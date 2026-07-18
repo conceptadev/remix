@@ -143,7 +143,7 @@ void main() {
         } else {
           expect(
             _textColor(normal.spec.label),
-            indigo.light.scale.alphaStep(10),
+            indigo.light.scale.alphaStep(11),
           );
           expect(
             _textColor(highContrast.spec.label),
@@ -329,7 +329,7 @@ void main() {
 
         final expectedNormal = switch (variant) {
           .ghost => indigo.light.scale.step(11),
-          .outline => indigo.light.scale.step(10),
+          .outline => indigo.light.scale.step(11),
         };
         expect(_textColor(normal.spec.label), expectedNormal);
         expect(

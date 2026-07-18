@@ -61,8 +61,10 @@ RemixTabStyler fortalTabStyler({bool highContrast = false}) {
 class FortalTabBar extends StatelessWidget {
   const FortalTabBar({super.key, this.color, this.radius, required this.child});
 
+  /// Optional accent color override for this tab bar subtree.
   final FortalAccentColor? color;
 
+  /// Optional radius override for this tab bar subtree.
   final FortalRadius? radius;
 
   final Widget child;
@@ -87,8 +89,10 @@ class FortalTabView extends StatelessWidget {
     required this.child,
   });
 
+  /// Optional accent color override for this tab view subtree.
   final FortalAccentColor? color;
 
+  /// Optional radius override for this tab view subtree.
   final FortalRadius? radius;
 
   final String tabId;
@@ -134,10 +138,13 @@ class FortalTab extends StatelessWidget {
 
   final String tabId;
 
+  /// Optional accent color override for this tab subtree.
   final FortalAccentColor? color;
 
+  /// Optional radius override for this tab subtree.
   final FortalRadius? radius;
 
+  /// Whether to use higher-contrast accent colors.
   final bool highContrast;
 
   final Widget? child;

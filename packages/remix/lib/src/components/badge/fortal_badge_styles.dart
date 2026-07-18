@@ -44,7 +44,7 @@ RemixBadgeStyler _fortalBadgeSoftStyler(
   return _fortalBadgeBaseStyler(size)
       .backgroundColor(FortalTokens.accentA3())
       .foregroundColor(
-        highContrast ? FortalTokens.accent12() : FortalTokens.accentA10(),
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
       );
 }
 
@@ -59,7 +59,7 @@ RemixBadgeStyler _fortalBadgeSurfaceStyler(
         width: FortalTokens.borderWidth1(),
       )
       .foregroundColor(
-        highContrast ? FortalTokens.accent12() : FortalTokens.accentA10(),
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
       );
 }
 
@@ -74,7 +74,7 @@ RemixBadgeStyler _fortalBadgeOutlineStyler(
         width: FortalTokens.borderWidth1(),
       )
       .foregroundColor(
-        highContrast ? FortalTokens.accent12() : FortalTokens.accentA10(),
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
       );
 }
 

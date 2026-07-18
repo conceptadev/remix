@@ -393,13 +393,13 @@ class FortalIconButton extends StatelessWidget {
 
   final FortalIconButtonSize size;
 
-  /// Per-instance accent color override.
+  /// Optional accent color override for this icon button subtree.
   final FortalAccentColor? color;
 
-  /// Per-instance radius override.
+  /// Optional radius override for this icon button subtree.
   final FortalRadius? radius;
 
-  /// Uses higher-contrast accent roles where this variant supports them.
+  /// Whether to use higher-contrast accent colors.
   final bool highContrast;
 
   final IconData icon;

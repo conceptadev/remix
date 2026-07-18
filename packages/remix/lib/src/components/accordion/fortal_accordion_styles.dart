@@ -173,8 +173,10 @@ class FortalAccordion<T> extends StatelessWidget {
 
   final FortalAccordionSize size;
 
+  /// Optional accent color override for this accordion subtree.
   final FortalAccentColor? color;
 
+  /// Optional radius override for this accordion subtree.
   final FortalRadius? radius;
 
   final T value;

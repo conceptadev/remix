@@ -31,30 +31,11 @@ RemixDialogStyler fortalDialogStyler() {
       )
       .borderRadius(.all(FortalTokens.radius3()))
       .backgroundColor(FortalTokens.colorPanel())
-      // Uses the mode-aware stroke with neutral deferred layers. Exact Radix
-      // gray-alpha layer swaps for these overlay stylers remain follow-up work.
-      .shadows([
-        BoxShadowMix()
-            .color(FortalTokens.shadowStroke())
-            .offset(x: 0, y: 0)
-            .blurRadius(0)
-            .spreadRadius(1),
-        BoxShadowMix()
-            .color(FortalTokens.blackA4())
-            .offset(x: 0, y: 12)
-            .blurRadius(60)
-            .spreadRadius(0),
-        BoxShadowMix()
-            .color(FortalTokens.blackA6())
-            .offset(x: 0, y: 16)
-            .blurRadius(64)
-            .spreadRadius(0),
-        BoxShadowMix()
-            .color(FortalTokens.blackA11())
-            .offset(x: 0, y: 16)
-            .blurRadius(36)
-            .spreadRadius(-20),
-      ]);
+      // Radix --shadow-6, sourced from the shared mode-aware shadow tokens so
+      // the light/dark layer recipes stay defined once in buildFortalShadows.
+      .decoration(
+        BoxDecorationMix.create(boxShadow: FortalTokens.shadow6.mix()),
+      );
 }
 
 /// Fortal-themed preset for [RemixDialog].

@@ -14,11 +14,7 @@ void main() {
       testWidgets('${brightness.name} theme round-trips canonically', (
         tester,
       ) async {
-        final rawTokens = await _captureFortalTokens(tester, brightness);
-        final rawErrors = _expectFailure(
-          mixProtocol.encodeTheme(MixProtocolTheme(tokens: rawTokens)),
-        );
-        final tokens = _concretizeFortalShadowTokens(rawTokens);
+        final tokens = await _captureFortalTokens(tester, brightness);
 
         final encoded = _expectSuccess(
           mixProtocol.encodeTheme(MixProtocolTheme(tokens: tokens)),
@@ -26,23 +22,6 @@ void main() {
         final decoded = _expectSuccess(mixProtocol.decodeTheme(encoded));
         final reencoded = _expectSuccess(mixProtocol.encodeTheme(decoded));
 
-        expect(rawErrors, hasLength(6));
-        expect(
-          rawErrors,
-          everyElement(
-            isA<MixProtocolError>()
-                .having(
-                  (error) => error.code,
-                  'code',
-                  MixProtocolErrorCode.constraintViolation,
-                )
-                .having(
-                  (error) => error.path,
-                  'path',
-                  startsWith('/boxShadows/fortal.shadow.'),
-                ),
-          ),
-        );
         expect(reencoded, encoded);
         expect(decoded.tokens, hasLength(tokens.length));
       });
@@ -134,13 +113,9 @@ void main() {
       final themeCoverage = <Map<String, Object?>>[];
 
       for (final brightness in Brightness.values) {
-        final rawTokens = await _captureFortalTokens(tester, brightness);
-        final rawErrors = _expectFailure(
-          mixProtocol.encodeTheme(MixProtocolTheme(tokens: rawTokens)),
-        );
-        final concreteTokens = _concretizeFortalShadowTokens(rawTokens);
+        final tokens = await _captureFortalTokens(tester, brightness);
         final themeDocument = _expectSuccess(
-          mixProtocol.encodeTheme(MixProtocolTheme(tokens: concreteTokens)),
+          mixProtocol.encodeTheme(MixProtocolTheme(tokens: tokens)),
         );
 
         _expectJsonArtifact(
@@ -150,10 +125,7 @@ void main() {
         themeCoverage.add({
           'id': brightness.name,
           'status': 'supported',
-          'tokenCount': concreteTokens.length,
-          'rawStatus': 'failed',
-          'captureTransform': 'concretizeBoxShadowColorTokenReferences',
-          'rawDiagnostics': [for (final error in rawErrors) error.toJson()],
+          'tokenCount': tokens.length,
         });
       }
 
@@ -299,43 +271,6 @@ Future<Map<MixToken, Object>> _captureFortalTokens(
   );
 
   return captured!;
-}
-
-Map<MixToken, Object> _concretizeFortalShadowTokens(
-  Map<MixToken, Object> tokens,
-) {
-  return {
-    for (final MapEntry(:key, :value) in tokens.entries)
-      key: switch (value) {
-        List<BoxShadow>() => [
-          for (final shadow in value)
-            shadow.copyWith(color: _resolveColor(shadow.color, tokens)),
-        ],
-        _ => value,
-      },
-  };
-}
-
-Color _resolveColor(Color color, Map<MixToken, Object> tokens) {
-  final active = <MixToken<dynamic>>{};
-  var current = color;
-
-  while (true) {
-    final token = tokenFromReferenceValue<Color>(current);
-    if (token == null) break;
-    if (!active.add(token)) {
-      fail('Circular Fortal color token reference: ${token.name}');
-    }
-    final resolved = tokens[token];
-    if (resolved is! Color) {
-      fail(
-        'Fortal color token ${token.name} resolved to ${resolved.runtimeType}.',
-      );
-    }
-    current = resolved;
-  }
-
-  return current;
 }
 
 T _expectSuccess<T extends Object>(MixProtocolResult<T> result) {

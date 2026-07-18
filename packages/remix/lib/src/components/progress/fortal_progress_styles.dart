@@ -131,10 +131,13 @@ class FortalProgress extends StatelessWidget {
 
   final FortalProgressSize size;
 
+  /// Optional accent color override for this progress subtree.
   final FortalAccentColor? color;
 
+  /// Optional radius override for this progress subtree.
   final FortalRadius? radius;
 
+  /// Whether to use higher-contrast accent colors.
   final bool highContrast;
 
   final double value;

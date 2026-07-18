@@ -100,8 +100,10 @@ class FortalCard extends StatelessWidget {
 
   final FortalCardSize size;
 
+  /// Optional accent color override for this card subtree.
   final FortalAccentColor? color;
 
+  /// Optional radius override for this card subtree.
   final FortalRadius? radius;
 
   final Widget? child;

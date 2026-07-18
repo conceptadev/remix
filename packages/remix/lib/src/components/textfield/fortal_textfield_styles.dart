@@ -363,8 +363,10 @@ class FortalTextField extends StatelessWidget {
 
   final FortalTextFieldSize size;
 
+  /// Optional accent color override for this text field subtree.
   final FortalAccentColor? color;
 
+  /// Optional radius override for this text field subtree.
   final FortalRadius? radius;
 
   final TextEditingController? controller;

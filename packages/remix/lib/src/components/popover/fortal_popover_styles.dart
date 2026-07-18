@@ -12,25 +12,11 @@ RemixPopoverStyler fortalPopoverStyler() {
       )
       .borderRadiusAll(FortalTokens.radius3())
       .backgroundColor(FortalTokens.colorPanel())
-      // Uses the mode-aware stroke with neutral deferred layers. Exact Radix
-      // gray-alpha layer swaps for these overlay stylers remain follow-up work.
-      .shadows([
-        BoxShadowMix()
-            .color(FortalTokens.shadowStroke())
-            .offset(x: 0, y: 0)
-            .blurRadius(0)
-            .spreadRadius(1),
-        BoxShadowMix()
-            .color(FortalTokens.blackA5())
-            .offset(x: 0, y: 12)
-            .blurRadius(60)
-            .spreadRadius(0),
-        BoxShadowMix()
-            .color(FortalTokens.blackA7())
-            .offset(x: 0, y: 12)
-            .blurRadius(32)
-            .spreadRadius(-16),
-      ]);
+      // Radix --shadow-5, sourced from the shared mode-aware shadow tokens so
+      // the light/dark layer recipes stay defined once in buildFortalShadows.
+      .decoration(
+        BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),
+      );
 }
 
 /// Fortal-themed preset for [RemixPopover].
@@ -57,8 +43,10 @@ class FortalPopover extends StatelessWidget {
 
   final Widget popoverChild;
 
+  /// Optional accent color override for this popover subtree.
   final FortalAccentColor? color;
 
+  /// Optional radius override for this popover subtree.
   final FortalRadius? radius;
 
   final Widget child;

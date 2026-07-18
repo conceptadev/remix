@@ -644,8 +644,10 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeConfig theme) {
     FortalTokens.space9: 64.0 * theme.scaling,
     ..._radiusTokensFor(theme.radius, theme.scaling),
 
-    // Layered shadows approximating Radix Themes CSS tokens.
-    ...buildFortalShadows(isDark: theme.isDark),
+    // Layered shadows approximating Radix Themes CSS tokens. Colors are
+    // resolved here (not token refs) so the shadow tokens can be consumed
+    // directly by stylers.
+    ...buildFortalShadows(isDark: theme.isDark, colors: tokens),
     FortalTokens.borderWidth1: 1.0,
     FortalTokens.borderWidth2: 2.0,
     FortalTokens.focusRingWidth: 2.0,

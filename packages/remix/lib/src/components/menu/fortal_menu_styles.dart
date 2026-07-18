@@ -59,25 +59,12 @@ RemixMenuStyler _fortalMenuBaseStyler(FortalMenuSize size) {
           ),
           padding: EdgeInsetsMix.all(FortalTokens.space1()),
         ).marginTop(8)
-        // Uses the mode-aware stroke with neutral deferred layers. Exact
-        // Radix gray-alpha layer swaps remain follow-up work.
-        .shadows([
-          BoxShadowMix()
-              .color(FortalTokens.shadowStroke())
-              .offset(x: 0, y: 0)
-              .blurRadius(0)
-              .spreadRadius(1),
-          BoxShadowMix()
-              .color(FortalTokens.blackA5())
-              .offset(x: 0, y: 12)
-              .blurRadius(60)
-              .spreadRadius(0),
-          BoxShadowMix()
-              .color(FortalTokens.blackA7())
-              .offset(x: 0, y: 12)
-              .blurRadius(32)
-              .spreadRadius(-16),
-        ]),
+        // Radix --shadow-5, sourced from the shared mode-aware shadow tokens
+        // so the light/dark layer recipes stay defined once in
+        // buildFortalShadows.
+        .decoration(
+          BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),
+        ),
       )
       .divider(
         RemixDividerStyler()

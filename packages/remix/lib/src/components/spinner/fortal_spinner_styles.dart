@@ -25,6 +25,7 @@ class FortalSpinner extends StatelessWidget {
 
   final FortalSpinnerSize size;
 
+  /// Optional accent color override for this spinner subtree.
   final FortalAccentColor? color;
 
   @override

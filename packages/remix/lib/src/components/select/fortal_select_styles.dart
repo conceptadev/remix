@@ -331,10 +331,13 @@ class FortalSelect<T> extends StatelessWidget {
 
   final FortalSelectSize size;
 
+  /// Optional accent color override for this select subtree.
   final FortalAccentColor? color;
 
+  /// Optional radius override for this select subtree.
   final FortalRadius? radius;
 
+  /// Whether to use higher-contrast accent colors.
   final bool highContrast;
 
   final RemixSelectTrigger trigger;

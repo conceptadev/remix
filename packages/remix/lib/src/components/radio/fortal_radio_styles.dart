@@ -73,7 +73,9 @@ RemixRadioStyler _fortalRadioSurfaceStyler(
             )
             .indicator(
               BoxStyler().color(
-                highContrast ? FortalTokens.accent1() : Colors.white,
+                highContrast
+                    ? FortalTokens.accent1()
+                    : FortalTokens.accentContrast(),
               ),
             ),
       )

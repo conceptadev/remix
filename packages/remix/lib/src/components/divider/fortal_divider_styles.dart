@@ -33,6 +33,7 @@ class FortalDivider extends StatelessWidget {
 
   final FortalDividerSize size;
 
+  /// Optional accent color override for this divider subtree.
   final FortalAccentColor? color;
 
   @override

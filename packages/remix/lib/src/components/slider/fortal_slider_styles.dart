@@ -174,10 +174,13 @@ class FortalSlider extends StatelessWidget {
 
   final FortalSliderSize size;
 
+  /// Optional accent color override for this slider subtree.
   final FortalAccentColor? color;
 
+  /// Optional radius override for this slider subtree.
   final FortalRadius? radius;
 
+  /// Whether to use higher-contrast accent colors.
   final bool highContrast;
 
   final double value;

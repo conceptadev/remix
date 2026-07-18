@@ -27,8 +27,10 @@ class FortalTooltip extends StatelessWidget {
 
   final Widget tooltipChild;
 
+  /// Optional accent color override for this tooltip subtree.
   final FortalAccentColor? color;
 
+  /// Optional radius override for this tooltip subtree.
   final FortalRadius? radius;
 
   final Widget child;

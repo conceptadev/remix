@@ -69,7 +69,7 @@ RemixToggleStyler _fortalToggleOutlineStyler(
         RemixToggleStyler()
             .backgroundColor(FortalTokens.accentA3())
             .foregroundColor(
-              highContrast ? FortalTokens.accent12() : FortalTokens.accent10(),
+              highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
             )
             .borderAll(color: FortalTokens.accentA5()),
       );

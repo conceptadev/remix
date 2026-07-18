@@ -116,8 +116,10 @@ class FortalAvatar extends StatelessWidget {
 
   final FortalAvatarSize size;
 
+  /// Optional accent color override for this avatar subtree.
   final FortalAccentColor? color;
 
+  /// Optional radius override for this avatar subtree.
   final FortalRadius? radius;
 
   final ImageProvider<Object>? backgroundImage;
