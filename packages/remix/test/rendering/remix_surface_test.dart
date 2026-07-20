@@ -836,6 +836,67 @@ void main() {
       expect(_pixel(pixels, 20, 20), _rgba(Colors.white));
     });
 
+    testWidgets(
+      'surface boxes keep surface effects outside their content clip',
+      (tester) async {
+        const boundaryKey = ValueKey('unclipped-surface-effects');
+
+        await tester.pumpWidget(
+          const Directionality(
+            textDirection: TextDirection.ltr,
+            child: Center(
+              child: RepaintBoundary(
+                key: boundaryKey,
+                child: SizedBox.square(
+                  dimension: 40,
+                  child: Center(
+                    child: RemixSurfaceBox(
+                      styleSpec: StyleSpec(
+                        spec: BoxSpec(
+                          constraints: BoxConstraints.tightFor(
+                            width: 20,
+                            height: 20,
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                          ),
+                        ),
+                      ),
+                      surface: RemixSurfaceLayerSpec(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.all(Radius.circular(4)),
+                        shadows: [
+                          RemixPaintShadow(color: Colors.red, spreadRadius: 4),
+                        ],
+                        outlineColor: Colors.green,
+                        outlineWidth: 2,
+                        outlineOffset: 2,
+                      ),
+                      child: OverflowBox(
+                        maxWidth: 40,
+                        maxHeight: 40,
+                        child: ColoredBox(
+                          color: Colors.yellow,
+                          child: SizedBox.square(dimension: 40),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        final pixels = await _capture(tester, find.byKey(boundaryKey));
+        expect(_pixel(pixels, 5, 20), _rgba(Colors.transparent));
+        expect(_pixel(pixels, 7, 20), _rgba(Colors.green));
+        expect(_pixel(pixels, 9, 20), _rgba(Colors.red));
+        expect(_pixel(pixels, 20, 20), _rgba(Colors.yellow));
+      },
+    );
+
     testWidgets('surface boxes support CSS-style negative margins', (
       tester,
     ) async {

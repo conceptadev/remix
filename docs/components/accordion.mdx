@@ -170,7 +170,7 @@ class _FortalAccordionExampleState extends State<FortalAccordionExample> {
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
 // Accordion Group
-const RemixAccordionGroup({
+const RemixAccordionGroup<T>({
   Key? key,
   required Widget child,
   required RemixAccordionController<T> controller,
@@ -178,7 +178,7 @@ const RemixAccordionGroup({
 })
 
 // Accordion Item
-const RemixAccordion({
+const RemixAccordion<T>({
   Key? key,
   required T value,
   required Widget child,
@@ -195,7 +195,8 @@ const RemixAccordion({
   ValueChanged<bool>? onHoverChange,
   ValueChanged<bool>? onPressChange,
   String? semanticLabel,
-  Widget Function(Widget, Animation<double>) transitionBuilder = defaultAccordionTransitionBuilder,
+  Widget Function(Widget, Animation<double>) transitionBuilder =
+      RemixAccordion.defaultAccordionTransitionBuilder,
   RemixAccordionStyler style = const RemixAccordionStyler.create(),
   RemixAccordionSpec? styleSpec,
 })

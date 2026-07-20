@@ -20,7 +20,7 @@
   per-thumb focus, and per-thumb semantics. Remove scalar `value` and
   `snapDivisions`.
 - **BREAKING**: `RemixTabs.activationMode` now exposes automatic and manual
-  keyboard activation from Naked beta.5.
+  keyboard activation from Naked beta.6.
 - **BREAKING**: Menu now takes an arbitrary trigger widget and compositional
   action, checkbox, group, label, separator, radio, and recursive submenu
   entries. Select uses `entries` with selectable, group, label, and separator
@@ -49,7 +49,7 @@
   for both values because it uses a Navigator dialog route.
 - **FIX**: Keep full-length Fortal dividers at one logical pixel on their cross
   axis even when a tight parent supplies extra height or width.
-- **CHORE**: Target exact `naked_ui` 1.0.0-beta.5 behavior, add the pinned
+- **CHORE**: Target exact `naked_ui` 1.0.0-beta.6 behavior, add the pinned
   Chromium reference fixture and parity manifest/checker, and expand the Fortal
   Atlas from Button-only coverage to all 23 families in light and dark themes.
 - **CHORE**: Require every parity-manifest enum and state to cite an exact

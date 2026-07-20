@@ -249,21 +249,23 @@ Size _resolveThumbSize(BuildContext context, StyleSpec<BoxSpec> thumb) {
   final box = thumb.spec;
   final constraints = box.constraints;
   final padding = box.padding?.resolve(Directionality.of(context));
+  final hasTightWidth = constraints?.hasTightWidth ?? false;
+  final hasTightHeight = constraints?.hasTightHeight ?? false;
   return Size(
     _resolveTightDimension(
-          tight: constraints?.hasTightWidth ?? false,
+          tight: hasTightWidth,
           min: constraints?.minWidth,
           max: constraints?.maxWidth,
           fallback: RemixSliderSpec.defaultThumbSize.width,
         ) +
-        (padding?.horizontal ?? 0),
+        (hasTightWidth ? 0 : padding?.horizontal ?? 0),
     _resolveTightDimension(
-          tight: constraints?.hasTightHeight ?? false,
+          tight: hasTightHeight,
           min: constraints?.minHeight,
           max: constraints?.maxHeight,
           fallback: RemixSliderSpec.defaultThumbSize.height,
         ) +
-        (padding?.vertical ?? 0),
+        (hasTightHeight ? 0 : padding?.vertical ?? 0),
   );
 }
 

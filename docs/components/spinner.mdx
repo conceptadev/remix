@@ -51,12 +51,12 @@ over its footprint. With no child, the spinner uses its configured square size.
 
 <CodeGroup title="Fortal spinner" defaultLanguage="dart">
 ```dart
-FortalSpinner(
+Widget savingIndicator(bool isSaving) => FortalSpinner(
   size: FortalSpinnerSize.size2,
   loading: isSaving,
   semanticLabel: 'Saving',
   child: const Text('Save changes'),
-)
+);
 ```
 </CodeGroup>
 

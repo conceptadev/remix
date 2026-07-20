@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 const _expectedIntegrity =
     'sha512-I0/h2CRNTpYNB7Mi3xFIvSsQq5a108d7kK8dTO5zp5b9HR5QJXKag6B8tjpz2ITkVYkFdkGk45doNkSr7OxwNw==';
-const _expectedNakedUiRef = 'c0b37035f4083e67152a3c062bd60c25789b6df9';
+const _expectedNakedUiVersion = '1.0.0-beta.6';
 const _expectedMappedFamilies = <String>{
   'avatar',
   'badge',
@@ -94,7 +94,12 @@ void main() {
   _checkTheme(manifest, evidence, packageRoot, failures);
   _checkFamilies(manifest, evidence, packageRoot, workspaceRoot, failures);
   _checkFixtures(manifest, packageRoot, failures);
-  _checkNakedPin(pubspec, File('${workspaceRoot.path}/pubspec.yaml'), failures);
+  _checkNakedPin(
+    pubspec,
+    File('${workspaceRoot.path}/pubspec.yaml'),
+    File('${workspaceRoot.path}/pubspec.lock'),
+    failures,
+  );
   _checkSingleConstructors(packageRoot, failures);
   _checkApproximations(manifest, failures);
   _finish(failures);
@@ -549,31 +554,75 @@ void _checkFixtures(
 void _checkNakedPin(
   File packagePubspec,
   File workspacePubspec,
+  File workspaceLock,
   List<String> failures,
 ) {
   final packageSource = packagePubspec.readAsStringSync();
   _expect(
     RegExp(
-      r'^  naked_ui: 1\.0\.0-beta\.5\s*$',
+      '^  naked_ui: ${RegExp.escape(_expectedNakedUiVersion)}\\s*\$',
       multiLine: true,
     ).hasMatch(packageSource),
-    'Remix must declare the exact hosted naked_ui 1.0.0-beta.5 dependency.',
+    'Remix must declare the exact naked_ui $_expectedNakedUiVersion '
+    'dependency.',
     failures,
   );
   final workspaceSource = workspacePubspec.readAsStringSync();
   _expect(
-    RegExp(
-      '^  naked_ui:\\s*\\n'
-      r'    git:\s*\n'
-      r'      url: https://github\.com/btwld/naked_ui\.git\s*\n'
-      '      ref: $_expectedNakedUiRef\\s*\\n'
-      r'      path: packages/naked_ui\s*$',
-      multiLine: true,
-    ).hasMatch(workspaceSource),
-    'The workspace must resolve naked_ui 1.0.0-beta.5 from '
-    '$_expectedNakedUiRef until it is hosted.',
+    !_hasDependencyOverride(workspaceSource, 'naked_ui'),
+    'The workspace must resolve naked_ui $_expectedNakedUiVersion from '
+    'pub.dev without a dependency override.',
     failures,
   );
+  final lockSource = workspaceLock.readAsStringSync();
+  final nakedUiLockEntry = _lockEntry(lockSource, 'naked_ui');
+  _expect(
+    nakedUiLockEntry != null &&
+        RegExp(
+          r'^    source: hosted$',
+          multiLine: true,
+        ).hasMatch(nakedUiLockEntry) &&
+        RegExp(
+          '^    version: "${RegExp.escape(_expectedNakedUiVersion)}"\\s*\$',
+          multiLine: true,
+        ).hasMatch(nakedUiLockEntry),
+    'The workspace lockfile must resolve naked_ui '
+    '$_expectedNakedUiVersion from pub.dev.',
+    failures,
+  );
+}
+
+bool _hasDependencyOverride(String source, String dependency) {
+  var inDependencyOverrides = false;
+  for (final line in const LineSplitter().convert(source)) {
+    final trimmed = line.trim();
+    if (trimmed.isEmpty || trimmed.startsWith('#')) continue;
+    final indentation = line.length - line.trimLeft().length;
+    if (indentation == 0) {
+      inDependencyOverrides = trimmed == 'dependency_overrides:';
+      continue;
+    }
+    if (inDependencyOverrides &&
+        indentation == 2 &&
+        trimmed == '$dependency:') {
+      return true;
+    }
+  }
+  return false;
+}
+
+String? _lockEntry(String source, String dependency) {
+  final lines = const LineSplitter().convert(source);
+  final start = lines.indexOf('  $dependency:');
+  if (start == -1) return null;
+  var end = lines.length;
+  for (var index = start + 1; index < lines.length; index++) {
+    if (RegExp(r'^  [^ ]').hasMatch(lines[index])) {
+      end = index;
+      break;
+    }
+  }
+  return lines.sublist(start, end).join('\n');
 }
 
 void _checkSingleConstructors(Directory packageRoot, List<String> failures) {
@@ -658,7 +707,8 @@ Never _finish(List<String> failures) {
   stdout.writeln(
     'Verified @radix-ui/themes 3.3.0 contract: '
     '20 mapped families, 3 Fortal extensions, Chromium fixtures, '
-    'coverage ledger, Atlas inventory, exact Naked beta.5 pin, and no '
+    'coverage ledger, Atlas inventory, hosted Naked '
+    '$_expectedNakedUiVersion pin, and no '
     'undocumented approximations.',
   );
   exit(0);

@@ -20,8 +20,8 @@ final style = ButtonStyler()
 The following expressions are equivalent:
 
 ```dart
-RemixCardStyler.color(Colors.blue)
-RemixCardStyler().color(Colors.blue)
+final factoryStyle = RemixCardStyler.color(Colors.blue);
+final fluentStyle = RemixCardStyler().color(Colors.blue);
 ```
 
 ## Factory policy

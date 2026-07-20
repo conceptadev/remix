@@ -90,12 +90,12 @@ callback to complete the state change.
 alignment offsets. Collision handling flips or shifts the overlay when needed.
 
 ```dart
-const OverlayPositionConfig(
+const positioning = OverlayPositionConfig(
   side: OverlaySide.top,
   alignment: OverlayAlignment.end,
   sideOffset: 8,
   collisionPadding: EdgeInsets.all(10),
-)
+);
 ```
 
 The overlay is clamped to the available screen bounds.
@@ -111,15 +111,15 @@ descendant in the same overlay subtree.
 visual styling.
 
 ```dart
-RemixPopover(
+final customPopover = RemixPopover(
   style: RemixPopoverStyler()
       .paddingAll(16)
       .constraints(BoxConstraintsMix(maxWidth: 320))
       .backgroundColor(Colors.white)
-      .borderRadiusAll(12),
+      .borderRadiusAll(const Radius.circular(12)),
   popoverChild: const Text('Custom popover'),
   child: const Text('Open'),
-)
+);
 ```
 
 The `FortalPopover` preset adds Fortal spacing, border, radius, surface color,

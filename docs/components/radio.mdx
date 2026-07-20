@@ -172,7 +172,7 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
 // Radio Group
-const RemixRadioGroup({
+const RemixRadioGroup<T>({
   Key? key,
   required T? groupValue,
   ValueChanged<T?>? onChanged,
@@ -180,7 +180,7 @@ const RemixRadioGroup({
 })
 
 // Radio Button
-const RemixRadio({
+const RemixRadio<T>({
   Key? key,
   required T value,
   bool enabled = true,

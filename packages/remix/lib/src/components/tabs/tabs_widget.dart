@@ -334,6 +334,20 @@ class RemixTab extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         WidgetStateProvider(
+          states: const {},
+          child: Builder(
+            builder: (context) {
+              final neutralSpec = styleSpec ?? style.build(context).spec;
+              return ExcludeSemantics(
+                child: Opacity(
+                  opacity: 0,
+                  child: _buildDefaultContent(neutralSpec, sizing: true),
+                ),
+              );
+            },
+          ),
+        ),
+        WidgetStateProvider(
           states: const {WidgetState.selected},
           child: Builder(
             builder: (context) {
@@ -345,6 +359,12 @@ class RemixTab extends StatelessWidget {
                 ),
               );
             },
+          ),
+        ),
+        ExcludeSemantics(
+          child: Opacity(
+            opacity: 0,
+            child: _buildDefaultContent(visibleSpec, sizing: true),
           ),
         ),
         Positioned.fill(

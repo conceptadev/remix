@@ -53,11 +53,11 @@ possible to coordinate multiple tooltips without replacing trigger behavior.
 
 <CodeGroup title="Fortal tooltip" defaultLanguage="dart">
 ```dart
-const FortalTooltip(
+const helpfulTooltip = FortalTooltip(
   tooltipChild: Text('More information'),
   tooltipSemantics: 'More information',
   child: Icon(Icons.info_outline),
-)
+);
 ```
 </CodeGroup>
 
@@ -85,7 +85,11 @@ const RemixTooltip({
   TooltipTriggerMode triggerMode = TooltipTriggerMode.longPress,
   bool enableFeedback = true,
   TooltipTriggeredCallback? onTriggered,
-  AnimationStyle animationStyle = const AnimationStyle(...),
+  AnimationStyle animationStyle = const AnimationStyle(
+    curve: Curves.fastOutSlowIn,
+    duration: Duration(milliseconds: 150),
+    reverseDuration: Duration(milliseconds: 75),
+  ),
   bool useRootOverlay = false,
   bool excludeSemantics = false,
   double? minWidth,

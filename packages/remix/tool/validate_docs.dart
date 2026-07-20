@@ -31,6 +31,19 @@ final _legacyFractionalProgressValue = RegExp(
   r'\bvalue\s*:\s*0\.(?:\d*[1-9]\d*)(?![\d.])',
 );
 final _explicitProgressMax = RegExp(r'\bmax\s*:');
+final _remixImport = RegExp(
+  r'''import\s+['"]package:remix/remix\.dart['"]\s*;''',
+);
+final _remixPublicReference = RegExp(
+  r'\b(?:Remix[A-Z][A-Za-z0-9_]*|Fortal[A-Z][A-Za-z0-9_]*|'
+  r'FortalTokens|ButtonStyler|fortal[A-Z][A-Za-z0-9_]*|'
+  r'OverlayPositionConfig|OverlaySide|OverlayAlignment)\b',
+);
+final _apiReferenceSignature = RegExp(
+  r'^(?:(?:\s*//[^\n]*\n)+)?\s*'
+  r'(?:const\s+(?:Remix|Fortal)[A-Z][A-Za-z0-9_]*(?:<[^>]+>)?\s*\(\{'
+  r'|Future<[^>]+>\s+showRemix[A-Z][A-Za-z0-9_]*(?:<[^>]+>)?\s*\(\{)',
+);
 
 const _exampleSourceDirectories = <String>[
   'packages/demo/lib',
@@ -90,7 +103,7 @@ Future<void> main() async {
     return;
   }
 
-  final snippets = _extractSelfContainedSnippets(docs, workspaceRoot, failures);
+  final snippets = _extractAnalyzableSnippets(docs, workspaceRoot, failures);
   if (failures.isNotEmpty) {
     _finish(failures);
     return;
@@ -115,7 +128,7 @@ Future<void> main() async {
     ], workingDirectory: packageRoot.path);
     if (result.exitCode != 0) {
       failures
-        ..add('Self-contained Dart documentation examples do not analyze.')
+        ..add('Dart documentation examples do not analyze.')
         ..add('${result.stdout}${result.stderr}'.trim())
         ..add(
           'Snippet map:\n${snippets.indexed.map((entry) => '  '
@@ -133,7 +146,7 @@ Future<void> main() async {
 
   stdout.writeln(
     'Documentation validation passed: ${docs.length} MDX files, '
-    '${snippets.length} self-contained Dart examples, and '
+    '${snippets.length} analyzable Dart examples, and '
     '$exampleSourceCount app/example Dart sources.',
   );
 }
@@ -284,7 +297,7 @@ void _checkFortalScopeTopology(Directory workspaceRoot, List<String> failures) {
   }
 }
 
-List<({String path, String source})> _extractSelfContainedSnippets(
+List<({String path, String source})> _extractAnalyzableSnippets(
   List<File> docs,
   Directory workspaceRoot,
   List<String> failures,
@@ -296,19 +309,75 @@ List<({String path, String source})> _extractSelfContainedSnippets(
     final source = file.readAsStringSync();
     for (final (index, match) in fence.allMatches(source).indexed) {
       final snippet = match.group(1)!;
-      if (!snippet.contains("import 'package:remix/remix.dart';")) continue;
+      final importsRemix = _remixImport.hasMatch(snippet);
+      if (!importsRemix && !_remixPublicReference.hasMatch(snippet)) continue;
       if (snippet.contains('...')) {
         failures.add(
-          '$relativePath Dart example ${index + 1} imports Remix but contains '
-          'an ellipsis and cannot be compile-validated.',
+          '$relativePath Dart example ${index + 1} uses Remix but contains an '
+          'ellipsis and cannot be compile-validated.',
         );
         continue;
       }
-      snippets.add((path: '$relativePath#${index + 1}', source: snippet));
+      snippets.add((
+        path: '$relativePath#${index + 1}',
+        source: importsRemix
+            ? snippet
+            : _apiReferenceSignature.hasMatch(snippet)
+            ? _wrapApiReferenceSignature(snippet)
+            : _wrapRemixFragment(snippet),
+      ));
     }
   }
   return snippets;
 }
+
+String _wrapRemixFragment(String snippet) {
+  if (RegExp(r'^\s*class\s+').hasMatch(snippet)) {
+    return '$_generatedImports$snippet';
+  }
+
+  return '''
+$_generatedImports
+void main() {
+$snippet
+}
+''';
+}
+
+String _wrapApiReferenceSignature(String snippet) {
+  if (RegExp(r'\bFuture<[^>]+>\s+showRemix').hasMatch(snippet)) {
+    final declaration = snippet
+        .replaceFirst(RegExp(r'\bFuture<'), 'external Future<')
+        .replaceFirst(RegExp(r'\}\)\s*$'), '});');
+    return '$_generatedImports$declaration';
+  }
+
+  var signatureIndex = 0;
+  final declarations = snippet
+      .replaceAllMapped(
+        RegExp(
+          r'^(\s*)const\s+(?:Remix|Fortal)[A-Z][A-Za-z0-9_]*'
+          r'(<[^>]+>)?\s*\(\{',
+          multiLine: true,
+        ),
+        (match) =>
+            '${match[1]}void _docsApiSignature${signatureIndex++}'
+            '${match[2] ?? ''}({',
+      )
+      .replaceAll(RegExp(r'^\s*\}\)\s*$', multiLine: true), '}) {}');
+  return '$_generatedImports$declarations';
+}
+
+const _generatedImports = '''
+// ignore_for_file: unused_element, unused_element_parameter, unused_import
+// ignore_for_file: unused_local_variable
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:naked_ui/naked_ui.dart';
+import 'package:remix/remix.dart';
+
+''';
 
 String _relativePath(Directory root, File file) => _relative(file.path, root);
 

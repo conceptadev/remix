@@ -93,8 +93,8 @@
     },
     {
       "path": "dark/card.png",
-      "sha256": "fe00ff53880a91db36a72703663cade1fda8263f76008d7fd240a85399802536",
-      "bytes": 18865
+      "sha256": "53908512d1e47fc9e702b8c51df7c34d4ab7ef961b3b731c2607451524fa29ae",
+      "bytes": 18778
     },
     {
       "path": "dark/checkbox.json",
@@ -143,8 +143,8 @@
     },
     {
       "path": "dark/menu.png",
-      "sha256": "0286db012b8a73340a14ba8479107ea29fea753489b5dac43ade006126c1d976",
-      "bytes": 18716
+      "sha256": "95074b4ad44e3987a0603e8db2f5d0bcceba0329eee651eaea6b0094796dd21b",
+      "bytes": 42695
     },
     {
       "path": "dark/popover.json",
@@ -153,8 +153,8 @@
     },
     {
       "path": "dark/popover.png",
-      "sha256": "e46b8302a327baf25c8439a1f38daee9af246000099f80ff223d73a3150064b3",
-      "bytes": 13897
+      "sha256": "568cc8d006959d75509e29500acafb8392d6eb1a8e8dc2855d7993fad1fa0a1a",
+      "bytes": 33833
     },
     {
       "path": "dark/progress.json",
@@ -163,8 +163,8 @@
     },
     {
       "path": "dark/progress.png",
-      "sha256": "bdeb37629cd9ee516743eb2a1158c17943c0cf2697ac6a111d43b2349360c279",
-      "bytes": 17712
+      "sha256": "3d7095a4385dc7a98d4b7a9c28e7b2a3c69b43b2ff273580595ccc1021bf4769",
+      "bytes": 18375
     },
     {
       "path": "dark/radio.json",
@@ -183,8 +183,8 @@
     },
     {
       "path": "dark/select.png",
-      "sha256": "2e5e698fc6fdf7a2d6fe90c35d7cefcbca95462feff961ad8adcceb059527f04",
-      "bytes": 47071
+      "sha256": "1e13fb67b82101ba3d4fbff7c863ee46a4b2d07b42ed7932c5ffb21c517f7ef0",
+      "bytes": 96681
     },
     {
       "path": "dark/slider.json",
@@ -203,8 +203,8 @@
     },
     {
       "path": "dark/spinner.png",
-      "sha256": "f9fb0e142debdbc1c4dd2af12a85db10994b39b3be1e95e50e71145099828c94",
-      "bytes": 10755
+      "sha256": "da11a5f98b81c94246caf042136547da4e337ca7542f0f7cbdce2ff2d1d1d0e7",
+      "bytes": 10783
     },
     {
       "path": "dark/switch.json",
@@ -223,8 +223,8 @@
     },
     {
       "path": "dark/tabs.png",
-      "sha256": "09c4250d1711e1b4ad5c78a769d337275d7a461e2169d65505440e400a945b24",
-      "bytes": 13772
+      "sha256": "de7097a635e48b7ba41f0b7255e880a727679243110c36272f63eb289dd8ec4e",
+      "bytes": 13648
     },
     {
       "path": "dark/text_field.json",
@@ -233,8 +233,8 @@
     },
     {
       "path": "dark/text_field.png",
-      "sha256": "d2ef4e32d84f426a808ad9dc42b0379d4d62d1cc411fa4e42f34c1bc2bf786f1",
-      "bytes": 47068
+      "sha256": "d526db88e15ba92aedb0b0bc2969e368c9894b48fed6013a8d17caecfc83f1ea",
+      "bytes": 47879
     },
     {
       "path": "dark/toggle.json",
@@ -263,8 +263,8 @@
     },
     {
       "path": "dark/tooltip.png",
-      "sha256": "60d78f27878019b246d649bd1eb92a4f6d2a60cc2a585c3723fc0c7f78c36d31",
-      "bytes": 5655
+      "sha256": "2d74b139ef38c3e806fe7b7e846a57eb5ce7c445b4b606816e68c4b2a08d7714",
+      "bytes": 7708
     },
     {
       "path": "light/accordion.json",
@@ -323,8 +323,8 @@
     },
     {
       "path": "light/card.png",
-      "sha256": "ea004ea1f51c978a89e161a60f28446ee1cd9db68f4520e110cc9fa80221e11e",
-      "bytes": 20236
+      "sha256": "35d72eec564693fd16f9e5b26f8887ff58e2cc4407f76205f77ac5df8274c9bf",
+      "bytes": 20352
     },
     {
       "path": "light/checkbox.json",
@@ -373,8 +373,8 @@
     },
     {
       "path": "light/menu.png",
-      "sha256": "7ecf6fe98baff842f3ad3c84346f3105d9de4b9f0b604f87c84c05228ca58258",
-      "bytes": 18458
+      "sha256": "567098318aa1175ae863001e9cca14bb806312dc320d556e2c5d4ffd9e48e969",
+      "bytes": 39568
     },
     {
       "path": "light/popover.json",
@@ -383,8 +383,8 @@
     },
     {
       "path": "light/popover.png",
-      "sha256": "be6942627bb96b99e6d1507bc56dfe4f7b689772c3379832a4fe00dc6e92b425",
-      "bytes": 13601
+      "sha256": "b396a2d68072912ae0a578b033ab9d4c0451ccc7b275d2a1a59e8cf55ac7d95f",
+      "bytes": 30734
     },
     {
       "path": "light/progress.json",
@@ -393,8 +393,8 @@
     },
     {
       "path": "light/progress.png",
-      "sha256": "f66200e4c38d236229afd5b0a2adb01220b305670349a49acf2455312ec8a13a",
-      "bytes": 17303
+      "sha256": "da32be5e0bf01c2760062f028e4217dee3fbc0a9afcc0c1b46ae8274a24fd7ff",
+      "bytes": 17956
     },
     {
       "path": "light/radio.json",
@@ -413,8 +413,8 @@
     },
     {
       "path": "light/select.png",
-      "sha256": "f48b840ffbad71fd3c0cef4813ea1aa4b59f43485ba028e2e5ced8a6c2fe31e6",
-      "bytes": 46963
+      "sha256": "265a6084a437749316fe9f1725aba8ffd8dc5f90966c5b050876bdbc9d7b6942",
+      "bytes": 88775
     },
     {
       "path": "light/slider.json",
@@ -433,8 +433,8 @@
     },
     {
       "path": "light/spinner.png",
-      "sha256": "94355335c6e01ee38f3a590f1bdca25f00d8314043cb928c9401055461154991",
-      "bytes": 10722
+      "sha256": "f4b00f35cf4036e3784790f102dc6958ecf02c96aa63faee8b3b9f39f753b433",
+      "bytes": 10699
     },
     {
       "path": "light/switch.json",
@@ -453,8 +453,8 @@
     },
     {
       "path": "light/tabs.png",
-      "sha256": "2d97042b20b1c8d2b71b3aa7a04fc364c193b40cf89d0868c633c5dab7381b76",
-      "bytes": 13676
+      "sha256": "22babb7b18a47ca83b535dda4122b591b6fa47b809933873a187c189d96af30e",
+      "bytes": 13643
     },
     {
       "path": "light/text_field.json",
@@ -463,8 +463,8 @@
     },
     {
       "path": "light/text_field.png",
-      "sha256": "df99d8c6717f3b66014adb0dbdb3edc176ebec0399d36c03645cbae74ef47460",
-      "bytes": 45116
+      "sha256": "67cd86101985b6bd1002ec8b1b7062fb7be634ed1d86a190d540593a3c611875",
+      "bytes": 45883
     },
     {
       "path": "light/toggle.json",
@@ -493,8 +493,8 @@
     },
     {
       "path": "light/tooltip.png",
-      "sha256": "94e093ca3100fc30ff6b6745adc7c3edc7488dcd572a8b83f824769f1b4df523",
-      "bytes": 5440
+      "sha256": "4fa88e1580786244fe57c4f2fed88a936290be802794e3a35f288a8a1d69857f",
+      "bytes": 7664
     },
     {
       "path": "protocol/coverage.json",

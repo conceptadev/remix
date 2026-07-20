@@ -33,7 +33,7 @@ final style = ButtonStyler()
 
 RemixButton(
   onPressed: () {},
-  label: 'Click me',
+  child: const Text('Click me'),
   style: style,
 );
 ```
@@ -49,8 +49,8 @@ final button = ButtonStyler()
   .animate(AnimationConfig.spring(300.ms));
 
 button(
-  label: 'Click me',
   onPressed: () {},
+  child: const Text('Click me'),
 ); // return RemixButton Widget.
 ```
 

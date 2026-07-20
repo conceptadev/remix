@@ -271,21 +271,24 @@ final _menuAtlas = ComponentAtlas(
       for (final size in FortalMenuSize.values)
         AtlasRow(
           '${variant.name}-${size.name}',
-          (context, cell) => FortalMenu<String>(
-            variant: variant,
-            size: size,
-            highContrast: cell.propOr('highContrast', false),
-            trigger: const Text('Open menu'),
-            entries: const [
-              RemixMenuLabel(child: Text('Actions')),
-              RemixMenuAction(value: 'edit', child: Text('Edit')),
-              RemixMenuCheckboxItem(
-                value: 'pin',
-                checked: true,
-                child: Text('Pinned'),
-              ),
-            ],
-            onSelected: (_) {},
+          (context, cell) => _AtlasOpenedMenuCell(
+            childBuilder: (controller) => FortalMenu<String>(
+              variant: variant,
+              size: size,
+              highContrast: cell.propOr('highContrast', false),
+              controller: controller,
+              trigger: const Text('Open menu'),
+              entries: const [
+                RemixMenuLabel(child: Text('Actions')),
+                RemixMenuAction(value: 'edit', child: Text('Edit')),
+                RemixMenuCheckboxItem(
+                  value: 'pin',
+                  checked: true,
+                  child: Text('Pinned'),
+                ),
+              ],
+              onSelected: (_) {},
+            ),
           ),
           values: _variantSizeValues(variant, size),
         ),
@@ -323,12 +326,16 @@ final _popoverAtlas = ComponentAtlas(
     for (final size in FortalPopoverSize.values)
       AtlasRow(
         size.name,
-        (context, cell) => FortalPopover(
-          size: size,
-          openOnTap: false,
-          matchTriggerWidth: false,
-          popoverChild: const Text('Popover content'),
-          child: const Text('Popover trigger'),
+        (context, cell) => _AtlasOpenedMenuCell(
+          height: 120,
+          childBuilder: (controller) => FortalPopover(
+            size: size,
+            controller: controller,
+            openOnTap: false,
+            matchTriggerWidth: false,
+            popoverChild: const Text('Popover content'),
+            child: const Text('Popover trigger'),
+          ),
         ),
         values: _sizeValues(size),
       ),
@@ -399,18 +406,22 @@ final _selectAtlas = ComponentAtlas(
       for (final contentVariant in FortalSelectContentVariant.values)
         AtlasRow(
           '${triggerVariant.name}-${contentVariant.name}',
-          (context, cell) => FortalSelect<String>(
-            triggerVariant: triggerVariant,
-            contentVariant: contentVariant,
-            size: .size2,
-            trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-            entries: const [
-              RemixSelectItem(value: 'one', label: 'Option one'),
-              RemixSelectItem(value: 'two', label: 'Option two'),
-            ],
-            selectedValue: 'one',
-            enabled: !cell.disabled,
-            onChanged: (_) {},
+          (context, cell) => _AtlasOverlayCell(
+            height: 132,
+            child: FortalSelect<String>(
+              triggerVariant: triggerVariant,
+              contentVariant: contentVariant,
+              size: .size2,
+              trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+              entries: const [
+                RemixSelectItem(value: 'one', label: 'Option one'),
+                RemixSelectItem(value: 'two', label: 'Option two'),
+              ],
+              selectedValue: 'one',
+              open: !cell.disabled,
+              enabled: !cell.disabled,
+              onChanged: (_) {},
+            ),
           ),
           values: {
             'triggerVariant': _axisValue(triggerVariant),
@@ -467,11 +478,14 @@ final _spinnerAtlas = ComponentAtlas(
     for (final size in FortalSpinnerSize.values)
       AtlasRow(
         size.name,
-        (context, cell) => FortalSpinner(
-          size: size,
-          loading: cell.propOr('loading', true),
-          semanticLabel: 'Loading',
-          child: const Text('Ready'),
+        (context, cell) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(disableAnimations: true),
+          child: FortalSpinner(
+            size: size,
+            loading: cell.propOr('loading', true),
+            semanticLabel: 'Loading',
+            child: const Text('Ready'),
+          ),
         ),
         values: _sizeValues(size),
       ),
@@ -572,12 +586,16 @@ final _tooltipAtlas = ComponentAtlas(
   rows: [
     AtlasRow(
       'default',
-      (context, cell) => FortalTooltip(
-        open: cell.propOr('open', false),
-        onOpenChanged: (_) {},
-        tooltipChild: const Text('Helpful context'),
-        tooltipSemantics: 'Helpful context',
-        child: const Icon(Icons.info_outline),
+      (context, cell) => _AtlasOverlayCell(
+        height: 72,
+        alignment: Alignment.bottomCenter,
+        child: FortalTooltip(
+          open: cell.propOr('open', false),
+          onOpenChanged: (_) {},
+          tooltipChild: const Text('Helpful context'),
+          tooltipSemantics: 'Helpful context',
+          child: const Icon(Icons.info_outline),
+        ),
       ),
     ),
   ],
@@ -699,6 +717,55 @@ String _enumLabel(String value) {
   );
 
   return '${spaced[0].toUpperCase()}${spaced.substring(1)}';
+}
+
+class _AtlasOverlayCell extends StatelessWidget {
+  const _AtlasOverlayCell({
+    required this.child,
+    this.height = 144,
+    this.alignment = Alignment.topCenter,
+  });
+
+  final Widget child;
+  final double height;
+  final AlignmentGeometry alignment;
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 176,
+    height: height,
+    child: AtlasOverlayHost(
+      child: Align(alignment: alignment, child: child),
+    ),
+  );
+}
+
+class _AtlasOpenedMenuCell extends StatefulWidget {
+  const _AtlasOpenedMenuCell({required this.childBuilder, this.height = 144});
+
+  final Widget Function(MenuController controller) childBuilder;
+  final double height;
+
+  @override
+  State<_AtlasOpenedMenuCell> createState() => _AtlasOpenedMenuCellState();
+}
+
+class _AtlasOpenedMenuCellState extends State<_AtlasOpenedMenuCell> {
+  final MenuController _controller = MenuController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !_controller.isOpen) _controller.open();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => _AtlasOverlayCell(
+    height: widget.height,
+    child: widget.childBuilder(_controller),
+  );
 }
 
 class _AtlasAccordionCell extends StatefulWidget {

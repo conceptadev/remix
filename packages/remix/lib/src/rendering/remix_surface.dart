@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:mix/mix.dart';
 
+import 'remix_blend_mode.dart';
+
 /// Whether a painted shadow falls outside a surface or into its interior.
 enum RemixPaintShadowKind { outer, inset }
 
@@ -858,12 +860,7 @@ class RemixSurfaceBox extends StatelessWidget {
         );
       }
 
-      current = RemixSurface.wrap(
-        surface: surface,
-        overlay: overlay,
-        child: current!,
-      );
-
+      // Clip decorated content without clipping surface shadows or outlines.
       if (spec.clipBehavior case final clip? when clip != Clip.none) {
         final decoration = spec.decoration;
         assert(decoration != null);
@@ -876,6 +873,13 @@ class RemixSurfaceBox extends StatelessWidget {
           child: current,
         );
       }
+
+      current = RemixSurface.wrap(
+        surface: surface,
+        overlay: overlay,
+        child: current!,
+      );
+
       if (spec.decoration case final decoration?) {
         if (_decorationShadow(decoration) case final shadow?) {
           current = DecoratedBox(decoration: shadow, child: current);
@@ -1239,7 +1243,8 @@ class _RemixDecorationClipper extends CustomClipper<Path> {
 
 enum _SurfacePaintPhase { all, background, outer, inner, outline }
 
-class _RemixSurfaceForegroundPainter extends CustomPainter {
+class _RemixSurfaceForegroundPainter extends CustomPainter
+    implements RemixCustomPainterPaintBounds {
   const _RemixSurfaceForegroundPainter({
     required this.surface,
     required this.overlay,
@@ -1273,13 +1278,37 @@ class _RemixSurfaceForegroundPainter extends CustomPainter {
   bool hitTest(Offset position) => false;
 
   @override
+  Rect paintBoundsForSize(Size size) {
+    var bounds = _surfacePaintBounds(
+      surface,
+      size,
+      borderRadius: surface.borderRadius.resolve(textDirection),
+      includeOuterShadows: false,
+      includeOutline: true,
+    );
+    if (overlay case final overlay?) {
+      bounds = bounds.expandToInclude(
+        _surfacePaintBounds(
+          overlay,
+          size,
+          borderRadius: overlay.borderRadius.resolve(textDirection),
+          includeOuterShadows: true,
+          includeOutline: true,
+        ),
+      );
+    }
+    return bounds;
+  }
+
+  @override
   bool shouldRepaint(_RemixSurfaceForegroundPainter oldDelegate) =>
       surface != oldDelegate.surface ||
       overlay != oldDelegate.overlay ||
       textDirection != oldDelegate.textDirection;
 }
 
-class _RemixSurfacePainter extends CustomPainter {
+class _RemixSurfacePainter extends CustomPainter
+    implements RemixCustomPainterPaintBounds {
   const _RemixSurfacePainter({
     required this.spec,
     required this.borderRadius,
@@ -1441,9 +1470,62 @@ class _RemixSurfacePainter extends CustomPainter {
   bool hitTest(Offset position) => false;
 
   @override
+  Rect paintBoundsForSize(Size size) => _surfacePaintBounds(
+    spec,
+    size,
+    borderRadius: borderRadius,
+    includeOuterShadows:
+        phase != _SurfacePaintPhase.inner &&
+        phase != _SurfacePaintPhase.outline,
+    includeOutline:
+        phase == _SurfacePaintPhase.all || phase == _SurfacePaintPhase.outline,
+  );
+
+  @override
   bool shouldRepaint(_RemixSurfacePainter oldDelegate) =>
       spec != oldDelegate.spec ||
       borderRadius != oldDelegate.borderRadius ||
       textDirection != oldDelegate.textDirection ||
       phase != oldDelegate.phase;
+}
+
+Rect _surfacePaintBounds(
+  RemixSurfaceLayerSpec spec,
+  Size size, {
+  required BorderRadius borderRadius,
+  required bool includeOuterShadows,
+  required bool includeOutline,
+}) {
+  var bounds = Offset.zero & size;
+  final shape = borderRadius.toRRect(bounds);
+
+  if (includeOuterShadows) {
+    for (final shadow in spec.shadows) {
+      if (shadow.kind != RemixPaintShadowKind.outer || shadow.color.a == 0) {
+        continue;
+      }
+      final shadowShape = shape
+          .deflate(shadow.shapeInset)
+          .inflate(shadow.spreadRadius)
+          .shift(shadow.offset);
+      if (shadowShape.outerRect.isEmpty) continue;
+      final blurExtent = ui.Shadow.convertRadiusToSigma(shadow.blurRadius) * 3;
+      bounds = bounds.expandToInclude(
+        shadowShape.outerRect.inflate(blurExtent),
+      );
+    }
+  }
+
+  final outlineColor = spec.outlineColor;
+  if (includeOutline &&
+      outlineColor != null &&
+      outlineColor.a > 0 &&
+      spec.outlineWidth > 0) {
+    final outline = shape.inflate(spec.outlineOffset + spec.outlineWidth);
+    if (!outline.outerRect.isEmpty) {
+      bounds = bounds.expandToInclude(outline.outerRect);
+    }
+  }
+
+  return bounds;
 }

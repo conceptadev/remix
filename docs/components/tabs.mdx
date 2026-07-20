@@ -68,9 +68,12 @@ class _TabsExampleState extends State<TabsExample> {
 
 <CodeGroup title="Fortal tabs" defaultLanguage="dart">
 ```dart
-RemixTabs(
+Widget fortalTabs({
+  required String selectedTab,
+  required ValueChanged<String> onChanged,
+}) => RemixTabs(
   selectedTabId: selectedTab,
-  onChanged: (id) => setState(() => selectedTab = id),
+  onChanged: onChanged,
   child: Column(
     children: [
       const FortalTabBar(
@@ -90,7 +93,7 @@ RemixTabs(
       ),
     ],
   ),
-)
+);
 ```
 </CodeGroup>
 

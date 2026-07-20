@@ -50,6 +50,108 @@ void main() {
     expect(_pixel(pixels, 30, 30), _rgba(Colors.red));
     expect(_pixel(pixels, 5, 5), _rgba(Colors.blue));
   });
+
+  testWidgets('includes overflowing descendants in the blend layer bounds', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _blendHarness(
+        blendMode: BlendMode.src,
+        child: const SizedBox.square(
+          dimension: 20,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                left: -8,
+                top: 6,
+                width: 8,
+                height: 8,
+                child: ColoredBox(color: Colors.red),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    final pixels = await _capture(tester);
+    expect(_pixel(pixels, 16, 30), _rgba(Colors.red));
+    expect(_pixel(pixels, 5, 5), _rgba(Colors.blue));
+  });
+
+  testWidgets(
+    'includes overflowing surface paint effects in the blend bounds',
+    (tester) async {
+      await tester.pumpWidget(
+        _blendHarness(
+          blendMode: BlendMode.src,
+          child: const SizedBox.square(
+            dimension: 20,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                  left: -8,
+                  top: 6,
+                  width: 8,
+                  height: 8,
+                  child: RemixSurface(
+                    spec: RemixSurfaceLayerSpec(
+                      color: Colors.red,
+                      shadows: [
+                        RemixPaintShadow(color: Colors.green, spreadRadius: 2),
+                      ],
+                      outlineColor: Colors.yellow,
+                      outlineWidth: 1,
+                      outlineOffset: 3,
+                    ),
+                    child: SizedBox.expand(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final pixels = await _capture(tester);
+      expect(_pixel(pixels, 8, 30), _rgba(Colors.yellow));
+      expect(_pixel(pixels, 10, 30), _rgba(Colors.green));
+      expect(_pixel(pixels, 13, 30), _rgba(Colors.red));
+      expect(_pixel(pixels, 5, 5), _rgba(Colors.blue));
+    },
+  );
+
+  testWidgets('does not expand the blend bounds past descendant clips', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _blendHarness(
+        blendMode: BlendMode.src,
+        child: const SizedBox.square(
+          dimension: 20,
+          child: ClipRect(
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                  left: -8,
+                  top: 6,
+                  width: 8,
+                  height: 8,
+                  child: ColoredBox(color: Colors.red),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final pixels = await _capture(tester);
+    expect(_pixel(pixels, 16, 30), _rgba(Colors.blue));
+  });
 }
 
 Widget _blendHarness({required BlendMode blendMode, required Widget child}) =>

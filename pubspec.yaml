@@ -8,15 +8,6 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   build_runner: ^2.10.1
 
-# naked_ui beta.5 is required for Remix but is not hosted yet. Keep workspace
-# resolution portable while the package manifest retains its publishable pin.
-dependency_overrides:
-  naked_ui:
-    git:
-      url: https://github.com/btwld/naked_ui.git
-      ref: c0b37035f4083e67152a3c062bd60c25789b6df9
-      path: packages/naked_ui
-
 workspace:
   - packages/demo
   - packages/example

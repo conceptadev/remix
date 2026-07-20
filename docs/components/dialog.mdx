@@ -66,27 +66,30 @@ configuration is needed.
 
 <CodeGroup title="Destructive alert" defaultLanguage="dart">
 ```dart
-showRemixAlertDialog<void>(
-  context: context,
-  semanticLabel: 'Delete project confirmation',
-  builder: (context) => Center(
-    child: FortalDialog(
-      title: 'Delete project?',
-      description: 'This permanently deletes the project and all of its data.',
-      actions: [
-        FortalButton(
-          variant: FortalButtonVariant.ghost,
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
-        FortalButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Delete project'),
-        ),
-      ],
+Future<void> showDeleteProjectDialog(BuildContext context) async {
+  await showRemixAlertDialog<void>(
+    context: context,
+    semanticLabel: 'Delete project confirmation',
+    builder: (context) => Center(
+      child: FortalDialog(
+        title: 'Delete project?',
+        description:
+            'This permanently deletes the project and all of its data.',
+        actions: [
+          FortalButton(
+            variant: FortalButtonVariant.ghost,
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FortalButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Delete project'),
+          ),
+        ],
+      ),
     ),
-  ),
-);
+  );
+}
 ```
 </CodeGroup>
 

@@ -102,7 +102,10 @@ both the group and per-item fluent stylers.
 
 <CodeGroup title="Per-item style" defaultLanguage="dart">
 ```dart
-RemixToggleGroup<String>(
+Widget statusToggle({
+  required String value,
+  required ValueChanged<String?> onChanged,
+}) => RemixToggleGroup<String>(
   items: [
     const RemixToggleGroupItem(value: 'draft', label: 'Draft'),
     RemixToggleGroupItem(
@@ -119,9 +122,9 @@ RemixToggleGroup<String>(
         .paddingY(8)
         .onSelected(
           RemixToggleGroupItemStyler().backgroundColor(Colors.green.shade50),
-        ),
+      ),
   ),
-)
+);
 ```
 </CodeGroup>
 

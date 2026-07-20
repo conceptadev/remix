@@ -1,5 +1,17 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+
+/// Supplies the local paint bounds of a [CustomPainter] that paints beyond its
+/// render box.
+///
+/// Flutter does not expose painter overflow through [RenderObject.paintBounds],
+/// so canvas effects that need an exact subtree layer can opt into this narrow
+/// internal contract.
+@internal
+abstract interface class RemixCustomPainterPaintBounds {
+  Rect paintBoundsForSize(Size size);
+}
 
 /// Composites a canvas-painted subtree with [blendMode] against its backdrop.
 ///
@@ -43,6 +55,12 @@ class _RenderRemixBlendMode extends RenderProxyBox {
   }
 
   @override
+  Rect get paintBounds {
+    final child = this.child;
+    return child == null ? super.paintBounds : _subtreePaintBounds(child);
+  }
+
+  @override
   void paint(PaintingContext context, Offset offset) {
     final child = this.child;
     if (child == null) return;
@@ -57,7 +75,7 @@ class _RenderRemixBlendMode extends RenderProxyBox {
         'BlendMode.srcOver.',
       );
     }
-    final bounds = child.paintBounds.shift(offset);
+    final bounds = paintBounds.shift(offset);
     context.canvas
       ..save()
       ..clipRect(bounds)
@@ -68,3 +86,79 @@ class _RenderRemixBlendMode extends RenderProxyBox {
       ..restore();
   }
 }
+
+// Computes conservative descendant bounds while preserving explicit clips.
+Rect _subtreePaintBounds(RenderObject root) {
+  var bounds = _localPaintBounds(root);
+
+  void includeDescendants(
+    RenderObject parent,
+    Matrix4 parentTransform,
+    Rect? ancestorClip,
+  ) {
+    parent.visitChildren((child) {
+      if (!parent.paintsChild(child)) return;
+
+      var childClip = ancestorClip;
+      if (parent.describeApproximatePaintClip(child) case final clip?) {
+        final transformedClip = MatrixUtils.transformRect(
+          parentTransform,
+          clip,
+        );
+        if (_isFinite(transformedClip)) {
+          childClip = childClip == null
+              ? transformedClip
+              : childClip.intersect(transformedClip);
+          if (childClip.isEmpty) return;
+        }
+      }
+
+      final childTransform = Matrix4.copy(parentTransform);
+      parent.applyPaintTransform(child, childTransform);
+      var childBounds = MatrixUtils.transformRect(
+        childTransform,
+        _localPaintBounds(child),
+      );
+      if (childClip != null) childBounds = childBounds.intersect(childClip);
+      if (_isFinite(childBounds) && !childBounds.isEmpty) {
+        bounds = bounds.expandToInclude(childBounds);
+      }
+      includeDescendants(child, childTransform, childClip);
+    });
+  }
+
+  includeDescendants(root, Matrix4.identity(), null);
+  return bounds;
+}
+
+Rect _localPaintBounds(RenderObject object) {
+  var bounds = object.paintBounds;
+  if (object case final RenderCustomPaint customPaint) {
+    bounds = _includePainterBounds(
+      bounds,
+      customPaint.painter,
+      customPaint.size,
+    );
+    bounds = _includePainterBounds(
+      bounds,
+      customPaint.foregroundPainter,
+      customPaint.size,
+    );
+  }
+  return bounds;
+}
+
+Rect _includePainterBounds(Rect bounds, CustomPainter? painter, Size size) {
+  if (painter case final RemixCustomPainterPaintBounds boundsProvider) {
+    final painterBounds = boundsProvider.paintBoundsForSize(size);
+    if (!_isFinite(painterBounds) || painterBounds.isEmpty) return bounds;
+    return bounds.expandToInclude(painterBounds);
+  }
+  return bounds;
+}
+
+bool _isFinite(Rect rect) =>
+    rect.left.isFinite &&
+    rect.top.isFinite &&
+    rect.right.isFinite &&
+    rect.bottom.isFinite;

@@ -132,7 +132,11 @@ const RemixSelect<T>({
   required RemixSelectTrigger trigger,
   required List<RemixSelectEntry<T>> entries,
   T? selectedValue,
-  OverlayPositionConfig positioning = const OverlayPositionConfig(...),
+  OverlayPositionConfig positioning = const OverlayPositionConfig(
+    side: OverlaySide.bottom,
+    alignment: OverlayAlignment.center,
+    sideOffset: 4,
+  ),
   ValueChanged<T?>? onChanged,
   VoidCallback? onOpen,
   VoidCallback? onClose,

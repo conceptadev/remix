@@ -3,9 +3,9 @@ part of 'spinner.dart';
 /// An eight-leaf loading indicator that can replace content without changing
 /// its layout.
 ///
-/// When [loading] is false, [child] is returned unchanged. While loading, the
-/// child remains laid out but is hidden, inert, and excluded from semantics;
-/// the spinner is centered over the same bounds.
+/// When [loading] is false, [child] remains visible. While loading, the child
+/// remains laid out but is hidden, inert, and excluded from semantics; the
+/// spinner is centered over the same bounds.
 class RemixSpinner extends StatelessWidget {
   const RemixSpinner({
     super.key,
@@ -37,10 +37,7 @@ class RemixSpinner extends StatelessWidget {
   /// Optional resolved style that bypasses [style].
   final RemixSpinnerSpec? styleSpec;
 
-  @override
-  Widget build(BuildContext context) {
-    if (!loading) return child ?? const SizedBox.shrink();
-
+  Widget _buildSpinner() {
     return RemixStyleSpecBuilder<RemixSpinnerSpec>(
       style: style,
       styleSpec: styleSpec,
@@ -48,8 +45,33 @@ class RemixSpinner extends StatelessWidget {
         spec: spec,
         semanticLabel: semanticLabel,
         excludeSemantics: excludeSemantics,
-        child: child,
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final child = this.child;
+    if (child == null) {
+      return loading ? _buildSpinner() : const SizedBox.shrink();
+    }
+
+    return Stack(
+      alignment: Alignment.center,
+      fit: StackFit.passthrough,
+      children: [
+        Visibility(
+          visible: !loading,
+          maintainState: true,
+          maintainAnimation: true,
+          maintainSize: true,
+          child: child,
+        ),
+        if (loading)
+          Positioned.fill(
+            child: IgnorePointer(child: Center(child: _buildSpinner())),
+          ),
+      ],
     );
   }
 }
@@ -59,13 +81,11 @@ class _SpinnerSpecWidget extends StatefulWidget {
     required this.spec,
     required this.semanticLabel,
     required this.excludeSemantics,
-    required this.child,
   });
 
   final RemixSpinnerSpec spec;
   final String? semanticLabel;
   final bool excludeSemantics;
-  final Widget? child;
 
   @override
   State<_SpinnerSpecWidget> createState() => _SpinnerSpecWidgetState();
@@ -153,21 +173,7 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
             child: spinner,
           );
 
-    final child = widget.child;
-    if (child == null) return spinner;
-
-    return Stack(
-      alignment: Alignment.center,
-      fit: StackFit.passthrough,
-      children: [
-        ExcludeSemantics(
-          child: IgnorePointer(child: Opacity(opacity: 0, child: child)),
-        ),
-        Positioned.fill(
-          child: IgnorePointer(child: Center(child: spinner)),
-        ),
-      ],
-    );
+    return spinner;
   }
 }
 
