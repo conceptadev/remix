@@ -26,4 +26,14 @@ class RemixCalloutSpec with _$RemixCalloutSpec {
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        text = text ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec());
+
+  @override
+  RemixCalloutSpec lerp(RemixCalloutSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
+    );
+  }
 }

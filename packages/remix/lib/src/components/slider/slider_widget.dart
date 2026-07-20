@@ -113,6 +113,10 @@ class _RemixSliderVisual extends StatelessWidget {
     final thumbSize = _resolveThumbSize(context, spec.thumb);
     final trackThickness = math.max(0.0, spec.trackThickness);
     final horizontal = state.orientation == Axis.horizontal;
+    final crossAxisExtent = math.max(
+      48.0,
+      math.max(horizontal ? thumbSize.height : thumbSize.width, trackThickness),
+    );
     final constrained = SizedBox(
       width: horizontal ? null : trackThickness,
       height: horizontal ? trackThickness : null,
@@ -152,7 +156,11 @@ class _RemixSliderVisual extends StatelessWidget {
         },
       ),
     );
-    return Align(alignment: Alignment.center, child: constrained);
+    return SizedBox(
+      width: horizontal ? null : crossAxisExtent,
+      height: horizontal ? crossAxisExtent : null,
+      child: Center(child: constrained),
+    );
   }
 
   Widget _buildRange(Size size) {

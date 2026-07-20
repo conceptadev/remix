@@ -26,4 +26,14 @@ class RemixIconButtonSpec with _$RemixIconButtonSpec {
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
        spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec());
+
+  @override
+  RemixIconButtonSpec lerp(RemixIconButtonSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
+    );
+  }
 }

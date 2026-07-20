@@ -104,4 +104,14 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
     this.overlay,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        indicator = indicator ?? const StyleSpec(spec: IconSpec());
+
+  @override
+  RemixCheckboxSpec lerp(RemixCheckboxSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
+    );
+  }
 }

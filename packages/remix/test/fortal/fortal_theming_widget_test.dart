@@ -396,6 +396,51 @@ void main() {
       green.light.scale.step(9),
     );
   });
+
+  testWidgets('component accent overrides rebuild classic shadow tokens', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      FortalScope(
+        accentColor: .indigo,
+        child: const MaterialApp(
+          home: Scaffold(
+            body: FortalButton(
+              variant: .classic,
+              color: .red,
+              child: Text('Red classic'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final context = tester.element(find.byType(RemixButton));
+    final normal = FortalTokens.baseButtonClassicShadows.resolve(context);
+    final normalHighContrast = FortalTokens.baseButtonClassicHighContrastShadows
+        .resolve(context);
+    final active = FortalTokens.baseButtonClassicActiveShadows.resolve(context);
+    final activeHighContrast = FortalTokens
+        .baseButtonClassicActiveHighContrastShadows
+        .resolve(context);
+
+    expect(
+      normal.map((shadow) => shadow.color),
+      contains(red.light.scale.step(9)),
+    );
+    expect(
+      active.map((shadow) => shadow.color),
+      contains(red.light.scale.step(9)),
+    );
+    expect(
+      normalHighContrast.map((shadow) => shadow.color),
+      contains(red.light.scale.step(12)),
+    );
+    expect(
+      activeHighContrast.map((shadow) => shadow.color),
+      contains(red.light.scale.step(12)),
+    );
+  });
 }
 
 Widget _fortalApp(Widget child) {

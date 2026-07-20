@@ -1520,7 +1520,7 @@ List<RemixPaintShadow> _baseButtonClassicShadows(
         offset: const Offset(0, 2),
         blur: 3,
         spread: -1,
-        shapeInset: isDark ? 1 : 2,
+        shapeInset: 1,
       ),
       _insetShadow(colors.whiteAlpha[2]!, spread: 1),
       _insetShadow(
@@ -1673,12 +1673,29 @@ double _radiusFactor(FortalRadius radius) => switch (radius) {
 Radius _scaledRadiusToken(FortalRadius radius, double scaling, double base) =>
     Radius.circular(base * scaling * _radiusFactor(radius));
 
-Map<ColorToken, Color> _buildAccentOverrideTokens(
+Map<MixToken, Object> _buildAccentOverrideTokens(
   FortalAccentColor accent,
   FortalThemeData ambient,
 ) {
   final tokens = resolveFortalTokens(ambient.copyWith(accentColor: accent));
-  return _accentColorTokens(tokens);
+  return {
+    ..._accentColorTokens(tokens),
+    FortalTokens.baseButtonClassicShadows: _baseButtonClassicShadows(
+      tokens,
+      isDark: ambient.isDark,
+      highContrast: false,
+    ),
+    FortalTokens.baseButtonClassicHighContrastShadows:
+        _baseButtonClassicShadows(
+          tokens,
+          isDark: ambient.isDark,
+          highContrast: true,
+        ),
+    FortalTokens.baseButtonClassicActiveShadows:
+        _baseButtonClassicActiveShadows(tokens, highContrast: false),
+    FortalTokens.baseButtonClassicActiveHighContrastShadows:
+        _baseButtonClassicActiveShadows(tokens, highContrast: true),
+  };
 }
 
 Map<ColorToken, Color> _accentColorTokens(FortalThemeColors tokens) {
@@ -2124,7 +2141,7 @@ class _FortalComponentOverrideState extends State<FortalComponentOverride> {
               WidgetsBinding.instance.platformDispatcher.platformBrightness,
         );
     return MixScope.inherit(
-      colors: widget.color == null
+      tokens: widget.color == null
           ? null
           : _buildAccentOverrideTokens(widget.color!, ambient),
       radii: widget.radius == null

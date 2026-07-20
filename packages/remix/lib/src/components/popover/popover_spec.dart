@@ -12,4 +12,13 @@ class RemixPopoverSpec with _$RemixPopoverSpec {
 
   const RemixPopoverSpec({StyleSpec<BoxSpec>? container, this.surface})
     : container = container ?? const StyleSpec(spec: BoxSpec());
+
+  @override
+  RemixPopoverSpec lerp(RemixPopoverSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+    );
+  }
 }

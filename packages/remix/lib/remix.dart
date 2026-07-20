@@ -36,6 +36,12 @@ export 'src/fortal/fortal.dart' hide FortalComponentOverride;
 
 /// RENDERING
 export 'src/rendering/remix_blend_mode.dart' show RemixBlendMode;
+export 'src/rendering/remix_ordered_color_filter.dart'
+    show
+        RemixCssColorFilterFunction,
+        RemixCssColorFilterOperation,
+        RemixOrderedColorFilterModifier,
+        RemixOrderedColorFilterModifierMix;
 export 'src/rendering/remix_surface.dart'
     show
         RemixPaintShadowKind,

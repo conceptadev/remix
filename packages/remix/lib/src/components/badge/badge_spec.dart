@@ -22,4 +22,14 @@ class RemixBadgeSpec with _$RemixBadgeSpec {
     this.overlay,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec());
+
+  @override
+  RemixBadgeSpec lerp(RemixBadgeSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
+    );
+  }
 }

@@ -104,6 +104,27 @@ void main() {
 
         expect(find.byType(RemixDivider), findsOneWidget);
       });
+
+      testWidgets('applies thickness on the vertical cross axis', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RemixDivider(
+                orientation: Axis.vertical,
+                style: RemixDividerStyler()
+                    .height(100)
+                    .thickness(2)
+                    .color(Colors.red),
+              ),
+            ],
+          ),
+        );
+
+        expect(tester.getSize(find.byType(Box)), const Size(2, 100));
+      });
     });
 
     group('Layout', () {

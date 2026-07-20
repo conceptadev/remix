@@ -34,4 +34,24 @@ class RemixSwitchSpec with _$RemixSwitchSpec {
     this.thumbOverlay,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        thumb = thumb ?? const StyleSpec(spec: BoxSpec());
+
+  @override
+  RemixSwitchSpec lerp(RemixSwitchSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
+      thumbSurface: RemixSurfaceLayerSpec.lerpNullable(
+        thumbSurface,
+        other.thumbSurface,
+        t,
+      ),
+      thumbOverlay: RemixSurfaceLayerSpec.lerpNullable(
+        thumbOverlay,
+        other.thumbOverlay,
+        t,
+      ),
+    );
+  }
 }

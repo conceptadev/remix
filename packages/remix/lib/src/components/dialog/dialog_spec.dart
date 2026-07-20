@@ -26,4 +26,13 @@ class RemixDialogSpec with _$RemixDialogSpec {
        title = title ?? const StyleSpec(spec: TextSpec()),
        description = description ?? const StyleSpec(spec: TextSpec()),
        actions = actions ?? const StyleSpec(spec: FlexBoxSpec());
+
+  @override
+  RemixDialogSpec lerp(RemixDialogSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+    );
+  }
 }

@@ -60,5 +60,45 @@ void main() {
       );
       expect(surface.surface!.color, color);
     });
+
+    testWidgets('wraps a long body within constrained width', (tester) async {
+      const bodyKey = ValueKey('long-callout-body');
+      await tester.pumpRemixApp(
+        const SizedBox(
+          width: 260,
+          child: FortalCallout(
+            icon: Icon(Icons.info),
+            child: Text(
+              key: bodyKey,
+              'A long callout body should use the remaining width after the '
+              'icon and wrap onto as many lines as necessary without overflow.',
+            ),
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+      final calloutRect = tester.getRect(find.byType(RemixSurfaceFlexBox));
+      final bodyRect = tester.getRect(find.byKey(bodyKey));
+      expect(bodyRect.left, greaterThanOrEqualTo(calloutRect.left));
+      expect(bodyRect.right, lessThanOrEqualTo(calloutRect.right));
+    });
+
+    testWidgets('remains valid in an unbounded horizontal viewport', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: FortalCallout(
+            icon: Icon(Icons.info),
+            child: Text('Unbounded callout body'),
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Unbounded callout body'), findsOneWidget);
+    });
   });
 }

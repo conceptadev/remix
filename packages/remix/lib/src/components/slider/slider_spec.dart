@@ -82,4 +82,47 @@ class RemixSliderSpec with _$RemixSliderSpec {
        range = range ?? const StyleSpec(spec: BoxSpec()),
        thumb = thumb ?? const StyleSpec(spec: BoxSpec()),
        trackThickness = trackThickness ?? _remixSliderDefaultTrackThickness;
+
+  @override
+  RemixSliderSpec lerp(RemixSliderSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      trackSurface: RemixSurfaceLayerSpec.lerpNullable(
+        trackSurface,
+        other.trackSurface,
+        t,
+      ),
+      trackOverlay: RemixSurfaceLayerSpec.lerpNullable(
+        trackOverlay,
+        other.trackOverlay,
+        t,
+      ),
+      rangeSurface: RemixSurfaceLayerSpec.lerpNullable(
+        rangeSurface,
+        other.rangeSurface,
+        t,
+      ),
+      rangeOverlay: RemixSurfaceLayerSpec.lerpNullable(
+        rangeOverlay,
+        other.rangeOverlay,
+        t,
+      ),
+      thumbSurface: RemixSurfaceLayerSpec.lerpNullable(
+        thumbSurface,
+        other.thumbSurface,
+        t,
+      ),
+      thumbOverlay: RemixSurfaceLayerSpec.lerpNullable(
+        thumbOverlay,
+        other.thumbOverlay,
+        t,
+      ),
+      thumbFocusOverlay: RemixSurfaceLayerSpec.lerpNullable(
+        thumbFocusOverlay,
+        other.thumbFocusOverlay,
+        t,
+      ),
+    );
+  }
 }

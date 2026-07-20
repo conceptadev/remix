@@ -1,10 +1,12 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-/// Composites a complete subtree with [blendMode] against its backdrop.
+/// Composites a canvas-painted subtree with [blendMode] against its backdrop.
 ///
 /// This is the Flutter equivalent of CSS `mix-blend-mode`; layout, hit testing,
-/// and semantics are unchanged.
+/// and semantics are unchanged. Composited descendants such as
+/// [RepaintBoundary] are rejected because Flutter's retained layers cannot be
+/// enclosed by a canvas `saveLayer`.
 class RemixBlendMode extends SingleChildRenderObjectWidget {
   const RemixBlendMode({
     super.key,
@@ -48,8 +50,21 @@ class _RenderRemixBlendMode extends RenderProxyBox {
       context.paintChild(child, offset);
       return;
     }
-    context.canvas.saveLayer(null, Paint()..blendMode = _blendMode);
+    if (child.isRepaintBoundary || child.needsCompositing) {
+      throw FlutterError(
+        'RemixBlendMode does not support composited descendants. '
+        'Remove the RepaintBoundary or compositing effect below it, or use '
+        'BlendMode.srcOver.',
+      );
+    }
+    final bounds = child.paintBounds.shift(offset);
+    context.canvas
+      ..save()
+      ..clipRect(bounds)
+      ..saveLayer(bounds, Paint()..blendMode = _blendMode);
     context.paintChild(child, offset);
-    context.canvas.restore();
+    context.canvas
+      ..restore()
+      ..restore();
   }
 }

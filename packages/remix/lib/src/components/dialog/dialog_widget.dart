@@ -261,31 +261,29 @@ class RemixDialog extends StatelessWidget {
             !hasActions;
 
         // Skip the default column so a fully custom body keeps its layout.
-        if (isLoneChild) {
-          return RemixSurfaceBox(
-            styleSpec: spec.container,
-            surface: spec.surface,
-            child: child!,
-          );
+        Widget body = isLoneChild
+            ? child!
+            : Column(
+                mainAxisAlignment: .start,
+                mainAxisSize: .min,
+                crossAxisAlignment: .start,
+                children: [
+                  if (title != null) StyledText(title!, styleSpec: spec.title),
+                  if (description != null)
+                    StyledText(description!, styleSpec: spec.description),
+                  ?child,
+                  if (hasActions)
+                    FlexBox(styleSpec: spec.actions, children: actions!),
+                ],
+              );
+        if (height != null || maxHeight != null) {
+          body = SingleChildScrollView(primary: false, child: body);
         }
 
-        // title → description → child → actions; never discard provided content.
         return RemixSurfaceBox(
           styleSpec: spec.container,
           surface: spec.surface,
-          child: Column(
-            mainAxisAlignment: .start,
-            mainAxisSize: .min,
-            crossAxisAlignment: .start,
-            children: [
-              if (title != null) StyledText(title!, styleSpec: spec.title),
-              if (description != null)
-                StyledText(description!, styleSpec: spec.description),
-              ?child,
-              if (hasActions)
-                FlexBox(styleSpec: spec.actions, children: actions!),
-            ],
-          ),
+          child: body,
         );
       },
     );

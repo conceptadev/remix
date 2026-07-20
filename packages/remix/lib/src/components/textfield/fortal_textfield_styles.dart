@@ -91,7 +91,7 @@ RemixTextFieldStyler _fortalTextFieldClassicStyler(FortalTextFieldSize size) {
         ),
       )
       .onDisabled(
-        _fortalTextFieldDisabledText().surface(
+        _fortalTextFieldDisabledText(radius).surface(
           _fortalTextFieldLayer(
             radius: radius,
             color: FortalTokens.colorSurface(),
@@ -121,7 +121,7 @@ RemixTextFieldStyler _fortalTextFieldSurfaceStyler([
       )
       .overlay(_fortalTextFieldInsetRing(radius, FortalTokens.grayA7()))
       .onDisabled(
-        _fortalTextFieldDisabledText()
+        _fortalTextFieldDisabledText(radius)
             .surface(
               _fortalTextFieldLayer(
                 radius: radius,
@@ -162,7 +162,7 @@ RemixTextFieldStyler _fortalTextFieldSoftStyler([
         _fortalTextFieldLayer(radius: radius, color: FortalTokens.accentA3()),
       )
       .onDisabled(
-        _fortalTextFieldDisabledText().surface(
+        _fortalTextFieldDisabledText(radius).surface(
           _fortalTextFieldLayer(radius: radius, color: FortalTokens.grayA3()),
         ),
       );
@@ -181,11 +181,21 @@ RemixTextFieldStyler _fortalTextFieldNeutralText(RemixTextFieldStyler base) =>
       ),
     );
 
-RemixTextFieldStyler _fortalTextFieldDisabledText() => RemixTextFieldStyler(
-  text: TextStyler().color(FortalTokens.gray11()),
-  hintText: TextStyler().color(FortalTokens.grayA8()),
-  cursorColor: FortalTokens.gray8(),
-);
+RemixTextFieldStyler _fortalTextFieldDisabledText(Radius radius) =>
+    RemixTextFieldStyler(
+      text: TextStyler().color(FortalTokens.gray11()),
+      hintText: TextStyler().color(FortalTokens.grayA8()),
+      cursorColor: FortalTokens.gray8(),
+    ).onFocused(
+      RemixTextFieldStyler().overlay(
+        _fortalTextFieldLayer(
+          radius: radius,
+          outlineColor: FortalTokens.gray8(),
+          outlineWidth: 2,
+          outlineOffset: -1,
+        ),
+      ),
+    );
 
 RemixTextFieldStyler _fortalTextFieldErrorStyler(FortalTextFieldSize size) {
   final radius = _fortalTextFieldMetrics(size, bordered: true).radius;
@@ -533,7 +543,15 @@ class FortalTextField extends StatelessWidget {
     return FortalComponentOverride(
       color: this.color,
       radius: this.radius,
-      child: textField,
+      // Radix keeps read-only selection interactive while neutralizing it.
+      child: this.readOnly
+          ? Builder(
+              builder: (context) => DefaultSelectionStyle.merge(
+                selectionColor: FortalTokens.grayA5.resolve(context),
+                child: textField,
+              ),
+            )
+          : textField,
     );
   }
 }

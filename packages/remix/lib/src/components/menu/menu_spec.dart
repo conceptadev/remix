@@ -38,6 +38,15 @@ class RemixMenuSpec with _$RemixMenuSpec {
        item = item ?? const StyleSpec(spec: RemixMenuItemSpec()),
        label = label ?? const StyleSpec(spec: RemixMenuItemSpec()),
        divider = divider ?? const StyleSpec(spec: RemixDividerSpec());
+
+  @override
+  RemixMenuSpec lerp(RemixMenuSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+    );
+  }
 }
 
 /// Resolved visual properties for a [RemixMenuAction].

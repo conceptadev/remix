@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 const _expectedIntegrity =
     'sha512-I0/h2CRNTpYNB7Mi3xFIvSsQq5a108d7kK8dTO5zp5b9HR5QJXKag6B8tjpz2ITkVYkFdkGk45doNkSr7OxwNw==';
+const _expectedNakedUiRef = 'c0b37035f4083e67152a3c062bd60c25789b6df9';
 const _expectedMappedFamilies = <String>{
   'avatar',
   'badge',
@@ -93,7 +94,7 @@ void main() {
   _checkTheme(manifest, evidence, packageRoot, failures);
   _checkFamilies(manifest, evidence, packageRoot, workspaceRoot, failures);
   _checkFixtures(manifest, packageRoot, failures);
-  _checkNakedPin(pubspec, failures);
+  _checkNakedPin(pubspec, File('${workspaceRoot.path}/pubspec.yaml'), failures);
   _checkSingleConstructors(packageRoot, failures);
   _checkApproximations(manifest, failures);
   _finish(failures);
@@ -545,14 +546,32 @@ void _checkFixtures(
   );
 }
 
-void _checkNakedPin(File pubspec, List<String> failures) {
-  final source = pubspec.readAsStringSync();
+void _checkNakedPin(
+  File packagePubspec,
+  File workspacePubspec,
+  List<String> failures,
+) {
+  final packageSource = packagePubspec.readAsStringSync();
   _expect(
     RegExp(
       r'^  naked_ui: 1\.0\.0-beta\.5\s*$',
       multiLine: true,
-    ).hasMatch(source),
-    'Remix must pin naked_ui exactly to 1.0.0-beta.5.',
+    ).hasMatch(packageSource),
+    'Remix must declare the exact hosted naked_ui 1.0.0-beta.5 dependency.',
+    failures,
+  );
+  final workspaceSource = workspacePubspec.readAsStringSync();
+  _expect(
+    RegExp(
+      '^  naked_ui:\\s*\\n'
+      r'    git:\s*\n'
+      r'      url: https://github\.com/btwld/naked_ui\.git\s*\n'
+      '      ref: $_expectedNakedUiRef\\s*\\n'
+      r'      path: packages/naked_ui\s*$',
+      multiLine: true,
+    ).hasMatch(workspaceSource),
+    'The workspace must resolve naked_ui 1.0.0-beta.5 from '
+    '$_expectedNakedUiRef until it is hosted.',
     failures,
   );
 }

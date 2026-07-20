@@ -96,7 +96,7 @@ void main() {
       );
     });
 
-    test('lerp snaps optional paint layers', () {
+    test('lerp interpolates optional paint layers', () {
       const source = RemixProgressSpec(
         surface: RemixSurfaceLayerSpec(color: Colors.red),
       );
@@ -104,8 +104,14 @@ void main() {
         surface: RemixSurfaceLayerSpec(color: Colors.blue),
       );
 
-      expect(source.lerp(destination, 0.49).surface?.color, Colors.red);
-      expect(source.lerp(destination, 0.5).surface?.color, Colors.blue);
+      expect(
+        source.lerp(destination, 0.49).surface?.color,
+        Color.lerp(Colors.red, Colors.blue, 0.49),
+      );
+      expect(
+        source.lerp(destination, 0.5).surface?.color,
+        Color.lerp(Colors.red, Colors.blue, 0.5),
+      );
     });
   });
 }

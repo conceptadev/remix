@@ -69,6 +69,16 @@ class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
        placeholder = placeholder ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
        chevron = chevron ?? const StyleSpec(spec: IconSpec());
+
+  @override
+  RemixSelectTriggerSpec lerp(RemixSelectTriggerSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
+    );
+  }
 }
 
 /// Resolved visual values for the select popup content.
@@ -83,6 +93,15 @@ class RemixSelectContentSpec with _$RemixSelectContentSpec {
 
   const RemixSelectContentSpec({StyleSpec<BoxSpec>? container, this.surface})
     : container = container ?? const StyleSpec(spec: BoxSpec());
+
+  @override
+  RemixSelectContentSpec lerp(RemixSelectContentSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+    );
+  }
 }
 
 /// Resolved visual values for a select menu item.

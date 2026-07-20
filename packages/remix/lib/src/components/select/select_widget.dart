@@ -390,7 +390,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     _validateUniqueValues();
     final style = _buildStyle();
 
-    final select = NakedSelect<T>(
+    return NakedSelect<T>(
       overlayBuilder: (context, info) {
         final content = RemixStyleSpecBuilder<RemixSelectSpec>(
           style: style,
@@ -447,8 +447,6 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         return widget.triggerWrapper?.call(context, trigger) ?? trigger;
       },
     );
-
-    return select;
   }
 }
 

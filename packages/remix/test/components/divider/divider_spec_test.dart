@@ -10,6 +10,7 @@ void main() {
         const spec = RemixDividerSpec();
 
         expect(spec.container, isA<StyleSpec<BoxSpec>>());
+        expect(spec.thickness, isNull);
       });
 
       test('creates spec with custom container', () {
@@ -20,6 +21,12 @@ void main() {
         final spec = RemixDividerSpec(container: customContainer);
 
         expect(spec.container, equals(customContainer));
+      });
+
+      test('creates spec with custom thickness', () {
+        const spec = RemixDividerSpec(thickness: 2);
+
+        expect(spec.thickness, 2);
       });
     });
 
@@ -96,14 +103,21 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.5', () {
-        final spec1 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
-        final spec2 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec1 = RemixDividerSpec(
+          container: StyleSpec(spec: BoxSpec()),
+          thickness: 1,
+        );
+        final spec2 = RemixDividerSpec(
+          container: StyleSpec(spec: BoxSpec()),
+          thickness: 3,
+        );
 
         final result = spec1.lerp(spec2, 0.5);
 
         expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
         expect(result, isA<RemixDividerSpec>());
+        expect(result.thickness, 2);
       });
     });
 
@@ -130,8 +144,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixDividerSpec();
 
-        expect(spec.props, hasLength(1));
-        expect(spec.props, contains(spec.container));
+        expect(spec.props, [spec.container, spec.thickness]);
       });
     });
 
@@ -159,10 +172,11 @@ void main() {
         spec.debugFillProperties(builder);
 
         final properties = builder.properties;
-        expect(properties, hasLength(1));
+        expect(properties, hasLength(2));
 
         final propertyNames = properties.map((p) => p.name).toList();
         expect(propertyNames, contains('container'));
+        expect(propertyNames, contains('thickness'));
       });
     });
 

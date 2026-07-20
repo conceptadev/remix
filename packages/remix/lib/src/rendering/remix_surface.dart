@@ -399,6 +399,30 @@ class RemixSurfaceLayerSpec extends Spec<RemixSurfaceLayerSpec> {
   final double outlineWidth;
   final double outlineOffset;
 
+  /// Interpolates nullable surface slots through an empty visual layer.
+  ///
+  /// Component specs use nullable layers so variants can add or remove a
+  /// surface. Treating absence as an empty layer lets those transitions fade
+  /// instead of snapping while preserving `null` at the exact absent endpoint.
+  static RemixSurfaceLayerSpec? lerpNullable(
+    RemixSurfaceLayerSpec? begin,
+    RemixSurfaceLayerSpec? end,
+    double t,
+  ) {
+    if (begin == null && end == null) return null;
+    if (begin == null) {
+      if (t <= 0) return null;
+      if (t >= 1) return end;
+      return const RemixSurfaceLayerSpec().lerp(end, t);
+    }
+    if (end == null) {
+      if (t <= 0) return begin;
+      if (t >= 1) return null;
+      return begin.lerp(const RemixSurfaceLayerSpec(), t);
+    }
+    return begin.lerp(end, t);
+  }
+
   @override
   RemixSurfaceLayerSpec copyWith({
     Color? color,
@@ -425,10 +449,21 @@ class RemixSurfaceLayerSpec extends Spec<RemixSurfaceLayerSpec> {
   @override
   RemixSurfaceLayerSpec lerp(RemixSurfaceLayerSpec? other, double t) {
     if (other == null) return this;
+    final interpolatedGradients = _lerpGradientList(
+      gradients,
+      other.gradients,
+      t,
+    );
+    final currentInsets = gradientInsets.isEmpty
+        ? List<double>.filled(gradients.length, 0)
+        : gradientInsets;
+    final otherInsets = other.gradientInsets.isEmpty
+        ? List<double>.filled(other.gradients.length, 0)
+        : other.gradientInsets;
     return RemixSurfaceLayerSpec(
       color: Color.lerp(color, other.color, t),
-      gradients: _lerpGradientList(gradients, other.gradients, t),
-      gradientInsets: _lerpDoubleList(gradientInsets, other.gradientInsets, t),
+      gradients: interpolatedGradients,
+      gradientInsets: _lerpDoubleList(currentInsets, otherInsets, t),
       shadows: RemixPaintShadow.lerpList(shadows, other.shadows, t),
       borderRadius: BorderRadiusGeometry.lerp(
         borderRadius,
@@ -466,11 +501,14 @@ List<double> _lerpDoubleList(List<double> a, List<double> b, double t) {
   final length = math.max(a.length, b.length);
   return [
     for (var index = 0; index < length; index++)
-      ui.lerpDouble(
-        index < a.length ? a[index] : 0,
-        index < b.length ? b[index] : 0,
-        t,
-      )!,
+      math.max(
+        0,
+        ui.lerpDouble(
+          index < a.length ? a[index] : 0,
+          index < b.length ? b[index] : 0,
+          t,
+        )!,
+      ),
   ];
 }
 
@@ -706,9 +744,9 @@ class RemixSurface extends StatelessWidget {
           spec: spec,
           borderRadius: borderRadius,
           textDirection: textDirection,
-          phase: _SurfacePaintPhase.all,
+          phase: _SurfacePaintPhase.background,
         ),
-        foregroundPainter: _overlayPainter(overlay, textDirection),
+        foregroundPainter: _foregroundPainter(spec, overlay, textDirection),
         child: child,
       );
     }
@@ -720,7 +758,7 @@ class RemixSurface extends StatelessWidget {
         textDirection: textDirection,
         phase: _SurfacePaintPhase.outer,
       ),
-      foregroundPainter: _overlayPainter(overlay, textDirection),
+      foregroundPainter: _foregroundPainter(spec, overlay, textDirection),
       child: Stack(
         fit: StackFit.passthrough,
         children: [
@@ -750,20 +788,22 @@ class RemixSurface extends StatelessWidget {
     );
   }
 
-  _RemixSurfacePainter? _overlayPainter(
-    RemixSurfaceLayerSpec? value,
+  _RemixSurfaceForegroundPainter? _foregroundPainter(
+    RemixSurfaceLayerSpec surface,
+    RemixSurfaceLayerSpec? overlay,
     TextDirection? textDirection,
   ) {
-    if (value == null) return null;
     assert(
-      value.backdropBlur == 0,
+      overlay == null || overlay.backdropBlur == 0,
       'Backdrop blur belongs to the background surface slot.',
     );
-    return _RemixSurfacePainter(
-      spec: value,
-      borderRadius: value.borderRadius.resolve(textDirection),
+    final paintsSurfaceOutline =
+        surface.outlineColor != null && surface.outlineWidth > 0;
+    if (!paintsSurfaceOutline && overlay == null) return null;
+    return _RemixSurfaceForegroundPainter(
+      surface: surface,
+      overlay: overlay,
       textDirection: textDirection,
-      phase: _SurfacePaintPhase.all,
     );
   }
 }
@@ -811,6 +851,13 @@ class RemixSurfaceBox extends StatelessWidget {
       };
       if (padding != null) current = Padding(padding: padding, child: current);
 
+      if (spec.decoration case final decoration?) {
+        current = DecoratedBox(
+          decoration: _backgroundDecoration(decoration),
+          child: current,
+        );
+      }
+
       current = RemixSurface.wrap(
         surface: surface,
         overlay: overlay,
@@ -830,7 +877,9 @@ class RemixSurfaceBox extends StatelessWidget {
         );
       }
       if (spec.decoration case final decoration?) {
-        current = DecoratedBox(decoration: decoration, child: current);
+        if (_decorationShadow(decoration) case final shadow?) {
+          current = DecoratedBox(decoration: shadow, child: current);
+        }
         if (_foregroundBorder(decoration) case final border?) {
           current = DecoratedBox(
             decoration: border,
@@ -1129,6 +1178,33 @@ class _RenderRemixNegativeMargin extends RenderShiftedBox {
   }
 }
 
+Decoration _backgroundDecoration(Decoration decoration) {
+  if (decoration is BoxDecoration) {
+    return BoxDecoration(
+      color: decoration.color,
+      image: decoration.image,
+      borderRadius: decoration.borderRadius,
+      gradient: decoration.gradient,
+      backgroundBlendMode: decoration.backgroundBlendMode,
+      shape: decoration.shape,
+    );
+  }
+  return decoration;
+}
+
+Decoration? _decorationShadow(Decoration decoration) {
+  if (decoration case BoxDecoration(
+    :final boxShadow?,
+  ) when boxShadow.isNotEmpty) {
+    return BoxDecoration(
+      borderRadius: decoration.borderRadius,
+      boxShadow: boxShadow,
+      shape: decoration.shape,
+    );
+  }
+  return null;
+}
+
 Decoration? _foregroundBorder(Decoration decoration) {
   if (decoration case BoxDecoration(:final border?) when border != Border()) {
     return BoxDecoration(
@@ -1161,7 +1237,47 @@ class _RemixDecorationClipper extends CustomClipper<Path> {
       textDirection != oldClipper.textDirection;
 }
 
-enum _SurfacePaintPhase { all, outer, inner }
+enum _SurfacePaintPhase { all, background, outer, inner, outline }
+
+class _RemixSurfaceForegroundPainter extends CustomPainter {
+  const _RemixSurfaceForegroundPainter({
+    required this.surface,
+    required this.overlay,
+    required this.textDirection,
+  });
+
+  final RemixSurfaceLayerSpec surface;
+  final RemixSurfaceLayerSpec? overlay;
+  final TextDirection? textDirection;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    _RemixSurfacePainter(
+      spec: surface,
+      borderRadius: surface.borderRadius.resolve(textDirection),
+      textDirection: textDirection,
+      phase: _SurfacePaintPhase.outline,
+    ).paint(canvas, size);
+
+    if (overlay case final overlay?) {
+      _RemixSurfacePainter(
+        spec: overlay,
+        borderRadius: overlay.borderRadius.resolve(textDirection),
+        textDirection: textDirection,
+        phase: _SurfacePaintPhase.all,
+      ).paint(canvas, size);
+    }
+  }
+
+  @override
+  bool hitTest(Offset position) => false;
+
+  @override
+  bool shouldRepaint(_RemixSurfaceForegroundPainter oldDelegate) =>
+      surface != oldDelegate.surface ||
+      overlay != oldDelegate.overlay ||
+      textDirection != oldDelegate.textDirection;
+}
 
 class _RemixSurfacePainter extends CustomPainter {
   const _RemixSurfacePainter({
@@ -1182,11 +1298,18 @@ class _RemixSurfacePainter extends CustomPainter {
     final rect = Offset.zero & size;
     final shape = borderRadius.toRRect(rect);
 
+    if (phase == _SurfacePaintPhase.outline) {
+      _paintOutline(canvas, shape);
+      return;
+    }
     if (phase != _SurfacePaintPhase.inner) {
       _paintOuterShadows(canvas, shape);
     }
     if (phase != _SurfacePaintPhase.outer) {
       _paintInnerLayers(canvas, rect, shape);
+    }
+    if (phase == _SurfacePaintPhase.all) {
+      _paintOutline(canvas, shape);
     }
   }
 
@@ -1204,7 +1327,6 @@ class _RemixSurfacePainter extends CustomPainter {
       ).toPaint();
       canvas.drawRRect(shadowShape, paint);
     }
-    _paintOutline(canvas, shape);
   }
 
   void _paintOutline(Canvas canvas, RRect shape) {
@@ -1232,7 +1354,7 @@ class _RemixSurfacePainter extends CustomPainter {
     if (spec.gradientInsets.any((inset) => !inset.isFinite || inset < 0)) {
       throw FlutterError(
         'RemixSurfaceLayerSpec.gradientInsets must contain finite '
-        'non-negative values.',
+        'non-negative values. Received ${spec.gradientInsets}.',
       );
     }
     canvas.save();
@@ -1314,6 +1436,9 @@ class _RemixSurfacePainter extends CustomPainter {
     );
     canvas.restore();
   }
+
+  @override
+  bool hitTest(Offset position) => false;
 
   @override
   bool shouldRepaint(_RemixSurfacePainter oldDelegate) =>

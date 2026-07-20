@@ -7,6 +7,9 @@ class RemixDividerSpec with _$RemixDividerSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
 
-  const RemixDividerSpec({StyleSpec<BoxSpec>? container})
+  @override
+  final double? thickness;
+
+  const RemixDividerSpec({StyleSpec<BoxSpec>? container, this.thickness})
     : container = container ?? const StyleSpec(spec: BoxSpec());
 }

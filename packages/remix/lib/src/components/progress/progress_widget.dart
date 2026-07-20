@@ -149,7 +149,7 @@ class _RemixProgressIndicatorState extends State<_RemixProgressIndicator>
     if (_animationsDisabled == disabled) return;
 
     _animationsDisabled = disabled;
-    _syncIndeterminateAnimation(restart: true);
+    _syncIndeterminateAnimation();
   }
 
   @override
@@ -160,13 +160,13 @@ class _RemixProgressIndicatorState extends State<_RemixProgressIndicator>
       _controller.duration = widget.duration;
     }
     if (oldWidget.value != null && widget.value == null) {
-      _syncIndeterminateAnimation(restart: true);
+      _syncIndeterminateAnimation();
     } else if (oldWidget.value == null && widget.value != null) {
       _controller.stop();
     }
   }
 
-  void _syncIndeterminateAnimation({required bool restart}) {
+  void _syncIndeterminateAnimation() {
     if (widget.value != null) {
       _controller.stop();
       return;
@@ -177,9 +177,7 @@ class _RemixProgressIndicatorState extends State<_RemixProgressIndicator>
         ..value = 1;
       return;
     }
-    if (restart || !_controller.isAnimating) {
-      _controller.forward(from: restart ? 0 : _controller.value);
-    }
+    _controller.forward(from: 0);
   }
 
   @override

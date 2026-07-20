@@ -66,6 +66,47 @@ void main() {
   });
 
   group('RemixSlider visual composition', () {
+    testWidgets('width-only layout keeps the full interaction target', (
+      tester,
+    ) async {
+      final changes = <List<double>>[];
+      await tester.pumpWidget(
+        FortalScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      child: RemixSlider(
+                        key: _sliderKey,
+                        values: const [0],
+                        onChanged: changes.add,
+                        style: RemixSliderStyler()
+                            .thickness(2)
+                            .thumbSize(const Size(24, 24)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final sliderRect = tester.getRect(find.byKey(_sliderKey));
+      expect(sliderRect.height, 48);
+
+      await tester.tapAt(
+        Offset(sliderRect.center.dx, sliderRect.center.dy + 20),
+      );
+      await tester.pump();
+      expect(changes.last, [50]);
+    });
+
     testWidgets('renders one visual thumb per value and spans first to last', (
       tester,
     ) async {

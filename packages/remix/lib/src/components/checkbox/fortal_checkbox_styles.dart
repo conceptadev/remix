@@ -92,7 +92,10 @@ RemixCheckboxStyler _fortalCheckboxSurface(
       .onDisabled(
         RemixCheckboxStyler()
             .surface(
-              _fortalCheckboxLayer(radius: radius, color: Colors.transparent),
+              _fortalCheckboxLayer(
+                radius: radius,
+                color: FortalTokens.grayA3(),
+              ),
             )
             .overlay(_fortalCheckboxInsetRing(radius, FortalTokens.grayA6()))
             .indicatorColor(FortalTokens.grayA8()),
@@ -157,7 +160,7 @@ RemixCheckboxStyler _fortalCheckboxClassic(
             .surface(
               _fortalCheckboxLayer(
                 radius: radius,
-                color: Colors.transparent,
+                color: FortalTokens.grayA3(),
                 gradients: const [],
                 shadowToken: FortalTokens.shadow1,
               ),
@@ -185,7 +188,10 @@ RemixCheckboxStyler _fortalCheckboxSoft(
       .onDisabled(
         RemixCheckboxStyler()
             .surface(
-              _fortalCheckboxLayer(radius: radius, color: Colors.transparent),
+              _fortalCheckboxLayer(
+                radius: radius,
+                color: FortalTokens.grayA3(),
+              ),
             )
             .indicatorColor(FortalTokens.grayA8()),
       );

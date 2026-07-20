@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_surface.dart'
+    show RemixSurfaceFlexBox;
 
 import '../../helpers/test_helpers.dart';
 
@@ -88,4 +91,77 @@ void main() {
     expect(find.byType(FortalTextField), findsOneWidget);
     expect(find.byType(RemixTextField), findsOneWidget);
   });
+
+  testWidgets('focused read-only field uses the neutral Radix focus ring', (
+    tester,
+  ) async {
+    final focusNode = FocusNode();
+    final controller = TextEditingController(text: 'read only');
+    addTearDown(focusNode.dispose);
+    addTearDown(controller.dispose);
+
+    await tester.pumpRemixApp(
+      FortalTextField(
+        readOnly: true,
+        focusNode: focusNode,
+        controller: controller,
+      ),
+    );
+
+    focusNode.requestFocus();
+    await tester.pump(const Duration(milliseconds: 200));
+
+    final fieldContext = tester.element(find.byType(RemixTextField));
+    final surfaceBox = tester.widget<RemixSurfaceFlexBox>(
+      find.byType(RemixSurfaceFlexBox),
+    );
+    final nakedField = tester.widget<NakedTextField>(
+      find.byType(NakedTextField),
+    );
+
+    expect(focusNode.hasFocus, isTrue);
+    expect(nakedField.enabled, isTrue);
+    expect(nakedField.readOnly, isTrue);
+    expect(
+      surfaceBox.overlay?.outlineColor,
+      FortalTokens.gray8.resolve(fieldContext),
+    );
+  });
+
+  testWidgets(
+    'focused read-only field uses the neutral Radix selection color',
+    (tester) async {
+      final focusNode = FocusNode();
+      final controller = TextEditingController(text: 'selectable');
+      addTearDown(focusNode.dispose);
+      addTearDown(controller.dispose);
+
+      await tester.pumpRemixApp(
+        FortalTextField(
+          readOnly: true,
+          focusNode: focusNode,
+          controller: controller,
+        ),
+      );
+
+      focusNode.requestFocus();
+      await tester.pump(const Duration(milliseconds: 200));
+
+      final fieldContext = tester.element(find.byType(RemixTextField));
+      final editable = tester.widget<EditableText>(find.byType(EditableText));
+      expect(
+        editable.selectionColor,
+        FortalTokens.grayA5.resolve(fieldContext),
+      );
+
+      final editableRect = tester.getRect(find.byType(EditableText));
+      await tester.longPressAt(
+        Offset(editableRect.left + 20, editableRect.center.dy),
+      );
+      await tester.pumpAndSettle();
+
+      expect(controller.selection.isValid, isTrue);
+      expect(controller.selection.isCollapsed, isFalse);
+    },
+  );
 }

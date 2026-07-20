@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
@@ -114,6 +118,27 @@ void main() {
       expect(
         DefaultTextStyle.of(tester.element(find.text('Spec'))).style.color,
         color,
+      );
+    });
+
+    testWidgets('fluent color overrides a Fortal surface', (tester) async {
+      const boundaryKey = ValueKey('button-color-boundary');
+      await tester.pumpRemixApp(
+        RepaintBoundary(
+          key: boundaryKey,
+          child: fortalButtonStyler()
+              .color(Colors.red)
+              .call(
+                onPressed: () {},
+                child: const SizedBox(width: 40, height: 12),
+              ),
+        ),
+      );
+
+      final pixels = await _capture(tester, find.byKey(boundaryKey));
+      expect(
+        _pixel(pixels, pixels.width ~/ 2, pixels.height ~/ 2),
+        _rgba(Colors.red),
       );
     });
 
@@ -337,4 +362,27 @@ void main() {
       expect(find.text('Save'), findsOneWidget);
     });
   });
+}
+
+Future<({ByteData bytes, int width, int height})> _capture(
+  WidgetTester tester,
+  Finder finder,
+) async {
+  final boundary = tester.renderObject<RenderRepaintBoundary>(finder);
+  final result = await tester.runAsync(() async {
+    final image = boundary.toImageSync(pixelRatio: 1);
+    final bytes = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+    final result = (bytes: bytes!, width: image.width, height: image.height);
+    image.dispose();
+    return result;
+  });
+  return result!;
+}
+
+int _pixel(({ByteData bytes, int width, int height}) image, int x, int y) =>
+    image.bytes.getUint32((y * image.width + x) * 4);
+
+int _rgba(Color color) {
+  final argb = color.toARGB32();
+  return ((argb & 0x00FFFFFF) << 8) | (argb >>> 24);
 }

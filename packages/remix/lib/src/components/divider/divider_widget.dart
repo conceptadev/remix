@@ -54,7 +54,14 @@ class RemixDivider extends StatelessWidget {
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
-        final divider = Box(styleSpec: spec.container);
+        Widget divider = Box(styleSpec: spec.container);
+        if (spec.thickness case final thickness?) {
+          divider = SizedBox(
+            width: orientation == Axis.vertical ? thickness : null,
+            height: orientation == Axis.horizontal ? thickness : null,
+            child: divider,
+          );
+        }
         if (decorative) return ExcludeSemantics(child: divider);
         return Semantics(
           container: true,

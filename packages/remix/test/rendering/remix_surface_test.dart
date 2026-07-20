@@ -264,6 +264,44 @@ void main() {
       expect(middle.shadows.first.blurRadius, 6);
       expect(middle.shadows.last.kind, RemixPaintShadowKind.inset);
     });
+
+    test('surface interpolation expands implicit zero gradient insets', () {
+      const first = RemixSurfaceLayerSpec(
+        gradients: [
+          LinearGradient(colors: [Colors.red, Colors.red]),
+          LinearGradient(colors: [Colors.green, Colors.green]),
+        ],
+      );
+      const second = RemixSurfaceLayerSpec(
+        gradients: [
+          LinearGradient(colors: [Colors.blue, Colors.blue]),
+        ],
+        gradientInsets: [2],
+      );
+
+      final middle = first.lerp(second, 0.5);
+
+      expect(middle.gradients, hasLength(2));
+      expect(middle.gradientInsets, [1, 0]);
+    });
+
+    test('surface interpolation keeps extrapolated insets non-negative', () {
+      const first = RemixSurfaceLayerSpec(
+        gradients: [
+          LinearGradient(colors: [Colors.red, Colors.red]),
+        ],
+        gradientInsets: [2],
+      );
+      const second = RemixSurfaceLayerSpec(
+        gradients: [
+          LinearGradient(colors: [Colors.blue, Colors.blue]),
+        ],
+      );
+
+      final extrapolated = first.lerp(second, 1.2);
+
+      expect(extrapolated.gradientInsets, [0]);
+    });
   });
 
   group('RemixSurface', () {
@@ -382,6 +420,67 @@ void main() {
       expect(_pixel(pixels, 2, 10), _rgba(Colors.red));
       expect(_pixel(pixels, 4, 10), _rgba(Colors.transparent));
       expect(_pixel(pixels, 5, 10), _rgba(Colors.blue));
+    });
+
+    testWidgets('paints a negative outline over the surface fill', (
+      tester,
+    ) async {
+      const boundaryKey = ValueKey('negative-outline-boundary');
+
+      await tester.pumpWidget(
+        const Directionality(
+          textDirection: TextDirection.ltr,
+          child: Center(
+            child: RepaintBoundary(
+              key: boundaryKey,
+              child: SizedBox.square(
+                dimension: 20,
+                child: Center(
+                  child: RemixSurface(
+                    spec: RemixSurfaceLayerSpec(
+                      color: Colors.blue,
+                      outlineColor: Colors.red,
+                      outlineWidth: 2,
+                      outlineOffset: -1,
+                    ),
+                    child: SizedBox.square(dimension: 10),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final pixels = await _capture(tester, find.byKey(boundaryKey));
+
+      expect(_pixel(pixels, 5, 10), _rgba(Colors.red));
+      expect(_pixel(pixels, 10, 10), _rgba(Colors.blue));
+    });
+
+    testWidgets('does not make an ignored child hittable', (tester) async {
+      var backgroundTaps = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Stack(
+            fit: StackFit.expand,
+            children: [
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => backgroundTaps += 1,
+              ),
+              const RemixSurface(
+                spec: RemixSurfaceLayerSpec(color: Colors.transparent),
+                child: IgnorePointer(child: SizedBox.expand()),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.tapAt(const Offset(100, 100));
+      expect(backgroundTaps, 1);
     });
 
     testWidgets('preserves layout, baseline, hit testing, and semantics', (
@@ -639,6 +738,103 @@ void main() {
         expect(_pixel(pixels, 10, 15), _rgba(Colors.green));
       },
     );
+
+    testWidgets('surface boxes paint translucent decoration borders once', (
+      tester,
+    ) async {
+      const boundaryKey = ValueKey('single-border-composition');
+      const borderColor = Color(0x80000000);
+
+      await tester.pumpWidget(
+        const Directionality(
+          textDirection: TextDirection.ltr,
+          child: Center(
+            child: RepaintBoundary(
+              key: boundaryKey,
+              child: RemixSurfaceBox(
+                styleSpec: StyleSpec(
+                  spec: BoxSpec(
+                    constraints: BoxConstraints.tightFor(width: 20, height: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.fromBorderSide(
+                        BorderSide(color: borderColor, width: 2),
+                      ),
+                    ),
+                  ),
+                ),
+                surface: RemixSurfaceLayerSpec(color: Colors.red),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final pixels = await _capture(tester, find.byKey(boundaryKey));
+      expect(
+        _pixel(pixels, 1, 10),
+        _rgba(Color.alphaBlend(borderColor, Colors.white)),
+      );
+    });
+
+    testWidgets('surface boxes keep decoration shadows outside their clip', (
+      tester,
+    ) async {
+      const boundaryKey = ValueKey('unclipped-decoration-shadow');
+
+      await tester.pumpWidget(
+        const Directionality(
+          textDirection: TextDirection.ltr,
+          child: Center(
+            child: RepaintBoundary(
+              key: boundaryKey,
+              child: SizedBox.square(
+                dimension: 40,
+                child: Center(
+                  child: RemixSurfaceBox(
+                    styleSpec: StyleSpec(
+                      spec: BoxSpec(
+                        constraints: BoxConstraints.tightFor(
+                          width: 20,
+                          height: 20,
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          boxShadow: [
+                            BoxShadow(color: Colors.red, spreadRadius: 4),
+                          ],
+                        ),
+                      ),
+                    ),
+                    surface: RemixSurfaceLayerSpec(color: Colors.blue),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final shadowDecorations = tester
+          .widgetList<DecoratedBox>(
+            find.descendant(
+              of: find.byKey(boundaryKey),
+              matching: find.byType(DecoratedBox),
+            ),
+          )
+          .where(
+            (box) => switch (box.decoration) {
+              BoxDecoration(:final boxShadow?) => boxShadow.isNotEmpty,
+              _ => false,
+            },
+          );
+      final pixels = await _capture(tester, find.byKey(boundaryKey));
+      expect(shadowDecorations, hasLength(1));
+      expect(_pixel(pixels, 7, 20), _rgba(Colors.red));
+      expect(_pixel(pixels, 20, 20), _rgba(Colors.white));
+    });
 
     testWidgets('surface boxes support CSS-style negative margins', (
       tester,

@@ -218,4 +218,14 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
        label = label ?? const StyleSpec(spec: TextSpec()),
        container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        layout = layout ?? const StyleSpec(spec: FlexBoxSpec());
+
+  @override
+  RemixTextFieldSpec lerp(RemixTextFieldSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
+    );
+  }
 }

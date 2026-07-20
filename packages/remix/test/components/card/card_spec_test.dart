@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -105,6 +106,39 @@ void main() {
         expect(result1, isNot(same(result2)));
         expect(result1, isA<RemixCardSpec>());
         expect(result2, isA<RemixCardSpec>());
+      });
+
+      test('interpolates surface layers instead of snapping', () {
+        const start = RemixCardSpec(
+          surface: RemixSurfaceLayerSpec(color: Colors.red),
+          overlay: RemixSurfaceLayerSpec(color: Colors.green),
+        );
+        const end = RemixCardSpec(
+          surface: RemixSurfaceLayerSpec(color: Colors.blue),
+          overlay: RemixSurfaceLayerSpec(color: Colors.yellow),
+        );
+
+        final result = start.lerp(end, 0.25);
+
+        expect(
+          result.surface?.color,
+          Color.lerp(Colors.red, Colors.blue, 0.25),
+        );
+        expect(
+          result.overlay?.color,
+          Color.lerp(Colors.green, Colors.yellow, 0.25),
+        );
+      });
+
+      test('fades a surface layer in from an absent value', () {
+        const start = RemixCardSpec();
+        const end = RemixCardSpec(
+          surface: RemixSurfaceLayerSpec(color: Colors.blue),
+        );
+
+        final result = start.lerp(end, 0.25);
+
+        expect(result.surface?.color, Color.lerp(null, Colors.blue, 0.25));
       });
     });
 

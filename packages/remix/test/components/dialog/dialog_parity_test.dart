@@ -43,6 +43,49 @@ void main() {
       );
     });
 
+    testWidgets('scrolls structured content inside a fixed height', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        const Directionality(
+          textDirection: TextDirection.ltr,
+          child: SizedBox(
+            width: 800,
+            height: 600,
+            child: RemixDialog(
+              alignment: RemixDialogAlignment.start,
+              width: 320,
+              height: 200,
+              title: 'Settings',
+              child: SizedBox(
+                key: ValueKey('fixed-height-content'),
+                height: 600,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+      final innerScroll = find.descendant(
+        of: find.byType(RemixSurfaceBox),
+        matching: find.byType(SingleChildScrollView),
+      );
+      expect(innerScroll, findsOneWidget);
+
+      final before = tester.getTopLeft(
+        find.byKey(const ValueKey('fixed-height-content')),
+      );
+      await tester.drag(innerScroll, const Offset(0, -200));
+      await tester.pump();
+      expect(
+        tester
+            .getTopLeft(find.byKey(const ValueKey('fixed-height-content')))
+            .dy,
+        lessThan(before.dy),
+      );
+    });
+
     testWidgets('clamps full width to maxWidth', (tester) async {
       await tester.pumpWidget(
         const Directionality(

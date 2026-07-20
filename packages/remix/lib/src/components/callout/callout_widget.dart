@@ -45,10 +45,14 @@ class RemixCallout extends StatelessWidget {
           children: [
             if (icon case final icon?)
               remixInheritedContentStyle(child: icon, icon: spec.icon),
-            remixInheritedContentStyle(
-              child: child,
-              text: spec.text,
-              icon: spec.icon,
+            // ignore: avoid-flexible-outside-flex
+            Flexible(
+              fit: FlexFit.loose,
+              child: remixInheritedContentStyle(
+                child: child,
+                text: spec.text,
+                icon: spec.icon,
+              ),
             ),
           ],
         );

@@ -38,4 +38,24 @@ class RemixProgressSpec with _$RemixProgressSpec {
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        track = track ?? const StyleSpec(spec: BoxSpec()),
        indicator = indicator ?? const StyleSpec(spec: BoxSpec());
+
+  @override
+  RemixProgressSpec lerp(RemixProgressSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
+      indicatorSurface: RemixSurfaceLayerSpec.lerpNullable(
+        indicatorSurface,
+        other.indicatorSurface,
+        t,
+      ),
+      indicatorOverlay: RemixSurfaceLayerSpec.lerpNullable(
+        indicatorOverlay,
+        other.indicatorOverlay,
+        t,
+      ),
+    );
+  }
 }
