@@ -46,7 +46,7 @@ Use a generated `@MixWidget` wrapper **only if all of**:
 - semantics/keyboard behavior match.
 
 Otherwise write a **hand-written facade**: a `StatelessWidget` in the target
-vocabulary that builds a `Remix*Styler` recipe and invokes its `.call(...)`.
+vocabulary that builds a `*Styler` recipe and invokes its `.call(...)`.
 
 With `mix_generator` 2.1.2 or newer, a generic `call<T>()` target is not by
 itself a reason to hand-write the facade. `@MixWidget` copies the styler
@@ -117,14 +117,14 @@ the wrapper in the public API.
 ## 3. Recipe shape
 
 This Button recipe is for a hand-written facade: its `loading` styling input
-collides with `RemixButtonStyler.call(loading: ...)`, so it cannot be exposed
+collides with `ButtonStyler.call(loading: ...)`, so it cannot be exposed
 unchanged through `@MixWidget`.
 
 ```dart
 // Pure function of a few enums → memoize; stylers are immutable value objects.
-final Map<(Kind, Size, bool), RemixButtonStyler> _styleCache = {};
+final Map<(Kind, Size, bool), ButtonStyler> _styleCache = {};
 
-RemixButtonStyler acmeButtonStyle({Kind kind, Size size, bool loading = false}) {
+ButtonStyler acmeButtonStyle({Kind kind, Size size, bool loading = false}) {
   final clamped = size.clampTo(Size.sm, Size.x2l);   // worksheet's supported range
   return _styleCache.putIfAbsent((kind, clamped, loading), () {
     final base = _baseStyle(clamped);                 // shared height/padding/label/focus
@@ -154,7 +154,7 @@ the disabled variant accordingly:
 
 ```dart
 final disabledStyle = loading
-    ? RemixButtonStyler().color(fill()).spinner(...)   // keep kind visuals
+    ? ButtonStyler().color(fill()).spinner(...)   // keep kind visuals
     : _disabledTreatment();                            // real disabled gray
 ```
 
@@ -168,7 +168,7 @@ Flutter containers pad by border width, **shifts layout on focus**. Paint the
 ring over the content instead — no layout change, base border intact:
 
 ```dart
-.onFocused(RemixButtonStyler().foregroundDecoration(BoxDecorationMix(
+.onFocused(ButtonStyler().foregroundDecoration(BoxDecorationMix(
   border: BoxBorderMix.all(BorderSideMix(color: AcmeTokens.focus(), width: 2.0)),
 )))
 ```
@@ -190,7 +190,7 @@ specifies it, and don't fight the min-size default.
 
 ### One-icon alignment is style-driven
 
-`RemixButtonStyler.iconAlignment(IconAlignment.start|end)` controls which
+`ButtonStyler.iconAlignment(IconAlignment.start|end)` controls which
 side of the label a **single** icon occupies. It applies regardless of whether
 the caller supplied `leadingIcon` or `trailingIcon`. When both icons are
 present, Remix deliberately preserves leading → label → trailing order. Test

@@ -21,7 +21,7 @@ Flutter developers commonly face these challenges when building custom UIs:
 ### The Solution
 
 ```dart
-final style = RemixButtonStyler()
+final style = ButtonStyler()
   .paddingX(16)
   .paddingY(10)
   .color(Colors.blue)
@@ -38,7 +38,7 @@ RemixButton(
 
 Or using callable styles:
 ```dart
-final button = RemixButtonStyler()
+final button = ButtonStyler()
   .paddingX(16)
   .paddingY(10)
   .color(Colors.blue)
@@ -85,7 +85,7 @@ import 'package:remix/remix.dart';
 
 class MyApp extends StatelessWidget {
 
-  final button = RemixButtonStyler()
+  final button = ButtonStyler()
     .paddingX(16)
     .paddingY(10)
     .color(Colors.blue)
@@ -113,7 +113,7 @@ class MyApp extends StatelessWidget {
 Easily define how components should look in different interaction states.
 
 ```dart
-final button = RemixButtonStyler()
+final button = ButtonStyler()
   .paddingX(16)
   .paddingY(10)
   .color(Colors.blue)
@@ -128,7 +128,7 @@ final button = RemixButtonStyler()
 Make your button style smoothly animate when its state changes by chaining `.animate()` with your state-specific styles. You can use `AnimationConfig.spring` to get natural, spring-based motion.
 
 ```dart
-final style = RemixButtonStyler()
+final style = ButtonStyler()
   .paddingX(16)
   .paddingY(10)
   .color(Colors.blue)
@@ -147,7 +147,7 @@ This example animates both the color on hover and the scale on press, creating a
 Create base styles and extend them to build variants:
 
 ```dart
-final baseButtonStyle = RemixButtonStyler()
+final baseButtonStyle = ButtonStyler()
     .paddingX(16)
     .paddingY(10)
     .borderRadiusAll(const Radius.circular(8));
@@ -220,7 +220,7 @@ Fortal styles are built on a robust token system that includes:
 You can use these tokens directly in your custom styles:
 
 ```dart
-final style = RemixButtonStyler()
+final style = ButtonStyler()
   .color(FortalTokens.accent9())
   .paddingAll(FortalTokens.space4())
   .borderRadiusAll(FortalTokens.radius3())

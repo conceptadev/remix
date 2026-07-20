@@ -40,7 +40,7 @@ FortalButtonComponentArtifacts buildFortalButtonComponentArtifacts() {
   for (final variant in FortalButtonVariant.values) {
     for (final size in FortalButtonSize.values) {
       final id = '${variant.name}-${size.name}';
-      final projection = projectRemixButtonStyler(
+      final projection = projectButtonStyler(
         fortalButtonStyler(variant: variant, size: size),
       );
       if (projection.diagnostics.isNotEmpty) {

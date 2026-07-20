@@ -20,7 +20,7 @@ FortalButton(
 RemixButton(
   onPressed: save,
   style: fortalButtonStyler(variant: .soft, size: .size3)
-      .onHovered(RemixButtonStyler().scale(1.02)),
+      .onHovered(ButtonStyler().scale(1.02)),
   child: const Text('Save'),
 )
 ```
@@ -197,7 +197,7 @@ Use callable tokens inside Mix stylers and resolve concrete values through the
 active `MixScope` in ordinary widget code:
 
 ```dart
-final style = RemixButtonStyler()
+final style = ButtonStyler()
     .color(FortalTokens.accent9())
     .paddingAll(FortalTokens.space4())
     .borderRadiusAll(FortalTokens.radius3());

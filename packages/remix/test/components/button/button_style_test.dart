@@ -6,13 +6,13 @@ import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixButtonStyler', () {
+  group('ButtonStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        final style = RemixButtonStyler();
+        final style = ButtonStyler();
 
         expect(style, isNotNull);
-        expect(style, isA<RemixButtonStyler>());
+        expect(style, isA<ButtonStyler>());
       });
 
       test('create constructor with all parameters', () {
@@ -22,7 +22,7 @@ void main() {
         final spinner = Prop.maybeMix(RemixSpinnerStyler());
         final variants = <VariantStyle<RemixButtonSpec>>[];
 
-        final style = RemixButtonStyler.create(
+        final style = ButtonStyler.create(
           container: container,
           label: label,
           icon: icon,
@@ -44,7 +44,7 @@ void main() {
         final iconStyler = IconStyler();
         final spinnerStyle = RemixSpinnerStyler();
 
-        final style = RemixButtonStyler()
+        final style = ButtonStyler()
             .container(containerStyler)
             .label(labelStyler)
             .icon(iconStyler)
@@ -59,16 +59,16 @@ void main() {
 
       test('shadow factory applies shadow style', () {
         final shadow = BoxShadowMix().color(Colors.black).blurRadius(4.0);
-        final style = RemixButtonStyler().shadow(shadow);
+        final style = ButtonStyler().shadow(shadow);
 
-        expect(style, equals(RemixButtonStyler.shadow(shadow)));
+        expect(style, equals(ButtonStyler.shadow(shadow)));
       });
     });
 
     group('Style Methods', () {
       styleMethodTest(
         'label',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.label(TextStyler()),
         expect: (style) {
           expect(style.$label, Prop.maybeMix(TextStyler()));
@@ -77,7 +77,7 @@ void main() {
 
       styleMethodTest(
         'icon',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.icon(IconStyler()),
         expect: (style) {
           expect(style.$icon, equals(Prop.maybeMix(IconStyler())));
@@ -86,7 +86,7 @@ void main() {
 
       styleMethodTest(
         'spinner',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.spinner(RemixSpinnerStyler()),
         expect: (style) {
           expect(style.$spinner, equals(Prop.maybeMix(RemixSpinnerStyler())));
@@ -95,31 +95,31 @@ void main() {
 
       styleMethodTest(
         'padding',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixButtonStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
+            equals(ButtonStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
 
       styleMethodTest(
         'margin',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixButtonStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
+            equals(ButtonStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
 
       styleMethodTest(
         'decoration',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.blue,
@@ -130,7 +130,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixButtonStyler.decoration(
+              ButtonStyler.decoration(
                 BoxDecorationMix(
                   color: Colors.blue,
                   borderRadius: BorderRadiusMix.circular(8.0),
@@ -143,28 +143,25 @@ void main() {
 
       styleMethodTest(
         'alignment',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
-          expect(
-            style,
-            equals(RemixButtonStyler.alignment(Alignment.centerLeft)),
-          );
+          expect(style, equals(ButtonStyler.alignment(Alignment.centerLeft)));
         },
       );
 
       styleMethodTest(
         'spacing',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.spacing(12.0),
         expect: (style) {
-          expect(style, equals(RemixButtonStyler.spacing(12.0)));
+          expect(style, equals(ButtonStyler.spacing(12.0)));
         },
       );
 
       styleMethodTest(
         'constraints',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 100.0, minHeight: 40.0),
         ),
@@ -172,7 +169,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixButtonStyler.constraints(
+              ButtonStyler.constraints(
                 BoxConstraintsMix(minWidth: 100.0, minHeight: 40.0),
               ),
             ),
@@ -182,7 +179,7 @@ void main() {
 
       styleMethodTest(
         'variants',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.variants(<VariantStyle<RemixButtonSpec>>[]),
         expect: (style) {
           expect(style.$variants, equals(<VariantStyle<RemixButtonSpec>>[]));
@@ -190,7 +187,7 @@ void main() {
       );
       styleMethodTest(
         'flex',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.flex(FlexStyler()),
         expect: (style) {
           expect(
@@ -202,7 +199,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
@@ -212,7 +209,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixButtonStyler.foregroundDecoration(
+              ButtonStyler.foregroundDecoration(
                 BoxDecorationMix(
                   border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
@@ -224,14 +221,14 @@ void main() {
 
       styleMethodTest(
         'transform',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) =>
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixButtonStyler.transform(
+              ButtonStyler.transform(
                 Matrix4.identity(),
                 alignment: Alignment.topLeft,
               ),
@@ -242,7 +239,7 @@ void main() {
 
       styleMethodTest(
         'modifierRotate',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) =>
             style.modifierRotate(0.5, alignment: Alignment.topLeft),
         expect: (style) {
@@ -260,37 +257,37 @@ void main() {
 
       styleMethodTest(
         'scale',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.scale(1.2, alignment: Alignment.topLeft),
         expect: (style) {
           expect(
             style,
-            equals(RemixButtonStyler.scale(1.2, alignment: Alignment.topLeft)),
+            equals(ButtonStyler.scale(1.2, alignment: Alignment.topLeft)),
           );
         },
       );
 
       styleMethodTest(
         'translate',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.translate(1.0, 2.0, 3.0),
         expect: (style) {
-          expect(style, equals(RemixButtonStyler.translate(1.0, 2.0, 3.0)));
+          expect(style, equals(ButtonStyler.translate(1.0, 2.0, 3.0)));
         },
       );
 
       styleMethodTest(
         'skew',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.skew(0.1, 0.2),
         expect: (style) {
-          expect(style, equals(RemixButtonStyler.skew(0.1, 0.2)));
+          expect(style, equals(ButtonStyler.skew(0.1, 0.2)));
         },
       );
 
       styleMethodTest(
         'transformReset',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.transformReset(),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -302,7 +299,7 @@ void main() {
       ) async {
         final scaleBox = await _resolveContainerBoxSpec(
           tester,
-          RemixButtonStyler().scale(1.2, alignment: Alignment.topLeft),
+          ButtonStyler().scale(1.2, alignment: Alignment.topLeft),
         );
         expect(
           scaleBox.transform?.storage,
@@ -312,7 +309,7 @@ void main() {
 
         final translateBox = await _resolveContainerBoxSpec(
           tester,
-          RemixButtonStyler().translate(1.0, 2.0, 3.0),
+          ButtonStyler().translate(1.0, 2.0, 3.0),
         );
         expect(
           translateBox.transform?.storage,
@@ -324,13 +321,13 @@ void main() {
           ..setEntry(1, 0, 0.2);
         final skewBox = await _resolveContainerBoxSpec(
           tester,
-          RemixButtonStyler().skew(0.1, 0.2),
+          ButtonStyler().skew(0.1, 0.2),
         );
         expect(skewBox.transform?.storage, orderedEquals(skewMatrix.storage));
 
         final resetBox = await _resolveContainerBoxSpec(
           tester,
-          RemixButtonStyler().transformReset(),
+          ButtonStyler().transformReset(),
         );
         expect(
           resetBox.transform?.storage,
@@ -340,16 +337,16 @@ void main() {
 
       styleMethodTest(
         'color',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
-          expect(style, equals(RemixButtonStyler.color(Colors.blue)));
+          expect(style, equals(ButtonStyler.color(Colors.blue)));
         },
       );
 
       styleMethodTest(
         'wrap',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
@@ -358,7 +355,7 @@ void main() {
 
       styleMethodTest(
         'inherited spacing helpers',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.paddingStart(4.0).marginEnd(8.0),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -367,7 +364,7 @@ void main() {
 
       styleMethodTest(
         'inherited border helpers',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.borderTop(color: Colors.red, width: 2.0),
         expect: (style) {
           expect(
@@ -383,7 +380,7 @@ void main() {
 
       styleMethodTest(
         'inherited shape and constraint helpers',
-        initial: RemixButtonStyler(),
+        initial: ButtonStyler(),
         modify: (style) => style.shapeStadium().minHeight(32.0),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -393,7 +390,7 @@ void main() {
 
     group('Call Method', () {
       test('call method creates RemixButton with minimal parameters', () {
-        final style = RemixButtonStyler();
+        final style = ButtonStyler();
 
         const child = Text('Test Button');
         final button = style.call(child: child);
@@ -404,7 +401,7 @@ void main() {
       });
 
       test('call method creates RemixButton with all parameters', () {
-        final style = RemixButtonStyler();
+        final style = ButtonStyler();
         final focusNode = FocusNode();
 
         const child = Row(children: [Icon(Icons.star), Text('Test Button')]);
@@ -431,7 +428,7 @@ void main() {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
       ) async {
-        final style = RemixButtonStyler();
+        final style = ButtonStyler();
 
         await tester.pumpWidget(
           MaterialApp(
@@ -454,7 +451,7 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        final originalStyle = RemixButtonStyler();
+        final originalStyle = ButtonStyler();
 
         final mergedStyle = originalStyle.merge(null);
 
@@ -464,20 +461,16 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        final style1 = RemixButtonStyler();
-        final style2 = RemixButtonStyler();
+        final style1 = ButtonStyler();
+        final style2 = ButtonStyler();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixButtonStyler().padding(
-          EdgeInsetsGeometryMix.all(16.0),
-        );
-        final style2 = RemixButtonStyler().padding(
-          EdgeInsetsGeometryMix.all(8.0),
-        );
+        final style1 = ButtonStyler().padding(EdgeInsetsGeometryMix.all(16.0));
+        final style2 = ButtonStyler().padding(EdgeInsetsGeometryMix.all(8.0));
 
         expect(style1, isNot(equals(style2)));
       });
@@ -577,7 +570,7 @@ void main() {
 
 Future<StyleSpec<RemixButtonSpec>> _resolveFortalButtonStyle(
   WidgetTester tester,
-  RemixButtonStyler style,
+  ButtonStyler style,
 ) async {
   late final StyleSpec<RemixButtonSpec> resolved;
 
@@ -596,7 +589,7 @@ Future<StyleSpec<RemixButtonSpec>> _resolveFortalButtonStyle(
 
 Future<BoxSpec> _resolveContainerBoxSpec(
   WidgetTester tester,
-  RemixButtonStyler style,
+  ButtonStyler style,
 ) async {
   final resolved = await _resolveFortalButtonStyle(tester, style);
 

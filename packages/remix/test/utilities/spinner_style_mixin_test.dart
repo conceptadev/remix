@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixButtonStyler spinner nesting', () {
+  group('ButtonStyler spinner nesting', () {
     test('sets each spinner field through nested shorthand', () {
       final spinner = RemixSpinnerStyler(
         color: Colors.red,
@@ -12,7 +12,7 @@ void main() {
         leafRadius: const Radius.circular(3),
         duration: const Duration(milliseconds: 500),
       );
-      final original = RemixButtonStyler();
+      final original = ButtonStyler();
       final modified = original.spinner(spinner);
 
       expect(modified, isNot(same(original)));
@@ -22,7 +22,7 @@ void main() {
     testWidgets('successive nested styles merge field by field', (
       tester,
     ) async {
-      final style = RemixButtonStyler()
+      final style = ButtonStyler()
           .spinner(.color(Colors.blue))
           .spinner(.opacity(0.45))
           .spinner(.size(28))
@@ -49,7 +49,7 @@ void main() {
     });
 
     test('spinner nesting composes with label and icon nesting', () {
-      final style = RemixButtonStyler()
+      final style = ButtonStyler()
           .label(.color(Colors.white))
           .icon(.color(Colors.white))
           .spinner(.color(Colors.white))

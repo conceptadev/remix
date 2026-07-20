@@ -61,6 +61,32 @@ void main() {
       expect(surface.surface!.color, color);
     });
 
+    testWidgets('constrains flexible custom content to the callout width', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 320,
+          child: RemixCallout(
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'A detailed capture failure that should wrap in place.',
+                  ),
+                ),
+                TextButton(onPressed: () {}, child: const Text('Retry')),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Retry'), findsOneWidget);
+    });
+
     testWidgets('wraps a long body within constrained width', (tester) async {
       const bodyKey = ValueKey('long-callout-body');
       await tester.pumpRemixApp(

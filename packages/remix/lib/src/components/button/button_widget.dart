@@ -22,14 +22,14 @@ class RemixButton extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
-    this.style = const RemixButtonStyler.create(),
+    this.style = const ButtonStyler.create(),
     this.styleSpec,
   });
 
-  static RemixButtonStyler composeStyle(RemixButtonStyler style) =>
+  static ButtonStyler composeStyle(ButtonStyler style) =>
       .mainAxisSize(.min).merge(style);
 
-  static final styleFrom = RemixButtonStyler.new;
+  static final styleFrom = ButtonStyler.new;
 
   final Widget child;
   final RemixButtonLoadingBuilder? loadingBuilder;
@@ -44,7 +44,7 @@ class RemixButton extends StatelessWidget {
   final String? semanticHint;
   final bool excludeSemantics;
   final MouseCursor mouseCursor;
-  final RemixButtonStyler style;
+  final ButtonStyler style;
   final RemixButtonSpec? styleSpec;
 
   bool get _isEnabled =>

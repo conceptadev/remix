@@ -37,7 +37,7 @@ naked_ui        interaction primitives (focus, press, semantics, keyboard)
    ↑
 mix             styling engine, tokens, MixScope, variants
    ↑
-remix           reusable component machinery (RemixButtonStyler, specs, widgets)
+remix           reusable component machinery (ButtonStyler, specs, widgets)
    ↑
 <your package>  generated tokens + <System>Scope + component recipes/facades
                 exposes ONLY <System>* widgets and tokens publicly
@@ -189,7 +189,7 @@ Per component:
    when the target system's anatomy matches the Remix component, the public
    API reads in the target vocabulary, and no Remix-only types leak. Otherwise
    write a hand-written facade (a `StatelessWidget` that builds a
-   `Remix*Styler` recipe and calls it).
+   `*Styler` recipe and calls it).
 3. Style **through tokens, never copied values**: `token()` inside styler
    chains, `TextStyler().style(textToken.mix())` for text styles,
    `token.resolve(context)` for direct widget use. A hand-copied measurement

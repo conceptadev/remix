@@ -11,6 +11,26 @@ import '../../helpers/test_methods.dart';
 
 void main() {
   group('RemixTextField', () {
+    testWidgets('Fortal variants keep text and surface colors separate', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(const FortalTextField(variant: .surface));
+      var context = tester.element(find.byType(FortalTextField));
+      var colors = resolveFortalTokens(FortalTheme.of(context));
+      var spec = fortalTextFieldStyler(variant: .surface).resolve(context).spec;
+
+      expect(spec.text.spec.style?.color, colors.gray.scale.step(12));
+      expect(spec.surface?.color, colors.colorSurface);
+
+      await tester.pumpRemixApp(const FortalTextField(variant: .soft));
+      context = tester.element(find.byType(FortalTextField));
+      colors = resolveFortalTokens(FortalTheme.of(context));
+      spec = fortalTextFieldStyler(variant: .soft).resolve(context).spec;
+
+      expect(spec.text.spec.style?.color, colors.accent.scale.step(12));
+      expect(spec.surface?.color, colors.accent.scale.alphaStep(3));
+    });
+
     widgetControllerTest<RemixTextFieldSpec>(
       'reports text field hovered state',
       build: RemixTextField.new,

@@ -82,7 +82,7 @@ void main() {
       });
     });
 
-    test('custom RemixButtonStyler fails with a structured diagnostic', () {
+    test('custom ButtonStyler fails with a structured diagnostic', () {
       final errors = _expectFailure(
         mixProtocol.encodeStyle(fortalButtonStyler()),
       );
@@ -230,7 +230,7 @@ void main() {
           },
           {
             'id': 'fortal-button-portable',
-            'runtimeType': 'RemixButtonStyler projection',
+            'runtimeType': 'ButtonStyler projection',
             'status':
                 componentArtifacts.supportedContainerRecipes ==
                     componentArtifacts.recipeCount
@@ -247,7 +247,7 @@ void main() {
           },
           {
             'id': 'fortal-button',
-            'runtimeType': 'RemixButtonStyler',
+            'runtimeType': 'ButtonStyler',
             'status': 'unsupported',
             'diagnostics': [for (final error in customErrors) error.toJson()],
           },

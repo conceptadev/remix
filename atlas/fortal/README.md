@@ -40,7 +40,7 @@ integrity envelope for those payloads.
   protocol boundary, not evidence that the other 22 families lack raster or
   structured Atlas coverage.
 - `protocol/coverage.json` records supported probes and every unsupported
-  Button slot or value. In particular, a complete `RemixButtonStyler` and its
+  Button slot or value. In particular, a complete `ButtonStyler` and its
   spinner are not claimed to be representable by neutral Mix protocol v1.
 
 Fortal shadow-stroke colors use premultiplied-alpha OKLab mixing, matching the

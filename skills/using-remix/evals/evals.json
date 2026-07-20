@@ -10,7 +10,7 @@
     {
       "id": 2,
       "prompt": "Create a custom-styled button that has a gradient background, rounded corners, scales down on press, and glows on hover. Don't use Fortal — build a fully custom style from scratch using the Remix fluent API. Show me the complete code.",
-      "expected_output": "A RemixButton with a fully custom RemixButtonStyler using the fluent API — gradient, borderRounded, .onPressed with scale, .onHovered with shadow/glow, .animate(AnimationConfig...) for transitions. Uses RemixButtonStyler (not the removed RemixButtonStyle) throughout.",
+      "expected_output": "A RemixButton with a fully custom ButtonStyler using the fluent API — gradient, borderRounded, .onPressed with scale, .onHovered with shadow/glow, .animate(AnimationConfig...) for transitions. Uses ButtonStyler (not the removed RemixButtonStyle) throughout.",
       "files": []
     },
     {
@@ -22,7 +22,7 @@
     {
       "id": 4,
       "prompt": "I have a RemixButton with one icon and need the icon after the label without changing the widget arguments. Can styling do that? What happens if the button later gets both a leading and trailing icon?",
-      "expected_output": "Uses RemixButtonStyler().iconAlignment(IconAlignment.end) and explains that the style controls placement whenever exactly one icon exists, regardless of which icon argument supplied it. Explains that with both icons Remix preserves leading -> label -> trailing order instead of allowing the alignment override to collapse or reorder the pair.",
+      "expected_output": "Uses ButtonStyler().iconAlignment(IconAlignment.end) and explains that the style controls placement whenever exactly one icon exists, regardless of which icon argument supplied it. Explains that with both icons Remix preserves leading -> label -> trailing order instead of allowing the alignment override to collapse or reorder the pair.",
       "files": []
     },
     {

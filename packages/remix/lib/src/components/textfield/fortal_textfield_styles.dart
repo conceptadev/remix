@@ -157,6 +157,7 @@ RemixTextFieldStyler _fortalTextFieldSoftStyler([
               .fontWeight(FortalTokens.fontWeightMedium()),
         ),
       )
+      .textColor(FortalTokens.accent12())
       .wrap(.iconTheme(color: FortalTokens.accent10()))
       .surface(
         _fortalTextFieldLayer(radius: radius, color: FortalTokens.accentA3()),

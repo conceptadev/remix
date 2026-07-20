@@ -34,8 +34,8 @@ class ButtonExample extends StatelessWidget {
     );
   }
 
-  RemixButtonStyler get destructiveStyle {
-    return RemixButtonStyler()
+  ButtonStyler get destructiveStyle {
+    return ButtonStyler()
         .paddingX(16)
         .paddingY(10)
         .backgroundColor(const Color(0xFF4D1919))
@@ -50,18 +50,16 @@ class ButtonExample extends StatelessWidget {
           side: BorderSideMix.width(1).color(Colors.redAccent),
         )
         .wrap(.scale(x: 1, y: 1))
-        .onPressed(RemixButtonStyler().wrap(.scale(x: 0.90, y: 0.90)))
+        .onPressed(ButtonStyler().wrap(.scale(x: 0.90, y: 0.90)))
         .onHovered(
-          RemixButtonStyler()
+          ButtonStyler()
               .backgroundColor(const Color(0xFF732D2D))
               .animate(.spring(300.ms)),
         )
-        .onFocused(
-          RemixButtonStyler().backgroundColor(const Color(0xFF732D2D)),
-        );
+        .onFocused(ButtonStyler().backgroundColor(const Color(0xFF732D2D)));
   }
 
-  RemixButtonStyler get successStyle {
+  ButtonStyler get successStyle {
     return destructiveStyle
         .backgroundColor(const Color.fromARGB(255, 15, 61, 15))
         .label(TextStyler().uppercase().color(Colors.greenAccent))
@@ -72,9 +70,7 @@ class ButtonExample extends StatelessWidget {
               .blurRadius(10)
               .spreadRadius(0),
         )
-        .onHovered(RemixButtonStyler().backgroundColor(const Color(0xFF357857)))
-        .onFocused(
-          RemixButtonStyler().backgroundColor(const Color(0xFF357857)),
-        );
+        .onHovered(ButtonStyler().backgroundColor(const Color(0xFF357857)))
+        .onFocused(ButtonStyler().backgroundColor(const Color(0xFF357857)));
   }
 }

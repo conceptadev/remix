@@ -5,7 +5,7 @@ import 'package:remix/remix.dart';
 void main() {
   group('generated Remix styler factories', () {
     test('support contextual shorthand for widget-state variants', () {
-      final style = RemixButtonStyler()
+      final style = ButtonStyler()
           .onHovered(.color(Colors.green))
           .onPressed(.scale(0.97));
 
@@ -18,7 +18,7 @@ void main() {
         RemixCardStyler().color(Colors.blue),
       );
       expect(RemixSpinnerStyler.size(20), RemixSpinnerStyler().size(20));
-      expect(RemixButtonStyler.rotate(0.25), RemixButtonStyler().rotate(0.25));
+      expect(ButtonStyler.rotate(0.25), ButtonStyler().rotate(0.25));
       expect(
         RemixToggleGroupStyler.color(Colors.blue),
         RemixToggleGroupStyler().color(Colors.blue),
@@ -145,8 +145,8 @@ void main() {
         ),
       );
       expectSameSpec(
-        RemixButtonStyler().padding(padding).color(Colors.blue).spacing(8),
-        RemixButtonStyler(
+        ButtonStyler().padding(padding).color(Colors.blue).spacing(8),
+        ButtonStyler(
           container: FlexBoxStyler(
             padding: padding,
             decoration: BoxDecorationMix(color: Colors.blue),

@@ -2,23 +2,23 @@ part of 'button.dart';
 
 /// Defines the structure and styling properties for a button component.
 ///
-/// RemixButtonSpec is the resolved specification that describes how a button
+/// ButtonSpec is the resolved specification that describes how a button
 /// should be styled and structured. It follows the Spec pattern used
 /// throughout the Remix framework, where:
 ///
-/// 1. **Style classes** (like [RemixButtonStyler]) define styling APIs
-/// 2. **Spec classes** (like [RemixButtonSpec]) hold resolved styling properties
+/// 1. **Style classes** (like [ButtonStyler]) define styling APIs
+/// 2. **Spec classes** (like [ButtonSpec]) hold resolved styling properties
 /// 3. **Widget classes** (like [RemixButton]) consume specs to render UI
 ///
-/// The RemixButtonSpec contains [StyleSpec] properties for each visual element
+/// The ButtonSpec contains [StyleSpec] properties for each visual element
 /// of the button: container layout, text label, icon, and loading spinner.
-/// These properties are built by [RemixButtonStyler] and consumed by
+/// These properties are built by [ButtonStyler] and consumed by
 /// [RemixButton] to create the final rendered widget.
 ///
 /// ## Architecture Overview
 ///
 /// ```
-/// RemixButtonStyler -> RemixButtonSpec -> RemixButton Widget
+/// ButtonStyler -> ButtonSpec -> RemixButton Widget
 /// (Define styles)    (Hold props)   (Render UI)
 /// ```
 ///
@@ -29,7 +29,7 @@ part of 'button.dart';
 ///
 /// ```dart
 /// // Style creates and populates the spec
-/// final style = RemixButtonStyler()
+/// final style = ButtonStyler()
 ///   .backgroundColor(Colors.blue)
 ///   .foregroundColor(Colors.white)
 ///   .iconSize(20.0);
@@ -51,7 +51,7 @@ part of 'button.dart';
 /// - [spinner]: Loading spinner styling during async operations
 ///
 /// See also:
-/// - [RemixButtonStyler] for the styling API
+/// - [ButtonStyler] for the styling API
 /// - [RemixButton] for the widget implementation
 /// - [Spec] for the base specification pattern
 @MixableSpec(
@@ -62,7 +62,7 @@ part of 'button.dart';
     SpinnerStyleMixin,
   ],
 )
-class RemixButtonSpec with _$RemixButtonSpec {
+class ButtonSpec with _$ButtonSpec {
   /// Styling specification for the button's container.
   ///
   /// Controls the button's layout, background, borders, padding,
@@ -100,7 +100,7 @@ class RemixButtonSpec with _$RemixButtonSpec {
   @MixableField(setterType: RemixSurfaceLayerMix)
   final RemixSurfaceLayerSpec? overlay;
 
-  /// Creates a RemixButtonSpec with optional styling specifications.
+  /// Creates a ButtonSpec with optional styling specifications.
   ///
   /// If any [StyleSpec] is not provided, a default specification
   /// with empty styling is used. This ensures all properties are
@@ -108,12 +108,12 @@ class RemixButtonSpec with _$RemixButtonSpec {
   ///
   /// Example:
   /// ```dart
-  /// const spec = RemixButtonSpec(
+  /// const spec = ButtonSpec(
   ///   container: StyleSpec(spec: FlexBoxSpec()),
   ///   label: StyleSpec(spec: TextSpec()),
   /// );
   /// ```
-  const RemixButtonSpec({
+  const ButtonSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
@@ -135,3 +135,9 @@ class RemixButtonSpec with _$RemixButtonSpec {
     );
   }
 }
+
+/// Backward-compatible name for [ButtonSpec].
+///
+/// The generated button style API is based on [ButtonSpec], so resolved
+/// values use `ButtonSpec` as their runtime type.
+typedef RemixButtonSpec = ButtonSpec;

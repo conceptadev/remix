@@ -50,9 +50,7 @@ final class RemixButtonProtocolProjection {
 /// It reads the composite style's existing sources and variants, then combines
 /// leaf stylers through their generated `merge` implementations. It does not
 /// resolve a widget, inspect private fields, or restate the Fortal recipe.
-RemixButtonProtocolProjection projectRemixButtonStyler(
-  RemixButtonStyler style,
-) {
+RemixButtonProtocolProjection projectButtonStyler(ButtonStyler style) {
   final effectiveStyle = RemixButton.composeStyle(style);
   final container = _projectContainer(effectiveStyle, depth: 0);
   final label = _projectLabel(effectiveStyle, depth: 0);
@@ -98,7 +96,7 @@ final class _Projection<T extends Object> {
 }
 
 _Projection<FlexBoxStyler> _projectContainer(
-  RemixButtonStyler style, {
+  ButtonStyler style, {
   required int depth,
 }) {
   if (depth > 16) return _depthFailure('container');
@@ -125,7 +123,7 @@ _Projection<FlexBoxStyler> _projectContainer(
   for (final variant
       in style.$variants ?? const <VariantStyle<RemixButtonSpec>>[]) {
     final nested = variant.value;
-    if (nested is! RemixButtonStyler) {
+    if (nested is! ButtonStyler) {
       diagnostics.add(
         _unsupportedSource('container', nested.runtimeType.toString()),
       );
@@ -145,7 +143,7 @@ _Projection<FlexBoxStyler> _projectContainer(
 }
 
 _Projection<TextStyler> _projectLabel(
-  RemixButtonStyler style, {
+  ButtonStyler style, {
   required int depth,
 }) {
   if (depth > 16) return _depthFailure('label');
@@ -172,7 +170,7 @@ _Projection<TextStyler> _projectLabel(
   for (final variant
       in style.$variants ?? const <VariantStyle<RemixButtonSpec>>[]) {
     final nested = variant.value;
-    if (nested is! RemixButtonStyler) {
+    if (nested is! ButtonStyler) {
       diagnostics.add(
         _unsupportedSource('label', nested.runtimeType.toString()),
       );
@@ -191,10 +189,7 @@ _Projection<TextStyler> _projectLabel(
   return _Projection(value: result, diagnostics: diagnostics);
 }
 
-_Projection<IconStyler> _projectIcon(
-  RemixButtonStyler style, {
-  required int depth,
-}) {
+_Projection<IconStyler> _projectIcon(ButtonStyler style, {required int depth}) {
   if (depth > 16) return _depthFailure('icon');
   final diagnostics = <ButtonProjectionDiagnostic>[];
   IconStyler? result;
@@ -219,7 +214,7 @@ _Projection<IconStyler> _projectIcon(
   for (final variant
       in style.$variants ?? const <VariantStyle<RemixButtonSpec>>[]) {
     final nested = variant.value;
-    if (nested is! RemixButtonStyler) {
+    if (nested is! ButtonStyler) {
       diagnostics.add(
         _unsupportedSource('icon', nested.runtimeType.toString()),
       );

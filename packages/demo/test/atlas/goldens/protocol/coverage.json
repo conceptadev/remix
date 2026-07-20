@@ -61,7 +61,7 @@
     },
     {
       "id": "fortal-button-portable",
-      "runtimeType": "RemixButtonStyler projection",
+      "runtimeType": "ButtonStyler projection",
       "status": "unsupported",
       "recipeCount": 24,
       "totalMatrixCells": 288,
@@ -85,56 +85,56 @@
     },
     {
       "id": "fortal-button",
-      "runtimeType": "RemixButtonStyler",
+      "runtimeType": "ButtonStyler",
       "status": "unsupported",
       "diagnostics": [
         {
           "code": "unsupported_encode_value",
           "severity": "error",
           "path": "",
-          "message": "Expected box, got RemixButtonStyler."
+          "message": "Expected box, got ButtonStyler."
         },
         {
           "code": "unsupported_encode_value",
           "severity": "error",
           "path": "",
-          "message": "Expected text, got RemixButtonStyler."
+          "message": "Expected text, got ButtonStyler."
         },
         {
           "code": "unsupported_encode_value",
           "severity": "error",
           "path": "",
-          "message": "Expected flex, got RemixButtonStyler."
+          "message": "Expected flex, got ButtonStyler."
         },
         {
           "code": "unsupported_encode_value",
           "severity": "error",
           "path": "",
-          "message": "Expected stack, got RemixButtonStyler."
+          "message": "Expected stack, got ButtonStyler."
         },
         {
           "code": "unsupported_encode_value",
           "severity": "error",
           "path": "",
-          "message": "Expected icon, got RemixButtonStyler."
+          "message": "Expected icon, got ButtonStyler."
         },
         {
           "code": "unsupported_encode_value",
           "severity": "error",
           "path": "",
-          "message": "Expected image, got RemixButtonStyler."
+          "message": "Expected image, got ButtonStyler."
         },
         {
           "code": "unsupported_encode_value",
           "severity": "error",
           "path": "",
-          "message": "Expected flex_box, got RemixButtonStyler."
+          "message": "Expected flex_box, got ButtonStyler."
         },
         {
           "code": "unsupported_encode_value",
           "severity": "error",
           "path": "",
-          "message": "Expected stack_box, got RemixButtonStyler."
+          "message": "Expected stack_box, got ButtonStyler."
         }
       ]
     }

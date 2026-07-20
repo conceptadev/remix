@@ -220,7 +220,7 @@ class _AllVariantsSection extends StatelessWidget {
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  RemixButtonStyler _getSizedStyle(FortalButtonVariant variant) {
+  ButtonStyler _getSizedStyle(FortalButtonVariant variant) {
     return switch (size) {
       1 => fortalButtonStyler(variant: variant, size: .size1),
       2 => fortalButtonStyler(variant: variant, size: .size2),
@@ -319,7 +319,7 @@ class _SizeComparisonSection extends StatelessWidget {
 class _StateTestingSection extends StatelessWidget {
   const _StateTestingSection();
 
-  RemixButtonStyler _getVariantButton(String variantName) {
+  ButtonStyler _getVariantButton(String variantName) {
     switch (variantName) {
       case 'Solid':
         return fortalButtonStyler(variant: .solid);

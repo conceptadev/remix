@@ -7,8 +7,11 @@ Remix stylers expose matching named factories and fluent methods for canonical
 style operations. This symmetry lets a state variant use Dart's contextual dot
 shorthand without constructing another styler explicitly:
 
+For buttons, use `ButtonStyler`. `RemixButtonStyler` is retained as a
+deprecated compatibility alias.
+
 ```dart
-final style = RemixButtonStyler()
+final style = ButtonStyler()
     .color(Colors.blue)
     .onHovered(.color(Colors.indigo))
     .onPressed(.scale(0.97));
@@ -119,7 +122,7 @@ names:
 | Styler | Canonical generated API | Component-specific helper |
 | --- | --- | --- |
 | `RemixTextFieldStyler` | `color` styles the container | `textColor` styles editable text |
-| `RemixButtonStyler` | `rotate` transforms the container | `modifierRotate` rotates the complete widget with a modifier |
+| `ButtonStyler` | `rotate` transforms the container | `modifierRotate` rotates the complete widget with a modifier |
 | `RemixCalloutStyler` | `textStyle(TextStyler)` applies the container text style | `contentTextStyle(TextStyleMix)` styles callout content |
 
 This keeps contextual shorthand predictable while preserving each specialized
@@ -127,7 +130,7 @@ operation without ambiguous overloads.
 
 ## Generation boundary
 
-`Remix*Styler` classes are generated from `@MixableSpec`. Fortal widget wrapper
+Component stylers are generated from `@MixableSpec`. Fortal widget wrapper
 classes are source-authored even though they were previously emitted by
 `@MixWidget`. Both upstream generators write shared parts for the same library;
 during a clean build, the widget generator cannot resolve a Styler that the

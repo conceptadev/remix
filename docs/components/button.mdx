@@ -45,8 +45,8 @@ class ButtonExample extends StatelessWidget {
     );
   }
 
-  RemixButtonStyler get destructiveStyle {
-    return RemixButtonStyler()
+  ButtonStyler get destructiveStyle {
+    return ButtonStyler()
         .paddingX(16)
         .paddingY(10)
         .backgroundColor(const Color(0xFF4D1919))
@@ -75,7 +75,7 @@ class ButtonExample extends StatelessWidget {
         );
   }
 
-  RemixButtonStyler get successStyle {
+  ButtonStyler get successStyle {
     return destructiveStyle
         .backgroundColor(const Color.fromARGB(255, 15, 61, 15))
         .label(TextStyler().uppercase().color(Colors.greenAccent))
@@ -175,7 +175,7 @@ const RemixButton({
   String? semanticHint,
   bool excludeSemantics = false,
   MouseCursor mouseCursor = SystemMouseCursors.click,
-  RemixButtonStyler style = const RemixButtonStyler.create(),
+  ButtonStyler style = const ButtonStyler.create(),
   RemixButtonSpec? styleSpec,
 })
 ```
@@ -185,7 +185,7 @@ const RemixButton({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixButtonStyler`
+#### `style` → `ButtonStyler`
 
 Optional. The style configuration for the button. Customize colors, sizing, spacing, and state-based styling.
 

@@ -50,7 +50,7 @@ void main() {
       const iconColor = Color(0xFF654321);
       await tester.pumpRemixApp(
         RemixButton(
-          style: RemixButtonStyler(
+          style: ButtonStyler(
             label: TextStyler().color(textColor).fontSize(15),
             icon: IconStyler().color(iconColor).size(19),
           ),
@@ -74,7 +74,7 @@ void main() {
     ) async {
       await tester.pumpRemixApp(
         RemixButton(
-          style: RemixButtonStyler(
+          style: ButtonStyler(
             label: TextStyler().color(Colors.blue),
             icon: IconStyler().color(Colors.green),
           ),

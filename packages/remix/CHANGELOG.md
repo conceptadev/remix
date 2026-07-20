@@ -1,5 +1,7 @@
 ## Unreleased
 
+- **FEAT**: Expose `ButtonStyler` as the canonical button styling API.
+  `RemixButtonStyler` remains available as a deprecated compatibility alias.
 - **BREAKING**: Align the 20 mapped Fortal families with the pinned
   `@radix-ui/themes@3.3.0` contract. Accordion, Toggle, and ToggleGroup remain
   documented Fortal extensions and are excluded from the Radix parity score.

@@ -8,7 +8,7 @@ Widget buildButtonExample() {
     remix: [
       RemixButton(
         onPressed: () {},
-        style: RemixButtonStyler()
+        style: ButtonStyler()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
@@ -18,7 +18,7 @@ Widget buildButtonExample() {
       ),
       RemixButton(
         onPressed: null,
-        style: RemixButtonStyler()
+        style: ButtonStyler()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
@@ -29,7 +29,7 @@ Widget buildButtonExample() {
       RemixButton(
         loading: true,
         onPressed: () {},
-        style: RemixButtonStyler()
+        style: ButtonStyler()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
@@ -40,7 +40,7 @@ Widget buildButtonExample() {
       ),
       RemixButton(
         onPressed: () {},
-        style: RemixButtonStyler()
+        style: ButtonStyler()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
