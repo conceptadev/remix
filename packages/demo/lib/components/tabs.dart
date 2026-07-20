@@ -27,12 +27,10 @@ Widget buildTabsUseCase(BuildContext context) {
                     style: FlexBoxStyler().spacing(12),
                     children: [
                       FortalTabBar(
-                        child: RowBox(
-                          children: [
-                            FortalTab(tabId: 'tab1', label: 'Tab 1'),
-                            FortalTab(tabId: 'tab2', label: 'Tab 2'),
-                          ],
-                        ),
+                        children: [
+                          FortalTab(tabId: 'tab1', label: 'Tab 1'),
+                          FortalTab(tabId: 'tab2', label: 'Tab 2'),
+                        ],
                       ),
                       const RowBox(
                         children: [

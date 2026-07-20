@@ -356,8 +356,11 @@ class RemixTextField extends StatelessWidget {
               )
             : styledEditableText;
 
-        final withAccessories = RowBox(
+        final withAccessories = RemixSurfaceFlexBox(
           styleSpec: spec.container,
+          direction: Axis.horizontal,
+          surface: spec.surface,
+          overlay: spec.overlay,
           children: [
             ?leading,
             // ignore: avoid-flexible-outside-flex
@@ -403,7 +406,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   void initState() {
     super.initState();
     _styleController = WidgetStatesController({
-      if (!widget.config.enabled) .disabled,
+      if (!widget.config.enabled || widget.config.readOnly) .disabled,
       if (widget.config.error) .error,
     });
   }
@@ -412,7 +415,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   void didUpdateWidget(_RemixTextFieldBody oldWidget) {
     super.didUpdateWidget(oldWidget);
     _styleController
-      ..update(.disabled, !widget.config.enabled)
+      ..update(.disabled, !widget.config.enabled || widget.config.readOnly)
       ..update(.error, widget.config.error);
   }
 

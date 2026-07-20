@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart' as m;
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:widgetbook/widgetbook.dart';
@@ -15,7 +14,7 @@ Widget buildCalloutUseCase(BuildContext context) {
         child: SizedBox(
           width: 300,
           child: FortalCallout(
-            icon: m.Icons.info_outline,
+            icon: const Icon(Icons.info_outline),
             variant: context.knobs.object.dropdown(
               label: 'variant',
               options: FortalCalloutVariant.values,
@@ -27,9 +26,11 @@ Widget buildCalloutUseCase(BuildContext context) {
               labelBuilder: (size) => size.name,
               initialOption: FortalCalloutSize.size2,
             ),
-            text: context.knobs.string(
-              label: 'Text',
-              initialValue: 'This is a callout message',
+            child: Text(
+              context.knobs.string(
+                label: 'Text',
+                initialValue: 'This is a callout message',
+              ),
             ),
           ),
         ),

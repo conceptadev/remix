@@ -5,13 +5,19 @@
   "themes": [
     {
       "id": "dark",
-      "status": "supported",
-      "tokenCount": 115
+      "status": "supported-with-remix-extension",
+      "tokenCount": 254,
+      "mixProtocolTokenCount": 234,
+      "remixSurfaceTokenCount": 20,
+      "surfaceDocument": "themes/dark.remix-surfaces.json"
     },
     {
       "id": "light",
-      "status": "supported",
-      "tokenCount": 115
+      "status": "supported-with-remix-extension",
+      "tokenCount": 254,
+      "mixProtocolTokenCount": 234,
+      "remixSurfaceTokenCount": 20,
+      "surfaceDocument": "themes/light.remix-surfaces.json"
     }
   ],
   "styles": [
@@ -56,18 +62,24 @@
     {
       "id": "fortal-button-portable",
       "runtimeType": "RemixButtonStyler projection",
-      "status": "partial",
-      "recipeCount": 20,
-      "totalMatrixCells": 240,
-      "nonLoadingCells": 200,
-      "loadingUnsupportedCells": 40,
-      "supportedContainerRecipes": 20,
+      "status": "unsupported",
+      "recipeCount": 24,
+      "totalMatrixCells": 288,
+      "nonLoadingCells": 240,
+      "loadingUnsupportedCells": 48,
+      "supportedContainerRecipes": 4,
       "diagnostics": [
         {
           "code": "unsupported_slot_primitive",
           "severity": "error",
           "path": "spinner",
           "message": "RemixSpinner has no neutral Mix protocol primitive."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "/constraints",
+          "message": "Field \"minHeight\" is TokenSource<double>; expected double."
         }
       ]
     },

@@ -32,13 +32,13 @@ class ButtonExample extends StatelessWidget {
         children: [
           RemixButton(
             onPressed: () {},
-            label: 'Turn Off',
             style: destructiveStyle,
+            child: const Text('Turn Off'),
           ),
           RemixButton(
             onPressed: () {},
-            label: 'Turn on',
             style: successStyle,
+            child: const Text('Turn on'),
           ),
         ],
       ),
@@ -101,7 +101,7 @@ class ButtonExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -117,29 +117,34 @@ class FortalButtonExample extends StatelessWidget {
       spacing: 16,
       children: [
         // Solid variant - High emphasis, primary actions
-        FortalButton.solid(
-          label: 'Solid Button',
+        FortalButton(
+          variant: FortalButtonVariant.solid,
           onPressed: () {},
+          child: const Text('Solid Button'),
         ),
         // Soft variant - Medium emphasis, secondary actions
-        FortalButton.soft(
-          label: 'Soft Button',
+        FortalButton(
+          variant: FortalButtonVariant.soft,
           onPressed: () {},
+          child: const Text('Soft Button'),
         ),
         // Surface variant - Subtle emphasis with border
-        FortalButton.surface(
-          label: 'Surface Button',
+        FortalButton(
+          variant: FortalButtonVariant.surface,
           onPressed: () {},
+          child: const Text('Surface Button'),
         ),
         // Outline variant - Low emphasis, tertiary actions
-        FortalButton.outline(
-          label: 'Outline Button',
+        FortalButton(
+          variant: FortalButtonVariant.outline,
           onPressed: () {},
+          child: const Text('Outline Button'),
         ),
         // Ghost variant - Minimal styling, inline actions
-        FortalButton.ghost(
-          label: 'Ghost Button',
+        FortalButton(
+          variant: FortalButtonVariant.ghost,
           onPressed: () {},
+          child: const Text('Ghost Button'),
         ),
       ],
     );
@@ -157,12 +162,7 @@ class FortalButtonExample extends StatelessWidget {
 ```dart
 const RemixButton({
   Key? key,
-  required String label,
-  IconData? leadingIcon,
-  IconData? trailingIcon,
-  RemixButtonTextBuilder? textBuilder,
-  RemixButtonIconBuilder? leadingIconBuilder,
-  RemixButtonIconBuilder? trailingIconBuilder,
+  required Widget child,
   RemixButtonLoadingBuilder? loadingBuilder,
   bool loading = false,
   bool enabled = true,
@@ -197,29 +197,10 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `label` → `String`
+#### `child` → `Widget`
 
-**Required**. The label text to display in the button. If [textBuilder] is provided, this is ignored.
-
-#### `leadingIcon` → `IconData?`
-
-Optional. The leading icon to display before the label. If [leadingIconBuilder] is provided, this is ignored.
-
-#### `trailingIcon` → `IconData?`
-
-Optional. The trailing icon to display after the label. If [trailingIconBuilder] is provided, this is ignored.
-
-#### `textBuilder` → `RemixButtonTextBuilder?`
-
-Optional. Builder for customizing the text rendering.
-
-#### `leadingIconBuilder` → `RemixButtonIconBuilder?`
-
-Optional. Builder for customizing the leading icon rendering.
-
-#### `trailingIconBuilder` → `RemixButtonIconBuilder?`
-
-Optional. Builder for customizing the trailing icon rendering.
+**Required**. Arbitrary button content. Descendant text and icons inherit the
+resolved label and icon styles.
 
 #### `loadingBuilder` → `RemixButtonLoadingBuilder?`
 

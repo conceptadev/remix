@@ -1,21 +1,23 @@
 ---
 title: Select
-description: A dropdown select component for choosing options from a list
+description: A structured dropdown select for choosing one value
 keywords: [flutter, remix, select, dropdown, picker, combo-box, form]
 ---
 
-A dropdown select component for choosing from a list of options.
+`RemixSelect` is a controlled single-value input. Its sealed `entries` model
+supports selectable items, groups, labels, and separators without allowing
+arbitrary interactive widgets inside listbox content.
 
 ## When to use this
 
-- **Form inputs**: Collect user selections from predefined options
-- **Filters**: Allow users to filter content by categories or criteria
-- **Settings**: Enable users to choose configuration values
-- **Data entry**: Provide structured input options in forms
+- **Form inputs**: Collect one value from a known set
+- **Filters**: Choose one category, status, or sort order
+- **Settings**: Select one configuration value
+- **Grouped choices**: Organize longer lists with labels and separators
 
 ## Basic implementation
 
-<CodeGroup title="Basic implementation" defaultLanguage="dart">
+<CodeGroup title="Structured select" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -33,63 +35,44 @@ class _SelectExampleState extends State<SelectExample> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 200,
-      child: RemixSelect(
-        trigger: const RemixSelectTrigger(placeholder: 'Text Value'),
-        items: [
-          RemixSelectItem(
-            value: 'option1',
-            label: 'Option 1',
-            enabled: true,
-            style: itemStyle,
+      width: 240,
+      child: RemixSelect<String>(
+        trigger: const RemixSelectTrigger(placeholder: 'Choose a fruit'),
+        entries: const [
+          RemixSelectLabel(label: 'Fresh'),
+          RemixSelectGroup(
+            semanticLabel: 'Fresh fruit',
+            entries: [
+              RemixSelectItem(value: 'apple', label: 'Apple'),
+              RemixSelectItem(value: 'banana', label: 'Banana'),
+            ],
           ),
+          RemixSelectSeparator(),
           RemixSelectItem(
-            value: 'option2',
-            label: 'Option 2',
+            value: 'orange',
+            label: 'Orange',
             enabled: false,
-            style: itemStyle,
           ),
         ],
         selectedValue: _selectedValue,
-        style: style,
-        onChanged: (value) {
-          setState(() {
-            _selectedValue = value;
-          });
-        },
+        onChanged: (value) => setState(() => _selectedValue = value),
+        style: RemixSelectStyler()
+            .trigger(
+              RemixSelectTriggerStyler()
+                  .paddingY(10)
+                  .paddingX(12)
+                  .borderAll(color: const Color(0xFF898988))
+                  .borderRadiusAll(const Radius.circular(12)),
+            )
+            .content(
+              RemixSelectContentStyler()
+                  .width(240)
+                  .paddingAll(6)
+                  .color(Colors.white)
+                  .borderRadiusAll(const Radius.circular(12)),
+            ),
       ),
     );
-  }
-
-  RemixSelectMenuItemStyler get itemStyle {
-    return RemixSelectMenuItemStyler()
-        .iconSize(16)
-        .paddingAll(8)
-        .borderRadiusAll(const Radius.circular(8))
-        .onHovered(RemixSelectMenuItemStyler().color(Colors.blueGrey.shade50))
-        .onDisabled(
-          RemixSelectMenuItemStyler().labelColor(Colors.grey.shade300),
-        );
-  }
-
-  RemixSelectStyler get style {
-    return RemixSelectStyler()
-        .trigger(
-          RemixSelectTriggerStyler()
-              .color(Colors.transparent)
-              .borderAll(color: const Color(0xFF898988))
-              .paddingY(10)
-              .paddingX(12)
-              .borderRadiusAll(const Radius.circular(12)),
-        )
-        .menuContainer(
-          FlexBoxStyler()
-              .width(200)
-              .marginY(5)
-              .paddingAll(6)
-              .color(Colors.white)
-              .borderRadiusAll(const Radius.circular(12)),
-        );
   }
 }
 ```
@@ -97,7 +80,9 @@ class _SelectExampleState extends State<SelectExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+`FortalSelect` styles the trigger and popup independently. Use
+`triggerVariant` for `classic`, `surface`, `soft`, or `ghost`, and
+`contentVariant` for `solid` or `soft` content.
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -112,39 +97,22 @@ class FortalSelectExample extends StatefulWidget {
 }
 
 class _FortalSelectExampleState extends State<FortalSelectExample> {
-  String? _surface;
-  String? _soft;
-  String? _ghost;
+  String? _value;
 
-  static const _items = [
+  static const _entries = <RemixSelectEntry<String>>[
     RemixSelectItem(value: 'opt1', label: 'Option 1'),
     RemixSelectItem(value: 'opt2', label: 'Option 2'),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 16,
-      children: [
-        FortalSelect.surface(
-          trigger: const RemixSelectTrigger(placeholder: 'Surface'),
-          items: _items,
-          selectedValue: _surface,
-          onChanged: (value) => setState(() => _surface = value),
-        ),
-        FortalSelect.soft(
-          trigger: const RemixSelectTrigger(placeholder: 'Soft'),
-          items: _items,
-          selectedValue: _soft,
-          onChanged: (value) => setState(() => _soft = value),
-        ),
-        FortalSelect.ghost(
-          trigger: const RemixSelectTrigger(placeholder: 'Ghost'),
-          items: _items,
-          selectedValue: _ghost,
-          onChanged: (value) => setState(() => _ghost = value),
-        ),
-      ],
+    return FortalSelect<String>(
+      triggerVariant: FortalSelectTriggerVariant.surface,
+      contentVariant: FortalSelectContentVariant.solid,
+      trigger: const RemixSelectTrigger(placeholder: 'Choose an option'),
+      entries: _entries,
+      selectedValue: _value,
+      onChanged: (value) => setState(() => _value = value),
     );
   }
 }
@@ -152,435 +120,56 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
 </CodeGroup>
 
 <Info>
-  `FortalSelect` applies matching trigger, menu container, and default item styles. Set `RemixSelectItem.style` only for a row-level override.
-  See the [fortalSelectStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/select/fortal_select_styles.dart) for all available options.
+  See the [fortalSelectStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/select/fortal_select_styles.dart) for the exact trigger and content recipes.
 </Info>
 
 ## Constructor
-<CodeGroup title="Constructor" defaultLanguage="dart">
+
+<CodeGroup title="RemixSelect constructor" defaultLanguage="dart">
 ```dart
-const RemixSelect({
+const RemixSelect<T>({
   Key? key,
   required RemixSelectTrigger trigger,
-  required List<RemixSelectItem<T>> items,
+  required List<RemixSelectEntry<T>> entries,
   T? selectedValue,
-  OverlayPositionConfig positioning = const OverlayPositionConfig(
-    targetAnchor: Alignment.bottomCenter,
-    followerAnchor: Alignment.topCenter,
-  ),
+  OverlayPositionConfig positioning = const OverlayPositionConfig(...),
   ValueChanged<T?>? onChanged,
   VoidCallback? onOpen,
   VoidCallback? onClose,
+  bool? open,
+  ValueChanged<bool>? onOpenChanged,
   bool enabled = true,
   String? semanticLabel,
   bool closeOnSelect = true,
   FocusNode? focusNode,
+  RemixSelectPartWrapper? triggerWrapper,
+  RemixSelectPartWrapper? contentWrapper,
+  RemixSelectIconBuilder? triggerChevronBuilder,
+  RemixSelectIconBuilder? itemIndicatorBuilder,
   RemixSelectStyler style = const RemixSelectStyler.create(),
   RemixSelectSpec? styleSpec,
 })
 ```
 </CodeGroup>
 
-
-## Properties
-### Widget Properties
-
-#### `key` → `Key?`
-
-Optional. Controls how one widget replaces another widget in the tree.
-
-#### `trigger` → `RemixSelectTrigger`
-
-**Required**. The trigger data that defines the select's button.
-
-#### `items` → `List<RemixSelectItem<T>>`
-
-**Required**. The list of selectable items.
-
-#### `selectedValue` → `T?`
-
-Optional. The currently selected value.
-
-#### `onChanged` → `ValueChanged<T?>?`
-
-Optional. Called when the selected value changes.
-
-#### `onOpen` → `VoidCallback?`
-
-Optional. Called when the dropdown opens.
-
-#### `onClose` → `VoidCallback?`
-
-Optional. Called when the dropdown closes.
-
-#### `enabled` → `bool`
-
-Optional. Whether the select is enabled and can be interacted with.
-
-#### `semanticLabel` → `String?`
-
-Optional. Semantic label for accessibility.
-
-#### `closeOnSelect` → `bool`
-
-Optional. Whether to automatically close the dropdown when an item is selected.
-
-#### `focusNode` → `FocusNode?`
-
-Optional. Optional focus node to control focus behavior.
-
-#### `style` → `RemixSelectStyler`
-
-Optional. The style configuration for the select.
-
-#### `styleSpec` → `RemixSelectSpec?`
-
-Optional. A raw resolved style spec that bypasses fluent style resolution.
-
-
-### Select Style Methods
-
-#### `menuContainer(FlexBoxStyler value)`
-
-Configures the select menu overlay container.
-
-#### `trigger(RemixSelectTriggerStyler value)`
-
-Configures the select trigger style.
-
-#### `item(RemixSelectMenuItemStyler value)`
-
-Configures the default style for every option. A `RemixSelectItem.style`
-merges on top as an optional row-level override.
-
-#### `animate(AnimationConfig value)`
-
-Configures implicit animation for style transitions.
-
-#### `variants(List<VariantStyle<RemixSelectSpec>> value)`
-
-Sets style variants.
-
-#### `foregroundDecoration(DecorationMix value)`
-
-Sets the menu container foreground decoration.
-
-#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
-
-Applies a matrix transformation to the menu container.
-
-#### `wrap(WidgetModifierConfig value)`
-
-Applies widget modifiers such as clipping, opacity, or scaling.
-
-#### `modifier(WidgetModifierConfig value)`
-
-Sets the widget modifier.
-
-#### `call<T>({ ... })`
-
-Creates a RemixSelect widget with this style applied.
-
-### Select Trigger Style Methods
-
-#### `container(FlexBoxStyler value)`
-
-Configures the trigger container style.
-
-#### `label(TextStyler value)`
-
-Sets trigger label styling.
-
-#### `icon(IconStyler value)`
-
-Sets trigger icon styling.
-
-#### `alignment(Alignment value)`
-
-Sets trigger container alignment.
-
-#### `constraints(BoxConstraintsMix value)`
-
-Sets trigger size constraints.
-
-#### `decoration(DecorationMix value)`
-
-Sets trigger container decoration.
-
-#### `margin(EdgeInsetsGeometryMix value)`
-
-Sets trigger container margin.
-
-#### `padding(EdgeInsetsGeometryMix value)`
-
-Sets trigger container padding.
-
-#### `foregroundDecoration(DecorationMix value)`
-
-Sets a foreground decoration painted on top of the trigger.
-
-#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
-
-Applies a matrix transformation to the trigger.
-
-#### `flex(FlexStyler value)`
-
-Configures trigger flex layout properties.
-
-#### `animate(AnimationConfig value)`
-
-Configures implicit animation for trigger style transitions.
-
-#### `variants(List<VariantStyle<RemixSelectTriggerSpec>> value)`
-
-Sets trigger style variants.
-
-#### `wrap(WidgetModifierConfig value)`
-
-Applies widget modifiers such as clipping, opacity, or scaling.
-
-#### `modifier(WidgetModifierConfig value)`
-
-Sets the trigger widget modifier.
-
-#### `labelStyle(TextStyleMix value)`
-
-Sets label/text style using TextStyleMix directly
-
-#### `labelColor(Color value)`
-
-Sets label/text color
-
-#### `labelFontSize(double value)`
-
-Sets label/text font size
-
-#### `labelFontWeight(FontWeight value)`
-
-Sets label/text font weight
-
-#### `labelFontStyle(FontStyle value)`
-
-Sets label/text font style (italic/normal)
-
-#### `labelLetterSpacing(double value)`
-
-Sets label/text letter spacing
-
-#### `labelDecoration(TextDecoration value)`
-
-Sets label/text decoration (underline, strikethrough, etc.)
-
-#### `labelFontFamily(String value)`
-
-Sets label/text font family
-
-#### `labelHeight(double value)`
-
-Sets label/text line height
-
-#### `labelWordSpacing(double value)`
-
-Sets label/text word spacing
-
-#### `labelDecorationColor(Color value)`
-
-Sets label/text decoration color
-
-#### `iconColor(Color value)`
-
-Sets icon color
-
-#### `iconSize(double value)`
-
-Sets icon size
-
-#### `iconOpacity(double value)`
-
-Sets icon opacity
-
-#### `iconWeight(double value)`
-
-Sets icon weight (useful for variable icons like Material Symbols)
-
-#### `iconGrade(double value)`
-
-Sets icon grade (useful for Material Icons)
-
-#### `iconFill(double value)`
-
-Sets icon fill (useful for Material Icons filled variants)
-
-#### `iconOpticalSize(double value)`
-
-Sets icon optical size (useful for Material Icons)
-
-#### `iconBlendMode(BlendMode value)`
-
-Sets icon blend mode
-
-#### `iconTextDirection(TextDirection value)`
-
-Sets icon text direction
-
-#### `iconShadows(List<ShadowMix> value)`
-
-Sets icon shadows
-
-#### `iconShadow(ShadowMix value)`
-
-Sets single icon shadow
-
-### Select Menu Item Style Methods
-
-#### `container(FlexBoxStyler value)`
-
-Configures the menu item container style.
-
-#### `text(TextStyler value)`
-
-Sets menu item text styling.
-
-#### `label(TextStyler value)`
-
-Sets menu item text styling through the label alias.
-
-#### `icon(IconStyler value)`
-
-Sets menu item icon styling.
-
-#### `alignment(Alignment value)`
-
-Sets menu item container alignment.
-
-#### `constraints(BoxConstraintsMix value)`
-
-Sets menu item size constraints.
-
-#### `decoration(DecorationMix value)`
-
-Sets menu item container decoration.
-
-#### `margin(EdgeInsetsGeometryMix value)`
-
-Sets menu item container margin.
-
-#### `padding(EdgeInsetsGeometryMix value)`
-
-Sets menu item container padding.
-
-#### `foregroundDecoration(DecorationMix value)`
-
-Sets a foreground decoration painted on top of the menu item.
-
-#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
-
-Applies a matrix transformation to the menu item.
-
-#### `flex(FlexStyler value)`
-
-Configures menu item flex layout properties.
-
-#### `animate(AnimationConfig value)`
-
-Configures implicit animation for menu item style transitions.
-
-#### `variants(List<VariantStyle<RemixSelectMenuItemSpec>> value)`
-
-Sets menu item style variants.
-
-#### `wrap(WidgetModifierConfig value)`
-
-Applies widget modifiers such as clipping, opacity, or scaling.
-
-#### `modifier(WidgetModifierConfig value)`
-
-Sets the menu item widget modifier.
-
-#### `labelStyle(TextStyleMix value)`
-
-Sets item text style using TextStyleMix directly.
-
-#### `labelColor(Color value)`
-
-Sets item text color.
-
-#### `labelFontSize(double value)`
-
-Sets item text font size.
-
-#### `labelFontWeight(FontWeight value)`
-
-Sets item text font weight.
-
-#### `labelFontStyle(FontStyle value)`
-
-Sets item text font style.
-
-#### `labelLetterSpacing(double value)`
-
-Sets item text letter spacing.
-
-#### `labelDecoration(TextDecoration value)`
-
-Sets item text decoration.
-
-#### `labelFontFamily(String value)`
-
-Sets item text font family.
-
-#### `labelHeight(double value)`
-
-Sets item text line height.
-
-#### `labelWordSpacing(double value)`
-
-Sets item text word spacing.
-
-#### `labelDecorationColor(Color value)`
-
-Sets item text decoration color.
-
-#### `iconColor(Color value)`
-
-Sets item icon color.
-
-#### `iconSize(double value)`
-
-Sets item icon size.
-
-#### `iconOpacity(double value)`
-
-Sets item icon opacity.
-
-#### `iconWeight(double value)`
-
-Sets item icon weight.
-
-#### `iconGrade(double value)`
-
-Sets item icon grade.
-
-#### `iconFill(double value)`
-
-Sets item icon fill.
-
-#### `iconOpticalSize(double value)`
-
-Sets item icon optical size.
-
-#### `iconBlendMode(BlendMode value)`
-
-Sets item icon blend mode.
-
-#### `iconTextDirection(TextDirection value)`
-
-Sets item icon text direction.
-
-#### `iconShadows(List<ShadowMix> value)`
-
-Sets item icon shadows.
-
-#### `iconShadow(ShadowMix value)`
-
-Sets single item icon shadow.
+## Entry types
+
+- `RemixSelectItem<T>` is a selectable typed value with a visible label.
+- `RemixSelectGroup<T>` creates a semantic group around nested entries.
+- `RemixSelectLabel<T>` is a non-selectable heading.
+- `RemixSelectSeparator<T>` is a decorative boundary.
+
+The selected value is controlled by `selectedValue`. A null `onChanged` ignores
+selection requests, but an enabled select may still open so users can inspect
+its options. Set `enabled: false` to disable opening and selection together.
+The overlay is uncontrolled when `open` is null. With a non-null `open`, user
+interaction only reports the requested state through `onOpenChanged`; the
+owner must rebuild with the new value, so rejecting a request leaves the
+overlay unchanged. `FortalSelect` forwards the same controlled-open contract.
+
+## Styling
+
+`RemixSelectStyler` owns separate `trigger`, `content`, `item`, `label`, and
+`separator` slots. Per-item and per-label styles merge after those defaults.
+The wrapper and glyph builders replace only presentation; Remix retains the
+select behavior and semantics.

@@ -10,15 +10,13 @@ import 'package:remix/remix.dart';
 /// - Consistent background and centering
 /// - Debug banner disabled for clean previews
 Widget createRemixPreview(Widget child) {
-  return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: Builder(
-      builder: (context) => FortalScope(
-        brightness: Theme.of(context).brightness,
-        child: Scaffold(
-          backgroundColor: MixColors.grey[50],
-          body: Center(child: child),
-        ),
+  return FortalScope(
+    appearance: .light,
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: MixColors.grey[50],
+        body: Center(child: child),
       ),
     ),
   );
@@ -26,22 +24,20 @@ Widget createRemixPreview(Widget child) {
 
 /// Dark mode variant of the preview wrapper.
 Widget createRemixPreviewDark(Widget child) {
-  return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(
-      brightness: Brightness.dark,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: MixColors.blueGrey,
+  return FortalScope(
+    appearance: .dark,
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
         brightness: Brightness.dark,
-      ),
-    ),
-    home: Builder(
-      builder: (context) => FortalScope(
-        brightness: Theme.of(context).brightness,
-        child: Scaffold(
-          backgroundColor: MixColors.black,
-          body: Center(child: child),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: MixColors.blueGrey,
+          brightness: Brightness.dark,
         ),
+      ),
+      home: Scaffold(
+        backgroundColor: MixColors.black,
+        body: Center(child: child),
       ),
     ),
   );

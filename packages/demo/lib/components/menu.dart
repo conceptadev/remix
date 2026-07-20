@@ -29,21 +29,17 @@ Widget buildMenuUseCase(BuildContext context) {
           height: 300,
           width: 300,
           child: Center(
-            child: FortalMenu(
-              positioning: const OverlayPositionConfig(
-                followerAnchor: .topCenter,
-                targetAnchor: .bottomCenter,
-              ),
-              trigger: const RemixMenuTrigger(
-                label: 'Menu',
-                icon: Icons.keyboard_arrow_down,
+            child: FortalMenu<String>(
+              trigger: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [Text('Menu'), Icon(Icons.keyboard_arrow_down)],
               ),
               variant: variant,
               size: size,
-              items: [
-                const RemixMenuItem(label: 'Item 1', value: 'item1'),
-                const RemixMenuItem(label: 'Item 2', value: 'item2'),
-                const RemixMenuItem(label: 'Item 3', value: 'item3'),
+              entries: const [
+                RemixMenuAction(value: 'item1', child: Text('Item 1')),
+                RemixMenuAction(value: 'item2', child: Text('Item 2')),
+                RemixMenuAction(value: 'item3', child: Text('Item 3')),
               ],
               onSelected: (value) {},
             ),

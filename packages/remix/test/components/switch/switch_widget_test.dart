@@ -4,6 +4,7 @@ import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
+import '../../helpers/test_methods.dart';
 
 void main() {
   group('RemixSwitch', () {
@@ -45,6 +46,42 @@ void main() {
 
         expect(find.byType(RemixSwitch), findsOneWidget);
       });
+    });
+
+    group('WidgetStateController', () {
+      RemixSwitch buildSwitch({bool enabled = true}) => RemixSwitch(
+        selected: false,
+        enabled: enabled,
+        onChanged: (_) {},
+        style: RemixSwitchStyler().size(40, 20),
+      );
+
+      widgetControllerTest<RemixSwitchSpec>(
+        'reports switch hovered state',
+        build: buildSwitch,
+        act: hoverAction<RemixSwitch>,
+        expectedStates: {WidgetState.hovered},
+      );
+
+      widgetControllerTest<RemixSwitchSpec>(
+        'reports switch pressed state',
+        build: buildSwitch,
+        act: pressAction<RemixSwitch>,
+        expectedStates: {WidgetState.pressed},
+      );
+
+      widgetControllerTest<RemixSwitchSpec>(
+        'reports switch focused state',
+        build: buildSwitch,
+        act: focusAction<RemixSwitch>,
+        expectedStates: {WidgetState.focused},
+      );
+
+      widgetControllerTest<RemixSwitchSpec>(
+        'reports switch disabled state',
+        build: () => buildSwitch(enabled: false),
+        expectedStates: {WidgetState.disabled},
+      );
     });
 
     group('Interaction', () {
@@ -552,11 +589,13 @@ void main() {
       testWidgets('accepts styleSpec parameter', (tester) async {
         const spec = RemixSwitchSpec(
           container: StyleSpec(
-            spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.green)),
           ),
           thumb: StyleSpec(
-            spec: BoxSpec(decoration: BoxDecoration(color: Colors.blue)),
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.yellow)),
           ),
+          surface: RemixSurfaceLayerSpec(color: Colors.red),
+          thumbSurface: RemixSurfaceLayerSpec(color: Colors.blue),
         );
 
         await tester.pumpRemixApp(
@@ -564,17 +603,21 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        final decorations = tester
-            .widgetList<Box>(find.byType(Box))
-            .map((box) => box.styleSpec?.spec.decoration);
+        final renderedDecorations = tester
+            .widgetList<DecoratedBox>(find.byType(DecoratedBox))
+            .map((box) => box.decoration);
+        final surfaceColors = tester
+            .widgetList<RemixSurface>(find.byType(RemixSurface))
+            .map((surface) => surface.spec.color);
 
+        expect(surfaceColors, containsAll([Colors.red, Colors.blue]));
         expect(
-          decorations,
-          contains(equals(const BoxDecoration(color: Colors.red))),
+          renderedDecorations,
+          contains(equals(const BoxDecoration(color: Colors.green))),
         );
         expect(
-          decorations,
-          contains(equals(const BoxDecoration(color: Colors.blue))),
+          renderedDecorations,
+          contains(equals(const BoxDecoration(color: Colors.yellow))),
         );
       });
     });

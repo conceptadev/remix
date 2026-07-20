@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Build a settings page with a form that has text fields for name and email, a select dropdown for language preference, some checkboxes for notification options, and a submit button. Use Fortal theming with indigo accent. Make it look polished.",
-      "expected_output": "A complete Flutter widget wrapped in FortalScope(accent: .indigo) using named Fortal variant constructors where the variant is fixed, including FortalSelect.surface without an unnecessary explicit generic type or redundant per-item preset styling, plus FortalTextField, FortalCheckbox, and FortalButton preset widgets.",
+      "expected_output": "A complete Flutter widget wrapped in FortalScope(accentColor: .indigo) using the single enum-based Fortal constructors, including FortalSelect(triggerVariant: .surface, contentVariant: .solid) without redundant per-entry preset styling, plus FortalTextField, FortalCheckbox, and FortalButton preset widgets.",
       "files": []
     },
     {
@@ -16,7 +16,7 @@
     {
       "id": 3,
       "prompt": "I'm using FortalIconButton but I need a long-press action and a semantic label on it. How do I do that?",
-      "expected_output": "Explains that FortalIconButton forwards the complete RemixIconButton behavior surface and shows a named variant constructor using both onLongPress and semanticLabel directly.",
+      "expected_output": "Explains that FortalIconButton forwards the complete RemixIconButton behavior surface and shows the single enum-based constructor with variant, onLongPress, and semanticLabel supplied directly.",
       "files": []
     },
     {

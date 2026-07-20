@@ -4,6 +4,36 @@ import 'package:remix/remix.dart';
 
 void main() {
   group('Fortal semantic tokens', () {
+    testWidgets('radio indicator metrics resolve before size arithmetic', (
+      tester,
+    ) async {
+      final expectedSizes = {
+        FortalRadioSize.size1: 5.6,
+        FortalRadioSize.size2: 6.4,
+        FortalRadioSize.size3: 8.0,
+      };
+
+      for (final entry in expectedSizes.entries) {
+        late RemixRadioSpec spec;
+        await tester.pumpWidget(
+          FortalScope(
+            child: Builder(
+              builder: (context) {
+                spec = fortalRadioStyler(size: entry.key).build(context).spec;
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        );
+
+        final constraints = spec.indicator.spec.constraints!;
+        expect(constraints.minWidth, entry.value);
+        expect(constraints.minHeight, entry.value);
+        expect(constraints.isTight, isTrue);
+        expect(constraints.isNormalized, isTrue);
+      }
+    });
+
     testWidgets('resolve to the Radix light and dark semantic colors', (
       tester,
     ) async {
@@ -40,24 +70,31 @@ void main() {
       final light = await _captureFortalTokens(tester, Brightness.light);
       final dark = await _captureFortalTokens(tester, Brightness.dark);
 
-      final expectedLightStroke = Color.lerp(
-        slate.light.scale.alphaStep(3),
-        slate.light.scale.step(3),
-        0.25,
-      )!;
-      final expectedDarkStroke = Color.lerp(
-        slate.dark.scale.alphaStep(6),
-        slate.dark.scale.step(6),
-        0.25,
-      )!;
-
-      expect(light.shadowStroke, expectedLightStroke);
-      expect(dark.shadowStroke, expectedDarkStroke);
+      // Independent Chromium 3.3.0 `color-mix(in oklab, ...)` reference
+      // vectors. Keeping the numeric oracle here prevents the production
+      // interpolation helper from validating itself.
+      _expectColorChannels(
+        light.shadowStroke,
+        alpha: 0.294118,
+        red: 0.7666243898705472,
+        green: 0.7864932535606407,
+        blue: 0.8354613643851005,
+        tolerance: 0.0002,
+      );
+      _expectColorChannels(
+        dark.shadowStroke,
+        alpha: 0.391176,
+        red: 0.42099932796903133,
+        green: 0.45831310533138864,
+        blue: 0.49482048001248397,
+        tolerance: 0.0002,
+      );
+      expect(light.shadowStroke.toARGB32(), 0x4BC3C9D5);
+      expect(dark.shadowStroke.toARGB32(), 0x646B757E);
       expect(light.shadowStroke, isNot(dark.shadowStroke));
 
-      // buildFortalShadows bakes fully-resolved Color values into every
-      // BoxShadow layer (not token refs — see the `colors:` parameter it
-      // takes), so a shadowStroke-backed layer is pinned by resolved-value
+      // buildFortalShadows bakes fully-resolved Color values into every paint
+      // layer, so a shadowStroke-backed layer is pinned by resolved-value
       // equality against the mode's shadowStroke rather than token identity.
       for (final entry in {'light': light, 'dark': dark}.entries) {
         final mode = entry.key;
@@ -101,13 +138,9 @@ void main() {
         (offset: Offset(0, 4), blurRadius: 12.0, spreadRadius: -4.0),
       ]);
 
-      // shadow1 has no shadowStroke layer: Flutter has no inset-shadow
-      // primitive, so buildFortalShadows approximates the CSS inset first
-      // layer with a plain gray-alpha outer layer instead (gray alpha step 5
-      // light / step 6 dark), followed by mode-specific black/gray layers.
-      // The layer *count* also differs (3 in light, 2 in dark).
+      // shadow1 is the exact ordered CSS inset recipe in both modes.
       final expectedLightShadow1Stroke = slate.light.scale.alphaStep(5);
-      final expectedDarkShadow1Stroke = slate.dark.scale.alphaStep(6);
+      final expectedDarkShadow1Stroke = slate.dark.scale.alphaStep(3);
 
       expect(light.shadow1FirstLayerColor, expectedLightShadow1Stroke);
       expect(dark.shadow1FirstLayerColor, expectedDarkShadow1Stroke);
@@ -116,14 +149,41 @@ void main() {
         _shadowGeometry(light.shadow1),
         isNot(_shadowGeometry(dark.shadow1)),
       );
+      expect(
+        light.shadow1.map((shadow) => shadow.kind),
+        everyElement(RemixPaintShadowKind.inset),
+      );
+      expect(
+        dark.shadow1.map((shadow) => shadow.kind),
+        everyElement(RemixPaintShadowKind.inset),
+      );
+      for (final shadows in [
+        light.shadow2,
+        light.shadow3,
+        light.shadow4,
+        light.shadow5,
+        light.shadow6,
+        dark.shadow2,
+        dark.shadow3,
+        dark.shadow4,
+        dark.shadow5,
+        dark.shadow6,
+      ]) {
+        expect(
+          shadows.map((shadow) => shadow.kind),
+          everyElement(RemixPaintShadowKind.outer),
+        );
+      }
       expect(_shadowGeometry(light.shadow1), const [
         (offset: Offset(0, 0), blurRadius: 0.0, spreadRadius: 1.0),
         (offset: Offset(0, 1.5), blurRadius: 2.0, spreadRadius: 0.0),
         (offset: Offset(0, 1.5), blurRadius: 2.0, spreadRadius: 0.0),
       ]);
       expect(_shadowGeometry(dark.shadow1), const [
+        (offset: Offset(0, -1), blurRadius: 1.0, spreadRadius: 0.0),
         (offset: Offset(0, 0), blurRadius: 0.0, spreadRadius: 1.0),
-        (offset: Offset(0, 1), blurRadius: 2.0, spreadRadius: 0.0),
+        (offset: Offset(0, 3), blurRadius: 4.0, spreadRadius: 0.0),
+        (offset: Offset(0, 0), blurRadius: 0.0, spreadRadius: 1.0),
       ]);
 
       final expectedLightShadow1Colors = [
@@ -132,8 +192,10 @@ void main() {
         blackAlpha[2]!,
       ];
       final expectedDarkShadow1Colors = [
-        slate.dark.scale.alphaStep(6),
+        slate.dark.scale.alphaStep(3),
+        slate.dark.scale.alphaStep(3),
         blackAlpha[5]!,
+        slate.dark.scale.alphaStep(4),
       ];
       expect(_shadowColors(light.shadow1), isNot(_shadowColors(dark.shadow1)));
       expect(_shadowColors(light.shadow1), expectedLightShadow1Colors);
@@ -149,12 +211,12 @@ void main() {
       expect(_shadowGeometry(dark.shadow4), _shadowGeometry(light.shadow4));
 
       final expectedLightShadow4Colors = [
-        expectedLightStroke,
+        light.shadowStroke,
         blackAlpha[1]!,
         slate.light.scale.alphaStep(3),
       ];
       final expectedDarkShadow4Colors = [
-        expectedDarkStroke,
+        dark.shadowStroke,
         blackAlpha[3]!,
         blackAlpha[5]!,
       ];
@@ -170,12 +232,12 @@ void main() {
       expect(_shadowGeometry(dark.shadow5), _shadowGeometry(light.shadow5));
 
       final expectedLightShadow5Colors = [
-        expectedLightStroke,
+        light.shadowStroke,
         blackAlpha[3]!,
         slate.light.scale.alphaStep(5),
       ];
       final expectedDarkShadow5Colors = [
-        expectedDarkStroke,
+        dark.shadowStroke,
         blackAlpha[5]!,
         blackAlpha[7]!,
       ];
@@ -193,27 +255,27 @@ Future<_FortalTokenSnapshot> _captureFortalTokens(
   late _FortalTokenSnapshot snapshot;
 
   await tester.pumpWidget(
-    MaterialApp(
-      home: FortalScope(
-        brightness: brightness,
-        child: Builder(
+    FortalScope(
+      appearance: brightness == .dark ? .dark : .light,
+      child: MaterialApp(
+        home: Builder(
           builder: (context) {
-            final shadow1 = List<BoxShadow>.unmodifiable(
+            final shadow1 = List<RemixPaintShadow>.unmodifiable(
               MixScope.tokenOf(FortalTokens.shadow1, context),
             );
-            final shadow2 = List<BoxShadow>.unmodifiable(
+            final shadow2 = List<RemixPaintShadow>.unmodifiable(
               MixScope.tokenOf(FortalTokens.shadow2, context),
             );
-            final shadow3 = List<BoxShadow>.unmodifiable(
+            final shadow3 = List<RemixPaintShadow>.unmodifiable(
               MixScope.tokenOf(FortalTokens.shadow3, context),
             );
-            final shadow4 = List<BoxShadow>.unmodifiable(
+            final shadow4 = List<RemixPaintShadow>.unmodifiable(
               MixScope.tokenOf(FortalTokens.shadow4, context),
             );
-            final shadow5 = List<BoxShadow>.unmodifiable(
+            final shadow5 = List<RemixPaintShadow>.unmodifiable(
               MixScope.tokenOf(FortalTokens.shadow5, context),
             );
-            final shadow6 = List<BoxShadow>.unmodifiable(
+            final shadow6 = List<RemixPaintShadow>.unmodifiable(
               MixScope.tokenOf(FortalTokens.shadow6, context),
             );
 
@@ -242,26 +304,11 @@ Future<_FortalTokenSnapshot> _captureFortalTokens(
               shadow4: shadow4,
               shadow5: shadow5,
               shadow6: shadow6,
-              shadow1FirstLayerColor: _resolveColorReference(
-                context,
-                shadow1.first.color,
-              ),
-              shadow2FirstLayerColor: _resolveColorReference(
-                context,
-                shadow2.first.color,
-              ),
-              shadow4FirstLayerColor: _resolveColorReference(
-                context,
-                shadow4.first.color,
-              ),
-              shadow5FirstLayerColor: _resolveColorReference(
-                context,
-                shadow5.first.color,
-              ),
-              shadow6FirstLayerColor: _resolveColorReference(
-                context,
-                shadow6.first.color,
-              ),
+              shadow1FirstLayerColor: shadow1.first.color,
+              shadow2FirstLayerColor: shadow2.first.color,
+              shadow4FirstLayerColor: shadow4.first.color,
+              shadow5FirstLayerColor: shadow5.first.color,
+              shadow6FirstLayerColor: shadow6.first.color,
             );
 
             return const SizedBox.shrink();
@@ -274,14 +321,8 @@ Future<_FortalTokenSnapshot> _captureFortalTokens(
   return snapshot;
 }
 
-Color _resolveColorReference(BuildContext context, Color color) {
-  final token = tokenFromReferenceValue<Color>(color);
-
-  return token == null ? color : MixScope.tokenOf(token, context);
-}
-
 List<({Offset offset, double blurRadius, double spreadRadius})> _shadowGeometry(
-  List<BoxShadow> shadows,
+  List<RemixPaintShadow> shadows,
 ) {
   return [
     for (final shadow in shadows)
@@ -296,12 +337,26 @@ List<({Offset offset, double blurRadius, double spreadRadius})> _shadowGeometry(
 /// Extracts each shadow layer's resolved color, in order.
 ///
 /// buildFortalShadows bakes fully-resolved [Color] values into every
-/// [BoxShadow] (it takes the theme's resolved [FortalThemeColors] rather than
+/// [RemixPaintShadow] (it takes the theme's resolved [FortalThemeColors] rather than
 /// embedding token refs), so pinning the exact color per layer is what
 /// catches a swapped gray/black alpha step for a given brightness — the
 /// layer count and geometry alone wouldn't change.
-List<Color> _shadowColors(List<BoxShadow> shadows) {
+List<Color> _shadowColors(List<RemixPaintShadow> shadows) {
   return [for (final shadow in shadows) shadow.color];
+}
+
+void _expectColorChannels(
+  Color actual, {
+  required double alpha,
+  required double red,
+  required double green,
+  required double blue,
+  double tolerance = 1e-9,
+}) {
+  expect(actual.a, closeTo(alpha, tolerance), reason: 'alpha channel');
+  expect(actual.r, closeTo(red, tolerance), reason: 'red channel');
+  expect(actual.g, closeTo(green, tolerance), reason: 'green channel');
+  expect(actual.b, closeTo(blue, tolerance), reason: 'blue channel');
 }
 
 class _FortalTokenSnapshot {
@@ -331,12 +386,12 @@ class _FortalTokenSnapshot {
   final Color surface;
   final Color overlay;
   final Color shadowStroke;
-  final List<BoxShadow> shadow1;
-  final List<BoxShadow> shadow2;
-  final List<BoxShadow> shadow3;
-  final List<BoxShadow> shadow4;
-  final List<BoxShadow> shadow5;
-  final List<BoxShadow> shadow6;
+  final List<RemixPaintShadow> shadow1;
+  final List<RemixPaintShadow> shadow2;
+  final List<RemixPaintShadow> shadow3;
+  final List<RemixPaintShadow> shadow4;
+  final List<RemixPaintShadow> shadow5;
+  final List<RemixPaintShadow> shadow6;
   final Color shadow1FirstLayerColor;
   final Color shadow2FirstLayerColor;
   final Color shadow4FirstLayerColor;

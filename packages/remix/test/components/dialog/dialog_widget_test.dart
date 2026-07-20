@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_surface.dart' show RemixSurfaceBox;
 
 import '../../helpers/test_helpers.dart';
 
@@ -272,6 +273,98 @@ void main() {
   });
 
   group('showRemixDialog', () {
+    testWidgets('transitions through entering open exiting and closed states', (
+      tester,
+    ) async {
+      final enteringValues = <double>[];
+      final exitingValues = <double>[];
+      var exiting = false;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => showRemixDialog<void>(
+                context: context,
+                barrierDismissible: false,
+                transitionDuration: const Duration(milliseconds: 200),
+                transitionBuilder: (context, animation, secondary, child) {
+                  (exiting ? exitingValues : enteringValues).add(
+                    animation.value,
+                  );
+                  return child;
+                },
+                builder: (context) =>
+                    const RemixDialog(title: 'Animated dialog'),
+              ),
+              child: const Text('Open animated dialog'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Animated dialog'), findsNothing);
+      await tester.tap(find.text('Open animated dialog'));
+      await tester.pump();
+      expect(find.text('Animated dialog'), findsOneWidget);
+      expect(enteringValues.any((value) => value < 1), isTrue);
+
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(enteringValues.any((value) => value > 0 && value < 1), isTrue);
+      await tester.pumpAndSettle();
+      expect(enteringValues, contains(1));
+
+      exiting = true;
+      Navigator.of(tester.element(find.text('Animated dialog'))).pop();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(exitingValues.any((value) => value > 0 && value < 1), isTrue);
+      await tester.pumpAndSettle();
+      expect(find.text('Animated dialog'), findsNothing);
+      expect(exitingValues.any((value) => value == 0), isTrue);
+    });
+
+    testWidgets(
+      'route barrier blocks background pointers for non-modal semantics',
+      (tester) async {
+        var backgroundPresses = 0;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Builder(
+              builder: (context) => Column(
+                children: [
+                  TextButton(
+                    onPressed: () => backgroundPresses++,
+                    child: const Text('Background action'),
+                  ),
+                  TextButton(
+                    onPressed: () => showRemixDialog<void>(
+                      context: context,
+                      barrierDismissible: false,
+                      transitionDuration: Duration.zero,
+                      builder: (context) => const RemixDialog(
+                        title: 'Semantic non-modal dialog',
+                        modal: false,
+                      ),
+                    ),
+                    child: const Text('Open non-modal semantics'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Open non-modal semantics'));
+        await tester.pump();
+        await tester.pump();
+        await tester.tapAt(tester.getCenter(find.text('Background action')));
+        await tester.pump();
+
+        expect(backgroundPresses, 0);
+        expect(find.text('Semantic non-modal dialog'), findsOneWidget);
+      },
+    );
+
     testWidgets('opens without a MixScope ancestor', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -328,7 +421,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(RemixSurfaceBox), findsOneWidget);
         expect(find.byType(StyledText), findsOneWidget);
         expect(find.text('Test Dialog'), findsOneWidget);
       });
@@ -340,7 +433,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(RemixSurfaceBox), findsOneWidget);
         expect(find.byType(StyledText), findsOneWidget);
         expect(find.text('Dialog Description'), findsOneWidget);
       });
@@ -351,7 +444,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(RemixSurfaceBox), findsOneWidget);
         expect(find.byKey(ValueKey('test_icon')), findsOneWidget);
         expect(find.byIcon(Icons.star), findsOneWidget);
       });
@@ -363,7 +456,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(RemixSurfaceBox), findsOneWidget);
         expect(find.byType(StyledText), findsNWidgets(2));
         expect(find.text('Dialog Title'), findsOneWidget);
         expect(find.text('Dialog Description'), findsOneWidget);
@@ -388,7 +481,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(RemixSurfaceBox), findsOneWidget);
         expect(find.byType(StyledText), findsNWidgets(2));
         expect(find.byType(FlexBox), findsOneWidget);
         expect(find.text('Complete Dialog'), findsOneWidget);
@@ -455,7 +548,10 @@ void main() {
 
         expect(find.text('Only child'), findsOneWidget);
         expect(
-          find.descendant(of: find.byType(Box), matching: find.byType(Column)),
+          find.descendant(
+            of: find.byType(RemixSurfaceBox),
+            matching: find.byType(Column),
+          ),
           findsNothing,
           reason: 'a fully custom body keeps its own layout',
         );
@@ -497,7 +593,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(RemixSurfaceBox), findsOneWidget);
         expect(find.byType(StyledText), findsNWidgets(2));
         expect(find.text('Info Dialog'), findsOneWidget);
         expect(find.text('This is an informational dialog'), findsOneWidget);
@@ -515,7 +611,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(RemixSurfaceBox), findsOneWidget);
         expect(find.byType(FlexBox), findsOneWidget);
         expect(find.text('Dialog with Actions'), findsOneWidget);
         expect(find.text('Action 1'), findsOneWidget);
@@ -531,33 +627,63 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(RemixSurfaceBox), findsOneWidget);
         expect(find.text('Dialog without Actions'), findsOneWidget);
         expect(find.byType(FlexBox), findsNothing);
       });
     });
 
     group('Modal Behavior', () {
-      testWidgets('modal dialog blocks background interaction', (tester) async {
-        await tester.pumpRemixApp(
-          RemixDialog(title: 'Modal Dialog', modal: true),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
-      });
-
-      testWidgets('non-modal dialog allows background interaction', (
+      testWidgets('modal controls route-scoping accessibility semantics', (
         tester,
       ) async {
-        await tester.pumpRemixApp(
-          RemixDialog(title: 'Non-Modal Dialog', modal: false),
-        );
-        await tester.pumpAndSettle();
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            const RemixDialog(
+              title: 'Modal content',
+              semanticLabel: 'Modal route scope',
+            ),
+          );
 
-        expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+          final modalData = tester
+              .getSemantics(find.bySemanticsLabel('Modal route scope'))
+              .getSemanticsData();
+          expect(modalData.role, SemanticsRole.dialog);
+          expect(modalData.flagsCollection.scopesRoute, isTrue);
+          expect(modalData.flagsCollection.namesRoute, isTrue);
+          expect(
+            find.descendant(
+              of: find.byType(RemixDialog),
+              matching: find.byType(BlockSemantics),
+            ),
+            findsOneWidget,
+          );
+
+          await tester.pumpRemixApp(
+            const RemixDialog(
+              title: 'Non-modal content',
+              semanticLabel: 'Non-modal semantic scope',
+              modal: false,
+            ),
+          );
+
+          final nonModalData = tester
+              .getSemantics(find.bySemanticsLabel('Non-modal semantic scope'))
+              .getSemanticsData();
+          expect(nonModalData.role, SemanticsRole.dialog);
+          expect(nonModalData.flagsCollection.scopesRoute, isFalse);
+          expect(nonModalData.flagsCollection.namesRoute, isFalse);
+          expect(
+            find.descendant(
+              of: find.byType(RemixDialog),
+              matching: find.byType(BlockSemantics),
+            ),
+            findsNothing,
+          );
+        } finally {
+          semantics.dispose();
+        }
       });
     });
 
@@ -619,7 +745,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(RemixSurfaceBox), findsOneWidget);
         expect(find.text('Styled Dialog'), findsOneWidget);
       });
 
@@ -699,7 +825,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(RemixSurfaceBox), findsOneWidget);
         expect(find.byType(StyledText), findsOneWidget);
         expect(find.text('Default Style Dialog'), findsOneWidget);
       });
@@ -710,7 +836,7 @@ void main() {
         await tester.pumpRemixApp(RemixDialog(title: 'Short'));
         await tester.pumpAndSettle();
 
-        final shortSize = tester.getSize(find.byType(RemixDialog));
+        final shortSize = tester.getSize(find.byType(RemixSurfaceBox));
 
         await tester.pumpRemixApp(
           RemixDialog(
@@ -720,7 +846,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        final longSize = tester.getSize(find.byType(RemixDialog));
+        final longSize = tester.getSize(find.byType(RemixSurfaceBox));
 
         expect(longSize.width, greaterThan(shortSize.width));
       });
@@ -731,7 +857,7 @@ void main() {
         await tester.pumpRemixApp(RemixDialog(title: 'Title Only'));
         await tester.pumpAndSettle();
 
-        final titleOnlySize = tester.getSize(find.byType(RemixDialog));
+        final titleOnlySize = tester.getSize(find.byType(RemixSurfaceBox));
 
         final actions = [TextButton(onPressed: () {}, child: Text('Action'))];
 
@@ -740,7 +866,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        final withActionsSize = tester.getSize(find.byType(RemixDialog));
+        final withActionsSize = tester.getSize(find.byType(RemixSurfaceBox));
 
         expect(withActionsSize.height, greaterThan(titleOnlySize.height));
       });
@@ -750,13 +876,13 @@ void main() {
         await tester.pumpRemixApp(RemixDialog(child: smallChild));
         await tester.pumpAndSettle();
 
-        final smallSize = tester.getSize(find.byType(RemixDialog));
+        final smallSize = tester.getSize(find.byType(RemixSurfaceBox));
 
         final largeChild = Icon(Icons.star, size: 32.0);
         await tester.pumpRemixApp(RemixDialog(child: largeChild));
         await tester.pumpAndSettle();
 
-        final largeSize = tester.getSize(find.byType(RemixDialog));
+        final largeSize = tester.getSize(find.byType(RemixSurfaceBox));
 
         expect(largeSize.width, greaterThan(smallSize.width));
         expect(largeSize.height, greaterThan(smallSize.height));
@@ -769,7 +895,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(RemixSurfaceBox), findsOneWidget);
         expect(find.byType(StyledText), findsOneWidget);
       });
 
@@ -778,7 +904,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(RemixSurfaceBox), findsOneWidget);
         expect(find.byType(StyledText), findsOneWidget);
       });
 
@@ -789,7 +915,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(RemixSurfaceBox), findsOneWidget);
         expect(find.text('No Actions'), findsOneWidget);
         expect(find.byType(FlexBox), findsNothing);
       });

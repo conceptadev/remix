@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Radix Themes 3.3.0 Fortal reference</title>
+    <link rel="stylesheet" href="node_modules/@radix-ui/themes/styles.css" />
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 1440px; height: 1280px; overflow: hidden; }
+      body { background: #f4f4f5; }
+      .fixture-root { min-height: 1280px; padding: 32px; }
+      .fixture-heading { margin: 0 0 24px; font: 700 24px/1.2 system-ui; }
+      .fixture-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+      .fixture-cell {
+        position: relative;
+        display: flex;
+        min-height: 190px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 16px;
+        overflow: hidden;
+        padding: 20px;
+        border: 1px solid var(--gray-a5);
+        border-radius: 12px;
+        background: var(--color-panel-solid);
+      }
+      .fixture-label { position: absolute; top: 10px; left: 12px; color: var(--gray-11); font: 600 11px/1 system-ui; }
+      .fixture-row { display: flex; align-items: center; gap: 12px; }
+      .fixture-dialog-overlay { position: absolute; inset: 0; background: var(--black-a6); }
+      .fixture-dialog-content { position: relative; width: 240px; }
+      .fixture-menu, .fixture-select-content { position: relative; width: 220px; }
+      .fixture-progress { width: 240px; flex-grow: 0; }
+      .fixture-slider { width: 240px; flex-grow: 0; }
+      .fixture-text-field { width: 250px; }
+      .fixture-tooltip { position: relative; }
+    </style>
+  </head>
+  <body>
+    <main
+      class="radix-themes light fixture-root"
+      data-is-root-theme="true"
+      data-accent-color="indigo"
+      data-gray-color="slate"
+      data-has-background="true"
+      data-panel-background="translucent"
+      data-radius="medium"
+      data-scaling="100%"
+    >
+      <h1 class="fixture-heading">Radix Themes 3.3.0 — Fortal mapped families</h1>
+      <section class="fixture-grid">
+        <article class="fixture-cell"><span class="fixture-label">Avatar</span><span id="avatar" data-probe class="rt-reset rt-AvatarRoot rt-r-size-3 rt-variant-soft"><span class="rt-AvatarFallback rt-two-letters">RT</span></span></article>
+        <article class="fixture-cell"><span class="fixture-label">Badge</span><span id="badge" data-probe class="rt-reset rt-Badge rt-r-size-1 rt-variant-soft">Badge</span></article>
+        <article class="fixture-cell"><span class="fixture-label">Button</span><button id="button" data-probe class="rt-reset rt-BaseButton rt-Button rt-r-size-2 rt-variant-solid">Button</button></article>
+        <article class="fixture-cell"><span class="fixture-label">Callout</span><div id="callout" data-probe class="rt-CalloutRoot rt-r-size-2 rt-variant-soft"><div class="rt-CalloutIcon">!</div><p class="rt-Text rt-r-size-2 rt-CalloutText">Callout text</p></div></article>
+        <article class="fixture-cell"><span class="fixture-label">Card</span><button id="card" data-probe class="rt-reset rt-BaseCard rt-Card rt-r-size-1 rt-variant-surface">Interactive card</button></article>
+        <article class="fixture-cell"><span class="fixture-label">Checkbox</span><button id="checkbox" data-probe data-state="checked" class="rt-reset rt-BaseCheckboxRoot rt-CheckboxRoot rt-r-size-2 rt-variant-surface"><span class="rt-BaseCheckboxIndicator rt-CheckboxIndicator">✓</span></button></article>
+        <article class="fixture-cell"><span class="fixture-label">Dialog</span><div class="fixture-dialog-overlay"></div><div id="dialog" data-probe data-state="open" class="rt-BaseDialogContent rt-DialogContent rt-r-size-3 rt-r-align-center fixture-dialog-content"><strong>Dialog title</strong><span>Dialog content</span></div></article>
+        <article class="fixture-cell"><span class="fixture-label">Divider</span><span id="divider" data-probe role="separator" class="rt-Separator rt-r-orientation-horizontal rt-r-size-4"></span></article>
+        <article class="fixture-cell"><span class="fixture-label">Menu</span><div id="menu" data-probe class="rt-BaseMenuContent rt-DropdownMenuContent rt-r-size-2 rt-variant-solid fixture-menu"><div class="rt-BaseMenuItem rt-DropdownMenuItem" data-highlighted>Menu item</div><div class="rt-BaseMenuSeparator rt-DropdownMenuSeparator"></div><div class="rt-BaseMenuItem rt-DropdownMenuItem">Another item</div></div></article>
+        <article class="fixture-cell"><span class="fixture-label">IconButton</span><button id="icon-button" data-probe aria-label="Add" class="rt-reset rt-BaseButton rt-IconButton rt-r-size-2 rt-variant-classic">+</button></article>
+        <article class="fixture-cell"><span class="fixture-label">Popover</span><div id="popover" data-probe data-state="open" class="rt-PopperContent rt-PopoverContent rt-r-size-2">Popover content</div></article>
+        <article class="fixture-cell"><span class="fixture-label">Progress</span><div id="progress" data-probe role="progressbar" class="rt-ProgressRoot rt-r-size-2 rt-variant-surface fixture-progress" style="--progress-value: 62; --progress-max: 100"><div class="rt-ProgressIndicator"></div></div></article>
+        <article class="fixture-cell"><span class="fixture-label">Radio</span><button id="radio" data-probe data-state="checked" class="rt-reset rt-BaseRadioRoot rt-RadioRoot rt-r-size-2 rt-variant-surface"><span class="rt-BaseRadioIndicator rt-RadioIndicator"></span></button></article>
+        <article class="fixture-cell"><span class="fixture-label">Select</span><button id="select" data-probe data-state="open" class="rt-reset rt-SelectTrigger rt-r-size-2 rt-variant-surface"><span class="rt-SelectTriggerInner">Selected</span><span class="rt-SelectIcon">⌄</span></button><div class="rt-SelectContent rt-r-size-2 rt-variant-solid fixture-select-content"><div class="rt-SelectItem" data-highlighted>Item</div></div></article>
+        <article class="fixture-cell"><span class="fixture-label">Slider</span><span id="slider" data-probe data-orientation="horizontal" class="rt-SliderRoot rt-r-size-2 rt-variant-surface fixture-slider"><span class="rt-SliderTrack" data-orientation="horizontal"><span class="rt-SliderRange" data-orientation="horizontal" style="width: 60%"></span></span><span class="rt-SliderThumb" data-orientation="horizontal" style="position: absolute; left: 60%"></span></span></article>
+        <article class="fixture-cell"><span class="fixture-label">Spinner</span><span id="spinner" data-probe class="rt-Spinner rt-r-size-2"><i class="rt-SpinnerLeaf"></i><i class="rt-SpinnerLeaf"></i><i class="rt-SpinnerLeaf"></i><i class="rt-SpinnerLeaf"></i><i class="rt-SpinnerLeaf"></i><i class="rt-SpinnerLeaf"></i><i class="rt-SpinnerLeaf"></i><i class="rt-SpinnerLeaf"></i></span></article>
+        <article class="fixture-cell"><span class="fixture-label">Switch</span><button id="switch" data-probe data-state="checked" class="rt-reset rt-SwitchRoot rt-r-size-2 rt-variant-surface"><span class="rt-SwitchThumb"></span></button></article>
+        <article class="fixture-cell"><span class="fixture-label">Tabs</span><div id="tabs" data-probe role="tablist" class="rt-BaseTabList rt-TabsList rt-r-size-2"><button role="tab" aria-selected="true" data-state="active" class="rt-reset rt-BaseTabListTrigger rt-TabsTrigger">Active</button><button role="tab" data-state="inactive" class="rt-reset rt-BaseTabListTrigger rt-TabsTrigger">Inactive</button></div></article>
+        <article class="fixture-cell"><span class="fixture-label">TextField</span><label id="text-field" data-probe class="rt-TextFieldRoot rt-r-size-2 rt-variant-surface fixture-text-field"><span class="rt-TextFieldSlot">@</span><input class="rt-reset rt-TextFieldInput" value="Text field" readonly /></label></article>
+        <article class="fixture-cell"><span class="fixture-label">Tooltip</span><div id="tooltip" data-probe data-state="delayed-open" data-side="top" class="rt-TooltipContent fixture-tooltip"><p class="rt-Text rt-r-size-1 rt-TooltipText">Tooltip content</p><svg class="rt-TooltipArrow" width="16" height="8"><path d="M0 8L8 0l8 8z"></path></svg></div></article>
+      </section>
+    </main>
+    <script>
+      addEventListener('load', () => {
+        const properties = [
+          'display', 'position', 'width', 'height', 'minWidth', 'minHeight',
+          'padding', 'gap', 'borderWidth', 'borderColor', 'borderRadius',
+          'backgroundColor', 'color', 'boxShadow', 'opacity', 'transform',
+          'filter', 'backdropFilter', 'animationDuration', 'fontSize', 'lineHeight',
+        ];
+        const probes = Object.fromEntries(
+          [...document.querySelectorAll('[data-probe]')].map((element) => {
+            const style = getComputedStyle(element);
+            return [
+              element.id,
+              {
+                className: element.className,
+                styles: Object.fromEntries(properties.map((name) => [name, style[name]])),
+              },
+            ];
+          }),
+        );
+        const rootStyle = getComputedStyle(document.querySelector('.radix-themes'));
+        const themeTokens = Object.fromEntries(
+          [
+            '--accent-1', '--accent-9', '--accent-12', '--accent-a9',
+            '--gray-1', '--gray-12', '--color-background', '--color-panel',
+            '--radius-1', '--radius-3', '--radius-6', '--radius-full',
+            '--space-1', '--space-4', '--font-size-2', '--line-height-2',
+            '--shadow-1', '--shadow-4',
+          ].map((name) => [name, rootStyle.getPropertyValue(name).trim()]),
+        );
+        const output = document.createElement('script');
+        output.id = 'computed-style-result';
+        output.type = 'application/json';
+        output.textContent = JSON.stringify({ themeTokens, probes });
+        document.body.append(output);
+      });
+    </script>
+  </body>
+</html>

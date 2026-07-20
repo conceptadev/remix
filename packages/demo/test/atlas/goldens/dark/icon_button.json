@@ -1,0 +1,106 @@
+{
+  "schema": "mix_atlas/atlas/v1",
+  "component": "icon_button",
+  "componentLabel": "Icon Button",
+  "theme": "dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "icon_button.png",
+  "rowAxes": [
+    {
+      "id": "variant",
+      "label": "Variant"
+    }
+  ],
+  "rows": [
+    {
+      "id": "classic",
+      "values": {
+        "variant": {
+          "id": "classic",
+          "label": "Classic"
+        }
+      }
+    },
+    {
+      "id": "solid",
+      "values": {
+        "variant": {
+          "id": "solid",
+          "label": "Solid"
+        }
+      }
+    },
+    {
+      "id": "soft",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        }
+      }
+    },
+    {
+      "id": "surface",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        }
+      }
+    },
+    {
+      "id": "outline",
+      "values": {
+        "variant": {
+          "id": "outline",
+          "label": "Outline"
+        }
+      }
+    },
+    {
+      "id": "ghost",
+      "values": {
+        "variant": {
+          "id": "ghost",
+          "label": "Ghost"
+        }
+      }
+    }
+  ],
+  "columns": [
+    {
+      "id": "default",
+      "states": [],
+      "props": {}
+    },
+    {
+      "id": "hovered",
+      "states": [
+        "hovered"
+      ],
+      "props": {}
+    },
+    {
+      "id": "pressed",
+      "states": [
+        "pressed"
+      ],
+      "props": {}
+    },
+    {
+      "id": "focused",
+      "states": [
+        "focused"
+      ],
+      "props": {}
+    },
+    {
+      "id": "disabled",
+      "states": [
+        "disabled"
+      ],
+      "props": {}
+    }
+  ]
+}

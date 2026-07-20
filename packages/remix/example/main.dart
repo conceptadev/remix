@@ -10,13 +10,13 @@ class RemixExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: FortalScope(
-        accent: .blue,
-        gray: .slate,
-        brightness: .light,
-        child: const RemixExampleScreen(),
+    return FortalScope(
+      appearance: .light,
+      accentColor: .blue,
+      grayColor: .slate,
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: RemixExampleScreen(),
       ),
     );
   }
@@ -42,13 +42,14 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
             padding: const EdgeInsets.all(16),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
-              child: FortalCard.classic(
+              child: FortalCard(
+                variant: .classic,
                 size: .size3,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const FortalBadge.soft(label: 'Remix 1.0'),
+                    const FortalBadge(child: Text('Remix 1.0')),
                     const SizedBox(height: 16),
                     const Text(
                       'Build themed Flutter interfaces with Remix widgets and Fortal recipes.',
@@ -63,7 +64,8 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
                       runSpacing: 12,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        FortalToggle.outline(
+                        FortalToggle(
+                          variant: .outline,
                           selected: notificationsEnabled,
                           onChanged: (value) {
                             setState(() => notificationsEnabled = value);
@@ -72,11 +74,16 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
                           label: 'Notifications',
                         ),
                         FortalButton(
-                          label: 'Continue',
-                          trailingIcon: Icons.arrow_forward_rounded,
                           onPressed: () {
                             debugPrint('Continue pressed');
                           },
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Continue'),
+                              Icon(Icons.arrow_forward_rounded),
+                            ],
+                          ),
                         ),
                       ],
                     ),

@@ -6,7 +6,10 @@ class RemixPopoverSpec with _$RemixPopoverSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? surface;
 
-  const RemixPopoverSpec({StyleSpec<BoxSpec>? container})
+  const RemixPopoverSpec({StyleSpec<BoxSpec>? container, this.surface})
     : container = container ?? const StyleSpec(spec: BoxSpec());
 }

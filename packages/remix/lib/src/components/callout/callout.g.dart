@@ -10,6 +10,8 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get text;
   StyleSpec<IconSpec> get icon;
+  RemixSurfaceLayerSpec? get surface;
+  RemixSurfaceLayerSpec? get overlay;
 
   @override
   Type get type => RemixCalloutSpec;
@@ -19,11 +21,15 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? text,
     StyleSpec<IconSpec>? icon,
+    RemixSurfaceLayerSpec? surface,
+    RemixSurfaceLayerSpec? overlay,
   }) {
     return RemixCalloutSpec(
       container: container ?? this.container,
       text: text ?? this.text,
       icon: icon ?? this.icon,
+      surface: surface ?? this.surface,
+      overlay: overlay ?? this.overlay,
     );
   }
 
@@ -33,11 +39,13 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
       container: container.lerp(other?.container, t),
       text: text.lerp(other?.text, t),
       icon: icon.lerp(other?.icon, t),
+      surface: MixOps.lerpSnap(surface, other?.surface, t),
+      overlay: MixOps.lerpSnap(overlay, other?.overlay, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, text, icon];
+  List<Object?> get props => [container, text, icon, surface, overlay];
 
   @override
   bool operator ==(Object other) {
@@ -81,7 +89,9 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('text', text))
-      ..add(DiagnosticsProperty('icon', icon));
+      ..add(DiagnosticsProperty('icon', icon))
+      ..add(DiagnosticsProperty('surface', surface))
+      ..add(DiagnosticsProperty('overlay', overlay));
   }
 }
 
@@ -101,22 +111,30 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
+  final Prop<RemixSurfaceLayerSpec>? $surface;
+  final Prop<RemixSurfaceLayerSpec>? $overlay;
 
   const RemixCalloutStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? text,
     Prop<StyleSpec<IconSpec>>? icon,
+    Prop<RemixSurfaceLayerSpec>? surface,
+    Prop<RemixSurfaceLayerSpec>? overlay,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $text = text,
-       $icon = icon;
+       $icon = icon,
+       $surface = surface,
+       $overlay = overlay;
 
   RemixCalloutStyler({
     FlexBoxStyler? container,
     TextStyler? text,
     IconStyler? icon,
+    RemixSurfaceLayerMix? surface,
+    RemixSurfaceLayerMix? overlay,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixCalloutSpec>>? variants,
@@ -124,6 +142,8 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
          container: Prop.maybeMix(container),
          text: Prop.maybeMix(text),
          icon: Prop.maybeMix(icon),
+         surface: Prop.maybeMix(surface),
+         overlay: Prop.maybeMix(overlay),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -135,6 +155,10 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
       RemixCalloutStyler().text(value);
   factory RemixCalloutStyler.icon(IconStyler value) =>
       RemixCalloutStyler().icon(value);
+  factory RemixCalloutStyler.surface(RemixSurfaceLayerMix value) =>
+      RemixCalloutStyler().surface(value);
+  factory RemixCalloutStyler.overlay(RemixSurfaceLayerMix value) =>
+      RemixCalloutStyler().overlay(value);
   factory RemixCalloutStyler.color(Color value) =>
       RemixCalloutStyler().color(value);
   factory RemixCalloutStyler.gradient(GradientMix value) =>
@@ -681,6 +705,16 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     return merge(RemixCalloutStyler(icon: value));
   }
 
+  /// Sets the surface.
+  RemixCalloutStyler surface(RemixSurfaceLayerMix value) {
+    return merge(RemixCalloutStyler(surface: value));
+  }
+
+  /// Sets the overlay.
+  RemixCalloutStyler overlay(RemixSurfaceLayerMix value) {
+    return merge(RemixCalloutStyler(overlay: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixCalloutStyler animate(AnimationConfig value) {
@@ -711,6 +745,8 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
       container: MixOps.merge($container, other?.$container),
       text: MixOps.merge($text, other?.$text),
       icon: MixOps.merge($icon, other?.$icon),
+      surface: MixOps.merge($surface, other?.$surface),
+      overlay: MixOps.merge($overlay, other?.$overlay),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -724,6 +760,8 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
       container: MixOps.resolve(context, $container),
       text: MixOps.resolve(context, $text),
       icon: MixOps.resolve(context, $icon),
+      surface: MixOps.resolve(context, $surface),
+      overlay: MixOps.resolve(context, $overlay),
     );
 
     return StyleSpec(
@@ -739,7 +777,9 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     properties
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('text', $text))
-      ..add(DiagnosticsProperty('icon', $icon));
+      ..add(DiagnosticsProperty('icon', $icon))
+      ..add(DiagnosticsProperty('surface', $surface))
+      ..add(DiagnosticsProperty('overlay', $overlay));
   }
 
   @override
@@ -747,6 +787,8 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     $container,
     $text,
     $icon,
+    $surface,
+    $overlay,
     $animation,
     $modifier,
     $variants,

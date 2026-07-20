@@ -170,12 +170,13 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixButtonSpec();
 
-        expect(spec.props, hasLength(5));
+        expect(spec.props, hasLength(6));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.icon));
         expect(spec.props, contains(spec.spinner));
-        expect(spec.props, contains(spec.iconAlignment));
+        expect(spec.props, contains(spec.surface));
+        expect(spec.props, contains(spec.overlay));
       });
     });
 
@@ -204,7 +205,7 @@ void main() {
         spec.debugFillProperties(builder);
 
         final properties = builder.properties;
-        expect(properties, hasLength(5));
+        expect(properties, hasLength(6));
 
         // Check that all expected properties are present
         final propertyNames = properties.map((p) => p.name).toList();
@@ -212,7 +213,8 @@ void main() {
         expect(propertyNames, contains('label'));
         expect(propertyNames, contains('icon'));
         expect(propertyNames, contains('spinner'));
-        expect(propertyNames, contains('iconAlignment'));
+        expect(propertyNames, contains('surface'));
+        expect(propertyNames, contains('overlay'));
       });
     });
 

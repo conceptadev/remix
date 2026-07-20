@@ -31,15 +31,17 @@ class IconButtonExample extends StatelessWidget {
       spacing: 16,
       children: [
         RemixIconButton(
-          icon: CupertinoIcons.heart,
+          semanticLabel: 'Favorite',
           onPressed: () {},
           style: style,
+          child: const Icon(CupertinoIcons.heart),
         ),
         RemixIconButton(
-          icon: CupertinoIcons.heart,
+          semanticLabel: 'Favorite loading',
           onPressed: () {},
           style: style,
           loading: true,
+          child: const Icon(CupertinoIcons.heart),
         ),
       ],
     );
@@ -56,8 +58,7 @@ class IconButtonExample extends StatelessWidget {
         .spinner(
           RemixSpinnerStyler()
               .size(22)
-              .strokeWidth(1.3)
-              .indicatorColor(Colors.blueGrey.shade600),
+              .color(Colors.blueGrey.shade600),
         )
         .onHovered(
           RemixIconButtonStyler()
@@ -74,7 +75,7 @@ class IconButtonExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -90,25 +91,35 @@ class FortalIconButtonExample extends StatelessWidget {
       spacing: 16,
       runSpacing: 16,
       children: [
-        FortalIconButton.solid(
-          icon: Icons.add,
+        FortalIconButton(
+          variant: FortalIconButtonVariant.solid,
+          semanticLabel: 'Add',
           onPressed: () {},
+          child: const Icon(Icons.add),
         ),
-        FortalIconButton.soft(
-          icon: Icons.edit,
+        FortalIconButton(
+          variant: FortalIconButtonVariant.soft,
+          semanticLabel: 'Edit',
           onPressed: () {},
+          child: const Icon(Icons.edit),
         ),
-        FortalIconButton.surface(
-          icon: Icons.layers,
+        FortalIconButton(
+          variant: FortalIconButtonVariant.surface,
+          semanticLabel: 'Layers',
           onPressed: () {},
+          child: const Icon(Icons.layers),
         ),
-        FortalIconButton.outline(
-          icon: Icons.border_style,
+        FortalIconButton(
+          variant: FortalIconButtonVariant.outline,
+          semanticLabel: 'Border style',
           onPressed: () {},
+          child: const Icon(Icons.border_style),
         ),
-        FortalIconButton.ghost(
-          icon: Icons.delete,
+        FortalIconButton(
+          variant: FortalIconButtonVariant.ghost,
+          semanticLabel: 'Delete',
           onPressed: () {},
+          child: const Icon(Icons.delete),
         ),
       ],
     );
@@ -126,8 +137,8 @@ class FortalIconButtonExample extends StatelessWidget {
 ```dart
 const RemixIconButton({
   Key? key,
-  required IconData icon,
-  RemixIconButtonIconBuilder? iconBuilder,
+  required Widget child,
+  required String semanticLabel,
   RemixIconButtonLoadingBuilder? loadingBuilder,
   bool loading = false,
   bool enabled = true,
@@ -136,7 +147,6 @@ const RemixIconButton({
   VoidCallback? onLongPress,
   FocusNode? focusNode,
   bool autofocus = false,
-  String? semanticLabel,
   String? semanticHint,
   bool excludeSemantics = false,
   MouseCursor mouseCursor = SystemMouseCursors.click,
@@ -162,13 +172,14 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `icon` → `IconData`
+#### `child` → `Widget`
 
-**Required**. The icon to display in the button.
+**Required**. Arbitrary button content. Descendant icons inherit the resolved
+icon style.
 
-#### `iconBuilder` → `RemixIconButtonIconBuilder?`
+#### `semanticLabel` → `String`
 
-Optional. Builder for customizing the icon rendering.
+**Required**. A nonempty accessible name for the icon-only action.
 
 #### `loadingBuilder` → `RemixIconButtonLoadingBuilder?`
 

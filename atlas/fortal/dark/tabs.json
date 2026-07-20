@@ -1,0 +1,56 @@
+{
+  "schema": "mix_atlas/atlas/v1",
+  "component": "tabs",
+  "componentLabel": "Tabs",
+  "theme": "dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "tabs.png",
+  "rowAxes": [
+    {
+      "id": "size",
+      "label": "Size"
+    }
+  ],
+  "rows": [
+    {
+      "id": "size1",
+      "values": {
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "size2",
+      "values": {
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    }
+  ],
+  "columns": [
+    {
+      "id": "default",
+      "states": [],
+      "props": {}
+    },
+    {
+      "id": "selected",
+      "states": [
+        "selected"
+      ],
+      "props": {}
+    },
+    {
+      "id": "disabled",
+      "states": [
+        "disabled"
+      ],
+      "props": {}
+    }
+  ]
+}

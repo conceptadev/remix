@@ -79,7 +79,7 @@ class _SwitchExampleState extends State<SwitchExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -101,11 +101,13 @@ class _FortalSwitchExampleState extends State<FortalSwitchExample> {
     return Column(
       spacing: 16,
       children: [
-        FortalSwitch.surface(
+        FortalSwitch(
+          variant: FortalSwitchVariant.surface,
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
         ),
-        FortalSwitch.soft(
+        FortalSwitch(
+          variant: FortalSwitchVariant.soft,
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
         ),

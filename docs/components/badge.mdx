@@ -30,8 +30,8 @@ class BadgeExample extends StatelessWidget {
       spacing: 16,
       children: [
         RemixBadge(
-          label: '8',
           style: styleLabel,
+          child: const Text('8'),
         ),
         RemixBadge(
           style: styleIcon,
@@ -76,7 +76,7 @@ class BadgeExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -91,17 +91,21 @@ class FortalBadgeExample extends StatelessWidget {
     return Row(
       spacing: 16,
       children: [
-        FortalBadge.solid(
-          label: 'Solid',
+        FortalBadge(
+          variant: FortalBadgeVariant.solid,
+          child: const Text('Solid'),
         ),
-        FortalBadge.soft(
-          label: 'Soft',
+        FortalBadge(
+          variant: FortalBadgeVariant.soft,
+          child: const Text('Soft'),
         ),
-        FortalBadge.surface(
-          label: 'Surface',
+        FortalBadge(
+          variant: FortalBadgeVariant.surface,
+          child: const Text('Surface'),
         ),
-        FortalBadge.outline(
-          label: 'Outline',
+        FortalBadge(
+          variant: FortalBadgeVariant.outline,
+          child: const Text('Outline'),
         ),
       ],
     );
@@ -119,9 +123,7 @@ class FortalBadgeExample extends StatelessWidget {
 ```dart
 const RemixBadge({
   Key? key,
-  String? label,
-  Widget? child,
-  RemixBadgeLabelBuilder? labelBuilder,
+  required Widget child,
   RemixBadgeStyler style = const RemixBadgeStyler.create(),
   RemixBadgeSpec? styleSpec,
 })
@@ -144,17 +146,10 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `label` → `String?`
+#### `child` → `Widget`
 
-Optional. Optional text label rendered with the badge text style.
-
-#### `child` → `Widget?`
-
-Optional. Optional fully custom badge content. When provided the badge style is applied only to the container.
-
-#### `labelBuilder` → `RemixBadgeLabelBuilder?`
-
-Optional. Optional builder that receives the resolved [TextSpec] so callers can render text with custom widgets while preserving badge typography.
+**Required**. Arbitrary badge content. Descendant text and icons inherit the
+resolved badge styles.
 
 
 ### Style Methods
@@ -255,6 +250,6 @@ Sets label/text word spacing
 
 Sets label/text decoration color
 
-#### `call({Key? key, String? label, Widget? child, RemixBadgeLabelBuilder? labelBuilder})`
+#### `call({Key? key, required Widget child})`
 
 Creates a `RemixBadge` widget with this style applied.

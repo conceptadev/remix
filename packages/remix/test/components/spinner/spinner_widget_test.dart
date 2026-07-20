@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -5,322 +7,167 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
-  group('RemixSpinner', () {
-    group('Basic Rendering', () {
-      testWidgets('renders spinner with default props', (tester) async {
-        await tester.pumpRemixApp(const RemixSpinner());
-        await tester.pump();
+  group('RemixSpinner contract', () {
+    test('defaults to loading with optional content', () {
+      const spinner = RemixSpinner();
 
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
+      expect(spinner.loading, isTrue);
+      expect(spinner.child, isNull);
+      expect(spinner.excludeSemantics, isFalse);
+    });
 
-      testWidgets('renders spinner with custom style', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSpinner(
-            style: RemixSpinnerStyler(
-              size: 32.0,
-              indicatorColor: const Color(0xFF0000FF),
+    testWidgets('returns its child directly when not loading', (tester) async {
+      const child = SizedBox(key: ValueKey('child'), width: 120, height: 40);
+      await tester.pumpRemixApp(
+        const RemixSpinner(loading: false, child: child),
+      );
+
+      expect(find.byKey(const ValueKey('child')), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(RemixSpinner),
+          matching: find.byType(CustomPaint),
+        ),
+        findsNothing,
+      );
+      expect(tester.getSize(find.byType(RemixSpinner)), const Size(120, 40));
+    });
+
+    testWidgets('preserves hidden child layout while loading', (tester) async {
+      await tester.pumpRemixApp(
+        const RemixSpinner(
+          semanticLabel: 'Saving',
+          child: SizedBox(
+            key: ValueKey('child'),
+            width: 120,
+            height: 40,
+            child: Text('Save changes'),
+          ),
+        ),
+      );
+
+      expect(tester.getSize(find.byType(RemixSpinner)), const Size(120, 40));
+      expect(find.text('Save changes'), findsOneWidget);
+      expect(find.bySemanticsLabel('Save changes'), findsNothing);
+      expect(find.bySemanticsLabel('Saving'), findsOneWidget);
+    });
+
+    testWidgets('passes parent constraints through to hidden content', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const SizedBox(
+          width: 140,
+          height: 48,
+          child: RemixSpinner(
+            child: Align(
+              key: ValueKey('constraint-sensitive-child'),
+              child: Text('Save'),
             ),
           ),
-        );
-        await tester.pump();
+        ),
+      );
 
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('contains CustomPaint widget', (tester) async {
-        await tester.pumpRemixApp(const RemixSpinner());
-        await tester.pump();
-
-        expect(find.byType(CustomPaint), findsWidgets);
-      });
-
-      testWidgets('contains AnimatedBuilder widget', (tester) async {
-        await tester.pumpRemixApp(const RemixSpinner());
-        await tester.pump();
-
-        expect(find.byType(AnimatedBuilder), findsWidgets);
-      });
+      expect(
+        tester.getSize(
+          find.byKey(const ValueKey('constraint-sensitive-child')),
+        ),
+        const Size(140, 48),
+      );
     });
 
-    group('Styling', () {
-      testWidgets('applies custom size', (tester) async {
-        final customStyle = RemixSpinnerStyler().size(48.0);
-
-        await tester.pumpRemixApp(RemixSpinner(style: customStyle));
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('applies custom indicator color', (tester) async {
-        final customStyle = RemixSpinnerStyler().indicatorColor(
-          const Color(0xFF0000FF),
-        );
-
-        await tester.pumpRemixApp(RemixSpinner(style: customStyle));
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('applies custom track color', (tester) async {
-        final customStyle = RemixSpinnerStyler().trackColor(
-          const Color(0xFFCCCCCC),
-        );
-
-        await tester.pumpRemixApp(RemixSpinner(style: customStyle));
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('applies custom stroke width', (tester) async {
-        final customStyle = RemixSpinnerStyler().strokeWidth(3.0);
-
-        await tester.pumpRemixApp(RemixSpinner(style: customStyle));
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('applies custom track stroke width', (tester) async {
-        final customStyle = RemixSpinnerStyler().trackStrokeWidth(2.0);
-
-        await tester.pumpRemixApp(RemixSpinner(style: customStyle));
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('applies custom duration', (tester) async {
-        final customStyle = RemixSpinnerStyler().duration(
-          const Duration(milliseconds: 500),
-        );
-
-        await tester.pumpRemixApp(RemixSpinner(style: customStyle));
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-    });
-
-    group('Animation', () {
-      testWidgets('spinner animates', (tester) async {
-        await tester.pumpRemixApp(const RemixSpinner());
-
-        // Initial state
-        await tester.pump();
-
-        // Advance animation
-        await tester.pump(const Duration(milliseconds: 100));
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-        expect(find.byType(AnimatedBuilder), findsWidgets);
-      });
-
-      testWidgets('spinner respects custom duration', (tester) async {
-        const customDuration = Duration(milliseconds: 500);
-
-        await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyler(duration: customDuration)),
-        );
-        await tester.pump();
-
-        // Advance through the custom duration
-        await tester.pump(customDuration);
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('animation repeats continuously', (tester) async {
-        await tester.pumpRemixApp(const RemixSpinner());
-
-        await tester.pump();
-        await tester.pump(const Duration(milliseconds: 1000));
-        await tester.pump(const Duration(milliseconds: 1000));
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-    });
-
-    group('Different Sizes', () {
-      testWidgets('renders small spinner', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyler(size: 16.0)),
-        );
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('renders medium spinner', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyler(size: 32.0)),
-        );
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('renders large spinner', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyler(size: 64.0)),
-        );
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-    });
-
-    group('Advanced Styling', () {
-      testWidgets('applies multiple style methods', (tester) async {
-        final customStyle = RemixSpinnerStyler()
-            .size(48.0)
-            .strokeWidth(3.0)
-            .indicatorColor(const Color(0xFF0000FF))
-            .trackColor(const Color(0xFFCCCCCC))
-            .trackStrokeWidth(2.0)
-            .duration(const Duration(milliseconds: 500));
-
-        await tester.pumpRemixApp(RemixSpinner(style: customStyle));
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('applies animation config', (tester) async {
-        final customStyle = RemixSpinnerStyler().animate(
-          AnimationConfig.linear(const Duration(milliseconds: 200)),
-        );
-
-        await tester.pumpRemixApp(RemixSpinner(style: customStyle));
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-    });
-
-    group('Widget Modifiers', () {
-      testWidgets('applies widget modifiers from style', (tester) async {
-        final customStyle = RemixSpinnerStyler().wrap(.clipOval());
-
-        await tester.pumpRemixApp(RemixSpinner(style: customStyle));
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-    });
-
-    group('Key Parameter', () {
-      testWidgets('accepts and respects key parameter', (tester) async {
-        const key = ValueKey('spinner_key');
-
-        await tester.pumpRemixApp(const RemixSpinner(key: key));
-        await tester.pump();
-
-        expect(find.byKey(key), findsOneWidget);
-      });
-    });
-
-    group('StyleSpec Parameter', () {
-      testWidgets('accepts styleSpec parameter', (tester) async {
-        const spec = RemixSpinnerSpec(
-          size: 32.0,
-          indicatorColor: Color(0xFF0000FF),
-        );
-        await tester.pumpRemixApp(const RemixSpinner(styleSpec: spec));
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-    });
-
-    group('Edge Cases', () {
-      testWidgets('handles zero size', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyler(size: 0.0)),
-        );
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('handles very large size', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyler(size: 200.0)),
-        );
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('handles zero stroke width', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyler(strokeWidth: 0.0)),
-        );
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('handles very long duration', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSpinner(
-            style: RemixSpinnerStyler(duration: const Duration(seconds: 10)),
+    testWidgets('renders an eight-leaf spinner in inherited current color', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const IconTheme(
+          data: IconThemeData(color: Colors.purple),
+          child: RemixSpinner(
+            styleSpec: RemixSpinnerSpec(size: 32, opacity: 0.65),
           ),
-        );
-        await tester.pump();
+        ),
+      );
 
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('handles very short duration', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSpinner(
-            style: RemixSpinnerStyler(
-              duration: const Duration(milliseconds: 100),
-            ),
-          ),
-        );
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
+      final paint = tester.widget<CustomPaint>(
+        find.descendant(
+          of: find.byType(RemixSpinner),
+          matching: find.byType(CustomPaint),
+        ),
+      );
+      final painter = paint.painter! as RemixSpinnerPainter;
+      expect(paint.size, const Size.square(32));
+      expect(painter.color, Colors.purple);
+      expect(painter.opacity, 0.65);
+      expect(RemixSpinnerPainter.leafCount, 8);
     });
 
-    group('Widget Lifecycle', () {
-      testWidgets('disposes animation controller', (tester) async {
-        await tester.pumpRemixApp(const RemixSpinner());
-        await tester.pump();
+    testWidgets('uses an 800ms repeating linear phase by default', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(const RemixSpinner());
+      final painter = () =>
+          tester
+                  .widget<CustomPaint>(
+                    find.descendant(
+                      of: find.byType(RemixSpinner),
+                      matching: find.byType(CustomPaint),
+                    ),
+                  )
+                  .painter!
+              as RemixSpinnerPainter;
 
-        expect(find.byType(RemixSpinner), findsOneWidget);
+      expect(painter().animation.value, closeTo(0, 0.0001));
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(painter().animation.value, closeTo(0.125, 0.0001));
+      await tester.pump(const Duration(milliseconds: 700));
+      expect(painter().animation.value, closeTo(0, 0.0001));
+    });
 
-        // Remove the widget
-        await tester.pumpRemixApp(Container());
+    testWidgets('stops animation when accessible animations are disabled', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        const MediaQuery(
+          data: MediaQueryData(disableAnimations: true),
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: RemixSpinner(),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(seconds: 2));
 
-        expect(find.byType(RemixSpinner), findsNothing);
-      });
+      final painter =
+          tester.widget<CustomPaint>(find.byType(CustomPaint)).painter!
+              as RemixSpinnerPainter;
+      expect(painter.animation.value, 0);
+      expect(tester.binding.hasScheduledFrame, isFalse);
+    });
+  });
 
-      testWidgets('updates duration when spec changes', (tester) async {
-        const initialDuration = Duration(milliseconds: 1000);
-        const newDuration = Duration(milliseconds: 500);
+  group('RemixSpinner semantics', () {
+    testWidgets('exposes a loading-spinner role and optional label', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const RemixSpinner(semanticLabel: 'Loading dashboard'),
+      );
 
-        await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyler(duration: initialDuration)),
-        );
-        await tester.pump();
+      final node = tester.getSemantics(
+        find.bySemanticsLabel('Loading dashboard'),
+      );
+      expect(node.getSemanticsData().role, ui.SemanticsRole.loadingSpinner);
+    });
 
-        expect(find.byType(RemixSpinner), findsOneWidget);
+    testWidgets('can exclude spinner semantics', (tester) async {
+      await tester.pumpRemixApp(
+        const RemixSpinner(
+          semanticLabel: 'Hidden spinner',
+          excludeSemantics: true,
+        ),
+      );
 
-        // Update duration
-        await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyler(duration: newDuration)),
-        );
-        await tester.pump();
-
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
+      expect(find.bySemanticsLabel('Hidden spinner'), findsNothing);
     });
   });
 }

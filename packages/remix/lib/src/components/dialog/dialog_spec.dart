@@ -7,6 +7,9 @@ class RemixDialogSpec with _$RemixDialogSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? surface;
+  @override
   final StyleSpec<TextSpec> title;
   @override
   final StyleSpec<TextSpec> description;
@@ -15,6 +18,7 @@ class RemixDialogSpec with _$RemixDialogSpec {
 
   const RemixDialogSpec({
     StyleSpec<BoxSpec>? container,
+    this.surface,
     StyleSpec<TextSpec>? title,
     StyleSpec<TextSpec>? description,
     StyleSpec<FlexBoxSpec>? actions,

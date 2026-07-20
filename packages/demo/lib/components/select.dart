@@ -7,9 +7,14 @@ final _key = GlobalKey();
 
 @widgetbook.UseCase(name: 'Select Component', type: RemixSelect)
 Widget buildSelectUseCase(BuildContext context) {
-  final variant = context.knobs.object.dropdown(
-    label: 'variant',
-    options: FortalSelectVariant.values,
+  final triggerVariant = context.knobs.object.dropdown(
+    label: 'trigger variant',
+    options: FortalSelectTriggerVariant.values,
+    labelBuilder: (variant) => variant.name,
+  );
+  final contentVariant = context.knobs.object.dropdown(
+    label: 'content variant',
+    options: FortalSelectContentVariant.values,
     labelBuilder: (variant) => variant.name,
   );
   final size = context.knobs.object.dropdown(
@@ -27,7 +32,8 @@ Widget buildSelectUseCase(BuildContext context) {
         child: StatefulBuilder(
           builder: (context, setState) {
             return FortalSelect(
-              variant: variant,
+              triggerVariant: triggerVariant,
+              contentVariant: contentVariant,
               size: size,
               trigger: RemixSelectTrigger(
                 placeholder: context.knobs.string(
@@ -41,7 +47,7 @@ Widget buildSelectUseCase(BuildContext context) {
                   selectedValue = value ?? 'Apple';
                 });
               },
-              items: [
+              entries: [
                 RemixSelectItem(value: 'Apple', label: 'Apple'),
                 RemixSelectItem(value: 'Banana', label: 'Banana'),
                 RemixSelectItem(value: 'Orange', label: 'Orange'),

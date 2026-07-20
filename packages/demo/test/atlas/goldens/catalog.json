@@ -16,6 +16,38 @@
   ],
   "atlases": [
     {
+      "id": "avatar",
+      "label": "Avatar",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/avatar.png",
+          "metadata": "light/avatar.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/avatar.png",
+          "metadata": "dark/avatar.json"
+        }
+      ]
+    },
+    {
+      "id": "badge",
+      "label": "Badge",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/badge.png",
+          "metadata": "light/badge.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/badge.png",
+          "metadata": "dark/badge.json"
+        }
+      ]
+    },
+    {
       "id": "button",
       "label": "Button",
       "files": [
@@ -28,6 +60,326 @@
           "theme": "dark",
           "image": "dark/button.png",
           "metadata": "dark/button.json"
+        }
+      ]
+    },
+    {
+      "id": "callout",
+      "label": "Callout",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/callout.png",
+          "metadata": "light/callout.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/callout.png",
+          "metadata": "dark/callout.json"
+        }
+      ]
+    },
+    {
+      "id": "card",
+      "label": "Card",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/card.png",
+          "metadata": "light/card.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/card.png",
+          "metadata": "dark/card.json"
+        }
+      ]
+    },
+    {
+      "id": "checkbox",
+      "label": "Checkbox",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/checkbox.png",
+          "metadata": "light/checkbox.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/checkbox.png",
+          "metadata": "dark/checkbox.json"
+        }
+      ]
+    },
+    {
+      "id": "dialog",
+      "label": "Dialog",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/dialog.png",
+          "metadata": "light/dialog.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/dialog.png",
+          "metadata": "dark/dialog.json"
+        }
+      ]
+    },
+    {
+      "id": "divider",
+      "label": "Divider",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/divider.png",
+          "metadata": "light/divider.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/divider.png",
+          "metadata": "dark/divider.json"
+        }
+      ]
+    },
+    {
+      "id": "menu",
+      "label": "Menu",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/menu.png",
+          "metadata": "light/menu.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/menu.png",
+          "metadata": "dark/menu.json"
+        }
+      ]
+    },
+    {
+      "id": "icon_button",
+      "label": "Icon Button",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/icon_button.png",
+          "metadata": "light/icon_button.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/icon_button.png",
+          "metadata": "dark/icon_button.json"
+        }
+      ]
+    },
+    {
+      "id": "popover",
+      "label": "Popover",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/popover.png",
+          "metadata": "light/popover.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/popover.png",
+          "metadata": "dark/popover.json"
+        }
+      ]
+    },
+    {
+      "id": "progress",
+      "label": "Progress",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/progress.png",
+          "metadata": "light/progress.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/progress.png",
+          "metadata": "dark/progress.json"
+        }
+      ]
+    },
+    {
+      "id": "radio",
+      "label": "Radio",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/radio.png",
+          "metadata": "light/radio.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/radio.png",
+          "metadata": "dark/radio.json"
+        }
+      ]
+    },
+    {
+      "id": "select",
+      "label": "Select",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/select.png",
+          "metadata": "light/select.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/select.png",
+          "metadata": "dark/select.json"
+        }
+      ]
+    },
+    {
+      "id": "slider",
+      "label": "Slider",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/slider.png",
+          "metadata": "light/slider.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/slider.png",
+          "metadata": "dark/slider.json"
+        }
+      ]
+    },
+    {
+      "id": "spinner",
+      "label": "Spinner",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/spinner.png",
+          "metadata": "light/spinner.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/spinner.png",
+          "metadata": "dark/spinner.json"
+        }
+      ]
+    },
+    {
+      "id": "switch",
+      "label": "Switch",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/switch.png",
+          "metadata": "light/switch.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/switch.png",
+          "metadata": "dark/switch.json"
+        }
+      ]
+    },
+    {
+      "id": "tabs",
+      "label": "Tabs",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/tabs.png",
+          "metadata": "light/tabs.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/tabs.png",
+          "metadata": "dark/tabs.json"
+        }
+      ]
+    },
+    {
+      "id": "text_field",
+      "label": "Text Field",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/text_field.png",
+          "metadata": "light/text_field.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/text_field.png",
+          "metadata": "dark/text_field.json"
+        }
+      ]
+    },
+    {
+      "id": "tooltip",
+      "label": "Tooltip",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/tooltip.png",
+          "metadata": "light/tooltip.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/tooltip.png",
+          "metadata": "dark/tooltip.json"
+        }
+      ]
+    },
+    {
+      "id": "accordion",
+      "label": "Accordion",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/accordion.png",
+          "metadata": "light/accordion.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/accordion.png",
+          "metadata": "dark/accordion.json"
+        }
+      ]
+    },
+    {
+      "id": "toggle",
+      "label": "Toggle",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/toggle.png",
+          "metadata": "light/toggle.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/toggle.png",
+          "metadata": "dark/toggle.json"
+        }
+      ]
+    },
+    {
+      "id": "toggle_group",
+      "label": "Toggle Group",
+      "files": [
+        {
+          "theme": "light",
+          "image": "light/toggle_group.png",
+          "metadata": "light/toggle_group.json"
+        },
+        {
+          "theme": "dark",
+          "image": "dark/toggle_group.png",
+          "metadata": "dark/toggle_group.json"
         }
       ]
     }

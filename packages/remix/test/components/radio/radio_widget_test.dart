@@ -4,6 +4,7 @@ import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
+import '../../helpers/test_methods.dart';
 
 void main() {
   group('RemixRadio', () {
@@ -63,6 +64,54 @@ void main() {
 
         expect(tester.takeException(), isA<FlutterError>());
       });
+    });
+
+    group('WidgetStateController', () {
+      Widget buildRadio({bool enabled = true}) => RemixRadioGroup<String>(
+        groupValue: 'other',
+        onChanged: (_) {},
+        child: RemixRadio<String>(
+          value: 'option',
+          enabled: enabled,
+          style: RemixRadioStyler().size(20, 20),
+        ),
+      );
+
+      widgetControllerTest<RemixRadioSpec>(
+        'reports radio hovered state',
+        build: buildRadio,
+        act: (tester) async {
+          final previousStrategy = FocusManager.instance.highlightStrategy;
+          FocusManager.instance.highlightStrategy =
+              FocusHighlightStrategy.alwaysTraditional;
+          addTearDown(
+            () => FocusManager.instance.highlightStrategy = previousStrategy,
+          );
+          await tester.pump();
+          await hoverAction<RemixRadio<String>>(tester);
+        },
+        expectedStates: {WidgetState.hovered},
+      );
+
+      widgetControllerTest<RemixRadioSpec>(
+        'reports radio pressed state',
+        build: buildRadio,
+        act: pressAction<RemixRadio<String>>,
+        expectedStates: {WidgetState.pressed},
+      );
+
+      widgetControllerTest<RemixRadioSpec>(
+        'reports radio focused state',
+        build: buildRadio,
+        act: focusAction<RemixRadio<String>>,
+        expectedStates: {WidgetState.focused},
+      );
+
+      widgetControllerTest<RemixRadioSpec>(
+        'reports radio disabled state',
+        build: () => buildRadio(enabled: false),
+        expectedStates: {WidgetState.disabled},
+      );
     });
 
     group('RemixRadioGroup', () {
@@ -350,11 +399,12 @@ void main() {
       testWidgets('applies raw styleSpec when provided', (tester) async {
         const spec = RemixRadioSpec(
           container: StyleSpec(
-            spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.green)),
           ),
           indicator: StyleSpec(
             spec: BoxSpec(decoration: BoxDecoration(color: Colors.blue)),
           ),
+          surface: RemixSurfaceLayerSpec(color: Colors.red),
         );
 
         await tester.pumpRemixApp(
@@ -366,16 +416,21 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        final decorations = tester
+        final boxDecorations = tester
             .widgetList<Box>(find.byType(Box))
             .map((box) => box.styleSpec?.spec.decoration);
+        final renderedDecorations = tester
+            .widgetList<DecoratedBox>(find.byType(DecoratedBox))
+            .map((box) => box.decoration);
+        final surface = tester.widget<RemixSurface>(find.byType(RemixSurface));
 
+        expect(surface.spec.color, Colors.red);
         expect(
-          decorations,
-          contains(equals(const BoxDecoration(color: Colors.red))),
+          renderedDecorations,
+          contains(equals(const BoxDecoration(color: Colors.green))),
         );
         expect(
-          decorations,
+          boxDecorations,
           contains(equals(const BoxDecoration(color: Colors.blue))),
         );
       });

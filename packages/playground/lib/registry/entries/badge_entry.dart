@@ -8,7 +8,7 @@ Widget buildBadgeExample() {
     width: 360,
     child: ComparisonView(
       remix: [
-        RemixBadge(label: 'New'),
+        RemixBadge(child: Text('New')),
         RemixBadge(child: Text('Beta')),
       ],
       material: [

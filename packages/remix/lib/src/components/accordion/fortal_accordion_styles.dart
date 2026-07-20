@@ -19,11 +19,34 @@ RemixAccordionStyler fortalAccordionStyler({
 
 RemixAccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
   return RemixAccordionStyler()
-      .trigger(FlexBoxStyler().direction(.horizontal))
-      .title(TextStyler().fontWeight(.w500).color(FortalTokens.gray12()))
+      .trigger(FlexBoxStyler().direction(.horizontal).clipBehavior(.antiAlias))
+      .leadingIcon(IconStyler().color(FortalTokens.gray11()))
+      .title(
+        TextStyler()
+            .fontWeight(FortalTokens.fontWeightMedium())
+            .color(FortalTokens.gray12()),
+      )
       .trailingIcon(IconStyler().color(FortalTokens.gray11()))
       .content(BoxStyler().width(.infinity))
       .merge(_fortalAccordionSizeStyler(size));
+}
+
+RemixAccordionStyler _fortalAccordionFocusStyler() {
+  return RemixAccordionStyler().trigger(
+    FlexBoxStyler().borderAll(
+      color: FortalTokens.focusA8(),
+      width: FortalTokens.focusRingWidth(),
+      strokeAlign: BorderSide.strokeAlignInside,
+    ),
+  );
+}
+
+RemixAccordionStyler _fortalAccordionDisabledStyler() {
+  return RemixAccordionStyler()
+      .trigger(FlexBoxStyler().color(FortalTokens.grayA3()))
+      .leadingIcon(IconStyler().color(FortalTokens.gray8()))
+      .title(TextStyler().color(FortalTokens.gray8()))
+      .trailingIcon(IconStyler().color(FortalTokens.gray8()));
 }
 
 RemixAccordionStyler _fortalAccordionSurfaceStyler([
@@ -43,7 +66,19 @@ RemixAccordionStyler _fortalAccordionSurfaceStyler([
                 style: TextStyleMix().color(FortalTokens.gray12()),
               ),
             ),
-      );
+      )
+      .onHovered(
+        RemixAccordionStyler().trigger(
+          FlexBoxStyler().color(FortalTokens.gray2()),
+        ),
+      )
+      .onPressed(
+        RemixAccordionStyler().trigger(
+          FlexBoxStyler().color(FortalTokens.gray3()),
+        ),
+      )
+      .onFocused(_fortalAccordionFocusStyler())
+      .onDisabled(_fortalAccordionDisabledStyler());
 }
 
 RemixAccordionStyler _fortalAccordionSoftStyler([
@@ -65,7 +100,19 @@ RemixAccordionStyler _fortalAccordionSoftStyler([
                 style: TextStyleMix().color(FortalTokens.accent12()),
               ),
             ),
-      );
+      )
+      .onHovered(
+        RemixAccordionStyler().trigger(
+          FlexBoxStyler().color(FortalTokens.accent3()),
+        ),
+      )
+      .onPressed(
+        RemixAccordionStyler().trigger(
+          FlexBoxStyler().color(FortalTokens.accent4()),
+        ),
+      )
+      .onFocused(_fortalAccordionFocusStyler())
+      .onDisabled(_fortalAccordionDisabledStyler());
 }
 
 RemixAccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
@@ -73,26 +120,41 @@ RemixAccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
     .size1 => RemixAccordionStyler(
       trigger: FlexBoxStyler()
           .paddingX(FortalTokens.space2())
-          .paddingY(FortalTokens.space2()),
-      title: TextStyler().fontSize(14),
-      trailingIcon: IconStyler().size(16),
-      content: BoxStyler().paddingAll(FortalTokens.space2()),
+          .paddingY(FortalTokens.space2())
+          .borderRadiusAll(FortalTokens.radius3()),
+      leadingIcon: IconStyler().size(FortalTokens.space4()),
+      title: TextStyler(style: FortalTokens.text2.mix()),
+      trailingIcon: IconStyler().size(FortalTokens.space4()),
+      content: BoxStyler()
+          .paddingAll(FortalTokens.space2())
+          .borderRadiusBottom(FortalTokens.radius3())
+          .clipBehavior(.antiAlias),
     ),
     .size2 => RemixAccordionStyler(
       trigger: FlexBoxStyler()
           .paddingX(FortalTokens.space3())
-          .paddingY(FortalTokens.space3()),
-      title: TextStyler().fontSize(15),
-      trailingIcon: IconStyler().size(20),
-      content: BoxStyler().paddingAll(FortalTokens.space3()),
+          .paddingY(FortalTokens.space3())
+          .borderRadiusAll(FortalTokens.radius4()),
+      leadingIcon: IconStyler().size(FortalTokens.spinnerSize3()),
+      title: TextStyler(style: FortalTokens.accordionText2.mix()),
+      trailingIcon: IconStyler().size(FortalTokens.spinnerSize3()),
+      content: BoxStyler()
+          .paddingAll(FortalTokens.space3())
+          .borderRadiusBottom(FortalTokens.radius4())
+          .clipBehavior(.antiAlias),
     ),
     .size3 => RemixAccordionStyler(
       trigger: FlexBoxStyler()
           .paddingX(FortalTokens.space4())
-          .paddingY(FortalTokens.space4()),
-      title: TextStyler().fontSize(16),
-      trailingIcon: IconStyler().size(24),
-      content: BoxStyler().paddingAll(FortalTokens.space4()),
+          .paddingY(FortalTokens.space4())
+          .borderRadiusAll(FortalTokens.radius5()),
+      leadingIcon: IconStyler().size(FortalTokens.space5()),
+      title: TextStyler(style: FortalTokens.text3.mix()),
+      trailingIcon: IconStyler().size(FortalTokens.space5()),
+      content: BoxStyler()
+          .paddingAll(FortalTokens.space4())
+          .borderRadiusBottom(FortalTokens.radius5())
+          .clipBehavior(.antiAlias),
     ),
   };
 }
@@ -122,52 +184,6 @@ class FortalAccordion<T> extends StatelessWidget {
     this.semanticLabel,
     this.transitionBuilder,
   });
-
-  const FortalAccordion.surface({
-    super.key,
-    this.size = .size2,
-    this.color,
-    this.radius,
-    required this.value,
-    required this.child,
-    this.title,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.builder,
-    this.enabled = true,
-    this.mouseCursor = SystemMouseCursors.click,
-    this.enableFeedback = true,
-    this.autofocus = false,
-    this.focusNode,
-    this.onFocusChange,
-    this.onHoverChange,
-    this.onPressChange,
-    this.semanticLabel,
-    this.transitionBuilder,
-  }) : variant = FortalAccordionVariant.surface;
-
-  const FortalAccordion.soft({
-    super.key,
-    this.size = .size2,
-    this.color,
-    this.radius,
-    required this.value,
-    required this.child,
-    this.title,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.builder,
-    this.enabled = true,
-    this.mouseCursor = SystemMouseCursors.click,
-    this.enableFeedback = true,
-    this.autofocus = false,
-    this.focusNode,
-    this.onFocusChange,
-    this.onHoverChange,
-    this.onPressChange,
-    this.semanticLabel,
-    this.transitionBuilder,
-  }) : variant = FortalAccordionVariant.soft;
 
   final FortalAccordionVariant variant;
 
@@ -213,7 +229,7 @@ class FortalAccordion<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FortalOverride(
+    return FortalComponentOverride(
       color: this.color,
       radius: this.radius,
       child: fortalAccordionStyler(variant: this.variant, size: this.size)

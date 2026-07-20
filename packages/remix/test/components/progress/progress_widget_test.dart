@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -5,380 +7,191 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
-  group('RemixProgress Basic Rendering', () {
-    testWidgets('renders progress with minimal props', (tester) async {
-      await tester.pumpRemixApp(const RemixProgress(value: 0.5));
-      await tester.pumpAndSettle();
+  Finder indicatorOf() => find.descendant(
+    of: find.byType(RemixProgress),
+    matching: find.byType(FractionallySizedBox),
+  );
 
-      expect(find.byType(RemixProgress), findsOneWidget);
+  group('RemixProgress contract', () {
+    test('defaults to indeterminate progress on a 0-100 scale', () {
+      const progress = RemixProgress();
+
+      expect(progress.value, isNull);
+      expect(progress.max, 100);
+      expect(progress.duration, const Duration(seconds: 5));
+      expect(progress.excludeSemantics, isFalse);
     });
 
-    testWidgets('renders progress with value 0', (tester) async {
-      await tester.pumpRemixApp(const RemixProgress(value: 0.0));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('renders progress with value 1', (tester) async {
-      await tester.pumpRemixApp(const RemixProgress(value: 1.0));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('renders progress with custom style', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.75,
-          style: RemixProgressStyler()
-              .height(20.0)
-              .trackColor(Colors.grey)
-              .indicatorColor(Colors.blue),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-  });
-
-  group('RemixProgress Value Validation', () {
-    test('accepts value at lower boundary (0)', () {
-      expect(() => const RemixProgress(value: 0.0), returnsNormally);
-    });
-
-    test('accepts value at upper boundary (1)', () {
-      expect(() => const RemixProgress(value: 1.0), returnsNormally);
-    });
-
-    test('accepts value in middle range', () {
-      expect(() => const RemixProgress(value: 0.5), returnsNormally);
-    });
-
-    test('throws assertion error when value is less than 0', () {
+    test('validates max, value, and duration', () {
+      expect(() => const RemixProgress(value: 0), returnsNormally);
+      expect(() => const RemixProgress(value: 100), returnsNormally);
       expect(() => RemixProgress(value: -0.1), throwsA(isA<AssertionError>()));
+      expect(() => RemixProgress(value: 100.1), throwsA(isA<AssertionError>()));
+      expect(() => RemixProgress(max: 0), throwsA(isA<AssertionError>()));
+      expect(
+        () => RemixProgress(max: double.infinity),
+        throwsA(isA<AssertionError>()),
+      );
     });
 
-    test('throws assertion error when value is greater than 1', () {
-      expect(() => RemixProgress(value: 1.1), throwsA(isA<AssertionError>()));
+    testWidgets('rejects a non-positive duration when mounted', (tester) async {
+      await tester.pumpRemixApp(const RemixProgress(duration: Duration.zero));
+
+      expect(tester.takeException(), isA<ArgumentError>());
     });
   });
 
-  group('RemixProgress Styling Tests', () {
-    testWidgets('applies height style', (tester) async {
+  group('RemixProgress geometry', () {
+    testWidgets('uses value divided by max for determinate width', (
+      tester,
+    ) async {
       await tester.pumpRemixApp(
-        RemixProgress(value: 0.5, style: RemixProgressStyler().height(30.0)),
+        const SizedBox(width: 200, child: RemixProgress(value: 25, max: 200)),
       );
-      await tester.pumpAndSettle();
 
-      expect(find.byType(RemixProgress), findsOneWidget);
+      final indicator = tester.widget<FractionallySizedBox>(indicatorOf());
+      expect(indicator.widthFactor, 0.125);
+      expect(indicator.heightFactor, 1);
     });
 
-    testWidgets('applies width style', (tester) async {
+    testWidgets('runs the indeterminate growth sequence once', (tester) async {
       await tester.pumpRemixApp(
-        RemixProgress(value: 0.5, style: RemixProgressStyler().width(200.0)),
+        const RemixProgress(duration: Duration(seconds: 1)),
       );
-      await tester.pumpAndSettle();
 
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('applies track color style', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().trackColor(Colors.grey),
-        ),
+      expect(
+        tester.widget<FractionallySizedBox>(indicatorOf()).widthFactor,
+        closeTo(0.01, 0.0001),
       );
-      await tester.pumpAndSettle();
 
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('applies indicator color style', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().indicatorColor(Colors.blue),
-        ),
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(
+        tester.widget<FractionallySizedBox>(indicatorOf()).widthFactor,
+        closeTo(0.1, 0.0001),
       );
-      await tester.pumpAndSettle();
 
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('applies padding style', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().padding(EdgeInsetsGeometryMix.all(16.0)),
-        ),
+      await tester.pump(const Duration(milliseconds: 800));
+      expect(
+        tester.widget<FractionallySizedBox>(indicatorOf()).widthFactor,
+        closeTo(1, 0.0001),
       );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('applies margin style', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().margin(EdgeInsetsGeometryMix.all(8.0)),
-        ),
+      await tester.pump(const Duration(seconds: 1));
+      expect(
+        tester.widget<FractionallySizedBox>(indicatorOf()).widthFactor,
+        closeTo(1, 0.0001),
       );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
     });
 
-    testWidgets('applies combined styles', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler()
-              .height(20.0)
-              .width(300.0)
-              .trackColor(Colors.grey.shade300)
-              .indicatorColor(Colors.blue)
-              .padding(EdgeInsetsGeometryMix.all(8.0)),
-        ),
+    testWidgets('restarts indeterminate growth after a mode change', (
+      tester,
+    ) async {
+      const key = ValueKey('progress');
+      await tester.pumpRemixApp(const RemixProgress(key: key, value: 50));
+      expect(
+        tester.widget<FractionallySizedBox>(indicatorOf()).widthFactor,
+        0.5,
       );
-      await tester.pumpAndSettle();
 
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-  });
-
-  group('RemixProgress Different Values', () {
-    testWidgets('renders progress at 0% (empty)', (tester) async {
-      await tester.pumpRemixApp(const RemixProgress(value: 0.0));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('renders progress at 25%', (tester) async {
-      await tester.pumpRemixApp(const RemixProgress(value: 0.25));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('renders progress at 50%', (tester) async {
-      await tester.pumpRemixApp(const RemixProgress(value: 0.5));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('renders progress at 75%', (tester) async {
-      await tester.pumpRemixApp(const RemixProgress(value: 0.75));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('renders progress at 100% (full)', (tester) async {
-      await tester.pumpRemixApp(const RemixProgress(value: 1.0));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-  });
-
-  group('RemixProgress Layout Tests', () {
-    testWidgets('contains LayoutBuilder widget', (tester) async {
-      await tester.pumpRemixApp(const RemixProgress(value: 0.5));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(LayoutBuilder), findsOneWidget);
-    });
-
-    testWidgets('contains SizedBox widget', (tester) async {
-      await tester.pumpRemixApp(const RemixProgress(value: 0.5));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(SizedBox), findsWidgets);
-    });
-  });
-
-  group('RemixProgress Edge Cases', () {
-    testWidgets('handles very small progress value', (tester) async {
-      await tester.pumpRemixApp(const RemixProgress(value: 0.01));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('handles very large progress value', (tester) async {
-      await tester.pumpRemixApp(const RemixProgress(value: 0.99));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('handles progress with styleSpec directly', (tester) async {
-      await tester.pumpRemixApp(
-        const RemixProgress(value: 0.5, styleSpec: RemixProgressSpec()),
+      await tester.pumpRemixApp(const RemixProgress(key: key));
+      expect(
+        tester.widget<FractionallySizedBox>(indicatorOf()).widthFactor,
+        closeTo(0.01, 0.0001),
       );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
     });
-  });
 
-  group('RemixProgress Advanced Styling', () {
-    testWidgets('applies track styler', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().track(
-            BoxStyler(
-              decoration: BoxDecorationMix(
-                color: Colors.grey,
-                borderRadius: BorderRadiusMix.circular(8.0),
-              ),
-            ),
+    testWidgets('uses a stable completed frame when animations are disabled', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        const MediaQuery(
+          data: MediaQueryData(disableAnimations: true),
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: RemixProgress(duration: Duration(seconds: 1)),
           ),
         ),
       );
-      await tester.pumpAndSettle();
 
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('applies indicator styler', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().indicator(
-            BoxStyler(
-              decoration: BoxDecorationMix(
-                color: Colors.blue,
-                borderRadius: BorderRadiusMix.circular(8.0),
-              ),
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('applies trackContainer styler', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().trackContainer(
-            BoxStyler(
-              decoration: BoxDecorationMix(
-                border: BoxBorderMix.all(BorderSideMix(color: Colors.black)),
-              ),
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('applies alignment style', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().alignment(Alignment.center),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('applies constraints style', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().constraints(
-            BoxConstraintsMix(minWidth: 200.0, maxWidth: 400.0),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('applies decoration style', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().decoration(
-            BoxDecorationMix(
-              color: Colors.white,
-              borderRadius: BorderRadiusMix.circular(12.0),
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('applies foregroundDecoration style', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().foregroundDecoration(
-            BoxDecorationMix(
-              border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
-    });
-
-    testWidgets('applies transform style', (tester) async {
-      await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().transform(Matrix4.identity()),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixProgress), findsOneWidget);
+      expect(tester.widget<FractionallySizedBox>(indicatorOf()).widthFactor, 1);
+      await tester.pump(const Duration(seconds: 2));
+      expect(tester.widget<FractionallySizedBox>(indicatorOf()).widthFactor, 1);
+      expect(tester.binding.hasScheduledFrame, isFalse);
     });
   });
 
-  group('RemixProgress Widget Modifiers', () {
-    testWidgets('applies wrap modifier', (tester) async {
+  group('RemixProgress semantics', () {
+    testWidgets('exposes determinate progress semantics', (tester) async {
       await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().wrap(.clipOval()),
+        const RemixProgress(
+          value: 25.5,
+          max: 200,
+          semanticLabel: 'Upload progress',
         ),
       );
-      await tester.pumpAndSettle();
 
-      expect(find.byType(RemixProgress), findsOneWidget);
+      final node = tester.getSemantics(
+        find.bySemanticsLabel('Upload progress'),
+      );
+      expect(node.getSemanticsData().role, ui.SemanticsRole.progressBar);
+      expect(
+        node,
+        matchesSemantics(
+          label: 'Upload progress',
+          value: '25.5',
+          minValue: '0',
+          maxValue: '200',
+        ),
+      );
+    });
+
+    testWidgets('exposes an indeterminate loading role without fake values', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const RemixProgress(semanticLabel: 'Loading records'),
+      );
+
+      final node = tester.getSemantics(
+        find.bySemanticsLabel('Loading records'),
+      );
+      final data = node.getSemanticsData();
+      expect(data.role, ui.SemanticsRole.loadingSpinner);
+      expect(data.value, isEmpty);
+      expect(data.maxValue, isNull);
+    });
+
+    testWidgets('can explicitly exclude progress semantics', (tester) async {
+      await tester.pumpRemixApp(
+        const RemixProgress(
+          value: 50,
+          semanticLabel: 'Hidden progress',
+          excludeSemantics: true,
+        ),
+      );
+
+      expect(find.bySemanticsLabel('Hidden progress'), findsNothing);
     });
   });
 
-  group('RemixProgress Key Tests', () {
-    testWidgets('accepts key parameter', (tester) async {
-      const key = ValueKey('progress_key');
+  testWidgets('wires resolved surface and overlay slots to the renderer', (
+    tester,
+  ) async {
+    const surface = RemixSurfaceLayerSpec(color: Colors.red, backdropBlur: 3);
+    const overlay = RemixSurfaceLayerSpec(
+      shadows: [
+        RemixPaintShadow(kind: RemixPaintShadowKind.inset, blurRadius: 1),
+      ],
+    );
+    await tester.pumpRemixApp(
+      const RemixProgress(
+        value: 50,
+        styleSpec: RemixProgressSpec(surface: surface, overlay: overlay),
+      ),
+    );
 
-      await tester.pumpRemixApp(const RemixProgress(key: key, value: 0.5));
-      await tester.pumpAndSettle();
-
-      expect(find.byKey(key), findsOneWidget);
-    });
+    final rendered = tester.widget<RemixSurface>(find.byType(RemixSurface));
+    expect(rendered.spec, same(surface));
+    expect(rendered.overlay, same(overlay));
+    expect(find.byType(BackdropFilter), findsOneWidget);
   });
 }

@@ -343,6 +343,66 @@ void main() {
       });
     });
 
+    group('Fortal styles', () {
+      testWidgets('size metrics use scaled shared tokens', (tester) async {
+        final resolved = await _resolveFortalToggleStyle(
+          tester,
+          fortalToggleStyler(size: .size3),
+          scaling: .percent110,
+        );
+        final box = resolved.container.spec.box!.spec;
+        final padding = box.padding!.resolve(TextDirection.ltr);
+
+        expect(padding.left, closeTo(17.6, 1e-9));
+        expect(padding.top, closeTo(8.8, 1e-9));
+        expect(resolved.container.spec.flex?.spec.spacing, closeTo(6.6, 1e-9));
+        expect(resolved.label.spec.style?.fontSize, closeTo(17.6, 1e-9));
+        expect(resolved.label.spec.style?.height, closeTo(24 / 16, 1e-9));
+        expect(resolved.label.spec.style?.fontWeight, FontWeight.w500);
+        expect(resolved.icon.spec.size, closeTo(22, 1e-9));
+        expect(_toggleRadius(resolved), closeTo(6.6, 1e-9));
+      });
+
+      testWidgets('pressed and disabled state precedence is deterministic', (
+        tester,
+      ) async {
+        final pressed = await _resolveFortalToggleStyle(
+          tester,
+          fortalToggleStyler(),
+          states: {WidgetState.pressed},
+        );
+        final selectedPressed = await _resolveFortalToggleStyle(
+          tester,
+          fortalToggleStyler(),
+          states: {WidgetState.selected, WidgetState.pressed},
+        );
+        final disabled = await _resolveFortalToggleStyle(
+          tester,
+          fortalToggleStyler(),
+          states: {
+            WidgetState.disabled,
+            WidgetState.selected,
+            WidgetState.hovered,
+            WidgetState.pressed,
+          },
+        );
+        final focused = await _resolveFortalToggleStyle(
+          tester,
+          fortalToggleStyler(),
+          states: {WidgetState.focused},
+        );
+
+        expect(_toggleColor(pressed), slate.light.scale.alphaStep(4));
+        expect(_toggleColor(selectedPressed), indigo.light.scale.step(5));
+        expect(_toggleColor(disabled), slate.light.scale.alphaStep(3));
+        expect(disabled.label.spec.style?.color, slate.light.scale.step(8));
+        expect(
+          _toggleBorder(focused).top.color,
+          indigo.light.scale.alphaStep(8),
+        );
+      });
+    });
+
     group('Core Methods', () {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
@@ -433,3 +493,44 @@ void main() {
     });
   });
 }
+
+Future<RemixToggleSpec> _resolveFortalToggleStyle(
+  WidgetTester tester,
+  RemixToggleStyler style, {
+  Set<WidgetState> states = const {},
+  FortalScaling scaling = .percent100,
+  FortalRadius radius = .medium,
+}) async {
+  late RemixToggleSpec resolved;
+  await tester.pumpWidget(
+    FortalScope(
+      appearance: .light,
+      scaling: scaling,
+      radius: radius,
+      child: WidgetsApp(
+        color: Colors.black,
+        builder: (context, child) => WidgetStateProvider(
+          states: states,
+          child: Builder(
+            builder: (context) {
+              resolved = style.build(context).spec;
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      ),
+    ),
+  );
+  return resolved;
+}
+
+BoxDecoration _toggleDecoration(RemixToggleSpec spec) =>
+    spec.container.spec.box!.spec.decoration! as BoxDecoration;
+
+Color? _toggleColor(RemixToggleSpec spec) => _toggleDecoration(spec).color;
+
+Border _toggleBorder(RemixToggleSpec spec) =>
+    _toggleDecoration(spec).border! as Border;
+
+double _toggleRadius(RemixToggleSpec spec) =>
+    (_toggleDecoration(spec).borderRadius! as BorderRadius).topLeft.x;

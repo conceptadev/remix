@@ -64,7 +64,7 @@ class _ToggleExampleState extends State<ToggleExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -86,12 +86,14 @@ class _FortalToggleExampleState extends State<FortalToggleExample> {
     return Row(
       spacing: 8,
       children: [
-        FortalToggle.ghost(
+        FortalToggle(
+          variant: FortalToggleVariant.ghost,
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
           label: 'Ghost',
         ),
-        FortalToggle.outline(
+        FortalToggle(
+          variant: FortalToggleVariant.outline,
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
           label: 'Outline',

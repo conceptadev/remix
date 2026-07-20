@@ -21,10 +21,14 @@ class ButtonExample extends StatelessWidget {
         children: [
           RemixButton(
             onPressed: () {},
-            label: 'Turn Off',
             style: destructiveStyle,
+            child: const Text('Turn Off'),
           ),
-          RemixButton(onPressed: () {}, label: 'Turn on', style: successStyle),
+          RemixButton(
+            onPressed: () {},
+            style: successStyle,
+            child: const Text('Turn on'),
+          ),
         ],
       ),
     );

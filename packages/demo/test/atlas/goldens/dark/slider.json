@@ -1,0 +1,160 @@
+{
+  "schema": "mix_atlas/atlas/v1",
+  "component": "slider",
+  "componentLabel": "Slider",
+  "theme": "dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "slider.png",
+  "rowAxes": [
+    {
+      "id": "variant",
+      "label": "Variant"
+    },
+    {
+      "id": "size",
+      "label": "Size"
+    }
+  ],
+  "rows": [
+    {
+      "id": "classic-size1",
+      "values": {
+        "variant": {
+          "id": "classic",
+          "label": "Classic"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "classic-size2",
+      "values": {
+        "variant": {
+          "id": "classic",
+          "label": "Classic"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "classic-size3",
+      "values": {
+        "variant": {
+          "id": "classic",
+          "label": "Classic"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    },
+    {
+      "id": "surface-size1",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "surface-size2",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "surface-size3",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    },
+    {
+      "id": "soft-size1",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "soft-size2",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "soft-size3",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    }
+  ],
+  "columns": [
+    {
+      "id": "default",
+      "states": [],
+      "props": {}
+    },
+    {
+      "id": "high-contrast",
+      "label": "High contrast",
+      "states": [],
+      "props": {
+        "highContrast": true
+      }
+    },
+    {
+      "id": "disabled",
+      "states": [
+        "disabled"
+      ],
+      "props": {}
+    }
+  ]
+}

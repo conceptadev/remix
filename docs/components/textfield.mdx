@@ -67,7 +67,7 @@ class _TextfieldExampleState extends State<TextfieldExample> {
           BoxShadowMix()
               .blurRadius(1)
               .color(Colors.black12)
-              .offset(const Offset(0, 1)),
+              .offset(x: 0, y: 1),
         )
         .border(
           BoxBorderMix.all(BorderSideMix(color: Colors.grey.shade300)),
@@ -89,7 +89,7 @@ class _TextfieldExampleState extends State<TextfieldExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -111,12 +111,14 @@ class _FortalTextFieldExampleState extends State<FortalTextFieldExample> {
     return Column(
       spacing: 16,
       children: [
-        FortalTextField.surface(
+        FortalTextField(
+          variant: FortalTextFieldVariant.surface,
           controller: controller,
           label: 'Surface',
           hintText: 'Neutral surface field',
         ),
-        FortalTextField.soft(
+        FortalTextField(
+          variant: FortalTextFieldVariant.soft,
           controller: controller,
           label: 'Soft',
           hintText: 'Accent soft field',

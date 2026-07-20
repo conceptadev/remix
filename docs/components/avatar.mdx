@@ -77,7 +77,7 @@ class AvatarExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -93,11 +93,13 @@ class FortalAvatarExample extends StatelessWidget {
       spacing: 16,
       children: [
         // Soft variant - Subtle background
-        FortalAvatar.soft(
+        FortalAvatar(
+          variant: FortalAvatarVariant.soft,
           label: 'AB',
         ),
         // Solid variant - Bold background
-        FortalAvatar.solid(
+        FortalAvatar(
+          variant: FortalAvatarVariant.solid,
           label: 'CD',
         ),
       ],

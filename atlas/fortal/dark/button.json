@@ -18,6 +18,58 @@
   ],
   "rows": [
     {
+      "id": "classic-size1",
+      "values": {
+        "variant": {
+          "id": "classic",
+          "label": "Classic"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "classic-size2",
+      "values": {
+        "variant": {
+          "id": "classic",
+          "label": "Classic"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "classic-size3",
+      "values": {
+        "variant": {
+          "id": "classic",
+          "label": "Classic"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    },
+    {
+      "id": "classic-size4",
+      "values": {
+        "variant": {
+          "id": "classic",
+          "label": "Classic"
+        },
+        "size": {
+          "id": "size4",
+          "label": "Size 4"
+        }
+      }
+    },
+    {
       "id": "solid-size1",
       "values": {
         "variant": {

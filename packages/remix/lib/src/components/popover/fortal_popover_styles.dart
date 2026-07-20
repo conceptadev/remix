@@ -1,21 +1,35 @@
 part of 'popover.dart';
 
+/// Fortal popover size presets matching Radix Themes 3.3.0.
+enum FortalPopoverSize { size1, size2, size3, size4 }
+
 /// Fortal-themed preset for [RemixPopover].
-RemixPopoverStyler fortalPopoverStyler() {
+RemixPopoverStyler fortalPopoverStyler({
+  FortalPopoverSize size = FortalPopoverSize.size2,
+}) {
+  final radius = switch (size) {
+    FortalPopoverSize.size1 ||
+    FortalPopoverSize.size2 => FortalTokens.radius4(),
+    FortalPopoverSize.size3 ||
+    FortalPopoverSize.size4 => FortalTokens.radius5(),
+  };
+  final padding = switch (size) {
+    FortalPopoverSize.size1 => FortalTokens.space3(),
+    FortalPopoverSize.size2 => FortalTokens.space4(),
+    FortalPopoverSize.size3 => FortalTokens.space5(),
+    FortalPopoverSize.size4 => FortalTokens.space6(),
+  };
+
   return RemixPopoverStyler()
-      .paddingAll(FortalTokens.space4())
-      .marginTop(FortalTokens.space2())
-      .constraints(BoxConstraintsMix(maxWidth: 360))
-      .borderAll(
-        color: FortalTokens.gray6(),
-        width: FortalTokens.borderWidth1(),
-      )
-      .borderRadiusAll(FortalTokens.radius3())
-      .backgroundColor(FortalTokens.colorPanel())
-      // Radix --shadow-5, sourced from the shared mode-aware shadow tokens so
-      // the light/dark layer recipes stay defined once in buildFortalShadows.
-      .decoration(
-        BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),
+      .paddingAll(padding)
+      .borderRadiusAll(radius)
+      .surface(
+        RemixSurfaceLayerMix(
+          color: FortalTokens.colorPanel(),
+          shadowToken: FortalTokens.shadow5,
+          borderRadius: BorderRadiusMix.all(radius),
+          backdropBlur: FortalTokens.panelBlur(),
+        ),
       );
 }
 
@@ -23,14 +37,21 @@ RemixPopoverStyler fortalPopoverStyler() {
 class FortalPopover extends StatelessWidget {
   const FortalPopover({
     super.key,
-    this.color,
-    this.radius,
+    this.size = FortalPopoverSize.size2,
     required this.popoverChild,
     required this.child,
-    this.positioning = const OverlayPositionConfig(),
+    this.width,
+    this.minWidth,
+    this.maxWidth = 480,
+    this.height,
+    this.minHeight,
+    this.maxHeight,
+    this.matchTriggerWidth = true,
+    this.positioning = const OverlayPositionConfig(sideOffset: 8),
     this.consumeOutsideTaps = true,
     this.useRootOverlay = false,
     this.openOnTap = true,
+    this.anchorKey,
     this.triggerFocusNode,
     this.onOpen,
     this.onClose,
@@ -41,15 +62,25 @@ class FortalPopover extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  final FortalPopoverSize size;
+
   final Widget popoverChild;
 
-  /// Optional accent color override for this popover subtree.
-  final FortalAccentColor? color;
-
-  /// Optional radius override for this popover subtree.
-  final FortalRadius? radius;
-
   final Widget child;
+
+  final double? width;
+
+  final double? minWidth;
+
+  final double? maxWidth;
+
+  final double? height;
+
+  final double? minHeight;
+
+  final double? maxHeight;
+
+  final bool matchTriggerWidth;
 
   final OverlayPositionConfig positioning;
 
@@ -58,6 +89,8 @@ class FortalPopover extends StatelessWidget {
   final bool useRootOverlay;
 
   final bool openOnTap;
+
+  final GlobalKey? anchorKey;
 
   final FocusNode? triggerFocusNode;
 
@@ -76,27 +109,29 @@ class FortalPopover extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
-    return FortalOverride(
-      color: this.color,
-      radius: this.radius,
-      child: fortalPopoverStyler().call(
-        key: this.key,
-        popoverChild: this.popoverChild,
-        child: this.child,
-        positioning: this.positioning,
-        consumeOutsideTaps: this.consumeOutsideTaps,
-        useRootOverlay: this.useRootOverlay,
-        openOnTap: this.openOnTap,
-        triggerFocusNode: this.triggerFocusNode,
-        onOpen: this.onOpen,
-        onClose: this.onClose,
-        onOpenRequested: this.onOpenRequested,
-        onCloseRequested: this.onCloseRequested,
-        controller: this.controller,
-        semanticLabel: this.semanticLabel,
-        excludeSemantics: this.excludeSemantics,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => fortalPopoverStyler(size: size).call(
+    key: key,
+    popoverChild: popoverChild,
+    child: child,
+    width: width,
+    minWidth: minWidth,
+    maxWidth: maxWidth,
+    height: height,
+    minHeight: minHeight,
+    maxHeight: maxHeight,
+    matchTriggerWidth: matchTriggerWidth,
+    positioning: positioning,
+    consumeOutsideTaps: consumeOutsideTaps,
+    useRootOverlay: useRootOverlay,
+    openOnTap: openOnTap,
+    anchorKey: anchorKey,
+    triggerFocusNode: triggerFocusNode,
+    onOpen: onOpen,
+    onClose: onClose,
+    onOpenRequested: onOpenRequested,
+    onCloseRequested: onCloseRequested,
+    controller: controller,
+    semanticLabel: semanticLabel,
+    excludeSemantics: excludeSemantics,
+  );
 }

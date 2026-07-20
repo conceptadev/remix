@@ -10,16 +10,32 @@ class RemixProgressSpec with _$RemixProgressSpec {
   final StyleSpec<BoxSpec> track;
   @override
   final StyleSpec<BoxSpec> indicator;
+
   @override
-  final StyleSpec<BoxSpec> trackContainer;
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? surface;
+
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? overlay;
+
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? indicatorSurface;
+
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? indicatorOverlay;
 
   const RemixProgressSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? track,
     StyleSpec<BoxSpec>? indicator,
-    StyleSpec<BoxSpec>? trackContainer,
+    this.surface,
+    this.overlay,
+    this.indicatorSurface,
+    this.indicatorOverlay,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        track = track ?? const StyleSpec(spec: BoxSpec()),
-       indicator = indicator ?? const StyleSpec(spec: BoxSpec()),
-       trackContainer = trackContainer ?? const StyleSpec(spec: BoxSpec());
+       indicator = indicator ?? const StyleSpec(spec: BoxSpec());
 }

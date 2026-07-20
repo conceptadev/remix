@@ -1,0 +1,1086 @@
+{
+  "schema": "remix/surface-tokens/v1",
+  "colorFormat": "AARRGGBB",
+  "tokens": [
+    {
+      "name": "fortal.base-button.classic.active.high-contrast.shadows",
+      "layers": [
+        {
+          "kind": "inset",
+          "color": "#1700002D",
+          "offset": {
+            "x": 0.0,
+            "y": 4.0
+          },
+          "blurRadius": 2.0,
+          "spreadRadius": -2.0
+        },
+        {
+          "kind": "inset",
+          "color": "#3200062E",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "inset",
+          "color": "#1F000932",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#FF1F2D5C",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#0F000033",
+          "offset": {
+            "x": 0.0,
+            "y": 3.0
+          },
+          "blurRadius": 2.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "inset",
+          "color": "#80FFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#4DFFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": -2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.base-button.classic.active.shadows",
+      "layers": [
+        {
+          "kind": "inset",
+          "color": "#1700002D",
+          "offset": {
+            "x": 0.0,
+            "y": 4.0
+          },
+          "blurRadius": 2.0,
+          "spreadRadius": -2.0
+        },
+        {
+          "kind": "inset",
+          "color": "#3200062E",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "inset",
+          "color": "#1F000932",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#FF3E63DD",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#0F000033",
+          "offset": {
+            "x": 0.0,
+            "y": 3.0
+          },
+          "blurRadius": 2.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "inset",
+          "color": "#80FFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#4DFFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": -2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.base-button.classic.disabled.shadows",
+      "layers": [
+        {
+          "kind": "inset",
+          "color": "#1700002D",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#0F000033",
+          "offset": {
+            "x": 0.0,
+            "y": -2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "inset",
+          "color": "#B3FFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": 4.0
+          },
+          "blurRadius": 2.0,
+          "spreadRadius": -2.0
+        },
+        {
+          "kind": "inset",
+          "color": "#B3FFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": -1.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.base-button.classic.high-contrast.shadows",
+      "layers": [
+        {
+          "kind": "inset",
+          "color": "#33FFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 3.0,
+          "spreadRadius": -1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#1700002D",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#0F000033",
+          "offset": {
+            "x": 0.0,
+            "y": -2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "inset",
+          "color": "#FF1F2D5C",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#B3FFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": 4.0
+          },
+          "blurRadius": 2.0,
+          "spreadRadius": -2.0
+        },
+        {
+          "kind": "inset",
+          "color": "#B3FFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": -1.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.base-button.classic.shadows",
+      "layers": [
+        {
+          "kind": "inset",
+          "color": "#33FFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 3.0,
+          "spreadRadius": -1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#1700002D",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#0F000033",
+          "offset": {
+            "x": 0.0,
+            "y": -2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "inset",
+          "color": "#FF3E63DD",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#B3FFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": 4.0
+          },
+          "blurRadius": 2.0,
+          "spreadRadius": -2.0
+        },
+        {
+          "kind": "inset",
+          "color": "#B3FFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": -1.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.card.classic.active.inner-shadows",
+      "layers": [
+        {
+          "kind": "outer",
+          "color": "#4BC3C9D5",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#00000000",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 0.5
+        },
+        {
+          "kind": "outer",
+          "color": "#1700002D",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": -1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 3.0,
+          "spreadRadius": 0.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.card.classic.active.outer-shadows",
+      "layers": [
+        {
+          "kind": "outer",
+          "color": "#4BC3C9D5",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#00000000",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#1700002D",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": -1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": -2.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 3.0,
+          "spreadRadius": -1.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.card.classic.hover.inner-shadows",
+      "layers": [
+        {
+          "kind": "outer",
+          "color": "#51ABB2C1",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0F000033",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": -1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 3.0,
+          "spreadRadius": -2.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0F000033",
+          "offset": {
+            "x": 0.0,
+            "y": 3.0
+          },
+          "blurRadius": 12.0,
+          "spreadRadius": -4.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 4.0
+          },
+          "blurRadius": 16.0,
+          "spreadRadius": -8.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.card.classic.hover.outer-shadows",
+      "layers": [
+        {
+          "kind": "outer",
+          "color": "#51ABB2C1",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0F000033",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": -2.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 3.0,
+          "spreadRadius": -3.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0F000033",
+          "offset": {
+            "x": 0.0,
+            "y": 3.0
+          },
+          "blurRadius": 12.0,
+          "spreadRadius": -5.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 4.0
+          },
+          "blurRadius": 16.0,
+          "spreadRadius": -9.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.card.classic.inner-shadows",
+      "layers": [
+        {
+          "kind": "outer",
+          "color": "#4BC3C9D5",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#00000000",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 0.5
+        },
+        {
+          "kind": "outer",
+          "color": "#06000055",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": -1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 3.0,
+          "spreadRadius": 0.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.card.classic.outer-shadows",
+      "layers": [
+        {
+          "kind": "outer",
+          "color": "#4BC3C9D5",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#00000000",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#06000055",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": -1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": -2.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 3.0,
+          "spreadRadius": -1.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.select.trigger.classic.hover-shadows",
+      "layers": [
+        {
+          "kind": "inset",
+          "color": "#0F000033",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#1F000932",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#E6FFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "inset",
+          "color": "#1700002D",
+          "offset": {
+            "x": 0.0,
+            "y": -2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.select.trigger.classic.shadows",
+      "layers": [
+        {
+          "kind": "inset",
+          "color": "#1F000932",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#E6FFFFFF",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "inset",
+          "color": "#1700002D",
+          "offset": {
+            "x": 0.0,
+            "y": -2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.shadow.1",
+      "layers": [
+        {
+          "kind": "inset",
+          "color": "#1F000932",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#06000055",
+          "offset": {
+            "x": 0.0,
+            "y": 1.5
+          },
+          "blurRadius": 2.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "inset",
+          "color": "#1A000000",
+          "offset": {
+            "x": 0.0,
+            "y": 1.5
+          },
+          "blurRadius": 2.0,
+          "spreadRadius": 0.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.shadow.2",
+      "layers": [
+        {
+          "kind": "outer",
+          "color": "#4BC3C9D5",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.5,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#06000055",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 1.0,
+          "spreadRadius": -1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 1.0
+          },
+          "blurRadius": 3.0,
+          "spreadRadius": 0.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.shadow.3",
+      "layers": [
+        {
+          "kind": "outer",
+          "color": "#4BC3C9D5",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0F000033",
+          "offset": {
+            "x": 0.0,
+            "y": 2.0
+          },
+          "blurRadius": 3.0,
+          "spreadRadius": -2.0
+        },
+        {
+          "kind": "outer",
+          "color": "#1A000000",
+          "offset": {
+            "x": 0.0,
+            "y": 3.0
+          },
+          "blurRadius": 12.0,
+          "spreadRadius": -4.0
+        },
+        {
+          "kind": "outer",
+          "color": "#1A000000",
+          "offset": {
+            "x": 0.0,
+            "y": 4.0
+          },
+          "blurRadius": 16.0,
+          "spreadRadius": -8.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.shadow.4",
+      "layers": [
+        {
+          "kind": "outer",
+          "color": "#4BC3C9D5",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 8.0
+          },
+          "blurRadius": 40.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#0F000033",
+          "offset": {
+            "x": 0.0,
+            "y": 12.0
+          },
+          "blurRadius": 32.0,
+          "spreadRadius": -16.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.shadow.5",
+      "layers": [
+        {
+          "kind": "outer",
+          "color": "#4BC3C9D5",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#26000000",
+          "offset": {
+            "x": 0.0,
+            "y": 12.0
+          },
+          "blurRadius": 60.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#1F000932",
+          "offset": {
+            "x": 0.0,
+            "y": 12.0
+          },
+          "blurRadius": 32.0,
+          "spreadRadius": -16.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.shadow.6",
+      "layers": [
+        {
+          "kind": "outer",
+          "color": "#4BC3C9D5",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "outer",
+          "color": "#26000000",
+          "offset": {
+            "x": 0.0,
+            "y": 12.0
+          },
+          "blurRadius": 60.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#06000055",
+          "offset": {
+            "x": 0.0,
+            "y": 16.0
+          },
+          "blurRadius": 64.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "outer",
+          "color": "#3200062E",
+          "offset": {
+            "x": 0.0,
+            "y": 16.0
+          },
+          "blurRadius": 36.0,
+          "spreadRadius": -20.0
+        }
+      ]
+    },
+    {
+      "name": "fortal.slider.classic.disabled-track-shadows",
+      "layers": [
+        {
+          "kind": "inset",
+          "color": "#10000932",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "blurRadius": 0.0,
+          "spreadRadius": 1.0
+        },
+        {
+          "kind": "inset",
+          "color": "#03000055",
+          "offset": {
+            "x": 0.0,
+            "y": 1.5
+          },
+          "blurRadius": 2.0,
+          "spreadRadius": 0.0
+        },
+        {
+          "kind": "inset",
+          "color": "#0D000000",
+          "offset": {
+            "x": 0.0,
+            "y": 1.5
+          },
+          "blurRadius": 2.0,
+          "spreadRadius": 0.0
+        }
+      ]
+    }
+  ]
+}

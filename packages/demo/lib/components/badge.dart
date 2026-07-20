@@ -12,7 +12,6 @@ Widget buildBadgeUseCase(BuildContext context) {
     child: Scaffold(
       body: Center(
         child: FortalBadge(
-          label: context.knobs.string(label: 'Label', initialValue: 'New'),
           variant: context.knobs.object.dropdown(
             label: 'variant',
             options: FortalBadgeVariant.values,
@@ -23,6 +22,9 @@ Widget buildBadgeUseCase(BuildContext context) {
             options: FortalBadgeSize.values,
             labelBuilder: (size) => size.name,
             initialOption: FortalBadgeSize.size2,
+          ),
+          child: Text(
+            context.knobs.string(label: 'Label', initialValue: 'New'),
           ),
         ),
       ),

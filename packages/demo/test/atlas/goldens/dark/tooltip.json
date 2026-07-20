@@ -1,0 +1,34 @@
+{
+  "schema": "mix_atlas/atlas/v1",
+  "component": "tooltip",
+  "componentLabel": "Tooltip",
+  "theme": "dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "tooltip.png",
+  "rowAxes": [],
+  "rows": [
+    {
+      "id": "default",
+      "values": {}
+    }
+  ],
+  "columns": [
+    {
+      "id": "closed",
+      "label": "Closed",
+      "states": [],
+      "props": {
+        "open": false
+      }
+    },
+    {
+      "id": "open",
+      "label": "Open",
+      "states": [],
+      "props": {
+        "open": true
+      }
+    }
+  ]
+}

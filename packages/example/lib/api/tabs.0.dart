@@ -6,8 +6,10 @@ import 'package:remix/remix.dart';
 
 void main() {
   runApp(
-    const MaterialApp(
-      home: Scaffold(backgroundColor: Colors.white, body: TabsExample()),
+    const FortalScope(
+      child: MaterialApp(
+        home: Scaffold(backgroundColor: Colors.white, body: TabsExample()),
+      ),
     ),
   );
 }
@@ -36,14 +38,11 @@ class _TabsExampleState extends State<TabsExample> {
             children: [
               RemixTabBar(
                 style: tabBarStyle,
-                child: Row(
-                  mainAxisSize: .max,
-                  children: [
-                    RemixTab(tabId: 'tab1', style: tabStyle, label: 'Tab 1'),
-                    const SizedBox(width: 8),
-                    RemixTab(tabId: 'tab2', style: tabStyle, label: 'Tab 2'),
-                  ],
-                ),
+                children: [
+                  RemixTab(tabId: 'tab1', style: tabStyle, label: 'Tab 1'),
+                  const SizedBox(width: 8),
+                  RemixTab(tabId: 'tab2', style: tabStyle, label: 'Tab 2'),
+                ],
               ),
               const SizedBox(height: 8),
               Expanded(

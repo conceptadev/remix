@@ -1,18 +1,41 @@
 part of 'dialog.dart';
 
+/// Fortal dialog size presets matching Radix Themes 3.3.0.
+enum FortalDialogSize { size1, size2, size3, size4 }
+
+/// Vertical placement of a Fortal dialog within its viewport.
+enum FortalDialogAlign { start, center }
+
 /// Fortal-themed preset for [RemixDialog].
-RemixDialogStyler fortalDialogStyler() {
+RemixDialogStyler fortalDialogStyler({
+  FortalDialogSize size = FortalDialogSize.size3,
+}) {
+  final radius = switch (size) {
+    FortalDialogSize.size1 || FortalDialogSize.size2 => FortalTokens.radius4(),
+    FortalDialogSize.size3 || FortalDialogSize.size4 => FortalTokens.radius5(),
+  };
+  final padding = switch (size) {
+    FortalDialogSize.size1 => FortalTokens.space3(),
+    FortalDialogSize.size2 => FortalTokens.space4(),
+    FortalDialogSize.size3 => FortalTokens.space5(),
+    FortalDialogSize.size4 => FortalTokens.space6(),
+  };
+
   return RemixDialogStyler()
       .title(
         TextStyler()
-            .fontSize(18)
-            .fontWeight(.w600)
+            .style(FortalTokens.text5.mix())
+            .fontWeight(FortalTokens.fontWeightBold())
             .color(FortalTokens.gray12())
             .wrap(
-              .padding(EdgeInsetsMix.fromLTRB(0, 0, 0, FortalTokens.space4())),
+              .padding(EdgeInsetsMix.fromLTRB(0, 0, 0, FortalTokens.space3())),
             ),
       )
-      .description(TextStyler().fontSize(14).color(FortalTokens.gray11()))
+      .description(
+        TextStyler(
+          style: FortalTokens.text3.mix(),
+        ).color(FortalTokens.gray12()),
+      )
       .actions(
         FlexBoxStyler()
             .mainAxisAlignment(.end)
@@ -20,21 +43,15 @@ RemixDialogStyler fortalDialogStyler() {
             .spacing(FortalTokens.space3())
             .marginTop(FortalTokens.space5()),
       )
-      .padding(.all(FortalTokens.space5()))
-      .constraints(BoxConstraintsMix(maxWidth: 450))
-      .border(
-        .all(
-          BorderSideMix()
-              .color(FortalTokens.gray6())
-              .width(FortalTokens.borderWidth1()),
+      .padding(.all(padding))
+      .borderRadius(.all(radius))
+      .surface(
+        RemixSurfaceLayerMix(
+          color: FortalTokens.colorPanel(),
+          shadowToken: FortalTokens.shadow6,
+          borderRadius: BorderRadiusMix.all(radius),
+          backdropBlur: FortalTokens.panelBlur(),
         ),
-      )
-      .borderRadius(.all(FortalTokens.radius3()))
-      .backgroundColor(FortalTokens.colorPanel())
-      // Radix --shadow-6, sourced from the shared mode-aware shadow tokens so
-      // the light/dark layer recipes stay defined once in buildFortalShadows.
-      .decoration(
-        BoxDecorationMix.create(boxShadow: FortalTokens.shadow6.mix()),
       );
 }
 
@@ -42,8 +59,14 @@ RemixDialogStyler fortalDialogStyler() {
 class FortalDialog extends StatelessWidget {
   const FortalDialog({
     super.key,
-    this.color,
-    this.radius,
+    this.size = FortalDialogSize.size3,
+    this.align = FortalDialogAlign.center,
+    this.width = double.infinity,
+    this.minWidth,
+    this.maxWidth = 600,
+    this.height,
+    this.minHeight,
+    this.maxHeight,
     this.child,
     this.title,
     this.description,
@@ -52,11 +75,21 @@ class FortalDialog extends StatelessWidget {
     this.semanticLabel,
   });
 
-  /// Optional accent color override for this dialog subtree.
-  final FortalAccentColor? color;
+  final FortalDialogSize size;
 
-  /// Optional radius override for this dialog subtree.
-  final FortalRadius? radius;
+  final FortalDialogAlign align;
+
+  final double? width;
+
+  final double? minWidth;
+
+  final double? maxWidth;
+
+  final double? height;
+
+  final double? minHeight;
+
+  final double? maxHeight;
 
   final Widget? child;
 
@@ -72,18 +105,37 @@ class FortalDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FortalOverride(
-      color: this.color,
-      radius: this.radius,
-      child: fortalDialogStyler().call(
-        key: this.key,
-        title: this.title,
-        description: this.description,
-        actions: this.actions,
-        modal: this.modal,
-        semanticLabel: this.semanticLabel,
-        child: this.child,
+    final horizontalInset = MixScope.tokenOf(FortalTokens.space4, context);
+    final verticalInset = MixScope.tokenOf(FortalTokens.space6, context);
+    final viewportHeight = MediaQuery.maybeOf(context)?.size.height ?? 0;
+    final proportionalBottomInset = viewportHeight * 0.06;
+
+    return fortalDialogStyler(size: size).call(
+      key: key,
+      title: title,
+      description: description,
+      actions: actions,
+      modal: modal,
+      semanticLabel: semanticLabel,
+      alignment: switch (align) {
+        FortalDialogAlign.start => RemixDialogAlignment.start,
+        FortalDialogAlign.center => RemixDialogAlignment.center,
+      },
+      width: width,
+      minWidth: minWidth,
+      maxWidth: maxWidth,
+      height: height,
+      minHeight: minHeight,
+      maxHeight: maxHeight,
+      insetPadding: EdgeInsets.fromLTRB(
+        horizontalInset,
+        verticalInset,
+        horizontalInset,
+        proportionalBottomInset > verticalInset
+            ? proportionalBottomInset
+            : verticalInset,
       ),
+      child: child,
     );
   }
 }

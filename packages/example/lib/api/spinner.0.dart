@@ -27,7 +27,7 @@ class _SpinnerExampleState extends State<SpinnerExample> {
           spacing: 16,
           children: [
             RemixSpinner(style: styleDefault),
-            RemixSpinner(style: styleWithTrack),
+            RemixSpinner(style: styleMuted),
             RemixSpinner(style: styleCustomColors),
           ],
         ),
@@ -36,19 +36,17 @@ class _SpinnerExampleState extends State<SpinnerExample> {
   }
 
   RemixSpinnerStyler get styleDefault {
-    return RemixSpinnerStyler().indicatorColor(Colors.blue);
+    return RemixSpinnerStyler().color(Colors.blue);
   }
 
-  RemixSpinnerStyler get styleWithTrack {
-    return RemixSpinnerStyler()
-        .indicatorColor(Colors.green)
-        .trackColor(Colors.green.withValues(alpha: 0.2));
+  RemixSpinnerStyler get styleMuted {
+    return RemixSpinnerStyler().color(Colors.green).opacity(0.45);
   }
 
   RemixSpinnerStyler get styleCustomColors {
     return RemixSpinnerStyler()
-        .indicatorColor(Colors.redAccent)
-        .trackColor(Colors.red.withValues(alpha: 0.15))
+        .color(Colors.redAccent)
+        .leafRadius(const Radius.circular(3))
         .duration(2.s);
   }
 }

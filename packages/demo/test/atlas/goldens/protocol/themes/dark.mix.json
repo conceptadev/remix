@@ -6,26 +6,46 @@
     "fortal.color.surface": "#40000000",
     "fortal.color.panel.solid": "#18191B",
     "fortal.color.panel.translucent": "#09D8F4F6",
-    "fortal.color.panel": "#18191B",
+    "fortal.color.panel": "#09D8F4F6",
     "fortal.color.overlay": "#99000000",
+    "fortal.slider.high-contrast-overlay": "#00000000",
+    "fortal.error.3": "#3B1219",
+    "fortal.error.7": "#8C333A",
+    "fortal.error.8": "#B54548",
+    "fortal.error.9": "#E5484D",
+    "fortal.error.11": "#FF9592",
+    "fortal.error.12": "#FFD1D9",
+    "fortal.error.a7": "#84FF5361",
     "fortal.accent.surface": "#80171D3B",
     "fortal.accent.indicator": "#3E63DD",
     "fortal.accent.track": "#3E63DD",
     "fortal.accent.contrast": "#FFFFFF",
-    "fortal.focus.8": "#405EB2",
-    "fortal.focus.a8": "#AC5783FF",
-    "fortal.accent.1": "#0C111C",
-    "fortal.accent.2": "#111725",
-    "fortal.accent.3": "#172448",
-    "fortal.accent.4": "#1D2E61",
-    "fortal.accent.5": "#243974",
-    "fortal.accent.6": "#2D4484",
-    "fortal.accent.7": "#375098",
-    "fortal.accent.8": "#405EB2",
-    "fortal.accent.9": "#3D63DD",
-    "fortal.accent.10": "#3F5CB0",
-    "fortal.accent.11": "#93B4FF",
-    "fortal.accent.12": "#D5E2FF",
+    "fortal.focus.8": "#435DB1",
+    "fortal.focus.a8": "#AC5B81FE",
+    "fortal.accent.1": "#11131F",
+    "fortal.accent.2": "#141726",
+    "fortal.accent.3": "#182449",
+    "fortal.accent.4": "#1D2E62",
+    "fortal.accent.5": "#253974",
+    "fortal.accent.6": "#304384",
+    "fortal.accent.7": "#3A4F97",
+    "fortal.accent.8": "#435DB1",
+    "fortal.accent.9": "#3E63DD",
+    "fortal.accent.10": "#5472E4",
+    "fortal.accent.11": "#9EB1FF",
+    "fortal.accent.12": "#D6E1FF",
+    "fortal.accent.a1": "#0F1133FF",
+    "fortal.accent.a2": "#173354FA",
+    "fortal.accent.a3": "#3C2F62FF",
+    "fortal.accent.a4": "#573566FF",
+    "fortal.accent.a5": "#6B4171FD",
+    "fortal.accent.a6": "#7C5178FD",
+    "fortal.accent.a7": "#905A7FFF",
+    "fortal.accent.a8": "#AC5B81FE",
+    "fortal.accent.a9": "#DB4671FF",
+    "fortal.accent.a10": "#E35C7EFE",
+    "fortal.accent.a11": "#9EB1FF",
+    "fortal.accent.a12": "#D6E1FF",
     "fortal.gray.1": "#111113",
     "fortal.gray.2": "#18191B",
     "fortal.gray.3": "#212225",
@@ -42,18 +62,6 @@
     "fortal.gray.indicator": "#696E77",
     "fortal.gray.track": "#696E77",
     "fortal.gray.contrast": "#FFFFFF",
-    "fortal.accent.a1": "#0F0012FB",
-    "fortal.accent.a2": "#171156F9",
-    "fortal.accent.a3": "#3C2B64FF",
-    "fortal.accent.a4": "#573567FF",
-    "fortal.accent.a5": "#6B3F71FD",
-    "fortal.accent.a6": "#7C4B7AFD",
-    "fortal.accent.a7": "#905480FF",
-    "fortal.accent.a8": "#AC5783FF",
-    "fortal.accent.a9": "#DB4571FF",
-    "fortal.accent.a10": "#E35580FE",
-    "fortal.accent.a11": "#93B4FF",
-    "fortal.accent.a12": "#D5E2FF",
     "fortal.gray.a1": "#00000000",
     "fortal.gray.a2": "#09D8F4F6",
     "fortal.gray.a3": "#14DDEAF8",
@@ -73,8 +81,29 @@
     "fortal.black.a5": "#4D000000",
     "fortal.black.a6": "#66000000",
     "fortal.black.a7": "#80000000",
+    "fortal.black.a8": "#99000000",
+    "fortal.black.a9": "#B3000000",
+    "fortal.black.a10": "#CC000000",
     "fortal.black.a11": "#E6000000",
-    "fortal.shadow.stroke": "#64AEBFCE"
+    "fortal.black.a12": "#F2000000",
+    "fortal.white.a1": "#0DFFFFFF",
+    "fortal.white.a2": "#1AFFFFFF",
+    "fortal.white.a3": "#26FFFFFF",
+    "fortal.white.a4": "#33FFFFFF",
+    "fortal.white.a5": "#4DFFFFFF",
+    "fortal.white.a6": "#66FFFFFF",
+    "fortal.white.a7": "#80FFFFFF",
+    "fortal.white.a8": "#99FFFFFF",
+    "fortal.white.a9": "#B3FFFFFF",
+    "fortal.white.a10": "#CCFFFFFF",
+    "fortal.white.a11": "#E6FFFFFF",
+    "fortal.white.a12": "#F2FFFFFF",
+    "fortal.shadow.stroke": "#646B757E",
+    "fortal.gray.stroke.3": "#4F404348",
+    "fortal.gray.stroke.4": "#564E565B",
+    "fortal.gray.stroke.5": "#5C5D656C",
+    "fortal.gray.stroke.6": "#646B757E",
+    "fortal.gray.stroke.7": "#70808B95"
   },
   "spaces": {
     "fortal.space.1": 4.0,
@@ -91,15 +120,99 @@
     "fortal.focus.ring.width": 2.0,
     "fortal.focus.ring.offset": 2.0
   },
+  "doubles": {
+    "fortal.panel.blur": 64.0,
+    "fortal.spinner.size.3": 20.0,
+    "fortal.toggle.gap.1": 2.0,
+    "fortal.toggle.gap.3": 6.0,
+    "fortal.avatar.size.6": 80.0,
+    "fortal.avatar.size.7": 96.0,
+    "fortal.avatar.size.8": 128.0,
+    "fortal.avatar.size.9": 160.0,
+    "fortal.badge.padding-x.1": 6.0,
+    "fortal.badge.padding-y.1": 2.0,
+    "fortal.badge.padding-x.3": 10.0,
+    "fortal.checkbox.size.1": 14.0,
+    "fortal.checkbox.size.3": 20.0,
+    "fortal.checkbox.indicator-size.1": 9.0,
+    "fortal.checkbox.indicator-size.2": 10.0,
+    "fortal.checkbox.indicator-size.3": 12.0,
+    "fortal.radio.indicator-size.1": 5.6,
+    "fortal.radio.indicator-size.2": 6.4,
+    "fortal.radio.indicator-size.3": 8.0,
+    "fortal.switch.height.2": 20.0,
+    "fortal.switch.width.1": 28.0,
+    "fortal.switch.width.2": 35.0,
+    "fortal.switch.width.3": 42.0,
+    "fortal.switch.thumb-size.1": 14.0,
+    "fortal.switch.thumb-size.2": 18.0,
+    "fortal.switch.thumb-size.3": 22.0,
+    "fortal.progress.height.2": 6.0,
+    "fortal.slider.track-size.1": 6.0,
+    "fortal.slider.track-size.2": 8.0,
+    "fortal.slider.track-size.3": 10.0,
+    "fortal.slider.thumb-size.1": 13.0,
+    "fortal.slider.thumb-size.2": 16.0,
+    "fortal.slider.thumb-size.3": 19.0,
+    "fortal.text-field.padding.1": 5.0,
+    "fortal.text-field.padding.2": 7.0,
+    "fortal.text-field.padding.3": 11.0,
+    "fortal.tabs.inner-padding-y.1": 2.0,
+    "fortal.tabs.active-letter-spacing.1": -0.12,
+    "fortal.tabs.active-letter-spacing.2": -0.14,
+    "fortal.select.space.1-half": 6.0,
+    "fortal.select.indicator-width.1": 20.0,
+    "fortal.select.indicator-size.1": 8.0,
+    "fortal.select.indicator-size.2": 10.0,
+    "fortal.select.ghost-margin-x.1-2": -8.0,
+    "fortal.select.ghost-margin-y.1-2": -4.0,
+    "fortal.select.ghost-margin-x.3": -12.0,
+    "fortal.select.ghost-margin-y.3": -6.0,
+    "fortal.base-button.classic.after-inset": 1.0,
+    "fortal.base-button.ghost.padding-y.3": 6.0,
+    "fortal.base-button.ghost.margin-x.1-2": -8.0,
+    "fortal.base-button.ghost.margin-y.1-2": -4.0,
+    "fortal.base-button.ghost.margin-x.3": -12.0,
+    "fortal.base-button.ghost.margin-y.3": -6.0,
+    "fortal.base-button.ghost.margin-x.4": -16.0,
+    "fortal.base-button.ghost.margin-y.4": -8.0,
+    "fortal.icon-button.ghost.padding.2": 6.0,
+    "fortal.icon-button.ghost.margin.1": -4.0,
+    "fortal.icon-button.ghost.margin.2": -6.0,
+    "fortal.icon-button.ghost.margin.3": -8.0,
+    "fortal.icon-button.ghost.margin.4": -12.0,
+    "fortal.card.ghost.margin.1": -12.0,
+    "fortal.card.ghost.margin.2": -16.0,
+    "fortal.card.ghost.margin.3": -24.0,
+    "fortal.card.ghost.margin.4": -32.0,
+    "fortal.card.ghost.margin.5": -48.0
+  },
   "radii": {
+    "fortal.checkbox.radius.1": 2.625,
+    "fortal.checkbox.radius.3": 3.75,
     "fortal.radius.1": 3.0,
     "fortal.radius.2": 4.0,
     "fortal.radius.3": 6.0,
     "fortal.radius.4": 8.0,
     "fortal.radius.5": 12.0,
     "fortal.radius.6": 16.0,
-    "fortal.radius.full": 9999.0,
-    "fortal.radius.thumb": 9999.0
+    "fortal.radius.full": 0.0,
+    "fortal.radius.thumb": 9999.0,
+    "fortal.radius.circle": 9999.0,
+    "fortal.radius.1-or-full": 3.0,
+    "fortal.radius.2-or-full": 4.0,
+    "fortal.radius.3-or-full": 6.0,
+    "fortal.radius.4-or-full": 8.0,
+    "fortal.radius.5-or-full": 12.0,
+    "fortal.radius.6-or-full": 16.0,
+    "fortal.radius.1-or-thumb": 9999.0,
+    "fortal.radius.2-or-thumb": 9999.0,
+    "fortal.progress.radius.1": 9999.0,
+    "fortal.progress.radius.2": 9999.0,
+    "fortal.progress.radius.3": 9999.0,
+    "fortal.slider.track-radius.1": 9999.0,
+    "fortal.slider.track-radius.2": 9999.0,
+    "fortal.slider.track-radius.3": 9999.0
   },
   "textStyles": {
     "fortal.text.1": {
@@ -116,6 +229,11 @@
       "fontSize": 16.0,
       "letterSpacing": 0.0,
       "height": 1.5
+    },
+    "fortal.accordion.text.2": {
+      "fontSize": 15.0,
+      "letterSpacing": 0.0,
+      "height": 1.3333333333333333
     },
     "fortal.text.4": {
       "fontSize": 18.0,
@@ -146,210 +264,72 @@
       "fontSize": 60.0,
       "letterSpacing": -1.5,
       "height": 1.0
+    },
+    "fortal.avatar.fallback.1.one": {
+      "fontSize": 14.0,
+      "letterSpacing": 0.03,
+      "height": 1.0
+    },
+    "fortal.avatar.fallback.1.two": {
+      "fontSize": 12.0,
+      "letterSpacing": 0.03,
+      "height": 1.0
+    },
+    "fortal.avatar.fallback.2.one": {
+      "fontSize": 16.0,
+      "letterSpacing": 0.0,
+      "height": 1.0
+    },
+    "fortal.avatar.fallback.2.two": {
+      "fontSize": 14.0,
+      "letterSpacing": 0.0,
+      "height": 1.0
+    },
+    "fortal.avatar.fallback.3.one": {
+      "fontSize": 18.0,
+      "letterSpacing": 0.0,
+      "height": 1.0
+    },
+    "fortal.avatar.fallback.3.two": {
+      "fontSize": 16.0,
+      "letterSpacing": 0.0,
+      "height": 1.0
+    },
+    "fortal.avatar.fallback.4.one": {
+      "fontSize": 20.0,
+      "letterSpacing": -0.045,
+      "height": 1.0
+    },
+    "fortal.avatar.fallback.4.two": {
+      "fontSize": 18.0,
+      "letterSpacing": -0.045,
+      "height": 1.0
+    },
+    "fortal.avatar.fallback.5": {
+      "fontSize": 24.0,
+      "letterSpacing": -0.15000000000000002,
+      "height": 1.0
+    },
+    "fortal.avatar.fallback.6": {
+      "fontSize": 28.0,
+      "letterSpacing": -0.21,
+      "height": 1.0
+    },
+    "fortal.avatar.fallback.7": {
+      "fontSize": 28.0,
+      "letterSpacing": -0.21,
+      "height": 1.0
+    },
+    "fortal.avatar.fallback.8": {
+      "fontSize": 35.0,
+      "letterSpacing": -0.35000000000000003,
+      "height": 1.0
+    },
+    "fortal.avatar.fallback.9": {
+      "fontSize": 60.0,
+      "letterSpacing": -1.5,
+      "height": 1.0
     }
-  },
-  "boxShadows": {
-    "fortal.shadow.1": [
-      {
-        "color": "#30D6EBFD",
-        "offset": {
-          "x": 0.0,
-          "y": 0.0
-        },
-        "blurRadius": 0.0,
-        "spreadRadius": 1.0
-      },
-      {
-        "color": "#4D000000",
-        "offset": {
-          "x": 0.0,
-          "y": 1.0
-        },
-        "blurRadius": 2.0,
-        "spreadRadius": 0.0
-      }
-    ],
-    "fortal.shadow.2": [
-      {
-        "color": "#64AEBFCE",
-        "offset": {
-          "x": 0.0,
-          "y": 0.0
-        },
-        "blurRadius": 0.0,
-        "spreadRadius": 1.0
-      },
-      {
-        "color": "#26000000",
-        "offset": {
-          "x": 0.0,
-          "y": 0.0
-        },
-        "blurRadius": 0.5,
-        "spreadRadius": 0.0
-      },
-      {
-        "color": "#66000000",
-        "offset": {
-          "x": 0.0,
-          "y": 1.0
-        },
-        "blurRadius": 1.0,
-        "spreadRadius": 0.0
-      },
-      {
-        "color": "#66000000",
-        "offset": {
-          "x": 0.0,
-          "y": 2.0
-        },
-        "blurRadius": 1.0,
-        "spreadRadius": -1.0
-      },
-      {
-        "color": "#4D000000",
-        "offset": {
-          "x": 0.0,
-          "y": 1.0
-        },
-        "blurRadius": 3.0,
-        "spreadRadius": 0.0
-      }
-    ],
-    "fortal.shadow.3": [
-      {
-        "color": "#64AEBFCE",
-        "offset": {
-          "x": 0.0,
-          "y": 0.0
-        },
-        "blurRadius": 0.0,
-        "spreadRadius": 1.0
-      },
-      {
-        "color": "#26000000",
-        "offset": {
-          "x": 0.0,
-          "y": 2.0
-        },
-        "blurRadius": 3.0,
-        "spreadRadius": -2.0
-      },
-      {
-        "color": "#66000000",
-        "offset": {
-          "x": 0.0,
-          "y": 3.0
-        },
-        "blurRadius": 8.0,
-        "spreadRadius": -2.0
-      },
-      {
-        "color": "#80000000",
-        "offset": {
-          "x": 0.0,
-          "y": 4.0
-        },
-        "blurRadius": 12.0,
-        "spreadRadius": -4.0
-      }
-    ],
-    "fortal.shadow.4": [
-      {
-        "color": "#64AEBFCE",
-        "offset": {
-          "x": 0.0,
-          "y": 0.0
-        },
-        "blurRadius": 0.0,
-        "spreadRadius": 1.0
-      },
-      {
-        "color": "#26000000",
-        "offset": {
-          "x": 0.0,
-          "y": 8.0
-        },
-        "blurRadius": 40.0,
-        "spreadRadius": 0.0
-      },
-      {
-        "color": "#4D000000",
-        "offset": {
-          "x": 0.0,
-          "y": 12.0
-        },
-        "blurRadius": 32.0,
-        "spreadRadius": -16.0
-      }
-    ],
-    "fortal.shadow.5": [
-      {
-        "color": "#64AEBFCE",
-        "offset": {
-          "x": 0.0,
-          "y": 0.0
-        },
-        "blurRadius": 0.0,
-        "spreadRadius": 1.0
-      },
-      {
-        "color": "#4D000000",
-        "offset": {
-          "x": 0.0,
-          "y": 12.0
-        },
-        "blurRadius": 60.0,
-        "spreadRadius": 0.0
-      },
-      {
-        "color": "#80000000",
-        "offset": {
-          "x": 0.0,
-          "y": 12.0
-        },
-        "blurRadius": 32.0,
-        "spreadRadius": -16.0
-      }
-    ],
-    "fortal.shadow.6": [
-      {
-        "color": "#64AEBFCE",
-        "offset": {
-          "x": 0.0,
-          "y": 0.0
-        },
-        "blurRadius": 0.0,
-        "spreadRadius": 1.0
-      },
-      {
-        "color": "#33000000",
-        "offset": {
-          "x": 0.0,
-          "y": 12.0
-        },
-        "blurRadius": 60.0,
-        "spreadRadius": 0.0
-      },
-      {
-        "color": "#66000000",
-        "offset": {
-          "x": 0.0,
-          "y": 16.0
-        },
-        "blurRadius": 64.0,
-        "spreadRadius": 0.0
-      },
-      {
-        "color": "#E6000000",
-        "offset": {
-          "x": 0.0,
-          "y": 16.0
-        },
-        "blurRadius": 36.0,
-        "spreadRadius": -20.0
-      }
-    ]
   },
   "fontWeights": {
     "fortal.font.weight.light": "w300",

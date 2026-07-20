@@ -1,153 +1,99 @@
 ---
 title: Spinner
-description: An animated loading spinner component for indicating ongoing processes
-keywords: [flutter, remix, spinner, loading, progress, indicator, circular]
+description: An eight-leaf loading indicator that can preserve a child's layout
+keywords: [flutter, remix, spinner, loading, progress, indicator]
 ---
 
-An animated loading spinner component for indicating ongoing processes.
+`RemixSpinner` renders an animated eight-leaf loading indicator. It can stand
+alone or replace a child while preserving that child's layout.
 
 ## When to use this
 
-- **Loading states**: Show that content or data is being loaded
-- **Processing**: Indicate that a background process is running
-- **Async operations**: Display during API calls or file uploads
-- **Indeterminate progress**: When the completion time is unknown
+- **Pending actions**: Replace button content while work is in progress
+- **Async content**: Indicate an operation with no measurable completion value
+- **Stable layouts**: Keep the original child's dimensions while loading
 
 ## Basic implementation
 
-<CodeGroup title="Basic implementation" defaultLanguage="dart">
+<CodeGroup title="Loading replacement" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
 class SpinnerExample extends StatelessWidget {
-  const SpinnerExample({super.key});
+  const SpinnerExample({super.key, required this.loading});
+
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 16,
-      children: [
-        RemixSpinner(style: styleDefault),
-        RemixSpinner(style: styleWithTrack),
-        RemixSpinner(style: styleCustomColors),
-      ],
+    return RemixSpinner(
+      loading: loading,
+      semanticLabel: 'Saving',
+      style: RemixSpinnerStyler()
+          .size(20)
+          .color(Colors.blue)
+          .opacity(0.7)
+          .leafRadius(const Radius.circular(2))
+          .duration(const Duration(milliseconds: 800)),
+      child: const Text('Save changes'),
     );
-  }
-
-  RemixSpinnerStyler get styleDefault {
-    return RemixSpinnerStyler().indicatorColor(Colors.blue);
-  }
-
-  RemixSpinnerStyler get styleWithTrack {
-    return RemixSpinnerStyler()
-        .indicatorColor(Colors.green)
-        .trackColor(Colors.green.withValues(alpha: 0.2));
-  }
-
-  RemixSpinnerStyler get styleCustomColors {
-    return RemixSpinnerStyler()
-        .indicatorColor(Colors.redAccent)
-        .trackColor(Colors.red.withValues(alpha: 0.15))
-        .duration(2.s);
   }
 }
 ```
 </CodeGroup>
 
-## Fortal widgets
+When `loading` is false, `child` is returned normally. When it is true, the
+child is hidden but still participates in layout and the spinner is centered
+over its footprint. With no child, the spinner uses its configured square size.
 
-Remix includes a generated Fortal-themed widget for this component:
+## Fortal widget
 
-<CodeGroup title="Fortal widget" defaultLanguage="dart">
+<CodeGroup title="Fortal spinner" defaultLanguage="dart">
 ```dart
-import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
-
-class FortalSpinnerExample extends StatelessWidget {
-  const FortalSpinnerExample({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: 16,
-      children: [
-        FortalSpinner(size: FortalSpinnerSize.size2),
-        FortalSpinner(size: FortalSpinnerSize.size3),
-      ],
-    );
-  }
-}
+FortalSpinner(
+  size: FortalSpinnerSize.size2,
+  loading: isSaving,
+  semanticLabel: 'Saving',
+  child: const Text('Save changes'),
+)
 ```
 </CodeGroup>
+
+`FortalSpinner` uses the inherited foreground color and the Radix-aligned
+eight-leaf geometry. Sizes 1–3 map to the Fortal spacing scale.
 
 <Info>
-  See the [fortalSpinnerStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/spinner/fortal_spinner_styles.dart) for all available options.
+  See the [fortalSpinnerStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/spinner/fortal_spinner_styles.dart) for the exact size recipes.
 </Info>
 
 ## Constructor
-<CodeGroup title="Constructor" defaultLanguage="dart">
+
+<CodeGroup title="RemixSpinner constructor" defaultLanguage="dart">
 ```dart
 const RemixSpinner({
   Key? key,
+  bool loading = true,
+  Widget? child,
+  String? semanticLabel,
+  bool excludeSemantics = false,
   RemixSpinnerStyler style = const RemixSpinnerStyler.create(),
   RemixSpinnerSpec? styleSpec,
 })
 ```
 </CodeGroup>
 
+## Behavior and semantics
 
-## Properties
-### Widget Properties
+- `loading: false` returns `child`, or an empty box when no child exists.
+- `loading: true` exposes the loading-spinner role unless `excludeSemantics` is
+  true. Supply `semanticLabel` when context does not already name the operation.
+- When reduced motion is requested, animation stops at a stable frame.
+- Spinner color defaults to the inherited foreground color, so it composes with
+  Button, IconButton, and other styled content.
 
-#### `style` → `RemixSpinnerStyler`
+## Styling
 
-Optional. The style configuration for the spinner. Customize colors, sizing, stroke, and animation duration.
-
-#### `styleSpec` → `RemixSpinnerSpec?`
-
-Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
-
-#### `key` → `Key?`
-
-Optional. Controls how one widget replaces another widget in the tree.
-
-
-### Style Methods
-
-#### `size(double value)`
-
-Sets the spinner size (width and height).
-
-#### `indicatorColor(Color value)`
-
-Sets the color of the spinning indicator.
-
-#### `trackColor(Color value)`
-
-Sets the color of the track (background ring).
-
-#### `strokeWidth(double value)`
-
-Sets the stroke width of the indicator.
-
-#### `trackStrokeWidth(double value)`
-
-Sets the stroke width of the track.
-
-#### `duration(Duration value)`
-
-Sets the duration of one full rotation.
-
-#### `animate(AnimationConfig value)`
-
-Configures implicit animation for style transitions.
-
-#### `wrap(WidgetModifierConfig value)`
-
-Applies widget modifiers such as clipping, opacity, or scaling.
-
-#### `call()`
-
-Creates a `RemixSpinner` widget with this style applied.
+`RemixSpinnerStyler` exposes `size`, `color`, `opacity`, `leafRadius`, and
+`duration`. The spinner always uses eight fading leaves; ring-track and stroke
+properties from the former circular painter are not part of this API.

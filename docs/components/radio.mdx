@@ -112,7 +112,7 @@ class _RadioExampleState extends State<RadioExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -131,14 +131,15 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
 
   @override
   Widget build(BuildContext context) {
-    return RemixRadioGroup<String>(
-      groupValue: _selected,
+    return FortalRadioGroup<String>(
+      value: _selected,
       onChanged: (value) => setState(() => _selected = value),
       child: Column(
         children: [
           Row(
             children: [
-              FortalRadio.surface(
+              FortalRadio(
+                variant: FortalRadioVariant.surface,
                 value: 'surface',
               ),
               const SizedBox(width: 8),
@@ -147,7 +148,8 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
           ),
           Row(
             children: [
-              FortalRadio.soft(
+              FortalRadio(
+                variant: FortalRadioVariant.soft,
                 value: 'soft',
               ),
               const SizedBox(width: 8),

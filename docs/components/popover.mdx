@@ -25,8 +25,9 @@ class AccountPopover extends StatelessWidget {
     return FortalPopover(
       semanticLabel: 'Show account details',
       positioning: const OverlayPositionConfig(
-        targetAnchor: Alignment.bottomCenter,
-        followerAnchor: Alignment.topCenter,
+        side: OverlaySide.bottom,
+        alignment: OverlayAlignment.center,
+        sideOffset: 8,
       ),
       popoverChild: const SizedBox(
         width: 240,
@@ -85,18 +86,24 @@ callback to complete the state change.
 
 ## Positioning
 
-`OverlayPositionConfig` aligns one point on the trigger with one point on the
-overlay and can apply an additional offset.
+`OverlayPositionConfig` selects a side and alignment, then applies side and
+alignment offsets. Collision handling flips or shifts the overlay when needed.
 
 ```dart
 const OverlayPositionConfig(
-  targetAnchor: Alignment.topRight,
-  followerAnchor: Alignment.bottomRight,
-  offset: Offset(0, -8),
+  side: OverlaySide.top,
+  alignment: OverlayAlignment.end,
+  sideOffset: 8,
+  collisionPadding: EdgeInsets.all(10),
 )
 ```
 
 The overlay is clamped to the available screen bounds.
+
+By default, the trigger also supplies the positioning geometry. Pass the
+`GlobalKey` of another widget as `anchorKey` when interaction and placement
+must be independent; the keyed widget may be a sibling or an ancestor's
+descendant in the same overlay subtree.
 
 ## Styling
 
@@ -133,10 +140,18 @@ const RemixPopover({
   Key? key,
   required Widget popoverChild,
   required Widget child,
+  double? width,
+  double? minWidth,
+  double? maxWidth,
+  double? height,
+  double? minHeight,
+  double? maxHeight,
+  bool matchTriggerWidth = false,
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
   bool consumeOutsideTaps = true,
   bool useRootOverlay = false,
   bool openOnTap = true,
+  GlobalKey? anchorKey,
   FocusNode? triggerFocusNode,
   VoidCallback? onOpen,
   VoidCallback? onClose,

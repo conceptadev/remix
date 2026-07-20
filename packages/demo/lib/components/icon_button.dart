@@ -17,6 +17,7 @@ void _showToast(BuildContext context, String message) {
 
 @widgetbook.UseCase(name: 'Icon Button Component', type: RemixIconButton)
 Widget buildIconButtonUseCase(BuildContext context) {
+  final icon = context.knobs.iconData(label: 'Icon', initialValue: Icons.add)!;
   return KeyedSubtree(
     key: _key,
     child: Scaffold(
@@ -27,7 +28,7 @@ Widget buildIconButtonUseCase(BuildContext context) {
           },
           enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           loading: context.knobs.boolean(label: 'Loading', initialValue: false),
-          icon: context.knobs.iconData(label: 'Icon', initialValue: Icons.add)!,
+          semanticLabel: 'Activate ${icon.codePoint}',
           size: context.knobs.object.dropdown(
             label: 'size',
             options: FortalIconButtonSize.values,
@@ -39,6 +40,7 @@ Widget buildIconButtonUseCase(BuildContext context) {
             options: FortalIconButtonVariant.values,
             labelBuilder: (variant) => variant.name,
           ),
+          child: Icon(icon),
         ),
       ),
     ),

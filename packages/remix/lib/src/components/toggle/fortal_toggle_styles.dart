@@ -22,40 +22,59 @@ RemixToggleStyler _fortalToggleBaseStyler(FortalToggleSize size) {
   return RemixToggleStyler()
       .container(FlexBoxStyler().mainAxisSize(.min))
       .foregroundColor(FortalTokens.gray12())
-      .labelFontWeight(.w500)
-      .onFocused(
-        RemixToggleStyler().borderAll(
-          color: FortalTokens.focusA8(),
-          width: FortalTokens.focusRingWidth(),
-        ),
-      )
-      .onDisabled(
-        RemixToggleStyler()
-            .backgroundColor(FortalTokens.grayA3())
-            .foregroundColor(FortalTokens.gray8()),
-      )
+      .labelFontWeight(FortalTokens.fontWeightMedium())
       .merge(_fortalToggleSizeStyler(size));
+}
+
+RemixToggleStyler _fortalToggleFocusStyler() {
+  return RemixToggleStyler().borderAll(
+    color: FortalTokens.focusA8(),
+    width: FortalTokens.focusRingWidth(),
+    strokeAlign: BorderSide.strokeAlignInside,
+  );
+}
+
+RemixToggleStyler _fortalToggleDisabledStyler({bool outlined = false}) {
+  final style = RemixToggleStyler()
+      .backgroundColor(FortalTokens.grayA3())
+      .foregroundColor(FortalTokens.gray8());
+  return outlined
+      ? style.borderAll(
+          color: FortalTokens.grayA6(),
+          width: FortalTokens.borderWidth1(),
+          strokeAlign: BorderSide.strokeAlignInside,
+        )
+      : style;
 }
 
 RemixToggleStyler _fortalToggleGhostStyler(
   FortalToggleSize size, {
-  bool highContrast = false,
+  required bool highContrast,
 }) {
   return _fortalToggleBaseStyler(size)
       .backgroundColor(Colors.transparent)
       .onHovered(RemixToggleStyler().backgroundColor(FortalTokens.grayA3()))
+      .onPressed(RemixToggleStyler().backgroundColor(FortalTokens.grayA4()))
       .onSelected(
         RemixToggleStyler()
             .backgroundColor(FortalTokens.accent3())
             .foregroundColor(
               highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+            )
+            .onHovered(
+              RemixToggleStyler().backgroundColor(FortalTokens.accent4()),
+            )
+            .onPressed(
+              RemixToggleStyler().backgroundColor(FortalTokens.accent5()),
             ),
-      );
+      )
+      .onFocused(_fortalToggleFocusStyler())
+      .onDisabled(_fortalToggleDisabledStyler());
 }
 
 RemixToggleStyler _fortalToggleOutlineStyler(
   FortalToggleSize size, {
-  bool highContrast = false,
+  required bool highContrast,
 }) {
   return _fortalToggleBaseStyler(size)
       .backgroundColor(Colors.transparent)
@@ -65,14 +84,23 @@ RemixToggleStyler _fortalToggleOutlineStyler(
         strokeAlign: BorderSide.strokeAlignInside,
       )
       .onHovered(RemixToggleStyler().backgroundColor(FortalTokens.grayA3()))
+      .onPressed(RemixToggleStyler().backgroundColor(FortalTokens.grayA4()))
       .onSelected(
         RemixToggleStyler()
             .backgroundColor(FortalTokens.accentA3())
             .foregroundColor(
               highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
             )
-            .borderAll(color: FortalTokens.accentA5()),
-      );
+            .borderAll(color: FortalTokens.accentA5())
+            .onHovered(
+              RemixToggleStyler().backgroundColor(FortalTokens.accentA4()),
+            )
+            .onPressed(
+              RemixToggleStyler().backgroundColor(FortalTokens.accentA5()),
+            ),
+      )
+      .onFocused(_fortalToggleFocusStyler())
+      .onDisabled(_fortalToggleDisabledStyler(outlined: true));
 }
 
 RemixToggleStyler _fortalToggleSizeStyler(FortalToggleSize size) {
@@ -82,30 +110,27 @@ RemixToggleStyler _fortalToggleSizeStyler(FortalToggleSize size) {
           .paddingX(FortalTokens.space2())
           .paddingY(FortalTokens.space1())
           .borderRadiusAll(FortalTokens.radius2())
-          .spacing(2),
-      label: TextStyler()
-          .fontSize(12.0)
-          .height(16.0 / 12.0)
-          .letterSpacing(0.0025),
-      icon: IconStyler(size: 12),
+          .spacing(FortalTokens.toggleGap1()),
+      label: TextStyler(style: FortalTokens.text1.mix()),
+      icon: IconStyler(size: FortalTokens.space3()),
     ),
     .size2 => RemixToggleStyler(
       container: FlexBoxStyler()
           .paddingX(FortalTokens.space3())
           .paddingY(FortalTokens.space2())
           .borderRadiusAll(FortalTokens.radius2())
-          .spacing(4),
-      label: TextStyler().fontSize(14.0).height(20.0 / 14.0).letterSpacing(0.0),
-      icon: IconStyler(size: 16),
+          .spacing(FortalTokens.space1()),
+      label: TextStyler(style: FortalTokens.text2.mix()),
+      icon: IconStyler(size: FortalTokens.space4()),
     ),
     .size3 => RemixToggleStyler(
       container: FlexBoxStyler()
           .paddingX(FortalTokens.space4())
           .paddingY(FortalTokens.space2())
           .borderRadiusAll(FortalTokens.radius3())
-          .spacing(6),
-      label: TextStyler().fontSize(16.0).height(24.0 / 16.0).letterSpacing(0.0),
-      icon: IconStyler(size: 20),
+          .spacing(FortalTokens.toggleGap3()),
+      label: TextStyler(style: FortalTokens.text3.mix()),
+      icon: IconStyler(size: FortalTokens.spinnerSize3()),
     ),
   };
 }
@@ -130,42 +155,6 @@ class FortalToggle extends StatelessWidget {
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
   });
-
-  const FortalToggle.ghost({
-    super.key,
-    this.size = .size2,
-    this.color,
-    this.radius,
-    this.highContrast = false,
-    required this.selected,
-    this.onChanged,
-    this.enabled = true,
-    this.label,
-    this.icon,
-    this.enableFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
-    this.semanticLabel,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = FortalToggleVariant.ghost;
-
-  const FortalToggle.outline({
-    super.key,
-    this.size = .size2,
-    this.color,
-    this.radius,
-    this.highContrast = false,
-    required this.selected,
-    this.onChanged,
-    this.enabled = true,
-    this.label,
-    this.icon,
-    this.enableFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
-    this.semanticLabel,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = FortalToggleVariant.outline;
 
   final FortalToggleVariant variant;
 
@@ -202,7 +191,7 @@ class FortalToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FortalOverride(
+    return FortalComponentOverride(
       color: this.color,
       radius: this.radius,
       child:

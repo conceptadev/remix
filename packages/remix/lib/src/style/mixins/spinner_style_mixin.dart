@@ -11,14 +11,9 @@ mixin SpinnerStyleMixin<T extends Mix<Object?>> {
   /// Should merge the provided RemixSpinnerStyler with the component's spinner style
   T spinner(RemixSpinnerStyler value);
 
-  /// Sets spinner indicator color
-  T spinnerIndicatorColor(Color value) {
-    return spinner(RemixSpinnerStyler(indicatorColor: value));
-  }
-
-  /// Sets spinner track color
-  T spinnerTrackColor(Color value) {
-    return spinner(RemixSpinnerStyler(trackColor: value));
+  /// Sets an explicit spinner color instead of inherited current color.
+  T spinnerColor(Color value) {
+    return spinner(RemixSpinnerStyler(color: value));
   }
 
   /// Sets spinner size
@@ -26,14 +21,14 @@ mixin SpinnerStyleMixin<T extends Mix<Object?>> {
     return spinner(RemixSpinnerStyler(size: value));
   }
 
-  /// Sets spinner stroke width
-  T spinnerStrokeWidth(double value) {
-    return spinner(RemixSpinnerStyler(strokeWidth: value));
+  /// Sets the complete spinner opacity.
+  T spinnerOpacity(double value) {
+    return spinner(RemixSpinnerStyler(opacity: value));
   }
 
-  /// Sets spinner track stroke width
-  T spinnerTrackStrokeWidth(double value) {
-    return spinner(RemixSpinnerStyler(trackStrokeWidth: value));
+  /// Sets each leaf's corner radius.
+  T spinnerLeafRadius(Radius value) {
+    return spinner(RemixSpinnerStyler(leafRadius: value));
   }
 
   /// Sets spinner animation duration

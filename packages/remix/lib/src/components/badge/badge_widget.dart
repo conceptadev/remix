@@ -1,9 +1,5 @@
 part of 'badge.dart';
 
-/// Builder for rendering badge label content with the resolved text spec.
-typedef RemixBadgeLabelBuilder =
-    Widget Function(BuildContext context, TextSpec spec, String label);
-
 /// A badge widget that displays compact text or custom content.
 ///
 /// Badges are used to display small amounts of information, such as
@@ -12,34 +8,21 @@ typedef RemixBadgeLabelBuilder =
 /// ## Example
 ///
 /// ```dart
-/// RemixBadge(
-///   label: 'New',
-/// )
+/// RemixBadge(child: Text('New'))
 /// ```
 class RemixBadge extends StatelessWidget {
-  /// Creates a badge widget. Provide [label] for a text badge or [child] for
-  /// fully custom content. When nothing is provided, an empty label is used.
+  /// Creates a badge whose arbitrary [child] inherits the resolved badge text
+  /// and icon themes.
   const RemixBadge({
     super.key,
-    this.label,
-    this.child,
-    this.labelBuilder,
+    required this.child,
     this.style = const RemixBadgeStyler.create(),
     this.styleSpec,
   });
 
   static final styleFrom = RemixBadgeStyler.new;
 
-  /// Optional text label rendered with the badge text style.
-  final String? label;
-
-  /// Optional fully custom badge content. When provided the badge style is
-  /// applied only to the container.
-  final Widget? child;
-
-  /// Optional builder that receives the resolved [TextSpec] so callers can
-  /// render text with custom widgets while preserving badge typography.
-  final RemixBadgeLabelBuilder? labelBuilder;
+  final Widget child;
 
   /// The style configuration for the badge.
   final RemixBadgeStyler style;
@@ -53,20 +36,16 @@ class RemixBadge extends StatelessWidget {
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
-        Widget? content = child;
-        final resolvedLabel = label ?? '';
-
-        if (content == null) {
-          content = labelBuilder == null
-              ? StyledText(resolvedLabel, styleSpec: spec.label)
-              : StyleSpecBuilder<TextSpec>(
-                  styleSpec: spec.label,
-                  builder: (context, textSpec) =>
-                      labelBuilder!(context, textSpec, resolvedLabel),
-                );
-        }
-
-        return Box(styleSpec: spec.container, child: content);
+        final content = remixInheritedContentStyle(
+          child: child,
+          text: spec.label,
+        );
+        return RemixSurfaceBox(
+          styleSpec: spec.container,
+          surface: spec.surface,
+          overlay: spec.overlay,
+          child: content,
+        );
       },
     );
   }

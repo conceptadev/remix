@@ -485,13 +485,12 @@ packages:
     source: hosted
     version: "2.0.5"
   naked_ui:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: naked_ui
-      sha256: f0add49dead1ddb1d1823b0f0d39d33b65959640b5dfc21c9de4f9e8db658494
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0-beta.4"
+      path: ".context/naked_ui-beta5/packages/naked_ui"
+      relative: true
+    source: path
+    version: "1.0.0-beta.5"
   nested:
     dependency: transitive
     description:

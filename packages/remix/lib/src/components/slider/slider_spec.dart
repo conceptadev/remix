@@ -1,58 +1,85 @@
 part of 'slider.dart';
 
-const Size _remixSliderDefaultThumbSize = Size(16.0, 16.0);
-const double _remixSliderDefaultTrackStrokeWidth = 8.0;
+const Size _remixSliderDefaultThumbSize = Size.square(16);
+const double _remixSliderDefaultTrackThickness = 8;
 
-const Color _defaultTrackColor = MixColors.grey;
-const Color _defaultRangeColor = MixColors.black;
-
-/// Resolved visual values for a [RemixSlider].
-///
-/// A slider spec contains the thumb box style plus the track and range colors
-/// and stroke widths used when painting the control.
+/// Resolved visuals for a multi-thumb [RemixSlider].
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
 class RemixSliderSpec with _$RemixSliderSpec {
-  /// Default thumb size used when the thumb style does not resolve a size.
   static const Size defaultThumbSize = _remixSliderDefaultThumbSize;
+  static const double defaultTrackThickness = _remixSliderDefaultTrackThickness;
 
-  /// Default stroke width for both the track and range.
-  static const double defaultTrackStrokeWidth =
-      _remixSliderDefaultTrackStrokeWidth;
+  /// Layout boundary for the complete track.
+  @override
+  final StyleSpec<BoxSpec> track;
 
-  /// Resolved style for the slider thumb.
+  /// Paint layers behind the track.
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? trackSurface;
+
+  /// Paint layers above the track.
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? trackOverlay;
+
+  /// Layout boundary for the selected range.
+  @override
+  final StyleSpec<BoxSpec> range;
+
+  /// Paint layers behind the selected range.
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? rangeSurface;
+
+  /// Paint layers above the selected range.
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? rangeOverlay;
+
+  /// Layout and decoration for every visual thumb.
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> thumb;
 
-  /// Color of the unfilled slider track.
+  /// Paint layers behind every thumb.
   @override
-  final Color trackColor;
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? thumbSurface;
 
-  /// Stroke width of the unfilled slider track.
+  /// Paint layers above every thumb.
   @override
-  final double trackWidth;
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? thumbOverlay;
 
-  /// Color of the filled slider range.
+  /// Additional overlay painted only on the focused thumb.
   @override
-  final Color rangeColor;
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? thumbFocusOverlay;
 
-  /// Stroke width of the filled slider range.
+  /// Preferred cross-axis extent of the visual track.
   @override
-  final double rangeWidth;
+  final double trackThickness;
 
-  /// Creates resolved slider styling values.
-  RemixSliderSpec({
+  /// Whole-subtree blend used for state recipes such as disabled sliders.
+  @override
+  final BlendMode? blendMode;
+
+  const RemixSliderSpec({
+    StyleSpec<BoxSpec>? track,
+    this.trackSurface,
+    this.trackOverlay,
+    StyleSpec<BoxSpec>? range,
+    this.rangeSurface,
+    this.rangeOverlay,
     StyleSpec<BoxSpec>? thumb,
-    Color? trackColor,
-    double? trackWidth,
-    Color? rangeColor,
-    double? rangeWidth,
-  }) : thumb = thumb ?? const StyleSpec(spec: BoxSpec()),
-       rangeColor = rangeColor ?? _defaultRangeColor,
-       trackWidth = trackWidth ?? _remixSliderDefaultTrackStrokeWidth,
-       rangeWidth = rangeWidth ?? _remixSliderDefaultTrackStrokeWidth,
-       trackColor = trackColor ?? _defaultTrackColor;
-
-  /// Largest track or range width used for layout clearance.
-  double get trackThickness => math.max(trackWidth, rangeWidth);
+    this.thumbSurface,
+    this.thumbOverlay,
+    this.thumbFocusOverlay,
+    double? trackThickness,
+    this.blendMode,
+  }) : track = track ?? const StyleSpec(spec: BoxSpec()),
+       range = range ?? const StyleSpec(spec: BoxSpec()),
+       thumb = thumb ?? const StyleSpec(spec: BoxSpec()),
+       trackThickness = trackThickness ?? _remixSliderDefaultTrackThickness;
 }

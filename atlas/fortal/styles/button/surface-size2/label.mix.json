@@ -3,22 +3,16 @@
   "style": {
     "$merge": [
       {
+        "$token": "fortal.text.2"
+      },
+      {
         "fontWeight": {
           "$token": "fortal.font.weight.medium"
         }
       },
       {
-        "fontSize": 14.0
-      },
-      {
-        "height": 1.4285714285714286
-      },
-      {
-        "letterSpacing": 0.0
-      },
-      {
         "color": {
-          "$token": "fortal.accent.11"
+          "$token": "fortal.accent.a11"
         }
       }
     ]
@@ -31,7 +25,7 @@
         "type": "text",
         "style": {
           "color": {
-            "$token": "fortal.gray.8"
+            "$token": "fortal.gray.a8"
           }
         }
       }

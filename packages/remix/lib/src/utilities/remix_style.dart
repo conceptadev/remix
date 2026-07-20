@@ -1,5 +1,50 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:mix/mix.dart' hide AnimationConfig;
+
+/// Applies resolved Remix text and icon specs as inherited defaults for
+/// arbitrary component content.
+///
+/// Explicit styles on descendants still win, matching the way Radix styles
+/// arbitrary button, badge, and callout children through inherited CSS.
+Widget remixInheritedContentStyle({
+  required Widget child,
+  StyleSpec<TextSpec>? text,
+  StyleSpec<IconSpec>? icon,
+}) {
+  final textSpec = text?.spec;
+  final iconSpec = icon?.spec;
+
+  Widget current = child;
+  if (iconSpec != null) {
+    current = IconTheme.merge(
+      data: IconThemeData(
+        color: iconSpec.color,
+        opacity: iconSpec.opacity,
+        size: iconSpec.size,
+        fill: iconSpec.fill,
+        weight: iconSpec.weight,
+        grade: iconSpec.grade,
+        opticalSize: iconSpec.opticalSize,
+        shadows: iconSpec.shadows,
+        applyTextScaling: iconSpec.applyTextScaling,
+      ),
+      child: current,
+    );
+  }
+  if (textSpec != null) {
+    current = DefaultTextStyle.merge(
+      style: textSpec.style ?? const TextStyle(),
+      textAlign: textSpec.textAlign,
+      softWrap: textSpec.softWrap ?? true,
+      overflow: textSpec.overflow ?? TextOverflow.clip,
+      maxLines: textSpec.maxLines,
+      textWidthBasis: textSpec.textWidthBasis ?? TextWidthBasis.parent,
+      textHeightBehavior: textSpec.textHeightBehavior,
+      child: current,
+    );
+  }
+  return current;
+}
 
 /// Builds from a raw spec when supplied, otherwise resolves the fluent style.
 class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {

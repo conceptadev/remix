@@ -395,10 +395,11 @@ void main() {
       test('call method creates RemixButton with minimal parameters', () {
         final style = RemixButtonStyler();
 
-        final button = style.call(label: 'Test Button');
+        const child = Text('Test Button');
+        final button = style.call(child: child);
 
         expect(button, isA<RemixButton>());
-        expect(button.label, equals('Test Button'));
+        expect(button.child, same(child));
         expect(button.onPressed, isNull);
       });
 
@@ -406,9 +407,9 @@ void main() {
         final style = RemixButtonStyler();
         final focusNode = FocusNode();
 
+        const child = Row(children: [Icon(Icons.star), Text('Test Button')]);
         final button = style.call(
-          label: 'Test Button',
-          leadingIcon: Icons.star,
+          child: child,
           loading: true,
           enabled: false,
           enableFeedback: false,
@@ -417,8 +418,7 @@ void main() {
         );
 
         expect(button, isA<RemixButton>());
-        expect(button.label, equals('Test Button'));
-        expect(button.leadingIcon, equals(Icons.star));
+        expect(button.child, same(child));
         expect(button.loading, isTrue);
         expect(button.enabled, isFalse);
         expect(button.enableFeedback, isFalse);
@@ -504,16 +504,19 @@ void main() {
         fortalButtonStyler(highContrast: true),
       );
 
-      expect(_containerColor(solid), indigo.light.scale.step(9));
-      expect(_containerColor(highContrastSolid), indigo.light.scale.step(12));
+      expect(solid.spec.surface?.color, indigo.light.scale.step(9));
+      expect(
+        highContrastSolid.spec.surface?.color,
+        indigo.light.scale.step(12),
+      );
       expect(solid.spec.label.spec.style?.color, Colors.white);
       expect(
         highContrastSolid.spec.label.spec.style?.color,
-        indigo.light.scale.step(1),
+        slate.light.scale.step(1),
       );
 
       for (final variant in FortalButtonVariant.values.where(
-        (variant) => variant != .solid,
+        (variant) => variant != .solid && variant != .classic,
       )) {
         final normal = await _resolveFortalButtonStyle(
           tester,
@@ -526,7 +529,7 @@ void main() {
 
         expect(
           normal.spec.label.spec.style?.color,
-          indigo.light.scale.step(11),
+          indigo.light.scale.alphaStep(11),
           reason: '$variant normal foreground',
         );
         expect(
@@ -567,7 +570,7 @@ void main() {
           .toSet();
 
       expect(paddings, hasLength(FortalButtonSize.values.length));
-      expect(spacings, hasLength(FortalButtonSize.values.length));
+      expect(spacings, {4.0, 8.0, 12.0});
     });
   });
 }
@@ -599,6 +602,3 @@ Future<BoxSpec> _resolveContainerBoxSpec(
 
   return resolved.spec.container.spec.box!.spec;
 }
-
-Color? _containerColor(StyleSpec<RemixButtonSpec> spec) =>
-    (spec.spec.container.spec.box?.spec.decoration as BoxDecoration?)?.color;

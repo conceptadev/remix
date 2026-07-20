@@ -72,6 +72,14 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
   @override
   final StyleSpec<IconSpec> indicator;
 
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? surface;
+
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? overlay;
+
   /// Creates a RemixCheckboxSpec with optional styling specifications.
   ///
   /// If any [StyleSpec] is not provided, a default specification
@@ -92,6 +100,8 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
   const RemixCheckboxSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<IconSpec>? indicator,
+    this.surface,
+    this.overlay,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        indicator = indicator ?? const StyleSpec(spec: IconSpec());
 }

@@ -156,9 +156,13 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixSwitchSpec();
 
-        expect(spec.props, hasLength(2));
+        expect(spec.props, hasLength(6));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.thumb));
+        expect(spec.props, contains(spec.surface));
+        expect(spec.props, contains(spec.overlay));
+        expect(spec.props, contains(spec.thumbSurface));
+        expect(spec.props, contains(spec.thumbOverlay));
       });
     });
 

@@ -2,8 +2,7 @@ part of 'progress.dart';
 
 /// Style builder for [RemixProgress].
 ///
-/// Use this class to style the progress container, track, indicator, and track
-/// layout container.
+/// Use this class to style the progress container, track, and indicator.
 extension RemixProgressStylerRemixHelpers on RemixProgressStyler {
   /// Sets track color
   RemixProgressStyler trackColor(Color value) {
@@ -24,7 +23,22 @@ extension RemixProgressStylerRemixHelpers on RemixProgressStyler {
   }
 
   /// Creates a [RemixProgress] widget with this style applied.
-  RemixProgress call({Key? key, required double value}) {
-    return RemixProgress(key: key, value: value, style: this);
+  RemixProgress call({
+    Key? key,
+    double? value,
+    double max = 100,
+    Duration duration = const Duration(seconds: 5),
+    String? semanticLabel,
+    bool excludeSemantics = false,
+  }) {
+    return RemixProgress(
+      key: key,
+      value: value,
+      max: max,
+      duration: duration,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+      style: this,
+    );
   }
 }

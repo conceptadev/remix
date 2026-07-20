@@ -28,10 +28,24 @@ export 'src/components/tooltip/tooltip.dart';
 
 /// EXTERNAL DEPENDENCIES
 export 'package:mix/mix.dart';
-export 'package:naked_ui/naked_ui.dart' show OverlayPositionConfig;
+export 'package:naked_ui/naked_ui.dart'
+    show OverlayAlignment, OverlayPlacement, OverlayPositionConfig, OverlaySide;
 
 /// FORTAL
-export 'src/fortal/fortal.dart';
+export 'src/fortal/fortal.dart' hide FortalComponentOverride;
+
+/// RENDERING
+export 'src/rendering/remix_blend_mode.dart' show RemixBlendMode;
+export 'src/rendering/remix_surface.dart'
+    show
+        RemixPaintShadowKind,
+        RemixPaintShadow,
+        RemixPaintShadowMix,
+        RemixPaintShadowListToken,
+        RemixLinearGradientMix,
+        RemixSurfaceLayerSpec,
+        RemixSurfaceLayerMix,
+        RemixSurface;
 
 /// STYLER CONVENIENCES
 export 'src/utilities/remix_style.dart'

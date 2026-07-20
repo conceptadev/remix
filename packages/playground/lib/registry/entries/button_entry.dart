@@ -7,7 +7,6 @@ Widget buildButtonExample() {
   return ComparisonView(
     remix: [
       RemixButton(
-        label: 'Primary Button',
         onPressed: () {},
         style: RemixButtonStyler()
             .paddingX(16)
@@ -15,9 +14,9 @@ Widget buildButtonExample() {
             .borderRadiusAll(const Radius.circular(8))
             .backgroundColor(const Color(0xFF1F2937))
             .foregroundColor(Colors.white),
+        child: const Text('Primary Button'),
       ),
       RemixButton(
-        label: 'Disabled',
         onPressed: null,
         style: RemixButtonStyler()
             .paddingX(16)
@@ -25,9 +24,9 @@ Widget buildButtonExample() {
             .borderRadiusAll(const Radius.circular(8))
             .backgroundColor(const Color(0xFFE5E7EB))
             .foregroundColor(const Color(0xFF9CA3AF)),
+        child: const Text('Disabled'),
       ),
       RemixButton(
-        label: 'Loading',
         loading: true,
         onPressed: () {},
         style: RemixButtonStyler()
@@ -36,11 +35,10 @@ Widget buildButtonExample() {
             .borderRadiusAll(const Radius.circular(8))
             .backgroundColor(const Color(0xFF1F2937).withValues(alpha: 0.6))
             .foregroundColor(Colors.white.withValues(alpha: 0.7))
-            .spinner(.indicatorColor(Colors.white)),
+            .spinner(.color(Colors.white)),
+        child: const Text('Loading'),
       ),
       RemixButton(
-        label: 'With Icon',
-        leadingIcon: Icons.star,
         onPressed: () {},
         style: RemixButtonStyler()
             .paddingX(16)
@@ -48,9 +46,12 @@ Widget buildButtonExample() {
             .borderRadiusAll(const Radius.circular(8))
             .backgroundColor(const Color(0xFF1F2937))
             .foregroundColor(Colors.white),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [Icon(Icons.star), Text('With Icon')],
+        ),
       ),
       RemixIconButton(
-        icon: Icons.star,
         onPressed: () {},
         semanticLabel: 'Favorite',
         style: RemixIconButtonStyler()
@@ -58,6 +59,7 @@ Widget buildButtonExample() {
             .borderRadiusAll(const Radius.circular(8))
             .backgroundColor(const Color(0xFF1F2937))
             .foregroundColor(Colors.white),
+        child: const Icon(Icons.star),
       ),
     ],
     material: [

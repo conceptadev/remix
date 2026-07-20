@@ -13,9 +13,19 @@ class RemixRadioSpec with _$RemixRadioSpec {
   @override
   final StyleSpec<BoxSpec> indicator;
 
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? surface;
+
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? overlay;
+
   const RemixRadioSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicator,
+    this.surface,
+    this.overlay,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        indicator = indicator ?? const StyleSpec(spec: BoxSpec());
 }

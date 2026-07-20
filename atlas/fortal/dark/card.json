@@ -1,0 +1,58 @@
+{
+  "schema": "mix_atlas/atlas/v1",
+  "component": "card",
+  "componentLabel": "Card",
+  "theme": "dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "card.png",
+  "rowAxes": [
+    {
+      "id": "variant",
+      "label": "Variant"
+    }
+  ],
+  "rows": [
+    {
+      "id": "surface",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        }
+      }
+    },
+    {
+      "id": "classic",
+      "values": {
+        "variant": {
+          "id": "classic",
+          "label": "Classic"
+        }
+      }
+    },
+    {
+      "id": "ghost",
+      "values": {
+        "variant": {
+          "id": "ghost",
+          "label": "Ghost"
+        }
+      }
+    }
+  ],
+  "columns": [
+    {
+      "id": "default",
+      "states": [],
+      "props": {}
+    },
+    {
+      "id": "disabled",
+      "states": [
+        "disabled"
+      ],
+      "props": {}
+    }
+  ]
+}

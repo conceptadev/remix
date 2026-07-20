@@ -9,12 +9,7 @@ extension RemixButtonStylerRemixHelpers on RemixButtonStyler {
   /// Creates a [RemixButton] widget with this style applied.
   RemixButton call({
     Key? key,
-    required String label,
-    IconData? leadingIcon,
-    IconData? trailingIcon,
-    RemixButtonTextBuilder? textBuilder,
-    RemixButtonIconBuilder? leadingIconBuilder,
-    RemixButtonIconBuilder? trailingIconBuilder,
+    required Widget child,
     RemixButtonLoadingBuilder? loadingBuilder,
     bool loading = false,
     bool enabled = true,
@@ -30,12 +25,7 @@ extension RemixButtonStylerRemixHelpers on RemixButtonStyler {
   }) {
     return RemixButton(
       key: key,
-      label: label,
-      leadingIcon: leadingIcon,
-      trailingIcon: trailingIcon,
-      textBuilder: textBuilder,
-      leadingIconBuilder: leadingIconBuilder,
-      trailingIconBuilder: trailingIconBuilder,
+      child: child,
       loadingBuilder: loadingBuilder,
       loading: loading,
       enabled: enabled,

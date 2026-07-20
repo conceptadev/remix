@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_protocol/mix_protocol.dart';
 import 'package:remix/remix.dart';
@@ -23,30 +22,43 @@ void main() {
       expect(projection.icon, isNotNull);
       expect(projection.diagnostics, isEmpty);
       expect(
-        projection.container!.$variants!
-            .map((variant) => variant.variant)
-            .whereType<WidgetStateVariant>()
-            .map((variant) => variant.state),
-        containsAll({
-          WidgetState.hovered,
-          WidgetState.focused,
-          WidgetState.disabled,
-        }),
+        mixProtocol.encodeStyle(projection.label!),
+        isA<MixProtocolSuccess<Map<String, Object?>>>(),
+      );
+      expect(
+        mixProtocol.encodeStyle(projection.icon!),
+        isA<MixProtocolSuccess<Map<String, Object?>>>(),
       );
     });
 
-    test('all projected slots encode as built-in protocol styles', () {
+    test('records the exact neutral-protocol boundary for every recipe', () {
       for (final variant in FortalButtonVariant.values) {
         for (final size in FortalButtonSize.values) {
           final projection = projectRemixButtonStyler(
             fortalButtonStyler(variant: variant, size: size),
           );
 
-          expect(
-            mixProtocol.encodeStyle(projection.container!),
-            isA<MixProtocolSuccess<Map<String, Object?>>>(),
-            reason: '${variant.name}-${size.name} container',
-          );
+          final container = mixProtocol.encodeStyle(projection.container!);
+          if (variant == FortalButtonVariant.ghost) {
+            expect(
+              container,
+              isA<MixProtocolSuccess<Map<String, Object?>>>(),
+              reason: '${variant.name}-${size.name} container',
+            );
+          } else {
+            expect(
+              container,
+              isA<MixProtocolFailure<Map<String, Object?>>>(),
+              reason: '${variant.name}-${size.name} container',
+            );
+            final failure =
+                container as MixProtocolFailure<Map<String, Object?>>;
+            expect(
+              failure.errors.map((error) => error.toJson()),
+              contains(containsPair('path', '/constraints')),
+              reason: '${variant.name}-${size.name} diagnostic',
+            );
+          }
           expect(
             mixProtocol.encodeStyle(projection.label!),
             isA<MixProtocolSuccess<Map<String, Object?>>>(),
@@ -72,21 +84,22 @@ void main() {
       },
     );
 
-    test('builds a deterministic 240-cell portable Button contract', () {
+    test('builds a deterministic 288-cell portable Button contract', () {
       final first = buildFortalButtonComponentArtifacts();
       final second = buildFortalButtonComponentArtifacts();
       final recipes = first.document['recipes']! as List<Object?>;
       final states = first.document['states']! as List<Object?>;
       final oracles = first.document['oracles']! as List<Object?>;
 
-      expect(recipes, hasLength(20));
+      expect(recipes, hasLength(24));
+      expect(first.recipeCount, 24);
       expect(states, hasLength(6));
       expect(oracles, hasLength(2));
-      expect(first.totalMatrixCells, 240);
-      expect(first.nonLoadingCells, 200);
-      expect(first.loadingUnsupportedCells, 40);
-      expect(first.styleDocuments, hasLength(60));
-      expect(first.supportedContainerRecipes, 20);
+      expect(first.totalMatrixCells, 288);
+      expect(first.nonLoadingCells, 240);
+      expect(first.loadingUnsupportedCells, 48);
+      expect(first.styleDocuments, hasLength(52));
+      expect(first.supportedContainerRecipes, 4);
       expect(jsonEncode(first.document), jsonEncode(second.document));
       expect(
         jsonEncode(first.styleDocuments),
@@ -105,8 +118,18 @@ void main() {
         final spinner = styles['spinner']! as Map<String, Object?>;
         expect(spinner['status'], 'unsupported');
         final container = styles['container']! as Map<String, Object?>;
-        expect(container['status'], 'supported');
-        expect(container['document'], endsWith('/container.mix.json'));
+        final properties = recipe['properties']! as Map<String, Object?>;
+        if (properties['variant'] == FortalButtonVariant.ghost.name) {
+          expect(container['status'], 'supported');
+          expect(container['document'], endsWith('/container.mix.json'));
+        } else {
+          expect(container['status'], 'unsupported');
+          final diagnostics = container['diagnostics']! as List<Object?>;
+          expect(
+            diagnostics.cast<Map<String, Object?>>(),
+            contains(containsPair('path', '/constraints')),
+          );
+        }
       }
     });
   });

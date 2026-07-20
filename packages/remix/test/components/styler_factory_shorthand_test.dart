@@ -29,20 +29,17 @@ void main() {
       );
     });
 
-    test('forward a restricted Box surface from Select menuContainer', () {
+    test('forward a restricted Box surface from Select content', () {
       expect(
-        RemixSelectStyler.color(Colors.white),
-        RemixSelectStyler().color(Colors.white),
+        RemixSelectContentStyler.color(Colors.white),
+        RemixSelectContentStyler().color(Colors.white),
       );
     });
 
     test('retain field factories for composite stylers', () {
-      final trigger = RemixMenuTriggerStyler.color(Colors.black);
+      final item = RemixMenuItemStyler.color(Colors.black);
 
-      expect(
-        RemixMenuStyler.trigger(trigger),
-        RemixMenuStyler().trigger(trigger),
-      );
+      expect(RemixMenuStyler.item(item), RemixMenuStyler().item(item));
 
       final layout = FlexBoxStyler.spacing(12);
       expect(
@@ -172,11 +169,15 @@ void main() {
         ),
       );
       expectSameSpec(
-        RemixSelectStyler().padding(padding).color(Colors.white),
+        RemixSelectStyler().content(
+          RemixSelectContentStyler().padding(padding).color(Colors.white),
+        ),
         RemixSelectStyler(
-          menuContainer: FlexBoxStyler(
-            padding: padding,
-            decoration: BoxDecorationMix(color: Colors.white),
+          content: RemixSelectContentStyler(
+            container: BoxStyler(
+              padding: padding,
+              decoration: BoxDecorationMix(color: Colors.white),
+            ),
           ),
         ),
       );

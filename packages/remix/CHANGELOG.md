@@ -1,3 +1,62 @@
+## Unreleased
+
+- **BREAKING**: Align the 20 mapped Fortal families with the pinned
+  `@radix-ui/themes@3.3.0` contract. Accordion, Toggle, and ToggleGroup remain
+  documented Fortal extensions and are excluded from the Radix parity score.
+- **BREAKING**: Replace every variant-specific Fortal named constructor with
+  one enum-based constructor per widget. Use `variant:`, `size:`, and the
+  component's supported `color`, `radius`, or `highContrast` overrides.
+- **BREAKING**: Replace the root theme inputs with partial, inheritable
+  `appearance`, `accentColor`, `grayColor`, `panelBackground`, `radius`,
+  `scaling`, and `hasBackground` values. Root `FortalScope` belongs above the
+  app widget so platform appearance and Navigator overlays share one theme.
+- **BREAKING**: Button and IconButton accept arbitrary `child` widgets;
+  IconButton requires a nonempty `semanticLabel`. Badge and other content
+  components also inherit resolved text/icon styles through arbitrary content.
+- **BREAKING**: Slider is an arbitrary multi-thumb control with ascending
+  `values`, list-valued callbacks, `step`, `minSpacing`, orientation, inversion,
+  per-thumb focus, and per-thumb semantics. Remove scalar `value` and
+  `snapDivisions`.
+- **BREAKING**: `RemixTabs.activationMode` now exposes automatic and manual
+  keyboard activation from Naked beta.5.
+- **BREAKING**: Menu now takes an arbitrary trigger widget and compositional
+  action, checkbox, group, label, separator, radio, and recursive submenu
+  entries. Select uses `entries` with selectable, group, label, and separator
+  types and exposes owner-authoritative `open`/`onOpenChanged` control.
+- **FEAT**: Add Radix-aligned Popover and Fortal ToggleGroup; complete missing
+  classic variants, sizes, high-contrast roles, geometry, focus/disabled/open
+  states, separate Popover anchors, and semantic behavior across the mapped
+  families.
+- **FEAT**: Add partial theme resolution, platform-brightness observation,
+  automatic matching gray scales, complete 90%–110% scaling, derived radii,
+  translucent panels, and premultiplied-alpha OKLab shadow-stroke mixing.
+- **FEAT**: Add real surface and overlay paint slots with token-aware multiple
+  gradients, outer and inset shadows, clip insets, CSS-style outlines, and
+  backdrop blur.
+- **FIX**: Preserve token-backed shadow-list identity when state styles replace
+  explicit surface shadows, and use dedicated scaled radio-indicator tokens so
+  Mix token references are never multiplied as raw sentinel doubles.
+- **FIX**: Propagate Popover trigger interaction and open state into composed
+  Remix recipes. Card now preserves inherited states, holds the Radix open
+  treatment over pressed, and applies the exact focused-active surface layer.
+- **FIX**: Keep Tooltip arrows anchored to the trigger after collision shifts
+  and flips, including rotated side geometry; stabilize indeterminate Progress
+  at its completed-growth frame when accessible animations are disabled.
+- **FIX**: Define `RemixDialog.modal` as accessibility route scoping and
+  document the Flutter route boundary: `showRemixDialog` remains pointer-modal
+  for both values because it uses a Navigator dialog route.
+- **FIX**: Keep full-length Fortal dividers at one logical pixel on their cross
+  axis even when a tight parent supplies extra height or width.
+- **CHORE**: Target exact `naked_ui` 1.0.0-beta.5 behavior, add the pinned
+  Chromium reference fixture and parity manifest/checker, and expand the Fortal
+  Atlas from Button-only coverage to all 23 families in light and dark themes.
+- **CHORE**: Require every parity-manifest enum and state to cite an exact
+  executable test case; reject missing, stale, extra, or uncited evidence.
+- **DOCS**: Migrate the complete MDX guide and public examples to the hard-break
+  APIs. Add a documentation gate that rejects retired component syntax across
+  MDX and app/example sources and analyzes every self-contained Dart snippet
+  against the package.
+
 ## 1.0.0-beta.1
 
 - **BREAKING** **FIX**: `RemixDialog.child` now composes with `title`,
@@ -21,9 +80,10 @@
 - **FIX**: Consume `naked_ui` beta.3's type-specific state scopes, including typed menu-item and select-option controllers, while preserving callback-optional `RemixSelect` browsing.
 - **FIX**: Forward menu interception, outside-tap, root-overlay, close-on-outside-click, focus, and positioning options through `RemixMenuStyler.call()` and generated `FortalMenu` widgets.
 - **FEAT**: Add `call()` widget-builder methods to all component stylers and reproducibly generate every `FortalX` convenience widget via `@MixWidget`, including generic Radio/Accordion/Menu/Select surfaces.
-- **FEAT**: Add generated named constructors for Fortal variants (for example, `FortalButton.solid(...)`); Dart infers generic types for calls such as `FortalRadio.soft(...)`, and the unnamed constructors remain available.
+- **FEAT**: Add generated named constructors for Fortal variants (subsequently
+  removed by the Unreleased Radix 3.3.0 hard break).
 - **FEAT**: Fortal wrappers for dialog, menu, select, tooltip, and tabs parts (`FortalTabBar`/`FortalTab`/`FortalTabView`).
-- **FEAT**: Tooltip `dismissDuration` (hover-exit → `NakedTooltip.dismissDelay`); `showDuration` remains touch wait → `touchDelay`.
+- **FEAT**: Tooltip `dismissDuration` (hover-exit → `NakedTooltip.dismissDelay`); `showDuration` maps to the post-activation touch visibility interval (`touchDelay`).
 - **FEAT**: Add `positioning` (`OverlayPositionConfig`) to `RemixTooltip` and `enabled` to `RemixIconButton`.
 - **FEAT**: Add `FortalAccordionVariant`/`FortalAccordionSize` parameters to `fortalAccordionStyler()`.
 - **FIX**: Menu trigger renders icon before label.

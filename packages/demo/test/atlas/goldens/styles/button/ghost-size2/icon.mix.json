@@ -1,9 +1,8 @@
 {
   "type": "icon",
   "color": {
-    "$token": "fortal.accent.11"
+    "$token": "fortal.accent.a11"
   },
-  "size": 16.0,
   "variants": [
     {
       "kind": "widget_state",
@@ -11,7 +10,7 @@
       "style": {
         "type": "icon",
         "color": {
-          "$token": "fortal.gray.8"
+          "$token": "fortal.gray.a8"
         }
       }
     }

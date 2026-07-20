@@ -1,0 +1,60 @@
+{
+  "schema": "mix_atlas/atlas/v1",
+  "component": "divider",
+  "componentLabel": "Divider",
+  "theme": "dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "divider.png",
+  "rowAxes": [
+    {
+      "id": "size",
+      "label": "Size"
+    }
+  ],
+  "rows": [
+    {
+      "id": "size1",
+      "values": {
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "size2",
+      "values": {
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "size3",
+      "values": {
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    },
+    {
+      "id": "size4",
+      "values": {
+        "size": {
+          "id": "size4",
+          "label": "Size 4"
+        }
+      }
+    }
+  ],
+  "columns": [
+    {
+      "id": "default",
+      "states": [],
+      "props": {}
+    }
+  ]
+}

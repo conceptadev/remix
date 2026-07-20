@@ -111,7 +111,7 @@ class _AccordionExampleState extends State<AccordionExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
@@ -140,13 +140,15 @@ class _FortalAccordionExampleState extends State<FortalAccordionExample> {
       controller: controller,
       child: Column(
         children: [
-          FortalAccordion.surface(
+          FortalAccordion(
+            variant: FortalAccordionVariant.surface,
             value: 'item1',
             title: 'First Item',
             size: FortalAccordionSize.size2,
             child: Text('First content'),
           ),
-          FortalAccordion.soft(
+          FortalAccordion(
+            variant: FortalAccordionVariant.soft,
             value: 'item2',
             title: 'Second Item',
             size: FortalAccordionSize.size3,

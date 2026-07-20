@@ -1,6 +1,9 @@
 part of 'dialog.dart';
 
-WidgetBuilder _captureMixScope(BuildContext context, WidgetBuilder builder) {
+WidgetBuilder _captureInheritedScopes(
+  BuildContext context,
+  WidgetBuilder builder,
+) {
   final scope = MixScope.maybeOf(context);
   final theme = FortalTheme.maybeOf(context);
   if (scope == null && theme == null) return builder;
@@ -17,7 +20,7 @@ WidgetBuilder _captureMixScope(BuildContext context, WidgetBuilder builder) {
     }
 
     if (theme != null) {
-      child = FortalTheme(config: theme, child: child);
+      child = FortalTheme(data: theme, child: child);
     }
 
     return child;
@@ -84,7 +87,7 @@ Future<T?> showRemixDialog<T>({
     transitionBuilder: transitionBuilder,
     requestFocus: requestFocus,
     traversalEdgeBehavior: traversalEdgeBehavior,
-    builder: _captureMixScope(context, builder),
+    builder: _captureInheritedScopes(context, builder),
   );
 }
 
@@ -123,7 +126,7 @@ Future<T?> showRemixAlertDialog<T>({
     transitionDuration: transitionDuration,
     transitionBuilder: transitionBuilder,
     initialFocusNode: initialFocusNode,
-    builder: _captureMixScope(context, builder),
+    builder: _captureInheritedScopes(context, builder),
   );
 }
 
@@ -137,16 +140,18 @@ Future<T?> showRemixAlertDialog<T>({
 ///   description: 'Are you sure you want to delete this item?',
 ///   actions: [
 ///     RemixButton(
-///       label: 'Cancel',
 ///       onPressed: () => Navigator.pop(context),
+///       child: Text('Cancel'),
 ///     ),
 ///     RemixButton(
-///       label: 'Delete',
 ///       onPressed: () => Navigator.pop(context),
+///       child: Text('Delete'),
 ///     ),
 ///   ],
 /// )
 /// ```
+enum RemixDialogAlignment { start, center }
+
 class RemixDialog extends StatelessWidget {
   const RemixDialog({
     super.key,
@@ -156,9 +161,31 @@ class RemixDialog extends StatelessWidget {
     this.actions,
     this.modal = true,
     this.semanticLabel,
+    this.alignment = RemixDialogAlignment.center,
+    this.width,
+    this.minWidth,
+    this.maxWidth,
+    this.height,
+    this.minHeight,
+    this.maxHeight,
+    this.insetPadding = EdgeInsets.zero,
     this.style = const RemixDialogStyler.create(),
     this.styleSpec,
-  }) : assert(
+  }) : assert(width == null || width >= 0),
+       assert(minWidth == null || minWidth >= 0),
+       assert(maxWidth == null || maxWidth >= 0),
+       assert(height == null || height >= 0),
+       assert(minHeight == null || minHeight >= 0),
+       assert(maxHeight == null || maxHeight >= 0),
+       assert(
+         minWidth == null || maxWidth == null || minWidth <= maxWidth,
+         'minWidth must not exceed maxWidth',
+       ),
+       assert(
+         minHeight == null || maxHeight == null || minHeight <= maxHeight,
+         'minHeight must not exceed maxHeight',
+       ),
+       assert(
          child != null || title != null || description != null,
          'Either child, title, or description must be provided',
        );
@@ -178,11 +205,39 @@ class RemixDialog extends StatelessWidget {
   /// Action buttons (typically placed at the bottom).
   final List<Widget>? actions;
 
-  /// Whether to block background content interaction.
+  /// Whether this wrapper establishes modal accessibility route semantics.
+  ///
+  /// When true, the dialog scopes and names the semantics route and blocks
+  /// earlier semantics nodes. Pointer modality belongs to the route created by
+  /// [showRemixDialog] and is unaffected by this value.
   final bool modal;
 
   /// Semantic label for accessibility.
   final String? semanticLabel;
+
+  /// Positions the dialog at the start or center of its available viewport.
+  final RemixDialogAlignment alignment;
+
+  /// Preferred dialog width, clamped by [minWidth] and [maxWidth].
+  final double? width;
+
+  /// Minimum dialog width.
+  final double? minWidth;
+
+  /// Maximum dialog width.
+  final double? maxWidth;
+
+  /// Preferred dialog height, clamped by [minHeight] and [maxHeight].
+  final double? height;
+
+  /// Minimum dialog height.
+  final double? minHeight;
+
+  /// Maximum dialog height.
+  final double? maxHeight;
+
+  /// Empty space between the scrollable viewport and dialog surface.
+  final EdgeInsetsGeometry insetPadding;
 
   /// The style configuration for the dialog.
   final RemixDialogStyler style;
@@ -194,7 +249,7 @@ class RemixDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final content = RemixStyleSpecBuilder<RemixDialogSpec>(
+    Widget content = RemixStyleSpecBuilder<RemixDialogSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
@@ -207,12 +262,17 @@ class RemixDialog extends StatelessWidget {
 
         // Skip the default column so a fully custom body keeps its layout.
         if (isLoneChild) {
-          return Box(styleSpec: spec.container, child: child!);
+          return RemixSurfaceBox(
+            styleSpec: spec.container,
+            surface: spec.surface,
+            child: child!,
+          );
         }
 
         // title → description → child → actions; never discard provided content.
-        return Box(
+        return RemixSurfaceBox(
           styleSpec: spec.container,
+          surface: spec.surface,
           child: Column(
             mainAxisAlignment: .start,
             mainAxisSize: .min,
@@ -230,6 +290,20 @@ class RemixDialog extends StatelessWidget {
       },
     );
 
+    content = _RemixDialogViewport(
+      alignment: alignment,
+      insetPadding: insetPadding,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: minWidth ?? 0,
+          maxWidth: maxWidth ?? double.infinity,
+          minHeight: minHeight ?? 0,
+          maxHeight: maxHeight ?? double.infinity,
+        ),
+        child: SizedBox(width: width, height: height, child: content),
+      ),
+    );
+
     final hasDialogAncestor =
         context.findAncestorWidgetOfExactType<NakedDialog>() != null;
     if (hasDialogAncestor) return content;
@@ -238,6 +312,48 @@ class RemixDialog extends StatelessWidget {
       modal: modal,
       semanticLabel: semanticLabel ?? title,
       child: content,
+    );
+  }
+}
+
+class _RemixDialogViewport extends StatelessWidget {
+  const _RemixDialogViewport({
+    required this.alignment,
+    required this.insetPadding,
+    required this.child,
+  });
+
+  final RemixDialogAlignment alignment;
+  final EdgeInsetsGeometry insetPadding;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final padding = insetPadding.resolve(Directionality.of(context));
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final minimumHeight = constraints.hasBoundedHeight
+            ? (constraints.maxHeight - padding.vertical).clamp(
+                0.0,
+                double.infinity,
+              )
+            : 0.0;
+
+        return SingleChildScrollView(
+          padding: padding,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: minimumHeight),
+            child: Align(
+              alignment: switch (alignment) {
+                RemixDialogAlignment.start => Alignment.topCenter,
+                RemixDialogAlignment.center => Alignment.center,
+              },
+              child: child,
+            ),
+          ),
+        );
+      },
     );
   }
 }

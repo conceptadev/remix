@@ -11,6 +11,8 @@ mixin _$RemixIconButtonSpec
   StyleSpec<BoxSpec> get container;
   StyleSpec<IconSpec> get icon;
   StyleSpec<RemixSpinnerSpec> get spinner;
+  RemixSurfaceLayerSpec? get surface;
+  RemixSurfaceLayerSpec? get overlay;
 
   @override
   Type get type => RemixIconButtonSpec;
@@ -20,11 +22,15 @@ mixin _$RemixIconButtonSpec
     StyleSpec<BoxSpec>? container,
     StyleSpec<IconSpec>? icon,
     StyleSpec<RemixSpinnerSpec>? spinner,
+    RemixSurfaceLayerSpec? surface,
+    RemixSurfaceLayerSpec? overlay,
   }) {
     return RemixIconButtonSpec(
       container: container ?? this.container,
       icon: icon ?? this.icon,
       spinner: spinner ?? this.spinner,
+      surface: surface ?? this.surface,
+      overlay: overlay ?? this.overlay,
     );
   }
 
@@ -34,11 +40,13 @@ mixin _$RemixIconButtonSpec
       container: container.lerp(other?.container, t),
       icon: icon.lerp(other?.icon, t),
       spinner: spinner.lerp(other?.spinner, t),
+      surface: MixOps.lerpSnap(surface, other?.surface, t),
+      overlay: MixOps.lerpSnap(overlay, other?.overlay, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, icon, spinner];
+  List<Object?> get props => [container, icon, spinner, surface, overlay];
 
   @override
   bool operator ==(Object other) {
@@ -82,7 +90,9 @@ mixin _$RemixIconButtonSpec
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('icon', icon))
-      ..add(DiagnosticsProperty('spinner', spinner));
+      ..add(DiagnosticsProperty('spinner', spinner))
+      ..add(DiagnosticsProperty('surface', surface))
+      ..add(DiagnosticsProperty('overlay', overlay));
   }
 }
 
@@ -103,22 +113,30 @@ class RemixIconButtonStyler
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
+  final Prop<RemixSurfaceLayerSpec>? $surface;
+  final Prop<RemixSurfaceLayerSpec>? $overlay;
 
   const RemixIconButtonStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<IconSpec>>? icon,
     Prop<StyleSpec<RemixSpinnerSpec>>? spinner,
+    Prop<RemixSurfaceLayerSpec>? surface,
+    Prop<RemixSurfaceLayerSpec>? overlay,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $icon = icon,
-       $spinner = spinner;
+       $spinner = spinner,
+       $surface = surface,
+       $overlay = overlay;
 
   RemixIconButtonStyler({
     BoxStyler? container,
     IconStyler? icon,
     RemixSpinnerStyler? spinner,
+    RemixSurfaceLayerMix? surface,
+    RemixSurfaceLayerMix? overlay,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixIconButtonSpec>>? variants,
@@ -126,6 +144,8 @@ class RemixIconButtonStyler
          container: Prop.maybeMix(container),
          icon: Prop.maybeMix(icon),
          spinner: Prop.maybeMix(spinner),
+         surface: Prop.maybeMix(surface),
+         overlay: Prop.maybeMix(overlay),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -137,6 +157,10 @@ class RemixIconButtonStyler
       RemixIconButtonStyler().icon(value);
   factory RemixIconButtonStyler.spinner(RemixSpinnerStyler value) =>
       RemixIconButtonStyler().spinner(value);
+  factory RemixIconButtonStyler.surface(RemixSurfaceLayerMix value) =>
+      RemixIconButtonStyler().surface(value);
+  factory RemixIconButtonStyler.overlay(RemixSurfaceLayerMix value) =>
+      RemixIconButtonStyler().overlay(value);
   factory RemixIconButtonStyler.alignment(AlignmentGeometry value) =>
       RemixIconButtonStyler().alignment(value);
   factory RemixIconButtonStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -634,6 +658,16 @@ class RemixIconButtonStyler
     return merge(RemixIconButtonStyler(spinner: value));
   }
 
+  /// Sets the surface.
+  RemixIconButtonStyler surface(RemixSurfaceLayerMix value) {
+    return merge(RemixIconButtonStyler(surface: value));
+  }
+
+  /// Sets the overlay.
+  RemixIconButtonStyler overlay(RemixSurfaceLayerMix value) {
+    return merge(RemixIconButtonStyler(overlay: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixIconButtonStyler animate(AnimationConfig value) {
@@ -666,6 +700,8 @@ class RemixIconButtonStyler
       container: MixOps.merge($container, other?.$container),
       icon: MixOps.merge($icon, other?.$icon),
       spinner: MixOps.merge($spinner, other?.$spinner),
+      surface: MixOps.merge($surface, other?.$surface),
+      overlay: MixOps.merge($overlay, other?.$overlay),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -679,6 +715,8 @@ class RemixIconButtonStyler
       container: MixOps.resolve(context, $container),
       icon: MixOps.resolve(context, $icon),
       spinner: MixOps.resolve(context, $spinner),
+      surface: MixOps.resolve(context, $surface),
+      overlay: MixOps.resolve(context, $overlay),
     );
 
     return StyleSpec(
@@ -694,7 +732,9 @@ class RemixIconButtonStyler
     properties
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('icon', $icon))
-      ..add(DiagnosticsProperty('spinner', $spinner));
+      ..add(DiagnosticsProperty('spinner', $spinner))
+      ..add(DiagnosticsProperty('surface', $surface))
+      ..add(DiagnosticsProperty('overlay', $overlay));
   }
 
   @override
@@ -702,6 +742,8 @@ class RemixIconButtonStyler
     $container,
     $icon,
     $spinner,
+    $surface,
+    $overlay,
     $animation,
     $modifier,
     $variants,

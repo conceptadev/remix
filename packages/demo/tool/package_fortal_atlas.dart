@@ -47,22 +47,8 @@ void main(List<String> arguments) {
         sourcePath: 'catalog.json',
         destinationPath: 'catalog.json',
       ),
-      const AtlasCaptureAsset(
-        sourcePath: 'light/button.json',
-        destinationPath: 'light/button.json',
-      ),
-      const AtlasCaptureAsset(
-        sourcePath: 'light/button.png',
-        destinationPath: 'light/button.png',
-      ),
-      const AtlasCaptureAsset(
-        sourcePath: 'dark/button.json',
-        destinationPath: 'dark/button.json',
-      ),
-      const AtlasCaptureAsset(
-        sourcePath: 'dark/button.png',
-        destinationPath: 'dark/button.png',
-      ),
+      ..._directoryAssets(sourceRoot, 'light'),
+      ..._directoryAssets(sourceRoot, 'dark'),
       const AtlasCaptureAsset(
         sourcePath: 'protocol/themes/light.mix.json',
         destinationPath: 'themes/light.mix.json',
@@ -70,6 +56,14 @@ void main(List<String> arguments) {
       const AtlasCaptureAsset(
         sourcePath: 'protocol/themes/dark.mix.json',
         destinationPath: 'themes/dark.mix.json',
+      ),
+      const AtlasCaptureAsset(
+        sourcePath: 'protocol/themes/light.remix-surfaces.json',
+        destinationPath: 'themes/light.remix-surfaces.json',
+      ),
+      const AtlasCaptureAsset(
+        sourcePath: 'protocol/themes/dark.remix-surfaces.json',
+        destinationPath: 'themes/dark.remix-surfaces.json',
       ),
       const AtlasCaptureAsset(
         sourcePath: 'protocol/coverage.json',

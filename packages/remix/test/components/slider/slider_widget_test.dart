@@ -1,794 +1,704 @@
+import 'dart:ui' as ui;
+
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_surface.dart' show RemixSurfaceBox;
 
-import '../../helpers/test_helpers.dart';
+const _sliderKey = ValueKey('slider');
 
 void main() {
-  group('RemixSlider', () {
-    group('Basic Rendering', () {
-      testWidgets('renders slider with minimal props', (tester) async {
-        await tester.pumpRemixApp(const RemixSlider(value: 0.5));
-        await tester.pumpAndSettle();
+  group('RemixSlider contract', () {
+    test('defaults match the Radix-shaped arbitrary-thumb contract', () {
+      final slider = RemixSlider(values: const [25]);
 
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('renders slider with custom range', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 50.0, min: 0.0, max: 100.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('renders slider at minimum value', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.0, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('renders slider at maximum value', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 1.0, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('contains SizedBox widget', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.5, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(SizedBox), findsWidgets);
-      });
-
-      testWidgets('contains Stack widget', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.5, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(Stack), findsWidgets);
-      });
+      expect(slider.min, 0);
+      expect(slider.max, 100);
+      expect(slider.step, 1);
+      expect(slider.minSpacing, 0);
+      expect(slider.orientation, Axis.horizontal);
+      expect(slider.inverted, isFalse);
+      expect(slider.enabled, isTrue);
+      expect(slider.excludeSemantics, isFalse);
     });
 
-    group('Value Validation', () {
-      test('accepts value at lower boundary (min)', () {
-        expect(
-          () => RemixSlider(
-            value: 0.0,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-          ),
-          returnsNormally,
-        );
-      });
-
-      test('accepts value at upper boundary (max)', () {
-        expect(
-          () => RemixSlider(
-            value: 1.0,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-          ),
-          returnsNormally,
-        );
-      });
-
-      test('accepts value in middle range', () {
-        expect(
-          () => RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-          ),
-          returnsNormally,
-        );
-      });
-
-      test('throws assertion error when value is less than min', () {
-        expect(
-          () => RemixSlider(
-            value: -0.1,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-          ),
-          throwsA(isA<AssertionError>()),
-        );
-      });
-
-      test('throws assertion error when value is greater than max', () {
-        expect(
-          () => RemixSlider(
-            value: 1.1,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-          ),
-          throwsA(isA<AssertionError>()),
-        );
-      });
-
-      test('throws assertion error when min is greater than max', () {
-        expect(
-          () => RemixSlider(
-            value: 0.5,
-            min: 1.0,
-            max: 0.0,
-            onChanged: (value) {},
-          ),
-          throwsA(isA<AssertionError>()),
-        );
-      });
+    test('rejects invalid scalar configuration', () {
+      expect(() => RemixSlider(values: const []), returnsNormally);
+      expect(
+        () => RemixSlider(values: const [50], min: 100, max: 0),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixSlider(values: const [50], step: 0),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixSlider(values: const [50], minSpacing: -1),
+        throwsAssertionError,
+      );
     });
 
-    group('Styling', () {
-      testWidgets('applies custom style', (tester) async {
-        final customStyle = RemixSliderStyler().trackColor(Colors.blue);
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            style: customStyle,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('applies thumb color styling', (tester) async {
-        final customStyle = RemixSliderStyler().thumbColor(Colors.red);
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            style: customStyle,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('applies range color styling', (tester) async {
-        final customStyle = RemixSliderStyler().rangeColor(Colors.green);
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            style: customStyle,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('applies thumb size styling', (tester) async {
-        final customStyle = RemixSliderStyler().thumbSize(const Size(24, 24));
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            style: customStyle,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('applies thickness styling', (tester) async {
-        final customStyle = RemixSliderStyler().thickness(12.0);
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            style: customStyle,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('applies track thickness styling', (tester) async {
-        final customStyle = RemixSliderStyler().trackThickness(10.0);
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            style: customStyle,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('applies range thickness styling', (tester) async {
-        final customStyle = RemixSliderStyler().rangeThickness(8.0);
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            style: customStyle,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-    });
-
-    group('Different Values', () {
-      testWidgets('renders slider at 0% (empty)', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.0, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('renders slider at 25%', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.25, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('renders slider at 50%', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.5, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('renders slider at 75%', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.75, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('renders slider at 100% (full)', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 1.0, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-    });
-
-    group('Interaction', () {
-      testWidgets('handles swipe right to increase value', (tester) async {
-        double changedValue = 0.5;
-
-        await tester.pumpRemixApp(
-          StatefulBuilder(
-            builder: (context, setState) => RemixSlider(
-              value: changedValue,
-              min: 0.0,
-              max: 1.0,
-              onChanged: (value) {
-                setState(() {
-                  changedValue = value;
-                });
-              },
-              enabled: true,
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        // Drag (swipe right) the slider's thumb
-        final sliderFinder = find.byType(RemixSlider);
-        // final sliderCenter = tester.getCenter(sliderFinder);
-
-        // Drag a reasonable amount to the right
-        await tester.drag(sliderFinder, const Offset(100.0, 0.0));
-        await tester.pumpAndSettle();
-
-        // After swiping right, the value should have increased
-        expect(changedValue, greaterThan(0.5));
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('does not react to swipe when disabled', (tester) async {
-        double changedValue = 0.5;
-        bool onChangeStartCalled = false;
-        bool onChangeEndCalled = false;
-
-        await tester.pumpRemixApp(
-          StatefulBuilder(
-            builder: (context, setState) => RemixSlider(
-              value: changedValue,
-              min: 0.0,
-              max: 1.0,
-              onChanged: (value) {
-                setState(() {
-                  changedValue = value;
-                });
-              },
-              onChangeStart: (value) => onChangeStartCalled = true,
-              onChangeEnd: (value) => onChangeEndCalled = true,
-              enabled: false,
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        final sliderFinder = find.byType(RemixSlider);
-        // Try to drag (swipe right) the slider's thumb
-        await tester.drag(sliderFinder, const Offset(100.0, 0.0));
-        await tester.pumpAndSettle();
-
-        // Value should not have changed
-        expect(changedValue, equals(0.5));
-        expect(onChangeStartCalled, isFalse);
-        expect(onChangeEndCalled, isFalse);
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('does not react to swipe when onChanged is omitted', (
-        tester,
-      ) async {
-        bool onChangeStartCalled = false;
-        bool onChangeEndCalled = false;
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChangeStart: (value) => onChangeStartCalled = true,
-            onChangeEnd: (value) => onChangeEndCalled = true,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        final sliderFinder = find.byType(RemixSlider);
-        await tester.drag(sliderFinder, const Offset(100.0, 0.0));
-        await tester.pumpAndSettle();
-
-        expect(onChangeStartCalled, isFalse);
-        expect(onChangeEndCalled, isFalse);
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('handles onChangeStart callback', (tester) async {
-        bool onChangeStartCalled = false;
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            onChangeStart: (value) => onChangeStartCalled = true,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        final sliderFinder = find.byType(RemixSlider);
-        // Try to drag (swipe right) the slider's thumb
-        await tester.drag(sliderFinder, const Offset(100.0, 0.0));
-        await tester.pumpAndSettle();
-
-        // Value should not have changed
-        expect(onChangeStartCalled, isTrue);
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('handles onChangeEnd callback', (tester) async {
-        bool onChangeEndCalled = false;
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            onChangeEnd: (value) => onChangeEndCalled = true,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        final sliderFinder = find.byType(RemixSlider);
-        // Try to drag (swipe right) the slider's thumb
-        await tester.drag(sliderFinder, const Offset(100.0, 0.0));
-        await tester.pumpAndSettle();
-
-        // Value should not have changed
-        expect(onChangeEndCalled, isTrue);
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-    });
-
-    group('Focus', () {
-      testWidgets('accepts focusNode parameter', (tester) async {
-        final focusNode = FocusNode();
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            focusNode: focusNode,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-        focusNode.dispose();
-      });
-
-      testWidgets('handles autofocus parameter', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            autofocus: true,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-
-        expect(tester.binding.focusManager.primaryFocus, isNotNull);
-      });
-
-      testWidgets('can request focus programmatically', (tester) async {
-        final focusNode = FocusNode();
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            focusNode: focusNode,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        focusNode.requestFocus();
-        await tester.pumpAndSettle();
-
-        expect(focusNode.hasFocus, isTrue);
-        focusNode.dispose();
-      });
-    });
-
-    group('Snap Divisions', () {
-      testWidgets('accepts snapDivisions parameter', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            snapDivisions: 10,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('handles null snapDivisions', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            snapDivisions: null,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-    });
-
-    group('Feedback', () {
-      testWidgets('accepts enableFeedback parameter', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            enableFeedback: true,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('handles disabled feedback', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            enableFeedback: false,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-    });
-
-    group('Edge Cases', () {
-      testWidgets('handles very small value', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.01, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('handles very large value', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.99, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('handles negative range', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: -50.0,
-            min: -100.0,
-            max: 0.0,
-            onChanged: (value) {},
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('handles large range', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 500.0,
-            min: 0.0,
-            max: 1000.0,
-            onChanged: (value) {},
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('handles very small range', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.005, min: 0.0, max: 0.01, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-    });
-
-    group('Key Parameter', () {
-      testWidgets('accepts and respects key parameter', (tester) async {
-        const key = ValueKey('slider_key');
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            key: key,
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byKey(key), findsOneWidget);
-      });
-    });
-
-    group('Advanced Styling', () {
-      testWidgets('applies multiple style methods', (tester) async {
-        final customStyle = RemixSliderStyler()
-            .trackColor(Colors.blue)
-            .rangeColor(Colors.red)
-            .thumbColor(Colors.green)
-            .thickness(12.0);
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            style: customStyle,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('applies thumb styling with decoration', (tester) async {
-        final customStyle = RemixSliderStyler().thumb(
-          BoxStyler(
-            decoration: BoxDecorationMix(
-              color: Colors.blue,
-              borderRadius: BorderRadiusMix.circular(8.0),
-            ),
-          ),
-        );
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            style: customStyle,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('applies border radius styling', (tester) async {
-        final customStyle = RemixSliderStyler().borderRadius(
-          BorderRadiusMix.circular(16.0),
-        );
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            style: customStyle,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-    });
-
-    group('Widget Modifiers', () {
-      testWidgets('applies widget modifiers from style', (tester) async {
-        final customStyle = RemixSliderStyler().wrap(.clipOval());
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            style: customStyle,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-    });
-
-    group('StyleSpec Parameter', () {
-      testWidgets('applies raw styleSpec when provided', (tester) async {
-        final spec = RemixSliderSpec(
-          thumb: const StyleSpec(
-            spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
-          ),
-        );
-
-        await tester.pumpRemixApp(
-          RemixSlider(
-            value: 0.5,
-            min: 0.0,
-            max: 1.0,
-            onChanged: (value) {},
-            styleSpec: spec,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        final decorations = tester
-            .widgetList<Box>(find.byType(Box))
-            .map((box) => box.styleSpec?.spec.decoration);
-
-        expect(
-          decorations,
-          contains(equals(const BoxDecoration(color: Colors.red))),
-        );
-      });
-    });
-
-    group('Value Updates', () {
-      testWidgets('renders correctly when value changes', (tester) async {
-        double sliderValue = 0.5;
-
-        await tester.pumpRemixApp(
-          StatefulBuilder(
-            builder: (context, setState) {
-              return RemixSlider(
-                value: sliderValue,
-                min: 0.0,
-                max: 1.0,
-                onChanged: (value) => setState(() => sliderValue = value),
-              );
-            },
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
-
-      testWidgets('handles min and max bounds correctly', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 25.0, min: 0.0, max: 100.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
-      });
+    testWidgets('delegates value and per-thumb list validation', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_harness(values: const [], onChanged: (_) {}));
+      expect(tester.takeException(), isA<AssertionError>());
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpWidget(
+        _harness(values: const [60, 40], onChanged: (_) {}),
+      );
+      expect(tester.takeException(), isA<AssertionError>());
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpWidget(
+        _harness(
+          values: const [20, 80],
+          focusNodes: const [null],
+          onChanged: (_) {},
+        ),
+      );
+      expect(tester.takeException(), isA<AssertionError>());
     });
   });
+
+  group('RemixSlider visual composition', () {
+    testWidgets('renders one visual thumb per value and spans first to last', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _harness(values: const [20, 50, 80], onChanged: (_) {}),
+      );
+
+      final sliderRect = tester.getRect(find.byKey(_sliderKey));
+      final trackRect = tester.getRect(
+        find.byKey(const ValueKey('remix-slider-track')),
+      );
+      final rangeRect = tester.getRect(
+        find.byKey(const ValueKey('remix-slider-range')),
+      );
+      final centers = [
+        for (var index = 0; index < 3; index++)
+          tester.getCenter(find.byKey(ValueKey('remix-slider-thumb-$index'))),
+      ];
+
+      expect(sliderRect.size, const Size(200, 48));
+      expect(trackRect.size, const Size(200, 8));
+      expect(centers.map((point) => point.dx), [
+        sliderRect.left + 40,
+        sliderRect.left + 100,
+        sliderRect.left + 160,
+      ]);
+      expect(rangeRect.left, sliderRect.left + 40);
+      expect(rangeRect.width, 120);
+    });
+
+    testWidgets('a single thumb fills from the logical minimum', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_harness(values: const [25], onChanged: (_) {}));
+
+      final sliderRect = tester.getRect(find.byKey(_sliderKey));
+      final rangeRect = tester.getRect(
+        find.byKey(const ValueKey('remix-slider-range')),
+      );
+      final thumb = tester.getCenter(
+        find.byKey(const ValueKey('remix-slider-thumb-0')),
+      );
+
+      expect(thumb.dx, sliderRect.left + 50);
+      expect(rangeRect.left, sliderRect.left);
+      expect(rangeRect.right, thumb.dx);
+    });
+
+    testWidgets('RTL and inversion map both the thumb and filled origin', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _harness(
+          values: const [25],
+          textDirection: TextDirection.rtl,
+          onChanged: (_) {},
+        ),
+      );
+
+      var sliderRect = tester.getRect(find.byKey(_sliderKey));
+      var rangeRect = tester.getRect(
+        find.byKey(const ValueKey('remix-slider-range')),
+      );
+      var thumb = tester.getCenter(
+        find.byKey(const ValueKey('remix-slider-thumb-0')),
+      );
+      expect(thumb.dx, sliderRect.left + 150);
+      expect(rangeRect.left, thumb.dx);
+      expect(rangeRect.right, sliderRect.right);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpWidget(
+        _harness(values: const [25], inverted: true, onChanged: (_) {}),
+      );
+      sliderRect = tester.getRect(find.byKey(_sliderKey));
+      rangeRect = tester.getRect(
+        find.byKey(const ValueKey('remix-slider-range')),
+      );
+      thumb = tester.getCenter(
+        find.byKey(const ValueKey('remix-slider-thumb-0')),
+      );
+      expect(thumb.dx, sliderRect.left + 150);
+      expect(rangeRect.left, thumb.dx);
+      expect(rangeRect.right, sliderRect.right);
+    });
+
+    testWidgets('vertical orientation grows bottom-up unless inverted', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _harness(
+          values: const [25],
+          orientation: Axis.vertical,
+          size: const Size(48, 200),
+          onChanged: (_) {},
+        ),
+      );
+
+      var sliderRect = tester.getRect(find.byKey(_sliderKey));
+      var trackRect = tester.getRect(
+        find.byKey(const ValueKey('remix-slider-track')),
+      );
+      var rangeRect = tester.getRect(
+        find.byKey(const ValueKey('remix-slider-range')),
+      );
+      var thumb = tester.getCenter(
+        find.byKey(const ValueKey('remix-slider-thumb-0')),
+      );
+      expect(sliderRect.size, const Size(48, 200));
+      expect(trackRect.size, const Size(8, 200));
+      expect(thumb.dy, sliderRect.top + 150);
+      expect(rangeRect.top, thumb.dy);
+      expect(rangeRect.bottom, sliderRect.bottom);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpWidget(
+        _harness(
+          values: const [25],
+          orientation: Axis.vertical,
+          inverted: true,
+          size: const Size(48, 200),
+          onChanged: (_) {},
+        ),
+      );
+      sliderRect = tester.getRect(find.byKey(_sliderKey));
+      trackRect = tester.getRect(
+        find.byKey(const ValueKey('remix-slider-track')),
+      );
+      rangeRect = tester.getRect(
+        find.byKey(const ValueKey('remix-slider-range')),
+      );
+      thumb = tester.getCenter(
+        find.byKey(const ValueKey('remix-slider-thumb-0')),
+      );
+      expect(thumb.dy, sliderRect.top + 50);
+      expect(trackRect.size, const Size(8, 200));
+      expect(rangeRect.top, sliderRect.top);
+      expect(rangeRect.bottom, thumb.dy);
+    });
+
+    testWidgets('wires every resolved surface slot and blend mode', (
+      tester,
+    ) async {
+      const track = RemixSurfaceLayerSpec(color: Colors.grey);
+      const trackOverlay = RemixSurfaceLayerSpec(color: Colors.black12);
+      const range = RemixSurfaceLayerSpec(color: Colors.blue);
+      const rangeOverlay = RemixSurfaceLayerSpec(color: Colors.blueGrey);
+      const thumb = RemixSurfaceLayerSpec(color: Colors.white);
+      const thumbOverlay = RemixSurfaceLayerSpec(color: Colors.black26);
+      await tester.pumpWidget(
+        _harness(
+          values: const [25, 75],
+          onChanged: (_) {},
+          styleSpec: const RemixSliderSpec(
+            trackSurface: track,
+            trackOverlay: trackOverlay,
+            rangeSurface: range,
+            rangeOverlay: rangeOverlay,
+            thumbSurface: thumb,
+            thumbOverlay: thumbOverlay,
+            blendMode: BlendMode.multiply,
+          ),
+        ),
+      );
+
+      RemixSurfaceBox surfaceBox(String key) =>
+          tester.widget<RemixSurfaceBox>(find.byKey(ValueKey(key)));
+      expect(surfaceBox('remix-slider-track').surface, track);
+      expect(surfaceBox('remix-slider-track').overlay, trackOverlay);
+      expect(surfaceBox('remix-slider-range').surface, range);
+      expect(surfaceBox('remix-slider-range').overlay, rangeOverlay);
+      expect(surfaceBox('remix-slider-thumb-0').surface, thumb);
+      expect(surfaceBox('remix-slider-thumb-0').overlay, thumbOverlay);
+      expect(find.byType(RemixBlendMode), findsOneWidget);
+      expect(
+        tester.widget<RemixBlendMode>(find.byType(RemixBlendMode)).blendMode,
+        BlendMode.multiply,
+      );
+    });
+
+    testWidgets('paints the focus overlay only around the focused thumb', (
+      tester,
+    ) async {
+      const focusOverlay = RemixSurfaceLayerSpec(color: Colors.purple);
+      final first = FocusNode();
+      final second = FocusNode();
+      addTearDown(first.dispose);
+      addTearDown(second.dispose);
+      await tester.pumpWidget(
+        _harness(
+          values: const [20, 80],
+          focusNodes: [first, second],
+          styleSpec: const RemixSliderSpec(thumbFocusOverlay: focusOverlay),
+          onChanged: (_) {},
+        ),
+      );
+
+      Finder focusSurfaces() => find.byWidgetPredicate(
+        (widget) => widget is RemixSurface && widget.spec == focusOverlay,
+      );
+      expect(focusSurfaces(), findsNothing);
+
+      second.requestFocus();
+      await tester.pump();
+      expect(focusSurfaces(), findsOneWidget);
+    });
+  });
+
+  group('RemixSlider controlled behavior', () {
+    testWidgets('tap changes the nearest thumb and supports three thumbs', (
+      tester,
+    ) async {
+      final changes = <List<double>>[];
+      await tester.pumpWidget(
+        _harness(values: const [10, 50, 90], onChanged: changes.add),
+      );
+
+      await tester.tapAt(_pointAt(tester, 0.6));
+      await tester.pump();
+      expect(changes.last, [10, 60, 90]);
+
+      await tester.tapAt(_pointAt(tester, 0.95));
+      await tester.pump();
+      expect(changes.last, [10, 60, 95]);
+    });
+
+    testWidgets('pointer input snaps and cannot cross minimum spacing', (
+      tester,
+    ) async {
+      final changes = <List<double>>[];
+      await tester.pumpWidget(
+        _harness(
+          values: const [20, 80],
+          step: 10,
+          minSpacing: 10,
+          onChanged: changes.add,
+        ),
+      );
+
+      await tester.tapAt(_pointAt(tester, 0.44));
+      await tester.pump();
+      expect(changes.last, [40, 80]);
+
+      final gesture = await tester.startGesture(_pointAt(tester, 0.4));
+      await gesture.moveTo(_pointAt(tester, 0.95));
+      await tester.pump();
+      await gesture.up();
+      await tester.pump();
+      expect(changes.last, [70, 80]);
+    });
+
+    testWidgets('owner rejection leaves visual values unchanged', (
+      tester,
+    ) async {
+      final changes = <List<double>>[];
+      await tester.pumpWidget(
+        _harness(
+          values: const [20, 80],
+          acceptChanges: false,
+          onChanged: changes.add,
+        ),
+      );
+
+      await tester.tapAt(_pointAt(tester, 0.3));
+      await tester.pump();
+
+      expect(changes.last, [30, 80]);
+      final sliderRect = tester.getRect(find.byKey(_sliderKey));
+      expect(
+        tester.getCenter(find.byKey(const ValueKey('remix-slider-thumb-0'))).dx,
+        sliderRect.left + 40,
+      );
+    });
+
+    testWidgets('reports complete drag lifecycle lists and aggregate states', (
+      tester,
+    ) async {
+      final starts = <List<double>>[];
+      final ends = <List<double>>[];
+      final dragging = <bool>[];
+      final focused = <bool>[];
+      await tester.pumpWidget(
+        _harness(
+          values: const [20, 80],
+          onChanged: (_) {},
+          onChangeStart: starts.add,
+          onChangeEnd: ends.add,
+          onDragChange: dragging.add,
+          onFocusChange: focused.add,
+        ),
+      );
+
+      final gesture = await tester.startGesture(_pointAt(tester, 0.2));
+      await gesture.moveTo(_pointAt(tester, 0.4));
+      await tester.pump();
+      await gesture.up();
+      await tester.pump();
+
+      expect(starts, [
+        [20, 80],
+      ]);
+      expect(ends, [
+        [40, 80],
+      ]);
+      expect(dragging, [true, false]);
+      expect(focused, contains(true));
+    });
+
+    testWidgets('reports hover entry and exit', (tester) async {
+      final hovers = <bool>[];
+      await tester.pumpWidget(
+        _harness(
+          values: const [50],
+          onChanged: (_) {},
+          onHoverChange: hovers.add,
+        ),
+      );
+
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(mouse.removePointer);
+      await mouse.addPointer(location: Offset.zero);
+      await mouse.moveTo(tester.getCenter(find.byKey(_sliderKey)));
+      await tester.pump();
+      await mouse.moveTo(const Offset(799, 599));
+      await tester.pump();
+
+      expect(hovers, [true, false]);
+    });
+
+    testWidgets('RTL, inversion, and vertical input follow visual direction', (
+      tester,
+    ) async {
+      final changes = <List<double>>[];
+      await tester.pumpWidget(
+        _harness(
+          values: const [50],
+          textDirection: TextDirection.rtl,
+          onChanged: changes.add,
+        ),
+      );
+      await tester.tapAt(_pointAt(tester, 0.25));
+      await tester.pump();
+      expect(changes.last, [75]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      changes.clear();
+      await tester.pumpWidget(
+        _harness(values: const [50], inverted: true, onChanged: changes.add),
+      );
+      await tester.tapAt(_pointAt(tester, 0.25));
+      await tester.pump();
+      expect(changes.last, [75]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      changes.clear();
+      await tester.pumpWidget(
+        _harness(
+          values: const [50],
+          orientation: Axis.vertical,
+          size: const Size(48, 200),
+          onChanged: changes.add,
+        ),
+      );
+      await tester.tapAt(_verticalPointAt(tester, 0.25));
+      await tester.pump();
+      expect(changes.last, [75]);
+    });
+
+    testWidgets('disabled slider ignores pointer and hover input', (
+      tester,
+    ) async {
+      final changes = <List<double>>[];
+      final hovers = <bool>[];
+      await tester.pumpWidget(
+        _harness(
+          values: const [50],
+          enabled: false,
+          onChanged: changes.add,
+          onHoverChange: hovers.add,
+        ),
+      );
+
+      await tester.tapAt(_pointAt(tester, 0.75));
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer();
+      await mouse.moveTo(tester.getCenter(find.byKey(_sliderKey)));
+      await tester.pump();
+      await mouse.removePointer();
+
+      expect(changes, isEmpty);
+      expect(hovers, isEmpty);
+    });
+  });
+
+  group('RemixSlider keyboard and semantics', () {
+    testWidgets('routes keyboard input to the independently focused thumb', (
+      tester,
+    ) async {
+      final first = FocusNode();
+      final second = FocusNode();
+      final changes = <List<double>>[];
+      addTearDown(first.dispose);
+      addTearDown(second.dispose);
+      await tester.pumpWidget(
+        _harness(
+          values: const [20, 80],
+          focusNodes: [first, second],
+          onChanged: changes.add,
+        ),
+      );
+
+      second.requestFocus();
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.pump();
+
+      expect(first.hasFocus, isFalse);
+      expect(second.hasFocus, isTrue);
+      expect(changes.last, [20, 79]);
+    });
+
+    testWidgets('exposes one labeled slider node per thumb', (tester) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        _harness(
+          values: const [20, 50, 80],
+          semanticLabels: const ['Minimum', 'Target', 'Maximum'],
+          onChanged: (_) {},
+        ),
+      );
+
+      final data = _sliderNodes(
+        tester,
+      ).map((node) => node.getSemanticsData()).toList();
+      expect(data, hasLength(3));
+      expect(data.map((value) => value.label), [
+        'Minimum',
+        'Target',
+        'Maximum',
+      ]);
+      expect(data.map((value) => value.value), ['20%', '50%', '80%']);
+      for (final value in data) {
+        expect(value.flagsCollection.isSlider, isTrue);
+        expect(value.hasAction(ui.SemanticsAction.increase), isTrue);
+        expect(value.hasAction(ui.SemanticsAction.decrease), isTrue);
+      }
+      handle.dispose();
+    });
+
+    testWidgets('uses per-thumb semantic formatters and target actions', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      final changes = <List<double>>[];
+      await tester.pumpWidget(
+        _harness(
+          values: const [20, 80],
+          step: 5,
+          semanticFormatterCallbacks: [
+            (value) => 'From ${value.round()} dollars',
+            (value) => 'To ${value.round()} dollars',
+          ],
+          onChanged: changes.add,
+        ),
+      );
+
+      var nodes = _sliderNodes(tester);
+      expect(nodes[0].getSemanticsData().value, 'From 20 dollars');
+      expect(nodes[0].getSemanticsData().increasedValue, 'From 25 dollars');
+      expect(nodes[1].getSemanticsData().value, 'To 80 dollars');
+
+      _performSemanticsAction(tester, nodes[1], ui.SemanticsAction.decrease);
+      await tester.pump();
+      expect(changes.last, [20, 75]);
+
+      nodes = _sliderNodes(tester);
+      expect(nodes[1].getSemanticsData().value, 'To 75 dollars');
+      handle.dispose();
+    });
+
+    testWidgets('disabled semantics retain values but remove actions', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        _harness(values: const [25, 75], enabled: false, onChanged: (_) {}),
+      );
+
+      final data = _sliderNodes(
+        tester,
+      ).map((node) => node.getSemanticsData()).toList();
+      expect(data.map((value) => value.value), ['25%', '75%']);
+      for (final value in data) {
+        expect(value.flagsCollection.isEnabled, ui.Tristate.isFalse);
+        expect(value.hasAction(ui.SemanticsAction.increase), isFalse);
+        expect(value.hasAction(ui.SemanticsAction.decrease), isFalse);
+      }
+      handle.dispose();
+    });
+
+    testWidgets('can exclude every thumb semantics node', (tester) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        _harness(
+          values: const [25, 75],
+          excludeSemantics: true,
+          onChanged: (_) {},
+        ),
+      );
+
+      expect(_sliderNodes(tester), isEmpty);
+      handle.dispose();
+    });
+  });
+}
+
+Widget _harness({
+  required List<double> values,
+  required ValueChanged<List<double>>? onChanged,
+  ValueChanged<List<double>>? onChangeStart,
+  ValueChanged<List<double>>? onChangeEnd,
+  ValueChanged<bool>? onHoverChange,
+  ValueChanged<bool>? onDragChange,
+  ValueChanged<bool>? onFocusChange,
+  double min = 0,
+  double max = 100,
+  double step = 1,
+  double minSpacing = 0,
+  Axis orientation = Axis.horizontal,
+  bool inverted = false,
+  bool enabled = true,
+  bool acceptChanges = true,
+  TextDirection textDirection = TextDirection.ltr,
+  List<FocusNode?>? focusNodes,
+  int? autofocusThumbIndex,
+  List<String?>? semanticLabels,
+  List<RemixSliderSemanticFormatterCallback?>? semanticFormatterCallbacks,
+  bool excludeSemantics = false,
+  RemixSliderSpec? styleSpec,
+  Size size = const Size(200, 48),
+}) {
+  var currentValues = List<double>.of(values);
+
+  return FortalScope(
+    child: MaterialApp(
+      home: Directionality(
+        textDirection: textDirection,
+        child: Scaffold(
+          body: Center(
+            child: SizedBox.fromSize(
+              size: size,
+              child: StatefulBuilder(
+                builder: (context, setState) => RemixSlider(
+                  key: _sliderKey,
+                  values: currentValues,
+                  min: min,
+                  max: max,
+                  step: step,
+                  minSpacing: minSpacing,
+                  orientation: orientation,
+                  inverted: inverted,
+                  enabled: enabled,
+                  focusNodes: focusNodes,
+                  autofocusThumbIndex: autofocusThumbIndex,
+                  semanticLabels: semanticLabels,
+                  semanticFormatterCallbacks: semanticFormatterCallbacks,
+                  excludeSemantics: excludeSemantics,
+                  styleSpec: styleSpec,
+                  onChanged: onChanged == null
+                      ? null
+                      : (next) {
+                          onChanged(next);
+                          if (acceptChanges) {
+                            setState(
+                              () => currentValues = List<double>.of(next),
+                            );
+                          }
+                        },
+                  onChangeStart: onChangeStart,
+                  onChangeEnd: onChangeEnd,
+                  onHoverChange: onHoverChange,
+                  onDragChange: onDragChange,
+                  onFocusChange: onFocusChange,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Offset _pointAt(WidgetTester tester, double percentage) {
+  final rect = tester.getRect(find.byKey(_sliderKey));
+
+  return Offset(rect.left + rect.width * percentage, rect.center.dy);
+}
+
+Offset _verticalPointAt(WidgetTester tester, double percentageFromTop) {
+  final rect = tester.getRect(find.byKey(_sliderKey));
+
+  return Offset(rect.center.dx, rect.top + rect.height * percentageFromTop);
+}
+
+List<SemanticsNode> _sliderNodes(WidgetTester tester) {
+  final root = tester.getSemantics(find.byType(Scaffold));
+  final nodes = <SemanticsNode>[];
+
+  void collect(SemanticsNode node) {
+    if (node.getSemanticsData().flagsCollection.isSlider) nodes.add(node);
+    node.visitChildren((child) {
+      collect(child);
+
+      return true;
+    });
+  }
+
+  collect(root);
+
+  return nodes;
+}
+
+void _performSemanticsAction(
+  WidgetTester tester,
+  SemanticsNode node,
+  ui.SemanticsAction action,
+) {
+  tester.binding.performSemanticsAction(
+    ui.SemanticsActionEvent(
+      type: action,
+      viewId: tester.view.viewId,
+      nodeId: node.id,
+    ),
+  );
 }

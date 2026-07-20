@@ -201,7 +201,7 @@ class RadixColorGenerator {
     buffer.writeln('// Generated from: ${meta['description']}');
     buffer.writeln('// Radix Themes version: ${meta['radix_themes_version']}');
     buffer.writeln('// Radix Colors version: ${meta['radix_colors_version']}');
-    buffer.writeln('// Generated on: ${DateTime.now().toIso8601String()}');
+    buffer.writeln('// Source integrity: ${meta['source_integrity']}');
     buffer.writeln();
     buffer.writeln('part of \'colors.dart\';');
     buffer.writeln();

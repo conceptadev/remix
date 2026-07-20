@@ -8,10 +8,10 @@ extension RemixSelectStylerRemixHelpers on RemixSelectStyler {
   /// ```dart
   /// RemixSelectStyler()
   ///   .trigger(...)
-  ///   .menuContainer(...)
+  ///   .content(...)
   ///   .call<String>(
   ///     trigger: RemixSelectTrigger(placeholder: 'Select an option'),
-  ///     items: [
+  ///     entries: [
   ///       RemixSelectItem(value: 'apple', label: 'Apple'),
   ///       RemixSelectItem(value: 'banana', label: 'Banana'),
   ///     ],
@@ -20,33 +20,46 @@ extension RemixSelectStylerRemixHelpers on RemixSelectStyler {
   RemixSelect<T> call<T>({
     Key? key,
     required RemixSelectTrigger trigger,
-    required List<RemixSelectItem<T>> items,
+    required List<RemixSelectEntry<T>> entries,
     T? selectedValue,
     OverlayPositionConfig positioning = const OverlayPositionConfig(
-      targetAnchor: .bottomCenter,
-      followerAnchor: .topCenter,
+      side: .bottom,
+      alignment: .center,
+      sideOffset: 4,
     ),
     ValueChanged<T?>? onChanged,
     VoidCallback? onOpen,
     VoidCallback? onClose,
+    bool? open,
+    ValueChanged<bool>? onOpenChanged,
     bool enabled = true,
     bool closeOnSelect = true,
     String? semanticLabel,
     FocusNode? focusNode,
+    RemixSelectPartWrapper? triggerWrapper,
+    RemixSelectPartWrapper? contentWrapper,
+    RemixSelectIconBuilder? triggerChevronBuilder,
+    RemixSelectIconBuilder? itemIndicatorBuilder,
   }) {
     return RemixSelect(
       key: key,
       trigger: trigger,
-      items: items,
+      entries: entries,
       selectedValue: selectedValue,
       positioning: positioning,
       onChanged: onChanged,
       onOpen: onOpen,
       onClose: onClose,
+      open: open,
+      onOpenChanged: onOpenChanged,
       enabled: enabled,
       semanticLabel: semanticLabel,
       closeOnSelect: closeOnSelect,
       focusNode: focusNode,
+      triggerWrapper: triggerWrapper,
+      contentWrapper: contentWrapper,
+      triggerChevronBuilder: triggerChevronBuilder,
+      itemIndicatorBuilder: itemIndicatorBuilder,
       style: this,
     );
   }
@@ -116,5 +129,18 @@ extension RemixSelectMenuItemStylerRemixHelpers on RemixSelectMenuItemStyler {
     return merge(
       RemixSelectMenuItemStyler(container: FlexBoxStyler().flex(value)),
     );
+  }
+}
+
+/// Text conveniences for non-selectable labels in select content.
+extension RemixSelectLabelStylerRemixHelpers on RemixSelectLabelStyler {
+  RemixSelectLabelStyler label(TextStyler value) => text(value);
+
+  RemixSelectLabelStyler labelStyle(TextStyleMix value) {
+    return label(TextStyler(style: value));
+  }
+
+  RemixSelectLabelStyler labelColor(Color value) {
+    return label(TextStyler(style: TextStyleMix(color: value)));
   }
 }

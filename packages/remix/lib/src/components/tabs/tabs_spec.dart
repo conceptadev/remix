@@ -5,10 +5,10 @@ part of 'tabs.dart';
 class RemixTabBarSpec with _$RemixTabBarSpec {
   @override
   @MixableField(forwardStyler: true)
-  final StyleSpec<FlexBoxSpec> container;
+  final StyleSpec<BoxSpec> container;
 
-  const RemixTabBarSpec({StyleSpec<FlexBoxSpec>? container})
-    : container = container ?? const StyleSpec(spec: FlexBoxSpec());
+  const RemixTabBarSpec({StyleSpec<BoxSpec>? container})
+    : container = container ?? const StyleSpec(spec: BoxSpec());
 }
 
 /// Resolved visual values for an individual [RemixTab].

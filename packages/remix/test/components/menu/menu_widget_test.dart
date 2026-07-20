@@ -1,749 +1,332 @@
+import 'dart:ui' show CheckedState, SemanticsRole, Tristate;
+
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
 
 void main() {
-  group('RemixMenuTrigger', () {
-    test('creates trigger with label', () {
-      const trigger = RemixMenuTrigger(label: 'Options');
+  testWidgets('arbitrary trigger opens ordered compositional entries', (
+    tester,
+  ) async {
+    await tester.pumpRemixApp(
+      RemixMenu<String>(
+        trigger: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [Icon(Icons.more_horiz), Text('Actions')],
+        ),
+        entries: const [
+          RemixMenuLabel(child: Text('Edit')),
+          RemixMenuAction(value: 'copy', child: Text('Copy')),
+          RemixMenuSeparator(),
+          RemixMenuAction(value: 'delete', child: Text('Delete')),
+        ],
+      ),
+    );
 
-      expect(trigger.label, equals('Options'));
-      expect(trigger.icon, isNull);
-    });
+    expect(find.text('Edit'), findsNothing);
+    await tester.tap(find.text('Actions'));
+    await tester.pumpAndSettle();
 
-    test('creates trigger with label and icon', () {
-      const trigger = RemixMenuTrigger(label: 'Options', icon: Icons.more_vert);
-
-      expect(trigger.label, equals('Options'));
-      expect(trigger.icon, equals(Icons.more_vert));
-    });
+    expect(find.text('Edit'), findsOneWidget);
+    expect(find.text('Copy'), findsOneWidget);
+    expect(find.byType(RemixDivider), findsOneWidget);
+    expect(find.text('Delete'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('Copy')).dy,
+      lessThan(tester.getTopLeft(find.text('Delete')).dy),
+    );
   });
 
-  group('RemixMenuItem', () {
-    test('creates menu item with value and label', () {
-      const item = RemixMenuItem<String>(value: 'copy', label: 'Copy');
+  testWidgets('action reports its typed value, closes, and restores focus', (
+    tester,
+  ) async {
+    final controller = MenuController();
+    final triggerFocus = FocusNode();
+    addTearDown(triggerFocus.dispose);
+    String? selected;
 
-      expect(item.value, equals('copy'));
-      expect(item.label, equals('Copy'));
-      expect(item.leadingIcon, isNull);
-      expect(item.trailingIcon, isNull);
-      expect(item.enabled, isTrue);
-      expect(item.closeOnActivate, isTrue);
-    });
+    await tester.pumpRemixApp(
+      RemixMenu<String>(
+        controller: controller,
+        triggerFocusNode: triggerFocus,
+        trigger: const Text('Open'),
+        entries: const [RemixMenuAction(value: 'copy', child: Text('Copy'))],
+        onSelected: (value) => selected = value,
+      ),
+    );
+    triggerFocus.requestFocus();
+    controller.open();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Copy'));
+    await tester.pumpAndSettle();
 
-    test('creates menu item with all parameters', () {
-      const item = RemixMenuItem<String>(
-        value: 'delete',
-        label: 'Delete',
-        leadingIcon: Icons.delete,
-        trailingIcon: Icons.chevron_right,
-        enabled: false,
-        closeOnActivate: false,
-        semanticLabel: 'Delete item',
-      );
-
-      expect(item.value, equals('delete'));
-      expect(item.label, equals('Delete'));
-      expect(item.leadingIcon, equals(Icons.delete));
-      expect(item.trailingIcon, equals(Icons.chevron_right));
-      expect(item.enabled, isFalse);
-      expect(item.closeOnActivate, isFalse);
-      expect(item.semanticLabel, equals('Delete item'));
-    });
-
-    test('menu item extends RemixMenuItemData', () {
-      const item = RemixMenuItem<String>(value: 'test', label: 'Test');
-
-      expect(item, isA<RemixMenuItemData<String>>());
-    });
+    expect(selected, 'copy');
+    expect(controller.isOpen, isFalse);
+    expect(find.text('Copy'), findsNothing);
+    expect(triggerFocus.hasFocus, isTrue);
   });
 
-  group('RemixMenuDivider', () {
-    test('creates divider', () {
-      const divider = RemixMenuDivider<String>();
-
-      expect(divider, isNotNull);
-      expect(divider, isA<RemixMenuItemData<String>>());
-    });
-  });
-
-  group('RemixMenu Basic Rendering', () {
-    testWidgets('renders menu with minimal props', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-      expect(find.text('Options'), findsOneWidget);
-    });
-
-    testWidgets('renders menu with icon in trigger', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(
-            label: 'Options',
-            icon: Icons.more_vert,
-          ),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.text('Options'), findsOneWidget);
-      expect(find.byIcon(Icons.more_vert), findsOneWidget);
-    });
-
-    testWidgets('renders menu with multiple items', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [
-            RemixMenuItem<String>(value: 'copy', label: 'Copy'),
-            RemixMenuItem<String>(value: 'paste', label: 'Paste'),
-            RemixMenuItem<String>(value: 'delete', label: 'Delete'),
-          ],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
-
-    testWidgets('renders menu with dividers', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [
-            RemixMenuItem<String>(value: 'copy', label: 'Copy'),
-            RemixMenuDivider<String>(),
-            RemixMenuItem<String>(value: 'delete', label: 'Delete'),
-          ],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
-
-    testWidgets('renders menu items with icons', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [
-            RemixMenuItem<String>(
-              value: 'copy',
-              label: 'Copy',
-              leadingIcon: Icons.copy,
-            ),
-            RemixMenuItem<String>(
-              value: 'paste',
-              label: 'Paste',
-              leadingIcon: Icons.paste,
-              trailingIcon: Icons.chevron_right,
-            ),
-          ],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
-  });
-
-  group('RemixMenu Interaction Tests', () {
-    testWidgets('menu opens when trigger is tapped', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [
-            RemixMenuItem<String>(value: 'copy', label: 'Copy'),
-            RemixMenuItem<String>(value: 'paste', label: 'Paste'),
-          ],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Tap the trigger
-      await tester.tap(find.text('Options'));
-      await tester.pumpAndSettle();
-
-      // Menu items should now be visible
-      expect(find.text('Copy'), findsOneWidget);
-      expect(find.text('Paste'), findsOneWidget);
-    });
-
-    testWidgets('onSelected callback fires when item is selected', (
-      tester,
-    ) async {
-      String? selectedValue;
-
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [
-            RemixMenuItem<String>(value: 'copy', label: 'Copy'),
-            RemixMenuItem<String>(value: 'paste', label: 'Paste'),
-          ],
-          onSelected: (value) => selectedValue = value,
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Open the menu
-      await tester.tap(find.text('Options'));
-      await tester.pumpAndSettle();
-
-      // Tap an item
-      await tester.tap(find.text('Copy'));
-      await tester.pumpAndSettle();
-
-      expect(selectedValue, equals('copy'));
-    });
-
-    testWidgets('onOpen callback fires when menu opens', (tester) async {
-      int openCount = 0;
-
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-          onOpen: () => openCount++,
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Open the menu
-      await tester.tap(find.text('Options'));
-      await tester.pumpAndSettle();
-
-      expect(openCount, equals(1));
-    });
-
-    testWidgets('onClose callback fires when menu closes', (tester) async {
-      int closeCount = 0;
-
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-          onClose: () => closeCount++,
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Open the menu
-      await tester.tap(find.text('Options'));
-      await tester.pumpAndSettle();
-
-      // Close by selecting an item
-      await tester.tap(find.text('Copy'));
-      await tester.pumpAndSettle();
-
-      expect(closeCount, equals(1));
-    });
-
-    testWidgets('menu closes when item with closeOnActivate is selected', (
-      tester,
-    ) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [
-            RemixMenuItem<String>(
-              value: 'copy',
-              label: 'Copy',
-              closeOnActivate: true,
-            ),
-          ],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Open the menu
-      await tester.tap(find.text('Options'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Copy'), findsOneWidget);
-
-      // Select the item
-      await tester.tap(find.text('Copy'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Copy'), findsNothing);
-      expect(find.text('Options'), findsOneWidget);
-    });
-
-    testWidgets('disabled menu item does not trigger onSelected', (
-      tester,
-    ) async {
-      String? selectedValue;
-
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [
-            RemixMenuItem<String>(value: 'copy', label: 'Copy', enabled: false),
-          ],
-          onSelected: (value) => selectedValue = value,
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Open the menu
-      await tester.tap(find.text('Options'));
-      await tester.pumpAndSettle();
-
-      // Try to tap the disabled item
-      await tester.tap(find.text('Copy'));
-      await tester.pumpAndSettle();
-
-      // onSelected should not have been called
-      expect(selectedValue, isNull);
-    });
-  });
-
-  group('RemixMenu Controller Tests', () {
-    testWidgets('uses provided controller', (tester) async {
-      final controller = MenuController();
-
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          controller: controller,
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
-
-    testWidgets('creates default controller when not provided', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Menu should work without explicit controller
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
-  });
-
-  group('RemixMenu Focus Tests', () {
-    testWidgets('uses provided focus node for trigger', (tester) async {
-      final focusNode = FocusNode();
-      addTearDown(() => focusNode.dispose());
-
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          triggerFocusNode: focusNode,
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
-  });
-
-  group('RemixMenu Styling Tests', () {
-    testWidgets('item styling listens to the typed menu-item controller', (
-      tester,
-    ) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.tap(find.text('Options'));
-      await tester.pumpAndSettle();
-
-      final itemContext = tester.element(find.text('Copy'));
-      final itemController = NakedMenuItemState.controllerOf<String>(
-        itemContext,
-      );
-      final stylingListeners = tester
-          .widgetList<ListenableBuilder>(
-            find.ancestor(
-              of: find.text('Copy'),
-              matching: find.byType(ListenableBuilder),
-            ),
-          )
-          .map((builder) => builder.listenable);
-
-      expect(stylingListeners, contains(same(itemController)));
-    });
-
-    testWidgets('applies custom style to menu', (tester) async {
-      final style = RemixMenuStyler().trigger(
-        RemixMenuTriggerStyler().padding(EdgeInsetsGeometryMix.all(20.0)),
-      );
-
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          style: style,
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
-
-    testWidgets('applies custom style to menu items', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: [
-            RemixMenuItem<String>(
-              value: 'copy',
-              label: 'Copy',
-              style: RemixMenuItemStyler().padding(
-                EdgeInsetsGeometryMix.all(12.0),
+  testWidgets('group and label preserve semantic boundaries', (tester) async {
+    final semantics = tester.ensureSemantics();
+    final controller = MenuController();
+    await tester.pumpRemixApp(
+      RemixMenu<String>(
+        controller: controller,
+        trigger: const Text('Open'),
+        entries: const [
+          RemixMenuGroup(
+            semanticLabel: 'Editing actions',
+            children: [
+              RemixMenuLabel(
+                semanticLabel: 'Edit section',
+                child: Text('Edit'),
               ),
-            ),
-          ],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
-
-    testWidgets('applies menu-level default item style', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-          style: RemixMenuStyler().item(
-            RemixMenuItemStyler().label(TextStyler().color(Colors.red)),
+              RemixMenuAction(value: 'copy', child: Text('Copy')),
+            ],
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        ],
+      ),
+    );
+    controller.open();
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Options'));
-      await tester.pumpAndSettle();
+    final label = tester.getSemantics(find.text('Edit')).getSemanticsData();
+    expect(label.label, 'Edit section');
+    expect(label.flagsCollection.isHeader, isTrue);
+    expect(find.text('Copy'), findsOneWidget);
+    semantics.dispose();
+  });
 
-      final itemText = tester.widget<Text>(find.text('Copy'));
-      expect(itemText.style?.color, equals(Colors.red));
-    });
+  testWidgets('checkbox and radio entries expose correct roles and callbacks', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    final controller = MenuController();
+    bool? checked;
+    String? radio;
 
-    testWidgets('lets per-item style override menu-level item style', (
-      tester,
-    ) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: [
-            RemixMenuItem<String>(
-              value: 'copy',
-              label: 'Copy',
-              style: RemixMenuItemStyler().label(
-                TextStyler().color(Colors.blue),
+    await tester.pumpRemixApp(
+      RemixMenu<String>(
+        controller: controller,
+        trigger: const Text('Open'),
+        entries: [
+          RemixMenuCheckboxItem(
+            value: 'notifications',
+            checked: true,
+            closeOnActivate: false,
+            onChanged: (value) => checked = value,
+            child: const Text('Notifications'),
+          ),
+          RemixMenuRadioGroup<String>(
+            value: 'compact',
+            onChanged: (value) => radio = value,
+            children: const [
+              RemixMenuRadioItem(
+                value: 'compact',
+                closeOnActivate: false,
+                child: Text('Compact'),
               ),
-            ),
-          ],
-          style: RemixMenuStyler().item(
-            RemixMenuItemStyler().label(TextStyler().color(Colors.red)),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Options'));
-      await tester.pumpAndSettle();
-
-      final itemText = tester.widget<Text>(find.text('Copy'));
-      expect(itemText.style?.color, equals(Colors.blue));
-    });
-
-    testWidgets('applies menu-level divider style', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [
-            RemixMenuItem<String>(value: 'copy', label: 'Copy'),
-            RemixMenuDivider<String>(),
-            RemixMenuItem<String>(value: 'paste', label: 'Paste'),
-          ],
-          style: RemixMenuStyler().divider(
-            RemixDividerStyler().color(Colors.purple),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Options'));
-      await tester.pumpAndSettle();
-
-      final decorations = tester
-          .widgetList<Box>(find.byType(Box))
-          .map((box) => box.styleSpec?.spec.decoration);
-
-      expect(
-        decorations,
-        contains(equals(const BoxDecoration(color: Colors.purple))),
-      );
-    });
-
-    testWidgets('raw item styleSpec bypasses per-item fluent styles', (
-      tester,
-    ) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: [
-            RemixMenuItem(
-              value: 'copy',
-              label: 'Copy',
-              style: RemixMenuItemStyler().label(
-                TextStyler().color(Colors.green),
+              RemixMenuRadioItem(
+                value: 'comfortable',
+                closeOnActivate: false,
+                child: Text('Comfortable'),
               ),
-            ),
-          ],
-          styleSpec: const RemixMenuSpec(
-            item: StyleSpec(
-              spec: RemixMenuItemSpec(
-                label: StyleSpec(
-                  spec: TextSpec(style: TextStyle(color: Colors.red)),
-                ),
-              ),
-            ),
+            ],
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        ],
+      ),
+    );
+    controller.open();
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Options'));
-      await tester.pumpAndSettle();
+    final checkbox = tester
+        .getSemantics(find.text('Notifications'))
+        .getSemanticsData();
+    final selectedRadio = tester
+        .getSemantics(find.text('Compact'))
+        .getSemanticsData();
+    final unselectedRadio = tester
+        .getSemantics(find.text('Comfortable'))
+        .getSemanticsData();
+    expect(checkbox.role, SemanticsRole.menuItemCheckbox);
+    expect(checkbox.flagsCollection.isChecked, CheckedState.isTrue);
+    expect(selectedRadio.role, SemanticsRole.menuItemRadio);
+    expect(selectedRadio.flagsCollection.isChecked, CheckedState.isTrue);
+    expect(selectedRadio.flagsCollection.isInMutuallyExclusiveGroup, isTrue);
+    expect(unselectedRadio.role, SemanticsRole.menuItemRadio);
+    expect(unselectedRadio.flagsCollection.isChecked, CheckedState.isFalse);
 
-      expect(tester.widget<Text>(find.text('Copy')).style?.color, Colors.red);
-    });
+    await tester.tap(find.text('Notifications'));
+    await tester.tap(find.text('Comfortable'));
+    expect(checked, isFalse);
+    expect(radio, 'comfortable');
+    expect(controller.isOpen, isTrue);
+    semantics.dispose();
   });
 
-  group('RemixMenu Semantics and Accessibility', () {
-    testWidgets('menu item has semantic label', (tester) async {
-      final semantics = tester.ensureSemantics();
+  testWidgets('submenu hover waits 100 ms and nested action closes the root', (
+    tester,
+  ) async {
+    final controller = MenuController();
+    String? selected;
+    await tester.pumpRemixApp(
+      RemixMenu<String>(
+        controller: controller,
+        trigger: const Text('Open'),
+        onSelected: (value) => selected = value,
+        entries: const [
+          RemixMenuSubmenu<String>(
+            child: SizedBox(width: 120, child: Text('More')),
+            entries: [
+              RemixMenuAction(value: 'child', child: Text('Child item')),
+            ],
+          ),
+        ],
+      ),
+    );
+    controller.open();
+    await tester.pumpAndSettle();
 
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [
-            RemixMenuItem<String>(
-              value: 'copy',
-              label: 'Copy',
-              semanticLabel: 'Copy item',
-            ),
-          ],
-        ),
-      );
-      await tester.pumpAndSettle();
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await mouse.addPointer(location: Offset.zero);
+    addTearDown(mouse.removePointer);
+    await mouse.moveTo(tester.getCenter(find.text('More')));
+    await tester.pump(const Duration(milliseconds: 99));
+    expect(find.text('Child item'), findsNothing);
+    await tester.pump(const Duration(milliseconds: 1));
+    await tester.pump();
+    expect(find.text('Child item'), findsOneWidget);
 
-      await tester.tap(find.text('Options'));
-      await tester.pumpAndSettle();
-
-      final item = find.bySemanticsLabel('Copy item');
-      final itemCount = item.evaluate().length;
-      final itemSemantics = itemCount == 1 ? tester.getSemantics(item) : null;
-      semantics.dispose();
-      expect(itemCount, 1);
-      expect(itemSemantics, isSemantics(label: 'Copy item'));
-    });
-
-    testWidgets('menu item uses label as default semantic label', (
-      tester,
-    ) async {
-      final semantics = tester.ensureSemantics();
-
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Options'));
-      await tester.pumpAndSettle();
-
-      final item = find.bySemanticsLabel('Copy');
-      final itemCount = item.evaluate().length;
-      final itemSemantics = itemCount == 1 ? tester.getSemantics(item) : null;
-      semantics.dispose();
-      expect(itemCount, 1);
-      expect(itemSemantics, isSemantics(label: 'Copy'));
-    });
+    await tester.tap(find.text('Child item'));
+    await tester.pumpAndSettle();
+    expect(selected, 'child');
+    expect(controller.isOpen, isFalse);
   });
 
-  group('RemixMenu Edge Cases', () {
-    testWidgets('renders menu with empty items list', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [],
-        ),
-      );
-      await tester.pumpAndSettle();
+  testWidgets('submenu keyboard handoff follows LTR and restores focus', (
+    tester,
+  ) async {
+    final controller = MenuController();
+    final submenuFocus = FocusNode();
+    addTearDown(submenuFocus.dispose);
+    await tester.pumpRemixApp(
+      RemixMenu<String>(
+        controller: controller,
+        trigger: const Text('Open'),
+        entries: [
+          RemixMenuSubmenu<String>(
+            focusNode: submenuFocus,
+            child: const SizedBox(width: 120, child: Text('More')),
+            entries: const [
+              RemixMenuAction(value: 'child', child: Text('Child item')),
+            ],
+          ),
+        ],
+      ),
+    );
+    controller.open();
+    await tester.pumpAndSettle();
+    submenuFocus.requestFocus();
+    await tester.pump();
 
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-      expect(find.text('Options'), findsOneWidget);
-    });
-
-    testWidgets('renders menu with only dividers', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuDivider<String>(), RemixMenuDivider<String>()],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
-
-    testWidgets('handles multiple sequential dividers', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [
-            RemixMenuItem<String>(value: 'copy', label: 'Copy'),
-            RemixMenuDivider<String>(),
-            RemixMenuDivider<String>(),
-            RemixMenuItem<String>(value: 'paste', label: 'Paste'),
-          ],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.pumpAndSettle();
+    expect(find.text('Child item'), findsOneWidget);
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(find.text('Child item'), findsNothing);
+    expect(submenuFocus.hasFocus, isTrue);
   });
 
-  group('RemixMenu Positioning Tests', () {
-    testWidgets('applies custom positioning config', (tester) async {
-      const positioning = OverlayPositionConfig(
-        targetAnchor: Alignment.bottomLeft,
-        followerAnchor: Alignment.topLeft,
-      );
+  testWidgets('submenu keyboard handoff reverses in RTL', (tester) async {
+    final controller = MenuController();
+    final submenuFocus = FocusNode();
+    addTearDown(submenuFocus.dispose);
+    await tester.pumpRemixApp(
+      RemixMenu<String>(
+        controller: controller,
+        trigger: const Text('Open'),
+        entries: [
+          RemixMenuSubmenu<String>(
+            focusNode: submenuFocus,
+            child: const SizedBox(width: 120, child: Text('More')),
+            entries: const [
+              RemixMenuAction(value: 'child', child: Text('Child item')),
+            ],
+          ),
+        ],
+      ),
+      textDirection: TextDirection.rtl,
+    );
+    controller.open();
+    await tester.pumpAndSettle();
+    submenuFocus.requestFocus();
+    await tester.pump();
 
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          positioning: positioning,
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    await tester.pumpAndSettle();
+    expect(find.text('Child item'), findsOneWidget);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.pumpAndSettle();
+    expect(find.text('Child item'), findsNothing);
+    expect(submenuFocus.hasFocus, isTrue);
   });
 
-  group('RemixMenu Configuration Tests', () {
-    testWidgets('respects closeOnClickOutside flag', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          closeOnClickOutside: true,
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
+  testWidgets('submenu trigger exposes expandable menu-item semantics', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    final controller = MenuController();
+    await tester.pumpRemixApp(
+      RemixMenu<String>(
+        controller: controller,
+        trigger: const Text('Open'),
+        entries: const [
+          RemixMenuSubmenu<String>(
+            semanticLabel: 'More options',
+            child: Text('More'),
+            entries: [RemixMenuAction(value: 'child', child: Text('Child'))],
+          ),
+        ],
+      ),
+    );
+    controller.open();
+    await tester.pumpAndSettle();
 
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
-
-    testWidgets('respects consumeOutsideTaps flag', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          consumeOutsideTaps: false,
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
-
-    testWidgets('respects useRootOverlay flag', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          useRootOverlay: true,
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
-    });
+    final data = tester.getSemantics(find.text('More')).getSemanticsData();
+    expect(data.role, SemanticsRole.menuItem);
+    expect(data.label, 'More options');
+    expect(data.flagsCollection.isExpanded, Tristate.isFalse);
+    semantics.dispose();
   });
 
-  group('RemixMenu Type Safety', () {
-    testWidgets('menu works with int type', (tester) async {
-      int? selectedValue;
+  testWidgets('disabled action does not select or close', (tester) async {
+    final controller = MenuController();
+    String? selected;
+    await tester.pumpRemixApp(
+      RemixMenu<String>(
+        controller: controller,
+        trigger: const Text('Open'),
+        onSelected: (value) => selected = value,
+        entries: const [
+          RemixMenuAction(
+            value: 'disabled',
+            enabled: false,
+            child: Text('Disabled'),
+          ),
+        ],
+      ),
+    );
+    controller.open();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Disabled'));
+    await tester.pump();
 
-      await tester.pumpRemixApp(
-        RemixMenu<int>(
-          trigger: const RemixMenuTrigger(label: 'Numbers'),
-          items: const [
-            RemixMenuItem<int>(value: 1, label: 'One'),
-            RemixMenuItem<int>(value: 2, label: 'Two'),
-          ],
-          onSelected: (value) => selectedValue = value,
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Numbers'));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('One'));
-      await tester.pumpAndSettle();
-
-      expect(selectedValue, equals(1));
-    });
-
-    testWidgets('menu works with custom enum type', (tester) async {
-      MenuAction? selectedValue;
-
-      await tester.pumpRemixApp(
-        RemixMenu<MenuAction>(
-          trigger: const RemixMenuTrigger(label: 'Actions'),
-          items: const [
-            RemixMenuItem<MenuAction>(value: MenuAction.copy, label: 'Copy'),
-            RemixMenuItem<MenuAction>(value: MenuAction.paste, label: 'Paste'),
-          ],
-          onSelected: (value) => selectedValue = value,
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Actions'));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Copy'));
-      await tester.pumpAndSettle();
-
-      expect(selectedValue, equals(MenuAction.copy));
-    });
+    expect(selected, isNull);
+    expect(controller.isOpen, isTrue);
   });
 }
-
-// Test enum for type safety testing
-enum MenuAction { copy, paste, delete }

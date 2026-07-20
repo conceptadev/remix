@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_surface.dart' show RemixSurfaceBox;
 
 import '../../helpers/test_helpers.dart';
 
@@ -30,7 +31,7 @@ void main() {
       expect(
         find.ancestor(
           of: find.text('Popover content'),
-          matching: find.byType(Box),
+          matching: find.byType(RemixSurfaceBox),
         ),
         findsOneWidget,
       );
@@ -241,10 +242,10 @@ void main() {
       await tester.tap(find.text('Open popover'));
       await tester.pumpAndSettle();
 
-      final box = tester.widget<Box>(
+      final box = tester.widget<RemixSurfaceBox>(
         find.ancestor(
           of: find.text('Raw styled content'),
-          matching: find.byType(Box),
+          matching: find.byType(RemixSurfaceBox),
         ),
       );
       expect(box.styleSpec, same(rawContainer));
@@ -267,7 +268,7 @@ void main() {
       expect(
         find.ancestor(
           of: find.text('Fortal content'),
-          matching: find.byType(Box),
+          matching: find.byType(RemixSurfaceBox),
         ),
         findsOneWidget,
       );

@@ -12,9 +12,14 @@ final class FortalButtonComponentArtifacts {
   final Map<String, Object?> document;
   final Map<String, Map<String, Object?>> styleDocuments;
 
-  int get totalMatrixCells => 5 * 4 * 6 * 2;
-  int get nonLoadingCells => 5 * 4 * 5 * 2;
-  int get loadingUnsupportedCells => 5 * 4 * 1 * 2;
+  int get recipeCount => (document['recipes']! as List<Object?>).length;
+
+  int get totalMatrixCells => recipeCount * _stateCount * _oracleCount;
+  int get nonLoadingCells => recipeCount * (_stateCount - 1) * _oracleCount;
+  int get loadingUnsupportedCells => recipeCount * _oracleCount;
+
+  int get _stateCount => (document['states']! as List<Object?>).length;
+  int get _oracleCount => (document['oracles']! as List<Object?>).length;
 
   int get supportedContainerRecipes {
     final recipes = document['recipes']! as List<Object?>;

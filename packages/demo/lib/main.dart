@@ -15,12 +15,41 @@ class HotReload extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeAddon = FortalThemeAddon();
+
     return Widgetbook.material(
-      addons: [FortalThemeAddon()],
-      appBuilder: (context, child) => child,
+      addons: [themeAddon],
+      appBuilder: (context, child) =>
+          buildFortalWidgetbookApp(context, child, themeAddon),
       directories: directories,
     );
   }
+}
+
+/// Builds the Widgetbook preview app from its query-selected Material theme.
+///
+/// This is public only so the app-shell contract can be verified without
+/// launching Widgetbook's navigation UI; it is not part of Remix's API.
+@visibleForTesting
+Widget buildFortalWidgetbookApp(
+  BuildContext context,
+  Widget child,
+  FortalThemeAddon themeAddon,
+) {
+  final state = WidgetbookState.of(context);
+  final setting = themeAddon.valueFromQueryGroup(
+    FieldCodec.decodeQueryGroup(state.queryParams[themeAddon.groupName]),
+  );
+  final theme = setting.data;
+
+  return FortalScope(
+    appearance: theme.brightness == .dark ? .dark : .light,
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: theme,
+      home: Material(color: theme.scaffoldBackgroundColor, child: child),
+    ),
+  );
 }
 
 class FortalThemeAddon extends ThemeAddon<ThemeData> {
@@ -43,20 +72,8 @@ class FortalThemeAddon extends ThemeAddon<ThemeData> {
             ),
           ),
         ],
-        themeBuilder: (context, theme, child) {
-          return Theme(
-            data: theme,
-            child: FortalScope(
-              brightness: theme.brightness,
-              child: ColoredBox(
-                color: theme.scaffoldBackgroundColor,
-                child: DefaultTextStyle(
-                  style: theme.textTheme.bodyMedium!,
-                  child: child,
-                ),
-              ),
-            ),
-          );
-        },
+        // The selected setting is resolved by the custom appBuilder so the
+        // FortalScope can wrap the MaterialApp rather than sit below it.
+        themeBuilder: (context, theme, child) => child,
       );
 }

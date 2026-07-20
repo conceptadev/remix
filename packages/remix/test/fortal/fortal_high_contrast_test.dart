@@ -23,18 +23,18 @@ void main() {
         );
 
         expect(
-          _flexBoxColor(button.spec.container),
+          button.spec.surface?.color,
           indigo.dark.scale.step(12),
           reason: 'Button ${state.name} background must remain high contrast.',
         );
-        expect(_textColor(button.spec.label), indigo.dark.scale.step(1));
+        expect(_textColor(button.spec.label), slate.dark.scale.step(1));
         expect(
-          _boxColor(iconButton.spec.container),
+          iconButton.spec.surface?.color,
           indigo.dark.scale.step(12),
           reason:
               'Icon button ${state.name} background must remain high contrast.',
         );
-        expect(iconButton.spec.icon.spec.color, indigo.dark.scale.step(1));
+        expect(iconButton.spec.icon.spec.color, slate.dark.scale.step(1));
       }
     });
 
@@ -61,9 +61,9 @@ void main() {
               states: {state},
             );
 
-            final buttonBackground = _flexBoxColor(button.spec.container)!;
+            final buttonBackground = button.spec.surface!.color!;
             final buttonForeground = _textColor(button.spec.label)!;
-            final iconBackground = _boxColor(iconButton.spec.container)!;
+            final iconBackground = iconButton.spec.surface!.color!;
             final iconForeground = iconButton.spec.icon.spec.color!;
 
             expect(
@@ -97,16 +97,13 @@ void main() {
           ).build(context),
         );
 
-        if (variant == .solid) {
-          expect(_boxColor(normal.spec.container), indigo.light.scale.step(9));
-          expect(
-            _boxColor(highContrast.spec.container),
-            indigo.light.scale.step(12),
-          );
+        if (variant == .solid || variant == .classic) {
+          expect(normal.spec.surface?.color, indigo.light.scale.step(9));
+          expect(highContrast.spec.surface?.color, indigo.light.scale.step(12));
           expect(normal.spec.icon.spec.color, indigo.light.contrast);
-          expect(highContrast.spec.icon.spec.color, indigo.light.scale.step(1));
+          expect(highContrast.spec.icon.spec.color, slate.light.scale.step(1));
         } else {
-          expect(normal.spec.icon.spec.color, indigo.light.scale.step(11));
+          expect(normal.spec.icon.spec.color, indigo.light.scale.alphaStep(11));
           expect(
             highContrast.spec.icon.spec.color,
             indigo.light.scale.step(12),
@@ -130,11 +127,8 @@ void main() {
         );
 
         if (variant == .solid) {
-          expect(_boxColor(normal.spec.container), indigo.light.scale.step(9));
-          expect(
-            _boxColor(highContrast.spec.container),
-            indigo.light.scale.step(12),
-          );
+          expect(normal.spec.surface?.color, indigo.light.scale.step(9));
+          expect(highContrast.spec.surface?.color, indigo.light.scale.step(12));
           expect(_textColor(normal.spec.label), indigo.light.contrast);
           expect(
             _textColor(highContrast.spec.label),
@@ -169,9 +163,9 @@ void main() {
           ).build(context),
         );
 
-        expect(_textColor(normal.spec.text), indigo.light.scale.step(11));
+        expect(_textColor(normal.spec.text), indigo.light.scale.alphaStep(11));
         expect(_textColor(highContrast.spec.text), indigo.light.scale.step(12));
-        expect(normal.spec.icon.spec.color, indigo.light.scale.step(11));
+        expect(normal.spec.icon.spec.color, indigo.light.scale.alphaStep(11));
         expect(highContrast.spec.icon.spec.color, indigo.light.scale.step(12));
       }
     });
@@ -194,12 +188,9 @@ void main() {
           states: {WidgetState.selected},
         );
 
-        if (variant == .surface) {
-          expect(_boxColor(normal.spec.container), indigo.light.scale.step(9));
-          expect(
-            _boxColor(highContrast.spec.container),
-            indigo.light.scale.step(12),
-          );
+        if (variant == .classic || variant == .surface) {
+          expect(normal.spec.surface?.color, indigo.light.indicator);
+          expect(highContrast.spec.surface?.color, indigo.light.scale.step(12));
           expect(normal.spec.indicator.spec.color, indigo.light.contrast);
           expect(
             highContrast.spec.indicator.spec.color,
@@ -236,12 +227,9 @@ void main() {
           states: {WidgetState.selected},
         );
 
-        if (variant == .surface) {
-          expect(_boxColor(normal.spec.container), indigo.light.scale.step(9));
-          expect(
-            _boxColor(highContrast.spec.container),
-            indigo.light.scale.step(12),
-          );
+        if (variant == .classic || variant == .surface) {
+          expect(normal.spec.surface?.color, indigo.light.indicator);
+          expect(highContrast.spec.surface?.color, indigo.light.scale.step(12));
           expect(_boxColor(normal.spec.indicator), indigo.light.contrast);
           expect(
             _boxColor(highContrast.spec.indicator),
@@ -276,18 +264,19 @@ void main() {
         );
 
         final expectedNormal = switch (variant) {
-          .surface => indigo.light.track,
-          .soft => indigo.light.scale.alphaStep(7),
+          .classic || .surface => indigo.light.track,
+          .soft => indigo.light.scale.alphaStep(4),
         };
-        expect(_boxColor(normal.spec.container), expectedNormal);
-        expect(
-          _boxColor(highContrast.spec.container),
-          indigo.light.scale.step(12),
-        );
+        final expectedHighContrast = switch (variant) {
+          .classic || .surface => indigo.light.scale.step(12),
+          .soft => indigo.light.scale.alphaStep(6),
+        };
+        expect(normal.spec.surface?.color, expectedNormal);
+        expect(highContrast.spec.surface?.color, expectedHighContrast);
       }
     });
 
-    testWidgets('selected switches use a contrasting thumb in dark mode', (
+    testWidgets('selected switches retain the exact white Radix thumb', (
       tester,
     ) async {
       for (final variant in FortalSwitchVariant.values) {
@@ -302,8 +291,8 @@ void main() {
         );
 
         expect(
-          _boxColor(highContrast.spec.thumb),
-          indigo.dark.scale.step(1),
+          highContrast.spec.thumbSurface?.color,
+          Colors.white,
           reason: '$variant must contrast with its accent12 track.',
         );
       }
@@ -339,24 +328,28 @@ void main() {
       }
     });
 
-    testWidgets('soft select resolves stronger trigger and item roles', (
+    testWidgets('select owns contrast on solid content, not its trigger', (
       tester,
     ) async {
       final normal = await _resolveFortalStyle(
         tester,
-        (context) => fortalSelectStyler(variant: .soft).build(context),
+        (context) => fortalSelectStyler(
+          triggerVariant: .soft,
+          contentVariant: .solid,
+        ).build(context),
       );
       final highContrast = await _resolveFortalStyle(
         tester,
         (context) => fortalSelectStyler(
-          variant: .soft,
-          highContrast: true,
+          triggerVariant: .soft,
+          contentVariant: .solid,
+          contentHighContrast: true,
         ).build(context),
       );
 
       expect(
         _textColor(normal.spec.trigger.spec.label),
-        indigo.light.scale.step(11),
+        indigo.light.scale.step(12),
       );
       expect(
         _textColor(highContrast.spec.trigger.spec.label),
@@ -364,7 +357,7 @@ void main() {
       );
       expect(
         normal.spec.trigger.spec.icon.spec.color,
-        indigo.light.scale.step(11),
+        indigo.light.scale.step(12),
       );
       expect(
         highContrast.spec.trigger.spec.icon.spec.color,
@@ -373,32 +366,36 @@ void main() {
 
       final hoveredNormal = await _resolveFortalStyle(
         tester,
-        (context) => fortalSelectStyler(variant: .soft).build(context),
+        (context) => fortalSelectStyler(
+          triggerVariant: .soft,
+          contentVariant: .solid,
+        ).build(context),
         states: {WidgetState.hovered},
       );
       final hoveredHighContrast = await _resolveFortalStyle(
         tester,
         (context) => fortalSelectStyler(
-          variant: .soft,
-          highContrast: true,
+          triggerVariant: .soft,
+          contentVariant: .solid,
+          contentHighContrast: true,
         ).build(context),
         states: {WidgetState.hovered},
       );
       expect(
         _textColor(hoveredNormal.spec.item.spec.text),
-        indigo.light.scale.step(11),
+        indigo.light.contrast,
       );
       expect(
         _textColor(hoveredHighContrast.spec.item.spec.text),
-        indigo.light.scale.step(12),
+        indigo.light.scale.step(1),
       );
       expect(
         hoveredNormal.spec.item.spec.icon.spec.color,
-        indigo.light.scale.step(11),
+        indigo.light.contrast,
       );
       expect(
         hoveredHighContrast.spec.item.spec.icon.spec.color,
-        indigo.light.scale.step(12),
+        indigo.light.scale.step(1),
       );
     });
 
@@ -417,11 +414,13 @@ void main() {
         );
 
         final expectedNormal = switch (variant) {
-          .surface => indigo.light.indicator,
+          .classic || .surface => indigo.light.indicator,
           .soft => indigo.light.scale.step(6),
         };
-        expect(normal.spec.rangeColor, expectedNormal);
-        expect(highContrast.spec.rangeColor, indigo.light.scale.step(12));
+        expect(normal.spec.rangeSurface?.color, expectedNormal);
+        final contrastGradient =
+            highContrast.spec.rangeSurface!.gradients.last as LinearGradient;
+        expect(contrastGradient.colors, everyElement(blackAlpha[8]));
       }
     });
 
@@ -442,12 +441,12 @@ void main() {
         );
 
         final expectedNormal = switch (variant) {
-          .surface => indigo.light.indicator,
-          .soft => indigo.light.scale.step(9),
+          .classic || .surface => indigo.light.indicator,
+          .soft => indigo.light.scale.step(8),
         };
-        expect(_boxColor(normal.spec.indicator), expectedNormal);
+        expect(normal.spec.indicatorSurface?.color, expectedNormal);
         expect(
-          _boxColor(highContrast.spec.indicator),
+          highContrast.spec.indicatorSurface?.color,
           indigo.light.scale.step(12),
         );
       }
@@ -463,14 +462,11 @@ void main() {
           radius: .none,
         );
 
-        expect(_boxBorderRadius(style.spec.track), BorderRadius.zero);
         expect(_boxBorderRadius(style.spec.indicator), BorderRadius.zero);
-        if (variant == .surface) {
-          expect(
-            _boxForegroundBorderRadius(style.spec.container),
-            BorderRadius.zero,
-          );
-        }
+        expect(style.spec.surface?.borderRadius, BorderRadius.zero);
+        expect(style.spec.overlay?.borderRadius, BorderRadius.zero);
+        expect(style.spec.indicatorSurface?.borderRadius, BorderRadius.zero);
+        expect(style.spec.indicatorOverlay?.borderRadius, BorderRadius.zero);
       }
     });
 
@@ -486,8 +482,8 @@ void main() {
         states: {WidgetState.selected},
       );
 
-      expect(_tabUnderlineColor(normal), indigo.light.scale.step(9));
-      expect(_tabUnderlineColor(highContrast), indigo.light.scale.step(12));
+      expect(_tabUnderlineColor(normal), const Color(0xFF3E63DD));
+      expect(_tabUnderlineColor(highContrast), const Color(0xFF1F2D5C));
     });
   });
 }
@@ -504,8 +500,8 @@ Future<T> _resolveFortalStyle<T>(
 
   await tester.pumpWidget(
     FortalScope(
-      accent: accent,
-      brightness: brightness,
+      accentColor: accent,
+      appearance: brightness == .dark ? .dark : .light,
       radius: radius,
       child: MaterialApp(
         home: WidgetStateProvider(
@@ -527,14 +523,13 @@ Future<T> _resolveFortalStyle<T>(
 Color? _boxColor(StyleSpec<BoxSpec> style) =>
     (style.spec.decoration as BoxDecoration?)?.color;
 
-Color? _flexBoxColor(StyleSpec<FlexBoxSpec> style) =>
-    (style.spec.box?.spec.decoration as BoxDecoration?)?.color;
-
 BorderRadiusGeometry? _boxBorderRadius(StyleSpec<BoxSpec> style) =>
-    (style.spec.decoration as BoxDecoration?)?.borderRadius;
-
-BorderRadiusGeometry? _boxForegroundBorderRadius(StyleSpec<BoxSpec> style) =>
-    (style.spec.foregroundDecoration as BoxDecoration?)?.borderRadius;
+    switch (style.spec.decoration) {
+      BoxDecoration(:final borderRadius) => borderRadius,
+      ShapeDecoration(shape: RoundedRectangleBorder(:final borderRadius)) =>
+        borderRadius,
+      _ => null,
+    };
 
 double _contrastRatio(Color first, Color second) {
   final firstLuminance = first.computeLuminance();

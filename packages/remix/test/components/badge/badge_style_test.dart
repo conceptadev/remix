@@ -279,7 +279,7 @@ void main() {
 
       test('props list contains all properties', () {
         const style = RemixBadgeStyler.create();
-        expect(style.props, hasLength(5));
+        expect(style.props, hasLength(7));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$label));
         expect(style.props, contains(style.$variants));

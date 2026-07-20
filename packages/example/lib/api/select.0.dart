@@ -24,7 +24,7 @@ class _SelectExampleState extends State<SelectExample> {
     return Center(
       child: RemixSelect(
         trigger: const RemixSelectTrigger(placeholder: 'Text Value'),
-        items: [
+        entries: [
           RemixSelectItem(
             value: 'option1',
             label: 'Option 1',
@@ -70,8 +70,8 @@ class _SelectExampleState extends State<SelectExample> {
               .paddingX(12)
               .borderRadiusAll(const Radius.circular(12)),
         )
-        .menuContainer(
-          FlexBoxStyler()
+        .content(
+          RemixSelectContentStyler()
               .width(200)
               .marginY(5)
               .paddingAll(6)

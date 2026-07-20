@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
 
 import '../preview_shell/preview_shell.dart';
 import '../routes/all_components.dart';
@@ -19,73 +18,25 @@ import 'entries/switch_entry.dart';
 import 'entries/textfield_entry.dart';
 import 'entries/tooltip_entry.dart';
 
-// Map component slugs to a builder that returns the component inside FortalScope.
+// The preview shell owns the single FortalScope around its preview app.
 final Map<String, WidgetBuilder> components = {
-  'button': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildButtonExample()),
-  ),
-  'textfield': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildTextFieldExample()),
-  ),
-  'checkbox': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildCheckboxExample()),
-  ),
-  'radio': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildRadioExample()),
-  ),
-  'select': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildSelectExample()),
-  ),
-  'switch': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildSwitchExample()),
-  ),
-  'slider': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildSliderExample()),
-  ),
+  'button': (_) => PreviewShell(child: buildButtonExample()),
+  'textfield': (_) => PreviewShell(child: buildTextFieldExample()),
+  'checkbox': (_) => PreviewShell(child: buildCheckboxExample()),
+  'radio': (_) => PreviewShell(child: buildRadioExample()),
+  'select': (_) => PreviewShell(child: buildSelectExample()),
+  'switch': (_) => PreviewShell(child: buildSwitchExample()),
+  'slider': (_) => PreviewShell(child: buildSliderExample()),
   // A consolidated page to preview all components together
-  'all': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: const PreviewShell(child: AllComponentsPage()),
-  ),
-  'avatar': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildAvatarExample()),
-  ),
-  'badge': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildBadgeExample()),
-  ),
-  'card': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildCardExample()),
-  ),
-  'callout': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildCalloutExample()),
-  ),
-  'divider': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildDividerExample()),
-  ),
-  'progress': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildProgressExample()),
-  ),
-  'spinner': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildSpinnerExample()),
-  ),
-  'tooltip': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildTooltipExample()),
-  ),
+  'all': (_) => const PreviewShell(child: AllComponentsPage()),
+  'avatar': (_) => PreviewShell(child: buildAvatarExample()),
+  'badge': (_) => PreviewShell(child: buildBadgeExample()),
+  'card': (_) => PreviewShell(child: buildCardExample()),
+  'callout': (_) => PreviewShell(child: buildCalloutExample()),
+  'divider': (_) => PreviewShell(child: buildDividerExample()),
+  'progress': (_) => PreviewShell(child: buildProgressExample()),
+  'spinner': (_) => PreviewShell(child: buildSpinnerExample()),
+  'tooltip': (_) => PreviewShell(child: buildTooltipExample()),
 };
 
 List<String> get availableComponents => components.keys.toList()..sort();

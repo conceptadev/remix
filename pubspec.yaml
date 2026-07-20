@@ -32,10 +32,10 @@ melos:
         scope: remix
 
     generate:check:
-      steps:
-        - generate
-        - git diff --exit-code -- packages/remix/lib
-      description: Regenerate Remix sources and fail on generated drift
+      exec: dart run tool/check_generated.dart
+      description: Regenerate Remix sources and fail only on generated drift
+      packageFilters:
+        scope: remix
 
     test:flutter:
       exec: flutter test --reporter=failures-only
@@ -46,8 +46,9 @@ melos:
     ci:
       steps:
         - generate:check
+        - docs:check
         - test:flutter
-      description: Verify generated sources, then run Flutter and Dart tests
+      description: Verify generated sources and docs, then run Flutter and Dart tests
 
     atlas:fortal:
       steps:
@@ -62,3 +63,15 @@ melos:
         - melos exec --scope="demo" -- flutter test test/atlas/fortal_atlas_golden_test.dart
         - melos exec --scope="demo" -- dart run tool/package_fortal_atlas.dart --check
       description: Verify the committed Fortal Atlas capture without rewriting it
+
+    fortal:parity:check:
+      exec: dart run tool/fortal_parity/check.dart
+      description: Verify the pinned Radix Themes 3.3.0 parity contract and coverage
+      packageFilters:
+        scope: remix
+
+    docs:check:
+      exec: dart run tool/validate_docs.dart
+      description: Reject retired APIs in docs and examples, then analyze MDX Dart snippets
+      packageFilters:
+        scope: remix

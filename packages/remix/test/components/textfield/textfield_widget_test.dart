@@ -7,9 +7,17 @@ import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
+import '../../helpers/test_methods.dart';
 
 void main() {
   group('RemixTextField', () {
+    widgetControllerTest<RemixTextFieldSpec>(
+      'reports text field hovered state',
+      build: RemixTextField.new,
+      act: hoverAction<RemixTextField>,
+      expectedStates: {WidgetState.hovered},
+    );
+
     group('Basic Rendering', () {
       testWidgets('renders with default style', (tester) async {
         await tester.pumpRemixApp(const RemixTextField());
@@ -549,32 +557,31 @@ void main() {
         expect(find.byType(RemixTextField), findsOneWidget);
       });
 
-      testWidgets(
-        'layout override for one property keeps layout defaults',
-        (tester) async {
-          await tester.pumpRemixApp(
-            RemixTextField(
-              label: 'Label',
-              helperText: 'Helper',
-              style: RemixTextFieldStyler().layout(FlexBoxStyler().spacing(12)),
-            ),
-          );
-          await tester.pumpAndSettle();
+      testWidgets('layout override for one property keeps layout defaults', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixTextField(
+            label: 'Label',
+            helperText: 'Helper',
+            style: RemixTextFieldStyler().layout(FlexBoxStyler().spacing(12)),
+          ),
+        );
+        await tester.pumpAndSettle();
 
-          final flex = tester
-              .widget<ColumnBox>(find.byType(ColumnBox))
-              .styleSpec
-              ?.spec
-              .flex
-              ?.spec;
+        final flex = tester
+            .widget<ColumnBox>(find.byType(ColumnBox))
+            .styleSpec
+            ?.spec
+            .flex
+            ?.spec;
 
-          // Customizing spacing keeps the min-size / start-alignment defaults
-          // instead of falling back to ColumnBox's max / center.
-          expect(flex?.spacing, 12);
-          expect(flex?.mainAxisSize, MainAxisSize.min);
-          expect(flex?.crossAxisAlignment, CrossAxisAlignment.start);
-        },
-      );
+        // Customizing spacing keeps the min-size / start-alignment defaults
+        // instead of falling back to ColumnBox's max / center.
+        expect(flex?.spacing, 12);
+        expect(flex?.mainAxisSize, MainAxisSize.min);
+        expect(flex?.crossAxisAlignment, CrossAxisAlignment.start);
+      });
 
       testWidgets('applies width and height constraints', (tester) async {
         await tester.pumpRemixApp(
@@ -625,10 +632,11 @@ void main() {
           container: StyleSpec(
             spec: FlexBoxSpec(
               box: StyleSpec(
-                spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+                spec: BoxSpec(decoration: BoxDecoration(color: Colors.green)),
               ),
             ),
           ),
+          surface: RemixSurfaceLayerSpec(color: Colors.red),
           textAlign: TextAlign.center,
           cursorWidth: 3.0,
         );
@@ -636,16 +644,18 @@ void main() {
         await tester.pumpRemixApp(const RemixTextField(styleSpec: spec));
         await tester.pumpAndSettle();
 
-        final rowBoxDecorations = tester
-            .widgetList<RowBox>(find.byType(RowBox))
-            .map((box) => box.styleSpec?.spec.box?.spec.decoration);
+        final renderedDecorations = tester
+            .widgetList<DecoratedBox>(find.byType(DecoratedBox))
+            .map((box) => box.decoration);
+        final surface = tester.widget<RemixSurface>(find.byType(RemixSurface));
         final textField = tester.widget<NakedTextField>(
           find.byType(NakedTextField),
         );
 
+        expect(surface.spec.color, Colors.red);
         expect(
-          rowBoxDecorations,
-          contains(equals(const BoxDecoration(color: Colors.red))),
+          renderedDecorations,
+          contains(equals(const BoxDecoration(color: Colors.green))),
         );
         expect(textField.textAlign, TextAlign.center);
         expect(textField.cursorWidth, 3.0);

@@ -1,21 +1,16 @@
 ---
 title: Tooltip
-description: A contextual overlay component for displaying helpful information on hover
+description: A controllable hover, focus, and long-press information overlay
 keywords: [flutter, remix, tooltip, hint, overlay, info, help]
 ---
 
-A contextual overlay component for displaying helpful information when hovering.
-
-## When to use this
-
-- **Additional information**: Provide extra context or details on hover
-- **Icon explanations**: Explain the purpose of icons or buttons
-- **Truncated text**: Show full text when space is limited
-- **Help text**: Offer guidance or tips to users
+`RemixTooltip` presents contextual information on hover, focus, or touch. It
+supports controlled open state, collision-aware positioning, hoverable content,
+root overlays, optional arrows, and configurable transitions.
 
 ## Basic implementation
 
-<CodeGroup title="Basic implementation" defaultLanguage="dart">
+<CodeGroup title="Tooltip with arrow" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -25,109 +20,57 @@ class TooltipExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 24,
-      children: [
-        RemixTooltip(
-          tooltipChild: const Text('Default tooltip'),
-          style: styleDefault,
-          child: const _TriggerButton(label: 'Default'),
-        ),
-        RemixTooltip(
-          tooltipChild: const Text('Quick tooltip!'),
-          style: styleFast,
-          child: const _TriggerButton(label: 'Fast'),
-        ),
-        RemixTooltip(
-          tooltipChild: const Text('Slow tooltip'),
-          style: styleSlow,
-          child: const _TriggerButton(label: 'Slow'),
-        ),
-      ],
-    );
-  }
-
-  RemixTooltipStyler get styleDefault {
-    return RemixTooltipStyler()
-        .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 8))
-        .backgroundColor(Colors.black87)
-        .borderRadius(BorderRadiusGeometryMix.all(const Radius.circular(6)))
-        .wrap(.defaultTextStyle(style: TextStyleMix().color(Colors.white).fontSize(14)));
-  }
-
-  RemixTooltipStyler get styleFast {
-    return styleDefault
-        .waitDuration(const Duration(milliseconds: 100))
-        .showDuration(const Duration(milliseconds: 800)) // touch wait
-        .dismissDuration(const Duration(milliseconds: 100)); // hover exit
-  }
-
-  RemixTooltipStyler get styleSlow {
-    return styleDefault
-        .waitDuration(const Duration(seconds: 1))
-        .showDuration(const Duration(seconds: 3));
-  }
-}
-
-class _TriggerButton extends StatelessWidget {
-  const _TriggerButton({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.circular(8),
+    return RemixTooltip(
+      tooltipChild: const Text('Archive this message'),
+      tooltipSemantics: 'Archive this message',
+      positioning: const OverlayPositionConfig(
+        side: OverlaySide.top,
+        alignment: OverlayAlignment.center,
+        sideOffset: 6,
       ),
-      child: Text(label, style: const TextStyle(color: Colors.white)),
+      showArrow: true,
+      maxWidth: 240,
+      style: RemixTooltipStyler()
+          .paddingX(12)
+          .paddingY(8)
+          .backgroundColor(Colors.black87)
+          .arrowColor(Colors.black87)
+          .label(TextStyler().color(Colors.white)),
+      child: const Icon(Icons.archive_outlined),
     );
   }
 }
 ```
 </CodeGroup>
 
-## Fortal widgets
+## Controlled state
 
-Remix includes a generated Fortal-themed widget for this component:
+Pass `open` and `onOpenChanged` to control visibility. Leave `open` null for
+internal state. User requests still flow through `onOpenChanged`, which makes it
+possible to coordinate multiple tooltips without replacing trigger behavior.
 
-<CodeGroup title="Fortal widget" defaultLanguage="dart">
+## Fortal widget
+
+<CodeGroup title="Fortal tooltip" defaultLanguage="dart">
 ```dart
-import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
-
-class FortalTooltipExample extends StatelessWidget {
-  const FortalTooltipExample({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: 16,
-      children: [
-        FortalTooltip(
-          tooltipChild: const Text('Information tooltip'),
-          child: const Icon(Icons.info),
-        ),
-        FortalTooltip(
-          tooltipChild: const Text('Help tooltip'),
-          child: const Icon(Icons.help),
-        ),
-      ],
-    );
-  }
-}
+const FortalTooltip(
+  tooltipChild: Text('More information'),
+  tooltipSemantics: 'More information',
+  child: Icon(Icons.info_outline),
+)
 ```
 </CodeGroup>
+
+Fortal defaults to top-center placement, a visible arrow, collision padding,
+Radix color roles, and a maximum width of 360 logical pixels.
 
 <Info>
-  See the [fortalTooltipStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/tooltip/fortal_tooltip_styles.dart) for all available options.
+  See the [fortalTooltipStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/tooltip/fortal_tooltip_styles.dart) for the exact recipe.
 </Info>
 
 ## Constructor
-<CodeGroup title="Constructor" defaultLanguage="dart">
+
+<CodeGroup title="RemixTooltip constructor" defaultLanguage="dart">
 ```dart
 const RemixTooltip({
   Key? key,
@@ -135,123 +78,41 @@ const RemixTooltip({
   required Widget child,
   String? tooltipSemantics,
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
+  bool? open,
+  ValueChanged<bool>? onOpenChanged,
+  bool disableHoverableContent = false,
+  bool enableTapToDismiss = true,
+  TooltipTriggerMode triggerMode = TooltipTriggerMode.longPress,
+  bool enableFeedback = true,
+  TooltipTriggeredCallback? onTriggered,
+  AnimationStyle animationStyle = const AnimationStyle(...),
+  bool useRootOverlay = false,
+  bool excludeSemantics = false,
+  double? minWidth,
+  double? maxWidth,
+  bool showArrow = false,
+  Size arrowSize = const Size(10, 5),
   RemixTooltipStyler style = const RemixTooltipStyler.create(),
   RemixTooltipSpec? styleSpec,
 })
 ```
 </CodeGroup>
 
+## Timing and interaction
 
-## Properties
-### Widget Properties
+- `waitDuration` is the mouse-hover delay.
+- `showDuration` controls how long a touch-triggered tooltip remains open after
+  activation.
+- `dismissDuration` is the hover-exit grace period.
+- `disableHoverableContent: false` lets a pointer move into tooltip content
+  without closing it. `enableTapToDismiss` controls outside-tap dismissal.
+- `useRootOverlay` chooses the root rather than nearest overlay.
+- `showArrow` paints toward the resolved side when `arrowColor` is styled. The
+  arrow follows the trigger after collision flipping or cross-axis shifting,
+  including correctly rotated left/right geometry.
 
-#### `key` → `Key?`
+## Semantics
 
-Optional. Controls how one widget replaces another widget in the tree.
-
-#### `style` → `RemixTooltipStyler`
-
-Optional. The style configuration for the tooltip.
-
-#### `styleSpec` → `RemixTooltipSpec?`
-
-Optional. The style spec for the tooltip.
-
-#### `tooltipChild` → `Widget`
-
-**Required**. The widget to display in the tooltip.
-
-#### `child` → `Widget`
-
-**Required**. The child widget that will trigger the tooltip.
-
-#### `tooltipSemantics` → `String?`
-
-Optional. The semantic label for the tooltip.
-
-#### `positioning` → `OverlayPositionConfig`
-
-Optional. Overlay positioning configuration.
-
-
-### Style Methods
-
-#### `container(BoxStyler value)`
-
-Sets the tooltip container style.
-
-#### `label(TextStyler value)`
-
-Sets the tooltip label style.
-
-#### `padding(EdgeInsetsGeometryMix value)`
-
-Sets container padding
-
-#### `margin(EdgeInsetsGeometryMix value)`
-
-Sets container margin
-
-#### `alignment(Alignment value)`
-
-Sets container alignment
-
-#### `color(Color value)`
-
-Sets container background color
-
-#### `backgroundColor(Color value)`
-
-Sets tooltip container background color.
-
-#### `borderRadius(BorderRadiusGeometryMix radius)`
-
-Sets container border radius
-
-#### `decoration(DecorationMix value)`
-
-Sets container decoration
-
-#### `waitDuration(Duration value)`
-
-Sets the wait duration before showing tooltip
-
-#### `showDuration(Duration value)`
-
-Maps to touch long-press wait (`NakedTooltip.touchDelay`), not hover dismiss.
-
-#### `dismissDuration(Duration value)`
-
-Maps to hover-exit dismiss grace (`NakedTooltip.dismissDelay`).
-
-#### `wrap(WidgetModifierConfig value)`
-
-Applies widget modifiers such as clipping, opacity, or scaling.
-
-#### `animate(AnimationConfig value)`
-
-Configures implicit animation for style transitions.
-
-#### `variants(List<VariantStyle<RemixTooltipSpec>> value)`
-
-Sets style variants.
-
-#### `constraints(BoxConstraintsMix value)`
-
-Sets size constraints on the component.
-
-#### `foregroundDecoration(DecorationMix value)`
-
-Sets a foreground decoration painted on top of the component.
-
-#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
-
-Applies a matrix transformation to the component.
-
-#### `modifier(WidgetModifierConfig value)`
-
-Sets the widget modifier.
-
-#### `call({Key? key, required Widget tooltipChild, required Widget child, String? tooltipSemantics, OverlayPositionConfig positioning = const OverlayPositionConfig()})`
-
-Creates a `RemixTooltip` widget with this style applied.
+`tooltipSemantics` supplies the trigger's accessible description. Set
+`excludeSemantics` only when equivalent information is already provided by the
+surrounding control. The overlay does not duplicate trigger semantics.

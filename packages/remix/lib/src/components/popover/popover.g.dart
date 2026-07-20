@@ -8,22 +8,32 @@ part of 'popover.dart';
 
 mixin _$RemixPopoverSpec implements Spec<RemixPopoverSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
+  RemixSurfaceLayerSpec? get surface;
 
   @override
   Type get type => RemixPopoverSpec;
 
   @override
-  RemixPopoverSpec copyWith({StyleSpec<BoxSpec>? container}) {
-    return RemixPopoverSpec(container: container ?? this.container);
+  RemixPopoverSpec copyWith({
+    StyleSpec<BoxSpec>? container,
+    RemixSurfaceLayerSpec? surface,
+  }) {
+    return RemixPopoverSpec(
+      container: container ?? this.container,
+      surface: surface ?? this.surface,
+    );
   }
 
   @override
   RemixPopoverSpec lerp(RemixPopoverSpec? other, double t) {
-    return RemixPopoverSpec(container: container.lerp(other?.container, t));
+    return RemixPopoverSpec(
+      container: container.lerp(other?.container, t),
+      surface: MixOps.lerpSnap(surface, other?.surface, t),
+    );
   }
 
   @override
-  List<Object?> get props => [container];
+  List<Object?> get props => [container, surface];
 
   @override
   bool operator ==(Object other) {
@@ -64,7 +74,9 @@ mixin _$RemixPopoverSpec implements Spec<RemixPopoverSpec>, Diagnosticable {
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties.add(DiagnosticsProperty('container', container));
+    properties
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('surface', surface));
   }
 }
 
@@ -80,21 +92,26 @@ typedef _$RemixPopoverSpecMethods = _$RemixPopoverSpec; // ignore: unused_elemen
 class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     with RemixBoxStylerMixin<RemixPopoverStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<RemixSurfaceLayerSpec>? $surface;
 
   const RemixPopoverStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
+    Prop<RemixSurfaceLayerSpec>? surface,
     super.variants,
     super.modifier,
     super.animation,
-  }) : $container = container;
+  }) : $container = container,
+       $surface = surface;
 
   RemixPopoverStyler({
     BoxStyler? container,
+    RemixSurfaceLayerMix? surface,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixPopoverSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
+         surface: Prop.maybeMix(surface),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -102,6 +119,8 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
 
   factory RemixPopoverStyler.container(BoxStyler value) =>
       RemixPopoverStyler().container(value);
+  factory RemixPopoverStyler.surface(RemixSurfaceLayerMix value) =>
+      RemixPopoverStyler().surface(value);
   factory RemixPopoverStyler.alignment(AlignmentGeometry value) =>
       RemixPopoverStyler().alignment(value);
   factory RemixPopoverStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -579,6 +598,11 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     return merge(RemixPopoverStyler(container: value));
   }
 
+  /// Sets the surface.
+  RemixPopoverStyler surface(RemixSurfaceLayerMix value) {
+    return merge(RemixPopoverStyler(surface: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixPopoverStyler animate(AnimationConfig value) {
@@ -607,6 +631,7 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
   RemixPopoverStyler merge(RemixPopoverStyler? other) {
     return RemixPopoverStyler.create(
       container: MixOps.merge($container, other?.$container),
+      surface: MixOps.merge($surface, other?.$surface),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -618,6 +643,7 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
   StyleSpec<RemixPopoverSpec> resolve(BuildContext context) {
     final spec = RemixPopoverSpec(
       container: MixOps.resolve(context, $container),
+      surface: MixOps.resolve(context, $surface),
     );
 
     return StyleSpec(
@@ -630,9 +656,17 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('container', $container));
+    properties
+      ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('surface', $surface));
   }
 
   @override
-  List<Object?> get props => [$container, $animation, $modifier, $variants];
+  List<Object?> get props => [
+    $container,
+    $surface,
+    $animation,
+    $modifier,
+    $variants,
+  ];
 }

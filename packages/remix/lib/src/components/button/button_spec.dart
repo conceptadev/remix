@@ -36,9 +36,9 @@ part of 'button.dart';
 ///
 /// // Widget receives the resolved spec
 /// RemixButton(
-///   label: 'Click me',
 ///   style: style,
 ///   onPressed: () {},
+///   child: Text('Click me'),
 /// )
 /// ```
 ///
@@ -93,15 +93,12 @@ class RemixButtonSpec with _$RemixButtonSpec {
   @override
   final StyleSpec<RemixSpinnerSpec> spinner;
 
-  /// Optional alignment override for a button with exactly one icon.
-  ///
-  /// When set to [IconAlignment.start], the icon appears before the label.
-  /// When set to [IconAlignment.end], the icon appears after the label.
-  /// When omitted, [RemixButton.leadingIcon] and [RemixButton.trailingIcon]
-  /// keep their named positions.
-  /// Buttons with both icons always keep both explicit positions.
   @override
-  final IconAlignment? iconAlignment;
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? surface;
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? overlay;
 
   /// Creates a RemixButtonSpec with optional styling specifications.
   ///
@@ -121,10 +118,10 @@ class RemixButtonSpec with _$RemixButtonSpec {
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
     StyleSpec<RemixSpinnerSpec>? spinner,
-    IconAlignment? iconAlignment,
+    this.surface,
+    this.overlay,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
-       spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec()),
-       iconAlignment = iconAlignment;
+       spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec());
 }

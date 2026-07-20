@@ -166,6 +166,14 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
   @override
   final StyleSpec<TextSpec> label;
 
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? surface;
+
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? overlay;
+
   /// Creates a RemixTextFieldSpec with optional styling and configuration.
   ///
   /// Provides sensible defaults for all properties to ensure the text field
@@ -202,6 +210,8 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
     StyleSpec<FlexBoxSpec>? layout,
     StyleSpec<TextSpec>? helperText,
     StyleSpec<TextSpec>? label,
+    this.surface,
+    this.overlay,
   }) : text = text ?? const StyleSpec(spec: TextSpec()),
        hintText = hintText ?? const StyleSpec(spec: TextSpec()),
        helperText = helperText ?? const StyleSpec(spec: TextSpec()),

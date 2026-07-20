@@ -11,20 +11,24 @@ Widget previewBasicButtons() {
       mainAxisAlignment: .center,
       children: [
         RemixButton(
-          label: 'Primary Button',
           onPressed: null, // No-op for preview
+          child: Text('Primary Button'),
         ),
         SizedBox(height: 12),
         RemixButton(
-          label: 'Button with Icon',
-          leadingIcon: Icons.star,
           onPressed: null,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [Icon(Icons.star), Text('Button with Icon')],
+          ),
         ),
         SizedBox(height: 12),
         RemixButton(
-          label: 'Trailing Icon',
-          trailingIcon: Icons.arrow_forward,
           onPressed: null,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [Text('Trailing Icon'), Icon(Icons.arrow_forward)],
+          ),
         ),
       ],
     ),
@@ -37,17 +41,23 @@ Widget previewButtonStates() {
     const Column(
       mainAxisAlignment: .center,
       children: [
-        RemixButton(label: 'Enabled Button', onPressed: null),
+        RemixButton(onPressed: null, child: Text('Enabled Button')),
         SizedBox(height: 12),
-        RemixButton(label: 'Disabled Button', onPressed: null),
-        SizedBox(height: 12),
-        RemixButton(label: 'Loading Button', loading: true, onPressed: null),
+        RemixButton(onPressed: null, child: Text('Disabled Button')),
         SizedBox(height: 12),
         RemixButton(
-          label: 'Icon Loading',
-          leadingIcon: Icons.download,
           loading: true,
           onPressed: null,
+          child: Text('Loading Button'),
+        ),
+        SizedBox(height: 12),
+        RemixButton(
+          loading: true,
+          onPressed: null,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [Icon(Icons.download), Text('Icon Loading')],
+          ),
         ),
       ],
     ),
@@ -60,13 +70,29 @@ Widget previewIconButtons() {
     const Row(
       mainAxisAlignment: .center,
       children: [
-        RemixIconButton(icon: Icons.add, onPressed: null),
+        RemixIconButton(
+          semanticLabel: 'Add',
+          onPressed: null,
+          child: Icon(Icons.add),
+        ),
         SizedBox(width: 12),
-        RemixIconButton(icon: Icons.edit, onPressed: null),
+        RemixIconButton(
+          semanticLabel: 'Edit',
+          onPressed: null,
+          child: Icon(Icons.edit),
+        ),
         SizedBox(width: 12),
-        RemixIconButton(icon: Icons.delete, onPressed: null),
+        RemixIconButton(
+          semanticLabel: 'Delete',
+          onPressed: null,
+          child: Icon(Icons.delete),
+        ),
         SizedBox(width: 12),
-        RemixIconButton(icon: Icons.settings, onPressed: null),
+        RemixIconButton(
+          semanticLabel: 'Settings',
+          onPressed: null,
+          child: Icon(Icons.settings),
+        ),
       ],
     ),
   );
@@ -82,37 +108,55 @@ Widget previewButtonVariations() {
           mainAxisAlignment: .center,
           children: [
             RemixButton(
-              label: 'Save',
-              leadingIcon: Icons.save,
               onPressed: null,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [Icon(Icons.save), Text('Save')],
+              ),
             ),
             SizedBox(width: 12),
-            RemixButton(label: 'Cancel', onPressed: null),
+            RemixButton(onPressed: null, child: Text('Cancel')),
           ],
         ),
         SizedBox(height: 16),
         RemixButton(
-          label: 'Download File',
-          leadingIcon: Icons.download,
           onPressed: null,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [Icon(Icons.download), Text('Download File')],
+          ),
         ),
         SizedBox(height: 16),
         Row(
           mainAxisAlignment: .center,
           children: [
-            RemixIconButton(icon: Icons.thumb_up, onPressed: null),
+            RemixIconButton(
+              semanticLabel: 'Like',
+              onPressed: null,
+              child: Icon(Icons.thumb_up),
+            ),
             SizedBox(width: 8),
-            RemixIconButton(icon: Icons.thumb_down, onPressed: null),
+            RemixIconButton(
+              semanticLabel: 'Dislike',
+              onPressed: null,
+              child: Icon(Icons.thumb_down),
+            ),
             SizedBox(width: 8),
-            RemixIconButton(icon: Icons.share, onPressed: null),
+            RemixIconButton(
+              semanticLabel: 'Share',
+              onPressed: null,
+              child: Icon(Icons.share),
+            ),
           ],
         ),
         SizedBox(height: 16),
         RemixButton(
-          label: 'Processing...',
-          leadingIcon: Icons.sync,
           loading: true,
           onPressed: null,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [Icon(Icons.sync), Text('Processing...')],
+          ),
         ),
       ],
     ),

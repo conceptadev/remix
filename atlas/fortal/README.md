@@ -1,64 +1,84 @@
 # Fortal Atlas capture
 
-This directory contains a deterministic, inert capture of the Fortal Button.
-It is designed for repository readers such as Mix Atlas; loading it does not
-execute or compile Remix source code.
+This directory is a deterministic, inert capture of the Fortal design system.
+Repository readers such as Mix Atlas can inspect it without executing or
+compiling Remix source code.
 
-## Contents
+## Scope and provenance
 
-- `capture.json` — integrity envelope and artifact index
-- `catalog.json` — Atlas catalog index
-- `light/` and `dark/` — Button contact-sheet PNGs and structured sidecars
-- `themes/` — strict `mix_protocol` v1 theme documents
-- `components/button.component.json` — bounded Button properties, states,
-  anatomy, semantics, recipe coordinates, evidence, and visual-oracle links
-- `styles/button/` — projected built-in container, label, and icon style
-  documents for all 20 recipes
-- `protocol/coverage.json` — supported and unsupported protocol probes
-- `protocol/fixtures/` — a representable built-in style fixture using Fortal
-  tokens
+The parity source is the exact npm artifact
+`@radix-ui/themes@3.3.0`, integrity
+`sha512-I0/h2CRNTpYNB7Mi3xFIvSsQq5a108d7kK8dTO5zp5b9HR5QJXKag6B8tjpz2ITkVYkFdkGk45doNkSr7OxwNw==`.
+The tracked parity manifest is
+`packages/remix/reference/radix_themes_3_3_0/manifest.json`.
 
-The capture covers five Button variants, four sizes, and default, hovered,
-pressed, focused, disabled, and loading scenarios in light and dark themes:
-240 cells total, 200 non-loading cells, and 40 loading cells.
+The catalog contains 23 Fortal families and 388 cells in each of the light and
+dark themes (776 cells total):
 
-The producer adapter walks the real `RemixButtonStyler` sources and variants,
-then uses each built-in leaf styler's normal merge semantics. It does not copy
-the Fortal recipe. It calls `RemixButton.composeStyle` first so widget-owned
-defaults and tooling share one source of truth. Container, label, and icon
-leaves are portable after the multi-source nested-styler fix from
-`btwld/mix#981`. `RemixSpinner` remains an explicit unsupported slot because no
-neutral primitive has been selected.
+- 20 mapped Radix families: Avatar, Badge, Button, Callout, Card, Checkbox,
+  Dialog, Divider, Menu, IconButton, Popover, Progress, Radio, Select, Slider,
+  Spinner, Switch, Tabs, TextField, and Tooltip.
+- 3 Fortal extensions, excluded from the Radix parity score: Accordion,
+  Toggle, and ToggleGroup.
 
-The 200 non-loading cells reconstructed from this capture match the existing
-light and dark Button screenshot oracles exactly. The 40 loading cells remain
-screenshot-only until spinner support is deliberately designed.
+Every family has a light and dark contact-sheet PNG plus a structured Atlas
+sidecar. The bundle index covers 152 payload files; `capture.json` is the
+integrity envelope for those payloads.
 
-The raw Fortal theme also contains nested color-token references in six shadow
-tokens; the capture resolves those colors to concrete runtime theme values
-before protocol encoding, while preserving the raw diagnostics in the coverage
-report.
+## Artifact model
 
-## Regenerate
+- `catalog.json` indexes every family and theme.
+- `light/` and `dark/` contain the 46 contact sheets and their 46 structured
+  sidecars.
+- `themes/*.mix.json` contain concrete, resolved Mix token values. Token aliases
+  are resolved against the captured runtime theme before encoding.
+- `themes/*.remix-surfaces.json` preserve Remix surface-token diagnostics that
+  the neutral Mix protocol cannot express: solid and multi-stop gradient fills,
+  ordered outer and inset paint shadows, overlays, and backdrop blur.
+- `components/button.component.json` and `styles/button/` are the only portable
+  component/projection artifact currently emitted. This is a deliberate
+  protocol boundary, not evidence that the other 22 families lack raster or
+  structured Atlas coverage.
+- `protocol/coverage.json` records supported probes and every unsupported
+  Button slot or value. In particular, a complete `RemixButtonStyler` and its
+  spinner are not claimed to be representable by neutral Mix protocol v1.
+
+Fortal shadow-stroke colors use premultiplied-alpha OKLab mixing, matching the
+Radix `color-mix(in oklab, ...)` contract. The independently generated Chromium
+fixture under `packages/remix/reference/radix_themes_3_3_0/chromium/` is kept
+separate from these Flutter-engine goldens. Resolved colors, geometry, surface
+layer order, states, and semantics are exact contract values. Browser and
+Flutter screenshots are not compared byte-for-byte: platform glyph rendering
+and edge anti-aliasing may differ by at most one 8-bit channel at an edge pixel.
+
+The manifest's `approximations` list records one interaction-model boundary:
+`RemixDialog` with `modal: false` changes accessibility route scoping, while
+the `RawDialogRoute` remains pointer-modal. It has no visual tolerance. Other
+Flutter-native API substitutions and their reasons are documented per family
+in that manifest. The sole intentional scope-topology exception is the Atlas
+builder: `mix_atlas` owns its internal `MaterialApp`, so `AtlasTheme.builder`
+must install `FortalScope` below that app. Production, example, preview, and
+test app roots put `FortalScope` above `WidgetsApp` or `MaterialApp`.
+
+## Regenerate and verify
 
 Use the repository's Flutter 3.44.0 FVM pin on macOS:
 
 ```sh
-cd packages/demo
-fvm flutter test test/atlas/fortal_protocol_probe_test.dart --update-goldens
-fvm flutter test test/atlas/fortal_atlas_golden_test.dart --update-goldens
-fvm dart run tool/package_fortal_atlas.dart
+fvm dart run melos run atlas:fortal
 ```
 
 Verify committed output without rewriting it:
 
 ```sh
-cd packages/demo
-fvm flutter test test/atlas/fortal_protocol_probe_test.dart
-CI=1 fvm flutter test test/atlas/fortal_atlas_golden_test.dart
-fvm dart run tool/package_fortal_atlas.dart --check
+fvm dart run melos run atlas:fortal:check
+fvm dart run melos run fortal:parity:check
 ```
 
-Repository transport metadata such as requested ref and resolved Git commit is
-attached by the reader. It is deliberately not embedded in this committed
-manifest, which avoids a self-referential commit identifier.
+The Chromium reference is regenerated separately from the pinned source:
+
+```sh
+cd packages/remix/tool/fortal_parity/chromium
+npm install
+npm run generate
+```

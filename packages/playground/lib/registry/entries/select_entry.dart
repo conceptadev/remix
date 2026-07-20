@@ -18,7 +18,7 @@ Widget buildSelectExample() {
           trigger: const RemixSelectTrigger(placeholder: 'Select an option'),
           selectedValue: 'Two',
           onChanged: (_) {},
-          items: items
+          entries: items
               .map((e) => RemixSelectItem<String>(value: e, label: e))
               .toList(),
         ),
@@ -26,7 +26,7 @@ Widget buildSelectExample() {
           trigger: const RemixSelectTrigger(placeholder: 'Select an option'),
           selectedValue: 'Two',
           onChanged: null,
-          items: items
+          entries: items
               .map((e) => RemixSelectItem<String>(value: e, label: e))
               .toList(),
         ),

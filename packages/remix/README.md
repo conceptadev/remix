@@ -31,7 +31,7 @@ final style = RemixButtonStyler()
 
 RemixButton(
   onPressed: () {},
-  label: 'Click me',
+  child: const Text('Click me'),
   style: style,
 );
 ```
@@ -47,7 +47,7 @@ final button = RemixButtonStyler()
   .animate(AnimationConfig.spring(300.ms));
 
 button(
-  label: 'Click me',
+  child: const Text('Click me'),
   onPressed: () {},
 ); // return RemixButton Widget.
 ```
@@ -72,7 +72,7 @@ Or add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  remix: ^1.0.0
+  remix: ^1.0.0-beta.1
 ```
 
 ### Your First Component
@@ -98,7 +98,7 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Center(
           child: button(
-            label: 'Click Me',
+            child: const Text('Click Me'),
             onPressed: () => debugPrint('Button pressed!'),
           ),
         ),
@@ -163,11 +163,15 @@ final destructiveButton = baseButtonStyle
 
 ## The Fortal Widgets
 
-While Remix gives you complete freedom to build any design system, it also includes **Fortal Design System** - a comprehensive set of prebuilt styles based on Radix. These styles provide a polished, modern UI out of the box while maintaining full customizability.
+While Remix gives you complete freedom to build any design system, it also includes **Fortal Design System**: a set of prebuilt styles aligned with the mapped component contract from Radix Themes 3.3.0. Accordion, Toggle, and ToggleGroup are documented Fortal extensions rather than Radix parity families.
+
+The pinned source contract, documented Flutter boundaries, and executable
+coverage ledger are tracked in
+[`reference/radix_themes_3_3_0`](reference/radix_themes_3_3_0/README.md).
 
 ### Quick Start with Fortal
 
-To use Fortal widgets, wrap your app with `FortalScope` to provide the design tokens, then use the generated `Fortal*` widgets. Named constructors select a fixed variant; use the unnamed constructor with `variant:` when the choice is dynamic:
+Put `FortalScope` above the app widget so platform appearance and every overlay inherit the same resolved theme. Each `Fortal*` widget has one enum-based constructor; pass `variant:` and `size:` explicitly when they differ from the component defaults:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -176,13 +180,16 @@ import 'package:remix/remix.dart';
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: FortalScope(
-          child: Center(
-            child: FortalButton.solid(
+    return FortalScope(
+      appearance: .inherit,
+      accentColor: .indigo,
+      child: MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: FortalButton(
+              variant: .solid,
               onPressed: () {},
-              label: 'Fortal Button',
+              child: const Text('Fortal Button'),
             ),
           ),
         ),
@@ -194,7 +201,7 @@ class MyApp extends StatelessWidget {
 
 ### Customizing Fortal Styles
 
-Generated Fortal widgets call the matching `fortal*Styler` internally. Use those stylers directly when you need a custom Remix widget composition:
+Fortal widgets call the matching `fortal*Styler` internally. Use those stylers directly when you need a custom Remix widget composition:
 
 ```dart
 final style = fortalButtonStyler(variant: FortalButtonVariant.solid)
@@ -209,8 +216,8 @@ Fortal styles are built on a robust token system that includes:
 
 - **Colors**: 12-step accent and gray scales (powered by Radix Colors)
 - **Spacing**: 9-step spacing scale
-- **Border Radius**: 6-step radius scale
-- **Shadows**: 6-level shadow system
+- **Border Radius**: 6-step radius scale plus theme-derived control radii
+- **Surfaces and Shadows**: layered fills, gradients, outer/inset shadows, overlays, and backdrop blur
 - **Typography**: 9-size type scale
 - **Border Widths**: Consistent stroke weights
 
@@ -253,9 +260,11 @@ Remix provides a comprehensive set of production-ready components:
 - **Tabs** - Tabbed navigation
 - **Accordion** - Collapsible content sections
 - **Menu** - Context menus and dropdowns
+- **ToggleGroup** - Single-select segmented controls
 
 ### Overlays
 - **Dialog** - Modal dialogs
+- **Popover** - Anchored interactive content
 - **Tooltip** - Contextual help
 - **Callout** - Highlighted information blocks
 

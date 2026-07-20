@@ -1,0 +1,72 @@
+{
+  "schema": "mix_atlas/atlas/v1",
+  "component": "text_field",
+  "componentLabel": "Text Field",
+  "theme": "dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "text_field.png",
+  "rowAxes": [
+    {
+      "id": "variant",
+      "label": "Variant"
+    }
+  ],
+  "rows": [
+    {
+      "id": "classic",
+      "values": {
+        "variant": {
+          "id": "classic",
+          "label": "Classic"
+        }
+      }
+    },
+    {
+      "id": "surface",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        }
+      }
+    },
+    {
+      "id": "soft",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        }
+      }
+    }
+  ],
+  "columns": [
+    {
+      "id": "default",
+      "states": [],
+      "props": {}
+    },
+    {
+      "id": "focused",
+      "states": [
+        "focused"
+      ],
+      "props": {}
+    },
+    {
+      "id": "error",
+      "states": [
+        "error"
+      ],
+      "props": {}
+    },
+    {
+      "id": "disabled",
+      "states": [
+        "disabled"
+      ],
+      "props": {}
+    }
+  ]
+}

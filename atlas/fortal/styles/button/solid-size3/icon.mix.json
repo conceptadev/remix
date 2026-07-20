@@ -3,7 +3,7 @@
   "color": {
     "$token": "fortal.accent.contrast"
   },
-  "size": 20.0,
+  "opacity": 0.9,
   "variants": [
     {
       "kind": "widget_state",
@@ -11,7 +11,7 @@
       "style": {
         "type": "icon",
         "color": {
-          "$token": "fortal.gray.8"
+          "$token": "fortal.gray.a8"
         }
       }
     }

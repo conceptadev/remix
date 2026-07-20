@@ -82,17 +82,6 @@ RemixButtonProtocolProjection projectRemixButtonStyler(
       ),
     );
   }
-  if (effectiveStyle.$iconAlignment != null) {
-    diagnostics.add(
-      const ButtonProjectionDiagnostic(
-        code: 'unsupported_component_scalar',
-        severity: 'error',
-        path: 'iconAlignment',
-        message: 'Icon alignment requires an explicit anatomy property.',
-      ),
-    );
-  }
-
   return RemixButtonProtocolProjection(
     container: container.value,
     label: label.value,

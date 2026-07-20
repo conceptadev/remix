@@ -24,15 +24,17 @@ class IconButtonExample extends StatelessWidget {
         spacing: 16,
         children: [
           RemixIconButton(
-            icon: CupertinoIcons.heart,
+            semanticLabel: 'Favorite',
             onPressed: () {},
             style: style,
+            child: const Icon(CupertinoIcons.heart),
           ),
           RemixIconButton(
-            icon: CupertinoIcons.heart,
+            semanticLabel: 'Favorite loading',
             onPressed: () {},
             style: style,
             loading: true,
+            child: const Icon(CupertinoIcons.heart),
           ),
         ],
       ),
@@ -47,12 +49,7 @@ class IconButtonExample extends StatelessWidget {
         .backgroundColor(Colors.blueGrey.shade50.withValues(alpha: 0.6))
         .borderAll(color: Colors.blueGrey.shade100, width: 1.5)
         .borderRadiusAll(const Radius.circular(8))
-        .spinner(
-          RemixSpinnerStyler()
-              .size(22)
-              .strokeWidth(1.3)
-              .indicatorColor(Colors.blueGrey.shade600),
-        )
+        .spinner(RemixSpinnerStyler().size(22).color(Colors.blueGrey.shade600))
         .onHovered(
           RemixIconButtonStyler().backgroundColor(
             Colors.blueGrey.shade100.withValues(alpha: 0.4),

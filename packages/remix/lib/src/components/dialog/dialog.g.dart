@@ -8,6 +8,7 @@ part of 'dialog.dart';
 
 mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
+  RemixSurfaceLayerSpec? get surface;
   StyleSpec<TextSpec> get title;
   StyleSpec<TextSpec> get description;
   StyleSpec<FlexBoxSpec> get actions;
@@ -18,12 +19,14 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   @override
   RemixDialogSpec copyWith({
     StyleSpec<BoxSpec>? container,
+    RemixSurfaceLayerSpec? surface,
     StyleSpec<TextSpec>? title,
     StyleSpec<TextSpec>? description,
     StyleSpec<FlexBoxSpec>? actions,
   }) {
     return RemixDialogSpec(
       container: container ?? this.container,
+      surface: surface ?? this.surface,
       title: title ?? this.title,
       description: description ?? this.description,
       actions: actions ?? this.actions,
@@ -34,6 +37,7 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   RemixDialogSpec lerp(RemixDialogSpec? other, double t) {
     return RemixDialogSpec(
       container: container.lerp(other?.container, t),
+      surface: MixOps.lerpSnap(surface, other?.surface, t),
       title: title.lerp(other?.title, t),
       description: description.lerp(other?.description, t),
       actions: actions.lerp(other?.actions, t),
@@ -41,7 +45,7 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   }
 
   @override
-  List<Object?> get props => [container, title, description, actions];
+  List<Object?> get props => [container, surface, title, description, actions];
 
   @override
   bool operator ==(Object other) {
@@ -84,6 +88,7 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('surface', surface))
       ..add(DiagnosticsProperty('title', title))
       ..add(DiagnosticsProperty('description', description))
       ..add(DiagnosticsProperty('actions', actions));
@@ -102,12 +107,14 @@ typedef _$RemixDialogSpecMethods = _$RemixDialogSpec; // ignore: unused_element
 class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     with RemixBoxStylerMixin<RemixDialogStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<RemixSurfaceLayerSpec>? $surface;
   final Prop<StyleSpec<TextSpec>>? $title;
   final Prop<StyleSpec<TextSpec>>? $description;
   final Prop<StyleSpec<FlexBoxSpec>>? $actions;
 
   const RemixDialogStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
+    Prop<RemixSurfaceLayerSpec>? surface,
     Prop<StyleSpec<TextSpec>>? title,
     Prop<StyleSpec<TextSpec>>? description,
     Prop<StyleSpec<FlexBoxSpec>>? actions,
@@ -115,12 +122,14 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     super.modifier,
     super.animation,
   }) : $container = container,
+       $surface = surface,
        $title = title,
        $description = description,
        $actions = actions;
 
   RemixDialogStyler({
     BoxStyler? container,
+    RemixSurfaceLayerMix? surface,
     TextStyler? title,
     TextStyler? description,
     FlexBoxStyler? actions,
@@ -129,6 +138,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     List<VariantStyle<RemixDialogSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
+         surface: Prop.maybeMix(surface),
          title: Prop.maybeMix(title),
          description: Prop.maybeMix(description),
          actions: Prop.maybeMix(actions),
@@ -139,6 +149,8 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
 
   factory RemixDialogStyler.container(BoxStyler value) =>
       RemixDialogStyler().container(value);
+  factory RemixDialogStyler.surface(RemixSurfaceLayerMix value) =>
+      RemixDialogStyler().surface(value);
   factory RemixDialogStyler.title(TextStyler value) =>
       RemixDialogStyler().title(value);
   factory RemixDialogStyler.description(TextStyler value) =>
@@ -622,6 +634,11 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     return merge(RemixDialogStyler(container: value));
   }
 
+  /// Sets the surface.
+  RemixDialogStyler surface(RemixSurfaceLayerMix value) {
+    return merge(RemixDialogStyler(surface: value));
+  }
+
   /// Sets the title.
   RemixDialogStyler title(TextStyler value) {
     return merge(RemixDialogStyler(title: value));
@@ -665,6 +682,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
   RemixDialogStyler merge(RemixDialogStyler? other) {
     return RemixDialogStyler.create(
       container: MixOps.merge($container, other?.$container),
+      surface: MixOps.merge($surface, other?.$surface),
       title: MixOps.merge($title, other?.$title),
       description: MixOps.merge($description, other?.$description),
       actions: MixOps.merge($actions, other?.$actions),
@@ -679,6 +697,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
   StyleSpec<RemixDialogSpec> resolve(BuildContext context) {
     final spec = RemixDialogSpec(
       container: MixOps.resolve(context, $container),
+      surface: MixOps.resolve(context, $surface),
       title: MixOps.resolve(context, $title),
       description: MixOps.resolve(context, $description),
       actions: MixOps.resolve(context, $actions),
@@ -696,6 +715,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('surface', $surface))
       ..add(DiagnosticsProperty('title', $title))
       ..add(DiagnosticsProperty('description', $description))
       ..add(DiagnosticsProperty('actions', $actions));
@@ -704,6 +724,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
   @override
   List<Object?> get props => [
     $container,
+    $surface,
     $title,
     $description,
     $actions,

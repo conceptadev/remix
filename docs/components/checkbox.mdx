@@ -61,7 +61,7 @@ class _CheckboxExampleState extends State<CheckboxExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -83,11 +83,13 @@ class _FortalCheckboxExampleState extends State<FortalCheckboxExample> {
     return Column(
       spacing: 16,
       children: [
-        FortalCheckbox.surface(
+        FortalCheckbox(
+          variant: FortalCheckboxVariant.surface,
           selected: _isChecked,
           onChanged: (value) => setState(() => _isChecked = value ?? false),
         ),
-        FortalCheckbox.soft(
+        FortalCheckbox(
+          variant: FortalCheckboxVariant.soft,
           selected: _isChecked,
           onChanged: (value) => setState(() => _isChecked = value ?? false),
         ),

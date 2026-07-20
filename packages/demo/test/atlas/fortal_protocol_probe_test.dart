@@ -15,15 +15,23 @@ void main() {
         tester,
       ) async {
         final tokens = await _captureFortalTokens(tester, brightness);
+        final protocolTokens = _protocolTokens(tokens);
 
         final encoded = _expectSuccess(
-          mixProtocol.encodeTheme(MixProtocolTheme(tokens: tokens)),
+          mixProtocol.encodeTheme(MixProtocolTheme(tokens: protocolTokens)),
         );
         final decoded = _expectSuccess(mixProtocol.decodeTheme(encoded));
         final reencoded = _expectSuccess(mixProtocol.encodeTheme(decoded));
 
         expect(reencoded, encoded);
-        expect(decoded.tokens, hasLength(tokens.length));
+        expect(decoded.tokens, hasLength(protocolTokens.length));
+
+        final surfaceDocument = _surfaceTokenDocument(tokens);
+        expect(surfaceDocument['schema'], 'remix/surface-tokens/v1');
+        expect(
+          surfaceDocument['tokens'],
+          hasLength(tokens.length - protocolTokens.length),
+        );
       });
     }
 
@@ -114,18 +122,28 @@ void main() {
 
       for (final brightness in Brightness.values) {
         final tokens = await _captureFortalTokens(tester, brightness);
+        final protocolTokens = _protocolTokens(tokens);
+        final surfaceDocument = _surfaceTokenDocument(tokens);
         final themeDocument = _expectSuccess(
-          mixProtocol.encodeTheme(MixProtocolTheme(tokens: tokens)),
+          mixProtocol.encodeTheme(MixProtocolTheme(tokens: protocolTokens)),
         );
 
         _expectJsonArtifact(
           'goldens/protocol/themes/${brightness.name}.mix.json',
           themeDocument,
         );
+        _expectJsonArtifact(
+          'goldens/protocol/themes/${brightness.name}.remix-surfaces.json',
+          surfaceDocument,
+        );
+        final surfaceTokens = surfaceDocument['tokens']! as List<Object?>;
         themeCoverage.add({
           'id': brightness.name,
-          'status': 'supported',
+          'status': 'supported-with-remix-extension',
           'tokenCount': tokens.length,
+          'mixProtocolTokenCount': protocolTokens.length,
+          'remixSurfaceTokenCount': surfaceTokens.length,
+          'surfaceDocument': 'themes/${brightness.name}.remix-surfaces.json',
         });
       }
 
@@ -213,7 +231,9 @@ void main() {
           {
             'id': 'fortal-button-portable',
             'runtimeType': 'RemixButtonStyler projection',
-            'status': componentArtifacts.supportedContainerRecipes == 20
+            'status':
+                componentArtifacts.supportedContainerRecipes ==
+                    componentArtifacts.recipeCount
                 ? 'partial'
                 : 'unsupported',
             'recipeCount': componentRecipes.length,
@@ -256,10 +276,10 @@ Future<Map<MixToken, Object>> _captureFortalTokens(
   Map<MixToken, Object>? captured;
 
   await tester.pumpWidget(
-    MaterialApp(
-      home: FortalScope(
-        brightness: brightness,
-        child: Builder(
+    FortalScope(
+      appearance: brightness == .dark ? .dark : .light,
+      child: MaterialApp(
+        home: Builder(
           builder: (context) {
             captured = Map.unmodifiable(MixScope.of(context).tokens!);
 
@@ -272,6 +292,45 @@ Future<Map<MixToken, Object>> _captureFortalTokens(
 
   return captured!;
 }
+
+Map<MixToken, Object> _protocolTokens(Map<MixToken, Object> tokens) {
+  return Map.unmodifiable({
+    for (final entry in tokens.entries)
+      if (entry.key is! RemixPaintShadowListToken) entry.key: entry.value,
+  });
+}
+
+Map<String, Object?> _surfaceTokenDocument(Map<MixToken, Object> tokens) {
+  final entries =
+      tokens.entries
+          .where((entry) => entry.key is RemixPaintShadowListToken)
+          .toList(growable: false)
+        ..sort((left, right) => left.key.name.compareTo(right.key.name));
+
+  return {
+    'schema': 'remix/surface-tokens/v1',
+    'colorFormat': 'AARRGGBB',
+    'tokens': [
+      for (final entry in entries)
+        {
+          'name': entry.key.name,
+          'layers': [
+            for (final shadow in entry.value as List<RemixPaintShadow>)
+              {
+                'kind': shadow.kind.name,
+                'color': _colorHex(shadow.color),
+                'offset': {'x': shadow.offset.dx, 'y': shadow.offset.dy},
+                'blurRadius': shadow.blurRadius,
+                'spreadRadius': shadow.spreadRadius,
+              },
+          ],
+        },
+    ],
+  };
+}
+
+String _colorHex(Color color) =>
+    '#${color.toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase()}';
 
 T _expectSuccess<T extends Object>(MixProtocolResult<T> result) {
   return switch (result) {

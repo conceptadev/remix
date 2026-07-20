@@ -1,35 +1,22 @@
 part of 'menu.dart';
 
-/// Style configuration for [RemixMenu] trigger content.
-///
-/// Naked menu behavior wraps the trigger in a button; this style only controls
-/// the visible trigger content.
-extension RemixMenuTriggerStylerRemixHelpers on RemixMenuTriggerStyler {
-  RemixMenuTriggerStyler flex(FlexStyler value) {
-    return merge(
-      RemixMenuTriggerStyler(container: FlexBoxStyler().flex(value)),
-    );
-  }
-}
-
-/// Style configuration for [RemixMenu] trigger, overlay, items, and dividers.
+/// Style configuration for [RemixMenu] overlay, items, and dividers.
 extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
   /// Creates a [RemixMenu] widget with this style applied.
   ///
   /// Example:
   /// ```dart
   /// RemixMenuStyler()
-  ///   .trigger(...)
   ///   .overlay(...)
   ///   .call<String>(
-  ///     trigger: RemixMenuTrigger(label: 'Options'),
-  ///     items: [...],
+  ///     trigger: const Text('Options'),
+  ///     entries: [...],
   ///   )
   /// ```
   RemixMenu<T> call<T>({
     Key? key,
-    required RemixMenuTrigger trigger,
-    required List<RemixMenuItemData<T>> items,
+    required Widget trigger,
+    required List<Widget> entries,
     MenuController? controller,
     ValueChanged<T>? onSelected,
     VoidCallback? onOpen,
@@ -41,12 +28,27 @@ extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
     bool useRootOverlay = false,
     bool closeOnClickOutside = true,
     FocusNode? triggerFocusNode,
-    OverlayPositionConfig positioning = const OverlayPositionConfig(),
+    OverlayPositionConfig positioning = const OverlayPositionConfig(
+      side: OverlaySide.bottom,
+      alignment: OverlayAlignment.start,
+      sideOffset: 4,
+      collisionPadding: EdgeInsets.all(10),
+    ),
+    OverlayPositionConfig submenuPositioning = const OverlayPositionConfig(
+      side: OverlaySide.right,
+      alignment: OverlayAlignment.start,
+      sideOffset: 1,
+      alignmentOffset: -8,
+      collisionPadding: EdgeInsets.all(10),
+    ),
+    String? semanticLabel,
+    bool excludeSemantics = false,
+    RemixMenuPartWrapper? contentWrapper,
   }) {
     return RemixMenu(
       key: key,
       trigger: trigger,
-      items: items,
+      entries: entries,
       controller: controller,
       onSelected: onSelected,
       onOpen: onOpen,
@@ -59,6 +61,10 @@ extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
       closeOnClickOutside: closeOnClickOutside,
       triggerFocusNode: triggerFocusNode,
       positioning: positioning,
+      submenuPositioning: submenuPositioning,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+      contentWrapper: contentWrapper,
       style: this,
     );
   }

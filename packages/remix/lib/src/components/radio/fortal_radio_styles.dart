@@ -14,6 +14,9 @@ enum FortalRadioSize {
 
 /// Fortal radio color variants.
 enum FortalRadioVariant {
+  /// Raised treatment with Radix's classic shadow and gradient layers.
+  classic,
+
   /// Surface treatment with neutral border.
   surface,
 
@@ -28,85 +31,154 @@ RemixRadioStyler fortalRadioStyler({
   bool highContrast = false,
 }) {
   return switch (variant) {
+    .classic => _fortalRadioClassicStyler(size, highContrast: highContrast),
     .surface => _fortalRadioSurfaceStyler(size, highContrast: highContrast),
     .soft => _fortalRadioSoftStyler(size, highContrast: highContrast),
   };
 }
 
 RemixRadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
-  return RemixRadioStyler()
-      .onFocused(
-        RemixRadioStyler().borderAll(
-          color: FortalTokens.focusA8(),
-          width: FortalTokens.focusRingWidth(),
-        ),
-      )
-      .merge(_fortalRadioSizeStyler(size));
+  final metrics = _fortalRadioMetrics(size);
+  return RemixRadioStyler(
+    container: BoxStyler()
+        .size(metrics.size, metrics.size)
+        .alignment(.center)
+        .borderRadiusAll(FortalTokens.radiusCircle()),
+    indicator: BoxStyler()
+        .size(metrics.indicatorSize, metrics.indicatorSize)
+        .borderRadiusAll(FortalTokens.radiusCircle()),
+    surface: _fortalRadioLayer(),
+    overlay: _fortalRadioLayer(),
+  ).onFocused(
+    RemixRadioStyler().overlay(
+      _fortalRadioLayer(
+        outlineColor: FortalTokens.focus8(),
+        outlineWidth: 2,
+        outlineOffset: 2,
+      ),
+    ),
+  );
 }
 
-RemixRadioStyler _fortalRadioSurfaceStyler(
+RemixRadioStyler _fortalRadioClassicStyler(
   FortalRadioSize size, {
-  bool highContrast = false,
+  required bool highContrast,
 }) {
+  final selectedColor = highContrast
+      ? FortalTokens.accent12()
+      : FortalTokens.accentIndicator();
   return _fortalRadioBaseStyler(size)
-      .fillColor(FortalTokens.colorSurface())
-      .borderAll(
-        color: FortalTokens.gray6(),
-        width: FortalTokens.borderWidth1(),
+      .surface(
+        _fortalRadioLayer(
+          color: FortalTokens.colorSurface(),
+          shadowToken: FortalTokens.shadow1,
+        ),
       )
-      .borderRadiusAll(FortalTokens.radiusFull())
-      .indicator(
-        BoxStyler()
-            .color(FortalTokens.accent9())
-            .borderRadiusAll(FortalTokens.radiusFull()),
+      .overlay(_fortalRadioInsetRing(FortalTokens.gray7()))
+      .indicatorColor(
+        highContrast ? FortalTokens.accent1() : FortalTokens.accentContrast(),
       )
       .onSelected(
         RemixRadioStyler()
-            .fillColor(
-              highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
-            )
-            .borderAll(
-              color: highContrast
-                  ? FortalTokens.accent12()
-                  : FortalTokens.accent9(),
-              width: FortalTokens.borderWidth1(),
-            )
-            .indicator(
-              BoxStyler().color(
-                highContrast
-                    ? FortalTokens.accent1()
-                    : FortalTokens.accentContrast(),
+            .surface(
+              _fortalRadioLayer(
+                color: selectedColor,
+                gradients: [
+                  RemixLinearGradientMix(
+                    colors: [
+                      FortalTokens.whiteA3(),
+                      Colors.transparent,
+                      FortalTokens.blackA3(),
+                    ],
+                  ),
+                ],
+                shadows: [
+                  RemixPaintShadowMix(
+                    kind: .inset,
+                    color: FortalTokens.whiteA4(),
+                    offset: const Offset(0, 0.5),
+                    blurRadius: 0.5,
+                  ),
+                  RemixPaintShadowMix(
+                    kind: .inset,
+                    color: FortalTokens.blackA4(),
+                    offset: const Offset(0, -0.5),
+                    blurRadius: 0.5,
+                  ),
+                ],
               ),
+            )
+            .indicatorColor(
+              highContrast
+                  ? FortalTokens.accent1()
+                  : FortalTokens.accentContrast(),
             ),
       )
       .onDisabled(
         RemixRadioStyler()
-            .fillColor(FortalTokens.gray3())
-            .borderAll(
-              color: FortalTokens.gray6(),
-              width: FortalTokens.borderWidth1(),
+            .surface(
+              _fortalRadioLayer(
+                color: FortalTokens.grayA3(),
+                shadowToken: FortalTokens.shadow1,
+              ),
             )
-            .indicator(BoxStyler().color(FortalTokens.gray9())),
+            .overlay(_fortalRadioLayer(shadows: const []))
+            .indicatorColor(FortalTokens.grayA8()),
+      );
+}
+
+RemixRadioStyler _fortalRadioSurfaceStyler(
+  FortalRadioSize size, {
+  required bool highContrast,
+}) {
+  return _fortalRadioBaseStyler(size)
+      .surface(_fortalRadioLayer(color: FortalTokens.colorSurface()))
+      .overlay(_fortalRadioInsetRing(FortalTokens.grayA7()))
+      .indicator(
+        BoxStyler()
+            .color(FortalTokens.accent9())
+            .borderRadiusAll(FortalTokens.radiusCircle()),
+      )
+      .onSelected(
+        RemixRadioStyler()
+            .surface(
+              _fortalRadioLayer(
+                color: highContrast
+                    ? FortalTokens.accent12()
+                    : FortalTokens.accentIndicator(),
+              ),
+            )
+            .overlay(_fortalRadioLayer(shadows: const []))
+            .indicatorColor(
+              highContrast
+                  ? FortalTokens.accent1()
+                  : FortalTokens.accentContrast(),
+            ),
+      )
+      .onDisabled(
+        RemixRadioStyler()
+            .surface(_fortalRadioLayer(color: FortalTokens.grayA3()))
+            .overlay(_fortalRadioInsetRing(FortalTokens.grayA6()))
+            .indicatorColor(FortalTokens.grayA8()),
       );
 }
 
 RemixRadioStyler _fortalRadioSoftStyler(
   FortalRadioSize size, {
-  bool highContrast = false,
+  required bool highContrast,
 }) {
   return _fortalRadioBaseStyler(size)
-      .fillColor(FortalTokens.accentA4())
-      .borderRadiusAll(FortalTokens.radiusFull())
+      .surface(_fortalRadioLayer(color: FortalTokens.accentA4()))
       .indicator(
         BoxStyler()
             .color(
               highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
             )
-            .borderRadiusAll(FortalTokens.radiusFull()),
+            .borderRadiusAll(FortalTokens.radiusCircle()),
       )
       .onSelected(
         RemixRadioStyler()
-            .fillColor(FortalTokens.accentA4())
+            .surface(_fortalRadioLayer(color: FortalTokens.accentA4()))
             .indicator(
               BoxStyler().color(
                 highContrast
@@ -117,27 +189,50 @@ RemixRadioStyler _fortalRadioSoftStyler(
       )
       .onDisabled(
         RemixRadioStyler()
-            .fillColor(FortalTokens.gray3())
-            .indicator(BoxStyler().color(FortalTokens.gray7())),
+            .surface(_fortalRadioLayer(color: FortalTokens.grayA3()))
+            .indicatorColor(FortalTokens.grayA8()),
       );
 }
 
-RemixRadioStyler _fortalRadioSizeStyler(FortalRadioSize size) {
-  return switch (size) {
-    .size1 => RemixRadioStyler(
-      container: BoxStyler().width(16.0).height(16.0).alignment(.center),
-      indicator: BoxStyler().width(6.0).height(6.0),
-    ),
-    .size2 => RemixRadioStyler(
-      container: BoxStyler().width(20.0).height(20.0).alignment(.center),
-      indicator: BoxStyler().width(8.0).height(8.0),
-    ),
-    .size3 => RemixRadioStyler(
-      container: BoxStyler().width(24.0).height(24.0).alignment(.center),
-      indicator: BoxStyler().width(10.0).height(10.0),
-    ),
-  };
-}
+({double size, double indicatorSize}) _fortalRadioMetrics(
+  FortalRadioSize size,
+) => switch (size) {
+  .size1 => (
+    size: FortalTokens.checkboxSize1(),
+    indicatorSize: FortalTokens.radioIndicatorSize1(),
+  ),
+  .size2 => (
+    size: FortalTokens.space4(),
+    indicatorSize: FortalTokens.radioIndicatorSize2(),
+  ),
+  .size3 => (
+    size: FortalTokens.checkboxSize3(),
+    indicatorSize: FortalTokens.radioIndicatorSize3(),
+  ),
+};
+
+RemixSurfaceLayerMix _fortalRadioInsetRing(Color color) => _fortalRadioLayer(
+  shadows: [RemixPaintShadowMix(kind: .inset, color: color, spreadRadius: 1)],
+);
+
+RemixSurfaceLayerMix _fortalRadioLayer({
+  Color? color,
+  List<RemixLinearGradientMix>? gradients,
+  List<RemixPaintShadowMix>? shadows,
+  RemixPaintShadowListToken? shadowToken,
+  Color? outlineColor,
+  double? outlineWidth,
+  double? outlineOffset,
+}) => RemixSurfaceLayerMix(
+  color: color,
+  gradients: gradients,
+  shadows: shadows,
+  shadowToken: shadowToken,
+  borderRadius: BorderRadiusMix.all(FortalTokens.radiusCircle()),
+  outlineColor: outlineColor,
+  outlineWidth: outlineWidth,
+  outlineOffset: outlineOffset,
+);
 
 /// Fortal-themed preset for [RemixRadio].
 class FortalRadio<T> extends StatelessWidget {
@@ -154,34 +249,6 @@ class FortalRadio<T> extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
   });
-
-  /// Surface treatment with neutral border.
-  const FortalRadio.surface({
-    super.key,
-    this.size = .size2,
-    this.color,
-    this.highContrast = false,
-    required this.value,
-    this.enabled = true,
-    this.toggleable = false,
-    this.mouseCursor,
-    this.focusNode,
-    this.autofocus = false,
-  }) : variant = FortalRadioVariant.surface;
-
-  /// Soft accent treatment.
-  const FortalRadio.soft({
-    super.key,
-    this.size = .size2,
-    this.color,
-    this.highContrast = false,
-    required this.value,
-    this.enabled = true,
-    this.toggleable = false,
-    this.mouseCursor,
-    this.focusNode,
-    this.autofocus = false,
-  }) : variant = FortalRadioVariant.soft;
 
   final FortalRadioVariant variant;
 
@@ -207,7 +274,7 @@ class FortalRadio<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FortalOverride(
+    return FortalComponentOverride(
       color: this.color,
       child:
           fortalRadioStyler(
@@ -225,4 +292,27 @@ class FortalRadio<T> extends StatelessWidget {
           ),
     );
   }
+}
+
+/// Typed selection scope for a set of [FortalRadio] widgets.
+class FortalRadioGroup<T> extends StatelessWidget {
+  const FortalRadioGroup({
+    super.key,
+    required this.value,
+    this.onChanged,
+    required this.child,
+  });
+
+  /// The currently selected group value.
+  final T? value;
+
+  /// Called when a radio requests a new selection. Null disables the group.
+  final ValueChanged<T?>? onChanged;
+
+  /// The subtree containing the group's radio items and labels.
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) =>
+      RemixRadioGroup<T>(groupValue: value, onChanged: onChanged, child: child);
 }

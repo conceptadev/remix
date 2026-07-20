@@ -16,15 +16,19 @@ void main() {
     );
 
     await tester.pumpRemixApp(
-      RemixButton(label: 'Save', onPressed: () {}, styleSpec: styleSpec),
+      RemixButton(
+        onPressed: () {},
+        styleSpec: styleSpec,
+        child: const Text('Save'),
+      ),
     );
     await tester.pumpAndSettle();
 
     expect(find.byType(RemixButton), findsOneWidget);
     expect(find.text('Save'), findsOneWidget);
 
-    final text = tester.widget<Text>(find.text('Save'));
-    expect(text.style?.color, labelColor);
-    expect(text.style?.fontSize, 18);
+    final inherited = DefaultTextStyle.of(tester.element(find.text('Save')));
+    expect(inherited.style.color, labelColor);
+    expect(inherited.style.fontSize, 18);
   });
 }

@@ -20,6 +20,16 @@ List<Color> _renderedDecorationColors(WidgetTester tester, Finder finder) {
       .toList();
 }
 
+List<Color> _renderedSurfaceColors(WidgetTester tester, Finder finder) {
+  return tester
+      .widgetList<RemixSurface>(
+        find.descendant(of: finder, matching: find.byType(RemixSurface)),
+      )
+      .map((surface) => surface.spec.color)
+      .whereType<Color>()
+      .toList();
+}
+
 void main() {
   testWidgets('fortal textfield factories build real stylers per variant', (
     tester,
@@ -47,7 +57,10 @@ void main() {
       final finder = find.byType(FortalTextField);
       expect(finder, findsOneWidget);
 
-      final colors = _renderedDecorationColors(tester, finder);
+      final colors = [
+        ..._renderedDecorationColors(tester, finder),
+        ..._renderedSurfaceColors(tester, finder),
+      ];
 
       // The disabled soft variant paints its onDisabled background
       // (FortalTokens.accentA3) — the resolved style tree must carry a color.

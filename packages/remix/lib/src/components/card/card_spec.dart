@@ -7,6 +7,17 @@ class RemixCardSpec with _$RemixCardSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
 
-  const RemixCardSpec({StyleSpec<BoxSpec>? container})
-    : container = container ?? const StyleSpec(spec: BoxSpec());
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? surface;
+
+  @override
+  @MixableField(setterType: RemixSurfaceLayerMix)
+  final RemixSurfaceLayerSpec? overlay;
+
+  const RemixCardSpec({
+    StyleSpec<BoxSpec>? container,
+    this.surface,
+    this.overlay,
+  }) : container = container ?? const StyleSpec(spec: BoxSpec());
 }

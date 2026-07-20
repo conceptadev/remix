@@ -100,8 +100,8 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Center(
           child: button(
-            label: 'Click Me',
             onPressed: () => debugPrint('Button pressed!'),
+            child: const Text('Click Me'),
           ),
         ),
       ),
@@ -169,7 +169,9 @@ While Remix gives you complete freedom to build any design system, it also inclu
 
 ### Quick Start with Fortal
 
-To use Fortal widgets, wrap your app with `FortalScope` to provide the design tokens, then use the generated `Fortal*` widgets. Named constructors select a fixed variant; use the unnamed constructor with `variant:` when the choice is dynamic:
+To use Fortal widgets, place `FortalScope` above the app widget so routes and
+Navigator overlays inherit the same resolved tokens. Every `Fortal*` widget has
+one constructor; select recipes with enum-valued `variant:` and `size:` fields:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -178,13 +180,14 @@ import 'package:remix/remix.dart';
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: FortalScope(
-          child: Center(
-            child: FortalButton.solid(
+    return FortalScope(
+      child: MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: FortalButton(
+              variant: FortalButtonVariant.solid,
               onPressed: () {},
-              label: 'Fortal Button',
+              child: const Text('Fortal Button'),
             ),
           ),
         ),
@@ -196,7 +199,7 @@ class MyApp extends StatelessWidget {
 
 ### Customizing Fortal Styles
 
-Generated Fortal widgets call the matching `fortal*Styler` internally. Use those stylers directly when you need a custom Remix widget composition:
+Fortal widgets call the matching `fortal*Styler` internally. Use those stylers directly when you need a custom Remix widget composition:
 
 ```dart
 final style = fortalButtonStyler(variant: FortalButtonVariant.solid)

@@ -22,7 +22,7 @@ class BadgeExample extends StatelessWidget {
         mainAxisAlignment: .center,
         spacing: 16,
         children: [
-          RemixBadge(label: '8', style: styleLabel),
+          RemixBadge(style: styleLabel, child: const Text('8')),
           RemixBadge(style: styleIcon, child: const Icon(Icons.camera_alt)),
         ],
       ),

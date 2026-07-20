@@ -8,12 +8,13 @@
 
 // Documentation for all public APIs is provided below
 
+import 'dart:math' as math;
 import 'dart:ui' show Color, Offset;
 
-import 'package:flutter/painting.dart' show BoxShadow, ColorSwatch;
-import 'package:mix/mix.dart' show BoxShadowToken;
+import 'package:flutter/painting.dart' show ColorSwatch;
 
 import '../radix/colors/colors.dart';
+import '../rendering/remix_surface.dart';
 import 'fortal_theme.dart';
 
 // ============================================================================
@@ -68,158 +69,193 @@ Color computeColorOverlay({required bool isDark}) =>
 
 /// Computes the mode-aware stroke used by elevation shadows.
 Color computeShadowStroke(RadixColorScale gray, {required bool isDark}) =>
-    Color.lerp(
+    mixOklabPremultiplied(
       gray.alphaStep(isDark ? 6 : 3),
       gray.step(isDark ? 6 : 3),
       0.25,
-    )!;
+    );
+
+/// Mixes two sRGB colors in OKLab after premultiplying their channels by
+/// alpha, matching CSS `color-mix(in oklab, ...)` for translucent colors.
+Color mixOklabPremultiplied(Color first, Color second, double amount) {
+  if (!amount.isFinite || amount < 0 || amount > 1) {
+    throw ArgumentError.value(
+      amount,
+      'amount',
+      'Expected a value from 0 to 1.',
+    );
+  }
+  final firstWeight = 1 - amount;
+  final alpha = first.a * firstWeight + second.a * amount;
+  if (alpha == 0) return const Color(0x00000000);
+
+  final firstLab = _srgbToOklab(first);
+  final secondLab = _srgbToOklab(second);
+  final mixedLab = (
+    lightness:
+        (firstLab.lightness * first.a * firstWeight +
+            secondLab.lightness * second.a * amount) /
+        alpha,
+    a:
+        (firstLab.a * first.a * firstWeight + secondLab.a * second.a * amount) /
+        alpha,
+    b:
+        (firstLab.b * first.a * firstWeight + secondLab.b * second.a * amount) /
+        alpha,
+  );
+  final rgb = _oklabToSrgb(mixedLab);
+
+  return Color.from(
+    alpha: alpha,
+    red: rgb.red.clamp(0, 1),
+    green: rgb.green.clamp(0, 1),
+    blue: rgb.blue.clamp(0, 1),
+  );
+}
+
+({double lightness, double a, double b}) _srgbToOklab(Color color) {
+  final red = _linearizeSrgb(color.r);
+  final green = _linearizeSrgb(color.g);
+  final blue = _linearizeSrgb(color.b);
+  final l = math
+      .pow(
+        0.4122214708 * red + 0.5363325363 * green + 0.0514459929 * blue,
+        1 / 3,
+      )
+      .toDouble();
+  final m = math
+      .pow(
+        0.2119034982 * red + 0.6806995451 * green + 0.1073969566 * blue,
+        1 / 3,
+      )
+      .toDouble();
+  final s = math
+      .pow(
+        0.0883024619 * red + 0.2817188376 * green + 0.6299787005 * blue,
+        1 / 3,
+      )
+      .toDouble();
+
+  return (
+    lightness: 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+    a: 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+    b: 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s,
+  );
+}
+
+({double red, double green, double blue}) _oklabToSrgb(
+  ({double lightness, double a, double b}) color,
+) {
+  final l = math
+      .pow(color.lightness + 0.3963377774 * color.a + 0.2158037573 * color.b, 3)
+      .toDouble();
+  final m = math
+      .pow(color.lightness - 0.1055613458 * color.a - 0.0638541728 * color.b, 3)
+      .toDouble();
+  final s = math
+      .pow(color.lightness - 0.0894841775 * color.a - 1.2914855480 * color.b, 3)
+      .toDouble();
+
+  return (
+    red: _encodeSrgb(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
+    green: _encodeSrgb(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
+    blue: _encodeSrgb(-0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s),
+  );
+}
+
+double _linearizeSrgb(double channel) => channel <= 0.04045
+    ? channel / 12.92
+    : math.pow((channel + 0.055) / 1.055, 2.4).toDouble();
+
+double _encodeSrgb(double channel) => channel <= 0.0031308
+    ? 12.92 * channel
+    : 1.055 * math.pow(channel, 1 / 2.4).toDouble() - 0.055;
 
 /// Builds Radix Themes elevation shadows for the active brightness.
-///
-/// Flutter does not support CSS inset shadows, so the first light shadow is
-/// represented by its equivalent layered outer-shadow approximation.
-Map<BoxShadowToken, List<BoxShadow>> buildFortalShadows({
+Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
   required bool isDark,
   required FortalThemeColors colors,
 }) {
   if (isDark) {
     return {
       FortalTokens.shadow1: [
-        BoxShadow(
-          color: colors.gray.scale.alphaStep(6),
-          offset: const Offset(0, 0),
-          blurRadius: 0,
-          spreadRadius: 1,
+        _shadow(
+          colors.gray.scale.alphaStep(3),
+          kind: .inset,
+          offset: const Offset(0, -1),
+          blur: 1,
         ),
-        BoxShadow(
-          color: colors.blackAlpha[5]!,
-          offset: const Offset(0, 1),
-          blurRadius: 2,
-          spreadRadius: 0,
+        _shadow(colors.gray.scale.alphaStep(3), kind: .inset, spread: 1),
+        _shadow(
+          colors.blackAlpha[5]!,
+          kind: .inset,
+          offset: const Offset(0, 3),
+          blur: 4,
         ),
+        _shadow(colors.gray.scale.alphaStep(4), kind: .inset, spread: 1),
       ],
       FortalTokens.shadow2: [
-        BoxShadow(
-          color: colors.shadowStroke,
-          offset: const Offset(0, 0),
-          blurRadius: 0,
-          spreadRadius: 1,
-        ),
-        BoxShadow(
-          color: colors.blackAlpha[3]!,
-          offset: const Offset(0, 0),
-          blurRadius: 0.5,
-          spreadRadius: 0,
-        ),
-        BoxShadow(
-          color: colors.blackAlpha[6]!,
-          offset: const Offset(0, 1),
-          blurRadius: 1,
-          spreadRadius: 0,
-        ),
-        BoxShadow(
-          color: colors.blackAlpha[6]!,
+        _shadow(colors.shadowStroke, spread: 1),
+        _shadow(colors.blackAlpha[3]!, blur: 0.5),
+        _shadow(colors.blackAlpha[6]!, offset: const Offset(0, 1), blur: 1),
+        _shadow(
+          colors.blackAlpha[6]!,
           offset: const Offset(0, 2),
-          blurRadius: 1,
-          spreadRadius: -1,
+          blur: 1,
+          spread: -1,
         ),
-        BoxShadow(
-          color: colors.blackAlpha[5]!,
-          offset: const Offset(0, 1),
-          blurRadius: 3,
-          spreadRadius: 0,
-        ),
+        _shadow(colors.blackAlpha[5]!, offset: const Offset(0, 1), blur: 3),
       ],
       FortalTokens.shadow3: [
-        BoxShadow(
-          color: colors.shadowStroke,
-          offset: const Offset(0, 0),
-          blurRadius: 0,
-          spreadRadius: 1,
-        ),
-        BoxShadow(
-          color: colors.blackAlpha[3]!,
+        _shadow(colors.shadowStroke, spread: 1),
+        _shadow(
+          colors.blackAlpha[3]!,
           offset: const Offset(0, 2),
-          blurRadius: 3,
-          spreadRadius: -2,
+          blur: 3,
+          spread: -2,
         ),
-        BoxShadow(
-          color: colors.blackAlpha[6]!,
+        _shadow(
+          colors.blackAlpha[6]!,
           offset: const Offset(0, 3),
-          blurRadius: 8,
-          spreadRadius: -2,
+          blur: 8,
+          spread: -2,
         ),
-        BoxShadow(
-          color: colors.blackAlpha[7]!,
+        _shadow(
+          colors.blackAlpha[7]!,
           offset: const Offset(0, 4),
-          blurRadius: 12,
-          spreadRadius: -4,
+          blur: 12,
+          spread: -4,
         ),
       ],
       FortalTokens.shadow4: [
-        BoxShadow(
-          color: colors.shadowStroke,
-          offset: const Offset(0, 0),
-          blurRadius: 0,
-          spreadRadius: 1,
-        ),
-        BoxShadow(
-          color: colors.blackAlpha[3]!,
-          offset: const Offset(0, 8),
-          blurRadius: 40,
-          spreadRadius: 0,
-        ),
-        BoxShadow(
-          color: colors.blackAlpha[5]!,
+        _shadow(colors.shadowStroke, spread: 1),
+        _shadow(colors.blackAlpha[3]!, offset: const Offset(0, 8), blur: 40),
+        _shadow(
+          colors.blackAlpha[5]!,
           offset: const Offset(0, 12),
-          blurRadius: 32,
-          spreadRadius: -16,
+          blur: 32,
+          spread: -16,
         ),
       ],
       FortalTokens.shadow5: [
-        BoxShadow(
-          color: colors.shadowStroke,
-          offset: const Offset(0, 0),
-          blurRadius: 0,
-          spreadRadius: 1,
-        ),
-        BoxShadow(
-          color: colors.blackAlpha[5]!,
+        _shadow(colors.shadowStroke, spread: 1),
+        _shadow(colors.blackAlpha[5]!, offset: const Offset(0, 12), blur: 60),
+        _shadow(
+          colors.blackAlpha[7]!,
           offset: const Offset(0, 12),
-          blurRadius: 60,
-          spreadRadius: 0,
-        ),
-        BoxShadow(
-          color: colors.blackAlpha[7]!,
-          offset: const Offset(0, 12),
-          blurRadius: 32,
-          spreadRadius: -16,
+          blur: 32,
+          spread: -16,
         ),
       ],
       FortalTokens.shadow6: [
-        BoxShadow(
-          color: colors.shadowStroke,
-          offset: const Offset(0, 0),
-          blurRadius: 0,
-          spreadRadius: 1,
-        ),
-        BoxShadow(
-          color: colors.blackAlpha[4]!,
-          offset: const Offset(0, 12),
-          blurRadius: 60,
-          spreadRadius: 0,
-        ),
-        BoxShadow(
-          color: colors.blackAlpha[6]!,
+        _shadow(colors.shadowStroke, spread: 1),
+        _shadow(colors.blackAlpha[4]!, offset: const Offset(0, 12), blur: 60),
+        _shadow(colors.blackAlpha[6]!, offset: const Offset(0, 16), blur: 64),
+        _shadow(
+          colors.blackAlpha[11]!,
           offset: const Offset(0, 16),
-          blurRadius: 64,
-          spreadRadius: 0,
-        ),
-        BoxShadow(
-          color: colors.blackAlpha[11]!,
-          offset: const Offset(0, 16),
-          blurRadius: 36,
-          spreadRadius: -20,
+          blur: 36,
+          spread: -20,
         ),
       ],
     };
@@ -227,151 +263,108 @@ Map<BoxShadowToken, List<BoxShadow>> buildFortalShadows({
 
   return {
     FortalTokens.shadow1: [
-      BoxShadow(
-        color: colors.gray.scale.alphaStep(5),
-        offset: const Offset(0, 0),
-        blurRadius: 0,
-        spreadRadius: 1,
-      ),
-      BoxShadow(
-        color: colors.gray.scale.alphaStep(2),
+      _shadow(colors.gray.scale.alphaStep(5), kind: .inset, spread: 1),
+      _shadow(
+        colors.gray.scale.alphaStep(2),
+        kind: .inset,
         offset: const Offset(0, 1.5),
-        blurRadius: 2,
-        spreadRadius: 0,
+        blur: 2,
       ),
-      BoxShadow(
-        color: colors.blackAlpha[2]!,
+      _shadow(
+        colors.blackAlpha[2]!,
+        kind: .inset,
         offset: const Offset(0, 1.5),
-        blurRadius: 2,
-        spreadRadius: 0,
+        blur: 2,
       ),
     ],
     FortalTokens.shadow2: [
-      BoxShadow(
-        color: colors.shadowStroke,
-        offset: const Offset(0, 0),
-        blurRadius: 0,
-        spreadRadius: 1,
-      ),
-      BoxShadow(
-        color: colors.blackAlpha[1]!,
-        offset: const Offset(0, 0),
-        blurRadius: 0.5,
-        spreadRadius: 0,
-      ),
-      BoxShadow(
-        color: colors.gray.scale.alphaStep(2),
+      _shadow(colors.shadowStroke, spread: 1),
+      _shadow(colors.blackAlpha[1]!, blur: 0.5),
+      _shadow(
+        colors.gray.scale.alphaStep(2),
         offset: const Offset(0, 1),
-        blurRadius: 1,
-        spreadRadius: 0,
+        blur: 1,
       ),
-      BoxShadow(
-        color: colors.blackAlpha[1]!,
+      _shadow(
+        colors.blackAlpha[1]!,
         offset: const Offset(0, 2),
-        blurRadius: 1,
-        spreadRadius: -1,
+        blur: 1,
+        spread: -1,
       ),
-      BoxShadow(
-        color: colors.blackAlpha[1]!,
-        offset: const Offset(0, 1),
-        blurRadius: 3,
-        spreadRadius: 0,
-      ),
+      _shadow(colors.blackAlpha[1]!, offset: const Offset(0, 1), blur: 3),
     ],
     FortalTokens.shadow3: [
-      BoxShadow(
-        color: colors.shadowStroke,
-        offset: const Offset(0, 0),
-        blurRadius: 0,
-        spreadRadius: 1,
-      ),
-      BoxShadow(
-        color: colors.gray.scale.alphaStep(3),
+      _shadow(colors.shadowStroke, spread: 1),
+      _shadow(
+        colors.gray.scale.alphaStep(3),
         offset: const Offset(0, 2),
-        blurRadius: 3,
-        spreadRadius: -2,
+        blur: 3,
+        spread: -2,
       ),
-      BoxShadow(
-        color: colors.blackAlpha[2]!,
+      _shadow(
+        colors.blackAlpha[2]!,
         offset: const Offset(0, 3),
-        blurRadius: 12,
-        spreadRadius: -4,
+        blur: 12,
+        spread: -4,
       ),
-      BoxShadow(
-        color: colors.blackAlpha[2]!,
+      _shadow(
+        colors.blackAlpha[2]!,
         offset: const Offset(0, 4),
-        blurRadius: 16,
-        spreadRadius: -8,
+        blur: 16,
+        spread: -8,
       ),
     ],
     FortalTokens.shadow4: [
-      BoxShadow(
-        color: colors.shadowStroke,
-        offset: const Offset(0, 0),
-        blurRadius: 0,
-        spreadRadius: 1,
-      ),
-      BoxShadow(
-        color: colors.blackAlpha[1]!,
-        offset: const Offset(0, 8),
-        blurRadius: 40,
-        spreadRadius: 0,
-      ),
-      BoxShadow(
-        color: colors.gray.scale.alphaStep(3),
+      _shadow(colors.shadowStroke, spread: 1),
+      _shadow(colors.blackAlpha[1]!, offset: const Offset(0, 8), blur: 40),
+      _shadow(
+        colors.gray.scale.alphaStep(3),
         offset: const Offset(0, 12),
-        blurRadius: 32,
-        spreadRadius: -16,
+        blur: 32,
+        spread: -16,
       ),
     ],
     FortalTokens.shadow5: [
-      BoxShadow(
-        color: colors.shadowStroke,
-        offset: const Offset(0, 0),
-        blurRadius: 0,
-        spreadRadius: 1,
-      ),
-      BoxShadow(
-        color: colors.blackAlpha[3]!,
+      _shadow(colors.shadowStroke, spread: 1),
+      _shadow(colors.blackAlpha[3]!, offset: const Offset(0, 12), blur: 60),
+      _shadow(
+        colors.gray.scale.alphaStep(5),
         offset: const Offset(0, 12),
-        blurRadius: 60,
-        spreadRadius: 0,
-      ),
-      BoxShadow(
-        color: colors.gray.scale.alphaStep(5),
-        offset: const Offset(0, 12),
-        blurRadius: 32,
-        spreadRadius: -16,
+        blur: 32,
+        spread: -16,
       ),
     ],
     FortalTokens.shadow6: [
-      BoxShadow(
-        color: colors.shadowStroke,
-        offset: const Offset(0, 0),
-        blurRadius: 0,
-        spreadRadius: 1,
-      ),
-      BoxShadow(
-        color: colors.blackAlpha[3]!,
-        offset: const Offset(0, 12),
-        blurRadius: 60,
-        spreadRadius: 0,
-      ),
-      BoxShadow(
-        color: colors.gray.scale.alphaStep(2),
+      _shadow(colors.shadowStroke, spread: 1),
+      _shadow(colors.blackAlpha[3]!, offset: const Offset(0, 12), blur: 60),
+      _shadow(
+        colors.gray.scale.alphaStep(2),
         offset: const Offset(0, 16),
-        blurRadius: 64,
-        spreadRadius: 0,
+        blur: 64,
       ),
-      BoxShadow(
-        color: colors.gray.scale.alphaStep(7),
+      _shadow(
+        colors.gray.scale.alphaStep(7),
         offset: const Offset(0, 16),
-        blurRadius: 36,
-        spreadRadius: -20,
+        blur: 36,
+        spread: -20,
       ),
     ],
   };
 }
+
+RemixPaintShadow _shadow(
+  Color color, {
+  RemixPaintShadowKind kind = RemixPaintShadowKind.outer,
+  Offset offset = Offset.zero,
+  double blur = 0,
+  double spread = 0,
+}) => RemixPaintShadow(
+  kind: kind,
+  color: color,
+  offset: offset,
+  blurRadius: blur,
+  spreadRadius: spread,
+);
 
 // ============================================================================
 // RESOLVER (merged from resolver.dart)
@@ -417,6 +410,7 @@ class FortalThemeColors {
 
 // Map by enum .name to generated RadixColorTheme instances (light/dark contained).
 const Map<String, RadixColorTheme> _accentThemesByName = {
+  'gray': gray,
   'amber': amber,
   'blue': blue,
   'bronze': bronze,
@@ -442,13 +436,6 @@ const Map<String, RadixColorTheme> _accentThemesByName = {
   'tomato': tomato,
   'violet': violet,
   'yellow': yellow,
-  // neutrals also exist as accent enums for convenience
-  'gray': gray,
-  'mauve': mauve,
-  'slate': slate,
-  'sage': sage,
-  'olive': olive,
-  'sand': sand,
 };
 
 const Map<String, RadixColorTheme> _grayThemesByName = {
@@ -461,12 +448,14 @@ const Map<String, RadixColorTheme> _grayThemesByName = {
 };
 
 /// Resolves all computed tokens for a theme configuration.
-FortalThemeColors resolveFortalTokens(FortalThemeConfig theme) {
+FortalThemeColors resolveFortalTokens(FortalThemeData theme) {
   // Pick light/dark RadixColor for accent and neutral using enum .name keys
-  final String accentName = theme.accent.name;
-  final String grayName = theme.gray.name;
-  final RadixColorTheme accentTheme = _accentThemesByName[accentName]!;
+  final String accentName = theme.accentColor.name;
+  final String grayName = theme.grayColor.name;
   final RadixColorTheme grayTheme = _grayThemesByName[grayName]!;
+  final RadixColorTheme accentTheme = theme.accentColor == .gray
+      ? grayTheme
+      : _accentThemesByName[accentName]!;
   final RadixColor accentRC = theme.isDark
       ? accentTheme.dark
       : accentTheme.light;

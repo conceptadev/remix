@@ -459,9 +459,9 @@ void main() {
 
       testWidgets('accepts custom positioning', (tester) async {
         const positioning = OverlayPositionConfig(
-          targetAnchor: Alignment.topCenter,
-          followerAnchor: Alignment.bottomCenter,
-          offset: Offset(0, -8),
+          side: OverlaySide.top,
+          alignment: OverlayAlignment.center,
+          sideOffset: 8,
         );
 
         await tester.pumpRemixApp(
