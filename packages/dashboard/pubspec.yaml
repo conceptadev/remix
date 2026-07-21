@@ -1,0 +1,21 @@
+name: dashboard
+description: Polished Fortal dashboard demo app showcasing Remix theming and components.
+publish_to: "none"
+version: 0.1.0+1
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  remix:
+    path: ../remix
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

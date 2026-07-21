@@ -9,6 +9,7 @@ dev_dependencies:
   build_runner: ^2.10.1
 
 workspace:
+  - packages/dashboard
   - packages/demo
   - packages/example
   - packages/playground
