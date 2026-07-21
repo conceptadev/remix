@@ -56,8 +56,7 @@
 - **FIX**: Preserve unresolved constraint tokens in portable Fortal Button
   container documents so every variant and size remains protocol-encodable.
 - **CHORE**: Target exact `naked_ui` 1.0.0-beta.7 behavior, add the pinned
-  Chromium reference fixture and parity manifest/checker, and expand the Fortal
-  Atlas from Button-only coverage to all 23 families in light and dark themes.
+  Chromium reference fixture and parity manifest/checker.
 - **CHORE**: Require every parity-manifest enum and state to cite an exact
   executable test case; reject missing, stale, extra, or uncited evidence.
 - **DOCS**: Migrate the complete MDX guide and public examples to the hard-break

@@ -11,7 +11,6 @@
     "source",
     "theme",
     "families",
-    "atlas",
     "referenceFixtures",
     "commonFlutterExceptions",
     "approximations"
@@ -56,16 +55,6 @@
       "minItems": 23,
       "maxItems": 23,
       "items": { "$ref": "#/$defs/family" }
-    },
-    "atlas": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["requiredFamilyIds", "themeIds", "belowAppException"],
-      "properties": {
-        "requiredFamilyIds": { "$ref": "#/$defs/nonEmptyStrings" },
-        "themeIds": { "$ref": "#/$defs/nonEmptyStrings" },
-        "belowAppException": { "type": "string", "minLength": 1 }
-      }
     },
     "referenceFixtures": {
       "type": "object",
@@ -137,8 +126,7 @@
       "properties": {
         "enums": { "$ref": "#/$defs/strings" },
         "states": { "$ref": "#/$defs/strings" },
-        "tests": { "$ref": "#/$defs/nonEmptyStrings" },
-        "atlas": { "type": "string", "minLength": 1 }
+        "tests": { "$ref": "#/$defs/nonEmptyStrings" }
       }
     },
     "family": {
@@ -175,12 +163,7 @@
         "sourceFiles": { "$ref": "#/$defs/strings" },
         "sourceSelectors": { "$ref": "#/$defs/strings" },
         "flutterExceptions": { "$ref": "#/$defs/nonEmptyStrings" },
-        "coverage": {
-          "allOf": [
-            { "$ref": "#/$defs/coverage" },
-            { "required": ["atlas"] }
-          ]
-        }
+        "coverage": { "$ref": "#/$defs/coverage" }
       }
     },
     "mappingBoundary": {

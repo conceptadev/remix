@@ -272,33 +272,6 @@ void _checkFamilies(
     'Exactly 23 Fortal families must be tracked.',
     failures,
   );
-
-  final atlas = _object(manifest['atlas'], 'atlas', failures);
-  final requiredAtlasIds = _strings(
-    atlas?['requiredFamilyIds'],
-    'atlas.requiredFamilyIds',
-    failures,
-  ).toSet();
-  _expect(
-    _sameSet(requiredAtlasIds, families.keys.toSet()),
-    'Atlas family ids must equal the 23 manifest families.',
-    failures,
-  );
-
-  final catalog = File(
-    '${workspaceRoot.path}/packages/demo/test/atlas/support/fortal_atlas_catalog.dart',
-  );
-  if (!catalog.existsSync()) {
-    failures.add('Missing ${catalog.path}.');
-    return;
-  }
-  final catalogSource = catalog.readAsStringSync();
-  for (final id in requiredAtlasIds) {
-    final literal = "id: '$id'";
-    if (!catalogSource.contains(literal)) {
-      failures.add('Atlas catalog has no explicit $literal component.');
-    }
-  }
 }
 
 void _checkCoverage({
@@ -707,8 +680,7 @@ Never _finish(List<String> failures) {
   stdout.writeln(
     'Verified @radix-ui/themes 3.3.0 contract: '
     '20 mapped families, 3 Fortal extensions, Chromium fixtures, '
-    'coverage ledger, Atlas inventory, hosted Naked '
-    '$_expectedNakedUiVersion pin, and no '
+    'coverage ledger, hosted Naked $_expectedNakedUiVersion pin, and no '
     'undocumented approximations.',
   );
   exit(0);

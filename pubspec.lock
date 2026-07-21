@@ -441,24 +441,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0-beta.0"
-  mix_atlas:
-    dependency: transitive
-    description:
-      path: "packages/mix_atlas"
-      ref: fb6aa7eccc0a4a21728ac61c662d96b94496dd55
-      resolved-ref: fb6aa7eccc0a4a21728ac61c662d96b94496dd55
-      url: "https://github.com/btwld/mix.git"
-    source: git
-    version: "0.1.0"
-  mix_atlas_capture:
-    dependency: transitive
-    description:
-      path: "packages/mix_atlas_capture"
-      ref: fb6aa7eccc0a4a21728ac61c662d96b94496dd55
-      resolved-ref: fb6aa7eccc0a4a21728ac61c662d96b94496dd55
-      url: "https://github.com/btwld/mix.git"
-    source: git
-    version: "0.1.0"
   mix_generator:
     dependency: transitive
     description:

@@ -52,20 +52,6 @@ melos:
         - test:flutter
       description: Verify generated sources, docs, Fortal parity, and tests
 
-    atlas:fortal:
-      steps:
-        - melos exec --scope="demo" -- flutter test test/atlas/fortal_protocol_probe_test.dart --update-goldens
-        - melos exec --scope="demo" -- flutter test test/atlas/fortal_atlas_golden_test.dart --update-goldens
-        - melos exec --scope="demo" -- dart run tool/package_fortal_atlas.dart
-      description: Regenerate the committed Fortal Atlas capture
-
-    atlas:fortal:check:
-      steps:
-        - melos exec --scope="demo" -- flutter test test/atlas/fortal_protocol_probe_test.dart
-        - melos exec --scope="demo" -- flutter test test/atlas/fortal_atlas_golden_test.dart
-        - melos exec --scope="demo" -- dart run tool/package_fortal_atlas.dart --check
-      description: Verify the committed Fortal Atlas capture without rewriting it
-
     fortal:parity:check:
       exec: dart run tool/fortal_parity/check.dart
       description: Verify the pinned Radix Themes 3.3.0 parity contract and coverage

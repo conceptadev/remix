@@ -9,8 +9,7 @@ environment:
 
 dependency_overrides:
   accessibility_tools: ^2.8.0
-  # Keep Mix and Atlas on their compatible revision while the generator and
-  # annotation packages use their published beta through Remix.
+  # Keep Mix on the revision compatible with Remix's generator packages.
   mix:
     git:
       url: https://github.com/btwld/mix.git
@@ -30,21 +29,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mix_atlas:
-    git:
-      url: https://github.com/btwld/mix.git
-      ref: fb6aa7eccc0a4a21728ac61c662d96b94496dd55
-      path: packages/mix_atlas
   mix_protocol:
     git:
       url: https://github.com/btwld/mix.git
       ref: fb6aa7eccc0a4a21728ac61c662d96b94496dd55
       path: packages/mix_protocol
-  mix_atlas_capture:
-    git:
-      url: https://github.com/btwld/mix.git
-      ref: fb6aa7eccc0a4a21728ac61c662d96b94496dd55
-      path: packages/mix_atlas_capture
   widgetbook_generator: ^3.24.0
 
 flutter:
