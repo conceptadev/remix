@@ -373,6 +373,10 @@ class RemixSurfaceLayerSpec extends Spec<RemixSurfaceLayerSpec> {
     this.outlineOffset = 0,
   }) : assert(backdropBlur >= 0),
        assert(outlineWidth >= 0),
+       // Const-context finiteness check: `outlineOffset.isFinite` is a property
+       // access and is not permitted in a const assert, so the equivalent
+       // comparison against ±double.maxFinite (which excludes NaN/±Infinity) is
+       // used instead. Do not "simplify" to `.isFinite` — it breaks const eval.
        assert(
          outlineOffset >= -double.maxFinite &&
              outlineOffset <= double.maxFinite,

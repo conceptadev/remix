@@ -507,7 +507,7 @@ class _RemixMenuPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scope = _RemixMenuStyleScope(
+    return _RemixMenuStyleScope(
       hasCheckableItems: _menuEntriesContainCheckable(entries),
       overlay: overlay,
       surface: surface,
@@ -540,7 +540,6 @@ class _RemixMenuPanel extends StatelessWidget {
         ),
       ),
     );
-    return scope;
   }
 }
 

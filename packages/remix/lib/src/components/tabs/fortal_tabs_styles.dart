@@ -4,9 +4,10 @@ part of 'tabs.dart';
 enum FortalTabsSize { size1, size2 }
 
 /// Fortal-themed preset for [RemixTabBar].
-RemixTabBarStyler fortalTabBarStyler({
-  FortalTabsSize size = FortalTabsSize.size2,
-}) {
+///
+/// The tab-list bottom border is a single hairline at every Radix size, so this
+/// preset takes no `size` — unlike [fortalTabStyler], whose per-tab metrics vary.
+RemixTabBarStyler fortalTabBarStyler() {
   return RemixTabBarStyler().borderBottom(
     color: FortalTokens.grayA5(),
     width: FortalTokens.borderWidth1(),
@@ -148,9 +149,12 @@ class FortalTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tabBar = fortalTabBarStyler(
-      size: size,
-    ).call(key: key, wrap: wrap, justify: justify, children: children);
+    final tabBar = fortalTabBarStyler().call(
+      key: key,
+      wrap: wrap,
+      justify: justify,
+      children: children,
+    );
 
     return FortalComponentOverride(
       color: color,
