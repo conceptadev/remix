@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_surface.dart' show RemixSurfaceBox;
 
 void main() {
   test('defaults to Radix size1, soft, and normal contrast', () {
@@ -58,6 +59,35 @@ void main() {
       expect(padding.top, closeTo(4.4, 1e-9));
       expect(scaled.label.spec.style!.fontSize, closeTo(15.4, 1e-9));
       expect(_radius(full.container.spec), 9999);
+    });
+
+    testWidgets('shrink-wraps its surface inside a bounded parent', (
+      tester,
+    ) async {
+      const slotWidth = 110.0;
+      const slotHeight = 48.0;
+      await tester.pumpWidget(
+        const FortalScope(
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: slotWidth,
+                height: slotHeight,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: FortalBadge(child: Text('Active')),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final badgeSize = tester.getSize(find.byType(RemixSurfaceBox));
+      expect(badgeSize.width, lessThan(slotWidth));
+      expect(badgeSize.height, lessThan(slotHeight));
     });
   });
 

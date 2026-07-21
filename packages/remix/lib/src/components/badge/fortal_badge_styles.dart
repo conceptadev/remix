@@ -83,10 +83,7 @@ RemixBadgeStyler fortalBadgeStyler({
 RemixBadgeStyler _fortalBadgeBaseStyler(FortalBadgeSize size) {
   final radius = _fortalBadgeRadius(size);
   return RemixBadgeStyler(
-    container: BoxStyler(
-      alignment: .center,
-      padding: _fortalBadgePadding(size),
-    ),
+    container: BoxStyler(padding: _fortalBadgePadding(size)),
     label: TextStyler(
       style: _fortalBadgeText(size).mix(),
     ).fontWeight(FortalTokens.fontWeightMedium()),
