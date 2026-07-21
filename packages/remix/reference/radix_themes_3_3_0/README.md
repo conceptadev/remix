@@ -10,7 +10,7 @@ boundaries, Atlas inventory, and reference-fixture paths live in
 executable test case in the corresponding `coverage.tests` allowlist. The
 parity checker rejects unknown keys, missing keys, stale test descriptions,
 uncited test files, missing Atlas families, source drift, an inexact Naked
-beta.6 dependency, or an undocumented approximation. Parameterized cases use
+beta.7 dependency, or an undocumented approximation. Parameterized cases use
 their literal Dart test description, such as
 `${size.name} matches the pinned dimension and radius`.
 

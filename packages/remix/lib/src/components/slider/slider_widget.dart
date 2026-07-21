@@ -165,7 +165,7 @@ class _RemixSliderVisual extends StatelessWidget {
 
   Widget _buildRange(Size size) {
     final percentages = state.values.length == 1
-        ? [_visualPercentage(state, 0), state.visualPercentageAt(0)]
+        ? [state.visualPercentageOf(0), state.visualPercentageAt(0)]
         : [
             state.visualPercentageAt(0),
             state.visualPercentageAt(state.values.length - 1),
@@ -232,23 +232,6 @@ class _RemixSliderVisual extends StatelessWidget {
       child: thumb,
     );
   }
-}
-
-/// The visual (screen-space) fraction for a fixed [logicalPercentage].
-///
-/// Mirrors the RTL/vertical/inverted flip chain of
-/// [NakedSliderState.visualPercentageAt], which naked_ui exposes only keyed by
-/// thumb index. naked_ui is pinned to an exact version, so re-check this against
-/// it whenever that pin moves.
-double _visualPercentage(NakedSliderState state, double logicalPercentage) {
-  var result = logicalPercentage;
-  if (state.orientation == Axis.horizontal && state.textDirection == .rtl) {
-    result = 1 - result;
-  } else if (state.orientation == Axis.vertical) {
-    result = 1 - result;
-  }
-  if (state.inverted) result = 1 - result;
-  return result;
 }
 
 Size _resolveThumbSize(BuildContext context, StyleSpec<BoxSpec> thumb) {

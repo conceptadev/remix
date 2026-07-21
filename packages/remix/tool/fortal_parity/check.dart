@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 const _expectedIntegrity =
     'sha512-I0/h2CRNTpYNB7Mi3xFIvSsQq5a108d7kK8dTO5zp5b9HR5QJXKag6B8tjpz2ITkVYkFdkGk45doNkSr7OxwNw==';
-const _expectedNakedUiVersion = '1.0.0-beta.6';
+const _expectedNakedUiVersion = '1.0.0-beta.7';
 const _expectedMappedFamilies = <String>{
   'avatar',
   'badge',

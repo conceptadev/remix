@@ -49,7 +49,9 @@
   for both values because it uses a Navigator dialog route.
 - **FIX**: Keep full-length Fortal dividers at one logical pixel on their cross
   axis even when a tight parent supplies extra height or width.
-- **CHORE**: Target exact `naked_ui` 1.0.0-beta.6 behavior, add the pinned
+- **FIX**: Use Naked beta.7's public slider visual-percentage mapping instead
+  of mirroring its direction, orientation, and inversion logic locally.
+- **CHORE**: Target exact `naked_ui` 1.0.0-beta.7 behavior, add the pinned
   Chromium reference fixture and parity manifest/checker, and expand the Fortal
   Atlas from Button-only coverage to all 23 families in light and dark themes.
 - **CHORE**: Require every parity-manifest enum and state to cite an exact
