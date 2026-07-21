@@ -93,8 +93,8 @@
     },
     {
       "path": "dark/card.png",
-      "sha256": "53908512d1e47fc9e702b8c51df7c34d4ab7ef961b3b731c2607451524fa29ae",
-      "bytes": 18778
+      "sha256": "b8d54c50ef68fdc878e1e0cffecf8ad1d1252042ccb06dd93f105265fb2d81d2",
+      "bytes": 18659
     },
     {
       "path": "dark/checkbox.json",
@@ -113,8 +113,8 @@
     },
     {
       "path": "dark/dialog.png",
-      "sha256": "2bb2cf9b41b2e9c9c8079b41a2ab3200b0f1a7fb1c917cf785cfd60caff84095",
-      "bytes": 69846
+      "sha256": "1edc78466400b646caf4e7174d42b7759e0afe1488fdd41bdebeacfcdffdd9aa",
+      "bytes": 42347
     },
     {
       "path": "dark/divider.json",
@@ -143,8 +143,8 @@
     },
     {
       "path": "dark/menu.png",
-      "sha256": "95074b4ad44e3987a0603e8db2f5d0bcceba0329eee651eaea6b0094796dd21b",
-      "bytes": 42695
+      "sha256": "84f0086d0178873c2c15a277c2a7e7dcc6eda98a8ab6dec490a09a83198f3a0c",
+      "bytes": 36908
     },
     {
       "path": "dark/popover.json",
@@ -153,8 +153,8 @@
     },
     {
       "path": "dark/popover.png",
-      "sha256": "568cc8d006959d75509e29500acafb8392d6eb1a8e8dc2855d7993fad1fa0a1a",
-      "bytes": 33833
+      "sha256": "b33c92a9479e6cce19837c1cba60bdbe0fd5626a1a971d937560fedae7645d20",
+      "bytes": 31627
     },
     {
       "path": "dark/progress.json",
@@ -183,8 +183,8 @@
     },
     {
       "path": "dark/select.png",
-      "sha256": "1e13fb67b82101ba3d4fbff7c863ee46a4b2d07b42ed7932c5ffb21c517f7ef0",
-      "bytes": 96681
+      "sha256": "abb120717f51d505fd54c76eea6cebed7d95c725f858ae0530760abd3b8f804e",
+      "bytes": 89471
     },
     {
       "path": "dark/slider.json",
@@ -193,8 +193,8 @@
     },
     {
       "path": "dark/slider.png",
-      "sha256": "e24515427a1944468eb2d458173c18f71f60e4758e7fc162d4dece47151c318c",
-      "bytes": 33897
+      "sha256": "4b132cd890b24c23ca05d9862be218017e246f8f1e0d20c031ca8f2c4eed81a3",
+      "bytes": 34141
     },
     {
       "path": "dark/spinner.json",
@@ -213,8 +213,8 @@
     },
     {
       "path": "dark/switch.png",
-      "sha256": "93311935a95bb0a6c367ff1a0861ac63034d466adafa58a673b02a0649fd1cfd",
-      "bytes": 14686
+      "sha256": "fc8dc4c81b0d25f982a450623f0f388f500f77e07c9d9ad39d3b978ec245740a",
+      "bytes": 14719
     },
     {
       "path": "dark/tabs.json",
@@ -323,8 +323,8 @@
     },
     {
       "path": "light/card.png",
-      "sha256": "35d72eec564693fd16f9e5b26f8887ff58e2cc4407f76205f77ac5df8274c9bf",
-      "bytes": 20352
+      "sha256": "32628dec6ff6e57625aa7a4189eb6e6ac13d1d3095c850393dd4be6d928b7797",
+      "bytes": 16467
     },
     {
       "path": "light/checkbox.json",
@@ -343,8 +343,8 @@
     },
     {
       "path": "light/dialog.png",
-      "sha256": "e1f298a6f3738157205b6c2d289d98e2ee6faf0b5ddaa11b3a6b3ddb6af0fed8",
-      "bytes": 67100
+      "sha256": "f3eb714611ad7fd7035be1ab8e9f8293cd48960dceeb521f086bfc13780b562a",
+      "bytes": 42866
     },
     {
       "path": "light/divider.json",
@@ -373,8 +373,8 @@
     },
     {
       "path": "light/menu.png",
-      "sha256": "567098318aa1175ae863001e9cca14bb806312dc320d556e2c5d4ffd9e48e969",
-      "bytes": 39568
+      "sha256": "d7782d95f0e188937ccd6d77366b48b49ebf4d2e37bc74bba33f286108c40d81",
+      "bytes": 34723
     },
     {
       "path": "light/popover.json",
@@ -383,8 +383,8 @@
     },
     {
       "path": "light/popover.png",
-      "sha256": "b396a2d68072912ae0a578b033ab9d4c0451ccc7b275d2a1a59e8cf55ac7d95f",
-      "bytes": 30734
+      "sha256": "8b33c28b6cbfc7a0711f146c49dbeb73f983fa97e00250654dcf2bb42e96eb7f",
+      "bytes": 28351
     },
     {
       "path": "light/progress.json",
@@ -413,8 +413,8 @@
     },
     {
       "path": "light/select.png",
-      "sha256": "265a6084a437749316fe9f1725aba8ffd8dc5f90966c5b050876bdbc9d7b6942",
-      "bytes": 88775
+      "sha256": "e039c552c299094983331f8af2a851731e4701692492a52f7daabaeb057c11e1",
+      "bytes": 84948
     },
     {
       "path": "light/slider.json",
@@ -423,8 +423,8 @@
     },
     {
       "path": "light/slider.png",
-      "sha256": "27d5b92879a299e5ae948f5c35fcf25ea297b891dd4b96197407b00456b3ffb0",
-      "bytes": 37277
+      "sha256": "87ca7046fec47e168e5e6e18006a6af720afc8f3df4492289912d5d09488af5b",
+      "bytes": 36917
     },
     {
       "path": "light/spinner.json",
@@ -443,8 +443,8 @@
     },
     {
       "path": "light/switch.png",
-      "sha256": "f42114ca615951258edf7d59debadbb89705d803ef513569c6087a663b84f75a",
-      "bytes": 14061
+      "sha256": "038efa5c441a2da4ffcad932056ce7db0be9fa077c365aaee96acda2a902c968",
+      "bytes": 14007
     },
     {
       "path": "light/tabs.json",

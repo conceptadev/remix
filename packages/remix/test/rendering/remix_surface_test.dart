@@ -554,6 +554,52 @@ void main() {
       );
     });
 
+    testWidgets('keeps outer shadows out of a backdrop-filtered surface', (
+      tester,
+    ) async {
+      const boundaryKey = ValueKey('backdrop-outer-shadow');
+
+      await tester.pumpWidget(
+        const Directionality(
+          textDirection: TextDirection.ltr,
+          child: Center(
+            child: RepaintBoundary(
+              key: boundaryKey,
+              child: ColoredBox(
+                color: Colors.white,
+                child: SizedBox(
+                  width: 100,
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _BackdropShadowSurface(),
+                      _BackdropShadowSurface(
+                        shadows: [
+                          RemixPaintShadow(
+                            color: Color(0x80000000),
+                            blurRadius: 4,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final pixels = await _capture(tester, find.byKey(boundaryKey));
+      final withoutShadow = _pixel(pixels, 30, 25);
+      final withShadow = _pixel(pixels, 70, 25);
+
+      expect(withShadow, withoutShadow);
+      expect(_red(_pixel(pixels, 58, 25)), lessThan(_red(withShadow)));
+    });
+
     testWidgets('paints inset offset, positive spread, and negative spread', (
       tester,
     ) async {
@@ -927,6 +973,22 @@ void main() {
       );
     });
   });
+}
+
+class _BackdropShadowSurface extends StatelessWidget {
+  const _BackdropShadowSurface({this.shadows = const []});
+
+  final List<RemixPaintShadow> shadows;
+
+  @override
+  Widget build(BuildContext context) => RemixSurface(
+    spec: RemixSurfaceLayerSpec(
+      color: const Color(0x80FFFFFF),
+      backdropBlur: 8,
+      shadows: shadows,
+    ),
+    child: const SizedBox.square(dimension: 20),
+  );
 }
 
 Future<({ByteData bytes, int width})> _capture(

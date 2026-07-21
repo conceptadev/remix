@@ -758,12 +758,6 @@ class RemixSurface extends StatelessWidget {
     }
 
     return CustomPaint(
-      painter: _RemixSurfacePainter(
-        spec: spec,
-        borderRadius: borderRadius,
-        textDirection: textDirection,
-        phase: _SurfacePaintPhase.outer,
-      ),
       foregroundPainter: _foregroundPainter(spec, overlay, textDirection),
       child: Stack(
         fit: StackFit.passthrough,
@@ -785,6 +779,16 @@ class RemixSurface extends StatelessWidget {
                     phase: _SurfacePaintPhase.inner,
                   ),
                 ),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _RemixSurfacePainter(
+                spec: spec,
+                borderRadius: borderRadius,
+                textDirection: textDirection,
+                phase: _SurfacePaintPhase.outer,
               ),
             ),
           ),
@@ -1348,9 +1352,11 @@ class _RemixSurfacePainter extends CustomPainter
 
   void _paintOuterShadows(Canvas canvas, RRect shape) {
     for (final shadow in spec.shadows.reversed) {
-      if (shadow.kind != RemixPaintShadowKind.outer) continue;
-      final shadowShape = shape
-          .deflate(shadow.shapeInset)
+      if (shadow.kind != RemixPaintShadowKind.outer || shadow.color.a == 0) {
+        continue;
+      }
+      final targetShape = shape.deflate(shadow.shapeInset);
+      final shadowShape = targetShape
           .inflate(shadow.spreadRadius)
           .shift(shadow.offset);
       if (shadowShape.outerRect.isEmpty) continue;
@@ -1358,7 +1364,16 @@ class _RemixSurfacePainter extends CustomPainter
         color: shadow.color,
         blurRadius: shadow.blurRadius,
       ).toPaint();
+
+      final blurExtent = ui.Shadow.convertRadiusToSigma(shadow.blurRadius) * 3;
+      final shadowBounds = shadowShape.outerRect
+          .inflate(blurExtent)
+          .expandToInclude(targetShape.outerRect);
+      // Isolate the knockout so it cannot erase the filtered backdrop.
+      canvas.saveLayer(shadowBounds, Paint());
       canvas.drawRRect(shadowShape, paint);
+      canvas.drawRRect(targetShape, Paint()..blendMode = BlendMode.dstOut);
+      canvas.restore();
     }
   }
 
