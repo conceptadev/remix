@@ -199,14 +199,16 @@ _FortalMenuMetrics _fortalMenuMetrics(FortalMenuSize size) => switch (size) {
   ),
 };
 
-OverlayPositionConfig _fortalMenuSubmenuPositioning(FortalMenuSize size) =>
-    OverlayPositionConfig(
-      side: OverlaySide.right,
-      alignment: OverlayAlignment.start,
-      sideOffset: 1,
-      alignmentOffset: size == .size1 ? -4 : -8,
-      collisionPadding: const EdgeInsets.all(10),
-    );
+OverlayPositionConfig _fortalMenuSubmenuPositioning(
+  FortalMenuSize size,
+  TextDirection direction,
+) => OverlayPositionConfig(
+  side: direction == TextDirection.rtl ? OverlaySide.left : OverlaySide.right,
+  alignment: OverlayAlignment.start,
+  sideOffset: 1,
+  alignmentOffset: size == .size1 ? -4 : -8,
+  collisionPadding: const EdgeInsets.all(10),
+);
 
 /// Fortal menu content with Radix-owned size, variant, and contrast behavior.
 class FortalMenu<T> extends StatelessWidget {
@@ -290,7 +292,8 @@ class FortalMenu<T> extends StatelessWidget {
         triggerFocusNode: triggerFocusNode,
         positioning: positioning,
         submenuPositioning:
-            submenuPositioning ?? _fortalMenuSubmenuPositioning(size),
+            submenuPositioning ??
+            _fortalMenuSubmenuPositioning(size, Directionality.of(context)),
         semanticLabel: semanticLabel,
         excludeSemantics: excludeSemantics,
         contentWrapper: (context, child) =>

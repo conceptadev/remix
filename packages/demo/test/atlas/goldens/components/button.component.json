@@ -202,16 +202,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/classic-size1/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -250,16 +243,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/classic-size2/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -298,16 +284,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/classic-size3/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -346,16 +325,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/classic-size4/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -394,16 +366,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/solid-size1/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -442,16 +407,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/solid-size2/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -490,16 +448,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/solid-size3/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -538,16 +489,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/solid-size4/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -586,16 +530,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/soft-size1/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -634,16 +571,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/soft-size2/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -682,16 +612,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/soft-size3/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -730,16 +653,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/soft-size4/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -778,16 +694,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/surface-size1/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -826,16 +735,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/surface-size2/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -874,16 +776,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/surface-size3/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -922,16 +817,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/surface-size4/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -970,16 +858,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/outline-size1/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -1018,16 +899,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/outline-size2/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -1066,16 +940,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/outline-size3/container.mix.json"
         },
         "label": {
           "status": "supported",
@@ -1114,16 +981,9 @@
       },
       "styles": {
         "container": {
-          "status": "unsupported",
+          "status": "supported",
           "evidence": "declared",
-          "diagnostics": [
-            {
-              "code": "unsupported_encode_value",
-              "severity": "error",
-              "path": "/constraints",
-              "message": "Field \"minHeight\" is TokenSource<double>; expected double."
-            }
-          ]
+          "document": "styles/button/outline-size4/container.mix.json"
         },
         "label": {
           "status": "supported",

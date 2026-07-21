@@ -62,24 +62,18 @@
     {
       "id": "fortal-button-portable",
       "runtimeType": "ButtonStyler projection",
-      "status": "unsupported",
+      "status": "partial",
       "recipeCount": 24,
       "totalMatrixCells": 288,
       "nonLoadingCells": 240,
       "loadingUnsupportedCells": 48,
-      "supportedContainerRecipes": 4,
+      "supportedContainerRecipes": 24,
       "diagnostics": [
         {
           "code": "unsupported_slot_primitive",
           "severity": "error",
           "path": "spinner",
           "message": "RemixSpinner has no neutral Mix protocol primitive."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "/constraints",
-          "message": "Field \"minHeight\" is TokenSource<double>; expected double."
         }
       ]
     },

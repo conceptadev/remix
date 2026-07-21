@@ -22,7 +22,7 @@ dark themes (776 cells total):
   Toggle, and ToggleGroup.
 
 Every family has a light and dark contact-sheet PNG plus a structured Atlas
-sidecar. The bundle index covers 152 payload files; `capture.json` is the
+sidecar. The bundle index covers 172 payload files; `capture.json` is the
 integrity envelope for those payloads.
 
 ## Artifact model
@@ -40,8 +40,9 @@ integrity envelope for those payloads.
   protocol boundary, not evidence that the other 22 families lack raster or
   structured Atlas coverage.
 - `protocol/coverage.json` records supported probes and every unsupported
-  Button slot or value. In particular, a complete `ButtonStyler` and its
-  spinner are not claimed to be representable by neutral Mix protocol v1.
+  Button slot. All 24 Button container recipes preserve their constraint-token
+  references; the complete `ButtonStyler` and its spinner are not claimed to
+  be representable by neutral Mix protocol v1.
 
 Fortal shadow-stroke colors use premultiplied-alpha OKLab mixing, matching the
 Radix `color-mix(in oklab, ...)` contract. The independently generated Chromium

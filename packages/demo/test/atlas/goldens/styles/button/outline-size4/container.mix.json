@@ -1,0 +1,42 @@
+{
+  "type": "flex_box",
+  "padding": {
+    "left": {
+      "$token": "fortal.space.5",
+      "kind": "space"
+    },
+    "right": {
+      "$token": "fortal.space.5",
+      "kind": "space"
+    }
+  },
+  "constraints": {
+    "minHeight": {
+      "$token": "fortal.space.8",
+      "kind": "space"
+    },
+    "maxHeight": {
+      "$token": "fortal.space.8",
+      "kind": "space"
+    }
+  },
+  "decoration": {
+    "borderRadius": {
+      "$token": "fortal.radius.4-or-full"
+    }
+  },
+  "direction": "horizontal",
+  "mainAxisAlignment": "center",
+  "crossAxisAlignment": "center",
+  "mainAxisSize": {
+    "$merge": [
+      "min",
+      "min"
+    ]
+  },
+  "spacing": {
+    "$token": "fortal.space.3",
+    "kind": "space"
+  },
+  "v": 1
+}

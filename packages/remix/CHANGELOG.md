@@ -51,6 +51,10 @@
   axis even when a tight parent supplies extra height or width.
 - **FIX**: Use Naked beta.7's public slider visual-percentage mapping instead
   of mirroring its direction, orientation, and inversion logic locally.
+- **FIX**: Open default Remix and Fortal submenus toward the leading side in
+  RTL while preserving explicit physical positioning overrides.
+- **FIX**: Preserve unresolved constraint tokens in portable Fortal Button
+  container documents so every variant and size remains protocol-encodable.
 - **CHORE**: Target exact `naked_ui` 1.0.0-beta.7 behavior, add the pinned
   Chromium reference fixture and parity manifest/checker, and expand the Fortal
   Atlas from Button-only coverage to all 23 families in light and dark themes.

@@ -31,7 +31,7 @@ void main() {
       );
     });
 
-    test('records the exact neutral-protocol boundary for every recipe', () {
+    test('encodes every recipe without resolving constraint tokens', () {
       for (final variant in FortalButtonVariant.values) {
         for (final size in FortalButtonSize.values) {
           final projection = projectButtonStyler(
@@ -39,25 +39,25 @@ void main() {
           );
 
           final container = mixProtocol.encodeStyle(projection.container!);
-          if (variant == FortalButtonVariant.ghost) {
-            expect(
-              container,
-              isA<MixProtocolSuccess<Map<String, Object?>>>(),
-              reason: '${variant.name}-${size.name} container',
-            );
-          } else {
-            expect(
-              container,
-              isA<MixProtocolFailure<Map<String, Object?>>>(),
-              reason: '${variant.name}-${size.name} container',
-            );
-            final failure =
-                container as MixProtocolFailure<Map<String, Object?>>;
-            expect(
-              failure.errors.map((error) => error.toJson()),
-              contains(containsPair('path', '/constraints')),
-              reason: '${variant.name}-${size.name} diagnostic',
-            );
+          expect(
+            container,
+            isA<MixProtocolSuccess<Map<String, Object?>>>(),
+            reason: '${variant.name}-${size.name} container',
+          );
+          final document =
+              (container as MixProtocolSuccess<Map<String, Object?>>).value;
+          if (variant != FortalButtonVariant.ghost) {
+            final constraints =
+                document['constraints']! as Map<String, Object?>;
+            final minHeight = constraints['minHeight']! as Map<String, Object?>;
+            final expectedToken = switch (size) {
+              FortalButtonSize.size1 => 'fortal.space.5',
+              FortalButtonSize.size2 => 'fortal.space.6',
+              FortalButtonSize.size3 => 'fortal.space.7',
+              FortalButtonSize.size4 => 'fortal.space.8',
+            };
+            expect(minHeight, {r'$token': expectedToken, 'kind': 'space'});
+            expect(constraints['maxHeight'], minHeight);
           }
           expect(
             mixProtocol.encodeStyle(projection.label!),
@@ -98,8 +98,8 @@ void main() {
       expect(first.totalMatrixCells, 288);
       expect(first.nonLoadingCells, 240);
       expect(first.loadingUnsupportedCells, 48);
-      expect(first.styleDocuments, hasLength(52));
-      expect(first.supportedContainerRecipes, 4);
+      expect(first.styleDocuments, hasLength(72));
+      expect(first.supportedContainerRecipes, 24);
       expect(jsonEncode(first.document), jsonEncode(second.document));
       expect(
         jsonEncode(first.styleDocuments),
@@ -118,18 +118,8 @@ void main() {
         final spinner = styles['spinner']! as Map<String, Object?>;
         expect(spinner['status'], 'unsupported');
         final container = styles['container']! as Map<String, Object?>;
-        final properties = recipe['properties']! as Map<String, Object?>;
-        if (properties['variant'] == FortalButtonVariant.ghost.name) {
-          expect(container['status'], 'supported');
-          expect(container['document'], endsWith('/container.mix.json'));
-        } else {
-          expect(container['status'], 'unsupported');
-          final diagnostics = container['diagnostics']! as List<Object?>;
-          expect(
-            diagnostics.cast<Map<String, Object?>>(),
-            contains(containsPair('path', '/constraints')),
-          );
-        }
+        expect(container['status'], 'supported');
+        expect(container['document'], endsWith('/container.mix.json'));
       }
     });
   });

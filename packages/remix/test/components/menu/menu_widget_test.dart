@@ -236,6 +236,10 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await tester.pumpAndSettle();
     expect(find.text('Child item'), findsOneWidget);
+    expect(
+      tester.getCenter(find.text('Child item')).dx,
+      greaterThan(tester.getCenter(find.text('More')).dx),
+    );
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pumpAndSettle();
     expect(find.text('Child item'), findsNothing);
@@ -270,10 +274,121 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
     await tester.pumpAndSettle();
     expect(find.text('Child item'), findsOneWidget);
+    expect(
+      tester.getCenter(find.text('Child item')).dx,
+      lessThan(tester.getCenter(find.text('More')).dx),
+    );
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await tester.pumpAndSettle();
     expect(find.text('Child item'), findsNothing);
     expect(submenuFocus.hasFocus, isTrue);
+  });
+
+  testWidgets('Fortal submenu defaults to the leading side in RTL', (
+    tester,
+  ) async {
+    final controller = MenuController();
+    await tester.pumpRemixApp(
+      FortalMenu<String>(
+        controller: controller,
+        trigger: const Text('Open'),
+        entries: const [
+          RemixMenuSubmenu<String>(
+            child: SizedBox(width: 120, child: Text('More')),
+            entries: [
+              RemixMenuAction(value: 'child', child: Text('Child item')),
+            ],
+          ),
+        ],
+      ),
+      textDirection: TextDirection.rtl,
+    );
+    controller.open();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('More'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Child item'), findsOneWidget);
+    expect(
+      tester.getCenter(find.text('Child item')).dx,
+      lessThan(tester.getCenter(find.text('More')).dx),
+    );
+  });
+
+  testWidgets('explicit submenu positioning overrides RTL defaults', (
+    tester,
+  ) async {
+    final controller = MenuController();
+    await tester.pumpRemixApp(
+      RemixMenu<String>(
+        controller: controller,
+        submenuPositioning: const OverlayPositionConfig(
+          side: OverlaySide.right,
+          alignment: OverlayAlignment.start,
+          sideOffset: 1,
+          alignmentOffset: -8,
+          collisionPadding: EdgeInsets.all(10),
+        ),
+        trigger: const Text('Open'),
+        entries: const [
+          RemixMenuSubmenu<String>(
+            child: SizedBox(width: 120, child: Text('More')),
+            entries: [
+              RemixMenuAction(value: 'child', child: Text('Child item')),
+            ],
+          ),
+        ],
+      ),
+      textDirection: TextDirection.rtl,
+    );
+    controller.open();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('More'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Child item'), findsOneWidget);
+    expect(
+      tester.getCenter(find.text('Child item')).dx,
+      greaterThan(tester.getCenter(find.text('More')).dx),
+    );
+  });
+
+  testWidgets('Fortal preserves explicit submenu positioning in RTL', (
+    tester,
+  ) async {
+    final controller = MenuController();
+    await tester.pumpRemixApp(
+      FortalMenu<String>(
+        controller: controller,
+        submenuPositioning: const OverlayPositionConfig(
+          side: OverlaySide.right,
+          alignment: OverlayAlignment.start,
+          sideOffset: 1,
+          alignmentOffset: -8,
+          collisionPadding: EdgeInsets.all(10),
+        ),
+        trigger: const Text('Open'),
+        entries: const [
+          RemixMenuSubmenu<String>(
+            child: SizedBox(width: 120, child: Text('More')),
+            entries: [
+              RemixMenuAction(value: 'child', child: Text('Child item')),
+            ],
+          ),
+        ],
+      ),
+      textDirection: TextDirection.rtl,
+    );
+    controller.open();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('More'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Child item'), findsOneWidget);
+    expect(
+      tester.getCenter(find.text('Child item')).dx,
+      greaterThan(tester.getCenter(find.text('More')).dx),
+    );
   });
 
   testWidgets('submenu trigger exposes expandable menu-item semantics', (

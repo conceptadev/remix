@@ -42,19 +42,22 @@ class RemixMenu<T> extends StatefulWidget {
       sideOffset: 4,
       collisionPadding: EdgeInsets.all(10),
     ),
-    this.submenuPositioning = const OverlayPositionConfig(
-      side: OverlaySide.right,
-      alignment: OverlayAlignment.start,
-      sideOffset: 1,
-      alignmentOffset: -8,
-      collisionPadding: EdgeInsets.all(10),
-    ),
+    OverlayPositionConfig? submenuPositioning,
     this.semanticLabel,
     this.excludeSemantics = false,
     this.contentWrapper,
     this.style = const RemixMenuStyler.create(),
     this.styleSpec,
-  });
+  }) : submenuPositioning =
+           submenuPositioning ??
+           const OverlayPositionConfig(
+             side: OverlaySide.right,
+             alignment: OverlayAlignment.start,
+             sideOffset: 1,
+             alignmentOffset: -8,
+             collisionPadding: EdgeInsets.all(10),
+           ),
+       _hasExplicitSubmenuPositioning = submenuPositioning != null;
 
   /// Widget that opens and closes the menu.
   final Widget trigger;
@@ -82,7 +85,11 @@ class RemixMenu<T> extends StatefulWidget {
   final OverlayPositionConfig positioning;
 
   /// Default placement inherited by recursive submenus.
+  ///
+  /// When omitted, submenus open right in LTR and left in RTL.
   final OverlayPositionConfig submenuPositioning;
+
+  final bool _hasExplicitSubmenuPositioning;
 
   /// Accessible name for the trigger.
   final String? semanticLabel;
@@ -120,6 +127,17 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
   @override
   Widget build(BuildContext context) {
     final style = _effectiveStyle();
+    final submenuPositioning = widget._hasExplicitSubmenuPositioning
+        ? widget.submenuPositioning
+        : OverlayPositionConfig(
+            side: Directionality.of(context) == TextDirection.rtl
+                ? OverlaySide.left
+                : OverlaySide.right,
+            alignment: OverlayAlignment.start,
+            sideOffset: 1,
+            alignmentOffset: -8,
+            collisionPadding: const EdgeInsets.all(10),
+          );
     return NakedMenu<T>(
       controller: _controller,
       onSelected: widget.onSelected,
@@ -155,7 +173,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
             defaultDividerStyleSpec: widget.styleSpec == null
                 ? null
                 : spec.divider,
-            submenuPositioning: widget.submenuPositioning,
+            submenuPositioning: submenuPositioning,
             contentWrapper: widget.contentWrapper,
           ),
         );

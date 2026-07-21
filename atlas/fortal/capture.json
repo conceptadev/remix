@@ -33,8 +33,8 @@
     },
     {
       "path": "components/button.component.json",
-      "sha256": "24ca384a32dc41e6dfa9c2b0b735f92df5ac50652b92d2132ae1fb908990aeab",
-      "bytes": 36579
+      "sha256": "9e8a7c9a22157a26e3facc9233cd387ee8a4f11eb9fdf39143659ceb2929b691",
+      "bytes": 32379
     },
     {
       "path": "dark/accordion.json",
@@ -498,13 +498,18 @@
     },
     {
       "path": "protocol/coverage.json",
-      "sha256": "bc01d101a69d6146318a98d6fdccaf35c9bfa37659026982eb6892d9933a0f7b",
-      "bytes": 3754
+      "sha256": "8620bf4b369d8db0b4cec5cab6c54d6578d44ce8e87f022b045379a3c941bccf",
+      "bytes": 3535
     },
     {
       "path": "protocol/fixtures/fortal-tokenized-flex-box.mix.json",
       "sha256": "b413d177b00998fe55ddf7d30d9ca8c0891a4e67056db2025c911bf3ee4b4ac3",
       "bytes": 257
+    },
+    {
+      "path": "styles/button/classic-size1/container.mix.json",
+      "sha256": "ac3b0afdecebf08d25a1cff2c73a060ebff6fd60fc59bc8489f14be77625bb28",
+      "bytes": 923
     },
     {
       "path": "styles/button/classic-size1/icon.mix.json",
@@ -517,6 +522,11 @@
       "bytes": 551
     },
     {
+      "path": "styles/button/classic-size2/container.mix.json",
+      "sha256": "5a8620c86296650bd6d178fb0f3ab9a86516b5db209d7b5a00137c4869bf9edc",
+      "bytes": 923
+    },
+    {
       "path": "styles/button/classic-size2/icon.mix.json",
       "sha256": "0ff0dded594b76ea8c991f4420b7752b7189be2a6409354a312f5b5452b8feae",
       "bytes": 311
@@ -527,6 +537,11 @@
       "bytes": 551
     },
     {
+      "path": "styles/button/classic-size3/container.mix.json",
+      "sha256": "0f6c87a8cea4afd90a15b0e0c38e015a9f6df4eecb91f1089968f42e4effc360",
+      "bytes": 923
+    },
+    {
       "path": "styles/button/classic-size3/icon.mix.json",
       "sha256": "0ff0dded594b76ea8c991f4420b7752b7189be2a6409354a312f5b5452b8feae",
       "bytes": 311
@@ -535,6 +550,11 @@
       "path": "styles/button/classic-size3/label.mix.json",
       "sha256": "74a96743b975e095670ebcf1f46587a34321a4d3f571aa50abc0d97d5f847ba7",
       "bytes": 551
+    },
+    {
+      "path": "styles/button/classic-size4/container.mix.json",
+      "sha256": "65c147c8272fa61ec5b82603f1cecc2628997e346a907d5e419aa5d18a7e4c79",
+      "bytes": 923
     },
     {
       "path": "styles/button/classic-size4/icon.mix.json",
@@ -607,6 +627,11 @@
       "bytes": 547
     },
     {
+      "path": "styles/button/outline-size1/container.mix.json",
+      "sha256": "657eb842350b88d6a3a7f29cbde53f0edd833f1f2b923e6f9e0880c93c19f975",
+      "bytes": 729
+    },
+    {
       "path": "styles/button/outline-size1/icon.mix.json",
       "sha256": "2b770dbf365893296c985d191cd796772e2dbb182b16882d1f048d15d75da0f3",
       "bytes": 306
@@ -615,6 +640,11 @@
       "path": "styles/button/outline-size1/label.mix.json",
       "sha256": "9736fca3df92020446c40edc8edf30a3794f278c8f50801f00b2ea6a11f5eed1",
       "bytes": 546
+    },
+    {
+      "path": "styles/button/outline-size2/container.mix.json",
+      "sha256": "f1bde3ae298e488eb6a729321f7bb179f10e5d22f44064b22cdb2fe1bb8ec88f",
+      "bytes": 729
     },
     {
       "path": "styles/button/outline-size2/icon.mix.json",
@@ -627,6 +657,11 @@
       "bytes": 546
     },
     {
+      "path": "styles/button/outline-size3/container.mix.json",
+      "sha256": "dedb20971316619fb4184f98b121374125b99639e9fd97a2e9d68543d9c8fa5b",
+      "bytes": 729
+    },
+    {
       "path": "styles/button/outline-size3/icon.mix.json",
       "sha256": "2b770dbf365893296c985d191cd796772e2dbb182b16882d1f048d15d75da0f3",
       "bytes": 306
@@ -635,6 +670,11 @@
       "path": "styles/button/outline-size3/label.mix.json",
       "sha256": "ff9157b0d962074f5450718a1a3cacba8d55ef6b21548b1b128d33da987acf48",
       "bytes": 546
+    },
+    {
+      "path": "styles/button/outline-size4/container.mix.json",
+      "sha256": "5ffc279876f9430e8ad76aece9a1cf4a16298b2b23eff73c4ced998b5f7e3a43",
+      "bytes": 729
     },
     {
       "path": "styles/button/outline-size4/icon.mix.json",
@@ -647,6 +687,11 @@
       "bytes": 546
     },
     {
+      "path": "styles/button/soft-size1/container.mix.json",
+      "sha256": "657eb842350b88d6a3a7f29cbde53f0edd833f1f2b923e6f9e0880c93c19f975",
+      "bytes": 729
+    },
+    {
       "path": "styles/button/soft-size1/icon.mix.json",
       "sha256": "2b770dbf365893296c985d191cd796772e2dbb182b16882d1f048d15d75da0f3",
       "bytes": 306
@@ -655,6 +700,11 @@
       "path": "styles/button/soft-size1/label.mix.json",
       "sha256": "9736fca3df92020446c40edc8edf30a3794f278c8f50801f00b2ea6a11f5eed1",
       "bytes": 546
+    },
+    {
+      "path": "styles/button/soft-size2/container.mix.json",
+      "sha256": "f1bde3ae298e488eb6a729321f7bb179f10e5d22f44064b22cdb2fe1bb8ec88f",
+      "bytes": 729
     },
     {
       "path": "styles/button/soft-size2/icon.mix.json",
@@ -667,6 +717,11 @@
       "bytes": 546
     },
     {
+      "path": "styles/button/soft-size3/container.mix.json",
+      "sha256": "dedb20971316619fb4184f98b121374125b99639e9fd97a2e9d68543d9c8fa5b",
+      "bytes": 729
+    },
+    {
       "path": "styles/button/soft-size3/icon.mix.json",
       "sha256": "2b770dbf365893296c985d191cd796772e2dbb182b16882d1f048d15d75da0f3",
       "bytes": 306
@@ -675,6 +730,11 @@
       "path": "styles/button/soft-size3/label.mix.json",
       "sha256": "ff9157b0d962074f5450718a1a3cacba8d55ef6b21548b1b128d33da987acf48",
       "bytes": 546
+    },
+    {
+      "path": "styles/button/soft-size4/container.mix.json",
+      "sha256": "5ffc279876f9430e8ad76aece9a1cf4a16298b2b23eff73c4ced998b5f7e3a43",
+      "bytes": 729
     },
     {
       "path": "styles/button/soft-size4/icon.mix.json",
@@ -687,6 +747,11 @@
       "bytes": 546
     },
     {
+      "path": "styles/button/solid-size1/container.mix.json",
+      "sha256": "657eb842350b88d6a3a7f29cbde53f0edd833f1f2b923e6f9e0880c93c19f975",
+      "bytes": 729
+    },
+    {
       "path": "styles/button/solid-size1/icon.mix.json",
       "sha256": "0ff0dded594b76ea8c991f4420b7752b7189be2a6409354a312f5b5452b8feae",
       "bytes": 311
@@ -695,6 +760,11 @@
       "path": "styles/button/solid-size1/label.mix.json",
       "sha256": "fc300e339b5a81090bffb04c049be6cba89e9a417cc8b8077b9cb86992aa7b52",
       "bytes": 551
+    },
+    {
+      "path": "styles/button/solid-size2/container.mix.json",
+      "sha256": "f1bde3ae298e488eb6a729321f7bb179f10e5d22f44064b22cdb2fe1bb8ec88f",
+      "bytes": 729
     },
     {
       "path": "styles/button/solid-size2/icon.mix.json",
@@ -707,6 +777,11 @@
       "bytes": 551
     },
     {
+      "path": "styles/button/solid-size3/container.mix.json",
+      "sha256": "dedb20971316619fb4184f98b121374125b99639e9fd97a2e9d68543d9c8fa5b",
+      "bytes": 729
+    },
+    {
       "path": "styles/button/solid-size3/icon.mix.json",
       "sha256": "0ff0dded594b76ea8c991f4420b7752b7189be2a6409354a312f5b5452b8feae",
       "bytes": 311
@@ -715,6 +790,11 @@
       "path": "styles/button/solid-size3/label.mix.json",
       "sha256": "74a96743b975e095670ebcf1f46587a34321a4d3f571aa50abc0d97d5f847ba7",
       "bytes": 551
+    },
+    {
+      "path": "styles/button/solid-size4/container.mix.json",
+      "sha256": "5ffc279876f9430e8ad76aece9a1cf4a16298b2b23eff73c4ced998b5f7e3a43",
+      "bytes": 729
     },
     {
       "path": "styles/button/solid-size4/icon.mix.json",
@@ -727,6 +807,11 @@
       "bytes": 551
     },
     {
+      "path": "styles/button/surface-size1/container.mix.json",
+      "sha256": "657eb842350b88d6a3a7f29cbde53f0edd833f1f2b923e6f9e0880c93c19f975",
+      "bytes": 729
+    },
+    {
       "path": "styles/button/surface-size1/icon.mix.json",
       "sha256": "2b770dbf365893296c985d191cd796772e2dbb182b16882d1f048d15d75da0f3",
       "bytes": 306
@@ -735,6 +820,11 @@
       "path": "styles/button/surface-size1/label.mix.json",
       "sha256": "9736fca3df92020446c40edc8edf30a3794f278c8f50801f00b2ea6a11f5eed1",
       "bytes": 546
+    },
+    {
+      "path": "styles/button/surface-size2/container.mix.json",
+      "sha256": "f1bde3ae298e488eb6a729321f7bb179f10e5d22f44064b22cdb2fe1bb8ec88f",
+      "bytes": 729
     },
     {
       "path": "styles/button/surface-size2/icon.mix.json",
@@ -747,6 +837,11 @@
       "bytes": 546
     },
     {
+      "path": "styles/button/surface-size3/container.mix.json",
+      "sha256": "dedb20971316619fb4184f98b121374125b99639e9fd97a2e9d68543d9c8fa5b",
+      "bytes": 729
+    },
+    {
       "path": "styles/button/surface-size3/icon.mix.json",
       "sha256": "2b770dbf365893296c985d191cd796772e2dbb182b16882d1f048d15d75da0f3",
       "bytes": 306
@@ -755,6 +850,11 @@
       "path": "styles/button/surface-size3/label.mix.json",
       "sha256": "ff9157b0d962074f5450718a1a3cacba8d55ef6b21548b1b128d33da987acf48",
       "bytes": 546
+    },
+    {
+      "path": "styles/button/surface-size4/container.mix.json",
+      "sha256": "5ffc279876f9430e8ad76aece9a1cf4a16298b2b23eff73c4ced998b5f7e3a43",
+      "bytes": 729
     },
     {
       "path": "styles/button/surface-size4/icon.mix.json",

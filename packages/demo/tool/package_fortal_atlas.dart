@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:mix_atlas_capture/producer.dart';
+import 'package:mix_atlas_capture/packaging.dart';
 
 void main(List<String> arguments) {
   final unknown = arguments.where((argument) => argument != '--check').toList();
