@@ -206,6 +206,28 @@ void main() {
     expect(find.text('11–20 of 24'), findsOneWidget);
   });
 
+  testWidgets('grid checkboxes preserve their Fortal square size', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1400, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey('nav-customers')).first);
+    await tester.pump();
+
+    expect(
+      tester.getSize(find.byKey(const ValueKey('grid-select-all')).first),
+      const Size.square(14),
+    );
+    expect(
+      tester.getSize(find.byKey(const ValueKey('grid-row-checkbox')).first),
+      const Size.square(14),
+    );
+  });
+
   testWidgets('top bar search filters the active data page', (tester) async {
     tester.view.physicalSize = const Size(1400, 900);
     tester.view.devicePixelRatio = 1;

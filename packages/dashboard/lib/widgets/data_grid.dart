@@ -153,15 +153,17 @@ class DataGrid<T> extends StatelessWidget {
           if (_selectable)
             SizedBox(
               width: 42,
-              child: FortalCheckbox(
-                key: const ValueKey('grid-select-all'),
-                size: .size1,
-                selected: selectedValue,
-                tristate: true,
-                semanticLabel: 'Select all rows',
-                onChanged: (_) => _toggleAll(
-                  select: selectedOnPage != rowIds.length,
-                  rowIds: rowIds,
+              child: Center(
+                child: FortalCheckbox(
+                  key: const ValueKey('grid-select-all'),
+                  size: .size1,
+                  selected: selectedValue,
+                  tristate: true,
+                  semanticLabel: 'Select all rows',
+                  onChanged: (_) => _toggleAll(
+                    select: selectedOnPage != rowIds.length,
+                    rowIds: rowIds,
+                  ),
                 ),
               ),
             ),
@@ -348,12 +350,15 @@ class _DataGridRowState<T> extends State<_DataGridRow<T>> {
             if (widget.selectable)
               SizedBox(
                 width: 42,
-                child: FortalCheckbox(
-                  key: const ValueKey('grid-row-checkbox'),
-                  size: .size1,
-                  selected: widget.selected,
-                  semanticLabel: 'Select row',
-                  onChanged: (value) => widget.onSelected?.call(value ?? false),
+                child: Center(
+                  child: FortalCheckbox(
+                    key: const ValueKey('grid-row-checkbox'),
+                    size: .size1,
+                    selected: widget.selected,
+                    semanticLabel: 'Select row',
+                    onChanged: (value) =>
+                        widget.onSelected?.call(value ?? false),
+                  ),
                 ),
               ),
             for (final column in widget.columns)
