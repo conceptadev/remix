@@ -262,7 +262,7 @@ void main() {
         FortalTextFieldSize.size2: 32,
         FortalTextFieldSize.size3: 40,
       };
-      final surfaces = <RemixSurfaceLayerSpec>{};
+      final recipes = <({Color? color, RemixSurfaceEffectsSpec? effects})>{};
 
       for (final variant in FortalTextFieldVariant.values) {
         for (final entry in expectedHeights.entries) {
@@ -278,14 +278,20 @@ void main() {
             entry.value,
             reason: '$variant ${entry.key}',
           );
-          expect(resolved.spec.surface, isNotNull);
+          expect(resolved.spec.effects?.background, isNotNull);
           if (entry.key == FortalTextFieldSize.size2) {
-            surfaces.add(resolved.spec.surface!);
+            final decoration =
+                resolved.spec.container.spec.box!.spec.decoration
+                    as BoxDecoration;
+            recipes.add((
+              color: decoration.color,
+              effects: resolved.spec.effects,
+            ));
           }
         }
       }
 
-      expect(surfaces, hasLength(FortalTextFieldVariant.values.length));
+      expect(recipes, hasLength(FortalTextFieldVariant.values.length));
     });
   });
 }

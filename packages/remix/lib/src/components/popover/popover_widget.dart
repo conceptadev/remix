@@ -154,9 +154,10 @@ class RemixPopover extends StatelessWidget {
               child: SizedBox(
                 width: width,
                 height: height,
-                child: RemixSurfaceBox(
+                child: remixSurfaceBox(
+                  key: const ValueKey('remix-popover-surface'),
                   styleSpec: spec.container,
-                  surface: spec.surface,
+                  effects: spec.effects,
                   child: SingleChildScrollView(
                     primary: false,
                     child: popoverChild,

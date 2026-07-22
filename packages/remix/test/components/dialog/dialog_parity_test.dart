@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart' show RemixSurfaceBox;
 
 import '../../helpers/test_helpers.dart';
 
@@ -38,7 +37,7 @@ void main() {
       );
 
       expect(
-        tester.getSize(find.byType(RemixSurfaceBox)),
+        tester.getSize(find.byKey(const ValueKey('remix-dialog-surface'))),
         const Size(320, 200),
       );
     });
@@ -68,7 +67,7 @@ void main() {
 
       expect(tester.takeException(), isNull);
       final innerScroll = find.descendant(
-        of: find.byType(RemixSurfaceBox),
+        of: find.byKey(const ValueKey('remix-dialog-surface')),
         matching: find.byType(SingleChildScrollView),
       );
       expect(innerScroll, findsOneWidget);
@@ -102,7 +101,12 @@ void main() {
         ),
       );
 
-      expect(tester.getSize(find.byType(RemixSurfaceBox)).width, 600);
+      expect(
+        tester
+            .getSize(find.byKey(const ValueKey('remix-dialog-surface')))
+            .width,
+        600,
+      );
     });
 
     testWidgets('supports start and center viewport alignment', (tester) async {
@@ -122,7 +126,9 @@ void main() {
             ),
           ),
         );
-        return tester.getTopLeft(find.byType(RemixSurfaceBox)).dy;
+        return tester
+            .getTopLeft(find.byKey(const ValueKey('remix-dialog-surface')))
+            .dy;
       }
 
       final startY = await pumpAlignment(RemixDialogAlignment.start);
@@ -156,14 +162,24 @@ void main() {
 
       expect(tester.takeException(), isNull);
       expect(find.byType(SingleChildScrollView), findsOneWidget);
-      expect(tester.getTopLeft(find.byType(RemixSurfaceBox)).dy, 32);
+      expect(
+        tester
+            .getTopLeft(find.byKey(const ValueKey('remix-dialog-surface')))
+            .dy,
+        32,
+      );
 
       await tester.drag(
         find.byType(SingleChildScrollView),
         const Offset(0, -200),
       );
       await tester.pump();
-      expect(tester.getTopLeft(find.byType(RemixSurfaceBox)).dy, lessThan(32));
+      expect(
+        tester
+            .getTopLeft(find.byKey(const ValueKey('remix-dialog-surface')))
+            .dy,
+        lessThan(32),
+      );
     });
   });
 
@@ -189,7 +205,8 @@ void main() {
             for (final size in FortalDialogSize.values) {
               final spec = fortalDialogStyler(size: size).resolve(context).spec;
               paddings[size] = spec.container.spec.padding;
-              radii[size] = spec.surface!.borderRadius;
+              radii[size] = (spec.container.spec.decoration! as BoxDecoration)
+                  .borderRadius!;
             }
             return const SizedBox.shrink();
           },

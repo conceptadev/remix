@@ -9,17 +9,13 @@ class RemixBadgeSpec with _$RemixBadgeSpec {
   @override
   final StyleSpec<TextSpec> label;
   @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? surface;
-  @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? overlay;
+  @MixableField(setterType: RemixSurfaceEffectsMix)
+  final RemixSurfaceEffectsSpec? effects;
 
   const RemixBadgeSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
-    this.surface,
-    this.overlay,
+    this.effects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec());
 
@@ -28,8 +24,7 @@ class RemixBadgeSpec with _$RemixBadgeSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
-      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
+      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
     );
   }
 }

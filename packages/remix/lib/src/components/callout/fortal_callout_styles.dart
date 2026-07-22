@@ -15,38 +15,35 @@ RemixCalloutStyler fortalCalloutStyler({
   final base = _fortalCalloutBaseStyler(size).foregroundColor(
     highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
   );
-  final radius = _fortalCalloutRadius(size);
-
   return switch (variant) {
-    .soft => base.surface(
-      RemixSurfaceLayerMix(
-        color: FortalTokens.accentA3(),
-        borderRadius: BorderRadiusMix.all(radius),
-      ),
-    ),
-    .surface => base.surface(
-      RemixSurfaceLayerMix(
-        color: FortalTokens.accentA2(),
-        shadows: [
-          RemixPaintShadowMix(
-            kind: RemixPaintShadowKind.inset,
-            color: FortalTokens.accentA6(),
-            spreadRadius: 1,
+    .soft => base.color(FortalTokens.accentA3()),
+    .surface =>
+      base
+          .color(FortalTokens.accentA2())
+          .effects(
+            RemixSurfaceEffectsMix(
+              background: RemixSurfaceLayerMix(
+                shadows: [
+                  RemixPaintShadowMix(
+                    kind: RemixPaintShadowKind.inset,
+                    color: FortalTokens.accentA6(),
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+            ),
           ),
-        ],
-        borderRadius: BorderRadiusMix.all(radius),
-      ),
-    ),
-    .outline => base.surface(
-      RemixSurfaceLayerMix(
-        shadows: [
-          RemixPaintShadowMix(
-            kind: RemixPaintShadowKind.inset,
-            color: FortalTokens.accentA7(),
-            spreadRadius: 1,
-          ),
-        ],
-        borderRadius: BorderRadiusMix.all(radius),
+    .outline => base.effects(
+      RemixSurfaceEffectsMix(
+        background: RemixSurfaceLayerMix(
+          shadows: [
+            RemixPaintShadowMix(
+              kind: RemixPaintShadowKind.inset,
+              color: FortalTokens.accentA7(),
+              spreadRadius: 1,
+            ),
+          ],
+        ),
       ),
     ),
   };

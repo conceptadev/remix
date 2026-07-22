@@ -18,7 +18,11 @@ void main() {
       const original = RemixSelectSpec();
       const replacement = StyleSpec(
         spec: RemixSelectContentSpec(
-          surface: RemixSurfaceLayerSpec(color: Colors.blue),
+          effects: RemixSurfaceEffectsSpec(
+            background: RemixSurfaceLayerSpec(
+              shadows: [RemixPaintShadow(color: Colors.blue)],
+            ),
+          ),
         ),
       );
 
@@ -53,14 +57,20 @@ void main() {
   group('Select part specs', () {
     test('trigger carries independent paint and text roles', () {
       const trigger = RemixSelectTriggerSpec(
-        surface: RemixSurfaceLayerSpec(color: Colors.red),
-        overlay: RemixSurfaceLayerSpec(color: Colors.orange),
+        effects: RemixSurfaceEffectsSpec(
+          background: RemixSurfaceLayerSpec(
+            shadows: [RemixPaintShadow(color: Colors.red)],
+          ),
+          foreground: RemixSurfaceLayerSpec(
+            shadows: [RemixPaintShadow(color: Colors.orange)],
+          ),
+        ),
         chevronOpacity: 0.9,
         placeholderOpacity: 0.6,
       );
 
-      expect(trigger.surface?.color, Colors.red);
-      expect(trigger.overlay?.color, Colors.orange);
+      expect(trigger.effects?.background?.shadows.first.color, Colors.red);
+      expect(trigger.effects?.foreground?.shadows.first.color, Colors.orange);
       expect(trigger.chevronOpacity, 0.9);
       expect(trigger.placeholderOpacity, 0.6);
       expect(trigger.placeholder.spec, isA<TextSpec>());
@@ -69,12 +79,16 @@ void main() {
 
     test('content, item, and label expose their owned slots', () {
       const content = RemixSelectContentSpec(
-        surface: RemixSurfaceLayerSpec(color: Colors.blue),
+        effects: RemixSurfaceEffectsSpec(
+          background: RemixSurfaceLayerSpec(
+            shadows: [RemixPaintShadow(color: Colors.blue)],
+          ),
+        ),
       );
       const item = RemixSelectMenuItemSpec();
       const label = RemixSelectLabelSpec(adjacentItemSpacing: 8);
 
-      expect(content.surface?.color, Colors.blue);
+      expect(content.effects?.background?.shadows.first.color, Colors.blue);
       expect(item.indicator.spec, isA<BoxSpec>());
       expect(item.icon.spec, isA<IconSpec>());
       expect(label.text.spec, isA<TextSpec>());

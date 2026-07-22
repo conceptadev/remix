@@ -11,18 +11,14 @@ class RemixCalloutSpec with _$RemixCalloutSpec {
   @override
   final StyleSpec<IconSpec> icon;
   @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? surface;
-  @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? overlay;
+  @MixableField(setterType: RemixSurfaceEffectsMix)
+  final RemixSurfaceEffectsSpec? effects;
 
   const RemixCalloutSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? text,
     StyleSpec<IconSpec>? icon,
-    this.surface,
-    this.overlay,
+    this.effects,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        text = text ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec());
@@ -32,8 +28,7 @@ class RemixCalloutSpec with _$RemixCalloutSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
-      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
+      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
     );
   }
 }

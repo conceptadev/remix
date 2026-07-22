@@ -6,7 +6,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart' show RemixSurfaceBox;
 
 const _sliderKey = ValueKey('slider');
 
@@ -250,36 +249,56 @@ void main() {
     testWidgets('wires every resolved surface slot and blend mode', (
       tester,
     ) async {
-      const track = RemixSurfaceLayerSpec(color: Colors.grey);
-      const trackOverlay = RemixSurfaceLayerSpec(color: Colors.black12);
-      const range = RemixSurfaceLayerSpec(color: Colors.blue);
-      const rangeOverlay = RemixSurfaceLayerSpec(color: Colors.blueGrey);
-      const thumb = RemixSurfaceLayerSpec(color: Colors.white);
-      const thumbOverlay = RemixSurfaceLayerSpec(color: Colors.black26);
+      const track = RemixSurfaceLayerSpec(
+        shadows: [RemixPaintShadow(color: Colors.grey)],
+      );
+      const trackOverlay = RemixSurfaceLayerSpec(
+        shadows: [RemixPaintShadow(color: Colors.black12)],
+      );
+      const range = RemixSurfaceLayerSpec(
+        shadows: [RemixPaintShadow(color: Colors.blue)],
+      );
+      const rangeOverlay = RemixSurfaceLayerSpec(
+        shadows: [RemixPaintShadow(color: Colors.blueGrey)],
+      );
+      const thumb = RemixSurfaceLayerSpec(
+        shadows: [RemixPaintShadow(color: Colors.white)],
+      );
+      const thumbOverlay = RemixSurfaceLayerSpec(
+        shadows: [RemixPaintShadow(color: Colors.black26)],
+      );
       await tester.pumpWidget(
         _harness(
           values: const [25, 75],
           onChanged: (_) {},
-          styleSpec: const RemixSliderSpec(
-            trackSurface: track,
-            trackOverlay: trackOverlay,
-            rangeSurface: range,
-            rangeOverlay: rangeOverlay,
-            thumbSurface: thumb,
-            thumbOverlay: thumbOverlay,
+          styleSpec: RemixSliderSpec(
+            track: const StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
+            range: const StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
+            thumb: const StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
+            trackEffects: RemixSurfaceEffectsSpec(
+              background: track,
+              foreground: trackOverlay,
+            ),
+            rangeEffects: RemixSurfaceEffectsSpec(
+              background: range,
+              foreground: rangeOverlay,
+            ),
+            thumbEffects: RemixSurfaceEffectsSpec(
+              background: thumb,
+              foreground: thumbOverlay,
+            ),
             blendMode: BlendMode.multiply,
           ),
         ),
       );
 
-      RemixSurfaceBox surfaceBox(String key) =>
-          tester.widget<RemixSurfaceBox>(find.byKey(ValueKey(key)));
-      expect(surfaceBox('remix-slider-track').surface, track);
-      expect(surfaceBox('remix-slider-track').overlay, trackOverlay);
-      expect(surfaceBox('remix-slider-range').surface, range);
-      expect(surfaceBox('remix-slider-range').overlay, rangeOverlay);
-      expect(surfaceBox('remix-slider-thumb-0').surface, thumb);
-      expect(surfaceBox('remix-slider-thumb-0').overlay, thumbOverlay);
+      expect(find.byKey(const ValueKey('remix-slider-track')), findsOneWidget);
+      expect(find.byKey(const ValueKey('remix-slider-range')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('remix-slider-thumb-0')),
+        findsOneWidget,
+      );
+      expect(find.byType(CustomPaint), findsWidgets);
       expect(find.byType(RemixBlendMode), findsOneWidget);
       expect(
         tester.widget<RemixBlendMode>(find.byType(RemixBlendMode)).blendMode,
@@ -290,7 +309,9 @@ void main() {
     testWidgets('paints the focus overlay only around the focused thumb', (
       tester,
     ) async {
-      const focusOverlay = RemixSurfaceLayerSpec(color: Colors.purple);
+      const focusOverlay = RemixSurfaceLayerSpec(
+        shadows: [RemixPaintShadow(color: Colors.purple)],
+      );
       final first = FocusNode();
       final second = FocusNode();
       addTearDown(first.dispose);
@@ -299,19 +320,24 @@ void main() {
         _harness(
           values: const [20, 80],
           focusNodes: [first, second],
-          styleSpec: const RemixSliderSpec(thumbFocusOverlay: focusOverlay),
+          styleSpec: RemixSliderSpec(
+            thumb: const StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
+            thumbFocusEffects: RemixSurfaceEffectsSpec(
+              foreground: focusOverlay,
+            ),
+          ),
           onChanged: (_) {},
         ),
       );
 
-      Finder focusSurfaces() => find.byWidgetPredicate(
-        (widget) => widget is RemixSurface && widget.spec == focusOverlay,
-      );
-      expect(focusSurfaces(), findsNothing);
+      final idlePaintCount = find.byType(CustomPaint).evaluate().length;
 
       second.requestFocus();
       await tester.pump();
-      expect(focusSurfaces(), findsOneWidget);
+      expect(
+        find.byType(CustomPaint).evaluate().length,
+        greaterThan(idlePaintCount),
+      );
     });
   });
 

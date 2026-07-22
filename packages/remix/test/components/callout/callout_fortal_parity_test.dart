@@ -60,12 +60,17 @@ void main() {
         fortalCalloutStyler(variant: .outline, highContrast: true),
       );
 
-      expect(soft.surface!.color, tokens.accentA3);
+      expect(_color(soft.container), tokens.accentA3);
       expect(soft.text.spec.style!.color, tokens.accentA11);
-      expect(surface.surface!.color, tokens.accentA2);
-      expect(surface.surface!.shadows.single.color, tokens.accentA6);
-      expect(outlineHigh.surface!.color, isNull);
-      expect(outlineHigh.surface!.shadows.single.color, tokens.accentA7);
+      expect(_color(surface.container), tokens.accentA2);
+      expect(
+        surface.effects!.background!.shadows.single.color,
+        tokens.accentA6,
+      );
+      expect(
+        outlineHigh.effects!.background!.shadows.single.color,
+        tokens.accentA7,
+      );
       expect(outlineHigh.text.spec.style!.color, tokens.accent12);
     });
   });
@@ -140,3 +145,6 @@ double _radius(BoxSpec box) => (box.decoration as BoxDecoration).borderRadius!
     .resolve(TextDirection.ltr)
     .topLeft
     .x;
+
+Color? _color(StyleSpec<FlexBoxSpec> style) =>
+    (style.spec.box?.spec.decoration as BoxDecoration?)?.color;

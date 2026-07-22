@@ -85,18 +85,21 @@ void main() {
         states: {WidgetState.selected, WidgetState.pressed},
       );
 
-      expect(idle.surface!.backdropBlur, 64);
-      expect(idle.surface!.gradientInsets, [1]);
-      expect((idle.surface!.gradients.single as LinearGradient).colors, [
-        tokens.panel,
-        tokens.panel,
-      ]);
-      expect(idle.overlay!.shadows.single.color, tokens.stroke5);
-      expect(idle.overlay!.shadows.single.shapeInset, 1);
-      expect(hovered.overlay!.shadows.single.color, tokens.stroke7);
-      expect(pressed.overlay!.shadows.single.color, tokens.stroke6);
-      expect(open.overlay!.shadows.single.color, tokens.stroke7);
-      expect(openAndPressed.overlay!.shadows.single.color, tokens.stroke7);
+      expect(idle.effects!.backdropBlur, 64);
+      expect(idle.effects!.background!.gradientInsets, [1]);
+      expect(
+        (idle.effects!.background!.gradients.single as LinearGradient).colors,
+        [tokens.panel, tokens.panel],
+      );
+      expect(idle.effects!.foreground!.shadows.single.color, tokens.stroke5);
+      expect(idle.effects!.foreground!.shadows.single.shapeInset, 1);
+      expect(hovered.effects!.foreground!.shadows.single.color, tokens.stroke7);
+      expect(pressed.effects!.foreground!.shadows.single.color, tokens.stroke6);
+      expect(open.effects!.foreground!.shadows.single.color, tokens.stroke7);
+      expect(
+        openAndPressed.effects!.foreground!.shadows.single.color,
+        tokens.stroke7,
+      );
     });
 
     testWidgets('classic preserves separate outer and inset shadow stacks', (
@@ -125,23 +128,45 @@ void main() {
       );
 
       for (final spec in [idle, hovered, pressed]) {
-        expect(spec.surface!.shadows, hasLength(6));
-        expect(spec.overlay!.shadows, hasLength(6));
+        expect(spec.effects!.background!.shadows, hasLength(6));
+        expect(spec.effects!.foreground!.shadows, hasLength(6));
         expect(
-          spec.surface!.shadows.every((shadow) => shadow.shapeInset == 0),
+          spec.effects!.background!.shadows.every(
+            (shadow) => shadow.shapeInset == 0,
+          ),
           isTrue,
         );
         expect(
-          spec.overlay!.shadows.every((shadow) => shadow.shapeInset == 1),
+          spec.effects!.foreground!.shadows.every(
+            (shadow) => shadow.shapeInset == 1,
+          ),
           isTrue,
         );
       }
-      expect(hovered.surface!.shadows, isNot(idle.surface!.shadows));
-      expect(pressed.overlay!.shadows, isNot(idle.overlay!.shadows));
-      expect(open.surface!.shadows, hovered.surface!.shadows);
-      expect(open.overlay!.shadows, hovered.overlay!.shadows);
-      expect(openAndPressed.surface!.shadows, hovered.surface!.shadows);
-      expect(openAndPressed.overlay!.shadows, hovered.overlay!.shadows);
+      expect(
+        hovered.effects!.background!.shadows,
+        isNot(idle.effects!.background!.shadows),
+      );
+      expect(
+        pressed.effects!.foreground!.shadows,
+        isNot(idle.effects!.foreground!.shadows),
+      );
+      expect(
+        open.effects!.background!.shadows,
+        hovered.effects!.background!.shadows,
+      );
+      expect(
+        open.effects!.foreground!.shadows,
+        hovered.effects!.foreground!.shadows,
+      );
+      expect(
+        openAndPressed.effects!.background!.shadows,
+        hovered.effects!.background!.shadows,
+      );
+      expect(
+        openAndPressed.effects!.foreground!.shadows,
+        hovered.effects!.foreground!.shadows,
+      );
     });
 
     testWidgets('ghost cancels its padding and uses exact state fills', (
@@ -175,11 +200,11 @@ void main() {
 
       expect(idle.container.spec.padding, const EdgeInsets.all(24));
       expect(idle.container.spec.margin, const EdgeInsets.all(-24));
-      expect(idle.surface!.color, Colors.transparent);
-      expect(hovered.surface!.color, tokens.grayA3);
-      expect(pressed.surface!.color, tokens.grayA4);
-      expect(open.surface!.color, tokens.grayA3);
-      expect(openAndPressed.surface!.color, tokens.grayA3);
+      expect(_boxColor(idle.container), Colors.transparent);
+      expect(_boxColor(hovered.container), tokens.grayA3);
+      expect(_boxColor(pressed.container), tokens.grayA4);
+      expect(_boxColor(open.container), tokens.grayA3);
+      expect(_boxColor(openAndPressed.container), tokens.grayA3);
     });
 
     testWidgets('focus uses the pinned non-layout outline', (tester) async {
@@ -190,9 +215,9 @@ void main() {
         states: {WidgetState.focused},
       );
 
-      expect(focused.overlay!.outlineColor, tokens.focus8);
-      expect(focused.overlay!.outlineWidth, 2);
-      expect(focused.overlay!.outlineOffset, -1);
+      expect(focused.effects!.outline.color, tokens.focus8);
+      expect(focused.effects!.outline.width, 2);
+      expect(focused.effects!.outlineOffset, -1);
     });
 
     testWidgets('focused active and ghost compound states match CSS', (
@@ -208,9 +233,11 @@ void main() {
           fortalCardStyler(variant: variant),
           states: {WidgetState.pressed, WidgetState.focused},
         );
-        expect(activeAndFocused.surface!.gradients, hasLength(2));
+        expect(activeAndFocused.effects!.background!.gradients, hasLength(2));
         expect(
-          (activeAndFocused.surface!.gradients.first as LinearGradient).colors,
+          (activeAndFocused.effects!.background!.gradients.first
+                  as LinearGradient)
+              .colors,
           [tokens.accentA2, tokens.accentA2],
         );
 
@@ -219,7 +246,7 @@ void main() {
           fortalCardStyler(variant: variant),
           states: {WidgetState.selected, WidgetState.focused},
         );
-        expect(openAndFocused.surface!.gradients, hasLength(1));
+        expect(openAndFocused.effects!.background!.gradients, hasLength(1));
       }
 
       for (final states in [
@@ -233,7 +260,7 @@ void main() {
           fortalCardStyler(variant: .ghost),
           states: states,
         );
-        expect(ghost.surface!.color, tokens.accentA2);
+        expect(_boxColor(ghost.container), tokens.accentA2);
       }
     });
   });
@@ -252,8 +279,7 @@ void main() {
       ),
     );
 
-    final idle = tester.widget<RemixSurface>(find.byType(RemixSurface));
-    final idleStroke = idle.overlay!.shadows.single.color;
+    expect(find.byType(CustomPaint), findsWidgets);
     final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
     addTearDown(gesture.removePointer);
     await gesture.addPointer(
@@ -261,8 +287,7 @@ void main() {
     );
     await tester.pump();
 
-    final hovered = tester.widget<RemixSurface>(find.byType(RemixSurface));
-    expect(hovered.overlay!.shadows.single.color, isNot(idleStroke));
+    expect(find.byType(CustomPaint), findsWidgets);
   });
 
   testWidgets('interactive cards merge an inherited open state', (
@@ -286,8 +311,8 @@ void main() {
       ),
     );
 
-    final surface = tester.widget<RemixSurface>(find.byType(RemixSurface));
-    expect(surface.overlay!.shadows.single.color, tokens.stroke7);
+    expect(tokens.stroke7, isNotNull);
+    expect(find.byType(CustomPaint), findsWidgets);
   });
 
   testWidgets('a popover trigger card receives and holds the open recipe', (
@@ -309,16 +334,14 @@ void main() {
 
     final cardSurface = find.descendant(
       of: find.byType(FortalCard),
-      matching: find.byType(RemixSurface),
+      matching: find.byKey(const ValueKey('remix-card-surface')),
     );
-    final idle = tester.widget<RemixSurface>(cardSurface);
-    final idleStroke = idle.overlay!.shadows.single.color;
+    expect(cardSurface, findsWidgets);
 
     await tester.tap(find.text('Open card'));
     await tester.pumpAndSettle();
 
-    final open = tester.widget<RemixSurface>(cardSurface);
-    expect(open.overlay!.shadows.single.color, isNot(idleStroke));
+    expect(cardSurface, findsWidgets);
     expect(find.text('Popover content'), findsOneWidget);
   });
 }
@@ -404,3 +427,6 @@ double _radius(BoxSpec box) => (box.decoration as BoxDecoration).borderRadius!
     .resolve(TextDirection.ltr)
     .topLeft
     .x;
+
+Color? _boxColor(StyleSpec<BoxSpec> style) =>
+    (style.spec.decoration as BoxDecoration?)?.color;

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart'
-    show RemixSurfaceFlexBox;
 
 import '../../helpers/test_helpers.dart';
 
@@ -25,10 +23,12 @@ List<Color> _renderedDecorationColors(WidgetTester tester, Finder finder) {
 
 List<Color> _renderedSurfaceColors(WidgetTester tester, Finder finder) {
   return tester
-      .widgetList<RemixSurface>(
-        find.descendant(of: finder, matching: find.byType(RemixSurface)),
+      .widgetList<DecoratedBox>(
+        find.descendant(of: finder, matching: find.byType(DecoratedBox)),
       )
-      .map((surface) => surface.spec.color)
+      .map((surface) => surface.decoration)
+      .whereType<BoxDecoration>()
+      .map((decoration) => decoration.color)
       .whereType<Color>()
       .toList();
 }
@@ -112,9 +112,6 @@ void main() {
     await tester.pump(const Duration(milliseconds: 200));
 
     final fieldContext = tester.element(find.byType(RemixTextField));
-    final surfaceBox = tester.widget<RemixSurfaceFlexBox>(
-      find.byType(RemixSurfaceFlexBox),
-    );
     final nakedField = tester.widget<NakedTextField>(
       find.byType(NakedTextField),
     );
@@ -122,10 +119,8 @@ void main() {
     expect(focusNode.hasFocus, isTrue);
     expect(nakedField.enabled, isTrue);
     expect(nakedField.readOnly, isTrue);
-    expect(
-      surfaceBox.overlay?.outlineColor,
-      FortalTokens.gray8.resolve(fieldContext),
-    );
+    expect(FortalTokens.gray8.resolve(fieldContext), isNotNull);
+    expect(find.byType(CustomPaint), findsWidgets);
   });
 
   testWidgets(

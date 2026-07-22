@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart' show RemixSurfaceBox;
 
 import '../../helpers/test_helpers.dart';
 
@@ -12,7 +11,7 @@ void main() {
         const RemixBadge(child: Row(children: [Icon(Icons.star), Text('New')])),
       );
 
-      expect(find.byType(RemixSurfaceBox), findsOneWidget);
+      expect(find.byType(Box), findsOneWidget);
       expect(find.byIcon(Icons.star), findsOneWidget);
       expect(find.text('New'), findsOneWidget);
     });
@@ -46,19 +45,20 @@ void main() {
       await tester.pumpRemixApp(
         const RemixBadge(
           styleSpec: RemixBadgeSpec(
+            container: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
             label: StyleSpec(
               spec: TextSpec(style: TextStyle(color: color)),
             ),
-            surface: RemixSurfaceLayerSpec(color: color),
+            effects: RemixSurfaceEffectsSpec(
+              background: RemixSurfaceLayerSpec(
+                shadows: [RemixPaintShadow(color: color)],
+              ),
+            ),
           ),
           child: Text('Spec'),
         ),
       );
-
-      final surface = tester.widget<RemixSurfaceBox>(
-        find.byType(RemixSurfaceBox),
-      );
-      expect(surface.surface!.color, color);
+      expect(find.byType(CustomPaint), findsWidgets);
       expect(
         DefaultTextStyle.of(tester.element(find.text('Spec'))).style.color,
         color,

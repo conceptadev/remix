@@ -86,7 +86,7 @@ void main() {
       await tester.pumpWidget(
         _blendHarness(
           blendMode: BlendMode.src,
-          child: const SizedBox.square(
+          child: SizedBox.square(
             dimension: 20,
             child: Stack(
               clipBehavior: Clip.none,
@@ -96,17 +96,25 @@ void main() {
                   top: 6,
                   width: 8,
                   height: 8,
-                  child: RemixSurface(
-                    spec: RemixSurfaceLayerSpec(
-                      color: Colors.red,
-                      shadows: [
-                        RemixPaintShadow(color: Colors.green, spreadRadius: 2),
-                      ],
-                      outlineColor: Colors.yellow,
-                      outlineWidth: 1,
+                  child: remixSurfaceBox(
+                    styleSpec: const StyleSpec(
+                      spec: BoxSpec(
+                        decoration: BoxDecoration(color: Colors.red),
+                      ),
+                    ),
+                    effects: const RemixSurfaceEffectsSpec(
+                      background: RemixSurfaceLayerSpec(
+                        shadows: [
+                          RemixPaintShadow(
+                            color: Colors.green,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      outline: BorderSide(color: Colors.yellow, width: 1),
                       outlineOffset: 3,
                     ),
-                    child: SizedBox.expand(),
+                    child: const SizedBox.expand(),
                   ),
                 ),
               ],

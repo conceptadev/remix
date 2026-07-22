@@ -3,151 +3,287 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  const beginLayer = RemixSurfaceLayerSpec(color: Colors.red);
-  const endLayer = RemixSurfaceLayerSpec(color: Colors.blue);
+  const beginLayer = RemixSurfaceLayerSpec(
+    shadows: [RemixPaintShadow(color: Colors.red)],
+  );
+  const endLayer = RemixSurfaceLayerSpec(
+    shadows: [RemixPaintShadow(color: Colors.blue)],
+  );
 
-  final badgeBegin = RemixBadgeSpec(surface: beginLayer, overlay: beginLayer);
-  final badgeEnd = RemixBadgeSpec(surface: endLayer, overlay: endLayer);
-  final buttonBegin = RemixButtonSpec(surface: beginLayer, overlay: beginLayer);
-  final buttonEnd = RemixButtonSpec(surface: endLayer, overlay: endLayer);
+  final badgeBegin = RemixBadgeSpec(
+    effects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
+  );
+  final badgeEnd = RemixBadgeSpec(
+    effects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
+  );
+  final buttonBegin = RemixButtonSpec(
+    effects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
+  );
+  final buttonEnd = RemixButtonSpec(
+    effects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
+  );
   final calloutBegin = RemixCalloutSpec(
-    surface: beginLayer,
-    overlay: beginLayer,
+    effects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
   );
-  final calloutEnd = RemixCalloutSpec(surface: endLayer, overlay: endLayer);
-  final cardBegin = RemixCardSpec(surface: beginLayer, overlay: beginLayer);
-  final cardEnd = RemixCardSpec(surface: endLayer, overlay: endLayer);
+  final calloutEnd = RemixCalloutSpec(
+    effects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
+  );
+  final cardBegin = RemixCardSpec(
+    effects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
+  );
+  final cardEnd = RemixCardSpec(
+    effects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
+  );
   final checkboxBegin = RemixCheckboxSpec(
-    surface: beginLayer,
-    overlay: beginLayer,
+    effects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
   );
-  final checkboxEnd = RemixCheckboxSpec(surface: endLayer, overlay: endLayer);
-  final dialogBegin = RemixDialogSpec(surface: beginLayer);
-  final dialogEnd = RemixDialogSpec(surface: endLayer);
+  final checkboxEnd = RemixCheckboxSpec(
+    effects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
+  );
+  final dialogBegin = RemixDialogSpec(
+    effects: RemixSurfaceEffectsSpec(background: beginLayer),
+  );
+  final dialogEnd = RemixDialogSpec(
+    effects: RemixSurfaceEffectsSpec(background: endLayer),
+  );
   final iconButtonBegin = RemixIconButtonSpec(
-    surface: beginLayer,
-    overlay: beginLayer,
+    effects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
   );
   final iconButtonEnd = RemixIconButtonSpec(
-    surface: endLayer,
-    overlay: endLayer,
+    effects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
   );
-  final menuBegin = RemixMenuSpec(surface: beginLayer);
-  final menuEnd = RemixMenuSpec(surface: endLayer);
-  final popoverBegin = RemixPopoverSpec(surface: beginLayer);
-  final popoverEnd = RemixPopoverSpec(surface: endLayer);
+  final menuBegin = RemixMenuSpec(
+    effects: RemixSurfaceEffectsSpec(background: beginLayer),
+  );
+  final menuEnd = RemixMenuSpec(
+    effects: RemixSurfaceEffectsSpec(background: endLayer),
+  );
+  final popoverBegin = RemixPopoverSpec(
+    effects: RemixSurfaceEffectsSpec(background: beginLayer),
+  );
+  final popoverEnd = RemixPopoverSpec(
+    effects: RemixSurfaceEffectsSpec(background: endLayer),
+  );
   final progressBegin = RemixProgressSpec(
-    surface: beginLayer,
-    overlay: beginLayer,
-    indicatorSurface: beginLayer,
-    indicatorOverlay: beginLayer,
+    trackEffects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
+    indicatorEffects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
   );
   final progressEnd = RemixProgressSpec(
-    surface: endLayer,
-    overlay: endLayer,
-    indicatorSurface: endLayer,
-    indicatorOverlay: endLayer,
+    trackEffects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
+    indicatorEffects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
   );
-  final radioBegin = RemixRadioSpec(surface: beginLayer, overlay: beginLayer);
-  final radioEnd = RemixRadioSpec(surface: endLayer, overlay: endLayer);
+  final radioBegin = RemixRadioSpec(
+    effects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
+  );
+  final radioEnd = RemixRadioSpec(
+    effects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
+  );
   final selectTriggerBegin = RemixSelectTriggerSpec(
-    surface: beginLayer,
-    overlay: beginLayer,
+    effects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
   );
   final selectTriggerEnd = RemixSelectTriggerSpec(
-    surface: endLayer,
-    overlay: endLayer,
+    effects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
   );
-  final selectContentBegin = RemixSelectContentSpec(surface: beginLayer);
-  final selectContentEnd = RemixSelectContentSpec(surface: endLayer);
+  final selectContentBegin = RemixSelectContentSpec(
+    effects: RemixSurfaceEffectsSpec(background: beginLayer),
+  );
+  final selectContentEnd = RemixSelectContentSpec(
+    effects: RemixSurfaceEffectsSpec(background: endLayer),
+  );
   final sliderBegin = RemixSliderSpec(
-    trackSurface: beginLayer,
-    trackOverlay: beginLayer,
-    rangeSurface: beginLayer,
-    rangeOverlay: beginLayer,
-    thumbSurface: beginLayer,
-    thumbOverlay: beginLayer,
-    thumbFocusOverlay: beginLayer,
+    trackEffects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
+    rangeEffects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
+    thumbEffects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
+    thumbFocusEffects: RemixSurfaceEffectsSpec(foreground: beginLayer),
   );
   final sliderEnd = RemixSliderSpec(
-    trackSurface: endLayer,
-    trackOverlay: endLayer,
-    rangeSurface: endLayer,
-    rangeOverlay: endLayer,
-    thumbSurface: endLayer,
-    thumbOverlay: endLayer,
-    thumbFocusOverlay: endLayer,
+    trackEffects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
+    rangeEffects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
+    thumbEffects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
+    thumbFocusEffects: RemixSurfaceEffectsSpec(foreground: endLayer),
   );
   final switchBegin = RemixSwitchSpec(
-    surface: beginLayer,
-    overlay: beginLayer,
-    thumbSurface: beginLayer,
-    thumbOverlay: beginLayer,
+    trackEffects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
+    thumbEffects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
   );
   final switchEnd = RemixSwitchSpec(
-    surface: endLayer,
-    overlay: endLayer,
-    thumbSurface: endLayer,
-    thumbOverlay: endLayer,
+    trackEffects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
+    thumbEffects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
   );
   final textFieldBegin = RemixTextFieldSpec(
-    surface: beginLayer,
-    overlay: beginLayer,
+    effects: RemixSurfaceEffectsSpec(
+      background: beginLayer,
+      foreground: beginLayer,
+    ),
   );
-  final textFieldEnd = RemixTextFieldSpec(surface: endLayer, overlay: endLayer);
+  final textFieldEnd = RemixTextFieldSpec(
+    effects: RemixSurfaceEffectsSpec(
+      background: endLayer,
+      foreground: endLayer,
+    ),
+  );
 
   final cases = <String, RemixSurfaceLayerSpec? Function(double)>{
-    'badge surface': (t) => badgeBegin.lerp(badgeEnd, t).surface,
-    'badge overlay': (t) => badgeBegin.lerp(badgeEnd, t).overlay,
-    'button surface': (t) => buttonBegin.lerp(buttonEnd, t).surface,
-    'button overlay': (t) => buttonBegin.lerp(buttonEnd, t).overlay,
-    'callout surface': (t) => calloutBegin.lerp(calloutEnd, t).surface,
-    'callout overlay': (t) => calloutBegin.lerp(calloutEnd, t).overlay,
-    'card surface': (t) => cardBegin.lerp(cardEnd, t).surface,
-    'card overlay': (t) => cardBegin.lerp(cardEnd, t).overlay,
-    'checkbox surface': (t) => checkboxBegin.lerp(checkboxEnd, t).surface,
-    'checkbox overlay': (t) => checkboxBegin.lerp(checkboxEnd, t).overlay,
-    'dialog surface': (t) => dialogBegin.lerp(dialogEnd, t).surface,
+    'badge surface': (t) => badgeBegin.lerp(badgeEnd, t).effects?.background,
+    'badge overlay': (t) => badgeBegin.lerp(badgeEnd, t).effects?.foreground,
+    'button surface': (t) => buttonBegin.lerp(buttonEnd, t).effects?.background,
+    'button overlay': (t) => buttonBegin.lerp(buttonEnd, t).effects?.foreground,
+    'callout surface': (t) =>
+        calloutBegin.lerp(calloutEnd, t).effects?.background,
+    'callout overlay': (t) =>
+        calloutBegin.lerp(calloutEnd, t).effects?.foreground,
+    'card surface': (t) => cardBegin.lerp(cardEnd, t).effects?.background,
+    'card overlay': (t) => cardBegin.lerp(cardEnd, t).effects?.foreground,
+    'checkbox surface': (t) =>
+        checkboxBegin.lerp(checkboxEnd, t).effects?.background,
+    'checkbox overlay': (t) =>
+        checkboxBegin.lerp(checkboxEnd, t).effects?.foreground,
+    'dialog surface': (t) => dialogBegin.lerp(dialogEnd, t).effects?.background,
     'icon button surface': (t) =>
-        iconButtonBegin.lerp(iconButtonEnd, t).surface,
+        iconButtonBegin.lerp(iconButtonEnd, t).effects?.background,
     'icon button overlay': (t) =>
-        iconButtonBegin.lerp(iconButtonEnd, t).overlay,
-    'menu surface': (t) => menuBegin.lerp(menuEnd, t).surface,
-    'popover surface': (t) => popoverBegin.lerp(popoverEnd, t).surface,
-    'progress surface': (t) => progressBegin.lerp(progressEnd, t).surface,
-    'progress overlay': (t) => progressBegin.lerp(progressEnd, t).overlay,
+        iconButtonBegin.lerp(iconButtonEnd, t).effects?.foreground,
+    'menu surface': (t) => menuBegin.lerp(menuEnd, t).effects?.background,
+    'popover surface': (t) =>
+        popoverBegin.lerp(popoverEnd, t).effects?.background,
+    'progress surface': (t) =>
+        progressBegin.lerp(progressEnd, t).trackEffects?.background,
+    'progress overlay': (t) =>
+        progressBegin.lerp(progressEnd, t).trackEffects?.foreground,
     'progress indicator surface': (t) =>
-        progressBegin.lerp(progressEnd, t).indicatorSurface,
+        progressBegin.lerp(progressEnd, t).indicatorEffects?.background,
     'progress indicator overlay': (t) =>
-        progressBegin.lerp(progressEnd, t).indicatorOverlay,
-    'radio surface': (t) => radioBegin.lerp(radioEnd, t).surface,
-    'radio overlay': (t) => radioBegin.lerp(radioEnd, t).overlay,
+        progressBegin.lerp(progressEnd, t).indicatorEffects?.foreground,
+    'radio surface': (t) => radioBegin.lerp(radioEnd, t).effects?.background,
+    'radio overlay': (t) => radioBegin.lerp(radioEnd, t).effects?.foreground,
     'select trigger surface': (t) =>
-        selectTriggerBegin.lerp(selectTriggerEnd, t).surface,
+        selectTriggerBegin.lerp(selectTriggerEnd, t).effects?.background,
     'select trigger overlay': (t) =>
-        selectTriggerBegin.lerp(selectTriggerEnd, t).overlay,
+        selectTriggerBegin.lerp(selectTriggerEnd, t).effects?.foreground,
     'select content surface': (t) =>
-        selectContentBegin.lerp(selectContentEnd, t).surface,
-    'slider track surface': (t) => sliderBegin.lerp(sliderEnd, t).trackSurface,
-    'slider track overlay': (t) => sliderBegin.lerp(sliderEnd, t).trackOverlay,
-    'slider range surface': (t) => sliderBegin.lerp(sliderEnd, t).rangeSurface,
-    'slider range overlay': (t) => sliderBegin.lerp(sliderEnd, t).rangeOverlay,
-    'slider thumb surface': (t) => sliderBegin.lerp(sliderEnd, t).thumbSurface,
-    'slider thumb overlay': (t) => sliderBegin.lerp(sliderEnd, t).thumbOverlay,
+        selectContentBegin.lerp(selectContentEnd, t).effects?.background,
+    'slider track surface': (t) =>
+        sliderBegin.lerp(sliderEnd, t).trackEffects?.background,
+    'slider track overlay': (t) =>
+        sliderBegin.lerp(sliderEnd, t).trackEffects?.foreground,
+    'slider range surface': (t) =>
+        sliderBegin.lerp(sliderEnd, t).rangeEffects?.background,
+    'slider range overlay': (t) =>
+        sliderBegin.lerp(sliderEnd, t).rangeEffects?.foreground,
+    'slider thumb surface': (t) =>
+        sliderBegin.lerp(sliderEnd, t).thumbEffects?.background,
+    'slider thumb overlay': (t) =>
+        sliderBegin.lerp(sliderEnd, t).thumbEffects?.foreground,
     'slider thumb focus overlay': (t) =>
-        sliderBegin.lerp(sliderEnd, t).thumbFocusOverlay,
-    'switch surface': (t) => switchBegin.lerp(switchEnd, t).surface,
-    'switch overlay': (t) => switchBegin.lerp(switchEnd, t).overlay,
-    'switch thumb surface': (t) => switchBegin.lerp(switchEnd, t).thumbSurface,
-    'switch thumb overlay': (t) => switchBegin.lerp(switchEnd, t).thumbOverlay,
-    'text field surface': (t) => textFieldBegin.lerp(textFieldEnd, t).surface,
-    'text field overlay': (t) => textFieldBegin.lerp(textFieldEnd, t).overlay,
+        sliderBegin.lerp(sliderEnd, t).thumbFocusEffects?.foreground,
+    'switch surface': (t) =>
+        switchBegin.lerp(switchEnd, t).trackEffects?.background,
+    'switch overlay': (t) =>
+        switchBegin.lerp(switchEnd, t).trackEffects?.foreground,
+    'switch thumb surface': (t) =>
+        switchBegin.lerp(switchEnd, t).thumbEffects?.background,
+    'switch thumb overlay': (t) =>
+        switchBegin.lerp(switchEnd, t).thumbEffects?.foreground,
+    'text field surface': (t) =>
+        textFieldBegin.lerp(textFieldEnd, t).effects?.background,
+    'text field overlay': (t) =>
+        textFieldBegin.lerp(textFieldEnd, t).effects?.foreground,
   };
 
   for (final entry in cases.entries) {
     test('${entry.key} interpolates instead of snapping', () {
       expect(
-        entry.value(0.25)?.color,
+        entry.value(0.25)?.shadows.first.color,
         Color.lerp(Colors.red, Colors.blue, 0.25),
       );
     });

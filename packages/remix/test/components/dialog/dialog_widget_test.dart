@@ -3,7 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart' show RemixSurfaceBox;
 
 import '../../helpers/test_helpers.dart';
 
@@ -421,7 +420,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(RemixSurfaceBox), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+          findsOneWidget,
+        );
         expect(find.byType(StyledText), findsOneWidget);
         expect(find.text('Test Dialog'), findsOneWidget);
       });
@@ -433,7 +435,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(RemixSurfaceBox), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+          findsOneWidget,
+        );
         expect(find.byType(StyledText), findsOneWidget);
         expect(find.text('Dialog Description'), findsOneWidget);
       });
@@ -444,7 +449,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(RemixSurfaceBox), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+          findsOneWidget,
+        );
         expect(find.byKey(ValueKey('test_icon')), findsOneWidget);
         expect(find.byIcon(Icons.star), findsOneWidget);
       });
@@ -456,7 +464,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(RemixSurfaceBox), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+          findsOneWidget,
+        );
         expect(find.byType(StyledText), findsNWidgets(2));
         expect(find.text('Dialog Title'), findsOneWidget);
         expect(find.text('Dialog Description'), findsOneWidget);
@@ -481,7 +492,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(RemixSurfaceBox), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+          findsOneWidget,
+        );
         expect(find.byType(StyledText), findsNWidgets(2));
         expect(find.byType(FlexBox), findsOneWidget);
         expect(find.text('Complete Dialog'), findsOneWidget);
@@ -549,7 +563,7 @@ void main() {
         expect(find.text('Only child'), findsOneWidget);
         expect(
           find.descendant(
-            of: find.byType(RemixSurfaceBox),
+            of: find.byKey(const ValueKey('remix-dialog-surface')),
             matching: find.byType(Column),
           ),
           findsNothing,
@@ -593,7 +607,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(RemixSurfaceBox), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+          findsOneWidget,
+        );
         expect(find.byType(StyledText), findsNWidgets(2));
         expect(find.text('Info Dialog'), findsOneWidget);
         expect(find.text('This is an informational dialog'), findsOneWidget);
@@ -611,7 +628,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(RemixSurfaceBox), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+          findsOneWidget,
+        );
         expect(find.byType(FlexBox), findsOneWidget);
         expect(find.text('Dialog with Actions'), findsOneWidget);
         expect(find.text('Action 1'), findsOneWidget);
@@ -627,7 +647,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(RemixSurfaceBox), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+          findsOneWidget,
+        );
         expect(find.text('Dialog without Actions'), findsOneWidget);
         expect(find.byType(FlexBox), findsNothing);
       });
@@ -745,7 +768,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(RemixSurfaceBox), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+          findsOneWidget,
+        );
         expect(find.text('Styled Dialog'), findsOneWidget);
       });
 
@@ -825,7 +851,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(RemixSurfaceBox), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+          findsOneWidget,
+        );
         expect(find.byType(StyledText), findsOneWidget);
         expect(find.text('Default Style Dialog'), findsOneWidget);
       });
@@ -836,7 +865,9 @@ void main() {
         await tester.pumpRemixApp(RemixDialog(title: 'Short'));
         await tester.pumpAndSettle();
 
-        final shortSize = tester.getSize(find.byType(RemixSurfaceBox));
+        final shortSize = tester.getSize(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+        );
 
         await tester.pumpRemixApp(
           RemixDialog(
@@ -846,7 +877,9 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        final longSize = tester.getSize(find.byType(RemixSurfaceBox));
+        final longSize = tester.getSize(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+        );
 
         expect(longSize.width, greaterThan(shortSize.width));
       });
@@ -857,7 +890,9 @@ void main() {
         await tester.pumpRemixApp(RemixDialog(title: 'Title Only'));
         await tester.pumpAndSettle();
 
-        final titleOnlySize = tester.getSize(find.byType(RemixSurfaceBox));
+        final titleOnlySize = tester.getSize(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+        );
 
         final actions = [TextButton(onPressed: () {}, child: Text('Action'))];
 
@@ -866,7 +901,9 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        final withActionsSize = tester.getSize(find.byType(RemixSurfaceBox));
+        final withActionsSize = tester.getSize(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+        );
 
         expect(withActionsSize.height, greaterThan(titleOnlySize.height));
       });
@@ -876,13 +913,17 @@ void main() {
         await tester.pumpRemixApp(RemixDialog(child: smallChild));
         await tester.pumpAndSettle();
 
-        final smallSize = tester.getSize(find.byType(RemixSurfaceBox));
+        final smallSize = tester.getSize(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+        );
 
         final largeChild = Icon(Icons.star, size: 32.0);
         await tester.pumpRemixApp(RemixDialog(child: largeChild));
         await tester.pumpAndSettle();
 
-        final largeSize = tester.getSize(find.byType(RemixSurfaceBox));
+        final largeSize = tester.getSize(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+        );
 
         expect(largeSize.width, greaterThan(smallSize.width));
         expect(largeSize.height, greaterThan(smallSize.height));
@@ -895,7 +936,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(RemixSurfaceBox), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+          findsOneWidget,
+        );
         expect(find.byType(StyledText), findsOneWidget);
       });
 
@@ -904,7 +948,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(RemixSurfaceBox), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+          findsOneWidget,
+        );
         expect(find.byType(StyledText), findsOneWidget);
       });
 
@@ -915,7 +962,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(RemixSurfaceBox), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('remix-dialog-surface')),
+          findsOneWidget,
+        );
         expect(find.text('No Actions'), findsOneWidget);
         expect(find.byType(FlexBox), findsNothing);
       });

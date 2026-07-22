@@ -23,8 +23,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get layout;
   StyleSpec<TextSpec> get helperText;
   StyleSpec<TextSpec> get label;
-  RemixSurfaceLayerSpec? get surface;
-  RemixSurfaceLayerSpec? get overlay;
+  RemixSurfaceEffectsSpec? get effects;
 
   @override
   Type get type => RemixTextFieldSpec;
@@ -47,8 +46,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
     StyleSpec<FlexBoxSpec>? layout,
     StyleSpec<TextSpec>? helperText,
     StyleSpec<TextSpec>? label,
-    RemixSurfaceLayerSpec? surface,
-    RemixSurfaceLayerSpec? overlay,
+    RemixSurfaceEffectsSpec? effects,
   }) {
     return RemixTextFieldSpec(
       text: text ?? this.text,
@@ -68,8 +66,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
       layout: layout ?? this.layout,
       helperText: helperText ?? this.helperText,
       label: label ?? this.label,
-      surface: surface ?? this.surface,
-      overlay: overlay ?? this.overlay,
+      effects: effects ?? this.effects,
     );
   }
 
@@ -108,8 +105,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
       layout: layout.lerp(other?.layout, t),
       helperText: helperText.lerp(other?.helperText, t),
       label: label.lerp(other?.label, t),
-      surface: MixOps.lerpSnap(surface, other?.surface, t),
-      overlay: MixOps.lerpSnap(overlay, other?.overlay, t),
+      effects: MixOps.lerpSnap(effects, other?.effects, t),
     );
   }
 
@@ -131,8 +127,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
     layout,
     helperText,
     label,
-    surface,
-    overlay,
+    effects,
   ];
 
   @override
@@ -191,8 +186,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('layout', layout))
       ..add(DiagnosticsProperty('helperText', helperText))
       ..add(DiagnosticsProperty('label', label))
-      ..add(DiagnosticsProperty('surface', surface))
-      ..add(DiagnosticsProperty('overlay', overlay));
+      ..add(DiagnosticsProperty('effects', effects));
   }
 }
 
@@ -226,8 +220,7 @@ class RemixTextFieldStyler
   final Prop<StyleSpec<FlexBoxSpec>>? $layout;
   final Prop<StyleSpec<TextSpec>>? $helperText;
   final Prop<StyleSpec<TextSpec>>? $label;
-  final Prop<RemixSurfaceLayerSpec>? $surface;
-  final Prop<RemixSurfaceLayerSpec>? $overlay;
+  final Prop<RemixSurfaceEffectsSpec>? $effects;
 
   const RemixTextFieldStyler.create({
     Prop<StyleSpec<TextSpec>>? text,
@@ -246,8 +239,7 @@ class RemixTextFieldStyler
     Prop<StyleSpec<FlexBoxSpec>>? layout,
     Prop<StyleSpec<TextSpec>>? helperText,
     Prop<StyleSpec<TextSpec>>? label,
-    Prop<RemixSurfaceLayerSpec>? surface,
-    Prop<RemixSurfaceLayerSpec>? overlay,
+    Prop<RemixSurfaceEffectsSpec>? effects,
     super.variants,
     super.modifier,
     super.animation,
@@ -267,8 +259,7 @@ class RemixTextFieldStyler
        $layout = layout,
        $helperText = helperText,
        $label = label,
-       $surface = surface,
-       $overlay = overlay;
+       $effects = effects;
 
   RemixTextFieldStyler({
     TextStyler? text,
@@ -287,8 +278,7 @@ class RemixTextFieldStyler
     FlexBoxStyler? layout,
     TextStyler? helperText,
     TextStyler? label,
-    RemixSurfaceLayerMix? surface,
-    RemixSurfaceLayerMix? overlay,
+    RemixSurfaceEffectsMix? effects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixTextFieldSpec>>? variants,
@@ -309,8 +299,7 @@ class RemixTextFieldStyler
          layout: Prop.maybeMix(layout),
          helperText: Prop.maybeMix(helperText),
          label: Prop.maybeMix(label),
-         surface: Prop.maybeMix(surface),
-         overlay: Prop.maybeMix(overlay),
+         effects: Prop.maybeMix(effects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -348,10 +337,8 @@ class RemixTextFieldStyler
       RemixTextFieldStyler().helperText(value);
   factory RemixTextFieldStyler.label(TextStyler value) =>
       RemixTextFieldStyler().label(value);
-  factory RemixTextFieldStyler.surface(RemixSurfaceLayerMix value) =>
-      RemixTextFieldStyler().surface(value);
-  factory RemixTextFieldStyler.overlay(RemixSurfaceLayerMix value) =>
-      RemixTextFieldStyler().overlay(value);
+  factory RemixTextFieldStyler.effects(RemixSurfaceEffectsMix value) =>
+      RemixTextFieldStyler().effects(value);
   factory RemixTextFieldStyler.color(Color value) =>
       RemixTextFieldStyler().color(value);
   factory RemixTextFieldStyler.gradient(GradientMix value) =>
@@ -969,14 +956,9 @@ class RemixTextFieldStyler
     return merge(RemixTextFieldStyler(label: value));
   }
 
-  /// Sets the surface.
-  RemixTextFieldStyler surface(RemixSurfaceLayerMix value) {
-    return merge(RemixTextFieldStyler(surface: value));
-  }
-
-  /// Sets the overlay.
-  RemixTextFieldStyler overlay(RemixSurfaceLayerMix value) {
-    return merge(RemixTextFieldStyler(overlay: value));
+  /// Sets the effects.
+  RemixTextFieldStyler effects(RemixSurfaceEffectsMix value) {
+    return merge(RemixTextFieldStyler(effects: value));
   }
 
   /// Sets the animation configuration.
@@ -1034,8 +1016,7 @@ class RemixTextFieldStyler
       layout: MixOps.merge($layout, other?.$layout),
       helperText: MixOps.merge($helperText, other?.$helperText),
       label: MixOps.merge($label, other?.$label),
-      surface: MixOps.merge($surface, other?.$surface),
-      overlay: MixOps.merge($overlay, other?.$overlay),
+      effects: MixOps.merge($effects, other?.$effects),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1062,8 +1043,7 @@ class RemixTextFieldStyler
       layout: MixOps.resolve(context, $layout),
       helperText: MixOps.resolve(context, $helperText),
       label: MixOps.resolve(context, $label),
-      surface: MixOps.resolve(context, $surface),
-      overlay: MixOps.resolve(context, $overlay),
+      effects: MixOps.resolve(context, $effects),
     );
 
     return StyleSpec(
@@ -1095,8 +1075,7 @@ class RemixTextFieldStyler
       ..add(DiagnosticsProperty('layout', $layout))
       ..add(DiagnosticsProperty('helperText', $helperText))
       ..add(DiagnosticsProperty('label', $label))
-      ..add(DiagnosticsProperty('surface', $surface))
-      ..add(DiagnosticsProperty('overlay', $overlay));
+      ..add(DiagnosticsProperty('effects', $effects));
   }
 
   @override
@@ -1117,8 +1096,7 @@ class RemixTextFieldStyler
     $layout,
     $helperText,
     $label,
-    $surface,
-    $overlay,
+    $effects,
     $animation,
     $modifier,
     $variants,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart' show RemixSurfaceBox;
 
 import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
@@ -25,7 +24,10 @@ void main() {
       );
 
       expect(find.byType(NakedButton), findsOneWidget);
-      expect(find.byType(RemixSurfaceBox), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('remix-icon-button-surface')),
+        findsOneWidget,
+      );
       expect(find.byIcon(Icons.add), findsOneWidget);
       expect(find.text('1'), findsOneWidget);
       expect(
@@ -73,18 +75,20 @@ void main() {
         const RemixIconButton(
           semanticLabel: 'Spec',
           styleSpec: RemixIconButtonSpec(
+            container: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
             icon: StyleSpec(spec: IconSpec(color: color, size: 21)),
-            surface: RemixSurfaceLayerSpec(color: color),
+            effects: RemixSurfaceEffectsSpec(
+              background: RemixSurfaceLayerSpec(
+                shadows: [RemixPaintShadow(color: color)],
+              ),
+            ),
           ),
           child: Icon(Icons.settings),
         ),
       );
 
-      final surface = tester.widget<RemixSurfaceBox>(
-        find.byType(RemixSurfaceBox),
-      );
       final iconContext = tester.element(find.byIcon(Icons.settings));
-      expect(surface.surface!.color, color);
+      expect(find.byType(CustomPaint), findsWidgets);
       expect(IconTheme.of(iconContext).color, color);
       expect(IconTheme.of(iconContext).size, 21);
     });

@@ -14,12 +14,22 @@ void main() {
             trigger: RemixSelectTriggerStyler(
               label: TextStyler().color(Colors.red),
               placeholder: TextStyler().color(Colors.orange),
-              surface: RemixSurfaceLayerMix(color: Colors.pink),
-              overlay: RemixSurfaceLayerMix(color: Colors.purple),
+              effects: RemixSurfaceEffectsMix(
+                background: RemixSurfaceLayerMix(
+                  shadows: [RemixPaintShadowMix(color: Colors.pink)],
+                ),
+                foreground: RemixSurfaceLayerMix(
+                  shadows: [RemixPaintShadowMix(color: Colors.purple)],
+                ),
+              ),
             ),
             content: RemixSelectContentStyler(
               container: BoxStyler().paddingAll(12),
-              surface: RemixSurfaceLayerMix(color: Colors.blue),
+              effects: RemixSurfaceEffectsMix(
+                background: RemixSurfaceLayerMix(
+                  shadows: [RemixPaintShadowMix(color: Colors.blue)],
+                ),
+              ),
             ),
             item: RemixSelectMenuItemStyler(
               text: TextStyler().color(Colors.green),
@@ -40,9 +50,18 @@ void main() {
     final spec = resolved.spec;
     expect(spec.trigger.spec.label.spec.style?.color, Colors.red);
     expect(spec.trigger.spec.placeholder.spec.style?.color, Colors.orange);
-    expect(spec.trigger.spec.surface?.color, Colors.pink);
-    expect(spec.trigger.spec.overlay?.color, Colors.purple);
-    expect(spec.content.spec.surface?.color, Colors.blue);
+    expect(
+      spec.trigger.spec.effects?.background?.shadows.first.color,
+      Colors.pink,
+    );
+    expect(
+      spec.trigger.spec.effects?.foreground?.shadows.first.color,
+      Colors.purple,
+    );
+    expect(
+      spec.content.spec.effects?.background?.shadows.first.color,
+      Colors.blue,
+    );
     expect(spec.item.spec.text.spec.style?.color, Colors.green);
     expect(spec.item.spec.icon.spec.color, Colors.yellow);
     expect(spec.label.spec.text.spec.style?.color, Colors.cyan);

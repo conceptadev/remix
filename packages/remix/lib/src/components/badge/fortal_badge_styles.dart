@@ -13,17 +13,11 @@ RemixBadgeStyler fortalBadgeStyler({
   bool highContrast = false,
 }) {
   final base = _fortalBadgeBaseStyler(size);
-  final radius = _fortalBadgeRadius(size);
   return switch (variant) {
     .solid =>
       base
-          .surface(
-            RemixSurfaceLayerMix(
-              color: highContrast
-                  ? FortalTokens.accent12()
-                  : FortalTokens.accent9(),
-              borderRadius: BorderRadiusMix.all(radius),
-            ),
+          .color(
+            highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
           )
           .foregroundColor(
             highContrast
@@ -32,46 +26,42 @@ RemixBadgeStyler fortalBadgeStyler({
           ),
     .soft =>
       base
-          .surface(
-            RemixSurfaceLayerMix(
-              color: FortalTokens.accentA3(),
-              borderRadius: BorderRadiusMix.all(radius),
-            ),
-          )
+          .color(FortalTokens.accentA3())
           .foregroundColor(
             highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
           ),
     .surface =>
       base
-          .surface(
-            _fortalBadgeInsetStroke(
-              FortalTokens.accentA6(),
-              radius,
-            ).merge(RemixSurfaceLayerMix(color: FortalTokens.accentSurface())),
+          .color(FortalTokens.accentSurface())
+          .effects(
+            RemixSurfaceEffectsMix(
+              background: _fortalBadgeInsetStroke(FortalTokens.accentA6()),
+            ),
           )
           .foregroundColor(
             highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
           ),
     .outline =>
       base
-          .surface(
-            RemixSurfaceLayerMix(
-              shadows: [
-                RemixPaintShadowMix(
-                  kind: RemixPaintShadowKind.inset,
-                  color: highContrast
-                      ? FortalTokens.accentA7()
-                      : FortalTokens.accentA8(),
-                  spreadRadius: 1,
-                ),
-                if (highContrast)
+          .effects(
+            RemixSurfaceEffectsMix(
+              background: RemixSurfaceLayerMix(
+                shadows: [
                   RemixPaintShadowMix(
                     kind: RemixPaintShadowKind.inset,
-                    color: FortalTokens.grayA11(),
+                    color: highContrast
+                        ? FortalTokens.accentA7()
+                        : FortalTokens.accentA8(),
                     spreadRadius: 1,
                   ),
-              ],
-              borderRadius: BorderRadiusMix.all(radius),
+                  if (highContrast)
+                    RemixPaintShadowMix(
+                      kind: RemixPaintShadowKind.inset,
+                      color: FortalTokens.grayA11(),
+                      spreadRadius: 1,
+                    ),
+                ],
+              ),
             ),
           )
           .foregroundColor(
@@ -116,7 +106,7 @@ Radius _fortalBadgeRadius(FortalBadgeSize size) => switch (size) {
   .size2 || .size3 => FortalTokens.radius2OrFull(),
 };
 
-RemixSurfaceLayerMix _fortalBadgeInsetStroke(Color color, Radius radius) =>
+RemixSurfaceLayerMix _fortalBadgeInsetStroke(Color color) =>
     RemixSurfaceLayerMix(
       shadows: [
         RemixPaintShadowMix(
@@ -125,7 +115,6 @@ RemixSurfaceLayerMix _fortalBadgeInsetStroke(Color color, Radius radius) =>
           spreadRadius: 1,
         ),
       ],
-      borderRadius: BorderRadiusMix.all(radius),
     );
 
 /// Fortal-themed Badge with the Radix size, variant, and override contract.

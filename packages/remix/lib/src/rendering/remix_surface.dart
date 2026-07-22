@@ -33,7 +33,7 @@ class RemixPaintShadow {
 
   RemixPaintShadow scale(double factor) => RemixPaintShadow(
     kind: kind,
-    color: color,
+    color: color.withValues(alpha: color.a * factor),
     offset: offset * factor,
     blurRadius: math.max(0, blurRadius * factor),
     spreadRadius: spreadRadius * factor,
@@ -362,27 +362,10 @@ _NormalizedGradient _normalizeGradient(
 @immutable
 class RemixSurfaceLayerSpec extends Spec<RemixSurfaceLayerSpec> {
   const RemixSurfaceLayerSpec({
-    this.color,
     this.gradients = const [],
     this.gradientInsets = const [],
     this.shadows = const [],
-    this.borderRadius = BorderRadius.zero,
-    this.backdropBlur = 0,
-    this.outlineColor,
-    this.outlineWidth = 0,
-    this.outlineOffset = 0,
-  }) : assert(backdropBlur >= 0),
-       assert(outlineWidth >= 0),
-       // Const-context finiteness check: `outlineOffset.isFinite` is a property
-       // access and is not permitted in a const assert, so the equivalent
-       // comparison against ±double.maxFinite (which excludes NaN/±Infinity) is
-       // used instead. Do not "simplify" to `.isFinite` — it breaks const eval.
-       assert(
-         outlineOffset >= -double.maxFinite &&
-             outlineOffset <= double.maxFinite,
-       );
-
-  final Color? color;
+  });
 
   /// CSS order: the first gradient is painted closest to the content.
   final List<Gradient> gradients;
@@ -395,15 +378,9 @@ class RemixSurfaceLayerSpec extends Spec<RemixSurfaceLayerSpec> {
 
   /// CSS order: the first shadow is painted closest to the content.
   final List<RemixPaintShadow> shadows;
-  final BorderRadiusGeometry borderRadius;
 
-  /// Backdrop-filter blur sigma, clipped to [borderRadius].
-  final double backdropBlur;
-
-  /// CSS-style outline painted without affecting layout.
-  final Color? outlineColor;
-  final double outlineWidth;
-  final double outlineOffset;
+  /// Whether this layer contributes no paint.
+  bool get isEmpty => gradients.isEmpty && shadows.isEmpty;
 
   /// Interpolates nullable surface slots through an empty visual layer.
   ///
@@ -431,25 +408,13 @@ class RemixSurfaceLayerSpec extends Spec<RemixSurfaceLayerSpec> {
 
   @override
   RemixSurfaceLayerSpec copyWith({
-    Color? color,
     List<Gradient>? gradients,
     List<double>? gradientInsets,
     List<RemixPaintShadow>? shadows,
-    BorderRadiusGeometry? borderRadius,
-    double? backdropBlur,
-    Color? outlineColor,
-    double? outlineWidth,
-    double? outlineOffset,
   }) => RemixSurfaceLayerSpec(
-    color: color ?? this.color,
     gradients: gradients ?? this.gradients,
     gradientInsets: gradientInsets ?? this.gradientInsets,
     shadows: shadows ?? this.shadows,
-    borderRadius: borderRadius ?? this.borderRadius,
-    backdropBlur: backdropBlur ?? this.backdropBlur,
-    outlineColor: outlineColor ?? this.outlineColor,
-    outlineWidth: outlineWidth ?? this.outlineWidth,
-    outlineOffset: outlineOffset ?? this.outlineOffset,
   );
 
   @override
@@ -467,40 +432,14 @@ class RemixSurfaceLayerSpec extends Spec<RemixSurfaceLayerSpec> {
         ? List<double>.filled(other.gradients.length, 0)
         : other.gradientInsets;
     return RemixSurfaceLayerSpec(
-      color: Color.lerp(color, other.color, t),
       gradients: interpolatedGradients,
       gradientInsets: _lerpDoubleList(currentInsets, otherInsets, t),
       shadows: RemixPaintShadow.lerpList(shadows, other.shadows, t),
-      borderRadius: BorderRadiusGeometry.lerp(
-        borderRadius,
-        other.borderRadius,
-        t,
-      )!,
-      backdropBlur: math.max(
-        0,
-        ui.lerpDouble(backdropBlur, other.backdropBlur, t)!,
-      ),
-      outlineColor: Color.lerp(outlineColor, other.outlineColor, t),
-      outlineWidth: math.max(
-        0,
-        ui.lerpDouble(outlineWidth, other.outlineWidth, t)!,
-      ),
-      outlineOffset: ui.lerpDouble(outlineOffset, other.outlineOffset, t)!,
     );
   }
 
   @override
-  List<Object?> get props => [
-    color,
-    gradients,
-    gradientInsets,
-    shadows,
-    borderRadius,
-    backdropBlur,
-    outlineColor,
-    outlineWidth,
-    outlineOffset,
-  ];
+  List<Object?> get props => [gradients, gradientInsets, shadows];
 }
 
 List<double> _lerpDoubleList(List<double> a, List<double> b, double t) {
@@ -610,18 +549,11 @@ Prop<List<RemixPaintShadow>>? _shadowProp(
 @immutable
 class RemixSurfaceLayerMix extends Mix<RemixSurfaceLayerSpec> {
   RemixSurfaceLayerMix({
-    Color? color,
     List<RemixLinearGradientMix>? gradients,
     List<double>? gradientInsets,
     List<RemixPaintShadowMix>? shadows,
     RemixPaintShadowListToken? shadowToken,
-    BorderRadiusGeometryMix? borderRadius,
-    double? backdropBlur,
-    Color? outlineColor,
-    double? outlineWidth,
-    double? outlineOffset,
   }) : this.create(
-         color: Prop.maybe(color),
          gradients: gradients == null
              ? null
              : Prop.mix(_RemixGradientListMix(gradients)),
@@ -629,209 +561,390 @@ class RemixSurfaceLayerMix extends Mix<RemixSurfaceLayerSpec> {
              ? null
              : Prop.mix(_RemixDoubleListMix(gradientInsets)),
          shadows: _shadowProp(shadows, shadowToken),
-         borderRadius: Prop.maybeMix(borderRadius),
-         backdropBlur: Prop.maybe(backdropBlur),
-         outlineColor: Prop.maybe(outlineColor),
-         outlineWidth: Prop.maybe(outlineWidth),
-         outlineOffset: Prop.maybe(outlineOffset),
        );
 
   const RemixSurfaceLayerMix.create({
-    Prop<Color>? color,
     Prop<List<Gradient>>? gradients,
     Prop<List<double>>? gradientInsets,
     Prop<List<RemixPaintShadow>>? shadows,
-    Prop<BorderRadiusGeometry>? borderRadius,
-    Prop<double>? backdropBlur,
-    Prop<Color>? outlineColor,
-    Prop<double>? outlineWidth,
-    Prop<double>? outlineOffset,
-  }) : $color = color,
-       $gradients = gradients,
+  }) : $gradients = gradients,
        $gradientInsets = gradientInsets,
-       $shadows = shadows,
-       $borderRadius = borderRadius,
-       $backdropBlur = backdropBlur,
-       $outlineColor = outlineColor,
-       $outlineWidth = outlineWidth,
-       $outlineOffset = outlineOffset;
+       $shadows = shadows;
 
-  final Prop<Color>? $color;
   final Prop<List<Gradient>>? $gradients;
   final Prop<List<double>>? $gradientInsets;
   final Prop<List<RemixPaintShadow>>? $shadows;
-  final Prop<BorderRadiusGeometry>? $borderRadius;
-  final Prop<double>? $backdropBlur;
-  final Prop<Color>? $outlineColor;
-  final Prop<double>? $outlineWidth;
-  final Prop<double>? $outlineOffset;
 
   @override
   RemixSurfaceLayerMix merge(RemixSurfaceLayerMix? other) {
     if (other == null) return this;
     return RemixSurfaceLayerMix.create(
-      color: MixOps.merge($color, other.$color),
       gradients: MixOps.merge($gradients, other.$gradients),
       gradientInsets: MixOps.merge($gradientInsets, other.$gradientInsets),
       shadows: MixOps.merge($shadows, other.$shadows),
-      borderRadius: MixOps.merge($borderRadius, other.$borderRadius),
-      backdropBlur: MixOps.merge($backdropBlur, other.$backdropBlur),
-      outlineColor: MixOps.merge($outlineColor, other.$outlineColor),
-      outlineWidth: MixOps.merge($outlineWidth, other.$outlineWidth),
-      outlineOffset: MixOps.merge($outlineOffset, other.$outlineOffset),
     );
   }
 
   @override
   RemixSurfaceLayerSpec resolve(BuildContext context) => RemixSurfaceLayerSpec(
-    color: MixOps.resolve(context, $color),
     gradients: MixOps.resolve(context, $gradients) ?? const [],
     gradientInsets: MixOps.resolve(context, $gradientInsets) ?? const [],
     shadows: MixOps.resolve(context, $shadows) ?? const [],
-    borderRadius: MixOps.resolve(context, $borderRadius) ?? BorderRadius.zero,
-    backdropBlur: MixOps.resolve(context, $backdropBlur) ?? 0,
-    outlineColor: MixOps.resolve(context, $outlineColor),
-    outlineWidth: MixOps.resolve(context, $outlineWidth) ?? 0,
-    outlineOffset: MixOps.resolve(context, $outlineOffset) ?? 0,
   );
 
   @override
+  List<Object?> get props => [$gradients, $gradientInsets, $shadows];
+}
+
+/// Advanced paint that augments, but does not replace, a Mix Box decoration.
+@immutable
+class RemixSurfaceEffectsSpec extends Spec<RemixSurfaceEffectsSpec> {
+  const RemixSurfaceEffectsSpec({
+    this.background,
+    this.foreground,
+    this.backdropBlur = 0,
+    this.outline = BorderSide.none,
+    this.outlineOffset = 0,
+  }) : assert(backdropBlur >= 0),
+       assert(
+         outlineOffset >= -double.maxFinite &&
+             outlineOffset <= double.maxFinite,
+       );
+
+  final RemixSurfaceLayerSpec? background;
+  final RemixSurfaceLayerSpec? foreground;
+  final double backdropBlur;
+  final BorderSide outline;
+  final double outlineOffset;
+
+  /// Whether this aggregate contributes no advanced paint.
+  bool get isEmpty =>
+      (background == null || background!.isEmpty) &&
+      (foreground == null || foreground!.isEmpty) &&
+      backdropBlur == 0 &&
+      (outline.style == BorderStyle.none || outline.width == 0);
+
+  RemixSurfaceEffectsSpec merge(RemixSurfaceEffectsSpec? other) {
+    if (other == null) return this;
+    final hasOutline = other.outline.style != BorderStyle.none;
+    return RemixSurfaceEffectsSpec(
+      background: other.background ?? background,
+      foreground: other.foreground ?? foreground,
+      backdropBlur: other.backdropBlur == 0 ? backdropBlur : other.backdropBlur,
+      outline: hasOutline ? other.outline : outline,
+      outlineOffset: hasOutline ? other.outlineOffset : outlineOffset,
+    );
+  }
+
+  static RemixSurfaceEffectsSpec? lerpNullable(
+    RemixSurfaceEffectsSpec? begin,
+    RemixSurfaceEffectsSpec? end,
+    double t,
+  ) {
+    if (begin == null && end == null) return null;
+    if (begin == null) {
+      if (t <= 0) return null;
+      if (t >= 1) return end;
+      return RemixSurfaceEffectsSpec().lerp(end, t);
+    }
+    if (end == null) {
+      if (t <= 0) return begin;
+      if (t >= 1) return null;
+      return begin.lerp(RemixSurfaceEffectsSpec(), t);
+    }
+    return begin.lerp(end, t);
+  }
+
+  @override
+  RemixSurfaceEffectsSpec copyWith({
+    RemixSurfaceLayerSpec? background,
+    RemixSurfaceLayerSpec? foreground,
+    double? backdropBlur,
+    BorderSide? outline,
+    double? outlineOffset,
+  }) => RemixSurfaceEffectsSpec(
+    background: background ?? this.background,
+    foreground: foreground ?? this.foreground,
+    backdropBlur: backdropBlur ?? this.backdropBlur,
+    outline: outline ?? this.outline,
+    outlineOffset: outlineOffset ?? this.outlineOffset,
+  );
+
+  @override
+  RemixSurfaceEffectsSpec lerp(RemixSurfaceEffectsSpec? other, double t) {
+    if (other == null) return this;
+    return RemixSurfaceEffectsSpec(
+      background: RemixSurfaceLayerSpec.lerpNullable(
+        background,
+        other.background,
+        t,
+      ),
+      foreground: RemixSurfaceLayerSpec.lerpNullable(
+        foreground,
+        other.foreground,
+        t,
+      ),
+      backdropBlur: math.max(
+        0,
+        ui.lerpDouble(backdropBlur, other.backdropBlur, t)!,
+      ),
+      outline: _lerpOutline(outline, other.outline, t),
+      outlineOffset: ui.lerpDouble(outlineOffset, other.outlineOffset, t)!,
+    );
+  }
+
+  @override
   List<Object?> get props => [
-    $color,
-    $gradients,
-    $gradientInsets,
-    $shadows,
-    $borderRadius,
+    background,
+    foreground,
+    backdropBlur,
+    outline,
+    outlineOffset,
+  ];
+}
+
+BorderSide _lerpOutline(BorderSide begin, BorderSide end, double t) {
+  final beginVisible = begin.style != BorderStyle.none && begin.width > 0;
+  final endVisible = end.style != BorderStyle.none && end.width > 0;
+  final beginColor = beginVisible
+      ? begin.color
+      : end.color.withValues(alpha: 0);
+  final endColor = endVisible ? end.color : begin.color.withValues(alpha: 0);
+  return BorderSide(
+    color: Color.lerp(beginColor, endColor, t)!,
+    width: math.max(
+      0,
+      ui.lerpDouble(
+        beginVisible ? begin.width : 0,
+        endVisible ? end.width : 0,
+        t,
+      )!,
+    ),
+    style: beginVisible || endVisible ? BorderStyle.solid : BorderStyle.none,
+    strokeAlign: BorderSide.strokeAlignInside,
+  );
+}
+
+/// Mix representation of [RemixSurfaceEffectsSpec].
+@immutable
+class RemixSurfaceEffectsMix extends Mix<RemixSurfaceEffectsSpec> {
+  RemixSurfaceEffectsMix({
+    RemixSurfaceLayerMix? background,
+    RemixSurfaceLayerMix? foreground,
+    double? backdropBlur,
+    BorderSideMix? outline,
+    double? outlineOffset,
+  }) : this.create(
+         background: Prop.maybeMix(background),
+         foreground: Prop.maybeMix(foreground),
+         backdropBlur: Prop.maybe(backdropBlur),
+         outline: Prop.maybeMix(outline),
+         outlineOffset: Prop.maybe(outlineOffset),
+       );
+
+  const RemixSurfaceEffectsMix.create({
+    Prop<RemixSurfaceLayerSpec>? background,
+    Prop<RemixSurfaceLayerSpec>? foreground,
+    Prop<double>? backdropBlur,
+    Prop<BorderSide>? outline,
+    Prop<double>? outlineOffset,
+  }) : $background = background,
+       $foreground = foreground,
+       $backdropBlur = backdropBlur,
+       $outline = outline,
+       $outlineOffset = outlineOffset;
+
+  final Prop<RemixSurfaceLayerSpec>? $background;
+  final Prop<RemixSurfaceLayerSpec>? $foreground;
+  final Prop<double>? $backdropBlur;
+  final Prop<BorderSide>? $outline;
+  final Prop<double>? $outlineOffset;
+
+  @override
+  RemixSurfaceEffectsMix merge(RemixSurfaceEffectsMix? other) {
+    if (other == null) return this;
+    return RemixSurfaceEffectsMix.create(
+      background: MixOps.merge($background, other.$background),
+      foreground: MixOps.merge($foreground, other.$foreground),
+      backdropBlur: MixOps.merge($backdropBlur, other.$backdropBlur),
+      outline: MixOps.merge($outline, other.$outline),
+      outlineOffset: MixOps.merge($outlineOffset, other.$outlineOffset),
+    );
+  }
+
+  @override
+  RemixSurfaceEffectsSpec resolve(BuildContext context) =>
+      RemixSurfaceEffectsSpec(
+        background: MixOps.resolve(context, $background),
+        foreground: MixOps.resolve(context, $foreground),
+        backdropBlur: MixOps.resolve(context, $backdropBlur) ?? 0,
+        outline: MixOps.resolve(context, $outline) ?? BorderSide.none,
+        outlineOffset: MixOps.resolve(context, $outlineOffset) ?? 0,
+      );
+
+  @override
+  List<Object?> get props => [
+    $background,
+    $foreground,
     $backdropBlur,
-    $outlineColor,
-    $outlineWidth,
+    $outline,
     $outlineOffset,
   ];
 }
 
-/// Paints [spec] behind [child] without changing the child's layout,
-/// hit-testing, baseline, or semantics.
-class RemixSurface extends StatelessWidget {
-  const RemixSurface({
-    super.key,
-    required this.spec,
-    this.overlay,
-    required this.child,
-  });
+/// Builds a Mix [Box], inserting the private effects adapter only when needed.
+Widget remixSurfaceBox({
+  Key? key,
+  required StyleSpec<BoxSpec> styleSpec,
+  RemixSurfaceEffectsSpec? effects,
+  Widget? child,
+}) {
+  final resolvedEffects = effects ?? const RemixSurfaceEffectsSpec();
+  if (!resolvedEffects.isEmpty) _validateEffects(resolvedEffects);
+  return _RemixEffectsBox(
+    key: key,
+    styleSpec: styleSpec,
+    effects: resolvedEffects,
+    child: child,
+  );
+}
 
-  /// Returns [child] unchanged when neither paint slot is present.
-  static Widget wrap({
-    RemixSurfaceLayerSpec? surface,
-    RemixSurfaceLayerSpec? overlay,
-    required Widget child,
-  }) {
-    if (surface == null && overlay == null) return child;
-    return RemixSurface(
-      spec: surface ?? const RemixSurfaceLayerSpec(),
-      overlay: overlay,
-      child: child,
-    );
-  }
+/// Builds a Mix [FlexBox], inserting the private effects adapter only when needed.
+Widget remixSurfaceFlexBox({
+  Key? key,
+  required StyleSpec<FlexBoxSpec> styleSpec,
+  Axis? direction,
+  RemixSurfaceEffectsSpec? effects,
+  List<Widget> children = const [],
+}) {
+  final resolvedEffects = effects ?? const RemixSurfaceEffectsSpec();
+  if (!resolvedEffects.isEmpty) _validateEffects(resolvedEffects);
+  return _RemixEffectsFlexBox(
+    key: key,
+    styleSpec: styleSpec,
+    direction: direction,
+    effects: resolvedEffects,
+    children: children,
+  );
+}
 
-  final RemixSurfaceLayerSpec spec;
-
-  /// Optional layers painted after the child without participating in hit
-  /// testing or semantics.
-  final RemixSurfaceLayerSpec? overlay;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final textDirection = Directionality.maybeOf(context);
-    final borderRadius = spec.borderRadius.resolve(textDirection);
-    if (spec.backdropBlur <= 0) {
-      return CustomPaint(
-        painter: _RemixSurfacePainter(
-          spec: spec,
-          borderRadius: borderRadius,
-          textDirection: textDirection,
-          phase: _SurfacePaintPhase.background,
-        ),
-        foregroundPainter: _foregroundPainter(spec, overlay, textDirection),
-        child: child,
-      );
-    }
-
-    return CustomPaint(
-      foregroundPainter: _foregroundPainter(spec, overlay, textDirection),
-      child: Stack(
-        fit: StackFit.passthrough,
-        children: [
-          Positioned.fill(
-            child: ClipRRect(
-              borderRadius: borderRadius,
-              clipBehavior: Clip.antiAlias,
-              child: BackdropFilter(
-                filter: ui.ImageFilter.blur(
-                  sigmaX: spec.backdropBlur,
-                  sigmaY: spec.backdropBlur,
-                ),
-                child: CustomPaint(
-                  painter: _RemixSurfacePainter(
-                    spec: spec,
-                    borderRadius: borderRadius,
-                    textDirection: textDirection,
-                    phase: _SurfacePaintPhase.inner,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned.fill(
-            child: CustomPaint(
-              painter: _RemixSurfacePainter(
-                spec: spec,
-                borderRadius: borderRadius,
-                textDirection: textDirection,
-                phase: _SurfacePaintPhase.outer,
-              ),
-            ),
-          ),
-          child,
-        ],
-      ),
-    );
-  }
-
-  _RemixSurfaceForegroundPainter? _foregroundPainter(
-    RemixSurfaceLayerSpec surface,
-    RemixSurfaceLayerSpec? overlay,
-    TextDirection? textDirection,
-  ) {
-    assert(
-      overlay == null || overlay.backdropBlur == 0,
-      'Backdrop blur belongs to the background surface slot.',
-    );
-    final paintsSurfaceOutline =
-        surface.outlineColor != null && surface.outlineWidth > 0;
-    if (!paintsSurfaceOutline && overlay == null) return null;
-    return _RemixSurfaceForegroundPainter(
-      surface: surface,
-      overlay: overlay,
-      textDirection: textDirection,
+void _validateEffects(RemixSurfaceEffectsSpec effects) {
+  if (effects.outline.style != BorderStyle.none &&
+      effects.outline.strokeAlign != BorderSide.strokeAlignInside) {
+    throw FlutterError(
+      'Remix Surface outlines must use BorderSide.strokeAlignInside.',
     );
   }
 }
 
-/// Internal Box equivalent that inserts surface layers at the decoration
-/// boundary, inside constraints and margin.
-class RemixSurfaceBox extends StatelessWidget {
-  const RemixSurfaceBox({
+class _RemixEffectsFlexBox extends StatelessWidget {
+  const _RemixEffectsFlexBox({
     super.key,
     required this.styleSpec,
-    this.surface,
-    this.overlay,
+    required this.effects,
+    this.direction,
+    this.children = const [],
+  });
+
+  final StyleSpec<FlexBoxSpec> styleSpec;
+  final Axis? direction;
+  final RemixSurfaceEffectsSpec effects;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => StyleSpecBuilder<FlexBoxSpec>(
+    styleSpec: styleSpec,
+    builder: (context, spec) {
+      final box = spec.box?.spec;
+      final margin = box?.margin;
+      if (effects.isEmpty && (margin == null || margin.isNonNegative)) {
+        final resolved = StyleSpec(spec: spec);
+        return switch (direction) {
+          Axis.horizontal => RowBox(styleSpec: resolved, children: children),
+          Axis.vertical => ColumnBox(styleSpec: resolved, children: children),
+          null => FlexBox(styleSpec: resolved, children: children),
+        };
+      }
+      final decoration = box?.decoration;
+      if (decoration is! BoxDecoration || decoration.shape == BoxShape.circle) {
+        if (effects.isEmpty) {
+          throw FlutterError(
+            'Negative Remix FlexBox margins require a rectangular '
+            'BoxDecoration.',
+          );
+        }
+        throw FlutterError(
+          'Remix Surface effects require a rectangular BoxDecoration. '
+          'Add a radius-only BoxDecoration for otherwise undecorated content; '
+          'ShapeDecoration and BoxShape.circle are not supported.',
+        );
+      }
+      return _RemixDecoratedFlexBox(
+        styleSpec: StyleSpec(spec: spec),
+        direction: direction,
+        effects: effects,
+        children: children,
+      );
+    },
+  );
+}
+
+class _RemixEffectsBox extends StatelessWidget {
+  const _RemixEffectsBox({
+    super.key,
+    required this.styleSpec,
+    required this.effects,
     this.child,
   });
 
   final StyleSpec<BoxSpec> styleSpec;
-  final RemixSurfaceLayerSpec? surface;
-  final RemixSurfaceLayerSpec? overlay;
+  final RemixSurfaceEffectsSpec effects;
+  final Widget? child;
+
+  @override
+  Widget build(BuildContext context) => StyleSpecBuilder<BoxSpec>(
+    styleSpec: styleSpec,
+    builder: (context, spec) {
+      if (effects.isEmpty &&
+          (spec.margin == null || spec.margin!.isNonNegative)) {
+        return Box(
+          styleSpec: StyleSpec(spec: spec),
+          child: child,
+        );
+      }
+      final decoration = spec.decoration;
+      if (decoration is! BoxDecoration || decoration.shape == BoxShape.circle) {
+        if (effects.isEmpty) {
+          throw FlutterError(
+            'Negative Remix Box margins require a rectangular BoxDecoration.',
+          );
+        }
+        throw FlutterError(
+          'Remix Surface effects require a rectangular BoxDecoration. '
+          'Add a radius-only BoxDecoration for otherwise undecorated content; '
+          'ShapeDecoration and BoxShape.circle are not supported.',
+        );
+      }
+      return _RemixDecoratedBox(
+        styleSpec: StyleSpec(spec: spec),
+        effects: effects,
+        child: child,
+      );
+    },
+  );
+}
+
+/// Internal Box equivalent that inserts surface layers at the decoration
+/// boundary, inside constraints and margin.
+class _RemixDecoratedBox extends StatelessWidget {
+  const _RemixDecoratedBox({
+    required this.styleSpec,
+    required this.effects,
+    this.child,
+  });
+
+  final StyleSpec<BoxSpec> styleSpec;
+  final RemixSurfaceEffectsSpec effects;
   final Widget? child;
 
   @override
@@ -861,49 +974,98 @@ class RemixSurfaceBox extends StatelessWidget {
       };
       if (padding != null) current = Padding(padding: padding, child: current);
 
-      if (spec.decoration case final decoration?) {
-        current = DecoratedBox(
-          decoration: _backgroundDecoration(decoration),
+      final decoration = spec.decoration! as BoxDecoration;
+      final textDirection = Directionality.maybeOf(context);
+      final borderRadius = (decoration.borderRadius ?? BorderRadius.zero)
+          .resolve(textDirection);
+      final background = effects.background ?? const RemixSurfaceLayerSpec();
+
+      // Box fill -> advanced background -> border -> child.
+      if (decoration.border case final border?) {
+        current = CustomPaint(
+          painter: _RemixBoxBorderPainter(
+            border: border,
+            borderRadius: borderRadius,
+            textDirection: textDirection,
+          ),
           child: current,
+        );
+      }
+      if (!background.isEmpty) {
+        current = CustomPaint(
+          painter: _RemixSurfacePainter(
+            spec: background,
+            borderRadius: borderRadius,
+            textDirection: textDirection,
+            phase: _SurfacePaintPhase.inner,
+          ),
+          child: current,
+        );
+      }
+      current = DecoratedBox(
+        decoration: _backgroundDecoration(decoration),
+        child: current,
+      );
+
+      if (effects.backdropBlur > 0) {
+        current = ClipRRect(
+          borderRadius: borderRadius,
+          clipBehavior: Clip.antiAlias,
+          child: BackdropFilter(
+            filter: ui.ImageFilter.blur(
+              sigmaX: effects.backdropBlur,
+              sigmaY: effects.backdropBlur,
+            ),
+            child: current,
+          ),
         );
       }
 
       // Clip decorated content without clipping surface shadows or outlines.
       if (spec.clipBehavior case final clip? when clip != Clip.none) {
-        final decoration = spec.decoration;
-        assert(decoration != null);
         current = ClipPath(
           clipper: _RemixDecorationClipper(
-            textDirection: Directionality.maybeOf(context),
-            decoration: decoration!,
+            textDirection: textDirection,
+            decoration: decoration,
           ),
           clipBehavior: clip,
           child: current,
         );
       }
 
-      current = RemixSurface.wrap(
-        surface: surface,
-        overlay: overlay,
-        child: current!,
-      );
-
-      if (spec.decoration case final decoration?) {
-        if (_decorationShadow(decoration) case final shadow?) {
-          current = DecoratedBox(decoration: shadow, child: current);
-        }
-        if (_foregroundBorder(decoration) case final border?) {
-          current = DecoratedBox(
-            decoration: border,
-            position: DecorationPosition.foreground,
-            child: current,
-          );
-        }
+      if (_decorationShadow(decoration) case final shadow?) {
+        current = DecoratedBox(decoration: shadow, child: current);
+      }
+      if (!background.isEmpty) {
+        current = CustomPaint(
+          painter: _RemixSurfacePainter(
+            spec: background,
+            borderRadius: borderRadius,
+            textDirection: textDirection,
+            phase: _SurfacePaintPhase.outer,
+          ),
+          child: current,
+        );
       }
       if (spec.foregroundDecoration case final foreground?) {
         current = DecoratedBox(
           decoration: foreground,
           position: DecorationPosition.foreground,
+          child: current,
+        );
+      }
+      final hasForeground =
+          effects.foreground != null && !effects.foreground!.isEmpty;
+      final hasOutline =
+          effects.outline.style != BorderStyle.none &&
+          effects.outline.width > 0;
+      if (hasForeground || hasOutline) {
+        current = CustomPaint(
+          foregroundPainter: _RemixSurfaceForegroundPainter(
+            effects: effects,
+            borderRadius: borderRadius,
+            textDirection: textDirection,
+          ),
           child: current,
         );
       }
@@ -927,21 +1089,18 @@ class RemixSurfaceBox extends StatelessWidget {
   );
 }
 
-/// Internal FlexBox equivalent backed by [RemixSurfaceBox].
-class RemixSurfaceFlexBox extends StatelessWidget {
-  const RemixSurfaceFlexBox({
-    super.key,
+/// Internal FlexBox equivalent backed by [_RemixDecoratedBox].
+class _RemixDecoratedFlexBox extends StatelessWidget {
+  const _RemixDecoratedFlexBox({
     required this.styleSpec,
     this.direction,
-    this.surface,
-    this.overlay,
+    required this.effects,
     this.children = const [],
   });
 
   final StyleSpec<FlexBoxSpec> styleSpec;
   final Axis? direction;
-  final RemixSurfaceLayerSpec? surface;
-  final RemixSurfaceLayerSpec? overlay;
+  final RemixSurfaceEffectsSpec effects;
   final List<Widget> children;
 
   @override
@@ -970,16 +1129,14 @@ class RemixSurfaceFlexBox extends StatelessWidget {
       );
       final box = spec.box;
       if (box == null) {
-        return RemixSurface.wrap(
-          surface: surface,
-          overlay: overlay,
-          child: content,
+        throw FlutterError(
+          'Remix Surface effects require a rectangular BoxDecoration. '
+          'Add a radius-only BoxDecoration for otherwise undecorated content.',
         );
       }
-      return RemixSurfaceBox(
+      return _RemixDecoratedBox(
         styleSpec: box,
-        surface: surface,
-        overlay: overlay,
+        effects: effects,
         child: content,
       );
     },
@@ -1217,17 +1374,6 @@ Decoration? _decorationShadow(Decoration decoration) {
   return null;
 }
 
-Decoration? _foregroundBorder(Decoration decoration) {
-  if (decoration case BoxDecoration(:final border?) when border != Border()) {
-    return BoxDecoration(
-      border: border,
-      borderRadius: decoration.borderRadius,
-      shape: decoration.shape,
-    );
-  }
-  return null;
-}
-
 class _RemixDecorationClipper extends CustomClipper<Path> {
   const _RemixDecorationClipper({
     required this.textDirection,
@@ -1249,37 +1395,68 @@ class _RemixDecorationClipper extends CustomClipper<Path> {
       textDirection != oldClipper.textDirection;
 }
 
-enum _SurfacePaintPhase { all, background, outer, inner, outline }
+enum _SurfacePaintPhase { all, outer, inner, outline }
 
-class _RemixSurfaceForegroundPainter extends CustomPainter
-    implements RemixCustomPainterPaintBounds {
-  const _RemixSurfaceForegroundPainter({
-    required this.surface,
-    required this.overlay,
+class _RemixBoxBorderPainter extends CustomPainter {
+  const _RemixBoxBorderPainter({
+    required this.border,
+    required this.borderRadius,
     required this.textDirection,
   });
 
-  final RemixSurfaceLayerSpec surface;
-  final RemixSurfaceLayerSpec? overlay;
+  final BoxBorder border;
+  final BorderRadius borderRadius;
   final TextDirection? textDirection;
 
   @override
   void paint(Canvas canvas, Size size) {
-    _RemixSurfacePainter(
-      spec: surface,
-      borderRadius: surface.borderRadius.resolve(textDirection),
+    border.paint(
+      canvas,
+      Offset.zero & size,
+      shape: BoxShape.rectangle,
+      borderRadius: borderRadius,
       textDirection: textDirection,
-      phase: _SurfacePaintPhase.outline,
-    ).paint(canvas, size);
+    );
+  }
 
-    if (overlay case final overlay?) {
+  @override
+  bool shouldRepaint(_RemixBoxBorderPainter oldDelegate) =>
+      border != oldDelegate.border ||
+      borderRadius != oldDelegate.borderRadius ||
+      textDirection != oldDelegate.textDirection;
+}
+
+class _RemixSurfaceForegroundPainter extends CustomPainter
+    implements RemixCustomPainterPaintBounds {
+  const _RemixSurfaceForegroundPainter({
+    required this.effects,
+    required this.borderRadius,
+    required this.textDirection,
+  });
+
+  final RemixSurfaceEffectsSpec effects;
+  final BorderRadius borderRadius;
+  final TextDirection? textDirection;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (effects.foreground case final foreground?) {
       _RemixSurfacePainter(
-        spec: overlay,
-        borderRadius: overlay.borderRadius.resolve(textDirection),
+        spec: foreground,
+        borderRadius: borderRadius,
         textDirection: textDirection,
         phase: _SurfacePaintPhase.all,
       ).paint(canvas, size);
     }
+
+    _RemixSurfacePainter(
+      spec: const RemixSurfaceLayerSpec(),
+      borderRadius: borderRadius,
+      textDirection: textDirection,
+      phase: _SurfacePaintPhase.outline,
+      outline: effects.outline,
+      outlineOffset: effects.outlineOffset,
+    ).paint(canvas, size);
   }
 
   @override
@@ -1288,20 +1465,22 @@ class _RemixSurfaceForegroundPainter extends CustomPainter
   @override
   Rect paintBoundsForSize(Size size) {
     var bounds = _surfacePaintBounds(
-      surface,
+      const RemixSurfaceLayerSpec(),
       size,
-      borderRadius: surface.borderRadius.resolve(textDirection),
+      borderRadius: borderRadius,
       includeOuterShadows: false,
       includeOutline: true,
+      outline: effects.outline,
+      outlineOffset: effects.outlineOffset,
     );
-    if (overlay case final overlay?) {
+    if (effects.foreground case final foreground?) {
       bounds = bounds.expandToInclude(
         _surfacePaintBounds(
-          overlay,
+          foreground,
           size,
-          borderRadius: overlay.borderRadius.resolve(textDirection),
+          borderRadius: borderRadius,
           includeOuterShadows: true,
-          includeOutline: true,
+          includeOutline: false,
         ),
       );
     }
@@ -1310,8 +1489,8 @@ class _RemixSurfaceForegroundPainter extends CustomPainter
 
   @override
   bool shouldRepaint(_RemixSurfaceForegroundPainter oldDelegate) =>
-      surface != oldDelegate.surface ||
-      overlay != oldDelegate.overlay ||
+      effects != oldDelegate.effects ||
+      borderRadius != oldDelegate.borderRadius ||
       textDirection != oldDelegate.textDirection;
 }
 
@@ -1322,12 +1501,16 @@ class _RemixSurfacePainter extends CustomPainter
     required this.borderRadius,
     required this.textDirection,
     required this.phase,
+    this.outline = BorderSide.none,
+    this.outlineOffset = 0,
   });
 
   final RemixSurfaceLayerSpec spec;
   final BorderRadius borderRadius;
   final TextDirection? textDirection;
   final _SurfacePaintPhase phase;
+  final BorderSide outline;
+  final double outlineOffset;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1378,17 +1561,16 @@ class _RemixSurfacePainter extends CustomPainter
   }
 
   void _paintOutline(Canvas canvas, RRect shape) {
-    final color = spec.outlineColor;
-    if (color == null || spec.outlineWidth <= 0) return;
-    final inner = shape.inflate(spec.outlineOffset);
-    final outer = shape.inflate(spec.outlineOffset + spec.outlineWidth);
+    if (outline.style == BorderStyle.none || outline.width <= 0) return;
+    final inner = shape.inflate(outlineOffset);
+    final outer = shape.inflate(outlineOffset + outline.width);
     if (outer.outerRect.isEmpty) return;
 
     final path = Path()
       ..fillType = PathFillType.evenOdd
       ..addRRect(outer);
     if (!inner.outerRect.isEmpty) path.addRRect(inner);
-    canvas.drawPath(path, Paint()..color = color);
+    canvas.drawPath(path, Paint()..color = outline.color);
   }
 
   void _paintInnerLayers(Canvas canvas, Rect rect, RRect shape) {
@@ -1408,9 +1590,6 @@ class _RemixSurfacePainter extends CustomPainter
     canvas.save();
     canvas.clipRRect(shape, doAntiAlias: true);
 
-    if (spec.color case final color?) {
-      canvas.drawRect(rect, Paint()..color = color);
-    }
     for (var index = spec.gradients.length - 1; index >= 0; index--) {
       final gradient = spec.gradients[index];
       final inset = spec.gradientInsets.isEmpty
@@ -1498,6 +1677,8 @@ class _RemixSurfacePainter extends CustomPainter
         phase != _SurfacePaintPhase.outline,
     includeOutline:
         phase == _SurfacePaintPhase.all || phase == _SurfacePaintPhase.outline,
+    outline: outline,
+    outlineOffset: outlineOffset,
   );
 
   @override
@@ -1505,7 +1686,9 @@ class _RemixSurfacePainter extends CustomPainter
       spec != oldDelegate.spec ||
       borderRadius != oldDelegate.borderRadius ||
       textDirection != oldDelegate.textDirection ||
-      phase != oldDelegate.phase;
+      phase != oldDelegate.phase ||
+      outline != oldDelegate.outline ||
+      outlineOffset != oldDelegate.outlineOffset;
 }
 
 Rect _surfacePaintBounds(
@@ -1514,6 +1697,8 @@ Rect _surfacePaintBounds(
   required BorderRadius borderRadius,
   required bool includeOuterShadows,
   required bool includeOutline,
+  BorderSide outline = BorderSide.none,
+  double outlineOffset = 0,
 }) {
   var bounds = Offset.zero & size;
   final shape = borderRadius.toRRect(bounds);
@@ -1535,14 +1720,13 @@ Rect _surfacePaintBounds(
     }
   }
 
-  final outlineColor = spec.outlineColor;
   if (includeOutline &&
-      outlineColor != null &&
-      outlineColor.a > 0 &&
-      spec.outlineWidth > 0) {
-    final outline = shape.inflate(spec.outlineOffset + spec.outlineWidth);
-    if (!outline.outerRect.isEmpty) {
-      bounds = bounds.expandToInclude(outline.outerRect);
+      outline.style != BorderStyle.none &&
+      outline.color.a > 0 &&
+      outline.width > 0) {
+    final outlineShape = shape.inflate(outlineOffset + outline.width);
+    if (!outlineShape.outerRect.isEmpty) {
+      bounds = bounds.expandToInclude(outlineShape.outerRect);
     }
   }
 

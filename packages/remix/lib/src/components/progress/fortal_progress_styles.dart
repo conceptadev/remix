@@ -31,10 +31,14 @@ RemixProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
     indicator: BoxStyler()
         .height(metrics.height)
         .borderRadiusAll(metrics.radius),
-    surface: _fortalProgressLayer(radius: metrics.radius),
-    overlay: _fortalProgressLayer(radius: metrics.radius),
-    indicatorSurface: _fortalProgressLayer(radius: metrics.radius),
-    indicatorOverlay: _fortalProgressLayer(radius: metrics.radius),
+    trackEffects: RemixSurfaceEffectsMix(
+      background: _fortalProgressLayer(),
+      foreground: _fortalProgressLayer(),
+    ),
+    indicatorEffects: RemixSurfaceEffectsMix(
+      background: _fortalProgressLayer(),
+      foreground: _fortalProgressLayer(),
+    ),
   );
 }
 
@@ -42,21 +46,19 @@ RemixProgressStyler _fortalProgressClassicStyler(
   FortalProgressSize size, {
   required bool highContrast,
 }) {
-  final radius = _fortalProgressMetrics(size).radius;
   return _fortalProgressBaseStyler(size)
-      .surface(
-        _fortalProgressLayer(radius: radius, color: FortalTokens.grayA3()),
-      )
-      .overlay(
-        _fortalProgressLayer(radius: radius, shadowToken: FortalTokens.shadow1),
-      )
-      .indicatorSurface(
-        _fortalProgressLayer(
-          radius: radius,
-          color: highContrast
-              ? FortalTokens.accent12()
-              : FortalTokens.accentTrack(),
+      .trackColor(FortalTokens.grayA3())
+      .trackEffects(RemixSurfaceEffectsMix(background: _fortalProgressLayer()))
+      .trackEffects(
+        RemixSurfaceEffectsMix(
+          foreground: _fortalProgressLayer(shadowToken: FortalTokens.shadow1),
         ),
+      )
+      .indicatorEffects(
+        RemixSurfaceEffectsMix(background: _fortalProgressLayer()),
+      )
+      .indicatorColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentTrack(),
       );
 }
 
@@ -64,31 +66,27 @@ RemixProgressStyler _fortalProgressSurfaceStyler(
   FortalProgressSize size, {
   required bool highContrast,
 }) {
-  final radius = _fortalProgressMetrics(size).radius;
-
   return _fortalProgressBaseStyler(size)
-      .surface(
-        _fortalProgressLayer(radius: radius, color: FortalTokens.grayA3()),
-      )
-      .overlay(
-        _fortalProgressLayer(
-          radius: radius,
-          shadows: [
-            RemixPaintShadowMix(
-              kind: .inset,
-              color: FortalTokens.grayA4(),
-              spreadRadius: 1,
-            ),
-          ],
+      .trackColor(FortalTokens.grayA3())
+      .trackEffects(RemixSurfaceEffectsMix(background: _fortalProgressLayer()))
+      .trackEffects(
+        RemixSurfaceEffectsMix(
+          foreground: _fortalProgressLayer(
+            shadows: [
+              RemixPaintShadowMix(
+                kind: .inset,
+                color: FortalTokens.grayA4(),
+                spreadRadius: 1,
+              ),
+            ],
+          ),
         ),
       )
-      .indicatorSurface(
-        _fortalProgressLayer(
-          radius: radius,
-          color: highContrast
-              ? FortalTokens.accent12()
-              : FortalTokens.accentTrack(),
-        ),
+      .indicatorEffects(
+        RemixSurfaceEffectsMix(background: _fortalProgressLayer()),
+      )
+      .indicatorColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentTrack(),
       );
 }
 
@@ -96,29 +94,30 @@ RemixProgressStyler _fortalProgressSoftStyler(
   FortalProgressSize size, {
   required bool highContrast,
 }) {
-  final radius = _fortalProgressMetrics(size).radius;
   return _fortalProgressBaseStyler(size)
-      .surface(
-        _fortalProgressLayer(radius: radius, color: FortalTokens.grayA4()),
-      )
-      .overlay(
-        _fortalProgressLayer(radius: radius, color: FortalTokens.whiteA1()),
-      )
-      .indicatorSurface(
-        _fortalProgressLayer(
-          radius: radius,
-          color: highContrast
-              ? FortalTokens.accent12()
-              : FortalTokens.accent8(),
+      .trackColor(FortalTokens.grayA4())
+      .track(
+        BoxStyler().foregroundDecoration(
+          BoxDecorationMix(color: FortalTokens.whiteA1()),
         ),
       )
-      .indicatorOverlay(
-        highContrast
-            ? _fortalProgressLayer(radius: radius)
-            : _fortalProgressLayer(
-                radius: radius,
-                color: FortalTokens.accentA5(),
-              ),
+      .trackEffects(RemixSurfaceEffectsMix(background: _fortalProgressLayer()))
+      .trackEffects(RemixSurfaceEffectsMix(foreground: _fortalProgressLayer()))
+      .indicatorEffects(
+        RemixSurfaceEffectsMix(background: _fortalProgressLayer()),
+      )
+      .indicatorEffects(
+        RemixSurfaceEffectsMix(foreground: _fortalProgressLayer()),
+      )
+      .indicatorColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accent8(),
+      )
+      .indicator(
+        BoxStyler().foregroundDecoration(
+          BoxDecorationMix(
+            color: highContrast ? null : FortalTokens.accentA5(),
+          ),
+        ),
       );
 }
 
@@ -140,16 +139,9 @@ RemixProgressStyler _fortalProgressSoftStyler(
 };
 
 RemixSurfaceLayerMix _fortalProgressLayer({
-  required Radius radius,
-  Color? color,
   List<RemixPaintShadowMix>? shadows,
   RemixPaintShadowListToken? shadowToken,
-}) => RemixSurfaceLayerMix(
-  color: color,
-  shadows: shadows,
-  shadowToken: shadowToken,
-  borderRadius: BorderRadiusMix.all(radius),
-);
+}) => RemixSurfaceLayerMix(shadows: shadows, shadowToken: shadowToken);
 
 /// Fortal-themed preset for [RemixProgress].
 class FortalProgress extends StatelessWidget {

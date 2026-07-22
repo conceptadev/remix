@@ -36,7 +36,7 @@ RemixTextFieldStyler fortalTextFieldStyler({
   };
   return style.variant(
     ContextVariant.widgetState(.error),
-    _fortalTextFieldErrorStyler(size),
+    _fortalTextFieldErrorStyler(),
   );
 }
 
@@ -62,16 +62,20 @@ RemixTextFieldStyler _fortalTextFieldBaseStyler(
         helperText: TextStyler(style: FortalTokens.text1.mix()),
         label: TextStyler(style: FortalTokens.text2.mix()),
         cursorWidth: 1.5,
-        surface: _fortalTextFieldLayer(radius: metrics.radius),
-        overlay: _fortalTextFieldLayer(radius: metrics.radius),
+        effects: RemixSurfaceEffectsMix(
+          background: _fortalTextFieldLayer(),
+          foreground: _fortalTextFieldLayer(),
+        ),
       )
       .wrap(.iconTheme(color: FortalTokens.gray11(), size: 16.0))
       .onFocused(
-        RemixTextFieldStyler().overlay(
-          _fortalTextFieldLayer(
-            radius: metrics.radius,
-            outlineColor: FortalTokens.focus8(),
-            outlineWidth: 2,
+        RemixTextFieldStyler().effects(
+          RemixSurfaceEffectsMix(
+            outline: BorderSideMix(
+              color: FortalTokens.focus8(),
+              width: 2,
+              strokeAlign: BorderSide.strokeAlignInside,
+            ),
             outlineOffset: -1,
           ),
         ),
@@ -79,68 +83,71 @@ RemixTextFieldStyler _fortalTextFieldBaseStyler(
 }
 
 RemixTextFieldStyler _fortalTextFieldClassicStyler(FortalTextFieldSize size) {
-  final radius = _fortalTextFieldMetrics(size, bordered: true).radius;
   return _fortalTextFieldNeutralText(
         _fortalTextFieldBaseStyler(size, bordered: true),
       )
-      .surface(
-        _fortalTextFieldLayer(
-          radius: radius,
-          color: FortalTokens.colorSurface(),
-          shadowToken: FortalTokens.shadow1,
+      .color(FortalTokens.colorSurface())
+      .effects(
+        RemixSurfaceEffectsMix(
+          background: _fortalTextFieldLayer(shadowToken: FortalTokens.shadow1),
         ),
       )
       .onDisabled(
-        _fortalTextFieldDisabledText(radius).surface(
-          _fortalTextFieldLayer(
-            radius: radius,
-            color: FortalTokens.colorSurface(),
-            gradients: [
-              RemixLinearGradientMix(
-                colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
+        _fortalTextFieldDisabledText()
+            .color(FortalTokens.colorSurface())
+            .effects(
+              RemixSurfaceEffectsMix(
+                background: _fortalTextFieldLayer(
+                  gradients: [
+                    RemixLinearGradientMix(
+                      colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
+                    ),
+                  ],
+                  shadowToken: FortalTokens.shadow1,
+                ),
               ),
-            ],
-            shadowToken: FortalTokens.shadow1,
-          ),
-        ),
+            ),
       );
 }
 
 RemixTextFieldStyler _fortalTextFieldSurfaceStyler([
   FortalTextFieldSize size = .size2,
 ]) {
-  final radius = _fortalTextFieldMetrics(size, bordered: true).radius;
   return _fortalTextFieldNeutralText(
         _fortalTextFieldBaseStyler(size, bordered: true),
       )
-      .surface(
-        _fortalTextFieldLayer(
-          radius: radius,
-          color: FortalTokens.colorSurface(),
+      .color(FortalTokens.colorSurface())
+      .effects(RemixSurfaceEffectsMix(background: _fortalTextFieldLayer()))
+      .effects(
+        RemixSurfaceEffectsMix(
+          foreground: _fortalTextFieldInsetRing(FortalTokens.grayA7()),
         ),
       )
-      .overlay(_fortalTextFieldInsetRing(radius, FortalTokens.grayA7()))
       .onDisabled(
-        _fortalTextFieldDisabledText(radius)
-            .surface(
-              _fortalTextFieldLayer(
-                radius: radius,
-                color: FortalTokens.colorSurface(),
-                gradients: [
-                  RemixLinearGradientMix(
-                    colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
-                  ),
-                ],
+        _fortalTextFieldDisabledText()
+            .color(FortalTokens.colorSurface())
+            .effects(
+              RemixSurfaceEffectsMix(
+                background: _fortalTextFieldLayer(
+                  gradients: [
+                    RemixLinearGradientMix(
+                      colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
+                    ),
+                  ],
+                ),
               ),
             )
-            .overlay(_fortalTextFieldInsetRing(radius, FortalTokens.grayA6())),
+            .effects(
+              RemixSurfaceEffectsMix(
+                foreground: _fortalTextFieldInsetRing(FortalTokens.grayA6()),
+              ),
+            ),
       );
 }
 
 RemixTextFieldStyler _fortalTextFieldSoftStyler([
   FortalTextFieldSize size = .size2,
 ]) {
-  final radius = _fortalTextFieldMetrics(size, bordered: false).radius;
   return _fortalTextFieldBaseStyler(size, bordered: false)
       .merge(
         RemixTextFieldStyler(
@@ -159,13 +166,14 @@ RemixTextFieldStyler _fortalTextFieldSoftStyler([
       )
       .textColor(FortalTokens.accent12())
       .wrap(.iconTheme(color: FortalTokens.accent10()))
-      .surface(
-        _fortalTextFieldLayer(radius: radius, color: FortalTokens.accentA3()),
-      )
+      .color(FortalTokens.accentA3())
+      .effects(RemixSurfaceEffectsMix(background: _fortalTextFieldLayer()))
       .onDisabled(
-        _fortalTextFieldDisabledText(radius).surface(
-          _fortalTextFieldLayer(radius: radius, color: FortalTokens.grayA3()),
-        ),
+        _fortalTextFieldDisabledText()
+            .color(FortalTokens.grayA3())
+            .effects(
+              RemixSurfaceEffectsMix(background: _fortalTextFieldLayer()),
+            ),
       );
 }
 
@@ -182,39 +190,44 @@ RemixTextFieldStyler _fortalTextFieldNeutralText(RemixTextFieldStyler base) =>
       ),
     );
 
-RemixTextFieldStyler _fortalTextFieldDisabledText(Radius radius) =>
+RemixTextFieldStyler _fortalTextFieldDisabledText() =>
     RemixTextFieldStyler(
       text: TextStyler().color(FortalTokens.gray11()),
       hintText: TextStyler().color(FortalTokens.grayA8()),
       cursorColor: FortalTokens.gray8(),
     ).onFocused(
-      RemixTextFieldStyler().overlay(
-        _fortalTextFieldLayer(
-          radius: radius,
-          outlineColor: FortalTokens.gray8(),
-          outlineWidth: 2,
+      RemixTextFieldStyler().effects(
+        RemixSurfaceEffectsMix(
+          outline: BorderSideMix(
+            color: FortalTokens.gray8(),
+            width: 2,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
           outlineOffset: -1,
         ),
       ),
     );
 
-RemixTextFieldStyler _fortalTextFieldErrorStyler(FortalTextFieldSize size) {
-  final radius = _fortalTextFieldMetrics(size, bordered: true).radius;
+RemixTextFieldStyler _fortalTextFieldErrorStyler() {
   return RemixTextFieldStyler(
     helperText: TextStyler().color(FortalTokens.error11()),
     label: TextStyler().color(FortalTokens.error11()),
     cursorColor: FortalTokens.error9(),
-    overlay: _fortalTextFieldLayer(
-      radius: radius,
-      shadows: [
-        RemixPaintShadowMix(
-          kind: .inset,
-          color: FortalTokens.errorA7(),
-          spreadRadius: 1,
-        ),
-      ],
-      outlineColor: FortalTokens.error8(),
-      outlineWidth: 2,
+    effects: RemixSurfaceEffectsMix(
+      foreground: _fortalTextFieldLayer(
+        shadows: [
+          RemixPaintShadowMix(
+            kind: .inset,
+            color: FortalTokens.errorA7(),
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      outline: BorderSideMix(
+        color: FortalTokens.error8(),
+        width: 2,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
       outlineOffset: -1,
     ),
   );
@@ -258,32 +271,21 @@ _fortalTextFieldMetrics(FortalTextFieldSize size, {required bool bordered}) =>
       ),
     };
 
-RemixSurfaceLayerMix _fortalTextFieldInsetRing(Radius radius, Color color) =>
+RemixSurfaceLayerMix _fortalTextFieldInsetRing(Color color) =>
     _fortalTextFieldLayer(
-      radius: radius,
       shadows: [
         RemixPaintShadowMix(kind: .inset, color: color, spreadRadius: 1),
       ],
     );
 
 RemixSurfaceLayerMix _fortalTextFieldLayer({
-  required Radius radius,
-  Color? color,
   List<RemixLinearGradientMix>? gradients,
   List<RemixPaintShadowMix>? shadows,
   RemixPaintShadowListToken? shadowToken,
-  Color? outlineColor,
-  double? outlineWidth,
-  double? outlineOffset,
 }) => RemixSurfaceLayerMix(
-  color: color,
   gradients: gradients,
   shadows: shadows,
   shadowToken: shadowToken,
-  borderRadius: BorderRadiusMix.all(radius),
-  outlineColor: outlineColor,
-  outlineWidth: outlineWidth,
-  outlineOffset: outlineOffset,
 );
 
 /// Fortal-themed preset for [RemixTextField].

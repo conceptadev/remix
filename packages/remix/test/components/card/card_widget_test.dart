@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart' show RemixSurfaceBox;
 
 import '../../helpers/test_helpers.dart';
 
@@ -16,7 +15,7 @@ void main() {
     ) async {
       await tester.pumpRemixApp(const RemixCard(child: Text('Passive card')));
 
-      expect(find.byType(RemixSurfaceBox), findsOneWidget);
+      expect(find.byKey(const ValueKey('remix-card-surface')), findsOneWidget);
       expect(find.byType(NakedButton), findsNothing);
       final semantics = tester.getSemantics(find.text('Passive card'));
       expect(semantics.getSemanticsData().role, ui.SemanticsRole.none);
@@ -126,7 +125,9 @@ void main() {
     testWidgets('wires the resolved surface layer to the shared renderer', (
       tester,
     ) async {
-      const surface = RemixSurfaceLayerSpec(color: Colors.red, backdropBlur: 4);
+      const surface = RemixSurfaceLayerSpec(
+        shadows: [RemixPaintShadow(color: Colors.red)],
+      );
       const overlay = RemixSurfaceLayerSpec(
         shadows: [
           RemixPaintShadow(kind: RemixPaintShadowKind.inset, blurRadius: 1),
@@ -134,14 +135,19 @@ void main() {
       );
       await tester.pumpRemixApp(
         const RemixCard(
-          styleSpec: RemixCardSpec(surface: surface, overlay: overlay),
+          styleSpec: RemixCardSpec(
+            container: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
+            effects: RemixSurfaceEffectsSpec(
+              background: surface,
+              foreground: overlay,
+              backdropBlur: 4,
+            ),
+          ),
           child: Text('Surface card'),
         ),
       );
 
-      final box = tester.widget<RemixSurfaceBox>(find.byType(RemixSurfaceBox));
-      expect(box.surface, same(surface));
-      expect(box.overlay, same(overlay));
+      expect(find.byType(CustomPaint), findsWidgets);
       expect(find.byType(BackdropFilter), findsOneWidget);
     });
 

@@ -137,14 +137,9 @@ class RemixCheckbox extends StatelessWidget {
                         indicatorBuilder!(context, iconSpec, selected),
                   );
 
-            if (spec.surface == null && spec.overlay == null) {
-              return Box(styleSpec: spec.container, child: indicator);
-            }
-
-            return RemixSurfaceBox(
+            return remixSurfaceBox(
               styleSpec: spec.container,
-              surface: spec.surface,
-              overlay: spec.overlay,
+              effects: spec.effects,
               child: indicator,
             );
           },

@@ -1,159 +1,115 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart'
-    show RemixSurfaceBox, RemixSurfaceFlexBox;
 
 void main() {
   testWidgets('FortalCard resolves translucent and solid panel surfaces', (
     tester,
   ) async {
-    await tester.pumpWidget(
-      _fortalApp(const FortalCard(child: Text('Panel card'))),
-    );
-
-    var finder = find.byType(RemixSurfaceBox);
-    var context = tester.element(finder);
-    var surface = tester.widget<RemixSurfaceBox>(finder).surface!;
-    _expectPanelSurface(
-      tester: tester,
-      finder: finder,
-      surface: surface,
-      color: null,
-      radius: MixScope.tokenOf(FortalTokens.radius4, context),
-      blur: 64,
-    );
-    _expectPanelGradient(
-      surface,
-      MixScope.tokenOf(FortalTokens.colorPanel, context),
-    );
-
-    await tester.pumpWidget(
-      FortalScope(
-        panelBackground: .solid,
-        child: const MaterialApp(
-          home: Scaffold(body: FortalCard(child: Text('Panel card'))),
-        ),
+    final translucent = await _resolveFortal(
+      tester,
+      (context) => (
+        spec: fortalCardStyler().build(context).spec,
+        panel: MixScope.tokenOf(FortalTokens.colorPanel, context),
+        radius: MixScope.tokenOf(FortalTokens.radius4, context),
       ),
     );
-
-    finder = find.byType(RemixSurfaceBox);
-    context = tester.element(finder);
-    surface = tester.widget<RemixSurfaceBox>(finder).surface!;
-    _expectPanelSurface(
-      tester: tester,
-      finder: finder,
-      surface: surface,
-      color: null,
-      radius: MixScope.tokenOf(FortalTokens.radius4, context),
-      blur: 0,
+    final solid = await _resolveFortal(
+      tester,
+      (context) => (
+        spec: fortalCardStyler().build(context).spec,
+        panel: MixScope.tokenOf(FortalTokens.colorPanelSolid, context),
+        radius: MixScope.tokenOf(FortalTokens.radius4, context),
+      ),
+      panelBackground: .solid,
     );
-    _expectPanelGradient(
-      surface,
-      MixScope.tokenOf(FortalTokens.colorPanelSolid, context),
+
+    _expectPanelRecipe(
+      container: translucent.spec.container.spec,
+      effects: translucent.spec.effects!,
+      color: translucent.panel,
+      radius: translucent.radius,
+      blur: 64,
+    );
+    _expectPanelRecipe(
+      container: solid.spec.container.spec,
+      effects: solid.spec.effects!,
+      color: solid.panel,
+      radius: solid.radius,
+      blur: 0,
     );
   });
 
   testWidgets('Fortal transient surfaces resolve exact panel recipes', (
     tester,
   ) async {
-    await tester.pumpWidget(
-      _fortalApp(
-        FortalMenu<String>(
-          trigger: const Text('Open panel menu'),
-          entries: const [
-            RemixMenuAction(value: 'menu', child: Text('Panel menu item')),
-          ],
-        ),
+    final menu = await _resolveFortal(
+      tester,
+      (context) => (
+        spec: fortalMenuStyler().build(context).spec,
+        panel: MixScope.tokenOf(FortalTokens.colorPanel, context),
+        radius: MixScope.tokenOf(FortalTokens.radius4, context),
+        shadows: MixScope.tokenOf(FortalTokens.shadow5, context),
       ),
     );
-    await tester.tap(find.text('Open panel menu'));
-    await tester.pumpAndSettle();
-
-    var finder = find.byType(RemixSurfaceFlexBox);
-    var context = tester.element(finder);
-    var surface = tester.widget<RemixSurfaceFlexBox>(finder).surface!;
-    _expectPanelSurface(
-      tester: tester,
-      finder: finder,
-      surface: surface,
-      color: MixScope.tokenOf(FortalTokens.colorPanel, context),
-      radius: MixScope.tokenOf(FortalTokens.radius4, context),
-      shadows: MixScope.tokenOf(FortalTokens.shadow5, context),
-      blur: 64,
-    );
-
-    await tester.pumpWidget(
-      _fortalApp(
-        FortalSelect<String>(
-          trigger: const RemixSelectTrigger(placeholder: 'Open panel select'),
-          entries: const [
-            RemixSelectItem(value: 'select', label: 'Panel select item'),
-          ],
-          onChanged: (_) {},
-        ),
+    final select = await _resolveFortal(
+      tester,
+      (context) => (
+        spec: fortalSelectStyler().build(context).spec.content.spec,
+        panel: MixScope.tokenOf(FortalTokens.colorPanel, context),
+        radius: MixScope.tokenOf(FortalTokens.radius4, context),
+        shadows: MixScope.tokenOf(FortalTokens.shadow5, context),
       ),
     );
-    await tester.tap(find.byType(RemixSelect<String>));
-    await tester.pumpAndSettle();
-
-    finder = find.ancestor(
-      of: find.text('Panel select item'),
-      matching: find.byType(RemixSurfaceBox),
-    );
-    context = tester.element(finder);
-    surface = tester.widget<RemixSurfaceBox>(finder).surface!;
-    _expectPanelSurface(
-      tester: tester,
-      finder: finder,
-      surface: surface,
-      color: MixScope.tokenOf(FortalTokens.colorPanel, context),
-      radius: MixScope.tokenOf(FortalTokens.radius4, context),
-      shadows: MixScope.tokenOf(FortalTokens.shadow5, context),
-      blur: 64,
-    );
-
-    await tester.pumpWidget(
-      _fortalApp(
-        const FortalPopover(
-          popoverChild: Text('Panel popover content'),
-          child: Text('Open panel popover'),
-        ),
+    final popover = await _resolveFortal(
+      tester,
+      (context) => (
+        spec: fortalPopoverStyler().build(context).spec,
+        panel: MixScope.tokenOf(FortalTokens.colorPanel, context),
+        radius: MixScope.tokenOf(FortalTokens.radius4, context),
+        shadows: MixScope.tokenOf(FortalTokens.shadow5, context),
       ),
     );
-    await tester.tap(find.text('Open panel popover'));
-    await tester.pumpAndSettle();
-
-    finder = find.ancestor(
-      of: find.text('Panel popover content'),
-      matching: find.byType(RemixSurfaceBox),
+    final dialog = await _resolveFortal(
+      tester,
+      (context) => (
+        spec: fortalDialogStyler().build(context).spec,
+        panel: MixScope.tokenOf(FortalTokens.colorPanel, context),
+        radius: MixScope.tokenOf(FortalTokens.radius5, context),
+        shadows: MixScope.tokenOf(FortalTokens.shadow6, context),
+      ),
     );
-    context = tester.element(finder);
-    surface = tester.widget<RemixSurfaceBox>(finder).surface!;
-    _expectPanelSurface(
-      tester: tester,
-      finder: finder,
-      surface: surface,
-      color: MixScope.tokenOf(FortalTokens.colorPanel, context),
-      radius: MixScope.tokenOf(FortalTokens.radius4, context),
-      shadows: MixScope.tokenOf(FortalTokens.shadow5, context),
+
+    _expectPanelRecipe(
+      container: menu.spec.overlay.spec.box!.spec,
+      effects: menu.spec.effects!,
+      color: menu.panel,
+      radius: menu.radius,
+      shadows: menu.shadows,
       blur: 64,
     );
-
-    await tester.pumpWidget(
-      _fortalApp(const FortalDialog(title: 'Panel dialog')),
+    _expectPanelRecipe(
+      container: select.spec.container.spec,
+      effects: select.spec.effects!,
+      color: select.panel,
+      radius: select.radius,
+      shadows: select.shadows,
+      blur: 64,
     );
-
-    finder = find.byType(RemixSurfaceBox);
-    context = tester.element(finder);
-    surface = tester.widget<RemixSurfaceBox>(finder).surface!;
-    _expectPanelSurface(
-      tester: tester,
-      finder: finder,
-      surface: surface,
-      color: MixScope.tokenOf(FortalTokens.colorPanel, context),
-      radius: MixScope.tokenOf(FortalTokens.radius5, context),
-      shadows: MixScope.tokenOf(FortalTokens.shadow6, context),
+    _expectPanelRecipe(
+      container: popover.spec.container.spec,
+      effects: popover.spec.effects!,
+      color: popover.panel,
+      radius: popover.radius,
+      shadows: popover.shadows,
+      blur: 64,
+    );
+    _expectPanelRecipe(
+      container: dialog.spec.container.spec,
+      effects: dialog.spec.effects!,
+      color: dialog.panel,
+      radius: dialog.radius,
+      shadows: dialog.shadows,
       blur: 64,
     );
   });
@@ -254,12 +210,13 @@ void main() {
       ),
     );
 
-    final thumb = tester.widget<RemixSurfaceBox>(
-      find.byKey(const ValueKey('remix-slider-thumb-0')),
-    );
+    final decorations = tester
+        .widgetList<DecoratedBox>(find.byType(DecoratedBox))
+        .map((box) => box.decoration)
+        .whereType<BoxDecoration>();
     expect(
-      thumb.surface!.borderRadius,
-      const BorderRadius.all(Radius.circular(0.5)),
+      decorations.map((decoration) => decoration.borderRadius),
+      contains(const BorderRadius.all(Radius.circular(0.5))),
     );
   });
 
@@ -451,28 +408,44 @@ Widget _fortalApp(Widget child) {
   );
 }
 
-void _expectPanelSurface({
-  required WidgetTester tester,
-  required Finder finder,
-  required RemixSurfaceLayerSpec surface,
-  required Color? color,
+void _expectPanelRecipe({
+  required BoxSpec container,
+  required RemixSurfaceEffectsSpec effects,
+  required Color color,
   required Radius radius,
   List<RemixPaintShadow> shadows = const [],
   required double blur,
 }) {
-  expect(surface.color, color);
-  expect(surface.borderRadius, BorderRadius.all(radius));
-  expect(surface.shadows, shadows);
-  expect(surface.backdropBlur, blur);
-  expect(
-    find.descendant(of: finder, matching: find.byType(BackdropFilter)),
-    blur > 0 ? findsOneWidget : findsNothing,
-  );
+  final decoration = container.decoration! as BoxDecoration;
+  if (decoration.color == null) {
+    expect(effects.background!.gradients, isNotEmpty);
+    expect(effects.background!.gradients.first.colors, everyElement(color));
+  } else {
+    expect(decoration.color, color);
+  }
+  expect(decoration.borderRadius, BorderRadius.all(radius));
+  expect(effects.backdropBlur, blur);
+  expect(effects.background?.shadows, shadows);
 }
 
-void _expectPanelGradient(RemixSurfaceLayerSpec surface, Color color) {
-  expect(surface.gradientInsets, const [1]);
-  expect(surface.gradients, hasLength(1));
-  final gradient = surface.gradients.single as LinearGradient;
-  expect(gradient.colors, [color, color]);
+Future<T> _resolveFortal<T>(
+  WidgetTester tester,
+  T Function(BuildContext context) resolve, {
+  FortalPanelBackground panelBackground = .translucent,
+}) async {
+  late T result;
+  await tester.pumpWidget(
+    FortalScope(
+      panelBackground: panelBackground,
+      child: MaterialApp(
+        home: Builder(
+          builder: (context) {
+            result = resolve(context);
+            return const SizedBox.shrink();
+          },
+        ),
+      ),
+    ),
+  );
+  return result;
 }

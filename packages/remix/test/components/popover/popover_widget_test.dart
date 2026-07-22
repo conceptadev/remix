@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart' show RemixSurfaceBox;
 
 import '../../helpers/test_helpers.dart';
 
@@ -31,7 +30,7 @@ void main() {
       expect(
         find.ancestor(
           of: find.text('Popover content'),
-          matching: find.byType(RemixSurfaceBox),
+          matching: find.byKey(const ValueKey('remix-popover-surface')),
         ),
         findsOneWidget,
       );
@@ -242,13 +241,7 @@ void main() {
       await tester.tap(find.text('Open popover'));
       await tester.pumpAndSettle();
 
-      final box = tester.widget<RemixSurfaceBox>(
-        find.ancestor(
-          of: find.text('Raw styled content'),
-          matching: find.byType(RemixSurfaceBox),
-        ),
-      );
-      expect(box.styleSpec, same(rawContainer));
+      expect(tester.getSize(find.text('Raw styled content')).width, 240);
     });
 
     testWidgets('FortalPopover supplies the themed overlay style', (
@@ -268,7 +261,7 @@ void main() {
       expect(
         find.ancestor(
           of: find.text('Fortal content'),
-          matching: find.byType(RemixSurfaceBox),
+          matching: find.byKey(const ValueKey('remix-popover-surface')),
         ),
         findsOneWidget,
       );

@@ -6,15 +6,29 @@ void main() {
   test('slider styler exposes track, range, thumb, and painter slots', () {
     final style = RemixSliderStyler()
         .track(BoxStyler().borderRadiusAll(const Radius.circular(4)))
-        .trackSurface(RemixSurfaceLayerMix(color: Colors.grey))
-        .trackOverlay(RemixSurfaceLayerMix(color: Colors.transparent))
+        .trackEffects(
+          RemixSurfaceEffectsMix(background: RemixSurfaceLayerMix()),
+        )
+        .trackEffects(
+          RemixSurfaceEffectsMix(foreground: RemixSurfaceLayerMix()),
+        )
         .range(BoxStyler().borderRadiusAll(const Radius.circular(4)))
-        .rangeSurface(RemixSurfaceLayerMix(color: Colors.blue))
-        .rangeOverlay(RemixSurfaceLayerMix(color: Colors.transparent))
+        .rangeEffects(
+          RemixSurfaceEffectsMix(background: RemixSurfaceLayerMix()),
+        )
+        .rangeEffects(
+          RemixSurfaceEffectsMix(foreground: RemixSurfaceLayerMix()),
+        )
         .thumb(BoxStyler().size(16, 16))
-        .thumbSurface(RemixSurfaceLayerMix(color: Colors.white))
-        .thumbOverlay(RemixSurfaceLayerMix(color: Colors.transparent))
-        .thumbFocusOverlay(RemixSurfaceLayerMix(color: Colors.indigo))
+        .thumbEffects(
+          RemixSurfaceEffectsMix(background: RemixSurfaceLayerMix()),
+        )
+        .thumbEffects(
+          RemixSurfaceEffectsMix(foreground: RemixSurfaceLayerMix()),
+        )
+        .thumbFocusEffects(
+          RemixSurfaceEffectsMix(foreground: RemixSurfaceLayerMix()),
+        )
         .trackThickness(8)
         .blendMode(BlendMode.multiply);
 

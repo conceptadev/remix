@@ -11,18 +11,14 @@ class RemixIconButtonSpec with _$RemixIconButtonSpec {
   @override
   final StyleSpec<RemixSpinnerSpec> spinner;
   @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? surface;
-  @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? overlay;
+  @MixableField(setterType: RemixSurfaceEffectsMix)
+  final RemixSurfaceEffectsSpec? effects;
 
   const RemixIconButtonSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<IconSpec>? icon,
     StyleSpec<RemixSpinnerSpec>? spinner,
-    this.surface,
-    this.overlay,
+    this.effects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
        spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec());
@@ -32,8 +28,7 @@ class RemixIconButtonSpec with _$RemixIconButtonSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
-      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
+      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
     );
   }
 }

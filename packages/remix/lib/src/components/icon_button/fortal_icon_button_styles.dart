@@ -13,54 +13,29 @@ RemixIconButtonStyler fortalIconButtonStyler({
   bool highContrast = false,
 }) {
   final index = size.index + 1;
-  final metrics = fortalBaseButtonMetrics(index);
   final base = _fortalIconButtonBaseStyler(variant, index);
   final focus = fortalFocusOutline(
-    metrics.radius,
     variant == .soft ? FortalTokens.accent8() : FortalTokens.focus8(),
     offset: variant == .classic || variant == .solid ? 2 : -1,
   );
-  final disabledFocus = RemixSurfaceLayerMix(
-    borderRadius: BorderRadiusMix.all(metrics.radius),
-    outlineColor: Colors.transparent,
-    outlineWidth: 0,
+  final disabledFocus = RemixSurfaceEffectsMix(
+    outline: BorderSideMix(style: BorderStyle.none),
   );
 
   return switch (variant) {
         .classic => _fortalIconButtonClassic(
           base,
-          metrics.radius,
           size: index,
           highContrast: highContrast,
         ),
-        .solid => _fortalIconButtonSolid(
-          base,
-          metrics.radius,
-          highContrast: highContrast,
-        ),
-        .soft => _fortalIconButtonSoft(
-          base,
-          metrics.radius,
-          highContrast: highContrast,
-        ),
-        .surface => _fortalIconButtonSurface(
-          base,
-          metrics.radius,
-          highContrast: highContrast,
-        ),
-        .outline => _fortalIconButtonOutline(
-          base,
-          metrics.radius,
-          highContrast: highContrast,
-        ),
-        .ghost => _fortalIconButtonGhost(
-          base,
-          metrics.radius,
-          highContrast: highContrast,
-        ),
+        .solid => _fortalIconButtonSolid(base, highContrast: highContrast),
+        .soft => _fortalIconButtonSoft(base, highContrast: highContrast),
+        .surface => _fortalIconButtonSurface(base, highContrast: highContrast),
+        .outline => _fortalIconButtonOutline(base, highContrast: highContrast),
+        .ghost => _fortalIconButtonGhost(base, highContrast: highContrast),
       }
-      .onFocused(RemixIconButtonStyler().overlay(focus))
-      .onDisabled(RemixIconButtonStyler().overlay(disabledFocus));
+      .onFocused(RemixIconButtonStyler().effects(focus))
+      .onDisabled(RemixIconButtonStyler().effects(disabledFocus));
 }
 
 RemixIconButtonStyler _fortalIconButtonBaseStyler(
@@ -96,8 +71,7 @@ double _fortalIconButtonIconSize(int size) => switch (size) {
 };
 
 RemixIconButtonStyler _fortalIconButtonClassic(
-  RemixIconButtonStyler base,
-  Radius radius, {
+  RemixIconButtonStyler base, {
   required int size,
   required bool highContrast,
 }) {
@@ -105,19 +79,22 @@ RemixIconButtonStyler _fortalIconButtonClassic(
       ? FortalTokens.gray1()
       : FortalTokens.accentContrast();
   return _fortalIconButtonForeground(base, foreground)
-      .surface(
-        fortalClassicBaseButtonSurface(
-          radius: radius,
-          highContrast: highContrast,
+      .color(highContrast ? FortalTokens.accent12() : FortalTokens.accent9())
+      .effects(
+        RemixSurfaceEffectsMix(
+          background: fortalClassicBaseButtonSurface(
+            highContrast: highContrast,
+          ),
         ),
       )
       .onHovered(
         RemixIconButtonStyler()
-            .surface(
-              fortalClassicBaseButtonSurface(
-                radius: radius,
-                highContrast: highContrast,
-                hovered: true,
+            .effects(
+              RemixSurfaceEffectsMix(
+                background: fortalClassicBaseButtonSurface(
+                  highContrast: highContrast,
+                  hovered: true,
+                ),
               ),
             )
             .wrap(
@@ -139,11 +116,12 @@ RemixIconButtonStyler _fortalIconButtonClassic(
       )
       .onPressed(
         RemixIconButtonStyler()
-            .surface(
-              fortalClassicBaseButtonSurface(
-                radius: radius,
-                highContrast: highContrast,
-                pressed: true,
+            .effects(
+              RemixSurfaceEffectsMix(
+                background: fortalClassicBaseButtonSurface(
+                  highContrast: highContrast,
+                  pressed: true,
+                ),
               ),
             )
             .paddingTop(size == 1 ? 1 : 2)
@@ -176,11 +154,13 @@ RemixIconButtonStyler _fortalIconButtonClassic(
               RemixIconButtonStyler(),
               FortalTokens.grayA8(),
             )
-            .surface(
-              fortalClassicBaseButtonSurface(
-                radius: radius,
-                highContrast: false,
-                disabled: true,
+            .color(FortalTokens.gray2())
+            .effects(
+              RemixSurfaceEffectsMix(
+                background: fortalClassicBaseButtonSurface(
+                  highContrast: false,
+                  disabled: true,
+                ),
               ),
             )
             .spinner(RemixSpinnerStyler().opacity(1))
@@ -189,29 +169,18 @@ RemixIconButtonStyler _fortalIconButtonClassic(
 }
 
 RemixIconButtonStyler _fortalIconButtonSolid(
-  RemixIconButtonStyler base,
-  Radius radius, {
+  RemixIconButtonStyler base, {
   required bool highContrast,
 }) {
   final foreground = highContrast
       ? FortalTokens.gray1()
       : FortalTokens.accentContrast();
   return _fortalIconButtonForeground(base, foreground)
-      .surface(
-        _fortalIconButtonFill(
-          highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
-          radius,
-        ),
-      )
+      .color(highContrast ? FortalTokens.accent12() : FortalTokens.accent9())
       .onHovered(
         RemixIconButtonStyler()
-            .surface(
-              _fortalIconButtonFill(
-                highContrast
-                    ? FortalTokens.accent12()
-                    : FortalTokens.accent10(),
-                radius,
-              ),
+            .color(
+              highContrast ? FortalTokens.accent12() : FortalTokens.accent10(),
             )
             .wrap(
               highContrast
@@ -232,13 +201,8 @@ RemixIconButtonStyler _fortalIconButtonSolid(
       )
       .onPressed(
         RemixIconButtonStyler()
-            .surface(
-              _fortalIconButtonFill(
-                highContrast
-                    ? FortalTokens.accent12()
-                    : FortalTokens.accent10(),
-                radius,
-              ),
+            .color(
+              highContrast ? FortalTokens.accent12() : FortalTokens.accent10(),
             )
             .wrap(
               highContrast
@@ -269,86 +233,79 @@ RemixIconButtonStyler _fortalIconButtonSolid(
               RemixIconButtonStyler(),
               FortalTokens.grayA8(),
             )
-            .surface(_fortalIconButtonFill(FortalTokens.grayA3(), radius))
+            .color(FortalTokens.grayA3())
             .spinner(RemixSpinnerStyler().opacity(1))
             .wrap(fortalClearFilter()),
       );
 }
 
 RemixIconButtonStyler _fortalIconButtonSoft(
-  RemixIconButtonStyler base,
-  Radius radius, {
+  RemixIconButtonStyler base, {
   required bool highContrast,
 }) =>
     _fortalIconButtonForeground(
           base,
           highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
         )
-        .surface(_fortalIconButtonFill(FortalTokens.accentA3(), radius))
-        .onHovered(
-          RemixIconButtonStyler().surface(
-            _fortalIconButtonFill(FortalTokens.accentA4(), radius),
-          ),
-        )
-        .onPressed(
-          RemixIconButtonStyler().surface(
-            _fortalIconButtonFill(FortalTokens.accentA5(), radius),
-          ),
-        )
-        .onDisabled(_fortalIconButtonDisabledFill(radius));
+        .color(FortalTokens.accentA3())
+        .onHovered(RemixIconButtonStyler().color(FortalTokens.accentA4()))
+        .onPressed(RemixIconButtonStyler().color(FortalTokens.accentA5()))
+        .onDisabled(_fortalIconButtonDisabledFill());
 
 RemixIconButtonStyler _fortalIconButtonSurface(
-  RemixIconButtonStyler base,
-  Radius radius, {
+  RemixIconButtonStyler base, {
   required bool highContrast,
 }) =>
     _fortalIconButtonForeground(
           base,
           highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
         )
-        .surface(
-          fortalInsetSurface(
-            radius: radius,
-            color: FortalTokens.accentSurface(),
-            strokes: [FortalTokens.accentA7()],
+        .color(FortalTokens.accentSurface())
+        .effects(
+          RemixSurfaceEffectsMix(
+            background: fortalInsetSurface(strokes: [FortalTokens.accentA7()]),
           ),
         )
         .onHovered(
-          RemixIconButtonStyler().surface(
-            fortalInsetSurface(
-              radius: radius,
-              color: FortalTokens.accentSurface(),
-              strokes: [FortalTokens.accentA8()],
-            ),
-          ),
+          RemixIconButtonStyler()
+              .color(FortalTokens.accentSurface())
+              .effects(
+                RemixSurfaceEffectsMix(
+                  background: fortalInsetSurface(
+                    strokes: [FortalTokens.accentA8()],
+                  ),
+                ),
+              ),
         )
         .onPressed(
-          RemixIconButtonStyler().surface(
-            fortalInsetSurface(
-              radius: radius,
-              color: FortalTokens.accentA3(),
-              strokes: [FortalTokens.accentA8()],
-            ),
-          ),
+          RemixIconButtonStyler()
+              .color(FortalTokens.accentA3())
+              .effects(
+                RemixSurfaceEffectsMix(
+                  background: fortalInsetSurface(
+                    strokes: [FortalTokens.accentA8()],
+                  ),
+                ),
+              ),
         )
         .onDisabled(
           _fortalIconButtonForeground(
                 RemixIconButtonStyler(),
                 FortalTokens.grayA8(),
               )
-              .surface(
-                fortalInsetSurface(
-                  radius: radius,
-                  color: FortalTokens.grayA2(),
-                  strokes: [FortalTokens.grayA6()],
+              .color(FortalTokens.grayA2())
+              .effects(
+                RemixSurfaceEffectsMix(
+                  background: fortalInsetSurface(
+                    strokes: [FortalTokens.grayA6()],
+                  ),
                 ),
               )
               .spinner(RemixSpinnerStyler().opacity(1)),
         );
 
 RemixIconButtonStyler _fortalIconButtonOutline(
-  RemixIconButtonStyler base,
-  Radius radius, {
+  RemixIconButtonStyler base, {
   required bool highContrast,
 }) {
   final strokes = highContrast
@@ -358,35 +315,40 @@ RemixIconButtonStyler _fortalIconButtonOutline(
         base,
         highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
       )
-      .surface(fortalInsetSurface(radius: radius, strokes: strokes))
-      .onHovered(
-        RemixIconButtonStyler().surface(
-          fortalInsetSurface(
-            radius: radius,
-            color: FortalTokens.accentA2(),
-            strokes: strokes,
-          ),
+      .effects(
+        RemixSurfaceEffectsMix(
+          background: fortalInsetSurface(strokes: strokes),
         ),
       )
+      .onHovered(
+        RemixIconButtonStyler()
+            .color(FortalTokens.accentA2())
+            .effects(
+              RemixSurfaceEffectsMix(
+                background: fortalInsetSurface(strokes: strokes),
+              ),
+            ),
+      )
       .onPressed(
-        RemixIconButtonStyler().surface(
-          fortalInsetSurface(
-            radius: radius,
-            color: FortalTokens.accentA3(),
-            strokes: strokes,
-          ),
-        ),
+        RemixIconButtonStyler()
+            .color(FortalTokens.accentA3())
+            .effects(
+              RemixSurfaceEffectsMix(
+                background: fortalInsetSurface(strokes: strokes),
+              ),
+            ),
       )
       .onDisabled(
         _fortalIconButtonForeground(
               RemixIconButtonStyler(),
               FortalTokens.grayA8(),
             )
-            .surface(
-              fortalInsetSurface(
-                radius: radius,
-                color: Colors.transparent,
-                strokes: [FortalTokens.grayA7()],
+            .color(Colors.transparent)
+            .effects(
+              RemixSurfaceEffectsMix(
+                background: fortalInsetSurface(
+                  strokes: [FortalTokens.grayA7()],
+                ),
               ),
             )
             .spinner(RemixSpinnerStyler().opacity(1)),
@@ -394,38 +356,28 @@ RemixIconButtonStyler _fortalIconButtonOutline(
 }
 
 RemixIconButtonStyler _fortalIconButtonGhost(
-  RemixIconButtonStyler base,
-  Radius radius, {
+  RemixIconButtonStyler base, {
   required bool highContrast,
 }) =>
     _fortalIconButtonForeground(
           base,
           highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
         )
-        .surface(_fortalIconButtonFill(Colors.transparent, radius))
-        .onHovered(
-          RemixIconButtonStyler().surface(
-            _fortalIconButtonFill(FortalTokens.accentA3(), radius),
-          ),
-        )
-        .onPressed(
-          RemixIconButtonStyler().surface(
-            _fortalIconButtonFill(FortalTokens.accentA4(), radius),
-          ),
-        )
+        .color(Colors.transparent)
+        .onHovered(RemixIconButtonStyler().color(FortalTokens.accentA3()))
+        .onPressed(RemixIconButtonStyler().color(FortalTokens.accentA4()))
         .onDisabled(
           _fortalIconButtonForeground(
-                RemixIconButtonStyler(),
-                FortalTokens.grayA8(),
-              )
-              .surface(_fortalIconButtonFill(Colors.transparent, radius))
-              .spinner(RemixSpinnerStyler().opacity(1)),
+            RemixIconButtonStyler(),
+            FortalTokens.grayA8(),
+          ).color(Colors.transparent).spinner(RemixSpinnerStyler().opacity(1)),
         );
 
-RemixIconButtonStyler _fortalIconButtonDisabledFill(Radius radius) =>
-    _fortalIconButtonForeground(RemixIconButtonStyler(), FortalTokens.grayA8())
-        .surface(_fortalIconButtonFill(FortalTokens.grayA3(), radius))
-        .spinner(RemixSpinnerStyler().opacity(1));
+RemixIconButtonStyler _fortalIconButtonDisabledFill() =>
+    _fortalIconButtonForeground(
+      RemixIconButtonStyler(),
+      FortalTokens.grayA8(),
+    ).color(FortalTokens.grayA3()).spinner(RemixSpinnerStyler().opacity(1));
 
 RemixIconButtonStyler _fortalIconButtonForeground(
   RemixIconButtonStyler style,
@@ -433,12 +385,6 @@ RemixIconButtonStyler _fortalIconButtonForeground(
 ) => style
     .icon(IconStyler().color(color))
     .spinner(RemixSpinnerStyler().color(color));
-
-RemixSurfaceLayerMix _fortalIconButtonFill(Color color, Radius radius) =>
-    RemixSurfaceLayerMix(
-      color: color,
-      borderRadius: BorderRadiusMix.all(radius),
-    );
 
 /// Fortal-themed IconButton with the Radix size, variant, and override contract.
 class FortalIconButton extends StatelessWidget {

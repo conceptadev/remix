@@ -8,7 +8,7 @@ part of 'menu.dart';
 
 mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get overlay;
-  RemixSurfaceLayerSpec? get surface;
+  RemixSurfaceEffectsSpec? get effects;
   StyleSpec<RemixMenuItemSpec> get item;
   StyleSpec<RemixMenuItemSpec> get label;
   StyleSpec<RemixDividerSpec> get divider;
@@ -19,14 +19,14 @@ mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
   @override
   RemixMenuSpec copyWith({
     StyleSpec<FlexBoxSpec>? overlay,
-    RemixSurfaceLayerSpec? surface,
+    RemixSurfaceEffectsSpec? effects,
     StyleSpec<RemixMenuItemSpec>? item,
     StyleSpec<RemixMenuItemSpec>? label,
     StyleSpec<RemixDividerSpec>? divider,
   }) {
     return RemixMenuSpec(
       overlay: overlay ?? this.overlay,
-      surface: surface ?? this.surface,
+      effects: effects ?? this.effects,
       item: item ?? this.item,
       label: label ?? this.label,
       divider: divider ?? this.divider,
@@ -37,7 +37,7 @@ mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
   RemixMenuSpec lerp(RemixMenuSpec? other, double t) {
     return RemixMenuSpec(
       overlay: overlay.lerp(other?.overlay, t),
-      surface: MixOps.lerpSnap(surface, other?.surface, t),
+      effects: MixOps.lerpSnap(effects, other?.effects, t),
       item: item.lerp(other?.item, t),
       label: label.lerp(other?.label, t),
       divider: divider.lerp(other?.divider, t),
@@ -45,7 +45,7 @@ mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
   }
 
   @override
-  List<Object?> get props => [overlay, surface, item, label, divider];
+  List<Object?> get props => [overlay, effects, item, label, divider];
 
   @override
   bool operator ==(Object other) {
@@ -88,7 +88,7 @@ mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('overlay', overlay))
-      ..add(DiagnosticsProperty('surface', surface))
+      ..add(DiagnosticsProperty('effects', effects))
       ..add(DiagnosticsProperty('item', item))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('divider', divider));
@@ -245,14 +245,14 @@ typedef _$RemixMenuItemSpecMethods = _$RemixMenuItemSpec; // ignore: unused_elem
 
 class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
   final Prop<StyleSpec<FlexBoxSpec>>? $overlay;
-  final Prop<RemixSurfaceLayerSpec>? $surface;
+  final Prop<RemixSurfaceEffectsSpec>? $effects;
   final Prop<StyleSpec<RemixMenuItemSpec>>? $item;
   final Prop<StyleSpec<RemixMenuItemSpec>>? $label;
   final Prop<StyleSpec<RemixDividerSpec>>? $divider;
 
   const RemixMenuStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? overlay,
-    Prop<RemixSurfaceLayerSpec>? surface,
+    Prop<RemixSurfaceEffectsSpec>? effects,
     Prop<StyleSpec<RemixMenuItemSpec>>? item,
     Prop<StyleSpec<RemixMenuItemSpec>>? label,
     Prop<StyleSpec<RemixDividerSpec>>? divider,
@@ -260,14 +260,14 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
     super.modifier,
     super.animation,
   }) : $overlay = overlay,
-       $surface = surface,
+       $effects = effects,
        $item = item,
        $label = label,
        $divider = divider;
 
   RemixMenuStyler({
     FlexBoxStyler? overlay,
-    RemixSurfaceLayerMix? surface,
+    RemixSurfaceEffectsMix? effects,
     RemixMenuItemStyler? item,
     RemixMenuItemStyler? label,
     RemixDividerStyler? divider,
@@ -276,7 +276,7 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
     List<VariantStyle<RemixMenuSpec>>? variants,
   }) : this.create(
          overlay: Prop.maybeMix(overlay),
-         surface: Prop.maybeMix(surface),
+         effects: Prop.maybeMix(effects),
          item: Prop.maybeMix(item),
          label: Prop.maybeMix(label),
          divider: Prop.maybeMix(divider),
@@ -287,8 +287,8 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
 
   factory RemixMenuStyler.overlay(FlexBoxStyler value) =>
       RemixMenuStyler().overlay(value);
-  factory RemixMenuStyler.surface(RemixSurfaceLayerMix value) =>
-      RemixMenuStyler().surface(value);
+  factory RemixMenuStyler.effects(RemixSurfaceEffectsMix value) =>
+      RemixMenuStyler().effects(value);
   factory RemixMenuStyler.item(RemixMenuItemStyler value) =>
       RemixMenuStyler().item(value);
   factory RemixMenuStyler.label(RemixMenuItemStyler value) =>
@@ -301,9 +301,9 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
     return merge(RemixMenuStyler(overlay: value));
   }
 
-  /// Sets the surface.
-  RemixMenuStyler surface(RemixSurfaceLayerMix value) {
-    return merge(RemixMenuStyler(surface: value));
+  /// Sets the effects.
+  RemixMenuStyler effects(RemixSurfaceEffectsMix value) {
+    return merge(RemixMenuStyler(effects: value));
   }
 
   /// Sets the item.
@@ -349,7 +349,7 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
   RemixMenuStyler merge(RemixMenuStyler? other) {
     return RemixMenuStyler.create(
       overlay: MixOps.merge($overlay, other?.$overlay),
-      surface: MixOps.merge($surface, other?.$surface),
+      effects: MixOps.merge($effects, other?.$effects),
       item: MixOps.merge($item, other?.$item),
       label: MixOps.merge($label, other?.$label),
       divider: MixOps.merge($divider, other?.$divider),
@@ -364,7 +364,7 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
   StyleSpec<RemixMenuSpec> resolve(BuildContext context) {
     final spec = RemixMenuSpec(
       overlay: MixOps.resolve(context, $overlay),
-      surface: MixOps.resolve(context, $surface),
+      effects: MixOps.resolve(context, $effects),
       item: MixOps.resolve(context, $item),
       label: MixOps.resolve(context, $label),
       divider: MixOps.resolve(context, $divider),
@@ -382,7 +382,7 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('overlay', $overlay))
-      ..add(DiagnosticsProperty('surface', $surface))
+      ..add(DiagnosticsProperty('effects', $effects))
       ..add(DiagnosticsProperty('item', $item))
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('divider', $divider));
@@ -391,7 +391,7 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
   @override
   List<Object?> get props => [
     $overlay,
-    $surface,
+    $effects,
     $item,
     $label,
     $divider,

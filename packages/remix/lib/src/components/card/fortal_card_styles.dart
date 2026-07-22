@@ -17,20 +17,22 @@ RemixCardStyler fortalCardStyler({
       .borderRadiusAll(metrics.radius)
       .clipBehavior(Clip.antiAlias)
       .onFocused(
-        RemixCardStyler().overlay(
-          RemixSurfaceLayerMix(
-            borderRadius: BorderRadiusMix.all(metrics.radius),
-            outlineColor: FortalTokens.focus8(),
-            outlineWidth: 2,
+        RemixCardStyler().effects(
+          RemixSurfaceEffectsMix(
+            outline: BorderSideMix(
+              color: FortalTokens.focus8(),
+              width: 2,
+              strokeAlign: BorderSide.strokeAlignInside,
+            ),
             outlineOffset: -1,
           ),
         ),
       );
 
   return switch (variant) {
-    .surface => _fortalCardSurface(base, metrics.radius),
-    .classic => _fortalCardClassic(base, metrics.radius),
-    .ghost => _fortalCardGhost(base, metrics.radius, metrics.ghostMargin),
+    .surface => _fortalCardSurface(base),
+    .classic => _fortalCardClassic(base),
+    .ghost => _fortalCardGhost(base, metrics.ghostMargin),
   };
 }
 
@@ -64,74 +66,100 @@ RemixCardStyler fortalCardStyler({
   ),
 };
 
-RemixCardStyler _fortalCardSurface(RemixCardStyler base, Radius radius) {
+RemixCardStyler _fortalCardSurface(RemixCardStyler base) {
+  base = base.effects(
+    RemixSurfaceEffectsMix(backdropBlur: FortalTokens.panelBlur()),
+  );
   final open = RemixCardStyler()
-      .surface(_fortalCardPanel(radius))
-      .overlay(_fortalCardSurfaceStroke(radius, FortalTokens.grayStroke7()));
+      .effects(RemixSurfaceEffectsMix(background: _fortalCardPanel()))
+      .effects(
+        RemixSurfaceEffectsMix(
+          foreground: _fortalCardSurfaceStroke(FortalTokens.grayStroke7()),
+        ),
+      );
   final activeFocus = RemixCardStyler()
-      .surface(_fortalCardActiveFocus(radius))
+      .effects(RemixSurfaceEffectsMix(background: _fortalCardActiveFocus()))
       .onSelected(open);
   final pressed = RemixCardStyler()
-      .overlay(_fortalCardSurfaceStroke(radius, FortalTokens.grayStroke6()))
+      .effects(
+        RemixSurfaceEffectsMix(
+          foreground: _fortalCardSurfaceStroke(FortalTokens.grayStroke6()),
+        ),
+      )
       .onFocused(activeFocus)
       .onSelected(open);
 
   return base
-      .surface(_fortalCardPanel(radius))
-      .overlay(_fortalCardSurfaceStroke(radius, FortalTokens.grayStroke5()))
+      .effects(RemixSurfaceEffectsMix(background: _fortalCardPanel()))
+      .effects(
+        RemixSurfaceEffectsMix(
+          foreground: _fortalCardSurfaceStroke(FortalTokens.grayStroke5()),
+        ),
+      )
       .onHovered(open)
       .onPressed(pressed)
       .onSelected(open.onPressed(open));
 }
 
-RemixCardStyler _fortalCardClassic(RemixCardStyler base, Radius radius) {
+RemixCardStyler _fortalCardClassic(RemixCardStyler base) {
+  base = base.effects(
+    RemixSurfaceEffectsMix(backdropBlur: FortalTokens.panelBlur()),
+  );
   final open = RemixCardStyler()
       .animate(AnimationConfig.ease(const Duration(milliseconds: 40)))
-      .surface(
-        _fortalCardPanel(
-          radius,
-          shadowToken: FortalTokens.cardClassicHoverOuterShadows,
+      .effects(
+        RemixSurfaceEffectsMix(
+          background: _fortalCardPanel(
+            shadowToken: FortalTokens.cardClassicHoverOuterShadows,
+          ),
         ),
       )
-      .overlay(
-        RemixSurfaceLayerMix(
-          borderRadius: BorderRadiusMix.all(radius),
-          shadowToken: FortalTokens.cardClassicHoverInnerShadows,
+      .effects(
+        RemixSurfaceEffectsMix(
+          foreground: RemixSurfaceLayerMix(
+            shadowToken: FortalTokens.cardClassicHoverInnerShadows,
+          ),
         ),
       );
   final pressed = RemixCardStyler()
       .animate(AnimationConfig.ease(const Duration(milliseconds: 40)))
-      .surface(
-        RemixSurfaceLayerMix(
-          borderRadius: BorderRadiusMix.all(radius),
-          shadowToken: FortalTokens.cardClassicActiveOuterShadows,
+      .effects(
+        RemixSurfaceEffectsMix(
+          background: RemixSurfaceLayerMix(
+            shadowToken: FortalTokens.cardClassicActiveOuterShadows,
+          ),
         ),
       )
-      .overlay(
-        RemixSurfaceLayerMix(
-          borderRadius: BorderRadiusMix.all(radius),
-          shadowToken: FortalTokens.cardClassicActiveInnerShadows,
+      .effects(
+        RemixSurfaceEffectsMix(
+          foreground: RemixSurfaceLayerMix(
+            shadowToken: FortalTokens.cardClassicActiveInnerShadows,
+          ),
         ),
       )
       .onFocused(
         RemixCardStyler()
-            .surface(_fortalCardActiveFocus(radius))
+            .effects(
+              RemixSurfaceEffectsMix(background: _fortalCardActiveFocus()),
+            )
             .onSelected(open),
       )
       .onSelected(open);
 
   return base
       .animate(AnimationConfig.ease(const Duration(milliseconds: 120)))
-      .surface(
-        _fortalCardPanel(
-          radius,
-          shadowToken: FortalTokens.cardClassicOuterShadows,
+      .effects(
+        RemixSurfaceEffectsMix(
+          background: _fortalCardPanel(
+            shadowToken: FortalTokens.cardClassicOuterShadows,
+          ),
         ),
       )
-      .overlay(
-        RemixSurfaceLayerMix(
-          borderRadius: BorderRadiusMix.all(radius),
-          shadowToken: FortalTokens.cardClassicInnerShadows,
+      .effects(
+        RemixSurfaceEffectsMix(
+          foreground: RemixSurfaceLayerMix(
+            shadowToken: FortalTokens.cardClassicInnerShadows,
+          ),
         ),
       )
       .onHovered(open)
@@ -139,32 +167,25 @@ RemixCardStyler _fortalCardClassic(RemixCardStyler base, Radius radius) {
       .onSelected(open.onPressed(open));
 }
 
-RemixCardStyler _fortalCardGhost(
-  RemixCardStyler base,
-  Radius radius,
-  double ghostMargin,
-) {
-  final focused = RemixCardStyler().surface(
-    _fortalCardFill(FortalTokens.accentA2(), radius),
-  );
+RemixCardStyler _fortalCardGhost(RemixCardStyler base, double ghostMargin) {
+  final focused = RemixCardStyler().color(FortalTokens.accentA2());
   final open = RemixCardStyler()
-      .surface(_fortalCardFill(FortalTokens.grayA3(), radius))
+      .color(FortalTokens.grayA3())
       .onFocused(focused);
   final pressed = RemixCardStyler()
-      .surface(_fortalCardFill(FortalTokens.grayA4(), radius))
+      .color(FortalTokens.grayA4())
       .onFocused(focused)
       .onSelected(open);
 
   return base
       .marginAll(ghostMargin)
-      .surface(_fortalCardFill(Colors.transparent, radius))
+      .color(Colors.transparent)
       .onHovered(open)
       .onPressed(pressed)
       .onSelected(open.onPressed(open));
 }
 
-RemixSurfaceLayerMix _fortalCardPanel(
-  Radius radius, {
+RemixSurfaceLayerMix _fortalCardPanel({
   RemixPaintShadowListToken? shadowToken,
 }) => RemixSurfaceLayerMix(
   gradients: [
@@ -174,36 +195,25 @@ RemixSurfaceLayerMix _fortalCardPanel(
   ],
   gradientInsets: const [1],
   shadowToken: shadowToken,
-  borderRadius: BorderRadiusMix.all(radius),
-  backdropBlur: FortalTokens.panelBlur(),
 );
 
-RemixSurfaceLayerMix _fortalCardActiveFocus(Radius radius) =>
-    RemixSurfaceLayerMix(
-      gradients: [
-        RemixLinearGradientMix(
-          colors: [FortalTokens.accentA2(), FortalTokens.accentA2()],
-        ),
-        RemixLinearGradientMix(
-          colors: [FortalTokens.colorPanel(), FortalTokens.colorPanel()],
-        ),
-      ],
-      gradientInsets: const [1, 1],
-      borderRadius: BorderRadiusMix.all(radius),
-    );
+RemixSurfaceLayerMix _fortalCardActiveFocus() => RemixSurfaceLayerMix(
+  gradients: [
+    RemixLinearGradientMix(
+      colors: [FortalTokens.accentA2(), FortalTokens.accentA2()],
+    ),
+    RemixLinearGradientMix(
+      colors: [FortalTokens.colorPanel(), FortalTokens.colorPanel()],
+    ),
+  ],
+  gradientInsets: const [1, 1],
+);
 
-RemixSurfaceLayerMix _fortalCardSurfaceStroke(Radius radius, Color color) =>
+RemixSurfaceLayerMix _fortalCardSurfaceStroke(Color color) =>
     RemixSurfaceLayerMix(
       shadows: [
         RemixPaintShadowMix(color: color, spreadRadius: 1, shapeInset: 1),
       ],
-      borderRadius: BorderRadiusMix.all(radius),
-    );
-
-RemixSurfaceLayerMix _fortalCardFill(Color color, Radius radius) =>
-    RemixSurfaceLayerMix(
-      color: color,
-      borderRadius: BorderRadiusMix.all(radius),
     );
 
 /// Fortal-themed Card with the Radix size and variant contract.

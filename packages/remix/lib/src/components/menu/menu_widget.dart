@@ -162,7 +162,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
             entries: widget.entries,
             maximumHeight: info.overlaySize.height,
             overlay: spec.overlay,
-            surface: spec.surface,
+            effects: spec.effects,
             defaultItemStyle: widget.styleSpec == null ? style.$item : null,
             defaultItemStyleSpec: widget.styleSpec == null ? null : spec.item,
             defaultLabelStyle: widget.styleSpec == null ? style.$label : null,
@@ -499,7 +499,7 @@ class _RemixMenuPanel extends StatelessWidget {
     required this.entries,
     required this.maximumHeight,
     required this.overlay,
-    required this.surface,
+    required this.effects,
     required this.defaultItemStyle,
     required this.defaultItemStyleSpec,
     required this.defaultLabelStyle,
@@ -513,7 +513,7 @@ class _RemixMenuPanel extends StatelessWidget {
   final List<Widget> entries;
   final double maximumHeight;
   final StyleSpec<FlexBoxSpec> overlay;
-  final RemixSurfaceLayerSpec? surface;
+  final RemixSurfaceEffectsSpec? effects;
   final Prop<StyleSpec<RemixMenuItemSpec>>? defaultItemStyle;
   final StyleSpec<RemixMenuItemSpec>? defaultItemStyleSpec;
   final Prop<StyleSpec<RemixMenuItemSpec>>? defaultLabelStyle;
@@ -528,7 +528,7 @@ class _RemixMenuPanel extends StatelessWidget {
     return _RemixMenuStyleScope(
       hasCheckableItems: _menuEntriesContainCheckable(entries),
       overlay: overlay,
-      surface: surface,
+      effects: effects,
       defaultItemStyle: defaultItemStyle,
       defaultItemStyleSpec: defaultItemStyleSpec,
       defaultLabelStyle: defaultLabelStyle,
@@ -539,10 +539,10 @@ class _RemixMenuPanel extends StatelessWidget {
       contentWrapper: contentWrapper,
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: maximumHeight),
-        child: RemixSurfaceFlexBox(
+        child: remixSurfaceFlexBox(
           styleSpec: overlay,
           direction: Axis.vertical,
-          surface: surface,
+          effects: effects,
           children: [
             // ignore: avoid-flexible-outside-flex
             Flexible(
@@ -565,7 +565,7 @@ class _RemixMenuStyleScope extends InheritedWidget {
   const _RemixMenuStyleScope({
     required this.hasCheckableItems,
     required this.overlay,
-    required this.surface,
+    required this.effects,
     required this.defaultItemStyle,
     required this.defaultItemStyleSpec,
     required this.defaultLabelStyle,
@@ -579,7 +579,7 @@ class _RemixMenuStyleScope extends InheritedWidget {
 
   final bool hasCheckableItems;
   final StyleSpec<FlexBoxSpec> overlay;
-  final RemixSurfaceLayerSpec? surface;
+  final RemixSurfaceEffectsSpec? effects;
   final Prop<StyleSpec<RemixMenuItemSpec>>? defaultItemStyle;
   final StyleSpec<RemixMenuItemSpec>? defaultItemStyleSpec;
   final Prop<StyleSpec<RemixMenuItemSpec>>? defaultLabelStyle;
@@ -653,7 +653,7 @@ class _RemixMenuStyleScope extends InheritedWidget {
       entries: entries,
       maximumHeight: maximumHeight,
       overlay: overlay,
-      surface: surface,
+      effects: effects,
       defaultItemStyle: defaultItemStyle,
       defaultItemStyleSpec: defaultItemStyleSpec,
       defaultLabelStyle: defaultLabelStyle,
@@ -670,7 +670,7 @@ class _RemixMenuStyleScope extends InheritedWidget {
   bool updateShouldNotify(_RemixMenuStyleScope oldWidget) =>
       hasCheckableItems != oldWidget.hasCheckableItems ||
       overlay != oldWidget.overlay ||
-      surface != oldWidget.surface ||
+      effects != oldWidget.effects ||
       defaultItemStyle != oldWidget.defaultItemStyle ||
       defaultItemStyleSpec != oldWidget.defaultItemStyleSpec ||
       defaultLabelStyle != oldWidget.defaultLabelStyle ||

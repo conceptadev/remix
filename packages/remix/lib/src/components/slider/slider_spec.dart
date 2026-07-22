@@ -15,13 +15,8 @@ class RemixSliderSpec with _$RemixSliderSpec {
 
   /// Paint layers behind the track.
   @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? trackSurface;
-
-  /// Paint layers above the track.
-  @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? trackOverlay;
+  @MixableField(setterType: RemixSurfaceEffectsMix)
+  final RemixSurfaceEffectsSpec? trackEffects;
 
   /// Layout boundary for the selected range.
   @override
@@ -29,13 +24,8 @@ class RemixSliderSpec with _$RemixSliderSpec {
 
   /// Paint layers behind the selected range.
   @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? rangeSurface;
-
-  /// Paint layers above the selected range.
-  @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? rangeOverlay;
+  @MixableField(setterType: RemixSurfaceEffectsMix)
+  final RemixSurfaceEffectsSpec? rangeEffects;
 
   /// Layout and decoration for every visual thumb.
   @override
@@ -44,18 +34,13 @@ class RemixSliderSpec with _$RemixSliderSpec {
 
   /// Paint layers behind every thumb.
   @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? thumbSurface;
-
-  /// Paint layers above every thumb.
-  @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? thumbOverlay;
+  @MixableField(setterType: RemixSurfaceEffectsMix)
+  final RemixSurfaceEffectsSpec? thumbEffects;
 
   /// Additional overlay painted only on the focused thumb.
   @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? thumbFocusOverlay;
+  @MixableField(setterType: RemixSurfaceEffectsMix)
+  final RemixSurfaceEffectsSpec? thumbFocusEffects;
 
   /// Preferred cross-axis extent of the visual track.
   @override
@@ -67,15 +52,12 @@ class RemixSliderSpec with _$RemixSliderSpec {
 
   const RemixSliderSpec({
     StyleSpec<BoxSpec>? track,
-    this.trackSurface,
-    this.trackOverlay,
+    this.trackEffects,
     StyleSpec<BoxSpec>? range,
-    this.rangeSurface,
-    this.rangeOverlay,
+    this.rangeEffects,
     StyleSpec<BoxSpec>? thumb,
-    this.thumbSurface,
-    this.thumbOverlay,
-    this.thumbFocusOverlay,
+    this.thumbEffects,
+    this.thumbFocusEffects,
     double? trackThickness,
     this.blendMode,
   }) : track = track ?? const StyleSpec(spec: BoxSpec()),
@@ -88,39 +70,24 @@ class RemixSliderSpec with _$RemixSliderSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      trackSurface: RemixSurfaceLayerSpec.lerpNullable(
-        trackSurface,
-        other.trackSurface,
+      trackEffects: RemixSurfaceEffectsSpec.lerpNullable(
+        trackEffects,
+        other.trackEffects,
         t,
       ),
-      trackOverlay: RemixSurfaceLayerSpec.lerpNullable(
-        trackOverlay,
-        other.trackOverlay,
+      rangeEffects: RemixSurfaceEffectsSpec.lerpNullable(
+        rangeEffects,
+        other.rangeEffects,
         t,
       ),
-      rangeSurface: RemixSurfaceLayerSpec.lerpNullable(
-        rangeSurface,
-        other.rangeSurface,
+      thumbEffects: RemixSurfaceEffectsSpec.lerpNullable(
+        thumbEffects,
+        other.thumbEffects,
         t,
       ),
-      rangeOverlay: RemixSurfaceLayerSpec.lerpNullable(
-        rangeOverlay,
-        other.rangeOverlay,
-        t,
-      ),
-      thumbSurface: RemixSurfaceLayerSpec.lerpNullable(
-        thumbSurface,
-        other.thumbSurface,
-        t,
-      ),
-      thumbOverlay: RemixSurfaceLayerSpec.lerpNullable(
-        thumbOverlay,
-        other.thumbOverlay,
-        t,
-      ),
-      thumbFocusOverlay: RemixSurfaceLayerSpec.lerpNullable(
-        thumbFocusOverlay,
-        other.thumbFocusOverlay,
+      thumbFocusEffects: RemixSurfaceEffectsSpec.lerpNullable(
+        thumbFocusEffects,
+        other.thumbFocusEffects,
         t,
       ),
     );

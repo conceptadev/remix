@@ -51,7 +51,10 @@ export 'src/rendering/remix_surface.dart'
         RemixLinearGradientMix,
         RemixSurfaceLayerSpec,
         RemixSurfaceLayerMix,
-        RemixSurface;
+        RemixSurfaceEffectsSpec,
+        RemixSurfaceEffectsMix,
+        remixSurfaceBox,
+        remixSurfaceFlexBox;
 
 /// STYLER CONVENIENCES
 export 'src/utilities/remix_style.dart'

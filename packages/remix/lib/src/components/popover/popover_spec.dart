@@ -7,10 +7,10 @@ class RemixPopoverSpec with _$RemixPopoverSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? surface;
+  @MixableField(setterType: RemixSurfaceEffectsMix)
+  final RemixSurfaceEffectsSpec? effects;
 
-  const RemixPopoverSpec({StyleSpec<BoxSpec>? container, this.surface})
+  const RemixPopoverSpec({StyleSpec<BoxSpec>? container, this.effects})
     : container = container ?? const StyleSpec(spec: BoxSpec());
 
   @override
@@ -18,7 +18,7 @@ class RemixPopoverSpec with _$RemixPopoverSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
     );
   }
 }

@@ -8,10 +8,16 @@ import '../widgets/toast.dart';
 import 'dashboard_page.dart';
 
 class TopBar extends StatefulWidget {
-  const TopBar({super.key, required this.page, required this.onSearchChanged});
+  const TopBar({
+    super.key,
+    required this.page,
+    required this.onSearchChanged,
+    this.onMenuPressed,
+  });
 
   final DashboardPage page;
   final ValueChanged<String> onSearchChanged;
+  final VoidCallback? onMenuPressed;
 
   @override
   State<TopBar> createState() => _TopBarState();
@@ -24,9 +30,11 @@ class _TopBarState extends State<TopBar> {
   @override
   Widget build(BuildContext context) {
     final border = MixScope.tokenOf(FortalTokens.grayA6, context);
+    final compact =
+        MediaQuery.sizeOf(context).width < dashboardCompactBreakpoint;
     return Container(
       height: 64,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.symmetric(horizontal: compact ? 12 : 24),
       decoration: BoxDecoration(
         color: MixScope.tokenOf(FortalTokens.colorPanelSolid, context),
         border: Border(bottom: BorderSide(color: border)),
@@ -34,6 +42,14 @@ class _TopBarState extends State<TopBar> {
       child: Row(
         spacing: 12,
         children: [
+          if (widget.onMenuPressed case final onMenuPressed?)
+            FortalIconButton(
+              key: const ValueKey('dashboard-menu'),
+              variant: .ghost,
+              semanticLabel: 'Open navigation',
+              onPressed: onMenuPressed,
+              child: const Icon(Icons.menu),
+            ),
           if (MediaQuery.sizeOf(context).width > 900) ...[
             StyledText(
               widget.page.section.label,

@@ -6,8 +6,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart'
-    show RemixSurfaceFlexBox;
 
 import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
@@ -31,7 +29,10 @@ void main() {
       );
 
       expect(find.byType(NakedButton), findsOneWidget);
-      expect(find.byType(RemixSurfaceFlexBox), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('remix-button-surface')),
+        findsOneWidget,
+      );
       final labelX = tester.getTopLeft(find.text('Continue')).dx;
       expect(
         tester.getTopLeft(find.byKey(const ValueKey('leading'))).dx,
@@ -102,19 +103,24 @@ void main() {
       await tester.pumpRemixApp(
         const RemixButton(
           styleSpec: RemixButtonSpec(
+            container: StyleSpec(
+              spec: FlexBoxSpec(
+                box: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
+              ),
+            ),
             label: StyleSpec(
               spec: TextSpec(style: TextStyle(color: color)),
             ),
-            surface: RemixSurfaceLayerSpec(color: color),
+            effects: RemixSurfaceEffectsSpec(
+              background: RemixSurfaceLayerSpec(
+                shadows: [RemixPaintShadow(color: color)],
+              ),
+            ),
           ),
           child: Text('Spec'),
         ),
       );
-
-      final surface = tester.widget<RemixSurfaceFlexBox>(
-        find.byType(RemixSurfaceFlexBox),
-      );
-      expect(surface.surface!.color, color);
+      expect(find.byType(CustomPaint), findsWidgets);
       expect(
         DefaultTextStyle.of(tester.element(find.text('Spec'))).style.color,
         color,

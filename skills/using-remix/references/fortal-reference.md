@@ -205,9 +205,13 @@ final style = ButtonStyler()
 final accent = MixScope.tokenOf(FortalTokens.accent9, context);
 ```
 
-Fortal's surface slots are not reduced to `BoxDecoration`. A
-`RemixSurfaceLayerMix` can resolve a solid color, multiple token-aware linear
-gradients with independent clip insets, ordered outer and true inset paint
-shadows, border radius, backdrop blur, and a CSS-style outline. Components may
-also use a separate overlay layer for interaction and focus paint. Shadow
-stroke colors use standards-aligned premultiplied-alpha OKLab mixing.
+Mix `BoxSpec` and `FlexBoxSpec` own container geometry and standard decoration:
+color, ordinary gradient and shadow, border, radius, clipping, margin,
+constraints, and transforms. `RemixSurfaceEffectsMix` augments that decoration
+only when Fortal needs advanced paint. Its background and foreground
+`RemixSurfaceLayerMix` values support multiple token-aware gradients with
+independent clip insets plus ordered outer and true inset paint shadows; the
+aggregate also owns backdrop blur and offset outlines. Component APIs expose
+one `effects` field, or role-specific names such as `trackEffects`,
+`thumbEffects`, and `thumbFocusEffects`. Shadow stroke colors use
+standards-aligned premultiplied-alpha OKLab mixing.

@@ -8,15 +8,12 @@ part of 'slider.dart';
 
 mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get track;
-  RemixSurfaceLayerSpec? get trackSurface;
-  RemixSurfaceLayerSpec? get trackOverlay;
+  RemixSurfaceEffectsSpec? get trackEffects;
   StyleSpec<BoxSpec> get range;
-  RemixSurfaceLayerSpec? get rangeSurface;
-  RemixSurfaceLayerSpec? get rangeOverlay;
+  RemixSurfaceEffectsSpec? get rangeEffects;
   StyleSpec<BoxSpec> get thumb;
-  RemixSurfaceLayerSpec? get thumbSurface;
-  RemixSurfaceLayerSpec? get thumbOverlay;
-  RemixSurfaceLayerSpec? get thumbFocusOverlay;
+  RemixSurfaceEffectsSpec? get thumbEffects;
+  RemixSurfaceEffectsSpec? get thumbFocusEffects;
   double get trackThickness;
   BlendMode? get blendMode;
 
@@ -26,29 +23,23 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
   @override
   RemixSliderSpec copyWith({
     StyleSpec<BoxSpec>? track,
-    RemixSurfaceLayerSpec? trackSurface,
-    RemixSurfaceLayerSpec? trackOverlay,
+    RemixSurfaceEffectsSpec? trackEffects,
     StyleSpec<BoxSpec>? range,
-    RemixSurfaceLayerSpec? rangeSurface,
-    RemixSurfaceLayerSpec? rangeOverlay,
+    RemixSurfaceEffectsSpec? rangeEffects,
     StyleSpec<BoxSpec>? thumb,
-    RemixSurfaceLayerSpec? thumbSurface,
-    RemixSurfaceLayerSpec? thumbOverlay,
-    RemixSurfaceLayerSpec? thumbFocusOverlay,
+    RemixSurfaceEffectsSpec? thumbEffects,
+    RemixSurfaceEffectsSpec? thumbFocusEffects,
     double? trackThickness,
     BlendMode? blendMode,
   }) {
     return RemixSliderSpec(
       track: track ?? this.track,
-      trackSurface: trackSurface ?? this.trackSurface,
-      trackOverlay: trackOverlay ?? this.trackOverlay,
+      trackEffects: trackEffects ?? this.trackEffects,
       range: range ?? this.range,
-      rangeSurface: rangeSurface ?? this.rangeSurface,
-      rangeOverlay: rangeOverlay ?? this.rangeOverlay,
+      rangeEffects: rangeEffects ?? this.rangeEffects,
       thumb: thumb ?? this.thumb,
-      thumbSurface: thumbSurface ?? this.thumbSurface,
-      thumbOverlay: thumbOverlay ?? this.thumbOverlay,
-      thumbFocusOverlay: thumbFocusOverlay ?? this.thumbFocusOverlay,
+      thumbEffects: thumbEffects ?? this.thumbEffects,
+      thumbFocusEffects: thumbFocusEffects ?? this.thumbFocusEffects,
       trackThickness: trackThickness ?? this.trackThickness,
       blendMode: blendMode ?? this.blendMode,
     );
@@ -58,17 +49,14 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
   RemixSliderSpec lerp(RemixSliderSpec? other, double t) {
     return RemixSliderSpec(
       track: track.lerp(other?.track, t),
-      trackSurface: MixOps.lerpSnap(trackSurface, other?.trackSurface, t),
-      trackOverlay: MixOps.lerpSnap(trackOverlay, other?.trackOverlay, t),
+      trackEffects: MixOps.lerpSnap(trackEffects, other?.trackEffects, t),
       range: range.lerp(other?.range, t),
-      rangeSurface: MixOps.lerpSnap(rangeSurface, other?.rangeSurface, t),
-      rangeOverlay: MixOps.lerpSnap(rangeOverlay, other?.rangeOverlay, t),
+      rangeEffects: MixOps.lerpSnap(rangeEffects, other?.rangeEffects, t),
       thumb: thumb.lerp(other?.thumb, t),
-      thumbSurface: MixOps.lerpSnap(thumbSurface, other?.thumbSurface, t),
-      thumbOverlay: MixOps.lerpSnap(thumbOverlay, other?.thumbOverlay, t),
-      thumbFocusOverlay: MixOps.lerpSnap(
-        thumbFocusOverlay,
-        other?.thumbFocusOverlay,
+      thumbEffects: MixOps.lerpSnap(thumbEffects, other?.thumbEffects, t),
+      thumbFocusEffects: MixOps.lerpSnap(
+        thumbFocusEffects,
+        other?.thumbFocusEffects,
         t,
       ),
       trackThickness: MixOps.lerp(trackThickness, other?.trackThickness, t),
@@ -79,15 +67,12 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
   @override
   List<Object?> get props => [
     track,
-    trackSurface,
-    trackOverlay,
+    trackEffects,
     range,
-    rangeSurface,
-    rangeOverlay,
+    rangeEffects,
     thumb,
-    thumbSurface,
-    thumbOverlay,
-    thumbFocusOverlay,
+    thumbEffects,
+    thumbFocusEffects,
     trackThickness,
     blendMode,
   ];
@@ -133,15 +118,12 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('track', track))
-      ..add(DiagnosticsProperty('trackSurface', trackSurface))
-      ..add(DiagnosticsProperty('trackOverlay', trackOverlay))
+      ..add(DiagnosticsProperty('trackEffects', trackEffects))
       ..add(DiagnosticsProperty('range', range))
-      ..add(DiagnosticsProperty('rangeSurface', rangeSurface))
-      ..add(DiagnosticsProperty('rangeOverlay', rangeOverlay))
+      ..add(DiagnosticsProperty('rangeEffects', rangeEffects))
       ..add(DiagnosticsProperty('thumb', thumb))
-      ..add(DiagnosticsProperty('thumbSurface', thumbSurface))
-      ..add(DiagnosticsProperty('thumbOverlay', thumbOverlay))
-      ..add(DiagnosticsProperty('thumbFocusOverlay', thumbFocusOverlay))
+      ..add(DiagnosticsProperty('thumbEffects', thumbEffects))
+      ..add(DiagnosticsProperty('thumbFocusEffects', thumbFocusEffects))
       ..add(DoubleProperty('trackThickness', trackThickness))
       ..add(EnumProperty<BlendMode>('blendMode', blendMode));
   }
@@ -159,58 +141,46 @@ typedef _$RemixSliderSpecMethods = _$RemixSliderSpec; // ignore: unused_element
 class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     with RemixBoxStylerMixin<RemixSliderStyler> {
   final Prop<StyleSpec<BoxSpec>>? $track;
-  final Prop<RemixSurfaceLayerSpec>? $trackSurface;
-  final Prop<RemixSurfaceLayerSpec>? $trackOverlay;
+  final Prop<RemixSurfaceEffectsSpec>? $trackEffects;
   final Prop<StyleSpec<BoxSpec>>? $range;
-  final Prop<RemixSurfaceLayerSpec>? $rangeSurface;
-  final Prop<RemixSurfaceLayerSpec>? $rangeOverlay;
+  final Prop<RemixSurfaceEffectsSpec>? $rangeEffects;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
-  final Prop<RemixSurfaceLayerSpec>? $thumbSurface;
-  final Prop<RemixSurfaceLayerSpec>? $thumbOverlay;
-  final Prop<RemixSurfaceLayerSpec>? $thumbFocusOverlay;
+  final Prop<RemixSurfaceEffectsSpec>? $thumbEffects;
+  final Prop<RemixSurfaceEffectsSpec>? $thumbFocusEffects;
   final Prop<double>? $trackThickness;
   final Prop<BlendMode>? $blendMode;
 
   const RemixSliderStyler.create({
     Prop<StyleSpec<BoxSpec>>? track,
-    Prop<RemixSurfaceLayerSpec>? trackSurface,
-    Prop<RemixSurfaceLayerSpec>? trackOverlay,
+    Prop<RemixSurfaceEffectsSpec>? trackEffects,
     Prop<StyleSpec<BoxSpec>>? range,
-    Prop<RemixSurfaceLayerSpec>? rangeSurface,
-    Prop<RemixSurfaceLayerSpec>? rangeOverlay,
+    Prop<RemixSurfaceEffectsSpec>? rangeEffects,
     Prop<StyleSpec<BoxSpec>>? thumb,
-    Prop<RemixSurfaceLayerSpec>? thumbSurface,
-    Prop<RemixSurfaceLayerSpec>? thumbOverlay,
-    Prop<RemixSurfaceLayerSpec>? thumbFocusOverlay,
+    Prop<RemixSurfaceEffectsSpec>? thumbEffects,
+    Prop<RemixSurfaceEffectsSpec>? thumbFocusEffects,
     Prop<double>? trackThickness,
     Prop<BlendMode>? blendMode,
     super.variants,
     super.modifier,
     super.animation,
   }) : $track = track,
-       $trackSurface = trackSurface,
-       $trackOverlay = trackOverlay,
+       $trackEffects = trackEffects,
        $range = range,
-       $rangeSurface = rangeSurface,
-       $rangeOverlay = rangeOverlay,
+       $rangeEffects = rangeEffects,
        $thumb = thumb,
-       $thumbSurface = thumbSurface,
-       $thumbOverlay = thumbOverlay,
-       $thumbFocusOverlay = thumbFocusOverlay,
+       $thumbEffects = thumbEffects,
+       $thumbFocusEffects = thumbFocusEffects,
        $trackThickness = trackThickness,
        $blendMode = blendMode;
 
   RemixSliderStyler({
     BoxStyler? track,
-    RemixSurfaceLayerMix? trackSurface,
-    RemixSurfaceLayerMix? trackOverlay,
+    RemixSurfaceEffectsMix? trackEffects,
     BoxStyler? range,
-    RemixSurfaceLayerMix? rangeSurface,
-    RemixSurfaceLayerMix? rangeOverlay,
+    RemixSurfaceEffectsMix? rangeEffects,
     BoxStyler? thumb,
-    RemixSurfaceLayerMix? thumbSurface,
-    RemixSurfaceLayerMix? thumbOverlay,
-    RemixSurfaceLayerMix? thumbFocusOverlay,
+    RemixSurfaceEffectsMix? thumbEffects,
+    RemixSurfaceEffectsMix? thumbFocusEffects,
     double? trackThickness,
     BlendMode? blendMode,
     AnimationConfig? animation,
@@ -218,15 +188,12 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     List<VariantStyle<RemixSliderSpec>>? variants,
   }) : this.create(
          track: Prop.maybeMix(track),
-         trackSurface: Prop.maybeMix(trackSurface),
-         trackOverlay: Prop.maybeMix(trackOverlay),
+         trackEffects: Prop.maybeMix(trackEffects),
          range: Prop.maybeMix(range),
-         rangeSurface: Prop.maybeMix(rangeSurface),
-         rangeOverlay: Prop.maybeMix(rangeOverlay),
+         rangeEffects: Prop.maybeMix(rangeEffects),
          thumb: Prop.maybeMix(thumb),
-         thumbSurface: Prop.maybeMix(thumbSurface),
-         thumbOverlay: Prop.maybeMix(thumbOverlay),
-         thumbFocusOverlay: Prop.maybeMix(thumbFocusOverlay),
+         thumbEffects: Prop.maybeMix(thumbEffects),
+         thumbFocusEffects: Prop.maybeMix(thumbFocusEffects),
          trackThickness: Prop.maybe(trackThickness),
          blendMode: Prop.maybe(blendMode),
          variants: variants,
@@ -236,24 +203,18 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
 
   factory RemixSliderStyler.track(BoxStyler value) =>
       RemixSliderStyler().track(value);
-  factory RemixSliderStyler.trackSurface(RemixSurfaceLayerMix value) =>
-      RemixSliderStyler().trackSurface(value);
-  factory RemixSliderStyler.trackOverlay(RemixSurfaceLayerMix value) =>
-      RemixSliderStyler().trackOverlay(value);
+  factory RemixSliderStyler.trackEffects(RemixSurfaceEffectsMix value) =>
+      RemixSliderStyler().trackEffects(value);
   factory RemixSliderStyler.range(BoxStyler value) =>
       RemixSliderStyler().range(value);
-  factory RemixSliderStyler.rangeSurface(RemixSurfaceLayerMix value) =>
-      RemixSliderStyler().rangeSurface(value);
-  factory RemixSliderStyler.rangeOverlay(RemixSurfaceLayerMix value) =>
-      RemixSliderStyler().rangeOverlay(value);
+  factory RemixSliderStyler.rangeEffects(RemixSurfaceEffectsMix value) =>
+      RemixSliderStyler().rangeEffects(value);
   factory RemixSliderStyler.thumb(BoxStyler value) =>
       RemixSliderStyler().thumb(value);
-  factory RemixSliderStyler.thumbSurface(RemixSurfaceLayerMix value) =>
-      RemixSliderStyler().thumbSurface(value);
-  factory RemixSliderStyler.thumbOverlay(RemixSurfaceLayerMix value) =>
-      RemixSliderStyler().thumbOverlay(value);
-  factory RemixSliderStyler.thumbFocusOverlay(RemixSurfaceLayerMix value) =>
-      RemixSliderStyler().thumbFocusOverlay(value);
+  factory RemixSliderStyler.thumbEffects(RemixSurfaceEffectsMix value) =>
+      RemixSliderStyler().thumbEffects(value);
+  factory RemixSliderStyler.thumbFocusEffects(RemixSurfaceEffectsMix value) =>
+      RemixSliderStyler().thumbFocusEffects(value);
   factory RemixSliderStyler.trackThickness(double value) =>
       RemixSliderStyler().trackThickness(value);
   factory RemixSliderStyler.blendMode(BlendMode value) =>
@@ -735,14 +696,9 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     return merge(RemixSliderStyler(track: value));
   }
 
-  /// Sets the trackSurface.
-  RemixSliderStyler trackSurface(RemixSurfaceLayerMix value) {
-    return merge(RemixSliderStyler(trackSurface: value));
-  }
-
-  /// Sets the trackOverlay.
-  RemixSliderStyler trackOverlay(RemixSurfaceLayerMix value) {
-    return merge(RemixSliderStyler(trackOverlay: value));
+  /// Sets the trackEffects.
+  RemixSliderStyler trackEffects(RemixSurfaceEffectsMix value) {
+    return merge(RemixSliderStyler(trackEffects: value));
   }
 
   /// Sets the range.
@@ -750,14 +706,9 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     return merge(RemixSliderStyler(range: value));
   }
 
-  /// Sets the rangeSurface.
-  RemixSliderStyler rangeSurface(RemixSurfaceLayerMix value) {
-    return merge(RemixSliderStyler(rangeSurface: value));
-  }
-
-  /// Sets the rangeOverlay.
-  RemixSliderStyler rangeOverlay(RemixSurfaceLayerMix value) {
-    return merge(RemixSliderStyler(rangeOverlay: value));
+  /// Sets the rangeEffects.
+  RemixSliderStyler rangeEffects(RemixSurfaceEffectsMix value) {
+    return merge(RemixSliderStyler(rangeEffects: value));
   }
 
   /// Sets the thumb.
@@ -765,19 +716,14 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     return merge(RemixSliderStyler(thumb: value));
   }
 
-  /// Sets the thumbSurface.
-  RemixSliderStyler thumbSurface(RemixSurfaceLayerMix value) {
-    return merge(RemixSliderStyler(thumbSurface: value));
+  /// Sets the thumbEffects.
+  RemixSliderStyler thumbEffects(RemixSurfaceEffectsMix value) {
+    return merge(RemixSliderStyler(thumbEffects: value));
   }
 
-  /// Sets the thumbOverlay.
-  RemixSliderStyler thumbOverlay(RemixSurfaceLayerMix value) {
-    return merge(RemixSliderStyler(thumbOverlay: value));
-  }
-
-  /// Sets the thumbFocusOverlay.
-  RemixSliderStyler thumbFocusOverlay(RemixSurfaceLayerMix value) {
-    return merge(RemixSliderStyler(thumbFocusOverlay: value));
+  /// Sets the thumbFocusEffects.
+  RemixSliderStyler thumbFocusEffects(RemixSurfaceEffectsMix value) {
+    return merge(RemixSliderStyler(thumbFocusEffects: value));
   }
 
   /// Sets the trackThickness.
@@ -818,17 +764,14 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
   RemixSliderStyler merge(RemixSliderStyler? other) {
     return RemixSliderStyler.create(
       track: MixOps.merge($track, other?.$track),
-      trackSurface: MixOps.merge($trackSurface, other?.$trackSurface),
-      trackOverlay: MixOps.merge($trackOverlay, other?.$trackOverlay),
+      trackEffects: MixOps.merge($trackEffects, other?.$trackEffects),
       range: MixOps.merge($range, other?.$range),
-      rangeSurface: MixOps.merge($rangeSurface, other?.$rangeSurface),
-      rangeOverlay: MixOps.merge($rangeOverlay, other?.$rangeOverlay),
+      rangeEffects: MixOps.merge($rangeEffects, other?.$rangeEffects),
       thumb: MixOps.merge($thumb, other?.$thumb),
-      thumbSurface: MixOps.merge($thumbSurface, other?.$thumbSurface),
-      thumbOverlay: MixOps.merge($thumbOverlay, other?.$thumbOverlay),
-      thumbFocusOverlay: MixOps.merge(
-        $thumbFocusOverlay,
-        other?.$thumbFocusOverlay,
+      thumbEffects: MixOps.merge($thumbEffects, other?.$thumbEffects),
+      thumbFocusEffects: MixOps.merge(
+        $thumbFocusEffects,
+        other?.$thumbFocusEffects,
       ),
       trackThickness: MixOps.merge($trackThickness, other?.$trackThickness),
       blendMode: MixOps.merge($blendMode, other?.$blendMode),
@@ -843,15 +786,12 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
   StyleSpec<RemixSliderSpec> resolve(BuildContext context) {
     final spec = RemixSliderSpec(
       track: MixOps.resolve(context, $track),
-      trackSurface: MixOps.resolve(context, $trackSurface),
-      trackOverlay: MixOps.resolve(context, $trackOverlay),
+      trackEffects: MixOps.resolve(context, $trackEffects),
       range: MixOps.resolve(context, $range),
-      rangeSurface: MixOps.resolve(context, $rangeSurface),
-      rangeOverlay: MixOps.resolve(context, $rangeOverlay),
+      rangeEffects: MixOps.resolve(context, $rangeEffects),
       thumb: MixOps.resolve(context, $thumb),
-      thumbSurface: MixOps.resolve(context, $thumbSurface),
-      thumbOverlay: MixOps.resolve(context, $thumbOverlay),
-      thumbFocusOverlay: MixOps.resolve(context, $thumbFocusOverlay),
+      thumbEffects: MixOps.resolve(context, $thumbEffects),
+      thumbFocusEffects: MixOps.resolve(context, $thumbFocusEffects),
       trackThickness: MixOps.resolve(context, $trackThickness),
       blendMode: MixOps.resolve(context, $blendMode),
     );
@@ -868,15 +808,12 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('track', $track))
-      ..add(DiagnosticsProperty('trackSurface', $trackSurface))
-      ..add(DiagnosticsProperty('trackOverlay', $trackOverlay))
+      ..add(DiagnosticsProperty('trackEffects', $trackEffects))
       ..add(DiagnosticsProperty('range', $range))
-      ..add(DiagnosticsProperty('rangeSurface', $rangeSurface))
-      ..add(DiagnosticsProperty('rangeOverlay', $rangeOverlay))
+      ..add(DiagnosticsProperty('rangeEffects', $rangeEffects))
       ..add(DiagnosticsProperty('thumb', $thumb))
-      ..add(DiagnosticsProperty('thumbSurface', $thumbSurface))
-      ..add(DiagnosticsProperty('thumbOverlay', $thumbOverlay))
-      ..add(DiagnosticsProperty('thumbFocusOverlay', $thumbFocusOverlay))
+      ..add(DiagnosticsProperty('thumbEffects', $thumbEffects))
+      ..add(DiagnosticsProperty('thumbFocusEffects', $thumbFocusEffects))
       ..add(DiagnosticsProperty('trackThickness', $trackThickness))
       ..add(DiagnosticsProperty('blendMode', $blendMode));
   }
@@ -884,15 +821,12 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
   @override
   List<Object?> get props => [
     $track,
-    $trackSurface,
-    $trackOverlay,
+    $trackEffects,
     $range,
-    $rangeSurface,
-    $rangeOverlay,
+    $rangeEffects,
     $thumb,
-    $thumbSurface,
-    $thumbOverlay,
-    $thumbFocusOverlay,
+    $thumbEffects,
+    $thumbFocusEffects,
     $trackThickness,
     $blendMode,
     $animation,

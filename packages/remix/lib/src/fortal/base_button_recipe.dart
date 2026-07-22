@@ -111,34 +111,30 @@ fortalBaseButtonGhostMetrics(int size) => switch (size) {
     };
 
 /// A CSS outline that does not affect layout.
-RemixSurfaceLayerMix fortalFocusOutline(
-  Radius radius,
+RemixSurfaceEffectsMix fortalFocusOutline(
   Color color, {
   required double offset,
-}) => RemixSurfaceLayerMix(
-  borderRadius: BorderRadiusMix.all(radius),
-  outlineColor: color,
-  outlineWidth: 2,
+}) => RemixSurfaceEffectsMix(
+  outline: BorderSideMix(
+    color: color,
+    width: 2,
+    strokeAlign: BorderSide.strokeAlignInside,
+  ),
   outlineOffset: offset,
 );
 
 /// A one-pixel inset stroke, optionally layered over a fill.
-RemixSurfaceLayerMix fortalInsetSurface({
-  required Radius radius,
-  Color? color,
-  required List<Color> strokes,
-}) => RemixSurfaceLayerMix(
-  color: color,
-  shadows: [
-    for (final stroke in strokes)
-      RemixPaintShadowMix(
-        kind: RemixPaintShadowKind.inset,
-        color: stroke,
-        spreadRadius: 1,
-      ),
-  ],
-  borderRadius: BorderRadiusMix.all(radius),
-);
+RemixSurfaceLayerMix fortalInsetSurface({required List<Color> strokes}) =>
+    RemixSurfaceLayerMix(
+      shadows: [
+        for (final stroke in strokes)
+          RemixPaintShadowMix(
+            kind: RemixPaintShadowKind.inset,
+            color: stroke,
+            spreadRadius: 1,
+          ),
+      ],
+    );
 
 /// Resolves a mode-aware ordered CSS filter at the component build context.
 WidgetModifierConfig fortalModeAwareFilter({
@@ -154,7 +150,6 @@ WidgetModifierConfig fortalClearFilter() =>
 
 /// Exact classic BaseButton surface for a visual state.
 RemixSurfaceLayerMix fortalClassicBaseButtonSurface({
-  required Radius radius,
   required bool highContrast,
   bool hovered = false,
   bool pressed = false,
@@ -163,7 +158,6 @@ RemixSurfaceLayerMix fortalClassicBaseButtonSurface({
   final inset = FortalTokens.baseButtonClassicAfterInset();
   if (disabled) {
     return RemixSurfaceLayerMix(
-      color: FortalTokens.gray2(),
       gradients: [
         RemixLinearGradientMix(
           colors: [
@@ -179,7 +173,6 @@ RemixSurfaceLayerMix fortalClassicBaseButtonSurface({
       ],
       gradientInsets: [inset, inset],
       shadowToken: FortalTokens.baseButtonClassicDisabledShadows,
-      borderRadius: BorderRadiusMix.all(radius),
     );
   }
 
@@ -237,7 +230,6 @@ RemixSurfaceLayerMix fortalClassicBaseButtonSurface({
     ],
   ];
   return RemixSurfaceLayerMix(
-    color: baseColor,
     gradients: gradients,
     gradientInsets: [inset, inset, ...List.filled(gradients.length - 2, 0)],
     shadowToken: pressed
@@ -247,7 +239,6 @@ RemixSurfaceLayerMix fortalClassicBaseButtonSurface({
         : highContrast
         ? FortalTokens.baseButtonClassicHighContrastShadows
         : FortalTokens.baseButtonClassicShadows,
-    borderRadius: BorderRadiusMix.all(radius),
   );
 }
 

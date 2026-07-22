@@ -594,8 +594,16 @@ void main() {
           thumb: StyleSpec(
             spec: BoxSpec(decoration: BoxDecoration(color: Colors.yellow)),
           ),
-          surface: RemixSurfaceLayerSpec(color: Colors.red),
-          thumbSurface: RemixSurfaceLayerSpec(color: Colors.blue),
+          trackEffects: RemixSurfaceEffectsSpec(
+            background: RemixSurfaceLayerSpec(
+              shadows: [RemixPaintShadow(color: Colors.red)],
+            ),
+          ),
+          thumbEffects: RemixSurfaceEffectsSpec(
+            background: RemixSurfaceLayerSpec(
+              shadows: [RemixPaintShadow(color: Colors.blue)],
+            ),
+          ),
         );
 
         await tester.pumpRemixApp(
@@ -607,10 +615,12 @@ void main() {
             .widgetList<DecoratedBox>(find.byType(DecoratedBox))
             .map((box) => box.decoration);
         final surfaceColors = tester
-            .widgetList<RemixSurface>(find.byType(RemixSurface))
-            .map((surface) => surface.spec.color);
+            .widgetList<DecoratedBox>(find.byType(DecoratedBox))
+            .map((surface) => surface.decoration)
+            .whereType<BoxDecoration>()
+            .map((decoration) => decoration.color);
 
-        expect(surfaceColors, containsAll([Colors.red, Colors.blue]));
+        expect(surfaceColors, containsAll([Colors.green, Colors.yellow]));
         expect(
           renderedDecorations,
           contains(equals(const BoxDecoration(color: Colors.green))),

@@ -38,22 +38,41 @@ void main() {
         const spec = RemixSelectSpec(
           trigger: StyleSpec(
             spec: RemixSelectTriggerSpec(
-              surface: RemixSurfaceLayerSpec(color: Colors.red),
-              overlay: RemixSurfaceLayerSpec(color: Colors.orange),
+              effects: RemixSurfaceEffectsSpec(
+                background: RemixSurfaceLayerSpec(
+                  shadows: [RemixPaintShadow(color: Colors.red)],
+                ),
+                foreground: RemixSurfaceLayerSpec(
+                  shadows: [RemixPaintShadow(color: Colors.orange)],
+                ),
+              ),
             ),
           ),
           content: StyleSpec(
             spec: RemixSelectContentSpec(
-              surface: RemixSurfaceLayerSpec(color: Colors.blue),
+              effects: RemixSurfaceEffectsSpec(
+                background: RemixSurfaceLayerSpec(
+                  shadows: [RemixPaintShadow(color: Colors.blue)],
+                ),
+              ),
             ),
           ),
           label: StyleSpec(spec: RemixSelectLabelSpec()),
           separator: StyleSpec(spec: BoxSpec()),
         );
 
-        expect(spec.trigger.spec.surface?.color, Colors.red);
-        expect(spec.trigger.spec.overlay?.color, Colors.orange);
-        expect(spec.content.spec.surface?.color, Colors.blue);
+        expect(
+          spec.trigger.spec.effects?.background?.shadows.first.color,
+          Colors.red,
+        );
+        expect(
+          spec.trigger.spec.effects?.foreground?.shadows.first.color,
+          Colors.orange,
+        );
+        expect(
+          spec.content.spec.effects?.background?.shadows.first.color,
+          Colors.blue,
+        );
         expect(spec.label.spec, isA<RemixSelectLabelSpec>());
         expect(spec.separator.spec, isA<BoxSpec>());
       },

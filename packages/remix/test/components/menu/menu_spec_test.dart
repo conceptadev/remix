@@ -8,21 +8,27 @@ void main() {
       const spec = RemixMenuSpec();
 
       expect(spec.overlay, isA<StyleSpec<FlexBoxSpec>>());
-      expect(spec.surface, isNull);
+      expect(spec.effects, isNull);
       expect(spec.item, isA<StyleSpec<RemixMenuItemSpec>>());
       expect(spec.label, isA<StyleSpec<RemixMenuItemSpec>>());
       expect(spec.divider, isA<StyleSpec<RemixDividerSpec>>());
     });
 
     test('retains every supplied content slot', () {
-      const surface = RemixSurfaceLayerSpec(color: Colors.white);
+      const surface = RemixSurfaceLayerSpec(
+        shadows: [RemixPaintShadow(color: Colors.white)],
+      );
       final item = StyleSpec(spec: const RemixMenuItemSpec(leadingInset: 12));
       final label = StyleSpec(
         spec: const RemixMenuItemSpec(adjacentItemSpacing: 8),
       );
-      final spec = RemixMenuSpec(surface: surface, item: item, label: label);
+      final spec = RemixMenuSpec(
+        effects: RemixSurfaceEffectsSpec(background: surface),
+        item: item,
+        label: label,
+      );
 
-      expect(spec.surface, surface);
+      expect(spec.effects?.background, surface);
       expect(spec.item, item);
       expect(spec.label, label);
     });

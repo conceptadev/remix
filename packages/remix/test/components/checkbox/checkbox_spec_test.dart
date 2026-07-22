@@ -211,11 +211,11 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixCheckboxSpec();
 
-        expect(spec.props, hasLength(4));
+        expect(spec.props, hasLength(3));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.indicator));
-        expect(spec.surface, isNull);
-        expect(spec.overlay, isNull);
+        expect(spec.effects?.background, isNull);
+        expect(spec.effects?.foreground, isNull);
       });
 
       test('props list with custom properties', () {
@@ -227,7 +227,7 @@ void main() {
           indicator: indicatorSpec,
         );
 
-        expect(spec.props, hasLength(4));
+        expect(spec.props, hasLength(3));
         expect(spec.props, contains(containerSpec));
         expect(spec.props, contains(indicatorSpec));
       });
@@ -319,7 +319,7 @@ void main() {
 
         expect(spec.container, equals(complexContainerSpec));
         expect(spec.indicator, equals(complexIndicatorSpec));
-        expect(spec.props, hasLength(4));
+        expect(spec.props, hasLength(3));
       });
     });
   });

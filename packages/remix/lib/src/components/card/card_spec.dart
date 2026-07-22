@@ -8,18 +8,11 @@ class RemixCardSpec with _$RemixCardSpec {
   final StyleSpec<BoxSpec> container;
 
   @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? surface;
+  @MixableField(setterType: RemixSurfaceEffectsMix)
+  final RemixSurfaceEffectsSpec? effects;
 
-  @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? overlay;
-
-  const RemixCardSpec({
-    StyleSpec<BoxSpec>? container,
-    this.surface,
-    this.overlay,
-  }) : container = container ?? const StyleSpec(spec: BoxSpec());
+  const RemixCardSpec({StyleSpec<BoxSpec>? container, this.effects})
+    : container = container ?? const StyleSpec(spec: BoxSpec());
 
   @override
   RemixCardSpec lerp(RemixCardSpec? other, double t) {
@@ -27,8 +20,7 @@ class RemixCardSpec with _$RemixCardSpec {
     if (other == null) return generated;
     return RemixCardSpec(
       container: generated.container,
-      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
-      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
+      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
     );
   }
 }

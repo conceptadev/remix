@@ -20,23 +20,27 @@ RemixCheckboxStyler fortalCheckboxStyler({
             .alignment(.center)
             .borderRadiusAll(metrics.radius),
         indicator: IconStyler().size(metrics.indicatorSize),
-        surface: _fortalCheckboxLayer(radius: metrics.radius),
-        overlay: _fortalCheckboxLayer(radius: metrics.radius),
+        effects: RemixSurfaceEffectsMix(
+          background: _fortalCheckboxLayer(),
+          foreground: _fortalCheckboxLayer(),
+        ),
       ).onFocused(
-        RemixCheckboxStyler().overlay(
-          _fortalCheckboxLayer(
-            radius: metrics.radius,
-            outlineColor: FortalTokens.focus8(),
-            outlineWidth: 2,
+        RemixCheckboxStyler().effects(
+          RemixSurfaceEffectsMix(
+            outline: BorderSideMix(
+              color: FortalTokens.focus8(),
+              width: 2,
+              strokeAlign: BorderSide.strokeAlignInside,
+            ),
             outlineOffset: 2,
           ),
         ),
       );
 
   return switch (variant) {
-    .classic => _fortalCheckboxClassic(base, metrics.radius, highContrast),
-    .surface => _fortalCheckboxSurface(base, metrics.radius, highContrast),
-    .soft => _fortalCheckboxSoft(base, metrics.radius, highContrast),
+    .classic => _fortalCheckboxClassic(base, highContrast),
+    .surface => _fortalCheckboxSurface(base, highContrast),
+    .soft => _fortalCheckboxSoft(base, highContrast),
   };
 }
 
@@ -62,117 +66,127 @@ RemixCheckboxStyler fortalCheckboxStyler({
 
 RemixCheckboxStyler _fortalCheckboxSurface(
   RemixCheckboxStyler base,
-  Radius radius,
   bool highContrast,
 ) {
   final selected = RemixCheckboxStyler()
-      .surface(
-        _fortalCheckboxLayer(
-          radius: radius,
-          color: highContrast
-              ? FortalTokens.accent12()
-              : FortalTokens.accentIndicator(),
+      .color(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentIndicator(),
+      )
+      .effects(RemixSurfaceEffectsMix(background: _fortalCheckboxLayer()))
+      .effects(
+        RemixSurfaceEffectsMix(
+          foreground: _fortalCheckboxLayer(shadows: const []),
         ),
       )
-      .overlay(_fortalCheckboxLayer(radius: radius, shadows: const []))
       .indicatorColor(
         highContrast ? FortalTokens.accent1() : FortalTokens.accentContrast(),
       );
 
   return base
-      .surface(
-        _fortalCheckboxLayer(
-          radius: radius,
-          color: FortalTokens.colorSurface(),
+      .color(FortalTokens.colorSurface())
+      .effects(RemixSurfaceEffectsMix(background: _fortalCheckboxLayer()))
+      .effects(
+        RemixSurfaceEffectsMix(
+          foreground: _fortalCheckboxInsetRing(FortalTokens.grayA7()),
         ),
       )
-      .overlay(_fortalCheckboxInsetRing(radius, FortalTokens.grayA7()))
       .onSelected(selected)
       .onIndeterminate(selected)
       .onDisabled(
         RemixCheckboxStyler()
-            .surface(
-              _fortalCheckboxLayer(
-                radius: radius,
-                color: FortalTokens.grayA3(),
+            .color(FortalTokens.grayA3())
+            .effects(RemixSurfaceEffectsMix(background: _fortalCheckboxLayer()))
+            .effects(
+              RemixSurfaceEffectsMix(
+                foreground: _fortalCheckboxInsetRing(FortalTokens.grayA6()),
               ),
             )
-            .overlay(_fortalCheckboxInsetRing(radius, FortalTokens.grayA6()))
             .indicatorColor(FortalTokens.grayA8()),
       );
 }
 
 RemixCheckboxStyler _fortalCheckboxClassic(
   RemixCheckboxStyler base,
-  Radius radius,
   bool highContrast,
 ) {
   final selected = RemixCheckboxStyler()
-      .surface(
-        _fortalCheckboxLayer(
-          radius: radius,
-          color: highContrast
-              ? FortalTokens.accent12()
-              : FortalTokens.accentIndicator(),
-          gradients: [
-            RemixLinearGradientMix(
-              colors: [
-                FortalTokens.whiteA3(),
-                Colors.transparent,
-                FortalTokens.blackA1(),
-              ],
-            ),
-          ],
-          shadows: [
-            RemixPaintShadowMix(
-              kind: .inset,
-              color: FortalTokens.whiteA4(),
-              offset: const Offset(0, 0.5),
-              blurRadius: 0.5,
-            ),
-            RemixPaintShadowMix(
-              kind: .inset,
-              color: FortalTokens.blackA4(),
-              offset: const Offset(0, -0.5),
-              blurRadius: 0.5,
-            ),
-          ],
+      .color(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentIndicator(),
+      )
+      .effects(
+        RemixSurfaceEffectsMix(
+          background: _fortalCheckboxLayer(
+            gradients: [
+              RemixLinearGradientMix(
+                colors: [
+                  FortalTokens.whiteA3(),
+                  Colors.transparent,
+                  FortalTokens.blackA1(),
+                ],
+              ),
+            ],
+            shadows: [
+              RemixPaintShadowMix(
+                kind: .inset,
+                color: FortalTokens.whiteA4(),
+                offset: const Offset(0, 0.5),
+                blurRadius: 0.5,
+              ),
+              RemixPaintShadowMix(
+                kind: .inset,
+                color: FortalTokens.blackA4(),
+                offset: const Offset(0, -0.5),
+                blurRadius: 0.5,
+              ),
+            ],
+          ),
         ),
       )
-      .overlay(_fortalCheckboxLayer(radius: radius, shadows: const []))
+      .effects(
+        RemixSurfaceEffectsMix(
+          foreground: _fortalCheckboxLayer(shadows: const []),
+        ),
+      )
       .indicatorColor(
         highContrast ? FortalTokens.accent1() : FortalTokens.accentContrast(),
       );
 
   return base
-      .surface(
-        _fortalCheckboxLayer(
-          radius: radius,
-          color: FortalTokens.colorSurface(),
-          shadowToken: FortalTokens.shadow1,
+      .color(FortalTokens.colorSurface())
+      .effects(
+        RemixSurfaceEffectsMix(
+          background: _fortalCheckboxLayer(shadowToken: FortalTokens.shadow1),
         ),
       )
-      .overlay(_fortalCheckboxInsetRing(radius, FortalTokens.grayA3()))
+      .effects(
+        RemixSurfaceEffectsMix(
+          foreground: _fortalCheckboxInsetRing(FortalTokens.grayA3()),
+        ),
+      )
       .onSelected(selected)
       .onIndeterminate(selected)
       .onDisabled(
         RemixCheckboxStyler()
-            .surface(
-              _fortalCheckboxLayer(
-                radius: radius,
-                color: FortalTokens.grayA3(),
-                gradients: const [],
-                shadowToken: FortalTokens.shadow1,
+            .color(FortalTokens.grayA3())
+            .effects(
+              RemixSurfaceEffectsMix(
+                background: _fortalCheckboxLayer(
+                  gradients: const [],
+                  shadowToken: FortalTokens.shadow1,
+                ),
               ),
             )
-            .overlay(_fortalCheckboxLayer(radius: radius, shadows: const []))
+            .effects(
+              RemixSurfaceEffectsMix(
+                foreground: _fortalCheckboxLayer(shadows: const []),
+              ),
+            )
             .indicatorColor(FortalTokens.grayA8()),
       );
 }
 
 RemixCheckboxStyler _fortalCheckboxSoft(
   RemixCheckboxStyler base,
-  Radius radius,
   bool highContrast,
 ) {
   final selected = RemixCheckboxStyler().indicatorColor(
@@ -180,49 +194,33 @@ RemixCheckboxStyler _fortalCheckboxSoft(
   );
 
   return base
-      .surface(
-        _fortalCheckboxLayer(radius: radius, color: FortalTokens.accentA5()),
-      )
+      .color(FortalTokens.accentA5())
+      .effects(RemixSurfaceEffectsMix(background: _fortalCheckboxLayer()))
       .onSelected(selected)
       .onIndeterminate(selected)
       .onDisabled(
         RemixCheckboxStyler()
-            .surface(
-              _fortalCheckboxLayer(
-                radius: radius,
-                color: FortalTokens.grayA3(),
-              ),
-            )
+            .color(FortalTokens.grayA3())
+            .effects(RemixSurfaceEffectsMix(background: _fortalCheckboxLayer()))
             .indicatorColor(FortalTokens.grayA8()),
       );
 }
 
-RemixSurfaceLayerMix _fortalCheckboxInsetRing(Radius radius, Color color) =>
+RemixSurfaceLayerMix _fortalCheckboxInsetRing(Color color) =>
     _fortalCheckboxLayer(
-      radius: radius,
       shadows: [
         RemixPaintShadowMix(kind: .inset, color: color, spreadRadius: 1),
       ],
     );
 
 RemixSurfaceLayerMix _fortalCheckboxLayer({
-  required Radius radius,
-  Color? color,
   List<RemixLinearGradientMix>? gradients,
   List<RemixPaintShadowMix>? shadows,
   RemixPaintShadowListToken? shadowToken,
-  Color? outlineColor,
-  double? outlineWidth,
-  double? outlineOffset,
 }) => RemixSurfaceLayerMix(
-  color: color,
   gradients: gradients,
   shadows: shadows,
   shadowToken: shadowToken,
-  borderRadius: BorderRadiusMix.all(radius),
-  outlineColor: outlineColor,
-  outlineWidth: outlineWidth,
-  outlineOffset: outlineOffset,
 );
 
 /// Fortal Checkbox with the Radix size, variant, and override contract.

@@ -9,10 +9,8 @@ part of 'switch.dart';
 mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get thumb;
-  RemixSurfaceLayerSpec? get surface;
-  RemixSurfaceLayerSpec? get overlay;
-  RemixSurfaceLayerSpec? get thumbSurface;
-  RemixSurfaceLayerSpec? get thumbOverlay;
+  RemixSurfaceEffectsSpec? get trackEffects;
+  RemixSurfaceEffectsSpec? get thumbEffects;
 
   @override
   Type get type => RemixSwitchSpec;
@@ -21,18 +19,14 @@ mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
   RemixSwitchSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? thumb,
-    RemixSurfaceLayerSpec? surface,
-    RemixSurfaceLayerSpec? overlay,
-    RemixSurfaceLayerSpec? thumbSurface,
-    RemixSurfaceLayerSpec? thumbOverlay,
+    RemixSurfaceEffectsSpec? trackEffects,
+    RemixSurfaceEffectsSpec? thumbEffects,
   }) {
     return RemixSwitchSpec(
       container: container ?? this.container,
       thumb: thumb ?? this.thumb,
-      surface: surface ?? this.surface,
-      overlay: overlay ?? this.overlay,
-      thumbSurface: thumbSurface ?? this.thumbSurface,
-      thumbOverlay: thumbOverlay ?? this.thumbOverlay,
+      trackEffects: trackEffects ?? this.trackEffects,
+      thumbEffects: thumbEffects ?? this.thumbEffects,
     );
   }
 
@@ -41,22 +35,13 @@ mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
     return RemixSwitchSpec(
       container: container.lerp(other?.container, t),
       thumb: thumb.lerp(other?.thumb, t),
-      surface: MixOps.lerpSnap(surface, other?.surface, t),
-      overlay: MixOps.lerpSnap(overlay, other?.overlay, t),
-      thumbSurface: MixOps.lerpSnap(thumbSurface, other?.thumbSurface, t),
-      thumbOverlay: MixOps.lerpSnap(thumbOverlay, other?.thumbOverlay, t),
+      trackEffects: MixOps.lerpSnap(trackEffects, other?.trackEffects, t),
+      thumbEffects: MixOps.lerpSnap(thumbEffects, other?.thumbEffects, t),
     );
   }
 
   @override
-  List<Object?> get props => [
-    container,
-    thumb,
-    surface,
-    overlay,
-    thumbSurface,
-    thumbOverlay,
-  ];
+  List<Object?> get props => [container, thumb, trackEffects, thumbEffects];
 
   @override
   bool operator ==(Object other) {
@@ -100,10 +85,8 @@ mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('thumb', thumb))
-      ..add(DiagnosticsProperty('surface', surface))
-      ..add(DiagnosticsProperty('overlay', overlay))
-      ..add(DiagnosticsProperty('thumbSurface', thumbSurface))
-      ..add(DiagnosticsProperty('thumbOverlay', thumbOverlay));
+      ..add(DiagnosticsProperty('trackEffects', trackEffects))
+      ..add(DiagnosticsProperty('thumbEffects', thumbEffects));
   }
 }
 
@@ -120,45 +103,35 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     with RemixBoxStylerMixin<RemixSwitchStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
-  final Prop<RemixSurfaceLayerSpec>? $surface;
-  final Prop<RemixSurfaceLayerSpec>? $overlay;
-  final Prop<RemixSurfaceLayerSpec>? $thumbSurface;
-  final Prop<RemixSurfaceLayerSpec>? $thumbOverlay;
+  final Prop<RemixSurfaceEffectsSpec>? $trackEffects;
+  final Prop<RemixSurfaceEffectsSpec>? $thumbEffects;
 
   const RemixSwitchStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? thumb,
-    Prop<RemixSurfaceLayerSpec>? surface,
-    Prop<RemixSurfaceLayerSpec>? overlay,
-    Prop<RemixSurfaceLayerSpec>? thumbSurface,
-    Prop<RemixSurfaceLayerSpec>? thumbOverlay,
+    Prop<RemixSurfaceEffectsSpec>? trackEffects,
+    Prop<RemixSurfaceEffectsSpec>? thumbEffects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $thumb = thumb,
-       $surface = surface,
-       $overlay = overlay,
-       $thumbSurface = thumbSurface,
-       $thumbOverlay = thumbOverlay;
+       $trackEffects = trackEffects,
+       $thumbEffects = thumbEffects;
 
   RemixSwitchStyler({
     BoxStyler? container,
     BoxStyler? thumb,
-    RemixSurfaceLayerMix? surface,
-    RemixSurfaceLayerMix? overlay,
-    RemixSurfaceLayerMix? thumbSurface,
-    RemixSurfaceLayerMix? thumbOverlay,
+    RemixSurfaceEffectsMix? trackEffects,
+    RemixSurfaceEffectsMix? thumbEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixSwitchSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          thumb: Prop.maybeMix(thumb),
-         surface: Prop.maybeMix(surface),
-         overlay: Prop.maybeMix(overlay),
-         thumbSurface: Prop.maybeMix(thumbSurface),
-         thumbOverlay: Prop.maybeMix(thumbOverlay),
+         trackEffects: Prop.maybeMix(trackEffects),
+         thumbEffects: Prop.maybeMix(thumbEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -168,14 +141,10 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
       RemixSwitchStyler().container(value);
   factory RemixSwitchStyler.thumb(BoxStyler value) =>
       RemixSwitchStyler().thumb(value);
-  factory RemixSwitchStyler.surface(RemixSurfaceLayerMix value) =>
-      RemixSwitchStyler().surface(value);
-  factory RemixSwitchStyler.overlay(RemixSurfaceLayerMix value) =>
-      RemixSwitchStyler().overlay(value);
-  factory RemixSwitchStyler.thumbSurface(RemixSurfaceLayerMix value) =>
-      RemixSwitchStyler().thumbSurface(value);
-  factory RemixSwitchStyler.thumbOverlay(RemixSurfaceLayerMix value) =>
-      RemixSwitchStyler().thumbOverlay(value);
+  factory RemixSwitchStyler.trackEffects(RemixSurfaceEffectsMix value) =>
+      RemixSwitchStyler().trackEffects(value);
+  factory RemixSwitchStyler.thumbEffects(RemixSurfaceEffectsMix value) =>
+      RemixSwitchStyler().thumbEffects(value);
   factory RemixSwitchStyler.alignment(AlignmentGeometry value) =>
       RemixSwitchStyler().alignment(value);
   factory RemixSwitchStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -658,24 +627,14 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     return merge(RemixSwitchStyler(thumb: value));
   }
 
-  /// Sets the surface.
-  RemixSwitchStyler surface(RemixSurfaceLayerMix value) {
-    return merge(RemixSwitchStyler(surface: value));
+  /// Sets the trackEffects.
+  RemixSwitchStyler trackEffects(RemixSurfaceEffectsMix value) {
+    return merge(RemixSwitchStyler(trackEffects: value));
   }
 
-  /// Sets the overlay.
-  RemixSwitchStyler overlay(RemixSurfaceLayerMix value) {
-    return merge(RemixSwitchStyler(overlay: value));
-  }
-
-  /// Sets the thumbSurface.
-  RemixSwitchStyler thumbSurface(RemixSurfaceLayerMix value) {
-    return merge(RemixSwitchStyler(thumbSurface: value));
-  }
-
-  /// Sets the thumbOverlay.
-  RemixSwitchStyler thumbOverlay(RemixSurfaceLayerMix value) {
-    return merge(RemixSwitchStyler(thumbOverlay: value));
+  /// Sets the thumbEffects.
+  RemixSwitchStyler thumbEffects(RemixSurfaceEffectsMix value) {
+    return merge(RemixSwitchStyler(thumbEffects: value));
   }
 
   /// Sets the animation configuration.
@@ -707,10 +666,8 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     return RemixSwitchStyler.create(
       container: MixOps.merge($container, other?.$container),
       thumb: MixOps.merge($thumb, other?.$thumb),
-      surface: MixOps.merge($surface, other?.$surface),
-      overlay: MixOps.merge($overlay, other?.$overlay),
-      thumbSurface: MixOps.merge($thumbSurface, other?.$thumbSurface),
-      thumbOverlay: MixOps.merge($thumbOverlay, other?.$thumbOverlay),
+      trackEffects: MixOps.merge($trackEffects, other?.$trackEffects),
+      thumbEffects: MixOps.merge($thumbEffects, other?.$thumbEffects),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -723,10 +680,8 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     final spec = RemixSwitchSpec(
       container: MixOps.resolve(context, $container),
       thumb: MixOps.resolve(context, $thumb),
-      surface: MixOps.resolve(context, $surface),
-      overlay: MixOps.resolve(context, $overlay),
-      thumbSurface: MixOps.resolve(context, $thumbSurface),
-      thumbOverlay: MixOps.resolve(context, $thumbOverlay),
+      trackEffects: MixOps.resolve(context, $trackEffects),
+      thumbEffects: MixOps.resolve(context, $thumbEffects),
     );
 
     return StyleSpec(
@@ -742,20 +697,16 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     properties
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('thumb', $thumb))
-      ..add(DiagnosticsProperty('surface', $surface))
-      ..add(DiagnosticsProperty('overlay', $overlay))
-      ..add(DiagnosticsProperty('thumbSurface', $thumbSurface))
-      ..add(DiagnosticsProperty('thumbOverlay', $thumbOverlay));
+      ..add(DiagnosticsProperty('trackEffects', $trackEffects))
+      ..add(DiagnosticsProperty('thumbEffects', $thumbEffects));
   }
 
   @override
   List<Object?> get props => [
     $container,
     $thumb,
-    $surface,
-    $overlay,
-    $thumbSurface,
-    $thumbOverlay,
+    $trackEffects,
+    $thumbEffects,
     $animation,
     $modifier,
     $variants,

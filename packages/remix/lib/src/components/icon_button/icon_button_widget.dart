@@ -71,10 +71,10 @@ class RemixIconButton extends StatelessWidget {
             maintainSemantics: true,
             child: remixInheritedContentStyle(child: child, icon: spec.icon),
           );
-          final button = RemixSurfaceBox(
+          final button = remixSurfaceBox(
+            key: const ValueKey('remix-icon-button-surface'),
             styleSpec: spec.container,
-            surface: spec.surface,
-            overlay: spec.overlay,
+            effects: spec.effects,
             child: content,
           );
           final spinner = loadingBuilder == null

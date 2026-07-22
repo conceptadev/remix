@@ -21,13 +21,19 @@ class DashboardShell extends StatefulWidget {
 }
 
 class _DashboardShellState extends State<DashboardShell> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   DashboardPage _selected = .overview;
   String _searchQuery = '';
 
-  void _select(DashboardPage page) => setState(() => _selected = page);
+  void _select(DashboardPage page) {
+    setState(() => _selected = page);
+    _scaffoldKey.currentState?.closeDrawer();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final compact =
+        MediaQuery.sizeOf(context).width < dashboardCompactBreakpoint;
     final pages = <Widget>[
       OverviewPage(onViewOrders: () => _select(.orders)),
       CustomersPage(globalQuery: _searchQuery),
@@ -41,15 +47,25 @@ class _DashboardShellState extends State<DashboardShell> {
     ];
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.transparent,
+      drawer: compact
+          ? Drawer(
+              width: 256,
+              child: Sidebar(selected: _selected, onSelected: _select),
+            )
+          : null,
       body: Row(
         children: [
-          Sidebar(selected: _selected, onSelected: _select),
+          if (!compact) Sidebar(selected: _selected, onSelected: _select),
           Expanded(
             child: Column(
               children: [
                 TopBar(
                   page: _selected,
+                  onMenuPressed: compact
+                      ? () => _scaffoldKey.currentState?.openDrawer()
+                      : null,
                   onSearchChanged: (value) =>
                       setState(() => _searchQuery = value.trim().toLowerCase()),
                 ),

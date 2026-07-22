@@ -19,9 +19,12 @@ void main() {
                 expected = FortalTokens.grayA3.resolve(context);
                 resolvedColors = {
                   for (final variant in FortalCheckboxVariant.values)
-                    variant: fortalCheckboxStyler(
-                      variant: variant,
-                    ).build(context).spec.surface?.color,
+                    variant:
+                        (fortalCheckboxStyler(
+                                  variant: variant,
+                                ).build(context).spec.container.spec.decoration
+                                as BoxDecoration?)
+                            ?.color,
                 };
                 return const SizedBox.shrink();
               },

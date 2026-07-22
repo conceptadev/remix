@@ -356,11 +356,10 @@ class RemixTextField extends StatelessWidget {
               )
             : styledEditableText;
 
-        final withAccessories = RemixSurfaceFlexBox(
+        final withAccessories = remixSurfaceFlexBox(
           styleSpec: spec.container,
           direction: Axis.horizontal,
-          surface: spec.surface,
-          overlay: spec.overlay,
+          effects: spec.effects,
           children: [
             ?leading,
             // ignore: avoid-flexible-outside-flex

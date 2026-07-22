@@ -3,7 +3,6 @@ import 'dart:ui' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart' show RemixSurfaceBox;
 
 import '../../helpers/test_helpers.dart';
 
@@ -180,7 +179,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        tester.getSize(find.byType(RemixSurfaceBox)),
+        tester.getSize(find.byKey(const ValueKey('remix-popover-surface'))),
         const Size(320, 200),
       );
     });
@@ -197,7 +196,12 @@ void main() {
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
-      expect(tester.getSize(find.byType(RemixSurfaceBox)).width, 240);
+      expect(
+        tester
+            .getSize(find.byKey(const ValueKey('remix-popover-surface')))
+            .width,
+        240,
+      );
     });
 
     testWidgets('scrolls content constrained by maxHeight', (tester) async {
@@ -213,10 +217,15 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(tester.takeException(), isNull);
-      expect(tester.getSize(find.byType(RemixSurfaceBox)).height, 200);
+      expect(
+        tester
+            .getSize(find.byKey(const ValueKey('remix-popover-surface')))
+            .height,
+        200,
+      );
       expect(
         find.descendant(
-          of: find.byType(RemixSurfaceBox),
+          of: find.byKey(const ValueKey('remix-popover-surface')),
           matching: find.byType(SingleChildScrollView),
         ),
         findsOneWidget,
@@ -253,7 +262,8 @@ void main() {
                 size: size,
               ).resolve(context).spec;
               paddings[size] = spec.container.spec.padding;
-              radii[size] = spec.surface!.borderRadius;
+              radii[size] = (spec.container.spec.decoration! as BoxDecoration)
+                  .borderRadius!;
             }
             return const SizedBox.shrink();
           },

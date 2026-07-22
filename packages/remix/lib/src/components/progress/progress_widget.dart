@@ -63,13 +63,11 @@ class RemixProgress extends StatelessWidget {
           max: max,
           duration: duration,
           styleSpec: spec.indicator,
-          surface: spec.indicatorSurface,
-          overlay: spec.indicatorOverlay,
+          effects: spec.indicatorEffects,
         );
-        final progress = RemixSurfaceBox(
+        final progress = remixSurfaceBox(
           styleSpec: spec.container,
-          surface: spec.surface,
-          overlay: spec.overlay,
+          effects: spec.trackEffects,
           child: Stack(
             children: [
               track,
@@ -106,16 +104,14 @@ class _RemixProgressIndicator extends StatefulWidget {
     required this.max,
     required this.duration,
     required this.styleSpec,
-    this.surface,
-    this.overlay,
+    this.effects,
   });
 
   final double? value;
   final double max;
   final Duration duration;
   final StyleSpec<BoxSpec> styleSpec;
-  final RemixSurfaceLayerSpec? surface;
-  final RemixSurfaceLayerSpec? overlay;
+  final RemixSurfaceEffectsSpec? effects;
 
   @override
   State<_RemixProgressIndicator> createState() =>
@@ -203,10 +199,9 @@ class _RemixProgressIndicatorState extends State<_RemixProgressIndicator>
     child: FractionallySizedBox(
       widthFactor: fraction,
       heightFactor: 1,
-      child: RemixSurfaceBox(
+      child: remixSurfaceBox(
         styleSpec: widget.styleSpec,
-        surface: widget.surface,
-        overlay: widget.overlay,
+        effects: widget.effects,
       ),
     ),
   );

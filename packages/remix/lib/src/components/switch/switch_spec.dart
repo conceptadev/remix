@@ -10,28 +10,18 @@ class RemixSwitchSpec with _$RemixSwitchSpec {
   final StyleSpec<BoxSpec> thumb;
 
   @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? surface;
+  @MixableField(setterType: RemixSurfaceEffectsMix)
+  final RemixSurfaceEffectsSpec? trackEffects;
 
   @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? overlay;
-
-  @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? thumbSurface;
-
-  @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? thumbOverlay;
+  @MixableField(setterType: RemixSurfaceEffectsMix)
+  final RemixSurfaceEffectsSpec? thumbEffects;
 
   const RemixSwitchSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? thumb,
-    this.surface,
-    this.overlay,
-    this.thumbSurface,
-    this.thumbOverlay,
+    this.trackEffects,
+    this.thumbEffects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        thumb = thumb ?? const StyleSpec(spec: BoxSpec());
 
@@ -40,16 +30,14 @@ class RemixSwitchSpec with _$RemixSwitchSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
-      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
-      thumbSurface: RemixSurfaceLayerSpec.lerpNullable(
-        thumbSurface,
-        other.thumbSurface,
+      trackEffects: RemixSurfaceEffectsSpec.lerpNullable(
+        trackEffects,
+        other.trackEffects,
         t,
       ),
-      thumbOverlay: RemixSurfaceLayerSpec.lerpNullable(
-        thumbOverlay,
-        other.thumbOverlay,
+      thumbEffects: RemixSurfaceEffectsSpec.lerpNullable(
+        thumbEffects,
+        other.thumbEffects,
         t,
       ),
     );

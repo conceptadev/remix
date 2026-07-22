@@ -107,8 +107,7 @@ mixin _$RemixSelectTriggerSpec
   StyleSpec<TextSpec> get placeholder;
   StyleSpec<IconSpec> get icon;
   StyleSpec<IconSpec> get chevron;
-  RemixSurfaceLayerSpec? get surface;
-  RemixSurfaceLayerSpec? get overlay;
+  RemixSurfaceEffectsSpec? get effects;
   double? get chevronOpacity;
   double? get placeholderOpacity;
 
@@ -122,8 +121,7 @@ mixin _$RemixSelectTriggerSpec
     StyleSpec<TextSpec>? placeholder,
     StyleSpec<IconSpec>? icon,
     StyleSpec<IconSpec>? chevron,
-    RemixSurfaceLayerSpec? surface,
-    RemixSurfaceLayerSpec? overlay,
+    RemixSurfaceEffectsSpec? effects,
     double? chevronOpacity,
     double? placeholderOpacity,
   }) {
@@ -133,8 +131,7 @@ mixin _$RemixSelectTriggerSpec
       placeholder: placeholder ?? this.placeholder,
       icon: icon ?? this.icon,
       chevron: chevron ?? this.chevron,
-      surface: surface ?? this.surface,
-      overlay: overlay ?? this.overlay,
+      effects: effects ?? this.effects,
       chevronOpacity: chevronOpacity ?? this.chevronOpacity,
       placeholderOpacity: placeholderOpacity ?? this.placeholderOpacity,
     );
@@ -148,8 +145,7 @@ mixin _$RemixSelectTriggerSpec
       placeholder: placeholder.lerp(other?.placeholder, t),
       icon: icon.lerp(other?.icon, t),
       chevron: chevron.lerp(other?.chevron, t),
-      surface: MixOps.lerpSnap(surface, other?.surface, t),
-      overlay: MixOps.lerpSnap(overlay, other?.overlay, t),
+      effects: MixOps.lerpSnap(effects, other?.effects, t),
       chevronOpacity: MixOps.lerp(chevronOpacity, other?.chevronOpacity, t),
       placeholderOpacity: MixOps.lerp(
         placeholderOpacity,
@@ -166,8 +162,7 @@ mixin _$RemixSelectTriggerSpec
     placeholder,
     icon,
     chevron,
-    surface,
-    overlay,
+    effects,
     chevronOpacity,
     placeholderOpacity,
   ];
@@ -217,8 +212,7 @@ mixin _$RemixSelectTriggerSpec
       ..add(DiagnosticsProperty('placeholder', placeholder))
       ..add(DiagnosticsProperty('icon', icon))
       ..add(DiagnosticsProperty('chevron', chevron))
-      ..add(DiagnosticsProperty('surface', surface))
-      ..add(DiagnosticsProperty('overlay', overlay))
+      ..add(DiagnosticsProperty('effects', effects))
       ..add(DoubleProperty('chevronOpacity', chevronOpacity))
       ..add(DoubleProperty('placeholderOpacity', placeholderOpacity));
   }
@@ -232,7 +226,7 @@ typedef _$RemixSelectTriggerSpecMethods = _$RemixSelectTriggerSpec; // ignore: u
 mixin _$RemixSelectContentSpec
     implements Spec<RemixSelectContentSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
-  RemixSurfaceLayerSpec? get surface;
+  RemixSurfaceEffectsSpec? get effects;
 
   @override
   Type get type => RemixSelectContentSpec;
@@ -240,11 +234,11 @@ mixin _$RemixSelectContentSpec
   @override
   RemixSelectContentSpec copyWith({
     StyleSpec<BoxSpec>? container,
-    RemixSurfaceLayerSpec? surface,
+    RemixSurfaceEffectsSpec? effects,
   }) {
     return RemixSelectContentSpec(
       container: container ?? this.container,
-      surface: surface ?? this.surface,
+      effects: effects ?? this.effects,
     );
   }
 
@@ -252,12 +246,12 @@ mixin _$RemixSelectContentSpec
   RemixSelectContentSpec lerp(RemixSelectContentSpec? other, double t) {
     return RemixSelectContentSpec(
       container: container.lerp(other?.container, t),
-      surface: MixOps.lerpSnap(surface, other?.surface, t),
+      effects: MixOps.lerpSnap(effects, other?.effects, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, surface];
+  List<Object?> get props => [container, effects];
 
   @override
   bool operator ==(Object other) {
@@ -300,7 +294,7 @@ mixin _$RemixSelectContentSpec
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('surface', surface));
+      ..add(DiagnosticsProperty('effects', effects));
   }
 }
 
@@ -661,8 +655,7 @@ class RemixSelectTriggerStyler
   final Prop<StyleSpec<TextSpec>>? $placeholder;
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<StyleSpec<IconSpec>>? $chevron;
-  final Prop<RemixSurfaceLayerSpec>? $surface;
-  final Prop<RemixSurfaceLayerSpec>? $overlay;
+  final Prop<RemixSurfaceEffectsSpec>? $effects;
   final Prop<double>? $chevronOpacity;
   final Prop<double>? $placeholderOpacity;
 
@@ -672,8 +665,7 @@ class RemixSelectTriggerStyler
     Prop<StyleSpec<TextSpec>>? placeholder,
     Prop<StyleSpec<IconSpec>>? icon,
     Prop<StyleSpec<IconSpec>>? chevron,
-    Prop<RemixSurfaceLayerSpec>? surface,
-    Prop<RemixSurfaceLayerSpec>? overlay,
+    Prop<RemixSurfaceEffectsSpec>? effects,
     Prop<double>? chevronOpacity,
     Prop<double>? placeholderOpacity,
     super.variants,
@@ -684,8 +676,7 @@ class RemixSelectTriggerStyler
        $placeholder = placeholder,
        $icon = icon,
        $chevron = chevron,
-       $surface = surface,
-       $overlay = overlay,
+       $effects = effects,
        $chevronOpacity = chevronOpacity,
        $placeholderOpacity = placeholderOpacity;
 
@@ -695,8 +686,7 @@ class RemixSelectTriggerStyler
     TextStyler? placeholder,
     IconStyler? icon,
     IconStyler? chevron,
-    RemixSurfaceLayerMix? surface,
-    RemixSurfaceLayerMix? overlay,
+    RemixSurfaceEffectsMix? effects,
     double? chevronOpacity,
     double? placeholderOpacity,
     AnimationConfig? animation,
@@ -708,8 +698,7 @@ class RemixSelectTriggerStyler
          placeholder: Prop.maybeMix(placeholder),
          icon: Prop.maybeMix(icon),
          chevron: Prop.maybeMix(chevron),
-         surface: Prop.maybeMix(surface),
-         overlay: Prop.maybeMix(overlay),
+         effects: Prop.maybeMix(effects),
          chevronOpacity: Prop.maybe(chevronOpacity),
          placeholderOpacity: Prop.maybe(placeholderOpacity),
          variants: variants,
@@ -727,10 +716,8 @@ class RemixSelectTriggerStyler
       RemixSelectTriggerStyler().icon(value);
   factory RemixSelectTriggerStyler.chevron(IconStyler value) =>
       RemixSelectTriggerStyler().chevron(value);
-  factory RemixSelectTriggerStyler.surface(RemixSurfaceLayerMix value) =>
-      RemixSelectTriggerStyler().surface(value);
-  factory RemixSelectTriggerStyler.overlay(RemixSurfaceLayerMix value) =>
-      RemixSelectTriggerStyler().overlay(value);
+  factory RemixSelectTriggerStyler.effects(RemixSurfaceEffectsMix value) =>
+      RemixSelectTriggerStyler().effects(value);
   factory RemixSelectTriggerStyler.chevronOpacity(double value) =>
       RemixSelectTriggerStyler().chevronOpacity(value);
   factory RemixSelectTriggerStyler.placeholderOpacity(double value) =>
@@ -1307,14 +1294,9 @@ class RemixSelectTriggerStyler
     return merge(RemixSelectTriggerStyler(chevron: value));
   }
 
-  /// Sets the surface.
-  RemixSelectTriggerStyler surface(RemixSurfaceLayerMix value) {
-    return merge(RemixSelectTriggerStyler(surface: value));
-  }
-
-  /// Sets the overlay.
-  RemixSelectTriggerStyler overlay(RemixSurfaceLayerMix value) {
-    return merge(RemixSelectTriggerStyler(overlay: value));
+  /// Sets the effects.
+  RemixSelectTriggerStyler effects(RemixSurfaceEffectsMix value) {
+    return merge(RemixSelectTriggerStyler(effects: value));
   }
 
   /// Sets the chevronOpacity.
@@ -1361,8 +1343,7 @@ class RemixSelectTriggerStyler
       placeholder: MixOps.merge($placeholder, other?.$placeholder),
       icon: MixOps.merge($icon, other?.$icon),
       chevron: MixOps.merge($chevron, other?.$chevron),
-      surface: MixOps.merge($surface, other?.$surface),
-      overlay: MixOps.merge($overlay, other?.$overlay),
+      effects: MixOps.merge($effects, other?.$effects),
       chevronOpacity: MixOps.merge($chevronOpacity, other?.$chevronOpacity),
       placeholderOpacity: MixOps.merge(
         $placeholderOpacity,
@@ -1383,8 +1364,7 @@ class RemixSelectTriggerStyler
       placeholder: MixOps.resolve(context, $placeholder),
       icon: MixOps.resolve(context, $icon),
       chevron: MixOps.resolve(context, $chevron),
-      surface: MixOps.resolve(context, $surface),
-      overlay: MixOps.resolve(context, $overlay),
+      effects: MixOps.resolve(context, $effects),
       chevronOpacity: MixOps.resolve(context, $chevronOpacity),
       placeholderOpacity: MixOps.resolve(context, $placeholderOpacity),
     );
@@ -1405,8 +1385,7 @@ class RemixSelectTriggerStyler
       ..add(DiagnosticsProperty('placeholder', $placeholder))
       ..add(DiagnosticsProperty('icon', $icon))
       ..add(DiagnosticsProperty('chevron', $chevron))
-      ..add(DiagnosticsProperty('surface', $surface))
-      ..add(DiagnosticsProperty('overlay', $overlay))
+      ..add(DiagnosticsProperty('effects', $effects))
       ..add(DiagnosticsProperty('chevronOpacity', $chevronOpacity))
       ..add(DiagnosticsProperty('placeholderOpacity', $placeholderOpacity));
   }
@@ -1418,8 +1397,7 @@ class RemixSelectTriggerStyler
     $placeholder,
     $icon,
     $chevron,
-    $surface,
-    $overlay,
+    $effects,
     $chevronOpacity,
     $placeholderOpacity,
     $animation,
@@ -1432,26 +1410,26 @@ class RemixSelectContentStyler
     extends MixStyler<RemixSelectContentStyler, RemixSelectContentSpec>
     with RemixBoxStylerMixin<RemixSelectContentStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
-  final Prop<RemixSurfaceLayerSpec>? $surface;
+  final Prop<RemixSurfaceEffectsSpec>? $effects;
 
   const RemixSelectContentStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
-    Prop<RemixSurfaceLayerSpec>? surface,
+    Prop<RemixSurfaceEffectsSpec>? effects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
-       $surface = surface;
+       $effects = effects;
 
   RemixSelectContentStyler({
     BoxStyler? container,
-    RemixSurfaceLayerMix? surface,
+    RemixSurfaceEffectsMix? effects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixSelectContentSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
-         surface: Prop.maybeMix(surface),
+         effects: Prop.maybeMix(effects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -1459,8 +1437,8 @@ class RemixSelectContentStyler
 
   factory RemixSelectContentStyler.container(BoxStyler value) =>
       RemixSelectContentStyler().container(value);
-  factory RemixSelectContentStyler.surface(RemixSurfaceLayerMix value) =>
-      RemixSelectContentStyler().surface(value);
+  factory RemixSelectContentStyler.effects(RemixSurfaceEffectsMix value) =>
+      RemixSelectContentStyler().effects(value);
   factory RemixSelectContentStyler.alignment(AlignmentGeometry value) =>
       RemixSelectContentStyler().alignment(value);
   factory RemixSelectContentStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -1951,9 +1929,9 @@ class RemixSelectContentStyler
     return merge(RemixSelectContentStyler(container: value));
   }
 
-  /// Sets the surface.
-  RemixSelectContentStyler surface(RemixSurfaceLayerMix value) {
-    return merge(RemixSelectContentStyler(surface: value));
+  /// Sets the effects.
+  RemixSelectContentStyler effects(RemixSurfaceEffectsMix value) {
+    return merge(RemixSelectContentStyler(effects: value));
   }
 
   /// Sets the animation configuration.
@@ -1986,7 +1964,7 @@ class RemixSelectContentStyler
   RemixSelectContentStyler merge(RemixSelectContentStyler? other) {
     return RemixSelectContentStyler.create(
       container: MixOps.merge($container, other?.$container),
-      surface: MixOps.merge($surface, other?.$surface),
+      effects: MixOps.merge($effects, other?.$effects),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1998,7 +1976,7 @@ class RemixSelectContentStyler
   StyleSpec<RemixSelectContentSpec> resolve(BuildContext context) {
     final spec = RemixSelectContentSpec(
       container: MixOps.resolve(context, $container),
-      surface: MixOps.resolve(context, $surface),
+      effects: MixOps.resolve(context, $effects),
     );
 
     return StyleSpec(
@@ -2013,13 +1991,13 @@ class RemixSelectContentStyler
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('surface', $surface));
+      ..add(DiagnosticsProperty('effects', $effects));
   }
 
   @override
   List<Object?> get props => [
     $container,
-    $surface,
+    $effects,
     $animation,
     $modifier,
     $variants,

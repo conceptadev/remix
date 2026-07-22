@@ -140,11 +140,10 @@ class _RemixSliderVisual extends StatelessWidget {
               clipBehavior: Clip.none,
               children: [
                 Positioned.fill(
-                  child: RemixSurfaceBox(
+                  child: remixSurfaceBox(
                     key: const ValueKey('remix-slider-track'),
                     styleSpec: spec.track,
-                    surface: spec.trackSurface,
-                    overlay: spec.trackOverlay,
+                    effects: spec.trackEffects,
                     child: const SizedBox.expand(),
                   ),
                 ),
@@ -184,11 +183,10 @@ class _RemixSliderVisual extends StatelessWidget {
       top: horizontal ? 0 : size.height * start,
       width: horizontal ? size.width * (end - start) : size.width,
       height: horizontal ? size.height : size.height * (end - start),
-      child: RemixSurfaceBox(
+      child: remixSurfaceBox(
         key: const ValueKey('remix-slider-range'),
         styleSpec: spec.range,
-        surface: spec.rangeSurface,
-        overlay: spec.rangeOverlay,
+        effects: spec.rangeEffects,
         child: const SizedBox.expand(),
       ),
     );
@@ -209,17 +207,20 @@ class _RemixSliderVisual extends StatelessWidget {
         .clamp(0.0, 1.0)
         .toDouble();
     final horizontal = state.orientation == Axis.horizontal;
-    Widget thumb = RemixSurfaceBox(
+    final focusEffects = index == state.focusedThumbIndex
+        ? spec.thumbFocusEffects
+        : null;
+    final effects = switch ((spec.thumbEffects, focusEffects)) {
+      (final base?, final focus?) => base.merge(focus),
+      (final base, null) => base,
+      (null, final focus) => focus,
+    };
+    final thumb = remixSurfaceBox(
       key: ValueKey('remix-slider-thumb-$index'),
       styleSpec: spec.thumb,
-      surface: spec.thumbSurface,
-      overlay: spec.thumbOverlay,
+      effects: effects,
       child: const SizedBox.expand(),
     );
-    final focusOverlay = spec.thumbFocusOverlay;
-    if (index == state.focusedThumbIndex && focusOverlay != null) {
-      thumb = RemixSurface.wrap(surface: focusOverlay, child: thumb);
-    }
     return Positioned(
       left: horizontal
           ? size.width * percentage - thumbSize.width / 2

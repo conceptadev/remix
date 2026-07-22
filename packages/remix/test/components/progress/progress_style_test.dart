@@ -8,22 +8,24 @@ void main() {
       final container = BoxStyler();
       final track = BoxStyler();
       final indicator = BoxStyler();
-      final surface = RemixSurfaceLayerMix(color: Colors.red);
-      final overlay = RemixSurfaceLayerMix(color: Colors.blue);
+      final surface = RemixSurfaceLayerMix();
+      final overlay = RemixSurfaceLayerMix();
+      final effects = RemixSurfaceEffectsMix(
+        background: surface,
+        foreground: overlay,
+      );
 
       final style = RemixProgressStyler(
         container: container,
         track: track,
         indicator: indicator,
-        surface: surface,
-        overlay: overlay,
+        trackEffects: effects,
       );
 
       expect(style.$container, Prop.maybeMix(container));
       expect(style.$track, Prop.maybeMix(track));
       expect(style.$indicator, Prop.maybeMix(indicator));
-      expect(style.$surface, Prop.maybeMix(surface));
-      expect(style.$overlay, Prop.maybeMix(overlay));
+      expect(style.$trackEffects, Prop.maybeMix(effects));
     });
 
     testWidgets('resolves box and surface fields', (tester) async {
@@ -31,8 +33,20 @@ void main() {
           .height(12)
           .trackColor(Colors.grey)
           .indicatorColor(Colors.blue)
-          .surface(RemixSurfaceLayerMix(color: Colors.red))
-          .overlay(RemixSurfaceLayerMix(color: Colors.green));
+          .trackEffects(
+            RemixSurfaceEffectsMix(
+              background: RemixSurfaceLayerMix(
+                shadows: [RemixPaintShadowMix(color: Colors.red)],
+              ),
+            ),
+          )
+          .trackEffects(
+            RemixSurfaceEffectsMix(
+              foreground: RemixSurfaceLayerMix(
+                shadows: [RemixPaintShadowMix(color: Colors.green)],
+              ),
+            ),
+          );
 
       late StyleSpec<RemixProgressSpec> resolved;
       await tester.pumpWidget(
@@ -55,8 +69,14 @@ void main() {
         (resolved.spec.indicator.spec.decoration as BoxDecoration).color,
         Colors.blue,
       );
-      expect(resolved.spec.surface?.color, Colors.red);
-      expect(resolved.spec.overlay?.color, Colors.green);
+      expect(
+        resolved.spec.trackEffects?.background?.shadows.first.color,
+        Colors.red,
+      );
+      expect(
+        resolved.spec.trackEffects?.foreground?.shadows.first.color,
+        Colors.green,
+      );
     });
 
     test('merge is immutable and preserves unrelated fields', () {

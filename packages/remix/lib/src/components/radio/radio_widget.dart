@@ -116,10 +116,9 @@ class RemixRadio<T> extends StatelessWidget {
           styleSpec: styleSpec,
           controller: NakedRadioState.controllerOf<T>(context),
           builder: (context, spec) {
-            return RemixSurfaceBox(
+            return remixSurfaceBox(
               styleSpec: spec.container,
-              surface: spec.surface,
-              overlay: spec.overlay,
+              effects: spec.effects,
               child: isSelected ? Box(styleSpec: spec.indicator) : null,
             );
           },

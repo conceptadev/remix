@@ -47,13 +47,18 @@ RemixRadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
     indicator: BoxStyler()
         .size(metrics.indicatorSize, metrics.indicatorSize)
         .borderRadiusAll(FortalTokens.radiusCircle()),
-    surface: _fortalRadioLayer(),
-    overlay: _fortalRadioLayer(),
+    effects: RemixSurfaceEffectsMix(
+      background: _fortalRadioLayer(),
+      foreground: _fortalRadioLayer(),
+    ),
   ).onFocused(
-    RemixRadioStyler().overlay(
-      _fortalRadioLayer(
-        outlineColor: FortalTokens.focus8(),
-        outlineWidth: 2,
+    RemixRadioStyler().effects(
+      RemixSurfaceEffectsMix(
+        outline: BorderSideMix(
+          color: FortalTokens.focus8(),
+          width: 2,
+          strokeAlign: BorderSide.strokeAlignInside,
+        ),
         outlineOffset: 2,
       ),
     ),
@@ -68,44 +73,50 @@ RemixRadioStyler _fortalRadioClassicStyler(
       ? FortalTokens.accent12()
       : FortalTokens.accentIndicator();
   return _fortalRadioBaseStyler(size)
-      .surface(
-        _fortalRadioLayer(
-          color: FortalTokens.colorSurface(),
-          shadowToken: FortalTokens.shadow1,
+      .color(FortalTokens.colorSurface())
+      .effects(
+        RemixSurfaceEffectsMix(
+          background: _fortalRadioLayer(shadowToken: FortalTokens.shadow1),
         ),
       )
-      .overlay(_fortalRadioInsetRing(FortalTokens.gray7()))
+      .effects(
+        RemixSurfaceEffectsMix(
+          foreground: _fortalRadioInsetRing(FortalTokens.gray7()),
+        ),
+      )
       .indicatorColor(
         highContrast ? FortalTokens.accent1() : FortalTokens.accentContrast(),
       )
       .onSelected(
         RemixRadioStyler()
-            .surface(
-              _fortalRadioLayer(
-                color: selectedColor,
-                gradients: [
-                  RemixLinearGradientMix(
-                    colors: [
-                      FortalTokens.whiteA3(),
-                      Colors.transparent,
-                      FortalTokens.blackA3(),
-                    ],
-                  ),
-                ],
-                shadows: [
-                  RemixPaintShadowMix(
-                    kind: .inset,
-                    color: FortalTokens.whiteA4(),
-                    offset: const Offset(0, 0.5),
-                    blurRadius: 0.5,
-                  ),
-                  RemixPaintShadowMix(
-                    kind: .inset,
-                    color: FortalTokens.blackA4(),
-                    offset: const Offset(0, -0.5),
-                    blurRadius: 0.5,
-                  ),
-                ],
+            .color(selectedColor)
+            .effects(
+              RemixSurfaceEffectsMix(
+                background: _fortalRadioLayer(
+                  gradients: [
+                    RemixLinearGradientMix(
+                      colors: [
+                        FortalTokens.whiteA3(),
+                        Colors.transparent,
+                        FortalTokens.blackA3(),
+                      ],
+                    ),
+                  ],
+                  shadows: [
+                    RemixPaintShadowMix(
+                      kind: .inset,
+                      color: FortalTokens.whiteA4(),
+                      offset: const Offset(0, 0.5),
+                      blurRadius: 0.5,
+                    ),
+                    RemixPaintShadowMix(
+                      kind: .inset,
+                      color: FortalTokens.blackA4(),
+                      offset: const Offset(0, -0.5),
+                      blurRadius: 0.5,
+                    ),
+                  ],
+                ),
               ),
             )
             .indicatorColor(
@@ -116,13 +127,19 @@ RemixRadioStyler _fortalRadioClassicStyler(
       )
       .onDisabled(
         RemixRadioStyler()
-            .surface(
-              _fortalRadioLayer(
-                color: FortalTokens.grayA3(),
-                shadowToken: FortalTokens.shadow1,
+            .color(FortalTokens.grayA3())
+            .effects(
+              RemixSurfaceEffectsMix(
+                background: _fortalRadioLayer(
+                  shadowToken: FortalTokens.shadow1,
+                ),
               ),
             )
-            .overlay(_fortalRadioLayer(shadows: const []))
+            .effects(
+              RemixSurfaceEffectsMix(
+                foreground: _fortalRadioLayer(shadows: const []),
+              ),
+            )
             .indicatorColor(FortalTokens.grayA8()),
       );
 }
@@ -132,8 +149,13 @@ RemixRadioStyler _fortalRadioSurfaceStyler(
   required bool highContrast,
 }) {
   return _fortalRadioBaseStyler(size)
-      .surface(_fortalRadioLayer(color: FortalTokens.colorSurface()))
-      .overlay(_fortalRadioInsetRing(FortalTokens.grayA7()))
+      .color(FortalTokens.colorSurface())
+      .effects(RemixSurfaceEffectsMix(background: _fortalRadioLayer()))
+      .effects(
+        RemixSurfaceEffectsMix(
+          foreground: _fortalRadioInsetRing(FortalTokens.grayA7()),
+        ),
+      )
       .indicator(
         BoxStyler()
             .color(FortalTokens.accent9())
@@ -141,14 +163,17 @@ RemixRadioStyler _fortalRadioSurfaceStyler(
       )
       .onSelected(
         RemixRadioStyler()
-            .surface(
-              _fortalRadioLayer(
-                color: highContrast
-                    ? FortalTokens.accent12()
-                    : FortalTokens.accentIndicator(),
+            .color(
+              highContrast
+                  ? FortalTokens.accent12()
+                  : FortalTokens.accentIndicator(),
+            )
+            .effects(RemixSurfaceEffectsMix(background: _fortalRadioLayer()))
+            .effects(
+              RemixSurfaceEffectsMix(
+                foreground: _fortalRadioLayer(shadows: const []),
               ),
             )
-            .overlay(_fortalRadioLayer(shadows: const []))
             .indicatorColor(
               highContrast
                   ? FortalTokens.accent1()
@@ -157,8 +182,13 @@ RemixRadioStyler _fortalRadioSurfaceStyler(
       )
       .onDisabled(
         RemixRadioStyler()
-            .surface(_fortalRadioLayer(color: FortalTokens.grayA3()))
-            .overlay(_fortalRadioInsetRing(FortalTokens.grayA6()))
+            .color(FortalTokens.grayA3())
+            .effects(RemixSurfaceEffectsMix(background: _fortalRadioLayer()))
+            .effects(
+              RemixSurfaceEffectsMix(
+                foreground: _fortalRadioInsetRing(FortalTokens.grayA6()),
+              ),
+            )
             .indicatorColor(FortalTokens.grayA8()),
       );
 }
@@ -168,7 +198,8 @@ RemixRadioStyler _fortalRadioSoftStyler(
   required bool highContrast,
 }) {
   return _fortalRadioBaseStyler(size)
-      .surface(_fortalRadioLayer(color: FortalTokens.accentA4()))
+      .color(FortalTokens.accentA4())
+      .effects(RemixSurfaceEffectsMix(background: _fortalRadioLayer()))
       .indicator(
         BoxStyler()
             .color(
@@ -178,7 +209,8 @@ RemixRadioStyler _fortalRadioSoftStyler(
       )
       .onSelected(
         RemixRadioStyler()
-            .surface(_fortalRadioLayer(color: FortalTokens.accentA4()))
+            .color(FortalTokens.accentA4())
+            .effects(RemixSurfaceEffectsMix(background: _fortalRadioLayer()))
             .indicator(
               BoxStyler().color(
                 highContrast
@@ -189,7 +221,8 @@ RemixRadioStyler _fortalRadioSoftStyler(
       )
       .onDisabled(
         RemixRadioStyler()
-            .surface(_fortalRadioLayer(color: FortalTokens.grayA3()))
+            .color(FortalTokens.grayA3())
+            .effects(RemixSurfaceEffectsMix(background: _fortalRadioLayer()))
             .indicatorColor(FortalTokens.grayA8()),
       );
 }
@@ -216,22 +249,13 @@ RemixSurfaceLayerMix _fortalRadioInsetRing(Color color) => _fortalRadioLayer(
 );
 
 RemixSurfaceLayerMix _fortalRadioLayer({
-  Color? color,
   List<RemixLinearGradientMix>? gradients,
   List<RemixPaintShadowMix>? shadows,
   RemixPaintShadowListToken? shadowToken,
-  Color? outlineColor,
-  double? outlineWidth,
-  double? outlineOffset,
 }) => RemixSurfaceLayerMix(
-  color: color,
   gradients: gradients,
   shadows: shadows,
   shadowToken: shadowToken,
-  borderRadius: BorderRadiusMix.all(FortalTokens.radiusCircle()),
-  outlineColor: outlineColor,
-  outlineWidth: outlineWidth,
-  outlineOffset: outlineOffset,
 );
 
 /// Fortal-themed preset for [RemixRadio].

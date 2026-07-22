@@ -10,10 +10,8 @@ mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get track;
   StyleSpec<BoxSpec> get indicator;
-  RemixSurfaceLayerSpec? get surface;
-  RemixSurfaceLayerSpec? get overlay;
-  RemixSurfaceLayerSpec? get indicatorSurface;
-  RemixSurfaceLayerSpec? get indicatorOverlay;
+  RemixSurfaceEffectsSpec? get trackEffects;
+  RemixSurfaceEffectsSpec? get indicatorEffects;
 
   @override
   Type get type => RemixProgressSpec;
@@ -23,19 +21,15 @@ mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? track,
     StyleSpec<BoxSpec>? indicator,
-    RemixSurfaceLayerSpec? surface,
-    RemixSurfaceLayerSpec? overlay,
-    RemixSurfaceLayerSpec? indicatorSurface,
-    RemixSurfaceLayerSpec? indicatorOverlay,
+    RemixSurfaceEffectsSpec? trackEffects,
+    RemixSurfaceEffectsSpec? indicatorEffects,
   }) {
     return RemixProgressSpec(
       container: container ?? this.container,
       track: track ?? this.track,
       indicator: indicator ?? this.indicator,
-      surface: surface ?? this.surface,
-      overlay: overlay ?? this.overlay,
-      indicatorSurface: indicatorSurface ?? this.indicatorSurface,
-      indicatorOverlay: indicatorOverlay ?? this.indicatorOverlay,
+      trackEffects: trackEffects ?? this.trackEffects,
+      indicatorEffects: indicatorEffects ?? this.indicatorEffects,
     );
   }
 
@@ -45,16 +39,10 @@ mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
       container: container.lerp(other?.container, t),
       track: track.lerp(other?.track, t),
       indicator: indicator.lerp(other?.indicator, t),
-      surface: MixOps.lerpSnap(surface, other?.surface, t),
-      overlay: MixOps.lerpSnap(overlay, other?.overlay, t),
-      indicatorSurface: MixOps.lerpSnap(
-        indicatorSurface,
-        other?.indicatorSurface,
-        t,
-      ),
-      indicatorOverlay: MixOps.lerpSnap(
-        indicatorOverlay,
-        other?.indicatorOverlay,
+      trackEffects: MixOps.lerpSnap(trackEffects, other?.trackEffects, t),
+      indicatorEffects: MixOps.lerpSnap(
+        indicatorEffects,
+        other?.indicatorEffects,
         t,
       ),
     );
@@ -65,10 +53,8 @@ mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
     container,
     track,
     indicator,
-    surface,
-    overlay,
-    indicatorSurface,
-    indicatorOverlay,
+    trackEffects,
+    indicatorEffects,
   ];
 
   @override
@@ -114,10 +100,8 @@ mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('track', track))
       ..add(DiagnosticsProperty('indicator', indicator))
-      ..add(DiagnosticsProperty('surface', surface))
-      ..add(DiagnosticsProperty('overlay', overlay))
-      ..add(DiagnosticsProperty('indicatorSurface', indicatorSurface))
-      ..add(DiagnosticsProperty('indicatorOverlay', indicatorOverlay));
+      ..add(DiagnosticsProperty('trackEffects', trackEffects))
+      ..add(DiagnosticsProperty('indicatorEffects', indicatorEffects));
   }
 }
 
@@ -136,38 +120,30 @@ class RemixProgressStyler
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $track;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
-  final Prop<RemixSurfaceLayerSpec>? $surface;
-  final Prop<RemixSurfaceLayerSpec>? $overlay;
-  final Prop<RemixSurfaceLayerSpec>? $indicatorSurface;
-  final Prop<RemixSurfaceLayerSpec>? $indicatorOverlay;
+  final Prop<RemixSurfaceEffectsSpec>? $trackEffects;
+  final Prop<RemixSurfaceEffectsSpec>? $indicatorEffects;
 
   const RemixProgressStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? track,
     Prop<StyleSpec<BoxSpec>>? indicator,
-    Prop<RemixSurfaceLayerSpec>? surface,
-    Prop<RemixSurfaceLayerSpec>? overlay,
-    Prop<RemixSurfaceLayerSpec>? indicatorSurface,
-    Prop<RemixSurfaceLayerSpec>? indicatorOverlay,
+    Prop<RemixSurfaceEffectsSpec>? trackEffects,
+    Prop<RemixSurfaceEffectsSpec>? indicatorEffects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $track = track,
        $indicator = indicator,
-       $surface = surface,
-       $overlay = overlay,
-       $indicatorSurface = indicatorSurface,
-       $indicatorOverlay = indicatorOverlay;
+       $trackEffects = trackEffects,
+       $indicatorEffects = indicatorEffects;
 
   RemixProgressStyler({
     BoxStyler? container,
     BoxStyler? track,
     BoxStyler? indicator,
-    RemixSurfaceLayerMix? surface,
-    RemixSurfaceLayerMix? overlay,
-    RemixSurfaceLayerMix? indicatorSurface,
-    RemixSurfaceLayerMix? indicatorOverlay,
+    RemixSurfaceEffectsMix? trackEffects,
+    RemixSurfaceEffectsMix? indicatorEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixProgressSpec>>? variants,
@@ -175,10 +151,8 @@ class RemixProgressStyler
          container: Prop.maybeMix(container),
          track: Prop.maybeMix(track),
          indicator: Prop.maybeMix(indicator),
-         surface: Prop.maybeMix(surface),
-         overlay: Prop.maybeMix(overlay),
-         indicatorSurface: Prop.maybeMix(indicatorSurface),
-         indicatorOverlay: Prop.maybeMix(indicatorOverlay),
+         trackEffects: Prop.maybeMix(trackEffects),
+         indicatorEffects: Prop.maybeMix(indicatorEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -190,14 +164,10 @@ class RemixProgressStyler
       RemixProgressStyler().track(value);
   factory RemixProgressStyler.indicator(BoxStyler value) =>
       RemixProgressStyler().indicator(value);
-  factory RemixProgressStyler.surface(RemixSurfaceLayerMix value) =>
-      RemixProgressStyler().surface(value);
-  factory RemixProgressStyler.overlay(RemixSurfaceLayerMix value) =>
-      RemixProgressStyler().overlay(value);
-  factory RemixProgressStyler.indicatorSurface(RemixSurfaceLayerMix value) =>
-      RemixProgressStyler().indicatorSurface(value);
-  factory RemixProgressStyler.indicatorOverlay(RemixSurfaceLayerMix value) =>
-      RemixProgressStyler().indicatorOverlay(value);
+  factory RemixProgressStyler.trackEffects(RemixSurfaceEffectsMix value) =>
+      RemixProgressStyler().trackEffects(value);
+  factory RemixProgressStyler.indicatorEffects(RemixSurfaceEffectsMix value) =>
+      RemixProgressStyler().indicatorEffects(value);
   factory RemixProgressStyler.alignment(AlignmentGeometry value) =>
       RemixProgressStyler().alignment(value);
   factory RemixProgressStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -688,24 +658,14 @@ class RemixProgressStyler
     return merge(RemixProgressStyler(indicator: value));
   }
 
-  /// Sets the surface.
-  RemixProgressStyler surface(RemixSurfaceLayerMix value) {
-    return merge(RemixProgressStyler(surface: value));
+  /// Sets the trackEffects.
+  RemixProgressStyler trackEffects(RemixSurfaceEffectsMix value) {
+    return merge(RemixProgressStyler(trackEffects: value));
   }
 
-  /// Sets the overlay.
-  RemixProgressStyler overlay(RemixSurfaceLayerMix value) {
-    return merge(RemixProgressStyler(overlay: value));
-  }
-
-  /// Sets the indicatorSurface.
-  RemixProgressStyler indicatorSurface(RemixSurfaceLayerMix value) {
-    return merge(RemixProgressStyler(indicatorSurface: value));
-  }
-
-  /// Sets the indicatorOverlay.
-  RemixProgressStyler indicatorOverlay(RemixSurfaceLayerMix value) {
-    return merge(RemixProgressStyler(indicatorOverlay: value));
+  /// Sets the indicatorEffects.
+  RemixProgressStyler indicatorEffects(RemixSurfaceEffectsMix value) {
+    return merge(RemixProgressStyler(indicatorEffects: value));
   }
 
   /// Sets the animation configuration.
@@ -738,15 +698,10 @@ class RemixProgressStyler
       container: MixOps.merge($container, other?.$container),
       track: MixOps.merge($track, other?.$track),
       indicator: MixOps.merge($indicator, other?.$indicator),
-      surface: MixOps.merge($surface, other?.$surface),
-      overlay: MixOps.merge($overlay, other?.$overlay),
-      indicatorSurface: MixOps.merge(
-        $indicatorSurface,
-        other?.$indicatorSurface,
-      ),
-      indicatorOverlay: MixOps.merge(
-        $indicatorOverlay,
-        other?.$indicatorOverlay,
+      trackEffects: MixOps.merge($trackEffects, other?.$trackEffects),
+      indicatorEffects: MixOps.merge(
+        $indicatorEffects,
+        other?.$indicatorEffects,
       ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
@@ -761,10 +716,8 @@ class RemixProgressStyler
       container: MixOps.resolve(context, $container),
       track: MixOps.resolve(context, $track),
       indicator: MixOps.resolve(context, $indicator),
-      surface: MixOps.resolve(context, $surface),
-      overlay: MixOps.resolve(context, $overlay),
-      indicatorSurface: MixOps.resolve(context, $indicatorSurface),
-      indicatorOverlay: MixOps.resolve(context, $indicatorOverlay),
+      trackEffects: MixOps.resolve(context, $trackEffects),
+      indicatorEffects: MixOps.resolve(context, $indicatorEffects),
     );
 
     return StyleSpec(
@@ -781,10 +734,8 @@ class RemixProgressStyler
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('track', $track))
       ..add(DiagnosticsProperty('indicator', $indicator))
-      ..add(DiagnosticsProperty('surface', $surface))
-      ..add(DiagnosticsProperty('overlay', $overlay))
-      ..add(DiagnosticsProperty('indicatorSurface', $indicatorSurface))
-      ..add(DiagnosticsProperty('indicatorOverlay', $indicatorOverlay));
+      ..add(DiagnosticsProperty('trackEffects', $trackEffects))
+      ..add(DiagnosticsProperty('indicatorEffects', $indicatorEffects));
   }
 
   @override
@@ -792,10 +743,8 @@ class RemixProgressStyler
     $container,
     $track,
     $indicator,
-    $surface,
-    $overlay,
-    $indicatorSurface,
-    $indicatorOverlay,
+    $trackEffects,
+    $indicatorEffects,
     $animation,
     $modifier,
     $variants,

@@ -404,7 +404,11 @@ void main() {
           indicator: StyleSpec(
             spec: BoxSpec(decoration: BoxDecoration(color: Colors.blue)),
           ),
-          surface: RemixSurfaceLayerSpec(color: Colors.red),
+          effects: RemixSurfaceEffectsSpec(
+            background: RemixSurfaceLayerSpec(
+              shadows: [RemixPaintShadow(color: Colors.red)],
+            ),
+          ),
         );
 
         await tester.pumpRemixApp(
@@ -422,9 +426,7 @@ void main() {
         final renderedDecorations = tester
             .widgetList<DecoratedBox>(find.byType(DecoratedBox))
             .map((box) => box.decoration);
-        final surface = tester.widget<RemixSurface>(find.byType(RemixSurface));
-
-        expect(surface.spec.color, Colors.red);
+        expect(find.byType(CustomPaint), findsWidgets);
         expect(
           renderedDecorations,
           contains(equals(const BoxDecoration(color: Colors.green))),

@@ -497,9 +497,15 @@ void main() {
         fortalButtonStyler(highContrast: true),
       );
 
-      expect(solid.spec.surface?.color, indigo.light.scale.step(9));
       expect(
-        highContrastSolid.spec.surface?.color,
+        (solid.spec.container.spec.box?.spec.decoration as BoxDecoration?)
+            ?.color,
+        indigo.light.scale.step(9),
+      );
+      expect(
+        (highContrastSolid.spec.container.spec.box?.spec.decoration
+                as BoxDecoration?)
+            ?.color,
         indigo.light.scale.step(12),
       );
       expect(solid.spec.label.spec.style?.color, Colors.white);

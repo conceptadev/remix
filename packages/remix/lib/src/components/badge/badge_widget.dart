@@ -42,10 +42,9 @@ class RemixBadge extends StatelessWidget {
           text: spec.label,
           icon: StyleSpec(spec: IconSpec(color: foreground)),
         );
-        return RemixSurfaceBox(
+        return remixSurfaceBox(
           styleSpec: spec.container,
-          surface: spec.surface,
-          overlay: spec.overlay,
+          effects: spec.effects,
           child: content,
         );
       },

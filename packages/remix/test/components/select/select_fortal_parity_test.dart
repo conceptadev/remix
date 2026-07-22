@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart'
-    show RemixSurfaceBox, RemixSurfaceFlexBox;
 
 void main() {
   group('Fortal Select geometry', () {
@@ -197,16 +195,22 @@ void main() {
       );
       final tokens = await _tokens(tester);
 
-      expect(idle.trigger.spec.surface!.color, tokens.colorSurface);
+      expect(_flexColor(idle.trigger.spec.container), tokens.colorSurface);
       expect(
-        idle.trigger.spec.surface!.shadows.single.kind,
+        idle.trigger.spec.effects!.background!.shadows.single.kind,
         RemixPaintShadowKind.inset,
       );
-      expect(idle.trigger.spec.surface!.shadows.single.color, tokens.grayA7);
-      expect(open.trigger.spec.surface!.shadows.single.color, tokens.grayA8);
-      expect(disabledHover.trigger.spec.surface!.color, tokens.grayA2);
       expect(
-        disabledHover.trigger.spec.surface!.shadows.single.color,
+        idle.trigger.spec.effects!.background!.shadows.single.color,
+        tokens.grayA7,
+      );
+      expect(
+        open.trigger.spec.effects!.background!.shadows.single.color,
+        tokens.grayA8,
+      );
+      expect(_flexColor(disabledHover.trigger.spec.container), tokens.grayA2);
+      expect(
+        disabledHover.trigger.spec.effects!.background!.shadows.single.color,
         tokens.grayA6,
       );
       expect(
@@ -225,7 +229,7 @@ void main() {
         states: {WidgetState.focused},
       );
       final tokens = await _tokens(tester);
-      final ring = focused.trigger.spec.overlay!;
+      final ring = focused.trigger.spec.effects!.foreground!;
 
       expect(ring.shadows, hasLength(2));
       expect(ring.shadows.first.kind, RemixPaintShadowKind.outer);
@@ -258,11 +262,11 @@ void main() {
         );
         final tokens = await _tokens(tester);
 
-        expect(soft.trigger.spec.surface!.color, tokens.accentA3);
-        expect(softOpen.trigger.spec.surface!.color, tokens.accentA4);
+        expect(_flexColor(soft.trigger.spec.container), tokens.accentA3);
+        expect(_flexColor(softOpen.trigger.spec.container), tokens.accentA4);
         expect(soft.trigger.spec.label.spec.style!.color, tokens.accent12);
         expect(soft.trigger.spec.placeholderOpacity, 0.6);
-        expect(ghost.trigger.spec.surface!.color, Colors.transparent);
+        expect(_flexColor(ghost.trigger.spec.container), Colors.transparent);
         expect(ghost.trigger.spec.placeholderOpacity, 0.6);
         final ghostBox = ghost.trigger.spec.container.spec.box!.spec;
         expect(
@@ -300,27 +304,37 @@ void main() {
         final lightTokens = await _tokens(tester, appearance: .light);
         final darkTokens = await _tokens(tester, appearance: .dark);
 
-        expect(light.trigger.spec.surface!.gradients, hasLength(3));
-        expect(light.trigger.spec.surface!.gradientInsets, [2, 2, 0]);
-        expect(light.trigger.spec.surface!.shadows, hasLength(3));
+        expect(light.trigger.spec.effects!.background!.gradients, hasLength(3));
+        expect(light.trigger.spec.effects!.background!.gradientInsets, [
+          2,
+          2,
+          0,
+        ]);
+        expect(light.trigger.spec.effects!.background!.shadows, hasLength(3));
         expect(
-          light.trigger.spec.surface!.shadows.first.color,
+          light.trigger.spec.effects!.background!.shadows.first.color,
           lightTokens.grayA5,
         );
         expect(
-          light.trigger.spec.surface!.shadows[1].color,
+          light.trigger.spec.effects!.background!.shadows[1].color,
           lightTokens.whiteA11,
         );
         expect(
-          dark.trigger.spec.surface!.shadows.first.color,
+          dark.trigger.spec.effects!.background!.shadows.first.color,
           darkTokens.whiteA4,
         );
         expect(
-          dark.trigger.spec.surface!.shadows.last.color,
+          dark.trigger.spec.effects!.background!.shadows.last.color,
           darkTokens.blackA9,
         );
-        expect(disabled.trigger.spec.surface!.gradients, hasLength(2));
-        expect(disabled.trigger.spec.surface!.gradientInsets, [2, 2]);
+        expect(
+          disabled.trigger.spec.effects!.background!.gradients,
+          hasLength(2),
+        );
+        expect(disabled.trigger.spec.effects!.background!.gradientInsets, [
+          2,
+          2,
+        ]);
       },
     );
 
@@ -418,22 +432,30 @@ void main() {
       ),
     );
 
-    var trigger = tester.widget<RemixSurfaceFlexBox>(
-      find.byType(RemixSurfaceFlexBox),
+    final triggerFinder = find.byKey(
+      const ValueKey('remix-select-trigger-surface'),
     );
-    var context = tester.element(find.byType(RemixSurfaceFlexBox));
+    var trigger = tester.widget<DecoratedBox>(
+      find.descendant(of: triggerFinder, matching: find.byType(DecoratedBox)),
+    );
+    var context = tester.element(triggerFinder);
     expect(
       MixScope.tokenOf(FortalTokens.accent12, context),
       red.light.scale.step(12),
     );
-    expect(_surfaceRadius(trigger.surface!), 6);
+    expect(
+      (trigger.decoration as BoxDecoration).borderRadius!
+          .resolve(TextDirection.ltr)
+          .topLeft
+          .x,
+      6,
+    );
 
     await tester.tap(find.byType(RemixSelect<String>));
     await tester.pumpAndSettle();
 
-    final contentFinder = find.ancestor(
-      of: find.text('Apple'),
-      matching: find.byType(RemixSurfaceBox),
+    final contentFinder = find.byKey(
+      const ValueKey('remix-select-content-surface'),
     );
     context = tester.element(contentFinder);
     expect(
@@ -568,5 +590,5 @@ double? _radius(BoxSpec spec) {
 
 Color? _color(BoxSpec spec) => (spec.decoration as BoxDecoration?)?.color;
 
-double _surfaceRadius(RemixSurfaceLayerSpec spec) =>
-    spec.borderRadius.resolve(TextDirection.ltr).topLeft.x;
+Color? _flexColor(StyleSpec<FlexBoxSpec> style) =>
+    (style.spec.box?.spec.decoration as BoxDecoration?)?.color;

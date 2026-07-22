@@ -6,9 +6,8 @@ typedef RemixSliderSemanticFormatterCallback = String Function(double value);
 /// Convenience helpers for [RemixSliderStyler].
 extension RemixSliderStylerRemixHelpers on RemixSliderStyler {
   /// Sets the solid thumb fill.
-  RemixSliderStyler thumbColor(Color value) => merge(
-    RemixSliderStyler(thumbSurface: RemixSurfaceLayerMix(color: value)),
-  );
+  RemixSliderStyler thumbColor(Color value) =>
+      merge(RemixSliderStyler(thumb: BoxStyler().color(value)));
 
   /// Sets every visual thumb to a fixed [size].
   RemixSliderStyler thumbSize(Size size) => merge(
@@ -22,14 +21,12 @@ extension RemixSliderStylerRemixHelpers on RemixSliderStyler {
       merge(RemixSliderStyler(trackThickness: value));
 
   /// Sets the solid track fill.
-  RemixSliderStyler trackColor(Color value) => merge(
-    RemixSliderStyler(trackSurface: RemixSurfaceLayerMix(color: value)),
-  );
+  RemixSliderStyler trackColor(Color value) =>
+      merge(RemixSliderStyler(track: BoxStyler().color(value)));
 
   /// Sets the solid selected-range fill.
-  RemixSliderStyler rangeColor(Color value) => merge(
-    RemixSliderStyler(rangeSurface: RemixSurfaceLayerMix(color: value)),
-  );
+  RemixSliderStyler rangeColor(Color value) =>
+      merge(RemixSliderStyler(range: BoxStyler().color(value)));
 
   /// Creates a [RemixSlider] with this style.
   RemixSlider call({

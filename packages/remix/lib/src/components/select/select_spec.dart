@@ -44,11 +44,8 @@ class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
   @override
   final StyleSpec<IconSpec> chevron;
   @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? surface;
-  @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? overlay;
+  @MixableField(setterType: RemixSurfaceEffectsMix)
+  final RemixSurfaceEffectsSpec? effects;
   @override
   final double? chevronOpacity;
   @override
@@ -60,8 +57,7 @@ class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
     StyleSpec<TextSpec>? placeholder,
     StyleSpec<IconSpec>? icon,
     StyleSpec<IconSpec>? chevron,
-    this.surface,
-    this.overlay,
+    this.effects,
     this.chevronOpacity,
     this.placeholderOpacity,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
@@ -75,8 +71,7 @@ class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
-      overlay: RemixSurfaceLayerSpec.lerpNullable(overlay, other.overlay, t),
+      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
     );
   }
 }
@@ -88,10 +83,10 @@ class RemixSelectContentSpec with _$RemixSelectContentSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   @override
-  @MixableField(setterType: RemixSurfaceLayerMix)
-  final RemixSurfaceLayerSpec? surface;
+  @MixableField(setterType: RemixSurfaceEffectsMix)
+  final RemixSurfaceEffectsSpec? effects;
 
-  const RemixSelectContentSpec({StyleSpec<BoxSpec>? container, this.surface})
+  const RemixSelectContentSpec({StyleSpec<BoxSpec>? container, this.effects})
     : container = container ?? const StyleSpec(spec: BoxSpec());
 
   @override
@@ -99,7 +94,7 @@ class RemixSelectContentSpec with _$RemixSelectContentSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      surface: RemixSurfaceLayerSpec.lerpNullable(surface, other.surface, t),
+      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart' show RemixSurfaceBox;
 
 void main() {
   test('defaults to Radix size1, soft, and normal contrast', () {
@@ -85,7 +84,7 @@ void main() {
         ),
       );
 
-      final badgeSize = tester.getSize(find.byType(RemixSurfaceBox));
+      final badgeSize = tester.getSize(find.byType(DecoratedBox));
       expect(badgeSize.width, lessThan(slotWidth));
       expect(badgeSize.height, lessThan(slotHeight));
     });
@@ -110,16 +109,21 @@ void main() {
           fortalBadgeStyler(variant: .outline, highContrast: true),
         );
 
-        expect(soft.surface!.color, tokens.accentA3);
+        expect(_color(soft.container.spec), tokens.accentA3);
         expect(soft.label.spec.style!.color, tokens.accentA11);
-        expect(solidHigh.surface!.color, tokens.accent12);
+        expect(_color(solidHigh.container.spec), tokens.accent12);
         expect(solidHigh.label.spec.style!.color, tokens.accent1);
-        expect(surface.surface!.color, tokens.accentSurface);
-        expect(surface.surface!.shadows.single.color, tokens.accentA6);
-        expect(outlineHigh.surface!.shadows.map((shadow) => shadow.color), [
-          tokens.accentA7,
-          tokens.grayA11,
-        ]);
+        expect(_color(surface.container.spec), tokens.accentSurface);
+        expect(
+          surface.effects!.background!.shadows.single.color,
+          tokens.accentA6,
+        );
+        expect(
+          outlineHigh.effects!.background!.shadows.map(
+            (shadow) => shadow.color,
+          ),
+          [tokens.accentA7, tokens.grayA11],
+        );
         expect(outlineHigh.label.spec.style!.color, tokens.accent12);
       },
     );
@@ -203,3 +207,5 @@ double _radius(BoxSpec box) => (box.decoration as BoxDecoration).borderRadius!
     .resolve(TextDirection.ltr)
     .topLeft
     .x;
+
+Color? _color(BoxSpec box) => (box.decoration as BoxDecoration?)?.color;

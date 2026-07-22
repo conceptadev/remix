@@ -9,7 +9,7 @@ void main() {
       const spec = RemixPopoverSpec();
 
       expect(spec.container, isA<StyleSpec<BoxSpec>>());
-      expect(spec.props, [spec.container, spec.surface]);
+      expect(spec.props, [spec.container, spec.effects?.background]);
     });
 
     test('accepts and copies a custom container spec', () {

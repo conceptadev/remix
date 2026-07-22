@@ -23,19 +23,51 @@ void main() {
         );
 
         expect(
-          button.spec.surface?.color,
+          _flexBoxColor(button.spec.container),
           indigo.dark.scale.step(12),
           reason: 'Button ${state.name} background must remain high contrast.',
         );
         expect(_textColor(button.spec.label), slate.dark.scale.step(1));
         expect(
-          iconButton.spec.surface?.color,
+          _boxColor(iconButton.spec.container),
           indigo.dark.scale.step(12),
           reason:
               'Icon button ${state.name} background must remain high contrast.',
         );
         expect(iconButton.spec.icon.spec.color, slate.dark.scale.step(1));
       }
+    });
+
+    testWidgets('soft and surface controls retain distinct base fills', (
+      tester,
+    ) async {
+      final softButton = await _resolveFortalStyle(
+        tester,
+        (context) => fortalButtonStyler(variant: .soft).build(context),
+      );
+      final surfaceButton = await _resolveFortalStyle(
+        tester,
+        (context) => fortalButtonStyler(variant: .surface).build(context),
+      );
+      final softIconButton = await _resolveFortalStyle(
+        tester,
+        (context) => fortalIconButtonStyler(variant: .soft).build(context),
+      );
+      final surfaceIconButton = await _resolveFortalStyle(
+        tester,
+        (context) => fortalIconButtonStyler(variant: .surface).build(context),
+      );
+
+      expect(
+        _flexBoxColor(softButton.spec.container),
+        indigo.light.scale.alphaStep(3),
+      );
+      expect(_flexBoxColor(surfaceButton.spec.container), indigo.light.surface);
+      expect(
+        _boxColor(softIconButton.spec.container),
+        indigo.light.scale.alphaStep(3),
+      );
+      expect(_boxColor(surfaceIconButton.spec.container), indigo.light.surface);
     });
 
     testWidgets('solid interactions meet contrast for every accent and mode', (
@@ -61,9 +93,9 @@ void main() {
               states: {state},
             );
 
-            final buttonBackground = button.spec.surface!.color!;
+            final buttonBackground = _flexBoxColor(button.spec.container)!;
             final buttonForeground = _textColor(button.spec.label)!;
-            final iconBackground = iconButton.spec.surface!.color!;
+            final iconBackground = _boxColor(iconButton.spec.container)!;
             final iconForeground = iconButton.spec.icon.spec.color!;
 
             expect(
@@ -98,8 +130,11 @@ void main() {
         );
 
         if (variant == .solid || variant == .classic) {
-          expect(normal.spec.surface?.color, indigo.light.scale.step(9));
-          expect(highContrast.spec.surface?.color, indigo.light.scale.step(12));
+          expect(_boxColor(normal.spec.container), indigo.light.scale.step(9));
+          expect(
+            _boxColor(highContrast.spec.container),
+            indigo.light.scale.step(12),
+          );
           expect(normal.spec.icon.spec.color, indigo.light.contrast);
           expect(highContrast.spec.icon.spec.color, slate.light.scale.step(1));
         } else {
@@ -127,8 +162,11 @@ void main() {
         );
 
         if (variant == .solid) {
-          expect(normal.spec.surface?.color, indigo.light.scale.step(9));
-          expect(highContrast.spec.surface?.color, indigo.light.scale.step(12));
+          expect(_boxColor(normal.spec.container), indigo.light.scale.step(9));
+          expect(
+            _boxColor(highContrast.spec.container),
+            indigo.light.scale.step(12),
+          );
           expect(_textColor(normal.spec.label), indigo.light.contrast);
           expect(
             _textColor(highContrast.spec.label),
@@ -189,8 +227,11 @@ void main() {
         );
 
         if (variant == .classic || variant == .surface) {
-          expect(normal.spec.surface?.color, indigo.light.indicator);
-          expect(highContrast.spec.surface?.color, indigo.light.scale.step(12));
+          expect(_boxColor(normal.spec.container), indigo.light.indicator);
+          expect(
+            _boxColor(highContrast.spec.container),
+            indigo.light.scale.step(12),
+          );
           expect(normal.spec.indicator.spec.color, indigo.light.contrast);
           expect(
             highContrast.spec.indicator.spec.color,
@@ -228,8 +269,11 @@ void main() {
         );
 
         if (variant == .classic || variant == .surface) {
-          expect(normal.spec.surface?.color, indigo.light.indicator);
-          expect(highContrast.spec.surface?.color, indigo.light.scale.step(12));
+          expect(_boxColor(normal.spec.container), indigo.light.indicator);
+          expect(
+            _boxColor(highContrast.spec.container),
+            indigo.light.scale.step(12),
+          );
           expect(_boxColor(normal.spec.indicator), indigo.light.contrast);
           expect(
             _boxColor(highContrast.spec.indicator),
@@ -271,8 +315,8 @@ void main() {
           .classic || .surface => indigo.light.scale.step(12),
           .soft => indigo.light.scale.alphaStep(6),
         };
-        expect(normal.spec.surface?.color, expectedNormal);
-        expect(highContrast.spec.surface?.color, expectedHighContrast);
+        expect(_boxColor(normal.spec.container), expectedNormal);
+        expect(_boxColor(highContrast.spec.container), expectedHighContrast);
       }
     });
 
@@ -291,7 +335,7 @@ void main() {
         );
 
         expect(
-          highContrast.spec.thumbSurface?.color,
+          _boxColor(highContrast.spec.thumb),
           Colors.white,
           reason: '$variant must contrast with its accent12 track.',
         );
@@ -417,9 +461,10 @@ void main() {
           .classic || .surface => indigo.light.indicator,
           .soft => indigo.light.scale.step(6),
         };
-        expect(normal.spec.rangeSurface?.color, expectedNormal);
+        expect(_boxColor(normal.spec.range), expectedNormal);
         final contrastGradient =
-            highContrast.spec.rangeSurface!.gradients.last as LinearGradient;
+            highContrast.spec.rangeEffects!.background!.gradients.last
+                as LinearGradient;
         expect(contrastGradient.colors, everyElement(blackAlpha[8]));
       }
     });
@@ -444,9 +489,9 @@ void main() {
           .classic || .surface => indigo.light.indicator,
           .soft => indigo.light.scale.step(8),
         };
-        expect(normal.spec.indicatorSurface?.color, expectedNormal);
+        expect(_boxColor(normal.spec.indicator), expectedNormal);
         expect(
-          highContrast.spec.indicatorSurface?.color,
+          _boxColor(highContrast.spec.indicator),
           indigo.light.scale.step(12),
         );
       }
@@ -463,10 +508,7 @@ void main() {
         );
 
         expect(_boxBorderRadius(style.spec.indicator), BorderRadius.zero);
-        expect(style.spec.surface?.borderRadius, BorderRadius.zero);
-        expect(style.spec.overlay?.borderRadius, BorderRadius.zero);
-        expect(style.spec.indicatorSurface?.borderRadius, BorderRadius.zero);
-        expect(style.spec.indicatorOverlay?.borderRadius, BorderRadius.zero);
+        expect(_boxBorderRadius(style.spec.container), BorderRadius.zero);
       }
     });
 
@@ -522,6 +564,9 @@ Future<T> _resolveFortalStyle<T>(
 
 Color? _boxColor(StyleSpec<BoxSpec> style) =>
     (style.spec.decoration as BoxDecoration?)?.color;
+
+Color? _flexBoxColor(StyleSpec<FlexBoxSpec> style) =>
+    (style.spec.box?.spec.decoration as BoxDecoration?)?.color;
 
 BorderRadiusGeometry? _boxBorderRadius(StyleSpec<BoxSpec> style) =>
     switch (style.spec.decoration) {

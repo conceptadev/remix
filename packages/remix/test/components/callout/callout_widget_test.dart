@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_surface.dart'
-    show RemixSurfaceFlexBox;
 
 import '../../helpers/test_helpers.dart';
 
@@ -16,7 +14,10 @@ void main() {
         ),
       );
 
-      expect(find.byType(RemixSurfaceFlexBox), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('remix-callout-surface')),
+        findsOneWidget,
+      );
       expect(find.byIcon(Icons.info), findsOneWidget);
       expect(find.text('Title'), findsOneWidget);
       expect(find.text('Description'), findsOneWidget);
@@ -49,16 +50,21 @@ void main() {
       await tester.pumpRemixApp(
         const RemixCallout(
           styleSpec: RemixCalloutSpec(
-            surface: RemixSurfaceLayerSpec(color: color),
+            container: StyleSpec(
+              spec: FlexBoxSpec(
+                box: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
+              ),
+            ),
+            effects: RemixSurfaceEffectsSpec(
+              background: RemixSurfaceLayerSpec(
+                shadows: [RemixPaintShadow(color: color)],
+              ),
+            ),
           ),
           child: Text('Spec'),
         ),
       );
-
-      final surface = tester.widget<RemixSurfaceFlexBox>(
-        find.byType(RemixSurfaceFlexBox),
-      );
-      expect(surface.surface!.color, color);
+      expect(find.byType(CustomPaint), findsWidgets);
     });
 
     testWidgets('constrains flexible custom content to the callout width', (
@@ -104,7 +110,9 @@ void main() {
       );
 
       expect(tester.takeException(), isNull);
-      final calloutRect = tester.getRect(find.byType(RemixSurfaceFlexBox));
+      final calloutRect = tester.getRect(
+        find.byKey(const ValueKey('remix-callout-surface')),
+      );
       final bodyRect = tester.getRect(find.byKey(bodyKey));
       expect(bodyRect.left, greaterThanOrEqualTo(calloutRect.left));
       expect(bodyRect.right, lessThanOrEqualTo(calloutRect.right));

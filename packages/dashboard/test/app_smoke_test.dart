@@ -17,6 +17,42 @@ void main() {
     expect(find.text('Overview'), findsWidgets);
   });
 
+  testWidgets('compact layout uses a drawer without rendering overflows', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+
+    expect(find.byKey(const ValueKey('dashboard-menu')), findsWidgets);
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.byIcon(Icons.menu));
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(
+      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
+      isTrue,
+    );
+
+    await tester.tap(find.byKey(const ValueKey('nav-galleryForms')).first);
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    expect(
+      find.text(
+        'Production-ready fields and selection controls in every preset.',
+      ),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('customers page renders an interactive paginated grid', (
     tester,
   ) async {

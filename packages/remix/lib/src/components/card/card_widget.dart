@@ -95,10 +95,10 @@ class RemixCard extends StatelessWidget {
   final RemixCardSpec? styleSpec;
 
   Widget _buildVisual(BuildContext context, RemixCardSpec spec) =>
-      RemixSurfaceBox(
+      remixSurfaceBox(
+        key: const ValueKey('remix-card-surface'),
         styleSpec: spec.container,
-        surface: spec.surface,
-        overlay: spec.overlay,
+        effects: spec.effects,
         child: child,
       );
 

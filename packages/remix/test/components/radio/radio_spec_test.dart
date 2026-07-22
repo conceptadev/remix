@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -62,6 +63,58 @@ void main() {
     });
 
     group('lerp', () {
+      testWidgets(
+        'classic selected transition synchronizes Box and advanced effects',
+        (tester) async {
+          Future<RemixRadioSpec> resolve(Set<WidgetState> states) async {
+            late RemixRadioSpec result;
+            await tester.pumpWidget(
+              FortalScope(
+                child: MaterialApp(
+                  home: WidgetStateProvider(
+                    states: states,
+                    child: Builder(
+                      builder: (context) {
+                        result = fortalRadioStyler(
+                          variant: FortalRadioVariant.classic,
+                        ).build(context).spec;
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            );
+            return result;
+          }
+
+          final begin = await resolve(const {});
+          final end = await resolve(const {WidgetState.selected});
+          const t = 0.4;
+          final middle = begin.lerp(end, t);
+          final beginDecoration =
+              begin.container.spec.decoration! as BoxDecoration;
+          final endDecoration = end.container.spec.decoration! as BoxDecoration;
+          final middleDecoration =
+              middle.container.spec.decoration! as BoxDecoration;
+          final expectedEffects = begin.effects!.lerp(end.effects, t);
+
+          expect(
+            middleDecoration.color,
+            Color.lerp(beginDecoration.color, endDecoration.color, t),
+          );
+          expect(middle.effects, expectedEffects);
+          expect(
+            middle.effects!.background!.gradients,
+            expectedEffects.background!.gradients,
+          );
+          expect(
+            middle.effects!.background!.shadows,
+            expectedEffects.background!.shadows,
+          );
+        },
+      );
+
       test('returns spec equal to this when other is null', () {
         const spec = RemixRadioSpec();
         const RemixRadioSpec? other = null;
@@ -118,11 +171,11 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixRadioSpec();
 
-        expect(spec.props, hasLength(4));
+        expect(spec.props, hasLength(3));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.indicator));
-        expect(spec.props, contains(spec.surface));
-        expect(spec.props, contains(spec.overlay));
+        expect(spec.props, contains(spec.effects?.background));
+        expect(spec.props, contains(spec.effects?.foreground));
       });
     });
 

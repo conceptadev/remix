@@ -20,7 +20,10 @@ void main() {
       var spec = fortalTextFieldStyler(variant: .surface).resolve(context).spec;
 
       expect(spec.text.spec.style?.color, colors.gray.scale.step(12));
-      expect(spec.surface?.color, colors.colorSurface);
+      expect(
+        (spec.container.spec.box?.spec.decoration as BoxDecoration?)?.color,
+        colors.colorSurface,
+      );
 
       await tester.pumpRemixApp(const FortalTextField(variant: .soft));
       context = tester.element(find.byType(FortalTextField));
@@ -28,7 +31,10 @@ void main() {
       spec = fortalTextFieldStyler(variant: .soft).resolve(context).spec;
 
       expect(spec.text.spec.style?.color, colors.accent.scale.step(12));
-      expect(spec.surface?.color, colors.accent.scale.alphaStep(3));
+      expect(
+        (spec.container.spec.box?.spec.decoration as BoxDecoration?)?.color,
+        colors.accent.scale.alphaStep(3),
+      );
     });
 
     widgetControllerTest<RemixTextFieldSpec>(
@@ -656,7 +662,11 @@ void main() {
               ),
             ),
           ),
-          surface: RemixSurfaceLayerSpec(color: Colors.red),
+          effects: RemixSurfaceEffectsSpec(
+            background: RemixSurfaceLayerSpec(
+              shadows: [RemixPaintShadow(color: Colors.red)],
+            ),
+          ),
           textAlign: TextAlign.center,
           cursorWidth: 3.0,
         );
@@ -667,12 +677,11 @@ void main() {
         final renderedDecorations = tester
             .widgetList<DecoratedBox>(find.byType(DecoratedBox))
             .map((box) => box.decoration);
-        final surface = tester.widget<RemixSurface>(find.byType(RemixSurface));
         final textField = tester.widget<NakedTextField>(
           find.byType(NakedTextField),
         );
 
-        expect(surface.spec.color, Colors.red);
+        expect(find.byType(CustomPaint), findsWidgets);
         expect(
           renderedDecorations,
           contains(equals(const BoxDecoration(color: Colors.green))),

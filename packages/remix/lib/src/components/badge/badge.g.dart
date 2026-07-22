@@ -9,8 +9,7 @@ part of 'badge.dart';
 mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<TextSpec> get label;
-  RemixSurfaceLayerSpec? get surface;
-  RemixSurfaceLayerSpec? get overlay;
+  RemixSurfaceEffectsSpec? get effects;
 
   @override
   Type get type => RemixBadgeSpec;
@@ -19,14 +18,12 @@ mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
   RemixBadgeSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
-    RemixSurfaceLayerSpec? surface,
-    RemixSurfaceLayerSpec? overlay,
+    RemixSurfaceEffectsSpec? effects,
   }) {
     return RemixBadgeSpec(
       container: container ?? this.container,
       label: label ?? this.label,
-      surface: surface ?? this.surface,
-      overlay: overlay ?? this.overlay,
+      effects: effects ?? this.effects,
     );
   }
 
@@ -35,13 +32,12 @@ mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
     return RemixBadgeSpec(
       container: container.lerp(other?.container, t),
       label: label.lerp(other?.label, t),
-      surface: MixOps.lerpSnap(surface, other?.surface, t),
-      overlay: MixOps.lerpSnap(overlay, other?.overlay, t),
+      effects: MixOps.lerpSnap(effects, other?.effects, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, label, surface, overlay];
+  List<Object?> get props => [container, label, effects];
 
   @override
   bool operator ==(Object other) {
@@ -85,8 +81,7 @@ mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
-      ..add(DiagnosticsProperty('surface', surface))
-      ..add(DiagnosticsProperty('overlay', overlay));
+      ..add(DiagnosticsProperty('effects', effects));
   }
 }
 
@@ -105,35 +100,30 @@ class RemixBadgeStyler extends MixStyler<RemixBadgeStyler, RemixBadgeSpec>
         LabelStyleMixin<RemixBadgeStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
-  final Prop<RemixSurfaceLayerSpec>? $surface;
-  final Prop<RemixSurfaceLayerSpec>? $overlay;
+  final Prop<RemixSurfaceEffectsSpec>? $effects;
 
   const RemixBadgeStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
-    Prop<RemixSurfaceLayerSpec>? surface,
-    Prop<RemixSurfaceLayerSpec>? overlay,
+    Prop<RemixSurfaceEffectsSpec>? effects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $label = label,
-       $surface = surface,
-       $overlay = overlay;
+       $effects = effects;
 
   RemixBadgeStyler({
     BoxStyler? container,
     TextStyler? label,
-    RemixSurfaceLayerMix? surface,
-    RemixSurfaceLayerMix? overlay,
+    RemixSurfaceEffectsMix? effects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixBadgeSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          label: Prop.maybeMix(label),
-         surface: Prop.maybeMix(surface),
-         overlay: Prop.maybeMix(overlay),
+         effects: Prop.maybeMix(effects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -143,10 +133,8 @@ class RemixBadgeStyler extends MixStyler<RemixBadgeStyler, RemixBadgeSpec>
       RemixBadgeStyler().container(value);
   factory RemixBadgeStyler.label(TextStyler value) =>
       RemixBadgeStyler().label(value);
-  factory RemixBadgeStyler.surface(RemixSurfaceLayerMix value) =>
-      RemixBadgeStyler().surface(value);
-  factory RemixBadgeStyler.overlay(RemixSurfaceLayerMix value) =>
-      RemixBadgeStyler().overlay(value);
+  factory RemixBadgeStyler.effects(RemixSurfaceEffectsMix value) =>
+      RemixBadgeStyler().effects(value);
   factory RemixBadgeStyler.alignment(AlignmentGeometry value) =>
       RemixBadgeStyler().alignment(value);
   factory RemixBadgeStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -630,14 +618,9 @@ class RemixBadgeStyler extends MixStyler<RemixBadgeStyler, RemixBadgeSpec>
     return merge(RemixBadgeStyler(label: value));
   }
 
-  /// Sets the surface.
-  RemixBadgeStyler surface(RemixSurfaceLayerMix value) {
-    return merge(RemixBadgeStyler(surface: value));
-  }
-
-  /// Sets the overlay.
-  RemixBadgeStyler overlay(RemixSurfaceLayerMix value) {
-    return merge(RemixBadgeStyler(overlay: value));
+  /// Sets the effects.
+  RemixBadgeStyler effects(RemixSurfaceEffectsMix value) {
+    return merge(RemixBadgeStyler(effects: value));
   }
 
   /// Sets the animation configuration.
@@ -669,8 +652,7 @@ class RemixBadgeStyler extends MixStyler<RemixBadgeStyler, RemixBadgeSpec>
     return RemixBadgeStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
-      surface: MixOps.merge($surface, other?.$surface),
-      overlay: MixOps.merge($overlay, other?.$overlay),
+      effects: MixOps.merge($effects, other?.$effects),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -683,8 +665,7 @@ class RemixBadgeStyler extends MixStyler<RemixBadgeStyler, RemixBadgeSpec>
     final spec = RemixBadgeSpec(
       container: MixOps.resolve(context, $container),
       label: MixOps.resolve(context, $label),
-      surface: MixOps.resolve(context, $surface),
-      overlay: MixOps.resolve(context, $overlay),
+      effects: MixOps.resolve(context, $effects),
     );
 
     return StyleSpec(
@@ -700,16 +681,14 @@ class RemixBadgeStyler extends MixStyler<RemixBadgeStyler, RemixBadgeSpec>
     properties
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('label', $label))
-      ..add(DiagnosticsProperty('surface', $surface))
-      ..add(DiagnosticsProperty('overlay', $overlay));
+      ..add(DiagnosticsProperty('effects', $effects));
   }
 
   @override
   List<Object?> get props => [
     $container,
     $label,
-    $surface,
-    $overlay,
+    $effects,
     $animation,
     $modifier,
     $variants,

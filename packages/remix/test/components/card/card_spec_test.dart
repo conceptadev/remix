@@ -110,22 +110,34 @@ void main() {
 
       test('interpolates surface layers instead of snapping', () {
         const start = RemixCardSpec(
-          surface: RemixSurfaceLayerSpec(color: Colors.red),
-          overlay: RemixSurfaceLayerSpec(color: Colors.green),
+          effects: RemixSurfaceEffectsSpec(
+            background: RemixSurfaceLayerSpec(
+              shadows: [RemixPaintShadow(color: Colors.red)],
+            ),
+            foreground: RemixSurfaceLayerSpec(
+              shadows: [RemixPaintShadow(color: Colors.green)],
+            ),
+          ),
         );
         const end = RemixCardSpec(
-          surface: RemixSurfaceLayerSpec(color: Colors.blue),
-          overlay: RemixSurfaceLayerSpec(color: Colors.yellow),
+          effects: RemixSurfaceEffectsSpec(
+            background: RemixSurfaceLayerSpec(
+              shadows: [RemixPaintShadow(color: Colors.blue)],
+            ),
+            foreground: RemixSurfaceLayerSpec(
+              shadows: [RemixPaintShadow(color: Colors.yellow)],
+            ),
+          ),
         );
 
         final result = start.lerp(end, 0.25);
 
         expect(
-          result.surface?.color,
+          result.effects?.background?.shadows.first.color,
           Color.lerp(Colors.red, Colors.blue, 0.25),
         );
         expect(
-          result.overlay?.color,
+          result.effects?.foreground?.shadows.first.color,
           Color.lerp(Colors.green, Colors.yellow, 0.25),
         );
       });
@@ -133,12 +145,19 @@ void main() {
       test('fades a surface layer in from an absent value', () {
         const start = RemixCardSpec();
         const end = RemixCardSpec(
-          surface: RemixSurfaceLayerSpec(color: Colors.blue),
+          effects: RemixSurfaceEffectsSpec(
+            background: RemixSurfaceLayerSpec(
+              shadows: [RemixPaintShadow(color: Colors.blue)],
+            ),
+          ),
         );
 
         final result = start.lerp(end, 0.25);
 
-        expect(result.surface?.color, Color.lerp(null, Colors.blue, 0.25));
+        expect(
+          result.effects?.background?.shadows.first.color,
+          Color.lerp(null, Colors.blue, 0.25),
+        );
       });
     });
 
@@ -172,7 +191,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixCardSpec();
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(2));
         expect(spec.props, contains(spec.container));
       });
 
@@ -181,7 +200,7 @@ void main() {
 
         final spec = RemixCardSpec(container: containerSpec);
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(2));
         expect(spec.props, contains(containerSpec));
       });
     });
@@ -254,7 +273,7 @@ void main() {
         final spec = RemixCardSpec(container: complexContainerSpec);
 
         expect(spec.container, equals(complexContainerSpec));
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(2));
       });
     });
   });

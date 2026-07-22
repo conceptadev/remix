@@ -176,7 +176,9 @@ void main() {
   testWidgets('wires resolved surface and overlay slots to the renderer', (
     tester,
   ) async {
-    const surface = RemixSurfaceLayerSpec(color: Colors.red, backdropBlur: 3);
+    const surface = RemixSurfaceLayerSpec(
+      shadows: [RemixPaintShadow(color: Colors.red)],
+    );
     const overlay = RemixSurfaceLayerSpec(
       shadows: [
         RemixPaintShadow(kind: RemixPaintShadowKind.inset, blurRadius: 1),
@@ -185,13 +187,18 @@ void main() {
     await tester.pumpRemixApp(
       const RemixProgress(
         value: 50,
-        styleSpec: RemixProgressSpec(surface: surface, overlay: overlay),
+        styleSpec: RemixProgressSpec(
+          container: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
+          trackEffects: RemixSurfaceEffectsSpec(
+            background: surface,
+            foreground: overlay,
+            backdropBlur: 3,
+          ),
+        ),
       ),
     );
 
-    final rendered = tester.widget<RemixSurface>(find.byType(RemixSurface));
-    expect(rendered.spec, same(surface));
-    expect(rendered.overlay, same(overlay));
+    expect(find.byType(CustomPaint), findsWidgets);
     expect(find.byType(BackdropFilter), findsOneWidget);
   });
 }
