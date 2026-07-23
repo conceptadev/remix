@@ -110,8 +110,7 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
           child: Row(
             spacing: 18,
             children: [
-              FortalButton(
-                variant: .soft,
+              FortalButton.soft(
                 size: .size1,
                 onPressed: () =>
                     setState(() => _spinnersRunning = !_spinnersRunning),

@@ -310,8 +310,7 @@ void main() {
     ) async {
       const child = Icon(Icons.add);
       await tester.pumpRemixApp(
-        const FortalIconButton(
-          variant: .classic,
+        const FortalIconButton.classic(
           size: .size3,
           color: .red,
           radius: .small,

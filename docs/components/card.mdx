@@ -63,16 +63,13 @@ class FortalCardExample extends StatelessWidget {
     return Column(
       spacing: 16,
       children: [
-        const FortalCard(
-          variant: FortalCardVariant.classic,
+        const FortalCard.classic(
           child: Text('Classic'),
         ),
-        const FortalCard(
-          variant: FortalCardVariant.surface,
+        const FortalCard.surface(
           child: Text('Surface'),
         ),
-        const FortalCard(
-          variant: FortalCardVariant.ghost,
+        const FortalCard.ghost(
           child: Text('Ghost'),
         ),
       ],

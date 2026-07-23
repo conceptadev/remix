@@ -85,14 +85,12 @@ class _FortalToggleExampleState extends State<FortalToggleExample> {
     return Row(
       spacing: 8,
       children: [
-        FortalToggle(
-          variant: FortalToggleVariant.ghost,
+        FortalToggle.ghost(
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
           label: 'Ghost',
         ),
-        FortalToggle(
-          variant: FortalToggleVariant.outline,
+        FortalToggle.outline(
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
           label: 'Outline',

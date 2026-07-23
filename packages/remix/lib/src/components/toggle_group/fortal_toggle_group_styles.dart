@@ -146,6 +146,38 @@ class FortalToggleGroup<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  const FortalToggleGroup.soft({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    required this.items,
+    required this.selectedValue,
+    this.onChanged,
+    this.enabled = true,
+    this.orientation = .horizontal,
+    this.loop = true,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : variant = .soft;
+
+  const FortalToggleGroup.surface({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    required this.items,
+    required this.selectedValue,
+    this.onChanged,
+    this.enabled = true,
+    this.orientation = .horizontal,
+    this.loop = true,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : variant = .surface;
+
   final FortalToggleGroupVariant variant;
 
   final FortalToggleGroupSize size;

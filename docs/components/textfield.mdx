@@ -109,14 +109,12 @@ class _FortalTextFieldExampleState extends State<FortalTextFieldExample> {
     return Column(
       spacing: 16,
       children: [
-        FortalTextField(
-          variant: FortalTextFieldVariant.surface,
+        FortalTextField.surface(
           controller: controller,
           label: 'Surface',
           hintText: 'Neutral surface field',
         ),
-        FortalTextField(
-          variant: FortalTextFieldVariant.soft,
+        FortalTextField.soft(
           controller: controller,
           label: 'Soft',
           hintText: 'Accent soft field',

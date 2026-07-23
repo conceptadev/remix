@@ -240,6 +240,63 @@ class FortalCard extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  const FortalCard.surface({
+    super.key,
+    this.size = .size1,
+    this.child,
+    this.onTap,
+    this.onLongPress,
+    this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.focusOnTap = false,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChange,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : variant = .surface;
+
+  const FortalCard.classic({
+    super.key,
+    this.size = .size1,
+    this.child,
+    this.onTap,
+    this.onLongPress,
+    this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.focusOnTap = false,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChange,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : variant = .classic;
+
+  const FortalCard.ghost({
+    super.key,
+    this.size = .size1,
+    this.child,
+    this.onTap,
+    this.onLongPress,
+    this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.focusOnTap = false,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChange,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : variant = .ghost;
+
   final FortalCardVariant variant;
   final FortalCardSize size;
   final Widget? child;

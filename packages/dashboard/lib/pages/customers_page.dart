@@ -84,8 +84,7 @@ class _CustomersPageState extends State<CustomersPage> {
                           size: .size2,
                           child: Text('${_selectedIds.length} selected'),
                         ),
-                        FortalButton(
-                          variant: .ghost,
+                        FortalButton.ghost(
                           size: .size1,
                           onPressed: () => showToast(
                             context,
@@ -94,8 +93,7 @@ class _CustomersPageState extends State<CustomersPage> {
                           ),
                           child: const Text('Export'),
                         ),
-                        FortalButton(
-                          variant: .ghost,
+                        FortalButton.ghost(
                           size: .size1,
                           onPressed: () => showToast(
                             context,

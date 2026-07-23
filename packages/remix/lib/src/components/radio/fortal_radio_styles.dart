@@ -282,6 +282,45 @@ class FortalRadio<T> extends StatelessWidget {
     this.autofocus = false,
   });
 
+  const FortalRadio.classic({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.highContrast = false,
+    required this.value,
+    this.enabled = true,
+    this.toggleable = false,
+    this.mouseCursor,
+    this.focusNode,
+    this.autofocus = false,
+  }) : variant = .classic;
+
+  const FortalRadio.surface({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.highContrast = false,
+    required this.value,
+    this.enabled = true,
+    this.toggleable = false,
+    this.mouseCursor,
+    this.focusNode,
+    this.autofocus = false,
+  }) : variant = .surface;
+
+  const FortalRadio.soft({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.highContrast = false,
+    required this.value,
+    this.enabled = true,
+    this.toggleable = false,
+    this.mouseCursor,
+    this.focusNode,
+    this.autofocus = false,
+  }) : variant = .soft;
+
   final FortalRadioVariant variant;
 
   final FortalRadioSize size;

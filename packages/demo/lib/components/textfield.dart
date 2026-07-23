@@ -19,8 +19,7 @@ Widget buildTextFieldUseCase(BuildContext context) {
                   label: 'Show Trailing',
                   initialValue: false,
                 )
-                ? FortalIconButton(
-                    variant: .ghost,
+                ? FortalIconButton.ghost(
                     semanticLabel: 'Clear field',
                     onPressed: () {},
                     child: const Icon(Icons.close_rounded),

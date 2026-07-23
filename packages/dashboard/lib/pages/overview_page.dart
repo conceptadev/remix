@@ -201,9 +201,8 @@ class _RecentOrders extends StatelessWidget {
           Row(
             children: [
               const Expanded(child: SectionLabel('Recent orders')),
-              FortalButton(
+              FortalButton.ghost(
                 key: const ValueKey('overview-view-orders'),
-                variant: .ghost,
                 size: .size1,
                 onPressed: onViewOrders,
                 child: const Row(

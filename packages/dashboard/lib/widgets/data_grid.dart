@@ -173,9 +173,8 @@ class DataGrid<T> extends StatelessWidget {
               flex: column.flex,
               align: column.align,
               child: column.sortable
-                  ? FortalButton(
+                  ? FortalButton.ghost(
                       key: ValueKey('sort-${column.id}'),
-                      variant: .ghost,
                       size: .size1,
                       onPressed: () => _sortBy(column.id),
                       child: Row(
@@ -252,18 +251,16 @@ class DataGrid<T> extends StatelessWidget {
             ).color(FortalTokens.gray11()),
           ),
           const SizedBox(width: 10),
-          FortalIconButton(
+          FortalIconButton.ghost(
             key: const ValueKey('grid-previous'),
-            variant: .ghost,
             size: .size1,
             semanticLabel: 'Previous page',
             enabled: page > 0,
             onPressed: () => onPageChanged?.call(page - 1),
             child: const Icon(Icons.chevron_left),
           ),
-          FortalIconButton(
+          FortalIconButton.ghost(
             key: const ValueKey('grid-next'),
-            variant: .ghost,
             size: .size1,
             semanticLabel: 'Next page',
             enabled: page < maxPage,

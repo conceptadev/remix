@@ -135,14 +135,12 @@ class FortalMenuExample extends StatelessWidget {
     return Row(
       spacing: 16,
       children: [
-        FortalMenu<String>(
-          variant: FortalMenuVariant.solid,
+        FortalMenu<String>.solid(
           trigger: const Text('Solid'),
           entries: _entries,
           onSelected: debugPrint,
         ),
-        FortalMenu<String>(
-          variant: FortalMenuVariant.soft,
+        FortalMenu<String>.soft(
           trigger: const Text('Soft'),
           entries: _entries,
           onSelected: debugPrint,

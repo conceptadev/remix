@@ -156,6 +156,42 @@ class FortalToggle extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  const FortalToggle.ghost({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.label,
+    this.icon,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = .ghost;
+
+  const FortalToggle.outline({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.label,
+    this.icon,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = .outline;
+
   final FortalToggleVariant variant;
 
   final FortalToggleSize size;

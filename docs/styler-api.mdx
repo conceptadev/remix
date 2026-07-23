@@ -152,6 +152,8 @@ during a clean build, the widget generator cannot resolve a Styler that the
 spec generator has not yet combined into that library.
 
 Only the wrapper shell was materialized—the `fortal*Styler` recipes and widget
-behavior remain unchanged. The source-authored wrappers intentionally expose
-the current single-constructor, enum-based Fortal APIs. The widget builder can
-be re-enabled once upstream generation supports that dependency ordering.
+behavior remain unchanged. The source-authored wrappers mirror `@MixWidget`'s
+variant-constructor convention: use `FortalButton.ghost(...)` when the variant
+is known and retain `FortalButton(variant: currentVariant, ...)` for runtime
+selection. The widget builder can be re-enabled once upstream generation
+supports that dependency ordering.

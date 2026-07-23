@@ -35,8 +35,7 @@ class DialogExample extends StatelessWidget {
               description:
                   'This application will no longer be accessible.',
               actions: [
-                FortalButton(
-                  variant: FortalButtonVariant.ghost,
+                FortalButton.ghost(
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Cancel'),
                 ),
@@ -76,8 +75,7 @@ Future<void> showDeleteProjectDialog(BuildContext context) async {
         description:
             'This permanently deletes the project and all of its data.',
         actions: [
-          FortalButton(
-            variant: FortalButtonVariant.ghost,
+          FortalButton.ghost(
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
           ),
@@ -111,8 +109,7 @@ class FortalDialogExample extends StatelessWidget {
       title: 'Confirm changes',
       description: 'Save these settings before leaving?',
       actions: [
-        FortalButton(
-          variant: FortalButtonVariant.ghost,
+        FortalButton.ghost(
           onPressed: () => Navigator.pop(context),
           child: const Text('Cancel'),
         ),

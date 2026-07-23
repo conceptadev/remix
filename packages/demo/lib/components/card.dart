@@ -27,8 +27,7 @@ Widget buildCardUseCase(BuildContext context) {
             mainAxisSize: .min,
             spacing: 16,
             children: [
-              const FortalAvatar(
-                variant: FortalAvatarVariant.solid,
+              const FortalAvatar.solid(
                 label: 'LF',
                 size: FortalAvatarSize.size3,
               ),

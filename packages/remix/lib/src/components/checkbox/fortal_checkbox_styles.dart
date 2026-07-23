@@ -252,6 +252,54 @@ class FortalCheckbox extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  const FortalCheckbox.classic({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.highContrast = false,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.tristate = false,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = .classic;
+
+  const FortalCheckbox.surface({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.highContrast = false,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.tristate = false,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = .surface;
+
+  const FortalCheckbox.soft({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.highContrast = false,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.tristate = false,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = .soft;
+
   final FortalCheckboxVariant variant;
   final FortalCheckboxSize size;
   final FortalAccentColor? color;

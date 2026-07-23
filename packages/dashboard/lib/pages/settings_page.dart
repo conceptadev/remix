@@ -168,8 +168,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     Align(
                       alignment: .centerLeft,
-                      child: FortalButton(
-                        variant: .outline,
+                      child: FortalButton.outline(
                         color: .red,
                         onPressed: _confirmDelete,
                         child: const Text('Delete workspace'),
@@ -193,8 +192,7 @@ class _SettingsPageState extends State<SettingsPage> {
         description:
             'This demo keeps your data safe, but a real action would be permanent.',
         actions: [
-          FortalButton(
-            variant: .soft,
+          FortalButton.soft(
             onPressed: () => Navigator.of(context).pop(false),
             child: const Text('Cancel'),
           ),

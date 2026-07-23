@@ -42,8 +42,7 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
             padding: const EdgeInsets.all(16),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
-              child: FortalCard(
-                variant: .classic,
+              child: FortalCard.classic(
                 size: .size3,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -64,8 +63,7 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
                       runSpacing: 12,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        FortalToggle(
-                          variant: .outline,
+                        FortalToggle.outline(
                           selected: notificationsEnabled,
                           onChanged: (value) {
                             setState(() => notificationsEnabled = value);

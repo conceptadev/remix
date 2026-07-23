@@ -358,6 +358,54 @@ class FortalSwitch extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  const FortalSwitch.classic({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = .classic;
+
+  const FortalSwitch.surface({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = .surface;
+
+  const FortalSwitch.soft({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = .soft;
+
   final FortalSwitchVariant variant;
 
   final FortalSwitchSize size;

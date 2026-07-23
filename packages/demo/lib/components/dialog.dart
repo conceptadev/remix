@@ -20,8 +20,7 @@ Widget buildDividerUseCase(BuildContext context) {
                   description:
                       'Are you sure? This application will no longer be accessible and any existing sessions will be expired.',
                   actions: [
-                    FortalButton(
-                      variant: .ghost,
+                    FortalButton.ghost(
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -57,8 +56,7 @@ Widget buildAlertDialogUseCase(BuildContext context) {
               description:
                   'This permanently deletes the project and all of its data.',
               actions: [
-                FortalButton(
-                  variant: .ghost,
+                FortalButton.ghost(
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Cancel'),
                 ),

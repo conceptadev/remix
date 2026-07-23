@@ -63,8 +63,7 @@ class _ToastBody extends StatelessWidget {
       tween: Tween(begin: 0, end: 1),
       duration: const Duration(milliseconds: 180),
       curve: Curves.easeOutCubic,
-      child: FortalCard(
-        variant: .classic,
+      child: FortalCard.classic(
         size: .size2,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 360),
@@ -86,8 +85,7 @@ class _ToastBody extends StatelessWidget {
                 ),
               ),
               if (actionLabel case final label?)
-                FortalButton(
-                  variant: .ghost,
+                FortalButton.ghost(
                   size: .size1,
                   onPressed: onAction,
                   child: Text(label),

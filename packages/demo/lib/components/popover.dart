@@ -42,8 +42,7 @@ Widget buildPopoverUseCase(BuildContext context) {
                   'Share this project with teammates and choose what they can access.',
                   style: TextStyler().fontSize(14).color(FortalTokens.gray11()),
                 ),
-                FortalButton(
-                  variant: .soft,
+                FortalButton.soft(
                   onPressed: () {},
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,

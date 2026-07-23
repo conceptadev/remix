@@ -17,9 +17,8 @@
 - **BREAKING**: Align the 20 mapped Fortal families with the pinned
   `@radix-ui/themes@3.3.0` contract. Accordion, Toggle, and ToggleGroup remain
   documented Fortal extensions and are excluded from the Radix parity score.
-- **BREAKING**: Replace every variant-specific Fortal named constructor with
-  one enum-based constructor per widget. Use `variant:`, `size:`, and the
-  component's supported `color`, `radius`, or `highContrast` overrides.
+- **FIX**: Restore variant-specific Fortal named constructors while retaining
+  the enum-based constructor for runtime variant selection.
 - **BREAKING**: Replace the root theme inputs with partial, inheritable
   `appearance`, `accentColor`, `grayColor`, `panelBackground`, `radius`,
   `scaling`, and `hasBackground` values. Root `FortalScope` belongs above the
@@ -98,8 +97,7 @@
 - **FIX**: Consume `naked_ui` beta.3's type-specific state scopes, including typed menu-item and select-option controllers, while preserving callback-optional `RemixSelect` browsing.
 - **FIX**: Forward menu interception, outside-tap, root-overlay, close-on-outside-click, focus, and positioning options through `RemixMenuStyler.call()` and generated `FortalMenu` widgets.
 - **FEAT**: Add `call()` widget-builder methods to all component stylers and reproducibly generate every `FortalX` convenience widget via `@MixWidget`, including generic Radio/Accordion/Menu/Select surfaces.
-- **FEAT**: Add generated named constructors for Fortal variants (subsequently
-  removed by the Unreleased Radix 3.3.0 hard break).
+- **FEAT**: Add generated named constructors for Fortal variants.
 - **FEAT**: Fortal wrappers for dialog, menu, select, tooltip, and tabs parts (`FortalTabBar`/`FortalTab`/`FortalTabView`).
 - **FEAT**: Tooltip `dismissDuration` (hover-exit → `NakedTooltip.dismissDelay`); `showDuration` maps to the post-activation touch visibility interval (`touchDelay`).
 - **FEAT**: Add `positioning` (`OverlayPositionConfig`) to `RemixTooltip` and `enabled` to `RemixIconButton`.

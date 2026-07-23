@@ -21,8 +21,7 @@ class GalleryOverlaysPage extends StatelessWidget {
           child: GalleryMatrix(
             rows: FortalDialogAlign.values.map(galleryLabel).toList(),
             columns: FortalDialogSize.values.map(galleryLabel).toList(),
-            cellBuilder: (context, row, column) => FortalButton(
-              variant: .soft,
+            cellBuilder: (context, row, column) => FortalButton.soft(
               size: .size1,
               onPressed: () => showRemixDialog<void>(
                 context: context,
@@ -32,8 +31,7 @@ class GalleryOverlaysPage extends StatelessWidget {
                   title: 'Invite teammates',
                   description: 'Share this workspace with your collaborators.',
                   actions: [
-                    FortalButton(
-                      variant: .soft,
+                    FortalButton.soft(
                       onPressed: () => Navigator.of(dialogContext).pop(),
                       child: const Text('Cancel'),
                     ),

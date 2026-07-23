@@ -124,6 +124,40 @@ class FortalAvatar extends StatelessWidget {
     this.iconBuilder,
   });
 
+  const FortalAvatar.soft({
+    super.key,
+    this.size = .size3,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    this.backgroundImage,
+    this.foregroundImage,
+    this.onBackgroundImageError,
+    this.onForegroundImageError,
+    this.child,
+    this.label,
+    this.labelBuilder,
+    this.icon,
+    this.iconBuilder,
+  }) : variant = .soft;
+
+  const FortalAvatar.solid({
+    super.key,
+    this.size = .size3,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    this.backgroundImage,
+    this.foregroundImage,
+    this.onBackgroundImageError,
+    this.onForegroundImageError,
+    this.child,
+    this.label,
+    this.labelBuilder,
+    this.icon,
+    this.iconBuilder,
+  }) : variant = .solid;
+
   final FortalAvatarVariant variant;
   final FortalAvatarSize size;
 

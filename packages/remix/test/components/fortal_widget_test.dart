@@ -7,15 +7,10 @@ import '../helpers/test_helpers.dart';
 void main() {
   group('Fortal widgets', () {
     test('constructors pin variants and infer generic types', () {
-      const button = FortalButton(variant: .soft, child: Text('Save'));
-      const accordion = FortalAccordion(
-        variant: .soft,
-        value: 'item',
-        child: SizedBox(),
-      );
-      const radio = FortalRadio(variant: .soft, value: 'option');
-      const menu = FortalMenu<String>(
-        variant: .soft,
+      const button = FortalButton.soft(child: Text('Save'));
+      const accordion = FortalAccordion.soft(value: 'item', child: SizedBox());
+      const radio = FortalRadio.soft(value: 'option');
+      const menu = FortalMenu<String>.soft(
         trigger: Text('Menu'),
         entries: [RemixMenuAction(value: 'a', child: Text('A'))],
       );
@@ -34,6 +29,218 @@ void main() {
       expect(menu.variant, FortalMenuVariant.soft);
       expect(select, isA<FortalSelect<String>>());
       expect(select.triggerVariant, FortalSelectTriggerVariant.ghost);
+    });
+
+    test('variant constructors cover every generator-compatible variant', () {
+      expect(
+        const FortalAccordion.surface(value: 1, child: SizedBox()).variant,
+        FortalAccordionVariant.surface,
+      );
+      expect(
+        const FortalAccordion.soft(value: 1, child: SizedBox()).variant,
+        FortalAccordionVariant.soft,
+      );
+
+      expect(const FortalAvatar.soft().variant, FortalAvatarVariant.soft);
+      expect(const FortalAvatar.solid().variant, FortalAvatarVariant.solid);
+
+      expect(
+        const FortalBadge.solid(child: SizedBox()).variant,
+        FortalBadgeVariant.solid,
+      );
+      expect(
+        const FortalBadge.soft(child: SizedBox()).variant,
+        FortalBadgeVariant.soft,
+      );
+      expect(
+        const FortalBadge.surface(child: SizedBox()).variant,
+        FortalBadgeVariant.surface,
+      );
+      expect(
+        const FortalBadge.outline(child: SizedBox()).variant,
+        FortalBadgeVariant.outline,
+      );
+
+      expect(
+        const FortalButton.classic(child: SizedBox()).variant,
+        FortalButtonVariant.classic,
+      );
+      expect(
+        const FortalButton.solid(child: SizedBox()).variant,
+        FortalButtonVariant.solid,
+      );
+      expect(
+        const FortalButton.soft(child: SizedBox()).variant,
+        FortalButtonVariant.soft,
+      );
+      expect(
+        const FortalButton.surface(child: SizedBox()).variant,
+        FortalButtonVariant.surface,
+      );
+      expect(
+        const FortalButton.outline(child: SizedBox()).variant,
+        FortalButtonVariant.outline,
+      );
+      expect(
+        const FortalButton.ghost(child: SizedBox()).variant,
+        FortalButtonVariant.ghost,
+      );
+
+      expect(
+        const FortalCallout.soft(child: SizedBox()).variant,
+        FortalCalloutVariant.soft,
+      );
+      expect(
+        const FortalCallout.surface(child: SizedBox()).variant,
+        FortalCalloutVariant.surface,
+      );
+      expect(
+        const FortalCallout.outline(child: SizedBox()).variant,
+        FortalCalloutVariant.outline,
+      );
+
+      expect(const FortalCard.surface().variant, FortalCardVariant.surface);
+      expect(const FortalCard.classic().variant, FortalCardVariant.classic);
+      expect(const FortalCard.ghost().variant, FortalCardVariant.ghost);
+
+      expect(
+        const FortalCheckbox.classic(selected: false).variant,
+        FortalCheckboxVariant.classic,
+      );
+      expect(
+        const FortalCheckbox.surface(selected: false).variant,
+        FortalCheckboxVariant.surface,
+      );
+      expect(
+        const FortalCheckbox.soft(selected: false).variant,
+        FortalCheckboxVariant.soft,
+      );
+
+      expect(
+        const FortalIconButton.classic(
+          semanticLabel: 'icon',
+          child: SizedBox(),
+        ).variant,
+        FortalIconButtonVariant.classic,
+      );
+      expect(
+        const FortalIconButton.solid(
+          semanticLabel: 'icon',
+          child: SizedBox(),
+        ).variant,
+        FortalIconButtonVariant.solid,
+      );
+      expect(
+        const FortalIconButton.soft(
+          semanticLabel: 'icon',
+          child: SizedBox(),
+        ).variant,
+        FortalIconButtonVariant.soft,
+      );
+      expect(
+        const FortalIconButton.surface(
+          semanticLabel: 'icon',
+          child: SizedBox(),
+        ).variant,
+        FortalIconButtonVariant.surface,
+      );
+      expect(
+        const FortalIconButton.outline(
+          semanticLabel: 'icon',
+          child: SizedBox(),
+        ).variant,
+        FortalIconButtonVariant.outline,
+      );
+      expect(
+        const FortalIconButton.ghost(
+          semanticLabel: 'icon',
+          child: SizedBox(),
+        ).variant,
+        FortalIconButtonVariant.ghost,
+      );
+
+      expect(
+        const FortalMenu.solid(trigger: SizedBox(), entries: []).variant,
+        FortalMenuVariant.solid,
+      );
+      expect(
+        const FortalMenu.soft(trigger: SizedBox(), entries: []).variant,
+        FortalMenuVariant.soft,
+      );
+
+      expect(
+        const FortalProgress.classic().variant,
+        FortalProgressVariant.classic,
+      );
+      expect(
+        const FortalProgress.surface().variant,
+        FortalProgressVariant.surface,
+      );
+      expect(const FortalProgress.soft().variant, FortalProgressVariant.soft);
+
+      expect(
+        const FortalRadio.classic(value: 1).variant,
+        FortalRadioVariant.classic,
+      );
+      expect(
+        const FortalRadio.surface(value: 1).variant,
+        FortalRadioVariant.surface,
+      );
+      expect(const FortalRadio.soft(value: 1).variant, FortalRadioVariant.soft);
+
+      expect(
+        const FortalSlider.classic(values: [0]).variant,
+        FortalSliderVariant.classic,
+      );
+      expect(
+        const FortalSlider.surface(values: [0]).variant,
+        FortalSliderVariant.surface,
+      );
+      expect(
+        const FortalSlider.soft(values: [0]).variant,
+        FortalSliderVariant.soft,
+      );
+
+      expect(
+        const FortalSwitch.classic(selected: false).variant,
+        FortalSwitchVariant.classic,
+      );
+      expect(
+        const FortalSwitch.surface(selected: false).variant,
+        FortalSwitchVariant.surface,
+      );
+      expect(
+        const FortalSwitch.soft(selected: false).variant,
+        FortalSwitchVariant.soft,
+      );
+
+      expect(
+        const FortalTextField.classic().variant,
+        FortalTextFieldVariant.classic,
+      );
+      expect(
+        const FortalTextField.surface().variant,
+        FortalTextFieldVariant.surface,
+      );
+      expect(const FortalTextField.soft().variant, FortalTextFieldVariant.soft);
+
+      expect(
+        const FortalToggle.ghost(selected: false).variant,
+        FortalToggleVariant.ghost,
+      );
+      expect(
+        const FortalToggle.outline(selected: false).variant,
+        FortalToggleVariant.outline,
+      );
+
+      expect(
+        const FortalToggleGroup.soft(items: [], selectedValue: null).variant,
+        FortalToggleGroupVariant.soft,
+      );
+      expect(
+        const FortalToggleGroup.surface(items: [], selectedValue: null).variant,
+        FortalToggleGroupVariant.surface,
+      );
     });
 
     testWidgets('renders FortalAccordion', (tester) async {

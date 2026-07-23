@@ -362,11 +362,7 @@ void main() {
         accentColor: .indigo,
         child: const MaterialApp(
           home: Scaffold(
-            body: FortalButton(
-              variant: .classic,
-              color: .red,
-              child: Text('Red classic'),
-            ),
+            body: FortalButton.classic(color: .red, child: Text('Red classic')),
           ),
         ),
       ),

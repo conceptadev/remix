@@ -14,7 +14,7 @@ void main() {
     testWidgets('Fortal variants keep text and surface colors separate', (
       tester,
     ) async {
-      await tester.pumpRemixApp(const FortalTextField(variant: .surface));
+      await tester.pumpRemixApp(const FortalTextField.surface());
       var context = tester.element(find.byType(FortalTextField));
       var colors = resolveFortalTokens(FortalTheme.of(context));
       var spec = fortalTextFieldStyler(variant: .surface).resolve(context).spec;
@@ -25,7 +25,7 @@ void main() {
         colors.colorSurface,
       );
 
-      await tester.pumpRemixApp(const FortalTextField(variant: .soft));
+      await tester.pumpRemixApp(const FortalTextField.soft());
       context = tester.element(find.byType(FortalTextField));
       colors = resolveFortalTokens(FortalTheme.of(context));
       spec = fortalTextFieldStyler(variant: .soft).resolve(context).spec;

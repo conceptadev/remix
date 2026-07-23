@@ -129,6 +129,42 @@ class FortalBadge extends StatelessWidget {
     required this.child,
   });
 
+  const FortalBadge.solid({
+    super.key,
+    this.size = .size1,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    required this.child,
+  }) : variant = .solid;
+
+  const FortalBadge.soft({
+    super.key,
+    this.size = .size1,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    required this.child,
+  }) : variant = .soft;
+
+  const FortalBadge.surface({
+    super.key,
+    this.size = .size1,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    required this.child,
+  }) : variant = .surface;
+
+  const FortalBadge.outline({
+    super.key,
+    this.size = .size1,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    required this.child,
+  }) : variant = .outline;
+
   final FortalBadgeVariant variant;
   final FortalBadgeSize size;
   final FortalAccentColor? color;

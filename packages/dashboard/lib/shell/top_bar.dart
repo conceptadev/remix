@@ -43,9 +43,8 @@ class _TopBarState extends State<TopBar> {
         spacing: 12,
         children: [
           if (widget.onMenuPressed case final onMenuPressed?)
-            FortalIconButton(
+            FortalIconButton.ghost(
               key: const ValueKey('dashboard-menu'),
-              variant: .ghost,
               semanticLabel: 'Open navigation',
               onPressed: onMenuPressed,
               child: const Icon(Icons.menu),
@@ -84,9 +83,8 @@ class _TopBarState extends State<TopBar> {
                 onChanged: widget.onSearchChanged,
               ),
             ),
-          FortalIconButton(
+          FortalIconButton.ghost(
             key: const ValueKey('theme-quick-toggle'),
-            variant: .ghost,
             semanticLabel: 'Toggle dark mode',
             onPressed: () {
               final theme = ThemeScope.of(context);
@@ -126,8 +124,7 @@ class _TopBarState extends State<TopBar> {
                         ).fontWeight(.w600).color(FortalTokens.gray12()),
                       ),
                     ),
-                    FortalButton(
-                      variant: .ghost,
+                    FortalButton.ghost(
                       size: .size1,
                       onPressed: () {
                         _notificationsController.close();
@@ -181,8 +178,7 @@ class _TopBarState extends State<TopBar> {
                   ),
               ],
             ),
-            child: FortalIconButton(
-              variant: .ghost,
+            child: FortalIconButton.ghost(
               semanticLabel: 'Notifications',
               onPressed: _toggleNotifications,
               child: Stack(
@@ -218,9 +214,8 @@ class _TopBarState extends State<TopBar> {
               sideOffset: 8,
             ),
             popoverChild: const ThemePanel(),
-            child: FortalIconButton(
+            child: FortalIconButton.ghost(
               key: const ValueKey('theme-panel-trigger'),
-              variant: .ghost,
               semanticLabel: 'Theme settings',
               onPressed: _toggleTheme,
               child: const Icon(Icons.palette_outlined),

@@ -83,13 +83,11 @@ class _FortalCheckboxExampleState extends State<FortalCheckboxExample> {
     return Column(
       spacing: 16,
       children: [
-        FortalCheckbox(
-          variant: FortalCheckboxVariant.surface,
+        FortalCheckbox.surface(
           selected: _isChecked,
           onChanged: (value) => setState(() => _isChecked = value ?? false),
         ),
-        FortalCheckbox(
-          variant: FortalCheckboxVariant.soft,
+        FortalCheckbox.soft(
           selected: _isChecked,
           onChanged: (value) => setState(() => _isChecked = value ?? false),
         ),

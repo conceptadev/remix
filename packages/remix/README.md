@@ -171,7 +171,7 @@ coverage ledger are tracked in
 
 ### Quick Start with Fortal
 
-Put `FortalScope` above the app widget so platform appearance and every overlay inherit the same resolved theme. Each `Fortal*` widget has one enum-based constructor; pass `variant:` and `size:` explicitly when they differ from the component defaults:
+Put `FortalScope` above the app widget so platform appearance and every overlay inherit the same resolved theme. Use a variant constructor such as `FortalButton.solid(...)` when the variant is known. The unnamed constructor still accepts `variant:` for runtime selection:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -186,8 +186,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         home: Scaffold(
           body: Center(
-            child: FortalButton(
-              variant: .solid,
+            child: FortalButton.solid(
               onPressed: () {},
               child: const Text('Fortal Button'),
             ),

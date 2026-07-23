@@ -142,15 +142,13 @@ class _FortalAccordionExampleState extends State<FortalAccordionExample> {
       controller: controller,
       child: Column(
         children: [
-          FortalAccordion(
-            variant: FortalAccordionVariant.surface,
+          FortalAccordion.surface(
             value: 'item1',
             title: 'First Item',
             size: FortalAccordionSize.size2,
             child: Text('First content'),
           ),
-          FortalAccordion(
-            variant: FortalAccordionVariant.soft,
+          FortalAccordion.soft(
             value: 'item2',
             title: 'Second Item',
             size: FortalAccordionSize.size3,

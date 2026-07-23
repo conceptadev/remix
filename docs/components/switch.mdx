@@ -100,13 +100,11 @@ class _FortalSwitchExampleState extends State<FortalSwitchExample> {
     return Column(
       spacing: 16,
       children: [
-        FortalSwitch(
-          variant: FortalSwitchVariant.surface,
+        FortalSwitch.surface(
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
         ),
-        FortalSwitch(
-          variant: FortalSwitchVariant.soft,
+        FortalSwitch.soft(
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
         ),

@@ -49,8 +49,7 @@ void main() {
     'disabled soft textfield resolves a background and never the debug red',
     (tester) async {
       await tester.pumpRemixApp(
-        FortalTextField(
-          variant: .soft,
+        FortalTextField.soft(
           enabled: false,
           controller: TextEditingController(text: 'disabled'),
         ),
@@ -80,8 +79,7 @@ void main() {
   ) async {
     await tester.pumpRemixApp(
       FortalScope(
-        child: FortalTextField(
-          variant: .soft,
+        child: FortalTextField.soft(
           enabled: false,
           controller: TextEditingController(text: 'disabled'),
         ),

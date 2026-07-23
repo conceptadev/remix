@@ -104,6 +104,33 @@ class FortalCallout extends StatelessWidget {
     this.icon,
   });
 
+  const FortalCallout.soft({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.highContrast = false,
+    required this.child,
+    this.icon,
+  }) : variant = .soft;
+
+  const FortalCallout.surface({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.highContrast = false,
+    required this.child,
+    this.icon,
+  }) : variant = .surface;
+
+  const FortalCallout.outline({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.highContrast = false,
+    required this.child,
+    this.icon,
+  }) : variant = .outline;
+
   final FortalCalloutVariant variant;
   final FortalCalloutSize size;
   final FortalAccentColor? color;

@@ -117,32 +117,27 @@ class FortalButtonExample extends StatelessWidget {
       spacing: 16,
       children: [
         // Solid variant - High emphasis, primary actions
-        FortalButton(
-          variant: FortalButtonVariant.solid,
+        FortalButton.solid(
           onPressed: () {},
           child: const Text('Solid Button'),
         ),
         // Soft variant - Medium emphasis, secondary actions
-        FortalButton(
-          variant: FortalButtonVariant.soft,
+        FortalButton.soft(
           onPressed: () {},
           child: const Text('Soft Button'),
         ),
         // Surface variant - Subtle emphasis with border
-        FortalButton(
-          variant: FortalButtonVariant.surface,
+        FortalButton.surface(
           onPressed: () {},
           child: const Text('Surface Button'),
         ),
         // Outline variant - Low emphasis, tertiary actions
-        FortalButton(
-          variant: FortalButtonVariant.outline,
+        FortalButton.outline(
           onPressed: () {},
           child: const Text('Outline Button'),
         ),
         // Ghost variant - Minimal styling, inline actions
-        FortalButton(
-          variant: FortalButtonVariant.ghost,
+        FortalButton.ghost(
           onPressed: () {},
           child: const Text('Ghost Button'),
         ),

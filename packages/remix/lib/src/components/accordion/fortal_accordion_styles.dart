@@ -185,6 +185,52 @@ class FortalAccordion<T> extends StatelessWidget {
     this.transitionBuilder,
   });
 
+  const FortalAccordion.surface({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    required this.value,
+    required this.child,
+    this.title,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.builder,
+    this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.enableFeedback = true,
+    this.autofocus = false,
+    this.focusNode,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChange,
+    this.semanticLabel,
+    this.transitionBuilder,
+  }) : variant = .surface;
+
+  const FortalAccordion.soft({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    required this.value,
+    required this.child,
+    this.title,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.builder,
+    this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.enableFeedback = true,
+    this.autofocus = false,
+    this.focusNode,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChange,
+    this.semanticLabel,
+    this.transitionBuilder,
+  }) : variant = .soft;
+
   final FortalAccordionVariant variant;
 
   final FortalAccordionSize size;

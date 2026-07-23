@@ -349,8 +349,7 @@ void main() {
         children: [Icon(Icons.save), Text('Save')],
       );
       await tester.pumpRemixApp(
-        const FortalButton(
-          variant: .classic,
+        const FortalButton.classic(
           size: .size3,
           color: .red,
           radius: .small,

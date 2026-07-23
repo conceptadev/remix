@@ -100,7 +100,7 @@ void main() {
     File('${workspaceRoot.path}/pubspec.lock'),
     failures,
   );
-  _checkSingleConstructors(packageRoot, failures);
+  _checkVariantConstructors(packageRoot, failures);
   _checkApproximations(manifest, failures);
   _finish(failures);
 }
@@ -598,17 +598,54 @@ String? _lockEntry(String source, String dependency) {
   return lines.sublist(start, end).join('\n');
 }
 
-void _checkSingleConstructors(Directory packageRoot, List<String> failures) {
+void _checkVariantConstructors(Directory packageRoot, List<String> failures) {
   final componentRoot = Directory('${packageRoot.path}/lib/src/components');
   for (final entity in componentRoot.listSync(recursive: true)) {
     if (entity is! File || !entity.path.endsWith('_styles.dart')) continue;
     final source = entity.readAsStringSync();
-    final named = RegExp(r'const\s+(Fortal[A-Za-z0-9_]+)\.([A-Za-z0-9_]+)\s*\(')
-        .allMatches(source)
-        .map((match) => '${match.group(1)}.${match.group(2)}')
-        .toSet();
-    if (named.isNotEmpty) {
-      failures.add('${entity.path} retains variant constructors: $named.');
+
+    for (final enumMatch in RegExp(
+      r'enum\s+(Fortal[A-Za-z0-9_]+Variant)\s*\{([^}]*)\}',
+      dotAll: true,
+    ).allMatches(source)) {
+      final enumName = enumMatch.group(1)!;
+      final className = enumName.substring(
+        0,
+        enumName.length - 'Variant'.length,
+      );
+      if (!RegExp(
+        'class\\s+${RegExp.escape(className)}(?:<|\\s)',
+      ).hasMatch(source)) {
+        continue;
+      }
+
+      final enumBody = enumMatch
+          .group(2)!
+          .replaceAll(RegExp(r'//[^\n]*'), '')
+          .replaceAll(RegExp(r'/\*.*?\*/', dotAll: true), '');
+      final variants = enumBody
+          .split(',')
+          .map((value) => value.trim())
+          .where((value) => value.isNotEmpty)
+          .map((value) => RegExp(r'^[A-Za-z0-9_]+').stringMatch(value))
+          .nonNulls
+          .toSet();
+      final constructors = RegExp(
+        'const\\s+${RegExp.escape(className)}\\.([A-Za-z0-9_]+)\\s*\\(',
+      ).allMatches(source).map((match) => match.group(1)!).toSet();
+
+      final missing = variants.difference(constructors);
+      final unexpected = constructors.difference(variants);
+      if (missing.isNotEmpty) {
+        failures.add(
+          '${entity.path} is missing $className variant constructors: $missing.',
+        );
+      }
+      if (unexpected.isNotEmpty) {
+        failures.add(
+          '${entity.path} has non-variant $className constructors: $unexpected.',
+        );
+      }
     }
   }
 }

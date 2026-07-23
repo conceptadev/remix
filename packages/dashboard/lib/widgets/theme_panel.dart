@@ -164,9 +164,8 @@ class ThemePanel extends StatelessWidget {
           ),
           Align(
             alignment: .centerLeft,
-            child: FortalButton(
+            child: FortalButton.ghost(
               key: const ValueKey('theme-reset'),
-              variant: .ghost,
               size: .size1,
               onPressed: () => scope.onChanged(const ThemeSettings()),
               child: const Row(

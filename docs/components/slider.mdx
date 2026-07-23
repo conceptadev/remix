@@ -79,8 +79,7 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
 
   @override
   Widget build(BuildContext context) {
-    return FortalSlider(
-      variant: FortalSliderVariant.surface,
+    return FortalSlider.surface(
       values: _values,
       semanticLabels: const ['Volume'],
       onChanged: (values) => setState(() => _values = values),

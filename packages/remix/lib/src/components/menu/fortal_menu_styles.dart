@@ -241,6 +241,64 @@ class FortalMenu<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  const FortalMenu.solid({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.highContrast = false,
+    required this.trigger,
+    required this.entries,
+    this.controller,
+    this.onSelected,
+    this.onOpen,
+    this.onClose,
+    this.onCanceled,
+    this.onOpenRequested,
+    this.onCloseRequested,
+    this.consumeOutsideTaps = true,
+    this.useRootOverlay = false,
+    this.closeOnClickOutside = true,
+    this.triggerFocusNode,
+    this.positioning = const OverlayPositionConfig(
+      side: OverlaySide.bottom,
+      alignment: OverlayAlignment.start,
+      sideOffset: 4,
+      collisionPadding: EdgeInsets.all(10),
+    ),
+    this.submenuPositioning,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : variant = .solid;
+
+  const FortalMenu.soft({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.highContrast = false,
+    required this.trigger,
+    required this.entries,
+    this.controller,
+    this.onSelected,
+    this.onOpen,
+    this.onClose,
+    this.onCanceled,
+    this.onOpenRequested,
+    this.onCloseRequested,
+    this.consumeOutsideTaps = true,
+    this.useRootOverlay = false,
+    this.closeOnClickOutside = true,
+    this.triggerFocusNode,
+    this.positioning = const OverlayPositionConfig(
+      side: OverlaySide.bottom,
+      alignment: OverlayAlignment.start,
+      sideOffset: 4,
+      collisionPadding: EdgeInsets.all(10),
+    ),
+    this.submenuPositioning,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : variant = .soft;
+
   final FortalMenuVariant variant;
   final FortalMenuSize size;
 

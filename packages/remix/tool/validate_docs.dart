@@ -4,9 +4,12 @@ import 'dart:io';
 final _retiredApis = <(RegExp, String)>[
   (
     RegExp(
-      r'Fortal[A-Z][A-Za-z0-9_]*\.(?:classic|solid|soft|surface|outline|ghost)\s*\(',
+      r'Fortal(?:Accordion|Avatar|Badge|Button|Callout|Card|Checkbox|IconButton|Menu|Progress|Radio|Slider|Switch|TextField|Toggle|ToggleGroup)'
+      r'(?:<[^>]+>)?\s*\((?:[^()]|\([^()]*\)){0,1200}?'
+      r'\bvariant\s*:\s*(?:Fortal[A-Za-z0-9_]+Variant\s*)?'
+      r'\.(?:classic|solid|soft|surface|outline|ghost)',
     ),
-    'variant-specific Fortal named constructor',
+    'static Fortal variant argument; use its named constructor',
   ),
   (
     RegExp(

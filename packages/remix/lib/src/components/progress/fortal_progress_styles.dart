@@ -157,6 +157,45 @@ class FortalProgress extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  const FortalProgress.classic({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    this.value,
+    this.max = 100,
+    this.duration = const Duration(seconds: 5),
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : variant = .classic;
+
+  const FortalProgress.surface({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    this.value,
+    this.max = 100,
+    this.duration = const Duration(seconds: 5),
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : variant = .surface;
+
+  const FortalProgress.soft({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    this.value,
+    this.max = 100,
+    this.duration = const Duration(seconds: 5),
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : variant = .soft;
+
   final FortalProgressVariant variant;
 
   final FortalProgressSize size;
