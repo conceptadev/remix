@@ -227,19 +227,6 @@ class _RemixBoxEffectLayerPainter extends CustomPainter
   }
 
   void _paintInnerLayers(Canvas canvas, Rect rect, RRect shape) {
-    if (spec.gradientInsets.isNotEmpty &&
-        spec.gradientInsets.length != spec.gradients.length) {
-      throw FlutterError(
-        'RemixBoxEffectLayerSpec.gradientInsets must be empty or match the '
-        'gradients length.',
-      );
-    }
-    if (spec.gradientInsets.any((inset) => !inset.isFinite || inset < 0)) {
-      throw FlutterError(
-        'RemixBoxEffectLayerSpec.gradientInsets must contain finite '
-        'non-negative values. Received ${spec.gradientInsets}.',
-      );
-    }
     canvas.save();
     canvas.clipRRect(shape, doAntiAlias: true);
 

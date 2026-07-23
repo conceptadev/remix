@@ -100,14 +100,11 @@ class _TabsExampleState extends State<TabsExample> {
         .labelColor(Colors.indigo.shade600)
         .iconColor(Colors.indigo.shade500)
         .onHovered(
-          RemixTabStyler()
-              .color(Colors.indigo.shade50)
-              .labelColor(Colors.indigo.shade700),
+          .color(Colors.indigo.shade50).labelColor(Colors.indigo.shade700),
         )
-        .onPressed(RemixTabStyler().color(Colors.indigo.shade100))
+        .onPressed(.color(Colors.indigo.shade100))
         .onSelected(
-          RemixTabStyler()
-              .color(Colors.white)
+          .color(Colors.white)
               .borderAll(color: Colors.indigo.shade400, width: 2)
               .shadowOnly(
                 color: Colors.indigo.withValues(alpha: 0.16),

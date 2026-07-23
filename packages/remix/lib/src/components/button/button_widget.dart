@@ -51,7 +51,7 @@ class RemixButton extends StatelessWidget {
       enabled && !loading && (onPressed != null || onLongPress != null);
 
   Widget _buildContent(BuildContext context, RemixButtonSpec spec) {
-    final content = remixInheritedContentStyle(
+    final content = RemixDefaultContentStyle(
       child: child,
       text: spec.label,
       icon: spec.icon,
@@ -64,7 +64,7 @@ class RemixButton extends StatelessWidget {
       maintainSemantics: true,
       child: content,
     );
-    final button = remixFlexBoxWithEffects(
+    final button = RemixFlexBoxWithEffects(
       key: const ValueKey('remix-button-surface'),
       styleSpec: spec.container,
       direction: Axis.horizontal,

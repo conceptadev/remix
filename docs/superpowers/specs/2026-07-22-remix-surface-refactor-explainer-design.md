@@ -1,5 +1,9 @@
 # Remix Surface Refactor Explainer Design
 
+> **Superseded:** This historical design described an explainer that has been
+> removed. Its type names and implementation steps do not describe the current
+> Remix box-effects architecture.
+
 ## Purpose
 
 Create a detailed, self-contained HTML explainer for Remix maintainers reviewing

@@ -24,6 +24,21 @@ final factoryStyle = RemixCardStyler.color(Colors.blue);
 final fluentStyle = RemixCardStyler().color(Colors.blue);
 ```
 
+## Contextual shorthand convention
+
+Use contextual dot shorthand for nested stylers, where the receiving API makes
+the expected type clear:
+
+- Use named factories for state variants: `.onHovered(.color(value))`.
+- Use `.new()` only when a nested styler starts with a lifecycle operation
+  that has no named factory, such as `.onPressed(.new().wrap(...))`.
+- Use shorthand for nested component slots such as `label`, `icon`,
+  `container`, `content`, and `item`.
+
+Keep the concrete class name for root styles, standalone variables, widget
+`style:` arguments, and constructor defaults. This makes the primary styled
+component explicit while keeping its nested pieces concise.
+
 ## Factory policy
 
 | API shape | Policy |
@@ -84,7 +99,7 @@ as `RemixMenuStyler`, exposes factories for its child fields instead:
 
 ```dart
 final style = RemixMenuStyler.item(
-  RemixMenuItemStyler.color(Colors.black),
+  .color(Colors.black),
 );
 ```
 
@@ -99,7 +114,7 @@ the root select styler.
 The upstream forwarded `transform` factory currently accepts `Alignment`
 rather than the wider `AlignmentGeometry` accepted by the former handwritten
 helpers. Use a direct child styler when a directional alignment is required,
-for example `RemixCardStyler.container(BoxStyler(transform: matrix,
+for example `RemixCardStyler.container(.new(transform: matrix,
 transformAlignment: AlignmentDirectional.centerStart))`.
 
 ### Variants and selected state

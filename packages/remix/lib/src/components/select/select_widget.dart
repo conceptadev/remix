@@ -519,7 +519,7 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
               opacity: fadeAnimation.value,
               child: StyleSpecBuilder<RemixSelectContentSpec>(
                 styleSpec: widget.content,
-                builder: (context, spec) => remixBoxWithEffects(
+                builder: (context, spec) => RemixBoxWithEffects(
                   key: const ValueKey('remix-select-content-surface'),
                   styleSpec: spec.container,
                   containerEffects: spec.containerEffects,
@@ -565,7 +565,7 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
     return StyleSpecBuilder<RemixSelectTriggerSpec>(
       styleSpec: styleSpec,
       builder: (context, spec) {
-        return remixFlexBoxWithEffects(
+        return RemixFlexBoxWithEffects(
           key: const ValueKey('remix-select-trigger-surface'),
           styleSpec: spec.container,
           direction: Axis.horizontal,

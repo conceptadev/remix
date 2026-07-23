@@ -26,6 +26,12 @@ final _retiredApis = <(RegExp, String)>[
     ),
     'retired surface-effects API',
   ),
+  (
+    RegExp(
+      r'\b(?:remixBoxWithEffects|remixFlexBoxWithEffects|remixInheritedContentStyle)\b',
+    ),
+    'removed internal widget helper',
+  ),
   (RegExp(r'\.effects\s*\('), 'retired generic effects styler'),
   (
     RegExp(r'generated Fortal', caseSensitive: false),

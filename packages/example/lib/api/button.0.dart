@@ -42,7 +42,7 @@ class ButtonExample extends StatelessWidget {
         .shadow(
           BoxShadowMix().color(Colors.redAccent).blurRadius(10).spreadRadius(0),
         )
-        .label(TextStyler().uppercase().color(Colors.redAccent))
+        .label(.uppercase().color(Colors.redAccent))
         .shapeBeveledRectangle(
           borderRadius: BorderRadiusMix()
               .bottomLeft(const Radius.circular(12))
@@ -50,19 +50,15 @@ class ButtonExample extends StatelessWidget {
           side: BorderSideMix.width(1).color(Colors.redAccent),
         )
         .wrap(.scale(x: 1, y: 1))
-        .onPressed(ButtonStyler().wrap(.scale(x: 0.90, y: 0.90)))
-        .onHovered(
-          ButtonStyler()
-              .backgroundColor(const Color(0xFF732D2D))
-              .animate(.spring(300.ms)),
-        )
-        .onFocused(ButtonStyler().backgroundColor(const Color(0xFF732D2D)));
+        .onPressed(.new().wrap(.scale(x: 0.90, y: 0.90)))
+        .onHovered(.color(const Color(0xFF732D2D)).animate(.spring(300.ms)))
+        .onFocused(.color(const Color(0xFF732D2D)));
   }
 
   ButtonStyler get successStyle {
     return destructiveStyle
         .backgroundColor(const Color.fromARGB(255, 15, 61, 15))
-        .label(TextStyler().uppercase().color(Colors.greenAccent))
+        .label(.uppercase().color(Colors.greenAccent))
         .shapeBeveledRectangle(side: BorderSideMix().color(Colors.greenAccent))
         .shadow(
           BoxShadowMix()
@@ -70,7 +66,7 @@ class ButtonExample extends StatelessWidget {
               .blurRadius(10)
               .spreadRadius(0),
         )
-        .onHovered(ButtonStyler().backgroundColor(const Color(0xFF357857)))
-        .onFocused(ButtonStyler().backgroundColor(const Color(0xFF357857)));
+        .onHovered(.color(const Color(0xFF357857)))
+        .onFocused(.color(const Color(0xFF357857)));
   }
 }

@@ -46,7 +46,7 @@ class _SliderExampleState extends State<SliderExample> {
         onChanged: (values) => setState(() => _values = values),
         style: RemixSliderStyler()
             .thumbSize(const Size(24, 24))
-            .thumb(BoxStyler().shapeCircle())
+            .thumb(.shape(CircleBorderMix()))
             .thumbColor(Colors.black)
             .trackColor(Colors.grey.shade300)
             .rangeColor(Colors.black)

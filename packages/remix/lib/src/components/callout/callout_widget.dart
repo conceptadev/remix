@@ -37,18 +37,18 @@ class RemixCallout extends StatelessWidget {
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
-        return remixFlexBoxWithEffects(
+        return RemixFlexBoxWithEffects(
           key: const ValueKey('remix-callout-surface'),
           styleSpec: spec.container,
           direction: Axis.horizontal,
           containerEffects: spec.containerEffects,
           children: [
             if (icon case final icon?)
-              remixInheritedContentStyle(child: icon, icon: spec.icon),
+              RemixDefaultContentStyle(child: icon, icon: spec.icon),
             // ignore: avoid-flexible-outside-flex
             Flexible(
               fit: FlexFit.loose,
-              child: remixInheritedContentStyle(
+              child: RemixDefaultContentStyle(
                 child: child,
                 text: spec.text,
                 icon: spec.icon,

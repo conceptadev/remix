@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix/src/rendering/remix_box_effects.dart'
-    show remixBoxWithEffects;
+    show RemixBoxWithEffects;
 
 void main() {
   group('Remix box effects pixel contract', () {
@@ -16,7 +16,7 @@ void main() {
       final pixels = await _render(
         tester,
         size: const Size(12, 12),
-        child: remixBoxWithEffects(
+        child: RemixBoxWithEffects(
           styleSpec: const StyleSpec(
             spec: BoxSpec(
               constraints: BoxConstraints.tightFor(width: 12, height: 12),
@@ -104,7 +104,7 @@ void main() {
           tester,
           size: const Size(32, 32),
           child: Center(
-            child: remixBoxWithEffects(
+            child: RemixBoxWithEffects(
               styleSpec: const StyleSpec(
                 spec: BoxSpec(
                   constraints: BoxConstraints.tightFor(width: 20, height: 20),
@@ -152,7 +152,7 @@ void main() {
           size: const Size(48, 32),
           background: Colors.white,
           child: Center(
-            child: remixBoxWithEffects(
+            child: RemixBoxWithEffects(
               styleSpec: const StyleSpec(
                 spec: BoxSpec(
                   constraints: BoxConstraints.tightFor(width: 20, height: 20),
@@ -184,7 +184,7 @@ void main() {
   });
 }
 
-Widget _insetSample(RemixBoxShadow shadow) => remixBoxWithEffects(
+Widget _insetSample(RemixBoxShadow shadow) => RemixBoxWithEffects(
   styleSpec: const StyleSpec(
     spec: BoxSpec(
       constraints: BoxConstraints.tightFor(width: 20, height: 24),

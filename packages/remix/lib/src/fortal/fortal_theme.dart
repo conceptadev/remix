@@ -33,7 +33,7 @@ class FortalTokens {
   // ============================================================================
 
   /// Page background color selected for the active brightness.
-  static const colorBackground = ColorToken('fortal.color.behindContent');
+  static const colorBackground = ColorToken('fortal.color.background');
 
   /// Neutral surface color for input fields and controls.
   static const colorSurface = ColorToken('fortal.color.surface');

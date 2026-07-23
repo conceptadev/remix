@@ -69,9 +69,9 @@ class RemixIconButton extends StatelessWidget {
             maintainAnimation: true,
             maintainSize: true,
             maintainSemantics: true,
-            child: remixInheritedContentStyle(child: child, icon: spec.icon),
+            child: RemixDefaultContentStyle(child: child, icon: spec.icon),
           );
-          final button = remixBoxWithEffects(
+          final button = RemixBoxWithEffects(
             key: const ValueKey('remix-icon-button-surface'),
             styleSpec: spec.container,
             containerEffects: spec.containerEffects,

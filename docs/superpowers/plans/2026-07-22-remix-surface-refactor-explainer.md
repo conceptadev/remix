@@ -1,5 +1,9 @@
 # Remix Surface Refactor Explainer Implementation Plan
 
+> **Superseded:** This historical plan targeted an explainer that has been
+> removed. Do not execute its implementation steps or treat its names as the
+> current Remix API.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a self-contained interactive HTML document that explains why commit `0fd5983` changed Remix surface ownership, how every surface type participates, and what the architecture enables across real components.

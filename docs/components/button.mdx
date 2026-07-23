@@ -54,7 +54,7 @@ class ButtonExample extends StatelessWidget {
           BoxShadowMix().color(Colors.redAccent).blurRadius(10).spreadRadius(0),
         )
         .label(
-          TextStyler().uppercase().color(Colors.redAccent),
+          .uppercase().color(Colors.redAccent),
         )
         .shapeBeveledRectangle(
           borderRadius: BorderRadiusMix()
@@ -78,7 +78,7 @@ class ButtonExample extends StatelessWidget {
   ButtonStyler get successStyle {
     return destructiveStyle
         .backgroundColor(const Color.fromARGB(255, 15, 61, 15))
-        .label(TextStyler().uppercase().color(Colors.greenAccent))
+        .label(.uppercase().color(Colors.greenAccent))
         .shapeBeveledRectangle(
           side: BorderSideMix().color(Colors.greenAccent),
         )

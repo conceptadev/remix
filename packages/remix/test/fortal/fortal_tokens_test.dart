@@ -4,6 +4,10 @@ import 'package:remix/remix.dart';
 
 void main() {
   group('Fortal semantic tokens', () {
+    test('keeps the background token name stable', () {
+      expect(FortalTokens.colorBackground.name, 'fortal.color.background');
+    });
+
     testWidgets('radio indicator metrics resolve before size arithmetic', (
       tester,
     ) async {

@@ -65,7 +65,7 @@ class RemixProgress extends StatelessWidget {
           styleSpec: spec.indicator,
           containerEffects: spec.indicatorEffects,
         );
-        final progress = remixBoxWithEffects(
+        final progress = RemixBoxWithEffects(
           styleSpec: spec.container,
           containerEffects: spec.trackEffects,
           child: Stack(
@@ -199,7 +199,7 @@ class _RemixProgressIndicatorState extends State<_RemixProgressIndicator>
     child: FractionallySizedBox(
       widthFactor: fraction,
       heightFactor: 1,
-      child: remixBoxWithEffects(
+      child: RemixBoxWithEffects(
         styleSpec: widget.styleSpec,
         containerEffects: widget.containerEffects,
       ),

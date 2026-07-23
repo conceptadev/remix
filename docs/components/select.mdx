@@ -58,15 +58,13 @@ class _SelectExampleState extends State<SelectExample> {
         onChanged: (value) => setState(() => _selectedValue = value),
         style: RemixSelectStyler()
             .trigger(
-              RemixSelectTriggerStyler()
-                  .paddingY(10)
+              .padding(EdgeInsetsGeometryMix.symmetric(vertical: 10))
                   .paddingX(12)
                   .borderAll(color: const Color(0xFF898988))
                   .borderRadiusAll(const Radius.circular(12)),
             )
             .content(
-              RemixSelectContentStyler()
-                  .width(240)
+              .width(240)
                   .paddingAll(6)
                   .color(Colors.white)
                   .borderRadiusAll(const Radius.circular(12)),

@@ -49,11 +49,10 @@ class _ToggleExampleState extends State<ToggleExample> {
         .backgroundColor(Colors.grey.shade100)
         .foregroundColor(Colors.grey.shade700)
         .borderRadiusAll(const Radius.circular(8))
-        .onHovered(RemixToggleStyler().backgroundColor(Colors.grey.shade200))
-        .onPressed(RemixToggleStyler().scale(0.93))
+        .onHovered(.color(Colors.grey.shade200))
+        .onPressed(.scale(0.93))
         .onSelected(
-          RemixToggleStyler()
-              .backgroundColor(Colors.deepPurple.shade50)
+          .color(Colors.deepPurple.shade50)
               .foregroundColor(Colors.deepPurple),
         )
         .animate(AnimationConfig.easeOut(200.ms));

@@ -87,17 +87,15 @@ class _MenuExampleState extends State<MenuExample> {
       onSelected: (value) => debugPrint('Selected: $value'),
       style: RemixMenuStyler()
           .overlay(
-            FlexBoxStyler()
-                .paddingAll(8)
+            .padding(EdgeInsetsGeometryMix.all(8))
                 .color(Colors.white)
                 .borderRadiusAll(const Radius.circular(12)),
           )
           .item(
-            RemixMenuItemStyler()
-                .spacing(8)
+            .spacing(8)
                 .borderRadiusAll(const Radius.circular(8))
                 .onHovered(
-                  RemixMenuItemStyler().color(Colors.blueGrey.shade50),
+                  .color(Colors.blueGrey.shade50),
                 ),
           ),
     );

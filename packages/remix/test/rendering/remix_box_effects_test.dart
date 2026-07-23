@@ -2,10 +2,122 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix/src/rendering/remix_box_effects.dart'
-    show remixBoxWithEffects, remixFlexBoxWithEffects;
+    show RemixBoxWithEffects, RemixFlexBoxWithEffects;
 
 void main() {
   group('RemixBoxEffectsSpec', () {
+    test('rejects explicit shadows and a shadow token together', () {
+      expect(
+        () => RemixBoxEffectLayerMix(
+          shadows: [RemixBoxShadowMix()],
+          shadowToken: const RemixBoxShadowListToken('test.shadow'),
+        ),
+        throwsArgumentError,
+      );
+    });
+
+    testWidgets('rejects a non-finite backdrop blur during build', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: RemixBoxWithEffects(
+            styleSpec: const StyleSpec(spec: BoxSpec()),
+            containerEffects: const RemixBoxEffectsSpec(
+              backdropBlur: double.infinity,
+            ),
+            child: const SizedBox.square(dimension: 20),
+          ),
+        ),
+      );
+
+      final exception = tester.takeException();
+      expect(exception, isA<FlutterError>());
+      expect(exception.toString(), contains('backdropBlur must be finite'));
+    });
+
+    final invalidEffects = <(String, RemixBoxEffectsSpec)>[
+      (
+        'outline.width',
+        const RemixBoxEffectsSpec(outline: BorderSide(width: double.infinity)),
+      ),
+      (
+        'gradientInsets must be empty or match',
+        const RemixBoxEffectsSpec(
+          behindContent: RemixBoxEffectLayerSpec(
+            gradients: [
+              LinearGradient(colors: [Colors.red, Colors.blue]),
+            ],
+            gradientInsets: [0, 1],
+          ),
+        ),
+      ),
+      (
+        'gradientInsets must contain finite',
+        const RemixBoxEffectsSpec(
+          overContent: RemixBoxEffectLayerSpec(
+            gradients: [
+              LinearGradient(colors: [Colors.red, Colors.blue]),
+            ],
+            gradientInsets: [double.infinity],
+          ),
+        ),
+      ),
+      (
+        'offset must contain finite',
+        const RemixBoxEffectsSpec(
+          behindContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(offset: Offset(double.infinity, 0))],
+          ),
+        ),
+      ),
+      (
+        'blurRadius must be finite and non-negative',
+        const RemixBoxEffectsSpec(
+          behindContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(blurRadius: double.infinity)],
+          ),
+        ),
+      ),
+      (
+        'spreadRadius must be finite',
+        const RemixBoxEffectsSpec(
+          overContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(spreadRadius: double.infinity)],
+          ),
+        ),
+      ),
+      (
+        'shapeInset must be finite and non-negative',
+        const RemixBoxEffectsSpec(
+          overContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(shapeInset: double.infinity)],
+          ),
+        ),
+      ),
+    ];
+
+    for (final (message, effects) in invalidEffects) {
+      testWidgets('rejects invalid effects during build: $message', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: RemixBoxWithEffects(
+              styleSpec: const StyleSpec(spec: BoxSpec()),
+              containerEffects: effects,
+            ),
+          ),
+        );
+
+        final exception = tester.takeException();
+        expect(exception, isA<FlutterError>());
+        expect(exception.toString(), contains(message));
+      });
+    }
+
     test('owns only advanced paint', () {
       const background = RemixBoxEffectLayerSpec(
         gradients: [
@@ -36,15 +148,25 @@ void main() {
     testWidgets('rejects outline stroke alignment other than inside', (
       tester,
     ) async {
-      Widget build(double strokeAlign) => remixBoxWithEffects(
+      Widget build(double strokeAlign) => RemixBoxWithEffects(
         styleSpec: const StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
         containerEffects: RemixBoxEffectsSpec(
           outline: BorderSide(strokeAlign: strokeAlign),
         ),
       );
 
-      expect(() => build(BorderSide.strokeAlignCenter), throwsFlutterError);
-      expect(() => build(BorderSide.strokeAlignOutside), throwsFlutterError);
+      for (final strokeAlign in [
+        BorderSide.strokeAlignCenter,
+        BorderSide.strokeAlignOutside,
+      ]) {
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: build(strokeAlign),
+          ),
+        );
+        expect(tester.takeException(), isA<FlutterError>());
+      }
       expect(RemixBoxEffectsSpec().outline, BorderSide.none);
     });
 
@@ -88,7 +210,7 @@ void main() {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: remixBoxWithEffects(
+          child: RemixBoxWithEffects(
             styleSpec: const StyleSpec(spec: BoxSpec()),
             child: const SizedBox.square(dimension: 12),
           ),
@@ -107,13 +229,13 @@ void main() {
           textDirection: TextDirection.ltr,
           child: Column(
             children: [
-              remixBoxWithEffects(
+              RemixBoxWithEffects(
                 styleSpec: const StyleSpec(spec: BoxSpec()),
                 containerEffects: const RemixBoxEffectsSpec(
                   behindContent: RemixBoxEffectLayerSpec(),
                 ),
               ),
-              remixFlexBoxWithEffects(
+              RemixFlexBoxWithEffects(
                 styleSpec: const StyleSpec(spec: FlexBoxSpec()),
                 direction: Axis.horizontal,
                 containerEffects: const RemixBoxEffectsSpec(
@@ -136,7 +258,7 @@ void main() {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: remixBoxWithEffects(
+          child: RemixBoxWithEffects(
             styleSpec: const StyleSpec(
               spec: BoxSpec(
                 decoration: BoxDecoration(
@@ -162,7 +284,7 @@ void main() {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: remixBoxWithEffects(
+          child: RemixBoxWithEffects(
             styleSpec: const StyleSpec(spec: BoxSpec()),
             containerEffects: const RemixBoxEffectsSpec(
               outline: BorderSide(color: Colors.green, width: 2),
@@ -186,7 +308,7 @@ void main() {
         await tester.pumpWidget(
           Directionality(
             textDirection: TextDirection.ltr,
-            child: remixBoxWithEffects(
+            child: RemixBoxWithEffects(
               styleSpec: StyleSpec(spec: BoxSpec(decoration: invalid)),
               containerEffects: RemixBoxEffectsSpec(backdropBlur: 1),
               child: const SizedBox.square(dimension: 20),
@@ -241,7 +363,7 @@ void main() {
                 key: const ValueKey('effects-host'),
                 width: 100,
                 height: 80,
-                child: remixBoxWithEffects(
+                child: RemixBoxWithEffects(
                   styleSpec: spec,
                   containerEffects: const RemixBoxEffectsSpec(
                     behindContent: RemixBoxEffectLayerSpec(
@@ -290,7 +412,7 @@ void main() {
             children: [
               SizedBox(
                 key: const ValueKey('negative-footprint'),
-                child: remixBoxWithEffects(
+                child: RemixBoxWithEffects(
                   styleSpec: const StyleSpec(
                     spec: BoxSpec(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -311,7 +433,7 @@ void main() {
                   child: const SizedBox(width: 20, height: 10),
                 ),
               ),
-              remixBoxWithEffects(
+              RemixBoxWithEffects(
                 key: const ValueKey('null-child'),
                 styleSpec: const StyleSpec(
                   spec: BoxSpec(
@@ -346,7 +468,7 @@ void main() {
         Directionality(
           textDirection: TextDirection.ltr,
           child: Center(
-            child: remixBoxWithEffects(
+            child: RemixBoxWithEffects(
               styleSpec: const StyleSpec(
                 spec: BoxSpec(
                   constraints: BoxConstraints.tightFor(width: 30, height: 20),
@@ -399,7 +521,7 @@ void main() {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: remixBoxWithEffects(
+          child: RemixBoxWithEffects(
             styleSpec: const StyleSpec(
               spec: BoxSpec(
                 clipBehavior: Clip.hardEdge,
@@ -432,6 +554,150 @@ void main() {
       expect(find.byType(ClipRRect), findsOneWidget);
       expect(find.byType(ClipPath), findsOneWidget);
       expect(find.byType(CustomPaint), findsAtLeastNWidgets(3));
+    });
+
+    for (final advanced in [false, true]) {
+      testWidgets('preserves Box modifiers and animation on the '
+          '${advanced ? 'advanced' : 'fast'} path', (tester) async {
+        final animation = AnimationConfig.linear(
+          const Duration(milliseconds: 100),
+        );
+        Widget build(double width) => Directionality(
+          textDirection: TextDirection.ltr,
+          child: Center(
+            child: RemixBoxWithEffects(
+              key: const ValueKey('animated-box'),
+              styleSpec: StyleSpec(
+                spec: BoxSpec(
+                  constraints: BoxConstraints.tightFor(
+                    width: width,
+                    height: 20,
+                  ),
+                  decoration: const BoxDecoration(),
+                ),
+                animation: animation,
+                widgetModifiers: const [OpacityModifier(0.75)],
+              ),
+              containerEffects: advanced
+                  ? const RemixBoxEffectsSpec(
+                      outline: BorderSide(color: Colors.red, width: 1),
+                    )
+                  : null,
+            ),
+          ),
+        );
+
+        await tester.pumpWidget(build(20));
+
+        expect(find.byType(Opacity), findsOneWidget);
+        expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, 0.75);
+        final providers = tester.widgetList<StyleSpecProvider<BoxSpec>>(
+          find.byType(StyleSpecProvider<BoxSpec>),
+        );
+        expect(
+          providers.where((provider) => provider.spec.animation == animation),
+          hasLength(1),
+        );
+
+        await tester.pumpWidget(build(40));
+        await tester.pump(const Duration(milliseconds: 50));
+        final animatedBox = find.byWidgetPredicate(
+          (widget) =>
+              widget is ConstrainedBox &&
+              widget.constraints.hasTightHeight &&
+              widget.constraints.maxHeight == 20,
+        );
+        expect(animatedBox, findsOneWidget);
+        expect(tester.getSize(animatedBox).width, closeTo(30, 0.01));
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(tester.getSize(animatedBox).width, 40);
+      });
+    }
+
+    testWidgets('applies outer Flex and nested Box metadata exactly once', (
+      tester,
+    ) async {
+      final outerAnimation = AnimationConfig.linear(
+        const Duration(milliseconds: 100),
+      );
+      final innerAnimation = AnimationConfig.linear(
+        const Duration(milliseconds: 200),
+      );
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: RemixFlexBoxWithEffects(
+            styleSpec: StyleSpec(
+              spec: FlexBoxSpec(
+                box: StyleSpec(
+                  spec: const BoxSpec(decoration: BoxDecoration()),
+                  animation: innerAnimation,
+                  widgetModifiers: const [OpacityModifier(0.6)],
+                ),
+              ),
+              animation: outerAnimation,
+              widgetModifiers: const [OpacityModifier(0.8)],
+            ),
+            direction: Axis.horizontal,
+            containerEffects: const RemixBoxEffectsSpec(
+              outline: BorderSide(color: Colors.red, width: 1),
+            ),
+            children: const [SizedBox.square(dimension: 10)],
+          ),
+        ),
+      );
+
+      final opacities = tester
+          .widgetList<Opacity>(find.byType(Opacity))
+          .map((widget) => widget.opacity)
+          .toList();
+      expect(opacities, hasLength(2));
+      expect(opacities, containsAll(<double>[0.6, 0.8]));
+      expect(
+        tester
+            .widgetList<StyleSpecProvider<FlexBoxSpec>>(
+              find.byType(StyleSpecProvider<FlexBoxSpec>),
+            )
+            .where((provider) => provider.spec.animation == outerAnimation),
+        hasLength(1),
+      );
+      expect(
+        tester
+            .widgetList<StyleSpecProvider<BoxSpec>>(
+              find.byType(StyleSpecProvider<BoxSpec>),
+            )
+            .where((provider) => provider.spec.animation == innerAnimation),
+        hasLength(1),
+      );
+    });
+
+    testWidgets('retains the forced and styled Flex direction assertion', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: RemixFlexBoxWithEffects(
+            styleSpec: const StyleSpec(
+              spec: FlexBoxSpec(
+                box: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
+                flex: StyleSpec(spec: FlexSpec(direction: Axis.vertical)),
+              ),
+            ),
+            direction: Axis.horizontal,
+            containerEffects: const RemixBoxEffectsSpec(
+              outline: BorderSide(color: Colors.red, width: 1),
+            ),
+          ),
+        ),
+      );
+
+      final exception = tester.takeException();
+      expect(exception, isA<AssertionError>());
+      expect(
+        exception.toString(),
+        contains('forced and styled flex directions must agree'),
+      );
     });
   });
 }

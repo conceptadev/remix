@@ -539,7 +539,7 @@ class _RemixMenuPanel extends StatelessWidget {
       contentWrapper: contentWrapper,
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: maximumHeight),
-        child: remixFlexBoxWithEffects(
+        child: RemixFlexBoxWithEffects(
           styleSpec: overlay,
           direction: Axis.vertical,
           containerEffects: containerEffects,
@@ -768,7 +768,7 @@ class _RemixMenuItemChrome extends StatelessWidget {
             ? spec.checkableLeadingInset ?? spec.leadingInset ?? 0
             : spec.leadingInset ?? 0;
         final trailingInset = spec.trailingInset ?? 0;
-        final content = remixInheritedContentStyle(
+        final content = RemixDefaultContentStyle(
           child: child,
           text: spec.label,
         );
@@ -800,14 +800,14 @@ class _RemixMenuItemChrome extends StatelessWidget {
               spacing: spacing,
               children: [
                 if (leading != null)
-                  remixInheritedContentStyle(
+                  RemixDefaultContentStyle(
                     child: leading!,
                     icon: spec.leadingIcon,
                   ),
                 // ignore: avoid-flexible-outside-flex
                 Expanded(child: effectiveContent),
                 if (effectiveTrailing != null)
-                  remixInheritedContentStyle(
+                  RemixDefaultContentStyle(
                     child: effectiveTrailing,
                     icon: spec.trailingIcon,
                   ),

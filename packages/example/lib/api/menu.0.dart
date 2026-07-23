@@ -74,10 +74,9 @@ class _MenuExampleState extends State<MenuExample> {
                 value: 'Logout',
                 leading: const Icon(Icons.logout),
                 style: menuItemStyle.onHovered(
-                  RemixMenuItemStyler()
-                      .color(Colors.redAccent.withValues(alpha: 0.05))
-                      .label(TextStyler().color(Colors.redAccent))
-                      .leadingIcon(IconStyler().color(Colors.redAccent)),
+                  .color(Colors.redAccent.withValues(alpha: 0.05))
+                      .label(.color(Colors.redAccent))
+                      .leadingIcon(.color(Colors.redAccent)),
                 ),
                 child: const Text('Logout'),
               ),
@@ -115,7 +114,7 @@ class _MenuExampleState extends State<MenuExample> {
   RemixMenuStyler get menuStyle {
     return RemixMenuStyler()
         .overlay(
-          FlexBoxStyler(
+          .new(
             padding: EdgeInsetsMix.all(12),
             decoration: BoxDecorationMix(
               color: Colors.white,
@@ -133,12 +132,7 @@ class _MenuExampleState extends State<MenuExample> {
             ),
           ),
         )
-        .divider(
-          RemixDividerStyler()
-              .color(Colors.blueGrey.shade100)
-              .height(1)
-              .marginY(6),
-        );
+        .divider(.color(Colors.blueGrey.shade100).height(1).marginY(6));
   }
 
   RemixMenuItemStyler get menuItemStyle {
@@ -146,10 +140,10 @@ class _MenuExampleState extends State<MenuExample> {
         .leadingInset(6)
         .checkableLeadingInset(24)
         .trailingInset(6)
-        .leadingIcon(IconStyler().size(20).color(Colors.blueGrey.shade800))
+        .leadingIcon(.size(20).color(Colors.blueGrey.shade800))
         .spacing(8)
         .borderRadiusAll(const Radius.circular(8))
-        .label(TextStyler().color(Colors.blueGrey.shade800))
-        .onHovered(RemixMenuItemStyler().color(Colors.blueGrey.shade50));
+        .label(.color(Colors.blueGrey.shade800))
+        .onHovered(.color(Colors.blueGrey.shade50));
   }
 }

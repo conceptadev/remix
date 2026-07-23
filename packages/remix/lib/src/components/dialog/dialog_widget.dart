@@ -280,7 +280,7 @@ class RemixDialog extends StatelessWidget {
           body = SingleChildScrollView(primary: false, child: body);
         }
 
-        return remixBoxWithEffects(
+        return RemixBoxWithEffects(
           key: const ValueKey('remix-dialog-surface'),
           styleSpec: spec.container,
           containerEffects: spec.containerEffects,

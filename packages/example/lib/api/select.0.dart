@@ -54,25 +54,21 @@ class _SelectExampleState extends State<SelectExample> {
         .iconSize(16)
         .paddingAll(8)
         .borderRadiusAll(const Radius.circular(8))
-        .onHovered(RemixSelectMenuItemStyler().color(Colors.blueGrey.shade50))
-        .onDisabled(
-          RemixSelectMenuItemStyler().labelColor(Colors.grey.shade300),
-        );
+        .onHovered(.color(Colors.blueGrey.shade50))
+        .onDisabled(.text(.color(Colors.grey.shade300)));
   }
 
   RemixSelectStyler get style {
     return RemixSelectStyler()
         .trigger(
-          RemixSelectTriggerStyler()
-              .color(Colors.transparent)
+          .color(Colors.transparent)
               .borderAll(color: const Color(0xFF898988))
               .paddingY(10)
               .paddingX(12)
               .borderRadiusAll(const Radius.circular(12)),
         )
         .content(
-          RemixSelectContentStyler()
-              .width(200)
+          .width(200)
               .marginY(5)
               .paddingAll(6)
               .color(Colors.white)

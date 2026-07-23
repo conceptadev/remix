@@ -53,13 +53,11 @@ class _TextfieldExampleState extends State<TextfieldExample> {
         .paddingX(12)
         .spacing(8)
         .label(
-          TextStyler()
-              .color(Colors.blueGrey.shade900)
+          .color(Colors.blueGrey.shade900)
               .fontWeight(FontWeight.w500),
         )
         .helperText(
-          TextStyler()
-              .fontWeight(FontWeight.w300)
+          .fontWeight(FontWeight.w300)
               .color(Colors.blueGrey.shade600),
         )
         .hintColor(Colors.blueGrey.shade500)
@@ -73,7 +71,7 @@ class _TextfieldExampleState extends State<TextfieldExample> {
           BoxBorderMix.all(BorderSideMix(color: Colors.grey.shade300)),
         )
         .onFocused(
-          RemixTextFieldStyler().border(
+          .border(
             BoxBorderMix.all(
               BorderSideMix()
                   .color(Colors.deepPurpleAccent)

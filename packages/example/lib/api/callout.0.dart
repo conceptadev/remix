@@ -33,15 +33,11 @@ class CalloutExample extends StatelessWidget {
         .height(60)
         .paddingRight(12)
         .icon(
-          IconStyler()
-              .size(24)
+          .size(24)
               .color(Colors.white)
               .wrap(
                 .box(
-                  BoxStyler()
-                      .color(Colors.blue.shade900)
-                      .paddingX(12)
-                      .height(.infinity),
+                  .color(Colors.blue.shade900).paddingX(12).height(.infinity),
                 ),
               ),
         )

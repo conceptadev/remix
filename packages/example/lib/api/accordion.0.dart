@@ -86,12 +86,14 @@ class _AccordionExampleState extends State<AccordionExample> {
 
   RemixAccordionStyler get itemStyle {
     return RemixAccordionStyler()
-        .content(BoxStyler().paddingX(16).paddingTop(8))
+        .content(
+          .padding(EdgeInsetsGeometryMix.only(left: 16, top: 8, right: 16)),
+        )
         .wrap(.clipRRect(borderRadius: .circular(8)))
         .paddingX(16)
         .paddingY(14)
         .borderRounded(8)
-        .onHovered(RemixAccordionStyler().backgroundColor(Colors.grey.shade100))
+        .onHovered(.color(Colors.grey.shade100))
         .decoration(
           BoxDecorationMix(
             color: Colors.white,
@@ -102,18 +104,12 @@ class _AccordionExampleState extends State<AccordionExample> {
           ),
         )
         .trigger(
-          FlexBoxStyler()
-              .direction(.horizontal)
-              .mainAxisAlignment(.spaceBetween)
-              .spacing(12),
+          .direction(.horizontal).mainAxisAlignment(.spaceBetween).spacing(12),
         )
-        .leadingIcon(IconStyler().color(Colors.grey.shade700).size(20))
+        .leadingIcon(.color(Colors.grey.shade700).size(20))
         .title(
-          TextStyler()
-              .color(Colors.grey.shade900)
-              .fontWeight(FontWeight.w500)
-              .fontSize(14),
+          .color(Colors.grey.shade900).fontWeight(FontWeight.w500).fontSize(14),
         )
-        .trailingIcon(IconStyler().color(Colors.grey.shade700).size(20));
+        .trailingIcon(.color(Colors.grey.shade700).size(20));
   }
 }

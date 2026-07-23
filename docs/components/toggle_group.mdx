@@ -117,11 +117,10 @@ Widget statusToggle({
   selectedValue: value,
   onChanged: onChanged,
   style: RemixToggleGroupStyler().item(
-    RemixToggleGroupItemStyler()
-        .paddingX(12)
+    .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 12))
         .paddingY(8)
         .onSelected(
-          RemixToggleGroupItemStyler().backgroundColor(Colors.green.shade50),
+          .color(Colors.green.shade50),
       ),
   ),
 );

@@ -522,10 +522,9 @@ Prop<List<RemixBoxShadow>>? _shadowProp(
   List<RemixBoxShadowMix>? shadows,
   RemixBoxShadowListToken? token,
 ) {
-  assert(
-    shadows == null || token == null,
-    'Provide either shadows or shadowToken, not both.',
-  );
+  if (shadows != null && token != null) {
+    throw ArgumentError('Provide either shadows or shadowToken, not both.');
+  }
   if (token != null) return Prop.mix(_RemixShadowListMix.token(token));
   if (shadows != null) {
     return Prop.mix(_RemixShadowListMix.values(shadows));

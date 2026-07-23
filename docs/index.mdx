@@ -92,7 +92,7 @@ class MyApp extends StatelessWidget {
     .paddingY(10)
     .color(Colors.blue)
     .borderRadiusAll(const Radius.circular(8))
-    .label(TextStyler().color(Colors.white));
+    .label(.color(Colors.white));
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +120,7 @@ final style = ButtonStyler()
   .paddingY(10)
   .color(Colors.blue)
   .borderRadiusAll(const Radius.circular(8))
-  .label(TextStyler().color(Colors.white))
+  .label(.color(Colors.white))
   .onHovered(.color(Colors.blue.shade700)) // [!code ++]
   .onPressed(.scale(0.95)); // [!code ++]
 ```
@@ -156,11 +156,11 @@ final baseButtonStyle = ButtonStyler()
 
 final primaryButton = baseButtonStyle
     .color(Colors.blue)
-    .label(TextStyler().color(Colors.white));
+    .label(.color(Colors.white));
 
 final destructiveButton = baseButtonStyle
     .color(Colors.red)
-    .label(TextStyler().color(Colors.white));
+    .label(.color(Colors.white));
 ```
 
 ## The Fortal Widgets
@@ -226,7 +226,7 @@ final style = ButtonStyler()
   .color(FortalTokens.accent9())
   .paddingAll(FortalTokens.space4())
   .borderRadiusAll(FortalTokens.radius3())
-  .label(TextStyler().color(FortalTokens.accentContrast()));
+  .label(.color(FortalTokens.accentContrast()));
 ```
 
 ## Components
