@@ -197,6 +197,34 @@ void main() {
       expect(find.byType(RemixSpinner), findsNothing);
     });
 
+    testWidgets('loading applies nested spinner widget modifiers', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const RemixButton(
+          loading: true,
+          styleSpec: RemixButtonSpec(
+            spinner: StyleSpec(
+              spec: RemixSpinnerSpec(),
+              widgetModifiers: [OpacityModifier(0.25)],
+            ),
+          ),
+          child: Text('Save'),
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        find.ancestor(
+          of: find.byType(RemixSpinner),
+          matching: find.byWidgetPredicate(
+            (widget) => widget is Opacity && widget.opacity == 0.25,
+          ),
+        ),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('press and long-press callbacks independently enable it', (
       tester,
     ) async {
@@ -257,6 +285,19 @@ void main() {
       expect(node.label, 'Save document');
       expect(node.hint, 'Writes changes to disk');
       expect(node.flagsCollection.isButton, isTrue);
+      semantics.dispose();
+    });
+
+    testWidgets('legacy label supplies one accessible name', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpRemixApp(
+        RemixButton(label: 'Default Label', onPressed: () {}),
+      );
+
+      expect(
+        tester.getSemantics(find.byType(RemixButton)).label,
+        'Default Label',
+      );
       semantics.dispose();
     });
 

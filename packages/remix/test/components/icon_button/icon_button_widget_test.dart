@@ -141,6 +141,37 @@ void main() {
       expect(find.byType(RemixSpinner), findsNothing);
     });
 
+    testWidgets('loadingBuilder retains nested spinner widget modifiers', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixIconButton(
+          semanticLabel: 'Save',
+          loading: true,
+          loadingBuilder: (context, spec) =>
+              const SizedBox(key: ValueKey('custom-spinner')),
+          styleSpec: const RemixIconButtonSpec(
+            spinner: StyleSpec(
+              spec: RemixSpinnerSpec(),
+              widgetModifiers: [OpacityModifier(0.25)],
+            ),
+          ),
+          icon: const Icon(Icons.save),
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        find.ancestor(
+          of: find.byKey(const ValueKey('custom-spinner')),
+          matching: find.byWidgetPredicate(
+            (widget) => widget is Opacity && widget.opacity == 0.25,
+          ),
+        ),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('press and long-press callbacks independently enable it', (
       tester,
     ) async {

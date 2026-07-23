@@ -148,12 +148,15 @@ class RemixButton extends StatelessWidget {
       maintainSemantics: true,
       child: content,
     );
-    final spinner = loadingBuilder == null
-        ? RemixSpinner(styleSpec: spec.spinner.spec)
-        : loadingBuilder!(context, spec.spinner.spec);
+    final spinner = StyleSpecBuilder<RemixSpinnerSpec>(
+      styleSpec: spec.spinner,
+      builder: (context, spinnerSpec) => loadingBuilder == null
+          ? RemixSpinner(styleSpec: spinnerSpec)
+          : loadingBuilder!(context, spinnerSpec),
+    );
 
     return Semantics(
-      excludeSemantics: semanticLabel != null,
+      excludeSemantics: semanticLabel != null || label != null,
       liveRegion: loading,
       hint: semanticHint,
       child: Stack(

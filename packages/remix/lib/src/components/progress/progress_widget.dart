@@ -196,7 +196,7 @@ class _RemixProgressIndicatorState extends State<_RemixProgressIndicator>
   }
 
   Widget _buildIndicator(double fraction) => Align(
-    alignment: Alignment.centerLeft,
+    alignment: AlignmentDirectional.centerStart,
     child: FractionallySizedBox(
       widthFactor: fraction,
       heightFactor: 1,

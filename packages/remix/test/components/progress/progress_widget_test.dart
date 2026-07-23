@@ -54,6 +54,47 @@ void main() {
       expect(indicator.heightFactor, 1);
     });
 
+    testWidgets('fills from the logical start in RTL', (tester) async {
+      const progressKey = ValueKey('progress');
+      await tester.pumpWidget(
+        const Directionality(
+          textDirection: TextDirection.rtl,
+          child: Center(
+            child: SizedBox(
+              key: progressKey,
+              width: 100,
+              height: 10,
+              child: RemixProgress(
+                value: 0.25,
+                styleSpec: RemixProgressSpec(
+                  track: StyleSpec(
+                    spec: BoxSpec(
+                      decoration: BoxDecoration(color: Colors.black),
+                    ),
+                  ),
+                  indicator: StyleSpec(
+                    spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final indicator = find.byWidgetPredicate(
+        (widget) =>
+            widget is DecoratedBox &&
+            widget.decoration is BoxDecoration &&
+            (widget.decoration as BoxDecoration).color == Colors.red,
+      );
+      expect(indicator, findsOneWidget);
+      expect(
+        tester.getRect(indicator).right,
+        tester.getRect(find.byKey(progressKey)).right,
+      );
+    });
+
     testWidgets('runs the indeterminate growth sequence once', (tester) async {
       await tester.pumpRemixApp(
         const RemixProgress(duration: Duration(seconds: 1)),
