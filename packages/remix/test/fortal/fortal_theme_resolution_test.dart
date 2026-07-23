@@ -4,7 +4,7 @@ import 'package:remix/remix.dart';
 
 void main() {
   group('Fortal theme resolution', () {
-    test('exposes current theme values and legacy neutral accents', () {
+    test('exposes only the Radix Themes 3.3.0 theme values', () {
       expect(FortalAppearance.values, [
         FortalAppearance.inherit,
         FortalAppearance.light,

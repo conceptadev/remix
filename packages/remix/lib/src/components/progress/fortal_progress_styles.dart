@@ -154,20 +154,6 @@ class FortalProgress extends StatelessWidget {
     this.excludeSemantics = false,
   }) : _value = value;
 
-  /// Creates an indeterminate Fortal progress indicator.
-  const FortalProgress.indeterminate({
-    super.key,
-    this.variant = .surface,
-    this.size = .size2,
-    this.color,
-    this.radius,
-    this.highContrast = false,
-    this.max = 1,
-    this.duration = const Duration(seconds: 5),
-    this.semanticLabel,
-    this.excludeSemantics = false,
-  }) : _value = null;
-
   const FortalProgress.classic({
     super.key,
     this.size = .size2,

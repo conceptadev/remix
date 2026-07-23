@@ -7,6 +7,11 @@ import '../theme/theme_settings.dart';
 
 const _accentThemes = <FortalAccentColor, RadixColorTheme>{
   .gray: gray,
+  .mauve: mauve,
+  .slate: slate,
+  .sage: sage,
+  .olive: olive,
+  .sand: sand,
   .gold: gold,
   .bronze: bronze,
   .brown: brown,

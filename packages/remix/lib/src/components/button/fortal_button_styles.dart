@@ -389,34 +389,6 @@ class FortalButton extends StatelessWidget {
          'Provide exactly one of label or child.',
        );
 
-  /// Creates a Fortal button with arbitrary widget content.
-  const FortalButton.custom({
-    super.key,
-    this.variant = .solid,
-    this.size = .size2,
-    this.color,
-    this.radius,
-    this.highContrast = false,
-    required this.child,
-    this.loadingBuilder,
-    this.loading = false,
-    this.enabled = true,
-    this.onPressed,
-    this.onLongPress,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : _label = null,
-       leadingIcon = null,
-       trailingIcon = null,
-       textBuilder = null,
-       leadingIconBuilder = null,
-       trailingIconBuilder = null;
-
   const FortalButton.classic({
     super.key,
     this.size = .size2,

@@ -521,50 +521,6 @@ class FortalSelect<T> extends StatelessWidget {
                ? FortalSelectTriggerVariant.ghost
                : FortalSelectTriggerVariant.surface);
 
-  /// Creates a Fortal select with grouped, labeled, or separated content.
-  const FortalSelect.structured({
-    super.key,
-    FortalSelectVariant? variant,
-    FortalSelectTriggerVariant? triggerVariant,
-    this.contentVariant = .solid,
-    this.size = .size2,
-    this.triggerColor,
-    this.triggerRadius,
-    this.contentColor,
-    this.contentHighContrast = false,
-    required this.trigger,
-    required List<RemixSelectItemData<T>> items,
-    this.selectedValue,
-    this.positioning = const OverlayPositionConfig(
-      side: .bottom,
-      alignment: .center,
-      sideOffset: 4,
-    ),
-    this.onChanged,
-    this.onOpen,
-    this.onClose,
-    this.open,
-    this.onOpenChanged,
-    this.enabled = true,
-    this.closeOnSelect = true,
-    this.semanticLabel,
-    this.focusNode,
-  }) : _items = items,
-       variant =
-           variant ??
-           (triggerVariant == FortalSelectTriggerVariant.soft
-               ? FortalSelectVariant.soft
-               : triggerVariant == FortalSelectTriggerVariant.ghost
-               ? FortalSelectVariant.ghost
-               : FortalSelectVariant.surface),
-       triggerVariant =
-           triggerVariant ??
-           (variant == FortalSelectVariant.soft
-               ? FortalSelectTriggerVariant.soft
-               : variant == FortalSelectVariant.ghost
-               ? FortalSelectTriggerVariant.ghost
-               : FortalSelectTriggerVariant.surface);
-
   const FortalSelect.classic({
     super.key,
     this.contentVariant = .solid,
