@@ -444,10 +444,10 @@ packages:
     dependency: transitive
     description:
       name: mix_generator
-      sha256: "76d888e0845e7bb3bc6bee3d903bbb0611ec7f27b8b6c554deef62775b59654b"
+      sha256: afcd3ae90df234c0c17dd5ace163984e00f85e0c565d6c98de0083a5d2b2b4df
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0-beta.0"
+    version: "2.2.0-beta.1"
   mix_protocol:
     dependency: transitive
     description:

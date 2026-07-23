@@ -30,7 +30,7 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^2.10.1
   meta: ^1.18.0
-  mix_generator: ^2.2.0-beta.0
+  mix_generator: ^2.2.0-beta.1
 
 flutter:
   uses-material-design: true
