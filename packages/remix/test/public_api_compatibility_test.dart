@@ -46,11 +46,36 @@ void main() {
     const progress = RemixProgress(value: 0.5);
     const tabBar = RemixTabBar(child: SizedBox());
 
+    final String buttonLabel = button.label;
+    final IconData buttonIcon = iconButton.icon;
+    final List<RemixMenuItemData<String>> menuItems = menu.items;
+    const compositionalMenuItems = <RemixMenuItemData<String>>[
+      RemixMenuLabel(child: Text('Actions')),
+      RemixMenuAction(value: 'copy', child: Text('Copy')),
+      RemixMenuCheckboxItem(value: 'grid', checked: true, child: Text('Grid')),
+      RemixMenuGroup(
+        children: [RemixMenuAction(value: 'archive', child: Text('Archive'))],
+      ),
+      RemixMenuSeparator(),
+      RemixMenuRadioGroup(
+        value: 'comfortable',
+        onChanged: null,
+        children: [
+          RemixMenuRadioItem(value: 'comfortable', child: Text('Comfortable')),
+        ],
+      ),
+      RemixMenuSubmenu(
+        child: Text('More'),
+        items: [RemixMenuAction(value: 'settings', child: Text('Settings'))],
+      ),
+    ];
+
     expect(badge.label, 'New');
-    expect(button.label, 'Save');
+    expect(buttonLabel, 'Save');
     expect(callout.text, 'Saved');
-    expect(iconButton.icon, Icons.favorite);
-    expect(menu.items, hasLength(2));
+    expect(buttonIcon, Icons.favorite);
+    expect(menuItems, hasLength(2));
+    expect(compositionalMenuItems, hasLength(7));
     expect(select.items, hasLength(1));
     expect(slider.value, 0.5);
     expect(slider.snapDivisions, 10);

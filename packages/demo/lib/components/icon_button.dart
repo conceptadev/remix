@@ -40,7 +40,7 @@ Widget buildIconButtonUseCase(BuildContext context) {
             options: FortalIconButtonVariant.values,
             labelBuilder: (variant) => variant.name,
           ),
-          icon: Icon(icon),
+          icon: icon,
         ),
       ),
     ),

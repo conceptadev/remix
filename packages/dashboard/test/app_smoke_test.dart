@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:dashboard/main.dart';
 import 'package:dashboard/shell/dashboard_shell.dart';
 import 'package:dashboard/theme/theme_settings.dart';
@@ -51,6 +53,50 @@ void main() {
       findsOneWidget,
     );
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('compact settings render without horizontal overflow', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byIcon(Icons.menu));
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    await tester.tap(find.byKey(const ValueKey('nav-settings')).first);
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    expect(find.byKey(const ValueKey('theme-panel')), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('sidebar destinations expose one accessible name', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await tester.pumpWidget(const DashboardApp());
+
+    final overviewSemantics = find
+        .descendant(
+          of: find.byKey(const ValueKey('nav-overview')).first,
+          matching: find.byType(Semantics),
+        )
+        .first;
+    final overviewNode = tester.getSemantics(overviewSemantics);
+    expect(overviewNode.label, 'Overview');
+    expect(
+      overviewNode.getSemanticsData().hasAction(ui.SemanticsAction.tap),
+      isTrue,
+    );
+    semantics.dispose();
   });
 
   testWidgets('customers page renders an interactive paginated grid', (

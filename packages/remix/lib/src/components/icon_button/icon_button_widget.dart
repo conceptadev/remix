@@ -8,7 +8,9 @@ typedef RemixIconButtonIconBuilder =
 typedef RemixIconButtonLoadingBuilder =
     Widget Function(BuildContext context, RemixSpinnerSpec spec);
 
-/// A square button accepting established [IconData] or arbitrary icon widgets.
+/// A square button that renders typed [IconData].
+///
+/// Use [iconBuilder] when custom icon composition is needed.
 class RemixIconButton extends StatelessWidget {
   const RemixIconButton({
     super.key,
@@ -32,8 +34,8 @@ class RemixIconButton extends StatelessWidget {
 
   static final styleFrom = RemixIconButtonStyler.new;
 
-  /// An [IconData] from the established API or an arbitrary icon [Widget].
-  final Object icon;
+  /// The icon rendered by the button.
+  final IconData icon;
   final RemixIconButtonIconBuilder? iconBuilder;
   final String? semanticLabel;
   final RemixIconButtonLoadingBuilder? loadingBuilder;
@@ -54,29 +56,13 @@ class RemixIconButton extends StatelessWidget {
       enabled && !loading && (onPressed != null || onLongPress != null);
 
   Widget _buildIcon(BuildContext context, StyleSpec<IconSpec> styleSpec) {
-    final icon = this.icon;
     if (iconBuilder case final builder?) {
-      if (icon is! IconData) {
-        throw ArgumentError.value(
-          icon,
-          'icon',
-          'iconBuilder requires icon to be IconData.',
-        );
-      }
       return StyleSpecBuilder<IconSpec>(
         styleSpec: styleSpec,
         builder: (context, spec) => builder(context, spec, icon),
       );
     }
-    return switch (icon) {
-      IconData() => StyledIcon(icon: icon, styleSpec: styleSpec),
-      Widget() => RemixDefaultContentStyle(child: icon, icon: styleSpec),
-      _ => throw ArgumentError.value(
-        icon,
-        'icon',
-        'Expected IconData or Widget.',
-      ),
-    };
+    return StyledIcon(icon: icon, styleSpec: styleSpec);
   }
 
   @override

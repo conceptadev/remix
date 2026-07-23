@@ -322,7 +322,8 @@ void _checkLegacyIconButtonSlot(
     if (childOffset == null) continue;
     failures.add(
       '$relativePath contains the retired IconButton child argument at offset '
-      '${openingParenthesis + 1 + childOffset}; use icon.',
+      '${openingParenthesis + 1 + childOffset}; use icon, and add iconBuilder '
+      'for custom composition.',
     );
   }
 }

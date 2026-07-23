@@ -129,7 +129,7 @@ class FortalIconButtonExample extends StatelessWidget {
 ```dart
 const RemixIconButton({
   Key? key,
-  required Object icon,
+  required IconData icon,
   RemixIconButtonIconBuilder? iconBuilder,
   String? semanticLabel,
   RemixIconButtonLoadingBuilder? loadingBuilder,
@@ -165,10 +165,10 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `icon` → `Object`
+#### `icon` → `IconData`
 
-**Required**. Accepts established `IconData` or an arbitrary icon `Widget`.
-Widget descendants inherit the resolved icon style.
+**Required**. The typed icon rendered by the button. Use `iconBuilder` when
+the icon needs custom widget composition.
 
 #### `semanticLabel` → `String?`
 

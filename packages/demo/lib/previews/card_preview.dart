@@ -116,19 +116,19 @@ Widget previewProfileCard() {
                   RemixIconButton(
                     semanticLabel: 'Email',
                     onPressed: null,
-                    icon: Icon(Icons.email),
+                    icon: Icons.email,
                   ),
                   SizedBox(width: 12),
                   RemixIconButton(
                     semanticLabel: 'Call',
                     onPressed: null,
-                    icon: Icon(Icons.phone),
+                    icon: Icons.phone,
                   ),
                   SizedBox(width: 12),
                   RemixIconButton(
                     semanticLabel: 'Message',
                     onPressed: null,
-                    icon: Icon(Icons.message),
+                    icon: Icons.message,
                   ),
                 ],
               ),

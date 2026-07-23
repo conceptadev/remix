@@ -141,8 +141,8 @@ class ThemePanel extends StatelessWidget {
           ),
           _Control(
             label: 'Scaling',
-            child: Align(
-              alignment: .centerLeft,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: FortalToggleGroup<FortalScaling>(
                 size: .size1,
                 selectedValue: settings.scaling,

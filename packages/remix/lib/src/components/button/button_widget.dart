@@ -18,7 +18,7 @@ class RemixButton extends StatelessWidget {
   const RemixButton({
     super.key,
     this.child,
-    this.label,
+    String? label,
     this.leadingIcon,
     this.trailingIcon,
     this.textBuilder,
@@ -38,7 +38,8 @@ class RemixButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
     this.style = const ButtonStyler.create(),
     this.styleSpec,
-  }) : assert(
+  }) : _label = label,
+       assert(
          child != null || label != null,
          'RemixButton requires either child or label.',
        );
@@ -50,7 +51,11 @@ class RemixButton extends StatelessWidget {
 
   /// Arbitrary button content. Use [label] for the established text API.
   final Widget? child;
-  final String? label;
+  final String? _label;
+
+  /// The established text label, or an empty string for arbitrary content.
+  String get label => _label ?? '';
+
   final IconData? leadingIcon;
   final IconData? trailingIcon;
   final RemixButtonTextBuilder? textBuilder;
@@ -102,11 +107,11 @@ class RemixButton extends StatelessWidget {
       trailingIconBuilder,
     );
     final text = textBuilder == null
-        ? StyledText(label!, styleSpec: spec.label)
+        ? StyledText(_label!, styleSpec: spec.label)
         : StyleSpecBuilder<TextSpec>(
             styleSpec: spec.label,
             builder: (context, textSpec) =>
-                textBuilder!(context, textSpec, label!),
+                textBuilder!(context, textSpec, _label!),
           );
     final hasBothIcons = leading != null && trailing != null;
     final children = hasBothIcons || spec.iconAlignment == null
@@ -156,7 +161,7 @@ class RemixButton extends StatelessWidget {
     );
 
     return Semantics(
-      excludeSemantics: semanticLabel != null || label != null,
+      excludeSemantics: semanticLabel != null || _label != null,
       liveRegion: loading,
       hint: semanticHint,
       child: Stack(
@@ -179,7 +184,7 @@ class RemixButton extends StatelessWidget {
       enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
-      semanticLabel: semanticLabel ?? label,
+      semanticLabel: semanticLabel ?? _label,
       excludeSemantics: excludeSemantics,
       builder: (context, _, _) => RemixStyleSpecBuilder<RemixButtonSpec>(
         style: composeStyle(style),

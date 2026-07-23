@@ -119,42 +119,42 @@ void main() {
       expect(
         const FortalIconButton.classic(
           semanticLabel: 'icon',
-          icon: SizedBox(),
+          icon: Icons.add,
         ).variant,
         FortalIconButtonVariant.classic,
       );
       expect(
         const FortalIconButton.solid(
           semanticLabel: 'icon',
-          icon: SizedBox(),
+          icon: Icons.add,
         ).variant,
         FortalIconButtonVariant.solid,
       );
       expect(
         const FortalIconButton.soft(
           semanticLabel: 'icon',
-          icon: SizedBox(),
+          icon: Icons.add,
         ).variant,
         FortalIconButtonVariant.soft,
       );
       expect(
         const FortalIconButton.surface(
           semanticLabel: 'icon',
-          icon: SizedBox(),
+          icon: Icons.add,
         ).variant,
         FortalIconButtonVariant.surface,
       );
       expect(
         const FortalIconButton.outline(
           semanticLabel: 'icon',
-          icon: SizedBox(),
+          icon: Icons.add,
         ).variant,
         FortalIconButtonVariant.outline,
       );
       expect(
         const FortalIconButton.ghost(
           semanticLabel: 'icon',
-          icon: SizedBox(),
+          icon: Icons.add,
         ).variant,
         FortalIconButtonVariant.ghost,
       );
@@ -371,7 +371,7 @@ void main() {
           radius: .small,
           highContrast: true,
           semanticLabel: 'Add',
-          icon: Icon(Icons.add),
+          icon: Icons.add,
         ),
       );
 

@@ -301,7 +301,7 @@ class FortalMenu<T> extends StatelessWidget {
   final bool highContrast;
 
   final Widget trigger;
-  final List<Widget> items;
+  final List<RemixMenuItemData<T>> items;
   final MenuController? controller;
   final ValueChanged<T>? onSelected;
   final VoidCallback? onOpen;

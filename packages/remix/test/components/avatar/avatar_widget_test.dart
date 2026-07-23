@@ -173,6 +173,29 @@ void main() {
     });
 
     group('Image Error Handling', () {
+      testWidgets('loaded background image preserves fallback semantics', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        final image = (await tester.runAsync(createTestImage))!;
+        addTearDown(image.dispose);
+        final provider = _ControllableImageProvider(image);
+
+        await tester.pumpRemixApp(
+          SizedBox.square(
+            dimension: 40,
+            child: RemixAvatar(backgroundImage: provider, label: 'JD'),
+          ),
+        );
+        expect(find.bySemanticsLabel('JD'), findsOneWidget);
+
+        provider.complete();
+        await tester.pump();
+
+        expect(find.bySemanticsLabel('JD'), findsOneWidget);
+        semantics.dispose();
+      });
+
       testWidgets('loaded background image replaces the fallback content', (
         tester,
       ) async {
@@ -190,7 +213,12 @@ void main() {
 
         expect(find.byType(RawImage), findsOneWidget);
         expect(find.byType(Image), findsOneWidget);
-        expect(find.text('JD'), findsNothing);
+        expect(
+          tester.widget<Opacity>(
+            find.ancestor(of: find.text('JD'), matching: find.byType(Opacity)),
+          ),
+          isA<Opacity>().having((opacity) => opacity.opacity, 'opacity', 0),
+        );
       });
 
       testWidgets('background image errors preserve fallback and report once', (
@@ -217,6 +245,32 @@ void main() {
         expect(errors, hasLength(1));
         await tester.pump();
         expect(errors, hasLength(1));
+      });
+
+      testWidgets('image error callback can update its owner', (tester) async {
+        final image = (await tester.runAsync(createTestImage))!;
+        addTearDown(image.dispose);
+        final provider = _ControllableImageProvider(image);
+        var errorCount = 0;
+
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) => RemixAvatar(
+              backgroundImage: provider,
+              label: 'JD',
+              onBackgroundImageError: (error, stackTrace) {
+                setState(() => errorCount++);
+              },
+            ),
+          ),
+        );
+
+        provider.fail(StateError('background failed'));
+        await tester.pump();
+        await tester.pump();
+
+        expect(tester.takeException(), isNull);
+        expect(errorCount, 1);
       });
 
       testWidgets('foreground image errors preserve fallback and report once', (
@@ -247,6 +301,27 @@ void main() {
     });
 
     group('Layout and Sizing', () {
+      testWidgets('background image decode preserves shrink-wrapped size', (
+        tester,
+      ) async {
+        final image = (await tester.runAsync(createTestImage))!;
+        addTearDown(image.dispose);
+        final provider = _ControllableImageProvider(image);
+
+        await tester.pumpRemixApp(
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [RemixAvatar(backgroundImage: provider, label: 'JD')],
+          ),
+        );
+        final sizeBeforeDecode = tester.getSize(find.byType(RemixAvatar));
+
+        provider.complete();
+        await tester.pump();
+
+        expect(tester.getSize(find.byType(RemixAvatar)), sizeBeforeDecode);
+      });
+
       testWidgets('default layout properties are applied', (tester) async {
         await tester.pumpRemixApp(const RemixAvatar());
         await tester.pumpAndSettle();

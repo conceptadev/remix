@@ -47,7 +47,7 @@ class _TopBarState extends State<TopBar> {
               key: const ValueKey('dashboard-menu'),
               semanticLabel: 'Open navigation',
               onPressed: onMenuPressed,
-              icon: const Icon(Icons.menu),
+              icon: Icons.menu,
             ),
           if (MediaQuery.sizeOf(context).width > 900) ...[
             StyledText(
@@ -93,11 +93,9 @@ class _TopBarState extends State<TopBar> {
                 theme.settings.copyWith(appearance: isDark ? .light : .dark),
               );
             },
-            icon: Icon(
-              FortalTheme.of(context).isDark
-                  ? Icons.light_mode_outlined
-                  : Icons.dark_mode_outlined,
-            ),
+            icon: FortalTheme.of(context).isDark
+                ? Icons.light_mode_outlined
+                : Icons.dark_mode_outlined,
           ),
           FortalPopover(
             controller: _notificationsController,
@@ -181,10 +179,14 @@ class _TopBarState extends State<TopBar> {
             child: FortalIconButton.ghost(
               semanticLabel: 'Notifications',
               onPressed: _toggleNotifications,
-              icon: Stack(
+              icon: Icons.notifications_none,
+              iconBuilder: (context, spec, icon) => Stack(
                 clipBehavior: .none,
                 children: [
-                  const Icon(Icons.notifications_none),
+                  StyledIcon(
+                    icon: icon,
+                    styleSpec: StyleSpec(spec: spec),
+                  ),
                   Positioned(
                     right: -1,
                     top: -1,
@@ -218,7 +220,7 @@ class _TopBarState extends State<TopBar> {
               key: const ValueKey('theme-panel-trigger'),
               semanticLabel: 'Theme settings',
               onPressed: _toggleTheme,
-              icon: const Icon(Icons.palette_outlined),
+              icon: Icons.palette_outlined,
             ),
           ),
           FortalMenu<String>(

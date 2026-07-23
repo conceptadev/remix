@@ -82,8 +82,9 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 
 /// A compositional menu anchored to an arbitrary trigger widget.
 ///
-/// Items are widgets so labels, groups, checkboxes, radio groups, and
-/// recursive submenus can be composed in the same order in which they appear.
+/// Menu items are typed [RemixMenuItemData] widgets, so actions, labels,
+/// groups, checkboxes, radio groups, and recursive submenus appear in source
+/// order without weakening the established collection type.
 ///
 /// ```dart
 /// RemixMenu<String>(
@@ -138,8 +139,8 @@ class RemixMenu<T> extends StatefulWidget {
   /// Widget that opens and closes the menu.
   final Widget trigger;
 
-  /// Compositional popup items.
-  final List<Widget> items;
+  /// Established data-driven popup items.
+  final List<RemixMenuItemData<T>> items;
 
   /// Optional controller for programmatic menu control.
   final MenuController? controller;
@@ -270,7 +271,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
 }
 
 /// An actionable menu entry associated with [value].
-class RemixMenuAction<T> extends StatelessWidget {
+class RemixMenuAction<T> extends RemixMenuItemData<T> {
   const RemixMenuAction({
     super.key,
     required this.value,
@@ -310,7 +311,7 @@ class RemixMenuAction<T> extends StatelessWidget {
 }
 
 /// A controlled checkbox entry with menu-item-checkbox semantics.
-class RemixMenuCheckboxItem<T> extends StatelessWidget {
+class RemixMenuCheckboxItem<T> extends RemixMenuItemData<T> {
   const RemixMenuCheckboxItem({
     super.key,
     required this.value,
@@ -357,7 +358,7 @@ class RemixMenuCheckboxItem<T> extends StatelessWidget {
 }
 
 /// A semantic grouping of adjacent menu items.
-class RemixMenuGroup extends StatelessWidget {
+class RemixMenuGroup extends RemixMenuItemData<Never> {
   const RemixMenuGroup({super.key, required this.children, this.semanticLabel});
 
   final List<Widget> children;
@@ -377,7 +378,7 @@ class RemixMenuGroup extends StatelessWidget {
 }
 
 /// A noninteractive heading inside menu content.
-class RemixMenuLabel extends StatelessWidget {
+class RemixMenuLabel extends RemixMenuItemData<Never> {
   const RemixMenuLabel({
     super.key,
     required this.child,
@@ -414,7 +415,7 @@ class RemixMenuLabel extends StatelessWidget {
 }
 
 /// A decorative separator inside menu content.
-class RemixMenuSeparator extends StatelessWidget {
+class RemixMenuSeparator extends RemixMenuItemData<Never> {
   const RemixMenuSeparator({
     super.key,
     this.style = const RemixDividerStyler.create(),
@@ -444,7 +445,7 @@ class RemixMenuSeparator extends StatelessWidget {
 }
 
 /// Provides controlled selection to typed [RemixMenuRadioItem] descendants.
-class RemixMenuRadioGroup<T> extends StatelessWidget {
+class RemixMenuRadioGroup<T> extends RemixMenuItemData<T> {
   const RemixMenuRadioGroup({
     super.key,
     required this.value,
@@ -479,7 +480,7 @@ class RemixMenuRadioGroup<T> extends StatelessWidget {
 }
 
 /// A mutually exclusive entry inside a [RemixMenuRadioGroup].
-class RemixMenuRadioItem<T> extends StatelessWidget {
+class RemixMenuRadioItem<T> extends RemixMenuItemData<T> {
   const RemixMenuRadioItem({
     super.key,
     required this.value,
@@ -520,7 +521,7 @@ class RemixMenuRadioItem<T> extends StatelessWidget {
 }
 
 /// A recursively nestable submenu entry.
-class RemixMenuSubmenu<T> extends StatelessWidget {
+class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
   const RemixMenuSubmenu({
     super.key,
     required this.child,

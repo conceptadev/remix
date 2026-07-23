@@ -22,7 +22,7 @@ Widget buildTextFieldUseCase(BuildContext context) {
                 ? FortalIconButton.ghost(
                     semanticLabel: 'Clear field',
                     onPressed: () {},
-                    icon: const Icon(Icons.close_rounded),
+                    icon: Icons.close_rounded,
                   )
                 : null,
             leading:

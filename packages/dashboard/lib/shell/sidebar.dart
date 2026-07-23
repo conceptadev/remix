@@ -161,6 +161,8 @@ class _NavItemState extends State<_NavItem> {
         button: true,
         selected: widget.selected,
         label: widget.page.label,
+        excludeSemantics: true,
+        onTap: widget.onPressed,
         child: Focus(
           onFocusChange: (value) => setState(() => _focused = value),
           onKeyEvent: (_, event) {

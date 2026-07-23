@@ -4,9 +4,9 @@ description: A compositional dropdown menu for actions, checkboxes, radio choice
 keywords: [flutter, remix, menu, dropdown, context-menu, popup, overlay]
 ---
 
-`RemixMenu` displays compositional menu content in an overlay. Its trigger is
-any widget, and its items can be actions, controlled checkboxes or radio
-items, groups, labels, separators, and recursively nested submenus.
+`RemixMenu` displays typed menu content in an overlay. Its trigger is any
+widget, and every action, controlled checkbox or radio item, group, label,
+separator, and recursively nested submenu implements `RemixMenuItemData<T>`.
 
 ## When to use this
 
@@ -117,7 +117,7 @@ import 'package:remix/remix.dart';
 class FortalMenuExample extends StatelessWidget {
   const FortalMenuExample({super.key});
 
-  static const _items = <Widget>[
+  static const _items = <RemixMenuItemData<String>>[
     RemixMenuAction(
       value: 'edit',
       leading: Icon(Icons.edit),
@@ -163,7 +163,7 @@ class FortalMenuExample extends StatelessWidget {
 const RemixMenu<T>({
   Key? key,
   required Widget trigger,
-  required List<Widget> items,
+  required List<RemixMenuItemData<T>> items,
   MenuController? controller,
   ValueChanged<T>? onSelected,
   VoidCallback? onOpen,
@@ -198,6 +198,9 @@ const RemixMenu<T>({
 </CodeGroup>
 
 ## Item types
+
+Every item type below implements `RemixMenuItemData<T>`, preserving the
+original typed collection while supporting compositional content.
 
 - `RemixMenuAction<T>` activates a typed value and accepts arbitrary `child`,
   `leading`, and `trailing` widgets.

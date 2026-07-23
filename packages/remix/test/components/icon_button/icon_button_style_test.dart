@@ -314,11 +314,11 @@ void main() {
     group('Call Method', () {
       test('call method creates RemixIconButton with minimal parameters', () {
         const style = RemixIconButtonStyler.create();
-        const icon = Icon(Icons.add);
+        const icon = Icons.add;
         final button = style.call(icon: icon, semanticLabel: 'Add');
 
         expect(button, isA<RemixIconButton>());
-        expect(button.icon, same(icon));
+        expect(button.icon, icon);
         expect(button.onPressed, isNull);
       });
 
@@ -334,7 +334,7 @@ void main() {
 
         final button = style.call(
           key: key,
-          icon: const Icon(Icons.delete),
+          icon: Icons.delete,
           loadingBuilder: loadingBuilder,
           loading: true,
           enabled: false,
@@ -351,7 +351,7 @@ void main() {
 
         expect(button, isA<RemixIconButton>());
         expect(button.key, key);
-        expect(button.icon, isA<Icon>());
+        expect(button.icon, Icons.delete);
         expect(button.loadingBuilder, same(loadingBuilder));
         expect(button.onPressed, same(onPressed));
         expect(button.onLongPress, same(onLongPress));

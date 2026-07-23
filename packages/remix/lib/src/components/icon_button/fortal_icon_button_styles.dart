@@ -533,7 +533,7 @@ class FortalIconButton extends StatelessWidget {
   final FortalAccentColor? color;
   final FortalRadius? radius;
   final bool highContrast;
-  final Object icon;
+  final IconData icon;
   final RemixIconButtonIconBuilder? iconBuilder;
   final String? semanticLabel;
   final RemixIconButtonLoadingBuilder? loadingBuilder;

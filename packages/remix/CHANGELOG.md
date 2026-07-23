@@ -23,19 +23,20 @@
   `appearance`, `accentColor`, `grayColor`, `panelBackground`, `radius`,
   `scaling`, and `hasBackground` values. Root `FortalScope` belongs above the
   app widget so platform appearance and Navigator overlays share one theme.
-- **FEAT**: Button, Badge, Callout, and IconButton accept arbitrary widget
-  content while retaining their established label/text/icon and builder APIs.
-  Arbitrary descendants inherit resolved text and icon styles.
+- **FEAT**: Button, Badge, and Callout accept arbitrary widget content.
+  IconButton retains its typed `icon` API and uses `iconBuilder` for custom
+  widget composition.
 - **FEAT**: Slider adds an arbitrary multi-thumb mode with ascending `values`,
   `onValues...` callbacks, `step`, `minSpacing`, orientation, inversion,
   per-thumb focus, and per-thumb semantics while retaining scalar `value`,
   callbacks, `focusNode`, `autofocus`, and `snapDivisions`.
 - **BREAKING**: `RemixTabs.activationMode` now exposes automatic and manual
   keyboard activation from Naked beta.6.
-- **FEAT**: Menu now also takes an arbitrary trigger widget and compositional
-  action, checkbox, group, label, separator, radio, and recursive submenu
-  items. Select uses `items` with selectable, group, label, and separator
-  types and exposes owner-authoritative `open`/`onOpenChanged` control.
+- **FEAT**: Menu now also takes an arbitrary trigger widget and typed
+  `RemixMenuItemData<T>` action, checkbox, group, label, separator, radio, and
+  recursive submenu items. Select uses `items` with selectable, group, label,
+  and separator types and exposes owner-authoritative
+  `open`/`onOpenChanged` control.
 - **FEAT**: Add Radix-aligned Popover and Fortal ToggleGroup; complete missing
   classic variants, sizes, high-contrast roles, geometry, focus/disabled/open
   states, separate Popover anchors, and semantic behavior across the mapped

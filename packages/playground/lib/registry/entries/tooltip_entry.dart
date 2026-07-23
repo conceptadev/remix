@@ -15,7 +15,7 @@ Widget buildTooltipExample() {
           child: RemixIconButton(
             semanticLabel: 'More info',
             onPressed: () {},
-            icon: const Icon(Icons.info_outline),
+            icon: Icons.info_outline,
           ),
         ),
         RemixTooltip(
@@ -23,7 +23,7 @@ Widget buildTooltipExample() {
           child: RemixIconButton(
             semanticLabel: 'Settings',
             onPressed: () {},
-            icon: const Icon(Icons.settings),
+            icon: Icons.settings,
           ),
         ),
       ],

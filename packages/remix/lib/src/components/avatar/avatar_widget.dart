@@ -174,16 +174,28 @@ class _RemixAvatarImageLayerState extends State<_RemixAvatarImageLayer> {
     return Image(
       image: widget.image,
       fit: BoxFit.cover,
-      width: double.infinity,
-      height: double.infinity,
+      excludeFromSemantics: true,
       frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-        if (wasSynchronouslyLoaded || frame != null) return child;
-        return widget.fallback;
+        if (!wasSynchronouslyLoaded && frame == null) return widget.fallback;
+        return Stack(
+          fit: StackFit.passthrough,
+          children: [
+            Opacity(
+              opacity: 0,
+              alwaysIncludeSemantics: true,
+              child: widget.fallback,
+            ),
+            Positioned.fill(child: child),
+          ],
+        );
       },
       errorBuilder: (context, error, stackTrace) {
         if (!_reportedError) {
           _reportedError = true;
-          widget.onError?.call(error, stackTrace);
+          final onError = widget.onError;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) onError?.call(error, stackTrace);
+          });
         }
         return widget.fallback;
       },

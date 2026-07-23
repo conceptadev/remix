@@ -79,7 +79,7 @@ void main() {
 
       const iconButton = FortalIconButton(
         semanticLabel: 'Add',
-        icon: Icon(Icons.add),
+        icon: Icons.add,
       );
       const checkbox = FortalCheckbox(selected: false);
       const radio = FortalRadio<int>(value: 1);

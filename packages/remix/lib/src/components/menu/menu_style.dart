@@ -25,7 +25,7 @@ extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
   RemixMenu<T> call<T>({
     Key? key,
     required Widget trigger,
-    required List<Widget> items,
+    required List<RemixMenuItemData<T>> items,
     MenuController? controller,
     ValueChanged<T>? onSelected,
     VoidCallback? onOpen,
@@ -48,7 +48,7 @@ extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
     bool excludeSemantics = false,
     RemixMenuPartWrapper? contentWrapper,
   }) {
-    return RemixMenu(
+    return RemixMenu<T>(
       key: key,
       trigger: trigger,
       items: items,
