@@ -209,7 +209,7 @@ class FortalMenu<T> extends StatelessWidget {
     this.size = .size2,
     this.color,
     this.highContrast = false,
-    required this.trigger,
+    required Widget trigger,
     required this.items,
     this.controller,
     this.onSelected,
@@ -231,14 +231,14 @@ class FortalMenu<T> extends StatelessWidget {
     this.submenuPositioning,
     this.semanticLabel,
     this.excludeSemantics = false,
-  });
+  }) : _trigger = trigger;
 
   const FortalMenu.solid({
     super.key,
     this.size = .size2,
     this.color,
     this.highContrast = false,
-    required this.trigger,
+    required Widget trigger,
     required this.items,
     this.controller,
     this.onSelected,
@@ -260,14 +260,15 @@ class FortalMenu<T> extends StatelessWidget {
     this.submenuPositioning,
     this.semanticLabel,
     this.excludeSemantics = false,
-  }) : variant = .solid;
+  }) : _trigger = trigger,
+       variant = .solid;
 
   const FortalMenu.soft({
     super.key,
     this.size = .size2,
     this.color,
     this.highContrast = false,
-    required this.trigger,
+    required Widget trigger,
     required this.items,
     this.controller,
     this.onSelected,
@@ -289,7 +290,8 @@ class FortalMenu<T> extends StatelessWidget {
     this.submenuPositioning,
     this.semanticLabel,
     this.excludeSemantics = false,
-  }) : variant = .soft;
+  }) : _trigger = trigger,
+       variant = .soft;
 
   final FortalMenuVariant variant;
   final FortalMenuSize size;
@@ -300,7 +302,12 @@ class FortalMenu<T> extends StatelessWidget {
   /// Whether solid highlights use accent step 12 and accent step 1.
   final bool highContrast;
 
-  final Widget trigger;
+  final Widget _trigger;
+
+  /// Established trigger model.
+  ///
+  /// Arbitrary widget triggers are rendered directly.
+  RemixMenuTrigger get trigger => _trigger as RemixMenuTrigger;
   final List<RemixMenuItemData<T>> items;
   final MenuController? controller;
   final ValueChanged<T>? onSelected;
@@ -326,7 +333,7 @@ class FortalMenu<T> extends StatelessWidget {
         highContrast: highContrast,
       ).call<T>(
         key: key,
-        trigger: trigger,
+        trigger: _trigger,
         items: items,
         controller: controller,
         onSelected: onSelected,

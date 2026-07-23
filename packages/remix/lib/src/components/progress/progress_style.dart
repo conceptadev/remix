@@ -41,4 +41,22 @@ extension RemixProgressStylerRemixHelpers on RemixProgressStyler {
       style: this,
     );
   }
+
+  /// Creates an indeterminate progress indicator with this style.
+  RemixProgress indeterminate({
+    Key? key,
+    double max = 1,
+    Duration duration = const Duration(seconds: 5),
+    String? semanticLabel,
+    bool excludeSemantics = false,
+  }) {
+    return RemixProgress.indeterminate(
+      key: key,
+      max: max,
+      duration: duration,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+      style: this,
+    );
+  }
 }

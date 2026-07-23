@@ -111,7 +111,9 @@ RemixSliderStyler _fortalSliderClassic(
     .thumbColor(Colors.white)
     .trackEffects(
       RemixBoxEffectsMix(
-        overContent: RemixBoxEffectLayerMix(shadowToken: FortalTokens.shadow1),
+        overContent: RemixBoxEffectLayerMix(
+          shadowToken: FortalTokens.shadow1Layers,
+        ),
       ),
     )
     .rangeEffects(
@@ -349,7 +351,7 @@ class FortalSlider extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    this.value,
+    double? value,
     this.values,
     this.onChanged,
     this.onChangeStart,
@@ -377,7 +379,8 @@ class FortalSlider extends StatelessWidget {
     this.semanticLabels,
     this.semanticFormatterCallbacks,
     this.excludeSemantics = false,
-  }) : max = max ?? (values == null ? 1 : 100),
+  }) : _value = value,
+       max = max ?? (values == null ? 1 : 100),
        step = step ?? 1,
        _hasExplicitStep = step != null;
 
@@ -387,7 +390,7 @@ class FortalSlider extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    this.value,
+    double? value,
     this.values,
     this.onChanged,
     this.onChangeStart,
@@ -415,7 +418,8 @@ class FortalSlider extends StatelessWidget {
     this.semanticLabels,
     this.semanticFormatterCallbacks,
     this.excludeSemantics = false,
-  }) : variant = .classic,
+  }) : _value = value,
+       variant = .classic,
        max = max ?? (values == null ? 1 : 100),
        step = step ?? 1,
        _hasExplicitStep = step != null;
@@ -426,7 +430,7 @@ class FortalSlider extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    this.value,
+    double? value,
     this.values,
     this.onChanged,
     this.onChangeStart,
@@ -454,7 +458,8 @@ class FortalSlider extends StatelessWidget {
     this.semanticLabels,
     this.semanticFormatterCallbacks,
     this.excludeSemantics = false,
-  }) : variant = .surface,
+  }) : _value = value,
+       variant = .surface,
        max = max ?? (values == null ? 1 : 100),
        step = step ?? 1,
        _hasExplicitStep = step != null;
@@ -465,7 +470,7 @@ class FortalSlider extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    this.value,
+    double? value,
     this.values,
     this.onChanged,
     this.onChangeStart,
@@ -493,7 +498,8 @@ class FortalSlider extends StatelessWidget {
     this.semanticLabels,
     this.semanticFormatterCallbacks,
     this.excludeSemantics = false,
-  }) : variant = .soft,
+  }) : _value = value,
+       variant = .soft,
        max = max ?? (values == null ? 1 : 100),
        step = step ?? 1,
        _hasExplicitStep = step != null;
@@ -503,7 +509,12 @@ class FortalSlider extends StatelessWidget {
   final FortalAccentColor? color;
   final FortalRadius? radius;
   final bool highContrast;
-  final double? value;
+  final double? _value;
+
+  /// Current value for the established single-thumb API.
+  ///
+  /// Multi-thumb sliders expose their values through [values].
+  double get value => _value!;
   final List<double>? values;
   final ValueChanged<double>? onChanged;
   final ValueChanged<double>? onChangeStart;
@@ -544,7 +555,7 @@ class FortalSlider extends StatelessWidget {
           highContrast: highContrast,
         ).call(
           key: key,
-          value: value,
+          value: _value,
           values: values,
           onChanged: onChanged,
           onChangeStart: onChangeStart,

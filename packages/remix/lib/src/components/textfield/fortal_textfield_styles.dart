@@ -89,7 +89,7 @@ RemixTextFieldStyler _fortalTextFieldClassicStyler(FortalTextFieldSize size) {
       .containerEffects(
         RemixBoxEffectsMix(
           behindContent: _fortalTextFieldLayer(
-            shadowToken: FortalTokens.shadow1,
+            shadowToken: FortalTokens.shadow1Layers,
           ),
         ),
       )
@@ -104,7 +104,7 @@ RemixTextFieldStyler _fortalTextFieldClassicStyler(FortalTextFieldSize size) {
                       colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
                     ),
                   ],
-                  shadowToken: FortalTokens.shadow1,
+                  shadowToken: FortalTokens.shadow1Layers,
                 ),
               ),
             ),

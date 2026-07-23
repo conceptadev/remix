@@ -92,19 +92,25 @@ enum RemixTabBarJustify { start, center, end }
 class RemixTabBar extends StatelessWidget {
   const RemixTabBar({
     super.key,
-    this.child,
+    Widget? child,
     this.children,
     this.wrap = RemixTabBarWrap.nowrap,
     this.justify = RemixTabBarJustify.start,
     this.style = const RemixTabBarStyler.create(),
     this.styleSpec,
-  }) : assert(
+  }) : _child = child,
+       assert(
          (child == null) != (children == null),
          'Provide exactly one of child or children.',
        );
 
   /// Established arbitrary tab-bar content.
-  final Widget? child;
+  final Widget? _child;
+
+  /// Established arbitrary tab-bar content.
+  ///
+  /// Structured tab bars expose their entries through [children].
+  Widget get child => _child!;
 
   /// Additive tab list used by wrapping and distribution behavior.
   final List<Widget>? children;
@@ -131,7 +137,7 @@ class RemixTabBar extends StatelessWidget {
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
-        if (child case final content?) {
+        if (_child case final content?) {
           return FlexBox(
             styleSpec: spec.container,
             children: [NakedTabBar(child: content)],

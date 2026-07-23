@@ -111,7 +111,8 @@ void main() {
     );
 
     expect(select.style, same(styler));
-    expect(select.items, same(items));
+    expect(select.items, hasLength(1));
+    expect(select.items.single, same(items.single));
     expect(select.enabled, isFalse);
     expect(select.closeOnSelect, isFalse);
     expect(select.triggerWrapper, same(triggerWrapper));

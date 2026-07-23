@@ -486,7 +486,7 @@ Widget _fortalSelectIndicatorBuilder(
 class FortalSelect<T> extends StatelessWidget {
   const FortalSelect({
     super.key,
-    FortalSelectVariant? variant,
+    FortalSelectVariant variant = .surface,
     FortalSelectTriggerVariant? triggerVariant,
     this.contentVariant = .solid,
     this.size = .size2,
@@ -495,7 +495,7 @@ class FortalSelect<T> extends StatelessWidget {
     this.contentColor,
     this.contentHighContrast = false,
     required this.trigger,
-    required this.items,
+    required List<RemixSelectItemData<T>> items,
     this.selectedValue,
     this.positioning = const OverlayPositionConfig(
       side: .bottom,
@@ -511,7 +511,46 @@ class FortalSelect<T> extends StatelessWidget {
     this.closeOnSelect = true,
     this.semanticLabel,
     this.focusNode,
-  }) : variant =
+  }) : _items = items,
+       variant = variant,
+       triggerVariant =
+           triggerVariant ??
+           (variant == FortalSelectVariant.soft
+               ? FortalSelectTriggerVariant.soft
+               : variant == FortalSelectVariant.ghost
+               ? FortalSelectTriggerVariant.ghost
+               : FortalSelectTriggerVariant.surface);
+
+  /// Creates a Fortal select with grouped, labeled, or separated content.
+  const FortalSelect.structured({
+    super.key,
+    FortalSelectVariant? variant,
+    FortalSelectTriggerVariant? triggerVariant,
+    this.contentVariant = .solid,
+    this.size = .size2,
+    this.triggerColor,
+    this.triggerRadius,
+    this.contentColor,
+    this.contentHighContrast = false,
+    required this.trigger,
+    required List<RemixSelectItemData<T>> items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      side: .bottom,
+      alignment: .center,
+      sideOffset: 4,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.open,
+    this.onOpenChanged,
+    this.enabled = true,
+    this.closeOnSelect = true,
+    this.semanticLabel,
+    this.focusNode,
+  }) : _items = items,
+       variant =
            variant ??
            (triggerVariant == FortalSelectTriggerVariant.soft
                ? FortalSelectVariant.soft
@@ -535,7 +574,7 @@ class FortalSelect<T> extends StatelessWidget {
     this.contentColor,
     this.contentHighContrast = false,
     required this.trigger,
-    required this.items,
+    required List<RemixSelectItemData<T>> items,
     this.selectedValue,
     this.positioning = const OverlayPositionConfig(
       side: .bottom,
@@ -551,7 +590,8 @@ class FortalSelect<T> extends StatelessWidget {
     this.closeOnSelect = true,
     this.semanticLabel,
     this.focusNode,
-  }) : variant = .surface,
+  }) : _items = items,
+       variant = .surface,
        triggerVariant = .classic;
 
   const FortalSelect.surface({
@@ -563,7 +603,7 @@ class FortalSelect<T> extends StatelessWidget {
     this.contentColor,
     this.contentHighContrast = false,
     required this.trigger,
-    required this.items,
+    required List<RemixSelectItemData<T>> items,
     this.selectedValue,
     this.positioning = const OverlayPositionConfig(
       side: .bottom,
@@ -579,7 +619,8 @@ class FortalSelect<T> extends StatelessWidget {
     this.closeOnSelect = true,
     this.semanticLabel,
     this.focusNode,
-  }) : variant = .surface,
+  }) : _items = items,
+       variant = .surface,
        triggerVariant = .surface;
 
   const FortalSelect.soft({
@@ -591,7 +632,7 @@ class FortalSelect<T> extends StatelessWidget {
     this.contentColor,
     this.contentHighContrast = false,
     required this.trigger,
-    required this.items,
+    required List<RemixSelectItemData<T>> items,
     this.selectedValue,
     this.positioning = const OverlayPositionConfig(
       side: .bottom,
@@ -607,7 +648,8 @@ class FortalSelect<T> extends StatelessWidget {
     this.closeOnSelect = true,
     this.semanticLabel,
     this.focusNode,
-  }) : variant = .soft,
+  }) : _items = items,
+       variant = .soft,
        triggerVariant = .soft;
 
   const FortalSelect.ghost({
@@ -619,7 +661,7 @@ class FortalSelect<T> extends StatelessWidget {
     this.contentColor,
     this.contentHighContrast = false,
     required this.trigger,
-    required this.items,
+    required List<RemixSelectItemData<T>> items,
     this.selectedValue,
     this.positioning = const OverlayPositionConfig(
       side: .bottom,
@@ -635,7 +677,8 @@ class FortalSelect<T> extends StatelessWidget {
     this.closeOnSelect = true,
     this.semanticLabel,
     this.focusNode,
-  }) : variant = .ghost,
+  }) : _items = items,
+       variant = .ghost,
        triggerVariant = .ghost;
 
   final FortalSelectVariant variant;
@@ -647,7 +690,10 @@ class FortalSelect<T> extends StatelessWidget {
   final FortalAccentColor? contentColor;
   final bool contentHighContrast;
   final RemixSelectTrigger trigger;
-  final List<RemixSelectItemData<T>> items;
+  final List<RemixSelectItemData<T>> _items;
+
+  /// Established selectable items.
+  List<RemixSelectItem<T>> get items => _selectItemsView(_items);
   final T? selectedValue;
   final OverlayPositionConfig positioning;
   final ValueChanged<T?>? onChanged;
@@ -667,9 +713,9 @@ class FortalSelect<T> extends StatelessWidget {
       contentVariant: contentVariant,
       size: size,
       contentHighContrast: contentHighContrast,
-    ).call<T>(
+    ).structured<T>(
       trigger: trigger,
-      items: items,
+      items: _items,
       selectedValue: selectedValue,
       positioning: positioning,
       onChanged: onChanged,

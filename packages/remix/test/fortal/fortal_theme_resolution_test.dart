@@ -4,7 +4,7 @@ import 'package:remix/remix.dart';
 
 void main() {
   group('Fortal theme resolution', () {
-    test('exposes only the Radix Themes 3.3.0 theme values', () {
+    test('exposes current theme values and legacy neutral accents', () {
       expect(FortalAppearance.values, [
         FortalAppearance.inherit,
         FortalAppearance.light,
@@ -35,6 +35,11 @@ void main() {
       ]);
       expect(FortalAccentColor.values.map((value) => value.name), [
         'gray',
+        'mauve',
+        'slate',
+        'sage',
+        'olive',
+        'sand',
         'gold',
         'bronze',
         'brown',
@@ -349,4 +354,9 @@ FortalGrayColor _expectedGrayFor(FortalAccentColor accent) => switch (accent) {
   .grass || .lime => .olive,
   .yellow || .amber || .orange || .brown || .gold || .bronze => .sand,
   .gray => .gray,
+  .mauve => .mauve,
+  .slate => .slate,
+  .sage => .sage,
+  .olive => .olive,
+  .sand => .sand,
 };

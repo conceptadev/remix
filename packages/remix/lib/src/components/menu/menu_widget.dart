@@ -6,12 +6,22 @@ typedef RemixMenuPartWrapper =
 
 /// Compatibility trigger model retained from the original Remix menu API.
 class RemixMenuTrigger extends StatelessWidget {
-  const RemixMenuTrigger({super.key, required this.label, this.icon});
+  const RemixMenuTrigger({super.key, required this.label, this.icon})
+    : _child = null;
+
+  /// Creates a trigger from arbitrary widget content.
+  const RemixMenuTrigger.custom({super.key, required Widget child})
+    : label = '',
+      icon = null,
+      _child = child;
 
   final String label;
   final IconData? icon;
+  final Widget? _child;
 
   Widget _build(StyleSpec<RemixMenuTriggerSpec> styleSpec) {
+    if (_child case final child?) return child;
+
     return StyleSpecBuilder<RemixMenuTriggerSpec>(
       styleSpec: styleSpec,
       builder: (context, spec) => RowBox(
@@ -25,10 +35,12 @@ class RemixMenuTrigger extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [if (icon != null) Icon(icon), Text(label)],
-  );
+  Widget build(BuildContext context) =>
+      _child ??
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [if (icon != null) Icon(icon), Text(label)],
+      );
 }
 
 /// Compatibility base class for the original data-driven menu items.
@@ -100,7 +112,7 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 class RemixMenu<T> extends StatefulWidget {
   const RemixMenu({
     super.key,
-    required this.trigger,
+    required Widget trigger,
     required this.items,
     this.controller,
     this.onSelected,
@@ -125,7 +137,8 @@ class RemixMenu<T> extends StatefulWidget {
     this.contentWrapper,
     this.style = const RemixMenuStyler.create(),
     this.styleSpec,
-  }) : submenuPositioning =
+  }) : _trigger = trigger,
+       submenuPositioning =
            submenuPositioning ??
            const OverlayPositionConfig(
              side: OverlaySide.right,
@@ -136,8 +149,12 @@ class RemixMenu<T> extends StatefulWidget {
            ),
        _hasExplicitSubmenuPositioning = submenuPositioning != null;
 
-  /// Widget that opens and closes the menu.
-  final Widget trigger;
+  final Widget _trigger;
+
+  /// Established trigger model.
+  ///
+  /// Arbitrary widget triggers are rendered directly.
+  RemixMenuTrigger get trigger => _trigger as RemixMenuTrigger;
 
   /// Established data-driven popup items.
   final List<RemixMenuItemData<T>> items;
@@ -202,12 +219,14 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       .merge(widget.style);
 
   Widget _buildTrigger(RemixMenuStyler style) {
-    final trigger = widget.trigger;
-    if (trigger is! RemixMenuTrigger) return trigger;
+    final trigger = widget._trigger;
     return RemixStyleSpecBuilder<RemixMenuSpec>(
       style: style,
       styleSpec: widget.styleSpec,
-      builder: (context, spec) => trigger._build(spec.trigger),
+      builder: (context, spec) => switch (trigger) {
+        RemixMenuTrigger() => trigger._build(spec.trigger),
+        _ => trigger,
+      },
     );
   }
 

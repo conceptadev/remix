@@ -77,7 +77,9 @@ RemixRadioStyler _fortalRadioClassicStyler(
       .color(FortalTokens.colorSurface())
       .containerEffects(
         RemixBoxEffectsMix(
-          behindContent: _fortalRadioLayer(shadowToken: FortalTokens.shadow1),
+          behindContent: _fortalRadioLayer(
+            shadowToken: FortalTokens.shadow1Layers,
+          ),
         ),
       )
       .containerEffects(
@@ -130,7 +132,7 @@ RemixRadioStyler _fortalRadioClassicStyler(
             .containerEffects(
               RemixBoxEffectsMix(
                 behindContent: _fortalRadioLayer(
-                  shadowToken: FortalTokens.shadow1,
+                  shadowToken: FortalTokens.shadow1Layers,
                 ),
               ),
             )

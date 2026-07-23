@@ -48,7 +48,12 @@ void main() {
 
     final String buttonLabel = button.label;
     final IconData buttonIcon = iconButton.icon;
+    final RemixMenuTrigger menuTrigger = menu.trigger;
     final List<RemixMenuItemData<String>> menuItems = menu.items;
+    final List<RemixSelectItem<String>> selectItems = select.items;
+    final double sliderValue = slider.value;
+    final double progressValue = progress.value;
+    final Widget tabBarChild = tabBar.child;
     const compositionalMenuItems = <RemixMenuItemData<String>>[
       RemixMenuLabel(child: Text('Actions')),
       RemixMenuAction(value: 'copy', child: Text('Copy')),
@@ -74,13 +79,16 @@ void main() {
     expect(buttonLabel, 'Save');
     expect(callout.text, 'Saved');
     expect(buttonIcon, Icons.favorite);
+    expect(menuTrigger.label, 'Options');
     expect(menuItems, hasLength(2));
+    expect(selectItems, hasLength(1));
     expect(compositionalMenuItems, hasLength(7));
     expect(select.items, hasLength(1));
-    expect(slider.value, 0.5);
+    expect(sliderValue, 0.5);
     expect(slider.snapDivisions, 10);
+    expect(progressValue, 0.5);
     expect(progress.max, 1);
-    expect(tabBar.child, isA<SizedBox>());
+    expect(tabBarChild, isA<SizedBox>());
   });
 
   test('origin main raw specs and styler calls remain source compatible', () {
@@ -135,6 +143,14 @@ void main() {
     ).rangeColor(Colors.blue);
     final generatedSelectContainer = RemixSelectStyler.color(Colors.white);
     final generatedTabBar = RemixTabBarStyler.row().spacing(8);
+    final legacyButtonSpinner = ButtonStyler()
+        .spinnerIndicatorColor(Colors.blue)
+        .spinnerTrackColor(Colors.grey)
+        .spinnerStrokeWidth(2)
+        .spinnerTrackStrokeWidth(1);
+    final legacyDividerThickness = RemixDividerStylerRemixHelpers(
+      RemixDividerStyler(),
+    ).thickness(1);
     final legacyTabBarFlex = RemixTabBarStyler().flex(
       FlexStyler(mainAxisSize: MainAxisSize.min),
     );
@@ -166,6 +182,8 @@ void main() {
     expect(generatedSlider, isA<RemixSliderStyler>());
     expect(generatedSelectContainer, isA<RemixSelectStyler>());
     expect(generatedTabBar, isA<RemixTabBarStyler>());
+    expect(legacyButtonSpinner, isA<ButtonStyler>());
+    expect(legacyDividerThickness, isA<RemixDividerStyler>());
     expect(legacyTabBarFlex, isA<RemixTabBarStyler>());
     expect(legacySliderHelpers, isA<RemixSliderStyler>());
     expect(RemixSliderSpec.defaultTrackStrokeWidth, 8);
@@ -203,18 +221,69 @@ void main() {
     final slider = FortalSlider.surface(value: 0.5, onChanged: (value) {});
     const progress = FortalProgress.surface(value: 0.5);
     const tabBar = FortalTabBar(child: SizedBox());
+    const checkbox = FortalCheckbox.surface(
+      selected: true,
+      checkedIcon: Icons.check,
+      uncheckedIcon: Icons.close,
+      indeterminateIcon: Icons.remove,
+    );
+    final String buttonLabel = button.label;
+    final RemixMenuTrigger menuTrigger = menu.trigger;
+    final List<RemixSelectItem<String>> selectItems = select.items;
+    final double sliderValue = slider.value;
+    final double progressValue = progress.value;
+    final Widget tabBarChild = tabBar.child;
+    final IconData checkedIcon = checkbox.checkedIcon;
+    final IconData? uncheckedIcon = checkbox.uncheckedIcon;
+    final IconData indeterminateIcon = checkbox.indeterminateIcon;
 
-    expect(button.label, 'Save');
+    expect(buttonLabel, 'Save');
     expect(badge.label, 'New');
     expect(callout.text, 'Saved');
     expect(iconButton.icon, Icons.favorite);
+    expect(menuTrigger.label, 'Options');
     expect(menu.items, hasLength(1));
-    expect(select.items, hasLength(1));
+    expect(selectItems, hasLength(1));
     expect(runtimeSelect.variant, FortalSelectVariant.ghost);
     expect(legacySelectStyle, isA<RemixSelectStyler>());
     expect(legacySelectItemStyle, isA<RemixSelectMenuItemStyler>());
-    expect(slider.value, 0.5);
-    expect(progress.value, 0.5);
-    expect(tabBar.child, isA<SizedBox>());
+    expect(sliderValue, 0.5);
+    expect(progressValue, 0.5);
+    expect(tabBarChild, isA<SizedBox>());
+    expect(checkedIcon, Icons.check);
+    expect(uncheckedIcon, Icons.close);
+    expect(indeterminateIcon, Icons.remove);
+  });
+
+  test('origin main Fortal theme API remains source compatible', () {
+    const config = FortalThemeConfig(
+      accent: FortalAccentColor.mauve,
+      gray: FortalGrayColor.slate,
+      brightness: Brightness.dark,
+    );
+    final copied = config.copyWith(
+      accent: FortalAccentColor.sage,
+      gray: FortalGrayColor.olive,
+      brightness: Brightness.light,
+    );
+    const scope = FortalScope(
+      accent: FortalAccentColor.sand,
+      gray: FortalGrayColor.gray,
+      brightness: Brightness.light,
+      child: SizedBox(),
+    );
+    final BoxShadowToken shadow1 = FortalTokens.shadow1;
+    final colors = resolveFortalTokens(config);
+
+    expect(config.accent, FortalAccentColor.mauve);
+    expect(config.gray, FortalGrayColor.slate);
+    expect(config.brightness, Brightness.dark);
+    expect(config.isDark, isTrue);
+    expect(copied.accent, FortalAccentColor.sage);
+    expect(scope.accent, FortalAccentColor.sand);
+    expect(scope.gray, FortalGrayColor.gray);
+    expect(scope.brightness, Brightness.light);
+    expect(shadow1, isA<BoxShadowToken>());
+    expect(colors, isA<FortalThemeColors>());
   });
 }

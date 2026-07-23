@@ -48,7 +48,9 @@ RemixProgressStyler _fortalProgressClassicStyler(
       .trackEffects(RemixBoxEffectsMix(behindContent: _fortalProgressLayer()))
       .trackEffects(
         RemixBoxEffectsMix(
-          overContent: _fortalProgressLayer(shadowToken: FortalTokens.shadow1),
+          overContent: _fortalProgressLayer(
+            shadowToken: FortalTokens.shadow1Layers,
+          ),
         ),
       )
       .indicatorEffects(
@@ -145,12 +147,26 @@ class FortalProgress extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    this.value,
+    double? value,
     this.max = 1,
     this.duration = const Duration(seconds: 5),
     this.semanticLabel,
     this.excludeSemantics = false,
-  });
+  }) : _value = value;
+
+  /// Creates an indeterminate Fortal progress indicator.
+  const FortalProgress.indeterminate({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    this.max = 1,
+    this.duration = const Duration(seconds: 5),
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : _value = null;
 
   const FortalProgress.classic({
     super.key,
@@ -158,12 +174,13 @@ class FortalProgress extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    this.value,
+    double? value,
     this.max = 1,
     this.duration = const Duration(seconds: 5),
     this.semanticLabel,
     this.excludeSemantics = false,
-  }) : variant = .classic;
+  }) : _value = value,
+       variant = .classic;
 
   const FortalProgress.surface({
     super.key,
@@ -171,12 +188,13 @@ class FortalProgress extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    this.value,
+    double? value,
     this.max = 1,
     this.duration = const Duration(seconds: 5),
     this.semanticLabel,
     this.excludeSemantics = false,
-  }) : variant = .surface;
+  }) : _value = value,
+       variant = .surface;
 
   const FortalProgress.soft({
     super.key,
@@ -184,12 +202,13 @@ class FortalProgress extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    this.value,
+    double? value,
     this.max = 1,
     this.duration = const Duration(seconds: 5),
     this.semanticLabel,
     this.excludeSemantics = false,
-  }) : variant = .soft;
+  }) : _value = value,
+       variant = .soft;
 
   final FortalProgressVariant variant;
 
@@ -204,8 +223,13 @@ class FortalProgress extends StatelessWidget {
   /// Whether to use higher-contrast accent colors.
   final bool highContrast;
 
-  /// Current progress, or null for the indeterminate animation.
-  final double? value;
+  final double? _value;
+
+  /// Current progress for the established determinate API.
+  double get value => _value ?? 0;
+
+  /// Whether this progress indicator is currently indeterminate.
+  bool get isIndeterminate => _value == null;
 
   /// Maximum determinate value.
   final double max;
@@ -221,22 +245,32 @@ class FortalProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style = fortalProgressStyler(
+      variant: variant,
+      size: size,
+      highContrast: highContrast,
+    );
+    final value = _value;
+    final progress = value != null
+        ? style.call(
+            key: key,
+            value: value,
+            max: max,
+            duration: duration,
+            semanticLabel: semanticLabel,
+            excludeSemantics: excludeSemantics,
+          )
+        : style.indeterminate(
+            key: key,
+            max: max,
+            duration: duration,
+            semanticLabel: semanticLabel,
+            excludeSemantics: excludeSemantics,
+          );
     return FortalComponentOverride(
       color: this.color,
       radius: this.radius,
-      child:
-          fortalProgressStyler(
-            variant: this.variant,
-            size: this.size,
-            highContrast: this.highContrast,
-          ).call(
-            key: this.key,
-            value: this.value,
-            max: this.max,
-            duration: this.duration,
-            semanticLabel: this.semanticLabel,
-            excludeSemantics: this.excludeSemantics,
-          ),
+      child: progress,
     );
   }
 }

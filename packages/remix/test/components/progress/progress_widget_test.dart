@@ -16,7 +16,8 @@ void main() {
     test('defaults to indeterminate progress on a 0-1 scale', () {
       const progress = RemixProgress();
 
-      expect(progress.value, isNull);
+      expect(progress.value, 0);
+      expect(progress.isIndeterminate, isTrue);
       expect(progress.max, 1);
       expect(progress.duration, const Duration(seconds: 5));
       expect(progress.excludeSemantics, isFalse);

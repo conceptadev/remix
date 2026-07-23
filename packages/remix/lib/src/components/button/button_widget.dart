@@ -17,8 +17,8 @@ typedef RemixButtonLoadingBuilder =
 class RemixButton extends StatelessWidget {
   const RemixButton({
     super.key,
-    this.child,
     String? label,
+    this.child,
     this.leadingIcon,
     this.trailingIcon,
     this.textBuilder,
@@ -40,9 +40,34 @@ class RemixButton extends StatelessWidget {
     this.styleSpec,
   }) : _label = label,
        assert(
-         child != null || label != null,
-         'RemixButton requires either child or label.',
+         (label == null) != (child == null),
+         'Provide exactly one of label or child.',
        );
+
+  /// Creates a button with arbitrary content that inherits resolved styles.
+  const RemixButton.custom({
+    super.key,
+    required this.child,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.style = const ButtonStyler.create(),
+    this.styleSpec,
+  }) : _label = null,
+       leadingIcon = null,
+       trailingIcon = null,
+       textBuilder = null,
+       leadingIconBuilder = null,
+       trailingIconBuilder = null;
 
   static ButtonStyler composeStyle(ButtonStyler style) =>
       .mainAxisSize(.min).merge(style);
@@ -51,10 +76,11 @@ class RemixButton extends StatelessWidget {
 
   /// Arbitrary button content. Use [label] for the established text API.
   final Widget? child;
+
   final String? _label;
 
-  /// The established text label, or an empty string for arbitrary content.
-  String get label => _label ?? '';
+  /// The established text label.
+  String get label => _label!;
 
   final IconData? leadingIcon;
   final IconData? trailingIcon;
@@ -107,11 +133,11 @@ class RemixButton extends StatelessWidget {
       trailingIconBuilder,
     );
     final text = textBuilder == null
-        ? StyledText(_label!, styleSpec: spec.label)
+        ? StyledText(label, styleSpec: spec.label)
         : StyleSpecBuilder<TextSpec>(
             styleSpec: spec.label,
             builder: (context, textSpec) =>
-                textBuilder!(context, textSpec, _label!),
+                textBuilder!(context, textSpec, label),
           );
     final hasBothIcons = leading != null && trailing != null;
     final children = hasBothIcons || spec.iconAlignment == null
@@ -161,7 +187,7 @@ class RemixButton extends StatelessWidget {
     );
 
     return Semantics(
-      excludeSemantics: semanticLabel != null || _label != null,
+      excludeSemantics: semanticLabel != null || child == null,
       liveRegion: loading,
       hint: semanticHint,
       child: Stack(
@@ -184,7 +210,7 @@ class RemixButton extends StatelessWidget {
       enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
-      semanticLabel: semanticLabel ?? _label,
+      semanticLabel: semanticLabel ?? (child == null ? label : null),
       excludeSemantics: excludeSemantics,
       builder: (context, _, _) => RemixStyleSpecBuilder<RemixButtonSpec>(
         style: composeStyle(style),

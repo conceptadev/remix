@@ -129,9 +129,10 @@ class FortalTabBar extends StatelessWidget {
     this.justify = RemixTabBarJustify.start,
     this.color,
     this.highContrast = false,
-    this.child,
+    Widget? child,
     this.children,
-  }) : assert(
+  }) : _child = child,
+       assert(
          (child == null) != (children == null),
          'Provide exactly one of child or children.',
        );
@@ -141,7 +142,12 @@ class FortalTabBar extends StatelessWidget {
   final RemixTabBarJustify justify;
   final FortalAccentColor? color;
   final bool highContrast;
-  final Widget? child;
+  final Widget? _child;
+
+  /// Established arbitrary tab-bar content.
+  ///
+  /// Structured tab bars expose their entries through [children].
+  Widget get child => _child!;
   final List<Widget>? children;
 
   @override
@@ -150,7 +156,7 @@ class FortalTabBar extends StatelessWidget {
       key: key,
       wrap: wrap,
       justify: justify,
-      child: child,
+      child: _child,
       children: children,
     );
 

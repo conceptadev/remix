@@ -265,7 +265,7 @@ Future<_FortalTokenSnapshot> _captureFortalTokens(
         home: Builder(
           builder: (context) {
             final shadow1 = List<RemixBoxShadow>.unmodifiable(
-              MixScope.tokenOf(FortalTokens.shadow1, context),
+              MixScope.tokenOf(FortalTokens.shadow1Layers, context),
             );
             final shadow2 = List<BoxShadow>.unmodifiable(
               MixScope.tokenOf(FortalTokens.shadow2, context),

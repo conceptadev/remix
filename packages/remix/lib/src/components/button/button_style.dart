@@ -9,8 +9,8 @@ extension RemixButtonStylerRemixHelpers on ButtonStyler {
   /// Creates a [RemixButton] widget with this style applied.
   RemixButton call({
     Key? key,
-    Widget? child,
     String? label,
+    Widget? child,
     IconData? leadingIcon,
     IconData? trailingIcon,
     RemixButtonTextBuilder? textBuilder,
@@ -31,13 +31,49 @@ extension RemixButtonStylerRemixHelpers on ButtonStyler {
   }) {
     return RemixButton(
       key: key,
-      child: child,
       label: label,
+      child: child,
       leadingIcon: leadingIcon,
       trailingIcon: trailingIcon,
       textBuilder: textBuilder,
       leadingIconBuilder: leadingIconBuilder,
       trailingIconBuilder: trailingIconBuilder,
+      loadingBuilder: loadingBuilder,
+      loading: loading,
+      enabled: enabled,
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      enableFeedback: enableFeedback,
+      semanticLabel: semanticLabel,
+      semanticHint: semanticHint,
+      excludeSemantics: excludeSemantics,
+      mouseCursor: mouseCursor,
+      style: this,
+    );
+  }
+
+  /// Creates a button with arbitrary content using this style.
+  RemixButton custom({
+    Key? key,
+    required Widget child,
+    RemixButtonLoadingBuilder? loadingBuilder,
+    bool loading = false,
+    bool enabled = true,
+    VoidCallback? onPressed,
+    VoidCallback? onLongPress,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    bool enableFeedback = true,
+    String? semanticLabel,
+    String? semanticHint,
+    bool excludeSemantics = false,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+  }) {
+    return RemixButton.custom(
+      key: key,
+      child: child,
       loadingBuilder: loadingBuilder,
       loading: loading,
       enabled: enabled,

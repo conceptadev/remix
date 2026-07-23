@@ -600,7 +600,15 @@ class FortalTokens {
   ///
   /// Minimal shadow for slight elevation effects.
   /// Good for cards and buttons in their resting state.
-  static const shadow1 = RemixBoxShadowListToken('fortal.shadow.1');
+  static const shadow1 = BoxShadowToken('fortal.shadow.1');
+
+  /// Exact layered shadow level 1, including inset layers.
+  ///
+  /// This additive token powers Fortal's Radix-compatible rendering while
+  /// [shadow1] retains the original Remix public token type.
+  static const shadow1Layers = RemixBoxShadowListToken(
+    'fortal.shadow.1.layers',
+  );
 
   /// Half-opacity shadow-1 layers used by a disabled classic slider track.
   static const sliderClassicDisabledTrackShadows = RemixBoxShadowListToken(
@@ -1071,7 +1079,7 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
     // Exact layered Radix shadow tokens, resolved for the active color scales.
     ...shadows,
     FortalTokens.sliderClassicDisabledTrackShadows: _scaleShadowOpacity(
-      shadows[FortalTokens.shadow1]! as List<RemixBoxShadow>,
+      shadows[FortalTokens.shadow1Layers]! as List<RemixBoxShadow>,
       0.5,
     ),
     FortalTokens.cardClassicOuterShadows: _cardClassicShadows(
@@ -1751,6 +1759,9 @@ Map<ColorToken, Color> _accentColorTokens(FortalThemeColors tokens) {
 class FortalScope extends StatefulWidget {
   const FortalScope({
     super.key,
+    FortalAccentColor? accent,
+    FortalGrayColor? gray,
+    Brightness? brightness,
     this.appearance,
     this.accentColor,
     this.grayColor,
@@ -1760,8 +1771,25 @@ class FortalScope extends StatefulWidget {
     this.hasBackground,
     this.orderOfModifiers,
     required this.child,
-  });
+  }) : _accent = accent,
+       _gray = gray,
+       _brightness = brightness,
+       assert(
+         accent == null || accentColor == null,
+         'Provide either accent or accentColor, not both.',
+       ),
+       assert(
+         gray == null || grayColor == null,
+         'Provide either gray or grayColor, not both.',
+       ),
+       assert(
+         brightness == null || appearance == null,
+         'Provide either brightness or appearance, not both.',
+       );
 
+  final FortalAccentColor? _accent;
+  final FortalGrayColor? _gray;
+  final Brightness? _brightness;
   final FortalAppearance? appearance;
   final FortalAccentColor? accentColor;
   final FortalGrayColor? grayColor;
@@ -1771,6 +1799,25 @@ class FortalScope extends StatefulWidget {
   final bool? hasBackground;
   final List<Type>? orderOfModifiers;
   final Widget child;
+
+  /// Legacy accent setting retained from the original Remix API.
+  FortalAccentColor get accent => _accent ?? accentColor ?? .indigo;
+
+  /// Legacy gray setting retained from the original Remix API.
+  FortalGrayColor get gray =>
+      _gray ??
+      switch (grayColor) {
+        null || .auto => FortalGrayColor.slate,
+        final value => value,
+      };
+
+  /// Legacy brightness setting retained from the original Remix API.
+  Brightness get brightness =>
+      _brightness ??
+      switch (appearance) {
+        .dark => Brightness.dark,
+        null || .inherit || .light => Brightness.light,
+      };
 
   @override
   State<FortalScope> createState() => _FortalScopeState();
@@ -1804,6 +1851,9 @@ class _FortalScopeState extends State<FortalScope> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final config = FortalThemeConfig(
+      accent: widget._accent,
+      gray: widget._gray,
+      brightness: widget._brightness,
       appearance: widget.appearance,
       accentColor: widget.accentColor,
       grayColor: widget.grayColor,
@@ -1837,6 +1887,11 @@ class _FortalScopeState extends State<FortalScope> with WidgetsBindingObserver {
 /// Available accent colors matching Radix Themes names.
 enum FortalAccentColor {
   gray,
+  mauve,
+  slate,
+  sage,
+  olive,
+  sand,
   gold,
   bronze,
   brown,
@@ -1894,6 +1949,9 @@ enum FortalScaling {
 @immutable
 class FortalThemeConfig {
   const FortalThemeConfig({
+    FortalAccentColor? accent,
+    FortalGrayColor? gray,
+    Brightness? brightness,
     this.appearance,
     this.accentColor,
     this.grayColor,
@@ -1901,8 +1959,25 @@ class FortalThemeConfig {
     this.radius,
     this.scaling,
     this.hasBackground,
-  });
+  }) : _accent = accent,
+       _gray = gray,
+       _brightness = brightness,
+       assert(
+         accent == null || accentColor == null,
+         'Provide either accent or accentColor, not both.',
+       ),
+       assert(
+         gray == null || grayColor == null,
+         'Provide either gray or grayColor, not both.',
+       ),
+       assert(
+         brightness == null || appearance == null,
+         'Provide either brightness or appearance, not both.',
+       );
 
+  final FortalAccentColor? _accent;
+  final FortalGrayColor? _gray;
+  final Brightness? _brightness;
   final FortalAppearance? appearance;
   final FortalAccentColor? accentColor;
   final FortalGrayColor? grayColor;
@@ -1911,10 +1986,70 @@ class FortalThemeConfig {
   final FortalScaling? scaling;
   final bool? hasBackground;
 
+  /// Legacy accent setting retained from the original Remix API.
+  FortalAccentColor get accent => _accent ?? accentColor ?? .indigo;
+
+  /// Legacy gray setting retained from the original Remix API.
+  FortalGrayColor get gray =>
+      _gray ??
+      switch (grayColor) {
+        null || .auto => FortalGrayColor.slate,
+        final value => value,
+      };
+
+  /// Legacy brightness setting retained from the original Remix API.
+  Brightness get brightness =>
+      _brightness ??
+      switch (appearance) {
+        .dark => Brightness.dark,
+        null || .inherit || .light => Brightness.light,
+      };
+
+  bool get isDark => brightness == .dark;
+
+  FortalAppearance? get _configuredAppearance =>
+      appearance ??
+      switch (_brightness) {
+        Brightness.light => FortalAppearance.light,
+        Brightness.dark => FortalAppearance.dark,
+        null => null,
+      };
+
+  FortalAccentColor? get _configuredAccentColor => accentColor ?? _accent;
+
+  FortalGrayColor? get _configuredGrayColor => grayColor ?? _gray;
+
+  FortalThemeConfig copyWith({
+    FortalAccentColor? accent,
+    FortalGrayColor? gray,
+    Brightness? brightness,
+    FortalAppearance? appearance,
+    FortalAccentColor? accentColor,
+    FortalGrayColor? grayColor,
+    FortalPanelBackground? panelBackground,
+    FortalRadius? radius,
+    FortalScaling? scaling,
+    bool? hasBackground,
+  }) => FortalThemeConfig(
+    accent: accent ?? (accentColor == null ? _accent : null),
+    gray: gray ?? (grayColor == null ? _gray : null),
+    brightness: brightness ?? (appearance == null ? _brightness : null),
+    appearance: brightness == null ? appearance ?? this.appearance : null,
+    accentColor: accent == null ? accentColor ?? this.accentColor : null,
+    grayColor: gray == null ? grayColor ?? this.grayColor : null,
+    panelBackground: panelBackground ?? this.panelBackground,
+    radius: radius ?? this.radius,
+    scaling: scaling ?? this.scaling,
+    hasBackground: hasBackground ?? this.hasBackground,
+  );
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is FortalThemeConfig &&
+          _accent == other._accent &&
+          _gray == other._gray &&
+          _brightness == other._brightness &&
           appearance == other.appearance &&
           accentColor == other.accentColor &&
           grayColor == other.grayColor &&
@@ -1925,6 +2060,9 @@ class FortalThemeConfig {
 
   @override
   int get hashCode => Object.hash(
+    _accent,
+    _gray,
+    _brightness,
     appearance,
     accentColor,
     grayColor,
@@ -1936,6 +2074,9 @@ class FortalThemeConfig {
 
   Widget createScope({List<Type>? orderOfModifiers, required Widget child}) =>
       FortalScope(
+        accent: _accent,
+        gray: _gray,
+        brightness: _brightness,
         appearance: appearance,
         accentColor: accentColor,
         grayColor: grayColor,
@@ -1950,7 +2091,7 @@ class FortalThemeConfig {
 
 /// Fully resolved theme values inherited by a Fortal subtree.
 @immutable
-class FortalThemeData {
+class FortalThemeData extends FortalThemeConfig {
   const FortalThemeData({
     required this.appearance,
     required this.accentColor,
@@ -1960,22 +2101,44 @@ class FortalThemeData {
     required this.scaling,
     required this.hasBackground,
   }) : assert(appearance != FortalAppearance.inherit),
-       assert(grayColor != FortalGrayColor.auto);
+       assert(grayColor != FortalGrayColor.auto),
+       super(
+         appearance: appearance,
+         accentColor: accentColor,
+         grayColor: grayColor,
+         panelBackground: panelBackground,
+         radius: radius,
+         scaling: scaling,
+         hasBackground: hasBackground,
+       );
 
+  @override
   final FortalAppearance appearance;
+  @override
   final FortalAccentColor accentColor;
+  @override
   final FortalGrayColor grayColor;
+  @override
   final FortalPanelBackground panelBackground;
+  @override
   final FortalRadius radius;
+  @override
   final FortalScaling scaling;
+  @override
   final bool hasBackground;
 
+  @override
   Brightness get brightness =>
       appearance == .dark ? Brightness.dark : Brightness.light;
 
+  @override
   bool get isDark => appearance == .dark;
 
+  @override
   FortalThemeData copyWith({
+    FortalAccentColor? accent,
+    FortalGrayColor? gray,
+    Brightness? brightness,
     FortalAppearance? appearance,
     FortalAccentColor? accentColor,
     FortalGrayColor? grayColor,
@@ -1984,9 +2147,13 @@ class FortalThemeData {
     FortalScaling? scaling,
     bool? hasBackground,
   }) => FortalThemeData(
-    appearance: appearance ?? this.appearance,
-    accentColor: accentColor ?? this.accentColor,
-    grayColor: grayColor ?? this.grayColor,
+    appearance: brightness == .dark
+        ? FortalAppearance.dark
+        : brightness == .light
+        ? FortalAppearance.light
+        : appearance ?? this.appearance,
+    accentColor: accent ?? accentColor ?? this.accentColor,
+    grayColor: gray ?? grayColor ?? this.grayColor,
     panelBackground: panelBackground ?? this.panelBackground,
     radius: radius ?? this.radius,
     scaling: scaling ?? this.scaling,
@@ -2022,7 +2189,7 @@ FortalThemeData _resolveFortalTheme(
   FortalThemeData? parent,
   required Brightness platformBrightness,
 }) {
-  final appearance = switch (config.appearance) {
+  final appearance = switch (config._configuredAppearance) {
     .light => FortalAppearance.light,
     .dark => FortalAppearance.dark,
     null || .inherit =>
@@ -2032,14 +2199,17 @@ FortalThemeData _resolveFortalTheme(
               : FortalAppearance.light),
   };
   final accentColor =
-      config.accentColor ?? parent?.accentColor ?? FortalAccentColor.indigo;
-  final grayColor = switch (config.grayColor) {
+      config._configuredAccentColor ??
+      parent?.accentColor ??
+      FortalAccentColor.indigo;
+  final grayColor = switch (config._configuredGrayColor) {
     null => parent?.grayColor ?? _matchingGrayColor(accentColor),
     .auto => _matchingGrayColor(accentColor),
     final gray => gray,
   };
   final hasExplicitAppearance =
-      config.appearance == .light || config.appearance == .dark;
+      config._configuredAppearance == .light ||
+      config._configuredAppearance == .dark;
 
   return FortalThemeData(
     appearance: appearance,
@@ -2071,6 +2241,11 @@ FortalGrayColor _matchingGrayColor(FortalAccentColor accent) =>
       .grass || .lime => .olive,
       .yellow || .amber || .orange || .brown || .gold || .bronze => .sand,
       .gray => .gray,
+      .mauve => .mauve,
+      .slate => .slate,
+      .sage => .sage,
+      .olive => .olive,
+      .sand => .sand,
     };
 
 /// Makes the active [FortalThemeData] available to descendants.

@@ -161,7 +161,7 @@ RemixCheckboxStyler _fortalCheckboxClassic(
       .containerEffects(
         RemixBoxEffectsMix(
           behindContent: _fortalCheckboxLayer(
-            shadowToken: FortalTokens.shadow1,
+            shadowToken: FortalTokens.shadow1Layers,
           ),
         ),
       )
@@ -178,7 +178,7 @@ RemixCheckboxStyler _fortalCheckboxClassic(
               RemixBoxEffectsMix(
                 behindContent: _fortalCheckboxLayer(
                   gradients: const [],
-                  shadowToken: FortalTokens.shadow1,
+                  shadowToken: FortalTokens.shadow1Layers,
                 ),
               ),
             )
@@ -242,6 +242,9 @@ class FortalCheckbox extends StatelessWidget {
     this.onChanged,
     this.enabled = true,
     this.tristate = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.indeterminateIcon = Icons.horizontal_rule,
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
@@ -258,6 +261,9 @@ class FortalCheckbox extends StatelessWidget {
     this.onChanged,
     this.enabled = true,
     this.tristate = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.indeterminateIcon = Icons.horizontal_rule,
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
@@ -274,6 +280,9 @@ class FortalCheckbox extends StatelessWidget {
     this.onChanged,
     this.enabled = true,
     this.tristate = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.indeterminateIcon = Icons.horizontal_rule,
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
@@ -290,6 +299,9 @@ class FortalCheckbox extends StatelessWidget {
     this.onChanged,
     this.enabled = true,
     this.tristate = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.indeterminateIcon = Icons.horizontal_rule,
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
@@ -305,11 +317,19 @@ class FortalCheckbox extends StatelessWidget {
   final ValueChanged<bool?>? onChanged;
   final bool enabled;
   final bool tristate;
+  final IconData checkedIcon;
+  final IconData? uncheckedIcon;
+  final IconData indeterminateIcon;
   final FocusNode? focusNode;
   final bool autofocus;
   final bool enableFeedback;
   final String? semanticLabel;
   final MouseCursor mouseCursor;
+
+  bool get _usesFortalIndicator =>
+      checkedIcon == Icons.check_rounded &&
+      uncheckedIcon == null &&
+      indeterminateIcon == Icons.horizontal_rule;
 
   @override
   Widget build(BuildContext context) => FortalComponentOverride(
@@ -325,7 +345,12 @@ class FortalCheckbox extends StatelessWidget {
           onChanged: onChanged,
           enabled: enabled,
           tristate: tristate,
-          indicatorBuilder: _buildFortalCheckboxIndicator,
+          checkedIcon: checkedIcon,
+          uncheckedIcon: uncheckedIcon,
+          indeterminateIcon: indeterminateIcon,
+          indicatorBuilder: _usesFortalIndicator
+              ? _buildFortalCheckboxIndicator
+              : null,
           focusNode: focusNode,
           autofocus: autofocus,
           enableFeedback: enableFeedback,

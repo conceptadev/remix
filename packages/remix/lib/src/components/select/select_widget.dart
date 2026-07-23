@@ -96,6 +96,35 @@ class RemixSelectSeparator<T> extends RemixSelectItemData<T> {
   final BoxStyler style;
 }
 
+List<RemixSelectItem<T>> _flattenSelectItems<T>(
+  List<RemixSelectItemData<T>> entries,
+) {
+  final items = <RemixSelectItem<T>>[];
+
+  void visit(List<RemixSelectItemData<T>> currentEntries) {
+    for (final entry in currentEntries) {
+      switch (entry) {
+        case RemixSelectItem<T>():
+          items.add(entry);
+        case RemixSelectGroup<T>():
+          visit(entry.items);
+        case RemixSelectLabel<T>() || RemixSelectSeparator<T>():
+          break;
+      }
+    }
+  }
+
+  visit(entries);
+  return items;
+}
+
+List<RemixSelectItem<T>> _selectItemsView<T>(
+  List<RemixSelectItemData<T>> items,
+) {
+  if (items is List<RemixSelectItem<T>>) return items;
+  return _flattenSelectItems(items);
+}
+
 // ============================================================================
 // REMIX SELECT - Main select widget
 // ============================================================================
@@ -123,7 +152,7 @@ class RemixSelect<T> extends StatefulWidget {
   const RemixSelect({
     super.key,
     required this.trigger,
-    required this.items,
+    required List<RemixSelectItemData<T>> items,
     this.selectedValue,
     this.positioning = const OverlayPositionConfig(
       side: .bottom,
@@ -145,13 +174,46 @@ class RemixSelect<T> extends StatefulWidget {
     this.itemIndicatorBuilder,
     this.style = const RemixSelectStyler.create(),
     this.styleSpec,
-  });
+  }) : _items = items;
+
+  /// Creates a select with grouped, labeled, or separated content.
+  const RemixSelect.structured({
+    super.key,
+    required this.trigger,
+    required List<RemixSelectItemData<T>> items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      side: .bottom,
+      alignment: .center,
+      sideOffset: 4,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.open,
+    this.onOpenChanged,
+    this.enabled = true,
+    this.semanticLabel,
+    this.closeOnSelect = true,
+    this.focusNode,
+    this.triggerWrapper,
+    this.contentWrapper,
+    this.triggerChevronBuilder,
+    this.itemIndicatorBuilder,
+    this.style = const RemixSelectStyler.create(),
+    this.styleSpec,
+  }) : _items = items;
 
   /// The trigger data that defines the select's button.
   final RemixSelectTrigger trigger;
 
-  /// Structured content items.
-  final List<RemixSelectItemData<T>> items;
+  final List<RemixSelectItemData<T>> _items;
+
+  /// Established selectable items.
+  ///
+  /// Structural entries are omitted and grouped items are flattened in source
+  /// order so the original return type remains intact.
+  List<RemixSelectItem<T>> get items => _selectItemsView(_items);
 
   /// The currently selected value.
   final T? selectedValue;
@@ -256,7 +318,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       minimumWidth: info.anchorRect.width,
       maximumHeight: info.overlaySize.height,
       children: _buildItems(
-        widget.items,
+        widget._items,
         defaultItemStyle: widget.styleSpec == null ? defaultItemStyle : null,
         defaultItemStyleSpec: widget.styleSpec == null ? null : spec.item,
         defaultLabelStyle: widget.styleSpec == null ? defaultLabelStyle : null,
@@ -339,7 +401,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     final selectedValue = widget.selectedValue;
     if (selectedValue == null) return widget.trigger.placeholder;
 
-    final selectedItem = _findItem(widget.items, selectedValue);
+    final selectedItem = _findItem(widget._items, selectedValue);
     if (selectedItem != null) return selectedItem.label;
 
     assert(
@@ -375,7 +437,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       }
     }
 
-    visit(widget.items);
+    visit(widget._items);
   }
 
   void _handleChanged(T? value) => widget.onChanged?.call(value);

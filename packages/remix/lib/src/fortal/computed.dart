@@ -357,14 +357,18 @@ Map<MixToken, Object> buildFortalShadows({
 
 Map<MixToken, Object> _fortalShadowTokens(
   Map<String, List<RemixBoxShadow>> shadows,
-) => {
-  FortalTokens.shadow1: shadows['shadow1']!,
-  FortalTokens.shadow2: _ordinaryShadows(shadows['shadow2']!),
-  FortalTokens.shadow3: _ordinaryShadows(shadows['shadow3']!),
-  FortalTokens.shadow4: _ordinaryShadows(shadows['shadow4']!),
-  FortalTokens.shadow5: _ordinaryShadows(shadows['shadow5']!),
-  FortalTokens.shadow6: _ordinaryShadows(shadows['shadow6']!),
-};
+) {
+  final shadow1 = shadows['shadow1']!;
+  return {
+    FortalTokens.shadow1: _ordinaryShadows(shadow1),
+    FortalTokens.shadow1Layers: shadow1,
+    FortalTokens.shadow2: _ordinaryShadows(shadows['shadow2']!),
+    FortalTokens.shadow3: _ordinaryShadows(shadows['shadow3']!),
+    FortalTokens.shadow4: _ordinaryShadows(shadows['shadow4']!),
+    FortalTokens.shadow5: _ordinaryShadows(shadows['shadow5']!),
+    FortalTokens.shadow6: _ordinaryShadows(shadows['shadow6']!),
+  };
+}
 
 List<BoxShadow> _ordinaryShadows(List<RemixBoxShadow> shadows) => [
   for (final shadow in shadows)
@@ -435,6 +439,11 @@ class FortalThemeColors {
 // Map by enum .name to generated RadixColorTheme instances (light/dark contained).
 const Map<String, RadixColorTheme> _accentThemesByName = {
   'gray': gray,
+  'mauve': mauve,
+  'slate': slate,
+  'sage': sage,
+  'olive': olive,
+  'sand': sand,
   'amber': amber,
   'blue': blue,
   'bronze': bronze,
@@ -472,12 +481,12 @@ const Map<String, RadixColorTheme> _grayThemesByName = {
 };
 
 /// Resolves all computed tokens for a theme configuration.
-FortalThemeColors resolveFortalTokens(FortalThemeData theme) {
+FortalThemeColors resolveFortalTokens(FortalThemeConfig theme) {
   // Pick light/dark RadixColor for accent and neutral using enum .name keys
-  final String accentName = theme.accentColor.name;
-  final String grayName = theme.grayColor.name;
+  final String accentName = theme.accent.name;
+  final String grayName = theme.gray.name;
   final RadixColorTheme grayTheme = _grayThemesByName[grayName]!;
-  final RadixColorTheme accentTheme = theme.accentColor == .gray
+  final RadixColorTheme accentTheme = theme.accent == .gray
       ? grayTheme
       : _accentThemesByName[accentName]!;
   final RadixColor accentRC = theme.isDark

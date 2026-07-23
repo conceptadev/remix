@@ -15,14 +15,15 @@ part of 'progress.dart';
 class RemixProgress extends StatelessWidget {
   const RemixProgress({
     super.key,
-    this.value,
+    double? value,
     this.max = 1,
     this.duration = const Duration(seconds: 5),
     this.semanticLabel,
     this.excludeSemantics = false,
     this.style = const RemixProgressStyler.create(),
     this.styleSpec,
-  }) : assert(
+  }) : _value = value,
+       assert(
          max > 0 && max < double.infinity,
          'Progress max must be finite and greater than zero.',
        ),
@@ -31,10 +32,30 @@ class RemixProgress extends StatelessWidget {
          'Progress value must be between zero and max.',
        );
 
+  /// Creates an indeterminate progress indicator.
+  const RemixProgress.indeterminate({
+    super.key,
+    this.max = 1,
+    this.duration = const Duration(seconds: 5),
+    this.semanticLabel,
+    this.excludeSemantics = false,
+    this.style = const RemixProgressStyler.create(),
+    this.styleSpec,
+  }) : _value = null,
+       assert(
+         max > 0 && max < double.infinity,
+         'Progress max must be finite and greater than zero.',
+       );
+
   static final styleFrom = RemixProgressStyler.new;
 
-  /// Current progress. Null represents an indeterminate operation.
-  final double? value;
+  final double? _value;
+
+  /// Current progress for the established determinate API.
+  double get value => _value ?? 0;
+
+  /// Whether this progress indicator is currently indeterminate.
+  bool get isIndeterminate => _value == null;
 
   /// Maximum determinate progress value.
   final double max;
@@ -59,7 +80,7 @@ class RemixProgress extends StatelessWidget {
       builder: (context, spec) {
         final track = Box(styleSpec: spec.track);
         final indicator = _RemixProgressIndicator(
-          value: value,
+          value: _value,
           max: max,
           duration: duration,
           styleSpec: spec.indicator,
@@ -77,7 +98,7 @@ class RemixProgress extends StatelessWidget {
           ),
         );
         if (excludeSemantics) return ExcludeSemantics(child: progress);
-        if (value case final determinate?) {
+        if (_value case final determinate?) {
           return Semantics(
             container: true,
             role: ui.SemanticsRole.progressBar,

@@ -76,7 +76,9 @@ RemixSwitchStyler _fortalSwitchClassicStyler(
       .trackColor(FortalTokens.grayA4())
       .trackEffects(
         RemixBoxEffectsMix(
-          behindContent: _fortalSwitchLayer(shadowToken: FortalTokens.shadow1),
+          behindContent: _fortalSwitchLayer(
+            shadowToken: FortalTokens.shadow1Layers,
+          ),
         ),
       )
       .thumb(
@@ -240,7 +242,7 @@ RemixSwitchStyler _fortalSwitchDisabledStyler({
       .trackEffects(
         RemixBoxEffectsMix(
           behindContent: _fortalSwitchLayer(
-            shadowToken: classic ? FortalTokens.shadow1 : null,
+            shadowToken: classic ? FortalTokens.shadow1Layers : null,
           ),
         ),
       )

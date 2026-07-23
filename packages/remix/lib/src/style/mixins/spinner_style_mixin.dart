@@ -16,9 +16,29 @@ mixin SpinnerStyleMixin<T extends Mix<Object?>> {
     return spinner(RemixSpinnerStyler(color: value));
   }
 
+  /// Sets the legacy circular-spinner indicator color.
+  T spinnerIndicatorColor(Color value) {
+    return spinner(RemixSpinnerStyler(indicatorColor: value));
+  }
+
+  /// Sets the legacy circular-spinner track color.
+  T spinnerTrackColor(Color value) {
+    return spinner(RemixSpinnerStyler(trackColor: value));
+  }
+
   /// Sets spinner size
   T spinnerSize(double value) {
     return spinner(RemixSpinnerStyler(size: value));
+  }
+
+  /// Sets the legacy circular-spinner indicator stroke width.
+  T spinnerStrokeWidth(double value) {
+    return spinner(RemixSpinnerStyler(strokeWidth: value));
+  }
+
+  /// Sets the legacy circular-spinner track stroke width.
+  T spinnerTrackStrokeWidth(double value) {
+    return spinner(RemixSpinnerStyler(trackStrokeWidth: value));
   }
 
   /// Sets the complete spinner opacity.

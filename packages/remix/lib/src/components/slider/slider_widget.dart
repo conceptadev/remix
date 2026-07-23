@@ -8,7 +8,7 @@ part of 'slider.dart';
 class RemixSlider extends StatelessWidget {
   const RemixSlider({
     super.key,
-    this.value,
+    double? value,
     this.values,
     this.onChanged,
     this.onChangeStart,
@@ -38,7 +38,8 @@ class RemixSlider extends StatelessWidget {
     this.excludeSemantics = false,
     this.style = const RemixSliderStyler.create(),
     this.styleSpec,
-  }) : max = max ?? (values == null ? 1 : 100),
+  }) : _value = value,
+       max = max ?? (values == null ? 1 : 100),
        step = step ?? 1,
        _hasExplicitStep = step != null,
        assert(
@@ -59,7 +60,12 @@ class RemixSlider extends StatelessWidget {
        assert(minSpacing >= 0, 'minSpacing must be non-negative');
 
   /// Current value for the established single-thumb API.
-  final double? value;
+  final double? _value;
+
+  /// Current value for the established single-thumb API.
+  ///
+  /// Multi-thumb sliders expose their values through [values].
+  double get value => _value!;
 
   /// Current values for the additive multi-thumb API.
   final List<double>? values;
@@ -98,7 +104,7 @@ class RemixSlider extends StatelessWidget {
 
   static final styleFrom = RemixSliderStyler.new;
 
-  List<double> get _effectiveValues => values ?? [value!];
+  List<double> get _effectiveValues => values ?? [_value!];
 
   double get _effectiveStep {
     final divisions = snapDivisions;

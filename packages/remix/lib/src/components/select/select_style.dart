@@ -41,7 +41,55 @@ extension RemixSelectStylerRemixHelpers on RemixSelectStyler {
     RemixSelectIconBuilder? triggerChevronBuilder,
     RemixSelectIconBuilder? itemIndicatorBuilder,
   }) {
-    return RemixSelect(
+    return RemixSelect<T>(
+      key: key,
+      trigger: trigger,
+      items: items,
+      selectedValue: selectedValue,
+      positioning: positioning,
+      onChanged: onChanged,
+      onOpen: onOpen,
+      onClose: onClose,
+      open: open,
+      onOpenChanged: onOpenChanged,
+      enabled: enabled,
+      semanticLabel: semanticLabel,
+      closeOnSelect: closeOnSelect,
+      focusNode: focusNode,
+      triggerWrapper: triggerWrapper,
+      contentWrapper: contentWrapper,
+      triggerChevronBuilder: triggerChevronBuilder,
+      itemIndicatorBuilder: itemIndicatorBuilder,
+      style: this,
+    );
+  }
+
+  /// Creates a select with grouped, labeled, or separated content.
+  RemixSelect<T> structured<T>({
+    Key? key,
+    required RemixSelectTrigger trigger,
+    required List<RemixSelectItemData<T>> items,
+    T? selectedValue,
+    OverlayPositionConfig positioning = const OverlayPositionConfig(
+      side: .bottom,
+      alignment: .center,
+      sideOffset: 4,
+    ),
+    ValueChanged<T?>? onChanged,
+    VoidCallback? onOpen,
+    VoidCallback? onClose,
+    bool? open,
+    ValueChanged<bool>? onOpenChanged,
+    bool enabled = true,
+    bool closeOnSelect = true,
+    String? semanticLabel,
+    FocusNode? focusNode,
+    RemixSelectPartWrapper? triggerWrapper,
+    RemixSelectPartWrapper? contentWrapper,
+    RemixSelectIconBuilder? triggerChevronBuilder,
+    RemixSelectIconBuilder? itemIndicatorBuilder,
+  }) {
+    return RemixSelect<T>.structured(
       key: key,
       trigger: trigger,
       items: items,

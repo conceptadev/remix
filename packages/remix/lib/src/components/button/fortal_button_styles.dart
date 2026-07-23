@@ -364,8 +364,8 @@ class FortalButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
+    String? label,
     this.child,
-    this.label,
     this.leadingIcon,
     this.trailingIcon,
     this.textBuilder,
@@ -383,7 +383,39 @@ class FortalButton extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
-  });
+  }) : _label = label,
+       assert(
+         (label == null) != (child == null),
+         'Provide exactly one of label or child.',
+       );
+
+  /// Creates a Fortal button with arbitrary widget content.
+  const FortalButton.custom({
+    super.key,
+    this.variant = .solid,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    required this.child,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : _label = null,
+       leadingIcon = null,
+       trailingIcon = null,
+       textBuilder = null,
+       leadingIconBuilder = null,
+       trailingIconBuilder = null;
 
   const FortalButton.classic({
     super.key,
@@ -391,8 +423,8 @@ class FortalButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
+    String? label,
     this.child,
-    this.label,
     this.leadingIcon,
     this.trailingIcon,
     this.textBuilder,
@@ -410,7 +442,12 @@ class FortalButton extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = .classic;
+  }) : _label = label,
+       assert(
+         (label == null) != (child == null),
+         'Provide exactly one of label or child.',
+       ),
+       variant = .classic;
 
   const FortalButton.solid({
     super.key,
@@ -418,8 +455,8 @@ class FortalButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
+    String? label,
     this.child,
-    this.label,
     this.leadingIcon,
     this.trailingIcon,
     this.textBuilder,
@@ -437,7 +474,12 @@ class FortalButton extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = .solid;
+  }) : _label = label,
+       assert(
+         (label == null) != (child == null),
+         'Provide exactly one of label or child.',
+       ),
+       variant = .solid;
 
   const FortalButton.soft({
     super.key,
@@ -445,8 +487,8 @@ class FortalButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
+    String? label,
     this.child,
-    this.label,
     this.leadingIcon,
     this.trailingIcon,
     this.textBuilder,
@@ -464,7 +506,12 @@ class FortalButton extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = .soft;
+  }) : _label = label,
+       assert(
+         (label == null) != (child == null),
+         'Provide exactly one of label or child.',
+       ),
+       variant = .soft;
 
   const FortalButton.surface({
     super.key,
@@ -472,8 +519,8 @@ class FortalButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
+    String? label,
     this.child,
-    this.label,
     this.leadingIcon,
     this.trailingIcon,
     this.textBuilder,
@@ -491,7 +538,12 @@ class FortalButton extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = .surface;
+  }) : _label = label,
+       assert(
+         (label == null) != (child == null),
+         'Provide exactly one of label or child.',
+       ),
+       variant = .surface;
 
   const FortalButton.outline({
     super.key,
@@ -499,8 +551,8 @@ class FortalButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
+    String? label,
     this.child,
-    this.label,
     this.leadingIcon,
     this.trailingIcon,
     this.textBuilder,
@@ -518,7 +570,12 @@ class FortalButton extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = .outline;
+  }) : _label = label,
+       assert(
+         (label == null) != (child == null),
+         'Provide exactly one of label or child.',
+       ),
+       variant = .outline;
 
   const FortalButton.ghost({
     super.key,
@@ -526,8 +583,8 @@ class FortalButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
+    String? label,
     this.child,
-    this.label,
     this.leadingIcon,
     this.trailingIcon,
     this.textBuilder,
@@ -545,7 +602,12 @@ class FortalButton extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = .ghost;
+  }) : _label = label,
+       assert(
+         (label == null) != (child == null),
+         'Provide exactly one of label or child.',
+       ),
+       variant = .ghost;
 
   final FortalButtonVariant variant;
   final FortalButtonSize size;
@@ -553,7 +615,10 @@ class FortalButton extends StatelessWidget {
   final FortalRadius? radius;
   final bool highContrast;
   final Widget? child;
-  final String? label;
+  final String? _label;
+
+  /// The established text label.
+  String get label => _label!;
   final IconData? leadingIcon;
   final IconData? trailingIcon;
   final RemixButtonTextBuilder? textBuilder;
@@ -574,17 +639,14 @@ class FortalButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FortalComponentOverride(
-      color: color,
-      radius: radius,
-      child:
-          fortalButtonStyler(
-            variant: variant,
-            size: size,
-            highContrast: highContrast,
-          ).call(
+    final style = fortalButtonStyler(
+      variant: variant,
+      size: size,
+      highContrast: highContrast,
+    );
+    final button = child == null
+        ? style.call(
             key: key,
-            child: child,
             label: label,
             leadingIcon: leadingIcon,
             trailingIcon: trailingIcon,
@@ -603,7 +665,23 @@ class FortalButton extends StatelessWidget {
             semanticHint: semanticHint,
             excludeSemantics: excludeSemantics,
             mouseCursor: mouseCursor,
-          ),
-    );
+          )
+        : style.custom(
+            key: key,
+            child: child!,
+            loadingBuilder: loadingBuilder,
+            loading: loading,
+            enabled: enabled,
+            onPressed: onPressed,
+            onLongPress: onLongPress,
+            focusNode: focusNode,
+            autofocus: autofocus,
+            enableFeedback: enableFeedback,
+            semanticLabel: semanticLabel,
+            semanticHint: semanticHint,
+            excludeSemantics: excludeSemantics,
+            mouseCursor: mouseCursor,
+          );
+    return FortalComponentOverride(color: color, radius: radius, child: button);
   }
 }
