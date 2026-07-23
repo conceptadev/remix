@@ -7,8 +7,8 @@ class RemixDialogSpec with _$RemixDialogSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? effects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
   @override
   final StyleSpec<TextSpec> title;
   @override
@@ -18,7 +18,7 @@ class RemixDialogSpec with _$RemixDialogSpec {
 
   const RemixDialogSpec({
     StyleSpec<BoxSpec>? container,
-    this.effects,
+    this.containerEffects,
     StyleSpec<TextSpec>? title,
     StyleSpec<TextSpec>? description,
     StyleSpec<FlexBoxSpec>? actions,
@@ -32,7 +32,11 @@ class RemixDialogSpec with _$RemixDialogSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
     );
   }
 }

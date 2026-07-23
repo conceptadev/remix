@@ -10,7 +10,7 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get text;
   StyleSpec<IconSpec> get icon;
-  RemixSurfaceEffectsSpec? get effects;
+  RemixBoxEffectsSpec? get containerEffects;
 
   @override
   Type get type => RemixCalloutSpec;
@@ -20,13 +20,13 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? text,
     StyleSpec<IconSpec>? icon,
-    RemixSurfaceEffectsSpec? effects,
+    RemixBoxEffectsSpec? containerEffects,
   }) {
     return RemixCalloutSpec(
       container: container ?? this.container,
       text: text ?? this.text,
       icon: icon ?? this.icon,
-      effects: effects ?? this.effects,
+      containerEffects: containerEffects ?? this.containerEffects,
     );
   }
 
@@ -36,12 +36,16 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
       container: container.lerp(other?.container, t),
       text: text.lerp(other?.text, t),
       icon: icon.lerp(other?.icon, t),
-      effects: MixOps.lerpSnap(effects, other?.effects, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, text, icon, effects];
+  List<Object?> get props => [container, text, icon, containerEffects];
 
   @override
   bool operator ==(Object other) {
@@ -86,7 +90,7 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('text', text))
       ..add(DiagnosticsProperty('icon', icon))
-      ..add(DiagnosticsProperty('effects', effects));
+      ..add(DiagnosticsProperty('containerEffects', containerEffects));
   }
 }
 
@@ -106,26 +110,26 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
-  final Prop<RemixSurfaceEffectsSpec>? $effects;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
   const RemixCalloutStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? text,
     Prop<StyleSpec<IconSpec>>? icon,
-    Prop<RemixSurfaceEffectsSpec>? effects,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $text = text,
        $icon = icon,
-       $effects = effects;
+       $containerEffects = containerEffects;
 
   RemixCalloutStyler({
     FlexBoxStyler? container,
     TextStyler? text,
     IconStyler? icon,
-    RemixSurfaceEffectsMix? effects,
+    RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixCalloutSpec>>? variants,
@@ -133,7 +137,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
          container: Prop.maybeMix(container),
          text: Prop.maybeMix(text),
          icon: Prop.maybeMix(icon),
-         effects: Prop.maybeMix(effects),
+         containerEffects: Prop.maybeMix(containerEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -145,8 +149,8 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
       RemixCalloutStyler().text(value);
   factory RemixCalloutStyler.icon(IconStyler value) =>
       RemixCalloutStyler().icon(value);
-  factory RemixCalloutStyler.effects(RemixSurfaceEffectsMix value) =>
-      RemixCalloutStyler().effects(value);
+  factory RemixCalloutStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixCalloutStyler().containerEffects(value);
   factory RemixCalloutStyler.color(Color value) =>
       RemixCalloutStyler().color(value);
   factory RemixCalloutStyler.gradient(GradientMix value) =>
@@ -693,9 +697,9 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     return merge(RemixCalloutStyler(icon: value));
   }
 
-  /// Sets the effects.
-  RemixCalloutStyler effects(RemixSurfaceEffectsMix value) {
-    return merge(RemixCalloutStyler(effects: value));
+  /// Sets the containerEffects.
+  RemixCalloutStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixCalloutStyler(containerEffects: value));
   }
 
   /// Sets the animation configuration.
@@ -728,7 +732,10 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
       container: MixOps.merge($container, other?.$container),
       text: MixOps.merge($text, other?.$text),
       icon: MixOps.merge($icon, other?.$icon),
-      effects: MixOps.merge($effects, other?.$effects),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -742,7 +749,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
       container: MixOps.resolve(context, $container),
       text: MixOps.resolve(context, $text),
       icon: MixOps.resolve(context, $icon),
-      effects: MixOps.resolve(context, $effects),
+      containerEffects: MixOps.resolve(context, $containerEffects),
     );
 
     return StyleSpec(
@@ -759,7 +766,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('text', $text))
       ..add(DiagnosticsProperty('icon', $icon))
-      ..add(DiagnosticsProperty('effects', $effects));
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
   }
 
   @override
@@ -767,7 +774,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     $container,
     $text,
     $icon,
-    $effects,
+    $containerEffects,
     $animation,
     $modifier,
     $variants,

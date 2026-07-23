@@ -46,11 +46,11 @@ RemixDialogStyler fortalDialogStyler({
       .padding(.all(padding))
       .borderRadius(.all(radius))
       .color(FortalTokens.colorPanel())
-      .effects(
-        RemixSurfaceEffectsMix(
-          backdropBlur: FortalTokens.panelBlur(),
-          background: RemixSurfaceLayerMix(shadowToken: FortalTokens.shadow6),
-        ),
+      .decoration(
+        BoxDecorationMix.create(boxShadow: FortalTokens.shadow6.mix()),
+      )
+      .containerEffects(
+        RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
       );
 }
 

@@ -175,8 +175,8 @@ void main() {
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.icon));
         expect(spec.props, contains(spec.spinner));
-        expect(spec.props, contains(spec.effects?.background));
-        expect(spec.props, contains(spec.effects?.foreground));
+        expect(spec.props, contains(spec.containerEffects?.behindContent));
+        expect(spec.props, contains(spec.containerEffects?.overContent));
       });
     });
 
@@ -213,7 +213,7 @@ void main() {
         expect(propertyNames, contains('label'));
         expect(propertyNames, contains('icon'));
         expect(propertyNames, contains('spinner'));
-        expect(propertyNames, contains('effects'));
+        expect(propertyNames, contains('containerEffects'));
       });
     });
 

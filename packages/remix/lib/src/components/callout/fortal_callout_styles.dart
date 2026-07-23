@@ -20,12 +20,12 @@ RemixCalloutStyler fortalCalloutStyler({
     .surface =>
       base
           .color(FortalTokens.accentA2())
-          .effects(
-            RemixSurfaceEffectsMix(
-              background: RemixSurfaceLayerMix(
+          .containerEffects(
+            RemixBoxEffectsMix(
+              behindContent: RemixBoxEffectLayerMix(
                 shadows: [
-                  RemixPaintShadowMix(
-                    kind: RemixPaintShadowKind.inset,
+                  RemixBoxShadowMix(
+                    kind: RemixBoxShadowKind.inset,
                     color: FortalTokens.accentA6(),
                     spreadRadius: 1,
                   ),
@@ -33,12 +33,12 @@ RemixCalloutStyler fortalCalloutStyler({
               ),
             ),
           ),
-    .outline => base.effects(
-      RemixSurfaceEffectsMix(
-        background: RemixSurfaceLayerMix(
+    .outline => base.containerEffects(
+      RemixBoxEffectsMix(
+        behindContent: RemixBoxEffectLayerMix(
           shadows: [
-            RemixPaintShadowMix(
-              kind: RemixPaintShadowKind.inset,
+            RemixBoxShadowMix(
+              kind: RemixBoxShadowKind.inset,
               color: FortalTokens.accentA7(),
               spreadRadius: 1,
             ),

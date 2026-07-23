@@ -17,8 +17,8 @@ RemixCardStyler fortalCardStyler({
       .borderRadiusAll(metrics.radius)
       .clipBehavior(Clip.antiAlias)
       .onFocused(
-        RemixCardStyler().effects(
-          RemixSurfaceEffectsMix(
+        RemixCardStyler().containerEffects(
+          RemixBoxEffectsMix(
             outline: BorderSideMix(
               color: FortalTokens.focus8(),
               width: 2,
@@ -67,33 +67,35 @@ RemixCardStyler fortalCardStyler({
 };
 
 RemixCardStyler _fortalCardSurface(RemixCardStyler base) {
-  base = base.effects(
-    RemixSurfaceEffectsMix(backdropBlur: FortalTokens.panelBlur()),
+  base = base.containerEffects(
+    RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
   );
   final open = RemixCardStyler()
-      .effects(RemixSurfaceEffectsMix(background: _fortalCardPanel()))
-      .effects(
-        RemixSurfaceEffectsMix(
-          foreground: _fortalCardSurfaceStroke(FortalTokens.grayStroke7()),
+      .containerEffects(RemixBoxEffectsMix(behindContent: _fortalCardPanel()))
+      .containerEffects(
+        RemixBoxEffectsMix(
+          overContent: _fortalCardSurfaceStroke(FortalTokens.grayStroke7()),
         ),
       );
   final activeFocus = RemixCardStyler()
-      .effects(RemixSurfaceEffectsMix(background: _fortalCardActiveFocus()))
+      .containerEffects(
+        RemixBoxEffectsMix(behindContent: _fortalCardActiveFocus()),
+      )
       .onSelected(open);
   final pressed = RemixCardStyler()
-      .effects(
-        RemixSurfaceEffectsMix(
-          foreground: _fortalCardSurfaceStroke(FortalTokens.grayStroke6()),
+      .containerEffects(
+        RemixBoxEffectsMix(
+          overContent: _fortalCardSurfaceStroke(FortalTokens.grayStroke6()),
         ),
       )
       .onFocused(activeFocus)
       .onSelected(open);
 
   return base
-      .effects(RemixSurfaceEffectsMix(background: _fortalCardPanel()))
-      .effects(
-        RemixSurfaceEffectsMix(
-          foreground: _fortalCardSurfaceStroke(FortalTokens.grayStroke5()),
+      .containerEffects(RemixBoxEffectsMix(behindContent: _fortalCardPanel()))
+      .containerEffects(
+        RemixBoxEffectsMix(
+          overContent: _fortalCardSurfaceStroke(FortalTokens.grayStroke5()),
         ),
       )
       .onHovered(open)
@@ -102,45 +104,45 @@ RemixCardStyler _fortalCardSurface(RemixCardStyler base) {
 }
 
 RemixCardStyler _fortalCardClassic(RemixCardStyler base) {
-  base = base.effects(
-    RemixSurfaceEffectsMix(backdropBlur: FortalTokens.panelBlur()),
+  base = base.containerEffects(
+    RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
   );
   final open = RemixCardStyler()
       .animate(AnimationConfig.ease(const Duration(milliseconds: 40)))
-      .effects(
-        RemixSurfaceEffectsMix(
-          background: _fortalCardPanel(
+      .containerEffects(
+        RemixBoxEffectsMix(
+          behindContent: _fortalCardPanel(
             shadowToken: FortalTokens.cardClassicHoverOuterShadows,
           ),
         ),
       )
-      .effects(
-        RemixSurfaceEffectsMix(
-          foreground: RemixSurfaceLayerMix(
+      .containerEffects(
+        RemixBoxEffectsMix(
+          overContent: RemixBoxEffectLayerMix(
             shadowToken: FortalTokens.cardClassicHoverInnerShadows,
           ),
         ),
       );
   final pressed = RemixCardStyler()
       .animate(AnimationConfig.ease(const Duration(milliseconds: 40)))
-      .effects(
-        RemixSurfaceEffectsMix(
-          background: RemixSurfaceLayerMix(
+      .containerEffects(
+        RemixBoxEffectsMix(
+          behindContent: RemixBoxEffectLayerMix(
             shadowToken: FortalTokens.cardClassicActiveOuterShadows,
           ),
         ),
       )
-      .effects(
-        RemixSurfaceEffectsMix(
-          foreground: RemixSurfaceLayerMix(
+      .containerEffects(
+        RemixBoxEffectsMix(
+          overContent: RemixBoxEffectLayerMix(
             shadowToken: FortalTokens.cardClassicActiveInnerShadows,
           ),
         ),
       )
       .onFocused(
         RemixCardStyler()
-            .effects(
-              RemixSurfaceEffectsMix(background: _fortalCardActiveFocus()),
+            .containerEffects(
+              RemixBoxEffectsMix(behindContent: _fortalCardActiveFocus()),
             )
             .onSelected(open),
       )
@@ -148,16 +150,16 @@ RemixCardStyler _fortalCardClassic(RemixCardStyler base) {
 
   return base
       .animate(AnimationConfig.ease(const Duration(milliseconds: 120)))
-      .effects(
-        RemixSurfaceEffectsMix(
-          background: _fortalCardPanel(
+      .containerEffects(
+        RemixBoxEffectsMix(
+          behindContent: _fortalCardPanel(
             shadowToken: FortalTokens.cardClassicOuterShadows,
           ),
         ),
       )
-      .effects(
-        RemixSurfaceEffectsMix(
-          foreground: RemixSurfaceLayerMix(
+      .containerEffects(
+        RemixBoxEffectsMix(
+          overContent: RemixBoxEffectLayerMix(
             shadowToken: FortalTokens.cardClassicInnerShadows,
           ),
         ),
@@ -185,9 +187,9 @@ RemixCardStyler _fortalCardGhost(RemixCardStyler base, double ghostMargin) {
       .onSelected(open.onPressed(open));
 }
 
-RemixSurfaceLayerMix _fortalCardPanel({
-  RemixPaintShadowListToken? shadowToken,
-}) => RemixSurfaceLayerMix(
+RemixBoxEffectLayerMix _fortalCardPanel({
+  RemixBoxShadowListToken? shadowToken,
+}) => RemixBoxEffectLayerMix(
   gradients: [
     RemixLinearGradientMix(
       colors: [FortalTokens.colorPanel(), FortalTokens.colorPanel()],
@@ -197,7 +199,7 @@ RemixSurfaceLayerMix _fortalCardPanel({
   shadowToken: shadowToken,
 );
 
-RemixSurfaceLayerMix _fortalCardActiveFocus() => RemixSurfaceLayerMix(
+RemixBoxEffectLayerMix _fortalCardActiveFocus() => RemixBoxEffectLayerMix(
   gradients: [
     RemixLinearGradientMix(
       colors: [FortalTokens.accentA2(), FortalTokens.accentA2()],
@@ -209,10 +211,10 @@ RemixSurfaceLayerMix _fortalCardActiveFocus() => RemixSurfaceLayerMix(
   gradientInsets: const [1, 1],
 );
 
-RemixSurfaceLayerMix _fortalCardSurfaceStroke(Color color) =>
-    RemixSurfaceLayerMix(
+RemixBoxEffectLayerMix _fortalCardSurfaceStroke(Color color) =>
+    RemixBoxEffectLayerMix(
       shadows: [
-        RemixPaintShadowMix(color: color, spreadRadius: 1, shapeInset: 1),
+        RemixBoxShadowMix(color: color, spreadRadius: 1, shapeInset: 1),
       ],
     );
 

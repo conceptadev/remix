@@ -137,9 +137,9 @@ class RemixCheckbox extends StatelessWidget {
                         indicatorBuilder!(context, iconSpec, selected),
                   );
 
-            return remixSurfaceBox(
+            return remixBoxWithEffects(
               styleSpec: spec.container,
-              effects: spec.effects,
+              containerEffects: spec.containerEffects,
               child: indicator,
             );
           },

@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_box_effects.dart'
+    show remixBoxWithEffects, remixFlexBoxWithEffects;
 
 void main() {
-  group('RemixSurfaceEffectsSpec', () {
+  group('RemixBoxEffectsSpec', () {
     test('owns only advanced paint', () {
-      const background = RemixSurfaceLayerSpec(
+      const background = RemixBoxEffectLayerSpec(
         gradients: [
           LinearGradient(colors: [Colors.red, Colors.blue]),
         ],
         gradientInsets: [1],
-        shadows: [RemixPaintShadow(kind: RemixPaintShadowKind.inset)],
+        shadows: [RemixBoxShadow(kind: RemixBoxShadowKind.inset)],
       );
-      final effects = RemixSurfaceEffectsSpec(
-        background: background,
+      final effects = RemixBoxEffectsSpec(
+        behindContent: background,
         backdropBlur: 8,
         outline: BorderSide(color: Colors.green, width: 2),
         outlineOffset: 3,
       );
 
-      expect(effects.background, same(background));
-      expect(effects.foreground, isNull);
+      expect(effects.behindContent, same(background));
+      expect(effects.overContent, isNull);
       expect(effects.backdropBlur, 8);
       expect(effects.outline.color, Colors.green);
       expect(effects.outlineOffset, 3);
@@ -34,25 +36,25 @@ void main() {
     testWidgets('rejects outline stroke alignment other than inside', (
       tester,
     ) async {
-      Widget build(double strokeAlign) => remixSurfaceBox(
+      Widget build(double strokeAlign) => remixBoxWithEffects(
         styleSpec: const StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
-        effects: RemixSurfaceEffectsSpec(
+        containerEffects: RemixBoxEffectsSpec(
           outline: BorderSide(strokeAlign: strokeAlign),
         ),
       );
 
       expect(() => build(BorderSide.strokeAlignCenter), throwsFlutterError);
       expect(() => build(BorderSide.strokeAlignOutside), throwsFlutterError);
-      expect(RemixSurfaceEffectsSpec().outline, BorderSide.none);
+      expect(RemixBoxEffectsSpec().outline, BorderSide.none);
     });
 
     test('fades an appearing outline through its own transparent hue', () {
-      final target = RemixSurfaceEffectsSpec(
+      final target = RemixBoxEffectsSpec(
         outline: BorderSide(color: Color(0xFF3A7BD5), width: 4),
         outlineOffset: 6,
       );
 
-      final middle = RemixSurfaceEffectsSpec.lerpNullable(null, target, 0.5)!;
+      final middle = RemixBoxEffectsSpec.lerpNullable(null, target, 0.5)!;
 
       expect(middle.outline.color.a, closeTo(0.5, 1e-12));
       expect(middle.outline.color.r, closeTo(target.outline.color.r, 1e-12));
@@ -63,12 +65,12 @@ void main() {
     });
 
     test('fades a disappearing outline through its own transparent hue', () {
-      final source = RemixSurfaceEffectsSpec(
+      final source = RemixBoxEffectsSpec(
         outline: BorderSide(color: Color(0xFF3A7BD5), width: 4),
         outlineOffset: 6,
       );
 
-      final middle = RemixSurfaceEffectsSpec.lerpNullable(source, null, 0.5)!;
+      final middle = RemixBoxEffectsSpec.lerpNullable(source, null, 0.5)!;
 
       expect(middle.outline.color.a, closeTo(0.5, 1e-12));
       expect(middle.outline.color.r, closeTo(source.outline.color.r, 1e-12));
@@ -79,14 +81,14 @@ void main() {
     });
   });
 
-  group('Surface Box geometry', () {
+  group('Box effects geometry', () {
     testWidgets('uses the real Mix Box when effects are absent', (
       tester,
     ) async {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: remixSurfaceBox(
+          child: remixBoxWithEffects(
             styleSpec: const StyleSpec(spec: BoxSpec()),
             child: const SizedBox.square(dimension: 12),
           ),
@@ -105,17 +107,17 @@ void main() {
           textDirection: TextDirection.ltr,
           child: Column(
             children: [
-              remixSurfaceBox(
+              remixBoxWithEffects(
                 styleSpec: const StyleSpec(spec: BoxSpec()),
-                effects: const RemixSurfaceEffectsSpec(
-                  background: RemixSurfaceLayerSpec(),
+                containerEffects: const RemixBoxEffectsSpec(
+                  behindContent: RemixBoxEffectLayerSpec(),
                 ),
               ),
-              remixSurfaceFlexBox(
+              remixFlexBoxWithEffects(
                 styleSpec: const StyleSpec(spec: FlexBoxSpec()),
                 direction: Axis.horizontal,
-                effects: const RemixSurfaceEffectsSpec(
-                  foreground: RemixSurfaceLayerSpec(),
+                containerEffects: const RemixBoxEffectsSpec(
+                  overContent: RemixBoxEffectLayerSpec(),
                 ),
               ),
             ],
@@ -134,7 +136,7 @@ void main() {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: remixSurfaceBox(
+          child: remixBoxWithEffects(
             styleSpec: const StyleSpec(
               spec: BoxSpec(
                 decoration: BoxDecoration(
@@ -142,7 +144,27 @@ void main() {
                 ),
               ),
             ),
-            effects: RemixSurfaceEffectsSpec(
+            containerEffects: RemixBoxEffectsSpec(
+              outline: BorderSide(color: Colors.green, width: 2),
+            ),
+            child: const SizedBox.square(dimension: 20),
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+      expect(find.byType(CustomPaint), findsWidgets);
+    });
+
+    testWidgets('treats a missing decoration as a zero-radius rectangle', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: remixBoxWithEffects(
+            styleSpec: const StyleSpec(spec: BoxSpec()),
+            containerEffects: const RemixBoxEffectsSpec(
               outline: BorderSide(color: Colors.green, width: 2),
             ),
             child: const SizedBox.square(dimension: 20),
@@ -155,7 +177,6 @@ void main() {
     });
 
     for (final invalid in <Decoration?>[
-      null,
       const ShapeDecoration(shape: RoundedRectangleBorder()),
       const BoxDecoration(shape: BoxShape.circle),
     ]) {
@@ -165,9 +186,9 @@ void main() {
         await tester.pumpWidget(
           Directionality(
             textDirection: TextDirection.ltr,
-            child: remixSurfaceBox(
+            child: remixBoxWithEffects(
               styleSpec: StyleSpec(spec: BoxSpec(decoration: invalid)),
-              effects: RemixSurfaceEffectsSpec(backdropBlur: 1),
+              containerEffects: RemixBoxEffectsSpec(backdropBlur: 1),
               child: const SizedBox.square(dimension: 20),
             ),
           ),
@@ -220,13 +241,13 @@ void main() {
                 key: const ValueKey('effects-host'),
                 width: 100,
                 height: 80,
-                child: remixSurfaceBox(
+                child: remixBoxWithEffects(
                   styleSpec: spec,
-                  effects: const RemixSurfaceEffectsSpec(
-                    background: RemixSurfaceLayerSpec(
+                  containerEffects: const RemixBoxEffectsSpec(
+                    behindContent: RemixBoxEffectLayerSpec(
                       shadows: [
-                        RemixPaintShadow(
-                          kind: RemixPaintShadowKind.inset,
+                        RemixBoxShadow(
+                          kind: RemixBoxShadowKind.inset,
                           color: Colors.red,
                           spreadRadius: 1,
                         ),
@@ -269,7 +290,7 @@ void main() {
             children: [
               SizedBox(
                 key: const ValueKey('negative-footprint'),
-                child: remixSurfaceBox(
+                child: remixBoxWithEffects(
                   styleSpec: const StyleSpec(
                     spec: BoxSpec(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -280,8 +301,8 @@ void main() {
                       decoration: BoxDecoration(),
                     ),
                   ),
-                  effects: const RemixSurfaceEffectsSpec(
-                    background: RemixSurfaceLayerSpec(
+                  containerEffects: const RemixBoxEffectsSpec(
+                    behindContent: RemixBoxEffectLayerSpec(
                       gradients: [
                         LinearGradient(colors: [Colors.red, Colors.blue]),
                       ],
@@ -290,7 +311,7 @@ void main() {
                   child: const SizedBox(width: 20, height: 10),
                 ),
               ),
-              remixSurfaceBox(
+              remixBoxWithEffects(
                 key: const ValueKey('null-child'),
                 styleSpec: const StyleSpec(
                   spec: BoxSpec(
@@ -298,7 +319,7 @@ void main() {
                     decoration: BoxDecoration(),
                   ),
                 ),
-                effects: const RemixSurfaceEffectsSpec(backdropBlur: 1),
+                containerEffects: const RemixBoxEffectsSpec(backdropBlur: 1),
               ),
             ],
           ),
@@ -325,7 +346,7 @@ void main() {
         Directionality(
           textDirection: TextDirection.ltr,
           child: Center(
-            child: remixSurfaceBox(
+            child: remixBoxWithEffects(
               styleSpec: const StyleSpec(
                 spec: BoxSpec(
                   constraints: BoxConstraints.tightFor(width: 30, height: 20),
@@ -335,7 +356,7 @@ void main() {
                   ),
                 ),
               ),
-              effects: const RemixSurfaceEffectsSpec(
+              containerEffects: const RemixBoxEffectsSpec(
                 outline: BorderSide(color: Colors.green, width: 2),
                 outlineOffset: 2,
               ),
@@ -344,7 +365,7 @@ void main() {
                 onTap: () => taps += 1,
                 child: Semantics(
                   key: ValueKey('effects-semantics'),
-                  label: 'advanced surface child',
+                  label: 'advanced box effects child',
                   child: OverflowBox(
                     maxWidth: 60,
                     maxHeight: 40,
@@ -367,7 +388,7 @@ void main() {
         tester
             .getSemantics(find.byKey(const ValueKey('effects-semantics')))
             .label,
-        contains('advanced surface child'),
+        contains('advanced box effects child'),
       );
       semantics.dispose();
     });
@@ -378,7 +399,7 @@ void main() {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: remixSurfaceBox(
+          child: remixBoxWithEffects(
             styleSpec: const StyleSpec(
               spec: BoxSpec(
                 clipBehavior: Clip.hardEdge,
@@ -388,16 +409,16 @@ void main() {
                 ),
               ),
             ),
-            effects: const RemixSurfaceEffectsSpec(
+            containerEffects: const RemixBoxEffectsSpec(
               backdropBlur: 4,
-              background: RemixSurfaceLayerSpec(
+              behindContent: RemixBoxEffectLayerSpec(
                 shadows: [
-                  RemixPaintShadow(
-                    kind: RemixPaintShadowKind.inset,
+                  RemixBoxShadow(
+                    kind: RemixBoxShadowKind.inset,
                     color: Colors.blue,
                     spreadRadius: 1,
                   ),
-                  RemixPaintShadow(color: Colors.red, spreadRadius: 3),
+                  RemixBoxShadow(color: Colors.red, spreadRadius: 3),
                 ],
               ),
               outline: BorderSide(color: Colors.green, width: 2),

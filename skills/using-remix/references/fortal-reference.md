@@ -185,13 +185,14 @@ Use `FortalRadioGroup<T>(value:, onChanged:, child:)` around
 Dialog defaults to `maxWidth: 600`, Popover to `maxWidth: 480` without an
 arrow, and Tooltip to `maxWidth: 360` with a styled arrow.
 
-## Tokens and surface rendering
+## Tokens and box effects
 
 Token families include 12-step accent and gray scales plus alpha scales,
 spacing (`space1`–`space9` = 4, 8, 12, 16, 24, 32, 40, 48, 64), typography
 (`text1`–`text9` = 12, 14, 16, 18, 20, 24, 28, 35, 60), radii
 (`radius1`–`radius6` = 3, 4, 6, 8, 12, 16), derived theme radii, border/focus
-widths, motion durations, and ordered inset-capable shadow lists.
+widths, motion durations, ordinary Mix box-shadow lists, and specialized
+inset-capable Remix shadow lists.
 
 Use callable tokens inside Mix stylers and resolve concrete values through the
 active `MixScope` in ordinary widget code:
@@ -206,12 +207,16 @@ final accent = MixScope.tokenOf(FortalTokens.accent9, context);
 ```
 
 Mix `BoxSpec` and `FlexBoxSpec` own container geometry and standard decoration:
-color, ordinary gradient and shadow, border, radius, clipping, margin,
-constraints, and transforms. `RemixSurfaceEffectsMix` augments that decoration
-only when Fortal needs advanced paint. Its background and foreground
-`RemixSurfaceLayerMix` values support multiple token-aware gradients with
-independent clip insets plus ordered outer and true inset paint shadows; the
-aggregate also owns backdrop blur and offset outlines. Component APIs expose
-one `effects` field, or role-specific names such as `trackEffects`,
+color, ordinary gradient and `BoxShadowMix` elevation, border, radius,
+clipping, margin, constraints, and transforms. `FortalTokens.shadow2` through
+`shadow6` are Mix `BoxShadowToken` values; `shadow1` and mixed/inset recipes
+remain `RemixBoxShadowListToken` values.
+
+`RemixBoxEffectsMix` augments the box only when Fortal needs advanced paint.
+Its `behindContent` and `overContent` `RemixBoxEffectLayerMix` values support
+multiple token-aware gradients with independent clip insets, true inset
+shadows, `shapeInset`, and explicitly positioned overlays. The aggregate also
+owns backdrop blur and offset outlines. Component APIs expose one
+`containerEffects` field, or role-specific names such as `trackEffects`,
 `thumbEffects`, and `thumbFocusEffects`. Shadow stroke colors use
 standards-aligned premultiplied-alpha OKLab mixing.

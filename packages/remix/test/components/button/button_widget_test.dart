@@ -111,9 +111,9 @@ void main() {
             label: StyleSpec(
               spec: TextSpec(style: TextStyle(color: color)),
             ),
-            effects: RemixSurfaceEffectsSpec(
-              background: RemixSurfaceLayerSpec(
-                shadows: [RemixPaintShadow(color: color)],
+            containerEffects: RemixBoxEffectsSpec(
+              behindContent: RemixBoxEffectLayerSpec(
+                shadows: [RemixBoxShadow(color: color)],
               ),
             ),
           ),

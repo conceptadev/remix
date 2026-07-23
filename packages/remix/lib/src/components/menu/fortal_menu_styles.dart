@@ -19,13 +19,13 @@ RemixMenuStyler fortalMenuStyler({
             .paddingAll(metrics.contentPadding)
             .borderRadiusAll(metrics.contentRadius)
             .color(FortalTokens.colorPanel())
+            .decoration(
+              BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),
+            )
             .clipBehavior(Clip.antiAlias),
       )
-      .effects(
-        RemixSurfaceEffectsMix(
-          backdropBlur: FortalTokens.panelBlur(),
-          background: RemixSurfaceLayerMix(shadowToken: FortalTokens.shadow5),
-        ),
+      .containerEffects(
+        RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
       )
       .item(_fortalMenuItemStyler(variant, metrics, highContrast: highContrast))
       .label(_fortalMenuLabelStyler(metrics))

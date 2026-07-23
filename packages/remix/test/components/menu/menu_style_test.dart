@@ -16,7 +16,9 @@ void main() {
         .adjacentItemSpacing(8);
     final style = RemixMenuStyler()
         .overlay(FlexBoxStyler().paddingAll(8))
-        .effects(RemixSurfaceEffectsMix(background: RemixSurfaceLayerMix()))
+        .containerEffects(
+          RemixBoxEffectsMix(behindContent: RemixBoxEffectLayerMix()),
+        )
         .item(item)
         .label(item)
         .divider(RemixDividerStyler().height(1));

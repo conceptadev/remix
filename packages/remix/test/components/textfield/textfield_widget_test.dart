@@ -662,9 +662,9 @@ void main() {
               ),
             ),
           ),
-          effects: RemixSurfaceEffectsSpec(
-            background: RemixSurfaceLayerSpec(
-              shadows: [RemixPaintShadow(color: Colors.red)],
+          containerEffects: RemixBoxEffectsSpec(
+            behindContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.red)],
             ),
           ),
           textAlign: TextAlign.center,

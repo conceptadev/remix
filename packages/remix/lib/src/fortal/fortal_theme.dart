@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart' show internal;
 import 'package:mix/mix.dart';
 
 import '../radix/colors/colors.dart' as radix;
-import '../rendering/remix_surface.dart';
+import '../rendering/remix_box_effects.dart';
 import 'computed.dart';
 
 // OKLab mixing lives in computed.dart; no direct dependency here.
@@ -33,7 +33,7 @@ class FortalTokens {
   // ============================================================================
 
   /// Page background color selected for the active brightness.
-  static const colorBackground = ColorToken('fortal.color.background');
+  static const colorBackground = ColorToken('fortal.color.behindContent');
 
   /// Neutral surface color for input fields and controls.
   static const colorSurface = ColorToken('fortal.color.surface');
@@ -600,10 +600,10 @@ class FortalTokens {
   ///
   /// Minimal shadow for slight elevation effects.
   /// Good for cards and buttons in their resting state.
-  static const shadow1 = RemixPaintShadowListToken('fortal.shadow.1');
+  static const shadow1 = RemixBoxShadowListToken('fortal.shadow.1');
 
   /// Half-opacity shadow-1 layers used by a disabled classic slider track.
-  static const sliderClassicDisabledTrackShadows = RemixPaintShadowListToken(
+  static const sliderClassicDisabledTrackShadows = RemixBoxShadowListToken(
     'fortal.slider.classic.disabled-track-shadows',
   );
 
@@ -611,79 +611,79 @@ class FortalTokens {
   ///
   /// Light shadow for gentle elevation and hover states.
   /// Suitable for interactive elements and small modals.
-  static const shadow2 = RemixPaintShadowListToken('fortal.shadow.2');
+  static const shadow2 = BoxShadowToken('fortal.shadow.2');
 
   /// Shadow level 3 - Medium elevation.
   ///
   /// Moderate shadow for clear visual separation.
   /// Good for dropdowns, tooltips, and floating elements.
-  static const shadow3 = RemixPaintShadowListToken('fortal.shadow.3');
+  static const shadow3 = BoxShadowToken('fortal.shadow.3');
 
   /// Shadow level 4 - High elevation.
   ///
   /// Prominent shadow for important floating content.
   /// Suitable for modal dialogs and important overlays.
-  static const shadow4 = RemixPaintShadowListToken('fortal.shadow.4');
+  static const shadow4 = BoxShadowToken('fortal.shadow.4');
 
   /// Shadow level 5 - Very high elevation.
   ///
   /// Strong shadow for primary modals and major overlays.
   /// Creates clear hierarchy and focus on important content.
-  static const shadow5 = RemixPaintShadowListToken('fortal.shadow.5');
+  static const shadow5 = BoxShadowToken('fortal.shadow.5');
 
   /// Shadow level 6 - Maximum elevation.
   ///
   /// Maximum shadow depth for critical dialogs and notifications.
   /// Ensures content appears above all other interface elements.
-  static const shadow6 = RemixPaintShadowListToken('fortal.shadow.6');
+  static const shadow6 = BoxShadowToken('fortal.shadow.6');
 
   /// Card classic outer and inset-pseudo-element shadow lists.
-  static const cardClassicOuterShadows = RemixPaintShadowListToken(
+  static const cardClassicOuterShadows = RemixBoxShadowListToken(
     'fortal.card.classic.outer-shadows',
   );
-  static const cardClassicInnerShadows = RemixPaintShadowListToken(
+  static const cardClassicInnerShadows = RemixBoxShadowListToken(
     'fortal.card.classic.inner-shadows',
   );
-  static const cardClassicHoverOuterShadows = RemixPaintShadowListToken(
+  static const cardClassicHoverOuterShadows = RemixBoxShadowListToken(
     'fortal.card.classic.hover.outer-shadows',
   );
-  static const cardClassicHoverInnerShadows = RemixPaintShadowListToken(
+  static const cardClassicHoverInnerShadows = RemixBoxShadowListToken(
     'fortal.card.classic.hover.inner-shadows',
   );
-  static const cardClassicActiveOuterShadows = RemixPaintShadowListToken(
+  static const cardClassicActiveOuterShadows = RemixBoxShadowListToken(
     'fortal.card.classic.active.outer-shadows',
   );
-  static const cardClassicActiveInnerShadows = RemixPaintShadowListToken(
+  static const cardClassicActiveInnerShadows = RemixBoxShadowListToken(
     'fortal.card.classic.active.inner-shadows',
   );
 
   /// Mode-aware inset layers for a classic Select trigger.
-  static const selectTriggerClassicShadows = RemixPaintShadowListToken(
+  static const selectTriggerClassicShadows = RemixBoxShadowListToken(
     'fortal.select.trigger.classic.shadows',
   );
 
   /// Mode-aware open/hover layers for a classic Select trigger.
-  static const selectTriggerClassicHoverShadows = RemixPaintShadowListToken(
+  static const selectTriggerClassicHoverShadows = RemixBoxShadowListToken(
     'fortal.select.trigger.classic.hover-shadows',
   );
 
   /// Mode-aware disabled layers shared by classic button-shaped controls.
-  static const baseButtonClassicDisabledShadows = RemixPaintShadowListToken(
+  static const baseButtonClassicDisabledShadows = RemixBoxShadowListToken(
     'fortal.base-button.classic.disabled.shadows',
   );
 
   /// Mode-aware classic Button/IconButton layers.
-  static const baseButtonClassicShadows = RemixPaintShadowListToken(
+  static const baseButtonClassicShadows = RemixBoxShadowListToken(
     'fortal.base-button.classic.shadows',
   );
-  static const baseButtonClassicHighContrastShadows = RemixPaintShadowListToken(
+  static const baseButtonClassicHighContrastShadows = RemixBoxShadowListToken(
     'fortal.base-button.classic.high-contrast.shadows',
   );
-  static const baseButtonClassicActiveShadows = RemixPaintShadowListToken(
+  static const baseButtonClassicActiveShadows = RemixBoxShadowListToken(
     'fortal.base-button.classic.active.shadows',
   );
   static const baseButtonClassicActiveHighContrastShadows =
-      RemixPaintShadowListToken(
+      RemixBoxShadowListToken(
         'fortal.base-button.classic.active.high-contrast.shadows',
       );
   static const baseButtonClassicAfterInset = DoubleToken(
@@ -1071,7 +1071,7 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
     // Exact layered Radix shadow tokens, resolved for the active color scales.
     ...shadows,
     FortalTokens.sliderClassicDisabledTrackShadows: _scaleShadowOpacity(
-      shadows[FortalTokens.shadow1]!,
+      shadows[FortalTokens.shadow1]! as List<RemixBoxShadow>,
       0.5,
     ),
     FortalTokens.cardClassicOuterShadows: _cardClassicShadows(
@@ -1302,7 +1302,7 @@ enum _CardShadowLayer { outer, inner }
 
 enum _CardShadowState { idle, hovered, active }
 
-List<RemixPaintShadow> _cardClassicShadows(
+List<RemixBoxShadow> _cardClassicShadows(
   FortalThemeColors colors, {
   required bool isDark,
   required _CardShadowLayer layer,
@@ -1328,12 +1328,12 @@ List<RemixPaintShadow> _cardClassicShadows(
     ),
   };
 
-  RemixPaintShadow shadow(
+  RemixBoxShadow shadow(
     Color color, {
     Offset offset = Offset.zero,
     double blur = 0,
     required double spread,
-  }) => RemixPaintShadow(
+  }) => RemixBoxShadow(
     color: color,
     offset: offset,
     blurRadius: blur,
@@ -1424,14 +1424,14 @@ List<RemixPaintShadow> _cardClassicShadows(
   ];
 }
 
-RemixPaintShadow _insetShadow(
+RemixBoxShadow _insetShadow(
   Color color, {
   Offset offset = Offset.zero,
   double blur = 0,
   double spread = 0,
   double shapeInset = 0,
-}) => RemixPaintShadow(
-  kind: RemixPaintShadowKind.inset,
+}) => RemixBoxShadow(
+  kind: RemixBoxShadowKind.inset,
   color: color,
   offset: offset,
   blurRadius: blur,
@@ -1439,7 +1439,7 @@ RemixPaintShadow _insetShadow(
   shapeInset: shapeInset,
 );
 
-List<RemixPaintShadow> _selectClassicShadows(
+List<RemixBoxShadow> _selectClassicShadows(
   FortalThemeColors colors, {
   required bool isDark,
 }) {
@@ -1461,7 +1461,7 @@ List<RemixPaintShadow> _selectClassicShadows(
   ];
 }
 
-List<RemixPaintShadow> _baseButtonClassicDisabledShadows(
+List<RemixBoxShadow> _baseButtonClassicDisabledShadows(
   FortalThemeColors colors, {
   required bool isDark,
 }) {
@@ -1505,7 +1505,7 @@ List<RemixPaintShadow> _baseButtonClassicDisabledShadows(
   ];
 }
 
-List<RemixPaintShadow> _baseButtonClassicShadows(
+List<RemixBoxShadow> _baseButtonClassicShadows(
   FortalThemeColors colors, {
   required bool isDark,
   required bool highContrast,
@@ -1564,7 +1564,7 @@ List<RemixPaintShadow> _baseButtonClassicShadows(
   ];
 }
 
-List<RemixPaintShadow> _baseButtonClassicActiveShadows(
+List<RemixBoxShadow> _baseButtonClassicActiveShadows(
   FortalThemeColors colors, {
   required bool highContrast,
 }) {
@@ -1648,12 +1648,12 @@ Map<RadiusToken, Radius> _radiusTokensFor(FortalRadius radius, double scaling) {
   };
 }
 
-List<RemixPaintShadow> _scaleShadowOpacity(
-  List<RemixPaintShadow> shadows,
+List<RemixBoxShadow> _scaleShadowOpacity(
+  List<RemixBoxShadow> shadows,
   double factor,
 ) => [
   for (final shadow in shadows)
-    RemixPaintShadow(
+    RemixBoxShadow(
       kind: shadow.kind,
       color: shadow.color.withValues(alpha: shadow.color.a * factor),
       offset: shadow.offset,

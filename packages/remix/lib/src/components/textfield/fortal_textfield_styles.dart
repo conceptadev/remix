@@ -62,15 +62,15 @@ RemixTextFieldStyler _fortalTextFieldBaseStyler(
         helperText: TextStyler(style: FortalTokens.text1.mix()),
         label: TextStyler(style: FortalTokens.text2.mix()),
         cursorWidth: 1.5,
-        effects: RemixSurfaceEffectsMix(
-          background: _fortalTextFieldLayer(),
-          foreground: _fortalTextFieldLayer(),
+        containerEffects: RemixBoxEffectsMix(
+          behindContent: _fortalTextFieldLayer(),
+          overContent: _fortalTextFieldLayer(),
         ),
       )
       .wrap(.iconTheme(color: FortalTokens.gray11(), size: 16.0))
       .onFocused(
-        RemixTextFieldStyler().effects(
-          RemixSurfaceEffectsMix(
+        RemixTextFieldStyler().containerEffects(
+          RemixBoxEffectsMix(
             outline: BorderSideMix(
               color: FortalTokens.focus8(),
               width: 2,
@@ -87,17 +87,19 @@ RemixTextFieldStyler _fortalTextFieldClassicStyler(FortalTextFieldSize size) {
         _fortalTextFieldBaseStyler(size, bordered: true),
       )
       .color(FortalTokens.colorSurface())
-      .effects(
-        RemixSurfaceEffectsMix(
-          background: _fortalTextFieldLayer(shadowToken: FortalTokens.shadow1),
+      .containerEffects(
+        RemixBoxEffectsMix(
+          behindContent: _fortalTextFieldLayer(
+            shadowToken: FortalTokens.shadow1,
+          ),
         ),
       )
       .onDisabled(
         _fortalTextFieldDisabledText()
             .color(FortalTokens.colorSurface())
-            .effects(
-              RemixSurfaceEffectsMix(
-                background: _fortalTextFieldLayer(
+            .containerEffects(
+              RemixBoxEffectsMix(
+                behindContent: _fortalTextFieldLayer(
                   gradients: [
                     RemixLinearGradientMix(
                       colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
@@ -117,18 +119,20 @@ RemixTextFieldStyler _fortalTextFieldSurfaceStyler([
         _fortalTextFieldBaseStyler(size, bordered: true),
       )
       .color(FortalTokens.colorSurface())
-      .effects(RemixSurfaceEffectsMix(background: _fortalTextFieldLayer()))
-      .effects(
-        RemixSurfaceEffectsMix(
-          foreground: _fortalTextFieldInsetRing(FortalTokens.grayA7()),
+      .containerEffects(
+        RemixBoxEffectsMix(behindContent: _fortalTextFieldLayer()),
+      )
+      .containerEffects(
+        RemixBoxEffectsMix(
+          overContent: _fortalTextFieldInsetRing(FortalTokens.grayA7()),
         ),
       )
       .onDisabled(
         _fortalTextFieldDisabledText()
             .color(FortalTokens.colorSurface())
-            .effects(
-              RemixSurfaceEffectsMix(
-                background: _fortalTextFieldLayer(
+            .containerEffects(
+              RemixBoxEffectsMix(
+                behindContent: _fortalTextFieldLayer(
                   gradients: [
                     RemixLinearGradientMix(
                       colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
@@ -137,9 +141,9 @@ RemixTextFieldStyler _fortalTextFieldSurfaceStyler([
                 ),
               ),
             )
-            .effects(
-              RemixSurfaceEffectsMix(
-                foreground: _fortalTextFieldInsetRing(FortalTokens.grayA6()),
+            .containerEffects(
+              RemixBoxEffectsMix(
+                overContent: _fortalTextFieldInsetRing(FortalTokens.grayA6()),
               ),
             ),
       );
@@ -167,12 +171,14 @@ RemixTextFieldStyler _fortalTextFieldSoftStyler([
       .textColor(FortalTokens.accent12())
       .wrap(.iconTheme(color: FortalTokens.accent10()))
       .color(FortalTokens.accentA3())
-      .effects(RemixSurfaceEffectsMix(background: _fortalTextFieldLayer()))
+      .containerEffects(
+        RemixBoxEffectsMix(behindContent: _fortalTextFieldLayer()),
+      )
       .onDisabled(
         _fortalTextFieldDisabledText()
             .color(FortalTokens.grayA3())
-            .effects(
-              RemixSurfaceEffectsMix(background: _fortalTextFieldLayer()),
+            .containerEffects(
+              RemixBoxEffectsMix(behindContent: _fortalTextFieldLayer()),
             ),
       );
 }
@@ -196,8 +202,8 @@ RemixTextFieldStyler _fortalTextFieldDisabledText() =>
       hintText: TextStyler().color(FortalTokens.grayA8()),
       cursorColor: FortalTokens.gray8(),
     ).onFocused(
-      RemixTextFieldStyler().effects(
-        RemixSurfaceEffectsMix(
+      RemixTextFieldStyler().containerEffects(
+        RemixBoxEffectsMix(
           outline: BorderSideMix(
             color: FortalTokens.gray8(),
             width: 2,
@@ -213,10 +219,10 @@ RemixTextFieldStyler _fortalTextFieldErrorStyler() {
     helperText: TextStyler().color(FortalTokens.error11()),
     label: TextStyler().color(FortalTokens.error11()),
     cursorColor: FortalTokens.error9(),
-    effects: RemixSurfaceEffectsMix(
-      foreground: _fortalTextFieldLayer(
+    containerEffects: RemixBoxEffectsMix(
+      overContent: _fortalTextFieldLayer(
         shadows: [
-          RemixPaintShadowMix(
+          RemixBoxShadowMix(
             kind: .inset,
             color: FortalTokens.errorA7(),
             spreadRadius: 1,
@@ -271,18 +277,16 @@ _fortalTextFieldMetrics(FortalTextFieldSize size, {required bool bordered}) =>
       ),
     };
 
-RemixSurfaceLayerMix _fortalTextFieldInsetRing(Color color) =>
+RemixBoxEffectLayerMix _fortalTextFieldInsetRing(Color color) =>
     _fortalTextFieldLayer(
-      shadows: [
-        RemixPaintShadowMix(kind: .inset, color: color, spreadRadius: 1),
-      ],
+      shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
     );
 
-RemixSurfaceLayerMix _fortalTextFieldLayer({
+RemixBoxEffectLayerMix _fortalTextFieldLayer({
   List<RemixLinearGradientMix>? gradients,
-  List<RemixPaintShadowMix>? shadows,
-  RemixPaintShadowListToken? shadowToken,
-}) => RemixSurfaceLayerMix(
+  List<RemixBoxShadowMix>? shadows,
+  RemixBoxShadowListToken? shadowToken,
+}) => RemixBoxEffectLayerMix(
   gradients: gradients,
   shadows: shadows,
   shadowToken: shadowToken,

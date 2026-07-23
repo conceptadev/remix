@@ -463,7 +463,7 @@ void main() {
         };
         expect(_boxColor(normal.spec.range), expectedNormal);
         final contrastGradient =
-            highContrast.spec.rangeEffects!.background!.gradients.last
+            highContrast.spec.rangeEffects!.behindContent!.gradients.last
                 as LinearGradient;
         expect(contrastGradient.colors, everyElement(blackAlpha[8]));
       }

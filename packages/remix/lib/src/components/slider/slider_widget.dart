@@ -140,10 +140,10 @@ class _RemixSliderVisual extends StatelessWidget {
               clipBehavior: Clip.none,
               children: [
                 Positioned.fill(
-                  child: remixSurfaceBox(
+                  child: remixBoxWithEffects(
                     key: const ValueKey('remix-slider-track'),
                     styleSpec: spec.track,
-                    effects: spec.trackEffects,
+                    containerEffects: spec.trackEffects,
                     child: const SizedBox.expand(),
                   ),
                 ),
@@ -183,10 +183,10 @@ class _RemixSliderVisual extends StatelessWidget {
       top: horizontal ? 0 : size.height * start,
       width: horizontal ? size.width * (end - start) : size.width,
       height: horizontal ? size.height : size.height * (end - start),
-      child: remixSurfaceBox(
+      child: remixBoxWithEffects(
         key: const ValueKey('remix-slider-range'),
         styleSpec: spec.range,
-        effects: spec.rangeEffects,
+        containerEffects: spec.rangeEffects,
         child: const SizedBox.expand(),
       ),
     );
@@ -215,10 +215,10 @@ class _RemixSliderVisual extends StatelessWidget {
       (final base, null) => base,
       (null, final focus) => focus,
     };
-    final thumb = remixSurfaceBox(
+    final thumb = remixBoxWithEffects(
       key: ValueKey('remix-slider-thumb-$index'),
       styleSpec: spec.thumb,
-      effects: effects,
+      containerEffects: effects,
       child: const SizedBox.expand(),
     );
     return Positioned(

@@ -10,8 +10,8 @@ mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get track;
   StyleSpec<BoxSpec> get indicator;
-  RemixSurfaceEffectsSpec? get trackEffects;
-  RemixSurfaceEffectsSpec? get indicatorEffects;
+  RemixBoxEffectsSpec? get trackEffects;
+  RemixBoxEffectsSpec? get indicatorEffects;
 
   @override
   Type get type => RemixProgressSpec;
@@ -21,8 +21,8 @@ mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? track,
     StyleSpec<BoxSpec>? indicator,
-    RemixSurfaceEffectsSpec? trackEffects,
-    RemixSurfaceEffectsSpec? indicatorEffects,
+    RemixBoxEffectsSpec? trackEffects,
+    RemixBoxEffectsSpec? indicatorEffects,
   }) {
     return RemixProgressSpec(
       container: container ?? this.container,
@@ -120,15 +120,15 @@ class RemixProgressStyler
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $track;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
-  final Prop<RemixSurfaceEffectsSpec>? $trackEffects;
-  final Prop<RemixSurfaceEffectsSpec>? $indicatorEffects;
+  final Prop<RemixBoxEffectsSpec>? $trackEffects;
+  final Prop<RemixBoxEffectsSpec>? $indicatorEffects;
 
   const RemixProgressStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? track,
     Prop<StyleSpec<BoxSpec>>? indicator,
-    Prop<RemixSurfaceEffectsSpec>? trackEffects,
-    Prop<RemixSurfaceEffectsSpec>? indicatorEffects,
+    Prop<RemixBoxEffectsSpec>? trackEffects,
+    Prop<RemixBoxEffectsSpec>? indicatorEffects,
     super.variants,
     super.modifier,
     super.animation,
@@ -142,8 +142,8 @@ class RemixProgressStyler
     BoxStyler? container,
     BoxStyler? track,
     BoxStyler? indicator,
-    RemixSurfaceEffectsMix? trackEffects,
-    RemixSurfaceEffectsMix? indicatorEffects,
+    RemixBoxEffectsMix? trackEffects,
+    RemixBoxEffectsMix? indicatorEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixProgressSpec>>? variants,
@@ -164,9 +164,9 @@ class RemixProgressStyler
       RemixProgressStyler().track(value);
   factory RemixProgressStyler.indicator(BoxStyler value) =>
       RemixProgressStyler().indicator(value);
-  factory RemixProgressStyler.trackEffects(RemixSurfaceEffectsMix value) =>
+  factory RemixProgressStyler.trackEffects(RemixBoxEffectsMix value) =>
       RemixProgressStyler().trackEffects(value);
-  factory RemixProgressStyler.indicatorEffects(RemixSurfaceEffectsMix value) =>
+  factory RemixProgressStyler.indicatorEffects(RemixBoxEffectsMix value) =>
       RemixProgressStyler().indicatorEffects(value);
   factory RemixProgressStyler.alignment(AlignmentGeometry value) =>
       RemixProgressStyler().alignment(value);
@@ -659,12 +659,12 @@ class RemixProgressStyler
   }
 
   /// Sets the trackEffects.
-  RemixProgressStyler trackEffects(RemixSurfaceEffectsMix value) {
+  RemixProgressStyler trackEffects(RemixBoxEffectsMix value) {
     return merge(RemixProgressStyler(trackEffects: value));
   }
 
   /// Sets the indicatorEffects.
-  RemixProgressStyler indicatorEffects(RemixSurfaceEffectsMix value) {
+  RemixProgressStyler indicatorEffects(RemixBoxEffectsMix value) {
     return merge(RemixProgressStyler(indicatorEffects: value));
   }
 

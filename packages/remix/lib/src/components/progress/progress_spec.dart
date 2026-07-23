@@ -12,12 +12,12 @@ class RemixProgressSpec with _$RemixProgressSpec {
   final StyleSpec<BoxSpec> indicator;
 
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? trackEffects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? trackEffects;
 
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? indicatorEffects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? indicatorEffects;
 
   const RemixProgressSpec({
     StyleSpec<BoxSpec>? container,
@@ -34,12 +34,12 @@ class RemixProgressSpec with _$RemixProgressSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      trackEffects: RemixSurfaceEffectsSpec.lerpNullable(
+      trackEffects: RemixBoxEffectsSpec.lerpNullable(
         trackEffects,
         other.trackEffects,
         t,
       ),
-      indicatorEffects: RemixSurfaceEffectsSpec.lerpNullable(
+      indicatorEffects: RemixBoxEffectsSpec.lerpNullable(
         indicatorEffects,
         other.indicatorEffects,
         t,

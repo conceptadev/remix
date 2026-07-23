@@ -9,7 +9,7 @@ import 'package:mix_annotations/mix_annotations.dart';
 
 import '../../utilities/remix_style.dart';
 import '../../fortal/fortal.dart';
-import '../../rendering/remix_surface.dart';
+import '../../rendering/remix_box_effects.dart';
 
 part 'progress_spec.dart';
 part 'progress_style.dart';

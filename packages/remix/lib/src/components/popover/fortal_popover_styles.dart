@@ -24,11 +24,11 @@ RemixPopoverStyler fortalPopoverStyler({
       .paddingAll(padding)
       .borderRadiusAll(radius)
       .color(FortalTokens.colorPanel())
-      .effects(
-        RemixSurfaceEffectsMix(
-          backdropBlur: FortalTokens.panelBlur(),
-          background: RemixSurfaceLayerMix(shadowToken: FortalTokens.shadow5),
-        ),
+      .decoration(
+        BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),
+      )
+      .containerEffects(
+        RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
       );
 }
 

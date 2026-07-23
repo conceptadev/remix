@@ -21,6 +21,13 @@ final _retiredApis = <(RegExp, String)>[
   ),
   (RegExp(r'\b(?:menuContainer|trackContainer)\s*\('), 'retired style slot'),
   (
+    RegExp(
+      r'\b(?:RemixPaintShadow(?:Kind|Mix|ListToken)?|RemixSurface(?:Layer|Effects)?(?:Spec|Mix)?|remixSurface(?:Box|FlexBox))\b',
+    ),
+    'retired surface-effects API',
+  ),
+  (RegExp(r'\.effects\s*\('), 'retired generic effects styler'),
+  (
     RegExp(r'generated Fortal', caseSensitive: false),
     'stale generated-wrapper claim',
   ),

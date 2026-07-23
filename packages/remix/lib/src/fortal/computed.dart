@@ -11,10 +11,11 @@
 import 'dart:math' as math;
 import 'dart:ui' show Color, Offset;
 
-import 'package:flutter/painting.dart' show ColorSwatch;
+import 'package:flutter/painting.dart' show BoxShadow, ColorSwatch;
+import 'package:mix/mix.dart' show MixToken;
 
 import '../radix/colors/colors.dart';
-import '../rendering/remix_surface.dart';
+import '../rendering/remix_box_effects.dart';
 import 'fortal_theme.dart';
 
 // ============================================================================
@@ -172,13 +173,13 @@ double _encodeSrgb(double channel) => channel <= 0.0031308
     : 1.055 * math.pow(channel, 1 / 2.4).toDouble() - 0.055;
 
 /// Builds Radix Themes elevation shadows for the active brightness.
-Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
+Map<MixToken, Object> buildFortalShadows({
   required bool isDark,
   required FortalThemeColors colors,
 }) {
   if (isDark) {
-    return {
-      FortalTokens.shadow1: [
+    final shadows = <String, List<RemixBoxShadow>>{
+      'shadow1': [
         _shadow(
           colors.gray.scale.alphaStep(3),
           kind: .inset,
@@ -194,7 +195,7 @@ Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
         ),
         _shadow(colors.gray.scale.alphaStep(4), kind: .inset, spread: 1),
       ],
-      FortalTokens.shadow2: [
+      'shadow2': [
         _shadow(colors.shadowStroke, spread: 1),
         _shadow(colors.blackAlpha[3]!, blur: 0.5),
         _shadow(colors.blackAlpha[6]!, offset: const Offset(0, 1), blur: 1),
@@ -206,7 +207,7 @@ Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
         ),
         _shadow(colors.blackAlpha[5]!, offset: const Offset(0, 1), blur: 3),
       ],
-      FortalTokens.shadow3: [
+      'shadow3': [
         _shadow(colors.shadowStroke, spread: 1),
         _shadow(
           colors.blackAlpha[3]!,
@@ -227,7 +228,7 @@ Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
           spread: -4,
         ),
       ],
-      FortalTokens.shadow4: [
+      'shadow4': [
         _shadow(colors.shadowStroke, spread: 1),
         _shadow(colors.blackAlpha[3]!, offset: const Offset(0, 8), blur: 40),
         _shadow(
@@ -237,7 +238,7 @@ Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
           spread: -16,
         ),
       ],
-      FortalTokens.shadow5: [
+      'shadow5': [
         _shadow(colors.shadowStroke, spread: 1),
         _shadow(colors.blackAlpha[5]!, offset: const Offset(0, 12), blur: 60),
         _shadow(
@@ -247,7 +248,7 @@ Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
           spread: -16,
         ),
       ],
-      FortalTokens.shadow6: [
+      'shadow6': [
         _shadow(colors.shadowStroke, spread: 1),
         _shadow(colors.blackAlpha[4]!, offset: const Offset(0, 12), blur: 60),
         _shadow(colors.blackAlpha[6]!, offset: const Offset(0, 16), blur: 64),
@@ -259,10 +260,11 @@ Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
         ),
       ],
     };
+    return _fortalShadowTokens(shadows);
   }
 
-  return {
-    FortalTokens.shadow1: [
+  final shadows = <String, List<RemixBoxShadow>>{
+    'shadow1': [
       _shadow(colors.gray.scale.alphaStep(5), kind: .inset, spread: 1),
       _shadow(
         colors.gray.scale.alphaStep(2),
@@ -277,7 +279,7 @@ Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
         blur: 2,
       ),
     ],
-    FortalTokens.shadow2: [
+    'shadow2': [
       _shadow(colors.shadowStroke, spread: 1),
       _shadow(colors.blackAlpha[1]!, blur: 0.5),
       _shadow(
@@ -293,7 +295,7 @@ Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
       ),
       _shadow(colors.blackAlpha[1]!, offset: const Offset(0, 1), blur: 3),
     ],
-    FortalTokens.shadow3: [
+    'shadow3': [
       _shadow(colors.shadowStroke, spread: 1),
       _shadow(
         colors.gray.scale.alphaStep(3),
@@ -314,7 +316,7 @@ Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
         spread: -8,
       ),
     ],
-    FortalTokens.shadow4: [
+    'shadow4': [
       _shadow(colors.shadowStroke, spread: 1),
       _shadow(colors.blackAlpha[1]!, offset: const Offset(0, 8), blur: 40),
       _shadow(
@@ -324,7 +326,7 @@ Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
         spread: -16,
       ),
     ],
-    FortalTokens.shadow5: [
+    'shadow5': [
       _shadow(colors.shadowStroke, spread: 1),
       _shadow(colors.blackAlpha[3]!, offset: const Offset(0, 12), blur: 60),
       _shadow(
@@ -334,7 +336,7 @@ Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
         spread: -16,
       ),
     ],
-    FortalTokens.shadow6: [
+    'shadow6': [
       _shadow(colors.shadowStroke, spread: 1),
       _shadow(colors.blackAlpha[3]!, offset: const Offset(0, 12), blur: 60),
       _shadow(
@@ -350,15 +352,37 @@ Map<RemixPaintShadowListToken, List<RemixPaintShadow>> buildFortalShadows({
       ),
     ],
   };
+  return _fortalShadowTokens(shadows);
 }
 
-RemixPaintShadow _shadow(
+Map<MixToken, Object> _fortalShadowTokens(
+  Map<String, List<RemixBoxShadow>> shadows,
+) => {
+  FortalTokens.shadow1: shadows['shadow1']!,
+  FortalTokens.shadow2: _ordinaryShadows(shadows['shadow2']!),
+  FortalTokens.shadow3: _ordinaryShadows(shadows['shadow3']!),
+  FortalTokens.shadow4: _ordinaryShadows(shadows['shadow4']!),
+  FortalTokens.shadow5: _ordinaryShadows(shadows['shadow5']!),
+  FortalTokens.shadow6: _ordinaryShadows(shadows['shadow6']!),
+};
+
+List<BoxShadow> _ordinaryShadows(List<RemixBoxShadow> shadows) => [
+  for (final shadow in shadows)
+    BoxShadow(
+      color: shadow.color,
+      offset: shadow.offset,
+      blurRadius: shadow.blurRadius,
+      spreadRadius: shadow.spreadRadius,
+    ),
+];
+
+RemixBoxShadow _shadow(
   Color color, {
-  RemixPaintShadowKind kind = RemixPaintShadowKind.outer,
+  RemixBoxShadowKind kind = RemixBoxShadowKind.outer,
   Offset offset = Offset.zero,
   double blur = 0,
   double spread = 0,
-}) => RemixPaintShadow(
+}) => RemixBoxShadow(
   kind: kind,
   color: color,
   offset: offset,

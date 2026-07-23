@@ -321,8 +321,8 @@ void main() {
         expect(style.props, hasLength(6));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$indicator));
-        expect(style.props, contains(style.$effects));
-        expect(style.props, contains(style.$effects));
+        expect(style.props, contains(style.$containerEffects));
+        expect(style.props, contains(style.$containerEffects));
         expect(style.props, contains(style.$variants));
         expect(style.props, contains(style.$animation));
         expect(style.props, contains(style.$modifier));

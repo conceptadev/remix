@@ -97,20 +97,23 @@ void main() {
           final endDecoration = end.container.spec.decoration! as BoxDecoration;
           final middleDecoration =
               middle.container.spec.decoration! as BoxDecoration;
-          final expectedEffects = begin.effects!.lerp(end.effects, t);
+          final expectedEffects = begin.containerEffects!.lerp(
+            end.containerEffects,
+            t,
+          );
 
           expect(
             middleDecoration.color,
             Color.lerp(beginDecoration.color, endDecoration.color, t),
           );
-          expect(middle.effects, expectedEffects);
+          expect(middle.containerEffects, expectedEffects);
           expect(
-            middle.effects!.background!.gradients,
-            expectedEffects.background!.gradients,
+            middle.containerEffects!.behindContent!.gradients,
+            expectedEffects.behindContent!.gradients,
           );
           expect(
-            middle.effects!.background!.shadows,
-            expectedEffects.background!.shadows,
+            middle.containerEffects!.behindContent!.shadows,
+            expectedEffects.behindContent!.shadows,
           );
         },
       );
@@ -174,8 +177,8 @@ void main() {
         expect(spec.props, hasLength(3));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.indicator));
-        expect(spec.props, contains(spec.effects?.background));
-        expect(spec.props, contains(spec.effects?.foreground));
+        expect(spec.props, contains(spec.containerEffects?.behindContent));
+        expect(spec.props, contains(spec.containerEffects?.overContent));
       });
     });
 

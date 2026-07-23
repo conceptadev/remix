@@ -44,8 +44,8 @@ class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
   @override
   final StyleSpec<IconSpec> chevron;
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? effects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
   @override
   final double? chevronOpacity;
   @override
@@ -57,7 +57,7 @@ class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
     StyleSpec<TextSpec>? placeholder,
     StyleSpec<IconSpec>? icon,
     StyleSpec<IconSpec>? chevron,
-    this.effects,
+    this.containerEffects,
     this.chevronOpacity,
     this.placeholderOpacity,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
@@ -71,7 +71,11 @@ class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
     );
   }
 }
@@ -83,18 +87,24 @@ class RemixSelectContentSpec with _$RemixSelectContentSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? effects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
 
-  const RemixSelectContentSpec({StyleSpec<BoxSpec>? container, this.effects})
-    : container = container ?? const StyleSpec(spec: BoxSpec());
+  const RemixSelectContentSpec({
+    StyleSpec<BoxSpec>? container,
+    this.containerEffects,
+  }) : container = container ?? const StyleSpec(spec: BoxSpec());
 
   @override
   RemixSelectContentSpec lerp(RemixSelectContentSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
     );
   }
 }

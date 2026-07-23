@@ -404,9 +404,9 @@ void main() {
           indicator: StyleSpec(
             spec: BoxSpec(decoration: BoxDecoration(color: Colors.blue)),
           ),
-          effects: RemixSurfaceEffectsSpec(
-            background: RemixSurfaceLayerSpec(
-              shadows: [RemixPaintShadow(color: Colors.red)],
+          containerEffects: RemixBoxEffectsSpec(
+            behindContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.red)],
             ),
           ),
         );

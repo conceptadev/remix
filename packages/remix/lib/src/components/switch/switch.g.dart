@@ -9,8 +9,8 @@ part of 'switch.dart';
 mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get thumb;
-  RemixSurfaceEffectsSpec? get trackEffects;
-  RemixSurfaceEffectsSpec? get thumbEffects;
+  RemixBoxEffectsSpec? get trackEffects;
+  RemixBoxEffectsSpec? get thumbEffects;
 
   @override
   Type get type => RemixSwitchSpec;
@@ -19,8 +19,8 @@ mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
   RemixSwitchSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? thumb,
-    RemixSurfaceEffectsSpec? trackEffects,
-    RemixSurfaceEffectsSpec? thumbEffects,
+    RemixBoxEffectsSpec? trackEffects,
+    RemixBoxEffectsSpec? thumbEffects,
   }) {
     return RemixSwitchSpec(
       container: container ?? this.container,
@@ -103,14 +103,14 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     with RemixBoxStylerMixin<RemixSwitchStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
-  final Prop<RemixSurfaceEffectsSpec>? $trackEffects;
-  final Prop<RemixSurfaceEffectsSpec>? $thumbEffects;
+  final Prop<RemixBoxEffectsSpec>? $trackEffects;
+  final Prop<RemixBoxEffectsSpec>? $thumbEffects;
 
   const RemixSwitchStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? thumb,
-    Prop<RemixSurfaceEffectsSpec>? trackEffects,
-    Prop<RemixSurfaceEffectsSpec>? thumbEffects,
+    Prop<RemixBoxEffectsSpec>? trackEffects,
+    Prop<RemixBoxEffectsSpec>? thumbEffects,
     super.variants,
     super.modifier,
     super.animation,
@@ -122,8 +122,8 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
   RemixSwitchStyler({
     BoxStyler? container,
     BoxStyler? thumb,
-    RemixSurfaceEffectsMix? trackEffects,
-    RemixSurfaceEffectsMix? thumbEffects,
+    RemixBoxEffectsMix? trackEffects,
+    RemixBoxEffectsMix? thumbEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixSwitchSpec>>? variants,
@@ -141,9 +141,9 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
       RemixSwitchStyler().container(value);
   factory RemixSwitchStyler.thumb(BoxStyler value) =>
       RemixSwitchStyler().thumb(value);
-  factory RemixSwitchStyler.trackEffects(RemixSurfaceEffectsMix value) =>
+  factory RemixSwitchStyler.trackEffects(RemixBoxEffectsMix value) =>
       RemixSwitchStyler().trackEffects(value);
-  factory RemixSwitchStyler.thumbEffects(RemixSurfaceEffectsMix value) =>
+  factory RemixSwitchStyler.thumbEffects(RemixBoxEffectsMix value) =>
       RemixSwitchStyler().thumbEffects(value);
   factory RemixSwitchStyler.alignment(AlignmentGeometry value) =>
       RemixSwitchStyler().alignment(value);
@@ -628,12 +628,12 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
   }
 
   /// Sets the trackEffects.
-  RemixSwitchStyler trackEffects(RemixSurfaceEffectsMix value) {
+  RemixSwitchStyler trackEffects(RemixBoxEffectsMix value) {
     return merge(RemixSwitchStyler(trackEffects: value));
   }
 
   /// Sets the thumbEffects.
-  RemixSwitchStyler thumbEffects(RemixSurfaceEffectsMix value) {
+  RemixSwitchStyler thumbEffects(RemixBoxEffectsMix value) {
     return merge(RemixSwitchStyler(thumbEffects: value));
   }
 

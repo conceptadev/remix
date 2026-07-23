@@ -15,8 +15,8 @@ class RemixSliderSpec with _$RemixSliderSpec {
 
   /// Paint layers behind the track.
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? trackEffects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? trackEffects;
 
   /// Layout boundary for the selected range.
   @override
@@ -24,8 +24,8 @@ class RemixSliderSpec with _$RemixSliderSpec {
 
   /// Paint layers behind the selected range.
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? rangeEffects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? rangeEffects;
 
   /// Layout and decoration for every visual thumb.
   @override
@@ -34,13 +34,13 @@ class RemixSliderSpec with _$RemixSliderSpec {
 
   /// Paint layers behind every thumb.
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? thumbEffects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? thumbEffects;
 
   /// Additional overlay painted only on the focused thumb.
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? thumbFocusEffects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? thumbFocusEffects;
 
   /// Preferred cross-axis extent of the visual track.
   @override
@@ -70,22 +70,22 @@ class RemixSliderSpec with _$RemixSliderSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      trackEffects: RemixSurfaceEffectsSpec.lerpNullable(
+      trackEffects: RemixBoxEffectsSpec.lerpNullable(
         trackEffects,
         other.trackEffects,
         t,
       ),
-      rangeEffects: RemixSurfaceEffectsSpec.lerpNullable(
+      rangeEffects: RemixBoxEffectsSpec.lerpNullable(
         rangeEffects,
         other.rangeEffects,
         t,
       ),
-      thumbEffects: RemixSurfaceEffectsSpec.lerpNullable(
+      thumbEffects: RemixBoxEffectsSpec.lerpNullable(
         thumbEffects,
         other.thumbEffects,
         t,
       ),
-      thumbFocusEffects: RemixSurfaceEffectsSpec.lerpNullable(
+      thumbFocusEffects: RemixBoxEffectsSpec.lerpNullable(
         thumbFocusEffects,
         other.thumbFocusEffects,
         t,

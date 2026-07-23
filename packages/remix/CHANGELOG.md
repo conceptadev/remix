@@ -1,5 +1,17 @@
 ## Unreleased
 
+- **BREAKING**: Replace the unreleased surface paint API with the box-effects
+  domain: `RemixBoxShadow*`, `RemixBoxEffectLayer*`, and `RemixBoxEffects*`.
+  Rename generic component `effects` slots to `containerEffects` and layer
+  positions to `behindContent`/`overContent`; no deprecated aliases are kept.
+- **BREAKING**: Move ordinary Dialog, Menu, Popover, Select-content, Slider
+  thumb, and Switch thumb elevation into the component's Mix box decoration.
+  `FortalTokens.shadow2` through `shadow6` are now `BoxShadowToken` values;
+  inset, `shapeInset`, mixed, and explicitly positioned shadows remain Remix
+  effects.
+- **CHORE**: Upgrade to hosted `mix` 2.2.0-beta.1 while keeping hosted
+  `mix_annotations`/`mix_generator` 2.2.0-beta.0 and the unhosted
+  `mix_protocol` development dependency on git.
 - **FEAT**: Expose `ButtonStyler` as the canonical button styling API.
   `RemixButtonStyler` remains available as a deprecated compatibility alias.
 - **BREAKING**: Align the 20 mapped Fortal families with the pinned
@@ -32,9 +44,8 @@
 - **FEAT**: Add partial theme resolution, platform-brightness observation,
   automatic matching gray scales, complete 90%–110% scaling, derived radii,
   translucent panels, and premultiplied-alpha OKLab shadow-stroke mixing.
-- **FEAT**: Add real surface and overlay paint slots with token-aware multiple
-  gradients, outer and inset shadows, clip insets, CSS-style outlines, and
-  backdrop blur.
+- **FEAT**: Add box effects with token-aware multiple gradients, positioned
+  and inset shadows, clip insets, CSS-style outlines, and backdrop blur.
 - **FIX**: Preserve token-backed shadow-list identity when state styles replace
   explicit surface shadows, and use dedicated scaled radio-indicator tokens so
   Mix token references are never multiplied as raw sentinel doubles.

@@ -26,14 +26,14 @@ void main() {
 
     _expectPanelRecipe(
       container: translucent.spec.container.spec,
-      effects: translucent.spec.effects!,
+      containerEffects: translucent.spec.containerEffects!,
       color: translucent.panel,
       radius: translucent.radius,
       blur: 64,
     );
     _expectPanelRecipe(
       container: solid.spec.container.spec,
-      effects: solid.spec.effects!,
+      containerEffects: solid.spec.containerEffects!,
       color: solid.panel,
       radius: solid.radius,
       blur: 0,
@@ -82,7 +82,7 @@ void main() {
 
     _expectPanelRecipe(
       container: menu.spec.overlay.spec.box!.spec,
-      effects: menu.spec.effects!,
+      containerEffects: menu.spec.containerEffects!,
       color: menu.panel,
       radius: menu.radius,
       shadows: menu.shadows,
@@ -90,7 +90,7 @@ void main() {
     );
     _expectPanelRecipe(
       container: select.spec.container.spec,
-      effects: select.spec.effects!,
+      containerEffects: select.spec.containerEffects!,
       color: select.panel,
       radius: select.radius,
       shadows: select.shadows,
@@ -98,7 +98,7 @@ void main() {
     );
     _expectPanelRecipe(
       container: popover.spec.container.spec,
-      effects: popover.spec.effects!,
+      containerEffects: popover.spec.containerEffects!,
       color: popover.panel,
       radius: popover.radius,
       shadows: popover.shadows,
@@ -106,7 +106,7 @@ void main() {
     );
     _expectPanelRecipe(
       container: dialog.spec.container.spec,
-      effects: dialog.spec.effects!,
+      containerEffects: dialog.spec.containerEffects!,
       color: dialog.panel,
       radius: dialog.radius,
       shadows: dialog.shadows,
@@ -410,22 +410,25 @@ Widget _fortalApp(Widget child) {
 
 void _expectPanelRecipe({
   required BoxSpec container,
-  required RemixSurfaceEffectsSpec effects,
+  required RemixBoxEffectsSpec containerEffects,
   required Color color,
   required Radius radius,
-  List<RemixPaintShadow> shadows = const [],
+  List<BoxShadow> shadows = const [],
   required double blur,
 }) {
   final decoration = container.decoration! as BoxDecoration;
   if (decoration.color == null) {
-    expect(effects.background!.gradients, isNotEmpty);
-    expect(effects.background!.gradients.first.colors, everyElement(color));
+    expect(containerEffects.behindContent!.gradients, isNotEmpty);
+    expect(
+      containerEffects.behindContent!.gradients.first.colors,
+      everyElement(color),
+    );
   } else {
     expect(decoration.color, color);
   }
   expect(decoration.borderRadius, BorderRadius.all(radius));
-  expect(effects.backdropBlur, blur);
-  expect(effects.background?.shadows, shadows);
+  expect(containerEffects.backdropBlur, blur);
+  expect(decoration.boxShadow ?? const <BoxShadow>[], shadows);
 }
 
 Future<T> _resolveFortal<T>(

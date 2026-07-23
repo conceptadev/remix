@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import '../rendering/remix_ordered_color_filter.dart';
-import '../rendering/remix_surface.dart';
+import '../rendering/remix_box_effects.dart';
 import 'fortal_theme.dart';
 
 /// Shared Radix BaseButton metrics used by Button and IconButton recipes.
@@ -111,25 +111,23 @@ fortalBaseButtonGhostMetrics(int size) => switch (size) {
     };
 
 /// A CSS outline that does not affect layout.
-RemixSurfaceEffectsMix fortalFocusOutline(
-  Color color, {
-  required double offset,
-}) => RemixSurfaceEffectsMix(
-  outline: BorderSideMix(
-    color: color,
-    width: 2,
-    strokeAlign: BorderSide.strokeAlignInside,
-  ),
-  outlineOffset: offset,
-);
+RemixBoxEffectsMix fortalFocusOutline(Color color, {required double offset}) =>
+    RemixBoxEffectsMix(
+      outline: BorderSideMix(
+        color: color,
+        width: 2,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      outlineOffset: offset,
+    );
 
 /// A one-pixel inset stroke, optionally layered over a fill.
-RemixSurfaceLayerMix fortalInsetSurface({required List<Color> strokes}) =>
-    RemixSurfaceLayerMix(
+RemixBoxEffectLayerMix fortalInsetSurface({required List<Color> strokes}) =>
+    RemixBoxEffectLayerMix(
       shadows: [
         for (final stroke in strokes)
-          RemixPaintShadowMix(
-            kind: RemixPaintShadowKind.inset,
+          RemixBoxShadowMix(
+            kind: RemixBoxShadowKind.inset,
             color: stroke,
             spreadRadius: 1,
           ),
@@ -149,7 +147,7 @@ WidgetModifierConfig fortalClearFilter() =>
     fortalModeAwareFilter(light: const [], dark: const []);
 
 /// Exact classic BaseButton surface for a visual state.
-RemixSurfaceLayerMix fortalClassicBaseButtonSurface({
+RemixBoxEffectLayerMix fortalClassicBaseButtonSurface({
   required bool highContrast,
   bool hovered = false,
   bool pressed = false,
@@ -157,7 +155,7 @@ RemixSurfaceLayerMix fortalClassicBaseButtonSurface({
 }) {
   final inset = FortalTokens.baseButtonClassicAfterInset();
   if (disabled) {
-    return RemixSurfaceLayerMix(
+    return RemixBoxEffectLayerMix(
       gradients: [
         RemixLinearGradientMix(
           colors: [
@@ -229,7 +227,7 @@ RemixSurfaceLayerMix fortalClassicBaseButtonSurface({
       ),
     ],
   ];
-  return RemixSurfaceLayerMix(
+  return RemixBoxEffectLayerMix(
     gradients: gradients,
     gradientInsets: [inset, inset, ...List.filled(gradients.length - 2, 0)],
     shadowToken: pressed

@@ -107,7 +107,7 @@ mixin _$RemixSelectTriggerSpec
   StyleSpec<TextSpec> get placeholder;
   StyleSpec<IconSpec> get icon;
   StyleSpec<IconSpec> get chevron;
-  RemixSurfaceEffectsSpec? get effects;
+  RemixBoxEffectsSpec? get containerEffects;
   double? get chevronOpacity;
   double? get placeholderOpacity;
 
@@ -121,7 +121,7 @@ mixin _$RemixSelectTriggerSpec
     StyleSpec<TextSpec>? placeholder,
     StyleSpec<IconSpec>? icon,
     StyleSpec<IconSpec>? chevron,
-    RemixSurfaceEffectsSpec? effects,
+    RemixBoxEffectsSpec? containerEffects,
     double? chevronOpacity,
     double? placeholderOpacity,
   }) {
@@ -131,7 +131,7 @@ mixin _$RemixSelectTriggerSpec
       placeholder: placeholder ?? this.placeholder,
       icon: icon ?? this.icon,
       chevron: chevron ?? this.chevron,
-      effects: effects ?? this.effects,
+      containerEffects: containerEffects ?? this.containerEffects,
       chevronOpacity: chevronOpacity ?? this.chevronOpacity,
       placeholderOpacity: placeholderOpacity ?? this.placeholderOpacity,
     );
@@ -145,7 +145,11 @@ mixin _$RemixSelectTriggerSpec
       placeholder: placeholder.lerp(other?.placeholder, t),
       icon: icon.lerp(other?.icon, t),
       chevron: chevron.lerp(other?.chevron, t),
-      effects: MixOps.lerpSnap(effects, other?.effects, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
       chevronOpacity: MixOps.lerp(chevronOpacity, other?.chevronOpacity, t),
       placeholderOpacity: MixOps.lerp(
         placeholderOpacity,
@@ -162,7 +166,7 @@ mixin _$RemixSelectTriggerSpec
     placeholder,
     icon,
     chevron,
-    effects,
+    containerEffects,
     chevronOpacity,
     placeholderOpacity,
   ];
@@ -212,7 +216,7 @@ mixin _$RemixSelectTriggerSpec
       ..add(DiagnosticsProperty('placeholder', placeholder))
       ..add(DiagnosticsProperty('icon', icon))
       ..add(DiagnosticsProperty('chevron', chevron))
-      ..add(DiagnosticsProperty('effects', effects))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DoubleProperty('chevronOpacity', chevronOpacity))
       ..add(DoubleProperty('placeholderOpacity', placeholderOpacity));
   }
@@ -226,7 +230,7 @@ typedef _$RemixSelectTriggerSpecMethods = _$RemixSelectTriggerSpec; // ignore: u
 mixin _$RemixSelectContentSpec
     implements Spec<RemixSelectContentSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
-  RemixSurfaceEffectsSpec? get effects;
+  RemixBoxEffectsSpec? get containerEffects;
 
   @override
   Type get type => RemixSelectContentSpec;
@@ -234,11 +238,11 @@ mixin _$RemixSelectContentSpec
   @override
   RemixSelectContentSpec copyWith({
     StyleSpec<BoxSpec>? container,
-    RemixSurfaceEffectsSpec? effects,
+    RemixBoxEffectsSpec? containerEffects,
   }) {
     return RemixSelectContentSpec(
       container: container ?? this.container,
-      effects: effects ?? this.effects,
+      containerEffects: containerEffects ?? this.containerEffects,
     );
   }
 
@@ -246,12 +250,16 @@ mixin _$RemixSelectContentSpec
   RemixSelectContentSpec lerp(RemixSelectContentSpec? other, double t) {
     return RemixSelectContentSpec(
       container: container.lerp(other?.container, t),
-      effects: MixOps.lerpSnap(effects, other?.effects, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, effects];
+  List<Object?> get props => [container, containerEffects];
 
   @override
   bool operator ==(Object other) {
@@ -294,7 +302,7 @@ mixin _$RemixSelectContentSpec
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('effects', effects));
+      ..add(DiagnosticsProperty('containerEffects', containerEffects));
   }
 }
 
@@ -655,7 +663,7 @@ class RemixSelectTriggerStyler
   final Prop<StyleSpec<TextSpec>>? $placeholder;
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<StyleSpec<IconSpec>>? $chevron;
-  final Prop<RemixSurfaceEffectsSpec>? $effects;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<double>? $chevronOpacity;
   final Prop<double>? $placeholderOpacity;
 
@@ -665,7 +673,7 @@ class RemixSelectTriggerStyler
     Prop<StyleSpec<TextSpec>>? placeholder,
     Prop<StyleSpec<IconSpec>>? icon,
     Prop<StyleSpec<IconSpec>>? chevron,
-    Prop<RemixSurfaceEffectsSpec>? effects,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<double>? chevronOpacity,
     Prop<double>? placeholderOpacity,
     super.variants,
@@ -676,7 +684,7 @@ class RemixSelectTriggerStyler
        $placeholder = placeholder,
        $icon = icon,
        $chevron = chevron,
-       $effects = effects,
+       $containerEffects = containerEffects,
        $chevronOpacity = chevronOpacity,
        $placeholderOpacity = placeholderOpacity;
 
@@ -686,7 +694,7 @@ class RemixSelectTriggerStyler
     TextStyler? placeholder,
     IconStyler? icon,
     IconStyler? chevron,
-    RemixSurfaceEffectsMix? effects,
+    RemixBoxEffectsMix? containerEffects,
     double? chevronOpacity,
     double? placeholderOpacity,
     AnimationConfig? animation,
@@ -698,7 +706,7 @@ class RemixSelectTriggerStyler
          placeholder: Prop.maybeMix(placeholder),
          icon: Prop.maybeMix(icon),
          chevron: Prop.maybeMix(chevron),
-         effects: Prop.maybeMix(effects),
+         containerEffects: Prop.maybeMix(containerEffects),
          chevronOpacity: Prop.maybe(chevronOpacity),
          placeholderOpacity: Prop.maybe(placeholderOpacity),
          variants: variants,
@@ -716,8 +724,8 @@ class RemixSelectTriggerStyler
       RemixSelectTriggerStyler().icon(value);
   factory RemixSelectTriggerStyler.chevron(IconStyler value) =>
       RemixSelectTriggerStyler().chevron(value);
-  factory RemixSelectTriggerStyler.effects(RemixSurfaceEffectsMix value) =>
-      RemixSelectTriggerStyler().effects(value);
+  factory RemixSelectTriggerStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixSelectTriggerStyler().containerEffects(value);
   factory RemixSelectTriggerStyler.chevronOpacity(double value) =>
       RemixSelectTriggerStyler().chevronOpacity(value);
   factory RemixSelectTriggerStyler.placeholderOpacity(double value) =>
@@ -1294,9 +1302,9 @@ class RemixSelectTriggerStyler
     return merge(RemixSelectTriggerStyler(chevron: value));
   }
 
-  /// Sets the effects.
-  RemixSelectTriggerStyler effects(RemixSurfaceEffectsMix value) {
-    return merge(RemixSelectTriggerStyler(effects: value));
+  /// Sets the containerEffects.
+  RemixSelectTriggerStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixSelectTriggerStyler(containerEffects: value));
   }
 
   /// Sets the chevronOpacity.
@@ -1343,7 +1351,10 @@ class RemixSelectTriggerStyler
       placeholder: MixOps.merge($placeholder, other?.$placeholder),
       icon: MixOps.merge($icon, other?.$icon),
       chevron: MixOps.merge($chevron, other?.$chevron),
-      effects: MixOps.merge($effects, other?.$effects),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       chevronOpacity: MixOps.merge($chevronOpacity, other?.$chevronOpacity),
       placeholderOpacity: MixOps.merge(
         $placeholderOpacity,
@@ -1364,7 +1375,7 @@ class RemixSelectTriggerStyler
       placeholder: MixOps.resolve(context, $placeholder),
       icon: MixOps.resolve(context, $icon),
       chevron: MixOps.resolve(context, $chevron),
-      effects: MixOps.resolve(context, $effects),
+      containerEffects: MixOps.resolve(context, $containerEffects),
       chevronOpacity: MixOps.resolve(context, $chevronOpacity),
       placeholderOpacity: MixOps.resolve(context, $placeholderOpacity),
     );
@@ -1385,7 +1396,7 @@ class RemixSelectTriggerStyler
       ..add(DiagnosticsProperty('placeholder', $placeholder))
       ..add(DiagnosticsProperty('icon', $icon))
       ..add(DiagnosticsProperty('chevron', $chevron))
-      ..add(DiagnosticsProperty('effects', $effects))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('chevronOpacity', $chevronOpacity))
       ..add(DiagnosticsProperty('placeholderOpacity', $placeholderOpacity));
   }
@@ -1397,7 +1408,7 @@ class RemixSelectTriggerStyler
     $placeholder,
     $icon,
     $chevron,
-    $effects,
+    $containerEffects,
     $chevronOpacity,
     $placeholderOpacity,
     $animation,
@@ -1410,26 +1421,26 @@ class RemixSelectContentStyler
     extends MixStyler<RemixSelectContentStyler, RemixSelectContentSpec>
     with RemixBoxStylerMixin<RemixSelectContentStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
-  final Prop<RemixSurfaceEffectsSpec>? $effects;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
   const RemixSelectContentStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
-    Prop<RemixSurfaceEffectsSpec>? effects,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
-       $effects = effects;
+       $containerEffects = containerEffects;
 
   RemixSelectContentStyler({
     BoxStyler? container,
-    RemixSurfaceEffectsMix? effects,
+    RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixSelectContentSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
-         effects: Prop.maybeMix(effects),
+         containerEffects: Prop.maybeMix(containerEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -1437,8 +1448,8 @@ class RemixSelectContentStyler
 
   factory RemixSelectContentStyler.container(BoxStyler value) =>
       RemixSelectContentStyler().container(value);
-  factory RemixSelectContentStyler.effects(RemixSurfaceEffectsMix value) =>
-      RemixSelectContentStyler().effects(value);
+  factory RemixSelectContentStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixSelectContentStyler().containerEffects(value);
   factory RemixSelectContentStyler.alignment(AlignmentGeometry value) =>
       RemixSelectContentStyler().alignment(value);
   factory RemixSelectContentStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -1929,9 +1940,9 @@ class RemixSelectContentStyler
     return merge(RemixSelectContentStyler(container: value));
   }
 
-  /// Sets the effects.
-  RemixSelectContentStyler effects(RemixSurfaceEffectsMix value) {
-    return merge(RemixSelectContentStyler(effects: value));
+  /// Sets the containerEffects.
+  RemixSelectContentStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixSelectContentStyler(containerEffects: value));
   }
 
   /// Sets the animation configuration.
@@ -1964,7 +1975,10 @@ class RemixSelectContentStyler
   RemixSelectContentStyler merge(RemixSelectContentStyler? other) {
     return RemixSelectContentStyler.create(
       container: MixOps.merge($container, other?.$container),
-      effects: MixOps.merge($effects, other?.$effects),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1976,7 +1990,7 @@ class RemixSelectContentStyler
   StyleSpec<RemixSelectContentSpec> resolve(BuildContext context) {
     final spec = RemixSelectContentSpec(
       container: MixOps.resolve(context, $container),
-      effects: MixOps.resolve(context, $effects),
+      containerEffects: MixOps.resolve(context, $containerEffects),
     );
 
     return StyleSpec(
@@ -1991,13 +2005,13 @@ class RemixSelectContentStyler
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('effects', $effects));
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
   }
 
   @override
   List<Object?> get props => [
     $container,
-    $effects,
+    $containerEffects,
     $animation,
     $modifier,
     $variants,

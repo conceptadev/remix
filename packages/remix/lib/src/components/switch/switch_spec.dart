@@ -10,12 +10,12 @@ class RemixSwitchSpec with _$RemixSwitchSpec {
   final StyleSpec<BoxSpec> thumb;
 
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? trackEffects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? trackEffects;
 
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? thumbEffects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? thumbEffects;
 
   const RemixSwitchSpec({
     StyleSpec<BoxSpec>? container,
@@ -30,12 +30,12 @@ class RemixSwitchSpec with _$RemixSwitchSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      trackEffects: RemixSurfaceEffectsSpec.lerpNullable(
+      trackEffects: RemixBoxEffectsSpec.lerpNullable(
         trackEffects,
         other.trackEffects,
         t,
       ),
-      thumbEffects: RemixSurfaceEffectsSpec.lerpNullable(
+      thumbEffects: RemixBoxEffectsSpec.lerpNullable(
         thumbEffects,
         other.thumbEffects,
         t,

@@ -264,8 +264,8 @@ void main() {
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.icon));
         expect(spec.props, contains(spec.spinner));
-        expect(spec.props, contains(spec.effects?.background));
-        expect(spec.props, contains(spec.effects?.foreground));
+        expect(spec.props, contains(spec.containerEffects?.behindContent));
+        expect(spec.props, contains(spec.containerEffects?.overContent));
       });
 
       test('props list with custom properties', () {

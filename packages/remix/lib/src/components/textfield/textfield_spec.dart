@@ -167,8 +167,8 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
   final StyleSpec<TextSpec> label;
 
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? effects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
 
   /// Creates a RemixTextFieldSpec with optional styling and configuration.
   ///
@@ -206,7 +206,7 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
     StyleSpec<FlexBoxSpec>? layout,
     StyleSpec<TextSpec>? helperText,
     StyleSpec<TextSpec>? label,
-    this.effects,
+    this.containerEffects,
   }) : text = text ?? const StyleSpec(spec: TextSpec()),
        hintText = hintText ?? const StyleSpec(spec: TextSpec()),
        helperText = helperText ?? const StyleSpec(spec: TextSpec()),
@@ -219,7 +219,11 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
     );
   }
 }

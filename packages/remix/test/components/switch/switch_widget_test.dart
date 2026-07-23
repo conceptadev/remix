@@ -594,14 +594,14 @@ void main() {
           thumb: StyleSpec(
             spec: BoxSpec(decoration: BoxDecoration(color: Colors.yellow)),
           ),
-          trackEffects: RemixSurfaceEffectsSpec(
-            background: RemixSurfaceLayerSpec(
-              shadows: [RemixPaintShadow(color: Colors.red)],
+          trackEffects: RemixBoxEffectsSpec(
+            behindContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.red)],
             ),
           ),
-          thumbEffects: RemixSurfaceEffectsSpec(
-            background: RemixSurfaceLayerSpec(
-              shadows: [RemixPaintShadow(color: Colors.blue)],
+          thumbEffects: RemixBoxEffectsSpec(
+            behindContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.blue)],
             ),
           ),
         );

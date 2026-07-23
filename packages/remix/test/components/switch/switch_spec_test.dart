@@ -159,10 +159,10 @@ void main() {
         expect(spec.props, hasLength(4));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.thumb));
-        expect(spec.props, contains(spec.trackEffects?.background));
-        expect(spec.props, contains(spec.trackEffects?.foreground));
-        expect(spec.props, contains(spec.thumbEffects?.background));
-        expect(spec.props, contains(spec.thumbEffects?.foreground));
+        expect(spec.props, contains(spec.trackEffects?.behindContent));
+        expect(spec.props, contains(spec.trackEffects?.overContent));
+        expect(spec.props, contains(spec.thumbEffects?.behindContent));
+        expect(spec.props, contains(spec.thumbEffects?.overContent));
       });
     });
 

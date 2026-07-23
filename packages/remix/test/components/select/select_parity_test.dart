@@ -38,21 +38,21 @@ void main() {
         const spec = RemixSelectSpec(
           trigger: StyleSpec(
             spec: RemixSelectTriggerSpec(
-              effects: RemixSurfaceEffectsSpec(
-                background: RemixSurfaceLayerSpec(
-                  shadows: [RemixPaintShadow(color: Colors.red)],
+              containerEffects: RemixBoxEffectsSpec(
+                behindContent: RemixBoxEffectLayerSpec(
+                  shadows: [RemixBoxShadow(color: Colors.red)],
                 ),
-                foreground: RemixSurfaceLayerSpec(
-                  shadows: [RemixPaintShadow(color: Colors.orange)],
+                overContent: RemixBoxEffectLayerSpec(
+                  shadows: [RemixBoxShadow(color: Colors.orange)],
                 ),
               ),
             ),
           ),
           content: StyleSpec(
             spec: RemixSelectContentSpec(
-              effects: RemixSurfaceEffectsSpec(
-                background: RemixSurfaceLayerSpec(
-                  shadows: [RemixPaintShadow(color: Colors.blue)],
+              containerEffects: RemixBoxEffectsSpec(
+                behindContent: RemixBoxEffectLayerSpec(
+                  shadows: [RemixBoxShadow(color: Colors.blue)],
                 ),
               ),
             ),
@@ -62,15 +62,29 @@ void main() {
         );
 
         expect(
-          spec.trigger.spec.effects?.background?.shadows.first.color,
+          spec
+              .trigger
+              .spec
+              .containerEffects
+              ?.behindContent
+              ?.shadows
+              .first
+              .color,
           Colors.red,
         );
         expect(
-          spec.trigger.spec.effects?.foreground?.shadows.first.color,
+          spec.trigger.spec.containerEffects?.overContent?.shadows.first.color,
           Colors.orange,
         );
         expect(
-          spec.content.spec.effects?.background?.shadows.first.color,
+          spec
+              .content
+              .spec
+              .containerEffects
+              ?.behindContent
+              ?.shadows
+              .first
+              .color,
           Colors.blue,
         );
         expect(spec.label.spec, isA<RemixSelectLabelSpec>());

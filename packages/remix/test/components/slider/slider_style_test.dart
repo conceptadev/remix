@@ -7,27 +7,21 @@ void main() {
     final style = RemixSliderStyler()
         .track(BoxStyler().borderRadiusAll(const Radius.circular(4)))
         .trackEffects(
-          RemixSurfaceEffectsMix(background: RemixSurfaceLayerMix()),
+          RemixBoxEffectsMix(behindContent: RemixBoxEffectLayerMix()),
         )
-        .trackEffects(
-          RemixSurfaceEffectsMix(foreground: RemixSurfaceLayerMix()),
-        )
+        .trackEffects(RemixBoxEffectsMix(overContent: RemixBoxEffectLayerMix()))
         .range(BoxStyler().borderRadiusAll(const Radius.circular(4)))
         .rangeEffects(
-          RemixSurfaceEffectsMix(background: RemixSurfaceLayerMix()),
+          RemixBoxEffectsMix(behindContent: RemixBoxEffectLayerMix()),
         )
-        .rangeEffects(
-          RemixSurfaceEffectsMix(foreground: RemixSurfaceLayerMix()),
-        )
+        .rangeEffects(RemixBoxEffectsMix(overContent: RemixBoxEffectLayerMix()))
         .thumb(BoxStyler().size(16, 16))
         .thumbEffects(
-          RemixSurfaceEffectsMix(background: RemixSurfaceLayerMix()),
+          RemixBoxEffectsMix(behindContent: RemixBoxEffectLayerMix()),
         )
-        .thumbEffects(
-          RemixSurfaceEffectsMix(foreground: RemixSurfaceLayerMix()),
-        )
+        .thumbEffects(RemixBoxEffectsMix(overContent: RemixBoxEffectLayerMix()))
         .thumbFocusEffects(
-          RemixSurfaceEffectsMix(foreground: RemixSurfaceLayerMix()),
+          RemixBoxEffectsMix(overContent: RemixBoxEffectLayerMix()),
         )
         .trackThickness(8)
         .blendMode(BlendMode.multiply);

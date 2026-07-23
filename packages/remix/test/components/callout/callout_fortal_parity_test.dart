@@ -64,11 +64,11 @@ void main() {
       expect(soft.text.spec.style!.color, tokens.accentA11);
       expect(_color(surface.container), tokens.accentA2);
       expect(
-        surface.effects!.background!.shadows.single.color,
+        surface.containerEffects!.behindContent!.shadows.single.color,
         tokens.accentA6,
       );
       expect(
-        outlineHigh.effects!.background!.shadows.single.color,
+        outlineHigh.containerEffects!.behindContent!.shadows.single.color,
         tokens.accentA7,
       );
       expect(outlineHigh.text.spec.style!.color, tokens.accent12);

@@ -125,21 +125,21 @@ void main() {
     testWidgets('wires the resolved surface layer to the shared renderer', (
       tester,
     ) async {
-      const surface = RemixSurfaceLayerSpec(
-        shadows: [RemixPaintShadow(color: Colors.red)],
+      const surface = RemixBoxEffectLayerSpec(
+        shadows: [RemixBoxShadow(color: Colors.red)],
       );
-      const overlay = RemixSurfaceLayerSpec(
+      const overlay = RemixBoxEffectLayerSpec(
         shadows: [
-          RemixPaintShadow(kind: RemixPaintShadowKind.inset, blurRadius: 1),
+          RemixBoxShadow(kind: RemixBoxShadowKind.inset, blurRadius: 1),
         ],
       );
       await tester.pumpRemixApp(
         const RemixCard(
           styleSpec: RemixCardSpec(
             container: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
-            effects: RemixSurfaceEffectsSpec(
-              background: surface,
-              foreground: overlay,
+            containerEffects: RemixBoxEffectsSpec(
+              behindContent: surface,
+              overContent: overlay,
               backdropBlur: 4,
             ),
           ),

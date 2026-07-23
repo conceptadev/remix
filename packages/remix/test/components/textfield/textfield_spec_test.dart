@@ -250,8 +250,8 @@ void main() {
         expect(spec.props, contains(spec.layout));
         expect(spec.props, contains(spec.helperText));
         expect(spec.props, contains(spec.label));
-        expect(spec.props, contains(spec.effects?.background));
-        expect(spec.props, contains(spec.effects?.foreground));
+        expect(spec.props, contains(spec.containerEffects?.behindContent));
+        expect(spec.props, contains(spec.containerEffects?.overContent));
       });
     });
 

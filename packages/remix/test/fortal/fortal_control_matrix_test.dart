@@ -262,7 +262,8 @@ void main() {
         FortalTextFieldSize.size2: 32,
         FortalTextFieldSize.size3: 40,
       };
-      final recipes = <({Color? color, RemixSurfaceEffectsSpec? effects})>{};
+      final recipes =
+          <({Color? color, RemixBoxEffectsSpec? containerEffects})>{};
 
       for (final variant in FortalTextFieldVariant.values) {
         for (final entry in expectedHeights.entries) {
@@ -278,14 +279,14 @@ void main() {
             entry.value,
             reason: '$variant ${entry.key}',
           );
-          expect(resolved.spec.effects?.background, isNotNull);
+          expect(resolved.spec.containerEffects?.behindContent, isNotNull);
           if (entry.key == FortalTextFieldSize.size2) {
             final decoration =
                 resolved.spec.container.spec.box!.spec.decoration
                     as BoxDecoration;
             recipes.add((
               color: decoration.color,
-              effects: resolved.spec.effects,
+              containerEffects: resolved.spec.containerEffects,
             ));
           }
         }

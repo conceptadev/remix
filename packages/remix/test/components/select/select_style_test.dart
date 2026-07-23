@@ -14,20 +14,20 @@ void main() {
             trigger: RemixSelectTriggerStyler(
               label: TextStyler().color(Colors.red),
               placeholder: TextStyler().color(Colors.orange),
-              effects: RemixSurfaceEffectsMix(
-                background: RemixSurfaceLayerMix(
-                  shadows: [RemixPaintShadowMix(color: Colors.pink)],
+              containerEffects: RemixBoxEffectsMix(
+                behindContent: RemixBoxEffectLayerMix(
+                  shadows: [RemixBoxShadowMix(color: Colors.pink)],
                 ),
-                foreground: RemixSurfaceLayerMix(
-                  shadows: [RemixPaintShadowMix(color: Colors.purple)],
+                overContent: RemixBoxEffectLayerMix(
+                  shadows: [RemixBoxShadowMix(color: Colors.purple)],
                 ),
               ),
             ),
             content: RemixSelectContentStyler(
               container: BoxStyler().paddingAll(12),
-              effects: RemixSurfaceEffectsMix(
-                background: RemixSurfaceLayerMix(
-                  shadows: [RemixPaintShadowMix(color: Colors.blue)],
+              containerEffects: RemixBoxEffectsMix(
+                behindContent: RemixBoxEffectLayerMix(
+                  shadows: [RemixBoxShadowMix(color: Colors.blue)],
                 ),
               ),
             ),
@@ -51,15 +51,15 @@ void main() {
     expect(spec.trigger.spec.label.spec.style?.color, Colors.red);
     expect(spec.trigger.spec.placeholder.spec.style?.color, Colors.orange);
     expect(
-      spec.trigger.spec.effects?.background?.shadows.first.color,
+      spec.trigger.spec.containerEffects?.behindContent?.shadows.first.color,
       Colors.pink,
     );
     expect(
-      spec.trigger.spec.effects?.foreground?.shadows.first.color,
+      spec.trigger.spec.containerEffects?.overContent?.shadows.first.color,
       Colors.purple,
     );
     expect(
-      spec.content.spec.effects?.background?.shadows.first.color,
+      spec.content.spec.containerEffects?.behindContent?.shadows.first.color,
       Colors.blue,
     );
     expect(spec.item.spec.text.spec.style?.color, Colors.green);

@@ -8,11 +8,11 @@ void main() {
       final container = BoxStyler();
       final track = BoxStyler();
       final indicator = BoxStyler();
-      final surface = RemixSurfaceLayerMix();
-      final overlay = RemixSurfaceLayerMix();
-      final effects = RemixSurfaceEffectsMix(
-        background: surface,
-        foreground: overlay,
+      final surface = RemixBoxEffectLayerMix();
+      final overlay = RemixBoxEffectLayerMix();
+      final effects = RemixBoxEffectsMix(
+        behindContent: surface,
+        overContent: overlay,
       );
 
       final style = RemixProgressStyler(
@@ -34,16 +34,16 @@ void main() {
           .trackColor(Colors.grey)
           .indicatorColor(Colors.blue)
           .trackEffects(
-            RemixSurfaceEffectsMix(
-              background: RemixSurfaceLayerMix(
-                shadows: [RemixPaintShadowMix(color: Colors.red)],
+            RemixBoxEffectsMix(
+              behindContent: RemixBoxEffectLayerMix(
+                shadows: [RemixBoxShadowMix(color: Colors.red)],
               ),
             ),
           )
           .trackEffects(
-            RemixSurfaceEffectsMix(
-              foreground: RemixSurfaceLayerMix(
-                shadows: [RemixPaintShadowMix(color: Colors.green)],
+            RemixBoxEffectsMix(
+              overContent: RemixBoxEffectLayerMix(
+                shadows: [RemixBoxShadowMix(color: Colors.green)],
               ),
             ),
           );
@@ -70,11 +70,11 @@ void main() {
         Colors.blue,
       );
       expect(
-        resolved.spec.trackEffects?.background?.shadows.first.color,
+        resolved.spec.trackEffects?.behindContent?.shadows.first.color,
         Colors.red,
       );
       expect(
-        resolved.spec.trackEffects?.foreground?.shadows.first.color,
+        resolved.spec.trackEffects?.overContent?.shadows.first.color,
         Colors.green,
       );
     });

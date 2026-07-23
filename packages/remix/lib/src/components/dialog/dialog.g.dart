@@ -8,7 +8,7 @@ part of 'dialog.dart';
 
 mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
-  RemixSurfaceEffectsSpec? get effects;
+  RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<TextSpec> get title;
   StyleSpec<TextSpec> get description;
   StyleSpec<FlexBoxSpec> get actions;
@@ -19,14 +19,14 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   @override
   RemixDialogSpec copyWith({
     StyleSpec<BoxSpec>? container,
-    RemixSurfaceEffectsSpec? effects,
+    RemixBoxEffectsSpec? containerEffects,
     StyleSpec<TextSpec>? title,
     StyleSpec<TextSpec>? description,
     StyleSpec<FlexBoxSpec>? actions,
   }) {
     return RemixDialogSpec(
       container: container ?? this.container,
-      effects: effects ?? this.effects,
+      containerEffects: containerEffects ?? this.containerEffects,
       title: title ?? this.title,
       description: description ?? this.description,
       actions: actions ?? this.actions,
@@ -37,7 +37,11 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   RemixDialogSpec lerp(RemixDialogSpec? other, double t) {
     return RemixDialogSpec(
       container: container.lerp(other?.container, t),
-      effects: MixOps.lerpSnap(effects, other?.effects, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
       title: title.lerp(other?.title, t),
       description: description.lerp(other?.description, t),
       actions: actions.lerp(other?.actions, t),
@@ -45,7 +49,13 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   }
 
   @override
-  List<Object?> get props => [container, effects, title, description, actions];
+  List<Object?> get props => [
+    container,
+    containerEffects,
+    title,
+    description,
+    actions,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -88,7 +98,7 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('effects', effects))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('title', title))
       ..add(DiagnosticsProperty('description', description))
       ..add(DiagnosticsProperty('actions', actions));
@@ -107,14 +117,14 @@ typedef _$RemixDialogSpecMethods = _$RemixDialogSpec; // ignore: unused_element
 class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     with RemixBoxStylerMixin<RemixDialogStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
-  final Prop<RemixSurfaceEffectsSpec>? $effects;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<TextSpec>>? $title;
   final Prop<StyleSpec<TextSpec>>? $description;
   final Prop<StyleSpec<FlexBoxSpec>>? $actions;
 
   const RemixDialogStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
-    Prop<RemixSurfaceEffectsSpec>? effects,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<TextSpec>>? title,
     Prop<StyleSpec<TextSpec>>? description,
     Prop<StyleSpec<FlexBoxSpec>>? actions,
@@ -122,14 +132,14 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     super.modifier,
     super.animation,
   }) : $container = container,
-       $effects = effects,
+       $containerEffects = containerEffects,
        $title = title,
        $description = description,
        $actions = actions;
 
   RemixDialogStyler({
     BoxStyler? container,
-    RemixSurfaceEffectsMix? effects,
+    RemixBoxEffectsMix? containerEffects,
     TextStyler? title,
     TextStyler? description,
     FlexBoxStyler? actions,
@@ -138,7 +148,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     List<VariantStyle<RemixDialogSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
-         effects: Prop.maybeMix(effects),
+         containerEffects: Prop.maybeMix(containerEffects),
          title: Prop.maybeMix(title),
          description: Prop.maybeMix(description),
          actions: Prop.maybeMix(actions),
@@ -149,8 +159,8 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
 
   factory RemixDialogStyler.container(BoxStyler value) =>
       RemixDialogStyler().container(value);
-  factory RemixDialogStyler.effects(RemixSurfaceEffectsMix value) =>
-      RemixDialogStyler().effects(value);
+  factory RemixDialogStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixDialogStyler().containerEffects(value);
   factory RemixDialogStyler.title(TextStyler value) =>
       RemixDialogStyler().title(value);
   factory RemixDialogStyler.description(TextStyler value) =>
@@ -634,9 +644,9 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     return merge(RemixDialogStyler(container: value));
   }
 
-  /// Sets the effects.
-  RemixDialogStyler effects(RemixSurfaceEffectsMix value) {
-    return merge(RemixDialogStyler(effects: value));
+  /// Sets the containerEffects.
+  RemixDialogStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixDialogStyler(containerEffects: value));
   }
 
   /// Sets the title.
@@ -682,7 +692,10 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
   RemixDialogStyler merge(RemixDialogStyler? other) {
     return RemixDialogStyler.create(
       container: MixOps.merge($container, other?.$container),
-      effects: MixOps.merge($effects, other?.$effects),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       title: MixOps.merge($title, other?.$title),
       description: MixOps.merge($description, other?.$description),
       actions: MixOps.merge($actions, other?.$actions),
@@ -697,7 +710,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
   StyleSpec<RemixDialogSpec> resolve(BuildContext context) {
     final spec = RemixDialogSpec(
       container: MixOps.resolve(context, $container),
-      effects: MixOps.resolve(context, $effects),
+      containerEffects: MixOps.resolve(context, $containerEffects),
       title: MixOps.resolve(context, $title),
       description: MixOps.resolve(context, $description),
       actions: MixOps.resolve(context, $actions),
@@ -715,7 +728,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('effects', $effects))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('title', $title))
       ..add(DiagnosticsProperty('description', $description))
       ..add(DiagnosticsProperty('actions', $actions));
@@ -724,7 +737,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
   @override
   List<Object?> get props => [
     $container,
-    $effects,
+    $containerEffects,
     $title,
     $description,
     $actions,

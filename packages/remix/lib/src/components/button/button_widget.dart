@@ -64,11 +64,11 @@ class RemixButton extends StatelessWidget {
       maintainSemantics: true,
       child: content,
     );
-    final button = remixSurfaceFlexBox(
+    final button = remixFlexBoxWithEffects(
       key: const ValueKey('remix-button-surface'),
       styleSpec: spec.container,
       direction: Axis.horizontal,
-      effects: spec.effects,
+      containerEffects: spec.containerEffects,
       children: [hiddenContent],
     );
     final spinner = loadingBuilder == null

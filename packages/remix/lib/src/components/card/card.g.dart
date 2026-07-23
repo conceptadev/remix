@@ -8,7 +8,7 @@ part of 'card.dart';
 
 mixin _$RemixCardSpec implements Spec<RemixCardSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
-  RemixSurfaceEffectsSpec? get effects;
+  RemixBoxEffectsSpec? get containerEffects;
 
   @override
   Type get type => RemixCardSpec;
@@ -16,11 +16,11 @@ mixin _$RemixCardSpec implements Spec<RemixCardSpec>, Diagnosticable {
   @override
   RemixCardSpec copyWith({
     StyleSpec<BoxSpec>? container,
-    RemixSurfaceEffectsSpec? effects,
+    RemixBoxEffectsSpec? containerEffects,
   }) {
     return RemixCardSpec(
       container: container ?? this.container,
-      effects: effects ?? this.effects,
+      containerEffects: containerEffects ?? this.containerEffects,
     );
   }
 
@@ -28,12 +28,16 @@ mixin _$RemixCardSpec implements Spec<RemixCardSpec>, Diagnosticable {
   RemixCardSpec lerp(RemixCardSpec? other, double t) {
     return RemixCardSpec(
       container: container.lerp(other?.container, t),
-      effects: MixOps.lerpSnap(effects, other?.effects, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, effects];
+  List<Object?> get props => [container, containerEffects];
 
   @override
   bool operator ==(Object other) {
@@ -76,7 +80,7 @@ mixin _$RemixCardSpec implements Spec<RemixCardSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('effects', effects));
+      ..add(DiagnosticsProperty('containerEffects', containerEffects));
   }
 }
 
@@ -92,26 +96,26 @@ typedef _$RemixCardSpecMethods = _$RemixCardSpec; // ignore: unused_element
 class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     with RemixBoxStylerMixin<RemixCardStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
-  final Prop<RemixSurfaceEffectsSpec>? $effects;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
   const RemixCardStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
-    Prop<RemixSurfaceEffectsSpec>? effects,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
-       $effects = effects;
+       $containerEffects = containerEffects;
 
   RemixCardStyler({
     BoxStyler? container,
-    RemixSurfaceEffectsMix? effects,
+    RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixCardSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
-         effects: Prop.maybeMix(effects),
+         containerEffects: Prop.maybeMix(containerEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -119,8 +123,8 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
 
   factory RemixCardStyler.container(BoxStyler value) =>
       RemixCardStyler().container(value);
-  factory RemixCardStyler.effects(RemixSurfaceEffectsMix value) =>
-      RemixCardStyler().effects(value);
+  factory RemixCardStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixCardStyler().containerEffects(value);
   factory RemixCardStyler.alignment(AlignmentGeometry value) =>
       RemixCardStyler().alignment(value);
   factory RemixCardStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -596,9 +600,9 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     return merge(RemixCardStyler(container: value));
   }
 
-  /// Sets the effects.
-  RemixCardStyler effects(RemixSurfaceEffectsMix value) {
-    return merge(RemixCardStyler(effects: value));
+  /// Sets the containerEffects.
+  RemixCardStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixCardStyler(containerEffects: value));
   }
 
   /// Sets the animation configuration.
@@ -629,7 +633,10 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
   RemixCardStyler merge(RemixCardStyler? other) {
     return RemixCardStyler.create(
       container: MixOps.merge($container, other?.$container),
-      effects: MixOps.merge($effects, other?.$effects),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -641,7 +648,7 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
   StyleSpec<RemixCardSpec> resolve(BuildContext context) {
     final spec = RemixCardSpec(
       container: MixOps.resolve(context, $container),
-      effects: MixOps.resolve(context, $effects),
+      containerEffects: MixOps.resolve(context, $containerEffects),
     );
 
     return StyleSpec(
@@ -656,13 +663,13 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('effects', $effects));
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
   }
 
   @override
   List<Object?> get props => [
     $container,
-    $effects,
+    $containerEffects,
     $animation,
     $modifier,
     $variants,

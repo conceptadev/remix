@@ -21,7 +21,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  mix: ^2.1.0
+  mix: ^2.2.0-beta.1
   mix_annotations: ^2.2.0-beta.0
   naked_ui: 1.0.0-beta.7
 

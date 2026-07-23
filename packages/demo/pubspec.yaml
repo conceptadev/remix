@@ -9,12 +9,9 @@ environment:
 
 dependency_overrides:
   accessibility_tools: ^2.8.0
-  # Keep Mix on the revision compatible with Remix's generator packages.
-  mix:
-    git:
-      url: https://github.com/btwld/mix.git
-      ref: fb6aa7eccc0a4a21728ac61c662d96b94496dd55
-      path: packages/mix
+  # mix_protocol is not hosted yet and still pins Mix by git internally.
+  # Override that transitive source so the workspace uses the hosted beta.
+  mix: ^2.2.0-beta.1
 
 dependencies:
   flutter:

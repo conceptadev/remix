@@ -12,8 +12,8 @@ class RemixMenuSpec with _$RemixMenuSpec {
 
   /// Paint layers behind the popup overlay, inside its margin.
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? effects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
 
   /// Default style spec applied to menu items.
   @override
@@ -30,7 +30,7 @@ class RemixMenuSpec with _$RemixMenuSpec {
   /// Creates a menu spec with default empty child specs.
   const RemixMenuSpec({
     StyleSpec<FlexBoxSpec>? overlay,
-    this.effects,
+    this.containerEffects,
     StyleSpec<RemixMenuItemSpec>? item,
     StyleSpec<RemixMenuItemSpec>? label,
     StyleSpec<RemixDividerSpec>? divider,
@@ -44,7 +44,11 @@ class RemixMenuSpec with _$RemixMenuSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
     );
   }
 }

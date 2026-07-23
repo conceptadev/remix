@@ -7,7 +7,7 @@ extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
   /// Example:
   /// ```dart
   /// RemixMenuStyler()
-  ///   .effects(RemixSurfaceEffectsMix(foreground: ...))
+  ///   .containerEffects(RemixBoxEffectsMix(overContent: ...))
   ///   .call<String>(
   ///     trigger: const Text('Options'),
   ///     entries: [...],

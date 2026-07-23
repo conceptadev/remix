@@ -49,8 +49,8 @@ RemixSelectTriggerStyler _fortalSelectTriggerStyler(
         IconStyler(color: FortalTokens.gray12(), size: size == .size3 ? 11 : 9),
       )
       .onFocused(
-        RemixSelectTriggerStyler().effects(
-          RemixSurfaceEffectsMix(foreground: _fortalSelectFocusRing()),
+        RemixSelectTriggerStyler().containerEffects(
+          RemixBoxEffectsMix(overContent: _fortalSelectFocusRing()),
         ),
       )
       .merge(_fortalSelectTriggerSizeStyler(variant, size));
@@ -115,12 +115,12 @@ RemixSelectTriggerStyler _fortalSelectTriggerSizeStyler(
   };
 }
 
-RemixSurfaceLayerMix _fortalSelectFocusRing() {
-  return RemixSurfaceLayerMix(
+RemixBoxEffectLayerMix _fortalSelectFocusRing() {
+  return RemixBoxEffectLayerMix(
     shadows: [
-      RemixPaintShadowMix(color: FortalTokens.focus8(), spreadRadius: 1),
-      RemixPaintShadowMix(
-        kind: RemixPaintShadowKind.inset,
+      RemixBoxShadowMix(color: FortalTokens.focus8(), spreadRadius: 1),
+      RemixBoxShadowMix(
+        kind: RemixBoxShadowKind.inset,
         color: FortalTokens.focus8(),
         spreadRadius: 1,
       ),
@@ -128,11 +128,11 @@ RemixSurfaceLayerMix _fortalSelectFocusRing() {
   );
 }
 
-RemixSurfaceLayerMix _fortalSelectInsetStroke(Color color) {
-  return RemixSurfaceLayerMix(
+RemixBoxEffectLayerMix _fortalSelectInsetStroke(Color color) {
+  return RemixBoxEffectLayerMix(
     shadows: [
-      RemixPaintShadowMix(
-        kind: RemixPaintShadowKind.inset,
+      RemixBoxShadowMix(
+        kind: RemixBoxShadowKind.inset,
         color: color,
         spreadRadius: 1,
       ),
@@ -146,24 +146,24 @@ RemixSelectTriggerStyler _fortalSelectSurfaceTrigger(
   return base
       .chevronOpacity(0.9)
       .color(FortalTokens.colorSurface())
-      .effects(
-        RemixSurfaceEffectsMix(
-          background: _fortalSelectInsetStroke(
+      .containerEffects(
+        RemixBoxEffectsMix(
+          behindContent: _fortalSelectInsetStroke(
             FortalTokens.grayA7(),
-          ).merge(RemixSurfaceLayerMix()),
+          ).merge(RemixBoxEffectLayerMix()),
         ),
       )
       .onHovered(
-        RemixSelectTriggerStyler().effects(
-          RemixSurfaceEffectsMix(
-            background: _fortalSelectInsetStroke(FortalTokens.grayA8()),
+        RemixSelectTriggerStyler().containerEffects(
+          RemixBoxEffectsMix(
+            behindContent: _fortalSelectInsetStroke(FortalTokens.grayA8()),
           ),
         ),
       )
       .onSelected(
-        RemixSelectTriggerStyler().effects(
-          RemixSurfaceEffectsMix(
-            background: _fortalSelectInsetStroke(FortalTokens.grayA8()),
+        RemixSelectTriggerStyler().containerEffects(
+          RemixBoxEffectsMix(
+            behindContent: _fortalSelectInsetStroke(FortalTokens.grayA8()),
           ),
         ),
       )
@@ -173,11 +173,11 @@ RemixSelectTriggerStyler _fortalSelectSurfaceTrigger(
             .label(TextStyler().color(FortalTokens.grayA11()))
             .icon(IconStyler(color: FortalTokens.grayA9()))
             .chevron(IconStyler(color: FortalTokens.grayA9()))
-            .effects(
-              RemixSurfaceEffectsMix(
-                background: _fortalSelectInsetStroke(
+            .containerEffects(
+              RemixBoxEffectsMix(
+                behindContent: _fortalSelectInsetStroke(
                   FortalTokens.grayA6(),
-                ).merge(RemixSurfaceLayerMix()),
+                ).merge(RemixBoxEffectLayerMix()),
               ),
             ),
       );
@@ -186,17 +186,17 @@ RemixSelectTriggerStyler _fortalSelectSurfaceTrigger(
 RemixSelectTriggerStyler _fortalSelectClassicTrigger(
   RemixSelectTriggerStyler base,
 ) {
-  final idleSurface = RemixSurfaceLayerMix(
+  final idleSurface = RemixBoxEffectLayerMix(
     gradients: _fortalSelectClassicGradients(hovered: false),
     gradientInsets: const [2, 2, 0],
     shadowToken: FortalTokens.selectTriggerClassicShadows,
   );
-  final hoverSurface = RemixSurfaceLayerMix(
+  final hoverSurface = RemixBoxEffectLayerMix(
     gradients: _fortalSelectClassicGradients(hovered: true),
     gradientInsets: const [2, 2, 0],
     shadowToken: FortalTokens.selectTriggerClassicHoverShadows,
   );
-  final disabledSurface = RemixSurfaceLayerMix(
+  final disabledSurface = RemixBoxEffectLayerMix(
     gradients: [
       RemixLinearGradientMix(
         colors: [
@@ -216,15 +216,15 @@ RemixSelectTriggerStyler _fortalSelectClassicTrigger(
   return base
       .chevronOpacity(0.9)
       .color(FortalTokens.gray1())
-      .effects(RemixSurfaceEffectsMix(background: idleSurface))
+      .containerEffects(RemixBoxEffectsMix(behindContent: idleSurface))
       .onHovered(
-        RemixSelectTriggerStyler().effects(
-          RemixSurfaceEffectsMix(background: hoverSurface),
+        RemixSelectTriggerStyler().containerEffects(
+          RemixBoxEffectsMix(behindContent: hoverSurface),
         ),
       )
       .onSelected(
-        RemixSelectTriggerStyler().effects(
-          RemixSurfaceEffectsMix(background: hoverSurface),
+        RemixSelectTriggerStyler().containerEffects(
+          RemixBoxEffectsMix(behindContent: hoverSurface),
         ),
       )
       .onDisabled(
@@ -233,7 +233,9 @@ RemixSelectTriggerStyler _fortalSelectClassicTrigger(
             .label(TextStyler().color(FortalTokens.grayA11()))
             .icon(IconStyler(color: FortalTokens.grayA9()))
             .chevron(IconStyler(color: FortalTokens.grayA9()))
-            .effects(RemixSurfaceEffectsMix(background: disabledSurface)),
+            .containerEffects(
+              RemixBoxEffectsMix(behindContent: disabledSurface),
+            ),
       );
 }
 
@@ -312,12 +314,12 @@ RemixSelectContentStyler _fortalSelectContentStyler(FortalSelectSize size) {
       )
       .borderRadiusAll(radius)
       .color(FortalTokens.colorPanel())
+      .decoration(
+        BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),
+      )
       .clipBehavior(Clip.antiAlias)
-      .effects(
-        RemixSurfaceEffectsMix(
-          backdropBlur: FortalTokens.panelBlur(),
-          background: RemixSurfaceLayerMix(shadowToken: FortalTokens.shadow5),
-        ),
+      .containerEffects(
+        RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
       );
 }
 

@@ -408,8 +408,8 @@ void main() {
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$icon));
         expect(style.props, contains(style.$spinner));
-        expect(style.props, contains(style.$effects));
-        expect(style.props, contains(style.$effects));
+        expect(style.props, contains(style.$containerEffects));
+        expect(style.props, contains(style.$containerEffects));
         expect(style.props, contains(style.$variants));
         expect(style.props, contains(style.$animation));
         expect(style.props, contains(style.$modifier));

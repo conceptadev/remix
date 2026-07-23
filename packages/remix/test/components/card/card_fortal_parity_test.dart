@@ -85,19 +85,33 @@ void main() {
         states: {WidgetState.selected, WidgetState.pressed},
       );
 
-      expect(idle.effects!.backdropBlur, 64);
-      expect(idle.effects!.background!.gradientInsets, [1]);
+      expect(idle.containerEffects!.backdropBlur, 64);
+      expect(idle.containerEffects!.behindContent!.gradientInsets, [1]);
       expect(
-        (idle.effects!.background!.gradients.single as LinearGradient).colors,
+        (idle.containerEffects!.behindContent!.gradients.single
+                as LinearGradient)
+            .colors,
         [tokens.panel, tokens.panel],
       );
-      expect(idle.effects!.foreground!.shadows.single.color, tokens.stroke5);
-      expect(idle.effects!.foreground!.shadows.single.shapeInset, 1);
-      expect(hovered.effects!.foreground!.shadows.single.color, tokens.stroke7);
-      expect(pressed.effects!.foreground!.shadows.single.color, tokens.stroke6);
-      expect(open.effects!.foreground!.shadows.single.color, tokens.stroke7);
       expect(
-        openAndPressed.effects!.foreground!.shadows.single.color,
+        idle.containerEffects!.overContent!.shadows.single.color,
+        tokens.stroke5,
+      );
+      expect(idle.containerEffects!.overContent!.shadows.single.shapeInset, 1);
+      expect(
+        hovered.containerEffects!.overContent!.shadows.single.color,
+        tokens.stroke7,
+      );
+      expect(
+        pressed.containerEffects!.overContent!.shadows.single.color,
+        tokens.stroke6,
+      );
+      expect(
+        open.containerEffects!.overContent!.shadows.single.color,
+        tokens.stroke7,
+      );
+      expect(
+        openAndPressed.containerEffects!.overContent!.shadows.single.color,
         tokens.stroke7,
       );
     });
@@ -128,44 +142,44 @@ void main() {
       );
 
       for (final spec in [idle, hovered, pressed]) {
-        expect(spec.effects!.background!.shadows, hasLength(6));
-        expect(spec.effects!.foreground!.shadows, hasLength(6));
+        expect(spec.containerEffects!.behindContent!.shadows, hasLength(6));
+        expect(spec.containerEffects!.overContent!.shadows, hasLength(6));
         expect(
-          spec.effects!.background!.shadows.every(
+          spec.containerEffects!.behindContent!.shadows.every(
             (shadow) => shadow.shapeInset == 0,
           ),
           isTrue,
         );
         expect(
-          spec.effects!.foreground!.shadows.every(
+          spec.containerEffects!.overContent!.shadows.every(
             (shadow) => shadow.shapeInset == 1,
           ),
           isTrue,
         );
       }
       expect(
-        hovered.effects!.background!.shadows,
-        isNot(idle.effects!.background!.shadows),
+        hovered.containerEffects!.behindContent!.shadows,
+        isNot(idle.containerEffects!.behindContent!.shadows),
       );
       expect(
-        pressed.effects!.foreground!.shadows,
-        isNot(idle.effects!.foreground!.shadows),
+        pressed.containerEffects!.overContent!.shadows,
+        isNot(idle.containerEffects!.overContent!.shadows),
       );
       expect(
-        open.effects!.background!.shadows,
-        hovered.effects!.background!.shadows,
+        open.containerEffects!.behindContent!.shadows,
+        hovered.containerEffects!.behindContent!.shadows,
       );
       expect(
-        open.effects!.foreground!.shadows,
-        hovered.effects!.foreground!.shadows,
+        open.containerEffects!.overContent!.shadows,
+        hovered.containerEffects!.overContent!.shadows,
       );
       expect(
-        openAndPressed.effects!.background!.shadows,
-        hovered.effects!.background!.shadows,
+        openAndPressed.containerEffects!.behindContent!.shadows,
+        hovered.containerEffects!.behindContent!.shadows,
       );
       expect(
-        openAndPressed.effects!.foreground!.shadows,
-        hovered.effects!.foreground!.shadows,
+        openAndPressed.containerEffects!.overContent!.shadows,
+        hovered.containerEffects!.overContent!.shadows,
       );
     });
 
@@ -215,9 +229,9 @@ void main() {
         states: {WidgetState.focused},
       );
 
-      expect(focused.effects!.outline.color, tokens.focus8);
-      expect(focused.effects!.outline.width, 2);
-      expect(focused.effects!.outlineOffset, -1);
+      expect(focused.containerEffects!.outline.color, tokens.focus8);
+      expect(focused.containerEffects!.outline.width, 2);
+      expect(focused.containerEffects!.outlineOffset, -1);
     });
 
     testWidgets('focused active and ghost compound states match CSS', (
@@ -233,9 +247,12 @@ void main() {
           fortalCardStyler(variant: variant),
           states: {WidgetState.pressed, WidgetState.focused},
         );
-        expect(activeAndFocused.effects!.background!.gradients, hasLength(2));
         expect(
-          (activeAndFocused.effects!.background!.gradients.first
+          activeAndFocused.containerEffects!.behindContent!.gradients,
+          hasLength(2),
+        );
+        expect(
+          (activeAndFocused.containerEffects!.behindContent!.gradients.first
                   as LinearGradient)
               .colors,
           [tokens.accentA2, tokens.accentA2],
@@ -246,7 +263,10 @@ void main() {
           fortalCardStyler(variant: variant),
           states: {WidgetState.selected, WidgetState.focused},
         );
-        expect(openAndFocused.effects!.background!.gradients, hasLength(1));
+        expect(
+          openAndFocused.containerEffects!.behindContent!.gradients,
+          hasLength(1),
+        );
       }
 
       for (final states in [

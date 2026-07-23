@@ -197,20 +197,27 @@ void main() {
 
       expect(_flexColor(idle.trigger.spec.container), tokens.colorSurface);
       expect(
-        idle.trigger.spec.effects!.background!.shadows.single.kind,
-        RemixPaintShadowKind.inset,
+        idle.trigger.spec.containerEffects!.behindContent!.shadows.single.kind,
+        RemixBoxShadowKind.inset,
       );
       expect(
-        idle.trigger.spec.effects!.background!.shadows.single.color,
+        idle.trigger.spec.containerEffects!.behindContent!.shadows.single.color,
         tokens.grayA7,
       );
       expect(
-        open.trigger.spec.effects!.background!.shadows.single.color,
+        open.trigger.spec.containerEffects!.behindContent!.shadows.single.color,
         tokens.grayA8,
       );
       expect(_flexColor(disabledHover.trigger.spec.container), tokens.grayA2);
       expect(
-        disabledHover.trigger.spec.effects!.background!.shadows.single.color,
+        disabledHover
+            .trigger
+            .spec
+            .containerEffects!
+            .behindContent!
+            .shadows
+            .single
+            .color,
         tokens.grayA6,
       );
       expect(
@@ -229,11 +236,11 @@ void main() {
         states: {WidgetState.focused},
       );
       final tokens = await _tokens(tester);
-      final ring = focused.trigger.spec.effects!.foreground!;
+      final ring = focused.trigger.spec.containerEffects!.overContent!;
 
       expect(ring.shadows, hasLength(2));
-      expect(ring.shadows.first.kind, RemixPaintShadowKind.outer);
-      expect(ring.shadows.last.kind, RemixPaintShadowKind.inset);
+      expect(ring.shadows.first.kind, RemixBoxShadowKind.outer);
+      expect(ring.shadows.last.kind, RemixBoxShadowKind.inset);
       expect(
         ring.shadows.map((shadow) => shadow.color),
         everyElement(tokens.focus8),
@@ -304,37 +311,56 @@ void main() {
         final lightTokens = await _tokens(tester, appearance: .light);
         final darkTokens = await _tokens(tester, appearance: .dark);
 
-        expect(light.trigger.spec.effects!.background!.gradients, hasLength(3));
-        expect(light.trigger.spec.effects!.background!.gradientInsets, [
-          2,
-          2,
-          0,
-        ]);
-        expect(light.trigger.spec.effects!.background!.shadows, hasLength(3));
         expect(
-          light.trigger.spec.effects!.background!.shadows.first.color,
+          light.trigger.spec.containerEffects!.behindContent!.gradients,
+          hasLength(3),
+        );
+        expect(
+          light.trigger.spec.containerEffects!.behindContent!.gradientInsets,
+          [2, 2, 0],
+        );
+        expect(
+          light.trigger.spec.containerEffects!.behindContent!.shadows,
+          hasLength(3),
+        );
+        expect(
+          light
+              .trigger
+              .spec
+              .containerEffects!
+              .behindContent!
+              .shadows
+              .first
+              .color,
           lightTokens.grayA5,
         );
         expect(
-          light.trigger.spec.effects!.background!.shadows[1].color,
+          light.trigger.spec.containerEffects!.behindContent!.shadows[1].color,
           lightTokens.whiteA11,
         );
         expect(
-          dark.trigger.spec.effects!.background!.shadows.first.color,
+          dark
+              .trigger
+              .spec
+              .containerEffects!
+              .behindContent!
+              .shadows
+              .first
+              .color,
           darkTokens.whiteA4,
         );
         expect(
-          dark.trigger.spec.effects!.background!.shadows.last.color,
+          dark.trigger.spec.containerEffects!.behindContent!.shadows.last.color,
           darkTokens.blackA9,
         );
         expect(
-          disabled.trigger.spec.effects!.background!.gradients,
+          disabled.trigger.spec.containerEffects!.behindContent!.gradients,
           hasLength(2),
         );
-        expect(disabled.trigger.spec.effects!.background!.gradientInsets, [
-          2,
-          2,
-        ]);
+        expect(
+          disabled.trigger.spec.containerEffects!.behindContent!.gradientInsets,
+          [2, 2],
+        );
       },
     );
 

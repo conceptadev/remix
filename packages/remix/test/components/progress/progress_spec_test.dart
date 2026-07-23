@@ -11,36 +11,36 @@ void main() {
       expect(spec.container, isA<StyleSpec<BoxSpec>>());
       expect(spec.track, isA<StyleSpec<BoxSpec>>());
       expect(spec.indicator, isA<StyleSpec<BoxSpec>>());
-      expect(spec.trackEffects?.background, isNull);
-      expect(spec.trackEffects?.foreground, isNull);
+      expect(spec.trackEffects?.behindContent, isNull);
+      expect(spec.trackEffects?.overContent, isNull);
     });
 
     test('stores every structural part', () {
       final container = StyleSpec(spec: BoxSpec());
       final track = StyleSpec(spec: BoxSpec());
       final indicator = StyleSpec(spec: BoxSpec());
-      const surface = RemixSurfaceLayerSpec(
-        shadows: [RemixPaintShadow(color: Colors.red)],
+      const surface = RemixBoxEffectLayerSpec(
+        shadows: [RemixBoxShadow(color: Colors.red)],
       );
-      const overlay = RemixSurfaceLayerSpec(
-        shadows: [RemixPaintShadow(color: Colors.blue)],
+      const overlay = RemixBoxEffectLayerSpec(
+        shadows: [RemixBoxShadow(color: Colors.blue)],
       );
 
       final spec = RemixProgressSpec(
         container: container,
         track: track,
         indicator: indicator,
-        trackEffects: RemixSurfaceEffectsSpec(
-          background: surface,
-          foreground: overlay,
+        trackEffects: RemixBoxEffectsSpec(
+          behindContent: surface,
+          overContent: overlay,
         ),
       );
 
       expect(spec.container, same(container));
       expect(spec.track, same(track));
       expect(spec.indicator, same(indicator));
-      expect(spec.trackEffects?.background, same(surface));
-      expect(spec.trackEffects?.foreground, same(overlay));
+      expect(spec.trackEffects?.behindContent, same(surface));
+      expect(spec.trackEffects?.overContent, same(overlay));
     });
 
     test(
@@ -50,20 +50,20 @@ void main() {
         final container = StyleSpec(spec: BoxSpec());
         final track = StyleSpec(spec: BoxSpec());
         final indicator = StyleSpec(spec: BoxSpec());
-        const surface = RemixSurfaceLayerSpec(
-          shadows: [RemixPaintShadow(color: Colors.red)],
+        const surface = RemixBoxEffectLayerSpec(
+          shadows: [RemixBoxShadow(color: Colors.red)],
         );
-        const overlay = RemixSurfaceLayerSpec(
-          shadows: [RemixPaintShadow(color: Colors.blue)],
+        const overlay = RemixBoxEffectLayerSpec(
+          shadows: [RemixBoxShadow(color: Colors.blue)],
         );
 
         final updated = original.copyWith(
           container: container,
           track: track,
           indicator: indicator,
-          trackEffects: RemixSurfaceEffectsSpec(
-            background: surface,
-            foreground: overlay,
+          trackEffects: RemixBoxEffectsSpec(
+            behindContent: surface,
+            overContent: overlay,
           ),
         );
 
@@ -71,45 +71,45 @@ void main() {
         expect(updated.container, same(container));
         expect(updated.track, same(track));
         expect(updated.indicator, same(indicator));
-        expect(updated.trackEffects?.background, same(surface));
-        expect(updated.trackEffects?.foreground, same(overlay));
+        expect(updated.trackEffects?.behindContent, same(surface));
+        expect(updated.trackEffects?.overContent, same(overlay));
       },
     );
 
     test('equality and diagnostics include all seven structural parts', () {
       const spec = RemixProgressSpec(
-        trackEffects: RemixSurfaceEffectsSpec(
-          background: RemixSurfaceLayerSpec(
-            shadows: [RemixPaintShadow(color: Colors.red)],
+        trackEffects: RemixBoxEffectsSpec(
+          behindContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(color: Colors.red)],
           ),
-          foreground: RemixSurfaceLayerSpec(
-            shadows: [RemixPaintShadow(color: Colors.blue)],
+          overContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(color: Colors.blue)],
           ),
         ),
-        indicatorEffects: RemixSurfaceEffectsSpec(
-          background: RemixSurfaceLayerSpec(
-            shadows: [RemixPaintShadow(color: Colors.green)],
+        indicatorEffects: RemixBoxEffectsSpec(
+          behindContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(color: Colors.green)],
           ),
-          foreground: RemixSurfaceLayerSpec(
-            shadows: [RemixPaintShadow(color: Colors.yellow)],
+          overContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(color: Colors.yellow)],
           ),
         ),
       );
       const equal = RemixProgressSpec(
-        trackEffects: RemixSurfaceEffectsSpec(
-          background: RemixSurfaceLayerSpec(
-            shadows: [RemixPaintShadow(color: Colors.red)],
+        trackEffects: RemixBoxEffectsSpec(
+          behindContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(color: Colors.red)],
           ),
-          foreground: RemixSurfaceLayerSpec(
-            shadows: [RemixPaintShadow(color: Colors.blue)],
+          overContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(color: Colors.blue)],
           ),
         ),
-        indicatorEffects: RemixSurfaceEffectsSpec(
-          background: RemixSurfaceLayerSpec(
-            shadows: [RemixPaintShadow(color: Colors.green)],
+        indicatorEffects: RemixBoxEffectsSpec(
+          behindContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(color: Colors.green)],
           ),
-          foreground: RemixSurfaceLayerSpec(
-            shadows: [RemixPaintShadow(color: Colors.yellow)],
+          overContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(color: Colors.yellow)],
           ),
         ),
       );
@@ -132,16 +132,16 @@ void main() {
 
     test('lerp interpolates optional paint layers', () {
       const source = RemixProgressSpec(
-        trackEffects: RemixSurfaceEffectsSpec(
-          background: RemixSurfaceLayerSpec(
-            shadows: [RemixPaintShadow(color: Colors.red)],
+        trackEffects: RemixBoxEffectsSpec(
+          behindContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(color: Colors.red)],
           ),
         ),
       );
       const destination = RemixProgressSpec(
-        trackEffects: RemixSurfaceEffectsSpec(
-          background: RemixSurfaceLayerSpec(
-            shadows: [RemixPaintShadow(color: Colors.blue)],
+        trackEffects: RemixBoxEffectsSpec(
+          behindContent: RemixBoxEffectLayerSpec(
+            shadows: [RemixBoxShadow(color: Colors.blue)],
           ),
         ),
       );
@@ -150,7 +150,7 @@ void main() {
         source
             .lerp(destination, 0.49)
             .trackEffects
-            ?.background
+            ?.behindContent
             ?.shadows
             .first
             .color,
@@ -160,7 +160,7 @@ void main() {
         source
             .lerp(destination, 0.5)
             .trackEffects
-            ?.background
+            ?.behindContent
             ?.shadows
             .first
             .color,

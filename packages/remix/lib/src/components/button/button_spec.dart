@@ -94,8 +94,8 @@ class ButtonSpec with _$ButtonSpec {
   final StyleSpec<RemixSpinnerSpec> spinner;
 
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? effects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
 
   /// Creates a ButtonSpec with optional styling specifications.
   ///
@@ -115,7 +115,7 @@ class ButtonSpec with _$ButtonSpec {
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
     StyleSpec<RemixSpinnerSpec>? spinner,
-    this.effects,
+    this.containerEffects,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
@@ -126,7 +126,11 @@ class ButtonSpec with _$ButtonSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
     );
   }
 }

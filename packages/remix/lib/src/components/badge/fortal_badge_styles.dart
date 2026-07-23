@@ -33,9 +33,9 @@ RemixBadgeStyler fortalBadgeStyler({
     .surface =>
       base
           .color(FortalTokens.accentSurface())
-          .effects(
-            RemixSurfaceEffectsMix(
-              background: _fortalBadgeInsetStroke(FortalTokens.accentA6()),
+          .containerEffects(
+            RemixBoxEffectsMix(
+              behindContent: _fortalBadgeInsetStroke(FortalTokens.accentA6()),
             ),
           )
           .foregroundColor(
@@ -43,20 +43,20 @@ RemixBadgeStyler fortalBadgeStyler({
           ),
     .outline =>
       base
-          .effects(
-            RemixSurfaceEffectsMix(
-              background: RemixSurfaceLayerMix(
+          .containerEffects(
+            RemixBoxEffectsMix(
+              behindContent: RemixBoxEffectLayerMix(
                 shadows: [
-                  RemixPaintShadowMix(
-                    kind: RemixPaintShadowKind.inset,
+                  RemixBoxShadowMix(
+                    kind: RemixBoxShadowKind.inset,
                     color: highContrast
                         ? FortalTokens.accentA7()
                         : FortalTokens.accentA8(),
                     spreadRadius: 1,
                   ),
                   if (highContrast)
-                    RemixPaintShadowMix(
-                      kind: RemixPaintShadowKind.inset,
+                    RemixBoxShadowMix(
+                      kind: RemixBoxShadowKind.inset,
                       color: FortalTokens.grayA11(),
                       spreadRadius: 1,
                     ),
@@ -106,11 +106,11 @@ Radius _fortalBadgeRadius(FortalBadgeSize size) => switch (size) {
   .size2 || .size3 => FortalTokens.radius2OrFull(),
 };
 
-RemixSurfaceLayerMix _fortalBadgeInsetStroke(Color color) =>
-    RemixSurfaceLayerMix(
+RemixBoxEffectLayerMix _fortalBadgeInsetStroke(Color color) =>
+    RemixBoxEffectLayerMix(
       shadows: [
-        RemixPaintShadowMix(
-          kind: RemixPaintShadowKind.inset,
+        RemixBoxShadowMix(
+          kind: RemixBoxShadowKind.inset,
           color: color,
           spreadRadius: 1,
         ),

@@ -77,9 +77,9 @@ void main() {
           styleSpec: RemixIconButtonSpec(
             container: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
             icon: StyleSpec(spec: IconSpec(color: color, size: 21)),
-            effects: RemixSurfaceEffectsSpec(
-              background: RemixSurfaceLayerSpec(
-                shadows: [RemixPaintShadow(color: color)],
+            containerEffects: RemixBoxEffectsSpec(
+              behindContent: RemixBoxEffectLayerSpec(
+                shadows: [RemixBoxShadow(color: color)],
               ),
             ),
           ),

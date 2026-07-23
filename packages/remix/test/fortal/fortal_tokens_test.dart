@@ -151,11 +151,11 @@ void main() {
       );
       expect(
         light.shadow1.map((shadow) => shadow.kind),
-        everyElement(RemixPaintShadowKind.inset),
+        everyElement(RemixBoxShadowKind.inset),
       );
       expect(
         dark.shadow1.map((shadow) => shadow.kind),
-        everyElement(RemixPaintShadowKind.inset),
+        everyElement(RemixBoxShadowKind.inset),
       );
       for (final shadows in [
         light.shadow2,
@@ -170,8 +170,8 @@ void main() {
         dark.shadow6,
       ]) {
         expect(
-          shadows.map((shadow) => shadow.kind),
-          everyElement(RemixPaintShadowKind.outer),
+          shadows.map((shadow) => shadow.blurStyle),
+          everyElement(BlurStyle.normal),
         );
       }
       expect(_shadowGeometry(light.shadow1), const [
@@ -260,22 +260,22 @@ Future<_FortalTokenSnapshot> _captureFortalTokens(
       child: MaterialApp(
         home: Builder(
           builder: (context) {
-            final shadow1 = List<RemixPaintShadow>.unmodifiable(
+            final shadow1 = List<RemixBoxShadow>.unmodifiable(
               MixScope.tokenOf(FortalTokens.shadow1, context),
             );
-            final shadow2 = List<RemixPaintShadow>.unmodifiable(
+            final shadow2 = List<BoxShadow>.unmodifiable(
               MixScope.tokenOf(FortalTokens.shadow2, context),
             );
-            final shadow3 = List<RemixPaintShadow>.unmodifiable(
+            final shadow3 = List<BoxShadow>.unmodifiable(
               MixScope.tokenOf(FortalTokens.shadow3, context),
             );
-            final shadow4 = List<RemixPaintShadow>.unmodifiable(
+            final shadow4 = List<BoxShadow>.unmodifiable(
               MixScope.tokenOf(FortalTokens.shadow4, context),
             );
-            final shadow5 = List<RemixPaintShadow>.unmodifiable(
+            final shadow5 = List<BoxShadow>.unmodifiable(
               MixScope.tokenOf(FortalTokens.shadow5, context),
             );
-            final shadow6 = List<RemixPaintShadow>.unmodifiable(
+            final shadow6 = List<BoxShadow>.unmodifiable(
               MixScope.tokenOf(FortalTokens.shadow6, context),
             );
 
@@ -322,7 +322,7 @@ Future<_FortalTokenSnapshot> _captureFortalTokens(
 }
 
 List<({Offset offset, double blurRadius, double spreadRadius})> _shadowGeometry(
-  List<RemixPaintShadow> shadows,
+  List<dynamic> shadows,
 ) {
   return [
     for (final shadow in shadows)
@@ -337,11 +337,11 @@ List<({Offset offset, double blurRadius, double spreadRadius})> _shadowGeometry(
 /// Extracts each shadow layer's resolved color, in order.
 ///
 /// buildFortalShadows bakes fully-resolved [Color] values into every
-/// [RemixPaintShadow] (it takes the theme's resolved [FortalThemeColors] rather than
+/// shadow values (it takes the theme's resolved [FortalThemeColors] rather than
 /// embedding token refs), so pinning the exact color per layer is what
 /// catches a swapped gray/black alpha step for a given brightness — the
 /// layer count and geometry alone wouldn't change.
-List<Color> _shadowColors(List<RemixPaintShadow> shadows) {
+List<Color> _shadowColors(List<dynamic> shadows) {
   return [for (final shadow in shadows) shadow.color];
 }
 
@@ -386,12 +386,12 @@ class _FortalTokenSnapshot {
   final Color surface;
   final Color overlay;
   final Color shadowStroke;
-  final List<RemixPaintShadow> shadow1;
-  final List<RemixPaintShadow> shadow2;
-  final List<RemixPaintShadow> shadow3;
-  final List<RemixPaintShadow> shadow4;
-  final List<RemixPaintShadow> shadow5;
-  final List<RemixPaintShadow> shadow6;
+  final List<RemixBoxShadow> shadow1;
+  final List<BoxShadow> shadow2;
+  final List<BoxShadow> shadow3;
+  final List<BoxShadow> shadow4;
+  final List<BoxShadow> shadow5;
+  final List<BoxShadow> shadow6;
   final Color shadow1FirstLayerColor;
   final Color shadow2FirstLayerColor;
   final Color shadow4FirstLayerColor;

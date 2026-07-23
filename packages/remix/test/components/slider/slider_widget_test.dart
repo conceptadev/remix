@@ -249,23 +249,23 @@ void main() {
     testWidgets('wires every resolved surface slot and blend mode', (
       tester,
     ) async {
-      const track = RemixSurfaceLayerSpec(
-        shadows: [RemixPaintShadow(color: Colors.grey)],
+      const track = RemixBoxEffectLayerSpec(
+        shadows: [RemixBoxShadow(color: Colors.grey)],
       );
-      const trackOverlay = RemixSurfaceLayerSpec(
-        shadows: [RemixPaintShadow(color: Colors.black12)],
+      const trackOverlay = RemixBoxEffectLayerSpec(
+        shadows: [RemixBoxShadow(color: Colors.black12)],
       );
-      const range = RemixSurfaceLayerSpec(
-        shadows: [RemixPaintShadow(color: Colors.blue)],
+      const range = RemixBoxEffectLayerSpec(
+        shadows: [RemixBoxShadow(color: Colors.blue)],
       );
-      const rangeOverlay = RemixSurfaceLayerSpec(
-        shadows: [RemixPaintShadow(color: Colors.blueGrey)],
+      const rangeOverlay = RemixBoxEffectLayerSpec(
+        shadows: [RemixBoxShadow(color: Colors.blueGrey)],
       );
-      const thumb = RemixSurfaceLayerSpec(
-        shadows: [RemixPaintShadow(color: Colors.white)],
+      const thumb = RemixBoxEffectLayerSpec(
+        shadows: [RemixBoxShadow(color: Colors.white)],
       );
-      const thumbOverlay = RemixSurfaceLayerSpec(
-        shadows: [RemixPaintShadow(color: Colors.black26)],
+      const thumbOverlay = RemixBoxEffectLayerSpec(
+        shadows: [RemixBoxShadow(color: Colors.black26)],
       );
       await tester.pumpWidget(
         _harness(
@@ -275,17 +275,17 @@ void main() {
             track: const StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
             range: const StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
             thumb: const StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
-            trackEffects: RemixSurfaceEffectsSpec(
-              background: track,
-              foreground: trackOverlay,
+            trackEffects: RemixBoxEffectsSpec(
+              behindContent: track,
+              overContent: trackOverlay,
             ),
-            rangeEffects: RemixSurfaceEffectsSpec(
-              background: range,
-              foreground: rangeOverlay,
+            rangeEffects: RemixBoxEffectsSpec(
+              behindContent: range,
+              overContent: rangeOverlay,
             ),
-            thumbEffects: RemixSurfaceEffectsSpec(
-              background: thumb,
-              foreground: thumbOverlay,
+            thumbEffects: RemixBoxEffectsSpec(
+              behindContent: thumb,
+              overContent: thumbOverlay,
             ),
             blendMode: BlendMode.multiply,
           ),
@@ -309,8 +309,8 @@ void main() {
     testWidgets('paints the focus overlay only around the focused thumb', (
       tester,
     ) async {
-      const focusOverlay = RemixSurfaceLayerSpec(
-        shadows: [RemixPaintShadow(color: Colors.purple)],
+      const focusOverlay = RemixBoxEffectLayerSpec(
+        shadows: [RemixBoxShadow(color: Colors.purple)],
       );
       final first = FocusNode();
       final second = FocusNode();
@@ -322,9 +322,7 @@ void main() {
           focusNodes: [first, second],
           styleSpec: RemixSliderSpec(
             thumb: const StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
-            thumbFocusEffects: RemixSurfaceEffectsSpec(
-              foreground: focusOverlay,
-            ),
+            thumbFocusEffects: RemixBoxEffectsSpec(overContent: focusOverlay),
           ),
           onChanged: (_) {},
         ),

@@ -115,11 +115,11 @@ void main() {
         expect(solidHigh.label.spec.style!.color, tokens.accent1);
         expect(_color(surface.container.spec), tokens.accentSurface);
         expect(
-          surface.effects!.background!.shadows.single.color,
+          surface.containerEffects!.behindContent!.shadows.single.color,
           tokens.accentA6,
         );
         expect(
-          outlineHigh.effects!.background!.shadows.map(
+          outlineHigh.containerEffects!.behindContent!.shadows.map(
             (shadow) => shadow.color,
           ),
           [tokens.accentA7, tokens.grayA11],

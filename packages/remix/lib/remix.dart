@@ -42,19 +42,17 @@ export 'src/rendering/remix_ordered_color_filter.dart'
         RemixCssColorFilterOperation,
         RemixOrderedColorFilterModifier,
         RemixOrderedColorFilterModifierMix;
-export 'src/rendering/remix_surface.dart'
+export 'src/rendering/remix_box_effects.dart'
     show
-        RemixPaintShadowKind,
-        RemixPaintShadow,
-        RemixPaintShadowMix,
-        RemixPaintShadowListToken,
+        RemixBoxShadowKind,
+        RemixBoxShadow,
+        RemixBoxShadowMix,
+        RemixBoxShadowListToken,
         RemixLinearGradientMix,
-        RemixSurfaceLayerSpec,
-        RemixSurfaceLayerMix,
-        RemixSurfaceEffectsSpec,
-        RemixSurfaceEffectsMix,
-        remixSurfaceBox,
-        remixSurfaceFlexBox;
+        RemixBoxEffectLayerSpec,
+        RemixBoxEffectLayerMix,
+        RemixBoxEffectsSpec,
+        RemixBoxEffectsMix;
 
 /// STYLER CONVENIENCES
 export 'src/utilities/remix_style.dart'

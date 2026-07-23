@@ -14,13 +14,13 @@ class RemixRadioSpec with _$RemixRadioSpec {
   final StyleSpec<BoxSpec> indicator;
 
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? effects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
 
   const RemixRadioSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicator,
-    this.effects,
+    this.containerEffects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        indicator = indicator ?? const StyleSpec(spec: BoxSpec());
 
@@ -29,7 +29,11 @@ class RemixRadioSpec with _$RemixRadioSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
     );
   }
 }

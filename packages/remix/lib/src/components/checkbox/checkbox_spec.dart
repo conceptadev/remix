@@ -73,8 +73,8 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
   final StyleSpec<IconSpec> indicator;
 
   @override
-  @MixableField(setterType: RemixSurfaceEffectsMix)
-  final RemixSurfaceEffectsSpec? effects;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
 
   /// Creates a RemixCheckboxSpec with optional styling specifications.
   ///
@@ -96,7 +96,7 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
   const RemixCheckboxSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<IconSpec>? indicator,
-    this.effects,
+    this.containerEffects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        indicator = indicator ?? const StyleSpec(spec: IconSpec());
 
@@ -105,7 +105,11 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
-      effects: RemixSurfaceEffectsSpec.lerpNullable(effects, other.effects, t),
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
     );
   }
 }

@@ -7,45 +7,45 @@ void main() {
     const spec = RemixSliderSpec();
 
     expect(spec.track, isA<StyleSpec<BoxSpec>>());
-    expect(spec.trackEffects?.background, isNull);
-    expect(spec.trackEffects?.foreground, isNull);
+    expect(spec.trackEffects?.behindContent, isNull);
+    expect(spec.trackEffects?.overContent, isNull);
     expect(spec.range, isA<StyleSpec<BoxSpec>>());
-    expect(spec.rangeEffects?.background, isNull);
-    expect(spec.rangeEffects?.foreground, isNull);
+    expect(spec.rangeEffects?.behindContent, isNull);
+    expect(spec.rangeEffects?.overContent, isNull);
     expect(spec.thumb, isA<StyleSpec<BoxSpec>>());
-    expect(spec.thumbEffects?.background, isNull);
-    expect(spec.thumbEffects?.foreground, isNull);
-    expect(spec.thumbFocusEffects?.foreground, isNull);
+    expect(spec.thumbEffects?.behindContent, isNull);
+    expect(spec.thumbEffects?.overContent, isNull);
+    expect(spec.thumbFocusEffects?.overContent, isNull);
     expect(spec.trackThickness, RemixSliderSpec.defaultTrackThickness);
     expect(spec.blendMode, isNull);
   });
 
   test('RemixSliderSpec retains every paint layer and behavior field', () {
-    const trackSurface = RemixSurfaceLayerSpec(
-      shadows: [RemixPaintShadow(color: Colors.grey)],
+    const trackSurface = RemixBoxEffectLayerSpec(
+      shadows: [RemixBoxShadow(color: Colors.grey)],
     );
-    const rangeSurface = RemixSurfaceLayerSpec(
-      shadows: [RemixPaintShadow(color: Colors.blue)],
+    const rangeSurface = RemixBoxEffectLayerSpec(
+      shadows: [RemixBoxShadow(color: Colors.blue)],
     );
-    const thumbSurface = RemixSurfaceLayerSpec(
-      shadows: [RemixPaintShadow(color: Colors.white)],
+    const thumbSurface = RemixBoxEffectLayerSpec(
+      shadows: [RemixBoxShadow(color: Colors.white)],
     );
-    const focusOverlay = RemixSurfaceLayerSpec(
-      shadows: [RemixPaintShadow(color: Colors.transparent)],
+    const focusOverlay = RemixBoxEffectLayerSpec(
+      shadows: [RemixBoxShadow(color: Colors.transparent)],
     );
     const spec = RemixSliderSpec(
-      trackEffects: RemixSurfaceEffectsSpec(background: trackSurface),
-      rangeEffects: RemixSurfaceEffectsSpec(background: rangeSurface),
-      thumbEffects: RemixSurfaceEffectsSpec(background: thumbSurface),
-      thumbFocusEffects: RemixSurfaceEffectsSpec(foreground: focusOverlay),
+      trackEffects: RemixBoxEffectsSpec(behindContent: trackSurface),
+      rangeEffects: RemixBoxEffectsSpec(behindContent: rangeSurface),
+      thumbEffects: RemixBoxEffectsSpec(behindContent: thumbSurface),
+      thumbFocusEffects: RemixBoxEffectsSpec(overContent: focusOverlay),
       trackThickness: 10,
       blendMode: BlendMode.multiply,
     );
 
-    expect(spec.trackEffects?.background, trackSurface);
-    expect(spec.rangeEffects?.background, rangeSurface);
-    expect(spec.thumbEffects?.background, thumbSurface);
-    expect(spec.thumbFocusEffects?.foreground, focusOverlay);
+    expect(spec.trackEffects?.behindContent, trackSurface);
+    expect(spec.rangeEffects?.behindContent, rangeSurface);
+    expect(spec.thumbEffects?.behindContent, thumbSurface);
+    expect(spec.thumbFocusEffects?.overContent, focusOverlay);
     expect(spec.trackThickness, 10);
     expect(spec.blendMode, BlendMode.multiply);
   });

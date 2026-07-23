@@ -176,22 +176,20 @@ void main() {
   testWidgets('wires resolved surface and overlay slots to the renderer', (
     tester,
   ) async {
-    const surface = RemixSurfaceLayerSpec(
-      shadows: [RemixPaintShadow(color: Colors.red)],
+    const surface = RemixBoxEffectLayerSpec(
+      shadows: [RemixBoxShadow(color: Colors.red)],
     );
-    const overlay = RemixSurfaceLayerSpec(
-      shadows: [
-        RemixPaintShadow(kind: RemixPaintShadowKind.inset, blurRadius: 1),
-      ],
+    const overlay = RemixBoxEffectLayerSpec(
+      shadows: [RemixBoxShadow(kind: RemixBoxShadowKind.inset, blurRadius: 1)],
     );
     await tester.pumpRemixApp(
       const RemixProgress(
         value: 50,
         styleSpec: RemixProgressSpec(
           container: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
-          trackEffects: RemixSurfaceEffectsSpec(
-            background: surface,
-            foreground: overlay,
+          trackEffects: RemixBoxEffectsSpec(
+            behindContent: surface,
+            overContent: overlay,
             backdropBlur: 3,
           ),
         ),

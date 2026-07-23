@@ -110,22 +110,22 @@ void main() {
 
       test('interpolates surface layers instead of snapping', () {
         const start = RemixCardSpec(
-          effects: RemixSurfaceEffectsSpec(
-            background: RemixSurfaceLayerSpec(
-              shadows: [RemixPaintShadow(color: Colors.red)],
+          containerEffects: RemixBoxEffectsSpec(
+            behindContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.red)],
             ),
-            foreground: RemixSurfaceLayerSpec(
-              shadows: [RemixPaintShadow(color: Colors.green)],
+            overContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.green)],
             ),
           ),
         );
         const end = RemixCardSpec(
-          effects: RemixSurfaceEffectsSpec(
-            background: RemixSurfaceLayerSpec(
-              shadows: [RemixPaintShadow(color: Colors.blue)],
+          containerEffects: RemixBoxEffectsSpec(
+            behindContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.blue)],
             ),
-            foreground: RemixSurfaceLayerSpec(
-              shadows: [RemixPaintShadow(color: Colors.yellow)],
+            overContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.yellow)],
             ),
           ),
         );
@@ -133,11 +133,11 @@ void main() {
         final result = start.lerp(end, 0.25);
 
         expect(
-          result.effects?.background?.shadows.first.color,
+          result.containerEffects?.behindContent?.shadows.first.color,
           Color.lerp(Colors.red, Colors.blue, 0.25),
         );
         expect(
-          result.effects?.foreground?.shadows.first.color,
+          result.containerEffects?.overContent?.shadows.first.color,
           Color.lerp(Colors.green, Colors.yellow, 0.25),
         );
       });
@@ -145,9 +145,9 @@ void main() {
       test('fades a surface layer in from an absent value', () {
         const start = RemixCardSpec();
         const end = RemixCardSpec(
-          effects: RemixSurfaceEffectsSpec(
-            background: RemixSurfaceLayerSpec(
-              shadows: [RemixPaintShadow(color: Colors.blue)],
+          containerEffects: RemixBoxEffectsSpec(
+            behindContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.blue)],
             ),
           ),
         );
@@ -155,7 +155,7 @@ void main() {
         final result = start.lerp(end, 0.25);
 
         expect(
-          result.effects?.background?.shadows.first.color,
+          result.containerEffects?.behindContent?.shadows.first.color,
           Color.lerp(null, Colors.blue, 0.25),
         );
       });

@@ -427,12 +427,11 @@ packages:
   mix:
     dependency: "direct overridden"
     description:
-      path: "packages/mix"
-      ref: fb6aa7eccc0a4a21728ac61c662d96b94496dd55
-      resolved-ref: fb6aa7eccc0a4a21728ac61c662d96b94496dd55
-      url: "https://github.com/btwld/mix.git"
-    source: git
-    version: "2.1.0"
+      name: mix
+      sha256: "69c94d5b14686ff5add0f59d7d54b302453f7b342c76750d67caf76a0827e88e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0-beta.1"
   mix_annotations:
     dependency: transitive
     description:

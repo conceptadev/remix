@@ -31,13 +31,13 @@ RemixProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
     indicator: BoxStyler()
         .height(metrics.height)
         .borderRadiusAll(metrics.radius),
-    trackEffects: RemixSurfaceEffectsMix(
-      background: _fortalProgressLayer(),
-      foreground: _fortalProgressLayer(),
+    trackEffects: RemixBoxEffectsMix(
+      behindContent: _fortalProgressLayer(),
+      overContent: _fortalProgressLayer(),
     ),
-    indicatorEffects: RemixSurfaceEffectsMix(
-      background: _fortalProgressLayer(),
-      foreground: _fortalProgressLayer(),
+    indicatorEffects: RemixBoxEffectsMix(
+      behindContent: _fortalProgressLayer(),
+      overContent: _fortalProgressLayer(),
     ),
   );
 }
@@ -48,14 +48,14 @@ RemixProgressStyler _fortalProgressClassicStyler(
 }) {
   return _fortalProgressBaseStyler(size)
       .trackColor(FortalTokens.grayA3())
-      .trackEffects(RemixSurfaceEffectsMix(background: _fortalProgressLayer()))
+      .trackEffects(RemixBoxEffectsMix(behindContent: _fortalProgressLayer()))
       .trackEffects(
-        RemixSurfaceEffectsMix(
-          foreground: _fortalProgressLayer(shadowToken: FortalTokens.shadow1),
+        RemixBoxEffectsMix(
+          overContent: _fortalProgressLayer(shadowToken: FortalTokens.shadow1),
         ),
       )
       .indicatorEffects(
-        RemixSurfaceEffectsMix(background: _fortalProgressLayer()),
+        RemixBoxEffectsMix(behindContent: _fortalProgressLayer()),
       )
       .indicatorColor(
         highContrast ? FortalTokens.accent12() : FortalTokens.accentTrack(),
@@ -68,12 +68,12 @@ RemixProgressStyler _fortalProgressSurfaceStyler(
 }) {
   return _fortalProgressBaseStyler(size)
       .trackColor(FortalTokens.grayA3())
-      .trackEffects(RemixSurfaceEffectsMix(background: _fortalProgressLayer()))
+      .trackEffects(RemixBoxEffectsMix(behindContent: _fortalProgressLayer()))
       .trackEffects(
-        RemixSurfaceEffectsMix(
-          foreground: _fortalProgressLayer(
+        RemixBoxEffectsMix(
+          overContent: _fortalProgressLayer(
             shadows: [
-              RemixPaintShadowMix(
+              RemixBoxShadowMix(
                 kind: .inset,
                 color: FortalTokens.grayA4(),
                 spreadRadius: 1,
@@ -83,7 +83,7 @@ RemixProgressStyler _fortalProgressSurfaceStyler(
         ),
       )
       .indicatorEffects(
-        RemixSurfaceEffectsMix(background: _fortalProgressLayer()),
+        RemixBoxEffectsMix(behindContent: _fortalProgressLayer()),
       )
       .indicatorColor(
         highContrast ? FortalTokens.accent12() : FortalTokens.accentTrack(),
@@ -101,14 +101,12 @@ RemixProgressStyler _fortalProgressSoftStyler(
           BoxDecorationMix(color: FortalTokens.whiteA1()),
         ),
       )
-      .trackEffects(RemixSurfaceEffectsMix(background: _fortalProgressLayer()))
-      .trackEffects(RemixSurfaceEffectsMix(foreground: _fortalProgressLayer()))
+      .trackEffects(RemixBoxEffectsMix(behindContent: _fortalProgressLayer()))
+      .trackEffects(RemixBoxEffectsMix(overContent: _fortalProgressLayer()))
       .indicatorEffects(
-        RemixSurfaceEffectsMix(background: _fortalProgressLayer()),
+        RemixBoxEffectsMix(behindContent: _fortalProgressLayer()),
       )
-      .indicatorEffects(
-        RemixSurfaceEffectsMix(foreground: _fortalProgressLayer()),
-      )
+      .indicatorEffects(RemixBoxEffectsMix(overContent: _fortalProgressLayer()))
       .indicatorColor(
         highContrast ? FortalTokens.accent12() : FortalTokens.accent8(),
       )
@@ -138,10 +136,10 @@ RemixProgressStyler _fortalProgressSoftStyler(
   ),
 };
 
-RemixSurfaceLayerMix _fortalProgressLayer({
-  List<RemixPaintShadowMix>? shadows,
-  RemixPaintShadowListToken? shadowToken,
-}) => RemixSurfaceLayerMix(shadows: shadows, shadowToken: shadowToken);
+RemixBoxEffectLayerMix _fortalProgressLayer({
+  List<RemixBoxShadowMix>? shadows,
+  RemixBoxShadowListToken? shadowToken,
+}) => RemixBoxEffectLayerMix(shadows: shadows, shadowToken: shadowToken);
 
 /// Fortal-themed preset for [RemixProgress].
 class FortalProgress extends StatelessWidget {

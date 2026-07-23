@@ -55,9 +55,9 @@ void main() {
                 box: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
               ),
             ),
-            effects: RemixSurfaceEffectsSpec(
-              background: RemixSurfaceLayerSpec(
-                shadows: [RemixPaintShadow(color: color)],
+            containerEffects: RemixBoxEffectsSpec(
+              behindContent: RemixBoxEffectLayerSpec(
+                shadows: [RemixBoxShadow(color: color)],
               ),
             ),
           ),

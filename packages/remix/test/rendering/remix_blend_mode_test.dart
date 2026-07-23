@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_box_effects.dart'
+    show remixBoxWithEffects;
 
 const _boundaryKey = ValueKey('blend-boundary');
 
@@ -96,19 +98,16 @@ void main() {
                   top: 6,
                   width: 8,
                   height: 8,
-                  child: remixSurfaceBox(
+                  child: remixBoxWithEffects(
                     styleSpec: const StyleSpec(
                       spec: BoxSpec(
                         decoration: BoxDecoration(color: Colors.red),
                       ),
                     ),
-                    effects: const RemixSurfaceEffectsSpec(
-                      background: RemixSurfaceLayerSpec(
+                    containerEffects: const RemixBoxEffectsSpec(
+                      behindContent: RemixBoxEffectLayerSpec(
                         shadows: [
-                          RemixPaintShadow(
-                            color: Colors.green,
-                            spreadRadius: 2,
-                          ),
+                          RemixBoxShadow(color: Colors.green, spreadRadius: 2),
                         ],
                       ),
                       outline: BorderSide(color: Colors.yellow, width: 1),
