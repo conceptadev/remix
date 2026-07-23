@@ -81,17 +81,19 @@ class _ViewportFrame extends StatelessWidget {
         platformBrightness: brightness,
         devicePixelRatio: 1.0,
       ),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(brightness: brightness),
-        home: Scaffold(
-          backgroundColor: MixColors.transparent,
-          body: Center(child: child),
+      child: FortalScope(
+        appearance: brightness == .dark ? .dark : .light,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(brightness: brightness),
+          home: Scaffold(
+            backgroundColor: MixColors.transparent,
+            body: Center(child: child),
+          ),
         ),
       ),
     );
 
-    // Note: FortalScope is applied by the component registry wrapper.
     return Stack(
       children: [
         frame,

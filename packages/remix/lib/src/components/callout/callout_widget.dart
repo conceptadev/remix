@@ -6,37 +6,30 @@ part of 'callout.dart';
 /// ## Example
 ///
 /// ```dart
-/// RemixCallout(
-///   text: 'This is a callout message!',
-/// )
+/// RemixCallout(text: 'This is a callout message!')
 /// ```
 class RemixCallout extends StatelessWidget {
-  /// Creates a callout widget with optional text, icon, or custom [child]. At
-  /// least one of [text] or [child] must be provided.
+  /// Creates a callout with established [text] and [icon] values or arbitrary
+  /// [child] and [iconWidget] content.
   const RemixCallout({
     super.key,
-    String? text,
+    this.text,
+    this.child,
     this.icon,
-    Widget? child,
+    this.iconWidget,
     this.style = const RemixCalloutStyler.create(),
     this.styleSpec,
-  }) : text = text,
-       child = child,
-       assert(
+  }) : assert(
          text != null || child != null,
          'Provide either text or child to RemixCallout.',
        );
 
   static final styleFrom = RemixCalloutStyler.new;
 
-  /// The text to display in the callout.
   final String? text;
-
-  /// The icon to display in the callout.
-  final IconData? icon;
-
-  /// Optional custom child content for the callout body.
   final Widget? child;
+  final IconData? icon;
+  final Widget? iconWidget;
 
   /// The style configuration for the callout.
   final RemixCalloutStyler style;
@@ -50,38 +43,29 @@ class RemixCallout extends StatelessWidget {
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
-        // For raw constructor, use provided child directly
-        if (child != null) {
-          return RowBox(
-            styleSpec: spec.container,
-            children: [
-              // RowBox resolves to a Flex. A loose fit gives custom content a
-              // bounded maximum width without forcing it to fill the callout.
-              // ignore: avoid-flexible-outside-flex
-              Flexible(child: child!),
-            ],
-          );
-        }
-
-        // Build the callout content with text and optional icon
-        final List<Widget> children = [];
-
-        // Add icon if present
-        if (icon != null || spec.icon.spec.icon != null) {
-          children.add(StyledIcon(icon: icon, styleSpec: spec.icon));
-        }
-
-        // Add text if present
-        if (text?.isNotEmpty == true) {
-          children.add(
-            // RowBox resolves to a Flex. A loose fit lets text wrap while
-            // preserving its intrinsic width for short messages.
+        final resolvedIcon = iconWidget != null
+            ? RemixDefaultContentStyle(child: iconWidget!, icon: spec.icon)
+            : icon != null || spec.icon.spec.icon != null
+            ? StyledIcon(icon: icon, styleSpec: spec.icon)
+            : null;
+        final content = child != null
+            ? RemixDefaultContentStyle(
+                text: spec.text,
+                icon: spec.icon,
+                child: child!,
+              )
+            : StyledText(text!, styleSpec: spec.text);
+        return RemixFlexBoxWithEffects(
+          key: const ValueKey('remix-callout-surface'),
+          styleSpec: spec.container,
+          direction: Axis.horizontal,
+          containerEffects: spec.containerEffects,
+          children: [
+            if (resolvedIcon != null) resolvedIcon,
             // ignore: avoid-flexible-outside-flex
-            Flexible(child: StyledText(text!, styleSpec: spec.text)),
-          );
-        }
-
-        return RowBox(styleSpec: spec.container, children: children);
+            Flexible(fit: FlexFit.loose, child: content),
+          ],
+        );
       },
     );
   }

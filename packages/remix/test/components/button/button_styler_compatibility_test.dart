@@ -14,7 +14,7 @@ void main() {
     final ButtonStyler canonical = legacy;
     final legacyWidget = RemixButtonStylerRemixHelpers(
       legacy,
-    ).call(label: 'Legacy button');
+    ).call(child: const Text('Legacy button'));
 
     expect(canonical, same(legacy));
     expect(legacy.merge(emptyLegacy), isA<ButtonStyler>());

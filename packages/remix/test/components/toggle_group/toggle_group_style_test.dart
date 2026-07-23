@@ -174,6 +174,119 @@ void main() {
       expect(colors, hasLength(FortalToggleGroupVariant.values.length));
       expect(colors, isNot(contains(null)));
     });
+
+    testWidgets('Fortal high contrast uses accent12 for selected foreground', (
+      tester,
+    ) async {
+      final normal = await _resolveFortalToggleGroupStyle(
+        tester,
+        fortalToggleGroupStyler(),
+        states: {WidgetState.selected},
+      );
+      final highContrast = await _resolveFortalToggleGroupStyle(
+        tester,
+        fortalToggleGroupStyler(highContrast: true),
+        states: {WidgetState.selected},
+      );
+
+      expect(
+        normal.spec.item.spec.label.spec.style?.color,
+        indigo.light.scale.step(11),
+      );
+      expect(
+        highContrast.spec.item.spec.label.spec.style?.color,
+        indigo.light.scale.step(12),
+      );
+    });
+
+    testWidgets('Fortal item metrics use scaled shared tokens', (tester) async {
+      final resolved = await _resolveFortalToggleGroupStyle(
+        tester,
+        fortalToggleGroupStyler(size: .size3),
+        scaling: .percent110,
+      );
+      final item = resolved.spec.item.spec;
+      final padding = item.container.spec.box!.spec.padding!.resolve(
+        TextDirection.ltr,
+      );
+
+      expect(padding.left, closeTo(17.6, 1e-9));
+      expect(padding.top, closeTo(8.8, 1e-9));
+      expect(item.container.spec.flex?.spec.spacing, closeTo(6.6, 1e-9));
+      expect(item.label.spec.style?.fontSize, closeTo(17.6, 1e-9));
+      expect(item.label.spec.style?.height, closeTo(24 / 16, 1e-9));
+      expect(item.label.spec.style?.fontWeight, FontWeight.w500);
+      expect(item.icon.spec.size, closeTo(22, 1e-9));
+    });
+
+    testWidgets('Fortal pressed and disabled precedence is deterministic', (
+      tester,
+    ) async {
+      final pressed = await _resolveFortalToggleGroupStyle(
+        tester,
+        fortalToggleGroupStyler(),
+        states: {WidgetState.pressed},
+      );
+      final selectedPressed = await _resolveFortalToggleGroupStyle(
+        tester,
+        fortalToggleGroupStyler(),
+        states: {WidgetState.selected, WidgetState.pressed},
+      );
+      final disabled = await _resolveFortalToggleGroupStyle(
+        tester,
+        fortalToggleGroupStyler(),
+        states: {
+          WidgetState.disabled,
+          WidgetState.selected,
+          WidgetState.hovered,
+          WidgetState.pressed,
+        },
+      );
+
+      expect(_toggleGroupItemColor(pressed), slate.light.scale.alphaStep(4));
+      expect(
+        _toggleGroupItemColor(selectedPressed),
+        indigo.light.scale.step(5),
+      );
+      expect(_toggleGroupItemColor(disabled), slate.light.scale.alphaStep(3));
+      expect(
+        disabled.spec.item.spec.label.spec.style?.color,
+        slate.light.scale.step(8),
+      );
+    });
+
+    testWidgets('Fortal hover and focus resolve exact interaction roles', (
+      tester,
+    ) async {
+      final hovered = await _resolveFortalToggleGroupStyle(
+        tester,
+        fortalToggleGroupStyler(),
+        states: {WidgetState.hovered},
+      );
+      final selectedHovered = await _resolveFortalToggleGroupStyle(
+        tester,
+        fortalToggleGroupStyler(),
+        states: {WidgetState.selected, WidgetState.hovered},
+      );
+      final focused = await _resolveFortalToggleGroupStyle(
+        tester,
+        fortalToggleGroupStyler(),
+        states: {WidgetState.focused},
+      );
+
+      expect(_toggleGroupItemColor(hovered), slate.light.scale.alphaStep(3));
+      expect(
+        _toggleGroupItemColor(selectedHovered),
+        indigo.light.scale.step(4),
+      );
+      final border =
+          (focused.spec.item.spec.container.spec.box?.spec.decoration
+                  as BoxDecoration?)
+              ?.border;
+      expect(border, isA<Border>());
+      expect((border as Border).top.color, indigo.light.scale.alphaStep(8));
+      expect(border.top.width, 2);
+    });
   });
 
   group('RemixToggleGroupItemStyler', () {
@@ -213,11 +326,14 @@ Future<StyleSpec<RemixToggleGroupSpec>> _resolveFortalToggleGroupStyle(
   WidgetTester tester,
   RemixToggleGroupStyler style, {
   Set<WidgetState> states = const {},
+  FortalScaling scaling = .percent100,
 }) async {
   late StyleSpec<RemixToggleGroupSpec> resolved;
 
   await tester.pumpWidget(
     FortalScope(
+      appearance: .light,
+      scaling: scaling,
       child: MaterialApp(
         home: WidgetStateProvider(
           states: states,
@@ -235,3 +351,7 @@ Future<StyleSpec<RemixToggleGroupSpec>> _resolveFortalToggleGroupStyle(
 
   return resolved;
 }
+
+Color? _toggleGroupItemColor(StyleSpec<RemixToggleGroupSpec> spec) =>
+    (spec.spec.item.spec.container.spec.box!.spec.decoration as BoxDecoration?)
+        ?.color;

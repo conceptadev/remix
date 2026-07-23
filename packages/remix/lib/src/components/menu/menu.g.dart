@@ -94,7 +94,9 @@ typedef _$RemixMenuTriggerSpecMethods = _$RemixMenuTriggerSpec; // ignore: unuse
 mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
   StyleSpec<RemixMenuTriggerSpec> get trigger;
   StyleSpec<FlexBoxSpec> get overlay;
+  RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<RemixMenuItemSpec> get item;
+  StyleSpec<RemixMenuItemSpec> get label;
   StyleSpec<RemixDividerSpec> get divider;
 
   @override
@@ -104,13 +106,17 @@ mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
   RemixMenuSpec copyWith({
     StyleSpec<RemixMenuTriggerSpec>? trigger,
     StyleSpec<FlexBoxSpec>? overlay,
+    RemixBoxEffectsSpec? containerEffects,
     StyleSpec<RemixMenuItemSpec>? item,
+    StyleSpec<RemixMenuItemSpec>? label,
     StyleSpec<RemixDividerSpec>? divider,
   }) {
     return RemixMenuSpec(
       trigger: trigger ?? this.trigger,
       overlay: overlay ?? this.overlay,
+      containerEffects: containerEffects ?? this.containerEffects,
       item: item ?? this.item,
+      label: label ?? this.label,
       divider: divider ?? this.divider,
     );
   }
@@ -120,13 +126,26 @@ mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
     return RemixMenuSpec(
       trigger: trigger.lerp(other?.trigger, t),
       overlay: overlay.lerp(other?.overlay, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
       item: item.lerp(other?.item, t),
+      label: label.lerp(other?.label, t),
       divider: divider.lerp(other?.divider, t),
     );
   }
 
   @override
-  List<Object?> get props => [trigger, overlay, item, divider];
+  List<Object?> get props => [
+    trigger,
+    overlay,
+    containerEffects,
+    item,
+    label,
+    divider,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -170,7 +189,9 @@ mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
     properties
       ..add(DiagnosticsProperty('trigger', trigger))
       ..add(DiagnosticsProperty('overlay', overlay))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('item', item))
+      ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('divider', divider));
   }
 }
@@ -185,6 +206,12 @@ mixin _$RemixMenuItemSpec implements Spec<RemixMenuItemSpec>, Diagnosticable {
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get leadingIcon;
   StyleSpec<IconSpec> get trailingIcon;
+  StyleSpec<BoxSpec> get indicator;
+  StyleSpec<IconSpec> get indicatorIcon;
+  double? get leadingInset;
+  double? get checkableLeadingInset;
+  double? get trailingInset;
+  double? get adjacentItemSpacing;
 
   @override
   Type get type => RemixMenuItemSpec;
@@ -195,12 +222,25 @@ mixin _$RemixMenuItemSpec implements Spec<RemixMenuItemSpec>, Diagnosticable {
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? leadingIcon,
     StyleSpec<IconSpec>? trailingIcon,
+    StyleSpec<BoxSpec>? indicator,
+    StyleSpec<IconSpec>? indicatorIcon,
+    double? leadingInset,
+    double? checkableLeadingInset,
+    double? trailingInset,
+    double? adjacentItemSpacing,
   }) {
     return RemixMenuItemSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       leadingIcon: leadingIcon ?? this.leadingIcon,
       trailingIcon: trailingIcon ?? this.trailingIcon,
+      indicator: indicator ?? this.indicator,
+      indicatorIcon: indicatorIcon ?? this.indicatorIcon,
+      leadingInset: leadingInset ?? this.leadingInset,
+      checkableLeadingInset:
+          checkableLeadingInset ?? this.checkableLeadingInset,
+      trailingInset: trailingInset ?? this.trailingInset,
+      adjacentItemSpacing: adjacentItemSpacing ?? this.adjacentItemSpacing,
     );
   }
 
@@ -211,11 +251,36 @@ mixin _$RemixMenuItemSpec implements Spec<RemixMenuItemSpec>, Diagnosticable {
       label: label.lerp(other?.label, t),
       leadingIcon: leadingIcon.lerp(other?.leadingIcon, t),
       trailingIcon: trailingIcon.lerp(other?.trailingIcon, t),
+      indicator: indicator.lerp(other?.indicator, t),
+      indicatorIcon: indicatorIcon.lerp(other?.indicatorIcon, t),
+      leadingInset: MixOps.lerp(leadingInset, other?.leadingInset, t),
+      checkableLeadingInset: MixOps.lerp(
+        checkableLeadingInset,
+        other?.checkableLeadingInset,
+        t,
+      ),
+      trailingInset: MixOps.lerp(trailingInset, other?.trailingInset, t),
+      adjacentItemSpacing: MixOps.lerp(
+        adjacentItemSpacing,
+        other?.adjacentItemSpacing,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, label, leadingIcon, trailingIcon];
+  List<Object?> get props => [
+    container,
+    label,
+    leadingIcon,
+    trailingIcon,
+    indicator,
+    indicatorIcon,
+    leadingInset,
+    checkableLeadingInset,
+    trailingInset,
+    adjacentItemSpacing,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -260,7 +325,13 @@ mixin _$RemixMenuItemSpec implements Spec<RemixMenuItemSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('leadingIcon', leadingIcon))
-      ..add(DiagnosticsProperty('trailingIcon', trailingIcon));
+      ..add(DiagnosticsProperty('trailingIcon', trailingIcon))
+      ..add(DiagnosticsProperty('indicator', indicator))
+      ..add(DiagnosticsProperty('indicatorIcon', indicatorIcon))
+      ..add(DoubleProperty('leadingInset', leadingInset))
+      ..add(DoubleProperty('checkableLeadingInset', checkableLeadingInset))
+      ..add(DoubleProperty('trailingInset', trailingInset))
+      ..add(DoubleProperty('adjacentItemSpacing', adjacentItemSpacing));
   }
 }
 
@@ -949,26 +1020,34 @@ class RemixMenuTriggerStyler
 class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
   final Prop<StyleSpec<RemixMenuTriggerSpec>>? $trigger;
   final Prop<StyleSpec<FlexBoxSpec>>? $overlay;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<RemixMenuItemSpec>>? $item;
+  final Prop<StyleSpec<RemixMenuItemSpec>>? $label;
   final Prop<StyleSpec<RemixDividerSpec>>? $divider;
 
   const RemixMenuStyler.create({
     Prop<StyleSpec<RemixMenuTriggerSpec>>? trigger,
     Prop<StyleSpec<FlexBoxSpec>>? overlay,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<RemixMenuItemSpec>>? item,
+    Prop<StyleSpec<RemixMenuItemSpec>>? label,
     Prop<StyleSpec<RemixDividerSpec>>? divider,
     super.variants,
     super.modifier,
     super.animation,
   }) : $trigger = trigger,
        $overlay = overlay,
+       $containerEffects = containerEffects,
        $item = item,
+       $label = label,
        $divider = divider;
 
   RemixMenuStyler({
     RemixMenuTriggerStyler? trigger,
     FlexBoxStyler? overlay,
+    RemixBoxEffectsMix? containerEffects,
     RemixMenuItemStyler? item,
+    RemixMenuItemStyler? label,
     RemixDividerStyler? divider,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -976,7 +1055,9 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
   }) : this.create(
          trigger: Prop.maybeMix(trigger),
          overlay: Prop.maybeMix(overlay),
+         containerEffects: Prop.maybeMix(containerEffects),
          item: Prop.maybeMix(item),
+         label: Prop.maybeMix(label),
          divider: Prop.maybeMix(divider),
          variants: variants,
          modifier: modifier,
@@ -987,8 +1068,12 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
       RemixMenuStyler().trigger(value);
   factory RemixMenuStyler.overlay(FlexBoxStyler value) =>
       RemixMenuStyler().overlay(value);
+  factory RemixMenuStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixMenuStyler().containerEffects(value);
   factory RemixMenuStyler.item(RemixMenuItemStyler value) =>
       RemixMenuStyler().item(value);
+  factory RemixMenuStyler.label(RemixMenuItemStyler value) =>
+      RemixMenuStyler().label(value);
   factory RemixMenuStyler.divider(RemixDividerStyler value) =>
       RemixMenuStyler().divider(value);
 
@@ -1002,9 +1087,19 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
     return merge(RemixMenuStyler(overlay: value));
   }
 
+  /// Sets the containerEffects.
+  RemixMenuStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixMenuStyler(containerEffects: value));
+  }
+
   /// Sets the item.
   RemixMenuStyler item(RemixMenuItemStyler value) {
     return merge(RemixMenuStyler(item: value));
+  }
+
+  /// Sets the label.
+  RemixMenuStyler label(RemixMenuItemStyler value) {
+    return merge(RemixMenuStyler(label: value));
   }
 
   /// Sets the divider.
@@ -1041,7 +1136,12 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
     return RemixMenuStyler.create(
       trigger: MixOps.merge($trigger, other?.$trigger),
       overlay: MixOps.merge($overlay, other?.$overlay),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       item: MixOps.merge($item, other?.$item),
+      label: MixOps.merge($label, other?.$label),
       divider: MixOps.merge($divider, other?.$divider),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
@@ -1055,7 +1155,9 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
     final spec = RemixMenuSpec(
       trigger: MixOps.resolve(context, $trigger),
       overlay: MixOps.resolve(context, $overlay),
+      containerEffects: MixOps.resolve(context, $containerEffects),
       item: MixOps.resolve(context, $item),
+      label: MixOps.resolve(context, $label),
       divider: MixOps.resolve(context, $divider),
     );
 
@@ -1072,7 +1174,9 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
     properties
       ..add(DiagnosticsProperty('trigger', $trigger))
       ..add(DiagnosticsProperty('overlay', $overlay))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('item', $item))
+      ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('divider', $divider));
   }
 
@@ -1080,7 +1184,9 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
   List<Object?> get props => [
     $trigger,
     $overlay,
+    $containerEffects,
     $item,
+    $label,
     $divider,
     $animation,
     $modifier,
@@ -1095,25 +1201,49 @@ class RemixMenuItemStyler
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $leadingIcon;
   final Prop<StyleSpec<IconSpec>>? $trailingIcon;
+  final Prop<StyleSpec<BoxSpec>>? $indicator;
+  final Prop<StyleSpec<IconSpec>>? $indicatorIcon;
+  final Prop<double>? $leadingInset;
+  final Prop<double>? $checkableLeadingInset;
+  final Prop<double>? $trailingInset;
+  final Prop<double>? $adjacentItemSpacing;
 
   const RemixMenuItemStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? leadingIcon,
     Prop<StyleSpec<IconSpec>>? trailingIcon,
+    Prop<StyleSpec<BoxSpec>>? indicator,
+    Prop<StyleSpec<IconSpec>>? indicatorIcon,
+    Prop<double>? leadingInset,
+    Prop<double>? checkableLeadingInset,
+    Prop<double>? trailingInset,
+    Prop<double>? adjacentItemSpacing,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $label = label,
        $leadingIcon = leadingIcon,
-       $trailingIcon = trailingIcon;
+       $trailingIcon = trailingIcon,
+       $indicator = indicator,
+       $indicatorIcon = indicatorIcon,
+       $leadingInset = leadingInset,
+       $checkableLeadingInset = checkableLeadingInset,
+       $trailingInset = trailingInset,
+       $adjacentItemSpacing = adjacentItemSpacing;
 
   RemixMenuItemStyler({
     FlexBoxStyler? container,
     TextStyler? label,
     IconStyler? leadingIcon,
     IconStyler? trailingIcon,
+    BoxStyler? indicator,
+    IconStyler? indicatorIcon,
+    double? leadingInset,
+    double? checkableLeadingInset,
+    double? trailingInset,
+    double? adjacentItemSpacing,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixMenuItemSpec>>? variants,
@@ -1122,6 +1252,12 @@ class RemixMenuItemStyler
          label: Prop.maybeMix(label),
          leadingIcon: Prop.maybeMix(leadingIcon),
          trailingIcon: Prop.maybeMix(trailingIcon),
+         indicator: Prop.maybeMix(indicator),
+         indicatorIcon: Prop.maybeMix(indicatorIcon),
+         leadingInset: Prop.maybe(leadingInset),
+         checkableLeadingInset: Prop.maybe(checkableLeadingInset),
+         trailingInset: Prop.maybe(trailingInset),
+         adjacentItemSpacing: Prop.maybe(adjacentItemSpacing),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -1135,6 +1271,18 @@ class RemixMenuItemStyler
       RemixMenuItemStyler().leadingIcon(value);
   factory RemixMenuItemStyler.trailingIcon(IconStyler value) =>
       RemixMenuItemStyler().trailingIcon(value);
+  factory RemixMenuItemStyler.indicator(BoxStyler value) =>
+      RemixMenuItemStyler().indicator(value);
+  factory RemixMenuItemStyler.indicatorIcon(IconStyler value) =>
+      RemixMenuItemStyler().indicatorIcon(value);
+  factory RemixMenuItemStyler.leadingInset(double value) =>
+      RemixMenuItemStyler().leadingInset(value);
+  factory RemixMenuItemStyler.checkableLeadingInset(double value) =>
+      RemixMenuItemStyler().checkableLeadingInset(value);
+  factory RemixMenuItemStyler.trailingInset(double value) =>
+      RemixMenuItemStyler().trailingInset(value);
+  factory RemixMenuItemStyler.adjacentItemSpacing(double value) =>
+      RemixMenuItemStyler().adjacentItemSpacing(value);
   factory RemixMenuItemStyler.color(Color value) =>
       RemixMenuItemStyler().color(value);
   factory RemixMenuItemStyler.gradient(GradientMix value) =>
@@ -1688,6 +1836,36 @@ class RemixMenuItemStyler
     return merge(RemixMenuItemStyler(trailingIcon: value));
   }
 
+  /// Sets the indicator.
+  RemixMenuItemStyler indicator(BoxStyler value) {
+    return merge(RemixMenuItemStyler(indicator: value));
+  }
+
+  /// Sets the indicatorIcon.
+  RemixMenuItemStyler indicatorIcon(IconStyler value) {
+    return merge(RemixMenuItemStyler(indicatorIcon: value));
+  }
+
+  /// Sets the leadingInset.
+  RemixMenuItemStyler leadingInset(double value) {
+    return merge(RemixMenuItemStyler(leadingInset: value));
+  }
+
+  /// Sets the checkableLeadingInset.
+  RemixMenuItemStyler checkableLeadingInset(double value) {
+    return merge(RemixMenuItemStyler(checkableLeadingInset: value));
+  }
+
+  /// Sets the trailingInset.
+  RemixMenuItemStyler trailingInset(double value) {
+    return merge(RemixMenuItemStyler(trailingInset: value));
+  }
+
+  /// Sets the adjacentItemSpacing.
+  RemixMenuItemStyler adjacentItemSpacing(double value) {
+    return merge(RemixMenuItemStyler(adjacentItemSpacing: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixMenuItemStyler animate(AnimationConfig value) {
@@ -1719,6 +1897,18 @@ class RemixMenuItemStyler
       label: MixOps.merge($label, other?.$label),
       leadingIcon: MixOps.merge($leadingIcon, other?.$leadingIcon),
       trailingIcon: MixOps.merge($trailingIcon, other?.$trailingIcon),
+      indicator: MixOps.merge($indicator, other?.$indicator),
+      indicatorIcon: MixOps.merge($indicatorIcon, other?.$indicatorIcon),
+      leadingInset: MixOps.merge($leadingInset, other?.$leadingInset),
+      checkableLeadingInset: MixOps.merge(
+        $checkableLeadingInset,
+        other?.$checkableLeadingInset,
+      ),
+      trailingInset: MixOps.merge($trailingInset, other?.$trailingInset),
+      adjacentItemSpacing: MixOps.merge(
+        $adjacentItemSpacing,
+        other?.$adjacentItemSpacing,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1733,6 +1923,12 @@ class RemixMenuItemStyler
       label: MixOps.resolve(context, $label),
       leadingIcon: MixOps.resolve(context, $leadingIcon),
       trailingIcon: MixOps.resolve(context, $trailingIcon),
+      indicator: MixOps.resolve(context, $indicator),
+      indicatorIcon: MixOps.resolve(context, $indicatorIcon),
+      leadingInset: MixOps.resolve(context, $leadingInset),
+      checkableLeadingInset: MixOps.resolve(context, $checkableLeadingInset),
+      trailingInset: MixOps.resolve(context, $trailingInset),
+      adjacentItemSpacing: MixOps.resolve(context, $adjacentItemSpacing),
     );
 
     return StyleSpec(
@@ -1749,7 +1945,15 @@ class RemixMenuItemStyler
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('leadingIcon', $leadingIcon))
-      ..add(DiagnosticsProperty('trailingIcon', $trailingIcon));
+      ..add(DiagnosticsProperty('trailingIcon', $trailingIcon))
+      ..add(DiagnosticsProperty('indicator', $indicator))
+      ..add(DiagnosticsProperty('indicatorIcon', $indicatorIcon))
+      ..add(DiagnosticsProperty('leadingInset', $leadingInset))
+      ..add(
+        DiagnosticsProperty('checkableLeadingInset', $checkableLeadingInset),
+      )
+      ..add(DiagnosticsProperty('trailingInset', $trailingInset))
+      ..add(DiagnosticsProperty('adjacentItemSpacing', $adjacentItemSpacing));
   }
 
   @override
@@ -1758,6 +1962,12 @@ class RemixMenuItemStyler
     $label,
     $leadingIcon,
     $trailingIcon,
+    $indicator,
+    $indicatorIcon,
+    $leadingInset,
+    $checkableLeadingInset,
+    $trailingInset,
+    $adjacentItemSpacing,
     $animation,
     $modifier,
     $variants,

@@ -9,6 +9,7 @@ part of 'badge.dart';
 mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<TextSpec> get label;
+  RemixBoxEffectsSpec? get containerEffects;
 
   @override
   Type get type => RemixBadgeSpec;
@@ -17,10 +18,12 @@ mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
   RemixBadgeSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
+    RemixBoxEffectsSpec? containerEffects,
   }) {
     return RemixBadgeSpec(
       container: container ?? this.container,
       label: label ?? this.label,
+      containerEffects: containerEffects ?? this.containerEffects,
     );
   }
 
@@ -29,11 +32,16 @@ mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
     return RemixBadgeSpec(
       container: container.lerp(other?.container, t),
       label: label.lerp(other?.label, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, label];
+  List<Object?> get props => [container, label, containerEffects];
 
   @override
   bool operator ==(Object other) {
@@ -76,7 +84,8 @@ mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('label', label));
+      ..add(DiagnosticsProperty('label', label))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects));
   }
 }
 
@@ -95,25 +104,30 @@ class RemixBadgeStyler extends MixStyler<RemixBadgeStyler, RemixBadgeSpec>
         LabelStyleMixin<RemixBadgeStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
   const RemixBadgeStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
-       $label = label;
+       $label = label,
+       $containerEffects = containerEffects;
 
   RemixBadgeStyler({
     BoxStyler? container,
     TextStyler? label,
+    RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixBadgeSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          label: Prop.maybeMix(label),
+         containerEffects: Prop.maybeMix(containerEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -123,6 +137,8 @@ class RemixBadgeStyler extends MixStyler<RemixBadgeStyler, RemixBadgeSpec>
       RemixBadgeStyler().container(value);
   factory RemixBadgeStyler.label(TextStyler value) =>
       RemixBadgeStyler().label(value);
+  factory RemixBadgeStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixBadgeStyler().containerEffects(value);
   factory RemixBadgeStyler.alignment(AlignmentGeometry value) =>
       RemixBadgeStyler().alignment(value);
   factory RemixBadgeStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -606,6 +622,11 @@ class RemixBadgeStyler extends MixStyler<RemixBadgeStyler, RemixBadgeSpec>
     return merge(RemixBadgeStyler(label: value));
   }
 
+  /// Sets the containerEffects.
+  RemixBadgeStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixBadgeStyler(containerEffects: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixBadgeStyler animate(AnimationConfig value) {
@@ -635,6 +656,10 @@ class RemixBadgeStyler extends MixStyler<RemixBadgeStyler, RemixBadgeSpec>
     return RemixBadgeStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -647,6 +672,7 @@ class RemixBadgeStyler extends MixStyler<RemixBadgeStyler, RemixBadgeSpec>
     final spec = RemixBadgeSpec(
       container: MixOps.resolve(context, $container),
       label: MixOps.resolve(context, $label),
+      containerEffects: MixOps.resolve(context, $containerEffects),
     );
 
     return StyleSpec(
@@ -661,13 +687,15 @@ class RemixBadgeStyler extends MixStyler<RemixBadgeStyler, RemixBadgeSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('label', $label));
+      ..add(DiagnosticsProperty('label', $label))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
   }
 
   @override
   List<Object?> get props => [
     $container,
     $label,
+    $containerEffects,
     $animation,
     $modifier,
     $variants,

@@ -12,28 +12,29 @@ Widget buildDividerUseCase(BuildContext context) {
       body: Center(
         child: Center(
           child: FortalButton(
-            label: 'Open Dialog',
             onPressed: () {
               showRemixDialog(
                 context: context,
-                builder: (context) => Center(
-                  child: FortalDialog(
-                    title: 'Revoke access',
-                    description:
-                        'Are you sure? This application will no longer be accessible and any existing sessions will be expired.',
-                    actions: [
-                      FortalButton.ghost(
-                        label: 'Cancel',
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FortalButton(label: 'Revoke access', onPressed: () {}),
-                    ],
-                  ),
+                builder: (context) => FortalDialog(
+                  title: 'Revoke access',
+                  description:
+                      'Are you sure? This application will no longer be accessible and any existing sessions will be expired.',
+                  actions: [
+                    FortalButton.ghost(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    FortalButton(
+                      onPressed: () {},
+                      child: const Text('Revoke access'),
+                    ),
+                  ],
                 ),
               );
             },
+            child: const Text('Open Dialog'),
           ),
         ),
       ),
@@ -46,30 +47,28 @@ Widget buildAlertDialogUseCase(BuildContext context) {
   return Scaffold(
     body: Center(
       child: FortalButton(
-        label: 'Delete project',
         onPressed: () {
           showRemixAlertDialog<void>(
             context: context,
             semanticLabel: 'Delete project confirmation',
-            builder: (context) => Center(
-              child: FortalDialog(
-                title: 'Delete project?',
-                description:
-                    'This permanently deletes the project and all of its data.',
-                actions: [
-                  FortalButton.ghost(
-                    label: 'Cancel',
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  FortalButton(
-                    label: 'Delete project',
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
+            builder: (context) => FortalDialog(
+              title: 'Delete project?',
+              description:
+                  'This permanently deletes the project and all of its data.',
+              actions: [
+                FortalButton.ghost(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                FortalButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Delete project'),
+                ),
+              ],
             ),
           );
         },
+        child: const Text('Delete project'),
       ),
     ),
   );

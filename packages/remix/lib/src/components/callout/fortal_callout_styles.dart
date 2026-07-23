@@ -1,148 +1,167 @@
 part of 'callout.dart';
 
-/// Fortal callout size presets.
+/// Radix Themes Callout size presets.
 enum FortalCalloutSize { size1, size2, size3 }
 
-/// Fortal callout color and emphasis variants.
-enum FortalCalloutVariant { outline, surface, soft }
+/// Radix Themes Callout variants.
+enum FortalCalloutVariant { soft, surface, outline }
 
-/// Fortal-themed preset for [RemixCallout].
+/// Fortal recipe for [RemixCallout].
 RemixCalloutStyler fortalCalloutStyler({
-  FortalCalloutVariant variant = .surface,
+  FortalCalloutVariant variant = .soft,
   FortalCalloutSize size = .size2,
+  bool highContrast = false,
 }) {
+  final base = _fortalCalloutBaseStyler(size).foregroundColor(
+    highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
+  );
   return switch (variant) {
-    .soft => _fortalCalloutSoftStyler(size),
-    .outline => _fortalCalloutOutlineStyler(size),
-    .surface => _fortalCalloutSurfaceStyler(size),
+    .soft => base.color(FortalTokens.accentA3()),
+    .surface =>
+      base
+          .color(FortalTokens.accentA2())
+          .containerEffects(
+            RemixBoxEffectsMix(
+              behindContent: RemixBoxEffectLayerMix(
+                shadows: [
+                  RemixBoxShadowMix(
+                    kind: RemixBoxShadowKind.inset,
+                    color: FortalTokens.accentA6(),
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+            ),
+          ),
+    .outline => base.containerEffects(
+      RemixBoxEffectsMix(
+        behindContent: RemixBoxEffectLayerMix(
+          shadows: [
+            RemixBoxShadowMix(
+              kind: RemixBoxShadowKind.inset,
+              color: FortalTokens.accentA7(),
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+      ),
+    ),
   };
 }
 
 RemixCalloutStyler _fortalCalloutBaseStyler(FortalCalloutSize size) {
-  return RemixCalloutStyler()
-      .merge(
-        RemixCalloutStyler(
-          container: FlexBoxStyler(
-            direction: .horizontal,
-            crossAxisAlignment: .center,
-          ),
-        ),
-      )
-      .merge(_fortalCalloutSizeStyler(size));
+  final radius = _fortalCalloutRadius(size);
+  return RemixCalloutStyler(
+    container: .direction(.horizontal)
+        .mainAxisSize(.min)
+        .crossAxisAlignment(.start)
+        .spacing(_fortalCalloutGap(size))
+        .padding(EdgeInsetsGeometryMix.all(_fortalCalloutPadding(size))),
+    text: .style(_fortalCalloutText(size).mix()),
+    icon: .size(_fortalCalloutIconSize(size)),
+  ).borderRadiusAll(radius);
 }
 
-RemixCalloutStyler _fortalCalloutOutlineStyler([
-  FortalCalloutSize size = .size2,
-]) {
-  return _fortalCalloutBaseStyler(size)
-      .backgroundColor(Colors.transparent)
-      .borderAll(
-        color: FortalTokens.accent7(),
-        width: FortalTokens.borderWidth1(),
-      )
-      .borderRadiusAll(FortalTokens.radius3())
-      .foregroundColor(FortalTokens.accent11());
-}
+double _fortalCalloutPadding(FortalCalloutSize size) => switch (size) {
+  .size1 => FortalTokens.space3(),
+  .size2 => FortalTokens.space4(),
+  .size3 => FortalTokens.space5(),
+};
 
-RemixCalloutStyler _fortalCalloutSurfaceStyler([
-  FortalCalloutSize size = .size2,
-]) {
-  return _fortalCalloutBaseStyler(size)
-      .backgroundColor(FortalTokens.accentSurface())
-      .borderAll(
-        color: FortalTokens.accent6(),
-        width: FortalTokens.borderWidth1(),
-      )
-      .borderRadiusAll(FortalTokens.radius3())
-      .foregroundColor(FortalTokens.accent11());
-}
+double _fortalCalloutGap(FortalCalloutSize size) => switch (size) {
+  .size1 => FortalTokens.space2(),
+  .size2 => FortalTokens.space3(),
+  .size3 => FortalTokens.space4(),
+};
 
-RemixCalloutStyler _fortalCalloutSoftStyler([FortalCalloutSize size = .size2]) {
-  return _fortalCalloutBaseStyler(size)
-      .backgroundColor(FortalTokens.accent3())
-      .borderRadiusAll(FortalTokens.radius3())
-      .foregroundColor(FortalTokens.accent11());
-}
+TextStyleToken _fortalCalloutText(FortalCalloutSize size) => switch (size) {
+  .size1 || .size2 => FortalTokens.text2,
+  .size3 => FortalTokens.text3,
+};
 
-RemixCalloutStyler _fortalCalloutSizeStyler(FortalCalloutSize size) {
-  return switch (size) {
-    .size1 => RemixCalloutStyler(
-      container: FlexBoxStyler()
-          .paddingY(8.0)
-          .paddingX(12.0)
-          .spacing(FortalTokens.space2()),
-      text: TextStyler(style: FortalTokens.text1.mix()),
-      icon: IconStyler(size: 16.0),
-    ),
-    .size2 => RemixCalloutStyler(
-      container: FlexBoxStyler()
-          .paddingY(12.0)
-          .paddingX(16.0)
-          .spacing(FortalTokens.space2()),
-      text: TextStyler(style: FortalTokens.text2.mix()),
-      icon: IconStyler(size: 20.0),
-    ),
-    .size3 => RemixCalloutStyler(
-      container: FlexBoxStyler()
-          .paddingY(16.0)
-          .paddingX(20.0)
-          .spacing(FortalTokens.space3()),
-      text: TextStyler(style: FortalTokens.text3.mix()),
-      icon: IconStyler(size: 24.0),
-    ),
-  };
-}
+double _fortalCalloutIconSize(FortalCalloutSize size) => switch (size) {
+  .size1 || .size2 => FortalTokens.space4(),
+  .size3 => FortalTokens.spinnerSize3(),
+};
 
-/// Fortal-themed preset for [RemixCallout].
+Radius _fortalCalloutRadius(FortalCalloutSize size) => switch (size) {
+  .size1 => FortalTokens.radius3(),
+  .size2 => FortalTokens.radius4(),
+  .size3 => FortalTokens.radius5(),
+};
+
+/// Fortal-themed Callout with the Radix size, variant, and override contract.
 class FortalCallout extends StatelessWidget {
   const FortalCallout({
     super.key,
-    this.variant = .surface,
+    this.variant = .soft,
     this.size = .size2,
+    this.color,
+    this.highContrast = false,
     this.text,
-    this.icon,
     this.child,
+    this.icon,
+    this.iconWidget,
   });
-
-  const FortalCallout.outline({
-    super.key,
-    this.size = .size2,
-    this.text,
-    this.icon,
-    this.child,
-  }) : variant = FortalCalloutVariant.outline;
-
-  const FortalCallout.surface({
-    super.key,
-    this.size = .size2,
-    this.text,
-    this.icon,
-    this.child,
-  }) : variant = FortalCalloutVariant.surface;
 
   const FortalCallout.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.highContrast = false,
     this.text,
-    this.icon,
     this.child,
-  }) : variant = FortalCalloutVariant.soft;
+    this.icon,
+    this.iconWidget,
+  }) : variant = .soft;
+
+  const FortalCallout.surface({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.highContrast = false,
+    this.text,
+    this.child,
+    this.icon,
+    this.iconWidget,
+  }) : variant = .surface;
+
+  const FortalCallout.outline({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.highContrast = false,
+    this.text,
+    this.child,
+    this.icon,
+    this.iconWidget,
+  }) : variant = .outline;
 
   final FortalCalloutVariant variant;
-
   final FortalCalloutSize size;
-
+  final FortalAccentColor? color;
+  final bool highContrast;
   final String? text;
-
-  final IconData? icon;
-
   final Widget? child;
+  final IconData? icon;
+  final Widget? iconWidget;
 
   @override
   Widget build(BuildContext context) {
-    return fortalCalloutStyler(
-      variant: this.variant,
-      size: this.size,
-    ).call(key: this.key, text: this.text, icon: this.icon, child: this.child);
+    return FortalComponentOverride(
+      color: color,
+      child:
+          fortalCalloutStyler(
+            variant: variant,
+            size: size,
+            highContrast: highContrast,
+          ).call(
+            key: key,
+            text: text,
+            child: child,
+            icon: icon,
+            iconWidget: iconWidget,
+          ),
+    );
   }
 }

@@ -4,90 +4,139 @@ part of 'progress.dart';
 enum FortalProgressSize { size1, size2, size3 }
 
 /// Fortal progress color variants.
-enum FortalProgressVariant { surface, soft }
+enum FortalProgressVariant { classic, surface, soft }
 
 /// Fortal-themed preset for [RemixProgress].
 RemixProgressStyler fortalProgressStyler({
   FortalProgressVariant variant = .surface,
   FortalProgressSize size = .size2,
+  bool highContrast = false,
 }) {
   return switch (variant) {
-    .surface => _fortalProgressSurfaceStyler(size),
-    .soft => _fortalProgressSoftStyler(size),
+    .classic => _fortalProgressClassicStyler(size, highContrast: highContrast),
+    .surface => _fortalProgressSurfaceStyler(size, highContrast: highContrast),
+    .soft => _fortalProgressSoftStyler(size, highContrast: highContrast),
   };
 }
 
 RemixProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
-  return RemixProgressStyler()
-      .width(.infinity)
-      .merge(_fortalProgressSizeStyler(size));
+  final metrics = _fortalProgressMetrics(size);
+  return RemixProgressStyler(
+    container: .width(.infinity)
+        .height(metrics.height)
+        .borderRadiusAll(metrics.radius)
+        .clipBehavior(.antiAlias),
+    track: .width(.infinity).height(metrics.height),
+    indicator: .height(metrics.height).borderRadiusAll(metrics.radius),
+    trackEffects: RemixBoxEffectsMix(
+      behindContent: _fortalProgressLayer(),
+      overContent: _fortalProgressLayer(),
+    ),
+    indicatorEffects: RemixBoxEffectsMix(
+      behindContent: _fortalProgressLayer(),
+      overContent: _fortalProgressLayer(),
+    ),
+  );
 }
 
-RemixProgressStyler _fortalProgressSurfaceStyler([
-  FortalProgressSize size = .size2,
-]) {
+RemixProgressStyler _fortalProgressClassicStyler(
+  FortalProgressSize size, {
+  required bool highContrast,
+}) {
   return _fortalProgressBaseStyler(size)
-      .foregroundDecoration(
-        BoxDecorationMix()
-            .border(
-              BoxBorderMix.all(BorderSideMix().color(FortalTokens.grayA5())),
-            )
-            .borderRadius(
-              BorderRadiusGeometryMix.all(FortalTokens.radiusFull()),
-            ),
+      .trackColor(FortalTokens.grayA3())
+      .trackEffects(RemixBoxEffectsMix(behindContent: _fortalProgressLayer()))
+      .trackEffects(
+        RemixBoxEffectsMix(
+          overContent: _fortalProgressLayer(
+            shadowToken: FortalTokens.shadow1Layers,
+          ),
+        ),
       )
-      .track(BoxStyler().color(FortalTokens.gray3()).width(.infinity))
-      .indicator(BoxStyler().color(FortalTokens.accentIndicator()));
-}
-
-RemixProgressStyler _fortalProgressSoftStyler([
-  FortalProgressSize size = .size2,
-]) {
-  return _fortalProgressBaseStyler(size)
-      .track(
-        BoxStyler()
-            .color(FortalTokens.gray4())
-            .borderRadiusAll(FortalTokens.radiusFull())
-            .width(.infinity),
+      .indicatorEffects(
+        RemixBoxEffectsMix(behindContent: _fortalProgressLayer()),
       )
-      .indicator(
-        BoxStyler()
-            .color(FortalTokens.accent9())
-            .borderRadiusAll(FortalTokens.radiusFull()),
+      .indicatorColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentTrack(),
       );
 }
 
-RemixProgressStyler _fortalProgressSizeStyler(FortalProgressSize size) {
-  return switch (size) {
-    .size1 =>
-      RemixProgressStyler()
-          .height(4.0)
-          .track(
-            BoxStyler().height(4.0).borderRadiusAll(FortalTokens.radius1()),
-          )
-          .indicator(
-            BoxStyler().height(4.0).borderRadiusAll(FortalTokens.radius1()),
+RemixProgressStyler _fortalProgressSurfaceStyler(
+  FortalProgressSize size, {
+  required bool highContrast,
+}) {
+  return _fortalProgressBaseStyler(size)
+      .trackColor(FortalTokens.grayA3())
+      .trackEffects(RemixBoxEffectsMix(behindContent: _fortalProgressLayer()))
+      .trackEffects(
+        RemixBoxEffectsMix(
+          overContent: _fortalProgressLayer(
+            shadows: [
+              RemixBoxShadowMix(
+                kind: .inset,
+                color: FortalTokens.grayA4(),
+                spreadRadius: 1,
+              ),
+            ],
           ),
-    .size2 =>
-      RemixProgressStyler()
-          .height(8.0)
-          .track(
-            BoxStyler().height(8.0).borderRadiusAll(FortalTokens.radius2()),
-          )
-          .indicator(
-            BoxStyler().height(8.0).borderRadiusAll(FortalTokens.radius2()),
-          ),
-    .size3 =>
-      RemixProgressStyler()
-          .height(12.0)
-          .track(
-            BoxStyler().height(12.0).borderRadiusAll(FortalTokens.radius3()),
-          )
-          .indicator(
-            BoxStyler().height(12.0).borderRadiusAll(FortalTokens.radius3()),
-          ),
-  };
+        ),
+      )
+      .indicatorEffects(
+        RemixBoxEffectsMix(behindContent: _fortalProgressLayer()),
+      )
+      .indicatorColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentTrack(),
+      );
 }
+
+RemixProgressStyler _fortalProgressSoftStyler(
+  FortalProgressSize size, {
+  required bool highContrast,
+}) {
+  return _fortalProgressBaseStyler(size)
+      .trackColor(FortalTokens.grayA4())
+      .track(
+        .foregroundDecoration(BoxDecorationMix(color: FortalTokens.whiteA1())),
+      )
+      .trackEffects(RemixBoxEffectsMix(behindContent: _fortalProgressLayer()))
+      .trackEffects(RemixBoxEffectsMix(overContent: _fortalProgressLayer()))
+      .indicatorEffects(
+        RemixBoxEffectsMix(behindContent: _fortalProgressLayer()),
+      )
+      .indicatorEffects(RemixBoxEffectsMix(overContent: _fortalProgressLayer()))
+      .indicatorColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accent8(),
+      )
+      .indicator(
+        .foregroundDecoration(
+          BoxDecorationMix(
+            color: highContrast ? null : FortalTokens.accentA5(),
+          ),
+        ),
+      );
+}
+
+({double height, Radius radius}) _fortalProgressMetrics(
+  FortalProgressSize size,
+) => switch (size) {
+  .size1 => (
+    height: FortalTokens.space1(),
+    radius: FortalTokens.progressRadius1(),
+  ),
+  .size2 => (
+    height: FortalTokens.progressHeight2(),
+    radius: FortalTokens.progressRadius2(),
+  ),
+  .size3 => (
+    height: FortalTokens.space2(),
+    radius: FortalTokens.progressRadius3(),
+  ),
+};
+
+RemixBoxEffectLayerMix _fortalProgressLayer({
+  List<RemixBoxShadowMix>? shadows,
+  RemixBoxShadowListToken? shadowToken,
+}) => RemixBoxEffectLayerMix(shadows: shadows, shadowToken: shadowToken);
 
 /// Fortal-themed preset for [RemixProgress].
 class FortalProgress extends StatelessWidget {
@@ -95,32 +144,119 @@ class FortalProgress extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
-    required this.value,
-  });
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    double? value,
+    this.max = 1,
+    this.duration = const Duration(seconds: 5),
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : _value = value;
+
+  const FortalProgress.classic({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    double? value,
+    this.max = 1,
+    this.duration = const Duration(seconds: 5),
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : _value = value,
+       variant = .classic;
 
   const FortalProgress.surface({
     super.key,
     this.size = .size2,
-    required this.value,
-  }) : variant = FortalProgressVariant.surface;
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    double? value,
+    this.max = 1,
+    this.duration = const Duration(seconds: 5),
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : _value = value,
+       variant = .surface;
 
   const FortalProgress.soft({
     super.key,
     this.size = .size2,
-    required this.value,
-  }) : variant = FortalProgressVariant.soft;
+    this.color,
+    this.radius,
+    this.highContrast = false,
+    double? value,
+    this.max = 1,
+    this.duration = const Duration(seconds: 5),
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : _value = value,
+       variant = .soft;
 
   final FortalProgressVariant variant;
 
   final FortalProgressSize size;
 
-  final double value;
+  /// Optional accent color override for this progress subtree.
+  final FortalAccentColor? color;
+
+  /// Optional radius override for this progress subtree.
+  final FortalRadius? radius;
+
+  /// Whether to use higher-contrast accent colors.
+  final bool highContrast;
+
+  final double? _value;
+
+  /// Current progress for the established determinate API.
+  double get value => _value ?? 0;
+
+  /// Whether this progress indicator is currently indeterminate.
+  bool get isIndeterminate => _value == null;
+
+  /// Maximum determinate value.
+  final double max;
+
+  /// Initial indeterminate growth duration.
+  final Duration duration;
+
+  /// Accessible label for the operation.
+  final String? semanticLabel;
+
+  /// Whether to remove progress semantics from the tree.
+  final bool excludeSemantics;
 
   @override
   Widget build(BuildContext context) {
-    return fortalProgressStyler(
-      variant: this.variant,
-      size: this.size,
-    ).call(key: this.key, value: this.value);
+    final style = fortalProgressStyler(
+      variant: variant,
+      size: size,
+      highContrast: highContrast,
+    );
+    final value = _value;
+    final progress = value != null
+        ? style.call(
+            key: key,
+            value: value,
+            max: max,
+            duration: duration,
+            semanticLabel: semanticLabel,
+            excludeSemantics: excludeSemantics,
+          )
+        : style.indeterminate(
+            key: key,
+            max: max,
+            duration: duration,
+            semanticLabel: semanticLabel,
+            excludeSemantics: excludeSemantics,
+          );
+    return FortalComponentOverride(
+      color: this.color,
+      radius: this.radius,
+      child: progress,
+    );
   }
 }

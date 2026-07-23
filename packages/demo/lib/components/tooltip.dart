@@ -17,7 +17,10 @@ Widget buildTooltipUseCase(BuildContext context) {
           child: Center(
             child: FortalTooltip(
               tooltipChild: const Text('Tooltip content'),
-              child: FortalButton(label: 'Hover me', onPressed: () {}),
+              child: FortalButton(
+                onPressed: () {},
+                child: const Text('Hover me'),
+              ),
             ),
           ),
         ),

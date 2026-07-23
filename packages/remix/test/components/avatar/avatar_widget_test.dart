@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:ui' as ui;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -169,50 +173,155 @@ void main() {
     });
 
     group('Image Error Handling', () {
-      testWidgets('onBackgroundImageError callback is properly set', (
+      testWidgets('loaded background image preserves fallback semantics', (
         tester,
       ) async {
-        Exception? exception;
+        final semantics = tester.ensureSemantics();
+        final image = (await tester.runAsync(createTestImage))!;
+        addTearDown(image.dispose);
+        final provider = _ControllableImageProvider(image);
+
         await tester.pumpRemixApp(
-          RemixAvatar(
-            backgroundImage: const NetworkImage(
-              'https://invalid-url.com/image.png',
-            ),
-            onBackgroundImageError: (e, stackTrace) {
-              // Callback is properly set
-              exception = e as Exception;
-            },
+          SizedBox.square(
+            dimension: 40,
+            child: RemixAvatar(backgroundImage: provider, label: 'JD'),
           ),
         );
-        await tester.pumpAndSettle();
+        expect(find.bySemanticsLabel('JD'), findsOneWidget);
 
-        expectLater(exception, isA<Exception>());
-        expect(find.byType(RemixAvatar), findsOneWidget);
+        provider.complete();
+        await tester.pump();
+
+        expect(find.bySemanticsLabel('JD'), findsOneWidget);
+        semantics.dispose();
       });
 
-      testWidgets('onForegroundImageError callback is properly set', (
+      testWidgets('loaded background image replaces the fallback content', (
         tester,
       ) async {
-        Exception? exception;
+        final image = (await tester.runAsync(createTestImage))!;
+        addTearDown(image.dispose);
+        final provider = _ControllableImageProvider(image);
+
+        await tester.pumpRemixApp(
+          RemixAvatar(backgroundImage: provider, label: 'JD'),
+        );
+        expect(find.text('JD'), findsOneWidget);
+
+        provider.complete();
+        await tester.pump();
+
+        expect(find.byType(RawImage), findsOneWidget);
+        expect(find.byType(Image), findsOneWidget);
+        expect(
+          tester.widget<Opacity>(
+            find.ancestor(of: find.text('JD'), matching: find.byType(Opacity)),
+          ),
+          isA<Opacity>().having((opacity) => opacity.opacity, 'opacity', 0),
+        );
+      });
+
+      testWidgets('background image errors preserve fallback and report once', (
+        tester,
+      ) async {
+        final image = (await tester.runAsync(createTestImage))!;
+        addTearDown(image.dispose);
+        final provider = _ControllableImageProvider(image);
+        final errors = <Object>[];
         await tester.pumpRemixApp(
           RemixAvatar(
-            foregroundImage: const NetworkImage(
-              'https://invalid-url.com/image.png',
-            ),
-            onForegroundImageError: (e, stackTrace) {
-              exception = e as Exception;
-              // Callback is properly set
-            },
+            backgroundImage: provider,
+            label: 'JD',
+            onBackgroundImageError: (error, stackTrace) => errors.add(error),
           ),
         );
-        await tester.pumpAndSettle();
+        expect(find.text('JD'), findsOneWidget);
 
-        expectLater(exception, isA<Exception>());
-        expect(find.byType(RemixAvatar), findsOneWidget);
+        provider.fail(StateError('background failed'));
+        await tester.pump();
+        await tester.pump();
+
+        expect(find.text('JD'), findsOneWidget);
+        expect(errors, hasLength(1));
+        await tester.pump();
+        expect(errors, hasLength(1));
+      });
+
+      testWidgets('image error callback can update its owner', (tester) async {
+        final image = (await tester.runAsync(createTestImage))!;
+        addTearDown(image.dispose);
+        final provider = _ControllableImageProvider(image);
+        var errorCount = 0;
+
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) => RemixAvatar(
+              backgroundImage: provider,
+              label: 'JD',
+              onBackgroundImageError: (error, stackTrace) {
+                setState(() => errorCount++);
+              },
+            ),
+          ),
+        );
+
+        provider.fail(StateError('background failed'));
+        await tester.pump();
+        await tester.pump();
+
+        expect(tester.takeException(), isNull);
+        expect(errorCount, 1);
+      });
+
+      testWidgets('foreground image errors preserve fallback and report once', (
+        tester,
+      ) async {
+        final image = (await tester.runAsync(createTestImage))!;
+        addTearDown(image.dispose);
+        final provider = _ControllableImageProvider(image);
+        final errors = <Object>[];
+        await tester.pumpRemixApp(
+          RemixAvatar(
+            foregroundImage: provider,
+            label: 'JD',
+            onForegroundImageError: (error, stackTrace) => errors.add(error),
+          ),
+        );
+        expect(find.text('JD'), findsOneWidget);
+
+        provider.fail(StateError('foreground failed'));
+        await tester.pump();
+        await tester.pump();
+
+        expect(find.text('JD'), findsOneWidget);
+        expect(errors, hasLength(1));
+        await tester.pump();
+        expect(errors, hasLength(1));
       });
     });
 
     group('Layout and Sizing', () {
+      testWidgets('background image decode preserves shrink-wrapped size', (
+        tester,
+      ) async {
+        final image = (await tester.runAsync(createTestImage))!;
+        addTearDown(image.dispose);
+        final provider = _ControllableImageProvider(image);
+
+        await tester.pumpRemixApp(
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [RemixAvatar(backgroundImage: provider, label: 'JD')],
+          ),
+        );
+        final sizeBeforeDecode = tester.getSize(find.byType(RemixAvatar));
+
+        provider.complete();
+        await tester.pump();
+
+        expect(tester.getSize(find.byType(RemixAvatar)), sizeBeforeDecode);
+      });
+
       testWidgets('default layout properties are applied', (tester) async {
         await tester.pumpRemixApp(const RemixAvatar());
         await tester.pumpAndSettle();
@@ -276,4 +385,27 @@ void main() {
       });
     });
   });
+}
+
+class _ControllableImageProvider
+    extends ImageProvider<_ControllableImageProvider> {
+  _ControllableImageProvider(this.image);
+
+  final ui.Image image;
+  final _completer = Completer<ImageInfo>.sync();
+
+  @override
+  Future<_ControllableImageProvider> obtainKey(
+    ImageConfiguration configuration,
+  ) => SynchronousFuture(this);
+
+  @override
+  ImageStreamCompleter loadImage(
+    _ControllableImageProvider key,
+    ImageDecoderCallback decode,
+  ) => OneFrameImageStreamCompleter(_completer.future);
+
+  void complete() => _completer.complete(ImageInfo(image: image));
+
+  void fail(Object error) => _completer.completeError(error, StackTrace.empty);
 }

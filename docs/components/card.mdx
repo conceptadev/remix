@@ -48,7 +48,7 @@ class CardExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -63,9 +63,15 @@ class FortalCardExample extends StatelessWidget {
     return Column(
       spacing: 16,
       children: [
-        FortalCard.classic(),
-        FortalCard.surface(),
-        FortalCard.ghost(),
+        const FortalCard.classic(
+          child: Text('Classic'),
+        ),
+        const FortalCard.surface(
+          child: Text('Surface'),
+        ),
+        const FortalCard.ghost(
+          child: Text('Ghost'),
+        ),
       ],
     );
   }
@@ -83,6 +89,19 @@ class FortalCardExample extends StatelessWidget {
 const RemixCard({
   Key? key,
   Widget? child,
+  GestureTapCallback? onTap,
+  GestureLongPressCallback? onLongPress,
+  bool enabled = true,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
+  bool enableFeedback = true,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  bool focusOnTap = false,
+  ValueChanged<bool>? onFocusChange,
+  ValueChanged<bool>? onHoverChange,
+  ValueChanged<bool>? onPressChange,
+  String? semanticLabel,
+  bool excludeSemantics = false,
   RemixCardStyler style = const RemixCardStyler.create(),
   RemixCardSpec? styleSpec,
 })
@@ -108,6 +127,32 @@ Optional. Controls how one widget replaces another widget in the tree.
 #### `child` → `Widget?`
 
 Optional. The widget below this widget in the tree.  This widget can only have one child. To lay out multiple children, let this widget's child be a widget such as [RowBox], [ColumnBox], or [StackBox], which have a children property, and then provide the children to that widget.
+
+#### `onTap`, `onLongPress` → callbacks
+
+Optional. Supplying either callback turns the card into an interactive card
+with hover, press, focus, feedback, cursor, and button semantics.
+
+When a card is the trigger of `RemixPopover`, the popover supplies
+`WidgetState.selected` while it is open. Fortal cards map that composition state
+to Radix's open recipe (the hover treatment), keep it while pressed, and retain
+the focus treatment. Custom card recipes can respond with `.onSelected(...)`.
+
+#### `enabled` → `bool`
+
+Optional. Disables callbacks and applies the disabled state when false.
+
+#### `focusNode`, `autofocus`, `focusOnTap` → focus controls
+
+Optional. Configure keyboard focus ownership and pointer focus behavior.
+
+#### `onFocusChange`, `onHoverChange`, `onPressChange` → state callbacks
+
+Optional. Observe interaction-state changes without replacing built-in behavior.
+
+#### `semanticLabel`, `excludeSemantics` → semantics controls
+
+Optional. Name an interactive card or intentionally remove its semantics.
 
 
 ### Style Methods

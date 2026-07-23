@@ -53,13 +53,11 @@ class _TextfieldExampleState extends State<TextfieldExample> {
         .paddingX(12)
         .spacing(8)
         .label(
-          TextStyler()
-              .color(Colors.blueGrey.shade900)
+          .color(Colors.blueGrey.shade900)
               .fontWeight(FontWeight.w500),
         )
         .helperText(
-          TextStyler()
-              .fontWeight(FontWeight.w300)
+          .fontWeight(FontWeight.w300)
               .color(Colors.blueGrey.shade600),
         )
         .hintColor(Colors.blueGrey.shade500)
@@ -67,13 +65,13 @@ class _TextfieldExampleState extends State<TextfieldExample> {
           BoxShadowMix()
               .blurRadius(1)
               .color(Colors.black12)
-              .offset(const Offset(0, 1)),
+              .offset(x: 0, y: 1),
         )
         .border(
           BoxBorderMix.all(BorderSideMix(color: Colors.grey.shade300)),
         )
         .onFocused(
-          RemixTextFieldStyler().border(
+          .border(
             BoxBorderMix.all(
               BorderSideMix()
                   .color(Colors.deepPurpleAccent)
@@ -89,7 +87,7 @@ class _TextfieldExampleState extends State<TextfieldExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart

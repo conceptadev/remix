@@ -45,7 +45,7 @@ class ProgressExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -82,7 +82,11 @@ class FortalProgressExample extends StatelessWidget {
 ```dart
 const RemixProgress({
   Key? key,
-  required double value,
+  double? value,
+  double max = 1,
+  Duration duration = const Duration(seconds: 5),
+  String? semanticLabel,
+  bool excludeSemantics = false,
   RemixProgressStyler style = const RemixProgressStyler.create(),
   RemixProgressSpec? styleSpec,
 })
@@ -105,9 +109,28 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `value` → `double`
+#### `value` → `double?`
 
-**Required**. The progress value between 0 and 1.  This value determines how much of the progress bar is filled. A value of 0 means empty, while 1 means completely filled.
+Optional. The determinate progress between zero and `max`. A null value renders
+an indeterminate progress indicator.
+
+#### `max` → `double`
+
+Optional. The finite, positive maximum determinate value. Defaults to `1`.
+
+#### `duration` → `Duration`
+
+Optional. Duration of the initial indeterminate growth animation.
+When `MediaQuery.disableAnimations` is true, indeterminate progress stops its
+controller and renders the stable completed-growth frame.
+
+#### `semanticLabel` → `String?`
+
+Optional. Accessible label for the operation.
+
+#### `excludeSemantics` → `bool`
+
+Optional. Removes progress semantics from the tree when true.
 
 
 ### Style Methods
@@ -135,10 +158,6 @@ Sets track styling
 #### `indicator(BoxStyler value)`
 
 Sets fill styling
-
-#### `trackContainer(BoxStyler value)`
-
-Sets outer container styling
 
 #### `alignment(Alignment value)`
 
@@ -176,6 +195,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
-#### `call({Key? key, required double value})`
+#### `call({Key? key, double? value, double max = 100, ...})`
 
 Creates a `RemixProgress` widget with this style applied.

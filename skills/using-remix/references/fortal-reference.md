@@ -1,274 +1,223 @@
 # Fortal Theme Reference
 
-Complete reference for Fortal — Remix's built-in, Radix-inspired design
-system: preset widgets, variants, sizes, and tokens.
+Fortal is Remix's built-in theme. Its 20 mapped component families follow the
+tracked `@radix-ui/themes@3.3.0` contract; Accordion, Toggle, and ToggleGroup are
+Fortal extensions and are excluded from the Radix parity score.
 
-## How Fortal presets work
+## Presets and stylers
 
-Each component ships a `fortal<Name>Styler(...)` function that returns the
-component's `*Styler`, plus a `Fortal<Name>` preset widget that applies
-it. Two equivalent ways to use a preset:
+Fortal widgets with variants expose named constructors. Prefer those
+constructors when the variant is known statically; use the unnamed constructor
+with `variant:` when the variant is selected dynamically at runtime.
 
 ```dart
-// 1. Preset widget — Remix widget params + fixed variant/size
-FortalButton.soft(label: 'Save', onPressed: save, size: .size3)
+FortalButton.soft(
+  size: .size3,
+  onPressed: save,
+  child: const Text('Save'),
+)
 
-// 2. Styler function — returns a ButtonStyler to extend
 RemixButton(
-  label: 'Save',
   onPressed: save,
   style: fortalButtonStyler(variant: .soft, size: .size3)
       .onHovered(ButtonStyler().scale(1.02)),
+  child: const Text('Save'),
 )
 ```
 
-Fortal preset styles resolve `FortalTokens`, so a `FortalScope` ancestor is
-required.
+Use the Fortal widget for the canonical recipe. Use the matching
+`fortal<Name>Styler(...)` with a `Remix*` widget when a visual override is
+required. Fortal widgets and stylers resolve `FortalTokens`, so they require a
+`FortalScope` ancestor.
 
-Every variant has a matching named constructor. Prefer a named constructor
-when the variant is fixed and reserve the unnamed constructor's `variant:`
-parameter for runtime-selected values. Generic presets infer their type from
-required values and item lists, so `FortalRadio.soft(value: 'option')`,
-`FortalMenu.solid(items: items, ...)`, and similar calls do not need an
-explicit `<String>`.
+## Component matrix
 
-## Component Variants & Sizes
+| Family | Variants | Sizes | Default |
+|---|---|---|---|
+| Avatar | `soft`, `solid` | `size1`–`size9` | `soft`, `size3` |
+| Badge | `solid`, `soft`, `surface`, `outline` | `size1`–`size3` | `soft`, `size1` |
+| Button | `classic`, `solid`, `soft`, `surface`, `outline`, `ghost` | `size1`–`size4` | `solid`, `size2` |
+| Callout | `soft`, `surface`, `outline` | `size1`–`size3` | `soft`, `size2` |
+| Card | `surface`, `classic`, `ghost` | `size1`–`size5` | `surface`, `size1` |
+| Checkbox | `classic`, `surface`, `soft` | `size1`–`size3` | `surface`, `size2` |
+| Dialog | alignment `start`, `center` | `size1`–`size4` | `center`, `size3` |
+| Divider | horizontal or vertical | `size1`–`size4` | horizontal, `size1` |
+| IconButton | `classic`, `solid`, `soft`, `surface`, `outline`, `ghost` | `size1`–`size4` | `solid`, `size2` |
+| Menu content | `solid`, `soft` | `size1`–`size2` | `solid`, `size2` |
+| Popover | — | `size1`–`size4` | `size2` |
+| Progress | `classic`, `surface`, `soft` | `size1`–`size3` | `surface`, `size2` |
+| Radio | `classic`, `surface`, `soft` | `size1`–`size3` | `surface`, `size2` |
+| Select trigger | `classic`, `surface`, `soft`, `ghost` | `size1`–`size3` | `surface`, `size2` |
+| Select content | `solid`, `soft` | follows Select size | `solid` |
+| Slider | `classic`, `surface`, `soft` | `size1`–`size3` | `surface`, `size2` |
+| Spinner | — | `size1`–`size3` | `size2`, loading |
+| Switch | `classic`, `surface`, `soft` | `size1`–`size3` | `surface`, `size2` |
+| Tabs | — | `size1`–`size2` | `size2` |
+| TextField | `classic`, `surface`, `soft` | `size1`–`size3` | `surface`, `size2` |
+| Tooltip | — | — | 200 ms delay, arrow, 360 px max |
+| Accordion extension | `surface`, `soft` | `size1`–`size3` | `surface`, `size2` |
+| Toggle extension | `ghost`, `outline` | `size1`–`size3` | `ghost`, `size2` |
+| ToggleGroup extension | `soft`, `surface` | `size1`–`size3` | `soft`, `size2` |
 
-| Component | Preset widget | Variants | Sizes |
-|-----------|--------------|----------|-------|
-| Button | `FortalButton` | `solid`, `soft`, `surface`, `outline`, `ghost` | `size1`–`size4` |
-| IconButton | `FortalIconButton` | `solid`, `soft`, `surface`, `outline`, `ghost` | `size1`–`size4` |
-| Toggle | `FortalToggle` | `ghost`, `outline` | `size1`–`size3` |
-| Checkbox | `FortalCheckbox` | `surface`, `soft` | `size1`–`size3` (16/24/32 px) |
-| Radio | `FortalRadio<T>` | `surface`, `soft` | `size1`–`size3` |
-| Switch | `FortalSwitch` | `surface`, `soft` | `size1`–`size3` |
-| Slider | `FortalSlider` | `surface`, `soft` | `size1`–`size3` (13/16/19 px thumb) |
-| TextField | `FortalTextField` | `surface`, `soft` | `size1`–`size3` |
-| Select | `FortalSelect<T>` | `surface`, `soft`, `ghost` | `size1`–`size3` |
-| Menu | `FortalMenu<T>` | `solid`, `soft` | `size1`–`size2` |
-| Avatar | `FortalAvatar` | `soft`, `solid` | `size1`–`size4` (24/32/40/64 px) |
-| Badge | `FortalBadge` | `solid`, `soft`, `surface`, `outline` | `size1`–`size3` |
-| Card | `FortalCard` | `surface`, `classic`, `ghost` | `size1`–`size3` |
-| Callout | `FortalCallout` | `outline`, `surface`, `soft` | `size1`–`size3` |
-| Progress | `FortalProgress` | `surface`, `soft` | `size1`–`size3` (4/8/12 px) |
-| Accordion | `FortalAccordion<T>` | `surface`, `soft` | `size1`–`size3` |
-| Spinner | `FortalSpinner` | — | `size1`–`size3` |
-| Divider | `FortalDivider` | — | `size1`–`size3` (1/2/3 px) |
-| Dialog | `FortalDialog` | — | — |
-| Tooltip | `FortalTooltip` | — | — |
-| Tabs | `FortalTabBar` / `FortalTab` / `FortalTabView` | — | — |
+`classic` is the raised Radix treatment, including its ordered gradient and
+shadow layers. `solid` is an accent fill, `soft` is a subtle accent treatment,
+`surface` is a translucent or neutral control surface, `outline` has no fill,
+and `ghost` removes persistent chrome.
 
-Variant meanings (consistent across components):
+Component-specific overrides mirror Radix style props. Where supported, use
+`color: FortalAccentColor?`, `radius: FortalRadius?`, and `highContrast:` on the
+Fortal widget. Select exposes separate trigger/content color overrides and
+`contentHighContrast`; Tabs applies color and contrast at `FortalTabBar`.
 
-| Variant | Description |
-|---------|-------------|
-| `solid` | Filled accent background, high-contrast foreground |
-| `soft` | Subtle accent surface, accent foreground |
-| `surface` | Neutral surface with border |
-| `outline` | Transparent with border |
-| `ghost` | Transparent, no persistent border |
-| `classic` (Card) | Traditional card with shadow |
+## Theme scope
 
-Notes:
-
-- Enum names are per component: `FortalButtonVariant`, `FortalButtonSize`,
-  `FortalCheckboxVariant`, etc.
-- There is no `FortalTabs` — use `RemixTabs` as the behavioral root.
-- `FortalIconButton` forwards the complete `RemixIconButton` behavior surface,
-  including builders, long press, focus, semantics, and cursor options.
-- Generated `FortalButton` does not accept a style override. For Fortal visuals
-  with custom one-icon placement, use
-  `RemixButton(style: fortalButtonStyler(...).iconAlignment(.end), ...)`.
-  With two icons, leading → label → trailing order remains stable.
-- `FortalSelect` and `FortalMenu` both include matching default item styles.
-  Set an individual item's `style` only when that row needs an override.
-
----
-
-## FortalScope & Theme Config
+Put the root scope above `WidgetsApp`, `MaterialApp`, or `CupertinoApp`. This
+lets platform appearance and Navigator overlays resolve the same theme.
 
 ```dart
 FortalScope(
-  accent: FortalAccentColor.indigo,   // default .indigo
-  gray: FortalGrayColor.slate,        // default .slate
-  brightness: Brightness.light,       // default .light
-  orderOfModifiers: null,             // optional List<Type>
-  child: MyApp(),
+  appearance: .inherit,
+  accentColor: .indigo,
+  grayColor: .auto,
+  panelBackground: .translucent,
+  radius: .medium,
+  scaling: .percent100,
+  child: MaterialApp(home: MyScreen()),
 )
 ```
 
-**Accent colors** (31): amber, blue, bronze, brown, crimson, cyan, gold,
-grass, green, indigo, iris, jade, lime, mint, orange, pink, plum, purple,
-red, ruby, sky, teal, tomato, violet, yellow — plus the neutrals gray,
-mauve, slate, sage, olive, sand.
+Theme enums and root defaults:
 
-**Gray scales** (6): gray, mauve, slate, sage, olive, sand.
+- `FortalAppearance`: `inherit`, `light`, `dark`; root `inherit` observes
+  platform brightness.
+- `FortalAccentColor`: 26 Radix accent names from `gray` through `sky`; default
+  `indigo`.
+- `FortalGrayColor`: `auto`, `gray`, `mauve`, `slate`, `sage`, `olive`, `sand`;
+  `auto` selects the accent's matching neutral (Indigo resolves to Slate).
+- `FortalPanelBackground`: `solid`, `translucent`; default `translucent`.
+- `FortalRadius`: `none`, `small`, `medium`, `large`, `full`; default `medium`.
+- `FortalScaling`: `percent90`, `percent95`, `percent100`, `percent105`,
+  `percent110`; default `percent100`.
+- Root `hasBackground` defaults to true and translucent panels resolve a
+  64-logical-pixel backdrop blur.
 
-`FortalThemeConfig` is the immutable config object form:
+Nested scopes inherit omitted values. Passing `.auto` recomputes the gray for
+the nested accent; it does not simply preserve the parent's resolved gray.
+`FortalTheme.of(context)` returns the fully resolved `FortalThemeData`.
+`FortalThemeConfig.createScope(...)` is the immutable configuration form.
+
+## Current composition APIs
+
+Button, IconButton, Badge, and other content-bearing components accept widgets,
+so text and icon styling is inherited by arbitrary descendants:
 
 ```dart
-const theme = FortalThemeConfig(accent: .green, gray: .sage, brightness: .dark);
-final light = theme.copyWith(brightness: .light);
-theme.createScope(child: MyApp())
+FortalButton(
+  onPressed: save,
+  child: const Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [Icon(Icons.save), Text('Save')],
+  ),
+)
+
+FortalIconButton(
+  semanticLabel: 'Settings',
+  onPressed: openSettings,
+  icon: const Icon(Icons.settings),
+)
 ```
 
----
-
-## Using Tokens
-
-Inside styler chains, call the token to get a resolvable value; in plain
-widgets, resolve against context:
+Slider retains scalar `value`/`snapDivisions` and adds list-valued mode for any
+positive number of ordered thumbs. Multi-thumb mode uses `step`, `minSpacing`,
+and `onValuesChanged`.
 
 ```dart
-// In a styler chain:
-ButtonStyler()
-    .backgroundColor(FortalTokens.accent9())
-    .borderRadiusAll(FortalTokens.radius3())
-
-// In a widget build:
-Container(color: FortalTokens.colorBackground.resolve(context))
-
-// Text style token into a TextStyler:
-TextStyler().style(FortalTokens.text2.mix())
+FortalSlider(
+  values: range,
+  min: 0,
+  max: 100,
+  step: 5,
+  minSpacing: 10,
+  onValuesChanged: (values) => setState(() => range = values),
+)
 ```
 
-## Color Tokens
+Select uses a declarative trigger and sealed items:
 
-### Accent Scale (12 steps)
+```dart
+FortalSelect<String>(
+  trigger: const RemixSelectTrigger(placeholder: 'Choose a fruit'),
+  items: const [
+    RemixSelectLabel(label: 'Fruit'),
+    RemixSelectItem(value: 'apple', label: 'Apple'),
+    RemixSelectItem(value: 'banana', label: 'Banana'),
+    RemixSelectSeparator(),
+  ],
+  selectedValue: fruit,
+  onChanged: (value) => setState(() => fruit = value),
+)
+```
 
-| Token | Semantic Role |
-|-------|---------------|
-| `FortalTokens.accent1` | App background (subtle) |
-| `FortalTokens.accent2` | Subtle component background |
-| `FortalTokens.accent3` | Component background (rest) |
-| `FortalTokens.accent4` | Component background (hover) |
-| `FortalTokens.accent5` | Component background (active) |
-| `FortalTokens.accent6` | Subtle border |
-| `FortalTokens.accent7` | Component border |
-| `FortalTokens.accent8` | Border (hover/focus) |
-| `FortalTokens.accent9` | Solid background (default) |
-| `FortalTokens.accent10` | Solid background (hover) |
-| `FortalTokens.accent11` | Low-contrast text |
-| `FortalTokens.accent12` | High-contrast text |
+Menu is widget-compositional. Its `items` may contain actions, labels,
+groups, separators, controlled checkbox items, radio groups/items, and
+recursive submenus:
 
-### Gray Scale (12 steps)
+```dart
+FortalMenu<String>(
+  trigger: const Text('Actions'),
+  items: const [
+    RemixMenuLabel(child: Text('Edit')),
+    RemixMenuAction(value: 'copy', child: Text('Copy')),
+    RemixMenuSeparator(),
+    RemixMenuSubmenu<String>(
+      child: Text('Share'),
+      items: [
+        RemixMenuAction(value: 'link', child: Text('Copy link')),
+      ],
+    ),
+  ],
+  onSelected: handleAction,
+)
+```
 
-Same semantic structure: `FortalTokens.gray1` through `FortalTokens.gray12`.
+Use `FortalRadioGroup<T>(value:, onChanged:, child:)` around
+`FortalRadio<T>` items. Use `RemixTabs` as the behavioral root around
+`FortalTabBar`, `FortalTab`, and `FortalTabView`; there is no `FortalTabs`.
+Dialog defaults to `maxWidth: 600`, Popover to `maxWidth: 480` without an
+arrow, and Tooltip to `maxWidth: 360` with a styled arrow.
 
-### Alpha Variants
+## Tokens and box effects
 
-- Accent alpha: `FortalTokens.accentA1` – `accentA12`
-- Gray alpha: `FortalTokens.grayA1` – `grayA12`
-- Black alpha (shadows): `blackA3`, `blackA4`, `blackA5`, `blackA6`,
-  `blackA7`, `blackA11`
+Token families include 12-step accent and gray scales plus alpha scales,
+spacing (`space1`–`space9` = 4, 8, 12, 16, 24, 32, 40, 48, 64), typography
+(`text1`–`text9` = 12, 14, 16, 18, 20, 24, 28, 35, 60), radii
+(`radius1`–`radius6` = 3, 4, 6, 8, 12, 16), derived theme radii, border/focus
+widths, motion durations, ordinary Mix box-shadow lists, and specialized
+inset-capable Remix shadow lists.
 
-### Functional Colors
+Use callable tokens inside Mix stylers and resolve concrete values through the
+active `MixScope` in ordinary widget code:
 
-| Token | Role |
-|-------|------|
-| `FortalTokens.colorBackground` | Page background (gray1) |
-| `FortalTokens.colorSurface` | Input/control surface |
-| `FortalTokens.colorPanelSolid` | Solid panel (gray2) |
-| `FortalTokens.colorPanelTranslucent` | Translucent panel with alpha |
-| `FortalTokens.colorOverlay` | Dark overlay for modals |
-| `FortalTokens.accentSurface` | Subtle accent (soft variants) |
-| `FortalTokens.accentIndicator` | Active indicator (sliders, progress) |
-| `FortalTokens.accentTrack` | Track background |
-| `FortalTokens.accentContrast` | High-contrast text on accent solid |
-| `FortalTokens.graySurface` | Neutral surface |
-| `FortalTokens.grayIndicator` | Neutral indicator |
-| `FortalTokens.grayTrack` | Neutral track |
-| `FortalTokens.grayContrast` | Text on neutral solid |
-| `FortalTokens.focus8` | Solid focus ring (accent step 8) |
-| `FortalTokens.focusA8` | Translucent focus ring |
-| `FortalTokens.shadowStroke` | OKLab-mixed shadow stroke blend |
+```dart
+final style = ButtonStyler()
+    .color(FortalTokens.accent9())
+    .paddingAll(FortalTokens.space4())
+    .borderRadiusAll(FortalTokens.radius3());
 
----
+final accent = MixScope.tokenOf(FortalTokens.accent9, context);
+```
 
-## Space Tokens
+Mix `BoxSpec` and `FlexBoxSpec` own container geometry and standard decoration:
+color, ordinary gradient and `BoxShadowMix` elevation, border, radius,
+clipping, margin, constraints, and transforms. `FortalTokens.shadow2` through
+`shadow6` are Mix `BoxShadowToken` values; `shadow1` and mixed/inset recipes
+remain `RemixBoxShadowListToken` values.
 
-4px-increment scale (`SpaceToken`):
-
-| Token | Value |
-|-------|-------|
-| `FortalTokens.space1` | 4px |
-| `FortalTokens.space2` | 8px |
-| `FortalTokens.space3` | 12px |
-| `FortalTokens.space4` | 16px |
-| `FortalTokens.space5` | 24px |
-| `FortalTokens.space6` | 32px |
-| `FortalTokens.space7` | 40px |
-| `FortalTokens.space8` | 48px |
-| `FortalTokens.space9` | 64px |
-
----
-
-## Radius Tokens
-
-| Token | Value |
-|-------|-------|
-| `FortalTokens.radius1` | 3px |
-| `FortalTokens.radius2` | 4px |
-| `FortalTokens.radius3` | 6px |
-| `FortalTokens.radius4` | 8px |
-| `FortalTokens.radius5` | 12px |
-| `FortalTokens.radius6` | 16px |
-| `FortalTokens.radiusFull` | 9999px (pill/circle) |
-
----
-
-## Typography Tokens
-
-`TextStyleToken`s with tuned line height and letter spacing:
-
-| Token | Size | Typical use |
-|-------|------|-------------|
-| `FortalTokens.text1` | 12px | Small labels, metadata |
-| `FortalTokens.text2` | 14px | Standard UI text, buttons |
-| `FortalTokens.text3` | 16px | Body text |
-| `FortalTokens.text4` | 18px | Prominent body |
-| `FortalTokens.text5` | 20px | Small headings |
-| `FortalTokens.text6` | 24px | Medium headings |
-| `FortalTokens.text7` | 28px | Large headings |
-| `FortalTokens.text8` | 35px | Extra-large headings |
-| `FortalTokens.text9` | 60px | Display/hero text |
-
----
-
-## Shadow Tokens
-
-`BoxShadowToken`s, six elevation levels: `FortalTokens.shadow1` (subtle,
-resting cards) through `FortalTokens.shadow6` (maximum elevation, critical
-dialogs). `shadow3` suits dropdowns/tooltips; `shadow4`–`shadow5` suit
-modals.
-
----
-
-## Border & Focus Tokens
-
-| Token | Value |
-|-------|-------|
-| `FortalTokens.borderWidth1` | 1px |
-| `FortalTokens.borderWidth2` | 2px |
-| `FortalTokens.focusRingWidth` | 2px |
-| `FortalTokens.focusRingOffset` | 2px |
-
----
-
-## Animation Tokens
-
-| Token | Value |
-|-------|-------|
-| `FortalTokens.transitionFast` | 100ms (hover, press micro-interactions) |
-| `FortalTokens.transitionSlow` | 300ms (modals, larger transitions) |
-
----
-
-## Font Weight Tokens
-
-| Token | Value |
-|-------|-------|
-| `FortalTokens.fontWeightLight` | 300 |
-| `FortalTokens.fontWeightRegular` | 400 |
-| `FortalTokens.fontWeightMedium` | 500 |
-| `FortalTokens.fontWeightBold` | 700 |
+`RemixBoxEffectsMix` augments the box only when Fortal needs advanced paint.
+Its `behindContent` and `overContent` `RemixBoxEffectLayerMix` values support
+multiple token-aware gradients with independent clip insets, true inset
+shadows, `shapeInset`, and explicitly positioned overlays. The aggregate also
+owns backdrop blur and offset outlines. Component APIs expose one
+`containerEffects` field, or role-specific names such as `trackEffects`,
+`thumbEffects`, and `thumbFocusEffects`. Shadow stroke colors use
+standards-aligned premultiplied-alpha OKLab mixing.

@@ -1,0 +1,11 @@
+{
+  "name": "fortal-radix-themes-3-3-0-reference",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node generate.mjs"
+  },
+  "dependencies": {
+    "@radix-ui/themes": "3.3.0"
+  }
+}

@@ -42,7 +42,7 @@ class DividerExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
@@ -75,6 +75,9 @@ class FortalDividerExample extends StatelessWidget {
 ```dart
 const RemixDivider({
   Key? key,
+  Axis orientation = Axis.horizontal,
+  bool decorative = true,
+  String? semanticLabel,
   RemixDividerStyler style = const RemixDividerStyler.create(),
   RemixDividerSpec? styleSpec,
 })
@@ -96,6 +99,19 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 #### `key` → `Key?`
 
 Optional. Controls how one widget replaces another widget in the tree.
+
+#### `orientation` → `Axis`
+
+Optional. Chooses a horizontal or vertical separator.
+
+#### `decorative` → `bool`
+
+Optional. Decorative dividers are excluded from accessibility by default.
+
+#### `semanticLabel` → `String?`
+
+Optional. Accessible name used when `decorative` is false. When omitted, Remix
+uses `separator` because Flutter has no dedicated separator role.
 
 
 ### Style Methods

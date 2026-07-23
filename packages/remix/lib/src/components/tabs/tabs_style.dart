@@ -5,8 +5,21 @@ part of 'tabs.dart';
 /// Use this class to style the flex container that lays out tab triggers.
 extension RemixTabBarStylerRemixHelpers on RemixTabBarStyler {
   /// Creates a [RemixTabBar] widget with this style applied.
-  RemixTabBar call({Key? key, required Widget child}) {
-    return RemixTabBar(key: key, style: this, child: child);
+  RemixTabBar call({
+    Key? key,
+    Widget? child,
+    List<Widget>? children,
+    RemixTabBarWrap wrap = RemixTabBarWrap.nowrap,
+    RemixTabBarJustify justify = RemixTabBarJustify.start,
+  }) {
+    return RemixTabBar(
+      key: key,
+      child: child,
+      children: children,
+      wrap: wrap,
+      justify: justify,
+      style: this,
+    );
   }
 
   RemixTabBarStyler flex(FlexStyler value) {
@@ -20,8 +33,19 @@ extension RemixTabBarStylerRemixHelpers on RemixTabBarStyler {
 /// tab.
 extension RemixTabViewStylerRemixHelpers on RemixTabViewStyler {
   /// Creates a [RemixTabView] widget with this style applied.
-  RemixTabView call({Key? key, required String tabId, required Widget child}) {
-    return RemixTabView(key: key, tabId: tabId, style: this, child: child);
+  RemixTabView call({
+    Key? key,
+    required String tabId,
+    required Widget child,
+    bool maintainState = true,
+  }) {
+    return RemixTabView(
+      key: key,
+      tabId: tabId,
+      maintainState: maintainState,
+      style: this,
+      child: child,
+    );
   }
 }
 
@@ -47,6 +71,7 @@ extension RemixTabStylerRemixHelpers on RemixTabStyler {
     ValueChanged<bool>? onPressChange,
     ValueWidgetBuilder<NakedTabState>? builder,
     String? semanticLabel,
+    bool excludeSemantics = false,
   }) {
     return RemixTab(
       key: key,
@@ -62,6 +87,7 @@ extension RemixTabStylerRemixHelpers on RemixTabStyler {
       onHoverChange: onHoverChange,
       onPressChange: onPressChange,
       semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
       style: this,
       child: child,
       builder: builder,

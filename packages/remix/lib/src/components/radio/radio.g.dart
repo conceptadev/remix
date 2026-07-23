@@ -9,6 +9,7 @@ part of 'radio.dart';
 mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get indicator;
+  RemixBoxEffectsSpec? get containerEffects;
 
   @override
   Type get type => RemixRadioSpec;
@@ -17,10 +18,12 @@ mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
   RemixRadioSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicator,
+    RemixBoxEffectsSpec? containerEffects,
   }) {
     return RemixRadioSpec(
       container: container ?? this.container,
       indicator: indicator ?? this.indicator,
+      containerEffects: containerEffects ?? this.containerEffects,
     );
   }
 
@@ -29,11 +32,16 @@ mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
     return RemixRadioSpec(
       container: container.lerp(other?.container, t),
       indicator: indicator.lerp(other?.indicator, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, indicator];
+  List<Object?> get props => [container, indicator, containerEffects];
 
   @override
   bool operator ==(Object other) {
@@ -76,7 +84,8 @@ mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('indicator', indicator));
+      ..add(DiagnosticsProperty('indicator', indicator))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects));
   }
 }
 
@@ -93,25 +102,30 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     with RemixBoxStylerMixin<RemixRadioStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
   const RemixRadioStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? indicator,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
-       $indicator = indicator;
+       $indicator = indicator,
+       $containerEffects = containerEffects;
 
   RemixRadioStyler({
     BoxStyler? container,
     BoxStyler? indicator,
+    RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixRadioSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          indicator: Prop.maybeMix(indicator),
+         containerEffects: Prop.maybeMix(containerEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -121,6 +135,8 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
       RemixRadioStyler().container(value);
   factory RemixRadioStyler.indicator(BoxStyler value) =>
       RemixRadioStyler().indicator(value);
+  factory RemixRadioStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixRadioStyler().containerEffects(value);
   factory RemixRadioStyler.alignment(AlignmentGeometry value) =>
       RemixRadioStyler().alignment(value);
   factory RemixRadioStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -603,6 +619,11 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     return merge(RemixRadioStyler(indicator: value));
   }
 
+  /// Sets the containerEffects.
+  RemixRadioStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixRadioStyler(containerEffects: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixRadioStyler animate(AnimationConfig value) {
@@ -632,6 +653,10 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     return RemixRadioStyler.create(
       container: MixOps.merge($container, other?.$container),
       indicator: MixOps.merge($indicator, other?.$indicator),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -644,6 +669,7 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     final spec = RemixRadioSpec(
       container: MixOps.resolve(context, $container),
       indicator: MixOps.resolve(context, $indicator),
+      containerEffects: MixOps.resolve(context, $containerEffects),
     );
 
     return StyleSpec(
@@ -658,13 +684,15 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('indicator', $indicator));
+      ..add(DiagnosticsProperty('indicator', $indicator))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
   }
 
   @override
   List<Object?> get props => [
     $container,
     $indicator,
+    $containerEffects,
     $animation,
     $modifier,
     $variants,

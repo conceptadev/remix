@@ -9,6 +9,8 @@ part of 'switch.dart';
 mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get thumb;
+  RemixBoxEffectsSpec? get trackEffects;
+  RemixBoxEffectsSpec? get thumbEffects;
 
   @override
   Type get type => RemixSwitchSpec;
@@ -17,10 +19,14 @@ mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
   RemixSwitchSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? thumb,
+    RemixBoxEffectsSpec? trackEffects,
+    RemixBoxEffectsSpec? thumbEffects,
   }) {
     return RemixSwitchSpec(
       container: container ?? this.container,
       thumb: thumb ?? this.thumb,
+      trackEffects: trackEffects ?? this.trackEffects,
+      thumbEffects: thumbEffects ?? this.thumbEffects,
     );
   }
 
@@ -29,11 +35,13 @@ mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
     return RemixSwitchSpec(
       container: container.lerp(other?.container, t),
       thumb: thumb.lerp(other?.thumb, t),
+      trackEffects: MixOps.lerpSnap(trackEffects, other?.trackEffects, t),
+      thumbEffects: MixOps.lerpSnap(thumbEffects, other?.thumbEffects, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, thumb];
+  List<Object?> get props => [container, thumb, trackEffects, thumbEffects];
 
   @override
   bool operator ==(Object other) {
@@ -76,7 +84,9 @@ mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('thumb', thumb));
+      ..add(DiagnosticsProperty('thumb', thumb))
+      ..add(DiagnosticsProperty('trackEffects', trackEffects))
+      ..add(DiagnosticsProperty('thumbEffects', thumbEffects));
   }
 }
 
@@ -93,25 +103,35 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     with RemixBoxStylerMixin<RemixSwitchStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
+  final Prop<RemixBoxEffectsSpec>? $trackEffects;
+  final Prop<RemixBoxEffectsSpec>? $thumbEffects;
 
   const RemixSwitchStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? thumb,
+    Prop<RemixBoxEffectsSpec>? trackEffects,
+    Prop<RemixBoxEffectsSpec>? thumbEffects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
-       $thumb = thumb;
+       $thumb = thumb,
+       $trackEffects = trackEffects,
+       $thumbEffects = thumbEffects;
 
   RemixSwitchStyler({
     BoxStyler? container,
     BoxStyler? thumb,
+    RemixBoxEffectsMix? trackEffects,
+    RemixBoxEffectsMix? thumbEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixSwitchSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          thumb: Prop.maybeMix(thumb),
+         trackEffects: Prop.maybeMix(trackEffects),
+         thumbEffects: Prop.maybeMix(thumbEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -121,6 +141,10 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
       RemixSwitchStyler().container(value);
   factory RemixSwitchStyler.thumb(BoxStyler value) =>
       RemixSwitchStyler().thumb(value);
+  factory RemixSwitchStyler.trackEffects(RemixBoxEffectsMix value) =>
+      RemixSwitchStyler().trackEffects(value);
+  factory RemixSwitchStyler.thumbEffects(RemixBoxEffectsMix value) =>
+      RemixSwitchStyler().thumbEffects(value);
   factory RemixSwitchStyler.alignment(AlignmentGeometry value) =>
       RemixSwitchStyler().alignment(value);
   factory RemixSwitchStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -603,6 +627,16 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     return merge(RemixSwitchStyler(thumb: value));
   }
 
+  /// Sets the trackEffects.
+  RemixSwitchStyler trackEffects(RemixBoxEffectsMix value) {
+    return merge(RemixSwitchStyler(trackEffects: value));
+  }
+
+  /// Sets the thumbEffects.
+  RemixSwitchStyler thumbEffects(RemixBoxEffectsMix value) {
+    return merge(RemixSwitchStyler(thumbEffects: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixSwitchStyler animate(AnimationConfig value) {
@@ -632,6 +666,8 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     return RemixSwitchStyler.create(
       container: MixOps.merge($container, other?.$container),
       thumb: MixOps.merge($thumb, other?.$thumb),
+      trackEffects: MixOps.merge($trackEffects, other?.$trackEffects),
+      thumbEffects: MixOps.merge($thumbEffects, other?.$thumbEffects),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -644,6 +680,8 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     final spec = RemixSwitchSpec(
       container: MixOps.resolve(context, $container),
       thumb: MixOps.resolve(context, $thumb),
+      trackEffects: MixOps.resolve(context, $trackEffects),
+      thumbEffects: MixOps.resolve(context, $thumbEffects),
     );
 
     return StyleSpec(
@@ -658,13 +696,17 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('thumb', $thumb));
+      ..add(DiagnosticsProperty('thumb', $thumb))
+      ..add(DiagnosticsProperty('trackEffects', $trackEffects))
+      ..add(DiagnosticsProperty('thumbEffects', $thumbEffects));
   }
 
   @override
   List<Object?> get props => [
     $container,
     $thumb,
+    $trackEffects,
+    $thumbEffects,
     $animation,
     $modifier,
     $variants,

@@ -260,10 +260,12 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixIconButtonSpec();
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(4));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.icon));
         expect(spec.props, contains(spec.spinner));
+        expect(spec.props, contains(spec.containerEffects?.behindContent));
+        expect(spec.props, contains(spec.containerEffects?.overContent));
       });
 
       test('props list with custom properties', () {
@@ -277,7 +279,7 @@ void main() {
           spinner: spinnerSpec,
         );
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(4));
         expect(spec.props, contains(containerSpec));
         expect(spec.props, contains(iconSpec));
         expect(spec.props, contains(spinnerSpec));
@@ -384,7 +386,7 @@ void main() {
         expect(spec.container, equals(complexContainerSpec));
         expect(spec.icon, equals(complexIconSpec));
         expect(spec.spinner, equals(complexSpinnerSpec));
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(4));
       });
     });
   });

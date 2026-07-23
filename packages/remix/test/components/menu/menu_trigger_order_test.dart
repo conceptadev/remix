@@ -5,26 +5,22 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
-  testWidgets('menu trigger icon paints before label', (tester) async {
+  testWidgets('arbitrary trigger preserves caller-owned child order', (
+    tester,
+  ) async {
     await tester.pumpRemixApp(
-      RemixMenu<String>(
-        trigger: const RemixMenuTrigger(label: 'Actions', icon: Icons.menu),
-        items: const [RemixMenuItem(value: 'a', label: 'A')],
+      const RemixMenu<String>(
+        trigger: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [Text('Actions'), Icon(Icons.menu)],
+        ),
+        items: [RemixMenuAction(value: 'a', child: Text('A'))],
       ),
     );
-    await tester.pumpAndSettle();
 
-    final iconFinder = find.byIcon(Icons.menu);
-    final labelFinder = find.text('Actions');
-    expect(iconFinder, findsOneWidget);
-    expect(labelFinder, findsOneWidget);
-
-    final iconOffset = tester.getTopLeft(iconFinder);
-    final labelOffset = tester.getTopLeft(labelFinder);
     expect(
-      iconOffset.dx,
-      lessThan(labelOffset.dx),
-      reason: 'icon should render to the left of the label',
+      tester.getTopLeft(find.text('Actions')).dx,
+      lessThan(tester.getTopLeft(find.byIcon(Icons.menu)).dx),
     );
   });
 }

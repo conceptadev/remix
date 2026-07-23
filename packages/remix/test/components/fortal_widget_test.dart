@@ -6,15 +6,16 @@ import '../helpers/test_helpers.dart';
 
 void main() {
   group('Fortal widgets', () {
-    test('named constructors pin variants and infer generic types', () {
-      const button = FortalButton.soft(label: 'Save');
+    test('constructors pin variants and infer generic types', () {
+      const button = FortalButton.soft(child: Text('Save'));
       const accordion = FortalAccordion.soft(value: 'item', child: SizedBox());
       const radio = FortalRadio.soft(value: 'option');
-      const menu = FortalMenu.soft(
-        trigger: RemixMenuTrigger(label: 'Menu'),
-        items: [RemixMenuItem(value: 'a', label: 'A')],
+      const menu = FortalMenu<String>.soft(
+        trigger: Text('Menu'),
+        items: [RemixMenuAction(value: 'a', child: Text('A'))],
       );
-      const select = FortalSelect.ghost(
+      const select = FortalSelect<String>(
+        triggerVariant: .ghost,
         trigger: RemixSelectTrigger(placeholder: 'Pick'),
         items: [RemixSelectItem(value: 'a', label: 'A')],
       );
@@ -27,7 +28,219 @@ void main() {
       expect(menu, isA<FortalMenu<String>>());
       expect(menu.variant, FortalMenuVariant.soft);
       expect(select, isA<FortalSelect<String>>());
-      expect(select.variant, FortalSelectVariant.ghost);
+      expect(select.triggerVariant, FortalSelectTriggerVariant.ghost);
+    });
+
+    test('variant constructors cover every generator-compatible variant', () {
+      expect(
+        const FortalAccordion.surface(value: 1, child: SizedBox()).variant,
+        FortalAccordionVariant.surface,
+      );
+      expect(
+        const FortalAccordion.soft(value: 1, child: SizedBox()).variant,
+        FortalAccordionVariant.soft,
+      );
+
+      expect(const FortalAvatar.soft().variant, FortalAvatarVariant.soft);
+      expect(const FortalAvatar.solid().variant, FortalAvatarVariant.solid);
+
+      expect(
+        const FortalBadge.solid(child: SizedBox()).variant,
+        FortalBadgeVariant.solid,
+      );
+      expect(
+        const FortalBadge.soft(child: SizedBox()).variant,
+        FortalBadgeVariant.soft,
+      );
+      expect(
+        const FortalBadge.surface(child: SizedBox()).variant,
+        FortalBadgeVariant.surface,
+      );
+      expect(
+        const FortalBadge.outline(child: SizedBox()).variant,
+        FortalBadgeVariant.outline,
+      );
+
+      expect(
+        const FortalButton.classic(child: SizedBox()).variant,
+        FortalButtonVariant.classic,
+      );
+      expect(
+        const FortalButton.solid(child: SizedBox()).variant,
+        FortalButtonVariant.solid,
+      );
+      expect(
+        const FortalButton.soft(child: SizedBox()).variant,
+        FortalButtonVariant.soft,
+      );
+      expect(
+        const FortalButton.surface(child: SizedBox()).variant,
+        FortalButtonVariant.surface,
+      );
+      expect(
+        const FortalButton.outline(child: SizedBox()).variant,
+        FortalButtonVariant.outline,
+      );
+      expect(
+        const FortalButton.ghost(child: SizedBox()).variant,
+        FortalButtonVariant.ghost,
+      );
+
+      expect(
+        const FortalCallout.soft(child: SizedBox()).variant,
+        FortalCalloutVariant.soft,
+      );
+      expect(
+        const FortalCallout.surface(child: SizedBox()).variant,
+        FortalCalloutVariant.surface,
+      );
+      expect(
+        const FortalCallout.outline(child: SizedBox()).variant,
+        FortalCalloutVariant.outline,
+      );
+
+      expect(const FortalCard.surface().variant, FortalCardVariant.surface);
+      expect(const FortalCard.classic().variant, FortalCardVariant.classic);
+      expect(const FortalCard.ghost().variant, FortalCardVariant.ghost);
+
+      expect(
+        const FortalCheckbox.classic(selected: false).variant,
+        FortalCheckboxVariant.classic,
+      );
+      expect(
+        const FortalCheckbox.surface(selected: false).variant,
+        FortalCheckboxVariant.surface,
+      );
+      expect(
+        const FortalCheckbox.soft(selected: false).variant,
+        FortalCheckboxVariant.soft,
+      );
+
+      expect(
+        const FortalIconButton.classic(
+          semanticLabel: 'icon',
+          icon: Icons.add,
+        ).variant,
+        FortalIconButtonVariant.classic,
+      );
+      expect(
+        const FortalIconButton.solid(
+          semanticLabel: 'icon',
+          icon: Icons.add,
+        ).variant,
+        FortalIconButtonVariant.solid,
+      );
+      expect(
+        const FortalIconButton.soft(
+          semanticLabel: 'icon',
+          icon: Icons.add,
+        ).variant,
+        FortalIconButtonVariant.soft,
+      );
+      expect(
+        const FortalIconButton.surface(
+          semanticLabel: 'icon',
+          icon: Icons.add,
+        ).variant,
+        FortalIconButtonVariant.surface,
+      );
+      expect(
+        const FortalIconButton.outline(
+          semanticLabel: 'icon',
+          icon: Icons.add,
+        ).variant,
+        FortalIconButtonVariant.outline,
+      );
+      expect(
+        const FortalIconButton.ghost(
+          semanticLabel: 'icon',
+          icon: Icons.add,
+        ).variant,
+        FortalIconButtonVariant.ghost,
+      );
+
+      expect(
+        const FortalMenu.solid(trigger: SizedBox(), items: []).variant,
+        FortalMenuVariant.solid,
+      );
+      expect(
+        const FortalMenu.soft(trigger: SizedBox(), items: []).variant,
+        FortalMenuVariant.soft,
+      );
+
+      expect(
+        const FortalProgress.classic().variant,
+        FortalProgressVariant.classic,
+      );
+      expect(
+        const FortalProgress.surface().variant,
+        FortalProgressVariant.surface,
+      );
+      expect(const FortalProgress.soft().variant, FortalProgressVariant.soft);
+
+      expect(
+        const FortalRadio.classic(value: 1).variant,
+        FortalRadioVariant.classic,
+      );
+      expect(
+        const FortalRadio.surface(value: 1).variant,
+        FortalRadioVariant.surface,
+      );
+      expect(const FortalRadio.soft(value: 1).variant, FortalRadioVariant.soft);
+
+      expect(
+        const FortalSlider.classic(values: [0]).variant,
+        FortalSliderVariant.classic,
+      );
+      expect(
+        const FortalSlider.surface(values: [0]).variant,
+        FortalSliderVariant.surface,
+      );
+      expect(
+        const FortalSlider.soft(values: [0]).variant,
+        FortalSliderVariant.soft,
+      );
+
+      expect(
+        const FortalSwitch.classic(selected: false).variant,
+        FortalSwitchVariant.classic,
+      );
+      expect(
+        const FortalSwitch.surface(selected: false).variant,
+        FortalSwitchVariant.surface,
+      );
+      expect(
+        const FortalSwitch.soft(selected: false).variant,
+        FortalSwitchVariant.soft,
+      );
+
+      expect(
+        const FortalTextField.classic().variant,
+        FortalTextFieldVariant.classic,
+      );
+      expect(
+        const FortalTextField.surface().variant,
+        FortalTextFieldVariant.surface,
+      );
+      expect(const FortalTextField.soft().variant, FortalTextFieldVariant.soft);
+
+      expect(
+        const FortalToggle.ghost(selected: false).variant,
+        FortalToggleVariant.ghost,
+      );
+      expect(
+        const FortalToggle.outline(selected: false).variant,
+        FortalToggleVariant.outline,
+      );
+
+      expect(
+        const FortalToggleGroup.soft(items: [], selectedValue: null).variant,
+        FortalToggleGroupVariant.soft,
+      );
+      expect(
+        const FortalToggleGroup.surface(items: [], selectedValue: null).variant,
+        FortalToggleGroupVariant.surface,
+      );
     });
 
     testWidgets('renders FortalAccordion', (tester) async {
@@ -36,6 +249,8 @@ void main() {
           controller: RemixAccordionController<String>(),
           child: const FortalAccordion<String>(
             value: 'item',
+            color: .red,
+            radius: .small,
             title: 'Item',
             child: Text('Content'),
           ),
@@ -44,74 +259,47 @@ void main() {
 
       expect(find.byType(FortalAccordion<String>), findsOneWidget);
       expect(find.byType(RemixAccordion<String>), findsOneWidget);
+      _expectFortalTokenOverride(tester, find.byType(RemixAccordion<String>));
     });
 
     testWidgets('renders FortalAvatar', (tester) async {
-      await tester.pumpRemixApp(const FortalAvatar(label: 'LF'));
+      await tester.pumpRemixApp(
+        const FortalAvatar(color: .red, radius: .small, label: 'LF'),
+      );
 
       expect(find.byType(FortalAvatar), findsOneWidget);
       expect(find.byType(RemixAvatar), findsOneWidget);
+      _expectFortalTokenOverride(tester, find.byType(RemixAvatar));
     });
 
     testWidgets('renders FortalBadge', (tester) async {
-      await tester.pumpRemixApp(const FortalBadge(label: 'New'));
+      await tester.pumpRemixApp(
+        const FortalBadge(
+          color: .red,
+          radius: .small,
+          highContrast: true,
+          child: Text('New'),
+        ),
+      );
 
       expect(find.byType(FortalBadge), findsOneWidget);
       expect(find.byType(RemixBadge), findsOneWidget);
-    });
-
-    testWidgets('non-solid FortalBadge variants use accessible accent text', (
-      tester,
-    ) async {
-      final colors = resolveFortalTokens(const FortalThemeConfig());
-
-      for (final variant in [
-        FortalBadgeVariant.soft,
-        FortalBadgeVariant.surface,
-        FortalBadgeVariant.outline,
-      ]) {
-        await tester.pumpRemixApp(
-          FortalBadge(label: variant.name, variant: variant),
-        );
-        await tester.pumpAndSettle();
-
-        final label = tester.widget<Text>(find.text(variant.name));
-        expect(
-          label.style?.color,
-          colors.accent.scale.step(12),
-          reason: '${variant.name} badges use the accent text step',
-        );
-      }
-    });
-
-    test('accent text step meets WCAG AA over soft badge backgrounds', () {
-      for (final brightness in Brightness.values) {
-        for (final accent in FortalAccentColor.values) {
-          final colors = resolveFortalTokens(
-            FortalThemeConfig(accent: accent, brightness: brightness),
-          );
-          final background = Color.alphaBlend(
-            colors.accent.scale.alphaStep(3),
-            colors.colorBackground,
-          );
-          final foreground = colors.accent.scale.step(12);
-
-          expect(
-            _contrastRatio(foreground, background),
-            greaterThanOrEqualTo(4.5),
-            reason:
-                '${accent.name}/${brightness.name} soft badges must meet '
-                'WCAG AA contrast',
-          );
-        }
-      }
+      _expectFortalTokenOverride(tester, find.byType(RemixBadge));
     });
 
     testWidgets('renders FortalButton', (tester) async {
-      await tester.pumpRemixApp(const FortalButton(label: 'Save'));
+      await tester.pumpRemixApp(
+        const FortalButton(
+          color: .red,
+          radius: .small,
+          highContrast: true,
+          child: Text('Save'),
+        ),
+      );
 
       expect(find.byType(FortalButton), findsOneWidget);
       expect(find.byType(RemixButton), findsOneWidget);
+      _expectFortalTokenOverride(tester, find.byType(RemixButton));
     });
 
     testWidgets('renders FortalCard', (tester) async {
@@ -124,57 +312,124 @@ void main() {
     });
 
     testWidgets('renders FortalCallout', (tester) async {
-      await tester.pumpRemixApp(const FortalCallout(text: 'Heads up'));
+      await tester.pumpRemixApp(
+        const FortalCallout(
+          color: .red,
+          highContrast: true,
+          child: Text('Heads up'),
+        ),
+      );
 
       expect(find.byType(FortalCallout), findsOneWidget);
       expect(find.byType(RemixCallout), findsOneWidget);
+      _expectFortalTokenOverride(
+        tester,
+        find.byType(RemixCallout),
+        expectsRadius: false,
+      );
     });
 
     testWidgets('renders FortalCheckbox', (tester) async {
-      await tester.pumpRemixApp(const FortalCheckbox(selected: true));
+      await tester.pumpRemixApp(
+        const FortalCheckbox(color: .red, highContrast: true, selected: true),
+      );
 
       expect(find.byType(FortalCheckbox), findsOneWidget);
       expect(find.byType(RemixCheckbox), findsOneWidget);
+      _expectFortalTokenOverride(
+        tester,
+        find.byType(RemixCheckbox),
+        expectsRadius: false,
+      );
     });
 
     testWidgets('renders FortalDivider', (tester) async {
-      await tester.pumpRemixApp(const FortalDivider());
+      await tester.pumpRemixApp(const FortalDivider(color: .red));
 
       expect(find.byType(FortalDivider), findsOneWidget);
       expect(find.byType(RemixDivider), findsOneWidget);
+      _expectFortalTokenOverride(
+        tester,
+        find.byType(RemixDivider),
+        expectsRadius: false,
+      );
+
+      final divider = tester.widget<Box>(
+        find.descendant(
+          of: find.byType(RemixDivider),
+          matching: find.byType(Box),
+        ),
+      );
+      final decoration = divider.styleSpec!.spec.decoration as BoxDecoration;
+      expect(decoration.color, red.light.scale.alphaStep(6));
     });
 
     testWidgets('renders FortalIconButton', (tester) async {
-      await tester.pumpRemixApp(const FortalIconButton(icon: Icons.add));
+      await tester.pumpRemixApp(
+        const FortalIconButton(
+          color: .red,
+          radius: .small,
+          highContrast: true,
+          semanticLabel: 'Add',
+          icon: Icons.add,
+        ),
+      );
 
       expect(find.byType(FortalIconButton), findsOneWidget);
       expect(find.byType(RemixIconButton), findsOneWidget);
+      _expectFortalTokenOverride(tester, find.byType(RemixIconButton));
     });
 
     testWidgets('renders FortalProgress', (tester) async {
-      await tester.pumpRemixApp(const FortalProgress(value: 0.5));
+      await tester.pumpRemixApp(
+        const FortalProgress(
+          color: .red,
+          radius: .small,
+          highContrast: true,
+          value: 50,
+          max: 100,
+        ),
+      );
 
       expect(find.byType(FortalProgress), findsOneWidget);
       expect(find.byType(RemixProgress), findsOneWidget);
+      _expectFortalTokenOverride(tester, find.byType(RemixProgress));
     });
 
     testWidgets('renders FortalRadio', (tester) async {
       await tester.pumpRemixApp(
         const RemixRadioGroup<String>(
           groupValue: 'option',
-          child: FortalRadio<String>(value: 'option'),
+          child: FortalRadio<String>(
+            color: .red,
+            highContrast: true,
+            value: 'option',
+          ),
         ),
       );
 
       expect(find.byType(FortalRadio<String>), findsOneWidget);
       expect(find.byType(RemixRadio<String>), findsOneWidget);
+      _expectFortalTokenOverride(
+        tester,
+        find.byType(RemixRadio<String>),
+        expectsRadius: false,
+      );
     });
 
     testWidgets('renders FortalSlider', (tester) async {
-      await tester.pumpRemixApp(const FortalSlider(value: 0.5));
+      await tester.pumpRemixApp(
+        const FortalSlider(
+          color: .red,
+          radius: .small,
+          highContrast: true,
+          values: [50],
+        ),
+      );
 
       expect(find.byType(FortalSlider), findsOneWidget);
       expect(find.byType(RemixSlider), findsOneWidget);
+      _expectFortalTokenOverride(tester, find.byType(RemixSlider));
     });
 
     testWidgets('renders FortalSpinner', (tester) async {
@@ -185,31 +440,52 @@ void main() {
     });
 
     testWidgets('renders FortalSwitch', (tester) async {
-      await tester.pumpRemixApp(const FortalSwitch(selected: true));
+      await tester.pumpRemixApp(
+        const FortalSwitch(
+          color: .red,
+          radius: .small,
+          highContrast: true,
+          selected: true,
+        ),
+      );
 
       expect(find.byType(FortalSwitch), findsOneWidget);
       expect(find.byType(RemixSwitch), findsOneWidget);
+      _expectFortalTokenOverride(tester, find.byType(RemixSwitch));
     });
 
     testWidgets('renders FortalTextField', (tester) async {
-      await tester.pumpRemixApp(const FortalTextField(hintText: 'Email'));
+      await tester.pumpRemixApp(
+        const FortalTextField(color: .red, radius: .small, hintText: 'Email'),
+      );
 
       expect(find.byType(FortalTextField), findsOneWidget);
       expect(find.byType(RemixTextField), findsOneWidget);
+      _expectFortalTokenOverride(tester, find.byType(RemixTextField));
     });
 
     testWidgets('renders FortalToggle', (tester) async {
       await tester.pumpRemixApp(
-        const FortalToggle(selected: true, label: 'Bold'),
+        const FortalToggle(
+          color: .red,
+          radius: .small,
+          highContrast: true,
+          selected: true,
+          label: 'Bold',
+        ),
       );
 
       expect(find.byType(FortalToggle), findsOneWidget);
       expect(find.byType(RemixToggle), findsOneWidget);
+      _expectFortalTokenOverride(tester, find.byType(RemixToggle));
     });
 
     testWidgets('renders FortalToggleGroup', (tester) async {
       await tester.pumpRemixApp(
         FortalToggleGroup<String>(
+          color: .red,
+          radius: .small,
+          highContrast: true,
           selectedValue: 'a',
           onChanged: (_) {},
           items: const [
@@ -221,6 +497,7 @@ void main() {
 
       expect(find.byType(FortalToggleGroup<String>), findsOneWidget);
       expect(find.byType(RemixToggleGroup<String>), findsOneWidget);
+      _expectFortalTokenOverride(tester, find.byType(RemixToggleGroup<String>));
     });
 
     testWidgets('renders FortalDialog', (tester) async {
@@ -240,19 +517,32 @@ void main() {
     testWidgets('renders FortalMenu', (tester) async {
       await tester.pumpRemixApp(
         FortalMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Menu'),
-          items: const [RemixMenuItem(value: 'a', label: 'A')],
+          color: .red,
+          trigger: const Text('Menu'),
+          items: const [RemixMenuAction(value: 'a', child: Text('A'))],
         ),
       );
       expect(find.byType(FortalMenu<String>), findsOneWidget);
       expect(find.byType(RemixMenu<String>), findsOneWidget);
+      await tester.tap(find.text('Menu'));
+      await tester.pumpAndSettle();
+      _expectFortalTokenOverride(
+        tester,
+        find.text('A'),
+        expectedRadius: const Radius.circular(6),
+      );
     });
 
     testWidgets('renders FortalSelect', (tester) async {
       await tester.pumpRemixApp(
         FortalSelect<String>(
+          triggerColor: .red,
+          triggerRadius: .small,
+          contentColor: .red,
+          contentHighContrast: true,
           trigger: const RemixSelectTrigger(placeholder: 'Pick'),
           items: const [RemixSelectItem(value: 'a', label: 'A')],
+          onChanged: (_) {},
         ),
       );
       expect(find.byType(FortalSelect<String>), findsOneWidget);
@@ -267,12 +557,12 @@ void main() {
           child: Column(
             children: [
               FortalTabBar(
-                child: Row(
-                  children: const [
-                    FortalTab(tabId: 'a', label: 'A'),
-                    FortalTab(tabId: 'b', label: 'B'),
-                  ],
-                ),
+                color: .red,
+                highContrast: true,
+                children: const [
+                  FortalTab(tabId: 'a', label: 'A'),
+                  FortalTab(tabId: 'b', label: 'B'),
+                ],
               ),
               const FortalTabView(tabId: 'a', child: Text('A view')),
               const FortalTabView(tabId: 'b', child: Text('B view')),
@@ -283,19 +573,33 @@ void main() {
       expect(find.byType(FortalTabBar), findsOneWidget);
       expect(find.byType(FortalTab), findsNWidgets(2));
       expect(find.byType(FortalTabView), findsNWidgets(2));
+      _expectFortalTokenOverride(
+        tester,
+        find.byType(RemixTabBar),
+        expectsRadius: false,
+      );
+      _expectFortalTokenOverride(
+        tester,
+        find.byType(RemixTab).first,
+        expectsRadius: false,
+      );
     });
   });
 }
 
-double _contrastRatio(Color first, Color second) {
-  final firstLuminance = first.computeLuminance();
-  final secondLuminance = second.computeLuminance();
-  final lighter = firstLuminance > secondLuminance
-      ? firstLuminance
-      : secondLuminance;
-  final darker = firstLuminance > secondLuminance
-      ? secondLuminance
-      : firstLuminance;
+void _expectFortalTokenOverride(
+  WidgetTester tester,
+  Finder finder, {
+  bool expectsRadius = true,
+  Radius expectedRadius = const Radius.circular(4.5),
+}) {
+  final context = tester.element(finder);
 
-  return (lighter + 0.05) / (darker + 0.05);
+  expect(
+    MixScope.tokenOf(FortalTokens.accent9, context),
+    red.light.scale.step(9),
+  );
+  if (expectsRadius) {
+    expect(MixScope.tokenOf(FortalTokens.radius3, context), expectedRadius);
+  }
 }

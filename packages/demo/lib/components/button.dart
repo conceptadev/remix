@@ -17,6 +17,15 @@ void _showToast(BuildContext context, String message) {
 
 @widgetbook.UseCase(name: 'Button Component', type: RemixButton)
 Widget buildButtonUseCase(BuildContext context) {
+  final label = context.knobs.string(label: 'label', initialValue: 'Press Me');
+  final leadingIcon = context.knobs.iconData(
+    label: 'Leading Icon',
+    initialValue: null,
+  );
+  final trailingIcon = context.knobs.iconData(
+    label: 'Trailing Icon',
+    initialValue: null,
+  );
   return KeyedSubtree(
     key: _key,
     child: Scaffold(
@@ -36,15 +45,6 @@ Widget buildButtonUseCase(BuildContext context) {
               : null,
           enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           loading: context.knobs.boolean(label: 'Loading', initialValue: false),
-          label: context.knobs.string(label: 'label', initialValue: 'Press Me'),
-          leadingIcon: context.knobs.iconData(
-            label: 'Leading Icon',
-            initialValue: null,
-          ),
-          trailingIcon: context.knobs.iconData(
-            label: 'Trailing Icon',
-            initialValue: null,
-          ),
           variant: context.knobs.object.dropdown(
             label: 'variant',
             options: FortalButtonVariant.values,
@@ -55,6 +55,15 @@ Widget buildButtonUseCase(BuildContext context) {
             options: FortalButtonSize.values,
             labelBuilder: (size) => size.name,
             initialOption: FortalButtonSize.size2,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 8,
+            children: [
+              if (leadingIcon != null) Icon(leadingIcon),
+              Text(label),
+              if (trailingIcon != null) Icon(trailingIcon),
+            ],
           ),
         ),
       ),

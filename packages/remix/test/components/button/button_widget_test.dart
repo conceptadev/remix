@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
@@ -7,662 +11,424 @@ import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixButton Widget Tests', () {
-    group('Basic Rendering', () {
-      testWidgets('renders button with label only', (tester) async {
-        await tester.pumpRemixApp(RemixButton(label: 'Click Me'));
-
-        await tester.pumpAndSettle();
-
-        // Verify text is rendered
-        expect(find.text('Click Me'), findsOneWidget);
-
-        // Verify NakedButton is used internally
-        expect(find.byType(NakedButton), findsOneWidget);
-      });
-
-      testWidgets('renders button with label and icon', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(label: 'Save', leadingIcon: Icons.save, onPressed: () {}),
-        );
-
-        await tester.pumpAndSettle();
-
-        // Verify both text and icon are rendered
-        expect(find.text('Save'), findsOneWidget);
-        expect(find.byIcon(Icons.save), findsOneWidget);
-      });
-
-      testWidgets('iconAlignment repositions a single icon', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Continue',
-            leadingIcon: Icons.arrow_forward,
-            style: ButtonStyler().iconAlignment(.end),
-            onPressed: () {},
+  group('RemixButton', () {
+    testWidgets('renders arbitrary content without reordering it', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const RemixButton(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.arrow_back, key: ValueKey('leading')),
+              Text('Continue'),
+              Icon(Icons.arrow_forward, key: ValueKey('trailing')),
+            ],
           ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(
-          tester.getTopLeft(find.byIcon(Icons.arrow_forward)).dx,
-          greaterThan(tester.getTopLeft(find.text('Continue')).dx),
-        );
-      });
-
-      testWidgets('both explicit icon positions remain stable', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Continue',
-            leadingIcon: Icons.arrow_back,
-            trailingIcon: Icons.arrow_forward,
-            style: ButtonStyler().iconAlignment(.end),
-            onPressed: () {},
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        final labelX = tester.getTopLeft(find.text('Continue')).dx;
-        expect(
-          tester.getTopLeft(find.byIcon(Icons.arrow_back)).dx,
-          lessThan(labelX),
-        );
-        expect(
-          tester.getTopLeft(find.byIcon(Icons.arrow_forward)).dx,
-          greaterThan(labelX),
-        );
-      });
-    });
-
-    group('FortalButton wrapper widget', () {
-      testWidgets('renders generated button and forwards core params', (
-        tester,
-      ) async {
-        var pressCount = 0;
-        final focusNode = FocusNode();
-        addTearDown(focusNode.dispose);
-
-        await tester.pumpRemixApp(
-          FortalButton(
-            variant: .soft,
-            size: .size3,
-            label: 'Save',
-            leadingIcon: Icons.save,
-            trailingIcon: Icons.check,
-            loading: false,
-            enabled: true,
-            enableFeedback: false,
-            onPressed: () => pressCount++,
-            focusNode: focusNode,
-          ),
-        );
-
-        await tester.pumpAndSettle();
-
-        expect(find.byType(FortalButton), findsOneWidget);
-        expect(find.byType(RemixButton), findsOneWidget);
-        expect(find.text('Save'), findsOneWidget);
-        expect(find.byIcon(Icons.save), findsOneWidget);
-        expect(find.byIcon(Icons.check), findsOneWidget);
-
-        final generated = tester.widget<FortalButton>(
-          find.byType(FortalButton),
-        );
-        expect(generated.variant, equals(FortalButtonVariant.soft));
-        expect(generated.size, equals(FortalButtonSize.size3));
-
-        final remixButton = tester.widget<RemixButton>(
-          find.byType(RemixButton),
-        );
-        expect(
-          remixButton.style,
-          equals(fortalButtonStyler(variant: .soft, size: .size3)),
-        );
-        expect(remixButton.label, equals('Save'));
-        expect(remixButton.leadingIcon, equals(Icons.save));
-        expect(remixButton.trailingIcon, equals(Icons.check));
-        expect(remixButton.loading, isFalse);
-        expect(remixButton.enabled, isTrue);
-        expect(remixButton.enableFeedback, isFalse);
-        expect(remixButton.onPressed, isNotNull);
-        expect(remixButton.focusNode, same(focusNode));
-
-        final nakedButton = tester.widget<NakedButton>(
-          find.byType(NakedButton),
-        );
-        expect(nakedButton.enableFeedback, isFalse);
-
-        await tester.tap(find.byType(FortalButton));
-        await tester.pumpAndSettle();
-
-        expect(pressCount, equals(1));
-      });
-    });
-
-    group('WidgetStateController', () {
-      widgetControllerTest<RemixButtonSpec>(
-        'contains disabled state when enabled is false',
-        build: () =>
-            RemixButton(label: 'Click Me', onPressed: () {}, enabled: false),
-        expectedStates: {WidgetState.disabled},
+        ),
       );
 
-      widgetControllerTest<RemixButtonSpec>(
-        'contains disabled state when onPressed is omitted',
-        build: () => RemixButton(label: 'Click Me'),
-        expectedStates: {WidgetState.disabled},
+      expect(find.byType(NakedButton), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('remix-button-surface')),
+        findsOneWidget,
       );
-
-      widgetControllerTest<RemixButtonSpec>(
-        'contains hovered state when hovered',
-        build: () => RemixButton(label: 'Hover Me', onPressed: () {}),
-        act: hoverAction<RemixButton>,
-        expectedStates: {WidgetState.hovered},
+      final labelX = tester.getTopLeft(find.text('Continue')).dx;
+      expect(
+        tester.getTopLeft(find.byKey(const ValueKey('leading'))).dx,
+        lessThan(labelX),
       );
-
-      widgetControllerTest<RemixButtonSpec>(
-        'contains focused state when focused',
-        build: () => RemixButton(label: 'Focus Me', onPressed: () {}),
-        act: focusAction<RemixButton>,
-        expectedStates: {WidgetState.focused},
-      );
-
-      widgetControllerTest<RemixButtonSpec>(
-        'contains pressed state when pressed',
-        build: () => RemixButton(label: 'Press Me', onPressed: () {}),
-        act: pressAction<RemixButton>,
-        expectedStates: {WidgetState.pressed},
+      expect(
+        tester.getTopLeft(find.byKey(const ValueKey('trailing'))).dx,
+        greaterThan(labelX),
       );
     });
 
-    group('Custom Builders', () {
-      testWidgets('textBuilder renders custom text widget', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Original Label',
-            textBuilder: (context, spec, text) {
-              return Container(
-                key: const ValueKey('custom_text'),
-                child: Text('Custom: $text'),
-              );
-            },
-            onPressed: () {},
+    testWidgets('resolved text and icon styles are inherited by content', (
+      tester,
+    ) async {
+      const textColor = Color(0xFF123456);
+      const iconColor = Color(0xFF654321);
+      await tester.pumpRemixApp(
+        RemixButton(
+          style: ButtonStyler(
+            label: TextStyler().color(textColor).fontSize(15),
+            icon: IconStyler().color(iconColor).size(19),
           ),
-        );
-
-        await tester.pumpAndSettle();
-
-        // Verify custom text widget is rendered
-        expect(find.byKey(const ValueKey('custom_text')), findsOneWidget);
-        expect(find.text('Custom: Original Label'), findsOneWidget);
-
-        // Verify original label is not rendered as StyledText
-        expect(find.text('Original Label'), findsNothing);
-      });
-
-      testWidgets('iconBuilder renders custom icon widget', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Test',
-            leadingIcon: Icons.star,
-            leadingIconBuilder: (context, spec, icon) {
-              return Container(
-                key: const ValueKey('custom_icon'),
-                child: Icon(icon, color: Colors.red),
-              );
-            },
-            onPressed: () {},
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [Icon(Icons.star), Text('Inherited')],
           ),
-        );
+        ),
+      );
 
-        await tester.pumpAndSettle();
-
-        // Verify custom icon widget is rendered
-        expect(find.byKey(const ValueKey('custom_icon')), findsOneWidget);
-
-        // Verify icon has custom color
-        final icon = tester.widget<Icon>(find.byIcon(Icons.star));
-        expect(icon.color, equals(Colors.red));
-      });
-
-      testWidgets('loadingBuilder renders custom loading widget', (
-        tester,
-      ) async {
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Test',
-            loading: true,
-            loadingBuilder: (context, spec) {
-              return Container(
-                key: const ValueKey('custom_loading'),
-                child: const CircularProgressIndicator(),
-              );
-            },
-            onPressed: () {},
-          ),
-        );
-
-        await tester
-            .pump(); // Use pump() instead of pumpAndSettle() to avoid timeout
-
-        // Verify custom loading widget is rendered
-        expect(find.byKey(const ValueKey('custom_loading')), findsOneWidget);
-        expect(find.byType(CircularProgressIndicator), findsOneWidget);
-
-        // Verify default spinner is not rendered
-        expect(find.byType(RemixSpinner), findsNothing);
-      });
-
-      testWidgets('builders receive correct parameters', (tester) async {
-        TextSpec? receivedTextSpec;
-        IconSpec? receivedIconSpec;
-        RemixSpinnerSpec? receivedSpinnerSpec;
-
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Test Label',
-            leadingIcon: Icons.home,
-            loading: true,
-            textBuilder: (context, spec, text) {
-              receivedTextSpec = spec;
-              return Text(text);
-            },
-            leadingIconBuilder: (context, spec, icon) {
-              receivedIconSpec = spec;
-              return Icon(icon);
-            },
-            loadingBuilder: (context, spec) {
-              receivedSpinnerSpec = spec;
-              return const SizedBox.shrink();
-            },
-            onPressed: () {},
-          ),
-        );
-
-        await tester.pumpAndSettle();
-
-        // Verify builders received correct spec parameters
-        expect(receivedTextSpec, isNotNull);
-        expect(receivedIconSpec, isNotNull);
-        expect(receivedSpinnerSpec, isNotNull);
-      });
+      final textContext = tester.element(find.text('Inherited'));
+      final iconContext = tester.element(find.byIcon(Icons.star));
+      expect(DefaultTextStyle.of(textContext).style.color, textColor);
+      expect(DefaultTextStyle.of(textContext).style.fontSize, 15);
+      expect(IconTheme.of(iconContext).color, iconColor);
+      expect(IconTheme.of(iconContext).size, 19);
     });
 
-    group('Interaction Tests', () {
-      testWidgets('loading state shows spinner and hides content', (
-        tester,
-      ) async {
+    testWidgets('explicit descendant styles remain authoritative', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixButton(
+          style: ButtonStyler(
+            label: TextStyler().color(Colors.blue),
+            icon: IconStyler().color(Colors.green),
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.star, color: Colors.red),
+              Text('Explicit', style: TextStyle(color: Colors.orange)),
+            ],
+          ),
+        ),
+      );
+
+      expect(tester.widget<Icon>(find.byIcon(Icons.star)).color, Colors.red);
+      expect(
+        tester.widget<Text>(find.text('Explicit')).style!.color,
+        Colors.orange,
+      );
+    });
+
+    testWidgets('raw style spec supplies surface and inherited styles', (
+      tester,
+    ) async {
+      const color = Color(0xFF224466);
+      await tester.pumpRemixApp(
+        const RemixButton(
+          styleSpec: RemixButtonSpec(
+            container: StyleSpec(
+              spec: FlexBoxSpec(
+                box: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
+              ),
+            ),
+            label: StyleSpec(
+              spec: TextSpec(style: TextStyle(color: color)),
+            ),
+            containerEffects: RemixBoxEffectsSpec(
+              behindContent: RemixBoxEffectLayerSpec(
+                shadows: [RemixBoxShadow(color: color)],
+              ),
+            ),
+          ),
+          child: Text('Spec'),
+        ),
+      );
+      expect(find.byType(CustomPaint), findsWidgets);
+      expect(
+        DefaultTextStyle.of(tester.element(find.text('Spec'))).style.color,
+        color,
+      );
+    });
+
+    testWidgets('fluent color overrides a Fortal surface', (tester) async {
+      const boundaryKey = ValueKey('button-color-boundary');
+      await tester.pumpRemixApp(
+        RepaintBoundary(
+          key: boundaryKey,
+          child: fortalButtonStyler()
+              .color(Colors.red)
+              .call(
+                onPressed: () {},
+                child: const SizedBox(width: 40, height: 12),
+              ),
+        ),
+      );
+
+      final pixels = await _capture(tester, find.byKey(boundaryKey));
+      expect(
+        _pixel(pixels, pixels.width ~/ 2, pixels.height ~/ 2),
+        _rgba(Colors.red),
+      );
+    });
+
+    testWidgets('loading preserves layout, hides visuals, and shows spinner', (
+      tester,
+    ) async {
+      Widget build(bool loading) => RemixButton(
+        loading: loading,
+        onPressed: () {},
+        child: const SizedBox(width: 96, height: 24, child: Text('Save')),
+      );
+
+      await tester.pumpRemixApp(build(false));
+      final idleSize = tester.getSize(find.byType(RemixButton));
+      expect(find.byType(RemixSpinner), findsNothing);
+
+      await tester.pumpRemixApp(build(true));
+      await tester.pump();
+      final loadingSize = tester.getSize(find.byType(RemixButton));
+      final visibility = tester.widget<Visibility>(find.byType(Visibility));
+
+      expect(loadingSize, idleSize);
+      expect(find.byType(RemixSpinner), findsOneWidget);
+      expect(visibility.visible, isFalse);
+      expect(visibility.maintainSize, isTrue);
+      expect(visibility.maintainState, isTrue);
+      expect(visibility.maintainAnimation, isTrue);
+      expect(visibility.maintainSemantics, isTrue);
+    });
+
+    testWidgets('loadingBuilder receives the resolved spinner spec', (
+      tester,
+    ) async {
+      RemixSpinnerSpec? received;
+      await tester.pumpRemixApp(
+        RemixButton(
+          loading: true,
+          onPressed: () {},
+          loadingBuilder: (context, spec) {
+            received = spec;
+            return const SizedBox(key: ValueKey('custom-spinner'));
+          },
+          child: const Text('Save'),
+        ),
+      );
+      await tester.pump();
+
+      expect(received, isNotNull);
+      expect(find.byKey(const ValueKey('custom-spinner')), findsOneWidget);
+      expect(find.byType(RemixSpinner), findsNothing);
+    });
+
+    testWidgets('loading applies nested spinner widget modifiers', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const RemixButton(
+          loading: true,
+          styleSpec: RemixButtonSpec(
+            spinner: StyleSpec(
+              spec: RemixSpinnerSpec(),
+              widgetModifiers: [OpacityModifier(0.25)],
+            ),
+          ),
+          child: Text('Save'),
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        find.ancestor(
+          of: find.byType(RemixSpinner),
+          matching: find.byWidgetPredicate(
+            (widget) => widget is Opacity && widget.opacity == 0.25,
+          ),
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('press and long-press callbacks independently enable it', (
+      tester,
+    ) async {
+      var presses = 0;
+      await tester.pumpRemixApp(
+        RemixButton(onPressed: () => presses++, child: const Text('Press')),
+      );
+      await tester.tap(find.byType(RemixButton));
+      expect(presses, 1);
+
+      var longPresses = 0;
+      await tester.pumpRemixApp(
+        RemixButton(
+          onLongPress: () => longPresses++,
+          child: const Text('Long press'),
+        ),
+      );
+      await tester.longPress(find.byType(RemixButton));
+      expect(longPresses, 1);
+    });
+
+    testWidgets('disabled and loading states suppress every callback', (
+      tester,
+    ) async {
+      var callbacks = 0;
+      for (final configuration in [
+        (enabled: false, loading: false),
+        (enabled: true, loading: true),
+      ]) {
         await tester.pumpRemixApp(
           RemixButton(
-            label: 'Loading',
-            leadingIcon: Icons.download,
-            loading: true,
-            onPressed: () {},
+            enabled: configuration.enabled,
+            loading: configuration.loading,
+            onPressed: () => callbacks++,
+            onLongPress: () => callbacks++,
+            child: const Text('Unavailable'),
           ),
         );
-
-        await tester
-            .pump(); // Use pump() instead of pumpAndSettle() to avoid timeout
-
-        // Verify spinner is present
-        expect(find.byType(RemixSpinner), findsOneWidget);
-
-        // Verify content is hidden but maintains size
-        final VisibilityWidgets = tester.widgetList<Visibility>(
-          find.byType(Visibility),
-        );
-
-        for (final visibility in VisibilityWidgets) {
-          expect(visibility.visible, isFalse);
-          expect(visibility.maintainSize, isTrue);
-          expect(visibility.maintainState, isTrue);
-          expect(visibility.maintainAnimation, isTrue);
-        }
-      });
-
-      testWidgets('loading state makes button non-interactive', (tester) async {
-        bool wasPressed = false;
-
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Loading',
-            loading: true,
-            onPressed: () => wasPressed = true,
-          ),
-        );
-
-        await tester
-            .pump(); // Use pump() instead of pumpAndSettle() to avoid timeout
-
-        // Try to tap the button
-        await tester.tap(find.byType(RemixButton));
         await tester.pump();
-
-        expect(wasPressed, isFalse);
-      });
-
-      testWidgets('_isEnabled logic combines enabled, loading, and onPressed', (
-        tester,
-      ) async {
-        // Test case 1: enabled=true, loading=false, onPressed=callback -> should be enabled
-        int pressedCount = 0;
-
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Test',
-            enabled: true,
-            loading: false,
-            onPressed: () => pressedCount++,
-          ),
-        );
-
-        await tester.pump();
-        await tester.tap(find.byType(RemixButton));
-        expect(pressedCount, equals(1));
-
-        // Test case 2: enabled=false -> should be disabled
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Test',
-            enabled: false,
-            loading: false,
-            onPressed: () {},
-          ),
-        );
-
-        await tester.pump();
-        await tester.tap(find.byType(RemixButton));
-        expect(pressedCount, equals(1));
-
-        // Test case 3: loading=true -> should be disabled
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Test',
-            enabled: true,
-            loading: true,
-            onPressed: () {},
-          ),
-        );
-
-        await tester.pump();
-        await tester.tap(find.byType(RemixButton));
-        expect(pressedCount, equals(1));
-
-        // Test case 4: onPressed omitted -> should be disabled
-        await tester.pumpRemixApp(
-          const RemixButton(label: 'Test', enabled: true, loading: false),
-        );
-
-        await tester.pump();
-        await tester.tap(find.byType(RemixButton));
-        expect(pressedCount, equals(1));
-      });
-
-      testWidgets('onPressed fires when button is tapped', (tester) async {
-        int pressCount = 0;
-
-        await tester.pumpRemixApp(
-          RemixButton(label: 'Tap Me', onPressed: () => pressCount++),
-        );
-
-        await tester.pumpAndSettle();
-
-        // Tap the button
-        await tester.tap(find.byType(RemixButton));
-        await tester.pumpAndSettle();
-
-        expect(pressCount, equals(1));
-      });
-
-      testWidgets('onLongPress fires on long press', (tester) async {
-        int longPressCount = 0;
-
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Long Press Me',
-            onPressed: () {},
-            onLongPress: () => longPressCount++,
-          ),
-        );
-
-        await tester.pumpAndSettle();
-
-        // Long press the button
-        await tester.longPress(find.byType(RemixButton));
-        await tester.pumpAndSettle();
-
-        expect(longPressCount, equals(1));
-      });
-
-      testWidgets('callbacks do not fire when disabled', (tester) async {
-        int pressCount = 0;
-        int longPressCount = 0;
-
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Disabled',
-            enabled: false,
-            onPressed: () => pressCount++,
-            onLongPress: () => longPressCount++,
-          ),
-        );
-
-        await tester.pumpAndSettle();
-
-        // Try all interactions
         await tester.tap(find.byType(RemixButton));
         await tester.longPress(find.byType(RemixButton));
-        await tester.pumpAndSettle();
-
-        expect(pressCount, equals(0));
-        expect(longPressCount, equals(0));
-      });
-
-      testWidgets('callbacks do not fire when loading', (tester) async {
-        int pressCount = 0;
-        int longPressCount = 0;
-
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Loading',
-            loading: true,
-            onPressed: () => pressCount++,
-            onLongPress: () => longPressCount++,
-          ),
-        );
-
-        await tester
-            .pump(); // Use pump() instead of pumpAndSettle() to avoid timeout
-
-        // Try interactions
-        await tester.tap(find.byType(RemixButton));
-        await tester.longPress(find.byType(RemixButton));
-        await tester.pump();
-
-        expect(pressCount, equals(0));
-        expect(longPressCount, equals(0));
-      });
-
-      testWidgets('enableFeedback controls haptic feedback', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'No Feedback',
-            enableFeedback: false,
-            onPressed: () {},
-          ),
-        );
-
-        await tester.pumpAndSettle();
-
-        final nakedButton = tester.widget<NakedButton>(
-          find.byType(NakedButton),
-        );
-        expect(nakedButton.enableFeedback, isFalse);
-      });
+      }
+      expect(callbacks, 0);
     });
 
-    group('Focus and Keyboard', () {
-      testWidgets('autofocus requests focus on mount and button is focused', (
-        tester,
-      ) async {
-        final focusNode = FocusNode();
-        addTearDown(() {
-          focusNode.dispose();
-        });
+    testWidgets('semantic label and hint form one button node', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpRemixApp(
+        RemixButton(
+          semanticLabel: 'Save document',
+          semanticHint: 'Writes changes to disk',
+          onPressed: () {},
+          child: const Text('Save'),
+        ),
+      );
 
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Auto Focus',
-            autofocus: true,
-            onPressed: () {},
-            focusNode: focusNode,
-          ),
-        );
-
-        await tester.pumpAndSettle();
-
-        final focused = tester.binding.focusManager.primaryFocus;
-        expect(focused, equals(focusNode));
-      });
+      final node = tester.getSemantics(find.byType(RemixButton));
+      expect(node.label, 'Save document');
+      expect(node.hint, 'Writes changes to disk');
+      expect(node.flagsCollection.isButton, isTrue);
+      semantics.dispose();
     });
 
-    group('Semantics and Accessibility', () {
-      testWidgets('semanticLabel overrides default label', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Button Text',
-            semanticLabel: 'Custom Semantic Label',
-            onPressed: () {},
-          ),
-        );
+    testWidgets('legacy label supplies one accessible name', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpRemixApp(
+        RemixButton(label: 'Default Label', onPressed: () {}),
+      );
 
-        await tester.pumpAndSettle();
-
-        // Verify semantics widget is present
-        expect(find.byType(Semantics), findsAtLeastNWidgets(1));
-
-        // Test that the semantic label is applied by checking accessibility
-        final semantics = tester.getSemantics(find.byType(RemixButton));
-        expect(semantics.label, equals('Custom Semantic Label'));
-      });
-
-      testWidgets('semanticHint provides action context', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Save',
-            semanticHint: 'Saves the current document',
-            onPressed: () {},
-          ),
-        );
-
-        await tester.pumpAndSettle();
-
-        // Verify semantics widget is present
-        expect(find.byType(Semantics), findsAtLeastNWidgets(1));
-
-        // Test that the semantic hint is applied by checking accessibility
-        final semantics = tester.getSemantics(find.byType(RemixButton));
-        // Note: The hint might not be applied as expected, so we'll just verify the button renders
-        expect(semantics, isNotNull);
-      });
-
-      testWidgets('excludeSemantics excludes child semantics', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(label: 'Test', excludeSemantics: true, onPressed: () {}),
-        );
-
-        await tester.pumpAndSettle();
-
-        // Find the specific Semantics widget that has excludeSemantics set
-        final semanticsWidgets = tester.widgetList<Semantics>(
-          find.byType(Semantics),
-        );
-        final excludeSemanticsWidget = semanticsWidgets.firstWhere(
-          (semantics) => semantics.excludeSemantics == true,
-          orElse: () => throw StateError(
-            'No Semantics widget with excludeSemantics found',
-          ),
-        );
-        expect(excludeSemanticsWidget.excludeSemantics, isTrue);
-      });
-
-      testWidgets('loading state updates live region', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(label: 'Loading', loading: true, onPressed: () {}),
-        );
-
-        await tester
-            .pump(); // Use pump() instead of pumpAndSettle() to avoid timeout
-
-        // Verify semantics widget is present
-        expect(find.byType(Semantics), findsAtLeastNWidgets(1));
-
-        // Test that the button is in loading state by checking for spinner
-        expect(find.byType(RemixSpinner), findsOneWidget);
-      });
-
-      testWidgets('MergeSemantics wraps content properly', (tester) async {
-        await tester.pumpRemixApp(RemixButton(label: 'Test', onPressed: () {}));
-
-        await tester.pumpAndSettle();
-
-        expect(find.byType(MergeSemantics), findsOneWidget);
-      });
-
-      testWidgets('default semantic label uses button label', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(label: 'Default Label', onPressed: () {}),
-        );
-
-        await tester.pumpAndSettle();
-
-        final semantics = tester.getSemantics(find.byType(RemixButton));
-        expect(semantics.label, equals('Default Label'));
-      });
+      expect(
+        tester.getSemantics(find.byType(RemixButton)).label,
+        'Default Label',
+      );
+      semantics.dispose();
     });
 
-    group('Layout and Sizing', () {
-      testWidgets('Row with MainAxisSize.min is applied by default', (
-        tester,
-      ) async {
-        await tester.pumpRemixApp(RemixButton(label: 'Test', onPressed: () {}));
+    testWidgets('child supplies semantics when no explicit label is set', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpRemixApp(
+        RemixButton(onPressed: () {}, child: const Text('Continue')),
+      );
 
-        await tester.pumpAndSettle();
+      expect(tester.getSemantics(find.byType(RemixButton)).label, 'Continue');
+      semantics.dispose();
+    });
 
-        // Find the Flex widget (the internal flex used by the button)
-        final flexFinder = find.byType(Flex);
-        expect(flexFinder, findsOneWidget);
+    testWidgets('excludeSemantics is forwarded to the headless control', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixButton(
+          excludeSemantics: true,
+          onPressed: () {},
+          child: const Text('Hidden'),
+        ),
+      );
 
-        // Get the Flex widget and verify its mainAxisSize
-        final flexWidget = tester.widget<Flex>(flexFinder);
-        expect(flexWidget.mainAxisSize, equals(MainAxisSize.min));
-      });
+      expect(
+        tester.widget<NakedButton>(find.byType(NakedButton)).excludeSemantics,
+        isTrue,
+      );
+    });
 
-      testWidgets('mouseCursor defaults to SystemMouseCursors.click', (
-        tester,
-      ) async {
-        await tester.pumpRemixApp(RemixButton(label: 'Test', onPressed: () {}));
+    testWidgets('autofocus, feedback, and cursor are forwarded', (
+      tester,
+    ) async {
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+      await tester.pumpRemixApp(
+        RemixButton(
+          autofocus: true,
+          focusNode: focusNode,
+          enableFeedback: false,
+          mouseCursor: SystemMouseCursors.forbidden,
+          onPressed: () {},
+          child: const Text('Focus'),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        await tester.pumpAndSettle();
+      final naked = tester.widget<NakedButton>(find.byType(NakedButton));
+      expect(focusNode.hasFocus, isTrue);
+      expect(naked.enableFeedback, isFalse);
+      expect(naked.mouseCursor, SystemMouseCursors.forbidden);
+    });
 
-        final button = tester.widget<RemixButton>(find.byType(RemixButton));
-        expect(button.mouseCursor, equals(SystemMouseCursors.click));
-      });
+    widgetControllerTest<RemixButtonSpec>(
+      'reports disabled state when no callback is supplied',
+      build: () => const RemixButton(child: Text('Disabled')),
+      expectedStates: {WidgetState.disabled},
+    );
 
-      testWidgets('custom mouseCursor is applied', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Test',
-            mouseCursor: SystemMouseCursors.forbidden,
-            onPressed: () {},
-          ),
-        );
+    widgetControllerTest<RemixButtonSpec>(
+      'reports hovered state',
+      build: () => RemixButton(onPressed: () {}, child: const Text('Hover')),
+      act: hoverAction<RemixButton>,
+      expectedStates: {WidgetState.hovered},
+    );
 
-        await tester.pumpAndSettle();
+    widgetControllerTest<RemixButtonSpec>(
+      'reports focused state',
+      build: () => RemixButton(onPressed: () {}, child: const Text('Focus')),
+      act: focusAction<RemixButton>,
+      expectedStates: {WidgetState.focused},
+    );
 
-        final button = tester.widget<RemixButton>(find.byType(RemixButton));
-        expect(button.mouseCursor, equals(SystemMouseCursors.forbidden));
-      });
+    widgetControllerTest<RemixButtonSpec>(
+      'reports pressed state',
+      build: () => RemixButton(onPressed: () {}, child: const Text('Press')),
+      act: pressAction<RemixButton>,
+      expectedStates: {WidgetState.pressed},
+    );
+  });
+
+  group('FortalButton', () {
+    testWidgets('forwards the enum recipe, overrides, and arbitrary child', (
+      tester,
+    ) async {
+      const child = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [Icon(Icons.save), Text('Save')],
+      );
+      await tester.pumpRemixApp(
+        const FortalButton.classic(
+          size: .size3,
+          color: .red,
+          radius: .small,
+          highContrast: true,
+          child: child,
+        ),
+      );
+
+      final fortal = tester.widget<FortalButton>(find.byType(FortalButton));
+      final remix = tester.widget<RemixButton>(find.byType(RemixButton));
+      expect(fortal.variant, FortalButtonVariant.classic);
+      expect(fortal.size, FortalButtonSize.size3);
+      expect(remix.child, same(child));
+      expect(find.byIcon(Icons.save), findsOneWidget);
+      expect(find.text('Save'), findsOneWidget);
     });
   });
+}
+
+Future<({ByteData bytes, int width, int height})> _capture(
+  WidgetTester tester,
+  Finder finder,
+) async {
+  final boundary = tester.renderObject<RenderRepaintBoundary>(finder);
+  final result = await tester.runAsync(() async {
+    final image = boundary.toImageSync(pixelRatio: 1);
+    final bytes = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+    final result = (bytes: bytes!, width: image.width, height: image.height);
+    image.dispose();
+    return result;
+  });
+  return result!;
+}
+
+int _pixel(({ByteData bytes, int width, int height}) image, int x, int y) =>
+    image.bytes.getUint32((y * image.width + x) * 4);
+
+int _rgba(Color color) {
+  final argb = color.toARGB32();
+  return ((argb & 0x00FFFFFF) << 8) | (argb >>> 24);
 }

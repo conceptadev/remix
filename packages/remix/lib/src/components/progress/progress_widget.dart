@@ -1,7 +1,8 @@
 part of 'progress.dart';
 
 /// The [RemixProgress] widget is used to display a progress bar that indicates a
-/// completion percentage between 0 and 1. It can be customized using the
+/// completion value between zero and [max]. A null value is indeterminate.
+/// It can be customized using the
 /// [style] parameter to fit different design needs.
 ///
 /// ## Example
@@ -14,21 +15,56 @@ part of 'progress.dart';
 class RemixProgress extends StatelessWidget {
   const RemixProgress({
     super.key,
-    required this.value,
+    double? value,
+    this.max = 1,
+    this.duration = const Duration(seconds: 5),
+    this.semanticLabel,
+    this.excludeSemantics = false,
     this.style = const RemixProgressStyler.create(),
     this.styleSpec,
-  }) : assert(
-         value >= 0 && value <= 1,
-         'Progress value must be between 0 and 1',
+  }) : _value = value,
+       assert(
+         max > 0 && max < double.infinity,
+         'Progress max must be finite and greater than zero.',
+       ),
+       assert(
+         value == null || (value >= 0 && value <= max),
+         'Progress value must be between zero and max.',
+       );
+
+  /// Creates an indeterminate progress indicator.
+  const RemixProgress.indeterminate({
+    super.key,
+    this.max = 1,
+    this.duration = const Duration(seconds: 5),
+    this.semanticLabel,
+    this.excludeSemantics = false,
+    this.style = const RemixProgressStyler.create(),
+    this.styleSpec,
+  }) : _value = null,
+       assert(
+         max > 0 && max < double.infinity,
+         'Progress max must be finite and greater than zero.',
        );
 
   static final styleFrom = RemixProgressStyler.new;
 
-  /// The progress value between 0 and 1.
-  ///
-  /// This value determines how much of the progress bar is filled.
-  /// A value of 0 means empty, while 1 means completely filled.
-  final double value;
+  final double? _value;
+
+  /// Current progress for the established determinate API.
+  double get value => _value ?? 0;
+
+  /// Whether this progress indicator is currently indeterminate.
+  bool get isIndeterminate => _value == null;
+
+  /// Maximum determinate progress value.
+  final double max;
+
+  /// Duration of the initial indeterminate growth animation.
+  final Duration duration;
+
+  final String? semanticLabel;
+  final bool excludeSemantics;
 
   /// The style configuration for the progress bar.
   final RemixProgressStyler style;
@@ -42,29 +78,167 @@ class RemixProgress extends StatelessWidget {
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
-        return Box(
+        final track = Box(styleSpec: spec.track);
+        final indicator = _RemixProgressIndicator(
+          value: _value,
+          max: max,
+          duration: duration,
+          styleSpec: spec.indicator,
+          containerEffects: spec.indicatorEffects,
+        );
+        final progress = RemixBoxWithEffects(
           styleSpec: spec.container,
+          containerEffects: spec.trackEffects,
           child: Stack(
             children: [
-              // Track background
-              Box(styleSpec: spec.track),
-              // Indicator foreground based on value
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final biggestSize = constraints.biggest;
-
-                  return SizedBox(
-                    width: biggestSize.width * value.clamp(0.0, 1.0),
-                    child: Box(styleSpec: spec.indicator),
-                  );
-                },
-              ),
-              // Track container (for any additional styling)
-              Box(styleSpec: spec.trackContainer),
+              track,
+              Positioned.fill(child: indicator),
+              Positioned.fill(child: Box(styleSpec: spec.trackContainer)),
             ],
           ),
+        );
+        if (excludeSemantics) return ExcludeSemantics(child: progress);
+        if (_value case final determinate?) {
+          return Semantics(
+            container: true,
+            role: ui.SemanticsRole.progressBar,
+            label: semanticLabel,
+            value: _semanticNumber(determinate),
+            minValue: '0',
+            maxValue: _semanticNumber(max),
+            child: progress,
+          );
+        }
+        return Semantics(
+          container: true,
+          role: ui.SemanticsRole.loadingSpinner,
+          label: semanticLabel,
+          child: progress,
         );
       },
     );
   }
 }
+
+class _RemixProgressIndicator extends StatefulWidget {
+  const _RemixProgressIndicator({
+    required this.value,
+    required this.max,
+    required this.duration,
+    required this.styleSpec,
+    this.containerEffects,
+  });
+
+  final double? value;
+  final double max;
+  final Duration duration;
+  final StyleSpec<BoxSpec> styleSpec;
+  final RemixBoxEffectsSpec? containerEffects;
+
+  @override
+  State<_RemixProgressIndicator> createState() =>
+      _RemixProgressIndicatorState();
+}
+
+class _RemixProgressIndicatorState extends State<_RemixProgressIndicator>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _indeterminateGrowth;
+  bool? _animationsDisabled;
+
+  @override
+  void initState() {
+    super.initState();
+    _validateDuration(widget.duration);
+    _controller = AnimationController(duration: widget.duration, vsync: this);
+    _indeterminateGrowth = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.01, end: 0.1), weight: 20),
+      TweenSequenceItem(tween: Tween(begin: 0.1, end: 0.6), weight: 10),
+      TweenSequenceItem(tween: Tween(begin: 0.6, end: 0.9), weight: 10),
+      TweenSequenceItem(tween: ConstantTween(0.9), weight: 10),
+      TweenSequenceItem(tween: Tween(begin: 0.9, end: 1), weight: 50),
+    ]).animate(_controller);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final disabled = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    if (_animationsDisabled == disabled) return;
+
+    _animationsDisabled = disabled;
+    _syncIndeterminateAnimation();
+  }
+
+  @override
+  void didUpdateWidget(covariant _RemixProgressIndicator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.duration != widget.duration) {
+      _validateDuration(widget.duration);
+      _controller.duration = widget.duration;
+    }
+    if (oldWidget.value != null && widget.value == null) {
+      _syncIndeterminateAnimation();
+    } else if (oldWidget.value == null && widget.value != null) {
+      _controller.stop();
+    }
+  }
+
+  void _syncIndeterminateAnimation() {
+    if (widget.value != null) {
+      _controller.stop();
+      return;
+    }
+    if (_animationsDisabled ?? false) {
+      _controller
+        ..stop()
+        ..value = 1;
+      return;
+    }
+    _controller.forward(from: 0);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final value = widget.value;
+    if (value != null) {
+      return _buildIndicator((value / widget.max).clamp(0, 1));
+    }
+    return AnimatedBuilder(
+      animation: _indeterminateGrowth,
+      builder: (context, _) => _buildIndicator(_indeterminateGrowth.value),
+    );
+  }
+
+  Widget _buildIndicator(double fraction) => Align(
+    alignment: AlignmentDirectional.centerStart,
+    child: FractionallySizedBox(
+      widthFactor: fraction,
+      heightFactor: 1,
+      child: RemixBoxWithEffects(
+        styleSpec: widget.styleSpec,
+        containerEffects: widget.containerEffects,
+      ),
+    ),
+  );
+}
+
+void _validateDuration(Duration duration) {
+  if (duration <= Duration.zero) {
+    throw ArgumentError.value(
+      duration,
+      'duration',
+      'Progress duration must be positive.',
+    );
+  }
+}
+
+String _semanticNumber(double value) => value == value.truncateToDouble()
+    ? value.toInt().toString()
+    : value.toString();

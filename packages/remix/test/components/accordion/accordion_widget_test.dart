@@ -473,9 +473,34 @@ void main() {
         expectedStates: {WidgetState.focused},
       );
 
-      // Note: pressAction won't work here - the tappable header is in nested
-      // widgets, not on RemixAccordion itself. Press behavior is covered in
-      // the expansion behavior tests above.
+      testWidgets('tracks pressed state without requiring a callback', (
+        tester,
+      ) async {
+        Set<WidgetState> states = const {};
+        await tester.pumpRemixApp(
+          RemixAccordionGroup<String>(
+            controller: RemixAccordionController<String>(),
+            child: RemixAccordion<String>(
+              value: 'item1',
+              builder: (context, state) {
+                states = state.states;
+                return const Text('Press Me');
+              },
+              child: const Text('Content'),
+            ),
+          ),
+        );
+
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.text('Press Me')),
+        );
+        await tester.pump();
+        expect(states, contains(WidgetState.pressed));
+
+        await gesture.up();
+        await tester.pump();
+        expect(states, isNot(contains(WidgetState.pressed)));
+      });
     });
   });
 }

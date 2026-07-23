@@ -350,9 +350,13 @@ void main() {
       test('props list contains all properties', () {
         final style = RemixSwitchStyler();
 
-        expect(style.props, hasLength(5));
+        expect(style.props, hasLength(7));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$thumb));
+        expect(style.props, contains(style.$trackEffects));
+        expect(style.props, contains(style.$trackEffects));
+        expect(style.props, contains(style.$thumbEffects));
+        expect(style.props, contains(style.$thumbEffects));
         expect(style.props, contains(style.$variants));
         expect(style.props, contains(style.$animation));
         expect(style.props, contains(style.$modifier));

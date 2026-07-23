@@ -233,7 +233,7 @@ void main() {
       test('props includes all relevant properties', () {
         const spec = RemixTextFieldSpec();
 
-        expect(spec.props.length, equals(16));
+        expect(spec.props.length, equals(17));
         expect(spec.props, contains(spec.text));
         expect(spec.props, contains(spec.hintText));
         expect(spec.props, contains(spec.textAlign));
@@ -250,6 +250,8 @@ void main() {
         expect(spec.props, contains(spec.layout));
         expect(spec.props, contains(spec.helperText));
         expect(spec.props, contains(spec.label));
+        expect(spec.props, contains(spec.containerEffects?.behindContent));
+        expect(spec.props, contains(spec.containerEffects?.overContent));
       });
     });
 

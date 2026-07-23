@@ -392,10 +392,11 @@ void main() {
       test('call method creates RemixButton with minimal parameters', () {
         final style = ButtonStyler();
 
-        final button = style.call(label: 'Test Button');
+        const child = Text('Test Button');
+        final button = style.call(child: child);
 
         expect(button, isA<RemixButton>());
-        expect(button.label, equals('Test Button'));
+        expect(button.child, same(child));
         expect(button.onPressed, isNull);
       });
 
@@ -403,9 +404,9 @@ void main() {
         final style = ButtonStyler();
         final focusNode = FocusNode();
 
+        const child = Row(children: [Icon(Icons.star), Text('Test Button')]);
         final button = style.call(
-          label: 'Test Button',
-          leadingIcon: Icons.star,
+          child: child,
           loading: true,
           enabled: false,
           enableFeedback: false,
@@ -414,8 +415,7 @@ void main() {
         );
 
         expect(button, isA<RemixButton>());
-        expect(button.label, equals('Test Button'));
-        expect(button.leadingIcon, equals(Icons.star));
+        expect(button.child, same(child));
         expect(button.loading, isTrue);
         expect(button.enabled, isFalse);
         expect(button.enableFeedback, isFalse);
@@ -485,6 +485,60 @@ void main() {
       );
     });
 
+    testWidgets('high contrast selects the stronger button roles', (
+      tester,
+    ) async {
+      final solid = await _resolveFortalButtonStyle(
+        tester,
+        fortalButtonStyler(),
+      );
+      final highContrastSolid = await _resolveFortalButtonStyle(
+        tester,
+        fortalButtonStyler(highContrast: true),
+      );
+
+      expect(
+        (solid.spec.container.spec.box?.spec.decoration as BoxDecoration?)
+            ?.color,
+        indigo.light.scale.step(9),
+      );
+      expect(
+        (highContrastSolid.spec.container.spec.box?.spec.decoration
+                as BoxDecoration?)
+            ?.color,
+        indigo.light.scale.step(12),
+      );
+      expect(solid.spec.label.spec.style?.color, Colors.white);
+      expect(
+        highContrastSolid.spec.label.spec.style?.color,
+        slate.light.scale.step(1),
+      );
+
+      for (final variant in FortalButtonVariant.values.where(
+        (variant) => variant != .solid && variant != .classic,
+      )) {
+        final normal = await _resolveFortalButtonStyle(
+          tester,
+          fortalButtonStyler(variant: variant),
+        );
+        final highContrast = await _resolveFortalButtonStyle(
+          tester,
+          fortalButtonStyler(variant: variant, highContrast: true),
+        );
+
+        expect(
+          normal.spec.label.spec.style?.color,
+          indigo.light.scale.alphaStep(11),
+          reason: '$variant normal foreground',
+        );
+        expect(
+          highContrast.spec.label.spec.style?.color,
+          indigo.light.scale.step(12),
+          reason: '$variant high-contrast foreground',
+        );
+      }
+    });
+
     for (final variant in FortalButtonVariant.values) {
       testWidgets('resolves $variant variant', (tester) async {
         final resolved = await _resolveFortalButtonStyle(
@@ -515,7 +569,7 @@ void main() {
           .toSet();
 
       expect(paddings, hasLength(FortalButtonSize.values.length));
-      expect(spacings, hasLength(FortalButtonSize.values.length));
+      expect(spacings, {4.0, 8.0, 12.0});
     });
   });
 }

@@ -64,9 +64,9 @@ Widget previewCardWithActions() {
               Row(
                 mainAxisAlignment: .end,
                 children: [
-                  RemixButton(label: 'Cancel', onPressed: null),
+                  RemixButton(onPressed: null, child: Text('Cancel')),
                   SizedBox(width: 8),
-                  RemixButton(label: 'Read More', onPressed: null),
+                  RemixButton(onPressed: null, child: Text('Read More')),
                 ],
               ),
             ],
@@ -113,11 +113,23 @@ Widget previewProfileCard() {
               Row(
                 mainAxisAlignment: .center,
                 children: [
-                  RemixIconButton(icon: Icons.email, onPressed: null),
+                  RemixIconButton(
+                    semanticLabel: 'Email',
+                    onPressed: null,
+                    icon: Icons.email,
+                  ),
                   SizedBox(width: 12),
-                  RemixIconButton(icon: Icons.phone, onPressed: null),
+                  RemixIconButton(
+                    semanticLabel: 'Call',
+                    onPressed: null,
+                    icon: Icons.phone,
+                  ),
                   SizedBox(width: 12),
-                  RemixIconButton(icon: Icons.message, onPressed: null),
+                  RemixIconButton(
+                    semanticLabel: 'Message',
+                    onPressed: null,
+                    icon: Icons.message,
+                  ),
                 ],
               ),
             ],

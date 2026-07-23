@@ -356,8 +356,10 @@ class RemixTextField extends StatelessWidget {
               )
             : styledEditableText;
 
-        final withAccessories = RowBox(
+        final withAccessories = RemixFlexBoxWithEffects(
           styleSpec: spec.container,
+          direction: Axis.horizontal,
+          containerEffects: spec.containerEffects,
           children: [
             ?leading,
             // ignore: avoid-flexible-outside-flex
@@ -403,7 +405,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   void initState() {
     super.initState();
     _styleController = WidgetStatesController({
-      if (!widget.config.enabled) .disabled,
+      if (!widget.config.enabled || widget.config.readOnly) .disabled,
       if (widget.config.error) .error,
     });
   }
@@ -412,7 +414,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   void didUpdateWidget(_RemixTextFieldBody oldWidget) {
     super.didUpdateWidget(oldWidget);
     _styleController
-      ..update(.disabled, !widget.config.enabled)
+      ..update(.disabled, !widget.config.enabled || widget.config.readOnly)
       ..update(.error, widget.config.error);
   }
 
@@ -440,7 +442,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
 /// It seeds the vertical [ColumnBox] wrapper (the [RemixTextFieldSpec.layout])
 /// with the default min-size / start-alignment layout and an 8px vertical
 /// spacing. Merging it underneath the caller's style means customizing a
-/// single layout property (e.g. `.layout(FlexBoxStyler().spacing(12))`) keeps
+/// single layout property (e.g. `.layout(.spacing(12))`) keeps
 /// the remaining defaults instead of falling back to `ColumnBox`'s
 /// `mainAxisSize: max` / `crossAxisAlignment: center`.
 final RemixTextFieldStyler _baseStyle = RemixTextFieldStyler(

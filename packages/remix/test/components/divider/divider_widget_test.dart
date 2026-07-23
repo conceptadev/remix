@@ -6,6 +6,74 @@ import '../../helpers/test_helpers.dart';
 
 void main() {
   group('RemixDivider Widget Tests', () {
+    test('defaults to a decorative horizontal divider', () {
+      const divider = RemixDivider();
+
+      expect(divider.orientation, Axis.horizontal);
+      expect(divider.decorative, isTrue);
+    });
+
+    testWidgets('exposes non-decorative separator semantics', (tester) async {
+      await tester.pumpRemixApp(
+        const RemixDivider(decorative: false, semanticLabel: 'Section break'),
+      );
+
+      expect(find.bySemanticsLabel('Section break'), findsOneWidget);
+    });
+
+    testWidgets('keeps decorative dividers out of the semantics tree', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const RemixDivider(semanticLabel: 'Decorative break'),
+      );
+
+      expect(find.bySemanticsLabel('Decorative break'), findsNothing);
+    });
+
+    testWidgets('Fortal divider sizes resolve every orientation and length', (
+      tester,
+    ) async {
+      const fixedLengths = <FortalDividerSize, double>{
+        FortalDividerSize.size1: 16,
+        FortalDividerSize.size2: 32,
+        FortalDividerSize.size3: 64,
+      };
+
+      for (final orientation in Axis.values) {
+        for (final entry in fixedLengths.entries) {
+          await tester.pumpRemixApp(
+            FortalDivider(size: entry.key, orientation: orientation),
+          );
+          expect(
+            tester.getSize(find.byType(Box)),
+            orientation == Axis.horizontal
+                ? Size(entry.value, 1)
+                : Size(1, entry.value),
+            reason: '$orientation ${entry.key}',
+          );
+        }
+      }
+
+      await tester.pumpRemixApp(
+        const SizedBox(
+          width: 120,
+          height: 20,
+          child: FortalDivider(size: .size4),
+        ),
+      );
+      expect(tester.getSize(find.byType(Box)), const Size(120, 1));
+
+      await tester.pumpRemixApp(
+        const SizedBox(
+          width: 20,
+          height: 120,
+          child: FortalDivider(size: .size4, orientation: Axis.vertical),
+        ),
+      );
+      expect(tester.getSize(find.byType(Box)), const Size(1, 120));
+    });
+
     group('Basic Rendering', () {
       testWidgets('renders divider with default style', (tester) async {
         await tester.pumpRemixApp(const RemixDivider());
@@ -35,6 +103,27 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDivider), findsOneWidget);
+      });
+
+      testWidgets('applies thickness on the vertical cross axis', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RemixDivider(
+                orientation: Axis.vertical,
+                style: RemixDividerStyler()
+                    .height(100)
+                    .thickness(2)
+                    .color(Colors.red),
+              ),
+            ],
+          ),
+        );
+
+        expect(tester.getSize(find.byType(Box)), const Size(2, 100));
       });
     });
 
@@ -157,9 +246,9 @@ void main() {
         await tester.pumpRemixApp(
           Column(
             children: [
-              RemixButton(label: 'Button 1', onPressed: () {}),
+              RemixButton(onPressed: () {}, child: const Text('Button 1')),
               const RemixDivider(),
-              RemixButton(label: 'Button 2', onPressed: () {}),
+              RemixButton(onPressed: () {}, child: const Text('Button 2')),
             ],
           ),
         );

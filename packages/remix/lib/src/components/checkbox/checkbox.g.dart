@@ -9,6 +9,7 @@ part of 'checkbox.dart';
 mixin _$RemixCheckboxSpec implements Spec<RemixCheckboxSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<IconSpec> get indicator;
+  RemixBoxEffectsSpec? get containerEffects;
 
   @override
   Type get type => RemixCheckboxSpec;
@@ -17,10 +18,12 @@ mixin _$RemixCheckboxSpec implements Spec<RemixCheckboxSpec>, Diagnosticable {
   RemixCheckboxSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<IconSpec>? indicator,
+    RemixBoxEffectsSpec? containerEffects,
   }) {
     return RemixCheckboxSpec(
       container: container ?? this.container,
       indicator: indicator ?? this.indicator,
+      containerEffects: containerEffects ?? this.containerEffects,
     );
   }
 
@@ -29,11 +32,16 @@ mixin _$RemixCheckboxSpec implements Spec<RemixCheckboxSpec>, Diagnosticable {
     return RemixCheckboxSpec(
       container: container.lerp(other?.container, t),
       indicator: indicator.lerp(other?.indicator, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, indicator];
+  List<Object?> get props => [container, indicator, containerEffects];
 
   @override
   bool operator ==(Object other) {
@@ -76,7 +84,8 @@ mixin _$RemixCheckboxSpec implements Spec<RemixCheckboxSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('indicator', indicator));
+      ..add(DiagnosticsProperty('indicator', indicator))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects));
   }
 }
 
@@ -94,25 +103,30 @@ class RemixCheckboxStyler
     with RemixBoxStylerMixin<RemixCheckboxStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<IconSpec>>? $indicator;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
   const RemixCheckboxStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<IconSpec>>? indicator,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
-       $indicator = indicator;
+       $indicator = indicator,
+       $containerEffects = containerEffects;
 
   RemixCheckboxStyler({
     BoxStyler? container,
     IconStyler? indicator,
+    RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixCheckboxSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          indicator: Prop.maybeMix(indicator),
+         containerEffects: Prop.maybeMix(containerEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -122,6 +136,8 @@ class RemixCheckboxStyler
       RemixCheckboxStyler().container(value);
   factory RemixCheckboxStyler.indicator(IconStyler value) =>
       RemixCheckboxStyler().indicator(value);
+  factory RemixCheckboxStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixCheckboxStyler().containerEffects(value);
   factory RemixCheckboxStyler.alignment(AlignmentGeometry value) =>
       RemixCheckboxStyler().alignment(value);
   factory RemixCheckboxStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -607,6 +623,11 @@ class RemixCheckboxStyler
     return merge(RemixCheckboxStyler(indicator: value));
   }
 
+  /// Sets the containerEffects.
+  RemixCheckboxStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixCheckboxStyler(containerEffects: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixCheckboxStyler animate(AnimationConfig value) {
@@ -636,6 +657,10 @@ class RemixCheckboxStyler
     return RemixCheckboxStyler.create(
       container: MixOps.merge($container, other?.$container),
       indicator: MixOps.merge($indicator, other?.$indicator),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -648,6 +673,7 @@ class RemixCheckboxStyler
     final spec = RemixCheckboxSpec(
       container: MixOps.resolve(context, $container),
       indicator: MixOps.resolve(context, $indicator),
+      containerEffects: MixOps.resolve(context, $containerEffects),
     );
 
     return StyleSpec(
@@ -662,13 +688,15 @@ class RemixCheckboxStyler
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('indicator', $indicator));
+      ..add(DiagnosticsProperty('indicator', $indicator))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
   }
 
   @override
   List<Object?> get props => [
     $container,
     $indicator,
+    $containerEffects,
     $animation,
     $modifier,
     $variants,

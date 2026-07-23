@@ -35,37 +35,56 @@ class _MenuExampleState extends State<MenuExample> {
         children: [
           // RemixMenu
           RemixMenu<String>(
-            trigger: const RemixMenuTrigger(label: 'Open Remix Menu'),
+            trigger: Container(
+              constraints: const BoxConstraints(minHeight: 40),
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.blueGrey.shade100),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.blueGrey.withValues(alpha: 0.1),
+                    blurRadius: 3,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                'Open Remix Menu',
+                style: TextStyle(color: Colors.blueGrey.shade700),
+              ),
+            ),
             items: [
-              RemixMenuItem(
+              RemixMenuAction(
                 value: 'History',
-                leadingIcon: Icons.history,
-                label: 'History',
+                leading: const Icon(Icons.history),
                 style: menuItemStyle,
+                child: const Text('History'),
               ),
-              RemixMenuItem(
+              RemixMenuAction(
                 value: 'Settings',
-                leadingIcon: Icons.settings,
-                label: 'Settings',
+                leading: const Icon(Icons.settings),
                 style: menuItemStyle,
+                child: const Text('Settings'),
               ),
-              const RemixMenuDivider(),
-              RemixMenuItem(
+              const RemixMenuSeparator(),
+              RemixMenuAction(
                 value: 'Logout',
-                leadingIcon: Icons.logout,
-                label: 'Logout',
+                leading: const Icon(Icons.logout),
                 style: menuItemStyle.onHovered(
-                  RemixMenuItemStyler()
-                      .color(Colors.redAccent.withValues(alpha: 0.05))
-                      .label(TextStyler().color(Colors.redAccent))
-                      .leadingIcon(IconStyler().color(Colors.redAccent)),
+                  .color(Colors.redAccent.withValues(alpha: 0.05))
+                      .label(.color(Colors.redAccent))
+                      .leadingIcon(.color(Colors.redAccent)),
                 ),
+                child: const Text('Logout'),
               ),
             ],
             positioning: const OverlayPositionConfig(
-              offset: Offset(0, 8),
-              followerAnchor: .topCenter,
-              targetAnchor: .bottomCenter,
+              side: OverlaySide.bottom,
+              alignment: OverlayAlignment.center,
+              sideOffset: 8,
             ),
             style: menuStyle,
             onSelected: (value) {
@@ -94,38 +113,8 @@ class _MenuExampleState extends State<MenuExample> {
 
   RemixMenuStyler get menuStyle {
     return RemixMenuStyler()
-        .trigger(
-          RemixMenuTriggerStyler()
-              .padding(EdgeInsetsMix.symmetric(horizontal: 14))
-              .decoration(
-                BoxDecorationMix()
-                    .color(Colors.white)
-                    .borderRadius(
-                      BorderRadiusMix.all(const Radius.circular(12)),
-                    )
-                    .border(
-                      BorderMix.all(
-                        BorderSideMix(color: Colors.blueGrey.shade100),
-                      ),
-                    )
-                    .boxShadow([
-                      BoxShadowMix(
-                        color: Colors.blueGrey.withValues(alpha: 0.1),
-                        blurRadius: 3,
-                        offset: const Offset(0, 3),
-                      ),
-                    ]),
-              )
-              .constraints(BoxConstraintsMix(minHeight: 40))
-              .label(
-                TextStyler()
-                    .color(Colors.blueGrey.shade700)
-                    .fontWeight(FontWeight.w400),
-              )
-              .onHovered(RemixMenuTriggerStyler().color(Colors.red)),
-        )
         .overlay(
-          FlexBoxStyler(
+          .new(
             padding: EdgeInsetsMix.all(12),
             decoration: BoxDecorationMix(
               color: Colors.white,
@@ -143,21 +132,18 @@ class _MenuExampleState extends State<MenuExample> {
             ),
           ),
         )
-        .divider(
-          RemixDividerStyler()
-              .color(Colors.blueGrey.shade100)
-              .height(1)
-              .marginY(6),
-        );
+        .divider(.color(Colors.blueGrey.shade100).height(1).marginY(6));
   }
 
   RemixMenuItemStyler get menuItemStyle {
     return RemixMenuItemStyler()
-        .paddingAll(6)
-        .leadingIcon(IconStyler().size(20).color(Colors.blueGrey.shade800))
+        .leadingInset(6)
+        .checkableLeadingInset(24)
+        .trailingInset(6)
+        .leadingIcon(.size(20).color(Colors.blueGrey.shade800))
         .spacing(8)
         .borderRadiusAll(const Radius.circular(8))
-        .label(TextStyler().color(Colors.blueGrey.shade800))
-        .onHovered(RemixMenuItemStyler().color(Colors.blueGrey.shade50));
+        .label(.color(Colors.blueGrey.shade800))
+        .onHovered(.color(Colors.blueGrey.shade50));
   }
 }

@@ -23,6 +23,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get layout;
   StyleSpec<TextSpec> get helperText;
   StyleSpec<TextSpec> get label;
+  RemixBoxEffectsSpec? get containerEffects;
 
   @override
   Type get type => RemixTextFieldSpec;
@@ -45,6 +46,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
     StyleSpec<FlexBoxSpec>? layout,
     StyleSpec<TextSpec>? helperText,
     StyleSpec<TextSpec>? label,
+    RemixBoxEffectsSpec? containerEffects,
   }) {
     return RemixTextFieldSpec(
       text: text ?? this.text,
@@ -64,6 +66,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
       layout: layout ?? this.layout,
       helperText: helperText ?? this.helperText,
       label: label ?? this.label,
+      containerEffects: containerEffects ?? this.containerEffects,
     );
   }
 
@@ -102,6 +105,11 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
       layout: layout.lerp(other?.layout, t),
       helperText: helperText.lerp(other?.helperText, t),
       label: label.lerp(other?.label, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
     );
   }
 
@@ -123,6 +131,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
     layout,
     helperText,
     label,
+    containerEffects,
   ];
 
   @override
@@ -180,7 +189,8 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('layout', layout))
       ..add(DiagnosticsProperty('helperText', helperText))
-      ..add(DiagnosticsProperty('label', label));
+      ..add(DiagnosticsProperty('label', label))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects));
   }
 }
 
@@ -214,6 +224,7 @@ class RemixTextFieldStyler
   final Prop<StyleSpec<FlexBoxSpec>>? $layout;
   final Prop<StyleSpec<TextSpec>>? $helperText;
   final Prop<StyleSpec<TextSpec>>? $label;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
   const RemixTextFieldStyler.create({
     Prop<StyleSpec<TextSpec>>? text,
@@ -232,6 +243,7 @@ class RemixTextFieldStyler
     Prop<StyleSpec<FlexBoxSpec>>? layout,
     Prop<StyleSpec<TextSpec>>? helperText,
     Prop<StyleSpec<TextSpec>>? label,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
     super.modifier,
     super.animation,
@@ -250,7 +262,8 @@ class RemixTextFieldStyler
        $container = container,
        $layout = layout,
        $helperText = helperText,
-       $label = label;
+       $label = label,
+       $containerEffects = containerEffects;
 
   RemixTextFieldStyler({
     TextStyler? text,
@@ -269,6 +282,7 @@ class RemixTextFieldStyler
     FlexBoxStyler? layout,
     TextStyler? helperText,
     TextStyler? label,
+    RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixTextFieldSpec>>? variants,
@@ -289,6 +303,7 @@ class RemixTextFieldStyler
          layout: Prop.maybeMix(layout),
          helperText: Prop.maybeMix(helperText),
          label: Prop.maybeMix(label),
+         containerEffects: Prop.maybeMix(containerEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -326,6 +341,8 @@ class RemixTextFieldStyler
       RemixTextFieldStyler().helperText(value);
   factory RemixTextFieldStyler.label(TextStyler value) =>
       RemixTextFieldStyler().label(value);
+  factory RemixTextFieldStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixTextFieldStyler().containerEffects(value);
   factory RemixTextFieldStyler.color(Color value) =>
       RemixTextFieldStyler().color(value);
   factory RemixTextFieldStyler.gradient(GradientMix value) =>
@@ -943,6 +960,11 @@ class RemixTextFieldStyler
     return merge(RemixTextFieldStyler(label: value));
   }
 
+  /// Sets the containerEffects.
+  RemixTextFieldStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixTextFieldStyler(containerEffects: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixTextFieldStyler animate(AnimationConfig value) {
@@ -998,6 +1020,10 @@ class RemixTextFieldStyler
       layout: MixOps.merge($layout, other?.$layout),
       helperText: MixOps.merge($helperText, other?.$helperText),
       label: MixOps.merge($label, other?.$label),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1024,6 +1050,7 @@ class RemixTextFieldStyler
       layout: MixOps.resolve(context, $layout),
       helperText: MixOps.resolve(context, $helperText),
       label: MixOps.resolve(context, $label),
+      containerEffects: MixOps.resolve(context, $containerEffects),
     );
 
     return StyleSpec(
@@ -1054,7 +1081,8 @@ class RemixTextFieldStyler
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('layout', $layout))
       ..add(DiagnosticsProperty('helperText', $helperText))
-      ..add(DiagnosticsProperty('label', $label));
+      ..add(DiagnosticsProperty('label', $label))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
   }
 
   @override
@@ -1075,6 +1103,7 @@ class RemixTextFieldStyler
     $layout,
     $helperText,
     $label,
+    $containerEffects,
     $animation,
     $modifier,
     $variants,

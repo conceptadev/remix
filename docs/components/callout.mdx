@@ -26,9 +26,9 @@ class CalloutExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RemixCallout(
-      text: 'Callout important information for the user.',
       icon: Icons.info_outline,
       style: style,
+      child: const Text('Callout important information for the user.'),
     );
   }
 
@@ -39,13 +39,11 @@ class CalloutExample extends StatelessWidget {
         .height(60)
         .paddingRight(12)
         .icon(
-          IconStyler()
-              .size(24)
+          .size(24)
               .color(Colors.white)
               .wrap(
                 .box(
-                  BoxStyler()
-                      .color(Colors.blue.shade900)
+                  .color(Colors.blue.shade900)
                       .paddingX(12)
                       .height(double.infinity),
                 ),
@@ -59,7 +57,7 @@ class CalloutExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -75,16 +73,16 @@ class FortalCalloutExample extends StatelessWidget {
       spacing: 16,
       children: [
         FortalCallout.surface(
-          text: 'Surface callout',
           icon: Icons.info_outline,
+          child: const Text('Surface callout'),
         ),
         FortalCallout.soft(
-          text: 'Soft callout',
           icon: Icons.lightbulb_outline,
+          child: const Text('Soft callout'),
         ),
         FortalCallout.outline(
-          text: 'Outline callout',
           icon: Icons.border_outer,
+          child: const Text('Outline callout'),
         ),
       ],
     );
@@ -103,8 +101,9 @@ class FortalCalloutExample extends StatelessWidget {
 const RemixCallout({
   Key? key,
   String? text,
-  IconData? icon,
   Widget? child,
+  IconData? icon,
+  Widget? iconWidget,
   RemixCalloutStyler style = const RemixCalloutStyler.create(),
   RemixCalloutSpec? styleSpec,
 })
@@ -127,17 +126,15 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `text` → `String?`
+#### `child` → `Widget?`
 
-Optional. The text to display in the callout.
+Optional arbitrary callout body content. Descendant text inherits the resolved
+body style. Provide either `child` or the established `text`.
 
 #### `icon` → `IconData?`
 
-Optional. The icon to display in the callout.
-
-#### `child` → `Widget?`
-
-Optional. Optional custom child content for the callout body.
+Optional established leading icon. Use `iconWidget` for arbitrary leading
+content; descendant icons inherit the resolved icon style.
 
 ### Style Methods
 
@@ -257,6 +254,6 @@ Sets icon shadows
 
 Sets single icon shadow
 
-#### `call({Key? key, String? text, IconData? icon, Widget? child})`
+#### `call({Key? key, required Widget child, Widget? icon})`
 
 Creates a `RemixCallout` widget with this style applied.

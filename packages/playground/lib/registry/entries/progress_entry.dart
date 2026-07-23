@@ -7,7 +7,10 @@ Widget buildProgressExample() {
   return const SizedBox(
     width: 360,
     child: ComparisonView(
-      remix: [RemixProgress(value: 0.25), RemixProgress(value: 0.6)],
+      remix: [
+        RemixProgress(value: 25, max: 100),
+        RemixProgress(value: 60, max: 100),
+      ],
       material: [
         LinearProgressIndicator(value: 0.25),
         LinearProgressIndicator(value: 0.6),

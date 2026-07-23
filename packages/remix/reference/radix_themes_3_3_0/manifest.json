@@ -1,0 +1,452 @@
+{
+  "$schema": "./manifest.schema.json",
+  "contractVersion": 1,
+  "coverageEvidence": "reference/radix_themes_3_3_0/coverage_evidence.json",
+  "source": {
+    "package": "@radix-ui/themes",
+    "version": "3.3.0",
+    "integrity": "sha512-I0/h2CRNTpYNB7Mi3xFIvSsQq5a108d7kK8dTO5zp5b9HR5QJXKag6B8tjpz2ITkVYkFdkGk45doNkSr7OxwNw==",
+    "tarball": "https://registry.npmjs.org/@radix-ui/themes/-/themes-3.3.0.tgz"
+  },
+  "theme": {
+    "enums": {
+      "appearance": { "values": ["inherit", "light", "dark"], "default": "inherit" },
+      "accentColor": {
+        "values": ["gray", "gold", "bronze", "brown", "yellow", "amber", "orange", "tomato", "red", "ruby", "crimson", "pink", "plum", "purple", "violet", "iris", "indigo", "blue", "cyan", "teal", "jade", "green", "grass", "lime", "mint", "sky"],
+        "default": "indigo"
+      },
+      "grayColor": { "values": ["auto", "gray", "mauve", "slate", "sage", "olive", "sand"], "default": "auto" },
+      "panelBackground": { "values": ["solid", "translucent"], "default": "translucent" },
+      "radius": { "values": ["none", "small", "medium", "large", "full"], "default": "medium" },
+      "scaling": { "values": ["90%", "95%", "100%", "105%", "110%"], "default": "100%" }
+    },
+    "resolvedRootDefaults": {
+      "appearance": "platform brightness",
+      "accentColor": "indigo",
+      "grayColor": "slate",
+      "panelBackground": "translucent",
+      "radius": "medium",
+      "scaling": "100%",
+      "hasBackground": true,
+      "panelBlurLogicalPixels": 64
+    },
+    "autoGray": {
+      "gray": "gray",
+      "gold": "sand",
+      "bronze": "sand",
+      "brown": "sand",
+      "yellow": "sand",
+      "amber": "sand",
+      "orange": "sand",
+      "tomato": "mauve",
+      "red": "mauve",
+      "ruby": "mauve",
+      "crimson": "mauve",
+      "pink": "mauve",
+      "plum": "mauve",
+      "purple": "mauve",
+      "violet": "mauve",
+      "iris": "slate",
+      "indigo": "slate",
+      "blue": "slate",
+      "cyan": "slate",
+      "teal": "sage",
+      "jade": "sage",
+      "green": "sage",
+      "grass": "olive",
+      "lime": "olive",
+      "mint": "sage",
+      "sky": "slate"
+    },
+    "sourceFiles": [
+      "src/components/theme.props.tsx",
+      "src/components/theme.tsx",
+      "src/helpers/get-matching-gray-color.ts",
+      "src/styles/tokens/radius.css",
+      "src/styles/tokens/scaling.css",
+      "src/styles/tokens/shadow.css"
+    ],
+    "states": ["rootPlatformLight", "rootPlatformDark", "nestedInherit", "nestedExplicitAuto", "paintedBackground", "translucentPanel", "solidPanel"],
+    "coverage": {
+      "enums": [
+        "appearance.inherit", "appearance.light", "appearance.dark",
+        "accentColor.gray", "accentColor.gold", "accentColor.bronze", "accentColor.brown", "accentColor.yellow", "accentColor.amber", "accentColor.orange", "accentColor.tomato", "accentColor.red", "accentColor.ruby", "accentColor.crimson", "accentColor.pink", "accentColor.plum", "accentColor.purple", "accentColor.violet", "accentColor.iris", "accentColor.indigo", "accentColor.blue", "accentColor.cyan", "accentColor.teal", "accentColor.jade", "accentColor.green", "accentColor.grass", "accentColor.lime", "accentColor.mint", "accentColor.sky",
+        "grayColor.auto", "grayColor.gray", "grayColor.mauve", "grayColor.slate", "grayColor.sage", "grayColor.olive", "grayColor.sand",
+        "panelBackground.solid", "panelBackground.translucent",
+        "radius.none", "radius.small", "radius.medium", "radius.large", "radius.full",
+        "scaling.90%", "scaling.95%", "scaling.100%", "scaling.105%", "scaling.110%"
+      ],
+      "states": ["rootPlatformLight", "rootPlatformDark", "nestedInherit", "nestedExplicitAuto", "paintedBackground", "translucentPanel", "solidPanel"],
+      "tests": ["test/fortal/fortal_theme_resolution_test.dart", "test/fortal/fortal_theming_widget_test.dart", "test/fortal/fortal_tokens_test.dart"]
+    }
+  },
+  "commonFlutterExceptions": [
+    {
+      "upstream": "asChild and HTML element polymorphism",
+      "flutter": "Widget composition and builder APIs",
+      "reason": "Flutter has no DOM element or Slot cloning model."
+    },
+    {
+      "upstream": "CSS margin props and responsive-object syntax",
+      "flutter": "Parent layout widgets and concrete enum values",
+      "reason": "Layout ownership and responsive resolution are Flutter-native concerns."
+    },
+    {
+      "upstream": "CSS pixels and browser rasterization",
+      "flutter": "Logical pixels and Flutter engine rasterization",
+      "reason": "Resolved geometry and colors are normative; edge anti-aliasing may differ by one 8-bit channel."
+    }
+  ],
+  "families": [
+    {
+      "id": "avatar",
+      "fortalType": "FortalAvatar",
+      "radixComponent": "Avatar",
+      "parity": "mapped",
+      "enums": {
+        "size": { "values": ["size1", "size2", "size3", "size4", "size5", "size6", "size7", "size8", "size9"], "default": "size3" },
+        "variant": { "values": ["solid", "soft"], "default": "soft" }
+      },
+      "defaults": { "highContrast": false },
+      "supportedStyleProps": ["color", "radius", "highContrast"],
+      "states": ["idle", "loading", "loaded", "error", "highContrast"],
+      "sourceFiles": ["src/components/avatar.props.tsx", "src/components/avatar.css", "src/components/avatar.tsx"],
+      "sourceSelectors": [".rt-AvatarRoot", ".rt-AvatarImage", ".rt-AvatarFallback"],
+      "flutterExceptions": ["ImageProvider and Widget fallback replace DOM src/fallback nodes; no ring prop is exposed."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "size.size4", "size.size5", "size.size6", "size.size7", "size.size8", "size.size9", "variant.solid", "variant.soft"], "states": ["idle", "loading", "loaded", "error", "highContrast"], "tests": ["test/components/avatar/avatar_fortal_parity_test.dart", "test/components/avatar/avatar_widget_test.dart"] }
+    },
+    {
+      "id": "badge",
+      "fortalType": "FortalBadge",
+      "radixComponent": "Badge",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3"], "default": "size1" }, "variant": { "values": ["solid", "soft", "surface", "outline"], "default": "soft" } },
+      "defaults": { "highContrast": false },
+      "supportedStyleProps": ["color", "radius", "highContrast"],
+      "states": ["idle", "highContrast"],
+      "sourceFiles": ["src/components/badge.props.tsx", "src/components/badge.css"],
+      "sourceSelectors": [".rt-Badge"],
+      "flutterExceptions": ["Arbitrary Widget content uses DefaultTextStyle and IconTheme; there is no dedicated icon API."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "variant.solid", "variant.soft", "variant.surface", "variant.outline"], "states": ["idle", "highContrast"], "tests": ["test/components/badge/badge_fortal_parity_test.dart", "test/components/badge/badge_widget_test.dart", "test/fortal/fortal_high_contrast_test.dart"] }
+    },
+    {
+      "id": "button",
+      "fortalType": "FortalButton",
+      "radixComponent": "Button",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3", "size4"], "default": "size2" }, "variant": { "values": ["classic", "solid", "soft", "surface", "outline", "ghost"], "default": "solid" } },
+      "defaults": { "highContrast": false, "loading": false, "enabled": true },
+      "supportedStyleProps": ["color", "radius", "highContrast"],
+      "states": ["idle", "hovered", "pressed", "focused", "disabled", "loading", "highContrast"],
+      "sourceFiles": ["src/components/_internal/base-button.props.ts", "src/components/_internal/base-button.css", "src/components/button.css"],
+      "sourceSelectors": [".rt-BaseButton", ".rt-Button", ".rt-loading", ".rt-high-contrast"],
+      "flutterExceptions": ["Void callbacks and Widget content replace DOM button events and React children."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "size.size4", "variant.classic", "variant.solid", "variant.soft", "variant.surface", "variant.outline", "variant.ghost"], "states": ["idle", "hovered", "pressed", "focused", "disabled", "loading", "highContrast"], "tests": ["test/components/button/button_widget_test.dart", "test/components/button/button_style_test.dart", "test/fortal/fortal_high_contrast_test.dart"] }
+    },
+    {
+      "id": "callout",
+      "fortalType": "FortalCallout",
+      "radixComponent": "Callout.Root",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3"], "default": "size2" }, "variant": { "values": ["soft", "surface", "outline"], "default": "soft" } },
+      "defaults": { "highContrast": false },
+      "supportedStyleProps": ["color", "highContrast"],
+      "states": ["idle", "highContrast"],
+      "sourceFiles": ["src/components/callout.props.tsx", "src/components/callout.css"],
+      "sourceSelectors": [".rt-CalloutRoot", ".rt-CalloutIcon", ".rt-CalloutText"],
+      "flutterExceptions": ["Widget icon/content slots replace the upstream compound React nodes."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "variant.soft", "variant.surface", "variant.outline"], "states": ["idle", "highContrast"], "tests": ["test/components/callout/callout_fortal_parity_test.dart", "test/components/callout/callout_widget_test.dart", "test/fortal/fortal_high_contrast_test.dart"] }
+    },
+    {
+      "id": "card",
+      "fortalType": "FortalCard",
+      "radixComponent": "Card",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3", "size4", "size5"], "default": "size1" }, "variant": { "values": ["surface", "classic", "ghost"], "default": "surface" } },
+      "defaults": { "enabled": true },
+      "supportedStyleProps": [],
+      "states": ["idle", "hovered", "pressed", "focused", "open", "disabled", "passive"],
+      "sourceFiles": ["src/components/card.props.tsx", "src/components/card.css", "src/components/_internal/base-card.css"],
+      "sourceSelectors": [".rt-BaseCard", ".rt-Card"],
+      "flutterExceptions": ["Explicit Flutter interaction callbacks determine whether a card is interactive; passive cards expose no action semantics.", "WidgetState.selected represents Radix data-state=open when a Card is composed as an overlay trigger."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "size.size4", "size.size5", "variant.surface", "variant.classic", "variant.ghost"], "states": ["idle", "hovered", "pressed", "focused", "open", "disabled", "passive"], "tests": ["test/components/card/card_fortal_parity_test.dart", "test/components/card/card_widget_test.dart"] }
+    },
+    {
+      "id": "checkbox",
+      "fortalType": "FortalCheckbox",
+      "radixComponent": "Checkbox",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3"], "default": "size2" }, "variant": { "values": ["classic", "surface", "soft"], "default": "surface" } },
+      "defaults": { "selected": false, "tristate": false, "highContrast": false, "enabled": true },
+      "supportedStyleProps": ["color", "highContrast"],
+      "states": ["unchecked", "checked", "indeterminate", "hovered", "pressed", "focused", "disabled", "highContrast"],
+      "sourceFiles": ["src/components/_internal/base-checkbox.props.ts", "src/components/_internal/base-checkbox.css", "src/components/checkbox.css"],
+      "sourceSelectors": [".rt-BaseCheckboxRoot", ".rt-CheckboxRoot", ".rt-CheckboxIndicator"],
+      "flutterExceptions": ["Nullable bool plus tristate maps the Radix indeterminate checked state."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "variant.classic", "variant.surface", "variant.soft"], "states": ["unchecked", "checked", "indeterminate", "hovered", "pressed", "focused", "disabled", "highContrast"], "tests": ["test/components/checkbox/checkbox_widget_test.dart", "test/components/checkbox/checkbox_style_test.dart", "test/fortal/fortal_control_matrix_test.dart", "test/fortal/fortal_high_contrast_test.dart"] }
+    },
+    {
+      "id": "dialog",
+      "fortalType": "FortalDialog",
+      "radixComponent": "Dialog.Content",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3", "size4"], "default": "size3" }, "align": { "values": ["start", "center"], "default": "center" } },
+      "defaults": { "width": "infinity", "maxWidth": 600, "modal": true },
+      "supportedStyleProps": [],
+      "states": ["closed", "open", "entering", "exiting", "modal", "nonModal"],
+      "sourceFiles": ["src/components/dialog.props.tsx", "src/components/dialog.css", "src/components/_internal/base-dialog.css"],
+      "sourceSelectors": [".rt-BaseDialogContent", ".rt-DialogContent", ".rt-DialogOverlay"],
+      "flutterExceptions": ["Logical-pixel BoxConstraints replace CSS width and height strings; inherited Fortal and Mix scopes are replayed through Navigator overlays; modal controls accessibility route scoping while the Flutter Navigator route remains pointer-modal."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "size.size4", "align.start", "align.center"], "states": ["closed", "open", "entering", "exiting", "modal", "nonModal"], "tests": ["test/components/dialog/dialog_parity_test.dart", "test/components/dialog/dialog_widget_test.dart"] }
+    },
+    {
+      "id": "divider",
+      "fortalType": "FortalDivider",
+      "radixComponent": "Separator",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3", "size4"], "default": "size1" }, "orientation": { "values": ["horizontal", "vertical"], "default": "horizontal" } },
+      "defaults": { "color": "gray", "decorative": true, "thickness": 1, "lengths": [16, 32, 64, "full"] },
+      "supportedStyleProps": ["color"],
+      "states": ["decorative", "semantic"],
+      "sourceFiles": ["src/components/separator.props.tsx", "src/components/separator.css"],
+      "sourceSelectors": [".rt-Separator"],
+      "flutterExceptions": ["Axis and separator Semantics replace DOM orientation and role attributes."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "size.size4", "orientation.horizontal", "orientation.vertical"], "states": ["decorative", "semantic"], "tests": ["test/components/divider/divider_widget_test.dart", "test/components/divider/divider_style_test.dart"] }
+    },
+    {
+      "id": "menu",
+      "fortalType": "FortalMenu",
+      "radixComponent": "DropdownMenu",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2"], "default": "size2" }, "variant": { "values": ["solid", "soft"], "default": "solid" } },
+      "defaults": { "highContrast": false, "submenuOpenDelayMilliseconds": 100 },
+      "supportedStyleProps": ["color", "highContrast"],
+      "states": ["closed", "open", "highlighted", "disabled", "checked", "unchecked", "submenuOpen", "rtl", "escape", "focusRestored", "highContrast"],
+      "sourceFiles": ["src/components/_internal/base-menu.props.ts", "src/components/_internal/base-menu.css", "src/components/dropdown-menu.css"],
+      "sourceSelectors": [".rt-BaseMenuContent", ".rt-DropdownMenuContent", ".rt-BaseMenuItem", ".rt-BaseMenuCheckboxItem", ".rt-BaseMenuRadioItem", ".rt-BaseMenuSubTrigger"],
+      "flutterExceptions": ["Typed sealed action, label, group, separator, checkbox, radio-group/item, and recursive submenu items replace React compound children."],
+      "coverage": { "enums": ["size.size1", "size.size2", "variant.solid", "variant.soft"], "states": ["closed", "open", "highlighted", "disabled", "checked", "unchecked", "submenuOpen", "rtl", "escape", "focusRestored", "highContrast"], "tests": ["test/components/menu/menu_widget_test.dart", "test/components/menu/menu_style_test.dart"] }
+    },
+    {
+      "id": "icon_button",
+      "fortalType": "FortalIconButton",
+      "radixComponent": "IconButton",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3", "size4"], "default": "size2" }, "variant": { "values": ["classic", "solid", "soft", "surface", "outline", "ghost"], "default": "solid" } },
+      "defaults": { "highContrast": false, "loading": false, "enabled": true, "semanticLabel": "required" },
+      "supportedStyleProps": ["color", "radius", "highContrast"],
+      "states": ["idle", "hovered", "pressed", "focused", "disabled", "loading", "highContrast"],
+      "sourceFiles": ["src/components/icon-button.props.tsx", "src/components/icon-button.css", "src/components/_internal/base-button.css"],
+      "sourceSelectors": [".rt-BaseButton", ".rt-IconButton"],
+      "flutterExceptions": ["A required semanticLabel supplies the accessible name that icon-only DOM buttons receive from aria-label."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "size.size4", "variant.classic", "variant.solid", "variant.soft", "variant.surface", "variant.outline", "variant.ghost"], "states": ["idle", "hovered", "pressed", "focused", "disabled", "loading", "highContrast"], "tests": ["test/components/icon_button/icon_button_widget_test.dart", "test/components/icon_button/icon_button_style_test.dart", "test/fortal/fortal_control_matrix_test.dart", "test/fortal/fortal_high_contrast_test.dart"] }
+    },
+    {
+      "id": "popover",
+      "fortalType": "FortalPopover",
+      "radixComponent": "Popover.Content",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3", "size4"], "default": "size2" } },
+      "defaults": { "maxWidth": 480, "arrow": false },
+      "supportedStyleProps": [],
+      "states": ["closed", "open", "hovered", "escape", "outsideTap", "focusRestored", "separateAnchor", "collisionFlipped", "collisionShifted"],
+      "sourceFiles": ["src/components/popover.props.tsx", "src/components/popover.css"],
+      "sourceSelectors": [".rt-PopoverContent", ".rt-PopperContent"],
+      "flutterExceptions": ["A separate anchor Widget and OverlayPositionConfig replace Radix anchor and collision props; Fortal intentionally renders no Popover arrow."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "size.size4"], "states": ["closed", "open", "hovered", "escape", "outsideTap", "focusRestored", "separateAnchor", "collisionFlipped", "collisionShifted"], "tests": ["test/components/popover/popover_parity_test.dart", "test/components/popover/popover_widget_test.dart"] }
+    },
+    {
+      "id": "progress",
+      "fortalType": "FortalProgress",
+      "radixComponent": "Progress",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3"], "default": "size2" }, "variant": { "values": ["classic", "surface", "soft"], "default": "surface" } },
+      "defaults": { "value": null, "max": 100, "durationMilliseconds": 5000, "highContrast": false },
+      "supportedStyleProps": ["color", "radius", "highContrast"],
+      "states": ["determinate", "indeterminate", "animationDisabled", "highContrast"],
+      "sourceFiles": ["src/components/progress.props.tsx", "src/components/progress.css", "src/components/progress.tsx"],
+      "sourceSelectors": [".rt-ProgressRoot", ".rt-ProgressIndicator"],
+      "flutterExceptions": ["Duration and double max replace CSS duration strings and DOM numeric attributes; null value is indeterminate; disabled animations stabilize the completed-growth frame."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "variant.classic", "variant.surface", "variant.soft"], "states": ["determinate", "indeterminate", "animationDisabled", "highContrast"], "tests": ["test/components/progress/progress_widget_test.dart", "test/components/progress/progress_style_test.dart", "test/fortal/fortal_control_matrix_test.dart", "test/fortal/fortal_high_contrast_test.dart"] }
+    },
+    {
+      "id": "radio",
+      "fortalType": "FortalRadio",
+      "radixComponent": "RadioGroup.Item",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3"], "default": "size2" }, "variant": { "values": ["classic", "surface", "soft"], "default": "surface" } },
+      "defaults": { "highContrast": false, "enabled": true },
+      "supportedStyleProps": ["color", "highContrast"],
+      "states": ["unchecked", "checked", "hovered", "pressed", "focused", "disabled", "highContrast", "group"],
+      "sourceFiles": ["src/components/_internal/base-radio.props.ts", "src/components/_internal/base-radio.css", "src/components/radio.css"],
+      "sourceSelectors": [".rt-BaseRadioRoot", ".rt-RadioRoot", ".rt-RadioIndicator"],
+      "flutterExceptions": ["FortalRadioGroup provides typed Flutter group semantics and selection coordination."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "variant.classic", "variant.surface", "variant.soft"], "states": ["unchecked", "checked", "hovered", "pressed", "focused", "disabled", "highContrast", "group"], "tests": ["test/components/radio/radio_widget_test.dart", "test/components/radio/radio_style_test.dart", "test/fortal/fortal_control_matrix_test.dart", "test/fortal/fortal_high_contrast_test.dart"] }
+    },
+    {
+      "id": "select",
+      "fortalType": "FortalSelect",
+      "radixComponent": "Select",
+      "parity": "mapped",
+      "enums": {
+        "size": { "values": ["size1", "size2", "size3"], "default": "size2" },
+        "triggerVariant": { "values": ["classic", "surface", "soft", "ghost"], "default": "surface" },
+        "contentVariant": { "values": ["solid", "soft"], "default": "solid" }
+      },
+      "defaults": { "contentHighContrast": false, "open": null },
+      "supportedStyleProps": ["triggerColor", "triggerRadius", "contentColor", "contentHighContrast"],
+      "states": ["closed", "open", "placeholder", "selected", "highlighted", "disabled", "grouped", "separated", "ownerRejected", "collisionFlipped", "collisionShifted", "highContrast"],
+      "sourceFiles": ["src/components/select.props.tsx", "src/components/select.css", "src/components/select.tsx"],
+      "sourceSelectors": [".rt-SelectTrigger", ".rt-SelectContent", ".rt-SelectItem", ".rt-SelectLabel", ".rt-SelectSeparator"],
+      "flutterExceptions": ["Typed sealed item, group, label, and separator items replace React compound children; controlled opening is owner-authoritative."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "triggerVariant.classic", "triggerVariant.surface", "triggerVariant.soft", "triggerVariant.ghost", "contentVariant.solid", "contentVariant.soft"], "states": ["closed", "open", "placeholder", "selected", "highlighted", "disabled", "grouped", "separated", "ownerRejected", "collisionFlipped", "collisionShifted", "highContrast"], "tests": ["test/components/select/select_fortal_parity_test.dart", "test/components/select/select_parity_test.dart", "test/components/select/select_widget_test.dart", "test/fortal/fortal_high_contrast_test.dart"] }
+    },
+    {
+      "id": "slider",
+      "fortalType": "FortalSlider",
+      "radixComponent": "Slider",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3"], "default": "size2" }, "variant": { "values": ["classic", "surface", "soft"], "default": "surface" }, "orientation": { "values": ["horizontal", "vertical"], "default": "horizontal" } },
+      "defaults": { "min": 0, "max": 100, "step": 1, "minSpacing": 0, "inverted": false, "highContrast": false },
+      "supportedStyleProps": ["color", "radius", "highContrast"],
+      "states": ["idle", "hovered", "pressed", "focused", "disabled", "highContrast", "multipleThumbs", "rtl", "inverted", "ownerRejected"],
+      "sourceFiles": ["src/components/slider.props.tsx", "src/components/slider.css", "src/components/slider.tsx"],
+      "sourceSelectors": [".rt-SliderRoot", ".rt-SliderTrack", ".rt-SliderRange", ".rt-SliderThumb"],
+      "flutterExceptions": ["A non-empty List<double>, per-thumb FocusNode/semantics, Axis, and minimum spacing express the Radix multi-thumb primitive in Flutter."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "variant.classic", "variant.surface", "variant.soft", "orientation.horizontal", "orientation.vertical"], "states": ["idle", "hovered", "pressed", "focused", "disabled", "highContrast", "multipleThumbs", "rtl", "inverted", "ownerRejected"], "tests": ["test/components/slider/slider_widget_test.dart", "test/components/slider/slider_style_test.dart", "test/fortal/fortal_high_contrast_test.dart"] }
+    },
+    {
+      "id": "spinner",
+      "fortalType": "FortalSpinner",
+      "radixComponent": "Spinner",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3"], "default": "size2" } },
+      "defaults": { "loading": true, "leafCount": 8, "color": "currentColor" },
+      "supportedStyleProps": [],
+      "states": ["loading", "notLoading", "withChild", "withoutChild", "animationDisabled"],
+      "sourceFiles": ["src/components/spinner.props.tsx", "src/components/spinner.css", "src/components/spinner.tsx"],
+      "sourceSelectors": [".rt-Spinner", ".rt-SpinnerLeaf"],
+      "flutterExceptions": ["Visibility and Stack preserve hidden child layout while loading; inherited IconTheme/DefaultTextStyle supplies current color."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3"], "states": ["loading", "notLoading", "withChild", "withoutChild", "animationDisabled"], "tests": ["test/components/spinner/spinner_widget_test.dart", "test/components/spinner/spinner_style_test.dart", "test/fortal/fortal_control_matrix_test.dart"] }
+    },
+    {
+      "id": "switch",
+      "fortalType": "FortalSwitch",
+      "radixComponent": "Switch",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3"], "default": "size2" }, "variant": { "values": ["classic", "surface", "soft"], "default": "surface" } },
+      "defaults": { "selected": false, "highContrast": false, "enabled": true },
+      "supportedStyleProps": ["color", "radius", "highContrast"],
+      "states": ["unchecked", "checked", "hovered", "pressed", "focused", "disabled", "highContrast"],
+      "sourceFiles": ["src/components/switch.props.tsx", "src/components/switch.css", "src/components/switch.tsx"],
+      "sourceSelectors": [".rt-SwitchRoot", ".rt-SwitchThumb"],
+      "flutterExceptions": ["Boolean selection and Flutter focus/feedback APIs replace DOM checked attributes and events."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "variant.classic", "variant.surface", "variant.soft"], "states": ["unchecked", "checked", "hovered", "pressed", "focused", "disabled", "highContrast"], "tests": ["test/components/switch/switch_widget_test.dart", "test/components/switch/switch_style_test.dart", "test/fortal/fortal_control_matrix_test.dart", "test/fortal/fortal_high_contrast_test.dart"] }
+    },
+    {
+      "id": "tabs",
+      "fortalType": "FortalTabBar",
+      "radixComponent": "Tabs",
+      "parity": "mapped",
+      "enums": {
+        "size": { "values": ["size1", "size2"], "default": "size2" },
+        "wrap": { "values": ["nowrap", "wrap", "wrapReverse"], "default": "nowrap" },
+        "justify": { "values": ["start", "center", "end"], "default": "start" },
+        "orientation": { "values": ["horizontal", "vertical"], "default": "horizontal" },
+        "activationMode": { "values": ["automatic", "manual"], "default": "automatic" }
+      },
+      "defaults": { "highContrast": false },
+      "supportedStyleProps": ["color", "highContrast"],
+      "states": ["inactive", "active", "hovered", "pressed", "focused", "disabled", "automatic", "manual", "rtl", "highContrast"],
+      "sourceFiles": ["src/components/_internal/base-tab-list.props.ts", "src/components/_internal/base-tab-list.css", "src/components/tabs.css"],
+      "sourceSelectors": [".rt-BaseTabList", ".rt-TabsList", ".rt-BaseTabListTrigger", ".rt-TabsTrigger", ".rt-TabsContent"],
+      "flutterExceptions": ["Actual tab Widgets, Wrap/justify enums, Axis, and NakedTabActivationMode express layout and activation without a DOM flexbox API."],
+      "coverage": { "enums": ["size.size1", "size.size2", "wrap.nowrap", "wrap.wrap", "wrap.wrapReverse", "justify.start", "justify.center", "justify.end", "orientation.horizontal", "orientation.vertical", "activationMode.automatic", "activationMode.manual"], "states": ["inactive", "active", "hovered", "pressed", "focused", "disabled", "automatic", "manual", "rtl", "highContrast"], "tests": ["test/components/tabs/tabs_parity_test.dart", "test/components/tabs/tabs_widget_test.dart", "test/components/tabs/tabs_style_test.dart", "test/fortal/fortal_high_contrast_test.dart"] }
+    },
+    {
+      "id": "text_field",
+      "fortalType": "FortalTextField",
+      "radixComponent": "TextField.Root",
+      "parity": "mapped",
+      "enums": { "size": { "values": ["size1", "size2", "size3"], "default": "size2" }, "variant": { "values": ["classic", "surface", "soft"], "default": "surface" } },
+      "defaults": { "enabled": true, "readOnly": false, "error": false },
+      "supportedStyleProps": ["color", "radius"],
+      "states": ["idle", "hovered", "focused", "disabled", "readOnly", "invalid", "leading", "trailing"],
+      "sourceFiles": ["src/components/text-field.props.tsx", "src/components/text-field.css", "src/components/text-field.tsx"],
+      "sourceSelectors": [".rt-TextFieldRoot", ".rt-TextFieldInput", ".rt-TextFieldSlot"],
+      "flutterExceptions": ["error is a documented Fortal extension and must set invalid semantics plus red error/focus roles; Flutter text editing APIs replace input DOM props."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "variant.classic", "variant.surface", "variant.soft"], "states": ["idle", "hovered", "focused", "disabled", "readOnly", "invalid", "leading", "trailing"], "tests": ["test/components/textfield/textfield_widget_test.dart", "test/components/textfield/fortal_textfield_disabled_test.dart", "test/fortal/fortal_control_matrix_test.dart"] }
+    },
+    {
+      "id": "tooltip",
+      "fortalType": "FortalTooltip",
+      "radixComponent": "Tooltip",
+      "parity": "mapped",
+      "enums": {},
+      "defaults": { "maxWidth": 360, "delayMilliseconds": 200, "sideOffset": 4, "collisionPadding": 10, "disableHoverableContent": false, "arrow": true },
+      "supportedStyleProps": [],
+      "states": ["closed", "delayedOpen", "instantOpen", "triggerHovered", "contentHovered", "focused", "touch", "escape", "outsideTap", "ownerRejected", "collisionFlipped", "collisionShifted"],
+      "sourceFiles": ["src/components/tooltip.props.tsx", "src/components/tooltip.css", "src/components/tooltip.tsx"],
+      "sourceSelectors": [".rt-TooltipContent", ".rt-TooltipText", ".rt-TooltipArrow"],
+      "flutterExceptions": ["OverlayPositionConfig and resolved OverlayPlacement drive a CustomPaint arrow after collision resolution; width constraints use logical pixels."],
+      "coverage": { "enums": [], "states": ["closed", "delayedOpen", "instantOpen", "triggerHovered", "contentHovered", "focused", "touch", "escape", "outsideTap", "ownerRejected", "collisionFlipped", "collisionShifted"], "tests": ["test/components/tooltip/tooltip_widget_test.dart", "test/components/tooltip/tooltip_timing_test.dart", "test/components/tooltip/tooltip_parity_test.dart"] }
+    },
+    {
+      "id": "accordion",
+      "fortalType": "FortalAccordion",
+      "radixComponent": null,
+      "parity": "extension",
+      "enums": { "size": { "values": ["size1", "size2", "size3"], "default": "size2" }, "variant": { "values": ["surface", "soft"], "default": "surface" } },
+      "defaults": { "enabled": true },
+      "supportedStyleProps": ["color", "radius"],
+      "states": ["collapsed", "expanded", "hovered", "pressed", "focused", "disabled"],
+      "sourceFiles": [],
+      "sourceSelectors": [],
+      "flutterExceptions": ["Fortal extension: excluded from the Radix parity score and styled from shared Fortal tokens."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "variant.surface", "variant.soft"], "states": ["collapsed", "expanded", "hovered", "pressed", "focused", "disabled"], "tests": ["test/components/accordion/accordion_widget_test.dart", "test/components/accordion/accordion_style_test.dart"] }
+    },
+    {
+      "id": "toggle",
+      "fortalType": "FortalToggle",
+      "radixComponent": null,
+      "parity": "extension",
+      "enums": { "size": { "values": ["size1", "size2", "size3"], "default": "size2" }, "variant": { "values": ["ghost", "outline"], "default": "ghost" } },
+      "defaults": { "selected": false, "enabled": true, "highContrast": false },
+      "supportedStyleProps": ["color", "radius", "highContrast"],
+      "states": ["off", "on", "hovered", "pressed", "focused", "disabled", "highContrast"],
+      "sourceFiles": [],
+      "sourceSelectors": [],
+      "flutterExceptions": ["Fortal extension: excluded from the Radix parity score and styled from shared Fortal tokens."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "variant.ghost", "variant.outline"], "states": ["off", "on", "hovered", "pressed", "focused", "disabled", "highContrast"], "tests": ["test/components/toggle/toggle_widget_test.dart", "test/components/toggle/toggle_style_test.dart", "test/fortal/fortal_high_contrast_test.dart"] }
+    },
+    {
+      "id": "toggle_group",
+      "fortalType": "FortalToggleGroup",
+      "radixComponent": null,
+      "parity": "extension",
+      "enums": { "size": { "values": ["size1", "size2", "size3"], "default": "size2" }, "variant": { "values": ["soft", "surface"], "default": "soft" }, "orientation": { "values": ["horizontal", "vertical"], "default": "horizontal" } },
+      "defaults": { "enabled": true, "loop": true, "highContrast": false },
+      "supportedStyleProps": ["color", "radius", "highContrast"],
+      "states": ["unselected", "selected", "hovered", "pressed", "focused", "disabled", "highContrast", "rtl"],
+      "sourceFiles": [],
+      "sourceSelectors": [],
+      "flutterExceptions": ["Fortal extension: excluded from the Radix parity score and styled from shared Fortal tokens."],
+      "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "variant.soft", "variant.surface", "orientation.horizontal", "orientation.vertical"], "states": ["unselected", "selected", "hovered", "pressed", "focused", "disabled", "highContrast", "rtl"], "tests": ["test/components/toggle_group/toggle_group_widget_test.dart", "test/components/toggle_group/toggle_group_style_test.dart"] }
+    }
+  ],
+  "referenceFixtures": {
+    "computedStyles": "reference/radix_themes_3_3_0/chromium/computed-styles.json",
+    "screenshot": "reference/radix_themes_3_3_0/chromium/families-light.png",
+    "generator": "tool/fortal_parity/chromium/generate.mjs",
+    "fixture": "tool/fortal_parity/chromium/fixture.html"
+  },
+  "approximations": [
+    {
+      "family": "dialog",
+      "upstream": "Radix Dialog with modal=false permits background pointer interaction while the content is open.",
+      "flutter": "RemixDialog with modal=false disables modal accessibility route scoping, but showRemixDialog remains a RawDialogRoute whose barrier blocks background pointer input.",
+      "reason": "Flutter Navigator dialog routes are modal routes; non-modal pointer interaction requires a separate OverlayEntry lifecycle rather than the approved dialog route API.",
+      "tolerance": "Interaction-model boundary only; no visual tolerance. The route barrier and both accessibility modes are covered by dialog_widget_test.dart."
+    }
+  ]
+}

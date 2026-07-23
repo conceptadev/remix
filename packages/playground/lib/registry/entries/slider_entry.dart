@@ -9,7 +9,7 @@ Widget buildSliderExample() {
     child: ComparisonView(
       remix: [
         _StaticRemixSlider(value: 25, min: 0, max: 100),
-        _StaticRemixSlider(value: 50, min: 0, max: 100, snapDivisions: 5),
+        _StaticRemixSlider(value: 50, min: 0, max: 100, divisions: 5),
         _StaticRemixSlider(value: 75, min: 0, max: 100, enabled: false),
       ],
       material: [
@@ -26,14 +26,14 @@ class _StaticRemixSlider extends StatelessWidget {
     required this.value,
     required this.min,
     required this.max,
-    this.snapDivisions,
+    this.divisions,
     this.enabled = true,
   });
 
   final double value;
   final double min;
   final double max;
-  final int? snapDivisions;
+  final int? divisions;
   final bool enabled;
 
   @override
@@ -42,7 +42,7 @@ class _StaticRemixSlider extends StatelessWidget {
       value: value,
       min: min,
       max: max,
-      snapDivisions: snapDivisions,
+      snapDivisions: divisions,
       enabled: enabled,
       onChanged: (_) {},
     );

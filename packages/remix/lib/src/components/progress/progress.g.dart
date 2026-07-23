@@ -11,6 +11,8 @@ mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get track;
   StyleSpec<BoxSpec> get indicator;
   StyleSpec<BoxSpec> get trackContainer;
+  RemixBoxEffectsSpec? get trackEffects;
+  RemixBoxEffectsSpec? get indicatorEffects;
 
   @override
   Type get type => RemixProgressSpec;
@@ -21,12 +23,16 @@ mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
     StyleSpec<BoxSpec>? track,
     StyleSpec<BoxSpec>? indicator,
     StyleSpec<BoxSpec>? trackContainer,
+    RemixBoxEffectsSpec? trackEffects,
+    RemixBoxEffectsSpec? indicatorEffects,
   }) {
     return RemixProgressSpec(
       container: container ?? this.container,
       track: track ?? this.track,
       indicator: indicator ?? this.indicator,
       trackContainer: trackContainer ?? this.trackContainer,
+      trackEffects: trackEffects ?? this.trackEffects,
+      indicatorEffects: indicatorEffects ?? this.indicatorEffects,
     );
   }
 
@@ -37,11 +43,24 @@ mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
       track: track.lerp(other?.track, t),
       indicator: indicator.lerp(other?.indicator, t),
       trackContainer: trackContainer.lerp(other?.trackContainer, t),
+      trackEffects: MixOps.lerpSnap(trackEffects, other?.trackEffects, t),
+      indicatorEffects: MixOps.lerpSnap(
+        indicatorEffects,
+        other?.indicatorEffects,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, track, indicator, trackContainer];
+  List<Object?> get props => [
+    container,
+    track,
+    indicator,
+    trackContainer,
+    trackEffects,
+    indicatorEffects,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -86,7 +105,9 @@ mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('track', track))
       ..add(DiagnosticsProperty('indicator', indicator))
-      ..add(DiagnosticsProperty('trackContainer', trackContainer));
+      ..add(DiagnosticsProperty('trackContainer', trackContainer))
+      ..add(DiagnosticsProperty('trackEffects', trackEffects))
+      ..add(DiagnosticsProperty('indicatorEffects', indicatorEffects));
   }
 }
 
@@ -106,25 +127,33 @@ class RemixProgressStyler
   final Prop<StyleSpec<BoxSpec>>? $track;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
   final Prop<StyleSpec<BoxSpec>>? $trackContainer;
+  final Prop<RemixBoxEffectsSpec>? $trackEffects;
+  final Prop<RemixBoxEffectsSpec>? $indicatorEffects;
 
   const RemixProgressStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? track,
     Prop<StyleSpec<BoxSpec>>? indicator,
     Prop<StyleSpec<BoxSpec>>? trackContainer,
+    Prop<RemixBoxEffectsSpec>? trackEffects,
+    Prop<RemixBoxEffectsSpec>? indicatorEffects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $track = track,
        $indicator = indicator,
-       $trackContainer = trackContainer;
+       $trackContainer = trackContainer,
+       $trackEffects = trackEffects,
+       $indicatorEffects = indicatorEffects;
 
   RemixProgressStyler({
     BoxStyler? container,
     BoxStyler? track,
     BoxStyler? indicator,
     BoxStyler? trackContainer,
+    RemixBoxEffectsMix? trackEffects,
+    RemixBoxEffectsMix? indicatorEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixProgressSpec>>? variants,
@@ -133,6 +162,8 @@ class RemixProgressStyler
          track: Prop.maybeMix(track),
          indicator: Prop.maybeMix(indicator),
          trackContainer: Prop.maybeMix(trackContainer),
+         trackEffects: Prop.maybeMix(trackEffects),
+         indicatorEffects: Prop.maybeMix(indicatorEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -146,6 +177,10 @@ class RemixProgressStyler
       RemixProgressStyler().indicator(value);
   factory RemixProgressStyler.trackContainer(BoxStyler value) =>
       RemixProgressStyler().trackContainer(value);
+  factory RemixProgressStyler.trackEffects(RemixBoxEffectsMix value) =>
+      RemixProgressStyler().trackEffects(value);
+  factory RemixProgressStyler.indicatorEffects(RemixBoxEffectsMix value) =>
+      RemixProgressStyler().indicatorEffects(value);
   factory RemixProgressStyler.alignment(AlignmentGeometry value) =>
       RemixProgressStyler().alignment(value);
   factory RemixProgressStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -641,6 +676,16 @@ class RemixProgressStyler
     return merge(RemixProgressStyler(trackContainer: value));
   }
 
+  /// Sets the trackEffects.
+  RemixProgressStyler trackEffects(RemixBoxEffectsMix value) {
+    return merge(RemixProgressStyler(trackEffects: value));
+  }
+
+  /// Sets the indicatorEffects.
+  RemixProgressStyler indicatorEffects(RemixBoxEffectsMix value) {
+    return merge(RemixProgressStyler(indicatorEffects: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixProgressStyler animate(AnimationConfig value) {
@@ -672,6 +717,11 @@ class RemixProgressStyler
       track: MixOps.merge($track, other?.$track),
       indicator: MixOps.merge($indicator, other?.$indicator),
       trackContainer: MixOps.merge($trackContainer, other?.$trackContainer),
+      trackEffects: MixOps.merge($trackEffects, other?.$trackEffects),
+      indicatorEffects: MixOps.merge(
+        $indicatorEffects,
+        other?.$indicatorEffects,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -686,6 +736,8 @@ class RemixProgressStyler
       track: MixOps.resolve(context, $track),
       indicator: MixOps.resolve(context, $indicator),
       trackContainer: MixOps.resolve(context, $trackContainer),
+      trackEffects: MixOps.resolve(context, $trackEffects),
+      indicatorEffects: MixOps.resolve(context, $indicatorEffects),
     );
 
     return StyleSpec(
@@ -702,7 +754,9 @@ class RemixProgressStyler
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('track', $track))
       ..add(DiagnosticsProperty('indicator', $indicator))
-      ..add(DiagnosticsProperty('trackContainer', $trackContainer));
+      ..add(DiagnosticsProperty('trackContainer', $trackContainer))
+      ..add(DiagnosticsProperty('trackEffects', $trackEffects))
+      ..add(DiagnosticsProperty('indicatorEffects', $indicatorEffects));
   }
 
   @override
@@ -711,6 +765,8 @@ class RemixProgressStyler
     $track,
     $indicator,
     $trackContainer,
+    $trackEffects,
+    $indicatorEffects,
     $animation,
     $modifier,
     $variants,

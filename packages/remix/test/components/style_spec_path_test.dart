@@ -8,7 +8,7 @@ void main() {
   group('raw styleSpec widget path', () {
     testWidgets('badge', (tester) async {
       await tester.pumpRemixApp(
-        const RemixBadge(label: 'New', styleSpec: RemixBadgeSpec()),
+        const RemixBadge(child: Text('New'), styleSpec: RemixBadgeSpec()),
       );
       await tester.pumpAndSettle();
       expect(find.byType(RemixBadge), findsOneWidget);
@@ -41,7 +41,11 @@ void main() {
 
     testWidgets('progress', (tester) async {
       await tester.pumpRemixApp(
-        const RemixProgress(value: 0.4, styleSpec: RemixProgressSpec()),
+        const RemixProgress(
+          value: 40,
+          max: 100,
+          styleSpec: RemixProgressSpec(),
+        ),
       );
       await tester.pumpAndSettle();
       expect(find.byType(RemixProgress), findsOneWidget);
@@ -49,7 +53,7 @@ void main() {
 
     testWidgets('callout', (tester) async {
       await tester.pumpRemixApp(
-        const RemixCallout(text: 'hi', styleSpec: RemixCalloutSpec()),
+        const RemixCallout(child: Text('hi'), styleSpec: RemixCalloutSpec()),
       );
       await tester.pumpAndSettle();
       expect(find.byType(RemixCallout), findsOneWidget);

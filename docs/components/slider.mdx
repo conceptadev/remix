@@ -1,21 +1,23 @@
 ---
 title: Slider
-description: A draggable slider component for selecting values within a range
+description: An arbitrary multi-thumb slider for selecting ordered values within a range
 keywords: [flutter, remix, slider, range, input, value-picker, control]
 ---
 
-A draggable slider component for selecting values within a continuous range.
+`RemixSlider` retains its controlled scalar API and adds an arbitrary
+multi-thumb mode. Multi-thumb values remain in ascending order, thumbs cannot
+cross, and each thumb has independent focus and accessibility semantics.
 
 ## When to use this
 
-- **Volume controls**: Adjust audio or video volume levels
-- **Brightness settings**: Control screen brightness or lighting
-- **Price filters**: Select price ranges in e-commerce applications
-- **Value adjustments**: Set any numeric value within a defined range
+- **Single values**: Volume, brightness, or progress controls
+- **Ranges**: Minimum and maximum prices or dates
+- **Multiple thresholds**: Ordered stops within one numeric domain
+- **Vertical controls**: Use `orientation` and `inverted` for alternate layouts
 
 ## Basic implementation
 
-<CodeGroup title="Basic implementation" defaultLanguage="dart">
+<CodeGroup title="Two-thumb range" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -28,53 +30,38 @@ class SliderExample extends StatefulWidget {
 }
 
 class _SliderExampleState extends State<SliderExample> {
-  double _selectedValue = 0.3;
+  List<double> _values = [20, 80];
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 300,
       child: RemixSlider(
-        value: _selectedValue,
-        style: style,
-        onChanged: (value) {
-          setState(() {
-            _selectedValue = value;
-          });
-        },
+        values: _values,
+        min: 0,
+        max: 100,
+        step: 5,
+        minSpacing: 10,
+        semanticLabels: const ['Minimum price', 'Maximum price'],
+        onValuesChanged: (values) => setState(() => _values = values),
+        style: RemixSliderStyler()
+            .thumbSize(const Size(24, 24))
+            .thumb(.shape(CircleBorderMix()))
+            .thumbColor(Colors.black)
+            .trackColor(Colors.grey.shade300)
+            .rangeColor(Colors.black)
+            .thickness(2),
       ),
     );
-  }
-
-  RemixSliderStyler get style {
-    return RemixSliderStyler()
-        .thumbSize(const Size(24, 24))
-        .thumb(
-          BoxStyler().shapeCircle().shadow(
-                BoxShadowMix()
-                    .color(Colors.black45)
-                    .blurRadius(4)
-                    .offset(const Offset(0, 2)),
-              ),
-        )
-        .thumbColor(Colors.black)
-        .thickness(2)
-        .trackColor(Colors.grey.shade300)
-        .rangeColor(Colors.black)
-        .onDisabled(
-          RemixSliderStyler()
-              .trackColor(Colors.grey.shade300)
-              .rangeColor(Colors.blueGrey)
-              .thumbColor(Colors.white.withValues(alpha: 0.6)),
-        );
   }
 }
 ```
 </CodeGroup>
 
-## Fortal widgets
+For one thumb, prefer scalar `value` and `onChanged`; scalar mode keeps the
+original 0–1 default range and `snapDivisions`.
 
-Remix includes a generated Fortal-themed widget for this component:
+## Fortal widgets
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -89,22 +76,14 @@ class FortalSliderExample extends StatefulWidget {
 }
 
 class _FortalSliderExampleState extends State<FortalSliderExample> {
-  double _value = 0.5;
+  List<double> _values = [35];
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 16,
-      children: [
-        FortalSlider.surface(
-          value: _value,
-          onChanged: (v) => setState(() => _value = v),
-        ),
-        FortalSlider.soft(
-          value: _value,
-          onChanged: (v) => setState(() => _value = v),
-        ),
-      ],
+    return FortalSlider.surface(
+      values: _values,
+      semanticLabels: const ['Volume'],
+      onValuesChanged: (values) => setState(() => _values = values),
     );
   }
 }
@@ -112,190 +91,66 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalSliderStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/slider/fortal_slider_styles.dart) for all available options.
+  See the [fortalSliderStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/slider/fortal_slider_styles.dart) for the exact `classic`, `surface`, and `soft` recipes.
 </Info>
 
 ## Constructor
-<CodeGroup title="Constructor" defaultLanguage="dart">
+
+<CodeGroup title="RemixSlider constructor" defaultLanguage="dart">
 ```dart
 const RemixSlider({
   Key? key,
-  required double value,
+  double? value,
+  List<double>? values,
   ValueChanged<double>? onChanged,
   ValueChanged<double>? onChangeStart,
   ValueChanged<double>? onChangeEnd,
-  double min = 0.0,
-  double max = 1.0,
+  ValueChanged<List<double>>? onValuesChanged,
+  ValueChanged<List<double>>? onValuesChangeStart,
+  ValueChanged<List<double>>? onValuesChangeEnd,
+  ValueChanged<bool>? onHoverChange,
+  ValueChanged<bool>? onDragChange,
+  ValueChanged<bool>? onFocusChange,
+  double min = 0,
+  double? max,
+  double? step,
+  int? snapDivisions,
+  double minSpacing = 0,
+  Axis orientation = Axis.horizontal,
+  bool inverted = false,
   bool enabled = true,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
   bool enableFeedback = true,
   FocusNode? focusNode,
   bool autofocus = false,
-  int? snapDivisions,
+  List<FocusNode?>? focusNodes,
+  int? autofocusThumbIndex,
+  List<String?>? semanticLabels,
+  List<RemixSliderSemanticFormatterCallback?>? semanticFormatterCallbacks,
+  bool excludeSemantics = false,
   RemixSliderStyler style = const RemixSliderStyler.create(),
   RemixSliderSpec? styleSpec,
 })
 ```
 </CodeGroup>
 
-
-## Properties
-### Widget Properties
-
-#### `key` → `Key?`
-
-Optional. Controls how one widget replaces another widget in the tree.
-
-#### `min` → `double`
-
-Optional. The minimum value the slider can have.
-
-#### `max` → `double`
-
-Optional. The maximum value the slider can have.
-
-#### `onChanged` → `ValueChanged<double>?`
-
-Optional. Called during drag with the new value. When omitted, the slider is disabled.
-
-#### `value` → `double`
-
-**Required**. The current value of the slider. Must be between [min] and [max].
-
-#### `onChangeEnd` → `ValueChanged<double>?`
-
-Optional. Called when the user is done selecting a new value.
-
-#### `onChangeStart` → `ValueChanged<double>?`
-
-Optional. Called when the user starts dragging the slider.
-
-#### `style` → `RemixSliderStyler`
-
-Optional. The style configuration for the slider.
-
-#### `styleSpec` → `RemixSliderSpec?`
-
-Optional. The style spec for the slider.
-
-#### `enabled` → `bool`
-
-Optional. Whether the slider is enabled for interaction.
-
-#### `enableFeedback` → `bool`
-
-Optional. Whether to provide platform feedback during value changes. Defaults to true.
-
-#### `focusNode` → `FocusNode?`
-
-Optional. The focus node for the slider.
-
-#### `autofocus` → `bool`
-
-Optional. Whether the slider should automatically request focus when it is created.
-
-#### `snapDivisions` → `int?`
-
-Optional. Optional snapping divisions for interaction only (no visual ticks). When provided, the slider snaps to these discrete steps but does not render any division marks on the track.
-
-
-### Style Methods
-
-#### `thumbColor(Color value)`
-
-Sets thumb color
-
-#### `trackColor(Color value)`
-
-Sets track color (background rail)
-
-#### `rangeColor(Color value)`
-
-Sets range color (filled progress portion)
-
-#### `thumb(BoxStyler value)`
-
-Sets thumb styling
-
-#### `thumbSize(Size size)`
-
-Sets thumb to a fixed [size].
-
-#### `alignment(Alignment value)`
-
-Sets thumb alignment
-
-#### `thickness(double value)`
-
-Sets stroke width for both track and range.
-
-#### `trackThickness(double value)`
-
-Sets stroke width for the track only (background rail).
-
-#### `trackWidth(double value)`
-
-Sets stroke width for the track only.
-
-#### `rangeThickness(double value)`
-
-Sets stroke width for the range only (filled portion).
-
-#### `rangeWidth(double value)`
-
-Sets stroke width for the range only.
-
-#### `padding(EdgeInsetsGeometryMix value)`
-
-Sets the container padding.
-
-#### `color(Color value)`
-
-Sets background color.
-
-#### `size(double width, double height)`
-
-Sets the component size.
-
-#### `borderRadius(BorderRadiusGeometryMix radius)`
-
-Sets the border radius.
-
-#### `constraints(BoxConstraintsMix value)`
-
-Sets size constraints on the component.
-
-#### `decoration(DecorationMix value)`
-
-Sets the container decoration.
-
-#### `margin(EdgeInsetsGeometryMix value)`
-
-Sets the container margin.
-
-#### `foregroundDecoration(DecorationMix value)`
-
-Sets a foreground decoration painted on top of the component.
-
-#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
-
-Applies a matrix transformation to the component.
-
-#### `wrap(WidgetModifierConfig value)`
-
-Applies widget modifiers such as clipping, opacity, or scaling.
-
-#### `animate(AnimationConfig value)`
-
-Configures implicit animation for style transitions.
-
-#### `variants(List<VariantStyle<RemixSliderSpec>> value)`
-
-Sets style variants.
-
-#### `modifier(WidgetModifierConfig value)`
-
-Sets the widget modifier.
-
-#### `call({ ... })`
-
-Creates a RemixSlider widget with this style applied.
+## Controlled-value contract
+
+- `min` must be less than `max`; `step` must be positive; `minSpacing` must be
+  non-negative.
+- `values` must be finite, in range, aligned to `step`, ascending, and separated
+  by at least `minSpacing`.
+- Provide exactly one of `value` or `values`. Scalar callbacks receive a
+  `double`; multi-thumb callbacks use the `onValues...` names and receive the
+  complete normalized list.
+- `focusNodes`, `semanticLabels`, and `semanticFormatterCallbacks`, when
+  supplied, correspond by index to the value list.
+- Pointer input chooses the nearest eligible thumb. Keyboard input acts on the
+  focused thumb and respects orientation, inversion, steps, and neighbors.
+
+## Styling
+
+`RemixSliderStyler` exposes container, track, range, and thumb styles plus
+surface/overlay paint layers. Convenience methods such as `trackColor`,
+`rangeColor`, `thumbColor`, `thumbSize`, and `thickness` configure the common
+case while state variants handle hover, drag, focus, and disabled styling.

@@ -17,7 +17,7 @@ class ProgressExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: RemixProgress(value: 0.3, style: style));
+    return Center(child: RemixProgress(value: 30, max: 100, style: style));
   }
 
   RemixProgressStyler get style {

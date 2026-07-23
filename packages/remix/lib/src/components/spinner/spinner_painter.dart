@@ -1,39 +1,64 @@
 part of 'spinner.dart';
 
-/// Paints a solid arc spinner that rotates continuously around a circle
-/// with an optional track (background circle).
-///
-/// This creates a smooth, modern loading indicator consisting of a partial
-/// circle arc that rotates around the center. The arc covers approximately
-/// 1/3 of the full circle (120°) and spins continuously.
-///
-/// **Visual Characteristics:**
-/// - Clean, minimalist appearance
-/// - Smooth rotation without discrete steps
-/// - Optional track for better visibility
-/// - Works well in modern, flat design contexts
-///
-/// **Mathematical Foundation:**
-/// Uses Flutter's `drawArc` method with careful angle calculations
-/// to create smooth rotation and proper arc proportions.
-class RemixSpinnerPainter extends CustomPainter {
-  /// Animation controller providing values from 0.0 to 1.0 for rotation.
+/// Paints the eight independently fading leaves used by Radix Themes Spinner.
+class RemixLeafSpinnerPainter extends CustomPainter {
+  RemixLeafSpinnerPainter({
+    required this.animation,
+    required this.color,
+    required this.opacity,
+    required this.leafRadius,
+  }) : super(repaint: animation);
+
+  static const int leafCount = 8;
+
+  /// Linear phase from zero to one over one complete fade cycle.
   final Animation<double> animation;
 
-  /// Thickness of the indicator arc in logical pixels.
-  final double strokeWidth;
+  /// Resolved current color inherited by every leaf.
+  final Color color;
 
-  /// Color of the rotating indicator arc.
-  final Color indicatorColor;
+  /// Opacity applied to the complete spinner.
+  final double opacity;
 
-  /// Color of the background track circle.
-  /// If null, no track is drawn.
-  final Color? trackColor;
+  /// Corner radius of each leaf.
+  final Radius leafRadius;
 
-  /// Thickness of the track circle in logical pixels.
-  /// If null, uses the same width as the indicator.
-  final double? trackStrokeWidth;
+  @override
+  void paint(Canvas canvas, Size size) {
+    final extent = min(size.width, size.height);
+    final leaf = Rect.fromLTWH(
+      -extent * 0.125 / 2,
+      -extent / 2,
+      extent * 0.125,
+      extent * 0.3,
+    );
+    final paint = Paint();
+    canvas.save();
+    canvas.translate(size.width / 2, size.height / 2);
+    for (var index = 0; index < leafCount; index++) {
+      // CSS delays are -8/8, -7/8, ... -1/8 of a cycle.
+      final phase = (animation.value + (leafCount - index) / leafCount) % 1;
+      final leafOpacity = 1 - 0.75 * phase;
+      paint.color = color.withValues(alpha: color.a * opacity * leafOpacity);
 
+      canvas.save();
+      canvas.rotate(index * pi / 4);
+      canvas.drawRRect(RRect.fromRectAndRadius(leaf, leafRadius), paint);
+      canvas.restore();
+    }
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(RemixLeafSpinnerPainter oldDelegate) =>
+      animation != oldDelegate.animation ||
+      color != oldDelegate.color ||
+      opacity != oldDelegate.opacity ||
+      leafRadius != oldDelegate.leafRadius;
+}
+
+/// Paints the established rotating circular indicator and optional track.
+class RemixSpinnerPainter extends CustomPainter {
   RemixSpinnerPainter({
     required this.animation,
     required this.strokeWidth,
@@ -42,76 +67,50 @@ class RemixSpinnerPainter extends CustomPainter {
     this.trackStrokeWidth,
   }) : super(repaint: animation);
 
+  final Animation<double> animation;
+  final double strokeWidth;
+  final Color indicatorColor;
+  final Color? trackColor;
+  final double? trackStrokeWidth;
+
   @override
   void paint(Canvas canvas, Size size) {
     canvas.translate(size.width / 2, size.height / 2);
-
     final indicatorThickness = strokeWidth * 2;
-    final trackThickness = trackColor != null
-        ? 2 * (trackStrokeWidth ?? strokeWidth)
-        : 0;
-    final maxThickness = max(indicatorThickness, trackThickness);
+    final trackThickness = trackColor == null
+        ? 0.0
+        : 2 * (trackStrokeWidth ?? strokeWidth);
+    final radius =
+        min(size.width, size.height) / 2 -
+        max(indicatorThickness, trackThickness);
 
-    final radius = min(size.width, size.height) / 2 - maxThickness;
-
-    // Draw track (background circle) if trackColor is provided
-    if (trackColor != null) {
-      final trackPaint = Paint()
-        ..style = .stroke
-        ..strokeWidth = 2 * (trackStrokeWidth ?? strokeWidth)
-        ..color = trackColor!;
-
-      canvas.drawCircle(.zero, radius, trackPaint);
+    if (trackColor case final color?) {
+      canvas.drawCircle(
+        .zero,
+        radius,
+        Paint()
+          ..style = .stroke
+          ..strokeWidth = 2 * (trackStrokeWidth ?? strokeWidth)
+          ..color = color,
+      );
     }
-
-    // Draw indicator arc
-    final indicatorPaint = Paint()
-      ..style = .stroke
-      ..strokeWidth = 2 * strokeWidth
-      ..color = indicatorColor;
-
-    /// **Arc Geometry Constants**
-    ///
-    /// **Start Angle: π/3 radians (60°)**
-    /// Positions the arc to start at the 2 o'clock position.
-    /// This creates a visually pleasing starting point that works well
-    /// with the sweep angle.
-    ///
-    /// **Sweep Angle: 2π/3 radians (120°)**
-    /// Creates an arc that covers exactly 1/3 of the circle.
-    /// This proportion provides good visual balance - substantial enough
-    /// to be clearly visible, but not so large as to dominate the space.
-    const startAngle = pi / 3;
-    const sweepAngle = 2 * pi / 3;
-
-    /// **Arc Rotation Calculation**
-    ///
-    /// The arc is drawn with a starting angle that rotates based on animation:
-    /// `startAngle + animation.value * 2 * pi`
-    ///
-    /// **Animation Mapping:**
-    /// - animation.value: 0.0 to 1.0 (provided by AnimationController)
-    /// - 2 * π: Full circle in radians
-    /// - Result: Arc rotates 360° as animation progresses from 0 to 1
-    ///
-    /// **Why This Works:**
-    /// As animation cycles from 0 to 1, the start angle advances by 2π,
-    /// making the arc appear to rotate smoothly around the center.
     canvas.drawArc(
       Rect.fromCircle(center: .zero, radius: radius),
-      startAngle + animation.value * 2 * pi,
-      sweepAngle,
-      false, // useCenter: false - draws arc stroke, not a pie slice
-      indicatorPaint,
+      pi / 3 + animation.value * 2 * pi,
+      2 * pi / 3,
+      false,
+      Paint()
+        ..style = .stroke
+        ..strokeWidth = indicatorThickness
+        ..color = indicatorColor,
     );
   }
 
-  /// Always repaints to maintain smooth arc rotation.
-  ///
-  /// **Performance Justification:**
-  /// Spinner animations require continuous repainting for smooth
-  /// rotation. The visual smoothness is worth the performance cost for
-  /// temporary loading states.
   @override
-  bool shouldRepaint(RemixSpinnerPainter oldDelegate) => true;
+  bool shouldRepaint(RemixSpinnerPainter oldDelegate) =>
+      animation != oldDelegate.animation ||
+      strokeWidth != oldDelegate.strokeWidth ||
+      indicatorColor != oldDelegate.indicatorColor ||
+      trackColor != oldDelegate.trackColor ||
+      trackStrokeWidth != oldDelegate.trackStrokeWidth;
 }

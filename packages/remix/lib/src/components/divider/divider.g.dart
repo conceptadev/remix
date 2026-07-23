@@ -8,22 +8,32 @@ part of 'divider.dart';
 
 mixin _$RemixDividerSpec implements Spec<RemixDividerSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
+  double? get thickness;
 
   @override
   Type get type => RemixDividerSpec;
 
   @override
-  RemixDividerSpec copyWith({StyleSpec<BoxSpec>? container}) {
-    return RemixDividerSpec(container: container ?? this.container);
+  RemixDividerSpec copyWith({
+    StyleSpec<BoxSpec>? container,
+    double? thickness,
+  }) {
+    return RemixDividerSpec(
+      container: container ?? this.container,
+      thickness: thickness ?? this.thickness,
+    );
   }
 
   @override
   RemixDividerSpec lerp(RemixDividerSpec? other, double t) {
-    return RemixDividerSpec(container: container.lerp(other?.container, t));
+    return RemixDividerSpec(
+      container: container.lerp(other?.container, t),
+      thickness: MixOps.lerp(thickness, other?.thickness, t),
+    );
   }
 
   @override
-  List<Object?> get props => [container];
+  List<Object?> get props => [container, thickness];
 
   @override
   bool operator ==(Object other) {
@@ -64,7 +74,9 @@ mixin _$RemixDividerSpec implements Spec<RemixDividerSpec>, Diagnosticable {
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties.add(DiagnosticsProperty('container', container));
+    properties
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DoubleProperty('thickness', thickness));
   }
 }
 
@@ -80,21 +92,26 @@ typedef _$RemixDividerSpecMethods = _$RemixDividerSpec; // ignore: unused_elemen
 class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     with RemixBoxStylerMixin<RemixDividerStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<double>? $thickness;
 
   const RemixDividerStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
+    Prop<double>? thickness,
     super.variants,
     super.modifier,
     super.animation,
-  }) : $container = container;
+  }) : $container = container,
+       $thickness = thickness;
 
   RemixDividerStyler({
     BoxStyler? container,
+    double? thickness,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixDividerSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
+         thickness: Prop.maybe(thickness),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -102,6 +119,8 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
 
   factory RemixDividerStyler.container(BoxStyler value) =>
       RemixDividerStyler().container(value);
+  factory RemixDividerStyler.thickness(double value) =>
+      RemixDividerStyler().thickness(value);
   factory RemixDividerStyler.alignment(AlignmentGeometry value) =>
       RemixDividerStyler().alignment(value);
   factory RemixDividerStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -579,6 +598,11 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     return merge(RemixDividerStyler(container: value));
   }
 
+  /// Sets the thickness.
+  RemixDividerStyler thickness(double value) {
+    return merge(RemixDividerStyler(thickness: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixDividerStyler animate(AnimationConfig value) {
@@ -607,6 +631,7 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
   RemixDividerStyler merge(RemixDividerStyler? other) {
     return RemixDividerStyler.create(
       container: MixOps.merge($container, other?.$container),
+      thickness: MixOps.merge($thickness, other?.$thickness),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -618,6 +643,7 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
   StyleSpec<RemixDividerSpec> resolve(BuildContext context) {
     final spec = RemixDividerSpec(
       container: MixOps.resolve(context, $container),
+      thickness: MixOps.resolve(context, $thickness),
     );
 
     return StyleSpec(
@@ -630,9 +656,17 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('container', $container));
+    properties
+      ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('thickness', $thickness));
   }
 
   @override
-  List<Object?> get props => [$container, $animation, $modifier, $variants];
+  List<Object?> get props => [
+    $container,
+    $thickness,
+    $animation,
+    $modifier,
+    $variants,
+  ];
 }

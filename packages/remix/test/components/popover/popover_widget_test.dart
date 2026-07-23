@@ -30,7 +30,7 @@ void main() {
       expect(
         find.ancestor(
           of: find.text('Popover content'),
-          matching: find.byType(Box),
+          matching: find.byKey(const ValueKey('remix-popover-surface')),
         ),
         findsOneWidget,
       );
@@ -241,13 +241,7 @@ void main() {
       await tester.tap(find.text('Open popover'));
       await tester.pumpAndSettle();
 
-      final box = tester.widget<Box>(
-        find.ancestor(
-          of: find.text('Raw styled content'),
-          matching: find.byType(Box),
-        ),
-      );
-      expect(box.styleSpec, same(rawContainer));
+      expect(tester.getSize(find.text('Raw styled content')).width, 240);
     });
 
     testWidgets('FortalPopover supplies the themed overlay style', (
@@ -267,7 +261,7 @@ void main() {
       expect(
         find.ancestor(
           of: find.text('Fortal content'),
-          matching: find.byType(Box),
+          matching: find.byKey(const ValueKey('remix-popover-surface')),
         ),
         findsOneWidget,
       );

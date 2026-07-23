@@ -427,12 +427,11 @@ packages:
   mix:
     dependency: "direct overridden"
     description:
-      path: "packages/mix"
-      ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
-      resolved-ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
-      url: "https://github.com/btwld/mix.git"
-    source: git
-    version: "2.1.0"
+      name: mix
+      sha256: "69c94d5b14686ff5add0f59d7d54b302453f7b342c76750d67caf76a0827e88e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0-beta.1"
   mix_annotations:
     dependency: transitive
     description:
@@ -445,16 +444,16 @@ packages:
     dependency: transitive
     description:
       name: mix_generator
-      sha256: "76d888e0845e7bb3bc6bee3d903bbb0611ec7f27b8b6c554deef62775b59654b"
+      sha256: afcd3ae90df234c0c17dd5ace163984e00f85e0c565d6c98de0083a5d2b2b4df
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0-beta.0"
+    version: "2.2.0-beta.1"
   mix_protocol:
     dependency: transitive
     description:
       path: "packages/mix_protocol"
-      ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
-      resolved-ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
+      ref: fb6aa7eccc0a4a21728ac61c662d96b94496dd55
+      resolved-ref: fb6aa7eccc0a4a21728ac61c662d96b94496dd55
       url: "https://github.com/btwld/mix.git"
     source: git
     version: "1.0.0"
@@ -470,10 +469,10 @@ packages:
     dependency: transitive
     description:
       name: naked_ui
-      sha256: f0add49dead1ddb1d1823b0f0d39d33b65959640b5dfc21c9de4f9e8db658494
+      sha256: f370bb858f21eb0f9b3b52bef51156a4d0f5baa57ff93d942e509a2ce4bbd2dd
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-beta.4"
+    version: "1.0.0-beta.7"
   nested:
     dependency: transitive
     description:

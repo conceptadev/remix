@@ -285,8 +285,10 @@ void main() {
 
       test('props list contains all properties', () {
         const style = RemixCardStyler.create();
-        expect(style.props, hasLength(4));
+        expect(style.props, hasLength(5));
         expect(style.props, contains(style.$container));
+        expect(style.props, contains(style.$containerEffects));
+        expect(style.props, contains(style.$containerEffects));
         expect(style.props, contains(style.$variants));
         expect(style.props, contains(style.$animation));
         expect(style.props, contains(style.$modifier));

@@ -22,7 +22,7 @@ class BadgeExample extends StatelessWidget {
         mainAxisAlignment: .center,
         spacing: 16,
         children: [
-          RemixBadge(label: '8', style: styleLabel),
+          RemixBadge(style: styleLabel, child: const Text('8')),
           RemixBadge(style: styleIcon, child: const Icon(Icons.camera_alt)),
         ],
       ),
@@ -34,10 +34,9 @@ class BadgeExample extends StatelessWidget {
         .size(24, 24)
         .wrap(.clipOval())
         .label(
-          TextStyler()
-              .fontSize(15)
-              .wrap(.align(alignment: .center))
-              .fontFeatures([const FontFeature.tabularFigures()]),
+          .fontSize(15).wrap(.align(alignment: .center)).fontFeatures([
+            const FontFeature.tabularFigures(),
+          ]),
         )
         .foregroundColor(Colors.greenAccent.shade700)
         .labelColor(Colors.white)
@@ -50,10 +49,9 @@ class BadgeExample extends StatelessWidget {
         .size(24, 24)
         .wrap(.clipOval())
         .label(
-          TextStyler()
-              .fontSize(15)
-              .wrap(.align(alignment: .center))
-              .fontFeatures([const FontFeature.tabularFigures()]),
+          .fontSize(15).wrap(.align(alignment: .center)).fontFeatures([
+            const FontFeature.tabularFigures(),
+          ]),
         )
         .foregroundColor(Colors.redAccent)
         .wrap(.iconTheme(color: Colors.white, size: 15));

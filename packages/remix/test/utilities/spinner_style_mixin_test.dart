@@ -4,125 +4,60 @@ import 'package:remix/remix.dart';
 
 void main() {
   group('ButtonStyler spinner nesting', () {
-    test('spinner indicator color can be set through nested shorthand', () {
-      const testColor = Colors.red;
-      final originalStyle = ButtonStyler();
-      final modifiedStyle = originalStyle.spinner(.indicatorColor(testColor));
-
-      final expectedSpinner = Prop.maybeMix(
-        RemixSpinnerStyler(indicatorColor: testColor),
+    test('sets each spinner field through nested shorthand', () {
+      final spinner = RemixSpinnerStyler(
+        color: Colors.red,
+        size: 28,
+        opacity: 0.5,
+        leafRadius: const Radius.circular(3),
+        duration: const Duration(milliseconds: 500),
       );
+      final original = ButtonStyler();
+      final modified = original.spinner(spinner);
 
-      expect(modifiedStyle, isNot(same(originalStyle)));
-      expect(modifiedStyle.$spinner, equals(expectedSpinner));
+      expect(modified, isNot(same(original)));
+      expect(modified.$spinner, Prop.maybeMix(spinner));
     });
 
-    test('spinner track color can be set through nested shorthand', () {
-      const testColor = Colors.blue;
-      final originalStyle = ButtonStyler();
-      final modifiedStyle = originalStyle.spinner(.trackColor(testColor));
-
-      final expectedSpinner = Prop.maybeMix(
-        RemixSpinnerStyler(trackColor: testColor),
-      );
-
-      expect(modifiedStyle, isNot(same(originalStyle)));
-      expect(modifiedStyle.$spinner, equals(expectedSpinner));
-    });
-
-    test('spinner size can be set through nested shorthand', () {
-      const testSize = 32.0;
-      final originalStyle = ButtonStyler();
-      final modifiedStyle = originalStyle.spinner(.size(testSize));
-
-      final expectedSpinner = Prop.maybeMix(RemixSpinnerStyler(size: testSize));
-
-      expect(modifiedStyle, isNot(same(originalStyle)));
-      expect(modifiedStyle.$spinner, equals(expectedSpinner));
-    });
-
-    test('spinner stroke width can be set through nested shorthand', () {
-      const testWidth = 3.0;
-      final originalStyle = ButtonStyler();
-      final modifiedStyle = originalStyle.spinner(.strokeWidth(testWidth));
-
-      final expectedSpinner = Prop.maybeMix(
-        RemixSpinnerStyler(strokeWidth: testWidth),
-      );
-
-      expect(modifiedStyle, isNot(same(originalStyle)));
-      expect(modifiedStyle.$spinner, equals(expectedSpinner));
-    });
-
-    test('spinner track stroke width can be set through nested shorthand', () {
-      const testWidth = 2.5;
-      final originalStyle = ButtonStyler();
-      final modifiedStyle = originalStyle.spinner(.trackStrokeWidth(testWidth));
-
-      final expectedSpinner = Prop.maybeMix(
-        RemixSpinnerStyler(trackStrokeWidth: testWidth),
-      );
-
-      expect(modifiedStyle, isNot(same(originalStyle)));
-      expect(modifiedStyle.$spinner, equals(expectedSpinner));
-    });
-
-    test('spinner duration can be set through nested shorthand', () {
-      const testDuration = Duration(milliseconds: 800);
-      final originalStyle = ButtonStyler();
-      final modifiedStyle = originalStyle.spinner(.duration(testDuration));
-
-      final expectedSpinner = Prop.maybeMix(
-        RemixSpinnerStyler(duration: testDuration),
-      );
-
-      expect(modifiedStyle, isNot(same(originalStyle)));
-      expect(modifiedStyle.$spinner, equals(expectedSpinner));
-    });
-
-    testWidgets('spinner styles can be chained together', (tester) async {
-      final originalStyle = ButtonStyler();
-      final chainedStyle = originalStyle
-          .spinner(.indicatorColor(Colors.blue))
-          .spinner(.trackColor(Colors.blue.withValues(alpha: 0.2)))
-          .spinner(.size(28.0))
-          .spinner(.strokeWidth(2.5))
+    testWidgets('successive nested styles merge field by field', (
+      tester,
+    ) async {
+      final style = ButtonStyler()
+          .spinner(.color(Colors.blue))
+          .spinner(.opacity(0.45))
+          .spinner(.size(28))
+          .spinner(.leafRadius(const Radius.circular(3)))
           .spinner(.duration(const Duration(milliseconds: 500)));
 
-      expect(chainedStyle, isNot(same(originalStyle)));
-
+      late RemixSpinnerSpec resolved;
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
             builder: (context) {
-              final spec = chainedStyle.resolve(context).spec.spinner.spec;
-
-              expect(spec.indicatorColor, equals(Colors.blue));
-              expect(
-                spec.trackColor,
-                equals(Colors.blue.withValues(alpha: 0.2)),
-              );
-              expect(spec.size, equals(28.0));
-              expect(spec.strokeWidth, equals(2.5));
-              expect(spec.duration, equals(const Duration(milliseconds: 500)));
-
-              return const SizedBox.shrink();
+              resolved = style.resolve(context).spec.spinner.spec;
+              return const SizedBox();
             },
           ),
         ),
       );
+
+      expect(resolved.color, Colors.blue);
+      expect(resolved.opacity, 0.45);
+      expect(resolved.size, 28);
+      expect(resolved.leafRadius, const Radius.circular(3));
+      expect(resolved.duration, const Duration(milliseconds: 500));
     });
 
-    test('spinner nesting can be chained with label and icon nesting', () {
-      final combinedStyle = ButtonStyler()
+    test('spinner nesting composes with label and icon nesting', () {
+      final style = ButtonStyler()
           .label(.color(Colors.white))
           .icon(.color(Colors.white))
-          .spinner(.indicatorColor(Colors.white))
+          .spinner(.color(Colors.white))
           .color(Colors.blue);
 
       expect(
-        combinedStyle.$spinner,
-        equals(Prop.maybeMix(RemixSpinnerStyler(indicatorColor: Colors.white))),
+        style.$spinner,
+        Prop.maybeMix(RemixSpinnerStyler(color: Colors.white)),
       );
     });
   });

@@ -1,21 +1,23 @@
 ---
 title: Menu
-description: A dropdown menu component for displaying a list of actions or options
+description: A compositional dropdown menu for actions, checkboxes, radio choices, groups, and submenus
 keywords: [flutter, remix, menu, dropdown, context-menu, popup, overlay]
 ---
 
-A dropdown menu component for displaying actions or options in an overlay.
+`RemixMenu` displays typed menu content in an overlay. Its trigger is any
+widget, and every action, controlled checkbox or radio item, group, label,
+separator, and recursively nested submenu implements `RemixMenuItemData<T>`.
 
 ## When to use this
 
-- **Action menus**: Show a list of available actions for a selected item
-- **Context menus**: Provide contextual options based on user selection
-- **Navigation**: Create dropdown navigation menus
-- **Settings**: Display configuration options in a compact dropdown
+- **Action menus**: Show actions for the current item or selection
+- **Context menus**: Present commands that depend on local context
+- **Settings**: Mix actions with controlled checkbox and radio preferences
+- **Nested navigation**: Organize related commands into submenus
 
 ## Basic implementation
 
-<CodeGroup title="Basic implementation" defaultLanguage="dart">
+<CodeGroup title="Compositional menu" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -28,103 +30,75 @@ class MenuExample extends StatefulWidget {
 }
 
 class _MenuExampleState extends State<MenuExample> {
-  final controller = MenuController();
+  final _controller = MenuController();
+  bool _showGrid = true;
+  String _density = 'comfortable';
 
   @override
   Widget build(BuildContext context) {
     return RemixMenu<String>(
-      trigger: const RemixMenuTrigger(label: 'Open Menu'),
+      controller: _controller,
+      trigger: Container(
+        constraints: const BoxConstraints(minHeight: 40),
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        alignment: Alignment.center,
+        child: const Text('Open menu'),
+      ),
       items: [
-        RemixMenuItem(
-          value: 'History',
-          leadingIcon: Icons.history,
-          label: 'History',
-          style: menuItemStyle,
+        const RemixMenuLabel(child: Text('View')),
+        const RemixMenuAction(
+          value: 'history',
+          leading: Icon(Icons.history),
+          child: Text('History'),
         ),
-        RemixMenuItem(
-          value: 'Settings',
-          leadingIcon: Icons.settings,
-          label: 'Settings',
-          style: menuItemStyle,
+        RemixMenuCheckboxItem(
+          value: 'show-grid',
+          checked: _showGrid,
+          onChanged: (checked) => setState(() => _showGrid = checked),
+          child: const Text('Show grid'),
         ),
-        const RemixMenuDivider(),
-        RemixMenuItem(
-          value: 'Logout',
-          leadingIcon: Icons.logout,
-          label: 'Logout',
-          style: menuItemStyle.onHovered(
-            RemixMenuItemStyler()
-                .color(Colors.redAccent.withValues(alpha: 0.05))
-                .label(TextStyler().color(Colors.redAccent))
-                .leadingIcon(IconStyler().color(Colors.redAccent)),
-          ),
+        const RemixMenuSeparator(),
+        RemixMenuRadioGroup<String>(
+          value: _density,
+          onChanged: (value) => setState(() => _density = value),
+          children: const [
+            RemixMenuRadioItem(
+              value: 'compact',
+              child: Text('Compact'),
+            ),
+            RemixMenuRadioItem(
+              value: 'comfortable',
+              child: Text('Comfortable'),
+            ),
+          ],
+        ),
+        const RemixMenuSubmenu<String>(
+          child: Text('More'),
+          items: [
+            RemixMenuAction(value: 'settings', child: Text('Settings')),
+          ],
         ),
       ],
       positioning: const OverlayPositionConfig(
-        offset: Offset(0, 8),
-        followerAnchor: Alignment.topCenter,
-        targetAnchor: Alignment.bottomCenter,
+        side: OverlaySide.bottom,
+        alignment: OverlayAlignment.start,
+        sideOffset: 8,
       ),
-      style: menuStyle,
-      onSelected: (value) {
-        debugPrint('Selected: $value');
-      },
-      controller: controller,
-    );
-  }
-
-  RemixMenuStyler get menuStyle {
-    return RemixMenuStyler()
-        .trigger(
-          RemixMenuTriggerStyler()
-              .padding(EdgeInsetsMix.symmetric(horizontal: 14))
-              .decoration(
-                BoxDecorationMix()
-                    .color(Colors.white)
-                    .borderRadius(BorderRadiusMix.all(const Radius.circular(12)))
-                    .border(BorderMix.all(BorderSideMix(color: Colors.blueGrey.shade100)))
-                    .boxShadow([
-                  BoxShadowMix(
-                    color: Colors.blueGrey.withValues(alpha: 0.1),
-                    blurRadius: 3,
-                    offset: const Offset(0, 3),
-                  ),
-                ]),
-              )
-              .constraints(BoxConstraintsMix(minHeight: 40))
-              .label(
-                TextStyler()
-                    .color(Colors.blueGrey.shade700)
-                    .fontWeight(FontWeight.w400),
-              ),
-        )
-        .overlay(
-          FlexBoxStyler(
-            padding: EdgeInsetsMix.all(12),
-            decoration: BoxDecorationMix(
-              color: Colors.white,
-              borderRadius: BorderRadiusMix.all(const Radius.circular(12)),
-              border: BorderMix.all(BorderSideMix(color: Colors.blueGrey.shade100)),
-              boxShadow: [
-                BoxShadowMix(
-                  color: Colors.blueGrey.withValues(alpha: 0.1),
-                  blurRadius: 3,
-                  offset: const Offset(0, 3),
+      onSelected: (value) => debugPrint('Selected: $value'),
+      style: RemixMenuStyler()
+          .overlay(
+            .padding(EdgeInsetsGeometryMix.all(8))
+                .color(Colors.white)
+                .borderRadiusAll(const Radius.circular(12)),
+          )
+          .item(
+            .spacing(8)
+                .borderRadiusAll(const Radius.circular(8))
+                .onHovered(
+                  .color(Colors.blueGrey.shade50),
                 ),
-              ],
-            ),
           ),
-        );
-  }
-
-  RemixMenuItemStyler get menuItemStyle {
-    return RemixMenuItemStyler()
-        .paddingAll(6)
-        .leadingIcon(IconStyler().size(20).color(Colors.blueGrey.shade800))
-        .spacing(8)
-        .borderRadiusAll(const Radius.circular(8))
-        .label(TextStyler().color(Colors.blueGrey.shade800))
-        .onHovered(RemixMenuItemStyler().color(Colors.blueGrey.shade50));
+    );
   }
 }
 ```
@@ -132,7 +106,8 @@ class _MenuExampleState extends State<MenuExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+`FortalMenu` applies the Radix-aligned content and item recipes while retaining
+the same compositional item API and arbitrary trigger.
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -142,32 +117,33 @@ import 'package:remix/remix.dart';
 class FortalMenuExample extends StatelessWidget {
   const FortalMenuExample({super.key});
 
+  static const _items = <RemixMenuItemData<String>>[
+    RemixMenuAction(
+      value: 'edit',
+      leading: Icon(Icons.edit),
+      child: Text('Edit'),
+    ),
+    RemixMenuAction(
+      value: 'delete',
+      leading: Icon(Icons.delete),
+      child: Text('Delete'),
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final items = <RemixMenuItemData<String>>[
-      RemixMenuItem(
-        value: 'edit',
-        label: 'Edit',
-        leadingIcon: Icons.edit,
-      ),
-      RemixMenuItem(
-        value: 'delete',
-        label: 'Delete',
-        leadingIcon: Icons.delete,
-      ),
-    ];
     return Row(
       spacing: 16,
       children: [
-        FortalMenu.solid(
-          trigger: const RemixMenuTrigger(label: 'Solid', icon: Icons.menu),
-          items: items,
-          onSelected: (value) => debugPrint(value),
+        FortalMenu<String>.solid(
+          trigger: const Text('Solid'),
+          items: _items,
+          onSelected: debugPrint,
         ),
-        FortalMenu.soft(
-          trigger: const RemixMenuTrigger(label: 'Soft', icon: Icons.menu),
-          items: items,
-          onSelected: (value) => debugPrint(value),
+        FortalMenu<String>.soft(
+          trigger: const Text('Soft'),
+          items: _items,
+          onSelected: debugPrint,
         ),
       ],
     );
@@ -177,15 +153,16 @@ class FortalMenuExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalMenuStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/menu/fortal_menu_styles.dart) for all available options.
+  See the [fortalMenuStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/menu/fortal_menu_styles.dart) for the exact Fortal recipes.
 </Info>
 
 ## Constructor
-<CodeGroup title="Constructor" defaultLanguage="dart">
+
+<CodeGroup title="RemixMenu constructor" defaultLanguage="dart">
 ```dart
-const RemixMenu({
+const RemixMenu<T>({
   Key? key,
-  required RemixMenuTrigger trigger,
+  required Widget trigger,
   required List<RemixMenuItemData<T>> items,
   MenuController? controller,
   ValueChanged<T>? onSelected,
@@ -198,316 +175,49 @@ const RemixMenu({
   bool useRootOverlay = false,
   bool closeOnClickOutside = true,
   FocusNode? triggerFocusNode,
-  OverlayPositionConfig positioning = const OverlayPositionConfig(),
+  OverlayPositionConfig positioning = const OverlayPositionConfig(
+    side: OverlaySide.bottom,
+    alignment: OverlayAlignment.start,
+    sideOffset: 4,
+    collisionPadding: EdgeInsets.all(10),
+  ),
+  OverlayPositionConfig submenuPositioning = const OverlayPositionConfig(
+    side: OverlaySide.right,
+    alignment: OverlayAlignment.start,
+    sideOffset: 1,
+    alignmentOffset: -8,
+    collisionPadding: EdgeInsets.all(10),
+  ),
+  String? semanticLabel,
+  bool excludeSemantics = false,
+  RemixMenuPartWrapper? contentWrapper,
   RemixMenuStyler style = const RemixMenuStyler.create(),
   RemixMenuSpec? styleSpec,
 })
 ```
 </CodeGroup>
 
-
-## Properties
-### Widget Properties
-
-#### `key` → `Key?`
-
-Optional. Controls how one widget replaces another widget in the tree.
-
-#### `trigger` → `RemixMenuTrigger`
-
-**Required**. The trigger data that defines the menu's button.
-
-#### `items` → `List<RemixMenuItemData<T>>`
-
-**Required**. The list of menu items and dividers. Use [RemixMenuItem] for selectable items and [RemixMenuDivider] for separators.
-
-#### `controller` → `MenuController?`
-
-Optional. Optional controller for programmatic control of the menu state. If not provided, an internal controller will be created automatically.
-
-#### `onSelected` → `ValueChanged<T>?`
-
-Optional. Called when an item is selected.
-
-#### `onOpen` → `VoidCallback?`
-
-Optional. Called when the menu opens.
-
-#### `onClose` → `VoidCallback?`
-
-Optional. Called when the menu closes.
-
-#### `onCanceled` → `VoidCallback?`
-
-Optional. Called when the menu closes without a selection.
-
-#### `onOpenRequested` → `RawMenuAnchorOpenRequestedCallback?`
-
-Optional. Open/close interceptors (for example, to drive animations).
-
-#### `onCloseRequested` → `RawMenuAnchorCloseRequestedCallback?`
-
-Optional. 
-
-#### `consumeOutsideTaps` → `bool`
-
-Optional. Whether outside taps on the trigger are consumed.
-
-#### `useRootOverlay` → `bool`
-
-Optional. Whether to target the root overlay instead of the nearest ancestor.
-
-#### `closeOnClickOutside` → `bool`
-
-Optional. Whether taps outside the overlay close the menu.
-
-#### `triggerFocusNode` → `FocusNode?`
-
-Optional. Optional focus node for the trigger.
-
-#### `positioning` → `OverlayPositionConfig`
-
-Optional. Overlay positioning configuration.
-
-#### `style` → `RemixMenuStyler`
-
-Optional. The style configuration for the menu.
-
-#### `styleSpec` → `RemixMenuSpec?`
-
-Optional. A raw resolved style spec that bypasses fluent style resolution.
-
-
-### Menu Style Methods
-
-#### `trigger(RemixMenuTriggerStyler value)`
-
-Configures the trigger button style.
-
-#### `overlay(FlexBoxStyler value)`
-
-Configures the menu overlay container style.
-
-#### `item(RemixMenuItemStyler value)`
-
-Configures the default menu item style.
-
-#### `divider(RemixDividerStyler value)`
-
-Configures divider style.
-
-#### `animate(AnimationConfig value)`
-
-Configures implicit animation for style transitions.
-
-#### `variants(List<VariantStyle<RemixMenuSpec>> value)`
-
-Sets style variants.
-
-#### `wrap(WidgetModifierConfig value)`
-
-Applies widget modifiers such as clipping, opacity, or scaling.
-
-#### `modifier(WidgetModifierConfig value)`
-
-Sets the widget modifier.
-
-#### `call<T>({ ... })`
-
-Creates a RemixMenu widget with this style applied.
-
-### Menu Trigger Style Methods
-
-#### `container(FlexBoxStyler value)`
-
-Configures the trigger container style.
-
-#### `label(TextStyler value)`
-
-Configures the trigger label style.
-
-#### `icon(IconStyler value)`
-
-Configures the trigger icon style.
-
-#### `animate(AnimationConfig value)`
-
-Configures implicit animation for trigger style transitions.
-
-#### `variants(List<VariantStyle<RemixMenuTriggerSpec>> value)`
-
-Sets trigger style variants.
-
-#### `wrap(WidgetModifierConfig value)`
-
-Applies widget modifiers such as clipping, opacity, or scaling.
-
-#### `modifier(WidgetModifierConfig value)`
-
-Sets the trigger widget modifier.
-
-#### `labelStyle(TextStyleMix value)`
-
-Sets label/text style using TextStyleMix directly
-
-#### `labelColor(Color value)`
-
-Sets label/text color
-
-#### `labelFontSize(double value)`
-
-Sets label/text font size
-
-#### `labelFontWeight(FontWeight value)`
-
-Sets label/text font weight
-
-#### `labelFontStyle(FontStyle value)`
-
-Sets label/text font style (italic/normal)
-
-#### `labelLetterSpacing(double value)`
-
-Sets label/text letter spacing
-
-#### `labelDecoration(TextDecoration value)`
-
-Sets label/text decoration (underline, strikethrough, etc.)
-
-#### `labelFontFamily(String value)`
-
-Sets label/text font family
-
-#### `labelHeight(double value)`
-
-Sets label/text line height
-
-#### `labelWordSpacing(double value)`
-
-Sets label/text word spacing
-
-#### `labelDecorationColor(Color value)`
-
-Sets label/text decoration color
-
-#### `iconColor(Color value)`
-
-Sets icon color
-
-#### `iconSize(double value)`
-
-Sets icon size
-
-#### `iconOpacity(double value)`
-
-Sets icon opacity
-
-#### `iconWeight(double value)`
-
-Sets icon weight (useful for variable icons like Material Symbols)
-
-#### `iconGrade(double value)`
-
-Sets icon grade (useful for Material Icons)
-
-#### `iconFill(double value)`
-
-Sets icon fill (useful for Material Icons filled variants)
-
-#### `iconOpticalSize(double value)`
-
-Sets icon optical size (useful for Material Icons)
-
-#### `iconBlendMode(BlendMode value)`
-
-Sets icon blend mode
-
-#### `iconTextDirection(TextDirection value)`
-
-Sets icon text direction
-
-#### `iconShadows(List<ShadowMix> value)`
-
-Sets icon shadows
-
-#### `iconShadow(ShadowMix value)`
-
-Sets single icon shadow
-
-### Menu Item Style Methods
-
-#### `container(FlexBoxStyler value)`
-
-Configures the item container style.
-
-#### `label(TextStyler value)`
-
-Configures the label text style using a TextStyler.
-
-#### `leadingIcon(IconStyler value)`
-
-Configures the leading icon style.
-
-#### `trailingIcon(IconStyler value)`
-
-Configures the trailing icon style.
-
-#### `alignment(Alignment value)`
-
-Sets container alignment
-
-#### `padding(EdgeInsetsGeometryMix value)`
-
-Sets the container padding.
-
-#### `color(Color value)`
-
-Sets background color.
-
-#### `size(double width, double height)`
-
-Sets the component size.
-
-#### `borderRadius(BorderRadiusGeometryMix radius)`
-
-Sets the border radius.
-
-#### `constraints(BoxConstraintsMix value)`
-
-Sets size constraints on the component.
-
-#### `decoration(DecorationMix value)`
-
-Sets the container decoration.
-
-#### `margin(EdgeInsetsGeometryMix value)`
-
-Sets the container margin.
-
-#### `foregroundDecoration(DecorationMix value)`
-
-Sets a foreground decoration painted on top of the component.
-
-#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
-
-Applies a matrix transformation to the component.
-
-#### `flex(FlexStyler value)`
-
-Configures the flex layout properties.
-
-#### `animate(AnimationConfig value)`
-
-Configures implicit animation for style transitions.
-
-#### `variants(List<VariantStyle<RemixMenuItemSpec>> value)`
-
-Sets item style variants.
-
-#### `wrap(WidgetModifierConfig value)`
-
-Applies widget modifiers such as clipping, opacity, or scaling.
-
-#### `modifier(WidgetModifierConfig value)`
-
-Sets the item widget modifier.
+## Item types
+
+Every item type below implements `RemixMenuItemData<T>`, preserving the
+original typed collection while supporting compositional content.
+
+- `RemixMenuAction<T>` activates a typed value and accepts arbitrary `child`,
+  `leading`, and `trailing` widgets.
+- `RemixMenuCheckboxItem<T>` is controlled with `checked` and `onChanged`.
+- `RemixMenuRadioGroup<T>` controls typed `RemixMenuRadioItem<T>` children.
+- `RemixMenuGroup`, `RemixMenuLabel`, and `RemixMenuSeparator` add structure and
+  accessibility boundaries.
+- `RemixMenuSubmenu<T>` accepts its own compositional `items` and may be
+  nested recursively.
+
+Items close on activation by default. Set an item's `closeOnActivate` to false
+when interaction should keep the menu open. Disabled items remain discoverable
+but cannot activate.
+
+## Styling
+
+`RemixMenuStyler` owns `overlay`, `containerEffects`, default `item`, `label`,
+and `divider` slots. Each item's `style` merges after the menu defaults. The
+`trigger` slot applies to `RemixMenuTrigger`; style arbitrary trigger widgets
+independently.

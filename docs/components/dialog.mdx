@@ -26,7 +26,6 @@ class DialogExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FortalButton(
-      label: 'Open dialog',
       onPressed: () {
         showRemixDialog(
           context: context,
@@ -37,18 +36,19 @@ class DialogExample extends StatelessWidget {
                   'This application will no longer be accessible.',
               actions: [
                 FortalButton.ghost(
-                  label: 'Cancel',
                   onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
                 ),
                 FortalButton(
-                  label: 'Revoke access',
                   onPressed: () => Navigator.pop(context),
+                  child: const Text('Revoke access'),
                 ),
               ],
             ),
           ),
         );
       },
+      child: const Text('Open dialog'),
     );
   }
 }
@@ -65,32 +65,35 @@ configuration is needed.
 
 <CodeGroup title="Destructive alert" defaultLanguage="dart">
 ```dart
-showRemixAlertDialog<void>(
-  context: context,
-  semanticLabel: 'Delete project confirmation',
-  builder: (context) => Center(
-    child: FortalDialog(
-      title: 'Delete project?',
-      description: 'This permanently deletes the project and all of its data.',
-      actions: [
-        FortalButton.ghost(
-          label: 'Cancel',
-          onPressed: () => Navigator.pop(context),
-        ),
-        FortalButton(
-          label: 'Delete project',
-          onPressed: () => Navigator.pop(context),
-        ),
-      ],
+Future<void> showDeleteProjectDialog(BuildContext context) async {
+  await showRemixAlertDialog<void>(
+    context: context,
+    semanticLabel: 'Delete project confirmation',
+    builder: (context) => Center(
+      child: FortalDialog(
+        title: 'Delete project?',
+        description:
+            'This permanently deletes the project and all of its data.',
+        actions: [
+          FortalButton.ghost(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FortalButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Delete project'),
+          ),
+        ],
+      ),
     ),
-  ),
-);
+  );
+}
 ```
 </CodeGroup>
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
@@ -107,12 +110,12 @@ class FortalDialogExample extends StatelessWidget {
       description: 'Save these settings before leaving?',
       actions: [
         FortalButton.ghost(
-          label: 'Cancel',
           onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
         ),
         FortalButton(
-          label: 'Save',
           onPressed: () => Navigator.pop(context),
+          child: const Text('Save'),
         ),
       ],
     );
@@ -184,6 +187,14 @@ const RemixDialog({
   List<Widget>? actions,
   bool modal = true,
   String? semanticLabel,
+  RemixDialogAlignment alignment = RemixDialogAlignment.center,
+  double? width,
+  double? minWidth,
+  double? maxWidth,
+  double? height,
+  double? minHeight,
+  double? maxHeight,
+  EdgeInsetsGeometry insetPadding = EdgeInsets.zero,
   RemixDialogStyler style = const RemixDialogStyler.create(),
   RemixDialogSpec? styleSpec,
 })
@@ -211,11 +222,31 @@ Optional. Action widgets rendered in the dialog actions row.
 
 #### `modal` -> `bool`
 
-Optional. Whether the dialog blocks interaction with background content.
+Optional. Whether the dialog establishes modal accessibility route semantics.
+When `true`, it scopes and names the semantics route and blocks earlier
+semantics nodes. This value does not change pointer behavior: a dialog shown
+with `showRemixDialog` is always a Flutter modal Navigator route, so its route
+barrier blocks background pointer input for either value.
 
 #### `semanticLabel` → `String?`
 
 Optional. Accessibility label for the dialog. Defaults to the title when omitted.
+
+#### `alignment` → `RemixDialogAlignment`
+
+Optional. Positions the dialog at the start or center of the available viewport.
+
+#### `width`, `minWidth`, `maxWidth` → `double?`
+
+Optional. Preferred and clamped horizontal dimensions.
+
+#### `height`, `minHeight`, `maxHeight` → `double?`
+
+Optional. Preferred and clamped vertical dimensions.
+
+#### `insetPadding` → `EdgeInsetsGeometry`
+
+Optional. Empty space between the scrollable viewport and dialog surface.
 
 #### `style` → `RemixDialogStyler`
 
@@ -263,6 +294,6 @@ Sets dialog container shadow.
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
-#### `call({Key? key, Widget? child, String? title, String? description, List<Widget>? actions, bool modal = true, String? semanticLabel})`
+#### `call({Key? key, Widget? child, String? title, String? description, List<Widget>? actions, bool modal = true, String? semanticLabel, RemixDialogAlignment alignment = RemixDialogAlignment.center, ...})`
 
 Creates a `RemixDialog` widget with this style applied.

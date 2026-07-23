@@ -93,15 +93,13 @@ Always use `createRemixPreview()` helper to ensure:
 ### Preview Helper Function
 ```dart
 Widget createRemixPreview(Widget child) {
-  return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: Builder(
-      builder: (context) => FortalScope(
-        brightness: Theme.of(context).brightness,
-        child: Scaffold(
-          backgroundColor: MixColors.grey[50],
-          body: Center(child: child),
-        ),
+  return FortalScope(
+    appearance: .light,
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: MixColors.grey[50],
+        body: Center(child: child),
       ),
     ),
   );
@@ -110,7 +108,7 @@ Widget createRemixPreview(Widget child) {
 
 ### Key Features
 - **Remix Tokens**: Full access to design system tokens
-- **Theme Support**: Automatic light/dark theme handling  
+- **Theme Support**: Explicit light and dark preview helpers
 - **Hot Reload**: Changes reflect immediately
 - **No Interaction**: Uses empty callbacks for preview safety
 - **Consistent Styling**: All previews use same wrapper

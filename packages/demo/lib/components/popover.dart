@@ -20,8 +20,9 @@ Widget buildPopoverUseCase(BuildContext context) {
           consumeOutsideTaps: consumeOutsideTaps,
           semanticLabel: 'Show collaboration details',
           positioning: const OverlayPositionConfig(
-            targetAnchor: .bottomCenter,
-            followerAnchor: .topCenter,
+            side: .bottom,
+            alignment: .center,
+            sideOffset: 8,
           ),
           popoverChild: SizedBox(
             width: 280,
@@ -42,9 +43,12 @@ Widget buildPopoverUseCase(BuildContext context) {
                   style: TextStyler().fontSize(14).color(FortalTokens.gray11()),
                 ),
                 FortalButton.soft(
-                  label: 'Copy invite link',
-                  leadingIcon: Icons.link,
                   onPressed: () {},
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 8,
+                    children: [Icon(Icons.link), Text('Copy invite link')],
+                  ),
                 ),
               ],
             ),

@@ -1,9 +1,6 @@
 part of 'menu.dart';
 
-/// Style configuration for [RemixMenu] trigger content.
-///
-/// Naked menu behavior wraps the trigger in a button; this style only controls
-/// the visible trigger content.
+/// Style configuration for [RemixMenuTrigger] content.
 extension RemixMenuTriggerStylerRemixHelpers on RemixMenuTriggerStyler {
   RemixMenuTriggerStyler flex(FlexStyler value) {
     return merge(
@@ -19,16 +16,15 @@ extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
   /// Example:
   /// ```dart
   /// RemixMenuStyler()
-  ///   .trigger(...)
-  ///   .overlay(...)
+  ///   .containerEffects(RemixBoxEffectsMix(overContent: ...))
   ///   .call<String>(
-  ///     trigger: RemixMenuTrigger(label: 'Options'),
+  ///     trigger: const Text('Options'),
   ///     items: [...],
   ///   )
   /// ```
   RemixMenu<T> call<T>({
     Key? key,
-    required RemixMenuTrigger trigger,
+    required Widget trigger,
     required List<RemixMenuItemData<T>> items,
     MenuController? controller,
     ValueChanged<T>? onSelected,
@@ -41,9 +37,18 @@ extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
     bool useRootOverlay = false,
     bool closeOnClickOutside = true,
     FocusNode? triggerFocusNode,
-    OverlayPositionConfig positioning = const OverlayPositionConfig(),
+    OverlayPositionConfig positioning = const OverlayPositionConfig(
+      side: OverlaySide.bottom,
+      alignment: OverlayAlignment.start,
+      sideOffset: 4,
+      collisionPadding: EdgeInsets.all(10),
+    ),
+    OverlayPositionConfig? submenuPositioning,
+    String? semanticLabel,
+    bool excludeSemantics = false,
+    RemixMenuPartWrapper? contentWrapper,
   }) {
-    return RemixMenu(
+    return RemixMenu<T>(
       key: key,
       trigger: trigger,
       items: items,
@@ -59,6 +64,10 @@ extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
       closeOnClickOutside: closeOnClickOutside,
       triggerFocusNode: triggerFocusNode,
       positioning: positioning,
+      submenuPositioning: submenuPositioning,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+      contentWrapper: contentWrapper,
       style: this,
     );
   }

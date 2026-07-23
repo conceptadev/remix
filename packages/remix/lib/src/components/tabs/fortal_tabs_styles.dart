@@ -1,30 +1,58 @@
 part of 'tabs.dart';
 
+/// Fortal tab-list size presets matching Radix Themes 3.3.0.
+enum FortalTabsSize { size1, size2 }
+
 /// Fortal-themed preset for [RemixTabBar].
+///
+/// The tab-list bottom border is a single hairline at every Radix size, so this
+/// preset takes no `size` — unlike [fortalTabStyler], whose per-tab metrics vary.
 RemixTabBarStyler fortalTabBarStyler() {
-  return RemixTabBarStyler().container(
-    FlexBoxStyler()
-        .direction(.horizontal)
-        .spacing(FortalTokens.space1())
-        .mainAxisSize(.min),
+  return RemixTabBarStyler().borderBottom(
+    color: FortalTokens.grayA5(),
+    width: FortalTokens.borderWidth1(),
   );
 }
 
 /// Fortal-themed preset for [RemixTabView].
-RemixTabViewStyler fortalTabViewStyler() {
-  return RemixTabViewStyler().paddingAll(FortalTokens.space3());
-}
+RemixTabViewStyler fortalTabViewStyler() => RemixTabViewStyler();
 
 /// Fortal-themed preset for [RemixTab].
-RemixTabStyler fortalTabStyler() {
+RemixTabStyler fortalTabStyler({
+  FortalTabsSize size = FortalTabsSize.size2,
+  bool highContrast = false,
+}) {
+  final metrics = switch (size) {
+    FortalTabsSize.size1 => (
+      height: FortalTokens.space6(),
+      outerPaddingX: FortalTokens.space1(),
+      innerPaddingX: FortalTokens.space1(),
+      innerPaddingY: FortalTokens.tabInnerPaddingY1(),
+      radius: FortalTokens.radius1(),
+      text: FortalTokens.text1.mix(),
+      activeLetterSpacing: FortalTokens.tabActiveLetterSpacing1(),
+    ),
+    FortalTabsSize.size2 => (
+      height: FortalTokens.space7(),
+      outerPaddingX: FortalTokens.space2(),
+      innerPaddingX: FortalTokens.space2(),
+      innerPaddingY: FortalTokens.space1(),
+      radius: FortalTokens.radius2(),
+      text: FortalTokens.text2.mix(),
+      activeLetterSpacing: FortalTokens.tabActiveLetterSpacing2(),
+    ),
+  };
+
   return RemixTabStyler()
-      .label(TextStyler().color(FortalTokens.gray12()))
-      .icon(IconStyler(color: FortalTokens.gray12(), size: 16.0))
+      .label(
+        .style(metrics.text).letterSpacing(0.0).color(FortalTokens.grayA11()),
+      )
+      .icon(.color(FortalTokens.grayA11()).size(FortalTokens.space4()))
       .wrap(
         .box(
           BoxStyler()
-              .height(40)
-              .paddingX(4)
+              .height(metrics.height)
+              .paddingX(metrics.outerPaddingX)
               .alignment(.center)
               .borderBottom(
                 color: Colors.transparent,
@@ -33,52 +61,136 @@ RemixTabStyler fortalTabStyler() {
         ),
       )
       .container(
-        FlexBoxStyler()
-            .direction(.horizontal)
-            .borderRadiusAll(FortalTokens.radius2())
+        .direction(.horizontal)
+            .paddingX(metrics.innerPaddingX)
+            .paddingY(metrics.innerPaddingY)
+            .borderRadiusAll(metrics.radius)
             .mainAxisAlignment(.center)
             .crossAxisAlignment(.center)
-            .spacing(8.0),
+            .spacing(FortalTokens.space2()),
       )
-      .onHovered(RemixTabStyler().color(FortalTokens.gray3()))
-      .onSelected(
+      .onHovered(
+        .label(
+          .color(FortalTokens.gray12()),
+        ).icon(.color(FortalTokens.gray12())).color(FortalTokens.grayA3()),
+      )
+      .onFocused(
         RemixTabStyler()
-            .label(TextStyler().fontWeight(FortalTokens.fontWeightMedium()))
-            .wrap(
-              .box(BoxStyler().borderBottom(color: FortalTokens.accent9())),
-            ),
+            .borderAll(
+              color: FortalTokens.focus8(),
+              width: FortalTokens.focusRingWidth(),
+            )
+            .onHovered(.color(FortalTokens.accentA3())),
       )
-      .padding(EdgeInsetsMix.symmetric(vertical: 6.0, horizontal: 12.0));
+      .onSelected(
+        .label(
+              .color(FortalTokens.gray12())
+                  .fontWeight(FortalTokens.fontWeightMedium())
+                  .letterSpacing(metrics.activeLetterSpacing),
+            )
+            .icon(.color(FortalTokens.gray12()))
+            .wrap(
+              .box(
+                BoxStyler().borderBottom(
+                  color: highContrast
+                      ? FortalTokens.accent12()
+                      : FortalTokens.accentIndicator(),
+                  width: FortalTokens.borderWidth2(),
+                ),
+              ),
+            ),
+      );
+}
+
+class _FortalTabListScope extends InheritedWidget {
+  const _FortalTabListScope({
+    required this.size,
+    required this.highContrast,
+    required super.child,
+  });
+
+  final FortalTabsSize size;
+  final bool highContrast;
+
+  static _FortalTabListScope? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_FortalTabListScope>();
+
+  @override
+  bool updateShouldNotify(_FortalTabListScope oldWidget) =>
+      size != oldWidget.size || highContrast != oldWidget.highContrast;
 }
 
 /// Fortal-themed preset for [RemixTabBar].
 class FortalTabBar extends StatelessWidget {
-  const FortalTabBar({super.key, required this.child});
+  const FortalTabBar({
+    super.key,
+    this.size = FortalTabsSize.size2,
+    this.wrap = RemixTabBarWrap.nowrap,
+    this.justify = RemixTabBarJustify.start,
+    this.color,
+    this.highContrast = false,
+    Widget? child,
+    this.children,
+  }) : _child = child,
+       assert(
+         (child == null) != (children == null),
+         'Provide exactly one of child or children.',
+       );
 
-  final Widget child;
+  final FortalTabsSize size;
+  final RemixTabBarWrap wrap;
+  final RemixTabBarJustify justify;
+  final FortalAccentColor? color;
+  final bool highContrast;
+  final Widget? _child;
+
+  /// Established arbitrary tab-bar content.
+  ///
+  /// Structured tab bars expose their entries through [children].
+  Widget get child => _child!;
+  final List<Widget>? children;
 
   @override
   Widget build(BuildContext context) {
-    return fortalTabBarStyler().call(key: this.key, child: this.child);
+    final tabBar = fortalTabBarStyler().call(
+      key: key,
+      wrap: wrap,
+      justify: justify,
+      child: _child,
+      children: children,
+    );
+
+    return FortalComponentOverride(
+      color: color,
+      child: _FortalTabListScope(
+        size: size,
+        highContrast: highContrast,
+        child: tabBar,
+      ),
+    );
   }
 }
 
 /// Fortal-themed preset for [RemixTabView].
 class FortalTabView extends StatelessWidget {
-  const FortalTabView({super.key, required this.tabId, required this.child});
+  const FortalTabView({
+    super.key,
+    required this.tabId,
+    required this.child,
+    this.maintainState = true,
+  });
 
   final String tabId;
-
   final Widget child;
+  final bool maintainState;
 
   @override
-  Widget build(BuildContext context) {
-    return fortalTabViewStyler().call(
-      key: this.key,
-      tabId: this.tabId,
-      child: this.child,
-    );
-  }
+  Widget build(BuildContext context) => fortalTabViewStyler().call(
+    key: key,
+    tabId: tabId,
+    maintainState: maintainState,
+    child: child,
+  );
 }
 
 /// Fortal-themed preset for [RemixTab].
@@ -99,54 +211,48 @@ class FortalTab extends StatelessWidget {
     this.onPressChange,
     this.builder,
     this.semanticLabel,
+    this.excludeSemantics = false,
   });
 
   final String tabId;
-
   final Widget? child;
-
   final String? label;
-
   final IconData? icon;
-
   final bool enabled;
-
   final MouseCursor mouseCursor;
-
   final bool enableFeedback;
-
   final FocusNode? focusNode;
-
   final bool autofocus;
-
   final ValueChanged<bool>? onFocusChange;
-
   final ValueChanged<bool>? onHoverChange;
-
   final ValueChanged<bool>? onPressChange;
-
   final ValueWidgetBuilder<NakedTabState>? builder;
-
   final String? semanticLabel;
+  final bool excludeSemantics;
 
   @override
   Widget build(BuildContext context) {
-    return fortalTabStyler().call(
-      key: this.key,
-      tabId: this.tabId,
-      label: this.label,
-      icon: this.icon,
-      enabled: this.enabled,
-      mouseCursor: this.mouseCursor,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      onFocusChange: this.onFocusChange,
-      onHoverChange: this.onHoverChange,
-      onPressChange: this.onPressChange,
-      semanticLabel: this.semanticLabel,
-      child: this.child,
-      builder: this.builder,
+    final list = _FortalTabListScope.maybeOf(context);
+    return fortalTabStyler(
+      size: list?.size ?? FortalTabsSize.size2,
+      highContrast: list?.highContrast ?? false,
+    ).call(
+      key: key,
+      tabId: tabId,
+      label: label,
+      icon: icon,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      onFocusChange: onFocusChange,
+      onHoverChange: onHoverChange,
+      onPressChange: onPressChange,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+      child: child,
+      builder: builder,
     );
   }
 }

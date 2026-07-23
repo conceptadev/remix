@@ -32,13 +32,13 @@ class ButtonExample extends StatelessWidget {
         children: [
           RemixButton(
             onPressed: () {},
-            label: 'Turn Off',
             style: destructiveStyle,
+            child: const Text('Turn Off'),
           ),
           RemixButton(
             onPressed: () {},
-            label: 'Turn on',
             style: successStyle,
+            child: const Text('Turn on'),
           ),
         ],
       ),
@@ -54,7 +54,7 @@ class ButtonExample extends StatelessWidget {
           BoxShadowMix().color(Colors.redAccent).blurRadius(10).spreadRadius(0),
         )
         .label(
-          TextStyler().uppercase().color(Colors.redAccent),
+          .uppercase().color(Colors.redAccent),
         )
         .shapeBeveledRectangle(
           borderRadius: BorderRadiusMix()
@@ -78,7 +78,7 @@ class ButtonExample extends StatelessWidget {
   ButtonStyler get successStyle {
     return destructiveStyle
         .backgroundColor(const Color.fromARGB(255, 15, 61, 15))
-        .label(TextStyler().uppercase().color(Colors.greenAccent))
+        .label(.uppercase().color(Colors.greenAccent))
         .shapeBeveledRectangle(
           side: BorderSideMix().color(Colors.greenAccent),
         )
@@ -101,7 +101,7 @@ class ButtonExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -118,28 +118,28 @@ class FortalButtonExample extends StatelessWidget {
       children: [
         // Solid variant - High emphasis, primary actions
         FortalButton.solid(
-          label: 'Solid Button',
           onPressed: () {},
+          child: const Text('Solid Button'),
         ),
         // Soft variant - Medium emphasis, secondary actions
         FortalButton.soft(
-          label: 'Soft Button',
           onPressed: () {},
+          child: const Text('Soft Button'),
         ),
         // Surface variant - Subtle emphasis with border
         FortalButton.surface(
-          label: 'Surface Button',
           onPressed: () {},
+          child: const Text('Surface Button'),
         ),
         // Outline variant - Low emphasis, tertiary actions
         FortalButton.outline(
-          label: 'Outline Button',
           onPressed: () {},
+          child: const Text('Outline Button'),
         ),
         // Ghost variant - Minimal styling, inline actions
         FortalButton.ghost(
-          label: 'Ghost Button',
           onPressed: () {},
+          child: const Text('Ghost Button'),
         ),
       ],
     );
@@ -157,7 +157,8 @@ class FortalButtonExample extends StatelessWidget {
 ```dart
 const RemixButton({
   Key? key,
-  required String label,
+  Widget? child,
+  String? label,
   IconData? leadingIcon,
   IconData? trailingIcon,
   RemixButtonTextBuilder? textBuilder,
@@ -197,29 +198,15 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `label` → `String`
+#### `child` → `Widget?`
 
-**Required**. The label text to display in the button. If [textBuilder] is provided, this is ignored.
+Optional arbitrary button content. Descendant text and icons inherit the
+resolved label and icon styles. Provide either `child` or `label`.
 
-#### `leadingIcon` → `IconData?`
+#### `label`, `leadingIcon`, `trailingIcon`
 
-Optional. The leading icon to display before the label. If [leadingIconBuilder] is provided, this is ignored.
-
-#### `trailingIcon` → `IconData?`
-
-Optional. The trailing icon to display after the label. If [trailingIconBuilder] is provided, this is ignored.
-
-#### `textBuilder` → `RemixButtonTextBuilder?`
-
-Optional. Builder for customizing the text rendering.
-
-#### `leadingIconBuilder` → `RemixButtonIconBuilder?`
-
-Optional. Builder for customizing the leading icon rendering.
-
-#### `trailingIconBuilder` → `RemixButtonIconBuilder?`
-
-Optional. Builder for customizing the trailing icon rendering.
+The established text-and-icon composition. The corresponding builder fields
+can replace how each resolved part is rendered.
 
 #### `loadingBuilder` → `RemixButtonLoadingBuilder?`
 

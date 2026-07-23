@@ -11,6 +11,7 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
   StyleSpec<RemixSpinnerSpec> get spinner;
+  RemixBoxEffectsSpec? get containerEffects;
   IconAlignment? get iconAlignment;
 
   @override
@@ -22,6 +23,7 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
     StyleSpec<RemixSpinnerSpec>? spinner,
+    RemixBoxEffectsSpec? containerEffects,
     IconAlignment? iconAlignment,
   }) {
     return ButtonSpec(
@@ -29,6 +31,7 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
       label: label ?? this.label,
       icon: icon ?? this.icon,
       spinner: spinner ?? this.spinner,
+      containerEffects: containerEffects ?? this.containerEffects,
       iconAlignment: iconAlignment ?? this.iconAlignment,
     );
   }
@@ -40,12 +43,24 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
       label: label.lerp(other?.label, t),
       icon: icon.lerp(other?.icon, t),
       spinner: spinner.lerp(other?.spinner, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
       iconAlignment: MixOps.lerpSnap(iconAlignment, other?.iconAlignment, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, label, icon, spinner, iconAlignment];
+  List<Object?> get props => [
+    container,
+    label,
+    icon,
+    spinner,
+    containerEffects,
+    iconAlignment,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -91,6 +106,7 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('icon', icon))
       ..add(DiagnosticsProperty('spinner', spinner))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('iconAlignment', iconAlignment));
   }
 }
@@ -114,6 +130,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<IconAlignment>? $iconAlignment;
 
   const ButtonStyler.create({
@@ -121,6 +138,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
     Prop<StyleSpec<RemixSpinnerSpec>>? spinner,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<IconAlignment>? iconAlignment,
     super.variants,
     super.modifier,
@@ -129,6 +147,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
        $label = label,
        $icon = icon,
        $spinner = spinner,
+       $containerEffects = containerEffects,
        $iconAlignment = iconAlignment;
 
   ButtonStyler({
@@ -136,6 +155,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     TextStyler? label,
     IconStyler? icon,
     RemixSpinnerStyler? spinner,
+    RemixBoxEffectsMix? containerEffects,
     IconAlignment? iconAlignment,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -145,6 +165,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
          label: Prop.maybeMix(label),
          icon: Prop.maybeMix(icon),
          spinner: Prop.maybeMix(spinner),
+         containerEffects: Prop.maybeMix(containerEffects),
          iconAlignment: Prop.maybe(iconAlignment),
          variants: variants,
          modifier: modifier,
@@ -157,6 +178,8 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
   factory ButtonStyler.icon(IconStyler value) => ButtonStyler().icon(value);
   factory ButtonStyler.spinner(RemixSpinnerStyler value) =>
       ButtonStyler().spinner(value);
+  factory ButtonStyler.containerEffects(RemixBoxEffectsMix value) =>
+      ButtonStyler().containerEffects(value);
   factory ButtonStyler.iconAlignment(IconAlignment value) =>
       ButtonStyler().iconAlignment(value);
   factory ButtonStyler.color(Color value) => ButtonStyler().color(value);
@@ -703,6 +726,11 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     return merge(ButtonStyler(spinner: value));
   }
 
+  /// Sets the containerEffects.
+  ButtonStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(ButtonStyler(containerEffects: value));
+  }
+
   /// Sets the iconAlignment.
   ButtonStyler iconAlignment(IconAlignment value) {
     return merge(ButtonStyler(iconAlignment: value));
@@ -739,6 +767,10 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),
       spinner: MixOps.merge($spinner, other?.$spinner),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       iconAlignment: MixOps.merge($iconAlignment, other?.$iconAlignment),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
@@ -754,6 +786,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
       label: MixOps.resolve(context, $label),
       icon: MixOps.resolve(context, $icon),
       spinner: MixOps.resolve(context, $spinner),
+      containerEffects: MixOps.resolve(context, $containerEffects),
       iconAlignment: MixOps.resolve(context, $iconAlignment),
     );
 
@@ -772,6 +805,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('icon', $icon))
       ..add(DiagnosticsProperty('spinner', $spinner))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('iconAlignment', $iconAlignment));
   }
 
@@ -781,6 +815,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     $label,
     $icon,
     $spinner,
+    $containerEffects,
     $iconAlignment,
     $animation,
     $modifier,

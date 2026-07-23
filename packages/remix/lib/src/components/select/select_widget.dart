@@ -1,7 +1,15 @@
 part of 'select.dart';
 
+/// Wraps one visual part of a select without replacing its behavior.
+typedef RemixSelectPartWrapper =
+    Widget Function(BuildContext context, Widget child);
+
+/// Builds a Select glyph while preserving the resolved icon style slot.
+typedef RemixSelectIconBuilder =
+    Widget Function(BuildContext context, StyleSpec<IconSpec> styleSpec);
+
 // ============================================================================
-// DATA CLASSES - Trigger and Select Item
+// DATA CLASSES - Trigger and Select Items
 // ============================================================================
 
 /// Data class representing a select trigger.
@@ -19,10 +27,13 @@ class RemixSelectTrigger {
   const RemixSelectTrigger({required this.placeholder, this.icon});
 }
 
-/// Data class representing a selectable option.
-///
-/// Used with [RemixSelect]'s items list to define selectable options.
-class RemixSelectItem<T> {
+/// A structural item rendered in a [RemixSelect] content popup.
+sealed class RemixSelectItemData<T> {
+  const RemixSelectItemData();
+}
+
+/// A selectable option.
+class RemixSelectItem<T> extends RemixSelectItemData<T> {
   /// The value associated with this option.
   /// Passed to onChanged callback when selected.
   final T value;
@@ -45,7 +56,73 @@ class RemixSelectItem<T> {
     this.enabled = true,
     this.style = const RemixSelectMenuItemStyler.create(),
     this.semanticLabel,
-  });
+  }) : super();
+}
+
+/// A semantic and visual group of select items.
+class RemixSelectGroup<T> extends RemixSelectItemData<T> {
+  const RemixSelectGroup({required this.items, this.semanticLabel}) : super();
+
+  /// Items contained by this group.
+  final List<RemixSelectItemData<T>> items;
+
+  /// Optional accessible name for the group boundary.
+  final String? semanticLabel;
+}
+
+/// A non-selectable label inside select content.
+class RemixSelectLabel<T> extends RemixSelectItemData<T> {
+  const RemixSelectLabel({
+    required this.label,
+    this.semanticLabel,
+    this.style = const RemixSelectLabelStyler.create(),
+  }) : super();
+
+  /// Visible label text.
+  final String label;
+
+  /// Optional accessible name overriding [label].
+  final String? semanticLabel;
+
+  /// Per-label visual style merged after the select's default label style.
+  final RemixSelectLabelStyler style;
+}
+
+/// A decorative separator inside select content.
+class RemixSelectSeparator<T> extends RemixSelectItemData<T> {
+  const RemixSelectSeparator({this.style = const BoxStyler.create()}) : super();
+
+  /// Per-separator visual style merged after the select default.
+  final BoxStyler style;
+}
+
+List<RemixSelectItem<T>> _flattenSelectItems<T>(
+  List<RemixSelectItemData<T>> entries,
+) {
+  final items = <RemixSelectItem<T>>[];
+
+  void visit(List<RemixSelectItemData<T>> currentEntries) {
+    for (final entry in currentEntries) {
+      switch (entry) {
+        case RemixSelectItem<T>():
+          items.add(entry);
+        case RemixSelectGroup<T>():
+          visit(entry.items);
+        case RemixSelectLabel<T>() || RemixSelectSeparator<T>():
+          break;
+      }
+    }
+  }
+
+  visit(entries);
+  return items;
+}
+
+List<RemixSelectItem<T>> _selectItemsView<T>(
+  List<RemixSelectItemData<T>> items,
+) {
+  if (items is List<RemixSelectItem<T>>) return items;
+  return _flattenSelectItems(items);
 }
 
 // ============================================================================
@@ -54,7 +131,7 @@ class RemixSelectItem<T> {
 
 /// A customizable select component with data-driven API.
 ///
-/// Uses a simple, declarative API with data classes for trigger and items.
+/// Uses a declarative trigger plus sealed content items.
 /// Form input component for selecting a single value from a dropdown list.
 ///
 /// ## Example
@@ -75,28 +152,68 @@ class RemixSelect<T> extends StatefulWidget {
   const RemixSelect({
     super.key,
     required this.trigger,
-    required this.items,
+    required List<RemixSelectItemData<T>> items,
     this.selectedValue,
     this.positioning = const OverlayPositionConfig(
-      targetAnchor: .bottomCenter,
-      followerAnchor: .topCenter,
+      side: .bottom,
+      alignment: .center,
+      sideOffset: 4,
     ),
     this.onChanged,
     this.onOpen,
     this.onClose,
+    this.open,
+    this.onOpenChanged,
     this.enabled = true,
     this.semanticLabel,
     this.closeOnSelect = true,
     this.focusNode,
+    this.triggerWrapper,
+    this.contentWrapper,
+    this.triggerChevronBuilder,
+    this.itemIndicatorBuilder,
     this.style = const RemixSelectStyler.create(),
     this.styleSpec,
-  });
+  }) : _items = items;
+
+  /// Creates a select with grouped, labeled, or separated content.
+  const RemixSelect.structured({
+    super.key,
+    required this.trigger,
+    required List<RemixSelectItemData<T>> items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      side: .bottom,
+      alignment: .center,
+      sideOffset: 4,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.open,
+    this.onOpenChanged,
+    this.enabled = true,
+    this.semanticLabel,
+    this.closeOnSelect = true,
+    this.focusNode,
+    this.triggerWrapper,
+    this.contentWrapper,
+    this.triggerChevronBuilder,
+    this.itemIndicatorBuilder,
+    this.style = const RemixSelectStyler.create(),
+    this.styleSpec,
+  }) : _items = items;
 
   /// The trigger data that defines the select's button.
   final RemixSelectTrigger trigger;
 
-  /// The list of selectable items.
-  final List<RemixSelectItem<T>> items;
+  final List<RemixSelectItemData<T>> _items;
+
+  /// Established selectable items.
+  ///
+  /// Structural entries are omitted and grouped items are flattened in source
+  /// order so the original return type remains intact.
+  List<RemixSelectItem<T>> get items => _selectItemsView(_items);
 
   /// The currently selected value.
   final T? selectedValue;
@@ -116,6 +233,16 @@ class RemixSelect<T> extends StatefulWidget {
   /// Called when the dropdown closes.
   final VoidCallback? onClose;
 
+  /// Controls whether the dropdown is open.
+  ///
+  /// When null, the select owns its open state. When non-null, interaction
+  /// requests are reported through [onOpenChanged] and the overlay continues
+  /// to follow this value until the owner rebuilds it.
+  final bool? open;
+
+  /// Called when user interaction requests a controlled open-state change.
+  final ValueChanged<bool>? onOpenChanged;
+
   /// Whether the select is enabled and can be interacted with.
   final bool enabled;
 
@@ -127,6 +254,18 @@ class RemixSelect<T> extends StatefulWidget {
 
   /// Optional focus node to control focus behavior.
   final FocusNode? focusNode;
+
+  /// Optional inherited-scope wrapper around trigger style resolution.
+  final RemixSelectPartWrapper? triggerWrapper;
+
+  /// Optional inherited-scope wrapper around popup-content style resolution.
+  final RemixSelectPartWrapper? contentWrapper;
+
+  /// Optional visual replacement for the trigger chevron.
+  final RemixSelectIconBuilder? triggerChevronBuilder;
+
+  /// Optional visual replacement for the selected-item indicator.
+  final RemixSelectIconBuilder? itemIndicatorBuilder;
 
   /// The style configuration for the select.
   final RemixSelectStyler style;
@@ -159,53 +298,146 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         .trigger(
           RemixSelectTriggerStyler().mainAxisSize(.min).wrap(.intrinsicWidth()),
         )
-        .menuContainer(
-          FlexBoxStyler().mainAxisSize(.min).wrap(.intrinsicWidth()),
-        )
+        .content(RemixSelectContentStyler().wrap(.intrinsicWidth()))
         .merge(widget.style);
   }
 
   Widget _buildOverlayMenu(
     RemixSelectSpec spec,
+    RawMenuOverlayInfo info,
     Prop<StyleSpec<RemixSelectMenuItemSpec>>? defaultItemStyle,
+    Prop<StyleSpec<RemixSelectLabelSpec>>? defaultLabelStyle,
+    Prop<StyleSpec<BoxSpec>>? defaultSeparatorStyle,
   ) {
-    final menuContainerSpec = spec.menuContainer;
-
     return _AnimatedOverlayMenu(
       controller: animationController,
       duration: const Duration(milliseconds: 150),
       curve: Curves.easeInOut,
-      menuContainer: menuContainerSpec,
-      children: widget.items
-          .map(
-            (item) => _RemixSelectItemWidget(
-              data: item,
-              defaultStyle: widget.styleSpec == null ? defaultItemStyle : null,
-              defaultStyleSpec: widget.styleSpec == null ? null : spec.item,
-            ),
-          )
-          .toList(),
+      menuContainer: spec.menuContainer,
+      content: spec.content,
+      minimumWidth: info.anchorRect.width,
+      maximumHeight: info.overlaySize.height,
+      children: _buildItems(
+        widget._items,
+        defaultItemStyle: widget.styleSpec == null ? defaultItemStyle : null,
+        defaultItemStyleSpec: widget.styleSpec == null ? null : spec.item,
+        defaultLabelStyle: widget.styleSpec == null ? defaultLabelStyle : null,
+        defaultLabelStyleSpec: widget.styleSpec == null ? null : spec.label,
+        defaultSeparatorStyle: widget.styleSpec == null
+            ? defaultSeparatorStyle
+            : null,
+        defaultSeparatorStyleSpec: widget.styleSpec == null
+            ? null
+            : spec.separator,
+      ),
     );
   }
 
-  String _getDisplayLabel() {
-    if (widget.selectedValue == null) return widget.trigger.placeholder;
+  List<Widget> _buildItems(
+    List<RemixSelectItemData<T>> items, {
+    required Prop<StyleSpec<RemixSelectMenuItemSpec>>? defaultItemStyle,
+    required StyleSpec<RemixSelectMenuItemSpec>? defaultItemStyleSpec,
+    required Prop<StyleSpec<RemixSelectLabelSpec>>? defaultLabelStyle,
+    required StyleSpec<RemixSelectLabelSpec>? defaultLabelStyleSpec,
+    required Prop<StyleSpec<BoxSpec>>? defaultSeparatorStyle,
+    required StyleSpec<BoxSpec>? defaultSeparatorStyleSpec,
+  }) {
+    final children = <Widget>[];
+    RemixSelectItemData<T>? previous;
+    for (final item in items) {
+      final child = switch (item) {
+        RemixSelectItem<T>() => _RemixSelectItemWidget<T>(
+          data: item,
+          defaultStyle: defaultItemStyle,
+          defaultStyleSpec: defaultItemStyleSpec,
+          indicatorBuilder: widget.itemIndicatorBuilder,
+        ),
+        RemixSelectLabel<T>() => _RemixSelectLabelWidget<T>(
+          data: item,
+          followsItem: previous is RemixSelectItem<T>,
+          defaultStyle: defaultLabelStyle,
+          defaultStyleSpec: defaultLabelStyleSpec,
+        ),
+        RemixSelectSeparator<T>() => _RemixSelectSeparatorWidget<T>(
+          data: item,
+          defaultStyle: defaultSeparatorStyle,
+          defaultStyleSpec: defaultSeparatorStyleSpec,
+        ),
+        RemixSelectGroup<T>() => _RemixSelectGroupWidget<T>(
+          semanticLabel: item.semanticLabel,
+          children: _buildItems(
+            item.items,
+            defaultItemStyle: defaultItemStyle,
+            defaultItemStyleSpec: defaultItemStyleSpec,
+            defaultLabelStyle: defaultLabelStyle,
+            defaultLabelStyleSpec: defaultLabelStyleSpec,
+            defaultSeparatorStyle: defaultSeparatorStyle,
+            defaultSeparatorStyleSpec: defaultSeparatorStyleSpec,
+          ),
+        ),
+      };
+      children.add(child);
+      previous = item;
+    }
+    return children;
+  }
 
-    // Find the selected item and get its label
-    for (final item in widget.items) {
-      if (item.value == widget.selectedValue) {
-        return item.label;
+  RemixSelectItem<T>? _findItem(List<RemixSelectItemData<T>> items, T value) {
+    for (final item in items) {
+      switch (item) {
+        case RemixSelectItem<T>():
+          if (item.value == value) return item;
+        case RemixSelectGroup<T>():
+          final nested = _findItem(item.items, value);
+          if (nested != null) return nested;
+        case RemixSelectLabel<T>() || RemixSelectSeparator<T>():
+          break;
       }
     }
+    return null;
+  }
+
+  String _getDisplayLabel() {
+    final selectedValue = widget.selectedValue;
+    if (selectedValue == null) return widget.trigger.placeholder;
+
+    final selectedItem = _findItem(widget._items, selectedValue);
+    if (selectedItem != null) return selectedItem.label;
 
     assert(
-      widget.items.any((item) => item.value == widget.selectedValue),
-      'RemixSelect: selectedValue "${widget.selectedValue}" not found in items. '
-      'Ensure selectedValue matches one of the item values.',
+      selectedItem != null,
+      'RemixSelect: selectedValue "$selectedValue" not found in items. '
+      'Ensure selectedValue matches a RemixSelectItem value.',
     );
 
     // Gracefully degrade in release mode - show placeholder
     return widget.trigger.placeholder;
+  }
+
+  void _validateUniqueValues() {
+    final seen = <T>[];
+
+    void visit(List<RemixSelectItemData<T>> items) {
+      for (final item in items) {
+        switch (item) {
+          case RemixSelectItem<T>():
+            if (seen.any((value) => value == item.value)) {
+              throw FlutterError(
+                'RemixSelect contains duplicate item value "${item.value}". '
+                'Every RemixSelectItem value must be unique, including items '
+                'inside groups.',
+              );
+            }
+            seen.add(item.value);
+          case RemixSelectGroup<T>():
+            visit(item.items);
+          case RemixSelectLabel<T>() || RemixSelectSeparator<T>():
+            break;
+        }
+      }
+    }
+
+    visit(widget._items);
   }
 
   void _handleChanged(T? value) => widget.onChanged?.call(value);
@@ -218,15 +450,23 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
   @override
   Widget build(BuildContext context) {
+    _validateUniqueValues();
     final style = _buildStyle();
 
     return NakedSelect<T>(
       overlayBuilder: (context, info) {
-        return RemixStyleSpecBuilder<RemixSelectSpec>(
+        final content = RemixStyleSpecBuilder<RemixSelectSpec>(
           style: style,
           styleSpec: widget.styleSpec,
-          builder: (context, spec) => _buildOverlayMenu(spec, style.$item),
+          builder: (context, spec) => _buildOverlayMenu(
+            spec,
+            info,
+            style.$item,
+            style.$label,
+            style.$separator,
+          ),
         );
+        return widget.contentWrapper?.call(context, content) ?? content;
       },
       value: widget.selectedValue,
       onChanged: _handleChanged,
@@ -235,6 +475,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       triggerFocusNode: widget.focusNode,
       semanticLabel: widget.semanticLabel,
       positioning: widget.positioning,
+      open: widget.open,
+      onOpenChanged: widget.onOpenChanged,
       onOpen: () {
         animationController.forward();
         widget.onOpen?.call();
@@ -244,21 +486,28 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         widget.onClose?.call();
       },
       builder: (context, state, _) {
-        return RemixStyleSpecBuilder<RemixSelectSpec>(
-          style: style,
-          styleSpec: widget.styleSpec,
-          controller: NakedSelectState.controllerOf<T>(context),
-          builder: (context, spec) {
-            final triggerSpec = spec.trigger;
-
-            return _RemixSelectTriggerWidget(
-              trigger: widget.trigger,
-              displayLabel: _getDisplayLabel(),
-              isOpen: state.isOpen,
-              styleSpec: triggerSpec,
-            );
-          },
+        final controller = NakedSelectState.controllerOf<T>(context);
+        final trigger = ListenableBuilder(
+          listenable: controller,
+          builder: (context, _) => WidgetStateProvider(
+            states: {
+              ...controller.value,
+              if (state.isOpen) WidgetState.selected,
+            },
+            child: RemixStyleSpecBuilder<RemixSelectSpec>(
+              style: style,
+              styleSpec: widget.styleSpec,
+              builder: (context, spec) => _RemixSelectTriggerWidget(
+                trigger: widget.trigger,
+                displayLabel: _getDisplayLabel(),
+                isPlaceholder: widget.selectedValue == null,
+                styleSpec: spec.trigger,
+                chevronBuilder: widget.triggerChevronBuilder,
+              ),
+            ),
+          ),
         );
+        return widget.triggerWrapper?.call(context, trigger) ?? trigger;
       },
     );
   }
@@ -270,6 +519,9 @@ class _AnimatedOverlayMenu extends StatefulWidget {
     required this.duration,
     required this.curve,
     required this.menuContainer,
+    required this.content,
+    required this.minimumWidth,
+    required this.maximumHeight,
     required this.children,
   });
 
@@ -277,6 +529,9 @@ class _AnimatedOverlayMenu extends StatefulWidget {
   final Duration duration;
   final Curve curve;
   final StyleSpec<FlexBoxSpec> menuContainer;
+  final StyleSpec<RemixSelectContentSpec> content;
+  final double minimumWidth;
+  final double maximumHeight;
   final List<Widget> children;
 
   @override
@@ -318,13 +573,38 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
     return AnimatedBuilder(
       animation: fadeAnimation,
       builder: (context, child) {
-        return Transform.scale(
-          scale: scaleAnimation.value,
-          child: Opacity(
-            opacity: fadeAnimation.value,
-            child: ColumnBox(
-              styleSpec: widget.menuContainer,
-              children: widget.children,
+        return ConstrainedBox(
+          constraints: BoxConstraints(
+            minWidth: widget.minimumWidth,
+            maxHeight: widget.maximumHeight,
+          ),
+          child: Transform.scale(
+            scale: scaleAnimation.value,
+            child: Opacity(
+              opacity: fadeAnimation.value,
+              child: ColumnBox(
+                styleSpec: widget.menuContainer,
+                children: [
+                  // ignore: avoid-flexible-outside-flex
+                  Flexible(
+                    child: StyleSpecBuilder<RemixSelectContentSpec>(
+                      styleSpec: widget.content,
+                      builder: (context, spec) => RemixBoxWithEffects(
+                        key: const ValueKey('remix-select-content-surface'),
+                        styleSpec: spec.container,
+                        containerEffects: spec.containerEffects,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: widget.children,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -342,32 +622,48 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
   const _RemixSelectTriggerWidget({
     required this.trigger,
     required this.displayLabel,
-    required this.isOpen,
+    required this.isPlaceholder,
     required this.styleSpec,
+    this.chevronBuilder,
   });
 
   final RemixSelectTrigger trigger;
   final String displayLabel;
-  final bool isOpen;
+  final bool isPlaceholder;
   final StyleSpec<RemixSelectTriggerSpec> styleSpec;
+  final RemixSelectIconBuilder? chevronBuilder;
 
   @override
   Widget build(BuildContext context) {
     return StyleSpecBuilder<RemixSelectTriggerSpec>(
       styleSpec: styleSpec,
       builder: (context, spec) {
-        return RowBox(
+        return RemixFlexBoxWithEffects(
+          key: const ValueKey('remix-select-trigger-surface'),
           styleSpec: spec.container,
+          direction: Axis.horizontal,
+          containerEffects: spec.containerEffects,
           children: [
             if (trigger.icon != null)
               StyledIcon(icon: trigger.icon!, styleSpec: spec.icon),
             // ignore: avoid-flexible-outside-flex
-            Expanded(child: StyledText(displayLabel, styleSpec: spec.label)),
-            StyledIcon(
-              icon: isOpen
-                  ? Icons.keyboard_arrow_up
-                  : Icons.keyboard_arrow_down,
-              styleSpec: spec.icon,
+            Expanded(
+              child: Opacity(
+                opacity: isPlaceholder ? spec.placeholderOpacity ?? 1 : 1,
+                child: StyledText(
+                  displayLabel,
+                  styleSpec: isPlaceholder ? spec.placeholder : spec.label,
+                ),
+              ),
+            ),
+            Opacity(
+              opacity: spec.chevronOpacity ?? 1,
+              child:
+                  chevronBuilder?.call(context, spec.chevron) ??
+                  StyledIcon(
+                    icon: Icons.keyboard_arrow_down,
+                    styleSpec: spec.chevron,
+                  ),
             ),
           ],
         );
@@ -382,11 +678,13 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
     required this.data,
     this.defaultStyle,
     this.defaultStyleSpec,
+    this.indicatorBuilder,
   });
 
   final RemixSelectItem<T> data;
   final Prop<StyleSpec<RemixSelectMenuItemSpec>>? defaultStyle;
   final StyleSpec<RemixSelectMenuItemSpec>? defaultStyleSpec;
+  final RemixSelectIconBuilder? indicatorBuilder;
 
   StyleSpec<RemixSelectMenuItemSpec> _resolveStyle(BuildContext context) {
     final rawDefault = defaultStyleSpec;
@@ -419,15 +717,36 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
                 child: Builder(
                   builder: (context) => StyleSpecBuilder(
                     styleSpec: _resolveStyle(context),
-                    builder: (context, spec) => RowBox(
-                      styleSpec: spec.container,
+                    builder: (context, spec) => Stack(
                       children: [
-                        // ignore: avoid-flexible-outside-flex
-                        Expanded(
-                          child: StyledText(data.label, styleSpec: spec.text),
+                        RowBox(
+                          styleSpec: spec.container,
+                          children: [
+                            // ignore: avoid-flexible-outside-flex
+                            Expanded(
+                              child: StyledText(
+                                data.label,
+                                styleSpec: spec.text,
+                              ),
+                            ),
+                          ],
                         ),
-                        if (states.isSelected)
-                          StyledIcon(icon: Icons.check, styleSpec: spec.icon),
+                        PositionedDirectional(
+                          start: 0,
+                          top: 0,
+                          bottom: 0,
+                          child: Box(
+                            styleSpec: spec.indicator,
+                            child:
+                                controller.value.contains(WidgetState.selected)
+                                ? indicatorBuilder?.call(context, spec.icon) ??
+                                      StyledIcon(
+                                        icon: Icons.check,
+                                        styleSpec: spec.icon,
+                                      )
+                                : null,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -438,5 +757,108 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class _RemixSelectGroupWidget<T> extends StatelessWidget {
+  const _RemixSelectGroupWidget({
+    required this.semanticLabel,
+    required this.children,
+  });
+
+  final String? semanticLabel;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      container: true,
+      explicitChildNodes: true,
+      label: semanticLabel,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: children,
+      ),
+    );
+  }
+}
+
+class _RemixSelectLabelWidget<T> extends StatelessWidget {
+  const _RemixSelectLabelWidget({
+    required this.data,
+    required this.followsItem,
+    this.defaultStyle,
+    this.defaultStyleSpec,
+  });
+
+  final RemixSelectLabel<T> data;
+  final bool followsItem;
+  final Prop<StyleSpec<RemixSelectLabelSpec>>? defaultStyle;
+  final StyleSpec<RemixSelectLabelSpec>? defaultStyleSpec;
+
+  StyleSpec<RemixSelectLabelSpec> _resolveStyle(BuildContext context) {
+    final rawDefault = defaultStyleSpec;
+    if (rawDefault != null) return rawDefault;
+    return MixOps.resolve(
+          context,
+          MixOps.merge(
+            defaultStyle,
+            Prop.maybeMix<StyleSpec<RemixSelectLabelSpec>>(data.style),
+          ),
+        ) ??
+        const StyleSpec(spec: RemixSelectLabelSpec());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StyleSpecBuilder<RemixSelectLabelSpec>(
+      styleSpec: _resolveStyle(context),
+      builder: (context, spec) => Padding(
+        padding: EdgeInsets.only(
+          top: followsItem ? spec.adjacentItemSpacing ?? 0 : 0,
+        ),
+        child: Semantics(
+          header: true,
+          label: data.semanticLabel ?? data.label,
+          child: ExcludeSemantics(
+            child: RowBox(
+              styleSpec: spec.container,
+              children: [StyledText(data.label, styleSpec: spec.text)],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RemixSelectSeparatorWidget<T> extends StatelessWidget {
+  const _RemixSelectSeparatorWidget({
+    required this.data,
+    this.defaultStyle,
+    this.defaultStyleSpec,
+  });
+
+  final RemixSelectSeparator<T> data;
+  final Prop<StyleSpec<BoxSpec>>? defaultStyle;
+  final StyleSpec<BoxSpec>? defaultStyleSpec;
+
+  StyleSpec<BoxSpec> _resolveStyle(BuildContext context) {
+    final rawDefault = defaultStyleSpec;
+    if (rawDefault != null) return rawDefault;
+    return MixOps.resolve(
+          context,
+          MixOps.merge(
+            defaultStyle,
+            Prop.maybeMix<StyleSpec<BoxSpec>>(data.style),
+          ),
+        ) ??
+        const StyleSpec(spec: BoxSpec());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ExcludeSemantics(child: Box(styleSpec: _resolveStyle(context)));
   }
 }

@@ -20,8 +20,9 @@ Widget buildTextFieldUseCase(BuildContext context) {
                   initialValue: false,
                 )
                 ? FortalIconButton.ghost(
-                    icon: Icons.close_rounded,
+                    semanticLabel: 'Clear field',
                     onPressed: () {},
+                    icon: Icons.close_rounded,
                   )
                 : null,
             leading:

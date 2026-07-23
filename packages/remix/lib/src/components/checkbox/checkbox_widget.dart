@@ -1,5 +1,9 @@
 part of 'checkbox.dart';
 
+/// Builds a checkbox indicator from its resolved icon style and current value.
+typedef RemixCheckboxIndicatorBuilder =
+    Widget Function(BuildContext context, IconSpec spec, bool? value);
+
 /// A customizable checkbox component that supports various styles and behaviors.
 /// The checkbox integrates with the Mix styling system and follows Remix design patterns.
 ///
@@ -37,6 +41,7 @@ class RemixCheckbox extends StatelessWidget {
     this.checkedIcon = Icons.check_rounded,
     this.uncheckedIcon,
     this.indeterminateIcon = Icons.horizontal_rule,
+    this.indicatorBuilder,
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
@@ -67,6 +72,9 @@ class RemixCheckbox extends StatelessWidget {
 
   /// The icon to display when the checkbox is in indeterminate state (null value).
   final IconData indeterminateIcon;
+
+  /// Optional renderer for checked and indeterminate indicators.
+  final RemixCheckboxIndicatorBuilder? indicatorBuilder;
 
   /// The callback function that is called when the checkbox is tapped.
   /// When [tristate] is true, the value can be null.
@@ -119,11 +127,20 @@ class RemixCheckbox extends StatelessWidget {
                 ? checkedIcon
                 : uncheckedIcon;
 
-            return Box(
+            final indicator = iconData == null
+                ? null
+                : indicatorBuilder == null
+                ? StyledIcon(icon: iconData, styleSpec: spec.indicator)
+                : StyleSpecBuilder<IconSpec>(
+                    styleSpec: spec.indicator,
+                    builder: (context, iconSpec) =>
+                        indicatorBuilder!(context, iconSpec, selected),
+                  );
+
+            return RemixBoxWithEffects(
               styleSpec: spec.container,
-              child: iconData != null
-                  ? StyledIcon(icon: iconData, styleSpec: spec.indicator)
-                  : null,
+              containerEffects: spec.containerEffects,
+              child: indicator,
             );
           },
         );

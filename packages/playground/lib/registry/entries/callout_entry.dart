@@ -8,10 +8,13 @@ Widget buildCalloutExample() {
     width: 520,
     child: ComparisonView(
       remix: [
-        RemixCallout(text: 'Information message', icon: Icons.info),
         RemixCallout(
-          text: 'Warning message',
+          icon: Icons.info,
+          child: Text('Information message'),
+        ),
+        RemixCallout(
           icon: Icons.warning_amber_rounded,
+          child: Text('Warning message'),
         ),
       ],
       material: [

@@ -33,7 +33,7 @@ final style = ButtonStyler()
 
 RemixButton(
   onPressed: () {},
-  label: 'Click me',
+  child: const Text('Click me'),
   style: style,
 );
 ```
@@ -49,8 +49,8 @@ final button = ButtonStyler()
   .animate(AnimationConfig.spring(300.ms));
 
 button(
-  label: 'Click me',
   onPressed: () {},
+  child: const Text('Click me'),
 ); // return RemixButton Widget.
 ```
 
@@ -92,7 +92,7 @@ class MyApp extends StatelessWidget {
     .paddingY(10)
     .color(Colors.blue)
     .borderRadiusAll(const Radius.circular(8))
-    .label(TextStyler().color(Colors.white));
+    .label(.color(Colors.white));
 
   @override
   Widget build(BuildContext context) {
@@ -100,8 +100,8 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Center(
           child: button(
-            label: 'Click Me',
             onPressed: () => debugPrint('Button pressed!'),
+            child: const Text('Click Me'),
           ),
         ),
       ),
@@ -120,7 +120,7 @@ final style = ButtonStyler()
   .paddingY(10)
   .color(Colors.blue)
   .borderRadiusAll(const Radius.circular(8))
-  .label(TextStyler().color(Colors.white))
+  .label(.color(Colors.white))
   .onHovered(.color(Colors.blue.shade700)) // [!code ++]
   .onPressed(.scale(0.95)); // [!code ++]
 ```
@@ -156,11 +156,11 @@ final baseButtonStyle = ButtonStyler()
 
 final primaryButton = baseButtonStyle
     .color(Colors.blue)
-    .label(TextStyler().color(Colors.white));
+    .label(.color(Colors.white));
 
 final destructiveButton = baseButtonStyle
     .color(Colors.red)
-    .label(TextStyler().color(Colors.white));
+    .label(.color(Colors.white));
 ```
 
 ## The Fortal Widgets
@@ -169,7 +169,9 @@ While Remix gives you complete freedom to build any design system, it also inclu
 
 ### Quick Start with Fortal
 
-To use Fortal widgets, wrap your app with `FortalScope` to provide the design tokens, then use the generated `Fortal*` widgets. Named constructors select a fixed variant; use the unnamed constructor with `variant:` when the choice is dynamic:
+To use Fortal widgets, place `FortalScope` above the app widget so routes and
+Navigator overlays inherit the same resolved tokens. Every `Fortal*` widget has
+one constructor; select recipes with enum-valued `variant:` and `size:` fields:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -178,13 +180,13 @@ import 'package:remix/remix.dart';
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: FortalScope(
-          child: Center(
+    return FortalScope(
+      child: MaterialApp(
+        home: Scaffold(
+          body: Center(
             child: FortalButton.solid(
               onPressed: () {},
-              label: 'Fortal Button',
+              child: const Text('Fortal Button'),
             ),
           ),
         ),
@@ -196,7 +198,7 @@ class MyApp extends StatelessWidget {
 
 ### Customizing Fortal Styles
 
-Generated Fortal widgets call the matching `fortal*Styler` internally. Use those stylers directly when you need a custom Remix widget composition:
+Fortal widgets call the matching `fortal*Styler` internally. Use those stylers directly when you need a custom Remix widget composition:
 
 ```dart
 final style = fortalButtonStyler(variant: FortalButtonVariant.solid)
@@ -223,7 +225,7 @@ final style = ButtonStyler()
   .color(FortalTokens.accent9())
   .paddingAll(FortalTokens.space4())
   .borderRadiusAll(FortalTokens.radius3())
-  .label(TextStyler().color(FortalTokens.accentContrast()));
+  .label(.color(FortalTokens.accentContrast()));
 ```
 
 ## Components

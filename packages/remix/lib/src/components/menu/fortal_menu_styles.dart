@@ -1,203 +1,215 @@
 part of 'menu.dart';
 
-/// Size scale for Fortal menu triggers and items.
-enum FortalMenuSize {
-  /// Compact menu controls.
-  size1,
+/// Radix Themes menu content sizes.
+enum FortalMenuSize { size1, size2 }
 
-  /// Default menu controls.
-  size2,
-}
+/// Radix Themes menu content variants.
+enum FortalMenuVariant { solid, soft }
 
-/// Visual variants for Fortal menu controls.
-enum FortalMenuVariant {
-  /// High-emphasis menu trigger and item hover treatment.
-  solid,
-
-  /// Subtle accent-backed menu trigger and item hover treatment.
-  soft,
-}
-
-/// Fortal-themed preset for [RemixMenu].
+/// Fortal recipe for menu content and every structured entry type.
 RemixMenuStyler fortalMenuStyler({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
+  bool highContrast = false,
 }) {
-  return switch (variant) {
-    .solid => _fortalMenuSolidStyler(size),
-    .soft => _fortalMenuSoftStyler(size),
-  };
-}
-
-RemixMenuStyler _fortalMenuBaseStyler(FortalMenuSize size) {
+  final metrics = _fortalMenuMetrics(size);
   return RemixMenuStyler()
-      .trigger(
-        RemixMenuTriggerStyler()
-            .borderRadius(BorderRadiusMix.all(FortalTokens.radius2()))
-            .label(
-              TextStyler(
-                style: TextStyleMix(
-                  color: FortalTokens.gray12(),
-                  fontSize: 14,
-                  fontWeight: .w500,
-                ),
-              ),
-            )
-            .icon(IconStyler(color: FortalTokens.gray11(), size: 16)),
-      )
       .overlay(
-        FlexBoxStyler(
-          decoration: BoxDecorationMix(
-            border: BorderMix.all(
-              BorderSideMix(
-                color: FortalTokens.gray7(),
-                width: FortalTokens.borderWidth1(),
-              ),
-            ),
-            borderRadius: BorderRadiusMix.all(FortalTokens.radius3()),
-            color: FortalTokens.gray1(),
-          ),
-          padding: EdgeInsetsMix.all(FortalTokens.space1()),
-        ).marginTop(8),
-      )
-      .divider(
-        RemixDividerStyler()
-            .margin(EdgeInsetsMix.symmetric(vertical: FortalTokens.space1()))
-            .height(FortalTokens.borderWidth1())
-            .color(FortalTokens.gray6()),
-      )
-      .merge(_fortalMenuSizeStyler(size));
-}
-
-RemixMenuStyler _fortalMenuSolidStyler([FortalMenuSize size = .size2]) {
-  return _fortalMenuBaseStyler(size)
-      .trigger(
-        RemixMenuTriggerStyler()
-            .icon(IconStyler(color: FortalTokens.accentContrast(), size: 16))
-            .spacing(8)
-            .color(FortalTokens.accent9())
-            .label(TextStyler().color(FortalTokens.accentContrast())),
-      )
-      .item(_fortalMenuItemSolidStyler(size));
-}
-
-RemixMenuStyler _fortalMenuSoftStyler([FortalMenuSize size = .size2]) {
-  return _fortalMenuBaseStyler(size)
-      .trigger(
-        RemixMenuTriggerStyler()
-            .decoration(BoxDecorationMix(color: FortalTokens.accent3()))
-            .label(
-              TextStyler(
-                style: TextStyleMix(
-                  color: FortalTokens.accent11(),
-                  fontSize: 14,
-                  fontWeight: .w500,
-                ),
-              ),
+        FlexBoxStyler()
+            .paddingAll(metrics.contentPadding)
+            .borderRadiusAll(metrics.contentRadius)
+            .color(FortalTokens.colorPanel())
+            .decoration(
+              BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),
             )
-            .icon(IconStyler(color: FortalTokens.accent11(), size: 16)),
+            .clipBehavior(Clip.antiAlias),
       )
-      .item(_fortalMenuItemSoftStyler(size));
+      .containerEffects(
+        RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
+      )
+      .item(_fortalMenuItemStyler(variant, metrics, highContrast: highContrast))
+      .label(_fortalMenuLabelStyler(metrics))
+      .divider(_fortalMenuDividerStyler(metrics));
 }
 
-RemixMenuStyler _fortalMenuSizeStyler(FortalMenuSize size) {
-  return switch (size) {
-    .size1 => RemixMenuStyler().trigger(
-      RemixMenuTriggerStyler().padding(
-        EdgeInsetsMix.symmetric(
-          vertical: FortalTokens.space1(),
-          horizontal: FortalTokens.space2(),
-        ),
-      ),
-    ),
-    .size2 => RemixMenuStyler().trigger(
-      RemixMenuTriggerStyler().padding(
-        EdgeInsetsMix.symmetric(
-          vertical: FortalTokens.space2(),
-          horizontal: FortalTokens.space3(),
-        ),
-      ),
-    ),
-  };
-}
-
-/// Creates a Fortal-themed [RemixMenuItemStyler].
+/// Fortal item recipe for per-item style overrides.
 RemixMenuItemStyler fortalMenuItemStyler({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
+  bool highContrast = false,
+}) => _fortalMenuItemStyler(
+  variant,
+  _fortalMenuMetrics(size),
+  highContrast: highContrast,
+);
+
+RemixMenuItemStyler _fortalMenuItemStyler(
+  FortalMenuVariant variant,
+  _FortalMenuMetrics metrics, {
+  required bool highContrast,
 }) {
-  return switch (variant) {
-    .solid => _fortalMenuItemSolidStyler(size),
-    .soft => _fortalMenuItemSoftStyler(size),
+  final base = RemixMenuItemStyler()
+      .direction(.horizontal)
+      .mainAxisSize(.max)
+      .crossAxisAlignment(.center)
+      .spacing(FortalTokens.space2())
+      .height(metrics.itemHeight)
+      .borderRadiusAll(metrics.itemRadius)
+      .label(.style(metrics.text.mix()).color(FortalTokens.gray12()))
+      .leadingIcon(.color(FortalTokens.gray12()).size(metrics.indicatorSize))
+      .trailingIcon(.color(FortalTokens.gray12()).size(metrics.indicatorSize))
+      .indicator(.alignment(.center))
+      .indicatorIcon(.color(FortalTokens.gray12()).size(metrics.indicatorSize))
+      .leadingInset(metrics.leadingInset)
+      .checkableLeadingInset(metrics.checkableLeadingInset)
+      .trailingInset(metrics.trailingInset);
+
+  final highlighted = switch (variant) {
+    .solid =>
+      RemixMenuItemStyler()
+          .color(
+            highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
+          )
+          .label(
+            .color(
+              highContrast
+                  ? FortalTokens.accent1()
+                  : FortalTokens.accentContrast(),
+            ),
+          )
+          .leadingIcon(
+            .color(
+              highContrast
+                  ? FortalTokens.accent1()
+                  : FortalTokens.accentContrast(),
+            ),
+          )
+          .trailingIcon(
+            .color(
+              highContrast
+                  ? FortalTokens.accent1()
+                  : FortalTokens.accentContrast(),
+            ),
+          )
+          .indicatorIcon(
+            .color(
+              highContrast
+                  ? FortalTokens.accent1()
+                  : FortalTokens.accentContrast(),
+            ),
+          ),
+    .soft => RemixMenuItemStyler().color(FortalTokens.accentA4()),
   };
+  final submenuOpen = RemixMenuItemStyler().color(
+    variant == .solid ? FortalTokens.grayA3() : FortalTokens.accentA3(),
+  );
+  final disabled = RemixMenuItemStyler()
+      .color(Colors.transparent)
+      .label(.color(FortalTokens.grayA8()))
+      .leadingIcon(.color(FortalTokens.grayA8()))
+      .trailingIcon(.color(FortalTokens.grayA8()))
+      .indicatorIcon(.color(FortalTokens.grayA8()));
+
+  return base
+      .onSelected(submenuOpen)
+      .onHovered(highlighted)
+      .onFocused(highlighted)
+      .onPressed(highlighted)
+      .onDisabled(disabled);
 }
 
-RemixMenuItemStyler _fortalMenuItemBaseStyler(FortalMenuSize size) {
-  return RemixMenuItemStyler()
-      .borderRadius(BorderRadiusMix.all(FortalTokens.radius2()))
-      .label(
-        TextStyler(
-          style: TextStyleMix(color: FortalTokens.gray12(), fontSize: 14),
-        ),
-      )
-      .leadingIcon(IconStyler(color: FortalTokens.gray11(), size: 16))
-      .trailingIcon(IconStyler(color: FortalTokens.gray11(), size: 16))
-      .merge(_fortalMenuItemSizeStyler(size));
+RemixMenuItemStyler _fortalMenuLabelStyler(_FortalMenuMetrics metrics) =>
+    RemixMenuItemStyler()
+        .direction(.horizontal)
+        .mainAxisSize(.max)
+        .crossAxisAlignment(.center)
+        .height(metrics.itemHeight)
+        .label(.style(metrics.text.mix()).color(FortalTokens.grayA10()))
+        .leadingInset(metrics.leadingInset)
+        .checkableLeadingInset(metrics.checkableLeadingInset)
+        .trailingInset(metrics.trailingInset)
+        .adjacentItemSpacing(FortalTokens.space2());
+
+RemixDividerStyler _fortalMenuDividerStyler(_FortalMenuMetrics metrics) =>
+    RemixDividerStyler()
+        .height(1)
+        .marginOnly(
+          left: metrics.leadingInset,
+          right: metrics.trailingInset,
+          top: FortalTokens.space2(),
+          bottom: FortalTokens.space2(),
+        )
+        .color(FortalTokens.grayA6());
+
+class _FortalMenuMetrics {
+  const _FortalMenuMetrics({
+    required this.contentPadding,
+    required this.contentRadius,
+    required this.itemHeight,
+    required this.itemRadius,
+    required this.leadingInset,
+    required this.checkableLeadingInset,
+    required this.trailingInset,
+    required this.indicatorSize,
+    required this.text,
+  });
+
+  final double contentPadding;
+  final Radius contentRadius;
+  final double itemHeight;
+  final Radius itemRadius;
+  final double leadingInset;
+  final double checkableLeadingInset;
+  final double trailingInset;
+  final double indicatorSize;
+  final TextStyleToken text;
 }
 
-RemixMenuItemStyler _fortalMenuItemSolidStyler([FortalMenuSize size = .size2]) {
-  return _fortalMenuItemBaseStyler(size)
-      .color(FortalTokens.graySurface())
-      .onHovered(
-        RemixMenuItemStyler()
-            .color(FortalTokens.accent9())
-            .label(TextStyler().color(FortalTokens.accentContrast())),
-      );
-}
+_FortalMenuMetrics _fortalMenuMetrics(FortalMenuSize size) => switch (size) {
+  .size1 => _FortalMenuMetrics(
+    contentPadding: FortalTokens.space1(),
+    contentRadius: FortalTokens.radius3(),
+    itemHeight: FortalTokens.space5(),
+    itemRadius: FortalTokens.radius1(),
+    leadingInset: FortalTokens.space2(),
+    checkableLeadingInset: FortalTokens.selectIndicatorWidth1(),
+    trailingInset: FortalTokens.space2(),
+    indicatorSize: FortalTokens.selectIndicatorSize1(),
+    text: FortalTokens.text1,
+  ),
+  .size2 => _FortalMenuMetrics(
+    contentPadding: FortalTokens.space2(),
+    contentRadius: FortalTokens.radius4(),
+    itemHeight: FortalTokens.space6(),
+    itemRadius: FortalTokens.radius2(),
+    leadingInset: FortalTokens.space3(),
+    checkableLeadingInset: FortalTokens.space5(),
+    trailingInset: FortalTokens.space3(),
+    indicatorSize: FortalTokens.selectIndicatorSize2(),
+    text: FortalTokens.text2,
+  ),
+};
 
-RemixMenuItemStyler _fortalMenuItemSoftStyler([FortalMenuSize size = .size2]) {
-  return _fortalMenuItemBaseStyler(size)
-      .decoration(BoxDecorationMix(color: Colors.transparent))
-      .onHovered(
-        RemixMenuItemStyler()
-            .decoration(BoxDecorationMix(color: FortalTokens.accentA3()))
-            .label(
-              TextStyler(
-                style: TextStyleMix(
-                  color: FortalTokens.accent11(),
-                  fontSize: 14,
-                ),
-              ),
-            )
-            .leadingIcon(IconStyler(color: FortalTokens.accent11(), size: 16))
-            .trailingIcon(IconStyler(color: FortalTokens.accent11(), size: 16)),
-      );
-}
+OverlayPositionConfig _fortalMenuSubmenuPositioning(
+  FortalMenuSize size,
+  TextDirection direction,
+) => OverlayPositionConfig(
+  side: direction == TextDirection.rtl ? OverlaySide.left : OverlaySide.right,
+  alignment: OverlayAlignment.start,
+  sideOffset: 1,
+  alignmentOffset: size == .size1 ? -4 : -8,
+  collisionPadding: const EdgeInsets.all(10),
+);
 
-RemixMenuItemStyler _fortalMenuItemSizeStyler(FortalMenuSize size) {
-  return switch (size) {
-    .size1 => RemixMenuItemStyler().padding(
-      EdgeInsetsMix.symmetric(
-        vertical: FortalTokens.space1(),
-        horizontal: FortalTokens.space1(),
-      ),
-    ),
-    .size2 => RemixMenuItemStyler().padding(
-      EdgeInsetsMix.symmetric(
-        vertical: FortalTokens.space2(),
-        horizontal: FortalTokens.space2(),
-      ),
-    ),
-  };
-}
-
-/// Fortal-themed preset for [RemixMenu].
+/// Fortal menu content with Radix-owned size, variant, and contrast behavior.
 class FortalMenu<T> extends StatelessWidget {
   const FortalMenu({
     super.key,
     this.variant = .solid,
     this.size = .size2,
-    required this.trigger,
+    this.color,
+    this.highContrast = false,
+    required Widget trigger,
     required this.items,
     this.controller,
     this.onSelected,
@@ -210,14 +222,23 @@ class FortalMenu<T> extends StatelessWidget {
     this.useRootOverlay = false,
     this.closeOnClickOutside = true,
     this.triggerFocusNode,
-    this.positioning = const OverlayPositionConfig(),
-  });
+    this.positioning = const OverlayPositionConfig(
+      side: OverlaySide.bottom,
+      alignment: OverlayAlignment.start,
+      sideOffset: 4,
+      collisionPadding: EdgeInsets.all(10),
+    ),
+    this.submenuPositioning,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : _trigger = trigger;
 
-  /// High-emphasis menu trigger and item hover treatment.
   const FortalMenu.solid({
     super.key,
     this.size = .size2,
-    required this.trigger,
+    this.color,
+    this.highContrast = false,
+    required Widget trigger,
     required this.items,
     this.controller,
     this.onSelected,
@@ -230,14 +251,24 @@ class FortalMenu<T> extends StatelessWidget {
     this.useRootOverlay = false,
     this.closeOnClickOutside = true,
     this.triggerFocusNode,
-    this.positioning = const OverlayPositionConfig(),
-  }) : variant = FortalMenuVariant.solid;
+    this.positioning = const OverlayPositionConfig(
+      side: OverlaySide.bottom,
+      alignment: OverlayAlignment.start,
+      sideOffset: 4,
+      collisionPadding: EdgeInsets.all(10),
+    ),
+    this.submenuPositioning,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : _trigger = trigger,
+       variant = .solid;
 
-  /// Subtle accent-backed menu trigger and item hover treatment.
   const FortalMenu.soft({
     super.key,
     this.size = .size2,
-    required this.trigger,
+    this.color,
+    this.highContrast = false,
+    required Widget trigger,
     required this.items,
     this.controller,
     this.onSelected,
@@ -250,59 +281,78 @@ class FortalMenu<T> extends StatelessWidget {
     this.useRootOverlay = false,
     this.closeOnClickOutside = true,
     this.triggerFocusNode,
-    this.positioning = const OverlayPositionConfig(),
-  }) : variant = FortalMenuVariant.soft;
+    this.positioning = const OverlayPositionConfig(
+      side: OverlaySide.bottom,
+      alignment: OverlayAlignment.start,
+      sideOffset: 4,
+      collisionPadding: EdgeInsets.all(10),
+    ),
+    this.submenuPositioning,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : _trigger = trigger,
+       variant = .soft;
 
   final FortalMenuVariant variant;
-
   final FortalMenuSize size;
 
-  final RemixMenuTrigger trigger;
+  /// Optional accent color override for menu content and items.
+  final FortalAccentColor? color;
 
+  /// Whether solid highlights use accent step 12 and accent step 1.
+  final bool highContrast;
+
+  final Widget _trigger;
+
+  /// Established trigger model.
+  ///
+  /// Arbitrary widget triggers are rendered directly.
+  RemixMenuTrigger get trigger => _trigger as RemixMenuTrigger;
   final List<RemixMenuItemData<T>> items;
-
   final MenuController? controller;
-
   final ValueChanged<T>? onSelected;
-
   final VoidCallback? onOpen;
-
   final VoidCallback? onClose;
-
   final VoidCallback? onCanceled;
-
   final RawMenuAnchorOpenRequestedCallback? onOpenRequested;
-
   final RawMenuAnchorCloseRequestedCallback? onCloseRequested;
-
   final bool consumeOutsideTaps;
-
   final bool useRootOverlay;
-
   final bool closeOnClickOutside;
-
   final FocusNode? triggerFocusNode;
-
   final OverlayPositionConfig positioning;
+  final OverlayPositionConfig? submenuPositioning;
+  final String? semanticLabel;
+  final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
-    return fortalMenuStyler(variant: this.variant, size: this.size).call<T>(
-      key: this.key,
-      trigger: this.trigger,
-      items: this.items,
-      controller: this.controller,
-      onSelected: this.onSelected,
-      onOpen: this.onOpen,
-      onClose: this.onClose,
-      onCanceled: this.onCanceled,
-      onOpenRequested: this.onOpenRequested,
-      onCloseRequested: this.onCloseRequested,
-      consumeOutsideTaps: this.consumeOutsideTaps,
-      useRootOverlay: this.useRootOverlay,
-      closeOnClickOutside: this.closeOnClickOutside,
-      triggerFocusNode: this.triggerFocusNode,
-      positioning: this.positioning,
-    );
-  }
+  Widget build(BuildContext context) =>
+      fortalMenuStyler(
+        variant: variant,
+        size: size,
+        highContrast: highContrast,
+      ).call<T>(
+        key: key,
+        trigger: _trigger,
+        items: items,
+        controller: controller,
+        onSelected: onSelected,
+        onOpen: onOpen,
+        onClose: onClose,
+        onCanceled: onCanceled,
+        onOpenRequested: onOpenRequested,
+        onCloseRequested: onCloseRequested,
+        consumeOutsideTaps: consumeOutsideTaps,
+        useRootOverlay: useRootOverlay,
+        closeOnClickOutside: closeOnClickOutside,
+        triggerFocusNode: triggerFocusNode,
+        positioning: positioning,
+        submenuPositioning:
+            submenuPositioning ??
+            _fortalMenuSubmenuPositioning(size, Directionality.of(context)),
+        semanticLabel: semanticLabel,
+        excludeSemantics: excludeSemantics,
+        contentWrapper: (context, child) =>
+            FortalComponentOverride(color: color, child: child),
+      );
 }

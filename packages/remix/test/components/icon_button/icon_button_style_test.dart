@@ -314,10 +314,11 @@ void main() {
     group('Call Method', () {
       test('call method creates RemixIconButton with minimal parameters', () {
         const style = RemixIconButtonStyler.create();
-        final button = style.call(icon: Icons.add);
+        const icon = Icons.add;
+        final button = style.call(icon: icon, semanticLabel: 'Add');
 
         expect(button, isA<RemixIconButton>());
-        expect(button.icon, equals(Icons.add));
+        expect(button.icon, icon);
         expect(button.onPressed, isNull);
       });
 
@@ -327,14 +328,6 @@ void main() {
         final focusNode = FocusNode();
         void onPressed() {}
         void onLongPress() {}
-        Widget iconBuilder(
-          BuildContext context,
-          IconSpec spec,
-          IconData? icon,
-        ) {
-          return const SizedBox();
-        }
-
         Widget loadingBuilder(BuildContext context, RemixSpinnerSpec spec) {
           return const SizedBox();
         }
@@ -342,7 +335,6 @@ void main() {
         final button = style.call(
           key: key,
           icon: Icons.delete,
-          iconBuilder: iconBuilder,
           loadingBuilder: loadingBuilder,
           loading: true,
           enabled: false,
@@ -359,8 +351,7 @@ void main() {
 
         expect(button, isA<RemixIconButton>());
         expect(button.key, key);
-        expect(button.icon, equals(Icons.delete));
-        expect(button.iconBuilder, same(iconBuilder));
+        expect(button.icon, Icons.delete);
         expect(button.loadingBuilder, same(loadingBuilder));
         expect(button.onPressed, same(onPressed));
         expect(button.onLongPress, same(onLongPress));
@@ -413,10 +404,12 @@ void main() {
 
       test('props list contains all properties', () {
         const style = RemixIconButtonStyler.create();
-        expect(style.props, hasLength(6));
+        expect(style.props, hasLength(7));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$icon));
         expect(style.props, contains(style.$spinner));
+        expect(style.props, contains(style.$containerEffects));
+        expect(style.props, contains(style.$containerEffects));
         expect(style.props, contains(style.$variants));
         expect(style.props, contains(style.$animation));
         expect(style.props, contains(style.$modifier));

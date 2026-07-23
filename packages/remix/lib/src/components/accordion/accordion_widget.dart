@@ -225,7 +225,7 @@ class RemixAccordion<T> extends StatelessWidget {
       focusNode: focusNode,
       onFocusChange: onFocusChange,
       onHoverChange: onHoverChange,
-      onPressChange: onPressChange,
+      onPressChange: (pressed) => onPressChange?.call(pressed),
       semanticLabel: semanticLabel ?? title,
       child: child,
       builder: builder ?? _buildDefaultTrigger,

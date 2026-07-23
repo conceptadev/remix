@@ -1,7 +1,82 @@
 ## Unreleased
 
+- **BREAKING**: Replace the unreleased surface paint API with the box-effects
+  domain: `RemixBoxShadow*`, `RemixBoxEffectLayer*`, and `RemixBoxEffects*`.
+  Rename generic component `effects` slots to `containerEffects` and layer
+  positions to `behindContent`/`overContent`; no deprecated aliases are kept.
+- **BREAKING**: Move ordinary Dialog, Menu, Popover, Select-content, Slider
+  thumb, and Switch thumb elevation into the component's Mix box decoration.
+  `FortalTokens.shadow2` through `shadow6` are now `BoxShadowToken` values;
+  inset, `shapeInset`, mixed, and explicitly positioned shadows remain Remix
+  effects.
+- **CHORE**: Upgrade to hosted `mix` 2.2.0-beta.1 while keeping hosted
+  `mix_annotations`/`mix_generator` 2.2.0-beta.0 and the unhosted
+  `mix_protocol` development dependency on git.
 - **FEAT**: Expose `ButtonStyler` as the canonical button styling API.
   `RemixButtonStyler` remains available as a deprecated compatibility alias.
+- **BREAKING**: Align the 20 mapped Fortal families with the pinned
+  `@radix-ui/themes@3.3.0` contract. Accordion, Toggle, and ToggleGroup remain
+  documented Fortal extensions and are excluded from the Radix parity score.
+- **FIX**: Restore variant-specific Fortal named constructors while retaining
+  the enum-based constructor for runtime variant selection.
+- **BREAKING**: Replace the root theme inputs with partial, inheritable
+  `appearance`, `accentColor`, `grayColor`, `panelBackground`, `radius`,
+  `scaling`, and `hasBackground` values. Root `FortalScope` belongs above the
+  app widget so platform appearance and Navigator overlays share one theme.
+- **FEAT**: Button, Badge, and Callout accept arbitrary widget content.
+  IconButton retains its typed `icon` API and uses `iconBuilder` for custom
+  widget composition.
+- **FEAT**: Slider adds an arbitrary multi-thumb mode with ascending `values`,
+  `onValues...` callbacks, `step`, `minSpacing`, orientation, inversion,
+  per-thumb focus, and per-thumb semantics while retaining scalar `value`,
+  callbacks, `focusNode`, `autofocus`, and `snapDivisions`.
+- **BREAKING**: `RemixTabs.activationMode` now exposes automatic and manual
+  keyboard activation from Naked beta.6.
+- **FEAT**: Menu now also takes an arbitrary trigger widget and typed
+  `RemixMenuItemData<T>` action, checkbox, group, label, separator, radio, and
+  recursive submenu items. Select uses `items` with selectable, group, label,
+  and separator types and exposes owner-authoritative
+  `open`/`onOpenChanged` control.
+- **FEAT**: Add Radix-aligned Popover and Fortal ToggleGroup; complete missing
+  classic variants, sizes, high-contrast roles, geometry, focus/disabled/open
+  states, separate Popover anchors, and semantic behavior across the mapped
+  families.
+- **FEAT**: Add partial theme resolution, platform-brightness observation,
+  automatic matching gray scales, complete 90%–110% scaling, derived radii,
+  translucent panels, and premultiplied-alpha OKLab shadow-stroke mixing.
+- **FEAT**: Add box effects with token-aware multiple gradients, positioned
+  and inset shadows, clip insets, CSS-style outlines, and backdrop blur.
+- **FIX**: Preserve token-backed shadow-list identity when state styles replace
+  explicit surface shadows, and use dedicated scaled radio-indicator tokens so
+  Mix token references are never multiplied as raw sentinel doubles.
+- **FIX**: Propagate Popover trigger interaction and open state into composed
+  Remix recipes. Card now preserves inherited states, holds the Radix open
+  treatment over pressed, and applies the exact focused-active surface layer.
+- **FIX**: Keep Tooltip arrows anchored to the trigger after collision shifts
+  and flips, including rotated side geometry; stabilize indeterminate Progress
+  at its completed-growth frame when accessible animations are disabled.
+- **FIX**: Define `RemixDialog.modal` as accessibility route scoping and
+  document the Flutter route boundary: `showRemixDialog` remains pointer-modal
+  for both values because it uses a Navigator dialog route.
+- **FIX**: Keep full-length Fortal dividers at one logical pixel on their cross
+  axis even when a tight parent supplies extra height or width.
+- **FIX**: Use Naked beta.7's public slider visual-percentage mapping instead
+  of mirroring its direction, orientation, and inversion logic locally.
+- **FIX**: Open default Remix and Fortal submenus toward the leading side in
+  RTL while preserving explicit physical positioning overrides.
+- **FIX**: Preserve unresolved constraint tokens in portable Fortal Button
+  container documents so every variant and size remains protocol-encodable.
+- **CHORE**: Target exact `naked_ui` 1.0.0-beta.7 behavior, add the pinned
+  Chromium reference fixture and parity manifest/checker.
+- **CHORE**: Require every parity-manifest enum and state to cite an exact
+  executable test case; reject missing, stale, extra, or uncited evidence.
+- **FIX**: Preserve established Remix component source compatibility, including
+  Menu/Select `items`, Progress's 0–1 default, TabBar `child`, and the original
+  Spinner, Progress, Select, and Slider raw style slots.
+- **DOCS**: Migrate the complete MDX guide and public examples to the canonical
+  APIs. Add a documentation gate that rejects genuinely retired syntax across
+  MDX, app/example sources, READMEs, and the consumer skill; analyze every
+  self-contained MDX Dart snippet against the package.
 
 ## 1.0.0-beta.1
 
@@ -10,7 +85,7 @@
   discarding them. A lone `child` still fills the container directly, so fully
   custom dialog bodies are unaffected.
 
-- **BREAKING**: Rename fluent style builders from `RemixXStyle` to `RemixXStyler` and Fortal helpers from `fortalXStyle()` to `fortalXStyler()`, matching Mix terminology (`BoxStyler`, `TextStyler`, `MixStyler`). Widget parameter stays `style:`. No deprecated aliases were kept for the removed `RemixXStyle` names.
+- **BREAKING**: Rename fluent style builders from `RemixXStyle` to `RemixXStyler` and Fortal helpers from `fortalXStyle()` to `fortalXStyler()`, matching Mix terminology (`BoxStyler`, `TextStyler`, `MixStyler`). Widget parameter stays `style:`. No deprecated aliases.
 - **BREAKING**: Public `styleSpec` is raw `RemixXSpec?` on all component surfaces (resolved via `RemixStyleSpecBuilder`); StyleWidget-based components converted to explicit widgets.
 - **BREAKING**: `RemixSelect` overlay placement is `positioning: OverlayPositionConfig` (removed public `targetAnchor`/`followerAnchor`).
 - **BREAKING**: Remove `enableFeedback` from `RemixRadio` (not exposed by `NakedRadio`).
@@ -26,9 +101,9 @@
 - **FIX**: Consume `naked_ui` beta.3's type-specific state scopes, including typed menu-item and select-option controllers, while preserving callback-optional `RemixSelect` browsing.
 - **FIX**: Forward menu interception, outside-tap, root-overlay, close-on-outside-click, focus, and positioning options through `RemixMenuStyler.call()` and generated `FortalMenu` widgets.
 - **FEAT**: Add `call()` widget-builder methods to all component stylers and reproducibly generate every `FortalX` convenience widget via `@MixWidget`, including generic Radio/Accordion/Menu/Select surfaces.
-- **FEAT**: Add generated named constructors for Fortal variants (for example, `FortalButton.solid(...)`); Dart infers generic types for calls such as `FortalRadio.soft(...)`, and the unnamed constructors remain available.
+- **FEAT**: Add generated named constructors for Fortal variants.
 - **FEAT**: Fortal wrappers for dialog, menu, select, tooltip, and tabs parts (`FortalTabBar`/`FortalTab`/`FortalTabView`).
-- **FEAT**: Tooltip `dismissDuration` (hover-exit → `NakedTooltip.dismissDelay`); `showDuration` remains touch wait → `touchDelay`.
+- **FEAT**: Tooltip `dismissDuration` (hover-exit → `NakedTooltip.dismissDelay`); `showDuration` maps to the post-activation touch visibility interval (`touchDelay`).
 - **FEAT**: Add `positioning` (`OverlayPositionConfig`) to `RemixTooltip` and `enabled` to `RemixIconButton`.
 - **FEAT**: Add `FortalAccordionVariant`/`FortalAccordionSize` parameters to `fortalAccordionStyler()`.
 - **FIX**: Menu trigger renders icon before label.

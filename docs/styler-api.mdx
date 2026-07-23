@@ -20,16 +20,31 @@ final style = ButtonStyler()
 The following expressions are equivalent:
 
 ```dart
-RemixCardStyler.color(Colors.blue)
-RemixCardStyler().color(Colors.blue)
+final factoryStyle = RemixCardStyler.color(Colors.blue);
+final fluentStyle = RemixCardStyler().color(Colors.blue);
 ```
+
+## Contextual shorthand convention
+
+Use contextual dot shorthand for nested stylers, where the receiving API makes
+the expected type clear:
+
+- Use named factories for state variants: `.onHovered(.color(value))`.
+- Use `.new()` only when a nested styler starts with a lifecycle operation
+  that has no named factory, such as `.onPressed(.new().wrap(...))`.
+- Use shorthand for nested component slots such as `label`, `icon`,
+  `container`, `content`, and `item`.
+
+Keep the concrete class name for root styles, standalone variables, widget
+`style:` arguments, and constructor defaults. This makes the primary styled
+component explicit while keeping its nested pieces concise.
 
 ## Factory policy
 
 | API shape | Policy |
 | --- | --- |
 | Canonical style operation | Expose both a named factory and a matching fluent method. |
-| Direct child styler field | Expose a field factory such as `RemixMenuStyler.trigger(...)`. |
+| Direct child styler field | Expose a field factory such as `RemixMenuStyler.item(...)`. |
 | Primary nested container | Forward one compatible canonical surface from the nested styler. |
 | Alias or expanded convenience | Keep it fluent-only and use its canonical operation in contextual shorthand. |
 | Styler lifecycle or composition (`animate`, `variants`, `wrap`, `modifier`, `merge`) | Keep it fluent-only because it configures or combines an existing parent styler. |
@@ -83,20 +98,24 @@ or `FlexBox` container. A composite root without one clear visual surface, such
 as `RemixMenuStyler`, exposes factories for its child fields instead:
 
 ```dart
-final style = RemixMenuStyler.trigger(
-  RemixMenuTriggerStyler.color(Colors.black),
+final style = RemixMenuStyler.item(
+  .color(Colors.black),
 );
 ```
 
-`RemixSelectStyler` stores its popup container as a `FlexBox`, but intentionally
-forwards only the compatible `Box` surface. This exposes operations such as
-`color`, `padding`, and `scale` without leaking popup layout controls through
-the root select styler.
+The menu styler owns `trigger`, popup `overlay`, `containerEffects`, `item`,
+`label`, and `divider` slots. The `trigger` slot styles the established
+`RemixMenuTrigger`; arbitrary trigger widgets remain caller-styled.
+
+`RemixSelectStyler` retains the established `menuContainer` FlexBox slot and
+adds the `content` surface plus item, label, and separator slots. Style the
+popup layout through `menuContainer`; style its painted surface through
+`content`.
 
 The upstream forwarded `transform` factory currently accepts `Alignment`
 rather than the wider `AlignmentGeometry` accepted by the former handwritten
 helpers. Use a direct child styler when a directional alignment is required,
-for example `RemixCardStyler.container(BoxStyler(transform: matrix,
+for example `RemixCardStyler.container(.new(transform: matrix,
 transformAlignment: AlignmentDirectional.centerStart))`.
 
 ### Variants and selected state
@@ -134,6 +153,8 @@ during a clean build, the widget generator cannot resolve a Styler that the
 spec generator has not yet combined into that library.
 
 Only the wrapper shell was materialized—the `fortal*Styler` recipes and widget
-behavior remain unchanged. This keeps clean builds deterministic and preserves
-the former generated constructors and fields. The widget builder can be
-re-enabled once upstream generation supports that dependency ordering.
+behavior remain unchanged. The source-authored wrappers mirror `@MixWidget`'s
+variant-constructor convention: use `FortalButton.ghost(...)` when the variant
+is known and retain `FortalButton(variant: currentVariant, ...)` for runtime
+selection. The widget builder can be re-enabled once upstream generation
+supports that dependency ordering.

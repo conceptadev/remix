@@ -9,6 +9,16 @@ final _key = GlobalKey();
 @widgetbook.UseCase(name: 'Slider Component', type: RemixSlider)
 Widget buildSliderUseCase(BuildContext context) {
   final knobState = WidgetbookState.of(context);
+  final divisions = context.knobs.int.input(
+    label: 'divisions',
+    initialValue: 2,
+  );
+  final value = context.knobs.double.slider(
+    label: 'value',
+    min: 0,
+    max: 1,
+    initialValue: 0.25,
+  );
   return KeyedSubtree(
     key: _key,
     child: Scaffold(
@@ -16,20 +26,14 @@ Widget buildSliderUseCase(BuildContext context) {
         child: SizedBox(
           width: 200,
           child: FortalSlider(
+            value: value,
+            min: 0,
+            max: 1,
+            snapDivisions: divisions > 0 ? divisions : 100,
             onChanged: (value) => knobState.updateKnob('value', value),
             enabled: context.knobs.boolean(
               label: 'enabled',
               initialValue: true,
-            ),
-            snapDivisions: context.knobs.int.input(
-              label: 'snapDivisions',
-              initialValue: 2,
-            ),
-            value: context.knobs.double.slider(
-              label: 'value',
-              min: 0,
-              max: 1,
-              initialValue: 0.25,
             ),
             variant: context.knobs.object.dropdown(
               label: 'variant',

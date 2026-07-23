@@ -29,6 +29,9 @@ class _SliderExampleState extends State<SliderExample> {
         width: 300,
         child: RemixSlider(
           value: _selectedValue,
+          min: 0,
+          max: 1,
+          snapDivisions: 100,
           style: style,
           onChanged: (value) {
             setState(() {
@@ -44,7 +47,7 @@ class _SliderExampleState extends State<SliderExample> {
     return RemixSliderStyler()
         .thumbSize(const Size(24, 24))
         .thumb(
-          BoxStyler().shapeCircle().shadow(
+          .shape(CircleBorderMix()).shadow(
             BoxShadowMix()
                 .color(Colors.black45)
                 .blurRadius(4)
@@ -56,8 +59,7 @@ class _SliderExampleState extends State<SliderExample> {
         .trackColor(Colors.grey.shade300)
         .rangeColor(Colors.black)
         .onDisabled(
-          RemixSliderStyler()
-              .trackColor(Colors.grey.shade300)
+          .track(.color(Colors.grey.shade300))
               .rangeColor(Colors.blueGrey)
               .thumbColor(Colors.white.withValues(alpha: 0.6)),
         );

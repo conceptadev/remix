@@ -85,12 +85,11 @@ Future<void> sendKeyAndSettle(
 
 Future<void> hoverAction<T>(WidgetTester tester) async {
   final offset = tester.getCenter(find.byType(T));
-  final testPointer = TestPointer(1, PointerDeviceKind.mouse)..hover(offset);
-  await tester.sendEventToBinding(testPointer.hover(offset));
+  final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+  await gesture.addPointer(location: Offset.zero);
+  await gesture.moveTo(offset);
   await tester.pumpAndSettle();
-  addTearDown(() {
-    testPointer.removePointer();
-  });
+  addTearDown(gesture.removePointer);
 }
 
 Future<void> focusAction<T>(WidgetTester tester) async {

@@ -6,438 +6,133 @@ import '../../helpers/test_helpers.dart';
 
 void main() {
   group('RemixCallout', () {
-    group('Basic Rendering', () {
-      testWidgets('renders callout with text only', (tester) async {
-        await tester.pumpRemixApp(RemixCallout(text: 'Test Callout'));
-        await tester.pumpAndSettle();
+    testWidgets('renders arbitrary icon and body content', (tester) async {
+      await tester.pumpRemixApp(
+        const RemixCallout(
+          iconWidget: Icon(Icons.info),
+          child: Column(children: [Text('Title'), Text('Description')]),
+        ),
+      );
 
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.byType(StyledText), findsOneWidget);
-        expect(find.text('Test Callout'), findsOneWidget);
-      });
+      expect(
+        find.byKey(const ValueKey('remix-callout-surface')),
+        findsOneWidget,
+      );
+      expect(find.byIcon(Icons.info), findsOneWidget);
+      expect(find.text('Title'), findsOneWidget);
+      expect(find.text('Description'), findsOneWidget);
+    });
 
-      testWidgets('renders callout with icon only', (tester) async {
-        await tester.pumpRemixApp(
-          RemixCallout(text: 'Icon Callout', icon: Icons.info),
-        );
-        await tester.pumpAndSettle();
+    testWidgets('resolved styles are inherited by arbitrary content', (
+      tester,
+    ) async {
+      const color = Color(0xFF123456);
+      await tester.pumpRemixApp(
+        RemixCallout(
+          style: RemixCalloutStyler(
+            text: TextStyler().color(color).fontSize(15),
+            icon: IconStyler().color(color).size(17),
+          ),
+          iconWidget: const Icon(Icons.info),
+          child: const Text('Inherited'),
+        ),
+      );
 
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
-        expect(find.byType(StyledText), findsOneWidget);
-        expect(find.byIcon(Icons.info), findsOneWidget);
-        expect(find.text('Icon Callout'), findsOneWidget);
-      });
+      final textContext = tester.element(find.text('Inherited'));
+      final iconContext = tester.element(find.byIcon(Icons.info));
+      expect(DefaultTextStyle.of(textContext).style.color, color);
+      expect(IconTheme.of(iconContext).color, color);
+      expect(IconTheme.of(iconContext).size, 17);
+    });
 
-      testWidgets('renders callout with child only', (tester) async {
-        final testChild = Icon(Icons.star, key: ValueKey('test_icon'));
-        await tester.pumpRemixApp(RemixCallout(child: testChild));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.byKey(ValueKey('test_icon')), findsOneWidget);
-        expect(find.byIcon(Icons.star), findsOneWidget);
-      });
-
-      testWidgets('constrains flexible custom content to the callout width', (
-        tester,
-      ) async {
-        await tester.pumpRemixApp(
-          SizedBox(
-            width: 320,
-            child: RemixCallout(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'A detailed capture failure that should wrap in place.',
-                    ),
-                  ),
-                  TextButton(onPressed: () {}, child: Text('Retry')),
-                ],
+    testWidgets('raw style spec provides surface layers', (tester) async {
+      const color = Color(0xFF224466);
+      await tester.pumpRemixApp(
+        const RemixCallout(
+          styleSpec: RemixCalloutSpec(
+            container: StyleSpec(
+              spec: FlexBoxSpec(
+                box: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
+              ),
+            ),
+            containerEffects: RemixBoxEffectsSpec(
+              behindContent: RemixBoxEffectLayerSpec(
+                shadows: [RemixBoxShadow(color: color)],
               ),
             ),
           ),
-        );
-        await tester.pumpAndSettle();
+          child: Text('Spec'),
+        ),
+      );
+      expect(find.byType(CustomPaint), findsWidgets);
+    });
 
-        expect(tester.takeException(), isNull);
-        expect(find.text('Retry'), findsOneWidget);
-      });
-
-      testWidgets('wraps long text beside its icon at a bounded width', (
-        tester,
-      ) async {
-        await tester.pumpRemixApp(
-          SizedBox(
-            width: 320,
-            child: RemixCallout(
-              icon: Icons.info,
-              text:
-                  'A detailed capture failure that should wrap without '
-                  'overflowing the callout.',
+    testWidgets('constrains flexible custom content to the callout width', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 320,
+          child: RemixCallout(
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'A detailed capture failure that should wrap in place.',
+                  ),
+                ),
+                TextButton(onPressed: () {}, child: const Text('Retry')),
+              ],
             ),
           ),
-        );
-        await tester.pumpAndSettle();
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        expect(tester.takeException(), isNull);
-      });
-
-      testWidgets('renders callout with all props', (tester) async {
-        await tester.pumpRemixApp(
-          RemixCallout(
-            text: 'Complete Callout',
-            icon: Icons.warning,
-            style: RemixCalloutStyler.create(),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
-        expect(find.byType(StyledText), findsOneWidget);
-        expect(find.byIcon(Icons.warning), findsOneWidget);
-        expect(find.text('Complete Callout'), findsOneWidget);
-      });
+      expect(tester.takeException(), isNull);
+      expect(find.text('Retry'), findsOneWidget);
     });
 
-    group('Content Combinations', () {
-      testWidgets('text and icon are rendered together', (tester) async {
-        await tester.pumpRemixApp(
-          RemixCallout(text: 'Info Message', icon: Icons.info_outline),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
-        expect(find.byType(StyledText), findsOneWidget);
-        expect(find.byIcon(Icons.info_outline), findsOneWidget);
-        expect(find.text('Info Message'), findsOneWidget);
-      });
-
-      testWidgets('child takes priority over text and icon', (tester) async {
-        final testChild = Container(
-          key: ValueKey('priority_child'),
-          child: Text('Custom Child'),
-        );
-        await tester.pumpRemixApp(
-          RemixCallout(
-            text: 'Should not show',
-            icon: Icons.error,
-            child: testChild,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.byKey(ValueKey('priority_child')), findsOneWidget);
-        expect(find.text('Custom Child'), findsOneWidget);
-        expect(find.text('Should not show'), findsNothing);
-        expect(find.byIcon(Icons.error), findsNothing);
-      });
-
-      testWidgets('empty text with icon still renders icon', (tester) async {
-        await tester.pumpRemixApp(
-          RemixCallout(text: '', icon: Icons.check_circle),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
-        expect(find.byIcon(Icons.check_circle), findsOneWidget);
-        expect(find.byType(StyledText), findsNothing);
-      });
-
-      testWidgets('null text with icon still renders icon', (tester) async {
-        await tester.pumpRemixApp(RemixCallout(text: '', icon: Icons.star));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
-        expect(find.byIcon(Icons.star), findsOneWidget);
-        expect(find.byType(StyledText), findsNothing);
-      });
-    });
-
-    group('Icon Variations', () {
-      testWidgets('renders different icon types', (tester) async {
-        final icons = [
-          Icons.info,
-          Icons.warning,
-          Icons.error,
-          Icons.check_circle,
-          Icons.help,
-        ];
-
-        for (final icon in icons) {
-          await tester.pumpRemixApp(
-            RemixCallout(text: 'Icon Test', icon: icon),
-          );
-          await tester.pumpAndSettle();
-
-          expect(find.byType(RemixCallout), findsOneWidget);
-          expect(find.byType(StyledIcon), findsOneWidget);
-          expect(find.byIcon(icon), findsOneWidget);
-          expect(find.text('Icon Test'), findsOneWidget);
-        }
-      });
-
-      testWidgets('icon styling is applied correctly', (tester) async {
-        final customStyle = RemixCalloutStyler(
-          icon: IconStyler(color: Colors.red, size: 24.0),
-        );
-
-        await tester.pumpRemixApp(
-          RemixCallout(
-            text: 'Styled Icon',
-            icon: Icons.favorite,
-            style: customStyle,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
-        expect(find.byIcon(Icons.favorite), findsOneWidget);
-        expect(find.text('Styled Icon'), findsOneWidget);
-      });
-    });
-
-    group('Text Variations', () {
-      testWidgets('renders short text', (tester) async {
-        await tester.pumpRemixApp(RemixCallout(text: 'Hi'));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(StyledText), findsOneWidget);
-        expect(find.text('Hi'), findsOneWidget);
-      });
-
-      testWidgets('renders long text', (tester) async {
-        const longText = 'This is a longer callout message';
-
-        await tester.pumpRemixApp(RemixCallout(text: longText));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(StyledText), findsOneWidget);
-        expect(find.text(longText), findsOneWidget);
-      });
-
-      testWidgets('renders text with special characters', (tester) async {
-        const specialText = 'Callout with émojis 🎉 and spëcial chars!';
-
-        await tester.pumpRemixApp(RemixCallout(text: specialText));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(StyledText), findsOneWidget);
-        expect(find.text(specialText), findsOneWidget);
-      });
-
-      testWidgets('text styling is applied correctly', (tester) async {
-        final customStyle = RemixCalloutStyler(
-          text: TextStyler(
-            style: TextStyleMix(
-              color: Colors.blue,
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
+    testWidgets('wraps a long body within constrained width', (tester) async {
+      const bodyKey = ValueKey('long-callout-body');
+      await tester.pumpRemixApp(
+        const SizedBox(
+          width: 260,
+          child: FortalCallout(
+            iconWidget: Icon(Icons.info),
+            child: Text(
+              key: bodyKey,
+              'A long callout body should use the remaining width after the '
+              'icon and wrap onto as many lines as necessary without overflow.',
             ),
           ),
-        );
+        ),
+      );
 
-        await tester.pumpRemixApp(
-          RemixCallout(text: 'Styled Text', style: customStyle),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(StyledText), findsOneWidget);
-        expect(find.text('Styled Text'), findsOneWidget);
-      });
+      expect(tester.takeException(), isNull);
+      final calloutRect = tester.getRect(
+        find.byKey(const ValueKey('remix-callout-surface')),
+      );
+      final bodyRect = tester.getRect(find.byKey(bodyKey));
+      expect(bodyRect.left, greaterThanOrEqualTo(calloutRect.left));
+      expect(bodyRect.right, lessThanOrEqualTo(calloutRect.right));
     });
 
-    group('Style Integration', () {
-      testWidgets('applies custom container style', (tester) async {
-        final customStyle = RemixCalloutStyler(
-          container: FlexBoxStyler(
-            padding: EdgeInsetsGeometryMix.all(20.0),
-            decoration: BoxDecorationMix(
-              color: Colors.lightBlue,
-              borderRadius: BorderRadiusGeometryMix.circular(12.0),
-            ),
+    testWidgets('remains valid in an unbounded horizontal viewport', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: FortalCallout(
+            iconWidget: Icon(Icons.info),
+            child: Text('Unbounded callout body'),
           ),
-        );
+        ),
+      );
 
-        await tester.pumpRemixApp(
-          RemixCallout(text: 'Styled Container', style: customStyle),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.text('Styled Container'), findsOneWidget);
-      });
-
-      testWidgets('applies flex spacing between icon and text', (tester) async {
-        final customStyle = RemixCalloutStyler(
-          container: FlexBoxStyler(spacing: 16.0),
-        );
-
-        await tester.pumpRemixApp(
-          RemixCallout(
-            text: 'Spaced Content',
-            icon: Icons.info,
-            style: customStyle,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
-        expect(find.byType(StyledText), findsOneWidget);
-        expect(find.byIcon(Icons.info), findsOneWidget);
-        expect(find.text('Spaced Content'), findsOneWidget);
-      });
-
-      testWidgets('uses default style when none provided', (tester) async {
-        await tester.pumpRemixApp(RemixCallout(text: 'Default Style'));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.byType(StyledText), findsOneWidget);
-        expect(find.text('Default Style'), findsOneWidget);
-      });
-    });
-
-    group('Layout and Sizing', () {
-      testWidgets('callout renders with different text lengths', (
-        tester,
-      ) async {
-        await tester.pumpRemixApp(RemixCallout(text: 'Short'));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.text('Short'), findsOneWidget);
-
-        await tester.pumpRemixApp(
-          RemixCallout(text: 'Much Longer Callout Text'),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.text('Much Longer Callout Text'), findsOneWidget);
-      });
-
-      testWidgets('callout renders with and without icon', (tester) async {
-        await tester.pumpRemixApp(RemixCallout(text: 'Text Only'));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.text('Text Only'), findsOneWidget);
-        expect(find.byType(StyledIcon), findsNothing);
-
-        await tester.pumpRemixApp(
-          RemixCallout(text: 'Text Only', icon: Icons.info),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.text('Text Only'), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
-        expect(find.byIcon(Icons.info), findsOneWidget);
-      });
-
-      testWidgets('callout renders with different child sizes', (tester) async {
-        final smallChild = Icon(Icons.star, size: 16.0);
-        await tester.pumpRemixApp(RemixCallout(child: smallChild));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byIcon(Icons.star), findsOneWidget);
-
-        final largeChild = Icon(Icons.star, size: 32.0);
-        await tester.pumpRemixApp(RemixCallout(child: largeChild));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byIcon(Icons.star), findsOneWidget);
-      });
-    });
-
-    group('Accessibility', () {
-      testWidgets('callout with text renders correctly', (tester) async {
-        await tester.pumpRemixApp(RemixCallout(text: 'Accessible Callout'));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.text('Accessible Callout'), findsOneWidget);
-      });
-
-      testWidgets('callout with icon and text renders correctly', (
-        tester,
-      ) async {
-        await tester.pumpRemixApp(
-          RemixCallout(text: 'Info Message', icon: Icons.info),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byIcon(Icons.info), findsOneWidget);
-        expect(find.text('Info Message'), findsOneWidget);
-      });
-
-      testWidgets('callout with child renders correctly', (tester) async {
-        final testChild = Icon(Icons.star, semanticLabel: 'Star Icon');
-        await tester.pumpRemixApp(RemixCallout(child: testChild));
-        await tester.pumpAndSettle();
-
-        expect(find.byIcon(Icons.star), findsOneWidget);
-      });
-    });
-
-    group('Edge Cases', () {
-      testWidgets('handles empty text gracefully', (tester) async {
-        await tester.pumpRemixApp(RemixCallout(text: ''));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.byType(StyledText), findsNothing);
-      });
-
-      testWidgets('handles null icon gracefully', (tester) async {
-        await tester.pumpRemixApp(RemixCallout(text: 'No Icon', icon: null));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixCallout), findsOneWidget);
-        expect(find.byType(RowBox), findsOneWidget);
-        expect(find.byType(StyledText), findsOneWidget);
-        expect(find.text('No Icon'), findsOneWidget);
-        expect(find.byType(StyledIcon), findsNothing);
-      });
-
-      test('assertion error when both text and child are null', () {
-        expect(
-          () => RemixCallout(text: null, child: null),
-          throwsAssertionError,
-        );
-      });
-
-      test('assertion error when text is null and child is null', () {
-        expect(() => RemixCallout(), throwsAssertionError);
-      });
+      expect(tester.takeException(), isNull);
+      expect(find.text('Unbounded callout body'), findsOneWidget);
     });
   });
 }

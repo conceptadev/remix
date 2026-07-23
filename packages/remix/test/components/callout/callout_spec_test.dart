@@ -278,7 +278,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixCalloutSpec();
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(4));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.text));
         expect(spec.props, contains(spec.icon));
@@ -295,7 +295,7 @@ void main() {
           icon: iconSpec,
         );
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(4));
         expect(spec.props, contains(containerSpec));
         expect(spec.props, contains(textSpec));
         expect(spec.props, contains(iconSpec));
@@ -402,7 +402,7 @@ void main() {
         expect(spec.container, equals(complexContainerSpec));
         expect(spec.text, equals(complexTextSpec));
         expect(spec.icon, equals(complexIconSpec));
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(4));
       });
 
       test('spec equality with complex properties', () {

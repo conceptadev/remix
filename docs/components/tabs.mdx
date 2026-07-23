@@ -1,21 +1,23 @@
 ---
 title: Tabs
-description: A tabbed interface component for organizing content into separate panels
+description: An accessible manual or automatic tab list with controlled panels
 keywords: [flutter, remix, tabs, tabbed, navigation, panels, views]
 ---
 
-A tabbed interface component for organizing content into separate switchable panels.
+`RemixTabs` coordinates a tab list and its panels. Tab buttons are actual
+children of `RemixTabBar`, so the list can wrap, justify, and change orientation
+without requiring callers to construct a Row or Column.
 
 ## When to use this
 
-- **Content organization**: Group related content into separate sections
-- **Navigation**: Switch between different views or categories
-- **Settings panels**: Organize settings into categorized tabs
-- **Multi-step forms**: Break complex forms into manageable sections
+- **Content organization**: Switch between peer sections in one context
+- **Settings panels**: Group related controls without navigating away
+- **Responsive tab lists**: Wrap or justify tabs when space is constrained
+- **Keyboard navigation**: Provide roving focus and manual or automatic activation
 
 ## Basic implementation
 
-<CodeGroup title="Basic implementation" defaultLanguage="dart">
+<CodeGroup title="Controlled tabs" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -28,113 +30,7 @@ class TabsExample extends StatefulWidget {
 }
 
 class _TabsExampleState extends State<TabsExample> {
-  String _tab = 'tab1';
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 320,
-      height: 280,
-      child: RemixTabs(
-        selectedTabId: _tab,
-        onChanged: (id) => setState(() => _tab = id),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            RemixTabBar(
-              style: tabBarStyle,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  RemixTab(tabId: 'tab1', style: tabStyle, label: 'Tab 1'),
-                  const SizedBox(width: 8),
-                  RemixTab(tabId: 'tab2', style: tabStyle, label: 'Tab 2'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: RemixTabView(
-                tabId: 'tab1',
-                style: tabViewStyle,
-                child: const Text('Content for Tab 1'),
-              ),
-            ),
-            Expanded(
-              child: RemixTabView(
-                tabId: 'tab2',
-                style: tabViewStyle,
-                child: const Text('Content for Tab 2'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  RemixTabBarStyler get tabBarStyle {
-    return RemixTabBarStyler()
-        .paddingAll(4)
-        .borderRounded(12)
-        .color(const Color(0xFFF4F6FF))
-        .borderAll(color: Colors.indigo.shade100);
-  }
-
-  RemixTabStyler get tabStyle {
-    return RemixTabStyler()
-        .paddingX(18)
-        .paddingY(10)
-        .borderRounded(10)
-        .color(Colors.transparent)
-        .labelFontSize(14)
-        .labelFontWeight(FontWeight.w600)
-        .labelColor(Colors.indigo.shade600)
-        .iconColor(Colors.indigo.shade500)
-        .onHovered(
-          RemixTabStyler()
-              .color(Colors.indigo.shade50)
-              .labelColor(Colors.indigo.shade700),
-        )
-        .onSelected(
-          RemixTabStyler()
-              .color(Colors.white)
-              .borderAll(color: Colors.indigo.shade400, width: 2)
-              .labelColor(Colors.indigo.shade700)
-              .iconColor(Colors.indigo.shade600),
-        );
-  }
-
-  RemixTabViewStyler get tabViewStyle {
-    return RemixTabViewStyler()
-        .paddingAll(20)
-        .borderRounded(14)
-        .color(Colors.white)
-        .borderAll(color: Colors.indigo.shade100);
-  }
-}
-```
-</CodeGroup>
-
-## Fortal widgets
-
-Remix includes a generated Fortal-themed widget for this component:
-
-<CodeGroup title="Fortal widget" defaultLanguage="dart">
-```dart
-import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
-
-class FortalTabsExample extends StatefulWidget {
-  const FortalTabsExample({super.key});
-
-  @override
-  State<FortalTabsExample> createState() => _FortalTabsExampleState();
-}
-
-class _FortalTabsExampleState extends State<FortalTabsExample> {
-  String _tab = 'tab1';
+  String _tab = 'account';
 
   @override
   Widget build(BuildContext context) {
@@ -142,23 +38,24 @@ class _FortalTabsExampleState extends State<FortalTabsExample> {
       selectedTabId: _tab,
       onChanged: (id) => setState(() => _tab = id),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          FortalTabBar(
-            child: Row(
-              children: [
-                FortalTab(
-                  tabId: 'tab1',
-                  label: 'Tab 1',
-                ),
-                FortalTab(
-                  tabId: 'tab2',
-                  label: 'Tab 2',
-                ),
-              ],
-            ),
+          RemixTabBar(
+            wrap: RemixTabBarWrap.wrap,
+            justify: RemixTabBarJustify.start,
+            children: const [
+              RemixTab(tabId: 'account', label: 'Account'),
+              RemixTab(tabId: 'security', label: 'Security'),
+            ],
           ),
-          const FortalTabView(tabId: 'tab1', child: Text('Content 1')),
-          const FortalTabView(tabId: 'tab2', child: Text('Content 2')),
+          const RemixTabView(
+            tabId: 'account',
+            child: Text('Account settings'),
+          ),
+          const RemixTabView(
+            tabId: 'security',
+            child: Text('Security settings'),
+          ),
         ],
       ),
     );
@@ -167,14 +64,50 @@ class _FortalTabsExampleState extends State<FortalTabsExample> {
 ```
 </CodeGroup>
 
+## Fortal widgets
+
+<CodeGroup title="Fortal tabs" defaultLanguage="dart">
+```dart
+Widget fortalTabs({
+  required String selectedTab,
+  required ValueChanged<String> onChanged,
+}) => RemixTabs(
+  selectedTabId: selectedTab,
+  onChanged: onChanged,
+  child: Column(
+    children: [
+      const FortalTabBar(
+        size: FortalTabsSize.size2,
+        children: [
+          FortalTab(tabId: 'account', label: 'Account'),
+          FortalTab(tabId: 'security', label: 'Security'),
+        ],
+      ),
+      const FortalTabView(
+        tabId: 'account',
+        child: Text('Account settings'),
+      ),
+      const FortalTabView(
+        tabId: 'security',
+        child: Text('Security settings'),
+      ),
+    ],
+  ),
+);
+```
+</CodeGroup>
+
+`FortalTabBar` provides the size, color, and high-contrast scope consumed by its
+`FortalTab` descendants. `FortalTabView` supplies the matching panel behavior.
+
 <Info>
-  See the [fortalTabStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/tabs/fortal_tabs_styles.dart) for all available options.
+  See the [Fortal tabs source](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/tabs/fortal_tabs_styles.dart) for the exact recipes.
 </Info>
 
-## Constructor
-<CodeGroup title="Constructor" defaultLanguage="dart">
+## Constructors
+
+<CodeGroup title="Tabs constructors" defaultLanguage="dart">
 ```dart
-// Tabs Container
 const RemixTabs({
   Key? key,
   required Widget child,
@@ -182,19 +115,21 @@ const RemixTabs({
   String? selectedTabId,
   ValueChanged<String>? onChanged,
   Axis orientation = Axis.horizontal,
+  NakedTabActivationMode activationMode = NakedTabActivationMode.automatic,
   bool enabled = true,
   VoidCallback? onEscapePressed,
 })
 
-// Tab Bar
 const RemixTabBar({
   Key? key,
-  required Widget child,
+  Widget? child,
+  List<Widget>? children,
+  RemixTabBarWrap wrap = RemixTabBarWrap.nowrap,
+  RemixTabBarJustify justify = RemixTabBarJustify.start,
   RemixTabBarStyler style = const RemixTabBarStyler.create(),
   RemixTabBarSpec? styleSpec,
 })
 
-// Individual Tab
 const RemixTab({
   Key? key,
   required String tabId,
@@ -211,352 +146,38 @@ const RemixTab({
   ValueChanged<bool>? onPressChange,
   ValueWidgetBuilder<NakedTabState>? builder,
   String? semanticLabel,
+  bool excludeSemantics = false,
   RemixTabStyler style = const RemixTabStyler.create(),
   RemixTabSpec? styleSpec,
 })
 
-// Tab View
 const RemixTabView({
   Key? key,
   required String tabId,
   required Widget child,
+  bool maintainState = true,
   RemixTabViewStyler style = const RemixTabViewStyler.create(),
   RemixTabViewSpec? styleSpec,
 })
 ```
 </CodeGroup>
 
-
-## Properties
-### Widget Properties
-
-#### `key` → `Key?`
-
-Optional. Controls how one widget replaces another widget in the tree.
-
-#### `child` → `Widget`
-
-**Required**. The tabs content.
-
-#### `controller` → `NakedTabController?`
-
-Optional. Optional controller for managing tab state.
-
-#### `selectedTabId` → `String?`
-
-Optional. The identifier of the currently selected tab.
-
-#### `onChanged` → `ValueChanged<String>?`
-
-Optional. Called when the selected tab changes.
-
-#### `orientation` → `Axis`
-
-Optional. The tab list orientation.
-
-#### `enabled` → `bool`
-
-Optional. Whether the tabs are enabled.
-
-#### `onEscapePressed` → `VoidCallback?`
-
-Optional. Called when Escape is pressed while a tab has focus.
-
-### Styled Leaf Properties
-
-`RemixTabBar`, `RemixTab`, and `RemixTabView` each accept their matching
-`Remix*Styler` through `style` and an optional raw `Remix*Spec` through
-`styleSpec`. A raw spec bypasses fluent style resolution.
-
-
-### Tab Bar Style Methods
-
-Methods on `RemixTabBarStyler` configure the tab-list container.
-
-#### `container(FlexBoxStyler value)`
-
-Configures the tab bar flex box style.
-
-#### `alignment(Alignment value)`
-
-Sets tab bar alignment.
-
-#### `padding(EdgeInsetsGeometryMix value)`
-
-Sets tab bar padding.
-
-#### `margin(EdgeInsetsGeometryMix value)`
-
-Sets tab bar margin.
-
-#### `color(Color value)`
-
-Sets tab bar background color.
-
-#### `size(double width, double height)`
-
-Sets fixed tab bar width and height constraints.
-
-#### `constraints(BoxConstraintsMix value)`
-
-Sets tab bar constraints.
-
-#### `decoration(DecorationMix value)`
-
-Sets tab bar decoration.
-
-#### `borderRadius(BorderRadiusGeometryMix radius)`
-
-Sets tab bar border radius.
-
-#### `foregroundDecoration(DecorationMix value)`
-
-Sets a foreground decoration on the tab bar.
-
-#### `transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center})`
-
-Applies a matrix transform to the tab bar.
-
-#### `flex(FlexStyler value)`
-
-Configures tab bar flex behavior.
-
-#### `animate(AnimationConfig value)`
-
-Configures implicit animation for tab bar style transitions.
-
-#### `variants(List<VariantStyle<RemixTabBarSpec>> value)`
-
-Sets custom tab bar variants.
-
-#### `wrap(WidgetModifierConfig value)`
-
-Applies widget modifiers to the tab bar.
-
-#### `call({Key? key, required Widget child})`
-
-Creates a `RemixTabBar` widget with this style applied.
-
-### Tab Style Methods
-
-Methods on `RemixTabStyler` configure each interactive tab item.
-
-#### `container(FlexBoxStyler value)`
-
-Configures the tab item flex box style.
-
-#### `label(TextStyler value)`
-
-Configures the tab label style.
-
-#### `icon(IconStyler value)`
-
-Configures the tab icon style.
-
-#### `alignment(Alignment value)`
-
-Sets tab item alignment.
-
-#### `padding(EdgeInsetsGeometryMix value)`
-
-Sets tab item padding.
-
-#### `margin(EdgeInsetsGeometryMix value)`
-
-Sets tab item margin.
-
-#### `color(Color value)`
-
-Sets tab item background color.
-
-#### `constraints(BoxConstraintsMix value)`
-
-Sets tab item constraints.
-
-#### `decoration(DecorationMix value)`
-
-Sets tab item decoration.
-
-#### `foregroundDecoration(DecorationMix value)`
-
-Sets a foreground decoration on the tab item.
-
-#### `transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center})`
-
-Applies a matrix transform to the tab item.
-
-#### `flex(FlexStyler value)`
-
-Configures tab item flex behavior.
-
-#### `labelStyle(TextStyleMix value)`
-
-Sets tab label style using a `TextStyleMix`.
-
-#### `labelColor(Color value)`
-
-Sets tab label color.
-
-#### `labelFontSize(double value)`
-
-Sets tab label font size.
-
-#### `labelFontWeight(FontWeight value)`
-
-Sets tab label font weight.
-
-#### `labelFontStyle(FontStyle value)`
-
-Sets tab label font style.
-
-#### `labelLetterSpacing(double value)`
-
-Sets tab label letter spacing.
-
-#### `labelDecoration(TextDecoration value)`
-
-Sets tab label decoration.
-
-#### `labelFontFamily(String value)`
-
-Sets tab label font family.
-
-#### `labelHeight(double value)`
-
-Sets tab label line height.
-
-#### `labelWordSpacing(double value)`
-
-Sets tab label word spacing.
-
-#### `labelDecorationColor(Color value)`
-
-Sets tab label decoration color.
-
-#### `iconColor(Color value)`
-
-Sets tab icon color.
-
-#### `iconSize(double value)`
-
-Sets tab icon size.
-
-#### `iconOpacity(double value)`
-
-Sets tab icon opacity.
-
-#### `iconWeight(double value)`
-
-Sets tab icon weight.
-
-#### `iconGrade(double value)`
-
-Sets tab icon grade.
-
-#### `iconFill(double value)`
-
-Sets tab icon fill.
-
-#### `iconOpticalSize(double value)`
-
-Sets tab icon optical size.
-
-#### `iconBlendMode(BlendMode value)`
-
-Sets tab icon blend mode.
-
-#### `iconTextDirection(TextDirection value)`
-
-Sets tab icon text direction.
-
-#### `iconShadows(List<ShadowMix> value)`
-
-Sets tab icon shadows.
-
-#### `iconShadow(ShadowMix value)`
-
-Sets a single tab icon shadow.
-
-#### `onSelected(RemixTabStyler value)`
-
-Applies a style while the tab is selected.
-
-#### `animate(AnimationConfig value)`
-
-Configures implicit animation for tab item style transitions.
-
-#### `variants(List<VariantStyle<RemixTabSpec>> value)`
-
-Sets custom tab item variants.
-
-#### `wrap(WidgetModifierConfig value)`
-
-Applies widget modifiers to the tab item.
-
-#### `call({Key? key, required String tabId, Widget? child, bool enabled = true, MouseCursor mouseCursor = SystemMouseCursors.click, bool enableFeedback = true, FocusNode? focusNode, bool autofocus = false, ValueChanged<bool>? onFocusChange, ValueChanged<bool>? onHoverChange, ValueChanged<bool>? onPressChange, ValueWidgetBuilder<NakedTabState>? builder, String? semanticLabel, IconData? icon, String? label})`
-
-Creates a `RemixTab` widget with this style applied.
-
-### Tab View Style Methods
-
-Methods on `RemixTabViewStyler` configure each tab panel.
-
-#### `container(BoxStyler value)`
-
-Configures the tab view container style.
-
-#### `alignment(Alignment value)`
-
-Sets tab view alignment.
-
-#### `padding(EdgeInsetsGeometryMix value)`
-
-Sets tab view padding.
-
-#### `margin(EdgeInsetsGeometryMix value)`
-
-Sets tab view margin.
-
-#### `color(Color value)`
-
-Sets tab view background color.
-
-#### `constraints(BoxConstraintsMix value)`
-
-Sets tab view constraints.
-
-#### `decoration(DecorationMix value)`
-
-Sets tab view decoration.
-
-#### `borderRadius(BorderRadiusGeometryMix radius)`
-
-Sets tab view border radius.
-
-#### `foregroundDecoration(DecorationMix value)`
-
-Sets a foreground decoration on the tab view.
-
-#### `transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center})`
-
-Applies a matrix transform to the tab view.
-
-#### `onSelected(RemixTabViewStyler value)`
-
-Applies a style while the tab view is selected.
-
-#### `animate(AnimationConfig value)`
-
-Configures implicit animation for tab view style transitions.
-
-#### `variants(List<VariantStyle<RemixTabViewSpec>> value)`
-
-Sets custom tab view variants.
-
-#### `wrap(WidgetModifierConfig value)`
-
-Applies widget modifiers to the tab view.
-
-#### `call({Key? key, required String tabId, required Widget child})`
-
-Creates a `RemixTabView` widget with this style applied.
+## Layout and behavior
+
+- `RemixTabs` requires either a controller or `selectedTabId`. Its `orientation`
+  controls list layout, arrow-key direction, and tab-list semantics.
+- With `activationMode: .automatic`, moving focus also selects the tab. In
+  `.manual` mode, arrow keys move focus without changing the panel until Space
+  or Enter explicitly activates the focused tab.
+- `RemixTabBarWrap.nowrap` keeps one line; `wrap` and `wrapReverse` create runs.
+  `justify` aligns tabs along the main axis or each run when `children` is
+  supplied. The original arbitrary `child` form remains supported.
+- Tabs use roving focus, and `onEscapePressed` provides an explicit escape path.
+- `RemixTabView` exposes only the selected panel. With `maintainState: true`, an
+  inactive panel keeps element state while remaining hidden and nonsemantic.
+
+## Styling
+
+`RemixTabBarStyler`, `RemixTabStyler`, and `RemixTabViewStyler` own the list,
+tab, and panel surfaces respectively. Tab state variants include hovered,
+pressed, focused, selected, and disabled.

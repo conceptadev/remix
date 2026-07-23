@@ -16,15 +16,18 @@ void main() {
 
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
+        final thickness = Prop.maybe(2.0);
         final variants = <VariantStyle<RemixDividerSpec>>[];
 
         final style = RemixDividerStyler.create(
           container: container,
+          thickness: thickness,
           variants: variants,
         );
 
         expect(style, isNotNull);
         expect(style.$container, equals(container));
+        expect(style.$thickness, equals(thickness));
         expect(style.$variants, equals(variants));
       });
 
@@ -53,19 +56,8 @@ void main() {
         initial: RemixDividerStyler(),
         modify: (style) => style.thickness(2.0),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minHeight: 2.0,
-                    maxHeight: 2.0,
-                  ),
-                ),
-              ),
-            ),
-          );
+          expect(style.$thickness, equals(Prop.maybe(2.0)));
+          expect(style.$container, isNull);
         },
       );
 
@@ -257,6 +249,7 @@ void main() {
         expect(merged, isNot(same(style1)));
         expect(merged, isNot(same(style2)));
         expect(merged.$container, isNotNull);
+        expect(merged.$thickness, equals(style2.$thickness));
       });
     });
 
@@ -281,8 +274,9 @@ void main() {
       test('props list contains all properties', () {
         final style = RemixDividerStyler();
 
-        expect(style.props, hasLength(4));
+        expect(style.props, hasLength(5));
         expect(style.props, contains(style.$container));
+        expect(style.props, contains(style.$thickness));
         expect(style.props, contains(style.$variants));
         expect(style.props, contains(style.$animation));
         expect(style.props, contains(style.$modifier));
@@ -298,6 +292,7 @@ void main() {
 
         expect(style, isA<RemixDividerStyler>());
         expect(style.$container, isNotNull);
+        expect(style.$thickness, isNotNull);
       });
     });
   });

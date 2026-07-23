@@ -591,6 +591,71 @@ void main() {
           }
         }
       });
+
+      testWidgets('uses scaled type, icon, and radius tokens', (tester) async {
+        final scaled = await _resolveFortalAccordionStyle(
+          tester,
+          fortalAccordionStyler(size: .size2),
+          scaling: .percent110,
+        );
+        final square = await _resolveFortalAccordionStyle(
+          tester,
+          fortalAccordionStyler(size: .size2),
+          radius: .none,
+        );
+
+        expect(scaled.title.spec.style?.fontSize, closeTo(16.5, 1e-9));
+        expect(scaled.title.spec.style?.height, closeTo(20 / 15, 1e-9));
+        expect(scaled.title.spec.style?.fontWeight, FontWeight.w500);
+        expect(scaled.trailingIcon.spec.size, closeTo(22, 1e-9));
+        expect(_triggerRadius(scaled), closeTo(8.8, 1e-9));
+        expect(_triggerRadius(square), 0);
+      });
+
+      testWidgets('defines hover, press, focus, and disabled precedence', (
+        tester,
+      ) async {
+        final hovered = await _resolveFortalAccordionStyle(
+          tester,
+          fortalAccordionStyler(),
+          states: {WidgetState.hovered},
+        );
+        final pressed = await _resolveFortalAccordionStyle(
+          tester,
+          fortalAccordionStyler(),
+          states: {WidgetState.pressed},
+        );
+        final focused = await _resolveFortalAccordionStyle(
+          tester,
+          fortalAccordionStyler(),
+          states: {WidgetState.focused},
+        );
+        final disabled = await _resolveFortalAccordionStyle(
+          tester,
+          fortalAccordionStyler(),
+          states: {
+            WidgetState.disabled,
+            WidgetState.hovered,
+            WidgetState.pressed,
+          },
+        );
+        final softPressed = await _resolveFortalAccordionStyle(
+          tester,
+          fortalAccordionStyler(variant: .soft),
+          states: {WidgetState.pressed},
+        );
+
+        expect(_triggerColor(hovered), slate.light.scale.step(2));
+        expect(_triggerColor(pressed), slate.light.scale.step(3));
+        expect(
+          _triggerBorder(focused).top.color,
+          indigo.light.scale.alphaStep(8),
+        );
+        expect(_triggerBorder(focused).top.width, 2);
+        expect(_triggerColor(disabled), slate.light.scale.alphaStep(3));
+        expect(disabled.title.spec.style?.color, slate.light.scale.step(8));
+        expect(_triggerColor(softPressed), indigo.light.scale.step(4));
+      });
     });
 
     group('Core Methods', () {
@@ -690,3 +755,44 @@ void main() {
     });
   });
 }
+
+Future<RemixAccordionSpec> _resolveFortalAccordionStyle(
+  WidgetTester tester,
+  RemixAccordionStyler style, {
+  Set<WidgetState> states = const {},
+  FortalScaling scaling = .percent100,
+  FortalRadius radius = .medium,
+}) async {
+  late RemixAccordionSpec resolved;
+  await tester.pumpWidget(
+    FortalScope(
+      appearance: .light,
+      scaling: scaling,
+      radius: radius,
+      child: WidgetsApp(
+        color: Colors.black,
+        builder: (context, child) => WidgetStateProvider(
+          states: states,
+          child: Builder(
+            builder: (context) {
+              resolved = style.build(context).spec;
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      ),
+    ),
+  );
+  return resolved;
+}
+
+BoxDecoration _triggerDecoration(RemixAccordionSpec spec) =>
+    spec.trigger.spec.box!.spec.decoration! as BoxDecoration;
+
+Color? _triggerColor(RemixAccordionSpec spec) => _triggerDecoration(spec).color;
+
+Border _triggerBorder(RemixAccordionSpec spec) =>
+    _triggerDecoration(spec).border! as Border;
+
+double _triggerRadius(RemixAccordionSpec spec) =>
+    (_triggerDecoration(spec).borderRadius! as BorderRadius).topLeft.x;

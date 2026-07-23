@@ -1,4 +1,7 @@
+import 'dart:ui' show PointerDeviceKind, SemanticsRole, Tristate;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
@@ -6,1024 +9,372 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
-  group('RemixTabs', () {
-    group('Basic Rendering', () {
-      testWidgets('renders tabs with minimal props', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            onChanged: (id) {},
-            child: const Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTabs), findsOneWidget);
-        expect(find.byType(RemixTabBar), findsOneWidget);
-        expect(find.byType(RemixTab), findsNWidgets(2));
-        expect(find.byType(RemixTabView), findsNWidgets(2));
-      });
-
-      testWidgets('renders tabs with controller', (tester) async {
-        final controller = NakedTabController(selectedTabId: 'tab1');
-
-        await tester.pumpRemixApp(
-          RemixTabs(
-            controller: controller,
-            child: const Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTabs), findsOneWidget);
-        expect(controller.selectedTabId, equals('tab1'));
-      });
-
-      testWidgets('renders tabs with enabled state', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            enabled: true,
-            child: const Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTabs), findsOneWidget);
-      });
-
-      testWidgets('renders tabs with disabled state', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            enabled: false,
-            child: const Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTabs), findsOneWidget);
-      });
-
-      testWidgets('renders tabs with vertical orientation', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            orientation: Axis.vertical,
-            child: const Column(
-              children: [
-                RemixTabBar(
-                  child: Column(
-                    children: [
-                      RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTabs), findsOneWidget);
-      });
-    });
-
-    group('Interaction', () {
-      testWidgets('switches tabs when tab is tapped', (tester) async {
-        String? selectedTab = 'tab1';
-
-        await tester.pumpRemixApp(
-          StatefulBuilder(
-            builder: (context, setState) {
-              return RemixTabs(
-                selectedTabId: selectedTab,
-                onChanged: (id) {
-                  setState(() {
-                    selectedTab = id;
-                  });
-                },
-                child: Column(
-                  children: [
-                    RemixTabBar(
-                      child: Row(
-                        children: [
-                          RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                          RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                        ],
-                      ),
-                    ),
-                    RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-                    RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(selectedTab, equals('tab1'));
-        expect(find.text('Content 1'), findsOneWidget);
-
-        await tester.tap(find.text('Tab 2'));
-        await tester.pumpAndSettle();
-
-        expect(selectedTab, equals('tab2'));
-        expect(find.text('Content 2'), findsOneWidget);
-      });
-
-      testWidgets('does not switch tabs when disabled', (tester) async {
-        String? selectedTab = 'tab1';
-
-        await tester.pumpRemixApp(
-          StatefulBuilder(
-            builder: (context, setState) {
-              return RemixTabs(
-                selectedTabId: selectedTab,
-                enabled: false,
-                onChanged: (id) {
-                  setState(() {
-                    selectedTab = id;
-                  });
-                },
-                child: Column(
-                  children: [
-                    RemixTabBar(
-                      child: Row(
-                        children: [
-                          RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                          RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                        ],
-                      ),
-                    ),
-                    RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-                    RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(selectedTab, equals('tab1'));
-
-        await tester.tap(find.text('Tab 2'));
-        await tester.pumpAndSettle();
-
-        expect(selectedTab, equals('tab1'));
-      });
-
-      testWidgets('calls onChanged when tab is selected', (tester) async {
-        String? changedTabId;
-
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            onChanged: (id) {
-              changedTabId = id;
-            },
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.text('Tab 2'));
-        await tester.pumpAndSettle();
-
-        expect(changedTabId, equals('tab2'));
-      });
-
-      testWidgets('handles keyboard navigation with arrow keys', (
-        tester,
-      ) async {
-        String? selectedTab = 'tab1';
-
-        await tester.pumpRemixApp(
-          StatefulBuilder(
-            builder: (context, setState) {
-              return RemixTabs(
-                selectedTabId: selectedTab,
-                onChanged: (id) {
-                  setState(() {
-                    selectedTab = id;
-                  });
-                },
-                child: Column(
-                  children: [
-                    RemixTabBar(
-                      child: Row(
-                        children: [
-                          RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                          RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                        ],
-                      ),
-                    ),
-                    RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-                    RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        // Focus the first tab
-        await tester.tap(find.text('Tab 1'));
-        await tester.pumpAndSettle();
-
-        expect(selectedTab, equals('tab1'));
-      });
-    });
-
-    group('Controller Usage', () {
-      testWidgets('updates selected tab via controller', (tester) async {
-        final controller = NakedTabController(selectedTabId: 'tab1');
-
-        await tester.pumpRemixApp(
-          RemixTabs(
-            controller: controller,
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(controller.selectedTabId, equals('tab1'));
-
-        controller.selectTab('tab2');
-        await tester.pumpAndSettle();
-
-        expect(controller.selectedTabId, equals('tab2'));
-      });
-
-      testWidgets('listens to controller changes', (tester) async {
-        final controller = NakedTabController(selectedTabId: 'tab1');
-
-        await tester.pumpRemixApp(
-          RemixTabs(
-            controller: controller,
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(controller.selectedTabId, equals('tab1'));
-
-        controller.selectTab('tab2');
-        await tester.pumpAndSettle();
-
-        expect(controller.selectedTabId, equals('tab2'));
-      });
-    });
-
-    group('Focus', () {
-      testWidgets('handles autofocus on tab', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(tabId: 'tab1', label: 'Tab 1', autofocus: true),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTab), findsNWidgets(2));
-      });
-
-      testWidgets('handles custom FocusNode', (tester) async {
-        final focusNode = FocusNode();
-
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(
-                        tabId: 'tab1',
-                        label: 'Tab 1',
-                        focusNode: focusNode,
-                      ),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTab), findsNWidgets(2));
-
-        focusNode.dispose();
-      });
-    });
-
-    group('Styling', () {
-      testWidgets('applies custom tab bar style', (tester) async {
-        final customStyle = RemixTabBarStyler(
-          container: FlexBoxStyler(
-            decoration: BoxDecorationMix(color: Colors.blue),
-            padding: EdgeInsetsGeometryMix.all(16),
-          ),
-        );
-
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  style: customStyle,
-                  child: Row(
-                    children: [
-                      RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTabBar), findsOneWidget);
-      });
-
-      testWidgets('applies custom tab style', (tester) async {
-        final customStyle = RemixTabStyler(
-          container: FlexBoxStyler(
-            decoration: BoxDecorationMix(color: Colors.red),
-            padding: EdgeInsetsGeometryMix.all(8),
-          ),
-        );
-
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(
-                        tabId: 'tab1',
-                        label: 'Tab 1',
-                        style: customStyle,
-                      ),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTab), findsNWidgets(2));
-      });
-
-      testWidgets('applies custom tab view style', (tester) async {
-        final customStyle = RemixTabViewStyler(
-          container: BoxStyler(
-            decoration: BoxDecorationMix(color: Colors.green),
-            padding: EdgeInsetsGeometryMix.all(20),
-          ),
-        );
-
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(
-                  tabId: 'tab1',
-                  style: customStyle,
-                  child: const Text('Content 1'),
-                ),
-                RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTabView), findsNWidgets(2));
-      });
-    });
-
-    group('Tab Content', () {
-      testWidgets('renders tab with label only', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [RemixTab(tabId: 'tab1', label: 'Tab 1')],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.text('Tab 1'), findsOneWidget);
-      });
-
-      testWidgets(
-        'renders tab with icon and label - using icon and label params',
-        (tester) async {
-          await tester.pumpRemixApp(
-            RemixTabs(
-              selectedTabId: 'tab1',
-              child: Column(
+  testWidgets('controlled tabs select by tap and show the matching panel', (
+    tester,
+  ) async {
+    var selected = 'one';
+    await tester.pumpRemixApp(
+      StatefulBuilder(
+        builder: (context, setState) => RemixTabs(
+          selectedTabId: selected,
+          onChanged: (value) => setState(() => selected = value),
+          child: const Column(
+            children: [
+              RemixTabBar(
                 children: [
-                  RemixTabBar(
-                    child: Row(
-                      children: [
-                        RemixTab(
-                          tabId: 'tab1',
-                          icon: Icons.home,
-                          label: 'Home',
-                        ),
-                      ],
-                    ),
-                  ),
-                  RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
+                  RemixTab(tabId: 'one', label: 'One'),
+                  RemixTab(tabId: 'two', label: 'Two'),
                 ],
               ),
-            ),
-          );
-          await tester.pumpAndSettle();
+              RemixTabView(tabId: 'one', child: Text('First panel')),
+              RemixTabView(tabId: 'two', child: Text('Second panel')),
+            ],
+          ),
+        ),
+      ),
+    );
 
-          expect(find.byIcon(Icons.home), findsOneWidget);
-          expect(find.text('Home'), findsOneWidget);
-        },
+    expect(find.text('First panel'), findsOneWidget);
+    expect(find.text('Second panel'), findsNothing);
+    await tester.tap(find.text('Two'));
+    await tester.pump();
+    expect(selected, 'two');
+    expect(find.text('Second panel'), findsOneWidget);
+  });
+
+  testWidgets('controller changes rebuild selected state', (tester) async {
+    final controller = NakedTabController(selectedTabId: 'one');
+    addTearDown(controller.dispose);
+    await tester.pumpRemixApp(
+      RemixTabs(
+        controller: controller,
+        child: const Column(
+          children: [
+            RemixTabBar(
+              children: [
+                RemixTab(tabId: 'one', label: 'One'),
+                RemixTab(tabId: 'two', label: 'Two'),
+              ],
+            ),
+            RemixTabView(tabId: 'one', child: Text('First panel')),
+            RemixTabView(tabId: 'two', child: Text('Second panel')),
+          ],
+        ),
+      ),
+    );
+
+    controller.selectTab('two');
+    await tester.pump();
+    expect(find.text('Second panel'), findsOneWidget);
+  });
+
+  testWidgets('disabled root and disabled tabs cannot change selection', (
+    tester,
+  ) async {
+    var changes = 0;
+    await tester.pumpRemixApp(
+      RemixTabs(
+        selectedTabId: 'one',
+        onChanged: (_) => changes++,
+        enabled: false,
+        child: const RemixTabBar(
+          children: [
+            RemixTab(tabId: 'one', label: 'One'),
+            RemixTab(tabId: 'two', label: 'Two'),
+          ],
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Two'));
+    await tester.pump();
+    expect(changes, 0);
+  });
+
+  testWidgets('arrow focus automatically activates on the current contract', (
+    tester,
+  ) async {
+    var selected = 'one';
+    await tester.pumpRemixApp(
+      StatefulBuilder(
+        builder: (context, setState) => RemixTabs(
+          selectedTabId: selected,
+          onChanged: (value) => setState(() => selected = value),
+          child: const RemixTabBar(
+            children: [
+              RemixTab(tabId: 'one', label: 'One', autofocus: true),
+              RemixTab(tabId: 'two', label: 'Two'),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.pump();
+    expect(selected, 'two');
+  });
+
+  testWidgets('manual activation moves focus without selecting', (
+    tester,
+  ) async {
+    var selected = 'one';
+    await tester.pumpRemixApp(
+      StatefulBuilder(
+        builder: (context, setState) => RemixTabs(
+          selectedTabId: selected,
+          activationMode: NakedTabActivationMode.manual,
+          onChanged: (value) => setState(() => selected = value),
+          child: const RemixTabBar(
+            children: [
+              RemixTab(tabId: 'one', label: 'One', autofocus: true),
+              RemixTab(tabId: 'two', label: 'Two'),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.pump();
+    expect(selected, 'one');
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    await tester.pump();
+    expect(selected, 'two');
+  });
+
+  testWidgets('RTL horizontal arrows follow visual direction', (tester) async {
+    var selected = 'one';
+    await tester.pumpRemixApp(
+      StatefulBuilder(
+        builder: (context, setState) => RemixTabs(
+          selectedTabId: selected,
+          onChanged: (value) => setState(() => selected = value),
+          child: const RemixTabBar(
+            children: [
+              RemixTab(tabId: 'one', label: 'One', autofocus: true),
+              RemixTab(tabId: 'two', label: 'Two'),
+            ],
+          ),
+        ),
+      ),
+      textDirection: TextDirection.rtl,
+    );
+
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    await tester.pump();
+    expect(selected, 'two');
+  });
+
+  testWidgets('tab builder exposes hovered pressed and focused states', (
+    tester,
+  ) async {
+    const tabContentKey = ValueKey('stateful-tab-content');
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    final stateLog = <Set<WidgetState>>[];
+    final focusLog = <bool>[];
+    final hoverLog = <bool>[];
+    final pressLog = <bool>[];
+    await tester.pumpRemixApp(
+      RemixTabs(
+        selectedTabId: 'one',
+        onChanged: (_) {},
+        child: RemixTabBar(
+          children: [
+            RemixTab(
+              tabId: 'one',
+              focusNode: focusNode,
+              onFocusChange: focusLog.add,
+              onHoverChange: hoverLog.add,
+              onPressChange: pressLog.add,
+              builder: (context, state, child) {
+                stateLog.add(state.states.toSet());
+                return child!;
+              },
+              child: const ColoredBox(
+                key: tabContentKey,
+                color: Colors.transparent,
+                child: SizedBox(width: 100, height: 40),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    focusNode.requestFocus();
+    await tester.pump();
+    expect(focusLog, contains(true));
+    expect(
+      stateLog.any((states) => states.contains(WidgetState.focused)),
+      isTrue,
+    );
+
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    addTearDown(mouse.removePointer);
+    await mouse.addPointer(location: const Offset(799, 599));
+    await mouse.moveTo(tester.getCenter(find.byKey(tabContentKey)));
+    await tester.pumpAndSettle();
+    expect(hoverLog, contains(true));
+    expect(
+      stateLog.any((states) => states.contains(WidgetState.hovered)),
+      isTrue,
+    );
+
+    await mouse.down(tester.getCenter(find.byKey(tabContentKey)));
+    await tester.pump();
+    expect(pressLog, contains(true));
+    expect(
+      stateLog.any((states) => states.contains(WidgetState.pressed)),
+      isTrue,
+    );
+    await mouse.up();
+  });
+
+  testWidgets('maintainState false removes an inactive panel', (tester) async {
+    await tester.pumpRemixApp(
+      const RemixTabs(
+        selectedTabId: 'one',
+        child: Column(
+          children: [
+            RemixTabBar(
+              children: [RemixTab(tabId: 'one', label: 'One')],
+            ),
+            RemixTabView(
+              tabId: 'two',
+              maintainState: false,
+              child: Text('Removed panel'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    expect(find.text('Removed panel'), findsNothing);
+  });
+
+  testWidgets('tab semantics expose bar, tab, selection, and panel roles', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    try {
+      await tester.pumpRemixApp(
+        const RemixTabs(
+          selectedTabId: 'one',
+          child: Column(
+            children: [
+              RemixTabBar(
+                children: [RemixTab(tabId: 'one', label: 'One')],
+              ),
+              RemixTabView(tabId: 'one', child: Text('First panel')),
+            ],
+          ),
+        ),
       );
 
-      testWidgets('renders tab with icon and label - using NakedTab params', (
-        tester,
-      ) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(tabId: 'tab1', icon: Icons.home, label: 'Home'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byIcon(Icons.home), findsOneWidget);
-        expect(find.text('Home'), findsOneWidget);
-      });
-
-      testWidgets('renders tab with custom child', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(tabId: 'tab1', child: const Text('Custom Tab')),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.text('Custom Tab'), findsOneWidget);
-      });
-
-      testWidgets('renders tab with custom builder', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(
-                        tabId: 'tab1',
-                        label: 'Tab 1',
-                        builder: (context, state, child) {
-                          return Container(
-                            padding: const EdgeInsets.all(8),
-                            child: child,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.text('Tab 1'), findsOneWidget);
-      });
-    });
-
-    group('Semantics', () {
-      testWidgets('has semantic label for tab', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(
-                        tabId: 'tab1',
-                        label: 'Tab 1',
-                        semanticLabel: 'First Tab',
-                      ),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTab), findsNWidgets(2));
-      });
-
-      testWidgets('uses label as semantic label if not provided', (
-        tester,
-      ) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                      RemixTab(tabId: 'tab2', label: 'Tab 2'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-                RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.text('Tab 1'), findsOneWidget);
-        expect(find.text('Tab 2'), findsOneWidget);
-      });
-    });
-
-    group('Edge Cases', () {
-      testWidgets('handles empty tabs', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(selectedTabId: 'tab1', child: const SizedBox()),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTabs), findsOneWidget);
-      });
-
-      testWidgets('handles single tab', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [RemixTab(tabId: 'tab1', label: 'Tab 1')],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTab), findsOneWidget);
-      });
-
-      testWidgets('handles many tabs', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      for (int i = 1; i <= 10; i++)
-                        RemixTab(tabId: 'tab$i', label: 'Tab $i'),
-                    ],
-                  ),
-                ),
-                for (int i = 1; i <= 10; i++)
-                  RemixTabView(tabId: 'tab$i', child: Text('Content $i')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTab), findsNWidgets(10));
-      });
-
-      testWidgets('handles disabled individual tab', (tester) async {
-        String? selectedTab = 'tab1';
-
-        await tester.pumpRemixApp(
-          StatefulBuilder(
-            builder: (context, setState) {
-              return RemixTabs(
-                selectedTabId: selectedTab,
-                onChanged: (id) {
-                  setState(() {
-                    selectedTab = id;
-                  });
-                },
-                child: Column(
-                  children: [
-                    RemixTabBar(
-                      child: Row(
-                        children: [
-                          RemixTab(tabId: 'tab1', label: 'Tab 1'),
-                          RemixTab(
-                            tabId: 'tab2',
-                            label: 'Tab 2',
-                            enabled: false,
-                          ),
-                        ],
-                      ),
-                    ),
-                    RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-                    RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(selectedTab, equals('tab1'));
-
-        await tester.tap(find.text('Tab 2'));
-        await tester.pumpAndSettle();
-
-        expect(selectedTab, equals('tab1'));
-      });
-    });
-
-    group('Key Parameter', () {
-      testWidgets('accepts key parameter for RemixTabs', (tester) async {
-        const key = Key('tabs-key');
-
-        await tester.pumpRemixApp(
-          RemixTabs(
-            key: key,
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [RemixTab(tabId: 'tab1', label: 'Tab 1')],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byKey(key), findsOneWidget);
-      });
-
-      testWidgets('accepts key parameter for RemixTabBar', (tester) async {
-        const key = Key('tabbar-key');
-
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  key: key,
-                  child: Row(
-                    children: [RemixTab(tabId: 'tab1', label: 'Tab 1')],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byKey(key), findsOneWidget);
-      });
-
-      testWidgets('accepts key parameter for RemixTab', (tester) async {
-        const key = Key('tab-key');
-
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(key: key, tabId: 'tab1', label: 'Tab 1'),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byKey(key), findsOneWidget);
-      });
-
-      testWidgets('accepts key parameter for RemixTabView', (tester) async {
-        const key = Key('tabview-key');
-
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [RemixTab(tabId: 'tab1', label: 'Tab 1')],
-                  ),
-                ),
-                RemixTabView(
-                  key: key,
-                  tabId: 'tab1',
-                  child: const Text('Content 1'),
-                ),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byKey(key), findsOneWidget);
-      });
-    });
-
-    group('Mouse Interaction', () {
-      testWidgets('handles hover changes', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(
-                        tabId: 'tab1',
-                        label: 'Tab 1',
-                        onHoverChange: (hovered) {
-                          // Callback is tested by existence
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        // Verify callback is set up (existence test)
-        expect(find.byType(RemixTab), findsOneWidget);
-      });
-
-      testWidgets('handles press changes', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(
-                        tabId: 'tab1',
-                        label: 'Tab 1',
-                        onPressChange: (pressed) {
-                          // Callback is tested by existence
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        // Verify callback is set up (existence test)
-        expect(find.byType(RemixTab), findsOneWidget);
-      });
-
-      testWidgets('handles custom mouse cursor', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTabs(
-            selectedTabId: 'tab1',
-            child: Column(
-              children: [
-                RemixTabBar(
-                  child: Row(
-                    children: [
-                      RemixTab(
-                        tabId: 'tab1',
-                        label: 'Tab 1',
-                        mouseCursor: SystemMouseCursors.help,
-                      ),
-                    ],
-                  ),
-                ),
-                RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
-              ],
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTab), findsOneWidget);
-      });
-    });
+      expect(
+        _semanticsRoleWithin(find.byType(NakedTabBar), SemanticsRole.tabBar),
+        findsOneWidget,
+      );
+      expect(
+        _semanticsRoleWithin(find.byType(NakedTab), SemanticsRole.tab),
+        findsOneWidget,
+      );
+      expect(
+        _semanticsRoleWithin(find.byType(NakedTabView), SemanticsRole.tabPanel),
+        findsOneWidget,
+      );
+      expect(
+        tester.getSemantics(find.text('One')).flagsCollection.isSelected,
+        Tristate.isTrue,
+      );
+    } finally {
+      handle.dispose();
+    }
   });
+
+  testWidgets('custom child and state builder are both supported', (
+    tester,
+  ) async {
+    await tester.pumpRemixApp(
+      RemixTabs(
+        selectedTabId: 'one',
+        child: RemixTabBar(
+          children: [
+            RemixTab(
+              tabId: 'one',
+              child: const Text('Custom child'),
+              builder: (context, state, child) => DecoratedBox(
+                decoration: const BoxDecoration(color: Colors.red),
+                child: child,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    expect(find.text('Custom child'), findsOneWidget);
+    expect(find.byType(DecoratedBox), findsOneWidget);
+  });
+
+  testWidgets('Fortal size controls exact tab height', (tester) async {
+    Future<double> heightFor(FortalTabsSize size) async {
+      await tester.pumpRemixApp(
+        RemixTabs(
+          selectedTabId: 'one',
+          child: FortalTabBar(
+            size: size,
+            children: const [FortalTab(tabId: 'one', label: 'One')],
+          ),
+        ),
+      );
+      return tester.getSize(find.byType(RemixTab)).height;
+    }
+
+    expect(await heightFor(FortalTabsSize.size1), 32);
+    expect(await heightFor(FortalTabsSize.size2), 40);
+  });
+
+  testWidgets('Fortal label width stays stable when selection changes', (
+    tester,
+  ) async {
+    var selected = 'one';
+    const firstKey = ValueKey('first-tab');
+
+    await tester.pumpRemixApp(
+      StatefulBuilder(
+        builder: (context, setState) => RemixTabs(
+          selectedTabId: selected,
+          onChanged: (value) => setState(() => selected = value),
+          child: const FortalTabBar(
+            children: [
+              FortalTab(key: firstKey, tabId: 'one', label: 'MMMMMM'),
+              FortalTab(tabId: 'two', label: 'MMMMMM'),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    final selectedWidth = tester.getSize(find.byKey(firstKey).last).width;
+    await tester.tap(find.text('MMMMMM').last);
+    await tester.pump();
+    final inactiveWidth = tester.getSize(find.byKey(firstKey).last).width;
+
+    expect(inactiveWidth, closeTo(selectedWidth, 0.001));
+  });
+}
+
+Finder _semanticsRoleWithin(Finder ancestor, SemanticsRole role) {
+  return find.descendant(
+    of: ancestor,
+    matching: find.byWidgetPredicate(
+      (widget) => widget is Semantics && widget.properties.role == role,
+    ),
+  );
 }

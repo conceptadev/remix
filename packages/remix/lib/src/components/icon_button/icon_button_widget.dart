@@ -1,48 +1,22 @@
 part of 'icon_button.dart';
 
-/// Builder function for customizing icon button icon rendering.
+/// Builds icon data with the resolved icon style.
 typedef RemixIconButtonIconBuilder =
     Widget Function(BuildContext context, IconSpec spec, IconData? icon);
 
-/// Builder function for customizing icon button loading state rendering.
+/// Builder for the loading indicator rendered by [RemixIconButton].
 typedef RemixIconButtonLoadingBuilder =
     Widget Function(BuildContext context, RemixSpinnerSpec spec);
 
-/// A customizable icon button component optimized for icon-only interactions.
-/// The button is square by default and centers the icon properly.
+/// A square button that renders typed [IconData].
 ///
-/// ## Examples
-///
-/// ```dart
-/// // Basic icon button
-/// RemixIconButton(
-///   icon: Icons.add,
-///   onPressed: () => debugPrint('Add pressed!'),
-/// )
-///
-/// // Custom styled icon button
-/// RemixIconButton(
-///   icon: Icons.delete,
-///   style: RemixIconButtonStyler().backgroundColor(Colors.red),
-///   onPressed: () => debugPrint('Delete pressed!'),
-/// )
-///
-/// // Loading icon button
-/// RemixIconButton(
-///   icon: Icons.save,
-///   loading: true,
-///   onPressed: () => debugPrint('Save pressed!'),
-/// )
-/// ```
+/// Use [iconBuilder] when custom icon composition is needed.
 class RemixIconButton extends StatelessWidget {
-  /// Creates a Remix icon button.
-  ///
-  /// The [icon] parameter is required and specifies which icon to display.
-  /// Use builders to customize rendering of specific parts.
   const RemixIconButton({
     super.key,
     required this.icon,
     this.iconBuilder,
+    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -51,80 +25,45 @@ class RemixIconButton extends StatelessWidget {
     this.onLongPress,
     this.focusNode,
     this.autofocus = false,
-    this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
     this.style = const RemixIconButtonStyler.create(),
     this.styleSpec,
-  });
-
-  final RemixIconButtonStyler style;
-
-  final RemixIconButtonSpec? styleSpec;
+  }) : assert(semanticLabel == null || semanticLabel != '');
 
   static final styleFrom = RemixIconButtonStyler.new;
 
-  /// Whether the button is in a loading state.
-  ///
-  /// When true, the button will display a spinner and become non-interactive.
-  final bool loading;
-
-  /// Whether this icon button is enabled.
-  ///
-  /// When false, press callbacks are suppressed even if [onPressed] is provided.
-  final bool enabled;
-
-  /// Callback function called when the button is pressed.
-  ///
-  /// If null, the button will be considered disabled.
-  final VoidCallback? onPressed;
-
-  /// Callback function called when the button is long pressed.
-  final VoidCallback? onLongPress;
-
-  /// Optional focus node to control the button's focus behavior.
-  final FocusNode? focusNode;
-
-  /// Whether to provide feedback when the button is pressed.
-  ///
-  /// Defaults to true.
-  final bool enableFeedback;
-
-  /// Whether the button should automatically request focus when it is created.
-  final bool autofocus;
-
-  /// The icon to display in the button.
+  /// The icon rendered by the button.
   final IconData icon;
-
-  /// Builder for customizing the icon rendering.
   final RemixIconButtonIconBuilder? iconBuilder;
-
-  /// Builder for customizing the loading state rendering.
-  final RemixIconButtonLoadingBuilder? loadingBuilder;
-
-  /// The semantic label for the button.
-  ///
-  /// Used by screen readers to describe the button.
   final String? semanticLabel;
-
-  /// The semantic hint for the button.
-  ///
-  /// Provides additional context about what will happen when the button is activated.
+  final RemixIconButtonLoadingBuilder? loadingBuilder;
+  final bool loading;
+  final bool enabled;
+  final bool enableFeedback;
+  final VoidCallback? onPressed;
+  final VoidCallback? onLongPress;
+  final FocusNode? focusNode;
+  final bool autofocus;
   final String? semanticHint;
-
-  /// Whether to exclude child semantics.
-  ///
-  /// When true, the semantics of child widgets will be excluded.
-  /// Defaults to false.
   final bool excludeSemantics;
-
-  /// Cursor when hovering over the button.
-  ///
-  /// Defaults to [SystemMouseCursors.click] when enabled.
   final MouseCursor mouseCursor;
+  final RemixIconButtonStyler style;
+  final RemixIconButtonSpec? styleSpec;
 
-  bool get _isEnabled => enabled && !loading && onPressed != null;
+  bool get _isEnabled =>
+      enabled && !loading && (onPressed != null || onLongPress != null);
+
+  Widget _buildIcon(BuildContext context, StyleSpec<IconSpec> styleSpec) {
+    if (iconBuilder case final builder?) {
+      return StyleSpecBuilder<IconSpec>(
+        styleSpec: styleSpec,
+        builder: (context, spec) => builder(context, spec, icon),
+      );
+    }
+    return StyledIcon(icon: icon, styleSpec: styleSpec);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,66 +75,48 @@ class RemixIconButton extends StatelessWidget {
       enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
-      semanticLabel: semanticLabel,
-      builder: (context, states, child) {
-        return RemixStyleSpecBuilder<RemixIconButtonSpec>(
-          style: style,
-          styleSpec: styleSpec,
-          controller: NakedButtonState.controllerOf(context),
-          builder: (context, spec) {
-            Widget? iconWidget;
+      semanticLabel: semanticLabel ?? 'Icon Button',
+      excludeSemantics: excludeSemantics,
+      builder: (context, _, _) => RemixStyleSpecBuilder<RemixIconButtonSpec>(
+        style: style,
+        styleSpec: styleSpec,
+        controller: NakedButtonState.controllerOf(context),
+        builder: (context, spec) {
+          final content = Visibility(
+            visible: !loading,
+            maintainState: true,
+            maintainAnimation: true,
+            maintainSize: true,
+            maintainSemantics: true,
+            child: _buildIcon(context, spec.icon),
+          );
+          final button = RemixBoxWithEffects(
+            key: const ValueKey('remix-icon-button-surface'),
+            styleSpec: spec.container,
+            containerEffects: spec.containerEffects,
+            child: content,
+          );
+          final spinner = StyleSpecBuilder<RemixSpinnerSpec>(
+            styleSpec: spec.spinner,
+            builder: (context, spinnerSpec) => loadingBuilder == null
+                ? RemixSpinner(styleSpec: spinnerSpec)
+                : loadingBuilder!(context, spinnerSpec),
+          );
 
-            if (iconBuilder != null) {
-              iconWidget = StyleSpecBuilder(
-                styleSpec: spec.icon,
-                builder: (context, iconSpec) =>
-                    iconBuilder!(context, iconSpec, icon),
-              );
-            } else {
-              iconWidget = StyledIcon(icon: icon, styleSpec: spec.icon);
-            }
-
-            // Build spinner (used when loading)
-            final spinner = Center(
-              child: loadingBuilder == null
-                  ? StyleSpecBuilder(
-                      styleSpec: spec.spinner,
-                      builder: (context, spinnerSpec) =>
-                          RemixSpinner(styleSpec: spinnerSpec),
-                    )
-                  : StyleSpecBuilder(
-                      styleSpec: spec.spinner,
-                      builder: loadingBuilder!,
-                    ),
-            );
-
-            // Create content with visibility control for loading state
-            final content = Visibility(
-              visible: !loading,
-              maintainState: true,
-              maintainAnimation: true,
-              maintainSize: true,
-              child: iconWidget,
-            );
-
-            // Layer spinner above the content while keeping size stable.
-            final layered = Stack(
-              alignment: .center,
-              children: [content, if (loading) spinner],
-            );
-
-            return MergeSemantics(
-              child: Semantics(
-                excludeSemantics: excludeSemantics,
-                liveRegion: loading,
-                label: semanticLabel ?? 'Icon Button',
-                hint: semanticHint,
-                child: Box(styleSpec: spec.container, child: layered),
-              ),
-            );
-          },
-        );
-      },
+          return Semantics(
+            excludeSemantics: true,
+            liveRegion: loading,
+            hint: semanticHint,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                button,
+                if (loading) Positioned.fill(child: Center(child: spinner)),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

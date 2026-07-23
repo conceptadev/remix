@@ -1,0 +1,1034 @@
+{
+  "theme": [
+    {
+      "test": "test/fortal/fortal_theme_resolution_test.dart",
+      "case": "exposes only the Radix Themes 3.3.0 theme values",
+      "covers": [
+        "enum:appearance.inherit",
+        "enum:appearance.light",
+        "enum:appearance.dark",
+        "enum:accentColor.gray",
+        "enum:accentColor.gold",
+        "enum:accentColor.bronze",
+        "enum:accentColor.brown",
+        "enum:accentColor.yellow",
+        "enum:accentColor.amber",
+        "enum:accentColor.orange",
+        "enum:accentColor.tomato",
+        "enum:accentColor.red",
+        "enum:accentColor.ruby",
+        "enum:accentColor.crimson",
+        "enum:accentColor.pink",
+        "enum:accentColor.plum",
+        "enum:accentColor.purple",
+        "enum:accentColor.violet",
+        "enum:accentColor.iris",
+        "enum:accentColor.indigo",
+        "enum:accentColor.blue",
+        "enum:accentColor.cyan",
+        "enum:accentColor.teal",
+        "enum:accentColor.jade",
+        "enum:accentColor.green",
+        "enum:accentColor.grass",
+        "enum:accentColor.lime",
+        "enum:accentColor.mint",
+        "enum:accentColor.sky",
+        "enum:grayColor.auto",
+        "enum:grayColor.gray",
+        "enum:grayColor.mauve",
+        "enum:grayColor.slate",
+        "enum:grayColor.sage",
+        "enum:grayColor.olive",
+        "enum:grayColor.sand",
+        "enum:panelBackground.solid",
+        "enum:panelBackground.translucent",
+        "enum:radius.none",
+        "enum:radius.small",
+        "enum:radius.medium",
+        "enum:radius.large",
+        "enum:radius.full",
+        "enum:scaling.90%",
+        "enum:scaling.95%",
+        "enum:scaling.100%",
+        "enum:scaling.105%",
+        "enum:scaling.110%"
+      ]
+    },
+    {
+      "test": "test/fortal/fortal_theme_resolution_test.dart",
+      "case": "observes platform brightness without Material",
+      "covers": ["state:rootPlatformLight", "state:rootPlatformDark"]
+    },
+    {
+      "test": "test/fortal/fortal_theme_resolution_test.dart",
+      "case": "nested accent changes inherit gray unless auto is explicit",
+      "covers": ["state:nestedInherit", "state:nestedExplicitAuto"]
+    },
+    {
+      "test": "test/fortal/fortal_theme_resolution_test.dart",
+      "case": "nested appearance and background defaults match scope boundaries",
+      "covers": ["state:paintedBackground"]
+    },
+    {
+      "test": "test/fortal/fortal_theming_widget_test.dart",
+      "case": "FortalCard resolves translucent and solid panel surfaces",
+      "covers": ["state:translucentPanel", "state:solidPanel"]
+    }
+  ],
+  "avatar": [
+    {
+      "test": "test/components/avatar/avatar_fortal_parity_test.dart",
+      "case": "${size.name} matches the pinned dimension and radius",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:size.size4",
+        "enum:size.size5",
+        "enum:size.size6",
+        "enum:size.size7",
+        "enum:size.size8",
+        "enum:size.size9"
+      ]
+    },
+    {
+      "test": "test/components/avatar/avatar_fortal_parity_test.dart",
+      "case": "soft and solid resolve normal and high-contrast roles",
+      "covers": [
+        "enum:variant.solid",
+        "enum:variant.soft",
+        "state:idle",
+        "state:highContrast"
+      ]
+    },
+    {
+      "test": "test/components/avatar/avatar_widget_test.dart",
+      "case": "loaded background image replaces the fallback content",
+      "covers": ["state:loading", "state:loaded"]
+    },
+    {
+      "test": "test/components/avatar/avatar_widget_test.dart",
+      "case": "background image errors preserve fallback and report once",
+      "covers": ["state:error"]
+    }
+  ],
+  "badge": [
+    {
+      "test": "test/components/badge/badge_fortal_parity_test.dart",
+      "case": "${size.name} matches pinned metrics",
+      "covers": ["enum:size.size1", "enum:size.size2", "enum:size.size3"]
+    },
+    {
+      "test": "test/components/badge/badge_fortal_parity_test.dart",
+      "case": "variants resolve exact fills, inset strokes, and contrast roles",
+      "covers": [
+        "enum:variant.solid",
+        "enum:variant.soft",
+        "enum:variant.surface",
+        "enum:variant.outline",
+        "state:idle",
+        "state:highContrast"
+      ]
+    }
+  ],
+  "button": [
+    {
+      "test": "test/components/button/button_style_test.dart",
+      "case": "each size resolves distinct layout metrics",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:size.size4"
+      ]
+    },
+    {
+      "test": "test/components/button/button_style_test.dart",
+      "case": "resolves $variant variant",
+      "covers": [
+        "enum:variant.classic",
+        "enum:variant.solid",
+        "enum:variant.soft",
+        "enum:variant.surface",
+        "enum:variant.outline",
+        "enum:variant.ghost"
+      ]
+    },
+    {
+      "test": "test/components/button/button_style_test.dart",
+      "case": "high contrast selects the stronger button roles",
+      "covers": ["state:idle", "state:highContrast"]
+    },
+    {
+      "test": "test/components/button/button_widget_test.dart",
+      "case": "reports hovered state",
+      "covers": ["state:hovered"]
+    },
+    {
+      "test": "test/components/button/button_widget_test.dart",
+      "case": "reports pressed state",
+      "covers": ["state:pressed"]
+    },
+    {
+      "test": "test/components/button/button_widget_test.dart",
+      "case": "reports focused state",
+      "covers": ["state:focused"]
+    },
+    {
+      "test": "test/components/button/button_widget_test.dart",
+      "case": "reports disabled state when no callback is supplied",
+      "covers": ["state:disabled"]
+    },
+    {
+      "test": "test/components/button/button_widget_test.dart",
+      "case": "loading preserves layout, hides visuals, and shows spinner",
+      "covers": ["state:loading"]
+    }
+  ],
+  "callout": [
+    {
+      "test": "test/components/callout/callout_fortal_parity_test.dart",
+      "case": "${size.name} matches pinned metrics",
+      "covers": ["enum:size.size1", "enum:size.size2", "enum:size.size3"]
+    },
+    {
+      "test": "test/components/callout/callout_fortal_parity_test.dart",
+      "case": "variants resolve pinned alpha fills and inset strokes",
+      "covers": [
+        "enum:variant.soft",
+        "enum:variant.surface",
+        "enum:variant.outline",
+        "state:idle",
+        "state:highContrast"
+      ]
+    }
+  ],
+  "card": [
+    {
+      "test": "test/components/card/card_fortal_parity_test.dart",
+      "case": "public contract has the pinned enum order and defaults",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:size.size4",
+        "enum:size.size5",
+        "enum:variant.surface",
+        "enum:variant.classic",
+        "enum:variant.ghost"
+      ]
+    },
+    {
+      "test": "test/components/card/card_widget_test.dart",
+      "case": "is a passive semantic-preserving container by default",
+      "covers": ["state:idle", "state:passive"]
+    },
+    {
+      "test": "test/components/card/card_fortal_parity_test.dart",
+      "case": "focused active and ghost compound states match CSS",
+      "covers": [
+        "state:hovered",
+        "state:pressed",
+        "state:focused",
+        "state:open"
+      ]
+    },
+    {
+      "test": "test/components/card/card_widget_test.dart",
+      "case": "a disabled interactive card does not invoke callbacks",
+      "covers": ["state:disabled"]
+    }
+  ],
+  "checkbox": [
+    {
+      "test": "test/fortal/fortal_control_matrix_test.dart",
+      "case": "checkbox and radio sizes resolve exact control metrics",
+      "covers": ["enum:size.size1", "enum:size.size2", "enum:size.size3"]
+    },
+    {
+      "test": "test/fortal/fortal_high_contrast_test.dart",
+      "case": "selected checkbox variants resolve stronger roles",
+      "covers": [
+        "enum:variant.classic",
+        "enum:variant.surface",
+        "enum:variant.soft",
+        "state:highContrast"
+      ]
+    },
+    {
+      "test": "test/components/checkbox/checkbox_widget_test.dart",
+      "case": "renders unchecked state",
+      "covers": ["state:unchecked"]
+    },
+    {
+      "test": "test/components/checkbox/checkbox_widget_test.dart",
+      "case": "renders checked state",
+      "covers": ["state:checked"]
+    },
+    {
+      "test": "test/components/checkbox/checkbox_widget_test.dart",
+      "case": "renders indeterminate state when tristate is true",
+      "covers": ["state:indeterminate"]
+    },
+    {
+      "test": "test/components/checkbox/checkbox_widget_test.dart",
+      "case": "contains hovered state when hovered",
+      "covers": ["state:hovered"]
+    },
+    {
+      "test": "test/components/checkbox/checkbox_widget_test.dart",
+      "case": "contains pressed state when pressed",
+      "covers": ["state:pressed"]
+    },
+    {
+      "test": "test/components/checkbox/checkbox_widget_test.dart",
+      "case": "contains focused state when focused",
+      "covers": ["state:focused"]
+    },
+    {
+      "test": "test/components/checkbox/checkbox_widget_test.dart",
+      "case": "contains disabled state when enabled is false",
+      "covers": ["state:disabled"]
+    }
+  ],
+  "dialog": [
+    {
+      "test": "test/components/dialog/dialog_parity_test.dart",
+      "case": "resolves the exact size padding and radius matrix",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:size.size4"
+      ]
+    },
+    {
+      "test": "test/components/dialog/dialog_parity_test.dart",
+      "case": "supports start and center viewport alignment",
+      "covers": ["enum:align.start", "enum:align.center"]
+    },
+    {
+      "test": "test/components/dialog/dialog_widget_test.dart",
+      "case": "transitions through entering open exiting and closed states",
+      "covers": [
+        "state:closed",
+        "state:open",
+        "state:entering",
+        "state:exiting"
+      ]
+    },
+    {
+      "test": "test/components/dialog/dialog_widget_test.dart",
+      "case": "modal controls route-scoping accessibility semantics",
+      "covers": ["state:modal", "state:nonModal"]
+    }
+  ],
+  "divider": [
+    {
+      "test": "test/components/divider/divider_widget_test.dart",
+      "case": "Fortal divider sizes resolve every orientation and length",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:size.size4",
+        "enum:orientation.horizontal",
+        "enum:orientation.vertical"
+      ]
+    },
+    {
+      "test": "test/components/divider/divider_widget_test.dart",
+      "case": "keeps decorative dividers out of the semantics tree",
+      "covers": ["state:decorative"]
+    },
+    {
+      "test": "test/components/divider/divider_widget_test.dart",
+      "case": "exposes non-decorative separator semantics",
+      "covers": ["state:semantic"]
+    }
+  ],
+  "menu": [
+    {
+      "test": "test/components/menu/menu_style_test.dart",
+      "case": "Fortal exposes the complete Radix size and variant matrix",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:variant.solid",
+        "enum:variant.soft"
+      ]
+    },
+    {
+      "test": "test/components/menu/menu_widget_test.dart",
+      "case": "arbitrary trigger opens ordered compositional items",
+      "covers": ["state:closed", "state:open"]
+    },
+    {
+      "test": "test/components/menu/menu_style_test.dart",
+      "case": "Fortal item states resolve highlight submenu disabled and high contrast roles",
+      "covers": ["state:highlighted", "state:disabled", "state:highContrast"]
+    },
+    {
+      "test": "test/components/menu/menu_widget_test.dart",
+      "case": "checkbox and radio items expose correct roles and callbacks",
+      "covers": ["state:checked", "state:unchecked"]
+    },
+    {
+      "test": "test/components/menu/menu_widget_test.dart",
+      "case": "submenu hover waits 100 ms and nested action closes the root",
+      "covers": ["state:submenuOpen"]
+    },
+    {
+      "test": "test/components/menu/menu_widget_test.dart",
+      "case": "submenu keyboard handoff follows LTR and restores focus",
+      "covers": ["state:escape", "state:focusRestored"]
+    },
+    {
+      "test": "test/components/menu/menu_widget_test.dart",
+      "case": "submenu keyboard handoff reverses in RTL",
+      "covers": ["state:rtl"]
+    }
+  ],
+  "icon_button": [
+    {
+      "test": "test/fortal/fortal_control_matrix_test.dart",
+      "case": "icon button sizes resolve exact square and icon metrics",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:size.size4"
+      ]
+    },
+    {
+      "test": "test/fortal/fortal_high_contrast_test.dart",
+      "case": "icon button variants resolve stronger accent roles",
+      "covers": [
+        "enum:variant.classic",
+        "enum:variant.solid",
+        "enum:variant.soft",
+        "enum:variant.surface",
+        "enum:variant.outline",
+        "enum:variant.ghost",
+        "state:idle",
+        "state:highContrast"
+      ]
+    },
+    {
+      "test": "test/components/icon_button/icon_button_widget_test.dart",
+      "case": "reports hovered state",
+      "covers": ["state:hovered"]
+    },
+    {
+      "test": "test/components/icon_button/icon_button_widget_test.dart",
+      "case": "reports pressed state",
+      "covers": ["state:pressed"]
+    },
+    {
+      "test": "test/components/icon_button/icon_button_widget_test.dart",
+      "case": "reports focused state",
+      "covers": ["state:focused"]
+    },
+    {
+      "test": "test/components/icon_button/icon_button_widget_test.dart",
+      "case": "reports disabled state when no callback is supplied",
+      "covers": ["state:disabled"]
+    },
+    {
+      "test": "test/components/icon_button/icon_button_widget_test.dart",
+      "case": "loading preserves layout, hides content, and shows spinner",
+      "covers": ["state:loading"]
+    }
+  ],
+  "popover": [
+    {
+      "test": "test/components/popover/popover_parity_test.dart",
+      "case": "resolves the exact size padding and radius matrix",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:size.size4"
+      ]
+    },
+    {
+      "test": "test/components/popover/popover_widget_test.dart",
+      "case": "is closed by default and opens styled content on tap",
+      "covers": ["state:closed", "state:open"]
+    },
+    {
+      "test": "test/components/popover/popover_parity_test.dart",
+      "case": "propagates hovered and open states into its trigger subtree",
+      "covers": ["state:hovered"]
+    },
+    {
+      "test": "test/components/popover/popover_widget_test.dart",
+      "case": "closes on an outside tap and reports lifecycle changes",
+      "covers": ["state:outsideTap"]
+    },
+    {
+      "test": "test/components/popover/popover_widget_test.dart",
+      "case": "Escape closes the popover and restores trigger focus",
+      "covers": ["state:escape", "state:focusRestored"]
+    },
+    {
+      "test": "test/components/popover/popover_parity_test.dart",
+      "case": "positions against a separate keyed anchor",
+      "covers": ["state:separateAnchor"]
+    },
+    {
+      "test": "test/components/popover/popover_parity_test.dart",
+      "case": "reports collisionFlipped and collisionShifted placement",
+      "covers": ["state:collisionFlipped", "state:collisionShifted"]
+    }
+  ],
+  "progress": [
+    {
+      "test": "test/fortal/fortal_control_matrix_test.dart",
+      "case": "enum domains and defaults match Radix Themes 3.3.0",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:variant.classic",
+        "enum:variant.surface",
+        "enum:variant.soft"
+      ]
+    },
+    {
+      "test": "test/components/progress/progress_widget_test.dart",
+      "case": "uses value divided by max for determinate width",
+      "covers": ["state:determinate"]
+    },
+    {
+      "test": "test/components/progress/progress_widget_test.dart",
+      "case": "runs the indeterminate growth sequence once",
+      "covers": ["state:indeterminate"]
+    },
+    {
+      "test": "test/components/progress/progress_widget_test.dart",
+      "case": "uses a stable completed frame when animations are disabled",
+      "covers": ["state:animationDisabled"]
+    },
+    {
+      "test": "test/fortal/fortal_high_contrast_test.dart",
+      "case": "progress variants resolve accent12 indicators",
+      "covers": ["state:highContrast"]
+    }
+  ],
+  "radio": [
+    {
+      "test": "test/fortal/fortal_control_matrix_test.dart",
+      "case": "checkbox and radio sizes resolve exact control metrics",
+      "covers": ["enum:size.size1", "enum:size.size2", "enum:size.size3"]
+    },
+    {
+      "test": "test/fortal/fortal_high_contrast_test.dart",
+      "case": "selected radio variants resolve stronger roles",
+      "covers": [
+        "enum:variant.classic",
+        "enum:variant.surface",
+        "enum:variant.soft",
+        "state:highContrast"
+      ]
+    },
+    {
+      "test": "test/components/radio/radio_widget_test.dart",
+      "case": "renders radio as unselected when not matching groupValue",
+      "covers": ["state:unchecked"]
+    },
+    {
+      "test": "test/components/radio/radio_widget_test.dart",
+      "case": "renders radio as selected when matching groupValue",
+      "covers": ["state:checked"]
+    },
+    {
+      "test": "test/components/radio/radio_widget_test.dart",
+      "case": "reports radio hovered state",
+      "covers": ["state:hovered"]
+    },
+    {
+      "test": "test/components/radio/radio_widget_test.dart",
+      "case": "reports radio pressed state",
+      "covers": ["state:pressed"]
+    },
+    {
+      "test": "test/components/radio/radio_widget_test.dart",
+      "case": "reports radio focused state",
+      "covers": ["state:focused"]
+    },
+    {
+      "test": "test/components/radio/radio_widget_test.dart",
+      "case": "reports radio disabled state",
+      "covers": ["state:disabled"]
+    },
+    {
+      "test": "test/components/radio/radio_widget_test.dart",
+      "case": "provides group context for radio buttons",
+      "covers": ["state:group"]
+    }
+  ],
+  "select": [
+    {
+      "test": "test/components/select/select_fortal_parity_test.dart",
+      "case": "${size.name} matches the pinned CSS metrics",
+      "covers": ["enum:size.size1", "enum:size.size2", "enum:size.size3"]
+    },
+    {
+      "test": "test/components/select/select_parity_test.dart",
+      "case": "exposes the exact Radix trigger and content variant sets",
+      "covers": [
+        "enum:triggerVariant.classic",
+        "enum:triggerVariant.surface",
+        "enum:triggerVariant.soft",
+        "enum:triggerVariant.ghost",
+        "enum:contentVariant.solid",
+        "enum:contentVariant.soft"
+      ]
+    },
+    {
+      "test": "test/components/select/select_widget_test.dart",
+      "case": "reports open and close lifecycle around a selection",
+      "covers": ["state:closed", "state:open"]
+    },
+    {
+      "test": "test/components/select/select_widget_test.dart",
+      "case": "renders placeholder, leading icon, and a stable down chevron",
+      "covers": ["state:placeholder"]
+    },
+    {
+      "test": "test/components/select/select_widget_test.dart",
+      "case": "selection is controlled and closes content by default",
+      "covers": ["state:selected"]
+    },
+    {
+      "test": "test/components/select/select_fortal_parity_test.dart",
+      "case": "content variants and disabled precedence match pinned roles",
+      "covers": ["state:highlighted", "state:disabled", "state:highContrast"]
+    },
+    {
+      "test": "test/components/select/select_parity_test.dart",
+      "case": "exposes trigger, menu-item, label, and decorative boundaries",
+      "covers": ["state:grouped", "state:separated"]
+    },
+    {
+      "test": "test/components/select/select_parity_test.dart",
+      "case": "controlled opening remains owner-authoritative",
+      "covers": ["state:ownerRejected"]
+    },
+    {
+      "test": "test/components/select/select_parity_test.dart",
+      "case": "reports collisionFlipped and collisionShifted placement",
+      "covers": ["state:collisionFlipped", "state:collisionShifted"]
+    }
+  ],
+  "slider": [
+    {
+      "test": "test/components/slider/slider_style_test.dart",
+      "case": "Fortal exposes the exact Radix size and variant matrix",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:variant.classic",
+        "enum:variant.surface",
+        "enum:variant.soft"
+      ]
+    },
+    {
+      "test": "test/components/slider/slider_widget_test.dart",
+      "case": "vertical orientation grows bottom-up unless inverted",
+      "covers": [
+        "enum:orientation.horizontal",
+        "enum:orientation.vertical",
+        "state:inverted"
+      ]
+    },
+    {
+      "test": "test/components/slider/slider_widget_test.dart",
+      "case": "defaults match the Radix-shaped arbitrary-thumb contract",
+      "covers": ["state:idle"]
+    },
+    {
+      "test": "test/components/slider/slider_widget_test.dart",
+      "case": "reports hover entry and exit",
+      "covers": ["state:hovered"]
+    },
+    {
+      "test": "test/components/slider/slider_widget_test.dart",
+      "case": "reports complete drag lifecycle lists and aggregate states",
+      "covers": ["state:pressed"]
+    },
+    {
+      "test": "test/components/slider/slider_widget_test.dart",
+      "case": "paints the focus overlay only around the focused thumb",
+      "covers": ["state:focused"]
+    },
+    {
+      "test": "test/components/slider/slider_widget_test.dart",
+      "case": "disabled slider ignores pointer and hover input",
+      "covers": ["state:disabled"]
+    },
+    {
+      "test": "test/fortal/fortal_high_contrast_test.dart",
+      "case": "slider variants resolve accent12 ranges",
+      "covers": ["state:highContrast"]
+    },
+    {
+      "test": "test/components/slider/slider_widget_test.dart",
+      "case": "tap changes the nearest thumb and supports three thumbs",
+      "covers": ["state:multipleThumbs"]
+    },
+    {
+      "test": "test/components/slider/slider_widget_test.dart",
+      "case": "RTL and inversion map both the thumb and filled origin",
+      "covers": ["state:rtl"]
+    },
+    {
+      "test": "test/components/slider/slider_widget_test.dart",
+      "case": "owner rejection leaves visual values unchanged",
+      "covers": ["state:ownerRejected"]
+    }
+  ],
+  "spinner": [
+    {
+      "test": "test/fortal/fortal_control_matrix_test.dart",
+      "case": "progress and spinner sizes resolve exact metrics",
+      "covers": ["enum:size.size1", "enum:size.size2", "enum:size.size3"]
+    },
+    {
+      "test": "test/components/spinner/spinner_widget_test.dart",
+      "case": "preserves hidden child layout while loading",
+      "covers": ["state:loading", "state:withChild"]
+    },
+    {
+      "test": "test/components/spinner/spinner_widget_test.dart",
+      "case": "returns its child directly when not loading",
+      "covers": ["state:notLoading"]
+    },
+    {
+      "test": "test/components/spinner/spinner_widget_test.dart",
+      "case": "renders an eight-leaf spinner in inherited current color",
+      "covers": ["state:withoutChild"]
+    },
+    {
+      "test": "test/components/spinner/spinner_widget_test.dart",
+      "case": "stops animation when accessible animations are disabled",
+      "covers": ["state:animationDisabled"]
+    }
+  ],
+  "switch": [
+    {
+      "test": "test/fortal/fortal_control_matrix_test.dart",
+      "case": "switch sizes resolve exact track and thumb metrics",
+      "covers": ["enum:size.size1", "enum:size.size2", "enum:size.size3"]
+    },
+    {
+      "test": "test/fortal/fortal_high_contrast_test.dart",
+      "case": "selected switch variants resolve accent12 tracks",
+      "covers": [
+        "enum:variant.classic",
+        "enum:variant.surface",
+        "enum:variant.soft",
+        "state:highContrast"
+      ]
+    },
+    {
+      "test": "test/components/switch/switch_widget_test.dart",
+      "case": "renders switch in unselected state",
+      "covers": ["state:unchecked"]
+    },
+    {
+      "test": "test/components/switch/switch_widget_test.dart",
+      "case": "renders switch in selected state",
+      "covers": ["state:checked"]
+    },
+    {
+      "test": "test/components/switch/switch_widget_test.dart",
+      "case": "reports switch hovered state",
+      "covers": ["state:hovered"]
+    },
+    {
+      "test": "test/components/switch/switch_widget_test.dart",
+      "case": "reports switch pressed state",
+      "covers": ["state:pressed"]
+    },
+    {
+      "test": "test/components/switch/switch_widget_test.dart",
+      "case": "reports switch focused state",
+      "covers": ["state:focused"]
+    },
+    {
+      "test": "test/components/switch/switch_widget_test.dart",
+      "case": "reports switch disabled state",
+      "covers": ["state:disabled"]
+    }
+  ],
+  "tabs": [
+    {
+      "test": "test/components/tabs/tabs_widget_test.dart",
+      "case": "Fortal size controls exact tab height",
+      "covers": ["enum:size.size1", "enum:size.size2"]
+    },
+    {
+      "test": "test/components/tabs/tabs_parity_test.dart",
+      "case": "maps every wrap justify and orientation to rendered layout",
+      "covers": [
+        "enum:wrap.nowrap",
+        "enum:wrap.wrap",
+        "enum:wrap.wrapReverse",
+        "enum:justify.start",
+        "enum:justify.center",
+        "enum:justify.end",
+        "enum:orientation.horizontal",
+        "enum:orientation.vertical"
+      ]
+    },
+    {
+      "test": "test/components/tabs/tabs_widget_test.dart",
+      "case": "arrow focus automatically activates on the current contract",
+      "covers": ["enum:activationMode.automatic", "state:automatic"]
+    },
+    {
+      "test": "test/components/tabs/tabs_widget_test.dart",
+      "case": "manual activation moves focus without selecting",
+      "covers": ["enum:activationMode.manual", "state:manual"]
+    },
+    {
+      "test": "test/components/tabs/tabs_widget_test.dart",
+      "case": "controlled tabs select by tap and show the matching panel",
+      "covers": ["state:inactive", "state:active"]
+    },
+    {
+      "test": "test/components/tabs/tabs_widget_test.dart",
+      "case": "tab builder exposes hovered pressed and focused states",
+      "covers": ["state:hovered", "state:pressed", "state:focused"]
+    },
+    {
+      "test": "test/components/tabs/tabs_widget_test.dart",
+      "case": "disabled root and disabled tabs cannot change selection",
+      "covers": ["state:disabled"]
+    },
+    {
+      "test": "test/components/tabs/tabs_widget_test.dart",
+      "case": "RTL horizontal arrows follow visual direction",
+      "covers": ["state:rtl"]
+    },
+    {
+      "test": "test/fortal/fortal_high_contrast_test.dart",
+      "case": "selected tabs resolve an accent12 underline",
+      "covers": ["state:highContrast"]
+    }
+  ],
+  "text_field": [
+    {
+      "test": "test/fortal/fortal_control_matrix_test.dart",
+      "case": "text field size and variant matrix resolves exact metrics",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:variant.classic",
+        "enum:variant.surface",
+        "enum:variant.soft",
+        "state:idle"
+      ]
+    },
+    {
+      "test": "test/components/textfield/textfield_widget_test.dart",
+      "case": "reports text field hovered state",
+      "covers": ["state:hovered"]
+    },
+    {
+      "test": "test/components/textfield/textfield_widget_test.dart",
+      "case": "keeps focus variants connected to NakedTextField state",
+      "covers": ["state:focused"]
+    },
+    {
+      "test": "test/components/textfield/fortal_textfield_disabled_test.dart",
+      "case": "disabled soft textfield resolves a background and never the debug red",
+      "covers": ["state:disabled"]
+    },
+    {
+      "test": "test/components/textfield/textfield_widget_test.dart",
+      "case": "respects readOnly flag",
+      "covers": ["state:readOnly"]
+    },
+    {
+      "test": "test/components/textfield/textfield_widget_test.dart",
+      "case": "handles error state",
+      "covers": ["state:invalid"]
+    },
+    {
+      "test": "test/components/textfield/textfield_widget_test.dart",
+      "case": "renders with leading and trailing widgets",
+      "covers": ["state:leading", "state:trailing"]
+    }
+  ],
+  "tooltip": [
+    {
+      "test": "test/components/tooltip/tooltip_parity_test.dart",
+      "case": "delayed trigger hover opens and content hover holds the overlay",
+      "covers": [
+        "state:closed",
+        "state:delayedOpen",
+        "state:triggerHovered",
+        "state:contentHovered"
+      ]
+    },
+    {
+      "test": "test/components/tooltip/tooltip_parity_test.dart",
+      "case": "focus opens instantly and Escape closes",
+      "covers": ["state:instantOpen", "state:focused", "state:escape"]
+    },
+    {
+      "test": "test/components/tooltip/tooltip_parity_test.dart",
+      "case": "touch long press opens and reports the trigger",
+      "covers": ["state:touch"]
+    },
+    {
+      "test": "test/components/tooltip/tooltip_parity_test.dart",
+      "case": "outside tap requests and accepts close",
+      "covers": ["state:outsideTap"]
+    },
+    {
+      "test": "test/components/tooltip/tooltip_parity_test.dart",
+      "case": "controlled opening remains owner-authoritative",
+      "covers": ["state:ownerRejected"]
+    },
+    {
+      "test": "test/components/tooltip/tooltip_parity_test.dart",
+      "case": "a collision flip reverses the arrow side",
+      "covers": ["state:collisionFlipped"]
+    },
+    {
+      "test": "test/components/tooltip/tooltip_parity_test.dart",
+      "case": "the arrow follows a collision shift and instant open",
+      "covers": ["state:collisionShifted"]
+    }
+  ],
+  "accordion": [
+    {
+      "test": "test/components/accordion/accordion_style_test.dart",
+      "case": "all variant and size combinations produce complete styles",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:variant.surface",
+        "enum:variant.soft"
+      ]
+    },
+    {
+      "test": "test/components/accordion/accordion_widget_test.dart",
+      "case": "shows add icon when collapsed and remove icon when expanded",
+      "covers": ["state:collapsed", "state:expanded"]
+    },
+    {
+      "test": "test/components/accordion/accordion_widget_test.dart",
+      "case": "contains hovered state when hovered",
+      "covers": ["state:hovered"]
+    },
+    {
+      "test": "test/components/accordion/accordion_widget_test.dart",
+      "case": "tracks pressed state without requiring a callback",
+      "covers": ["state:pressed"]
+    },
+    {
+      "test": "test/components/accordion/accordion_widget_test.dart",
+      "case": "contains focused state when focused",
+      "covers": ["state:focused"]
+    },
+    {
+      "test": "test/components/accordion/accordion_widget_test.dart",
+      "case": "contains disabled state when enabled is false",
+      "covers": ["state:disabled"]
+    }
+  ],
+  "toggle": [
+    {
+      "test": "test/components/toggle/toggle_widget_test.dart",
+      "case": "recipe works for all variant/size combos",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:variant.ghost",
+        "enum:variant.outline"
+      ]
+    },
+    {
+      "test": "test/components/toggle/toggle_widget_test.dart",
+      "case": "toggles between states",
+      "covers": ["state:off", "state:on"]
+    },
+    {
+      "test": "test/components/toggle/toggle_widget_test.dart",
+      "case": "contains hovered state when hovered",
+      "covers": ["state:hovered"]
+    },
+    {
+      "test": "test/components/toggle/toggle_widget_test.dart",
+      "case": "contains pressed state when pressed",
+      "covers": ["state:pressed"]
+    },
+    {
+      "test": "test/components/toggle/toggle_widget_test.dart",
+      "case": "contains focused state when focused",
+      "covers": ["state:focused"]
+    },
+    {
+      "test": "test/components/toggle/toggle_widget_test.dart",
+      "case": "contains disabled state when enabled is false",
+      "covers": ["state:disabled"]
+    },
+    {
+      "test": "test/fortal/fortal_high_contrast_test.dart",
+      "case": "selected toggle variants resolve accent12 foregrounds",
+      "covers": ["state:highContrast"]
+    }
+  ],
+  "toggle_group": [
+    {
+      "test": "test/components/toggle_group/toggle_group_style_test.dart",
+      "case": "all Fortal variant and size combinations resolve",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:variant.soft",
+        "enum:variant.surface"
+      ]
+    },
+    {
+      "test": "test/components/toggle_group/toggle_group_widget_test.dart",
+      "case": "styleSpec preserves vertical layout orientation",
+      "covers": ["enum:orientation.horizontal", "enum:orientation.vertical"]
+    },
+    {
+      "test": "test/components/toggle_group/toggle_group_widget_test.dart",
+      "case": "selected style is removed when selection changes",
+      "covers": ["state:unselected", "state:selected"]
+    },
+    {
+      "test": "test/components/toggle_group/toggle_group_style_test.dart",
+      "case": "Fortal hover and focus resolve exact interaction roles",
+      "covers": ["state:hovered", "state:focused"]
+    },
+    {
+      "test": "test/components/toggle_group/toggle_group_style_test.dart",
+      "case": "Fortal pressed and disabled precedence is deterministic",
+      "covers": ["state:pressed", "state:disabled"]
+    },
+    {
+      "test": "test/components/toggle_group/toggle_group_style_test.dart",
+      "case": "Fortal high contrast uses accent12 for selected foreground",
+      "covers": ["state:highContrast"]
+    },
+    {
+      "test": "test/components/toggle_group/toggle_group_widget_test.dart",
+      "case": "RTL inverts horizontal arrow direction",
+      "covers": ["state:rtl"]
+    }
+  ]
+}

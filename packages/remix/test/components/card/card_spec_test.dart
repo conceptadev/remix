@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -106,6 +107,58 @@ void main() {
         expect(result1, isA<RemixCardSpec>());
         expect(result2, isA<RemixCardSpec>());
       });
+
+      test('interpolates surface layers instead of snapping', () {
+        const start = RemixCardSpec(
+          containerEffects: RemixBoxEffectsSpec(
+            behindContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.red)],
+            ),
+            overContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.green)],
+            ),
+          ),
+        );
+        const end = RemixCardSpec(
+          containerEffects: RemixBoxEffectsSpec(
+            behindContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.blue)],
+            ),
+            overContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.yellow)],
+            ),
+          ),
+        );
+
+        final result = start.lerp(end, 0.25);
+
+        expect(
+          result.containerEffects?.behindContent?.shadows.first.color,
+          Color.lerp(Colors.red, Colors.blue, 0.25),
+        );
+        expect(
+          result.containerEffects?.overContent?.shadows.first.color,
+          Color.lerp(Colors.green, Colors.yellow, 0.25),
+        );
+      });
+
+      test('fades a surface layer in from an absent value', () {
+        const start = RemixCardSpec();
+        const end = RemixCardSpec(
+          containerEffects: RemixBoxEffectsSpec(
+            behindContent: RemixBoxEffectLayerSpec(
+              shadows: [RemixBoxShadow(color: Colors.blue)],
+            ),
+          ),
+        );
+
+        final result = start.lerp(end, 0.25);
+
+        expect(
+          result.containerEffects?.behindContent?.shadows.first.color,
+          Color.lerp(null, Colors.blue, 0.25),
+        );
+      });
     });
 
     group('Equality and Props', () {
@@ -138,7 +191,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixCardSpec();
 
-        expect(spec.props, hasLength(1));
+        expect(spec.props, hasLength(2));
         expect(spec.props, contains(spec.container));
       });
 
@@ -147,7 +200,7 @@ void main() {
 
         final spec = RemixCardSpec(container: containerSpec);
 
-        expect(spec.props, hasLength(1));
+        expect(spec.props, hasLength(2));
         expect(spec.props, contains(containerSpec));
       });
     });
@@ -220,7 +273,7 @@ void main() {
         final spec = RemixCardSpec(container: complexContainerSpec);
 
         expect(spec.container, equals(complexContainerSpec));
-        expect(spec.props, hasLength(1));
+        expect(spec.props, hasLength(2));
       });
     });
   });
