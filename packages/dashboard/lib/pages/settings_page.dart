@@ -80,7 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         placeholder: 'Language',
                       ),
                       selectedValue: _language,
-                      entries: const [
+                      items: const [
                         RemixSelectItem(
                           value: 'English (US)',
                           label: 'English (US)',
@@ -146,7 +146,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           'Tune every Fortal theme parameter in real time.',
                     ),
                     FortalCallout(
-                      icon: Icon(Icons.auto_awesome_outlined),
+                      icon: Icons.auto_awesome_outlined,
                       child: Text(
                         'Changes apply live across the entire dashboard.',
                       ),

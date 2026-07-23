@@ -18,7 +18,8 @@ size, default, and supported theme override.
 
 ### Button
 
-`RemixButton` requires an arbitrary `Widget child`. Its behavior fields include
+`RemixButton` accepts the established `label`, leading/trailing icon, and
+builder fields or an arbitrary `Widget child`. Its behavior fields include
 `onPressed`, `onLongPress`, `loading`, `loadingBuilder`, `enabled`, focus,
 feedback, cursor, and semantic options. It is interactive only when
 `enabled && !loading && (onPressed != null || onLongPress != null)`. Loading
@@ -38,8 +39,9 @@ RemixButton(
 
 ### IconButton
 
-`RemixIconButton` requires an arbitrary `Widget icon` and a nonempty
-`semanticLabel`. Descendant `Icon` widgets inherit the resolved icon style. It
+`RemixIconButton.icon` accepts the established `IconData` form or an arbitrary
+icon widget; `iconBuilder` remains available for icon data. `semanticLabel` is
+optional, though a localized label should be supplied for accessibility. It
 otherwise mirrors Button's loading, enabled, long-press, focus, feedback,
 cursor, and semantic surface. `FortalIconButton` adds the same Fortal style
 props as Button.
@@ -85,8 +87,10 @@ It also exposes enabled, feedback, focus, cursor, and semantic fields.
 
 ### Slider
 
-`RemixSlider` and `FortalSlider` use an arbitrary nonempty ascending
-`List<double> values`. All change callbacks receive the complete list.
+`RemixSlider` and `FortalSlider` retain the scalar `value`, `onChanged`,
+`onChangeStart`, `onChangeEnd`, `focusNode`, `autofocus`, and `snapDivisions`
+API. Their additive multi-thumb mode uses an ascending `List<double> values`
+and `onValuesChanged`, `onValuesChangeStart`, and `onValuesChangeEnd`.
 
 ```dart
 FortalSlider(
@@ -96,15 +100,14 @@ FortalSlider(
   step: 5,
   minSpacing: 10,
   orientation: Axis.horizontal,
-  onChanged: (values) => setState(() => range = values),
+  onValuesChanged: (values) => setState(() => range = values),
 )
 ```
 
 `min < max`, `step > 0`, and `minSpacing >= 0`. `orientation`, `inverted`,
 per-thumb focus nodes, an autofocus thumb index, semantic labels/formatters,
-feedback, cursor, and hover/drag/focus callbacks are supported. A null
-`onChanged` disables value changes. The removed scalar `value` and
-`snapDivisions` API must not be used.
+feedback, cursor, and hover/drag/focus callbacks are supported. In scalar mode,
+the 0–1 range remains the default; multi-thumb mode defaults to 0–100.
 
 ### TextField
 
@@ -123,9 +126,9 @@ props.
 
 - `RemixSelectTrigger trigger`, containing a required placeholder and optional
   leading icon.
-- `List<RemixSelectEntry<T>> entries`.
+- `List<RemixSelectItemData<T>> items`.
 
-Entry types are `RemixSelectItem<T>`, `RemixSelectGroup<T>`,
+Item types are `RemixSelectItem<T>`, `RemixSelectGroup<T>`,
 `RemixSelectLabel<T>`, and `RemixSelectSeparator<T>`. Items carry value, label,
 enabled/semantic fields, and an optional row style. The Select also accepts
 `selectedValue`, nullable `onChanged`, open/close callbacks, `enabled`,
@@ -150,9 +153,9 @@ radius, and high contrast; its string fallback is normalized to uppercase.
 
 ### Badge
 
-`RemixBadge` requires arbitrary `Widget child` and applies the resolved text
-style to descendants. `FortalBadge` adds variant, size, color, radius, and high
-contrast.
+`RemixBadge` accepts the established `label`/`labelBuilder` API or arbitrary
+`Widget child`; arbitrary content inherits resolved text and icon styles.
+`FortalBadge` adds variant, size, color, radius, and high contrast.
 
 ### Card
 
@@ -166,12 +169,13 @@ the Radix open treatment and gives open precedence over pressed.
 
 ### Callout
 
-`RemixCallout` requires arbitrary `child` and accepts an optional `Widget icon`.
-`FortalCallout` adds variant, size, color, and high contrast.
+`RemixCallout` accepts established `text` and `IconData icon` values or an
+arbitrary `child` and `iconWidget`. `FortalCallout` adds variant, size, color,
+and high contrast.
 
 ### Progress
 
-`RemixProgress` accepts nullable `value`, `max` (default 100), indeterminate
+`RemixProgress` accepts nullable `value`, `max` (default 1), indeterminate
 animation `duration`, and semantic fields. Null is indeterminate; determinate
 values must be in `0...max`. `FortalProgress` adds variant, size, color, radius,
 and high contrast.
@@ -219,7 +223,7 @@ arrow.
 ### Menu
 
 `RemixMenu<T>` and `FortalMenu<T>` require arbitrary trigger `Widget` and
-`List<Widget> entries`. Supported entries are:
+`List<Widget> items`. Supported items are:
 
 - `RemixMenuAction<T>`
 - `RemixMenuCheckboxItem<T>`
@@ -239,8 +243,9 @@ adds content variant, size, color, and high contrast.
 
 `RemixTabs` is the behavioral root with `selectedTabId`, nullable `onChanged`,
 `activationMode` (`automatic` or `manual`), orientation, and `child`. Below it,
-`RemixTabBar`/`FortalTabBar` take `List<Widget> children` plus wrap/justify
-configuration; `RemixTab`/`FortalTab` require `tabId` and accept arbitrary
+`RemixTabBar`/`FortalTabBar` retain arbitrary `Widget child` and additionally
+accept `List<Widget> children` for wrap/justify configuration;
+`RemixTab`/`FortalTab` require `tabId` and accept arbitrary
 child or label/icon content; `RemixTabView`/`FortalTabView` require `tabId` and
 child and can maintain inactive state. There is no `FortalTabs`.
 

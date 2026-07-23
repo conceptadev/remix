@@ -154,17 +154,13 @@ Widget previewSliders() {
         mainAxisAlignment: .center,
         children: [
           const Text('Volume: 50%'),
-          RemixSlider(values: const [50], onChanged: (values) {}),
+          RemixSlider(value: 0.5, onChanged: (value) {}),
           const SizedBox(height: 20),
           const Text('Brightness: 75%'),
-          RemixSlider(values: const [75], onChanged: (values) {}),
+          RemixSlider(value: 0.75, onChanged: (value) {}),
           const SizedBox(height: 20),
           const Text('Disabled Slider'),
-          RemixSlider(
-            values: const [30],
-            enabled: false,
-            onChanged: (values) {},
-          ),
+          RemixSlider(value: 0.3, enabled: false, onChanged: (value) {}),
         ],
       ),
     ),
@@ -177,7 +173,7 @@ Widget previewSelect() {
     RemixSelect<String>(
       trigger: const RemixSelectTrigger(placeholder: 'Select an option'),
       selectedValue: 'option1',
-      entries: const [
+      items: const [
         RemixSelectItem(value: 'option1', label: 'First Option'),
         RemixSelectItem(value: 'option2', label: 'Second Option'),
         RemixSelectItem(value: 'option3', label: 'Third Option'),

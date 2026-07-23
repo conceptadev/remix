@@ -26,11 +26,11 @@ Widget buildSliderUseCase(BuildContext context) {
         child: SizedBox(
           width: 200,
           child: FortalSlider(
-            values: [value],
+            value: value,
             min: 0,
             max: 1,
-            step: divisions > 0 ? 1 / divisions : 0.01,
-            onChanged: (values) => knobState.updateKnob('value', values.single),
+            snapDivisions: divisions > 0 ? divisions : 100,
+            onChanged: (value) => knobState.updateKnob('value', value),
             enabled: context.knobs.boolean(
               label: 'enabled',
               initialValue: true,

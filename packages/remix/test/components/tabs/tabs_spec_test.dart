@@ -8,7 +8,7 @@ void main() {
     const tab = RemixTabSpec();
     const view = RemixTabViewSpec();
 
-    expect(bar.container, const StyleSpec(spec: BoxSpec()));
+    expect(bar.container, const StyleSpec(spec: FlexBoxSpec()));
     expect(tab.container, const StyleSpec(spec: FlexBoxSpec()));
     expect(tab.label, const StyleSpec(spec: TextSpec()));
     expect(tab.icon, const StyleSpec(spec: IconSpec()));

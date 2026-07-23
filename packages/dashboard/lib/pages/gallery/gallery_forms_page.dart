@@ -63,7 +63,7 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
                 contentVariant: variant.content,
                 size: FortalSelectSize.values[column],
                 trigger: const RemixSelectTrigger(placeholder: 'Fruit'),
-                entries: const [
+                items: const [
                   RemixSelectLabel(label: 'Fruit'),
                   RemixSelectItem(value: 'apple', label: 'Apple'),
                   RemixSelectItem(value: 'orange', label: 'Orange'),
@@ -176,7 +176,7 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
                 values: _slider,
                 step: 1,
                 semanticLabels: const ['Example slider'],
-                onChanged: (value) => setState(() => _slider = value),
+                onValuesChanged: (value) => setState(() => _slider = value),
               ),
             ),
           ),

@@ -19,7 +19,7 @@ class CalloutExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: RemixCallout(
-        icon: const Icon(Icons.info_outline),
+        icon: Icons.info_outline,
         style: style,
         child: const Text('Callout important information for the user.'),
       ),

@@ -9,7 +9,7 @@ typedef RemixSelectIconBuilder =
     Widget Function(BuildContext context, StyleSpec<IconSpec> styleSpec);
 
 // ============================================================================
-// DATA CLASSES - Trigger and Select Entries
+// DATA CLASSES - Trigger and Select Items
 // ============================================================================
 
 /// Data class representing a select trigger.
@@ -27,13 +27,13 @@ class RemixSelectTrigger {
   const RemixSelectTrigger({required this.placeholder, this.icon});
 }
 
-/// A structural entry rendered in a [RemixSelect] content popup.
-sealed class RemixSelectEntry<T> {
-  const RemixSelectEntry();
+/// A structural item rendered in a [RemixSelect] content popup.
+sealed class RemixSelectItemData<T> {
+  const RemixSelectItemData();
 }
 
 /// A selectable option.
-class RemixSelectItem<T> extends RemixSelectEntry<T> {
+class RemixSelectItem<T> extends RemixSelectItemData<T> {
   /// The value associated with this option.
   /// Passed to onChanged callback when selected.
   final T value;
@@ -59,19 +59,19 @@ class RemixSelectItem<T> extends RemixSelectEntry<T> {
   }) : super();
 }
 
-/// A semantic and visual group of select entries.
-class RemixSelectGroup<T> extends RemixSelectEntry<T> {
-  const RemixSelectGroup({required this.entries, this.semanticLabel}) : super();
+/// A semantic and visual group of select items.
+class RemixSelectGroup<T> extends RemixSelectItemData<T> {
+  const RemixSelectGroup({required this.items, this.semanticLabel}) : super();
 
-  /// Entries contained by this group.
-  final List<RemixSelectEntry<T>> entries;
+  /// Items contained by this group.
+  final List<RemixSelectItemData<T>> items;
 
   /// Optional accessible name for the group boundary.
   final String? semanticLabel;
 }
 
 /// A non-selectable label inside select content.
-class RemixSelectLabel<T> extends RemixSelectEntry<T> {
+class RemixSelectLabel<T> extends RemixSelectItemData<T> {
   const RemixSelectLabel({
     required this.label,
     this.semanticLabel,
@@ -89,7 +89,7 @@ class RemixSelectLabel<T> extends RemixSelectEntry<T> {
 }
 
 /// A decorative separator inside select content.
-class RemixSelectSeparator<T> extends RemixSelectEntry<T> {
+class RemixSelectSeparator<T> extends RemixSelectItemData<T> {
   const RemixSelectSeparator({this.style = const BoxStyler.create()}) : super();
 
   /// Per-separator visual style merged after the select default.
@@ -102,7 +102,7 @@ class RemixSelectSeparator<T> extends RemixSelectEntry<T> {
 
 /// A customizable select component with data-driven API.
 ///
-/// Uses a declarative trigger plus sealed content entries.
+/// Uses a declarative trigger plus sealed content items.
 /// Form input component for selecting a single value from a dropdown list.
 ///
 /// ## Example
@@ -110,7 +110,7 @@ class RemixSelectSeparator<T> extends RemixSelectEntry<T> {
 /// ```dart
 /// RemixSelect<String>(
 ///   trigger: RemixSelectTrigger(placeholder: 'Select a fruit'),
-///   entries: [
+///   items: [
 ///     RemixSelectItem(value: 'apple', label: 'Apple'),
 ///     RemixSelectItem(value: 'banana', label: 'Banana'),
 ///     RemixSelectItem(value: 'orange', label: 'Orange'),
@@ -123,7 +123,7 @@ class RemixSelect<T> extends StatefulWidget {
   const RemixSelect({
     super.key,
     required this.trigger,
-    required this.entries,
+    required this.items,
     this.selectedValue,
     this.positioning = const OverlayPositionConfig(
       side: .bottom,
@@ -150,8 +150,8 @@ class RemixSelect<T> extends StatefulWidget {
   /// The trigger data that defines the select's button.
   final RemixSelectTrigger trigger;
 
-  /// Structured content entries.
-  final List<RemixSelectEntry<T>> entries;
+  /// Structured content items.
+  final List<RemixSelectItemData<T>> items;
 
   /// The currently selected value.
   final T? selectedValue;
@@ -251,11 +251,12 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       controller: animationController,
       duration: const Duration(milliseconds: 150),
       curve: Curves.easeInOut,
+      menuContainer: spec.menuContainer,
       content: spec.content,
       minimumWidth: info.anchorRect.width,
       maximumHeight: info.overlaySize.height,
-      children: _buildEntries(
-        widget.entries,
+      children: _buildItems(
+        widget.items,
         defaultItemStyle: widget.styleSpec == null ? defaultItemStyle : null,
         defaultItemStyleSpec: widget.styleSpec == null ? null : spec.item,
         defaultLabelStyle: widget.styleSpec == null ? defaultLabelStyle : null,
@@ -270,8 +271,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     );
   }
 
-  List<Widget> _buildEntries(
-    List<RemixSelectEntry<T>> entries, {
+  List<Widget> _buildItems(
+    List<RemixSelectItemData<T>> items, {
     required Prop<StyleSpec<RemixSelectMenuItemSpec>>? defaultItemStyle,
     required StyleSpec<RemixSelectMenuItemSpec>? defaultItemStyleSpec,
     required Prop<StyleSpec<RemixSelectLabelSpec>>? defaultLabelStyle,
@@ -280,30 +281,30 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     required StyleSpec<BoxSpec>? defaultSeparatorStyleSpec,
   }) {
     final children = <Widget>[];
-    RemixSelectEntry<T>? previous;
-    for (final entry in entries) {
-      final child = switch (entry) {
+    RemixSelectItemData<T>? previous;
+    for (final item in items) {
+      final child = switch (item) {
         RemixSelectItem<T>() => _RemixSelectItemWidget<T>(
-          data: entry,
+          data: item,
           defaultStyle: defaultItemStyle,
           defaultStyleSpec: defaultItemStyleSpec,
           indicatorBuilder: widget.itemIndicatorBuilder,
         ),
         RemixSelectLabel<T>() => _RemixSelectLabelWidget<T>(
-          data: entry,
+          data: item,
           followsItem: previous is RemixSelectItem<T>,
           defaultStyle: defaultLabelStyle,
           defaultStyleSpec: defaultLabelStyleSpec,
         ),
         RemixSelectSeparator<T>() => _RemixSelectSeparatorWidget<T>(
-          data: entry,
+          data: item,
           defaultStyle: defaultSeparatorStyle,
           defaultStyleSpec: defaultSeparatorStyleSpec,
         ),
         RemixSelectGroup<T>() => _RemixSelectGroupWidget<T>(
-          semanticLabel: entry.semanticLabel,
-          children: _buildEntries(
-            entry.entries,
+          semanticLabel: item.semanticLabel,
+          children: _buildItems(
+            item.items,
             defaultItemStyle: defaultItemStyle,
             defaultItemStyleSpec: defaultItemStyleSpec,
             defaultLabelStyle: defaultLabelStyle,
@@ -314,18 +315,18 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         ),
       };
       children.add(child);
-      previous = entry;
+      previous = item;
     }
     return children;
   }
 
-  RemixSelectItem<T>? _findItem(List<RemixSelectEntry<T>> entries, T value) {
-    for (final entry in entries) {
-      switch (entry) {
+  RemixSelectItem<T>? _findItem(List<RemixSelectItemData<T>> items, T value) {
+    for (final item in items) {
+      switch (item) {
         case RemixSelectItem<T>():
-          if (entry.value == value) return entry;
+          if (item.value == value) return item;
         case RemixSelectGroup<T>():
-          final nested = _findItem(entry.entries, value);
+          final nested = _findItem(item.items, value);
           if (nested != null) return nested;
         case RemixSelectLabel<T>() || RemixSelectSeparator<T>():
           break;
@@ -338,12 +339,12 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     final selectedValue = widget.selectedValue;
     if (selectedValue == null) return widget.trigger.placeholder;
 
-    final selectedItem = _findItem(widget.entries, selectedValue);
+    final selectedItem = _findItem(widget.items, selectedValue);
     if (selectedItem != null) return selectedItem.label;
 
     assert(
       selectedItem != null,
-      'RemixSelect: selectedValue "$selectedValue" not found in entries. '
+      'RemixSelect: selectedValue "$selectedValue" not found in items. '
       'Ensure selectedValue matches a RemixSelectItem value.',
     );
 
@@ -354,27 +355,27 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   void _validateUniqueValues() {
     final seen = <T>[];
 
-    void visit(List<RemixSelectEntry<T>> entries) {
-      for (final entry in entries) {
-        switch (entry) {
+    void visit(List<RemixSelectItemData<T>> items) {
+      for (final item in items) {
+        switch (item) {
           case RemixSelectItem<T>():
-            if (seen.any((value) => value == entry.value)) {
+            if (seen.any((value) => value == item.value)) {
               throw FlutterError(
-                'RemixSelect contains duplicate item value "${entry.value}". '
+                'RemixSelect contains duplicate item value "${item.value}". '
                 'Every RemixSelectItem value must be unique, including items '
                 'inside groups.',
               );
             }
-            seen.add(entry.value);
+            seen.add(item.value);
           case RemixSelectGroup<T>():
-            visit(entry.entries);
+            visit(item.items);
           case RemixSelectLabel<T>() || RemixSelectSeparator<T>():
             break;
         }
       }
     }
 
-    visit(widget.entries);
+    visit(widget.items);
   }
 
   void _handleChanged(T? value) => widget.onChanged?.call(value);
@@ -455,6 +456,7 @@ class _AnimatedOverlayMenu extends StatefulWidget {
     required this.controller,
     required this.duration,
     required this.curve,
+    required this.menuContainer,
     required this.content,
     required this.minimumWidth,
     required this.maximumHeight,
@@ -464,6 +466,7 @@ class _AnimatedOverlayMenu extends StatefulWidget {
   final AnimationController controller;
   final Duration duration;
   final Curve curve;
+  final StyleSpec<FlexBoxSpec> menuContainer;
   final StyleSpec<RemixSelectContentSpec> content;
   final double minimumWidth;
   final double maximumHeight;
@@ -517,20 +520,28 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
             scale: scaleAnimation.value,
             child: Opacity(
               opacity: fadeAnimation.value,
-              child: StyleSpecBuilder<RemixSelectContentSpec>(
-                styleSpec: widget.content,
-                builder: (context, spec) => RemixBoxWithEffects(
-                  key: const ValueKey('remix-select-content-surface'),
-                  styleSpec: spec.container,
-                  containerEffects: spec.containerEffects,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: widget.children,
+              child: ColumnBox(
+                styleSpec: widget.menuContainer,
+                children: [
+                  // ignore: avoid-flexible-outside-flex
+                  Flexible(
+                    child: StyleSpecBuilder<RemixSelectContentSpec>(
+                      styleSpec: widget.content,
+                      builder: (context, spec) => RemixBoxWithEffects(
+                        key: const ValueKey('remix-select-content-surface'),
+                        styleSpec: spec.container,
+                        containerEffects: spec.containerEffects,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: widget.children,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           ),

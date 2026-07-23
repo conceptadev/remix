@@ -9,14 +9,14 @@ part of 'progress.dart';
 ///
 /// ```dart
 /// RemixProgress(
-///   value: 50,
+///   value: 0.5,
 /// )
 /// ```
 class RemixProgress extends StatelessWidget {
   const RemixProgress({
     super.key,
     this.value,
-    this.max = 100,
+    this.max = 1,
     this.duration = const Duration(seconds: 5),
     this.semanticLabel,
     this.excludeSemantics = false,
@@ -72,6 +72,7 @@ class RemixProgress extends StatelessWidget {
             children: [
               track,
               Positioned.fill(child: indicator),
+              Positioned.fill(child: Box(styleSpec: spec.trackContainer)),
             ],
           ),
         );

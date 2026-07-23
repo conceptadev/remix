@@ -4,9 +4,9 @@ description: An arbitrary multi-thumb slider for selecting ordered values within
 keywords: [flutter, remix, slider, range, input, value-picker, control]
 ---
 
-`RemixSlider` is a controlled, arbitrary multi-thumb slider. Values remain in
-ascending order, thumbs cannot cross, and each thumb has independent focus and
-accessibility semantics.
+`RemixSlider` retains its controlled scalar API and adds an arbitrary
+multi-thumb mode. Multi-thumb values remain in ascending order, thumbs cannot
+cross, and each thumb has independent focus and accessibility semantics.
 
 ## When to use this
 
@@ -43,7 +43,7 @@ class _SliderExampleState extends State<SliderExample> {
         step: 5,
         minSpacing: 10,
         semanticLabels: const ['Minimum price', 'Maximum price'],
-        onChanged: (values) => setState(() => _values = values),
+        onValuesChanged: (values) => setState(() => _values = values),
         style: RemixSliderStyler()
             .thumbSize(const Size(24, 24))
             .thumb(.shape(CircleBorderMix()))
@@ -58,7 +58,8 @@ class _SliderExampleState extends State<SliderExample> {
 ```
 </CodeGroup>
 
-For one thumb, pass a one-element list and read `values.single` in the callback.
+For one thumb, prefer scalar `value` and `onChanged`; scalar mode keeps the
+original 0–1 default range and `snapDivisions`.
 
 ## Fortal widgets
 
@@ -82,7 +83,7 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
     return FortalSlider.surface(
       values: _values,
       semanticLabels: const ['Volume'],
-      onChanged: (values) => setState(() => _values = values),
+      onValuesChanged: (values) => setState(() => _values = values),
     );
   }
 }
@@ -99,22 +100,29 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
 ```dart
 const RemixSlider({
   Key? key,
-  required List<double> values,
-  ValueChanged<List<double>>? onChanged,
-  ValueChanged<List<double>>? onChangeStart,
-  ValueChanged<List<double>>? onChangeEnd,
+  double? value,
+  List<double>? values,
+  ValueChanged<double>? onChanged,
+  ValueChanged<double>? onChangeStart,
+  ValueChanged<double>? onChangeEnd,
+  ValueChanged<List<double>>? onValuesChanged,
+  ValueChanged<List<double>>? onValuesChangeStart,
+  ValueChanged<List<double>>? onValuesChangeEnd,
   ValueChanged<bool>? onHoverChange,
   ValueChanged<bool>? onDragChange,
   ValueChanged<bool>? onFocusChange,
   double min = 0,
-  double max = 100,
-  double step = 1,
+  double? max,
+  double? step,
+  int? snapDivisions,
   double minSpacing = 0,
   Axis orientation = Axis.horizontal,
   bool inverted = false,
   bool enabled = true,
   MouseCursor mouseCursor = SystemMouseCursors.click,
   bool enableFeedback = true,
+  FocusNode? focusNode,
+  bool autofocus = false,
   List<FocusNode?>? focusNodes,
   int? autofocusThumbIndex,
   List<String?>? semanticLabels,
@@ -132,8 +140,9 @@ const RemixSlider({
   non-negative.
 - `values` must be finite, in range, aligned to `step`, ascending, and separated
   by at least `minSpacing`.
-- Callbacks receive the complete normalized list. Omitting `onChanged` preserves
-  rendering while preventing value changes.
+- Provide exactly one of `value` or `values`. Scalar callbacks receive a
+  `double`; multi-thumb callbacks use the `onValues...` names and receive the
+  complete normalized list.
 - `focusNodes`, `semanticLabels`, and `semanticFormatterCallbacks`, when
   supplied, correspond by index to the value list.
 - Pointer input chooses the nearest eligible thumb. Keyboard input acts on the

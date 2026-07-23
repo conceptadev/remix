@@ -9,6 +9,10 @@ void main() {
       const spec = RemixSpinnerSpec();
 
       expect(spec.size, isNull);
+      expect(spec.strokeWidth, isNull);
+      expect(spec.indicatorColor, isNull);
+      expect(spec.trackColor, isNull);
+      expect(spec.trackStrokeWidth, isNull);
       expect(spec.color, isNull);
       expect(spec.opacity, isNull);
       expect(spec.leafRadius, isNull);
@@ -39,6 +43,10 @@ void main() {
       expect(copied.opacity, 0.65);
       expect(spec.props, [
         spec.size,
+        spec.strokeWidth,
+        spec.indicatorColor,
+        spec.trackColor,
+        spec.trackStrokeWidth,
         spec.color,
         spec.opacity,
         spec.leafRadius,
@@ -49,7 +57,7 @@ void main() {
     test('diagnostics include the complete contract', () {
       const spec = RemixSpinnerSpec();
 
-      expect(spec.props, hasLength(5));
+      expect(spec.props, hasLength(9));
       expect(
         () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
         returnsNormally,

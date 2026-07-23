@@ -56,7 +56,7 @@ class _MenuExampleState extends State<MenuExample> {
                 style: TextStyle(color: Colors.blueGrey.shade700),
               ),
             ),
-            entries: [
+            items: [
               RemixMenuAction(
                 value: 'History',
                 leading: const Icon(Icons.history),

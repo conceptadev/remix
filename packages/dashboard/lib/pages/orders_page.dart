@@ -174,7 +174,7 @@ class _OrdersPageState extends State<OrdersPage> {
           padding: EdgeInsets.all(6),
           child: Icon(Icons.more_horiz, size: 18),
         ),
-        entries: const [
+        items: const [
           RemixMenuAction(value: 'view', child: Text('View order')),
           RemixMenuAction(value: 'receipt', child: Text('Download receipt')),
           RemixMenuSeparator(),

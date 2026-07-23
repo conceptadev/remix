@@ -9,11 +9,11 @@ Widget buildCalloutExample() {
     child: ComparisonView(
       remix: [
         RemixCallout(
-          icon: Icon(Icons.info),
+          icon: Icons.info,
           child: Text('Information message'),
         ),
         RemixCallout(
-          icon: Icon(Icons.warning_amber_rounded),
+          icon: Icons.warning_amber_rounded,
           child: Text('Warning message'),
         ),
       ],

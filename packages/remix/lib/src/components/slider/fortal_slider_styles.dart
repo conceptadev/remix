@@ -21,7 +21,7 @@ RemixSliderStyler fortalSliderStyler({
       .thumb(
         .size(metrics.thumbSize, metrics.thumbSize).borderRadius(thumbRadius),
       )
-      .trackThickness(metrics.trackSize)
+      .thickness(metrics.trackSize)
       .thumbFocusEffects(
         RemixBoxEffectsMix(
           overContent: RemixBoxEffectLayerMix(
@@ -76,8 +76,8 @@ RemixSliderStyler _fortalSliderSurface(
   required BorderRadiusMix thumbRadius,
   required bool highContrast,
 }) => base
-    .trackColor(FortalTokens.grayA3())
-    .rangeColor(FortalTokens.accentTrack())
+    .track(.color(FortalTokens.grayA3()))
+    .range(.color(FortalTokens.accentTrack()))
     .thumbColor(Colors.white)
     .trackEffects(
       RemixBoxEffectsMix(
@@ -106,8 +106,8 @@ RemixSliderStyler _fortalSliderClassic(
   required BorderRadiusMix thumbRadius,
   required bool highContrast,
 }) => base
-    .trackColor(FortalTokens.grayA3())
-    .rangeColor(FortalTokens.accentTrack())
+    .track(.color(FortalTokens.grayA3()))
+    .range(.color(FortalTokens.accentTrack()))
     .thumbColor(Colors.white)
     .trackEffects(
       RemixBoxEffectsMix(
@@ -166,8 +166,8 @@ RemixSliderStyler _fortalSliderSoft(
   required BorderRadiusMix thumbRadius,
   required bool highContrast,
 }) => base
-    .trackColor(FortalTokens.grayA4())
-    .rangeColor(FortalTokens.accent6())
+    .track(.color(FortalTokens.grayA4()))
+    .range(.color(FortalTokens.accent6()))
     .thumbColor(Colors.white)
     .trackEffects(
       RemixBoxEffectsMix(
@@ -219,7 +219,7 @@ RemixSliderStyler _fortalSliderDisabled(
   final track = switch (variant) {
     .surface =>
       RemixSliderStyler()
-          .trackColor(FortalTokens.grayA3())
+          .track(.color(FortalTokens.grayA3()))
           .trackEffects(
             RemixBoxEffectsMix(
               behindContent: RemixBoxEffectLayerMix(
@@ -229,7 +229,7 @@ RemixSliderStyler _fortalSliderDisabled(
           ),
     .classic =>
       RemixSliderStyler()
-          .trackColor(FortalTokens.grayA3())
+          .track(.color(FortalTokens.grayA3()))
           .trackEffects(
             RemixBoxEffectsMix(
               overContent: RemixBoxEffectLayerMix(
@@ -239,7 +239,7 @@ RemixSliderStyler _fortalSliderDisabled(
           ),
     .soft =>
       RemixSliderStyler()
-          .trackColor(FortalTokens.grayA4())
+          .track(.color(FortalTokens.grayA4()))
           .trackEffects(
             RemixBoxEffectsMix(
               behindContent: RemixBoxEffectLayerMix(gradients: const []),
@@ -247,7 +247,7 @@ RemixSliderStyler _fortalSliderDisabled(
           ),
   };
   return track
-      .rangeColor(Colors.transparent)
+      .range(.color(Colors.transparent))
       .thumbColor(FortalTokens.gray1())
       .rangeEffects(
         RemixBoxEffectsMix(
@@ -349,28 +349,37 @@ class FortalSlider extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.values,
+    this.value,
+    this.values,
     this.onChanged,
     this.onChangeStart,
     this.onChangeEnd,
+    this.onValuesChanged,
+    this.onValuesChangeStart,
+    this.onValuesChangeEnd,
     this.onHoverChange,
     this.onDragChange,
     this.onFocusChange,
     this.min = 0,
-    this.max = 100,
-    this.step = 1,
+    double? max,
+    double? step,
+    this.snapDivisions,
     this.minSpacing = 0,
     this.orientation = Axis.horizontal,
     this.inverted = false,
     this.enabled = true,
     this.mouseCursor = SystemMouseCursors.click,
     this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
     this.focusNodes,
     this.autofocusThumbIndex,
     this.semanticLabels,
     this.semanticFormatterCallbacks,
     this.excludeSemantics = false,
-  });
+  }) : max = max ?? (values == null ? 1 : 100),
+       step = step ?? 1,
+       _hasExplicitStep = step != null;
 
   const FortalSlider.classic({
     super.key,
@@ -378,28 +387,38 @@ class FortalSlider extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.values,
+    this.value,
+    this.values,
     this.onChanged,
     this.onChangeStart,
     this.onChangeEnd,
+    this.onValuesChanged,
+    this.onValuesChangeStart,
+    this.onValuesChangeEnd,
     this.onHoverChange,
     this.onDragChange,
     this.onFocusChange,
     this.min = 0,
-    this.max = 100,
-    this.step = 1,
+    double? max,
+    double? step,
+    this.snapDivisions,
     this.minSpacing = 0,
     this.orientation = Axis.horizontal,
     this.inverted = false,
     this.enabled = true,
     this.mouseCursor = SystemMouseCursors.click,
     this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
     this.focusNodes,
     this.autofocusThumbIndex,
     this.semanticLabels,
     this.semanticFormatterCallbacks,
     this.excludeSemantics = false,
-  }) : variant = .classic;
+  }) : variant = .classic,
+       max = max ?? (values == null ? 1 : 100),
+       step = step ?? 1,
+       _hasExplicitStep = step != null;
 
   const FortalSlider.surface({
     super.key,
@@ -407,28 +426,38 @@ class FortalSlider extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.values,
+    this.value,
+    this.values,
     this.onChanged,
     this.onChangeStart,
     this.onChangeEnd,
+    this.onValuesChanged,
+    this.onValuesChangeStart,
+    this.onValuesChangeEnd,
     this.onHoverChange,
     this.onDragChange,
     this.onFocusChange,
     this.min = 0,
-    this.max = 100,
-    this.step = 1,
+    double? max,
+    double? step,
+    this.snapDivisions,
     this.minSpacing = 0,
     this.orientation = Axis.horizontal,
     this.inverted = false,
     this.enabled = true,
     this.mouseCursor = SystemMouseCursors.click,
     this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
     this.focusNodes,
     this.autofocusThumbIndex,
     this.semanticLabels,
     this.semanticFormatterCallbacks,
     this.excludeSemantics = false,
-  }) : variant = .surface;
+  }) : variant = .surface,
+       max = max ?? (values == null ? 1 : 100),
+       step = step ?? 1,
+       _hasExplicitStep = step != null;
 
   const FortalSlider.soft({
     super.key,
@@ -436,50 +465,68 @@ class FortalSlider extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.values,
+    this.value,
+    this.values,
     this.onChanged,
     this.onChangeStart,
     this.onChangeEnd,
+    this.onValuesChanged,
+    this.onValuesChangeStart,
+    this.onValuesChangeEnd,
     this.onHoverChange,
     this.onDragChange,
     this.onFocusChange,
     this.min = 0,
-    this.max = 100,
-    this.step = 1,
+    double? max,
+    double? step,
+    this.snapDivisions,
     this.minSpacing = 0,
     this.orientation = Axis.horizontal,
     this.inverted = false,
     this.enabled = true,
     this.mouseCursor = SystemMouseCursors.click,
     this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
     this.focusNodes,
     this.autofocusThumbIndex,
     this.semanticLabels,
     this.semanticFormatterCallbacks,
     this.excludeSemantics = false,
-  }) : variant = .soft;
+  }) : variant = .soft,
+       max = max ?? (values == null ? 1 : 100),
+       step = step ?? 1,
+       _hasExplicitStep = step != null;
 
   final FortalSliderVariant variant;
   final FortalSliderSize size;
   final FortalAccentColor? color;
   final FortalRadius? radius;
   final bool highContrast;
-  final List<double> values;
-  final ValueChanged<List<double>>? onChanged;
-  final ValueChanged<List<double>>? onChangeStart;
-  final ValueChanged<List<double>>? onChangeEnd;
+  final double? value;
+  final List<double>? values;
+  final ValueChanged<double>? onChanged;
+  final ValueChanged<double>? onChangeStart;
+  final ValueChanged<double>? onChangeEnd;
+  final ValueChanged<List<double>>? onValuesChanged;
+  final ValueChanged<List<double>>? onValuesChangeStart;
+  final ValueChanged<List<double>>? onValuesChangeEnd;
   final ValueChanged<bool>? onHoverChange;
   final ValueChanged<bool>? onDragChange;
   final ValueChanged<bool>? onFocusChange;
   final double min;
   final double max;
   final double step;
+  final bool _hasExplicitStep;
+  final int? snapDivisions;
   final double minSpacing;
   final Axis orientation;
   final bool inverted;
   final bool enabled;
   final MouseCursor mouseCursor;
   final bool enableFeedback;
+  final FocusNode? focusNode;
+  final bool autofocus;
   final List<FocusNode?>? focusNodes;
   final int? autofocusThumbIndex;
   final List<String?>? semanticLabels;
@@ -497,22 +544,29 @@ class FortalSlider extends StatelessWidget {
           highContrast: highContrast,
         ).call(
           key: key,
+          value: value,
           values: values,
           onChanged: onChanged,
           onChangeStart: onChangeStart,
           onChangeEnd: onChangeEnd,
+          onValuesChanged: onValuesChanged,
+          onValuesChangeStart: onValuesChangeStart,
+          onValuesChangeEnd: onValuesChangeEnd,
           onHoverChange: onHoverChange,
           onDragChange: onDragChange,
           onFocusChange: onFocusChange,
           min: min,
           max: max,
-          step: step,
+          step: _hasExplicitStep ? step : null,
+          snapDivisions: snapDivisions,
           minSpacing: minSpacing,
           orientation: orientation,
           inverted: inverted,
           enabled: enabled,
           mouseCursor: mouseCursor,
           enableFeedback: enableFeedback,
+          focusNode: focusNode,
+          autofocus: autofocus,
           focusNodes: focusNodes,
           autofocusThumbIndex: autofocusThumbIndex,
           semanticLabels: semanticLabels,

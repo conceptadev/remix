@@ -7,13 +7,13 @@ part of 'tabs.dart';
 // **************************************************************************
 
 mixin _$RemixTabBarSpec implements Spec<RemixTabBarSpec>, Diagnosticable {
-  StyleSpec<BoxSpec> get container;
+  StyleSpec<FlexBoxSpec> get container;
 
   @override
   Type get type => RemixTabBarSpec;
 
   @override
-  RemixTabBarSpec copyWith({StyleSpec<BoxSpec>? container}) {
+  RemixTabBarSpec copyWith({StyleSpec<FlexBoxSpec>? container}) {
     return RemixTabBarSpec(container: container ?? this.container);
   }
 
@@ -230,17 +230,17 @@ typedef _$RemixTabViewSpecMethods = _$RemixTabViewSpec; // ignore: unused_elemen
 
 class RemixTabBarStyler extends MixStyler<RemixTabBarStyler, RemixTabBarSpec>
     with RemixBoxStylerMixin<RemixTabBarStyler> {
-  final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<StyleSpec<FlexBoxSpec>>? $container;
 
   const RemixTabBarStyler.create({
-    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<StyleSpec<FlexBoxSpec>>? container,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container;
 
   RemixTabBarStyler({
-    BoxStyler? container,
+    FlexBoxStyler? container,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixTabBarSpec>>? variants,
@@ -251,22 +251,8 @@ class RemixTabBarStyler extends MixStyler<RemixTabBarStyler, RemixTabBarSpec>
          animation: animation,
        );
 
-  factory RemixTabBarStyler.container(BoxStyler value) =>
+  factory RemixTabBarStyler.container(FlexBoxStyler value) =>
       RemixTabBarStyler().container(value);
-  factory RemixTabBarStyler.alignment(AlignmentGeometry value) =>
-      RemixTabBarStyler().alignment(value);
-  factory RemixTabBarStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixTabBarStyler().padding(value);
-  factory RemixTabBarStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixTabBarStyler().margin(value);
-  factory RemixTabBarStyler.constraints(BoxConstraintsMix value) =>
-      RemixTabBarStyler().constraints(value);
-  factory RemixTabBarStyler.decoration(DecorationMix value) =>
-      RemixTabBarStyler().decoration(value);
-  factory RemixTabBarStyler.foregroundDecoration(DecorationMix value) =>
-      RemixTabBarStyler().foregroundDecoration(value);
-  factory RemixTabBarStyler.clipBehavior(Clip value) =>
-      RemixTabBarStyler().clipBehavior(value);
   factory RemixTabBarStyler.color(Color value) =>
       RemixTabBarStyler().color(value);
   factory RemixTabBarStyler.gradient(GradientMix value) =>
@@ -436,121 +422,125 @@ class RemixTabBarStyler extends MixStyler<RemixTabBarStyler, RemixTabBarSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
+  factory RemixTabBarStyler.row() => RemixTabBarStyler().row();
+  factory RemixTabBarStyler.column() => RemixTabBarStyler().column();
+  factory RemixTabBarStyler.alignment(AlignmentGeometry value) =>
+      RemixTabBarStyler().alignment(value);
+  factory RemixTabBarStyler.padding(EdgeInsetsGeometryMix value) =>
+      RemixTabBarStyler().padding(value);
+  factory RemixTabBarStyler.margin(EdgeInsetsGeometryMix value) =>
+      RemixTabBarStyler().margin(value);
+  factory RemixTabBarStyler.constraints(BoxConstraintsMix value) =>
+      RemixTabBarStyler().constraints(value);
+  factory RemixTabBarStyler.decoration(DecorationMix value) =>
+      RemixTabBarStyler().decoration(value);
+  factory RemixTabBarStyler.foregroundDecoration(DecorationMix value) =>
+      RemixTabBarStyler().foregroundDecoration(value);
+  factory RemixTabBarStyler.clipBehavior(Clip value) =>
+      RemixTabBarStyler().clipBehavior(value);
+  factory RemixTabBarStyler.direction(Axis value) =>
+      RemixTabBarStyler().direction(value);
+  factory RemixTabBarStyler.mainAxisAlignment(MainAxisAlignment value) =>
+      RemixTabBarStyler().mainAxisAlignment(value);
+  factory RemixTabBarStyler.crossAxisAlignment(CrossAxisAlignment value) =>
+      RemixTabBarStyler().crossAxisAlignment(value);
+  factory RemixTabBarStyler.mainAxisSize(MainAxisSize value) =>
+      RemixTabBarStyler().mainAxisSize(value);
+  factory RemixTabBarStyler.spacing(double value) =>
+      RemixTabBarStyler().spacing(value);
+  factory RemixTabBarStyler.verticalDirection(VerticalDirection value) =>
+      RemixTabBarStyler().verticalDirection(value);
+  factory RemixTabBarStyler.textDirection(TextDirection value) =>
+      RemixTabBarStyler().textDirection(value);
+  factory RemixTabBarStyler.textBaseline(TextBaseline value) =>
+      RemixTabBarStyler().textBaseline(value);
   factory RemixTabBarStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
   }) => RemixTabBarStyler().transform(value, alignment: alignment);
 
-  RemixTabBarStyler alignment(AlignmentGeometry value) {
-    return container(BoxStyler().alignment(value));
-  }
-
-  RemixTabBarStyler padding(EdgeInsetsGeometryMix value) {
-    return container(BoxStyler().padding(value));
-  }
-
-  RemixTabBarStyler margin(EdgeInsetsGeometryMix value) {
-    return container(BoxStyler().margin(value));
-  }
-
-  RemixTabBarStyler constraints(BoxConstraintsMix value) {
-    return container(BoxStyler().constraints(value));
-  }
-
-  RemixTabBarStyler decoration(DecorationMix value) {
-    return container(BoxStyler().decoration(value));
-  }
-
-  RemixTabBarStyler foregroundDecoration(DecorationMix value) {
-    return container(BoxStyler().foregroundDecoration(value));
-  }
-
-  RemixTabBarStyler clipBehavior(Clip value) {
-    return container(BoxStyler().clipBehavior(value));
-  }
-
   RemixTabBarStyler color(Color value) {
-    return container(BoxStyler().color(value));
+    return container(FlexBoxStyler().color(value));
   }
 
   RemixTabBarStyler gradient(GradientMix value) {
-    return container(BoxStyler().gradient(value));
+    return container(FlexBoxStyler().gradient(value));
   }
 
   RemixTabBarStyler border(BoxBorderMix value) {
-    return container(BoxStyler().border(value));
+    return container(FlexBoxStyler().border(value));
   }
 
   RemixTabBarStyler borderRadius(BorderRadiusGeometryMix value) {
-    return container(BoxStyler().borderRadius(value));
+    return container(FlexBoxStyler().borderRadius(value));
   }
 
   RemixTabBarStyler elevation(ElevationShadow value) {
-    return container(BoxStyler().elevation(value));
+    return container(FlexBoxStyler().elevation(value));
   }
 
   RemixTabBarStyler shadow(BoxShadowMix value) {
-    return container(BoxStyler().shadow(value));
+    return container(FlexBoxStyler().shadow(value));
   }
 
   RemixTabBarStyler shadows(List<BoxShadowMix> value) {
-    return container(BoxStyler().shadows(value));
+    return container(FlexBoxStyler().shadows(value));
   }
 
   RemixTabBarStyler width(double value) {
-    return container(BoxStyler().width(value));
+    return container(FlexBoxStyler().width(value));
   }
 
   RemixTabBarStyler height(double value) {
-    return container(BoxStyler().height(value));
+    return container(FlexBoxStyler().height(value));
   }
 
   RemixTabBarStyler size(double width, double height) {
-    return container(BoxStyler().size(width, height));
+    return container(FlexBoxStyler().size(width, height));
   }
 
   RemixTabBarStyler minWidth(double value) {
-    return container(BoxStyler().minWidth(value));
+    return container(FlexBoxStyler().minWidth(value));
   }
 
   RemixTabBarStyler maxWidth(double value) {
-    return container(BoxStyler().maxWidth(value));
+    return container(FlexBoxStyler().maxWidth(value));
   }
 
   RemixTabBarStyler minHeight(double value) {
-    return container(BoxStyler().minHeight(value));
+    return container(FlexBoxStyler().minHeight(value));
   }
 
   RemixTabBarStyler maxHeight(double value) {
-    return container(BoxStyler().maxHeight(value));
+    return container(FlexBoxStyler().maxHeight(value));
   }
 
   RemixTabBarStyler scale(double scale, {Alignment alignment = .center}) {
-    return container(BoxStyler().scale(scale, alignment: alignment));
+    return container(FlexBoxStyler().scale(scale, alignment: alignment));
   }
 
   RemixTabBarStyler rotate(double radians, {Alignment alignment = .center}) {
-    return container(BoxStyler().rotate(radians, alignment: alignment));
+    return container(FlexBoxStyler().rotate(radians, alignment: alignment));
   }
 
   RemixTabBarStyler translate(double x, double y, [double z = 0.0]) {
-    return container(BoxStyler().translate(x, y, z));
+    return container(FlexBoxStyler().translate(x, y, z));
   }
 
   RemixTabBarStyler skew(double skewX, double skewY) {
-    return container(BoxStyler().skew(skewX, skewY));
+    return container(FlexBoxStyler().skew(skewX, skewY));
   }
 
   RemixTabBarStyler textStyle(TextStyler value) {
-    return container(BoxStyler().textStyle(value));
+    return container(FlexBoxStyler().textStyle(value));
   }
 
   RemixTabBarStyler image(DecorationImageMix value) {
-    return container(BoxStyler().image(value));
+    return container(FlexBoxStyler().image(value));
   }
 
   RemixTabBarStyler shape(ShapeBorderMix value) {
-    return container(BoxStyler().shape(value));
+    return container(FlexBoxStyler().shape(value));
   }
 
   RemixTabBarStyler backgroundImage(
@@ -560,7 +550,7 @@ class RemixTabBarStyler extends MixStyler<RemixTabBarStyler, RemixTabBarSpec>
     ImageRepeat repeat = .noRepeat,
   }) {
     return container(
-      BoxStyler().backgroundImage(
+      FlexBoxStyler().backgroundImage(
         image,
         fit: fit,
         alignment: alignment,
@@ -576,7 +566,7 @@ class RemixTabBarStyler extends MixStyler<RemixTabBarStyler, RemixTabBarSpec>
     ImageRepeat repeat = .noRepeat,
   }) {
     return container(
-      BoxStyler().backgroundImageUrl(
+      FlexBoxStyler().backgroundImageUrl(
         url,
         fit: fit,
         alignment: alignment,
@@ -592,7 +582,7 @@ class RemixTabBarStyler extends MixStyler<RemixTabBarStyler, RemixTabBarSpec>
     ImageRepeat repeat = .noRepeat,
   }) {
     return container(
-      BoxStyler().backgroundImageAsset(
+      FlexBoxStyler().backgroundImageAsset(
         path,
         fit: fit,
         alignment: alignment,
@@ -609,7 +599,7 @@ class RemixTabBarStyler extends MixStyler<RemixTabBarStyler, RemixTabBarSpec>
     TileMode? tileMode,
   }) {
     return container(
-      BoxStyler().linearGradient(
+      FlexBoxStyler().linearGradient(
         colors: colors,
         stops: stops,
         begin: begin,
@@ -629,7 +619,7 @@ class RemixTabBarStyler extends MixStyler<RemixTabBarStyler, RemixTabBarSpec>
     TileMode? tileMode,
   }) {
     return container(
-      BoxStyler().radialGradient(
+      FlexBoxStyler().radialGradient(
         colors: colors,
         stops: stops,
         center: center,
@@ -650,7 +640,7 @@ class RemixTabBarStyler extends MixStyler<RemixTabBarStyler, RemixTabBarSpec>
     TileMode? tileMode,
   }) {
     return container(
-      BoxStyler().sweepGradient(
+      FlexBoxStyler().sweepGradient(
         colors: colors,
         stops: stops,
         center: center,
@@ -669,7 +659,7 @@ class RemixTabBarStyler extends MixStyler<RemixTabBarStyler, RemixTabBarSpec>
     TileMode? tileMode,
   }) {
     return container(
-      BoxStyler().foregroundLinearGradient(
+      FlexBoxStyler().foregroundLinearGradient(
         colors: colors,
         stops: stops,
         begin: begin,
@@ -689,7 +679,7 @@ class RemixTabBarStyler extends MixStyler<RemixTabBarStyler, RemixTabBarSpec>
     TileMode? tileMode,
   }) {
     return container(
-      BoxStyler().foregroundRadialGradient(
+      FlexBoxStyler().foregroundRadialGradient(
         colors: colors,
         stops: stops,
         center: center,
@@ -710,7 +700,7 @@ class RemixTabBarStyler extends MixStyler<RemixTabBarStyler, RemixTabBarSpec>
     TileMode? tileMode,
   }) {
     return container(
-      BoxStyler().foregroundSweepGradient(
+      FlexBoxStyler().foregroundSweepGradient(
         colors: colors,
         stops: stops,
         center: center,
@@ -721,12 +711,80 @@ class RemixTabBarStyler extends MixStyler<RemixTabBarStyler, RemixTabBarSpec>
     );
   }
 
+  RemixTabBarStyler row() {
+    return container(FlexBoxStyler().row());
+  }
+
+  RemixTabBarStyler column() {
+    return container(FlexBoxStyler().column());
+  }
+
+  RemixTabBarStyler alignment(AlignmentGeometry value) {
+    return container(FlexBoxStyler().alignment(value));
+  }
+
+  RemixTabBarStyler padding(EdgeInsetsGeometryMix value) {
+    return container(FlexBoxStyler().padding(value));
+  }
+
+  RemixTabBarStyler margin(EdgeInsetsGeometryMix value) {
+    return container(FlexBoxStyler().margin(value));
+  }
+
+  RemixTabBarStyler constraints(BoxConstraintsMix value) {
+    return container(FlexBoxStyler().constraints(value));
+  }
+
+  RemixTabBarStyler decoration(DecorationMix value) {
+    return container(FlexBoxStyler().decoration(value));
+  }
+
+  RemixTabBarStyler foregroundDecoration(DecorationMix value) {
+    return container(FlexBoxStyler().foregroundDecoration(value));
+  }
+
+  RemixTabBarStyler clipBehavior(Clip value) {
+    return container(FlexBoxStyler().clipBehavior(value));
+  }
+
+  RemixTabBarStyler direction(Axis value) {
+    return container(FlexBoxStyler().direction(value));
+  }
+
+  RemixTabBarStyler mainAxisAlignment(MainAxisAlignment value) {
+    return container(FlexBoxStyler().mainAxisAlignment(value));
+  }
+
+  RemixTabBarStyler crossAxisAlignment(CrossAxisAlignment value) {
+    return container(FlexBoxStyler().crossAxisAlignment(value));
+  }
+
+  RemixTabBarStyler mainAxisSize(MainAxisSize value) {
+    return container(FlexBoxStyler().mainAxisSize(value));
+  }
+
+  RemixTabBarStyler spacing(double value) {
+    return container(FlexBoxStyler().spacing(value));
+  }
+
+  RemixTabBarStyler verticalDirection(VerticalDirection value) {
+    return container(FlexBoxStyler().verticalDirection(value));
+  }
+
+  RemixTabBarStyler textDirection(TextDirection value) {
+    return container(FlexBoxStyler().textDirection(value));
+  }
+
+  RemixTabBarStyler textBaseline(TextBaseline value) {
+    return container(FlexBoxStyler().textBaseline(value));
+  }
+
   RemixTabBarStyler transform(Matrix4 value, {Alignment alignment = .center}) {
-    return container(BoxStyler().transform(value, alignment: alignment));
+    return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixTabBarStyler container(BoxStyler value) {
+  RemixTabBarStyler container(FlexBoxStyler value) {
     return merge(RemixTabBarStyler(container: value));
   }
 

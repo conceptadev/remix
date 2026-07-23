@@ -127,8 +127,9 @@ FortalIconButton(
 )
 ```
 
-Slider is list-valued and supports any positive number of ordered thumbs. It
-uses `step` and `minSpacing`, not the former scalar `value`/`snapDivisions` API.
+Slider retains scalar `value`/`snapDivisions` and adds list-valued mode for any
+positive number of ordered thumbs. Multi-thumb mode uses `step`, `minSpacing`,
+and `onValuesChanged`.
 
 ```dart
 FortalSlider(
@@ -137,16 +138,16 @@ FortalSlider(
   max: 100,
   step: 5,
   minSpacing: 10,
-  onChanged: (values) => setState(() => range = values),
+  onValuesChanged: (values) => setState(() => range = values),
 )
 ```
 
-Select uses a declarative trigger and sealed entries:
+Select uses a declarative trigger and sealed items:
 
 ```dart
 FortalSelect<String>(
   trigger: const RemixSelectTrigger(placeholder: 'Choose a fruit'),
-  entries: const [
+  items: const [
     RemixSelectLabel(label: 'Fruit'),
     RemixSelectItem(value: 'apple', label: 'Apple'),
     RemixSelectItem(value: 'banana', label: 'Banana'),
@@ -157,20 +158,20 @@ FortalSelect<String>(
 )
 ```
 
-Menu is widget-compositional. Its `entries` may contain actions, labels,
+Menu is widget-compositional. Its `items` may contain actions, labels,
 groups, separators, controlled checkbox items, radio groups/items, and
 recursive submenus:
 
 ```dart
 FortalMenu<String>(
   trigger: const Text('Actions'),
-  entries: const [
+  items: const [
     RemixMenuLabel(child: Text('Edit')),
     RemixMenuAction(value: 'copy', child: Text('Copy')),
     RemixMenuSeparator(),
     RemixMenuSubmenu<String>(
       child: Text('Share'),
-      entries: [
+      items: [
         RemixMenuAction(value: 'link', child: Text('Copy link')),
       ],
     ),

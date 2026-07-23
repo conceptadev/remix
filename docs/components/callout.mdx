@@ -26,7 +26,7 @@ class CalloutExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RemixCallout(
-      icon: const Icon(Icons.info_outline),
+      icon: Icons.info_outline,
       style: style,
       child: const Text('Callout important information for the user.'),
     );
@@ -73,15 +73,15 @@ class FortalCalloutExample extends StatelessWidget {
       spacing: 16,
       children: [
         FortalCallout.surface(
-          icon: const Icon(Icons.info_outline),
+          icon: Icons.info_outline,
           child: const Text('Surface callout'),
         ),
         FortalCallout.soft(
-          icon: const Icon(Icons.lightbulb_outline),
+          icon: Icons.lightbulb_outline,
           child: const Text('Soft callout'),
         ),
         FortalCallout.outline(
-          icon: const Icon(Icons.border_outer),
+          icon: Icons.border_outer,
           child: const Text('Outline callout'),
         ),
       ],
@@ -100,8 +100,10 @@ class FortalCalloutExample extends StatelessWidget {
 ```dart
 const RemixCallout({
   Key? key,
-  required Widget child,
-  Widget? icon,
+  String? text,
+  Widget? child,
+  IconData? icon,
+  Widget? iconWidget,
   RemixCalloutStyler style = const RemixCalloutStyler.create(),
   RemixCalloutSpec? styleSpec,
 })
@@ -124,15 +126,15 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `child` → `Widget`
+#### `child` → `Widget?`
 
-**Required**. Arbitrary callout body content. Descendant text inherits the
-resolved body style.
+Optional arbitrary callout body content. Descendant text inherits the resolved
+body style. Provide either `child` or the established `text`.
 
-#### `icon` → `Widget?`
+#### `icon` → `IconData?`
 
-Optional. Arbitrary leading content. Descendant icons inherit the resolved icon
-style.
+Optional established leading icon. Use `iconWidget` for arbitrary leading
+content; descendant icons inherit the resolved icon style.
 
 ### Style Methods
 

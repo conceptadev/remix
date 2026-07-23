@@ -1,28 +1,36 @@
 part of 'slider.dart';
 
-/// A controlled, arbitrary multi-thumb slider.
+/// A controlled slider supporting the established scalar API and an additive
+/// multi-thumb API.
 ///
-/// [values] is nonempty and ascending. Pointer, keyboard, and semantic input
-/// is delegated to [NakedSlider], while this widget owns visual composition.
+/// Provide exactly one of [value] or [values]. Multi-thumb callbacks use the
+/// `onValues...` names so the scalar callback contract remains source stable.
 class RemixSlider extends StatelessWidget {
   const RemixSlider({
     super.key,
-    required this.values,
+    this.value,
+    this.values,
     this.onChanged,
     this.onChangeStart,
     this.onChangeEnd,
+    this.onValuesChanged,
+    this.onValuesChangeStart,
+    this.onValuesChangeEnd,
     this.onHoverChange,
     this.onDragChange,
     this.onFocusChange,
     this.min = 0,
-    this.max = 100,
-    this.step = 1,
+    double? max,
+    double? step,
+    this.snapDivisions,
     this.minSpacing = 0,
     this.orientation = Axis.horizontal,
     this.inverted = false,
     this.enabled = true,
     this.mouseCursor = SystemMouseCursors.click,
     this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
     this.focusNodes,
     this.autofocusThumbIndex,
     this.semanticLabels,
@@ -30,30 +38,56 @@ class RemixSlider extends StatelessWidget {
     this.excludeSemantics = false,
     this.style = const RemixSliderStyler.create(),
     this.styleSpec,
-  }) : assert(min < max, 'min must be less than max'),
-       assert(step > 0, 'step must be positive'),
+  }) : max = max ?? (values == null ? 1 : 100),
+       step = step ?? 1,
+       _hasExplicitStep = step != null,
+       assert(
+         (value == null) != (values == null),
+         'Provide exactly one of value or values.',
+       ),
+       assert(min < (max ?? (values == null ? 1 : 100))),
+       assert(
+         value == null ||
+             (value >= min && value <= (max ?? (values == null ? 1 : 100))),
+         'Slider value must be between min and max.',
+       ),
+       assert(step == null || step > 0, 'step must be positive'),
+       assert(
+         snapDivisions == null || snapDivisions > 0,
+         'snapDivisions must be positive',
+       ),
        assert(minSpacing >= 0, 'minSpacing must be non-negative');
 
-  /// Current controlled values in ascending order.
-  final List<double> values;
+  /// Current value for the established single-thumb API.
+  final double? value;
 
-  /// Called with the complete value list when a thumb requests a change.
-  final ValueChanged<List<double>>? onChanged;
+  /// Current values for the additive multi-thumb API.
+  final List<double>? values;
 
-  final ValueChanged<List<double>>? onChangeStart;
-  final ValueChanged<List<double>>? onChangeEnd;
+  final ValueChanged<double>? onChanged;
+  final ValueChanged<double>? onChangeStart;
+  final ValueChanged<double>? onChangeEnd;
+  final ValueChanged<List<double>>? onValuesChanged;
+  final ValueChanged<List<double>>? onValuesChangeStart;
+  final ValueChanged<List<double>>? onValuesChangeEnd;
   final ValueChanged<bool>? onHoverChange;
   final ValueChanged<bool>? onDragChange;
   final ValueChanged<bool>? onFocusChange;
   final double min;
   final double max;
   final double step;
+  final bool _hasExplicitStep;
+
+  /// Optional scalar snapping divisions retained from the original API.
+  final int? snapDivisions;
   final double minSpacing;
   final Axis orientation;
   final bool inverted;
   final bool enabled;
   final MouseCursor mouseCursor;
   final bool enableFeedback;
+  final FocusNode? focusNode;
+  final bool autofocus;
   final List<FocusNode?>? focusNodes;
   final int? autofocusThumbIndex;
   final List<String?>? semanticLabels;
@@ -64,26 +98,46 @@ class RemixSlider extends StatelessWidget {
 
   static final styleFrom = RemixSliderStyler.new;
 
+  List<double> get _effectiveValues => values ?? [value!];
+
+  double get _effectiveStep {
+    final divisions = snapDivisions;
+    if (divisions != null) return (max - min) / divisions;
+    if (_hasExplicitStep || values != null) return step;
+    return (max - min) / 1000;
+  }
+
+  ValueChanged<List<double>>? _adaptCallback(
+    ValueChanged<double>? scalar,
+    ValueChanged<List<double>>? multiple,
+  ) {
+    if (scalar == null && multiple == null) return null;
+    return (values) {
+      multiple?.call(values);
+      if (values.length == 1) scalar?.call(values.single);
+    };
+  }
+
   @override
   Widget build(BuildContext context) => NakedSlider(
-    values: values,
+    values: _effectiveValues,
     min: min,
     max: max,
-    step: step,
+    step: _effectiveStep,
     minSpacing: minSpacing,
     orientation: orientation,
     inverted: inverted,
-    onChanged: onChanged,
-    onChangeStart: onChangeStart,
-    onChangeEnd: onChangeEnd,
+    onChanged: _adaptCallback(onChanged, onValuesChanged),
+    onChangeStart: _adaptCallback(onChangeStart, onValuesChangeStart),
+    onChangeEnd: _adaptCallback(onChangeEnd, onValuesChangeEnd),
     onHoverChange: onHoverChange,
     onDragChange: onDragChange,
     onFocusChange: onFocusChange,
     enabled: enabled,
     mouseCursor: mouseCursor,
     enableFeedback: enableFeedback,
-    focusNodes: focusNodes,
-    autofocusThumbIndex: autofocusThumbIndex,
+    focusNodes: focusNodes ?? (focusNode == null ? null : [focusNode]),
+    autofocusThumbIndex: autofocusThumbIndex ?? (autofocus ? 0 : null),
     semanticLabels: semanticLabels,
     semanticFormatterCallbacks: semanticFormatterCallbacks,
     excludeSemantics: excludeSemantics,
@@ -142,7 +196,10 @@ class _RemixSliderVisual extends StatelessWidget {
                 Positioned.fill(
                   child: RemixBoxWithEffects(
                     key: const ValueKey('remix-slider-track'),
-                    styleSpec: spec.track,
+                    styleSpec: _withSliderFallbackColor(
+                      spec.track,
+                      spec.trackColor,
+                    ),
                     containerEffects: spec.trackEffects,
                     child: const SizedBox.expand(),
                   ),
@@ -185,7 +242,7 @@ class _RemixSliderVisual extends StatelessWidget {
       height: horizontal ? size.height : size.height * (end - start),
       child: RemixBoxWithEffects(
         key: const ValueKey('remix-slider-range'),
-        styleSpec: spec.range,
+        styleSpec: _withSliderFallbackColor(spec.range, spec.rangeColor),
         containerEffects: spec.rangeEffects,
         child: const SizedBox.expand(),
       ),
@@ -233,6 +290,24 @@ class _RemixSliderVisual extends StatelessWidget {
       child: thumb,
     );
   }
+}
+
+StyleSpec<BoxSpec> _withSliderFallbackColor(
+  StyleSpec<BoxSpec> styleSpec,
+  Color color,
+) {
+  final decoration = styleSpec.spec.decoration;
+  final resolvedDecoration = switch (decoration) {
+    null => BoxDecoration(color: color),
+    BoxDecoration() when decoration.color == null => decoration.copyWith(
+      color: color,
+    ),
+    _ => decoration,
+  };
+  if (identical(resolvedDecoration, decoration)) return styleSpec;
+  return styleSpec.copyWith(
+    spec: styleSpec.spec.copyWith(decoration: resolvedDecoration),
+  );
 }
 
 Size _resolveThumbSize(BuildContext context, StyleSpec<BoxSpec> thumb) {

@@ -14,7 +14,7 @@ void main() {
       Builder(
         builder: (context) {
           bar = RemixTabBarStyler(
-            container: BoxStyler().color(Colors.red),
+            container: FlexBoxStyler().color(Colors.red),
           ).resolve(context);
           tab = RemixTabStyler(
             container: FlexBoxStyler().color(Colors.blue),
@@ -29,7 +29,10 @@ void main() {
       ),
     );
 
-    expect(bar.spec.container.spec.decoration, isA<BoxDecoration>());
+    expect(
+      bar.spec.container.spec.box?.spec.decoration,
+      isA<BoxDecoration>(),
+    );
     expect(tab.spec.container.spec.box?.spec.decoration, isA<BoxDecoration>());
     expect(tab.spec.label.spec.style?.color, Colors.green);
     expect(tab.spec.icon.spec.color, Colors.orange);

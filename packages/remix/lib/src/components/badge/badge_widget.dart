@@ -1,5 +1,9 @@
 part of 'badge.dart';
 
+/// Builds badge label content with its resolved text style.
+typedef RemixBadgeLabelBuilder =
+    Widget Function(BuildContext context, TextSpec spec, String label);
+
 /// A badge widget that displays compact text or custom content.
 ///
 /// Badges are used to display small amounts of information, such as
@@ -8,21 +12,25 @@ part of 'badge.dart';
 /// ## Example
 ///
 /// ```dart
-/// RemixBadge(child: Text('New'))
+/// RemixBadge(label: 'New')
 /// ```
 class RemixBadge extends StatelessWidget {
-  /// Creates a badge whose arbitrary [child] inherits the resolved badge text
-  /// and icon themes.
+  /// Creates a text badge with [label] or an arbitrary-content badge with
+  /// [child]. Arbitrary content inherits the resolved text and icon themes.
   const RemixBadge({
     super.key,
-    required this.child,
+    this.label,
+    this.child,
+    this.labelBuilder,
     this.style = const RemixBadgeStyler.create(),
     this.styleSpec,
   });
 
   static final styleFrom = RemixBadgeStyler.new;
 
-  final Widget child;
+  final String? label;
+  final Widget? child;
+  final RemixBadgeLabelBuilder? labelBuilder;
 
   /// The style configuration for the badge.
   final RemixBadgeStyler style;
@@ -37,11 +45,20 @@ class RemixBadge extends StatelessWidget {
       styleSpec: styleSpec,
       builder: (context, spec) {
         final foreground = spec.label.spec.style?.color;
-        final content = RemixDefaultContentStyle(
-          child: child,
-          text: spec.label,
-          icon: StyleSpec(spec: IconSpec(color: foreground)),
-        );
+        final resolvedLabel = label ?? '';
+        final content = child == null
+            ? labelBuilder == null
+                  ? StyledText(resolvedLabel, styleSpec: spec.label)
+                  : StyleSpecBuilder<TextSpec>(
+                      styleSpec: spec.label,
+                      builder: (context, textSpec) =>
+                          labelBuilder!(context, textSpec, resolvedLabel),
+                    )
+            : RemixDefaultContentStyle(
+                text: spec.label,
+                icon: StyleSpec(spec: IconSpec(color: foreground)),
+                child: child!,
+              );
         return RemixBoxWithEffects(
           styleSpec: spec.container,
           containerEffects: spec.containerEffects,

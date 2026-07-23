@@ -32,7 +32,7 @@ RemixMenuStyler fortalMenuStyler({
       .divider(_fortalMenuDividerStyler(metrics));
 }
 
-/// Fortal item recipe for per-entry style overrides.
+/// Fortal item recipe for per-item style overrides.
 RemixMenuItemStyler fortalMenuItemStyler({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
@@ -210,7 +210,7 @@ class FortalMenu<T> extends StatelessWidget {
     this.color,
     this.highContrast = false,
     required this.trigger,
-    required this.entries,
+    required this.items,
     this.controller,
     this.onSelected,
     this.onOpen,
@@ -239,7 +239,7 @@ class FortalMenu<T> extends StatelessWidget {
     this.color,
     this.highContrast = false,
     required this.trigger,
-    required this.entries,
+    required this.items,
     this.controller,
     this.onSelected,
     this.onOpen,
@@ -268,7 +268,7 @@ class FortalMenu<T> extends StatelessWidget {
     this.color,
     this.highContrast = false,
     required this.trigger,
-    required this.entries,
+    required this.items,
     this.controller,
     this.onSelected,
     this.onOpen,
@@ -301,7 +301,7 @@ class FortalMenu<T> extends StatelessWidget {
   final bool highContrast;
 
   final Widget trigger;
-  final List<Widget> entries;
+  final List<Widget> items;
   final MenuController? controller;
   final ValueChanged<T>? onSelected;
   final VoidCallback? onOpen;
@@ -327,7 +327,7 @@ class FortalMenu<T> extends StatelessWidget {
       ).call<T>(
         key: key,
         trigger: trigger,
-        entries: entries,
+        items: items,
         controller: controller,
         onSelected: onSelected,
         onOpen: onOpen,

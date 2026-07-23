@@ -157,7 +157,13 @@ class FortalButtonExample extends StatelessWidget {
 ```dart
 const RemixButton({
   Key? key,
-  required Widget child,
+  Widget? child,
+  String? label,
+  IconData? leadingIcon,
+  IconData? trailingIcon,
+  RemixButtonTextBuilder? textBuilder,
+  RemixButtonIconBuilder? leadingIconBuilder,
+  RemixButtonIconBuilder? trailingIconBuilder,
   RemixButtonLoadingBuilder? loadingBuilder,
   bool loading = false,
   bool enabled = true,
@@ -192,10 +198,15 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `child` → `Widget`
+#### `child` → `Widget?`
 
-**Required**. Arbitrary button content. Descendant text and icons inherit the
-resolved label and icon styles.
+Optional arbitrary button content. Descendant text and icons inherit the
+resolved label and icon styles. Provide either `child` or `label`.
+
+#### `label`, `leadingIcon`, `trailingIcon`
+
+The established text-and-icon composition. The corresponding builder fields
+can replace how each resolved part is rendered.
 
 #### `loadingBuilder` → `RemixButtonLoadingBuilder?`
 

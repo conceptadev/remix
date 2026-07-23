@@ -36,7 +36,7 @@ Widget buildMenuUseCase(BuildContext context) {
               ),
               variant: variant,
               size: size,
-              entries: const [
+              items: const [
                 RemixMenuAction(value: 'item1', child: Text('Item 1')),
                 RemixMenuAction(value: 'item2', child: Text('Item 2')),
                 RemixMenuAction(value: 'item3', child: Text('Item 3')),

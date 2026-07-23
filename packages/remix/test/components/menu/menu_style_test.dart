@@ -47,7 +47,7 @@ void main() {
   test('FortalMenu defaults match Radix Themes 3.3.0', () {
     const menu = FortalMenu<String>(
       trigger: Text('Open'),
-      entries: [RemixMenuAction(value: 'a', child: Text('A'))],
+      items: [RemixMenuAction(value: 'a', child: Text('A'))],
     );
 
     expect(menu.size, FortalMenuSize.size2);

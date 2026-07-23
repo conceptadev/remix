@@ -8,13 +8,16 @@ part of 'slider.dart';
 
 mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get track;
+  Color get trackColor;
+  double get trackWidth;
   RemixBoxEffectsSpec? get trackEffects;
   StyleSpec<BoxSpec> get range;
+  Color get rangeColor;
+  double get rangeWidth;
   RemixBoxEffectsSpec? get rangeEffects;
   StyleSpec<BoxSpec> get thumb;
   RemixBoxEffectsSpec? get thumbEffects;
   RemixBoxEffectsSpec? get thumbFocusEffects;
-  double get trackThickness;
   BlendMode? get blendMode;
 
   @override
@@ -23,24 +26,30 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
   @override
   RemixSliderSpec copyWith({
     StyleSpec<BoxSpec>? track,
+    Color? trackColor,
+    double? trackWidth,
     RemixBoxEffectsSpec? trackEffects,
     StyleSpec<BoxSpec>? range,
+    Color? rangeColor,
+    double? rangeWidth,
     RemixBoxEffectsSpec? rangeEffects,
     StyleSpec<BoxSpec>? thumb,
     RemixBoxEffectsSpec? thumbEffects,
     RemixBoxEffectsSpec? thumbFocusEffects,
-    double? trackThickness,
     BlendMode? blendMode,
   }) {
     return RemixSliderSpec(
       track: track ?? this.track,
+      trackColor: trackColor ?? this.trackColor,
+      trackWidth: trackWidth ?? this.trackWidth,
       trackEffects: trackEffects ?? this.trackEffects,
       range: range ?? this.range,
+      rangeColor: rangeColor ?? this.rangeColor,
+      rangeWidth: rangeWidth ?? this.rangeWidth,
       rangeEffects: rangeEffects ?? this.rangeEffects,
       thumb: thumb ?? this.thumb,
       thumbEffects: thumbEffects ?? this.thumbEffects,
       thumbFocusEffects: thumbFocusEffects ?? this.thumbFocusEffects,
-      trackThickness: trackThickness ?? this.trackThickness,
       blendMode: blendMode ?? this.blendMode,
     );
   }
@@ -49,8 +58,12 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
   RemixSliderSpec lerp(RemixSliderSpec? other, double t) {
     return RemixSliderSpec(
       track: track.lerp(other?.track, t),
+      trackColor: MixOps.lerp(trackColor, other?.trackColor, t),
+      trackWidth: MixOps.lerp(trackWidth, other?.trackWidth, t),
       trackEffects: MixOps.lerpSnap(trackEffects, other?.trackEffects, t),
       range: range.lerp(other?.range, t),
+      rangeColor: MixOps.lerp(rangeColor, other?.rangeColor, t),
+      rangeWidth: MixOps.lerp(rangeWidth, other?.rangeWidth, t),
       rangeEffects: MixOps.lerpSnap(rangeEffects, other?.rangeEffects, t),
       thumb: thumb.lerp(other?.thumb, t),
       thumbEffects: MixOps.lerpSnap(thumbEffects, other?.thumbEffects, t),
@@ -59,7 +72,6 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
         other?.thumbFocusEffects,
         t,
       ),
-      trackThickness: MixOps.lerp(trackThickness, other?.trackThickness, t),
       blendMode: MixOps.lerpSnap(blendMode, other?.blendMode, t),
     );
   }
@@ -67,13 +79,16 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
   @override
   List<Object?> get props => [
     track,
+    trackColor,
+    trackWidth,
     trackEffects,
     range,
+    rangeColor,
+    rangeWidth,
     rangeEffects,
     thumb,
     thumbEffects,
     thumbFocusEffects,
-    trackThickness,
     blendMode,
   ];
 
@@ -118,13 +133,16 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('track', track))
+      ..add(ColorProperty('trackColor', trackColor))
+      ..add(DoubleProperty('trackWidth', trackWidth))
       ..add(DiagnosticsProperty('trackEffects', trackEffects))
       ..add(DiagnosticsProperty('range', range))
+      ..add(ColorProperty('rangeColor', rangeColor))
+      ..add(DoubleProperty('rangeWidth', rangeWidth))
       ..add(DiagnosticsProperty('rangeEffects', rangeEffects))
       ..add(DiagnosticsProperty('thumb', thumb))
       ..add(DiagnosticsProperty('thumbEffects', thumbEffects))
       ..add(DiagnosticsProperty('thumbFocusEffects', thumbFocusEffects))
-      ..add(DoubleProperty('trackThickness', trackThickness))
       ..add(EnumProperty<BlendMode>('blendMode', blendMode));
   }
 }
@@ -141,60 +159,75 @@ typedef _$RemixSliderSpecMethods = _$RemixSliderSpec; // ignore: unused_element
 class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     with RemixBoxStylerMixin<RemixSliderStyler> {
   final Prop<StyleSpec<BoxSpec>>? $track;
+  final Prop<Color>? $trackColor;
+  final Prop<double>? $trackWidth;
   final Prop<RemixBoxEffectsSpec>? $trackEffects;
   final Prop<StyleSpec<BoxSpec>>? $range;
+  final Prop<Color>? $rangeColor;
+  final Prop<double>? $rangeWidth;
   final Prop<RemixBoxEffectsSpec>? $rangeEffects;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
   final Prop<RemixBoxEffectsSpec>? $thumbEffects;
   final Prop<RemixBoxEffectsSpec>? $thumbFocusEffects;
-  final Prop<double>? $trackThickness;
   final Prop<BlendMode>? $blendMode;
 
   const RemixSliderStyler.create({
     Prop<StyleSpec<BoxSpec>>? track,
+    Prop<Color>? trackColor,
+    Prop<double>? trackWidth,
     Prop<RemixBoxEffectsSpec>? trackEffects,
     Prop<StyleSpec<BoxSpec>>? range,
+    Prop<Color>? rangeColor,
+    Prop<double>? rangeWidth,
     Prop<RemixBoxEffectsSpec>? rangeEffects,
     Prop<StyleSpec<BoxSpec>>? thumb,
     Prop<RemixBoxEffectsSpec>? thumbEffects,
     Prop<RemixBoxEffectsSpec>? thumbFocusEffects,
-    Prop<double>? trackThickness,
     Prop<BlendMode>? blendMode,
     super.variants,
     super.modifier,
     super.animation,
   }) : $track = track,
+       $trackColor = trackColor,
+       $trackWidth = trackWidth,
        $trackEffects = trackEffects,
        $range = range,
+       $rangeColor = rangeColor,
+       $rangeWidth = rangeWidth,
        $rangeEffects = rangeEffects,
        $thumb = thumb,
        $thumbEffects = thumbEffects,
        $thumbFocusEffects = thumbFocusEffects,
-       $trackThickness = trackThickness,
        $blendMode = blendMode;
 
   RemixSliderStyler({
     BoxStyler? track,
+    Color? trackColor,
+    double? trackWidth,
     RemixBoxEffectsMix? trackEffects,
     BoxStyler? range,
+    Color? rangeColor,
+    double? rangeWidth,
     RemixBoxEffectsMix? rangeEffects,
     BoxStyler? thumb,
     RemixBoxEffectsMix? thumbEffects,
     RemixBoxEffectsMix? thumbFocusEffects,
-    double? trackThickness,
     BlendMode? blendMode,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixSliderSpec>>? variants,
   }) : this.create(
          track: Prop.maybeMix(track),
+         trackColor: Prop.maybe(trackColor),
+         trackWidth: Prop.maybe(trackWidth),
          trackEffects: Prop.maybeMix(trackEffects),
          range: Prop.maybeMix(range),
+         rangeColor: Prop.maybe(rangeColor),
+         rangeWidth: Prop.maybe(rangeWidth),
          rangeEffects: Prop.maybeMix(rangeEffects),
          thumb: Prop.maybeMix(thumb),
          thumbEffects: Prop.maybeMix(thumbEffects),
          thumbFocusEffects: Prop.maybeMix(thumbFocusEffects),
-         trackThickness: Prop.maybe(trackThickness),
          blendMode: Prop.maybe(blendMode),
          variants: variants,
          modifier: modifier,
@@ -203,10 +236,18 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
 
   factory RemixSliderStyler.track(BoxStyler value) =>
       RemixSliderStyler().track(value);
+  factory RemixSliderStyler.trackColor(Color value) =>
+      RemixSliderStyler().trackColor(value);
+  factory RemixSliderStyler.trackWidth(double value) =>
+      RemixSliderStyler().trackWidth(value);
   factory RemixSliderStyler.trackEffects(RemixBoxEffectsMix value) =>
       RemixSliderStyler().trackEffects(value);
   factory RemixSliderStyler.range(BoxStyler value) =>
       RemixSliderStyler().range(value);
+  factory RemixSliderStyler.rangeColor(Color value) =>
+      RemixSliderStyler().rangeColor(value);
+  factory RemixSliderStyler.rangeWidth(double value) =>
+      RemixSliderStyler().rangeWidth(value);
   factory RemixSliderStyler.rangeEffects(RemixBoxEffectsMix value) =>
       RemixSliderStyler().rangeEffects(value);
   factory RemixSliderStyler.thumb(BoxStyler value) =>
@@ -215,8 +256,6 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
       RemixSliderStyler().thumbEffects(value);
   factory RemixSliderStyler.thumbFocusEffects(RemixBoxEffectsMix value) =>
       RemixSliderStyler().thumbFocusEffects(value);
-  factory RemixSliderStyler.trackThickness(double value) =>
-      RemixSliderStyler().trackThickness(value);
   factory RemixSliderStyler.blendMode(BlendMode value) =>
       RemixSliderStyler().blendMode(value);
   factory RemixSliderStyler.alignment(AlignmentGeometry value) =>
@@ -696,6 +735,16 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     return merge(RemixSliderStyler(track: value));
   }
 
+  /// Sets the trackColor.
+  RemixSliderStyler trackColor(Color value) {
+    return merge(RemixSliderStyler(trackColor: value));
+  }
+
+  /// Sets the trackWidth.
+  RemixSliderStyler trackWidth(double value) {
+    return merge(RemixSliderStyler(trackWidth: value));
+  }
+
   /// Sets the trackEffects.
   RemixSliderStyler trackEffects(RemixBoxEffectsMix value) {
     return merge(RemixSliderStyler(trackEffects: value));
@@ -704,6 +753,16 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
   /// Sets the range.
   RemixSliderStyler range(BoxStyler value) {
     return merge(RemixSliderStyler(range: value));
+  }
+
+  /// Sets the rangeColor.
+  RemixSliderStyler rangeColor(Color value) {
+    return merge(RemixSliderStyler(rangeColor: value));
+  }
+
+  /// Sets the rangeWidth.
+  RemixSliderStyler rangeWidth(double value) {
+    return merge(RemixSliderStyler(rangeWidth: value));
   }
 
   /// Sets the rangeEffects.
@@ -724,11 +783,6 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
   /// Sets the thumbFocusEffects.
   RemixSliderStyler thumbFocusEffects(RemixBoxEffectsMix value) {
     return merge(RemixSliderStyler(thumbFocusEffects: value));
-  }
-
-  /// Sets the trackThickness.
-  RemixSliderStyler trackThickness(double value) {
-    return merge(RemixSliderStyler(trackThickness: value));
   }
 
   /// Sets the blendMode.
@@ -764,8 +818,12 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
   RemixSliderStyler merge(RemixSliderStyler? other) {
     return RemixSliderStyler.create(
       track: MixOps.merge($track, other?.$track),
+      trackColor: MixOps.merge($trackColor, other?.$trackColor),
+      trackWidth: MixOps.merge($trackWidth, other?.$trackWidth),
       trackEffects: MixOps.merge($trackEffects, other?.$trackEffects),
       range: MixOps.merge($range, other?.$range),
+      rangeColor: MixOps.merge($rangeColor, other?.$rangeColor),
+      rangeWidth: MixOps.merge($rangeWidth, other?.$rangeWidth),
       rangeEffects: MixOps.merge($rangeEffects, other?.$rangeEffects),
       thumb: MixOps.merge($thumb, other?.$thumb),
       thumbEffects: MixOps.merge($thumbEffects, other?.$thumbEffects),
@@ -773,7 +831,6 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
         $thumbFocusEffects,
         other?.$thumbFocusEffects,
       ),
-      trackThickness: MixOps.merge($trackThickness, other?.$trackThickness),
       blendMode: MixOps.merge($blendMode, other?.$blendMode),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
@@ -786,13 +843,16 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
   StyleSpec<RemixSliderSpec> resolve(BuildContext context) {
     final spec = RemixSliderSpec(
       track: MixOps.resolve(context, $track),
+      trackColor: MixOps.resolve(context, $trackColor),
+      trackWidth: MixOps.resolve(context, $trackWidth),
       trackEffects: MixOps.resolve(context, $trackEffects),
       range: MixOps.resolve(context, $range),
+      rangeColor: MixOps.resolve(context, $rangeColor),
+      rangeWidth: MixOps.resolve(context, $rangeWidth),
       rangeEffects: MixOps.resolve(context, $rangeEffects),
       thumb: MixOps.resolve(context, $thumb),
       thumbEffects: MixOps.resolve(context, $thumbEffects),
       thumbFocusEffects: MixOps.resolve(context, $thumbFocusEffects),
-      trackThickness: MixOps.resolve(context, $trackThickness),
       blendMode: MixOps.resolve(context, $blendMode),
     );
 
@@ -808,26 +868,32 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('track', $track))
+      ..add(DiagnosticsProperty('trackColor', $trackColor))
+      ..add(DiagnosticsProperty('trackWidth', $trackWidth))
       ..add(DiagnosticsProperty('trackEffects', $trackEffects))
       ..add(DiagnosticsProperty('range', $range))
+      ..add(DiagnosticsProperty('rangeColor', $rangeColor))
+      ..add(DiagnosticsProperty('rangeWidth', $rangeWidth))
       ..add(DiagnosticsProperty('rangeEffects', $rangeEffects))
       ..add(DiagnosticsProperty('thumb', $thumb))
       ..add(DiagnosticsProperty('thumbEffects', $thumbEffects))
       ..add(DiagnosticsProperty('thumbFocusEffects', $thumbFocusEffects))
-      ..add(DiagnosticsProperty('trackThickness', $trackThickness))
       ..add(DiagnosticsProperty('blendMode', $blendMode));
   }
 
   @override
   List<Object?> get props => [
     $track,
+    $trackColor,
+    $trackWidth,
     $trackEffects,
     $range,
+    $rangeColor,
+    $rangeWidth,
     $rangeEffects,
     $thumb,
     $thumbEffects,
     $thumbFocusEffects,
-    $trackThickness,
     $blendMode,
     $animation,
     $modifier,

@@ -10,12 +10,12 @@ import '../../helpers/test_helpers.dart';
 void main() {
   group('RemixSelect structural contract', () {
     test(
-      'entries model supports Radix item, group, label, and separator parts',
+      'items model supports Radix item, group, label, and separator parts',
       () {
-        const entries = <RemixSelectEntry<String>>[
+        const items = <RemixSelectItemData<String>>[
           RemixSelectGroup(
             semanticLabel: 'Fruit',
-            entries: [
+            items: [
               RemixSelectLabel(label: 'Fruit'),
               RemixSelectItem(value: 'apple', label: 'Apple'),
               RemixSelectSeparator(),
@@ -24,9 +24,9 @@ void main() {
           ),
         ];
 
-        expect(entries.single, isA<RemixSelectGroup<String>>());
+        expect(items.single, isA<RemixSelectGroup<String>>());
         expect(
-          (entries.single as RemixSelectGroup<String>).entries,
+          (items.single as RemixSelectGroup<String>).items,
           hasLength(4),
         );
       },
@@ -92,16 +92,16 @@ void main() {
       },
     );
 
-    testWidgets('renders nested entries and resolves a nested selected label', (
+    testWidgets('renders nested items and resolves a nested selected label', (
       tester,
     ) async {
       await tester.pumpRemixApp(
         RemixSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: const [
+          items: const [
             RemixSelectGroup(
               semanticLabel: 'Fruit',
-              entries: [
+              items: [
                 RemixSelectLabel(label: 'Fruit'),
                 RemixSelectItem(value: 'apple', label: 'Apple'),
                 RemixSelectSeparator(),
@@ -131,9 +131,9 @@ void main() {
         StatefulBuilder(
           builder: (context, setState) => RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-            entries: const [
+            items: const [
               RemixSelectGroup(
-                entries: [
+                items: [
                   RemixSelectItem(value: 'apple', label: 'Apple'),
                   RemixSelectItem(value: 'pear', label: 'Pear'),
                 ],
@@ -161,7 +161,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: const [RemixSelectItem(value: 'apple', label: 'Apple')],
+          items: const [RemixSelectItem(value: 'apple', label: 'Apple')],
           onChanged: (_) {},
           open: false,
           onOpenChanged: openRequests.add,
@@ -181,7 +181,7 @@ void main() {
           width: 220,
           child: RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-            entries: const [RemixSelectItem(value: 'a', label: 'A')],
+            items: const [RemixSelectItem(value: 'a', label: 'A')],
             onChanged: (_) {},
           ),
         ),
@@ -225,7 +225,7 @@ void main() {
                       collisionPadding: EdgeInsets.all(10),
                     ),
                     trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-                    entries: const [
+                    items: const [
                       RemixSelectItem(value: 'apple', label: 'Apple'),
                     ],
                     onChanged: (_) {},
@@ -260,7 +260,7 @@ void main() {
             RemixSelect<String>(
               semanticLabel: 'Fruit picker',
               trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-              entries: const [
+              items: const [
                 RemixSelectLabel(label: 'Fruit'),
                 RemixSelectItem(value: 'apple', label: 'Apple'),
                 RemixSelectSeparator(),
@@ -312,7 +312,7 @@ void main() {
     test('defaults to size2, surface trigger, and solid content', () {
       const select = FortalSelect<String>(
         trigger: RemixSelectTrigger(placeholder: 'Choose'),
-        entries: [RemixSelectItem(value: 'a', label: 'A')],
+        items: [RemixSelectItem(value: 'a', label: 'A')],
       );
 
       expect(select.size, FortalSelectSize.size2);
@@ -331,7 +331,7 @@ void main() {
       await tester.pumpRemixApp(
         FortalSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: const [RemixSelectItem(value: 'apple', label: 'Apple')],
+          items: const [RemixSelectItem(value: 'apple', label: 'Apple')],
           onChanged: (_) {},
           open: false,
           onOpenChanged: openRequests.add,

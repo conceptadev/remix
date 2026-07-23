@@ -11,7 +11,7 @@ extension RemixSelectStylerRemixHelpers on RemixSelectStyler {
   ///   .content(...)
   ///   .call<String>(
   ///     trigger: RemixSelectTrigger(placeholder: 'Select an option'),
-  ///     entries: [
+  ///     items: [
   ///       RemixSelectItem(value: 'apple', label: 'Apple'),
   ///       RemixSelectItem(value: 'banana', label: 'Banana'),
   ///     ],
@@ -20,7 +20,7 @@ extension RemixSelectStylerRemixHelpers on RemixSelectStyler {
   RemixSelect<T> call<T>({
     Key? key,
     required RemixSelectTrigger trigger,
-    required List<RemixSelectEntry<T>> entries,
+    required List<RemixSelectItemData<T>> items,
     T? selectedValue,
     OverlayPositionConfig positioning = const OverlayPositionConfig(
       side: .bottom,
@@ -44,7 +44,7 @@ extension RemixSelectStylerRemixHelpers on RemixSelectStyler {
     return RemixSelect(
       key: key,
       trigger: trigger,
-      entries: entries,
+      items: items,
       selectedValue: selectedValue,
       positioning: positioning,
       onChanged: onChanged,

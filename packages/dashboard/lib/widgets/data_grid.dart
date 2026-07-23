@@ -233,7 +233,7 @@ class DataGrid<T> extends StatelessWidget {
             size: .size1,
             triggerVariant: .ghost,
             trigger: const RemixSelectTrigger(placeholder: '10'),
-            entries: const [
+            items: const [
               RemixSelectItem(value: 5, label: '5'),
               RemixSelectItem(value: 10, label: '10'),
               RemixSelectItem(value: 20, label: '20'),

@@ -62,8 +62,20 @@ extension RemixCalloutStylerRemixHelpers on RemixCalloutStyler {
   }
 
   /// Creates a [RemixCallout] widget with this style applied.
-  RemixCallout call({Key? key, required Widget child, Widget? icon}) =>
-      RemixCallout(key: key, icon: icon, style: this, child: child);
+  RemixCallout call({
+    Key? key,
+    String? text,
+    Widget? child,
+    IconData? icon,
+    Widget? iconWidget,
+  }) => RemixCallout(
+    key: key,
+    text: text,
+    child: child,
+    icon: icon,
+    iconWidget: iconWidget,
+    style: this,
+  );
 
   RemixCalloutStyler flex(FlexStyler value) {
     return merge(RemixCalloutStyler(container: FlexBoxStyler().flex(value)));

@@ -50,7 +50,8 @@ extension RemixIconButtonStylerRemixHelpers on RemixIconButtonStyler {
 
   RemixIconButton call({
     Key? key,
-    required Widget icon,
+    required Object icon,
+    RemixIconButtonIconBuilder? iconBuilder,
     RemixIconButtonLoadingBuilder? loadingBuilder,
     bool loading = false,
     bool enabled = true,
@@ -59,7 +60,7 @@ extension RemixIconButtonStylerRemixHelpers on RemixIconButtonStyler {
     VoidCallback? onLongPress,
     FocusNode? focusNode,
     bool autofocus = false,
-    required String semanticLabel,
+    String? semanticLabel,
     String? semanticHint,
     bool excludeSemantics = false,
     MouseCursor mouseCursor = SystemMouseCursors.click,
@@ -67,6 +68,7 @@ extension RemixIconButtonStylerRemixHelpers on RemixIconButtonStyler {
     return RemixIconButton(
       key: key,
       icon: icon,
+      iconBuilder: iconBuilder,
       loadingBuilder: loadingBuilder,
       loading: loading,
       enabled: enabled,

@@ -9,7 +9,7 @@ void main() {
     testWidgets('renders arbitrary icon and body content', (tester) async {
       await tester.pumpRemixApp(
         const RemixCallout(
-          icon: Icon(Icons.info),
+          iconWidget: Icon(Icons.info),
           child: Column(children: [Text('Title'), Text('Description')]),
         ),
       );
@@ -33,7 +33,7 @@ void main() {
             text: TextStyler().color(color).fontSize(15),
             icon: IconStyler().color(color).size(17),
           ),
-          icon: const Icon(Icons.info),
+          iconWidget: const Icon(Icons.info),
           child: const Text('Inherited'),
         ),
       );
@@ -99,7 +99,7 @@ void main() {
         const SizedBox(
           width: 260,
           child: FortalCallout(
-            icon: Icon(Icons.info),
+            iconWidget: Icon(Icons.info),
             child: Text(
               key: bodyKey,
               'A long callout body should use the remaining width after the '
@@ -125,7 +125,7 @@ void main() {
         const SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: FortalCallout(
-            icon: Icon(Icons.info),
+            iconWidget: Icon(Icons.info),
             child: Text('Unbounded callout body'),
           ),
         ),

@@ -103,13 +103,14 @@ final style = RemixMenuStyler.item(
 );
 ```
 
-The menu trigger is an arbitrary widget and is styled independently. The menu
-styler owns popup `overlay`, `surface`, `item`, `label`, and `divider` slots.
+The menu styler owns `trigger`, popup `overlay`, `containerEffects`, `item`,
+`label`, and `divider` slots. The `trigger` slot styles the established
+`RemixMenuTrigger`; arbitrary trigger widgets remain caller-styled.
 
-`RemixSelectStyler` stores its popup container as a `FlexBox`, but intentionally
-forwards only the compatible `Box` surface. This exposes operations such as
-`color`, `padding`, and `scale` without leaking popup layout controls through
-the root select styler.
+`RemixSelectStyler` retains the established `menuContainer` FlexBox slot and
+adds the `content` surface plus item, label, and separator slots. Style the
+popup layout through `menuContainer`; style its painted surface through
+`content`.
 
 The upstream forwarded `transform` factory currently accepts `Alignment`
 rather than the wider `AlignmentGeometry` accepted by the former handwritten

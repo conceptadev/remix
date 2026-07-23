@@ -28,14 +28,14 @@ class _SliderExampleState extends State<SliderExample> {
       child: SizedBox(
         width: 300,
         child: RemixSlider(
-          values: [_selectedValue],
+          value: _selectedValue,
           min: 0,
           max: 1,
-          step: 0.01,
+          snapDivisions: 100,
           style: style,
-          onChanged: (values) {
+          onChanged: (value) {
             setState(() {
-              _selectedValue = values.single;
+              _selectedValue = value;
             });
           },
         ),

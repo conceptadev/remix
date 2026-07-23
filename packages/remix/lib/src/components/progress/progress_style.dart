@@ -26,7 +26,7 @@ extension RemixProgressStylerRemixHelpers on RemixProgressStyler {
   RemixProgress call({
     Key? key,
     double? value,
-    double max = 100,
+    double max = 1,
     Duration duration = const Duration(seconds: 5),
     String? semanticLabel,
     bool excludeSemantics = false,

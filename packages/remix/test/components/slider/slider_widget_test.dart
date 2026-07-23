@@ -82,7 +82,7 @@ void main() {
                       child: RemixSlider(
                         key: _sliderKey,
                         values: const [0],
-                        onChanged: changes.add,
+                        onValuesChanged: changes.add,
                         style: RemixSliderStyler()
                             .thickness(2)
                             .thumbSize(const Size(24, 24)),
@@ -699,7 +699,7 @@ Widget _harness({
                   semanticFormatterCallbacks: semanticFormatterCallbacks,
                   excludeSemantics: excludeSemantics,
                   styleSpec: styleSpec,
-                  onChanged: onChanged == null
+                  onValuesChanged: onChanged == null
                       ? null
                       : (next) {
                           onChanged(next);
@@ -709,8 +709,8 @@ Widget _harness({
                             );
                           }
                         },
-                  onChangeStart: onChangeStart,
-                  onChangeEnd: onChangeEnd,
+                  onValuesChangeStart: onChangeStart,
+                  onValuesChangeEnd: onChangeEnd,
                   onHoverChange: onHoverChange,
                   onDragChange: onDragChange,
                   onFocusChange: onFocusChange,

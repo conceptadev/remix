@@ -224,7 +224,7 @@
       "states": ["closed", "open", "highlighted", "disabled", "checked", "unchecked", "submenuOpen", "rtl", "escape", "focusRestored", "highContrast"],
       "sourceFiles": ["src/components/_internal/base-menu.props.ts", "src/components/_internal/base-menu.css", "src/components/dropdown-menu.css"],
       "sourceSelectors": [".rt-BaseMenuContent", ".rt-DropdownMenuContent", ".rt-BaseMenuItem", ".rt-BaseMenuCheckboxItem", ".rt-BaseMenuRadioItem", ".rt-BaseMenuSubTrigger"],
-      "flutterExceptions": ["Typed sealed action, label, group, separator, checkbox, radio-group/item, and recursive submenu entries replace React compound children."],
+      "flutterExceptions": ["Typed sealed action, label, group, separator, checkbox, radio-group/item, and recursive submenu items replace React compound children."],
       "coverage": { "enums": ["size.size1", "size.size2", "variant.solid", "variant.soft"], "states": ["closed", "open", "highlighted", "disabled", "checked", "unchecked", "submenuOpen", "rtl", "escape", "focusRestored", "highContrast"], "tests": ["test/components/menu/menu_widget_test.dart", "test/components/menu/menu_style_test.dart"] }
     },
     {
@@ -298,7 +298,7 @@
       "states": ["closed", "open", "placeholder", "selected", "highlighted", "disabled", "grouped", "separated", "ownerRejected", "collisionFlipped", "collisionShifted", "highContrast"],
       "sourceFiles": ["src/components/select.props.tsx", "src/components/select.css", "src/components/select.tsx"],
       "sourceSelectors": [".rt-SelectTrigger", ".rt-SelectContent", ".rt-SelectItem", ".rt-SelectLabel", ".rt-SelectSeparator"],
-      "flutterExceptions": ["Typed sealed item, group, label, and separator entries replace React compound children; controlled opening is owner-authoritative."],
+      "flutterExceptions": ["Typed sealed item, group, label, and separator items replace React compound children; controlled opening is owner-authoritative."],
       "coverage": { "enums": ["size.size1", "size.size2", "size.size3", "triggerVariant.classic", "triggerVariant.surface", "triggerVariant.soft", "triggerVariant.ghost", "contentVariant.solid", "contentVariant.soft"], "states": ["closed", "open", "placeholder", "selected", "highlighted", "disabled", "grouped", "separated", "ownerRejected", "collisionFlipped", "collisionShifted", "highContrast"], "tests": ["test/components/select/select_fortal_parity_test.dart", "test/components/select/select_parity_test.dart", "test/components/select/select_widget_test.dart", "test/fortal/fortal_high_contrast_test.dart"] }
     },
     {

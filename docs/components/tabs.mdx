@@ -122,7 +122,8 @@ const RemixTabs({
 
 const RemixTabBar({
   Key? key,
-  required List<Widget> children,
+  Widget? child,
+  List<Widget>? children,
   RemixTabBarWrap wrap = RemixTabBarWrap.nowrap,
   RemixTabBarJustify justify = RemixTabBarJustify.start,
   RemixTabBarStyler style = const RemixTabBarStyler.create(),
@@ -169,7 +170,8 @@ const RemixTabView({
   `.manual` mode, arrow keys move focus without changing the panel until Space
   or Enter explicitly activates the focused tab.
 - `RemixTabBarWrap.nowrap` keeps one line; `wrap` and `wrapReverse` create runs.
-  `justify` aligns tabs along the main axis or each run.
+  `justify` aligns tabs along the main axis or each run when `children` is
+  supplied. The original arbitrary `child` form remains supported.
 - Tabs use roving focus, and `onEscapePressed` provides an explicit escape path.
 - `RemixTabView` exposes only the selected panel. With `maintainState: true`, an
   inactive panel keeps element state while remaining hidden and nonsemantic.

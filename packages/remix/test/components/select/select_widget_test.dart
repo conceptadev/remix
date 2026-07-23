@@ -17,7 +17,7 @@ void main() {
               placeholder: 'Choose',
               icon: Icons.star,
             ),
-            entries: const [RemixSelectItem(value: 'a', label: 'A')],
+            items: const [RemixSelectItem(value: 'a', label: 'A')],
             onChanged: (_) {},
           ),
         );
@@ -39,7 +39,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: const [RemixSelectItem(value: 'a', label: 'Alpha')],
+          items: const [RemixSelectItem(value: 'a', label: 'Alpha')],
           selectedValue: 'a',
           onChanged: (_) {},
           triggerChevronBuilder: (context, styleSpec) =>
@@ -65,7 +65,7 @@ void main() {
       await tester.pumpRemixApp(
         const RemixSelect<String>(
           trigger: RemixSelectTrigger(placeholder: 'Choose'),
-          entries: [RemixSelectItem(value: 'a', label: 'A')],
+          items: [RemixSelectItem(value: 'a', label: 'A')],
         ),
       );
 
@@ -86,7 +86,7 @@ void main() {
         StatefulBuilder(
           builder: (context, setState) => RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-            entries: const [
+            items: const [
               RemixSelectItem(value: 'a', label: 'Alpha'),
               RemixSelectItem(value: 'b', label: 'Beta'),
             ],
@@ -112,7 +112,7 @@ void main() {
         StatefulBuilder(
           builder: (context, setState) => RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-            entries: const [
+            items: const [
               RemixSelectItem(value: 'a', label: 'Alpha'),
               RemixSelectItem(value: 'b', label: 'Beta'),
             ],
@@ -140,7 +140,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: const [
+          items: const [
             RemixSelectItem(value: 'a', label: 'Alpha', enabled: false),
           ],
           onChanged: (_) => changes++,
@@ -154,7 +154,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: const [
+          items: const [
             RemixSelectItem(value: 'a', label: 'Alpha', enabled: false),
           ],
           onChanged: (_) => changes++,
@@ -175,7 +175,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: const [RemixSelectItem(value: 'a', label: 'Alpha')],
+          items: const [RemixSelectItem(value: 'a', label: 'Alpha')],
           onChanged: (_) {},
           onOpen: () => opens++,
           onClose: () => closes++,
@@ -197,7 +197,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: const [RemixSelectItem(value: 'a', label: 'A')],
+          items: const [RemixSelectItem(value: 'a', label: 'A')],
           onChanged: (_) {},
           focusNode: node,
         ),
@@ -208,13 +208,13 @@ void main() {
       expect(node.hasFocus, isTrue);
     });
 
-    testWidgets('asserts when a controlled value is absent from all entries', (
+    testWidgets('asserts when a controlled value is absent from all items', (
       tester,
     ) async {
       await tester.pumpRemixApp(
         RemixSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: const [RemixSelectItem(value: 'a', label: 'A')],
+          items: const [RemixSelectItem(value: 'a', label: 'A')],
           selectedValue: 'missing',
           onChanged: (_) {},
         ),
@@ -223,16 +223,16 @@ void main() {
       expect(tester.takeException(), isAssertionError);
     });
 
-    testWidgets('asserts when nested entries contain duplicate values', (
+    testWidgets('asserts when nested items contain duplicate values', (
       tester,
     ) async {
       await tester.pumpRemixApp(
         RemixSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: const [
+          items: const [
             RemixSelectItem(value: 'duplicate', label: 'First'),
             RemixSelectGroup(
-              entries: [RemixSelectItem(value: 'duplicate', label: 'Second')],
+              items: [RemixSelectItem(value: 'duplicate', label: 'Second')],
             ),
           ],
           onChanged: (_) {},
@@ -244,13 +244,13 @@ void main() {
   });
 
   group('RemixSelect styling and composition', () {
-    testWidgets('select-level item style is inherited by entries', (
+    testWidgets('select-level item style is inherited by items', (
       tester,
     ) async {
       await tester.pumpRemixApp(
         RemixSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: const [RemixSelectItem(value: 'a', label: 'Alpha')],
+          items: const [RemixSelectItem(value: 'a', label: 'Alpha')],
           onChanged: (_) {},
           style: RemixSelectStyler().item(
             RemixSelectMenuItemStyler().text(TextStyler().color(Colors.red)),
@@ -263,11 +263,11 @@ void main() {
       expect(tester.widget<Text>(find.text('Alpha')).style?.color, Colors.red);
     });
 
-    testWidgets('entry style merges after the select default', (tester) async {
+    testWidgets('item style merges after the select default', (tester) async {
       await tester.pumpRemixApp(
         RemixSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: [
+          items: [
             RemixSelectItem(
               value: 'a',
               label: 'Alpha',
@@ -291,11 +291,11 @@ void main() {
       );
     });
 
-    testWidgets('raw styleSpec bypasses fluent entry styles', (tester) async {
+    testWidgets('raw styleSpec bypasses fluent item styles', (tester) async {
       await tester.pumpRemixApp(
         RemixSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: [
+          items: [
             RemixSelectItem(
               value: 'a',
               label: 'Alpha',
@@ -328,7 +328,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixSelect<String>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: const [RemixSelectItem(value: 'a', label: 'Alpha')],
+          items: const [RemixSelectItem(value: 'a', label: 'Alpha')],
           onChanged: (_) {},
           triggerWrapper: (context, child) => KeyedSubtree(
             key: const ValueKey('trigger-wrapper'),
@@ -352,7 +352,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixSelect<int>(
           trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-          entries: [
+          items: [
             for (var index = 0; index < 60; index++)
               RemixSelectItem(value: index, label: 'Option $index'),
           ],
@@ -377,7 +377,7 @@ void main() {
           RemixSelect<String>(
             semanticLabel: 'Fruit picker',
             trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-            entries: const [RemixSelectItem(value: 'a', label: 'Apple')],
+            items: const [RemixSelectItem(value: 'a', label: 'Apple')],
             onChanged: (_) {},
           ),
         );
@@ -431,7 +431,7 @@ void main() {
         await tester.pumpRemixApp(
           RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-            entries: const [
+            items: const [
               RemixSelectItem(
                 value: 'a',
                 label: 'Apple',

@@ -34,14 +34,14 @@ class IconButtonExample extends StatelessWidget {
           semanticLabel: 'Favorite',
           onPressed: () {},
           style: style,
-          icon: const Icon(CupertinoIcons.heart),
+          icon: CupertinoIcons.heart,
         ),
         RemixIconButton(
           semanticLabel: 'Favorite loading',
           onPressed: () {},
           style: style,
           loading: true,
-          icon: const Icon(CupertinoIcons.heart),
+          icon: CupertinoIcons.heart,
         ),
       ],
     );
@@ -91,27 +91,27 @@ class FortalIconButtonExample extends StatelessWidget {
         FortalIconButton.solid(
           semanticLabel: 'Add',
           onPressed: () {},
-          icon: const Icon(Icons.add),
+          icon: Icons.add,
         ),
         FortalIconButton.soft(
           semanticLabel: 'Edit',
           onPressed: () {},
-          icon: const Icon(Icons.edit),
+          icon: Icons.edit,
         ),
         FortalIconButton.surface(
           semanticLabel: 'Layers',
           onPressed: () {},
-          icon: const Icon(Icons.layers),
+          icon: Icons.layers,
         ),
         FortalIconButton.outline(
           semanticLabel: 'Border style',
           onPressed: () {},
-          icon: const Icon(Icons.border_style),
+          icon: Icons.border_style,
         ),
         FortalIconButton.ghost(
           semanticLabel: 'Delete',
           onPressed: () {},
-          icon: const Icon(Icons.delete),
+          icon: Icons.delete,
         ),
       ],
     );
@@ -129,8 +129,9 @@ class FortalIconButtonExample extends StatelessWidget {
 ```dart
 const RemixIconButton({
   Key? key,
-  required Widget icon,
-  required String semanticLabel,
+  required Object icon,
+  RemixIconButtonIconBuilder? iconBuilder,
+  String? semanticLabel,
   RemixIconButtonLoadingBuilder? loadingBuilder,
   bool loading = false,
   bool enabled = true,
@@ -164,14 +165,14 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `icon` → `Widget`
+#### `icon` → `Object`
 
-**Required**. Arbitrary icon content. Descendant `Icon` widgets inherit the
-resolved icon style.
+**Required**. Accepts established `IconData` or an arbitrary icon `Widget`.
+Widget descendants inherit the resolved icon style.
 
-#### `semanticLabel` → `String`
+#### `semanticLabel` → `String?`
 
-**Required**. A nonempty accessible name for the icon-only action.
+Optional. Supply a nonempty localized name for icon-only actions.
 
 #### `loadingBuilder` → `RemixIconButtonLoadingBuilder?`
 
@@ -204,10 +205,6 @@ Optional. Callback function called when the button is long pressed.
 #### `focusNode` → `FocusNode?`
 
 Optional. Optional focus node to control the button's focus behavior.
-
-#### `semanticLabel` → `String?`
-
-Optional. The semantic label for the button.  Used by screen readers to describe the button.
 
 #### `semanticHint` → `String?`
 

@@ -26,7 +26,7 @@ class ProgressExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RemixProgress(
-      value: 30,
+      value: 0.3,
       style: style,
     );
   }
@@ -61,10 +61,10 @@ class FortalProgressExample extends StatelessWidget {
       spacing: 16,
       children: [
         FortalProgress.surface(
-          value: 60,
+          value: 0.6,
         ),
         FortalProgress.soft(
-          value: 40,
+          value: 0.4,
         ),
       ],
     );
@@ -83,7 +83,7 @@ class FortalProgressExample extends StatelessWidget {
 const RemixProgress({
   Key? key,
   double? value,
-  double max = 100,
+  double max = 1,
   Duration duration = const Duration(seconds: 5),
   String? semanticLabel,
   bool excludeSemantics = false,
@@ -116,7 +116,7 @@ an indeterminate progress indicator.
 
 #### `max` → `double`
 
-Optional. The finite, positive maximum determinate value. Defaults to `100`.
+Optional. The finite, positive maximum determinate value. Defaults to `1`.
 
 #### `duration` → `Duration`
 

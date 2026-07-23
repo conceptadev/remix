@@ -6,6 +6,22 @@ class RemixSpinnerSpec with _$RemixSpinnerSpec {
   @override
   final double? size;
 
+  /// Established circular indicator stroke width.
+  @override
+  final double? strokeWidth;
+
+  /// Established circular indicator color.
+  @override
+  final Color? indicatorColor;
+
+  /// Established optional circular track color.
+  @override
+  final Color? trackColor;
+
+  /// Established optional circular track stroke width.
+  @override
+  final double? trackStrokeWidth;
+
   /// Explicit color override. When absent the spinner uses inherited color.
   @override
   final Color? color;
@@ -24,6 +40,10 @@ class RemixSpinnerSpec with _$RemixSpinnerSpec {
 
   const RemixSpinnerSpec({
     this.size,
+    this.strokeWidth,
+    this.indicatorColor,
+    this.trackColor,
+    this.trackStrokeWidth,
     this.color,
     this.opacity,
     this.leafRadius,

@@ -98,6 +98,7 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
                 variant: FortalProgressVariant.values[row],
                 size: FortalProgressSize.values[column],
                 value: 68,
+                max: 100,
                 semanticLabel: '68 percent complete',
               ),
             ),

@@ -4,7 +4,7 @@ description: A structured dropdown select for choosing one value
 keywords: [flutter, remix, select, dropdown, picker, combo-box, form]
 ---
 
-`RemixSelect` is a controlled single-value input. Its sealed `entries` model
+`RemixSelect` is a controlled single-value input. Its sealed `items` model
 supports selectable items, groups, labels, and separators without allowing
 arbitrary interactive widgets inside listbox content.
 
@@ -38,11 +38,11 @@ class _SelectExampleState extends State<SelectExample> {
       width: 240,
       child: RemixSelect<String>(
         trigger: const RemixSelectTrigger(placeholder: 'Choose a fruit'),
-        entries: const [
+        items: const [
           RemixSelectLabel(label: 'Fresh'),
           RemixSelectGroup(
             semanticLabel: 'Fresh fruit',
-            entries: [
+            items: [
               RemixSelectItem(value: 'apple', label: 'Apple'),
               RemixSelectItem(value: 'banana', label: 'Banana'),
             ],
@@ -97,18 +97,17 @@ class FortalSelectExample extends StatefulWidget {
 class _FortalSelectExampleState extends State<FortalSelectExample> {
   String? _value;
 
-  static const _entries = <RemixSelectEntry<String>>[
+  static const _items = <RemixSelectItemData<String>>[
     RemixSelectItem(value: 'opt1', label: 'Option 1'),
     RemixSelectItem(value: 'opt2', label: 'Option 2'),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return FortalSelect<String>(
-      triggerVariant: FortalSelectTriggerVariant.surface,
+    return FortalSelect<String>.surface(
       contentVariant: FortalSelectContentVariant.solid,
       trigger: const RemixSelectTrigger(placeholder: 'Choose an option'),
-      entries: _entries,
+      items: _items,
       selectedValue: _value,
       onChanged: (value) => setState(() => _value = value),
     );
@@ -128,7 +127,7 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
 const RemixSelect<T>({
   Key? key,
   required RemixSelectTrigger trigger,
-  required List<RemixSelectEntry<T>> entries,
+  required List<RemixSelectItemData<T>> items,
   T? selectedValue,
   OverlayPositionConfig positioning = const OverlayPositionConfig(
     side: OverlaySide.bottom,
@@ -154,10 +153,10 @@ const RemixSelect<T>({
 ```
 </CodeGroup>
 
-## Entry types
+## Item types
 
 - `RemixSelectItem<T>` is a selectable typed value with a visible label.
-- `RemixSelectGroup<T>` creates a semantic group around nested entries.
+- `RemixSelectGroup<T>` creates a semantic group around nested items.
 - `RemixSelectLabel<T>` is a non-selectable heading.
 - `RemixSelectSeparator<T>` is a decorative boundary.
 

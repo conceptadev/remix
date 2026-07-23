@@ -6,24 +6,30 @@ part of 'callout.dart';
 /// ## Example
 ///
 /// ```dart
-/// RemixCallout(child: Text('This is a callout message!'))
+/// RemixCallout(text: 'This is a callout message!')
 /// ```
 class RemixCallout extends StatelessWidget {
-  /// Creates a callout whose arbitrary [child] and optional [icon] inherit the
-  /// resolved content themes.
+  /// Creates a callout with established [text] and [icon] values or arbitrary
+  /// [child] and [iconWidget] content.
   const RemixCallout({
     super.key,
-    required this.child,
+    this.text,
+    this.child,
     this.icon,
+    this.iconWidget,
     this.style = const RemixCalloutStyler.create(),
     this.styleSpec,
-  });
+  }) : assert(
+         text != null || child != null,
+         'Provide either text or child to RemixCallout.',
+       );
 
   static final styleFrom = RemixCalloutStyler.new;
 
-  final Widget child;
-
-  final Widget? icon;
+  final String? text;
+  final Widget? child;
+  final IconData? icon;
+  final Widget? iconWidget;
 
   /// The style configuration for the callout.
   final RemixCalloutStyler style;
@@ -37,23 +43,27 @@ class RemixCallout extends StatelessWidget {
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
+        final resolvedIcon = iconWidget != null
+            ? RemixDefaultContentStyle(child: iconWidget!, icon: spec.icon)
+            : icon != null || spec.icon.spec.icon != null
+            ? StyledIcon(icon: icon, styleSpec: spec.icon)
+            : null;
+        final content = child != null
+            ? RemixDefaultContentStyle(
+                text: spec.text,
+                icon: spec.icon,
+                child: child!,
+              )
+            : StyledText(text!, styleSpec: spec.text);
         return RemixFlexBoxWithEffects(
           key: const ValueKey('remix-callout-surface'),
           styleSpec: spec.container,
           direction: Axis.horizontal,
           containerEffects: spec.containerEffects,
           children: [
-            if (icon case final icon?)
-              RemixDefaultContentStyle(child: icon, icon: spec.icon),
+            if (resolvedIcon != null) resolvedIcon,
             // ignore: avoid-flexible-outside-flex
-            Flexible(
-              fit: FlexFit.loose,
-              child: RemixDefaultContentStyle(
-                child: child,
-                text: spec.text,
-                icon: spec.icon,
-              ),
-            ),
+            Flexible(fit: FlexFit.loose, child: content),
           ],
         );
       },

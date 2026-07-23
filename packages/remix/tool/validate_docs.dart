@@ -12,17 +12,13 @@ final _retiredApis = <(RegExp, String)>[
     'static Fortal variant argument; use its named constructor',
   ),
   (
-    RegExp(
-      r'Remix(?:MenuTrigger|MenuItemData|MenuDivider|ButtonTextBuilder|ButtonIconBuilder|IconButtonIconBuilder|BadgeLabelBuilder)\b',
-    ),
-    'retired component type',
-  ),
-  (RegExp(r'\bsnapDivisions\b'), 'retired scalar Slider property'),
-  (
     RegExp(r'\b(?:targetAnchor|followerAnchor)\s*:'),
     'retired overlay anchor API',
   ),
-  (RegExp(r'\b(?:menuContainer|trackContainer)\s*\('), 'retired style slot'),
+  (
+    RegExp(r'\bentries\s*:'),
+    'renamed Menu/Select collection argument; use items',
+  ),
   (
     RegExp(
       r'\b(?:RemixPaintShadow(?:Kind|Mix|ListToken)?|RemixSurface(?:Layer|Effects)?(?:Spec|Mix)?|remixSurface(?:Box|FlexBox))\b',
@@ -42,14 +38,9 @@ final _retiredApis = <(RegExp, String)>[
   ),
 ];
 
-final _progressInvocation = RegExp(r'\b(?:RemixProgress|FortalProgress)\s*\(');
 final _iconButtonInvocation = RegExp(
   r'\b(?:RemixIconButton|FortalIconButton)(?:\.[A-Za-z0-9_]+)?\s*\(',
 );
-final _legacyFractionalProgressValue = RegExp(
-  r'\bvalue\s*:\s*0\.(?:\d*[1-9]\d*)(?![\d.])',
-);
-final _explicitProgressMax = RegExp(r'\bmax\s*:');
 final _remixImport = RegExp(
   r'''import\s+['"]package:remix/remix\.dart['"]\s*;''',
 );
@@ -311,33 +302,7 @@ void _checkRetiredApis(
       );
     }
   }
-  _checkLegacyProgressScale(source, relativePath, failures);
   _checkLegacyIconButtonSlot(source, relativePath, failures);
-}
-
-void _checkLegacyProgressScale(
-  String source,
-  String relativePath,
-  List<String> failures,
-) {
-  for (final invocation in _progressInvocation.allMatches(source)) {
-    final openingParenthesis = invocation.end - 1;
-    final closingParenthesis = _matchingParenthesis(source, openingParenthesis);
-    if (closingParenthesis == null) continue;
-    final arguments = source.substring(
-      openingParenthesis + 1,
-      closingParenthesis,
-    );
-    final legacyValue = _legacyFractionalProgressValue.firstMatch(arguments);
-    if (legacyValue == null || _explicitProgressMax.hasMatch(arguments)) {
-      continue;
-    }
-    failures.add(
-      '$relativePath contains a Progress value on the retired 0-1 default '
-      'scale at offset ${openingParenthesis + 1 + legacyValue.start}; use '
-      'the 0-100 default scale or declare an explicit max.',
-    );
-  }
 }
 
 void _checkLegacyIconButtonSlot(

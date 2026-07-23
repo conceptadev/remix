@@ -12,12 +12,12 @@ void main() {
       const radio = FortalRadio.soft(value: 'option');
       const menu = FortalMenu<String>.soft(
         trigger: Text('Menu'),
-        entries: [RemixMenuAction(value: 'a', child: Text('A'))],
+        items: [RemixMenuAction(value: 'a', child: Text('A'))],
       );
       const select = FortalSelect<String>(
         triggerVariant: .ghost,
         trigger: RemixSelectTrigger(placeholder: 'Pick'),
-        entries: [RemixSelectItem(value: 'a', label: 'A')],
+        items: [RemixSelectItem(value: 'a', label: 'A')],
       );
 
       expect(button.variant, FortalButtonVariant.soft);
@@ -160,11 +160,11 @@ void main() {
       );
 
       expect(
-        const FortalMenu.solid(trigger: SizedBox(), entries: []).variant,
+        const FortalMenu.solid(trigger: SizedBox(), items: []).variant,
         FortalMenuVariant.solid,
       );
       expect(
-        const FortalMenu.soft(trigger: SizedBox(), entries: []).variant,
+        const FortalMenu.soft(trigger: SizedBox(), items: []).variant,
         FortalMenuVariant.soft,
       );
 
@@ -387,6 +387,7 @@ void main() {
           radius: .small,
           highContrast: true,
           value: 50,
+          max: 100,
         ),
       );
 
@@ -518,7 +519,7 @@ void main() {
         FortalMenu<String>(
           color: .red,
           trigger: const Text('Menu'),
-          entries: const [RemixMenuAction(value: 'a', child: Text('A'))],
+          items: const [RemixMenuAction(value: 'a', child: Text('A'))],
         ),
       );
       expect(find.byType(FortalMenu<String>), findsOneWidget);
@@ -540,7 +541,7 @@ void main() {
           contentColor: .red,
           contentHighContrast: true,
           trigger: const RemixSelectTrigger(placeholder: 'Pick'),
-          entries: const [RemixSelectItem(value: 'a', label: 'A')],
+          items: const [RemixSelectItem(value: 'a', label: 'A')],
           onChanged: (_) {},
         ),
       );

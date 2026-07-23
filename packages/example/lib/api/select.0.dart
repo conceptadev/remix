@@ -24,7 +24,7 @@ class _SelectExampleState extends State<SelectExample> {
     return Center(
       child: RemixSelect(
         trigger: const RemixSelectTrigger(placeholder: 'Text Value'),
-        entries: [
+        items: [
           RemixSelectItem(
             value: 'option1',
             label: 'Option 1',

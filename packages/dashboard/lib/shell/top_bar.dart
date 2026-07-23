@@ -224,7 +224,7 @@ class _TopBarState extends State<TopBar> {
           FortalMenu<String>(
             semanticLabel: 'Account menu',
             trigger: const FortalAvatar(label: 'LF', size: .size2),
-            entries: const [
+            items: const [
               RemixMenuAction(value: 'profile', child: Text('Profile')),
               RemixMenuAction(value: 'preferences', child: Text('Preferences')),
               RemixMenuSeparator(),

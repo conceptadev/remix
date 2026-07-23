@@ -155,7 +155,7 @@ void main() {
         FortalMenu<String>(
           color: .red,
           trigger: const Text('Open red menu'),
-          entries: const [
+          items: const [
             RemixMenuAction(value: 'red', child: Text('Red menu item')),
           ],
         ),
@@ -180,7 +180,7 @@ void main() {
         FortalSelect<String>(
           contentColor: .red,
           trigger: const RemixSelectTrigger(placeholder: 'Pick red'),
-          entries: const [
+          items: const [
             RemixSelectItem(value: 'red', label: 'Red select item'),
           ],
           onChanged: (_) {},

@@ -98,8 +98,10 @@ class FortalCallout extends StatelessWidget {
     this.size = .size2,
     this.color,
     this.highContrast = false,
-    required this.child,
+    this.text,
+    this.child,
     this.icon,
+    this.iconWidget,
   });
 
   const FortalCallout.soft({
@@ -107,8 +109,10 @@ class FortalCallout extends StatelessWidget {
     this.size = .size2,
     this.color,
     this.highContrast = false,
-    required this.child,
+    this.text,
+    this.child,
     this.icon,
+    this.iconWidget,
   }) : variant = .soft;
 
   const FortalCallout.surface({
@@ -116,8 +120,10 @@ class FortalCallout extends StatelessWidget {
     this.size = .size2,
     this.color,
     this.highContrast = false,
-    required this.child,
+    this.text,
+    this.child,
     this.icon,
+    this.iconWidget,
   }) : variant = .surface;
 
   const FortalCallout.outline({
@@ -125,26 +131,37 @@ class FortalCallout extends StatelessWidget {
     this.size = .size2,
     this.color,
     this.highContrast = false,
-    required this.child,
+    this.text,
+    this.child,
     this.icon,
+    this.iconWidget,
   }) : variant = .outline;
 
   final FortalCalloutVariant variant;
   final FortalCalloutSize size;
   final FortalAccentColor? color;
   final bool highContrast;
-  final Widget child;
-  final Widget? icon;
+  final String? text;
+  final Widget? child;
+  final IconData? icon;
+  final Widget? iconWidget;
 
   @override
   Widget build(BuildContext context) {
     return FortalComponentOverride(
       color: color,
-      child: fortalCalloutStyler(
-        variant: variant,
-        size: size,
-        highContrast: highContrast,
-      ).call(key: key, child: child, icon: icon),
+      child:
+          fortalCalloutStyler(
+            variant: variant,
+            size: size,
+            highContrast: highContrast,
+          ).call(
+            key: key,
+            text: text,
+            child: child,
+            icon: icon,
+            iconWidget: iconWidget,
+          ),
     );
   }
 }

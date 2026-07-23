@@ -1,6 +1,15 @@
 part of 'menu.dart';
 
-/// Style configuration for [RemixMenu] overlay, items, and dividers.
+/// Style configuration for [RemixMenuTrigger] content.
+extension RemixMenuTriggerStylerRemixHelpers on RemixMenuTriggerStyler {
+  RemixMenuTriggerStyler flex(FlexStyler value) {
+    return merge(
+      RemixMenuTriggerStyler(container: FlexBoxStyler().flex(value)),
+    );
+  }
+}
+
+/// Style configuration for [RemixMenu] trigger, overlay, items, and dividers.
 extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
   /// Creates a [RemixMenu] widget with this style applied.
   ///
@@ -10,13 +19,13 @@ extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
   ///   .containerEffects(RemixBoxEffectsMix(overContent: ...))
   ///   .call<String>(
   ///     trigger: const Text('Options'),
-  ///     entries: [...],
+  ///     items: [...],
   ///   )
   /// ```
   RemixMenu<T> call<T>({
     Key? key,
     required Widget trigger,
-    required List<Widget> entries,
+    required List<Widget> items,
     MenuController? controller,
     ValueChanged<T>? onSelected,
     VoidCallback? onOpen,
@@ -42,7 +51,7 @@ extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
     return RemixMenu(
       key: key,
       trigger: trigger,
-      entries: entries,
+      items: items,
       controller: controller,
       onSelected: onSelected,
       onOpen: onOpen,

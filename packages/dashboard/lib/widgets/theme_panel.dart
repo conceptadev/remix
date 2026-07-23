@@ -91,7 +91,7 @@ class ThemePanel extends StatelessWidget {
             child: FortalSelect<FortalGrayColor>(
               trigger: const RemixSelectTrigger(placeholder: 'Choose gray'),
               selectedValue: settings.grayColor,
-              entries: [
+              items: [
                 for (final gray in FortalGrayColor.values)
                   RemixSelectItem(value: gray, label: _label(gray.name)),
               ],

@@ -126,7 +126,9 @@ class FortalBadge extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.child,
+    this.label,
+    this.child,
+    this.labelBuilder,
   });
 
   const FortalBadge.solid({
@@ -135,7 +137,9 @@ class FortalBadge extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.child,
+    this.label,
+    this.child,
+    this.labelBuilder,
   }) : variant = .solid;
 
   const FortalBadge.soft({
@@ -144,7 +148,9 @@ class FortalBadge extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.child,
+    this.label,
+    this.child,
+    this.labelBuilder,
   }) : variant = .soft;
 
   const FortalBadge.surface({
@@ -153,7 +159,9 @@ class FortalBadge extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.child,
+    this.label,
+    this.child,
+    this.labelBuilder,
   }) : variant = .surface;
 
   const FortalBadge.outline({
@@ -162,7 +170,9 @@ class FortalBadge extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.child,
+    this.label,
+    this.child,
+    this.labelBuilder,
   }) : variant = .outline;
 
   final FortalBadgeVariant variant;
@@ -170,7 +180,9 @@ class FortalBadge extends StatelessWidget {
   final FortalAccentColor? color;
   final FortalRadius? radius;
   final bool highContrast;
-  final Widget child;
+  final String? label;
+  final Widget? child;
+  final RemixBadgeLabelBuilder? labelBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +193,7 @@ class FortalBadge extends StatelessWidget {
         variant: variant,
         size: size,
         highContrast: highContrast,
-      ).call(key: key, child: child),
+      ).call(key: key, label: label, child: child, labelBuilder: labelBuilder),
     );
   }
 }

@@ -97,7 +97,10 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
   bool _animationsDisabled = false;
 
   Duration get _duration =>
-      widget.spec.duration ?? const Duration(milliseconds: 800);
+      widget.spec.duration ??
+      (widget.spec._usesLegacyCircularStyle
+          ? const Duration(milliseconds: 1000)
+          : const Duration(milliseconds: 800));
 
   @override
   void initState() {
@@ -128,7 +131,10 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
   void didUpdateWidget(covariant _SpinnerSpecWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     final oldDuration =
-        oldWidget.spec.duration ?? const Duration(milliseconds: 800);
+        oldWidget.spec.duration ??
+        (oldWidget.spec._usesLegacyCircularStyle
+            ? const Duration(milliseconds: 1000)
+            : const Duration(milliseconds: 800));
     if (oldDuration != _duration) {
       _validateDuration(_duration);
       controller.duration = _duration;
@@ -146,6 +152,29 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
   Widget build(BuildContext context) {
     final spec = widget.spec;
     final size = spec.size ?? 24;
+    if (spec._usesLegacyCircularStyle) {
+      final strokeWidth = spec.strokeWidth ?? 1.5;
+      final trackStrokeWidth = spec.trackStrokeWidth;
+      _validateLegacyVisuals(
+        size: size,
+        strokeWidth: strokeWidth,
+        trackStrokeWidth: trackStrokeWidth,
+      );
+      Widget spinner = CustomPaint(
+        size: Size.square(size),
+        painter: RemixSpinnerPainter(
+          animation: controller,
+          strokeWidth: strokeWidth,
+          indicatorColor:
+              spec.indicatorColor ??
+              spec.color ??
+              Theme.of(context).colorScheme.primary,
+          trackColor: spec.trackColor,
+          trackStrokeWidth: trackStrokeWidth,
+        ),
+      );
+      return _withSpinnerSemantics(spinner);
+    }
     final opacity = spec.opacity ?? 0.65;
     final leafRadius = spec.leafRadius ?? const Radius.circular(2);
     _validateVisuals(size: size, opacity: opacity, leafRadius: leafRadius);
@@ -157,14 +186,18 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
 
     Widget spinner = CustomPaint(
       size: Size.square(size),
-      painter: RemixSpinnerPainter(
+      painter: RemixLeafSpinnerPainter(
         animation: controller,
         color: color,
         opacity: opacity,
         leafRadius: leafRadius,
       ),
     );
-    spinner = widget.excludeSemantics
+    return _withSpinnerSemantics(spinner);
+  }
+
+  Widget _withSpinnerSemantics(Widget spinner) {
+    return widget.excludeSemantics
         ? ExcludeSemantics(child: spinner)
         : Semantics(
             container: true,
@@ -172,9 +205,15 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
             label: widget.semanticLabel,
             child: spinner,
           );
-
-    return spinner;
   }
+}
+
+extension on RemixSpinnerSpec {
+  bool get _usesLegacyCircularStyle =>
+      strokeWidth != null ||
+      indicatorColor != null ||
+      trackColor != null ||
+      trackStrokeWidth != null;
 }
 
 void _validateDuration(Duration duration) {
@@ -212,4 +251,38 @@ void _validateVisuals({
       'Spinner leaf radius must be finite and non-negative.',
     );
   }
+}
+
+void _validateLegacyVisuals({
+  required double size,
+  required double strokeWidth,
+  required double? trackStrokeWidth,
+}) {
+  if (!size.isFinite || size < 0) {
+    throw ArgumentError.value(size, 'size', 'Spinner size must be finite.');
+  }
+  if (!strokeWidth.isFinite || strokeWidth < 0) {
+    throw ArgumentError.value(
+      strokeWidth,
+      'strokeWidth',
+      'Spinner strokeWidth must be finite and non-negative.',
+    );
+  }
+  if (trackStrokeWidth != null &&
+      (!trackStrokeWidth.isFinite || trackStrokeWidth < 0)) {
+    throw ArgumentError.value(
+      trackStrokeWidth,
+      'trackStrokeWidth',
+      'Spinner trackStrokeWidth must be finite and non-negative.',
+    );
+  }
+}
+
+/// Creates the established circular spinner widget from a resolved [spec].
+Widget createSpinnerWidget(RemixSpinnerSpec spec) {
+  return _SpinnerSpecWidget(
+    spec: spec.copyWith(strokeWidth: spec.strokeWidth ?? 1.5),
+    semanticLabel: null,
+    excludeSemantics: false,
+  );
 }

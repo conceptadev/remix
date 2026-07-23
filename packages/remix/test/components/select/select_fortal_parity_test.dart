@@ -415,7 +415,7 @@ void main() {
           home: Scaffold(
             body: FortalSelect<String>(
               trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-              entries: const [RemixSelectItem(value: 'a', label: 'Apple')],
+              items: const [RemixSelectItem(value: 'a', label: 'Apple')],
               selectedValue: 'a',
               onChanged: (_) {},
             ),
@@ -450,7 +450,7 @@ void main() {
               triggerRadius: .large,
               contentColor: .green,
               trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-              entries: const [RemixSelectItem(value: 'a', label: 'Apple')],
+              items: const [RemixSelectItem(value: 'a', label: 'Apple')],
               onChanged: (_) {},
             ),
           ),

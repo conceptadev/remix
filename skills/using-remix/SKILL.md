@@ -146,11 +146,11 @@ FortalSwitch(
 )
 
 FortalSlider(
-  values: [volume],
+  value: volume,
   min: 0,
   max: 100,
-  step: 1,
-  onChanged: (values) => setState(() => volume = values.single),
+  snapDivisions: 100,
+  onChanged: (value) => setState(() => volume = value),
 )
 
 FortalTextField(
@@ -165,7 +165,7 @@ FortalTextField(
 
 ### Select & Menu
 
-Select uses a declarative trigger plus sealed entries. Menu entries are real
+Select uses a declarative trigger plus sealed items. Menu items are real
 widgets so actions, labels, groups, checks, radio choices, and recursive
 submenus compose in source order. Set `open` and handle `onOpenChanged` when
 the Select owner must accept or reject overlay-state requests.
@@ -173,7 +173,7 @@ the Select owner must accept or reject overlay-state requests.
 ```dart
 FortalSelect<String>(
   trigger: const RemixSelectTrigger(placeholder: 'Choose a fruit'),
-  entries: const [
+  items: const [
     RemixSelectItem(value: 'apple', label: 'Apple'),
     RemixSelectItem(value: 'banana', label: 'Banana'),
   ],
@@ -183,7 +183,7 @@ FortalSelect<String>(
 
 FortalMenu<String>(
   trigger: const Text('Actions'),
-  entries: const [
+  items: const [
     RemixMenuAction(
       value: 'edit',
       leading: Icon(Icons.edit),
@@ -192,7 +192,7 @@ FortalMenu<String>(
     RemixMenuSeparator(),
     RemixMenuSubmenu<String>(
       child: Text('Share'),
-      entries: [
+      items: [
         RemixMenuAction(value: 'link', child: Text('Copy link')),
       ],
     ),
@@ -401,7 +401,7 @@ primaryButton(child: const Text('Save'), onPressed: save) // → RemixButton
 ```
 
 Generic surfaces use `call<T>()`: Accordion, Menu, Radio, and Select. Dart can
-usually infer `T` from required values, entries, or callbacks. All other leaf
+usually infer `T` from required values, items, or callbacks. All other leaf
 component stylers use a non-generic `call()` method. Behavioral group/root
 widgets such as `RemixAccordionGroup`, `RemixRadioGroup`, and `RemixTabs` are
 constructed directly because they do not have stylers.

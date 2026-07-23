@@ -31,7 +31,7 @@ class BadgeExample extends StatelessWidget {
       children: [
         RemixBadge(
           style: styleLabel,
-          child: const Text('8'),
+          label: '8',
         ),
         RemixBadge(
           style: styleIcon,
@@ -117,7 +117,9 @@ class FortalBadgeExample extends StatelessWidget {
 ```dart
 const RemixBadge({
   Key? key,
-  required Widget child,
+  String? label,
+  Widget? child,
+  RemixBadgeLabelBuilder? labelBuilder,
   RemixBadgeStyler style = const RemixBadgeStyler.create(),
   RemixBadgeSpec? styleSpec,
 })
@@ -140,10 +142,11 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `child` → `Widget`
+#### `child` → `Widget?`
 
-**Required**. Arbitrary badge content. Descendant text and icons inherit the
-resolved badge styles.
+Optional arbitrary badge content. Descendant text and icons inherit the
+resolved badge styles. Use `label` and optional `labelBuilder` for the
+established text API.
 
 
 ### Style Methods

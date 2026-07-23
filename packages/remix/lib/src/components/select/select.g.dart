@@ -12,6 +12,7 @@ mixin _$RemixSelectSpec implements Spec<RemixSelectSpec>, Diagnosticable {
   StyleSpec<RemixSelectMenuItemSpec> get item;
   StyleSpec<RemixSelectLabelSpec> get label;
   StyleSpec<BoxSpec> get separator;
+  StyleSpec<FlexBoxSpec> get menuContainer;
 
   @override
   Type get type => RemixSelectSpec;
@@ -23,6 +24,7 @@ mixin _$RemixSelectSpec implements Spec<RemixSelectSpec>, Diagnosticable {
     StyleSpec<RemixSelectMenuItemSpec>? item,
     StyleSpec<RemixSelectLabelSpec>? label,
     StyleSpec<BoxSpec>? separator,
+    StyleSpec<FlexBoxSpec>? menuContainer,
   }) {
     return RemixSelectSpec(
       trigger: trigger ?? this.trigger,
@@ -30,6 +32,7 @@ mixin _$RemixSelectSpec implements Spec<RemixSelectSpec>, Diagnosticable {
       item: item ?? this.item,
       label: label ?? this.label,
       separator: separator ?? this.separator,
+      menuContainer: menuContainer ?? this.menuContainer,
     );
   }
 
@@ -41,11 +44,19 @@ mixin _$RemixSelectSpec implements Spec<RemixSelectSpec>, Diagnosticable {
       item: item.lerp(other?.item, t),
       label: label.lerp(other?.label, t),
       separator: separator.lerp(other?.separator, t),
+      menuContainer: menuContainer.lerp(other?.menuContainer, t),
     );
   }
 
   @override
-  List<Object?> get props => [trigger, content, item, label, separator];
+  List<Object?> get props => [
+    trigger,
+    content,
+    item,
+    label,
+    separator,
+    menuContainer,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -91,7 +102,8 @@ mixin _$RemixSelectSpec implements Spec<RemixSelectSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('content', content))
       ..add(DiagnosticsProperty('item', item))
       ..add(DiagnosticsProperty('label', label))
-      ..add(DiagnosticsProperty('separator', separator));
+      ..add(DiagnosticsProperty('separator', separator))
+      ..add(DiagnosticsProperty('menuContainer', menuContainer));
   }
 }
 
@@ -494,12 +506,14 @@ typedef _$RemixSelectLabelSpecMethods = _$RemixSelectLabelSpec; // ignore: unuse
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec> {
+class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec>
+    with RemixBoxStylerMixin<RemixSelectStyler> {
   final Prop<StyleSpec<RemixSelectTriggerSpec>>? $trigger;
   final Prop<StyleSpec<RemixSelectContentSpec>>? $content;
   final Prop<StyleSpec<RemixSelectMenuItemSpec>>? $item;
   final Prop<StyleSpec<RemixSelectLabelSpec>>? $label;
   final Prop<StyleSpec<BoxSpec>>? $separator;
+  final Prop<StyleSpec<FlexBoxSpec>>? $menuContainer;
 
   const RemixSelectStyler.create({
     Prop<StyleSpec<RemixSelectTriggerSpec>>? trigger,
@@ -507,6 +521,7 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec> {
     Prop<StyleSpec<RemixSelectMenuItemSpec>>? item,
     Prop<StyleSpec<RemixSelectLabelSpec>>? label,
     Prop<StyleSpec<BoxSpec>>? separator,
+    Prop<StyleSpec<FlexBoxSpec>>? menuContainer,
     super.variants,
     super.modifier,
     super.animation,
@@ -514,7 +529,8 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec> {
        $content = content,
        $item = item,
        $label = label,
-       $separator = separator;
+       $separator = separator,
+       $menuContainer = menuContainer;
 
   RemixSelectStyler({
     RemixSelectTriggerStyler? trigger,
@@ -522,6 +538,7 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec> {
     RemixSelectMenuItemStyler? item,
     RemixSelectLabelStyler? label,
     BoxStyler? separator,
+    FlexBoxStyler? menuContainer,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixSelectSpec>>? variants,
@@ -531,6 +548,7 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec> {
          item: Prop.maybeMix(item),
          label: Prop.maybeMix(label),
          separator: Prop.maybeMix(separator),
+         menuContainer: Prop.maybeMix(menuContainer),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -546,6 +564,481 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec> {
       RemixSelectStyler().label(value);
   factory RemixSelectStyler.separator(BoxStyler value) =>
       RemixSelectStyler().separator(value);
+  factory RemixSelectStyler.menuContainer(FlexBoxStyler value) =>
+      RemixSelectStyler().menuContainer(value);
+  factory RemixSelectStyler.alignment(AlignmentGeometry value) =>
+      RemixSelectStyler().alignment(value);
+  factory RemixSelectStyler.padding(EdgeInsetsGeometryMix value) =>
+      RemixSelectStyler().padding(value);
+  factory RemixSelectStyler.margin(EdgeInsetsGeometryMix value) =>
+      RemixSelectStyler().margin(value);
+  factory RemixSelectStyler.constraints(BoxConstraintsMix value) =>
+      RemixSelectStyler().constraints(value);
+  factory RemixSelectStyler.decoration(DecorationMix value) =>
+      RemixSelectStyler().decoration(value);
+  factory RemixSelectStyler.foregroundDecoration(DecorationMix value) =>
+      RemixSelectStyler().foregroundDecoration(value);
+  factory RemixSelectStyler.clipBehavior(Clip value) =>
+      RemixSelectStyler().clipBehavior(value);
+  factory RemixSelectStyler.color(Color value) =>
+      RemixSelectStyler().color(value);
+  factory RemixSelectStyler.gradient(GradientMix value) =>
+      RemixSelectStyler().gradient(value);
+  factory RemixSelectStyler.border(BoxBorderMix value) =>
+      RemixSelectStyler().border(value);
+  factory RemixSelectStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      RemixSelectStyler().borderRadius(value);
+  factory RemixSelectStyler.elevation(ElevationShadow value) =>
+      RemixSelectStyler().elevation(value);
+  factory RemixSelectStyler.shadow(BoxShadowMix value) =>
+      RemixSelectStyler().shadow(value);
+  factory RemixSelectStyler.shadows(List<BoxShadowMix> value) =>
+      RemixSelectStyler().shadows(value);
+  factory RemixSelectStyler.width(double value) =>
+      RemixSelectStyler().width(value);
+  factory RemixSelectStyler.height(double value) =>
+      RemixSelectStyler().height(value);
+  factory RemixSelectStyler.size(double width, double height) =>
+      RemixSelectStyler().size(width, height);
+  factory RemixSelectStyler.minWidth(double value) =>
+      RemixSelectStyler().minWidth(value);
+  factory RemixSelectStyler.maxWidth(double value) =>
+      RemixSelectStyler().maxWidth(value);
+  factory RemixSelectStyler.minHeight(double value) =>
+      RemixSelectStyler().minHeight(value);
+  factory RemixSelectStyler.maxHeight(double value) =>
+      RemixSelectStyler().maxHeight(value);
+  factory RemixSelectStyler.scale(
+    double scale, {
+    Alignment alignment = .center,
+  }) => RemixSelectStyler().scale(scale, alignment: alignment);
+  factory RemixSelectStyler.rotate(
+    double radians, {
+    Alignment alignment = .center,
+  }) => RemixSelectStyler().rotate(radians, alignment: alignment);
+  factory RemixSelectStyler.translate(double x, double y, [double z = 0.0]) =>
+      RemixSelectStyler().translate(x, y, z);
+  factory RemixSelectStyler.skew(double skewX, double skewY) =>
+      RemixSelectStyler().skew(skewX, skewY);
+  factory RemixSelectStyler.textStyle(TextStyler value) =>
+      RemixSelectStyler().textStyle(value);
+  factory RemixSelectStyler.image(DecorationImageMix value) =>
+      RemixSelectStyler().image(value);
+  factory RemixSelectStyler.shape(ShapeBorderMix value) =>
+      RemixSelectStyler().shape(value);
+  factory RemixSelectStyler.backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixSelectStyler().backgroundImage(
+    image,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixSelectStyler.backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixSelectStyler().backgroundImageUrl(
+    url,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixSelectStyler.backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixSelectStyler().backgroundImageAsset(
+    path,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixSelectStyler.linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixSelectStyler().linearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixSelectStyler.radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixSelectStyler().radialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixSelectStyler.sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixSelectStyler().sweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixSelectStyler.foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixSelectStyler().foregroundLinearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixSelectStyler.foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixSelectStyler().foregroundRadialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixSelectStyler.foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixSelectStyler().foregroundSweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixSelectStyler.transform(
+    Matrix4 value, {
+    Alignment alignment = .center,
+  }) => RemixSelectStyler().transform(value, alignment: alignment);
+
+  RemixSelectStyler alignment(AlignmentGeometry value) {
+    return menuContainer(FlexBoxStyler().alignment(value));
+  }
+
+  RemixSelectStyler padding(EdgeInsetsGeometryMix value) {
+    return menuContainer(FlexBoxStyler().padding(value));
+  }
+
+  RemixSelectStyler margin(EdgeInsetsGeometryMix value) {
+    return menuContainer(FlexBoxStyler().margin(value));
+  }
+
+  RemixSelectStyler constraints(BoxConstraintsMix value) {
+    return menuContainer(FlexBoxStyler().constraints(value));
+  }
+
+  RemixSelectStyler decoration(DecorationMix value) {
+    return menuContainer(FlexBoxStyler().decoration(value));
+  }
+
+  RemixSelectStyler foregroundDecoration(DecorationMix value) {
+    return menuContainer(FlexBoxStyler().foregroundDecoration(value));
+  }
+
+  RemixSelectStyler clipBehavior(Clip value) {
+    return menuContainer(FlexBoxStyler().clipBehavior(value));
+  }
+
+  RemixSelectStyler color(Color value) {
+    return menuContainer(FlexBoxStyler().color(value));
+  }
+
+  RemixSelectStyler gradient(GradientMix value) {
+    return menuContainer(FlexBoxStyler().gradient(value));
+  }
+
+  RemixSelectStyler border(BoxBorderMix value) {
+    return menuContainer(FlexBoxStyler().border(value));
+  }
+
+  RemixSelectStyler borderRadius(BorderRadiusGeometryMix value) {
+    return menuContainer(FlexBoxStyler().borderRadius(value));
+  }
+
+  RemixSelectStyler elevation(ElevationShadow value) {
+    return menuContainer(FlexBoxStyler().elevation(value));
+  }
+
+  RemixSelectStyler shadow(BoxShadowMix value) {
+    return menuContainer(FlexBoxStyler().shadow(value));
+  }
+
+  RemixSelectStyler shadows(List<BoxShadowMix> value) {
+    return menuContainer(FlexBoxStyler().shadows(value));
+  }
+
+  RemixSelectStyler width(double value) {
+    return menuContainer(FlexBoxStyler().width(value));
+  }
+
+  RemixSelectStyler height(double value) {
+    return menuContainer(FlexBoxStyler().height(value));
+  }
+
+  RemixSelectStyler size(double width, double height) {
+    return menuContainer(FlexBoxStyler().size(width, height));
+  }
+
+  RemixSelectStyler minWidth(double value) {
+    return menuContainer(FlexBoxStyler().minWidth(value));
+  }
+
+  RemixSelectStyler maxWidth(double value) {
+    return menuContainer(FlexBoxStyler().maxWidth(value));
+  }
+
+  RemixSelectStyler minHeight(double value) {
+    return menuContainer(FlexBoxStyler().minHeight(value));
+  }
+
+  RemixSelectStyler maxHeight(double value) {
+    return menuContainer(FlexBoxStyler().maxHeight(value));
+  }
+
+  RemixSelectStyler scale(double scale, {Alignment alignment = .center}) {
+    return menuContainer(FlexBoxStyler().scale(scale, alignment: alignment));
+  }
+
+  RemixSelectStyler rotate(double radians, {Alignment alignment = .center}) {
+    return menuContainer(FlexBoxStyler().rotate(radians, alignment: alignment));
+  }
+
+  RemixSelectStyler translate(double x, double y, [double z = 0.0]) {
+    return menuContainer(FlexBoxStyler().translate(x, y, z));
+  }
+
+  RemixSelectStyler skew(double skewX, double skewY) {
+    return menuContainer(FlexBoxStyler().skew(skewX, skewY));
+  }
+
+  RemixSelectStyler textStyle(TextStyler value) {
+    return menuContainer(FlexBoxStyler().textStyle(value));
+  }
+
+  RemixSelectStyler image(DecorationImageMix value) {
+    return menuContainer(FlexBoxStyler().image(value));
+  }
+
+  RemixSelectStyler shape(ShapeBorderMix value) {
+    return menuContainer(FlexBoxStyler().shape(value));
+  }
+
+  RemixSelectStyler backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return menuContainer(
+      FlexBoxStyler().backgroundImage(
+        image,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  RemixSelectStyler backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return menuContainer(
+      FlexBoxStyler().backgroundImageUrl(
+        url,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  RemixSelectStyler backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return menuContainer(
+      FlexBoxStyler().backgroundImageAsset(
+        path,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  RemixSelectStyler linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return menuContainer(
+      FlexBoxStyler().linearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixSelectStyler radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return menuContainer(
+      FlexBoxStyler().radialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixSelectStyler sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return menuContainer(
+      FlexBoxStyler().sweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixSelectStyler foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return menuContainer(
+      FlexBoxStyler().foregroundLinearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixSelectStyler foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return menuContainer(
+      FlexBoxStyler().foregroundRadialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixSelectStyler foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return menuContainer(
+      FlexBoxStyler().foregroundSweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixSelectStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+    return menuContainer(
+      FlexBoxStyler().transform(value, alignment: alignment),
+    );
+  }
 
   /// Sets the trigger.
   RemixSelectStyler trigger(RemixSelectTriggerStyler value) {
@@ -570,6 +1063,11 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec> {
   /// Sets the separator.
   RemixSelectStyler separator(BoxStyler value) {
     return merge(RemixSelectStyler(separator: value));
+  }
+
+  /// Sets the menuContainer.
+  RemixSelectStyler menuContainer(FlexBoxStyler value) {
+    return merge(RemixSelectStyler(menuContainer: value));
   }
 
   /// Sets the animation configuration.
@@ -604,6 +1102,7 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec> {
       item: MixOps.merge($item, other?.$item),
       label: MixOps.merge($label, other?.$label),
       separator: MixOps.merge($separator, other?.$separator),
+      menuContainer: MixOps.merge($menuContainer, other?.$menuContainer),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -619,6 +1118,7 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec> {
       item: MixOps.resolve(context, $item),
       label: MixOps.resolve(context, $label),
       separator: MixOps.resolve(context, $separator),
+      menuContainer: MixOps.resolve(context, $menuContainer),
     );
 
     return StyleSpec(
@@ -636,7 +1136,8 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec> {
       ..add(DiagnosticsProperty('content', $content))
       ..add(DiagnosticsProperty('item', $item))
       ..add(DiagnosticsProperty('label', $label))
-      ..add(DiagnosticsProperty('separator', $separator));
+      ..add(DiagnosticsProperty('separator', $separator))
+      ..add(DiagnosticsProperty('menuContainer', $menuContainer));
   }
 
   @override
@@ -646,6 +1147,7 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec> {
     $item,
     $label,
     $separator,
+    $menuContainer,
     $animation,
     $modifier,
     $variants,

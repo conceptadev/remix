@@ -41,7 +41,11 @@ void main() {
 
     testWidgets('progress', (tester) async {
       await tester.pumpRemixApp(
-        const RemixProgress(value: 40, styleSpec: RemixProgressSpec()),
+        const RemixProgress(
+          value: 40,
+          max: 100,
+          styleSpec: RemixProgressSpec(),
+        ),
       );
       await tester.pumpAndSettle();
       expect(find.byType(RemixProgress), findsOneWidget);

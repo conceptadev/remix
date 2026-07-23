@@ -205,7 +205,7 @@ class _CustomersPageState extends State<CustomersPage> {
           padding: EdgeInsets.all(6),
           child: Icon(Icons.more_horiz, size: 18),
         ),
-        entries: const [
+        items: const [
           RemixMenuAction(value: 'view', child: Text('View profile')),
           RemixMenuAction(value: 'email', child: Text('Send email')),
           RemixMenuSeparator(),

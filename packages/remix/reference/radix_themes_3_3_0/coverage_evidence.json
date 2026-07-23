@@ -360,7 +360,7 @@
     },
     {
       "test": "test/components/menu/menu_widget_test.dart",
-      "case": "arbitrary trigger opens ordered compositional entries",
+      "case": "arbitrary trigger opens ordered compositional items",
       "covers": ["state:closed", "state:open"]
     },
     {
@@ -370,7 +370,7 @@
     },
     {
       "test": "test/components/menu/menu_widget_test.dart",
-      "case": "checkbox and radio entries expose correct roles and callbacks",
+      "case": "checkbox and radio items expose correct roles and callbacks",
       "covers": ["state:checked", "state:unchecked"]
     },
     {

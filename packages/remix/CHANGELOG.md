@@ -23,19 +23,18 @@
   `appearance`, `accentColor`, `grayColor`, `panelBackground`, `radius`,
   `scaling`, and `hasBackground` values. Root `FortalScope` belongs above the
   app widget so platform appearance and Navigator overlays share one theme.
-- **BREAKING**: Button accepts an arbitrary `child` widget and IconButton
-  accepts an arbitrary `Widget icon`; IconButton requires a nonempty
-  `semanticLabel`. Badge and other content components also inherit resolved
-  text/icon styles through arbitrary content.
-- **BREAKING**: Slider is an arbitrary multi-thumb control with ascending
-  `values`, list-valued callbacks, `step`, `minSpacing`, orientation, inversion,
-  per-thumb focus, and per-thumb semantics. Remove scalar `value` and
-  `snapDivisions`.
+- **FEAT**: Button, Badge, Callout, and IconButton accept arbitrary widget
+  content while retaining their established label/text/icon and builder APIs.
+  Arbitrary descendants inherit resolved text and icon styles.
+- **FEAT**: Slider adds an arbitrary multi-thumb mode with ascending `values`,
+  `onValues...` callbacks, `step`, `minSpacing`, orientation, inversion,
+  per-thumb focus, and per-thumb semantics while retaining scalar `value`,
+  callbacks, `focusNode`, `autofocus`, and `snapDivisions`.
 - **BREAKING**: `RemixTabs.activationMode` now exposes automatic and manual
   keyboard activation from Naked beta.6.
-- **BREAKING**: Menu now takes an arbitrary trigger widget and compositional
+- **FEAT**: Menu now also takes an arbitrary trigger widget and compositional
   action, checkbox, group, label, separator, radio, and recursive submenu
-  entries. Select uses `entries` with selectable, group, label, and separator
+  items. Select uses `items` with selectable, group, label, and separator
   types and exposes owner-authoritative `open`/`onOpenChanged` control.
 - **FEAT**: Add Radix-aligned Popover and Fortal ToggleGroup; complete missing
   classic variants, sizes, high-contrast roles, geometry, focus/disabled/open
@@ -70,8 +69,11 @@
   Chromium reference fixture and parity manifest/checker.
 - **CHORE**: Require every parity-manifest enum and state to cite an exact
   executable test case; reject missing, stale, extra, or uncited evidence.
-- **DOCS**: Migrate the complete MDX guide and public examples to the hard-break
-  APIs. Add a documentation gate that rejects retired component syntax across
+- **FIX**: Preserve established Remix component source compatibility, including
+  Menu/Select `items`, Progress's 0–1 default, TabBar `child`, and the original
+  Spinner, Progress, Select, and Slider raw style slots.
+- **DOCS**: Migrate the complete MDX guide and public examples to the canonical
+  APIs. Add a documentation gate that rejects genuinely retired syntax across
   MDX, app/example sources, READMEs, and the consumer skill; analyze every
   self-contained MDX Dart snippet against the package.
 

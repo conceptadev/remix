@@ -4,15 +4,91 @@ part of 'menu.dart';
 typedef RemixMenuPartWrapper =
     Widget Function(BuildContext context, Widget child);
 
+/// Compatibility trigger model retained from the original Remix menu API.
+class RemixMenuTrigger extends StatelessWidget {
+  const RemixMenuTrigger({super.key, required this.label, this.icon});
+
+  final String label;
+  final IconData? icon;
+
+  Widget _build(StyleSpec<RemixMenuTriggerSpec> styleSpec) {
+    return StyleSpecBuilder<RemixMenuTriggerSpec>(
+      styleSpec: styleSpec,
+      builder: (context, spec) => RowBox(
+        styleSpec: spec.container,
+        children: [
+          if (icon != null) StyledIcon(icon: icon, styleSpec: spec.icon),
+          StyledText(label, styleSpec: spec.label),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [if (icon != null) Icon(icon), Text(label)],
+  );
+}
+
+/// Compatibility base class for the original data-driven menu items.
+sealed class RemixMenuItemData<T> extends StatelessWidget {
+  const RemixMenuItemData({super.key});
+}
+
+/// Compatibility action retained from the original Remix menu API.
+final class RemixMenuItem<T> extends RemixMenuItemData<T> {
+  const RemixMenuItem({
+    super.key,
+    required this.value,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.enabled = true,
+    this.closeOnActivate = true,
+    this.semanticLabel,
+    this.style = const RemixMenuItemStyler.create(),
+  });
+
+  final T value;
+  final String label;
+  final IconData? leadingIcon;
+  final IconData? trailingIcon;
+  final bool enabled;
+  final bool closeOnActivate;
+  final String? semanticLabel;
+  final RemixMenuItemStyler style;
+
+  @override
+  Widget build(BuildContext context) => RemixMenuAction<T>(
+    value: value,
+    leading: leadingIcon == null ? null : Icon(leadingIcon),
+    trailing: trailingIcon == null ? null : Icon(trailingIcon),
+    enabled: enabled,
+    closeOnActivate: closeOnActivate,
+    semanticLabel: semanticLabel,
+    style: style,
+    child: Text(label),
+  );
+}
+
+/// Compatibility divider retained from the original Remix menu API.
+final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
+  const RemixMenuDivider({super.key});
+
+  @override
+  Widget build(BuildContext context) => const RemixMenuSeparator();
+}
+
 /// A compositional menu anchored to an arbitrary trigger widget.
 ///
-/// Entries are widgets so labels, groups, checkboxes, radio groups, and
+/// Items are widgets so labels, groups, checkboxes, radio groups, and
 /// recursive submenus can be composed in the same order in which they appear.
 ///
 /// ```dart
 /// RemixMenu<String>(
 ///   trigger: const Text('Options'),
-///   entries: const [
+///   items: const [
 ///     RemixMenuAction(value: 'copy', child: Text('Copy')),
 ///     RemixMenuSeparator(),
 ///     RemixMenuAction(value: 'delete', child: Text('Delete')),
@@ -24,7 +100,7 @@ class RemixMenu<T> extends StatefulWidget {
   const RemixMenu({
     super.key,
     required this.trigger,
-    required this.entries,
+    required this.items,
     this.controller,
     this.onSelected,
     this.onOpen,
@@ -62,8 +138,8 @@ class RemixMenu<T> extends StatefulWidget {
   /// Widget that opens and closes the menu.
   final Widget trigger;
 
-  /// Compositional popup entries.
-  final List<Widget> entries;
+  /// Compositional popup items.
+  final List<Widget> items;
 
   /// Optional controller for programmatic menu control.
   final MenuController? controller;
@@ -124,6 +200,16 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       )
       .merge(widget.style);
 
+  Widget _buildTrigger(RemixMenuStyler style) {
+    final trigger = widget.trigger;
+    if (trigger is! RemixMenuTrigger) return trigger;
+    return RemixStyleSpecBuilder<RemixMenuSpec>(
+      style: style,
+      styleSpec: widget.styleSpec,
+      builder: (context, spec) => trigger._build(spec.trigger),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final style = _effectiveStyle();
@@ -153,13 +239,13 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       positioning: widget.positioning,
       semanticLabel: widget.semanticLabel,
       excludeSemantics: widget.excludeSemantics,
-      child: widget.trigger,
+      child: _buildTrigger(style),
       overlayBuilder: (context, info) {
         final content = RemixStyleSpecBuilder<RemixMenuSpec>(
           style: style,
           styleSpec: widget.styleSpec,
           builder: (context, spec) => _RemixMenuPanel(
-            entries: widget.entries,
+            items: widget.items,
             maximumHeight: info.overlaySize.height,
             overlay: spec.overlay,
             containerEffects: spec.containerEffects,
@@ -270,7 +356,7 @@ class RemixMenuCheckboxItem<T> extends StatelessWidget {
   );
 }
 
-/// A semantic grouping of adjacent menu entries.
+/// A semantic grouping of adjacent menu items.
 class RemixMenuGroup extends StatelessWidget {
   const RemixMenuGroup({super.key, required this.children, this.semanticLabel});
 
@@ -285,7 +371,7 @@ class RemixMenuGroup extends StatelessWidget {
     child: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: _decorateMenuEntries(children),
+      children: _decorateMenuItems(children),
     ),
   );
 }
@@ -386,7 +472,7 @@ class RemixMenuRadioGroup<T> extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: _decorateMenuEntries(children),
+        children: _decorateMenuItems(children),
       ),
     ),
   );
@@ -438,7 +524,7 @@ class RemixMenuSubmenu<T> extends StatelessWidget {
   const RemixMenuSubmenu({
     super.key,
     required this.child,
-    required this.entries,
+    required this.items,
     this.trailing,
     this.controller,
     this.enabled = true,
@@ -452,7 +538,7 @@ class RemixMenuSubmenu<T> extends StatelessWidget {
   });
 
   final Widget child;
-  final List<Widget> entries;
+  final List<Widget> items;
   final Widget? trailing;
   final MenuController? controller;
   final bool enabled;
@@ -478,7 +564,7 @@ class RemixMenuSubmenu<T> extends StatelessWidget {
       onClose: onClose,
       overlayBuilder: (context, info) => scope.buildSubmenuPanel(
         context,
-        entries,
+        items,
         maximumHeight: info.overlaySize.height,
       ),
       builder: (context, state, _) => _RemixMenuStatefulItem(
@@ -496,7 +582,7 @@ class RemixMenuSubmenu<T> extends StatelessWidget {
 
 class _RemixMenuPanel extends StatelessWidget {
   const _RemixMenuPanel({
-    required this.entries,
+    required this.items,
     required this.maximumHeight,
     required this.overlay,
     required this.containerEffects,
@@ -510,7 +596,7 @@ class _RemixMenuPanel extends StatelessWidget {
     required this.contentWrapper,
   });
 
-  final List<Widget> entries;
+  final List<Widget> items;
   final double maximumHeight;
   final StyleSpec<FlexBoxSpec> overlay;
   final RemixBoxEffectsSpec? containerEffects;
@@ -526,7 +612,7 @@ class _RemixMenuPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _RemixMenuStyleScope(
-      hasCheckableItems: _menuEntriesContainCheckable(entries),
+      hasCheckableItems: _menuItemsContainCheckable(items),
       overlay: overlay,
       containerEffects: containerEffects,
       defaultItemStyle: defaultItemStyle,
@@ -550,7 +636,7 @@ class _RemixMenuPanel extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: _decorateMenuEntries(entries),
+                  children: _decorateMenuItems(items),
                 ),
               ),
             ),
@@ -594,7 +680,7 @@ class _RemixMenuStyleScope extends InheritedWidget {
         .dependOnInheritedWidgetOfExactType<_RemixMenuStyleScope>();
     assert(
       scope != null,
-      'Remix menu entries must be descendants of RemixMenu content.',
+      'Remix menu items must be descendants of RemixMenu content.',
     );
     return scope!;
   }
@@ -646,11 +732,11 @@ class _RemixMenuStyleScope extends InheritedWidget {
 
   Widget buildSubmenuPanel(
     BuildContext context,
-    List<Widget> entries, {
+    List<Widget> items, {
     required double maximumHeight,
   }) {
     final panel = _RemixMenuPanel(
-      entries: entries,
+      items: items,
       maximumHeight: maximumHeight,
       overlay: overlay,
       containerEffects: containerEffects,
@@ -862,37 +948,36 @@ class _RemixMenuAdjacentLabelScope extends InheritedWidget {
   bool updateShouldNotify(_RemixMenuAdjacentLabelScope oldWidget) => false;
 }
 
-List<Widget> _decorateMenuEntries(List<Widget> entries) {
+List<Widget> _decorateMenuItems(List<Widget> items) {
   final result = <Widget>[];
   Widget? previous;
-  for (final entry in entries) {
+  for (final item in items) {
     result.add(
-      entry is RemixMenuLabel && _isInteractiveMenuEntry(previous)
-          ? _RemixMenuAdjacentLabelScope(child: entry)
-          : entry,
+      item is RemixMenuLabel && _isInteractiveMenuItem(previous)
+          ? _RemixMenuAdjacentLabelScope(child: item)
+          : item,
     );
-    previous = entry;
+    previous = item;
   }
   return result;
 }
 
-bool _isInteractiveMenuEntry(Widget? widget) =>
+bool _isInteractiveMenuItem(Widget? widget) =>
     widget is RemixMenuAction ||
     widget is RemixMenuCheckboxItem ||
     widget is RemixMenuRadioItem ||
     widget is RemixMenuSubmenu;
 
-bool _menuEntriesContainCheckable(List<Widget> entries) {
-  for (final entry in entries) {
-    if (entry is RemixMenuCheckboxItem || entry is RemixMenuRadioItem) {
+bool _menuItemsContainCheckable(List<Widget> items) {
+  for (final item in items) {
+    if (item is RemixMenuCheckboxItem || item is RemixMenuRadioItem) {
       return true;
     }
-    if (entry is RemixMenuGroup &&
-        _menuEntriesContainCheckable(entry.children)) {
+    if (item is RemixMenuGroup && _menuItemsContainCheckable(item.children)) {
       return true;
     }
-    if (entry is RemixMenuRadioGroup &&
-        _menuEntriesContainCheckable(entry.children)) {
+    if (item is RemixMenuRadioGroup &&
+        _menuItemsContainCheckable(item.children)) {
       return true;
     }
   }

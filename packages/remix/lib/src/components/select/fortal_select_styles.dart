@@ -3,6 +3,12 @@ part of 'select.dart';
 /// Radix Themes Select root size presets.
 enum FortalSelectSize { size1, size2, size3 }
 
+/// Established combined Select variant retained for source compatibility.
+///
+/// New code can configure [FortalSelectTriggerVariant] and
+/// [FortalSelectContentVariant] independently.
+enum FortalSelectVariant { surface, soft, ghost }
+
 /// Radix Themes Select trigger variants.
 enum FortalSelectTriggerVariant { classic, surface, soft, ghost }
 
@@ -11,13 +17,20 @@ enum FortalSelectContentVariant { solid, soft }
 
 /// Fortal recipe for a complete Select.
 RemixSelectStyler fortalSelectStyler({
+  FortalSelectVariant? variant,
   FortalSelectTriggerVariant triggerVariant = .surface,
   FortalSelectContentVariant contentVariant = .solid,
   FortalSelectSize size = .size2,
   bool contentHighContrast = false,
 }) {
+  final resolvedTriggerVariant = switch (variant) {
+    .surface => FortalSelectTriggerVariant.surface,
+    .soft => FortalSelectTriggerVariant.soft,
+    .ghost => FortalSelectTriggerVariant.ghost,
+    null => triggerVariant,
+  };
   return RemixSelectStyler()
-      .trigger(_fortalSelectTriggerStyler(triggerVariant, size))
+      .trigger(_fortalSelectTriggerStyler(resolvedTriggerVariant, size))
       .content(_fortalSelectContentStyler(size))
       .item(
         _fortalSelectItemStyler(
@@ -28,6 +41,20 @@ RemixSelectStyler fortalSelectStyler({
       )
       .label(_fortalSelectLabelStyler(size))
       .separator(_fortalSelectSeparatorStyler(size));
+}
+
+/// Creates the established combined-variant Select item recipe.
+RemixSelectMenuItemStyler fortalSelectMenuItemStyler({
+  FortalSelectVariant variant = .surface,
+  FortalSelectSize size = .size2,
+}) {
+  return _fortalSelectItemStyler(
+    variant == .soft
+        ? FortalSelectContentVariant.soft
+        : FortalSelectContentVariant.solid,
+    size,
+    highContrast: false,
+  );
 }
 
 RemixSelectTriggerStyler _fortalSelectTriggerStyler(
@@ -459,7 +486,8 @@ Widget _fortalSelectIndicatorBuilder(
 class FortalSelect<T> extends StatelessWidget {
   const FortalSelect({
     super.key,
-    this.triggerVariant = .surface,
+    FortalSelectVariant? variant,
+    FortalSelectTriggerVariant? triggerVariant,
     this.contentVariant = .solid,
     this.size = .size2,
     this.triggerColor,
@@ -467,7 +495,7 @@ class FortalSelect<T> extends StatelessWidget {
     this.contentColor,
     this.contentHighContrast = false,
     required this.trigger,
-    required this.entries,
+    required this.items,
     this.selectedValue,
     this.positioning = const OverlayPositionConfig(
       side: .bottom,
@@ -483,8 +511,134 @@ class FortalSelect<T> extends StatelessWidget {
     this.closeOnSelect = true,
     this.semanticLabel,
     this.focusNode,
-  });
+  }) : variant =
+           variant ??
+           (triggerVariant == FortalSelectTriggerVariant.soft
+               ? FortalSelectVariant.soft
+               : triggerVariant == FortalSelectTriggerVariant.ghost
+               ? FortalSelectVariant.ghost
+               : FortalSelectVariant.surface),
+       triggerVariant =
+           triggerVariant ??
+           (variant == FortalSelectVariant.soft
+               ? FortalSelectTriggerVariant.soft
+               : variant == FortalSelectVariant.ghost
+               ? FortalSelectTriggerVariant.ghost
+               : FortalSelectTriggerVariant.surface);
 
+  const FortalSelect.classic({
+    super.key,
+    this.contentVariant = .solid,
+    this.size = .size2,
+    this.triggerColor,
+    this.triggerRadius,
+    this.contentColor,
+    this.contentHighContrast = false,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      side: .bottom,
+      alignment: .center,
+      sideOffset: 4,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.open,
+    this.onOpenChanged,
+    this.enabled = true,
+    this.closeOnSelect = true,
+    this.semanticLabel,
+    this.focusNode,
+  }) : variant = .surface,
+       triggerVariant = .classic;
+
+  const FortalSelect.surface({
+    super.key,
+    this.contentVariant = .solid,
+    this.size = .size2,
+    this.triggerColor,
+    this.triggerRadius,
+    this.contentColor,
+    this.contentHighContrast = false,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      side: .bottom,
+      alignment: .center,
+      sideOffset: 4,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.open,
+    this.onOpenChanged,
+    this.enabled = true,
+    this.closeOnSelect = true,
+    this.semanticLabel,
+    this.focusNode,
+  }) : variant = .surface,
+       triggerVariant = .surface;
+
+  const FortalSelect.soft({
+    super.key,
+    this.contentVariant = .solid,
+    this.size = .size2,
+    this.triggerColor,
+    this.triggerRadius,
+    this.contentColor,
+    this.contentHighContrast = false,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      side: .bottom,
+      alignment: .center,
+      sideOffset: 4,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.open,
+    this.onOpenChanged,
+    this.enabled = true,
+    this.closeOnSelect = true,
+    this.semanticLabel,
+    this.focusNode,
+  }) : variant = .soft,
+       triggerVariant = .soft;
+
+  const FortalSelect.ghost({
+    super.key,
+    this.contentVariant = .solid,
+    this.size = .size2,
+    this.triggerColor,
+    this.triggerRadius,
+    this.contentColor,
+    this.contentHighContrast = false,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      side: .bottom,
+      alignment: .center,
+      sideOffset: 4,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.open,
+    this.onOpenChanged,
+    this.enabled = true,
+    this.closeOnSelect = true,
+    this.semanticLabel,
+    this.focusNode,
+  }) : variant = .ghost,
+       triggerVariant = .ghost;
+
+  final FortalSelectVariant variant;
   final FortalSelectTriggerVariant triggerVariant;
   final FortalSelectContentVariant contentVariant;
   final FortalSelectSize size;
@@ -493,7 +647,7 @@ class FortalSelect<T> extends StatelessWidget {
   final FortalAccentColor? contentColor;
   final bool contentHighContrast;
   final RemixSelectTrigger trigger;
-  final List<RemixSelectEntry<T>> entries;
+  final List<RemixSelectItemData<T>> items;
   final T? selectedValue;
   final OverlayPositionConfig positioning;
   final ValueChanged<T?>? onChanged;
@@ -515,7 +669,7 @@ class FortalSelect<T> extends StatelessWidget {
       contentHighContrast: contentHighContrast,
     ).call<T>(
       trigger: trigger,
-      entries: entries,
+      items: items,
       selectedValue: selectedValue,
       positioning: positioning,
       onChanged: onChanged,

@@ -375,7 +375,8 @@ class FortalIconButton extends StatelessWidget {
     this.radius,
     this.highContrast = false,
     required this.icon,
-    required this.semanticLabel,
+    this.iconBuilder,
+    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -387,7 +388,7 @@ class FortalIconButton extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
-  }) : assert(semanticLabel != '');
+  }) : assert(semanticLabel == null || semanticLabel != '');
 
   const FortalIconButton.classic({
     super.key,
@@ -396,7 +397,8 @@ class FortalIconButton extends StatelessWidget {
     this.radius,
     this.highContrast = false,
     required this.icon,
-    required this.semanticLabel,
+    this.iconBuilder,
+    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -409,7 +411,7 @@ class FortalIconButton extends StatelessWidget {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = .classic,
-       assert(semanticLabel != '');
+       assert(semanticLabel == null || semanticLabel != '');
 
   const FortalIconButton.solid({
     super.key,
@@ -418,7 +420,8 @@ class FortalIconButton extends StatelessWidget {
     this.radius,
     this.highContrast = false,
     required this.icon,
-    required this.semanticLabel,
+    this.iconBuilder,
+    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -431,7 +434,7 @@ class FortalIconButton extends StatelessWidget {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = .solid,
-       assert(semanticLabel != '');
+       assert(semanticLabel == null || semanticLabel != '');
 
   const FortalIconButton.soft({
     super.key,
@@ -440,7 +443,8 @@ class FortalIconButton extends StatelessWidget {
     this.radius,
     this.highContrast = false,
     required this.icon,
-    required this.semanticLabel,
+    this.iconBuilder,
+    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -453,7 +457,7 @@ class FortalIconButton extends StatelessWidget {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = .soft,
-       assert(semanticLabel != '');
+       assert(semanticLabel == null || semanticLabel != '');
 
   const FortalIconButton.surface({
     super.key,
@@ -462,7 +466,8 @@ class FortalIconButton extends StatelessWidget {
     this.radius,
     this.highContrast = false,
     required this.icon,
-    required this.semanticLabel,
+    this.iconBuilder,
+    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -475,7 +480,7 @@ class FortalIconButton extends StatelessWidget {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = .surface,
-       assert(semanticLabel != '');
+       assert(semanticLabel == null || semanticLabel != '');
 
   const FortalIconButton.outline({
     super.key,
@@ -484,7 +489,8 @@ class FortalIconButton extends StatelessWidget {
     this.radius,
     this.highContrast = false,
     required this.icon,
-    required this.semanticLabel,
+    this.iconBuilder,
+    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -497,7 +503,7 @@ class FortalIconButton extends StatelessWidget {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = .outline,
-       assert(semanticLabel != '');
+       assert(semanticLabel == null || semanticLabel != '');
 
   const FortalIconButton.ghost({
     super.key,
@@ -506,7 +512,8 @@ class FortalIconButton extends StatelessWidget {
     this.radius,
     this.highContrast = false,
     required this.icon,
-    required this.semanticLabel,
+    this.iconBuilder,
+    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -519,15 +526,16 @@ class FortalIconButton extends StatelessWidget {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = .ghost,
-       assert(semanticLabel != '');
+       assert(semanticLabel == null || semanticLabel != '');
 
   final FortalIconButtonVariant variant;
   final FortalIconButtonSize size;
   final FortalAccentColor? color;
   final FortalRadius? radius;
   final bool highContrast;
-  final Widget icon;
-  final String semanticLabel;
+  final Object icon;
+  final RemixIconButtonIconBuilder? iconBuilder;
+  final String? semanticLabel;
   final RemixIconButtonLoadingBuilder? loadingBuilder;
   final bool loading;
   final bool enabled;
@@ -553,6 +561,7 @@ class FortalIconButton extends StatelessWidget {
           ).call(
             key: key,
             icon: icon,
+            iconBuilder: iconBuilder,
             semanticLabel: semanticLabel,
             loadingBuilder: loadingBuilder,
             loading: loading,

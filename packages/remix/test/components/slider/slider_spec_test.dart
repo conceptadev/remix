@@ -38,7 +38,8 @@ void main() {
       rangeEffects: RemixBoxEffectsSpec(behindContent: rangeSurface),
       thumbEffects: RemixBoxEffectsSpec(behindContent: thumbSurface),
       thumbFocusEffects: RemixBoxEffectsSpec(overContent: focusOverlay),
-      trackThickness: 10,
+      trackWidth: 10,
+      rangeWidth: 10,
       blendMode: BlendMode.multiply,
     );
 

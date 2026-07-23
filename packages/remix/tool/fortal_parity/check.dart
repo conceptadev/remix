@@ -633,9 +633,23 @@ void _checkVariantConstructors(Directory packageRoot, List<String> failures) {
       final constructors = RegExp(
         'const\\s+${RegExp.escape(className)}\\.([A-Za-z0-9_]+)\\s*\\(',
       ).allMatches(source).map((match) => match.group(1)!).toSet();
+      final relatedVariants = RegExp(
+        'enum\\s+${RegExp.escape(className)}[A-Za-z0-9_]*Variant\\s*\\{([^}]*)\\}',
+        dotAll: true,
+      ).allMatches(source).expand((match) {
+        return match
+            .group(1)!
+            .replaceAll(RegExp(r'//[^\n]*'), '')
+            .replaceAll(RegExp(r'/\*.*?\*/', dotAll: true), '')
+            .split(',')
+            .map((value) => value.trim())
+            .where((value) => value.isNotEmpty)
+            .map((value) => RegExp(r'^[A-Za-z0-9_]+').stringMatch(value))
+            .nonNulls;
+      }).toSet();
 
       final missing = variants.difference(constructors);
-      final unexpected = constructors.difference(variants);
+      final unexpected = constructors.difference(relatedVariants);
       if (missing.isNotEmpty) {
         failures.add(
           '${entity.path} is missing $className variant constructors: $missing.',

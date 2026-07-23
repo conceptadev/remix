@@ -14,7 +14,7 @@ void main() {
           mainAxisSize: MainAxisSize.min,
           children: [Text('Actions'), Icon(Icons.menu)],
         ),
-        entries: [RemixMenuAction(value: 'a', child: Text('A'))],
+        items: [RemixMenuAction(value: 'a', child: Text('A'))],
       ),
     );
 

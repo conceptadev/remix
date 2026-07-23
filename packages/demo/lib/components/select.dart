@@ -47,7 +47,7 @@ Widget buildSelectUseCase(BuildContext context) {
                   selectedValue = value ?? 'Apple';
                 });
               },
-              entries: [
+              items: [
                 RemixSelectItem(value: 'Apple', label: 'Apple'),
                 RemixSelectItem(value: 'Banana', label: 'Banana'),
                 RemixSelectItem(value: 'Orange', label: 'Orange'),

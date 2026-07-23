@@ -97,7 +97,7 @@ class GalleryOverlaysPage extends StatelessWidget {
               size: FortalMenuSize.values[column],
               semanticLabel: 'Open actions menu',
               trigger: const _OverlayTrigger('Open menu'),
-              entries: const [
+              items: const [
                 RemixMenuLabel(child: Text('Document')),
                 RemixMenuAction(value: 'duplicate', child: Text('Duplicate')),
                 RemixMenuAction(value: 'share', child: Text('Share')),

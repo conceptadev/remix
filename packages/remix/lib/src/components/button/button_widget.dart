@@ -1,15 +1,29 @@
 part of 'button.dart';
 
+/// Builds the text content rendered by [RemixButton].
+typedef RemixButtonTextBuilder =
+    Widget Function(BuildContext context, TextSpec spec, String text);
+
+/// Builds a leading or trailing icon rendered by [RemixButton].
+typedef RemixButtonIconBuilder =
+    Widget Function(BuildContext context, IconSpec spec, IconData? icon);
+
 /// Builder for the loading indicator rendered by [RemixButton].
 typedef RemixButtonLoadingBuilder =
     Widget Function(BuildContext context, RemixSpinnerSpec spec);
 
-/// A pressable button whose arbitrary content inherits its resolved text and
-/// icon styles.
+/// A pressable button with either an established text-and-icon composition or
+/// arbitrary content that inherits the resolved text and icon styles.
 class RemixButton extends StatelessWidget {
   const RemixButton({
     super.key,
-    required this.child,
+    this.child,
+    this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -24,14 +38,24 @@ class RemixButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
     this.style = const ButtonStyler.create(),
     this.styleSpec,
-  });
+  }) : assert(
+         child != null || label != null,
+         'RemixButton requires either child or label.',
+       );
 
   static ButtonStyler composeStyle(ButtonStyler style) =>
       .mainAxisSize(.min).merge(style);
 
   static final styleFrom = ButtonStyler.new;
 
-  final Widget child;
+  /// Arbitrary button content. Use [label] for the established text API.
+  final Widget? child;
+  final String? label;
+  final IconData? leadingIcon;
+  final IconData? trailingIcon;
+  final RemixButtonTextBuilder? textBuilder;
+  final RemixButtonIconBuilder? leadingIconBuilder;
+  final RemixButtonIconBuilder? trailingIconBuilder;
   final RemixButtonLoadingBuilder? loadingBuilder;
   final bool loading;
   final bool enabled;
@@ -50,12 +74,72 @@ class RemixButton extends StatelessWidget {
   bool get _isEnabled =>
       enabled && !loading && (onPressed != null || onLongPress != null);
 
-  Widget _buildContent(BuildContext context, RemixButtonSpec spec) {
-    final content = RemixDefaultContentStyle(
-      child: child,
-      text: spec.label,
-      icon: spec.icon,
+  Widget? _buildIcon(
+    BuildContext context,
+    StyleSpec<IconSpec> styleSpec,
+    IconData? icon,
+    RemixButtonIconBuilder? builder,
+  ) {
+    if (icon == null && builder == null) return null;
+    if (builder == null) return StyledIcon(icon: icon, styleSpec: styleSpec);
+    return StyleSpecBuilder<IconSpec>(
+      styleSpec: styleSpec,
+      builder: (context, spec) => builder(context, spec, icon),
     );
+  }
+
+  Widget _buildLegacyContent(BuildContext context, RemixButtonSpec spec) {
+    final leading = _buildIcon(
+      context,
+      spec.icon,
+      leadingIcon,
+      leadingIconBuilder,
+    );
+    final trailing = _buildIcon(
+      context,
+      spec.icon,
+      trailingIcon,
+      trailingIconBuilder,
+    );
+    final text = textBuilder == null
+        ? StyledText(label!, styleSpec: spec.label)
+        : StyleSpecBuilder<TextSpec>(
+            styleSpec: spec.label,
+            builder: (context, textSpec) =>
+                textBuilder!(context, textSpec, label!),
+          );
+    final hasBothIcons = leading != null && trailing != null;
+    final children = hasBothIcons || spec.iconAlignment == null
+        ? <Widget>[?leading, text, ?trailing]
+        : switch (spec.iconAlignment!) {
+            .start => <Widget>[?leading, ?trailing, text],
+            .end => <Widget>[text, ?leading, ?trailing],
+          };
+    return RemixFlexBoxWithEffects(
+      key: const ValueKey('remix-button-surface'),
+      styleSpec: spec.container,
+      direction: Axis.horizontal,
+      containerEffects: spec.containerEffects,
+      children: children,
+    );
+  }
+
+  Widget _buildContent(BuildContext context, RemixButtonSpec spec) {
+    final content = child == null
+        ? _buildLegacyContent(context, spec)
+        : RemixFlexBoxWithEffects(
+            key: const ValueKey('remix-button-surface'),
+            styleSpec: spec.container,
+            direction: Axis.horizontal,
+            containerEffects: spec.containerEffects,
+            children: [
+              RemixDefaultContentStyle(
+                text: spec.label,
+                icon: spec.icon,
+                child: child!,
+              ),
+            ],
+          );
     final hiddenContent = Visibility(
       visible: !loading,
       maintainState: true,
@@ -63,13 +147,6 @@ class RemixButton extends StatelessWidget {
       maintainSize: true,
       maintainSemantics: true,
       child: content,
-    );
-    final button = RemixFlexBoxWithEffects(
-      key: const ValueKey('remix-button-surface'),
-      styleSpec: spec.container,
-      direction: Axis.horizontal,
-      containerEffects: spec.containerEffects,
-      children: [hiddenContent],
     );
     final spinner = loadingBuilder == null
         ? RemixSpinner(styleSpec: spec.spinner.spec)
@@ -82,7 +159,7 @@ class RemixButton extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          button,
+          hiddenContent,
           if (loading) Positioned.fill(child: Center(child: spinner)),
         ],
       ),
@@ -99,7 +176,7 @@ class RemixButton extends StatelessWidget {
       enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
-      semanticLabel: semanticLabel,
+      semanticLabel: semanticLabel ?? label,
       excludeSemantics: excludeSemantics,
       builder: (context, _, _) => RemixStyleSpecBuilder<RemixButtonSpec>(
         style: composeStyle(style),

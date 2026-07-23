@@ -8,6 +8,18 @@ import '../../helpers/test_helpers.dart';
 
 void main() {
   group('RemixSpinner contract', () {
+    testWidgets('legacy factory keeps the circular painter', (tester) async {
+      await tester.pumpRemixApp(
+        createSpinnerWidget(const RemixSpinnerSpec()),
+      );
+
+      final paints = tester.widgetList<CustomPaint>(find.byType(CustomPaint));
+      expect(
+        paints.any((paint) => paint.painter is RemixSpinnerPainter),
+        isTrue,
+      );
+    });
+
     test('defaults to loading with optional content', () {
       const spinner = RemixSpinner();
 
@@ -94,11 +106,11 @@ void main() {
           matching: find.byType(CustomPaint),
         ),
       );
-      final painter = paint.painter! as RemixSpinnerPainter;
+      final painter = paint.painter! as RemixLeafSpinnerPainter;
       expect(paint.size, const Size.square(32));
       expect(painter.color, Colors.purple);
       expect(painter.opacity, 0.65);
-      expect(RemixSpinnerPainter.leafCount, 8);
+      expect(RemixLeafSpinnerPainter.leafCount, 8);
     });
 
     testWidgets('uses an 800ms repeating linear phase by default', (
@@ -114,7 +126,7 @@ void main() {
                     ),
                   )
                   .painter!
-              as RemixSpinnerPainter;
+              as RemixLeafSpinnerPainter;
 
       expect(painter().animation.value, closeTo(0, 0.0001));
       await tester.pump(const Duration(milliseconds: 100));
@@ -139,7 +151,7 @@ void main() {
 
       final painter =
           tester.widget<CustomPaint>(find.byType(CustomPaint)).painter!
-              as RemixSpinnerPainter;
+              as RemixLeafSpinnerPainter;
       expect(painter.animation.value, 0);
       expect(tester.binding.hasScheduledFrame, isFalse);
     });

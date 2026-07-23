@@ -14,7 +14,7 @@ Widget buildCalloutUseCase(BuildContext context) {
         child: SizedBox(
           width: 300,
           child: FortalCallout(
-            icon: const Icon(Icons.info_outline),
+            icon: Icons.info_outline,
             variant: context.knobs.object.dropdown(
               label: 'variant',
               options: FortalCalloutVariant.values,

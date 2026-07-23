@@ -269,7 +269,7 @@ class _Profile extends StatelessWidget {
             ),
           ],
         ),
-        entries: const [
+        items: const [
           RemixMenuAction(value: 'profile', child: Text('View profile')),
           RemixMenuAction(value: 'preferences', child: Text('Preferences')),
           RemixMenuSeparator(),

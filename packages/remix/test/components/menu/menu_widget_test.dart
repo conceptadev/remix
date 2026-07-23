@@ -9,7 +9,7 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
-  testWidgets('arbitrary trigger opens ordered compositional entries', (
+  testWidgets('arbitrary trigger opens ordered compositional items', (
     tester,
   ) async {
     await tester.pumpRemixApp(
@@ -18,7 +18,7 @@ void main() {
           mainAxisSize: MainAxisSize.min,
           children: [Icon(Icons.more_horiz), Text('Actions')],
         ),
-        entries: const [
+        items: const [
           RemixMenuLabel(child: Text('Edit')),
           RemixMenuAction(value: 'copy', child: Text('Copy')),
           RemixMenuSeparator(),
@@ -54,7 +54,7 @@ void main() {
         controller: controller,
         triggerFocusNode: triggerFocus,
         trigger: const Text('Open'),
-        entries: const [RemixMenuAction(value: 'copy', child: Text('Copy'))],
+        items: const [RemixMenuAction(value: 'copy', child: Text('Copy'))],
         onSelected: (value) => selected = value,
       ),
     );
@@ -77,7 +77,7 @@ void main() {
       RemixMenu<String>(
         controller: controller,
         trigger: const Text('Open'),
-        entries: const [
+        items: const [
           RemixMenuGroup(
             semanticLabel: 'Editing actions',
             children: [
@@ -101,7 +101,7 @@ void main() {
     semantics.dispose();
   });
 
-  testWidgets('checkbox and radio entries expose correct roles and callbacks', (
+  testWidgets('checkbox and radio items expose correct roles and callbacks', (
     tester,
   ) async {
     final semantics = tester.ensureSemantics();
@@ -113,7 +113,7 @@ void main() {
       RemixMenu<String>(
         controller: controller,
         trigger: const Text('Open'),
-        entries: [
+        items: [
           RemixMenuCheckboxItem(
             value: 'notifications',
             checked: true,
@@ -178,12 +178,10 @@ void main() {
         controller: controller,
         trigger: const Text('Open'),
         onSelected: (value) => selected = value,
-        entries: const [
+        items: const [
           RemixMenuSubmenu<String>(
             child: SizedBox(width: 120, child: Text('More')),
-            entries: [
-              RemixMenuAction(value: 'child', child: Text('Child item')),
-            ],
+            items: [RemixMenuAction(value: 'child', child: Text('Child item'))],
           ),
         ],
       ),
@@ -217,11 +215,11 @@ void main() {
       RemixMenu<String>(
         controller: controller,
         trigger: const Text('Open'),
-        entries: [
+        items: [
           RemixMenuSubmenu<String>(
             focusNode: submenuFocus,
             child: const SizedBox(width: 120, child: Text('More')),
-            entries: const [
+            items: const [
               RemixMenuAction(value: 'child', child: Text('Child item')),
             ],
           ),
@@ -254,11 +252,11 @@ void main() {
       RemixMenu<String>(
         controller: controller,
         trigger: const Text('Open'),
-        entries: [
+        items: [
           RemixMenuSubmenu<String>(
             focusNode: submenuFocus,
             child: const SizedBox(width: 120, child: Text('More')),
-            entries: const [
+            items: const [
               RemixMenuAction(value: 'child', child: Text('Child item')),
             ],
           ),
@@ -292,12 +290,10 @@ void main() {
       FortalMenu<String>(
         controller: controller,
         trigger: const Text('Open'),
-        entries: const [
+        items: const [
           RemixMenuSubmenu<String>(
             child: SizedBox(width: 120, child: Text('More')),
-            entries: [
-              RemixMenuAction(value: 'child', child: Text('Child item')),
-            ],
+            items: [RemixMenuAction(value: 'child', child: Text('Child item'))],
           ),
         ],
       ),
@@ -330,12 +326,10 @@ void main() {
           collisionPadding: EdgeInsets.all(10),
         ),
         trigger: const Text('Open'),
-        entries: const [
+        items: const [
           RemixMenuSubmenu<String>(
             child: SizedBox(width: 120, child: Text('More')),
-            entries: [
-              RemixMenuAction(value: 'child', child: Text('Child item')),
-            ],
+            items: [RemixMenuAction(value: 'child', child: Text('Child item'))],
           ),
         ],
       ),
@@ -368,12 +362,10 @@ void main() {
           collisionPadding: EdgeInsets.all(10),
         ),
         trigger: const Text('Open'),
-        entries: const [
+        items: const [
           RemixMenuSubmenu<String>(
             child: SizedBox(width: 120, child: Text('More')),
-            entries: [
-              RemixMenuAction(value: 'child', child: Text('Child item')),
-            ],
+            items: [RemixMenuAction(value: 'child', child: Text('Child item'))],
           ),
         ],
       ),
@@ -400,11 +392,11 @@ void main() {
       RemixMenu<String>(
         controller: controller,
         trigger: const Text('Open'),
-        entries: const [
+        items: const [
           RemixMenuSubmenu<String>(
             semanticLabel: 'More options',
             child: Text('More'),
-            entries: [RemixMenuAction(value: 'child', child: Text('Child'))],
+            items: [RemixMenuAction(value: 'child', child: Text('Child'))],
           ),
         ],
       ),
@@ -427,7 +419,7 @@ void main() {
         controller: controller,
         trigger: const Text('Open'),
         onSelected: (value) => selected = value,
-        entries: const [
+        items: const [
           RemixMenuAction(
             value: 'disabled',
             enabled: false,

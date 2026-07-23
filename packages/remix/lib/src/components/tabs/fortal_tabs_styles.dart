@@ -129,15 +129,20 @@ class FortalTabBar extends StatelessWidget {
     this.justify = RemixTabBarJustify.start,
     this.color,
     this.highContrast = false,
-    required this.children,
-  });
+    this.child,
+    this.children,
+  }) : assert(
+         (child == null) != (children == null),
+         'Provide exactly one of child or children.',
+       );
 
   final FortalTabsSize size;
   final RemixTabBarWrap wrap;
   final RemixTabBarJustify justify;
   final FortalAccentColor? color;
   final bool highContrast;
-  final List<Widget> children;
+  final Widget? child;
+  final List<Widget>? children;
 
   @override
   Widget build(BuildContext context) {
@@ -145,6 +150,7 @@ class FortalTabBar extends StatelessWidget {
       key: key,
       wrap: wrap,
       justify: justify,
+      child: child,
       children: children,
     );
 

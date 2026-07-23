@@ -39,10 +39,10 @@ class _StaticRemixSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RemixSlider(
-      values: [value],
+      value: value,
       min: min,
       max: max,
-      step: divisions == null ? 1 : (max - min) / divisions!,
+      snapDivisions: divisions,
       enabled: enabled,
       onChanged: (_) {},
     );

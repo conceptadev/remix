@@ -7,17 +7,23 @@ extension RemixTabBarStylerRemixHelpers on RemixTabBarStyler {
   /// Creates a [RemixTabBar] widget with this style applied.
   RemixTabBar call({
     Key? key,
-    required List<Widget> children,
+    Widget? child,
+    List<Widget>? children,
     RemixTabBarWrap wrap = RemixTabBarWrap.nowrap,
     RemixTabBarJustify justify = RemixTabBarJustify.start,
   }) {
     return RemixTabBar(
       key: key,
+      child: child,
       children: children,
       wrap: wrap,
       justify: justify,
       style: this,
     );
+  }
+
+  RemixTabBarStyler flex(FlexStyler value) {
+    return merge(RemixTabBarStyler(container: FlexBoxStyler().flex(value)));
   }
 }
 

@@ -114,7 +114,7 @@ void main() {
         height: 48,
         child: RemixSlider(
           values: const [50],
-          onChanged: (_) {},
+          onValuesChanged: (_) {},
           style: RemixSliderStyler().thumb(
             BoxStyler().size(16, 16).paddingAll(2),
           ),

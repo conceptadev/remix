@@ -10,6 +10,8 @@ class RemixProgressSpec with _$RemixProgressSpec {
   final StyleSpec<BoxSpec> track;
   @override
   final StyleSpec<BoxSpec> indicator;
+  @override
+  final StyleSpec<BoxSpec> trackContainer;
 
   @override
   @MixableField(setterType: RemixBoxEffectsMix)
@@ -23,11 +25,13 @@ class RemixProgressSpec with _$RemixProgressSpec {
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? track,
     StyleSpec<BoxSpec>? indicator,
+    StyleSpec<BoxSpec>? trackContainer,
     this.trackEffects,
     this.indicatorEffects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        track = track ?? const StyleSpec(spec: BoxSpec()),
-       indicator = indicator ?? const StyleSpec(spec: BoxSpec());
+       indicator = indicator ?? const StyleSpec(spec: BoxSpec()),
+       trackContainer = trackContainer ?? const StyleSpec(spec: BoxSpec());
 
   @override
   RemixProgressSpec lerp(RemixProgressSpec? other, double t) {

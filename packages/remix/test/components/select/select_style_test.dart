@@ -94,14 +94,14 @@ void main() {
     final indicatorBuilder =
         (BuildContext context, StyleSpec<IconSpec> styleSpec) =>
             const SizedBox.shrink();
-    const entries = <RemixSelectEntry<String>>[
+    const items = <RemixSelectItemData<String>>[
       RemixSelectItem(value: 'a', label: 'A'),
     ];
     final styler = RemixSelectStyler();
 
     final select = styler.call<String>(
       trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-      entries: entries,
+      items: items,
       enabled: false,
       closeOnSelect: false,
       triggerWrapper: triggerWrapper,
@@ -111,7 +111,7 @@ void main() {
     );
 
     expect(select.style, same(styler));
-    expect(select.entries, same(entries));
+    expect(select.items, same(items));
     expect(select.enabled, isFalse);
     expect(select.closeOnSelect, isFalse);
     expect(select.triggerWrapper, same(triggerWrapper));

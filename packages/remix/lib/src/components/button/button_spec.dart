@@ -97,6 +97,10 @@ class ButtonSpec with _$ButtonSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
+  /// Placement used when exactly one legacy icon is present.
+  @override
+  final IconAlignment? iconAlignment;
+
   /// Creates a ButtonSpec with optional styling specifications.
   ///
   /// If any [StyleSpec] is not provided, a default specification
@@ -116,6 +120,7 @@ class ButtonSpec with _$ButtonSpec {
     StyleSpec<IconSpec>? icon,
     StyleSpec<RemixSpinnerSpec>? spinner,
     this.containerEffects,
+    this.iconAlignment,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),

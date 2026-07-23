@@ -116,11 +116,12 @@ void main() {
 
       expect(spec, equal);
       expect(spec.hashCode, equal.hashCode);
-      expect(spec.props, hasLength(5));
+      expect(spec.props, hasLength(6));
       expect(spec.props, [
         spec.container,
         spec.track,
         spec.indicator,
+        spec.trackContainer,
         spec.trackEffects,
         spec.indicatorEffects,
       ]);

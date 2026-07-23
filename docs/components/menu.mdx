@@ -5,7 +5,7 @@ keywords: [flutter, remix, menu, dropdown, context-menu, popup, overlay]
 ---
 
 `RemixMenu` displays compositional menu content in an overlay. Its trigger is
-any widget, and its entries can be actions, controlled checkboxes or radio
+any widget, and its items can be actions, controlled checkboxes or radio
 items, groups, labels, separators, and recursively nested submenus.
 
 ## When to use this
@@ -44,7 +44,7 @@ class _MenuExampleState extends State<MenuExample> {
         alignment: Alignment.center,
         child: const Text('Open menu'),
       ),
-      entries: [
+      items: [
         const RemixMenuLabel(child: Text('View')),
         const RemixMenuAction(
           value: 'history',
@@ -74,7 +74,7 @@ class _MenuExampleState extends State<MenuExample> {
         ),
         const RemixMenuSubmenu<String>(
           child: Text('More'),
-          entries: [
+          items: [
             RemixMenuAction(value: 'settings', child: Text('Settings')),
           ],
         ),
@@ -107,7 +107,7 @@ class _MenuExampleState extends State<MenuExample> {
 ## Fortal widgets
 
 `FortalMenu` applies the Radix-aligned content and item recipes while retaining
-the same compositional entry API and arbitrary trigger.
+the same compositional item API and arbitrary trigger.
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -117,7 +117,7 @@ import 'package:remix/remix.dart';
 class FortalMenuExample extends StatelessWidget {
   const FortalMenuExample({super.key});
 
-  static const _entries = <Widget>[
+  static const _items = <Widget>[
     RemixMenuAction(
       value: 'edit',
       leading: Icon(Icons.edit),
@@ -137,12 +137,12 @@ class FortalMenuExample extends StatelessWidget {
       children: [
         FortalMenu<String>.solid(
           trigger: const Text('Solid'),
-          entries: _entries,
+          items: _items,
           onSelected: debugPrint,
         ),
         FortalMenu<String>.soft(
           trigger: const Text('Soft'),
-          entries: _entries,
+          items: _items,
           onSelected: debugPrint,
         ),
       ],
@@ -163,7 +163,7 @@ class FortalMenuExample extends StatelessWidget {
 const RemixMenu<T>({
   Key? key,
   required Widget trigger,
-  required List<Widget> entries,
+  required List<Widget> items,
   MenuController? controller,
   ValueChanged<T>? onSelected,
   VoidCallback? onOpen,
@@ -197,7 +197,7 @@ const RemixMenu<T>({
 ```
 </CodeGroup>
 
-## Entry types
+## Item types
 
 - `RemixMenuAction<T>` activates a typed value and accepts arbitrary `child`,
   `leading`, and `trailing` widgets.
@@ -205,7 +205,7 @@ const RemixMenu<T>({
 - `RemixMenuRadioGroup<T>` controls typed `RemixMenuRadioItem<T>` children.
 - `RemixMenuGroup`, `RemixMenuLabel`, and `RemixMenuSeparator` add structure and
   accessibility boundaries.
-- `RemixMenuSubmenu<T>` accepts its own compositional `entries` and may be
+- `RemixMenuSubmenu<T>` accepts its own compositional `items` and may be
   nested recursively.
 
 Items close on activation by default. Set an item's `closeOnActivate` to false
@@ -214,7 +214,7 @@ but cannot activate.
 
 ## Styling
 
-`RemixMenuStyler` owns `overlay`, `surface`, default `item`, `label`, and
-`divider` slots. Each entry's `style` merges after the menu defaults. Style the
-arbitrary trigger independently; it is intentionally not part of the menu
-style contract.
+`RemixMenuStyler` owns `overlay`, `containerEffects`, default `item`, `label`,
+and `divider` slots. Each item's `style` merges after the menu defaults. The
+`trigger` slot applies to `RemixMenuTrigger`; style arbitrary trigger widgets
+independently.

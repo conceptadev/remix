@@ -17,6 +17,16 @@ extension RemixBadgeStylerRemixHelpers on RemixBadgeStyler {
   }
 
   /// Creates a [RemixBadge] widget with this style applied.
-  RemixBadge call({Key? key, required Widget child}) =>
-      RemixBadge(key: key, style: this, child: child);
+  RemixBadge call({
+    Key? key,
+    String? label,
+    Widget? child,
+    RemixBadgeLabelBuilder? labelBuilder,
+  }) => RemixBadge(
+    key: key,
+    label: label,
+    child: child,
+    labelBuilder: labelBuilder,
+    style: this,
+  );
 }

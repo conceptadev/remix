@@ -13,20 +13,20 @@ void main() {
   );
 
   group('RemixProgress contract', () {
-    test('defaults to indeterminate progress on a 0-100 scale', () {
+    test('defaults to indeterminate progress on a 0-1 scale', () {
       const progress = RemixProgress();
 
       expect(progress.value, isNull);
-      expect(progress.max, 100);
+      expect(progress.max, 1);
       expect(progress.duration, const Duration(seconds: 5));
       expect(progress.excludeSemantics, isFalse);
     });
 
     test('validates max, value, and duration', () {
       expect(() => const RemixProgress(value: 0), returnsNormally);
-      expect(() => const RemixProgress(value: 100), returnsNormally);
+      expect(() => const RemixProgress(value: 1), returnsNormally);
       expect(() => RemixProgress(value: -0.1), throwsA(isA<AssertionError>()));
-      expect(() => RemixProgress(value: 100.1), throwsA(isA<AssertionError>()));
+      expect(() => RemixProgress(value: 1.1), throwsA(isA<AssertionError>()));
       expect(() => RemixProgress(max: 0), throwsA(isA<AssertionError>()));
       expect(
         () => RemixProgress(max: double.infinity),
@@ -86,7 +86,9 @@ void main() {
       tester,
     ) async {
       const key = ValueKey('progress');
-      await tester.pumpRemixApp(const RemixProgress(key: key, value: 50));
+      await tester.pumpRemixApp(
+        const RemixProgress(key: key, value: 50, max: 100),
+      );
       expect(
         tester.widget<FractionallySizedBox>(indicatorOf()).widthFactor,
         0.5,
@@ -164,6 +166,7 @@ void main() {
       await tester.pumpRemixApp(
         const RemixProgress(
           value: 50,
+          max: 100,
           semanticLabel: 'Hidden progress',
           excludeSemantics: true,
         ),
@@ -185,6 +188,7 @@ void main() {
     await tester.pumpRemixApp(
       const RemixProgress(
         value: 50,
+        max: 100,
         styleSpec: RemixProgressSpec(
           container: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
           trackEffects: RemixBoxEffectsSpec(
