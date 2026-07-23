@@ -23,8 +23,7 @@ RemixDialogStyler fortalDialogStyler({
 
   return RemixDialogStyler()
       .title(
-        TextStyler()
-            .style(FortalTokens.text5.mix())
+        .style(FortalTokens.text5.mix())
             .fontWeight(FortalTokens.fontWeightBold())
             .color(FortalTokens.gray12())
             .wrap(

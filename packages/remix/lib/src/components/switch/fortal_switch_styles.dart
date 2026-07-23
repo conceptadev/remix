@@ -40,13 +40,14 @@ RemixSwitchStyler fortalSwitchStyler({
 RemixSwitchStyler _fortalSwitchBaseStyler(FortalSwitchSize size) {
   final metrics = _fortalSwitchMetrics(size);
   return RemixSwitchStyler(
-        container: BoxStyler()
-            .size(metrics.width, metrics.height)
-            .paddingAll(1)
-            .borderRadiusAll(metrics.radius),
-        thumb: BoxStyler()
-            .size(metrics.thumbSize, metrics.thumbSize)
-            .borderRadiusAll(metrics.radius),
+        container: .size(
+          metrics.width,
+          metrics.height,
+        ).paddingAll(1).borderRadiusAll(metrics.radius),
+        thumb: .size(
+          metrics.thumbSize,
+          metrics.thumbSize,
+        ).borderRadiusAll(metrics.radius),
         trackEffects: RemixBoxEffectsMix(
           behindContent: _fortalSwitchLayer(),
           overContent: _fortalSwitchLayer(),
@@ -54,7 +55,7 @@ RemixSwitchStyler _fortalSwitchBaseStyler(FortalSwitchSize size) {
       )
       .thumbColor(Colors.white)
       .onFocused(
-        RemixSwitchStyler().trackEffects(
+        .trackEffects(
           RemixBoxEffectsMix(
             outline: BorderSideMix(
               color: FortalTokens.focus8(),

@@ -17,7 +17,7 @@ RemixCardStyler fortalCardStyler({
       .borderRadiusAll(metrics.radius)
       .clipBehavior(Clip.antiAlias)
       .onFocused(
-        RemixCardStyler().containerEffects(
+        .containerEffects(
           RemixBoxEffectsMix(
             outline: BorderSideMix(
               color: FortalTokens.focus8(),
@@ -140,11 +140,9 @@ RemixCardStyler _fortalCardClassic(RemixCardStyler base) {
         ),
       )
       .onFocused(
-        RemixCardStyler()
-            .containerEffects(
-              RemixBoxEffectsMix(behindContent: _fortalCardActiveFocus()),
-            )
-            .onSelected(open),
+        .containerEffects(
+          RemixBoxEffectsMix(behindContent: _fortalCardActiveFocus()),
+        ).onSelected(open),
       )
       .onSelected(open);
 

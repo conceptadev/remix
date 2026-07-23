@@ -45,13 +45,9 @@ RemixTabStyler fortalTabStyler({
 
   return RemixTabStyler()
       .label(
-        TextStyler(
-          style: metrics.text,
-        ).letterSpacing(0.0).color(FortalTokens.grayA11()),
+        .style(metrics.text).letterSpacing(0.0).color(FortalTokens.grayA11()),
       )
-      .icon(
-        IconStyler(color: FortalTokens.grayA11(), size: FortalTokens.space4()),
-      )
+      .icon(.color(FortalTokens.grayA11()).size(FortalTokens.space4()))
       .wrap(
         .box(
           BoxStyler()
@@ -65,8 +61,7 @@ RemixTabStyler fortalTabStyler({
         ),
       )
       .container(
-        FlexBoxStyler()
-            .direction(.horizontal)
+        .direction(.horizontal)
             .paddingX(metrics.innerPaddingX)
             .paddingY(metrics.innerPaddingY)
             .borderRadiusAll(metrics.radius)
@@ -75,10 +70,9 @@ RemixTabStyler fortalTabStyler({
             .spacing(FortalTokens.space2()),
       )
       .onHovered(
-        RemixTabStyler()
-            .label(TextStyler().color(FortalTokens.gray12()))
-            .icon(IconStyler().color(FortalTokens.gray12()))
-            .color(FortalTokens.grayA3()),
+        .label(
+          .color(FortalTokens.gray12()),
+        ).icon(.color(FortalTokens.gray12())).color(FortalTokens.grayA3()),
       )
       .onFocused(
         RemixTabStyler()
@@ -86,17 +80,15 @@ RemixTabStyler fortalTabStyler({
               color: FortalTokens.focus8(),
               width: FortalTokens.focusRingWidth(),
             )
-            .onHovered(RemixTabStyler().color(FortalTokens.accentA3())),
+            .onHovered(.color(FortalTokens.accentA3())),
       )
       .onSelected(
-        RemixTabStyler()
-            .label(
-              TextStyler()
-                  .color(FortalTokens.gray12())
+        .label(
+              .color(FortalTokens.gray12())
                   .fontWeight(FortalTokens.fontWeightMedium())
                   .letterSpacing(metrics.activeLetterSpacing),
             )
-            .icon(IconStyler().color(FortalTokens.gray12()))
+            .icon(.color(FortalTokens.gray12()))
             .wrap(
               .box(
                 BoxStyler().borderBottom(

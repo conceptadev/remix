@@ -55,17 +55,11 @@ RemixMenuItemStyler _fortalMenuItemStyler(
       .spacing(FortalTokens.space2())
       .height(metrics.itemHeight)
       .borderRadiusAll(metrics.itemRadius)
-      .label(TextStyler(style: metrics.text.mix()).color(FortalTokens.gray12()))
-      .leadingIcon(
-        IconStyler(color: FortalTokens.gray12(), size: metrics.indicatorSize),
-      )
-      .trailingIcon(
-        IconStyler(color: FortalTokens.gray12(), size: metrics.indicatorSize),
-      )
-      .indicator(BoxStyler().alignment(.center))
-      .indicatorIcon(
-        IconStyler(color: FortalTokens.gray12(), size: metrics.indicatorSize),
-      )
+      .label(.style(metrics.text.mix()).color(FortalTokens.gray12()))
+      .leadingIcon(.color(FortalTokens.gray12()).size(metrics.indicatorSize))
+      .trailingIcon(.color(FortalTokens.gray12()).size(metrics.indicatorSize))
+      .indicator(.alignment(.center))
+      .indicatorIcon(.color(FortalTokens.gray12()).size(metrics.indicatorSize))
       .leadingInset(metrics.leadingInset)
       .checkableLeadingInset(metrics.checkableLeadingInset)
       .trailingInset(metrics.trailingInset);
@@ -77,29 +71,29 @@ RemixMenuItemStyler _fortalMenuItemStyler(
             highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
           )
           .label(
-            TextStyler().color(
+            .color(
               highContrast
                   ? FortalTokens.accent1()
                   : FortalTokens.accentContrast(),
             ),
           )
           .leadingIcon(
-            IconStyler(
-              color: highContrast
+            .color(
+              highContrast
                   ? FortalTokens.accent1()
                   : FortalTokens.accentContrast(),
             ),
           )
           .trailingIcon(
-            IconStyler(
-              color: highContrast
+            .color(
+              highContrast
                   ? FortalTokens.accent1()
                   : FortalTokens.accentContrast(),
             ),
           )
           .indicatorIcon(
-            IconStyler(
-              color: highContrast
+            .color(
+              highContrast
                   ? FortalTokens.accent1()
                   : FortalTokens.accentContrast(),
             ),
@@ -111,10 +105,10 @@ RemixMenuItemStyler _fortalMenuItemStyler(
   );
   final disabled = RemixMenuItemStyler()
       .color(Colors.transparent)
-      .label(TextStyler().color(FortalTokens.grayA8()))
-      .leadingIcon(IconStyler(color: FortalTokens.grayA8()))
-      .trailingIcon(IconStyler(color: FortalTokens.grayA8()))
-      .indicatorIcon(IconStyler(color: FortalTokens.grayA8()));
+      .label(.color(FortalTokens.grayA8()))
+      .leadingIcon(.color(FortalTokens.grayA8()))
+      .trailingIcon(.color(FortalTokens.grayA8()))
+      .indicatorIcon(.color(FortalTokens.grayA8()));
 
   return base
       .onSelected(submenuOpen)
@@ -130,9 +124,7 @@ RemixMenuItemStyler _fortalMenuLabelStyler(_FortalMenuMetrics metrics) =>
         .mainAxisSize(.max)
         .crossAxisAlignment(.center)
         .height(metrics.itemHeight)
-        .label(
-          TextStyler(style: metrics.text.mix()).color(FortalTokens.grayA10()),
-        )
+        .label(.style(metrics.text.mix()).color(FortalTokens.grayA10()))
         .leadingInset(metrics.leadingInset)
         .checkableLeadingInset(metrics.checkableLeadingInset)
         .trailingInset(metrics.trailingInset)

@@ -15,17 +15,17 @@ RemixCheckboxStyler fortalCheckboxStyler({
   final metrics = _fortalCheckboxMetrics(size);
   final base =
       RemixCheckboxStyler(
-        container: BoxStyler()
-            .size(metrics.size, metrics.size)
-            .alignment(.center)
-            .borderRadiusAll(metrics.radius),
-        indicator: IconStyler().size(metrics.indicatorSize),
+        container: .size(
+          metrics.size,
+          metrics.size,
+        ).alignment(.center).borderRadiusAll(metrics.radius),
+        indicator: .size(metrics.indicatorSize),
         containerEffects: RemixBoxEffectsMix(
           behindContent: _fortalCheckboxLayer(),
           overContent: _fortalCheckboxLayer(),
         ),
       ).onFocused(
-        RemixCheckboxStyler().containerEffects(
+        .containerEffects(
           RemixBoxEffectsMix(
             outline: BorderSideMix(
               color: FortalTokens.focus8(),
@@ -97,8 +97,7 @@ RemixCheckboxStyler _fortalCheckboxSurface(
       .onSelected(selected)
       .onIndeterminate(selected)
       .onDisabled(
-        RemixCheckboxStyler()
-            .color(FortalTokens.grayA3())
+        .color(FortalTokens.grayA3())
             .containerEffects(
               RemixBoxEffectsMix(behindContent: _fortalCheckboxLayer()),
             )
@@ -174,8 +173,7 @@ RemixCheckboxStyler _fortalCheckboxClassic(
       .onSelected(selected)
       .onIndeterminate(selected)
       .onDisabled(
-        RemixCheckboxStyler()
-            .color(FortalTokens.grayA3())
+        .color(FortalTokens.grayA3())
             .containerEffects(
               RemixBoxEffectsMix(
                 behindContent: _fortalCheckboxLayer(
@@ -209,8 +207,7 @@ RemixCheckboxStyler _fortalCheckboxSoft(
       .onSelected(selected)
       .onIndeterminate(selected)
       .onDisabled(
-        RemixCheckboxStyler()
-            .color(FortalTokens.grayA3())
+        .color(FortalTokens.grayA3())
             .containerEffects(
               RemixBoxEffectsMix(behindContent: _fortalCheckboxLayer()),
             )

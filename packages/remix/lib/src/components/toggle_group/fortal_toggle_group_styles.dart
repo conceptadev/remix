@@ -47,8 +47,7 @@ RemixToggleGroupStyler fortalToggleGroupStyler({
       mainAxisSize: .min,
       spacing: 0,
     ),
-    item: RemixToggleGroupItemStyler()
-        .alignment(.center)
+    item: .alignment(.center)
         .foregroundColor(FortalTokens.gray11())
         .labelFontWeight(FortalTokens.fontWeightMedium())
         .onHovered(
@@ -93,36 +92,39 @@ RemixToggleGroupStyler _fortalToggleGroupSizeStyler(
   return switch (size) {
     .size1 => RemixToggleGroupStyler(
       container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius2()),
-      item: RemixToggleGroupItemStyler(
-        container: FlexBoxStyler()
-            .paddingX(FortalTokens.space2())
-            .paddingY(FortalTokens.space1())
-            .spacing(FortalTokens.toggleGap1()),
-        label: TextStyler(style: FortalTokens.text1.mix()),
-        icon: IconStyler(size: FortalTokens.space3()),
-      ),
+      item:
+          .container(
+                FlexBoxStyler()
+                    .paddingX(FortalTokens.space2())
+                    .paddingY(FortalTokens.space1())
+                    .spacing(FortalTokens.toggleGap1()),
+              )
+              .label(.style(FortalTokens.text1.mix()))
+              .icon(.size(FortalTokens.space3())),
     ),
     .size2 => RemixToggleGroupStyler(
       container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius2()),
-      item: RemixToggleGroupItemStyler(
-        container: FlexBoxStyler()
-            .paddingX(FortalTokens.space3())
-            .paddingY(FortalTokens.space2())
-            .spacing(FortalTokens.space1()),
-        label: TextStyler(style: FortalTokens.text2.mix()),
-        icon: IconStyler(size: FortalTokens.space4()),
-      ),
+      item:
+          .container(
+                FlexBoxStyler()
+                    .paddingX(FortalTokens.space3())
+                    .paddingY(FortalTokens.space2())
+                    .spacing(FortalTokens.space1()),
+              )
+              .label(.style(FortalTokens.text2.mix()))
+              .icon(.size(FortalTokens.space4())),
     ),
     .size3 => RemixToggleGroupStyler(
       container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius3()),
-      item: RemixToggleGroupItemStyler(
-        container: FlexBoxStyler()
-            .paddingX(FortalTokens.space4())
-            .paddingY(FortalTokens.space2())
-            .spacing(FortalTokens.toggleGap3()),
-        label: TextStyler(style: FortalTokens.text3.mix()),
-        icon: IconStyler(size: FortalTokens.spinnerSize3()),
-      ),
+      item:
+          .container(
+                FlexBoxStyler()
+                    .paddingX(FortalTokens.space4())
+                    .paddingY(FortalTokens.space2())
+                    .spacing(FortalTokens.toggleGap3()),
+              )
+              .label(.style(FortalTokens.text3.mix()))
+              .icon(.size(FortalTokens.spinnerSize3())),
     ),
   };
 }

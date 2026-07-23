@@ -22,15 +22,12 @@ RemixProgressStyler fortalProgressStyler({
 RemixProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
   final metrics = _fortalProgressMetrics(size);
   return RemixProgressStyler(
-    container: BoxStyler()
-        .width(.infinity)
+    container: .width(.infinity)
         .height(metrics.height)
         .borderRadiusAll(metrics.radius)
         .clipBehavior(.antiAlias),
-    track: BoxStyler().width(.infinity).height(metrics.height),
-    indicator: BoxStyler()
-        .height(metrics.height)
-        .borderRadiusAll(metrics.radius),
+    track: .width(.infinity).height(metrics.height),
+    indicator: .height(metrics.height).borderRadiusAll(metrics.radius),
     trackEffects: RemixBoxEffectsMix(
       behindContent: _fortalProgressLayer(),
       overContent: _fortalProgressLayer(),
@@ -97,9 +94,7 @@ RemixProgressStyler _fortalProgressSoftStyler(
   return _fortalProgressBaseStyler(size)
       .trackColor(FortalTokens.grayA4())
       .track(
-        BoxStyler().foregroundDecoration(
-          BoxDecorationMix(color: FortalTokens.whiteA1()),
-        ),
+        .foregroundDecoration(BoxDecorationMix(color: FortalTokens.whiteA1())),
       )
       .trackEffects(RemixBoxEffectsMix(behindContent: _fortalProgressLayer()))
       .trackEffects(RemixBoxEffectsMix(overContent: _fortalProgressLayer()))
@@ -111,7 +106,7 @@ RemixProgressStyler _fortalProgressSoftStyler(
         highContrast ? FortalTokens.accent12() : FortalTokens.accent8(),
       )
       .indicator(
-        BoxStyler().foregroundDecoration(
+        .foregroundDecoration(
           BoxDecorationMix(
             color: highContrast ? null : FortalTokens.accentA5(),
           ),

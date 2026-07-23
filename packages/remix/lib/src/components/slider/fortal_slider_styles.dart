@@ -16,12 +16,10 @@ RemixSliderStyler fortalSliderStyler({
   final radius = BorderRadiusMix.all(metrics.trackRadius);
   final thumbRadius = BorderRadiusMix.all(FortalTokens.radius1OrThumb());
   final base = RemixSliderStyler()
-      .track(BoxStyler().borderRadius(radius))
-      .range(BoxStyler().borderRadius(radius))
+      .track(.borderRadius(radius))
+      .range(.borderRadius(radius))
       .thumb(
-        BoxStyler()
-            .size(metrics.thumbSize, metrics.thumbSize)
-            .borderRadius(thumbRadius),
+        .size(metrics.thumbSize, metrics.thumbSize).borderRadius(thumbRadius),
       )
       .trackThickness(metrics.trackSize)
       .thumbFocusEffects(
@@ -68,9 +66,7 @@ RemixSliderStyler fortalSliderStyler({
           'fortalSliderDisabledDarkBlend',
           (context) => FortalTheme.of(context).isDark,
         ),
-        RemixSliderStyler().onDisabled(
-          RemixSliderStyler().blendMode(BlendMode.screen),
-        ),
+        RemixSliderStyler().onDisabled(.blendMode(BlendMode.screen)),
       );
 }
 

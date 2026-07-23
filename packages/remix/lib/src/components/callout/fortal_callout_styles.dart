@@ -52,15 +52,13 @@ RemixCalloutStyler fortalCalloutStyler({
 RemixCalloutStyler _fortalCalloutBaseStyler(FortalCalloutSize size) {
   final radius = _fortalCalloutRadius(size);
   return RemixCalloutStyler(
-    container: FlexBoxStyler(
-      direction: .horizontal,
-      mainAxisSize: .min,
-      crossAxisAlignment: .start,
-      spacing: _fortalCalloutGap(size),
-      padding: EdgeInsetsGeometryMix.all(_fortalCalloutPadding(size)),
-    ),
-    text: TextStyler(style: _fortalCalloutText(size).mix()),
-    icon: IconStyler(size: _fortalCalloutIconSize(size)),
+    container: .direction(.horizontal)
+        .mainAxisSize(.min)
+        .crossAxisAlignment(.start)
+        .spacing(_fortalCalloutGap(size))
+        .padding(EdgeInsetsGeometryMix.all(_fortalCalloutPadding(size))),
+    text: .style(_fortalCalloutText(size).mix()),
+    icon: .size(_fortalCalloutIconSize(size)),
   ).borderRadiusAll(radius);
 }
 

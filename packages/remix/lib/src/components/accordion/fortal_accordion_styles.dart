@@ -19,15 +19,15 @@ RemixAccordionStyler fortalAccordionStyler({
 
 RemixAccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
   return RemixAccordionStyler()
-      .trigger(FlexBoxStyler().direction(.horizontal).clipBehavior(.antiAlias))
-      .leadingIcon(IconStyler().color(FortalTokens.gray11()))
+      .trigger(.direction(.horizontal).clipBehavior(.antiAlias))
+      .leadingIcon(.color(FortalTokens.gray11()))
       .title(
-        TextStyler()
-            .fontWeight(FortalTokens.fontWeightMedium())
-            .color(FortalTokens.gray12()),
+        .fontWeight(
+          FortalTokens.fontWeightMedium(),
+        ).color(FortalTokens.gray12()),
       )
-      .trailingIcon(IconStyler().color(FortalTokens.gray11()))
-      .content(BoxStyler().width(.infinity))
+      .trailingIcon(.color(FortalTokens.gray11()))
+      .content(.width(.infinity))
       .merge(_fortalAccordionSizeStyler(size));
 }
 
@@ -43,17 +43,17 @@ RemixAccordionStyler _fortalAccordionFocusStyler() {
 
 RemixAccordionStyler _fortalAccordionDisabledStyler() {
   return RemixAccordionStyler()
-      .trigger(FlexBoxStyler().color(FortalTokens.grayA3()))
-      .leadingIcon(IconStyler().color(FortalTokens.gray8()))
-      .title(TextStyler().color(FortalTokens.gray8()))
-      .trailingIcon(IconStyler().color(FortalTokens.gray8()));
+      .trigger(.color(FortalTokens.grayA3()))
+      .leadingIcon(.color(FortalTokens.gray8()))
+      .title(.color(FortalTokens.gray8()))
+      .trailingIcon(.color(FortalTokens.gray8()));
 }
 
 RemixAccordionStyler _fortalAccordionSurfaceStyler([
   FortalAccordionSize size = .size2,
 ]) {
   return _fortalAccordionBaseStyler(size)
-      .trigger(FlexBoxStyler().color(FortalTokens.gray1()))
+      .trigger(.color(FortalTokens.gray1()))
       .content(
         BoxStyler()
             .borderTop(
@@ -67,16 +67,8 @@ RemixAccordionStyler _fortalAccordionSurfaceStyler([
               ),
             ),
       )
-      .onHovered(
-        RemixAccordionStyler().trigger(
-          FlexBoxStyler().color(FortalTokens.gray2()),
-        ),
-      )
-      .onPressed(
-        RemixAccordionStyler().trigger(
-          FlexBoxStyler().color(FortalTokens.gray3()),
-        ),
-      )
+      .onHovered(.trigger(.color(FortalTokens.gray2())))
+      .onPressed(.trigger(.color(FortalTokens.gray3())))
       .onFocused(_fortalAccordionFocusStyler())
       .onDisabled(_fortalAccordionDisabledStyler());
 }
@@ -85,9 +77,9 @@ RemixAccordionStyler _fortalAccordionSoftStyler([
   FortalAccordionSize size = .size2,
 ]) {
   return _fortalAccordionBaseStyler(size)
-      .trigger(FlexBoxStyler().color(FortalTokens.accent2()))
-      .title(TextStyler().color(FortalTokens.accent12()))
-      .trailingIcon(IconStyler().color(FortalTokens.accent11()))
+      .trigger(.color(FortalTokens.accent2()))
+      .title(.color(FortalTokens.accent12()))
+      .trailingIcon(.color(FortalTokens.accent11()))
       .content(
         BoxStyler()
             .borderTop(
@@ -101,16 +93,8 @@ RemixAccordionStyler _fortalAccordionSoftStyler([
               ),
             ),
       )
-      .onHovered(
-        RemixAccordionStyler().trigger(
-          FlexBoxStyler().color(FortalTokens.accent3()),
-        ),
-      )
-      .onPressed(
-        RemixAccordionStyler().trigger(
-          FlexBoxStyler().color(FortalTokens.accent4()),
-        ),
-      )
+      .onHovered(.trigger(.color(FortalTokens.accent3())))
+      .onPressed(.trigger(.color(FortalTokens.accent4())))
       .onFocused(_fortalAccordionFocusStyler())
       .onDisabled(_fortalAccordionDisabledStyler());
 }
@@ -122,9 +106,9 @@ RemixAccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
           .paddingX(FortalTokens.space2())
           .paddingY(FortalTokens.space2())
           .borderRadiusAll(FortalTokens.radius3()),
-      leadingIcon: IconStyler().size(FortalTokens.space4()),
-      title: TextStyler(style: FortalTokens.text2.mix()),
-      trailingIcon: IconStyler().size(FortalTokens.space4()),
+      leadingIcon: .size(FortalTokens.space4()),
+      title: .style(FortalTokens.text2.mix()),
+      trailingIcon: .size(FortalTokens.space4()),
       content: BoxStyler()
           .paddingAll(FortalTokens.space2())
           .borderRadiusBottom(FortalTokens.radius3())
@@ -135,9 +119,9 @@ RemixAccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
           .paddingX(FortalTokens.space3())
           .paddingY(FortalTokens.space3())
           .borderRadiusAll(FortalTokens.radius4()),
-      leadingIcon: IconStyler().size(FortalTokens.spinnerSize3()),
-      title: TextStyler(style: FortalTokens.accordionText2.mix()),
-      trailingIcon: IconStyler().size(FortalTokens.spinnerSize3()),
+      leadingIcon: .size(FortalTokens.spinnerSize3()),
+      title: .style(FortalTokens.accordionText2.mix()),
+      trailingIcon: .size(FortalTokens.spinnerSize3()),
       content: BoxStyler()
           .paddingAll(FortalTokens.space3())
           .borderRadiusBottom(FortalTokens.radius4())
@@ -148,9 +132,9 @@ RemixAccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
           .paddingX(FortalTokens.space4())
           .paddingY(FortalTokens.space4())
           .borderRadiusAll(FortalTokens.radius5()),
-      leadingIcon: IconStyler().size(FortalTokens.space5()),
-      title: TextStyler(style: FortalTokens.text3.mix()),
-      trailingIcon: IconStyler().size(FortalTokens.space5()),
+      leadingIcon: .size(FortalTokens.space5()),
+      title: .style(FortalTokens.text3.mix()),
+      trailingIcon: .size(FortalTokens.space5()),
       content: BoxStyler()
           .paddingAll(FortalTokens.space4())
           .borderRadiusBottom(FortalTokens.radius5())

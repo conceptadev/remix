@@ -57,8 +57,8 @@ RemixAvatarStyler _fortalAvatarBaseStyler(
         ).fontWeight(FortalTokens.fontWeightMedium()),
       )
       .icon(
-        IconStyler(
-          size: _fortalAvatarDimension(size) * 0.5,
+        .size(
+          _fortalAvatarDimension(size) * 0.5,
         ).color(FortalTokens.accentA11()),
       )
       .square(_fortalAvatarDimension(size))

@@ -34,8 +34,8 @@ RemixIconButtonStyler fortalIconButtonStyler({
         .outline => _fortalIconButtonOutline(base, highContrast: highContrast),
         .ghost => _fortalIconButtonGhost(base, highContrast: highContrast),
       }
-      .onFocused(RemixIconButtonStyler().containerEffects(focus))
-      .onDisabled(RemixIconButtonStyler().containerEffects(disabledFocus));
+      .onFocused(.containerEffects(focus))
+      .onDisabled(.containerEffects(disabledFocus));
 }
 
 RemixIconButtonStyler _fortalIconButtonBaseStyler(
@@ -44,13 +44,11 @@ RemixIconButtonStyler _fortalIconButtonBaseStyler(
 ) {
   final metrics = fortalBaseButtonMetrics(size);
   var style = RemixIconButtonStyler(
-    container: BoxStyler(alignment: Alignment.center),
-    icon: IconStyler(size: _fortalIconButtonIconSize(size)),
-    spinner: RemixSpinnerStyler(
-      size: metrics.spinnerSize,
-      opacity: 0.65,
-      duration: const Duration(milliseconds: 800),
-    ),
+    container: .alignment(Alignment.center),
+    icon: .size(_fortalIconButtonIconSize(size)),
+    spinner: .size(
+      metrics.spinnerSize,
+    ).opacity(0.65).duration(const Duration(milliseconds: 800)),
   ).borderRadiusAll(metrics.radius);
 
   if (variant == .ghost) {
@@ -88,35 +86,32 @@ RemixIconButtonStyler _fortalIconButtonClassic(
         ),
       )
       .onHovered(
-        RemixIconButtonStyler()
-            .containerEffects(
-              RemixBoxEffectsMix(
-                behindContent: fortalClassicBaseButtonSurface(
-                  highContrast: highContrast,
-                  hovered: true,
-                ),
-              ),
-            )
-            .wrap(
-              highContrast
-                  ? fortalModeAwareFilter(
-                      light: const [
-                        RemixCssColorFilterOperation.contrast(0.88),
-                        RemixCssColorFilterOperation.saturate(1.1),
-                        RemixCssColorFilterOperation.brightness(1.1),
-                      ],
-                      dark: const [
-                        RemixCssColorFilterOperation.contrast(0.88),
-                        RemixCssColorFilterOperation.saturate(1.3),
-                        RemixCssColorFilterOperation.brightness(1.14),
-                      ],
-                    )
-                  : fortalClearFilter(),
+        .containerEffects(
+          RemixBoxEffectsMix(
+            behindContent: fortalClassicBaseButtonSurface(
+              highContrast: highContrast,
+              hovered: true,
             ),
+          ),
+        ).wrap(
+          highContrast
+              ? fortalModeAwareFilter(
+                  light: const [
+                    RemixCssColorFilterOperation.contrast(0.88),
+                    RemixCssColorFilterOperation.saturate(1.1),
+                    RemixCssColorFilterOperation.brightness(1.1),
+                  ],
+                  dark: const [
+                    RemixCssColorFilterOperation.contrast(0.88),
+                    RemixCssColorFilterOperation.saturate(1.3),
+                    RemixCssColorFilterOperation.brightness(1.14),
+                  ],
+                )
+              : fortalClearFilter(),
+        ),
       )
       .onPressed(
-        RemixIconButtonStyler()
-            .containerEffects(
+        .containerEffects(
               RemixBoxEffectsMix(
                 behindContent: fortalClassicBaseButtonSurface(
                   highContrast: highContrast,
@@ -163,7 +158,7 @@ RemixIconButtonStyler _fortalIconButtonClassic(
                 ),
               ),
             )
-            .spinner(RemixSpinnerStyler().opacity(1))
+            .spinner(.opacity(1))
             .wrap(fortalClearFilter()),
       );
 }
@@ -178,55 +173,49 @@ RemixIconButtonStyler _fortalIconButtonSolid(
   return _fortalIconButtonForeground(base, foreground)
       .color(highContrast ? FortalTokens.accent12() : FortalTokens.accent9())
       .onHovered(
-        RemixIconButtonStyler()
-            .color(
-              highContrast ? FortalTokens.accent12() : FortalTokens.accent10(),
-            )
-            .wrap(
-              highContrast
-                  ? fortalModeAwareFilter(
-                      light: const [
-                        RemixCssColorFilterOperation.contrast(0.88),
-                        RemixCssColorFilterOperation.saturate(1.1),
-                        RemixCssColorFilterOperation.brightness(1.1),
-                      ],
-                      dark: const [
-                        RemixCssColorFilterOperation.contrast(0.88),
-                        RemixCssColorFilterOperation.saturate(1.3),
-                        RemixCssColorFilterOperation.brightness(1.18),
-                      ],
-                    )
-                  : fortalClearFilter(),
-            ),
+        .color(
+          highContrast ? FortalTokens.accent12() : FortalTokens.accent10(),
+        ).wrap(
+          highContrast
+              ? fortalModeAwareFilter(
+                  light: const [
+                    RemixCssColorFilterOperation.contrast(0.88),
+                    RemixCssColorFilterOperation.saturate(1.1),
+                    RemixCssColorFilterOperation.brightness(1.1),
+                  ],
+                  dark: const [
+                    RemixCssColorFilterOperation.contrast(0.88),
+                    RemixCssColorFilterOperation.saturate(1.3),
+                    RemixCssColorFilterOperation.brightness(1.18),
+                  ],
+                )
+              : fortalClearFilter(),
+        ),
       )
       .onPressed(
-        RemixIconButtonStyler()
-            .color(
-              highContrast ? FortalTokens.accent12() : FortalTokens.accent10(),
-            )
-            .wrap(
-              highContrast
-                  ? fortalModeAwareFilter(
-                      light: const [
-                        RemixCssColorFilterOperation.contrast(0.82),
-                        RemixCssColorFilterOperation.saturate(1.2),
-                        RemixCssColorFilterOperation.brightness(1.16),
-                      ],
-                      dark: const [
-                        RemixCssColorFilterOperation.brightness(0.95),
-                        RemixCssColorFilterOperation.saturate(1.2),
-                      ],
-                    )
-                  : fortalModeAwareFilter(
-                      light: const [
-                        RemixCssColorFilterOperation.brightness(0.92),
-                        RemixCssColorFilterOperation.saturate(1.1),
-                      ],
-                      dark: const [
-                        RemixCssColorFilterOperation.brightness(1.08),
-                      ],
-                    ),
-            ),
+        .color(
+          highContrast ? FortalTokens.accent12() : FortalTokens.accent10(),
+        ).wrap(
+          highContrast
+              ? fortalModeAwareFilter(
+                  light: const [
+                    RemixCssColorFilterOperation.contrast(0.82),
+                    RemixCssColorFilterOperation.saturate(1.2),
+                    RemixCssColorFilterOperation.brightness(1.16),
+                  ],
+                  dark: const [
+                    RemixCssColorFilterOperation.brightness(0.95),
+                    RemixCssColorFilterOperation.saturate(1.2),
+                  ],
+                )
+              : fortalModeAwareFilter(
+                  light: const [
+                    RemixCssColorFilterOperation.brightness(0.92),
+                    RemixCssColorFilterOperation.saturate(1.1),
+                  ],
+                  dark: const [RemixCssColorFilterOperation.brightness(1.08)],
+                ),
+        ),
       )
       .onDisabled(
         _fortalIconButtonForeground(
@@ -234,7 +223,7 @@ RemixIconButtonStyler _fortalIconButtonSolid(
               FortalTokens.grayA8(),
             )
             .color(FortalTokens.grayA3())
-            .spinner(RemixSpinnerStyler().opacity(1))
+            .spinner(.opacity(1))
             .wrap(fortalClearFilter()),
       );
 }
@@ -248,8 +237,8 @@ RemixIconButtonStyler _fortalIconButtonSoft(
           highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
         )
         .color(FortalTokens.accentA3())
-        .onHovered(RemixIconButtonStyler().color(FortalTokens.accentA4()))
-        .onPressed(RemixIconButtonStyler().color(FortalTokens.accentA5()))
+        .onHovered(.color(FortalTokens.accentA4()))
+        .onPressed(.color(FortalTokens.accentA5()))
         .onDisabled(_fortalIconButtonDisabledFill());
 
 RemixIconButtonStyler _fortalIconButtonSurface(
@@ -269,26 +258,22 @@ RemixIconButtonStyler _fortalIconButtonSurface(
           ),
         )
         .onHovered(
-          RemixIconButtonStyler()
-              .color(FortalTokens.accentSurface())
-              .containerEffects(
-                RemixBoxEffectsMix(
-                  behindContent: fortalInsetSurface(
-                    strokes: [FortalTokens.accentA8()],
-                  ),
-                ),
+          .color(FortalTokens.accentSurface()).containerEffects(
+            RemixBoxEffectsMix(
+              behindContent: fortalInsetSurface(
+                strokes: [FortalTokens.accentA8()],
               ),
+            ),
+          ),
         )
         .onPressed(
-          RemixIconButtonStyler()
-              .color(FortalTokens.accentA3())
-              .containerEffects(
-                RemixBoxEffectsMix(
-                  behindContent: fortalInsetSurface(
-                    strokes: [FortalTokens.accentA8()],
-                  ),
-                ),
+          .color(FortalTokens.accentA3()).containerEffects(
+            RemixBoxEffectsMix(
+              behindContent: fortalInsetSurface(
+                strokes: [FortalTokens.accentA8()],
               ),
+            ),
+          ),
         )
         .onDisabled(
           _fortalIconButtonForeground(
@@ -303,7 +288,7 @@ RemixIconButtonStyler _fortalIconButtonSurface(
                   ),
                 ),
               )
-              .spinner(RemixSpinnerStyler().opacity(1)),
+              .spinner(.opacity(1)),
         );
 
 RemixIconButtonStyler _fortalIconButtonOutline(
@@ -321,22 +306,18 @@ RemixIconButtonStyler _fortalIconButtonOutline(
         RemixBoxEffectsMix(behindContent: fortalInsetSurface(strokes: strokes)),
       )
       .onHovered(
-        RemixIconButtonStyler()
-            .color(FortalTokens.accentA2())
-            .containerEffects(
-              RemixBoxEffectsMix(
-                behindContent: fortalInsetSurface(strokes: strokes),
-              ),
-            ),
+        .color(FortalTokens.accentA2()).containerEffects(
+          RemixBoxEffectsMix(
+            behindContent: fortalInsetSurface(strokes: strokes),
+          ),
+        ),
       )
       .onPressed(
-        RemixIconButtonStyler()
-            .color(FortalTokens.accentA3())
-            .containerEffects(
-              RemixBoxEffectsMix(
-                behindContent: fortalInsetSurface(strokes: strokes),
-              ),
-            ),
+        .color(FortalTokens.accentA3()).containerEffects(
+          RemixBoxEffectsMix(
+            behindContent: fortalInsetSurface(strokes: strokes),
+          ),
+        ),
       )
       .onDisabled(
         _fortalIconButtonForeground(
@@ -351,7 +332,7 @@ RemixIconButtonStyler _fortalIconButtonOutline(
                 ),
               ),
             )
-            .spinner(RemixSpinnerStyler().opacity(1)),
+            .spinner(.opacity(1)),
       );
 }
 
@@ -364,27 +345,25 @@ RemixIconButtonStyler _fortalIconButtonGhost(
           highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
         )
         .color(Colors.transparent)
-        .onHovered(RemixIconButtonStyler().color(FortalTokens.accentA3()))
-        .onPressed(RemixIconButtonStyler().color(FortalTokens.accentA4()))
+        .onHovered(.color(FortalTokens.accentA3()))
+        .onPressed(.color(FortalTokens.accentA4()))
         .onDisabled(
           _fortalIconButtonForeground(
             RemixIconButtonStyler(),
             FortalTokens.grayA8(),
-          ).color(Colors.transparent).spinner(RemixSpinnerStyler().opacity(1)),
+          ).color(Colors.transparent).spinner(.opacity(1)),
         );
 
 RemixIconButtonStyler _fortalIconButtonDisabledFill() =>
     _fortalIconButtonForeground(
       RemixIconButtonStyler(),
       FortalTokens.grayA8(),
-    ).color(FortalTokens.grayA3()).spinner(RemixSpinnerStyler().opacity(1));
+    ).color(FortalTokens.grayA3()).spinner(.opacity(1));
 
 RemixIconButtonStyler _fortalIconButtonForeground(
   RemixIconButtonStyler style,
   Color color,
-) => style
-    .icon(IconStyler().color(color))
-    .spinner(RemixSpinnerStyler().color(color));
+) => style.icon(.color(color)).spinner(.color(color));
 
 /// Fortal-themed IconButton with the Radix size, variant, and override contract.
 class FortalIconButton extends StatelessWidget {

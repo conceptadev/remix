@@ -44,12 +44,10 @@ RemixSelectTriggerStyler _fortalSelectTriggerStyler(
       .placeholder(
         _fortalSelectTriggerText(size, color: FortalTokens.grayA10()),
       )
-      .icon(IconStyler(color: FortalTokens.gray12()))
-      .chevron(
-        IconStyler(color: FortalTokens.gray12(), size: size == .size3 ? 11 : 9),
-      )
+      .icon(.color(FortalTokens.gray12()))
+      .chevron(.color(FortalTokens.gray12()).size(size == .size3 ? 11 : 9))
       .onFocused(
-        RemixSelectTriggerStyler().containerEffects(
+        .containerEffects(
           RemixBoxEffectsMix(overContent: _fortalSelectFocusRing()),
         ),
       )
@@ -154,25 +152,24 @@ RemixSelectTriggerStyler _fortalSelectSurfaceTrigger(
         ),
       )
       .onHovered(
-        RemixSelectTriggerStyler().containerEffects(
+        .containerEffects(
           RemixBoxEffectsMix(
             behindContent: _fortalSelectInsetStroke(FortalTokens.grayA8()),
           ),
         ),
       )
       .onSelected(
-        RemixSelectTriggerStyler().containerEffects(
+        .containerEffects(
           RemixBoxEffectsMix(
             behindContent: _fortalSelectInsetStroke(FortalTokens.grayA8()),
           ),
         ),
       )
       .onDisabled(
-        RemixSelectTriggerStyler()
-            .color(FortalTokens.grayA2())
-            .label(TextStyler().color(FortalTokens.grayA11()))
-            .icon(IconStyler(color: FortalTokens.grayA9()))
-            .chevron(IconStyler(color: FortalTokens.grayA9()))
+        .color(FortalTokens.grayA2())
+            .label(.color(FortalTokens.grayA11()))
+            .icon(.color(FortalTokens.grayA9()))
+            .chevron(.color(FortalTokens.grayA9()))
             .containerEffects(
               RemixBoxEffectsMix(
                 behindContent: _fortalSelectInsetStroke(
@@ -218,21 +215,16 @@ RemixSelectTriggerStyler _fortalSelectClassicTrigger(
       .color(FortalTokens.gray1())
       .containerEffects(RemixBoxEffectsMix(behindContent: idleSurface))
       .onHovered(
-        RemixSelectTriggerStyler().containerEffects(
-          RemixBoxEffectsMix(behindContent: hoverSurface),
-        ),
+        .containerEffects(RemixBoxEffectsMix(behindContent: hoverSurface)),
       )
       .onSelected(
-        RemixSelectTriggerStyler().containerEffects(
-          RemixBoxEffectsMix(behindContent: hoverSurface),
-        ),
+        .containerEffects(RemixBoxEffectsMix(behindContent: hoverSurface)),
       )
       .onDisabled(
-        RemixSelectTriggerStyler()
-            .color(FortalTokens.gray2())
-            .label(TextStyler().color(FortalTokens.grayA11()))
-            .icon(IconStyler(color: FortalTokens.grayA9()))
-            .chevron(IconStyler(color: FortalTokens.grayA9()))
+        .color(FortalTokens.gray2())
+            .label(.color(FortalTokens.grayA11()))
+            .icon(.color(FortalTokens.grayA9()))
+            .chevron(.color(FortalTokens.grayA9()))
             .containerEffects(
               RemixBoxEffectsMix(behindContent: disabledSurface),
             ),
@@ -266,19 +258,18 @@ RemixSelectTriggerStyler _fortalSelectSoftTrigger(
   RemixSelectTriggerStyler base,
 ) {
   return base
-      .label(TextStyler().color(FortalTokens.accent12()))
-      .placeholder(TextStyler().color(FortalTokens.accent12()))
+      .label(.color(FortalTokens.accent12()))
+      .placeholder(.color(FortalTokens.accent12()))
       .placeholderOpacity(0.6)
-      .icon(IconStyler(color: FortalTokens.accent12()))
-      .chevron(IconStyler(color: FortalTokens.accent12()))
+      .icon(.color(FortalTokens.accent12()))
+      .chevron(.color(FortalTokens.accent12()))
       .color(FortalTokens.accentA3())
-      .onHovered(RemixSelectTriggerStyler().color(FortalTokens.accentA4()))
-      .onSelected(RemixSelectTriggerStyler().color(FortalTokens.accentA4()))
+      .onHovered(.color(FortalTokens.accentA4()))
+      .onSelected(.color(FortalTokens.accentA4()))
       .onDisabled(
-        RemixSelectTriggerStyler()
-            .label(TextStyler().color(FortalTokens.grayA11()))
-            .icon(IconStyler(color: FortalTokens.grayA9()))
-            .chevron(IconStyler(color: FortalTokens.grayA9()))
+        .label(.color(FortalTokens.grayA11()))
+            .icon(.color(FortalTokens.grayA9()))
+            .chevron(.color(FortalTokens.grayA9()))
             .color(FortalTokens.grayA3()),
       );
 }
@@ -287,19 +278,18 @@ RemixSelectTriggerStyler _fortalSelectGhostTrigger(
   RemixSelectTriggerStyler base,
 ) {
   return base
-      .label(TextStyler().color(FortalTokens.accent12()))
-      .placeholder(TextStyler().color(FortalTokens.accent12()))
+      .label(.color(FortalTokens.accent12()))
+      .placeholder(.color(FortalTokens.accent12()))
       .placeholderOpacity(0.6)
-      .icon(IconStyler(color: FortalTokens.accent12()))
-      .chevron(IconStyler(color: FortalTokens.accent12()))
+      .icon(.color(FortalTokens.accent12()))
+      .chevron(.color(FortalTokens.accent12()))
       .color(Colors.transparent)
-      .onHovered(RemixSelectTriggerStyler().color(FortalTokens.accentA3()))
-      .onSelected(RemixSelectTriggerStyler().color(FortalTokens.accentA3()))
+      .onHovered(.color(FortalTokens.accentA3()))
+      .onSelected(.color(FortalTokens.accentA3()))
       .onDisabled(
-        RemixSelectTriggerStyler()
-            .label(TextStyler().color(FortalTokens.grayA11()))
-            .icon(IconStyler(color: FortalTokens.grayA9()))
-            .chevron(IconStyler(color: FortalTokens.grayA9()))
+        .label(.color(FortalTokens.grayA11()))
+            .icon(.color(FortalTokens.grayA9()))
+            .chevron(.color(FortalTokens.grayA9()))
             .color(Colors.transparent),
       );
 }
@@ -374,10 +364,9 @@ RemixSelectMenuItemStyler _fortalSelectItemStyler(
       .onFocused(highlighted)
       .onPressed(highlighted)
       .onDisabled(
-        RemixSelectMenuItemStyler()
-            .color(Colors.transparent)
-            .text(TextStyler().color(FortalTokens.grayA8()))
-            .iconColor(FortalTokens.grayA8()),
+        .color(
+          Colors.transparent,
+        ).text(.color(FortalTokens.grayA8())).iconColor(FortalTokens.grayA8()),
       );
 }
 

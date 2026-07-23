@@ -20,7 +20,7 @@ RemixToggleStyler fortalToggleStyler({
 
 RemixToggleStyler _fortalToggleBaseStyler(FortalToggleSize size) {
   return RemixToggleStyler()
-      .container(FlexBoxStyler().mainAxisSize(.min))
+      .container(.mainAxisSize(.min))
       .foregroundColor(FortalTokens.gray12())
       .labelFontWeight(FortalTokens.fontWeightMedium())
       .merge(_fortalToggleSizeStyler(size));
@@ -111,8 +111,8 @@ RemixToggleStyler _fortalToggleSizeStyler(FortalToggleSize size) {
           .paddingY(FortalTokens.space1())
           .borderRadiusAll(FortalTokens.radius2())
           .spacing(FortalTokens.toggleGap1()),
-      label: TextStyler(style: FortalTokens.text1.mix()),
-      icon: IconStyler(size: FortalTokens.space3()),
+      label: .style(FortalTokens.text1.mix()),
+      icon: .size(FortalTokens.space3()),
     ),
     .size2 => RemixToggleStyler(
       container: FlexBoxStyler()
@@ -120,8 +120,8 @@ RemixToggleStyler _fortalToggleSizeStyler(FortalToggleSize size) {
           .paddingY(FortalTokens.space2())
           .borderRadiusAll(FortalTokens.radius2())
           .spacing(FortalTokens.space1()),
-      label: TextStyler(style: FortalTokens.text2.mix()),
-      icon: IconStyler(size: FortalTokens.space4()),
+      label: .style(FortalTokens.text2.mix()),
+      icon: .size(FortalTokens.space4()),
     ),
     .size3 => RemixToggleStyler(
       container: FlexBoxStyler()
@@ -129,8 +129,8 @@ RemixToggleStyler _fortalToggleSizeStyler(FortalToggleSize size) {
           .paddingY(FortalTokens.space2())
           .borderRadiusAll(FortalTokens.radius3())
           .spacing(FortalTokens.toggleGap3()),
-      label: TextStyler(style: FortalTokens.text3.mix()),
-      icon: IconStyler(size: FortalTokens.spinnerSize3()),
+      label: .style(FortalTokens.text3.mix()),
+      icon: .size(FortalTokens.spinnerSize3()),
     ),
   };
 }
