@@ -59,7 +59,7 @@ Widget buildButtonExample() {
             .borderRadiusAll(const Radius.circular(8))
             .backgroundColor(const Color(0xFF1F2937))
             .foregroundColor(Colors.white),
-        child: const Icon(Icons.star),
+        icon: const Icon(Icons.star),
       ),
     ],
     material: [

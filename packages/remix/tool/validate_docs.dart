@@ -43,6 +43,9 @@ final _retiredApis = <(RegExp, String)>[
 ];
 
 final _progressInvocation = RegExp(r'\b(?:RemixProgress|FortalProgress)\s*\(');
+final _iconButtonInvocation = RegExp(
+  r'\b(?:RemixIconButton|FortalIconButton)(?:\.[A-Za-z0-9_]+)?\s*\(',
+);
 final _legacyFractionalProgressValue = RegExp(
   r'\bvalue\s*:\s*0\.(?:\d*[1-9]\d*)(?![\d.])',
 );
@@ -62,10 +65,47 @@ final _apiReferenceSignature = RegExp(
 );
 
 const _exampleSourceDirectories = <String>[
+  'packages/dashboard/lib',
   'packages/demo/lib',
   'packages/example/lib',
   'packages/playground/lib',
   'packages/remix/example',
+];
+
+const _consumerDocumentationDirectories = <String>['skills/using-remix'];
+const _consumerDocumentationFiles = <String>[
+  'README.md',
+  'packages/remix/README.md',
+];
+
+final _staleConsumerDocumentationClaims = <(RegExp, String)>[
+  (
+    RegExp(r'one enum-based constructor', caseSensitive: false),
+    'stale single-constructor Fortal claim',
+  ),
+  (
+    RegExp(
+      r'(?:variant-specific\s+named\s+constructors\s+'
+      r'(?:are\s+not\s+part|were\s+removed)|'
+      r'there\s+are\s+no\s+variant-specific\s+named\s+constructors)',
+      caseSensitive: false,
+    ),
+    'stale missing Fortal named-constructor claim',
+  ),
+  (
+    RegExp(
+      r'`?(?:Remix|Fortal)IconButton`?[^\n]{0,100}`?Widget\s+child`?',
+      caseSensitive: false,
+    ),
+    'stale IconButton child-slot claim',
+  ),
+  (
+    RegExp(
+      r'enabled\s*&&\s*!loading\s*&&\s*onPressed\s*!=\s*null',
+      caseSensitive: false,
+    ),
+    'stale button enablement claim that omits onLongPress',
+  ),
 ];
 
 Future<void> main() async {
@@ -109,6 +149,10 @@ Future<void> main() async {
     _checkRetiredApis(source, relativePath, failures);
   }
 
+  final consumerDocumentationCount = _checkConsumerDocumentation(
+    workspaceRoot,
+    failures,
+  );
   final exampleSourceCount = _checkExampleSources(workspaceRoot, failures);
 
   _checkNavigation(workspaceRoot, docsConfig, failures);
@@ -163,8 +207,66 @@ Future<void> main() async {
   stdout.writeln(
     'Documentation validation passed: ${docs.length} MDX files, '
     '${snippets.length} analyzable Dart examples, and '
-    '$exampleSourceCount app/example Dart sources.',
+    '$exampleSourceCount app/example Dart sources, plus '
+    '$consumerDocumentationCount consumer-facing Markdown files.',
   );
+}
+
+int _checkConsumerDocumentation(
+  Directory workspaceRoot,
+  List<String> failures,
+) {
+  final documents = <File>[];
+  for (final relativeDirectory in _consumerDocumentationDirectories) {
+    final directory = Directory('${workspaceRoot.path}/$relativeDirectory');
+    if (!directory.existsSync()) {
+      failures.add(
+        'Missing consumer documentation directory: $relativeDirectory.',
+      );
+      continue;
+    }
+    documents.addAll(
+      directory
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((file) => file.path.endsWith('.md')),
+    );
+  }
+  for (final relativeFile in _consumerDocumentationFiles) {
+    final file = File('${workspaceRoot.path}/$relativeFile');
+    if (!file.existsSync()) {
+      failures.add('Missing consumer documentation file: $relativeFile.');
+      continue;
+    }
+    documents.add(file);
+  }
+  documents.sort((a, b) => a.path.compareTo(b.path));
+
+  final dartFence = RegExp(r'```dart\s*\n([\s\S]*?)\n```');
+  for (final file in documents) {
+    final relativePath = _relativePath(workspaceRoot, file);
+    final source = file.readAsStringSync();
+    if ('```'.allMatches(source).length.isOdd) {
+      failures.add('$relativePath has an unclosed code fence.');
+    }
+    for (final (pattern, description) in _staleConsumerDocumentationClaims) {
+      final match = pattern.firstMatch(source);
+      if (match != null) {
+        failures.add(
+          '$relativePath contains a $description at offset ${match.start}.',
+        );
+      }
+    }
+    for (final (index, match) in dartFence.allMatches(source).indexed) {
+      _checkRetiredApis(
+        match.group(1)!,
+        '$relativePath Dart example ${index + 1}',
+        failures,
+      );
+    }
+  }
+
+  return documents.length;
 }
 
 int _checkExampleSources(Directory workspaceRoot, List<String> failures) {
@@ -210,6 +312,7 @@ void _checkRetiredApis(
     }
   }
   _checkLegacyProgressScale(source, relativePath, failures);
+  _checkLegacyIconButtonSlot(source, relativePath, failures);
 }
 
 void _checkLegacyProgressScale(
@@ -235,6 +338,87 @@ void _checkLegacyProgressScale(
       'the 0-100 default scale or declare an explicit max.',
     );
   }
+}
+
+void _checkLegacyIconButtonSlot(
+  String source,
+  String relativePath,
+  List<String> failures,
+) {
+  for (final invocation in _iconButtonInvocation.allMatches(source)) {
+    final openingParenthesis = invocation.end - 1;
+    final closingParenthesis = _matchingParenthesis(source, openingParenthesis);
+    if (closingParenthesis == null) continue;
+    final arguments = source.substring(
+      openingParenthesis + 1,
+      closingParenthesis,
+    );
+    final childOffset = _topLevelNamedArgumentOffset(arguments, 'child');
+    if (childOffset == null) continue;
+    failures.add(
+      '$relativePath contains the retired IconButton child argument at offset '
+      '${openingParenthesis + 1 + childOffset}; use icon.',
+    );
+  }
+}
+
+int? _topLevelNamedArgumentOffset(String source, String name) {
+  var parentheses = 0;
+  var brackets = 0;
+  var braces = 0;
+  String? quote;
+  var escaped = false;
+
+  for (var index = 0; index < source.length; index += 1) {
+    final character = source[index];
+    if (quote != null) {
+      if (escaped) {
+        escaped = false;
+      } else if (character == r'\') {
+        escaped = true;
+      } else if (character == quote) {
+        quote = null;
+      }
+      continue;
+    }
+
+    if (character == "'" || character == '"') {
+      quote = character;
+      continue;
+    }
+    switch (character) {
+      case '(':
+        parentheses += 1;
+      case ')':
+        parentheses -= 1;
+      case '[':
+        brackets += 1;
+      case ']':
+        brackets -= 1;
+      case '{':
+        braces += 1;
+      case '}':
+        braces -= 1;
+    }
+    if (parentheses != 0 || brackets != 0 || braces != 0) continue;
+    if (!source.startsWith(name, index)) continue;
+
+    final beforeIsIdentifier =
+        index > 0 && RegExp(r'[A-Za-z0-9_$]').hasMatch(source[index - 1]);
+    final afterName = index + name.length;
+    final afterIsIdentifier =
+        afterName < source.length &&
+        RegExp(r'[A-Za-z0-9_$]').hasMatch(source[afterName]);
+    if (beforeIsIdentifier || afterIsIdentifier) continue;
+
+    var separator = afterName;
+    while (separator < source.length &&
+        RegExp(r'\s').hasMatch(source[separator])) {
+      separator += 1;
+    }
+    if (separator < source.length && source[separator] == ':') return index;
+  }
+  return null;
 }
 
 int? _matchingParenthesis(String source, int openingParenthesis) {

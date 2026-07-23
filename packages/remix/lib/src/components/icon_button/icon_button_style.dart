@@ -50,7 +50,7 @@ extension RemixIconButtonStylerRemixHelpers on RemixIconButtonStyler {
 
   RemixIconButton call({
     Key? key,
-    required Widget child,
+    required Widget icon,
     RemixIconButtonLoadingBuilder? loadingBuilder,
     bool loading = false,
     bool enabled = true,
@@ -66,7 +66,7 @@ extension RemixIconButtonStylerRemixHelpers on RemixIconButtonStyler {
   }) {
     return RemixIconButton(
       key: key,
-      child: child,
+      icon: icon,
       loadingBuilder: loadingBuilder,
       loading: loading,
       enabled: enabled,

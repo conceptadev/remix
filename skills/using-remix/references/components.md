@@ -9,9 +9,10 @@ Styled `Remix*` leaves accept a `Remix*Styler style` and optional raw
 `Remix*Spec styleSpec`. The raw spec bypasses fluent style resolution. Most
 leaves also expose `static final styleFrom = Remix*Styler.new`.
 
-Fortal presets have one enum-based constructor. There are no variant-specific
-named constructors. See `fortal-reference.md` for every variant, size, default,
-and supported theme override.
+Fortal presets with variants expose named constructors. Prefer them when the
+variant is known statically; retain the unnamed constructor with `variant:`
+for runtime-selected variants. See `fortal-reference.md` for every variant,
+size, default, and supported theme override.
 
 ## Actions
 
@@ -37,8 +38,9 @@ RemixButton(
 
 ### IconButton
 
-`RemixIconButton` requires `Widget child` and a nonempty `semanticLabel`.
-It otherwise mirrors Button's loading, enabled, long-press, focus, feedback,
+`RemixIconButton` requires an arbitrary `Widget icon` and a nonempty
+`semanticLabel`. Descendant `Icon` widgets inherit the resolved icon style. It
+otherwise mirrors Button's loading, enabled, long-press, focus, feedback,
 cursor, and semantic surface. `FortalIconButton` adds the same Fortal style
 props as Button.
 

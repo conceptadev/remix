@@ -34,14 +34,14 @@ class IconButtonExample extends StatelessWidget {
           semanticLabel: 'Favorite',
           onPressed: () {},
           style: style,
-          child: const Icon(CupertinoIcons.heart),
+          icon: const Icon(CupertinoIcons.heart),
         ),
         RemixIconButton(
           semanticLabel: 'Favorite loading',
           onPressed: () {},
           style: style,
           loading: true,
-          child: const Icon(CupertinoIcons.heart),
+          icon: const Icon(CupertinoIcons.heart),
         ),
       ],
     );
@@ -91,27 +91,27 @@ class FortalIconButtonExample extends StatelessWidget {
         FortalIconButton.solid(
           semanticLabel: 'Add',
           onPressed: () {},
-          child: const Icon(Icons.add),
+          icon: const Icon(Icons.add),
         ),
         FortalIconButton.soft(
           semanticLabel: 'Edit',
           onPressed: () {},
-          child: const Icon(Icons.edit),
+          icon: const Icon(Icons.edit),
         ),
         FortalIconButton.surface(
           semanticLabel: 'Layers',
           onPressed: () {},
-          child: const Icon(Icons.layers),
+          icon: const Icon(Icons.layers),
         ),
         FortalIconButton.outline(
           semanticLabel: 'Border style',
           onPressed: () {},
-          child: const Icon(Icons.border_style),
+          icon: const Icon(Icons.border_style),
         ),
         FortalIconButton.ghost(
           semanticLabel: 'Delete',
           onPressed: () {},
-          child: const Icon(Icons.delete),
+          icon: const Icon(Icons.delete),
         ),
       ],
     );
@@ -129,7 +129,7 @@ class FortalIconButtonExample extends StatelessWidget {
 ```dart
 const RemixIconButton({
   Key? key,
-  required Widget child,
+  required Widget icon,
   required String semanticLabel,
   RemixIconButtonLoadingBuilder? loadingBuilder,
   bool loading = false,
@@ -164,10 +164,10 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `child` → `Widget`
+#### `icon` → `Widget`
 
-**Required**. Arbitrary button content. Descendant icons inherit the resolved
-icon style.
+**Required**. Arbitrary icon content. Descendant `Icon` widgets inherit the
+resolved icon style.
 
 #### `semanticLabel` → `String`
 
@@ -215,7 +215,8 @@ Optional. The semantic hint for the button.  Provides additional context about w
 
 #### `excludeSemantics` → `bool`
 
-Optional. Whether to exclude child semantics.  When true, the semantics of child widgets will be excluded. Defaults to false.
+Optional. Whether to exclude icon semantics. When true, the semantics of the
+icon content will be excluded. Defaults to false.
 
 #### `mouseCursor` → `MouseCursor`
 

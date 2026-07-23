@@ -6,12 +6,12 @@ Fortal extensions and are excluded from the Radix parity score.
 
 ## Presets and stylers
 
-Every Fortal widget has one enum-based constructor. Variant-specific named
-constructors were removed as a hard API break.
+Fortal widgets with variants expose named constructors. Prefer those
+constructors when the variant is known statically; use the unnamed constructor
+with `variant:` when the variant is selected dynamically at runtime.
 
 ```dart
-FortalButton(
-  variant: .soft,
+FortalButton.soft(
   size: .size3,
   onPressed: save,
   child: const Text('Save'),
@@ -123,7 +123,7 @@ FortalButton(
 FortalIconButton(
   semanticLabel: 'Settings',
   onPressed: openSettings,
-  child: const Icon(Icons.settings),
+  icon: const Icon(Icons.settings),
 )
 ```
 

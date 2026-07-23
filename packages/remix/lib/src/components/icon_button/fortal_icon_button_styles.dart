@@ -395,7 +395,7 @@ class FortalIconButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.child,
+    required this.icon,
     required this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
@@ -416,7 +416,7 @@ class FortalIconButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.child,
+    required this.icon,
     required this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
@@ -438,7 +438,7 @@ class FortalIconButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.child,
+    required this.icon,
     required this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
@@ -460,7 +460,7 @@ class FortalIconButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.child,
+    required this.icon,
     required this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
@@ -482,7 +482,7 @@ class FortalIconButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.child,
+    required this.icon,
     required this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
@@ -504,7 +504,7 @@ class FortalIconButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.child,
+    required this.icon,
     required this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
@@ -526,7 +526,7 @@ class FortalIconButton extends StatelessWidget {
     this.color,
     this.radius,
     this.highContrast = false,
-    required this.child,
+    required this.icon,
     required this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
@@ -547,7 +547,7 @@ class FortalIconButton extends StatelessWidget {
   final FortalAccentColor? color;
   final FortalRadius? radius;
   final bool highContrast;
-  final Widget child;
+  final Widget icon;
   final String semanticLabel;
   final RemixIconButtonLoadingBuilder? loadingBuilder;
   final bool loading;
@@ -573,7 +573,7 @@ class FortalIconButton extends StatelessWidget {
             highContrast: highContrast,
           ).call(
             key: key,
-            child: child,
+            icon: icon,
             semanticLabel: semanticLabel,
             loadingBuilder: loadingBuilder,
             loading: loading,

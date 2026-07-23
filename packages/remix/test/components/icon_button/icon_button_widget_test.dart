@@ -14,7 +14,7 @@ void main() {
       await tester.pumpRemixApp(
         const RemixIconButton(
           semanticLabel: 'Add item',
-          child: Stack(
+          icon: Stack(
             children: [
               Icon(Icons.add),
               Positioned(child: Text('1')),
@@ -46,7 +46,7 @@ void main() {
           style: RemixIconButtonStyler(
             icon: IconStyler().color(color).size(19),
           ),
-          child: const Icon(Icons.star),
+          icon: const Icon(Icons.star),
         ),
       );
 
@@ -60,7 +60,7 @@ void main() {
         RemixIconButton(
           semanticLabel: 'Star',
           style: RemixIconButtonStyler(icon: IconStyler().color(Colors.green)),
-          child: const Icon(Icons.star, color: Colors.red),
+          icon: const Icon(Icons.star, color: Colors.red),
         ),
       );
 
@@ -83,7 +83,7 @@ void main() {
               ),
             ),
           ),
-          child: Icon(Icons.settings),
+          icon: Icon(Icons.settings),
         ),
       );
 
@@ -100,7 +100,7 @@ void main() {
         semanticLabel: 'Save',
         loading: loading,
         onPressed: () {},
-        child: const SizedBox.square(dimension: 24, child: Icon(Icons.save)),
+        icon: const SizedBox.square(dimension: 24, child: Icon(Icons.save)),
       );
 
       await tester.pumpRemixApp(build(false));
@@ -131,7 +131,7 @@ void main() {
             received = spec;
             return const SizedBox(key: ValueKey('custom-spinner'));
           },
-          child: const Icon(Icons.save),
+          icon: const Icon(Icons.save),
         ),
       );
       await tester.pump();
@@ -149,7 +149,7 @@ void main() {
         RemixIconButton(
           semanticLabel: 'Add',
           onPressed: () => presses++,
-          child: const Icon(Icons.add),
+          icon: const Icon(Icons.add),
         ),
       );
       await tester.tap(find.byType(RemixIconButton));
@@ -160,7 +160,7 @@ void main() {
         RemixIconButton(
           semanticLabel: 'More actions',
           onLongPress: () => longPresses++,
-          child: const Icon(Icons.more_horiz),
+          icon: const Icon(Icons.more_horiz),
         ),
       );
       await tester.longPress(find.byType(RemixIconButton));
@@ -182,7 +182,7 @@ void main() {
             loading: configuration.loading,
             onPressed: () => callbacks++,
             onLongPress: () => callbacks++,
-            child: const Icon(Icons.block),
+            icon: const Icon(Icons.block),
           ),
         );
         await tester.pump();
@@ -201,7 +201,7 @@ void main() {
           semanticLabel: 'Delete item',
           semanticHint: 'Permanently removes the selected item',
           onPressed: () {},
-          child: const Icon(Icons.delete, semanticLabel: 'trash icon'),
+          icon: const Icon(Icons.delete, semanticLabel: 'trash icon'),
         ),
       );
 
@@ -215,7 +215,7 @@ void main() {
 
     test('rejects an empty semantic label', () {
       expect(
-        () => RemixIconButton(semanticLabel: '', child: const Icon(Icons.add)),
+        () => RemixIconButton(semanticLabel: '', icon: const Icon(Icons.add)),
         throwsAssertionError,
       );
     });
@@ -227,7 +227,7 @@ void main() {
         const RemixIconButton(
           semanticLabel: 'Hidden',
           excludeSemantics: true,
-          child: Icon(Icons.hide_source),
+          icon: Icon(Icons.hide_source),
         ),
       );
 
@@ -250,7 +250,7 @@ void main() {
           enableFeedback: false,
           mouseCursor: SystemMouseCursors.forbidden,
           onPressed: () {},
-          child: const Icon(Icons.center_focus_strong),
+          icon: const Icon(Icons.center_focus_strong),
         ),
       );
       await tester.pumpAndSettle();
@@ -265,7 +265,7 @@ void main() {
       'reports disabled state when no callback is supplied',
       build: () => const RemixIconButton(
         semanticLabel: 'Disabled',
-        child: Icon(Icons.block),
+        icon: Icon(Icons.block),
       ),
       expectedStates: {WidgetState.disabled},
     );
@@ -275,7 +275,7 @@ void main() {
       build: () => RemixIconButton(
         semanticLabel: 'Hover',
         onPressed: () {},
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
       ),
       act: hoverAction<RemixIconButton>,
       expectedStates: {WidgetState.hovered},
@@ -286,7 +286,7 @@ void main() {
       build: () => RemixIconButton(
         semanticLabel: 'Focus',
         onPressed: () {},
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
       ),
       act: focusAction<RemixIconButton>,
       expectedStates: {WidgetState.focused},
@@ -297,7 +297,7 @@ void main() {
       build: () => RemixIconButton(
         semanticLabel: 'Press',
         onPressed: () {},
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
       ),
       act: pressAction<RemixIconButton>,
       expectedStates: {WidgetState.pressed},
@@ -305,10 +305,10 @@ void main() {
   });
 
   group('FortalIconButton', () {
-    testWidgets('forwards enum recipe, overrides, semantics, and child', (
+    testWidgets('forwards enum recipe, overrides, semantics, and icon', (
       tester,
     ) async {
-      const child = Icon(Icons.add);
+      const icon = Icon(Icons.add);
       await tester.pumpRemixApp(
         const FortalIconButton.classic(
           size: .size3,
@@ -316,7 +316,7 @@ void main() {
           radius: .small,
           highContrast: true,
           semanticLabel: 'Add item',
-          child: child,
+          icon: icon,
         ),
       );
 
@@ -328,7 +328,8 @@ void main() {
       );
       expect(fortal.variant, FortalIconButtonVariant.classic);
       expect(fortal.size, FortalIconButtonSize.size3);
-      expect(remix.child, same(child));
+      expect(fortal.icon, same(icon));
+      expect(remix.icon, same(icon));
       expect(remix.semanticLabel, 'Add item');
     });
   });

@@ -35,8 +35,7 @@ Then use the Fortal preset widgets:
 
 ```dart
 FortalButton(child: const Text('Submit'), onPressed: handleSubmit)
-FortalButton(
-  variant: .ghost,
+FortalButton.ghost(
   child: const Text('Cancel'),
   onPressed: cancel,
 )
@@ -44,9 +43,10 @@ FortalTextField(hintText: 'you@example.com', label: 'Email')
 FortalCheckbox(selected: agreed, onChanged: (v) => setState(() => agreed = v))
 ```
 
-Every Fortal widget has one enum-based constructor. Pass `variant:` and `size:`
-when they differ from the component defaults; variant-specific named
-constructors are not part of the current API.
+Fortal widgets with variants expose named constructors such as
+`FortalButton.ghost`. Use the unnamed constructor with `variant:` only when the
+variant is selected dynamically at runtime. Pass `size:` when it differs from
+the component default.
 
 Plain `Remix*` widgets work without `FortalScope`, but anything Fortal
 (`Fortal*` widgets, `fortal*Styler()` functions, `FortalTokens`) requires it
@@ -54,8 +54,7 @@ to resolve tokens.
 
 ## Three levels of styling
 
-1. **Fortal preset widgets** — `FortalButton(variant: .soft, size: .size2,
-   child: ...)`.
+1. **Fortal preset widgets** — `FortalButton.soft(size: .size2, child: ...)`.
    Fastest path; consistent by construction. Use for standard UI.
 2. **Fortal styler + overrides** — `fortal*Styler()` returns the component's
    `Remix*Styler`; chain custom modifications and pass it to the `Remix*`
@@ -98,8 +97,7 @@ All Fortal variants, sizes, and tokens: `references/fortal-reference.md`.
 ### Buttons
 
 ```dart
-FortalButton(
-  variant: .outline,
+FortalButton.outline(
   loading: isDeleting,
   enabled: canDelete,
   size: .size2,
@@ -110,20 +108,20 @@ FortalButton(
   ),
 )
 
-FortalIconButton(
-  variant: .ghost,
+FortalIconButton.ghost(
   semanticLabel: 'Settings',
   onPressed: openSettings,
-  child: const Icon(Icons.settings),
+  icon: const Icon(Icons.settings),
 )
 
 // Toggle: a pressable button that stays active while selected
 FortalToggle(selected: isBold, label: 'Bold', onChanged: (v) => setBold(v))
 ```
 
-A button is interactive only when `enabled && !loading && onPressed != null`
-— `loading: true` disables it (and the `.onDisabled` variant styles the
-loading state).
+A button is interactive only when
+`enabled && !loading && (onPressed != null || onLongPress != null)`.
+`loading: true` disables it (and the `.onDisabled` variant styles the loading
+state).
 
 ### Form Controls
 
@@ -253,8 +251,7 @@ showRemixDialog(
       title: 'Confirm',
       description: 'Are you sure you want to proceed?',
       actions: [
-        FortalButton(
-          variant: .ghost,
+        FortalButton.ghost(
           onPressed: () => Navigator.pop(context),
           child: const Text('Cancel'),
         ),
@@ -272,7 +269,7 @@ FortalTooltip(
   child: FortalIconButton(
     semanticLabel: 'Save',
     onPressed: save,
-    child: const Icon(Icons.save),
+    icon: const Icon(Icons.save),
   ),
 )
 ```

@@ -23,9 +23,10 @@
   `appearance`, `accentColor`, `grayColor`, `panelBackground`, `radius`,
   `scaling`, and `hasBackground` values. Root `FortalScope` belongs above the
   app widget so platform appearance and Navigator overlays share one theme.
-- **BREAKING**: Button and IconButton accept arbitrary `child` widgets;
-  IconButton requires a nonempty `semanticLabel`. Badge and other content
-  components also inherit resolved text/icon styles through arbitrary content.
+- **BREAKING**: Button accepts an arbitrary `child` widget and IconButton
+  accepts an arbitrary `Widget icon`; IconButton requires a nonempty
+  `semanticLabel`. Badge and other content components also inherit resolved
+  text/icon styles through arbitrary content.
 - **BREAKING**: Slider is an arbitrary multi-thumb control with ascending
   `values`, list-valued callbacks, `step`, `minSpacing`, orientation, inversion,
   per-thumb focus, and per-thumb semantics. Remove scalar `value` and
@@ -71,8 +72,8 @@
   executable test case; reject missing, stale, extra, or uncited evidence.
 - **DOCS**: Migrate the complete MDX guide and public examples to the hard-break
   APIs. Add a documentation gate that rejects retired component syntax across
-  MDX and app/example sources and analyzes every self-contained Dart snippet
-  against the package.
+  MDX, app/example sources, READMEs, and the consumer skill; analyze every
+  self-contained MDX Dart snippet against the package.
 
 ## 1.0.0-beta.1
 

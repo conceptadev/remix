@@ -4,11 +4,11 @@ part of 'icon_button.dart';
 typedef RemixIconButtonLoadingBuilder =
     Widget Function(BuildContext context, RemixSpinnerSpec spec);
 
-/// A square button whose arbitrary [child] inherits the resolved icon theme.
+/// A square button whose arbitrary [icon] inherits the resolved icon theme.
 class RemixIconButton extends StatelessWidget {
   const RemixIconButton({
     super.key,
-    required this.child,
+    required this.icon,
     required this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
@@ -27,7 +27,10 @@ class RemixIconButton extends StatelessWidget {
 
   static final styleFrom = RemixIconButtonStyler.new;
 
-  final Widget child;
+  /// The icon content displayed by the button.
+  ///
+  /// Descendant [Icon] widgets inherit the icon style resolved by [style].
+  final Widget icon;
   final String semanticLabel;
   final RemixIconButtonLoadingBuilder? loadingBuilder;
   final bool loading;
@@ -69,7 +72,7 @@ class RemixIconButton extends StatelessWidget {
             maintainAnimation: true,
             maintainSize: true,
             maintainSemantics: true,
-            child: RemixDefaultContentStyle(child: child, icon: spec.icon),
+            child: RemixDefaultContentStyle(child: icon, icon: spec.icon),
           );
           final button = RemixBoxWithEffects(
             key: const ValueKey('remix-icon-button-surface'),

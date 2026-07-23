@@ -257,7 +257,7 @@ class DataGrid<T> extends StatelessWidget {
             semanticLabel: 'Previous page',
             enabled: page > 0,
             onPressed: () => onPageChanged?.call(page - 1),
-            child: const Icon(Icons.chevron_left),
+            icon: const Icon(Icons.chevron_left),
           ),
           FortalIconButton.ghost(
             key: const ValueKey('grid-next'),
@@ -265,7 +265,7 @@ class DataGrid<T> extends StatelessWidget {
             semanticLabel: 'Next page',
             enabled: page < maxPage,
             onPressed: () => onPageChanged?.call(page + 1),
-            child: const Icon(Icons.chevron_right),
+            icon: const Icon(Icons.chevron_right),
           ),
         ],
       ),
