@@ -126,6 +126,7 @@ class FortalButton extends StatelessWidget {
     super.key,
     this.variant = .solid,
     this.size = .size2,
+    this.highContrast = false,
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -149,6 +150,7 @@ class FortalButton extends StatelessWidget {
   const FortalButton.classic({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -172,6 +174,7 @@ class FortalButton extends StatelessWidget {
   const FortalButton.solid({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -195,6 +198,7 @@ class FortalButton extends StatelessWidget {
   const FortalButton.soft({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -218,6 +222,7 @@ class FortalButton extends StatelessWidget {
   const FortalButton.surface({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -241,6 +246,7 @@ class FortalButton extends StatelessWidget {
   const FortalButton.outline({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -264,6 +270,7 @@ class FortalButton extends StatelessWidget {
   const FortalButton.ghost({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -287,6 +294,8 @@ class FortalButton extends StatelessWidget {
   final FortalButtonVariant variant;
 
   final FortalButtonSize size;
+
+  final bool highContrast;
 
   final String label;
 
@@ -328,7 +337,11 @@ class FortalButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixButton(
       key: this.key,
-      style: fortalButtonStyler(variant: this.variant, size: this.size),
+      style: fortalButtonStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
       label: this.label,
       leadingIcon: this.leadingIcon,
       trailingIcon: this.trailingIcon,

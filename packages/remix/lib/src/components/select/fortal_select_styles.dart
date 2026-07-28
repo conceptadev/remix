@@ -7,12 +7,8 @@ enum FortalSelectSize { size1, size2, size3 }
 enum FortalSelectVariant { surface, soft, ghost }
 
 /// Fortal recipe for a complete Select.
-@MixWidget(
-  name: 'FortalSelect',
-  target: RemixSelect.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixSelectStyler fortalSelectStyler({
+@MixWidget(target: RemixSelect.new)
+RemixSelectStyler fortalSelectStyle({
   FortalSelectVariant variant = .surface,
   FortalSelectSize size = .size2,
   bool highContrast = false,
@@ -24,7 +20,7 @@ RemixSelectStyler fortalSelectStyler({
 }
 
 /// Creates the established combined-variant Select item recipe.
-RemixSelectMenuItemStyler fortalSelectMenuItemStyler({
+RemixSelectMenuItemStyler fortalSelectMenuItemStyle({
   FortalSelectVariant variant = .surface,
   FortalSelectSize size = .size2,
 }) => _fortalSelectItemStyler(variant, size);

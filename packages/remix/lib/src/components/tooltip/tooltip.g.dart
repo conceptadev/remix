@@ -142,7 +142,7 @@ class FortalTooltip extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTooltip(
       key: this.key,
-      style: fortalTooltipStyler(),
+      style: fortalTooltipStyle(),
       tooltipChild: this.tooltipChild,
       child: this.child,
       tooltipSemantics: this.tooltipSemantics,

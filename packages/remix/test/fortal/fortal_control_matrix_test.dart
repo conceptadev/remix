@@ -117,7 +117,7 @@ void main() {
       for (final entry in expected.entries) {
         final resolved = await _resolveFortal(
           tester,
-          (context) => fortalIconButtonStyler(size: entry.key).build(context),
+          (context) => fortalIconButtonStyle(size: entry.key).build(context),
         );
         final constraints = resolved.spec.container.spec.constraints!;
         expect(
@@ -148,7 +148,7 @@ void main() {
       for (final entry in expectedCheckbox.entries) {
         final resolved = await _resolveFortal(
           tester,
-          (context) => fortalCheckboxStyler(size: entry.key).build(context),
+          (context) => fortalCheckboxStyle(size: entry.key).build(context),
         );
         expect(
           resolved.spec.container.spec.constraints,
@@ -163,7 +163,7 @@ void main() {
       for (final entry in expectedRadio.entries) {
         final resolved = await _resolveFortal(
           tester,
-          (context) => fortalRadioStyler(size: entry.key).build(context),
+          (context) => fortalRadioStyle(size: entry.key).build(context),
         );
         expect(
           resolved.spec.container.spec.constraints,
@@ -194,7 +194,7 @@ void main() {
       for (final entry in expected.entries) {
         final resolved = await _resolveFortal(
           tester,
-          (context) => fortalSwitchStyler(size: entry.key).build(context),
+          (context) => fortalSwitchStyle(size: entry.key).build(context),
         );
         expect(
           resolved.spec.container.spec.constraints,
@@ -230,7 +230,7 @@ void main() {
       for (final entry in progressHeights.entries) {
         final resolved = await _resolveFortal(
           tester,
-          (context) => fortalProgressStyler(size: entry.key).build(context),
+          (context) => fortalProgressStyle(size: entry.key).build(context),
         );
         expect(
           resolved.spec.container.spec.constraints?.maxHeight,
@@ -246,7 +246,7 @@ void main() {
       for (final entry in spinnerSizes.entries) {
         final resolved = await _resolveFortal(
           tester,
-          (context) => fortalSpinnerStyler(size: entry.key).build(context),
+          (context) => fortalSpinnerStyle(size: entry.key).build(context),
         );
         expect(resolved.spec.size, entry.value);
         expect(resolved.spec.opacity, 0.65);
@@ -269,7 +269,7 @@ void main() {
         for (final entry in expectedHeights.entries) {
           final resolved = await _resolveFortal(
             tester,
-            (context) => fortalTextFieldStyler(
+            (context) => fortalTextFieldStyle(
               variant: variant,
               size: entry.key,
             ).build(context),

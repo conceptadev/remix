@@ -4,12 +4,8 @@ part of 'popover.dart';
 enum FortalPopoverSize { size1, size2, size3, size4 }
 
 /// Fortal-themed preset for [RemixPopover].
-@MixWidget(
-  name: 'FortalPopover',
-  target: RemixPopover.new,
-  factoryParameters: .only({'size'}),
-)
-RemixPopoverStyler fortalPopoverStyler({
+@MixWidget(target: RemixPopover.new)
+RemixPopoverStyler fortalPopoverStyle({
   FortalPopoverSize size = FortalPopoverSize.size2,
 }) {
   final radius = switch (size) {

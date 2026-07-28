@@ -25,12 +25,8 @@ enum FortalTextFieldVariant {
 }
 
 /// Fortal-themed preset for [RemixTextField].
-@MixWidget(
-  name: 'FortalTextField',
-  target: RemixTextField.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixTextFieldStyler fortalTextFieldStyler({
+@MixWidget(target: RemixTextField.new)
+RemixTextFieldStyler fortalTextFieldStyle({
   FortalTextFieldVariant variant = .surface,
   FortalTextFieldSize size = .size2,
 }) {

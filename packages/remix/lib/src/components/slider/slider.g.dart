@@ -162,6 +162,7 @@ class FortalSlider extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.highContrast = false,
     required this.value,
     this.onChanged,
     this.onChangeStart,
@@ -178,6 +179,7 @@ class FortalSlider extends StatelessWidget {
   const FortalSlider.classic({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.value,
     this.onChanged,
     this.onChangeStart,
@@ -194,6 +196,7 @@ class FortalSlider extends StatelessWidget {
   const FortalSlider.surface({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.value,
     this.onChanged,
     this.onChangeStart,
@@ -210,6 +213,7 @@ class FortalSlider extends StatelessWidget {
   const FortalSlider.soft({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.value,
     this.onChanged,
     this.onChangeStart,
@@ -226,6 +230,8 @@ class FortalSlider extends StatelessWidget {
   final FortalSliderVariant variant;
 
   final FortalSliderSize size;
+
+  final bool highContrast;
 
   final double value;
 
@@ -253,7 +259,11 @@ class FortalSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixSlider(
       key: this.key,
-      style: fortalSliderStyler(variant: this.variant, size: this.size),
+      style: fortalSliderStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
       value: this.value,
       onChanged: this.onChanged,
       onChangeStart: this.onChangeStart,

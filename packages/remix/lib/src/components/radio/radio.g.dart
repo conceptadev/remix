@@ -104,6 +104,7 @@ class FortalRadio<T> extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.highContrast = false,
     required this.value,
     this.enabled = true,
     this.toggleable = false,
@@ -116,6 +117,7 @@ class FortalRadio<T> extends StatelessWidget {
   const FortalRadio.classic({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.value,
     this.enabled = true,
     this.toggleable = false,
@@ -128,6 +130,7 @@ class FortalRadio<T> extends StatelessWidget {
   const FortalRadio.surface({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.value,
     this.enabled = true,
     this.toggleable = false,
@@ -140,6 +143,7 @@ class FortalRadio<T> extends StatelessWidget {
   const FortalRadio.soft({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.value,
     this.enabled = true,
     this.toggleable = false,
@@ -151,6 +155,8 @@ class FortalRadio<T> extends StatelessWidget {
   final FortalRadioVariant variant;
 
   final FortalRadioSize size;
+
+  final bool highContrast;
 
   final T value;
 
@@ -168,7 +174,11 @@ class FortalRadio<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixRadio<T>(
       key: this.key,
-      style: fortalRadioStyler(variant: this.variant, size: this.size),
+      style: fortalRadioStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
       value: this.value,
       enabled: this.enabled,
       toggleable: this.toggleable,

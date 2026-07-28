@@ -105,6 +105,7 @@ class FortalSwitch extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -119,6 +120,7 @@ class FortalSwitch extends StatelessWidget {
   const FortalSwitch.classic({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -133,6 +135,7 @@ class FortalSwitch extends StatelessWidget {
   const FortalSwitch.surface({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -147,6 +150,7 @@ class FortalSwitch extends StatelessWidget {
   const FortalSwitch.soft({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -160,6 +164,8 @@ class FortalSwitch extends StatelessWidget {
   final FortalSwitchVariant variant;
 
   final FortalSwitchSize size;
+
+  final bool highContrast;
 
   final bool selected;
 
@@ -181,7 +187,11 @@ class FortalSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixSwitch(
       key: this.key,
-      style: fortalSwitchStyler(variant: this.variant, size: this.size),
+      style: fortalSwitchStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
       selected: this.selected,
       onChanged: this.onChanged,
       enabled: this.enabled,

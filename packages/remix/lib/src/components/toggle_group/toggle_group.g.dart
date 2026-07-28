@@ -181,6 +181,7 @@ class FortalToggleGroup<T> extends StatelessWidget {
     super.key,
     this.variant = .soft,
     this.size = .size2,
+    this.highContrast = false,
     required this.items,
     required this.selectedValue,
     this.onChanged,
@@ -194,6 +195,7 @@ class FortalToggleGroup<T> extends StatelessWidget {
   const FortalToggleGroup.soft({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.items,
     required this.selectedValue,
     this.onChanged,
@@ -207,6 +209,7 @@ class FortalToggleGroup<T> extends StatelessWidget {
   const FortalToggleGroup.surface({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.items,
     required this.selectedValue,
     this.onChanged,
@@ -220,6 +223,8 @@ class FortalToggleGroup<T> extends StatelessWidget {
   final FortalToggleGroupVariant variant;
 
   final FortalToggleGroupSize size;
+
+  final bool highContrast;
 
   final List<RemixToggleGroupItem<T>> items;
 
@@ -241,7 +246,11 @@ class FortalToggleGroup<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixToggleGroup<T>(
       key: this.key,
-      style: fortalToggleGroupStyler(variant: this.variant, size: this.size),
+      style: fortalToggleGroupStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
       items: this.items,
       selectedValue: this.selectedValue,
       onChanged: this.onChanged,

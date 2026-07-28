@@ -7,12 +7,8 @@ enum FortalDialogSize { size1, size2, size3, size4 }
 enum FortalDialogAlign { start, center }
 
 /// Fortal-themed preset for [RemixDialog].
-@MixWidget(
-  name: 'FortalDialog',
-  target: RemixDialog.new,
-  factoryParameters: .only({'size'}),
-)
-RemixDialogStyler fortalDialogStyler({
+@MixWidget(target: RemixDialog.new)
+RemixDialogStyler fortalDialogStyle({
   FortalDialogSize size = FortalDialogSize.size3,
 }) {
   final radius = switch (size) {

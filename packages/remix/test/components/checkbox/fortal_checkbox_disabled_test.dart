@@ -20,7 +20,7 @@ void main() {
                 resolvedColors = {
                   for (final variant in FortalCheckboxVariant.values)
                     variant:
-                        (fortalCheckboxStyler(
+                        (fortalCheckboxStyle(
                                   variant: variant,
                                 ).build(context).spec.container.spec.decoration
                                 as BoxDecoration?)

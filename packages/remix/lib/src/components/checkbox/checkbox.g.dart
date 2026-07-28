@@ -104,6 +104,7 @@ class FortalCheckbox extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -121,6 +122,7 @@ class FortalCheckbox extends StatelessWidget {
   const FortalCheckbox.classic({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -138,6 +140,7 @@ class FortalCheckbox extends StatelessWidget {
   const FortalCheckbox.surface({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -155,6 +158,7 @@ class FortalCheckbox extends StatelessWidget {
   const FortalCheckbox.soft({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -172,6 +176,8 @@ class FortalCheckbox extends StatelessWidget {
   final FortalCheckboxVariant variant;
 
   final FortalCheckboxSize size;
+
+  final bool highContrast;
 
   final bool? selected;
 
@@ -201,7 +207,11 @@ class FortalCheckbox extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixCheckbox(
       key: this.key,
-      style: fortalCheckboxStyler(variant: this.variant, size: this.size),
+      style: fortalCheckboxStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
       selected: this.selected,
       onChanged: this.onChanged,
       enabled: this.enabled,

@@ -7,12 +7,8 @@ enum FortalCheckboxSize { size1, size2, size3 }
 enum FortalCheckboxVariant { classic, surface, soft }
 
 /// Fortal recipe for [RemixCheckbox].
-@MixWidget(
-  name: 'FortalCheckbox',
-  target: RemixCheckbox.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixCheckboxStyler fortalCheckboxStyler({
+@MixWidget(target: RemixCheckbox.new)
+RemixCheckboxStyler fortalCheckboxStyle({
   FortalCheckboxVariant variant = .surface,
   FortalCheckboxSize size = .size2,
   bool highContrast = false,

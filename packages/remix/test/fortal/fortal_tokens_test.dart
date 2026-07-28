@@ -23,7 +23,7 @@ void main() {
           FortalScope(
             child: Builder(
               builder: (context) {
-                spec = fortalRadioStyler(size: entry.key).build(context).spec;
+                spec = fortalRadioStyle(size: entry.key).build(context).spec;
                 return const SizedBox.shrink();
               },
             ),

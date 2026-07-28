@@ -5,7 +5,7 @@ system: preset widgets, variants, sizes, and tokens.
 
 ## How Fortal presets work
 
-Each component ships a `fortal<Name>Styler(...)` function that returns the
+Each component ships a `fortal<Name>Style(...)` function that returns the
 component's `*Styler`, plus a `Fortal<Name>` preset widget that applies
 it. Two equivalent ways to use a preset:
 
@@ -17,7 +17,7 @@ FortalButton.soft(label: 'Save', onPressed: save, size: .size3)
 RemixButton(
   label: 'Save',
   onPressed: save,
-  style: fortalButtonStyler(variant: .soft, size: .size3)
+  style: fortalButtonStyle(variant: .soft, size: .size3)
       .onHovered(ButtonStyler().scale(1.02)),
 )
 ```
@@ -78,7 +78,7 @@ Notes:
   including builders, long press, focus, semantics, and cursor options.
 - Generated `FortalButton` does not accept a style override. For Fortal visuals
   with custom one-icon placement, use
-  `RemixButton(style: fortalButtonStyler(...).iconAlignment(.end), ...)`.
+  `RemixButton(style: fortalButtonStyle(...).iconAlignment(.end), ...)`.
   With two icons, leading → label → trailing order remains stable.
 - `FortalSelect` and `FortalMenu` both include matching default item styles.
   Set an individual item's `style` only when that row needs an override.

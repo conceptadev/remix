@@ -79,7 +79,7 @@ void main() {
       testWidgets('${size.name} matches the pinned CSS metrics', (
         tester,
       ) async {
-        final spec = await _resolve(tester, fortalSelectStyler(size: size));
+        final spec = await _resolve(tester, fortalSelectStyle(size: size));
         final trigger = spec.trigger.spec;
         final triggerBox = trigger.container.spec.box!.spec;
         final content = spec.content.spec;
@@ -120,14 +120,13 @@ void main() {
         );
         expect(item.icon.spec.size, expected.indicatorSize);
         expect(item.text.spec.style!.fontSize, expected.itemFontSize);
-
       });
     }
 
     testWidgets('all scalable metrics follow Fortal scaling', (tester) async {
       final spec = await _resolve(
         tester,
-        fortalSelectStyler(size: .size1),
+        fortalSelectStyle(size: .size1),
         scaling: .percent110,
       );
       final triggerBox = spec.trigger.spec.container.spec.box!.spec;
@@ -146,7 +145,7 @@ void main() {
     ) async {
       final spec = await _resolve(
         tester,
-        fortalSelectStyler(size: .size2),
+        fortalSelectStyle(size: .size2),
         radius: .full,
       );
 
@@ -160,15 +159,15 @@ void main() {
     testWidgets('surface trigger uses exact idle, open, and disabled roles', (
       tester,
     ) async {
-      final idle = await _resolve(tester, fortalSelectStyler());
+      final idle = await _resolve(tester, fortalSelectStyle());
       final open = await _resolve(
         tester,
-        fortalSelectStyler(),
+        fortalSelectStyle(),
         states: {WidgetState.selected},
       );
       final disabledHover = await _resolve(
         tester,
-        fortalSelectStyler(),
+        fortalSelectStyle(),
         states: {WidgetState.disabled, WidgetState.hovered},
       );
       final tokens = await _tokens(tester);
@@ -210,7 +209,7 @@ void main() {
     ) async {
       final focused = await _resolve(
         tester,
-        fortalSelectStyler(),
+        fortalSelectStyle(),
         states: {WidgetState.focused},
       );
       final tokens = await _tokens(tester);
@@ -232,15 +231,15 @@ void main() {
     testWidgets(
       'soft and ghost own the pinned alpha fills and placeholder opacity',
       (tester) async {
-        final soft = await _resolve(tester, fortalSelectStyler(variant: .soft));
+        final soft = await _resolve(tester, fortalSelectStyle(variant: .soft));
         final softOpen = await _resolve(
           tester,
-          fortalSelectStyler(variant: .soft),
+          fortalSelectStyle(variant: .soft),
           states: {WidgetState.selected},
         );
         final ghost = await _resolve(
           tester,
-          fortalSelectStyler(variant: .ghost),
+          fortalSelectStyle(variant: .ghost),
         );
         final tokens = await _tokens(tester);
 

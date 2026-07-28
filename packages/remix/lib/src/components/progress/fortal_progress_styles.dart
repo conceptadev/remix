@@ -7,12 +7,8 @@ enum FortalProgressSize { size1, size2, size3 }
 enum FortalProgressVariant { classic, surface, soft }
 
 /// Fortal-themed preset for [RemixProgress].
-@MixWidget(
-  name: 'FortalProgress',
-  target: RemixProgress.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixProgressStyler fortalProgressStyler({
+@MixWidget(target: RemixProgress.new)
+RemixProgressStyler fortalProgressStyle({
   FortalProgressVariant variant = .surface,
   FortalProgressSize size = .size2,
   bool highContrast = false,

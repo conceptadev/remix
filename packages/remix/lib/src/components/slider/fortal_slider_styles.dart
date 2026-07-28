@@ -7,12 +7,8 @@ enum FortalSliderSize { size1, size2, size3 }
 enum FortalSliderVariant { classic, surface, soft }
 
 /// Fortal recipe for a multi-thumb slider.
-@MixWidget(
-  name: 'FortalSlider',
-  target: RemixSlider.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixSliderStyler fortalSliderStyler({
+@MixWidget(target: RemixSlider.new)
+RemixSliderStyler fortalSliderStyle({
   FortalSliderVariant variant = .surface,
   FortalSliderSize size = .size2,
   bool highContrast = false,

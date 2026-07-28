@@ -148,7 +148,7 @@ class FortalPopover extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixPopover(
       key: this.key,
-      style: fortalPopoverStyler(size: this.size),
+      style: fortalPopoverStyle(size: this.size),
       popoverChild: this.popoverChild,
       child: this.child,
       positioning: this.positioning,

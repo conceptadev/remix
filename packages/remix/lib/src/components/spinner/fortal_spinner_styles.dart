@@ -4,12 +4,8 @@ part of 'spinner.dart';
 enum FortalSpinnerSize { size1, size2, size3 }
 
 /// Fortal-themed preset for [RemixSpinner].
-@MixWidget(
-  name: 'FortalSpinner',
-  target: RemixSpinner.new,
-  factoryParameters: .only({'size'}),
-)
-RemixSpinnerStyler fortalSpinnerStyler({FortalSpinnerSize size = .size2}) {
+@MixWidget(target: RemixSpinner.new)
+RemixSpinnerStyler fortalSpinnerStyle({FortalSpinnerSize size = .size2}) {
   return RemixSpinnerStyler(
     opacity: 0.65,
     leafRadius: FortalTokens.radius1(),

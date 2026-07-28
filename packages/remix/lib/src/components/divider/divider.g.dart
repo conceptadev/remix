@@ -93,10 +93,7 @@ class FortalDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixDivider(
       key: this.key,
-      style: fortalDividerStyler(
-        size: this.size,
-        orientation: this.orientation,
-      ),
+      style: fortalDividerStyle(size: this.size, orientation: this.orientation),
     );
   }
 }

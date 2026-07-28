@@ -7,12 +7,8 @@ enum FortalMenuSize { size1, size2 }
 enum FortalMenuVariant { solid, soft }
 
 /// Fortal recipe for the established data-driven menu.
-@MixWidget(
-  name: 'FortalMenu',
-  target: RemixMenu.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixMenuStyler fortalMenuStyler({
+@MixWidget(target: RemixMenu.new)
+RemixMenuStyler fortalMenuStyle({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
   bool highContrast = false,
@@ -37,7 +33,7 @@ RemixMenuStyler fortalMenuStyler({
 }
 
 /// Fortal item recipe for per-item style overrides.
-RemixMenuItemStyler fortalMenuItemStyler({
+RemixMenuItemStyler fortalMenuItemStyle({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
   bool highContrast = false,

@@ -2,6 +2,13 @@
 
 - **FEAT**: Expose `ButtonStyler` as the canonical button styling API.
   `RemixButtonStyler` remains available as a deprecated compatibility alias.
+- **BREAKING**: Rename Fortal recipe helpers from `fortalXStyler()` to
+  `fortalXStyle()` so `@MixWidget` can infer every generated `FortalX` name.
+  Remix component styler types such as `ButtonStyler` and
+  `RemixAvatarStyler` are unchanged.
+- **FEAT**: Expose every Fortal recipe parameter on its generated widget,
+  including `highContrast` and Avatar's `fallbackLength`, while retaining both
+  the unnamed `variant:` constructor and generated named variant constructors.
 
 ## 1.0.0-beta.1
 

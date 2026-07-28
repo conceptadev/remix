@@ -7,12 +7,8 @@ enum FortalCardSize { size1, size2, size3, size4, size5 }
 enum FortalCardVariant { surface, classic, ghost }
 
 /// Fortal recipe for [RemixCard].
-@MixWidget(
-  name: 'FortalCard',
-  target: RemixCard.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixCardStyler fortalCardStyler({
+@MixWidget(target: RemixCard.new)
+RemixCardStyler fortalCardStyle({
   FortalCardVariant variant = .surface,
   FortalCardSize size = .size1,
 }) {

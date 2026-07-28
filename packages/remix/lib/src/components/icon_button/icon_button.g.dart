@@ -110,6 +110,7 @@ class FortalIconButton extends StatelessWidget {
     super.key,
     this.variant = .solid,
     this.size = .size2,
+    this.highContrast = false,
     required this.icon,
     this.iconBuilder,
     this.semanticLabel,
@@ -129,6 +130,7 @@ class FortalIconButton extends StatelessWidget {
   const FortalIconButton.classic({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.icon,
     this.iconBuilder,
     this.semanticLabel,
@@ -148,6 +150,7 @@ class FortalIconButton extends StatelessWidget {
   const FortalIconButton.solid({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.icon,
     this.iconBuilder,
     this.semanticLabel,
@@ -167,6 +170,7 @@ class FortalIconButton extends StatelessWidget {
   const FortalIconButton.soft({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.icon,
     this.iconBuilder,
     this.semanticLabel,
@@ -186,6 +190,7 @@ class FortalIconButton extends StatelessWidget {
   const FortalIconButton.surface({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.icon,
     this.iconBuilder,
     this.semanticLabel,
@@ -205,6 +210,7 @@ class FortalIconButton extends StatelessWidget {
   const FortalIconButton.outline({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.icon,
     this.iconBuilder,
     this.semanticLabel,
@@ -224,6 +230,7 @@ class FortalIconButton extends StatelessWidget {
   const FortalIconButton.ghost({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.icon,
     this.iconBuilder,
     this.semanticLabel,
@@ -243,6 +250,8 @@ class FortalIconButton extends StatelessWidget {
   final FortalIconButtonVariant variant;
 
   final FortalIconButtonSize size;
+
+  final bool highContrast;
 
   final IconData icon;
 
@@ -276,7 +285,11 @@ class FortalIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixIconButton(
       key: this.key,
-      style: fortalIconButtonStyler(variant: this.variant, size: this.size),
+      style: fortalIconButtonStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
       icon: this.icon,
       iconBuilder: this.iconBuilder,
       semanticLabel: this.semanticLabel,

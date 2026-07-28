@@ -25,12 +25,8 @@ enum FortalRadioVariant {
 }
 
 /// Fortal-themed preset for [RemixRadio].
-@MixWidget(
-  name: 'FortalRadio',
-  target: RemixRadio.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixRadioStyler fortalRadioStyler({
+@MixWidget(target: RemixRadio.new)
+RemixRadioStyler fortalRadioStyle({
   FortalRadioVariant variant = .surface,
   FortalRadioSize size = .size2,
   bool highContrast = false,

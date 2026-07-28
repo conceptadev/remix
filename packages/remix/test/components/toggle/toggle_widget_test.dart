@@ -370,7 +370,7 @@ void main() {
             selected: false,
             onChanged: (value) {},
             label: 'Bold',
-            style: fortalToggleStyler(),
+            style: fortalToggleStyle(),
           ),
         );
         await tester.pumpAndSettle();
@@ -384,7 +384,7 @@ void main() {
             selected: false,
             onChanged: (value) {},
             label: 'Bold',
-            style: fortalToggleStyler(variant: .outline),
+            style: fortalToggleStyle(variant: .outline),
           ),
         );
         await tester.pumpAndSettle();
@@ -399,7 +399,7 @@ void main() {
               selected: false,
               onChanged: (value) {},
               label: 'Bold',
-              style: fortalToggleStyler(size: size),
+              style: fortalToggleStyle(size: size),
             ),
           );
           await tester.pumpAndSettle();
@@ -416,7 +416,7 @@ void main() {
                 selected: false,
                 onChanged: (value) {},
                 label: 'Bold',
-                style: fortalToggleStyler(variant: variant, size: size),
+                style: fortalToggleStyle(variant: variant, size: size),
               ),
             );
             await tester.pumpAndSettle();

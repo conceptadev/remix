@@ -25,12 +25,8 @@ enum FortalSwitchVariant {
 }
 
 /// Fortal-themed preset for [RemixSwitch].
-@MixWidget(
-  name: 'FortalSwitch',
-  target: RemixSwitch.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixSwitchStyler fortalSwitchStyler({
+@MixWidget(target: RemixSwitch.new)
+RemixSwitchStyler fortalSwitchStyle({
   FortalSwitchVariant variant = .surface,
   FortalSwitchSize size = .size2,
   bool highContrast = false,

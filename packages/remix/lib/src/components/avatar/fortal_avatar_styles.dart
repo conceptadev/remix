@@ -17,12 +17,11 @@ enum FortalAvatarSize {
 enum FortalAvatarVariant { soft, solid }
 
 /// Fortal recipe for [RemixAvatar].
-@MixWidget(
-  name: 'FortalAvatar',
-  target: RemixAvatar.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixAvatarStyler fortalAvatarStyler({
+///
+/// [fallbackLength] selects the pinned one- or two-character fallback
+/// typography. Pass `2` when [RemixAvatar.label] contains two initials.
+@MixWidget(target: RemixAvatar.new)
+RemixAvatarStyler fortalAvatarStyle({
   FortalAvatarVariant variant = .soft,
   FortalAvatarSize size = .size3,
   bool highContrast = false,

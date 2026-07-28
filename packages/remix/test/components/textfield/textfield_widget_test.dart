@@ -16,7 +16,7 @@ void main() {
       await tester.pumpRemixApp(const FortalTextField.surface());
       var context = tester.element(find.byType(FortalTextField));
       var colors = resolveFortalTokens(const FortalThemeConfig());
-      var spec = fortalTextFieldStyler(
+      var spec = fortalTextFieldStyle(
         variant: FortalTextFieldVariant.surface,
       ).resolve(context).spec;
       var decoration =
@@ -28,7 +28,7 @@ void main() {
       await tester.pumpRemixApp(const FortalTextField.soft());
       context = tester.element(find.byType(FortalTextField));
       colors = resolveFortalTokens(const FortalThemeConfig());
-      spec = fortalTextFieldStyler(
+      spec = fortalTextFieldStyle(
         variant: FortalTextFieldVariant.soft,
       ).resolve(context).spec;
       decoration = spec.container.spec.box!.spec.decoration! as BoxDecoration;

@@ -27,7 +27,7 @@ void main() {
       ) async {
         final spec = await _resolve(
           tester,
-          fortalAvatarStyler(size: size, fallbackLength: 1),
+          fortalAvatarStyle(size: size, fallbackLength: 1),
         );
         final box = spec.container.spec;
         final decoration = box.decoration as BoxDecoration;
@@ -50,7 +50,7 @@ void main() {
     ) async {
       final spec = await _resolve(
         tester,
-        fortalAvatarStyler(size: .size6, fallbackLength: 1),
+        fortalAvatarStyle(size: .size6, fallbackLength: 1),
         scaling: .percent110,
       );
 
@@ -63,11 +63,11 @@ void main() {
     ) async {
       final one = await _resolve(
         tester,
-        fortalAvatarStyler(size: .size3, fallbackLength: 1),
+        fortalAvatarStyle(size: .size3, fallbackLength: 1),
       );
       final two = await _resolve(
         tester,
-        fortalAvatarStyler(size: .size3, fallbackLength: 2),
+        fortalAvatarStyle(size: .size3, fallbackLength: 2),
       );
 
       expect(one.label.spec.style!.fontSize, 18);
@@ -79,7 +79,7 @@ void main() {
     testWidgets('full radius promotes every size to a circle', (tester) async {
       final spec = await _resolve(
         tester,
-        fortalAvatarStyler(size: .size9, fallbackLength: 1),
+        fortalAvatarStyle(size: .size9, fallbackLength: 1),
         radius: .full,
       );
       final decoration = spec.container.spec.decoration as BoxDecoration;
@@ -95,15 +95,15 @@ void main() {
     testWidgets('soft and solid resolve normal and high-contrast roles', (
       tester,
     ) async {
-      final soft = await _resolve(tester, fortalAvatarStyler());
+      final soft = await _resolve(tester, fortalAvatarStyle());
       final softHigh = await _resolve(
         tester,
-        fortalAvatarStyler(highContrast: true),
+        fortalAvatarStyle(highContrast: true),
       );
-      final solid = await _resolve(tester, fortalAvatarStyler(variant: .solid));
+      final solid = await _resolve(tester, fortalAvatarStyle(variant: .solid));
       final solidHigh = await _resolve(
         tester,
-        fortalAvatarStyler(variant: .solid, highContrast: true),
+        fortalAvatarStyle(variant: .solid, highContrast: true),
       );
       final tokens = await _tokens(tester);
 

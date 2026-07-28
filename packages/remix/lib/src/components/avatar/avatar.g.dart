@@ -95,11 +95,16 @@ typedef _$RemixAvatarSpecMethods = _$RemixAvatarSpec; // ignore: unused_element
 // **************************************************************************
 
 /// Fortal recipe for [RemixAvatar].
+///
+/// [fallbackLength] selects the pinned one- or two-character fallback
+/// typography. Pass `2` when [RemixAvatar.label] contains two initials.
 class FortalAvatar extends StatelessWidget {
   const FortalAvatar({
     super.key,
     this.variant = .soft,
     this.size = .size3,
+    this.highContrast = false,
+    this.fallbackLength = 1,
     this.backgroundImage,
     this.foregroundImage,
     this.onBackgroundImageError,
@@ -114,6 +119,8 @@ class FortalAvatar extends StatelessWidget {
   const FortalAvatar.soft({
     super.key,
     this.size = .size3,
+    this.highContrast = false,
+    this.fallbackLength = 1,
     this.backgroundImage,
     this.foregroundImage,
     this.onBackgroundImageError,
@@ -128,6 +135,8 @@ class FortalAvatar extends StatelessWidget {
   const FortalAvatar.solid({
     super.key,
     this.size = .size3,
+    this.highContrast = false,
+    this.fallbackLength = 1,
     this.backgroundImage,
     this.foregroundImage,
     this.onBackgroundImageError,
@@ -142,6 +151,10 @@ class FortalAvatar extends StatelessWidget {
   final FortalAvatarVariant variant;
 
   final FortalAvatarSize size;
+
+  final bool highContrast;
+
+  final int fallbackLength;
 
   final ImageProvider<Object>? backgroundImage;
 
@@ -165,7 +178,12 @@ class FortalAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixAvatar(
       key: this.key,
-      style: fortalAvatarStyler(variant: this.variant, size: this.size),
+      style: fortalAvatarStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+        fallbackLength: this.fallbackLength,
+      ),
       backgroundImage: this.backgroundImage,
       foregroundImage: this.foregroundImage,
       onBackgroundImageError: this.onBackgroundImageError,

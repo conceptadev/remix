@@ -33,7 +33,7 @@ void main() {
       testWidgets('${size.name} matches the pinned padding and radius', (
         tester,
       ) async {
-        final spec = await _resolve(tester, fortalCardStyler(size: size));
+        final spec = await _resolve(tester, fortalCardStyle(size: size));
         final box = spec.container.spec;
 
         expect(box.padding, EdgeInsets.all(padding));
@@ -45,7 +45,7 @@ void main() {
     testWidgets('padding and radius scale with the theme', (tester) async {
       final spec = await _resolve(
         tester,
-        fortalCardStyler(size: .size5),
+        fortalCardStyle(size: .size5),
         scaling: .percent110,
       );
       expect(
@@ -61,25 +61,25 @@ void main() {
       tester,
     ) async {
       final tokens = await _tokens(tester);
-      final idle = await _resolve(tester, fortalCardStyler());
+      final idle = await _resolve(tester, fortalCardStyle());
       final hovered = await _resolve(
         tester,
-        fortalCardStyler(),
+        fortalCardStyle(),
         states: {WidgetState.hovered},
       );
       final pressed = await _resolve(
         tester,
-        fortalCardStyler(),
+        fortalCardStyle(),
         states: {WidgetState.pressed},
       );
       final open = await _resolve(
         tester,
-        fortalCardStyler(),
+        fortalCardStyle(),
         states: {WidgetState.selected},
       );
       final openAndPressed = await _resolve(
         tester,
-        fortalCardStyler(),
+        fortalCardStyle(),
         states: {WidgetState.selected, WidgetState.pressed},
       );
 
@@ -117,25 +117,25 @@ void main() {
     testWidgets('classic preserves separate outer and inset shadow stacks', (
       tester,
     ) async {
-      final idle = await _resolve(tester, fortalCardStyler(variant: .classic));
+      final idle = await _resolve(tester, fortalCardStyle(variant: .classic));
       final hovered = await _resolve(
         tester,
-        fortalCardStyler(variant: .classic),
+        fortalCardStyle(variant: .classic),
         states: {WidgetState.hovered},
       );
       final pressed = await _resolve(
         tester,
-        fortalCardStyler(variant: .classic),
+        fortalCardStyle(variant: .classic),
         states: {WidgetState.pressed},
       );
       final open = await _resolve(
         tester,
-        fortalCardStyler(variant: .classic),
+        fortalCardStyle(variant: .classic),
         states: {WidgetState.selected},
       );
       final openAndPressed = await _resolve(
         tester,
-        fortalCardStyler(variant: .classic),
+        fortalCardStyle(variant: .classic),
         states: {WidgetState.selected, WidgetState.pressed},
       );
 
@@ -187,26 +187,26 @@ void main() {
       final tokens = await _tokens(tester);
       final idle = await _resolve(
         tester,
-        fortalCardStyler(variant: .ghost, size: .size3),
+        fortalCardStyle(variant: .ghost, size: .size3),
       );
       final hovered = await _resolve(
         tester,
-        fortalCardStyler(variant: .ghost, size: .size3),
+        fortalCardStyle(variant: .ghost, size: .size3),
         states: {WidgetState.hovered},
       );
       final pressed = await _resolve(
         tester,
-        fortalCardStyler(variant: .ghost, size: .size3),
+        fortalCardStyle(variant: .ghost, size: .size3),
         states: {WidgetState.pressed},
       );
       final open = await _resolve(
         tester,
-        fortalCardStyler(variant: .ghost, size: .size3),
+        fortalCardStyle(variant: .ghost, size: .size3),
         states: {WidgetState.selected},
       );
       final openAndPressed = await _resolve(
         tester,
-        fortalCardStyler(variant: .ghost, size: .size3),
+        fortalCardStyle(variant: .ghost, size: .size3),
         states: {WidgetState.selected, WidgetState.pressed},
       );
 
@@ -223,7 +223,7 @@ void main() {
       final tokens = await _tokens(tester);
       final focused = await _resolve(
         tester,
-        fortalCardStyler(),
+        fortalCardStyle(),
         states: {WidgetState.focused},
       );
 
@@ -242,7 +242,7 @@ void main() {
       ]) {
         final activeAndFocused = await _resolve(
           tester,
-          fortalCardStyler(variant: variant),
+          fortalCardStyle(variant: variant),
           states: {WidgetState.pressed, WidgetState.focused},
         );
         expect(
@@ -258,7 +258,7 @@ void main() {
 
         final openAndFocused = await _resolve(
           tester,
-          fortalCardStyler(variant: variant),
+          fortalCardStyle(variant: variant),
           states: {WidgetState.selected, WidgetState.focused},
         );
         expect(
@@ -275,14 +275,13 @@ void main() {
       ]) {
         final ghost = await _resolve(
           tester,
-          fortalCardStyler(variant: .ghost),
+          fortalCardStyle(variant: .ghost),
           states: states,
         );
         expect(_boxColor(ghost.container), tokens.accentA2);
       }
     });
   });
-
 }
 
 Future<RemixCardSpec> _resolve(

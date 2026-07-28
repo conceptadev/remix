@@ -47,14 +47,14 @@ For generic presets, Dart infers `T` from values, items, and callbacks, so
 calls such as `FortalRadio.soft(value: 'option')` do not need `<String>`.
 
 Plain `Remix*` widgets work without `FortalScope`, but anything Fortal
-(`Fortal*` widgets, `fortal*Styler()` functions, `FortalTokens`) requires it
+(`Fortal*` widgets, `fortal*Style()` functions, `FortalTokens`) requires it
 to resolve tokens.
 
 ## Three levels of styling
 
 1. **Fortal preset widgets** — `FortalButton.soft(size: .size2)`.
    Fastest path; consistent by construction. Use for standard UI.
-2. **Fortal styler + overrides** — `fortal*Styler()` returns the component's
+2. **Fortal style recipe + overrides** — `fortal*Style()` returns the component's
    `*Styler`; chain custom modifications and pass it to the `Remix*`
    widget's `style:`:
 
@@ -62,7 +62,7 @@ to resolve tokens.
    RemixButton(
      label: 'Save',
      onPressed: save,
-     style: fortalButtonStyler(variant: .solid)
+     style: fortalButtonStyle(variant: .solid)
          .borderRadiusAll(const Radius.circular(8))
          .paddingX(32)
          .onHovered(ButtonStyler().wrap(.scale(x: 1.05, y: 1.05))),
@@ -392,10 +392,10 @@ transition durations. Full catalog: `references/fortal-reference.md`.
 
 ```dart
 class AppStyles {
-  static ButtonStyler get primaryButton => fortalButtonStyler(variant: .solid)
+  static ButtonStyler get primaryButton => fortalButtonStyle(variant: .solid)
       .animate(AnimationConfig.spring(200.ms));
 
-  static ButtonStyler get dangerButton => fortalButtonStyler(variant: .solid)
+  static ButtonStyler get dangerButton => fortalButtonStyle(variant: .solid)
       .color(Colors.red)
       .onHovered(ButtonStyler().color(Colors.red.shade700))
       .animate(AnimationConfig.spring(200.ms));

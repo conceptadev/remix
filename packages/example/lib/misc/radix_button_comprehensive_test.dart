@@ -222,11 +222,11 @@ class _AllVariantsSection extends StatelessWidget {
 
   ButtonStyler _getSizedStyle(FortalButtonVariant variant) {
     return switch (size) {
-      1 => fortalButtonStyler(variant: variant, size: .size1),
-      2 => fortalButtonStyler(variant: variant, size: .size2),
-      3 => fortalButtonStyler(variant: variant, size: .size3),
-      4 => fortalButtonStyler(variant: variant, size: .size4),
-      _ => fortalButtonStyler(variant: variant, size: .size2),
+      1 => fortalButtonStyle(variant: variant, size: .size1),
+      2 => fortalButtonStyle(variant: variant, size: .size2),
+      3 => fortalButtonStyle(variant: variant, size: .size3),
+      4 => fortalButtonStyle(variant: variant, size: .size4),
+      _ => fortalButtonStyle(variant: variant, size: .size2),
     };
   }
 
@@ -292,25 +292,25 @@ class _SizeComparisonSection extends StatelessWidget {
       children: [
         const Text('Size 1 (Small)'),
         const SizedBox(height: 8),
-        fortalButtonStyler(
+        fortalButtonStyle(
           variant: .solid,
         ).call(label: 'Size 1', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 2 (Medium - Default)'),
         const SizedBox(height: 8),
-        fortalButtonStyler(
+        fortalButtonStyle(
           variant: .solid,
         ).call(label: 'Size 2', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 3 (Large)'),
         const SizedBox(height: 8),
-        fortalButtonStyler(
+        fortalButtonStyle(
           variant: .solid,
         ).call(label: 'Size 3', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 4 (Extra Large)'),
         const SizedBox(height: 8),
-        fortalButtonStyler(
+        fortalButtonStyle(
           variant: .solid,
         ).call(label: 'Size 4', onPressed: () {}),
       ],
@@ -324,17 +324,17 @@ class _StateTestingSection extends StatelessWidget {
   ButtonStyler _getVariantButton(String variantName) {
     switch (variantName) {
       case 'Solid':
-        return fortalButtonStyler(variant: .solid);
+        return fortalButtonStyle(variant: .solid);
       case 'Soft':
-        return fortalButtonStyler(variant: .soft);
+        return fortalButtonStyle(variant: .soft);
       case 'Surface':
-        return fortalButtonStyler(variant: .surface);
+        return fortalButtonStyle(variant: .surface);
       case 'Outline':
-        return fortalButtonStyler(variant: .outline);
+        return fortalButtonStyle(variant: .outline);
       case 'Ghost':
-        return fortalButtonStyler(variant: .ghost);
+        return fortalButtonStyle(variant: .ghost);
       default:
-        return fortalButtonStyler(variant: .solid);
+        return fortalButtonStyle(variant: .solid);
     }
   }
 
@@ -408,7 +408,7 @@ class _AccentShowcaseSection extends StatelessWidget {
           accent: accentColor,
           gray: FortalGrayColor.slate,
           brightness: Theme.of(context).brightness,
-          child: fortalButtonStyler(variant: .solid).call(
+          child: fortalButtonStyle(variant: .solid).call(
             label: accentColor.name,
             onPressed: () => debugPrint('Button pressed'),
           ),

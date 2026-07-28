@@ -109,6 +109,7 @@ class FortalCallout extends StatelessWidget {
     super.key,
     this.variant = .soft,
     this.size = .size2,
+    this.highContrast = false,
     this.text,
     this.icon,
     this.child,
@@ -117,6 +118,7 @@ class FortalCallout extends StatelessWidget {
   const FortalCallout.soft({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     this.text,
     this.icon,
     this.child,
@@ -125,6 +127,7 @@ class FortalCallout extends StatelessWidget {
   const FortalCallout.surface({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     this.text,
     this.icon,
     this.child,
@@ -133,6 +136,7 @@ class FortalCallout extends StatelessWidget {
   const FortalCallout.outline({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     this.text,
     this.icon,
     this.child,
@@ -141,6 +145,8 @@ class FortalCallout extends StatelessWidget {
   final FortalCalloutVariant variant;
 
   final FortalCalloutSize size;
+
+  final bool highContrast;
 
   final String? text;
 
@@ -152,7 +158,11 @@ class FortalCallout extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixCallout(
       key: this.key,
-      style: fortalCalloutStyler(variant: this.variant, size: this.size),
+      style: fortalCalloutStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
       text: this.text,
       icon: this.icon,
       child: this.child,

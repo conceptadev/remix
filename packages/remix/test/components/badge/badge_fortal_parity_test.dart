@@ -32,7 +32,7 @@ void main() {
       ),
     ]) {
       testWidgets('${size.name} matches pinned metrics', (tester) async {
-        final spec = await _resolve(tester, fortalBadgeStyler(size: size));
+        final spec = await _resolve(tester, fortalBadgeStyle(size: size));
         final box = spec.container.spec;
 
         expect(box.padding, padding);
@@ -47,10 +47,10 @@ void main() {
     ) async {
       final scaled = await _resolve(
         tester,
-        fortalBadgeStyler(size: .size3),
+        fortalBadgeStyle(size: .size3),
         scaling: .percent110,
       );
-      final full = await _resolve(tester, fortalBadgeStyler(), radius: .full);
+      final full = await _resolve(tester, fortalBadgeStyle(), radius: .full);
 
       final padding = scaled.container.spec.padding!.resolve(TextDirection.ltr);
       expect(padding.left, closeTo(11, 1e-9));
@@ -94,18 +94,18 @@ void main() {
       'variants resolve exact fills, inset strokes, and contrast roles',
       (tester) async {
         final tokens = await _tokens(tester);
-        final soft = await _resolve(tester, fortalBadgeStyler());
+        final soft = await _resolve(tester, fortalBadgeStyle());
         final solidHigh = await _resolve(
           tester,
-          fortalBadgeStyler(variant: .solid, highContrast: true),
+          fortalBadgeStyle(variant: .solid, highContrast: true),
         );
         final surface = await _resolve(
           tester,
-          fortalBadgeStyler(variant: .surface),
+          fortalBadgeStyle(variant: .surface),
         );
         final outlineHigh = await _resolve(
           tester,
-          fortalBadgeStyler(variant: .outline, highContrast: true),
+          fortalBadgeStyle(variant: .outline, highContrast: true),
         );
 
         expect(_color(soft.container.spec), tokens.accentA3);

@@ -100,6 +100,7 @@ class FortalToggle extends StatelessWidget {
     super.key,
     this.variant = .ghost,
     this.size = .size2,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -115,6 +116,7 @@ class FortalToggle extends StatelessWidget {
   const FortalToggle.ghost({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -130,6 +132,7 @@ class FortalToggle extends StatelessWidget {
   const FortalToggle.outline({
     super.key,
     this.size = .size2,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -145,6 +148,8 @@ class FortalToggle extends StatelessWidget {
   final FortalToggleVariant variant;
 
   final FortalToggleSize size;
+
+  final bool highContrast;
 
   final bool selected;
 
@@ -170,7 +175,11 @@ class FortalToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixToggle(
       key: this.key,
-      style: fortalToggleStyler(variant: this.variant, size: this.size),
+      style: fortalToggleStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
       selected: this.selected,
       onChanged: this.onChanged,
       enabled: this.enabled,

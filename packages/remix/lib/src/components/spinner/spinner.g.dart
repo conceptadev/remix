@@ -148,7 +148,7 @@ class FortalSpinner extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixSpinner(
       key: this.key,
-      style: fortalSpinnerStyler(size: this.size),
+      style: fortalSpinnerStyle(size: this.size),
     );
   }
 }

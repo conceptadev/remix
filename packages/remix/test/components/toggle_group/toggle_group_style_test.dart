@@ -66,8 +66,8 @@ void main() {
 
     test('Fortal recipe defaults to soft size2', () {
       expect(
-        fortalToggleGroupStyler(),
-        fortalToggleGroupStyler(variant: .soft, size: .size2),
+        fortalToggleGroupStyle(),
+        fortalToggleGroupStyle(variant: .soft, size: .size2),
       );
     });
 
@@ -78,7 +78,7 @@ void main() {
         for (final size in FortalToggleGroupSize.values) {
           final resolved = await _resolveFortalToggleGroupStyle(
             tester,
-            fortalToggleGroupStyler(variant: variant, size: size),
+            fortalToggleGroupStyle(variant: variant, size: size),
             states: {WidgetState.selected},
           );
           final groupBox = resolved.spec.container.spec.box?.spec;
@@ -134,7 +134,7 @@ void main() {
       for (final size in FortalToggleGroupSize.values) {
         final resolved = await _resolveFortalToggleGroupStyle(
           tester,
-          fortalToggleGroupStyler(size: size),
+          fortalToggleGroupStyle(size: size),
         );
         final groupDecoration =
             resolved.spec.container.spec.box?.spec.decoration as BoxDecoration?;
@@ -162,7 +162,7 @@ void main() {
       for (final variant in FortalToggleGroupVariant.values) {
         final resolved = await _resolveFortalToggleGroupStyle(
           tester,
-          fortalToggleGroupStyler(variant: variant),
+          fortalToggleGroupStyle(variant: variant),
           states: {WidgetState.selected},
         );
         final decoration =

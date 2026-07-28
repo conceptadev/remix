@@ -10,14 +10,13 @@ void main() {
       for (final state in [WidgetState.hovered, WidgetState.pressed]) {
         final button = await _resolveFortalStyle(
           tester,
-          (context) => fortalButtonStyler(highContrast: true).build(context),
+          (context) => fortalButtonStyle(highContrast: true).build(context),
           brightness: .dark,
           states: {state},
         );
         final iconButton = await _resolveFortalStyle(
           tester,
-          (context) =>
-              fortalIconButtonStyler(highContrast: true).build(context),
+          (context) => fortalIconButtonStyle(highContrast: true).build(context),
           brightness: .dark,
           states: {state},
         );
@@ -43,19 +42,19 @@ void main() {
     ) async {
       final softButton = await _resolveFortalStyle(
         tester,
-        (context) => fortalButtonStyler(variant: .soft).build(context),
+        (context) => fortalButtonStyle(variant: .soft).build(context),
       );
       final surfaceButton = await _resolveFortalStyle(
         tester,
-        (context) => fortalButtonStyler(variant: .surface).build(context),
+        (context) => fortalButtonStyle(variant: .surface).build(context),
       );
       final softIconButton = await _resolveFortalStyle(
         tester,
-        (context) => fortalIconButtonStyler(variant: .soft).build(context),
+        (context) => fortalIconButtonStyle(variant: .soft).build(context),
       );
       final surfaceIconButton = await _resolveFortalStyle(
         tester,
-        (context) => fortalIconButtonStyler(variant: .surface).build(context),
+        (context) => fortalIconButtonStyle(variant: .surface).build(context),
       );
 
       expect(
@@ -78,8 +77,7 @@ void main() {
           for (final state in [WidgetState.hovered, WidgetState.pressed]) {
             final button = await _resolveFortalStyle(
               tester,
-              (context) =>
-                  fortalButtonStyler(highContrast: true).build(context),
+              (context) => fortalButtonStyle(highContrast: true).build(context),
               accent: accent,
               brightness: brightness,
               states: {state},
@@ -87,7 +85,7 @@ void main() {
             final iconButton = await _resolveFortalStyle(
               tester,
               (context) =>
-                  fortalIconButtonStyler(highContrast: true).build(context),
+                  fortalIconButtonStyle(highContrast: true).build(context),
               accent: accent,
               brightness: brightness,
               states: {state},
@@ -119,11 +117,11 @@ void main() {
       for (final variant in FortalIconButtonVariant.values) {
         final normal = await _resolveFortalStyle(
           tester,
-          (context) => fortalIconButtonStyler(variant: variant).build(context),
+          (context) => fortalIconButtonStyle(variant: variant).build(context),
         );
         final highContrast = await _resolveFortalStyle(
           tester,
-          (context) => fortalIconButtonStyler(
+          (context) => fortalIconButtonStyle(
             variant: variant,
             highContrast: true,
           ).build(context),
@@ -151,11 +149,11 @@ void main() {
       for (final variant in FortalBadgeVariant.values) {
         final normal = await _resolveFortalStyle(
           tester,
-          (context) => fortalBadgeStyler(variant: variant).build(context),
+          (context) => fortalBadgeStyle(variant: variant).build(context),
         );
         final highContrast = await _resolveFortalStyle(
           tester,
-          (context) => fortalBadgeStyler(
+          (context) => fortalBadgeStyle(
             variant: variant,
             highContrast: true,
           ).build(context),
@@ -191,11 +189,11 @@ void main() {
       for (final variant in FortalCalloutVariant.values) {
         final normal = await _resolveFortalStyle(
           tester,
-          (context) => fortalCalloutStyler(variant: variant).build(context),
+          (context) => fortalCalloutStyle(variant: variant).build(context),
         );
         final highContrast = await _resolveFortalStyle(
           tester,
-          (context) => fortalCalloutStyler(
+          (context) => fortalCalloutStyle(
             variant: variant,
             highContrast: true,
           ).build(context),
@@ -214,12 +212,12 @@ void main() {
       for (final variant in FortalCheckboxVariant.values) {
         final normal = await _resolveFortalStyle(
           tester,
-          (context) => fortalCheckboxStyler(variant: variant).build(context),
+          (context) => fortalCheckboxStyle(variant: variant).build(context),
           states: {WidgetState.selected},
         );
         final highContrast = await _resolveFortalStyle(
           tester,
-          (context) => fortalCheckboxStyler(
+          (context) => fortalCheckboxStyle(
             variant: variant,
             highContrast: true,
           ).build(context),
@@ -256,12 +254,12 @@ void main() {
       for (final variant in FortalRadioVariant.values) {
         final normal = await _resolveFortalStyle(
           tester,
-          (context) => fortalRadioStyler(variant: variant).build(context),
+          (context) => fortalRadioStyle(variant: variant).build(context),
           states: {WidgetState.selected},
         );
         final highContrast = await _resolveFortalStyle(
           tester,
-          (context) => fortalRadioStyler(
+          (context) => fortalRadioStyle(
             variant: variant,
             highContrast: true,
           ).build(context),
@@ -295,12 +293,12 @@ void main() {
       for (final variant in FortalSwitchVariant.values) {
         final normal = await _resolveFortalStyle(
           tester,
-          (context) => fortalSwitchStyler(variant: variant).build(context),
+          (context) => fortalSwitchStyle(variant: variant).build(context),
           states: {WidgetState.selected},
         );
         final highContrast = await _resolveFortalStyle(
           tester,
-          (context) => fortalSwitchStyler(
+          (context) => fortalSwitchStyle(
             variant: variant,
             highContrast: true,
           ).build(context),
@@ -326,7 +324,7 @@ void main() {
       for (final variant in FortalSwitchVariant.values) {
         final highContrast = await _resolveFortalStyle(
           tester,
-          (context) => fortalSwitchStyler(
+          (context) => fortalSwitchStyle(
             variant: variant,
             highContrast: true,
           ).build(context),
@@ -348,12 +346,12 @@ void main() {
       for (final variant in FortalToggleVariant.values) {
         final normal = await _resolveFortalStyle(
           tester,
-          (context) => fortalToggleStyler(variant: variant).build(context),
+          (context) => fortalToggleStyle(variant: variant).build(context),
           states: {WidgetState.selected},
         );
         final highContrast = await _resolveFortalStyle(
           tester,
-          (context) => fortalToggleStyler(
+          (context) => fortalToggleStyle(
             variant: variant,
             highContrast: true,
           ).build(context),
@@ -377,12 +375,12 @@ void main() {
     ) async {
       final hoveredNormal = await _resolveFortalStyle(
         tester,
-        (context) => fortalSelectStyler().build(context),
+        (context) => fortalSelectStyle().build(context),
         states: {WidgetState.hovered},
       );
       final hoveredHighContrast = await _resolveFortalStyle(
         tester,
-        (context) => fortalSelectStyler(highContrast: true).build(context),
+        (context) => fortalSelectStyle(highContrast: true).build(context),
         states: {WidgetState.hovered},
       );
       expect(
@@ -407,11 +405,11 @@ void main() {
       for (final variant in FortalSliderVariant.values) {
         final normal = await _resolveFortalStyle(
           tester,
-          (context) => fortalSliderStyler(variant: variant).build(context),
+          (context) => fortalSliderStyle(variant: variant).build(context),
         );
         final highContrast = await _resolveFortalStyle(
           tester,
-          (context) => fortalSliderStyler(
+          (context) => fortalSliderStyle(
             variant: variant,
             highContrast: true,
           ).build(context),
@@ -435,11 +433,11 @@ void main() {
       for (final variant in FortalProgressVariant.values) {
         final normal = await _resolveFortalStyle(
           tester,
-          (context) => fortalProgressStyler(variant: variant).build(context),
+          (context) => fortalProgressStyle(variant: variant).build(context),
         );
         final highContrast = await _resolveFortalStyle(
           tester,
-          (context) => fortalProgressStyler(
+          (context) => fortalProgressStyle(
             variant: variant,
             highContrast: true,
           ).build(context),
@@ -463,7 +461,7 @@ void main() {
       for (final variant in FortalProgressVariant.values) {
         final style = await _resolveFortalStyle(
           tester,
-          (context) => fortalProgressStyler(variant: variant).build(context),
+          (context) => fortalProgressStyle(variant: variant).build(context),
           radius: .none,
         );
 
@@ -475,12 +473,12 @@ void main() {
     testWidgets('selected tabs resolve an accent12 underline', (tester) async {
       final normal = await _resolveFortalStyle(
         tester,
-        (context) => fortalTabStyler().build(context),
+        (context) => fortalTabStyle().build(context),
         states: {WidgetState.selected},
       );
       final highContrast = await _resolveFortalStyle(
         tester,
-        (context) => fortalTabStyler(highContrast: true).build(context),
+        (context) => fortalTabStyle(highContrast: true).build(context),
         states: {WidgetState.selected},
       );
 

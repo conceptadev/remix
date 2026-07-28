@@ -7,12 +7,8 @@ enum FortalToggleSize { size1, size2, size3 }
 enum FortalToggleVariant { ghost, outline }
 
 /// Fortal-themed preset for [RemixToggle].
-@MixWidget(
-  name: 'FortalToggle',
-  target: RemixToggle.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixToggleStyler fortalToggleStyler({
+@MixWidget(target: RemixToggle.new)
+RemixToggleStyler fortalToggleStyle({
   FortalToggleVariant variant = .ghost,
   FortalToggleSize size = .size2,
   bool highContrast = false,

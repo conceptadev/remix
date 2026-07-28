@@ -4,12 +4,8 @@ part of 'divider.dart';
 enum FortalDividerSize { size1, size2, size3, size4 }
 
 /// Fortal-themed preset for [RemixDivider].
-@MixWidget(
-  name: 'FortalDivider',
-  target: RemixDivider.new,
-  factoryParameters: .only({'size', 'orientation'}),
-)
-RemixDividerStyler fortalDividerStyler({
+@MixWidget(target: RemixDivider.new)
+RemixDividerStyler fortalDividerStyle({
   FortalDividerSize size = .size1,
   Axis orientation = Axis.horizontal,
 }) {

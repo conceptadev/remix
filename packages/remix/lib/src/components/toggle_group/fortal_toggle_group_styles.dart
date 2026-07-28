@@ -7,12 +7,8 @@ enum FortalToggleGroupSize { size1, size2, size3 }
 enum FortalToggleGroupVariant { soft, surface }
 
 /// Fortal-themed segmented-control preset for [RemixToggleGroup].
-@MixWidget(
-  name: 'FortalToggleGroup',
-  target: RemixToggleGroup.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixToggleGroupStyler fortalToggleGroupStyler({
+@MixWidget(target: RemixToggleGroup.new)
+RemixToggleGroupStyler fortalToggleGroupStyle({
   FortalToggleGroupVariant variant = .soft,
   FortalToggleGroupSize size = .size2,
   bool highContrast = false,

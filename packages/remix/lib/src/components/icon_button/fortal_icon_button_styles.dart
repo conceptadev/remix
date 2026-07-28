@@ -7,12 +7,8 @@ enum FortalIconButtonSize { size1, size2, size3, size4 }
 enum FortalIconButtonVariant { classic, solid, soft, surface, outline, ghost }
 
 /// Fortal recipe for [RemixIconButton].
-@MixWidget(
-  name: 'FortalIconButton',
-  target: RemixIconButton.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixIconButtonStyler fortalIconButtonStyler({
+@MixWidget(target: RemixIconButton.new)
+RemixIconButtonStyler fortalIconButtonStyle({
   FortalIconButtonVariant variant = .solid,
   FortalIconButtonSize size = .size2,
   bool highContrast = false,

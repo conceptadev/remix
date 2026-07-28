@@ -145,7 +145,7 @@ class FortalDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixDialog(
       key: this.key,
-      style: fortalDialogStyler(size: this.size),
+      style: fortalDialogStyle(size: this.size),
       child: this.child,
       title: this.title,
       description: this.description,

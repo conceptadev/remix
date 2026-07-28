@@ -7,12 +7,8 @@ enum FortalBadgeSize { size1, size2, size3 }
 enum FortalBadgeVariant { solid, soft, surface, outline }
 
 /// Fortal recipe for [RemixBadge].
-@MixWidget(
-  name: 'FortalBadge',
-  target: RemixBadge.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixBadgeStyler fortalBadgeStyler({
+@MixWidget(target: RemixBadge.new)
+RemixBadgeStyler fortalBadgeStyle({
   FortalBadgeVariant variant = .soft,
   FortalBadgeSize size = .size1,
   bool highContrast = false,

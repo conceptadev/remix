@@ -104,6 +104,7 @@ class FortalBadge extends StatelessWidget {
     super.key,
     this.variant = .soft,
     this.size = .size1,
+    this.highContrast = false,
     this.label,
     this.child,
     this.labelBuilder,
@@ -112,6 +113,7 @@ class FortalBadge extends StatelessWidget {
   const FortalBadge.solid({
     super.key,
     this.size = .size1,
+    this.highContrast = false,
     this.label,
     this.child,
     this.labelBuilder,
@@ -120,6 +122,7 @@ class FortalBadge extends StatelessWidget {
   const FortalBadge.soft({
     super.key,
     this.size = .size1,
+    this.highContrast = false,
     this.label,
     this.child,
     this.labelBuilder,
@@ -128,6 +131,7 @@ class FortalBadge extends StatelessWidget {
   const FortalBadge.surface({
     super.key,
     this.size = .size1,
+    this.highContrast = false,
     this.label,
     this.child,
     this.labelBuilder,
@@ -136,6 +140,7 @@ class FortalBadge extends StatelessWidget {
   const FortalBadge.outline({
     super.key,
     this.size = .size1,
+    this.highContrast = false,
     this.label,
     this.child,
     this.labelBuilder,
@@ -144,6 +149,8 @@ class FortalBadge extends StatelessWidget {
   final FortalBadgeVariant variant;
 
   final FortalBadgeSize size;
+
+  final bool highContrast;
 
   final String? label;
 
@@ -155,7 +162,11 @@ class FortalBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixBadge(
       key: this.key,
-      style: fortalBadgeStyler(variant: this.variant, size: this.size),
+      style: fortalBadgeStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
       label: this.label,
       child: this.child,
       labelBuilder: this.labelBuilder,

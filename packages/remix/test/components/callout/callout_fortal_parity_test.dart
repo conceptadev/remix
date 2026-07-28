@@ -17,7 +17,7 @@ void main() {
       (FortalCalloutSize.size3, 24.0, 16.0, 12.0, 16.0),
     ]) {
       testWidgets('${size.name} matches pinned metrics', (tester) async {
-        final spec = await _resolve(tester, fortalCalloutStyler(size: size));
+        final spec = await _resolve(tester, fortalCalloutStyle(size: size));
         final flex = spec.container.spec;
         final box = flex.box!.spec;
 
@@ -32,7 +32,7 @@ void main() {
     testWidgets('geometry and type scale with Fortal scaling', (tester) async {
       final spec = await _resolve(
         tester,
-        fortalCalloutStyler(size: .size3),
+        fortalCalloutStyle(size: .size3),
         scaling: .percent110,
       );
       expect(
@@ -49,14 +49,14 @@ void main() {
       tester,
     ) async {
       final tokens = await _tokens(tester);
-      final soft = await _resolve(tester, fortalCalloutStyler());
+      final soft = await _resolve(tester, fortalCalloutStyle());
       final surface = await _resolve(
         tester,
-        fortalCalloutStyler(variant: .surface),
+        fortalCalloutStyle(variant: .surface),
       );
       final outlineHigh = await _resolve(
         tester,
-        fortalCalloutStyler(variant: .outline, highContrast: true),
+        fortalCalloutStyle(variant: .outline, highContrast: true),
       );
 
       expect(_color(soft.container), tokens.accentA3);

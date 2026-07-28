@@ -83,9 +83,9 @@ void main() {
         addTearDown(focusNode.dispose);
 
         await tester.pumpRemixApp(
-          FortalButton(
-            variant: .soft,
+          FortalButton.soft(
             size: .size3,
+            highContrast: true,
             label: 'Save',
             leadingIcon: Icons.save,
             trailingIcon: Icons.check,
@@ -110,13 +110,16 @@ void main() {
         );
         expect(generated.variant, equals(FortalButtonVariant.soft));
         expect(generated.size, equals(FortalButtonSize.size3));
+        expect(generated.highContrast, isTrue);
 
         final remixButton = tester.widget<RemixButton>(
           find.byType(RemixButton),
         );
         expect(
           remixButton.style,
-          equals(fortalButtonStyler(variant: .soft, size: .size3)),
+          equals(
+            fortalButtonStyle(variant: .soft, size: .size3, highContrast: true),
+          ),
         );
         expect(remixButton.label, equals('Save'));
         expect(remixButton.leadingIcon, equals(Icons.save));

@@ -7,12 +7,8 @@ enum FortalAccordionSize { size1, size2, size3 }
 enum FortalAccordionVariant { surface, soft }
 
 /// Fortal-themed preset for [RemixAccordion].
-@MixWidget(
-  name: 'FortalAccordion',
-  target: RemixAccordion.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixAccordionStyler fortalAccordionStyler({
+@MixWidget(target: RemixAccordion.new)
+RemixAccordionStyler fortalAccordionStyle({
   FortalAccordionVariant variant = .surface,
   FortalAccordionSize size = .size2,
 }) {

@@ -7,12 +7,8 @@ enum FortalCalloutSize { size1, size2, size3 }
 enum FortalCalloutVariant { soft, surface, outline }
 
 /// Fortal recipe for [RemixCallout].
-@MixWidget(
-  name: 'FortalCallout',
-  target: RemixCallout.new,
-  factoryParameters: .only({'variant', 'size'}),
-)
-RemixCalloutStyler fortalCalloutStyler({
+@MixWidget(target: RemixCallout.new)
+RemixCalloutStyler fortalCalloutStyle({
   FortalCalloutVariant variant = .soft,
   FortalCalloutSize size = .size2,
   bool highContrast = false,

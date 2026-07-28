@@ -98,7 +98,7 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 ///     RemixMenuItem(value: 'delete', label: 'Delete', leadingIcon: Icons.delete),
 ///   ],
 ///   onSelected: (value) => debugPrint('Selected: $value'),
-///   style: fortalMenuStyler(),
+///   style: fortalMenuStyle(),
 /// )
 ///
 /// // Advanced usage - provide controller for programmatic control

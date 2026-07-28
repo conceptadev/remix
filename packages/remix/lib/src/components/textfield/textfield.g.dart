@@ -579,7 +579,7 @@ class FortalTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTextField(
       key: this.key,
-      style: fortalTextFieldStyler(variant: this.variant, size: this.size),
+      style: fortalTextFieldStyle(variant: this.variant, size: this.size),
       controller: this.controller,
       focusNode: this.focusNode,
       label: this.label,

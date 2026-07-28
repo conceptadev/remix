@@ -216,7 +216,7 @@ class FortalAccordion<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixAccordion<T>(
       key: this.key,
-      style: fortalAccordionStyler(variant: this.variant, size: this.size),
+      style: fortalAccordionStyle(variant: this.variant, size: this.size),
       value: this.value,
       child: this.child,
       title: this.title,
