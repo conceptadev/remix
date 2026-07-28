@@ -9,13 +9,6 @@ environment:
 
 dependency_overrides:
   accessibility_tools: ^2.8.0
-  # Keep Mix on the compatible revision while the generator and annotation
-  # packages use their published beta through Remix.
-  mix:
-    git:
-      url: https://github.com/btwld/mix.git
-      ref: 07dafe904e56a9b60a172f4ef1863cf45564603a
-      path: packages/mix
 
 dependencies:
   flutter:
@@ -30,11 +23,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mix_protocol:
-    git:
-      url: https://github.com/btwld/mix.git
-      ref: 07dafe904e56a9b60a172f4ef1863cf45564603a
-      path: packages/mix_protocol
   widgetbook_generator: ^3.24.0
 
 flutter:
