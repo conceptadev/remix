@@ -130,6 +130,7 @@ class RemixDialog extends StatelessWidget {
     this.title,
     this.description,
     this.actions,
+    this.scrollable = false,
     this.modal = true,
     this.semanticLabel,
     this.style = const RemixDialogStyler.create(),
@@ -153,6 +154,13 @@ class RemixDialog extends StatelessWidget {
 
   /// Action buttons (typically placed at the bottom).
   final List<Widget>? actions;
+
+  /// Whether structured body content can scroll within a bounded dialog.
+  ///
+  /// When true, [description] and [child] share a vertical scroll region while
+  /// [title] and [actions] remain outside it. A lone [child] remains fully
+  /// caller-owned and is never wrapped in the structured scroll region.
+  final bool scrollable;
 
   /// Whether to block background content interaction.
   final bool modal;
@@ -186,22 +194,54 @@ class RemixDialog extends StatelessWidget {
           return Box(styleSpec: spec.container, child: child!);
         }
 
+        final hasBody = description != null || child != null;
+        final titleWidget = title == null
+            ? null
+            : StyledText(title!, styleSpec: spec.title);
+        final bodyChildren = <Widget>[
+          if (description != null)
+            StyledText(description!, styleSpec: spec.description),
+          ?child,
+        ];
+        final actionsWidget = hasActions
+            ? FlexBox(styleSpec: spec.actions, children: actions!)
+            : null;
+
         // title → description → child → actions; never discard provided content.
         return Box(
           styleSpec: spec.container,
-          child: Column(
-            mainAxisAlignment: .start,
-            mainAxisSize: .min,
-            crossAxisAlignment: .start,
-            children: [
-              if (title != null) StyledText(title!, styleSpec: spec.title),
-              if (description != null)
-                StyledText(description!, styleSpec: spec.description),
-              ?child,
-              if (hasActions)
-                FlexBox(styleSpec: spec.actions, children: actions!),
-            ],
-          ),
+          child: scrollable && hasBody
+              ? LayoutBuilder(
+                  builder: (context, constraints) {
+                    final body = SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: .min,
+                        crossAxisAlignment: .start,
+                        children: bodyChildren,
+                      ),
+                    );
+
+                    return Column(
+                      mainAxisAlignment: .start,
+                      mainAxisSize: .min,
+                      crossAxisAlignment: .start,
+                      children: [
+                        ?titleWidget,
+                        if (constraints.hasBoundedHeight)
+                          Flexible(fit: FlexFit.loose, child: body)
+                        else
+                          body,
+                        ?actionsWidget,
+                      ],
+                    );
+                  },
+                )
+              : Column(
+                  mainAxisAlignment: .start,
+                  mainAxisSize: .min,
+                  crossAxisAlignment: .start,
+                  children: [?titleWidget, ...bodyChildren, ?actionsWidget],
+                ),
         );
       },
     );

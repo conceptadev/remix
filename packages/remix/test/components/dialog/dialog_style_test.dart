@@ -311,6 +311,7 @@ void main() {
           title: 'Confirm',
           description: 'Continue?',
           actions: const [Text('OK')],
+          scrollable: true,
           modal: false,
           semanticLabel: 'Confirmation dialog',
         );
@@ -320,6 +321,7 @@ void main() {
         expect(dialog.title, 'Confirm');
         expect(dialog.description, 'Continue?');
         expect(dialog.actions, hasLength(1));
+        expect(dialog.scrollable, isTrue);
         expect(dialog.modal, isFalse);
         expect(dialog.semanticLabel, 'Confirmation dialog');
       });
