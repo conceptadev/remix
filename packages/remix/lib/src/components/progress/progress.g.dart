@@ -106,18 +106,24 @@ class FortalProgress extends StatelessWidget {
     this.variant = .surface,
     this.size = .size2,
     required this.value,
+    this.semanticsLabel,
+    this.semanticsValue,
   });
 
   const FortalProgress.surface({
     super.key,
     this.size = .size2,
     required this.value,
+    this.semanticsLabel,
+    this.semanticsValue,
   }) : variant = FortalProgressVariant.surface;
 
   const FortalProgress.soft({
     super.key,
     this.size = .size2,
     required this.value,
+    this.semanticsLabel,
+    this.semanticsValue,
   }) : variant = FortalProgressVariant.soft;
 
   final FortalProgressVariant variant;
@@ -126,12 +132,18 @@ class FortalProgress extends StatelessWidget {
 
   final double value;
 
+  final String? semanticsLabel;
+
+  final String? semanticsValue;
+
   @override
   Widget build(BuildContext context) {
     return RemixProgress(
       key: this.key,
       style: fortalProgressStyler(variant: this.variant, size: this.size),
       value: this.value,
+      semanticsLabel: this.semanticsLabel,
+      semanticsValue: this.semanticsValue,
     );
   }
 }

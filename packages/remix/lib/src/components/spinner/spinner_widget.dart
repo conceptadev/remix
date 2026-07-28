@@ -21,11 +21,19 @@ part of 'spinner.dart';
 class RemixSpinner extends StatelessWidget {
   const RemixSpinner({
     super.key,
+    this.semanticsLabel,
+    this.semanticsValue,
     this.style = const RemixSpinnerStyler.create(),
     this.styleSpec,
   });
 
   static final styleFrom = RemixSpinnerStyler.new;
+
+  /// The accessible name exposed when this spinner is not decorative.
+  final String? semanticsLabel;
+
+  /// Optional status text exposed with [semanticsLabel].
+  final String? semanticsValue;
 
   /// The style configuration for the spinner.
   final RemixSpinnerStyler style;
@@ -35,10 +43,19 @@ class RemixSpinner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RemixStyleSpecBuilder<RemixSpinnerSpec>(
+    final spinner = RemixStyleSpecBuilder<RemixSpinnerSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) => _SpinnerSpecWidget(spec: spec),
+    );
+
+    if (semanticsLabel == null && semanticsValue == null) return spinner;
+
+    return Semantics(
+      role: SemanticsRole.loadingSpinner,
+      label: semanticsLabel,
+      value: semanticsValue,
+      child: spinner,
     );
   }
 }

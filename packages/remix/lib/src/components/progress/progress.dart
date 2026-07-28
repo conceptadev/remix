@@ -1,5 +1,7 @@
 library remix_progress;
 
+import 'dart:ui' show SemanticsRole;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';

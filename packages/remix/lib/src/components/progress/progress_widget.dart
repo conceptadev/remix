@@ -15,6 +15,8 @@ class RemixProgress extends StatelessWidget {
   const RemixProgress({
     super.key,
     required this.value,
+    this.semanticsLabel,
+    this.semanticsValue,
     this.style = const RemixProgressStyler.create(),
     this.styleSpec,
   }) : assert(
@@ -30,6 +32,15 @@ class RemixProgress extends StatelessWidget {
   /// A value of 0 means empty, while 1 means completely filled.
   final double value;
 
+  /// The accessible name exposed when this progress bar is not decorative.
+  final String? semanticsLabel;
+
+  /// Optional progress value expressed as a number from 0 to 100 or a
+  /// percentage.
+  ///
+  /// Defaults to the rounded 0–100 value when [semanticsLabel] is provided.
+  final String? semanticsValue;
+
   /// The style configuration for the progress bar.
   final RemixProgressStyler style;
 
@@ -38,7 +49,7 @@ class RemixProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RemixStyleSpecBuilder<RemixProgressSpec>(
+    final progress = RemixStyleSpecBuilder<RemixProgressSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
@@ -65,6 +76,17 @@ class RemixProgress extends StatelessWidget {
           ),
         );
       },
+    );
+
+    if (semanticsLabel == null && semanticsValue == null) return progress;
+
+    return Semantics(
+      role: SemanticsRole.progressBar,
+      label: semanticsLabel,
+      value: semanticsValue ?? '${(value * 100).round()}',
+      minValue: '0',
+      maxValue: '100',
+      child: progress,
     );
   }
 }
