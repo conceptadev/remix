@@ -128,6 +128,8 @@ class FortalProgress extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.value,
+    this.semanticsLabel,
+    this.semanticsValue,
   });
 
   const FortalProgress.classic({
@@ -135,6 +137,8 @@ class FortalProgress extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.value,
+    this.semanticsLabel,
+    this.semanticsValue,
   }) : variant = FortalProgressVariant.classic;
 
   const FortalProgress.surface({
@@ -142,6 +146,8 @@ class FortalProgress extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.value,
+    this.semanticsLabel,
+    this.semanticsValue,
   }) : variant = FortalProgressVariant.surface;
 
   const FortalProgress.soft({
@@ -149,6 +155,8 @@ class FortalProgress extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.value,
+    this.semanticsLabel,
+    this.semanticsValue,
   }) : variant = FortalProgressVariant.soft;
 
   final FortalProgressVariant variant;
@@ -158,6 +166,10 @@ class FortalProgress extends StatelessWidget {
   final bool highContrast;
 
   final double value;
+
+  final String? semanticsLabel;
+
+  final String? semanticsValue;
 
   @override
   Widget build(BuildContext context) {
@@ -169,6 +181,8 @@ class FortalProgress extends StatelessWidget {
         highContrast: this.highContrast,
       ),
       value: this.value,
+      semanticsLabel: this.semanticsLabel,
+      semanticsValue: this.semanticsValue,
     );
   }
 }
