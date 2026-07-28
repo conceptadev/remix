@@ -375,6 +375,20 @@ class FortalTokens {
   static const avatarSize8 = DoubleToken('fortal.avatar.size.8');
   static const avatarSize9 = DoubleToken('fortal.avatar.size.9');
 
+  /// Avatar icon sizes are half of each resolved avatar dimension.
+  ///
+  /// These values need dedicated tokens because arithmetic on an unresolved
+  /// token reference would destroy its identity before Mix can resolve it.
+  static const avatarIconSize1 = DoubleToken('fortal.avatar.icon-size.1');
+  static const avatarIconSize2 = DoubleToken('fortal.avatar.icon-size.2');
+  static const avatarIconSize3 = DoubleToken('fortal.avatar.icon-size.3');
+  static const avatarIconSize4 = DoubleToken('fortal.avatar.icon-size.4');
+  static const avatarIconSize5 = DoubleToken('fortal.avatar.icon-size.5');
+  static const avatarIconSize6 = DoubleToken('fortal.avatar.icon-size.6');
+  static const avatarIconSize7 = DoubleToken('fortal.avatar.icon-size.7');
+  static const avatarIconSize8 = DoubleToken('fortal.avatar.icon-size.8');
+  static const avatarIconSize9 = DoubleToken('fortal.avatar.icon-size.9');
+
   /// Badge measurements that are fractional spacing expressions upstream.
   static const badgePaddingX1 = DoubleToken('fortal.badge.padding-x.1');
   static const badgePaddingY1 = DoubleToken('fortal.badge.padding-y.1');
@@ -1024,6 +1038,15 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.avatarSize7: 96.0 * scaling,
     FortalTokens.avatarSize8: 128.0 * scaling,
     FortalTokens.avatarSize9: 160.0 * scaling,
+    FortalTokens.avatarIconSize1: 12.0 * scaling,
+    FortalTokens.avatarIconSize2: 16.0 * scaling,
+    FortalTokens.avatarIconSize3: 20.0 * scaling,
+    FortalTokens.avatarIconSize4: 24.0 * scaling,
+    FortalTokens.avatarIconSize5: 32.0 * scaling,
+    FortalTokens.avatarIconSize6: 40.0 * scaling,
+    FortalTokens.avatarIconSize7: 48.0 * scaling,
+    FortalTokens.avatarIconSize8: 64.0 * scaling,
+    FortalTokens.avatarIconSize9: 80.0 * scaling,
     FortalTokens.badgePaddingX1: 6.0 * scaling,
     FortalTokens.badgePaddingY1: 2.0 * scaling,
     FortalTokens.badgePaddingX3: 10.0 * scaling,

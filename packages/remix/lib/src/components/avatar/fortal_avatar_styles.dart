@@ -60,11 +60,7 @@ RemixAvatarStyler _fortalAvatarBaseStyler(
           style: fallbackText.mix(),
         ).fontWeight(FortalTokens.fontWeightMedium()),
       )
-      .icon(
-        .size(
-          _fortalAvatarDimension(size) * 0.5,
-        ).color(FortalTokens.accentA11()),
-      )
+      .icon(.size(_fortalAvatarIconSize(size)).color(FortalTokens.accentA11()))
       .square(_fortalAvatarDimension(size))
       .borderRadiusAll(_fortalAvatarRadius(size));
 }
@@ -79,6 +75,18 @@ double _fortalAvatarDimension(FortalAvatarSize size) => switch (size) {
   .size7 => FortalTokens.avatarSize7(),
   .size8 => FortalTokens.avatarSize8(),
   .size9 => FortalTokens.avatarSize9(),
+};
+
+double _fortalAvatarIconSize(FortalAvatarSize size) => switch (size) {
+  .size1 => FortalTokens.avatarIconSize1(),
+  .size2 => FortalTokens.avatarIconSize2(),
+  .size3 => FortalTokens.avatarIconSize3(),
+  .size4 => FortalTokens.avatarIconSize4(),
+  .size5 => FortalTokens.avatarIconSize5(),
+  .size6 => FortalTokens.avatarIconSize6(),
+  .size7 => FortalTokens.avatarIconSize7(),
+  .size8 => FortalTokens.avatarIconSize8(),
+  .size9 => FortalTokens.avatarIconSize9(),
 };
 
 Radius _fortalAvatarRadius(FortalAvatarSize size) => switch (size) {

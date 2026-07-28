@@ -11,7 +11,7 @@ void main() {
   });
 
   group('Fortal Avatar geometry', () {
-    for (final (size, dimension, radius) in const [
+    const metrics = [
       (FortalAvatarSize.size1, 24.0, 4.0),
       (FortalAvatarSize.size2, 32.0, 4.0),
       (FortalAvatarSize.size3, 40.0, 6.0),
@@ -21,7 +21,9 @@ void main() {
       (FortalAvatarSize.size7, 96.0, 12.0),
       (FortalAvatarSize.size8, 128.0, 16.0),
       (FortalAvatarSize.size9, 160.0, 16.0),
-    ]) {
+    ];
+
+    for (final (size, dimension, radius) in metrics) {
       testWidgets('${size.name} matches the pinned dimension and radius', (
         tester,
       ) async {
@@ -44,6 +46,70 @@ void main() {
         expect(spec.label.spec.style!.fontWeight, FontWeight.w500);
       });
     }
+
+    for (final (scaling, factor) in const [
+      (FortalScaling.percent100, 1.0),
+      (FortalScaling.percent110, 1.1),
+    ]) {
+      testWidgets('icon sizes resolve before ${scaling.name} scaling', (
+        tester,
+      ) async {
+        for (final (size, dimension, _) in metrics) {
+          final spec = await _resolve(
+            tester,
+            fortalAvatarStyle(size: size, fallbackLength: 1),
+            scaling: scaling,
+          );
+
+          expect(
+            spec.icon.spec.size,
+            closeTo(dimension * factor * 0.5, 1e-9),
+            reason: '${size.name} must resolve to half its avatar dimension',
+          );
+        }
+      });
+    }
+
+    testWidgets('default and builder icon paths share valid geometry', (
+      tester,
+    ) async {
+      for (final (size, dimension, _) in metrics) {
+        await tester.pumpWidget(
+          FortalScope(
+            brightness: .light,
+            child: MaterialApp(
+              home: FortalAvatar(size: size, icon: Icons.person),
+            ),
+          ),
+        );
+
+        expect(tester.takeException(), isNull, reason: size.name);
+        expect(
+          tester.widget<Icon>(find.byIcon(Icons.person)).size,
+          dimension * 0.5,
+        );
+
+        double? builderSize;
+        await tester.pumpWidget(
+          FortalScope(
+            brightness: .light,
+            child: MaterialApp(
+              home: FortalAvatar(
+                size: size,
+                icon: Icons.person,
+                iconBuilder: (context, spec, icon) {
+                  builderSize = spec.size;
+                  return const SizedBox.shrink();
+                },
+              ),
+            ),
+          ),
+        );
+
+        expect(tester.takeException(), isNull, reason: size.name);
+        expect(builderSize, dimension * 0.5, reason: size.name);
+      }
+    });
 
     testWidgets('explicit pixel sizes and type scale with the theme', (
       tester,
