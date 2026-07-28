@@ -101,12 +101,22 @@ class RemixToggle extends StatelessWidget {
           styleSpec: styleSpec,
           controller: NakedToggleState.controllerOf(context),
           builder: (context, spec) {
-            return RowBox(
-              styleSpec: spec.container,
-              children: [
-                if (icon != null) StyledIcon(icon: icon, styleSpec: spec.icon),
-                if (label != null) StyledText(label!, styleSpec: spec.label),
-              ],
+            return LayoutBuilder(
+              builder: (context, constraints) => RowBox(
+                styleSpec: spec.container,
+                children: [
+                  if (icon != null)
+                    StyledIcon(icon: icon, styleSpec: spec.icon),
+                  if (label != null)
+                    if (constraints.hasBoundedWidth)
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: StyledText(label!, styleSpec: spec.label),
+                      )
+                    else
+                      StyledText(label!, styleSpec: spec.label),
+                ],
+              ),
             );
           },
         );

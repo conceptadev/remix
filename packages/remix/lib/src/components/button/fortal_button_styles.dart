@@ -65,7 +65,7 @@ ButtonStyler _fortalButtonBaseStyler(FortalButtonVariant variant, int size) {
         .marginOnly(horizontal: ghost.marginX, vertical: ghost.marginY);
   } else {
     style = style
-        .height(metrics.height)
+        .minHeight(metrics.height)
         .paddingX(metrics.paddingX)
         .icon(.opacity(0.9));
   }

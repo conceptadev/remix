@@ -425,6 +425,92 @@ void main() {
           }
         }
       });
+
+      testWidgets('wraps a complete label at 200% in 200 logical pixels', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+
+        await tester.pumpRemixApp(
+          MediaQuery(
+            data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+            child: SizedBox(
+              width: 200,
+              child: FortalToggle(
+                selected: false,
+                label: 'Workspace Write',
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(
+          tester.getSize(find.byType(RowBox)).width,
+          lessThanOrEqualTo(200),
+        );
+        expect(
+          tester.getSemantics(find.byType(RemixToggle)).label,
+          'Workspace Write',
+        );
+        semantics.dispose();
+      });
+
+      testWidgets('preserves normal label geometry and icon-only sizing', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          FortalToggle(selected: false, label: 'Bold', onChanged: (_) {}),
+        );
+        await tester.pumpAndSettle();
+
+        final rowSize = tester.getSize(find.byType(RowBox));
+        final labelSize = tester.getSize(find.text('Bold'));
+        expect(rowSize.width, closeTo(labelSize.width + 24, 0.01));
+        expect(rowSize.height, closeTo(labelSize.height + 16, 0.01));
+
+        final iconOnlySizes = <Size>[];
+        for (final scaler in const [
+          TextScaler.noScaling,
+          TextScaler.linear(2),
+        ]) {
+          await tester.pumpRemixApp(
+            MediaQuery(
+              data: MediaQueryData(textScaler: scaler),
+              child: FortalToggle(
+                selected: false,
+                icon: Icons.format_bold,
+                onChanged: (_) {},
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          iconOnlySizes.add(tester.getSize(find.byType(RowBox)));
+        }
+
+        expect(iconOnlySizes[1], iconOnlySizes[0]);
+      });
+
+      testWidgets('keeps labels intrinsic under unbounded width', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: FortalToggle(
+              selected: false,
+              label: 'Workspace Write',
+              onChanged: (_) {},
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(find.byType(Flexible), findsNothing);
+      });
     });
 
     group('Key Parameter', () {
