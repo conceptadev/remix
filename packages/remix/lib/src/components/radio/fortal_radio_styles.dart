@@ -262,7 +262,6 @@ RemixBoxEffectLayerMix _fortalRadioLayer({
   shadowToken: shadowToken,
 );
 
-/// Fortal-themed preset for [RemixRadio].
 /// Typed selection scope for a set of [FortalRadio] widgets.
 class FortalRadioGroup<T> extends StatelessWidget {
   const FortalRadioGroup({
