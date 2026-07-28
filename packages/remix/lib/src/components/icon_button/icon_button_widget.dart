@@ -66,7 +66,7 @@ class RemixIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NakedButton(
+    final button = NakedButton(
       onPressed: _isEnabled ? onPressed : null,
       onLongPress: _isEnabled ? onLongPress : null,
       enabled: _isEnabled,
@@ -102,23 +102,19 @@ class RemixIconButton extends StatelessWidget {
                 : loadingBuilder!(context, spinnerSpec),
           );
 
-          return MergeSemantics(
-            child: Semantics(
-              excludeSemantics: excludeSemantics,
-              liveRegion: loading,
-              label: semanticLabel ?? 'Icon Button',
-              hint: semanticHint,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  button,
-                  if (loading) Positioned.fill(child: Center(child: spinner)),
-                ],
-              ),
-            ),
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              button,
+              if (loading) Positioned.fill(child: Center(child: spinner)),
+            ],
           );
         },
       ),
     );
+
+    if (excludeSemantics) return button;
+
+    return Semantics(hint: semanticHint, liveRegion: loading, child: button);
   }
 }

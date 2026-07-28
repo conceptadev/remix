@@ -258,47 +258,119 @@ void main() {
     });
 
     group('Accessibility', () {
-      testWidgets('semanticLabel overrides default label', (tester) async {
-        await tester.pumpRemixApp(
-          RemixIconButton(
-            icon: Icons.add,
-            onPressed: () {},
-            semanticLabel: 'Custom Semantic Label',
-          ),
-        );
-        await tester.pumpAndSettle();
+      testWidgets('exposes one semantic owner for the button contract', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
 
-        final semantics = tester.getSemantics(find.byType(RemixIconButton));
-        expect(semantics.label, contains('Custom Semantic Label'));
-      });
-
-      testWidgets('semanticHint provides additional context', (tester) async {
         await tester.pumpRemixApp(
           RemixIconButton(
             icon: Icons.delete,
             onPressed: () {},
+            onLongPress: () {},
+            semanticLabel: 'Delete item',
             semanticHint: 'Deletes the selected item',
           ),
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixIconButton), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
+        final button = find.semantics.byLabel('Delete item');
+        expect(button, findsOne);
+        expect(
+          button.evaluate().single,
+          isSemantics(
+            label: 'Delete item',
+            hint: 'Deletes the selected item',
+            isButton: true,
+            hasEnabledState: true,
+            isEnabled: true,
+            hasTapAction: true,
+            hasLongPressAction: true,
+          ),
+        );
+        semantics.dispose();
       });
 
-      testWidgets('excludeSemantics excludes child semantics', (tester) async {
+      testWidgets('loading updates that owner without duplicating it', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+
+        await tester.pumpRemixApp(
+          RemixIconButton(
+            icon: Icons.save,
+            onPressed: () {},
+            loading: true,
+            semanticLabel: 'Save item',
+            semanticHint: 'Saves the selected item',
+          ),
+        );
+        await tester.pump();
+
+        final button = find.semantics.byLabel('Save item');
+        expect(button, findsOne);
+        expect(
+          button.evaluate().single,
+          isSemantics(
+            label: 'Save item',
+            hint: 'Saves the selected item',
+            isButton: true,
+            hasEnabledState: true,
+            isEnabled: false,
+            isLiveRegion: true,
+            hasTapAction: false,
+          ),
+        );
+        semantics.dispose();
+      });
+
+      testWidgets('default and disabled labels remain single button nodes', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+
+        await tester.pumpRemixApp(const RemixIconButton(icon: Icons.block));
+        await tester.pumpAndSettle();
+
+        final button = find.semantics.byLabel('Icon Button');
+        expect(button, findsOne);
+        expect(
+          button.evaluate().single,
+          isSemantics(
+            label: 'Icon Button',
+            isButton: true,
+            hasEnabledState: true,
+            isEnabled: false,
+            hasTapAction: false,
+          ),
+        );
+        semantics.dispose();
+      });
+
+      testWidgets('excludeSemantics hides the complete button contract', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+
         await tester.pumpRemixApp(
           RemixIconButton(
             icon: Icons.add,
             onPressed: () {},
+            semanticLabel: 'Add item',
+            semanticHint: 'Adds an item',
             excludeSemantics: true,
           ),
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixIconButton), findsOneWidget);
-        expect(find.byType(MergeSemantics), findsOneWidget);
+        expect(find.semantics.byLabel('Add item'), findsNothing);
+        expect(
+          tester.semantics.simulatedAccessibilityTraversal().where(
+            (node) => node.hint == 'Adds an item',
+          ),
+          isEmpty,
+        );
+        semantics.dispose();
       });
 
       testWidgets('renders correctly in enabled state', (tester) async {
