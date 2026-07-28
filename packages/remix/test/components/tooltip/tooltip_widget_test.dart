@@ -232,6 +232,55 @@ void main() {
     });
 
     group('Semantics', () {
+      testWidgets(
+        'open labelled tooltip keeps one interactive semantics node',
+        (tester) async {
+          final semantics = tester.ensureSemantics();
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          const label = 'Filter chats';
+
+          try {
+            await tester.pumpRemixApp(
+              RemixTooltip(
+                style: RemixTooltipStyler().waitDuration(Duration.zero),
+                tooltipSemantics: label,
+                tooltipChild: const Text(label),
+                child: RemixIconButton(
+                  key: const Key('filter-trigger'),
+                  icon: Icons.filter_list,
+                  semanticLabel: label,
+                  onPressed: () {},
+                ),
+              ),
+            );
+            await tester.pumpAndSettle();
+
+            await mouse.addPointer(location: Offset.zero);
+            await tester.pump();
+            await mouse.moveTo(
+              tester.getCenter(find.byKey(const Key('filter-trigger'))),
+            );
+            await tester.pumpAndSettle();
+
+            final nodes = tester.semantics
+                .simulatedAccessibilityTraversal()
+                .where((node) => node.getSemanticsData().label == label)
+                .toList();
+            expect(nodes, hasLength(1));
+
+            final data = nodes.single.getSemanticsData();
+            expect(data.tooltip, label);
+            expect(data.flagsCollection.isButton, isTrue);
+            expect(data.hasAction(SemanticsAction.tap), isTrue);
+          } finally {
+            await mouse.removePointer();
+            semantics.dispose();
+          }
+        },
+      );
+
       testWidgets('uses tooltip semantics label', (tester) async {
         await tester.pumpRemixApp(
           const RemixTooltip(
