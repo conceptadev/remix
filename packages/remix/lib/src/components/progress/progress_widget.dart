@@ -39,6 +39,7 @@ class RemixProgress extends StatelessWidget {
   /// percentage.
   ///
   /// Defaults to the rounded 0–100 value when [semanticsLabel] is provided.
+  /// Ignored when [semanticsLabel] is null.
   final String? semanticsValue;
 
   /// The style configuration for the progress bar.
@@ -84,7 +85,7 @@ class RemixProgress extends StatelessWidget {
       },
     );
 
-    if (semanticsLabel == null && semanticsValue == null) return progress;
+    if (semanticsLabel == null) return progress;
 
     return Semantics(
       role: SemanticsRole.progressBar,

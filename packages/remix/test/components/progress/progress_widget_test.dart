@@ -401,6 +401,23 @@ void main() {
       }
     });
 
+    testWidgets('semantic value alone remains decorative', (tester) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        await tester.pumpRemixApp(
+          const RemixProgress(value: 0.5, semanticsValue: '50'),
+        );
+        await tester.pump();
+
+        final nodes = tester.semantics.simulatedAccessibilityTraversal().where(
+          (node) => node.getSemanticsData().role == SemanticsRole.progressBar,
+        );
+        expect(nodes, isEmpty);
+      } finally {
+        semantics.dispose();
+      }
+    });
+
     testWidgets('Fortal forwards one named normalized progress node', (
       tester,
     ) async {

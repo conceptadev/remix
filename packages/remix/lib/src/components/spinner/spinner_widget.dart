@@ -33,6 +33,8 @@ class RemixSpinner extends StatelessWidget {
   final String? semanticsLabel;
 
   /// Optional status text exposed with [semanticsLabel].
+  ///
+  /// Ignored when [semanticsLabel] is null.
   final String? semanticsValue;
 
   /// The style configuration for the spinner.
@@ -49,7 +51,7 @@ class RemixSpinner extends StatelessWidget {
       builder: (context, spec) => _SpinnerSpecWidget(spec: spec),
     );
 
-    if (semanticsLabel == null && semanticsValue == null) return spinner;
+    if (semanticsLabel == null) return spinner;
 
     return Semantics(
       role: SemanticsRole.loadingSpinner,

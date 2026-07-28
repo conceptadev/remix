@@ -346,6 +346,27 @@ void main() {
         }
       });
 
+      testWidgets('semantic value alone remains decorative', (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            const RemixSpinner(semanticsValue: 'Connecting'),
+          );
+          await tester.pump();
+
+          final nodes = tester.semantics
+              .simulatedAccessibilityTraversal()
+              .where(
+                (node) =>
+                    node.getSemanticsData().role ==
+                    SemanticsRole.loadingSpinner,
+              );
+          expect(nodes, isEmpty);
+        } finally {
+          semantics.dispose();
+        }
+      });
+
       testWidgets('Fortal forwards one labelled loading status node', (
         tester,
       ) async {
