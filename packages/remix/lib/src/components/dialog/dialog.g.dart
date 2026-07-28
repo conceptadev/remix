@@ -123,6 +123,7 @@ class FortalDialog extends StatelessWidget {
     this.title,
     this.description,
     this.actions,
+    this.scrollable = false,
     this.modal = true,
     this.semanticLabel,
   });
@@ -137,6 +138,8 @@ class FortalDialog extends StatelessWidget {
 
   final List<Widget>? actions;
 
+  final bool scrollable;
+
   final bool modal;
 
   final String? semanticLabel;
@@ -150,6 +153,7 @@ class FortalDialog extends StatelessWidget {
       title: this.title,
       description: this.description,
       actions: this.actions,
+      scrollable: this.scrollable,
       modal: this.modal,
       semanticLabel: this.semanticLabel,
     );
