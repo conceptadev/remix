@@ -52,9 +52,10 @@ ButtonStyler _fortalButtonBaseStyler(FortalButtonVariant variant, int size) {
           ? FortalTokens.fontWeightRegular()
           : FortalTokens.fontWeightMedium(),
     ),
-    spinner: .size(
-      metrics.spinnerSize,
-    ).opacity(0.65).duration(const Duration(milliseconds: 800)),
+    spinner: .size(metrics.spinnerSize)
+        .opacity(0.65)
+        .leafRadius(FortalTokens.radius1())
+        .duration(const Duration(milliseconds: 800)),
   ).borderRadiusAll(metrics.radius);
 
   if (variant == .ghost) {

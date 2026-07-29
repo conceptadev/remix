@@ -131,6 +131,24 @@ void main() {
       }
     });
 
+    testWidgets('button recipes round loading-spinner leaves', (tester) async {
+      final expectedRadius = await _resolveFortal(
+        tester,
+        (context) => fortalSpinnerStyle().build(context).spec.leafRadius,
+      );
+      final button = await _resolveFortal(
+        tester,
+        (context) => fortalButtonStyle().build(context),
+      );
+      final iconButton = await _resolveFortal(
+        tester,
+        (context) => fortalIconButtonStyle().build(context),
+      );
+
+      expect(button.spec.spinner.spec.leafRadius, expectedRadius);
+      expect(iconButton.spec.spinner.spec.leafRadius, expectedRadius);
+    });
+
     testWidgets('checkbox and radio sizes resolve exact control metrics', (
       tester,
     ) async {
