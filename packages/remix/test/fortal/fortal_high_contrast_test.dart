@@ -401,6 +401,24 @@ void main() {
       );
     });
 
+    testWidgets('select item recipe exposes high contrast', (tester) async {
+      final hoveredHighContrast = await _resolveFortalStyle(
+        tester,
+        (context) =>
+            fortalSelectMenuItemStyle(highContrast: true).build(context),
+        states: {WidgetState.hovered},
+      );
+
+      expect(
+        _textColor(hoveredHighContrast.spec.text),
+        indigo.light.scale.step(1),
+      );
+      expect(
+        hoveredHighContrast.spec.icon.spec.color,
+        indigo.light.scale.step(1),
+      );
+    });
+
     testWidgets('slider variants resolve accent12 ranges', (tester) async {
       for (final variant in FortalSliderVariant.values) {
         final normal = await _resolveFortalStyle(

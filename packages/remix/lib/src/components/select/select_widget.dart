@@ -189,24 +189,25 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     );
   }
 
-  String _getDisplayLabel() {
-    if (widget.selectedValue == null) return widget.trigger.placeholder;
+  RemixSelectItem<T>? _findSelectedItem() {
+    final selectedValue = widget.selectedValue;
+    if (selectedValue == null) return null;
 
-    // Find the selected item and get its label
+    RemixSelectItem<T>? selectedItem;
     for (final item in widget.items) {
-      if (item.value == widget.selectedValue) {
-        return item.label;
+      if (item.value == selectedValue) {
+        selectedItem = item;
+        break;
       }
     }
 
     assert(
-      widget.items.any((item) => item.value == widget.selectedValue),
-      'RemixSelect: selectedValue "${widget.selectedValue}" not found in items. '
+      selectedItem != null,
+      'RemixSelect: selectedValue "$selectedValue" not found in items. '
       'Ensure selectedValue matches one of the item values.',
     );
 
-    // Gracefully degrade in release mode - show placeholder
-    return widget.trigger.placeholder;
+    return selectedItem;
   }
 
   void _handleChanged(T? value) => widget.onChanged?.call(value);
@@ -220,6 +221,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   @override
   Widget build(BuildContext context) {
     final style = _buildStyle();
+    final selectedItem = _findSelectedItem();
 
     return NakedSelect<T>(
       overlayBuilder: (context, info) {
@@ -254,8 +256,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
             return _RemixSelectTriggerWidget(
               trigger: widget.trigger,
-              displayLabel: _getDisplayLabel(),
-              isPlaceholder: widget.selectedValue == null,
+              displayLabel: selectedItem?.label ?? widget.trigger.placeholder,
+              isPlaceholder: selectedItem == null,
               isOpen: state.isOpen,
               styleSpec: triggerSpec,
             );

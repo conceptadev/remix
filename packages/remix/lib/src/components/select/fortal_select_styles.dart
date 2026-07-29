@@ -23,7 +23,8 @@ RemixSelectStyler fortalSelectStyle({
 RemixSelectMenuItemStyler fortalSelectMenuItemStyle({
   FortalSelectVariant variant = .surface,
   FortalSelectSize size = .size2,
-}) => _fortalSelectItemStyler(variant, size);
+  bool highContrast = false,
+}) => _fortalSelectItemStyler(variant, size, highContrast: highContrast);
 
 RemixSelectTriggerStyler _fortalSelectTriggerStyler(
   FortalSelectVariant variant,

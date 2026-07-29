@@ -101,16 +101,14 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        final chevron = find.byKey(
-          const ValueKey('fortal-select-chevron'),
-        );
+        final chevron = find.byKey(const ValueKey('fortal-select-chevron'));
         final transformFinder = find.ancestor(
           of: chevron,
           matching: find.byType(Transform),
         );
-        final closedTransform = tester.widget<Transform>(
-          transformFinder.first,
-        ).transform;
+        final closedTransform = tester
+            .widget<Transform>(transformFinder.first)
+            .transform;
 
         await tester.tap(find.byType(RemixSelect<String>));
         await tester.pumpAndSettle();
