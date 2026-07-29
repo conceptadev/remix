@@ -39,5 +39,3 @@ RemixDividerStyler _fortalDividerSizeStyler(
         )
       : style.height(length);
 }
-
-/// Fortal-themed preset for [RemixDivider].

@@ -288,7 +288,7 @@ typedef _$RemixMenuItemSpecMethods = _$RemixMenuItemSpec; // ignore: unused_elem
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal recipe for the established data-driven menu.
+/// Fortal menu content with Radix-owned size, variant, and contrast behavior.
 class FortalMenu<T> extends StatelessWidget {
   const FortalMenu({
     super.key,

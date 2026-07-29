@@ -104,7 +104,3 @@ RemixTabStyler fortalTabStyle({
             ),
       );
 }
-
-/// Fortal-themed preset for [RemixTabBar].
-/// Fortal-themed preset for [RemixTabView].
-/// Fortal-themed preset for [RemixTab].

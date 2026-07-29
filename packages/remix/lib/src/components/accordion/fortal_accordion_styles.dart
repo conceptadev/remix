@@ -143,5 +143,3 @@ RemixAccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
     ),
   };
 }
-
-/// Fortal-themed preset for [RemixAccordion].

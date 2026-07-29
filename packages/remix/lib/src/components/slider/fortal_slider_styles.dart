@@ -6,7 +6,7 @@ enum FortalSliderSize { size1, size2, size3 }
 /// Radix Themes slider variants.
 enum FortalSliderVariant { classic, surface, soft }
 
-/// Fortal recipe for a multi-thumb slider.
+/// Fortal slider with Radix-owned size, variant, and component overrides.
 @MixWidget(target: RemixSlider.new)
 RemixSliderStyler fortalSliderStyle({
   FortalSliderVariant variant = .surface,
@@ -342,5 +342,3 @@ _FortalSliderMetrics _fortalSliderMetrics(FortalSliderSize size) =>
         trackRadius: FortalTokens.sliderTrackRadius3(),
       ),
     };
-
-/// Fortal slider with Radix-owned size, variant, and component overrides.

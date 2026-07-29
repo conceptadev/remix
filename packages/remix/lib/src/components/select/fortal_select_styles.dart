@@ -6,7 +6,7 @@ enum FortalSelectSize { size1, size2, size3 }
 /// Radix Themes Select variants.
 enum FortalSelectVariant { surface, soft, ghost }
 
-/// Fortal recipe for a complete Select.
+/// Fortal-themed Select with Radix-owned trigger and content configuration.
 @MixWidget(target: RemixSelect.new)
 RemixSelectStyler fortalSelectStyle({
   FortalSelectVariant variant = .surface,
@@ -321,5 +321,3 @@ _fortalSelectContentMetrics(FortalSelectSize size) => switch (size) {
     itemText: FortalTokens.text3,
   ),
 };
-
-/// Fortal-themed Select with Radix-owned trigger and content configuration.

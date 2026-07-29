@@ -98,7 +98,7 @@ typedef _$RemixBadgeSpecMethods = _$RemixBadgeSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal recipe for [RemixBadge].
+/// Fortal-themed Badge with the Radix size, variant, and override contract.
 class FortalBadge extends StatelessWidget {
   const FortalBadge({
     super.key,

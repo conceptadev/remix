@@ -6,7 +6,7 @@ enum FortalCalloutSize { size1, size2, size3 }
 /// Radix Themes Callout variants.
 enum FortalCalloutVariant { soft, surface, outline }
 
-/// Fortal recipe for [RemixCallout].
+/// Fortal-themed Callout with the Radix size, variant, and override contract.
 @MixWidget(target: RemixCallout.new)
 RemixCalloutStyler fortalCalloutStyle({
   FortalCalloutVariant variant = .soft,
@@ -90,5 +90,3 @@ Radius _fortalCalloutRadius(FortalCalloutSize size) => switch (size) {
   .size2 => FortalTokens.radius4(),
   .size3 => FortalTokens.radius5(),
 };
-
-/// Fortal-themed Callout with the Radix size, variant, and override contract.

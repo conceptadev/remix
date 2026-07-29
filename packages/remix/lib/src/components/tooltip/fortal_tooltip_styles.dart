@@ -14,5 +14,3 @@ RemixTooltipStyler fortalTooltipStyle() {
       .label(.color(FortalTokens.gray1()))
       .backgroundColor(FortalTokens.gray12());
 }
-
-/// Fortal-themed preset for [RemixTooltip].

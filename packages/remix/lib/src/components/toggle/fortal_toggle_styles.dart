@@ -135,5 +135,3 @@ RemixToggleStyler _fortalToggleSizeStyler(FortalToggleSize size) {
     ),
   };
 }
-
-/// Fortal-themed preset for [RemixToggle].

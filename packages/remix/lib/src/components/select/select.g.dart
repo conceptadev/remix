@@ -400,7 +400,7 @@ typedef _$RemixSelectMenuItemSpecMethods = _$RemixSelectMenuItemSpec; // ignore:
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal recipe for a complete Select.
+/// Fortal-themed Select with Radix-owned trigger and content configuration.
 class FortalSelect<T> extends StatelessWidget {
   const FortalSelect({
     super.key,

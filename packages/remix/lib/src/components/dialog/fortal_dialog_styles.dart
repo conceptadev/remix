@@ -53,5 +53,3 @@ RemixDialogStyler fortalDialogStyle({
         RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
       );
 }
-
-/// Fortal-themed preset for [RemixDialog].

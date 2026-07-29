@@ -94,7 +94,7 @@ typedef _$RemixAvatarSpecMethods = _$RemixAvatarSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal recipe for [RemixAvatar].
+/// Fortal-themed Avatar with the Radix size, variant, and override contract.
 ///
 /// [fallbackLength] selects the pinned one- or two-character fallback
 /// typography. Pass `2` when [RemixAvatar.label] contains two initials.

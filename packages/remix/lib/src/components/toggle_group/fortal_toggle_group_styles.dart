@@ -129,5 +129,3 @@ RemixToggleGroupStyler _fortalToggleGroupSizeStyler(
     ),
   };
 }
-
-/// Fortal-themed segmented-control preset for [RemixToggleGroup].

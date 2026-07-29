@@ -32,5 +32,3 @@ RemixPopoverStyler fortalPopoverStyle({
         RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
       );
 }
-
-/// Fortal-themed preset for [RemixPopover].

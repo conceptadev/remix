@@ -120,7 +120,7 @@ typedef _$ButtonSpecMethods = _$ButtonSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal recipe for [RemixButton].
+/// Fortal-themed Button with the Radix size, variant, and override contract.
 class FortalButton extends StatelessWidget {
   const FortalButton({
     super.key,

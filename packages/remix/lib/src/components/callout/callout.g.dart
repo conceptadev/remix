@@ -103,7 +103,7 @@ typedef _$RemixCalloutSpecMethods = _$RemixCalloutSpec; // ignore: unused_elemen
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal recipe for [RemixCallout].
+/// Fortal-themed Callout with the Radix size, variant, and override contract.
 class FortalCallout extends StatelessWidget {
   const FortalCallout({
     super.key,

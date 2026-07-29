@@ -138,5 +138,3 @@ RemixBoxEffectLayerMix _fortalProgressLayer({
   List<RemixBoxShadowMix>? shadows,
   RemixBoxShadowListToken? shadowToken,
 }) => RemixBoxEffectLayerMix(shadows: shadows, shadowToken: shadowToken);
-
-/// Fortal-themed preset for [RemixProgress].

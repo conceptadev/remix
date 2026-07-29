@@ -6,7 +6,7 @@ enum FortalBadgeSize { size1, size2, size3 }
 /// Radix Themes Badge variants.
 enum FortalBadgeVariant { solid, soft, surface, outline }
 
-/// Fortal recipe for [RemixBadge].
+/// Fortal-themed Badge with the Radix size, variant, and override contract.
 @MixWidget(target: RemixBadge.new)
 RemixBadgeStyler fortalBadgeStyle({
   FortalBadgeVariant variant = .soft,
@@ -117,5 +117,3 @@ RemixBoxEffectLayerMix _fortalBadgeInsetStroke(Color color) =>
         ),
       ],
     );
-
-/// Fortal-themed Badge with the Radix size, variant, and override contract.

@@ -291,5 +291,3 @@ RemixBoxEffectLayerMix _fortalTextFieldLayer({
   shadows: shadows,
   shadowToken: shadowToken,
 );
-
-/// Fortal-themed preset for [RemixTextField].

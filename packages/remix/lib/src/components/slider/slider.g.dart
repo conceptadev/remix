@@ -156,7 +156,7 @@ typedef _$RemixSliderSpecMethods = _$RemixSliderSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal recipe for a multi-thumb slider.
+/// Fortal slider with Radix-owned size, variant, and component overrides.
 class FortalSlider extends StatelessWidget {
   const FortalSlider({
     super.key,

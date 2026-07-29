@@ -6,7 +6,7 @@ enum FortalCardSize { size1, size2, size3, size4, size5 }
 /// Radix Themes Card variants.
 enum FortalCardVariant { surface, classic, ghost }
 
-/// Fortal recipe for [RemixCard].
+/// Fortal-themed Card with the Radix size and variant contract.
 @MixWidget(target: RemixCard.new)
 RemixCardStyler fortalCardStyle({
   FortalCardVariant variant = .surface,
@@ -216,5 +216,3 @@ RemixBoxEffectLayerMix _fortalCardSurfaceStroke(Color color) =>
         RemixBoxShadowMix(color: color, spreadRadius: 1, shapeInset: 1),
       ],
     );
-
-/// Fortal-themed Card with the Radix size and variant contract.

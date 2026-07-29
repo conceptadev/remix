@@ -6,7 +6,7 @@ enum FortalButtonSize { size1, size2, size3, size4 }
 /// Radix Themes Button variants.
 enum FortalButtonVariant { classic, solid, soft, surface, outline, ghost }
 
-/// Fortal recipe for [RemixButton].
+/// Fortal-themed Button with the Radix size, variant, and override contract.
 @MixWidget(target: RemixButton.new)
 ButtonStyler fortalButtonStyle({
   FortalButtonVariant variant = .solid,
@@ -356,5 +356,3 @@ ButtonStyler _fortalButtonDisabledFill() => _fortalButtonForeground(
 
 ButtonStyler _fortalButtonForeground(ButtonStyler style, Color color) =>
     style.label(.color(color)).icon(.color(color)).spinner(.color(color));
-
-/// Fortal-themed Button with the Radix size, variant, and override contract.

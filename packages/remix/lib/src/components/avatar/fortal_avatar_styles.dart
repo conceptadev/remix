@@ -16,7 +16,7 @@ enum FortalAvatarSize {
 /// Radix Themes Avatar variants.
 enum FortalAvatarVariant { soft, solid }
 
-/// Fortal recipe for [RemixAvatar].
+/// Fortal-themed Avatar with the Radix size, variant, and override contract.
 ///
 /// [fallbackLength] selects the pinned one- or two-character fallback
 /// typography. Pass `2` when [RemixAvatar.label] contains two initials.
@@ -115,5 +115,3 @@ TextStyleToken _fortalAvatarFallbackText(
   (.size8, _) => FortalTokens.avatarFallback8,
   (.size9, _) => FortalTokens.avatarFallback9,
 };
-
-/// Fortal-themed Avatar with the Radix size, variant, and override contract.

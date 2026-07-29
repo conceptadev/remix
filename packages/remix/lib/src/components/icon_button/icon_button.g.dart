@@ -104,7 +104,7 @@ typedef _$RemixIconButtonSpecMethods = _$RemixIconButtonSpec; // ignore: unused_
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal recipe for [RemixIconButton].
+/// Fortal-themed IconButton with the Radix size, variant, and override contract.
 class FortalIconButton extends StatelessWidget {
   const FortalIconButton({
     super.key,

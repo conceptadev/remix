@@ -6,7 +6,7 @@ enum FortalMenuSize { size1, size2 }
 /// Radix Themes menu content variants.
 enum FortalMenuVariant { solid, soft }
 
-/// Fortal recipe for the established data-driven menu.
+/// Fortal menu content with Radix-owned size, variant, and contrast behavior.
 @MixWidget(target: RemixMenu.new)
 RemixMenuStyler fortalMenuStyle({
   FortalMenuVariant variant = .solid,
@@ -161,5 +161,3 @@ _FortalMenuMetrics _fortalMenuMetrics(FortalMenuSize size) => switch (size) {
     text: FortalTokens.text2,
   ),
 };
-
-/// Fortal menu content with Radix-owned size, variant, and contrast behavior.

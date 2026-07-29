@@ -342,5 +342,3 @@ RemixBoxEffectLayerMix _fortalSwitchLayer({
   List<RemixBoxShadowMix>? shadows,
   RemixBoxShadowListToken? shadowToken,
 }) => RemixBoxEffectLayerMix(shadows: shadows, shadowToken: shadowToken);
-
-/// Fortal-themed preset for [RemixSwitch].

@@ -93,7 +93,7 @@ typedef _$RemixCardSpecMethods = _$RemixCardSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal recipe for [RemixCard].
+/// Fortal-themed Card with the Radix size and variant contract.
 class FortalCard extends StatelessWidget {
   const FortalCard({
     super.key,
