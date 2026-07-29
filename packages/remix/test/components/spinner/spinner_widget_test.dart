@@ -44,6 +44,97 @@ void main() {
       });
     });
 
+    group('Painter selection', () {
+      Finder spinnerPaint() => find.descendant(
+        of: find.byType(RemixSpinner),
+        matching: find.byType(CustomPaint),
+      );
+
+      testWidgets('keeps the base spinner on the arc painter', (tester) async {
+        await tester.pumpRemixApp(const RemixSpinner());
+        await tester.pump();
+
+        final customPaint = tester.widget<CustomPaint>(spinnerPaint());
+
+        expect(customPaint.painter, isA<RemixSpinnerPainter>());
+      });
+
+      testWidgets('uses rounded fading leaves for the Fortal spinner', (
+        tester,
+      ) async {
+        final expectedRadius = await _resolveFortal(
+          tester,
+          (context) => fortalSpinnerStyle().resolve(context).spec.leafRadius!,
+        );
+
+        await tester.pumpRemixApp(const FortalSpinner());
+        await tester.pump();
+
+        final customPaint = tester.widget<CustomPaint>(spinnerPaint());
+        final painter = customPaint.painter;
+
+        expect(painter, isA<RemixLeafSpinnerPainter>());
+        final leafPainter = painter! as RemixLeafSpinnerPainter;
+        expect(leafPainter.opacity, 0.65);
+        expect(leafPainter.leafRadius, expectedRadius);
+      });
+
+      testWidgets('opts into the leaf painter when a leaf field is set', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixSpinner(style: RemixSpinnerStyler(opacity: 0.5)),
+        );
+        await tester.pump();
+
+        final customPaint = tester.widget<CustomPaint>(spinnerPaint());
+
+        expect(customPaint.painter, isA<RemixLeafSpinnerPainter>());
+      });
+
+      testWidgets('keeps legacy-only styling on the arc painter', (
+        tester,
+      ) async {
+        const indicatorColor = Color(0xFF123456);
+        await tester.pumpRemixApp(
+          RemixSpinner(
+            style: RemixSpinnerStyler(
+              indicatorColor: indicatorColor,
+              strokeWidth: 3,
+            ),
+          ),
+        );
+        await tester.pump();
+
+        final customPaint = tester.widget<CustomPaint>(spinnerPaint());
+        final painter = customPaint.painter;
+
+        expect(painter, isA<RemixSpinnerPainter>());
+        final arcPainter = painter! as RemixSpinnerPainter;
+        expect(arcPainter.indicatorColor, indicatorColor);
+        expect(arcPainter.strokeWidth, 3);
+      });
+
+      testWidgets('inherits leaf color from the nearest IconTheme', (
+        tester,
+      ) async {
+        const iconColor = Color(0xFF654321);
+        await tester.pumpRemixApp(
+          IconTheme(
+            data: const IconThemeData(color: iconColor),
+            child: RemixSpinner(style: RemixSpinnerStyler(opacity: 0.5)),
+          ),
+        );
+        await tester.pump();
+
+        final customPaint = tester.widget<CustomPaint>(spinnerPaint());
+        final painter = customPaint.painter;
+
+        expect(painter, isA<RemixLeafSpinnerPainter>());
+        expect((painter! as RemixLeafSpinnerPainter).color, iconColor);
+      });
+    });
+
     group('Styling', () {
       testWidgets('applies custom size', (tester) async {
         final customStyle = RemixSpinnerStyler().size(48.0);
@@ -412,4 +503,20 @@ void main() {
       });
     });
   });
+}
+
+Future<T> _resolveFortal<T>(
+  WidgetTester tester,
+  T Function(BuildContext context) resolve,
+) async {
+  late T result;
+  await tester.pumpRemixApp(
+    Builder(
+      builder: (context) {
+        result = resolve(context);
+        return const SizedBox.shrink();
+      },
+    ),
+  );
+  return result;
 }

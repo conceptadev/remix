@@ -112,13 +112,27 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
     final strokeWidth = spec.strokeWidth ?? 1.5;
     final size = spec.size ?? 24;
 
-    final painter = RemixSpinnerPainter(
-      animation: controller,
-      strokeWidth: strokeWidth,
-      indicatorColor: indicatorColor,
-      trackColor: trackColor,
-      trackStrokeWidth: spec.trackStrokeWidth,
-    );
+    // Leaf-only fields opt into the Radix leaf painter; duration still applies
+    // to both painters, and indicatorColor is deliberately a no-op in leaf mode.
+    final useLeafPainter =
+        spec.color != null || spec.opacity != null || spec.leafRadius != null;
+    final painter = useLeafPainter
+        ? RemixLeafSpinnerPainter(
+            animation: controller,
+            color:
+                spec.color ??
+                IconTheme.of(context).color ??
+                const Color(0xFF000000),
+            opacity: spec.opacity ?? 1,
+            leafRadius: spec.leafRadius ?? Radius.zero,
+          )
+        : RemixSpinnerPainter(
+            animation: controller,
+            strokeWidth: strokeWidth,
+            indicatorColor: indicatorColor,
+            trackColor: trackColor,
+            trackStrokeWidth: spec.trackStrokeWidth,
+          );
 
     return AnimatedBuilder(
       animation: controller,

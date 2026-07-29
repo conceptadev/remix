@@ -138,7 +138,7 @@ typedef _$RemixSpinnerSpecMethods = _$RemixSpinnerSpec; // ignore: unused_elemen
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixSpinner].
+/// Fortal-themed preset for [RemixSpinner] using the inherited foreground color.
 class FortalSpinner extends StatelessWidget {
   const FortalSpinner({
     super.key,
