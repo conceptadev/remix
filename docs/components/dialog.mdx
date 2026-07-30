@@ -65,26 +65,31 @@ configuration is needed.
 
 <CodeGroup title="Destructive alert" defaultLanguage="dart">
 ```dart
-showRemixAlertDialog<void>(
-  context: context,
-  semanticLabel: 'Delete project confirmation',
-  builder: (context) => Center(
-    child: FortalDialog(
-      title: 'Delete project?',
-      description: 'This permanently deletes the project and all of its data.',
-      actions: [
-        FortalButton.ghost(
-          label: 'Cancel',
-          onPressed: () => Navigator.pop(context),
-        ),
-        FortalButton(
-          label: 'Delete project',
-          onPressed: () => Navigator.pop(context),
-        ),
-      ],
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+Future<void> showDeleteDialog(BuildContext context) async {
+  await showRemixAlertDialog<void>(
+    context: context,
+    semanticLabel: 'Delete project confirmation',
+    builder: (context) => Center(
+      child: FortalDialog(
+        title: 'Delete project?',
+        description: 'This permanently deletes the project and all of its data.',
+        actions: [
+          FortalButton.ghost(
+            label: 'Cancel',
+            onPressed: () => Navigator.pop(context),
+          ),
+          FortalButton(
+            label: 'Delete project',
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
+      ),
     ),
-  ),
-);
+  );
+}
 ```
 </CodeGroup>
 
@@ -176,7 +181,10 @@ the alert with a `null` result.
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixDialog({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixDialog remixDialogConstructor({
   Key? key,
   Widget? child,
   String? title,
@@ -186,7 +194,7 @@ const RemixDialog({
   String? semanticLabel,
   RemixDialogStyler style = const RemixDialogStyler.create(),
   RemixDialogSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

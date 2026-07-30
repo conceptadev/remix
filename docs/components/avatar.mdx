@@ -117,7 +117,10 @@ class FortalAvatarExample extends StatelessWidget {
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixAvatar({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixAvatar remixAvatarConstructor({
   Key? key,
   ImageProvider? backgroundImage,
   ImageProvider? foregroundImage,
@@ -130,7 +133,7 @@ const RemixAvatar({
   RemixAvatarIconBuilder? iconBuilder,
   RemixAvatarStyler style = const RemixAvatarStyler.create(),
   RemixAvatarSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

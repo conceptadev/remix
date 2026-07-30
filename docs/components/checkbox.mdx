@@ -105,7 +105,10 @@ class _FortalCheckboxExampleState extends State<FortalCheckboxExample> {
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixCheckbox({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixCheckbox remixCheckboxConstructor({
   Key? key,
   required bool? selected,
   ValueChanged<bool?>? onChanged,
@@ -121,7 +124,7 @@ const RemixCheckbox({
   MouseCursor mouseCursor = SystemMouseCursors.click,
   RemixCheckboxStyler style = const RemixCheckboxStyler.create(),
   RemixCheckboxSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

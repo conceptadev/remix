@@ -23,6 +23,9 @@ Flutter developers commonly face these challenges when building custom UIs:
 ### The Solution
 
 ```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
 final style = ButtonStyler()
   .paddingX(16)
   .paddingY(10)
@@ -31,7 +34,7 @@ final style = ButtonStyler()
   .animate(AnimationConfig.spring(300.ms))
   .onHovered(.color(Colors.blue.shade700));
 
-RemixButton(
+final styledButton = RemixButton(
   onPressed: () {},
   label: 'Click me',
   style: style,
@@ -40,6 +43,9 @@ RemixButton(
 
 Or using callable styles:
 ```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
 final button = ButtonStyler()
   .paddingX(16)
   .paddingY(10)
@@ -48,7 +54,7 @@ final button = ButtonStyler()
   .onHovered(.color(Colors.blue.shade700))
   .animate(AnimationConfig.spring(300.ms));
 
-button(
+final fluentButton = button(
   label: 'Click me',
   onPressed: () {},
 ); // return RemixButton Widget.
@@ -200,6 +206,9 @@ Fortal widgets call the matching `fortal*Style` recipe internally. Use those
 recipes directly when you need a custom Remix widget composition:
 
 ```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
 final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
   .borderRadiusAll(const Radius.circular(8))
   .paddingX(32)
@@ -220,6 +229,8 @@ Fortal styles are built on a robust token system that includes:
 You can use these tokens directly in your custom styles:
 
 ```dart
+import 'package:remix/remix.dart';
+
 final style = ButtonStyler()
   .color(FortalTokens.accent9())
   .paddingAll(FortalTokens.space4())

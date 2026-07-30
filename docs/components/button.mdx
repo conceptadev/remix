@@ -155,7 +155,10 @@ class FortalButtonExample extends StatelessWidget {
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixButton({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixButton remixButtonConstructor({
   Key? key,
   required String label,
   IconData? leadingIcon,
@@ -177,7 +180,7 @@ const RemixButton({
   MouseCursor mouseCursor = SystemMouseCursors.click,
   ButtonStyler style = const ButtonStyler.create(),
   RemixButtonSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

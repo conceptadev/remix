@@ -174,8 +174,12 @@ class _FortalTabsExampleState extends State<FortalTabsExample> {
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+import 'package:remix/remix.dart';
+
 // Tabs Container
-const RemixTabs({
+RemixTabs remixTabsConstructor({
   Key? key,
   required Widget child,
   NakedTabController? controller,
@@ -184,18 +188,18 @@ const RemixTabs({
   Axis orientation = Axis.horizontal,
   bool enabled = true,
   VoidCallback? onEscapePressed,
-})
+}) => throw UnimplementedError();
 
 // Tab Bar
-const RemixTabBar({
+RemixTabBar remixTabBarConstructor({
   Key? key,
   required Widget child,
   RemixTabBarStyler style = const RemixTabBarStyler.create(),
   RemixTabBarSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 
 // Individual Tab
-const RemixTab({
+RemixTab remixTabConstructor({
   Key? key,
   required String tabId,
   Widget? child,
@@ -213,16 +217,16 @@ const RemixTab({
   String? semanticLabel,
   RemixTabStyler style = const RemixTabStyler.create(),
   RemixTabSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 
 // Tab View
-const RemixTabView({
+RemixTabView remixTabViewConstructor({
   Key? key,
   required String tabId,
   required Widget child,
   RemixTabViewStyler style = const RemixTabViewStyler.create(),
   RemixTabViewSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

@@ -44,6 +44,7 @@ final _iconButtonInvocation = RegExp(
 final _remixImport = RegExp(
   r'''import\s+['"]package:remix/remix\.dart['"]\s*;''',
 );
+final _remixApiReference = RegExp(r'\b(?:Remix|Fortal)[A-Z]\w*');
 
 const _exampleSourceDirectories = <String>[
   'packages/demo/lib',
@@ -136,7 +137,8 @@ Future<void> main() async {
     return;
   }
 
-  final snippets = _extractAnalyzableSnippets(docs, workspaceRoot, failures);
+  final extraction = _extractAnalyzableSnippets(docs, workspaceRoot, failures);
+  final snippets = extraction.snippets;
   if (failures.isNotEmpty) {
     _finish(failures);
     return;
@@ -180,6 +182,7 @@ Future<void> main() async {
   stdout.writeln(
     'Documentation validation passed: ${docs.length} MDX files, '
     '${snippets.length} analyzable Dart examples, and '
+    '${extraction.skipped} skipped Dart examples, plus '
     '$exampleSourceCount app/example Dart sources, plus '
     '$consumerDocumentationCount consumer-facing Markdown files.',
   );
@@ -445,12 +448,14 @@ void _checkFortalScopeTopology(Directory workspaceRoot, List<String> failures) {
   }
 }
 
-List<({String path, String source})> _extractAnalyzableSnippets(
+({List<({String path, String source})> snippets, int skipped})
+_extractAnalyzableSnippets(
   List<File> docs,
   Directory workspaceRoot,
   List<String> failures,
 ) {
   final snippets = <({String path, String source})>[];
+  var skipped = 0;
   final fence = RegExp(r'```dart\s*\n([\s\S]*?)\n```');
   for (final file in docs) {
     final relativePath = _relativePath(workspaceRoot, file);
@@ -458,7 +463,16 @@ List<({String path, String source})> _extractAnalyzableSnippets(
     for (final (index, match) in fence.allMatches(source).indexed) {
       final snippet = match.group(1)!;
       final importsRemix = _remixImport.hasMatch(snippet);
-      if (!importsRemix) continue;
+      if (!importsRemix) {
+        skipped += 1;
+        if (_remixApiReference.hasMatch(snippet)) {
+          failures.add(
+            '$relativePath Dart example ${index + 1} uses Remix APIs but is '
+            'missing the remix import.',
+          );
+        }
+        continue;
+      }
       if (snippet.contains('...')) {
         failures.add(
           '$relativePath Dart example ${index + 1} uses Remix but contains an '
@@ -469,7 +483,7 @@ List<({String path, String source})> _extractAnalyzableSnippets(
       snippets.add((path: '$relativePath#${index + 1}', source: snippet));
     }
   }
-  return snippets;
+  return (snippets: snippets, skipped: skipped);
 }
 
 String _relativePath(Directory root, File file) => _relative(file.path, root);

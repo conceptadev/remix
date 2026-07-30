@@ -118,7 +118,10 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixSlider({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixSlider remixSliderConstructor({
   Key? key,
   required double value,
   ValueChanged<double>? onChanged,
@@ -133,7 +136,7 @@ const RemixSlider({
   int? snapDivisions,
   RemixSliderStyler style = const RemixSliderStyler.create(),
   RemixSliderSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

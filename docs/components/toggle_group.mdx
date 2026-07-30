@@ -18,6 +18,9 @@ item is in the Tab order; arrow keys move focus without changing selection.
 
 <CodeGroup title="Basic implementation" defaultLanguage="dart">
 ```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
 class ViewToggle extends StatefulWidget {
   const ViewToggle({super.key});
 
@@ -102,26 +105,34 @@ both the group and per-item fluent stylers.
 
 <CodeGroup title="Per-item style" defaultLanguage="dart">
 ```dart
-RemixToggleGroup<String>(
-  items: [
-    const RemixToggleGroupItem(value: 'draft', label: 'Draft'),
-    RemixToggleGroupItem(
-      value: 'published',
-      label: 'Published',
-      style: RemixToggleGroupItemStyler().foregroundColor(Colors.green),
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+Widget buildStatusToggleGroup({
+  required String? value,
+  required ValueChanged<String?> onChanged,
+}) {
+  return RemixToggleGroup<String>(
+    items: [
+      const RemixToggleGroupItem(value: 'draft', label: 'Draft'),
+      RemixToggleGroupItem(
+        value: 'published',
+        label: 'Published',
+        style: RemixToggleGroupItemStyler().foregroundColor(Colors.green),
+      ),
+    ],
+    selectedValue: value,
+    onChanged: onChanged,
+    style: RemixToggleGroupStyler().item(
+      RemixToggleGroupItemStyler()
+          .paddingX(12)
+          .paddingY(8)
+          .onSelected(
+            RemixToggleGroupItemStyler().backgroundColor(Colors.green.shade50),
+          ),
     ),
-  ],
-  selectedValue: value,
-  onChanged: onChanged,
-  style: RemixToggleGroupStyler().item(
-    RemixToggleGroupItemStyler()
-        .paddingX(12)
-        .paddingY(8)
-        .onSelected(
-          RemixToggleGroupItemStyler().backgroundColor(Colors.green.shade50),
-        ),
-  ),
-)
+  );
+}
 ```
 </CodeGroup>
 
@@ -129,7 +140,10 @@ RemixToggleGroup<String>(
 
 <CodeGroup title="RemixToggleGroup" defaultLanguage="dart">
 ```dart
-const RemixToggleGroup<T>({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixToggleGroup<T> remixToggleGroupConstructor<T>({
   Key? key,
   required List<RemixToggleGroupItem<T>> items,
   required T? selectedValue,
@@ -141,13 +155,16 @@ const RemixToggleGroup<T>({
   bool excludeSemantics = false,
   RemixToggleGroupStyler style = const RemixToggleGroupStyler.create(),
   RemixToggleGroupSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 
 <CodeGroup title="RemixToggleGroupItem" defaultLanguage="dart">
 ```dart
-const RemixToggleGroupItem<T>({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixToggleGroupItem<T> remixToggleGroupItemConstructor<T>({
   required T value,
   String? label,
   IconData? icon,
@@ -157,7 +174,7 @@ const RemixToggleGroupItem<T>({
   bool autofocus = false,
   RemixToggleGroupItemStyler style =
       const RemixToggleGroupItemStyler.create(),
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

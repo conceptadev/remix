@@ -169,16 +169,19 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
 // Radio Group
-const RemixRadioGroup({
+RemixRadioGroup<T> remixRadioGroupConstructor<T>({
   Key? key,
   required T? groupValue,
   ValueChanged<T?>? onChanged,
   required Widget child,
-})
+}) => throw UnimplementedError();
 
 // Radio Button
-const RemixRadio({
+RemixRadio<T> remixRadioConstructor<T>({
   Key? key,
   required T value,
   bool enabled = true,
@@ -188,7 +191,7 @@ const RemixRadio({
   bool autofocus = false,
   RemixRadioStyler style = const RemixRadioStyler.create(),
   RemixRadioSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

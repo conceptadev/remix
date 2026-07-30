@@ -159,7 +159,10 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixSelect({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixSelect<T> remixSelectConstructor<T>({
   Key? key,
   required RemixSelectTrigger trigger,
   required List<RemixSelectItem<T>> items,
@@ -177,7 +180,7 @@ const RemixSelect({
   FocusNode? focusNode,
   RemixSelectStyler style = const RemixSelectStyler.create(),
   RemixSelectSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

@@ -20,8 +20,11 @@ final style = ButtonStyler()
 The following expressions are equivalent:
 
 ```dart
-RemixCardStyler.color(Colors.blue);
-RemixCardStyler().color(Colors.blue);
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final shorthand = RemixCardStyler.color(Colors.blue);
+final fluent = RemixCardStyler().color(Colors.blue);
 ```
 
 ## Factory policy
@@ -47,6 +50,9 @@ aliases remain fluent-only. For example, use the canonical factory inside a
 variant:
 
 ```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
 final style = RemixCardStyler()
     .paddingAll(12)
     .backgroundColor(Colors.white)
@@ -83,6 +89,9 @@ or `FlexBox` container. A composite root without one clear visual surface, such
 as `RemixMenuStyler`, exposes factories for its child fields instead:
 
 ```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
 final style = RemixMenuStyler.trigger(
   RemixMenuTriggerStyler.color(Colors.black),
 );
@@ -105,6 +114,9 @@ Widget-state and selected-state helpers consume the same styler type, so named
 factories work contextually for every generated Remix styler:
 
 ```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
 final checkboxStyle = RemixCheckboxStyler()
     .onHovered(.color(Colors.grey.shade100))
     .onSelected(.color(Colors.green));

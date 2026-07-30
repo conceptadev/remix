@@ -123,7 +123,10 @@ class _FortalSwitchExampleState extends State<FortalSwitchExample> {
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixSwitch({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixSwitch remixSwitchConstructor({
   Key? key,
   required bool selected,
   ValueChanged<bool>? onChanged,
@@ -135,7 +138,7 @@ const RemixSwitch({
   MouseCursor mouseCursor = SystemMouseCursors.click,
   RemixSwitchStyler style = const RemixSwitchStyler.create(),
   RemixSwitchSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 
