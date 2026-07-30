@@ -565,7 +565,13 @@ void _checkVariantConstructors(Directory packageRoot, List<String> failures) {
   final componentRoot = Directory('${packageRoot.path}/lib/src/components');
   for (final entity in componentRoot.listSync(recursive: true)) {
     if (entity is! File || !entity.path.endsWith('_styles.dart')) continue;
-    final source = entity.readAsStringSync();
+    final generatedSource = entity.parent
+        .listSync()
+        .whereType<File>()
+        .where((file) => file.path.endsWith('.g.dart'))
+        .map((file) => file.readAsStringSync())
+        .join('\n');
+    final source = '${entity.readAsStringSync()}\n$generatedSource';
 
     for (final enumMatch in RegExp(
       r'enum\s+(Fortal[A-Za-z0-9_]+Variant)\s*\{([^}]*)\}',
