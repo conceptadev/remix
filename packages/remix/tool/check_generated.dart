@@ -30,6 +30,7 @@ Future<void> main() async {
   );
   final buildExitCode = await process.exitCode;
   if (buildExitCode != 0) {
+    _restore(libraryRoot, before, _generatedSnapshot(libraryRoot));
     exitCode = buildExitCode;
     return;
   }
@@ -54,6 +55,7 @@ Future<void> main() async {
     for (final path in drift) {
       stderr.writeln('- $path');
     }
+    _restore(libraryRoot, before, after);
     exitCode = 1;
     return;
   }
@@ -71,6 +73,21 @@ Map<String, List<int>> _generatedSnapshot(Directory root) {
     snapshot[_relativePath(root, entity)] = entity.readAsBytesSync();
   }
   return snapshot;
+}
+
+void _restore(
+  Directory root,
+  Map<String, List<int>> before,
+  Map<String, List<int>> after,
+) {
+  for (final path in after.keys.where((path) => !before.containsKey(path))) {
+    File('${root.path}/$path').deleteSync();
+  }
+  for (final entry in before.entries) {
+    final file = File('${root.path}/${entry.key}');
+    file.parent.createSync(recursive: true);
+    file.writeAsBytesSync(entry.value);
+  }
 }
 
 String _relativePath(Directory root, File file) =>
