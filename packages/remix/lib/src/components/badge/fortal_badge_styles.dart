@@ -36,7 +36,9 @@ RemixBadgeStyler fortalBadgeStyle({
           .color(FortalTokens.accentSurface())
           .containerEffects(
             RemixBoxEffectsMix(
-              behindContent: _fortalBadgeInsetStroke(FortalTokens.accentA6()),
+              behindContent: fortalInsetSurface(
+                strokes: [FortalTokens.accentA6()],
+              ),
             ),
           )
           .foregroundColor(
@@ -46,21 +48,12 @@ RemixBadgeStyler fortalBadgeStyle({
       base
           .containerEffects(
             RemixBoxEffectsMix(
-              behindContent: RemixBoxEffectLayerMix(
-                shadows: [
-                  RemixBoxShadowMix(
-                    kind: RemixBoxShadowKind.inset,
-                    color: highContrast
-                        ? FortalTokens.accentA7()
-                        : FortalTokens.accentA8(),
-                    spreadRadius: 1,
-                  ),
-                  if (highContrast)
-                    RemixBoxShadowMix(
-                      kind: RemixBoxShadowKind.inset,
-                      color: FortalTokens.grayA11(),
-                      spreadRadius: 1,
-                    ),
+              behindContent: fortalInsetSurface(
+                strokes: [
+                  highContrast
+                      ? FortalTokens.accentA7()
+                      : FortalTokens.accentA8(),
+                  if (highContrast) FortalTokens.grayA11(),
                 ],
               ),
             ),
@@ -106,14 +99,3 @@ Radius _fortalBadgeRadius(FortalBadgeSize size) => switch (size) {
   .size1 => FortalTokens.radius1OrFull(),
   .size2 || .size3 => FortalTokens.radius2OrFull(),
 };
-
-RemixBoxEffectLayerMix _fortalBadgeInsetStroke(Color color) =>
-    RemixBoxEffectLayerMix(
-      shadows: [
-        RemixBoxShadowMix(
-          kind: RemixBoxShadowKind.inset,
-          color: color,
-          spreadRadius: 1,
-        ),
-      ],
-    );

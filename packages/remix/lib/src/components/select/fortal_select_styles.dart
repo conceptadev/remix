@@ -121,18 +121,6 @@ RemixBoxEffectLayerMix _fortalSelectFocusRing() {
   );
 }
 
-RemixBoxEffectLayerMix _fortalSelectInsetStroke(Color color) {
-  return RemixBoxEffectLayerMix(
-    shadows: [
-      RemixBoxShadowMix(
-        kind: RemixBoxShadowKind.inset,
-        color: color,
-        spreadRadius: 1,
-      ),
-    ],
-  );
-}
-
 RemixSelectTriggerStyler _fortalSelectSurfaceTrigger(
   RemixSelectTriggerStyler base,
 ) {
@@ -141,22 +129,20 @@ RemixSelectTriggerStyler _fortalSelectSurfaceTrigger(
       .color(FortalTokens.colorSurface())
       .containerEffects(
         RemixBoxEffectsMix(
-          behindContent: _fortalSelectInsetStroke(
-            FortalTokens.grayA7(),
-          ).merge(RemixBoxEffectLayerMix()),
+          behindContent: fortalInsetSurface(strokes: [FortalTokens.grayA7()]),
         ),
       )
       .onHovered(
         .containerEffects(
           RemixBoxEffectsMix(
-            behindContent: _fortalSelectInsetStroke(FortalTokens.grayA8()),
+            behindContent: fortalInsetSurface(strokes: [FortalTokens.grayA8()]),
           ),
         ),
       )
       .onSelected(
         .containerEffects(
           RemixBoxEffectsMix(
-            behindContent: _fortalSelectInsetStroke(FortalTokens.grayA8()),
+            behindContent: fortalInsetSurface(strokes: [FortalTokens.grayA8()]),
           ),
         ),
       )
@@ -167,9 +153,9 @@ RemixSelectTriggerStyler _fortalSelectSurfaceTrigger(
             .chevron(.color(FortalTokens.grayA9()))
             .containerEffects(
               RemixBoxEffectsMix(
-                behindContent: _fortalSelectInsetStroke(
-                  FortalTokens.grayA6(),
-                ).merge(RemixBoxEffectLayerMix()),
+                behindContent: fortalInsetSurface(
+                  strokes: [FortalTokens.grayA6()],
+                ),
               ),
             ),
       );

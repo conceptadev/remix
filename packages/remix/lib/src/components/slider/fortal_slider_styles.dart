@@ -82,17 +82,17 @@ RemixSliderStyler _fortalSliderSurface(
     .thumbColor(Colors.white)
     .trackEffects(
       RemixBoxEffectsMix(
-        behindContent: RemixBoxEffectLayerMix(
-          shadows: [_fortalSliderInset(FortalTokens.grayA5())],
-        ),
+        behindContent: fortalInsetSurface(strokes: [FortalTokens.grayA5()]),
       ),
     )
     .rangeEffects(
       RemixBoxEffectsMix(
-        behindContent: RemixBoxEffectLayerMix(
-          gradients: _fortalSliderHighContrastGradients(highContrast),
-          shadows: [_fortalSliderInset(FortalTokens.grayA5())],
-        ),
+        behindContent: fortalInsetSurface(strokes: [FortalTokens.grayA5()])
+            .merge(
+              RemixBoxEffectLayerMix(
+                gradients: _fortalSliderHighContrastGradients(highContrast),
+              ),
+            ),
       ),
     )
     .thumb(
@@ -225,8 +225,8 @@ RemixSliderStyler _fortalSliderDisabled(
           .track(.color(FortalTokens.grayA3()))
           .trackEffects(
             RemixBoxEffectsMix(
-              behindContent: RemixBoxEffectLayerMix(
-                shadows: [_fortalSliderInset(FortalTokens.grayA4())],
+              behindContent: fortalInsetSurface(
+                strokes: [FortalTokens.grayA4()],
               ),
             ),
           ),

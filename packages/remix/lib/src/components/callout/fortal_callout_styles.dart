@@ -23,28 +23,14 @@ RemixCalloutStyler fortalCalloutStyle({
           .color(FortalTokens.accentA2())
           .containerEffects(
             RemixBoxEffectsMix(
-              behindContent: RemixBoxEffectLayerMix(
-                shadows: [
-                  RemixBoxShadowMix(
-                    kind: RemixBoxShadowKind.inset,
-                    color: FortalTokens.accentA6(),
-                    spreadRadius: 1,
-                  ),
-                ],
+              behindContent: fortalInsetSurface(
+                strokes: [FortalTokens.accentA6()],
               ),
             ),
           ),
     .outline => base.containerEffects(
       RemixBoxEffectsMix(
-        behindContent: RemixBoxEffectLayerMix(
-          shadows: [
-            RemixBoxShadowMix(
-              kind: RemixBoxShadowKind.inset,
-              color: FortalTokens.accentA7(),
-              spreadRadius: 1,
-            ),
-          ],
-        ),
+        behindContent: fortalInsetSurface(strokes: [FortalTokens.accentA7()]),
       ),
     ),
   };
