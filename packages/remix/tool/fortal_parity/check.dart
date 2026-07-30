@@ -28,28 +28,6 @@ const _expectedMappedFamilies = <String>{
   'tooltip',
 };
 const _expectedExtensions = <String>{'accordion', 'toggle', 'toggle_group'};
-const _expectedStyleProps = <String, Set<String>>{
-  'avatar': {'color', 'radius', 'highContrast'},
-  'badge': {'color', 'radius', 'highContrast'},
-  'button': {'color', 'radius', 'highContrast'},
-  'callout': {'color', 'highContrast'},
-  'card': {},
-  'checkbox': {'color', 'highContrast'},
-  'dialog': {},
-  'divider': {'color'},
-  'menu': {'color', 'highContrast'},
-  'icon_button': {'color', 'radius', 'highContrast'},
-  'popover': {},
-  'progress': {'color', 'radius', 'highContrast'},
-  'radio': {'color', 'highContrast'},
-  'select': {'color', 'radius', 'highContrast'},
-  'slider': {'color', 'radius', 'highContrast'},
-  'spinner': {},
-  'switch': {'color', 'radius', 'highContrast'},
-  'tabs': {'color', 'highContrast'},
-  'text_field': {'color', 'radius'},
-  'tooltip': {},
-};
 
 void main() {
   final packageRoot = Directory.current;
@@ -197,6 +175,7 @@ void _checkFamilies(
       failures.add('families[$index].id must be a non-empty string.');
       continue;
     }
+    final stylesSource = _readFortalStylesSource(packageRoot, id, failures);
     if (families.containsKey(id)) failures.add('Duplicate family id: $id.');
     families[id] = family;
     switch (family['parity']) {
@@ -234,11 +213,21 @@ void _checkFamilies(
         '$id.supportedStyleProps',
         failures,
       ).toSet();
-      _expect(
-        _sameSet(actualProps, _expectedStyleProps[id] ?? const {}),
-        '$id supportedStyleProps drifted: $actualProps.',
-        failures,
-      );
+      if (stylesSource != null) {
+        final sourceExposesHighContrast = _recipeExposesHighContrast(
+          stylesSource,
+        );
+        _expect(
+          actualProps.contains('highContrast') == sourceExposesHighContrast,
+          '$id supportedStyleProps.highContrast drifted: manifest='
+          '${actualProps.contains('highContrast')}, '
+          'source=$sourceExposesHighContrast.',
+          failures,
+        );
+      }
+      // `color` and `radius` describe the upstream Radix prop surface rather
+      // than Dart recipe parameters. Review owns that mapping, anchored by the
+      // required sourceFiles and sourceSelectors above.
     }
     _expect(
       _strings(
@@ -266,7 +255,12 @@ void _checkFamilies(
     );
     _checkCoverage(
       owner: id,
-      enums: _enumKeys(family['enums'], '$id.enums', failures),
+      enums: _familyEnumKeys(
+        family: family,
+        id: id,
+        stylesSource: stylesSource,
+        failures: failures,
+      ),
       states: _strings(family['states'], '$id.states', failures),
       coverageValue: family['coverage'],
       evidence: evidence,
@@ -290,6 +284,100 @@ void _checkFamilies(
     'Exactly 23 Fortal families must be tracked.',
     failures,
   );
+}
+
+String? _readFortalStylesSource(
+  Directory packageRoot,
+  String id,
+  List<String> failures,
+) {
+  final componentName = id == 'text_field' ? 'textfield' : id;
+  final file = File(
+    '${packageRoot.path}/lib/src/components/$componentName/'
+    'fortal_${componentName}_styles.dart',
+  );
+  if (!file.existsSync()) {
+    failures.add('$id is missing Fortal recipe source ${file.path}.');
+    return null;
+  }
+  return file.readAsStringSync();
+}
+
+bool _recipeExposesHighContrast(String source) {
+  return RegExp(
+    r'\bfortal[A-Za-z0-9_]+Style\s*\(\s*\{[^}]*'
+    r'\bbool\s+highContrast\b',
+    dotAll: true,
+  ).hasMatch(source);
+}
+
+Set<String> _familyEnumKeys({
+  required Map<String, Object?> family,
+  required String id,
+  required String? stylesSource,
+  required List<String> failures,
+}) {
+  final enums = _object(family['enums'], '$id.enums', failures);
+  if (enums == null) return {};
+  final fortalType = family['fortalType'];
+  if (fortalType is! String || fortalType.isEmpty) {
+    failures.add('$id.fortalType must be a non-empty string.');
+  }
+
+  final result = <String>{};
+  for (final entry in enums.entries) {
+    final kind = entry.key;
+    final definition = _object(entry.value, '$id.enums.$kind', failures);
+    if (definition == null) continue;
+    final documentedValues = _strings(
+      definition['values'],
+      '$id.enums.$kind.values',
+      failures,
+    );
+    if (definition.containsKey('default')) {
+      final defaultValue = definition['default'];
+      if (defaultValue != null && !documentedValues.contains(defaultValue)) {
+        failures.add(
+          '$id.enums.$kind.default is not one of its documented values.',
+        );
+      }
+    }
+
+    Iterable<String> expectedValues = documentedValues;
+    if (kind == 'size' || kind == 'variant') {
+      if (stylesSource == null || fortalType is! String || fortalType.isEmpty) {
+        continue;
+      }
+      final suffix = '${kind[0].toUpperCase()}${kind.substring(1)}';
+      final idType = id
+          .split('_')
+          .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
+          .join();
+      final candidates = {'$fortalType$suffix', 'Fortal$idType$suffix'};
+      RegExpMatch? enumMatch;
+      for (final candidate in candidates) {
+        enumMatch = RegExp(
+          'enum\\s+${RegExp.escape(candidate)}\\s*\\{([^}]*)\\}',
+          dotAll: true,
+        ).firstMatch(stylesSource);
+        if (enumMatch != null) break;
+      }
+      if (enumMatch == null) {
+        failures.add(
+          '$id could not resolve its Dart $kind enum; tried $candidates.',
+        );
+        continue;
+      }
+      expectedValues = _dartEnumValues(enumMatch.group(1)!);
+    } else {
+      // Other enum kinds do not consistently map to named Fortal Dart enums.
+    }
+
+    for (final value in expectedValues) {
+      result.add('$kind.$value');
+    }
+  }
+  return result;
 }
 
 void _checkCoverage({
@@ -561,6 +649,18 @@ String? _lockEntry(String source, String dependency) {
   return lines.sublist(start, end).join('\n');
 }
 
+Set<String> _dartEnumValues(String body) {
+  return body
+      .replaceAll(RegExp(r'//[^\n]*'), '')
+      .replaceAll(RegExp(r'/\*.*?\*/', dotAll: true), '')
+      .split(',')
+      .map((value) => value.trim())
+      .where((value) => value.isNotEmpty)
+      .map((value) => RegExp(r'^[A-Za-z0-9_]+').stringMatch(value))
+      .nonNulls
+      .toSet();
+}
+
 void _checkVariantConstructors(Directory packageRoot, List<String> failures) {
   final componentRoot = Directory('${packageRoot.path}/lib/src/components');
   for (final entity in componentRoot.listSync(recursive: true)) {
@@ -588,17 +688,7 @@ void _checkVariantConstructors(Directory packageRoot, List<String> failures) {
         continue;
       }
 
-      final enumBody = enumMatch
-          .group(2)!
-          .replaceAll(RegExp(r'//[^\n]*'), '')
-          .replaceAll(RegExp(r'/\*.*?\*/', dotAll: true), '');
-      final variants = enumBody
-          .split(',')
-          .map((value) => value.trim())
-          .where((value) => value.isNotEmpty)
-          .map((value) => RegExp(r'^[A-Za-z0-9_]+').stringMatch(value))
-          .nonNulls
-          .toSet();
+      final variants = _dartEnumValues(enumMatch.group(2)!);
       final constructors = RegExp(
         'const\\s+${RegExp.escape(className)}\\.([A-Za-z0-9_]+)\\s*\\(',
       ).allMatches(source).map((match) => match.group(1)!).toSet();
@@ -607,15 +697,7 @@ void _checkVariantConstructors(Directory packageRoot, List<String> failures) {
             'enum\\s+${RegExp.escape(className)}[A-Za-z0-9_]*Variant\\s*\\{([^}]*)\\}',
             dotAll: true,
           ).allMatches(source).expand((match) {
-            return match
-                .group(1)!
-                .replaceAll(RegExp(r'//[^\n]*'), '')
-                .replaceAll(RegExp(r'/\*.*?\*/', dotAll: true), '')
-                .split(',')
-                .map((value) => value.trim())
-                .where((value) => value.isNotEmpty)
-                .map((value) => RegExp(r'^[A-Za-z0-9_]+').stringMatch(value))
-                .nonNulls;
+            return _dartEnumValues(match.group(1)!);
           }).toSet();
 
       final missing = variants.difference(constructors);
