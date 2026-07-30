@@ -3,9 +3,6 @@ part of 'dialog.dart';
 /// Fortal dialog size presets matching Radix Themes 3.3.0.
 enum FortalDialogSize { size1, size2, size3, size4 }
 
-/// Vertical placement of a Fortal dialog within its viewport.
-enum FortalDialogAlign { start, center }
-
 /// Fortal-themed preset for [RemixDialog].
 @MixWidget(target: RemixDialog.new)
 RemixDialogStyler fortalDialogStyle({

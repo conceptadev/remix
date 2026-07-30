@@ -6,7 +6,6 @@ RemixTooltipStyler fortalTooltipStyle() {
   return RemixTooltipStyler(
         label: .style(FortalTokens.text1.mix()),
         waitDuration: const Duration(milliseconds: 200),
-        arrowColor: FortalTokens.gray12(),
       )
       .borderRadiusAll(FortalTokens.radius2())
       .paddingY(FortalTokens.space1())

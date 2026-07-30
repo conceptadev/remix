@@ -40,8 +40,7 @@ export 'src/rendering/remix_ordered_color_filter.dart'
     show
         RemixCssColorFilterFunction,
         RemixCssColorFilterOperation,
-        RemixOrderedColorFilterModifier,
-        RemixOrderedColorFilterModifierMix;
+        RemixOrderedColorFilterModifier;
 export 'src/rendering/remix_box_effects.dart'
     show
         RemixBoxShadowKind,

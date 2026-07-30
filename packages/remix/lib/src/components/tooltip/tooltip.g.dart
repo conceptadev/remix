@@ -12,7 +12,6 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
   Duration? get waitDuration;
   Duration? get showDuration;
   Duration? get dismissDuration;
-  Color? get arrowColor;
 
   @override
   Type get type => RemixTooltipSpec;
@@ -24,7 +23,6 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
     Duration? waitDuration,
     Duration? showDuration,
     Duration? dismissDuration,
-    Color? arrowColor,
   }) {
     return RemixTooltipSpec(
       container: container ?? this.container,
@@ -32,7 +30,6 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
       waitDuration: waitDuration ?? this.waitDuration,
       showDuration: showDuration ?? this.showDuration,
       dismissDuration: dismissDuration ?? this.dismissDuration,
-      arrowColor: arrowColor ?? this.arrowColor,
     );
   }
 
@@ -48,7 +45,6 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
         other?.dismissDuration,
         t,
       ),
-      arrowColor: MixOps.lerp(arrowColor, other?.arrowColor, t),
     );
   }
 
@@ -59,7 +55,6 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
     waitDuration,
     showDuration,
     dismissDuration,
-    arrowColor,
   ];
 
   @override
@@ -106,8 +101,7 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('waitDuration', waitDuration))
       ..add(DiagnosticsProperty('showDuration', showDuration))
-      ..add(DiagnosticsProperty('dismissDuration', dismissDuration))
-      ..add(ColorProperty('arrowColor', arrowColor));
+      ..add(DiagnosticsProperty('dismissDuration', dismissDuration));
   }
 }
 
@@ -162,7 +156,6 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
   final Prop<Duration>? $waitDuration;
   final Prop<Duration>? $showDuration;
   final Prop<Duration>? $dismissDuration;
-  final Prop<Color>? $arrowColor;
 
   const RemixTooltipStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
@@ -170,7 +163,6 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     Prop<Duration>? waitDuration,
     Prop<Duration>? showDuration,
     Prop<Duration>? dismissDuration,
-    Prop<Color>? arrowColor,
     super.variants,
     super.modifier,
     super.animation,
@@ -178,8 +170,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
        $label = label,
        $waitDuration = waitDuration,
        $showDuration = showDuration,
-       $dismissDuration = dismissDuration,
-       $arrowColor = arrowColor;
+       $dismissDuration = dismissDuration;
 
   RemixTooltipStyler({
     BoxStyler? container,
@@ -187,7 +178,6 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     Duration? waitDuration,
     Duration? showDuration,
     Duration? dismissDuration,
-    Color? arrowColor,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixTooltipSpec>>? variants,
@@ -197,7 +187,6 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
          waitDuration: Prop.maybe(waitDuration),
          showDuration: Prop.maybe(showDuration),
          dismissDuration: Prop.maybe(dismissDuration),
-         arrowColor: Prop.maybe(arrowColor),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -213,8 +202,6 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
       RemixTooltipStyler().showDuration(value);
   factory RemixTooltipStyler.dismissDuration(Duration value) =>
       RemixTooltipStyler().dismissDuration(value);
-  factory RemixTooltipStyler.arrowColor(Color value) =>
-      RemixTooltipStyler().arrowColor(value);
   factory RemixTooltipStyler.alignment(AlignmentGeometry value) =>
       RemixTooltipStyler().alignment(value);
   factory RemixTooltipStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -712,11 +699,6 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     return merge(RemixTooltipStyler(dismissDuration: value));
   }
 
-  /// Sets the arrowColor.
-  RemixTooltipStyler arrowColor(Color value) {
-    return merge(RemixTooltipStyler(arrowColor: value));
-  }
-
   /// Sets the animation configuration.
   @override
   RemixTooltipStyler animate(AnimationConfig value) {
@@ -749,7 +731,6 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
       waitDuration: MixOps.merge($waitDuration, other?.$waitDuration),
       showDuration: MixOps.merge($showDuration, other?.$showDuration),
       dismissDuration: MixOps.merge($dismissDuration, other?.$dismissDuration),
-      arrowColor: MixOps.merge($arrowColor, other?.$arrowColor),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -765,7 +746,6 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
       waitDuration: MixOps.resolve(context, $waitDuration),
       showDuration: MixOps.resolve(context, $showDuration),
       dismissDuration: MixOps.resolve(context, $dismissDuration),
-      arrowColor: MixOps.resolve(context, $arrowColor),
     );
 
     return StyleSpec(
@@ -783,8 +763,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('waitDuration', $waitDuration))
       ..add(DiagnosticsProperty('showDuration', $showDuration))
-      ..add(DiagnosticsProperty('dismissDuration', $dismissDuration))
-      ..add(DiagnosticsProperty('arrowColor', $arrowColor));
+      ..add(DiagnosticsProperty('dismissDuration', $dismissDuration));
   }
 
   @override
@@ -794,7 +773,6 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     $waitDuration,
     $showDuration,
     $dismissDuration,
-    $arrowColor,
     $animation,
     $modifier,
     $variants,

@@ -261,26 +261,3 @@ RemixBoxEffectLayerMix _fortalRadioLayer({
   shadows: shadows,
   shadowToken: shadowToken,
 );
-
-/// Typed selection scope for a set of [FortalRadio] widgets.
-class FortalRadioGroup<T> extends StatelessWidget {
-  const FortalRadioGroup({
-    super.key,
-    required this.value,
-    this.onChanged,
-    required this.child,
-  });
-
-  /// The currently selected group value.
-  final T? value;
-
-  /// Called when a radio requests a new selection. Null disables the group.
-  final ValueChanged<T?>? onChanged;
-
-  /// The subtree containing the group's radio items and labels.
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) =>
-      RemixRadioGroup<T>(groupValue: value, onChanged: onChanged, child: child);
-}

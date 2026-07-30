@@ -1836,7 +1836,7 @@
         ".rt-RadioIndicator"
       ],
       "flutterExceptions": [
-        "FortalRadioGroup provides typed Flutter group semantics and selection coordination."
+        "RemixRadioGroup provides typed Flutter group semantics and selection coordination."
       ],
       "coverage": {
         "enums": [

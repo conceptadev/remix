@@ -183,26 +183,6 @@ final class RemixOrderedColorFilterModifier
   List<Object?> get props => [operations];
 }
 
-/// Mix representation for [RemixOrderedColorFilterModifier].
-final class RemixOrderedColorFilterModifierMix
-    extends ModifierMix<RemixOrderedColorFilterModifier> {
-  const RemixOrderedColorFilterModifierMix(this.operations);
-
-  final List<RemixCssColorFilterOperation> operations;
-
-  @override
-  RemixOrderedColorFilterModifier resolve(BuildContext context) =>
-      RemixOrderedColorFilterModifier(operations);
-
-  @override
-  RemixOrderedColorFilterModifierMix merge(
-    RemixOrderedColorFilterModifierMix? other,
-  ) => other ?? this;
-
-  @override
-  List<Object?> get props => [operations];
-}
-
 bool _areCompatible(
   List<RemixCssColorFilterOperation> first,
   List<RemixCssColorFilterOperation> second,
