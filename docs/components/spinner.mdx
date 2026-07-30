@@ -58,7 +58,7 @@ class SpinnerExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
@@ -83,17 +83,20 @@ class FortalSpinnerExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalSpinnerStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/spinner/fortal_spinner_styles.dart) for all available options.
+  See the [fortalSpinnerStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/spinner/fortal_spinner_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixSpinner({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixSpinner remixSpinnerConstructor({
   Key? key,
   RemixSpinnerStyler style = const RemixSpinnerStyler.create(),
   RemixSpinnerSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

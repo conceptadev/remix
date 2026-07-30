@@ -7,14 +7,31 @@ enum FortalToggleGroupSize { size1, size2, size3 }
 enum FortalToggleGroupVariant { soft, surface }
 
 /// Fortal-themed segmented-control preset for [RemixToggleGroup].
-RemixToggleGroupStyler fortalToggleGroupStyler({
+@MixWidget(target: RemixToggleGroup.new)
+RemixToggleGroupStyler fortalToggleGroupStyle({
   FortalToggleGroupVariant variant = .soft,
   FortalToggleGroupSize size = .size2,
+  bool highContrast = false,
 }) {
-  final selectedColor = switch (variant) {
-    .soft => FortalTokens.accent3(),
-    .surface => FortalTokens.accentSurface(),
+  final (
+    selectedColor,
+    selectedHoverColor,
+    selectedPressedColor,
+  ) = switch (variant) {
+    .soft => (
+      FortalTokens.accent3(),
+      FortalTokens.accent4(),
+      FortalTokens.accent5(),
+    ),
+    .surface => (
+      FortalTokens.accentSurface(),
+      FortalTokens.accentA4(),
+      FortalTokens.accentA5(),
+    ),
   };
+  final selectedForeground = highContrast
+      ? FortalTokens.accent12()
+      : FortalTokens.accent11();
 
   return RemixToggleGroupStyler(
     container: FlexBoxStyler(
@@ -31,12 +48,29 @@ RemixToggleGroupStyler fortalToggleGroupStyler({
       mainAxisSize: .min,
       spacing: 0,
     ),
-    item: RemixToggleGroupItemStyler()
-        .alignment(.center)
+    item: .alignment(.center)
         .foregroundColor(FortalTokens.gray11())
-        .labelFontWeight(.w500)
+        .labelFontWeight(FortalTokens.fontWeightMedium())
         .onHovered(
           RemixToggleGroupItemStyler().backgroundColor(FortalTokens.grayA3()),
+        )
+        .onPressed(
+          RemixToggleGroupItemStyler().backgroundColor(FortalTokens.grayA4()),
+        )
+        .onSelected(
+          RemixToggleGroupItemStyler()
+              .backgroundColor(selectedColor)
+              .foregroundColor(selectedForeground)
+              .onHovered(
+                RemixToggleGroupItemStyler().backgroundColor(
+                  selectedHoverColor,
+                ),
+              )
+              .onPressed(
+                RemixToggleGroupItemStyler().backgroundColor(
+                  selectedPressedColor,
+                ),
+              ),
         )
         .onFocused(
           RemixToggleGroupItemStyler().borderAll(
@@ -44,11 +78,6 @@ RemixToggleGroupStyler fortalToggleGroupStyler({
             width: FortalTokens.focusRingWidth(),
             strokeAlign: BorderSide.strokeAlignInside,
           ),
-        )
-        .onSelected(
-          RemixToggleGroupItemStyler()
-              .backgroundColor(selectedColor)
-              .foregroundColor(FortalTokens.accent11()),
         )
         .onDisabled(
           RemixToggleGroupItemStyler()
@@ -64,117 +93,39 @@ RemixToggleGroupStyler _fortalToggleGroupSizeStyler(
   return switch (size) {
     .size1 => RemixToggleGroupStyler(
       container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius2()),
-      item: RemixToggleGroupItemStyler(
-        container: FlexBoxStyler()
-            .paddingX(FortalTokens.space2())
-            .paddingY(FortalTokens.space1())
-            .spacing(2),
-        label: TextStyler().fontSize(12),
-        icon: IconStyler(size: 12),
-      ),
+      item:
+          .container(
+                FlexBoxStyler()
+                    .paddingX(FortalTokens.space2())
+                    .paddingY(FortalTokens.space1())
+                    .spacing(FortalTokens.toggleGap1()),
+              )
+              .label(.style(FortalTokens.text1.mix()))
+              .icon(.size(FortalTokens.space3())),
     ),
     .size2 => RemixToggleGroupStyler(
       container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius2()),
-      item: RemixToggleGroupItemStyler(
-        container: FlexBoxStyler()
-            .paddingX(FortalTokens.space3())
-            .paddingY(FortalTokens.space2())
-            .spacing(4),
-        label: TextStyler().fontSize(14),
-        icon: IconStyler(size: 16),
-      ),
+      item:
+          .container(
+                FlexBoxStyler()
+                    .paddingX(FortalTokens.space3())
+                    .paddingY(FortalTokens.space2())
+                    .spacing(FortalTokens.space1()),
+              )
+              .label(.style(FortalTokens.text2.mix()))
+              .icon(.size(FortalTokens.space4())),
     ),
     .size3 => RemixToggleGroupStyler(
       container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius3()),
-      item: RemixToggleGroupItemStyler(
-        container: FlexBoxStyler()
-            .paddingX(FortalTokens.space4())
-            .paddingY(FortalTokens.space2())
-            .spacing(6),
-        label: TextStyler().fontSize(16),
-        icon: IconStyler(size: 20),
-      ),
+      item:
+          .container(
+                FlexBoxStyler()
+                    .paddingX(FortalTokens.space4())
+                    .paddingY(FortalTokens.space2())
+                    .spacing(FortalTokens.toggleGap3()),
+              )
+              .label(.style(FortalTokens.text3.mix()))
+              .icon(.size(FortalTokens.spinnerSize3())),
     ),
   };
-}
-
-/// Fortal-themed segmented-control preset for [RemixToggleGroup].
-class FortalToggleGroup<T> extends StatelessWidget {
-  const FortalToggleGroup({
-    super.key,
-    this.variant = .soft,
-    this.size = .size2,
-    required this.items,
-    required this.selectedValue,
-    this.onChanged,
-    this.enabled = true,
-    this.orientation = .horizontal,
-    this.loop = true,
-    this.semanticLabel,
-    this.excludeSemantics = false,
-  });
-
-  const FortalToggleGroup.soft({
-    super.key,
-    this.size = .size2,
-    required this.items,
-    required this.selectedValue,
-    this.onChanged,
-    this.enabled = true,
-    this.orientation = .horizontal,
-    this.loop = true,
-    this.semanticLabel,
-    this.excludeSemantics = false,
-  }) : variant = FortalToggleGroupVariant.soft;
-
-  const FortalToggleGroup.surface({
-    super.key,
-    this.size = .size2,
-    required this.items,
-    required this.selectedValue,
-    this.onChanged,
-    this.enabled = true,
-    this.orientation = .horizontal,
-    this.loop = true,
-    this.semanticLabel,
-    this.excludeSemantics = false,
-  }) : variant = FortalToggleGroupVariant.surface;
-
-  final FortalToggleGroupVariant variant;
-
-  final FortalToggleGroupSize size;
-
-  final List<RemixToggleGroupItem<T>> items;
-
-  final T? selectedValue;
-
-  final ValueChanged<T?>? onChanged;
-
-  final bool enabled;
-
-  final Axis orientation;
-
-  final bool loop;
-
-  final String? semanticLabel;
-
-  final bool excludeSemantics;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalToggleGroupStyler(
-      variant: this.variant,
-      size: this.size,
-    ).call<T>(
-      key: this.key,
-      items: this.items,
-      selectedValue: this.selectedValue,
-      onChanged: this.onChanged,
-      enabled: this.enabled,
-      orientation: this.orientation,
-      loop: this.loop,
-      semanticLabel: this.semanticLabel,
-      excludeSemantics: this.excludeSemantics,
-    );
-  }
 }

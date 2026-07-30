@@ -97,7 +97,7 @@ class _SelectExampleState extends State<SelectExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -153,20 +153,23 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
 
 <Info>
   `FortalSelect` applies matching trigger, menu container, and default item styles. Set `RemixSelectItem.style` only for a row-level override.
-  See the [fortalSelectStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/select/fortal_select_styles.dart) for all available options.
+  See the [fortalSelectStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/select/fortal_select_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixSelect({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixSelect<T> remixSelectConstructor<T>({
   Key? key,
   required RemixSelectTrigger trigger,
   required List<RemixSelectItem<T>> items,
   T? selectedValue,
   OverlayPositionConfig positioning = const OverlayPositionConfig(
-    targetAnchor: Alignment.bottomCenter,
-    followerAnchor: Alignment.topCenter,
+    side: OverlaySide.bottom,
+    alignment: OverlayAlignment.center,
   ),
   ValueChanged<T?>? onChanged,
   VoidCallback? onOpen,
@@ -177,7 +180,7 @@ const RemixSelect({
   FocusNode? focusNode,
   RemixSelectStyler style = const RemixSelectStyler.create(),
   RemixSelectSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

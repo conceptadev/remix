@@ -23,8 +23,8 @@ extension RemixSelectStylerRemixHelpers on RemixSelectStyler {
     required List<RemixSelectItem<T>> items,
     T? selectedValue,
     OverlayPositionConfig positioning = const OverlayPositionConfig(
-      targetAnchor: .bottomCenter,
-      followerAnchor: .topCenter,
+      side: .bottom,
+      alignment: .center,
     ),
     ValueChanged<T?>? onChanged,
     VoidCallback? onOpen,

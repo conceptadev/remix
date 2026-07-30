@@ -318,7 +318,7 @@ void main() {
 
       test('props list contains all properties', () {
         const style = RemixCheckboxStyler.create();
-        expect(style.props, hasLength(5));
+        expect(style.props, hasLength(6));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$indicator));
         expect(style.props, contains(style.$variants));

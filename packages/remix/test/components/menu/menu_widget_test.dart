@@ -636,8 +636,8 @@ void main() {
   group('RemixMenu Positioning Tests', () {
     testWidgets('applies custom positioning config', (tester) async {
       const positioning = OverlayPositionConfig(
-        targetAnchor: Alignment.bottomLeft,
-        followerAnchor: Alignment.topLeft,
+        side: OverlaySide.bottom,
+        alignment: OverlayAlignment.start,
       );
 
       await tester.pumpRemixApp(

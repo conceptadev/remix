@@ -28,10 +28,30 @@ export 'src/components/tooltip/tooltip.dart';
 
 /// EXTERNAL DEPENDENCIES
 export 'package:mix/mix.dart';
-export 'package:naked_ui/naked_ui.dart' show OverlayPositionConfig;
+export 'package:naked_ui/naked_ui.dart'
+    show OverlayAlignment, OverlayPlacement, OverlayPositionConfig, OverlaySide;
 
 /// FORTAL
 export 'src/fortal/fortal.dart';
+
+/// RENDERING
+export 'src/rendering/remix_blend_mode.dart' show RemixBlendMode;
+export 'src/rendering/remix_ordered_color_filter.dart'
+    show
+        RemixCssColorFilterFunction,
+        RemixCssColorFilterOperation,
+        RemixOrderedColorFilterModifier;
+export 'src/rendering/remix_box_effects.dart'
+    show
+        RemixBoxShadowKind,
+        RemixBoxShadow,
+        RemixBoxShadowMix,
+        RemixBoxShadowListToken,
+        RemixLinearGradientMix,
+        RemixBoxEffectLayerSpec,
+        RemixBoxEffectLayerMix,
+        RemixBoxEffectsSpec,
+        RemixBoxEffectsMix;
 
 /// STYLER CONVENIENCES
 export 'src/utilities/remix_style.dart'

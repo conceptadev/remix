@@ -112,7 +112,7 @@ class _RadioExampleState extends State<RadioExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -163,22 +163,25 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalRadioStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/radio/fortal_radio_styles.dart) for all available options.
+  See the [fortalRadioStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/radio/fortal_radio_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
 // Radio Group
-const RemixRadioGroup({
+RemixRadioGroup<T> remixRadioGroupConstructor<T>({
   Key? key,
   required T? groupValue,
   ValueChanged<T?>? onChanged,
   required Widget child,
-})
+}) => throw UnimplementedError();
 
 // Radio Button
-const RemixRadio({
+RemixRadio<T> remixRadioConstructor<T>({
   Key? key,
   required T value,
   bool enabled = true,
@@ -188,7 +191,7 @@ const RemixRadio({
   bool autofocus = false,
   RemixRadioStyler style = const RemixRadioStyler.create(),
   RemixRadioSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

@@ -9,14 +9,13 @@ targets:
         enabled: true
         generate_for:
           - lib/**/*.dart
-      # Remix stylers now come from @MixableSpec. The Fortal widget wrappers
-      # stay source-authored because a @MixWidget builder cannot resolve a
-      # Styler generated into the same library during a clean build.
+      mix_generator|mix_widget_generator:
+        enabled: true
+        generate_for:
+          - lib/**/*.dart
       mix_generator|styler_generator:
         enabled: false
       mix_generator|mixable_generator:
-        enabled: false
-      mix_generator|mix_widget_generator:
         enabled: false
       mix_generator|modifier_generator:
         enabled: false

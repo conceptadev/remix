@@ -8,22 +8,36 @@ part of 'popover.dart';
 
 mixin _$RemixPopoverSpec implements Spec<RemixPopoverSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
+  RemixBoxEffectsSpec? get containerEffects;
 
   @override
   Type get type => RemixPopoverSpec;
 
   @override
-  RemixPopoverSpec copyWith({StyleSpec<BoxSpec>? container}) {
-    return RemixPopoverSpec(container: container ?? this.container);
+  RemixPopoverSpec copyWith({
+    StyleSpec<BoxSpec>? container,
+    RemixBoxEffectsSpec? containerEffects,
+  }) {
+    return RemixPopoverSpec(
+      container: container ?? this.container,
+      containerEffects: containerEffects ?? this.containerEffects,
+    );
   }
 
   @override
   RemixPopoverSpec lerp(RemixPopoverSpec? other, double t) {
-    return RemixPopoverSpec(container: container.lerp(other?.container, t));
+    return RemixPopoverSpec(
+      container: container.lerp(other?.container, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
+    );
   }
 
   @override
-  List<Object?> get props => [container];
+  List<Object?> get props => [container, containerEffects];
 
   @override
   bool operator ==(Object other) {
@@ -64,7 +78,9 @@ mixin _$RemixPopoverSpec implements Spec<RemixPopoverSpec>, Diagnosticable {
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties.add(DiagnosticsProperty('container', container));
+    properties
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects));
   }
 }
 
@@ -74,27 +90,110 @@ mixin _$RemixPopoverSpec implements Spec<RemixPopoverSpec>, Diagnosticable {
 typedef _$RemixPopoverSpecMethods = _$RemixPopoverSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixPopover].
+class FortalPopover extends StatelessWidget {
+  const FortalPopover({
+    super.key,
+    this.size = FortalPopoverSize.size2,
+    required this.popoverChild,
+    required this.child,
+    this.positioning = const OverlayPositionConfig(),
+    this.consumeOutsideTaps = true,
+    this.useRootOverlay = false,
+    this.openOnTap = true,
+    this.triggerFocusNode,
+    this.onOpen,
+    this.onClose,
+    this.onOpenRequested,
+    this.onCloseRequested,
+    this.controller,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  });
+
+  final FortalPopoverSize size;
+
+  final Widget popoverChild;
+
+  final Widget child;
+
+  final OverlayPositionConfig positioning;
+
+  final bool consumeOutsideTaps;
+
+  final bool useRootOverlay;
+
+  final bool openOnTap;
+
+  final FocusNode? triggerFocusNode;
+
+  final VoidCallback? onOpen;
+
+  final VoidCallback? onClose;
+
+  final RawMenuAnchorOpenRequestedCallback? onOpenRequested;
+
+  final RawMenuAnchorCloseRequestedCallback? onCloseRequested;
+
+  final MenuController? controller;
+
+  final String? semanticLabel;
+
+  final bool excludeSemantics;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixPopover(
+      key: this.key,
+      style: fortalPopoverStyle(size: this.size),
+      popoverChild: this.popoverChild,
+      child: this.child,
+      positioning: this.positioning,
+      consumeOutsideTaps: this.consumeOutsideTaps,
+      useRootOverlay: this.useRootOverlay,
+      openOnTap: this.openOnTap,
+      triggerFocusNode: this.triggerFocusNode,
+      onOpen: this.onOpen,
+      onClose: this.onClose,
+      onOpenRequested: this.onOpenRequested,
+      onCloseRequested: this.onCloseRequested,
+      controller: this.controller,
+      semanticLabel: this.semanticLabel,
+      excludeSemantics: this.excludeSemantics,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 
 class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     with RemixBoxStylerMixin<RemixPopoverStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
   const RemixPopoverStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
     super.modifier,
     super.animation,
-  }) : $container = container;
+  }) : $container = container,
+       $containerEffects = containerEffects;
 
   RemixPopoverStyler({
     BoxStyler? container,
+    RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixPopoverSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
+         containerEffects: Prop.maybeMix(containerEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -102,6 +201,8 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
 
   factory RemixPopoverStyler.container(BoxStyler value) =>
       RemixPopoverStyler().container(value);
+  factory RemixPopoverStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixPopoverStyler().containerEffects(value);
   factory RemixPopoverStyler.alignment(AlignmentGeometry value) =>
       RemixPopoverStyler().alignment(value);
   factory RemixPopoverStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -579,6 +680,11 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     return merge(RemixPopoverStyler(container: value));
   }
 
+  /// Sets the containerEffects.
+  RemixPopoverStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixPopoverStyler(containerEffects: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixPopoverStyler animate(AnimationConfig value) {
@@ -607,6 +713,10 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
   RemixPopoverStyler merge(RemixPopoverStyler? other) {
     return RemixPopoverStyler.create(
       container: MixOps.merge($container, other?.$container),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -618,6 +728,7 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
   StyleSpec<RemixPopoverSpec> resolve(BuildContext context) {
     final spec = RemixPopoverSpec(
       container: MixOps.resolve(context, $container),
+      containerEffects: MixOps.resolve(context, $containerEffects),
     );
 
     return StyleSpec(
@@ -630,9 +741,17 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('container', $container));
+    properties
+      ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
   }
 
   @override
-  List<Object?> get props => [$container, $animation, $modifier, $variants];
+  List<Object?> get props => [
+    $container,
+    $containerEffects,
+    $animation,
+    $modifier,
+    $variants,
+  ];
 }

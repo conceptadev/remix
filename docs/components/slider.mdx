@@ -54,7 +54,7 @@ class _SliderExampleState extends State<SliderExample> {
                 BoxShadowMix()
                     .color(Colors.black45)
                     .blurRadius(4)
-                    .offset(const Offset(0, 2)),
+                    .offset(x: 0, y: 2),
               ),
         )
         .thumbColor(Colors.black)
@@ -74,7 +74,7 @@ class _SliderExampleState extends State<SliderExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -112,13 +112,16 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalSliderStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/slider/fortal_slider_styles.dart) for all available options.
+  See the [fortalSliderStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/slider/fortal_slider_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixSlider({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixSlider remixSliderConstructor({
   Key? key,
   required double value,
   ValueChanged<double>? onChanged,
@@ -133,7 +136,7 @@ const RemixSlider({
   int? snapDivisions,
   RemixSliderStyler style = const RemixSliderStyler.create(),
   RemixSliderSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

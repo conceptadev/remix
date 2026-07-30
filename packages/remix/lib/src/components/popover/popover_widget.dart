@@ -85,7 +85,11 @@ class RemixPopover extends StatelessWidget {
       builder: (context, spec) {
         return NakedPopover(
           popoverBuilder: (context, info) {
-            return Box(styleSpec: spec.container, child: popoverChild);
+            return RemixBoxWithEffects(
+              styleSpec: spec.container,
+              containerEffects: spec.containerEffects,
+              child: popoverChild,
+            );
           },
           positioning: positioning,
           consumeOutsideTaps: consumeOutsideTaps,

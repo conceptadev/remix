@@ -31,8 +31,8 @@ Widget buildMenuUseCase(BuildContext context) {
           child: Center(
             child: FortalMenu(
               positioning: const OverlayPositionConfig(
-                followerAnchor: .topCenter,
-                targetAnchor: .bottomCenter,
+                side: .bottom,
+                alignment: .center,
               ),
               trigger: const RemixMenuTrigger(
                 label: 'Menu',

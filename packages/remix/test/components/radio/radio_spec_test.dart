@@ -118,7 +118,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixRadioSpec();
 
-        expect(spec.props, hasLength(2));
+        expect(spec.props, hasLength(3));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.indicator));
       });

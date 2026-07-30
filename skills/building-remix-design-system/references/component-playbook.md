@@ -73,13 +73,14 @@ The generator contract is intentionally convention-based:
   dartdoc/deprecation metadata into generated code. If an enum value has the
   same name as a generated widget type parameter, the generator suppresses
   all named variant constructors to keep the output valid;
-- use a lower-camel recipe name ending in `Style`, or pass
-  `@MixWidget(name: '<System><Component>')` explicitly.
+- prefer a lower-camel recipe name ending in `Style` so the generated widget
+  name is inferred; pass `@MixWidget(name: '<System><Component>')` only when
+  the convention cannot express the intended public name.
 
 ```dart
 enum AcmeSelectVariant { surface, soft, ghost }
 
-@MixWidget(name: 'AcmeSelect')
+@MixWidget()
 RemixSelectStyler acmeSelectStyle({
   AcmeSelectVariant variant = .surface,
 }) => switch (variant) {

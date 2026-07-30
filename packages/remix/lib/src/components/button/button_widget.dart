@@ -251,7 +251,12 @@ class RemixButton extends StatelessWidget {
         .toList();
 
     // Create content row with visibility control for loading state
-    final contentRow = RowBox(styleSpec: spec.container, children: rowChildren);
+    final contentRow = RemixFlexBoxWithEffects(
+      styleSpec: spec.container,
+      direction: Axis.horizontal,
+      containerEffects: spec.containerEffects,
+      children: rowChildren,
+    );
 
     // Layer spinner above the content while keeping size stable.
     final layered = Stack(

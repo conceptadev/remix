@@ -110,31 +110,94 @@ class RemixAvatar extends StatelessWidget {
           }
         }
 
+        Widget current = content ?? const SizedBox.shrink();
+        if (backgroundImage case final image?) {
+          current = _RemixAvatarImageLayer(
+            image: image,
+            onError: onBackgroundImageError,
+            fallback: current,
+          );
+        }
+        if (foregroundImage case final image?) {
+          current = Stack(
+            fit: StackFit.passthrough,
+            children: [
+              current,
+              Positioned.fill(
+                child: _RemixAvatarImageLayer(
+                  image: image,
+                  onError: onForegroundImageError,
+                  fallback: const SizedBox.expand(),
+                ),
+              ),
+            ],
+          );
+        }
+
         return Box(
           styleSpec: spec.container,
-          child: Container(
-            alignment: .center,
-            decoration: backgroundImage != null
-                ? BoxDecoration(
-                    image: DecorationImage(
-                      image: backgroundImage!,
-                      onError: onBackgroundImageError,
-                      fit: .cover,
-                    ),
-                  )
-                : null,
-            foregroundDecoration: foregroundImage != null
-                ? BoxDecoration(
-                    image: DecorationImage(
-                      image: foregroundImage!,
-                      onError: onForegroundImageError,
-                      fit: .cover,
-                    ),
-                  )
-                : null,
-            child: content,
-          ),
+          child: Container(alignment: .center, child: current),
         );
+      },
+    );
+  }
+}
+
+/// Replaces [fallback] only after an image frame has decoded successfully.
+/// Errors keep the fallback visible and are reported once per provider.
+class _RemixAvatarImageLayer extends StatefulWidget {
+  const _RemixAvatarImageLayer({
+    required this.image,
+    required this.fallback,
+    this.onError,
+  });
+
+  final ImageProvider image;
+  final Widget fallback;
+  final ImageErrorListener? onError;
+
+  @override
+  State<_RemixAvatarImageLayer> createState() => _RemixAvatarImageLayerState();
+}
+
+class _RemixAvatarImageLayerState extends State<_RemixAvatarImageLayer> {
+  bool _reportedError = false;
+
+  @override
+  void didUpdateWidget(_RemixAvatarImageLayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.image != widget.image) _reportedError = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Image(
+      image: widget.image,
+      fit: BoxFit.cover,
+      excludeFromSemantics: true,
+      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+        if (!wasSynchronouslyLoaded && frame == null) return widget.fallback;
+        return Stack(
+          fit: StackFit.passthrough,
+          children: [
+            Opacity(
+              opacity: 0,
+              alwaysIncludeSemantics: true,
+              child: widget.fallback,
+            ),
+            Positioned.fill(child: child),
+          ],
+        );
+      },
+      errorBuilder: (context, error, stackTrace) {
+        if (!_reportedError) {
+          _reportedError = true;
+          final onError = widget.onError;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) onError?.call(error, stackTrace);
+          });
+        }
+        return widget.fallback;
       },
     );
   }

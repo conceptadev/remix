@@ -59,7 +59,7 @@ class CalloutExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -94,20 +94,23 @@ class FortalCalloutExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalCalloutStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/callout/fortal_callout_styles.dart) for all available options.
+  See the [fortalCalloutStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/callout/fortal_callout_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixCallout({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixCallout remixCalloutConstructor({
   Key? key,
   String? text,
   IconData? icon,
   Widget? child,
   RemixCalloutStyler style = const RemixCalloutStyler.create(),
   RemixCalloutSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

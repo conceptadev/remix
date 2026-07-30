@@ -464,8 +464,8 @@ void main() {
         void onOpenRequested(Offset? position, VoidCallback showOverlay) {}
         void onCloseRequested(VoidCallback hideOverlay) {}
         const positioning = OverlayPositionConfig(
-          targetAnchor: Alignment.topLeft,
-          followerAnchor: Alignment.bottomRight,
+          side: OverlaySide.top,
+          alignment: OverlayAlignment.end,
         );
 
         final menu = style.call<String>(

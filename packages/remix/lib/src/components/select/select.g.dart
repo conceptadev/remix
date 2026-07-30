@@ -8,6 +8,7 @@ part of 'select.dart';
 
 mixin _$RemixSelectSpec implements Spec<RemixSelectSpec>, Diagnosticable {
   StyleSpec<RemixSelectTriggerSpec> get trigger;
+  StyleSpec<RemixSelectContentSpec> get content;
   StyleSpec<FlexBoxSpec> get menuContainer;
   StyleSpec<RemixSelectMenuItemSpec> get item;
 
@@ -17,11 +18,13 @@ mixin _$RemixSelectSpec implements Spec<RemixSelectSpec>, Diagnosticable {
   @override
   RemixSelectSpec copyWith({
     StyleSpec<RemixSelectTriggerSpec>? trigger,
+    StyleSpec<RemixSelectContentSpec>? content,
     StyleSpec<FlexBoxSpec>? menuContainer,
     StyleSpec<RemixSelectMenuItemSpec>? item,
   }) {
     return RemixSelectSpec(
       trigger: trigger ?? this.trigger,
+      content: content ?? this.content,
       menuContainer: menuContainer ?? this.menuContainer,
       item: item ?? this.item,
     );
@@ -31,13 +34,14 @@ mixin _$RemixSelectSpec implements Spec<RemixSelectSpec>, Diagnosticable {
   RemixSelectSpec lerp(RemixSelectSpec? other, double t) {
     return RemixSelectSpec(
       trigger: trigger.lerp(other?.trigger, t),
+      content: content.lerp(other?.content, t),
       menuContainer: menuContainer.lerp(other?.menuContainer, t),
       item: item.lerp(other?.item, t),
     );
   }
 
   @override
-  List<Object?> get props => [trigger, menuContainer, item];
+  List<Object?> get props => [trigger, content, menuContainer, item];
 
   @override
   bool operator ==(Object other) {
@@ -80,6 +84,7 @@ mixin _$RemixSelectSpec implements Spec<RemixSelectSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('trigger', trigger))
+      ..add(DiagnosticsProperty('content', content))
       ..add(DiagnosticsProperty('menuContainer', menuContainer))
       ..add(DiagnosticsProperty('item', item));
   }
@@ -94,7 +99,12 @@ mixin _$RemixSelectTriggerSpec
     implements Spec<RemixSelectTriggerSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get label;
+  StyleSpec<TextSpec> get placeholder;
   StyleSpec<IconSpec> get icon;
+  StyleSpec<IconSpec> get chevron;
+  RemixBoxEffectsSpec? get containerEffects;
+  double? get chevronOpacity;
+  double? get placeholderOpacity;
 
   @override
   Type get type => RemixSelectTriggerSpec;
@@ -103,12 +113,22 @@ mixin _$RemixSelectTriggerSpec
   RemixSelectTriggerSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
+    StyleSpec<TextSpec>? placeholder,
     StyleSpec<IconSpec>? icon,
+    StyleSpec<IconSpec>? chevron,
+    RemixBoxEffectsSpec? containerEffects,
+    double? chevronOpacity,
+    double? placeholderOpacity,
   }) {
     return RemixSelectTriggerSpec(
       container: container ?? this.container,
       label: label ?? this.label,
+      placeholder: placeholder ?? this.placeholder,
       icon: icon ?? this.icon,
+      chevron: chevron ?? this.chevron,
+      containerEffects: containerEffects ?? this.containerEffects,
+      chevronOpacity: chevronOpacity ?? this.chevronOpacity,
+      placeholderOpacity: placeholderOpacity ?? this.placeholderOpacity,
     );
   }
 
@@ -117,12 +137,34 @@ mixin _$RemixSelectTriggerSpec
     return RemixSelectTriggerSpec(
       container: container.lerp(other?.container, t),
       label: label.lerp(other?.label, t),
+      placeholder: placeholder.lerp(other?.placeholder, t),
       icon: icon.lerp(other?.icon, t),
+      chevron: chevron.lerp(other?.chevron, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
+      chevronOpacity: MixOps.lerp(chevronOpacity, other?.chevronOpacity, t),
+      placeholderOpacity: MixOps.lerp(
+        placeholderOpacity,
+        other?.placeholderOpacity,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, label, icon];
+  List<Object?> get props => [
+    container,
+    label,
+    placeholder,
+    icon,
+    chevron,
+    containerEffects,
+    chevronOpacity,
+    placeholderOpacity,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -166,7 +208,12 @@ mixin _$RemixSelectTriggerSpec
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
-      ..add(DiagnosticsProperty('icon', icon));
+      ..add(DiagnosticsProperty('placeholder', placeholder))
+      ..add(DiagnosticsProperty('icon', icon))
+      ..add(DiagnosticsProperty('chevron', chevron))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
+      ..add(DoubleProperty('chevronOpacity', chevronOpacity))
+      ..add(DoubleProperty('placeholderOpacity', placeholderOpacity));
   }
 }
 
@@ -175,10 +222,95 @@ mixin _$RemixSelectTriggerSpec
 )
 typedef _$RemixSelectTriggerSpecMethods = _$RemixSelectTriggerSpec; // ignore: unused_element
 
+mixin _$RemixSelectContentSpec
+    implements Spec<RemixSelectContentSpec>, Diagnosticable {
+  StyleSpec<BoxSpec> get container;
+  RemixBoxEffectsSpec? get containerEffects;
+
+  @override
+  Type get type => RemixSelectContentSpec;
+
+  @override
+  RemixSelectContentSpec copyWith({
+    StyleSpec<BoxSpec>? container,
+    RemixBoxEffectsSpec? containerEffects,
+  }) {
+    return RemixSelectContentSpec(
+      container: container ?? this.container,
+      containerEffects: containerEffects ?? this.containerEffects,
+    );
+  }
+
+  @override
+  RemixSelectContentSpec lerp(RemixSelectContentSpec? other, double t) {
+    return RemixSelectContentSpec(
+      container: container.lerp(other?.container, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
+    );
+  }
+
+  @override
+  List<Object?> get props => [container, containerEffects];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixSelectContentSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects));
+  }
+}
+
+@Deprecated(
+  'Rename to `_\$RemixSelectContentSpec` and migrate the class declaration to `class RemixSelectContentSpec with _\$RemixSelectContentSpec`. The `_\$RemixSelectContentSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixSelectContentSpecMethods = _$RemixSelectContentSpec; // ignore: unused_element
+
 mixin _$RemixSelectMenuItemSpec
     implements Spec<RemixSelectMenuItemSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get text;
+  StyleSpec<BoxSpec> get indicator;
   StyleSpec<IconSpec> get icon;
 
   @override
@@ -188,11 +320,13 @@ mixin _$RemixSelectMenuItemSpec
   RemixSelectMenuItemSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? text,
+    StyleSpec<BoxSpec>? indicator,
     StyleSpec<IconSpec>? icon,
   }) {
     return RemixSelectMenuItemSpec(
       container: container ?? this.container,
       text: text ?? this.text,
+      indicator: indicator ?? this.indicator,
       icon: icon ?? this.icon,
     );
   }
@@ -202,12 +336,13 @@ mixin _$RemixSelectMenuItemSpec
     return RemixSelectMenuItemSpec(
       container: container.lerp(other?.container, t),
       text: text.lerp(other?.text, t),
+      indicator: indicator.lerp(other?.indicator, t),
       icon: icon.lerp(other?.icon, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, text, icon];
+  List<Object?> get props => [container, text, indicator, icon];
 
   @override
   bool operator ==(Object other) {
@@ -251,6 +386,7 @@ mixin _$RemixSelectMenuItemSpec
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('text', text))
+      ..add(DiagnosticsProperty('indicator', indicator))
       ..add(DiagnosticsProperty('icon', icon));
   }
 }
@@ -261,28 +397,171 @@ mixin _$RemixSelectMenuItemSpec
 typedef _$RemixSelectMenuItemSpecMethods = _$RemixSelectMenuItemSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed Select with Radix-owned trigger and content configuration.
+class FortalSelect<T> extends StatelessWidget {
+  const FortalSelect({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      side: .bottom,
+      alignment: .center,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.enabled = true,
+    this.semanticLabel,
+    this.closeOnSelect = true,
+    this.focusNode,
+  });
+
+  const FortalSelect.surface({
+    super.key,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      side: .bottom,
+      alignment: .center,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.enabled = true,
+    this.semanticLabel,
+    this.closeOnSelect = true,
+    this.focusNode,
+  }) : variant = FortalSelectVariant.surface;
+
+  const FortalSelect.soft({
+    super.key,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      side: .bottom,
+      alignment: .center,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.enabled = true,
+    this.semanticLabel,
+    this.closeOnSelect = true,
+    this.focusNode,
+  }) : variant = FortalSelectVariant.soft;
+
+  const FortalSelect.ghost({
+    super.key,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      side: .bottom,
+      alignment: .center,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.enabled = true,
+    this.semanticLabel,
+    this.closeOnSelect = true,
+    this.focusNode,
+  }) : variant = FortalSelectVariant.ghost;
+
+  final FortalSelectVariant variant;
+
+  final FortalSelectSize size;
+
+  final bool highContrast;
+
+  final RemixSelectTrigger trigger;
+
+  final List<RemixSelectItem<T>> items;
+
+  final T? selectedValue;
+
+  final OverlayPositionConfig positioning;
+
+  final ValueChanged<T?>? onChanged;
+
+  final VoidCallback? onOpen;
+
+  final VoidCallback? onClose;
+
+  final bool enabled;
+
+  final String? semanticLabel;
+
+  final bool closeOnSelect;
+
+  final FocusNode? focusNode;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixSelect<T>(
+      key: this.key,
+      style: fortalSelectStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
+      trigger: this.trigger,
+      items: this.items,
+      selectedValue: this.selectedValue,
+      positioning: this.positioning,
+      onChanged: this.onChanged,
+      onOpen: this.onOpen,
+      onClose: this.onClose,
+      enabled: this.enabled,
+      semanticLabel: this.semanticLabel,
+      closeOnSelect: this.closeOnSelect,
+      focusNode: this.focusNode,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 
 class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec>
     with RemixBoxStylerMixin<RemixSelectStyler> {
   final Prop<StyleSpec<RemixSelectTriggerSpec>>? $trigger;
+  final Prop<StyleSpec<RemixSelectContentSpec>>? $content;
   final Prop<StyleSpec<FlexBoxSpec>>? $menuContainer;
   final Prop<StyleSpec<RemixSelectMenuItemSpec>>? $item;
 
   const RemixSelectStyler.create({
     Prop<StyleSpec<RemixSelectTriggerSpec>>? trigger,
+    Prop<StyleSpec<RemixSelectContentSpec>>? content,
     Prop<StyleSpec<FlexBoxSpec>>? menuContainer,
     Prop<StyleSpec<RemixSelectMenuItemSpec>>? item,
     super.variants,
     super.modifier,
     super.animation,
   }) : $trigger = trigger,
+       $content = content,
        $menuContainer = menuContainer,
        $item = item;
 
   RemixSelectStyler({
     RemixSelectTriggerStyler? trigger,
+    RemixSelectContentStyler? content,
     FlexBoxStyler? menuContainer,
     RemixSelectMenuItemStyler? item,
     AnimationConfig? animation,
@@ -290,6 +569,7 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec>
     List<VariantStyle<RemixSelectSpec>>? variants,
   }) : this.create(
          trigger: Prop.maybeMix(trigger),
+         content: Prop.maybeMix(content),
          menuContainer: Prop.maybeMix(menuContainer),
          item: Prop.maybeMix(item),
          variants: variants,
@@ -299,6 +579,8 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec>
 
   factory RemixSelectStyler.trigger(RemixSelectTriggerStyler value) =>
       RemixSelectStyler().trigger(value);
+  factory RemixSelectStyler.content(RemixSelectContentStyler value) =>
+      RemixSelectStyler().content(value);
   factory RemixSelectStyler.menuContainer(FlexBoxStyler value) =>
       RemixSelectStyler().menuContainer(value);
   factory RemixSelectStyler.item(RemixSelectMenuItemStyler value) =>
@@ -782,6 +1064,11 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec>
     return merge(RemixSelectStyler(trigger: value));
   }
 
+  /// Sets the content.
+  RemixSelectStyler content(RemixSelectContentStyler value) {
+    return merge(RemixSelectStyler(content: value));
+  }
+
   /// Sets the menuContainer.
   RemixSelectStyler menuContainer(FlexBoxStyler value) {
     return merge(RemixSelectStyler(menuContainer: value));
@@ -820,6 +1107,7 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec>
   RemixSelectStyler merge(RemixSelectStyler? other) {
     return RemixSelectStyler.create(
       trigger: MixOps.merge($trigger, other?.$trigger),
+      content: MixOps.merge($content, other?.$content),
       menuContainer: MixOps.merge($menuContainer, other?.$menuContainer),
       item: MixOps.merge($item, other?.$item),
       variants: MixOps.mergeVariants($variants, other?.$variants),
@@ -833,6 +1121,7 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec>
   StyleSpec<RemixSelectSpec> resolve(BuildContext context) {
     final spec = RemixSelectSpec(
       trigger: MixOps.resolve(context, $trigger),
+      content: MixOps.resolve(context, $content),
       menuContainer: MixOps.resolve(context, $menuContainer),
       item: MixOps.resolve(context, $item),
     );
@@ -849,6 +1138,7 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('trigger', $trigger))
+      ..add(DiagnosticsProperty('content', $content))
       ..add(DiagnosticsProperty('menuContainer', $menuContainer))
       ..add(DiagnosticsProperty('item', $item));
   }
@@ -856,6 +1146,7 @@ class RemixSelectStyler extends MixStyler<RemixSelectStyler, RemixSelectSpec>
   @override
   List<Object?> get props => [
     $trigger,
+    $content,
     $menuContainer,
     $item,
     $animation,
@@ -872,30 +1163,55 @@ class RemixSelectTriggerStyler
         IconStyleMixin<RemixSelectTriggerStyler> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
+  final Prop<StyleSpec<TextSpec>>? $placeholder;
   final Prop<StyleSpec<IconSpec>>? $icon;
+  final Prop<StyleSpec<IconSpec>>? $chevron;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
+  final Prop<double>? $chevronOpacity;
+  final Prop<double>? $placeholderOpacity;
 
   const RemixSelectTriggerStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
+    Prop<StyleSpec<TextSpec>>? placeholder,
     Prop<StyleSpec<IconSpec>>? icon,
+    Prop<StyleSpec<IconSpec>>? chevron,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
+    Prop<double>? chevronOpacity,
+    Prop<double>? placeholderOpacity,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $label = label,
-       $icon = icon;
+       $placeholder = placeholder,
+       $icon = icon,
+       $chevron = chevron,
+       $containerEffects = containerEffects,
+       $chevronOpacity = chevronOpacity,
+       $placeholderOpacity = placeholderOpacity;
 
   RemixSelectTriggerStyler({
     FlexBoxStyler? container,
     TextStyler? label,
+    TextStyler? placeholder,
     IconStyler? icon,
+    IconStyler? chevron,
+    RemixBoxEffectsMix? containerEffects,
+    double? chevronOpacity,
+    double? placeholderOpacity,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixSelectTriggerSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          label: Prop.maybeMix(label),
+         placeholder: Prop.maybeMix(placeholder),
          icon: Prop.maybeMix(icon),
+         chevron: Prop.maybeMix(chevron),
+         containerEffects: Prop.maybeMix(containerEffects),
+         chevronOpacity: Prop.maybe(chevronOpacity),
+         placeholderOpacity: Prop.maybe(placeholderOpacity),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -905,8 +1221,18 @@ class RemixSelectTriggerStyler
       RemixSelectTriggerStyler().container(value);
   factory RemixSelectTriggerStyler.label(TextStyler value) =>
       RemixSelectTriggerStyler().label(value);
+  factory RemixSelectTriggerStyler.placeholder(TextStyler value) =>
+      RemixSelectTriggerStyler().placeholder(value);
   factory RemixSelectTriggerStyler.icon(IconStyler value) =>
       RemixSelectTriggerStyler().icon(value);
+  factory RemixSelectTriggerStyler.chevron(IconStyler value) =>
+      RemixSelectTriggerStyler().chevron(value);
+  factory RemixSelectTriggerStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixSelectTriggerStyler().containerEffects(value);
+  factory RemixSelectTriggerStyler.chevronOpacity(double value) =>
+      RemixSelectTriggerStyler().chevronOpacity(value);
+  factory RemixSelectTriggerStyler.placeholderOpacity(double value) =>
+      RemixSelectTriggerStyler().placeholderOpacity(value);
   factory RemixSelectTriggerStyler.color(Color value) =>
       RemixSelectTriggerStyler().color(value);
   factory RemixSelectTriggerStyler.gradient(GradientMix value) =>
@@ -1463,10 +1789,35 @@ class RemixSelectTriggerStyler
     return merge(RemixSelectTriggerStyler(label: value));
   }
 
+  /// Sets the placeholder.
+  RemixSelectTriggerStyler placeholder(TextStyler value) {
+    return merge(RemixSelectTriggerStyler(placeholder: value));
+  }
+
   /// Sets the icon.
   @override
   RemixSelectTriggerStyler icon(IconStyler value) {
     return merge(RemixSelectTriggerStyler(icon: value));
+  }
+
+  /// Sets the chevron.
+  RemixSelectTriggerStyler chevron(IconStyler value) {
+    return merge(RemixSelectTriggerStyler(chevron: value));
+  }
+
+  /// Sets the containerEffects.
+  RemixSelectTriggerStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixSelectTriggerStyler(containerEffects: value));
+  }
+
+  /// Sets the chevronOpacity.
+  RemixSelectTriggerStyler chevronOpacity(double value) {
+    return merge(RemixSelectTriggerStyler(chevronOpacity: value));
+  }
+
+  /// Sets the placeholderOpacity.
+  RemixSelectTriggerStyler placeholderOpacity(double value) {
+    return merge(RemixSelectTriggerStyler(placeholderOpacity: value));
   }
 
   /// Sets the animation configuration.
@@ -1500,7 +1851,18 @@ class RemixSelectTriggerStyler
     return RemixSelectTriggerStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
+      placeholder: MixOps.merge($placeholder, other?.$placeholder),
       icon: MixOps.merge($icon, other?.$icon),
+      chevron: MixOps.merge($chevron, other?.$chevron),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
+      chevronOpacity: MixOps.merge($chevronOpacity, other?.$chevronOpacity),
+      placeholderOpacity: MixOps.merge(
+        $placeholderOpacity,
+        other?.$placeholderOpacity,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1513,7 +1875,12 @@ class RemixSelectTriggerStyler
     final spec = RemixSelectTriggerSpec(
       container: MixOps.resolve(context, $container),
       label: MixOps.resolve(context, $label),
+      placeholder: MixOps.resolve(context, $placeholder),
       icon: MixOps.resolve(context, $icon),
+      chevron: MixOps.resolve(context, $chevron),
+      containerEffects: MixOps.resolve(context, $containerEffects),
+      chevronOpacity: MixOps.resolve(context, $chevronOpacity),
+      placeholderOpacity: MixOps.resolve(context, $placeholderOpacity),
     );
 
     return StyleSpec(
@@ -1529,14 +1896,625 @@ class RemixSelectTriggerStyler
     properties
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('label', $label))
-      ..add(DiagnosticsProperty('icon', $icon));
+      ..add(DiagnosticsProperty('placeholder', $placeholder))
+      ..add(DiagnosticsProperty('icon', $icon))
+      ..add(DiagnosticsProperty('chevron', $chevron))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
+      ..add(DiagnosticsProperty('chevronOpacity', $chevronOpacity))
+      ..add(DiagnosticsProperty('placeholderOpacity', $placeholderOpacity));
   }
 
   @override
   List<Object?> get props => [
     $container,
     $label,
+    $placeholder,
     $icon,
+    $chevron,
+    $containerEffects,
+    $chevronOpacity,
+    $placeholderOpacity,
+    $animation,
+    $modifier,
+    $variants,
+  ];
+}
+
+class RemixSelectContentStyler
+    extends MixStyler<RemixSelectContentStyler, RemixSelectContentSpec>
+    with RemixBoxStylerMixin<RemixSelectContentStyler> {
+  final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
+
+  const RemixSelectContentStyler.create({
+    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
+    super.variants,
+    super.modifier,
+    super.animation,
+  }) : $container = container,
+       $containerEffects = containerEffects;
+
+  RemixSelectContentStyler({
+    BoxStyler? container,
+    RemixBoxEffectsMix? containerEffects,
+    AnimationConfig? animation,
+    WidgetModifierConfig? modifier,
+    List<VariantStyle<RemixSelectContentSpec>>? variants,
+  }) : this.create(
+         container: Prop.maybeMix(container),
+         containerEffects: Prop.maybeMix(containerEffects),
+         variants: variants,
+         modifier: modifier,
+         animation: animation,
+       );
+
+  factory RemixSelectContentStyler.container(BoxStyler value) =>
+      RemixSelectContentStyler().container(value);
+  factory RemixSelectContentStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixSelectContentStyler().containerEffects(value);
+  factory RemixSelectContentStyler.alignment(AlignmentGeometry value) =>
+      RemixSelectContentStyler().alignment(value);
+  factory RemixSelectContentStyler.padding(EdgeInsetsGeometryMix value) =>
+      RemixSelectContentStyler().padding(value);
+  factory RemixSelectContentStyler.margin(EdgeInsetsGeometryMix value) =>
+      RemixSelectContentStyler().margin(value);
+  factory RemixSelectContentStyler.constraints(BoxConstraintsMix value) =>
+      RemixSelectContentStyler().constraints(value);
+  factory RemixSelectContentStyler.decoration(DecorationMix value) =>
+      RemixSelectContentStyler().decoration(value);
+  factory RemixSelectContentStyler.foregroundDecoration(DecorationMix value) =>
+      RemixSelectContentStyler().foregroundDecoration(value);
+  factory RemixSelectContentStyler.clipBehavior(Clip value) =>
+      RemixSelectContentStyler().clipBehavior(value);
+  factory RemixSelectContentStyler.color(Color value) =>
+      RemixSelectContentStyler().color(value);
+  factory RemixSelectContentStyler.gradient(GradientMix value) =>
+      RemixSelectContentStyler().gradient(value);
+  factory RemixSelectContentStyler.border(BoxBorderMix value) =>
+      RemixSelectContentStyler().border(value);
+  factory RemixSelectContentStyler.borderRadius(
+    BorderRadiusGeometryMix value,
+  ) => RemixSelectContentStyler().borderRadius(value);
+  factory RemixSelectContentStyler.elevation(ElevationShadow value) =>
+      RemixSelectContentStyler().elevation(value);
+  factory RemixSelectContentStyler.shadow(BoxShadowMix value) =>
+      RemixSelectContentStyler().shadow(value);
+  factory RemixSelectContentStyler.shadows(List<BoxShadowMix> value) =>
+      RemixSelectContentStyler().shadows(value);
+  factory RemixSelectContentStyler.width(double value) =>
+      RemixSelectContentStyler().width(value);
+  factory RemixSelectContentStyler.height(double value) =>
+      RemixSelectContentStyler().height(value);
+  factory RemixSelectContentStyler.size(double width, double height) =>
+      RemixSelectContentStyler().size(width, height);
+  factory RemixSelectContentStyler.minWidth(double value) =>
+      RemixSelectContentStyler().minWidth(value);
+  factory RemixSelectContentStyler.maxWidth(double value) =>
+      RemixSelectContentStyler().maxWidth(value);
+  factory RemixSelectContentStyler.minHeight(double value) =>
+      RemixSelectContentStyler().minHeight(value);
+  factory RemixSelectContentStyler.maxHeight(double value) =>
+      RemixSelectContentStyler().maxHeight(value);
+  factory RemixSelectContentStyler.scale(
+    double scale, {
+    Alignment alignment = .center,
+  }) => RemixSelectContentStyler().scale(scale, alignment: alignment);
+  factory RemixSelectContentStyler.rotate(
+    double radians, {
+    Alignment alignment = .center,
+  }) => RemixSelectContentStyler().rotate(radians, alignment: alignment);
+  factory RemixSelectContentStyler.translate(
+    double x,
+    double y, [
+    double z = 0.0,
+  ]) => RemixSelectContentStyler().translate(x, y, z);
+  factory RemixSelectContentStyler.skew(double skewX, double skewY) =>
+      RemixSelectContentStyler().skew(skewX, skewY);
+  factory RemixSelectContentStyler.textStyle(TextStyler value) =>
+      RemixSelectContentStyler().textStyle(value);
+  factory RemixSelectContentStyler.image(DecorationImageMix value) =>
+      RemixSelectContentStyler().image(value);
+  factory RemixSelectContentStyler.shape(ShapeBorderMix value) =>
+      RemixSelectContentStyler().shape(value);
+  factory RemixSelectContentStyler.backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixSelectContentStyler().backgroundImage(
+    image,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixSelectContentStyler.backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixSelectContentStyler().backgroundImageUrl(
+    url,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixSelectContentStyler.backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixSelectContentStyler().backgroundImageAsset(
+    path,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixSelectContentStyler.linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixSelectContentStyler().linearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixSelectContentStyler.radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixSelectContentStyler().radialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixSelectContentStyler.sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixSelectContentStyler().sweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixSelectContentStyler.foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixSelectContentStyler().foregroundLinearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixSelectContentStyler.foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixSelectContentStyler().foregroundRadialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixSelectContentStyler.foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixSelectContentStyler().foregroundSweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixSelectContentStyler.transform(
+    Matrix4 value, {
+    Alignment alignment = .center,
+  }) => RemixSelectContentStyler().transform(value, alignment: alignment);
+
+  RemixSelectContentStyler alignment(AlignmentGeometry value) {
+    return container(BoxStyler().alignment(value));
+  }
+
+  RemixSelectContentStyler padding(EdgeInsetsGeometryMix value) {
+    return container(BoxStyler().padding(value));
+  }
+
+  RemixSelectContentStyler margin(EdgeInsetsGeometryMix value) {
+    return container(BoxStyler().margin(value));
+  }
+
+  RemixSelectContentStyler constraints(BoxConstraintsMix value) {
+    return container(BoxStyler().constraints(value));
+  }
+
+  RemixSelectContentStyler decoration(DecorationMix value) {
+    return container(BoxStyler().decoration(value));
+  }
+
+  RemixSelectContentStyler foregroundDecoration(DecorationMix value) {
+    return container(BoxStyler().foregroundDecoration(value));
+  }
+
+  RemixSelectContentStyler clipBehavior(Clip value) {
+    return container(BoxStyler().clipBehavior(value));
+  }
+
+  RemixSelectContentStyler color(Color value) {
+    return container(BoxStyler().color(value));
+  }
+
+  RemixSelectContentStyler gradient(GradientMix value) {
+    return container(BoxStyler().gradient(value));
+  }
+
+  RemixSelectContentStyler border(BoxBorderMix value) {
+    return container(BoxStyler().border(value));
+  }
+
+  RemixSelectContentStyler borderRadius(BorderRadiusGeometryMix value) {
+    return container(BoxStyler().borderRadius(value));
+  }
+
+  RemixSelectContentStyler elevation(ElevationShadow value) {
+    return container(BoxStyler().elevation(value));
+  }
+
+  RemixSelectContentStyler shadow(BoxShadowMix value) {
+    return container(BoxStyler().shadow(value));
+  }
+
+  RemixSelectContentStyler shadows(List<BoxShadowMix> value) {
+    return container(BoxStyler().shadows(value));
+  }
+
+  RemixSelectContentStyler width(double value) {
+    return container(BoxStyler().width(value));
+  }
+
+  RemixSelectContentStyler height(double value) {
+    return container(BoxStyler().height(value));
+  }
+
+  RemixSelectContentStyler size(double width, double height) {
+    return container(BoxStyler().size(width, height));
+  }
+
+  RemixSelectContentStyler minWidth(double value) {
+    return container(BoxStyler().minWidth(value));
+  }
+
+  RemixSelectContentStyler maxWidth(double value) {
+    return container(BoxStyler().maxWidth(value));
+  }
+
+  RemixSelectContentStyler minHeight(double value) {
+    return container(BoxStyler().minHeight(value));
+  }
+
+  RemixSelectContentStyler maxHeight(double value) {
+    return container(BoxStyler().maxHeight(value));
+  }
+
+  RemixSelectContentStyler scale(
+    double scale, {
+    Alignment alignment = .center,
+  }) {
+    return container(BoxStyler().scale(scale, alignment: alignment));
+  }
+
+  RemixSelectContentStyler rotate(
+    double radians, {
+    Alignment alignment = .center,
+  }) {
+    return container(BoxStyler().rotate(radians, alignment: alignment));
+  }
+
+  RemixSelectContentStyler translate(double x, double y, [double z = 0.0]) {
+    return container(BoxStyler().translate(x, y, z));
+  }
+
+  RemixSelectContentStyler skew(double skewX, double skewY) {
+    return container(BoxStyler().skew(skewX, skewY));
+  }
+
+  RemixSelectContentStyler textStyle(TextStyler value) {
+    return container(BoxStyler().textStyle(value));
+  }
+
+  RemixSelectContentStyler image(DecorationImageMix value) {
+    return container(BoxStyler().image(value));
+  }
+
+  RemixSelectContentStyler shape(ShapeBorderMix value) {
+    return container(BoxStyler().shape(value));
+  }
+
+  RemixSelectContentStyler backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImage(
+        image,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  RemixSelectContentStyler backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImageUrl(
+        url,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  RemixSelectContentStyler backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImageAsset(
+        path,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  RemixSelectContentStyler linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().linearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixSelectContentStyler radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().radialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixSelectContentStyler sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().sweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixSelectContentStyler foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().foregroundLinearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixSelectContentStyler foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().foregroundRadialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixSelectContentStyler foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().foregroundSweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixSelectContentStyler transform(
+    Matrix4 value, {
+    Alignment alignment = .center,
+  }) {
+    return container(BoxStyler().transform(value, alignment: alignment));
+  }
+
+  /// Sets the container.
+  RemixSelectContentStyler container(BoxStyler value) {
+    return merge(RemixSelectContentStyler(container: value));
+  }
+
+  /// Sets the containerEffects.
+  RemixSelectContentStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixSelectContentStyler(containerEffects: value));
+  }
+
+  /// Sets the animation configuration.
+  @override
+  RemixSelectContentStyler animate(AnimationConfig value) {
+    return merge(RemixSelectContentStyler(animation: value));
+  }
+
+  /// Sets the style variants.
+  @override
+  RemixSelectContentStyler variants(
+    List<VariantStyle<RemixSelectContentSpec>> value,
+  ) {
+    return merge(RemixSelectContentStyler(variants: value));
+  }
+
+  /// Wraps with a widget modifier.
+  @override
+  RemixSelectContentStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixSelectContentStyler(modifier: value));
+  }
+
+  /// Sets the widget modifier.
+  RemixSelectContentStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixSelectContentStyler(modifier: value));
+  }
+
+  /// Merges with another [RemixSelectContentStyler].
+  @override
+  RemixSelectContentStyler merge(RemixSelectContentStyler? other) {
+    return RemixSelectContentStyler.create(
+      container: MixOps.merge($container, other?.$container),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
+      variants: MixOps.mergeVariants($variants, other?.$variants),
+      modifier: MixOps.mergeModifier($modifier, other?.$modifier),
+      animation: MixOps.mergeAnimation($animation, other?.$animation),
+    );
+  }
+
+  /// Resolves to [StyleSpec<RemixSelectContentSpec>] using [context].
+  @override
+  StyleSpec<RemixSelectContentSpec> resolve(BuildContext context) {
+    final spec = RemixSelectContentSpec(
+      container: MixOps.resolve(context, $container),
+      containerEffects: MixOps.resolve(context, $containerEffects),
+    );
+
+    return StyleSpec(
+      spec: spec,
+      animation: $animation,
+      widgetModifiers: $modifier?.resolve(context),
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
+  }
+
+  @override
+  List<Object?> get props => [
+    $container,
+    $containerEffects,
     $animation,
     $modifier,
     $variants,
@@ -1550,22 +2528,26 @@ class RemixSelectMenuItemStyler
         IconStyleMixin<RemixSelectMenuItemStyler> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
+  final Prop<StyleSpec<BoxSpec>>? $indicator;
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const RemixSelectMenuItemStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? text,
+    Prop<StyleSpec<BoxSpec>>? indicator,
     Prop<StyleSpec<IconSpec>>? icon,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $text = text,
+       $indicator = indicator,
        $icon = icon;
 
   RemixSelectMenuItemStyler({
     FlexBoxStyler? container,
     TextStyler? text,
+    BoxStyler? indicator,
     IconStyler? icon,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -1573,6 +2555,7 @@ class RemixSelectMenuItemStyler
   }) : this.create(
          container: Prop.maybeMix(container),
          text: Prop.maybeMix(text),
+         indicator: Prop.maybeMix(indicator),
          icon: Prop.maybeMix(icon),
          variants: variants,
          modifier: modifier,
@@ -1583,6 +2566,8 @@ class RemixSelectMenuItemStyler
       RemixSelectMenuItemStyler().container(value);
   factory RemixSelectMenuItemStyler.text(TextStyler value) =>
       RemixSelectMenuItemStyler().text(value);
+  factory RemixSelectMenuItemStyler.indicator(BoxStyler value) =>
+      RemixSelectMenuItemStyler().indicator(value);
   factory RemixSelectMenuItemStyler.icon(IconStyler value) =>
       RemixSelectMenuItemStyler().icon(value);
   factory RemixSelectMenuItemStyler.color(Color value) =>
@@ -2142,6 +3127,11 @@ class RemixSelectMenuItemStyler
     return merge(RemixSelectMenuItemStyler(text: value));
   }
 
+  /// Sets the indicator.
+  RemixSelectMenuItemStyler indicator(BoxStyler value) {
+    return merge(RemixSelectMenuItemStyler(indicator: value));
+  }
+
   /// Sets the icon.
   @override
   RemixSelectMenuItemStyler icon(IconStyler value) {
@@ -2179,6 +3169,7 @@ class RemixSelectMenuItemStyler
     return RemixSelectMenuItemStyler.create(
       container: MixOps.merge($container, other?.$container),
       text: MixOps.merge($text, other?.$text),
+      indicator: MixOps.merge($indicator, other?.$indicator),
       icon: MixOps.merge($icon, other?.$icon),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
@@ -2192,6 +3183,7 @@ class RemixSelectMenuItemStyler
     final spec = RemixSelectMenuItemSpec(
       container: MixOps.resolve(context, $container),
       text: MixOps.resolve(context, $text),
+      indicator: MixOps.resolve(context, $indicator),
       icon: MixOps.resolve(context, $icon),
     );
 
@@ -2208,6 +3200,7 @@ class RemixSelectMenuItemStyler
     properties
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('text', $text))
+      ..add(DiagnosticsProperty('indicator', $indicator))
       ..add(DiagnosticsProperty('icon', $icon));
   }
 
@@ -2215,6 +3208,7 @@ class RemixSelectMenuItemStyler
   List<Object?> get props => [
     $container,
     $text,
+    $indicator,
     $icon,
     $animation,
     $modifier,

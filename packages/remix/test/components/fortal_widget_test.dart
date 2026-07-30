@@ -46,11 +46,32 @@ void main() {
       expect(find.byType(RemixAccordion<String>), findsOneWidget);
     });
 
-    testWidgets('renders FortalAvatar', (tester) async {
-      await tester.pumpRemixApp(const FortalAvatar(label: 'LF'));
+    testWidgets('forwards FortalAvatar recipe parameters', (tester) async {
+      await tester.pumpRemixApp(
+        const FortalAvatar.solid(
+          label: 'LF',
+          highContrast: true,
+          fallbackLength: 2,
+        ),
+      );
 
       expect(find.byType(FortalAvatar), findsOneWidget);
       expect(find.byType(RemixAvatar), findsOneWidget);
+
+      final generated = tester.widget<FortalAvatar>(find.byType(FortalAvatar));
+      expect(generated.variant, FortalAvatarVariant.solid);
+      expect(generated.highContrast, isTrue);
+      expect(generated.fallbackLength, 2);
+
+      final avatar = tester.widget<RemixAvatar>(find.byType(RemixAvatar));
+      expect(
+        avatar.style,
+        fortalAvatarStyle(
+          variant: .solid,
+          highContrast: true,
+          fallbackLength: 2,
+        ),
+      );
     });
 
     testWidgets('renders FortalBadge', (tester) async {
@@ -78,7 +99,7 @@ void main() {
         final label = tester.widget<Text>(find.text(variant.name));
         expect(
           label.style?.color,
-          colors.accent.scale.step(12),
+          colors.accent.scale.alphaStep(11),
           reason: '${variant.name} badges use the accent text step',
         );
       }

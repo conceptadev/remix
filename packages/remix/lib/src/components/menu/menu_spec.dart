@@ -45,6 +45,11 @@ class RemixMenuSpec with _$RemixMenuSpec {
   @override
   final StyleSpec<FlexBoxSpec> overlay;
 
+  /// Paint layers behind the popup overlay.
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
+
   /// Default style spec applied to menu items.
   @override
   final StyleSpec<RemixMenuItemSpec> item;
@@ -57,12 +62,28 @@ class RemixMenuSpec with _$RemixMenuSpec {
   const RemixMenuSpec({
     StyleSpec<RemixMenuTriggerSpec>? trigger,
     StyleSpec<FlexBoxSpec>? overlay,
+    this.containerEffects,
     StyleSpec<RemixMenuItemSpec>? item,
     StyleSpec<RemixDividerSpec>? divider,
   }) : trigger = trigger ?? const StyleSpec(spec: RemixMenuTriggerSpec()),
        overlay = overlay ?? const StyleSpec(spec: FlexBoxSpec()),
        item = item ?? const StyleSpec(spec: RemixMenuItemSpec()),
        divider = divider ?? const StyleSpec(spec: RemixDividerSpec());
+
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
+  @override
+  RemixMenuSpec lerp(RemixMenuSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
+    );
+  }
 }
 
 /// Resolved visual properties for a [RemixMenuItem].

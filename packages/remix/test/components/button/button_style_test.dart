@@ -480,8 +480,8 @@ void main() {
   group('FortalButton recipe', () {
     test('defaults to solid variant and size2', () {
       expect(
-        fortalButtonStyler(),
-        equals(fortalButtonStyler(variant: .solid, size: .size2)),
+        fortalButtonStyle(),
+        equals(fortalButtonStyle(variant: .solid, size: .size2)),
       );
     });
 
@@ -489,7 +489,7 @@ void main() {
       testWidgets('resolves $variant variant', (tester) async {
         final resolved = await _resolveFortalButtonStyle(
           tester,
-          fortalButtonStyler(variant: variant),
+          fortalButtonStyle(variant: variant),
         );
 
         expect(resolved, isA<StyleSpec<RemixButtonSpec>>());
@@ -503,7 +503,7 @@ void main() {
       for (final size in FortalButtonSize.values) {
         resolvedBySize[size] = await _resolveFortalButtonStyle(
           tester,
-          fortalButtonStyler(size: size),
+          fortalButtonStyle(size: size),
         );
       }
 
@@ -513,9 +513,15 @@ void main() {
       final spacings = resolvedBySize.values
           .map((spec) => spec.spec.container.spec.flex?.spec.spacing)
           .toSet();
+      final heights = resolvedBySize.values
+          .map(
+            (spec) => spec.spec.container.spec.box?.spec.constraints?.minHeight,
+          )
+          .toSet();
 
       expect(paddings, hasLength(FortalButtonSize.values.length));
-      expect(spacings, hasLength(FortalButtonSize.values.length));
+      expect(heights, hasLength(FortalButtonSize.values.length));
+      expect(spacings, hasLength(3));
     });
   });
 }

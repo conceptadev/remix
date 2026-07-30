@@ -83,9 +83,9 @@ void main() {
         addTearDown(focusNode.dispose);
 
         await tester.pumpRemixApp(
-          FortalButton(
-            variant: .soft,
+          FortalButton.soft(
             size: .size3,
+            highContrast: true,
             label: 'Save',
             leadingIcon: Icons.save,
             trailingIcon: Icons.check,
@@ -110,13 +110,16 @@ void main() {
         );
         expect(generated.variant, equals(FortalButtonVariant.soft));
         expect(generated.size, equals(FortalButtonSize.size3));
+        expect(generated.highContrast, isTrue);
 
         final remixButton = tester.widget<RemixButton>(
           find.byType(RemixButton),
         );
         expect(
           remixButton.style,
-          equals(fortalButtonStyler(variant: .soft, size: .size3)),
+          equals(
+            fortalButtonStyle(variant: .soft, size: .size3, highContrast: true),
+          ),
         );
         expect(remixButton.label, equals('Save'));
         expect(remixButton.leadingIcon, equals(Icons.save));
@@ -136,6 +139,68 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(pressCount, equals(1));
+      });
+
+      testWidgets('keeps scaled labels unclipped across sizes and variants', (
+        tester,
+      ) async {
+        for (final variant in const [
+          FortalButtonVariant.solid,
+          FortalButtonVariant.outline,
+        ]) {
+          for (final size in FortalButtonSize.values) {
+            await tester.pumpRemixApp(
+              MediaQuery(
+                data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+                child: FortalButton(
+                  variant: variant,
+                  size: size,
+                  label: 'Continue',
+                  onPressed: () {},
+                ),
+              ),
+            );
+            await tester.pumpAndSettle();
+
+            final label = tester.renderObject<RenderBox>(find.text('Continue'));
+            final intrinsicHeight = label.getMaxIntrinsicHeight(
+              label.size.width,
+            );
+
+            expect(tester.takeException(), isNull);
+            expect(
+              label.size.height,
+              greaterThanOrEqualTo(intrinsicHeight - 0.01),
+              reason: '${variant.name}/${size.name} clipped its label',
+            );
+          }
+        }
+      });
+
+      testWidgets('preserves normal-scale Fortal heights', (tester) async {
+        const expectedHeights = {
+          FortalButtonSize.size1: 24.0,
+          FortalButtonSize.size2: 32.0,
+          FortalButtonSize.size3: 40.0,
+          FortalButtonSize.size4: 48.0,
+        };
+
+        for (final entry in expectedHeights.entries) {
+          await tester.pumpRemixApp(
+            FortalButton.solid(
+              size: entry.key,
+              label: 'Continue',
+              onPressed: () {},
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          expect(
+            tester.getSize(find.byType(RowBox)).height,
+            entry.value,
+            reason: entry.key.name,
+          );
+        }
       });
     });
 

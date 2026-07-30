@@ -18,6 +18,7 @@ extension RemixDialogStylerRemixHelpers on RemixDialogStyler {
     String? title,
     String? description,
     List<Widget>? actions,
+    bool scrollable = false,
     bool modal = true,
     String? semanticLabel,
   }) {
@@ -26,6 +27,7 @@ extension RemixDialogStylerRemixHelpers on RemixDialogStyler {
       title: title,
       description: description,
       actions: actions,
+      scrollable: scrollable,
       modal: modal,
       semanticLabel: semanticLabel,
       style: this,

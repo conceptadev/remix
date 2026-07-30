@@ -20,8 +20,8 @@ Widget buildPopoverUseCase(BuildContext context) {
           consumeOutsideTaps: consumeOutsideTaps,
           semanticLabel: 'Show collaboration details',
           positioning: const OverlayPositionConfig(
-            targetAnchor: .bottomCenter,
-            followerAnchor: .topCenter,
+            side: .bottom,
+            alignment: .center,
           ),
           popoverChild: SizedBox(
             width: 280,

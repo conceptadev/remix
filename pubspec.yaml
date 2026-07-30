@@ -7,6 +7,8 @@ dev_dependencies:
   melos: ^7.1.1
   flutter_lints: ^6.0.0
   build_runner: ^2.10.1
+  pub_semver: ^2.2.0
+  yaml: ^3.1.3
 
 workspace:
   - packages/demo
@@ -32,10 +34,10 @@ melos:
         scope: remix
 
     generate:check:
-      steps:
-        - generate
-        - git diff --exit-code -- packages/remix/lib
-      description: Regenerate Remix sources and fail on generated drift
+      exec: dart run tool/check_generated.dart
+      description: Regenerate Remix sources and fail only on generated drift
+      packageFilters:
+        scope: remix
 
     test:flutter:
       exec: flutter test --reporter=failures-only
@@ -43,8 +45,27 @@ melos:
       packageFilters:
         dirExists: test
 
+    mix:consumer:check:
+      run: dart run tool/check_consumer_mix.dart
+      description: Verify consumer tests resolve the declared hosted Mix release
+
     ci:
       steps:
+        - mix:consumer:check
         - generate:check
+        - docs:check
+        - fortal:parity:check
         - test:flutter
-      description: Verify generated sources, then run Flutter and Dart tests
+      description: Verify generated sources, docs, Fortal parity, and tests
+
+    fortal:parity:check:
+      exec: dart run tool/fortal_parity/check.dart
+      description: Verify the pinned Radix Themes 3.3.0 parity contract and coverage
+      packageFilters:
+        scope: remix
+
+    docs:check:
+      exec: dart run tool/validate_docs.dart
+      description: Reject retired APIs in docs and examples, then analyze MDX Dart snippets
+      packageFilters:
+        scope: remix

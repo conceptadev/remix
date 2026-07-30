@@ -78,8 +78,8 @@ class RemixSelect<T> extends StatefulWidget {
     required this.items,
     this.selectedValue,
     this.positioning = const OverlayPositionConfig(
-      targetAnchor: .bottomCenter,
-      followerAnchor: .topCenter,
+      side: .bottom,
+      alignment: .center,
     ),
     this.onChanged,
     this.onOpen,
@@ -175,6 +175,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       controller: animationController,
       duration: const Duration(milliseconds: 150),
       curve: Curves.easeInOut,
+      content: spec.content,
       menuContainer: menuContainerSpec,
       children: widget.items
           .map(
@@ -188,24 +189,25 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     );
   }
 
-  String _getDisplayLabel() {
-    if (widget.selectedValue == null) return widget.trigger.placeholder;
+  RemixSelectItem<T>? _findSelectedItem() {
+    final selectedValue = widget.selectedValue;
+    if (selectedValue == null) return null;
 
-    // Find the selected item and get its label
+    RemixSelectItem<T>? selectedItem;
     for (final item in widget.items) {
-      if (item.value == widget.selectedValue) {
-        return item.label;
+      if (item.value == selectedValue) {
+        selectedItem = item;
+        break;
       }
     }
 
     assert(
-      widget.items.any((item) => item.value == widget.selectedValue),
-      'RemixSelect: selectedValue "${widget.selectedValue}" not found in items. '
+      selectedItem != null,
+      'RemixSelect: selectedValue "$selectedValue" not found in items. '
       'Ensure selectedValue matches one of the item values.',
     );
 
-    // Gracefully degrade in release mode - show placeholder
-    return widget.trigger.placeholder;
+    return selectedItem;
   }
 
   void _handleChanged(T? value) => widget.onChanged?.call(value);
@@ -219,6 +221,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   @override
   Widget build(BuildContext context) {
     final style = _buildStyle();
+    final selectedItem = _findSelectedItem();
 
     return NakedSelect<T>(
       overlayBuilder: (context, info) {
@@ -253,7 +256,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
             return _RemixSelectTriggerWidget(
               trigger: widget.trigger,
-              displayLabel: _getDisplayLabel(),
+              displayLabel: selectedItem?.label ?? widget.trigger.placeholder,
+              isPlaceholder: selectedItem == null,
               isOpen: state.isOpen,
               styleSpec: triggerSpec,
             );
@@ -269,6 +273,7 @@ class _AnimatedOverlayMenu extends StatefulWidget {
     required this.controller,
     required this.duration,
     required this.curve,
+    required this.content,
     required this.menuContainer,
     required this.children,
   });
@@ -276,6 +281,7 @@ class _AnimatedOverlayMenu extends StatefulWidget {
   final AnimationController controller;
   final Duration duration;
   final Curve curve;
+  final StyleSpec<RemixSelectContentSpec> content;
   final StyleSpec<FlexBoxSpec> menuContainer;
   final List<Widget> children;
 
@@ -322,9 +328,16 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
           scale: scaleAnimation.value,
           child: Opacity(
             opacity: fadeAnimation.value,
-            child: ColumnBox(
-              styleSpec: widget.menuContainer,
-              children: widget.children,
+            child: StyleSpecBuilder<RemixSelectContentSpec>(
+              styleSpec: widget.content,
+              builder: (context, spec) => RemixBoxWithEffects(
+                styleSpec: spec.container,
+                containerEffects: spec.containerEffects,
+                child: ColumnBox(
+                  styleSpec: widget.menuContainer,
+                  children: widget.children,
+                ),
+              ),
             ),
           ),
         );
@@ -342,12 +355,14 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
   const _RemixSelectTriggerWidget({
     required this.trigger,
     required this.displayLabel,
+    required this.isPlaceholder,
     required this.isOpen,
     required this.styleSpec,
   });
 
   final RemixSelectTrigger trigger;
   final String displayLabel;
+  final bool isPlaceholder;
   final bool isOpen;
   final StyleSpec<RemixSelectTriggerSpec> styleSpec;
 
@@ -356,18 +371,33 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
     return StyleSpecBuilder<RemixSelectTriggerSpec>(
       styleSpec: styleSpec,
       builder: (context, spec) {
-        return RowBox(
+        return RemixFlexBoxWithEffects(
           styleSpec: spec.container,
+          direction: Axis.horizontal,
+          containerEffects: spec.containerEffects,
           children: [
             if (trigger.icon != null)
               StyledIcon(icon: trigger.icon!, styleSpec: spec.icon),
             // ignore: avoid-flexible-outside-flex
-            Expanded(child: StyledText(displayLabel, styleSpec: spec.label)),
-            StyledIcon(
-              icon: isOpen
-                  ? Icons.keyboard_arrow_up
-                  : Icons.keyboard_arrow_down,
-              styleSpec: spec.icon,
+            Expanded(
+              child: Opacity(
+                opacity: isPlaceholder ? spec.placeholderOpacity ?? 1 : 1,
+                child: StyledText(
+                  displayLabel,
+                  styleSpec: isPlaceholder ? spec.placeholder : spec.label,
+                ),
+              ),
+            ),
+            Transform.rotate(
+              angle: isOpen ? math.pi : 0,
+              child: Opacity(
+                opacity: spec.chevronOpacity ?? 1,
+                child: RemixPathIcon(
+                  key: const ValueKey('fortal-select-chevron'),
+                  glyph: RemixPathGlyph.chevronDown,
+                  styleSpec: spec.chevron,
+                ),
+              ),
             ),
           ],
         );
@@ -427,7 +457,14 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
                           child: StyledText(data.label, styleSpec: spec.text),
                         ),
                         if (states.isSelected)
-                          StyledIcon(icon: Icons.check, styleSpec: spec.icon),
+                          Box(
+                            styleSpec: spec.indicator,
+                            child: RemixPathIcon(
+                              key: const ValueKey('fortal-select-indicator'),
+                              glyph: RemixPathGlyph.thickCheck,
+                              styleSpec: spec.icon,
+                            ),
+                          ),
                       ],
                     ),
                   ),

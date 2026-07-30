@@ -98,7 +98,7 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 ///     RemixMenuItem(value: 'delete', label: 'Delete', leadingIcon: Icons.delete),
 ///   ],
 ///   onSelected: (value) => debugPrint('Selected: $value'),
-///   style: fortalMenuStyler(),
+///   style: fortalMenuStyle(),
 /// )
 ///
 /// // Advanced usage - provide controller for programmatic control
@@ -218,8 +218,10 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
           style: style,
           styleSpec: widget.styleSpec,
           builder: (context, spec) {
-            return ColumnBox(
+            return RemixFlexBoxWithEffects(
               styleSpec: spec.overlay,
+              direction: Axis.vertical,
+              containerEffects: spec.containerEffects,
               children: widget.items.map((item) {
                 // Pattern matching ensures exhaustiveness
                 return switch (item) {

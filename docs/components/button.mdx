@@ -101,7 +101,7 @@ class ButtonExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -149,13 +149,16 @@ class FortalButtonExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalButtonStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/button/fortal_button_styles.dart) for all available options.
+  See the [fortalButtonStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/button/fortal_button_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixButton({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixButton remixButtonConstructor({
   Key? key,
   required String label,
   IconData? leadingIcon,
@@ -177,7 +180,7 @@ const RemixButton({
   MouseCursor mouseCursor = SystemMouseCursors.click,
   ButtonStyler style = const ButtonStyler.create(),
   RemixButtonSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

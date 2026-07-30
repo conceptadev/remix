@@ -61,9 +61,9 @@ class _MenuExampleState extends State<MenuExample> {
         ),
       ],
       positioning: const OverlayPositionConfig(
-        offset: Offset(0, 8),
-        followerAnchor: Alignment.topCenter,
-        targetAnchor: Alignment.bottomCenter,
+        sideOffset: 8,
+        side: OverlaySide.bottom,
+        alignment: OverlayAlignment.center,
       ),
       style: menuStyle,
       onSelected: (value) {
@@ -132,7 +132,7 @@ class _MenuExampleState extends State<MenuExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -177,13 +177,16 @@ class FortalMenuExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalMenuStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/menu/fortal_menu_styles.dart) for all available options.
+  See the [fortalMenuStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/menu/fortal_menu_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixMenu({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixMenu<T> remixMenuConstructor<T>({
   Key? key,
   required RemixMenuTrigger trigger,
   required List<RemixMenuItemData<T>> items,
@@ -201,7 +204,7 @@ const RemixMenu({
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
   RemixMenuStyler style = const RemixMenuStyler.create(),
   RemixMenuSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 
@@ -247,7 +250,7 @@ Optional. Open/close interceptors (for example, to drive animations).
 
 #### `onCloseRequested` → `RawMenuAnchorCloseRequestedCallback?`
 
-Optional. 
+Optional.
 
 #### `consumeOutsideTaps` → `bool`
 

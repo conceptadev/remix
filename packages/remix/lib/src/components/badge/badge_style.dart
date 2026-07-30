@@ -22,13 +22,11 @@ extension RemixBadgeStylerRemixHelpers on RemixBadgeStyler {
     String? label,
     Widget? child,
     RemixBadgeLabelBuilder? labelBuilder,
-  }) {
-    return RemixBadge(
-      key: key,
-      label: label,
-      labelBuilder: labelBuilder,
-      style: this,
-      child: child,
-    );
-  }
+  }) => RemixBadge(
+    key: key,
+    label: label,
+    child: child,
+    labelBuilder: labelBuilder,
+    style: this,
+  );
 }

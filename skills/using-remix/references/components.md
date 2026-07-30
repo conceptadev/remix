@@ -429,7 +429,7 @@ Fortal preset: `FortalTooltip` — same params, no variant/size.
 - **RemixMenuDivider\<T\>**: no fields, visual separator.
 
 Fortal preset: `FortalMenu<T>` — `variant` (`solid|soft`), `size`
-(`size1–size2`). Like Select, `fortalMenuStyler` already bakes in the matching
+(`size1–size2`). Like Select, `fortalMenuStyle` already bakes in the matching
 item styler; use an individual item's `style` only for a row-level override.
 
 ---

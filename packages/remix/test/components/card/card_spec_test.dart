@@ -138,7 +138,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixCardSpec();
 
-        expect(spec.props, hasLength(1));
+        expect(spec.props, hasLength(2));
         expect(spec.props, contains(spec.container));
       });
 
@@ -147,7 +147,7 @@ void main() {
 
         final spec = RemixCardSpec(container: containerSpec);
 
-        expect(spec.props, hasLength(1));
+        expect(spec.props, hasLength(2));
         expect(spec.props, contains(containerSpec));
       });
     });
@@ -220,7 +220,7 @@ void main() {
         final spec = RemixCardSpec(container: complexContainerSpec);
 
         expect(spec.container, equals(complexContainerSpec));
-        expect(spec.props, hasLength(1));
+        expect(spec.props, hasLength(2));
       });
     });
   });

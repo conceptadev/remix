@@ -67,7 +67,7 @@ class _TextfieldExampleState extends State<TextfieldExample> {
           BoxShadowMix()
               .blurRadius(1)
               .color(Colors.black12)
-              .offset(const Offset(0, 1)),
+              .offset(x: 0, y: 1),
         )
         .border(
           BoxBorderMix.all(BorderSideMix(color: Colors.grey.shade300)),
@@ -89,7 +89,7 @@ class _TextfieldExampleState extends State<TextfieldExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -129,13 +129,18 @@ class _FortalTextFieldExampleState extends State<FortalTextFieldExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalTextFieldStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/textfield/fortal_textfield_styles.dart) for all available options.
+  See the [fortalTextFieldStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/textfield/fortal_textfield_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixTextField({
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:remix/remix.dart';
+
+RemixTextField remixTextFieldConstructor({
   Key? key,
   TextEditingController? controller,
   FocusNode? focusNode,
@@ -196,7 +201,7 @@ const RemixTextField({
   bool excludeSemantics = false,
   RemixTextFieldStyler style = const RemixTextFieldStyler.create(),
   RemixTextFieldSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

@@ -110,7 +110,7 @@ Widget createRemixPreview(Widget child) {
 
 ### Key Features
 - **Remix Tokens**: Full access to design system tokens
-- **Theme Support**: Automatic light/dark theme handling  
+- **Theme Support**: Automatic light/dark theme handling
 - **Hot Reload**: Changes reflect immediately
 - **No Interaction**: Uses empty callbacks for preview safety
 - **Consistent Styling**: All previews use same wrapper

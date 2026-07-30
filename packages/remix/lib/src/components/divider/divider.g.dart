@@ -74,6 +74,31 @@ mixin _$RemixDividerSpec implements Spec<RemixDividerSpec>, Diagnosticable {
 typedef _$RemixDividerSpecMethods = _$RemixDividerSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixDivider].
+class FortalDivider extends StatelessWidget {
+  const FortalDivider({
+    super.key,
+    this.size = .size1,
+    this.orientation = Axis.horizontal,
+  });
+
+  final FortalDividerSize size;
+
+  final Axis orientation;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixDivider(
+      key: this.key,
+      style: fortalDividerStyle(size: this.size, orientation: this.orientation),
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 

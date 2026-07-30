@@ -1,7 +1,33 @@
 ## Unreleased
 
+- **FEAT**: Add the Remix rendering subsystem for layered inset and outer
+  shadows, gradients, outlines, backdrop blur, blend modes, and ordered color
+  filters used by the Radix-accurate Fortal recipes.
+- **FEAT**: Expose the complete Fortal theme surface through `FortalScope`,
+  including accent and gray palettes, brightness, panel backgrounds, radius,
+  scaling, optional background painting, and modifier ordering.
 - **FEAT**: Expose `ButtonStyler` as the canonical button styling API.
   `RemixButtonStyler` remains available as a deprecated compatibility alias.
+- **BREAKING**: Rename Fortal recipe helpers from `fortalXStyler()` to
+  `fortalXStyle()` so `@MixWidget` can infer every generated `FortalX` name.
+  Remix component styler types such as `ButtonStyler` and
+  `RemixAvatarStyler` are unchanged.
+- **FEAT**: Expose every Fortal recipe parameter on its generated widget,
+  including `highContrast` and Avatar's `fallbackLength`, while retaining both
+  the unnamed `variant:` constructor and generated named variant constructors.
+- **FIX**: Pin `naked_ui 1.0.0-beta.8` so open labelled tooltips retain one
+  interactive semantics node without hiding unlabelled overlay semantics.
+- **FIX**: Keep dialog titles and actions fixed while structured descriptions
+  and body content scroll within bounded dialogs.
+- **FIX**: Resolve Fortal Avatar icon geometry through scaled design tokens for
+  both the default icon and custom icon-builder paths.
+- **FIX**: Keep Remix icon-button semantics on one interactive node across
+  normal, loading, and excluded-semantics states.
+- **FIX**: Support 200 percent text scaling in Fortal buttons and toggles
+  without clipping labels or changing normal-scale geometry.
+- **FIX**: Render `FortalSpinner` and Fortal button loading states with the
+  eight fading Radix leaves while preserving the arc painter for plain
+  `RemixSpinner`.
 
 ## 1.0.0-beta.1
 

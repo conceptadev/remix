@@ -64,7 +64,7 @@ class _ToggleExampleState extends State<ToggleExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -104,13 +104,16 @@ class _FortalToggleExampleState extends State<FortalToggleExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalToggleStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/toggle/fortal_toggle_styles.dart) for all available options.
+  See the [fortalToggleStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/toggle/fortal_toggle_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixToggle({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixToggle remixToggleConstructor({
   Key? key,
   required bool selected,
   ValueChanged<bool>? onChanged,
@@ -124,7 +127,7 @@ const RemixToggle({
   MouseCursor mouseCursor = SystemMouseCursors.click,
   RemixToggleStyler style = const RemixToggleStyler.create(),
   RemixToggleSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

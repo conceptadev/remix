@@ -91,6 +91,110 @@ mixin _$RemixToggleSpec implements Spec<RemixToggleSpec>, Diagnosticable {
 typedef _$RemixToggleSpecMethods = _$RemixToggleSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixToggle].
+class FortalToggle extends StatelessWidget {
+  const FortalToggle({
+    super.key,
+    this.variant = .ghost,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.label,
+    this.icon,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  });
+
+  const FortalToggle.ghost({
+    super.key,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.label,
+    this.icon,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalToggleVariant.ghost;
+
+  const FortalToggle.outline({
+    super.key,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.label,
+    this.icon,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalToggleVariant.outline;
+
+  final FortalToggleVariant variant;
+
+  final FortalToggleSize size;
+
+  final bool highContrast;
+
+  final bool selected;
+
+  final ValueChanged<bool>? onChanged;
+
+  final bool enabled;
+
+  final String? label;
+
+  final IconData? icon;
+
+  final bool enableFeedback;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  final String? semanticLabel;
+
+  final MouseCursor mouseCursor;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixToggle(
+      key: this.key,
+      style: fortalToggleStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
+      selected: this.selected,
+      onChanged: this.onChanged,
+      enabled: this.enabled,
+      label: this.label,
+      icon: this.icon,
+      enableFeedback: this.enableFeedback,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+      semanticLabel: this.semanticLabel,
+      mouseCursor: this.mouseCursor,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 

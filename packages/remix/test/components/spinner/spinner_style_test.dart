@@ -240,7 +240,7 @@ void main() {
       test('props list contains all properties', () {
         final style = RemixSpinnerStyler();
 
-        expect(style.props, hasLength(9));
+        expect(style.props, hasLength(12));
         expect(style.props, contains(style.$size));
         expect(style.props, contains(style.$strokeWidth));
         expect(style.props, contains(style.$indicatorColor));

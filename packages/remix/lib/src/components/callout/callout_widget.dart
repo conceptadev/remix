@@ -52,8 +52,10 @@ class RemixCallout extends StatelessWidget {
       builder: (context, spec) {
         // For raw constructor, use provided child directly
         if (child != null) {
-          return RowBox(
+          return RemixFlexBoxWithEffects(
             styleSpec: spec.container,
+            direction: Axis.horizontal,
+            containerEffects: spec.containerEffects,
             children: [
               // RowBox resolves to a Flex. A loose fit gives custom content a
               // bounded maximum width without forcing it to fill the callout.
@@ -81,7 +83,12 @@ class RemixCallout extends StatelessWidget {
           );
         }
 
-        return RowBox(styleSpec: spec.container, children: children);
+        return RemixFlexBoxWithEffects(
+          styleSpec: spec.container,
+          direction: Axis.horizontal,
+          containerEffects: spec.containerEffects,
+          children: children,
+        );
       },
     );
   }

@@ -194,10 +194,11 @@ class MyApp extends StatelessWidget {
 
 ### Customizing Fortal Styles
 
-Generated Fortal widgets call the matching `fortal*Styler` internally. Use those stylers directly when you need a custom Remix widget composition:
+Generated Fortal widgets call the matching `fortal*Style` recipe internally.
+Use those recipes directly when you need a custom Remix widget composition:
 
 ```dart
-final style = fortalButtonStyler(variant: FortalButtonVariant.solid)
+final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
   .borderRadiusAll(const Radius.circular(8))
   .paddingX(32)
   .onHovered(.scale(1.05));

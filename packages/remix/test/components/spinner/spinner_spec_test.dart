@@ -195,7 +195,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixSpinnerSpec();
 
-        expect(spec.props, hasLength(6));
+        expect(spec.props, hasLength(9));
         expect(spec.props, contains(spec.size));
         expect(spec.props, contains(spec.strokeWidth));
         expect(spec.props, contains(spec.indicatorColor));

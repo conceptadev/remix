@@ -194,7 +194,7 @@ void main() {
       test('props list contains all properties', () {
         final spec = RemixSliderSpec();
 
-        expect(spec.props, hasLength(5));
+        expect(spec.props, hasLength(12));
         expect(spec.props, contains(spec.thumb));
         expect(spec.props, contains(spec.trackColor));
         expect(spec.props, contains(spec.trackWidth));

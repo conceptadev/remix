@@ -302,7 +302,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixMenuSpec();
 
-        expect(spec.props, hasLength(4));
+        expect(spec.props, hasLength(5));
         expect(spec.props, contains(spec.trigger));
         expect(spec.props, contains(spec.overlay));
         expect(spec.props, contains(spec.item));

@@ -170,7 +170,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixButtonSpec();
 
-        expect(spec.props, hasLength(5));
+        expect(spec.props, hasLength(6));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.icon));
@@ -204,7 +204,7 @@ void main() {
         spec.debugFillProperties(builder);
 
         final properties = builder.properties;
-        expect(properties, hasLength(5));
+        expect(properties, hasLength(6));
 
         // Check that all expected properties are present
         final propertyNames = properties.map((p) => p.name).toList();

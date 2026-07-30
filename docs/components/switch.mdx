@@ -79,7 +79,7 @@ class _SwitchExampleState extends State<SwitchExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -117,13 +117,16 @@ class _FortalSwitchExampleState extends State<FortalSwitchExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalSwitchStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/switch/fortal_switch_styles.dart) for all available options.
+  See the [fortalSwitchStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/switch/fortal_switch_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixSwitch({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixSwitch remixSwitchConstructor({
   Key? key,
   required bool selected,
   ValueChanged<bool>? onChanged,
@@ -135,7 +138,7 @@ const RemixSwitch({
   MouseCursor mouseCursor = SystemMouseCursors.click,
   RemixSwitchStyler style = const RemixSwitchStyler.create(),
   RemixSwitchSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

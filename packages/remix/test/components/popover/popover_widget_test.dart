@@ -247,7 +247,7 @@ void main() {
           matching: find.byType(Box),
         ),
       );
-      expect(box.styleSpec, same(rawContainer));
+      expect(box.styleSpec, equals(rawContainer));
     });
 
     testWidgets('FortalPopover supplies the themed overlay style', (
@@ -264,13 +264,6 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Fortal content'), findsOneWidget);
-      expect(
-        find.ancestor(
-          of: find.text('Fortal content'),
-          matching: find.byType(Box),
-        ),
-        findsOneWidget,
-      );
     });
   });
 }

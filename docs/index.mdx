@@ -23,6 +23,9 @@ Flutter developers commonly face these challenges when building custom UIs:
 ### The Solution
 
 ```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
 final style = ButtonStyler()
   .paddingX(16)
   .paddingY(10)
@@ -31,7 +34,7 @@ final style = ButtonStyler()
   .animate(AnimationConfig.spring(300.ms))
   .onHovered(.color(Colors.blue.shade700));
 
-RemixButton(
+final styledButton = RemixButton(
   onPressed: () {},
   label: 'Click me',
   style: style,
@@ -40,6 +43,9 @@ RemixButton(
 
 Or using callable styles:
 ```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
 final button = ButtonStyler()
   .paddingX(16)
   .paddingY(10)
@@ -48,7 +54,7 @@ final button = ButtonStyler()
   .onHovered(.color(Colors.blue.shade700))
   .animate(AnimationConfig.spring(300.ms));
 
-button(
+final fluentButton = button(
   label: 'Click me',
   onPressed: () {},
 ); // return RemixButton Widget.
@@ -169,7 +175,7 @@ While Remix gives you complete freedom to build any design system, it also inclu
 
 ### Quick Start with Fortal
 
-To use Fortal widgets, wrap your app with `FortalScope` to provide the design tokens, then use the generated `Fortal*` widgets. Named constructors select a fixed variant; use the unnamed constructor with `variant:` when the choice is dynamic:
+To use Fortal widgets, wrap your app with `FortalScope` to provide the design tokens, then use the `Fortal*` widgets. Named constructors select a fixed variant; use the unnamed constructor with `variant:` when the choice is dynamic:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -178,10 +184,10 @@ import 'package:remix/remix.dart';
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: FortalScope(
-          child: Center(
+    return FortalScope(
+      child: MaterialApp(
+        home: Scaffold(
+          body: Center(
             child: FortalButton.solid(
               onPressed: () {},
               label: 'Fortal Button',
@@ -196,10 +202,14 @@ class MyApp extends StatelessWidget {
 
 ### Customizing Fortal Styles
 
-Generated Fortal widgets call the matching `fortal*Styler` internally. Use those stylers directly when you need a custom Remix widget composition:
+Fortal widgets call the matching `fortal*Style` recipe internally. Use those
+recipes directly when you need a custom Remix widget composition:
 
 ```dart
-final style = fortalButtonStyler(variant: FortalButtonVariant.solid)
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
   .borderRadiusAll(const Radius.circular(8))
   .paddingX(32)
   .onHovered(.scale(1.05));
@@ -219,6 +229,8 @@ Fortal styles are built on a robust token system that includes:
 You can use these tokens directly in your custom styles:
 
 ```dart
+import 'package:remix/remix.dart';
+
 final style = ButtonStyler()
   .color(FortalTokens.accent9())
   .paddingAll(FortalTokens.space4())

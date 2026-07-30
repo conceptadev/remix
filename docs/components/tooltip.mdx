@@ -92,7 +92,7 @@ class _TriggerButton extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
@@ -123,13 +123,16 @@ class FortalTooltipExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalTooltipStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/tooltip/fortal_tooltip_styles.dart) for all available options.
+  See the [fortalTooltipStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/tooltip/fortal_tooltip_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixTooltip({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixTooltip remixTooltipConstructor({
   Key? key,
   required Widget tooltipChild,
   required Widget child,
@@ -137,7 +140,7 @@ const RemixTooltip({
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
   RemixTooltipStyler style = const RemixTooltipStyler.create(),
   RemixTooltipSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

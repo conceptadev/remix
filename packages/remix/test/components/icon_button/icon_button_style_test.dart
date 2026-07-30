@@ -413,7 +413,7 @@ void main() {
 
       test('props list contains all properties', () {
         const style = RemixIconButtonStyler.create();
-        expect(style.props, hasLength(6));
+        expect(style.props, hasLength(7));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$icon));
         expect(style.props, contains(style.$spinner));

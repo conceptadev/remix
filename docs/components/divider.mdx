@@ -42,7 +42,7 @@ class DividerExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
@@ -67,17 +67,20 @@ class FortalDividerExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalDividerStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/divider/fortal_divider_styles.dart) for all available options.
+  See the [fortalDividerStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/divider/fortal_divider_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixDivider({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixDivider remixDividerConstructor({
   Key? key,
   RemixDividerStyler style = const RemixDividerStyler.create(),
   RemixDividerSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

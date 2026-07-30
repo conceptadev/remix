@@ -63,9 +63,9 @@ class _MenuExampleState extends State<MenuExample> {
               ),
             ],
             positioning: const OverlayPositionConfig(
-              offset: Offset(0, 8),
-              followerAnchor: .topCenter,
-              targetAnchor: .bottomCenter,
+              side: .bottom,
+              alignment: .center,
+              sideOffset: 8,
             ),
             style: menuStyle,
             onSelected: (value) {

@@ -56,7 +56,7 @@ void main() {
         expect(find.byIcon(Icons.star), findsOneWidget);
       });
 
-      testWidgets('shows dropdown arrow icon', (tester) async {
+      testWidgets('shows dropdown chevron', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
@@ -65,7 +65,10 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('fortal-select-chevron')),
+          findsOneWidget,
+        );
       });
     });
 
@@ -89,7 +92,7 @@ void main() {
         expect(find.text('Option B'), findsOneWidget);
       });
 
-      testWidgets('shows up arrow when opened', (tester) async {
+      testWidgets('rotates the chevron when opened', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
@@ -98,10 +101,22 @@ void main() {
         );
         await tester.pumpAndSettle();
 
+        final chevron = find.byKey(const ValueKey('fortal-select-chevron'));
+        final transformFinder = find.ancestor(
+          of: chevron,
+          matching: find.byType(Transform),
+        );
+        final closedTransform = tester
+            .widget<Transform>(transformFinder.first)
+            .transform;
+
         await tester.tap(find.byType(RemixSelect<String>));
         await tester.pumpAndSettle();
 
-        expect(find.byIcon(Icons.keyboard_arrow_up), findsOneWidget);
+        expect(
+          tester.widget<Transform>(transformFinder.first).transform,
+          isNot(equals(closedTransform)),
+        );
       });
 
       testWidgets('calls onChanged when item is selected', (tester) async {
@@ -525,7 +540,10 @@ void main() {
         await tester.tap(find.byType(RemixSelect<String>));
         await tester.pumpAndSettle();
 
-        expect(find.byIcon(Icons.check), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('fortal-select-indicator')),
+          findsOneWidget,
+        );
       });
 
       testWidgets('applies semanticLabel to item', (tester) async {
@@ -586,8 +604,8 @@ void main() {
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             positioning: const OverlayPositionConfig(
-              targetAnchor: Alignment.bottomLeft,
-              followerAnchor: Alignment.topLeft,
+              side: OverlaySide.bottom,
+              alignment: OverlayAlignment.start,
             ),
           ),
         );

@@ -77,7 +77,7 @@ class AvatarExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -95,10 +95,12 @@ class FortalAvatarExample extends StatelessWidget {
         // Soft variant - Subtle background
         FortalAvatar.soft(
           label: 'AB',
+          fallbackLength: 2,
         ),
         // Solid variant - Bold background
         FortalAvatar.solid(
           label: 'CD',
+          fallbackLength: 2,
         ),
       ],
     );
@@ -108,13 +110,17 @@ class FortalAvatarExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalAvatarStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/avatar/fortal_avatar_styles.dart) for all available options.
+  Set `fallbackLength: 2` for two-character labels so the generated widget uses
+  the pinned two-initial typography. See the [fortalAvatarStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/avatar/fortal_avatar_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixAvatar({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixAvatar remixAvatarConstructor({
   Key? key,
   ImageProvider? backgroundImage,
   ImageProvider? foregroundImage,
@@ -127,7 +133,7 @@ const RemixAvatar({
   RemixAvatarIconBuilder? iconBuilder,
   RemixAvatarStyler style = const RemixAvatarStyler.create(),
   RemixAvatarSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

@@ -189,7 +189,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixBadgeSpec();
 
-        expect(spec.props, hasLength(2));
+        expect(spec.props, hasLength(3));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.label));
       });
@@ -200,7 +200,7 @@ void main() {
 
         final spec = RemixBadgeSpec(container: containerSpec, label: textSpec);
 
-        expect(spec.props, hasLength(2));
+        expect(spec.props, hasLength(3));
         expect(spec.props, contains(containerSpec));
         expect(spec.props, contains(textSpec));
       });
@@ -289,7 +289,7 @@ void main() {
 
         expect(spec.container, equals(complexContainerSpec));
         expect(spec.label, equals(complexTextSpec));
-        expect(spec.props, hasLength(2));
+        expect(spec.props, hasLength(3));
       });
     });
   });

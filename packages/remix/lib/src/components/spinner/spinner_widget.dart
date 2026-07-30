@@ -21,11 +21,21 @@ part of 'spinner.dart';
 class RemixSpinner extends StatelessWidget {
   const RemixSpinner({
     super.key,
+    this.semanticsLabel,
+    this.semanticsValue,
     this.style = const RemixSpinnerStyler.create(),
     this.styleSpec,
   });
 
   static final styleFrom = RemixSpinnerStyler.new;
+
+  /// The accessible name exposed when this spinner is not decorative.
+  final String? semanticsLabel;
+
+  /// Optional status text exposed with [semanticsLabel].
+  ///
+  /// Ignored when [semanticsLabel] is null.
+  final String? semanticsValue;
 
   /// The style configuration for the spinner.
   final RemixSpinnerStyler style;
@@ -35,10 +45,19 @@ class RemixSpinner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RemixStyleSpecBuilder<RemixSpinnerSpec>(
+    final spinner = RemixStyleSpecBuilder<RemixSpinnerSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) => _SpinnerSpecWidget(spec: spec),
+    );
+
+    if (semanticsLabel == null) return spinner;
+
+    return Semantics(
+      role: SemanticsRole.loadingSpinner,
+      label: semanticsLabel,
+      value: semanticsValue,
+      child: spinner,
     );
   }
 }
@@ -93,13 +112,27 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
     final strokeWidth = spec.strokeWidth ?? 1.5;
     final size = spec.size ?? 24;
 
-    final painter = RemixSpinnerPainter(
-      animation: controller,
-      strokeWidth: strokeWidth,
-      indicatorColor: indicatorColor,
-      trackColor: trackColor,
-      trackStrokeWidth: spec.trackStrokeWidth,
-    );
+    // Leaf-only fields opt into the Radix leaf painter; duration still applies
+    // to both painters, and indicatorColor is deliberately a no-op in leaf mode.
+    final useLeafPainter =
+        spec.color != null || spec.opacity != null || spec.leafRadius != null;
+    final painter = useLeafPainter
+        ? RemixLeafSpinnerPainter(
+            animation: controller,
+            color:
+                spec.color ??
+                IconTheme.of(context).color ??
+                const Color(0xFF000000),
+            opacity: spec.opacity ?? 1,
+            leafRadius: spec.leafRadius ?? Radius.zero,
+          )
+        : RemixSpinnerPainter(
+            animation: controller,
+            strokeWidth: strokeWidth,
+            indicatorColor: indicatorColor,
+            trackColor: trackColor,
+            trackStrokeWidth: spec.trackStrokeWidth,
+          );
 
     return AnimatedBuilder(
       animation: controller,

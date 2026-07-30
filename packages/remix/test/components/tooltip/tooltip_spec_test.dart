@@ -151,7 +151,7 @@ void main() {
       test('props includes all relevant properties', () {
         const spec = RemixTooltipSpec();
 
-        expect(spec.props.length, equals(5));
+        expect(spec.props, hasLength(5));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.waitDuration));

@@ -17,14 +17,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.8.0"
-  ack:
-    dependency: transitive
-    description:
-      name: ack
-      sha256: "1d9c3f8727cd2b2e04804b6b2d5e42953738f97239eee4e20dc7ef584f1775e4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   analyzer:
     dependency: transitive
     description:
@@ -425,39 +417,29 @@ packages:
     source: hosted
     version: "2.0.0"
   mix:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/mix"
-      ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
-      resolved-ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
-      url: "https://github.com/btwld/mix.git"
-    source: git
-    version: "2.1.0"
+      name: mix
+      sha256: "69c94d5b14686ff5add0f59d7d54b302453f7b342c76750d67caf76a0827e88e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0-beta.1"
   mix_annotations:
     dependency: transitive
     description:
       name: mix_annotations
-      sha256: f8b9ed018f70a1b376df0fcc16e965ebdcdd56ac3110f9d13de7d50405206c4a
+      sha256: "955ea7a1b647f96033315585cbe3ca94f5204216787eb11884e566d720ce7d86"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0-beta.0"
+    version: "2.2.0-beta.1"
   mix_generator:
     dependency: transitive
     description:
       name: mix_generator
-      sha256: "76d888e0845e7bb3bc6bee3d903bbb0611ec7f27b8b6c554deef62775b59654b"
+      sha256: "28bf9e71a5a79a02189bec1d5f9d4b0fa560532a36228ff8613272240b091b55"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0-beta.0"
-  mix_protocol:
-    dependency: transitive
-    description:
-      path: "packages/mix_protocol"
-      ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
-      resolved-ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
-      url: "https://github.com/btwld/mix.git"
-    source: git
-    version: "1.0.0"
+    version: "2.2.0-beta.2"
   mustache_template:
     dependency: transitive
     description:
@@ -470,10 +452,10 @@ packages:
     dependency: transitive
     description:
       name: naked_ui
-      sha256: f0add49dead1ddb1d1823b0f0d39d33b65959640b5dfc21c9de4f9e8db658494
+      sha256: "52702627d304a22b26bc10c8270088267596998de4884c9dda19be1614dfdc2b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-beta.4"
+    version: "1.0.0-beta.8"
   nested:
     dependency: transitive
     description:
@@ -547,7 +529,7 @@ packages:
     source: hosted
     version: "2.0.0"
   pub_semver:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: pub_semver
       sha256: "5bfcf68ca79ef689f8990d1160781b4bad40a3bd5e5218ad4076ddb7f4081585"
@@ -816,7 +798,7 @@ packages:
     source: hosted
     version: "7.0.1"
   yaml:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: yaml
       sha256: b9da305ac7c39faa3f030eccd175340f968459dae4af175130b3fc47e40d76ce

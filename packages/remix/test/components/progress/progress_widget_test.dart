@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -379,6 +380,155 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byKey(key), findsOneWidget);
+    });
+  });
+
+  group('RemixProgress Accessibility', () {
+    testWidgets('is decorative when semantic inputs are omitted', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        await tester.pumpRemixApp(const RemixProgress(value: 0.5));
+        await tester.pump();
+
+        final nodes = tester.semantics.simulatedAccessibilityTraversal().where(
+          (node) => node.getSemanticsData().role == SemanticsRole.progressBar,
+        );
+        expect(nodes, isEmpty);
+      } finally {
+        semantics.dispose();
+      }
+    });
+
+    testWidgets('semantic value alone remains decorative', (tester) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        await tester.pumpRemixApp(
+          const RemixProgress(value: 0.5, semanticsValue: '50'),
+        );
+        await tester.pump();
+
+        final nodes = tester.semantics.simulatedAccessibilityTraversal().where(
+          (node) => node.getSemanticsData().role == SemanticsRole.progressBar,
+        );
+        expect(nodes, isEmpty);
+      } finally {
+        semantics.dispose();
+      }
+    });
+
+    testWidgets('Fortal forwards one named normalized progress node', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        await tester.pumpRemixApp(
+          const FortalProgress(
+            value: 0.42,
+            semanticsLabel: 'Uploading workspace',
+          ),
+        );
+        await tester.pump();
+
+        final nodes = tester.semantics
+            .simulatedAccessibilityTraversal()
+            .where(
+              (node) =>
+                  node.getSemanticsData().role == SemanticsRole.progressBar,
+            )
+            .toList();
+        expect(nodes, hasLength(1));
+        expect(
+          nodes.single,
+          isSemantics(
+            label: 'Uploading workspace',
+            value: '42',
+            minValue: '0',
+            maxValue: '100',
+            hasTapAction: false,
+            hasLongPressAction: false,
+            hasIncreaseAction: false,
+            hasDecreaseAction: false,
+          ),
+        );
+
+        final progress = tester.widget<RemixProgress>(
+          find.byType(RemixProgress),
+        );
+        expect(progress.semanticsLabel, 'Uploading workspace');
+        expect(progress.semanticsValue, isNull);
+      } finally {
+        semantics.dispose();
+      }
+    });
+
+    testWidgets('uses a caller-provided progress value', (tester) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        await tester.pumpRemixApp(
+          const RemixProgress(
+            value: 0.42,
+            semanticsLabel: 'Uploading workspace',
+            semanticsValue: '42%',
+          ),
+        );
+        await tester.pump();
+
+        expect(
+          tester.getSemantics(find.byType(RemixProgress)),
+          isSemantics(
+            label: 'Uploading workspace',
+            value: '42%',
+            minValue: '0',
+            maxValue: '100',
+          ),
+        );
+      } finally {
+        semantics.dispose();
+      }
+    });
+
+    testWidgets('updates the existing progress node', (tester) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        var value = 0.25;
+        late StateSetter update;
+
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) {
+              update = setState;
+              return FortalProgress(
+                value: value,
+                semanticsLabel: 'Uploading workspace',
+              );
+            },
+          ),
+        );
+        await tester.pump();
+
+        List<SemanticsNode> progressNodes() => tester.semantics
+            .simulatedAccessibilityTraversal()
+            .where(
+              (node) =>
+                  node.getSemanticsData().role == SemanticsRole.progressBar,
+            )
+            .toList();
+
+        final initialNode = progressNodes().single;
+        expect(initialNode.getSemanticsData().value, '25');
+
+        update(() => value = 0.75);
+        await tester.pump();
+
+        final updatedNodes = progressNodes();
+        expect(updatedNodes, hasLength(1));
+        expect(updatedNodes.single.id, initialNode.id);
+        expect(updatedNodes.single.getSemanticsData().value, '75');
+      } finally {
+        semantics.dispose();
+      }
     });
   });
 }

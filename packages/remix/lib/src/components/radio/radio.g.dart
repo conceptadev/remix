@@ -9,6 +9,7 @@ part of 'radio.dart';
 mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get indicator;
+  RemixBoxEffectsSpec? get containerEffects;
 
   @override
   Type get type => RemixRadioSpec;
@@ -17,10 +18,12 @@ mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
   RemixRadioSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicator,
+    RemixBoxEffectsSpec? containerEffects,
   }) {
     return RemixRadioSpec(
       container: container ?? this.container,
       indicator: indicator ?? this.indicator,
+      containerEffects: containerEffects ?? this.containerEffects,
     );
   }
 
@@ -29,11 +32,16 @@ mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
     return RemixRadioSpec(
       container: container.lerp(other?.container, t),
       indicator: indicator.lerp(other?.indicator, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, indicator];
+  List<Object?> get props => [container, indicator, containerEffects];
 
   @override
   bool operator ==(Object other) {
@@ -76,7 +84,8 @@ mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('indicator', indicator));
+      ..add(DiagnosticsProperty('indicator', indicator))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects));
   }
 }
 
@@ -86,6 +95,101 @@ mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
 typedef _$RemixRadioSpecMethods = _$RemixRadioSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixRadio].
+class FortalRadio<T> extends StatelessWidget {
+  const FortalRadio({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.value,
+    this.enabled = true,
+    this.toggleable = false,
+    this.mouseCursor,
+    this.focusNode,
+    this.autofocus = false,
+  });
+
+  /// Raised treatment with Radix's classic shadow and gradient layers.
+  const FortalRadio.classic({
+    super.key,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.value,
+    this.enabled = true,
+    this.toggleable = false,
+    this.mouseCursor,
+    this.focusNode,
+    this.autofocus = false,
+  }) : variant = FortalRadioVariant.classic;
+
+  /// Surface treatment with neutral border.
+  const FortalRadio.surface({
+    super.key,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.value,
+    this.enabled = true,
+    this.toggleable = false,
+    this.mouseCursor,
+    this.focusNode,
+    this.autofocus = false,
+  }) : variant = FortalRadioVariant.surface;
+
+  /// Soft accent treatment.
+  const FortalRadio.soft({
+    super.key,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.value,
+    this.enabled = true,
+    this.toggleable = false,
+    this.mouseCursor,
+    this.focusNode,
+    this.autofocus = false,
+  }) : variant = FortalRadioVariant.soft;
+
+  final FortalRadioVariant variant;
+
+  final FortalRadioSize size;
+
+  final bool highContrast;
+
+  final T value;
+
+  final bool enabled;
+
+  final bool toggleable;
+
+  final MouseCursor? mouseCursor;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixRadio<T>(
+      key: this.key,
+      style: fortalRadioStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
+      value: this.value,
+      enabled: this.enabled,
+      toggleable: this.toggleable,
+      mouseCursor: this.mouseCursor,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 
@@ -93,25 +197,30 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     with RemixBoxStylerMixin<RemixRadioStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
   const RemixRadioStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? indicator,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
-       $indicator = indicator;
+       $indicator = indicator,
+       $containerEffects = containerEffects;
 
   RemixRadioStyler({
     BoxStyler? container,
     BoxStyler? indicator,
+    RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixRadioSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          indicator: Prop.maybeMix(indicator),
+         containerEffects: Prop.maybeMix(containerEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -121,6 +230,8 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
       RemixRadioStyler().container(value);
   factory RemixRadioStyler.indicator(BoxStyler value) =>
       RemixRadioStyler().indicator(value);
+  factory RemixRadioStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixRadioStyler().containerEffects(value);
   factory RemixRadioStyler.alignment(AlignmentGeometry value) =>
       RemixRadioStyler().alignment(value);
   factory RemixRadioStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -603,6 +714,11 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     return merge(RemixRadioStyler(indicator: value));
   }
 
+  /// Sets the containerEffects.
+  RemixRadioStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixRadioStyler(containerEffects: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixRadioStyler animate(AnimationConfig value) {
@@ -632,6 +748,10 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     return RemixRadioStyler.create(
       container: MixOps.merge($container, other?.$container),
       indicator: MixOps.merge($indicator, other?.$indicator),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -644,6 +764,7 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     final spec = RemixRadioSpec(
       container: MixOps.resolve(context, $container),
       indicator: MixOps.resolve(context, $indicator),
+      containerEffects: MixOps.resolve(context, $containerEffects),
     );
 
     return StyleSpec(
@@ -658,13 +779,15 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('indicator', $indicator));
+      ..add(DiagnosticsProperty('indicator', $indicator))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
   }
 
   @override
   List<Object?> get props => [
     $container,
     $indicator,
+    $containerEffects,
     $animation,
     $modifier,
     $variants,

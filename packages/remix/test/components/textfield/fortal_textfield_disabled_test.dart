@@ -25,8 +25,8 @@ void main() {
     tester,
   ) async {
     // Drive the real factories rather than asserting on their source text.
-    final surface = fortalTextFieldStyler(variant: .surface);
-    final soft = fortalTextFieldStyler(variant: .soft);
+    final surface = fortalTextFieldStyle(variant: .surface);
+    final soft = fortalTextFieldStyle(variant: .soft);
     expect(surface, isA<RemixTextFieldStyler>());
     expect(soft, isA<RemixTextFieldStyler>());
     expect(soft, isNot(equals(surface)));
@@ -36,8 +36,7 @@ void main() {
     'disabled soft textfield resolves a background and never the debug red',
     (tester) async {
       await tester.pumpRemixApp(
-        FortalTextField(
-          variant: .soft,
+        FortalTextField.soft(
           enabled: false,
           controller: TextEditingController(text: 'disabled'),
         ),
@@ -64,8 +63,7 @@ void main() {
   ) async {
     await tester.pumpRemixApp(
       FortalScope(
-        child: FortalTextField(
-          variant: .soft,
+        child: FortalTextField.soft(
           enabled: false,
           controller: TextEditingController(text: 'disabled'),
         ),

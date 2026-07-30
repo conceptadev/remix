@@ -311,6 +311,7 @@ void main() {
           title: 'Confirm',
           description: 'Continue?',
           actions: const [Text('OK')],
+          scrollable: true,
           modal: false,
           semanticLabel: 'Confirmation dialog',
         );
@@ -320,13 +321,14 @@ void main() {
         expect(dialog.title, 'Confirm');
         expect(dialog.description, 'Continue?');
         expect(dialog.actions, hasLength(1));
+        expect(dialog.scrollable, isTrue);
         expect(dialog.modal, isFalse);
         expect(dialog.semanticLabel, 'Confirmation dialog');
       });
 
       test('props list contains all properties', () {
         const style = RemixDialogStyler.create();
-        expect(style.props, hasLength(7));
+        expect(style.props, hasLength(8));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$title));
         expect(style.props, contains(style.$description));

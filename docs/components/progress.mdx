@@ -45,7 +45,7 @@ class ProgressExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -74,18 +74,21 @@ class FortalProgressExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalProgressStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/progress/fortal_progress_styles.dart) for all available options.
+  See the [fortalProgressStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/progress/fortal_progress_styles.dart) for all available options.
 </Info>
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixProgress({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixProgress remixProgressConstructor({
   Key? key,
   required double value,
   RemixProgressStyler style = const RemixProgressStyler.create(),
   RemixProgressSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

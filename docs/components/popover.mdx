@@ -25,8 +25,8 @@ class AccountPopover extends StatelessWidget {
     return FortalPopover(
       semanticLabel: 'Show account details',
       positioning: const OverlayPositionConfig(
-        targetAnchor: Alignment.bottomCenter,
-        followerAnchor: Alignment.topCenter,
+        side: OverlaySide.bottom,
+        alignment: OverlayAlignment.center,
       ),
       popoverChild: const SizedBox(
         width: 240,
@@ -59,9 +59,12 @@ Provide a Flutter `MenuController` and disable `openOnTap` when another event
 owns the open state.
 
 ```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
 final controller = MenuController();
 
-RemixPopover(
+final controlledPopover = RemixPopover(
   controller: controller,
   openOnTap: false,
   popoverChild: const Text('Controlled content'),
@@ -71,7 +74,7 @@ RemixPopover(
   ),
 );
 
-controller.close();
+void closePopover() => controller.close();
 ```
 
 With `openOnTap: false`, the child owns activation and its accessibility
@@ -85,15 +88,15 @@ callback to complete the state change.
 
 ## Positioning
 
-`OverlayPositionConfig` aligns one point on the trigger with one point on the
-overlay and can apply an additional offset.
+`OverlayPositionConfig` places the overlay on a trigger side, aligns it along
+that side, and can apply an additional offset.
 
 ```dart
 const OverlayPositionConfig(
-  targetAnchor: Alignment.topRight,
-  followerAnchor: Alignment.bottomRight,
-  offset: Offset(0, -8),
-)
+  side: OverlaySide.top,
+  alignment: OverlayAlignment.end,
+  sideOffset: 8,
+);
 ```
 
 The overlay is clamped to the available screen bounds.
@@ -104,15 +107,18 @@ The overlay is clamped to the available screen bounds.
 visual styling.
 
 ```dart
-RemixPopover(
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final styledPopover = RemixPopover(
   style: RemixPopoverStyler()
       .paddingAll(16)
       .constraints(BoxConstraintsMix(maxWidth: 320))
       .backgroundColor(Colors.white)
-      .borderRadiusAll(12),
+      .borderRadiusAll(const Radius.circular(12)),
   popoverChild: const Text('Custom popover'),
   child: const Text('Open'),
-)
+);
 ```
 
 The `FortalPopover` preset adds Fortal spacing, border, radius, surface color,
@@ -129,7 +135,10 @@ shadow, and a maximum width. Content remains fully composable.
 ## Constructor
 
 ```dart
-const RemixPopover({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixPopover remixPopoverConstructor({
   Key? key,
   required Widget popoverChild,
   required Widget child,
@@ -147,7 +156,7 @@ const RemixPopover({
   bool excludeSemantics = false,
   RemixPopoverStyler style = const RemixPopoverStyler.create(),
   RemixPopoverSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 
 ## Style methods

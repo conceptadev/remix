@@ -4,123 +4,137 @@ part of 'progress.dart';
 enum FortalProgressSize { size1, size2, size3 }
 
 /// Fortal progress color variants.
-enum FortalProgressVariant { surface, soft }
+enum FortalProgressVariant { classic, surface, soft }
 
 /// Fortal-themed preset for [RemixProgress].
-RemixProgressStyler fortalProgressStyler({
+@MixWidget(target: RemixProgress.new)
+RemixProgressStyler fortalProgressStyle({
   FortalProgressVariant variant = .surface,
   FortalProgressSize size = .size2,
+  bool highContrast = false,
 }) {
   return switch (variant) {
-    .surface => _fortalProgressSurfaceStyler(size),
-    .soft => _fortalProgressSoftStyler(size),
+    .classic => _fortalProgressClassicStyler(size, highContrast: highContrast),
+    .surface => _fortalProgressSurfaceStyler(size, highContrast: highContrast),
+    .soft => _fortalProgressSoftStyler(size, highContrast: highContrast),
   };
 }
 
 RemixProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
-  return RemixProgressStyler()
-      .width(.infinity)
-      .merge(_fortalProgressSizeStyler(size));
+  final metrics = _fortalProgressMetrics(size);
+  return RemixProgressStyler(
+    container: .width(.infinity)
+        .height(metrics.height)
+        .borderRadiusAll(metrics.radius)
+        .clipBehavior(.antiAlias),
+    track: .width(.infinity).height(metrics.height),
+    indicator: .height(metrics.height).borderRadiusAll(metrics.radius),
+    trackEffects: RemixBoxEffectsMix(
+      behindContent: _fortalProgressLayer(),
+      overContent: _fortalProgressLayer(),
+    ),
+    indicatorEffects: RemixBoxEffectsMix(
+      behindContent: _fortalProgressLayer(),
+      overContent: _fortalProgressLayer(),
+    ),
+  );
 }
 
-RemixProgressStyler _fortalProgressSurfaceStyler([
-  FortalProgressSize size = .size2,
-]) {
+RemixProgressStyler _fortalProgressClassicStyler(
+  FortalProgressSize size, {
+  required bool highContrast,
+}) {
   return _fortalProgressBaseStyler(size)
-      .foregroundDecoration(
-        BoxDecorationMix()
-            .border(
-              BoxBorderMix.all(BorderSideMix().color(FortalTokens.grayA5())),
-            )
-            .borderRadius(
-              BorderRadiusGeometryMix.all(FortalTokens.radiusFull()),
-            ),
+      .trackColor(FortalTokens.grayA3())
+      .trackEffects(RemixBoxEffectsMix(behindContent: _fortalProgressLayer()))
+      .trackEffects(
+        RemixBoxEffectsMix(
+          overContent: _fortalProgressLayer(
+            shadowToken: FortalTokens.shadow1Layers,
+          ),
+        ),
       )
-      .track(BoxStyler().color(FortalTokens.gray3()).width(.infinity))
-      .indicator(BoxStyler().color(FortalTokens.accentIndicator()));
-}
-
-RemixProgressStyler _fortalProgressSoftStyler([
-  FortalProgressSize size = .size2,
-]) {
-  return _fortalProgressBaseStyler(size)
-      .track(
-        BoxStyler()
-            .color(FortalTokens.gray4())
-            .borderRadiusAll(FortalTokens.radiusFull())
-            .width(.infinity),
+      .indicatorEffects(
+        RemixBoxEffectsMix(behindContent: _fortalProgressLayer()),
       )
-      .indicator(
-        BoxStyler()
-            .color(FortalTokens.accent9())
-            .borderRadiusAll(FortalTokens.radiusFull()),
+      .indicatorColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentTrack(),
       );
 }
 
-RemixProgressStyler _fortalProgressSizeStyler(FortalProgressSize size) {
-  return switch (size) {
-    .size1 =>
-      RemixProgressStyler()
-          .height(4.0)
-          .track(
-            BoxStyler().height(4.0).borderRadiusAll(FortalTokens.radius1()),
-          )
-          .indicator(
-            BoxStyler().height(4.0).borderRadiusAll(FortalTokens.radius1()),
+RemixProgressStyler _fortalProgressSurfaceStyler(
+  FortalProgressSize size, {
+  required bool highContrast,
+}) {
+  return _fortalProgressBaseStyler(size)
+      .trackColor(FortalTokens.grayA3())
+      .trackEffects(RemixBoxEffectsMix(behindContent: _fortalProgressLayer()))
+      .trackEffects(
+        RemixBoxEffectsMix(
+          overContent: _fortalProgressLayer(
+            shadows: [
+              RemixBoxShadowMix(
+                kind: .inset,
+                color: FortalTokens.grayA4(),
+                spreadRadius: 1,
+              ),
+            ],
           ),
-    .size2 =>
-      RemixProgressStyler()
-          .height(8.0)
-          .track(
-            BoxStyler().height(8.0).borderRadiusAll(FortalTokens.radius2()),
-          )
-          .indicator(
-            BoxStyler().height(8.0).borderRadiusAll(FortalTokens.radius2()),
-          ),
-    .size3 =>
-      RemixProgressStyler()
-          .height(12.0)
-          .track(
-            BoxStyler().height(12.0).borderRadiusAll(FortalTokens.radius3()),
-          )
-          .indicator(
-            BoxStyler().height(12.0).borderRadiusAll(FortalTokens.radius3()),
-          ),
-  };
+        ),
+      )
+      .indicatorEffects(
+        RemixBoxEffectsMix(behindContent: _fortalProgressLayer()),
+      )
+      .indicatorColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentTrack(),
+      );
 }
 
-/// Fortal-themed preset for [RemixProgress].
-class FortalProgress extends StatelessWidget {
-  const FortalProgress({
-    super.key,
-    this.variant = .surface,
-    this.size = .size2,
-    required this.value,
-  });
-
-  const FortalProgress.surface({
-    super.key,
-    this.size = .size2,
-    required this.value,
-  }) : variant = FortalProgressVariant.surface;
-
-  const FortalProgress.soft({
-    super.key,
-    this.size = .size2,
-    required this.value,
-  }) : variant = FortalProgressVariant.soft;
-
-  final FortalProgressVariant variant;
-
-  final FortalProgressSize size;
-
-  final double value;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalProgressStyler(
-      variant: this.variant,
-      size: this.size,
-    ).call(key: this.key, value: this.value);
-  }
+RemixProgressStyler _fortalProgressSoftStyler(
+  FortalProgressSize size, {
+  required bool highContrast,
+}) {
+  return _fortalProgressBaseStyler(size)
+      .trackColor(FortalTokens.grayA4())
+      .track(
+        .foregroundDecoration(BoxDecorationMix(color: FortalTokens.whiteA1())),
+      )
+      .trackEffects(RemixBoxEffectsMix(behindContent: _fortalProgressLayer()))
+      .trackEffects(RemixBoxEffectsMix(overContent: _fortalProgressLayer()))
+      .indicatorEffects(
+        RemixBoxEffectsMix(behindContent: _fortalProgressLayer()),
+      )
+      .indicatorEffects(RemixBoxEffectsMix(overContent: _fortalProgressLayer()))
+      .indicatorColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accent8(),
+      )
+      .indicator(
+        .foregroundDecoration(
+          BoxDecorationMix(
+            color: highContrast ? null : FortalTokens.accentA5(),
+          ),
+        ),
+      );
 }
+
+({double height, Radius radius}) _fortalProgressMetrics(
+  FortalProgressSize size,
+) => switch (size) {
+  .size1 => (
+    height: FortalTokens.space1(),
+    radius: FortalTokens.progressRadius1(),
+  ),
+  .size2 => (
+    height: FortalTokens.progressHeight2(),
+    radius: FortalTokens.progressRadius2(),
+  ),
+  .size3 => (
+    height: FortalTokens.space2(),
+    radius: FortalTokens.progressRadius3(),
+  ),
+};
+
+RemixBoxEffectLayerMix _fortalProgressLayer({
+  List<RemixBoxShadowMix>? shadows,
+  RemixBoxShadowListToken? shadowToken,
+}) => RemixBoxEffectLayerMix(shadows: shadows, shadowToken: shadowToken);

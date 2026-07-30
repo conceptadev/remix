@@ -136,7 +136,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixSelectSpec();
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(4));
         expect(spec.props, contains(spec.trigger));
         expect(spec.props, contains(spec.menuContainer));
         expect(spec.props, contains(spec.item));
@@ -289,7 +289,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixSelectTriggerSpec();
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(8));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.icon));
@@ -431,7 +431,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixSelectMenuItemSpec();
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(4));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.text));
         expect(spec.props, contains(spec.icon));

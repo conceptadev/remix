@@ -119,8 +119,9 @@ class RemixCheckbox extends StatelessWidget {
                 ? checkedIcon
                 : uncheckedIcon;
 
-            return Box(
+            return RemixBoxWithEffects(
               styleSpec: spec.container,
+              containerEffects: spec.containerEffects,
               child: iconData != null
                   ? StyledIcon(icon: iconData, styleSpec: spec.indicator)
                   : null,

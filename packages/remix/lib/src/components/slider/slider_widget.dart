@@ -86,22 +86,33 @@ class RemixSlider extends StatelessWidget {
   /// The focus node for the slider.
   final FocusNode? focusNode;
 
+  double get _effectiveStep {
+    final divisions = snapDivisions;
+    if (divisions != null) return (max - min) / divisions;
+    return (max - min) / 1000;
+  }
+
   @override
   Widget build(BuildContext context) {
     // NakedSlider handles semantics internally, no outer Semantics needed
     return NakedSlider(
-      value: value,
+      values: [value],
       min: min,
       max: max,
-      onChanged: onChanged,
-      onDragStart: () => onChangeStart?.call(value),
-      onDragEnd: onChangeEnd,
+      step: _effectiveStep,
+      onChanged: onChanged == null
+          ? null
+          : (values) => onChanged!(values.single),
+      onChangeStart: onChangeStart == null
+          ? null
+          : (values) => onChangeStart!(values.single),
+      onChangeEnd: onChangeEnd == null
+          ? null
+          : (values) => onChangeEnd!(values.single),
       enabled: enabled,
       enableFeedback: enableFeedback,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      direction: .horizontal,
-      divisions: snapDivisions,
+      focusNodes: focusNode == null ? null : [focusNode],
+      autofocusThumbIndex: autofocus ? 0 : null,
       builder: (context, state, _) {
         return RemixStyleSpecBuilder<RemixSliderSpec>(
           style: style,
@@ -127,7 +138,7 @@ class RemixSlider extends StatelessWidget {
             );
             final horizontalPadding = horizontalOverflow * 2;
 
-            return SizedBox(
+            final slider = SizedBox(
               height: sliderHeight,
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -175,33 +186,90 @@ class RemixSlider extends StatelessWidget {
                       Padding(
                         padding: .symmetric(horizontal: horizontalPadding / 2),
                         child: SizedBox(
-                          width: constraints.maxWidth,
+                          width: double.infinity,
                           height: constraints.maxHeight,
-                          child: _AnimatedTrack(
-                            value: normalizedValue,
-                            rangeColor: spec.rangeColor,
-                            rangeWidth: spec.rangeWidth,
-                            trackColor: spec.trackColor,
-                            trackWidth: spec.trackWidth,
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.linear,
+                          child: Stack(
+                            alignment: Alignment.centerLeft,
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                height: spec.trackWidth,
+                                child: RemixBoxWithEffects(
+                                  styleSpec: _sliderRailStyle(
+                                    spec.track,
+                                    color: spec.trackColor,
+                                    thickness: spec.trackWidth,
+                                  ),
+                                  containerEffects: spec.trackEffects,
+                                ),
+                              ),
+                              FractionallySizedBox(
+                                widthFactor: normalizedValue,
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: spec.rangeWidth,
+                                  child: RemixBoxWithEffects(
+                                    styleSpec: _sliderRailStyle(
+                                      spec.range,
+                                      color: spec.rangeColor,
+                                      thickness: spec.rangeWidth,
+                                    ),
+                                    containerEffects: spec.rangeEffects,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                       Transform.translate(
                         offset: Offset(thumbPosition, 0),
-                        child: Box(styleSpec: spec.thumb),
+                        child: RemixBoxWithEffects(
+                          styleSpec: spec.thumb,
+                          containerEffects:
+                              (spec.thumbEffects ?? const RemixBoxEffectsSpec())
+                                  .merge(
+                                    state.focusedThumbIndex == 0
+                                        ? spec.thumbFocusEffects
+                                        : null,
+                                  ),
+                        ),
                       ),
                     ],
                   );
                 },
               ),
             );
+            final blendMode = spec.blendMode;
+            return blendMode == null
+                ? slider
+                : RemixBlendMode(blendMode: blendMode, child: slider);
           },
         );
       },
     );
   }
+}
+
+StyleSpec<BoxSpec> _sliderRailStyle(
+  StyleSpec<BoxSpec> style, {
+  required Color color,
+  required double thickness,
+}) {
+  final box = style.spec;
+  final decoration = switch (box.decoration) {
+    final BoxDecoration value =>
+      value.color == null ? value.copyWith(color: color) : value,
+    null => BoxDecoration(color: color),
+    final value => value,
+  };
+  final constraints = (box.constraints ?? const BoxConstraints()).copyWith(
+    minHeight: thickness,
+    maxHeight: thickness,
+  );
+  return style.copyWith(
+    spec: box.copyWith(decoration: decoration, constraints: constraints),
+  );
 }
 
 Size _resolveThumbSize(BuildContext context, StyleSpec<BoxSpec> thumb) {

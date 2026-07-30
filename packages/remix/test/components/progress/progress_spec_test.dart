@@ -135,7 +135,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixProgressSpec();
 
-        expect(spec.props, hasLength(4));
+        expect(spec.props, hasLength(6));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.track));
         expect(spec.props, contains(spec.indicator));

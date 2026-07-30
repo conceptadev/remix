@@ -45,7 +45,11 @@ class RemixCard extends StatelessWidget {
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
-        return Box(styleSpec: spec.container, child: child);
+        return RemixBoxWithEffects(
+          styleSpec: spec.container,
+          containerEffects: spec.containerEffects,
+          child: child,
+        );
       },
     );
   }

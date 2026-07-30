@@ -72,6 +72,10 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
   @override
   final StyleSpec<IconSpec> indicator;
 
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
+
   /// Creates a RemixCheckboxSpec with optional styling specifications.
   ///
   /// If any [StyleSpec] is not provided, a default specification
@@ -92,6 +96,22 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
   const RemixCheckboxSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<IconSpec>? indicator,
+    this.containerEffects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        indicator = indicator ?? const StyleSpec(spec: IconSpec());
+
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
+  @override
+  RemixCheckboxSpec lerp(RemixCheckboxSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
+    );
+  }
 }

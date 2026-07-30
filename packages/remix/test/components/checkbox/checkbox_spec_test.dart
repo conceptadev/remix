@@ -211,7 +211,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RemixCheckboxSpec();
 
-        expect(spec.props, hasLength(2));
+        expect(spec.props, hasLength(3));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.indicator));
       });
@@ -225,7 +225,7 @@ void main() {
           indicator: indicatorSpec,
         );
 
-        expect(spec.props, hasLength(2));
+        expect(spec.props, hasLength(3));
         expect(spec.props, contains(containerSpec));
         expect(spec.props, contains(indicatorSpec));
       });
@@ -317,7 +317,7 @@ void main() {
 
         expect(spec.container, equals(complexContainerSpec));
         expect(spec.indicator, equals(complexIndicatorSpec));
-        expect(spec.props, hasLength(2));
+        expect(spec.props, hasLength(3));
       });
     });
   });

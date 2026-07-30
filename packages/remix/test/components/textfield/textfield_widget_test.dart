@@ -16,25 +16,25 @@ void main() {
       await tester.pumpRemixApp(const FortalTextField.surface());
       var context = tester.element(find.byType(FortalTextField));
       var colors = resolveFortalTokens(const FortalThemeConfig());
-      var spec = fortalTextFieldStyler(
+      var spec = fortalTextFieldStyle(
         variant: FortalTextFieldVariant.surface,
       ).resolve(context).spec;
       var decoration =
           spec.container.spec.box!.spec.decoration! as BoxDecoration;
 
       expect(spec.text.spec.style?.color, colors.gray.scale.step(12));
-      expect(decoration.color, isNull);
+      expect(decoration.color, colors.colorSurface);
 
       await tester.pumpRemixApp(const FortalTextField.soft());
       context = tester.element(find.byType(FortalTextField));
       colors = resolveFortalTokens(const FortalThemeConfig());
-      spec = fortalTextFieldStyler(
+      spec = fortalTextFieldStyle(
         variant: FortalTextFieldVariant.soft,
       ).resolve(context).spec;
       decoration = spec.container.spec.box!.spec.decoration! as BoxDecoration;
 
       expect(spec.text.spec.style?.color, colors.accent.scale.step(12));
-      expect(decoration.color, colors.accent.scale.step(3));
+      expect(decoration.color, colors.accent.scale.alphaStep(3));
     });
 
     group('Basic Rendering', () {
@@ -576,32 +576,31 @@ void main() {
         expect(find.byType(RemixTextField), findsOneWidget);
       });
 
-      testWidgets(
-        'layout override for one property keeps layout defaults',
-        (tester) async {
-          await tester.pumpRemixApp(
-            RemixTextField(
-              label: 'Label',
-              helperText: 'Helper',
-              style: RemixTextFieldStyler().layout(FlexBoxStyler().spacing(12)),
-            ),
-          );
-          await tester.pumpAndSettle();
+      testWidgets('layout override for one property keeps layout defaults', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixTextField(
+            label: 'Label',
+            helperText: 'Helper',
+            style: RemixTextFieldStyler().layout(FlexBoxStyler().spacing(12)),
+          ),
+        );
+        await tester.pumpAndSettle();
 
-          final flex = tester
-              .widget<ColumnBox>(find.byType(ColumnBox))
-              .styleSpec
-              ?.spec
-              .flex
-              ?.spec;
+        final flex = tester
+            .widget<ColumnBox>(find.byType(ColumnBox))
+            .styleSpec
+            ?.spec
+            .flex
+            ?.spec;
 
-          // Customizing spacing keeps the min-size / start-alignment defaults
-          // instead of falling back to ColumnBox's max / center.
-          expect(flex?.spacing, 12);
-          expect(flex?.mainAxisSize, MainAxisSize.min);
-          expect(flex?.crossAxisAlignment, CrossAxisAlignment.start);
-        },
-      );
+        // Customizing spacing keeps the min-size / start-alignment defaults
+        // instead of falling back to ColumnBox's max / center.
+        expect(flex?.spacing, 12);
+        expect(flex?.mainAxisSize, MainAxisSize.min);
+        expect(flex?.crossAxisAlignment, CrossAxisAlignment.start);
+      });
 
       testWidgets('applies width and height constraints', (tester) async {
         await tester.pumpRemixApp(

@@ -65,32 +65,37 @@ configuration is needed.
 
 <CodeGroup title="Destructive alert" defaultLanguage="dart">
 ```dart
-showRemixAlertDialog<void>(
-  context: context,
-  semanticLabel: 'Delete project confirmation',
-  builder: (context) => Center(
-    child: FortalDialog(
-      title: 'Delete project?',
-      description: 'This permanently deletes the project and all of its data.',
-      actions: [
-        FortalButton.ghost(
-          label: 'Cancel',
-          onPressed: () => Navigator.pop(context),
-        ),
-        FortalButton(
-          label: 'Delete project',
-          onPressed: () => Navigator.pop(context),
-        ),
-      ],
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+Future<void> showDeleteDialog(BuildContext context) async {
+  await showRemixAlertDialog<void>(
+    context: context,
+    semanticLabel: 'Delete project confirmation',
+    builder: (context) => Center(
+      child: FortalDialog(
+        title: 'Delete project?',
+        description: 'This permanently deletes the project and all of its data.',
+        actions: [
+          FortalButton.ghost(
+            label: 'Cancel',
+            onPressed: () => Navigator.pop(context),
+          ),
+          FortalButton(
+            label: 'Delete project',
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
+      ),
     ),
-  ),
-);
+  );
+}
 ```
 </CodeGroup>
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
@@ -122,7 +127,7 @@ class FortalDialogExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalDialogStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/dialog/fortal_dialog_styles.dart) for all available options.
+  See the [fortalDialogStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/dialog/fortal_dialog_styles.dart) for all available options.
 </Info>
 
 ## Show function
@@ -176,7 +181,10 @@ the alert with a `null` result.
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
-const RemixDialog({
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixDialog remixDialogConstructor({
   Key? key,
   Widget? child,
   String? title,
@@ -186,7 +194,7 @@ const RemixDialog({
   String? semanticLabel,
   RemixDialogStyler style = const RemixDialogStyler.create(),
   RemixDialogSpec? styleSpec,
-})
+}) => throw UnimplementedError();
 ```
 </CodeGroup>
 

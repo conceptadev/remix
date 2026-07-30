@@ -12,6 +12,9 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
   Color? get indicatorColor;
   Color? get trackColor;
   double? get trackStrokeWidth;
+  Color? get color;
+  double? get opacity;
+  Radius? get leafRadius;
   Duration? get duration;
 
   @override
@@ -24,6 +27,9 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
     Color? indicatorColor,
     Color? trackColor,
     double? trackStrokeWidth,
+    Color? color,
+    double? opacity,
+    Radius? leafRadius,
     Duration? duration,
   }) {
     return RemixSpinnerSpec(
@@ -32,6 +38,9 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
       indicatorColor: indicatorColor ?? this.indicatorColor,
       trackColor: trackColor ?? this.trackColor,
       trackStrokeWidth: trackStrokeWidth ?? this.trackStrokeWidth,
+      color: color ?? this.color,
+      opacity: opacity ?? this.opacity,
+      leafRadius: leafRadius ?? this.leafRadius,
       duration: duration ?? this.duration,
     );
   }
@@ -48,6 +57,9 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
         other?.trackStrokeWidth,
         t,
       ),
+      color: MixOps.lerp(color, other?.color, t),
+      opacity: MixOps.lerp(opacity, other?.opacity, t),
+      leafRadius: MixOps.lerpSnap(leafRadius, other?.leafRadius, t),
       duration: MixOps.lerpSnap(duration, other?.duration, t),
     );
   }
@@ -59,6 +71,9 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
     indicatorColor,
     trackColor,
     trackStrokeWidth,
+    color,
+    opacity,
+    leafRadius,
     duration,
   ];
 
@@ -107,6 +122,9 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
       ..add(ColorProperty('indicatorColor', indicatorColor))
       ..add(ColorProperty('trackColor', trackColor))
       ..add(DoubleProperty('trackStrokeWidth', trackStrokeWidth))
+      ..add(ColorProperty('color', color))
+      ..add(DoubleProperty('opacity', opacity))
+      ..add(DiagnosticsProperty('leafRadius', leafRadius))
       ..add(DiagnosticsProperty('duration', duration));
   }
 }
@@ -115,6 +133,36 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
   'Rename to `_\$RemixSpinnerSpec` and migrate the class declaration to `class RemixSpinnerSpec with _\$RemixSpinnerSpec`. The `_\$RemixSpinnerSpecMethods` alias will be removed in mix_generator 3.0.',
 )
 typedef _$RemixSpinnerSpecMethods = _$RemixSpinnerSpec; // ignore: unused_element
+
+// **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixSpinner] using the inherited foreground color.
+class FortalSpinner extends StatelessWidget {
+  const FortalSpinner({
+    super.key,
+    this.size = .size2,
+    this.semanticsLabel,
+    this.semanticsValue,
+  });
+
+  final FortalSpinnerSize size;
+
+  final String? semanticsLabel;
+
+  final String? semanticsValue;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixSpinner(
+      key: this.key,
+      style: fortalSpinnerStyle(size: this.size),
+      semanticsLabel: this.semanticsLabel,
+      semanticsValue: this.semanticsValue,
+    );
+  }
+}
 
 // **************************************************************************
 // SpecStylerGenerator
@@ -127,6 +175,9 @@ class RemixSpinnerStyler
   final Prop<Color>? $indicatorColor;
   final Prop<Color>? $trackColor;
   final Prop<double>? $trackStrokeWidth;
+  final Prop<Color>? $color;
+  final Prop<double>? $opacity;
+  final Prop<Radius>? $leafRadius;
   final Prop<Duration>? $duration;
 
   const RemixSpinnerStyler.create({
@@ -135,6 +186,9 @@ class RemixSpinnerStyler
     Prop<Color>? indicatorColor,
     Prop<Color>? trackColor,
     Prop<double>? trackStrokeWidth,
+    Prop<Color>? color,
+    Prop<double>? opacity,
+    Prop<Radius>? leafRadius,
     Prop<Duration>? duration,
     super.variants,
     super.modifier,
@@ -144,6 +198,9 @@ class RemixSpinnerStyler
        $indicatorColor = indicatorColor,
        $trackColor = trackColor,
        $trackStrokeWidth = trackStrokeWidth,
+       $color = color,
+       $opacity = opacity,
+       $leafRadius = leafRadius,
        $duration = duration;
 
   RemixSpinnerStyler({
@@ -152,6 +209,9 @@ class RemixSpinnerStyler
     Color? indicatorColor,
     Color? trackColor,
     double? trackStrokeWidth,
+    Color? color,
+    double? opacity,
+    Radius? leafRadius,
     Duration? duration,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -162,6 +222,9 @@ class RemixSpinnerStyler
          indicatorColor: Prop.maybe(indicatorColor),
          trackColor: Prop.maybe(trackColor),
          trackStrokeWidth: Prop.maybe(trackStrokeWidth),
+         color: Prop.maybe(color),
+         opacity: Prop.maybe(opacity),
+         leafRadius: Prop.maybe(leafRadius),
          duration: Prop.maybe(duration),
          variants: variants,
          modifier: modifier,
@@ -178,6 +241,12 @@ class RemixSpinnerStyler
       RemixSpinnerStyler().trackColor(value);
   factory RemixSpinnerStyler.trackStrokeWidth(double value) =>
       RemixSpinnerStyler().trackStrokeWidth(value);
+  factory RemixSpinnerStyler.color(Color value) =>
+      RemixSpinnerStyler().color(value);
+  factory RemixSpinnerStyler.opacity(double value) =>
+      RemixSpinnerStyler().opacity(value);
+  factory RemixSpinnerStyler.leafRadius(Radius value) =>
+      RemixSpinnerStyler().leafRadius(value);
   factory RemixSpinnerStyler.duration(Duration value) =>
       RemixSpinnerStyler().duration(value);
 
@@ -204,6 +273,21 @@ class RemixSpinnerStyler
   /// Sets the trackStrokeWidth.
   RemixSpinnerStyler trackStrokeWidth(double value) {
     return merge(RemixSpinnerStyler(trackStrokeWidth: value));
+  }
+
+  /// Sets the color.
+  RemixSpinnerStyler color(Color value) {
+    return merge(RemixSpinnerStyler(color: value));
+  }
+
+  /// Sets the opacity.
+  RemixSpinnerStyler opacity(double value) {
+    return merge(RemixSpinnerStyler(opacity: value));
+  }
+
+  /// Sets the leafRadius.
+  RemixSpinnerStyler leafRadius(Radius value) {
+    return merge(RemixSpinnerStyler(leafRadius: value));
   }
 
   /// Sets the duration.
@@ -246,6 +330,9 @@ class RemixSpinnerStyler
         $trackStrokeWidth,
         other?.$trackStrokeWidth,
       ),
+      color: MixOps.merge($color, other?.$color),
+      opacity: MixOps.merge($opacity, other?.$opacity),
+      leafRadius: MixOps.merge($leafRadius, other?.$leafRadius),
       duration: MixOps.merge($duration, other?.$duration),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
@@ -262,6 +349,9 @@ class RemixSpinnerStyler
       indicatorColor: MixOps.resolve(context, $indicatorColor),
       trackColor: MixOps.resolve(context, $trackColor),
       trackStrokeWidth: MixOps.resolve(context, $trackStrokeWidth),
+      color: MixOps.resolve(context, $color),
+      opacity: MixOps.resolve(context, $opacity),
+      leafRadius: MixOps.resolve(context, $leafRadius),
       duration: MixOps.resolve(context, $duration),
     );
 
@@ -281,6 +371,9 @@ class RemixSpinnerStyler
       ..add(DiagnosticsProperty('indicatorColor', $indicatorColor))
       ..add(DiagnosticsProperty('trackColor', $trackColor))
       ..add(DiagnosticsProperty('trackStrokeWidth', $trackStrokeWidth))
+      ..add(DiagnosticsProperty('color', $color))
+      ..add(DiagnosticsProperty('opacity', $opacity))
+      ..add(DiagnosticsProperty('leafRadius', $leafRadius))
       ..add(DiagnosticsProperty('duration', $duration));
   }
 
@@ -291,6 +384,9 @@ class RemixSpinnerStyler
     $indicatorColor,
     $trackColor,
     $trackStrokeWidth,
+    $color,
+    $opacity,
+    $leafRadius,
     $duration,
     $animation,
     $modifier,
