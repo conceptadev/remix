@@ -70,6 +70,8 @@ class RemixMenuSpec with _$RemixMenuSpec {
        item = item ?? const StyleSpec(spec: RemixMenuItemSpec()),
        divider = divider ?? const StyleSpec(spec: RemixDividerSpec());
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   RemixMenuSpec lerp(RemixMenuSpec? other, double t) {
     final generated = super.lerp(other, t);

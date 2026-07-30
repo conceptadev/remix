@@ -100,6 +100,8 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        indicator = indicator ?? const StyleSpec(spec: IconSpec());
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   RemixCheckboxSpec lerp(RemixCheckboxSpec? other, double t) {
     final generated = super.lerp(other, t);

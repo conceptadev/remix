@@ -23,6 +23,8 @@ class RemixCalloutSpec with _$RemixCalloutSpec {
        text = text ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec());
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   RemixCalloutSpec lerp(RemixCalloutSpec? other, double t) {
     final generated = super.lerp(other, t);

@@ -214,6 +214,8 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
        container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        layout = layout ?? const StyleSpec(spec: FlexBoxSpec());
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   RemixTextFieldSpec lerp(RemixTextFieldSpec? other, double t) {
     final generated = super.lerp(other, t);

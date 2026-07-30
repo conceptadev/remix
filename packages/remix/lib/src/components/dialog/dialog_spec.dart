@@ -27,6 +27,8 @@ class RemixDialogSpec with _$RemixDialogSpec {
        description = description ?? const StyleSpec(spec: TextSpec()),
        actions = actions ?? const StyleSpec(spec: FlexBoxSpec());
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   RemixDialogSpec lerp(RemixDialogSpec? other, double t) {
     final generated = super.lerp(other, t);

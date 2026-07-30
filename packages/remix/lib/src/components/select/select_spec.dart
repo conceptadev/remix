@@ -63,6 +63,8 @@ class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
        icon = icon ?? const StyleSpec(spec: IconSpec()),
        chevron = chevron ?? const StyleSpec(spec: IconSpec());
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   RemixSelectTriggerSpec lerp(RemixSelectTriggerSpec? other, double t) {
     final generated = super.lerp(other, t);
@@ -92,6 +94,8 @@ class RemixSelectContentSpec with _$RemixSelectContentSpec {
     this.containerEffects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec());
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   RemixSelectContentSpec lerp(RemixSelectContentSpec? other, double t) {
     final generated = super.lerp(other, t);

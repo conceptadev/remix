@@ -14,6 +14,8 @@ class RemixCardSpec with _$RemixCardSpec {
   const RemixCardSpec({StyleSpec<BoxSpec>? container, this.containerEffects})
     : container = container ?? const StyleSpec(spec: BoxSpec());
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   RemixCardSpec lerp(RemixCardSpec? other, double t) {
     final generated = super.lerp(other, t);

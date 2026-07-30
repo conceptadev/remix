@@ -19,6 +19,8 @@ class RemixBadgeSpec with _$RemixBadgeSpec {
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec());
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   RemixBadgeSpec lerp(RemixBadgeSpec? other, double t) {
     final generated = super.lerp(other, t);

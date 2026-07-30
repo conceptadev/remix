@@ -126,6 +126,8 @@ class ButtonSpec with _$ButtonSpec {
        icon = icon ?? const StyleSpec(spec: IconSpec()),
        spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec());
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   RemixButtonSpec lerp(RemixButtonSpec? other, double t) {
     final generated = super.lerp(other, t);

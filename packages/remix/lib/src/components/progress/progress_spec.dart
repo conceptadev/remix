@@ -33,6 +33,8 @@ class RemixProgressSpec with _$RemixProgressSpec {
        indicator = indicator ?? const StyleSpec(spec: BoxSpec()),
        trackContainer = trackContainer ?? const StyleSpec(spec: BoxSpec());
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   RemixProgressSpec lerp(RemixProgressSpec? other, double t) {
     final generated = super.lerp(other, t);

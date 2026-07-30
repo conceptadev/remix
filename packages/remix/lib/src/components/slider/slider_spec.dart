@@ -92,6 +92,8 @@ class RemixSliderSpec with _$RemixSliderSpec {
   /// Largest track or range width used for layout clearance.
   double get trackThickness => math.max(trackWidth, rangeWidth);
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   RemixSliderSpec lerp(RemixSliderSpec? other, double t) {
     final generated = super.lerp(other, t);

@@ -25,6 +25,8 @@ class RemixSwitchSpec with _$RemixSwitchSpec {
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        thumb = thumb ?? const StyleSpec(spec: BoxSpec());
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   RemixSwitchSpec lerp(RemixSwitchSpec? other, double t) {
     final generated = super.lerp(other, t);
