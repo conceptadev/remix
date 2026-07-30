@@ -62,10 +62,18 @@ void main() {
     _finish(failures);
   }
   _checkCoverageEvidenceOwners(evidence, failures);
+  final testSourceCache = <String, String>{};
 
   _checkSource(manifest, failures);
-  _checkTheme(manifest, evidence, packageRoot, failures);
-  _checkFamilies(manifest, evidence, packageRoot, workspaceRoot, failures);
+  _checkTheme(manifest, evidence, packageRoot, testSourceCache, failures);
+  _checkFamilies(
+    manifest,
+    evidence,
+    packageRoot,
+    workspaceRoot,
+    testSourceCache,
+    failures,
+  );
   _checkFixtures(manifest, packageRoot, failures);
   _checkNakedPin(
     pubspec,
@@ -123,6 +131,7 @@ void _checkTheme(
   Map<String, Object?> manifest,
   Map<String, Object?> evidence,
   Directory packageRoot,
+  Map<String, String> testSourceCache,
   List<String> failures,
 ) {
   final theme = _object(manifest['theme'], 'theme', failures);
@@ -148,6 +157,7 @@ void _checkTheme(
     coverageValue: theme['coverage'],
     evidence: evidence,
     packageRoot: packageRoot,
+    testSourceCache: testSourceCache,
     failures: failures,
   );
 }
@@ -157,6 +167,7 @@ void _checkFamilies(
   Map<String, Object?> evidence,
   Directory packageRoot,
   Directory workspaceRoot,
+  Map<String, String> testSourceCache,
   List<String> failures,
 ) {
   final familyValues = manifest['families'];
@@ -265,6 +276,7 @@ void _checkFamilies(
       coverageValue: family['coverage'],
       evidence: evidence,
       packageRoot: packageRoot,
+      testSourceCache: testSourceCache,
       failures: failures,
     );
   }
@@ -387,6 +399,7 @@ void _checkCoverage({
   required Object? coverageValue,
   required Map<String, Object?> evidence,
   required Directory packageRoot,
+  required Map<String, String> testSourceCache,
   required List<String> failures,
 }) {
   final coverage = _object(coverageValue, '$owner.coverage', failures);
@@ -431,6 +444,41 @@ void _checkCoverage({
   final evidenceValue = evidence[owner];
   if (evidenceValue is! List<Object?> || evidenceValue.isEmpty) {
     failures.add('$owner must retain upstream coverage evidence.');
+    return;
+  }
+  for (final (index, value) in evidenceValue.indexed) {
+    final citation = _object(
+      value,
+      'coverageEvidence.$owner[$index]',
+      failures,
+    );
+    if (citation == null) continue;
+    final relativePath = citation['test'];
+    final caseName = citation['case'];
+    if (relativePath is! String || relativePath.isEmpty) {
+      failures.add(
+        'coverageEvidence.$owner[$index].test must be a non-empty path.',
+      );
+      continue;
+    }
+    if (caseName is! String || caseName.isEmpty) {
+      failures.add('coverageEvidence.$owner[$index].case must be non-empty.');
+      continue;
+    }
+    final test = File('${packageRoot.path}/$relativePath');
+    if (!test.existsSync()) {
+      failures.add('$owner evidence cites missing test $relativePath.');
+      continue;
+    }
+    final source = testSourceCache.putIfAbsent(
+      relativePath,
+      test.readAsStringSync,
+    );
+    if (!source.contains(caseName)) {
+      failures.add(
+        '$owner evidence $relativePath cites missing case "$caseName".',
+      );
+    }
   }
 }
 
