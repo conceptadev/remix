@@ -5,40 +5,6 @@ import 'package:remix/remix.dart';
 import '../theme/theme_scope.dart';
 import '../theme/theme_settings.dart';
 
-const _accentThemes = <FortalAccentColor, RadixColorTheme>{
-  .gray: gray,
-  .mauve: mauve,
-  .slate: slate,
-  .sage: sage,
-  .olive: olive,
-  .sand: sand,
-  .gold: gold,
-  .bronze: bronze,
-  .brown: brown,
-  .yellow: yellow,
-  .amber: amber,
-  .orange: orange,
-  .tomato: tomato,
-  .red: red,
-  .ruby: ruby,
-  .crimson: crimson,
-  .pink: pink,
-  .plum: plum,
-  .purple: purple,
-  .violet: violet,
-  .iris: iris,
-  .indigo: indigo,
-  .blue: blue,
-  .cyan: cyan,
-  .teal: teal,
-  .jade: jade,
-  .green: green,
-  .grass: grass,
-  .lime: lime,
-  .mint: mint,
-  .sky: sky,
-};
-
 class ThemePanel extends StatelessWidget {
   const ThemePanel({super.key});
 
@@ -226,8 +192,6 @@ class _AccentSwatchState extends State<_AccentSwatch> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = _accentThemes[widget.accent]!;
-    final radix = FortalTheme.of(context).isDark ? theme.dark : theme.light;
     final ring = MixScope.tokenOf(FortalTokens.focus8, context);
     return Semantics(
       button: true,
@@ -250,21 +214,37 @@ class _AccentSwatchState extends State<_AccentSwatch> {
           onExit: (_) => setState(() => _hovered = false),
           child: GestureDetector(
             onTap: widget.onPressed,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 120),
-              width: 30,
-              height: 30,
-              alignment: .center,
-              decoration: BoxDecoration(
-                color: radix.scale.step(_hovered ? 10 : 9),
-                shape: .circle,
-                border: widget.selected || _focused
-                    ? Border.all(color: ring, width: 2)
-                    : null,
+            child: FortalScope(
+              accent: widget.accent,
+              hasBackground: false,
+              child: Builder(
+                builder: (context) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 120),
+                  width: 30,
+                  height: 30,
+                  alignment: .center,
+                  decoration: BoxDecoration(
+                    color: MixScope.tokenOf(
+                      _hovered ? FortalTokens.accent10 : FortalTokens.accent9,
+                      context,
+                    ),
+                    shape: .circle,
+                    border: widget.selected || _focused
+                        ? Border.all(color: ring, width: 2)
+                        : null,
+                  ),
+                  child: widget.selected
+                      ? Icon(
+                          Icons.check,
+                          size: 15,
+                          color: MixScope.tokenOf(
+                            FortalTokens.accentContrast,
+                            context,
+                          ),
+                        )
+                      : null,
+                ),
               ),
-              child: widget.selected
-                  ? Icon(Icons.check, size: 15, color: radix.contrast)
-                  : null,
             ),
           ),
         ),

@@ -183,7 +183,7 @@ void main() {
     expect(find.text('Scaling'), findsOneWidget);
   });
 
-  testWidgets('component gallery pages expose every Fortal family', (
+  testWidgets('actions gallery exposes button, icon button, and toggle', (
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
