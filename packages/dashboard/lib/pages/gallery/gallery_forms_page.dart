@@ -116,8 +116,8 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
           child: GalleryMatrix(
             rows: FortalRadioVariant.values.map(galleryLabel).toList(),
             columns: FortalRadioSize.values.map(galleryLabel).toList(),
-            cellBuilder: (_, row, column) => FortalRadioGroup<int>(
-              value: _radio,
+            cellBuilder: (_, row, column) => RemixRadioGroup<int>(
+              groupValue: _radio,
               onChanged: (value) {
                 if (value != null) setState(() => _radio = value);
               },
