@@ -1,0 +1,32 @@
+dart_code_metrics:
+  extends:
+    - package:dart_code_metrics_presets/recommended.yaml
+    - package:dart_code_metrics_presets/metrics_recommended.yaml
+  metrics-exclude:
+    - test/**
+    - lib/src/tokens/generated/**
+  rules-exclude:
+    - test/**
+    - lib/src/tokens/generated/**
+  rules:
+    newline-before-return: true
+    prefer-named-boolean-parameters: false
+    avoid-importing-entrypoint-exports:
+      only-in-src: true
+    prefer-match-file-name: false
+    prefer-single-widget-per-file: false
+    enum-constants-ordering: false
+    avoid-returning-widgets: false
+    prefer-prefixed-global-constants: false
+    member-ordering: false
+
+analyzer:
+  exclude:
+    - tool/**
+  errors:
+    non_constant_identifier_names: ignore
+
+linter:
+  rules:
+    public_member_api_docs: false
+    prefer_relative_imports: true

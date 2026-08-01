@@ -1,0 +1,114 @@
+# Carbon component worksheet — Button
+# The reviewable bridge between Carbon's web sources and the Flutter implementation.
+
+component: Button
+flutter_name: CarbonButton
+status: implemented (vertical slice)
+
+source:
+  carbon_commit: b288a66af010622bedc6de4d6d0b81ee3c9f5520
+  commit_date: 2026-07-09
+  license: Apache-2.0
+  files:
+    - packages/styles/scss/components/button/_button.scss
+    - packages/react/src/components/Button/Button.tsx
+    - packages/web-components/src/components/button/button.ts
+  component_tokens: packages/themes/src/component-tokens/button/tokens.js
+  docs: https://carbondesignsystem.com/components/button/usage/
+
+anatomy:
+  slots:
+    - label (required)
+    - trailing icon (optional; Carbon places button icons after the label)
+  child_slots: none
+
+kinds:               # Carbon variants (not Fortal/Remix names)
+  - primary
+  - secondary
+  - tertiary
+  - ghost
+  - danger
+  - dangerTertiary   # "Danger - tertiary"
+  - dangerGhost      # "Danger - ghost"
+
+sizes:               # Carbon control-size scale (height in logical px)
+  sm: 32
+  md: 40
+  lg: 48             # default
+  xl: 64
+  x2l: 80
+  supported_range: [sm, x2l]
+  default: lg
+  contextual: inherits CarbonLayoutScope size when `size` is null, clamped to range
+
+density: not size-driven for Button (Carbon buttons do not use condensed/normal)
+
+states:
+  - rest
+  - hover
+  - active (pressed)
+  - focus
+  - disabled
+  - loading   # non-interactive (Remix folds loading into the disabled
+              # widget-state) but keeps the kind's colors with a spinner
+
+tokens:
+  role:
+    - focus            # focus ring color
+    - textOnColor      # label/icon on solid fills
+    - textOnColorDisabled
+    - textDisabled     # ghost/tertiary disabled label
+    - borderDisabled   # tertiary disabled outline
+    - linkPrimary      # ghost label
+    - linkPrimaryHover
+    - backgroundHover  # ghost hover fill
+    - backgroundActive # ghost active fill
+  component:
+    - buttonPrimary / buttonPrimaryHover / buttonPrimaryActive
+    - buttonSecondary / buttonSecondaryHover / buttonSecondaryActive
+    - buttonTertiary / buttonTertiaryHover / buttonTertiaryActive
+    - buttonDangerPrimary / buttonDangerHover / buttonDangerActive
+    - buttonDangerSecondary
+    - buttonDisabled
+  type:
+    - body-compact-01  # label (14px / 400 / 0.16 tracking / 18px line-height)
+  layout:
+    - spacing-05 (16px) horizontal padding
+    - spacing-03 (8px) label↔icon gap
+    - iconSize01 (16px) icon size
+
+non_token_measurements:
+  - border width 1px for tertiary/outline kinds (Carbon component-local).
+  - focus ring width 2px (Carbon component-local).
+  # The label consumes CarbonTokens.bodyCompact01 directly via
+  # TextStyler().style(token.mix()) — no inlined type measurements.
+
+shape:
+  border_radius: 0   # Carbon buttons are square; do not invent a radius scale.
+
+behavior:
+  keyboard: Enter/Space activate (provided by Naked UI via RemixButton)
+  focus: 2px focus-colored ring
+  pointer: hover + active states
+  screen_reader: semanticLabel defaults to label
+  rtl: horizontal padding is symmetric (paddingX); icon slot follows text direction
+
+approximations:
+  - Carbon renders the focus ring as an inset box-shadow. This slice paints a
+    2px border in the container's foreground decoration: no layout shift, and
+    each kind's own border stays intact. Golden coverage still pending (needs
+    the approved Figma kit reference).
+  - Loading state is non-interactive via the disabled widget-state; visually it
+    keeps the kind's rest colors with a textOnColor spinner (upstream Carbon
+    animates the transition, which this slice does not yet).
+  - State changes are not yet animated (upstream transitions backgrounds over
+    duration-fast-01 with the productive standard curve). Tracked as follow-up;
+    recipes must route motion through CarbonMotion when added.
+  - Full-width and icon-only (IconButton) buttons are out of scope for this slice.
+
+examples_to_reproduce:
+  - Button kinds gallery (all seven) across the four themes
+  - Size scale sm..2xl
+  - Disabled and loading states
+
+figma: TBD (provide approved Carbon v11 kit node link in Phase 0)

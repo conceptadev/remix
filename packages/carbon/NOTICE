@@ -1,0 +1,29 @@
+carbon (Carbon for Flutter)
+Copyright 2026 the Remix authors (https://github.com/btwld/remix)
+
+This product includes design tokens derived from the IBM Carbon Design System.
+
+  IBM Carbon Design System
+  https://github.com/carbon-design-system/carbon
+  Copyright IBM Corp. and the Carbon authors
+  Licensed under the Apache License, Version 2.0.
+
+The color, spacing, typography, motion and component token values under
+`lib/src/tokens/generated/` are generated from the official @carbon/* npm
+packages at the commit and versions recorded in
+`tool/upstream/carbon-source-lock.json` and
+`lib/src/tokens/generated/carbon_source_manifest.g.dart`.
+
+This package expects, but does not bundle, the IBM Plex fonts:
+
+  IBM Plex
+  https://github.com/IBM/plex
+  Copyright IBM Corp.
+  Licensed under the SIL Open Font License, Version 1.1.
+
+Applications that render Carbon typography with IBM Plex must include the IBM
+Plex font assets and reproduce the SIL Open Font License as required.
+
+"IBM", "Carbon" and "IBM Plex" are trademarks of International Business Machines
+Corporation. This is an independent, community implementation and is not
+endorsed by or affiliated with IBM.

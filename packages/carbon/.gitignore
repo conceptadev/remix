@@ -1,0 +1,18 @@
+# Dart/Flutter
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+doc/api/
+
+# Token pipeline (development only)
+tool/build/
+tool/upstream/node_modules/
+tool/node_modules/
+
+# IDE / OS
+.idea/
+*.iml
+.DS_Store

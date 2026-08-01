@@ -1,0 +1,26 @@
+name: Carbon tokens
+
+# Enforces the carbon package's token-generation determinism: the committed
+# generated Dart must be byte-identical to a fresh regeneration from the
+# committed normalized snapshot. Needs only Node — no npm install, no network.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/carbon/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "packages/carbon/**"
+
+jobs:
+  verify-generated:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify generated tokens are reproducible
+        working-directory: packages/carbon/tool
+        run: node verify_generated.mjs

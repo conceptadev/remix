@@ -1,0 +1,41 @@
+name: carbon
+description: >-
+  Carbon for Flutter — a Flutter-native implementation of the IBM Carbon Design
+  System, built on the Remix, Naked UI and Mix foundations.
+repository: https://github.com/btwld/remix
+issue_tracker: https://github.com/btwld/remix/issues
+license: Apache-2.0
+resolution: workspace
+topics:
+  - design-system
+  - ui
+  - widgets
+  - styling
+  - carbon
+
+# Not publishable while Remix is a path dependency. Switch to the hosted Remix
+# release and remove this line when Carbon is ready to publish.
+publish_to: none
+
+# Pre-1.0: foundations + Carbon equivalents of the Remix component set.
+version: 0.0.2
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  mix: ^2.1.0
+  naked_ui: ^1.0.0-beta.3
+  remix:
+    path: ../remix
+
+dev_dependencies:
+  dart_code_metrics_presets: ^2.32.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

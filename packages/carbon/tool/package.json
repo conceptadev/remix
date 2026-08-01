@@ -1,0 +1,15 @@
+{
+  "name": "carbon-token-tools",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic token pipeline for the carbon Flutter package: extract official IBM Carbon tokens, normalize, generate Dart, verify.",
+  "scripts": {
+    "tokens:install": "npm --prefix upstream install --no-audit --no-fund",
+    "tokens:extract": "node extract_tokens.mjs",
+    "tokens:normalize": "node normalize_tokens.mjs",
+    "tokens:generate": "node generate_tokens.mjs",
+    "tokens:verify": "node verify_generated.mjs",
+    "tokens:all": "node extract_tokens.mjs && node normalize_tokens.mjs && node generate_tokens.mjs && node verify_generated.mjs"
+  }
+}

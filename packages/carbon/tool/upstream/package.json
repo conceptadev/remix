@@ -1,0 +1,18 @@
+{
+  "name": "carbon-upstream-tokens",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Development-only workspace that pins the exact official IBM Carbon token packages used to generate the carbon Flutter package. Not shipped to pub.dev consumers.",
+  "scripts": {
+    "install:pinned": "npm ci || npm install --no-save",
+    "postinstall": "node -e \"process.stdout.write('carbon upstream token sources installed\\n')\""
+  },
+  "dependencies": {
+    "@carbon/colors": "11.53.0",
+    "@carbon/layout": "11.54.0",
+    "@carbon/motion": "11.47.0",
+    "@carbon/themes": "11.76.1",
+    "@carbon/type": "11.62.0"
+  }
+}

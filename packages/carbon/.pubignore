@@ -1,0 +1,12 @@
+# Development-only sources and checks.
+docs/
+specs/
+test/
+tool/
+
+# Local editor and build output.
+.dart_tool/
+.idea/
+.vscode/
+build/
+doc/

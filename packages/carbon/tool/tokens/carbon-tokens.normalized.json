@@ -1,0 +1,3011 @@
+{
+  "$schema": "carbon-tokens/normalized/v1",
+  "componentTokens": {
+    "button": {
+      "buttonDangerActive": {
+        "g10": "0xFF750E13",
+        "g100": "0xFF750E13",
+        "g90": "0xFF750E13",
+        "white": "0xFF750E13"
+      },
+      "buttonDangerHover": {
+        "g10": "0xFFB81921",
+        "g100": "0xFFB81921",
+        "g90": "0xFFB81921",
+        "white": "0xFFB81921"
+      },
+      "buttonDangerPrimary": {
+        "g10": "0xFFDA1E28",
+        "g100": "0xFFDA1E28",
+        "g90": "0xFFDA1E28",
+        "white": "0xFFDA1E28"
+      },
+      "buttonDangerSecondary": {
+        "g10": "0xFFDA1E28",
+        "g100": "0xFFFA4D56",
+        "g90": "0xFFFF8389",
+        "white": "0xFFDA1E28"
+      },
+      "buttonDisabled": {
+        "g10": "0xFFC6C6C6",
+        "g100": "0x4D8D8D8D",
+        "g90": "0x4D8D8D8D",
+        "white": "0xFFC6C6C6"
+      },
+      "buttonPrimary": {
+        "g10": "0xFF0F62FE",
+        "g100": "0xFF0F62FE",
+        "g90": "0xFF0F62FE",
+        "white": "0xFF0F62FE"
+      },
+      "buttonPrimaryActive": {
+        "g10": "0xFF002D9C",
+        "g100": "0xFF002D9C",
+        "g90": "0xFF002D9C",
+        "white": "0xFF002D9C"
+      },
+      "buttonPrimaryHover": {
+        "g10": "0xFF0050E6",
+        "g100": "0xFF0050E6",
+        "g90": "0xFF0050E6",
+        "white": "0xFF0050E6"
+      },
+      "buttonSecondary": {
+        "g10": "0xFF393939",
+        "g100": "0xFF6F6F6F",
+        "g90": "0xFF6F6F6F",
+        "white": "0xFF393939"
+      },
+      "buttonSecondaryActive": {
+        "g10": "0xFF6F6F6F",
+        "g100": "0xFF393939",
+        "g90": "0xFF393939",
+        "white": "0xFF6F6F6F"
+      },
+      "buttonSecondaryHover": {
+        "g10": "0xFF474747",
+        "g100": "0xFF5E5E5E",
+        "g90": "0xFF5E5E5E",
+        "white": "0xFF474747"
+      },
+      "buttonSeparator": {
+        "fallback": "0xFFE0E0E0",
+        "g10": "0xFFE0E0E0",
+        "g100": "0xFF161616",
+        "g90": "0xFF161616",
+        "white": "0xFFE0E0E0"
+      },
+      "buttonTertiary": {
+        "g10": "0xFF0F62FE",
+        "g100": "0xFFFFFFFF",
+        "g90": "0xFFFFFFFF",
+        "white": "0xFF0F62FE"
+      },
+      "buttonTertiaryActive": {
+        "g10": "0xFF002D9C",
+        "g100": "0xFFC6C6C6",
+        "g90": "0xFFC6C6C6",
+        "white": "0xFF002D9C"
+      },
+      "buttonTertiaryHover": {
+        "g10": "0xFF0050E6",
+        "g100": "0xFFF4F4F4",
+        "g90": "0xFFF4F4F4",
+        "white": "0xFF0050E6"
+      }
+    },
+    "contentSwitcher": {
+      "contentSwitcherBackground": {
+        "g10": "0xFFE0E0E0",
+        "g100": "0x00000000",
+        "g90": "0x00000000",
+        "white": "0xFFE0E0E0"
+      },
+      "contentSwitcherBackgroundHover": {
+        "g10": "0xFFD1D1D1",
+        "g100": "0x1F8D8D8D",
+        "g90": "0x1F8D8D8D",
+        "white": "0xFFD1D1D1"
+      },
+      "contentSwitcherSelected": {
+        "g10": "0xFFFFFFFF",
+        "g100": "0x3D8D8D8D",
+        "g90": "0x3D8D8D8D",
+        "white": "0xFFFFFFFF"
+      }
+    },
+    "notification": {
+      "notificationActionHover": {
+        "g10": "0xFFFFFFFF",
+        "white": "0xFFFFFFFF"
+      },
+      "notificationActionTertiaryInverse": {
+        "g10": "0xFFFFFFFF",
+        "g100": "0xFF0F62FE",
+        "g90": "0xFF0F62FE",
+        "white": "0xFFFFFFFF"
+      },
+      "notificationActionTertiaryInverseActive": {
+        "g10": "0xFFC6C6C6",
+        "g100": "0xFF002D9C",
+        "g90": "0xFF002D9C",
+        "white": "0xFFC6C6C6"
+      },
+      "notificationActionTertiaryInverseHover": {
+        "g10": "0xFFF4F4F4",
+        "g100": "0xFF0050E6",
+        "g90": "0xFF0050E6",
+        "white": "0xFFF4F4F4"
+      },
+      "notificationActionTertiaryInverseText": {
+        "g10": "0xFF161616",
+        "g100": "0xFFFFFFFF",
+        "g90": "0xFFFFFFFF",
+        "white": "0xFF161616"
+      },
+      "notificationActionTertiaryInverseTextOnColorDisabled": {
+        "g10": "0x40FFFFFF",
+        "g100": "0xFF8D8D8D",
+        "g90": "0xFF8D8D8D",
+        "white": "0x40FFFFFF"
+      },
+      "notificationBackgroundError": {
+        "g10": "0xFFFFF1F1",
+        "g100": "0xFF262626",
+        "g90": "0xFF393939",
+        "white": "0xFFFFF1F1"
+      },
+      "notificationBackgroundInfo": {
+        "g10": "0xFFEDF5FF",
+        "g100": "0xFF262626",
+        "g90": "0xFF393939",
+        "white": "0xFFEDF5FF"
+      },
+      "notificationBackgroundSuccess": {
+        "g10": "0xFFDEFBE6",
+        "g100": "0xFF262626",
+        "g90": "0xFF393939",
+        "white": "0xFFDEFBE6"
+      },
+      "notificationBackgroundWarning": {
+        "g10": "0xFFFCF4D6",
+        "g100": "0xFF262626",
+        "g90": "0xFF393939",
+        "white": "0xFFFCF4D6"
+      }
+    },
+    "status": {
+      "statusAccessibilityBackground": {
+        "g10": "0xFFFFFFFF",
+        "g100": "0xFF161616",
+        "g90": "0xFF161616",
+        "white": "0xFFFFFFFF"
+      },
+      "statusBlue": {
+        "g10": "0xFF0043CE",
+        "g100": "0xFF4589FF",
+        "g90": "0xFF4589FF",
+        "white": "0xFF0043CE"
+      },
+      "statusGray": {
+        "g10": "0xFF6F6F6F",
+        "g100": "0xFF8D8D8D",
+        "g90": "0xFF8D8D8D",
+        "white": "0xFF6F6F6F"
+      },
+      "statusGreen": {
+        "g10": "0xFF24A148",
+        "g100": "0xFF42BE65",
+        "g90": "0xFF42BE65",
+        "white": "0xFF24A148"
+      },
+      "statusOrange": {
+        "g10": "0xFFFF832B",
+        "g100": "0xFFFF832B",
+        "g90": "0xFFFF832B",
+        "white": "0xFFFF832B"
+      },
+      "statusOrangeOutline": {
+        "g10": "0xFFBA4E00",
+        "white": "0xFFBA4E00"
+      },
+      "statusPurple": {
+        "g10": "0xFF8A3FFC",
+        "g100": "0xFFA56EFF",
+        "g90": "0xFFA56EFF",
+        "white": "0xFF8A3FFC"
+      },
+      "statusRed": {
+        "g10": "0xFFDA1E28",
+        "g100": "0xFFFA4D56",
+        "g90": "0xFFFA4D56",
+        "white": "0xFFDA1E28"
+      },
+      "statusYellow": {
+        "g10": "0xFFF1C21B",
+        "g100": "0xFFF1C21B",
+        "g90": "0xFFF1C21B",
+        "white": "0xFFF1C21B"
+      },
+      "statusYellowOutline": {
+        "g10": "0xFF8E6A00",
+        "white": "0xFF8E6A00"
+      }
+    },
+    "tag": {
+      "tagBackgroundBlue": {
+        "g10": "0xFFD0E2FF",
+        "g100": "0xFF0043CE",
+        "g90": "0xFF0043CE",
+        "white": "0xFFD0E2FF"
+      },
+      "tagBackgroundCoolGray": {
+        "g10": "0xFFDDE1E6",
+        "g100": "0xFF4D5358",
+        "g90": "0xFF4D5358",
+        "white": "0xFFDDE1E6"
+      },
+      "tagBackgroundCyan": {
+        "g10": "0xFFBAE6FF",
+        "g100": "0xFF00539A",
+        "g90": "0xFF00539A",
+        "white": "0xFFBAE6FF"
+      },
+      "tagBackgroundGray": {
+        "g10": "0xFFE0E0E0",
+        "g100": "0xFF525252",
+        "g90": "0xFF525252",
+        "white": "0xFFE0E0E0"
+      },
+      "tagBackgroundGreen": {
+        "g10": "0xFFA7F0BA",
+        "g100": "0xFF0E6027",
+        "g90": "0xFF0E6027",
+        "white": "0xFFA7F0BA"
+      },
+      "tagBackgroundMagenta": {
+        "g10": "0xFFFFD6E8",
+        "g100": "0xFF9F1853",
+        "g90": "0xFF9F1853",
+        "white": "0xFFFFD6E8"
+      },
+      "tagBackgroundPurple": {
+        "g10": "0xFFE8DAFF",
+        "g100": "0xFF6929C4",
+        "g90": "0xFF6929C4",
+        "white": "0xFFE8DAFF"
+      },
+      "tagBackgroundRed": {
+        "g10": "0xFFFFD7D9",
+        "g100": "0xFFA2191F",
+        "g90": "0xFFA2191F",
+        "white": "0xFFFFD7D9"
+      },
+      "tagBackgroundTeal": {
+        "g10": "0xFF9EF0F0",
+        "g100": "0xFF005D5D",
+        "g90": "0xFF005D5D",
+        "white": "0xFF9EF0F0"
+      },
+      "tagBackgroundWarmGray": {
+        "g10": "0xFFE5E0DF",
+        "g100": "0xFF565151",
+        "g90": "0xFF565151",
+        "white": "0xFFE5E0DF"
+      },
+      "tagBorderBlue": {
+        "g10": "0xFF78A9FF",
+        "g100": "0xFF4589FF",
+        "g90": "0xFF4589FF",
+        "white": "0xFF78A9FF"
+      },
+      "tagBorderCoolGray": {
+        "g10": "0xFFA2A9B0",
+        "g100": "0xFF878D96",
+        "g90": "0xFF878D96",
+        "white": "0xFFA2A9B0"
+      },
+      "tagBorderCyan": {
+        "g10": "0xFF33B1FF",
+        "g100": "0xFF1192E8",
+        "g90": "0xFF1192E8",
+        "white": "0xFF33B1FF"
+      },
+      "tagBorderGray": {
+        "g10": "0xFFA8A8A8",
+        "g100": "0xFF8D8D8D",
+        "g90": "0xFF8D8D8D",
+        "white": "0xFFA8A8A8"
+      },
+      "tagBorderGreen": {
+        "g10": "0xFF42BE65",
+        "g100": "0xFF24A148",
+        "g90": "0xFF24A148",
+        "white": "0xFF42BE65"
+      },
+      "tagBorderMagenta": {
+        "g10": "0xFFFF7EB6",
+        "g100": "0xFFEE5396",
+        "g90": "0xFFEE5396",
+        "white": "0xFFFF7EB6"
+      },
+      "tagBorderPurple": {
+        "g10": "0xFFBE95FF",
+        "g100": "0xFFA56EFF",
+        "g90": "0xFFA56EFF",
+        "white": "0xFFBE95FF"
+      },
+      "tagBorderRed": {
+        "g10": "0xFFFF8389",
+        "g100": "0xFFFA4D56",
+        "g90": "0xFFFA4D56",
+        "white": "0xFFFF8389"
+      },
+      "tagBorderTeal": {
+        "g10": "0xFF08BDBA",
+        "g100": "0xFF009D9A",
+        "g90": "0xFF009D9A",
+        "white": "0xFF08BDBA"
+      },
+      "tagBorderWarmGray": {
+        "g10": "0xFFADA8A8",
+        "g100": "0xFF8F8B8B",
+        "g90": "0xFF8F8B8B",
+        "white": "0xFFADA8A8"
+      },
+      "tagColorBlue": {
+        "g10": "0xFF0043CE",
+        "g100": "0xFFD0E2FF",
+        "g90": "0xFFD0E2FF",
+        "white": "0xFF0043CE"
+      },
+      "tagColorCoolGray": {
+        "g10": "0xFF121619",
+        "g100": "0xFFF2F4F8",
+        "g90": "0xFFF2F4F8",
+        "white": "0xFF121619"
+      },
+      "tagColorCyan": {
+        "g10": "0xFF00539A",
+        "g100": "0xFFBAE6FF",
+        "g90": "0xFFBAE6FF",
+        "white": "0xFF00539A"
+      },
+      "tagColorGray": {
+        "g10": "0xFF161616",
+        "g100": "0xFFF4F4F4",
+        "g90": "0xFFF4F4F4",
+        "white": "0xFF161616"
+      },
+      "tagColorGreen": {
+        "g10": "0xFF0E6027",
+        "g100": "0xFFA7F0BA",
+        "g90": "0xFFA7F0BA",
+        "white": "0xFF0E6027"
+      },
+      "tagColorMagenta": {
+        "g10": "0xFF9F1853",
+        "g100": "0xFFFFD6E8",
+        "g90": "0xFFFFD6E8",
+        "white": "0xFF9F1853"
+      },
+      "tagColorPurple": {
+        "g10": "0xFF6929C4",
+        "g100": "0xFFE8DAFF",
+        "g90": "0xFFE8DAFF",
+        "white": "0xFF6929C4"
+      },
+      "tagColorRed": {
+        "g10": "0xFFA2191F",
+        "g100": "0xFFFFD7D9",
+        "g90": "0xFFFFD7D9",
+        "white": "0xFFA2191F"
+      },
+      "tagColorTeal": {
+        "g10": "0xFF005D5D",
+        "g100": "0xFF9EF0F0",
+        "g90": "0xFF9EF0F0",
+        "white": "0xFF005D5D"
+      },
+      "tagColorWarmGray": {
+        "g10": "0xFF171414",
+        "g100": "0xFFF7F3F2",
+        "g90": "0xFFF7F3F2",
+        "white": "0xFF171414"
+      },
+      "tagHoverBlue": {
+        "g10": "0xFFB8D3FF",
+        "g100": "0xFF0053FF",
+        "g90": "0xFF0053FF",
+        "white": "0xFFB8D3FF"
+      },
+      "tagHoverCoolGray": {
+        "g10": "0xFFCDD3DA",
+        "g100": "0xFF5D646A",
+        "g90": "0xFF5D646A",
+        "white": "0xFFCDD3DA"
+      },
+      "tagHoverCyan": {
+        "g10": "0xFF99DAFF",
+        "g100": "0xFF0066BD",
+        "g90": "0xFF0066BD",
+        "white": "0xFF99DAFF"
+      },
+      "tagHoverGray": {
+        "g10": "0xFFD1D1D1",
+        "g100": "0xFF636363",
+        "g90": "0xFF636363",
+        "white": "0xFFD1D1D1"
+      },
+      "tagHoverGreen": {
+        "g10": "0xFF74E792",
+        "g100": "0xFF11742F",
+        "g90": "0xFF11742F",
+        "white": "0xFF74E792"
+      },
+      "tagHoverMagenta": {
+        "g10": "0xFFFFBDDA",
+        "g100": "0xFFBF1D63",
+        "g90": "0xFFBF1D63",
+        "white": "0xFFFFBDDA"
+      },
+      "tagHoverPurple": {
+        "g10": "0xFFDCC7FF",
+        "g100": "0xFF7C3DD6",
+        "g90": "0xFF7C3DD6",
+        "white": "0xFFDCC7FF"
+      },
+      "tagHoverRed": {
+        "g10": "0xFFFFC2C5",
+        "g100": "0xFFC21E25",
+        "g90": "0xFFC21E25",
+        "white": "0xFFFFC2C5"
+      },
+      "tagHoverTeal": {
+        "g10": "0xFF57E5E5",
+        "g100": "0xFF007070",
+        "g90": "0xFF007070",
+        "white": "0xFF57E5E5"
+      },
+      "tagHoverWarmGray": {
+        "g10": "0xFFD8D0CF",
+        "g100": "0xFF696363",
+        "g90": "0xFF696363",
+        "white": "0xFFD8D0CF"
+      }
+    }
+  },
+  "layout": {
+    "baseFontSizePx": 256,
+    "breakpoints": {
+      "lg": {
+        "columns": 16,
+        "marginPx": 16,
+        "widthPx": 1056
+      },
+      "max": {
+        "columns": 16,
+        "marginPx": 24,
+        "widthPx": 1584
+      },
+      "md": {
+        "columns": 8,
+        "marginPx": 16,
+        "widthPx": 672
+      },
+      "sm": {
+        "columns": 4,
+        "marginPx": 0,
+        "widthPx": 320
+      },
+      "xlg": {
+        "columns": 16,
+        "marginPx": 16,
+        "widthPx": 1312
+      }
+    },
+    "containers": [
+      {
+        "px": 24,
+        "token": "container01"
+      },
+      {
+        "px": 32,
+        "token": "container02"
+      },
+      {
+        "px": 40,
+        "token": "container03"
+      },
+      {
+        "px": 48,
+        "token": "container04"
+      },
+      {
+        "px": 64,
+        "token": "container05"
+      }
+    ],
+    "fluidSpacing": [
+      {
+        "token": "fluidSpacing01",
+        "unit": "px",
+        "value": 0
+      },
+      {
+        "token": "fluidSpacing02",
+        "unit": "vw",
+        "value": 2
+      },
+      {
+        "token": "fluidSpacing03",
+        "unit": "vw",
+        "value": 5
+      },
+      {
+        "token": "fluidSpacing04",
+        "unit": "vw",
+        "value": 10
+      }
+    ],
+    "iconSizes": [
+      {
+        "px": 16,
+        "token": "iconSize01"
+      },
+      {
+        "px": 20,
+        "token": "iconSize02"
+      }
+    ],
+    "miniUnitPx": 128,
+    "sizes": {
+      "large": {
+        "carbonName": "Large",
+        "px": 48
+      },
+      "medium": {
+        "carbonName": "Medium",
+        "px": 40
+      },
+      "small": {
+        "carbonName": "Small",
+        "px": 32
+      },
+      "xLarge": {
+        "carbonName": "XLarge",
+        "px": 64
+      },
+      "xSmall": {
+        "carbonName": "XSmall",
+        "px": 24
+      },
+      "xxLarge": {
+        "carbonName": "2XLarge",
+        "px": 80
+      }
+    },
+    "spacing": [
+      {
+        "index": 1,
+        "px": 2,
+        "token": "spacing01"
+      },
+      {
+        "index": 2,
+        "px": 4,
+        "token": "spacing02"
+      },
+      {
+        "index": 3,
+        "px": 8,
+        "token": "spacing03"
+      },
+      {
+        "index": 4,
+        "px": 12,
+        "token": "spacing04"
+      },
+      {
+        "index": 5,
+        "px": 16,
+        "token": "spacing05"
+      },
+      {
+        "index": 6,
+        "px": 24,
+        "token": "spacing06"
+      },
+      {
+        "index": 7,
+        "px": 32,
+        "token": "spacing07"
+      },
+      {
+        "index": 8,
+        "px": 40,
+        "token": "spacing08"
+      },
+      {
+        "index": 9,
+        "px": 48,
+        "token": "spacing09"
+      },
+      {
+        "index": 10,
+        "px": 64,
+        "token": "spacing10"
+      },
+      {
+        "index": 11,
+        "px": 80,
+        "token": "spacing11"
+      },
+      {
+        "index": 12,
+        "px": 96,
+        "token": "spacing12"
+      },
+      {
+        "index": 13,
+        "px": 160,
+        "token": "spacing13"
+      }
+    ]
+  },
+  "motion": {
+    "durations": {
+      "durationFast01": 70,
+      "durationFast02": 110,
+      "durationModerate01": 150,
+      "durationModerate02": 240,
+      "durationSlow01": 400,
+      "durationSlow02": 700,
+      "fast01": 70,
+      "fast02": 110,
+      "moderate01": 150,
+      "moderate02": 240,
+      "slow01": 400,
+      "slow02": 700
+    },
+    "easings": {
+      "entrance": {
+        "expressive": [
+          0,
+          0,
+          0.3,
+          1
+        ],
+        "productive": [
+          0,
+          0,
+          0.38,
+          0.9
+        ]
+      },
+      "exit": {
+        "expressive": [
+          0.4,
+          0.14,
+          1,
+          1
+        ],
+        "productive": [
+          0.2,
+          0,
+          1,
+          0.9
+        ]
+      },
+      "standard": {
+        "expressive": [
+          0.4,
+          0.14,
+          0.3,
+          1
+        ],
+        "productive": [
+          0.2,
+          0,
+          0.38,
+          0.9
+        ]
+      }
+    }
+  },
+  "palette": {
+    "black": "0xFF000000",
+    "black100": "0xFF000000",
+    "blackHover": "0xFF212121",
+    "blue10": "0xFFEDF5FF",
+    "blue100": "0xFF001141",
+    "blue100Hover": "0xFF001F75",
+    "blue10Hover": "0xFFDBEBFF",
+    "blue20": "0xFFD0E2FF",
+    "blue20Hover": "0xFFB8D3FF",
+    "blue30": "0xFFA6C8FF",
+    "blue30Hover": "0xFF8AB6FF",
+    "blue40": "0xFF78A9FF",
+    "blue40Hover": "0xFF5C97FF",
+    "blue50": "0xFF4589FF",
+    "blue50Hover": "0xFF1F70FF",
+    "blue60": "0xFF0F62FE",
+    "blue60Hover": "0xFF0050E6",
+    "blue70": "0xFF0043CE",
+    "blue70Hover": "0xFF0053FF",
+    "blue80": "0xFF002D9C",
+    "blue80Hover": "0xFF0039C7",
+    "blue90": "0xFF001D6C",
+    "blue90Hover": "0xFF00258A",
+    "coolGray10": "0xFFF2F4F8",
+    "coolGray100": "0xFF121619",
+    "coolGray100Hover": "0xFF222A2F",
+    "coolGray10Hover": "0xFFE4E9F1",
+    "coolGray20": "0xFFDDE1E6",
+    "coolGray20Hover": "0xFFCDD3DA",
+    "coolGray30": "0xFFC1C7CD",
+    "coolGray30Hover": "0xFFADB5BD",
+    "coolGray40": "0xFFA2A9B0",
+    "coolGray40Hover": "0xFF9199A1",
+    "coolGray50": "0xFF878D96",
+    "coolGray50Hover": "0xFF757B85",
+    "coolGray60": "0xFF697077",
+    "coolGray60Hover": "0xFF585E64",
+    "coolGray70": "0xFF4D5358",
+    "coolGray70Hover": "0xFF5D646A",
+    "coolGray80": "0xFF343A3F",
+    "coolGray80Hover": "0xFF434A51",
+    "coolGray90": "0xFF21272A",
+    "coolGray90Hover": "0xFF2B3236",
+    "cyan10": "0xFFE5F6FF",
+    "cyan100": "0xFF061727",
+    "cyan100Hover": "0xFF0B2947",
+    "cyan10Hover": "0xFFCCEEFF",
+    "cyan20": "0xFFBAE6FF",
+    "cyan20Hover": "0xFF99DAFF",
+    "cyan30": "0xFF82CFFF",
+    "cyan30Hover": "0xFF57BEFF",
+    "cyan40": "0xFF33B1FF",
+    "cyan40Hover": "0xFF059FFF",
+    "cyan50": "0xFF1192E8",
+    "cyan50Hover": "0xFF0F7EC8",
+    "cyan60": "0xFF0072C3",
+    "cyan60Hover": "0xFF005FA3",
+    "cyan70": "0xFF00539A",
+    "cyan70Hover": "0xFF0066BD",
+    "cyan80": "0xFF003A6D",
+    "cyan80Hover": "0xFF00498A",
+    "cyan90": "0xFF012749",
+    "cyan90Hover": "0xFF013360",
+    "gray10": "0xFFF4F4F4",
+    "gray100": "0xFF161616",
+    "gray100Hover": "0xFF292929",
+    "gray10Hover": "0xFFE8E8E8",
+    "gray20": "0xFFE0E0E0",
+    "gray20Hover": "0xFFD1D1D1",
+    "gray30": "0xFFC6C6C6",
+    "gray30Hover": "0xFFB5B5B5",
+    "gray40": "0xFFA8A8A8",
+    "gray40Hover": "0xFF999999",
+    "gray50": "0xFF8D8D8D",
+    "gray50Hover": "0xFF7A7A7A",
+    "gray60": "0xFF6F6F6F",
+    "gray60Hover": "0xFF5E5E5E",
+    "gray70": "0xFF525252",
+    "gray70Hover": "0xFF636363",
+    "gray80": "0xFF393939",
+    "gray80Hover": "0xFF474747",
+    "gray90": "0xFF262626",
+    "gray90Hover": "0xFF333333",
+    "green10": "0xFFDEFBE6",
+    "green100": "0xFF071908",
+    "green100Hover": "0xFF0D300F",
+    "green10Hover": "0xFFB6F6C8",
+    "green20": "0xFFA7F0BA",
+    "green20Hover": "0xFF74E792",
+    "green30": "0xFF6FDC8C",
+    "green30Hover": "0xFF36CE5E",
+    "green40": "0xFF42BE65",
+    "green40Hover": "0xFF3BAB5A",
+    "green50": "0xFF24A148",
+    "green50Hover": "0xFF208E3F",
+    "green60": "0xFF198038",
+    "green60Hover": "0xFF166F31",
+    "green70": "0xFF0E6027",
+    "green70Hover": "0xFF11742F",
+    "green80": "0xFF044317",
+    "green80Hover": "0xFF05521C",
+    "green90": "0xFF022D0D",
+    "green90Hover": "0xFF033B11",
+    "magenta10": "0xFFFFF0F7",
+    "magenta100": "0xFF2A0A18",
+    "magenta100Hover": "0xFF53142F",
+    "magenta10Hover": "0xFFFFE0EF",
+    "magenta20": "0xFFFFD6E8",
+    "magenta20Hover": "0xFFFFBDDA",
+    "magenta30": "0xFFFFAFD2",
+    "magenta30Hover": "0xFFFF94C3",
+    "magenta40": "0xFFFF7EB6",
+    "magenta40Hover": "0xFFFF57A0",
+    "magenta50": "0xFFEE5396",
+    "magenta50Hover": "0xFFE3176F",
+    "magenta60": "0xFFD02670",
+    "magenta60Hover": "0xFFB0215F",
+    "magenta70": "0xFF9F1853",
+    "magenta70Hover": "0xFFBF1D63",
+    "magenta80": "0xFF740937",
+    "magenta80Hover": "0xFF8E0B43",
+    "magenta90": "0xFF510224",
+    "magenta90Hover": "0xFF68032E",
+    "orange10": "0xFFFFF2E8",
+    "orange100": "0xFF231000",
+    "orange100Hover": "0xFF421E00",
+    "orange10Hover": "0xFFFFE2CC",
+    "orange20": "0xFFFFD9BE",
+    "orange20Hover": "0xFFFFC69E",
+    "orange30": "0xFFFFB784",
+    "orange30Hover": "0xFFFF9D57",
+    "orange40": "0xFFFF832B",
+    "orange40Hover": "0xFFFA6800",
+    "orange50": "0xFFEB6200",
+    "orange50Hover": "0xFFCC5500",
+    "orange60": "0xFFBA4E00",
+    "orange60Hover": "0xFF9E4200",
+    "orange70": "0xFF8A3800",
+    "orange70Hover": "0xFFA84400",
+    "orange80": "0xFF5E2900",
+    "orange80Hover": "0xFF753300",
+    "orange90": "0xFF3E1A00",
+    "orange90Hover": "0xFF522200",
+    "purple10": "0xFFF6F2FF",
+    "purple100": "0xFF1C0F30",
+    "purple100Hover": "0xFF341C59",
+    "purple10Hover": "0xFFEDE5FF",
+    "purple20": "0xFFE8DAFF",
+    "purple20Hover": "0xFFDCC7FF",
+    "purple30": "0xFFD4BBFF",
+    "purple30Hover": "0xFFC5A3FF",
+    "purple40": "0xFFBE95FF",
+    "purple40Hover": "0xFFAE7AFF",
+    "purple50": "0xFFA56EFF",
+    "purple50Hover": "0xFF9352FF",
+    "purple60": "0xFF8A3FFC",
+    "purple60Hover": "0xFF7822FB",
+    "purple70": "0xFF6929C4",
+    "purple70Hover": "0xFF7C3DD6",
+    "purple80": "0xFF491D8B",
+    "purple80Hover": "0xFF5B24AD",
+    "purple90": "0xFF31135E",
+    "purple90Hover": "0xFF40197B",
+    "red10": "0xFFFFF1F1",
+    "red100": "0xFF2D0709",
+    "red100Hover": "0xFF540D11",
+    "red10Hover": "0xFFFFE0E0",
+    "red20": "0xFFFFD7D9",
+    "red20Hover": "0xFFFFC2C5",
+    "red30": "0xFFFFB3B8",
+    "red30Hover": "0xFFFF99A0",
+    "red40": "0xFFFF8389",
+    "red40Hover": "0xFFFF6168",
+    "red50": "0xFFFA4D56",
+    "red50Hover": "0xFFEE0713",
+    "red60": "0xFFDA1E28",
+    "red60Hover": "0xFFB81922",
+    "red70": "0xFFA2191F",
+    "red70Hover": "0xFFC21E25",
+    "red80": "0xFF750E13",
+    "red80Hover": "0xFF921118",
+    "red90": "0xFF520408",
+    "red90Hover": "0xFF66050A",
+    "teal10": "0xFFD9FBFB",
+    "teal100": "0xFF081A1C",
+    "teal100Hover": "0xFF0F3034",
+    "teal10Hover": "0xFFACF6F6",
+    "teal20": "0xFF9EF0F0",
+    "teal20Hover": "0xFF57E5E5",
+    "teal30": "0xFF3DDBD9",
+    "teal30Hover": "0xFF25CAC8",
+    "teal40": "0xFF08BDBA",
+    "teal40Hover": "0xFF07ABA9",
+    "teal50": "0xFF009D9A",
+    "teal50Hover": "0xFF008A87",
+    "teal60": "0xFF007D79",
+    "teal60Hover": "0xFF006B68",
+    "teal70": "0xFF005D5D",
+    "teal70Hover": "0xFF007070",
+    "teal80": "0xFF004144",
+    "teal80Hover": "0xFF005357",
+    "teal90": "0xFF022B30",
+    "teal90Hover": "0xFF033940",
+    "warmGray10": "0xFFF7F3F2",
+    "warmGray100": "0xFF171414",
+    "warmGray100Hover": "0xFF2C2626",
+    "warmGray10Hover": "0xFFF0E8E6",
+    "warmGray20": "0xFFE5E0DF",
+    "warmGray20Hover": "0xFFD8D0CF",
+    "warmGray30": "0xFFCAC5C4",
+    "warmGray30Hover": "0xFFB9B3B1",
+    "warmGray40": "0xFFADA8A8",
+    "warmGray40Hover": "0xFF9C9696",
+    "warmGray50": "0xFF8F8B8B",
+    "warmGray50Hover": "0xFF7F7B7B",
+    "warmGray60": "0xFF726E6E",
+    "warmGray60Hover": "0xFF605D5D",
+    "warmGray70": "0xFF565151",
+    "warmGray70Hover": "0xFF696363",
+    "warmGray80": "0xFF3C3838",
+    "warmGray80Hover": "0xFF4C4848",
+    "warmGray90": "0xFF272525",
+    "warmGray90Hover": "0xFF343232",
+    "white": "0xFFFFFFFF",
+    "white0": "0xFFFFFFFF",
+    "whiteHover": "0xFFE8E8E8",
+    "yellow10": "0xFFFCF4D6",
+    "yellow100": "0xFF1C1500",
+    "yellow100Hover": "0xFF332600",
+    "yellow10Hover": "0xFFF8E6A0",
+    "yellow20": "0xFFFDDC69",
+    "yellow20Hover": "0xFFFCCD27",
+    "yellow30": "0xFFF1C21B",
+    "yellow30Hover": "0xFFDDB00E",
+    "yellow40": "0xFFD2A106",
+    "yellow40Hover": "0xFFBC9005",
+    "yellow50": "0xFFB28600",
+    "yellow50Hover": "0xFF9E7700",
+    "yellow60": "0xFF8E6A00",
+    "yellow60Hover": "0xFF755800",
+    "yellow70": "0xFF684E00",
+    "yellow70Hover": "0xFF806000",
+    "yellow80": "0xFF483700",
+    "yellow80Hover": "0xFF5C4600",
+    "yellow90": "0xFF302400",
+    "yellow90Hover": "0xFF3D2E00"
+  },
+  "paletteFamilies": {
+    "blue": {
+      "10": "0xFFEDF5FF",
+      "20": "0xFFD0E2FF",
+      "30": "0xFFA6C8FF",
+      "40": "0xFF78A9FF",
+      "50": "0xFF4589FF",
+      "60": "0xFF0F62FE",
+      "70": "0xFF0043CE",
+      "80": "0xFF002D9C",
+      "90": "0xFF001D6C",
+      "100": "0xFF001141"
+    },
+    "blueHover": {
+      "10": "0xFFDBEBFF",
+      "20": "0xFFB8D3FF",
+      "30": "0xFF8AB6FF",
+      "40": "0xFF5C97FF",
+      "50": "0xFF1F70FF",
+      "60": "0xFF0050E6",
+      "70": "0xFF0053FF",
+      "80": "0xFF0039C7",
+      "90": "0xFF00258A",
+      "100": "0xFF001F75"
+    },
+    "coolGray": {
+      "10": "0xFFF2F4F8",
+      "20": "0xFFDDE1E6",
+      "30": "0xFFC1C7CD",
+      "40": "0xFFA2A9B0",
+      "50": "0xFF878D96",
+      "60": "0xFF697077",
+      "70": "0xFF4D5358",
+      "80": "0xFF343A3F",
+      "90": "0xFF21272A",
+      "100": "0xFF121619"
+    },
+    "coolGrayHover": {
+      "10": "0xFFE4E9F1",
+      "20": "0xFFCDD3DA",
+      "30": "0xFFADB5BD",
+      "40": "0xFF9199A1",
+      "50": "0xFF757B85",
+      "60": "0xFF585E64",
+      "70": "0xFF5D646A",
+      "80": "0xFF434A51",
+      "90": "0xFF2B3236",
+      "100": "0xFF222A2F"
+    },
+    "cyan": {
+      "10": "0xFFE5F6FF",
+      "20": "0xFFBAE6FF",
+      "30": "0xFF82CFFF",
+      "40": "0xFF33B1FF",
+      "50": "0xFF1192E8",
+      "60": "0xFF0072C3",
+      "70": "0xFF00539A",
+      "80": "0xFF003A6D",
+      "90": "0xFF012749",
+      "100": "0xFF061727"
+    },
+    "cyanHover": {
+      "10": "0xFFCCEEFF",
+      "20": "0xFF99DAFF",
+      "30": "0xFF57BEFF",
+      "40": "0xFF059FFF",
+      "50": "0xFF0F7EC8",
+      "60": "0xFF005FA3",
+      "70": "0xFF0066BD",
+      "80": "0xFF00498A",
+      "90": "0xFF013360",
+      "100": "0xFF0B2947"
+    },
+    "gray": {
+      "10": "0xFFF4F4F4",
+      "20": "0xFFE0E0E0",
+      "30": "0xFFC6C6C6",
+      "40": "0xFFA8A8A8",
+      "50": "0xFF8D8D8D",
+      "60": "0xFF6F6F6F",
+      "70": "0xFF525252",
+      "80": "0xFF393939",
+      "90": "0xFF262626",
+      "100": "0xFF161616"
+    },
+    "grayHover": {
+      "10": "0xFFE8E8E8",
+      "20": "0xFFD1D1D1",
+      "30": "0xFFB5B5B5",
+      "40": "0xFF999999",
+      "50": "0xFF7A7A7A",
+      "60": "0xFF5E5E5E",
+      "70": "0xFF636363",
+      "80": "0xFF474747",
+      "90": "0xFF333333",
+      "100": "0xFF292929"
+    },
+    "green": {
+      "10": "0xFFDEFBE6",
+      "20": "0xFFA7F0BA",
+      "30": "0xFF6FDC8C",
+      "40": "0xFF42BE65",
+      "50": "0xFF24A148",
+      "60": "0xFF198038",
+      "70": "0xFF0E6027",
+      "80": "0xFF044317",
+      "90": "0xFF022D0D",
+      "100": "0xFF071908"
+    },
+    "greenHover": {
+      "10": "0xFFB6F6C8",
+      "20": "0xFF74E792",
+      "30": "0xFF36CE5E",
+      "40": "0xFF3BAB5A",
+      "50": "0xFF208E3F",
+      "60": "0xFF166F31",
+      "70": "0xFF11742F",
+      "80": "0xFF05521C",
+      "90": "0xFF033B11",
+      "100": "0xFF0D300F"
+    },
+    "hoverColors": {
+      "blackHover": "0xFF212121",
+      "whiteHover": "0xFFE8E8E8"
+    },
+    "magenta": {
+      "10": "0xFFFFF0F7",
+      "20": "0xFFFFD6E8",
+      "30": "0xFFFFAFD2",
+      "40": "0xFFFF7EB6",
+      "50": "0xFFEE5396",
+      "60": "0xFFD02670",
+      "70": "0xFF9F1853",
+      "80": "0xFF740937",
+      "90": "0xFF510224",
+      "100": "0xFF2A0A18"
+    },
+    "magentaHover": {
+      "10": "0xFFFFE0EF",
+      "20": "0xFFFFBDDA",
+      "30": "0xFFFF94C3",
+      "40": "0xFFFF57A0",
+      "50": "0xFFE3176F",
+      "60": "0xFFB0215F",
+      "70": "0xFFBF1D63",
+      "80": "0xFF8E0B43",
+      "90": "0xFF68032E",
+      "100": "0xFF53142F"
+    },
+    "orange": {
+      "10": "0xFFFFF2E8",
+      "20": "0xFFFFD9BE",
+      "30": "0xFFFFB784",
+      "40": "0xFFFF832B",
+      "50": "0xFFEB6200",
+      "60": "0xFFBA4E00",
+      "70": "0xFF8A3800",
+      "80": "0xFF5E2900",
+      "90": "0xFF3E1A00",
+      "100": "0xFF231000"
+    },
+    "orangeHover": {
+      "10": "0xFFFFE2CC",
+      "20": "0xFFFFC69E",
+      "30": "0xFFFF9D57",
+      "40": "0xFFFA6800",
+      "50": "0xFFCC5500",
+      "60": "0xFF9E4200",
+      "70": "0xFFA84400",
+      "80": "0xFF753300",
+      "90": "0xFF522200",
+      "100": "0xFF421E00"
+    },
+    "purple": {
+      "10": "0xFFF6F2FF",
+      "20": "0xFFE8DAFF",
+      "30": "0xFFD4BBFF",
+      "40": "0xFFBE95FF",
+      "50": "0xFFA56EFF",
+      "60": "0xFF8A3FFC",
+      "70": "0xFF6929C4",
+      "80": "0xFF491D8B",
+      "90": "0xFF31135E",
+      "100": "0xFF1C0F30"
+    },
+    "purpleHover": {
+      "10": "0xFFEDE5FF",
+      "20": "0xFFDCC7FF",
+      "30": "0xFFC5A3FF",
+      "40": "0xFFAE7AFF",
+      "50": "0xFF9352FF",
+      "60": "0xFF7822FB",
+      "70": "0xFF7C3DD6",
+      "80": "0xFF5B24AD",
+      "90": "0xFF40197B",
+      "100": "0xFF341C59"
+    },
+    "red": {
+      "10": "0xFFFFF1F1",
+      "20": "0xFFFFD7D9",
+      "30": "0xFFFFB3B8",
+      "40": "0xFFFF8389",
+      "50": "0xFFFA4D56",
+      "60": "0xFFDA1E28",
+      "70": "0xFFA2191F",
+      "80": "0xFF750E13",
+      "90": "0xFF520408",
+      "100": "0xFF2D0709"
+    },
+    "redHover": {
+      "10": "0xFFFFE0E0",
+      "20": "0xFFFFC2C5",
+      "30": "0xFFFF99A0",
+      "40": "0xFFFF6168",
+      "50": "0xFFEE0713",
+      "60": "0xFFB81922",
+      "70": "0xFFC21E25",
+      "80": "0xFF921118",
+      "90": "0xFF66050A",
+      "100": "0xFF540D11"
+    },
+    "teal": {
+      "10": "0xFFD9FBFB",
+      "20": "0xFF9EF0F0",
+      "30": "0xFF3DDBD9",
+      "40": "0xFF08BDBA",
+      "50": "0xFF009D9A",
+      "60": "0xFF007D79",
+      "70": "0xFF005D5D",
+      "80": "0xFF004144",
+      "90": "0xFF022B30",
+      "100": "0xFF081A1C"
+    },
+    "tealHover": {
+      "10": "0xFFACF6F6",
+      "20": "0xFF57E5E5",
+      "30": "0xFF25CAC8",
+      "40": "0xFF07ABA9",
+      "50": "0xFF008A87",
+      "60": "0xFF006B68",
+      "70": "0xFF007070",
+      "80": "0xFF005357",
+      "90": "0xFF033940",
+      "100": "0xFF0F3034"
+    },
+    "warmGray": {
+      "10": "0xFFF7F3F2",
+      "20": "0xFFE5E0DF",
+      "30": "0xFFCAC5C4",
+      "40": "0xFFADA8A8",
+      "50": "0xFF8F8B8B",
+      "60": "0xFF726E6E",
+      "70": "0xFF565151",
+      "80": "0xFF3C3838",
+      "90": "0xFF272525",
+      "100": "0xFF171414"
+    },
+    "warmGrayHover": {
+      "10": "0xFFF0E8E6",
+      "20": "0xFFD8D0CF",
+      "30": "0xFFB9B3B1",
+      "40": "0xFF9C9696",
+      "50": "0xFF7F7B7B",
+      "60": "0xFF605D5D",
+      "70": "0xFF696363",
+      "80": "0xFF4C4848",
+      "90": "0xFF343232",
+      "100": "0xFF2C2626"
+    },
+    "yellow": {
+      "10": "0xFFFCF4D6",
+      "20": "0xFFFDDC69",
+      "30": "0xFFF1C21B",
+      "40": "0xFFD2A106",
+      "50": "0xFFB28600",
+      "60": "0xFF8E6A00",
+      "70": "0xFF684E00",
+      "80": "0xFF483700",
+      "90": "0xFF302400",
+      "100": "0xFF1C1500"
+    },
+    "yellowHover": {
+      "10": "0xFFF8E6A0",
+      "20": "0xFFFCCD27",
+      "30": "0xFFDDB00E",
+      "40": "0xFFBC9005",
+      "50": "0xFF9E7700",
+      "60": "0xFF755800",
+      "70": "0xFF806000",
+      "80": "0xFF5C4600",
+      "90": "0xFF3D2E00",
+      "100": "0xFF332600"
+    }
+  },
+  "provenance": {
+    "carbonCommit": "b288a66af010622bedc6de4d6d0b81ee3c9f5520",
+    "carbonCommitDate": "2026-07-09",
+    "extractionSchemaVersion": 1,
+    "license": "Apache-2.0",
+    "packages": {
+      "@carbon/colors": "11.53.0",
+      "@carbon/layout": "11.54.0",
+      "@carbon/motion": "11.47.0",
+      "@carbon/themes": "11.76.1",
+      "@carbon/type": "11.62.0"
+    }
+  },
+  "themes": {
+    "g10": {
+      "aiAuraEnd": "0x00FFFFFF",
+      "aiAuraHoverBackground": "0xFFEDF5FF",
+      "aiAuraHoverEnd": "0x00FFFFFF",
+      "aiAuraHoverStart": "0x524589FF",
+      "aiAuraStart": "0x1A4589FF",
+      "aiAuraStartSm": "0x294589FF",
+      "aiBorderEnd": "0xFF78A9FF",
+      "aiBorderStart": "0xA3A6C8FF",
+      "aiBorderStrong": "0xFF4589FF",
+      "aiDropShadow": "0x1A0F62FE",
+      "aiInnerShadow": "0x1A4589FF",
+      "aiOverlay": "0x80001141",
+      "aiPopoverBackground": "0xFFFFFFFF",
+      "aiPopoverCaretBottom": "0xFF78A9FF",
+      "aiPopoverCaretBottomBackground": "0xFFEAF1FF",
+      "aiPopoverCaretBottomBackgroundActions": "0xFFE9EFFA",
+      "aiPopoverCaretCenter": "0xFFA0C3FF",
+      "aiPopoverShadowOuter01": "0x0F0043CE",
+      "aiPopoverShadowOuter02": "0x0A000000",
+      "aiSkeletonBackground": "0xFFD0E2FF",
+      "aiSkeletonElementBackground": "0xFF4589FF",
+      "background": "0xFFF4F4F4",
+      "backgroundActive": "0x808D8D8D",
+      "backgroundBrand": "0xFF0F62FE",
+      "backgroundHover": "0x1F8D8D8D",
+      "backgroundInverse": "0xFF393939",
+      "backgroundInverseHover": "0xFF474747",
+      "backgroundSelected": "0x338D8D8D",
+      "backgroundSelectedHover": "0x528D8D8D",
+      "borderDisabled": "0xFFC6C6C6",
+      "borderInteractive": "0xFF0F62FE",
+      "borderInverse": "0xFF161616",
+      "borderStrong01": "0xFF8D8D8D",
+      "borderStrong02": "0xFF8D8D8D",
+      "borderStrong03": "0xFF8D8D8D",
+      "borderSubtle00": "0xFFC6C6C6",
+      "borderSubtle01": "0xFFE0E0E0",
+      "borderSubtle02": "0xFFC6C6C6",
+      "borderSubtle03": "0xFFE0E0E0",
+      "borderSubtleSelected01": "0xFFC6C6C6",
+      "borderSubtleSelected02": "0xFFC6C6C6",
+      "borderSubtleSelected03": "0xFFC6C6C6",
+      "borderTile01": "0xFFA8A8A8",
+      "borderTile02": "0xFFC6C6C6",
+      "borderTile03": "0xFFA8A8A8",
+      "chatAvatarAgent": "0xFF393939",
+      "chatAvatarBot": "0xFF6F6F6F",
+      "chatAvatarUser": "0xFF0F62FE",
+      "chatBubbleAgent": "0xFFFFFFFF",
+      "chatBubbleAgentText": "0xFF161616",
+      "chatBubbleBorder": "0xFFE0E0E0",
+      "chatBubbleUser": "0xFFE0E0E0",
+      "chatBubbleUserText": "0xFF161616",
+      "chatButton": "0xFF0F62FE",
+      "chatButtonActive": "0x808D8D8D",
+      "chatButtonHover": "0x1F8D8D8D",
+      "chatButtonSelected": "0x338D8D8D",
+      "chatButtonTextHover": "0xFF0043CE",
+      "chatButtonTextSelected": "0xFF525252",
+      "chatHeaderBackground": "0xFFFFFFFF",
+      "chatHeaderText": "0xFF161616",
+      "chatPromptBackground": "0xFFFFFFFF",
+      "chatPromptBorderEnd": "0x00F4F4F4",
+      "chatPromptBorderStart": "0xFFF4F4F4",
+      "chatPromptText": "0xFF161616",
+      "chatShellBackground": "0xFFFFFFFF",
+      "field01": "0xFFFFFFFF",
+      "field02": "0xFFF4F4F4",
+      "field03": "0xFFFFFFFF",
+      "fieldHover01": "0xFFE8E8E8",
+      "fieldHover02": "0xFFE8E8E8",
+      "fieldHover03": "0xFFE8E8E8",
+      "focus": "0xFF0F62FE",
+      "focusInset": "0xFFFFFFFF",
+      "focusInverse": "0xFFFFFFFF",
+      "highlight": "0xFFD0E2FF",
+      "iconDisabled": "0x40161616",
+      "iconInteractive": "0xFF0F62FE",
+      "iconInverse": "0xFFFFFFFF",
+      "iconOnColor": "0xFFFFFFFF",
+      "iconOnColorDisabled": "0xFF8D8D8D",
+      "iconPrimary": "0xFF161616",
+      "iconSecondary": "0xFF525252",
+      "interactive": "0xFF0F62FE",
+      "layer01": "0xFFFFFFFF",
+      "layer02": "0xFFF4F4F4",
+      "layer03": "0xFFFFFFFF",
+      "layerAccent01": "0xFFE0E0E0",
+      "layerAccent02": "0xFFE0E0E0",
+      "layerAccent03": "0xFFE0E0E0",
+      "layerAccentActive01": "0xFFA8A8A8",
+      "layerAccentActive02": "0xFFA8A8A8",
+      "layerAccentActive03": "0xFFA8A8A8",
+      "layerAccentHover01": "0xFFD1D1D1",
+      "layerAccentHover02": "0xFFD1D1D1",
+      "layerAccentHover03": "0xFFD1D1D1",
+      "layerActive01": "0xFFC6C6C6",
+      "layerActive02": "0xFFC6C6C6",
+      "layerActive03": "0xFFC6C6C6",
+      "layerBackground01": "0xFFF4F4F4",
+      "layerBackground02": "0xFFFFFFFF",
+      "layerBackground03": "0xFFF4F4F4",
+      "layerHover01": "0xFFE8E8E8",
+      "layerHover02": "0xFFE8E8E8",
+      "layerHover03": "0xFFE8E8E8",
+      "layerSelected01": "0xFFE0E0E0",
+      "layerSelected02": "0xFFE0E0E0",
+      "layerSelected03": "0xFFE0E0E0",
+      "layerSelectedDisabled": "0xFF8D8D8D",
+      "layerSelectedHover01": "0xFFD1D1D1",
+      "layerSelectedHover02": "0xFFD1D1D1",
+      "layerSelectedHover03": "0xFFD1D1D1",
+      "layerSelectedInverse": "0xFF161616",
+      "linkInverse": "0xFF78A9FF",
+      "linkInverseActive": "0xFFF4F4F4",
+      "linkInverseHover": "0xFFA6C8FF",
+      "linkInverseVisited": "0xFFBE95FF",
+      "linkPrimary": "0xFF0F62FE",
+      "linkPrimaryHover": "0xFF0043CE",
+      "linkSecondary": "0xFF0043CE",
+      "linkVisited": "0xFF8A3FFC",
+      "overlay": "0x99000000",
+      "shadow": "0x4D000000",
+      "skeletonBackground": "0xFFE8E8E8",
+      "skeletonElement": "0xFFC6C6C6",
+      "supportCautionMajor": "0xFFFF832B",
+      "supportCautionMinor": "0xFFF1C21B",
+      "supportCautionUndefined": "0xFF8A3FFC",
+      "supportError": "0xFFDA1E28",
+      "supportErrorInverse": "0xFFFA4D56",
+      "supportInfo": "0xFF0043CE",
+      "supportInfoInverse": "0xFF4589FF",
+      "supportSuccess": "0xFF24A148",
+      "supportSuccessInverse": "0xFF42BE65",
+      "supportWarning": "0xFFF1C21B",
+      "supportWarningInverse": "0xFFF1C21B",
+      "syntaxAngleBracket": "0xFF697077",
+      "syntaxAnnotation": "0xFF007D79",
+      "syntaxArithmeticOperator": "0xFF343A3F",
+      "syntaxAtom": "0xFF161616",
+      "syntaxAttribute": "0xFF00539A",
+      "syntaxAttributeName": "0xFF00539A",
+      "syntaxAttributeValue": "0xFF161616",
+      "syntaxBitwiseOperator": "0xFF343A3F",
+      "syntaxBlockComment": "0xFF198038",
+      "syntaxBool": "0xFF161616",
+      "syntaxBrace": "0xFF343A3F",
+      "syntaxBracket": "0xFF343A3F",
+      "syntaxCharacter": "0xFF161616",
+      "syntaxClassName": "0xFF007D79",
+      "syntaxColor": "0xFF161616",
+      "syntaxComment": "0xFF198038",
+      "syntaxCompareOperator": "0xFF343A3F",
+      "syntaxConstant": "0xFF0F62FE",
+      "syntaxContent": "0xFF161616",
+      "syntaxContentSeparator": "0xFF343A3F",
+      "syntaxControlKeyword": "0xFF6929C4",
+      "syntaxControlOperator": "0xFF6929C4",
+      "syntaxDefinition": "0xFF00539A",
+      "syntaxDefinitionKeyword": "0xFF00539A",
+      "syntaxDefinitionOperator": "0xFF00539A",
+      "syntaxDeleted": "0xFFFFD7D9",
+      "syntaxDerefOperator": "0xFF343A3F",
+      "syntaxDocComment": "0xFF198038",
+      "syntaxDocString": "0xFF161616",
+      "syntaxDocumentMeta": "0xFF198038",
+      "syntaxEmphasis": "0xFF161616",
+      "syntaxEscape": "0xFF343A3F",
+      "syntaxFloat": "0xFF198038",
+      "syntaxFunction": "0xFF8E6A00",
+      "syntaxHeading": "0xFF00539A",
+      "syntaxHeading1": "0xFF00539A",
+      "syntaxHeading2": "0xFF00539A",
+      "syntaxHeading3": "0xFF00539A",
+      "syntaxHeading4": "0xFF00539A",
+      "syntaxHeading5": "0xFF00539A",
+      "syntaxHeading6": "0xFF00539A",
+      "syntaxInserted": "0xFFA7F0BA",
+      "syntaxInteger": "0xFF198038",
+      "syntaxInvalid": "0xFFDA1E28",
+      "syntaxKeyword": "0xFF0F62FE",
+      "syntaxLabelName": "0xFF0F62FE",
+      "syntaxLineComment": "0xFF198038",
+      "syntaxLink": "0xFF0F62FE",
+      "syntaxList": "0xFF161616",
+      "syntaxLiteral": "0xFF161616",
+      "syntaxLocal": "0xFF0F62FE",
+      "syntaxLogicOperator": "0xFF343A3F",
+      "syntaxMacroName": "0xFF161616",
+      "syntaxMeta": "0xFF198038",
+      "syntaxModifier": "0xFF0F62FE",
+      "syntaxModuleKeyword": "0xFF6929C4",
+      "syntaxMonospace": "0xFF161616",
+      "syntaxName": "0xFF0F62FE",
+      "syntaxNamespace": "0xFF007D79",
+      "syntaxNull": "0xFF161616",
+      "syntaxNumber": "0xFF198038",
+      "syntaxOperator": "0xFF343A3F",
+      "syntaxOperatorKeyword": "0xFF0F62FE",
+      "syntaxParen": "0xFF343A3F",
+      "syntaxProcessingInstruction": "0xFF161616",
+      "syntaxPropertyName": "0xFF00539A",
+      "syntaxPunctuation": "0xFF343A3F",
+      "syntaxQuote": "0xFF198038",
+      "syntaxRegexp": "0xFF6929C4",
+      "syntaxSelf": "0xFF007D79",
+      "syntaxSeparator": "0xFF343A3F",
+      "syntaxSpecial": "0xFF0F62FE",
+      "syntaxSpecialString": "0xFF8A3FFC",
+      "syntaxSquareBracket": "0xFF343A3F",
+      "syntaxStandard": "0xFF0F62FE",
+      "syntaxStrikethrough": "0xFF161616",
+      "syntaxString": "0xFF161616",
+      "syntaxStrong": "0xFF161616",
+      "syntaxTag": "0xFF007D79",
+      "syntaxTagName": "0xFF007D79",
+      "syntaxType": "0xFF007D79",
+      "syntaxTypeName": "0xFF007D79",
+      "syntaxTypeOperator": "0xFF007D79",
+      "syntaxUnit": "0xFF198038",
+      "syntaxUpdateOperator": "0xFF343A3F",
+      "syntaxUrl": "0xFF343A3F",
+      "syntaxVariable": "0xFF0F62FE",
+      "syntaxVariableName": "0xFF0F62FE",
+      "textDisabled": "0x40161616",
+      "textError": "0xFFDA1E28",
+      "textHelper": "0xFF6F6F6F",
+      "textInverse": "0xFFFFFFFF",
+      "textOnColor": "0xFFFFFFFF",
+      "textOnColorDisabled": "0xFF8D8D8D",
+      "textPlaceholder": "0x66161616",
+      "textPrimary": "0xFF161616",
+      "textSecondary": "0xFF525252",
+      "toggleOff": "0xFF8D8D8D"
+    },
+    "g100": {
+      "aiAuraEnd": "0x00000000",
+      "aiAuraHoverBackground": "0xFF333333",
+      "aiAuraHoverEnd": "0x00000000",
+      "aiAuraHoverStart": "0x664589FF",
+      "aiAuraStart": "0x1A4589FF",
+      "aiAuraStartSm": "0x294589FF",
+      "aiBorderEnd": "0xFF4589FF",
+      "aiBorderStart": "0x5CA6C8FF",
+      "aiBorderStrong": "0xFF78A9FF",
+      "aiDropShadow": "0x47000000",
+      "aiInnerShadow": "0x294589FF",
+      "aiOverlay": "0x80000000",
+      "aiPopoverBackground": "0xFF161616",
+      "aiPopoverCaretBottom": "0xFF4589FF",
+      "aiPopoverCaretBottomBackground": "0xFF202D45",
+      "aiPopoverCaretBottomBackgroundActions": "0xFF1E283A",
+      "aiPopoverCaretCenter": "0xFF4870B5",
+      "aiPopoverShadowOuter01": "0x1F000000",
+      "aiPopoverShadowOuter02": "0x14000000",
+      "aiSkeletonBackground": "0x8078A9FF",
+      "aiSkeletonElementBackground": "0x4D78A9FF",
+      "background": "0xFF161616",
+      "backgroundActive": "0x668D8D8D",
+      "backgroundBrand": "0xFF0F62FE",
+      "backgroundHover": "0x298D8D8D",
+      "backgroundInverse": "0xFFF4F4F4",
+      "backgroundInverseHover": "0xFFE8E8E8",
+      "backgroundSelected": "0x3D8D8D8D",
+      "backgroundSelectedHover": "0x528D8D8D",
+      "borderDisabled": "0x808D8D8D",
+      "borderInteractive": "0xFF4589FF",
+      "borderInverse": "0xFFF4F4F4",
+      "borderStrong01": "0xFF6F6F6F",
+      "borderStrong02": "0xFF8D8D8D",
+      "borderStrong03": "0xFFA8A8A8",
+      "borderSubtle00": "0xFF393939",
+      "borderSubtle01": "0xFF525252",
+      "borderSubtle02": "0xFF6F6F6F",
+      "borderSubtle03": "0xFF6F6F6F",
+      "borderSubtleSelected01": "0xFF6F6F6F",
+      "borderSubtleSelected02": "0xFF8D8D8D",
+      "borderSubtleSelected03": "0xFF8D8D8D",
+      "borderTile01": "0xFF525252",
+      "borderTile02": "0xFF6F6F6F",
+      "borderTile03": "0xFF8D8D8D",
+      "chatAvatarAgent": "0xFFC6C6C6",
+      "chatAvatarBot": "0xFF8D8D8D",
+      "chatAvatarUser": "0xFF4589FF",
+      "chatBubbleAgent": "0xFF262626",
+      "chatBubbleAgentText": "0xFFF4F4F4",
+      "chatBubbleBorder": "0xFF525252",
+      "chatBubbleUser": "0xFF393939",
+      "chatBubbleUserText": "0xFFF4F4F4",
+      "chatButton": "0xFF78A9FF",
+      "chatButtonActive": "0x668D8D8D",
+      "chatButtonHover": "0x298D8D8D",
+      "chatButtonSelected": "0x3D8D8D8D",
+      "chatButtonTextHover": "0xFFA6C8FF",
+      "chatButtonTextSelected": "0xFFC6C6C6",
+      "chatHeaderBackground": "0xFF262626",
+      "chatHeaderText": "0xFFF4F4F4",
+      "chatPromptBackground": "0xFF161616",
+      "chatPromptBorderEnd": "0x00262626",
+      "chatPromptBorderStart": "0xFF262626",
+      "chatPromptText": "0xFFF4F4F4",
+      "chatShellBackground": "0xFF262626",
+      "field01": "0xFF262626",
+      "field02": "0xFF393939",
+      "field03": "0xFF525252",
+      "fieldHover01": "0xFF333333",
+      "fieldHover02": "0xFF474747",
+      "fieldHover03": "0xFF636363",
+      "focus": "0xFFFFFFFF",
+      "focusInset": "0xFF161616",
+      "focusInverse": "0xFF0F62FE",
+      "highlight": "0xFF001D6C",
+      "iconDisabled": "0x40F4F4F4",
+      "iconInteractive": "0xFFFFFFFF",
+      "iconInverse": "0xFF161616",
+      "iconOnColor": "0xFFFFFFFF",
+      "iconOnColorDisabled": "0x40FFFFFF",
+      "iconPrimary": "0xFFF4F4F4",
+      "iconSecondary": "0xFFC6C6C6",
+      "interactive": "0xFF4589FF",
+      "layer01": "0xFF262626",
+      "layer02": "0xFF393939",
+      "layer03": "0xFF525252",
+      "layerAccent01": "0xFF393939",
+      "layerAccent02": "0xFF525252",
+      "layerAccent03": "0xFF6F6F6F",
+      "layerAccentActive01": "0xFF6F6F6F",
+      "layerAccentActive02": "0xFF8D8D8D",
+      "layerAccentActive03": "0xFF393939",
+      "layerAccentHover01": "0xFF474747",
+      "layerAccentHover02": "0xFF636363",
+      "layerAccentHover03": "0xFF5E5E5E",
+      "layerActive01": "0xFF525252",
+      "layerActive02": "0xFF6F6F6F",
+      "layerActive03": "0xFF8D8D8D",
+      "layerBackground01": "0xFF161616",
+      "layerBackground02": "0xFF262626",
+      "layerBackground03": "0xFF393939",
+      "layerHover01": "0xFF333333",
+      "layerHover02": "0xFF474747",
+      "layerHover03": "0xFF636363",
+      "layerSelected01": "0xFF393939",
+      "layerSelected02": "0xFF525252",
+      "layerSelected03": "0xFF6F6F6F",
+      "layerSelectedDisabled": "0xFFA8A8A8",
+      "layerSelectedHover01": "0xFF474747",
+      "layerSelectedHover02": "0xFF636363",
+      "layerSelectedHover03": "0xFF5E5E5E",
+      "layerSelectedInverse": "0xFFF4F4F4",
+      "linkInverse": "0xFF0F62FE",
+      "linkInverseActive": "0xFF161616",
+      "linkInverseHover": "0xFF0043CE",
+      "linkInverseVisited": "0xFF8A3FFC",
+      "linkPrimary": "0xFF78A9FF",
+      "linkPrimaryHover": "0xFFA6C8FF",
+      "linkSecondary": "0xFFA6C8FF",
+      "linkVisited": "0xFFBE95FF",
+      "overlay": "0x99000000",
+      "shadow": "0xCC000000",
+      "skeletonBackground": "0xFF292929",
+      "skeletonElement": "0xFF393939",
+      "supportCautionMajor": "0xFFFF832B",
+      "supportCautionMinor": "0xFFF1C21B",
+      "supportCautionUndefined": "0xFFA56EFF",
+      "supportError": "0xFFFA4D56",
+      "supportErrorInverse": "0xFFDA1E28",
+      "supportInfo": "0xFF4589FF",
+      "supportInfoInverse": "0xFF0043CE",
+      "supportSuccess": "0xFF42BE65",
+      "supportSuccessInverse": "0xFF24A148",
+      "supportWarning": "0xFFF1C21B",
+      "supportWarningInverse": "0xFFF1C21B",
+      "syntaxAngleBracket": "0xFF8D8D8D",
+      "syntaxAnnotation": "0xFF08BDBA",
+      "syntaxArithmeticOperator": "0xFFE0E0E0",
+      "syntaxAtom": "0xFFF4F4F4",
+      "syntaxAttribute": "0xFF33B1FF",
+      "syntaxAttributeName": "0xFF33B1FF",
+      "syntaxAttributeValue": "0xFFF4F4F4",
+      "syntaxBitwiseOperator": "0xFFE0E0E0",
+      "syntaxBlockComment": "0xFF42BE65",
+      "syntaxBool": "0xFFF4F4F4",
+      "syntaxBrace": "0xFFE0E0E0",
+      "syntaxBracket": "0xFFE0E0E0",
+      "syntaxCharacter": "0xFFF4F4F4",
+      "syntaxClassName": "0xFF3DDBD9",
+      "syntaxColor": "0xFFF4F4F4",
+      "syntaxComment": "0xFF42BE65",
+      "syntaxCompareOperator": "0xFFE0E0E0",
+      "syntaxConstant": "0xFF4589FF",
+      "syntaxContent": "0xFFF4F4F4",
+      "syntaxContentSeparator": "0xFFE0E0E0",
+      "syntaxControlKeyword": "0xFFBE95FF",
+      "syntaxControlOperator": "0xFFBE95FF",
+      "syntaxDefinition": "0xFF33B1FF",
+      "syntaxDefinitionKeyword": "0xFF33B1FF",
+      "syntaxDefinitionOperator": "0xFF33B1FF",
+      "syntaxDeleted": "0xFFA2191F",
+      "syntaxDerefOperator": "0xFFE0E0E0",
+      "syntaxDocComment": "0xFF42BE65",
+      "syntaxDocString": "0xFFF4F4F4",
+      "syntaxDocumentMeta": "0xFF42BE65",
+      "syntaxEmphasis": "0xFFF4F4F4",
+      "syntaxEscape": "0xFFE0E0E0",
+      "syntaxFloat": "0xFF6FDC8C",
+      "syntaxFunction": "0xFFF1C21B",
+      "syntaxHeading": "0xFF33B1FF",
+      "syntaxHeading1": "0xFF33B1FF",
+      "syntaxHeading2": "0xFF33B1FF",
+      "syntaxHeading3": "0xFF33B1FF",
+      "syntaxHeading4": "0xFF33B1FF",
+      "syntaxHeading5": "0xFF33B1FF",
+      "syntaxHeading6": "0xFF33B1FF",
+      "syntaxInserted": "0xFF198038",
+      "syntaxInteger": "0xFF6FDC8C",
+      "syntaxInvalid": "0xFFFA4D56",
+      "syntaxKeyword": "0xFF4589FF",
+      "syntaxLabelName": "0xFFA6C8FF",
+      "syntaxLineComment": "0xFF42BE65",
+      "syntaxLink": "0xFF4589FF",
+      "syntaxList": "0xFFF4F4F4",
+      "syntaxLiteral": "0xFFF4F4F4",
+      "syntaxLocal": "0xFFA6C8FF",
+      "syntaxLogicOperator": "0xFFE0E0E0",
+      "syntaxMacroName": "0xFFF4F4F4",
+      "syntaxMeta": "0xFF42BE65",
+      "syntaxModifier": "0xFF4589FF",
+      "syntaxModuleKeyword": "0xFFBE95FF",
+      "syntaxMonospace": "0xFFF4F4F4",
+      "syntaxName": "0xFFA6C8FF",
+      "syntaxNamespace": "0xFF3DDBD9",
+      "syntaxNull": "0xFFF4F4F4",
+      "syntaxNumber": "0xFF6FDC8C",
+      "syntaxOperator": "0xFFE0E0E0",
+      "syntaxOperatorKeyword": "0xFF4589FF",
+      "syntaxParen": "0xFFE0E0E0",
+      "syntaxProcessingInstruction": "0xFFF4F4F4",
+      "syntaxPropertyName": "0xFF33B1FF",
+      "syntaxPunctuation": "0xFFE0E0E0",
+      "syntaxQuote": "0xFF42BE65",
+      "syntaxRegexp": "0xFFBE95FF",
+      "syntaxSelf": "0xFF3DDBD9",
+      "syntaxSeparator": "0xFFE0E0E0",
+      "syntaxSpecial": "0xFF4589FF",
+      "syntaxSpecialString": "0xFFBE95FF",
+      "syntaxSquareBracket": "0xFFE0E0E0",
+      "syntaxStandard": "0xFF4589FF",
+      "syntaxStrikethrough": "0xFFF4F4F4",
+      "syntaxString": "0xFFF4F4F4",
+      "syntaxStrong": "0xFFF4F4F4",
+      "syntaxTag": "0xFF3DDBD9",
+      "syntaxTagName": "0xFF3DDBD9",
+      "syntaxType": "0xFF3DDBD9",
+      "syntaxTypeName": "0xFF3DDBD9",
+      "syntaxTypeOperator": "0xFF3DDBD9",
+      "syntaxUnit": "0xFF6FDC8C",
+      "syntaxUpdateOperator": "0xFFE0E0E0",
+      "syntaxUrl": "0xFFE0E0E0",
+      "syntaxVariable": "0xFFA6C8FF",
+      "syntaxVariableName": "0xFFA6C8FF",
+      "textDisabled": "0x40F4F4F4",
+      "textError": "0xFFFF8389",
+      "textHelper": "0xFFA8A8A8",
+      "textInverse": "0xFF161616",
+      "textOnColor": "0xFFFFFFFF",
+      "textOnColorDisabled": "0x40FFFFFF",
+      "textPlaceholder": "0x66F4F4F4",
+      "textPrimary": "0xFFF4F4F4",
+      "textSecondary": "0xFFC6C6C6",
+      "toggleOff": "0xFF6F6F6F"
+    },
+    "g90": {
+      "aiAuraEnd": "0x00000000",
+      "aiAuraHoverBackground": "0xFF474747",
+      "aiAuraHoverEnd": "0x00000000",
+      "aiAuraHoverStart": "0x664589FF",
+      "aiAuraStart": "0x1A4589FF",
+      "aiAuraStartSm": "0x294589FF",
+      "aiBorderEnd": "0xFF4589FF",
+      "aiBorderStart": "0x5CA6C8FF",
+      "aiBorderStrong": "0xFF78A9FF",
+      "aiDropShadow": "0x47000000",
+      "aiInnerShadow": "0x294589FF",
+      "aiOverlay": "0x80000000",
+      "aiPopoverBackground": "0xFF161616",
+      "aiPopoverCaretBottom": "0xFF4589FF",
+      "aiPopoverCaretBottomBackground": "0xFF202D45",
+      "aiPopoverCaretBottomBackgroundActions": "0xFF1E283A",
+      "aiPopoverCaretCenter": "0xFF4870B5",
+      "aiPopoverShadowOuter01": "0x1F000000",
+      "aiPopoverShadowOuter02": "0x14000000",
+      "aiSkeletonBackground": "0x8078A9FF",
+      "aiSkeletonElementBackground": "0x4D78A9FF",
+      "background": "0xFF262626",
+      "backgroundActive": "0x668D8D8D",
+      "backgroundBrand": "0xFF0F62FE",
+      "backgroundHover": "0x298D8D8D",
+      "backgroundInverse": "0xFFF4F4F4",
+      "backgroundInverseHover": "0xFFE8E8E8",
+      "backgroundSelected": "0x3D8D8D8D",
+      "backgroundSelectedHover": "0x528D8D8D",
+      "borderDisabled": "0x808D8D8D",
+      "borderInteractive": "0xFF4589FF",
+      "borderInverse": "0xFFF4F4F4",
+      "borderStrong01": "0xFF8D8D8D",
+      "borderStrong02": "0xFFA8A8A8",
+      "borderStrong03": "0xFFC6C6C6",
+      "borderSubtle00": "0xFF525252",
+      "borderSubtle01": "0xFF6F6F6F",
+      "borderSubtle02": "0xFF8D8D8D",
+      "borderSubtle03": "0xFF8D8D8D",
+      "borderSubtleSelected01": "0xFF8D8D8D",
+      "borderSubtleSelected02": "0xFFA8A8A8",
+      "borderSubtleSelected03": "0xFFA8A8A8",
+      "borderTile01": "0xFF6F6F6F",
+      "borderTile02": "0xFF8D8D8D",
+      "borderTile03": "0xFFA8A8A8",
+      "chatAvatarAgent": "0xFFC6C6C6",
+      "chatAvatarBot": "0xFF8D8D8D",
+      "chatAvatarUser": "0xFF4589FF",
+      "chatBubbleAgent": "0xFF262626",
+      "chatBubbleAgentText": "0xFFF4F4F4",
+      "chatBubbleBorder": "0xFF525252",
+      "chatBubbleUser": "0xFF393939",
+      "chatBubbleUserText": "0xFFF4F4F4",
+      "chatButton": "0xFF78A9FF",
+      "chatButtonActive": "0x668D8D8D",
+      "chatButtonHover": "0x298D8D8D",
+      "chatButtonSelected": "0x3D8D8D8D",
+      "chatButtonTextHover": "0xFFA6C8FF",
+      "chatButtonTextSelected": "0xFFC6C6C6",
+      "chatHeaderBackground": "0xFF262626",
+      "chatHeaderText": "0xFFF4F4F4",
+      "chatPromptBackground": "0xFF161616",
+      "chatPromptBorderEnd": "0x00262626",
+      "chatPromptBorderStart": "0xFF262626",
+      "chatPromptText": "0xFFF4F4F4",
+      "chatShellBackground": "0xFF262626",
+      "field01": "0xFF393939",
+      "field02": "0xFF525252",
+      "field03": "0xFF6F6F6F",
+      "fieldHover01": "0xFF474747",
+      "fieldHover02": "0xFF636363",
+      "fieldHover03": "0xFF5E5E5E",
+      "focus": "0xFFFFFFFF",
+      "focusInset": "0xFF161616",
+      "focusInverse": "0xFF0F62FE",
+      "highlight": "0xFF002D9C",
+      "iconDisabled": "0x40F4F4F4",
+      "iconInteractive": "0xFFFFFFFF",
+      "iconInverse": "0xFF161616",
+      "iconOnColor": "0xFFFFFFFF",
+      "iconOnColorDisabled": "0x40FFFFFF",
+      "iconPrimary": "0xFFF4F4F4",
+      "iconSecondary": "0xFFC6C6C6",
+      "interactive": "0xFF4589FF",
+      "layer01": "0xFF393939",
+      "layer02": "0xFF525252",
+      "layer03": "0xFF6F6F6F",
+      "layerAccent01": "0xFF525252",
+      "layerAccent02": "0xFF6F6F6F",
+      "layerAccent03": "0xFF8D8D8D",
+      "layerAccentActive01": "0xFF8D8D8D",
+      "layerAccentActive02": "0xFF393939",
+      "layerAccentActive03": "0xFF525252",
+      "layerAccentHover01": "0xFF636363",
+      "layerAccentHover02": "0xFF5E5E5E",
+      "layerAccentHover03": "0xFF7A7A7A",
+      "layerActive01": "0xFF6F6F6F",
+      "layerActive02": "0xFF8D8D8D",
+      "layerActive03": "0xFF393939",
+      "layerBackground01": "0xFF262626",
+      "layerBackground02": "0xFF393939",
+      "layerBackground03": "0xFF525252",
+      "layerHover01": "0xFF474747",
+      "layerHover02": "0xFF636363",
+      "layerHover03": "0xFF5E5E5E",
+      "layerSelected01": "0xFF525252",
+      "layerSelected02": "0xFF6F6F6F",
+      "layerSelected03": "0xFF525252",
+      "layerSelectedDisabled": "0xFFA8A8A8",
+      "layerSelectedHover01": "0xFF636363",
+      "layerSelectedHover02": "0xFF5E5E5E",
+      "layerSelectedHover03": "0xFF636363",
+      "layerSelectedInverse": "0xFFF4F4F4",
+      "linkInverse": "0xFF0F62FE",
+      "linkInverseActive": "0xFF161616",
+      "linkInverseHover": "0xFF0043CE",
+      "linkInverseVisited": "0xFF8A3FFC",
+      "linkPrimary": "0xFF78A9FF",
+      "linkPrimaryHover": "0xFFA6C8FF",
+      "linkSecondary": "0xFFA6C8FF",
+      "linkVisited": "0xFFBE95FF",
+      "overlay": "0x99000000",
+      "shadow": "0xCC000000",
+      "skeletonBackground": "0xFF333333",
+      "skeletonElement": "0xFF525252",
+      "supportCautionMajor": "0xFFFF832B",
+      "supportCautionMinor": "0xFFF1C21B",
+      "supportCautionUndefined": "0xFFA56EFF",
+      "supportError": "0xFFFF8389",
+      "supportErrorInverse": "0xFFDA1E28",
+      "supportInfo": "0xFF4589FF",
+      "supportInfoInverse": "0xFF0043CE",
+      "supportSuccess": "0xFF42BE65",
+      "supportSuccessInverse": "0xFF24A148",
+      "supportWarning": "0xFFF1C21B",
+      "supportWarningInverse": "0xFFF1C21B",
+      "syntaxAngleBracket": "0xFF8D8D8D",
+      "syntaxAnnotation": "0xFF08BDBA",
+      "syntaxArithmeticOperator": "0xFFE0E0E0",
+      "syntaxAtom": "0xFFF4F4F4",
+      "syntaxAttribute": "0xFF33B1FF",
+      "syntaxAttributeName": "0xFF33B1FF",
+      "syntaxAttributeValue": "0xFFF4F4F4",
+      "syntaxBitwiseOperator": "0xFFE0E0E0",
+      "syntaxBlockComment": "0xFF42BE65",
+      "syntaxBool": "0xFFF4F4F4",
+      "syntaxBrace": "0xFFE0E0E0",
+      "syntaxBracket": "0xFFE0E0E0",
+      "syntaxCharacter": "0xFFF4F4F4",
+      "syntaxClassName": "0xFF3DDBD9",
+      "syntaxColor": "0xFFF4F4F4",
+      "syntaxComment": "0xFF42BE65",
+      "syntaxCompareOperator": "0xFFE0E0E0",
+      "syntaxConstant": "0xFF4589FF",
+      "syntaxContent": "0xFFF4F4F4",
+      "syntaxContentSeparator": "0xFFE0E0E0",
+      "syntaxControlKeyword": "0xFFBE95FF",
+      "syntaxControlOperator": "0xFFBE95FF",
+      "syntaxDefinition": "0xFF33B1FF",
+      "syntaxDefinitionKeyword": "0xFF33B1FF",
+      "syntaxDefinitionOperator": "0xFF33B1FF",
+      "syntaxDeleted": "0xFFA2191F",
+      "syntaxDerefOperator": "0xFFE0E0E0",
+      "syntaxDocComment": "0xFF42BE65",
+      "syntaxDocString": "0xFFF4F4F4",
+      "syntaxDocumentMeta": "0xFF42BE65",
+      "syntaxEmphasis": "0xFFF4F4F4",
+      "syntaxEscape": "0xFFE0E0E0",
+      "syntaxFloat": "0xFF6FDC8C",
+      "syntaxFunction": "0xFFF1C21B",
+      "syntaxHeading": "0xFF33B1FF",
+      "syntaxHeading1": "0xFF33B1FF",
+      "syntaxHeading2": "0xFF33B1FF",
+      "syntaxHeading3": "0xFF33B1FF",
+      "syntaxHeading4": "0xFF33B1FF",
+      "syntaxHeading5": "0xFF33B1FF",
+      "syntaxHeading6": "0xFF33B1FF",
+      "syntaxInserted": "0xFF198038",
+      "syntaxInteger": "0xFF6FDC8C",
+      "syntaxInvalid": "0xFFFA4D56",
+      "syntaxKeyword": "0xFF4589FF",
+      "syntaxLabelName": "0xFFA6C8FF",
+      "syntaxLineComment": "0xFF42BE65",
+      "syntaxLink": "0xFF4589FF",
+      "syntaxList": "0xFFF4F4F4",
+      "syntaxLiteral": "0xFFF4F4F4",
+      "syntaxLocal": "0xFFA6C8FF",
+      "syntaxLogicOperator": "0xFFE0E0E0",
+      "syntaxMacroName": "0xFFF4F4F4",
+      "syntaxMeta": "0xFF42BE65",
+      "syntaxModifier": "0xFF4589FF",
+      "syntaxModuleKeyword": "0xFFBE95FF",
+      "syntaxMonospace": "0xFFF4F4F4",
+      "syntaxName": "0xFFA6C8FF",
+      "syntaxNamespace": "0xFF3DDBD9",
+      "syntaxNull": "0xFFF4F4F4",
+      "syntaxNumber": "0xFF6FDC8C",
+      "syntaxOperator": "0xFFE0E0E0",
+      "syntaxOperatorKeyword": "0xFF4589FF",
+      "syntaxParen": "0xFFE0E0E0",
+      "syntaxProcessingInstruction": "0xFFF4F4F4",
+      "syntaxPropertyName": "0xFF33B1FF",
+      "syntaxPunctuation": "0xFFE0E0E0",
+      "syntaxQuote": "0xFF42BE65",
+      "syntaxRegexp": "0xFFBE95FF",
+      "syntaxSelf": "0xFF3DDBD9",
+      "syntaxSeparator": "0xFFE0E0E0",
+      "syntaxSpecial": "0xFF4589FF",
+      "syntaxSpecialString": "0xFFBE95FF",
+      "syntaxSquareBracket": "0xFFE0E0E0",
+      "syntaxStandard": "0xFF4589FF",
+      "syntaxStrikethrough": "0xFFF4F4F4",
+      "syntaxString": "0xFFF4F4F4",
+      "syntaxStrong": "0xFFF4F4F4",
+      "syntaxTag": "0xFF3DDBD9",
+      "syntaxTagName": "0xFF3DDBD9",
+      "syntaxType": "0xFF3DDBD9",
+      "syntaxTypeName": "0xFF3DDBD9",
+      "syntaxTypeOperator": "0xFF3DDBD9",
+      "syntaxUnit": "0xFF6FDC8C",
+      "syntaxUpdateOperator": "0xFFE0E0E0",
+      "syntaxUrl": "0xFFE0E0E0",
+      "syntaxVariable": "0xFFA6C8FF",
+      "syntaxVariableName": "0xFFA6C8FF",
+      "textDisabled": "0x40F4F4F4",
+      "textError": "0xFFFFB3B8",
+      "textHelper": "0xFFC6C6C6",
+      "textInverse": "0xFF161616",
+      "textOnColor": "0xFFFFFFFF",
+      "textOnColorDisabled": "0x40FFFFFF",
+      "textPlaceholder": "0x66F4F4F4",
+      "textPrimary": "0xFFF4F4F4",
+      "textSecondary": "0xFFC6C6C6",
+      "toggleOff": "0xFF8D8D8D"
+    },
+    "white": {
+      "aiAuraEnd": "0x00FFFFFF",
+      "aiAuraHoverBackground": "0xFFEDF5FF",
+      "aiAuraHoverEnd": "0x00FFFFFF",
+      "aiAuraHoverStart": "0x524589FF",
+      "aiAuraStart": "0x1A4589FF",
+      "aiAuraStartSm": "0x294589FF",
+      "aiBorderEnd": "0xFF78A9FF",
+      "aiBorderStart": "0xA3A6C8FF",
+      "aiBorderStrong": "0xFF4589FF",
+      "aiDropShadow": "0x1A0F62FE",
+      "aiInnerShadow": "0x1A4589FF",
+      "aiOverlay": "0x80001141",
+      "aiPopoverBackground": "0xFFFFFFFF",
+      "aiPopoverCaretBottom": "0xFF78A9FF",
+      "aiPopoverCaretBottomBackground": "0xFFEAF1FF",
+      "aiPopoverCaretBottomBackgroundActions": "0xFFE9EFFA",
+      "aiPopoverCaretCenter": "0xFFA0C3FF",
+      "aiPopoverShadowOuter01": "0x0F0043CE",
+      "aiPopoverShadowOuter02": "0x0A000000",
+      "aiSkeletonBackground": "0xFFD0E2FF",
+      "aiSkeletonElementBackground": "0xFF4589FF",
+      "background": "0xFFFFFFFF",
+      "backgroundActive": "0x808D8D8D",
+      "backgroundBrand": "0xFF0F62FE",
+      "backgroundHover": "0x1F8D8D8D",
+      "backgroundInverse": "0xFF393939",
+      "backgroundInverseHover": "0xFF474747",
+      "backgroundSelected": "0x338D8D8D",
+      "backgroundSelectedHover": "0x528D8D8D",
+      "borderDisabled": "0xFFC6C6C6",
+      "borderInteractive": "0xFF0F62FE",
+      "borderInverse": "0xFF161616",
+      "borderStrong01": "0xFF8D8D8D",
+      "borderStrong02": "0xFF8D8D8D",
+      "borderStrong03": "0xFF8D8D8D",
+      "borderSubtle00": "0xFFE0E0E0",
+      "borderSubtle01": "0xFFC6C6C6",
+      "borderSubtle02": "0xFFE0E0E0",
+      "borderSubtle03": "0xFFC6C6C6",
+      "borderSubtleSelected01": "0xFFC6C6C6",
+      "borderSubtleSelected02": "0xFFC6C6C6",
+      "borderSubtleSelected03": "0xFFC6C6C6",
+      "borderTile01": "0xFFC6C6C6",
+      "borderTile02": "0xFFA8A8A8",
+      "borderTile03": "0xFFC6C6C6",
+      "chatAvatarAgent": "0xFF393939",
+      "chatAvatarBot": "0xFF6F6F6F",
+      "chatAvatarUser": "0xFF0F62FE",
+      "chatBubbleAgent": "0xFFFFFFFF",
+      "chatBubbleAgentText": "0xFF161616",
+      "chatBubbleBorder": "0xFFE0E0E0",
+      "chatBubbleUser": "0xFFE0E0E0",
+      "chatBubbleUserText": "0xFF161616",
+      "chatButton": "0xFF0F62FE",
+      "chatButtonActive": "0x808D8D8D",
+      "chatButtonHover": "0x1F8D8D8D",
+      "chatButtonSelected": "0x338D8D8D",
+      "chatButtonTextHover": "0xFF0043CE",
+      "chatButtonTextSelected": "0xFF525252",
+      "chatHeaderBackground": "0xFFFFFFFF",
+      "chatHeaderText": "0xFF161616",
+      "chatPromptBackground": "0xFFFFFFFF",
+      "chatPromptBorderEnd": "0x00F4F4F4",
+      "chatPromptBorderStart": "0xFFF4F4F4",
+      "chatPromptText": "0xFF161616",
+      "chatShellBackground": "0xFFFFFFFF",
+      "field01": "0xFFF4F4F4",
+      "field02": "0xFFFFFFFF",
+      "field03": "0xFFF4F4F4",
+      "fieldHover01": "0xFFE8E8E8",
+      "fieldHover02": "0xFFE8E8E8",
+      "fieldHover03": "0xFFE8E8E8",
+      "focus": "0xFF0F62FE",
+      "focusInset": "0xFFFFFFFF",
+      "focusInverse": "0xFFFFFFFF",
+      "highlight": "0xFFD0E2FF",
+      "iconDisabled": "0x40161616",
+      "iconInteractive": "0xFF0F62FE",
+      "iconInverse": "0xFFFFFFFF",
+      "iconOnColor": "0xFFFFFFFF",
+      "iconOnColorDisabled": "0xFF8D8D8D",
+      "iconPrimary": "0xFF161616",
+      "iconSecondary": "0xFF525252",
+      "interactive": "0xFF0F62FE",
+      "layer01": "0xFFF4F4F4",
+      "layer02": "0xFFFFFFFF",
+      "layer03": "0xFFF4F4F4",
+      "layerAccent01": "0xFFE0E0E0",
+      "layerAccent02": "0xFFE0E0E0",
+      "layerAccent03": "0xFFE0E0E0",
+      "layerAccentActive01": "0xFFA8A8A8",
+      "layerAccentActive02": "0xFFA8A8A8",
+      "layerAccentActive03": "0xFFA8A8A8",
+      "layerAccentHover01": "0xFFD1D1D1",
+      "layerAccentHover02": "0xFFD1D1D1",
+      "layerAccentHover03": "0xFFD1D1D1",
+      "layerActive01": "0xFFC6C6C6",
+      "layerActive02": "0xFFC6C6C6",
+      "layerActive03": "0xFFC6C6C6",
+      "layerBackground01": "0xFFFFFFFF",
+      "layerBackground02": "0xFFF4F4F4",
+      "layerBackground03": "0xFFFFFFFF",
+      "layerHover01": "0xFFE8E8E8",
+      "layerHover02": "0xFFE8E8E8",
+      "layerHover03": "0xFFE8E8E8",
+      "layerSelected01": "0xFFE0E0E0",
+      "layerSelected02": "0xFFE0E0E0",
+      "layerSelected03": "0xFFE0E0E0",
+      "layerSelectedDisabled": "0xFF8D8D8D",
+      "layerSelectedHover01": "0xFFD1D1D1",
+      "layerSelectedHover02": "0xFFD1D1D1",
+      "layerSelectedHover03": "0xFFD1D1D1",
+      "layerSelectedInverse": "0xFF161616",
+      "linkInverse": "0xFF78A9FF",
+      "linkInverseActive": "0xFFF4F4F4",
+      "linkInverseHover": "0xFFA6C8FF",
+      "linkInverseVisited": "0xFFBE95FF",
+      "linkPrimary": "0xFF0F62FE",
+      "linkPrimaryHover": "0xFF0043CE",
+      "linkSecondary": "0xFF0043CE",
+      "linkVisited": "0xFF8A3FFC",
+      "overlay": "0x99000000",
+      "shadow": "0x4D000000",
+      "skeletonBackground": "0xFFE8E8E8",
+      "skeletonElement": "0xFFC6C6C6",
+      "supportCautionMajor": "0xFFFF832B",
+      "supportCautionMinor": "0xFFF1C21B",
+      "supportCautionUndefined": "0xFF8A3FFC",
+      "supportError": "0xFFDA1E28",
+      "supportErrorInverse": "0xFFFA4D56",
+      "supportInfo": "0xFF0043CE",
+      "supportInfoInverse": "0xFF4589FF",
+      "supportSuccess": "0xFF24A148",
+      "supportSuccessInverse": "0xFF42BE65",
+      "supportWarning": "0xFFF1C21B",
+      "supportWarningInverse": "0xFFF1C21B",
+      "syntaxAngleBracket": "0xFF697077",
+      "syntaxAnnotation": "0xFF007D79",
+      "syntaxArithmeticOperator": "0xFF343A3F",
+      "syntaxAtom": "0xFF161616",
+      "syntaxAttribute": "0xFF00539A",
+      "syntaxAttributeName": "0xFF00539A",
+      "syntaxAttributeValue": "0xFF161616",
+      "syntaxBitwiseOperator": "0xFF343A3F",
+      "syntaxBlockComment": "0xFF198038",
+      "syntaxBool": "0xFF161616",
+      "syntaxBrace": "0xFF343A3F",
+      "syntaxBracket": "0xFF343A3F",
+      "syntaxCharacter": "0xFF161616",
+      "syntaxClassName": "0xFF007D79",
+      "syntaxColor": "0xFF161616",
+      "syntaxComment": "0xFF198038",
+      "syntaxCompareOperator": "0xFF343A3F",
+      "syntaxConstant": "0xFF0F62FE",
+      "syntaxContent": "0xFF161616",
+      "syntaxContentSeparator": "0xFF343A3F",
+      "syntaxControlKeyword": "0xFF6929C4",
+      "syntaxControlOperator": "0xFF6929C4",
+      "syntaxDefinition": "0xFF00539A",
+      "syntaxDefinitionKeyword": "0xFF00539A",
+      "syntaxDefinitionOperator": "0xFF00539A",
+      "syntaxDeleted": "0xFFFFD7D9",
+      "syntaxDerefOperator": "0xFF343A3F",
+      "syntaxDocComment": "0xFF198038",
+      "syntaxDocString": "0xFF161616",
+      "syntaxDocumentMeta": "0xFF198038",
+      "syntaxEmphasis": "0xFF161616",
+      "syntaxEscape": "0xFF343A3F",
+      "syntaxFloat": "0xFF198038",
+      "syntaxFunction": "0xFF8E6A00",
+      "syntaxHeading": "0xFF00539A",
+      "syntaxHeading1": "0xFF00539A",
+      "syntaxHeading2": "0xFF00539A",
+      "syntaxHeading3": "0xFF00539A",
+      "syntaxHeading4": "0xFF00539A",
+      "syntaxHeading5": "0xFF00539A",
+      "syntaxHeading6": "0xFF00539A",
+      "syntaxInserted": "0xFFA7F0BA",
+      "syntaxInteger": "0xFF198038",
+      "syntaxInvalid": "0xFFDA1E28",
+      "syntaxKeyword": "0xFF0F62FE",
+      "syntaxLabelName": "0xFF0F62FE",
+      "syntaxLineComment": "0xFF198038",
+      "syntaxLink": "0xFF0F62FE",
+      "syntaxList": "0xFF161616",
+      "syntaxLiteral": "0xFF161616",
+      "syntaxLocal": "0xFF0F62FE",
+      "syntaxLogicOperator": "0xFF343A3F",
+      "syntaxMacroName": "0xFF161616",
+      "syntaxMeta": "0xFF198038",
+      "syntaxModifier": "0xFF0F62FE",
+      "syntaxModuleKeyword": "0xFF6929C4",
+      "syntaxMonospace": "0xFF161616",
+      "syntaxName": "0xFF0F62FE",
+      "syntaxNamespace": "0xFF007D79",
+      "syntaxNull": "0xFF161616",
+      "syntaxNumber": "0xFF198038",
+      "syntaxOperator": "0xFF343A3F",
+      "syntaxOperatorKeyword": "0xFF0F62FE",
+      "syntaxParen": "0xFF343A3F",
+      "syntaxProcessingInstruction": "0xFF161616",
+      "syntaxPropertyName": "0xFF00539A",
+      "syntaxPunctuation": "0xFF343A3F",
+      "syntaxQuote": "0xFF198038",
+      "syntaxRegexp": "0xFF6929C4",
+      "syntaxSelf": "0xFF007D79",
+      "syntaxSeparator": "0xFF343A3F",
+      "syntaxSpecial": "0xFF0F62FE",
+      "syntaxSpecialString": "0xFF8A3FFC",
+      "syntaxSquareBracket": "0xFF343A3F",
+      "syntaxStandard": "0xFF0F62FE",
+      "syntaxStrikethrough": "0xFF161616",
+      "syntaxString": "0xFF161616",
+      "syntaxStrong": "0xFF161616",
+      "syntaxTag": "0xFF007D79",
+      "syntaxTagName": "0xFF007D79",
+      "syntaxType": "0xFF007D79",
+      "syntaxTypeName": "0xFF007D79",
+      "syntaxTypeOperator": "0xFF007D79",
+      "syntaxUnit": "0xFF198038",
+      "syntaxUpdateOperator": "0xFF343A3F",
+      "syntaxUrl": "0xFF343A3F",
+      "syntaxVariable": "0xFF0F62FE",
+      "syntaxVariableName": "0xFF0F62FE",
+      "textDisabled": "0x40161616",
+      "textError": "0xFFDA1E28",
+      "textHelper": "0xFF6F6F6F",
+      "textInverse": "0xFFFFFFFF",
+      "textOnColor": "0xFFFFFFFF",
+      "textOnColorDisabled": "0xFF8D8D8D",
+      "textPlaceholder": "0x66161616",
+      "textPrimary": "0xFF161616",
+      "textSecondary": "0xFF525252",
+      "toggleOff": "0xFF8D8D8D"
+    }
+  },
+  "type": {
+    "fluidStyles": {
+      "display01": {
+        "base": {
+          "fontSizePx": 42,
+          "fontWeight": 300,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.19
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 54
+          },
+          "max": {
+            "fontSizePx": 76,
+            "lineHeight": 1.13
+          },
+          "md": {
+            "fontSizePx": 42
+          },
+          "xlg": {
+            "fontSizePx": 60,
+            "lineHeight": 1.17
+          }
+        }
+      },
+      "display02": {
+        "base": {
+          "fontSizePx": 42,
+          "fontWeight": 600,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.19
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 54
+          },
+          "max": {
+            "fontSizePx": 76,
+            "lineHeight": 1.13
+          },
+          "md": {
+            "fontSizePx": 42
+          },
+          "xlg": {
+            "fontSizePx": 60,
+            "lineHeight": 1.16
+          }
+        }
+      },
+      "display03": {
+        "base": {
+          "fontSizePx": 42,
+          "fontWeight": 300,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.19
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 60,
+            "letterSpacingPx": -0.64,
+            "lineHeight": 1.16
+          },
+          "max": {
+            "fontSizePx": 84,
+            "letterSpacingPx": -0.96,
+            "lineHeight": 1.11
+          },
+          "md": {
+            "fontSizePx": 54,
+            "lineHeight": 1.18
+          },
+          "xlg": {
+            "fontSizePx": 76,
+            "lineHeight": 1.13
+          }
+        }
+      },
+      "display04": {
+        "base": {
+          "fontSizePx": 42,
+          "fontWeight": 300,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.19
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 92,
+            "letterSpacingPx": -0.64,
+            "lineHeight": 1.11
+          },
+          "max": {
+            "fontSizePx": 156,
+            "letterSpacingPx": -0.96,
+            "lineHeight": 1.05
+          },
+          "md": {
+            "fontSizePx": 68,
+            "lineHeight": 1.15
+          },
+          "xlg": {
+            "fontSizePx": 122,
+            "letterSpacingPx": -0.64,
+            "lineHeight": 1.07
+          }
+        }
+      },
+      "expressiveHeading03": {
+        "base": {
+          "fontSizePx": 20,
+          "fontWeight": 400,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.4
+        },
+        "breakpoints": {
+          "max": {
+            "fontSizePx": 24,
+            "lineHeight": 1.334
+          },
+          "xlg": {
+            "fontSizePx": 20,
+            "lineHeight": 1.4
+          }
+        }
+      },
+      "expressiveHeading04": {
+        "base": {
+          "fontSizePx": 28,
+          "fontWeight": 400,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.2857
+        },
+        "breakpoints": {
+          "max": {
+            "fontSizePx": 32,
+            "fontWeight": 400
+          },
+          "xlg": {
+            "fontSizePx": 32,
+            "fontWeight": 400,
+            "lineHeight": 1.25
+          }
+        }
+      },
+      "expressiveHeading05": {
+        "base": {
+          "fontSizePx": 32,
+          "fontWeight": 400,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.25
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 42,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.19
+          },
+          "max": {
+            "fontSizePx": 60,
+            "letterSpacingPx": 0
+          },
+          "md": {
+            "fontSizePx": 36,
+            "fontWeight": 300,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.22
+          },
+          "xlg": {
+            "fontSizePx": 48,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.17
+          }
+        }
+      },
+      "expressiveHeading06": {
+        "base": {
+          "fontSizePx": 32,
+          "fontWeight": 600,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.25
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 42,
+            "fontWeight": 600,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.19
+          },
+          "max": {
+            "fontSizePx": 60,
+            "fontWeight": 600,
+            "letterSpacingPx": 0
+          },
+          "md": {
+            "fontSizePx": 36,
+            "fontWeight": 600,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.22
+          },
+          "xlg": {
+            "fontSizePx": 48,
+            "fontWeight": 600,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.17
+          }
+        }
+      },
+      "expressiveParagraph01": {
+        "base": {
+          "fontSizePx": 24,
+          "fontWeight": 300,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.334
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 28,
+            "lineHeight": 1.2857
+          },
+          "max": {
+            "fontSizePx": 32,
+            "lineHeight": 1.25
+          }
+        }
+      },
+      "fluidDisplay01": {
+        "base": {
+          "fontSizePx": 42,
+          "fontWeight": 300,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.19
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 54
+          },
+          "max": {
+            "fontSizePx": 76,
+            "lineHeight": 1.13
+          },
+          "md": {
+            "fontSizePx": 42
+          },
+          "xlg": {
+            "fontSizePx": 60,
+            "lineHeight": 1.17
+          }
+        }
+      },
+      "fluidDisplay02": {
+        "base": {
+          "fontSizePx": 42,
+          "fontWeight": 600,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.19
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 54
+          },
+          "max": {
+            "fontSizePx": 76,
+            "lineHeight": 1.13
+          },
+          "md": {
+            "fontSizePx": 42
+          },
+          "xlg": {
+            "fontSizePx": 60,
+            "lineHeight": 1.16
+          }
+        }
+      },
+      "fluidDisplay03": {
+        "base": {
+          "fontSizePx": 42,
+          "fontWeight": 300,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.19
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 60,
+            "letterSpacingPx": -0.64,
+            "lineHeight": 1.16
+          },
+          "max": {
+            "fontSizePx": 84,
+            "letterSpacingPx": -0.96,
+            "lineHeight": 1.11
+          },
+          "md": {
+            "fontSizePx": 54,
+            "lineHeight": 1.18
+          },
+          "xlg": {
+            "fontSizePx": 76,
+            "lineHeight": 1.13
+          }
+        }
+      },
+      "fluidDisplay04": {
+        "base": {
+          "fontSizePx": 42,
+          "fontWeight": 300,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.19
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 92,
+            "letterSpacingPx": -0.64,
+            "lineHeight": 1.11
+          },
+          "max": {
+            "fontSizePx": 156,
+            "letterSpacingPx": -0.96,
+            "lineHeight": 1.05
+          },
+          "md": {
+            "fontSizePx": 68,
+            "lineHeight": 1.15
+          },
+          "xlg": {
+            "fontSizePx": 122,
+            "letterSpacingPx": -0.64,
+            "lineHeight": 1.07
+          }
+        }
+      },
+      "fluidHeading03": {
+        "base": {
+          "fontSizePx": 20,
+          "fontWeight": 400,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.4
+        },
+        "breakpoints": {
+          "max": {
+            "fontSizePx": 24,
+            "lineHeight": 1.334
+          },
+          "xlg": {
+            "fontSizePx": 20,
+            "lineHeight": 1.4
+          }
+        }
+      },
+      "fluidHeading04": {
+        "base": {
+          "fontSizePx": 28,
+          "fontWeight": 400,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.2857
+        },
+        "breakpoints": {
+          "max": {
+            "fontSizePx": 32,
+            "fontWeight": 400
+          },
+          "xlg": {
+            "fontSizePx": 32,
+            "fontWeight": 400,
+            "lineHeight": 1.25
+          }
+        }
+      },
+      "fluidHeading05": {
+        "base": {
+          "fontSizePx": 32,
+          "fontWeight": 400,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.25
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 42,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.19
+          },
+          "max": {
+            "fontSizePx": 60,
+            "letterSpacingPx": 0
+          },
+          "md": {
+            "fontSizePx": 36,
+            "fontWeight": 300,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.22
+          },
+          "xlg": {
+            "fontSizePx": 48,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.17
+          }
+        }
+      },
+      "fluidHeading06": {
+        "base": {
+          "fontSizePx": 32,
+          "fontWeight": 600,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.25
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 42,
+            "fontWeight": 600,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.19
+          },
+          "max": {
+            "fontSizePx": 60,
+            "fontWeight": 600,
+            "letterSpacingPx": 0
+          },
+          "md": {
+            "fontSizePx": 36,
+            "fontWeight": 600,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.22
+          },
+          "xlg": {
+            "fontSizePx": 48,
+            "fontWeight": 600,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.17
+          }
+        }
+      },
+      "fluidParagraph01": {
+        "base": {
+          "fontSizePx": 24,
+          "fontWeight": 300,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.334
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 28,
+            "lineHeight": 1.2857
+          },
+          "max": {
+            "fontSizePx": 32,
+            "lineHeight": 1.25
+          }
+        }
+      },
+      "fluidQuotation01": {
+        "base": {
+          "fontSizePx": 20,
+          "fontWeight": 400,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.3
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 24,
+            "fontWeight": 400,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.334
+          },
+          "max": {
+            "fontSizePx": 32,
+            "fontWeight": 400,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.25
+          },
+          "md": {
+            "fontSizePx": 20,
+            "fontWeight": 400,
+            "letterSpacingPx": 0
+          },
+          "xlg": {
+            "fontSizePx": 28,
+            "fontWeight": 400,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.2857
+          }
+        }
+      },
+      "fluidQuotation02": {
+        "base": {
+          "fontSizePx": 32,
+          "fontWeight": 300,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.25
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 42,
+            "lineHeight": 1.19
+          },
+          "max": {
+            "fontSizePx": 60
+          },
+          "md": {
+            "fontSizePx": 36,
+            "lineHeight": 1.22
+          },
+          "xlg": {
+            "fontSizePx": 48,
+            "lineHeight": 1.17
+          }
+        }
+      },
+      "quotation01": {
+        "base": {
+          "fontSizePx": 20,
+          "fontWeight": 400,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.3
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 24,
+            "fontWeight": 400,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.334
+          },
+          "max": {
+            "fontSizePx": 32,
+            "fontWeight": 400,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.25
+          },
+          "md": {
+            "fontSizePx": 20,
+            "fontWeight": 400,
+            "letterSpacingPx": 0
+          },
+          "xlg": {
+            "fontSizePx": 28,
+            "fontWeight": 400,
+            "letterSpacingPx": 0,
+            "lineHeight": 1.2857
+          }
+        }
+      },
+      "quotation02": {
+        "base": {
+          "fontSizePx": 32,
+          "fontWeight": 300,
+          "letterSpacingPx": 0,
+          "lineHeight": 1.25
+        },
+        "breakpoints": {
+          "lg": {
+            "fontSizePx": 42,
+            "lineHeight": 1.19
+          },
+          "max": {
+            "fontSizePx": 60
+          },
+          "md": {
+            "fontSizePx": 36,
+            "lineHeight": 1.22
+          },
+          "xlg": {
+            "fontSizePx": 48,
+            "lineHeight": 1.17
+          }
+        }
+      }
+    },
+    "fontFamilies": {
+      "mono": "'IBM Plex Mono', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', Courier, monospace",
+      "sans": "'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif",
+      "sansCondensed": "'IBM Plex Sans Condensed', 'Helvetica Neue', Arial, sans-serif",
+      "sansHebrew": "'IBM Plex Sans Hebrew', 'Helvetica Hebrew', 'Arial Hebrew', sans-serif",
+      "serif": "'IBM Plex Serif', 'Georgia', Times, serif"
+    },
+    "fontWeights": {
+      "light": 300,
+      "regular": 400,
+      "semibold": 600
+    },
+    "styles": {
+      "body01": {
+        "fontSizePx": 14,
+        "fontWeight": 400,
+        "letterSpacingPx": 0.16,
+        "lineHeight": 1.4286
+      },
+      "body02": {
+        "fontSizePx": 16,
+        "fontWeight": 400,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.5
+      },
+      "bodyCompact01": {
+        "fontSizePx": 14,
+        "fontWeight": 400,
+        "letterSpacingPx": 0.16,
+        "lineHeight": 1.2857
+      },
+      "bodyCompact02": {
+        "fontSizePx": 16,
+        "fontWeight": 400,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.375
+      },
+      "bodyLong01": {
+        "fontSizePx": 14,
+        "fontWeight": 400,
+        "letterSpacingPx": 0.16,
+        "lineHeight": 1.4286
+      },
+      "bodyLong02": {
+        "fontSizePx": 16,
+        "fontWeight": 400,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.5
+      },
+      "bodyShort01": {
+        "fontSizePx": 14,
+        "fontWeight": 400,
+        "letterSpacingPx": 0.16,
+        "lineHeight": 1.2857
+      },
+      "bodyShort02": {
+        "fontSizePx": 16,
+        "fontWeight": 400,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.375
+      },
+      "caption01": {
+        "fontSizePx": 12,
+        "fontWeight": 400,
+        "letterSpacingPx": 0.32,
+        "lineHeight": 1.3333
+      },
+      "caption02": {
+        "fontSizePx": 14,
+        "fontWeight": 400,
+        "letterSpacingPx": 0.32,
+        "lineHeight": 1.2857
+      },
+      "code01": {
+        "fontSizePx": 12,
+        "fontWeight": 400,
+        "letterSpacingPx": 0.32,
+        "lineHeight": 1.3333
+      },
+      "code02": {
+        "fontSizePx": 14,
+        "fontWeight": 400,
+        "letterSpacingPx": 0.32,
+        "lineHeight": 1.4286
+      },
+      "expressiveHeading01": {
+        "fontSizePx": 14,
+        "fontWeight": 600,
+        "letterSpacingPx": 0.16,
+        "lineHeight": 1.25
+      },
+      "expressiveHeading02": {
+        "fontSizePx": 16,
+        "fontWeight": 600,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.5
+      },
+      "heading01": {
+        "fontSizePx": 14,
+        "fontWeight": 600,
+        "letterSpacingPx": 0.16,
+        "lineHeight": 1.4286
+      },
+      "heading02": {
+        "fontSizePx": 16,
+        "fontWeight": 600,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.5
+      },
+      "heading03": {
+        "fontSizePx": 20,
+        "fontWeight": 400,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.4
+      },
+      "heading04": {
+        "fontSizePx": 28,
+        "fontWeight": 400,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.2857
+      },
+      "heading05": {
+        "fontSizePx": 32,
+        "fontWeight": 400,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.25
+      },
+      "heading06": {
+        "fontSizePx": 42,
+        "fontWeight": 300,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.199
+      },
+      "heading07": {
+        "fontSizePx": 54,
+        "fontWeight": 300,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.199
+      },
+      "headingCompact01": {
+        "fontSizePx": 14,
+        "fontWeight": 600,
+        "letterSpacingPx": 0.16,
+        "lineHeight": 1.2857
+      },
+      "headingCompact02": {
+        "fontSizePx": 16,
+        "fontWeight": 600,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.375
+      },
+      "helperText01": {
+        "fontSizePx": 12,
+        "letterSpacingPx": 0.32,
+        "lineHeight": 1.3333
+      },
+      "helperText02": {
+        "fontSizePx": 14,
+        "letterSpacingPx": 0.16,
+        "lineHeight": 1.2857
+      },
+      "label01": {
+        "fontSizePx": 12,
+        "fontWeight": 400,
+        "letterSpacingPx": 0.32,
+        "lineHeight": 1.3333
+      },
+      "label02": {
+        "fontSizePx": 14,
+        "fontWeight": 400,
+        "letterSpacingPx": 0.16,
+        "lineHeight": 1.2857
+      },
+      "legal01": {
+        "fontSizePx": 12,
+        "fontWeight": 400,
+        "letterSpacingPx": 0.32,
+        "lineHeight": 1.3333
+      },
+      "legal02": {
+        "fontSizePx": 14,
+        "fontWeight": 400,
+        "letterSpacingPx": 0.16,
+        "lineHeight": 1.2857
+      },
+      "productiveHeading01": {
+        "fontSizePx": 14,
+        "fontWeight": 600,
+        "letterSpacingPx": 0.16,
+        "lineHeight": 1.2857
+      },
+      "productiveHeading02": {
+        "fontSizePx": 16,
+        "fontWeight": 600,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.375
+      },
+      "productiveHeading03": {
+        "fontSizePx": 20,
+        "fontWeight": 400,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.4
+      },
+      "productiveHeading04": {
+        "fontSizePx": 28,
+        "fontWeight": 400,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.2857
+      },
+      "productiveHeading05": {
+        "fontSizePx": 32,
+        "fontWeight": 400,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.25
+      },
+      "productiveHeading06": {
+        "fontSizePx": 42,
+        "fontWeight": 300,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.199
+      },
+      "productiveHeading07": {
+        "fontSizePx": 54,
+        "fontWeight": 300,
+        "letterSpacingPx": 0,
+        "lineHeight": 1.199
+      }
+    }
+  }
+}
