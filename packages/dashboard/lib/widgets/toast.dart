@@ -10,13 +10,15 @@ void showToast(
   String? actionLabel,
   VoidCallback? onAction,
 }) {
+  // DashboardApp places its caller-owned Overlay below FortalScope, so entries
+  // inherit live Fortal and Mix state without snapshots.
   final overlay = Overlay.of(context);
-  final mixScope = MixScope.maybeOf(context);
-  final fortalTheme = FortalTheme.maybeOf(context);
   late final OverlayEntry entry;
   entry = OverlayEntry(
-    builder: (_) {
-      Widget child = _ToastBody(
+    builder: (_) => Positioned(
+      right: 24,
+      bottom: 24,
+      child: _ToastBody(
         message: message,
         icon: icon,
         actionLabel: actionLabel,
@@ -24,19 +26,8 @@ void showToast(
           onAction?.call();
           if (entry.mounted) entry.remove();
         },
-      );
-      if (mixScope != null) {
-        child = MixScope(
-          tokens: mixScope.tokens,
-          orderOfModifiers: mixScope.orderOfModifiers,
-          child: child,
-        );
-      }
-      if (fortalTheme != null) {
-        child = FortalTheme(data: fortalTheme, child: child);
-      }
-      return Positioned(right: 24, bottom: 24, child: child);
-    },
+      ),
+    ),
   );
   overlay.insert(entry);
   Timer(const Duration(seconds: 4), () {
