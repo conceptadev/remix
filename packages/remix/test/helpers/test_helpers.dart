@@ -5,7 +5,11 @@ import 'package:remix/remix.dart';
 
 /// Extension methods for WidgetTester to simplify test setup and interactions
 extension WidgetTesterHelpers on WidgetTester {
-  /// Pumps a Remix widget wrapped in a MaterialApp with Scaffold
+  /// Pumps a Remix widget in the Material interoperability test harness.
+  ///
+  /// `MaterialApp` and `Scaffold` are conveniences here, not Remix host
+  /// requirements. Host-contract tests should provide only the capability
+  /// under test, such as `Overlay.wrap` or a caller-owned `Navigator`.
   Future<void> pumpRemixApp(
     Widget widget, {
     TextDirection textDirection = TextDirection.ltr,
@@ -22,7 +26,7 @@ extension WidgetTesterHelpers on WidgetTester {
     );
   }
 
-  /// Pumps a widget with custom scaffold
+  /// Pumps a widget with a caller-provided Scaffold for Material interop tests.
   Future<void> pumpRemixAppWithScaffold(Widget scaffold) async {
     await pumpWidget(FortalScope(child: MaterialApp(home: scaffold)));
   }
@@ -495,7 +499,7 @@ extension WidgetTesterExtension on WidgetTester {
     );
   }
 
-  /// Pump widget wrapped in MaterialApp
+  /// Pumps a widget in the Material interoperability test harness.
   Future<void> pumpMaterialApp(Widget widget) async {
     await pumpWidget(MaterialApp(home: Scaffold(body: widget)));
   }

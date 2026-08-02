@@ -10,13 +10,14 @@ class RemixExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: FortalScope(
-        accent: .blue,
-        gray: .slate,
-        brightness: .light,
-        child: const RemixExampleScreen(),
+    return FortalScope(
+      accent: .blue,
+      gray: .slate,
+      brightness: .light,
+      child: WidgetsApp(
+        color: const Color(0xFFF8FAFC),
+        debugShowCheckedModeBanner: false,
+        builder: (_, _) => Overlay.wrap(child: const RemixExampleScreen()),
       ),
     );
   }
@@ -34,9 +35,9 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      body: SafeArea(
+    return ColoredBox(
+      color: const Color(0xFFF8FAFC),
+      child: SafeArea(
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -76,6 +77,16 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
                           trailingIcon: Icons.arrow_forward_rounded,
                           onPressed: () {
                             debugPrint('Continue pressed');
+                          },
+                        ),
+                        FortalMenu<String>.soft(
+                          trigger: const RemixMenuTrigger(label: 'Actions'),
+                          items: const [
+                            RemixMenuItem(value: 'preview', label: 'Preview'),
+                            RemixMenuItem(value: 'share', label: 'Share'),
+                          ],
+                          onSelected: (value) {
+                            debugPrint('Selected $value');
                           },
                         ),
                       ],

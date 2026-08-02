@@ -102,13 +102,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: button(
-            label: 'Click Me',
-            onPressed: () => debugPrint('Button pressed!'),
-          ),
+    return WidgetsApp(
+      color: Colors.blue,
+      builder: (_, _) => Center(
+        child: button(
+          label: 'Click Me',
+          onPressed: () => debugPrint('Button pressed!'),
         ),
       ),
     );
@@ -185,13 +184,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FortalScope(
-      child: MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: FortalButton.solid(
-              onPressed: () {},
-              label: 'Fortal Button',
-            ),
+      child: WidgetsApp(
+        color: Colors.white,
+        builder: (_, _) => Center(
+          child: FortalButton.solid(
+            onPressed: () {},
+            label: 'Fortal Button',
           ),
         ),
       ),
@@ -199,6 +197,47 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
+
+### Host Capabilities
+
+Remix composes inside your existing Flutter host. It does not require a
+`MaterialApp`, `Scaffold`, or Remix-owned application wrapper.
+
+| UI | Caller provides | Compatible hosts |
+|----|-----------------|------------------|
+| Ordinary `Remix*` widgets | The inherited Flutter services used by the widget subtree | Material, Cupertino, Widgets, and router-based hosts |
+| `Fortal*` widgets and recipes | `FortalScope`, in addition to the widget's normal Flutter services | Any Flutter host |
+| Menu, select, popover, and tooltip | An `Overlay` | Any host exposing an overlay; use `Overlay.wrap` when no `Navigator` is needed |
+| `showRemixDialog` and `showRemixAlertDialog` | A `Navigator` | Any host with a caller-owned navigator |
+
+For a portal-based interface without routing, provide only an overlay:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+Widget buildPortalHost() {
+  return FortalScope(
+    child: WidgetsApp(
+      color: const Color(0xFFFFFFFF),
+      builder: (_, _) => Overlay.wrap(
+        child: Center(
+          child: FortalMenu<String>.soft(
+            trigger: const RemixMenuTrigger(label: 'Actions'),
+            items: const [
+              RemixMenuItem(value: 'share', label: 'Share'),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+```
+
+A `MaterialApp`, `CupertinoApp`, `WidgetsApp`, or router with routing configured
+commonly provides a `Navigator` and its overlay already. Dialog helpers push
+routes, so their calling context must be below that caller-owned `Navigator`.
 
 ### Customizing Fortal Styles
 
