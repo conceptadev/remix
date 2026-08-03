@@ -11,15 +11,15 @@ class RemixTooltip extends StatelessWidget {
     required this.child,
     this.tooltipSemantics,
     this.positioning = const OverlayPositionConfig(),
-    this.style = const RemixTooltipStyler.create(),
+    this.style = const TooltipStyler.create(),
     this.styleSpec,
   });
 
   /// The style configuration for the tooltip.
-  final RemixTooltipStyler style;
+  final TooltipStyler style;
 
   /// The style spec for the tooltip.
-  final RemixTooltipSpec? styleSpec;
+  final TooltipSpec? styleSpec;
 
   /// The widget to display in the tooltip.
   final Widget tooltipChild;
@@ -33,11 +33,11 @@ class RemixTooltip extends StatelessWidget {
   /// Overlay positioning configuration.
   final OverlayPositionConfig positioning;
 
-  static final styleFrom = RemixTooltipStyler.new;
+  static final styleFrom = TooltipStyler.new;
 
   @override
   Widget build(BuildContext context) {
-    return RemixStyleSpecBuilder<RemixTooltipSpec>(
+    return RemixStyleSpecBuilder<TooltipSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {

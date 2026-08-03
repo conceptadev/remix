@@ -39,15 +39,15 @@ class RemixRadio<T> extends StatelessWidget {
     this.mouseCursor,
     this.focusNode,
     this.autofocus = false,
-    this.style = const RemixRadioStyler.create(),
+    this.style = const RadioStyler.create(),
     this.styleSpec,
   });
 
-  final RemixRadioStyler style;
+  final RadioStyler style;
 
-  final RemixRadioSpec? styleSpec;
+  final RadioSpec? styleSpec;
 
-  static final styleFrom = RemixRadioStyler.new;
+  static final styleFrom = RadioStyler.new;
 
   /// The value represented by this radio button.
   final T value;
@@ -111,7 +111,7 @@ class RemixRadio<T> extends StatelessWidget {
       autofocus: autofocus,
       toggleable: toggleable,
       builder: (context, _, __) {
-        return RemixStyleSpecBuilder<RemixRadioSpec>(
+        return RemixStyleSpecBuilder<RadioSpec>(
           style: style,
           styleSpec: styleSpec,
           controller: NakedRadioState.controllerOf<T>(context),

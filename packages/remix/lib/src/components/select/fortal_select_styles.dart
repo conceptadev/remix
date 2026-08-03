@@ -8,30 +8,30 @@ enum FortalSelectVariant { surface, soft, ghost }
 
 /// Fortal-themed Select with Radix-owned trigger and content configuration.
 @MixWidget(target: RemixSelect.new)
-RemixSelectStyler fortalSelectStyle({
+SelectStyler fortalSelectStyle({
   FortalSelectVariant variant = .surface,
   FortalSelectSize size = .size2,
   bool highContrast = false,
 }) {
-  return RemixSelectStyler()
+  return SelectStyler()
       .trigger(_fortalSelectTriggerStyler(variant, size))
       .content(_fortalSelectContentStyler(size))
       .item(_fortalSelectItemStyler(variant, size, highContrast: highContrast));
 }
 
 /// Creates the established combined-variant Select item recipe.
-RemixSelectMenuItemStyler fortalSelectMenuItemStyle({
+SelectMenuItemStyler fortalSelectMenuItemStyle({
   FortalSelectVariant variant = .surface,
   FortalSelectSize size = .size2,
   bool highContrast = false,
 }) => _fortalSelectItemStyler(variant, size, highContrast: highContrast);
 
-RemixSelectTriggerStyler _fortalSelectTriggerStyler(
+SelectTriggerStyler _fortalSelectTriggerStyler(
   FortalSelectVariant variant,
   FortalSelectSize size,
 ) {
   final radius = _fortalSelectTriggerRadius(size);
-  final base = RemixSelectTriggerStyler()
+  final base = SelectTriggerStyler()
       .direction(.horizontal)
       .mainAxisAlignment(.spaceBetween)
       .crossAxisAlignment(.center)
@@ -73,11 +73,11 @@ Radius _fortalSelectTriggerRadius(FortalSelectSize size) => switch (size) {
   .size3 => FortalTokens.radius3OrFull(),
 };
 
-RemixSelectTriggerStyler _fortalSelectTriggerSizeStyler(
+SelectTriggerStyler _fortalSelectTriggerSizeStyler(
   FortalSelectVariant variant,
   FortalSelectSize size,
 ) {
-  final style = RemixSelectTriggerStyler().spacing(switch (size) {
+  final style = SelectTriggerStyler().spacing(switch (size) {
     .size1 => FortalTokens.space1(),
     .size2 => FortalTokens.selectSpace1Half(),
     .size3 => FortalTokens.space2(),
@@ -121,9 +121,7 @@ RemixBoxEffectLayerMix _fortalSelectFocusRing() {
   );
 }
 
-RemixSelectTriggerStyler _fortalSelectSurfaceTrigger(
-  RemixSelectTriggerStyler base,
-) {
+SelectTriggerStyler _fortalSelectSurfaceTrigger(SelectTriggerStyler base) {
   return base
       .chevronOpacity(0.9)
       .color(FortalTokens.colorSurface())
@@ -161,9 +159,7 @@ RemixSelectTriggerStyler _fortalSelectSurfaceTrigger(
       );
 }
 
-RemixSelectTriggerStyler _fortalSelectSoftTrigger(
-  RemixSelectTriggerStyler base,
-) {
+SelectTriggerStyler _fortalSelectSoftTrigger(SelectTriggerStyler base) {
   return base
       .label(.color(FortalTokens.accent12()))
       .placeholder(.color(FortalTokens.accent12()))
@@ -181,9 +177,7 @@ RemixSelectTriggerStyler _fortalSelectSoftTrigger(
       );
 }
 
-RemixSelectTriggerStyler _fortalSelectGhostTrigger(
-  RemixSelectTriggerStyler base,
-) {
+SelectTriggerStyler _fortalSelectGhostTrigger(SelectTriggerStyler base) {
   return base
       .label(.color(FortalTokens.accent12()))
       .placeholder(.color(FortalTokens.accent12()))
@@ -201,11 +195,11 @@ RemixSelectTriggerStyler _fortalSelectGhostTrigger(
       );
 }
 
-RemixSelectContentStyler _fortalSelectContentStyler(FortalSelectSize size) {
+SelectContentStyler _fortalSelectContentStyler(FortalSelectSize size) {
   final radius = size == .size1
       ? FortalTokens.radius3()
       : FortalTokens.radius4();
-  return RemixSelectContentStyler()
+  return SelectContentStyler()
       .paddingAll(
         size == .size1 ? FortalTokens.space1() : FortalTokens.space2(),
       )
@@ -220,13 +214,13 @@ RemixSelectContentStyler _fortalSelectContentStyler(FortalSelectSize size) {
       );
 }
 
-RemixSelectMenuItemStyler _fortalSelectItemStyler(
+SelectMenuItemStyler _fortalSelectItemStyler(
   FortalSelectVariant variant,
   FortalSelectSize size, {
   bool highContrast = false,
 }) {
   final metrics = _fortalSelectContentMetrics(size);
-  final base = RemixSelectMenuItemStyler()
+  final base = SelectMenuItemStyler()
       .direction(.horizontal)
       .crossAxisAlignment(.center)
       .height(metrics.itemHeight)
@@ -247,7 +241,7 @@ RemixSelectMenuItemStyler _fortalSelectItemStyler(
 
   final highlighted = switch (variant) {
     .surface || .ghost =>
-      RemixSelectMenuItemStyler()
+      SelectMenuItemStyler()
           .color(
             highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
           )
@@ -263,7 +257,7 @@ RemixSelectMenuItemStyler _fortalSelectItemStyler(
                 ? FortalTokens.accent1()
                 : FortalTokens.accentContrast(),
           ),
-    .soft => RemixSelectMenuItemStyler().color(FortalTokens.accentA4()),
+    .soft => SelectMenuItemStyler().color(FortalTokens.accentA4()),
   };
 
   return base

@@ -8,7 +8,7 @@ enum FortalSliderVariant { classic, surface, soft }
 
 /// Fortal slider with Radix-owned size, variant, and component overrides.
 @MixWidget(target: RemixSlider.new)
-RemixSliderStyler fortalSliderStyle({
+SliderStyler fortalSliderStyle({
   FortalSliderVariant variant = .surface,
   FortalSliderSize size = .size2,
   bool highContrast = false,
@@ -16,7 +16,7 @@ RemixSliderStyler fortalSliderStyle({
   final metrics = _fortalSliderMetrics(size);
   final radius = BorderRadiusMix.all(metrics.trackRadius);
   final thumbRadius = BorderRadiusMix.all(FortalTokens.radius1OrThumb());
-  final base = RemixSliderStyler()
+  final base = SliderStyler()
       .track(.borderRadius(radius))
       .range(.borderRadius(radius))
       .thumb(
@@ -67,12 +67,12 @@ RemixSliderStyler fortalSliderStyle({
           'fortalSliderDisabledDarkBlend',
           (context) => FortalTheme.of(context).isDark,
         ),
-        RemixSliderStyler().onDisabled(.blendMode(BlendMode.screen)),
+        SliderStyler().onDisabled(.blendMode(BlendMode.screen)),
       );
 }
 
-RemixSliderStyler _fortalSliderSurface(
-  RemixSliderStyler base, {
+SliderStyler _fortalSliderSurface(
+  SliderStyler base, {
   required BorderRadiusMix trackRadius,
   required BorderRadiusMix thumbRadius,
   required bool highContrast,
@@ -101,8 +101,8 @@ RemixSliderStyler _fortalSliderSurface(
       ]),
     );
 
-RemixSliderStyler _fortalSliderClassic(
-  RemixSliderStyler base, {
+SliderStyler _fortalSliderClassic(
+  SliderStyler base, {
   required BorderRadiusMix trackRadius,
   required BorderRadiusMix thumbRadius,
   required bool highContrast,
@@ -163,8 +163,8 @@ RemixSliderStyler _fortalSliderClassic(
       ]),
     );
 
-RemixSliderStyler _fortalSliderSoft(
-  RemixSliderStyler base, {
+SliderStyler _fortalSliderSoft(
+  SliderStyler base, {
   required BorderRadiusMix trackRadius,
   required BorderRadiusMix thumbRadius,
   required bool highContrast,
@@ -214,14 +214,14 @@ RemixSliderStyler _fortalSliderSoft(
       ]),
     );
 
-RemixSliderStyler _fortalSliderDisabled(
+SliderStyler _fortalSliderDisabled(
   FortalSliderVariant variant, {
   required BorderRadiusMix trackRadius,
   required BorderRadiusMix thumbRadius,
 }) {
   final track = switch (variant) {
     .surface =>
-      RemixSliderStyler()
+      SliderStyler()
           .track(.color(FortalTokens.grayA3()))
           .trackEffects(
             RemixBoxEffectsMix(
@@ -231,7 +231,7 @@ RemixSliderStyler _fortalSliderDisabled(
             ),
           ),
     .classic =>
-      RemixSliderStyler()
+      SliderStyler()
           .track(.color(FortalTokens.grayA3()))
           .trackEffects(
             RemixBoxEffectsMix(
@@ -241,7 +241,7 @@ RemixSliderStyler _fortalSliderDisabled(
             ),
           ),
     .soft =>
-      RemixSliderStyler()
+      SliderStyler()
           .track(.color(FortalTokens.grayA4()))
           .trackEffects(
             RemixBoxEffectsMix(

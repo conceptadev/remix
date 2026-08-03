@@ -2,7 +2,7 @@ part of 'badge.dart';
 
 /// Resolved visual properties for a [RemixBadge].
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin])
-class RemixBadgeSpec with _$RemixBadgeSpec {
+class BadgeSpec with _$BadgeSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
@@ -12,7 +12,7 @@ class RemixBadgeSpec with _$RemixBadgeSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
-  const RemixBadgeSpec({
+  const BadgeSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
     this.containerEffects,
@@ -22,7 +22,7 @@ class RemixBadgeSpec with _$RemixBadgeSpec {
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixBadgeSpec lerp(RemixBadgeSpec? other, double t) {
+  BadgeSpec lerp(BadgeSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
@@ -34,3 +34,9 @@ class RemixBadgeSpec with _$RemixBadgeSpec {
     );
   }
 }
+
+/// Backward-compatible name for [BadgeSpec].
+///
+/// The generated style API is based on [BadgeSpec], so resolved values use
+/// `BadgeSpec` as their runtime type.
+typedef RemixBadgeSpec = BadgeSpec;

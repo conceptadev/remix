@@ -8,13 +8,13 @@ enum FortalMenuVariant { solid, soft }
 
 /// Fortal menu content with Radix-owned size, variant, and contrast behavior.
 @MixWidget(target: RemixMenu.new)
-RemixMenuStyler fortalMenuStyle({
+MenuStyler fortalMenuStyle({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
   bool highContrast = false,
 }) {
   final metrics = _fortalMenuMetrics(size);
-  return RemixMenuStyler()
+  return MenuStyler()
       .overlay(
         FlexBoxStyler()
             .paddingAll(metrics.contentPadding)
@@ -33,7 +33,7 @@ RemixMenuStyler fortalMenuStyle({
 }
 
 /// Fortal item recipe for per-item style overrides.
-RemixMenuItemStyler fortalMenuItemStyle({
+MenuItemStyler fortalMenuItemStyle({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
   bool highContrast = false,
@@ -43,12 +43,12 @@ RemixMenuItemStyler fortalMenuItemStyle({
   highContrast: highContrast,
 );
 
-RemixMenuItemStyler _fortalMenuItemStyler(
+MenuItemStyler _fortalMenuItemStyler(
   FortalMenuVariant variant,
   _FortalMenuMetrics metrics, {
   required bool highContrast,
 }) {
-  final base = RemixMenuItemStyler()
+  final base = MenuItemStyler()
       .direction(.horizontal)
       .mainAxisSize(.max)
       .crossAxisAlignment(.center)
@@ -62,7 +62,7 @@ RemixMenuItemStyler _fortalMenuItemStyler(
 
   final highlighted = switch (variant) {
     .solid =>
-      RemixMenuItemStyler()
+      MenuItemStyler()
           .color(
             highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
           )
@@ -87,12 +87,12 @@ RemixMenuItemStyler _fortalMenuItemStyler(
                   : FortalTokens.accentContrast(),
             ),
           ),
-    .soft => RemixMenuItemStyler().color(FortalTokens.accentA4()),
+    .soft => MenuItemStyler().color(FortalTokens.accentA4()),
   };
-  final submenuOpen = RemixMenuItemStyler().color(
+  final submenuOpen = MenuItemStyler().color(
     variant == .solid ? FortalTokens.grayA3() : FortalTokens.accentA3(),
   );
-  final disabled = RemixMenuItemStyler()
+  final disabled = MenuItemStyler()
       .color(Colors.transparent)
       .label(.color(FortalTokens.grayA8()))
       .leadingIcon(.color(FortalTokens.grayA8()))
@@ -106,8 +106,8 @@ RemixMenuItemStyler _fortalMenuItemStyler(
       .onDisabled(disabled);
 }
 
-RemixDividerStyler _fortalMenuDividerStyler(_FortalMenuMetrics metrics) =>
-    RemixDividerStyler()
+DividerStyler _fortalMenuDividerStyler(_FortalMenuMetrics metrics) =>
+    DividerStyler()
         .height(1)
         .marginOnly(
           left: metrics.leadingInset,

@@ -2,7 +2,7 @@ part of 'dialog.dart';
 
 /// Resolved visual properties for a [RemixDialog].
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixDialogSpec with _$RemixDialogSpec {
+class DialogSpec with _$DialogSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
@@ -16,7 +16,7 @@ class RemixDialogSpec with _$RemixDialogSpec {
   @override
   final StyleSpec<FlexBoxSpec> actions;
 
-  const RemixDialogSpec({
+  const DialogSpec({
     StyleSpec<BoxSpec>? container,
     this.containerEffects,
     StyleSpec<TextSpec>? title,
@@ -30,7 +30,7 @@ class RemixDialogSpec with _$RemixDialogSpec {
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixDialogSpec lerp(RemixDialogSpec? other, double t) {
+  DialogSpec lerp(DialogSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
@@ -42,3 +42,9 @@ class RemixDialogSpec with _$RemixDialogSpec {
     );
   }
 }
+
+/// Backward-compatible name for [DialogSpec].
+///
+/// The generated style API is based on [DialogSpec], so resolved values use
+/// `DialogSpec` as their runtime type.
+typedef RemixDialogSpec = DialogSpec;

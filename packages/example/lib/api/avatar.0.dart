@@ -30,8 +30,8 @@ class AvatarExample extends StatelessWidget {
     );
   }
 
-  RemixAvatarStyler get labelStyle {
-    return RemixAvatarStyler()
+  AvatarStyler get labelStyle {
+    return AvatarStyler()
         .backgroundColor(Colors.deepPurpleAccent)
         .size(50, 50)
         .shapeCircle()
@@ -41,8 +41,8 @@ class AvatarExample extends StatelessWidget {
         .labelFontSize(15);
   }
 
-  RemixAvatarStyler get iconStyle {
-    return RemixAvatarStyler()
+  AvatarStyler get iconStyle {
+    return AvatarStyler()
         .backgroundColor(Colors.deepOrangeAccent)
         .size(70, 70)
         .foregroundColor(Colors.white)
@@ -52,8 +52,8 @@ class AvatarExample extends StatelessWidget {
         .wrap(.clipOval());
   }
 
-  RemixAvatarStyler get image {
-    return RemixAvatarStyler()
+  AvatarStyler get image {
+    return AvatarStyler()
         .size(90, 90)
         .backgroundImageUrl('https://i.pravatar.cc/150?img=48')
         .shapeCircle();

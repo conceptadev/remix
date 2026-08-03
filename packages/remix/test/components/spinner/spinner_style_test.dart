@@ -5,13 +5,13 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixSpinnerStyler', () {
+  group('SpinnerStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        final style = RemixSpinnerStyler();
+        final style = SpinnerStyler();
 
         expect(style, isNotNull);
-        expect(style, isA<RemixSpinnerStyler>());
+        expect(style, isA<SpinnerStyler>());
       });
 
       test('create constructor with all parameters', () {
@@ -21,9 +21,9 @@ void main() {
         final trackColor = Prop.maybe(const Color(0xFFCCCCCC));
         final trackStrokeWidth = Prop.maybe(1.0);
         final duration = Prop.maybe(const Duration(milliseconds: 1000));
-        final variants = <VariantStyle<RemixSpinnerSpec>>[];
+        final variants = <VariantStyle<SpinnerSpec>>[];
 
-        final style = RemixSpinnerStyler.create(
+        final style = SpinnerStyler.create(
           size: size,
           strokeWidth: strokeWidth,
           indicatorColor: indicatorColor,
@@ -44,7 +44,7 @@ void main() {
       });
 
       test('constructor with direct parameters', () {
-        final style = RemixSpinnerStyler(
+        final style = SpinnerStyler(
           size: 24.0,
           strokeWidth: 2.0,
           indicatorColor: const Color(0xFF0000FF),
@@ -66,7 +66,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'size',
-        initial: RemixSpinnerStyler(),
+        initial: SpinnerStyler(),
         modify: (style) => style.size(32.0),
         expect: (style) {
           expect(style.$size, equals(Prop.maybe(32.0)));
@@ -75,7 +75,7 @@ void main() {
 
       styleMethodTest(
         'strokeWidth',
-        initial: RemixSpinnerStyler(),
+        initial: SpinnerStyler(),
         modify: (style) => style.strokeWidth(3.0),
         expect: (style) {
           expect(style.$strokeWidth, equals(Prop.maybe(3.0)));
@@ -84,7 +84,7 @@ void main() {
 
       styleMethodTest(
         'indicatorColor',
-        initial: RemixSpinnerStyler(),
+        initial: SpinnerStyler(),
         modify: (style) => style.indicatorColor(const Color(0xFF0000FF)),
         expect: (style) {
           expect(
@@ -96,7 +96,7 @@ void main() {
 
       styleMethodTest(
         'trackColor',
-        initial: RemixSpinnerStyler(),
+        initial: SpinnerStyler(),
         modify: (style) => style.trackColor(const Color(0xFFCCCCCC)),
         expect: (style) {
           expect(
@@ -108,7 +108,7 @@ void main() {
 
       styleMethodTest(
         'trackStrokeWidth',
-        initial: RemixSpinnerStyler(),
+        initial: SpinnerStyler(),
         modify: (style) => style.trackStrokeWidth(2.0),
         expect: (style) {
           expect(style.$trackStrokeWidth, equals(Prop.maybe(2.0)));
@@ -117,7 +117,7 @@ void main() {
 
       styleMethodTest(
         'duration',
-        initial: RemixSpinnerStyler(),
+        initial: SpinnerStyler(),
         modify: (style) => style.duration(const Duration(milliseconds: 500)),
         expect: (style) {
           expect(
@@ -129,16 +129,16 @@ void main() {
 
       styleMethodTest(
         'variants',
-        initial: RemixSpinnerStyler(),
-        modify: (style) => style.variants(<VariantStyle<RemixSpinnerSpec>>[]),
+        initial: SpinnerStyler(),
+        modify: (style) => style.variants(<VariantStyle<SpinnerSpec>>[]),
         expect: (style) {
-          expect(style.$variants, equals(<VariantStyle<RemixSpinnerSpec>>[]));
+          expect(style.$variants, equals(<VariantStyle<SpinnerSpec>>[]));
         },
       );
 
       styleMethodTest(
         'wrap',
-        initial: RemixSpinnerStyler(),
+        initial: SpinnerStyler(),
         modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
@@ -147,7 +147,7 @@ void main() {
 
       styleMethodTest(
         'animate',
-        initial: RemixSpinnerStyler(),
+        initial: SpinnerStyler(),
         modify: (style) =>
             style.animate(AnimationConfig.linear(const Duration(seconds: 1))),
         expect: (style) {
@@ -161,7 +161,7 @@ void main() {
 
     group('Call Method', () {
       test('call method creates RemixSpinner', () {
-        final style = RemixSpinnerStyler();
+        final style = SpinnerStyler();
         final spinner = style.call();
 
         expect(spinner, isA<RemixSpinner>());
@@ -169,7 +169,7 @@ void main() {
       });
 
       test('call method with customized style creates RemixSpinner', () {
-        final style = RemixSpinnerStyler(
+        final style = SpinnerStyler(
           size: 32.0,
           indicatorColor: const Color(0xFF0000FF),
         );
@@ -184,7 +184,7 @@ void main() {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
       ) async {
-        final style = RemixSpinnerStyler();
+        final style = SpinnerStyler();
 
         await tester.pumpWidget(
           MaterialApp(
@@ -192,8 +192,8 @@ void main() {
               builder: (context) {
                 final spec = style.resolve(context);
 
-                expect(spec, isA<StyleSpec<RemixSpinnerSpec>>());
-                expect(spec.spec, isA<RemixSpinnerSpec>());
+                expect(spec, isA<StyleSpec<SpinnerSpec>>());
+                expect(spec.spec, isA<SpinnerSpec>());
 
                 return Container();
               },
@@ -203,7 +203,7 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        final originalStyle = RemixSpinnerStyler();
+        final originalStyle = SpinnerStyler();
 
         final mergedStyle = originalStyle.merge(null);
 
@@ -211,8 +211,8 @@ void main() {
       });
 
       test('merge combines properties correctly', () {
-        final style1 = RemixSpinnerStyler(size: 24.0);
-        final style2 = RemixSpinnerStyler(strokeWidth: 2.0);
+        final style1 = SpinnerStyler(size: 24.0);
+        final style2 = SpinnerStyler(strokeWidth: 2.0);
 
         final merged = style1.merge(style2);
 
@@ -223,22 +223,22 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        final style1 = RemixSpinnerStyler();
-        final style2 = RemixSpinnerStyler();
+        final style1 = SpinnerStyler();
+        final style2 = SpinnerStyler();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixSpinnerStyler().size(24.0);
-        final style2 = RemixSpinnerStyler().size(32.0);
+        final style1 = SpinnerStyler().size(24.0);
+        final style2 = SpinnerStyler().size(32.0);
 
         expect(style1, isNot(equals(style2)));
       });
 
       test('props list contains all properties', () {
-        final style = RemixSpinnerStyler();
+        final style = SpinnerStyler();
 
         expect(style.props, hasLength(12));
         expect(style.props, contains(style.$size));

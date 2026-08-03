@@ -6,10 +6,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixTextFieldSpec', () {
+  group('TextFieldSpec', () {
     group('Constructor', () {
       test('creates with default properties', () {
-        const spec = RemixTextFieldSpec();
+        const spec = TextFieldSpec();
 
         expect(spec.text, equals(const StyleSpec(spec: TextSpec())));
         expect(spec.hintText, equals(const StyleSpec(spec: TextSpec())));
@@ -45,7 +45,7 @@ void main() {
         final helperText = StyleSpec(spec: const TextSpec());
         final label = StyleSpec(spec: const TextSpec());
 
-        final spec = RemixTextFieldSpec(
+        final spec = TextFieldSpec(
           text: text,
           hintText: hintText,
           textAlign: textAlign,
@@ -83,7 +83,7 @@ void main() {
 
     group('copyWith', () {
       test('returns copy when no parameters provided', () {
-        const spec = RemixTextFieldSpec();
+        const spec = TextFieldSpec();
         final copy = spec.copyWith();
 
         expect(copy.text, equals(spec.text));
@@ -103,7 +103,7 @@ void main() {
       });
 
       test('returns copy with new text', () {
-        const spec = RemixTextFieldSpec();
+        const spec = TextFieldSpec();
         final newText = StyleSpec(
           spec: const TextSpec(),
           animation: AnimationConfig.linear(const Duration(milliseconds: 100)),
@@ -117,7 +117,7 @@ void main() {
       });
 
       test('returns copy with new cursor properties', () {
-        const spec = RemixTextFieldSpec();
+        const spec = TextFieldSpec();
 
         final copy = spec.copyWith(
           cursorWidth: 5.0,
@@ -134,7 +134,7 @@ void main() {
       });
 
       test('returns copy with new text alignment', () {
-        const spec = RemixTextFieldSpec();
+        const spec = TextFieldSpec();
 
         final copy = spec.copyWith(textAlign: TextAlign.center);
 
@@ -145,7 +145,7 @@ void main() {
 
     group('lerp', () {
       test('returns value equal to this when other is null', () {
-        const spec = RemixTextFieldSpec();
+        const spec = TextFieldSpec();
         final lerped = spec.lerp(null, 0.5);
 
         // StyleSpec fields should be preserved
@@ -157,8 +157,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=0', () {
-        const spec1 = RemixTextFieldSpec();
-        const spec2 = RemixTextFieldSpec(
+        const spec1 = TextFieldSpec();
+        const spec2 = TextFieldSpec(
           textAlign: TextAlign.center,
           cursorWidth: 4.0,
         );
@@ -170,8 +170,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=1', () {
-        const spec1 = RemixTextFieldSpec();
-        const spec2 = RemixTextFieldSpec(
+        const spec1 = TextFieldSpec();
+        const spec2 = TextFieldSpec(
           textAlign: TextAlign.center,
           cursorWidth: 4.0,
         );
@@ -183,8 +183,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.5', () {
-        const spec1 = RemixTextFieldSpec(cursorWidth: 2.0);
-        const spec2 = RemixTextFieldSpec(cursorWidth: 4.0);
+        const spec1 = TextFieldSpec(cursorWidth: 2.0);
+        const spec2 = TextFieldSpec(cursorWidth: 4.0);
 
         final result = spec1.lerp(spec2, 0.5);
 
@@ -192,8 +192,8 @@ void main() {
       });
 
       test('interpolates colors correctly', () {
-        const spec1 = RemixTextFieldSpec(cursorColor: Colors.red);
-        const spec2 = RemixTextFieldSpec(cursorColor: Colors.blue);
+        const spec1 = TextFieldSpec(cursorColor: Colors.red);
+        const spec2 = TextFieldSpec(cursorColor: Colors.blue);
 
         final result = spec1.lerp(spec2, 0.5);
 
@@ -205,8 +205,8 @@ void main() {
       });
 
       test('interpolates edge insets correctly', () {
-        const spec1 = RemixTextFieldSpec(scrollPadding: EdgeInsets.all(10));
-        const spec2 = RemixTextFieldSpec(scrollPadding: EdgeInsets.all(20));
+        const spec1 = TextFieldSpec(scrollPadding: EdgeInsets.all(10));
+        const spec2 = TextFieldSpec(scrollPadding: EdgeInsets.all(20));
 
         final result = spec1.lerp(spec2, 0.5);
 
@@ -216,22 +216,22 @@ void main() {
 
     group('Equality & Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixTextFieldSpec();
-        const spec2 = RemixTextFieldSpec();
+        const spec1 = TextFieldSpec();
+        const spec2 = TextFieldSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('two specs with different properties are not equal', () {
-        const spec1 = RemixTextFieldSpec();
-        const spec2 = RemixTextFieldSpec(textAlign: TextAlign.center);
+        const spec1 = TextFieldSpec();
+        const spec2 = TextFieldSpec(textAlign: TextAlign.center);
 
         expect(spec1, isNot(equals(spec2)));
       });
 
       test('props includes all relevant properties', () {
-        const spec = RemixTextFieldSpec();
+        const spec = TextFieldSpec();
 
         expect(spec.props.length, equals(17));
         expect(spec.props, contains(spec.text));
@@ -255,7 +255,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties includes all properties', () {
-        const spec = RemixTextFieldSpec();
+        const spec = TextFieldSpec();
         final builder = DiagnosticPropertiesBuilder();
 
         spec.debugFillProperties(builder);
@@ -284,7 +284,7 @@ void main() {
 
     group('Edge Cases', () {
       test('handles null optional properties correctly', () {
-        const spec = RemixTextFieldSpec(
+        const spec = TextFieldSpec(
           cursorHeight: null,
           cursorRadius: null,
           cursorColor: null,
@@ -300,8 +300,8 @@ void main() {
       });
 
       test('lerp handles null properties', () {
-        const spec1 = RemixTextFieldSpec(cursorColor: null);
-        const spec2 = RemixTextFieldSpec(cursorColor: Colors.blue);
+        const spec1 = TextFieldSpec(cursorColor: null);
+        const spec2 = TextFieldSpec(cursorColor: Colors.blue);
 
         final result = spec1.lerp(spec2, 0.5);
 

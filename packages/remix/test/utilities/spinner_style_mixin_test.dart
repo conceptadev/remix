@@ -10,7 +10,7 @@ void main() {
       final modifiedStyle = originalStyle.spinner(.indicatorColor(testColor));
 
       final expectedSpinner = Prop.maybeMix(
-        RemixSpinnerStyler(indicatorColor: testColor),
+        SpinnerStyler(indicatorColor: testColor),
       );
 
       expect(modifiedStyle, isNot(same(originalStyle)));
@@ -23,7 +23,7 @@ void main() {
       final modifiedStyle = originalStyle.spinner(.trackColor(testColor));
 
       final expectedSpinner = Prop.maybeMix(
-        RemixSpinnerStyler(trackColor: testColor),
+        SpinnerStyler(trackColor: testColor),
       );
 
       expect(modifiedStyle, isNot(same(originalStyle)));
@@ -35,7 +35,7 @@ void main() {
       final originalStyle = ButtonStyler();
       final modifiedStyle = originalStyle.spinner(.size(testSize));
 
-      final expectedSpinner = Prop.maybeMix(RemixSpinnerStyler(size: testSize));
+      final expectedSpinner = Prop.maybeMix(SpinnerStyler(size: testSize));
 
       expect(modifiedStyle, isNot(same(originalStyle)));
       expect(modifiedStyle.$spinner, equals(expectedSpinner));
@@ -47,7 +47,7 @@ void main() {
       final modifiedStyle = originalStyle.spinner(.strokeWidth(testWidth));
 
       final expectedSpinner = Prop.maybeMix(
-        RemixSpinnerStyler(strokeWidth: testWidth),
+        SpinnerStyler(strokeWidth: testWidth),
       );
 
       expect(modifiedStyle, isNot(same(originalStyle)));
@@ -60,7 +60,7 @@ void main() {
       final modifiedStyle = originalStyle.spinner(.trackStrokeWidth(testWidth));
 
       final expectedSpinner = Prop.maybeMix(
-        RemixSpinnerStyler(trackStrokeWidth: testWidth),
+        SpinnerStyler(trackStrokeWidth: testWidth),
       );
 
       expect(modifiedStyle, isNot(same(originalStyle)));
@@ -73,7 +73,7 @@ void main() {
       final modifiedStyle = originalStyle.spinner(.duration(testDuration));
 
       final expectedSpinner = Prop.maybeMix(
-        RemixSpinnerStyler(duration: testDuration),
+        SpinnerStyler(duration: testDuration),
       );
 
       expect(modifiedStyle, isNot(same(originalStyle)));
@@ -122,7 +122,7 @@ void main() {
 
       expect(
         combinedStyle.$spinner,
-        equals(Prop.maybeMix(RemixSpinnerStyler(indicatorColor: Colors.white))),
+        equals(Prop.maybeMix(SpinnerStyler(indicatorColor: Colors.white))),
       );
     });
   });

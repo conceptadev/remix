@@ -44,8 +44,8 @@ class _TextfieldExampleState extends State<TextfieldExample> {
     );
   }
 
-  RemixTextFieldStyler get style {
-    return RemixTextFieldStyler()
+  TextFieldStyler get style {
+    return TextFieldStyler()
         .color(Colors.grey.shade800)
         .backgroundColor(Colors.white)
         .borderRadiusAll(const Radius.circular(8.0))
@@ -73,7 +73,7 @@ class _TextfieldExampleState extends State<TextfieldExample> {
           BoxBorderMix.all(BorderSideMix(color: Colors.grey.shade300)),
         )
         .onFocused(
-          RemixTextFieldStyler().border(
+          TextFieldStyler().border(
             BoxBorderMix.all(
               BorderSideMix()
                   .color(Colors.deepPurpleAccent)
@@ -199,8 +199,8 @@ RemixTextField remixTextFieldConstructor({
   String? semanticLabel,
   String? semanticHint,
   bool excludeSemantics = false,
-  RemixTextFieldStyler style = const RemixTextFieldStyler.create(),
-  RemixTextFieldSpec? styleSpec,
+  TextFieldStyler style = const TextFieldStyler.create(),
+  TextFieldSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -421,7 +421,7 @@ Optional. Label text to display above the text field.
 
 Optional. Whether the text field is in error state.
 
-#### `styleSpec` → `RemixTextFieldSpec?`
+#### `styleSpec` → `TextFieldSpec?`
 
 Optional. The style spec for the text field.
 
@@ -445,7 +445,7 @@ Optional. The semantic hint for the text field.
 
 Optional. Whether to exclude child semantics.
 
-#### `style` → `RemixTextFieldStyler`
+#### `style` → `TextFieldStyler`
 
 Optional. The style configuration for the text field.
 
@@ -568,7 +568,7 @@ Sets label text
 
 Sets animation configuration.
 
-#### `variants(List<VariantStyle<RemixTextFieldSpec>> value)`
+#### `variants(List<VariantStyle<TextFieldSpec>> value)`
 
 Sets style variants.
 

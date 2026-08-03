@@ -205,34 +205,34 @@ void main() {
     });
 
     group('WidgetStateController', () {
-      widgetControllerTest<RemixButtonSpec>(
+      widgetControllerTest<ButtonSpec>(
         'contains disabled state when enabled is false',
         build: () =>
             RemixButton(label: 'Click Me', onPressed: () {}, enabled: false),
         expectedStates: {WidgetState.disabled},
       );
 
-      widgetControllerTest<RemixButtonSpec>(
+      widgetControllerTest<ButtonSpec>(
         'contains disabled state when onPressed is omitted',
         build: () => RemixButton(label: 'Click Me'),
         expectedStates: {WidgetState.disabled},
       );
 
-      widgetControllerTest<RemixButtonSpec>(
+      widgetControllerTest<ButtonSpec>(
         'contains hovered state when hovered',
         build: () => RemixButton(label: 'Hover Me', onPressed: () {}),
         act: hoverAction<RemixButton>,
         expectedStates: {WidgetState.hovered},
       );
 
-      widgetControllerTest<RemixButtonSpec>(
+      widgetControllerTest<ButtonSpec>(
         'contains focused state when focused',
         build: () => RemixButton(label: 'Focus Me', onPressed: () {}),
         act: focusAction<RemixButton>,
         expectedStates: {WidgetState.focused},
       );
 
-      widgetControllerTest<RemixButtonSpec>(
+      widgetControllerTest<ButtonSpec>(
         'contains pressed state when pressed',
         build: () => RemixButton(label: 'Press Me', onPressed: () {}),
         act: pressAction<RemixButton>,
@@ -321,7 +321,7 @@ void main() {
       testWidgets('builders receive correct parameters', (tester) async {
         TextSpec? receivedTextSpec;
         IconSpec? receivedIconSpec;
-        RemixSpinnerSpec? receivedSpinnerSpec;
+        SpinnerSpec? receivedSpinnerSpec;
 
         await tester.pumpRemixApp(
           RemixButton(

@@ -269,7 +269,7 @@ void main() {
 
     group('Styling', () {
       testWidgets('applies custom style', (tester) async {
-        final customStyle = RemixRadioStyler().size(32.0, 32.0);
+        final customStyle = RadioStyler().size(32.0, 32.0);
 
         await tester.pumpRemixApp(
           RemixRadioGroup<String>(
@@ -284,7 +284,7 @@ void main() {
       });
 
       testWidgets('applies indicator styling', (tester) async {
-        final customStyle = RemixRadioStyler().indicator(
+        final customStyle = RadioStyler().indicator(
           BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
         );
 
@@ -301,7 +301,7 @@ void main() {
       });
 
       testWidgets('applies alignment styling', (tester) async {
-        final customStyle = RemixRadioStyler().alignment(Alignment.center);
+        final customStyle = RadioStyler().alignment(Alignment.center);
 
         await tester.pumpRemixApp(
           RemixRadioGroup<String>(
@@ -316,7 +316,7 @@ void main() {
       });
 
       testWidgets('applies color styling', (tester) async {
-        final customStyle = RemixRadioStyler().fillColor(Colors.red);
+        final customStyle = RadioStyler().fillColor(Colors.red);
 
         await tester.pumpRemixApp(
           RemixRadioGroup<String>(
@@ -331,7 +331,7 @@ void main() {
       });
 
       testWidgets('applies border radius styling', (tester) async {
-        final customStyle = RemixRadioStyler().borderRadius(
+        final customStyle = RadioStyler().borderRadius(
           BorderRadiusMix.circular(8.0),
         );
 
@@ -348,7 +348,7 @@ void main() {
       });
 
       testWidgets('applies raw styleSpec when provided', (tester) async {
-        const spec = RemixRadioSpec(
+        const spec = RadioSpec(
           container: StyleSpec(
             spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
           ),
@@ -609,7 +609,7 @@ void main() {
 
     group('Widget Modifiers', () {
       testWidgets('applies widget modifiers from style', (tester) async {
-        final customStyle = RemixRadioStyler().wrap(.clipOval());
+        final customStyle = RadioStyler().wrap(.clipOval());
 
         await tester.pumpRemixApp(
           RemixRadioGroup<String>(

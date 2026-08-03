@@ -2,7 +2,7 @@ part of 'switch.dart';
 
 /// Resolved visual values for a [RemixSwitch].
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixSwitchSpec with _$RemixSwitchSpec {
+class SwitchSpec with _$SwitchSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
@@ -17,7 +17,7 @@ class RemixSwitchSpec with _$RemixSwitchSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? thumbEffects;
 
-  const RemixSwitchSpec({
+  const SwitchSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? thumb,
     this.trackEffects,
@@ -28,7 +28,7 @@ class RemixSwitchSpec with _$RemixSwitchSpec {
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixSwitchSpec lerp(RemixSwitchSpec? other, double t) {
+  SwitchSpec lerp(SwitchSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
@@ -45,3 +45,9 @@ class RemixSwitchSpec with _$RemixSwitchSpec {
     );
   }
 }
+
+/// Backward-compatible name for [SwitchSpec].
+///
+/// The generated style API is based on [SwitchSpec], so resolved values use
+/// `SwitchSpec` as their runtime type.
+typedef RemixSwitchSpec = SwitchSpec;

@@ -25,7 +25,7 @@ class RemixSwitch extends StatelessWidget {
     this.autofocus = false,
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
-    this.style = const RemixSwitchStyler.create(),
+    this.style = const SwitchStyler.create(),
     this.styleSpec,
   });
 
@@ -42,12 +42,12 @@ class RemixSwitch extends StatelessWidget {
   final ValueChanged<bool>? onChanged;
 
   /// The style configuration for the switch.
-  final RemixSwitchStyler style;
+  final SwitchStyler style;
 
   /// The style spec for the switch.
-  final RemixSwitchSpec? styleSpec;
+  final SwitchSpec? styleSpec;
 
-  static final styleFrom = RemixSwitchStyler.new;
+  static final styleFrom = SwitchStyler.new;
 
   /// Whether to enable haptic feedback when toggled.
   final bool enableFeedback;
@@ -64,11 +64,11 @@ class RemixSwitch extends StatelessWidget {
   /// Cursor when hovering over the switch.
   final MouseCursor mouseCursor;
 
-  RemixSwitchStyler _buildStyle() {
-    return RemixSwitchStyler()
+  SwitchStyler _buildStyle() {
+    return SwitchStyler()
         .alignment(.centerLeft)
         // Small thumb inset
-        .onSelected(RemixSwitchStyler().alignment(.centerRight))
+        .onSelected(SwitchStyler().alignment(.centerRight))
         .merge(style);
   }
 
@@ -87,7 +87,7 @@ class RemixSwitch extends StatelessWidget {
       semanticLabel: semanticLabel,
       asSwitch: true,
       builder: (context, state, _) {
-        return RemixStyleSpecBuilder<RemixSwitchSpec>(
+        return RemixStyleSpecBuilder<SwitchSpec>(
           style: _buildStyle(),
           styleSpec: styleSpec,
           controller: NakedToggleState.controllerOf(context),

@@ -6,21 +6,21 @@ part of 'toggle.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixToggleSpec implements Spec<RemixToggleSpec>, Diagnosticable {
+mixin _$ToggleSpec implements Spec<ToggleSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
 
   @override
-  Type get type => RemixToggleSpec;
+  Type get type => ToggleSpec;
 
   @override
-  RemixToggleSpec copyWith({
+  ToggleSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
   }) {
-    return RemixToggleSpec(
+    return ToggleSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       icon: icon ?? this.icon,
@@ -28,8 +28,8 @@ mixin _$RemixToggleSpec implements Spec<RemixToggleSpec>, Diagnosticable {
   }
 
   @override
-  RemixToggleSpec lerp(RemixToggleSpec? other, double t) {
-    return RemixToggleSpec(
+  ToggleSpec lerp(ToggleSpec? other, double t) {
+    return ToggleSpec(
       container: container.lerp(other?.container, t),
       label: label.lerp(other?.label, t),
       icon: icon.lerp(other?.icon, t),
@@ -42,7 +42,7 @@ mixin _$RemixToggleSpec implements Spec<RemixToggleSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixToggleSpec &&
+        other is ToggleSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -86,9 +86,9 @@ mixin _$RemixToggleSpec implements Spec<RemixToggleSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixToggleSpec` and migrate the class declaration to `class RemixToggleSpec with _\$RemixToggleSpec`. The `_\$RemixToggleSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$ToggleSpec` and migrate the class declaration to `class ToggleSpec with _\$ToggleSpec`. The `_\$ToggleSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixToggleSpecMethods = _$RemixToggleSpec; // ignore: unused_element
+typedef _$ToggleSpecMethods = _$ToggleSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -198,16 +198,16 @@ class FortalToggle extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
+class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     with
-        RemixBoxStylerMixin<RemixToggleStyler>,
-        LabelStyleMixin<RemixToggleStyler>,
-        IconStyleMixin<RemixToggleStyler> {
+        RemixBoxStylerMixin<ToggleStyler>,
+        LabelStyleMixin<ToggleStyler>,
+        IconStyleMixin<ToggleStyler> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
 
-  const RemixToggleStyler.create({
+  const ToggleStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
@@ -218,13 +218,13 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
        $label = label,
        $icon = icon;
 
-  RemixToggleStyler({
+  ToggleStyler({
     FlexBoxStyler? container,
     TextStyler? label,
     IconStyler? icon,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixToggleSpec>>? variants,
+    List<VariantStyle<ToggleSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          label: Prop.maybeMix(label),
@@ -234,105 +234,96 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
          animation: animation,
        );
 
-  factory RemixToggleStyler.container(FlexBoxStyler value) =>
-      RemixToggleStyler().container(value);
-  factory RemixToggleStyler.label(TextStyler value) =>
-      RemixToggleStyler().label(value);
-  factory RemixToggleStyler.icon(IconStyler value) =>
-      RemixToggleStyler().icon(value);
-  factory RemixToggleStyler.color(Color value) =>
-      RemixToggleStyler().color(value);
-  factory RemixToggleStyler.gradient(GradientMix value) =>
-      RemixToggleStyler().gradient(value);
-  factory RemixToggleStyler.border(BoxBorderMix value) =>
-      RemixToggleStyler().border(value);
-  factory RemixToggleStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixToggleStyler().borderRadius(value);
-  factory RemixToggleStyler.elevation(ElevationShadow value) =>
-      RemixToggleStyler().elevation(value);
-  factory RemixToggleStyler.shadow(BoxShadowMix value) =>
-      RemixToggleStyler().shadow(value);
-  factory RemixToggleStyler.shadows(List<BoxShadowMix> value) =>
-      RemixToggleStyler().shadows(value);
-  factory RemixToggleStyler.width(double value) =>
-      RemixToggleStyler().width(value);
-  factory RemixToggleStyler.height(double value) =>
-      RemixToggleStyler().height(value);
-  factory RemixToggleStyler.size(double width, double height) =>
-      RemixToggleStyler().size(width, height);
-  factory RemixToggleStyler.minWidth(double value) =>
-      RemixToggleStyler().minWidth(value);
-  factory RemixToggleStyler.maxWidth(double value) =>
-      RemixToggleStyler().maxWidth(value);
-  factory RemixToggleStyler.minHeight(double value) =>
-      RemixToggleStyler().minHeight(value);
-  factory RemixToggleStyler.maxHeight(double value) =>
-      RemixToggleStyler().maxHeight(value);
-  factory RemixToggleStyler.scale(
-    double scale, {
-    Alignment alignment = .center,
-  }) => RemixToggleStyler().scale(scale, alignment: alignment);
-  factory RemixToggleStyler.rotate(
+  factory ToggleStyler.container(FlexBoxStyler value) =>
+      ToggleStyler().container(value);
+  factory ToggleStyler.label(TextStyler value) => ToggleStyler().label(value);
+  factory ToggleStyler.icon(IconStyler value) => ToggleStyler().icon(value);
+  factory ToggleStyler.color(Color value) => ToggleStyler().color(value);
+  factory ToggleStyler.gradient(GradientMix value) =>
+      ToggleStyler().gradient(value);
+  factory ToggleStyler.border(BoxBorderMix value) =>
+      ToggleStyler().border(value);
+  factory ToggleStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      ToggleStyler().borderRadius(value);
+  factory ToggleStyler.elevation(ElevationShadow value) =>
+      ToggleStyler().elevation(value);
+  factory ToggleStyler.shadow(BoxShadowMix value) =>
+      ToggleStyler().shadow(value);
+  factory ToggleStyler.shadows(List<BoxShadowMix> value) =>
+      ToggleStyler().shadows(value);
+  factory ToggleStyler.width(double value) => ToggleStyler().width(value);
+  factory ToggleStyler.height(double value) => ToggleStyler().height(value);
+  factory ToggleStyler.size(double width, double height) =>
+      ToggleStyler().size(width, height);
+  factory ToggleStyler.minWidth(double value) => ToggleStyler().minWidth(value);
+  factory ToggleStyler.maxWidth(double value) => ToggleStyler().maxWidth(value);
+  factory ToggleStyler.minHeight(double value) =>
+      ToggleStyler().minHeight(value);
+  factory ToggleStyler.maxHeight(double value) =>
+      ToggleStyler().maxHeight(value);
+  factory ToggleStyler.scale(double scale, {Alignment alignment = .center}) =>
+      ToggleStyler().scale(scale, alignment: alignment);
+  factory ToggleStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixToggleStyler().rotate(radians, alignment: alignment);
-  factory RemixToggleStyler.translate(double x, double y, [double z = 0.0]) =>
-      RemixToggleStyler().translate(x, y, z);
-  factory RemixToggleStyler.skew(double skewX, double skewY) =>
-      RemixToggleStyler().skew(skewX, skewY);
-  factory RemixToggleStyler.textStyle(TextStyler value) =>
-      RemixToggleStyler().textStyle(value);
-  factory RemixToggleStyler.image(DecorationImageMix value) =>
-      RemixToggleStyler().image(value);
-  factory RemixToggleStyler.shape(ShapeBorderMix value) =>
-      RemixToggleStyler().shape(value);
-  factory RemixToggleStyler.backgroundImage(
+  }) => ToggleStyler().rotate(radians, alignment: alignment);
+  factory ToggleStyler.translate(double x, double y, [double z = 0.0]) =>
+      ToggleStyler().translate(x, y, z);
+  factory ToggleStyler.skew(double skewX, double skewY) =>
+      ToggleStyler().skew(skewX, skewY);
+  factory ToggleStyler.textStyle(TextStyler value) =>
+      ToggleStyler().textStyle(value);
+  factory ToggleStyler.image(DecorationImageMix value) =>
+      ToggleStyler().image(value);
+  factory ToggleStyler.shape(ShapeBorderMix value) =>
+      ToggleStyler().shape(value);
+  factory ToggleStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixToggleStyler().backgroundImage(
+  }) => ToggleStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixToggleStyler.backgroundImageUrl(
+  factory ToggleStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixToggleStyler().backgroundImageUrl(
+  }) => ToggleStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixToggleStyler.backgroundImageAsset(
+  factory ToggleStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixToggleStyler().backgroundImageAsset(
+  }) => ToggleStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixToggleStyler.linearGradient({
+  factory ToggleStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixToggleStyler().linearGradient(
+  }) => ToggleStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixToggleStyler.radialGradient({
+  factory ToggleStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -340,7 +331,7 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixToggleStyler().radialGradient(
+  }) => ToggleStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -349,14 +340,14 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixToggleStyler.sweepGradient({
+  factory ToggleStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixToggleStyler().sweepGradient(
+  }) => ToggleStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -364,20 +355,20 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixToggleStyler.foregroundLinearGradient({
+  factory ToggleStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixToggleStyler().foregroundLinearGradient(
+  }) => ToggleStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixToggleStyler.foregroundRadialGradient({
+  factory ToggleStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -385,7 +376,7 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixToggleStyler().foregroundRadialGradient(
+  }) => ToggleStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -394,14 +385,14 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixToggleStyler.foregroundSweepGradient({
+  factory ToggleStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixToggleStyler().foregroundSweepGradient(
+  }) => ToggleStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -409,128 +400,126 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixToggleStyler.row() => RemixToggleStyler().row();
-  factory RemixToggleStyler.column() => RemixToggleStyler().column();
-  factory RemixToggleStyler.alignment(AlignmentGeometry value) =>
-      RemixToggleStyler().alignment(value);
-  factory RemixToggleStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixToggleStyler().padding(value);
-  factory RemixToggleStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixToggleStyler().margin(value);
-  factory RemixToggleStyler.constraints(BoxConstraintsMix value) =>
-      RemixToggleStyler().constraints(value);
-  factory RemixToggleStyler.decoration(DecorationMix value) =>
-      RemixToggleStyler().decoration(value);
-  factory RemixToggleStyler.foregroundDecoration(DecorationMix value) =>
-      RemixToggleStyler().foregroundDecoration(value);
-  factory RemixToggleStyler.clipBehavior(Clip value) =>
-      RemixToggleStyler().clipBehavior(value);
-  factory RemixToggleStyler.direction(Axis value) =>
-      RemixToggleStyler().direction(value);
-  factory RemixToggleStyler.mainAxisAlignment(MainAxisAlignment value) =>
-      RemixToggleStyler().mainAxisAlignment(value);
-  factory RemixToggleStyler.crossAxisAlignment(CrossAxisAlignment value) =>
-      RemixToggleStyler().crossAxisAlignment(value);
-  factory RemixToggleStyler.mainAxisSize(MainAxisSize value) =>
-      RemixToggleStyler().mainAxisSize(value);
-  factory RemixToggleStyler.spacing(double value) =>
-      RemixToggleStyler().spacing(value);
-  factory RemixToggleStyler.verticalDirection(VerticalDirection value) =>
-      RemixToggleStyler().verticalDirection(value);
-  factory RemixToggleStyler.textDirection(TextDirection value) =>
-      RemixToggleStyler().textDirection(value);
-  factory RemixToggleStyler.textBaseline(TextBaseline value) =>
-      RemixToggleStyler().textBaseline(value);
-  factory RemixToggleStyler.transform(
+  factory ToggleStyler.row() => ToggleStyler().row();
+  factory ToggleStyler.column() => ToggleStyler().column();
+  factory ToggleStyler.alignment(AlignmentGeometry value) =>
+      ToggleStyler().alignment(value);
+  factory ToggleStyler.padding(EdgeInsetsGeometryMix value) =>
+      ToggleStyler().padding(value);
+  factory ToggleStyler.margin(EdgeInsetsGeometryMix value) =>
+      ToggleStyler().margin(value);
+  factory ToggleStyler.constraints(BoxConstraintsMix value) =>
+      ToggleStyler().constraints(value);
+  factory ToggleStyler.decoration(DecorationMix value) =>
+      ToggleStyler().decoration(value);
+  factory ToggleStyler.foregroundDecoration(DecorationMix value) =>
+      ToggleStyler().foregroundDecoration(value);
+  factory ToggleStyler.clipBehavior(Clip value) =>
+      ToggleStyler().clipBehavior(value);
+  factory ToggleStyler.direction(Axis value) => ToggleStyler().direction(value);
+  factory ToggleStyler.mainAxisAlignment(MainAxisAlignment value) =>
+      ToggleStyler().mainAxisAlignment(value);
+  factory ToggleStyler.crossAxisAlignment(CrossAxisAlignment value) =>
+      ToggleStyler().crossAxisAlignment(value);
+  factory ToggleStyler.mainAxisSize(MainAxisSize value) =>
+      ToggleStyler().mainAxisSize(value);
+  factory ToggleStyler.spacing(double value) => ToggleStyler().spacing(value);
+  factory ToggleStyler.verticalDirection(VerticalDirection value) =>
+      ToggleStyler().verticalDirection(value);
+  factory ToggleStyler.textDirection(TextDirection value) =>
+      ToggleStyler().textDirection(value);
+  factory ToggleStyler.textBaseline(TextBaseline value) =>
+      ToggleStyler().textBaseline(value);
+  factory ToggleStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixToggleStyler().transform(value, alignment: alignment);
+  }) => ToggleStyler().transform(value, alignment: alignment);
 
-  RemixToggleStyler color(Color value) {
+  ToggleStyler color(Color value) {
     return container(FlexBoxStyler().color(value));
   }
 
-  RemixToggleStyler gradient(GradientMix value) {
+  ToggleStyler gradient(GradientMix value) {
     return container(FlexBoxStyler().gradient(value));
   }
 
-  RemixToggleStyler border(BoxBorderMix value) {
+  ToggleStyler border(BoxBorderMix value) {
     return container(FlexBoxStyler().border(value));
   }
 
-  RemixToggleStyler borderRadius(BorderRadiusGeometryMix value) {
+  ToggleStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(FlexBoxStyler().borderRadius(value));
   }
 
-  RemixToggleStyler elevation(ElevationShadow value) {
+  ToggleStyler elevation(ElevationShadow value) {
     return container(FlexBoxStyler().elevation(value));
   }
 
-  RemixToggleStyler shadow(BoxShadowMix value) {
+  ToggleStyler shadow(BoxShadowMix value) {
     return container(FlexBoxStyler().shadow(value));
   }
 
-  RemixToggleStyler shadows(List<BoxShadowMix> value) {
+  ToggleStyler shadows(List<BoxShadowMix> value) {
     return container(FlexBoxStyler().shadows(value));
   }
 
-  RemixToggleStyler width(double value) {
+  ToggleStyler width(double value) {
     return container(FlexBoxStyler().width(value));
   }
 
-  RemixToggleStyler height(double value) {
+  ToggleStyler height(double value) {
     return container(FlexBoxStyler().height(value));
   }
 
-  RemixToggleStyler size(double width, double height) {
+  ToggleStyler size(double width, double height) {
     return container(FlexBoxStyler().size(width, height));
   }
 
-  RemixToggleStyler minWidth(double value) {
+  ToggleStyler minWidth(double value) {
     return container(FlexBoxStyler().minWidth(value));
   }
 
-  RemixToggleStyler maxWidth(double value) {
+  ToggleStyler maxWidth(double value) {
     return container(FlexBoxStyler().maxWidth(value));
   }
 
-  RemixToggleStyler minHeight(double value) {
+  ToggleStyler minHeight(double value) {
     return container(FlexBoxStyler().minHeight(value));
   }
 
-  RemixToggleStyler maxHeight(double value) {
+  ToggleStyler maxHeight(double value) {
     return container(FlexBoxStyler().maxHeight(value));
   }
 
-  RemixToggleStyler scale(double scale, {Alignment alignment = .center}) {
+  ToggleStyler scale(double scale, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixToggleStyler rotate(double radians, {Alignment alignment = .center}) {
+  ToggleStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixToggleStyler translate(double x, double y, [double z = 0.0]) {
+  ToggleStyler translate(double x, double y, [double z = 0.0]) {
     return container(FlexBoxStyler().translate(x, y, z));
   }
 
-  RemixToggleStyler skew(double skewX, double skewY) {
+  ToggleStyler skew(double skewX, double skewY) {
     return container(FlexBoxStyler().skew(skewX, skewY));
   }
 
-  RemixToggleStyler textStyle(TextStyler value) {
+  ToggleStyler textStyle(TextStyler value) {
     return container(FlexBoxStyler().textStyle(value));
   }
 
-  RemixToggleStyler image(DecorationImageMix value) {
+  ToggleStyler image(DecorationImageMix value) {
     return container(FlexBoxStyler().image(value));
   }
 
-  RemixToggleStyler shape(ShapeBorderMix value) {
+  ToggleStyler shape(ShapeBorderMix value) {
     return container(FlexBoxStyler().shape(value));
   }
 
-  RemixToggleStyler backgroundImage(
+  ToggleStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -546,7 +535,7 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     );
   }
 
-  RemixToggleStyler backgroundImageUrl(
+  ToggleStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -562,7 +551,7 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     );
   }
 
-  RemixToggleStyler backgroundImageAsset(
+  ToggleStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -578,7 +567,7 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     );
   }
 
-  RemixToggleStyler linearGradient({
+  ToggleStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -596,7 +585,7 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     );
   }
 
-  RemixToggleStyler radialGradient({
+  ToggleStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -618,7 +607,7 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     );
   }
 
-  RemixToggleStyler sweepGradient({
+  ToggleStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -638,7 +627,7 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     );
   }
 
-  RemixToggleStyler foregroundLinearGradient({
+  ToggleStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -656,7 +645,7 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     );
   }
 
-  RemixToggleStyler foregroundRadialGradient({
+  ToggleStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -678,7 +667,7 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     );
   }
 
-  RemixToggleStyler foregroundSweepGradient({
+  ToggleStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -698,122 +687,122 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     );
   }
 
-  RemixToggleStyler row() {
+  ToggleStyler row() {
     return container(FlexBoxStyler().row());
   }
 
-  RemixToggleStyler column() {
+  ToggleStyler column() {
     return container(FlexBoxStyler().column());
   }
 
-  RemixToggleStyler alignment(AlignmentGeometry value) {
+  ToggleStyler alignment(AlignmentGeometry value) {
     return container(FlexBoxStyler().alignment(value));
   }
 
-  RemixToggleStyler padding(EdgeInsetsGeometryMix value) {
+  ToggleStyler padding(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler().padding(value));
   }
 
-  RemixToggleStyler margin(EdgeInsetsGeometryMix value) {
+  ToggleStyler margin(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler().margin(value));
   }
 
-  RemixToggleStyler constraints(BoxConstraintsMix value) {
+  ToggleStyler constraints(BoxConstraintsMix value) {
     return container(FlexBoxStyler().constraints(value));
   }
 
-  RemixToggleStyler decoration(DecorationMix value) {
+  ToggleStyler decoration(DecorationMix value) {
     return container(FlexBoxStyler().decoration(value));
   }
 
-  RemixToggleStyler foregroundDecoration(DecorationMix value) {
+  ToggleStyler foregroundDecoration(DecorationMix value) {
     return container(FlexBoxStyler().foregroundDecoration(value));
   }
 
-  RemixToggleStyler clipBehavior(Clip value) {
+  ToggleStyler clipBehavior(Clip value) {
     return container(FlexBoxStyler().clipBehavior(value));
   }
 
-  RemixToggleStyler direction(Axis value) {
+  ToggleStyler direction(Axis value) {
     return container(FlexBoxStyler().direction(value));
   }
 
-  RemixToggleStyler mainAxisAlignment(MainAxisAlignment value) {
+  ToggleStyler mainAxisAlignment(MainAxisAlignment value) {
     return container(FlexBoxStyler().mainAxisAlignment(value));
   }
 
-  RemixToggleStyler crossAxisAlignment(CrossAxisAlignment value) {
+  ToggleStyler crossAxisAlignment(CrossAxisAlignment value) {
     return container(FlexBoxStyler().crossAxisAlignment(value));
   }
 
-  RemixToggleStyler mainAxisSize(MainAxisSize value) {
+  ToggleStyler mainAxisSize(MainAxisSize value) {
     return container(FlexBoxStyler().mainAxisSize(value));
   }
 
-  RemixToggleStyler spacing(double value) {
+  ToggleStyler spacing(double value) {
     return container(FlexBoxStyler().spacing(value));
   }
 
-  RemixToggleStyler verticalDirection(VerticalDirection value) {
+  ToggleStyler verticalDirection(VerticalDirection value) {
     return container(FlexBoxStyler().verticalDirection(value));
   }
 
-  RemixToggleStyler textDirection(TextDirection value) {
+  ToggleStyler textDirection(TextDirection value) {
     return container(FlexBoxStyler().textDirection(value));
   }
 
-  RemixToggleStyler textBaseline(TextBaseline value) {
+  ToggleStyler textBaseline(TextBaseline value) {
     return container(FlexBoxStyler().textBaseline(value));
   }
 
-  RemixToggleStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+  ToggleStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixToggleStyler container(FlexBoxStyler value) {
-    return merge(RemixToggleStyler(container: value));
+  ToggleStyler container(FlexBoxStyler value) {
+    return merge(ToggleStyler(container: value));
   }
 
   /// Sets the label.
   @override
-  RemixToggleStyler label(TextStyler value) {
-    return merge(RemixToggleStyler(label: value));
+  ToggleStyler label(TextStyler value) {
+    return merge(ToggleStyler(label: value));
   }
 
   /// Sets the icon.
   @override
-  RemixToggleStyler icon(IconStyler value) {
-    return merge(RemixToggleStyler(icon: value));
+  ToggleStyler icon(IconStyler value) {
+    return merge(ToggleStyler(icon: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixToggleStyler animate(AnimationConfig value) {
-    return merge(RemixToggleStyler(animation: value));
+  ToggleStyler animate(AnimationConfig value) {
+    return merge(ToggleStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixToggleStyler variants(List<VariantStyle<RemixToggleSpec>> value) {
-    return merge(RemixToggleStyler(variants: value));
+  ToggleStyler variants(List<VariantStyle<ToggleSpec>> value) {
+    return merge(ToggleStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixToggleStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixToggleStyler(modifier: value));
+  ToggleStyler wrap(WidgetModifierConfig value) {
+    return merge(ToggleStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixToggleStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixToggleStyler(modifier: value));
+  ToggleStyler modifier(WidgetModifierConfig value) {
+    return merge(ToggleStyler(modifier: value));
   }
 
-  /// Merges with another [RemixToggleStyler].
+  /// Merges with another [ToggleStyler].
   @override
-  RemixToggleStyler merge(RemixToggleStyler? other) {
-    return RemixToggleStyler.create(
+  ToggleStyler merge(ToggleStyler? other) {
+    return ToggleStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),
@@ -823,10 +812,10 @@ class RemixToggleStyler extends MixStyler<RemixToggleStyler, RemixToggleSpec>
     );
   }
 
-  /// Resolves to [StyleSpec<RemixToggleSpec>] using [context].
+  /// Resolves to [StyleSpec<ToggleSpec>] using [context].
   @override
-  StyleSpec<RemixToggleSpec> resolve(BuildContext context) {
-    final spec = RemixToggleSpec(
+  StyleSpec<ToggleSpec> resolve(BuildContext context) {
+    final spec = ToggleSpec(
       container: MixOps.resolve(context, $container),
       label: MixOps.resolve(context, $label),
       icon: MixOps.resolve(context, $icon),

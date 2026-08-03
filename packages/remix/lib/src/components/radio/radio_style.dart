@@ -1,7 +1,7 @@
 part of 'radio.dart';
 
 /// Style configuration for [RemixRadio] container and selected indicator.
-extension RemixRadioStylerRemixHelpers on RemixRadioStyler {
+extension RemixRadioStylerRemixHelpers on RadioStyler {
   /// Creates a RemixRadio widget with this style applied.
   RemixRadio<T> call<T>({
     Key? key,
@@ -25,18 +25,18 @@ extension RemixRadioStylerRemixHelpers on RemixRadioStyler {
   }
 
   /// Sets fill color on the container.
-  RemixRadioStyler fillColor(Color value) {
+  RadioStyler fillColor(Color value) {
     return merge(
-      RemixRadioStyler(
+      RadioStyler(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets the indicator's fill color.
-  RemixRadioStyler indicatorColor(Color value) {
+  RadioStyler indicatorColor(Color value) {
     return merge(
-      RemixRadioStyler(
+      RadioStyler(
         indicator: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );

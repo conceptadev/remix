@@ -3,14 +3,14 @@ part of 'tabs.dart';
 /// Style builder for [RemixTabBar].
 ///
 /// Use this class to style the flex container that lays out tab triggers.
-extension RemixTabBarStylerRemixHelpers on RemixTabBarStyler {
+extension RemixTabBarStylerRemixHelpers on TabBarStyler {
   /// Creates a [RemixTabBar] widget with this style applied.
   RemixTabBar call({Key? key, required Widget child}) {
     return RemixTabBar(key: key, style: this, child: child);
   }
 
-  RemixTabBarStyler flex(FlexStyler value) {
-    return merge(RemixTabBarStyler(container: FlexBoxStyler().flex(value)));
+  TabBarStyler flex(FlexStyler value) {
+    return merge(TabBarStyler(container: FlexBoxStyler().flex(value)));
   }
 }
 
@@ -18,7 +18,7 @@ extension RemixTabBarStylerRemixHelpers on RemixTabBarStyler {
 ///
 /// Use this class to style the content container associated with a selected
 /// tab.
-extension RemixTabViewStylerRemixHelpers on RemixTabViewStyler {
+extension RemixTabViewStylerRemixHelpers on TabViewStyler {
   /// Creates a [RemixTabView] widget with this style applied.
   RemixTabView call({Key? key, required String tabId, required Widget child}) {
     return RemixTabView(key: key, tabId: tabId, style: this, child: child);
@@ -29,7 +29,7 @@ extension RemixTabViewStylerRemixHelpers on RemixTabViewStyler {
 ///
 /// Use this class to style an individual tab trigger, including its container,
 /// label, icon, and selected state.
-extension RemixTabStylerRemixHelpers on RemixTabStyler {
+extension RemixTabStylerRemixHelpers on TabStyler {
   /// Creates a [RemixTab] widget with this style applied.
   RemixTab call({
     Key? key,
@@ -68,7 +68,7 @@ extension RemixTabStylerRemixHelpers on RemixTabStyler {
     );
   }
 
-  RemixTabStyler flex(FlexStyler value) {
-    return merge(RemixTabStyler(container: FlexBoxStyler().flex(value)));
+  TabStyler flex(FlexStyler value) {
+    return merge(TabStyler(container: FlexBoxStyler().flex(value)));
   }
 }

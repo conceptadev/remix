@@ -16,7 +16,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixTooltip(
           tooltipChild: const Text('tip'),
-          style: RemixTooltipStyler(
+          style: TooltipStyler(
             waitDuration: wait,
             showDuration: show,
             dismissDuration: dismiss,

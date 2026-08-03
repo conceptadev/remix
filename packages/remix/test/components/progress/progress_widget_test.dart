@@ -32,7 +32,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.75,
-          style: RemixProgressStyler()
+          style: ProgressStyler()
               .height(20.0)
               .trackColor(Colors.grey)
               .indicatorColor(Colors.blue),
@@ -69,7 +69,7 @@ void main() {
   group('RemixProgress Styling Tests', () {
     testWidgets('applies height style', (tester) async {
       await tester.pumpRemixApp(
-        RemixProgress(value: 0.5, style: RemixProgressStyler().height(30.0)),
+        RemixProgress(value: 0.5, style: ProgressStyler().height(30.0)),
       );
       await tester.pumpAndSettle();
 
@@ -78,7 +78,7 @@ void main() {
 
     testWidgets('applies width style', (tester) async {
       await tester.pumpRemixApp(
-        RemixProgress(value: 0.5, style: RemixProgressStyler().width(200.0)),
+        RemixProgress(value: 0.5, style: ProgressStyler().width(200.0)),
       );
       await tester.pumpAndSettle();
 
@@ -89,7 +89,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler().trackColor(Colors.grey),
+          style: ProgressStyler().trackColor(Colors.grey),
         ),
       );
       await tester.pumpAndSettle();
@@ -101,7 +101,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler().indicatorColor(Colors.blue),
+          style: ProgressStyler().indicatorColor(Colors.blue),
         ),
       );
       await tester.pumpAndSettle();
@@ -113,7 +113,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler().padding(EdgeInsetsGeometryMix.all(16.0)),
+          style: ProgressStyler().padding(EdgeInsetsGeometryMix.all(16.0)),
         ),
       );
       await tester.pumpAndSettle();
@@ -125,7 +125,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler().margin(EdgeInsetsGeometryMix.all(8.0)),
+          style: ProgressStyler().margin(EdgeInsetsGeometryMix.all(8.0)),
         ),
       );
       await tester.pumpAndSettle();
@@ -137,7 +137,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler()
+          style: ProgressStyler()
               .height(20.0)
               .width(300.0)
               .trackColor(Colors.grey.shade300)
@@ -221,7 +221,7 @@ void main() {
 
     testWidgets('handles progress with styleSpec directly', (tester) async {
       await tester.pumpRemixApp(
-        const RemixProgress(value: 0.5, styleSpec: RemixProgressSpec()),
+        const RemixProgress(value: 0.5, styleSpec: ProgressSpec()),
       );
       await tester.pumpAndSettle();
 
@@ -234,7 +234,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler().track(
+          style: ProgressStyler().track(
             BoxStyler(
               decoration: BoxDecorationMix(
                 color: Colors.grey,
@@ -253,7 +253,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler().indicator(
+          style: ProgressStyler().indicator(
             BoxStyler(
               decoration: BoxDecorationMix(
                 color: Colors.blue,
@@ -272,7 +272,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler().trackContainer(
+          style: ProgressStyler().trackContainer(
             BoxStyler(
               decoration: BoxDecorationMix(
                 border: BoxBorderMix.all(BorderSideMix(color: Colors.black)),
@@ -290,7 +290,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler().alignment(Alignment.center),
+          style: ProgressStyler().alignment(Alignment.center),
         ),
       );
       await tester.pumpAndSettle();
@@ -302,7 +302,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler().constraints(
+          style: ProgressStyler().constraints(
             BoxConstraintsMix(minWidth: 200.0, maxWidth: 400.0),
           ),
         ),
@@ -316,7 +316,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler().decoration(
+          style: ProgressStyler().decoration(
             BoxDecorationMix(
               color: Colors.white,
               borderRadius: BorderRadiusMix.circular(12.0),
@@ -333,7 +333,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler().foregroundDecoration(
+          style: ProgressStyler().foregroundDecoration(
             BoxDecorationMix(
               border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
             ),
@@ -349,7 +349,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler().transform(Matrix4.identity()),
+          style: ProgressStyler().transform(Matrix4.identity()),
         ),
       );
       await tester.pumpAndSettle();
@@ -361,10 +361,7 @@ void main() {
   group('RemixProgress Widget Modifiers', () {
     testWidgets('applies wrap modifier', (tester) async {
       await tester.pumpRemixApp(
-        RemixProgress(
-          value: 0.5,
-          style: RemixProgressStyler().wrap(.clipOval()),
-        ),
+        RemixProgress(value: 0.5, style: ProgressStyler().wrap(.clipOval())),
       );
       await tester.pumpAndSettle();
 

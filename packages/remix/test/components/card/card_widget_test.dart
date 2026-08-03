@@ -29,7 +29,7 @@ void main() {
       testWidgets('renders card with all props', (tester) async {
         const testChild = Text('Card Content');
         await tester.pumpRemixApp(
-          const RemixCard(child: testChild, style: RemixCardStyler.create()),
+          const RemixCard(child: testChild, style: CardStyler.create()),
         );
         await tester.pumpAndSettle();
 
@@ -81,7 +81,7 @@ void main() {
 
     group('Style Integration', () {
       testWidgets('applies custom style to container', (tester) async {
-        final customStyle = RemixCardStyler(
+        final customStyle = CardStyler(
           container: BoxStyler(
             padding: EdgeInsetsGeometryMix.all(20.0),
             decoration: BoxDecorationMix(

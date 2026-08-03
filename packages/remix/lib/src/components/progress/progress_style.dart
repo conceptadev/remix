@@ -4,20 +4,20 @@ part of 'progress.dart';
 ///
 /// Use this class to style the progress container, track, indicator, and track
 /// layout container.
-extension RemixProgressStylerRemixHelpers on RemixProgressStyler {
+extension RemixProgressStylerRemixHelpers on ProgressStyler {
   /// Sets track color
-  RemixProgressStyler trackColor(Color value) {
+  ProgressStyler trackColor(Color value) {
     return merge(
-      RemixProgressStyler(
+      ProgressStyler(
         track: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets fill color
-  RemixProgressStyler indicatorColor(Color value) {
+  ProgressStyler indicatorColor(Color value) {
     return merge(
-      RemixProgressStyler(
+      ProgressStyler(
         indicator: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );

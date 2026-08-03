@@ -4,9 +4,9 @@ part of 'tooltip.dart';
 ///
 /// Use this class to style tooltip container, label, wait duration, and show
 /// duration.
-extension RemixTooltipStylerRemixHelpers on RemixTooltipStyler {
+extension RemixTooltipStylerRemixHelpers on TooltipStyler {
   /// Sets tooltip container background color.
-  RemixTooltipStyler backgroundColor(Color value) => color(value);
+  TooltipStyler backgroundColor(Color value) => color(value);
 
   /// Creates a [RemixTooltip] widget with this style applied.
   RemixTooltip call({

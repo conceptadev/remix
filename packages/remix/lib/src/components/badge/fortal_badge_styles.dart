@@ -8,7 +8,7 @@ enum FortalBadgeVariant { solid, soft, surface, outline }
 
 /// Fortal-themed Badge with the Radix size, variant, and override contract.
 @MixWidget(target: RemixBadge.new)
-RemixBadgeStyler fortalBadgeStyle({
+BadgeStyler fortalBadgeStyle({
   FortalBadgeVariant variant = .soft,
   FortalBadgeSize size = .size1,
   bool highContrast = false,
@@ -64,9 +64,9 @@ RemixBadgeStyler fortalBadgeStyle({
   };
 }
 
-RemixBadgeStyler _fortalBadgeBaseStyler(FortalBadgeSize size) {
+BadgeStyler _fortalBadgeBaseStyler(FortalBadgeSize size) {
   final radius = _fortalBadgeRadius(size);
-  return RemixBadgeStyler(
+  return BadgeStyler(
     container: .padding(_fortalBadgePadding(size)),
     label: .style(
       _fortalBadgeText(size).mix(),

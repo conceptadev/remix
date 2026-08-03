@@ -40,8 +40,8 @@ class _SliderExampleState extends State<SliderExample> {
     );
   }
 
-  RemixSliderStyler get style {
-    return RemixSliderStyler()
+  SliderStyler get style {
+    return SliderStyler()
         .thumbSize(const Size(24, 24))
         .thumb(
           BoxStyler().shapeCircle().shadow(
@@ -56,7 +56,7 @@ class _SliderExampleState extends State<SliderExample> {
         .trackColor(Colors.grey.shade300)
         .rangeColor(Colors.black)
         .onDisabled(
-          RemixSliderStyler()
+          SliderStyler()
               .trackColor(Colors.grey.shade300)
               .rangeColor(Colors.blueGrey)
               .thumbColor(Colors.white.withValues(alpha: 0.6)),

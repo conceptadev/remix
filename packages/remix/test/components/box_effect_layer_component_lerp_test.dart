@@ -10,97 +10,97 @@ void main() {
     shadows: [RemixBoxShadow(color: Colors.blue)],
   );
 
-  final badgeBegin = RemixBadgeSpec(
+  final badgeBegin = BadgeSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: beginLayer,
       overContent: beginLayer,
     ),
   );
-  final badgeEnd = RemixBadgeSpec(
+  final badgeEnd = BadgeSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: endLayer,
       overContent: endLayer,
     ),
   );
-  final buttonBegin = RemixButtonSpec(
+  final buttonBegin = ButtonSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: beginLayer,
       overContent: beginLayer,
     ),
   );
-  final buttonEnd = RemixButtonSpec(
+  final buttonEnd = ButtonSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: endLayer,
       overContent: endLayer,
     ),
   );
-  final calloutBegin = RemixCalloutSpec(
+  final calloutBegin = CalloutSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: beginLayer,
       overContent: beginLayer,
     ),
   );
-  final calloutEnd = RemixCalloutSpec(
+  final calloutEnd = CalloutSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: endLayer,
       overContent: endLayer,
     ),
   );
-  final cardBegin = RemixCardSpec(
+  final cardBegin = CardSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: beginLayer,
       overContent: beginLayer,
     ),
   );
-  final cardEnd = RemixCardSpec(
+  final cardEnd = CardSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: endLayer,
       overContent: endLayer,
     ),
   );
-  final checkboxBegin = RemixCheckboxSpec(
+  final checkboxBegin = CheckboxSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: beginLayer,
       overContent: beginLayer,
     ),
   );
-  final checkboxEnd = RemixCheckboxSpec(
+  final checkboxEnd = CheckboxSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: endLayer,
       overContent: endLayer,
     ),
   );
-  final dialogBegin = RemixDialogSpec(
+  final dialogBegin = DialogSpec(
     containerEffects: RemixBoxEffectsSpec(behindContent: beginLayer),
   );
-  final dialogEnd = RemixDialogSpec(
+  final dialogEnd = DialogSpec(
     containerEffects: RemixBoxEffectsSpec(behindContent: endLayer),
   );
-  final iconButtonBegin = RemixIconButtonSpec(
+  final iconButtonBegin = IconButtonSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: beginLayer,
       overContent: beginLayer,
     ),
   );
-  final iconButtonEnd = RemixIconButtonSpec(
+  final iconButtonEnd = IconButtonSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: endLayer,
       overContent: endLayer,
     ),
   );
-  final menuBegin = RemixMenuSpec(
+  final menuBegin = MenuSpec(
     containerEffects: RemixBoxEffectsSpec(behindContent: beginLayer),
   );
-  final menuEnd = RemixMenuSpec(
+  final menuEnd = MenuSpec(
     containerEffects: RemixBoxEffectsSpec(behindContent: endLayer),
   );
-  final popoverBegin = RemixPopoverSpec(
+  final popoverBegin = PopoverSpec(
     containerEffects: RemixBoxEffectsSpec(behindContent: beginLayer),
   );
-  final popoverEnd = RemixPopoverSpec(
+  final popoverEnd = PopoverSpec(
     containerEffects: RemixBoxEffectsSpec(behindContent: endLayer),
   );
-  final progressBegin = RemixProgressSpec(
+  final progressBegin = ProgressSpec(
     trackEffects: RemixBoxEffectsSpec(
       behindContent: beginLayer,
       overContent: beginLayer,
@@ -110,7 +110,7 @@ void main() {
       overContent: beginLayer,
     ),
   );
-  final progressEnd = RemixProgressSpec(
+  final progressEnd = ProgressSpec(
     trackEffects: RemixBoxEffectsSpec(
       behindContent: endLayer,
       overContent: endLayer,
@@ -120,37 +120,37 @@ void main() {
       overContent: endLayer,
     ),
   );
-  final radioBegin = RemixRadioSpec(
+  final radioBegin = RadioSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: beginLayer,
       overContent: beginLayer,
     ),
   );
-  final radioEnd = RemixRadioSpec(
+  final radioEnd = RadioSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: endLayer,
       overContent: endLayer,
     ),
   );
-  final selectTriggerBegin = RemixSelectTriggerSpec(
+  final selectTriggerBegin = SelectTriggerSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: beginLayer,
       overContent: beginLayer,
     ),
   );
-  final selectTriggerEnd = RemixSelectTriggerSpec(
+  final selectTriggerEnd = SelectTriggerSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: endLayer,
       overContent: endLayer,
     ),
   );
-  final selectContentBegin = RemixSelectContentSpec(
+  final selectContentBegin = SelectContentSpec(
     containerEffects: RemixBoxEffectsSpec(behindContent: beginLayer),
   );
-  final selectContentEnd = RemixSelectContentSpec(
+  final selectContentEnd = SelectContentSpec(
     containerEffects: RemixBoxEffectsSpec(behindContent: endLayer),
   );
-  final sliderBegin = RemixSliderSpec(
+  final sliderBegin = SliderSpec(
     trackEffects: RemixBoxEffectsSpec(
       behindContent: beginLayer,
       overContent: beginLayer,
@@ -165,7 +165,7 @@ void main() {
     ),
     thumbFocusEffects: RemixBoxEffectsSpec(overContent: beginLayer),
   );
-  final sliderEnd = RemixSliderSpec(
+  final sliderEnd = SliderSpec(
     trackEffects: RemixBoxEffectsSpec(
       behindContent: endLayer,
       overContent: endLayer,
@@ -180,7 +180,7 @@ void main() {
     ),
     thumbFocusEffects: RemixBoxEffectsSpec(overContent: endLayer),
   );
-  final switchBegin = RemixSwitchSpec(
+  final switchBegin = SwitchSpec(
     trackEffects: RemixBoxEffectsSpec(
       behindContent: beginLayer,
       overContent: beginLayer,
@@ -190,7 +190,7 @@ void main() {
       overContent: beginLayer,
     ),
   );
-  final switchEnd = RemixSwitchSpec(
+  final switchEnd = SwitchSpec(
     trackEffects: RemixBoxEffectsSpec(
       behindContent: endLayer,
       overContent: endLayer,
@@ -200,13 +200,13 @@ void main() {
       overContent: endLayer,
     ),
   );
-  final textFieldBegin = RemixTextFieldSpec(
+  final textFieldBegin = TextFieldSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: beginLayer,
       overContent: beginLayer,
     ),
   );
-  final textFieldEnd = RemixTextFieldSpec(
+  final textFieldEnd = TextFieldSpec(
     containerEffects: RemixBoxEffectsSpec(
       behindContent: endLayer,
       overContent: endLayer,

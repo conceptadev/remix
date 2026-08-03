@@ -18,7 +18,7 @@ void main() {
       };
 
       for (final entry in expectedSizes.entries) {
-        late RemixRadioSpec spec;
+        late RadioSpec spec;
         await tester.pumpWidget(
           FortalScope(
             child: Builder(

@@ -103,7 +103,7 @@ The overlay is clamped to the available screen bounds.
 
 ## Styling
 
-`RemixPopoverStyler` styles the overlay container. The trigger keeps its own
+`PopoverStyler` styles the overlay container. The trigger keeps its own
 visual styling.
 
 ```dart
@@ -111,7 +111,7 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
 final styledPopover = RemixPopover(
-  style: RemixPopoverStyler()
+  style: PopoverStyler()
       .paddingAll(16)
       .constraints(BoxConstraintsMix(maxWidth: 320))
       .backgroundColor(Colors.white)
@@ -154,8 +154,8 @@ RemixPopover remixPopoverConstructor({
   MenuController? controller,
   String? semanticLabel,
   bool excludeSemantics = false,
-  RemixPopoverStyler style = const RemixPopoverStyler.create(),
-  RemixPopoverSpec? styleSpec,
+  PopoverStyler style = const PopoverStyler.create(),
+  PopoverSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 

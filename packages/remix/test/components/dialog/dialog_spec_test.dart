@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixDialogSpec', () {
+  group('DialogSpec', () {
     test('creates default child specs', () {
-      const spec = RemixDialogSpec();
+      const spec = DialogSpec();
 
       expect(spec.container, isA<StyleSpec<BoxSpec>>());
       expect(spec.title, isA<StyleSpec<TextSpec>>());
@@ -19,7 +19,7 @@ void main() {
       final description = StyleSpec(spec: TextSpec());
       final actions = StyleSpec(spec: FlexBoxSpec());
 
-      final spec = RemixDialogSpec(
+      final spec = DialogSpec(
         container: container,
         title: title,
         description: description,
@@ -33,7 +33,7 @@ void main() {
     });
 
     test('copyWith updates selected values and preserves the rest', () {
-      const original = RemixDialogSpec();
+      const original = DialogSpec();
       final title = StyleSpec(spec: TextSpec());
 
       final updated = original.copyWith(title: title);
@@ -46,12 +46,12 @@ void main() {
     });
 
     test('lerp returns a value object with all dialog fields', () {
-      const first = RemixDialogSpec();
-      const second = RemixDialogSpec();
+      const first = DialogSpec();
+      const second = DialogSpec();
 
       final result = first.lerp(second, 0.5);
 
-      expect(result, isA<RemixDialogSpec>());
+      expect(result, isA<DialogSpec>());
       expect(result.props, hasLength(5));
       expect(
         result.props,
@@ -65,8 +65,8 @@ void main() {
     });
 
     test('supports value equality and diagnostics', () {
-      const first = RemixDialogSpec();
-      const second = RemixDialogSpec();
+      const first = DialogSpec();
+      const second = DialogSpec();
       final properties = DiagnosticPropertiesBuilder();
 
       first.debugFillProperties(properties);

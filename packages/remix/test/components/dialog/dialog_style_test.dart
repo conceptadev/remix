@@ -5,12 +5,12 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixDialogStyler', () {
+  group('DialogStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        const style = RemixDialogStyler.create();
+        const style = DialogStyler.create();
         expect(style, isNotNull);
-        expect(style, isA<RemixDialogStyler>());
+        expect(style, isA<DialogStyler>());
       });
 
       test('create constructor with all parameters', () {
@@ -19,7 +19,7 @@ void main() {
         final description = Prop.maybeMix(TextStyler());
         final actions = Prop.maybeMix(FlexBoxStyler());
 
-        final style = RemixDialogStyler.create(
+        final style = DialogStyler.create(
           container: container,
           title: title,
           description: description,
@@ -27,11 +27,11 @@ void main() {
         );
 
         expect(style, isNotNull);
-        expect(style, isA<RemixDialogStyler>());
+        expect(style, isA<DialogStyler>());
       });
 
       test('constructor with styler parameters', () {
-        final style = RemixDialogStyler(
+        final style = DialogStyler(
           container: BoxStyler(padding: EdgeInsetsGeometryMix.all(24.0)),
           title: TextStyler(style: TextStyleMix(color: Colors.blue)),
           description: TextStyler(style: TextStyleMix(color: Colors.grey)),
@@ -39,14 +39,14 @@ void main() {
         );
 
         expect(style, isNotNull);
-        expect(style, isA<RemixDialogStyler>());
+        expect(style, isA<DialogStyler>());
       });
     });
 
     group('Style Methods', () {
       styleMethodTest(
         'title sets title text styler',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) =>
             style.title(TextStyler(style: TextStyleMix(color: Colors.red))),
         expect: (style) {
@@ -61,7 +61,7 @@ void main() {
 
       styleMethodTest(
         'description sets description text styler',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) => style.description(
           TextStyler(style: TextStyleMix(color: Colors.green)),
         ),
@@ -79,7 +79,7 @@ void main() {
 
       styleMethodTest(
         'actions sets actions flex box styler',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) => style.actions(FlexBoxStyler(spacing: 12.0)),
         expect: (style) {
           expect(
@@ -91,31 +91,28 @@ void main() {
 
       styleMethodTest(
         'alignment sets container alignment',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) => style.alignment(Alignment.centerRight),
         expect: (style) {
-          expect(
-            style,
-            equals(RemixDialogStyler.alignment(Alignment.centerRight)),
-          );
+          expect(style, equals(DialogStyler.alignment(Alignment.centerRight)));
         },
       );
 
       styleMethodTest(
         'padding sets container padding',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(24.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixDialogStyler.padding(EdgeInsetsGeometryMix.all(24.0))),
+            equals(DialogStyler.padding(EdgeInsetsGeometryMix.all(24.0))),
           );
         },
       );
 
       styleMethodTest(
         'backgroundColor sets container background color',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) => style.backgroundColor(Colors.white),
         expect: (style) {
           expect(
@@ -131,25 +128,23 @@ void main() {
 
       styleMethodTest(
         'size sets container size constraints',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) => style.size(400.0, 300.0),
         expect: (style) {
-          expect(style, equals(RemixDialogStyler.size(400.0, 300.0)));
+          expect(style, equals(DialogStyler.size(400.0, 300.0)));
         },
       );
 
       styleMethodTest(
         'borderRadius sets container border radius',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) =>
             style.borderRadius(BorderRadiusGeometryMix.circular(16.0)),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixDialogStyler.borderRadius(
-                BorderRadiusGeometryMix.circular(16.0),
-              ),
+              DialogStyler.borderRadius(BorderRadiusGeometryMix.circular(16.0)),
             ),
           );
         },
@@ -157,7 +152,7 @@ void main() {
 
       styleMethodTest(
         'constraints sets container constraints',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 300.0, minHeight: 200.0),
         ),
@@ -165,7 +160,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixDialogStyler.constraints(
+              DialogStyler.constraints(
                 BoxConstraintsMix(minWidth: 300.0, minHeight: 200.0),
               ),
             ),
@@ -175,7 +170,7 @@ void main() {
 
       styleMethodTest(
         'decoration sets container decoration',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.blue,
@@ -186,7 +181,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixDialogStyler.decoration(
+              DialogStyler.decoration(
                 BoxDecorationMix(
                   color: Colors.blue,
                   borderRadius: BorderRadiusGeometryMix.circular(12.0),
@@ -199,19 +194,19 @@ void main() {
 
       styleMethodTest(
         'margin sets container margin',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixDialogStyler.margin(EdgeInsetsGeometryMix.all(16.0))),
+            equals(DialogStyler.margin(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
 
       styleMethodTest(
         'foregroundDecoration sets foreground decoration',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(color: Colors.yellow.withValues(alpha: 0.3)),
         ),
@@ -219,7 +214,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixDialogStyler.foregroundDecoration(
+              DialogStyler.foregroundDecoration(
                 BoxDecorationMix(color: Colors.yellow.withValues(alpha: 0.3)),
               ),
             ),
@@ -229,19 +224,16 @@ void main() {
 
       styleMethodTest(
         'transform sets container transform',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) => style.transform(Matrix4.rotationZ(0.1)),
         expect: (style) {
-          expect(
-            style,
-            equals(RemixDialogStyler.transform(Matrix4.rotationZ(0.1))),
-          );
+          expect(style, equals(DialogStyler.transform(Matrix4.rotationZ(0.1))));
         },
       );
 
       styleMethodTest(
         'variants sets variant styles',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) => style.variants([]),
         expect: (style) {
           expect(style.$variants, equals([]));
@@ -250,7 +242,7 @@ void main() {
 
       styleMethodTest(
         'wrap sets widget modifier config',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) => style.wrap(WidgetModifierConfig()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig()));
@@ -259,7 +251,7 @@ void main() {
 
       styleMethodTest(
         'animate sets animation config',
-        initial: RemixDialogStyler(),
+        initial: DialogStyler(),
         modify: (style) =>
             style.animate(AnimationConfig.linear(Duration(milliseconds: 300))),
         expect: (style) {
@@ -273,14 +265,14 @@ void main() {
 
     group('Core Methods', () {
       testWidgets('resolve method returns StyleSpec', (tester) async {
-        const style = RemixDialogStyler.create();
+        const style = DialogStyler.create();
         await tester.pumpWidget(
           MaterialApp(
             home: Builder(
               builder: (context) {
                 final spec = style.resolve(context);
-                expect(spec, isA<StyleSpec<RemixDialogSpec>>());
-                expect(spec.spec, isA<RemixDialogSpec>());
+                expect(spec, isA<StyleSpec<DialogSpec>>());
+                expect(spec.spec, isA<DialogSpec>());
                 return Container();
               },
             ),
@@ -289,23 +281,23 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        const originalStyle = RemixDialogStyler.create();
+        const originalStyle = DialogStyler.create();
         final mergedStyle = originalStyle.merge(null);
         expect(mergedStyle, equals(originalStyle));
       });
 
       test('merge with other style combines properties', () {
-        const style1 = RemixDialogStyler.create();
-        final style2 = RemixDialogStyler();
+        const style1 = DialogStyler.create();
+        final style2 = DialogStyler();
 
         final merged = style1.merge(style2);
         expect(merged, isNot(same(style1)));
         expect(merged, isNot(same(style2)));
-        expect(merged, isA<RemixDialogStyler>());
+        expect(merged, isA<DialogStyler>());
       });
 
       test('call creates RemixDialog with this style', () {
-        final style = RemixDialogStyler().backgroundColor(Colors.white);
+        final style = DialogStyler().backgroundColor(Colors.white);
 
         final dialog = style.call(
           title: 'Confirm',
@@ -327,7 +319,7 @@ void main() {
       });
 
       test('props list contains all properties', () {
-        const style = RemixDialogStyler.create();
+        const style = DialogStyler.create();
         expect(style.props, hasLength(8));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$title));
@@ -341,21 +333,21 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        const style1 = RemixDialogStyler.create();
-        const style2 = RemixDialogStyler.create();
+        const style1 = DialogStyler.create();
+        const style2 = DialogStyler.create();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        const style1 = RemixDialogStyler.create();
-        final style2 = RemixDialogStyler();
+        const style1 = DialogStyler.create();
+        final style2 = DialogStyler();
         expect(style1, equals(style2));
       });
 
       test('styles with same properties are equal', () {
-        final style1 = RemixDialogStyler();
-        final style2 = RemixDialogStyler();
+        final style1 = DialogStyler();
+        final style2 = DialogStyler();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });

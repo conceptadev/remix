@@ -21,7 +21,7 @@ class RemixPopover extends StatelessWidget {
     this.controller,
     this.semanticLabel,
     this.excludeSemantics = false,
-    this.style = const RemixPopoverStyler.create(),
+    this.style = const PopoverStyler.create(),
     this.styleSpec,
   });
 
@@ -70,16 +70,16 @@ class RemixPopover extends StatelessWidget {
   final bool excludeSemantics;
 
   /// Style configuration for the overlay container.
-  final RemixPopoverStyler style;
+  final PopoverStyler style;
 
   /// Optional resolved style that bypasses [style].
-  final RemixPopoverSpec? styleSpec;
+  final PopoverSpec? styleSpec;
 
-  static final styleFrom = RemixPopoverStyler.new;
+  static final styleFrom = PopoverStyler.new;
 
   @override
   Widget build(BuildContext context) {
-    return RemixStyleSpecBuilder<RemixPopoverSpec>(
+    return RemixStyleSpecBuilder<PopoverSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {

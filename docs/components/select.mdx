@@ -61,21 +61,21 @@ class _SelectExampleState extends State<SelectExample> {
     );
   }
 
-  RemixSelectMenuItemStyler get itemStyle {
-    return RemixSelectMenuItemStyler()
+  SelectMenuItemStyler get itemStyle {
+    return SelectMenuItemStyler()
         .iconSize(16)
         .paddingAll(8)
         .borderRadiusAll(const Radius.circular(8))
-        .onHovered(RemixSelectMenuItemStyler().color(Colors.blueGrey.shade50))
+        .onHovered(SelectMenuItemStyler().color(Colors.blueGrey.shade50))
         .onDisabled(
-          RemixSelectMenuItemStyler().labelColor(Colors.grey.shade300),
+          SelectMenuItemStyler().labelColor(Colors.grey.shade300),
         );
   }
 
-  RemixSelectStyler get style {
-    return RemixSelectStyler()
+  SelectStyler get style {
+    return SelectStyler()
         .trigger(
-          RemixSelectTriggerStyler()
+          SelectTriggerStyler()
               .color(Colors.transparent)
               .borderAll(color: const Color(0xFF898988))
               .paddingY(10)
@@ -178,8 +178,8 @@ RemixSelect<T> remixSelectConstructor<T>({
   String? semanticLabel,
   bool closeOnSelect = true,
   FocusNode? focusNode,
-  RemixSelectStyler style = const RemixSelectStyler.create(),
-  RemixSelectSpec? styleSpec,
+  SelectStyler style = const SelectStyler.create(),
+  SelectSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -232,11 +232,11 @@ Optional. Whether to automatically close the dropdown when an item is selected.
 
 Optional. Optional focus node to control focus behavior.
 
-#### `style` → `RemixSelectStyler`
+#### `style` → `SelectStyler`
 
 Optional. The style configuration for the select.
 
-#### `styleSpec` → `RemixSelectSpec?`
+#### `styleSpec` → `SelectSpec?`
 
 Optional. A raw resolved style spec that bypasses fluent style resolution.
 
@@ -247,11 +247,11 @@ Optional. A raw resolved style spec that bypasses fluent style resolution.
 
 Configures the select menu overlay container.
 
-#### `trigger(RemixSelectTriggerStyler value)`
+#### `trigger(SelectTriggerStyler value)`
 
 Configures the select trigger style.
 
-#### `item(RemixSelectMenuItemStyler value)`
+#### `item(SelectMenuItemStyler value)`
 
 Configures the default style for every option. A `RemixSelectItem.style`
 merges on top as an optional row-level override.
@@ -260,7 +260,7 @@ merges on top as an optional row-level override.
 
 Configures implicit animation for style transitions.
 
-#### `variants(List<VariantStyle<RemixSelectSpec>> value)`
+#### `variants(List<VariantStyle<SelectSpec>> value)`
 
 Sets style variants.
 
@@ -334,7 +334,7 @@ Configures trigger flex layout properties.
 
 Configures implicit animation for trigger style transitions.
 
-#### `variants(List<VariantStyle<RemixSelectTriggerSpec>> value)`
+#### `variants(List<VariantStyle<SelectTriggerSpec>> value)`
 
 Sets trigger style variants.
 
@@ -488,7 +488,7 @@ Configures menu item flex layout properties.
 
 Configures implicit animation for menu item style transitions.
 
-#### `variants(List<VariantStyle<RemixSelectMenuItemSpec>> value)`
+#### `variants(List<VariantStyle<SelectMenuItemSpec>> value)`
 
 Sets menu item style variants.
 

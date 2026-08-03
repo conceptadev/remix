@@ -5,13 +5,13 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixSliderStyler', () {
+  group('SliderStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        final style = RemixSliderStyler();
+        final style = SliderStyler();
 
         expect(style, isNotNull);
-        expect(style, isA<RemixSliderStyler>());
+        expect(style, isA<SliderStyler>());
       });
 
       test('create constructor with all parameters', () {
@@ -20,9 +20,9 @@ void main() {
         final trackWidth = Prop.value(8.0);
         final rangeColor = Prop.value(Colors.red);
         final rangeWidth = Prop.value(4.0);
-        final variants = <VariantStyle<RemixSliderSpec>>[];
+        final variants = <VariantStyle<SliderSpec>>[];
 
-        final style = RemixSliderStyler.create(
+        final style = SliderStyler.create(
           thumb: thumb,
           trackColor: trackColor,
           trackWidth: trackWidth,
@@ -43,7 +43,7 @@ void main() {
       test('constructor with styler parameters', () {
         final thumbStyler = BoxStyler();
 
-        final style = RemixSliderStyler(
+        final style = SliderStyler(
           thumb: thumbStyler,
           trackColor: Colors.blue,
           trackWidth: 10.0,
@@ -63,7 +63,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'thumbColor',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.thumbColor(Colors.blue),
         expect: (style) {
           expect(
@@ -79,31 +79,31 @@ void main() {
 
       styleMethodTest(
         'trackColor',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.trackColor(const Color(0xFF0000FF)),
         expect: (style) {
           expect(
             style,
-            equals(RemixSliderStyler.trackColor(const Color(0xFF0000FF))),
+            equals(SliderStyler.trackColor(const Color(0xFF0000FF))),
           );
         },
       );
 
       styleMethodTest(
         'rangeColor',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.rangeColor(const Color(0xFFFF0000)),
         expect: (style) {
           expect(
             style,
-            equals(RemixSliderStyler.rangeColor(const Color(0xFFFF0000))),
+            equals(SliderStyler.rangeColor(const Color(0xFFFF0000))),
           );
         },
       );
 
       styleMethodTest(
         'thumb',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.thumb(
           BoxStyler(decoration: BoxDecorationMix(color: Colors.green)),
         ),
@@ -111,7 +111,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixSliderStyler.thumb(
+              SliderStyler.thumb(
                 BoxStyler(decoration: BoxDecorationMix(color: Colors.green)),
               ),
             ),
@@ -121,7 +121,7 @@ void main() {
 
       styleMethodTest(
         'thumbSize',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.thumbSize(const Size(20.0, 20.0)),
         expect: (style) {
           expect(
@@ -139,16 +139,16 @@ void main() {
 
       styleMethodTest(
         'alignment',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
-          expect(style, equals(RemixSliderStyler.alignment(Alignment.center)));
+          expect(style, equals(SliderStyler.alignment(Alignment.center)));
         },
       );
 
       styleMethodTest(
         'thickness',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.thickness(12.0),
         expect: (style) {
           expect(style.$trackWidth, equals(Prop.value(12.0)));
@@ -158,7 +158,7 @@ void main() {
 
       styleMethodTest(
         'trackThickness',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.trackThickness(10.0),
         expect: (style) {
           expect(style.$trackWidth, equals(Prop.value(10.0)));
@@ -167,7 +167,7 @@ void main() {
 
       styleMethodTest(
         'rangeThickness',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.rangeThickness(8.0),
         expect: (style) {
           expect(style.$rangeWidth, equals(Prop.value(8.0)));
@@ -176,51 +176,49 @@ void main() {
 
       styleMethodTest(
         'padding',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixSliderStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
+            equals(SliderStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
 
       styleMethodTest(
         'color',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.color(Colors.purple),
         expect: (style) {
-          expect(style, equals(RemixSliderStyler.color(Colors.purple)));
+          expect(style, equals(SliderStyler.color(Colors.purple)));
         },
       );
 
       styleMethodTest(
         'size',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.size(24.0, 24.0),
         expect: (style) {
-          expect(style, equals(RemixSliderStyler.size(24.0, 24.0)));
+          expect(style, equals(SliderStyler.size(24.0, 24.0)));
         },
       );
 
       styleMethodTest(
         'borderRadius',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.borderRadius(BorderRadiusMix.circular(12.0)),
         expect: (style) {
           expect(
             style,
-            equals(
-              RemixSliderStyler.borderRadius(BorderRadiusMix.circular(12.0)),
-            ),
+            equals(SliderStyler.borderRadius(BorderRadiusMix.circular(12.0))),
           );
         },
       );
 
       styleMethodTest(
         'constraints',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 20.0, minHeight: 20.0),
         ),
@@ -228,7 +226,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixSliderStyler.constraints(
+              SliderStyler.constraints(
                 BoxConstraintsMix(minWidth: 20.0, minHeight: 20.0),
               ),
             ),
@@ -238,7 +236,7 @@ void main() {
 
       styleMethodTest(
         'decoration',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.blue,
@@ -249,7 +247,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixSliderStyler.decoration(
+              SliderStyler.decoration(
                 BoxDecorationMix(
                   color: Colors.blue,
                   borderRadius: BorderRadiusMix.circular(8.0),
@@ -262,19 +260,19 @@ void main() {
 
       styleMethodTest(
         'margin',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixSliderStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
+            equals(SliderStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
 
       styleMethodTest(
         'foregroundDecoration',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
@@ -284,7 +282,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixSliderStyler.foregroundDecoration(
+              SliderStyler.foregroundDecoration(
                 BoxDecorationMix(
                   border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
@@ -296,14 +294,14 @@ void main() {
 
       styleMethodTest(
         'transform',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) =>
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixSliderStyler.transform(
+              SliderStyler.transform(
                 Matrix4.identity(),
                 alignment: Alignment.topLeft,
               ),
@@ -314,16 +312,16 @@ void main() {
 
       styleMethodTest(
         'variants',
-        initial: RemixSliderStyler(),
-        modify: (style) => style.variants(<VariantStyle<RemixSliderSpec>>[]),
+        initial: SliderStyler(),
+        modify: (style) => style.variants(<VariantStyle<SliderSpec>>[]),
         expect: (style) {
-          expect(style.$variants, equals(<VariantStyle<RemixSliderSpec>>[]));
+          expect(style.$variants, equals(<VariantStyle<SliderSpec>>[]));
         },
       );
 
       styleMethodTest(
         'wrap',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
@@ -332,7 +330,7 @@ void main() {
 
       styleMethodTest(
         'animate',
-        initial: RemixSliderStyler(),
+        initial: SliderStyler(),
         modify: (style) =>
             style.animate(AnimationConfig.linear(const Duration(seconds: 1))),
         expect: (style) {
@@ -348,7 +346,7 @@ void main() {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
       ) async {
-        final style = RemixSliderStyler();
+        final style = SliderStyler();
 
         await tester.pumpWidget(
           MaterialApp(
@@ -356,8 +354,8 @@ void main() {
               builder: (context) {
                 final spec = style.resolve(context);
 
-                expect(spec, isA<StyleSpec<RemixSliderSpec>>());
-                expect(spec.spec, isA<RemixSliderSpec>());
+                expect(spec, isA<StyleSpec<SliderSpec>>());
+                expect(spec.spec, isA<SliderSpec>());
                 expect(spec.spec.thumb, isA<StyleSpec<BoxSpec>?>());
                 expect(spec.spec.trackColor, isA<Color?>());
                 expect(spec.spec.trackWidth, isA<double?>());
@@ -372,7 +370,7 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        final originalStyle = RemixSliderStyler();
+        final originalStyle = SliderStyler();
 
         final mergedStyle = originalStyle.merge(null);
 
@@ -384,7 +382,7 @@ void main() {
       testWidgets('call method creates RemixSlider with all parameters', (
         tester,
       ) async {
-        final style = RemixSliderStyler().thumbColor(Colors.blue);
+        final style = SliderStyler().thumbColor(Colors.blue);
         final focusNode = FocusNode();
 
         final slider = style.call(
@@ -418,7 +416,7 @@ void main() {
       testWidgets('call method creates RemixSlider with minimal parameters', (
         tester,
       ) async {
-        final style = RemixSliderStyler();
+        final style = SliderStyler();
 
         final slider = style.call(value: 0.3, onChanged: (v) {});
 
@@ -433,16 +431,16 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        final style1 = RemixSliderStyler();
-        final style2 = RemixSliderStyler();
+        final style1 = SliderStyler();
+        final style2 = SliderStyler();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixSliderStyler().trackColor(Colors.blue);
-        final style2 = RemixSliderStyler().trackColor(Colors.red);
+        final style1 = SliderStyler().trackColor(Colors.blue);
+        final style2 = SliderStyler().trackColor(Colors.red);
 
         expect(style1, isNot(equals(style2)));
       });

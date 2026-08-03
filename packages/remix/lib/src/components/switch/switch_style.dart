@@ -4,18 +4,18 @@ part of 'switch.dart';
 ///
 /// Use this class to style the switch track and thumb, including selected,
 /// focused, disabled, hovered, and pressed state variants.
-extension RemixSwitchStylerRemixHelpers on RemixSwitchStyler {
+extension RemixSwitchStylerRemixHelpers on SwitchStyler {
   /// Sets thumb color
-  RemixSwitchStyler thumbColor(Color value) {
+  SwitchStyler thumbColor(Color value) {
     return merge(
-      RemixSwitchStyler(
+      SwitchStyler(
         thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets the track/rail background color.
-  RemixSwitchStyler trackColor(Color value) {
+  SwitchStyler trackColor(Color value) {
     return color(value);
   }
 
@@ -23,7 +23,7 @@ extension RemixSwitchStylerRemixHelpers on RemixSwitchStyler {
   ///
   /// Example:
   /// ```dart
-  /// final toggle = RemixSwitchStyler()
+  /// final toggle = SwitchStyler()
   ///   .thumbColor(Colors.white)
   ///   .trackColor(Colors.blue);
   ///

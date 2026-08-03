@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixCheckboxSpec', () {
+  group('CheckboxSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        const spec = RemixCheckboxSpec();
+        const spec = CheckboxSpec();
 
         expect(spec.container, isA<StyleSpec<BoxSpec>>());
         expect(spec.indicator, isA<StyleSpec<IconSpec>>());
@@ -18,7 +18,7 @@ void main() {
         final containerSpec = StyleSpec(spec: BoxSpec());
         final indicatorSpec = StyleSpec(spec: IconSpec());
 
-        final spec = RemixCheckboxSpec(
+        final spec = CheckboxSpec(
           container: containerSpec,
           indicator: indicatorSpec,
         );
@@ -30,7 +30,7 @@ void main() {
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
-        const originalSpec = RemixCheckboxSpec();
+        const originalSpec = CheckboxSpec();
         final newContainer = StyleSpec(spec: BoxSpec());
         final newIndicator = StyleSpec(spec: IconSpec());
 
@@ -45,7 +45,7 @@ void main() {
       });
 
       test('returns new instance with single updated property', () {
-        const originalSpec = RemixCheckboxSpec();
+        const originalSpec = CheckboxSpec();
         final newContainer = StyleSpec(spec: BoxSpec());
 
         final updatedSpec = originalSpec.copyWith(container: newContainer);
@@ -56,7 +56,7 @@ void main() {
       });
 
       test('preserves immutability - original spec unchanged', () {
-        const originalSpec = RemixCheckboxSpec();
+        const originalSpec = CheckboxSpec();
         final originalContainer = originalSpec.container;
         final originalIndicator = originalSpec.indicator;
         final newContainer = StyleSpec(spec: BoxSpec());
@@ -76,7 +76,7 @@ void main() {
       });
 
       test('copyWith with null parameters preserves original values', () {
-        const originalSpec = RemixCheckboxSpec();
+        const originalSpec = CheckboxSpec();
         final originalContainer = originalSpec.container;
         final originalIndicator = originalSpec.indicator;
 
@@ -94,7 +94,7 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        const spec = RemixCheckboxSpec();
+        const spec = CheckboxSpec();
         const other = null;
 
         final result = spec.lerp(other, 0.5);
@@ -102,11 +102,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = RemixCheckboxSpec(
+        final spec1 = CheckboxSpec(
           container: StyleSpec(spec: BoxSpec()),
           indicator: StyleSpec(spec: IconSpec()),
         );
-        final spec2 = RemixCheckboxSpec(
+        final spec2 = CheckboxSpec(
           container: StyleSpec(spec: BoxSpec()),
           indicator: StyleSpec(spec: IconSpec()),
         );
@@ -119,11 +119,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = RemixCheckboxSpec(
+        final spec1 = CheckboxSpec(
           container: StyleSpec(spec: BoxSpec()),
           indicator: StyleSpec(spec: IconSpec()),
         );
-        final spec2 = RemixCheckboxSpec(
+        final spec2 = CheckboxSpec(
           container: StyleSpec(spec: BoxSpec()),
           indicator: StyleSpec(spec: IconSpec()),
         );
@@ -136,11 +136,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.5', () {
-        final spec1 = RemixCheckboxSpec(
+        final spec1 = CheckboxSpec(
           container: StyleSpec(spec: BoxSpec()),
           indicator: StyleSpec(spec: IconSpec()),
         );
-        final spec2 = RemixCheckboxSpec(
+        final spec2 = CheckboxSpec(
           container: StyleSpec(spec: BoxSpec()),
           indicator: StyleSpec(spec: IconSpec()),
         );
@@ -149,15 +149,15 @@ void main() {
 
         expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
-        expect(result, isA<RemixCheckboxSpec>());
+        expect(result, isA<CheckboxSpec>());
       });
 
       test('lerp with different t values', () {
-        final spec1 = RemixCheckboxSpec(
+        final spec1 = CheckboxSpec(
           container: StyleSpec(spec: BoxSpec()),
           indicator: StyleSpec(spec: IconSpec()),
         );
-        final spec2 = RemixCheckboxSpec(
+        final spec2 = CheckboxSpec(
           container: StyleSpec(spec: BoxSpec()),
           indicator: StyleSpec(spec: IconSpec()),
         );
@@ -166,23 +166,23 @@ void main() {
         final result2 = spec1.lerp(spec2, 0.75);
 
         expect(result1, isNot(same(result2)));
-        expect(result1, isA<RemixCheckboxSpec>());
-        expect(result2, isA<RemixCheckboxSpec>());
+        expect(result1, isA<CheckboxSpec>());
+        expect(result2, isA<CheckboxSpec>());
       });
     });
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixCheckboxSpec();
-        const spec2 = RemixCheckboxSpec();
+        const spec1 = CheckboxSpec();
+        const spec2 = CheckboxSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('two specs with different properties are not equal', () {
-        const spec1 = RemixCheckboxSpec();
-        final spec2 = RemixCheckboxSpec(
+        const spec1 = CheckboxSpec();
+        final spec2 = CheckboxSpec(
           container: StyleSpec(spec: BoxSpec()),
           indicator: StyleSpec(spec: IconSpec()),
         );
@@ -195,11 +195,11 @@ void main() {
         final containerSpec = StyleSpec(spec: BoxSpec());
         final indicatorSpec = StyleSpec(spec: IconSpec());
 
-        final spec1 = RemixCheckboxSpec(
+        final spec1 = CheckboxSpec(
           container: containerSpec,
           indicator: indicatorSpec,
         );
-        final spec2 = RemixCheckboxSpec(
+        final spec2 = CheckboxSpec(
           container: containerSpec,
           indicator: indicatorSpec,
         );
@@ -209,7 +209,7 @@ void main() {
       });
 
       test('props list contains all properties', () {
-        const spec = RemixCheckboxSpec();
+        const spec = CheckboxSpec();
 
         expect(spec.props, hasLength(3));
         expect(spec.props, contains(spec.container));
@@ -220,7 +220,7 @@ void main() {
         final containerSpec = StyleSpec(spec: BoxSpec());
         final indicatorSpec = StyleSpec(spec: IconSpec());
 
-        final spec = RemixCheckboxSpec(
+        final spec = CheckboxSpec(
           container: containerSpec,
           indicator: indicatorSpec,
         );
@@ -233,7 +233,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = RemixCheckboxSpec();
+        const spec = CheckboxSpec();
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -245,7 +245,7 @@ void main() {
         final containerSpec = StyleSpec(spec: BoxSpec());
         final indicatorSpec = StyleSpec(spec: IconSpec());
 
-        final spec = RemixCheckboxSpec(
+        final spec = CheckboxSpec(
           container: containerSpec,
           indicator: indicatorSpec,
         );
@@ -257,14 +257,14 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        const spec = RemixCheckboxSpec();
+        const spec = CheckboxSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
       });
 
       test('toString includes all properties', () {
-        const spec = RemixCheckboxSpec();
+        const spec = CheckboxSpec();
         final stringRepresentation = spec.toString();
 
         expect(stringRepresentation, contains('container'));
@@ -274,7 +274,7 @@ void main() {
 
     group('Edge Cases and Error Handling', () {
       test('copyWith handles null parameters correctly', () {
-        const spec = RemixCheckboxSpec();
+        const spec = CheckboxSpec();
         final originalContainer = spec.container;
         final originalIndicator = spec.indicator;
 
@@ -285,22 +285,22 @@ void main() {
       });
 
       test('lerp handles edge t values', () {
-        final spec1 = RemixCheckboxSpec(
+        final spec1 = CheckboxSpec(
           container: StyleSpec(spec: BoxSpec()),
           indicator: StyleSpec(spec: IconSpec()),
         );
-        final spec2 = RemixCheckboxSpec(
+        final spec2 = CheckboxSpec(
           container: StyleSpec(spec: BoxSpec()),
           indicator: StyleSpec(spec: IconSpec()),
         );
 
         // Test t=0.0
         final result0 = spec1.lerp(spec2, 0.0);
-        expect(result0, isA<RemixCheckboxSpec>());
+        expect(result0, isA<CheckboxSpec>());
 
         // Test t=1.0
         final result1 = spec1.lerp(spec2, 1.0);
-        expect(result1, isA<RemixCheckboxSpec>());
+        expect(result1, isA<CheckboxSpec>());
 
         // Test t=0.0 and t=1.0 should be different
         expect(result0, isNot(same(result1)));
@@ -310,7 +310,7 @@ void main() {
         final complexContainerSpec = StyleSpec(spec: BoxSpec());
         final complexIndicatorSpec = StyleSpec(spec: IconSpec());
 
-        final spec = RemixCheckboxSpec(
+        final spec = CheckboxSpec(
           container: complexContainerSpec,
           indicator: complexIndicatorSpec,
         );

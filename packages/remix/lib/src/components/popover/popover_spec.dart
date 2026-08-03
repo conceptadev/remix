@@ -2,7 +2,7 @@ part of 'popover.dart';
 
 /// Resolved visual properties for a [RemixPopover] overlay.
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixPopoverSpec with _$RemixPopoverSpec {
+class PopoverSpec with _$PopoverSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
@@ -10,13 +10,13 @@ class RemixPopoverSpec with _$RemixPopoverSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
-  const RemixPopoverSpec({StyleSpec<BoxSpec>? container, this.containerEffects})
+  const PopoverSpec({StyleSpec<BoxSpec>? container, this.containerEffects})
     : container = container ?? const StyleSpec(spec: BoxSpec());
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixPopoverSpec lerp(RemixPopoverSpec? other, double t) {
+  PopoverSpec lerp(PopoverSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
@@ -28,3 +28,9 @@ class RemixPopoverSpec with _$RemixPopoverSpec {
     );
   }
 }
+
+/// Backward-compatible name for [PopoverSpec].
+///
+/// The generated style API is based on [PopoverSpec], so resolved values use
+/// `PopoverSpec` as their runtime type.
+typedef RemixPopoverSpec = PopoverSpec;

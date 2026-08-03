@@ -6,7 +6,7 @@ part of 'spinner.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
+mixin _$SpinnerSpec implements Spec<SpinnerSpec>, Diagnosticable {
   double? get size;
   double? get strokeWidth;
   Color? get indicatorColor;
@@ -18,10 +18,10 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
   Duration? get duration;
 
   @override
-  Type get type => RemixSpinnerSpec;
+  Type get type => SpinnerSpec;
 
   @override
-  RemixSpinnerSpec copyWith({
+  SpinnerSpec copyWith({
     double? size,
     double? strokeWidth,
     Color? indicatorColor,
@@ -32,7 +32,7 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
     Radius? leafRadius,
     Duration? duration,
   }) {
-    return RemixSpinnerSpec(
+    return SpinnerSpec(
       size: size ?? this.size,
       strokeWidth: strokeWidth ?? this.strokeWidth,
       indicatorColor: indicatorColor ?? this.indicatorColor,
@@ -46,8 +46,8 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
   }
 
   @override
-  RemixSpinnerSpec lerp(RemixSpinnerSpec? other, double t) {
-    return RemixSpinnerSpec(
+  SpinnerSpec lerp(SpinnerSpec? other, double t) {
+    return SpinnerSpec(
       size: MixOps.lerp(size, other?.size, t),
       strokeWidth: MixOps.lerp(strokeWidth, other?.strokeWidth, t),
       indicatorColor: MixOps.lerp(indicatorColor, other?.indicatorColor, t),
@@ -80,7 +80,7 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixSpinnerSpec &&
+        other is SpinnerSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -130,9 +130,9 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixSpinnerSpec` and migrate the class declaration to `class RemixSpinnerSpec with _\$RemixSpinnerSpec`. The `_\$RemixSpinnerSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$SpinnerSpec` and migrate the class declaration to `class SpinnerSpec with _\$SpinnerSpec`. The `_\$SpinnerSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixSpinnerSpecMethods = _$RemixSpinnerSpec; // ignore: unused_element
+typedef _$SpinnerSpecMethods = _$SpinnerSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -168,8 +168,7 @@ class FortalSpinner extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixSpinnerStyler
-    extends MixStyler<RemixSpinnerStyler, RemixSpinnerSpec> {
+class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec> {
   final Prop<double>? $size;
   final Prop<double>? $strokeWidth;
   final Prop<Color>? $indicatorColor;
@@ -180,7 +179,7 @@ class RemixSpinnerStyler
   final Prop<Radius>? $leafRadius;
   final Prop<Duration>? $duration;
 
-  const RemixSpinnerStyler.create({
+  const SpinnerStyler.create({
     Prop<double>? size,
     Prop<double>? strokeWidth,
     Prop<Color>? indicatorColor,
@@ -203,7 +202,7 @@ class RemixSpinnerStyler
        $leafRadius = leafRadius,
        $duration = duration;
 
-  RemixSpinnerStyler({
+  SpinnerStyler({
     double? size,
     double? strokeWidth,
     Color? indicatorColor,
@@ -215,7 +214,7 @@ class RemixSpinnerStyler
     Duration? duration,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixSpinnerSpec>>? variants,
+    List<VariantStyle<SpinnerSpec>>? variants,
   }) : this.create(
          size: Prop.maybe(size),
          strokeWidth: Prop.maybe(strokeWidth),
@@ -231,97 +230,94 @@ class RemixSpinnerStyler
          animation: animation,
        );
 
-  factory RemixSpinnerStyler.size(double value) =>
-      RemixSpinnerStyler().size(value);
-  factory RemixSpinnerStyler.strokeWidth(double value) =>
-      RemixSpinnerStyler().strokeWidth(value);
-  factory RemixSpinnerStyler.indicatorColor(Color value) =>
-      RemixSpinnerStyler().indicatorColor(value);
-  factory RemixSpinnerStyler.trackColor(Color value) =>
-      RemixSpinnerStyler().trackColor(value);
-  factory RemixSpinnerStyler.trackStrokeWidth(double value) =>
-      RemixSpinnerStyler().trackStrokeWidth(value);
-  factory RemixSpinnerStyler.color(Color value) =>
-      RemixSpinnerStyler().color(value);
-  factory RemixSpinnerStyler.opacity(double value) =>
-      RemixSpinnerStyler().opacity(value);
-  factory RemixSpinnerStyler.leafRadius(Radius value) =>
-      RemixSpinnerStyler().leafRadius(value);
-  factory RemixSpinnerStyler.duration(Duration value) =>
-      RemixSpinnerStyler().duration(value);
+  factory SpinnerStyler.size(double value) => SpinnerStyler().size(value);
+  factory SpinnerStyler.strokeWidth(double value) =>
+      SpinnerStyler().strokeWidth(value);
+  factory SpinnerStyler.indicatorColor(Color value) =>
+      SpinnerStyler().indicatorColor(value);
+  factory SpinnerStyler.trackColor(Color value) =>
+      SpinnerStyler().trackColor(value);
+  factory SpinnerStyler.trackStrokeWidth(double value) =>
+      SpinnerStyler().trackStrokeWidth(value);
+  factory SpinnerStyler.color(Color value) => SpinnerStyler().color(value);
+  factory SpinnerStyler.opacity(double value) => SpinnerStyler().opacity(value);
+  factory SpinnerStyler.leafRadius(Radius value) =>
+      SpinnerStyler().leafRadius(value);
+  factory SpinnerStyler.duration(Duration value) =>
+      SpinnerStyler().duration(value);
 
   /// Sets the size.
-  RemixSpinnerStyler size(double value) {
-    return merge(RemixSpinnerStyler(size: value));
+  SpinnerStyler size(double value) {
+    return merge(SpinnerStyler(size: value));
   }
 
   /// Sets the strokeWidth.
-  RemixSpinnerStyler strokeWidth(double value) {
-    return merge(RemixSpinnerStyler(strokeWidth: value));
+  SpinnerStyler strokeWidth(double value) {
+    return merge(SpinnerStyler(strokeWidth: value));
   }
 
   /// Sets the indicatorColor.
-  RemixSpinnerStyler indicatorColor(Color value) {
-    return merge(RemixSpinnerStyler(indicatorColor: value));
+  SpinnerStyler indicatorColor(Color value) {
+    return merge(SpinnerStyler(indicatorColor: value));
   }
 
   /// Sets the trackColor.
-  RemixSpinnerStyler trackColor(Color value) {
-    return merge(RemixSpinnerStyler(trackColor: value));
+  SpinnerStyler trackColor(Color value) {
+    return merge(SpinnerStyler(trackColor: value));
   }
 
   /// Sets the trackStrokeWidth.
-  RemixSpinnerStyler trackStrokeWidth(double value) {
-    return merge(RemixSpinnerStyler(trackStrokeWidth: value));
+  SpinnerStyler trackStrokeWidth(double value) {
+    return merge(SpinnerStyler(trackStrokeWidth: value));
   }
 
   /// Sets the color.
-  RemixSpinnerStyler color(Color value) {
-    return merge(RemixSpinnerStyler(color: value));
+  SpinnerStyler color(Color value) {
+    return merge(SpinnerStyler(color: value));
   }
 
   /// Sets the opacity.
-  RemixSpinnerStyler opacity(double value) {
-    return merge(RemixSpinnerStyler(opacity: value));
+  SpinnerStyler opacity(double value) {
+    return merge(SpinnerStyler(opacity: value));
   }
 
   /// Sets the leafRadius.
-  RemixSpinnerStyler leafRadius(Radius value) {
-    return merge(RemixSpinnerStyler(leafRadius: value));
+  SpinnerStyler leafRadius(Radius value) {
+    return merge(SpinnerStyler(leafRadius: value));
   }
 
   /// Sets the duration.
-  RemixSpinnerStyler duration(Duration value) {
-    return merge(RemixSpinnerStyler(duration: value));
+  SpinnerStyler duration(Duration value) {
+    return merge(SpinnerStyler(duration: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixSpinnerStyler animate(AnimationConfig value) {
-    return merge(RemixSpinnerStyler(animation: value));
+  SpinnerStyler animate(AnimationConfig value) {
+    return merge(SpinnerStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixSpinnerStyler variants(List<VariantStyle<RemixSpinnerSpec>> value) {
-    return merge(RemixSpinnerStyler(variants: value));
+  SpinnerStyler variants(List<VariantStyle<SpinnerSpec>> value) {
+    return merge(SpinnerStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixSpinnerStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixSpinnerStyler(modifier: value));
+  SpinnerStyler wrap(WidgetModifierConfig value) {
+    return merge(SpinnerStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixSpinnerStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixSpinnerStyler(modifier: value));
+  SpinnerStyler modifier(WidgetModifierConfig value) {
+    return merge(SpinnerStyler(modifier: value));
   }
 
-  /// Merges with another [RemixSpinnerStyler].
+  /// Merges with another [SpinnerStyler].
   @override
-  RemixSpinnerStyler merge(RemixSpinnerStyler? other) {
-    return RemixSpinnerStyler.create(
+  SpinnerStyler merge(SpinnerStyler? other) {
+    return SpinnerStyler.create(
       size: MixOps.merge($size, other?.$size),
       strokeWidth: MixOps.merge($strokeWidth, other?.$strokeWidth),
       indicatorColor: MixOps.merge($indicatorColor, other?.$indicatorColor),
@@ -340,10 +336,10 @@ class RemixSpinnerStyler
     );
   }
 
-  /// Resolves to [StyleSpec<RemixSpinnerSpec>] using [context].
+  /// Resolves to [StyleSpec<SpinnerSpec>] using [context].
   @override
-  StyleSpec<RemixSpinnerSpec> resolve(BuildContext context) {
-    final spec = RemixSpinnerSpec(
+  StyleSpec<SpinnerSpec> resolve(BuildContext context) {
+    final spec = SpinnerSpec(
       size: MixOps.resolve(context, $size),
       strokeWidth: MixOps.resolve(context, $strokeWidth),
       indicatorColor: MixOps.resolve(context, $indicatorColor),

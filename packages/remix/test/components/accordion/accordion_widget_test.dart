@@ -431,7 +431,7 @@ void main() {
     });
 
     group('WidgetStateController', () {
-      widgetControllerTest<RemixAccordionSpec>(
+      widgetControllerTest<AccordionSpec>(
         'contains disabled state when enabled is false',
         build: () => RemixAccordionGroup<String>(
           controller: RemixAccordionController<String>(),
@@ -445,7 +445,7 @@ void main() {
         expectedStates: {WidgetState.disabled},
       );
 
-      widgetControllerTest<RemixAccordionSpec>(
+      widgetControllerTest<AccordionSpec>(
         'contains hovered state when hovered',
         build: () => RemixAccordionGroup<String>(
           controller: RemixAccordionController<String>(),
@@ -459,7 +459,7 @@ void main() {
         expectedStates: {WidgetState.hovered},
       );
 
-      widgetControllerTest<RemixAccordionSpec>(
+      widgetControllerTest<AccordionSpec>(
         'contains focused state when focused',
         build: () => RemixAccordionGroup<String>(
           controller: RemixAccordionController<String>(),

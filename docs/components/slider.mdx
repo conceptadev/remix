@@ -46,8 +46,8 @@ class _SliderExampleState extends State<SliderExample> {
     );
   }
 
-  RemixSliderStyler get style {
-    return RemixSliderStyler()
+  SliderStyler get style {
+    return SliderStyler()
         .thumbSize(const Size(24, 24))
         .thumb(
           BoxStyler().shapeCircle().shadow(
@@ -62,7 +62,7 @@ class _SliderExampleState extends State<SliderExample> {
         .trackColor(Colors.grey.shade300)
         .rangeColor(Colors.black)
         .onDisabled(
-          RemixSliderStyler()
+          SliderStyler()
               .trackColor(Colors.grey.shade300)
               .rangeColor(Colors.blueGrey)
               .thumbColor(Colors.white.withValues(alpha: 0.6)),
@@ -134,8 +134,8 @@ RemixSlider remixSliderConstructor({
   FocusNode? focusNode,
   bool autofocus = false,
   int? snapDivisions,
-  RemixSliderStyler style = const RemixSliderStyler.create(),
-  RemixSliderSpec? styleSpec,
+  SliderStyler style = const SliderStyler.create(),
+  SliderSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -172,11 +172,11 @@ Optional. Called when the user is done selecting a new value.
 
 Optional. Called when the user starts dragging the slider.
 
-#### `style` → `RemixSliderStyler`
+#### `style` → `SliderStyler`
 
 Optional. The style configuration for the slider.
 
-#### `styleSpec` → `RemixSliderSpec?`
+#### `styleSpec` → `SliderSpec?`
 
 Optional. The style spec for the slider.
 
@@ -291,7 +291,7 @@ Applies widget modifiers such as clipping, opacity, or scaling.
 
 Configures implicit animation for style transitions.
 
-#### `variants(List<VariantStyle<RemixSliderSpec>> value)`
+#### `variants(List<VariantStyle<SliderSpec>> value)`
 
 Sets style variants.
 

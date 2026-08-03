@@ -2,7 +2,7 @@ part of 'tooltip.dart';
 
 /// Resolved visual values for a [RemixTooltip].
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixTooltipSpec with _$RemixTooltipSpec {
+class TooltipSpec with _$TooltipSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
@@ -15,7 +15,7 @@ class RemixTooltipSpec with _$RemixTooltipSpec {
   @override
   final Duration? dismissDuration;
 
-  const RemixTooltipSpec({
+  const TooltipSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
     this.waitDuration = const Duration(milliseconds: 300),
@@ -24,3 +24,9 @@ class RemixTooltipSpec with _$RemixTooltipSpec {
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec());
 }
+
+/// Backward-compatible name for [TooltipSpec].
+///
+/// The generated style API is based on [TooltipSpec], so resolved values use
+/// `TooltipSpec` as their runtime type.
+typedef RemixTooltipSpec = TooltipSpec;

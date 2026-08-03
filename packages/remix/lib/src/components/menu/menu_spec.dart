@@ -7,7 +7,7 @@ part of 'menu.dart';
 @MixableSpec(
   extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
 )
-class RemixMenuTriggerSpec with _$RemixMenuTriggerSpec {
+class MenuTriggerSpec with _$MenuTriggerSpec {
   /// Layout and decoration for the trigger content row.
   @override
   @MixableField(forwardStyler: true)
@@ -22,7 +22,7 @@ class RemixMenuTriggerSpec with _$RemixMenuTriggerSpec {
   final StyleSpec<IconSpec> icon;
 
   /// Creates a trigger spec with default empty child specs.
-  const RemixMenuTriggerSpec({
+  const MenuTriggerSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
@@ -31,15 +31,21 @@ class RemixMenuTriggerSpec with _$RemixMenuTriggerSpec {
        icon = icon ?? const StyleSpec(spec: IconSpec());
 }
 
+/// Backward-compatible name for [MenuTriggerSpec].
+///
+/// The generated trigger style API is based on [MenuTriggerSpec], so resolved
+/// values use `MenuTriggerSpec` as their runtime type.
+typedef RemixMenuTriggerSpec = MenuTriggerSpec;
+
 /// Resolved visual properties for a [RemixMenu].
 ///
 /// The menu spec owns the trigger, overlay, default item, and divider styles
 /// used when rendering the menu and its popup content.
 @MixableSpec()
-class RemixMenuSpec with _$RemixMenuSpec {
+class MenuSpec with _$MenuSpec {
   /// Style spec for the trigger content.
   @override
-  final StyleSpec<RemixMenuTriggerSpec> trigger;
+  final StyleSpec<MenuTriggerSpec> trigger;
 
   /// Layout and decoration for the popup overlay.
   @override
@@ -52,28 +58,28 @@ class RemixMenuSpec with _$RemixMenuSpec {
 
   /// Default style spec applied to menu items.
   @override
-  final StyleSpec<RemixMenuItemSpec> item;
+  final StyleSpec<MenuItemSpec> item;
 
   /// Default style spec applied to menu dividers.
   @override
-  final StyleSpec<RemixDividerSpec> divider;
+  final StyleSpec<DividerSpec> divider;
 
   /// Creates a menu spec with default empty child specs.
-  const RemixMenuSpec({
-    StyleSpec<RemixMenuTriggerSpec>? trigger,
+  const MenuSpec({
+    StyleSpec<MenuTriggerSpec>? trigger,
     StyleSpec<FlexBoxSpec>? overlay,
     this.containerEffects,
-    StyleSpec<RemixMenuItemSpec>? item,
-    StyleSpec<RemixDividerSpec>? divider,
-  }) : trigger = trigger ?? const StyleSpec(spec: RemixMenuTriggerSpec()),
+    StyleSpec<MenuItemSpec>? item,
+    StyleSpec<DividerSpec>? divider,
+  }) : trigger = trigger ?? const StyleSpec(spec: MenuTriggerSpec()),
        overlay = overlay ?? const StyleSpec(spec: FlexBoxSpec()),
-       item = item ?? const StyleSpec(spec: RemixMenuItemSpec()),
-       divider = divider ?? const StyleSpec(spec: RemixDividerSpec());
+       item = item ?? const StyleSpec(spec: MenuItemSpec()),
+       divider = divider ?? const StyleSpec(spec: DividerSpec());
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixMenuSpec lerp(RemixMenuSpec? other, double t) {
+  MenuSpec lerp(MenuSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
@@ -86,9 +92,15 @@ class RemixMenuSpec with _$RemixMenuSpec {
   }
 }
 
+/// Backward-compatible name for [MenuSpec].
+///
+/// The generated menu style API is based on [MenuSpec], so resolved values use
+/// `MenuSpec` as their runtime type.
+typedef RemixMenuSpec = MenuSpec;
+
 /// Resolved visual properties for a [RemixMenuItem].
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixMenuItemSpec with _$RemixMenuItemSpec {
+class MenuItemSpec with _$MenuItemSpec {
   /// Layout and decoration for the item row.
   @override
   @MixableField(forwardStyler: true)
@@ -107,7 +119,7 @@ class RemixMenuItemSpec with _$RemixMenuItemSpec {
   final StyleSpec<IconSpec> trailingIcon;
 
   /// Creates an item spec with default empty child specs.
-  const RemixMenuItemSpec({
+  const MenuItemSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? leadingIcon,
@@ -117,3 +129,9 @@ class RemixMenuItemSpec with _$RemixMenuItemSpec {
        leadingIcon = leadingIcon ?? const StyleSpec(spec: IconSpec()),
        trailingIcon = trailingIcon ?? const StyleSpec(spec: IconSpec());
 }
+
+/// Backward-compatible name for [MenuItemSpec].
+///
+/// The generated item style API is based on [MenuItemSpec], so resolved values
+/// use `MenuItemSpec` as their runtime type.
+typedef RemixMenuItemSpec = MenuItemSpec;

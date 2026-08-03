@@ -254,7 +254,7 @@ widgets:
 
 - **RemixSelectTrigger**: `placeholder` (required), `icon` (optional).
 - **RemixSelectItem\<T\>**: `value` (required), `label` (required),
-  `enabled` (default true), `style` (a `RemixSelectMenuItemStyler`),
+  `enabled` (default true), `style` (a `SelectMenuItemStyler`),
   `semanticLabel`.
 
 `onChanged: null` does not disable the Select. When `enabled` is true it can

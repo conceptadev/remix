@@ -2,7 +2,7 @@ part of 'progress.dart';
 
 /// Resolved visual values for a [RemixProgress].
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixProgressSpec with _$RemixProgressSpec {
+class ProgressSpec with _$ProgressSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
@@ -21,7 +21,7 @@ class RemixProgressSpec with _$RemixProgressSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? indicatorEffects;
 
-  const RemixProgressSpec({
+  const ProgressSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? track,
     StyleSpec<BoxSpec>? indicator,
@@ -36,7 +36,7 @@ class RemixProgressSpec with _$RemixProgressSpec {
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixProgressSpec lerp(RemixProgressSpec? other, double t) {
+  ProgressSpec lerp(ProgressSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
@@ -53,3 +53,9 @@ class RemixProgressSpec with _$RemixProgressSpec {
     );
   }
 }
+
+/// Backward-compatible name for [ProgressSpec].
+///
+/// The generated style API is based on [ProgressSpec], so resolved values use
+/// `ProgressSpec` as their runtime type.
+typedef RemixProgressSpec = ProgressSpec;

@@ -42,8 +42,8 @@ class TooltipExample extends StatelessWidget {
     );
   }
 
-  RemixTooltipStyler get styleDefault {
-    return RemixTooltipStyler()
+  TooltipStyler get styleDefault {
+    return TooltipStyler()
         .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 8))
         .backgroundColor(Colors.black87)
         .borderRadius(BorderRadiusGeometryMix.all(const .circular(6)))
@@ -54,13 +54,13 @@ class TooltipExample extends StatelessWidget {
         );
   }
 
-  RemixTooltipStyler get styleFast {
+  TooltipStyler get styleFast {
     return styleDefault
         .waitDuration(const Duration(milliseconds: 100))
         .showDuration(const Duration(milliseconds: 800));
   }
 
-  RemixTooltipStyler get styleSlow {
+  TooltipStyler get styleSlow {
     return styleDefault
         .waitDuration(const Duration(seconds: 1))
         .showDuration(const Duration(seconds: 3));

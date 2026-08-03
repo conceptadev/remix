@@ -11,7 +11,7 @@ part of 'spinner.dart';
 ///
 /// // Custom spinner with track
 /// RemixSpinner(
-///   style: RemixSpinnerStyler(
+///   style: SpinnerStyler(
 ///     size: 32,
 ///     indicatorColor: Colors.blue,
 ///     trackColor: Colors.blue.withValues(alpha: 0.2),
@@ -23,11 +23,11 @@ class RemixSpinner extends StatelessWidget {
     super.key,
     this.semanticsLabel,
     this.semanticsValue,
-    this.style = const RemixSpinnerStyler.create(),
+    this.style = const SpinnerStyler.create(),
     this.styleSpec,
   });
 
-  static final styleFrom = RemixSpinnerStyler.new;
+  static final styleFrom = SpinnerStyler.new;
 
   /// The accessible name exposed when this spinner is not decorative.
   final String? semanticsLabel;
@@ -38,14 +38,14 @@ class RemixSpinner extends StatelessWidget {
   final String? semanticsValue;
 
   /// The style configuration for the spinner.
-  final RemixSpinnerStyler style;
+  final SpinnerStyler style;
 
   /// Optional raw style spec that bypasses fluent style resolution.
-  final RemixSpinnerSpec? styleSpec;
+  final SpinnerSpec? styleSpec;
 
   @override
   Widget build(BuildContext context) {
-    final spinner = RemixStyleSpecBuilder<RemixSpinnerSpec>(
+    final spinner = RemixStyleSpecBuilder<SpinnerSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) => _SpinnerSpecWidget(spec: spec),
@@ -65,7 +65,7 @@ class RemixSpinner extends StatelessWidget {
 class _SpinnerSpecWidget extends StatefulWidget {
   const _SpinnerSpecWidget({required this.spec});
 
-  final RemixSpinnerSpec spec;
+  final SpinnerSpec spec;
 
   @override
   State createState() => _SpinnerSpecWidgetState();
@@ -143,6 +143,6 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
   }
 }
 
-Widget createSpinnerWidget(RemixSpinnerSpec spec) {
+Widget createSpinnerWidget(SpinnerSpec spec) {
   return _SpinnerSpecWidget(spec: spec);
 }

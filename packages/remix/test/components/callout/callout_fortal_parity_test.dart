@@ -75,12 +75,12 @@ void main() {
   });
 }
 
-Future<RemixCalloutSpec> _resolve(
+Future<CalloutSpec> _resolve(
   WidgetTester tester,
-  RemixCalloutStyler style, {
+  CalloutStyler style, {
   FortalScaling scaling = .percent100,
 }) async {
-  late RemixCalloutSpec result;
+  late CalloutSpec result;
   await tester.pumpWidget(
     FortalScope(
       brightness: .light,

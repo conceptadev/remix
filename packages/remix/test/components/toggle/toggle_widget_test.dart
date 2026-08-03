@@ -50,7 +50,7 @@ void main() {
     });
 
     group('WidgetStateController', () {
-      widgetControllerTest<RemixToggleSpec>(
+      widgetControllerTest<ToggleSpec>(
         'contains disabled state when enabled is false',
         build: () => RemixToggle(
           selected: false,
@@ -61,7 +61,7 @@ void main() {
         expectedStates: {WidgetState.disabled},
       );
 
-      widgetControllerTest<RemixToggleSpec>(
+      widgetControllerTest<ToggleSpec>(
         'contains hovered state when hovered',
         build: () => RemixToggle(
           selected: false,
@@ -72,7 +72,7 @@ void main() {
         expectedStates: {WidgetState.hovered},
       );
 
-      widgetControllerTest<RemixToggleSpec>(
+      widgetControllerTest<ToggleSpec>(
         'contains focused state when focused',
         build: () => RemixToggle(
           selected: false,
@@ -83,7 +83,7 @@ void main() {
         expectedStates: {WidgetState.focused},
       );
 
-      widgetControllerTest<RemixToggleSpec>(
+      widgetControllerTest<ToggleSpec>(
         'contains pressed state when pressed',
         build: () => RemixToggle(
           selected: false,
@@ -303,7 +303,7 @@ void main() {
 
     group('Styling', () {
       testWidgets('applies padding styling', (tester) async {
-        final customStyle = RemixToggleStyler().padding(
+        final customStyle = ToggleStyler().padding(
           EdgeInsetsGeometryMix.all(16.0),
         );
 
@@ -321,7 +321,7 @@ void main() {
       });
 
       testWidgets('applies multiple style methods', (tester) async {
-        final customStyle = RemixToggleStyler()
+        final customStyle = ToggleStyler()
             .backgroundColor(Colors.blue)
             .labelColor(Colors.white)
             .iconColor(Colors.white)
@@ -345,7 +345,7 @@ void main() {
       });
 
       testWidgets('applies animation config', (tester) async {
-        final customStyle = RemixToggleStyler().animate(
+        final customStyle = ToggleStyler().animate(
           AnimationConfig.linear(const Duration(milliseconds: 200)),
         );
 
@@ -533,7 +533,7 @@ void main() {
 
     group('Edge Cases', () {
       testWidgets('applies raw styleSpec when provided', (tester) async {
-        const spec = RemixToggleSpec(
+        const spec = ToggleSpec(
           container: StyleSpec(
             spec: FlexBoxSpec(
               box: StyleSpec(

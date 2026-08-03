@@ -22,11 +22,11 @@ class RemixCard extends StatelessWidget {
   const RemixCard({
     super.key,
     this.child,
-    this.style = const RemixCardStyler.create(),
+    this.style = const CardStyler.create(),
     this.styleSpec,
   });
 
-  static final styleFrom = RemixCardStyler.new;
+  static final styleFrom = CardStyler.new;
 
   /// The widget below this widget in the tree.
   ///
@@ -34,14 +34,14 @@ class RemixCard extends StatelessWidget {
   final Widget? child;
 
   /// The style configuration for the card.
-  final RemixCardStyler style;
+  final CardStyler style;
 
   /// Optional raw style spec that bypasses fluent style resolution.
-  final RemixCardSpec? styleSpec;
+  final CardSpec? styleSpec;
 
   @override
   Widget build(BuildContext context) {
-    return RemixStyleSpecBuilder<RemixCardSpec>(
+    return RemixStyleSpecBuilder<CardSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {

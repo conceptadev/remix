@@ -55,7 +55,7 @@ class _MenuExampleState extends State<MenuExample> {
                 leadingIcon: Icons.logout,
                 label: 'Logout',
                 style: menuItemStyle.onHovered(
-                  RemixMenuItemStyler()
+                  MenuItemStyler()
                       .color(Colors.redAccent.withValues(alpha: 0.05))
                       .label(TextStyler().color(Colors.redAccent))
                       .leadingIcon(IconStyler().color(Colors.redAccent)),
@@ -92,10 +92,10 @@ class _MenuExampleState extends State<MenuExample> {
     );
   }
 
-  RemixMenuStyler get menuStyle {
-    return RemixMenuStyler()
+  MenuStyler get menuStyle {
+    return MenuStyler()
         .trigger(
-          RemixMenuTriggerStyler()
+          MenuTriggerStyler()
               .padding(EdgeInsetsMix.symmetric(horizontal: 14))
               .decoration(
                 BoxDecorationMix()
@@ -122,7 +122,7 @@ class _MenuExampleState extends State<MenuExample> {
                     .color(Colors.blueGrey.shade700)
                     .fontWeight(FontWeight.w400),
               )
-              .onHovered(RemixMenuTriggerStyler().color(Colors.red)),
+              .onHovered(MenuTriggerStyler().color(Colors.red)),
         )
         .overlay(
           FlexBoxStyler(
@@ -144,20 +144,17 @@ class _MenuExampleState extends State<MenuExample> {
           ),
         )
         .divider(
-          RemixDividerStyler()
-              .color(Colors.blueGrey.shade100)
-              .height(1)
-              .marginY(6),
+          DividerStyler().color(Colors.blueGrey.shade100).height(1).marginY(6),
         );
   }
 
-  RemixMenuItemStyler get menuItemStyle {
-    return RemixMenuItemStyler()
+  MenuItemStyler get menuItemStyle {
+    return MenuItemStyler()
         .paddingAll(6)
         .leadingIcon(IconStyler().size(20).color(Colors.blueGrey.shade800))
         .spacing(8)
         .borderRadiusAll(const Radius.circular(8))
         .label(TextStyler().color(Colors.blueGrey.shade800))
-        .onHovered(RemixMenuItemStyler().color(Colors.blueGrey.shade50));
+        .onHovered(MenuItemStyler().color(Colors.blueGrey.shade50));
   }
 }

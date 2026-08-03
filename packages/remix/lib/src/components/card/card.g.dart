@@ -6,27 +6,27 @@ part of 'card.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixCardSpec implements Spec<RemixCardSpec>, Diagnosticable {
+mixin _$CardSpec implements Spec<CardSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   RemixBoxEffectsSpec? get containerEffects;
 
   @override
-  Type get type => RemixCardSpec;
+  Type get type => CardSpec;
 
   @override
-  RemixCardSpec copyWith({
+  CardSpec copyWith({
     StyleSpec<BoxSpec>? container,
     RemixBoxEffectsSpec? containerEffects,
   }) {
-    return RemixCardSpec(
+    return CardSpec(
       container: container ?? this.container,
       containerEffects: containerEffects ?? this.containerEffects,
     );
   }
 
   @override
-  RemixCardSpec lerp(RemixCardSpec? other, double t) {
-    return RemixCardSpec(
+  CardSpec lerp(CardSpec? other, double t) {
+    return CardSpec(
       container: container.lerp(other?.container, t),
       containerEffects: MixOps.lerpSnap(
         containerEffects,
@@ -42,7 +42,7 @@ mixin _$RemixCardSpec implements Spec<RemixCardSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixCardSpec &&
+        other is CardSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -85,9 +85,9 @@ mixin _$RemixCardSpec implements Spec<RemixCardSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixCardSpec` and migrate the class declaration to `class RemixCardSpec with _\$RemixCardSpec`. The `_\$RemixCardSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$CardSpec` and migrate the class declaration to `class CardSpec with _\$CardSpec`. The `_\$CardSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixCardSpecMethods = _$RemixCardSpec; // ignore: unused_element
+typedef _$CardSpecMethods = _$CardSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -131,12 +131,12 @@ class FortalCard extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
-    with RemixBoxStylerMixin<RemixCardStyler> {
+class CardStyler extends MixStyler<CardStyler, CardSpec>
+    with RemixBoxStylerMixin<CardStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
-  const RemixCardStyler.create({
+  const CardStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
@@ -145,12 +145,12 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
   }) : $container = container,
        $containerEffects = containerEffects;
 
-  RemixCardStyler({
+  CardStyler({
     BoxStyler? container,
     RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixCardSpec>>? variants,
+    List<VariantStyle<CardSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          containerEffects: Prop.maybeMix(containerEffects),
@@ -159,115 +159,103 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
          animation: animation,
        );
 
-  factory RemixCardStyler.container(BoxStyler value) =>
-      RemixCardStyler().container(value);
-  factory RemixCardStyler.containerEffects(RemixBoxEffectsMix value) =>
-      RemixCardStyler().containerEffects(value);
-  factory RemixCardStyler.alignment(AlignmentGeometry value) =>
-      RemixCardStyler().alignment(value);
-  factory RemixCardStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixCardStyler().padding(value);
-  factory RemixCardStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixCardStyler().margin(value);
-  factory RemixCardStyler.constraints(BoxConstraintsMix value) =>
-      RemixCardStyler().constraints(value);
-  factory RemixCardStyler.decoration(DecorationMix value) =>
-      RemixCardStyler().decoration(value);
-  factory RemixCardStyler.foregroundDecoration(DecorationMix value) =>
-      RemixCardStyler().foregroundDecoration(value);
-  factory RemixCardStyler.clipBehavior(Clip value) =>
-      RemixCardStyler().clipBehavior(value);
-  factory RemixCardStyler.color(Color value) => RemixCardStyler().color(value);
-  factory RemixCardStyler.gradient(GradientMix value) =>
-      RemixCardStyler().gradient(value);
-  factory RemixCardStyler.border(BoxBorderMix value) =>
-      RemixCardStyler().border(value);
-  factory RemixCardStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixCardStyler().borderRadius(value);
-  factory RemixCardStyler.elevation(ElevationShadow value) =>
-      RemixCardStyler().elevation(value);
-  factory RemixCardStyler.shadow(BoxShadowMix value) =>
-      RemixCardStyler().shadow(value);
-  factory RemixCardStyler.shadows(List<BoxShadowMix> value) =>
-      RemixCardStyler().shadows(value);
-  factory RemixCardStyler.width(double value) => RemixCardStyler().width(value);
-  factory RemixCardStyler.height(double value) =>
-      RemixCardStyler().height(value);
-  factory RemixCardStyler.size(double width, double height) =>
-      RemixCardStyler().size(width, height);
-  factory RemixCardStyler.minWidth(double value) =>
-      RemixCardStyler().minWidth(value);
-  factory RemixCardStyler.maxWidth(double value) =>
-      RemixCardStyler().maxWidth(value);
-  factory RemixCardStyler.minHeight(double value) =>
-      RemixCardStyler().minHeight(value);
-  factory RemixCardStyler.maxHeight(double value) =>
-      RemixCardStyler().maxHeight(value);
-  factory RemixCardStyler.scale(
-    double scale, {
-    Alignment alignment = .center,
-  }) => RemixCardStyler().scale(scale, alignment: alignment);
-  factory RemixCardStyler.rotate(
-    double radians, {
-    Alignment alignment = .center,
-  }) => RemixCardStyler().rotate(radians, alignment: alignment);
-  factory RemixCardStyler.translate(double x, double y, [double z = 0.0]) =>
-      RemixCardStyler().translate(x, y, z);
-  factory RemixCardStyler.skew(double skewX, double skewY) =>
-      RemixCardStyler().skew(skewX, skewY);
-  factory RemixCardStyler.textStyle(TextStyler value) =>
-      RemixCardStyler().textStyle(value);
-  factory RemixCardStyler.image(DecorationImageMix value) =>
-      RemixCardStyler().image(value);
-  factory RemixCardStyler.shape(ShapeBorderMix value) =>
-      RemixCardStyler().shape(value);
-  factory RemixCardStyler.backgroundImage(
+  factory CardStyler.container(BoxStyler value) =>
+      CardStyler().container(value);
+  factory CardStyler.containerEffects(RemixBoxEffectsMix value) =>
+      CardStyler().containerEffects(value);
+  factory CardStyler.alignment(AlignmentGeometry value) =>
+      CardStyler().alignment(value);
+  factory CardStyler.padding(EdgeInsetsGeometryMix value) =>
+      CardStyler().padding(value);
+  factory CardStyler.margin(EdgeInsetsGeometryMix value) =>
+      CardStyler().margin(value);
+  factory CardStyler.constraints(BoxConstraintsMix value) =>
+      CardStyler().constraints(value);
+  factory CardStyler.decoration(DecorationMix value) =>
+      CardStyler().decoration(value);
+  factory CardStyler.foregroundDecoration(DecorationMix value) =>
+      CardStyler().foregroundDecoration(value);
+  factory CardStyler.clipBehavior(Clip value) =>
+      CardStyler().clipBehavior(value);
+  factory CardStyler.color(Color value) => CardStyler().color(value);
+  factory CardStyler.gradient(GradientMix value) =>
+      CardStyler().gradient(value);
+  factory CardStyler.border(BoxBorderMix value) => CardStyler().border(value);
+  factory CardStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      CardStyler().borderRadius(value);
+  factory CardStyler.elevation(ElevationShadow value) =>
+      CardStyler().elevation(value);
+  factory CardStyler.shadow(BoxShadowMix value) => CardStyler().shadow(value);
+  factory CardStyler.shadows(List<BoxShadowMix> value) =>
+      CardStyler().shadows(value);
+  factory CardStyler.width(double value) => CardStyler().width(value);
+  factory CardStyler.height(double value) => CardStyler().height(value);
+  factory CardStyler.size(double width, double height) =>
+      CardStyler().size(width, height);
+  factory CardStyler.minWidth(double value) => CardStyler().minWidth(value);
+  factory CardStyler.maxWidth(double value) => CardStyler().maxWidth(value);
+  factory CardStyler.minHeight(double value) => CardStyler().minHeight(value);
+  factory CardStyler.maxHeight(double value) => CardStyler().maxHeight(value);
+  factory CardStyler.scale(double scale, {Alignment alignment = .center}) =>
+      CardStyler().scale(scale, alignment: alignment);
+  factory CardStyler.rotate(double radians, {Alignment alignment = .center}) =>
+      CardStyler().rotate(radians, alignment: alignment);
+  factory CardStyler.translate(double x, double y, [double z = 0.0]) =>
+      CardStyler().translate(x, y, z);
+  factory CardStyler.skew(double skewX, double skewY) =>
+      CardStyler().skew(skewX, skewY);
+  factory CardStyler.textStyle(TextStyler value) =>
+      CardStyler().textStyle(value);
+  factory CardStyler.image(DecorationImageMix value) =>
+      CardStyler().image(value);
+  factory CardStyler.shape(ShapeBorderMix value) => CardStyler().shape(value);
+  factory CardStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixCardStyler().backgroundImage(
+  }) => CardStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixCardStyler.backgroundImageUrl(
+  factory CardStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixCardStyler().backgroundImageUrl(
+  }) => CardStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixCardStyler.backgroundImageAsset(
+  factory CardStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixCardStyler().backgroundImageAsset(
+  }) => CardStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixCardStyler.linearGradient({
+  factory CardStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixCardStyler().linearGradient(
+  }) => CardStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixCardStyler.radialGradient({
+  factory CardStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -275,7 +263,7 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixCardStyler().radialGradient(
+  }) => CardStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -284,14 +272,14 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixCardStyler.sweepGradient({
+  factory CardStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixCardStyler().sweepGradient(
+  }) => CardStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -299,20 +287,20 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixCardStyler.foregroundLinearGradient({
+  factory CardStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixCardStyler().foregroundLinearGradient(
+  }) => CardStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixCardStyler.foregroundRadialGradient({
+  factory CardStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -320,7 +308,7 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixCardStyler().foregroundRadialGradient(
+  }) => CardStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -329,14 +317,14 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixCardStyler.foregroundSweepGradient({
+  factory CardStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixCardStyler().foregroundSweepGradient(
+  }) => CardStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -344,124 +332,124 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixCardStyler.transform(
+  factory CardStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixCardStyler().transform(value, alignment: alignment);
+  }) => CardStyler().transform(value, alignment: alignment);
 
-  RemixCardStyler alignment(AlignmentGeometry value) {
+  CardStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
   }
 
-  RemixCardStyler padding(EdgeInsetsGeometryMix value) {
+  CardStyler padding(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().padding(value));
   }
 
-  RemixCardStyler margin(EdgeInsetsGeometryMix value) {
+  CardStyler margin(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().margin(value));
   }
 
-  RemixCardStyler constraints(BoxConstraintsMix value) {
+  CardStyler constraints(BoxConstraintsMix value) {
     return container(BoxStyler().constraints(value));
   }
 
-  RemixCardStyler decoration(DecorationMix value) {
+  CardStyler decoration(DecorationMix value) {
     return container(BoxStyler().decoration(value));
   }
 
-  RemixCardStyler foregroundDecoration(DecorationMix value) {
+  CardStyler foregroundDecoration(DecorationMix value) {
     return container(BoxStyler().foregroundDecoration(value));
   }
 
-  RemixCardStyler clipBehavior(Clip value) {
+  CardStyler clipBehavior(Clip value) {
     return container(BoxStyler().clipBehavior(value));
   }
 
-  RemixCardStyler color(Color value) {
+  CardStyler color(Color value) {
     return container(BoxStyler().color(value));
   }
 
-  RemixCardStyler gradient(GradientMix value) {
+  CardStyler gradient(GradientMix value) {
     return container(BoxStyler().gradient(value));
   }
 
-  RemixCardStyler border(BoxBorderMix value) {
+  CardStyler border(BoxBorderMix value) {
     return container(BoxStyler().border(value));
   }
 
-  RemixCardStyler borderRadius(BorderRadiusGeometryMix value) {
+  CardStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(BoxStyler().borderRadius(value));
   }
 
-  RemixCardStyler elevation(ElevationShadow value) {
+  CardStyler elevation(ElevationShadow value) {
     return container(BoxStyler().elevation(value));
   }
 
-  RemixCardStyler shadow(BoxShadowMix value) {
+  CardStyler shadow(BoxShadowMix value) {
     return container(BoxStyler().shadow(value));
   }
 
-  RemixCardStyler shadows(List<BoxShadowMix> value) {
+  CardStyler shadows(List<BoxShadowMix> value) {
     return container(BoxStyler().shadows(value));
   }
 
-  RemixCardStyler width(double value) {
+  CardStyler width(double value) {
     return container(BoxStyler().width(value));
   }
 
-  RemixCardStyler height(double value) {
+  CardStyler height(double value) {
     return container(BoxStyler().height(value));
   }
 
-  RemixCardStyler size(double width, double height) {
+  CardStyler size(double width, double height) {
     return container(BoxStyler().size(width, height));
   }
 
-  RemixCardStyler minWidth(double value) {
+  CardStyler minWidth(double value) {
     return container(BoxStyler().minWidth(value));
   }
 
-  RemixCardStyler maxWidth(double value) {
+  CardStyler maxWidth(double value) {
     return container(BoxStyler().maxWidth(value));
   }
 
-  RemixCardStyler minHeight(double value) {
+  CardStyler minHeight(double value) {
     return container(BoxStyler().minHeight(value));
   }
 
-  RemixCardStyler maxHeight(double value) {
+  CardStyler maxHeight(double value) {
     return container(BoxStyler().maxHeight(value));
   }
 
-  RemixCardStyler scale(double scale, {Alignment alignment = .center}) {
+  CardStyler scale(double scale, {Alignment alignment = .center}) {
     return container(BoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixCardStyler rotate(double radians, {Alignment alignment = .center}) {
+  CardStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(BoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixCardStyler translate(double x, double y, [double z = 0.0]) {
+  CardStyler translate(double x, double y, [double z = 0.0]) {
     return container(BoxStyler().translate(x, y, z));
   }
 
-  RemixCardStyler skew(double skewX, double skewY) {
+  CardStyler skew(double skewX, double skewY) {
     return container(BoxStyler().skew(skewX, skewY));
   }
 
-  RemixCardStyler textStyle(TextStyler value) {
+  CardStyler textStyle(TextStyler value) {
     return container(BoxStyler().textStyle(value));
   }
 
-  RemixCardStyler image(DecorationImageMix value) {
+  CardStyler image(DecorationImageMix value) {
     return container(BoxStyler().image(value));
   }
 
-  RemixCardStyler shape(ShapeBorderMix value) {
+  CardStyler shape(ShapeBorderMix value) {
     return container(BoxStyler().shape(value));
   }
 
-  RemixCardStyler backgroundImage(
+  CardStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -477,7 +465,7 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     );
   }
 
-  RemixCardStyler backgroundImageUrl(
+  CardStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -493,7 +481,7 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     );
   }
 
-  RemixCardStyler backgroundImageAsset(
+  CardStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -509,7 +497,7 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     );
   }
 
-  RemixCardStyler linearGradient({
+  CardStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -527,7 +515,7 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     );
   }
 
-  RemixCardStyler radialGradient({
+  CardStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -549,7 +537,7 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     );
   }
 
-  RemixCardStyler sweepGradient({
+  CardStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -569,7 +557,7 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     );
   }
 
-  RemixCardStyler foregroundLinearGradient({
+  CardStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -587,7 +575,7 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     );
   }
 
-  RemixCardStyler foregroundRadialGradient({
+  CardStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -609,7 +597,7 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     );
   }
 
-  RemixCardStyler foregroundSweepGradient({
+  CardStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -629,47 +617,47 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     );
   }
 
-  RemixCardStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+  CardStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixCardStyler container(BoxStyler value) {
-    return merge(RemixCardStyler(container: value));
+  CardStyler container(BoxStyler value) {
+    return merge(CardStyler(container: value));
   }
 
   /// Sets the containerEffects.
-  RemixCardStyler containerEffects(RemixBoxEffectsMix value) {
-    return merge(RemixCardStyler(containerEffects: value));
+  CardStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(CardStyler(containerEffects: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixCardStyler animate(AnimationConfig value) {
-    return merge(RemixCardStyler(animation: value));
+  CardStyler animate(AnimationConfig value) {
+    return merge(CardStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixCardStyler variants(List<VariantStyle<RemixCardSpec>> value) {
-    return merge(RemixCardStyler(variants: value));
+  CardStyler variants(List<VariantStyle<CardSpec>> value) {
+    return merge(CardStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixCardStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixCardStyler(modifier: value));
+  CardStyler wrap(WidgetModifierConfig value) {
+    return merge(CardStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixCardStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixCardStyler(modifier: value));
+  CardStyler modifier(WidgetModifierConfig value) {
+    return merge(CardStyler(modifier: value));
   }
 
-  /// Merges with another [RemixCardStyler].
+  /// Merges with another [CardStyler].
   @override
-  RemixCardStyler merge(RemixCardStyler? other) {
-    return RemixCardStyler.create(
+  CardStyler merge(CardStyler? other) {
+    return CardStyler.create(
       container: MixOps.merge($container, other?.$container),
       containerEffects: MixOps.merge(
         $containerEffects,
@@ -681,10 +669,10 @@ class RemixCardStyler extends MixStyler<RemixCardStyler, RemixCardSpec>
     );
   }
 
-  /// Resolves to [StyleSpec<RemixCardSpec>] using [context].
+  /// Resolves to [StyleSpec<CardSpec>] using [context].
   @override
-  StyleSpec<RemixCardSpec> resolve(BuildContext context) {
-    final spec = RemixCardSpec(
+  StyleSpec<CardSpec> resolve(BuildContext context) {
+    final spec = CardSpec(
       container: MixOps.resolve(context, $container),
       containerEffects: MixOps.resolve(context, $containerEffects),
     );

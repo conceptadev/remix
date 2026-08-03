@@ -185,13 +185,13 @@ void main() {
   });
 }
 
-Future<RemixAvatarSpec> _resolve(
+Future<AvatarSpec> _resolve(
   WidgetTester tester,
-  RemixAvatarStyler style, {
+  AvatarStyler style, {
   FortalScaling scaling = .percent100,
   FortalRadius radius = .medium,
 }) async {
-  late RemixAvatarSpec resolved;
+  late AvatarSpec resolved;
   await tester.pumpWidget(
     FortalScope(
       brightness: .light,
@@ -252,5 +252,5 @@ _tokens(WidgetTester tester) async {
   return result;
 }
 
-Color? _color(RemixAvatarSpec spec) =>
+Color? _color(AvatarSpec spec) =>
     (spec.container.spec.decoration as BoxDecoration?)?.color;

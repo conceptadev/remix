@@ -13,7 +13,7 @@ part of 'textfield.dart';
 ///   onChanged: (value) {
 ///     debugPrint('Value changed: $value');
 ///   },
-///   style: RemixTextFieldStyler(),
+///   style: TextFieldStyler(),
 /// )
 /// ```
 class RemixTextField extends StatelessWidget {
@@ -76,7 +76,7 @@ class RemixTextField extends StatelessWidget {
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
-    this.style = const RemixTextFieldStyler.create(),
+    this.style = const TextFieldStyler.create(),
     this.styleSpec,
   });
 
@@ -252,15 +252,15 @@ class RemixTextField extends StatelessWidget {
   final bool excludeSemantics;
 
   /// The style configuration for the text field.
-  final RemixTextFieldStyler style;
+  final TextFieldStyler style;
 
   /// The style spec for the text field.
-  final RemixTextFieldSpec? styleSpec;
+  final TextFieldSpec? styleSpec;
 
-  static final styleFrom = RemixTextFieldStyler.new;
+  static final styleFrom = TextFieldStyler.new;
 
   Widget _buildResolved(
-    RemixTextFieldSpec spec,
+    TextFieldSpec spec,
     WidgetStatesController styleController,
   ) {
     return NakedTextField(
@@ -428,7 +428,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   Widget build(BuildContext context) {
     final config = widget.config;
 
-    return RemixStyleSpecBuilder<RemixTextFieldSpec>(
+    return RemixStyleSpecBuilder<TextFieldSpec>(
       style: _baseStyle.merge(config.style),
       styleSpec: config.styleSpec,
       controller: _styleController,
@@ -439,13 +439,13 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
 
 /// Baseline style merged beneath the user-supplied style.
 ///
-/// It seeds the vertical [ColumnBox] wrapper (the [RemixTextFieldSpec.layout])
+/// It seeds the vertical [ColumnBox] wrapper (the [TextFieldSpec.layout])
 /// with the default min-size / start-alignment layout and an 8px vertical
 /// spacing. Merging it underneath the caller's style means customizing a
 /// single layout property (e.g. `.layout(.spacing(12))`) keeps
 /// the remaining defaults instead of falling back to `ColumnBox`'s
 /// `mainAxisSize: max` / `crossAxisAlignment: center`.
-final RemixTextFieldStyler _baseStyle = RemixTextFieldStyler(
+final TextFieldStyler _baseStyle = TextFieldStyler(
   layout: FlexBoxStyler()
       .mainAxisSize(.min)
       .crossAxisAlignment(.start)

@@ -42,7 +42,7 @@ class RemixCheckbox extends StatelessWidget {
     this.enableFeedback = true,
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
-    this.style = const RemixCheckboxStyler.create(),
+    this.style = const CheckboxStyler.create(),
     this.styleSpec,
   });
 
@@ -73,12 +73,12 @@ class RemixCheckbox extends StatelessWidget {
   final ValueChanged<bool?>? onChanged;
 
   /// The style configuration for the checkbox.
-  final RemixCheckboxStyler style;
+  final CheckboxStyler style;
 
   /// The style spec for the checkbox.
-  final RemixCheckboxSpec? styleSpec;
+  final CheckboxSpec? styleSpec;
 
-  static final styleFrom = RemixCheckboxStyler.new;
+  static final styleFrom = CheckboxStyler.new;
 
   /// Whether to provide haptic feedback when the checkbox is toggled.
   /// Defaults to true.
@@ -108,7 +108,7 @@ class RemixCheckbox extends StatelessWidget {
       autofocus: autofocus,
       semanticLabel: semanticLabel,
       builder: (context, state, _) {
-        return RemixStyleSpecBuilder<RemixCheckboxSpec>(
+        return RemixStyleSpecBuilder<CheckboxSpec>(
           style: style,
           styleSpec: styleSpec,
           controller: NakedCheckboxState.controllerOf(context),

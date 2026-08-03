@@ -13,7 +13,7 @@ part of 'slider.dart';
 ///   onChanged: (value) {
 ///     debugPrint('Slider value changed: $value');
 ///   },
-///   style: RemixSliderStyler(),
+///   style: SliderStyler(),
 /// )
 /// ```
 class RemixSlider extends StatelessWidget {
@@ -30,7 +30,7 @@ class RemixSlider extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.snapDivisions,
-    this.style = const RemixSliderStyler.create(),
+    this.style = const SliderStyler.create(),
     this.styleSpec,
   }) : assert(min <= max, 'Slider min must be less than or equal to max'),
        assert(
@@ -57,12 +57,12 @@ class RemixSlider extends StatelessWidget {
   final double value;
 
   /// The style configuration for the slider.
-  final RemixSliderStyler style;
+  final SliderStyler style;
 
   /// The style spec for the slider.
-  final RemixSliderSpec? styleSpec;
+  final SliderSpec? styleSpec;
 
-  static final styleFrom = RemixSliderStyler.new;
+  static final styleFrom = SliderStyler.new;
 
   /// Whether the slider is enabled for interaction.
   final bool enabled;
@@ -114,7 +114,7 @@ class RemixSlider extends StatelessWidget {
       focusNodes: focusNode == null ? null : [focusNode],
       autofocusThumbIndex: autofocus ? 0 : null,
       builder: (context, state, _) {
-        return RemixStyleSpecBuilder<RemixSliderSpec>(
+        return RemixStyleSpecBuilder<SliderSpec>(
           style: style,
           styleSpec: styleSpec,
           controller: NakedSliderState.controllerOf(context),
@@ -123,7 +123,7 @@ class RemixSlider extends StatelessWidget {
             final thumbSize = _resolveThumbSize(context, thumbSpec);
             final trackThickness = spec.trackThickness > 0
                 ? spec.trackThickness
-                : RemixSliderSpec.defaultTrackStrokeWidth;
+                : SliderSpec.defaultTrackStrokeWidth;
 
             // Slider height accommodates both thumb and track:
             // - thumb.height + trackThickness: ensures thumb has clearance above/below
@@ -280,14 +280,14 @@ Size _resolveThumbSize(BuildContext context, StyleSpec<BoxSpec> thumb) {
     tight: constraints?.hasTightWidth ?? false,
     min: constraints?.minWidth,
     max: constraints?.maxWidth,
-    fallback: RemixSliderSpec.defaultThumbSize.width,
+    fallback: SliderSpec.defaultThumbSize.width,
   );
 
   final height = _resolveTightDimension(
     tight: constraints?.hasTightHeight ?? false,
     min: constraints?.minHeight,
     max: constraints?.maxHeight,
-    fallback: RemixSliderSpec.defaultThumbSize.height,
+    fallback: SliderSpec.defaultThumbSize.height,
   );
 
   final padding = box.padding?.resolve(Directionality.of(context));

@@ -41,8 +41,8 @@ class BadgeExample extends StatelessWidget {
     );
   }
 
-  RemixBadgeStyler get styleLabel {
-    return RemixBadgeStyler()
+  BadgeStyler get styleLabel {
+    return BadgeStyler()
         .size(24, 24)
         .wrap(.clipOval())
         .label(
@@ -57,8 +57,8 @@ class BadgeExample extends StatelessWidget {
         .labelFontSize(15);
   }
 
-  RemixBadgeStyler get styleIcon {
-    return RemixBadgeStyler()
+  BadgeStyler get styleIcon {
+    return BadgeStyler()
         .size(24, 24)
         .wrap(.clipOval())
         .label(
@@ -125,8 +125,8 @@ RemixBadge remixBadgeConstructor({
   String? label,
   Widget? child,
   RemixBadgeLabelBuilder? labelBuilder,
-  RemixBadgeStyler style = const RemixBadgeStyler.create(),
-  RemixBadgeSpec? styleSpec,
+  BadgeStyler style = const BadgeStyler.create(),
+  BadgeSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -135,11 +135,11 @@ RemixBadge remixBadgeConstructor({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixBadgeStyler`
+#### `style` → `BadgeStyler`
 
 Optional. The style configuration for the badge. Customize colors, sizing, shape, and state-based styling.
 
-#### `styleSpec` → `RemixBadgeSpec?`
+#### `styleSpec` → `BadgeSpec?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 

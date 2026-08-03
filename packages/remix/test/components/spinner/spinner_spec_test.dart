@@ -4,10 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixSpinnerSpec', () {
+  group('SpinnerSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        const spec = RemixSpinnerSpec();
+        const spec = SpinnerSpec();
 
         expect(spec.size, isNull);
         expect(spec.strokeWidth, isNull);
@@ -25,7 +25,7 @@ void main() {
         const trackStrokeWidth = 1.0;
         const duration = Duration(milliseconds: 1000);
 
-        const spec = RemixSpinnerSpec(
+        const spec = SpinnerSpec(
           size: size,
           strokeWidth: strokeWidth,
           indicatorColor: indicatorColor,
@@ -45,7 +45,7 @@ void main() {
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
-        const originalSpec = RemixSpinnerSpec();
+        const originalSpec = SpinnerSpec();
         const newSize = 32.0;
 
         final updatedSpec = originalSpec.copyWith(size: newSize);
@@ -55,7 +55,7 @@ void main() {
       });
 
       test('preserves immutability - original spec unchanged', () {
-        const originalSpec = RemixSpinnerSpec(size: 24.0);
+        const originalSpec = SpinnerSpec(size: 24.0);
         final originalSize = originalSpec.size;
         const newSize = 32.0;
 
@@ -67,7 +67,7 @@ void main() {
       });
 
       test('returns new instance with all properties updated', () {
-        const originalSpec = RemixSpinnerSpec();
+        const originalSpec = SpinnerSpec();
         const newSize = 32.0;
         const newStrokeWidth = 3.0;
         const newIndicatorColor = Color(0xFF0000FF);
@@ -95,8 +95,8 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        const spec = RemixSpinnerSpec();
-        const RemixSpinnerSpec? other = null;
+        const spec = SpinnerSpec();
+        const SpinnerSpec? other = null;
 
         final result = spec.lerp(other, 0.5);
 
@@ -106,7 +106,7 @@ void main() {
       test('interpolates between two specs at t=0.0', () {
         const color1 = Color(0xFF0000FF);
         const color2 = Color(0xFF00FF00);
-        const spec1 = RemixSpinnerSpec(
+        const spec1 = SpinnerSpec(
           size: 24.0,
           strokeWidth: 2.0,
           indicatorColor: color1,
@@ -114,7 +114,7 @@ void main() {
           trackStrokeWidth: 1.0,
           duration: Duration(milliseconds: 1000),
         );
-        const spec2 = RemixSpinnerSpec(
+        const spec2 = SpinnerSpec(
           size: 32.0,
           strokeWidth: 4.0,
           indicatorColor: color2,
@@ -137,7 +137,7 @@ void main() {
       test('interpolates between two specs at t=1.0', () {
         const color1 = Color(0xFF0000FF);
         const color2 = Color(0xFF00FF00);
-        const spec1 = RemixSpinnerSpec(
+        const spec1 = SpinnerSpec(
           size: 24.0,
           strokeWidth: 2.0,
           indicatorColor: color1,
@@ -145,7 +145,7 @@ void main() {
           trackStrokeWidth: 1.0,
           duration: Duration(milliseconds: 1000),
         );
-        const spec2 = RemixSpinnerSpec(
+        const spec2 = SpinnerSpec(
           size: 32.0,
           strokeWidth: 4.0,
           indicatorColor: color2,
@@ -166,8 +166,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.5', () {
-        const spec1 = RemixSpinnerSpec(size: 24.0, strokeWidth: 2.0);
-        const spec2 = RemixSpinnerSpec(size: 32.0, strokeWidth: 4.0);
+        const spec1 = SpinnerSpec(size: 24.0, strokeWidth: 2.0);
+        const spec2 = SpinnerSpec(size: 32.0, strokeWidth: 4.0);
 
         final result = spec1.lerp(spec2, 0.5);
 
@@ -178,22 +178,22 @@ void main() {
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixSpinnerSpec();
-        const spec2 = RemixSpinnerSpec();
+        const spec1 = SpinnerSpec();
+        const spec2 = SpinnerSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('two specs with different properties are not equal', () {
-        const spec1 = RemixSpinnerSpec(size: 24.0);
-        const spec2 = RemixSpinnerSpec(size: 32.0);
+        const spec1 = SpinnerSpec(size: 24.0);
+        const spec2 = SpinnerSpec(size: 32.0);
 
         expect(spec1, isNot(equals(spec2)));
       });
 
       test('props list contains all properties', () {
-        const spec = RemixSpinnerSpec();
+        const spec = SpinnerSpec();
 
         expect(spec.props, hasLength(9));
         expect(spec.props, contains(spec.size));
@@ -207,7 +207,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = RemixSpinnerSpec();
+        const spec = SpinnerSpec();
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -216,7 +216,7 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        const spec = RemixSpinnerSpec();
+        const spec = SpinnerSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
@@ -225,7 +225,7 @@ void main() {
 
     group('Edge Cases and Error Handling', () {
       test('copyWith handles null parameters correctly', () {
-        const spec = RemixSpinnerSpec(size: 24.0);
+        const spec = SpinnerSpec(size: 24.0);
         final originalSize = spec.size;
 
         final updatedSpec = spec.copyWith(size: null);
@@ -234,25 +234,25 @@ void main() {
       });
 
       test('handles zero size', () {
-        const spec = RemixSpinnerSpec(size: 0.0);
+        const spec = SpinnerSpec(size: 0.0);
 
         expect(spec.size, equals(0.0));
       });
 
       test('handles very large size', () {
-        const spec = RemixSpinnerSpec(size: 1000.0);
+        const spec = SpinnerSpec(size: 1000.0);
 
         expect(spec.size, equals(1000.0));
       });
 
       test('handles zero duration', () {
-        const spec = RemixSpinnerSpec(duration: Duration.zero);
+        const spec = SpinnerSpec(duration: Duration.zero);
 
         expect(spec.duration, equals(Duration.zero));
       });
 
       test('handles very long duration', () {
-        const spec = RemixSpinnerSpec(duration: Duration(seconds: 60));
+        const spec = SpinnerSpec(duration: Duration(seconds: 60));
 
         expect(spec.duration, equals(const Duration(seconds: 60)));
       });
@@ -260,7 +260,7 @@ void main() {
 
     group('Default Values', () {
       test('all properties are nullable', () {
-        const spec = RemixSpinnerSpec();
+        const spec = SpinnerSpec();
 
         expect(spec.size, isNull);
         expect(spec.strokeWidth, isNull);

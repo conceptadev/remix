@@ -1,26 +1,26 @@
 part of 'avatar.dart';
 
 /// Style configuration for [RemixAvatar] container, label, and fallback icon.
-extension RemixAvatarStylerRemixHelpers on RemixAvatarStyler {
+extension RemixAvatarStylerRemixHelpers on AvatarStyler {
   /// Sets the foreground color (text and icon) of the avatar.
-  RemixAvatarStyler foregroundColor(Color value) {
+  AvatarStyler foregroundColor(Color value) {
     return labelColor(value).iconColor(value);
   }
 
   /// Sets the background color of the avatar.
-  RemixAvatarStyler backgroundColor(Color value) {
+  AvatarStyler backgroundColor(Color value) {
     return color(value);
   }
 
   /// Sets avatar size to a square
-  RemixAvatarStyler square(double size) {
+  AvatarStyler square(double size) {
     return this.size(size, size);
   }
 
   /// Sets avatar size with width and height (alias)
-  RemixAvatarStyler sizeWH(double width, double height) {
+  AvatarStyler sizeWH(double width, double height) {
     return merge(
-      RemixAvatarStyler(
+      AvatarStyler(
         container: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: width,

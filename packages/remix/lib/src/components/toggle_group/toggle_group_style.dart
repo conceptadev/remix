@@ -1,9 +1,9 @@
 part of 'toggle_group.dart';
 
 /// Style configuration for a [RemixToggleGroup] container and its items.
-extension RemixToggleGroupStylerRemixHelpers on RemixToggleGroupStyler {
+extension RemixToggleGroupStylerRemixHelpers on ToggleGroupStyler {
   /// Sets the group background color.
-  RemixToggleGroupStyler backgroundColor(Color value) => color(value);
+  ToggleGroupStyler backgroundColor(Color value) => color(value);
 
   /// Creates a [RemixToggleGroup] with this style applied.
   RemixToggleGroup<T> call<T>({
@@ -31,26 +31,22 @@ extension RemixToggleGroupStylerRemixHelpers on RemixToggleGroupStyler {
     );
   }
 
-  RemixToggleGroupStyler flex(FlexStyler value) {
-    return merge(
-      RemixToggleGroupStyler(container: FlexBoxStyler().flex(value)),
-    );
+  ToggleGroupStyler flex(FlexStyler value) {
+    return merge(ToggleGroupStyler(container: FlexBoxStyler().flex(value)));
   }
 }
 
 /// Style configuration for an option in a [RemixToggleGroup].
-extension RemixToggleGroupItemStylerRemixHelpers on RemixToggleGroupItemStyler {
+extension RemixToggleGroupItemStylerRemixHelpers on ToggleGroupItemStyler {
   /// Sets the item background color.
-  RemixToggleGroupItemStyler backgroundColor(Color value) => color(value);
+  ToggleGroupItemStyler backgroundColor(Color value) => color(value);
 
   /// Sets the item foreground color for both label and icon.
-  RemixToggleGroupItemStyler foregroundColor(Color value) {
+  ToggleGroupItemStyler foregroundColor(Color value) {
     return labelColor(value).iconColor(value);
   }
 
-  RemixToggleGroupItemStyler flex(FlexStyler value) {
-    return merge(
-      RemixToggleGroupItemStyler(container: FlexBoxStyler().flex(value)),
-    );
+  ToggleGroupItemStyler flex(FlexStyler value) {
+    return merge(ToggleGroupItemStyler(container: FlexBoxStyler().flex(value)));
   }
 }

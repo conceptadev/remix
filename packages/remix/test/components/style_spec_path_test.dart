@@ -8,7 +8,7 @@ void main() {
   group('raw styleSpec widget path', () {
     testWidgets('badge', (tester) async {
       await tester.pumpRemixApp(
-        const RemixBadge(label: 'New', styleSpec: RemixBadgeSpec()),
+        const RemixBadge(label: 'New', styleSpec: BadgeSpec()),
       );
       await tester.pumpAndSettle();
       expect(find.byType(RemixBadge), findsOneWidget);
@@ -17,23 +17,21 @@ void main() {
 
     testWidgets('card', (tester) async {
       await tester.pumpRemixApp(
-        const RemixCard(styleSpec: RemixCardSpec(), child: Text('body')),
+        const RemixCard(styleSpec: CardSpec(), child: Text('body')),
       );
       await tester.pumpAndSettle();
       expect(find.byType(RemixCard), findsOneWidget);
     });
 
     testWidgets('divider', (tester) async {
-      await tester.pumpRemixApp(
-        const RemixDivider(styleSpec: RemixDividerSpec()),
-      );
+      await tester.pumpRemixApp(const RemixDivider(styleSpec: DividerSpec()));
       await tester.pumpAndSettle();
       expect(find.byType(RemixDivider), findsOneWidget);
     });
 
     testWidgets('spinner', (tester) async {
       await tester.pumpRemixApp(
-        const RemixSpinner(styleSpec: RemixSpinnerSpec(size: 20)),
+        const RemixSpinner(styleSpec: SpinnerSpec(size: 20)),
       );
       await tester.pump();
       expect(find.byType(RemixSpinner), findsOneWidget);
@@ -41,7 +39,7 @@ void main() {
 
     testWidgets('progress', (tester) async {
       await tester.pumpRemixApp(
-        const RemixProgress(value: 0.4, styleSpec: RemixProgressSpec()),
+        const RemixProgress(value: 0.4, styleSpec: ProgressSpec()),
       );
       await tester.pumpAndSettle();
       expect(find.byType(RemixProgress), findsOneWidget);
@@ -49,7 +47,7 @@ void main() {
 
     testWidgets('callout', (tester) async {
       await tester.pumpRemixApp(
-        const RemixCallout(text: 'hi', styleSpec: RemixCalloutSpec()),
+        const RemixCallout(text: 'hi', styleSpec: CalloutSpec()),
       );
       await tester.pumpAndSettle();
       expect(find.byType(RemixCallout), findsOneWidget);
@@ -57,7 +55,7 @@ void main() {
 
     testWidgets('avatar', (tester) async {
       await tester.pumpRemixApp(
-        const RemixAvatar(label: 'LF', styleSpec: RemixAvatarSpec()),
+        const RemixAvatar(label: 'LF', styleSpec: AvatarSpec()),
       );
       await tester.pumpAndSettle();
       expect(find.byType(RemixAvatar), findsOneWidget);
@@ -65,7 +63,7 @@ void main() {
 
     testWidgets('dialog', (tester) async {
       await tester.pumpRemixApp(
-        const RemixDialog(title: 'T', styleSpec: RemixDialogSpec()),
+        const RemixDialog(title: 'T', styleSpec: DialogSpec()),
       );
       await tester.pumpAndSettle();
       expect(find.byType(RemixDialog), findsOneWidget);
@@ -75,7 +73,7 @@ void main() {
       await tester.pumpRemixApp(
         const RemixTooltip(
           tooltipChild: Text('tip'),
-          styleSpec: RemixTooltipSpec(),
+          styleSpec: TooltipSpec(),
           child: Text('child'),
         ),
       );

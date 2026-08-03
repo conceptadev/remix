@@ -26,7 +26,7 @@ enum FortalSwitchVariant {
 
 /// Fortal-themed preset for [RemixSwitch].
 @MixWidget(target: RemixSwitch.new)
-RemixSwitchStyler fortalSwitchStyle({
+SwitchStyler fortalSwitchStyle({
   FortalSwitchVariant variant = .surface,
   FortalSwitchSize size = .size2,
   bool highContrast = false,
@@ -38,9 +38,9 @@ RemixSwitchStyler fortalSwitchStyle({
   };
 }
 
-RemixSwitchStyler _fortalSwitchBaseStyler(FortalSwitchSize size) {
+SwitchStyler _fortalSwitchBaseStyler(FortalSwitchSize size) {
   final metrics = _fortalSwitchMetrics(size);
-  return RemixSwitchStyler(
+  return SwitchStyler(
         container: .size(
           metrics.width,
           metrics.height,
@@ -69,7 +69,7 @@ RemixSwitchStyler _fortalSwitchBaseStyler(FortalSwitchSize size) {
       );
 }
 
-RemixSwitchStyler _fortalSwitchClassicStyler(
+SwitchStyler _fortalSwitchClassicStyler(
   FortalSwitchSize size, {
   required bool highContrast,
 }) {
@@ -86,7 +86,7 @@ RemixSwitchStyler _fortalSwitchClassicStyler(
         _fortalSwitchThumbStyler(selected: false, highContrast: highContrast),
       )
       .onSelected(
-        RemixSwitchStyler()
+        SwitchStyler()
             .trackColor(
               highContrast
                   ? FortalTokens.accent12()
@@ -126,7 +126,7 @@ RemixSwitchStyler _fortalSwitchClassicStyler(
             ),
       )
       .onPressed(
-        RemixSwitchStyler()
+        SwitchStyler()
             .trackColor(FortalTokens.grayA5())
             .trackEffects(
               RemixBoxEffectsMix(behindContent: _fortalSwitchLayer()),
@@ -135,7 +135,7 @@ RemixSwitchStyler _fortalSwitchClassicStyler(
       .onDisabled(_fortalSwitchDisabledStyler(classic: true));
 }
 
-RemixSwitchStyler _fortalSwitchSurfaceStyler(
+SwitchStyler _fortalSwitchSurfaceStyler(
   FortalSwitchSize size, {
   required bool highContrast,
 }) {
@@ -151,7 +151,7 @@ RemixSwitchStyler _fortalSwitchSurfaceStyler(
         _fortalSwitchThumbStyler(selected: false, highContrast: highContrast),
       )
       .onSelected(
-        RemixSwitchStyler()
+        SwitchStyler()
             .trackColor(
               highContrast
                   ? FortalTokens.accent12()
@@ -168,7 +168,7 @@ RemixSwitchStyler _fortalSwitchSurfaceStyler(
             ),
       )
       .onPressed(
-        RemixSwitchStyler()
+        SwitchStyler()
             .trackColor(FortalTokens.grayA4())
             .trackEffects(
               RemixBoxEffectsMix(behindContent: _fortalSwitchLayer()),
@@ -177,7 +177,7 @@ RemixSwitchStyler _fortalSwitchSurfaceStyler(
       .onDisabled(_fortalSwitchDisabledStyler());
 }
 
-RemixSwitchStyler _fortalSwitchSoftStyler(
+SwitchStyler _fortalSwitchSoftStyler(
   FortalSwitchSize size, {
   required bool highContrast,
 }) {
@@ -186,7 +186,7 @@ RemixSwitchStyler _fortalSwitchSoftStyler(
       .trackEffects(RemixBoxEffectsMix(behindContent: _fortalSwitchLayer()))
       .thumb(_fortalSwitchSoftThumbStyler(false))
       .onSelected(
-        RemixSwitchStyler()
+        SwitchStyler()
             .trackColor(
               highContrast ? FortalTokens.accentA6() : FortalTokens.accentA4(),
             )
@@ -196,7 +196,7 @@ RemixSwitchStyler _fortalSwitchSoftStyler(
             .thumb(_fortalSwitchSoftThumbStyler(true)),
       )
       .onPressed(
-        RemixSwitchStyler()
+        SwitchStyler()
             .trackColor(FortalTokens.grayA4())
             .trackEffects(
               RemixBoxEffectsMix(behindContent: _fortalSwitchLayer()),
@@ -229,7 +229,7 @@ _fortalSwitchMetrics(FortalSwitchSize size) {
   return (width: width, height: height, thumbSize: thumbSize, radius: radius);
 }
 
-RemixSwitchStyler _fortalSwitchDisabledStyler({
+SwitchStyler _fortalSwitchDisabledStyler({
   bool classic = false,
   bool soft = false,
 }) {
@@ -238,7 +238,7 @@ RemixSwitchStyler _fortalSwitchDisabledStyler({
     (_, true) => FortalTokens.grayA4(),
     _ => FortalTokens.grayA3(),
   };
-  return RemixSwitchStyler()
+  return SwitchStyler()
       .trackColor(trackColor)
       .trackEffects(
         RemixBoxEffectsMix(

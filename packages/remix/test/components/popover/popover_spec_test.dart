@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixPopoverSpec', () {
+  group('PopoverSpec', () {
     test('provides an empty container spec by default', () {
-      const spec = RemixPopoverSpec();
+      const spec = PopoverSpec();
 
       expect(spec.container, isA<StyleSpec<BoxSpec>>());
       expect(spec.props, [spec.container, spec.containerEffects]);
@@ -18,7 +18,7 @@ void main() {
           constraints: BoxConstraints(minWidth: 240, maxWidth: 240),
         ),
       );
-      const spec = RemixPopoverSpec(container: container);
+      const spec = PopoverSpec(container: container);
 
       final copy = spec.copyWith();
 
@@ -28,14 +28,14 @@ void main() {
     });
 
     test('interpolates container specs', () {
-      const start = RemixPopoverSpec(
+      const start = PopoverSpec(
         container: StyleSpec(
           spec: BoxSpec(
             constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
           ),
         ),
       );
-      const end = RemixPopoverSpec(
+      const end = PopoverSpec(
         container: StyleSpec(
           spec: BoxSpec(
             constraints: BoxConstraints(minWidth: 200, maxWidth: 200),
@@ -48,7 +48,7 @@ void main() {
     });
 
     test('supports diagnostics', () {
-      const spec = RemixPopoverSpec();
+      const spec = PopoverSpec();
 
       expect(
         () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),

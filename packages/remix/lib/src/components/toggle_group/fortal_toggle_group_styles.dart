@@ -8,7 +8,7 @@ enum FortalToggleGroupVariant { soft, surface }
 
 /// Fortal-themed segmented-control preset for [RemixToggleGroup].
 @MixWidget(target: RemixToggleGroup.new)
-RemixToggleGroupStyler fortalToggleGroupStyle({
+ToggleGroupStyler fortalToggleGroupStyle({
   FortalToggleGroupVariant variant = .soft,
   FortalToggleGroupSize size = .size2,
   bool highContrast = false,
@@ -33,7 +33,7 @@ RemixToggleGroupStyler fortalToggleGroupStyle({
       ? FortalTokens.accent12()
       : FortalTokens.accent11();
 
-  return RemixToggleGroupStyler(
+  return ToggleGroupStyler(
     container: FlexBoxStyler(
       decoration: BoxDecorationMix(
         border: BorderMix.all(
@@ -52,46 +52,40 @@ RemixToggleGroupStyler fortalToggleGroupStyle({
         .foregroundColor(FortalTokens.gray11())
         .labelFontWeight(FortalTokens.fontWeightMedium())
         .onHovered(
-          RemixToggleGroupItemStyler().backgroundColor(FortalTokens.grayA3()),
+          ToggleGroupItemStyler().backgroundColor(FortalTokens.grayA3()),
         )
         .onPressed(
-          RemixToggleGroupItemStyler().backgroundColor(FortalTokens.grayA4()),
+          ToggleGroupItemStyler().backgroundColor(FortalTokens.grayA4()),
         )
         .onSelected(
-          RemixToggleGroupItemStyler()
+          ToggleGroupItemStyler()
               .backgroundColor(selectedColor)
               .foregroundColor(selectedForeground)
               .onHovered(
-                RemixToggleGroupItemStyler().backgroundColor(
-                  selectedHoverColor,
-                ),
+                ToggleGroupItemStyler().backgroundColor(selectedHoverColor),
               )
               .onPressed(
-                RemixToggleGroupItemStyler().backgroundColor(
-                  selectedPressedColor,
-                ),
+                ToggleGroupItemStyler().backgroundColor(selectedPressedColor),
               ),
         )
         .onFocused(
-          RemixToggleGroupItemStyler().borderAll(
+          ToggleGroupItemStyler().borderAll(
             color: FortalTokens.focusA8(),
             width: FortalTokens.focusRingWidth(),
             strokeAlign: BorderSide.strokeAlignInside,
           ),
         )
         .onDisabled(
-          RemixToggleGroupItemStyler()
+          ToggleGroupItemStyler()
               .backgroundColor(FortalTokens.grayA3())
               .foregroundColor(FortalTokens.gray8()),
         ),
   ).merge(_fortalToggleGroupSizeStyler(size));
 }
 
-RemixToggleGroupStyler _fortalToggleGroupSizeStyler(
-  FortalToggleGroupSize size,
-) {
+ToggleGroupStyler _fortalToggleGroupSizeStyler(FortalToggleGroupSize size) {
   return switch (size) {
-    .size1 => RemixToggleGroupStyler(
+    .size1 => ToggleGroupStyler(
       container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius2()),
       item:
           .container(
@@ -103,7 +97,7 @@ RemixToggleGroupStyler _fortalToggleGroupSizeStyler(
               .label(.style(FortalTokens.text1.mix()))
               .icon(.size(FortalTokens.space3())),
     ),
-    .size2 => RemixToggleGroupStyler(
+    .size2 => ToggleGroupStyler(
       container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius2()),
       item:
           .container(
@@ -115,7 +109,7 @@ RemixToggleGroupStyler _fortalToggleGroupSizeStyler(
               .label(.style(FortalTokens.text2.mix()))
               .icon(.size(FortalTokens.space4())),
     ),
-    .size3 => RemixToggleGroupStyler(
+    .size3 => ToggleGroupStyler(
       container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius3()),
       item:
           .container(

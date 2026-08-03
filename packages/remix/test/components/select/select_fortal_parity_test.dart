@@ -297,15 +297,15 @@ void main() {
   });
 }
 
-Future<RemixSelectSpec> _resolve(
+Future<SelectSpec> _resolve(
   WidgetTester tester,
-  RemixSelectStyler style, {
+  SelectStyler style, {
   Set<WidgetState> states = const {},
   FortalScaling scaling = .percent100,
   FortalRadius radius = .medium,
   Brightness brightness = .light,
 }) async {
-  late RemixSelectSpec resolved;
+  late SelectSpec resolved;
   await tester.pumpWidget(
     FortalScope(
       brightness: brightness,

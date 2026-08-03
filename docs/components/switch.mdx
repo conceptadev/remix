@@ -49,8 +49,8 @@ class _SwitchExampleState extends State<SwitchExample> {
     );
   }
 
-  RemixSwitchStyler get style {
-    return RemixSwitchStyler()
+  SwitchStyler get style {
+    return SwitchStyler()
         .thumbColor(Colors.grey.shade600)
         .trackColor(Colors.deepPurpleAccent.shade200)
         .size(65, 30)
@@ -136,8 +136,8 @@ RemixSwitch remixSwitchConstructor({
   bool autofocus = false,
   String? semanticLabel,
   MouseCursor mouseCursor = SystemMouseCursors.click,
-  RemixSwitchStyler style = const RemixSwitchStyler.create(),
-  RemixSwitchSpec? styleSpec,
+  SwitchStyler style = const SwitchStyler.create(),
+  SwitchSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -162,11 +162,11 @@ Optional. Whether this switch is enabled.
 
 Optional. Called when the user toggles the switch. When omitted, the switch is disabled.
 
-#### `style` → `RemixSwitchStyler`
+#### `style` → `SwitchStyler`
 
 Optional. The style configuration for the switch.
 
-#### `styleSpec` → `RemixSwitchSpec?`
+#### `styleSpec` → `SwitchSpec?`
 
 Optional. The style spec for the switch.
 
@@ -217,7 +217,7 @@ Sets the track background color.
 
 Sets the track background color.
 
-#### `onSelected(RemixSwitchStyler value)`
+#### `onSelected(SwitchStyler value)`
 
 Applies a style while the switch is selected.
 
@@ -229,7 +229,7 @@ Applies widget modifiers such as clipping, opacity, or scaling.
 
 Configures implicit animation for style transitions.
 
-#### `variants(List<VariantStyle<RemixSwitchSpec>> value)`
+#### `variants(List<VariantStyle<SwitchSpec>> value)`
 
 Sets custom style variants.
 

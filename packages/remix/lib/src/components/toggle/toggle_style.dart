@@ -1,18 +1,18 @@
 part of 'toggle.dart';
 
 /// Style configuration for [RemixToggle] container, label, icon, and states.
-extension RemixToggleStylerRemixHelpers on RemixToggleStyler {
+extension RemixToggleStylerRemixHelpers on ToggleStyler {
   /// Sets the background color.
-  RemixToggleStyler backgroundColor(Color value) {
+  ToggleStyler backgroundColor(Color value) {
     return merge(
-      RemixToggleStyler(
+      ToggleStyler(
         container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets the foreground color (label and icon).
-  RemixToggleStyler foregroundColor(Color value) {
+  ToggleStyler foregroundColor(Color value) {
     return labelColor(value).iconColor(value);
   }
 
@@ -46,7 +46,7 @@ extension RemixToggleStylerRemixHelpers on RemixToggleStyler {
     );
   }
 
-  RemixToggleStyler flex(FlexStyler value) {
-    return merge(RemixToggleStyler(container: FlexBoxStyler().flex(value)));
+  ToggleStyler flex(FlexStyler value) {
+    return merge(ToggleStyler(container: FlexBoxStyler().flex(value)));
   }
 }

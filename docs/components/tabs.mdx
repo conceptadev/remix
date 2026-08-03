@@ -74,16 +74,16 @@ class _TabsExampleState extends State<TabsExample> {
     );
   }
 
-  RemixTabBarStyler get tabBarStyle {
-    return RemixTabBarStyler()
+  TabBarStyler get tabBarStyle {
+    return TabBarStyler()
         .paddingAll(4)
         .borderRounded(12)
         .color(const Color(0xFFF4F6FF))
         .borderAll(color: Colors.indigo.shade100);
   }
 
-  RemixTabStyler get tabStyle {
-    return RemixTabStyler()
+  TabStyler get tabStyle {
+    return TabStyler()
         .paddingX(18)
         .paddingY(10)
         .borderRounded(10)
@@ -93,12 +93,12 @@ class _TabsExampleState extends State<TabsExample> {
         .labelColor(Colors.indigo.shade600)
         .iconColor(Colors.indigo.shade500)
         .onHovered(
-          RemixTabStyler()
+          TabStyler()
               .color(Colors.indigo.shade50)
               .labelColor(Colors.indigo.shade700),
         )
         .onSelected(
-          RemixTabStyler()
+          TabStyler()
               .color(Colors.white)
               .borderAll(color: Colors.indigo.shade400, width: 2)
               .labelColor(Colors.indigo.shade700)
@@ -106,8 +106,8 @@ class _TabsExampleState extends State<TabsExample> {
         );
   }
 
-  RemixTabViewStyler get tabViewStyle {
-    return RemixTabViewStyler()
+  TabViewStyler get tabViewStyle {
+    return TabViewStyler()
         .paddingAll(20)
         .borderRounded(14)
         .color(Colors.white)
@@ -194,8 +194,8 @@ RemixTabs remixTabsConstructor({
 RemixTabBar remixTabBarConstructor({
   Key? key,
   required Widget child,
-  RemixTabBarStyler style = const RemixTabBarStyler.create(),
-  RemixTabBarSpec? styleSpec,
+  TabBarStyler style = const TabBarStyler.create(),
+  TabBarSpec? styleSpec,
 }) => throw UnimplementedError();
 
 // Individual Tab
@@ -215,8 +215,8 @@ RemixTab remixTabConstructor({
   ValueChanged<bool>? onPressChange,
   ValueWidgetBuilder<NakedTabState>? builder,
   String? semanticLabel,
-  RemixTabStyler style = const RemixTabStyler.create(),
-  RemixTabSpec? styleSpec,
+  TabStyler style = const TabStyler.create(),
+  TabSpec? styleSpec,
 }) => throw UnimplementedError();
 
 // Tab View
@@ -224,8 +224,8 @@ RemixTabView remixTabViewConstructor({
   Key? key,
   required String tabId,
   required Widget child,
-  RemixTabViewStyler style = const RemixTabViewStyler.create(),
-  RemixTabViewSpec? styleSpec,
+  TabViewStyler style = const TabViewStyler.create(),
+  TabViewSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -275,7 +275,7 @@ Optional. Called when Escape is pressed while a tab has focus.
 
 ### Tab Bar Style Methods
 
-Methods on `RemixTabBarStyler` configure the tab-list container.
+Methods on `TabBarStyler` configure the tab-list container.
 
 #### `container(FlexBoxStyler value)`
 
@@ -329,7 +329,7 @@ Configures tab bar flex behavior.
 
 Configures implicit animation for tab bar style transitions.
 
-#### `variants(List<VariantStyle<RemixTabBarSpec>> value)`
+#### `variants(List<VariantStyle<TabBarSpec>> value)`
 
 Sets custom tab bar variants.
 
@@ -343,7 +343,7 @@ Creates a `RemixTabBar` widget with this style applied.
 
 ### Tab Style Methods
 
-Methods on `RemixTabStyler` configure each interactive tab item.
+Methods on `TabStyler` configure each interactive tab item.
 
 #### `container(FlexBoxStyler value)`
 
@@ -481,7 +481,7 @@ Sets tab icon shadows.
 
 Sets a single tab icon shadow.
 
-#### `onSelected(RemixTabStyler value)`
+#### `onSelected(TabStyler value)`
 
 Applies a style while the tab is selected.
 
@@ -489,7 +489,7 @@ Applies a style while the tab is selected.
 
 Configures implicit animation for tab item style transitions.
 
-#### `variants(List<VariantStyle<RemixTabSpec>> value)`
+#### `variants(List<VariantStyle<TabSpec>> value)`
 
 Sets custom tab item variants.
 
@@ -503,7 +503,7 @@ Creates a `RemixTab` widget with this style applied.
 
 ### Tab View Style Methods
 
-Methods on `RemixTabViewStyler` configure each tab panel.
+Methods on `TabViewStyler` configure each tab panel.
 
 #### `container(BoxStyler value)`
 
@@ -545,7 +545,7 @@ Sets a foreground decoration on the tab view.
 
 Applies a matrix transform to the tab view.
 
-#### `onSelected(RemixTabViewStyler value)`
+#### `onSelected(TabViewStyler value)`
 
 Applies a style while the tab view is selected.
 
@@ -553,7 +553,7 @@ Applies a style while the tab view is selected.
 
 Configures implicit animation for tab view style transitions.
 
-#### `variants(List<VariantStyle<RemixTabViewSpec>> value)`
+#### `variants(List<VariantStyle<TabViewSpec>> value)`
 
 Sets custom tab view variants.
 

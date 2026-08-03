@@ -31,8 +31,8 @@ class ProgressExample extends StatelessWidget {
     );
   }
 
-  RemixProgressStyler get style {
-    return RemixProgressStyler()
+  ProgressStyler get style {
+    return ProgressStyler()
         .wrap(.clipRRect(borderRadius: BorderRadiusGeometryMix.circular(10)))
         .trackColor(Colors.grey.shade300)
         .indicatorColor(Colors.grey.shade900)
@@ -86,8 +86,8 @@ import 'package:remix/remix.dart';
 RemixProgress remixProgressConstructor({
   Key? key,
   required double value,
-  RemixProgressStyler style = const RemixProgressStyler.create(),
-  RemixProgressSpec? styleSpec,
+  ProgressStyler style = const ProgressStyler.create(),
+  ProgressSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -96,11 +96,11 @@ RemixProgress remixProgressConstructor({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixProgressStyler`
+#### `style` → `ProgressStyler`
 
 Optional. The style configuration for the progress indicator. Customize colors, sizing, and track appearance.
 
-#### `styleSpec` → `RemixProgressSpec?`
+#### `styleSpec` → `ProgressSpec?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 

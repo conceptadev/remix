@@ -5,21 +5,21 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixRadioStyler', () {
+  group('RadioStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        final style = RemixRadioStyler();
+        final style = RadioStyler();
 
         expect(style, isNotNull);
-        expect(style, isA<RemixRadioStyler>());
+        expect(style, isA<RadioStyler>());
       });
 
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final indicator = Prop.maybeMix(BoxStyler());
-        final variants = <VariantStyle<RemixRadioSpec>>[];
+        final variants = <VariantStyle<RadioSpec>>[];
 
-        final style = RemixRadioStyler.create(
+        final style = RadioStyler.create(
           container: container,
           indicator: indicator,
           variants: variants,
@@ -35,7 +35,7 @@ void main() {
         final containerStyler = BoxStyler();
         final indicatorStyler = BoxStyler();
 
-        final style = RemixRadioStyler(
+        final style = RadioStyler(
           container: containerStyler,
           indicator: indicatorStyler,
         );
@@ -49,7 +49,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'indicator',
-        initial: RemixRadioStyler(),
+        initial: RadioStyler(),
         modify: (style) => style.indicator(
           BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
         ),
@@ -67,40 +67,40 @@ void main() {
 
       styleMethodTest(
         'alignment',
-        initial: RemixRadioStyler(),
+        initial: RadioStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
-          expect(style, equals(RemixRadioStyler.alignment(Alignment.center)));
+          expect(style, equals(RadioStyler.alignment(Alignment.center)));
         },
       );
 
       styleMethodTest(
         'padding',
-        initial: RemixRadioStyler(),
+        initial: RadioStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixRadioStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
+            equals(RadioStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
 
       styleMethodTest(
         'margin',
-        initial: RemixRadioStyler(),
+        initial: RadioStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixRadioStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
+            equals(RadioStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
 
       styleMethodTest(
         'fillColor',
-        initial: RemixRadioStyler(),
+        initial: RadioStyler(),
         modify: (style) => style.fillColor(Colors.blue),
         expect: (style) {
           expect(
@@ -116,30 +116,28 @@ void main() {
 
       styleMethodTest(
         'size',
-        initial: RemixRadioStyler(),
+        initial: RadioStyler(),
         modify: (style) => style.size(24.0, 24.0),
         expect: (style) {
-          expect(style, equals(RemixRadioStyler.size(24.0, 24.0)));
+          expect(style, equals(RadioStyler.size(24.0, 24.0)));
         },
       );
 
       styleMethodTest(
         'borderRadius',
-        initial: RemixRadioStyler(),
+        initial: RadioStyler(),
         modify: (style) => style.borderRadius(BorderRadiusMix.circular(12.0)),
         expect: (style) {
           expect(
             style,
-            equals(
-              RemixRadioStyler.borderRadius(BorderRadiusMix.circular(12.0)),
-            ),
+            equals(RadioStyler.borderRadius(BorderRadiusMix.circular(12.0))),
           );
         },
       );
 
       styleMethodTest(
         'constraints',
-        initial: RemixRadioStyler(),
+        initial: RadioStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 20.0, minHeight: 20.0),
         ),
@@ -147,7 +145,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixRadioStyler.constraints(
+              RadioStyler.constraints(
                 BoxConstraintsMix(minWidth: 20.0, minHeight: 20.0),
               ),
             ),
@@ -157,7 +155,7 @@ void main() {
 
       styleMethodTest(
         'decoration',
-        initial: RemixRadioStyler(),
+        initial: RadioStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.blue,
@@ -168,7 +166,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixRadioStyler.decoration(
+              RadioStyler.decoration(
                 BoxDecorationMix(
                   color: Colors.blue,
                   borderRadius: BorderRadiusMix.circular(8.0),
@@ -181,7 +179,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration',
-        initial: RemixRadioStyler(),
+        initial: RadioStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
@@ -191,7 +189,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixRadioStyler.foregroundDecoration(
+              RadioStyler.foregroundDecoration(
                 BoxDecorationMix(
                   border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
@@ -203,14 +201,14 @@ void main() {
 
       styleMethodTest(
         'transform',
-        initial: RemixRadioStyler(),
+        initial: RadioStyler(),
         modify: (style) =>
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixRadioStyler.transform(
+              RadioStyler.transform(
                 Matrix4.identity(),
                 alignment: Alignment.topLeft,
               ),
@@ -221,16 +219,16 @@ void main() {
 
       styleMethodTest(
         'variants',
-        initial: RemixRadioStyler(),
-        modify: (style) => style.variants(<VariantStyle<RemixRadioSpec>>[]),
+        initial: RadioStyler(),
+        modify: (style) => style.variants(<VariantStyle<RadioSpec>>[]),
         expect: (style) {
-          expect(style.$variants, equals(<VariantStyle<RemixRadioSpec>>[]));
+          expect(style.$variants, equals(<VariantStyle<RadioSpec>>[]));
         },
       );
 
       styleMethodTest(
         'wrap',
-        initial: RemixRadioStyler(),
+        initial: RadioStyler(),
         modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
@@ -240,7 +238,7 @@ void main() {
 
     group('Call Method', () {
       test('call method creates RemixRadio with required parameters', () {
-        final style = RemixRadioStyler();
+        final style = RadioStyler();
 
         final radio = style.call<String>(value: 'option1');
 
@@ -252,7 +250,7 @@ void main() {
       });
 
       test('call method creates RemixRadio with all parameters', () {
-        final style = RemixRadioStyler();
+        final style = RadioStyler();
         final focusNode = FocusNode();
 
         final radio = style.call<int>(
@@ -278,7 +276,7 @@ void main() {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
       ) async {
-        final style = RemixRadioStyler();
+        final style = RadioStyler();
 
         await tester.pumpWidget(
           MaterialApp(
@@ -286,8 +284,8 @@ void main() {
               builder: (context) {
                 final spec = style.resolve(context);
 
-                expect(spec, isA<StyleSpec<RemixRadioSpec>>());
-                expect(spec.spec, isA<RemixRadioSpec>());
+                expect(spec, isA<StyleSpec<RadioSpec>>());
+                expect(spec.spec, isA<RadioSpec>());
                 expect(spec.spec.container, isA<StyleSpec<BoxSpec>>());
                 expect(spec.spec.indicator, isA<StyleSpec<BoxSpec>>());
 
@@ -299,7 +297,7 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        final originalStyle = RemixRadioStyler();
+        final originalStyle = RadioStyler();
 
         final mergedStyle = originalStyle.merge(null);
 
@@ -309,16 +307,16 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        final style1 = RemixRadioStyler();
-        final style2 = RemixRadioStyler();
+        final style1 = RadioStyler();
+        final style2 = RadioStyler();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixRadioStyler().size(20.0, 20.0);
-        final style2 = RemixRadioStyler().size(24.0, 24.0);
+        final style1 = RadioStyler().size(20.0, 20.0);
+        final style2 = RadioStyler().size(24.0, 24.0);
 
         expect(style1, isNot(equals(style2)));
       });

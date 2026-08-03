@@ -55,7 +55,7 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
   final String? semanticLabel;
 
   /// The style for the menu item.
-  final RemixMenuItemStyler style;
+  final MenuItemStyler style;
 
   const RemixMenuItem({
     required this.value,
@@ -65,7 +65,7 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
     this.enabled = true,
     this.closeOnActivate = true,
     this.semanticLabel,
-    this.style = const RemixMenuItemStyler.create(),
+    this.style = const MenuItemStyler.create(),
   });
 }
 
@@ -83,7 +83,7 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 /// A customizable menu component with data-driven API.
 ///
 /// Uses a simple, declarative API with data classes for trigger and items.
-/// All styling is centralized in [RemixMenuStyler] and passed directly to children.
+/// All styling is centralized in [MenuStyler] and passed directly to children.
 ///
 /// ## Example
 ///
@@ -127,7 +127,7 @@ class RemixMenu<T> extends StatefulWidget {
     this.closeOnClickOutside = true,
     this.triggerFocusNode,
     this.positioning = const OverlayPositionConfig(),
-    this.style = const RemixMenuStyler.create(),
+    this.style = const MenuStyler.create(),
     this.styleSpec,
   });
 
@@ -175,12 +175,12 @@ class RemixMenu<T> extends StatefulWidget {
   final OverlayPositionConfig positioning;
 
   /// The style configuration for the menu.
-  final RemixMenuStyler style;
+  final MenuStyler style;
 
   /// Optional raw style spec that bypasses fluent style resolution.
-  final RemixMenuSpec? styleSpec;
+  final MenuSpec? styleSpec;
 
-  static final styleFrom = RemixMenuStyler.new;
+  static final styleFrom = MenuStyler.new;
 
   @override
   State<RemixMenu<T>> createState() => _RemixMenuState<T>();
@@ -197,9 +197,9 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
 
   // Note: MenuController doesn't require disposal - it's not a ChangeNotifier
 
-  RemixMenuStyler _buildStyle() {
-    return RemixMenuStyler()
-        .trigger(RemixMenuTriggerStyler().mainAxisSize(.min))
+  MenuStyler _buildStyle() {
+    return MenuStyler()
+        .trigger(MenuTriggerStyler().mainAxisSize(.min))
         .overlay(FlexBoxStyler().mainAxisSize(.min).wrap(.intrinsicWidth()))
         .merge(widget.style);
   }
@@ -214,7 +214,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
     return NakedMenu<T>(
       // Render items list with direct spec passing
       overlayBuilder: (context, info) {
-        return RemixStyleSpecBuilder<RemixMenuSpec>(
+        return RemixStyleSpecBuilder<MenuSpec>(
           style: style,
           styleSpec: widget.styleSpec,
           builder: (context, spec) {
@@ -257,7 +257,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       positioning: widget.positioning,
       // Render trigger from RemixMenuTrigger data
       builder: (context, state, _) {
-        return RemixStyleSpecBuilder<RemixMenuSpec>(
+        return RemixStyleSpecBuilder<MenuSpec>(
           style: style,
           styleSpec: widget.styleSpec,
           controller: NakedMenuState.controllerOf(context),
@@ -301,20 +301,20 @@ class _RemixMenuItemWidget<T> extends StatelessWidget {
   });
 
   final RemixMenuItem<T> data;
-  final Prop<StyleSpec<RemixMenuItemSpec>>? defaultStyle;
-  final StyleSpec<RemixMenuItemSpec>? defaultStyleSpec;
+  final Prop<StyleSpec<MenuItemSpec>>? defaultStyle;
+  final StyleSpec<MenuItemSpec>? defaultStyleSpec;
 
-  StyleSpec<RemixMenuItemSpec> _resolveStyle(BuildContext context) {
+  StyleSpec<MenuItemSpec> _resolveStyle(BuildContext context) {
     final rawDefault = defaultStyleSpec;
     if (rawDefault != null) return rawDefault;
 
     final itemStyle = MixOps.merge(
       defaultStyle,
-      Prop.maybeMix<StyleSpec<RemixMenuItemSpec>>(data.style),
+      Prop.maybeMix<StyleSpec<MenuItemSpec>>(data.style),
     );
 
     return MixOps.resolve(context, itemStyle) ??
-        const StyleSpec(spec: RemixMenuItemSpec());
+        const StyleSpec(spec: MenuItemSpec());
   }
 
   @override
@@ -335,7 +335,7 @@ class _RemixMenuItemWidget<T> extends StatelessWidget {
                 states: controller.value,
                 child: Builder(
                   builder: (context) {
-                    return StyleSpecBuilder<RemixMenuItemSpec>(
+                    return StyleSpecBuilder<MenuItemSpec>(
                       styleSpec: _resolveStyle(context),
                       builder: (context, spec) {
                         return FlexBox(

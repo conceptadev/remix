@@ -8,7 +8,7 @@ enum FortalAccordionVariant { surface, soft }
 
 /// Fortal-themed preset for [RemixAccordion].
 @MixWidget(target: RemixAccordion.new)
-RemixAccordionStyler fortalAccordionStyle({
+AccordionStyler fortalAccordionStyle({
   FortalAccordionVariant variant = .surface,
   FortalAccordionSize size = .size2,
 }) {
@@ -18,8 +18,8 @@ RemixAccordionStyler fortalAccordionStyle({
   };
 }
 
-RemixAccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
-  return RemixAccordionStyler()
+AccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
+  return AccordionStyler()
       .trigger(.direction(.horizontal).clipBehavior(.antiAlias))
       .leadingIcon(.color(FortalTokens.gray11()))
       .title(
@@ -32,8 +32,8 @@ RemixAccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
       .merge(_fortalAccordionSizeStyler(size));
 }
 
-RemixAccordionStyler _fortalAccordionFocusStyler() {
-  return RemixAccordionStyler().trigger(
+AccordionStyler _fortalAccordionFocusStyler() {
+  return AccordionStyler().trigger(
     FlexBoxStyler().borderAll(
       color: FortalTokens.focusA8(),
       width: FortalTokens.focusRingWidth(),
@@ -42,15 +42,15 @@ RemixAccordionStyler _fortalAccordionFocusStyler() {
   );
 }
 
-RemixAccordionStyler _fortalAccordionDisabledStyler() {
-  return RemixAccordionStyler()
+AccordionStyler _fortalAccordionDisabledStyler() {
+  return AccordionStyler()
       .trigger(.color(FortalTokens.grayA3()))
       .leadingIcon(.color(FortalTokens.gray8()))
       .title(.color(FortalTokens.gray8()))
       .trailingIcon(.color(FortalTokens.gray8()));
 }
 
-RemixAccordionStyler _fortalAccordionSurfaceStyler([
+AccordionStyler _fortalAccordionSurfaceStyler([
   FortalAccordionSize size = .size2,
 ]) {
   return _fortalAccordionBaseStyler(size)
@@ -74,7 +74,7 @@ RemixAccordionStyler _fortalAccordionSurfaceStyler([
       .onDisabled(_fortalAccordionDisabledStyler());
 }
 
-RemixAccordionStyler _fortalAccordionSoftStyler([
+AccordionStyler _fortalAccordionSoftStyler([
   FortalAccordionSize size = .size2,
 ]) {
   return _fortalAccordionBaseStyler(size)
@@ -100,9 +100,9 @@ RemixAccordionStyler _fortalAccordionSoftStyler([
       .onDisabled(_fortalAccordionDisabledStyler());
 }
 
-RemixAccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
+AccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
   return switch (size) {
-    .size1 => RemixAccordionStyler(
+    .size1 => AccordionStyler(
       trigger: FlexBoxStyler()
           .paddingX(FortalTokens.space2())
           .paddingY(FortalTokens.space2())
@@ -115,7 +115,7 @@ RemixAccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
           .borderRadiusBottom(FortalTokens.radius3())
           .clipBehavior(.antiAlias),
     ),
-    .size2 => RemixAccordionStyler(
+    .size2 => AccordionStyler(
       trigger: FlexBoxStyler()
           .paddingX(FortalTokens.space3())
           .paddingY(FortalTokens.space3())
@@ -128,7 +128,7 @@ RemixAccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
           .borderRadiusBottom(FortalTokens.radius4())
           .clipBehavior(.antiAlias),
     ),
-    .size3 => RemixAccordionStyler(
+    .size3 => AccordionStyler(
       trigger: FlexBoxStyler()
           .paddingX(FortalTokens.space4())
           .paddingY(FortalTokens.space4())

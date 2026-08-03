@@ -39,11 +39,11 @@ class RemixAvatar extends StatelessWidget {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
-    this.style = const RemixAvatarStyler.create(),
+    this.style = const AvatarStyler.create(),
     this.styleSpec,
   });
 
-  static final styleFrom = RemixAvatarStyler.new;
+  static final styleFrom = AvatarStyler.new;
 
   /// The background image to display in the avatar.
   final ImageProvider? backgroundImage;
@@ -76,14 +76,14 @@ class RemixAvatar extends StatelessWidget {
   final RemixAvatarIconBuilder? iconBuilder;
 
   /// The style configuration for the avatar.
-  final RemixAvatarStyler style;
+  final AvatarStyler style;
 
   /// Optional raw style spec that bypasses fluent style resolution.
-  final RemixAvatarSpec? styleSpec;
+  final AvatarSpec? styleSpec;
 
   @override
   Widget build(BuildContext context) {
-    return RemixStyleSpecBuilder<RemixAvatarSpec>(
+    return RemixStyleSpecBuilder<AvatarSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {

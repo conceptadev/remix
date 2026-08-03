@@ -27,8 +27,8 @@ void main() {
     // Drive the real factories rather than asserting on their source text.
     final surface = fortalTextFieldStyle(variant: .surface);
     final soft = fortalTextFieldStyle(variant: .soft);
-    expect(surface, isA<RemixTextFieldStyler>());
-    expect(soft, isA<RemixTextFieldStyler>());
+    expect(surface, isA<TextFieldStyler>());
+    expect(soft, isA<TextFieldStyler>());
     expect(soft, isNot(equals(surface)));
   });
 

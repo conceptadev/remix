@@ -6,7 +6,7 @@ part of 'slider.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
+mixin _$SliderSpec implements Spec<SliderSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get track;
   Color get trackColor;
   double get trackWidth;
@@ -21,10 +21,10 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
   BlendMode? get blendMode;
 
   @override
-  Type get type => RemixSliderSpec;
+  Type get type => SliderSpec;
 
   @override
-  RemixSliderSpec copyWith({
+  SliderSpec copyWith({
     StyleSpec<BoxSpec>? track,
     Color? trackColor,
     double? trackWidth,
@@ -38,7 +38,7 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
     RemixBoxEffectsSpec? thumbFocusEffects,
     BlendMode? blendMode,
   }) {
-    return RemixSliderSpec(
+    return SliderSpec(
       track: track ?? this.track,
       trackColor: trackColor ?? this.trackColor,
       trackWidth: trackWidth ?? this.trackWidth,
@@ -55,8 +55,8 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
   }
 
   @override
-  RemixSliderSpec lerp(RemixSliderSpec? other, double t) {
-    return RemixSliderSpec(
+  SliderSpec lerp(SliderSpec? other, double t) {
+    return SliderSpec(
       track: track.lerp(other?.track, t),
       trackColor: MixOps.lerp(trackColor, other?.trackColor, t),
       trackWidth: MixOps.lerp(trackWidth, other?.trackWidth, t),
@@ -95,7 +95,7 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixSliderSpec &&
+        other is SliderSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -148,9 +148,9 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixSliderSpec` and migrate the class declaration to `class RemixSliderSpec with _\$RemixSliderSpec`. The `_\$RemixSliderSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$SliderSpec` and migrate the class declaration to `class SliderSpec with _\$SliderSpec`. The `_\$SliderSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixSliderSpecMethods = _$RemixSliderSpec; // ignore: unused_element
+typedef _$SliderSpecMethods = _$SliderSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -283,8 +283,8 @@ class FortalSlider extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
-    with RemixBoxStylerMixin<RemixSliderStyler> {
+class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
+    with RemixBoxStylerMixin<SliderStyler> {
   final Prop<StyleSpec<BoxSpec>>? $track;
   final Prop<Color>? $trackColor;
   final Prop<double>? $trackWidth;
@@ -298,7 +298,7 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
   final Prop<RemixBoxEffectsSpec>? $thumbFocusEffects;
   final Prop<BlendMode>? $blendMode;
 
-  const RemixSliderStyler.create({
+  const SliderStyler.create({
     Prop<StyleSpec<BoxSpec>>? track,
     Prop<Color>? trackColor,
     Prop<double>? trackWidth,
@@ -327,7 +327,7 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
        $thumbFocusEffects = thumbFocusEffects,
        $blendMode = blendMode;
 
-  RemixSliderStyler({
+  SliderStyler({
     BoxStyler? track,
     Color? trackColor,
     double? trackWidth,
@@ -342,7 +342,7 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     BlendMode? blendMode,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixSliderSpec>>? variants,
+    List<VariantStyle<SliderSpec>>? variants,
   }) : this.create(
          track: Prop.maybeMix(track),
          trackColor: Prop.maybe(trackColor),
@@ -361,137 +361,127 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
          animation: animation,
        );
 
-  factory RemixSliderStyler.track(BoxStyler value) =>
-      RemixSliderStyler().track(value);
-  factory RemixSliderStyler.trackColor(Color value) =>
-      RemixSliderStyler().trackColor(value);
-  factory RemixSliderStyler.trackWidth(double value) =>
-      RemixSliderStyler().trackWidth(value);
-  factory RemixSliderStyler.trackEffects(RemixBoxEffectsMix value) =>
-      RemixSliderStyler().trackEffects(value);
-  factory RemixSliderStyler.range(BoxStyler value) =>
-      RemixSliderStyler().range(value);
-  factory RemixSliderStyler.rangeColor(Color value) =>
-      RemixSliderStyler().rangeColor(value);
-  factory RemixSliderStyler.rangeWidth(double value) =>
-      RemixSliderStyler().rangeWidth(value);
-  factory RemixSliderStyler.rangeEffects(RemixBoxEffectsMix value) =>
-      RemixSliderStyler().rangeEffects(value);
-  factory RemixSliderStyler.thumb(BoxStyler value) =>
-      RemixSliderStyler().thumb(value);
-  factory RemixSliderStyler.thumbEffects(RemixBoxEffectsMix value) =>
-      RemixSliderStyler().thumbEffects(value);
-  factory RemixSliderStyler.thumbFocusEffects(RemixBoxEffectsMix value) =>
-      RemixSliderStyler().thumbFocusEffects(value);
-  factory RemixSliderStyler.blendMode(BlendMode value) =>
-      RemixSliderStyler().blendMode(value);
-  factory RemixSliderStyler.alignment(AlignmentGeometry value) =>
-      RemixSliderStyler().alignment(value);
-  factory RemixSliderStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixSliderStyler().padding(value);
-  factory RemixSliderStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixSliderStyler().margin(value);
-  factory RemixSliderStyler.constraints(BoxConstraintsMix value) =>
-      RemixSliderStyler().constraints(value);
-  factory RemixSliderStyler.decoration(DecorationMix value) =>
-      RemixSliderStyler().decoration(value);
-  factory RemixSliderStyler.foregroundDecoration(DecorationMix value) =>
-      RemixSliderStyler().foregroundDecoration(value);
-  factory RemixSliderStyler.clipBehavior(Clip value) =>
-      RemixSliderStyler().clipBehavior(value);
-  factory RemixSliderStyler.color(Color value) =>
-      RemixSliderStyler().color(value);
-  factory RemixSliderStyler.gradient(GradientMix value) =>
-      RemixSliderStyler().gradient(value);
-  factory RemixSliderStyler.border(BoxBorderMix value) =>
-      RemixSliderStyler().border(value);
-  factory RemixSliderStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixSliderStyler().borderRadius(value);
-  factory RemixSliderStyler.elevation(ElevationShadow value) =>
-      RemixSliderStyler().elevation(value);
-  factory RemixSliderStyler.shadow(BoxShadowMix value) =>
-      RemixSliderStyler().shadow(value);
-  factory RemixSliderStyler.shadows(List<BoxShadowMix> value) =>
-      RemixSliderStyler().shadows(value);
-  factory RemixSliderStyler.width(double value) =>
-      RemixSliderStyler().width(value);
-  factory RemixSliderStyler.height(double value) =>
-      RemixSliderStyler().height(value);
-  factory RemixSliderStyler.size(double width, double height) =>
-      RemixSliderStyler().size(width, height);
-  factory RemixSliderStyler.minWidth(double value) =>
-      RemixSliderStyler().minWidth(value);
-  factory RemixSliderStyler.maxWidth(double value) =>
-      RemixSliderStyler().maxWidth(value);
-  factory RemixSliderStyler.minHeight(double value) =>
-      RemixSliderStyler().minHeight(value);
-  factory RemixSliderStyler.maxHeight(double value) =>
-      RemixSliderStyler().maxHeight(value);
-  factory RemixSliderStyler.scale(
-    double scale, {
-    Alignment alignment = .center,
-  }) => RemixSliderStyler().scale(scale, alignment: alignment);
-  factory RemixSliderStyler.rotate(
+  factory SliderStyler.track(BoxStyler value) => SliderStyler().track(value);
+  factory SliderStyler.trackColor(Color value) =>
+      SliderStyler().trackColor(value);
+  factory SliderStyler.trackWidth(double value) =>
+      SliderStyler().trackWidth(value);
+  factory SliderStyler.trackEffects(RemixBoxEffectsMix value) =>
+      SliderStyler().trackEffects(value);
+  factory SliderStyler.range(BoxStyler value) => SliderStyler().range(value);
+  factory SliderStyler.rangeColor(Color value) =>
+      SliderStyler().rangeColor(value);
+  factory SliderStyler.rangeWidth(double value) =>
+      SliderStyler().rangeWidth(value);
+  factory SliderStyler.rangeEffects(RemixBoxEffectsMix value) =>
+      SliderStyler().rangeEffects(value);
+  factory SliderStyler.thumb(BoxStyler value) => SliderStyler().thumb(value);
+  factory SliderStyler.thumbEffects(RemixBoxEffectsMix value) =>
+      SliderStyler().thumbEffects(value);
+  factory SliderStyler.thumbFocusEffects(RemixBoxEffectsMix value) =>
+      SliderStyler().thumbFocusEffects(value);
+  factory SliderStyler.blendMode(BlendMode value) =>
+      SliderStyler().blendMode(value);
+  factory SliderStyler.alignment(AlignmentGeometry value) =>
+      SliderStyler().alignment(value);
+  factory SliderStyler.padding(EdgeInsetsGeometryMix value) =>
+      SliderStyler().padding(value);
+  factory SliderStyler.margin(EdgeInsetsGeometryMix value) =>
+      SliderStyler().margin(value);
+  factory SliderStyler.constraints(BoxConstraintsMix value) =>
+      SliderStyler().constraints(value);
+  factory SliderStyler.decoration(DecorationMix value) =>
+      SliderStyler().decoration(value);
+  factory SliderStyler.foregroundDecoration(DecorationMix value) =>
+      SliderStyler().foregroundDecoration(value);
+  factory SliderStyler.clipBehavior(Clip value) =>
+      SliderStyler().clipBehavior(value);
+  factory SliderStyler.color(Color value) => SliderStyler().color(value);
+  factory SliderStyler.gradient(GradientMix value) =>
+      SliderStyler().gradient(value);
+  factory SliderStyler.border(BoxBorderMix value) =>
+      SliderStyler().border(value);
+  factory SliderStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      SliderStyler().borderRadius(value);
+  factory SliderStyler.elevation(ElevationShadow value) =>
+      SliderStyler().elevation(value);
+  factory SliderStyler.shadow(BoxShadowMix value) =>
+      SliderStyler().shadow(value);
+  factory SliderStyler.shadows(List<BoxShadowMix> value) =>
+      SliderStyler().shadows(value);
+  factory SliderStyler.width(double value) => SliderStyler().width(value);
+  factory SliderStyler.height(double value) => SliderStyler().height(value);
+  factory SliderStyler.size(double width, double height) =>
+      SliderStyler().size(width, height);
+  factory SliderStyler.minWidth(double value) => SliderStyler().minWidth(value);
+  factory SliderStyler.maxWidth(double value) => SliderStyler().maxWidth(value);
+  factory SliderStyler.minHeight(double value) =>
+      SliderStyler().minHeight(value);
+  factory SliderStyler.maxHeight(double value) =>
+      SliderStyler().maxHeight(value);
+  factory SliderStyler.scale(double scale, {Alignment alignment = .center}) =>
+      SliderStyler().scale(scale, alignment: alignment);
+  factory SliderStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixSliderStyler().rotate(radians, alignment: alignment);
-  factory RemixSliderStyler.translate(double x, double y, [double z = 0.0]) =>
-      RemixSliderStyler().translate(x, y, z);
-  factory RemixSliderStyler.skew(double skewX, double skewY) =>
-      RemixSliderStyler().skew(skewX, skewY);
-  factory RemixSliderStyler.textStyle(TextStyler value) =>
-      RemixSliderStyler().textStyle(value);
-  factory RemixSliderStyler.image(DecorationImageMix value) =>
-      RemixSliderStyler().image(value);
-  factory RemixSliderStyler.shape(ShapeBorderMix value) =>
-      RemixSliderStyler().shape(value);
-  factory RemixSliderStyler.backgroundImage(
+  }) => SliderStyler().rotate(radians, alignment: alignment);
+  factory SliderStyler.translate(double x, double y, [double z = 0.0]) =>
+      SliderStyler().translate(x, y, z);
+  factory SliderStyler.skew(double skewX, double skewY) =>
+      SliderStyler().skew(skewX, skewY);
+  factory SliderStyler.textStyle(TextStyler value) =>
+      SliderStyler().textStyle(value);
+  factory SliderStyler.image(DecorationImageMix value) =>
+      SliderStyler().image(value);
+  factory SliderStyler.shape(ShapeBorderMix value) =>
+      SliderStyler().shape(value);
+  factory SliderStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixSliderStyler().backgroundImage(
+  }) => SliderStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixSliderStyler.backgroundImageUrl(
+  factory SliderStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixSliderStyler().backgroundImageUrl(
+  }) => SliderStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixSliderStyler.backgroundImageAsset(
+  factory SliderStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixSliderStyler().backgroundImageAsset(
+  }) => SliderStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixSliderStyler.linearGradient({
+  factory SliderStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixSliderStyler().linearGradient(
+  }) => SliderStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixSliderStyler.radialGradient({
+  factory SliderStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -499,7 +489,7 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixSliderStyler().radialGradient(
+  }) => SliderStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -508,14 +498,14 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixSliderStyler.sweepGradient({
+  factory SliderStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixSliderStyler().sweepGradient(
+  }) => SliderStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -523,20 +513,20 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixSliderStyler.foregroundLinearGradient({
+  factory SliderStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixSliderStyler().foregroundLinearGradient(
+  }) => SliderStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixSliderStyler.foregroundRadialGradient({
+  factory SliderStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -544,7 +534,7 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixSliderStyler().foregroundRadialGradient(
+  }) => SliderStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -553,14 +543,14 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixSliderStyler.foregroundSweepGradient({
+  factory SliderStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixSliderStyler().foregroundSweepGradient(
+  }) => SliderStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -568,124 +558,124 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixSliderStyler.transform(
+  factory SliderStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixSliderStyler().transform(value, alignment: alignment);
+  }) => SliderStyler().transform(value, alignment: alignment);
 
-  RemixSliderStyler alignment(AlignmentGeometry value) {
+  SliderStyler alignment(AlignmentGeometry value) {
     return thumb(BoxStyler().alignment(value));
   }
 
-  RemixSliderStyler padding(EdgeInsetsGeometryMix value) {
+  SliderStyler padding(EdgeInsetsGeometryMix value) {
     return thumb(BoxStyler().padding(value));
   }
 
-  RemixSliderStyler margin(EdgeInsetsGeometryMix value) {
+  SliderStyler margin(EdgeInsetsGeometryMix value) {
     return thumb(BoxStyler().margin(value));
   }
 
-  RemixSliderStyler constraints(BoxConstraintsMix value) {
+  SliderStyler constraints(BoxConstraintsMix value) {
     return thumb(BoxStyler().constraints(value));
   }
 
-  RemixSliderStyler decoration(DecorationMix value) {
+  SliderStyler decoration(DecorationMix value) {
     return thumb(BoxStyler().decoration(value));
   }
 
-  RemixSliderStyler foregroundDecoration(DecorationMix value) {
+  SliderStyler foregroundDecoration(DecorationMix value) {
     return thumb(BoxStyler().foregroundDecoration(value));
   }
 
-  RemixSliderStyler clipBehavior(Clip value) {
+  SliderStyler clipBehavior(Clip value) {
     return thumb(BoxStyler().clipBehavior(value));
   }
 
-  RemixSliderStyler color(Color value) {
+  SliderStyler color(Color value) {
     return thumb(BoxStyler().color(value));
   }
 
-  RemixSliderStyler gradient(GradientMix value) {
+  SliderStyler gradient(GradientMix value) {
     return thumb(BoxStyler().gradient(value));
   }
 
-  RemixSliderStyler border(BoxBorderMix value) {
+  SliderStyler border(BoxBorderMix value) {
     return thumb(BoxStyler().border(value));
   }
 
-  RemixSliderStyler borderRadius(BorderRadiusGeometryMix value) {
+  SliderStyler borderRadius(BorderRadiusGeometryMix value) {
     return thumb(BoxStyler().borderRadius(value));
   }
 
-  RemixSliderStyler elevation(ElevationShadow value) {
+  SliderStyler elevation(ElevationShadow value) {
     return thumb(BoxStyler().elevation(value));
   }
 
-  RemixSliderStyler shadow(BoxShadowMix value) {
+  SliderStyler shadow(BoxShadowMix value) {
     return thumb(BoxStyler().shadow(value));
   }
 
-  RemixSliderStyler shadows(List<BoxShadowMix> value) {
+  SliderStyler shadows(List<BoxShadowMix> value) {
     return thumb(BoxStyler().shadows(value));
   }
 
-  RemixSliderStyler width(double value) {
+  SliderStyler width(double value) {
     return thumb(BoxStyler().width(value));
   }
 
-  RemixSliderStyler height(double value) {
+  SliderStyler height(double value) {
     return thumb(BoxStyler().height(value));
   }
 
-  RemixSliderStyler size(double width, double height) {
+  SliderStyler size(double width, double height) {
     return thumb(BoxStyler().size(width, height));
   }
 
-  RemixSliderStyler minWidth(double value) {
+  SliderStyler minWidth(double value) {
     return thumb(BoxStyler().minWidth(value));
   }
 
-  RemixSliderStyler maxWidth(double value) {
+  SliderStyler maxWidth(double value) {
     return thumb(BoxStyler().maxWidth(value));
   }
 
-  RemixSliderStyler minHeight(double value) {
+  SliderStyler minHeight(double value) {
     return thumb(BoxStyler().minHeight(value));
   }
 
-  RemixSliderStyler maxHeight(double value) {
+  SliderStyler maxHeight(double value) {
     return thumb(BoxStyler().maxHeight(value));
   }
 
-  RemixSliderStyler scale(double scale, {Alignment alignment = .center}) {
+  SliderStyler scale(double scale, {Alignment alignment = .center}) {
     return thumb(BoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixSliderStyler rotate(double radians, {Alignment alignment = .center}) {
+  SliderStyler rotate(double radians, {Alignment alignment = .center}) {
     return thumb(BoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixSliderStyler translate(double x, double y, [double z = 0.0]) {
+  SliderStyler translate(double x, double y, [double z = 0.0]) {
     return thumb(BoxStyler().translate(x, y, z));
   }
 
-  RemixSliderStyler skew(double skewX, double skewY) {
+  SliderStyler skew(double skewX, double skewY) {
     return thumb(BoxStyler().skew(skewX, skewY));
   }
 
-  RemixSliderStyler textStyle(TextStyler value) {
+  SliderStyler textStyle(TextStyler value) {
     return thumb(BoxStyler().textStyle(value));
   }
 
-  RemixSliderStyler image(DecorationImageMix value) {
+  SliderStyler image(DecorationImageMix value) {
     return thumb(BoxStyler().image(value));
   }
 
-  RemixSliderStyler shape(ShapeBorderMix value) {
+  SliderStyler shape(ShapeBorderMix value) {
     return thumb(BoxStyler().shape(value));
   }
 
-  RemixSliderStyler backgroundImage(
+  SliderStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -701,7 +691,7 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     );
   }
 
-  RemixSliderStyler backgroundImageUrl(
+  SliderStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -717,7 +707,7 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     );
   }
 
-  RemixSliderStyler backgroundImageAsset(
+  SliderStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -733,7 +723,7 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     );
   }
 
-  RemixSliderStyler linearGradient({
+  SliderStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -751,7 +741,7 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     );
   }
 
-  RemixSliderStyler radialGradient({
+  SliderStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -773,7 +763,7 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     );
   }
 
-  RemixSliderStyler sweepGradient({
+  SliderStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -793,7 +783,7 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     );
   }
 
-  RemixSliderStyler foregroundLinearGradient({
+  SliderStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -811,7 +801,7 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     );
   }
 
-  RemixSliderStyler foregroundRadialGradient({
+  SliderStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -833,7 +823,7 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     );
   }
 
-  RemixSliderStyler foregroundSweepGradient({
+  SliderStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -853,97 +843,97 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     );
   }
 
-  RemixSliderStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+  SliderStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return thumb(BoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the track.
-  RemixSliderStyler track(BoxStyler value) {
-    return merge(RemixSliderStyler(track: value));
+  SliderStyler track(BoxStyler value) {
+    return merge(SliderStyler(track: value));
   }
 
   /// Sets the trackColor.
-  RemixSliderStyler trackColor(Color value) {
-    return merge(RemixSliderStyler(trackColor: value));
+  SliderStyler trackColor(Color value) {
+    return merge(SliderStyler(trackColor: value));
   }
 
   /// Sets the trackWidth.
-  RemixSliderStyler trackWidth(double value) {
-    return merge(RemixSliderStyler(trackWidth: value));
+  SliderStyler trackWidth(double value) {
+    return merge(SliderStyler(trackWidth: value));
   }
 
   /// Sets the trackEffects.
-  RemixSliderStyler trackEffects(RemixBoxEffectsMix value) {
-    return merge(RemixSliderStyler(trackEffects: value));
+  SliderStyler trackEffects(RemixBoxEffectsMix value) {
+    return merge(SliderStyler(trackEffects: value));
   }
 
   /// Sets the range.
-  RemixSliderStyler range(BoxStyler value) {
-    return merge(RemixSliderStyler(range: value));
+  SliderStyler range(BoxStyler value) {
+    return merge(SliderStyler(range: value));
   }
 
   /// Sets the rangeColor.
-  RemixSliderStyler rangeColor(Color value) {
-    return merge(RemixSliderStyler(rangeColor: value));
+  SliderStyler rangeColor(Color value) {
+    return merge(SliderStyler(rangeColor: value));
   }
 
   /// Sets the rangeWidth.
-  RemixSliderStyler rangeWidth(double value) {
-    return merge(RemixSliderStyler(rangeWidth: value));
+  SliderStyler rangeWidth(double value) {
+    return merge(SliderStyler(rangeWidth: value));
   }
 
   /// Sets the rangeEffects.
-  RemixSliderStyler rangeEffects(RemixBoxEffectsMix value) {
-    return merge(RemixSliderStyler(rangeEffects: value));
+  SliderStyler rangeEffects(RemixBoxEffectsMix value) {
+    return merge(SliderStyler(rangeEffects: value));
   }
 
   /// Sets the thumb.
-  RemixSliderStyler thumb(BoxStyler value) {
-    return merge(RemixSliderStyler(thumb: value));
+  SliderStyler thumb(BoxStyler value) {
+    return merge(SliderStyler(thumb: value));
   }
 
   /// Sets the thumbEffects.
-  RemixSliderStyler thumbEffects(RemixBoxEffectsMix value) {
-    return merge(RemixSliderStyler(thumbEffects: value));
+  SliderStyler thumbEffects(RemixBoxEffectsMix value) {
+    return merge(SliderStyler(thumbEffects: value));
   }
 
   /// Sets the thumbFocusEffects.
-  RemixSliderStyler thumbFocusEffects(RemixBoxEffectsMix value) {
-    return merge(RemixSliderStyler(thumbFocusEffects: value));
+  SliderStyler thumbFocusEffects(RemixBoxEffectsMix value) {
+    return merge(SliderStyler(thumbFocusEffects: value));
   }
 
   /// Sets the blendMode.
-  RemixSliderStyler blendMode(BlendMode value) {
-    return merge(RemixSliderStyler(blendMode: value));
+  SliderStyler blendMode(BlendMode value) {
+    return merge(SliderStyler(blendMode: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixSliderStyler animate(AnimationConfig value) {
-    return merge(RemixSliderStyler(animation: value));
+  SliderStyler animate(AnimationConfig value) {
+    return merge(SliderStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixSliderStyler variants(List<VariantStyle<RemixSliderSpec>> value) {
-    return merge(RemixSliderStyler(variants: value));
+  SliderStyler variants(List<VariantStyle<SliderSpec>> value) {
+    return merge(SliderStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixSliderStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixSliderStyler(modifier: value));
+  SliderStyler wrap(WidgetModifierConfig value) {
+    return merge(SliderStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixSliderStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixSliderStyler(modifier: value));
+  SliderStyler modifier(WidgetModifierConfig value) {
+    return merge(SliderStyler(modifier: value));
   }
 
-  /// Merges with another [RemixSliderStyler].
+  /// Merges with another [SliderStyler].
   @override
-  RemixSliderStyler merge(RemixSliderStyler? other) {
-    return RemixSliderStyler.create(
+  SliderStyler merge(SliderStyler? other) {
+    return SliderStyler.create(
       track: MixOps.merge($track, other?.$track),
       trackColor: MixOps.merge($trackColor, other?.$trackColor),
       trackWidth: MixOps.merge($trackWidth, other?.$trackWidth),
@@ -965,10 +955,10 @@ class RemixSliderStyler extends MixStyler<RemixSliderStyler, RemixSliderSpec>
     );
   }
 
-  /// Resolves to [StyleSpec<RemixSliderSpec>] using [context].
+  /// Resolves to [StyleSpec<SliderSpec>] using [context].
   @override
-  StyleSpec<RemixSliderSpec> resolve(BuildContext context) {
-    final spec = RemixSliderSpec(
+  StyleSpec<SliderSpec> resolve(BuildContext context) {
+    final spec = SliderSpec(
       track: MixOps.resolve(context, $track),
       trackColor: MixOps.resolve(context, $trackColor),
       trackWidth: MixOps.resolve(context, $trackWidth),

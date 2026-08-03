@@ -20,8 +20,8 @@ class ProgressExample extends StatelessWidget {
     return Center(child: RemixProgress(value: 0.3, style: style));
   }
 
-  RemixProgressStyler get style {
-    return RemixProgressStyler()
+  ProgressStyler get style {
+    return ProgressStyler()
         .wrap(.clipRRect(borderRadius: .circular(10)))
         .trackColor(Colors.grey.shade300)
         .indicatorColor(Colors.grey.shade900)

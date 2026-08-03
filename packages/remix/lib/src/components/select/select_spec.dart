@@ -2,33 +2,39 @@ part of 'select.dart';
 
 /// Resolved visual values for a [RemixSelect].
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixSelectSpec with _$RemixSelectSpec {
+class SelectSpec with _$SelectSpec {
   @override
-  final StyleSpec<RemixSelectTriggerSpec> trigger;
+  final StyleSpec<SelectTriggerSpec> trigger;
   @override
-  final StyleSpec<RemixSelectContentSpec> content;
+  final StyleSpec<SelectContentSpec> content;
   @override
   @MixableField(forwardStyler: true, stylerSurface: BoxSpec)
   final StyleSpec<FlexBoxSpec> menuContainer;
   @override
-  final StyleSpec<RemixSelectMenuItemSpec> item;
+  final StyleSpec<SelectMenuItemSpec> item;
 
-  const RemixSelectSpec({
-    StyleSpec<RemixSelectTriggerSpec>? trigger,
-    StyleSpec<RemixSelectContentSpec>? content,
+  const SelectSpec({
+    StyleSpec<SelectTriggerSpec>? trigger,
+    StyleSpec<SelectContentSpec>? content,
     StyleSpec<FlexBoxSpec>? menuContainer,
-    StyleSpec<RemixSelectMenuItemSpec>? item,
-  }) : trigger = trigger ?? const StyleSpec(spec: RemixSelectTriggerSpec()),
-       content = content ?? const StyleSpec(spec: RemixSelectContentSpec()),
-       item = item ?? const StyleSpec(spec: RemixSelectMenuItemSpec()),
+    StyleSpec<SelectMenuItemSpec>? item,
+  }) : trigger = trigger ?? const StyleSpec(spec: SelectTriggerSpec()),
+       content = content ?? const StyleSpec(spec: SelectContentSpec()),
+       item = item ?? const StyleSpec(spec: SelectMenuItemSpec()),
        menuContainer = menuContainer ?? const StyleSpec(spec: FlexBoxSpec());
 }
+
+/// Backward-compatible name for [SelectSpec].
+///
+/// The generated style API is based on [SelectSpec], so resolved values use
+/// `SelectSpec` as their runtime type.
+typedef RemixSelectSpec = SelectSpec;
 
 /// Resolved visual values for the select trigger.
 @MixableSpec(
   extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
 )
-class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
+class SelectTriggerSpec with _$SelectTriggerSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
@@ -48,7 +54,7 @@ class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
   @override
   final double? placeholderOpacity;
 
-  const RemixSelectTriggerSpec({
+  const SelectTriggerSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<TextSpec>? placeholder,
@@ -66,7 +72,7 @@ class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixSelectTriggerSpec lerp(RemixSelectTriggerSpec? other, double t) {
+  SelectTriggerSpec lerp(SelectTriggerSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
@@ -79,9 +85,15 @@ class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
   }
 }
 
+/// Backward-compatible name for [SelectTriggerSpec].
+///
+/// The generated style API is based on [SelectTriggerSpec], so resolved values
+/// use `SelectTriggerSpec` as their runtime type.
+typedef RemixSelectTriggerSpec = SelectTriggerSpec;
+
 /// Resolved visual values for the select popup content.
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixSelectContentSpec with _$RemixSelectContentSpec {
+class SelectContentSpec with _$SelectContentSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
@@ -89,7 +101,7 @@ class RemixSelectContentSpec with _$RemixSelectContentSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
-  const RemixSelectContentSpec({
+  const SelectContentSpec({
     StyleSpec<BoxSpec>? container,
     this.containerEffects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec());
@@ -97,7 +109,7 @@ class RemixSelectContentSpec with _$RemixSelectContentSpec {
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixSelectContentSpec lerp(RemixSelectContentSpec? other, double t) {
+  SelectContentSpec lerp(SelectContentSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
@@ -110,9 +122,15 @@ class RemixSelectContentSpec with _$RemixSelectContentSpec {
   }
 }
 
+/// Backward-compatible name for [SelectContentSpec].
+///
+/// The generated style API is based on [SelectContentSpec], so resolved values
+/// use `SelectContentSpec` as their runtime type.
+typedef RemixSelectContentSpec = SelectContentSpec;
+
 /// Resolved visual values for a select menu item.
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, IconStyleMixin])
-class RemixSelectMenuItemSpec with _$RemixSelectMenuItemSpec {
+class SelectMenuItemSpec with _$SelectMenuItemSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
@@ -123,7 +141,7 @@ class RemixSelectMenuItemSpec with _$RemixSelectMenuItemSpec {
   @override
   final StyleSpec<IconSpec> icon;
 
-  const RemixSelectMenuItemSpec({
+  const SelectMenuItemSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? text,
     StyleSpec<BoxSpec>? indicator,
@@ -133,3 +151,9 @@ class RemixSelectMenuItemSpec with _$RemixSelectMenuItemSpec {
        indicator = indicator ?? const StyleSpec(spec: BoxSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec());
 }
+
+/// Backward-compatible name for [SelectMenuItemSpec].
+///
+/// The generated style API is based on [SelectMenuItemSpec], so resolved values
+/// use `SelectMenuItemSpec` as their runtime type.
+typedef RemixSelectMenuItemSpec = SelectMenuItemSpec;

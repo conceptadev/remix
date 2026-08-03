@@ -60,4 +60,36 @@ export 'src/utilities/selected_mixin.dart'
     show SelectedWidgetStateVariantExtension;
 
 /// DEPRECATED
-export 'deprecated.dart' show RemixButtonStyler;
+export 'deprecated.dart'
+    show
+        RemixAccordionStyler,
+        RemixAvatarStyler,
+        RemixBadgeStyler,
+        RemixButtonStyler,
+        RemixCalloutStyler,
+        RemixCardStyler,
+        RemixCheckboxStyler,
+        RemixDialogStyler,
+        RemixDividerStyler,
+        RemixIconButtonStyler,
+        RemixMenuItemStyler,
+        RemixMenuStyler,
+        RemixMenuTriggerStyler,
+        RemixPopoverStyler,
+        RemixProgressStyler,
+        RemixRadioStyler,
+        RemixSelectContentStyler,
+        RemixSelectMenuItemStyler,
+        RemixSelectStyler,
+        RemixSelectTriggerStyler,
+        RemixSliderStyler,
+        RemixSpinnerStyler,
+        RemixSwitchStyler,
+        RemixTabBarStyler,
+        RemixTabStyler,
+        RemixTabViewStyler,
+        RemixTextFieldStyler,
+        RemixToggleGroupItemStyler,
+        RemixToggleGroupStyler,
+        RemixToggleStyler,
+        RemixTooltipStyler;

@@ -434,7 +434,7 @@ void main() {
 
     group('Styling', () {
       testWidgets('applies custom tab bar style', (tester) async {
-        final customStyle = RemixTabBarStyler(
+        final customStyle = TabBarStyler(
           container: FlexBoxStyler(
             decoration: BoxDecorationMix(color: Colors.blue),
             padding: EdgeInsetsGeometryMix.all(16),
@@ -467,7 +467,7 @@ void main() {
       });
 
       testWidgets('applies custom tab style', (tester) async {
-        final customStyle = RemixTabStyler(
+        final customStyle = TabStyler(
           container: FlexBoxStyler(
             decoration: BoxDecorationMix(color: Colors.red),
             padding: EdgeInsetsGeometryMix.all(8),
@@ -503,7 +503,7 @@ void main() {
       });
 
       testWidgets('applies custom tab view style', (tester) async {
-        final customStyle = RemixTabViewStyler(
+        final customStyle = TabViewStyler(
           container: BoxStyler(
             decoration: BoxDecorationMix(color: Colors.green),
             padding: EdgeInsetsGeometryMix.all(20),

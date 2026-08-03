@@ -4,10 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixDividerSpec', () {
+  group('DividerSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        const spec = RemixDividerSpec();
+        const spec = DividerSpec();
 
         expect(spec.container, isA<StyleSpec<BoxSpec>>());
       });
@@ -17,7 +17,7 @@ void main() {
           spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
         );
 
-        final spec = RemixDividerSpec(container: customContainer);
+        final spec = DividerSpec(container: customContainer);
 
         expect(spec.container, equals(customContainer));
       });
@@ -25,7 +25,7 @@ void main() {
 
     group('copyWith', () {
       test('returns new instance with updated container', () {
-        const originalSpec = RemixDividerSpec();
+        const originalSpec = DividerSpec();
         final newContainer = StyleSpec(
           spec: BoxSpec(decoration: BoxDecoration(color: Colors.blue)),
         );
@@ -39,7 +39,7 @@ void main() {
       test(
         'returns new instance with no changes when no parameters provided',
         () {
-          const originalSpec = RemixDividerSpec();
+          const originalSpec = DividerSpec();
 
           final updatedSpec = originalSpec.copyWith();
 
@@ -49,7 +49,7 @@ void main() {
       );
 
       test('preserves immutability - original spec unchanged', () {
-        const originalSpec = RemixDividerSpec();
+        const originalSpec = DividerSpec();
         final originalContainer = originalSpec.container;
         final newContainer = StyleSpec(
           spec: BoxSpec(decoration: BoxDecoration(color: Colors.green)),
@@ -65,7 +65,7 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        const spec = RemixDividerSpec();
+        const spec = DividerSpec();
         const other = null;
 
         final result = spec.lerp(other, 0.5);
@@ -74,51 +74,51 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
-        final spec2 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec1 = DividerSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec2 = DividerSpec(container: StyleSpec(spec: BoxSpec()));
 
         final result = spec1.lerp(spec2, 0.0);
 
         expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
-        expect(result, isA<RemixDividerSpec>());
+        expect(result, isA<DividerSpec>());
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
-        final spec2 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec1 = DividerSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec2 = DividerSpec(container: StyleSpec(spec: BoxSpec()));
 
         final result = spec1.lerp(spec2, 1.0);
 
         expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
-        expect(result, isA<RemixDividerSpec>());
+        expect(result, isA<DividerSpec>());
       });
 
       test('interpolates between two specs at t=0.5', () {
-        final spec1 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
-        final spec2 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec1 = DividerSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec2 = DividerSpec(container: StyleSpec(spec: BoxSpec()));
 
         final result = spec1.lerp(spec2, 0.5);
 
         expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
-        expect(result, isA<RemixDividerSpec>());
+        expect(result, isA<DividerSpec>());
       });
     });
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixDividerSpec();
-        const spec2 = RemixDividerSpec();
+        const spec1 = DividerSpec();
+        const spec2 = DividerSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('specs with different properties are not equal', () {
-        const spec1 = RemixDividerSpec();
-        final spec2 = RemixDividerSpec(
+        const spec1 = DividerSpec();
+        final spec2 = DividerSpec(
           container: StyleSpec(
             spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
           ),
@@ -128,7 +128,7 @@ void main() {
       });
 
       test('props list contains all properties', () {
-        const spec = RemixDividerSpec();
+        const spec = DividerSpec();
 
         expect(spec.props, hasLength(1));
         expect(spec.props, contains(spec.container));
@@ -137,7 +137,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = RemixDividerSpec();
+        const spec = DividerSpec();
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -146,14 +146,14 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        const spec = RemixDividerSpec();
+        const spec = DividerSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
       });
 
       test('diagnostic properties are properly formatted', () {
-        const spec = RemixDividerSpec();
+        const spec = DividerSpec();
         final builder = DiagnosticPropertiesBuilder();
 
         spec.debugFillProperties(builder);
@@ -168,7 +168,7 @@ void main() {
 
     group('Edge Cases', () {
       test('copyWith handles null parameter correctly', () {
-        const spec = RemixDividerSpec();
+        const spec = DividerSpec();
         final originalContainer = spec.container;
 
         final updatedSpec = spec.copyWith(container: null);

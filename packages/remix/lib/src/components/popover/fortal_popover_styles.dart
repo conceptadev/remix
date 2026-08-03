@@ -5,7 +5,7 @@ enum FortalPopoverSize { size1, size2, size3, size4 }
 
 /// Fortal-themed preset for [RemixPopover].
 @MixWidget(target: RemixPopover.new)
-RemixPopoverStyler fortalPopoverStyle({
+PopoverStyler fortalPopoverStyle({
   FortalPopoverSize size = FortalPopoverSize.size2,
 }) {
   final radius = switch (size) {
@@ -21,7 +21,7 @@ RemixPopoverStyler fortalPopoverStyle({
     FortalPopoverSize.size4 => FortalTokens.space6(),
   };
 
-  return RemixPopoverStyler()
+  return PopoverStyler()
       .paddingAll(padding)
       .borderRadiusAll(radius)
       .color(FortalTokens.colorPanel())

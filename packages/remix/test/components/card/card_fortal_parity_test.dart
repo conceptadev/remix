@@ -284,13 +284,13 @@ void main() {
   });
 }
 
-Future<RemixCardSpec> _resolve(
+Future<CardSpec> _resolve(
   WidgetTester tester,
-  RemixCardStyler style, {
+  CardStyler style, {
   FortalScaling scaling = .percent100,
   Set<WidgetState> states = const {},
 }) async {
-  late RemixCardSpec result;
+  late CardSpec result;
   await tester.pumpWidget(
     FortalScope(
       brightness: .light,

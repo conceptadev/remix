@@ -19,8 +19,8 @@ void main() {
         final container = Prop.maybeMix(FlexBoxStyler());
         final label = Prop.maybeMix(TextStyler());
         final icon = Prop.maybeMix(IconStyler());
-        final spinner = Prop.maybeMix(RemixSpinnerStyler());
-        final variants = <VariantStyle<RemixButtonSpec>>[];
+        final spinner = Prop.maybeMix(SpinnerStyler());
+        final variants = <VariantStyle<ButtonSpec>>[];
 
         final style = ButtonStyler.create(
           container: container,
@@ -42,7 +42,7 @@ void main() {
         final containerStyler = FlexBoxStyler();
         final labelStyler = TextStyler();
         final iconStyler = IconStyler();
-        final spinnerStyle = RemixSpinnerStyler();
+        final spinnerStyle = SpinnerStyler();
 
         final style = ButtonStyler()
             .container(containerStyler)
@@ -87,9 +87,9 @@ void main() {
       styleMethodTest(
         'spinner',
         initial: ButtonStyler(),
-        modify: (style) => style.spinner(RemixSpinnerStyler()),
+        modify: (style) => style.spinner(SpinnerStyler()),
         expect: (style) {
-          expect(style.$spinner, equals(Prop.maybeMix(RemixSpinnerStyler())));
+          expect(style.$spinner, equals(Prop.maybeMix(SpinnerStyler())));
         },
       );
 
@@ -180,9 +180,9 @@ void main() {
       styleMethodTest(
         'variants',
         initial: ButtonStyler(),
-        modify: (style) => style.variants(<VariantStyle<RemixButtonSpec>>[]),
+        modify: (style) => style.variants(<VariantStyle<ButtonSpec>>[]),
         expect: (style) {
-          expect(style.$variants, equals(<VariantStyle<RemixButtonSpec>>[]));
+          expect(style.$variants, equals(<VariantStyle<ButtonSpec>>[]));
         },
       );
       styleMethodTest(
@@ -436,12 +436,12 @@ void main() {
               builder: (context) {
                 final spec = style.resolve(context);
 
-                expect(spec, isA<StyleSpec<RemixButtonSpec>>());
-                expect(spec.spec, isA<RemixButtonSpec>());
+                expect(spec, isA<StyleSpec<ButtonSpec>>());
+                expect(spec.spec, isA<ButtonSpec>());
                 expect(spec.spec.container, isA<StyleSpec<FlexBoxSpec>>());
                 expect(spec.spec.label, isA<StyleSpec<TextSpec>>());
                 expect(spec.spec.icon, isA<StyleSpec<IconSpec>>());
-                expect(spec.spec.spinner, isA<StyleSpec<RemixSpinnerSpec>>());
+                expect(spec.spec.spinner, isA<StyleSpec<SpinnerSpec>>());
 
                 return Container();
               },
@@ -492,13 +492,13 @@ void main() {
           fortalButtonStyle(variant: variant),
         );
 
-        expect(resolved, isA<StyleSpec<RemixButtonSpec>>());
-        expect(resolved.spec, isA<RemixButtonSpec>());
+        expect(resolved, isA<StyleSpec<ButtonSpec>>());
+        expect(resolved.spec, isA<ButtonSpec>());
       });
     }
 
     testWidgets('each size resolves distinct layout metrics', (tester) async {
-      final resolvedBySize = <FortalButtonSize, StyleSpec<RemixButtonSpec>>{};
+      final resolvedBySize = <FortalButtonSize, StyleSpec<ButtonSpec>>{};
 
       for (final size in FortalButtonSize.values) {
         resolvedBySize[size] = await _resolveFortalButtonStyle(
@@ -526,11 +526,11 @@ void main() {
   });
 }
 
-Future<StyleSpec<RemixButtonSpec>> _resolveFortalButtonStyle(
+Future<StyleSpec<ButtonSpec>> _resolveFortalButtonStyle(
   WidgetTester tester,
   ButtonStyler style,
 ) async {
-  late final StyleSpec<RemixButtonSpec> resolved;
+  late final StyleSpec<ButtonSpec> resolved;
 
   await tester.pumpRemixApp(
     Builder(

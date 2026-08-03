@@ -2,22 +2,22 @@ part of 'textfield.dart';
 
 /// Defines the structure and styling properties for a text field component.
 ///
-/// RemixTextFieldSpec is the resolved specification that describes how a text field
+/// TextFieldSpec is the resolved specification that describes how a text field
 /// should be styled, structured, and behave. It follows the Spec pattern used
 /// throughout the Remix framework, where:
 ///
-/// 1. **Style classes** (like [RemixTextFieldStyler]) define styling APIs
-/// 2. **Spec classes** (like [RemixTextFieldSpec]) hold resolved styling properties
+/// 1. **Style classes** (like [TextFieldStyler]) define styling APIs
+/// 2. **Spec classes** (like [TextFieldSpec]) hold resolved styling properties
 /// 3. **Widget classes** (like [RemixTextField]) consume specs to render UI
 ///
-/// The RemixTextFieldSpec contains both styling properties ([StyleSpec] instances)
+/// The TextFieldSpec contains both styling properties ([StyleSpec] instances)
 /// for visual elements and configuration properties for text field behavior
 /// such as cursor appearance, text alignment, and selection handling.
 ///
 /// ## Architecture Overview
 ///
 /// ```
-/// RemixTextFieldStyler -> RemixTextFieldSpec -> RemixTextField Widget
+/// TextFieldStyler -> TextFieldSpec -> RemixTextField Widget
 /// (Define styles)       (Hold props)     (Render UI)
 /// ```
 ///
@@ -36,7 +36,7 @@ part of 'textfield.dart';
 ///
 /// ```dart
 /// // Style creates and populates the spec
-/// final style = RemixTextFieldStyler()
+/// final style = TextFieldStyler()
 ///   .color(Colors.black)
 ///   .cursorColor(Colors.blue)
 ///   .spacing(8.0);
@@ -46,11 +46,11 @@ part of 'textfield.dart';
 /// ```
 ///
 /// See also:
-/// - [RemixTextFieldStyler] for the styling API
+/// - [TextFieldStyler] for the styling API
 /// - [RemixTextField] for the widget implementation
 /// - [Spec] for the base specification pattern
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin])
-class RemixTextFieldSpec with _$RemixTextFieldSpec {
+class TextFieldSpec with _$TextFieldSpec {
   /// Styling specification for the input text.
   ///
   /// Controls typography, color, and text-specific properties
@@ -170,7 +170,7 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
-  /// Creates a RemixTextFieldSpec with optional styling and configuration.
+  /// Creates a TextFieldSpec with optional styling and configuration.
   ///
   /// Provides sensible defaults for all properties to ensure the text field
   /// is functional even when minimal configuration is provided:
@@ -183,13 +183,13 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
   ///
   /// Example:
   /// ```dart
-  /// const spec = RemixTextFieldSpec(
+  /// const spec = TextFieldSpec(
   ///   textAlign: TextAlign.center,
   ///   cursorWidth: 3.0,
   ///   cursorColor: Colors.blue,
   /// );
   /// ```
-  const RemixTextFieldSpec({
+  const TextFieldSpec({
     StyleSpec<TextSpec>? text,
     StyleSpec<TextSpec>? hintText,
     this.textAlign = TextAlign.start,
@@ -217,7 +217,7 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixTextFieldSpec lerp(RemixTextFieldSpec? other, double t) {
+  TextFieldSpec lerp(TextFieldSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
@@ -229,3 +229,9 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
     );
   }
 }
+
+/// Backward-compatible name for [TextFieldSpec].
+///
+/// The generated style API is based on [TextFieldSpec], so resolved values use
+/// `TextFieldSpec` as their runtime type.
+typedef RemixTextFieldSpec = TextFieldSpec;

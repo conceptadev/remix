@@ -34,7 +34,7 @@ class RemixToggle extends StatelessWidget {
     this.autofocus = false,
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
-    this.style = const RemixToggleStyler.create(),
+    this.style = const ToggleStyler.create(),
     this.styleSpec,
   }) : assert(
          label != null || icon != null,
@@ -60,12 +60,12 @@ class RemixToggle extends StatelessWidget {
   final IconData? icon;
 
   /// The style configuration for the toggle.
-  final RemixToggleStyler style;
+  final ToggleStyler style;
 
   /// The style spec for the toggle.
-  final RemixToggleSpec? styleSpec;
+  final ToggleSpec? styleSpec;
 
-  static final styleFrom = RemixToggleStyler.new;
+  static final styleFrom = ToggleStyler.new;
 
   /// Whether to enable haptic feedback when toggled.
   final bool enableFeedback;
@@ -96,7 +96,7 @@ class RemixToggle extends StatelessWidget {
       autofocus: autofocus,
       semanticLabel: semanticLabel,
       builder: (context, state, _) {
-        return RemixStyleSpecBuilder<RemixToggleSpec>(
+        return RemixStyleSpecBuilder<ToggleSpec>(
           style: style,
           styleSpec: styleSpec,
           controller: NakedToggleState.controllerOf(context),

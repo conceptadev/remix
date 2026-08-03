@@ -29,7 +29,7 @@ class RemixToggleGroupItem<T> {
   final bool autofocus;
 
   /// Per-item style merged after the group's default item style.
-  final RemixToggleGroupItemStyler style;
+  final ToggleGroupItemStyler style;
 
   const RemixToggleGroupItem({
     required this.value,
@@ -39,7 +39,7 @@ class RemixToggleGroupItem<T> {
     this.enabled = true,
     this.focusNode,
     this.autofocus = false,
-    this.style = const RemixToggleGroupItemStyler.create(),
+    this.style = const ToggleGroupItemStyler.create(),
   }) : assert(value != null, 'Toggle group item values must be non-null'),
        assert(label != '', 'Item labels must not be empty'),
        assert(semanticLabel != '', 'Item semantic labels must not be empty'),
@@ -91,7 +91,7 @@ class RemixToggleGroup<T> extends StatelessWidget {
     this.loop = true,
     this.semanticLabel,
     this.excludeSemantics = false,
-    this.style = const RemixToggleGroupStyler.create(),
+    this.style = const ToggleGroupStyler.create(),
     this.styleSpec,
   });
 
@@ -130,12 +130,12 @@ class RemixToggleGroup<T> extends StatelessWidget {
   final bool excludeSemantics;
 
   /// Fluent visual style for the group and its default item style.
-  final RemixToggleGroupStyler style;
+  final ToggleGroupStyler style;
 
   /// Optional raw style spec that bypasses fluent group style resolution.
-  final RemixToggleGroupSpec? styleSpec;
+  final ToggleGroupSpec? styleSpec;
 
-  static final styleFrom = RemixToggleGroupStyler.new;
+  static final styleFrom = ToggleGroupStyler.new;
 
   bool _debugItemsAreValid() {
     final values = <T>{};
@@ -186,7 +186,7 @@ class RemixToggleGroup<T> extends StatelessWidget {
 
     // Direction is enforced post-resolution by _withOrientation so the same
     // behavior applies to both fluent styles and raw style specs.
-    final effectiveStyle = RemixToggleGroupStyler(
+    final effectiveStyle = ToggleGroupStyler(
       container: FlexBoxStyler(
         mainAxisSize: .min,
       ).wrap(.intrinsicWidth().intrinsicHeight()),
@@ -200,7 +200,7 @@ class RemixToggleGroup<T> extends StatelessWidget {
       loop: loop,
       semanticLabel: semanticLabel,
       excludeSemantics: excludeSemantics,
-      child: RemixStyleSpecBuilder<RemixToggleGroupSpec>(
+      child: RemixStyleSpecBuilder<ToggleGroupSpec>(
         style: effectiveStyle,
         styleSpec: styleSpec,
         builder: (context, spec) {
@@ -231,16 +231,16 @@ class _RemixToggleGroupItemWidget<T> extends StatelessWidget {
   });
 
   final RemixToggleGroupItem<T> data;
-  final RemixToggleGroupStyler? defaultStyle;
-  final StyleSpec<RemixToggleGroupItemSpec>? defaultStyleSpec;
+  final ToggleGroupStyler? defaultStyle;
+  final StyleSpec<ToggleGroupItemSpec>? defaultStyleSpec;
 
-  StyleSpec<RemixToggleGroupItemSpec> _resolveStyle(BuildContext context) {
+  StyleSpec<ToggleGroupItemSpec> _resolveStyle(BuildContext context) {
     final rawDefault = defaultStyleSpec;
     if (rawDefault != null) return rawDefault;
 
     final groupStyle = defaultStyle!;
     final compositeStyle = groupStyle.merge(
-      RemixToggleGroupStyler(item: data.style),
+      ToggleGroupStyler(item: data.style),
     );
 
     // Build the composite under this option's WidgetStateProvider. Mix then
@@ -262,7 +262,7 @@ class _RemixToggleGroupItemWidget<T> extends StatelessWidget {
           child: Builder(
             builder: (context) {
               return ExcludeSemantics(
-                child: StyleSpecBuilder<RemixToggleGroupItemSpec>(
+                child: StyleSpecBuilder<ToggleGroupItemSpec>(
                   styleSpec: _resolveStyle(context),
                   builder: (context, spec) {
                     return RowBox(

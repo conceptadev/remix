@@ -5,11 +5,11 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixToggleGroupStyler', () {
+  group('ToggleGroupStyler', () {
     test('constructors retain container and item styles', () {
       final container = FlexBoxStyler();
-      final item = RemixToggleGroupItemStyler();
-      final style = RemixToggleGroupStyler(container: container, item: item);
+      final item = ToggleGroupItemStyler();
+      final style = ToggleGroupStyler(container: container, item: item);
 
       expect(style.$container, Prop.maybeMix(container));
       expect(style.$item, Prop.maybeMix(item));
@@ -17,24 +17,24 @@ void main() {
 
     styleMethodTest(
       'sets the group background color',
-      initial: RemixToggleGroupStyler(),
+      initial: ToggleGroupStyler(),
       modify: (style) => style.backgroundColor(Colors.blue),
       expect: (style) {
-        expect(style, RemixToggleGroupStyler.color(Colors.blue));
+        expect(style, ToggleGroupStyler.color(Colors.blue));
       },
     );
 
     styleMethodTest(
       'sets the default item style',
-      initial: RemixToggleGroupStyler(),
-      modify: (style) => style.item(RemixToggleGroupItemStyler()),
+      initial: ToggleGroupStyler(),
+      modify: (style) => style.item(ToggleGroupItemStyler()),
       expect: (style) {
-        expect(style.$item, Prop.maybeMix(RemixToggleGroupItemStyler()));
+        expect(style.$item, Prop.maybeMix(ToggleGroupItemStyler()));
       },
     );
 
     test('generic call creates a typed group', () {
-      final widget = RemixToggleGroupStyler().call<String>(
+      final widget = ToggleGroupStyler().call<String>(
         items: const [RemixToggleGroupItem(value: 'list', label: 'List')],
         selectedValue: 'list',
         onChanged: (_) {},
@@ -176,10 +176,10 @@ void main() {
     });
   });
 
-  group('RemixToggleGroupItemStyler', () {
+  group('ToggleGroupItemStyler', () {
     styleMethodTest(
       'sets foreground color on label and icon',
-      initial: RemixToggleGroupItemStyler(),
+      initial: ToggleGroupItemStyler(),
       modify: (style) => style.foregroundColor(Colors.red),
       expect: (style) {
         expect(style.$label, isNotNull);
@@ -189,9 +189,9 @@ void main() {
 
     styleMethodTest(
       'adds a selected-state variant',
-      initial: RemixToggleGroupItemStyler(),
+      initial: ToggleGroupItemStyler(),
       modify: (style) => style.onSelected(
-        RemixToggleGroupItemStyler().backgroundColor(Colors.purple),
+        ToggleGroupItemStyler().backgroundColor(Colors.purple),
       ),
       expect: (style) {
         expect(style.$variants, hasLength(1));
@@ -200,21 +200,21 @@ void main() {
 
     styleMethodTest(
       'sets icon and label spacing',
-      initial: RemixToggleGroupItemStyler(),
+      initial: ToggleGroupItemStyler(),
       modify: (style) => style.spacing(8),
       expect: (style) {
-        expect(style, RemixToggleGroupItemStyler.spacing(8));
+        expect(style, ToggleGroupItemStyler.spacing(8));
       },
     );
   });
 }
 
-Future<StyleSpec<RemixToggleGroupSpec>> _resolveFortalToggleGroupStyle(
+Future<StyleSpec<ToggleGroupSpec>> _resolveFortalToggleGroupStyle(
   WidgetTester tester,
-  RemixToggleGroupStyler style, {
+  ToggleGroupStyler style, {
   Set<WidgetState> states = const {},
 }) async {
-  late StyleSpec<RemixToggleGroupSpec> resolved;
+  late StyleSpec<ToggleGroupSpec> resolved;
 
   await tester.pumpWidget(
     FortalScope(

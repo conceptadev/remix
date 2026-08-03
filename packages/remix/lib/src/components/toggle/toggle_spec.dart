@@ -4,7 +4,7 @@ part of 'toggle.dart';
 @MixableSpec(
   extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
 )
-class RemixToggleSpec with _$RemixToggleSpec {
+class ToggleSpec with _$ToggleSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
@@ -13,7 +13,7 @@ class RemixToggleSpec with _$RemixToggleSpec {
   @override
   final StyleSpec<IconSpec> icon;
 
-  const RemixToggleSpec({
+  const ToggleSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
@@ -21,3 +21,9 @@ class RemixToggleSpec with _$RemixToggleSpec {
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec());
 }
+
+/// Backward-compatible name for [ToggleSpec].
+///
+/// The generated style API is based on [ToggleSpec], so resolved values use
+/// `ToggleSpec` as their runtime type.
+typedef RemixToggleSpec = ToggleSpec;

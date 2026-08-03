@@ -53,7 +53,7 @@ Widget buildButtonExample() {
         icon: Icons.star,
         onPressed: () {},
         semanticLabel: 'Favorite',
-        style: RemixIconButtonStyler()
+        style: IconButtonStyler()
             .paddingAll(10)
             .borderRadiusAll(const Radius.circular(8))
             .backgroundColor(const Color(0xFF1F2937))

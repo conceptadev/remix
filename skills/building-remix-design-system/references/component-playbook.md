@@ -81,7 +81,7 @@ The generator contract is intentionally convention-based:
 enum AcmeSelectVariant { surface, soft, ghost }
 
 @MixWidget()
-RemixSelectStyler acmeSelectStyle({
+SelectStyler acmeSelectStyle({
   AcmeSelectVariant variant = .surface,
 }) => switch (variant) {
   .surface => _surfaceSelectStyle(),

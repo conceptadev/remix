@@ -48,22 +48,22 @@ class TooltipExample extends StatelessWidget {
     );
   }
 
-  RemixTooltipStyler get styleDefault {
-    return RemixTooltipStyler()
+  TooltipStyler get styleDefault {
+    return TooltipStyler()
         .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 8))
         .backgroundColor(Colors.black87)
         .borderRadius(BorderRadiusGeometryMix.all(const Radius.circular(6)))
         .wrap(.defaultTextStyle(style: TextStyleMix().color(Colors.white).fontSize(14)));
   }
 
-  RemixTooltipStyler get styleFast {
+  TooltipStyler get styleFast {
     return styleDefault
         .waitDuration(const Duration(milliseconds: 100))
         .showDuration(const Duration(milliseconds: 800)) // touch wait
         .dismissDuration(const Duration(milliseconds: 100)); // hover exit
   }
 
-  RemixTooltipStyler get styleSlow {
+  TooltipStyler get styleSlow {
     return styleDefault
         .waitDuration(const Duration(seconds: 1))
         .showDuration(const Duration(seconds: 3));
@@ -138,8 +138,8 @@ RemixTooltip remixTooltipConstructor({
   required Widget child,
   String? tooltipSemantics,
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
-  RemixTooltipStyler style = const RemixTooltipStyler.create(),
-  RemixTooltipSpec? styleSpec,
+  TooltipStyler style = const TooltipStyler.create(),
+  TooltipSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -152,11 +152,11 @@ RemixTooltip remixTooltipConstructor({
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `style` → `RemixTooltipStyler`
+#### `style` → `TooltipStyler`
 
 Optional. The style configuration for the tooltip.
 
-#### `styleSpec` → `RemixTooltipSpec?`
+#### `styleSpec` → `TooltipSpec?`
 
 Optional. The style spec for the tooltip.
 
@@ -235,7 +235,7 @@ Applies widget modifiers such as clipping, opacity, or scaling.
 
 Configures implicit animation for style transitions.
 
-#### `variants(List<VariantStyle<RemixTooltipSpec>> value)`
+#### `variants(List<VariantStyle<TooltipSpec>> value)`
 
 Sets style variants.
 

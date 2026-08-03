@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixToggleSpec', () {
+  group('ToggleSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        const spec = RemixToggleSpec();
+        const spec = ToggleSpec();
 
         expect(spec.container, isA<StyleSpec<FlexBoxSpec>>());
         expect(spec.label, isA<StyleSpec<TextSpec>>());
@@ -16,7 +16,7 @@ void main() {
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
-        const originalSpec = RemixToggleSpec();
+        const originalSpec = ToggleSpec();
         final newContainer = StyleSpec(spec: FlexBoxSpec());
         final newLabel = StyleSpec(spec: TextSpec());
 
@@ -34,7 +34,7 @@ void main() {
       test(
         'returns new instance with no changes when no parameters provided',
         () {
-          const originalSpec = RemixToggleSpec();
+          const originalSpec = ToggleSpec();
 
           final updatedSpec = originalSpec.copyWith();
 
@@ -46,7 +46,7 @@ void main() {
       );
 
       test('preserves immutability - original spec unchanged', () {
-        const originalSpec = RemixToggleSpec();
+        const originalSpec = ToggleSpec();
         final originalContainer = originalSpec.container;
         final newContainer = StyleSpec(spec: FlexBoxSpec());
 
@@ -60,8 +60,8 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        const spec = RemixToggleSpec();
-        const RemixToggleSpec? other = null;
+        const spec = ToggleSpec();
+        const ToggleSpec? other = null;
 
         final result = spec.lerp(other, 0.5);
 
@@ -69,11 +69,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = RemixToggleSpec(
+        final spec1 = ToggleSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
         );
-        final spec2 = RemixToggleSpec(
+        final spec2 = ToggleSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
         );
@@ -87,11 +87,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = RemixToggleSpec(
+        final spec1 = ToggleSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
         );
-        final spec2 = RemixToggleSpec(
+        final spec2 = ToggleSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
         );
@@ -105,11 +105,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.5', () {
-        final spec1 = RemixToggleSpec(
+        final spec1 = ToggleSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
         );
-        final spec2 = RemixToggleSpec(
+        final spec2 = ToggleSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
         );
@@ -118,21 +118,21 @@ void main() {
 
         expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
-        expect(result, isA<RemixToggleSpec>());
+        expect(result, isA<ToggleSpec>());
       });
     });
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixToggleSpec();
-        const spec2 = RemixToggleSpec();
+        const spec1 = ToggleSpec();
+        const spec2 = ToggleSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('two specs with different properties are not equal', () {
-        final spec1 = RemixToggleSpec(
+        final spec1 = ToggleSpec(
           container: StyleSpec(
             spec: const FlexBoxSpec(),
             animation: AnimationConfig.linear(
@@ -140,7 +140,7 @@ void main() {
             ),
           ),
         );
-        final spec2 = RemixToggleSpec(
+        final spec2 = ToggleSpec(
           container: StyleSpec(
             spec: const FlexBoxSpec(),
             animation: AnimationConfig.linear(
@@ -153,7 +153,7 @@ void main() {
       });
 
       test('props list contains all properties', () {
-        const spec = RemixToggleSpec();
+        const spec = ToggleSpec();
 
         expect(spec.props, hasLength(3));
         expect(spec.props, contains(spec.container));
@@ -164,7 +164,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = RemixToggleSpec();
+        const spec = ToggleSpec();
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -173,14 +173,14 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        const spec = RemixToggleSpec();
+        const spec = ToggleSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
       });
 
       test('diagnostic properties are properly formatted', () {
-        const spec = RemixToggleSpec();
+        const spec = ToggleSpec();
         final builder = DiagnosticPropertiesBuilder();
 
         spec.debugFillProperties(builder);
@@ -197,7 +197,7 @@ void main() {
 
     group('Edge Cases', () {
       test('copyWith handles null parameters correctly', () {
-        const spec = RemixToggleSpec();
+        const spec = ToggleSpec();
         final originalContainer = spec.container;
 
         final updatedSpec = spec.copyWith(container: null);

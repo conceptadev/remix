@@ -2,7 +2,7 @@ part of 'callout.dart';
 
 /// Resolved visual values for a [RemixCallout].
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, IconStyleMixin])
-class RemixCalloutSpec with _$RemixCalloutSpec {
+class CalloutSpec with _$CalloutSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
@@ -14,7 +14,7 @@ class RemixCalloutSpec with _$RemixCalloutSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
-  const RemixCalloutSpec({
+  const CalloutSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? text,
     StyleSpec<IconSpec>? icon,
@@ -26,7 +26,7 @@ class RemixCalloutSpec with _$RemixCalloutSpec {
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixCalloutSpec lerp(RemixCalloutSpec? other, double t) {
+  CalloutSpec lerp(CalloutSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
@@ -38,3 +38,9 @@ class RemixCalloutSpec with _$RemixCalloutSpec {
     );
   }
 }
+
+/// Backward-compatible name for [CalloutSpec].
+///
+/// The generated style API is based on [CalloutSpec], so resolved values use
+/// `CalloutSpec` as their runtime type.
+typedef RemixCalloutSpec = CalloutSpec;

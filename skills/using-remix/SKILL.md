@@ -352,9 +352,9 @@ ButtonStyler()
 Switch, Toggle, Tab, and TabView stylers:
 
 ```dart
-RemixCheckboxStyler()
+CheckboxStyler()
     .color(Colors.grey.shade200)
-    .onSelected(RemixCheckboxStyler().color(Colors.blue))
+    .onSelected(CheckboxStyler().color(Colors.blue))
 ```
 
 ### Context Variants

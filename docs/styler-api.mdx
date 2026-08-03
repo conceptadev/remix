@@ -7,8 +7,11 @@ Remix stylers expose matching named factories and fluent methods for canonical
 style operations. This symmetry lets a state variant use Dart's contextual dot
 shorthand without constructing another styler explicitly:
 
-For buttons, use `ButtonStyler`. `RemixButtonStyler` is retained as a
-deprecated compatibility alias.
+Styler and spec names are unprefixed: use `ButtonStyler`, `CardStyler`,
+`MenuStyler`, and so on. The former `RemixXStyler` names are retained as
+deprecated compatibility aliases, and the former `RemixXSpec` names are
+retained as typedefs. Widgets and data classes keep the `Remix` prefix
+(`RemixButton`, `RemixMenu`, `RemixMenuItem`).
 
 ```dart
 final style = ButtonStyler()
@@ -23,8 +26,8 @@ The following expressions are equivalent:
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
-final shorthand = RemixCardStyler.color(Colors.blue);
-final fluent = RemixCardStyler().color(Colors.blue);
+final shorthand = CardStyler.color(Colors.blue);
+final fluent = CardStyler().color(Colors.blue);
 ```
 
 ## Factory policy
@@ -32,7 +35,7 @@ final fluent = RemixCardStyler().color(Colors.blue);
 | API shape | Policy |
 | --- | --- |
 | Canonical style operation | Expose both a named factory and a matching fluent method. |
-| Direct child styler field | Expose a field factory such as `RemixMenuStyler.trigger(...)`. |
+| Direct child styler field | Expose a field factory such as `MenuStyler.trigger(...)`. |
 | Primary nested container | Forward one compatible canonical surface from the nested styler. |
 | Alias or expanded convenience | Keep it fluent-only and use its canonical operation in contextual shorthand. |
 | Styler lifecycle or composition (`animate`, `variants`, `wrap`, `modifier`, `merge`) | Keep it fluent-only because it configures or combines an existing parent styler. |
@@ -53,7 +56,7 @@ variant:
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
-final style = RemixCardStyler()
+final style = CardStyler()
     .paddingAll(12)
     .backgroundColor(Colors.white)
     .onHovered(.padding(EdgeInsetsGeometryMix.all(16)))
@@ -69,35 +72,35 @@ fluent convenience methods remain available on an existing styler.
 | Legacy convenience factory | Canonical contextual replacement |
 | --- | --- |
 | `backgroundColor(value)` | `.color(value)` |
-| `RemixAccordionStyler.titleColor(value)` | `.title(.color(value))` |
+| `AccordionStyler.titleColor(value)` | `.title(.color(value))` |
 | `titleFontSize(value)` / `titleFontWeight(value)` | `.title(.fontSize(value))` / `.title(.fontWeight(value))` |
 | `titleStyle(value)` | `.title(.style(value))` |
 | `leadingIconColor(value)` / `leadingIconSize(value)` | `.leadingIcon(.color(value))` / `.leadingIcon(.size(value))` |
 | `trailingIconColor(value)` / `trailingIconSize(value)` | `.trailingIcon(.color(value))` / `.trailingIcon(.size(value))` |
 | `contentColor(value)` / `contentPadding(value)` / `contentDecoration(value)` | `.content(.color(value))` / `.content(.padding(value))` / `.content(.decoration(value))` |
-| `RemixAvatarStyler.square(value)` | `.size(value, value)` |
-| `RemixAvatarStyler.foregroundColor(value)` | `.label(.color(value)).iconColor(value)` |
-| `RemixBadgeStyler.foregroundColor(value)` | `.label(.color(value))` |
-| `RemixCalloutStyler.foregroundColor(value)` | `.icon(.color(value)).textColor(value)` |
-| `RemixCalloutStyler.iconSize(value)` | `.icon(.size(value))` |
-| `RemixCalloutStyler.textStyle(value)` | `.text(.style(value))` |
+| `AvatarStyler.square(value)` | `.size(value, value)` |
+| `AvatarStyler.foregroundColor(value)` | `.label(.color(value)).iconColor(value)` |
+| `BadgeStyler.foregroundColor(value)` | `.label(.color(value))` |
+| `CalloutStyler.foregroundColor(value)` | `.icon(.color(value)).textColor(value)` |
+| `CalloutStyler.iconSize(value)` | `.icon(.size(value))` |
+| `CalloutStyler.textStyle(value)` | `.text(.style(value))` |
 
 ### Forwarded surfaces
 
 Most visual components forward the canonical surface of their primary `Box`
 or `FlexBox` container. A composite root without one clear visual surface, such
-as `RemixMenuStyler`, exposes factories for its child fields instead:
+as `MenuStyler`, exposes factories for its child fields instead:
 
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
-final style = RemixMenuStyler.trigger(
-  RemixMenuTriggerStyler.color(Colors.black),
+final style = MenuStyler.trigger(
+  MenuTriggerStyler.color(Colors.black),
 );
 ```
 
-`RemixSelectStyler` stores its popup container as a `FlexBox`, but intentionally
+`SelectStyler` stores its popup container as a `FlexBox`, but intentionally
 forwards only the compatible `Box` surface. This exposes operations such as
 `color`, `padding`, and `scale` without leaking popup layout controls through
 the root select styler.
@@ -105,7 +108,7 @@ the root select styler.
 The upstream forwarded `transform` factory currently accepts `Alignment`
 rather than the wider `AlignmentGeometry` accepted by the former handwritten
 helpers. Use a direct child styler when a directional alignment is required,
-for example `RemixCardStyler.container(BoxStyler(transform: matrix,
+for example `CardStyler.container(BoxStyler(transform: matrix,
 transformAlignment: AlignmentDirectional.centerStart))`.
 
 ### Variants and selected state
@@ -117,7 +120,7 @@ factories work contextually for every generated Remix styler:
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
-final checkboxStyle = RemixCheckboxStyler()
+final checkboxStyle = CheckboxStyler()
     .onHovered(.color(Colors.grey.shade100))
     .onSelected(.color(Colors.green));
 ```
@@ -130,9 +133,9 @@ names:
 
 | Styler | Canonical generated API | Component-specific helper |
 | --- | --- | --- |
-| `RemixTextFieldStyler` | `color` styles the container | `textColor` styles editable text |
+| `TextFieldStyler` | `color` styles the container | `textColor` styles editable text |
 | `ButtonStyler` | `rotate` transforms the container | `modifierRotate` rotates the complete widget with a modifier |
-| `RemixCalloutStyler` | `textStyle(TextStyler)` applies the container text style | `contentTextStyle(TextStyleMix)` styles callout content |
+| `CalloutStyler` | `textStyle(TextStyler)` applies the container text style | `contentTextStyle(TextStyleMix)` styles callout content |
 
 This keeps contextual shorthand predictable while preserving each specialized
 operation without ambiguous overloads.

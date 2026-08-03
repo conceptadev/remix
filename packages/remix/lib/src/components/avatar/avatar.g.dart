@@ -6,21 +6,21 @@ part of 'avatar.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixAvatarSpec implements Spec<RemixAvatarSpec>, Diagnosticable {
+mixin _$AvatarSpec implements Spec<AvatarSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
 
   @override
-  Type get type => RemixAvatarSpec;
+  Type get type => AvatarSpec;
 
   @override
-  RemixAvatarSpec copyWith({
+  AvatarSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
   }) {
-    return RemixAvatarSpec(
+    return AvatarSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       icon: icon ?? this.icon,
@@ -28,8 +28,8 @@ mixin _$RemixAvatarSpec implements Spec<RemixAvatarSpec>, Diagnosticable {
   }
 
   @override
-  RemixAvatarSpec lerp(RemixAvatarSpec? other, double t) {
-    return RemixAvatarSpec(
+  AvatarSpec lerp(AvatarSpec? other, double t) {
+    return AvatarSpec(
       container: container.lerp(other?.container, t),
       label: label.lerp(other?.label, t),
       icon: icon.lerp(other?.icon, t),
@@ -42,7 +42,7 @@ mixin _$RemixAvatarSpec implements Spec<RemixAvatarSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixAvatarSpec &&
+        other is AvatarSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -86,9 +86,9 @@ mixin _$RemixAvatarSpec implements Spec<RemixAvatarSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixAvatarSpec` and migrate the class declaration to `class RemixAvatarSpec with _\$RemixAvatarSpec`. The `_\$RemixAvatarSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$AvatarSpec` and migrate the class declaration to `class AvatarSpec with _\$AvatarSpec`. The `_\$AvatarSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixAvatarSpecMethods = _$RemixAvatarSpec; // ignore: unused_element
+typedef _$AvatarSpecMethods = _$AvatarSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -201,16 +201,16 @@ class FortalAvatar extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
+class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     with
-        RemixBoxStylerMixin<RemixAvatarStyler>,
-        LabelStyleMixin<RemixAvatarStyler>,
-        IconStyleMixin<RemixAvatarStyler> {
+        RemixBoxStylerMixin<AvatarStyler>,
+        LabelStyleMixin<AvatarStyler>,
+        IconStyleMixin<AvatarStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
 
-  const RemixAvatarStyler.create({
+  const AvatarStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
@@ -221,13 +221,13 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
        $label = label,
        $icon = icon;
 
-  RemixAvatarStyler({
+  AvatarStyler({
     BoxStyler? container,
     TextStyler? label,
     IconStyler? icon,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixAvatarSpec>>? variants,
+    List<VariantStyle<AvatarSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          label: Prop.maybeMix(label),
@@ -237,119 +237,110 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
          animation: animation,
        );
 
-  factory RemixAvatarStyler.container(BoxStyler value) =>
-      RemixAvatarStyler().container(value);
-  factory RemixAvatarStyler.label(TextStyler value) =>
-      RemixAvatarStyler().label(value);
-  factory RemixAvatarStyler.icon(IconStyler value) =>
-      RemixAvatarStyler().icon(value);
-  factory RemixAvatarStyler.alignment(AlignmentGeometry value) =>
-      RemixAvatarStyler().alignment(value);
-  factory RemixAvatarStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixAvatarStyler().padding(value);
-  factory RemixAvatarStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixAvatarStyler().margin(value);
-  factory RemixAvatarStyler.constraints(BoxConstraintsMix value) =>
-      RemixAvatarStyler().constraints(value);
-  factory RemixAvatarStyler.decoration(DecorationMix value) =>
-      RemixAvatarStyler().decoration(value);
-  factory RemixAvatarStyler.foregroundDecoration(DecorationMix value) =>
-      RemixAvatarStyler().foregroundDecoration(value);
-  factory RemixAvatarStyler.clipBehavior(Clip value) =>
-      RemixAvatarStyler().clipBehavior(value);
-  factory RemixAvatarStyler.color(Color value) =>
-      RemixAvatarStyler().color(value);
-  factory RemixAvatarStyler.gradient(GradientMix value) =>
-      RemixAvatarStyler().gradient(value);
-  factory RemixAvatarStyler.border(BoxBorderMix value) =>
-      RemixAvatarStyler().border(value);
-  factory RemixAvatarStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixAvatarStyler().borderRadius(value);
-  factory RemixAvatarStyler.elevation(ElevationShadow value) =>
-      RemixAvatarStyler().elevation(value);
-  factory RemixAvatarStyler.shadow(BoxShadowMix value) =>
-      RemixAvatarStyler().shadow(value);
-  factory RemixAvatarStyler.shadows(List<BoxShadowMix> value) =>
-      RemixAvatarStyler().shadows(value);
-  factory RemixAvatarStyler.width(double value) =>
-      RemixAvatarStyler().width(value);
-  factory RemixAvatarStyler.height(double value) =>
-      RemixAvatarStyler().height(value);
-  factory RemixAvatarStyler.size(double width, double height) =>
-      RemixAvatarStyler().size(width, height);
-  factory RemixAvatarStyler.minWidth(double value) =>
-      RemixAvatarStyler().minWidth(value);
-  factory RemixAvatarStyler.maxWidth(double value) =>
-      RemixAvatarStyler().maxWidth(value);
-  factory RemixAvatarStyler.minHeight(double value) =>
-      RemixAvatarStyler().minHeight(value);
-  factory RemixAvatarStyler.maxHeight(double value) =>
-      RemixAvatarStyler().maxHeight(value);
-  factory RemixAvatarStyler.scale(
-    double scale, {
-    Alignment alignment = .center,
-  }) => RemixAvatarStyler().scale(scale, alignment: alignment);
-  factory RemixAvatarStyler.rotate(
+  factory AvatarStyler.container(BoxStyler value) =>
+      AvatarStyler().container(value);
+  factory AvatarStyler.label(TextStyler value) => AvatarStyler().label(value);
+  factory AvatarStyler.icon(IconStyler value) => AvatarStyler().icon(value);
+  factory AvatarStyler.alignment(AlignmentGeometry value) =>
+      AvatarStyler().alignment(value);
+  factory AvatarStyler.padding(EdgeInsetsGeometryMix value) =>
+      AvatarStyler().padding(value);
+  factory AvatarStyler.margin(EdgeInsetsGeometryMix value) =>
+      AvatarStyler().margin(value);
+  factory AvatarStyler.constraints(BoxConstraintsMix value) =>
+      AvatarStyler().constraints(value);
+  factory AvatarStyler.decoration(DecorationMix value) =>
+      AvatarStyler().decoration(value);
+  factory AvatarStyler.foregroundDecoration(DecorationMix value) =>
+      AvatarStyler().foregroundDecoration(value);
+  factory AvatarStyler.clipBehavior(Clip value) =>
+      AvatarStyler().clipBehavior(value);
+  factory AvatarStyler.color(Color value) => AvatarStyler().color(value);
+  factory AvatarStyler.gradient(GradientMix value) =>
+      AvatarStyler().gradient(value);
+  factory AvatarStyler.border(BoxBorderMix value) =>
+      AvatarStyler().border(value);
+  factory AvatarStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      AvatarStyler().borderRadius(value);
+  factory AvatarStyler.elevation(ElevationShadow value) =>
+      AvatarStyler().elevation(value);
+  factory AvatarStyler.shadow(BoxShadowMix value) =>
+      AvatarStyler().shadow(value);
+  factory AvatarStyler.shadows(List<BoxShadowMix> value) =>
+      AvatarStyler().shadows(value);
+  factory AvatarStyler.width(double value) => AvatarStyler().width(value);
+  factory AvatarStyler.height(double value) => AvatarStyler().height(value);
+  factory AvatarStyler.size(double width, double height) =>
+      AvatarStyler().size(width, height);
+  factory AvatarStyler.minWidth(double value) => AvatarStyler().minWidth(value);
+  factory AvatarStyler.maxWidth(double value) => AvatarStyler().maxWidth(value);
+  factory AvatarStyler.minHeight(double value) =>
+      AvatarStyler().minHeight(value);
+  factory AvatarStyler.maxHeight(double value) =>
+      AvatarStyler().maxHeight(value);
+  factory AvatarStyler.scale(double scale, {Alignment alignment = .center}) =>
+      AvatarStyler().scale(scale, alignment: alignment);
+  factory AvatarStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixAvatarStyler().rotate(radians, alignment: alignment);
-  factory RemixAvatarStyler.translate(double x, double y, [double z = 0.0]) =>
-      RemixAvatarStyler().translate(x, y, z);
-  factory RemixAvatarStyler.skew(double skewX, double skewY) =>
-      RemixAvatarStyler().skew(skewX, skewY);
-  factory RemixAvatarStyler.textStyle(TextStyler value) =>
-      RemixAvatarStyler().textStyle(value);
-  factory RemixAvatarStyler.image(DecorationImageMix value) =>
-      RemixAvatarStyler().image(value);
-  factory RemixAvatarStyler.shape(ShapeBorderMix value) =>
-      RemixAvatarStyler().shape(value);
-  factory RemixAvatarStyler.backgroundImage(
+  }) => AvatarStyler().rotate(radians, alignment: alignment);
+  factory AvatarStyler.translate(double x, double y, [double z = 0.0]) =>
+      AvatarStyler().translate(x, y, z);
+  factory AvatarStyler.skew(double skewX, double skewY) =>
+      AvatarStyler().skew(skewX, skewY);
+  factory AvatarStyler.textStyle(TextStyler value) =>
+      AvatarStyler().textStyle(value);
+  factory AvatarStyler.image(DecorationImageMix value) =>
+      AvatarStyler().image(value);
+  factory AvatarStyler.shape(ShapeBorderMix value) =>
+      AvatarStyler().shape(value);
+  factory AvatarStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixAvatarStyler().backgroundImage(
+  }) => AvatarStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixAvatarStyler.backgroundImageUrl(
+  factory AvatarStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixAvatarStyler().backgroundImageUrl(
+  }) => AvatarStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixAvatarStyler.backgroundImageAsset(
+  factory AvatarStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixAvatarStyler().backgroundImageAsset(
+  }) => AvatarStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixAvatarStyler.linearGradient({
+  factory AvatarStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixAvatarStyler().linearGradient(
+  }) => AvatarStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixAvatarStyler.radialGradient({
+  factory AvatarStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -357,7 +348,7 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixAvatarStyler().radialGradient(
+  }) => AvatarStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -366,14 +357,14 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixAvatarStyler.sweepGradient({
+  factory AvatarStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixAvatarStyler().sweepGradient(
+  }) => AvatarStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -381,20 +372,20 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixAvatarStyler.foregroundLinearGradient({
+  factory AvatarStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixAvatarStyler().foregroundLinearGradient(
+  }) => AvatarStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixAvatarStyler.foregroundRadialGradient({
+  factory AvatarStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -402,7 +393,7 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixAvatarStyler().foregroundRadialGradient(
+  }) => AvatarStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -411,14 +402,14 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixAvatarStyler.foregroundSweepGradient({
+  factory AvatarStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixAvatarStyler().foregroundSweepGradient(
+  }) => AvatarStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -426,124 +417,124 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixAvatarStyler.transform(
+  factory AvatarStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixAvatarStyler().transform(value, alignment: alignment);
+  }) => AvatarStyler().transform(value, alignment: alignment);
 
-  RemixAvatarStyler alignment(AlignmentGeometry value) {
+  AvatarStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
   }
 
-  RemixAvatarStyler padding(EdgeInsetsGeometryMix value) {
+  AvatarStyler padding(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().padding(value));
   }
 
-  RemixAvatarStyler margin(EdgeInsetsGeometryMix value) {
+  AvatarStyler margin(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().margin(value));
   }
 
-  RemixAvatarStyler constraints(BoxConstraintsMix value) {
+  AvatarStyler constraints(BoxConstraintsMix value) {
     return container(BoxStyler().constraints(value));
   }
 
-  RemixAvatarStyler decoration(DecorationMix value) {
+  AvatarStyler decoration(DecorationMix value) {
     return container(BoxStyler().decoration(value));
   }
 
-  RemixAvatarStyler foregroundDecoration(DecorationMix value) {
+  AvatarStyler foregroundDecoration(DecorationMix value) {
     return container(BoxStyler().foregroundDecoration(value));
   }
 
-  RemixAvatarStyler clipBehavior(Clip value) {
+  AvatarStyler clipBehavior(Clip value) {
     return container(BoxStyler().clipBehavior(value));
   }
 
-  RemixAvatarStyler color(Color value) {
+  AvatarStyler color(Color value) {
     return container(BoxStyler().color(value));
   }
 
-  RemixAvatarStyler gradient(GradientMix value) {
+  AvatarStyler gradient(GradientMix value) {
     return container(BoxStyler().gradient(value));
   }
 
-  RemixAvatarStyler border(BoxBorderMix value) {
+  AvatarStyler border(BoxBorderMix value) {
     return container(BoxStyler().border(value));
   }
 
-  RemixAvatarStyler borderRadius(BorderRadiusGeometryMix value) {
+  AvatarStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(BoxStyler().borderRadius(value));
   }
 
-  RemixAvatarStyler elevation(ElevationShadow value) {
+  AvatarStyler elevation(ElevationShadow value) {
     return container(BoxStyler().elevation(value));
   }
 
-  RemixAvatarStyler shadow(BoxShadowMix value) {
+  AvatarStyler shadow(BoxShadowMix value) {
     return container(BoxStyler().shadow(value));
   }
 
-  RemixAvatarStyler shadows(List<BoxShadowMix> value) {
+  AvatarStyler shadows(List<BoxShadowMix> value) {
     return container(BoxStyler().shadows(value));
   }
 
-  RemixAvatarStyler width(double value) {
+  AvatarStyler width(double value) {
     return container(BoxStyler().width(value));
   }
 
-  RemixAvatarStyler height(double value) {
+  AvatarStyler height(double value) {
     return container(BoxStyler().height(value));
   }
 
-  RemixAvatarStyler size(double width, double height) {
+  AvatarStyler size(double width, double height) {
     return container(BoxStyler().size(width, height));
   }
 
-  RemixAvatarStyler minWidth(double value) {
+  AvatarStyler minWidth(double value) {
     return container(BoxStyler().minWidth(value));
   }
 
-  RemixAvatarStyler maxWidth(double value) {
+  AvatarStyler maxWidth(double value) {
     return container(BoxStyler().maxWidth(value));
   }
 
-  RemixAvatarStyler minHeight(double value) {
+  AvatarStyler minHeight(double value) {
     return container(BoxStyler().minHeight(value));
   }
 
-  RemixAvatarStyler maxHeight(double value) {
+  AvatarStyler maxHeight(double value) {
     return container(BoxStyler().maxHeight(value));
   }
 
-  RemixAvatarStyler scale(double scale, {Alignment alignment = .center}) {
+  AvatarStyler scale(double scale, {Alignment alignment = .center}) {
     return container(BoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixAvatarStyler rotate(double radians, {Alignment alignment = .center}) {
+  AvatarStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(BoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixAvatarStyler translate(double x, double y, [double z = 0.0]) {
+  AvatarStyler translate(double x, double y, [double z = 0.0]) {
     return container(BoxStyler().translate(x, y, z));
   }
 
-  RemixAvatarStyler skew(double skewX, double skewY) {
+  AvatarStyler skew(double skewX, double skewY) {
     return container(BoxStyler().skew(skewX, skewY));
   }
 
-  RemixAvatarStyler textStyle(TextStyler value) {
+  AvatarStyler textStyle(TextStyler value) {
     return container(BoxStyler().textStyle(value));
   }
 
-  RemixAvatarStyler image(DecorationImageMix value) {
+  AvatarStyler image(DecorationImageMix value) {
     return container(BoxStyler().image(value));
   }
 
-  RemixAvatarStyler shape(ShapeBorderMix value) {
+  AvatarStyler shape(ShapeBorderMix value) {
     return container(BoxStyler().shape(value));
   }
 
-  RemixAvatarStyler backgroundImage(
+  AvatarStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -559,7 +550,7 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     );
   }
 
-  RemixAvatarStyler backgroundImageUrl(
+  AvatarStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -575,7 +566,7 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     );
   }
 
-  RemixAvatarStyler backgroundImageAsset(
+  AvatarStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -591,7 +582,7 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     );
   }
 
-  RemixAvatarStyler linearGradient({
+  AvatarStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -609,7 +600,7 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     );
   }
 
-  RemixAvatarStyler radialGradient({
+  AvatarStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -631,7 +622,7 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     );
   }
 
-  RemixAvatarStyler sweepGradient({
+  AvatarStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -651,7 +642,7 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     );
   }
 
-  RemixAvatarStyler foregroundLinearGradient({
+  AvatarStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -669,7 +660,7 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     );
   }
 
-  RemixAvatarStyler foregroundRadialGradient({
+  AvatarStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -691,7 +682,7 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     );
   }
 
-  RemixAvatarStyler foregroundSweepGradient({
+  AvatarStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -711,54 +702,54 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     );
   }
 
-  RemixAvatarStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+  AvatarStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixAvatarStyler container(BoxStyler value) {
-    return merge(RemixAvatarStyler(container: value));
+  AvatarStyler container(BoxStyler value) {
+    return merge(AvatarStyler(container: value));
   }
 
   /// Sets the label.
   @override
-  RemixAvatarStyler label(TextStyler value) {
-    return merge(RemixAvatarStyler(label: value));
+  AvatarStyler label(TextStyler value) {
+    return merge(AvatarStyler(label: value));
   }
 
   /// Sets the icon.
   @override
-  RemixAvatarStyler icon(IconStyler value) {
-    return merge(RemixAvatarStyler(icon: value));
+  AvatarStyler icon(IconStyler value) {
+    return merge(AvatarStyler(icon: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixAvatarStyler animate(AnimationConfig value) {
-    return merge(RemixAvatarStyler(animation: value));
+  AvatarStyler animate(AnimationConfig value) {
+    return merge(AvatarStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixAvatarStyler variants(List<VariantStyle<RemixAvatarSpec>> value) {
-    return merge(RemixAvatarStyler(variants: value));
+  AvatarStyler variants(List<VariantStyle<AvatarSpec>> value) {
+    return merge(AvatarStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixAvatarStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixAvatarStyler(modifier: value));
+  AvatarStyler wrap(WidgetModifierConfig value) {
+    return merge(AvatarStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixAvatarStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixAvatarStyler(modifier: value));
+  AvatarStyler modifier(WidgetModifierConfig value) {
+    return merge(AvatarStyler(modifier: value));
   }
 
-  /// Merges with another [RemixAvatarStyler].
+  /// Merges with another [AvatarStyler].
   @override
-  RemixAvatarStyler merge(RemixAvatarStyler? other) {
-    return RemixAvatarStyler.create(
+  AvatarStyler merge(AvatarStyler? other) {
+    return AvatarStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),
@@ -768,10 +759,10 @@ class RemixAvatarStyler extends MixStyler<RemixAvatarStyler, RemixAvatarSpec>
     );
   }
 
-  /// Resolves to [StyleSpec<RemixAvatarSpec>] using [context].
+  /// Resolves to [StyleSpec<AvatarSpec>] using [context].
   @override
-  StyleSpec<RemixAvatarSpec> resolve(BuildContext context) {
-    final spec = RemixAvatarSpec(
+  StyleSpec<AvatarSpec> resolve(BuildContext context) {
+    final spec = AvatarSpec(
       container: MixOps.resolve(context, $container),
       label: MixOps.resolve(context, $label),
       icon: MixOps.resolve(context, $icon),

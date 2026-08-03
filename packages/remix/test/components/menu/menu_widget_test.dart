@@ -387,8 +387,8 @@ void main() {
     });
 
     testWidgets('applies custom style to menu', (tester) async {
-      final style = RemixMenuStyler().trigger(
-        RemixMenuTriggerStyler().padding(EdgeInsetsGeometryMix.all(20.0)),
+      final style = MenuStyler().trigger(
+        MenuTriggerStyler().padding(EdgeInsetsGeometryMix.all(20.0)),
       );
 
       await tester.pumpRemixApp(
@@ -411,9 +411,7 @@ void main() {
             RemixMenuItem<String>(
               value: 'copy',
               label: 'Copy',
-              style: RemixMenuItemStyler().padding(
-                EdgeInsetsGeometryMix.all(12.0),
-              ),
+              style: MenuItemStyler().padding(EdgeInsetsGeometryMix.all(12.0)),
             ),
           ],
         ),
@@ -428,8 +426,8 @@ void main() {
         RemixMenu<String>(
           trigger: const RemixMenuTrigger(label: 'Options'),
           items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-          style: RemixMenuStyler().item(
-            RemixMenuItemStyler().label(TextStyler().color(Colors.red)),
+          style: MenuStyler().item(
+            MenuItemStyler().label(TextStyler().color(Colors.red)),
           ),
         ),
       );
@@ -452,13 +450,11 @@ void main() {
             RemixMenuItem<String>(
               value: 'copy',
               label: 'Copy',
-              style: RemixMenuItemStyler().label(
-                TextStyler().color(Colors.blue),
-              ),
+              style: MenuItemStyler().label(TextStyler().color(Colors.blue)),
             ),
           ],
-          style: RemixMenuStyler().item(
-            RemixMenuItemStyler().label(TextStyler().color(Colors.red)),
+          style: MenuStyler().item(
+            MenuItemStyler().label(TextStyler().color(Colors.red)),
           ),
         ),
       );
@@ -480,9 +476,7 @@ void main() {
             RemixMenuDivider<String>(),
             RemixMenuItem<String>(value: 'paste', label: 'Paste'),
           ],
-          style: RemixMenuStyler().divider(
-            RemixDividerStyler().color(Colors.purple),
-          ),
+          style: MenuStyler().divider(DividerStyler().color(Colors.purple)),
         ),
       );
       await tester.pumpAndSettle();
@@ -510,14 +504,12 @@ void main() {
             RemixMenuItem(
               value: 'copy',
               label: 'Copy',
-              style: RemixMenuItemStyler().label(
-                TextStyler().color(Colors.green),
-              ),
+              style: MenuItemStyler().label(TextStyler().color(Colors.green)),
             ),
           ],
-          styleSpec: const RemixMenuSpec(
+          styleSpec: const MenuSpec(
             item: StyleSpec(
-              spec: RemixMenuItemSpec(
+              spec: MenuItemSpec(
                 label: StyleSpec(
                   spec: TextSpec(style: TextStyle(color: Colors.red)),
                 ),

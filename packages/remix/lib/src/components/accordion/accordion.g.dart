@@ -6,7 +6,7 @@ part of 'accordion.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixAccordionSpec implements Spec<RemixAccordionSpec>, Diagnosticable {
+mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get trigger;
   StyleSpec<IconSpec> get leadingIcon;
   StyleSpec<TextSpec> get title;
@@ -14,17 +14,17 @@ mixin _$RemixAccordionSpec implements Spec<RemixAccordionSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get content;
 
   @override
-  Type get type => RemixAccordionSpec;
+  Type get type => AccordionSpec;
 
   @override
-  RemixAccordionSpec copyWith({
+  AccordionSpec copyWith({
     StyleSpec<FlexBoxSpec>? trigger,
     StyleSpec<IconSpec>? leadingIcon,
     StyleSpec<TextSpec>? title,
     StyleSpec<IconSpec>? trailingIcon,
     StyleSpec<BoxSpec>? content,
   }) {
-    return RemixAccordionSpec(
+    return AccordionSpec(
       trigger: trigger ?? this.trigger,
       leadingIcon: leadingIcon ?? this.leadingIcon,
       title: title ?? this.title,
@@ -34,8 +34,8 @@ mixin _$RemixAccordionSpec implements Spec<RemixAccordionSpec>, Diagnosticable {
   }
 
   @override
-  RemixAccordionSpec lerp(RemixAccordionSpec? other, double t) {
-    return RemixAccordionSpec(
+  AccordionSpec lerp(AccordionSpec? other, double t) {
+    return AccordionSpec(
       trigger: trigger.lerp(other?.trigger, t),
       leadingIcon: leadingIcon.lerp(other?.leadingIcon, t),
       title: title.lerp(other?.title, t),
@@ -56,7 +56,7 @@ mixin _$RemixAccordionSpec implements Spec<RemixAccordionSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixAccordionSpec &&
+        other is AccordionSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -102,9 +102,9 @@ mixin _$RemixAccordionSpec implements Spec<RemixAccordionSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixAccordionSpec` and migrate the class declaration to `class RemixAccordionSpec with _\$RemixAccordionSpec`. The `_\$RemixAccordionSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$AccordionSpec` and migrate the class declaration to `class AccordionSpec with _\$AccordionSpec`. The `_\$AccordionSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixAccordionSpecMethods = _$RemixAccordionSpec; // ignore: unused_element
+typedef _$AccordionSpecMethods = _$AccordionSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -241,16 +241,15 @@ class FortalAccordion<T> extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixAccordionStyler
-    extends MixStyler<RemixAccordionStyler, RemixAccordionSpec>
-    with RemixBoxStylerMixin<RemixAccordionStyler> {
+class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
+    with RemixBoxStylerMixin<AccordionStyler> {
   final Prop<StyleSpec<FlexBoxSpec>>? $trigger;
   final Prop<StyleSpec<IconSpec>>? $leadingIcon;
   final Prop<StyleSpec<TextSpec>>? $title;
   final Prop<StyleSpec<IconSpec>>? $trailingIcon;
   final Prop<StyleSpec<BoxSpec>>? $content;
 
-  const RemixAccordionStyler.create({
+  const AccordionStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? trigger,
     Prop<StyleSpec<IconSpec>>? leadingIcon,
     Prop<StyleSpec<TextSpec>>? title,
@@ -265,7 +264,7 @@ class RemixAccordionStyler
        $trailingIcon = trailingIcon,
        $content = content;
 
-  RemixAccordionStyler({
+  AccordionStyler({
     FlexBoxStyler? trigger,
     IconStyler? leadingIcon,
     TextStyler? title,
@@ -273,7 +272,7 @@ class RemixAccordionStyler
     BoxStyler? content,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixAccordionSpec>>? variants,
+    List<VariantStyle<AccordionSpec>>? variants,
   }) : this.create(
          trigger: Prop.maybeMix(trigger),
          leadingIcon: Prop.maybeMix(leadingIcon),
@@ -285,112 +284,107 @@ class RemixAccordionStyler
          animation: animation,
        );
 
-  factory RemixAccordionStyler.trigger(FlexBoxStyler value) =>
-      RemixAccordionStyler().trigger(value);
-  factory RemixAccordionStyler.leadingIcon(IconStyler value) =>
-      RemixAccordionStyler().leadingIcon(value);
-  factory RemixAccordionStyler.title(TextStyler value) =>
-      RemixAccordionStyler().title(value);
-  factory RemixAccordionStyler.trailingIcon(IconStyler value) =>
-      RemixAccordionStyler().trailingIcon(value);
-  factory RemixAccordionStyler.content(BoxStyler value) =>
-      RemixAccordionStyler().content(value);
-  factory RemixAccordionStyler.color(Color value) =>
-      RemixAccordionStyler().color(value);
-  factory RemixAccordionStyler.gradient(GradientMix value) =>
-      RemixAccordionStyler().gradient(value);
-  factory RemixAccordionStyler.border(BoxBorderMix value) =>
-      RemixAccordionStyler().border(value);
-  factory RemixAccordionStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixAccordionStyler().borderRadius(value);
-  factory RemixAccordionStyler.elevation(ElevationShadow value) =>
-      RemixAccordionStyler().elevation(value);
-  factory RemixAccordionStyler.shadow(BoxShadowMix value) =>
-      RemixAccordionStyler().shadow(value);
-  factory RemixAccordionStyler.shadows(List<BoxShadowMix> value) =>
-      RemixAccordionStyler().shadows(value);
-  factory RemixAccordionStyler.width(double value) =>
-      RemixAccordionStyler().width(value);
-  factory RemixAccordionStyler.height(double value) =>
-      RemixAccordionStyler().height(value);
-  factory RemixAccordionStyler.size(double width, double height) =>
-      RemixAccordionStyler().size(width, height);
-  factory RemixAccordionStyler.minWidth(double value) =>
-      RemixAccordionStyler().minWidth(value);
-  factory RemixAccordionStyler.maxWidth(double value) =>
-      RemixAccordionStyler().maxWidth(value);
-  factory RemixAccordionStyler.minHeight(double value) =>
-      RemixAccordionStyler().minHeight(value);
-  factory RemixAccordionStyler.maxHeight(double value) =>
-      RemixAccordionStyler().maxHeight(value);
-  factory RemixAccordionStyler.scale(
+  factory AccordionStyler.trigger(FlexBoxStyler value) =>
+      AccordionStyler().trigger(value);
+  factory AccordionStyler.leadingIcon(IconStyler value) =>
+      AccordionStyler().leadingIcon(value);
+  factory AccordionStyler.title(TextStyler value) =>
+      AccordionStyler().title(value);
+  factory AccordionStyler.trailingIcon(IconStyler value) =>
+      AccordionStyler().trailingIcon(value);
+  factory AccordionStyler.content(BoxStyler value) =>
+      AccordionStyler().content(value);
+  factory AccordionStyler.color(Color value) => AccordionStyler().color(value);
+  factory AccordionStyler.gradient(GradientMix value) =>
+      AccordionStyler().gradient(value);
+  factory AccordionStyler.border(BoxBorderMix value) =>
+      AccordionStyler().border(value);
+  factory AccordionStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      AccordionStyler().borderRadius(value);
+  factory AccordionStyler.elevation(ElevationShadow value) =>
+      AccordionStyler().elevation(value);
+  factory AccordionStyler.shadow(BoxShadowMix value) =>
+      AccordionStyler().shadow(value);
+  factory AccordionStyler.shadows(List<BoxShadowMix> value) =>
+      AccordionStyler().shadows(value);
+  factory AccordionStyler.width(double value) => AccordionStyler().width(value);
+  factory AccordionStyler.height(double value) =>
+      AccordionStyler().height(value);
+  factory AccordionStyler.size(double width, double height) =>
+      AccordionStyler().size(width, height);
+  factory AccordionStyler.minWidth(double value) =>
+      AccordionStyler().minWidth(value);
+  factory AccordionStyler.maxWidth(double value) =>
+      AccordionStyler().maxWidth(value);
+  factory AccordionStyler.minHeight(double value) =>
+      AccordionStyler().minHeight(value);
+  factory AccordionStyler.maxHeight(double value) =>
+      AccordionStyler().maxHeight(value);
+  factory AccordionStyler.scale(
     double scale, {
     Alignment alignment = .center,
-  }) => RemixAccordionStyler().scale(scale, alignment: alignment);
-  factory RemixAccordionStyler.rotate(
+  }) => AccordionStyler().scale(scale, alignment: alignment);
+  factory AccordionStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixAccordionStyler().rotate(radians, alignment: alignment);
-  factory RemixAccordionStyler.translate(
-    double x,
-    double y, [
-    double z = 0.0,
-  ]) => RemixAccordionStyler().translate(x, y, z);
-  factory RemixAccordionStyler.skew(double skewX, double skewY) =>
-      RemixAccordionStyler().skew(skewX, skewY);
-  factory RemixAccordionStyler.textStyle(TextStyler value) =>
-      RemixAccordionStyler().textStyle(value);
-  factory RemixAccordionStyler.image(DecorationImageMix value) =>
-      RemixAccordionStyler().image(value);
-  factory RemixAccordionStyler.shape(ShapeBorderMix value) =>
-      RemixAccordionStyler().shape(value);
-  factory RemixAccordionStyler.backgroundImage(
+  }) => AccordionStyler().rotate(radians, alignment: alignment);
+  factory AccordionStyler.translate(double x, double y, [double z = 0.0]) =>
+      AccordionStyler().translate(x, y, z);
+  factory AccordionStyler.skew(double skewX, double skewY) =>
+      AccordionStyler().skew(skewX, skewY);
+  factory AccordionStyler.textStyle(TextStyler value) =>
+      AccordionStyler().textStyle(value);
+  factory AccordionStyler.image(DecorationImageMix value) =>
+      AccordionStyler().image(value);
+  factory AccordionStyler.shape(ShapeBorderMix value) =>
+      AccordionStyler().shape(value);
+  factory AccordionStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixAccordionStyler().backgroundImage(
+  }) => AccordionStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixAccordionStyler.backgroundImageUrl(
+  factory AccordionStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixAccordionStyler().backgroundImageUrl(
+  }) => AccordionStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixAccordionStyler.backgroundImageAsset(
+  factory AccordionStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixAccordionStyler().backgroundImageAsset(
+  }) => AccordionStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixAccordionStyler.linearGradient({
+  factory AccordionStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixAccordionStyler().linearGradient(
+  }) => AccordionStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixAccordionStyler.radialGradient({
+  factory AccordionStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -398,7 +392,7 @@ class RemixAccordionStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixAccordionStyler().radialGradient(
+  }) => AccordionStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -407,14 +401,14 @@ class RemixAccordionStyler
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixAccordionStyler.sweepGradient({
+  factory AccordionStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixAccordionStyler().sweepGradient(
+  }) => AccordionStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -422,20 +416,20 @@ class RemixAccordionStyler
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixAccordionStyler.foregroundLinearGradient({
+  factory AccordionStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixAccordionStyler().foregroundLinearGradient(
+  }) => AccordionStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixAccordionStyler.foregroundRadialGradient({
+  factory AccordionStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -443,7 +437,7 @@ class RemixAccordionStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixAccordionStyler().foregroundRadialGradient(
+  }) => AccordionStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -452,14 +446,14 @@ class RemixAccordionStyler
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixAccordionStyler.foregroundSweepGradient({
+  factory AccordionStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixAccordionStyler().foregroundSweepGradient(
+  }) => AccordionStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -467,128 +461,128 @@ class RemixAccordionStyler
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixAccordionStyler.row() => RemixAccordionStyler().row();
-  factory RemixAccordionStyler.column() => RemixAccordionStyler().column();
-  factory RemixAccordionStyler.alignment(AlignmentGeometry value) =>
-      RemixAccordionStyler().alignment(value);
-  factory RemixAccordionStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixAccordionStyler().padding(value);
-  factory RemixAccordionStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixAccordionStyler().margin(value);
-  factory RemixAccordionStyler.constraints(BoxConstraintsMix value) =>
-      RemixAccordionStyler().constraints(value);
-  factory RemixAccordionStyler.decoration(DecorationMix value) =>
-      RemixAccordionStyler().decoration(value);
-  factory RemixAccordionStyler.foregroundDecoration(DecorationMix value) =>
-      RemixAccordionStyler().foregroundDecoration(value);
-  factory RemixAccordionStyler.clipBehavior(Clip value) =>
-      RemixAccordionStyler().clipBehavior(value);
-  factory RemixAccordionStyler.direction(Axis value) =>
-      RemixAccordionStyler().direction(value);
-  factory RemixAccordionStyler.mainAxisAlignment(MainAxisAlignment value) =>
-      RemixAccordionStyler().mainAxisAlignment(value);
-  factory RemixAccordionStyler.crossAxisAlignment(CrossAxisAlignment value) =>
-      RemixAccordionStyler().crossAxisAlignment(value);
-  factory RemixAccordionStyler.mainAxisSize(MainAxisSize value) =>
-      RemixAccordionStyler().mainAxisSize(value);
-  factory RemixAccordionStyler.spacing(double value) =>
-      RemixAccordionStyler().spacing(value);
-  factory RemixAccordionStyler.verticalDirection(VerticalDirection value) =>
-      RemixAccordionStyler().verticalDirection(value);
-  factory RemixAccordionStyler.textDirection(TextDirection value) =>
-      RemixAccordionStyler().textDirection(value);
-  factory RemixAccordionStyler.textBaseline(TextBaseline value) =>
-      RemixAccordionStyler().textBaseline(value);
-  factory RemixAccordionStyler.transform(
+  factory AccordionStyler.row() => AccordionStyler().row();
+  factory AccordionStyler.column() => AccordionStyler().column();
+  factory AccordionStyler.alignment(AlignmentGeometry value) =>
+      AccordionStyler().alignment(value);
+  factory AccordionStyler.padding(EdgeInsetsGeometryMix value) =>
+      AccordionStyler().padding(value);
+  factory AccordionStyler.margin(EdgeInsetsGeometryMix value) =>
+      AccordionStyler().margin(value);
+  factory AccordionStyler.constraints(BoxConstraintsMix value) =>
+      AccordionStyler().constraints(value);
+  factory AccordionStyler.decoration(DecorationMix value) =>
+      AccordionStyler().decoration(value);
+  factory AccordionStyler.foregroundDecoration(DecorationMix value) =>
+      AccordionStyler().foregroundDecoration(value);
+  factory AccordionStyler.clipBehavior(Clip value) =>
+      AccordionStyler().clipBehavior(value);
+  factory AccordionStyler.direction(Axis value) =>
+      AccordionStyler().direction(value);
+  factory AccordionStyler.mainAxisAlignment(MainAxisAlignment value) =>
+      AccordionStyler().mainAxisAlignment(value);
+  factory AccordionStyler.crossAxisAlignment(CrossAxisAlignment value) =>
+      AccordionStyler().crossAxisAlignment(value);
+  factory AccordionStyler.mainAxisSize(MainAxisSize value) =>
+      AccordionStyler().mainAxisSize(value);
+  factory AccordionStyler.spacing(double value) =>
+      AccordionStyler().spacing(value);
+  factory AccordionStyler.verticalDirection(VerticalDirection value) =>
+      AccordionStyler().verticalDirection(value);
+  factory AccordionStyler.textDirection(TextDirection value) =>
+      AccordionStyler().textDirection(value);
+  factory AccordionStyler.textBaseline(TextBaseline value) =>
+      AccordionStyler().textBaseline(value);
+  factory AccordionStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixAccordionStyler().transform(value, alignment: alignment);
+  }) => AccordionStyler().transform(value, alignment: alignment);
 
-  RemixAccordionStyler color(Color value) {
+  AccordionStyler color(Color value) {
     return trigger(FlexBoxStyler().color(value));
   }
 
-  RemixAccordionStyler gradient(GradientMix value) {
+  AccordionStyler gradient(GradientMix value) {
     return trigger(FlexBoxStyler().gradient(value));
   }
 
-  RemixAccordionStyler border(BoxBorderMix value) {
+  AccordionStyler border(BoxBorderMix value) {
     return trigger(FlexBoxStyler().border(value));
   }
 
-  RemixAccordionStyler borderRadius(BorderRadiusGeometryMix value) {
+  AccordionStyler borderRadius(BorderRadiusGeometryMix value) {
     return trigger(FlexBoxStyler().borderRadius(value));
   }
 
-  RemixAccordionStyler elevation(ElevationShadow value) {
+  AccordionStyler elevation(ElevationShadow value) {
     return trigger(FlexBoxStyler().elevation(value));
   }
 
-  RemixAccordionStyler shadow(BoxShadowMix value) {
+  AccordionStyler shadow(BoxShadowMix value) {
     return trigger(FlexBoxStyler().shadow(value));
   }
 
-  RemixAccordionStyler shadows(List<BoxShadowMix> value) {
+  AccordionStyler shadows(List<BoxShadowMix> value) {
     return trigger(FlexBoxStyler().shadows(value));
   }
 
-  RemixAccordionStyler width(double value) {
+  AccordionStyler width(double value) {
     return trigger(FlexBoxStyler().width(value));
   }
 
-  RemixAccordionStyler height(double value) {
+  AccordionStyler height(double value) {
     return trigger(FlexBoxStyler().height(value));
   }
 
-  RemixAccordionStyler size(double width, double height) {
+  AccordionStyler size(double width, double height) {
     return trigger(FlexBoxStyler().size(width, height));
   }
 
-  RemixAccordionStyler minWidth(double value) {
+  AccordionStyler minWidth(double value) {
     return trigger(FlexBoxStyler().minWidth(value));
   }
 
-  RemixAccordionStyler maxWidth(double value) {
+  AccordionStyler maxWidth(double value) {
     return trigger(FlexBoxStyler().maxWidth(value));
   }
 
-  RemixAccordionStyler minHeight(double value) {
+  AccordionStyler minHeight(double value) {
     return trigger(FlexBoxStyler().minHeight(value));
   }
 
-  RemixAccordionStyler maxHeight(double value) {
+  AccordionStyler maxHeight(double value) {
     return trigger(FlexBoxStyler().maxHeight(value));
   }
 
-  RemixAccordionStyler scale(double scale, {Alignment alignment = .center}) {
+  AccordionStyler scale(double scale, {Alignment alignment = .center}) {
     return trigger(FlexBoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixAccordionStyler rotate(double radians, {Alignment alignment = .center}) {
+  AccordionStyler rotate(double radians, {Alignment alignment = .center}) {
     return trigger(FlexBoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixAccordionStyler translate(double x, double y, [double z = 0.0]) {
+  AccordionStyler translate(double x, double y, [double z = 0.0]) {
     return trigger(FlexBoxStyler().translate(x, y, z));
   }
 
-  RemixAccordionStyler skew(double skewX, double skewY) {
+  AccordionStyler skew(double skewX, double skewY) {
     return trigger(FlexBoxStyler().skew(skewX, skewY));
   }
 
-  RemixAccordionStyler textStyle(TextStyler value) {
+  AccordionStyler textStyle(TextStyler value) {
     return trigger(FlexBoxStyler().textStyle(value));
   }
 
-  RemixAccordionStyler image(DecorationImageMix value) {
+  AccordionStyler image(DecorationImageMix value) {
     return trigger(FlexBoxStyler().image(value));
   }
 
-  RemixAccordionStyler shape(ShapeBorderMix value) {
+  AccordionStyler shape(ShapeBorderMix value) {
     return trigger(FlexBoxStyler().shape(value));
   }
 
-  RemixAccordionStyler backgroundImage(
+  AccordionStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -604,7 +598,7 @@ class RemixAccordionStyler
     );
   }
 
-  RemixAccordionStyler backgroundImageUrl(
+  AccordionStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -620,7 +614,7 @@ class RemixAccordionStyler
     );
   }
 
-  RemixAccordionStyler backgroundImageAsset(
+  AccordionStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -636,7 +630,7 @@ class RemixAccordionStyler
     );
   }
 
-  RemixAccordionStyler linearGradient({
+  AccordionStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -654,7 +648,7 @@ class RemixAccordionStyler
     );
   }
 
-  RemixAccordionStyler radialGradient({
+  AccordionStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -676,7 +670,7 @@ class RemixAccordionStyler
     );
   }
 
-  RemixAccordionStyler sweepGradient({
+  AccordionStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -696,7 +690,7 @@ class RemixAccordionStyler
     );
   }
 
-  RemixAccordionStyler foregroundLinearGradient({
+  AccordionStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -714,7 +708,7 @@ class RemixAccordionStyler
     );
   }
 
-  RemixAccordionStyler foregroundRadialGradient({
+  AccordionStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -736,7 +730,7 @@ class RemixAccordionStyler
     );
   }
 
-  RemixAccordionStyler foregroundSweepGradient({
+  AccordionStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -756,133 +750,130 @@ class RemixAccordionStyler
     );
   }
 
-  RemixAccordionStyler row() {
+  AccordionStyler row() {
     return trigger(FlexBoxStyler().row());
   }
 
-  RemixAccordionStyler column() {
+  AccordionStyler column() {
     return trigger(FlexBoxStyler().column());
   }
 
-  RemixAccordionStyler alignment(AlignmentGeometry value) {
+  AccordionStyler alignment(AlignmentGeometry value) {
     return trigger(FlexBoxStyler().alignment(value));
   }
 
-  RemixAccordionStyler padding(EdgeInsetsGeometryMix value) {
+  AccordionStyler padding(EdgeInsetsGeometryMix value) {
     return trigger(FlexBoxStyler().padding(value));
   }
 
-  RemixAccordionStyler margin(EdgeInsetsGeometryMix value) {
+  AccordionStyler margin(EdgeInsetsGeometryMix value) {
     return trigger(FlexBoxStyler().margin(value));
   }
 
-  RemixAccordionStyler constraints(BoxConstraintsMix value) {
+  AccordionStyler constraints(BoxConstraintsMix value) {
     return trigger(FlexBoxStyler().constraints(value));
   }
 
-  RemixAccordionStyler decoration(DecorationMix value) {
+  AccordionStyler decoration(DecorationMix value) {
     return trigger(FlexBoxStyler().decoration(value));
   }
 
-  RemixAccordionStyler foregroundDecoration(DecorationMix value) {
+  AccordionStyler foregroundDecoration(DecorationMix value) {
     return trigger(FlexBoxStyler().foregroundDecoration(value));
   }
 
-  RemixAccordionStyler clipBehavior(Clip value) {
+  AccordionStyler clipBehavior(Clip value) {
     return trigger(FlexBoxStyler().clipBehavior(value));
   }
 
-  RemixAccordionStyler direction(Axis value) {
+  AccordionStyler direction(Axis value) {
     return trigger(FlexBoxStyler().direction(value));
   }
 
-  RemixAccordionStyler mainAxisAlignment(MainAxisAlignment value) {
+  AccordionStyler mainAxisAlignment(MainAxisAlignment value) {
     return trigger(FlexBoxStyler().mainAxisAlignment(value));
   }
 
-  RemixAccordionStyler crossAxisAlignment(CrossAxisAlignment value) {
+  AccordionStyler crossAxisAlignment(CrossAxisAlignment value) {
     return trigger(FlexBoxStyler().crossAxisAlignment(value));
   }
 
-  RemixAccordionStyler mainAxisSize(MainAxisSize value) {
+  AccordionStyler mainAxisSize(MainAxisSize value) {
     return trigger(FlexBoxStyler().mainAxisSize(value));
   }
 
-  RemixAccordionStyler spacing(double value) {
+  AccordionStyler spacing(double value) {
     return trigger(FlexBoxStyler().spacing(value));
   }
 
-  RemixAccordionStyler verticalDirection(VerticalDirection value) {
+  AccordionStyler verticalDirection(VerticalDirection value) {
     return trigger(FlexBoxStyler().verticalDirection(value));
   }
 
-  RemixAccordionStyler textDirection(TextDirection value) {
+  AccordionStyler textDirection(TextDirection value) {
     return trigger(FlexBoxStyler().textDirection(value));
   }
 
-  RemixAccordionStyler textBaseline(TextBaseline value) {
+  AccordionStyler textBaseline(TextBaseline value) {
     return trigger(FlexBoxStyler().textBaseline(value));
   }
 
-  RemixAccordionStyler transform(
-    Matrix4 value, {
-    Alignment alignment = .center,
-  }) {
+  AccordionStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return trigger(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the trigger.
-  RemixAccordionStyler trigger(FlexBoxStyler value) {
-    return merge(RemixAccordionStyler(trigger: value));
+  AccordionStyler trigger(FlexBoxStyler value) {
+    return merge(AccordionStyler(trigger: value));
   }
 
   /// Sets the leadingIcon.
-  RemixAccordionStyler leadingIcon(IconStyler value) {
-    return merge(RemixAccordionStyler(leadingIcon: value));
+  AccordionStyler leadingIcon(IconStyler value) {
+    return merge(AccordionStyler(leadingIcon: value));
   }
 
   /// Sets the title.
-  RemixAccordionStyler title(TextStyler value) {
-    return merge(RemixAccordionStyler(title: value));
+  AccordionStyler title(TextStyler value) {
+    return merge(AccordionStyler(title: value));
   }
 
   /// Sets the trailingIcon.
-  RemixAccordionStyler trailingIcon(IconStyler value) {
-    return merge(RemixAccordionStyler(trailingIcon: value));
+  AccordionStyler trailingIcon(IconStyler value) {
+    return merge(AccordionStyler(trailingIcon: value));
   }
 
   /// Sets the content.
-  RemixAccordionStyler content(BoxStyler value) {
-    return merge(RemixAccordionStyler(content: value));
+  AccordionStyler content(BoxStyler value) {
+    return merge(AccordionStyler(content: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixAccordionStyler animate(AnimationConfig value) {
-    return merge(RemixAccordionStyler(animation: value));
+  AccordionStyler animate(AnimationConfig value) {
+    return merge(AccordionStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixAccordionStyler variants(List<VariantStyle<RemixAccordionSpec>> value) {
-    return merge(RemixAccordionStyler(variants: value));
+  AccordionStyler variants(List<VariantStyle<AccordionSpec>> value) {
+    return merge(AccordionStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixAccordionStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixAccordionStyler(modifier: value));
+  AccordionStyler wrap(WidgetModifierConfig value) {
+    return merge(AccordionStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixAccordionStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixAccordionStyler(modifier: value));
+  AccordionStyler modifier(WidgetModifierConfig value) {
+    return merge(AccordionStyler(modifier: value));
   }
 
-  /// Merges with another [RemixAccordionStyler].
+  /// Merges with another [AccordionStyler].
   @override
-  RemixAccordionStyler merge(RemixAccordionStyler? other) {
-    return RemixAccordionStyler.create(
+  AccordionStyler merge(AccordionStyler? other) {
+    return AccordionStyler.create(
       trigger: MixOps.merge($trigger, other?.$trigger),
       leadingIcon: MixOps.merge($leadingIcon, other?.$leadingIcon),
       title: MixOps.merge($title, other?.$title),
@@ -894,10 +885,10 @@ class RemixAccordionStyler
     );
   }
 
-  /// Resolves to [StyleSpec<RemixAccordionSpec>] using [context].
+  /// Resolves to [StyleSpec<AccordionSpec>] using [context].
   @override
-  StyleSpec<RemixAccordionSpec> resolve(BuildContext context) {
-    final spec = RemixAccordionSpec(
+  StyleSpec<AccordionSpec> resolve(BuildContext context) {
+    final spec = AccordionSpec(
       trigger: MixOps.resolve(context, $trigger),
       leadingIcon: MixOps.resolve(context, $leadingIcon),
       title: MixOps.resolve(context, $title),

@@ -22,25 +22,25 @@ class RemixBadge extends StatelessWidget {
     this.label,
     this.child,
     this.labelBuilder,
-    this.style = const RemixBadgeStyler.create(),
+    this.style = const BadgeStyler.create(),
     this.styleSpec,
   });
 
-  static final styleFrom = RemixBadgeStyler.new;
+  static final styleFrom = BadgeStyler.new;
 
   final String? label;
   final Widget? child;
   final RemixBadgeLabelBuilder? labelBuilder;
 
   /// The style configuration for the badge.
-  final RemixBadgeStyler style;
+  final BadgeStyler style;
 
   /// Optional raw style spec that bypasses fluent style resolution.
-  final RemixBadgeSpec? styleSpec;
+  final BadgeSpec? styleSpec;
 
   @override
   Widget build(BuildContext context) {
-    return RemixStyleSpecBuilder<RemixBadgeSpec>(
+    return RemixStyleSpecBuilder<BadgeSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {

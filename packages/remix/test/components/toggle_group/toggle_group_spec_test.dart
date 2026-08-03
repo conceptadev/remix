@@ -3,17 +3,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixToggleGroupSpec', () {
+  group('ToggleGroupSpec', () {
     test('creates default child specs', () {
-      const spec = RemixToggleGroupSpec();
+      const spec = ToggleGroupSpec();
 
       expect(spec.container, isA<StyleSpec<FlexBoxSpec>>());
-      expect(spec.item, isA<StyleSpec<RemixToggleGroupItemSpec>>());
+      expect(spec.item, isA<StyleSpec<ToggleGroupItemSpec>>());
       expect(spec.props, hasLength(2));
     });
 
     test('copyWith replaces selected properties', () {
-      const original = RemixToggleGroupSpec();
+      const original = ToggleGroupSpec();
       final container = StyleSpec(spec: FlexBoxSpec());
 
       final copy = original.copyWith(container: container);
@@ -24,8 +24,8 @@ void main() {
     });
 
     test('lerp supports endpoints and null', () {
-      const first = RemixToggleGroupSpec();
-      const second = RemixToggleGroupSpec();
+      const first = ToggleGroupSpec();
+      const second = ToggleGroupSpec();
 
       expect(first.lerp(null, 0.5), first);
       expect(first.lerp(second, 0), first);
@@ -33,7 +33,7 @@ void main() {
     });
 
     test('supports diagnostics', () {
-      const spec = RemixToggleGroupSpec();
+      const spec = ToggleGroupSpec();
       final builder = DiagnosticPropertiesBuilder();
 
       expect(() => spec.debugFillProperties(builder), returnsNormally);
@@ -44,9 +44,9 @@ void main() {
     });
   });
 
-  group('RemixToggleGroupItemSpec', () {
+  group('ToggleGroupItemSpec', () {
     test('creates default child specs', () {
-      const spec = RemixToggleGroupItemSpec();
+      const spec = ToggleGroupItemSpec();
 
       expect(spec.container, isA<StyleSpec<FlexBoxSpec>>());
       expect(spec.label, isA<StyleSpec<TextSpec>>());
@@ -55,15 +55,15 @@ void main() {
     });
 
     test('copyWith and lerp preserve value semantics', () {
-      const original = RemixToggleGroupItemSpec();
+      const original = ToggleGroupItemSpec();
       final label = StyleSpec(spec: TextSpec());
       final copy = original.copyWith(label: label);
 
       expect(copy.label, label);
       expect(copy.container, original.container);
       expect(original.lerp(null, 0.5), original);
-      expect(const RemixToggleGroupItemSpec(), original);
-      expect(const RemixToggleGroupItemSpec().hashCode, original.hashCode);
+      expect(const ToggleGroupItemSpec(), original);
+      expect(const ToggleGroupItemSpec().hashCode, original.hashCode);
     });
   });
 }

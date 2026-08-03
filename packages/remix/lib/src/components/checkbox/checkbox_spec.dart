@@ -2,21 +2,21 @@ part of 'checkbox.dart';
 
 /// Defines the structure and styling properties for a checkbox component.
 ///
-/// RemixCheckboxSpec is the resolved specification that describes how a checkbox
+/// CheckboxSpec is the resolved specification that describes how a checkbox
 /// should be styled and structured. It follows the Spec pattern used
 /// throughout the Remix framework, where:
 ///
-/// 1. **Style classes** (like [RemixCheckboxStyler]) define styling APIs
-/// 2. **Spec classes** (like [RemixCheckboxSpec]) hold resolved styling properties
+/// 1. **Style classes** (like [CheckboxStyler]) define styling APIs
+/// 2. **Spec classes** (like [CheckboxSpec]) hold resolved styling properties
 /// 3. **Widget classes** (like [RemixCheckbox]) consume specs to render UI
 ///
-/// The RemixCheckboxSpec contains [StyleSpec] properties for the visual pieces of
+/// The CheckboxSpec contains [StyleSpec] properties for the visual pieces of
 /// the checkbox: the container (checkbox box) and the indicator icon (checkmark).
 ///
 /// ## Architecture Overview
 ///
 /// ```
-/// RemixCheckboxStyler -> RemixCheckboxSpec -> RemixCheckbox Widget
+/// CheckboxStyler -> CheckboxSpec -> RemixCheckbox Widget
 /// (Define styles)      (Hold props)    (Render UI)
 /// ```
 ///
@@ -35,7 +35,7 @@ part of 'checkbox.dart';
 ///
 /// ```dart
 /// // Style creates and populates the spec
-/// final style = RemixCheckboxStyler()
+/// final style = CheckboxStyler()
 ///   .indicatorColor(Colors.blue)
 ///   .size(20, 20);
 ///
@@ -50,11 +50,11 @@ part of 'checkbox.dart';
 /// - [indicator]: The checkmark icon styling (color, size)
 ///
 /// See also:
-/// - [RemixCheckboxStyler] for the styling API
+/// - [CheckboxStyler] for the styling API
 /// - [RemixCheckbox] for the widget implementation
 /// - [Spec] for the base specification pattern
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixCheckboxSpec with _$RemixCheckboxSpec {
+class CheckboxSpec with _$CheckboxSpec {
   /// Styling specification for the checkbox box container.
   ///
   /// Defines the appearance of the checkbox box itself, including
@@ -76,7 +76,7 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
-  /// Creates a RemixCheckboxSpec with optional styling specifications.
+  /// Creates a CheckboxSpec with optional styling specifications.
   ///
   /// If any [StyleSpec] is not provided, a default specification
   /// with empty styling is used. This ensures all properties are
@@ -88,12 +88,12 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
   ///
   /// Example:
   /// ```dart
-  /// const spec = RemixCheckboxSpec(
+  /// const spec = CheckboxSpec(
   ///   container: StyleSpec(spec: BoxSpec()),
   ///   indicator: StyleSpec(spec: IconSpec()),
   /// );
   /// ```
-  const RemixCheckboxSpec({
+  const CheckboxSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<IconSpec>? indicator,
     this.containerEffects,
@@ -103,7 +103,7 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixCheckboxSpec lerp(RemixCheckboxSpec? other, double t) {
+  CheckboxSpec lerp(CheckboxSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
@@ -115,3 +115,9 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
     );
   }
 }
+
+/// Backward-compatible name for [CheckboxSpec].
+///
+/// The generated style API is based on [CheckboxSpec], so resolved values use
+/// `CheckboxSpec` as their runtime type.
+typedef RemixCheckboxSpec = CheckboxSpec;
