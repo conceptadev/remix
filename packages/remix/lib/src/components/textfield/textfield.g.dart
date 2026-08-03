@@ -6,7 +6,7 @@ part of 'textfield.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
+mixin _$TextFieldSpec implements Spec<TextFieldSpec>, Diagnosticable {
   StyleSpec<TextSpec> get text;
   StyleSpec<TextSpec> get hintText;
   TextAlign? get textAlign;
@@ -26,10 +26,10 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
   RemixBoxEffectsSpec? get containerEffects;
 
   @override
-  Type get type => RemixTextFieldSpec;
+  Type get type => TextFieldSpec;
 
   @override
-  RemixTextFieldSpec copyWith({
+  TextFieldSpec copyWith({
     StyleSpec<TextSpec>? text,
     StyleSpec<TextSpec>? hintText,
     TextAlign? textAlign,
@@ -48,7 +48,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
     StyleSpec<TextSpec>? label,
     RemixBoxEffectsSpec? containerEffects,
   }) {
-    return RemixTextFieldSpec(
+    return TextFieldSpec(
       text: text ?? this.text,
       hintText: hintText ?? this.hintText,
       textAlign: textAlign ?? this.textAlign,
@@ -71,8 +71,8 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
   }
 
   @override
-  RemixTextFieldSpec lerp(RemixTextFieldSpec? other, double t) {
-    return RemixTextFieldSpec(
+  TextFieldSpec lerp(TextFieldSpec? other, double t) {
+    return TextFieldSpec(
       text: text.lerp(other?.text, t),
       hintText: hintText.lerp(other?.hintText, t),
       textAlign: MixOps.lerpSnap(textAlign, other?.textAlign, t),
@@ -137,7 +137,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixTextFieldSpec &&
+        other is TextFieldSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -195,9 +195,9 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixTextFieldSpec` and migrate the class declaration to `class RemixTextFieldSpec with _\$RemixTextFieldSpec`. The `_\$RemixTextFieldSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$TextFieldSpec` and migrate the class declaration to `class TextFieldSpec with _\$TextFieldSpec`. The `_\$TextFieldSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixTextFieldSpecMethods = _$RemixTextFieldSpec; // ignore: unused_element
+typedef _$TextFieldSpecMethods = _$TextFieldSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -645,11 +645,10 @@ class FortalTextField extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixTextFieldStyler
-    extends MixStyler<RemixTextFieldStyler, RemixTextFieldSpec>
+class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     with
-        RemixBoxStylerMixin<RemixTextFieldStyler>,
-        LabelStyleMixin<RemixTextFieldStyler> {
+        RemixBoxStylerMixin<TextFieldStyler>,
+        LabelStyleMixin<TextFieldStyler> {
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<TextSpec>>? $hintText;
   final Prop<TextAlign>? $textAlign;
@@ -668,7 +667,7 @@ class RemixTextFieldStyler
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
-  const RemixTextFieldStyler.create({
+  const TextFieldStyler.create({
     Prop<StyleSpec<TextSpec>>? text,
     Prop<StyleSpec<TextSpec>>? hintText,
     Prop<TextAlign>? textAlign,
@@ -707,7 +706,7 @@ class RemixTextFieldStyler
        $label = label,
        $containerEffects = containerEffects;
 
-  RemixTextFieldStyler({
+  TextFieldStyler({
     TextStyler? text,
     TextStyler? hintText,
     TextAlign? textAlign,
@@ -727,7 +726,7 @@ class RemixTextFieldStyler
     RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixTextFieldSpec>>? variants,
+    List<VariantStyle<TextFieldSpec>>? variants,
   }) : this.create(
          text: Prop.maybeMix(text),
          hintText: Prop.maybeMix(hintText),
@@ -751,136 +750,131 @@ class RemixTextFieldStyler
          animation: animation,
        );
 
-  factory RemixTextFieldStyler.text(TextStyler value) =>
-      RemixTextFieldStyler().text(value);
-  factory RemixTextFieldStyler.hintText(TextStyler value) =>
-      RemixTextFieldStyler().hintText(value);
-  factory RemixTextFieldStyler.textAlign(TextAlign value) =>
-      RemixTextFieldStyler().textAlign(value);
-  factory RemixTextFieldStyler.cursorWidth(double value) =>
-      RemixTextFieldStyler().cursorWidth(value);
-  factory RemixTextFieldStyler.cursorHeight(double value) =>
-      RemixTextFieldStyler().cursorHeight(value);
-  factory RemixTextFieldStyler.cursorRadius(Radius value) =>
-      RemixTextFieldStyler().cursorRadius(value);
-  factory RemixTextFieldStyler.cursorColor(Color value) =>
-      RemixTextFieldStyler().cursorColor(value);
-  factory RemixTextFieldStyler.selectionHeightStyle(BoxHeightStyle value) =>
-      RemixTextFieldStyler().selectionHeightStyle(value);
-  factory RemixTextFieldStyler.selectionWidthStyle(BoxWidthStyle value) =>
-      RemixTextFieldStyler().selectionWidthStyle(value);
-  factory RemixTextFieldStyler.scrollPadding(EdgeInsets value) =>
-      RemixTextFieldStyler().scrollPadding(value);
-  factory RemixTextFieldStyler.keyboardAppearance(Brightness value) =>
-      RemixTextFieldStyler().keyboardAppearance(value);
-  factory RemixTextFieldStyler.cursorOpacityAnimates(bool value) =>
-      RemixTextFieldStyler().cursorOpacityAnimates(value);
-  factory RemixTextFieldStyler.container(FlexBoxStyler value) =>
-      RemixTextFieldStyler().container(value);
-  factory RemixTextFieldStyler.layout(FlexBoxStyler value) =>
-      RemixTextFieldStyler().layout(value);
-  factory RemixTextFieldStyler.helperText(TextStyler value) =>
-      RemixTextFieldStyler().helperText(value);
-  factory RemixTextFieldStyler.label(TextStyler value) =>
-      RemixTextFieldStyler().label(value);
-  factory RemixTextFieldStyler.containerEffects(RemixBoxEffectsMix value) =>
-      RemixTextFieldStyler().containerEffects(value);
-  factory RemixTextFieldStyler.color(Color value) =>
-      RemixTextFieldStyler().color(value);
-  factory RemixTextFieldStyler.gradient(GradientMix value) =>
-      RemixTextFieldStyler().gradient(value);
-  factory RemixTextFieldStyler.border(BoxBorderMix value) =>
-      RemixTextFieldStyler().border(value);
-  factory RemixTextFieldStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixTextFieldStyler().borderRadius(value);
-  factory RemixTextFieldStyler.elevation(ElevationShadow value) =>
-      RemixTextFieldStyler().elevation(value);
-  factory RemixTextFieldStyler.shadow(BoxShadowMix value) =>
-      RemixTextFieldStyler().shadow(value);
-  factory RemixTextFieldStyler.shadows(List<BoxShadowMix> value) =>
-      RemixTextFieldStyler().shadows(value);
-  factory RemixTextFieldStyler.width(double value) =>
-      RemixTextFieldStyler().width(value);
-  factory RemixTextFieldStyler.height(double value) =>
-      RemixTextFieldStyler().height(value);
-  factory RemixTextFieldStyler.size(double width, double height) =>
-      RemixTextFieldStyler().size(width, height);
-  factory RemixTextFieldStyler.minWidth(double value) =>
-      RemixTextFieldStyler().minWidth(value);
-  factory RemixTextFieldStyler.maxWidth(double value) =>
-      RemixTextFieldStyler().maxWidth(value);
-  factory RemixTextFieldStyler.minHeight(double value) =>
-      RemixTextFieldStyler().minHeight(value);
-  factory RemixTextFieldStyler.maxHeight(double value) =>
-      RemixTextFieldStyler().maxHeight(value);
-  factory RemixTextFieldStyler.scale(
+  factory TextFieldStyler.text(TextStyler value) =>
+      TextFieldStyler().text(value);
+  factory TextFieldStyler.hintText(TextStyler value) =>
+      TextFieldStyler().hintText(value);
+  factory TextFieldStyler.textAlign(TextAlign value) =>
+      TextFieldStyler().textAlign(value);
+  factory TextFieldStyler.cursorWidth(double value) =>
+      TextFieldStyler().cursorWidth(value);
+  factory TextFieldStyler.cursorHeight(double value) =>
+      TextFieldStyler().cursorHeight(value);
+  factory TextFieldStyler.cursorRadius(Radius value) =>
+      TextFieldStyler().cursorRadius(value);
+  factory TextFieldStyler.cursorColor(Color value) =>
+      TextFieldStyler().cursorColor(value);
+  factory TextFieldStyler.selectionHeightStyle(BoxHeightStyle value) =>
+      TextFieldStyler().selectionHeightStyle(value);
+  factory TextFieldStyler.selectionWidthStyle(BoxWidthStyle value) =>
+      TextFieldStyler().selectionWidthStyle(value);
+  factory TextFieldStyler.scrollPadding(EdgeInsets value) =>
+      TextFieldStyler().scrollPadding(value);
+  factory TextFieldStyler.keyboardAppearance(Brightness value) =>
+      TextFieldStyler().keyboardAppearance(value);
+  factory TextFieldStyler.cursorOpacityAnimates(bool value) =>
+      TextFieldStyler().cursorOpacityAnimates(value);
+  factory TextFieldStyler.container(FlexBoxStyler value) =>
+      TextFieldStyler().container(value);
+  factory TextFieldStyler.layout(FlexBoxStyler value) =>
+      TextFieldStyler().layout(value);
+  factory TextFieldStyler.helperText(TextStyler value) =>
+      TextFieldStyler().helperText(value);
+  factory TextFieldStyler.label(TextStyler value) =>
+      TextFieldStyler().label(value);
+  factory TextFieldStyler.containerEffects(RemixBoxEffectsMix value) =>
+      TextFieldStyler().containerEffects(value);
+  factory TextFieldStyler.color(Color value) => TextFieldStyler().color(value);
+  factory TextFieldStyler.gradient(GradientMix value) =>
+      TextFieldStyler().gradient(value);
+  factory TextFieldStyler.border(BoxBorderMix value) =>
+      TextFieldStyler().border(value);
+  factory TextFieldStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      TextFieldStyler().borderRadius(value);
+  factory TextFieldStyler.elevation(ElevationShadow value) =>
+      TextFieldStyler().elevation(value);
+  factory TextFieldStyler.shadow(BoxShadowMix value) =>
+      TextFieldStyler().shadow(value);
+  factory TextFieldStyler.shadows(List<BoxShadowMix> value) =>
+      TextFieldStyler().shadows(value);
+  factory TextFieldStyler.width(double value) => TextFieldStyler().width(value);
+  factory TextFieldStyler.height(double value) =>
+      TextFieldStyler().height(value);
+  factory TextFieldStyler.size(double width, double height) =>
+      TextFieldStyler().size(width, height);
+  factory TextFieldStyler.minWidth(double value) =>
+      TextFieldStyler().minWidth(value);
+  factory TextFieldStyler.maxWidth(double value) =>
+      TextFieldStyler().maxWidth(value);
+  factory TextFieldStyler.minHeight(double value) =>
+      TextFieldStyler().minHeight(value);
+  factory TextFieldStyler.maxHeight(double value) =>
+      TextFieldStyler().maxHeight(value);
+  factory TextFieldStyler.scale(
     double scale, {
     Alignment alignment = .center,
-  }) => RemixTextFieldStyler().scale(scale, alignment: alignment);
-  factory RemixTextFieldStyler.rotate(
+  }) => TextFieldStyler().scale(scale, alignment: alignment);
+  factory TextFieldStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixTextFieldStyler().rotate(radians, alignment: alignment);
-  factory RemixTextFieldStyler.translate(
-    double x,
-    double y, [
-    double z = 0.0,
-  ]) => RemixTextFieldStyler().translate(x, y, z);
-  factory RemixTextFieldStyler.skew(double skewX, double skewY) =>
-      RemixTextFieldStyler().skew(skewX, skewY);
-  factory RemixTextFieldStyler.textStyle(TextStyler value) =>
-      RemixTextFieldStyler().textStyle(value);
-  factory RemixTextFieldStyler.image(DecorationImageMix value) =>
-      RemixTextFieldStyler().image(value);
-  factory RemixTextFieldStyler.shape(ShapeBorderMix value) =>
-      RemixTextFieldStyler().shape(value);
-  factory RemixTextFieldStyler.backgroundImage(
+  }) => TextFieldStyler().rotate(radians, alignment: alignment);
+  factory TextFieldStyler.translate(double x, double y, [double z = 0.0]) =>
+      TextFieldStyler().translate(x, y, z);
+  factory TextFieldStyler.skew(double skewX, double skewY) =>
+      TextFieldStyler().skew(skewX, skewY);
+  factory TextFieldStyler.textStyle(TextStyler value) =>
+      TextFieldStyler().textStyle(value);
+  factory TextFieldStyler.image(DecorationImageMix value) =>
+      TextFieldStyler().image(value);
+  factory TextFieldStyler.shape(ShapeBorderMix value) =>
+      TextFieldStyler().shape(value);
+  factory TextFieldStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixTextFieldStyler().backgroundImage(
+  }) => TextFieldStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixTextFieldStyler.backgroundImageUrl(
+  factory TextFieldStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixTextFieldStyler().backgroundImageUrl(
+  }) => TextFieldStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixTextFieldStyler.backgroundImageAsset(
+  factory TextFieldStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixTextFieldStyler().backgroundImageAsset(
+  }) => TextFieldStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixTextFieldStyler.linearGradient({
+  factory TextFieldStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixTextFieldStyler().linearGradient(
+  }) => TextFieldStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixTextFieldStyler.radialGradient({
+  factory TextFieldStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -888,7 +882,7 @@ class RemixTextFieldStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixTextFieldStyler().radialGradient(
+  }) => TextFieldStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -897,14 +891,14 @@ class RemixTextFieldStyler
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixTextFieldStyler.sweepGradient({
+  factory TextFieldStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixTextFieldStyler().sweepGradient(
+  }) => TextFieldStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -912,20 +906,20 @@ class RemixTextFieldStyler
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixTextFieldStyler.foregroundLinearGradient({
+  factory TextFieldStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixTextFieldStyler().foregroundLinearGradient(
+  }) => TextFieldStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixTextFieldStyler.foregroundRadialGradient({
+  factory TextFieldStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -933,7 +927,7 @@ class RemixTextFieldStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixTextFieldStyler().foregroundRadialGradient(
+  }) => TextFieldStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -942,14 +936,14 @@ class RemixTextFieldStyler
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixTextFieldStyler.foregroundSweepGradient({
+  factory TextFieldStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixTextFieldStyler().foregroundSweepGradient(
+  }) => TextFieldStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -957,128 +951,128 @@ class RemixTextFieldStyler
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixTextFieldStyler.row() => RemixTextFieldStyler().row();
-  factory RemixTextFieldStyler.column() => RemixTextFieldStyler().column();
-  factory RemixTextFieldStyler.alignment(AlignmentGeometry value) =>
-      RemixTextFieldStyler().alignment(value);
-  factory RemixTextFieldStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixTextFieldStyler().padding(value);
-  factory RemixTextFieldStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixTextFieldStyler().margin(value);
-  factory RemixTextFieldStyler.constraints(BoxConstraintsMix value) =>
-      RemixTextFieldStyler().constraints(value);
-  factory RemixTextFieldStyler.decoration(DecorationMix value) =>
-      RemixTextFieldStyler().decoration(value);
-  factory RemixTextFieldStyler.foregroundDecoration(DecorationMix value) =>
-      RemixTextFieldStyler().foregroundDecoration(value);
-  factory RemixTextFieldStyler.clipBehavior(Clip value) =>
-      RemixTextFieldStyler().clipBehavior(value);
-  factory RemixTextFieldStyler.direction(Axis value) =>
-      RemixTextFieldStyler().direction(value);
-  factory RemixTextFieldStyler.mainAxisAlignment(MainAxisAlignment value) =>
-      RemixTextFieldStyler().mainAxisAlignment(value);
-  factory RemixTextFieldStyler.crossAxisAlignment(CrossAxisAlignment value) =>
-      RemixTextFieldStyler().crossAxisAlignment(value);
-  factory RemixTextFieldStyler.mainAxisSize(MainAxisSize value) =>
-      RemixTextFieldStyler().mainAxisSize(value);
-  factory RemixTextFieldStyler.spacing(double value) =>
-      RemixTextFieldStyler().spacing(value);
-  factory RemixTextFieldStyler.verticalDirection(VerticalDirection value) =>
-      RemixTextFieldStyler().verticalDirection(value);
-  factory RemixTextFieldStyler.textDirection(TextDirection value) =>
-      RemixTextFieldStyler().textDirection(value);
-  factory RemixTextFieldStyler.textBaseline(TextBaseline value) =>
-      RemixTextFieldStyler().textBaseline(value);
-  factory RemixTextFieldStyler.transform(
+  factory TextFieldStyler.row() => TextFieldStyler().row();
+  factory TextFieldStyler.column() => TextFieldStyler().column();
+  factory TextFieldStyler.alignment(AlignmentGeometry value) =>
+      TextFieldStyler().alignment(value);
+  factory TextFieldStyler.padding(EdgeInsetsGeometryMix value) =>
+      TextFieldStyler().padding(value);
+  factory TextFieldStyler.margin(EdgeInsetsGeometryMix value) =>
+      TextFieldStyler().margin(value);
+  factory TextFieldStyler.constraints(BoxConstraintsMix value) =>
+      TextFieldStyler().constraints(value);
+  factory TextFieldStyler.decoration(DecorationMix value) =>
+      TextFieldStyler().decoration(value);
+  factory TextFieldStyler.foregroundDecoration(DecorationMix value) =>
+      TextFieldStyler().foregroundDecoration(value);
+  factory TextFieldStyler.clipBehavior(Clip value) =>
+      TextFieldStyler().clipBehavior(value);
+  factory TextFieldStyler.direction(Axis value) =>
+      TextFieldStyler().direction(value);
+  factory TextFieldStyler.mainAxisAlignment(MainAxisAlignment value) =>
+      TextFieldStyler().mainAxisAlignment(value);
+  factory TextFieldStyler.crossAxisAlignment(CrossAxisAlignment value) =>
+      TextFieldStyler().crossAxisAlignment(value);
+  factory TextFieldStyler.mainAxisSize(MainAxisSize value) =>
+      TextFieldStyler().mainAxisSize(value);
+  factory TextFieldStyler.spacing(double value) =>
+      TextFieldStyler().spacing(value);
+  factory TextFieldStyler.verticalDirection(VerticalDirection value) =>
+      TextFieldStyler().verticalDirection(value);
+  factory TextFieldStyler.textDirection(TextDirection value) =>
+      TextFieldStyler().textDirection(value);
+  factory TextFieldStyler.textBaseline(TextBaseline value) =>
+      TextFieldStyler().textBaseline(value);
+  factory TextFieldStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixTextFieldStyler().transform(value, alignment: alignment);
+  }) => TextFieldStyler().transform(value, alignment: alignment);
 
-  RemixTextFieldStyler color(Color value) {
+  TextFieldStyler color(Color value) {
     return container(FlexBoxStyler().color(value));
   }
 
-  RemixTextFieldStyler gradient(GradientMix value) {
+  TextFieldStyler gradient(GradientMix value) {
     return container(FlexBoxStyler().gradient(value));
   }
 
-  RemixTextFieldStyler border(BoxBorderMix value) {
+  TextFieldStyler border(BoxBorderMix value) {
     return container(FlexBoxStyler().border(value));
   }
 
-  RemixTextFieldStyler borderRadius(BorderRadiusGeometryMix value) {
+  TextFieldStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(FlexBoxStyler().borderRadius(value));
   }
 
-  RemixTextFieldStyler elevation(ElevationShadow value) {
+  TextFieldStyler elevation(ElevationShadow value) {
     return container(FlexBoxStyler().elevation(value));
   }
 
-  RemixTextFieldStyler shadow(BoxShadowMix value) {
+  TextFieldStyler shadow(BoxShadowMix value) {
     return container(FlexBoxStyler().shadow(value));
   }
 
-  RemixTextFieldStyler shadows(List<BoxShadowMix> value) {
+  TextFieldStyler shadows(List<BoxShadowMix> value) {
     return container(FlexBoxStyler().shadows(value));
   }
 
-  RemixTextFieldStyler width(double value) {
+  TextFieldStyler width(double value) {
     return container(FlexBoxStyler().width(value));
   }
 
-  RemixTextFieldStyler height(double value) {
+  TextFieldStyler height(double value) {
     return container(FlexBoxStyler().height(value));
   }
 
-  RemixTextFieldStyler size(double width, double height) {
+  TextFieldStyler size(double width, double height) {
     return container(FlexBoxStyler().size(width, height));
   }
 
-  RemixTextFieldStyler minWidth(double value) {
+  TextFieldStyler minWidth(double value) {
     return container(FlexBoxStyler().minWidth(value));
   }
 
-  RemixTextFieldStyler maxWidth(double value) {
+  TextFieldStyler maxWidth(double value) {
     return container(FlexBoxStyler().maxWidth(value));
   }
 
-  RemixTextFieldStyler minHeight(double value) {
+  TextFieldStyler minHeight(double value) {
     return container(FlexBoxStyler().minHeight(value));
   }
 
-  RemixTextFieldStyler maxHeight(double value) {
+  TextFieldStyler maxHeight(double value) {
     return container(FlexBoxStyler().maxHeight(value));
   }
 
-  RemixTextFieldStyler scale(double scale, {Alignment alignment = .center}) {
+  TextFieldStyler scale(double scale, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixTextFieldStyler rotate(double radians, {Alignment alignment = .center}) {
+  TextFieldStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixTextFieldStyler translate(double x, double y, [double z = 0.0]) {
+  TextFieldStyler translate(double x, double y, [double z = 0.0]) {
     return container(FlexBoxStyler().translate(x, y, z));
   }
 
-  RemixTextFieldStyler skew(double skewX, double skewY) {
+  TextFieldStyler skew(double skewX, double skewY) {
     return container(FlexBoxStyler().skew(skewX, skewY));
   }
 
-  RemixTextFieldStyler textStyle(TextStyler value) {
+  TextFieldStyler textStyle(TextStyler value) {
     return container(FlexBoxStyler().textStyle(value));
   }
 
-  RemixTextFieldStyler image(DecorationImageMix value) {
+  TextFieldStyler image(DecorationImageMix value) {
     return container(FlexBoxStyler().image(value));
   }
 
-  RemixTextFieldStyler shape(ShapeBorderMix value) {
+  TextFieldStyler shape(ShapeBorderMix value) {
     return container(FlexBoxStyler().shape(value));
   }
 
-  RemixTextFieldStyler backgroundImage(
+  TextFieldStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -1094,7 +1088,7 @@ class RemixTextFieldStyler
     );
   }
 
-  RemixTextFieldStyler backgroundImageUrl(
+  TextFieldStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -1110,7 +1104,7 @@ class RemixTextFieldStyler
     );
   }
 
-  RemixTextFieldStyler backgroundImageAsset(
+  TextFieldStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -1126,7 +1120,7 @@ class RemixTextFieldStyler
     );
   }
 
-  RemixTextFieldStyler linearGradient({
+  TextFieldStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -1144,7 +1138,7 @@ class RemixTextFieldStyler
     );
   }
 
-  RemixTextFieldStyler radialGradient({
+  TextFieldStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -1166,7 +1160,7 @@ class RemixTextFieldStyler
     );
   }
 
-  RemixTextFieldStyler sweepGradient({
+  TextFieldStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -1186,7 +1180,7 @@ class RemixTextFieldStyler
     );
   }
 
-  RemixTextFieldStyler foregroundLinearGradient({
+  TextFieldStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -1204,7 +1198,7 @@ class RemixTextFieldStyler
     );
   }
 
-  RemixTextFieldStyler foregroundRadialGradient({
+  TextFieldStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -1226,7 +1220,7 @@ class RemixTextFieldStyler
     );
   }
 
-  RemixTextFieldStyler foregroundSweepGradient({
+  TextFieldStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -1246,194 +1240,191 @@ class RemixTextFieldStyler
     );
   }
 
-  RemixTextFieldStyler row() {
+  TextFieldStyler row() {
     return container(FlexBoxStyler().row());
   }
 
-  RemixTextFieldStyler column() {
+  TextFieldStyler column() {
     return container(FlexBoxStyler().column());
   }
 
-  RemixTextFieldStyler alignment(AlignmentGeometry value) {
+  TextFieldStyler alignment(AlignmentGeometry value) {
     return container(FlexBoxStyler().alignment(value));
   }
 
-  RemixTextFieldStyler padding(EdgeInsetsGeometryMix value) {
+  TextFieldStyler padding(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler().padding(value));
   }
 
-  RemixTextFieldStyler margin(EdgeInsetsGeometryMix value) {
+  TextFieldStyler margin(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler().margin(value));
   }
 
-  RemixTextFieldStyler constraints(BoxConstraintsMix value) {
+  TextFieldStyler constraints(BoxConstraintsMix value) {
     return container(FlexBoxStyler().constraints(value));
   }
 
-  RemixTextFieldStyler decoration(DecorationMix value) {
+  TextFieldStyler decoration(DecorationMix value) {
     return container(FlexBoxStyler().decoration(value));
   }
 
-  RemixTextFieldStyler foregroundDecoration(DecorationMix value) {
+  TextFieldStyler foregroundDecoration(DecorationMix value) {
     return container(FlexBoxStyler().foregroundDecoration(value));
   }
 
-  RemixTextFieldStyler clipBehavior(Clip value) {
+  TextFieldStyler clipBehavior(Clip value) {
     return container(FlexBoxStyler().clipBehavior(value));
   }
 
-  RemixTextFieldStyler direction(Axis value) {
+  TextFieldStyler direction(Axis value) {
     return container(FlexBoxStyler().direction(value));
   }
 
-  RemixTextFieldStyler mainAxisAlignment(MainAxisAlignment value) {
+  TextFieldStyler mainAxisAlignment(MainAxisAlignment value) {
     return container(FlexBoxStyler().mainAxisAlignment(value));
   }
 
-  RemixTextFieldStyler crossAxisAlignment(CrossAxisAlignment value) {
+  TextFieldStyler crossAxisAlignment(CrossAxisAlignment value) {
     return container(FlexBoxStyler().crossAxisAlignment(value));
   }
 
-  RemixTextFieldStyler mainAxisSize(MainAxisSize value) {
+  TextFieldStyler mainAxisSize(MainAxisSize value) {
     return container(FlexBoxStyler().mainAxisSize(value));
   }
 
-  RemixTextFieldStyler spacing(double value) {
+  TextFieldStyler spacing(double value) {
     return container(FlexBoxStyler().spacing(value));
   }
 
-  RemixTextFieldStyler verticalDirection(VerticalDirection value) {
+  TextFieldStyler verticalDirection(VerticalDirection value) {
     return container(FlexBoxStyler().verticalDirection(value));
   }
 
-  RemixTextFieldStyler textDirection(TextDirection value) {
+  TextFieldStyler textDirection(TextDirection value) {
     return container(FlexBoxStyler().textDirection(value));
   }
 
-  RemixTextFieldStyler textBaseline(TextBaseline value) {
+  TextFieldStyler textBaseline(TextBaseline value) {
     return container(FlexBoxStyler().textBaseline(value));
   }
 
-  RemixTextFieldStyler transform(
-    Matrix4 value, {
-    Alignment alignment = .center,
-  }) {
+  TextFieldStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the text.
-  RemixTextFieldStyler text(TextStyler value) {
-    return merge(RemixTextFieldStyler(text: value));
+  TextFieldStyler text(TextStyler value) {
+    return merge(TextFieldStyler(text: value));
   }
 
   /// Sets the hintText.
-  RemixTextFieldStyler hintText(TextStyler value) {
-    return merge(RemixTextFieldStyler(hintText: value));
+  TextFieldStyler hintText(TextStyler value) {
+    return merge(TextFieldStyler(hintText: value));
   }
 
   /// Sets the textAlign.
-  RemixTextFieldStyler textAlign(TextAlign value) {
-    return merge(RemixTextFieldStyler(textAlign: value));
+  TextFieldStyler textAlign(TextAlign value) {
+    return merge(TextFieldStyler(textAlign: value));
   }
 
   /// Sets the cursorWidth.
-  RemixTextFieldStyler cursorWidth(double value) {
-    return merge(RemixTextFieldStyler(cursorWidth: value));
+  TextFieldStyler cursorWidth(double value) {
+    return merge(TextFieldStyler(cursorWidth: value));
   }
 
   /// Sets the cursorHeight.
-  RemixTextFieldStyler cursorHeight(double value) {
-    return merge(RemixTextFieldStyler(cursorHeight: value));
+  TextFieldStyler cursorHeight(double value) {
+    return merge(TextFieldStyler(cursorHeight: value));
   }
 
   /// Sets the cursorRadius.
-  RemixTextFieldStyler cursorRadius(Radius value) {
-    return merge(RemixTextFieldStyler(cursorRadius: value));
+  TextFieldStyler cursorRadius(Radius value) {
+    return merge(TextFieldStyler(cursorRadius: value));
   }
 
   /// Sets the cursorColor.
-  RemixTextFieldStyler cursorColor(Color value) {
-    return merge(RemixTextFieldStyler(cursorColor: value));
+  TextFieldStyler cursorColor(Color value) {
+    return merge(TextFieldStyler(cursorColor: value));
   }
 
   /// Sets the selectionHeightStyle.
-  RemixTextFieldStyler selectionHeightStyle(BoxHeightStyle value) {
-    return merge(RemixTextFieldStyler(selectionHeightStyle: value));
+  TextFieldStyler selectionHeightStyle(BoxHeightStyle value) {
+    return merge(TextFieldStyler(selectionHeightStyle: value));
   }
 
   /// Sets the selectionWidthStyle.
-  RemixTextFieldStyler selectionWidthStyle(BoxWidthStyle value) {
-    return merge(RemixTextFieldStyler(selectionWidthStyle: value));
+  TextFieldStyler selectionWidthStyle(BoxWidthStyle value) {
+    return merge(TextFieldStyler(selectionWidthStyle: value));
   }
 
   /// Sets the scrollPadding.
-  RemixTextFieldStyler scrollPadding(EdgeInsets value) {
-    return merge(RemixTextFieldStyler(scrollPadding: value));
+  TextFieldStyler scrollPadding(EdgeInsets value) {
+    return merge(TextFieldStyler(scrollPadding: value));
   }
 
   /// Sets the keyboardAppearance.
-  RemixTextFieldStyler keyboardAppearance(Brightness value) {
-    return merge(RemixTextFieldStyler(keyboardAppearance: value));
+  TextFieldStyler keyboardAppearance(Brightness value) {
+    return merge(TextFieldStyler(keyboardAppearance: value));
   }
 
   /// Sets the cursorOpacityAnimates.
-  RemixTextFieldStyler cursorOpacityAnimates(bool value) {
-    return merge(RemixTextFieldStyler(cursorOpacityAnimates: value));
+  TextFieldStyler cursorOpacityAnimates(bool value) {
+    return merge(TextFieldStyler(cursorOpacityAnimates: value));
   }
 
   /// Sets the container.
-  RemixTextFieldStyler container(FlexBoxStyler value) {
-    return merge(RemixTextFieldStyler(container: value));
+  TextFieldStyler container(FlexBoxStyler value) {
+    return merge(TextFieldStyler(container: value));
   }
 
   /// Sets the layout.
-  RemixTextFieldStyler layout(FlexBoxStyler value) {
-    return merge(RemixTextFieldStyler(layout: value));
+  TextFieldStyler layout(FlexBoxStyler value) {
+    return merge(TextFieldStyler(layout: value));
   }
 
   /// Sets the helperText.
-  RemixTextFieldStyler helperText(TextStyler value) {
-    return merge(RemixTextFieldStyler(helperText: value));
+  TextFieldStyler helperText(TextStyler value) {
+    return merge(TextFieldStyler(helperText: value));
   }
 
   /// Sets the label.
   @override
-  RemixTextFieldStyler label(TextStyler value) {
-    return merge(RemixTextFieldStyler(label: value));
+  TextFieldStyler label(TextStyler value) {
+    return merge(TextFieldStyler(label: value));
   }
 
   /// Sets the containerEffects.
-  RemixTextFieldStyler containerEffects(RemixBoxEffectsMix value) {
-    return merge(RemixTextFieldStyler(containerEffects: value));
+  TextFieldStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(TextFieldStyler(containerEffects: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixTextFieldStyler animate(AnimationConfig value) {
-    return merge(RemixTextFieldStyler(animation: value));
+  TextFieldStyler animate(AnimationConfig value) {
+    return merge(TextFieldStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixTextFieldStyler variants(List<VariantStyle<RemixTextFieldSpec>> value) {
-    return merge(RemixTextFieldStyler(variants: value));
+  TextFieldStyler variants(List<VariantStyle<TextFieldSpec>> value) {
+    return merge(TextFieldStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixTextFieldStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixTextFieldStyler(modifier: value));
+  TextFieldStyler wrap(WidgetModifierConfig value) {
+    return merge(TextFieldStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixTextFieldStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixTextFieldStyler(modifier: value));
+  TextFieldStyler modifier(WidgetModifierConfig value) {
+    return merge(TextFieldStyler(modifier: value));
   }
 
-  /// Merges with another [RemixTextFieldStyler].
+  /// Merges with another [TextFieldStyler].
   @override
-  RemixTextFieldStyler merge(RemixTextFieldStyler? other) {
-    return RemixTextFieldStyler.create(
+  TextFieldStyler merge(TextFieldStyler? other) {
+    return TextFieldStyler.create(
       text: MixOps.merge($text, other?.$text),
       hintText: MixOps.merge($hintText, other?.$hintText),
       textAlign: MixOps.merge($textAlign, other?.$textAlign),
@@ -1472,10 +1463,10 @@ class RemixTextFieldStyler
     );
   }
 
-  /// Resolves to [StyleSpec<RemixTextFieldSpec>] using [context].
+  /// Resolves to [StyleSpec<TextFieldSpec>] using [context].
   @override
-  StyleSpec<RemixTextFieldSpec> resolve(BuildContext context) {
-    final spec = RemixTextFieldSpec(
+  StyleSpec<TextFieldSpec> resolve(BuildContext context) {
+    final spec = TextFieldSpec(
       text: MixOps.resolve(context, $text),
       hintText: MixOps.resolve(context, $hintText),
       textAlign: MixOps.resolve(context, $textAlign),

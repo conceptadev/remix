@@ -13,59 +13,48 @@ void main() {
     });
 
     test('match their fluent methods', () {
-      expect(
-        RemixCardStyler.color(Colors.blue),
-        RemixCardStyler().color(Colors.blue),
-      );
-      expect(RemixSpinnerStyler.size(20), RemixSpinnerStyler().size(20));
+      expect(CardStyler.color(Colors.blue), CardStyler().color(Colors.blue));
+      expect(SpinnerStyler.size(20), SpinnerStyler().size(20));
       expect(ButtonStyler.rotate(0.25), ButtonStyler().rotate(0.25));
       expect(
-        RemixToggleGroupStyler.color(Colors.blue),
-        RemixToggleGroupStyler().color(Colors.blue),
+        ToggleGroupStyler.color(Colors.blue),
+        ToggleGroupStyler().color(Colors.blue),
       );
       expect(
-        RemixPopoverStyler.color(Colors.purple),
-        RemixPopoverStyler().color(Colors.purple),
+        PopoverStyler.color(Colors.purple),
+        PopoverStyler().color(Colors.purple),
       );
     });
 
     test('forward a restricted Box surface from Select menuContainer', () {
       expect(
-        RemixSelectStyler.color(Colors.white),
-        RemixSelectStyler().color(Colors.white),
+        SelectStyler.color(Colors.white),
+        SelectStyler().color(Colors.white),
       );
     });
 
     test('retain field factories for composite stylers', () {
       final trigger = MenuTriggerStyler.color(Colors.black);
 
-      expect(
-        MenuStyler.trigger(trigger),
-        MenuStyler().trigger(trigger),
-      );
+      expect(MenuStyler.trigger(trigger), MenuStyler().trigger(trigger));
 
       final layout = FlexBoxStyler.spacing(12);
-      expect(
-        RemixTextFieldStyler.layout(layout),
-        RemixTextFieldStyler().layout(layout),
-      );
+      expect(TextFieldStyler.layout(layout), TextFieldStyler().layout(layout));
     });
 
     test('retain fluent-only conveniences and aliases', () {
       expect(
-        RemixCardStyler().paddingAll(12),
-        RemixCardStyler.padding(EdgeInsetsGeometryMix.all(12)),
+        CardStyler().paddingAll(12),
+        CardStyler.padding(EdgeInsetsGeometryMix.all(12)),
       );
       expect(
-        RemixCardStyler().backgroundColor(Colors.red),
-        RemixCardStyler.color(Colors.red),
+        CardStyler().backgroundColor(Colors.red),
+        CardStyler.color(Colors.red),
       );
     });
 
     test('support contextual shorthand for selected state', () {
-      final style = RemixToggleGroupItemStyler().onSelected(
-        .color(Colors.green),
-      );
+      final style = ToggleGroupItemStyler().onSelected(.color(Colors.green));
 
       expect(style.$variants, hasLength(1));
     });
@@ -75,33 +64,30 @@ void main() {
       final padding = EdgeInsetsGeometryMix.all(12);
       final textStyle = TextStyleMix(fontSize: 14);
 
+      expect(CardStyler().backgroundColor(color), CardStyler.color(color));
       expect(
-        RemixCardStyler().backgroundColor(color),
-        RemixCardStyler.color(color),
+        AccordionStyler().titleColor(color),
+        AccordionStyler.title(TextStyler.color(color)),
       );
       expect(
-        RemixAccordionStyler().titleColor(color),
-        RemixAccordionStyler.title(TextStyler.color(color)),
+        AccordionStyler().leadingIconSize(16),
+        AccordionStyler.leadingIcon(IconStyler.size(16)),
       );
       expect(
-        RemixAccordionStyler().leadingIconSize(16),
-        RemixAccordionStyler.leadingIcon(IconStyler.size(16)),
+        AccordionStyler().contentPadding(padding),
+        AccordionStyler.content(BoxStyler.padding(padding)),
+      );
+      expect(AvatarStyler().square(24), AvatarStyler.size(24, 24));
+      expect(
+        BadgeStyler().foregroundColor(color),
+        BadgeStyler.label(TextStyler.color(color)),
       );
       expect(
-        RemixAccordionStyler().contentPadding(padding),
-        RemixAccordionStyler.content(BoxStyler.padding(padding)),
-      );
-      expect(RemixAvatarStyler().square(24), RemixAvatarStyler.size(24, 24));
-      expect(
-        RemixBadgeStyler().foregroundColor(color),
-        RemixBadgeStyler.label(TextStyler.color(color)),
-      );
-      expect(
-        RemixCalloutStyler().contentTextStyle(textStyle),
-        RemixCalloutStyler.text(TextStyler(style: textStyle)),
+        CalloutStyler().contentTextStyle(textStyle),
+        CalloutStyler.text(TextStyler(style: textStyle)),
       );
 
-      final contextual = RemixAccordionStyler()
+      final contextual = AccordionStyler()
           .onHovered(.title(.color(color)))
           .onPressed(.content(.padding(padding)));
       expect(contextual.$variants, hasLength(2));
@@ -133,11 +119,8 @@ void main() {
       final radius = BorderRadiusGeometryMix.circular(8);
 
       expectSameSpec(
-        RemixCardStyler()
-            .padding(padding)
-            .color(Colors.blue)
-            .borderRadius(radius),
-        RemixCardStyler(
+        CardStyler().padding(padding).color(Colors.blue).borderRadius(radius),
+        CardStyler(
           container: BoxStyler(
             padding: padding,
             decoration: BoxDecorationMix(
@@ -158,8 +141,8 @@ void main() {
         ),
       );
       expectSameSpec(
-        RemixSliderStyler().size(20, 20).color(Colors.blue),
-        RemixSliderStyler(
+        SliderStyler().size(20, 20).color(Colors.blue),
+        SliderStyler(
           thumb: BoxStyler(
             constraints: BoxConstraintsMix(
               minWidth: 20,
@@ -172,8 +155,8 @@ void main() {
         ),
       );
       expectSameSpec(
-        RemixSelectStyler().padding(padding).color(Colors.white),
-        RemixSelectStyler(
+        SelectStyler().padding(padding).color(Colors.white),
+        SelectStyler(
           menuContainer: FlexBoxStyler(
             padding: padding,
             decoration: BoxDecorationMix(color: Colors.white),
@@ -181,8 +164,8 @@ void main() {
         ),
       );
       expectSameSpec(
-        RemixTextFieldStyler().color(Colors.white).textColor(Colors.black),
-        RemixTextFieldStyler(
+        TextFieldStyler().color(Colors.white).textColor(Colors.black),
+        TextFieldStyler(
           container: FlexBoxStyler(
             decoration: BoxDecorationMix(color: Colors.white),
           ),
@@ -190,8 +173,8 @@ void main() {
         ),
       );
       expectSameSpec(
-        RemixToggleGroupStyler().padding(padding).color(Colors.blue).spacing(4),
-        RemixToggleGroupStyler(
+        ToggleGroupStyler().padding(padding).color(Colors.blue).spacing(4),
+        ToggleGroupStyler(
           container: FlexBoxStyler(
             padding: padding,
             decoration: BoxDecorationMix(color: Colors.blue),

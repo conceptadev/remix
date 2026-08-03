@@ -8,18 +8,23 @@
   scaling, optional background painting, and modifier ordering.
 - **FEAT**: Expose `ButtonStyler` as the canonical button styling API.
   `RemixButtonStyler` remains available as a deprecated compatibility alias.
-- **FEAT**: Expose `MenuStyler`, `MenuTriggerStyler`, and `MenuItemStyler` as
-  the canonical menu styling API, with `MenuSpec`, `MenuTriggerSpec`, and
-  `MenuItemSpec` as the canonical resolved spec names. `RemixMenuStyler`,
-  `RemixMenuTriggerStyler`, and `RemixMenuItemStyler` remain available as
-  deprecated source-compatible aliases, and `RemixMenuSpec`,
-  `RemixMenuTriggerSpec`, and `RemixMenuItemSpec` remain as spec typedefs. Menu
-  widgets and data classes (`RemixMenu`, `RemixMenuTrigger`,
-  `RemixMenuItemData`, `RemixMenuItem`, `RemixMenuDivider`) keep their names.
+- **FEAT**: Unprefixed styling names are now canonical for every component.
+  `RemixXStyler` becomes `XStyler` and `RemixXSpec` becomes `XSpec` across
+  Accordion, Avatar, Badge, Callout, Card, Checkbox, Dialog, Divider,
+  IconButton, Menu, Popover, Progress, Radio, Select, Slider, Spinner, Switch,
+  Tabs, TextField, Toggle, ToggleGroup, and Tooltip. Every `RemixXStyler` name
+  remains as a deprecated source-compatible alias exported from
+  `package:remix/remix.dart`, and every `RemixXSpec` name remains as a typedef
+  beside its canonical spec, so existing code keeps compiling. Widgets, data
+  classes, and rendering primitives keep the `Remix` prefix — for example
+  `RemixButton`, `RemixMenu`, `RemixMenuItem`, `RemixBoxEffectsSpec`, and
+  `RemixBoxStylerMixin` are unchanged. Public styler extension names such as
+  `RemixCardStylerRemixHelpers` are also unchanged, so explicit extension
+  invocation stays source-compatible.
 - **BREAKING**: Rename Fortal recipe helpers from `fortalXStyler()` to
   `fortalXStyle()` so `@MixWidget` can infer every generated `FortalX` name.
   Remix component styler types such as `ButtonStyler` and
-  `RemixAvatarStyler` are unchanged.
+  `AvatarStyler` are unchanged.
 - **FEAT**: Expose every Fortal recipe parameter on its generated widget,
   including `highContrast` and Avatar's `fallbackLength`, while retaining both
   the unnamed `variant:` constructor and generated named variant constructors.

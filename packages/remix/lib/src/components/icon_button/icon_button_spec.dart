@@ -2,31 +2,31 @@ part of 'icon_button.dart';
 
 /// Resolved visual properties for a [RemixIconButton].
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, IconStyleMixin])
-class RemixIconButtonSpec with _$RemixIconButtonSpec {
+class IconButtonSpec with _$IconButtonSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   @override
   final StyleSpec<IconSpec> icon;
   @override
-  final StyleSpec<RemixSpinnerSpec> spinner;
+  final StyleSpec<SpinnerSpec> spinner;
   @override
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
-  const RemixIconButtonSpec({
+  const IconButtonSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<IconSpec>? icon,
-    StyleSpec<RemixSpinnerSpec>? spinner,
+    StyleSpec<SpinnerSpec>? spinner,
     this.containerEffects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
-       spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec());
+       spinner = spinner ?? const StyleSpec(spec: SpinnerSpec());
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixIconButtonSpec lerp(RemixIconButtonSpec? other, double t) {
+  IconButtonSpec lerp(IconButtonSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
@@ -38,3 +38,9 @@ class RemixIconButtonSpec with _$RemixIconButtonSpec {
     );
   }
 }
+
+/// Backward-compatible name for [IconButtonSpec].
+///
+/// The generated style API is based on [IconButtonSpec], so resolved values use
+/// `IconButtonSpec` as their runtime type.
+typedef RemixIconButtonSpec = IconButtonSpec;

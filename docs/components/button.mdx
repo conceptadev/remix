@@ -179,7 +179,7 @@ RemixButton remixButtonConstructor({
   bool excludeSemantics = false,
   MouseCursor mouseCursor = SystemMouseCursors.click,
   ButtonStyler style = const ButtonStyler.create(),
-  RemixButtonSpec? styleSpec,
+  ButtonSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -192,7 +192,7 @@ RemixButton remixButtonConstructor({
 
 Optional. The style configuration for the button. Customize colors, sizing, spacing, and state-based styling.
 
-#### `styleSpec` → `RemixButtonSpec?`
+#### `styleSpec` → `ButtonSpec?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 
@@ -287,7 +287,7 @@ Configures the label text style using a TextStyler.
 
 Configures the icon style using an IconStyler.
 
-#### `spinner(RemixSpinnerStyler value)`
+#### `spinner(SpinnerStyler value)`
 
 Configures the loading spinner style.
 
@@ -324,7 +324,7 @@ Sets constraints
 
 Configures implicit animation for style transitions.
 
-#### `variants(List<VariantStyle<RemixButtonSpec>> value)`
+#### `variants(List<VariantStyle<ButtonSpec>> value)`
 
 Sets style variants.
 

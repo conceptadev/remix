@@ -43,11 +43,11 @@ class _CheckboxExampleState extends State<CheckboxExample> {
     );
   }
 
-  RemixCheckboxStyler get style {
-    return RemixCheckboxStyler()
+  CheckboxStyler get style {
+    return CheckboxStyler()
         .size(24, 24)
         .icon(IconStyler().size(20).color(Colors.white))
-        .onSelected(RemixCheckboxStyler().fillColor(Colors.grey.shade900))
+        .onSelected(CheckboxStyler().fillColor(Colors.grey.shade900))
         .borderRadiusAll(const Radius.circular(3))
         .border(
           BoxBorderMix.all(
@@ -122,8 +122,8 @@ RemixCheckbox remixCheckboxConstructor({
   bool enableFeedback = true,
   String? semanticLabel,
   MouseCursor mouseCursor = SystemMouseCursors.click,
-  RemixCheckboxStyler style = const RemixCheckboxStyler.create(),
-  RemixCheckboxSpec? styleSpec,
+  CheckboxStyler style = const CheckboxStyler.create(),
+  CheckboxSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -172,11 +172,11 @@ Optional. The icon to display when the checkbox is in indeterminate state. Defau
 
 Optional. Whether to provide haptic feedback when the checkbox is toggled. Defaults to true.
 
-#### `style` → `RemixCheckboxStyler`
+#### `style` → `CheckboxStyler`
 
 Optional. The style configuration for the checkbox.
 
-#### `styleSpec` → `RemixCheckboxSpec?`
+#### `styleSpec` → `CheckboxSpec?`
 
 Optional. The style spec for the checkbox.
 
@@ -231,11 +231,11 @@ Sets checkbox fill color on the container.
 
 Sets container alignment.
 
-#### `onIndeterminate(RemixCheckboxStyler value)`
+#### `onIndeterminate(CheckboxStyler value)`
 
 Style applied when the checkbox is in the indeterminate state.
 
-#### `onSelected(RemixCheckboxStyler value)`
+#### `onSelected(CheckboxStyler value)`
 
 Style applied when the checkbox is selected.
 
@@ -251,7 +251,7 @@ Sets container padding.
 
 Sets animation configuration.
 
-#### `variants(List<VariantStyle<RemixCheckboxSpec>> value)`
+#### `variants(List<VariantStyle<CheckboxSpec>> value)`
 
 Sets style variants.
 

@@ -62,7 +62,7 @@ class MenuSpec with _$MenuSpec {
 
   /// Default style spec applied to menu dividers.
   @override
-  final StyleSpec<RemixDividerSpec> divider;
+  final StyleSpec<DividerSpec> divider;
 
   /// Creates a menu spec with default empty child specs.
   const MenuSpec({
@@ -70,11 +70,11 @@ class MenuSpec with _$MenuSpec {
     StyleSpec<FlexBoxSpec>? overlay,
     this.containerEffects,
     StyleSpec<MenuItemSpec>? item,
-    StyleSpec<RemixDividerSpec>? divider,
+    StyleSpec<DividerSpec>? divider,
   }) : trigger = trigger ?? const StyleSpec(spec: MenuTriggerSpec()),
        overlay = overlay ?? const StyleSpec(spec: FlexBoxSpec()),
        item = item ?? const StyleSpec(spec: MenuItemSpec()),
-       divider = divider ?? const StyleSpec(spec: RemixDividerSpec());
+       divider = divider ?? const StyleSpec(spec: DividerSpec());
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.

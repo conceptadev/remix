@@ -6,9 +6,7 @@ part of 'menu.dart';
 /// the visible trigger content.
 extension RemixMenuTriggerStylerRemixHelpers on MenuTriggerStyler {
   MenuTriggerStyler flex(FlexStyler value) {
-    return merge(
-      MenuTriggerStyler(container: FlexBoxStyler().flex(value)),
-    );
+    return merge(MenuTriggerStyler(container: FlexBoxStyler().flex(value)));
   }
 }
 

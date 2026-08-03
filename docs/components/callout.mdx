@@ -32,8 +32,8 @@ class CalloutExample extends StatelessWidget {
     );
   }
 
-  RemixCalloutStyler get style {
-    return RemixCalloutStyler()
+  CalloutStyler get style {
+    return CalloutStyler()
         .backgroundColor(Colors.grey.shade200)
         .spacing(12)
         .height(60)
@@ -108,8 +108,8 @@ RemixCallout remixCalloutConstructor({
   String? text,
   IconData? icon,
   Widget? child,
-  RemixCalloutStyler style = const RemixCalloutStyler.create(),
-  RemixCalloutSpec? styleSpec,
+  CalloutStyler style = const CalloutStyler.create(),
+  CalloutSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -118,11 +118,11 @@ RemixCallout remixCalloutConstructor({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixCalloutStyler`
+#### `style` → `CalloutStyler`
 
 Optional. The style configuration for the callout. Customize colors, sizing, spacing, and state-based styling.
 
-#### `styleSpec` → `RemixCalloutSpec?`
+#### `styleSpec` → `CalloutSpec?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 

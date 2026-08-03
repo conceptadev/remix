@@ -5,42 +5,42 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixCheckboxStyler', () {
+  group('CheckboxStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        const style = RemixCheckboxStyler.create();
+        const style = CheckboxStyler.create();
         expect(style, isNotNull);
-        expect(style, isA<RemixCheckboxStyler>());
+        expect(style, isA<CheckboxStyler>());
       });
 
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final indicator = Prop.maybeMix(IconStyler());
 
-        final style = RemixCheckboxStyler.create(
+        final style = CheckboxStyler.create(
           container: container,
           indicator: indicator,
         );
 
         expect(style, isNotNull);
-        expect(style, isA<RemixCheckboxStyler>());
+        expect(style, isA<CheckboxStyler>());
       });
 
       test('constructor with styler parameters', () {
-        final style = RemixCheckboxStyler(
+        final style = CheckboxStyler(
           container: BoxStyler(padding: EdgeInsetsGeometryMix.all(4.0)),
           indicator: IconStyler(color: Colors.blue),
         );
 
         expect(style, isNotNull);
-        expect(style, isA<RemixCheckboxStyler>());
+        expect(style, isA<CheckboxStyler>());
       });
     });
 
     group('Style Methods', () {
       styleMethodTest(
         'shape sets container shape',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.shape(
           RoundedRectangleBorderMix(
             borderRadius: BorderRadiusMix.circular(8.0),
@@ -50,7 +50,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixCheckboxStyler.shape(
+              CheckboxStyler.shape(
                 RoundedRectangleBorderMix(
                   borderRadius: BorderRadiusMix.circular(8.0),
                 ),
@@ -62,14 +62,14 @@ void main() {
 
       styleMethodTest(
         'border sets container border',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) =>
             style.border(BoxBorderMix.all(BorderSideMix(color: Colors.grey))),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixCheckboxStyler.border(
+              CheckboxStyler.border(
                 BoxBorderMix.all(BorderSideMix(color: Colors.grey)),
               ),
             ),
@@ -79,7 +79,7 @@ void main() {
 
       styleMethodTest(
         'indicatorColor sets indicator color',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.indicatorColor(Colors.green),
         expect: (style) {
           expect(
@@ -91,19 +91,16 @@ void main() {
 
       styleMethodTest(
         'alignment sets container alignment',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
-          expect(
-            style,
-            equals(RemixCheckboxStyler.alignment(Alignment.centerLeft)),
-          );
+          expect(style, equals(CheckboxStyler.alignment(Alignment.centerLeft)));
         },
       );
 
       styleMethodTest(
         'icon sets indicator icon styler',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.icon(IconStyler(size: 16.0)),
         expect: (style) {
           expect(
@@ -115,19 +112,19 @@ void main() {
 
       styleMethodTest(
         'padding sets container padding',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixCheckboxStyler.padding(EdgeInsetsGeometryMix.all(8.0))),
+            equals(CheckboxStyler.padding(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
 
       styleMethodTest(
         'fillColor sets container background color',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.fillColor(Colors.blue),
         expect: (style) {
           expect(
@@ -143,23 +140,23 @@ void main() {
 
       styleMethodTest(
         'size sets container size with width and height',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.size(20.0, 20.0),
         expect: (style) {
-          expect(style, equals(RemixCheckboxStyler.size(20.0, 20.0)));
+          expect(style, equals(CheckboxStyler.size(20.0, 20.0)));
         },
       );
 
       styleMethodTest(
         'borderRadius sets container border radius',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) =>
             style.borderRadius(BorderRadiusGeometryMix.circular(6.0)),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixCheckboxStyler.borderRadius(
+              CheckboxStyler.borderRadius(
                 BorderRadiusGeometryMix.circular(6.0),
               ),
             ),
@@ -169,7 +166,7 @@ void main() {
 
       styleMethodTest(
         'animate sets animation config',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) =>
             style.animate(AnimationConfig.linear(Duration(milliseconds: 200))),
         expect: (style) {
@@ -182,7 +179,7 @@ void main() {
 
       styleMethodTest(
         'variants sets variant styles',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.variants([]),
         expect: (style) {
           expect(style.$variants, equals([]));
@@ -191,7 +188,7 @@ void main() {
 
       styleMethodTest(
         'wrap sets widget modifier config',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.wrap(WidgetModifierConfig()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig()));
@@ -200,7 +197,7 @@ void main() {
 
       styleMethodTest(
         'constraints sets container constraints',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 18.0, minHeight: 18.0),
         ),
@@ -208,7 +205,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixCheckboxStyler.constraints(
+              CheckboxStyler.constraints(
                 BoxConstraintsMix(minWidth: 18.0, minHeight: 18.0),
               ),
             ),
@@ -218,7 +215,7 @@ void main() {
 
       styleMethodTest(
         'decoration sets container decoration',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.lightBlue,
@@ -229,7 +226,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixCheckboxStyler.decoration(
+              CheckboxStyler.decoration(
                 BoxDecorationMix(
                   color: Colors.lightBlue,
                   borderRadius: BorderRadiusGeometryMix.circular(4.0),
@@ -242,19 +239,19 @@ void main() {
 
       styleMethodTest(
         'margin sets container margin',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(4.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixCheckboxStyler.margin(EdgeInsetsGeometryMix.all(4.0))),
+            equals(CheckboxStyler.margin(EdgeInsetsGeometryMix.all(4.0))),
           );
         },
       );
 
       styleMethodTest(
         'foregroundDecoration sets foreground decoration',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(color: Colors.yellow.withValues(alpha: 0.3)),
         ),
@@ -262,7 +259,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixCheckboxStyler.foregroundDecoration(
+              CheckboxStyler.foregroundDecoration(
                 BoxDecorationMix(color: Colors.yellow.withValues(alpha: 0.3)),
               ),
             ),
@@ -272,12 +269,12 @@ void main() {
 
       styleMethodTest(
         'transform sets container transform',
-        initial: RemixCheckboxStyler(),
+        initial: CheckboxStyler(),
         modify: (style) => style.transform(Matrix4.rotationZ(0.1)),
         expect: (style) {
           expect(
             style,
-            equals(RemixCheckboxStyler.transform(Matrix4.rotationZ(0.1))),
+            equals(CheckboxStyler.transform(Matrix4.rotationZ(0.1))),
           );
         },
       );
@@ -285,14 +282,14 @@ void main() {
 
     group('Core Methods', () {
       testWidgets('resolve method returns StyleSpec', (tester) async {
-        const style = RemixCheckboxStyler.create();
+        const style = CheckboxStyler.create();
         await tester.pumpWidget(
           MaterialApp(
             home: Builder(
               builder: (context) {
                 final spec = style.resolve(context);
-                expect(spec, isA<StyleSpec<RemixCheckboxSpec>>());
-                expect(spec.spec, isA<RemixCheckboxSpec>());
+                expect(spec, isA<StyleSpec<CheckboxSpec>>());
+                expect(spec.spec, isA<CheckboxSpec>());
                 return Container();
               },
             ),
@@ -301,23 +298,23 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        const originalStyle = RemixCheckboxStyler.create();
+        const originalStyle = CheckboxStyler.create();
         final mergedStyle = originalStyle.merge(null);
         expect(mergedStyle, equals(originalStyle));
       });
 
       test('merge with other style combines properties', () {
-        final style1 = RemixCheckboxStyler.create();
-        final style2 = RemixCheckboxStyler();
+        final style1 = CheckboxStyler.create();
+        final style2 = CheckboxStyler();
 
         final merged = style1.merge(style2);
         expect(merged, isNot(same(style1)));
         expect(merged, isNot(same(style2)));
-        expect(merged, isA<RemixCheckboxStyler>());
+        expect(merged, isA<CheckboxStyler>());
       });
 
       test('props list contains all properties', () {
-        const style = RemixCheckboxStyler.create();
+        const style = CheckboxStyler.create();
         expect(style.props, hasLength(6));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$indicator));
@@ -331,7 +328,7 @@ void main() {
       testWidgets('call method creates RemixCheckbox with all parameters', (
         tester,
       ) async {
-        final style = RemixCheckboxStyler().fillColor(Colors.blue);
+        final style = CheckboxStyler().fillColor(Colors.blue);
         final focusNode = FocusNode();
 
         final checkbox = style.call(
@@ -369,7 +366,7 @@ void main() {
       testWidgets('call method creates RemixCheckbox with minimal parameters', (
         tester,
       ) async {
-        final style = RemixCheckboxStyler();
+        final style = CheckboxStyler();
 
         final checkbox = style.call(selected: false);
 
@@ -383,21 +380,21 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        const style1 = RemixCheckboxStyler.create();
-        const style2 = RemixCheckboxStyler.create();
+        const style1 = CheckboxStyler.create();
+        const style2 = CheckboxStyler.create();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        const style1 = RemixCheckboxStyler.create();
-        final style2 = RemixCheckboxStyler();
+        const style1 = CheckboxStyler.create();
+        final style2 = CheckboxStyler();
         expect(style1, equals(style2));
       });
 
       test('styles with same properties are equal', () {
-        final style1 = RemixCheckboxStyler();
-        final style2 = RemixCheckboxStyler();
+        final style1 = CheckboxStyler();
+        final style2 = CheckboxStyler();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });

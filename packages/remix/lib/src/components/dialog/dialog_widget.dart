@@ -133,7 +133,7 @@ class RemixDialog extends StatelessWidget {
     this.scrollable = false,
     this.modal = true,
     this.semanticLabel,
-    this.style = const RemixDialogStyler.create(),
+    this.style = const DialogStyler.create(),
     this.styleSpec,
   }) : assert(
          child != null || title != null || description != null,
@@ -169,16 +169,16 @@ class RemixDialog extends StatelessWidget {
   final String? semanticLabel;
 
   /// The style configuration for the dialog.
-  final RemixDialogStyler style;
+  final DialogStyler style;
 
   /// Optional raw style spec that bypasses fluent style resolution.
-  final RemixDialogSpec? styleSpec;
+  final DialogSpec? styleSpec;
 
-  static final styleFrom = RemixDialogStyler.new;
+  static final styleFrom = DialogStyler.new;
 
   @override
   Widget build(BuildContext context) {
-    final content = RemixStyleSpecBuilder<RemixDialogSpec>(
+    final content = RemixStyleSpecBuilder<DialogSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {

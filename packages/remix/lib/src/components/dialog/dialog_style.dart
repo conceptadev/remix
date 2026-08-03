@@ -1,11 +1,11 @@
 part of 'dialog.dart';
 
 /// Style configuration for [RemixDialog] container, title, description, and actions.
-extension RemixDialogStylerRemixHelpers on RemixDialogStyler {
+extension RemixDialogStylerRemixHelpers on DialogStyler {
   /// Sets the background color of the dialog.
-  RemixDialogStyler backgroundColor(Color value) {
+  DialogStyler backgroundColor(Color value) {
     return merge(
-      RemixDialogStyler(
+      DialogStyler(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );

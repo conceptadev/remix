@@ -1,63 +1,63 @@
 part of 'callout.dart';
 
 /// Style configuration for [RemixCallout] layout, icon, and text.
-extension RemixCalloutStylerRemixHelpers on RemixCalloutStyler {
+extension RemixCalloutStylerRemixHelpers on CalloutStyler {
   /// Sets container background color
-  RemixCalloutStyler backgroundColor(Color value) {
+  CalloutStyler backgroundColor(Color value) {
     return merge(
-      RemixCalloutStyler(
+      CalloutStyler(
         container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets the foreground color (icon and text) of the callout.
-  RemixCalloutStyler foregroundColor(Color value) {
+  CalloutStyler foregroundColor(Color value) {
     return iconColor(value).textColor(value);
   }
 
   /// Sets the callout content text style.
-  RemixCalloutStyler contentTextStyle(TextStyleMix value) {
+  CalloutStyler contentTextStyle(TextStyleMix value) {
     return text(TextStyler(style: value));
   }
 
-  RemixCalloutStyler textColor(Color value) {
+  CalloutStyler textColor(Color value) {
     return text(TextStyler(style: TextStyleMix(color: value)));
   }
 
-  RemixCalloutStyler fontSize(double value) {
+  CalloutStyler fontSize(double value) {
     return text(TextStyler(style: TextStyleMix(fontSize: value)));
   }
 
-  RemixCalloutStyler fontWeight(FontWeight value) {
+  CalloutStyler fontWeight(FontWeight value) {
     return text(TextStyler(style: TextStyleMix(fontWeight: value)));
   }
 
-  RemixCalloutStyler fontStyle(FontStyle value) {
+  CalloutStyler fontStyle(FontStyle value) {
     return text(TextStyler(style: TextStyleMix(fontStyle: value)));
   }
 
-  RemixCalloutStyler letterSpacing(double value) {
+  CalloutStyler letterSpacing(double value) {
     return text(TextStyler(style: TextStyleMix(letterSpacing: value)));
   }
 
-  RemixCalloutStyler textDecoration(TextDecoration value) {
+  CalloutStyler textDecoration(TextDecoration value) {
     return text(TextStyler(style: TextStyleMix(decoration: value)));
   }
 
-  RemixCalloutStyler fontFamily(String value) {
+  CalloutStyler fontFamily(String value) {
     return text(TextStyler(style: TextStyleMix(fontFamily: value)));
   }
 
-  RemixCalloutStyler textHeight(double value) {
+  CalloutStyler textHeight(double value) {
     return text(TextStyler(style: TextStyleMix(height: value)));
   }
 
-  RemixCalloutStyler wordSpacing(double value) {
+  CalloutStyler wordSpacing(double value) {
     return text(TextStyler(style: TextStyleMix(wordSpacing: value)));
   }
 
-  RemixCalloutStyler textDecorationColor(Color value) {
+  CalloutStyler textDecorationColor(Color value) {
     return text(TextStyler(style: TextStyleMix(decorationColor: value)));
   }
 
@@ -72,7 +72,7 @@ extension RemixCalloutStylerRemixHelpers on RemixCalloutStyler {
     );
   }
 
-  RemixCalloutStyler flex(FlexStyler value) {
-    return merge(RemixCalloutStyler(container: FlexBoxStyler().flex(value)));
+  CalloutStyler flex(FlexStyler value) {
+    return merge(CalloutStyler(container: FlexBoxStyler().flex(value)));
   }
 }

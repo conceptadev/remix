@@ -6,7 +6,7 @@ part of 'tooltip.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
+mixin _$TooltipSpec implements Spec<TooltipSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<TextSpec> get label;
   Duration? get waitDuration;
@@ -14,17 +14,17 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
   Duration? get dismissDuration;
 
   @override
-  Type get type => RemixTooltipSpec;
+  Type get type => TooltipSpec;
 
   @override
-  RemixTooltipSpec copyWith({
+  TooltipSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
     Duration? waitDuration,
     Duration? showDuration,
     Duration? dismissDuration,
   }) {
-    return RemixTooltipSpec(
+    return TooltipSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       waitDuration: waitDuration ?? this.waitDuration,
@@ -34,8 +34,8 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
   }
 
   @override
-  RemixTooltipSpec lerp(RemixTooltipSpec? other, double t) {
-    return RemixTooltipSpec(
+  TooltipSpec lerp(TooltipSpec? other, double t) {
+    return TooltipSpec(
       container: container.lerp(other?.container, t),
       label: label.lerp(other?.label, t),
       waitDuration: MixOps.lerpSnap(waitDuration, other?.waitDuration, t),
@@ -60,7 +60,7 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixTooltipSpec &&
+        other is TooltipSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -106,9 +106,9 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixTooltipSpec` and migrate the class declaration to `class RemixTooltipSpec with _\$RemixTooltipSpec`. The `_\$RemixTooltipSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$TooltipSpec` and migrate the class declaration to `class TooltipSpec with _\$TooltipSpec`. The `_\$TooltipSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixTooltipSpecMethods = _$RemixTooltipSpec; // ignore: unused_element
+typedef _$TooltipSpecMethods = _$TooltipSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -149,15 +149,15 @@ class FortalTooltip extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
-    with RemixBoxStylerMixin<RemixTooltipStyler> {
+class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
+    with RemixBoxStylerMixin<TooltipStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<Duration>? $waitDuration;
   final Prop<Duration>? $showDuration;
   final Prop<Duration>? $dismissDuration;
 
-  const RemixTooltipStyler.create({
+  const TooltipStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<Duration>? waitDuration,
@@ -172,7 +172,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
        $showDuration = showDuration,
        $dismissDuration = dismissDuration;
 
-  RemixTooltipStyler({
+  TooltipStyler({
     BoxStyler? container,
     TextStyler? label,
     Duration? waitDuration,
@@ -180,7 +180,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     Duration? dismissDuration,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixTooltipSpec>>? variants,
+    List<VariantStyle<TooltipSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          label: Prop.maybeMix(label),
@@ -192,123 +192,117 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
          animation: animation,
        );
 
-  factory RemixTooltipStyler.container(BoxStyler value) =>
-      RemixTooltipStyler().container(value);
-  factory RemixTooltipStyler.label(TextStyler value) =>
-      RemixTooltipStyler().label(value);
-  factory RemixTooltipStyler.waitDuration(Duration value) =>
-      RemixTooltipStyler().waitDuration(value);
-  factory RemixTooltipStyler.showDuration(Duration value) =>
-      RemixTooltipStyler().showDuration(value);
-  factory RemixTooltipStyler.dismissDuration(Duration value) =>
-      RemixTooltipStyler().dismissDuration(value);
-  factory RemixTooltipStyler.alignment(AlignmentGeometry value) =>
-      RemixTooltipStyler().alignment(value);
-  factory RemixTooltipStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixTooltipStyler().padding(value);
-  factory RemixTooltipStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixTooltipStyler().margin(value);
-  factory RemixTooltipStyler.constraints(BoxConstraintsMix value) =>
-      RemixTooltipStyler().constraints(value);
-  factory RemixTooltipStyler.decoration(DecorationMix value) =>
-      RemixTooltipStyler().decoration(value);
-  factory RemixTooltipStyler.foregroundDecoration(DecorationMix value) =>
-      RemixTooltipStyler().foregroundDecoration(value);
-  factory RemixTooltipStyler.clipBehavior(Clip value) =>
-      RemixTooltipStyler().clipBehavior(value);
-  factory RemixTooltipStyler.color(Color value) =>
-      RemixTooltipStyler().color(value);
-  factory RemixTooltipStyler.gradient(GradientMix value) =>
-      RemixTooltipStyler().gradient(value);
-  factory RemixTooltipStyler.border(BoxBorderMix value) =>
-      RemixTooltipStyler().border(value);
-  factory RemixTooltipStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixTooltipStyler().borderRadius(value);
-  factory RemixTooltipStyler.elevation(ElevationShadow value) =>
-      RemixTooltipStyler().elevation(value);
-  factory RemixTooltipStyler.shadow(BoxShadowMix value) =>
-      RemixTooltipStyler().shadow(value);
-  factory RemixTooltipStyler.shadows(List<BoxShadowMix> value) =>
-      RemixTooltipStyler().shadows(value);
-  factory RemixTooltipStyler.width(double value) =>
-      RemixTooltipStyler().width(value);
-  factory RemixTooltipStyler.height(double value) =>
-      RemixTooltipStyler().height(value);
-  factory RemixTooltipStyler.size(double width, double height) =>
-      RemixTooltipStyler().size(width, height);
-  factory RemixTooltipStyler.minWidth(double value) =>
-      RemixTooltipStyler().minWidth(value);
-  factory RemixTooltipStyler.maxWidth(double value) =>
-      RemixTooltipStyler().maxWidth(value);
-  factory RemixTooltipStyler.minHeight(double value) =>
-      RemixTooltipStyler().minHeight(value);
-  factory RemixTooltipStyler.maxHeight(double value) =>
-      RemixTooltipStyler().maxHeight(value);
-  factory RemixTooltipStyler.scale(
-    double scale, {
-    Alignment alignment = .center,
-  }) => RemixTooltipStyler().scale(scale, alignment: alignment);
-  factory RemixTooltipStyler.rotate(
+  factory TooltipStyler.container(BoxStyler value) =>
+      TooltipStyler().container(value);
+  factory TooltipStyler.label(TextStyler value) => TooltipStyler().label(value);
+  factory TooltipStyler.waitDuration(Duration value) =>
+      TooltipStyler().waitDuration(value);
+  factory TooltipStyler.showDuration(Duration value) =>
+      TooltipStyler().showDuration(value);
+  factory TooltipStyler.dismissDuration(Duration value) =>
+      TooltipStyler().dismissDuration(value);
+  factory TooltipStyler.alignment(AlignmentGeometry value) =>
+      TooltipStyler().alignment(value);
+  factory TooltipStyler.padding(EdgeInsetsGeometryMix value) =>
+      TooltipStyler().padding(value);
+  factory TooltipStyler.margin(EdgeInsetsGeometryMix value) =>
+      TooltipStyler().margin(value);
+  factory TooltipStyler.constraints(BoxConstraintsMix value) =>
+      TooltipStyler().constraints(value);
+  factory TooltipStyler.decoration(DecorationMix value) =>
+      TooltipStyler().decoration(value);
+  factory TooltipStyler.foregroundDecoration(DecorationMix value) =>
+      TooltipStyler().foregroundDecoration(value);
+  factory TooltipStyler.clipBehavior(Clip value) =>
+      TooltipStyler().clipBehavior(value);
+  factory TooltipStyler.color(Color value) => TooltipStyler().color(value);
+  factory TooltipStyler.gradient(GradientMix value) =>
+      TooltipStyler().gradient(value);
+  factory TooltipStyler.border(BoxBorderMix value) =>
+      TooltipStyler().border(value);
+  factory TooltipStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      TooltipStyler().borderRadius(value);
+  factory TooltipStyler.elevation(ElevationShadow value) =>
+      TooltipStyler().elevation(value);
+  factory TooltipStyler.shadow(BoxShadowMix value) =>
+      TooltipStyler().shadow(value);
+  factory TooltipStyler.shadows(List<BoxShadowMix> value) =>
+      TooltipStyler().shadows(value);
+  factory TooltipStyler.width(double value) => TooltipStyler().width(value);
+  factory TooltipStyler.height(double value) => TooltipStyler().height(value);
+  factory TooltipStyler.size(double width, double height) =>
+      TooltipStyler().size(width, height);
+  factory TooltipStyler.minWidth(double value) =>
+      TooltipStyler().minWidth(value);
+  factory TooltipStyler.maxWidth(double value) =>
+      TooltipStyler().maxWidth(value);
+  factory TooltipStyler.minHeight(double value) =>
+      TooltipStyler().minHeight(value);
+  factory TooltipStyler.maxHeight(double value) =>
+      TooltipStyler().maxHeight(value);
+  factory TooltipStyler.scale(double scale, {Alignment alignment = .center}) =>
+      TooltipStyler().scale(scale, alignment: alignment);
+  factory TooltipStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixTooltipStyler().rotate(radians, alignment: alignment);
-  factory RemixTooltipStyler.translate(double x, double y, [double z = 0.0]) =>
-      RemixTooltipStyler().translate(x, y, z);
-  factory RemixTooltipStyler.skew(double skewX, double skewY) =>
-      RemixTooltipStyler().skew(skewX, skewY);
-  factory RemixTooltipStyler.textStyle(TextStyler value) =>
-      RemixTooltipStyler().textStyle(value);
-  factory RemixTooltipStyler.image(DecorationImageMix value) =>
-      RemixTooltipStyler().image(value);
-  factory RemixTooltipStyler.shape(ShapeBorderMix value) =>
-      RemixTooltipStyler().shape(value);
-  factory RemixTooltipStyler.backgroundImage(
+  }) => TooltipStyler().rotate(radians, alignment: alignment);
+  factory TooltipStyler.translate(double x, double y, [double z = 0.0]) =>
+      TooltipStyler().translate(x, y, z);
+  factory TooltipStyler.skew(double skewX, double skewY) =>
+      TooltipStyler().skew(skewX, skewY);
+  factory TooltipStyler.textStyle(TextStyler value) =>
+      TooltipStyler().textStyle(value);
+  factory TooltipStyler.image(DecorationImageMix value) =>
+      TooltipStyler().image(value);
+  factory TooltipStyler.shape(ShapeBorderMix value) =>
+      TooltipStyler().shape(value);
+  factory TooltipStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixTooltipStyler().backgroundImage(
+  }) => TooltipStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixTooltipStyler.backgroundImageUrl(
+  factory TooltipStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixTooltipStyler().backgroundImageUrl(
+  }) => TooltipStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixTooltipStyler.backgroundImageAsset(
+  factory TooltipStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixTooltipStyler().backgroundImageAsset(
+  }) => TooltipStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixTooltipStyler.linearGradient({
+  factory TooltipStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixTooltipStyler().linearGradient(
+  }) => TooltipStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixTooltipStyler.radialGradient({
+  factory TooltipStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -316,7 +310,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixTooltipStyler().radialGradient(
+  }) => TooltipStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -325,14 +319,14 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixTooltipStyler.sweepGradient({
+  factory TooltipStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixTooltipStyler().sweepGradient(
+  }) => TooltipStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -340,20 +334,20 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixTooltipStyler.foregroundLinearGradient({
+  factory TooltipStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixTooltipStyler().foregroundLinearGradient(
+  }) => TooltipStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixTooltipStyler.foregroundRadialGradient({
+  factory TooltipStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -361,7 +355,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixTooltipStyler().foregroundRadialGradient(
+  }) => TooltipStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -370,14 +364,14 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixTooltipStyler.foregroundSweepGradient({
+  factory TooltipStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixTooltipStyler().foregroundSweepGradient(
+  }) => TooltipStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -385,124 +379,124 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixTooltipStyler.transform(
+  factory TooltipStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixTooltipStyler().transform(value, alignment: alignment);
+  }) => TooltipStyler().transform(value, alignment: alignment);
 
-  RemixTooltipStyler alignment(AlignmentGeometry value) {
+  TooltipStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
   }
 
-  RemixTooltipStyler padding(EdgeInsetsGeometryMix value) {
+  TooltipStyler padding(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().padding(value));
   }
 
-  RemixTooltipStyler margin(EdgeInsetsGeometryMix value) {
+  TooltipStyler margin(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().margin(value));
   }
 
-  RemixTooltipStyler constraints(BoxConstraintsMix value) {
+  TooltipStyler constraints(BoxConstraintsMix value) {
     return container(BoxStyler().constraints(value));
   }
 
-  RemixTooltipStyler decoration(DecorationMix value) {
+  TooltipStyler decoration(DecorationMix value) {
     return container(BoxStyler().decoration(value));
   }
 
-  RemixTooltipStyler foregroundDecoration(DecorationMix value) {
+  TooltipStyler foregroundDecoration(DecorationMix value) {
     return container(BoxStyler().foregroundDecoration(value));
   }
 
-  RemixTooltipStyler clipBehavior(Clip value) {
+  TooltipStyler clipBehavior(Clip value) {
     return container(BoxStyler().clipBehavior(value));
   }
 
-  RemixTooltipStyler color(Color value) {
+  TooltipStyler color(Color value) {
     return container(BoxStyler().color(value));
   }
 
-  RemixTooltipStyler gradient(GradientMix value) {
+  TooltipStyler gradient(GradientMix value) {
     return container(BoxStyler().gradient(value));
   }
 
-  RemixTooltipStyler border(BoxBorderMix value) {
+  TooltipStyler border(BoxBorderMix value) {
     return container(BoxStyler().border(value));
   }
 
-  RemixTooltipStyler borderRadius(BorderRadiusGeometryMix value) {
+  TooltipStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(BoxStyler().borderRadius(value));
   }
 
-  RemixTooltipStyler elevation(ElevationShadow value) {
+  TooltipStyler elevation(ElevationShadow value) {
     return container(BoxStyler().elevation(value));
   }
 
-  RemixTooltipStyler shadow(BoxShadowMix value) {
+  TooltipStyler shadow(BoxShadowMix value) {
     return container(BoxStyler().shadow(value));
   }
 
-  RemixTooltipStyler shadows(List<BoxShadowMix> value) {
+  TooltipStyler shadows(List<BoxShadowMix> value) {
     return container(BoxStyler().shadows(value));
   }
 
-  RemixTooltipStyler width(double value) {
+  TooltipStyler width(double value) {
     return container(BoxStyler().width(value));
   }
 
-  RemixTooltipStyler height(double value) {
+  TooltipStyler height(double value) {
     return container(BoxStyler().height(value));
   }
 
-  RemixTooltipStyler size(double width, double height) {
+  TooltipStyler size(double width, double height) {
     return container(BoxStyler().size(width, height));
   }
 
-  RemixTooltipStyler minWidth(double value) {
+  TooltipStyler minWidth(double value) {
     return container(BoxStyler().minWidth(value));
   }
 
-  RemixTooltipStyler maxWidth(double value) {
+  TooltipStyler maxWidth(double value) {
     return container(BoxStyler().maxWidth(value));
   }
 
-  RemixTooltipStyler minHeight(double value) {
+  TooltipStyler minHeight(double value) {
     return container(BoxStyler().minHeight(value));
   }
 
-  RemixTooltipStyler maxHeight(double value) {
+  TooltipStyler maxHeight(double value) {
     return container(BoxStyler().maxHeight(value));
   }
 
-  RemixTooltipStyler scale(double scale, {Alignment alignment = .center}) {
+  TooltipStyler scale(double scale, {Alignment alignment = .center}) {
     return container(BoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixTooltipStyler rotate(double radians, {Alignment alignment = .center}) {
+  TooltipStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(BoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixTooltipStyler translate(double x, double y, [double z = 0.0]) {
+  TooltipStyler translate(double x, double y, [double z = 0.0]) {
     return container(BoxStyler().translate(x, y, z));
   }
 
-  RemixTooltipStyler skew(double skewX, double skewY) {
+  TooltipStyler skew(double skewX, double skewY) {
     return container(BoxStyler().skew(skewX, skewY));
   }
 
-  RemixTooltipStyler textStyle(TextStyler value) {
+  TooltipStyler textStyle(TextStyler value) {
     return container(BoxStyler().textStyle(value));
   }
 
-  RemixTooltipStyler image(DecorationImageMix value) {
+  TooltipStyler image(DecorationImageMix value) {
     return container(BoxStyler().image(value));
   }
 
-  RemixTooltipStyler shape(ShapeBorderMix value) {
+  TooltipStyler shape(ShapeBorderMix value) {
     return container(BoxStyler().shape(value));
   }
 
-  RemixTooltipStyler backgroundImage(
+  TooltipStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -518,7 +512,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     );
   }
 
-  RemixTooltipStyler backgroundImageUrl(
+  TooltipStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -534,7 +528,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     );
   }
 
-  RemixTooltipStyler backgroundImageAsset(
+  TooltipStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -550,7 +544,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     );
   }
 
-  RemixTooltipStyler linearGradient({
+  TooltipStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -568,7 +562,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     );
   }
 
-  RemixTooltipStyler radialGradient({
+  TooltipStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -590,7 +584,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     );
   }
 
-  RemixTooltipStyler sweepGradient({
+  TooltipStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -610,7 +604,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     );
   }
 
-  RemixTooltipStyler foregroundLinearGradient({
+  TooltipStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -628,7 +622,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     );
   }
 
-  RemixTooltipStyler foregroundRadialGradient({
+  TooltipStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -650,7 +644,7 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     );
   }
 
-  RemixTooltipStyler foregroundSweepGradient({
+  TooltipStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -670,62 +664,62 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     );
   }
 
-  RemixTooltipStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+  TooltipStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixTooltipStyler container(BoxStyler value) {
-    return merge(RemixTooltipStyler(container: value));
+  TooltipStyler container(BoxStyler value) {
+    return merge(TooltipStyler(container: value));
   }
 
   /// Sets the label.
-  RemixTooltipStyler label(TextStyler value) {
-    return merge(RemixTooltipStyler(label: value));
+  TooltipStyler label(TextStyler value) {
+    return merge(TooltipStyler(label: value));
   }
 
   /// Sets the waitDuration.
-  RemixTooltipStyler waitDuration(Duration value) {
-    return merge(RemixTooltipStyler(waitDuration: value));
+  TooltipStyler waitDuration(Duration value) {
+    return merge(TooltipStyler(waitDuration: value));
   }
 
   /// Sets the showDuration.
-  RemixTooltipStyler showDuration(Duration value) {
-    return merge(RemixTooltipStyler(showDuration: value));
+  TooltipStyler showDuration(Duration value) {
+    return merge(TooltipStyler(showDuration: value));
   }
 
   /// Sets the dismissDuration.
-  RemixTooltipStyler dismissDuration(Duration value) {
-    return merge(RemixTooltipStyler(dismissDuration: value));
+  TooltipStyler dismissDuration(Duration value) {
+    return merge(TooltipStyler(dismissDuration: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixTooltipStyler animate(AnimationConfig value) {
-    return merge(RemixTooltipStyler(animation: value));
+  TooltipStyler animate(AnimationConfig value) {
+    return merge(TooltipStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixTooltipStyler variants(List<VariantStyle<RemixTooltipSpec>> value) {
-    return merge(RemixTooltipStyler(variants: value));
+  TooltipStyler variants(List<VariantStyle<TooltipSpec>> value) {
+    return merge(TooltipStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixTooltipStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixTooltipStyler(modifier: value));
+  TooltipStyler wrap(WidgetModifierConfig value) {
+    return merge(TooltipStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixTooltipStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixTooltipStyler(modifier: value));
+  TooltipStyler modifier(WidgetModifierConfig value) {
+    return merge(TooltipStyler(modifier: value));
   }
 
-  /// Merges with another [RemixTooltipStyler].
+  /// Merges with another [TooltipStyler].
   @override
-  RemixTooltipStyler merge(RemixTooltipStyler? other) {
-    return RemixTooltipStyler.create(
+  TooltipStyler merge(TooltipStyler? other) {
+    return TooltipStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
       waitDuration: MixOps.merge($waitDuration, other?.$waitDuration),
@@ -737,10 +731,10 @@ class RemixTooltipStyler extends MixStyler<RemixTooltipStyler, RemixTooltipSpec>
     );
   }
 
-  /// Resolves to [StyleSpec<RemixTooltipSpec>] using [context].
+  /// Resolves to [StyleSpec<TooltipSpec>] using [context].
   @override
-  StyleSpec<RemixTooltipSpec> resolve(BuildContext context) {
-    final spec = RemixTooltipSpec(
+  StyleSpec<TooltipSpec> resolve(BuildContext context) {
+    final spec = TooltipSpec(
       container: MixOps.resolve(context, $container),
       label: MixOps.resolve(context, $label),
       waitDuration: MixOps.resolve(context, $waitDuration),

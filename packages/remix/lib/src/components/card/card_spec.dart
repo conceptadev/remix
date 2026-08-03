@@ -2,7 +2,7 @@ part of 'card.dart';
 
 /// Resolved visual properties for a [RemixCard].
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixCardSpec with _$RemixCardSpec {
+class CardSpec with _$CardSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
@@ -11,16 +11,16 @@ class RemixCardSpec with _$RemixCardSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
-  const RemixCardSpec({StyleSpec<BoxSpec>? container, this.containerEffects})
+  const CardSpec({StyleSpec<BoxSpec>? container, this.containerEffects})
     : container = container ?? const StyleSpec(spec: BoxSpec());
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixCardSpec lerp(RemixCardSpec? other, double t) {
+  CardSpec lerp(CardSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
-    return RemixCardSpec(
+    return CardSpec(
       container: generated.container,
       containerEffects: RemixBoxEffectsSpec.lerpNullable(
         containerEffects,
@@ -30,3 +30,9 @@ class RemixCardSpec with _$RemixCardSpec {
     );
   }
 }
+
+/// Backward-compatible name for [CardSpec].
+///
+/// The generated style API is based on [CardSpec], so resolved values use
+/// `CardSpec` as their runtime type.
+typedef RemixCardSpec = CardSpec;

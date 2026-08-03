@@ -85,9 +85,7 @@ void main() {
         expect: (style) {
           expect(
             style,
-            equals(
-              MenuTriggerStyler.padding(EdgeInsetsGeometryMix.all(16.0)),
-            ),
+            equals(MenuTriggerStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
@@ -130,9 +128,7 @@ void main() {
           expect(
             style,
             equals(
-              MenuTriggerStyler.borderRadius(
-                BorderRadiusMix.circular(8.0),
-              ),
+              MenuTriggerStyler.borderRadius(BorderRadiusMix.circular(8.0)),
             ),
           );
         },
@@ -187,9 +183,7 @@ void main() {
         expect: (style) {
           expect(
             style,
-            equals(
-              MenuTriggerStyler.margin(EdgeInsetsGeometryMix.all(8.0)),
-            ),
+            equals(MenuTriggerStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
@@ -249,13 +243,9 @@ void main() {
       styleMethodTest(
         'variants',
         initial: MenuTriggerStyler(),
-        modify: (style) =>
-            style.variants(<VariantStyle<MenuTriggerSpec>>[]),
+        modify: (style) => style.variants(<VariantStyle<MenuTriggerSpec>>[]),
         expect: (style) {
-          expect(
-            style.$variants,
-            equals(<VariantStyle<MenuTriggerSpec>>[]),
-          );
+          expect(style.$variants, equals(<VariantStyle<MenuTriggerSpec>>[]));
         },
       );
 
@@ -338,7 +328,7 @@ void main() {
         final trigger = Prop.maybeMix(MenuTriggerStyler());
         final overlay = Prop.maybeMix(FlexBoxStyler());
         final item = Prop.maybeMix(MenuItemStyler());
-        final divider = Prop.maybeMix(RemixDividerStyler());
+        final divider = Prop.maybeMix(DividerStyler());
         final variants = <VariantStyle<MenuSpec>>[];
 
         final style = MenuStyler.create(
@@ -361,7 +351,7 @@ void main() {
         final triggerStyle = MenuTriggerStyler();
         final overlayStyler = FlexBoxStyler();
         final itemStyle = MenuItemStyler();
-        final dividerStyle = RemixDividerStyler();
+        final dividerStyle = DividerStyler();
 
         final style = MenuStyler(
           trigger: triggerStyle,
@@ -384,10 +374,7 @@ void main() {
         initial: MenuStyler(),
         modify: (style) => style.trigger(MenuTriggerStyler()),
         expect: (style) {
-          expect(
-            style.$trigger,
-            equals(Prop.maybeMix(MenuTriggerStyler())),
-          );
+          expect(style.$trigger, equals(Prop.maybeMix(MenuTriggerStyler())));
         },
       );
 
@@ -412,9 +399,9 @@ void main() {
       styleMethodTest(
         'divider',
         initial: MenuStyler(),
-        modify: (style) => style.divider(RemixDividerStyler()),
+        modify: (style) => style.divider(DividerStyler()),
         expect: (style) {
-          expect(style.$divider, equals(Prop.maybeMix(RemixDividerStyler())));
+          expect(style.$divider, equals(Prop.maybeMix(DividerStyler())));
         },
       );
 
@@ -525,13 +512,10 @@ void main() {
 
                 expect(spec, isA<StyleSpec<MenuSpec>>());
                 expect(spec.spec, isA<MenuSpec>());
-                expect(
-                  spec.spec.trigger,
-                  isA<StyleSpec<MenuTriggerSpec>>(),
-                );
+                expect(spec.spec.trigger, isA<StyleSpec<MenuTriggerSpec>>());
                 expect(spec.spec.overlay, isA<StyleSpec<FlexBoxSpec>>());
                 expect(spec.spec.item, isA<StyleSpec<MenuItemSpec>>());
-                expect(spec.spec.divider, isA<StyleSpec<RemixDividerSpec>>());
+                expect(spec.spec.divider, isA<StyleSpec<DividerSpec>>());
 
                 return Container();
               },
@@ -657,10 +641,7 @@ void main() {
         initial: MenuItemStyler(),
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
-          expect(
-            style,
-            equals(MenuItemStyler.alignment(Alignment.centerLeft)),
-          );
+          expect(style, equals(MenuItemStyler.alignment(Alignment.centerLeft)));
         },
       );
 
@@ -671,9 +652,7 @@ void main() {
         expect: (style) {
           expect(
             style,
-            equals(
-              MenuItemStyler.padding(EdgeInsetsGeometryMix.all(16.0)),
-            ),
+            equals(MenuItemStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
@@ -703,9 +682,7 @@ void main() {
         expect: (style) {
           expect(
             style,
-            equals(
-              MenuItemStyler.borderRadius(BorderRadiusMix.circular(4.0)),
-            ),
+            equals(MenuItemStyler.borderRadius(BorderRadiusMix.circular(4.0))),
           );
         },
       );
@@ -883,9 +860,7 @@ void main() {
         final style1 = MenuItemStyler().padding(
           EdgeInsetsGeometryMix.all(16.0),
         );
-        final style2 = MenuItemStyler().padding(
-          EdgeInsetsGeometryMix.all(8.0),
-        );
+        final style2 = MenuItemStyler().padding(EdgeInsetsGeometryMix.all(8.0));
 
         expect(style1, isNot(equals(style2)));
       });

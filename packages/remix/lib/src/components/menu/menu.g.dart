@@ -95,7 +95,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get overlay;
   RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<MenuItemSpec> get item;
-  StyleSpec<RemixDividerSpec> get divider;
+  StyleSpec<DividerSpec> get divider;
 
   @override
   Type get type => MenuSpec;
@@ -106,7 +106,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
     StyleSpec<FlexBoxSpec>? overlay,
     RemixBoxEffectsSpec? containerEffects,
     StyleSpec<MenuItemSpec>? item,
-    StyleSpec<RemixDividerSpec>? divider,
+    StyleSpec<DividerSpec>? divider,
   }) {
     return MenuSpec(
       trigger: trigger ?? this.trigger,
@@ -1081,14 +1081,14 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
   final Prop<StyleSpec<FlexBoxSpec>>? $overlay;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<MenuItemSpec>>? $item;
-  final Prop<StyleSpec<RemixDividerSpec>>? $divider;
+  final Prop<StyleSpec<DividerSpec>>? $divider;
 
   const MenuStyler.create({
     Prop<StyleSpec<MenuTriggerSpec>>? trigger,
     Prop<StyleSpec<FlexBoxSpec>>? overlay,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<MenuItemSpec>>? item,
-    Prop<StyleSpec<RemixDividerSpec>>? divider,
+    Prop<StyleSpec<DividerSpec>>? divider,
     super.variants,
     super.modifier,
     super.animation,
@@ -1103,7 +1103,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
     FlexBoxStyler? overlay,
     RemixBoxEffectsMix? containerEffects,
     MenuItemStyler? item,
-    RemixDividerStyler? divider,
+    DividerStyler? divider,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<MenuSpec>>? variants,
@@ -1125,7 +1125,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
   factory MenuStyler.containerEffects(RemixBoxEffectsMix value) =>
       MenuStyler().containerEffects(value);
   factory MenuStyler.item(MenuItemStyler value) => MenuStyler().item(value);
-  factory MenuStyler.divider(RemixDividerStyler value) =>
+  factory MenuStyler.divider(DividerStyler value) =>
       MenuStyler().divider(value);
 
   /// Sets the trigger.
@@ -1149,7 +1149,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
   }
 
   /// Sets the divider.
-  MenuStyler divider(RemixDividerStyler value) {
+  MenuStyler divider(DividerStyler value) {
     return merge(MenuStyler(divider: value));
   }
 

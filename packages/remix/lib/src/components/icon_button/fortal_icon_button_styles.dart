@@ -8,7 +8,7 @@ enum FortalIconButtonVariant { classic, solid, soft, surface, outline, ghost }
 
 /// Fortal-themed IconButton with the Radix size, variant, and override contract.
 @MixWidget(target: RemixIconButton.new)
-RemixIconButtonStyler fortalIconButtonStyle({
+IconButtonStyler fortalIconButtonStyle({
   FortalIconButtonVariant variant = .solid,
   FortalIconButtonSize size = .size2,
   bool highContrast = false,
@@ -39,12 +39,12 @@ RemixIconButtonStyler fortalIconButtonStyle({
       .onDisabled(.containerEffects(disabledFocus));
 }
 
-RemixIconButtonStyler _fortalIconButtonBaseStyler(
+IconButtonStyler _fortalIconButtonBaseStyler(
   FortalIconButtonVariant variant,
   int size,
 ) {
   final metrics = fortalBaseButtonMetrics(size);
-  var style = RemixIconButtonStyler(
+  var style = IconButtonStyler(
     container: .alignment(Alignment.center),
     icon: .size(_fortalIconButtonIconSize(size)),
     spinner: .size(metrics.spinnerSize)
@@ -70,8 +70,8 @@ double _fortalIconButtonIconSize(int size) => switch (size) {
   _ => throw ArgumentError.value(size, 'size', 'Expected a size from 1 to 4.'),
 };
 
-RemixIconButtonStyler _fortalIconButtonClassic(
-  RemixIconButtonStyler base, {
+IconButtonStyler _fortalIconButtonClassic(
+  IconButtonStyler base, {
   required int size,
   required bool highContrast,
 }) {
@@ -147,10 +147,7 @@ RemixIconButtonStyler _fortalIconButtonClassic(
             ),
       )
       .onDisabled(
-        _fortalIconButtonForeground(
-              RemixIconButtonStyler(),
-              FortalTokens.grayA8(),
-            )
+        _fortalIconButtonForeground(IconButtonStyler(), FortalTokens.grayA8())
             .color(FortalTokens.gray2())
             .containerEffects(
               RemixBoxEffectsMix(
@@ -165,8 +162,8 @@ RemixIconButtonStyler _fortalIconButtonClassic(
       );
 }
 
-RemixIconButtonStyler _fortalIconButtonSolid(
-  RemixIconButtonStyler base, {
+IconButtonStyler _fortalIconButtonSolid(
+  IconButtonStyler base, {
   required bool highContrast,
 }) {
   final foreground = highContrast
@@ -220,18 +217,15 @@ RemixIconButtonStyler _fortalIconButtonSolid(
         ),
       )
       .onDisabled(
-        _fortalIconButtonForeground(
-              RemixIconButtonStyler(),
-              FortalTokens.grayA8(),
-            )
+        _fortalIconButtonForeground(IconButtonStyler(), FortalTokens.grayA8())
             .color(FortalTokens.grayA3())
             .spinner(.opacity(1))
             .wrap(fortalClearFilter()),
       );
 }
 
-RemixIconButtonStyler _fortalIconButtonSoft(
-  RemixIconButtonStyler base, {
+IconButtonStyler _fortalIconButtonSoft(
+  IconButtonStyler base, {
   required bool highContrast,
 }) =>
     _fortalIconButtonForeground(
@@ -243,8 +237,8 @@ RemixIconButtonStyler _fortalIconButtonSoft(
         .onPressed(.color(FortalTokens.accentA5()))
         .onDisabled(_fortalIconButtonDisabledFill());
 
-RemixIconButtonStyler _fortalIconButtonSurface(
-  RemixIconButtonStyler base, {
+IconButtonStyler _fortalIconButtonSurface(
+  IconButtonStyler base, {
   required bool highContrast,
 }) =>
     _fortalIconButtonForeground(
@@ -278,10 +272,7 @@ RemixIconButtonStyler _fortalIconButtonSurface(
           ),
         )
         .onDisabled(
-          _fortalIconButtonForeground(
-                RemixIconButtonStyler(),
-                FortalTokens.grayA8(),
-              )
+          _fortalIconButtonForeground(IconButtonStyler(), FortalTokens.grayA8())
               .color(FortalTokens.grayA2())
               .containerEffects(
                 RemixBoxEffectsMix(
@@ -293,8 +284,8 @@ RemixIconButtonStyler _fortalIconButtonSurface(
               .spinner(.opacity(1)),
         );
 
-RemixIconButtonStyler _fortalIconButtonOutline(
-  RemixIconButtonStyler base, {
+IconButtonStyler _fortalIconButtonOutline(
+  IconButtonStyler base, {
   required bool highContrast,
 }) {
   final strokes = highContrast
@@ -322,10 +313,7 @@ RemixIconButtonStyler _fortalIconButtonOutline(
         ),
       )
       .onDisabled(
-        _fortalIconButtonForeground(
-              RemixIconButtonStyler(),
-              FortalTokens.grayA8(),
-            )
+        _fortalIconButtonForeground(IconButtonStyler(), FortalTokens.grayA8())
             .color(Colors.transparent)
             .containerEffects(
               RemixBoxEffectsMix(
@@ -338,8 +326,8 @@ RemixIconButtonStyler _fortalIconButtonOutline(
       );
 }
 
-RemixIconButtonStyler _fortalIconButtonGhost(
-  RemixIconButtonStyler base, {
+IconButtonStyler _fortalIconButtonGhost(
+  IconButtonStyler base, {
   required bool highContrast,
 }) =>
     _fortalIconButtonForeground(
@@ -351,18 +339,17 @@ RemixIconButtonStyler _fortalIconButtonGhost(
         .onPressed(.color(FortalTokens.accentA4()))
         .onDisabled(
           _fortalIconButtonForeground(
-            RemixIconButtonStyler(),
+            IconButtonStyler(),
             FortalTokens.grayA8(),
           ).color(Colors.transparent).spinner(.opacity(1)),
         );
 
-RemixIconButtonStyler _fortalIconButtonDisabledFill() =>
-    _fortalIconButtonForeground(
-      RemixIconButtonStyler(),
-      FortalTokens.grayA8(),
-    ).color(FortalTokens.grayA3()).spinner(.opacity(1));
+IconButtonStyler _fortalIconButtonDisabledFill() => _fortalIconButtonForeground(
+  IconButtonStyler(),
+  FortalTokens.grayA8(),
+).color(FortalTokens.grayA3()).spinner(.opacity(1));
 
-RemixIconButtonStyler _fortalIconButtonForeground(
-  RemixIconButtonStyler style,
+IconButtonStyler _fortalIconButtonForeground(
+  IconButtonStyler style,
   Color color,
 ) => style.icon(.color(color)).spinner(.color(color));

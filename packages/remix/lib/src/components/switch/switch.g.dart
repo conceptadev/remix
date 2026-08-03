@@ -6,23 +6,23 @@ part of 'switch.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
+mixin _$SwitchSpec implements Spec<SwitchSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get thumb;
   RemixBoxEffectsSpec? get trackEffects;
   RemixBoxEffectsSpec? get thumbEffects;
 
   @override
-  Type get type => RemixSwitchSpec;
+  Type get type => SwitchSpec;
 
   @override
-  RemixSwitchSpec copyWith({
+  SwitchSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? thumb,
     RemixBoxEffectsSpec? trackEffects,
     RemixBoxEffectsSpec? thumbEffects,
   }) {
-    return RemixSwitchSpec(
+    return SwitchSpec(
       container: container ?? this.container,
       thumb: thumb ?? this.thumb,
       trackEffects: trackEffects ?? this.trackEffects,
@@ -31,8 +31,8 @@ mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
   }
 
   @override
-  RemixSwitchSpec lerp(RemixSwitchSpec? other, double t) {
-    return RemixSwitchSpec(
+  SwitchSpec lerp(SwitchSpec? other, double t) {
+    return SwitchSpec(
       container: container.lerp(other?.container, t),
       thumb: thumb.lerp(other?.thumb, t),
       trackEffects: MixOps.lerpSnap(trackEffects, other?.trackEffects, t),
@@ -46,7 +46,7 @@ mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixSwitchSpec &&
+        other is SwitchSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -91,9 +91,9 @@ mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixSwitchSpec` and migrate the class declaration to `class RemixSwitchSpec with _\$RemixSwitchSpec`. The `_\$RemixSwitchSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$SwitchSpec` and migrate the class declaration to `class SwitchSpec with _\$SwitchSpec`. The `_\$SwitchSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixSwitchSpecMethods = _$RemixSwitchSpec; // ignore: unused_element
+typedef _$SwitchSpecMethods = _$SwitchSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -208,14 +208,14 @@ class FortalSwitch extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
-    with RemixBoxStylerMixin<RemixSwitchStyler> {
+class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
+    with RemixBoxStylerMixin<SwitchStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
   final Prop<RemixBoxEffectsSpec>? $trackEffects;
   final Prop<RemixBoxEffectsSpec>? $thumbEffects;
 
-  const RemixSwitchStyler.create({
+  const SwitchStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? thumb,
     Prop<RemixBoxEffectsSpec>? trackEffects,
@@ -228,14 +228,14 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
        $trackEffects = trackEffects,
        $thumbEffects = thumbEffects;
 
-  RemixSwitchStyler({
+  SwitchStyler({
     BoxStyler? container,
     BoxStyler? thumb,
     RemixBoxEffectsMix? trackEffects,
     RemixBoxEffectsMix? thumbEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixSwitchSpec>>? variants,
+    List<VariantStyle<SwitchSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          thumb: Prop.maybeMix(thumb),
@@ -246,121 +246,113 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
          animation: animation,
        );
 
-  factory RemixSwitchStyler.container(BoxStyler value) =>
-      RemixSwitchStyler().container(value);
-  factory RemixSwitchStyler.thumb(BoxStyler value) =>
-      RemixSwitchStyler().thumb(value);
-  factory RemixSwitchStyler.trackEffects(RemixBoxEffectsMix value) =>
-      RemixSwitchStyler().trackEffects(value);
-  factory RemixSwitchStyler.thumbEffects(RemixBoxEffectsMix value) =>
-      RemixSwitchStyler().thumbEffects(value);
-  factory RemixSwitchStyler.alignment(AlignmentGeometry value) =>
-      RemixSwitchStyler().alignment(value);
-  factory RemixSwitchStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixSwitchStyler().padding(value);
-  factory RemixSwitchStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixSwitchStyler().margin(value);
-  factory RemixSwitchStyler.constraints(BoxConstraintsMix value) =>
-      RemixSwitchStyler().constraints(value);
-  factory RemixSwitchStyler.decoration(DecorationMix value) =>
-      RemixSwitchStyler().decoration(value);
-  factory RemixSwitchStyler.foregroundDecoration(DecorationMix value) =>
-      RemixSwitchStyler().foregroundDecoration(value);
-  factory RemixSwitchStyler.clipBehavior(Clip value) =>
-      RemixSwitchStyler().clipBehavior(value);
-  factory RemixSwitchStyler.color(Color value) =>
-      RemixSwitchStyler().color(value);
-  factory RemixSwitchStyler.gradient(GradientMix value) =>
-      RemixSwitchStyler().gradient(value);
-  factory RemixSwitchStyler.border(BoxBorderMix value) =>
-      RemixSwitchStyler().border(value);
-  factory RemixSwitchStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixSwitchStyler().borderRadius(value);
-  factory RemixSwitchStyler.elevation(ElevationShadow value) =>
-      RemixSwitchStyler().elevation(value);
-  factory RemixSwitchStyler.shadow(BoxShadowMix value) =>
-      RemixSwitchStyler().shadow(value);
-  factory RemixSwitchStyler.shadows(List<BoxShadowMix> value) =>
-      RemixSwitchStyler().shadows(value);
-  factory RemixSwitchStyler.width(double value) =>
-      RemixSwitchStyler().width(value);
-  factory RemixSwitchStyler.height(double value) =>
-      RemixSwitchStyler().height(value);
-  factory RemixSwitchStyler.size(double width, double height) =>
-      RemixSwitchStyler().size(width, height);
-  factory RemixSwitchStyler.minWidth(double value) =>
-      RemixSwitchStyler().minWidth(value);
-  factory RemixSwitchStyler.maxWidth(double value) =>
-      RemixSwitchStyler().maxWidth(value);
-  factory RemixSwitchStyler.minHeight(double value) =>
-      RemixSwitchStyler().minHeight(value);
-  factory RemixSwitchStyler.maxHeight(double value) =>
-      RemixSwitchStyler().maxHeight(value);
-  factory RemixSwitchStyler.scale(
-    double scale, {
-    Alignment alignment = .center,
-  }) => RemixSwitchStyler().scale(scale, alignment: alignment);
-  factory RemixSwitchStyler.rotate(
+  factory SwitchStyler.container(BoxStyler value) =>
+      SwitchStyler().container(value);
+  factory SwitchStyler.thumb(BoxStyler value) => SwitchStyler().thumb(value);
+  factory SwitchStyler.trackEffects(RemixBoxEffectsMix value) =>
+      SwitchStyler().trackEffects(value);
+  factory SwitchStyler.thumbEffects(RemixBoxEffectsMix value) =>
+      SwitchStyler().thumbEffects(value);
+  factory SwitchStyler.alignment(AlignmentGeometry value) =>
+      SwitchStyler().alignment(value);
+  factory SwitchStyler.padding(EdgeInsetsGeometryMix value) =>
+      SwitchStyler().padding(value);
+  factory SwitchStyler.margin(EdgeInsetsGeometryMix value) =>
+      SwitchStyler().margin(value);
+  factory SwitchStyler.constraints(BoxConstraintsMix value) =>
+      SwitchStyler().constraints(value);
+  factory SwitchStyler.decoration(DecorationMix value) =>
+      SwitchStyler().decoration(value);
+  factory SwitchStyler.foregroundDecoration(DecorationMix value) =>
+      SwitchStyler().foregroundDecoration(value);
+  factory SwitchStyler.clipBehavior(Clip value) =>
+      SwitchStyler().clipBehavior(value);
+  factory SwitchStyler.color(Color value) => SwitchStyler().color(value);
+  factory SwitchStyler.gradient(GradientMix value) =>
+      SwitchStyler().gradient(value);
+  factory SwitchStyler.border(BoxBorderMix value) =>
+      SwitchStyler().border(value);
+  factory SwitchStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      SwitchStyler().borderRadius(value);
+  factory SwitchStyler.elevation(ElevationShadow value) =>
+      SwitchStyler().elevation(value);
+  factory SwitchStyler.shadow(BoxShadowMix value) =>
+      SwitchStyler().shadow(value);
+  factory SwitchStyler.shadows(List<BoxShadowMix> value) =>
+      SwitchStyler().shadows(value);
+  factory SwitchStyler.width(double value) => SwitchStyler().width(value);
+  factory SwitchStyler.height(double value) => SwitchStyler().height(value);
+  factory SwitchStyler.size(double width, double height) =>
+      SwitchStyler().size(width, height);
+  factory SwitchStyler.minWidth(double value) => SwitchStyler().minWidth(value);
+  factory SwitchStyler.maxWidth(double value) => SwitchStyler().maxWidth(value);
+  factory SwitchStyler.minHeight(double value) =>
+      SwitchStyler().minHeight(value);
+  factory SwitchStyler.maxHeight(double value) =>
+      SwitchStyler().maxHeight(value);
+  factory SwitchStyler.scale(double scale, {Alignment alignment = .center}) =>
+      SwitchStyler().scale(scale, alignment: alignment);
+  factory SwitchStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixSwitchStyler().rotate(radians, alignment: alignment);
-  factory RemixSwitchStyler.translate(double x, double y, [double z = 0.0]) =>
-      RemixSwitchStyler().translate(x, y, z);
-  factory RemixSwitchStyler.skew(double skewX, double skewY) =>
-      RemixSwitchStyler().skew(skewX, skewY);
-  factory RemixSwitchStyler.textStyle(TextStyler value) =>
-      RemixSwitchStyler().textStyle(value);
-  factory RemixSwitchStyler.image(DecorationImageMix value) =>
-      RemixSwitchStyler().image(value);
-  factory RemixSwitchStyler.shape(ShapeBorderMix value) =>
-      RemixSwitchStyler().shape(value);
-  factory RemixSwitchStyler.backgroundImage(
+  }) => SwitchStyler().rotate(radians, alignment: alignment);
+  factory SwitchStyler.translate(double x, double y, [double z = 0.0]) =>
+      SwitchStyler().translate(x, y, z);
+  factory SwitchStyler.skew(double skewX, double skewY) =>
+      SwitchStyler().skew(skewX, skewY);
+  factory SwitchStyler.textStyle(TextStyler value) =>
+      SwitchStyler().textStyle(value);
+  factory SwitchStyler.image(DecorationImageMix value) =>
+      SwitchStyler().image(value);
+  factory SwitchStyler.shape(ShapeBorderMix value) =>
+      SwitchStyler().shape(value);
+  factory SwitchStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixSwitchStyler().backgroundImage(
+  }) => SwitchStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixSwitchStyler.backgroundImageUrl(
+  factory SwitchStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixSwitchStyler().backgroundImageUrl(
+  }) => SwitchStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixSwitchStyler.backgroundImageAsset(
+  factory SwitchStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixSwitchStyler().backgroundImageAsset(
+  }) => SwitchStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixSwitchStyler.linearGradient({
+  factory SwitchStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixSwitchStyler().linearGradient(
+  }) => SwitchStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixSwitchStyler.radialGradient({
+  factory SwitchStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -368,7 +360,7 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixSwitchStyler().radialGradient(
+  }) => SwitchStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -377,14 +369,14 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixSwitchStyler.sweepGradient({
+  factory SwitchStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixSwitchStyler().sweepGradient(
+  }) => SwitchStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -392,20 +384,20 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixSwitchStyler.foregroundLinearGradient({
+  factory SwitchStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixSwitchStyler().foregroundLinearGradient(
+  }) => SwitchStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixSwitchStyler.foregroundRadialGradient({
+  factory SwitchStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -413,7 +405,7 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixSwitchStyler().foregroundRadialGradient(
+  }) => SwitchStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -422,14 +414,14 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixSwitchStyler.foregroundSweepGradient({
+  factory SwitchStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixSwitchStyler().foregroundSweepGradient(
+  }) => SwitchStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -437,124 +429,124 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixSwitchStyler.transform(
+  factory SwitchStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixSwitchStyler().transform(value, alignment: alignment);
+  }) => SwitchStyler().transform(value, alignment: alignment);
 
-  RemixSwitchStyler alignment(AlignmentGeometry value) {
+  SwitchStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
   }
 
-  RemixSwitchStyler padding(EdgeInsetsGeometryMix value) {
+  SwitchStyler padding(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().padding(value));
   }
 
-  RemixSwitchStyler margin(EdgeInsetsGeometryMix value) {
+  SwitchStyler margin(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().margin(value));
   }
 
-  RemixSwitchStyler constraints(BoxConstraintsMix value) {
+  SwitchStyler constraints(BoxConstraintsMix value) {
     return container(BoxStyler().constraints(value));
   }
 
-  RemixSwitchStyler decoration(DecorationMix value) {
+  SwitchStyler decoration(DecorationMix value) {
     return container(BoxStyler().decoration(value));
   }
 
-  RemixSwitchStyler foregroundDecoration(DecorationMix value) {
+  SwitchStyler foregroundDecoration(DecorationMix value) {
     return container(BoxStyler().foregroundDecoration(value));
   }
 
-  RemixSwitchStyler clipBehavior(Clip value) {
+  SwitchStyler clipBehavior(Clip value) {
     return container(BoxStyler().clipBehavior(value));
   }
 
-  RemixSwitchStyler color(Color value) {
+  SwitchStyler color(Color value) {
     return container(BoxStyler().color(value));
   }
 
-  RemixSwitchStyler gradient(GradientMix value) {
+  SwitchStyler gradient(GradientMix value) {
     return container(BoxStyler().gradient(value));
   }
 
-  RemixSwitchStyler border(BoxBorderMix value) {
+  SwitchStyler border(BoxBorderMix value) {
     return container(BoxStyler().border(value));
   }
 
-  RemixSwitchStyler borderRadius(BorderRadiusGeometryMix value) {
+  SwitchStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(BoxStyler().borderRadius(value));
   }
 
-  RemixSwitchStyler elevation(ElevationShadow value) {
+  SwitchStyler elevation(ElevationShadow value) {
     return container(BoxStyler().elevation(value));
   }
 
-  RemixSwitchStyler shadow(BoxShadowMix value) {
+  SwitchStyler shadow(BoxShadowMix value) {
     return container(BoxStyler().shadow(value));
   }
 
-  RemixSwitchStyler shadows(List<BoxShadowMix> value) {
+  SwitchStyler shadows(List<BoxShadowMix> value) {
     return container(BoxStyler().shadows(value));
   }
 
-  RemixSwitchStyler width(double value) {
+  SwitchStyler width(double value) {
     return container(BoxStyler().width(value));
   }
 
-  RemixSwitchStyler height(double value) {
+  SwitchStyler height(double value) {
     return container(BoxStyler().height(value));
   }
 
-  RemixSwitchStyler size(double width, double height) {
+  SwitchStyler size(double width, double height) {
     return container(BoxStyler().size(width, height));
   }
 
-  RemixSwitchStyler minWidth(double value) {
+  SwitchStyler minWidth(double value) {
     return container(BoxStyler().minWidth(value));
   }
 
-  RemixSwitchStyler maxWidth(double value) {
+  SwitchStyler maxWidth(double value) {
     return container(BoxStyler().maxWidth(value));
   }
 
-  RemixSwitchStyler minHeight(double value) {
+  SwitchStyler minHeight(double value) {
     return container(BoxStyler().minHeight(value));
   }
 
-  RemixSwitchStyler maxHeight(double value) {
+  SwitchStyler maxHeight(double value) {
     return container(BoxStyler().maxHeight(value));
   }
 
-  RemixSwitchStyler scale(double scale, {Alignment alignment = .center}) {
+  SwitchStyler scale(double scale, {Alignment alignment = .center}) {
     return container(BoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixSwitchStyler rotate(double radians, {Alignment alignment = .center}) {
+  SwitchStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(BoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixSwitchStyler translate(double x, double y, [double z = 0.0]) {
+  SwitchStyler translate(double x, double y, [double z = 0.0]) {
     return container(BoxStyler().translate(x, y, z));
   }
 
-  RemixSwitchStyler skew(double skewX, double skewY) {
+  SwitchStyler skew(double skewX, double skewY) {
     return container(BoxStyler().skew(skewX, skewY));
   }
 
-  RemixSwitchStyler textStyle(TextStyler value) {
+  SwitchStyler textStyle(TextStyler value) {
     return container(BoxStyler().textStyle(value));
   }
 
-  RemixSwitchStyler image(DecorationImageMix value) {
+  SwitchStyler image(DecorationImageMix value) {
     return container(BoxStyler().image(value));
   }
 
-  RemixSwitchStyler shape(ShapeBorderMix value) {
+  SwitchStyler shape(ShapeBorderMix value) {
     return container(BoxStyler().shape(value));
   }
 
-  RemixSwitchStyler backgroundImage(
+  SwitchStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -570,7 +562,7 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     );
   }
 
-  RemixSwitchStyler backgroundImageUrl(
+  SwitchStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -586,7 +578,7 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     );
   }
 
-  RemixSwitchStyler backgroundImageAsset(
+  SwitchStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -602,7 +594,7 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     );
   }
 
-  RemixSwitchStyler linearGradient({
+  SwitchStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -620,7 +612,7 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     );
   }
 
-  RemixSwitchStyler radialGradient({
+  SwitchStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -642,7 +634,7 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     );
   }
 
-  RemixSwitchStyler sweepGradient({
+  SwitchStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -662,7 +654,7 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     );
   }
 
-  RemixSwitchStyler foregroundLinearGradient({
+  SwitchStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -680,7 +672,7 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     );
   }
 
-  RemixSwitchStyler foregroundRadialGradient({
+  SwitchStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -702,7 +694,7 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     );
   }
 
-  RemixSwitchStyler foregroundSweepGradient({
+  SwitchStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -722,57 +714,57 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     );
   }
 
-  RemixSwitchStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+  SwitchStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixSwitchStyler container(BoxStyler value) {
-    return merge(RemixSwitchStyler(container: value));
+  SwitchStyler container(BoxStyler value) {
+    return merge(SwitchStyler(container: value));
   }
 
   /// Sets the thumb.
-  RemixSwitchStyler thumb(BoxStyler value) {
-    return merge(RemixSwitchStyler(thumb: value));
+  SwitchStyler thumb(BoxStyler value) {
+    return merge(SwitchStyler(thumb: value));
   }
 
   /// Sets the trackEffects.
-  RemixSwitchStyler trackEffects(RemixBoxEffectsMix value) {
-    return merge(RemixSwitchStyler(trackEffects: value));
+  SwitchStyler trackEffects(RemixBoxEffectsMix value) {
+    return merge(SwitchStyler(trackEffects: value));
   }
 
   /// Sets the thumbEffects.
-  RemixSwitchStyler thumbEffects(RemixBoxEffectsMix value) {
-    return merge(RemixSwitchStyler(thumbEffects: value));
+  SwitchStyler thumbEffects(RemixBoxEffectsMix value) {
+    return merge(SwitchStyler(thumbEffects: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixSwitchStyler animate(AnimationConfig value) {
-    return merge(RemixSwitchStyler(animation: value));
+  SwitchStyler animate(AnimationConfig value) {
+    return merge(SwitchStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixSwitchStyler variants(List<VariantStyle<RemixSwitchSpec>> value) {
-    return merge(RemixSwitchStyler(variants: value));
+  SwitchStyler variants(List<VariantStyle<SwitchSpec>> value) {
+    return merge(SwitchStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixSwitchStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixSwitchStyler(modifier: value));
+  SwitchStyler wrap(WidgetModifierConfig value) {
+    return merge(SwitchStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixSwitchStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixSwitchStyler(modifier: value));
+  SwitchStyler modifier(WidgetModifierConfig value) {
+    return merge(SwitchStyler(modifier: value));
   }
 
-  /// Merges with another [RemixSwitchStyler].
+  /// Merges with another [SwitchStyler].
   @override
-  RemixSwitchStyler merge(RemixSwitchStyler? other) {
-    return RemixSwitchStyler.create(
+  SwitchStyler merge(SwitchStyler? other) {
+    return SwitchStyler.create(
       container: MixOps.merge($container, other?.$container),
       thumb: MixOps.merge($thumb, other?.$thumb),
       trackEffects: MixOps.merge($trackEffects, other?.$trackEffects),
@@ -783,10 +775,10 @@ class RemixSwitchStyler extends MixStyler<RemixSwitchStyler, RemixSwitchSpec>
     );
   }
 
-  /// Resolves to [StyleSpec<RemixSwitchSpec>] using [context].
+  /// Resolves to [StyleSpec<SwitchSpec>] using [context].
   @override
-  StyleSpec<RemixSwitchSpec> resolve(BuildContext context) {
-    final spec = RemixSwitchSpec(
+  StyleSpec<SwitchSpec> resolve(BuildContext context) {
+    final spec = SwitchSpec(
       container: MixOps.resolve(context, $container),
       thumb: MixOps.resolve(context, $thumb),
       trackEffects: MixOps.resolve(context, $trackEffects),

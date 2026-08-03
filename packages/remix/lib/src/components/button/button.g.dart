@@ -10,7 +10,7 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
-  StyleSpec<RemixSpinnerSpec> get spinner;
+  StyleSpec<SpinnerSpec> get spinner;
   RemixBoxEffectsSpec? get containerEffects;
   IconAlignment? get iconAlignment;
 
@@ -22,7 +22,7 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
-    StyleSpec<RemixSpinnerSpec>? spinner,
+    StyleSpec<SpinnerSpec>? spinner,
     RemixBoxEffectsSpec? containerEffects,
     IconAlignment? iconAlignment,
   }) {
@@ -377,7 +377,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
-  final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
+  final Prop<StyleSpec<SpinnerSpec>>? $spinner;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<IconAlignment>? $iconAlignment;
 
@@ -385,7 +385,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
-    Prop<StyleSpec<RemixSpinnerSpec>>? spinner,
+    Prop<StyleSpec<SpinnerSpec>>? spinner,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<IconAlignment>? iconAlignment,
     super.variants,
@@ -402,7 +402,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     FlexBoxStyler? container,
     TextStyler? label,
     IconStyler? icon,
-    RemixSpinnerStyler? spinner,
+    SpinnerStyler? spinner,
     RemixBoxEffectsMix? containerEffects,
     IconAlignment? iconAlignment,
     AnimationConfig? animation,
@@ -424,7 +424,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
       ButtonStyler().container(value);
   factory ButtonStyler.label(TextStyler value) => ButtonStyler().label(value);
   factory ButtonStyler.icon(IconStyler value) => ButtonStyler().icon(value);
-  factory ButtonStyler.spinner(RemixSpinnerStyler value) =>
+  factory ButtonStyler.spinner(SpinnerStyler value) =>
       ButtonStyler().spinner(value);
   factory ButtonStyler.containerEffects(RemixBoxEffectsMix value) =>
       ButtonStyler().containerEffects(value);
@@ -970,7 +970,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
 
   /// Sets the spinner.
   @override
-  ButtonStyler spinner(RemixSpinnerStyler value) {
+  ButtonStyler spinner(SpinnerStyler value) {
     return merge(ButtonStyler(spinner: value));
   }
 

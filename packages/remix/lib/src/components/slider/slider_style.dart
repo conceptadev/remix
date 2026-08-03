@@ -5,45 +5,43 @@ part of 'slider.dart';
 /// Use this class to customize the thumb, track, and filled range. It supports
 /// Mix variants and widget state variants such as disabled, hovered, focused,
 /// and pressed states.
-extension RemixSliderStylerRemixHelpers on RemixSliderStyler {
+extension RemixSliderStylerRemixHelpers on SliderStyler {
   /// Sets thumb color
-  RemixSliderStyler thumbColor(Color value) {
+  SliderStyler thumbColor(Color value) {
     return merge(
-      RemixSliderStyler(
+      SliderStyler(
         thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets thumb to a fixed [size].
-  RemixSliderStyler thumbSize(Size size) {
+  SliderStyler thumbSize(Size size) {
     return merge(
-      RemixSliderStyler(
-        thumb: BoxStyler(constraints: BoxConstraintsMix.size(size)),
-      ),
+      SliderStyler(thumb: BoxStyler(constraints: BoxConstraintsMix.size(size))),
     );
   }
 
   /// Sets stroke width for both track and range.
-  RemixSliderStyler thickness(double value) {
-    return merge(RemixSliderStyler(trackWidth: value, rangeWidth: value));
+  SliderStyler thickness(double value) {
+    return merge(SliderStyler(trackWidth: value, rangeWidth: value));
   }
 
   /// Sets stroke width for the track only (background rail).
-  RemixSliderStyler trackThickness(double value) {
-    return merge(RemixSliderStyler(trackWidth: value));
+  SliderStyler trackThickness(double value) {
+    return merge(SliderStyler(trackWidth: value));
   }
 
   /// Sets stroke width for the range only (filled portion).
-  RemixSliderStyler rangeThickness(double value) {
-    return merge(RemixSliderStyler(rangeWidth: value));
+  SliderStyler rangeThickness(double value) {
+    return merge(SliderStyler(rangeWidth: value));
   }
 
   /// Creates a [RemixSlider] widget with this style applied.
   ///
   /// Example:
   /// ```dart
-  /// final slider = RemixSliderStyler()
+  /// final slider = SliderStyler()
   ///   .thumbColor(Colors.blue)
   ///   .rangeColor(Colors.blue.shade200);
   ///

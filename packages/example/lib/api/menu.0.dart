@@ -144,10 +144,7 @@ class _MenuExampleState extends State<MenuExample> {
           ),
         )
         .divider(
-          RemixDividerStyler()
-              .color(Colors.blueGrey.shade100)
-              .height(1)
-              .marginY(6),
+          DividerStyler().color(Colors.blueGrey.shade100).height(1).marginY(6),
         );
   }
 

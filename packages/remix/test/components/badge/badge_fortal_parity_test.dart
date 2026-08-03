@@ -129,13 +129,13 @@ void main() {
   });
 }
 
-Future<RemixBadgeSpec> _resolve(
+Future<BadgeSpec> _resolve(
   WidgetTester tester,
-  RemixBadgeStyler style, {
+  BadgeStyler style, {
   FortalScaling scaling = .percent100,
   FortalRadius radius = .medium,
 }) async {
-  late RemixBadgeSpec result;
+  late BadgeSpec result;
   await tester.pumpWidget(
     FortalScope(
       brightness: .light,

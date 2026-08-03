@@ -26,8 +26,8 @@ class CardExample extends StatelessWidget {
     );
   }
 
-  RemixCardStyler get style {
-    return RemixCardStyler()
+  CardStyler get style {
+    return CardStyler()
         .size(300, 200)
         .backgroundColor(Colors.white)
         .borderRadiusAll(const Radius.circular(4))

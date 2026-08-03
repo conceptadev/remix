@@ -99,7 +99,7 @@ states and sizing.
 
 The group styler controls structural container styling and context variants such
 as brightness, breakpoints, and text direction. Put hover, press, focus,
-selected, and disabled variants on `RemixToggleGroupItemStyler`; they resolve
+selected, and disabled variants on `ToggleGroupItemStyler`; they resolve
 independently for each option. A raw `styleSpec` is authoritative and bypasses
 both the group and per-item fluent stylers.
 
@@ -118,17 +118,17 @@ Widget buildStatusToggleGroup({
       RemixToggleGroupItem(
         value: 'published',
         label: 'Published',
-        style: RemixToggleGroupItemStyler().foregroundColor(Colors.green),
+        style: ToggleGroupItemStyler().foregroundColor(Colors.green),
       ),
     ],
     selectedValue: value,
     onChanged: onChanged,
-    style: RemixToggleGroupStyler().item(
-      RemixToggleGroupItemStyler()
+    style: ToggleGroupStyler().item(
+      ToggleGroupItemStyler()
           .paddingX(12)
           .paddingY(8)
           .onSelected(
-            RemixToggleGroupItemStyler().backgroundColor(Colors.green.shade50),
+            ToggleGroupItemStyler().backgroundColor(Colors.green.shade50),
           ),
     ),
   );
@@ -153,8 +153,8 @@ RemixToggleGroup<T> remixToggleGroupConstructor<T>({
   bool loop = true,
   String? semanticLabel,
   bool excludeSemantics = false,
-  RemixToggleGroupStyler style = const RemixToggleGroupStyler.create(),
-  RemixToggleGroupSpec? styleSpec,
+  ToggleGroupStyler style = const ToggleGroupStyler.create(),
+  ToggleGroupSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -172,8 +172,8 @@ RemixToggleGroupItem<T> remixToggleGroupItemConstructor<T>({
   bool enabled = true,
   FocusNode? focusNode,
   bool autofocus = false,
-  RemixToggleGroupItemStyler style =
-      const RemixToggleGroupItemStyler.create(),
+  ToggleGroupItemStyler style =
+      const ToggleGroupItemStyler.create(),
 }) => throw UnimplementedError();
 ```
 </CodeGroup>

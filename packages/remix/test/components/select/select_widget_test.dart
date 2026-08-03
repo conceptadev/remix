@@ -334,7 +334,7 @@ void main() {
       });
 
       testWidgets('applies custom style', (tester) async {
-        final customStyle = RemixSelectStyler().menuContainer(
+        final customStyle = SelectStyler().menuContainer(
           FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
         );
 
@@ -351,8 +351,8 @@ void main() {
       });
 
       testWidgets('applies trigger styling', (tester) async {
-        final customStyle = RemixSelectStyler().trigger(
-          RemixSelectTriggerStyler().label(
+        final customStyle = SelectStyler().trigger(
+          SelectTriggerStyler().label(
             TextStyler(style: TextStyleMix(color: Colors.blue)),
           ),
         );
@@ -377,7 +377,7 @@ void main() {
               RemixSelectItem(
                 value: 'a',
                 label: 'Option A',
-                style: RemixSelectMenuItemStyler().text(
+                style: SelectMenuItemStyler().text(
                   TextStyler(style: TextStyleMix(color: Colors.red)),
                 ),
               ),
@@ -394,8 +394,8 @@ void main() {
           RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
-            style: RemixSelectStyler().item(
-              RemixSelectMenuItemStyler().text(
+            style: SelectStyler().item(
+              SelectMenuItemStyler().text(
                 TextStyler(style: TextStyleMix(color: Colors.red)),
               ),
             ),
@@ -422,14 +422,14 @@ void main() {
               RemixSelectItem(
                 value: 'a',
                 label: 'Option A',
-                style: RemixSelectMenuItemStyler().text(
+                style: SelectMenuItemStyler().text(
                   TextStyler().color(Colors.green),
                 ),
               ),
             ],
-            styleSpec: const RemixSelectSpec(
+            styleSpec: const SelectSpec(
               item: StyleSpec(
-                spec: RemixSelectMenuItemSpec(
+                spec: SelectMenuItemSpec(
                   text: StyleSpec(
                     spec: TextSpec(style: TextStyle(color: Colors.blue)),
                   ),

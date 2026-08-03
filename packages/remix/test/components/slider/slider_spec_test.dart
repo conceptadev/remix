@@ -4,10 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixSliderSpec', () {
+  group('SliderSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        final spec = RemixSliderSpec();
+        final spec = SliderSpec();
 
         expect(spec.thumb, isA<StyleSpec<BoxSpec>>());
         expect(spec.trackColor, isA<Color>());
@@ -23,7 +23,7 @@ void main() {
         const rangeColor = Color(0xFFFF0000);
         const rangeWidth = 5.0;
 
-        final spec = RemixSliderSpec(
+        final spec = SliderSpec(
           thumb: thumb,
           trackColor: trackColor,
           trackWidth: trackWidth,
@@ -39,20 +39,20 @@ void main() {
       });
 
       test('trackThickness returns max of trackWidth and rangeWidth', () {
-        final spec1 = RemixSliderSpec(trackWidth: 10.0, rangeWidth: 5.0);
+        final spec1 = SliderSpec(trackWidth: 10.0, rangeWidth: 5.0);
         expect(spec1.trackThickness, equals(10.0));
 
-        final spec2 = RemixSliderSpec(trackWidth: 5.0, rangeWidth: 10.0);
+        final spec2 = SliderSpec(trackWidth: 5.0, rangeWidth: 10.0);
         expect(spec2.trackThickness, equals(10.0));
 
-        final spec3 = RemixSliderSpec(trackWidth: 8.0, rangeWidth: 8.0);
+        final spec3 = SliderSpec(trackWidth: 8.0, rangeWidth: 8.0);
         expect(spec3.trackThickness, equals(8.0));
       });
     });
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
-        final originalSpec = RemixSliderSpec();
+        final originalSpec = SliderSpec();
         final newThumb = StyleSpec(spec: BoxSpec());
 
         final updatedSpec = originalSpec.copyWith(thumb: newThumb);
@@ -62,7 +62,7 @@ void main() {
       });
 
       test('preserves immutability - original spec unchanged', () {
-        final originalSpec = RemixSliderSpec();
+        final originalSpec = SliderSpec();
         final originalThumb = originalSpec.thumb;
         final newThumb = StyleSpec(spec: BoxSpec());
 
@@ -74,7 +74,7 @@ void main() {
       });
 
       test('returns new instance with all properties updated', () {
-        final originalSpec = RemixSliderSpec();
+        final originalSpec = SliderSpec();
         final newThumb = StyleSpec(spec: BoxSpec());
         const newTrackColor = Colors.blue;
         const newTrackWidth = 10.0;
@@ -99,8 +99,8 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        final spec = RemixSliderSpec();
-        const RemixSliderSpec? other = null;
+        final spec = SliderSpec();
+        const SliderSpec? other = null;
 
         final result = spec.lerp(other, 0.5);
 
@@ -111,14 +111,14 @@ void main() {
       test('interpolates between two specs at t=0.0', () {
         const color1 = Color(0xFF0000FF);
         const color2 = Color(0xFF00FF00);
-        final spec1 = RemixSliderSpec(
+        final spec1 = SliderSpec(
           thumb: StyleSpec(spec: BoxSpec()),
           trackColor: color1,
           trackWidth: 10.0,
           rangeColor: color1,
           rangeWidth: 5.0,
         );
-        final spec2 = RemixSliderSpec(
+        final spec2 = SliderSpec(
           thumb: StyleSpec(spec: BoxSpec()),
           trackColor: color2,
           trackWidth: 20.0,
@@ -139,14 +139,14 @@ void main() {
       test('interpolates between two specs at t=1.0', () {
         const color1 = Color(0xFF0000FF);
         const color2 = Color(0xFF00FF00);
-        final spec1 = RemixSliderSpec(
+        final spec1 = SliderSpec(
           thumb: StyleSpec(spec: BoxSpec()),
           trackColor: color1,
           trackWidth: 10.0,
           rangeColor: color1,
           rangeWidth: 5.0,
         );
-        final spec2 = RemixSliderSpec(
+        final spec2 = SliderSpec(
           thumb: StyleSpec(spec: BoxSpec()),
           trackColor: color2,
           trackWidth: 20.0,
@@ -165,8 +165,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.5', () {
-        final spec1 = RemixSliderSpec(trackWidth: 10.0, rangeWidth: 5.0);
-        final spec2 = RemixSliderSpec(trackWidth: 20.0, rangeWidth: 15.0);
+        final spec1 = SliderSpec(trackWidth: 10.0, rangeWidth: 5.0);
+        final spec2 = SliderSpec(trackWidth: 20.0, rangeWidth: 15.0);
 
         final result = spec1.lerp(spec2, 0.5);
 
@@ -177,22 +177,22 @@ void main() {
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        final spec1 = RemixSliderSpec();
-        final spec2 = RemixSliderSpec();
+        final spec1 = SliderSpec();
+        final spec2 = SliderSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('two specs with different properties are not equal', () {
-        final spec1 = RemixSliderSpec(trackColor: Colors.blue);
-        final spec2 = RemixSliderSpec(trackColor: Colors.red);
+        final spec1 = SliderSpec(trackColor: Colors.blue);
+        final spec2 = SliderSpec(trackColor: Colors.red);
 
         expect(spec1, isNot(equals(spec2)));
       });
 
       test('props list contains all properties', () {
-        final spec = RemixSliderSpec();
+        final spec = SliderSpec();
 
         expect(spec.props, hasLength(12));
         expect(spec.props, contains(spec.thumb));
@@ -205,7 +205,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        final spec = RemixSliderSpec();
+        final spec = SliderSpec();
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -214,7 +214,7 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        final spec = RemixSliderSpec();
+        final spec = SliderSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
@@ -223,7 +223,7 @@ void main() {
 
     group('Edge Cases and Error Handling', () {
       test('copyWith handles null parameters correctly', () {
-        final spec = RemixSliderSpec();
+        final spec = SliderSpec();
         final originalThumb = spec.thumb;
 
         final updatedSpec = spec.copyWith(thumb: null);
@@ -232,7 +232,7 @@ void main() {
       });
 
       test('handles zero width values', () {
-        final spec = RemixSliderSpec(trackWidth: 0.0, rangeWidth: 0.0);
+        final spec = SliderSpec(trackWidth: 0.0, rangeWidth: 0.0);
 
         expect(spec.trackWidth, equals(0.0));
         expect(spec.rangeWidth, equals(0.0));
@@ -240,7 +240,7 @@ void main() {
       });
 
       test('handles very large width values', () {
-        final spec = RemixSliderSpec(trackWidth: 1000.0, rangeWidth: 2000.0);
+        final spec = SliderSpec(trackWidth: 1000.0, rangeWidth: 2000.0);
 
         expect(spec.trackWidth, equals(1000.0));
         expect(spec.rangeWidth, equals(2000.0));
@@ -250,7 +250,7 @@ void main() {
 
     group('Default Values', () {
       test('uses correct default values', () {
-        final spec = RemixSliderSpec();
+        final spec = SliderSpec();
 
         expect(spec.thumb, isNotNull);
         expect(spec.trackColor, isNotNull);

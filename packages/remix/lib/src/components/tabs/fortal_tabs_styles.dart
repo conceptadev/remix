@@ -8,8 +8,8 @@ enum FortalTabsSize { size1, size2 }
 /// The tab-list bottom border is a single hairline at every Radix size, so this
 /// preset takes no `size` — unlike [fortalTabStyle], whose per-tab metrics vary.
 @MixWidget(target: RemixTabBar.new)
-RemixTabBarStyler fortalTabBarStyle() {
-  return RemixTabBarStyler().borderBottom(
+TabBarStyler fortalTabBarStyle() {
+  return TabBarStyler().borderBottom(
     color: FortalTokens.grayA5(),
     width: FortalTokens.borderWidth1(),
   );
@@ -17,11 +17,11 @@ RemixTabBarStyler fortalTabBarStyle() {
 
 /// Fortal-themed preset for [RemixTabView].
 @MixWidget(target: RemixTabView.new)
-RemixTabViewStyler fortalTabViewStyle() => RemixTabViewStyler();
+TabViewStyler fortalTabViewStyle() => TabViewStyler();
 
 /// Fortal-themed preset for [RemixTab].
 @MixWidget(target: RemixTab.new)
-RemixTabStyler fortalTabStyle({
+TabStyler fortalTabStyle({
   FortalTabsSize size = FortalTabsSize.size2,
   bool highContrast = false,
 }) {
@@ -46,7 +46,7 @@ RemixTabStyler fortalTabStyle({
     ),
   };
 
-  return RemixTabStyler()
+  return TabStyler()
       .label(
         .style(metrics.text).letterSpacing(0.0).color(FortalTokens.grayA11()),
       )
@@ -78,7 +78,7 @@ RemixTabStyler fortalTabStyle({
         ).icon(.color(FortalTokens.gray12())).color(FortalTokens.grayA3()),
       )
       .onFocused(
-        RemixTabStyler()
+        TabStyler()
             .borderAll(
               color: FortalTokens.focus8(),
               width: FortalTokens.focusRingWidth(),

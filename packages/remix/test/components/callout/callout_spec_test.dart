@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixCalloutSpec', () {
+  group('CalloutSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        const spec = RemixCalloutSpec();
+        const spec = CalloutSpec();
 
         expect(spec.container, isA<StyleSpec<FlexBoxSpec>>());
         expect(spec.text, isA<StyleSpec<TextSpec>>());
@@ -21,7 +21,7 @@ void main() {
         final textSpec = StyleSpec(spec: TextSpec());
         final iconSpec = StyleSpec(spec: IconSpec());
 
-        final spec = RemixCalloutSpec(
+        final spec = CalloutSpec(
           container: containerSpec,
           text: textSpec,
           icon: iconSpec,
@@ -35,7 +35,7 @@ void main() {
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
-        const originalSpec = RemixCalloutSpec();
+        const originalSpec = CalloutSpec();
         final newContainer = StyleSpec(spec: FlexBoxSpec());
         final newText = StyleSpec(spec: TextSpec());
         final newIcon = StyleSpec(spec: IconSpec());
@@ -53,7 +53,7 @@ void main() {
       });
 
       test('returns new instance with single updated property', () {
-        const originalSpec = RemixCalloutSpec();
+        const originalSpec = CalloutSpec();
         final newContainer = StyleSpec(spec: FlexBoxSpec());
 
         final updatedSpec = originalSpec.copyWith(container: newContainer);
@@ -65,7 +65,7 @@ void main() {
       });
 
       test('returns new instance with multiple updated properties', () {
-        const originalSpec = RemixCalloutSpec();
+        const originalSpec = CalloutSpec();
         final newText = StyleSpec(spec: TextSpec());
         final newIcon = StyleSpec(spec: IconSpec());
 
@@ -78,7 +78,7 @@ void main() {
       });
 
       test('preserves immutability - original spec unchanged', () {
-        const originalSpec = RemixCalloutSpec();
+        const originalSpec = CalloutSpec();
         final originalContainer = originalSpec.container;
         final originalText = originalSpec.text;
         final originalIcon = originalSpec.icon;
@@ -104,7 +104,7 @@ void main() {
       });
 
       test('copyWith with null parameters preserves original values', () {
-        const originalSpec = RemixCalloutSpec();
+        const originalSpec = CalloutSpec();
         final originalContainer = originalSpec.container;
         final originalText = originalSpec.text;
         final originalIcon = originalSpec.icon;
@@ -126,7 +126,7 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        const spec = RemixCalloutSpec();
+        const spec = CalloutSpec();
         const other = null;
 
         final result = spec.lerp(other, 0.5);
@@ -134,12 +134,12 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = RemixCalloutSpec(
+        final spec1 = CalloutSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           text: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
         );
-        final spec2 = RemixCalloutSpec(
+        final spec2 = CalloutSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           text: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
@@ -154,12 +154,12 @@ void main() {
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = RemixCalloutSpec(
+        final spec1 = CalloutSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           text: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
         );
-        final spec2 = RemixCalloutSpec(
+        final spec2 = CalloutSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           text: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
@@ -174,12 +174,12 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.5', () {
-        final spec1 = RemixCalloutSpec(
+        final spec1 = CalloutSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           text: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
         );
-        final spec2 = RemixCalloutSpec(
+        final spec2 = CalloutSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           text: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
@@ -189,16 +189,16 @@ void main() {
 
         expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
-        expect(result, isA<RemixCalloutSpec>());
+        expect(result, isA<CalloutSpec>());
       });
 
       test('lerp with different t values', () {
-        final spec1 = RemixCalloutSpec(
+        final spec1 = CalloutSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           text: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
         );
-        final spec2 = RemixCalloutSpec(
+        final spec2 = CalloutSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           text: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
@@ -208,23 +208,23 @@ void main() {
         final result2 = spec1.lerp(spec2, 0.75);
 
         expect(result1, isNot(same(result2)));
-        expect(result1, isA<RemixCalloutSpec>());
-        expect(result2, isA<RemixCalloutSpec>());
+        expect(result1, isA<CalloutSpec>());
+        expect(result2, isA<CalloutSpec>());
       });
     });
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixCalloutSpec();
-        const spec2 = RemixCalloutSpec();
+        const spec1 = CalloutSpec();
+        const spec2 = CalloutSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('two specs with different properties are not equal', () {
-        const spec1 = RemixCalloutSpec();
-        final spec2 = RemixCalloutSpec(
+        const spec1 = CalloutSpec();
+        final spec2 = CalloutSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           text: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
@@ -239,12 +239,12 @@ void main() {
         final textSpec = StyleSpec(spec: TextSpec());
         final iconSpec = StyleSpec(spec: IconSpec());
 
-        final spec1 = RemixCalloutSpec(
+        final spec1 = CalloutSpec(
           container: containerSpec,
           text: textSpec,
           icon: iconSpec,
         );
-        final spec2 = RemixCalloutSpec(
+        final spec2 = CalloutSpec(
           container: containerSpec,
           text: textSpec,
           icon: iconSpec,
@@ -260,12 +260,12 @@ void main() {
         final textSpec = StyleSpec(spec: TextSpec());
         final iconSpec = StyleSpec(spec: IconSpec());
 
-        final spec1 = RemixCalloutSpec(
+        final spec1 = CalloutSpec(
           container: containerSpec1,
           text: textSpec,
           icon: iconSpec,
         );
-        final spec2 = RemixCalloutSpec(
+        final spec2 = CalloutSpec(
           container: containerSpec2,
           text: textSpec,
           icon: iconSpec,
@@ -276,7 +276,7 @@ void main() {
       });
 
       test('props list contains all properties', () {
-        const spec = RemixCalloutSpec();
+        const spec = CalloutSpec();
 
         expect(spec.props, hasLength(4));
         expect(spec.props, contains(spec.container));
@@ -289,7 +289,7 @@ void main() {
         final textSpec = StyleSpec(spec: TextSpec());
         final iconSpec = StyleSpec(spec: IconSpec());
 
-        final spec = RemixCalloutSpec(
+        final spec = CalloutSpec(
           container: containerSpec,
           text: textSpec,
           icon: iconSpec,
@@ -304,7 +304,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = RemixCalloutSpec();
+        const spec = CalloutSpec();
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -317,7 +317,7 @@ void main() {
         final textSpec = StyleSpec(spec: TextSpec());
         final iconSpec = StyleSpec(spec: IconSpec());
 
-        final spec = RemixCalloutSpec(
+        final spec = CalloutSpec(
           container: containerSpec,
           text: textSpec,
           icon: iconSpec,
@@ -330,14 +330,14 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        const spec = RemixCalloutSpec();
+        const spec = CalloutSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
       });
 
       test('toString includes all properties', () {
-        const spec = RemixCalloutSpec();
+        const spec = CalloutSpec();
         final stringRepresentation = spec.toString();
 
         expect(stringRepresentation, contains('container'));
@@ -348,7 +348,7 @@ void main() {
 
     group('Edge Cases and Error Handling', () {
       test('copyWith handles null parameters correctly', () {
-        const spec = RemixCalloutSpec();
+        const spec = CalloutSpec();
         final originalContainer = spec.container;
         final originalText = spec.text;
         final originalIcon = spec.icon;
@@ -365,12 +365,12 @@ void main() {
       });
 
       test('lerp handles edge t values', () {
-        final spec1 = RemixCalloutSpec(
+        final spec1 = CalloutSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           text: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
         );
-        final spec2 = RemixCalloutSpec(
+        final spec2 = CalloutSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           text: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
@@ -378,11 +378,11 @@ void main() {
 
         // Test t=0.0
         final result0 = spec1.lerp(spec2, 0.0);
-        expect(result0, isA<RemixCalloutSpec>());
+        expect(result0, isA<CalloutSpec>());
 
         // Test t=1.0
         final result1 = spec1.lerp(spec2, 1.0);
-        expect(result1, isA<RemixCalloutSpec>());
+        expect(result1, isA<CalloutSpec>());
 
         // Test t=0.0 and t=1.0 should be different
         expect(result0, isNot(same(result1)));
@@ -393,7 +393,7 @@ void main() {
         final complexTextSpec = StyleSpec(spec: TextSpec());
         final complexIconSpec = StyleSpec(spec: IconSpec());
 
-        final spec = RemixCalloutSpec(
+        final spec = CalloutSpec(
           container: complexContainerSpec,
           text: complexTextSpec,
           icon: complexIconSpec,
@@ -410,12 +410,12 @@ void main() {
         final textSpec = StyleSpec(spec: TextSpec());
         final iconSpec = StyleSpec(spec: IconSpec());
 
-        final spec1 = RemixCalloutSpec(
+        final spec1 = CalloutSpec(
           container: containerSpec,
           text: textSpec,
           icon: iconSpec,
         );
-        final spec2 = RemixCalloutSpec(
+        final spec2 = CalloutSpec(
           container: containerSpec,
           text: textSpec,
           icon: iconSpec,

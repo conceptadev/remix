@@ -129,7 +129,7 @@ void main() {
           selectedValue: 'list',
           onChanged: (_) {},
           orientation: Axis.vertical,
-          styleSpec: const RemixToggleGroupSpec(),
+          styleSpec: const ToggleGroupSpec(),
         ),
       );
       await tester.pumpAndSettle();
@@ -142,16 +142,16 @@ void main() {
 
     testWidgets('styleSpec bypasses fluent style resolution', (tester) async {
       var fluentBuilds = 0;
-      final fluentStyle = RemixToggleGroupStyler().onBuilder((context) {
+      final fluentStyle = ToggleGroupStyler().onBuilder((context) {
         fluentBuilds += 1;
 
-        return RemixToggleGroupStyler(
-          item: RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
+        return ToggleGroupStyler(
+          item: ToggleGroupItemStyler().foregroundColor(Colors.blue),
         );
       });
-      const rawSpec = RemixToggleGroupSpec(
+      const rawSpec = ToggleGroupSpec(
         item: StyleSpec(
-          spec: RemixToggleGroupItemSpec(
+          spec: ToggleGroupItemSpec(
             label: StyleSpec(
               spec: TextSpec(style: TextStyle(color: Colors.red)),
             ),
@@ -177,9 +177,9 @@ void main() {
     testWidgets('raw item defaults bypass per-item fluent styles', (
       tester,
     ) async {
-      const rawSpec = RemixToggleGroupSpec(
+      const rawSpec = ToggleGroupSpec(
         item: StyleSpec(
-          spec: RemixToggleGroupItemSpec(
+          spec: ToggleGroupItemSpec(
             label: StyleSpec(
               spec: TextSpec(style: TextStyle(color: Colors.red)),
             ),
@@ -193,7 +193,7 @@ void main() {
             RemixToggleGroupItem(
               value: 'list',
               label: 'List',
-              style: RemixToggleGroupItemStyler().foregroundColor(Colors.green),
+              style: ToggleGroupItemStyler().foregroundColor(Colors.green),
             ),
           ],
           selectedValue: 'list',
@@ -210,15 +210,15 @@ void main() {
       tester,
     ) async {
       final style =
-          RemixToggleGroupStyler(
-            item: RemixToggleGroupItemStyler()
+          ToggleGroupStyler(
+            item: ToggleGroupItemStyler()
                 .foregroundColor(Colors.red)
                 .onSelected(
-                  RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
+                  ToggleGroupItemStyler().foregroundColor(Colors.blue),
                 ),
           ).onRtl(
-            RemixToggleGroupStyler(
-              item: RemixToggleGroupItemStyler().foregroundColor(Colors.green),
+            ToggleGroupStyler(
+              item: ToggleGroupItemStyler().foregroundColor(Colors.green),
             ),
           );
 
@@ -249,13 +249,11 @@ void main() {
     testWidgets('item context variants compose with item state variants', (
       tester,
     ) async {
-      final style = RemixToggleGroupStyler(
-        item: RemixToggleGroupItemStyler()
+      final style = ToggleGroupStyler(
+        item: ToggleGroupItemStyler()
             .foregroundColor(Colors.red)
-            .onSelected(
-              RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
-            )
-            .onRtl(RemixToggleGroupItemStyler().foregroundColor(Colors.green)),
+            .onSelected(ToggleGroupItemStyler().foregroundColor(Colors.blue))
+            .onRtl(ToggleGroupItemStyler().foregroundColor(Colors.green)),
       );
 
       await tester.pumpRemixApp(
@@ -350,11 +348,11 @@ void main() {
         RemixToggleGroup<String>(
           items: const [RemixToggleGroupItem(value: 'list', label: 'List')],
           selectedValue: 'list',
-          style: RemixToggleGroupStyler(
-            item: RemixToggleGroupItemStyler()
+          style: ToggleGroupStyler(
+            item: ToggleGroupItemStyler()
                 .foregroundColor(Colors.red)
                 .onDisabled(
-                  RemixToggleGroupItemStyler().foregroundColor(Colors.grey),
+                  ToggleGroupItemStyler().foregroundColor(Colors.grey),
                 ),
           ),
         ),
@@ -922,12 +920,10 @@ void main() {
     ) async {
       late StateSetter update;
       var selectedValue = 'list';
-      final style = RemixToggleGroupStyler(
-        item: RemixToggleGroupItemStyler()
+      final style = ToggleGroupStyler(
+        item: ToggleGroupItemStyler()
             .foregroundColor(Colors.red)
-            .onSelected(
-              RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
-            ),
+            .onSelected(ToggleGroupItemStyler().foregroundColor(Colors.blue)),
       );
 
       await tester.pumpRemixApp(
@@ -968,14 +964,14 @@ void main() {
           ],
           selectedValue: 'list',
           onChanged: (_) {},
-          style: RemixToggleGroupStyler(
-            item: RemixToggleGroupItemStyler()
+          style: ToggleGroupStyler(
+            item: ToggleGroupItemStyler()
                 .foregroundColor(Colors.red)
                 .onSelected(
-                  RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
+                  ToggleGroupItemStyler().foregroundColor(Colors.blue),
                 )
                 .onDisabled(
-                  RemixToggleGroupItemStyler().foregroundColor(Colors.grey),
+                  ToggleGroupItemStyler().foregroundColor(Colors.grey),
                 ),
           ),
         ),
@@ -1009,16 +1005,14 @@ void main() {
               ],
               selectedValue: 'list',
               onChanged: (_) {},
-              style: RemixToggleGroupStyler(
-                item: RemixToggleGroupItemStyler()
+              style: ToggleGroupStyler(
+                item: ToggleGroupItemStyler()
                     .foregroundColor(Colors.red)
                     .onFocused(
-                      RemixToggleGroupItemStyler().foregroundColor(
-                        Colors.green,
-                      ),
+                      ToggleGroupItemStyler().foregroundColor(Colors.green),
                     )
                     .onDisabled(
-                      RemixToggleGroupItemStyler().foregroundColor(Colors.grey),
+                      ToggleGroupItemStyler().foregroundColor(Colors.grey),
                     ),
               ),
             );
@@ -1046,23 +1040,23 @@ void main() {
             RemixToggleGroupItem(
               value: 'list',
               label: 'List',
-              style: RemixToggleGroupItemStyler().onSelected(
-                RemixToggleGroupItemStyler().foregroundColor(Colors.purple),
+              style: ToggleGroupItemStyler().onSelected(
+                ToggleGroupItemStyler().foregroundColor(Colors.purple),
               ),
             ),
             RemixToggleGroupItem(
               value: 'grid',
               label: 'Grid',
-              style: RemixToggleGroupItemStyler().foregroundColor(Colors.green),
+              style: ToggleGroupItemStyler().foregroundColor(Colors.green),
             ),
           ],
           selectedValue: 'list',
           onChanged: (_) {},
-          style: RemixToggleGroupStyler(
-            item: RemixToggleGroupItemStyler()
+          style: ToggleGroupStyler(
+            item: ToggleGroupItemStyler()
                 .foregroundColor(Colors.red)
                 .onSelected(
-                  RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
+                  ToggleGroupItemStyler().foregroundColor(Colors.blue),
                 ),
           ),
         ),

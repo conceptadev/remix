@@ -1,21 +1,21 @@
 part of 'icon_button.dart';
 
 /// Style configuration for [RemixIconButton] container, icon, and loading spinner.
-extension RemixIconButtonStylerRemixHelpers on RemixIconButtonStyler {
+extension RemixIconButtonStylerRemixHelpers on IconButtonStyler {
   /// Sets the background color of the icon button container.
-  RemixIconButtonStyler backgroundColor(Color value) {
+  IconButtonStyler backgroundColor(Color value) {
     return color(value);
   }
 
   /// Sets the foreground color (icon color) of the icon button.
-  RemixIconButtonStyler foregroundColor(Color value) {
+  IconButtonStyler foregroundColor(Color value) {
     return iconColor(value);
   }
 
   /// Sets size (width and height - icon buttons are square)
-  RemixIconButtonStyler iconButtonSize(double size) {
+  IconButtonStyler iconButtonSize(double size) {
     return merge(
-      RemixIconButtonStyler(
+      IconButtonStyler(
         container: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: size,
@@ -29,9 +29,9 @@ extension RemixIconButtonStylerRemixHelpers on RemixIconButtonStyler {
   }
 
   /// Sets the minimum size of the icon button.
-  RemixIconButtonStyler minimumSize(Size value) {
+  IconButtonStyler minimumSize(Size value) {
     return merge(
-      RemixIconButtonStyler().constraintsOnly(
+      IconButtonStyler().constraintsOnly(
         minWidth: value.width,
         minHeight: value.height,
       ),
@@ -39,9 +39,9 @@ extension RemixIconButtonStylerRemixHelpers on RemixIconButtonStyler {
   }
 
   /// Sets the maximum size of the icon button.
-  RemixIconButtonStyler maximumSize(Size value) {
+  IconButtonStyler maximumSize(Size value) {
     return merge(
-      RemixIconButtonStyler().constraintsOnly(
+      IconButtonStyler().constraintsOnly(
         maxWidth: value.width,
         maxHeight: value.height,
       ),

@@ -1,9 +1,9 @@
 part of 'popover.dart';
 
 /// Style configuration for a [RemixPopover] overlay container.
-extension RemixPopoverStylerRemixHelpers on RemixPopoverStyler {
+extension RemixPopoverStylerRemixHelpers on PopoverStyler {
   /// Sets the popover background color.
-  RemixPopoverStyler backgroundColor(Color value) => color(value);
+  PopoverStyler backgroundColor(Color value) => color(value);
 
   /// Creates a [RemixPopover] with this style applied.
   RemixPopover call({

@@ -6,21 +6,21 @@ part of 'radio.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
+mixin _$RadioSpec implements Spec<RadioSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get indicator;
   RemixBoxEffectsSpec? get containerEffects;
 
   @override
-  Type get type => RemixRadioSpec;
+  Type get type => RadioSpec;
 
   @override
-  RemixRadioSpec copyWith({
+  RadioSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicator,
     RemixBoxEffectsSpec? containerEffects,
   }) {
-    return RemixRadioSpec(
+    return RadioSpec(
       container: container ?? this.container,
       indicator: indicator ?? this.indicator,
       containerEffects: containerEffects ?? this.containerEffects,
@@ -28,8 +28,8 @@ mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
   }
 
   @override
-  RemixRadioSpec lerp(RemixRadioSpec? other, double t) {
-    return RemixRadioSpec(
+  RadioSpec lerp(RadioSpec? other, double t) {
+    return RadioSpec(
       container: container.lerp(other?.container, t),
       indicator: indicator.lerp(other?.indicator, t),
       containerEffects: MixOps.lerpSnap(
@@ -46,7 +46,7 @@ mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixRadioSpec &&
+        other is RadioSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -90,9 +90,9 @@ mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixRadioSpec` and migrate the class declaration to `class RemixRadioSpec with _\$RemixRadioSpec`. The `_\$RemixRadioSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$RadioSpec` and migrate the class declaration to `class RadioSpec with _\$RadioSpec`. The `_\$RadioSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixRadioSpecMethods = _$RemixRadioSpec; // ignore: unused_element
+typedef _$RadioSpecMethods = _$RadioSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -193,13 +193,13 @@ class FortalRadio<T> extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
-    with RemixBoxStylerMixin<RemixRadioStyler> {
+class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
+    with RemixBoxStylerMixin<RadioStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
-  const RemixRadioStyler.create({
+  const RadioStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? indicator,
     Prop<RemixBoxEffectsSpec>? containerEffects,
@@ -210,13 +210,13 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
        $indicator = indicator,
        $containerEffects = containerEffects;
 
-  RemixRadioStyler({
+  RadioStyler({
     BoxStyler? container,
     BoxStyler? indicator,
     RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixRadioSpec>>? variants,
+    List<VariantStyle<RadioSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          indicator: Prop.maybeMix(indicator),
@@ -226,119 +226,105 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
          animation: animation,
        );
 
-  factory RemixRadioStyler.container(BoxStyler value) =>
-      RemixRadioStyler().container(value);
-  factory RemixRadioStyler.indicator(BoxStyler value) =>
-      RemixRadioStyler().indicator(value);
-  factory RemixRadioStyler.containerEffects(RemixBoxEffectsMix value) =>
-      RemixRadioStyler().containerEffects(value);
-  factory RemixRadioStyler.alignment(AlignmentGeometry value) =>
-      RemixRadioStyler().alignment(value);
-  factory RemixRadioStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixRadioStyler().padding(value);
-  factory RemixRadioStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixRadioStyler().margin(value);
-  factory RemixRadioStyler.constraints(BoxConstraintsMix value) =>
-      RemixRadioStyler().constraints(value);
-  factory RemixRadioStyler.decoration(DecorationMix value) =>
-      RemixRadioStyler().decoration(value);
-  factory RemixRadioStyler.foregroundDecoration(DecorationMix value) =>
-      RemixRadioStyler().foregroundDecoration(value);
-  factory RemixRadioStyler.clipBehavior(Clip value) =>
-      RemixRadioStyler().clipBehavior(value);
-  factory RemixRadioStyler.color(Color value) =>
-      RemixRadioStyler().color(value);
-  factory RemixRadioStyler.gradient(GradientMix value) =>
-      RemixRadioStyler().gradient(value);
-  factory RemixRadioStyler.border(BoxBorderMix value) =>
-      RemixRadioStyler().border(value);
-  factory RemixRadioStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixRadioStyler().borderRadius(value);
-  factory RemixRadioStyler.elevation(ElevationShadow value) =>
-      RemixRadioStyler().elevation(value);
-  factory RemixRadioStyler.shadow(BoxShadowMix value) =>
-      RemixRadioStyler().shadow(value);
-  factory RemixRadioStyler.shadows(List<BoxShadowMix> value) =>
-      RemixRadioStyler().shadows(value);
-  factory RemixRadioStyler.width(double value) =>
-      RemixRadioStyler().width(value);
-  factory RemixRadioStyler.height(double value) =>
-      RemixRadioStyler().height(value);
-  factory RemixRadioStyler.size(double width, double height) =>
-      RemixRadioStyler().size(width, height);
-  factory RemixRadioStyler.minWidth(double value) =>
-      RemixRadioStyler().minWidth(value);
-  factory RemixRadioStyler.maxWidth(double value) =>
-      RemixRadioStyler().maxWidth(value);
-  factory RemixRadioStyler.minHeight(double value) =>
-      RemixRadioStyler().minHeight(value);
-  factory RemixRadioStyler.maxHeight(double value) =>
-      RemixRadioStyler().maxHeight(value);
-  factory RemixRadioStyler.scale(
-    double scale, {
-    Alignment alignment = .center,
-  }) => RemixRadioStyler().scale(scale, alignment: alignment);
-  factory RemixRadioStyler.rotate(
-    double radians, {
-    Alignment alignment = .center,
-  }) => RemixRadioStyler().rotate(radians, alignment: alignment);
-  factory RemixRadioStyler.translate(double x, double y, [double z = 0.0]) =>
-      RemixRadioStyler().translate(x, y, z);
-  factory RemixRadioStyler.skew(double skewX, double skewY) =>
-      RemixRadioStyler().skew(skewX, skewY);
-  factory RemixRadioStyler.textStyle(TextStyler value) =>
-      RemixRadioStyler().textStyle(value);
-  factory RemixRadioStyler.image(DecorationImageMix value) =>
-      RemixRadioStyler().image(value);
-  factory RemixRadioStyler.shape(ShapeBorderMix value) =>
-      RemixRadioStyler().shape(value);
-  factory RemixRadioStyler.backgroundImage(
+  factory RadioStyler.container(BoxStyler value) =>
+      RadioStyler().container(value);
+  factory RadioStyler.indicator(BoxStyler value) =>
+      RadioStyler().indicator(value);
+  factory RadioStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RadioStyler().containerEffects(value);
+  factory RadioStyler.alignment(AlignmentGeometry value) =>
+      RadioStyler().alignment(value);
+  factory RadioStyler.padding(EdgeInsetsGeometryMix value) =>
+      RadioStyler().padding(value);
+  factory RadioStyler.margin(EdgeInsetsGeometryMix value) =>
+      RadioStyler().margin(value);
+  factory RadioStyler.constraints(BoxConstraintsMix value) =>
+      RadioStyler().constraints(value);
+  factory RadioStyler.decoration(DecorationMix value) =>
+      RadioStyler().decoration(value);
+  factory RadioStyler.foregroundDecoration(DecorationMix value) =>
+      RadioStyler().foregroundDecoration(value);
+  factory RadioStyler.clipBehavior(Clip value) =>
+      RadioStyler().clipBehavior(value);
+  factory RadioStyler.color(Color value) => RadioStyler().color(value);
+  factory RadioStyler.gradient(GradientMix value) =>
+      RadioStyler().gradient(value);
+  factory RadioStyler.border(BoxBorderMix value) => RadioStyler().border(value);
+  factory RadioStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      RadioStyler().borderRadius(value);
+  factory RadioStyler.elevation(ElevationShadow value) =>
+      RadioStyler().elevation(value);
+  factory RadioStyler.shadow(BoxShadowMix value) => RadioStyler().shadow(value);
+  factory RadioStyler.shadows(List<BoxShadowMix> value) =>
+      RadioStyler().shadows(value);
+  factory RadioStyler.width(double value) => RadioStyler().width(value);
+  factory RadioStyler.height(double value) => RadioStyler().height(value);
+  factory RadioStyler.size(double width, double height) =>
+      RadioStyler().size(width, height);
+  factory RadioStyler.minWidth(double value) => RadioStyler().minWidth(value);
+  factory RadioStyler.maxWidth(double value) => RadioStyler().maxWidth(value);
+  factory RadioStyler.minHeight(double value) => RadioStyler().minHeight(value);
+  factory RadioStyler.maxHeight(double value) => RadioStyler().maxHeight(value);
+  factory RadioStyler.scale(double scale, {Alignment alignment = .center}) =>
+      RadioStyler().scale(scale, alignment: alignment);
+  factory RadioStyler.rotate(double radians, {Alignment alignment = .center}) =>
+      RadioStyler().rotate(radians, alignment: alignment);
+  factory RadioStyler.translate(double x, double y, [double z = 0.0]) =>
+      RadioStyler().translate(x, y, z);
+  factory RadioStyler.skew(double skewX, double skewY) =>
+      RadioStyler().skew(skewX, skewY);
+  factory RadioStyler.textStyle(TextStyler value) =>
+      RadioStyler().textStyle(value);
+  factory RadioStyler.image(DecorationImageMix value) =>
+      RadioStyler().image(value);
+  factory RadioStyler.shape(ShapeBorderMix value) => RadioStyler().shape(value);
+  factory RadioStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixRadioStyler().backgroundImage(
+  }) => RadioStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixRadioStyler.backgroundImageUrl(
+  factory RadioStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixRadioStyler().backgroundImageUrl(
+  }) => RadioStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixRadioStyler.backgroundImageAsset(
+  factory RadioStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixRadioStyler().backgroundImageAsset(
+  }) => RadioStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixRadioStyler.linearGradient({
+  factory RadioStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixRadioStyler().linearGradient(
+  }) => RadioStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixRadioStyler.radialGradient({
+  factory RadioStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -346,7 +332,7 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixRadioStyler().radialGradient(
+  }) => RadioStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -355,14 +341,14 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixRadioStyler.sweepGradient({
+  factory RadioStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixRadioStyler().sweepGradient(
+  }) => RadioStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -370,20 +356,20 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixRadioStyler.foregroundLinearGradient({
+  factory RadioStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixRadioStyler().foregroundLinearGradient(
+  }) => RadioStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixRadioStyler.foregroundRadialGradient({
+  factory RadioStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -391,7 +377,7 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixRadioStyler().foregroundRadialGradient(
+  }) => RadioStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -400,14 +386,14 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixRadioStyler.foregroundSweepGradient({
+  factory RadioStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixRadioStyler().foregroundSweepGradient(
+  }) => RadioStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -415,124 +401,124 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixRadioStyler.transform(
+  factory RadioStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixRadioStyler().transform(value, alignment: alignment);
+  }) => RadioStyler().transform(value, alignment: alignment);
 
-  RemixRadioStyler alignment(AlignmentGeometry value) {
+  RadioStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
   }
 
-  RemixRadioStyler padding(EdgeInsetsGeometryMix value) {
+  RadioStyler padding(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().padding(value));
   }
 
-  RemixRadioStyler margin(EdgeInsetsGeometryMix value) {
+  RadioStyler margin(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().margin(value));
   }
 
-  RemixRadioStyler constraints(BoxConstraintsMix value) {
+  RadioStyler constraints(BoxConstraintsMix value) {
     return container(BoxStyler().constraints(value));
   }
 
-  RemixRadioStyler decoration(DecorationMix value) {
+  RadioStyler decoration(DecorationMix value) {
     return container(BoxStyler().decoration(value));
   }
 
-  RemixRadioStyler foregroundDecoration(DecorationMix value) {
+  RadioStyler foregroundDecoration(DecorationMix value) {
     return container(BoxStyler().foregroundDecoration(value));
   }
 
-  RemixRadioStyler clipBehavior(Clip value) {
+  RadioStyler clipBehavior(Clip value) {
     return container(BoxStyler().clipBehavior(value));
   }
 
-  RemixRadioStyler color(Color value) {
+  RadioStyler color(Color value) {
     return container(BoxStyler().color(value));
   }
 
-  RemixRadioStyler gradient(GradientMix value) {
+  RadioStyler gradient(GradientMix value) {
     return container(BoxStyler().gradient(value));
   }
 
-  RemixRadioStyler border(BoxBorderMix value) {
+  RadioStyler border(BoxBorderMix value) {
     return container(BoxStyler().border(value));
   }
 
-  RemixRadioStyler borderRadius(BorderRadiusGeometryMix value) {
+  RadioStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(BoxStyler().borderRadius(value));
   }
 
-  RemixRadioStyler elevation(ElevationShadow value) {
+  RadioStyler elevation(ElevationShadow value) {
     return container(BoxStyler().elevation(value));
   }
 
-  RemixRadioStyler shadow(BoxShadowMix value) {
+  RadioStyler shadow(BoxShadowMix value) {
     return container(BoxStyler().shadow(value));
   }
 
-  RemixRadioStyler shadows(List<BoxShadowMix> value) {
+  RadioStyler shadows(List<BoxShadowMix> value) {
     return container(BoxStyler().shadows(value));
   }
 
-  RemixRadioStyler width(double value) {
+  RadioStyler width(double value) {
     return container(BoxStyler().width(value));
   }
 
-  RemixRadioStyler height(double value) {
+  RadioStyler height(double value) {
     return container(BoxStyler().height(value));
   }
 
-  RemixRadioStyler size(double width, double height) {
+  RadioStyler size(double width, double height) {
     return container(BoxStyler().size(width, height));
   }
 
-  RemixRadioStyler minWidth(double value) {
+  RadioStyler minWidth(double value) {
     return container(BoxStyler().minWidth(value));
   }
 
-  RemixRadioStyler maxWidth(double value) {
+  RadioStyler maxWidth(double value) {
     return container(BoxStyler().maxWidth(value));
   }
 
-  RemixRadioStyler minHeight(double value) {
+  RadioStyler minHeight(double value) {
     return container(BoxStyler().minHeight(value));
   }
 
-  RemixRadioStyler maxHeight(double value) {
+  RadioStyler maxHeight(double value) {
     return container(BoxStyler().maxHeight(value));
   }
 
-  RemixRadioStyler scale(double scale, {Alignment alignment = .center}) {
+  RadioStyler scale(double scale, {Alignment alignment = .center}) {
     return container(BoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixRadioStyler rotate(double radians, {Alignment alignment = .center}) {
+  RadioStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(BoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixRadioStyler translate(double x, double y, [double z = 0.0]) {
+  RadioStyler translate(double x, double y, [double z = 0.0]) {
     return container(BoxStyler().translate(x, y, z));
   }
 
-  RemixRadioStyler skew(double skewX, double skewY) {
+  RadioStyler skew(double skewX, double skewY) {
     return container(BoxStyler().skew(skewX, skewY));
   }
 
-  RemixRadioStyler textStyle(TextStyler value) {
+  RadioStyler textStyle(TextStyler value) {
     return container(BoxStyler().textStyle(value));
   }
 
-  RemixRadioStyler image(DecorationImageMix value) {
+  RadioStyler image(DecorationImageMix value) {
     return container(BoxStyler().image(value));
   }
 
-  RemixRadioStyler shape(ShapeBorderMix value) {
+  RadioStyler shape(ShapeBorderMix value) {
     return container(BoxStyler().shape(value));
   }
 
-  RemixRadioStyler backgroundImage(
+  RadioStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -548,7 +534,7 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     );
   }
 
-  RemixRadioStyler backgroundImageUrl(
+  RadioStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -564,7 +550,7 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     );
   }
 
-  RemixRadioStyler backgroundImageAsset(
+  RadioStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -580,7 +566,7 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     );
   }
 
-  RemixRadioStyler linearGradient({
+  RadioStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -598,7 +584,7 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     );
   }
 
-  RemixRadioStyler radialGradient({
+  RadioStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -620,7 +606,7 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     );
   }
 
-  RemixRadioStyler sweepGradient({
+  RadioStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -640,7 +626,7 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     );
   }
 
-  RemixRadioStyler foregroundLinearGradient({
+  RadioStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -658,7 +644,7 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     );
   }
 
-  RemixRadioStyler foregroundRadialGradient({
+  RadioStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -680,7 +666,7 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     );
   }
 
-  RemixRadioStyler foregroundSweepGradient({
+  RadioStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -700,52 +686,52 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     );
   }
 
-  RemixRadioStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+  RadioStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixRadioStyler container(BoxStyler value) {
-    return merge(RemixRadioStyler(container: value));
+  RadioStyler container(BoxStyler value) {
+    return merge(RadioStyler(container: value));
   }
 
   /// Sets the indicator.
-  RemixRadioStyler indicator(BoxStyler value) {
-    return merge(RemixRadioStyler(indicator: value));
+  RadioStyler indicator(BoxStyler value) {
+    return merge(RadioStyler(indicator: value));
   }
 
   /// Sets the containerEffects.
-  RemixRadioStyler containerEffects(RemixBoxEffectsMix value) {
-    return merge(RemixRadioStyler(containerEffects: value));
+  RadioStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RadioStyler(containerEffects: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixRadioStyler animate(AnimationConfig value) {
-    return merge(RemixRadioStyler(animation: value));
+  RadioStyler animate(AnimationConfig value) {
+    return merge(RadioStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixRadioStyler variants(List<VariantStyle<RemixRadioSpec>> value) {
-    return merge(RemixRadioStyler(variants: value));
+  RadioStyler variants(List<VariantStyle<RadioSpec>> value) {
+    return merge(RadioStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixRadioStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixRadioStyler(modifier: value));
+  RadioStyler wrap(WidgetModifierConfig value) {
+    return merge(RadioStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixRadioStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixRadioStyler(modifier: value));
+  RadioStyler modifier(WidgetModifierConfig value) {
+    return merge(RadioStyler(modifier: value));
   }
 
-  /// Merges with another [RemixRadioStyler].
+  /// Merges with another [RadioStyler].
   @override
-  RemixRadioStyler merge(RemixRadioStyler? other) {
-    return RemixRadioStyler.create(
+  RadioStyler merge(RadioStyler? other) {
+    return RadioStyler.create(
       container: MixOps.merge($container, other?.$container),
       indicator: MixOps.merge($indicator, other?.$indicator),
       containerEffects: MixOps.merge(
@@ -758,10 +744,10 @@ class RemixRadioStyler extends MixStyler<RemixRadioStyler, RemixRadioSpec>
     );
   }
 
-  /// Resolves to [StyleSpec<RemixRadioSpec>] using [context].
+  /// Resolves to [StyleSpec<RadioSpec>] using [context].
   @override
-  StyleSpec<RemixRadioSpec> resolve(BuildContext context) {
-    final spec = RemixRadioSpec(
+  StyleSpec<RadioSpec> resolve(BuildContext context) {
+    final spec = RadioSpec(
       container: MixOps.resolve(context, $container),
       indicator: MixOps.resolve(context, $indicator),
       containerEffects: MixOps.resolve(context, $containerEffects),

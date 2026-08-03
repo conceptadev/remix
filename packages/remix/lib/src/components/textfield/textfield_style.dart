@@ -4,32 +4,32 @@ part of 'textfield.dart';
 ///
 /// Use this class to style the text field container, text, hint text, helper
 /// text, label, cursor, selection behavior, and spacing.
-extension RemixTextFieldStylerRemixHelpers on RemixTextFieldStyler {
+extension RemixTextFieldStylerRemixHelpers on TextFieldStyler {
   /// Sets the editable text color.
   ///
-  /// Use [RemixTextFieldStyler.color] for the generated container color
+  /// Use [TextFieldStyler.color] for the generated container color
   /// shortcut.
-  RemixTextFieldStyler textColor(Color value) {
+  TextFieldStyler textColor(Color value) {
     return merge(
-      RemixTextFieldStyler(
+      TextFieldStyler(
         text: TextStyler(style: TextStyleMix(color: value)),
       ),
     );
   }
 
   /// Sets background color
-  RemixTextFieldStyler backgroundColor(Color value) {
+  TextFieldStyler backgroundColor(Color value) {
     return merge(
-      RemixTextFieldStyler(
+      TextFieldStyler(
         container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets hint text color
-  RemixTextFieldStyler hintColor(Color value) {
+  TextFieldStyler hintColor(Color value) {
     return merge(
-      RemixTextFieldStyler(
+      TextFieldStyler(
         hintText: TextStyler(style: TextStyleMix(color: value)),
       ),
     );
@@ -39,7 +39,7 @@ extension RemixTextFieldStylerRemixHelpers on RemixTextFieldStyler {
   ///
   /// Example:
   /// ```dart
-  /// final textField = RemixTextFieldStyler()
+  /// final textField = TextFieldStyler()
   ///   .backgroundColor(Colors.grey.shade100)
   ///   .borderRadius(BorderRadiusMix.circular(8));
   ///
@@ -172,7 +172,7 @@ extension RemixTextFieldStylerRemixHelpers on RemixTextFieldStyler {
     );
   }
 
-  RemixTextFieldStyler flex(FlexStyler value) {
-    return merge(RemixTextFieldStyler(container: FlexBoxStyler().flex(value)));
+  TextFieldStyler flex(FlexStyler value) {
+    return merge(TextFieldStyler(container: FlexBoxStyler().flex(value)));
   }
 }

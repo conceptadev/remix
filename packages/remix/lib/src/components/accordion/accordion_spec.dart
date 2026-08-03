@@ -2,7 +2,7 @@ part of 'accordion.dart';
 
 /// Resolved visual properties for a [RemixAccordion].
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixAccordionSpec with _$RemixAccordionSpec {
+class AccordionSpec with _$AccordionSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> trigger;
@@ -15,7 +15,7 @@ class RemixAccordionSpec with _$RemixAccordionSpec {
   @override
   final StyleSpec<BoxSpec> content;
 
-  const RemixAccordionSpec({
+  const AccordionSpec({
     StyleSpec<FlexBoxSpec>? trigger,
     StyleSpec<IconSpec>? leadingIcon,
     StyleSpec<TextSpec>? title,
@@ -27,3 +27,9 @@ class RemixAccordionSpec with _$RemixAccordionSpec {
        trailingIcon = trailingIcon ?? const StyleSpec(spec: IconSpec()),
        content = content ?? const StyleSpec(spec: BoxSpec());
 }
+
+/// Backward-compatible name for [AccordionSpec].
+///
+/// The generated style API is based on [AccordionSpec], so resolved values use
+/// `AccordionSpec` as their runtime type.
+typedef RemixAccordionSpec = AccordionSpec;

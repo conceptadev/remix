@@ -5,7 +5,7 @@ enum FortalDialogSize { size1, size2, size3, size4 }
 
 /// Fortal-themed preset for [RemixDialog].
 @MixWidget(target: RemixDialog.new)
-RemixDialogStyler fortalDialogStyle({
+DialogStyler fortalDialogStyle({
   FortalDialogSize size = FortalDialogSize.size3,
 }) {
   final radius = switch (size) {
@@ -19,7 +19,7 @@ RemixDialogStyler fortalDialogStyle({
     FortalDialogSize.size4 => FortalTokens.space6(),
   };
 
-  return RemixDialogStyler()
+  return DialogStyler()
       .title(
         .style(FortalTokens.text5.mix())
             .fontWeight(FortalTokens.fontWeightBold())

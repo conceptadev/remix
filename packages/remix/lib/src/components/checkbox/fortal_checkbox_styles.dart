@@ -8,14 +8,14 @@ enum FortalCheckboxVariant { classic, surface, soft }
 
 /// Fortal recipe for [RemixCheckbox].
 @MixWidget(target: RemixCheckbox.new)
-RemixCheckboxStyler fortalCheckboxStyle({
+CheckboxStyler fortalCheckboxStyle({
   FortalCheckboxVariant variant = .surface,
   FortalCheckboxSize size = .size2,
   bool highContrast = false,
 }) {
   final metrics = _fortalCheckboxMetrics(size);
   final base =
-      RemixCheckboxStyler(
+      CheckboxStyler(
         container: .size(
           metrics.size,
           metrics.size,
@@ -65,11 +65,8 @@ RemixCheckboxStyler fortalCheckboxStyle({
   ),
 };
 
-RemixCheckboxStyler _fortalCheckboxSurface(
-  RemixCheckboxStyler base,
-  bool highContrast,
-) {
-  final selected = RemixCheckboxStyler()
+CheckboxStyler _fortalCheckboxSurface(CheckboxStyler base, bool highContrast) {
+  final selected = CheckboxStyler()
       .color(
         highContrast ? FortalTokens.accent12() : FortalTokens.accentIndicator(),
       )
@@ -111,11 +108,8 @@ RemixCheckboxStyler _fortalCheckboxSurface(
       );
 }
 
-RemixCheckboxStyler _fortalCheckboxClassic(
-  RemixCheckboxStyler base,
-  bool highContrast,
-) {
-  final selected = RemixCheckboxStyler()
+CheckboxStyler _fortalCheckboxClassic(CheckboxStyler base, bool highContrast) {
+  final selected = CheckboxStyler()
       .color(
         highContrast ? FortalTokens.accent12() : FortalTokens.accentIndicator(),
       )
@@ -192,11 +186,8 @@ RemixCheckboxStyler _fortalCheckboxClassic(
       );
 }
 
-RemixCheckboxStyler _fortalCheckboxSoft(
-  RemixCheckboxStyler base,
-  bool highContrast,
-) {
-  final selected = RemixCheckboxStyler().indicatorColor(
+CheckboxStyler _fortalCheckboxSoft(CheckboxStyler base, bool highContrast) {
+  final selected = CheckboxStyler().indicatorColor(
     highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
   );
 

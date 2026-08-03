@@ -7,7 +7,7 @@ const Color _remixSliderDefaultRangeColor = MixColors.black;
 
 /// Resolved visuals for a multi-thumb [RemixSlider].
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixSliderSpec with _$RemixSliderSpec {
+class SliderSpec with _$SliderSpec {
   static const Size defaultThumbSize = _remixSliderDefaultThumbSize;
   static const double defaultTrackStrokeWidth =
       _remixSliderDefaultTrackThickness;
@@ -68,7 +68,7 @@ class RemixSliderSpec with _$RemixSliderSpec {
   @override
   final BlendMode? blendMode;
 
-  const RemixSliderSpec({
+  const SliderSpec({
     StyleSpec<BoxSpec>? track,
     Color? trackColor,
     double? trackWidth,
@@ -95,7 +95,7 @@ class RemixSliderSpec with _$RemixSliderSpec {
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixSliderSpec lerp(RemixSliderSpec? other, double t) {
+  SliderSpec lerp(SliderSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(
@@ -122,3 +122,9 @@ class RemixSliderSpec with _$RemixSliderSpec {
     );
   }
 }
+
+/// Backward-compatible name for [SliderSpec].
+///
+/// The generated style API is based on [SliderSpec], so resolved values use
+/// `SliderSpec` as their runtime type.
+typedef RemixSliderSpec = SliderSpec;

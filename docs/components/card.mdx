@@ -34,8 +34,8 @@ class CardExample extends StatelessWidget {
     );
   }
 
-  RemixCardStyler get style {
-    return RemixCardStyler()
+  CardStyler get style {
+    return CardStyler()
         .size(300, 200)
         .backgroundColor(const Color(0xFF111827))
         .padding(EdgeInsetsGeometryMix.all(24))
@@ -86,8 +86,8 @@ import 'package:remix/remix.dart';
 RemixCard remixCardConstructor({
   Key? key,
   Widget? child,
-  RemixCardStyler style = const RemixCardStyler.create(),
-  RemixCardSpec? styleSpec,
+  CardStyler style = const CardStyler.create(),
+  CardSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -96,11 +96,11 @@ RemixCard remixCardConstructor({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixCardStyler`
+#### `style` → `CardStyler`
 
 Optional. The style configuration for the card. Customize colors, sizing, borders, and state-based styling.
 
-#### `styleSpec` → `RemixCardSpec?`
+#### `styleSpec` → `CardSpec?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 

@@ -106,8 +106,8 @@ MenuItemStyler _fortalMenuItemStyler(
       .onDisabled(disabled);
 }
 
-RemixDividerStyler _fortalMenuDividerStyler(_FortalMenuMetrics metrics) =>
-    RemixDividerStyler()
+DividerStyler _fortalMenuDividerStyler(_FortalMenuMetrics metrics) =>
+    DividerStyler()
         .height(1)
         .marginOnly(
           left: metrics.leadingInset,

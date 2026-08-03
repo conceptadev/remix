@@ -30,8 +30,8 @@ class DividerExample extends StatelessWidget {
     );
   }
 
-  RemixDividerStyler get style {
-    return RemixDividerStyler()
+  DividerStyler get style {
+    return DividerStyler()
         .height(1)
         .color(Colors.grey.shade400)
         .width(300);
@@ -78,8 +78,8 @@ import 'package:remix/remix.dart';
 
 RemixDivider remixDividerConstructor({
   Key? key,
-  RemixDividerStyler style = const RemixDividerStyler.create(),
-  RemixDividerSpec? styleSpec,
+  DividerStyler style = const DividerStyler.create(),
+  DividerSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -88,11 +88,11 @@ RemixDivider remixDividerConstructor({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixDividerStyler`
+#### `style` → `DividerStyler`
 
 Optional. The style configuration for the divider. Customize color, thickness, and spacing.
 
-#### `styleSpec` → `RemixDividerSpec?`
+#### `styleSpec` → `DividerSpec?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 

@@ -8,7 +8,7 @@ enum FortalProgressVariant { classic, surface, soft }
 
 /// Fortal-themed preset for [RemixProgress].
 @MixWidget(target: RemixProgress.new)
-RemixProgressStyler fortalProgressStyle({
+ProgressStyler fortalProgressStyle({
   FortalProgressVariant variant = .surface,
   FortalProgressSize size = .size2,
   bool highContrast = false,
@@ -20,9 +20,9 @@ RemixProgressStyler fortalProgressStyle({
   };
 }
 
-RemixProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
+ProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
   final metrics = _fortalProgressMetrics(size);
-  return RemixProgressStyler(
+  return ProgressStyler(
     container: .width(.infinity)
         .height(metrics.height)
         .borderRadiusAll(metrics.radius)
@@ -40,7 +40,7 @@ RemixProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
   );
 }
 
-RemixProgressStyler _fortalProgressClassicStyler(
+ProgressStyler _fortalProgressClassicStyler(
   FortalProgressSize size, {
   required bool highContrast,
 }) {
@@ -62,7 +62,7 @@ RemixProgressStyler _fortalProgressClassicStyler(
       );
 }
 
-RemixProgressStyler _fortalProgressSurfaceStyler(
+ProgressStyler _fortalProgressSurfaceStyler(
   FortalProgressSize size, {
   required bool highContrast,
 }) {
@@ -90,7 +90,7 @@ RemixProgressStyler _fortalProgressSurfaceStyler(
       );
 }
 
-RemixProgressStyler _fortalProgressSoftStyler(
+ProgressStyler _fortalProgressSoftStyler(
   FortalProgressSize size, {
   required bool highContrast,
 }) {

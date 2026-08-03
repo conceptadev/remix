@@ -5,10 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixAvatarSpec', () {
+  group('AvatarSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        const spec = RemixAvatarSpec();
+        const spec = AvatarSpec();
 
         expect(spec.container, isA<StyleSpec<BoxSpec>>());
         expect(spec.label, isA<StyleSpec<TextSpec>>());
@@ -18,7 +18,7 @@ void main() {
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
-        const originalSpec = RemixAvatarSpec();
+        const originalSpec = AvatarSpec();
         final newContainer = StyleSpec(spec: BoxSpec());
 
         final updatedSpec = originalSpec.copyWith(container: newContainer);
@@ -30,7 +30,7 @@ void main() {
       });
 
       test('returns new instance with updated text property', () {
-        const originalSpec = RemixAvatarSpec();
+        const originalSpec = AvatarSpec();
         final newText = StyleSpec(spec: TextSpec());
 
         final updatedSpec = originalSpec.copyWith(label: newText);
@@ -42,7 +42,7 @@ void main() {
       });
 
       test('returns new instance with updated icon property', () {
-        const originalSpec = RemixAvatarSpec();
+        const originalSpec = AvatarSpec();
         final newIcon = StyleSpec(spec: IconSpec());
 
         final updatedSpec = originalSpec.copyWith(icon: newIcon);
@@ -54,7 +54,7 @@ void main() {
       });
 
       test('returns new instance with multiple updated properties', () {
-        const originalSpec = RemixAvatarSpec();
+        const originalSpec = AvatarSpec();
         final newContainer = StyleSpec(spec: BoxSpec());
         final newText = StyleSpec(spec: TextSpec());
         final newIcon = StyleSpec(spec: IconSpec());
@@ -72,7 +72,7 @@ void main() {
       });
 
       test('preserves immutability - original spec unchanged', () {
-        const originalSpec = RemixAvatarSpec();
+        const originalSpec = AvatarSpec();
         final originalContainer = originalSpec.container;
         final originalText = originalSpec.label;
         final originalIcon = originalSpec.icon;
@@ -90,7 +90,7 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        const spec = RemixAvatarSpec();
+        const spec = AvatarSpec();
         const other = null;
 
         final result = spec.lerp(other, 0.5);
@@ -106,12 +106,12 @@ void main() {
         final textSpec2 = StyleSpec(spec: TextSpec());
         final iconSpec2 = StyleSpec(spec: IconSpec());
 
-        final spec1 = RemixAvatarSpec(
+        final spec1 = AvatarSpec(
           container: containerSpec1,
           label: textSpec1,
           icon: iconSpec1,
         );
-        final spec2 = RemixAvatarSpec(
+        final spec2 = AvatarSpec(
           container: containerSpec2,
           label: textSpec2,
           icon: iconSpec2,
@@ -134,12 +134,12 @@ void main() {
         final textSpec2 = StyleSpec(spec: TextSpec());
         final iconSpec2 = StyleSpec(spec: IconSpec());
 
-        final spec1 = RemixAvatarSpec(
+        final spec1 = AvatarSpec(
           container: containerSpec1,
           label: textSpec1,
           icon: iconSpec1,
         );
-        final spec2 = RemixAvatarSpec(
+        final spec2 = AvatarSpec(
           container: containerSpec2,
           label: textSpec2,
           icon: iconSpec2,
@@ -162,12 +162,12 @@ void main() {
         final textSpec2 = StyleSpec(spec: TextSpec());
         final iconSpec2 = StyleSpec(spec: IconSpec());
 
-        final spec1 = RemixAvatarSpec(
+        final spec1 = AvatarSpec(
           container: containerSpec1,
           label: textSpec1,
           icon: iconSpec1,
         );
-        final spec2 = RemixAvatarSpec(
+        final spec2 = AvatarSpec(
           container: containerSpec2,
           label: textSpec2,
           icon: iconSpec2,
@@ -177,14 +177,14 @@ void main() {
 
         expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
-        expect(result, isA<RemixAvatarSpec>());
+        expect(result, isA<AvatarSpec>());
       });
     });
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixAvatarSpec();
-        const spec2 = RemixAvatarSpec();
+        const spec1 = AvatarSpec();
+        const spec2 = AvatarSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
@@ -196,14 +196,14 @@ void main() {
           spec: TextSpec(style: TextStyle(fontSize: 16)),
         );
 
-        final spec1 = RemixAvatarSpec(label: textSpec1);
-        final spec2 = RemixAvatarSpec(label: textSpec2);
+        final spec1 = AvatarSpec(label: textSpec1);
+        final spec2 = AvatarSpec(label: textSpec2);
 
         expect(spec1, isNot(equals(spec2)));
       });
 
       test('props list contains all properties', () {
-        const spec = RemixAvatarSpec();
+        const spec = AvatarSpec();
 
         expect(spec.props, hasLength(3));
         expect(spec.props, contains(spec.container));
@@ -214,7 +214,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = RemixAvatarSpec();
+        const spec = AvatarSpec();
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -223,7 +223,7 @@ void main() {
       });
 
       test('debugFillProperties includes all properties', () {
-        const spec = RemixAvatarSpec();
+        const spec = AvatarSpec();
         final builder = DiagnosticPropertiesBuilder();
 
         spec.debugFillProperties(builder);
@@ -239,16 +239,16 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        const spec = RemixAvatarSpec();
+        const spec = AvatarSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
       });
 
       test('toString includes class name', () {
-        const spec = RemixAvatarSpec();
+        const spec = AvatarSpec();
 
-        expect(spec.toString(), contains('RemixAvatarSpec'));
+        expect(spec.toString(), contains('AvatarSpec'));
       });
     });
   });

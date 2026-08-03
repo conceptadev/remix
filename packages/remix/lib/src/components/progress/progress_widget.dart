@@ -17,14 +17,14 @@ class RemixProgress extends StatelessWidget {
     required this.value,
     this.semanticsLabel,
     this.semanticsValue,
-    this.style = const RemixProgressStyler.create(),
+    this.style = const ProgressStyler.create(),
     this.styleSpec,
   }) : assert(
          value >= 0 && value <= 1,
          'Progress value must be between 0 and 1',
        );
 
-  static final styleFrom = RemixProgressStyler.new;
+  static final styleFrom = ProgressStyler.new;
 
   /// The progress value between 0 and 1.
   ///
@@ -43,14 +43,14 @@ class RemixProgress extends StatelessWidget {
   final String? semanticsValue;
 
   /// The style configuration for the progress bar.
-  final RemixProgressStyler style;
+  final ProgressStyler style;
 
   /// Optional raw style spec that bypasses fluent style resolution.
-  final RemixProgressSpec? styleSpec;
+  final ProgressSpec? styleSpec;
 
   @override
   Widget build(BuildContext context) {
-    final progress = RemixStyleSpecBuilder<RemixProgressSpec>(
+    final progress = RemixStyleSpecBuilder<ProgressSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {

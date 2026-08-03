@@ -44,8 +44,8 @@ class AvatarExample extends StatelessWidget {
     );
   }
 
-  RemixAvatarStyler get labelStyle {
-    return RemixAvatarStyler()
+  AvatarStyler get labelStyle {
+    return AvatarStyler()
         .backgroundColor(Colors.deepPurpleAccent)
         .size(50, 50)
         .shapeCircle()
@@ -55,8 +55,8 @@ class AvatarExample extends StatelessWidget {
         .labelFontSize(15);
   }
 
-  RemixAvatarStyler get iconStyle {
-    return RemixAvatarStyler()
+  AvatarStyler get iconStyle {
+    return AvatarStyler()
         .backgroundColor(Colors.deepOrangeAccent)
         .size(70, 70)
         .foregroundColor(Colors.white)
@@ -65,8 +65,8 @@ class AvatarExample extends StatelessWidget {
         .wrap(.clipOval());
   }
 
-  RemixAvatarStyler get image {
-    return RemixAvatarStyler()
+  AvatarStyler get image {
+    return AvatarStyler()
         .size(90, 90)
         .backgroundImageUrl('https://i.pravatar.cc/150?img=48')
         .shapeCircle();
@@ -131,8 +131,8 @@ RemixAvatar remixAvatarConstructor({
   RemixAvatarLabelBuilder? labelBuilder,
   IconData? icon,
   RemixAvatarIconBuilder? iconBuilder,
-  RemixAvatarStyler style = const RemixAvatarStyler.create(),
-  RemixAvatarSpec? styleSpec,
+  AvatarStyler style = const AvatarStyler.create(),
+  AvatarSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -141,11 +141,11 @@ RemixAvatar remixAvatarConstructor({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixAvatarStyler`
+#### `style` → `AvatarStyler`
 
 Optional. The style configuration for the avatar. Customize colors, sizing, shape, and state-based styling.
 
-#### `styleSpec` → `RemixAvatarSpec?`
+#### `styleSpec` → `AvatarSpec?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 

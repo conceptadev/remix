@@ -6,7 +6,7 @@ part of 'dialog.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
+mixin _$DialogSpec implements Spec<DialogSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<TextSpec> get title;
@@ -14,17 +14,17 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get actions;
 
   @override
-  Type get type => RemixDialogSpec;
+  Type get type => DialogSpec;
 
   @override
-  RemixDialogSpec copyWith({
+  DialogSpec copyWith({
     StyleSpec<BoxSpec>? container,
     RemixBoxEffectsSpec? containerEffects,
     StyleSpec<TextSpec>? title,
     StyleSpec<TextSpec>? description,
     StyleSpec<FlexBoxSpec>? actions,
   }) {
-    return RemixDialogSpec(
+    return DialogSpec(
       container: container ?? this.container,
       containerEffects: containerEffects ?? this.containerEffects,
       title: title ?? this.title,
@@ -34,8 +34,8 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   }
 
   @override
-  RemixDialogSpec lerp(RemixDialogSpec? other, double t) {
-    return RemixDialogSpec(
+  DialogSpec lerp(DialogSpec? other, double t) {
+    return DialogSpec(
       container: container.lerp(other?.container, t),
       containerEffects: MixOps.lerpSnap(
         containerEffects,
@@ -60,7 +60,7 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixDialogSpec &&
+        other is DialogSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -106,9 +106,9 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixDialogSpec` and migrate the class declaration to `class RemixDialogSpec with _\$RemixDialogSpec`. The `_\$RemixDialogSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$DialogSpec` and migrate the class declaration to `class DialogSpec with _\$DialogSpec`. The `_\$DialogSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixDialogSpecMethods = _$RemixDialogSpec; // ignore: unused_element
+typedef _$DialogSpecMethods = _$DialogSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -164,15 +164,15 @@ class FortalDialog extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
-    with RemixBoxStylerMixin<RemixDialogStyler> {
+class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
+    with RemixBoxStylerMixin<DialogStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<TextSpec>>? $title;
   final Prop<StyleSpec<TextSpec>>? $description;
   final Prop<StyleSpec<FlexBoxSpec>>? $actions;
 
-  const RemixDialogStyler.create({
+  const DialogStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<TextSpec>>? title,
@@ -187,7 +187,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
        $description = description,
        $actions = actions;
 
-  RemixDialogStyler({
+  DialogStyler({
     BoxStyler? container,
     RemixBoxEffectsMix? containerEffects,
     TextStyler? title,
@@ -195,7 +195,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     FlexBoxStyler? actions,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixDialogSpec>>? variants,
+    List<VariantStyle<DialogSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          containerEffects: Prop.maybeMix(containerEffects),
@@ -207,123 +207,115 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
          animation: animation,
        );
 
-  factory RemixDialogStyler.container(BoxStyler value) =>
-      RemixDialogStyler().container(value);
-  factory RemixDialogStyler.containerEffects(RemixBoxEffectsMix value) =>
-      RemixDialogStyler().containerEffects(value);
-  factory RemixDialogStyler.title(TextStyler value) =>
-      RemixDialogStyler().title(value);
-  factory RemixDialogStyler.description(TextStyler value) =>
-      RemixDialogStyler().description(value);
-  factory RemixDialogStyler.actions(FlexBoxStyler value) =>
-      RemixDialogStyler().actions(value);
-  factory RemixDialogStyler.alignment(AlignmentGeometry value) =>
-      RemixDialogStyler().alignment(value);
-  factory RemixDialogStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixDialogStyler().padding(value);
-  factory RemixDialogStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixDialogStyler().margin(value);
-  factory RemixDialogStyler.constraints(BoxConstraintsMix value) =>
-      RemixDialogStyler().constraints(value);
-  factory RemixDialogStyler.decoration(DecorationMix value) =>
-      RemixDialogStyler().decoration(value);
-  factory RemixDialogStyler.foregroundDecoration(DecorationMix value) =>
-      RemixDialogStyler().foregroundDecoration(value);
-  factory RemixDialogStyler.clipBehavior(Clip value) =>
-      RemixDialogStyler().clipBehavior(value);
-  factory RemixDialogStyler.color(Color value) =>
-      RemixDialogStyler().color(value);
-  factory RemixDialogStyler.gradient(GradientMix value) =>
-      RemixDialogStyler().gradient(value);
-  factory RemixDialogStyler.border(BoxBorderMix value) =>
-      RemixDialogStyler().border(value);
-  factory RemixDialogStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixDialogStyler().borderRadius(value);
-  factory RemixDialogStyler.elevation(ElevationShadow value) =>
-      RemixDialogStyler().elevation(value);
-  factory RemixDialogStyler.shadow(BoxShadowMix value) =>
-      RemixDialogStyler().shadow(value);
-  factory RemixDialogStyler.shadows(List<BoxShadowMix> value) =>
-      RemixDialogStyler().shadows(value);
-  factory RemixDialogStyler.width(double value) =>
-      RemixDialogStyler().width(value);
-  factory RemixDialogStyler.height(double value) =>
-      RemixDialogStyler().height(value);
-  factory RemixDialogStyler.size(double width, double height) =>
-      RemixDialogStyler().size(width, height);
-  factory RemixDialogStyler.minWidth(double value) =>
-      RemixDialogStyler().minWidth(value);
-  factory RemixDialogStyler.maxWidth(double value) =>
-      RemixDialogStyler().maxWidth(value);
-  factory RemixDialogStyler.minHeight(double value) =>
-      RemixDialogStyler().minHeight(value);
-  factory RemixDialogStyler.maxHeight(double value) =>
-      RemixDialogStyler().maxHeight(value);
-  factory RemixDialogStyler.scale(
-    double scale, {
-    Alignment alignment = .center,
-  }) => RemixDialogStyler().scale(scale, alignment: alignment);
-  factory RemixDialogStyler.rotate(
+  factory DialogStyler.container(BoxStyler value) =>
+      DialogStyler().container(value);
+  factory DialogStyler.containerEffects(RemixBoxEffectsMix value) =>
+      DialogStyler().containerEffects(value);
+  factory DialogStyler.title(TextStyler value) => DialogStyler().title(value);
+  factory DialogStyler.description(TextStyler value) =>
+      DialogStyler().description(value);
+  factory DialogStyler.actions(FlexBoxStyler value) =>
+      DialogStyler().actions(value);
+  factory DialogStyler.alignment(AlignmentGeometry value) =>
+      DialogStyler().alignment(value);
+  factory DialogStyler.padding(EdgeInsetsGeometryMix value) =>
+      DialogStyler().padding(value);
+  factory DialogStyler.margin(EdgeInsetsGeometryMix value) =>
+      DialogStyler().margin(value);
+  factory DialogStyler.constraints(BoxConstraintsMix value) =>
+      DialogStyler().constraints(value);
+  factory DialogStyler.decoration(DecorationMix value) =>
+      DialogStyler().decoration(value);
+  factory DialogStyler.foregroundDecoration(DecorationMix value) =>
+      DialogStyler().foregroundDecoration(value);
+  factory DialogStyler.clipBehavior(Clip value) =>
+      DialogStyler().clipBehavior(value);
+  factory DialogStyler.color(Color value) => DialogStyler().color(value);
+  factory DialogStyler.gradient(GradientMix value) =>
+      DialogStyler().gradient(value);
+  factory DialogStyler.border(BoxBorderMix value) =>
+      DialogStyler().border(value);
+  factory DialogStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      DialogStyler().borderRadius(value);
+  factory DialogStyler.elevation(ElevationShadow value) =>
+      DialogStyler().elevation(value);
+  factory DialogStyler.shadow(BoxShadowMix value) =>
+      DialogStyler().shadow(value);
+  factory DialogStyler.shadows(List<BoxShadowMix> value) =>
+      DialogStyler().shadows(value);
+  factory DialogStyler.width(double value) => DialogStyler().width(value);
+  factory DialogStyler.height(double value) => DialogStyler().height(value);
+  factory DialogStyler.size(double width, double height) =>
+      DialogStyler().size(width, height);
+  factory DialogStyler.minWidth(double value) => DialogStyler().minWidth(value);
+  factory DialogStyler.maxWidth(double value) => DialogStyler().maxWidth(value);
+  factory DialogStyler.minHeight(double value) =>
+      DialogStyler().minHeight(value);
+  factory DialogStyler.maxHeight(double value) =>
+      DialogStyler().maxHeight(value);
+  factory DialogStyler.scale(double scale, {Alignment alignment = .center}) =>
+      DialogStyler().scale(scale, alignment: alignment);
+  factory DialogStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixDialogStyler().rotate(radians, alignment: alignment);
-  factory RemixDialogStyler.translate(double x, double y, [double z = 0.0]) =>
-      RemixDialogStyler().translate(x, y, z);
-  factory RemixDialogStyler.skew(double skewX, double skewY) =>
-      RemixDialogStyler().skew(skewX, skewY);
-  factory RemixDialogStyler.textStyle(TextStyler value) =>
-      RemixDialogStyler().textStyle(value);
-  factory RemixDialogStyler.image(DecorationImageMix value) =>
-      RemixDialogStyler().image(value);
-  factory RemixDialogStyler.shape(ShapeBorderMix value) =>
-      RemixDialogStyler().shape(value);
-  factory RemixDialogStyler.backgroundImage(
+  }) => DialogStyler().rotate(radians, alignment: alignment);
+  factory DialogStyler.translate(double x, double y, [double z = 0.0]) =>
+      DialogStyler().translate(x, y, z);
+  factory DialogStyler.skew(double skewX, double skewY) =>
+      DialogStyler().skew(skewX, skewY);
+  factory DialogStyler.textStyle(TextStyler value) =>
+      DialogStyler().textStyle(value);
+  factory DialogStyler.image(DecorationImageMix value) =>
+      DialogStyler().image(value);
+  factory DialogStyler.shape(ShapeBorderMix value) =>
+      DialogStyler().shape(value);
+  factory DialogStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixDialogStyler().backgroundImage(
+  }) => DialogStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixDialogStyler.backgroundImageUrl(
+  factory DialogStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixDialogStyler().backgroundImageUrl(
+  }) => DialogStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixDialogStyler.backgroundImageAsset(
+  factory DialogStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixDialogStyler().backgroundImageAsset(
+  }) => DialogStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixDialogStyler.linearGradient({
+  factory DialogStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixDialogStyler().linearGradient(
+  }) => DialogStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixDialogStyler.radialGradient({
+  factory DialogStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -331,7 +323,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixDialogStyler().radialGradient(
+  }) => DialogStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -340,14 +332,14 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixDialogStyler.sweepGradient({
+  factory DialogStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixDialogStyler().sweepGradient(
+  }) => DialogStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -355,20 +347,20 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixDialogStyler.foregroundLinearGradient({
+  factory DialogStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixDialogStyler().foregroundLinearGradient(
+  }) => DialogStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixDialogStyler.foregroundRadialGradient({
+  factory DialogStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -376,7 +368,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixDialogStyler().foregroundRadialGradient(
+  }) => DialogStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -385,14 +377,14 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixDialogStyler.foregroundSweepGradient({
+  factory DialogStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixDialogStyler().foregroundSweepGradient(
+  }) => DialogStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -400,124 +392,124 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixDialogStyler.transform(
+  factory DialogStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixDialogStyler().transform(value, alignment: alignment);
+  }) => DialogStyler().transform(value, alignment: alignment);
 
-  RemixDialogStyler alignment(AlignmentGeometry value) {
+  DialogStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
   }
 
-  RemixDialogStyler padding(EdgeInsetsGeometryMix value) {
+  DialogStyler padding(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().padding(value));
   }
 
-  RemixDialogStyler margin(EdgeInsetsGeometryMix value) {
+  DialogStyler margin(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().margin(value));
   }
 
-  RemixDialogStyler constraints(BoxConstraintsMix value) {
+  DialogStyler constraints(BoxConstraintsMix value) {
     return container(BoxStyler().constraints(value));
   }
 
-  RemixDialogStyler decoration(DecorationMix value) {
+  DialogStyler decoration(DecorationMix value) {
     return container(BoxStyler().decoration(value));
   }
 
-  RemixDialogStyler foregroundDecoration(DecorationMix value) {
+  DialogStyler foregroundDecoration(DecorationMix value) {
     return container(BoxStyler().foregroundDecoration(value));
   }
 
-  RemixDialogStyler clipBehavior(Clip value) {
+  DialogStyler clipBehavior(Clip value) {
     return container(BoxStyler().clipBehavior(value));
   }
 
-  RemixDialogStyler color(Color value) {
+  DialogStyler color(Color value) {
     return container(BoxStyler().color(value));
   }
 
-  RemixDialogStyler gradient(GradientMix value) {
+  DialogStyler gradient(GradientMix value) {
     return container(BoxStyler().gradient(value));
   }
 
-  RemixDialogStyler border(BoxBorderMix value) {
+  DialogStyler border(BoxBorderMix value) {
     return container(BoxStyler().border(value));
   }
 
-  RemixDialogStyler borderRadius(BorderRadiusGeometryMix value) {
+  DialogStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(BoxStyler().borderRadius(value));
   }
 
-  RemixDialogStyler elevation(ElevationShadow value) {
+  DialogStyler elevation(ElevationShadow value) {
     return container(BoxStyler().elevation(value));
   }
 
-  RemixDialogStyler shadow(BoxShadowMix value) {
+  DialogStyler shadow(BoxShadowMix value) {
     return container(BoxStyler().shadow(value));
   }
 
-  RemixDialogStyler shadows(List<BoxShadowMix> value) {
+  DialogStyler shadows(List<BoxShadowMix> value) {
     return container(BoxStyler().shadows(value));
   }
 
-  RemixDialogStyler width(double value) {
+  DialogStyler width(double value) {
     return container(BoxStyler().width(value));
   }
 
-  RemixDialogStyler height(double value) {
+  DialogStyler height(double value) {
     return container(BoxStyler().height(value));
   }
 
-  RemixDialogStyler size(double width, double height) {
+  DialogStyler size(double width, double height) {
     return container(BoxStyler().size(width, height));
   }
 
-  RemixDialogStyler minWidth(double value) {
+  DialogStyler minWidth(double value) {
     return container(BoxStyler().minWidth(value));
   }
 
-  RemixDialogStyler maxWidth(double value) {
+  DialogStyler maxWidth(double value) {
     return container(BoxStyler().maxWidth(value));
   }
 
-  RemixDialogStyler minHeight(double value) {
+  DialogStyler minHeight(double value) {
     return container(BoxStyler().minHeight(value));
   }
 
-  RemixDialogStyler maxHeight(double value) {
+  DialogStyler maxHeight(double value) {
     return container(BoxStyler().maxHeight(value));
   }
 
-  RemixDialogStyler scale(double scale, {Alignment alignment = .center}) {
+  DialogStyler scale(double scale, {Alignment alignment = .center}) {
     return container(BoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixDialogStyler rotate(double radians, {Alignment alignment = .center}) {
+  DialogStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(BoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixDialogStyler translate(double x, double y, [double z = 0.0]) {
+  DialogStyler translate(double x, double y, [double z = 0.0]) {
     return container(BoxStyler().translate(x, y, z));
   }
 
-  RemixDialogStyler skew(double skewX, double skewY) {
+  DialogStyler skew(double skewX, double skewY) {
     return container(BoxStyler().skew(skewX, skewY));
   }
 
-  RemixDialogStyler textStyle(TextStyler value) {
+  DialogStyler textStyle(TextStyler value) {
     return container(BoxStyler().textStyle(value));
   }
 
-  RemixDialogStyler image(DecorationImageMix value) {
+  DialogStyler image(DecorationImageMix value) {
     return container(BoxStyler().image(value));
   }
 
-  RemixDialogStyler shape(ShapeBorderMix value) {
+  DialogStyler shape(ShapeBorderMix value) {
     return container(BoxStyler().shape(value));
   }
 
-  RemixDialogStyler backgroundImage(
+  DialogStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -533,7 +525,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     );
   }
 
-  RemixDialogStyler backgroundImageUrl(
+  DialogStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -549,7 +541,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     );
   }
 
-  RemixDialogStyler backgroundImageAsset(
+  DialogStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -565,7 +557,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     );
   }
 
-  RemixDialogStyler linearGradient({
+  DialogStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -583,7 +575,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     );
   }
 
-  RemixDialogStyler radialGradient({
+  DialogStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -605,7 +597,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     );
   }
 
-  RemixDialogStyler sweepGradient({
+  DialogStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -625,7 +617,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     );
   }
 
-  RemixDialogStyler foregroundLinearGradient({
+  DialogStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -643,7 +635,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     );
   }
 
-  RemixDialogStyler foregroundRadialGradient({
+  DialogStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -665,7 +657,7 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     );
   }
 
-  RemixDialogStyler foregroundSweepGradient({
+  DialogStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -685,62 +677,62 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     );
   }
 
-  RemixDialogStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+  DialogStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixDialogStyler container(BoxStyler value) {
-    return merge(RemixDialogStyler(container: value));
+  DialogStyler container(BoxStyler value) {
+    return merge(DialogStyler(container: value));
   }
 
   /// Sets the containerEffects.
-  RemixDialogStyler containerEffects(RemixBoxEffectsMix value) {
-    return merge(RemixDialogStyler(containerEffects: value));
+  DialogStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(DialogStyler(containerEffects: value));
   }
 
   /// Sets the title.
-  RemixDialogStyler title(TextStyler value) {
-    return merge(RemixDialogStyler(title: value));
+  DialogStyler title(TextStyler value) {
+    return merge(DialogStyler(title: value));
   }
 
   /// Sets the description.
-  RemixDialogStyler description(TextStyler value) {
-    return merge(RemixDialogStyler(description: value));
+  DialogStyler description(TextStyler value) {
+    return merge(DialogStyler(description: value));
   }
 
   /// Sets the actions.
-  RemixDialogStyler actions(FlexBoxStyler value) {
-    return merge(RemixDialogStyler(actions: value));
+  DialogStyler actions(FlexBoxStyler value) {
+    return merge(DialogStyler(actions: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixDialogStyler animate(AnimationConfig value) {
-    return merge(RemixDialogStyler(animation: value));
+  DialogStyler animate(AnimationConfig value) {
+    return merge(DialogStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixDialogStyler variants(List<VariantStyle<RemixDialogSpec>> value) {
-    return merge(RemixDialogStyler(variants: value));
+  DialogStyler variants(List<VariantStyle<DialogSpec>> value) {
+    return merge(DialogStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixDialogStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixDialogStyler(modifier: value));
+  DialogStyler wrap(WidgetModifierConfig value) {
+    return merge(DialogStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixDialogStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixDialogStyler(modifier: value));
+  DialogStyler modifier(WidgetModifierConfig value) {
+    return merge(DialogStyler(modifier: value));
   }
 
-  /// Merges with another [RemixDialogStyler].
+  /// Merges with another [DialogStyler].
   @override
-  RemixDialogStyler merge(RemixDialogStyler? other) {
-    return RemixDialogStyler.create(
+  DialogStyler merge(DialogStyler? other) {
+    return DialogStyler.create(
       container: MixOps.merge($container, other?.$container),
       containerEffects: MixOps.merge(
         $containerEffects,
@@ -755,10 +747,10 @@ class RemixDialogStyler extends MixStyler<RemixDialogStyler, RemixDialogSpec>
     );
   }
 
-  /// Resolves to [StyleSpec<RemixDialogSpec>] using [context].
+  /// Resolves to [StyleSpec<DialogSpec>] using [context].
   @override
-  StyleSpec<RemixDialogSpec> resolve(BuildContext context) {
-    final spec = RemixDialogSpec(
+  StyleSpec<DialogSpec> resolve(BuildContext context) {
+    final spec = DialogSpec(
       container: MixOps.resolve(context, $container),
       containerEffects: MixOps.resolve(context, $containerEffects),
       title: MixOps.resolve(context, $title),

@@ -4,21 +4,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixButtonSpec', () {
+  group('ButtonSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        const spec = RemixButtonSpec();
+        const spec = ButtonSpec();
 
         expect(spec.container, isA<StyleSpec<FlexBoxSpec>>());
         expect(spec.label, isA<StyleSpec<TextSpec>>());
         expect(spec.icon, isA<StyleSpec<IconSpec>>());
-        expect(spec.spinner, isA<StyleSpec<RemixSpinnerSpec>>());
+        expect(spec.spinner, isA<StyleSpec<SpinnerSpec>>());
       });
     });
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
-        const originalSpec = RemixButtonSpec();
+        const originalSpec = ButtonSpec();
         final newContainer = StyleSpec(spec: FlexBoxSpec());
         final newLabel = StyleSpec(spec: TextSpec());
 
@@ -37,7 +37,7 @@ void main() {
       test(
         'returns new instance with no changes when no parameters provided',
         () {
-          const originalSpec = RemixButtonSpec();
+          const originalSpec = ButtonSpec();
 
           final updatedSpec = originalSpec.copyWith();
 
@@ -50,7 +50,7 @@ void main() {
       );
 
       test('preserves immutability - original spec unchanged', () {
-        const originalSpec = RemixButtonSpec();
+        const originalSpec = ButtonSpec();
         final originalContainer = originalSpec.container;
         final newContainer = StyleSpec(spec: FlexBoxSpec());
 
@@ -64,7 +64,7 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        const spec = RemixButtonSpec();
+        const spec = ButtonSpec();
         const other = null;
 
         final result = spec.lerp(other, 0.5);
@@ -73,11 +73,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = RemixButtonSpec(
+        final spec1 = ButtonSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
         );
-        final spec2 = RemixButtonSpec(
+        final spec2 = ButtonSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
         );
@@ -92,11 +92,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = RemixButtonSpec(
+        final spec1 = ButtonSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
         );
-        final spec2 = RemixButtonSpec(
+        final spec2 = ButtonSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
         );
@@ -111,11 +111,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.5', () {
-        final spec1 = RemixButtonSpec(
+        final spec1 = ButtonSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
         );
-        final spec2 = RemixButtonSpec(
+        final spec2 = ButtonSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
         );
@@ -124,14 +124,14 @@ void main() {
 
         expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
-        expect(result, isA<RemixButtonSpec>());
+        expect(result, isA<ButtonSpec>());
       });
     });
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixButtonSpec();
-        const spec2 = RemixButtonSpec();
+        const spec1 = ButtonSpec();
+        const spec2 = ButtonSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
@@ -159,8 +159,8 @@ void main() {
           ),
         );
 
-        final spec1 = RemixButtonSpec(container: customContainer);
-        final spec2 = RemixButtonSpec(container: customContainer);
+        final spec1 = ButtonSpec(container: customContainer);
+        final spec2 = ButtonSpec(container: customContainer);
 
         // Both specs use default values, so they should be equal
         expect(spec1, equals(spec2));
@@ -168,7 +168,7 @@ void main() {
       });
 
       test('props list contains all properties', () {
-        const spec = RemixButtonSpec();
+        const spec = ButtonSpec();
 
         expect(spec.props, hasLength(6));
         expect(spec.props, contains(spec.container));
@@ -181,7 +181,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = RemixButtonSpec();
+        const spec = ButtonSpec();
 
         // Verify that debugFillProperties doesn't throw
         expect(
@@ -191,14 +191,14 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        const spec = RemixButtonSpec();
+        const spec = ButtonSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
       });
 
       test('diagnostic properties are properly formatted', () {
-        const spec = RemixButtonSpec();
+        const spec = ButtonSpec();
         final builder = DiagnosticPropertiesBuilder();
 
         spec.debugFillProperties(builder);
@@ -218,7 +218,7 @@ void main() {
 
     group('Edge Cases and Error Handling', () {
       test('copyWith handles null parameters correctly', () {
-        const spec = RemixButtonSpec();
+        const spec = ButtonSpec();
         final originalContainer = spec.container;
 
         final updatedSpec = spec.copyWith(container: null);

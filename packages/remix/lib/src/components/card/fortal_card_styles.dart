@@ -8,12 +8,12 @@ enum FortalCardVariant { surface, classic, ghost }
 
 /// Fortal-themed Card with the Radix size and variant contract.
 @MixWidget(target: RemixCard.new)
-RemixCardStyler fortalCardStyle({
+CardStyler fortalCardStyle({
   FortalCardVariant variant = .surface,
   FortalCardSize size = .size1,
 }) {
   final metrics = _fortalCardMetrics(size);
-  final base = RemixCardStyler()
+  final base = CardStyler()
       .paddingAll(metrics.padding)
       .borderRadiusAll(metrics.radius)
       .clipBehavior(Clip.antiAlias)
@@ -67,23 +67,23 @@ RemixCardStyler fortalCardStyle({
   ),
 };
 
-RemixCardStyler _fortalCardSurface(RemixCardStyler base) {
+CardStyler _fortalCardSurface(CardStyler base) {
   base = base.containerEffects(
     RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
   );
-  final open = RemixCardStyler()
+  final open = CardStyler()
       .containerEffects(RemixBoxEffectsMix(behindContent: _fortalCardPanel()))
       .containerEffects(
         RemixBoxEffectsMix(
           overContent: _fortalCardSurfaceStroke(FortalTokens.grayStroke7()),
         ),
       );
-  final activeFocus = RemixCardStyler()
+  final activeFocus = CardStyler()
       .containerEffects(
         RemixBoxEffectsMix(behindContent: _fortalCardActiveFocus()),
       )
       .onSelected(open);
-  final pressed = RemixCardStyler()
+  final pressed = CardStyler()
       .containerEffects(
         RemixBoxEffectsMix(
           overContent: _fortalCardSurfaceStroke(FortalTokens.grayStroke6()),
@@ -104,11 +104,11 @@ RemixCardStyler _fortalCardSurface(RemixCardStyler base) {
       .onSelected(open.onPressed(open));
 }
 
-RemixCardStyler _fortalCardClassic(RemixCardStyler base) {
+CardStyler _fortalCardClassic(CardStyler base) {
   base = base.containerEffects(
     RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
   );
-  final open = RemixCardStyler()
+  final open = CardStyler()
       .animate(AnimationConfig.ease(const Duration(milliseconds: 40)))
       .containerEffects(
         RemixBoxEffectsMix(
@@ -124,7 +124,7 @@ RemixCardStyler _fortalCardClassic(RemixCardStyler base) {
           ),
         ),
       );
-  final pressed = RemixCardStyler()
+  final pressed = CardStyler()
       .animate(AnimationConfig.ease(const Duration(milliseconds: 40)))
       .containerEffects(
         RemixBoxEffectsMix(
@@ -168,12 +168,10 @@ RemixCardStyler _fortalCardClassic(RemixCardStyler base) {
       .onSelected(open.onPressed(open));
 }
 
-RemixCardStyler _fortalCardGhost(RemixCardStyler base, double ghostMargin) {
-  final focused = RemixCardStyler().color(FortalTokens.accentA2());
-  final open = RemixCardStyler()
-      .color(FortalTokens.grayA3())
-      .onFocused(focused);
-  final pressed = RemixCardStyler()
+CardStyler _fortalCardGhost(CardStyler base, double ghostMargin) {
+  final focused = CardStyler().color(FortalTokens.accentA2());
+  final open = CardStyler().color(FortalTokens.grayA3()).onFocused(focused);
+  final pressed = CardStyler()
       .color(FortalTokens.grayA4())
       .onFocused(focused)
       .onSelected(open);

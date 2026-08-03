@@ -20,10 +20,7 @@ class DividerExample extends StatelessWidget {
     return Center(child: RemixDivider(style: style));
   }
 
-  RemixDividerStyler get style {
-    return RemixDividerStyler()
-        .height(1)
-        .color(Colors.grey.shade400)
-        .width(300);
+  DividerStyler get style {
+    return DividerStyler().height(1).color(Colors.grey.shade400).width(300);
   }
 }

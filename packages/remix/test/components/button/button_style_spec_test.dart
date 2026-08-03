@@ -9,7 +9,7 @@ void main() {
     tester,
   ) async {
     const labelColor = Color(0xFF112233);
-    final styleSpec = RemixButtonSpec(
+    final styleSpec = ButtonSpec(
       label: StyleSpec(
         spec: TextSpec(style: TextStyle(color: labelColor, fontSize: 18)),
       ),

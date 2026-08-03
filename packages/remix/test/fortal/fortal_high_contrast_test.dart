@@ -567,7 +567,7 @@ double _contrastRatio(Color first, Color second) {
 
 Color? _textColor(StyleSpec<TextSpec> style) => style.spec.style?.color;
 
-Color? _tabUnderlineColor(StyleSpec<RemixTabSpec> style) {
+Color? _tabUnderlineColor(StyleSpec<TabSpec> style) {
   final modifiers = style.widgetModifiers?.whereType<BoxModifier>().toList();
   final decoration = modifiers?.single.spec.decoration as BoxDecoration?;
   final border = decoration?.border;

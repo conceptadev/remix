@@ -411,9 +411,7 @@ void main() {
             RemixMenuItem<String>(
               value: 'copy',
               label: 'Copy',
-              style: MenuItemStyler().padding(
-                EdgeInsetsGeometryMix.all(12.0),
-              ),
+              style: MenuItemStyler().padding(EdgeInsetsGeometryMix.all(12.0)),
             ),
           ],
         ),
@@ -452,9 +450,7 @@ void main() {
             RemixMenuItem<String>(
               value: 'copy',
               label: 'Copy',
-              style: MenuItemStyler().label(
-                TextStyler().color(Colors.blue),
-              ),
+              style: MenuItemStyler().label(TextStyler().color(Colors.blue)),
             ),
           ],
           style: MenuStyler().item(
@@ -480,9 +476,7 @@ void main() {
             RemixMenuDivider<String>(),
             RemixMenuItem<String>(value: 'paste', label: 'Paste'),
           ],
-          style: MenuStyler().divider(
-            RemixDividerStyler().color(Colors.purple),
-          ),
+          style: MenuStyler().divider(DividerStyler().color(Colors.purple)),
         ),
       );
       await tester.pumpAndSettle();
@@ -510,9 +504,7 @@ void main() {
             RemixMenuItem(
               value: 'copy',
               label: 'Copy',
-              style: MenuItemStyler().label(
-                TextStyler().color(Colors.green),
-              ),
+              style: MenuItemStyler().label(TextStyler().color(Colors.green)),
             ),
           ],
           styleSpec: const MenuSpec(

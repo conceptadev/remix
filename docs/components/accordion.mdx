@@ -73,14 +73,14 @@ class _AccordionExampleState extends State<AccordionExample> {
     );
   }
 
-  RemixAccordionStyler get itemStyle {
-    return RemixAccordionStyler()
+  AccordionStyler get itemStyle {
+    return AccordionStyler()
         .content(BoxStyler().paddingX(16).paddingTop(8))
         .wrap(.clipRRect(borderRadius: BorderRadiusGeometryMix.circular(8)))
         .paddingX(16)
         .paddingY(14)
         .borderRounded(8)
-        .onHovered(RemixAccordionStyler().backgroundColor(Colors.grey.shade100))
+        .onHovered(AccordionStyler().backgroundColor(Colors.grey.shade100))
         .decoration(
           BoxDecorationMix(
             color: Colors.white,
@@ -199,8 +199,8 @@ RemixAccordion<T> remixAccordionConstructor<T>({
   String? semanticLabel,
   Widget Function(Widget, Animation<double>) transitionBuilder =
       RemixAccordion.defaultAccordionTransitionBuilder,
-  RemixAccordionStyler style = const RemixAccordionStyler.create(),
-  RemixAccordionSpec? styleSpec,
+  AccordionStyler style = const AccordionStyler.create(),
+  AccordionSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -272,11 +272,11 @@ Optional. Called when the header's pressed state changes.
 
 Optional. Semantic label announced for the header.
 
-#### `style` → `RemixAccordionStyler`
+#### `style` → `AccordionStyler`
 
 Optional. The style configuration for the accordion item.
 
-#### `styleSpec` → `RemixAccordionSpec?`
+#### `styleSpec` → `AccordionSpec?`
 
 Optional. A raw resolved style spec that bypasses fluent style resolution.
 
@@ -398,19 +398,19 @@ Sets expanded content padding.
 
 Sets expanded content decoration.
 
-#### `onExpanded<T>(RemixAccordionStyler value)`
+#### `onExpanded<T>(AccordionStyler value)`
 
 Applies a style while the item is expanded.
 
-#### `onCollapsed<T>(RemixAccordionStyler value)`
+#### `onCollapsed<T>(AccordionStyler value)`
 
 Applies a style while the item is collapsed.
 
-#### `onCanCollapse(RemixAccordionStyler value)`
+#### `onCanCollapse(AccordionStyler value)`
 
 Applies a style while the item can be collapsed.
 
-#### `onCanExpand<T>(RemixAccordionStyler value)`
+#### `onCanExpand<T>(AccordionStyler value)`
 
 Applies a style while the item can be expanded.
 
@@ -418,7 +418,7 @@ Applies a style while the item can be expanded.
 
 Configures implicit animation for style transitions.
 
-#### `variants(List<VariantStyle<RemixAccordionSpec>> value)`
+#### `variants(List<VariantStyle<AccordionSpec>> value)`
 
 Sets custom style variants.
 

@@ -26,7 +26,7 @@ enum FortalRadioVariant {
 
 /// Fortal-themed preset for [RemixRadio].
 @MixWidget(target: RemixRadio.new)
-RemixRadioStyler fortalRadioStyle({
+RadioStyler fortalRadioStyle({
   FortalRadioVariant variant = .surface,
   FortalRadioSize size = .size2,
   bool highContrast = false,
@@ -38,9 +38,9 @@ RemixRadioStyler fortalRadioStyle({
   };
 }
 
-RemixRadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
+RadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
   final metrics = _fortalRadioMetrics(size);
-  return RemixRadioStyler(
+  return RadioStyler(
     container: .size(
       metrics.size,
       metrics.size,
@@ -67,7 +67,7 @@ RemixRadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
   );
 }
 
-RemixRadioStyler _fortalRadioClassicStyler(
+RadioStyler _fortalRadioClassicStyler(
   FortalRadioSize size, {
   required bool highContrast,
 }) {
@@ -146,7 +146,7 @@ RemixRadioStyler _fortalRadioClassicStyler(
       );
 }
 
-RemixRadioStyler _fortalRadioSurfaceStyler(
+RadioStyler _fortalRadioSurfaceStyler(
   FortalRadioSize size, {
   required bool highContrast,
 }) {
@@ -197,7 +197,7 @@ RemixRadioStyler _fortalRadioSurfaceStyler(
       );
 }
 
-RemixRadioStyler _fortalRadioSoftStyler(
+RadioStyler _fortalRadioSoftStyler(
   FortalRadioSize size, {
   required bool highContrast,
 }) {

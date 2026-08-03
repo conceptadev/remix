@@ -6,24 +6,23 @@ part of 'icon_button.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixIconButtonSpec
-    implements Spec<RemixIconButtonSpec>, Diagnosticable {
+mixin _$IconButtonSpec implements Spec<IconButtonSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<IconSpec> get icon;
-  StyleSpec<RemixSpinnerSpec> get spinner;
+  StyleSpec<SpinnerSpec> get spinner;
   RemixBoxEffectsSpec? get containerEffects;
 
   @override
-  Type get type => RemixIconButtonSpec;
+  Type get type => IconButtonSpec;
 
   @override
-  RemixIconButtonSpec copyWith({
+  IconButtonSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<IconSpec>? icon,
-    StyleSpec<RemixSpinnerSpec>? spinner,
+    StyleSpec<SpinnerSpec>? spinner,
     RemixBoxEffectsSpec? containerEffects,
   }) {
-    return RemixIconButtonSpec(
+    return IconButtonSpec(
       container: container ?? this.container,
       icon: icon ?? this.icon,
       spinner: spinner ?? this.spinner,
@@ -32,8 +31,8 @@ mixin _$RemixIconButtonSpec
   }
 
   @override
-  RemixIconButtonSpec lerp(RemixIconButtonSpec? other, double t) {
-    return RemixIconButtonSpec(
+  IconButtonSpec lerp(IconButtonSpec? other, double t) {
+    return IconButtonSpec(
       container: container.lerp(other?.container, t),
       icon: icon.lerp(other?.icon, t),
       spinner: spinner.lerp(other?.spinner, t),
@@ -51,7 +50,7 @@ mixin _$RemixIconButtonSpec
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixIconButtonSpec &&
+        other is IconButtonSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -96,9 +95,9 @@ mixin _$RemixIconButtonSpec
 }
 
 @Deprecated(
-  'Rename to `_\$RemixIconButtonSpec` and migrate the class declaration to `class RemixIconButtonSpec with _\$RemixIconButtonSpec`. The `_\$RemixIconButtonSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$IconButtonSpec` and migrate the class declaration to `class IconButtonSpec with _\$IconButtonSpec`. The `_\$IconButtonSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixIconButtonSpecMethods = _$RemixIconButtonSpec; // ignore: unused_element
+typedef _$IconButtonSpecMethods = _$IconButtonSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -312,20 +311,19 @@ class FortalIconButton extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixIconButtonStyler
-    extends MixStyler<RemixIconButtonStyler, RemixIconButtonSpec>
+class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     with
-        RemixBoxStylerMixin<RemixIconButtonStyler>,
-        IconStyleMixin<RemixIconButtonStyler> {
+        RemixBoxStylerMixin<IconButtonStyler>,
+        IconStyleMixin<IconButtonStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<IconSpec>>? $icon;
-  final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
+  final Prop<StyleSpec<SpinnerSpec>>? $spinner;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
-  const RemixIconButtonStyler.create({
+  const IconButtonStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<IconSpec>>? icon,
-    Prop<StyleSpec<RemixSpinnerSpec>>? spinner,
+    Prop<StyleSpec<SpinnerSpec>>? spinner,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
     super.modifier,
@@ -335,14 +333,14 @@ class RemixIconButtonStyler
        $spinner = spinner,
        $containerEffects = containerEffects;
 
-  RemixIconButtonStyler({
+  IconButtonStyler({
     BoxStyler? container,
     IconStyler? icon,
-    RemixSpinnerStyler? spinner,
+    SpinnerStyler? spinner,
     RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixIconButtonSpec>>? variants,
+    List<VariantStyle<IconButtonSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          icon: Prop.maybeMix(icon),
@@ -353,124 +351,121 @@ class RemixIconButtonStyler
          animation: animation,
        );
 
-  factory RemixIconButtonStyler.container(BoxStyler value) =>
-      RemixIconButtonStyler().container(value);
-  factory RemixIconButtonStyler.icon(IconStyler value) =>
-      RemixIconButtonStyler().icon(value);
-  factory RemixIconButtonStyler.spinner(RemixSpinnerStyler value) =>
-      RemixIconButtonStyler().spinner(value);
-  factory RemixIconButtonStyler.containerEffects(RemixBoxEffectsMix value) =>
-      RemixIconButtonStyler().containerEffects(value);
-  factory RemixIconButtonStyler.alignment(AlignmentGeometry value) =>
-      RemixIconButtonStyler().alignment(value);
-  factory RemixIconButtonStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixIconButtonStyler().padding(value);
-  factory RemixIconButtonStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixIconButtonStyler().margin(value);
-  factory RemixIconButtonStyler.constraints(BoxConstraintsMix value) =>
-      RemixIconButtonStyler().constraints(value);
-  factory RemixIconButtonStyler.decoration(DecorationMix value) =>
-      RemixIconButtonStyler().decoration(value);
-  factory RemixIconButtonStyler.foregroundDecoration(DecorationMix value) =>
-      RemixIconButtonStyler().foregroundDecoration(value);
-  factory RemixIconButtonStyler.clipBehavior(Clip value) =>
-      RemixIconButtonStyler().clipBehavior(value);
-  factory RemixIconButtonStyler.color(Color value) =>
-      RemixIconButtonStyler().color(value);
-  factory RemixIconButtonStyler.gradient(GradientMix value) =>
-      RemixIconButtonStyler().gradient(value);
-  factory RemixIconButtonStyler.border(BoxBorderMix value) =>
-      RemixIconButtonStyler().border(value);
-  factory RemixIconButtonStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixIconButtonStyler().borderRadius(value);
-  factory RemixIconButtonStyler.elevation(ElevationShadow value) =>
-      RemixIconButtonStyler().elevation(value);
-  factory RemixIconButtonStyler.shadow(BoxShadowMix value) =>
-      RemixIconButtonStyler().shadow(value);
-  factory RemixIconButtonStyler.shadows(List<BoxShadowMix> value) =>
-      RemixIconButtonStyler().shadows(value);
-  factory RemixIconButtonStyler.width(double value) =>
-      RemixIconButtonStyler().width(value);
-  factory RemixIconButtonStyler.height(double value) =>
-      RemixIconButtonStyler().height(value);
-  factory RemixIconButtonStyler.size(double width, double height) =>
-      RemixIconButtonStyler().size(width, height);
-  factory RemixIconButtonStyler.minWidth(double value) =>
-      RemixIconButtonStyler().minWidth(value);
-  factory RemixIconButtonStyler.maxWidth(double value) =>
-      RemixIconButtonStyler().maxWidth(value);
-  factory RemixIconButtonStyler.minHeight(double value) =>
-      RemixIconButtonStyler().minHeight(value);
-  factory RemixIconButtonStyler.maxHeight(double value) =>
-      RemixIconButtonStyler().maxHeight(value);
-  factory RemixIconButtonStyler.scale(
+  factory IconButtonStyler.container(BoxStyler value) =>
+      IconButtonStyler().container(value);
+  factory IconButtonStyler.icon(IconStyler value) =>
+      IconButtonStyler().icon(value);
+  factory IconButtonStyler.spinner(SpinnerStyler value) =>
+      IconButtonStyler().spinner(value);
+  factory IconButtonStyler.containerEffects(RemixBoxEffectsMix value) =>
+      IconButtonStyler().containerEffects(value);
+  factory IconButtonStyler.alignment(AlignmentGeometry value) =>
+      IconButtonStyler().alignment(value);
+  factory IconButtonStyler.padding(EdgeInsetsGeometryMix value) =>
+      IconButtonStyler().padding(value);
+  factory IconButtonStyler.margin(EdgeInsetsGeometryMix value) =>
+      IconButtonStyler().margin(value);
+  factory IconButtonStyler.constraints(BoxConstraintsMix value) =>
+      IconButtonStyler().constraints(value);
+  factory IconButtonStyler.decoration(DecorationMix value) =>
+      IconButtonStyler().decoration(value);
+  factory IconButtonStyler.foregroundDecoration(DecorationMix value) =>
+      IconButtonStyler().foregroundDecoration(value);
+  factory IconButtonStyler.clipBehavior(Clip value) =>
+      IconButtonStyler().clipBehavior(value);
+  factory IconButtonStyler.color(Color value) =>
+      IconButtonStyler().color(value);
+  factory IconButtonStyler.gradient(GradientMix value) =>
+      IconButtonStyler().gradient(value);
+  factory IconButtonStyler.border(BoxBorderMix value) =>
+      IconButtonStyler().border(value);
+  factory IconButtonStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      IconButtonStyler().borderRadius(value);
+  factory IconButtonStyler.elevation(ElevationShadow value) =>
+      IconButtonStyler().elevation(value);
+  factory IconButtonStyler.shadow(BoxShadowMix value) =>
+      IconButtonStyler().shadow(value);
+  factory IconButtonStyler.shadows(List<BoxShadowMix> value) =>
+      IconButtonStyler().shadows(value);
+  factory IconButtonStyler.width(double value) =>
+      IconButtonStyler().width(value);
+  factory IconButtonStyler.height(double value) =>
+      IconButtonStyler().height(value);
+  factory IconButtonStyler.size(double width, double height) =>
+      IconButtonStyler().size(width, height);
+  factory IconButtonStyler.minWidth(double value) =>
+      IconButtonStyler().minWidth(value);
+  factory IconButtonStyler.maxWidth(double value) =>
+      IconButtonStyler().maxWidth(value);
+  factory IconButtonStyler.minHeight(double value) =>
+      IconButtonStyler().minHeight(value);
+  factory IconButtonStyler.maxHeight(double value) =>
+      IconButtonStyler().maxHeight(value);
+  factory IconButtonStyler.scale(
     double scale, {
     Alignment alignment = .center,
-  }) => RemixIconButtonStyler().scale(scale, alignment: alignment);
-  factory RemixIconButtonStyler.rotate(
+  }) => IconButtonStyler().scale(scale, alignment: alignment);
+  factory IconButtonStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixIconButtonStyler().rotate(radians, alignment: alignment);
-  factory RemixIconButtonStyler.translate(
-    double x,
-    double y, [
-    double z = 0.0,
-  ]) => RemixIconButtonStyler().translate(x, y, z);
-  factory RemixIconButtonStyler.skew(double skewX, double skewY) =>
-      RemixIconButtonStyler().skew(skewX, skewY);
-  factory RemixIconButtonStyler.textStyle(TextStyler value) =>
-      RemixIconButtonStyler().textStyle(value);
-  factory RemixIconButtonStyler.image(DecorationImageMix value) =>
-      RemixIconButtonStyler().image(value);
-  factory RemixIconButtonStyler.shape(ShapeBorderMix value) =>
-      RemixIconButtonStyler().shape(value);
-  factory RemixIconButtonStyler.backgroundImage(
+  }) => IconButtonStyler().rotate(radians, alignment: alignment);
+  factory IconButtonStyler.translate(double x, double y, [double z = 0.0]) =>
+      IconButtonStyler().translate(x, y, z);
+  factory IconButtonStyler.skew(double skewX, double skewY) =>
+      IconButtonStyler().skew(skewX, skewY);
+  factory IconButtonStyler.textStyle(TextStyler value) =>
+      IconButtonStyler().textStyle(value);
+  factory IconButtonStyler.image(DecorationImageMix value) =>
+      IconButtonStyler().image(value);
+  factory IconButtonStyler.shape(ShapeBorderMix value) =>
+      IconButtonStyler().shape(value);
+  factory IconButtonStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixIconButtonStyler().backgroundImage(
+  }) => IconButtonStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixIconButtonStyler.backgroundImageUrl(
+  factory IconButtonStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixIconButtonStyler().backgroundImageUrl(
+  }) => IconButtonStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixIconButtonStyler.backgroundImageAsset(
+  factory IconButtonStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixIconButtonStyler().backgroundImageAsset(
+  }) => IconButtonStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixIconButtonStyler.linearGradient({
+  factory IconButtonStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixIconButtonStyler().linearGradient(
+  }) => IconButtonStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixIconButtonStyler.radialGradient({
+  factory IconButtonStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -478,7 +473,7 @@ class RemixIconButtonStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixIconButtonStyler().radialGradient(
+  }) => IconButtonStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -487,14 +482,14 @@ class RemixIconButtonStyler
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixIconButtonStyler.sweepGradient({
+  factory IconButtonStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixIconButtonStyler().sweepGradient(
+  }) => IconButtonStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -502,20 +497,20 @@ class RemixIconButtonStyler
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixIconButtonStyler.foregroundLinearGradient({
+  factory IconButtonStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixIconButtonStyler().foregroundLinearGradient(
+  }) => IconButtonStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixIconButtonStyler.foregroundRadialGradient({
+  factory IconButtonStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -523,7 +518,7 @@ class RemixIconButtonStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixIconButtonStyler().foregroundRadialGradient(
+  }) => IconButtonStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -532,14 +527,14 @@ class RemixIconButtonStyler
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixIconButtonStyler.foregroundSweepGradient({
+  factory IconButtonStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixIconButtonStyler().foregroundSweepGradient(
+  }) => IconButtonStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -547,127 +542,124 @@ class RemixIconButtonStyler
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixIconButtonStyler.transform(
+  factory IconButtonStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixIconButtonStyler().transform(value, alignment: alignment);
+  }) => IconButtonStyler().transform(value, alignment: alignment);
 
-  RemixIconButtonStyler alignment(AlignmentGeometry value) {
+  IconButtonStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
   }
 
-  RemixIconButtonStyler padding(EdgeInsetsGeometryMix value) {
+  IconButtonStyler padding(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().padding(value));
   }
 
-  RemixIconButtonStyler margin(EdgeInsetsGeometryMix value) {
+  IconButtonStyler margin(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().margin(value));
   }
 
-  RemixIconButtonStyler constraints(BoxConstraintsMix value) {
+  IconButtonStyler constraints(BoxConstraintsMix value) {
     return container(BoxStyler().constraints(value));
   }
 
-  RemixIconButtonStyler decoration(DecorationMix value) {
+  IconButtonStyler decoration(DecorationMix value) {
     return container(BoxStyler().decoration(value));
   }
 
-  RemixIconButtonStyler foregroundDecoration(DecorationMix value) {
+  IconButtonStyler foregroundDecoration(DecorationMix value) {
     return container(BoxStyler().foregroundDecoration(value));
   }
 
-  RemixIconButtonStyler clipBehavior(Clip value) {
+  IconButtonStyler clipBehavior(Clip value) {
     return container(BoxStyler().clipBehavior(value));
   }
 
-  RemixIconButtonStyler color(Color value) {
+  IconButtonStyler color(Color value) {
     return container(BoxStyler().color(value));
   }
 
-  RemixIconButtonStyler gradient(GradientMix value) {
+  IconButtonStyler gradient(GradientMix value) {
     return container(BoxStyler().gradient(value));
   }
 
-  RemixIconButtonStyler border(BoxBorderMix value) {
+  IconButtonStyler border(BoxBorderMix value) {
     return container(BoxStyler().border(value));
   }
 
-  RemixIconButtonStyler borderRadius(BorderRadiusGeometryMix value) {
+  IconButtonStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(BoxStyler().borderRadius(value));
   }
 
-  RemixIconButtonStyler elevation(ElevationShadow value) {
+  IconButtonStyler elevation(ElevationShadow value) {
     return container(BoxStyler().elevation(value));
   }
 
-  RemixIconButtonStyler shadow(BoxShadowMix value) {
+  IconButtonStyler shadow(BoxShadowMix value) {
     return container(BoxStyler().shadow(value));
   }
 
-  RemixIconButtonStyler shadows(List<BoxShadowMix> value) {
+  IconButtonStyler shadows(List<BoxShadowMix> value) {
     return container(BoxStyler().shadows(value));
   }
 
-  RemixIconButtonStyler width(double value) {
+  IconButtonStyler width(double value) {
     return container(BoxStyler().width(value));
   }
 
-  RemixIconButtonStyler height(double value) {
+  IconButtonStyler height(double value) {
     return container(BoxStyler().height(value));
   }
 
-  RemixIconButtonStyler size(double width, double height) {
+  IconButtonStyler size(double width, double height) {
     return container(BoxStyler().size(width, height));
   }
 
-  RemixIconButtonStyler minWidth(double value) {
+  IconButtonStyler minWidth(double value) {
     return container(BoxStyler().minWidth(value));
   }
 
-  RemixIconButtonStyler maxWidth(double value) {
+  IconButtonStyler maxWidth(double value) {
     return container(BoxStyler().maxWidth(value));
   }
 
-  RemixIconButtonStyler minHeight(double value) {
+  IconButtonStyler minHeight(double value) {
     return container(BoxStyler().minHeight(value));
   }
 
-  RemixIconButtonStyler maxHeight(double value) {
+  IconButtonStyler maxHeight(double value) {
     return container(BoxStyler().maxHeight(value));
   }
 
-  RemixIconButtonStyler scale(double scale, {Alignment alignment = .center}) {
+  IconButtonStyler scale(double scale, {Alignment alignment = .center}) {
     return container(BoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixIconButtonStyler rotate(
-    double radians, {
-    Alignment alignment = .center,
-  }) {
+  IconButtonStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(BoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixIconButtonStyler translate(double x, double y, [double z = 0.0]) {
+  IconButtonStyler translate(double x, double y, [double z = 0.0]) {
     return container(BoxStyler().translate(x, y, z));
   }
 
-  RemixIconButtonStyler skew(double skewX, double skewY) {
+  IconButtonStyler skew(double skewX, double skewY) {
     return container(BoxStyler().skew(skewX, skewY));
   }
 
-  RemixIconButtonStyler textStyle(TextStyler value) {
+  IconButtonStyler textStyle(TextStyler value) {
     return container(BoxStyler().textStyle(value));
   }
 
-  RemixIconButtonStyler image(DecorationImageMix value) {
+  IconButtonStyler image(DecorationImageMix value) {
     return container(BoxStyler().image(value));
   }
 
-  RemixIconButtonStyler shape(ShapeBorderMix value) {
+  IconButtonStyler shape(ShapeBorderMix value) {
     return container(BoxStyler().shape(value));
   }
 
-  RemixIconButtonStyler backgroundImage(
+  IconButtonStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -683,7 +675,7 @@ class RemixIconButtonStyler
     );
   }
 
-  RemixIconButtonStyler backgroundImageUrl(
+  IconButtonStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -699,7 +691,7 @@ class RemixIconButtonStyler
     );
   }
 
-  RemixIconButtonStyler backgroundImageAsset(
+  IconButtonStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -715,7 +707,7 @@ class RemixIconButtonStyler
     );
   }
 
-  RemixIconButtonStyler linearGradient({
+  IconButtonStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -733,7 +725,7 @@ class RemixIconButtonStyler
     );
   }
 
-  RemixIconButtonStyler radialGradient({
+  IconButtonStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -755,7 +747,7 @@ class RemixIconButtonStyler
     );
   }
 
-  RemixIconButtonStyler sweepGradient({
+  IconButtonStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -775,7 +767,7 @@ class RemixIconButtonStyler
     );
   }
 
-  RemixIconButtonStyler foregroundLinearGradient({
+  IconButtonStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -793,7 +785,7 @@ class RemixIconButtonStyler
     );
   }
 
-  RemixIconButtonStyler foregroundRadialGradient({
+  IconButtonStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -815,7 +807,7 @@ class RemixIconButtonStyler
     );
   }
 
-  RemixIconButtonStyler foregroundSweepGradient({
+  IconButtonStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -835,63 +827,58 @@ class RemixIconButtonStyler
     );
   }
 
-  RemixIconButtonStyler transform(
-    Matrix4 value, {
-    Alignment alignment = .center,
-  }) {
+  IconButtonStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixIconButtonStyler container(BoxStyler value) {
-    return merge(RemixIconButtonStyler(container: value));
+  IconButtonStyler container(BoxStyler value) {
+    return merge(IconButtonStyler(container: value));
   }
 
   /// Sets the icon.
   @override
-  RemixIconButtonStyler icon(IconStyler value) {
-    return merge(RemixIconButtonStyler(icon: value));
+  IconButtonStyler icon(IconStyler value) {
+    return merge(IconButtonStyler(icon: value));
   }
 
   /// Sets the spinner.
-  RemixIconButtonStyler spinner(RemixSpinnerStyler value) {
-    return merge(RemixIconButtonStyler(spinner: value));
+  IconButtonStyler spinner(SpinnerStyler value) {
+    return merge(IconButtonStyler(spinner: value));
   }
 
   /// Sets the containerEffects.
-  RemixIconButtonStyler containerEffects(RemixBoxEffectsMix value) {
-    return merge(RemixIconButtonStyler(containerEffects: value));
+  IconButtonStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(IconButtonStyler(containerEffects: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixIconButtonStyler animate(AnimationConfig value) {
-    return merge(RemixIconButtonStyler(animation: value));
+  IconButtonStyler animate(AnimationConfig value) {
+    return merge(IconButtonStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixIconButtonStyler variants(
-    List<VariantStyle<RemixIconButtonSpec>> value,
-  ) {
-    return merge(RemixIconButtonStyler(variants: value));
+  IconButtonStyler variants(List<VariantStyle<IconButtonSpec>> value) {
+    return merge(IconButtonStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixIconButtonStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixIconButtonStyler(modifier: value));
+  IconButtonStyler wrap(WidgetModifierConfig value) {
+    return merge(IconButtonStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixIconButtonStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixIconButtonStyler(modifier: value));
+  IconButtonStyler modifier(WidgetModifierConfig value) {
+    return merge(IconButtonStyler(modifier: value));
   }
 
-  /// Merges with another [RemixIconButtonStyler].
+  /// Merges with another [IconButtonStyler].
   @override
-  RemixIconButtonStyler merge(RemixIconButtonStyler? other) {
-    return RemixIconButtonStyler.create(
+  IconButtonStyler merge(IconButtonStyler? other) {
+    return IconButtonStyler.create(
       container: MixOps.merge($container, other?.$container),
       icon: MixOps.merge($icon, other?.$icon),
       spinner: MixOps.merge($spinner, other?.$spinner),
@@ -905,10 +892,10 @@ class RemixIconButtonStyler
     );
   }
 
-  /// Resolves to [StyleSpec<RemixIconButtonSpec>] using [context].
+  /// Resolves to [StyleSpec<IconButtonSpec>] using [context].
   @override
-  StyleSpec<RemixIconButtonSpec> resolve(BuildContext context) {
-    final spec = RemixIconButtonSpec(
+  StyleSpec<IconButtonSpec> resolve(BuildContext context) {
+    final spec = IconButtonSpec(
       container: MixOps.resolve(context, $container),
       icon: MixOps.resolve(context, $icon),
       spinner: MixOps.resolve(context, $spinner),

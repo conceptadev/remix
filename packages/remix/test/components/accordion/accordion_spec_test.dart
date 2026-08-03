@@ -4,10 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixAccordionSpec', () {
+  group('AccordionSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        const spec = RemixAccordionSpec();
+        const spec = AccordionSpec();
 
         expect(spec.trigger, isA<StyleSpec<FlexBoxSpec>>());
         expect(spec.leadingIcon, isA<StyleSpec<IconSpec>>());
@@ -20,10 +20,7 @@ void main() {
         final customTrigger = StyleSpec(spec: FlexBoxSpec());
         final customTitle = StyleSpec(spec: TextSpec());
 
-        final spec = RemixAccordionSpec(
-          trigger: customTrigger,
-          title: customTitle,
-        );
+        final spec = AccordionSpec(trigger: customTrigger, title: customTitle);
 
         expect(spec.trigger, equals(customTrigger));
         expect(spec.title, equals(customTitle));
@@ -32,7 +29,7 @@ void main() {
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
-        const originalSpec = RemixAccordionSpec();
+        const originalSpec = AccordionSpec();
         final newTrigger = StyleSpec(spec: FlexBoxSpec());
         final newTitle = StyleSpec(spec: TextSpec());
 
@@ -52,7 +49,7 @@ void main() {
       test(
         'returns new instance with no changes when no parameters provided',
         () {
-          const originalSpec = RemixAccordionSpec();
+          const originalSpec = AccordionSpec();
 
           final updatedSpec = originalSpec.copyWith();
 
@@ -66,7 +63,7 @@ void main() {
       );
 
       test('preserves immutability - original spec unchanged', () {
-        const originalSpec = RemixAccordionSpec();
+        const originalSpec = AccordionSpec();
         final originalTrigger = originalSpec.trigger;
         final newTrigger = StyleSpec(spec: FlexBoxSpec());
 
@@ -80,7 +77,7 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        const spec = RemixAccordionSpec();
+        const spec = AccordionSpec();
         const other = null;
 
         final result = spec.lerp(other, 0.5);
@@ -89,11 +86,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = RemixAccordionSpec(
+        final spec1 = AccordionSpec(
           trigger: StyleSpec(spec: FlexBoxSpec()),
           title: StyleSpec(spec: TextSpec()),
         );
-        final spec2 = RemixAccordionSpec(
+        final spec2 = AccordionSpec(
           trigger: StyleSpec(spec: FlexBoxSpec()),
           title: StyleSpec(spec: TextSpec()),
         );
@@ -102,15 +99,15 @@ void main() {
 
         expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
-        expect(result, isA<RemixAccordionSpec>());
+        expect(result, isA<AccordionSpec>());
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = RemixAccordionSpec(
+        final spec1 = AccordionSpec(
           trigger: StyleSpec(spec: FlexBoxSpec()),
           title: StyleSpec(spec: TextSpec()),
         );
-        final spec2 = RemixAccordionSpec(
+        final spec2 = AccordionSpec(
           trigger: StyleSpec(spec: FlexBoxSpec()),
           title: StyleSpec(spec: TextSpec()),
         );
@@ -119,15 +116,15 @@ void main() {
 
         expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
-        expect(result, isA<RemixAccordionSpec>());
+        expect(result, isA<AccordionSpec>());
       });
 
       test('interpolates between two specs at t=0.5', () {
-        final spec1 = RemixAccordionSpec(
+        final spec1 = AccordionSpec(
           trigger: StyleSpec(spec: FlexBoxSpec()),
           title: StyleSpec(spec: TextSpec()),
         );
-        final spec2 = RemixAccordionSpec(
+        final spec2 = AccordionSpec(
           trigger: StyleSpec(spec: FlexBoxSpec()),
           title: StyleSpec(spec: TextSpec()),
         );
@@ -136,22 +133,22 @@ void main() {
 
         expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
-        expect(result, isA<RemixAccordionSpec>());
+        expect(result, isA<AccordionSpec>());
       });
     });
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixAccordionSpec();
-        const spec2 = RemixAccordionSpec();
+        const spec1 = AccordionSpec();
+        const spec2 = AccordionSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('specs with different properties are not equal', () {
-        const spec1 = RemixAccordionSpec();
-        final spec2 = RemixAccordionSpec(
+        const spec1 = AccordionSpec();
+        final spec2 = AccordionSpec(
           trigger: StyleSpec(
             spec: FlexBoxSpec(
               box: StyleSpec(
@@ -165,7 +162,7 @@ void main() {
       });
 
       test('props list contains all properties', () {
-        const spec = RemixAccordionSpec();
+        const spec = AccordionSpec();
 
         expect(spec.props, hasLength(5));
         expect(spec.props, contains(spec.trigger));
@@ -178,7 +175,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = RemixAccordionSpec();
+        const spec = AccordionSpec();
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -187,14 +184,14 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        const spec = RemixAccordionSpec();
+        const spec = AccordionSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
       });
 
       test('diagnostic properties are properly formatted', () {
-        const spec = RemixAccordionSpec();
+        const spec = AccordionSpec();
         final builder = DiagnosticPropertiesBuilder();
 
         spec.debugFillProperties(builder);
@@ -213,7 +210,7 @@ void main() {
 
     group('Edge Cases', () {
       test('copyWith handles null parameters correctly', () {
-        const spec = RemixAccordionSpec();
+        const spec = AccordionSpec();
         final originalTrigger = spec.trigger;
 
         final updatedSpec = spec.copyWith(trigger: null);

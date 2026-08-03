@@ -41,18 +41,18 @@ class _ToggleExampleState extends State<ToggleExample> {
     );
   }
 
-  RemixToggleStyler get style {
-    return RemixToggleStyler()
+  ToggleStyler get style {
+    return ToggleStyler()
         .paddingX(12)
         .paddingY(8)
         .spacing(6)
         .backgroundColor(Colors.grey.shade100)
         .foregroundColor(Colors.grey.shade700)
         .borderRadiusAll(const Radius.circular(8))
-        .onHovered(RemixToggleStyler().backgroundColor(Colors.grey.shade200))
-        .onPressed(RemixToggleStyler().scale(0.93))
+        .onHovered(ToggleStyler().backgroundColor(Colors.grey.shade200))
+        .onPressed(ToggleStyler().scale(0.93))
         .onSelected(
-          RemixToggleStyler()
+          ToggleStyler()
               .backgroundColor(Colors.deepPurple.shade50)
               .foregroundColor(Colors.deepPurple),
         )
@@ -125,8 +125,8 @@ RemixToggle remixToggleConstructor({
   bool autofocus = false,
   String? semanticLabel,
   MouseCursor mouseCursor = SystemMouseCursors.click,
-  RemixToggleStyler style = const RemixToggleStyler.create(),
-  RemixToggleSpec? styleSpec,
+  ToggleStyler style = const ToggleStyler.create(),
+  ToggleSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -154,11 +154,11 @@ Optional. Text rendered inside the toggle. At least one of `label` or `icon` mus
 
 Optional. Icon rendered inside the toggle. At least one of `label` or `icon` must be provided.
 
-#### `style` -> `RemixToggleStyler`
+#### `style` -> `ToggleStyler`
 
 Optional. The style configuration for the toggle.
 
-#### `styleSpec` → `RemixToggleSpec?`
+#### `styleSpec` → `ToggleSpec?`
 
 Optional. A pre-resolved style spec for the toggle.
 
@@ -332,15 +332,15 @@ Sets icon shadows
 
 Sets single icon shadow
 
-#### `onSelected(RemixToggleStyler value)`
+#### `onSelected(ToggleStyler value)`
 
 Applies style overrides while the toggle is selected.
 
-#### `onHovered(RemixToggleStyler value)`
+#### `onHovered(ToggleStyler value)`
 
 Applies style overrides while the toggle is hovered.
 
-#### `onPressed(RemixToggleStyler value)`
+#### `onPressed(ToggleStyler value)`
 
 Applies style overrides while the toggle is pressed.
 
@@ -348,7 +348,7 @@ Applies style overrides while the toggle is pressed.
 
 Sets animation configuration.
 
-#### `variants(List<VariantStyle<RemixToggleSpec>> value)`
+#### `variants(List<VariantStyle<ToggleSpec>> value)`
 
 Sets style variants.
 

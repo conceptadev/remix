@@ -6,23 +6,23 @@ part of 'callout.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
+mixin _$CalloutSpec implements Spec<CalloutSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get text;
   StyleSpec<IconSpec> get icon;
   RemixBoxEffectsSpec? get containerEffects;
 
   @override
-  Type get type => RemixCalloutSpec;
+  Type get type => CalloutSpec;
 
   @override
-  RemixCalloutSpec copyWith({
+  CalloutSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? text,
     StyleSpec<IconSpec>? icon,
     RemixBoxEffectsSpec? containerEffects,
   }) {
-    return RemixCalloutSpec(
+    return CalloutSpec(
       container: container ?? this.container,
       text: text ?? this.text,
       icon: icon ?? this.icon,
@@ -31,8 +31,8 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
   }
 
   @override
-  RemixCalloutSpec lerp(RemixCalloutSpec? other, double t) {
-    return RemixCalloutSpec(
+  CalloutSpec lerp(CalloutSpec? other, double t) {
+    return CalloutSpec(
       container: container.lerp(other?.container, t),
       text: text.lerp(other?.text, t),
       icon: icon.lerp(other?.icon, t),
@@ -50,7 +50,7 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixCalloutSpec &&
+        other is CalloutSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -95,9 +95,9 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixCalloutSpec` and migrate the class declaration to `class RemixCalloutSpec with _\$RemixCalloutSpec`. The `_\$RemixCalloutSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$CalloutSpec` and migrate the class declaration to `class CalloutSpec with _\$CalloutSpec`. The `_\$CalloutSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixCalloutSpecMethods = _$RemixCalloutSpec; // ignore: unused_element
+typedef _$CalloutSpecMethods = _$CalloutSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -174,16 +174,14 @@ class FortalCallout extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
-    with
-        RemixBoxStylerMixin<RemixCalloutStyler>,
-        IconStyleMixin<RemixCalloutStyler> {
+class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
+    with RemixBoxStylerMixin<CalloutStyler>, IconStyleMixin<CalloutStyler> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
-  const RemixCalloutStyler.create({
+  const CalloutStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? text,
     Prop<StyleSpec<IconSpec>>? icon,
@@ -196,14 +194,14 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
        $icon = icon,
        $containerEffects = containerEffects;
 
-  RemixCalloutStyler({
+  CalloutStyler({
     FlexBoxStyler? container,
     TextStyler? text,
     IconStyler? icon,
     RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixCalloutSpec>>? variants,
+    List<VariantStyle<CalloutSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          text: Prop.maybeMix(text),
@@ -214,107 +212,100 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
          animation: animation,
        );
 
-  factory RemixCalloutStyler.container(FlexBoxStyler value) =>
-      RemixCalloutStyler().container(value);
-  factory RemixCalloutStyler.text(TextStyler value) =>
-      RemixCalloutStyler().text(value);
-  factory RemixCalloutStyler.icon(IconStyler value) =>
-      RemixCalloutStyler().icon(value);
-  factory RemixCalloutStyler.containerEffects(RemixBoxEffectsMix value) =>
-      RemixCalloutStyler().containerEffects(value);
-  factory RemixCalloutStyler.color(Color value) =>
-      RemixCalloutStyler().color(value);
-  factory RemixCalloutStyler.gradient(GradientMix value) =>
-      RemixCalloutStyler().gradient(value);
-  factory RemixCalloutStyler.border(BoxBorderMix value) =>
-      RemixCalloutStyler().border(value);
-  factory RemixCalloutStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixCalloutStyler().borderRadius(value);
-  factory RemixCalloutStyler.elevation(ElevationShadow value) =>
-      RemixCalloutStyler().elevation(value);
-  factory RemixCalloutStyler.shadow(BoxShadowMix value) =>
-      RemixCalloutStyler().shadow(value);
-  factory RemixCalloutStyler.shadows(List<BoxShadowMix> value) =>
-      RemixCalloutStyler().shadows(value);
-  factory RemixCalloutStyler.width(double value) =>
-      RemixCalloutStyler().width(value);
-  factory RemixCalloutStyler.height(double value) =>
-      RemixCalloutStyler().height(value);
-  factory RemixCalloutStyler.size(double width, double height) =>
-      RemixCalloutStyler().size(width, height);
-  factory RemixCalloutStyler.minWidth(double value) =>
-      RemixCalloutStyler().minWidth(value);
-  factory RemixCalloutStyler.maxWidth(double value) =>
-      RemixCalloutStyler().maxWidth(value);
-  factory RemixCalloutStyler.minHeight(double value) =>
-      RemixCalloutStyler().minHeight(value);
-  factory RemixCalloutStyler.maxHeight(double value) =>
-      RemixCalloutStyler().maxHeight(value);
-  factory RemixCalloutStyler.scale(
-    double scale, {
-    Alignment alignment = .center,
-  }) => RemixCalloutStyler().scale(scale, alignment: alignment);
-  factory RemixCalloutStyler.rotate(
+  factory CalloutStyler.container(FlexBoxStyler value) =>
+      CalloutStyler().container(value);
+  factory CalloutStyler.text(TextStyler value) => CalloutStyler().text(value);
+  factory CalloutStyler.icon(IconStyler value) => CalloutStyler().icon(value);
+  factory CalloutStyler.containerEffects(RemixBoxEffectsMix value) =>
+      CalloutStyler().containerEffects(value);
+  factory CalloutStyler.color(Color value) => CalloutStyler().color(value);
+  factory CalloutStyler.gradient(GradientMix value) =>
+      CalloutStyler().gradient(value);
+  factory CalloutStyler.border(BoxBorderMix value) =>
+      CalloutStyler().border(value);
+  factory CalloutStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      CalloutStyler().borderRadius(value);
+  factory CalloutStyler.elevation(ElevationShadow value) =>
+      CalloutStyler().elevation(value);
+  factory CalloutStyler.shadow(BoxShadowMix value) =>
+      CalloutStyler().shadow(value);
+  factory CalloutStyler.shadows(List<BoxShadowMix> value) =>
+      CalloutStyler().shadows(value);
+  factory CalloutStyler.width(double value) => CalloutStyler().width(value);
+  factory CalloutStyler.height(double value) => CalloutStyler().height(value);
+  factory CalloutStyler.size(double width, double height) =>
+      CalloutStyler().size(width, height);
+  factory CalloutStyler.minWidth(double value) =>
+      CalloutStyler().minWidth(value);
+  factory CalloutStyler.maxWidth(double value) =>
+      CalloutStyler().maxWidth(value);
+  factory CalloutStyler.minHeight(double value) =>
+      CalloutStyler().minHeight(value);
+  factory CalloutStyler.maxHeight(double value) =>
+      CalloutStyler().maxHeight(value);
+  factory CalloutStyler.scale(double scale, {Alignment alignment = .center}) =>
+      CalloutStyler().scale(scale, alignment: alignment);
+  factory CalloutStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixCalloutStyler().rotate(radians, alignment: alignment);
-  factory RemixCalloutStyler.translate(double x, double y, [double z = 0.0]) =>
-      RemixCalloutStyler().translate(x, y, z);
-  factory RemixCalloutStyler.skew(double skewX, double skewY) =>
-      RemixCalloutStyler().skew(skewX, skewY);
-  factory RemixCalloutStyler.textStyle(TextStyler value) =>
-      RemixCalloutStyler().textStyle(value);
-  factory RemixCalloutStyler.image(DecorationImageMix value) =>
-      RemixCalloutStyler().image(value);
-  factory RemixCalloutStyler.shape(ShapeBorderMix value) =>
-      RemixCalloutStyler().shape(value);
-  factory RemixCalloutStyler.backgroundImage(
+  }) => CalloutStyler().rotate(radians, alignment: alignment);
+  factory CalloutStyler.translate(double x, double y, [double z = 0.0]) =>
+      CalloutStyler().translate(x, y, z);
+  factory CalloutStyler.skew(double skewX, double skewY) =>
+      CalloutStyler().skew(skewX, skewY);
+  factory CalloutStyler.textStyle(TextStyler value) =>
+      CalloutStyler().textStyle(value);
+  factory CalloutStyler.image(DecorationImageMix value) =>
+      CalloutStyler().image(value);
+  factory CalloutStyler.shape(ShapeBorderMix value) =>
+      CalloutStyler().shape(value);
+  factory CalloutStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixCalloutStyler().backgroundImage(
+  }) => CalloutStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixCalloutStyler.backgroundImageUrl(
+  factory CalloutStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixCalloutStyler().backgroundImageUrl(
+  }) => CalloutStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixCalloutStyler.backgroundImageAsset(
+  factory CalloutStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixCalloutStyler().backgroundImageAsset(
+  }) => CalloutStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixCalloutStyler.linearGradient({
+  factory CalloutStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixCalloutStyler().linearGradient(
+  }) => CalloutStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixCalloutStyler.radialGradient({
+  factory CalloutStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -322,7 +313,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixCalloutStyler().radialGradient(
+  }) => CalloutStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -331,14 +322,14 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixCalloutStyler.sweepGradient({
+  factory CalloutStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixCalloutStyler().sweepGradient(
+  }) => CalloutStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -346,20 +337,20 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixCalloutStyler.foregroundLinearGradient({
+  factory CalloutStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixCalloutStyler().foregroundLinearGradient(
+  }) => CalloutStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixCalloutStyler.foregroundRadialGradient({
+  factory CalloutStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -367,7 +358,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixCalloutStyler().foregroundRadialGradient(
+  }) => CalloutStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -376,14 +367,14 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixCalloutStyler.foregroundSweepGradient({
+  factory CalloutStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixCalloutStyler().foregroundSweepGradient(
+  }) => CalloutStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -391,128 +382,127 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixCalloutStyler.row() => RemixCalloutStyler().row();
-  factory RemixCalloutStyler.column() => RemixCalloutStyler().column();
-  factory RemixCalloutStyler.alignment(AlignmentGeometry value) =>
-      RemixCalloutStyler().alignment(value);
-  factory RemixCalloutStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixCalloutStyler().padding(value);
-  factory RemixCalloutStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixCalloutStyler().margin(value);
-  factory RemixCalloutStyler.constraints(BoxConstraintsMix value) =>
-      RemixCalloutStyler().constraints(value);
-  factory RemixCalloutStyler.decoration(DecorationMix value) =>
-      RemixCalloutStyler().decoration(value);
-  factory RemixCalloutStyler.foregroundDecoration(DecorationMix value) =>
-      RemixCalloutStyler().foregroundDecoration(value);
-  factory RemixCalloutStyler.clipBehavior(Clip value) =>
-      RemixCalloutStyler().clipBehavior(value);
-  factory RemixCalloutStyler.direction(Axis value) =>
-      RemixCalloutStyler().direction(value);
-  factory RemixCalloutStyler.mainAxisAlignment(MainAxisAlignment value) =>
-      RemixCalloutStyler().mainAxisAlignment(value);
-  factory RemixCalloutStyler.crossAxisAlignment(CrossAxisAlignment value) =>
-      RemixCalloutStyler().crossAxisAlignment(value);
-  factory RemixCalloutStyler.mainAxisSize(MainAxisSize value) =>
-      RemixCalloutStyler().mainAxisSize(value);
-  factory RemixCalloutStyler.spacing(double value) =>
-      RemixCalloutStyler().spacing(value);
-  factory RemixCalloutStyler.verticalDirection(VerticalDirection value) =>
-      RemixCalloutStyler().verticalDirection(value);
-  factory RemixCalloutStyler.textDirection(TextDirection value) =>
-      RemixCalloutStyler().textDirection(value);
-  factory RemixCalloutStyler.textBaseline(TextBaseline value) =>
-      RemixCalloutStyler().textBaseline(value);
-  factory RemixCalloutStyler.transform(
+  factory CalloutStyler.row() => CalloutStyler().row();
+  factory CalloutStyler.column() => CalloutStyler().column();
+  factory CalloutStyler.alignment(AlignmentGeometry value) =>
+      CalloutStyler().alignment(value);
+  factory CalloutStyler.padding(EdgeInsetsGeometryMix value) =>
+      CalloutStyler().padding(value);
+  factory CalloutStyler.margin(EdgeInsetsGeometryMix value) =>
+      CalloutStyler().margin(value);
+  factory CalloutStyler.constraints(BoxConstraintsMix value) =>
+      CalloutStyler().constraints(value);
+  factory CalloutStyler.decoration(DecorationMix value) =>
+      CalloutStyler().decoration(value);
+  factory CalloutStyler.foregroundDecoration(DecorationMix value) =>
+      CalloutStyler().foregroundDecoration(value);
+  factory CalloutStyler.clipBehavior(Clip value) =>
+      CalloutStyler().clipBehavior(value);
+  factory CalloutStyler.direction(Axis value) =>
+      CalloutStyler().direction(value);
+  factory CalloutStyler.mainAxisAlignment(MainAxisAlignment value) =>
+      CalloutStyler().mainAxisAlignment(value);
+  factory CalloutStyler.crossAxisAlignment(CrossAxisAlignment value) =>
+      CalloutStyler().crossAxisAlignment(value);
+  factory CalloutStyler.mainAxisSize(MainAxisSize value) =>
+      CalloutStyler().mainAxisSize(value);
+  factory CalloutStyler.spacing(double value) => CalloutStyler().spacing(value);
+  factory CalloutStyler.verticalDirection(VerticalDirection value) =>
+      CalloutStyler().verticalDirection(value);
+  factory CalloutStyler.textDirection(TextDirection value) =>
+      CalloutStyler().textDirection(value);
+  factory CalloutStyler.textBaseline(TextBaseline value) =>
+      CalloutStyler().textBaseline(value);
+  factory CalloutStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixCalloutStyler().transform(value, alignment: alignment);
+  }) => CalloutStyler().transform(value, alignment: alignment);
 
-  RemixCalloutStyler color(Color value) {
+  CalloutStyler color(Color value) {
     return container(FlexBoxStyler().color(value));
   }
 
-  RemixCalloutStyler gradient(GradientMix value) {
+  CalloutStyler gradient(GradientMix value) {
     return container(FlexBoxStyler().gradient(value));
   }
 
-  RemixCalloutStyler border(BoxBorderMix value) {
+  CalloutStyler border(BoxBorderMix value) {
     return container(FlexBoxStyler().border(value));
   }
 
-  RemixCalloutStyler borderRadius(BorderRadiusGeometryMix value) {
+  CalloutStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(FlexBoxStyler().borderRadius(value));
   }
 
-  RemixCalloutStyler elevation(ElevationShadow value) {
+  CalloutStyler elevation(ElevationShadow value) {
     return container(FlexBoxStyler().elevation(value));
   }
 
-  RemixCalloutStyler shadow(BoxShadowMix value) {
+  CalloutStyler shadow(BoxShadowMix value) {
     return container(FlexBoxStyler().shadow(value));
   }
 
-  RemixCalloutStyler shadows(List<BoxShadowMix> value) {
+  CalloutStyler shadows(List<BoxShadowMix> value) {
     return container(FlexBoxStyler().shadows(value));
   }
 
-  RemixCalloutStyler width(double value) {
+  CalloutStyler width(double value) {
     return container(FlexBoxStyler().width(value));
   }
 
-  RemixCalloutStyler height(double value) {
+  CalloutStyler height(double value) {
     return container(FlexBoxStyler().height(value));
   }
 
-  RemixCalloutStyler size(double width, double height) {
+  CalloutStyler size(double width, double height) {
     return container(FlexBoxStyler().size(width, height));
   }
 
-  RemixCalloutStyler minWidth(double value) {
+  CalloutStyler minWidth(double value) {
     return container(FlexBoxStyler().minWidth(value));
   }
 
-  RemixCalloutStyler maxWidth(double value) {
+  CalloutStyler maxWidth(double value) {
     return container(FlexBoxStyler().maxWidth(value));
   }
 
-  RemixCalloutStyler minHeight(double value) {
+  CalloutStyler minHeight(double value) {
     return container(FlexBoxStyler().minHeight(value));
   }
 
-  RemixCalloutStyler maxHeight(double value) {
+  CalloutStyler maxHeight(double value) {
     return container(FlexBoxStyler().maxHeight(value));
   }
 
-  RemixCalloutStyler scale(double scale, {Alignment alignment = .center}) {
+  CalloutStyler scale(double scale, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixCalloutStyler rotate(double radians, {Alignment alignment = .center}) {
+  CalloutStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixCalloutStyler translate(double x, double y, [double z = 0.0]) {
+  CalloutStyler translate(double x, double y, [double z = 0.0]) {
     return container(FlexBoxStyler().translate(x, y, z));
   }
 
-  RemixCalloutStyler skew(double skewX, double skewY) {
+  CalloutStyler skew(double skewX, double skewY) {
     return container(FlexBoxStyler().skew(skewX, skewY));
   }
 
-  RemixCalloutStyler textStyle(TextStyler value) {
+  CalloutStyler textStyle(TextStyler value) {
     return container(FlexBoxStyler().textStyle(value));
   }
 
-  RemixCalloutStyler image(DecorationImageMix value) {
+  CalloutStyler image(DecorationImageMix value) {
     return container(FlexBoxStyler().image(value));
   }
 
-  RemixCalloutStyler shape(ShapeBorderMix value) {
+  CalloutStyler shape(ShapeBorderMix value) {
     return container(FlexBoxStyler().shape(value));
   }
 
-  RemixCalloutStyler backgroundImage(
+  CalloutStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -528,7 +518,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     );
   }
 
-  RemixCalloutStyler backgroundImageUrl(
+  CalloutStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -544,7 +534,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     );
   }
 
-  RemixCalloutStyler backgroundImageAsset(
+  CalloutStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -560,7 +550,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     );
   }
 
-  RemixCalloutStyler linearGradient({
+  CalloutStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -578,7 +568,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     );
   }
 
-  RemixCalloutStyler radialGradient({
+  CalloutStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -600,7 +590,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     );
   }
 
-  RemixCalloutStyler sweepGradient({
+  CalloutStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -620,7 +610,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     );
   }
 
-  RemixCalloutStyler foregroundLinearGradient({
+  CalloutStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -638,7 +628,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     );
   }
 
-  RemixCalloutStyler foregroundRadialGradient({
+  CalloutStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -660,7 +650,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     );
   }
 
-  RemixCalloutStyler foregroundSweepGradient({
+  CalloutStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -680,126 +670,126 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     );
   }
 
-  RemixCalloutStyler row() {
+  CalloutStyler row() {
     return container(FlexBoxStyler().row());
   }
 
-  RemixCalloutStyler column() {
+  CalloutStyler column() {
     return container(FlexBoxStyler().column());
   }
 
-  RemixCalloutStyler alignment(AlignmentGeometry value) {
+  CalloutStyler alignment(AlignmentGeometry value) {
     return container(FlexBoxStyler().alignment(value));
   }
 
-  RemixCalloutStyler padding(EdgeInsetsGeometryMix value) {
+  CalloutStyler padding(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler().padding(value));
   }
 
-  RemixCalloutStyler margin(EdgeInsetsGeometryMix value) {
+  CalloutStyler margin(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler().margin(value));
   }
 
-  RemixCalloutStyler constraints(BoxConstraintsMix value) {
+  CalloutStyler constraints(BoxConstraintsMix value) {
     return container(FlexBoxStyler().constraints(value));
   }
 
-  RemixCalloutStyler decoration(DecorationMix value) {
+  CalloutStyler decoration(DecorationMix value) {
     return container(FlexBoxStyler().decoration(value));
   }
 
-  RemixCalloutStyler foregroundDecoration(DecorationMix value) {
+  CalloutStyler foregroundDecoration(DecorationMix value) {
     return container(FlexBoxStyler().foregroundDecoration(value));
   }
 
-  RemixCalloutStyler clipBehavior(Clip value) {
+  CalloutStyler clipBehavior(Clip value) {
     return container(FlexBoxStyler().clipBehavior(value));
   }
 
-  RemixCalloutStyler direction(Axis value) {
+  CalloutStyler direction(Axis value) {
     return container(FlexBoxStyler().direction(value));
   }
 
-  RemixCalloutStyler mainAxisAlignment(MainAxisAlignment value) {
+  CalloutStyler mainAxisAlignment(MainAxisAlignment value) {
     return container(FlexBoxStyler().mainAxisAlignment(value));
   }
 
-  RemixCalloutStyler crossAxisAlignment(CrossAxisAlignment value) {
+  CalloutStyler crossAxisAlignment(CrossAxisAlignment value) {
     return container(FlexBoxStyler().crossAxisAlignment(value));
   }
 
-  RemixCalloutStyler mainAxisSize(MainAxisSize value) {
+  CalloutStyler mainAxisSize(MainAxisSize value) {
     return container(FlexBoxStyler().mainAxisSize(value));
   }
 
-  RemixCalloutStyler spacing(double value) {
+  CalloutStyler spacing(double value) {
     return container(FlexBoxStyler().spacing(value));
   }
 
-  RemixCalloutStyler verticalDirection(VerticalDirection value) {
+  CalloutStyler verticalDirection(VerticalDirection value) {
     return container(FlexBoxStyler().verticalDirection(value));
   }
 
-  RemixCalloutStyler textDirection(TextDirection value) {
+  CalloutStyler textDirection(TextDirection value) {
     return container(FlexBoxStyler().textDirection(value));
   }
 
-  RemixCalloutStyler textBaseline(TextBaseline value) {
+  CalloutStyler textBaseline(TextBaseline value) {
     return container(FlexBoxStyler().textBaseline(value));
   }
 
-  RemixCalloutStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+  CalloutStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixCalloutStyler container(FlexBoxStyler value) {
-    return merge(RemixCalloutStyler(container: value));
+  CalloutStyler container(FlexBoxStyler value) {
+    return merge(CalloutStyler(container: value));
   }
 
   /// Sets the text.
-  RemixCalloutStyler text(TextStyler value) {
-    return merge(RemixCalloutStyler(text: value));
+  CalloutStyler text(TextStyler value) {
+    return merge(CalloutStyler(text: value));
   }
 
   /// Sets the icon.
   @override
-  RemixCalloutStyler icon(IconStyler value) {
-    return merge(RemixCalloutStyler(icon: value));
+  CalloutStyler icon(IconStyler value) {
+    return merge(CalloutStyler(icon: value));
   }
 
   /// Sets the containerEffects.
-  RemixCalloutStyler containerEffects(RemixBoxEffectsMix value) {
-    return merge(RemixCalloutStyler(containerEffects: value));
+  CalloutStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(CalloutStyler(containerEffects: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixCalloutStyler animate(AnimationConfig value) {
-    return merge(RemixCalloutStyler(animation: value));
+  CalloutStyler animate(AnimationConfig value) {
+    return merge(CalloutStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixCalloutStyler variants(List<VariantStyle<RemixCalloutSpec>> value) {
-    return merge(RemixCalloutStyler(variants: value));
+  CalloutStyler variants(List<VariantStyle<CalloutSpec>> value) {
+    return merge(CalloutStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixCalloutStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixCalloutStyler(modifier: value));
+  CalloutStyler wrap(WidgetModifierConfig value) {
+    return merge(CalloutStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixCalloutStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixCalloutStyler(modifier: value));
+  CalloutStyler modifier(WidgetModifierConfig value) {
+    return merge(CalloutStyler(modifier: value));
   }
 
-  /// Merges with another [RemixCalloutStyler].
+  /// Merges with another [CalloutStyler].
   @override
-  RemixCalloutStyler merge(RemixCalloutStyler? other) {
-    return RemixCalloutStyler.create(
+  CalloutStyler merge(CalloutStyler? other) {
+    return CalloutStyler.create(
       container: MixOps.merge($container, other?.$container),
       text: MixOps.merge($text, other?.$text),
       icon: MixOps.merge($icon, other?.$icon),
@@ -813,10 +803,10 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     );
   }
 
-  /// Resolves to [StyleSpec<RemixCalloutSpec>] using [context].
+  /// Resolves to [StyleSpec<CalloutSpec>] using [context].
   @override
-  StyleSpec<RemixCalloutSpec> resolve(BuildContext context) {
-    final spec = RemixCalloutSpec(
+  StyleSpec<CalloutSpec> resolve(BuildContext context) {
+    final spec = CalloutSpec(
       container: MixOps.resolve(context, $container),
       text: MixOps.resolve(context, $text),
       icon: MixOps.resolve(context, $icon),

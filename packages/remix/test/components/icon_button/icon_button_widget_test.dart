@@ -32,7 +32,7 @@ void main() {
             loading: false,
             enabled: true,
             enableFeedback: true,
-            style: RemixIconButtonStyler.create(),
+            style: IconButtonStyler.create(),
             semanticLabel: 'Delete Button',
             semanticHint: 'Deletes the item',
             excludeSemantics: false,
@@ -118,10 +118,7 @@ void main() {
       testWidgets('loadingBuilder renders custom loading widget', (
         tester,
       ) async {
-        Widget customLoadingBuilder(
-          BuildContext context,
-          RemixSpinnerSpec spec,
-        ) {
+        Widget customLoadingBuilder(BuildContext context, SpinnerSpec spec) {
           return Container(
             key: const ValueKey('custom_loading'),
             child: const CircularProgressIndicator(),
@@ -409,7 +406,7 @@ void main() {
 
     group('Style Integration', () {
       testWidgets('applies custom style to container', (tester) async {
-        final customStyle = RemixIconButtonStyler(
+        final customStyle = IconButtonStyler(
           container: BoxStyler(
             padding: EdgeInsetsGeometryMix.all(16.0),
             decoration: BoxDecorationMix(
@@ -434,7 +431,7 @@ void main() {
       });
 
       testWidgets('applies custom icon style', (tester) async {
-        final customStyle = RemixIconButtonStyler(
+        final customStyle = IconButtonStyler(
           icon: IconStyler(color: Colors.red, size: 24.0),
         );
 
@@ -452,9 +449,7 @@ void main() {
       });
 
       testWidgets('applies custom spinner style', (tester) async {
-        final customStyle = RemixIconButtonStyler(
-          spinner: RemixSpinnerStyler(),
-        );
+        final customStyle = IconButtonStyler(spinner: SpinnerStyler());
 
         await tester.pumpRemixApp(
           RemixIconButton(
@@ -482,7 +477,7 @@ void main() {
       });
 
       testWidgets('applies raw styleSpec when provided', (tester) async {
-        const spec = RemixIconButtonSpec(
+        const spec = IconButtonSpec(
           container: StyleSpec(
             spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
           ),
@@ -506,7 +501,7 @@ void main() {
 
     group('Layout and Sizing', () {
       testWidgets('icon button adapts to custom size', (tester) async {
-        final smallStyle = RemixIconButtonStyler().iconButtonSize(32.0);
+        final smallStyle = IconButtonStyler().iconButtonSize(32.0);
         await tester.pumpRemixApp(
           RemixIconButton(icon: Icons.add, onPressed: () {}, style: smallStyle),
         );
@@ -514,7 +509,7 @@ void main() {
 
         final smallSize = tester.getSize(find.byType(RemixIconButton));
 
-        final largeStyle = RemixIconButtonStyler().iconButtonSize(64.0);
+        final largeStyle = IconButtonStyler().iconButtonSize(64.0);
         await tester.pumpRemixApp(
           RemixIconButton(icon: Icons.add, onPressed: () {}, style: largeStyle),
         );

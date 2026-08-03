@@ -5,13 +5,13 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixPopoverStyler', () {
+  group('PopoverStyler', () {
     test('constructors retain container and universal style properties', () {
       final animation = AnimationConfig.linear(
         const Duration(milliseconds: 150),
       );
       final modifier = WidgetModifierConfig();
-      final style = RemixPopoverStyler(
+      final style = PopoverStyler(
         container: BoxStyler(padding: EdgeInsetsGeometryMix.all(12)),
         animation: animation,
         variants: const [],
@@ -25,22 +25,20 @@ void main() {
     });
 
     test('factory constructors create focused styles', () {
-      expect(RemixPopoverStyler.color(Colors.purple).$container, isNotNull);
+      expect(PopoverStyler.color(Colors.purple).$container, isNotNull);
       expect(
-        RemixPopoverStyler.padding(EdgeInsetsGeometryMix.all(12)).$container,
+        PopoverStyler.padding(EdgeInsetsGeometryMix.all(12)).$container,
         isNotNull,
       );
       expect(
-        RemixPopoverStyler.constraints(
-          BoxConstraintsMix(maxWidth: 320),
-        ).$container,
+        PopoverStyler.constraints(BoxConstraintsMix(maxWidth: 320)).$container,
         isNotNull,
       );
     });
 
     styleMethodTest(
       'container methods compose without mutating the original style',
-      initial: const RemixPopoverStyler.create(),
+      initial: const PopoverStyler.create(),
       modify: (style) => style
           .padding(EdgeInsetsGeometryMix.all(12))
           .margin(EdgeInsetsGeometryMix.all(8))
@@ -49,14 +47,14 @@ void main() {
       expect: (style) => expect(style.$container, isNotNull),
     );
 
-    testWidgets('resolves to a RemixPopoverSpec', (tester) async {
-      const style = RemixPopoverStyler.create();
+    testWidgets('resolves to a PopoverSpec', (tester) async {
+      const style = PopoverStyler.create();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
             builder: (context) {
-              expect(style.resolve(context).spec, isA<RemixPopoverSpec>());
+              expect(style.resolve(context).spec, isA<PopoverSpec>());
               return const SizedBox();
             },
           ),
@@ -65,7 +63,7 @@ void main() {
     });
 
     test('call creates a RemixPopover with this style', () {
-      final style = RemixPopoverStyler().backgroundColor(Colors.purple);
+      final style = PopoverStyler().backgroundColor(Colors.purple);
 
       final widget = style(
         popoverChild: const Text('Content'),

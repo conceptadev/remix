@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixSwitchSpec', () {
+  group('SwitchSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        const spec = RemixSwitchSpec();
+        const spec = SwitchSpec();
 
         expect(spec.container, isA<StyleSpec<BoxSpec>>());
         expect(spec.thumb, isA<StyleSpec<BoxSpec>>());
@@ -16,7 +16,7 @@ void main() {
         final container = StyleSpec(spec: BoxSpec());
         final thumb = StyleSpec(spec: BoxSpec());
 
-        final spec = RemixSwitchSpec(container: container, thumb: thumb);
+        final spec = SwitchSpec(container: container, thumb: thumb);
 
         expect(spec.container, equals(container));
         expect(spec.thumb, equals(thumb));
@@ -25,7 +25,7 @@ void main() {
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
-        const originalSpec = RemixSwitchSpec();
+        const originalSpec = SwitchSpec();
         final newContainer = StyleSpec(spec: BoxSpec());
 
         final updatedSpec = originalSpec.copyWith(container: newContainer);
@@ -35,7 +35,7 @@ void main() {
       });
 
       test('preserves immutability - original spec unchanged', () {
-        const originalSpec = RemixSwitchSpec();
+        const originalSpec = SwitchSpec();
         final originalContainer = originalSpec.container;
         final newContainer = StyleSpec(spec: BoxSpec());
 
@@ -47,7 +47,7 @@ void main() {
       });
 
       test('returns new instance with all properties updated', () {
-        const originalSpec = RemixSwitchSpec();
+        const originalSpec = SwitchSpec();
         final newContainer = StyleSpec(spec: BoxSpec());
         final newThumb = StyleSpec(spec: BoxSpec());
 
@@ -63,8 +63,8 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        const spec = RemixSwitchSpec();
-        const RemixSwitchSpec? other = null;
+        const spec = SwitchSpec();
+        const SwitchSpec? other = null;
 
         final result = spec.lerp(other, 0.5);
 
@@ -72,11 +72,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = RemixSwitchSpec(
+        final spec1 = SwitchSpec(
           container: StyleSpec(spec: BoxSpec()),
           thumb: StyleSpec(spec: BoxSpec()),
         );
-        final spec2 = RemixSwitchSpec(
+        final spec2 = SwitchSpec(
           container: StyleSpec(spec: BoxSpec()),
           thumb: StyleSpec(spec: BoxSpec()),
         );
@@ -89,11 +89,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = RemixSwitchSpec(
+        final spec1 = SwitchSpec(
           container: StyleSpec(spec: BoxSpec()),
           thumb: StyleSpec(spec: BoxSpec()),
         );
-        final spec2 = RemixSwitchSpec(
+        final spec2 = SwitchSpec(
           container: StyleSpec(spec: BoxSpec()),
           thumb: StyleSpec(spec: BoxSpec()),
         );
@@ -106,11 +106,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.5', () {
-        final spec1 = RemixSwitchSpec(
+        final spec1 = SwitchSpec(
           container: StyleSpec(spec: BoxSpec()),
           thumb: StyleSpec(spec: BoxSpec()),
         );
-        final spec2 = RemixSwitchSpec(
+        final spec2 = SwitchSpec(
           container: StyleSpec(spec: BoxSpec()),
           thumb: StyleSpec(spec: BoxSpec()),
         );
@@ -125,15 +125,15 @@ void main() {
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixSwitchSpec();
-        const spec2 = RemixSwitchSpec();
+        const spec1 = SwitchSpec();
+        const spec2 = SwitchSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('two specs with different properties are not equal', () {
-        final spec1 = RemixSwitchSpec(
+        final spec1 = SwitchSpec(
           container: StyleSpec(
             spec: const BoxSpec(),
             animation: AnimationConfig.linear(
@@ -141,7 +141,7 @@ void main() {
             ),
           ),
         );
-        final spec2 = RemixSwitchSpec(
+        final spec2 = SwitchSpec(
           container: StyleSpec(
             spec: const BoxSpec(),
             animation: AnimationConfig.linear(
@@ -154,7 +154,7 @@ void main() {
       });
 
       test('props list contains all properties', () {
-        const spec = RemixSwitchSpec();
+        const spec = SwitchSpec();
 
         expect(spec.props, hasLength(4));
         expect(spec.props, contains(spec.container));
@@ -164,7 +164,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = RemixSwitchSpec();
+        const spec = SwitchSpec();
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -173,7 +173,7 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        const spec = RemixSwitchSpec();
+        const spec = SwitchSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
@@ -182,7 +182,7 @@ void main() {
 
     group('Edge Cases and Error Handling', () {
       test('copyWith handles null parameters correctly', () {
-        const spec = RemixSwitchSpec();
+        const spec = SwitchSpec();
         final originalContainer = spec.container;
 
         final updatedSpec = spec.copyWith(container: null);
@@ -191,7 +191,7 @@ void main() {
       });
 
       test('handles empty StyleSpec', () {
-        const spec = RemixSwitchSpec(
+        const spec = SwitchSpec(
           container: StyleSpec(spec: BoxSpec()),
           thumb: StyleSpec(spec: BoxSpec()),
         );
@@ -203,7 +203,7 @@ void main() {
 
     group('Default Values', () {
       test('provides default values for all properties', () {
-        const spec = RemixSwitchSpec();
+        const spec = SwitchSpec();
 
         expect(spec.container, isNotNull);
         expect(spec.thumb, isNotNull);

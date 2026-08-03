@@ -34,7 +34,7 @@ class RemixSelectItem<T> {
   final bool enabled;
 
   /// The style for the item.
-  final RemixSelectMenuItemStyler style;
+  final SelectMenuItemStyler style;
 
   /// Semantic label for accessibility.
   final String? semanticLabel;
@@ -43,7 +43,7 @@ class RemixSelectItem<T> {
     required this.value,
     required this.label,
     this.enabled = true,
-    this.style = const RemixSelectMenuItemStyler.create(),
+    this.style = const SelectMenuItemStyler.create(),
     this.semanticLabel,
   });
 }
@@ -88,7 +88,7 @@ class RemixSelect<T> extends StatefulWidget {
     this.semanticLabel,
     this.closeOnSelect = true,
     this.focusNode,
-    this.style = const RemixSelectStyler.create(),
+    this.style = const SelectStyler.create(),
     this.styleSpec,
   });
 
@@ -129,12 +129,12 @@ class RemixSelect<T> extends StatefulWidget {
   final FocusNode? focusNode;
 
   /// The style configuration for the select.
-  final RemixSelectStyler style;
+  final SelectStyler style;
 
   /// Optional raw style spec that bypasses fluent style resolution.
-  final RemixSelectSpec? styleSpec;
+  final SelectSpec? styleSpec;
 
-  static final styleFrom = RemixSelectStyler.new;
+  static final styleFrom = SelectStyler.new;
 
   @override
   State<RemixSelect<T>> createState() => _RemixSelectState<T>();
@@ -154,10 +154,10 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     );
   }
 
-  RemixSelectStyler _buildStyle() {
-    return RemixSelectStyler()
+  SelectStyler _buildStyle() {
+    return SelectStyler()
         .trigger(
-          RemixSelectTriggerStyler().mainAxisSize(.min).wrap(.intrinsicWidth()),
+          SelectTriggerStyler().mainAxisSize(.min).wrap(.intrinsicWidth()),
         )
         .menuContainer(
           FlexBoxStyler().mainAxisSize(.min).wrap(.intrinsicWidth()),
@@ -166,8 +166,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   }
 
   Widget _buildOverlayMenu(
-    RemixSelectSpec spec,
-    Prop<StyleSpec<RemixSelectMenuItemSpec>>? defaultItemStyle,
+    SelectSpec spec,
+    Prop<StyleSpec<SelectMenuItemSpec>>? defaultItemStyle,
   ) {
     final menuContainerSpec = spec.menuContainer;
 
@@ -225,7 +225,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
     return NakedSelect<T>(
       overlayBuilder: (context, info) {
-        return RemixStyleSpecBuilder<RemixSelectSpec>(
+        return RemixStyleSpecBuilder<SelectSpec>(
           style: style,
           styleSpec: widget.styleSpec,
           builder: (context, spec) => _buildOverlayMenu(spec, style.$item),
@@ -247,7 +247,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         widget.onClose?.call();
       },
       builder: (context, state, _) {
-        return RemixStyleSpecBuilder<RemixSelectSpec>(
+        return RemixStyleSpecBuilder<SelectSpec>(
           style: style,
           styleSpec: widget.styleSpec,
           controller: NakedSelectState.controllerOf<T>(context),
@@ -281,7 +281,7 @@ class _AnimatedOverlayMenu extends StatefulWidget {
   final AnimationController controller;
   final Duration duration;
   final Curve curve;
-  final StyleSpec<RemixSelectContentSpec> content;
+  final StyleSpec<SelectContentSpec> content;
   final StyleSpec<FlexBoxSpec> menuContainer;
   final List<Widget> children;
 
@@ -328,7 +328,7 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
           scale: scaleAnimation.value,
           child: Opacity(
             opacity: fadeAnimation.value,
-            child: StyleSpecBuilder<RemixSelectContentSpec>(
+            child: StyleSpecBuilder<SelectContentSpec>(
               styleSpec: widget.content,
               builder: (context, spec) => RemixBoxWithEffects(
                 styleSpec: spec.container,
@@ -364,11 +364,11 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
   final String displayLabel;
   final bool isPlaceholder;
   final bool isOpen;
-  final StyleSpec<RemixSelectTriggerSpec> styleSpec;
+  final StyleSpec<SelectTriggerSpec> styleSpec;
 
   @override
   Widget build(BuildContext context) {
-    return StyleSpecBuilder<RemixSelectTriggerSpec>(
+    return StyleSpecBuilder<SelectTriggerSpec>(
       styleSpec: styleSpec,
       builder: (context, spec) {
         return RemixFlexBoxWithEffects(
@@ -415,20 +415,20 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
   });
 
   final RemixSelectItem<T> data;
-  final Prop<StyleSpec<RemixSelectMenuItemSpec>>? defaultStyle;
-  final StyleSpec<RemixSelectMenuItemSpec>? defaultStyleSpec;
+  final Prop<StyleSpec<SelectMenuItemSpec>>? defaultStyle;
+  final StyleSpec<SelectMenuItemSpec>? defaultStyleSpec;
 
-  StyleSpec<RemixSelectMenuItemSpec> _resolveStyle(BuildContext context) {
+  StyleSpec<SelectMenuItemSpec> _resolveStyle(BuildContext context) {
     final rawDefault = defaultStyleSpec;
     if (rawDefault != null) return rawDefault;
 
     final itemStyle = MixOps.merge(
       defaultStyle,
-      Prop.maybeMix<StyleSpec<RemixSelectMenuItemSpec>>(data.style),
+      Prop.maybeMix<StyleSpec<SelectMenuItemSpec>>(data.style),
     );
 
     return MixOps.resolve(context, itemStyle) ??
-        const StyleSpec(spec: RemixSelectMenuItemSpec());
+        const StyleSpec(spec: SelectMenuItemSpec());
   }
 
   @override

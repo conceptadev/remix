@@ -136,7 +136,7 @@ void main() {
 
     group('Styling', () {
       testWidgets('applies custom style', (tester) async {
-        final customStyle = RemixSliderStyler().trackColor(Colors.blue);
+        final customStyle = SliderStyler().trackColor(Colors.blue);
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -153,7 +153,7 @@ void main() {
       });
 
       testWidgets('applies thumb color styling', (tester) async {
-        final customStyle = RemixSliderStyler().thumbColor(Colors.red);
+        final customStyle = SliderStyler().thumbColor(Colors.red);
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -170,7 +170,7 @@ void main() {
       });
 
       testWidgets('applies range color styling', (tester) async {
-        final customStyle = RemixSliderStyler().rangeColor(Colors.green);
+        final customStyle = SliderStyler().rangeColor(Colors.green);
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -187,7 +187,7 @@ void main() {
       });
 
       testWidgets('applies thumb size styling', (tester) async {
-        final customStyle = RemixSliderStyler().thumbSize(const Size(24, 24));
+        final customStyle = SliderStyler().thumbSize(const Size(24, 24));
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -204,7 +204,7 @@ void main() {
       });
 
       testWidgets('applies thickness styling', (tester) async {
-        final customStyle = RemixSliderStyler().thickness(12.0);
+        final customStyle = SliderStyler().thickness(12.0);
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -221,7 +221,7 @@ void main() {
       });
 
       testWidgets('applies track thickness styling', (tester) async {
-        final customStyle = RemixSliderStyler().trackThickness(10.0);
+        final customStyle = SliderStyler().trackThickness(10.0);
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -238,7 +238,7 @@ void main() {
       });
 
       testWidgets('applies range thickness styling', (tester) async {
-        final customStyle = RemixSliderStyler().rangeThickness(8.0);
+        final customStyle = SliderStyler().rangeThickness(8.0);
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -647,7 +647,7 @@ void main() {
 
     group('Advanced Styling', () {
       testWidgets('applies multiple style methods', (tester) async {
-        final customStyle = RemixSliderStyler()
+        final customStyle = SliderStyler()
             .trackColor(Colors.blue)
             .rangeColor(Colors.red)
             .thumbColor(Colors.green)
@@ -668,7 +668,7 @@ void main() {
       });
 
       testWidgets('applies thumb styling with decoration', (tester) async {
-        final customStyle = RemixSliderStyler().thumb(
+        final customStyle = SliderStyler().thumb(
           BoxStyler(
             decoration: BoxDecorationMix(
               color: Colors.blue,
@@ -692,7 +692,7 @@ void main() {
       });
 
       testWidgets('applies border radius styling', (tester) async {
-        final customStyle = RemixSliderStyler().borderRadius(
+        final customStyle = SliderStyler().borderRadius(
           BorderRadiusMix.circular(16.0),
         );
 
@@ -713,7 +713,7 @@ void main() {
 
     group('Widget Modifiers', () {
       testWidgets('applies widget modifiers from style', (tester) async {
-        final customStyle = RemixSliderStyler().wrap(.clipOval());
+        final customStyle = SliderStyler().wrap(.clipOval());
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -732,7 +732,7 @@ void main() {
 
     group('StyleSpec Parameter', () {
       testWidgets('applies raw styleSpec when provided', (tester) async {
-        final spec = RemixSliderSpec(
+        final spec = SliderSpec(
           thumb: const StyleSpec(
             spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
           ),

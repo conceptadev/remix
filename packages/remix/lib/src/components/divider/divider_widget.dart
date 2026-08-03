@@ -21,21 +21,21 @@ class RemixDivider extends StatelessWidget {
   /// Creates a Remix divider.
   const RemixDivider({
     super.key,
-    this.style = const RemixDividerStyler.create(),
+    this.style = const DividerStyler.create(),
     this.styleSpec,
   });
 
-  static final styleFrom = RemixDividerStyler.new;
+  static final styleFrom = DividerStyler.new;
 
   /// The style configuration for the divider.
-  final RemixDividerStyler style;
+  final DividerStyler style;
 
   /// Optional raw style spec that bypasses fluent style resolution.
-  final RemixDividerSpec? styleSpec;
+  final DividerSpec? styleSpec;
 
   @override
   Widget build(BuildContext context) {
-    return RemixStyleSpecBuilder<RemixDividerSpec>(
+    return RemixStyleSpecBuilder<DividerSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {

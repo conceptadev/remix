@@ -5,16 +5,16 @@ enum FortalDividerSize { size1, size2, size3, size4 }
 
 /// Fortal-themed preset for [RemixDivider].
 @MixWidget(target: RemixDivider.new)
-RemixDividerStyler fortalDividerStyle({
+DividerStyler fortalDividerStyle({
   FortalDividerSize size = .size1,
   Axis orientation = Axis.horizontal,
 }) {
-  return RemixDividerStyler()
+  return DividerStyler()
       .color(FortalTokens.gray6())
       .merge(_fortalDividerSizeStyler(size, orientation));
 }
 
-RemixDividerStyler _fortalDividerSizeStyler(
+DividerStyler _fortalDividerSizeStyler(
   FortalDividerSize size,
   Axis orientation,
 ) {
@@ -25,14 +25,14 @@ RemixDividerStyler _fortalDividerSizeStyler(
     .size4 => null,
   };
   if (orientation == Axis.horizontal) {
-    final style = RemixDividerStyler().height(FortalTokens.borderWidth1());
+    final style = DividerStyler().height(FortalTokens.borderWidth1());
     return length == null
         ? style.wrap(
             WidgetModifierConfig.fractionallySizedBox(widthFactor: 1).align(),
           )
         : style.width(length);
   }
-  final style = RemixDividerStyler().width(FortalTokens.borderWidth1());
+  final style = DividerStyler().width(FortalTokens.borderWidth1());
   return length == null
       ? style.wrap(
           WidgetModifierConfig.fractionallySizedBox(heightFactor: 1).align(),

@@ -6,7 +6,7 @@ typedef RemixIconButtonIconBuilder =
 
 /// Builder for the loading indicator rendered by [RemixIconButton].
 typedef RemixIconButtonLoadingBuilder =
-    Widget Function(BuildContext context, RemixSpinnerSpec spec);
+    Widget Function(BuildContext context, SpinnerSpec spec);
 
 /// A square button that renders typed [IconData].
 ///
@@ -28,11 +28,11 @@ class RemixIconButton extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
-    this.style = const RemixIconButtonStyler.create(),
+    this.style = const IconButtonStyler.create(),
     this.styleSpec,
   }) : assert(semanticLabel == null || semanticLabel != '');
 
-  static final styleFrom = RemixIconButtonStyler.new;
+  static final styleFrom = IconButtonStyler.new;
 
   /// The icon rendered by the button.
   final IconData icon;
@@ -49,8 +49,8 @@ class RemixIconButton extends StatelessWidget {
   final String? semanticHint;
   final bool excludeSemantics;
   final MouseCursor mouseCursor;
-  final RemixIconButtonStyler style;
-  final RemixIconButtonSpec? styleSpec;
+  final IconButtonStyler style;
+  final IconButtonSpec? styleSpec;
 
   bool get _isEnabled => enabled && !loading && onPressed != null;
 
@@ -76,7 +76,7 @@ class RemixIconButton extends StatelessWidget {
       autofocus: autofocus,
       semanticLabel: semanticLabel ?? 'Icon Button',
       excludeSemantics: excludeSemantics,
-      builder: (context, _, _) => RemixStyleSpecBuilder<RemixIconButtonSpec>(
+      builder: (context, _, _) => RemixStyleSpecBuilder<IconButtonSpec>(
         style: style,
         styleSpec: styleSpec,
         controller: NakedButtonState.controllerOf(context),
@@ -95,7 +95,7 @@ class RemixIconButton extends StatelessWidget {
             containerEffects: spec.containerEffects,
             child: content,
           );
-          final spinner = StyleSpecBuilder<RemixSpinnerSpec>(
+          final spinner = StyleSpecBuilder<SpinnerSpec>(
             styleSpec: spec.spinner,
             builder: (context, spinnerSpec) => loadingBuilder == null
                 ? RemixSpinner(styleSpec: spinnerSpec)

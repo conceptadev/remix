@@ -4,7 +4,7 @@ part of 'avatar.dart';
 @MixableSpec(
   extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
 )
-class RemixAvatarSpec with _$RemixAvatarSpec {
+class AvatarSpec with _$AvatarSpec {
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
@@ -13,7 +13,7 @@ class RemixAvatarSpec with _$RemixAvatarSpec {
   @override
   final StyleSpec<IconSpec> icon;
 
-  const RemixAvatarSpec({
+  const AvatarSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
@@ -21,3 +21,9 @@ class RemixAvatarSpec with _$RemixAvatarSpec {
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec());
 }
+
+/// Backward-compatible name for [AvatarSpec].
+///
+/// The generated style API is based on [AvatarSpec], so resolved values use
+/// `AvatarSpec` as their runtime type.
+typedef RemixAvatarSpec = AvatarSpec;

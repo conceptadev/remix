@@ -5,21 +5,21 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixSwitchStyler', () {
+  group('SwitchStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        final style = RemixSwitchStyler();
+        final style = SwitchStyler();
 
         expect(style, isNotNull);
-        expect(style, isA<RemixSwitchStyler>());
+        expect(style, isA<SwitchStyler>());
       });
 
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final thumb = Prop.maybeMix(BoxStyler());
-        final variants = <VariantStyle<RemixSwitchSpec>>[];
+        final variants = <VariantStyle<SwitchSpec>>[];
 
-        final style = RemixSwitchStyler.create(
+        final style = SwitchStyler.create(
           container: container,
           thumb: thumb,
           variants: variants,
@@ -35,7 +35,7 @@ void main() {
         final containerStyler = BoxStyler();
         final thumbStyler = BoxStyler();
 
-        final style = RemixSwitchStyler(
+        final style = SwitchStyler(
           container: containerStyler,
           thumb: thumbStyler,
         );
@@ -49,7 +49,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'thumbColor',
-        initial: RemixSwitchStyler(),
+        initial: SwitchStyler(),
         modify: (style) => style.thumbColor(Colors.blue),
         expect: (style) {
           expect(
@@ -65,7 +65,7 @@ void main() {
 
       styleMethodTest(
         'thumb',
-        initial: RemixSwitchStyler(),
+        initial: SwitchStyler(),
         modify: (style) => style.thumb(
           BoxStyler(decoration: BoxDecorationMix(color: Colors.green)),
         ),
@@ -83,40 +83,40 @@ void main() {
 
       styleMethodTest(
         'alignment',
-        initial: RemixSwitchStyler(),
+        initial: SwitchStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
-          expect(style, equals(RemixSwitchStyler.alignment(Alignment.center)));
+          expect(style, equals(SwitchStyler.alignment(Alignment.center)));
         },
       );
 
       styleMethodTest(
         'padding',
-        initial: RemixSwitchStyler(),
+        initial: SwitchStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixSwitchStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
+            equals(SwitchStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
 
       styleMethodTest(
         'margin',
-        initial: RemixSwitchStyler(),
+        initial: SwitchStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixSwitchStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
+            equals(SwitchStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
 
       styleMethodTest(
         'constraints',
-        initial: RemixSwitchStyler(),
+        initial: SwitchStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 20.0, minHeight: 20.0),
         ),
@@ -124,7 +124,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixSwitchStyler.constraints(
+              SwitchStyler.constraints(
                 BoxConstraintsMix(minWidth: 20.0, minHeight: 20.0),
               ),
             ),
@@ -134,7 +134,7 @@ void main() {
 
       styleMethodTest(
         'decoration',
-        initial: RemixSwitchStyler(),
+        initial: SwitchStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.blue,
@@ -145,7 +145,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixSwitchStyler.decoration(
+              SwitchStyler.decoration(
                 BoxDecorationMix(
                   color: Colors.blue,
                   borderRadius: BorderRadiusMix.circular(8.0),
@@ -158,7 +158,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration',
-        initial: RemixSwitchStyler(),
+        initial: SwitchStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
@@ -168,7 +168,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixSwitchStyler.foregroundDecoration(
+              SwitchStyler.foregroundDecoration(
                 BoxDecorationMix(
                   border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
@@ -180,14 +180,14 @@ void main() {
 
       styleMethodTest(
         'transform',
-        initial: RemixSwitchStyler(),
+        initial: SwitchStyler(),
         modify: (style) =>
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixSwitchStyler.transform(
+              SwitchStyler.transform(
                 Matrix4.identity(),
                 alignment: Alignment.topLeft,
               ),
@@ -198,16 +198,16 @@ void main() {
 
       styleMethodTest(
         'variants',
-        initial: RemixSwitchStyler(),
-        modify: (style) => style.variants(<VariantStyle<RemixSwitchSpec>>[]),
+        initial: SwitchStyler(),
+        modify: (style) => style.variants(<VariantStyle<SwitchSpec>>[]),
         expect: (style) {
-          expect(style.$variants, equals(<VariantStyle<RemixSwitchSpec>>[]));
+          expect(style.$variants, equals(<VariantStyle<SwitchSpec>>[]));
         },
       );
 
       styleMethodTest(
         'wrap',
-        initial: RemixSwitchStyler(),
+        initial: SwitchStyler(),
         modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
@@ -216,7 +216,7 @@ void main() {
 
       styleMethodTest(
         'animate',
-        initial: RemixSwitchStyler(),
+        initial: SwitchStyler(),
         modify: (style) =>
             style.animate(AnimationConfig.linear(const Duration(seconds: 1))),
         expect: (style) {
@@ -232,7 +232,7 @@ void main() {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
       ) async {
-        final style = RemixSwitchStyler();
+        final style = SwitchStyler();
 
         await tester.pumpWidget(
           MaterialApp(
@@ -240,8 +240,8 @@ void main() {
               builder: (context) {
                 final spec = style.resolve(context);
 
-                expect(spec, isA<StyleSpec<RemixSwitchSpec>>());
-                expect(spec.spec, isA<RemixSwitchSpec>());
+                expect(spec, isA<StyleSpec<SwitchSpec>>());
+                expect(spec.spec, isA<SwitchSpec>());
                 expect(spec.spec.container, isA<StyleSpec<BoxSpec>>());
                 expect(spec.spec.thumb, isA<StyleSpec<BoxSpec>>());
 
@@ -253,7 +253,7 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        final originalStyle = RemixSwitchStyler();
+        final originalStyle = SwitchStyler();
 
         final mergedStyle = originalStyle.merge(null);
 
@@ -261,10 +261,10 @@ void main() {
       });
 
       test('merge combines properties correctly', () {
-        final style1 = RemixSwitchStyler(
+        final style1 = SwitchStyler(
           container: BoxStyler(alignment: Alignment.centerLeft),
         );
-        final style2 = RemixSwitchStyler(
+        final style2 = SwitchStyler(
           thumb: BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
         );
 
@@ -289,7 +289,7 @@ void main() {
       testWidgets('call method creates RemixSwitch with all parameters', (
         tester,
       ) async {
-        final style = RemixSwitchStyler().thumbColor(Colors.white);
+        final style = SwitchStyler().thumbColor(Colors.white);
         final focusNode = FocusNode();
 
         final switchWidget = style.call(
@@ -319,7 +319,7 @@ void main() {
       testWidgets('call method creates RemixSwitch with minimal parameters', (
         tester,
       ) async {
-        final style = RemixSwitchStyler();
+        final style = SwitchStyler();
 
         final switchWidget = style.call(selected: false, onChanged: (v) {});
 
@@ -333,22 +333,22 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        final style1 = RemixSwitchStyler();
-        final style2 = RemixSwitchStyler();
+        final style1 = SwitchStyler();
+        final style2 = SwitchStyler();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixSwitchStyler().thumbColor(Colors.blue);
-        final style2 = RemixSwitchStyler().thumbColor(Colors.red);
+        final style1 = SwitchStyler().thumbColor(Colors.blue);
+        final style2 = SwitchStyler().thumbColor(Colors.red);
 
         expect(style1, isNot(equals(style2)));
       });
 
       test('props list contains all properties', () {
-        final style = RemixSwitchStyler();
+        final style = SwitchStyler();
 
         expect(style.props, hasLength(7));
         expect(style.props, contains(style.$container));

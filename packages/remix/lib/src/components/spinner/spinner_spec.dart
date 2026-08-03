@@ -2,7 +2,7 @@ part of 'spinner.dart';
 
 /// Resolved visual values for an eight-leaf [RemixSpinner].
 @MixableSpec()
-class RemixSpinnerSpec with _$RemixSpinnerSpec {
+class SpinnerSpec with _$SpinnerSpec {
   @override
   final double? size;
 
@@ -38,7 +38,7 @@ class RemixSpinnerSpec with _$RemixSpinnerSpec {
   @override
   final Duration? duration;
 
-  const RemixSpinnerSpec({
+  const SpinnerSpec({
     this.size,
     this.strokeWidth,
     this.indicatorColor,
@@ -50,3 +50,9 @@ class RemixSpinnerSpec with _$RemixSpinnerSpec {
     this.duration,
   });
 }
+
+/// Backward-compatible name for [SpinnerSpec].
+///
+/// The generated style API is based on [SpinnerSpec], so resolved values use
+/// `SpinnerSpec` as their runtime type.
+typedef RemixSpinnerSpec = SpinnerSpec;

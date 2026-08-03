@@ -192,8 +192,8 @@ RemixDialog remixDialogConstructor({
   List<Widget>? actions,
   bool modal = true,
   String? semanticLabel,
-  RemixDialogStyler style = const RemixDialogStyler.create(),
-  RemixDialogSpec? styleSpec,
+  DialogStyler style = const DialogStyler.create(),
+  DialogSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -225,11 +225,11 @@ Optional. Whether the dialog blocks interaction with background content.
 
 Optional. Accessibility label for the dialog. Defaults to the title when omitted.
 
-#### `style` → `RemixDialogStyler`
+#### `style` → `DialogStyler`
 
 Optional. The style configuration for the dialog container, title, description, and actions.
 
-#### `styleSpec` → `RemixDialogSpec?`
+#### `styleSpec` → `DialogSpec?`
 
 Optional. A raw resolved style spec that bypasses fluent style resolution.
 

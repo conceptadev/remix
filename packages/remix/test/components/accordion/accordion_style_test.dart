@@ -5,13 +5,13 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixAccordionStyler', () {
+  group('AccordionStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        final style = RemixAccordionStyler();
+        final style = AccordionStyler();
 
         expect(style, isNotNull);
-        expect(style, isA<RemixAccordionStyler>());
+        expect(style, isA<AccordionStyler>());
       });
 
       test('create constructor with all parameters', () {
@@ -20,9 +20,9 @@ void main() {
         final title = Prop.maybeMix(TextStyler());
         final trailingIcon = Prop.maybeMix(IconStyler());
         final content = Prop.maybeMix(BoxStyler());
-        final variants = <VariantStyle<RemixAccordionSpec>>[];
+        final variants = <VariantStyle<AccordionSpec>>[];
 
-        final style = RemixAccordionStyler.create(
+        final style = AccordionStyler.create(
           trigger: trigger,
           leadingIcon: leadingIcon,
           title: title,
@@ -45,7 +45,7 @@ void main() {
         final titleStyler = TextStyler();
         final contentStyler = BoxStyler();
 
-        final style = RemixAccordionStyler(
+        final style = AccordionStyler(
           trigger: triggerStyler,
           title: titleStyler,
           content: contentStyler,
@@ -61,7 +61,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'trigger',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.trigger(FlexBoxStyler()),
         expect: (style) {
           expect(style.$trigger, equals(Prop.maybeMix(FlexBoxStyler())));
@@ -70,7 +70,7 @@ void main() {
 
       styleMethodTest(
         'leadingIcon',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.leadingIcon(IconStyler()),
         expect: (style) {
           expect(style.$leadingIcon, equals(Prop.maybeMix(IconStyler())));
@@ -79,7 +79,7 @@ void main() {
 
       styleMethodTest(
         'title',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.title(TextStyler()),
         expect: (style) {
           expect(style.$title, equals(Prop.maybeMix(TextStyler())));
@@ -88,7 +88,7 @@ void main() {
 
       styleMethodTest(
         'trailingIcon',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.trailingIcon(IconStyler()),
         expect: (style) {
           expect(style.$trailingIcon, equals(Prop.maybeMix(IconStyler())));
@@ -97,7 +97,7 @@ void main() {
 
       styleMethodTest(
         'content',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.content(BoxStyler()),
         expect: (style) {
           expect(style.$content, equals(Prop.maybeMix(BoxStyler())));
@@ -106,54 +106,52 @@ void main() {
 
       styleMethodTest(
         'alignment',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
             style,
-            equals(RemixAccordionStyler.alignment(Alignment.centerLeft)),
+            equals(AccordionStyler.alignment(Alignment.centerLeft)),
           );
         },
       );
 
       styleMethodTest(
         'padding',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
             style,
-            equals(
-              RemixAccordionStyler.padding(EdgeInsetsGeometryMix.all(16.0)),
-            ),
+            equals(AccordionStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
 
       styleMethodTest(
         'margin',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixAccordionStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
+            equals(AccordionStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
 
       styleMethodTest(
         'color',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
-          expect(style, equals(RemixAccordionStyler.color(Colors.blue)));
+          expect(style, equals(AccordionStyler.color(Colors.blue)));
         },
       );
 
       styleMethodTest(
         'decoration',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.red,
@@ -164,7 +162,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixAccordionStyler.decoration(
+              AccordionStyler.decoration(
                 BoxDecorationMix(
                   color: Colors.red,
                   borderRadius: BorderRadiusMix.circular(8.0),
@@ -177,7 +175,7 @@ void main() {
 
       styleMethodTest(
         'constraints',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 100.0, minHeight: 40.0),
         ),
@@ -185,7 +183,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixAccordionStyler.constraints(
+              AccordionStyler.constraints(
                 BoxConstraintsMix(minWidth: 100.0, minHeight: 40.0),
               ),
             ),
@@ -195,22 +193,22 @@ void main() {
 
       styleMethodTest(
         'size',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.size(200.0, 50.0),
         expect: (style) {
-          expect(style, equals(RemixAccordionStyler.size(200.0, 50.0)));
+          expect(style, equals(AccordionStyler.size(200.0, 50.0)));
         },
       );
 
       styleMethodTest(
         'borderRadius',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.borderRadius(BorderRadiusMix.circular(12.0)),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixAccordionStyler.borderRadius(BorderRadiusMix.circular(12.0)),
+              AccordionStyler.borderRadius(BorderRadiusMix.circular(12.0)),
             ),
           );
         },
@@ -218,7 +216,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
@@ -228,7 +226,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixAccordionStyler.foregroundDecoration(
+              AccordionStyler.foregroundDecoration(
                 BoxDecorationMix(
                   border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
@@ -240,14 +238,14 @@ void main() {
 
       styleMethodTest(
         'transform',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) =>
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixAccordionStyler.transform(
+              AccordionStyler.transform(
                 Matrix4.identity(),
                 alignment: Alignment.topLeft,
               ),
@@ -258,7 +256,7 @@ void main() {
 
       styleMethodTest(
         'flex',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.flex(FlexStyler()),
         expect: (style) {
           expect(
@@ -270,7 +268,7 @@ void main() {
 
       styleMethodTest(
         'backgroundColor',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.backgroundColor(Colors.red),
         expect: (style) {
           expect(
@@ -286,16 +284,16 @@ void main() {
 
       styleMethodTest(
         'spacing',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.spacing(8.0),
         expect: (style) {
-          expect(style, equals(RemixAccordionStyler.spacing(8.0)));
+          expect(style, equals(AccordionStyler.spacing(8.0)));
         },
       );
 
       styleMethodTest(
         'titleColor',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.titleColor(Colors.blue),
         expect: (style) {
           expect(
@@ -311,7 +309,7 @@ void main() {
 
       styleMethodTest(
         'titleFontSize',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.titleFontSize(20.0),
         expect: (style) {
           expect(
@@ -325,7 +323,7 @@ void main() {
 
       styleMethodTest(
         'titleFontWeight',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.titleFontWeight(FontWeight.bold),
         expect: (style) {
           expect(
@@ -341,7 +339,7 @@ void main() {
 
       styleMethodTest(
         'titleStyle',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) =>
             style.titleStyle(TextStyleMix(color: Colors.green, fontSize: 18.0)),
         expect: (style) {
@@ -360,7 +358,7 @@ void main() {
 
       styleMethodTest(
         'leadingIconColor',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.leadingIconColor(Colors.orange),
         expect: (style) {
           expect(
@@ -372,7 +370,7 @@ void main() {
 
       styleMethodTest(
         'leadingIconSize',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.leadingIconSize(24.0),
         expect: (style) {
           expect(
@@ -384,7 +382,7 @@ void main() {
 
       styleMethodTest(
         'trailingIconColor',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.trailingIconColor(Colors.purple),
         expect: (style) {
           expect(
@@ -396,7 +394,7 @@ void main() {
 
       styleMethodTest(
         'trailingIconSize',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.trailingIconSize(16.0),
         expect: (style) {
           expect(
@@ -408,7 +406,7 @@ void main() {
 
       styleMethodTest(
         'contentColor',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.contentColor(Colors.grey),
         expect: (style) {
           expect(
@@ -424,7 +422,7 @@ void main() {
 
       styleMethodTest(
         'contentPadding',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) =>
             style.contentPadding(EdgeInsetsGeometryMix.all(12.0)),
         expect: (style) {
@@ -441,7 +439,7 @@ void main() {
 
       styleMethodTest(
         'contentDecoration',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) =>
             style.contentDecoration(BoxDecorationMix(color: Colors.white)),
         expect: (style) {
@@ -458,7 +456,7 @@ void main() {
 
       styleMethodTest(
         'wrap',
-        initial: RemixAccordionStyler(),
+        initial: AccordionStyler(),
         modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
@@ -467,88 +465,84 @@ void main() {
 
       styleMethodTest(
         'variants',
-        initial: RemixAccordionStyler(),
-        modify: (style) => style.variants(<VariantStyle<RemixAccordionSpec>>[]),
+        initial: AccordionStyler(),
+        modify: (style) => style.variants(<VariantStyle<AccordionSpec>>[]),
         expect: (style) {
-          expect(style.$variants, equals(<VariantStyle<RemixAccordionSpec>>[]));
+          expect(style.$variants, equals(<VariantStyle<AccordionSpec>>[]));
         },
       );
     });
 
     group('Factory Constructors', () {
       test('color factory', () {
-        final style = RemixAccordionStyler.color(Colors.red);
+        final style = AccordionStyler.color(Colors.red);
         expect(style.$trigger, isNotNull);
       });
 
       test('padding factory', () {
-        final style = RemixAccordionStyler.padding(
-          EdgeInsetsGeometryMix.all(16.0),
-        );
+        final style = AccordionStyler.padding(EdgeInsetsGeometryMix.all(16.0));
         expect(style.$trigger, isNotNull);
       });
 
       test('margin factory', () {
-        final style = RemixAccordionStyler.margin(
-          EdgeInsetsGeometryMix.all(8.0),
-        );
+        final style = AccordionStyler.margin(EdgeInsetsGeometryMix.all(8.0));
         expect(style.$trigger, isNotNull);
       });
 
       test('decoration factory', () {
-        final style = RemixAccordionStyler.decoration(
+        final style = AccordionStyler.decoration(
           BoxDecorationMix(color: Colors.blue),
         );
         expect(style.$trigger, isNotNull);
       });
 
       test('alignment factory', () {
-        final style = RemixAccordionStyler.alignment(Alignment.center);
+        final style = AccordionStyler.alignment(Alignment.center);
         expect(style.$trigger, isNotNull);
       });
 
       test('constraints factory', () {
-        final style = RemixAccordionStyler.constraints(
+        final style = AccordionStyler.constraints(
           BoxConstraintsMix(minWidth: 100.0),
         );
         expect(style.$trigger, isNotNull);
       });
 
       test('borderRadius factory', () {
-        final style = RemixAccordionStyler.borderRadius(
+        final style = AccordionStyler.borderRadius(
           BorderRadiusMix.circular(8.0),
         );
         expect(style.$trigger, isNotNull);
       });
 
       test('spacing factory', () {
-        final style = RemixAccordionStyler.spacing(8.0);
+        final style = AccordionStyler.spacing(8.0);
         expect(style.$trigger, isNotNull);
       });
 
       test('title factory', () {
-        final style = RemixAccordionStyler.title(
+        final style = AccordionStyler.title(
           TextStyler(style: TextStyleMix(color: Colors.red)),
         );
         expect(style.$title, isNotNull);
       });
 
       test('leadingIcon factory', () {
-        final style = RemixAccordionStyler.leadingIcon(
+        final style = AccordionStyler.leadingIcon(
           IconStyler(color: Colors.green, size: 24.0),
         );
         expect(style.$leadingIcon, isNotNull);
       });
 
       test('trailingIcon factory', () {
-        final style = RemixAccordionStyler.trailingIcon(
+        final style = AccordionStyler.trailingIcon(
           IconStyler(color: Colors.purple, size: 16.0),
         );
         expect(style.$trailingIcon, isNotNull);
       });
 
       test('content factory', () {
-        final style = RemixAccordionStyler.content(
+        final style = AccordionStyler.content(
           BoxStyler(
             padding: EdgeInsetsGeometryMix.all(12.0),
             decoration: BoxDecorationMix(color: Colors.white),
@@ -597,7 +591,7 @@ void main() {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
       ) async {
-        final style = RemixAccordionStyler();
+        final style = AccordionStyler();
 
         await tester.pumpWidget(
           MaterialApp(
@@ -605,8 +599,8 @@ void main() {
               builder: (context) {
                 final spec = style.resolve(context);
 
-                expect(spec, isA<StyleSpec<RemixAccordionSpec>>());
-                expect(spec.spec, isA<RemixAccordionSpec>());
+                expect(spec, isA<StyleSpec<AccordionSpec>>());
+                expect(spec.spec, isA<AccordionSpec>());
                 expect(spec.spec.trigger, isA<StyleSpec<FlexBoxSpec>>());
                 expect(spec.spec.leadingIcon, isA<StyleSpec<IconSpec>>());
                 expect(spec.spec.title, isA<StyleSpec<TextSpec>>());
@@ -621,10 +615,10 @@ void main() {
       });
 
       test('merge combines two styles', () {
-        final style1 = RemixAccordionStyler().padding(
+        final style1 = AccordionStyler().padding(
           EdgeInsetsGeometryMix.all(8.0),
         );
-        final style2 = RemixAccordionStyler().color(Colors.blue);
+        final style2 = AccordionStyler().color(Colors.blue);
 
         final merged = style1.merge(style2);
 
@@ -634,7 +628,7 @@ void main() {
       });
 
       test('call creates RemixAccordion with this style', () {
-        final style = RemixAccordionStyler().backgroundColor(Colors.blue);
+        final style = AccordionStyler().backgroundColor(Colors.blue);
 
         final accordion = style.call<String>(
           value: 'details',
@@ -654,18 +648,18 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        final style1 = RemixAccordionStyler();
-        final style2 = RemixAccordionStyler();
+        final style1 = AccordionStyler();
+        final style2 = AccordionStyler();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixAccordionStyler().padding(
+        final style1 = AccordionStyler().padding(
           EdgeInsetsGeometryMix.all(16.0),
         );
-        final style2 = RemixAccordionStyler().padding(
+        final style2 = AccordionStyler().padding(
           EdgeInsetsGeometryMix.all(8.0),
         );
 
@@ -675,7 +669,7 @@ void main() {
 
     group('Props', () {
       test('props list contains all properties', () {
-        final style = RemixAccordionStyler();
+        final style = AccordionStyler();
 
         expect(style.props, hasLength(8));
         expect(style.props, contains(style.$trigger));

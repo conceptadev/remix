@@ -17,14 +17,14 @@ void main() {
         trigger: MenuTriggerStyler().color(Colors.black),
         overlay: FlexBoxStyler(),
         item: MenuItemStyler().color(Colors.white),
-        divider: RemixDividerStyler(),
+        divider: DividerStyler(),
       );
       final fromFactory = MenuStyler.trigger(MenuTriggerStyler());
       final fluent = MenuStyler()
           .trigger(MenuTriggerStyler().color(Colors.black))
           .overlay(FlexBoxStyler())
           .item(MenuItemStyler().color(Colors.white))
-          .divider(RemixDividerStyler())
+          .divider(DividerStyler())
           .variants(const <VariantStyle<MenuSpec>>[]);
 
       expect(fromFields.merge(empty), isA<MenuStyler>());
@@ -45,10 +45,7 @@ void main() {
 
       expect(triggerStyle, isA<MenuTriggerStyler>());
       expect(itemStyle, isA<MenuItemStyler>());
-      expect(
-        MenuTriggerStyler().flex(FlexStyler()),
-        isA<MenuTriggerStyler>(),
-      );
+      expect(MenuTriggerStyler().flex(FlexStyler()), isA<MenuTriggerStyler>());
       expect(MenuItemStyler().flex(FlexStyler()), isA<MenuItemStyler>());
     });
 

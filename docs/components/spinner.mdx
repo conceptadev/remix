@@ -36,18 +36,18 @@ class SpinnerExample extends StatelessWidget {
     );
   }
 
-  RemixSpinnerStyler get styleDefault {
-    return RemixSpinnerStyler().indicatorColor(Colors.blue);
+  SpinnerStyler get styleDefault {
+    return SpinnerStyler().indicatorColor(Colors.blue);
   }
 
-  RemixSpinnerStyler get styleWithTrack {
-    return RemixSpinnerStyler()
+  SpinnerStyler get styleWithTrack {
+    return SpinnerStyler()
         .indicatorColor(Colors.green)
         .trackColor(Colors.green.withValues(alpha: 0.2));
   }
 
-  RemixSpinnerStyler get styleCustomColors {
-    return RemixSpinnerStyler()
+  SpinnerStyler get styleCustomColors {
+    return SpinnerStyler()
         .indicatorColor(Colors.redAccent)
         .trackColor(Colors.red.withValues(alpha: 0.15))
         .duration(2.s);
@@ -94,8 +94,8 @@ import 'package:remix/remix.dart';
 
 RemixSpinner remixSpinnerConstructor({
   Key? key,
-  RemixSpinnerStyler style = const RemixSpinnerStyler.create(),
-  RemixSpinnerSpec? styleSpec,
+  SpinnerStyler style = const SpinnerStyler.create(),
+  SpinnerSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -104,11 +104,11 @@ RemixSpinner remixSpinnerConstructor({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixSpinnerStyler`
+#### `style` → `SpinnerStyler`
 
 Optional. The style configuration for the spinner. Customize colors, sizing, stroke, and animation duration.
 
-#### `styleSpec` → `RemixSpinnerSpec?`
+#### `styleSpec` → `SpinnerSpec?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 

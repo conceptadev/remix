@@ -18,7 +18,7 @@ class RemixCallout extends StatelessWidget {
     String? text,
     this.icon,
     Widget? child,
-    this.style = const RemixCalloutStyler.create(),
+    this.style = const CalloutStyler.create(),
     this.styleSpec,
   }) : text = text,
        child = child,
@@ -27,7 +27,7 @@ class RemixCallout extends StatelessWidget {
          'Provide either text or child to RemixCallout.',
        );
 
-  static final styleFrom = RemixCalloutStyler.new;
+  static final styleFrom = CalloutStyler.new;
 
   /// The text to display in the callout.
   final String? text;
@@ -39,14 +39,14 @@ class RemixCallout extends StatelessWidget {
   final Widget? child;
 
   /// The style configuration for the callout.
-  final RemixCalloutStyler style;
+  final CalloutStyler style;
 
   /// Optional raw style spec that bypasses fluent style resolution.
-  final RemixCalloutSpec? styleSpec;
+  final CalloutSpec? styleSpec;
 
   @override
   Widget build(BuildContext context) {
-    return RemixStyleSpecBuilder<RemixCalloutSpec>(
+    return RemixStyleSpecBuilder<CalloutSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {

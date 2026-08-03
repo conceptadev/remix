@@ -6,20 +6,20 @@ part of 'divider.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixDividerSpec implements Spec<RemixDividerSpec>, Diagnosticable {
+mixin _$DividerSpec implements Spec<DividerSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
 
   @override
-  Type get type => RemixDividerSpec;
+  Type get type => DividerSpec;
 
   @override
-  RemixDividerSpec copyWith({StyleSpec<BoxSpec>? container}) {
-    return RemixDividerSpec(container: container ?? this.container);
+  DividerSpec copyWith({StyleSpec<BoxSpec>? container}) {
+    return DividerSpec(container: container ?? this.container);
   }
 
   @override
-  RemixDividerSpec lerp(RemixDividerSpec? other, double t) {
-    return RemixDividerSpec(container: container.lerp(other?.container, t));
+  DividerSpec lerp(DividerSpec? other, double t) {
+    return DividerSpec(container: container.lerp(other?.container, t));
   }
 
   @override
@@ -28,7 +28,7 @@ mixin _$RemixDividerSpec implements Spec<RemixDividerSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixDividerSpec &&
+        other is DividerSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -69,9 +69,9 @@ mixin _$RemixDividerSpec implements Spec<RemixDividerSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixDividerSpec` and migrate the class declaration to `class RemixDividerSpec with _\$RemixDividerSpec`. The `_\$RemixDividerSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$DividerSpec` and migrate the class declaration to `class DividerSpec with _\$DividerSpec`. The `_\$DividerSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixDividerSpecMethods = _$RemixDividerSpec; // ignore: unused_element
+typedef _$DividerSpecMethods = _$DividerSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -102,22 +102,22 @@ class FortalDivider extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
-    with RemixBoxStylerMixin<RemixDividerStyler> {
+class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
+    with RemixBoxStylerMixin<DividerStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
 
-  const RemixDividerStyler.create({
+  const DividerStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container;
 
-  RemixDividerStyler({
+  DividerStyler({
     BoxStyler? container,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixDividerSpec>>? variants,
+    List<VariantStyle<DividerSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          variants: variants,
@@ -125,115 +125,110 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
          animation: animation,
        );
 
-  factory RemixDividerStyler.container(BoxStyler value) =>
-      RemixDividerStyler().container(value);
-  factory RemixDividerStyler.alignment(AlignmentGeometry value) =>
-      RemixDividerStyler().alignment(value);
-  factory RemixDividerStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixDividerStyler().padding(value);
-  factory RemixDividerStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixDividerStyler().margin(value);
-  factory RemixDividerStyler.constraints(BoxConstraintsMix value) =>
-      RemixDividerStyler().constraints(value);
-  factory RemixDividerStyler.decoration(DecorationMix value) =>
-      RemixDividerStyler().decoration(value);
-  factory RemixDividerStyler.foregroundDecoration(DecorationMix value) =>
-      RemixDividerStyler().foregroundDecoration(value);
-  factory RemixDividerStyler.clipBehavior(Clip value) =>
-      RemixDividerStyler().clipBehavior(value);
-  factory RemixDividerStyler.color(Color value) =>
-      RemixDividerStyler().color(value);
-  factory RemixDividerStyler.gradient(GradientMix value) =>
-      RemixDividerStyler().gradient(value);
-  factory RemixDividerStyler.border(BoxBorderMix value) =>
-      RemixDividerStyler().border(value);
-  factory RemixDividerStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixDividerStyler().borderRadius(value);
-  factory RemixDividerStyler.elevation(ElevationShadow value) =>
-      RemixDividerStyler().elevation(value);
-  factory RemixDividerStyler.shadow(BoxShadowMix value) =>
-      RemixDividerStyler().shadow(value);
-  factory RemixDividerStyler.shadows(List<BoxShadowMix> value) =>
-      RemixDividerStyler().shadows(value);
-  factory RemixDividerStyler.width(double value) =>
-      RemixDividerStyler().width(value);
-  factory RemixDividerStyler.height(double value) =>
-      RemixDividerStyler().height(value);
-  factory RemixDividerStyler.size(double width, double height) =>
-      RemixDividerStyler().size(width, height);
-  factory RemixDividerStyler.minWidth(double value) =>
-      RemixDividerStyler().minWidth(value);
-  factory RemixDividerStyler.maxWidth(double value) =>
-      RemixDividerStyler().maxWidth(value);
-  factory RemixDividerStyler.minHeight(double value) =>
-      RemixDividerStyler().minHeight(value);
-  factory RemixDividerStyler.maxHeight(double value) =>
-      RemixDividerStyler().maxHeight(value);
-  factory RemixDividerStyler.scale(
-    double scale, {
-    Alignment alignment = .center,
-  }) => RemixDividerStyler().scale(scale, alignment: alignment);
-  factory RemixDividerStyler.rotate(
+  factory DividerStyler.container(BoxStyler value) =>
+      DividerStyler().container(value);
+  factory DividerStyler.alignment(AlignmentGeometry value) =>
+      DividerStyler().alignment(value);
+  factory DividerStyler.padding(EdgeInsetsGeometryMix value) =>
+      DividerStyler().padding(value);
+  factory DividerStyler.margin(EdgeInsetsGeometryMix value) =>
+      DividerStyler().margin(value);
+  factory DividerStyler.constraints(BoxConstraintsMix value) =>
+      DividerStyler().constraints(value);
+  factory DividerStyler.decoration(DecorationMix value) =>
+      DividerStyler().decoration(value);
+  factory DividerStyler.foregroundDecoration(DecorationMix value) =>
+      DividerStyler().foregroundDecoration(value);
+  factory DividerStyler.clipBehavior(Clip value) =>
+      DividerStyler().clipBehavior(value);
+  factory DividerStyler.color(Color value) => DividerStyler().color(value);
+  factory DividerStyler.gradient(GradientMix value) =>
+      DividerStyler().gradient(value);
+  factory DividerStyler.border(BoxBorderMix value) =>
+      DividerStyler().border(value);
+  factory DividerStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      DividerStyler().borderRadius(value);
+  factory DividerStyler.elevation(ElevationShadow value) =>
+      DividerStyler().elevation(value);
+  factory DividerStyler.shadow(BoxShadowMix value) =>
+      DividerStyler().shadow(value);
+  factory DividerStyler.shadows(List<BoxShadowMix> value) =>
+      DividerStyler().shadows(value);
+  factory DividerStyler.width(double value) => DividerStyler().width(value);
+  factory DividerStyler.height(double value) => DividerStyler().height(value);
+  factory DividerStyler.size(double width, double height) =>
+      DividerStyler().size(width, height);
+  factory DividerStyler.minWidth(double value) =>
+      DividerStyler().minWidth(value);
+  factory DividerStyler.maxWidth(double value) =>
+      DividerStyler().maxWidth(value);
+  factory DividerStyler.minHeight(double value) =>
+      DividerStyler().minHeight(value);
+  factory DividerStyler.maxHeight(double value) =>
+      DividerStyler().maxHeight(value);
+  factory DividerStyler.scale(double scale, {Alignment alignment = .center}) =>
+      DividerStyler().scale(scale, alignment: alignment);
+  factory DividerStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixDividerStyler().rotate(radians, alignment: alignment);
-  factory RemixDividerStyler.translate(double x, double y, [double z = 0.0]) =>
-      RemixDividerStyler().translate(x, y, z);
-  factory RemixDividerStyler.skew(double skewX, double skewY) =>
-      RemixDividerStyler().skew(skewX, skewY);
-  factory RemixDividerStyler.textStyle(TextStyler value) =>
-      RemixDividerStyler().textStyle(value);
-  factory RemixDividerStyler.image(DecorationImageMix value) =>
-      RemixDividerStyler().image(value);
-  factory RemixDividerStyler.shape(ShapeBorderMix value) =>
-      RemixDividerStyler().shape(value);
-  factory RemixDividerStyler.backgroundImage(
+  }) => DividerStyler().rotate(radians, alignment: alignment);
+  factory DividerStyler.translate(double x, double y, [double z = 0.0]) =>
+      DividerStyler().translate(x, y, z);
+  factory DividerStyler.skew(double skewX, double skewY) =>
+      DividerStyler().skew(skewX, skewY);
+  factory DividerStyler.textStyle(TextStyler value) =>
+      DividerStyler().textStyle(value);
+  factory DividerStyler.image(DecorationImageMix value) =>
+      DividerStyler().image(value);
+  factory DividerStyler.shape(ShapeBorderMix value) =>
+      DividerStyler().shape(value);
+  factory DividerStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixDividerStyler().backgroundImage(
+  }) => DividerStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixDividerStyler.backgroundImageUrl(
+  factory DividerStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixDividerStyler().backgroundImageUrl(
+  }) => DividerStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixDividerStyler.backgroundImageAsset(
+  factory DividerStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixDividerStyler().backgroundImageAsset(
+  }) => DividerStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixDividerStyler.linearGradient({
+  factory DividerStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixDividerStyler().linearGradient(
+  }) => DividerStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixDividerStyler.radialGradient({
+  factory DividerStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -241,7 +236,7 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixDividerStyler().radialGradient(
+  }) => DividerStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -250,14 +245,14 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixDividerStyler.sweepGradient({
+  factory DividerStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixDividerStyler().sweepGradient(
+  }) => DividerStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -265,20 +260,20 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixDividerStyler.foregroundLinearGradient({
+  factory DividerStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixDividerStyler().foregroundLinearGradient(
+  }) => DividerStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixDividerStyler.foregroundRadialGradient({
+  factory DividerStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -286,7 +281,7 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixDividerStyler().foregroundRadialGradient(
+  }) => DividerStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -295,14 +290,14 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixDividerStyler.foregroundSweepGradient({
+  factory DividerStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixDividerStyler().foregroundSweepGradient(
+  }) => DividerStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -310,124 +305,124 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixDividerStyler.transform(
+  factory DividerStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixDividerStyler().transform(value, alignment: alignment);
+  }) => DividerStyler().transform(value, alignment: alignment);
 
-  RemixDividerStyler alignment(AlignmentGeometry value) {
+  DividerStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
   }
 
-  RemixDividerStyler padding(EdgeInsetsGeometryMix value) {
+  DividerStyler padding(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().padding(value));
   }
 
-  RemixDividerStyler margin(EdgeInsetsGeometryMix value) {
+  DividerStyler margin(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().margin(value));
   }
 
-  RemixDividerStyler constraints(BoxConstraintsMix value) {
+  DividerStyler constraints(BoxConstraintsMix value) {
     return container(BoxStyler().constraints(value));
   }
 
-  RemixDividerStyler decoration(DecorationMix value) {
+  DividerStyler decoration(DecorationMix value) {
     return container(BoxStyler().decoration(value));
   }
 
-  RemixDividerStyler foregroundDecoration(DecorationMix value) {
+  DividerStyler foregroundDecoration(DecorationMix value) {
     return container(BoxStyler().foregroundDecoration(value));
   }
 
-  RemixDividerStyler clipBehavior(Clip value) {
+  DividerStyler clipBehavior(Clip value) {
     return container(BoxStyler().clipBehavior(value));
   }
 
-  RemixDividerStyler color(Color value) {
+  DividerStyler color(Color value) {
     return container(BoxStyler().color(value));
   }
 
-  RemixDividerStyler gradient(GradientMix value) {
+  DividerStyler gradient(GradientMix value) {
     return container(BoxStyler().gradient(value));
   }
 
-  RemixDividerStyler border(BoxBorderMix value) {
+  DividerStyler border(BoxBorderMix value) {
     return container(BoxStyler().border(value));
   }
 
-  RemixDividerStyler borderRadius(BorderRadiusGeometryMix value) {
+  DividerStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(BoxStyler().borderRadius(value));
   }
 
-  RemixDividerStyler elevation(ElevationShadow value) {
+  DividerStyler elevation(ElevationShadow value) {
     return container(BoxStyler().elevation(value));
   }
 
-  RemixDividerStyler shadow(BoxShadowMix value) {
+  DividerStyler shadow(BoxShadowMix value) {
     return container(BoxStyler().shadow(value));
   }
 
-  RemixDividerStyler shadows(List<BoxShadowMix> value) {
+  DividerStyler shadows(List<BoxShadowMix> value) {
     return container(BoxStyler().shadows(value));
   }
 
-  RemixDividerStyler width(double value) {
+  DividerStyler width(double value) {
     return container(BoxStyler().width(value));
   }
 
-  RemixDividerStyler height(double value) {
+  DividerStyler height(double value) {
     return container(BoxStyler().height(value));
   }
 
-  RemixDividerStyler size(double width, double height) {
+  DividerStyler size(double width, double height) {
     return container(BoxStyler().size(width, height));
   }
 
-  RemixDividerStyler minWidth(double value) {
+  DividerStyler minWidth(double value) {
     return container(BoxStyler().minWidth(value));
   }
 
-  RemixDividerStyler maxWidth(double value) {
+  DividerStyler maxWidth(double value) {
     return container(BoxStyler().maxWidth(value));
   }
 
-  RemixDividerStyler minHeight(double value) {
+  DividerStyler minHeight(double value) {
     return container(BoxStyler().minHeight(value));
   }
 
-  RemixDividerStyler maxHeight(double value) {
+  DividerStyler maxHeight(double value) {
     return container(BoxStyler().maxHeight(value));
   }
 
-  RemixDividerStyler scale(double scale, {Alignment alignment = .center}) {
+  DividerStyler scale(double scale, {Alignment alignment = .center}) {
     return container(BoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixDividerStyler rotate(double radians, {Alignment alignment = .center}) {
+  DividerStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(BoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixDividerStyler translate(double x, double y, [double z = 0.0]) {
+  DividerStyler translate(double x, double y, [double z = 0.0]) {
     return container(BoxStyler().translate(x, y, z));
   }
 
-  RemixDividerStyler skew(double skewX, double skewY) {
+  DividerStyler skew(double skewX, double skewY) {
     return container(BoxStyler().skew(skewX, skewY));
   }
 
-  RemixDividerStyler textStyle(TextStyler value) {
+  DividerStyler textStyle(TextStyler value) {
     return container(BoxStyler().textStyle(value));
   }
 
-  RemixDividerStyler image(DecorationImageMix value) {
+  DividerStyler image(DecorationImageMix value) {
     return container(BoxStyler().image(value));
   }
 
-  RemixDividerStyler shape(ShapeBorderMix value) {
+  DividerStyler shape(ShapeBorderMix value) {
     return container(BoxStyler().shape(value));
   }
 
-  RemixDividerStyler backgroundImage(
+  DividerStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -443,7 +438,7 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     );
   }
 
-  RemixDividerStyler backgroundImageUrl(
+  DividerStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -459,7 +454,7 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     );
   }
 
-  RemixDividerStyler backgroundImageAsset(
+  DividerStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -475,7 +470,7 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     );
   }
 
-  RemixDividerStyler linearGradient({
+  DividerStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -493,7 +488,7 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     );
   }
 
-  RemixDividerStyler radialGradient({
+  DividerStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -515,7 +510,7 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     );
   }
 
-  RemixDividerStyler sweepGradient({
+  DividerStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -535,7 +530,7 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     );
   }
 
-  RemixDividerStyler foregroundLinearGradient({
+  DividerStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -553,7 +548,7 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     );
   }
 
-  RemixDividerStyler foregroundRadialGradient({
+  DividerStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -575,7 +570,7 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     );
   }
 
-  RemixDividerStyler foregroundSweepGradient({
+  DividerStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -595,42 +590,42 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     );
   }
 
-  RemixDividerStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+  DividerStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixDividerStyler container(BoxStyler value) {
-    return merge(RemixDividerStyler(container: value));
+  DividerStyler container(BoxStyler value) {
+    return merge(DividerStyler(container: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixDividerStyler animate(AnimationConfig value) {
-    return merge(RemixDividerStyler(animation: value));
+  DividerStyler animate(AnimationConfig value) {
+    return merge(DividerStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixDividerStyler variants(List<VariantStyle<RemixDividerSpec>> value) {
-    return merge(RemixDividerStyler(variants: value));
+  DividerStyler variants(List<VariantStyle<DividerSpec>> value) {
+    return merge(DividerStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixDividerStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixDividerStyler(modifier: value));
+  DividerStyler wrap(WidgetModifierConfig value) {
+    return merge(DividerStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixDividerStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixDividerStyler(modifier: value));
+  DividerStyler modifier(WidgetModifierConfig value) {
+    return merge(DividerStyler(modifier: value));
   }
 
-  /// Merges with another [RemixDividerStyler].
+  /// Merges with another [DividerStyler].
   @override
-  RemixDividerStyler merge(RemixDividerStyler? other) {
-    return RemixDividerStyler.create(
+  DividerStyler merge(DividerStyler? other) {
+    return DividerStyler.create(
       container: MixOps.merge($container, other?.$container),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
@@ -638,12 +633,10 @@ class RemixDividerStyler extends MixStyler<RemixDividerStyler, RemixDividerSpec>
     );
   }
 
-  /// Resolves to [StyleSpec<RemixDividerSpec>] using [context].
+  /// Resolves to [StyleSpec<DividerSpec>] using [context].
   @override
-  StyleSpec<RemixDividerSpec> resolve(BuildContext context) {
-    final spec = RemixDividerSpec(
-      container: MixOps.resolve(context, $container),
-    );
+  StyleSpec<DividerSpec> resolve(BuildContext context) {
+    final spec = DividerSpec(container: MixOps.resolve(context, $container));
 
     return StyleSpec(
       spec: spec,

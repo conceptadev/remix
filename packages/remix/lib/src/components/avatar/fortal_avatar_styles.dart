@@ -21,7 +21,7 @@ enum FortalAvatarVariant { soft, solid }
 /// [fallbackLength] selects the pinned one- or two-character fallback
 /// typography. Pass `2` when [RemixAvatar.label] contains two initials.
 @MixWidget(target: RemixAvatar.new)
-RemixAvatarStyler fortalAvatarStyle({
+AvatarStyler fortalAvatarStyle({
   FortalAvatarVariant variant = .soft,
   FortalAvatarSize size = .size3,
   bool highContrast = false,
@@ -48,12 +48,12 @@ RemixAvatarStyler fortalAvatarStyle({
   };
 }
 
-RemixAvatarStyler _fortalAvatarBaseStyler(
+AvatarStyler _fortalAvatarBaseStyler(
   FortalAvatarSize size, {
   required int fallbackLength,
 }) {
   final fallbackText = _fortalAvatarFallbackText(size, fallbackLength);
-  return RemixAvatarStyler()
+  return AvatarStyler()
       .clipBehavior(.hardEdge)
       .label(
         TextStyler(

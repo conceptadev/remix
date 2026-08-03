@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixCardSpec', () {
+  group('CardSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        const spec = RemixCardSpec();
+        const spec = CardSpec();
 
         expect(spec.container, isA<StyleSpec<BoxSpec>>());
         expect(spec.container.spec, isA<BoxSpec>());
@@ -15,7 +15,7 @@ void main() {
       test('creates spec with provided parameters', () {
         final containerSpec = StyleSpec(spec: BoxSpec());
 
-        final spec = RemixCardSpec(container: containerSpec);
+        final spec = CardSpec(container: containerSpec);
 
         expect(spec.container, equals(containerSpec));
       });
@@ -23,7 +23,7 @@ void main() {
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
-        const originalSpec = RemixCardSpec();
+        const originalSpec = CardSpec();
         final newContainer = StyleSpec(spec: BoxSpec());
 
         final updatedSpec = originalSpec.copyWith(container: newContainer);
@@ -33,7 +33,7 @@ void main() {
       });
 
       test('preserves immutability - original spec unchanged', () {
-        const originalSpec = RemixCardSpec();
+        const originalSpec = CardSpec();
         final originalContainer = originalSpec.container;
         final newContainer = StyleSpec(spec: BoxSpec());
 
@@ -45,7 +45,7 @@ void main() {
       });
 
       test('copyWith with null parameters preserves original values', () {
-        const originalSpec = RemixCardSpec();
+        const originalSpec = CardSpec();
         final originalContainer = originalSpec.container;
 
         final updatedSpec = originalSpec.copyWith(container: null);
@@ -57,7 +57,7 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        const spec = RemixCardSpec();
+        const spec = CardSpec();
         const other = null;
 
         final result = spec.lerp(other, 0.5);
@@ -65,8 +65,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = RemixCardSpec(container: StyleSpec(spec: BoxSpec()));
-        final spec2 = RemixCardSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec1 = CardSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec2 = CardSpec(container: StyleSpec(spec: BoxSpec()));
 
         final result = spec1.lerp(spec2, 0.0);
 
@@ -75,8 +75,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = RemixCardSpec(container: StyleSpec(spec: BoxSpec()));
-        final spec2 = RemixCardSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec1 = CardSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec2 = CardSpec(container: StyleSpec(spec: BoxSpec()));
 
         final result = spec1.lerp(spec2, 1.0);
 
@@ -85,41 +85,41 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.5', () {
-        final spec1 = RemixCardSpec(container: StyleSpec(spec: BoxSpec()));
-        final spec2 = RemixCardSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec1 = CardSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec2 = CardSpec(container: StyleSpec(spec: BoxSpec()));
 
         final result = spec1.lerp(spec2, 0.5);
 
         expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
-        expect(result, isA<RemixCardSpec>());
+        expect(result, isA<CardSpec>());
       });
 
       test('lerp with different t values', () {
-        final spec1 = RemixCardSpec(container: StyleSpec(spec: BoxSpec()));
-        final spec2 = RemixCardSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec1 = CardSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec2 = CardSpec(container: StyleSpec(spec: BoxSpec()));
 
         final result1 = spec1.lerp(spec2, 0.25);
         final result2 = spec1.lerp(spec2, 0.75);
 
         expect(result1, isNot(same(result2)));
-        expect(result1, isA<RemixCardSpec>());
-        expect(result2, isA<RemixCardSpec>());
+        expect(result1, isA<CardSpec>());
+        expect(result2, isA<CardSpec>());
       });
     });
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixCardSpec();
-        const spec2 = RemixCardSpec();
+        const spec1 = CardSpec();
+        const spec2 = CardSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('two specs with different properties are not equal', () {
-        const spec1 = RemixCardSpec();
-        final spec2 = RemixCardSpec(container: StyleSpec(spec: BoxSpec()));
+        const spec1 = CardSpec();
+        final spec2 = CardSpec(container: StyleSpec(spec: BoxSpec()));
 
         // Since both have default values, they should be equal
         expect(spec1, equals(spec2));
@@ -128,15 +128,15 @@ void main() {
       test('specs with same custom properties are equal', () {
         final containerSpec = StyleSpec(spec: BoxSpec());
 
-        final spec1 = RemixCardSpec(container: containerSpec);
-        final spec2 = RemixCardSpec(container: containerSpec);
+        final spec1 = CardSpec(container: containerSpec);
+        final spec2 = CardSpec(container: containerSpec);
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('props list contains all properties', () {
-        const spec = RemixCardSpec();
+        const spec = CardSpec();
 
         expect(spec.props, hasLength(2));
         expect(spec.props, contains(spec.container));
@@ -145,7 +145,7 @@ void main() {
       test('props list with custom properties', () {
         final containerSpec = StyleSpec(spec: BoxSpec());
 
-        final spec = RemixCardSpec(container: containerSpec);
+        final spec = CardSpec(container: containerSpec);
 
         expect(spec.props, hasLength(2));
         expect(spec.props, contains(containerSpec));
@@ -154,7 +154,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = RemixCardSpec();
+        const spec = CardSpec();
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -165,7 +165,7 @@ void main() {
       test('debugFillProperties with custom properties', () {
         final containerSpec = StyleSpec(spec: BoxSpec());
 
-        final spec = RemixCardSpec(container: containerSpec);
+        final spec = CardSpec(container: containerSpec);
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -174,14 +174,14 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        const spec = RemixCardSpec();
+        const spec = CardSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
       });
 
       test('toString includes all properties', () {
-        const spec = RemixCardSpec();
+        const spec = CardSpec();
         final stringRepresentation = spec.toString();
 
         expect(stringRepresentation, contains('container'));
@@ -190,7 +190,7 @@ void main() {
 
     group('Edge Cases and Error Handling', () {
       test('copyWith handles null parameters correctly', () {
-        const spec = RemixCardSpec();
+        const spec = CardSpec();
         final originalContainer = spec.container;
 
         final updatedSpec = spec.copyWith(container: null);
@@ -199,16 +199,16 @@ void main() {
       });
 
       test('lerp handles edge t values', () {
-        final spec1 = RemixCardSpec(container: StyleSpec(spec: BoxSpec()));
-        final spec2 = RemixCardSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec1 = CardSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec2 = CardSpec(container: StyleSpec(spec: BoxSpec()));
 
         // Test t=0.0
         final result0 = spec1.lerp(spec2, 0.0);
-        expect(result0, isA<RemixCardSpec>());
+        expect(result0, isA<CardSpec>());
 
         // Test t=1.0
         final result1 = spec1.lerp(spec2, 1.0);
-        expect(result1, isA<RemixCardSpec>());
+        expect(result1, isA<CardSpec>());
 
         // Test t=0.0 and t=1.0 should be different
         expect(result0, isNot(same(result1)));
@@ -217,7 +217,7 @@ void main() {
       test('spec with complex StyleSpec properties', () {
         final complexContainerSpec = StyleSpec(spec: BoxSpec());
 
-        final spec = RemixCardSpec(container: complexContainerSpec);
+        final spec = CardSpec(container: complexContainerSpec);
 
         expect(spec.container, equals(complexContainerSpec));
         expect(spec.props, hasLength(2));

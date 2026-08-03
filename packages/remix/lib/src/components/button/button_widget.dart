@@ -10,7 +10,7 @@ typedef RemixButtonIconBuilder =
 
 /// Builder function for customizing button loading state rendering.
 typedef RemixButtonLoadingBuilder =
-    Widget Function(BuildContext context, RemixSpinnerSpec spec);
+    Widget Function(BuildContext context, SpinnerSpec spec);
 
 /// A customizable button component that supports text with optional leading and trailing icons,
 /// loading states, and styling. The button integrates with the Mix styling system
@@ -173,13 +173,13 @@ class RemixButton extends StatelessWidget {
   final ButtonStyler style;
 
   /// Optional raw style spec that bypasses fluent style resolution.
-  final RemixButtonSpec? styleSpec;
+  final ButtonSpec? styleSpec;
 
   bool get _isEnabled => enabled && !loading && onPressed != null;
 
   ButtonStyler _buildStyle() => composeStyle(style);
 
-  Widget _buildContent(BuildContext context, RemixButtonSpec spec) {
+  Widget _buildContent(BuildContext context, ButtonSpec spec) {
     Widget? leadingIconWidget;
     Widget? trailingIconWidget;
 
@@ -287,7 +287,7 @@ class RemixButton extends StatelessWidget {
       autofocus: autofocus,
       semanticLabel: semanticLabel ?? label,
       builder: (context, _, _) {
-        return RemixStyleSpecBuilder<RemixButtonSpec>(
+        return RemixStyleSpecBuilder<ButtonSpec>(
           style: _buildStyle(),
           styleSpec: styleSpec,
           controller: NakedButtonState.controllerOf(context),

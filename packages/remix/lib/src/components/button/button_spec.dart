@@ -91,7 +91,7 @@ class ButtonSpec with _$ButtonSpec {
   /// Defines the appearance of the spinner shown during
   /// asynchronous operations when the button is in loading state.
   @override
-  final StyleSpec<RemixSpinnerSpec> spinner;
+  final StyleSpec<SpinnerSpec> spinner;
 
   @override
   @MixableField(setterType: RemixBoxEffectsMix)
@@ -118,18 +118,18 @@ class ButtonSpec with _$ButtonSpec {
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
-    StyleSpec<RemixSpinnerSpec>? spinner,
+    StyleSpec<SpinnerSpec>? spinner,
     this.containerEffects,
     this.iconAlignment,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
-       spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec());
+       spinner = spinner ?? const StyleSpec(spec: SpinnerSpec());
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
-  RemixButtonSpec lerp(RemixButtonSpec? other, double t) {
+  ButtonSpec lerp(ButtonSpec? other, double t) {
     final generated = super.lerp(other, t);
     if (other == null) return generated;
     return generated.copyWith(

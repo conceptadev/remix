@@ -170,14 +170,14 @@ void main() {
         expect(spec.trigger, isA<StyleSpec<MenuTriggerSpec>>());
         expect(spec.overlay, isA<StyleSpec<FlexBoxSpec>>());
         expect(spec.item, isA<StyleSpec<MenuItemSpec>>());
-        expect(spec.divider, isA<StyleSpec<RemixDividerSpec>>());
+        expect(spec.divider, isA<StyleSpec<DividerSpec>>());
       });
 
       test('creates spec with provided parameters', () {
         final trigger = StyleSpec(spec: MenuTriggerSpec());
         final overlay = StyleSpec(spec: FlexBoxSpec());
         final item = StyleSpec(spec: MenuItemSpec());
-        final divider = StyleSpec(spec: RemixDividerSpec());
+        final divider = StyleSpec(spec: DividerSpec());
 
         final spec = MenuSpec(
           trigger: trigger,
@@ -221,7 +221,7 @@ void main() {
         final newTrigger = StyleSpec(spec: MenuTriggerSpec());
         final newOverlay = StyleSpec(spec: FlexBoxSpec());
         final newItem = StyleSpec(spec: MenuItemSpec());
-        final newDivider = StyleSpec(spec: RemixDividerSpec());
+        final newDivider = StyleSpec(spec: DividerSpec());
 
         final updatedSpec = originalSpec.copyWith(
           trigger: newTrigger,
@@ -248,12 +248,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = MenuSpec(
-          trigger: StyleSpec(spec: MenuTriggerSpec()),
-        );
-        final spec2 = MenuSpec(
-          trigger: StyleSpec(spec: MenuTriggerSpec()),
-        );
+        final spec1 = MenuSpec(trigger: StyleSpec(spec: MenuTriggerSpec()));
+        final spec2 = MenuSpec(trigger: StyleSpec(spec: MenuTriggerSpec()));
 
         final result = spec1.lerp(spec2, 0.0);
 
@@ -262,12 +258,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = MenuSpec(
-          trigger: StyleSpec(spec: MenuTriggerSpec()),
-        );
-        final spec2 = MenuSpec(
-          trigger: StyleSpec(spec: MenuTriggerSpec()),
-        );
+        final spec1 = MenuSpec(trigger: StyleSpec(spec: MenuTriggerSpec()));
+        final spec2 = MenuSpec(trigger: StyleSpec(spec: MenuTriggerSpec()));
 
         final result = spec1.lerp(spec2, 1.0);
 
@@ -415,12 +407,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = MenuItemSpec(
-          container: StyleSpec(spec: FlexBoxSpec()),
-        );
-        final spec2 = MenuItemSpec(
-          container: StyleSpec(spec: FlexBoxSpec()),
-        );
+        final spec1 = MenuItemSpec(container: StyleSpec(spec: FlexBoxSpec()));
+        final spec2 = MenuItemSpec(container: StyleSpec(spec: FlexBoxSpec()));
 
         final result = spec1.lerp(spec2, 0.0);
 
@@ -429,12 +417,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = MenuItemSpec(
-          container: StyleSpec(spec: FlexBoxSpec()),
-        );
-        final spec2 = MenuItemSpec(
-          container: StyleSpec(spec: FlexBoxSpec()),
-        );
+        final spec1 = MenuItemSpec(container: StyleSpec(spec: FlexBoxSpec()));
+        final spec2 = MenuItemSpec(container: StyleSpec(spec: FlexBoxSpec()));
 
         final result = spec1.lerp(spec2, 1.0);
 

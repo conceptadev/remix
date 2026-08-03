@@ -36,11 +36,11 @@ class _CheckboxExampleState extends State<CheckboxExample> {
     );
   }
 
-  RemixCheckboxStyler get style {
-    return RemixCheckboxStyler()
+  CheckboxStyler get style {
+    return CheckboxStyler()
         .size(24, 24)
         .icon(IconStyler().size(20).color(Colors.white))
-        .onSelected(RemixCheckboxStyler().fillColor(Colors.grey.shade900))
+        .onSelected(CheckboxStyler().fillColor(Colors.grey.shade900))
         .borderRadiusAll(const Radius.circular(3))
         .border(
           BoxBorderMix.all(BorderSideMix().color(Colors.black87).width(2)),

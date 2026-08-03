@@ -6,27 +6,27 @@ part of 'popover.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixPopoverSpec implements Spec<RemixPopoverSpec>, Diagnosticable {
+mixin _$PopoverSpec implements Spec<PopoverSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   RemixBoxEffectsSpec? get containerEffects;
 
   @override
-  Type get type => RemixPopoverSpec;
+  Type get type => PopoverSpec;
 
   @override
-  RemixPopoverSpec copyWith({
+  PopoverSpec copyWith({
     StyleSpec<BoxSpec>? container,
     RemixBoxEffectsSpec? containerEffects,
   }) {
-    return RemixPopoverSpec(
+    return PopoverSpec(
       container: container ?? this.container,
       containerEffects: containerEffects ?? this.containerEffects,
     );
   }
 
   @override
-  RemixPopoverSpec lerp(RemixPopoverSpec? other, double t) {
-    return RemixPopoverSpec(
+  PopoverSpec lerp(PopoverSpec? other, double t) {
+    return PopoverSpec(
       container: container.lerp(other?.container, t),
       containerEffects: MixOps.lerpSnap(
         containerEffects,
@@ -42,7 +42,7 @@ mixin _$RemixPopoverSpec implements Spec<RemixPopoverSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixPopoverSpec &&
+        other is PopoverSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -85,9 +85,9 @@ mixin _$RemixPopoverSpec implements Spec<RemixPopoverSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixPopoverSpec` and migrate the class declaration to `class RemixPopoverSpec with _\$RemixPopoverSpec`. The `_\$RemixPopoverSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$PopoverSpec` and migrate the class declaration to `class PopoverSpec with _\$PopoverSpec`. The `_\$PopoverSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixPopoverSpecMethods = _$RemixPopoverSpec; // ignore: unused_element
+typedef _$PopoverSpecMethods = _$PopoverSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -171,12 +171,12 @@ class FortalPopover extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
-    with RemixBoxStylerMixin<RemixPopoverStyler> {
+class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
+    with RemixBoxStylerMixin<PopoverStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
-  const RemixPopoverStyler.create({
+  const PopoverStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
@@ -185,12 +185,12 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
   }) : $container = container,
        $containerEffects = containerEffects;
 
-  RemixPopoverStyler({
+  PopoverStyler({
     BoxStyler? container,
     RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixPopoverSpec>>? variants,
+    List<VariantStyle<PopoverSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          containerEffects: Prop.maybeMix(containerEffects),
@@ -199,117 +199,112 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
          animation: animation,
        );
 
-  factory RemixPopoverStyler.container(BoxStyler value) =>
-      RemixPopoverStyler().container(value);
-  factory RemixPopoverStyler.containerEffects(RemixBoxEffectsMix value) =>
-      RemixPopoverStyler().containerEffects(value);
-  factory RemixPopoverStyler.alignment(AlignmentGeometry value) =>
-      RemixPopoverStyler().alignment(value);
-  factory RemixPopoverStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixPopoverStyler().padding(value);
-  factory RemixPopoverStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixPopoverStyler().margin(value);
-  factory RemixPopoverStyler.constraints(BoxConstraintsMix value) =>
-      RemixPopoverStyler().constraints(value);
-  factory RemixPopoverStyler.decoration(DecorationMix value) =>
-      RemixPopoverStyler().decoration(value);
-  factory RemixPopoverStyler.foregroundDecoration(DecorationMix value) =>
-      RemixPopoverStyler().foregroundDecoration(value);
-  factory RemixPopoverStyler.clipBehavior(Clip value) =>
-      RemixPopoverStyler().clipBehavior(value);
-  factory RemixPopoverStyler.color(Color value) =>
-      RemixPopoverStyler().color(value);
-  factory RemixPopoverStyler.gradient(GradientMix value) =>
-      RemixPopoverStyler().gradient(value);
-  factory RemixPopoverStyler.border(BoxBorderMix value) =>
-      RemixPopoverStyler().border(value);
-  factory RemixPopoverStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixPopoverStyler().borderRadius(value);
-  factory RemixPopoverStyler.elevation(ElevationShadow value) =>
-      RemixPopoverStyler().elevation(value);
-  factory RemixPopoverStyler.shadow(BoxShadowMix value) =>
-      RemixPopoverStyler().shadow(value);
-  factory RemixPopoverStyler.shadows(List<BoxShadowMix> value) =>
-      RemixPopoverStyler().shadows(value);
-  factory RemixPopoverStyler.width(double value) =>
-      RemixPopoverStyler().width(value);
-  factory RemixPopoverStyler.height(double value) =>
-      RemixPopoverStyler().height(value);
-  factory RemixPopoverStyler.size(double width, double height) =>
-      RemixPopoverStyler().size(width, height);
-  factory RemixPopoverStyler.minWidth(double value) =>
-      RemixPopoverStyler().minWidth(value);
-  factory RemixPopoverStyler.maxWidth(double value) =>
-      RemixPopoverStyler().maxWidth(value);
-  factory RemixPopoverStyler.minHeight(double value) =>
-      RemixPopoverStyler().minHeight(value);
-  factory RemixPopoverStyler.maxHeight(double value) =>
-      RemixPopoverStyler().maxHeight(value);
-  factory RemixPopoverStyler.scale(
-    double scale, {
-    Alignment alignment = .center,
-  }) => RemixPopoverStyler().scale(scale, alignment: alignment);
-  factory RemixPopoverStyler.rotate(
+  factory PopoverStyler.container(BoxStyler value) =>
+      PopoverStyler().container(value);
+  factory PopoverStyler.containerEffects(RemixBoxEffectsMix value) =>
+      PopoverStyler().containerEffects(value);
+  factory PopoverStyler.alignment(AlignmentGeometry value) =>
+      PopoverStyler().alignment(value);
+  factory PopoverStyler.padding(EdgeInsetsGeometryMix value) =>
+      PopoverStyler().padding(value);
+  factory PopoverStyler.margin(EdgeInsetsGeometryMix value) =>
+      PopoverStyler().margin(value);
+  factory PopoverStyler.constraints(BoxConstraintsMix value) =>
+      PopoverStyler().constraints(value);
+  factory PopoverStyler.decoration(DecorationMix value) =>
+      PopoverStyler().decoration(value);
+  factory PopoverStyler.foregroundDecoration(DecorationMix value) =>
+      PopoverStyler().foregroundDecoration(value);
+  factory PopoverStyler.clipBehavior(Clip value) =>
+      PopoverStyler().clipBehavior(value);
+  factory PopoverStyler.color(Color value) => PopoverStyler().color(value);
+  factory PopoverStyler.gradient(GradientMix value) =>
+      PopoverStyler().gradient(value);
+  factory PopoverStyler.border(BoxBorderMix value) =>
+      PopoverStyler().border(value);
+  factory PopoverStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      PopoverStyler().borderRadius(value);
+  factory PopoverStyler.elevation(ElevationShadow value) =>
+      PopoverStyler().elevation(value);
+  factory PopoverStyler.shadow(BoxShadowMix value) =>
+      PopoverStyler().shadow(value);
+  factory PopoverStyler.shadows(List<BoxShadowMix> value) =>
+      PopoverStyler().shadows(value);
+  factory PopoverStyler.width(double value) => PopoverStyler().width(value);
+  factory PopoverStyler.height(double value) => PopoverStyler().height(value);
+  factory PopoverStyler.size(double width, double height) =>
+      PopoverStyler().size(width, height);
+  factory PopoverStyler.minWidth(double value) =>
+      PopoverStyler().minWidth(value);
+  factory PopoverStyler.maxWidth(double value) =>
+      PopoverStyler().maxWidth(value);
+  factory PopoverStyler.minHeight(double value) =>
+      PopoverStyler().minHeight(value);
+  factory PopoverStyler.maxHeight(double value) =>
+      PopoverStyler().maxHeight(value);
+  factory PopoverStyler.scale(double scale, {Alignment alignment = .center}) =>
+      PopoverStyler().scale(scale, alignment: alignment);
+  factory PopoverStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixPopoverStyler().rotate(radians, alignment: alignment);
-  factory RemixPopoverStyler.translate(double x, double y, [double z = 0.0]) =>
-      RemixPopoverStyler().translate(x, y, z);
-  factory RemixPopoverStyler.skew(double skewX, double skewY) =>
-      RemixPopoverStyler().skew(skewX, skewY);
-  factory RemixPopoverStyler.textStyle(TextStyler value) =>
-      RemixPopoverStyler().textStyle(value);
-  factory RemixPopoverStyler.image(DecorationImageMix value) =>
-      RemixPopoverStyler().image(value);
-  factory RemixPopoverStyler.shape(ShapeBorderMix value) =>
-      RemixPopoverStyler().shape(value);
-  factory RemixPopoverStyler.backgroundImage(
+  }) => PopoverStyler().rotate(radians, alignment: alignment);
+  factory PopoverStyler.translate(double x, double y, [double z = 0.0]) =>
+      PopoverStyler().translate(x, y, z);
+  factory PopoverStyler.skew(double skewX, double skewY) =>
+      PopoverStyler().skew(skewX, skewY);
+  factory PopoverStyler.textStyle(TextStyler value) =>
+      PopoverStyler().textStyle(value);
+  factory PopoverStyler.image(DecorationImageMix value) =>
+      PopoverStyler().image(value);
+  factory PopoverStyler.shape(ShapeBorderMix value) =>
+      PopoverStyler().shape(value);
+  factory PopoverStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixPopoverStyler().backgroundImage(
+  }) => PopoverStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixPopoverStyler.backgroundImageUrl(
+  factory PopoverStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixPopoverStyler().backgroundImageUrl(
+  }) => PopoverStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixPopoverStyler.backgroundImageAsset(
+  factory PopoverStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixPopoverStyler().backgroundImageAsset(
+  }) => PopoverStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixPopoverStyler.linearGradient({
+  factory PopoverStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixPopoverStyler().linearGradient(
+  }) => PopoverStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixPopoverStyler.radialGradient({
+  factory PopoverStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -317,7 +312,7 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixPopoverStyler().radialGradient(
+  }) => PopoverStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -326,14 +321,14 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixPopoverStyler.sweepGradient({
+  factory PopoverStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixPopoverStyler().sweepGradient(
+  }) => PopoverStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -341,20 +336,20 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixPopoverStyler.foregroundLinearGradient({
+  factory PopoverStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixPopoverStyler().foregroundLinearGradient(
+  }) => PopoverStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixPopoverStyler.foregroundRadialGradient({
+  factory PopoverStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -362,7 +357,7 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixPopoverStyler().foregroundRadialGradient(
+  }) => PopoverStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -371,14 +366,14 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixPopoverStyler.foregroundSweepGradient({
+  factory PopoverStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixPopoverStyler().foregroundSweepGradient(
+  }) => PopoverStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -386,124 +381,124 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixPopoverStyler.transform(
+  factory PopoverStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixPopoverStyler().transform(value, alignment: alignment);
+  }) => PopoverStyler().transform(value, alignment: alignment);
 
-  RemixPopoverStyler alignment(AlignmentGeometry value) {
+  PopoverStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
   }
 
-  RemixPopoverStyler padding(EdgeInsetsGeometryMix value) {
+  PopoverStyler padding(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().padding(value));
   }
 
-  RemixPopoverStyler margin(EdgeInsetsGeometryMix value) {
+  PopoverStyler margin(EdgeInsetsGeometryMix value) {
     return container(BoxStyler().margin(value));
   }
 
-  RemixPopoverStyler constraints(BoxConstraintsMix value) {
+  PopoverStyler constraints(BoxConstraintsMix value) {
     return container(BoxStyler().constraints(value));
   }
 
-  RemixPopoverStyler decoration(DecorationMix value) {
+  PopoverStyler decoration(DecorationMix value) {
     return container(BoxStyler().decoration(value));
   }
 
-  RemixPopoverStyler foregroundDecoration(DecorationMix value) {
+  PopoverStyler foregroundDecoration(DecorationMix value) {
     return container(BoxStyler().foregroundDecoration(value));
   }
 
-  RemixPopoverStyler clipBehavior(Clip value) {
+  PopoverStyler clipBehavior(Clip value) {
     return container(BoxStyler().clipBehavior(value));
   }
 
-  RemixPopoverStyler color(Color value) {
+  PopoverStyler color(Color value) {
     return container(BoxStyler().color(value));
   }
 
-  RemixPopoverStyler gradient(GradientMix value) {
+  PopoverStyler gradient(GradientMix value) {
     return container(BoxStyler().gradient(value));
   }
 
-  RemixPopoverStyler border(BoxBorderMix value) {
+  PopoverStyler border(BoxBorderMix value) {
     return container(BoxStyler().border(value));
   }
 
-  RemixPopoverStyler borderRadius(BorderRadiusGeometryMix value) {
+  PopoverStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(BoxStyler().borderRadius(value));
   }
 
-  RemixPopoverStyler elevation(ElevationShadow value) {
+  PopoverStyler elevation(ElevationShadow value) {
     return container(BoxStyler().elevation(value));
   }
 
-  RemixPopoverStyler shadow(BoxShadowMix value) {
+  PopoverStyler shadow(BoxShadowMix value) {
     return container(BoxStyler().shadow(value));
   }
 
-  RemixPopoverStyler shadows(List<BoxShadowMix> value) {
+  PopoverStyler shadows(List<BoxShadowMix> value) {
     return container(BoxStyler().shadows(value));
   }
 
-  RemixPopoverStyler width(double value) {
+  PopoverStyler width(double value) {
     return container(BoxStyler().width(value));
   }
 
-  RemixPopoverStyler height(double value) {
+  PopoverStyler height(double value) {
     return container(BoxStyler().height(value));
   }
 
-  RemixPopoverStyler size(double width, double height) {
+  PopoverStyler size(double width, double height) {
     return container(BoxStyler().size(width, height));
   }
 
-  RemixPopoverStyler minWidth(double value) {
+  PopoverStyler minWidth(double value) {
     return container(BoxStyler().minWidth(value));
   }
 
-  RemixPopoverStyler maxWidth(double value) {
+  PopoverStyler maxWidth(double value) {
     return container(BoxStyler().maxWidth(value));
   }
 
-  RemixPopoverStyler minHeight(double value) {
+  PopoverStyler minHeight(double value) {
     return container(BoxStyler().minHeight(value));
   }
 
-  RemixPopoverStyler maxHeight(double value) {
+  PopoverStyler maxHeight(double value) {
     return container(BoxStyler().maxHeight(value));
   }
 
-  RemixPopoverStyler scale(double scale, {Alignment alignment = .center}) {
+  PopoverStyler scale(double scale, {Alignment alignment = .center}) {
     return container(BoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixPopoverStyler rotate(double radians, {Alignment alignment = .center}) {
+  PopoverStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(BoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixPopoverStyler translate(double x, double y, [double z = 0.0]) {
+  PopoverStyler translate(double x, double y, [double z = 0.0]) {
     return container(BoxStyler().translate(x, y, z));
   }
 
-  RemixPopoverStyler skew(double skewX, double skewY) {
+  PopoverStyler skew(double skewX, double skewY) {
     return container(BoxStyler().skew(skewX, skewY));
   }
 
-  RemixPopoverStyler textStyle(TextStyler value) {
+  PopoverStyler textStyle(TextStyler value) {
     return container(BoxStyler().textStyle(value));
   }
 
-  RemixPopoverStyler image(DecorationImageMix value) {
+  PopoverStyler image(DecorationImageMix value) {
     return container(BoxStyler().image(value));
   }
 
-  RemixPopoverStyler shape(ShapeBorderMix value) {
+  PopoverStyler shape(ShapeBorderMix value) {
     return container(BoxStyler().shape(value));
   }
 
-  RemixPopoverStyler backgroundImage(
+  PopoverStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -519,7 +514,7 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     );
   }
 
-  RemixPopoverStyler backgroundImageUrl(
+  PopoverStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -535,7 +530,7 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     );
   }
 
-  RemixPopoverStyler backgroundImageAsset(
+  PopoverStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -551,7 +546,7 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     );
   }
 
-  RemixPopoverStyler linearGradient({
+  PopoverStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -569,7 +564,7 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     );
   }
 
-  RemixPopoverStyler radialGradient({
+  PopoverStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -591,7 +586,7 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     );
   }
 
-  RemixPopoverStyler sweepGradient({
+  PopoverStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -611,7 +606,7 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     );
   }
 
-  RemixPopoverStyler foregroundLinearGradient({
+  PopoverStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -629,7 +624,7 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     );
   }
 
-  RemixPopoverStyler foregroundRadialGradient({
+  PopoverStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -651,7 +646,7 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     );
   }
 
-  RemixPopoverStyler foregroundSweepGradient({
+  PopoverStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -671,47 +666,47 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     );
   }
 
-  RemixPopoverStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+  PopoverStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixPopoverStyler container(BoxStyler value) {
-    return merge(RemixPopoverStyler(container: value));
+  PopoverStyler container(BoxStyler value) {
+    return merge(PopoverStyler(container: value));
   }
 
   /// Sets the containerEffects.
-  RemixPopoverStyler containerEffects(RemixBoxEffectsMix value) {
-    return merge(RemixPopoverStyler(containerEffects: value));
+  PopoverStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(PopoverStyler(containerEffects: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixPopoverStyler animate(AnimationConfig value) {
-    return merge(RemixPopoverStyler(animation: value));
+  PopoverStyler animate(AnimationConfig value) {
+    return merge(PopoverStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixPopoverStyler variants(List<VariantStyle<RemixPopoverSpec>> value) {
-    return merge(RemixPopoverStyler(variants: value));
+  PopoverStyler variants(List<VariantStyle<PopoverSpec>> value) {
+    return merge(PopoverStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixPopoverStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixPopoverStyler(modifier: value));
+  PopoverStyler wrap(WidgetModifierConfig value) {
+    return merge(PopoverStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixPopoverStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixPopoverStyler(modifier: value));
+  PopoverStyler modifier(WidgetModifierConfig value) {
+    return merge(PopoverStyler(modifier: value));
   }
 
-  /// Merges with another [RemixPopoverStyler].
+  /// Merges with another [PopoverStyler].
   @override
-  RemixPopoverStyler merge(RemixPopoverStyler? other) {
-    return RemixPopoverStyler.create(
+  PopoverStyler merge(PopoverStyler? other) {
+    return PopoverStyler.create(
       container: MixOps.merge($container, other?.$container),
       containerEffects: MixOps.merge(
         $containerEffects,
@@ -723,10 +718,10 @@ class RemixPopoverStyler extends MixStyler<RemixPopoverStyler, RemixPopoverSpec>
     );
   }
 
-  /// Resolves to [StyleSpec<RemixPopoverSpec>] using [context].
+  /// Resolves to [StyleSpec<PopoverSpec>] using [context].
   @override
-  StyleSpec<RemixPopoverSpec> resolve(BuildContext context) {
-    final spec = RemixPopoverSpec(
+  StyleSpec<PopoverSpec> resolve(BuildContext context) {
+    final spec = PopoverSpec(
       container: MixOps.resolve(context, $container),
       containerEffects: MixOps.resolve(context, $containerEffects),
     );

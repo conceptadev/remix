@@ -38,7 +38,7 @@ void main() {
           RemixSwitch(
             selected: false,
             onChanged: (value) {},
-            style: RemixSwitchStyler().thumbColor(Colors.blue),
+            style: SwitchStyler().thumbColor(Colors.blue),
           ),
         );
         await tester.pumpAndSettle();
@@ -229,7 +229,7 @@ void main() {
 
     group('Styling', () {
       testWidgets('applies custom thumb color', (tester) async {
-        final customStyle = RemixSwitchStyler().thumbColor(Colors.blue);
+        final customStyle = SwitchStyler().thumbColor(Colors.blue);
 
         await tester.pumpRemixApp(
           RemixSwitch(
@@ -244,7 +244,7 @@ void main() {
       });
 
       testWidgets('applies custom thumb styling', (tester) async {
-        final customStyle = RemixSwitchStyler().thumb(
+        final customStyle = SwitchStyler().thumb(
           BoxStyler(
             decoration: BoxDecorationMix(
               color: Colors.red,
@@ -266,9 +266,7 @@ void main() {
       });
 
       testWidgets('applies alignment styling', (tester) async {
-        final customStyle = RemixSwitchStyler().alignment(
-          Alignment.centerRight,
-        );
+        final customStyle = SwitchStyler().alignment(Alignment.centerRight);
 
         await tester.pumpRemixApp(
           RemixSwitch(
@@ -283,7 +281,7 @@ void main() {
       });
 
       testWidgets('applies padding styling', (tester) async {
-        final customStyle = RemixSwitchStyler().padding(
+        final customStyle = SwitchStyler().padding(
           EdgeInsetsGeometryMix.all(16.0),
         );
 
@@ -300,7 +298,7 @@ void main() {
       });
 
       testWidgets('applies margin styling', (tester) async {
-        final customStyle = RemixSwitchStyler().margin(
+        final customStyle = SwitchStyler().margin(
           EdgeInsetsGeometryMix.all(8.0),
         );
 
@@ -317,7 +315,7 @@ void main() {
       });
 
       testWidgets('applies constraints styling', (tester) async {
-        final customStyle = RemixSwitchStyler().constraints(
+        final customStyle = SwitchStyler().constraints(
           BoxConstraintsMix(minWidth: 40.0, minHeight: 20.0),
         );
 
@@ -334,7 +332,7 @@ void main() {
       });
 
       testWidgets('applies decoration styling', (tester) async {
-        final customStyle = RemixSwitchStyler().decoration(
+        final customStyle = SwitchStyler().decoration(
           BoxDecorationMix(
             color: Colors.blue,
             borderRadius: BorderRadiusMix.circular(12.0),
@@ -440,7 +438,7 @@ void main() {
 
     group('Advanced Styling', () {
       testWidgets('applies multiple style methods', (tester) async {
-        final customStyle = RemixSwitchStyler()
+        final customStyle = SwitchStyler()
             .thumbColor(Colors.blue)
             .alignment(Alignment.centerLeft)
             .padding(EdgeInsetsGeometryMix.all(8.0))
@@ -464,7 +462,7 @@ void main() {
       });
 
       testWidgets('applies animation config', (tester) async {
-        final customStyle = RemixSwitchStyler().animate(
+        final customStyle = SwitchStyler().animate(
           AnimationConfig.linear(const Duration(milliseconds: 200)),
         );
 
@@ -481,7 +479,7 @@ void main() {
       });
 
       testWidgets('applies foreground decoration', (tester) async {
-        final customStyle = RemixSwitchStyler().foregroundDecoration(
+        final customStyle = SwitchStyler().foregroundDecoration(
           BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.blue)),
           ),
@@ -500,7 +498,7 @@ void main() {
       });
 
       testWidgets('applies transform', (tester) async {
-        final customStyle = RemixSwitchStyler().transform(
+        final customStyle = SwitchStyler().transform(
           Matrix4.rotationZ(0.1),
           alignment: Alignment.center,
         );
@@ -520,7 +518,7 @@ void main() {
 
     group('Widget Modifiers', () {
       testWidgets('applies widget modifiers from style', (tester) async {
-        final customStyle = RemixSwitchStyler().wrap(.clipOval());
+        final customStyle = SwitchStyler().wrap(.clipOval());
 
         await tester.pumpRemixApp(
           RemixSwitch(
@@ -550,7 +548,7 @@ void main() {
 
     group('StyleSpec Parameter', () {
       testWidgets('accepts styleSpec parameter', (tester) async {
-        const spec = RemixSwitchSpec(
+        const spec = SwitchSpec(
           container: StyleSpec(
             spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
           ),

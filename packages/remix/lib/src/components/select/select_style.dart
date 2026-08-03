@@ -1,12 +1,12 @@
 part of 'select.dart';
 
 /// Style configuration for [RemixSelect] trigger and menu overlay.
-extension RemixSelectStylerRemixHelpers on RemixSelectStyler {
+extension RemixSelectStylerRemixHelpers on SelectStyler {
   /// Creates a [RemixSelect] widget with this style applied.
   ///
   /// Example:
   /// ```dart
-  /// RemixSelectStyler()
+  /// SelectStyler()
   ///   .trigger(...)
   ///   .menuContainer(...)
   ///   .call<String>(
@@ -53,68 +53,64 @@ extension RemixSelectStylerRemixHelpers on RemixSelectStyler {
 }
 
 /// Style configuration for the visible [RemixSelect] trigger.
-extension RemixSelectTriggerStylerRemixHelpers on RemixSelectTriggerStyler {
-  RemixSelectTriggerStyler flex(FlexStyler value) {
-    return merge(
-      RemixSelectTriggerStyler(container: FlexBoxStyler().flex(value)),
-    );
+extension RemixSelectTriggerStylerRemixHelpers on SelectTriggerStyler {
+  SelectTriggerStyler flex(FlexStyler value) {
+    return merge(SelectTriggerStyler(container: FlexBoxStyler().flex(value)));
   }
 }
 
 /// Style configuration for an item in a [RemixSelect] menu.
-extension RemixSelectMenuItemStylerRemixHelpers on RemixSelectMenuItemStyler {
+extension RemixSelectMenuItemStylerRemixHelpers on SelectMenuItemStyler {
   /// Sets label styling (delegates to text for consistency with mixin)
-  RemixSelectMenuItemStyler label(TextStyler value) {
+  SelectMenuItemStyler label(TextStyler value) {
     return text(value);
   }
 
-  RemixSelectMenuItemStyler labelStyle(TextStyleMix value) {
+  SelectMenuItemStyler labelStyle(TextStyleMix value) {
     return label(TextStyler(style: value));
   }
 
-  RemixSelectMenuItemStyler labelColor(Color value) {
+  SelectMenuItemStyler labelColor(Color value) {
     return label(TextStyler(style: TextStyleMix(color: value)));
   }
 
-  RemixSelectMenuItemStyler labelFontSize(double value) {
+  SelectMenuItemStyler labelFontSize(double value) {
     return label(TextStyler(style: TextStyleMix(fontSize: value)));
   }
 
-  RemixSelectMenuItemStyler labelFontWeight(FontWeight value) {
+  SelectMenuItemStyler labelFontWeight(FontWeight value) {
     return label(TextStyler(style: TextStyleMix(fontWeight: value)));
   }
 
-  RemixSelectMenuItemStyler labelFontStyle(FontStyle value) {
+  SelectMenuItemStyler labelFontStyle(FontStyle value) {
     return label(TextStyler(style: TextStyleMix(fontStyle: value)));
   }
 
-  RemixSelectMenuItemStyler labelLetterSpacing(double value) {
+  SelectMenuItemStyler labelLetterSpacing(double value) {
     return label(TextStyler(style: TextStyleMix(letterSpacing: value)));
   }
 
-  RemixSelectMenuItemStyler labelDecoration(TextDecoration value) {
+  SelectMenuItemStyler labelDecoration(TextDecoration value) {
     return label(TextStyler(style: TextStyleMix(decoration: value)));
   }
 
-  RemixSelectMenuItemStyler labelFontFamily(String value) {
+  SelectMenuItemStyler labelFontFamily(String value) {
     return label(TextStyler(style: TextStyleMix(fontFamily: value)));
   }
 
-  RemixSelectMenuItemStyler labelHeight(double value) {
+  SelectMenuItemStyler labelHeight(double value) {
     return label(TextStyler(style: TextStyleMix(height: value)));
   }
 
-  RemixSelectMenuItemStyler labelWordSpacing(double value) {
+  SelectMenuItemStyler labelWordSpacing(double value) {
     return label(TextStyler(style: TextStyleMix(wordSpacing: value)));
   }
 
-  RemixSelectMenuItemStyler labelDecorationColor(Color value) {
+  SelectMenuItemStyler labelDecorationColor(Color value) {
     return label(TextStyler(style: TextStyleMix(decorationColor: value)));
   }
 
-  RemixSelectMenuItemStyler flex(FlexStyler value) {
-    return merge(
-      RemixSelectMenuItemStyler(container: FlexBoxStyler().flex(value)),
-    );
+  SelectMenuItemStyler flex(FlexStyler value) {
+    return merge(SelectMenuItemStyler(container: FlexBoxStyler().flex(value)));
   }
 }

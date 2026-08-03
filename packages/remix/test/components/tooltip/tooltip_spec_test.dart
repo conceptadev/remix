@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixTooltipSpec', () {
+  group('TooltipSpec', () {
     group('Constructor', () {
       test('creates with default properties', () {
-        const spec = RemixTooltipSpec();
+        const spec = TooltipSpec();
 
         expect(spec.container, equals(const StyleSpec(spec: BoxSpec())));
         expect(spec.label, equals(const StyleSpec(spec: TextSpec())));
@@ -20,7 +20,7 @@ void main() {
         const waitDuration = Duration(milliseconds: 500);
         const showDuration = Duration(milliseconds: 2000);
 
-        final spec = RemixTooltipSpec(
+        final spec = TooltipSpec(
           container: container,
           label: label,
           waitDuration: waitDuration,
@@ -36,7 +36,7 @@ void main() {
 
     group('copyWith', () {
       test('returns copy when no parameters provided', () {
-        const spec = RemixTooltipSpec();
+        const spec = TooltipSpec();
         final copy = spec.copyWith();
 
         expect(copy.container, equals(spec.container));
@@ -46,7 +46,7 @@ void main() {
       });
 
       test('returns copy with new container', () {
-        const spec = RemixTooltipSpec();
+        const spec = TooltipSpec();
         final newContainer = StyleSpec(
           spec: const BoxSpec(),
           animation: AnimationConfig.linear(const Duration(milliseconds: 100)),
@@ -60,7 +60,7 @@ void main() {
       });
 
       test('returns copy with new durations', () {
-        const spec = RemixTooltipSpec();
+        const spec = TooltipSpec();
 
         final copy = spec.copyWith(
           waitDuration: const Duration(milliseconds: 600),
@@ -76,7 +76,7 @@ void main() {
 
     group('lerp', () {
       test('returns value equal to this when other is null', () {
-        const spec = RemixTooltipSpec();
+        const spec = TooltipSpec();
         final lerped = spec.lerp(null, 0.5);
 
         // Container and label should be equal
@@ -85,8 +85,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=0', () {
-        const spec1 = RemixTooltipSpec();
-        const spec2 = RemixTooltipSpec(
+        const spec1 = TooltipSpec();
+        const spec2 = TooltipSpec(
           waitDuration: Duration(milliseconds: 600),
           showDuration: Duration(milliseconds: 3000),
         );
@@ -98,8 +98,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=1', () {
-        const spec1 = RemixTooltipSpec();
-        const spec2 = RemixTooltipSpec(
+        const spec1 = TooltipSpec();
+        const spec2 = TooltipSpec(
           waitDuration: Duration(milliseconds: 600),
           showDuration: Duration(milliseconds: 3000),
         );
@@ -111,11 +111,11 @@ void main() {
       });
 
       test('uses threshold interpolation for durations', () {
-        const spec1 = RemixTooltipSpec(
+        const spec1 = TooltipSpec(
           waitDuration: Duration(milliseconds: 300),
           showDuration: Duration(milliseconds: 1500),
         );
-        const spec2 = RemixTooltipSpec(
+        const spec2 = TooltipSpec(
           waitDuration: Duration(milliseconds: 600),
           showDuration: Duration(milliseconds: 3000),
         );
@@ -132,24 +132,22 @@ void main() {
 
     group('Equality & Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixTooltipSpec();
-        const spec2 = RemixTooltipSpec();
+        const spec1 = TooltipSpec();
+        const spec2 = TooltipSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('two specs with different properties are not equal', () {
-        const spec1 = RemixTooltipSpec();
-        const spec2 = RemixTooltipSpec(
-          waitDuration: Duration(milliseconds: 500),
-        );
+        const spec1 = TooltipSpec();
+        const spec2 = TooltipSpec(waitDuration: Duration(milliseconds: 500));
 
         expect(spec1, isNot(equals(spec2)));
       });
 
       test('props includes all relevant properties', () {
-        const spec = RemixTooltipSpec();
+        const spec = TooltipSpec();
 
         expect(spec.props, hasLength(5));
         expect(spec.props, contains(spec.container));
@@ -162,7 +160,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties includes all properties', () {
-        const spec = RemixTooltipSpec();
+        const spec = TooltipSpec();
         final builder = DiagnosticPropertiesBuilder();
 
         spec.debugFillProperties(builder);
@@ -178,7 +176,7 @@ void main() {
 
     group('Edge Cases', () {
       test('handles very short durations', () {
-        const spec = RemixTooltipSpec(
+        const spec = TooltipSpec(
           waitDuration: Duration(milliseconds: 1),
           showDuration: Duration(milliseconds: 1),
         );
@@ -188,7 +186,7 @@ void main() {
       });
 
       test('handles very long durations', () {
-        const spec = RemixTooltipSpec(
+        const spec = TooltipSpec(
           waitDuration: Duration(seconds: 60),
           showDuration: Duration(minutes: 5),
         );

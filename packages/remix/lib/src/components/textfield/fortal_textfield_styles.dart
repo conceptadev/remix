@@ -26,7 +26,7 @@ enum FortalTextFieldVariant {
 
 /// Fortal-themed preset for [RemixTextField].
 @MixWidget(target: RemixTextField.new)
-RemixTextFieldStyler fortalTextFieldStyle({
+TextFieldStyler fortalTextFieldStyle({
   FortalTextFieldVariant variant = .surface,
   FortalTextFieldSize size = .size2,
 }) {
@@ -41,12 +41,12 @@ RemixTextFieldStyler fortalTextFieldStyle({
   );
 }
 
-RemixTextFieldStyler _fortalTextFieldBaseStyler(
+TextFieldStyler _fortalTextFieldBaseStyler(
   FortalTextFieldSize size, {
   required bool bordered,
 }) {
   final metrics = _fortalTextFieldMetrics(size, bordered: bordered);
-  return RemixTextFieldStyler(
+  return TextFieldStyler(
         container: .height(metrics.height)
             .paddingX(metrics.paddingX)
             .spacing(metrics.spacing)
@@ -82,7 +82,7 @@ RemixTextFieldStyler _fortalTextFieldBaseStyler(
       );
 }
 
-RemixTextFieldStyler _fortalTextFieldClassicStyler(FortalTextFieldSize size) {
+TextFieldStyler _fortalTextFieldClassicStyler(FortalTextFieldSize size) {
   return _fortalTextFieldNeutralText(
         _fortalTextFieldBaseStyler(size, bordered: true),
       )
@@ -112,7 +112,7 @@ RemixTextFieldStyler _fortalTextFieldClassicStyler(FortalTextFieldSize size) {
       );
 }
 
-RemixTextFieldStyler _fortalTextFieldSurfaceStyler([
+TextFieldStyler _fortalTextFieldSurfaceStyler([
   FortalTextFieldSize size = .size2,
 ]) {
   return _fortalTextFieldNeutralText(
@@ -149,12 +149,12 @@ RemixTextFieldStyler _fortalTextFieldSurfaceStyler([
       );
 }
 
-RemixTextFieldStyler _fortalTextFieldSoftStyler([
+TextFieldStyler _fortalTextFieldSoftStyler([
   FortalTextFieldSize size = .size2,
 ]) {
   return _fortalTextFieldBaseStyler(size, bordered: false)
       .merge(
-        RemixTextFieldStyler(
+        TextFieldStyler(
           text: .fontWeight(FortalTokens.fontWeightRegular()),
           hintText: .color(
             FortalTokens.accentA11(),
@@ -183,21 +183,20 @@ RemixTextFieldStyler _fortalTextFieldSoftStyler([
       );
 }
 
-RemixTextFieldStyler _fortalTextFieldNeutralText(RemixTextFieldStyler base) =>
-    base.merge(
-      RemixTextFieldStyler(
-        text: .color(FortalTokens.gray12()),
-        hintText: .color(FortalTokens.grayA10()),
-        cursorColor: FortalTokens.gray12(),
-        helperText: .color(FortalTokens.gray11()),
-        label: .color(
-          FortalTokens.gray12(),
-        ).fontWeight(FortalTokens.fontWeightMedium()),
-      ),
-    );
+TextFieldStyler _fortalTextFieldNeutralText(TextFieldStyler base) => base.merge(
+  TextFieldStyler(
+    text: .color(FortalTokens.gray12()),
+    hintText: .color(FortalTokens.grayA10()),
+    cursorColor: FortalTokens.gray12(),
+    helperText: .color(FortalTokens.gray11()),
+    label: .color(
+      FortalTokens.gray12(),
+    ).fontWeight(FortalTokens.fontWeightMedium()),
+  ),
+);
 
-RemixTextFieldStyler _fortalTextFieldDisabledText() =>
-    RemixTextFieldStyler(
+TextFieldStyler _fortalTextFieldDisabledText() =>
+    TextFieldStyler(
       text: .color(FortalTokens.gray11()),
       hintText: .color(FortalTokens.grayA8()),
       cursorColor: FortalTokens.gray8(),
@@ -214,8 +213,8 @@ RemixTextFieldStyler _fortalTextFieldDisabledText() =>
       ),
     );
 
-RemixTextFieldStyler _fortalTextFieldErrorStyler() {
-  return RemixTextFieldStyler(
+TextFieldStyler _fortalTextFieldErrorStyler() {
+  return TextFieldStyler(
     helperText: .color(FortalTokens.error11()),
     label: .color(FortalTokens.error11()),
     cursorColor: FortalTokens.error9(),

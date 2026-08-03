@@ -34,7 +34,7 @@
     {
       "id": 6,
       "prompt": "I pass a small Column with ordinary Text widgets as RemixTooltip.tooltipChild. Can the tooltip's custom label styler apply to those nested Text widgets?",
-      "expected_output": "Explains that RemixTooltip applies its resolved RemixTooltipStyler.label(...) spec through DefaultTextStyle, so ordinary descendant Text widgets inherit the custom label style while retaining the arbitrary tooltipChild structure.",
+      "expected_output": "Explains that RemixTooltip applies its resolved TooltipStyler.label(...) spec through DefaultTextStyle, so ordinary descendant Text widgets inherit the custom label style while retaining the arbitrary tooltipChild structure.",
       "files": []
     }
   ]

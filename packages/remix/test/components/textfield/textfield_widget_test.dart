@@ -248,7 +248,7 @@ void main() {
     group('Styling', () {
       testWidgets('applies custom text color', (tester) async {
         await tester.pumpRemixApp(
-          RemixTextField(style: RemixTextFieldStyler().color(Colors.red)),
+          RemixTextField(style: TextFieldStyler().color(Colors.red)),
         );
         await tester.pumpAndSettle();
 
@@ -257,9 +257,7 @@ void main() {
 
       testWidgets('applies custom background color', (tester) async {
         await tester.pumpRemixApp(
-          RemixTextField(
-            style: RemixTextFieldStyler().backgroundColor(Colors.grey),
-          ),
+          RemixTextField(style: TextFieldStyler().backgroundColor(Colors.grey)),
         );
         await tester.pumpAndSettle();
 
@@ -269,9 +267,7 @@ void main() {
       testWidgets('applies custom padding', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(
-            style: RemixTextFieldStyler().padding(
-              EdgeInsetsGeometryMix.all(20),
-            ),
+            style: TextFieldStyler().padding(EdgeInsetsGeometryMix.all(20)),
           ),
         );
         await tester.pumpAndSettle();
@@ -282,7 +278,7 @@ void main() {
       testWidgets('applies custom border radius', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(
-            style: RemixTextFieldStyler().borderRadius(
+            style: TextFieldStyler().borderRadius(
               BorderRadiusGeometryMix.circular(12),
             ),
           ),
@@ -294,9 +290,7 @@ void main() {
 
       testWidgets('applies custom cursor color', (tester) async {
         await tester.pumpRemixApp(
-          RemixTextField(
-            style: RemixTextFieldStyler().cursorColor(Colors.blue),
-          ),
+          RemixTextField(style: TextFieldStyler().cursorColor(Colors.blue)),
         );
         await tester.pumpAndSettle();
 
@@ -313,7 +307,7 @@ void main() {
         const cursorRadius = Radius.circular(3);
         await tester.pumpRemixApp(
           RemixTextField(
-            style: RemixTextFieldStyler(
+            style: TextFieldStyler(
               textAlign: TextAlign.end,
               cursorWidth: 4,
               cursorHeight: 18,
@@ -352,9 +346,9 @@ void main() {
         await tester.pumpRemixApp(
           RemixTextField(
             focusNode: focusNode,
-            style: RemixTextFieldStyler(
+            style: TextFieldStyler(
               cursorColor: Colors.blue,
-            ).onFocused(RemixTextFieldStyler(cursorColor: Colors.red)),
+            ).onFocused(TextFieldStyler(cursorColor: Colors.red)),
           ),
         );
         await tester.pumpAndSettle();
@@ -381,7 +375,7 @@ void main() {
         await tester.pumpRemixApp(
           RemixTextField(
             hintText: 'Hint',
-            style: RemixTextFieldStyler().hintColor(Colors.grey),
+            style: TextFieldStyler().hintColor(Colors.grey),
           ),
         );
         await tester.pumpAndSettle();
@@ -563,7 +557,7 @@ void main() {
       testWidgets('applies container styling', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(
-            style: RemixTextFieldStyler().container(
+            style: TextFieldStyler().container(
               FlexBoxStyler(
                 decoration: BoxDecorationMix(color: Colors.grey),
                 padding: EdgeInsetsGeometryMix.all(16),
@@ -583,7 +577,7 @@ void main() {
           RemixTextField(
             label: 'Label',
             helperText: 'Helper',
-            style: RemixTextFieldStyler().layout(FlexBoxStyler().spacing(12)),
+            style: TextFieldStyler().layout(FlexBoxStyler().spacing(12)),
           ),
         );
         await tester.pumpAndSettle();
@@ -604,7 +598,7 @@ void main() {
 
       testWidgets('applies width and height constraints', (tester) async {
         await tester.pumpRemixApp(
-          RemixTextField(style: RemixTextFieldStyler().width(300).height(60)),
+          RemixTextField(style: TextFieldStyler().width(300).height(60)),
         );
         await tester.pumpAndSettle();
 
@@ -613,9 +607,7 @@ void main() {
 
       testWidgets('applies text alignment', (tester) async {
         await tester.pumpRemixApp(
-          RemixTextField(
-            style: RemixTextFieldStyler().textAlign(TextAlign.center),
-          ),
+          RemixTextField(style: TextFieldStyler().textAlign(TextAlign.center)),
         );
         await tester.pumpAndSettle();
 
@@ -626,7 +618,7 @@ void main() {
     group('Widget Modifiers', () {
       testWidgets('applies widget modifiers from style', (tester) async {
         await tester.pumpRemixApp(
-          RemixTextField(style: RemixTextFieldStyler().wrap(.clipOval())),
+          RemixTextField(style: TextFieldStyler().wrap(.clipOval())),
         );
         await tester.pumpAndSettle();
 
@@ -647,7 +639,7 @@ void main() {
 
     group('StyleSpec Parameter', () {
       testWidgets('uses styleSpec when provided', (tester) async {
-        const spec = RemixTextFieldSpec(
+        const spec = TextFieldSpec(
           container: StyleSpec(
             spec: FlexBoxSpec(
               box: StyleSpec(

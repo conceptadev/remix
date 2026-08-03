@@ -30,7 +30,7 @@ void main() {
             uncheckedIcon: Icons.close,
             indeterminateIcon: Icons.remove,
             enableFeedback: true,
-            style: RemixCheckboxStyler.create(),
+            style: CheckboxStyler.create(),
             semanticLabel: 'Test Checkbox',
             mouseCursor: SystemMouseCursors.click,
           ),
@@ -81,7 +81,7 @@ void main() {
     });
 
     group('WidgetStateController', () {
-      widgetControllerTest<RemixCheckboxSpec>(
+      widgetControllerTest<CheckboxSpec>(
         'contains disabled state when enabled is false',
         build: () => RemixCheckbox(
           selected: false,
@@ -91,21 +91,21 @@ void main() {
         expectedStates: {WidgetState.disabled},
       );
 
-      widgetControllerTest<RemixCheckboxSpec>(
+      widgetControllerTest<CheckboxSpec>(
         'contains hovered state when hovered',
         build: () => RemixCheckbox(selected: false, onChanged: (value) {}),
         act: hoverAction<RemixCheckbox>,
         expectedStates: {WidgetState.hovered},
       );
 
-      widgetControllerTest<RemixCheckboxSpec>(
+      widgetControllerTest<CheckboxSpec>(
         'contains focused state when focused',
         build: () => RemixCheckbox(selected: false, onChanged: (value) {}),
         act: focusAction<RemixCheckbox>,
         expectedStates: {WidgetState.focused},
       );
 
-      widgetControllerTest<RemixCheckboxSpec>(
+      widgetControllerTest<CheckboxSpec>(
         'contains pressed state when pressed',
         build: () => RemixCheckbox(selected: false, onChanged: (value) {}),
         act: pressAction<RemixCheckbox>,
@@ -324,7 +324,7 @@ void main() {
 
     group('Layout and Sizing', () {
       testWidgets('checkbox adapts to custom size', (tester) async {
-        final smallStyle = RemixCheckboxStyler().size(16.0, 16.0);
+        final smallStyle = CheckboxStyler().size(16.0, 16.0);
         await tester.pumpRemixApp(
           RemixCheckbox(
             selected: false,
@@ -336,7 +336,7 @@ void main() {
 
         final smallSize = tester.getSize(find.byType(RemixCheckbox));
 
-        final largeStyle = RemixCheckboxStyler().size(32.0, 32.0);
+        final largeStyle = CheckboxStyler().size(32.0, 32.0);
         await tester.pumpRemixApp(
           RemixCheckbox(
             selected: false,
@@ -355,7 +355,7 @@ void main() {
 
     group('StyleSpec Parameter', () {
       testWidgets('applies raw styleSpec when provided', (tester) async {
-        const spec = RemixCheckboxSpec(
+        const spec = CheckboxSpec(
           container: StyleSpec(
             spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
           ),

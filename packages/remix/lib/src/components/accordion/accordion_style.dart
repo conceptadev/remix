@@ -1,73 +1,73 @@
 part of 'accordion.dart';
 
 /// Style configuration for [RemixAccordion] trigger, icons, title, and content.
-extension RemixAccordionStylerRemixHelpers on RemixAccordionStyler {
+extension RemixAccordionStylerRemixHelpers on AccordionStyler {
   /// Sets the background color of the trigger.
-  RemixAccordionStyler backgroundColor(Color value) {
+  AccordionStyler backgroundColor(Color value) {
     return merge(
-      RemixAccordionStyler(
+      AccordionStyler(
         trigger: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets title color.
-  RemixAccordionStyler titleColor(Color value) {
+  AccordionStyler titleColor(Color value) {
     return title(TextStyler(style: TextStyleMix(color: value)));
   }
 
   /// Sets title font size.
-  RemixAccordionStyler titleFontSize(double value) {
+  AccordionStyler titleFontSize(double value) {
     return title(TextStyler(style: TextStyleMix(fontSize: value)));
   }
 
   /// Sets title font weight.
-  RemixAccordionStyler titleFontWeight(FontWeight value) {
+  AccordionStyler titleFontWeight(FontWeight value) {
     return title(TextStyler(style: TextStyleMix(fontWeight: value)));
   }
 
   /// Sets title style using TextStyleMix directly.
-  RemixAccordionStyler titleStyle(TextStyleMix value) {
+  AccordionStyler titleStyle(TextStyleMix value) {
     return title(TextStyler(style: value));
   }
 
   /// Sets leading icon color.
-  RemixAccordionStyler leadingIconColor(Color value) {
+  AccordionStyler leadingIconColor(Color value) {
     return leadingIcon(IconStyler(color: value));
   }
 
   /// Sets leading icon size.
-  RemixAccordionStyler leadingIconSize(double value) {
+  AccordionStyler leadingIconSize(double value) {
     return leadingIcon(IconStyler(size: value));
   }
 
   /// Sets trailing icon color.
-  RemixAccordionStyler trailingIconColor(Color value) {
+  AccordionStyler trailingIconColor(Color value) {
     return trailingIcon(IconStyler(color: value));
   }
 
   /// Sets trailing icon size.
-  RemixAccordionStyler trailingIconSize(double value) {
+  AccordionStyler trailingIconSize(double value) {
     return trailingIcon(IconStyler(size: value));
   }
 
   /// Sets content background color.
-  RemixAccordionStyler contentColor(Color value) {
+  AccordionStyler contentColor(Color value) {
     return content(BoxStyler(decoration: BoxDecorationMix(color: value)));
   }
 
   /// Sets content padding.
-  RemixAccordionStyler contentPadding(EdgeInsetsGeometryMix value) {
+  AccordionStyler contentPadding(EdgeInsetsGeometryMix value) {
     return content(BoxStyler(padding: value));
   }
 
   /// Sets content decoration.
-  RemixAccordionStyler contentDecoration(DecorationMix value) {
+  AccordionStyler contentDecoration(DecorationMix value) {
     return content(BoxStyler(decoration: value));
   }
 
   /// Style when the accordion is expanded.
-  RemixAccordionStyler onExpanded<T>(RemixAccordionStyler value) {
+  AccordionStyler onExpanded<T>(AccordionStyler value) {
     return variants([
       VariantStyle(
         ContextVariant('onExpanded', (context) {
@@ -79,7 +79,7 @@ extension RemixAccordionStylerRemixHelpers on RemixAccordionStyler {
   }
 
   /// Style when accordion is collapsed
-  RemixAccordionStyler onCollapsed<T>(RemixAccordionStyler value) {
+  AccordionStyler onCollapsed<T>(AccordionStyler value) {
     return variants([
       VariantStyle(
         ContextVariant('onCollapsed', (context) {
@@ -91,7 +91,7 @@ extension RemixAccordionStylerRemixHelpers on RemixAccordionStyler {
   }
 
   /// Style when the accordion item can collapse.
-  RemixAccordionStyler onCanCollapse(RemixAccordionStyler value) {
+  AccordionStyler onCanCollapse(AccordionStyler value) {
     return variants([
       VariantStyle(
         ContextVariant('onCanCollapse', (context) {
@@ -103,7 +103,7 @@ extension RemixAccordionStylerRemixHelpers on RemixAccordionStyler {
   }
 
   /// Style when the accordion item can expand.
-  RemixAccordionStyler onCanExpand<T>(RemixAccordionStyler value) {
+  AccordionStyler onCanExpand<T>(AccordionStyler value) {
     return variants([
       VariantStyle(
         ContextVariant('onCanExpand', (context) {
@@ -157,7 +157,7 @@ extension RemixAccordionStylerRemixHelpers on RemixAccordionStyler {
     );
   }
 
-  RemixAccordionStyler flex(FlexStyler value) {
-    return merge(RemixAccordionStyler(trigger: FlexBoxStyler().flex(value)));
+  AccordionStyler flex(FlexStyler value) {
+    return merge(AccordionStyler(trigger: FlexBoxStyler().flex(value)));
   }
 }

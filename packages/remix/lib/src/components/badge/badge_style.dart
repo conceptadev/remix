@@ -1,18 +1,18 @@
 part of 'badge.dart';
 
 /// Style configuration for [RemixBadge] container and label text.
-extension RemixBadgeStylerRemixHelpers on RemixBadgeStyler {
+extension RemixBadgeStylerRemixHelpers on BadgeStyler {
   /// Sets background color
-  RemixBadgeStyler backgroundColor(Color value) {
+  BadgeStyler backgroundColor(Color value) {
     return merge(
-      RemixBadgeStyler(
+      BadgeStyler(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets the foreground color (text) of the badge.
-  RemixBadgeStyler foregroundColor(Color value) {
+  BadgeStyler foregroundColor(Color value) {
     return labelColor(value);
   }
 
