@@ -17,6 +17,7 @@ standalone branded design-system package built on Remix, use the
 ## Quick Start
 
 ```dart
+import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 ```
 
@@ -27,7 +28,10 @@ FortalScope(
   accent: FortalAccentColor.indigo,  // 31 options (default .indigo)
   gray: FortalGrayColor.slate,       // 6 neutral scales (default .slate)
   brightness: Brightness.light,      // or .dark
-  child: MaterialApp(home: MyScreen()),
+  child: WidgetsApp(
+    color: const Color(0xFFFFFFFF),
+    builder: (_, _) => const MyScreen(),
+  ),
 )
 ```
 
@@ -49,6 +53,48 @@ calls such as `FortalRadio.soft(value: 'option')` do not need `<String>`.
 Plain `Remix*` widgets work without `FortalScope`, but anything Fortal
 (`Fortal*` widgets, `fortal*Style()` functions, `FortalTokens`) requires it
 to resolve tokens.
+
+## Host Capabilities
+
+Remix composes inside the caller's Flutter host. Do not add a `RemixApp`,
+`RemixOverlayHost`, or `RemixScaffold`.
+
+| UI | Caller provides | Compatible hosts |
+|----|-----------------|------------------|
+| Ordinary `Remix*` widgets | The inherited Flutter services used by the widget subtree | Material, Cupertino, Widgets, and router-based hosts |
+| `Fortal*` widgets and recipes | `FortalScope`, in addition to the widget's normal Flutter services | Any Flutter host |
+| Menu, select, popover, and tooltip | An `Overlay` | Any host exposing an overlay; use `Overlay.wrap` when no `Navigator` is needed |
+| `showRemixDialog` and `showRemixAlertDialog` | A `Navigator` | Any host with a caller-owned navigator |
+
+Use the smallest host capability required by the screen. A portal-only screen
+can use a caller-owned overlay without routing:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+Widget buildPortalHost() {
+  return FortalScope(
+    child: WidgetsApp(
+      color: const Color(0xFFFFFFFF),
+      builder: (_, _) => Overlay.wrap(
+        child: Center(
+          child: FortalMenu<String>.soft(
+            trigger: const RemixMenuTrigger(label: 'Actions'),
+            items: const [
+              RemixMenuItem(value: 'share', label: 'Share'),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+```
+
+Material, Cupertino, Widgets, and router hosts with routing configured commonly
+provide a `Navigator` and its overlay already. Dialog helpers push routes, so
+their calling context must be below that caller-owned `Navigator`.
 
 ## Three levels of styling
 
@@ -404,7 +450,10 @@ class AppStyles {
 RemixButton(label: 'Save', onPressed: save, style: AppStyles.primaryButton)
 ```
 
-### Dark Mode Toggle
+### Material Dark Mode Interoperability
+
+When the caller uses `MaterialApp`, keep its theme brightness aligned with
+`FortalScope`. `MaterialApp` and `Scaffold` are not Remix requirements.
 
 ```dart
 class _MyAppState extends State<MyApp> {

@@ -348,6 +348,11 @@ thickness), no variant.
 
 ## Overlays
 
+Menu, select, popover, and tooltip content uses the nearest caller-provided
+`Overlay`; these components do not require a `Navigator`. If the existing host
+does not expose an overlay, wrap the relevant subtree with `Overlay.wrap`.
+Dialog helpers push routes and therefore require a caller-provided `Navigator`.
+
 ### showRemixDialog\<T\>
 
 The only `showRemix*` helper in the package. It wraps `showNakedDialog`. When

@@ -438,12 +438,12 @@ void _checkNavigation(
 void _checkFortalScopeTopology(Directory workspaceRoot, List<String> failures) {
   final index = File('${workspaceRoot.path}/docs/index.mdx').readAsStringSync();
   final topology = RegExp(
-    r'return\s+FortalScope\s*\(\s*child:\s*MaterialApp\s*\(',
+    r'return\s+FortalScope\s*\(\s*child:\s*WidgetsApp\s*\(',
     dotAll: true,
   );
   if (!topology.hasMatch(index)) {
     failures.add(
-      'docs/index.mdx must place the root FortalScope above MaterialApp.',
+      'docs/index.mdx must place the root FortalScope above WidgetsApp.',
     );
   }
 }
