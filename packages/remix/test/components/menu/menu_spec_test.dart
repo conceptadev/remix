@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixMenuTriggerSpec', () {
+  group('MenuTriggerSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        const spec = RemixMenuTriggerSpec();
+        const spec = MenuTriggerSpec();
 
         expect(spec.container, isA<StyleSpec<FlexBoxSpec>>());
         expect(spec.label, isA<StyleSpec<TextSpec>>());
@@ -18,7 +18,7 @@ void main() {
         final label = StyleSpec(spec: TextSpec());
         final icon = StyleSpec(spec: IconSpec());
 
-        final spec = RemixMenuTriggerSpec(
+        final spec = MenuTriggerSpec(
           container: container,
           label: label,
           icon: icon,
@@ -32,7 +32,7 @@ void main() {
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
-        const originalSpec = RemixMenuTriggerSpec();
+        const originalSpec = MenuTriggerSpec();
         final newContainer = StyleSpec(spec: FlexBoxSpec());
 
         final updatedSpec = originalSpec.copyWith(container: newContainer);
@@ -42,7 +42,7 @@ void main() {
       });
 
       test('preserves immutability - original spec unchanged', () {
-        const originalSpec = RemixMenuTriggerSpec();
+        const originalSpec = MenuTriggerSpec();
         final originalContainer = originalSpec.container;
         final newContainer = StyleSpec(spec: FlexBoxSpec());
 
@@ -54,7 +54,7 @@ void main() {
       });
 
       test('returns new instance with all properties updated', () {
-        const originalSpec = RemixMenuTriggerSpec();
+        const originalSpec = MenuTriggerSpec();
         final newContainer = StyleSpec(spec: FlexBoxSpec());
         final newLabel = StyleSpec(spec: TextSpec());
         final newIcon = StyleSpec(spec: IconSpec());
@@ -73,8 +73,8 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        const spec = RemixMenuTriggerSpec();
-        const RemixMenuTriggerSpec? other = null;
+        const spec = MenuTriggerSpec();
+        const MenuTriggerSpec? other = null;
 
         final result = spec.lerp(other, 0.5);
 
@@ -82,10 +82,10 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = RemixMenuTriggerSpec(
+        final spec1 = MenuTriggerSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
         );
-        final spec2 = RemixMenuTriggerSpec(
+        final spec2 = MenuTriggerSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
         );
 
@@ -96,10 +96,10 @@ void main() {
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = RemixMenuTriggerSpec(
+        final spec1 = MenuTriggerSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
         );
-        final spec2 = RemixMenuTriggerSpec(
+        final spec2 = MenuTriggerSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
         );
 
@@ -112,16 +112,16 @@ void main() {
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixMenuTriggerSpec();
-        const spec2 = RemixMenuTriggerSpec();
+        const spec1 = MenuTriggerSpec();
+        const spec2 = MenuTriggerSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('two specs with different properties are not equal', () {
-        const spec1 = RemixMenuTriggerSpec();
-        final spec2 = RemixMenuTriggerSpec(
+        const spec1 = MenuTriggerSpec();
+        final spec2 = MenuTriggerSpec(
           container: StyleSpec(
             spec: const FlexBoxSpec(),
             animation: AnimationConfig.linear(
@@ -134,7 +134,7 @@ void main() {
       });
 
       test('props list contains all properties', () {
-        const spec = RemixMenuTriggerSpec();
+        const spec = MenuTriggerSpec();
 
         expect(spec.props, hasLength(3));
         expect(spec.props, contains(spec.container));
@@ -145,7 +145,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = RemixMenuTriggerSpec();
+        const spec = MenuTriggerSpec();
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -154,7 +154,7 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        const spec = RemixMenuTriggerSpec();
+        const spec = MenuTriggerSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
@@ -162,24 +162,24 @@ void main() {
     });
   });
 
-  group('RemixMenuSpec', () {
+  group('MenuSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        const spec = RemixMenuSpec();
+        const spec = MenuSpec();
 
-        expect(spec.trigger, isA<StyleSpec<RemixMenuTriggerSpec>>());
+        expect(spec.trigger, isA<StyleSpec<MenuTriggerSpec>>());
         expect(spec.overlay, isA<StyleSpec<FlexBoxSpec>>());
-        expect(spec.item, isA<StyleSpec<RemixMenuItemSpec>>());
+        expect(spec.item, isA<StyleSpec<MenuItemSpec>>());
         expect(spec.divider, isA<StyleSpec<RemixDividerSpec>>());
       });
 
       test('creates spec with provided parameters', () {
-        final trigger = StyleSpec(spec: RemixMenuTriggerSpec());
+        final trigger = StyleSpec(spec: MenuTriggerSpec());
         final overlay = StyleSpec(spec: FlexBoxSpec());
-        final item = StyleSpec(spec: RemixMenuItemSpec());
+        final item = StyleSpec(spec: MenuItemSpec());
         final divider = StyleSpec(spec: RemixDividerSpec());
 
-        final spec = RemixMenuSpec(
+        final spec = MenuSpec(
           trigger: trigger,
           overlay: overlay,
           item: item,
@@ -195,8 +195,8 @@ void main() {
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
-        const originalSpec = RemixMenuSpec();
-        final newTrigger = StyleSpec(spec: RemixMenuTriggerSpec());
+        const originalSpec = MenuSpec();
+        final newTrigger = StyleSpec(spec: MenuTriggerSpec());
 
         final updatedSpec = originalSpec.copyWith(trigger: newTrigger);
 
@@ -205,9 +205,9 @@ void main() {
       });
 
       test('preserves immutability - original spec unchanged', () {
-        const originalSpec = RemixMenuSpec();
+        const originalSpec = MenuSpec();
         final originalTrigger = originalSpec.trigger;
-        final newTrigger = StyleSpec(spec: RemixMenuTriggerSpec());
+        final newTrigger = StyleSpec(spec: MenuTriggerSpec());
 
         final updatedSpec = originalSpec.copyWith(trigger: newTrigger);
 
@@ -217,10 +217,10 @@ void main() {
       });
 
       test('returns new instance with all properties updated', () {
-        const originalSpec = RemixMenuSpec();
-        final newTrigger = StyleSpec(spec: RemixMenuTriggerSpec());
+        const originalSpec = MenuSpec();
+        final newTrigger = StyleSpec(spec: MenuTriggerSpec());
         final newOverlay = StyleSpec(spec: FlexBoxSpec());
-        final newItem = StyleSpec(spec: RemixMenuItemSpec());
+        final newItem = StyleSpec(spec: MenuItemSpec());
         final newDivider = StyleSpec(spec: RemixDividerSpec());
 
         final updatedSpec = originalSpec.copyWith(
@@ -239,8 +239,8 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        const spec = RemixMenuSpec();
-        const RemixMenuSpec? other = null;
+        const spec = MenuSpec();
+        const MenuSpec? other = null;
 
         final result = spec.lerp(other, 0.5);
 
@@ -248,11 +248,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = RemixMenuSpec(
-          trigger: StyleSpec(spec: RemixMenuTriggerSpec()),
+        final spec1 = MenuSpec(
+          trigger: StyleSpec(spec: MenuTriggerSpec()),
         );
-        final spec2 = RemixMenuSpec(
-          trigger: StyleSpec(spec: RemixMenuTriggerSpec()),
+        final spec2 = MenuSpec(
+          trigger: StyleSpec(spec: MenuTriggerSpec()),
         );
 
         final result = spec1.lerp(spec2, 0.0);
@@ -262,11 +262,11 @@ void main() {
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = RemixMenuSpec(
-          trigger: StyleSpec(spec: RemixMenuTriggerSpec()),
+        final spec1 = MenuSpec(
+          trigger: StyleSpec(spec: MenuTriggerSpec()),
         );
-        final spec2 = RemixMenuSpec(
-          trigger: StyleSpec(spec: RemixMenuTriggerSpec()),
+        final spec2 = MenuSpec(
+          trigger: StyleSpec(spec: MenuTriggerSpec()),
         );
 
         final result = spec1.lerp(spec2, 1.0);
@@ -278,18 +278,18 @@ void main() {
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixMenuSpec();
-        const spec2 = RemixMenuSpec();
+        const spec1 = MenuSpec();
+        const spec2 = MenuSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('two specs with different properties are not equal', () {
-        const spec1 = RemixMenuSpec();
-        final spec2 = RemixMenuSpec(
+        const spec1 = MenuSpec();
+        final spec2 = MenuSpec(
           trigger: StyleSpec(
-            spec: const RemixMenuTriggerSpec(),
+            spec: const MenuTriggerSpec(),
             animation: AnimationConfig.linear(
               const Duration(milliseconds: 100),
             ),
@@ -300,7 +300,7 @@ void main() {
       });
 
       test('props list contains all properties', () {
-        const spec = RemixMenuSpec();
+        const spec = MenuSpec();
 
         expect(spec.props, hasLength(5));
         expect(spec.props, contains(spec.trigger));
@@ -312,7 +312,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = RemixMenuSpec();
+        const spec = MenuSpec();
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -321,7 +321,7 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        const spec = RemixMenuSpec();
+        const spec = MenuSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
@@ -329,10 +329,10 @@ void main() {
     });
   });
 
-  group('RemixMenuItemSpec', () {
+  group('MenuItemSpec', () {
     group('Constructor', () {
       test('creates spec with default values when no parameters provided', () {
-        const spec = RemixMenuItemSpec();
+        const spec = MenuItemSpec();
 
         expect(spec.container, isA<StyleSpec<FlexBoxSpec>>());
         expect(spec.label, isA<StyleSpec<TextSpec>>());
@@ -346,7 +346,7 @@ void main() {
         final leadingIcon = StyleSpec(spec: IconSpec());
         final trailingIcon = StyleSpec(spec: IconSpec());
 
-        final spec = RemixMenuItemSpec(
+        final spec = MenuItemSpec(
           container: container,
           label: label,
           leadingIcon: leadingIcon,
@@ -362,7 +362,7 @@ void main() {
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
-        const originalSpec = RemixMenuItemSpec();
+        const originalSpec = MenuItemSpec();
         final newContainer = StyleSpec(spec: FlexBoxSpec());
 
         final updatedSpec = originalSpec.copyWith(container: newContainer);
@@ -372,7 +372,7 @@ void main() {
       });
 
       test('preserves immutability - original spec unchanged', () {
-        const originalSpec = RemixMenuItemSpec();
+        const originalSpec = MenuItemSpec();
         final originalContainer = originalSpec.container;
         final newContainer = StyleSpec(spec: FlexBoxSpec());
 
@@ -384,7 +384,7 @@ void main() {
       });
 
       test('returns new instance with all properties updated', () {
-        const originalSpec = RemixMenuItemSpec();
+        const originalSpec = MenuItemSpec();
         final newContainer = StyleSpec(spec: FlexBoxSpec());
         final newLabel = StyleSpec(spec: TextSpec());
         final newLeadingIcon = StyleSpec(spec: IconSpec());
@@ -406,8 +406,8 @@ void main() {
 
     group('lerp', () {
       test('returns spec equal to this when other is null', () {
-        const spec = RemixMenuItemSpec();
-        const RemixMenuItemSpec? other = null;
+        const spec = MenuItemSpec();
+        const MenuItemSpec? other = null;
 
         final result = spec.lerp(other, 0.5);
 
@@ -415,10 +415,10 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = RemixMenuItemSpec(
+        final spec1 = MenuItemSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
         );
-        final spec2 = RemixMenuItemSpec(
+        final spec2 = MenuItemSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
         );
 
@@ -429,10 +429,10 @@ void main() {
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = RemixMenuItemSpec(
+        final spec1 = MenuItemSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
         );
-        final spec2 = RemixMenuItemSpec(
+        final spec2 = MenuItemSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
         );
 
@@ -445,16 +445,16 @@ void main() {
 
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
-        const spec1 = RemixMenuItemSpec();
-        const spec2 = RemixMenuItemSpec();
+        const spec1 = MenuItemSpec();
+        const spec2 = MenuItemSpec();
 
         expect(spec1, equals(spec2));
         expect(spec1.hashCode, equals(spec2.hashCode));
       });
 
       test('two specs with different properties are not equal', () {
-        const spec1 = RemixMenuItemSpec();
-        final spec2 = RemixMenuItemSpec(
+        const spec1 = MenuItemSpec();
+        final spec2 = MenuItemSpec(
           container: StyleSpec(
             spec: const FlexBoxSpec(),
             animation: AnimationConfig.linear(
@@ -467,7 +467,7 @@ void main() {
       });
 
       test('props list contains all properties', () {
-        const spec = RemixMenuItemSpec();
+        const spec = MenuItemSpec();
 
         expect(spec.props, hasLength(4));
         expect(spec.props, contains(spec.container));
@@ -479,7 +479,7 @@ void main() {
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = RemixMenuItemSpec();
+        const spec = MenuItemSpec();
 
         expect(
           () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
@@ -488,7 +488,7 @@ void main() {
       });
 
       test('can be converted to string for debugging', () {
-        const spec = RemixMenuItemSpec();
+        const spec = MenuItemSpec();
 
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
@@ -497,7 +497,7 @@ void main() {
 
     group('Edge Cases and Error Handling', () {
       test('copyWith handles null parameters correctly', () {
-        const spec = RemixMenuItemSpec();
+        const spec = MenuItemSpec();
         final originalContainer = spec.container;
 
         final updatedSpec = spec.copyWith(container: null);

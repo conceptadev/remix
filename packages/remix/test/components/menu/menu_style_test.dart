@@ -5,22 +5,22 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixMenuTriggerStyler', () {
+  group('MenuTriggerStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        final style = RemixMenuTriggerStyler();
+        final style = MenuTriggerStyler();
 
         expect(style, isNotNull);
-        expect(style, isA<RemixMenuTriggerStyler>());
+        expect(style, isA<MenuTriggerStyler>());
       });
 
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(FlexBoxStyler());
         final label = Prop.maybeMix(TextStyler());
         final icon = Prop.maybeMix(IconStyler());
-        final variants = <VariantStyle<RemixMenuTriggerSpec>>[];
+        final variants = <VariantStyle<MenuTriggerSpec>>[];
 
-        final style = RemixMenuTriggerStyler.create(
+        final style = MenuTriggerStyler.create(
           container: container,
           label: label,
           icon: icon,
@@ -39,7 +39,7 @@ void main() {
         final labelStyler = TextStyler();
         final iconStyler = IconStyler();
 
-        final style = RemixMenuTriggerStyler(
+        final style = MenuTriggerStyler(
           container: containerStyler,
           label: labelStyler,
           icon: iconStyler,
@@ -55,7 +55,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'label',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) =>
             style.label(TextStyler().color(Colors.red).fontSize(14)),
         expect: (style) {
@@ -68,7 +68,7 @@ void main() {
 
       styleMethodTest(
         'icon',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) => style.icon(IconStyler().color(Colors.red).size(16)),
         expect: (style) {
           expect(
@@ -80,13 +80,13 @@ void main() {
 
       styleMethodTest(
         'padding',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixMenuTriggerStyler.padding(EdgeInsetsGeometryMix.all(16.0)),
+              MenuTriggerStyler.padding(EdgeInsetsGeometryMix.all(16.0)),
             ),
           );
         },
@@ -94,43 +94,43 @@ void main() {
 
       styleMethodTest(
         'color',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
-          expect(style, equals(RemixMenuTriggerStyler.color(Colors.blue)));
+          expect(style, equals(MenuTriggerStyler.color(Colors.blue)));
         },
       );
 
       styleMethodTest(
         'alignment',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
             style,
-            equals(RemixMenuTriggerStyler.alignment(Alignment.centerLeft)),
+            equals(MenuTriggerStyler.alignment(Alignment.centerLeft)),
           );
         },
       );
 
       styleMethodTest(
         'size',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) => style.size(100.0, 50.0),
         expect: (style) {
-          expect(style, equals(RemixMenuTriggerStyler.size(100.0, 50.0)));
+          expect(style, equals(MenuTriggerStyler.size(100.0, 50.0)));
         },
       );
 
       styleMethodTest(
         'borderRadius',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) => style.borderRadius(BorderRadiusMix.circular(8.0)),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixMenuTriggerStyler.borderRadius(
+              MenuTriggerStyler.borderRadius(
                 BorderRadiusMix.circular(8.0),
               ),
             ),
@@ -140,7 +140,7 @@ void main() {
 
       styleMethodTest(
         'constraints',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 100.0, minHeight: 40.0),
         ),
@@ -148,7 +148,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixMenuTriggerStyler.constraints(
+              MenuTriggerStyler.constraints(
                 BoxConstraintsMix(minWidth: 100.0, minHeight: 40.0),
               ),
             ),
@@ -158,7 +158,7 @@ void main() {
 
       styleMethodTest(
         'decoration',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.blue,
@@ -169,7 +169,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixMenuTriggerStyler.decoration(
+              MenuTriggerStyler.decoration(
                 BoxDecorationMix(
                   color: Colors.blue,
                   borderRadius: BorderRadiusMix.circular(8.0),
@@ -182,13 +182,13 @@ void main() {
 
       styleMethodTest(
         'margin',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixMenuTriggerStyler.margin(EdgeInsetsGeometryMix.all(8.0)),
+              MenuTriggerStyler.margin(EdgeInsetsGeometryMix.all(8.0)),
             ),
           );
         },
@@ -196,7 +196,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
@@ -206,7 +206,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixMenuTriggerStyler.foregroundDecoration(
+              MenuTriggerStyler.foregroundDecoration(
                 BoxDecorationMix(
                   border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
@@ -218,14 +218,14 @@ void main() {
 
       styleMethodTest(
         'transform',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) =>
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixMenuTriggerStyler.transform(
+              MenuTriggerStyler.transform(
                 Matrix4.identity(),
                 alignment: Alignment.topLeft,
               ),
@@ -236,7 +236,7 @@ void main() {
 
       styleMethodTest(
         'flex',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) => style.flex(FlexStyler()),
         expect: (style) {
           expect(
@@ -248,20 +248,20 @@ void main() {
 
       styleMethodTest(
         'variants',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) =>
-            style.variants(<VariantStyle<RemixMenuTriggerSpec>>[]),
+            style.variants(<VariantStyle<MenuTriggerSpec>>[]),
         expect: (style) {
           expect(
             style.$variants,
-            equals(<VariantStyle<RemixMenuTriggerSpec>>[]),
+            equals(<VariantStyle<MenuTriggerSpec>>[]),
           );
         },
       );
 
       styleMethodTest(
         'wrap',
-        initial: RemixMenuTriggerStyler(),
+        initial: MenuTriggerStyler(),
         modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
@@ -273,7 +273,7 @@ void main() {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
       ) async {
-        final style = RemixMenuTriggerStyler();
+        final style = MenuTriggerStyler();
 
         await tester.pumpWidget(
           MaterialApp(
@@ -281,8 +281,8 @@ void main() {
               builder: (context) {
                 final spec = style.resolve(context);
 
-                expect(spec, isA<StyleSpec<RemixMenuTriggerSpec>>());
-                expect(spec.spec, isA<RemixMenuTriggerSpec>());
+                expect(spec, isA<StyleSpec<MenuTriggerSpec>>());
+                expect(spec.spec, isA<MenuTriggerSpec>());
                 expect(spec.spec.container, isA<StyleSpec<FlexBoxSpec>>());
                 expect(spec.spec.label, isA<StyleSpec<TextSpec>>());
                 expect(spec.spec.icon, isA<StyleSpec<IconSpec>>());
@@ -295,7 +295,7 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        final originalStyle = RemixMenuTriggerStyler();
+        final originalStyle = MenuTriggerStyler();
 
         final mergedStyle = originalStyle.merge(null);
 
@@ -305,18 +305,18 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        final style1 = RemixMenuTriggerStyler();
-        final style2 = RemixMenuTriggerStyler();
+        final style1 = MenuTriggerStyler();
+        final style2 = MenuTriggerStyler();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixMenuTriggerStyler().padding(
+        final style1 = MenuTriggerStyler().padding(
           EdgeInsetsGeometryMix.all(16.0),
         );
-        final style2 = RemixMenuTriggerStyler().padding(
+        final style2 = MenuTriggerStyler().padding(
           EdgeInsetsGeometryMix.all(8.0),
         );
 
@@ -325,23 +325,23 @@ void main() {
     });
   });
 
-  group('RemixMenuStyler', () {
+  group('MenuStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        final style = RemixMenuStyler();
+        final style = MenuStyler();
 
         expect(style, isNotNull);
-        expect(style, isA<RemixMenuStyler>());
+        expect(style, isA<MenuStyler>());
       });
 
       test('create constructor with all parameters', () {
-        final trigger = Prop.maybeMix(RemixMenuTriggerStyler());
+        final trigger = Prop.maybeMix(MenuTriggerStyler());
         final overlay = Prop.maybeMix(FlexBoxStyler());
-        final item = Prop.maybeMix(RemixMenuItemStyler());
+        final item = Prop.maybeMix(MenuItemStyler());
         final divider = Prop.maybeMix(RemixDividerStyler());
-        final variants = <VariantStyle<RemixMenuSpec>>[];
+        final variants = <VariantStyle<MenuSpec>>[];
 
-        final style = RemixMenuStyler.create(
+        final style = MenuStyler.create(
           trigger: trigger,
           overlay: overlay,
           item: item,
@@ -358,12 +358,12 @@ void main() {
       });
 
       test('constructor with styler parameters', () {
-        final triggerStyle = RemixMenuTriggerStyler();
+        final triggerStyle = MenuTriggerStyler();
         final overlayStyler = FlexBoxStyler();
-        final itemStyle = RemixMenuItemStyler();
+        final itemStyle = MenuItemStyler();
         final dividerStyle = RemixDividerStyler();
 
-        final style = RemixMenuStyler(
+        final style = MenuStyler(
           trigger: triggerStyle,
           overlay: overlayStyler,
           item: itemStyle,
@@ -381,19 +381,19 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'trigger',
-        initial: RemixMenuStyler(),
-        modify: (style) => style.trigger(RemixMenuTriggerStyler()),
+        initial: MenuStyler(),
+        modify: (style) => style.trigger(MenuTriggerStyler()),
         expect: (style) {
           expect(
             style.$trigger,
-            equals(Prop.maybeMix(RemixMenuTriggerStyler())),
+            equals(Prop.maybeMix(MenuTriggerStyler())),
           );
         },
       );
 
       styleMethodTest(
         'overlay',
-        initial: RemixMenuStyler(),
+        initial: MenuStyler(),
         modify: (style) => style.overlay(FlexBoxStyler()),
         expect: (style) {
           expect(style.$overlay, equals(Prop.maybeMix(FlexBoxStyler())));
@@ -402,16 +402,16 @@ void main() {
 
       styleMethodTest(
         'item',
-        initial: RemixMenuStyler(),
-        modify: (style) => style.item(RemixMenuItemStyler()),
+        initial: MenuStyler(),
+        modify: (style) => style.item(MenuItemStyler()),
         expect: (style) {
-          expect(style.$item, equals(Prop.maybeMix(RemixMenuItemStyler())));
+          expect(style.$item, equals(Prop.maybeMix(MenuItemStyler())));
         },
       );
 
       styleMethodTest(
         'divider',
-        initial: RemixMenuStyler(),
+        initial: MenuStyler(),
         modify: (style) => style.divider(RemixDividerStyler()),
         expect: (style) {
           expect(style.$divider, equals(Prop.maybeMix(RemixDividerStyler())));
@@ -420,16 +420,16 @@ void main() {
 
       styleMethodTest(
         'variants',
-        initial: RemixMenuStyler(),
-        modify: (style) => style.variants(<VariantStyle<RemixMenuSpec>>[]),
+        initial: MenuStyler(),
+        modify: (style) => style.variants(<VariantStyle<MenuSpec>>[]),
         expect: (style) {
-          expect(style.$variants, equals(<VariantStyle<RemixMenuSpec>>[]));
+          expect(style.$variants, equals(<VariantStyle<MenuSpec>>[]));
         },
       );
 
       styleMethodTest(
         'wrap',
-        initial: RemixMenuStyler(),
+        initial: MenuStyler(),
         modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
@@ -439,7 +439,7 @@ void main() {
 
     group('Call Method', () {
       test('call method creates RemixMenu with required parameters', () {
-        final style = RemixMenuStyler();
+        final style = MenuStyler();
 
         final menu = style.call<String>(
           trigger: const RemixMenuTrigger(label: 'Options'),
@@ -452,7 +452,7 @@ void main() {
       });
 
       test('call method creates RemixMenu with all parameters', () {
-        final style = RemixMenuStyler();
+        final style = MenuStyler();
         final controller = MenuController();
         final focusNode = FocusNode();
         addTearDown(focusNode.dispose);
@@ -515,7 +515,7 @@ void main() {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
       ) async {
-        final style = RemixMenuStyler();
+        final style = MenuStyler();
 
         await tester.pumpWidget(
           MaterialApp(
@@ -523,14 +523,14 @@ void main() {
               builder: (context) {
                 final spec = style.resolve(context);
 
-                expect(spec, isA<StyleSpec<RemixMenuSpec>>());
-                expect(spec.spec, isA<RemixMenuSpec>());
+                expect(spec, isA<StyleSpec<MenuSpec>>());
+                expect(spec.spec, isA<MenuSpec>());
                 expect(
                   spec.spec.trigger,
-                  isA<StyleSpec<RemixMenuTriggerSpec>>(),
+                  isA<StyleSpec<MenuTriggerSpec>>(),
                 );
                 expect(spec.spec.overlay, isA<StyleSpec<FlexBoxSpec>>());
-                expect(spec.spec.item, isA<StyleSpec<RemixMenuItemSpec>>());
+                expect(spec.spec.item, isA<StyleSpec<MenuItemSpec>>());
                 expect(spec.spec.divider, isA<StyleSpec<RemixDividerSpec>>());
 
                 return Container();
@@ -541,7 +541,7 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        final originalStyle = RemixMenuStyler();
+        final originalStyle = MenuStyler();
 
         final mergedStyle = originalStyle.merge(null);
 
@@ -551,19 +551,19 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        final style1 = RemixMenuStyler();
-        final style2 = RemixMenuStyler();
+        final style1 = MenuStyler();
+        final style2 = MenuStyler();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixMenuStyler().trigger(
-          RemixMenuTriggerStyler().padding(EdgeInsetsGeometryMix.all(16.0)),
+        final style1 = MenuStyler().trigger(
+          MenuTriggerStyler().padding(EdgeInsetsGeometryMix.all(16.0)),
         );
-        final style2 = RemixMenuStyler().trigger(
-          RemixMenuTriggerStyler().padding(EdgeInsetsGeometryMix.all(8.0)),
+        final style2 = MenuStyler().trigger(
+          MenuTriggerStyler().padding(EdgeInsetsGeometryMix.all(8.0)),
         );
 
         expect(style1, isNot(equals(style2)));
@@ -571,13 +571,13 @@ void main() {
     });
   });
 
-  group('RemixMenuItemStyler', () {
+  group('MenuItemStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        final style = RemixMenuItemStyler();
+        final style = MenuItemStyler();
 
         expect(style, isNotNull);
-        expect(style, isA<RemixMenuItemStyler>());
+        expect(style, isA<MenuItemStyler>());
       });
 
       test('create constructor with all parameters', () {
@@ -585,9 +585,9 @@ void main() {
         final label = Prop.maybeMix(TextStyler());
         final leadingIcon = Prop.maybeMix(IconStyler());
         final trailingIcon = Prop.maybeMix(IconStyler());
-        final variants = <VariantStyle<RemixMenuItemSpec>>[];
+        final variants = <VariantStyle<MenuItemSpec>>[];
 
-        final style = RemixMenuItemStyler.create(
+        final style = MenuItemStyler.create(
           container: container,
           label: label,
           leadingIcon: leadingIcon,
@@ -609,7 +609,7 @@ void main() {
         final leadingIconStyler = IconStyler();
         final trailingIconStyler = IconStyler();
 
-        final style = RemixMenuItemStyler(
+        final style = MenuItemStyler(
           container: containerStyler,
           label: labelStyler,
           leadingIcon: leadingIconStyler,
@@ -627,7 +627,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'label',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.label(TextStyler()),
         expect: (style) {
           expect(style.$label, Prop.maybeMix(TextStyler()));
@@ -636,7 +636,7 @@ void main() {
 
       styleMethodTest(
         'leadingIcon',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.leadingIcon(IconStyler()),
         expect: (style) {
           expect(style.$leadingIcon, equals(Prop.maybeMix(IconStyler())));
@@ -645,7 +645,7 @@ void main() {
 
       styleMethodTest(
         'trailingIcon',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.trailingIcon(IconStyler()),
         expect: (style) {
           expect(style.$trailingIcon, equals(Prop.maybeMix(IconStyler())));
@@ -654,25 +654,25 @@ void main() {
 
       styleMethodTest(
         'alignment',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
             style,
-            equals(RemixMenuItemStyler.alignment(Alignment.centerLeft)),
+            equals(MenuItemStyler.alignment(Alignment.centerLeft)),
           );
         },
       );
 
       styleMethodTest(
         'padding',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixMenuItemStyler.padding(EdgeInsetsGeometryMix.all(16.0)),
+              MenuItemStyler.padding(EdgeInsetsGeometryMix.all(16.0)),
             ),
           );
         },
@@ -680,31 +680,31 @@ void main() {
 
       styleMethodTest(
         'color',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
-          expect(style, equals(RemixMenuItemStyler.color(Colors.blue)));
+          expect(style, equals(MenuItemStyler.color(Colors.blue)));
         },
       );
 
       styleMethodTest(
         'size',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.size(200.0, 48.0),
         expect: (style) {
-          expect(style, equals(RemixMenuItemStyler.size(200.0, 48.0)));
+          expect(style, equals(MenuItemStyler.size(200.0, 48.0)));
         },
       );
 
       styleMethodTest(
         'borderRadius',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.borderRadius(BorderRadiusMix.circular(4.0)),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixMenuItemStyler.borderRadius(BorderRadiusMix.circular(4.0)),
+              MenuItemStyler.borderRadius(BorderRadiusMix.circular(4.0)),
             ),
           );
         },
@@ -712,7 +712,7 @@ void main() {
 
       styleMethodTest(
         'constraints',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 150.0, minHeight: 36.0),
         ),
@@ -720,7 +720,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixMenuItemStyler.constraints(
+              MenuItemStyler.constraints(
                 BoxConstraintsMix(minWidth: 150.0, minHeight: 36.0),
               ),
             ),
@@ -730,7 +730,7 @@ void main() {
 
       styleMethodTest(
         'decoration',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.grey,
@@ -741,7 +741,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixMenuItemStyler.decoration(
+              MenuItemStyler.decoration(
                 BoxDecorationMix(
                   color: Colors.grey,
                   borderRadius: BorderRadiusMix.circular(4.0),
@@ -754,19 +754,19 @@ void main() {
 
       styleMethodTest(
         'margin',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(4.0)),
         expect: (style) {
           expect(
             style,
-            equals(RemixMenuItemStyler.margin(EdgeInsetsGeometryMix.all(4.0))),
+            equals(MenuItemStyler.margin(EdgeInsetsGeometryMix.all(4.0))),
           );
         },
       );
 
       styleMethodTest(
         'foregroundDecoration',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.blue)),
@@ -776,7 +776,7 @@ void main() {
           expect(
             style,
             equals(
-              RemixMenuItemStyler.foregroundDecoration(
+              MenuItemStyler.foregroundDecoration(
                 BoxDecorationMix(
                   border: BoxBorderMix.all(BorderSideMix(color: Colors.blue)),
                 ),
@@ -788,14 +788,14 @@ void main() {
 
       styleMethodTest(
         'transform',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) =>
             style.transform(Matrix4.identity(), alignment: Alignment.center),
         expect: (style) {
           expect(
             style,
             equals(
-              RemixMenuItemStyler.transform(
+              MenuItemStyler.transform(
                 Matrix4.identity(),
                 alignment: Alignment.center,
               ),
@@ -806,7 +806,7 @@ void main() {
 
       styleMethodTest(
         'flex',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.flex(FlexStyler()),
         expect: (style) {
           expect(
@@ -818,16 +818,16 @@ void main() {
 
       styleMethodTest(
         'variants',
-        initial: RemixMenuItemStyler(),
-        modify: (style) => style.variants(<VariantStyle<RemixMenuItemSpec>>[]),
+        initial: MenuItemStyler(),
+        modify: (style) => style.variants(<VariantStyle<MenuItemSpec>>[]),
         expect: (style) {
-          expect(style.$variants, equals(<VariantStyle<RemixMenuItemSpec>>[]));
+          expect(style.$variants, equals(<VariantStyle<MenuItemSpec>>[]));
         },
       );
 
       styleMethodTest(
         'wrap',
-        initial: RemixMenuItemStyler(),
+        initial: MenuItemStyler(),
         modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
@@ -839,7 +839,7 @@ void main() {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
       ) async {
-        final style = RemixMenuItemStyler();
+        final style = MenuItemStyler();
 
         await tester.pumpWidget(
           MaterialApp(
@@ -847,8 +847,8 @@ void main() {
               builder: (context) {
                 final spec = style.resolve(context);
 
-                expect(spec, isA<StyleSpec<RemixMenuItemSpec>>());
-                expect(spec.spec, isA<RemixMenuItemSpec>());
+                expect(spec, isA<StyleSpec<MenuItemSpec>>());
+                expect(spec.spec, isA<MenuItemSpec>());
                 expect(spec.spec.container, isA<StyleSpec<FlexBoxSpec>>());
                 expect(spec.spec.label, isA<StyleSpec<TextSpec>>());
                 expect(spec.spec.leadingIcon, isA<StyleSpec<IconSpec>>());
@@ -862,7 +862,7 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        final originalStyle = RemixMenuItemStyler();
+        final originalStyle = MenuItemStyler();
 
         final mergedStyle = originalStyle.merge(null);
 
@@ -872,18 +872,18 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        final style1 = RemixMenuItemStyler();
-        final style2 = RemixMenuItemStyler();
+        final style1 = MenuItemStyler();
+        final style2 = MenuItemStyler();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixMenuItemStyler().padding(
+        final style1 = MenuItemStyler().padding(
           EdgeInsetsGeometryMix.all(16.0),
         );
-        final style2 = RemixMenuItemStyler().padding(
+        final style2 = MenuItemStyler().padding(
           EdgeInsetsGeometryMix.all(8.0),
         );
 

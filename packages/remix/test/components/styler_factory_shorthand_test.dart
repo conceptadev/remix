@@ -37,11 +37,11 @@ void main() {
     });
 
     test('retain field factories for composite stylers', () {
-      final trigger = RemixMenuTriggerStyler.color(Colors.black);
+      final trigger = MenuTriggerStyler.color(Colors.black);
 
       expect(
-        RemixMenuStyler.trigger(trigger),
-        RemixMenuStyler().trigger(trigger),
+        MenuStyler.trigger(trigger),
+        MenuStyler().trigger(trigger),
       );
 
       final layout = FlexBoxStyler.spacing(12);

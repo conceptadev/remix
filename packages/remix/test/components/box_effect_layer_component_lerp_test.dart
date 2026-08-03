@@ -88,10 +88,10 @@ void main() {
       overContent: endLayer,
     ),
   );
-  final menuBegin = RemixMenuSpec(
+  final menuBegin = MenuSpec(
     containerEffects: RemixBoxEffectsSpec(behindContent: beginLayer),
   );
-  final menuEnd = RemixMenuSpec(
+  final menuEnd = MenuSpec(
     containerEffects: RemixBoxEffectsSpec(behindContent: endLayer),
   );
   final popoverBegin = RemixPopoverSpec(

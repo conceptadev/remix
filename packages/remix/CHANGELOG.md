@@ -8,6 +8,14 @@
   scaling, optional background painting, and modifier ordering.
 - **FEAT**: Expose `ButtonStyler` as the canonical button styling API.
   `RemixButtonStyler` remains available as a deprecated compatibility alias.
+- **FEAT**: Expose `MenuStyler`, `MenuTriggerStyler`, and `MenuItemStyler` as
+  the canonical menu styling API, with `MenuSpec`, `MenuTriggerSpec`, and
+  `MenuItemSpec` as the canonical resolved spec names. `RemixMenuStyler`,
+  `RemixMenuTriggerStyler`, and `RemixMenuItemStyler` remain available as
+  deprecated source-compatible aliases, and `RemixMenuSpec`,
+  `RemixMenuTriggerSpec`, and `RemixMenuItemSpec` remain as spec typedefs. Menu
+  widgets and data classes (`RemixMenu`, `RemixMenuTrigger`,
+  `RemixMenuItemData`, `RemixMenuItem`, `RemixMenuDivider`) keep their names.
 - **BREAKING**: Rename Fortal recipe helpers from `fortalXStyler()` to
   `fortalXStyle()` so `@MixWidget` can infer every generated `FortalX` name.
   Remix component styler types such as `ButtonStyler` and

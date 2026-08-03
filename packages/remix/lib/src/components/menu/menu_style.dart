@@ -4,21 +4,21 @@ part of 'menu.dart';
 ///
 /// Naked menu behavior wraps the trigger in a button; this style only controls
 /// the visible trigger content.
-extension RemixMenuTriggerStylerRemixHelpers on RemixMenuTriggerStyler {
-  RemixMenuTriggerStyler flex(FlexStyler value) {
+extension RemixMenuTriggerStylerRemixHelpers on MenuTriggerStyler {
+  MenuTriggerStyler flex(FlexStyler value) {
     return merge(
-      RemixMenuTriggerStyler(container: FlexBoxStyler().flex(value)),
+      MenuTriggerStyler(container: FlexBoxStyler().flex(value)),
     );
   }
 }
 
 /// Style configuration for [RemixMenu] trigger, overlay, items, and dividers.
-extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
+extension RemixMenuStylerRemixHelpers on MenuStyler {
   /// Creates a [RemixMenu] widget with this style applied.
   ///
   /// Example:
   /// ```dart
-  /// RemixMenuStyler()
+  /// MenuStyler()
   ///   .trigger(...)
   ///   .overlay(...)
   ///   .call<String>(
@@ -65,8 +65,8 @@ extension RemixMenuStylerRemixHelpers on RemixMenuStyler {
 }
 
 /// Style configuration for an item in a [RemixMenu].
-extension RemixMenuItemStylerRemixHelpers on RemixMenuItemStyler {
-  RemixMenuItemStyler flex(FlexStyler value) {
-    return merge(RemixMenuItemStyler(container: FlexBoxStyler().flex(value)));
+extension RemixMenuItemStylerRemixHelpers on MenuItemStyler {
+  MenuItemStyler flex(FlexStyler value) {
+    return merge(MenuItemStyler(container: FlexBoxStyler().flex(value)));
   }
 }

@@ -53,7 +53,7 @@ class _MenuExampleState extends State<MenuExample> {
           leadingIcon: Icons.logout,
           label: 'Logout',
           style: menuItemStyle.onHovered(
-            RemixMenuItemStyler()
+            MenuItemStyler()
                 .color(Colors.redAccent.withValues(alpha: 0.05))
                 .label(TextStyler().color(Colors.redAccent))
                 .leadingIcon(IconStyler().color(Colors.redAccent)),
@@ -73,10 +73,10 @@ class _MenuExampleState extends State<MenuExample> {
     );
   }
 
-  RemixMenuStyler get menuStyle {
-    return RemixMenuStyler()
+  MenuStyler get menuStyle {
+    return MenuStyler()
         .trigger(
-          RemixMenuTriggerStyler()
+          MenuTriggerStyler()
               .padding(EdgeInsetsMix.symmetric(horizontal: 14))
               .decoration(
                 BoxDecorationMix()
@@ -117,14 +117,14 @@ class _MenuExampleState extends State<MenuExample> {
         );
   }
 
-  RemixMenuItemStyler get menuItemStyle {
-    return RemixMenuItemStyler()
+  MenuItemStyler get menuItemStyle {
+    return MenuItemStyler()
         .paddingAll(6)
         .leadingIcon(IconStyler().size(20).color(Colors.blueGrey.shade800))
         .spacing(8)
         .borderRadiusAll(const Radius.circular(8))
         .label(TextStyler().color(Colors.blueGrey.shade800))
-        .onHovered(RemixMenuItemStyler().color(Colors.blueGrey.shade50));
+        .onHovered(MenuItemStyler().color(Colors.blueGrey.shade50));
   }
 }
 ```
@@ -202,8 +202,8 @@ RemixMenu<T> remixMenuConstructor<T>({
   bool closeOnClickOutside = true,
   FocusNode? triggerFocusNode,
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
-  RemixMenuStyler style = const RemixMenuStyler.create(),
-  RemixMenuSpec? styleSpec,
+  MenuStyler style = const MenuStyler.create(),
+  MenuSpec? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -272,18 +272,18 @@ Optional. Optional focus node for the trigger.
 
 Optional. Overlay positioning configuration.
 
-#### `style` → `RemixMenuStyler`
+#### `style` → `MenuStyler`
 
 Optional. The style configuration for the menu.
 
-#### `styleSpec` → `RemixMenuSpec?`
+#### `styleSpec` → `MenuSpec?`
 
 Optional. A raw resolved style spec that bypasses fluent style resolution.
 
 
 ### Menu Style Methods
 
-#### `trigger(RemixMenuTriggerStyler value)`
+#### `trigger(MenuTriggerStyler value)`
 
 Configures the trigger button style.
 
@@ -291,7 +291,7 @@ Configures the trigger button style.
 
 Configures the menu overlay container style.
 
-#### `item(RemixMenuItemStyler value)`
+#### `item(MenuItemStyler value)`
 
 Configures the default menu item style.
 
@@ -303,7 +303,7 @@ Configures divider style.
 
 Configures implicit animation for style transitions.
 
-#### `variants(List<VariantStyle<RemixMenuSpec>> value)`
+#### `variants(List<VariantStyle<MenuSpec>> value)`
 
 Sets style variants.
 
@@ -337,7 +337,7 @@ Configures the trigger icon style.
 
 Configures implicit animation for trigger style transitions.
 
-#### `variants(List<VariantStyle<RemixMenuTriggerSpec>> value)`
+#### `variants(List<VariantStyle<MenuTriggerSpec>> value)`
 
 Sets trigger style variants.
 
@@ -503,7 +503,7 @@ Configures the flex layout properties.
 
 Configures implicit animation for style transitions.
 
-#### `variants(List<VariantStyle<RemixMenuItemSpec>> value)`
+#### `variants(List<VariantStyle<MenuItemSpec>> value)`
 
 Sets item style variants.
 

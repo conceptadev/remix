@@ -32,7 +32,7 @@ final fluent = RemixCardStyler().color(Colors.blue);
 | API shape | Policy |
 | --- | --- |
 | Canonical style operation | Expose both a named factory and a matching fluent method. |
-| Direct child styler field | Expose a field factory such as `RemixMenuStyler.trigger(...)`. |
+| Direct child styler field | Expose a field factory such as `MenuStyler.trigger(...)`. |
 | Primary nested container | Forward one compatible canonical surface from the nested styler. |
 | Alias or expanded convenience | Keep it fluent-only and use its canonical operation in contextual shorthand. |
 | Styler lifecycle or composition (`animate`, `variants`, `wrap`, `modifier`, `merge`) | Keep it fluent-only because it configures or combines an existing parent styler. |
@@ -86,14 +86,14 @@ fluent convenience methods remain available on an existing styler.
 
 Most visual components forward the canonical surface of their primary `Box`
 or `FlexBox` container. A composite root without one clear visual surface, such
-as `RemixMenuStyler`, exposes factories for its child fields instead:
+as `MenuStyler`, exposes factories for its child fields instead:
 
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
-final style = RemixMenuStyler.trigger(
-  RemixMenuTriggerStyler.color(Colors.black),
+final style = MenuStyler.trigger(
+  MenuTriggerStyler.color(Colors.black),
 );
 ```
 

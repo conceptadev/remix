@@ -6,22 +6,21 @@ part of 'menu.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixMenuTriggerSpec
-    implements Spec<RemixMenuTriggerSpec>, Diagnosticable {
+mixin _$MenuTriggerSpec implements Spec<MenuTriggerSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
 
   @override
-  Type get type => RemixMenuTriggerSpec;
+  Type get type => MenuTriggerSpec;
 
   @override
-  RemixMenuTriggerSpec copyWith({
+  MenuTriggerSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
   }) {
-    return RemixMenuTriggerSpec(
+    return MenuTriggerSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       icon: icon ?? this.icon,
@@ -29,8 +28,8 @@ mixin _$RemixMenuTriggerSpec
   }
 
   @override
-  RemixMenuTriggerSpec lerp(RemixMenuTriggerSpec? other, double t) {
-    return RemixMenuTriggerSpec(
+  MenuTriggerSpec lerp(MenuTriggerSpec? other, double t) {
+    return MenuTriggerSpec(
       container: container.lerp(other?.container, t),
       label: label.lerp(other?.label, t),
       icon: icon.lerp(other?.icon, t),
@@ -43,7 +42,7 @@ mixin _$RemixMenuTriggerSpec
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixMenuTriggerSpec &&
+        other is MenuTriggerSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -87,29 +86,29 @@ mixin _$RemixMenuTriggerSpec
 }
 
 @Deprecated(
-  'Rename to `_\$RemixMenuTriggerSpec` and migrate the class declaration to `class RemixMenuTriggerSpec with _\$RemixMenuTriggerSpec`. The `_\$RemixMenuTriggerSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$MenuTriggerSpec` and migrate the class declaration to `class MenuTriggerSpec with _\$MenuTriggerSpec`. The `_\$MenuTriggerSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixMenuTriggerSpecMethods = _$RemixMenuTriggerSpec; // ignore: unused_element
+typedef _$MenuTriggerSpecMethods = _$MenuTriggerSpec; // ignore: unused_element
 
-mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
-  StyleSpec<RemixMenuTriggerSpec> get trigger;
+mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
+  StyleSpec<MenuTriggerSpec> get trigger;
   StyleSpec<FlexBoxSpec> get overlay;
   RemixBoxEffectsSpec? get containerEffects;
-  StyleSpec<RemixMenuItemSpec> get item;
+  StyleSpec<MenuItemSpec> get item;
   StyleSpec<RemixDividerSpec> get divider;
 
   @override
-  Type get type => RemixMenuSpec;
+  Type get type => MenuSpec;
 
   @override
-  RemixMenuSpec copyWith({
-    StyleSpec<RemixMenuTriggerSpec>? trigger,
+  MenuSpec copyWith({
+    StyleSpec<MenuTriggerSpec>? trigger,
     StyleSpec<FlexBoxSpec>? overlay,
     RemixBoxEffectsSpec? containerEffects,
-    StyleSpec<RemixMenuItemSpec>? item,
+    StyleSpec<MenuItemSpec>? item,
     StyleSpec<RemixDividerSpec>? divider,
   }) {
-    return RemixMenuSpec(
+    return MenuSpec(
       trigger: trigger ?? this.trigger,
       overlay: overlay ?? this.overlay,
       containerEffects: containerEffects ?? this.containerEffects,
@@ -119,8 +118,8 @@ mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
   }
 
   @override
-  RemixMenuSpec lerp(RemixMenuSpec? other, double t) {
-    return RemixMenuSpec(
+  MenuSpec lerp(MenuSpec? other, double t) {
+    return MenuSpec(
       trigger: trigger.lerp(other?.trigger, t),
       overlay: overlay.lerp(other?.overlay, t),
       containerEffects: MixOps.lerpSnap(
@@ -145,7 +144,7 @@ mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixMenuSpec &&
+        other is MenuSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -191,27 +190,27 @@ mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixMenuSpec` and migrate the class declaration to `class RemixMenuSpec with _\$RemixMenuSpec`. The `_\$RemixMenuSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$MenuSpec` and migrate the class declaration to `class MenuSpec with _\$MenuSpec`. The `_\$MenuSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixMenuSpecMethods = _$RemixMenuSpec; // ignore: unused_element
+typedef _$MenuSpecMethods = _$MenuSpec; // ignore: unused_element
 
-mixin _$RemixMenuItemSpec implements Spec<RemixMenuItemSpec>, Diagnosticable {
+mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get leadingIcon;
   StyleSpec<IconSpec> get trailingIcon;
 
   @override
-  Type get type => RemixMenuItemSpec;
+  Type get type => MenuItemSpec;
 
   @override
-  RemixMenuItemSpec copyWith({
+  MenuItemSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? leadingIcon,
     StyleSpec<IconSpec>? trailingIcon,
   }) {
-    return RemixMenuItemSpec(
+    return MenuItemSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       leadingIcon: leadingIcon ?? this.leadingIcon,
@@ -220,8 +219,8 @@ mixin _$RemixMenuItemSpec implements Spec<RemixMenuItemSpec>, Diagnosticable {
   }
 
   @override
-  RemixMenuItemSpec lerp(RemixMenuItemSpec? other, double t) {
-    return RemixMenuItemSpec(
+  MenuItemSpec lerp(MenuItemSpec? other, double t) {
+    return MenuItemSpec(
       container: container.lerp(other?.container, t),
       label: label.lerp(other?.label, t),
       leadingIcon: leadingIcon.lerp(other?.leadingIcon, t),
@@ -235,7 +234,7 @@ mixin _$RemixMenuItemSpec implements Spec<RemixMenuItemSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RemixMenuItemSpec &&
+        other is MenuItemSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -280,9 +279,9 @@ mixin _$RemixMenuItemSpec implements Spec<RemixMenuItemSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$RemixMenuItemSpec` and migrate the class declaration to `class RemixMenuItemSpec with _\$RemixMenuItemSpec`. The `_\$RemixMenuItemSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$MenuItemSpec` and migrate the class declaration to `class MenuItemSpec with _\$MenuItemSpec`. The `_\$MenuItemSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$RemixMenuItemSpecMethods = _$RemixMenuItemSpec; // ignore: unused_element
+typedef _$MenuItemSpecMethods = _$MenuItemSpec; // ignore: unused_element
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -416,17 +415,16 @@ class FortalMenu<T> extends StatelessWidget {
 // SpecStylerGenerator
 // **************************************************************************
 
-class RemixMenuTriggerStyler
-    extends MixStyler<RemixMenuTriggerStyler, RemixMenuTriggerSpec>
+class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     with
-        RemixBoxStylerMixin<RemixMenuTriggerStyler>,
-        LabelStyleMixin<RemixMenuTriggerStyler>,
-        IconStyleMixin<RemixMenuTriggerStyler> {
+        RemixBoxStylerMixin<MenuTriggerStyler>,
+        LabelStyleMixin<MenuTriggerStyler>,
+        IconStyleMixin<MenuTriggerStyler> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
 
-  const RemixMenuTriggerStyler.create({
+  const MenuTriggerStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
@@ -437,13 +435,13 @@ class RemixMenuTriggerStyler
        $label = label,
        $icon = icon;
 
-  RemixMenuTriggerStyler({
+  MenuTriggerStyler({
     FlexBoxStyler? container,
     TextStyler? label,
     IconStyler? icon,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixMenuTriggerSpec>>? variants,
+    List<VariantStyle<MenuTriggerSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          label: Prop.maybeMix(label),
@@ -453,108 +451,105 @@ class RemixMenuTriggerStyler
          animation: animation,
        );
 
-  factory RemixMenuTriggerStyler.container(FlexBoxStyler value) =>
-      RemixMenuTriggerStyler().container(value);
-  factory RemixMenuTriggerStyler.label(TextStyler value) =>
-      RemixMenuTriggerStyler().label(value);
-  factory RemixMenuTriggerStyler.icon(IconStyler value) =>
-      RemixMenuTriggerStyler().icon(value);
-  factory RemixMenuTriggerStyler.color(Color value) =>
-      RemixMenuTriggerStyler().color(value);
-  factory RemixMenuTriggerStyler.gradient(GradientMix value) =>
-      RemixMenuTriggerStyler().gradient(value);
-  factory RemixMenuTriggerStyler.border(BoxBorderMix value) =>
-      RemixMenuTriggerStyler().border(value);
-  factory RemixMenuTriggerStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixMenuTriggerStyler().borderRadius(value);
-  factory RemixMenuTriggerStyler.elevation(ElevationShadow value) =>
-      RemixMenuTriggerStyler().elevation(value);
-  factory RemixMenuTriggerStyler.shadow(BoxShadowMix value) =>
-      RemixMenuTriggerStyler().shadow(value);
-  factory RemixMenuTriggerStyler.shadows(List<BoxShadowMix> value) =>
-      RemixMenuTriggerStyler().shadows(value);
-  factory RemixMenuTriggerStyler.width(double value) =>
-      RemixMenuTriggerStyler().width(value);
-  factory RemixMenuTriggerStyler.height(double value) =>
-      RemixMenuTriggerStyler().height(value);
-  factory RemixMenuTriggerStyler.size(double width, double height) =>
-      RemixMenuTriggerStyler().size(width, height);
-  factory RemixMenuTriggerStyler.minWidth(double value) =>
-      RemixMenuTriggerStyler().minWidth(value);
-  factory RemixMenuTriggerStyler.maxWidth(double value) =>
-      RemixMenuTriggerStyler().maxWidth(value);
-  factory RemixMenuTriggerStyler.minHeight(double value) =>
-      RemixMenuTriggerStyler().minHeight(value);
-  factory RemixMenuTriggerStyler.maxHeight(double value) =>
-      RemixMenuTriggerStyler().maxHeight(value);
-  factory RemixMenuTriggerStyler.scale(
+  factory MenuTriggerStyler.container(FlexBoxStyler value) =>
+      MenuTriggerStyler().container(value);
+  factory MenuTriggerStyler.label(TextStyler value) =>
+      MenuTriggerStyler().label(value);
+  factory MenuTriggerStyler.icon(IconStyler value) =>
+      MenuTriggerStyler().icon(value);
+  factory MenuTriggerStyler.color(Color value) =>
+      MenuTriggerStyler().color(value);
+  factory MenuTriggerStyler.gradient(GradientMix value) =>
+      MenuTriggerStyler().gradient(value);
+  factory MenuTriggerStyler.border(BoxBorderMix value) =>
+      MenuTriggerStyler().border(value);
+  factory MenuTriggerStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      MenuTriggerStyler().borderRadius(value);
+  factory MenuTriggerStyler.elevation(ElevationShadow value) =>
+      MenuTriggerStyler().elevation(value);
+  factory MenuTriggerStyler.shadow(BoxShadowMix value) =>
+      MenuTriggerStyler().shadow(value);
+  factory MenuTriggerStyler.shadows(List<BoxShadowMix> value) =>
+      MenuTriggerStyler().shadows(value);
+  factory MenuTriggerStyler.width(double value) =>
+      MenuTriggerStyler().width(value);
+  factory MenuTriggerStyler.height(double value) =>
+      MenuTriggerStyler().height(value);
+  factory MenuTriggerStyler.size(double width, double height) =>
+      MenuTriggerStyler().size(width, height);
+  factory MenuTriggerStyler.minWidth(double value) =>
+      MenuTriggerStyler().minWidth(value);
+  factory MenuTriggerStyler.maxWidth(double value) =>
+      MenuTriggerStyler().maxWidth(value);
+  factory MenuTriggerStyler.minHeight(double value) =>
+      MenuTriggerStyler().minHeight(value);
+  factory MenuTriggerStyler.maxHeight(double value) =>
+      MenuTriggerStyler().maxHeight(value);
+  factory MenuTriggerStyler.scale(
     double scale, {
     Alignment alignment = .center,
-  }) => RemixMenuTriggerStyler().scale(scale, alignment: alignment);
-  factory RemixMenuTriggerStyler.rotate(
+  }) => MenuTriggerStyler().scale(scale, alignment: alignment);
+  factory MenuTriggerStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixMenuTriggerStyler().rotate(radians, alignment: alignment);
-  factory RemixMenuTriggerStyler.translate(
-    double x,
-    double y, [
-    double z = 0.0,
-  ]) => RemixMenuTriggerStyler().translate(x, y, z);
-  factory RemixMenuTriggerStyler.skew(double skewX, double skewY) =>
-      RemixMenuTriggerStyler().skew(skewX, skewY);
-  factory RemixMenuTriggerStyler.textStyle(TextStyler value) =>
-      RemixMenuTriggerStyler().textStyle(value);
-  factory RemixMenuTriggerStyler.image(DecorationImageMix value) =>
-      RemixMenuTriggerStyler().image(value);
-  factory RemixMenuTriggerStyler.shape(ShapeBorderMix value) =>
-      RemixMenuTriggerStyler().shape(value);
-  factory RemixMenuTriggerStyler.backgroundImage(
+  }) => MenuTriggerStyler().rotate(radians, alignment: alignment);
+  factory MenuTriggerStyler.translate(double x, double y, [double z = 0.0]) =>
+      MenuTriggerStyler().translate(x, y, z);
+  factory MenuTriggerStyler.skew(double skewX, double skewY) =>
+      MenuTriggerStyler().skew(skewX, skewY);
+  factory MenuTriggerStyler.textStyle(TextStyler value) =>
+      MenuTriggerStyler().textStyle(value);
+  factory MenuTriggerStyler.image(DecorationImageMix value) =>
+      MenuTriggerStyler().image(value);
+  factory MenuTriggerStyler.shape(ShapeBorderMix value) =>
+      MenuTriggerStyler().shape(value);
+  factory MenuTriggerStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixMenuTriggerStyler().backgroundImage(
+  }) => MenuTriggerStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixMenuTriggerStyler.backgroundImageUrl(
+  factory MenuTriggerStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixMenuTriggerStyler().backgroundImageUrl(
+  }) => MenuTriggerStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixMenuTriggerStyler.backgroundImageAsset(
+  factory MenuTriggerStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixMenuTriggerStyler().backgroundImageAsset(
+  }) => MenuTriggerStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixMenuTriggerStyler.linearGradient({
+  factory MenuTriggerStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixMenuTriggerStyler().linearGradient(
+  }) => MenuTriggerStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixMenuTriggerStyler.radialGradient({
+  factory MenuTriggerStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -562,7 +557,7 @@ class RemixMenuTriggerStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixMenuTriggerStyler().radialGradient(
+  }) => MenuTriggerStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -571,14 +566,14 @@ class RemixMenuTriggerStyler
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixMenuTriggerStyler.sweepGradient({
+  factory MenuTriggerStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixMenuTriggerStyler().sweepGradient(
+  }) => MenuTriggerStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -586,20 +581,20 @@ class RemixMenuTriggerStyler
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixMenuTriggerStyler.foregroundLinearGradient({
+  factory MenuTriggerStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixMenuTriggerStyler().foregroundLinearGradient(
+  }) => MenuTriggerStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixMenuTriggerStyler.foregroundRadialGradient({
+  factory MenuTriggerStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -607,7 +602,7 @@ class RemixMenuTriggerStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixMenuTriggerStyler().foregroundRadialGradient(
+  }) => MenuTriggerStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -616,14 +611,14 @@ class RemixMenuTriggerStyler
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixMenuTriggerStyler.foregroundSweepGradient({
+  factory MenuTriggerStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixMenuTriggerStyler().foregroundSweepGradient(
+  }) => MenuTriggerStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -631,131 +626,128 @@ class RemixMenuTriggerStyler
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixMenuTriggerStyler.row() => RemixMenuTriggerStyler().row();
-  factory RemixMenuTriggerStyler.column() => RemixMenuTriggerStyler().column();
-  factory RemixMenuTriggerStyler.alignment(AlignmentGeometry value) =>
-      RemixMenuTriggerStyler().alignment(value);
-  factory RemixMenuTriggerStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixMenuTriggerStyler().padding(value);
-  factory RemixMenuTriggerStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixMenuTriggerStyler().margin(value);
-  factory RemixMenuTriggerStyler.constraints(BoxConstraintsMix value) =>
-      RemixMenuTriggerStyler().constraints(value);
-  factory RemixMenuTriggerStyler.decoration(DecorationMix value) =>
-      RemixMenuTriggerStyler().decoration(value);
-  factory RemixMenuTriggerStyler.foregroundDecoration(DecorationMix value) =>
-      RemixMenuTriggerStyler().foregroundDecoration(value);
-  factory RemixMenuTriggerStyler.clipBehavior(Clip value) =>
-      RemixMenuTriggerStyler().clipBehavior(value);
-  factory RemixMenuTriggerStyler.direction(Axis value) =>
-      RemixMenuTriggerStyler().direction(value);
-  factory RemixMenuTriggerStyler.mainAxisAlignment(MainAxisAlignment value) =>
-      RemixMenuTriggerStyler().mainAxisAlignment(value);
-  factory RemixMenuTriggerStyler.crossAxisAlignment(CrossAxisAlignment value) =>
-      RemixMenuTriggerStyler().crossAxisAlignment(value);
-  factory RemixMenuTriggerStyler.mainAxisSize(MainAxisSize value) =>
-      RemixMenuTriggerStyler().mainAxisSize(value);
-  factory RemixMenuTriggerStyler.spacing(double value) =>
-      RemixMenuTriggerStyler().spacing(value);
-  factory RemixMenuTriggerStyler.verticalDirection(VerticalDirection value) =>
-      RemixMenuTriggerStyler().verticalDirection(value);
-  factory RemixMenuTriggerStyler.textDirection(TextDirection value) =>
-      RemixMenuTriggerStyler().textDirection(value);
-  factory RemixMenuTriggerStyler.textBaseline(TextBaseline value) =>
-      RemixMenuTriggerStyler().textBaseline(value);
-  factory RemixMenuTriggerStyler.transform(
+  factory MenuTriggerStyler.row() => MenuTriggerStyler().row();
+  factory MenuTriggerStyler.column() => MenuTriggerStyler().column();
+  factory MenuTriggerStyler.alignment(AlignmentGeometry value) =>
+      MenuTriggerStyler().alignment(value);
+  factory MenuTriggerStyler.padding(EdgeInsetsGeometryMix value) =>
+      MenuTriggerStyler().padding(value);
+  factory MenuTriggerStyler.margin(EdgeInsetsGeometryMix value) =>
+      MenuTriggerStyler().margin(value);
+  factory MenuTriggerStyler.constraints(BoxConstraintsMix value) =>
+      MenuTriggerStyler().constraints(value);
+  factory MenuTriggerStyler.decoration(DecorationMix value) =>
+      MenuTriggerStyler().decoration(value);
+  factory MenuTriggerStyler.foregroundDecoration(DecorationMix value) =>
+      MenuTriggerStyler().foregroundDecoration(value);
+  factory MenuTriggerStyler.clipBehavior(Clip value) =>
+      MenuTriggerStyler().clipBehavior(value);
+  factory MenuTriggerStyler.direction(Axis value) =>
+      MenuTriggerStyler().direction(value);
+  factory MenuTriggerStyler.mainAxisAlignment(MainAxisAlignment value) =>
+      MenuTriggerStyler().mainAxisAlignment(value);
+  factory MenuTriggerStyler.crossAxisAlignment(CrossAxisAlignment value) =>
+      MenuTriggerStyler().crossAxisAlignment(value);
+  factory MenuTriggerStyler.mainAxisSize(MainAxisSize value) =>
+      MenuTriggerStyler().mainAxisSize(value);
+  factory MenuTriggerStyler.spacing(double value) =>
+      MenuTriggerStyler().spacing(value);
+  factory MenuTriggerStyler.verticalDirection(VerticalDirection value) =>
+      MenuTriggerStyler().verticalDirection(value);
+  factory MenuTriggerStyler.textDirection(TextDirection value) =>
+      MenuTriggerStyler().textDirection(value);
+  factory MenuTriggerStyler.textBaseline(TextBaseline value) =>
+      MenuTriggerStyler().textBaseline(value);
+  factory MenuTriggerStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixMenuTriggerStyler().transform(value, alignment: alignment);
+  }) => MenuTriggerStyler().transform(value, alignment: alignment);
 
-  RemixMenuTriggerStyler color(Color value) {
+  MenuTriggerStyler color(Color value) {
     return container(FlexBoxStyler().color(value));
   }
 
-  RemixMenuTriggerStyler gradient(GradientMix value) {
+  MenuTriggerStyler gradient(GradientMix value) {
     return container(FlexBoxStyler().gradient(value));
   }
 
-  RemixMenuTriggerStyler border(BoxBorderMix value) {
+  MenuTriggerStyler border(BoxBorderMix value) {
     return container(FlexBoxStyler().border(value));
   }
 
-  RemixMenuTriggerStyler borderRadius(BorderRadiusGeometryMix value) {
+  MenuTriggerStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(FlexBoxStyler().borderRadius(value));
   }
 
-  RemixMenuTriggerStyler elevation(ElevationShadow value) {
+  MenuTriggerStyler elevation(ElevationShadow value) {
     return container(FlexBoxStyler().elevation(value));
   }
 
-  RemixMenuTriggerStyler shadow(BoxShadowMix value) {
+  MenuTriggerStyler shadow(BoxShadowMix value) {
     return container(FlexBoxStyler().shadow(value));
   }
 
-  RemixMenuTriggerStyler shadows(List<BoxShadowMix> value) {
+  MenuTriggerStyler shadows(List<BoxShadowMix> value) {
     return container(FlexBoxStyler().shadows(value));
   }
 
-  RemixMenuTriggerStyler width(double value) {
+  MenuTriggerStyler width(double value) {
     return container(FlexBoxStyler().width(value));
   }
 
-  RemixMenuTriggerStyler height(double value) {
+  MenuTriggerStyler height(double value) {
     return container(FlexBoxStyler().height(value));
   }
 
-  RemixMenuTriggerStyler size(double width, double height) {
+  MenuTriggerStyler size(double width, double height) {
     return container(FlexBoxStyler().size(width, height));
   }
 
-  RemixMenuTriggerStyler minWidth(double value) {
+  MenuTriggerStyler minWidth(double value) {
     return container(FlexBoxStyler().minWidth(value));
   }
 
-  RemixMenuTriggerStyler maxWidth(double value) {
+  MenuTriggerStyler maxWidth(double value) {
     return container(FlexBoxStyler().maxWidth(value));
   }
 
-  RemixMenuTriggerStyler minHeight(double value) {
+  MenuTriggerStyler minHeight(double value) {
     return container(FlexBoxStyler().minHeight(value));
   }
 
-  RemixMenuTriggerStyler maxHeight(double value) {
+  MenuTriggerStyler maxHeight(double value) {
     return container(FlexBoxStyler().maxHeight(value));
   }
 
-  RemixMenuTriggerStyler scale(double scale, {Alignment alignment = .center}) {
+  MenuTriggerStyler scale(double scale, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixMenuTriggerStyler rotate(
-    double radians, {
-    Alignment alignment = .center,
-  }) {
+  MenuTriggerStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixMenuTriggerStyler translate(double x, double y, [double z = 0.0]) {
+  MenuTriggerStyler translate(double x, double y, [double z = 0.0]) {
     return container(FlexBoxStyler().translate(x, y, z));
   }
 
-  RemixMenuTriggerStyler skew(double skewX, double skewY) {
+  MenuTriggerStyler skew(double skewX, double skewY) {
     return container(FlexBoxStyler().skew(skewX, skewY));
   }
 
-  RemixMenuTriggerStyler textStyle(TextStyler value) {
+  MenuTriggerStyler textStyle(TextStyler value) {
     return container(FlexBoxStyler().textStyle(value));
   }
 
-  RemixMenuTriggerStyler image(DecorationImageMix value) {
+  MenuTriggerStyler image(DecorationImageMix value) {
     return container(FlexBoxStyler().image(value));
   }
 
-  RemixMenuTriggerStyler shape(ShapeBorderMix value) {
+  MenuTriggerStyler shape(ShapeBorderMix value) {
     return container(FlexBoxStyler().shape(value));
   }
 
-  RemixMenuTriggerStyler backgroundImage(
+  MenuTriggerStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -771,7 +763,7 @@ class RemixMenuTriggerStyler
     );
   }
 
-  RemixMenuTriggerStyler backgroundImageUrl(
+  MenuTriggerStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -787,7 +779,7 @@ class RemixMenuTriggerStyler
     );
   }
 
-  RemixMenuTriggerStyler backgroundImageAsset(
+  MenuTriggerStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -803,7 +795,7 @@ class RemixMenuTriggerStyler
     );
   }
 
-  RemixMenuTriggerStyler linearGradient({
+  MenuTriggerStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -821,7 +813,7 @@ class RemixMenuTriggerStyler
     );
   }
 
-  RemixMenuTriggerStyler radialGradient({
+  MenuTriggerStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -843,7 +835,7 @@ class RemixMenuTriggerStyler
     );
   }
 
-  RemixMenuTriggerStyler sweepGradient({
+  MenuTriggerStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -863,7 +855,7 @@ class RemixMenuTriggerStyler
     );
   }
 
-  RemixMenuTriggerStyler foregroundLinearGradient({
+  MenuTriggerStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -881,7 +873,7 @@ class RemixMenuTriggerStyler
     );
   }
 
-  RemixMenuTriggerStyler foregroundRadialGradient({
+  MenuTriggerStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -903,7 +895,7 @@ class RemixMenuTriggerStyler
     );
   }
 
-  RemixMenuTriggerStyler foregroundSweepGradient({
+  MenuTriggerStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -923,127 +915,122 @@ class RemixMenuTriggerStyler
     );
   }
 
-  RemixMenuTriggerStyler row() {
+  MenuTriggerStyler row() {
     return container(FlexBoxStyler().row());
   }
 
-  RemixMenuTriggerStyler column() {
+  MenuTriggerStyler column() {
     return container(FlexBoxStyler().column());
   }
 
-  RemixMenuTriggerStyler alignment(AlignmentGeometry value) {
+  MenuTriggerStyler alignment(AlignmentGeometry value) {
     return container(FlexBoxStyler().alignment(value));
   }
 
-  RemixMenuTriggerStyler padding(EdgeInsetsGeometryMix value) {
+  MenuTriggerStyler padding(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler().padding(value));
   }
 
-  RemixMenuTriggerStyler margin(EdgeInsetsGeometryMix value) {
+  MenuTriggerStyler margin(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler().margin(value));
   }
 
-  RemixMenuTriggerStyler constraints(BoxConstraintsMix value) {
+  MenuTriggerStyler constraints(BoxConstraintsMix value) {
     return container(FlexBoxStyler().constraints(value));
   }
 
-  RemixMenuTriggerStyler decoration(DecorationMix value) {
+  MenuTriggerStyler decoration(DecorationMix value) {
     return container(FlexBoxStyler().decoration(value));
   }
 
-  RemixMenuTriggerStyler foregroundDecoration(DecorationMix value) {
+  MenuTriggerStyler foregroundDecoration(DecorationMix value) {
     return container(FlexBoxStyler().foregroundDecoration(value));
   }
 
-  RemixMenuTriggerStyler clipBehavior(Clip value) {
+  MenuTriggerStyler clipBehavior(Clip value) {
     return container(FlexBoxStyler().clipBehavior(value));
   }
 
-  RemixMenuTriggerStyler direction(Axis value) {
+  MenuTriggerStyler direction(Axis value) {
     return container(FlexBoxStyler().direction(value));
   }
 
-  RemixMenuTriggerStyler mainAxisAlignment(MainAxisAlignment value) {
+  MenuTriggerStyler mainAxisAlignment(MainAxisAlignment value) {
     return container(FlexBoxStyler().mainAxisAlignment(value));
   }
 
-  RemixMenuTriggerStyler crossAxisAlignment(CrossAxisAlignment value) {
+  MenuTriggerStyler crossAxisAlignment(CrossAxisAlignment value) {
     return container(FlexBoxStyler().crossAxisAlignment(value));
   }
 
-  RemixMenuTriggerStyler mainAxisSize(MainAxisSize value) {
+  MenuTriggerStyler mainAxisSize(MainAxisSize value) {
     return container(FlexBoxStyler().mainAxisSize(value));
   }
 
-  RemixMenuTriggerStyler spacing(double value) {
+  MenuTriggerStyler spacing(double value) {
     return container(FlexBoxStyler().spacing(value));
   }
 
-  RemixMenuTriggerStyler verticalDirection(VerticalDirection value) {
+  MenuTriggerStyler verticalDirection(VerticalDirection value) {
     return container(FlexBoxStyler().verticalDirection(value));
   }
 
-  RemixMenuTriggerStyler textDirection(TextDirection value) {
+  MenuTriggerStyler textDirection(TextDirection value) {
     return container(FlexBoxStyler().textDirection(value));
   }
 
-  RemixMenuTriggerStyler textBaseline(TextBaseline value) {
+  MenuTriggerStyler textBaseline(TextBaseline value) {
     return container(FlexBoxStyler().textBaseline(value));
   }
 
-  RemixMenuTriggerStyler transform(
-    Matrix4 value, {
-    Alignment alignment = .center,
-  }) {
+  MenuTriggerStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixMenuTriggerStyler container(FlexBoxStyler value) {
-    return merge(RemixMenuTriggerStyler(container: value));
+  MenuTriggerStyler container(FlexBoxStyler value) {
+    return merge(MenuTriggerStyler(container: value));
   }
 
   /// Sets the label.
   @override
-  RemixMenuTriggerStyler label(TextStyler value) {
-    return merge(RemixMenuTriggerStyler(label: value));
+  MenuTriggerStyler label(TextStyler value) {
+    return merge(MenuTriggerStyler(label: value));
   }
 
   /// Sets the icon.
   @override
-  RemixMenuTriggerStyler icon(IconStyler value) {
-    return merge(RemixMenuTriggerStyler(icon: value));
+  MenuTriggerStyler icon(IconStyler value) {
+    return merge(MenuTriggerStyler(icon: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixMenuTriggerStyler animate(AnimationConfig value) {
-    return merge(RemixMenuTriggerStyler(animation: value));
+  MenuTriggerStyler animate(AnimationConfig value) {
+    return merge(MenuTriggerStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixMenuTriggerStyler variants(
-    List<VariantStyle<RemixMenuTriggerSpec>> value,
-  ) {
-    return merge(RemixMenuTriggerStyler(variants: value));
+  MenuTriggerStyler variants(List<VariantStyle<MenuTriggerSpec>> value) {
+    return merge(MenuTriggerStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixMenuTriggerStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixMenuTriggerStyler(modifier: value));
+  MenuTriggerStyler wrap(WidgetModifierConfig value) {
+    return merge(MenuTriggerStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixMenuTriggerStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixMenuTriggerStyler(modifier: value));
+  MenuTriggerStyler modifier(WidgetModifierConfig value) {
+    return merge(MenuTriggerStyler(modifier: value));
   }
 
-  /// Merges with another [RemixMenuTriggerStyler].
+  /// Merges with another [MenuTriggerStyler].
   @override
-  RemixMenuTriggerStyler merge(RemixMenuTriggerStyler? other) {
-    return RemixMenuTriggerStyler.create(
+  MenuTriggerStyler merge(MenuTriggerStyler? other) {
+    return MenuTriggerStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),
@@ -1053,10 +1040,10 @@ class RemixMenuTriggerStyler
     );
   }
 
-  /// Resolves to [StyleSpec<RemixMenuTriggerSpec>] using [context].
+  /// Resolves to [StyleSpec<MenuTriggerSpec>] using [context].
   @override
-  StyleSpec<RemixMenuTriggerSpec> resolve(BuildContext context) {
-    final spec = RemixMenuTriggerSpec(
+  StyleSpec<MenuTriggerSpec> resolve(BuildContext context) {
+    final spec = MenuTriggerSpec(
       container: MixOps.resolve(context, $container),
       label: MixOps.resolve(context, $label),
       icon: MixOps.resolve(context, $icon),
@@ -1089,18 +1076,18 @@ class RemixMenuTriggerStyler
   ];
 }
 
-class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
-  final Prop<StyleSpec<RemixMenuTriggerSpec>>? $trigger;
+class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
+  final Prop<StyleSpec<MenuTriggerSpec>>? $trigger;
   final Prop<StyleSpec<FlexBoxSpec>>? $overlay;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
-  final Prop<StyleSpec<RemixMenuItemSpec>>? $item;
+  final Prop<StyleSpec<MenuItemSpec>>? $item;
   final Prop<StyleSpec<RemixDividerSpec>>? $divider;
 
-  const RemixMenuStyler.create({
-    Prop<StyleSpec<RemixMenuTriggerSpec>>? trigger,
+  const MenuStyler.create({
+    Prop<StyleSpec<MenuTriggerSpec>>? trigger,
     Prop<StyleSpec<FlexBoxSpec>>? overlay,
     Prop<RemixBoxEffectsSpec>? containerEffects,
-    Prop<StyleSpec<RemixMenuItemSpec>>? item,
+    Prop<StyleSpec<MenuItemSpec>>? item,
     Prop<StyleSpec<RemixDividerSpec>>? divider,
     super.variants,
     super.modifier,
@@ -1111,15 +1098,15 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
        $item = item,
        $divider = divider;
 
-  RemixMenuStyler({
-    RemixMenuTriggerStyler? trigger,
+  MenuStyler({
+    MenuTriggerStyler? trigger,
     FlexBoxStyler? overlay,
     RemixBoxEffectsMix? containerEffects,
-    RemixMenuItemStyler? item,
+    MenuItemStyler? item,
     RemixDividerStyler? divider,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixMenuSpec>>? variants,
+    List<VariantStyle<MenuSpec>>? variants,
   }) : this.create(
          trigger: Prop.maybeMix(trigger),
          overlay: Prop.maybeMix(overlay),
@@ -1131,69 +1118,68 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
          animation: animation,
        );
 
-  factory RemixMenuStyler.trigger(RemixMenuTriggerStyler value) =>
-      RemixMenuStyler().trigger(value);
-  factory RemixMenuStyler.overlay(FlexBoxStyler value) =>
-      RemixMenuStyler().overlay(value);
-  factory RemixMenuStyler.containerEffects(RemixBoxEffectsMix value) =>
-      RemixMenuStyler().containerEffects(value);
-  factory RemixMenuStyler.item(RemixMenuItemStyler value) =>
-      RemixMenuStyler().item(value);
-  factory RemixMenuStyler.divider(RemixDividerStyler value) =>
-      RemixMenuStyler().divider(value);
+  factory MenuStyler.trigger(MenuTriggerStyler value) =>
+      MenuStyler().trigger(value);
+  factory MenuStyler.overlay(FlexBoxStyler value) =>
+      MenuStyler().overlay(value);
+  factory MenuStyler.containerEffects(RemixBoxEffectsMix value) =>
+      MenuStyler().containerEffects(value);
+  factory MenuStyler.item(MenuItemStyler value) => MenuStyler().item(value);
+  factory MenuStyler.divider(RemixDividerStyler value) =>
+      MenuStyler().divider(value);
 
   /// Sets the trigger.
-  RemixMenuStyler trigger(RemixMenuTriggerStyler value) {
-    return merge(RemixMenuStyler(trigger: value));
+  MenuStyler trigger(MenuTriggerStyler value) {
+    return merge(MenuStyler(trigger: value));
   }
 
   /// Sets the overlay.
-  RemixMenuStyler overlay(FlexBoxStyler value) {
-    return merge(RemixMenuStyler(overlay: value));
+  MenuStyler overlay(FlexBoxStyler value) {
+    return merge(MenuStyler(overlay: value));
   }
 
   /// Sets the containerEffects.
-  RemixMenuStyler containerEffects(RemixBoxEffectsMix value) {
-    return merge(RemixMenuStyler(containerEffects: value));
+  MenuStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(MenuStyler(containerEffects: value));
   }
 
   /// Sets the item.
-  RemixMenuStyler item(RemixMenuItemStyler value) {
-    return merge(RemixMenuStyler(item: value));
+  MenuStyler item(MenuItemStyler value) {
+    return merge(MenuStyler(item: value));
   }
 
   /// Sets the divider.
-  RemixMenuStyler divider(RemixDividerStyler value) {
-    return merge(RemixMenuStyler(divider: value));
+  MenuStyler divider(RemixDividerStyler value) {
+    return merge(MenuStyler(divider: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixMenuStyler animate(AnimationConfig value) {
-    return merge(RemixMenuStyler(animation: value));
+  MenuStyler animate(AnimationConfig value) {
+    return merge(MenuStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixMenuStyler variants(List<VariantStyle<RemixMenuSpec>> value) {
-    return merge(RemixMenuStyler(variants: value));
+  MenuStyler variants(List<VariantStyle<MenuSpec>> value) {
+    return merge(MenuStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixMenuStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixMenuStyler(modifier: value));
+  MenuStyler wrap(WidgetModifierConfig value) {
+    return merge(MenuStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixMenuStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixMenuStyler(modifier: value));
+  MenuStyler modifier(WidgetModifierConfig value) {
+    return merge(MenuStyler(modifier: value));
   }
 
-  /// Merges with another [RemixMenuStyler].
+  /// Merges with another [MenuStyler].
   @override
-  RemixMenuStyler merge(RemixMenuStyler? other) {
-    return RemixMenuStyler.create(
+  MenuStyler merge(MenuStyler? other) {
+    return MenuStyler.create(
       trigger: MixOps.merge($trigger, other?.$trigger),
       overlay: MixOps.merge($overlay, other?.$overlay),
       containerEffects: MixOps.merge(
@@ -1208,10 +1194,10 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
     );
   }
 
-  /// Resolves to [StyleSpec<RemixMenuSpec>] using [context].
+  /// Resolves to [StyleSpec<MenuSpec>] using [context].
   @override
-  StyleSpec<RemixMenuSpec> resolve(BuildContext context) {
-    final spec = RemixMenuSpec(
+  StyleSpec<MenuSpec> resolve(BuildContext context) {
+    final spec = MenuSpec(
       trigger: MixOps.resolve(context, $trigger),
       overlay: MixOps.resolve(context, $overlay),
       containerEffects: MixOps.resolve(context, $containerEffects),
@@ -1250,15 +1236,14 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
   ];
 }
 
-class RemixMenuItemStyler
-    extends MixStyler<RemixMenuItemStyler, RemixMenuItemSpec>
-    with RemixBoxStylerMixin<RemixMenuItemStyler> {
+class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
+    with RemixBoxStylerMixin<MenuItemStyler> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $leadingIcon;
   final Prop<StyleSpec<IconSpec>>? $trailingIcon;
 
-  const RemixMenuItemStyler.create({
+  const MenuItemStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? leadingIcon,
@@ -1271,14 +1256,14 @@ class RemixMenuItemStyler
        $leadingIcon = leadingIcon,
        $trailingIcon = trailingIcon;
 
-  RemixMenuItemStyler({
+  MenuItemStyler({
     FlexBoxStyler? container,
     TextStyler? label,
     IconStyler? leadingIcon,
     IconStyler? trailingIcon,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixMenuItemSpec>>? variants,
+    List<VariantStyle<MenuItemSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          label: Prop.maybeMix(label),
@@ -1289,107 +1274,102 @@ class RemixMenuItemStyler
          animation: animation,
        );
 
-  factory RemixMenuItemStyler.container(FlexBoxStyler value) =>
-      RemixMenuItemStyler().container(value);
-  factory RemixMenuItemStyler.label(TextStyler value) =>
-      RemixMenuItemStyler().label(value);
-  factory RemixMenuItemStyler.leadingIcon(IconStyler value) =>
-      RemixMenuItemStyler().leadingIcon(value);
-  factory RemixMenuItemStyler.trailingIcon(IconStyler value) =>
-      RemixMenuItemStyler().trailingIcon(value);
-  factory RemixMenuItemStyler.color(Color value) =>
-      RemixMenuItemStyler().color(value);
-  factory RemixMenuItemStyler.gradient(GradientMix value) =>
-      RemixMenuItemStyler().gradient(value);
-  factory RemixMenuItemStyler.border(BoxBorderMix value) =>
-      RemixMenuItemStyler().border(value);
-  factory RemixMenuItemStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixMenuItemStyler().borderRadius(value);
-  factory RemixMenuItemStyler.elevation(ElevationShadow value) =>
-      RemixMenuItemStyler().elevation(value);
-  factory RemixMenuItemStyler.shadow(BoxShadowMix value) =>
-      RemixMenuItemStyler().shadow(value);
-  factory RemixMenuItemStyler.shadows(List<BoxShadowMix> value) =>
-      RemixMenuItemStyler().shadows(value);
-  factory RemixMenuItemStyler.width(double value) =>
-      RemixMenuItemStyler().width(value);
-  factory RemixMenuItemStyler.height(double value) =>
-      RemixMenuItemStyler().height(value);
-  factory RemixMenuItemStyler.size(double width, double height) =>
-      RemixMenuItemStyler().size(width, height);
-  factory RemixMenuItemStyler.minWidth(double value) =>
-      RemixMenuItemStyler().minWidth(value);
-  factory RemixMenuItemStyler.maxWidth(double value) =>
-      RemixMenuItemStyler().maxWidth(value);
-  factory RemixMenuItemStyler.minHeight(double value) =>
-      RemixMenuItemStyler().minHeight(value);
-  factory RemixMenuItemStyler.maxHeight(double value) =>
-      RemixMenuItemStyler().maxHeight(value);
-  factory RemixMenuItemStyler.scale(
-    double scale, {
-    Alignment alignment = .center,
-  }) => RemixMenuItemStyler().scale(scale, alignment: alignment);
-  factory RemixMenuItemStyler.rotate(
+  factory MenuItemStyler.container(FlexBoxStyler value) =>
+      MenuItemStyler().container(value);
+  factory MenuItemStyler.label(TextStyler value) =>
+      MenuItemStyler().label(value);
+  factory MenuItemStyler.leadingIcon(IconStyler value) =>
+      MenuItemStyler().leadingIcon(value);
+  factory MenuItemStyler.trailingIcon(IconStyler value) =>
+      MenuItemStyler().trailingIcon(value);
+  factory MenuItemStyler.color(Color value) => MenuItemStyler().color(value);
+  factory MenuItemStyler.gradient(GradientMix value) =>
+      MenuItemStyler().gradient(value);
+  factory MenuItemStyler.border(BoxBorderMix value) =>
+      MenuItemStyler().border(value);
+  factory MenuItemStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      MenuItemStyler().borderRadius(value);
+  factory MenuItemStyler.elevation(ElevationShadow value) =>
+      MenuItemStyler().elevation(value);
+  factory MenuItemStyler.shadow(BoxShadowMix value) =>
+      MenuItemStyler().shadow(value);
+  factory MenuItemStyler.shadows(List<BoxShadowMix> value) =>
+      MenuItemStyler().shadows(value);
+  factory MenuItemStyler.width(double value) => MenuItemStyler().width(value);
+  factory MenuItemStyler.height(double value) => MenuItemStyler().height(value);
+  factory MenuItemStyler.size(double width, double height) =>
+      MenuItemStyler().size(width, height);
+  factory MenuItemStyler.minWidth(double value) =>
+      MenuItemStyler().minWidth(value);
+  factory MenuItemStyler.maxWidth(double value) =>
+      MenuItemStyler().maxWidth(value);
+  factory MenuItemStyler.minHeight(double value) =>
+      MenuItemStyler().minHeight(value);
+  factory MenuItemStyler.maxHeight(double value) =>
+      MenuItemStyler().maxHeight(value);
+  factory MenuItemStyler.scale(double scale, {Alignment alignment = .center}) =>
+      MenuItemStyler().scale(scale, alignment: alignment);
+  factory MenuItemStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => RemixMenuItemStyler().rotate(radians, alignment: alignment);
-  factory RemixMenuItemStyler.translate(double x, double y, [double z = 0.0]) =>
-      RemixMenuItemStyler().translate(x, y, z);
-  factory RemixMenuItemStyler.skew(double skewX, double skewY) =>
-      RemixMenuItemStyler().skew(skewX, skewY);
-  factory RemixMenuItemStyler.textStyle(TextStyler value) =>
-      RemixMenuItemStyler().textStyle(value);
-  factory RemixMenuItemStyler.image(DecorationImageMix value) =>
-      RemixMenuItemStyler().image(value);
-  factory RemixMenuItemStyler.shape(ShapeBorderMix value) =>
-      RemixMenuItemStyler().shape(value);
-  factory RemixMenuItemStyler.backgroundImage(
+  }) => MenuItemStyler().rotate(radians, alignment: alignment);
+  factory MenuItemStyler.translate(double x, double y, [double z = 0.0]) =>
+      MenuItemStyler().translate(x, y, z);
+  factory MenuItemStyler.skew(double skewX, double skewY) =>
+      MenuItemStyler().skew(skewX, skewY);
+  factory MenuItemStyler.textStyle(TextStyler value) =>
+      MenuItemStyler().textStyle(value);
+  factory MenuItemStyler.image(DecorationImageMix value) =>
+      MenuItemStyler().image(value);
+  factory MenuItemStyler.shape(ShapeBorderMix value) =>
+      MenuItemStyler().shape(value);
+  factory MenuItemStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixMenuItemStyler().backgroundImage(
+  }) => MenuItemStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixMenuItemStyler.backgroundImageUrl(
+  factory MenuItemStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixMenuItemStyler().backgroundImageUrl(
+  }) => MenuItemStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixMenuItemStyler.backgroundImageAsset(
+  factory MenuItemStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => RemixMenuItemStyler().backgroundImageAsset(
+  }) => MenuItemStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory RemixMenuItemStyler.linearGradient({
+  factory MenuItemStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixMenuItemStyler().linearGradient(
+  }) => MenuItemStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixMenuItemStyler.radialGradient({
+  factory MenuItemStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -1397,7 +1377,7 @@ class RemixMenuItemStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixMenuItemStyler().radialGradient(
+  }) => MenuItemStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -1406,14 +1386,14 @@ class RemixMenuItemStyler
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixMenuItemStyler.sweepGradient({
+  factory MenuItemStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixMenuItemStyler().sweepGradient(
+  }) => MenuItemStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -1421,20 +1401,20 @@ class RemixMenuItemStyler
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixMenuItemStyler.foregroundLinearGradient({
+  factory MenuItemStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => RemixMenuItemStyler().foregroundLinearGradient(
+  }) => MenuItemStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory RemixMenuItemStyler.foregroundRadialGradient({
+  factory MenuItemStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -1442,7 +1422,7 @@ class RemixMenuItemStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => RemixMenuItemStyler().foregroundRadialGradient(
+  }) => MenuItemStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -1451,14 +1431,14 @@ class RemixMenuItemStyler
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory RemixMenuItemStyler.foregroundSweepGradient({
+  factory MenuItemStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => RemixMenuItemStyler().foregroundSweepGradient(
+  }) => MenuItemStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -1466,128 +1446,128 @@ class RemixMenuItemStyler
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory RemixMenuItemStyler.row() => RemixMenuItemStyler().row();
-  factory RemixMenuItemStyler.column() => RemixMenuItemStyler().column();
-  factory RemixMenuItemStyler.alignment(AlignmentGeometry value) =>
-      RemixMenuItemStyler().alignment(value);
-  factory RemixMenuItemStyler.padding(EdgeInsetsGeometryMix value) =>
-      RemixMenuItemStyler().padding(value);
-  factory RemixMenuItemStyler.margin(EdgeInsetsGeometryMix value) =>
-      RemixMenuItemStyler().margin(value);
-  factory RemixMenuItemStyler.constraints(BoxConstraintsMix value) =>
-      RemixMenuItemStyler().constraints(value);
-  factory RemixMenuItemStyler.decoration(DecorationMix value) =>
-      RemixMenuItemStyler().decoration(value);
-  factory RemixMenuItemStyler.foregroundDecoration(DecorationMix value) =>
-      RemixMenuItemStyler().foregroundDecoration(value);
-  factory RemixMenuItemStyler.clipBehavior(Clip value) =>
-      RemixMenuItemStyler().clipBehavior(value);
-  factory RemixMenuItemStyler.direction(Axis value) =>
-      RemixMenuItemStyler().direction(value);
-  factory RemixMenuItemStyler.mainAxisAlignment(MainAxisAlignment value) =>
-      RemixMenuItemStyler().mainAxisAlignment(value);
-  factory RemixMenuItemStyler.crossAxisAlignment(CrossAxisAlignment value) =>
-      RemixMenuItemStyler().crossAxisAlignment(value);
-  factory RemixMenuItemStyler.mainAxisSize(MainAxisSize value) =>
-      RemixMenuItemStyler().mainAxisSize(value);
-  factory RemixMenuItemStyler.spacing(double value) =>
-      RemixMenuItemStyler().spacing(value);
-  factory RemixMenuItemStyler.verticalDirection(VerticalDirection value) =>
-      RemixMenuItemStyler().verticalDirection(value);
-  factory RemixMenuItemStyler.textDirection(TextDirection value) =>
-      RemixMenuItemStyler().textDirection(value);
-  factory RemixMenuItemStyler.textBaseline(TextBaseline value) =>
-      RemixMenuItemStyler().textBaseline(value);
-  factory RemixMenuItemStyler.transform(
+  factory MenuItemStyler.row() => MenuItemStyler().row();
+  factory MenuItemStyler.column() => MenuItemStyler().column();
+  factory MenuItemStyler.alignment(AlignmentGeometry value) =>
+      MenuItemStyler().alignment(value);
+  factory MenuItemStyler.padding(EdgeInsetsGeometryMix value) =>
+      MenuItemStyler().padding(value);
+  factory MenuItemStyler.margin(EdgeInsetsGeometryMix value) =>
+      MenuItemStyler().margin(value);
+  factory MenuItemStyler.constraints(BoxConstraintsMix value) =>
+      MenuItemStyler().constraints(value);
+  factory MenuItemStyler.decoration(DecorationMix value) =>
+      MenuItemStyler().decoration(value);
+  factory MenuItemStyler.foregroundDecoration(DecorationMix value) =>
+      MenuItemStyler().foregroundDecoration(value);
+  factory MenuItemStyler.clipBehavior(Clip value) =>
+      MenuItemStyler().clipBehavior(value);
+  factory MenuItemStyler.direction(Axis value) =>
+      MenuItemStyler().direction(value);
+  factory MenuItemStyler.mainAxisAlignment(MainAxisAlignment value) =>
+      MenuItemStyler().mainAxisAlignment(value);
+  factory MenuItemStyler.crossAxisAlignment(CrossAxisAlignment value) =>
+      MenuItemStyler().crossAxisAlignment(value);
+  factory MenuItemStyler.mainAxisSize(MainAxisSize value) =>
+      MenuItemStyler().mainAxisSize(value);
+  factory MenuItemStyler.spacing(double value) =>
+      MenuItemStyler().spacing(value);
+  factory MenuItemStyler.verticalDirection(VerticalDirection value) =>
+      MenuItemStyler().verticalDirection(value);
+  factory MenuItemStyler.textDirection(TextDirection value) =>
+      MenuItemStyler().textDirection(value);
+  factory MenuItemStyler.textBaseline(TextBaseline value) =>
+      MenuItemStyler().textBaseline(value);
+  factory MenuItemStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => RemixMenuItemStyler().transform(value, alignment: alignment);
+  }) => MenuItemStyler().transform(value, alignment: alignment);
 
-  RemixMenuItemStyler color(Color value) {
+  MenuItemStyler color(Color value) {
     return container(FlexBoxStyler().color(value));
   }
 
-  RemixMenuItemStyler gradient(GradientMix value) {
+  MenuItemStyler gradient(GradientMix value) {
     return container(FlexBoxStyler().gradient(value));
   }
 
-  RemixMenuItemStyler border(BoxBorderMix value) {
+  MenuItemStyler border(BoxBorderMix value) {
     return container(FlexBoxStyler().border(value));
   }
 
-  RemixMenuItemStyler borderRadius(BorderRadiusGeometryMix value) {
+  MenuItemStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(FlexBoxStyler().borderRadius(value));
   }
 
-  RemixMenuItemStyler elevation(ElevationShadow value) {
+  MenuItemStyler elevation(ElevationShadow value) {
     return container(FlexBoxStyler().elevation(value));
   }
 
-  RemixMenuItemStyler shadow(BoxShadowMix value) {
+  MenuItemStyler shadow(BoxShadowMix value) {
     return container(FlexBoxStyler().shadow(value));
   }
 
-  RemixMenuItemStyler shadows(List<BoxShadowMix> value) {
+  MenuItemStyler shadows(List<BoxShadowMix> value) {
     return container(FlexBoxStyler().shadows(value));
   }
 
-  RemixMenuItemStyler width(double value) {
+  MenuItemStyler width(double value) {
     return container(FlexBoxStyler().width(value));
   }
 
-  RemixMenuItemStyler height(double value) {
+  MenuItemStyler height(double value) {
     return container(FlexBoxStyler().height(value));
   }
 
-  RemixMenuItemStyler size(double width, double height) {
+  MenuItemStyler size(double width, double height) {
     return container(FlexBoxStyler().size(width, height));
   }
 
-  RemixMenuItemStyler minWidth(double value) {
+  MenuItemStyler minWidth(double value) {
     return container(FlexBoxStyler().minWidth(value));
   }
 
-  RemixMenuItemStyler maxWidth(double value) {
+  MenuItemStyler maxWidth(double value) {
     return container(FlexBoxStyler().maxWidth(value));
   }
 
-  RemixMenuItemStyler minHeight(double value) {
+  MenuItemStyler minHeight(double value) {
     return container(FlexBoxStyler().minHeight(value));
   }
 
-  RemixMenuItemStyler maxHeight(double value) {
+  MenuItemStyler maxHeight(double value) {
     return container(FlexBoxStyler().maxHeight(value));
   }
 
-  RemixMenuItemStyler scale(double scale, {Alignment alignment = .center}) {
+  MenuItemStyler scale(double scale, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().scale(scale, alignment: alignment));
   }
 
-  RemixMenuItemStyler rotate(double radians, {Alignment alignment = .center}) {
+  MenuItemStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().rotate(radians, alignment: alignment));
   }
 
-  RemixMenuItemStyler translate(double x, double y, [double z = 0.0]) {
+  MenuItemStyler translate(double x, double y, [double z = 0.0]) {
     return container(FlexBoxStyler().translate(x, y, z));
   }
 
-  RemixMenuItemStyler skew(double skewX, double skewY) {
+  MenuItemStyler skew(double skewX, double skewY) {
     return container(FlexBoxStyler().skew(skewX, skewY));
   }
 
-  RemixMenuItemStyler textStyle(TextStyler value) {
+  MenuItemStyler textStyle(TextStyler value) {
     return container(FlexBoxStyler().textStyle(value));
   }
 
-  RemixMenuItemStyler image(DecorationImageMix value) {
+  MenuItemStyler image(DecorationImageMix value) {
     return container(FlexBoxStyler().image(value));
   }
 
-  RemixMenuItemStyler shape(ShapeBorderMix value) {
+  MenuItemStyler shape(ShapeBorderMix value) {
     return container(FlexBoxStyler().shape(value));
   }
 
-  RemixMenuItemStyler backgroundImage(
+  MenuItemStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -1603,7 +1583,7 @@ class RemixMenuItemStyler
     );
   }
 
-  RemixMenuItemStyler backgroundImageUrl(
+  MenuItemStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -1619,7 +1599,7 @@ class RemixMenuItemStyler
     );
   }
 
-  RemixMenuItemStyler backgroundImageAsset(
+  MenuItemStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -1635,7 +1615,7 @@ class RemixMenuItemStyler
     );
   }
 
-  RemixMenuItemStyler linearGradient({
+  MenuItemStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -1653,7 +1633,7 @@ class RemixMenuItemStyler
     );
   }
 
-  RemixMenuItemStyler radialGradient({
+  MenuItemStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -1675,7 +1655,7 @@ class RemixMenuItemStyler
     );
   }
 
-  RemixMenuItemStyler sweepGradient({
+  MenuItemStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -1695,7 +1675,7 @@ class RemixMenuItemStyler
     );
   }
 
-  RemixMenuItemStyler foregroundLinearGradient({
+  MenuItemStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -1713,7 +1693,7 @@ class RemixMenuItemStyler
     );
   }
 
-  RemixMenuItemStyler foregroundRadialGradient({
+  MenuItemStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -1735,7 +1715,7 @@ class RemixMenuItemStyler
     );
   }
 
-  RemixMenuItemStyler foregroundSweepGradient({
+  MenuItemStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -1755,128 +1735,125 @@ class RemixMenuItemStyler
     );
   }
 
-  RemixMenuItemStyler row() {
+  MenuItemStyler row() {
     return container(FlexBoxStyler().row());
   }
 
-  RemixMenuItemStyler column() {
+  MenuItemStyler column() {
     return container(FlexBoxStyler().column());
   }
 
-  RemixMenuItemStyler alignment(AlignmentGeometry value) {
+  MenuItemStyler alignment(AlignmentGeometry value) {
     return container(FlexBoxStyler().alignment(value));
   }
 
-  RemixMenuItemStyler padding(EdgeInsetsGeometryMix value) {
+  MenuItemStyler padding(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler().padding(value));
   }
 
-  RemixMenuItemStyler margin(EdgeInsetsGeometryMix value) {
+  MenuItemStyler margin(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler().margin(value));
   }
 
-  RemixMenuItemStyler constraints(BoxConstraintsMix value) {
+  MenuItemStyler constraints(BoxConstraintsMix value) {
     return container(FlexBoxStyler().constraints(value));
   }
 
-  RemixMenuItemStyler decoration(DecorationMix value) {
+  MenuItemStyler decoration(DecorationMix value) {
     return container(FlexBoxStyler().decoration(value));
   }
 
-  RemixMenuItemStyler foregroundDecoration(DecorationMix value) {
+  MenuItemStyler foregroundDecoration(DecorationMix value) {
     return container(FlexBoxStyler().foregroundDecoration(value));
   }
 
-  RemixMenuItemStyler clipBehavior(Clip value) {
+  MenuItemStyler clipBehavior(Clip value) {
     return container(FlexBoxStyler().clipBehavior(value));
   }
 
-  RemixMenuItemStyler direction(Axis value) {
+  MenuItemStyler direction(Axis value) {
     return container(FlexBoxStyler().direction(value));
   }
 
-  RemixMenuItemStyler mainAxisAlignment(MainAxisAlignment value) {
+  MenuItemStyler mainAxisAlignment(MainAxisAlignment value) {
     return container(FlexBoxStyler().mainAxisAlignment(value));
   }
 
-  RemixMenuItemStyler crossAxisAlignment(CrossAxisAlignment value) {
+  MenuItemStyler crossAxisAlignment(CrossAxisAlignment value) {
     return container(FlexBoxStyler().crossAxisAlignment(value));
   }
 
-  RemixMenuItemStyler mainAxisSize(MainAxisSize value) {
+  MenuItemStyler mainAxisSize(MainAxisSize value) {
     return container(FlexBoxStyler().mainAxisSize(value));
   }
 
-  RemixMenuItemStyler spacing(double value) {
+  MenuItemStyler spacing(double value) {
     return container(FlexBoxStyler().spacing(value));
   }
 
-  RemixMenuItemStyler verticalDirection(VerticalDirection value) {
+  MenuItemStyler verticalDirection(VerticalDirection value) {
     return container(FlexBoxStyler().verticalDirection(value));
   }
 
-  RemixMenuItemStyler textDirection(TextDirection value) {
+  MenuItemStyler textDirection(TextDirection value) {
     return container(FlexBoxStyler().textDirection(value));
   }
 
-  RemixMenuItemStyler textBaseline(TextBaseline value) {
+  MenuItemStyler textBaseline(TextBaseline value) {
     return container(FlexBoxStyler().textBaseline(value));
   }
 
-  RemixMenuItemStyler transform(
-    Matrix4 value, {
-    Alignment alignment = .center,
-  }) {
+  MenuItemStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the container.
-  RemixMenuItemStyler container(FlexBoxStyler value) {
-    return merge(RemixMenuItemStyler(container: value));
+  MenuItemStyler container(FlexBoxStyler value) {
+    return merge(MenuItemStyler(container: value));
   }
 
   /// Sets the label.
-  RemixMenuItemStyler label(TextStyler value) {
-    return merge(RemixMenuItemStyler(label: value));
+  MenuItemStyler label(TextStyler value) {
+    return merge(MenuItemStyler(label: value));
   }
 
   /// Sets the leadingIcon.
-  RemixMenuItemStyler leadingIcon(IconStyler value) {
-    return merge(RemixMenuItemStyler(leadingIcon: value));
+  MenuItemStyler leadingIcon(IconStyler value) {
+    return merge(MenuItemStyler(leadingIcon: value));
   }
 
   /// Sets the trailingIcon.
-  RemixMenuItemStyler trailingIcon(IconStyler value) {
-    return merge(RemixMenuItemStyler(trailingIcon: value));
+  MenuItemStyler trailingIcon(IconStyler value) {
+    return merge(MenuItemStyler(trailingIcon: value));
   }
 
   /// Sets the animation configuration.
   @override
-  RemixMenuItemStyler animate(AnimationConfig value) {
-    return merge(RemixMenuItemStyler(animation: value));
+  MenuItemStyler animate(AnimationConfig value) {
+    return merge(MenuItemStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  RemixMenuItemStyler variants(List<VariantStyle<RemixMenuItemSpec>> value) {
-    return merge(RemixMenuItemStyler(variants: value));
+  MenuItemStyler variants(List<VariantStyle<MenuItemSpec>> value) {
+    return merge(MenuItemStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  RemixMenuItemStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixMenuItemStyler(modifier: value));
+  MenuItemStyler wrap(WidgetModifierConfig value) {
+    return merge(MenuItemStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixMenuItemStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixMenuItemStyler(modifier: value));
+  MenuItemStyler modifier(WidgetModifierConfig value) {
+    return merge(MenuItemStyler(modifier: value));
   }
 
-  /// Merges with another [RemixMenuItemStyler].
+  /// Merges with another [MenuItemStyler].
   @override
-  RemixMenuItemStyler merge(RemixMenuItemStyler? other) {
-    return RemixMenuItemStyler.create(
+  MenuItemStyler merge(MenuItemStyler? other) {
+    return MenuItemStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
       leadingIcon: MixOps.merge($leadingIcon, other?.$leadingIcon),
@@ -1887,10 +1864,10 @@ class RemixMenuItemStyler
     );
   }
 
-  /// Resolves to [StyleSpec<RemixMenuItemSpec>] using [context].
+  /// Resolves to [StyleSpec<MenuItemSpec>] using [context].
   @override
-  StyleSpec<RemixMenuItemSpec> resolve(BuildContext context) {
-    final spec = RemixMenuItemSpec(
+  StyleSpec<MenuItemSpec> resolve(BuildContext context) {
+    final spec = MenuItemSpec(
       container: MixOps.resolve(context, $container),
       label: MixOps.resolve(context, $label),
       leadingIcon: MixOps.resolve(context, $leadingIcon),
