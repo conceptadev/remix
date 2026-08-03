@@ -6,10 +6,46 @@
 
 - Title: `feat(remix): expose menu checkbox, radio, and submenu items`
 - Depends on: none.
-- Compatibility: additive sealed subclasses plus additive indicator/gutter and
-  trailing-geometry spec fields; no migration.
+- Compatibility: additive sealed subclasses, an additive shared `indicator`
+  slot, and optional per-kind item style overrides; no migration.
 - Primary outcome: Remix users can build checked menu items, mutually exclusive radio sections, and recursively nested submenus with the same focus/keyboard behavior as Naked.
-- Out of scope: context menus, arbitrary custom item widgets, new submenu positioning logic, and final Radix-colored indicator styling (PR 7).
+- Out of scope: context menus, arbitrary custom item widgets, and new submenu positioning logic. Fortal indicator/chevron styling ships in this PR; PR 7 no longer touches the menu family.
+
+## Implementation status (2026-08-03)
+
+`origin/feat/menu-items` implements this plan (208 menu/public-API tests and
+the parity checker pass under FVM Flutter 3.44.0). Where this document and the
+branch differ, the branch's simpler choices are accepted and this plan was
+updated to match:
+
+- **No geometry scalars.** Radix's CSS-absolute indicator/trailing offsets are
+  not reproduced through `compoundLeadingGutter`/`trailingLeadingGap`/
+  `submenuChevronEndOffset` spec fields. Remix reserves one panel-wide in-flow
+  indicator slot and uses normal flex spacing with an expanded label for
+  trailing end alignment, recorded as a manifest approximation (behavior,
+  semantics, paths, colors, sizes, states, and panel-end alignment keep zero
+  tolerance).
+- **Per-kind overrides instead of scalars.** `MenuSpec` gains nullable
+  `checkboxItem`/`radioItem`/`submenuItem` overrides that fall back to `item`,
+  which also scopes submenu-open "selected" styling to submenu triggers only.
+- **One-phase styling.** Full Fortal indicator/chevron styling lands here; the
+  planned "temporary neutral indicator, PR 7 finishes it" phase is dropped.
+- **Generic parity checks only.** No bespoke menu checker code; the generic
+  family/coverage/approximation contract validates the updated menu record.
+
+Remaining follow-ups on the branch before merge:
+
+1. Pass `item.enabled` through and let Naked own the
+   `enabled && (onChanged != null || onSelected != null)` policy instead of
+   duplicating that formula in the panel builders.
+2. Add a coordinate regression test for the `thickCheck`/`thickChevronRight`
+   path data; the manifest claims zero path tolerance but only the glyph enum
+   is currently asserted.
+3. Disclose in the PR description: the `fortalMenuStyle(style:)` override and
+   `FortalMenuStyleOverride` type, the new Fortal trigger styler, the
+   `colorPanel` to `colorPanelSolid`/no-blur correction to the existing
+   recipe, `closeOnActivate` on ordinary items, and the light/dark playground
+   screenshots required by `01-conventions.md`.
 
 ## Context
 
@@ -18,11 +54,10 @@
 - `MenuItemSpec` already owns label, leading icon, and trailing icon slots.
   It needs an `indicator` `IconSpec` for the shared check indicator (pinned
   Radix uses `ThickCheckIcon` for both checked checkbox and selected radio
-  items), a compound-item leading-gutter metric, and trailing-slot geometry.
-  Radix positions the indicator inside a panel-wide conditional inset, so
-  treating it as an ordinary leading icon cannot align mixed ordinary and
-  compound rows exactly. Its shortcut/submenu slot is auto-aligned to the row
-  end with a leading gap, while the submenu chevron has its own end offset.
+  items). Radix positions the indicator and trailing content with CSS-absolute
+  offsets; Remix instead reserves one panel-wide in-flow indicator slot and
+  relies on normal flex spacing with an expanded label for trailing end
+  alignment, recording the pixel difference as a manifest approximation.
 - `NakedMenuCheckboxItem<T>`, `NakedMenuRadioGroup<T>`, `NakedMenuRadioItem<T>`, and `NakedMenuSubmenu<T>` already supply activation, roles, controlled state, group exclusivity, hover timing, arrow/Escape behavior, recursive close, and focus restoration.
 - The installed submenu default is right/start with a four-pixel side offset and a 100 ms hover delay. Preserve it by forwarding defaults rather than restating behavior.
 - There is no menu playground entry today. This PR creates it.
@@ -130,7 +165,7 @@ API rules:
 
 Extract the current overlay body into a private recursive `_RemixMenuItemsPanel<T>` that receives the item list plus already-resolved default style/spec inputs. Its exhaustive switch renders ordinary items, dividers, checkbox items, one radio-group subtree, and submenus. Root `NakedMenu.overlayBuilder` and every `NakedMenuSubmenu.overlayBuilder` call this same panel.
 
-Extract the duplicated visual row into a private item-content builder that accepts label/icons/indicator, whether the current panel reserves a compound gutter, and the active Naked controller. Each `_RemixMenuItemsPanel<T>` computes once whether its own item snapshot contains checkbox/radio items. When true, every actionable row in that panel reserves the same leading gutter and compound indicators are overlaid/centered inside it; ordinary rows leave it empty. Submenus compute this independently. Do not model the indicator as a normal in-flow leading icon. Expand the label region so a trailing slot aligns to the directional end, then apply the resolved trailing leading-gap and the submenu-only chevron end offset. Wrap visual text/icons in `ExcludeSemantics`; the Naked primitive remains the single semantic owner.
+Extract the duplicated visual row into a private item-content builder that accepts label/icons/indicator, whether the current panel reserves a compound gutter, and the active Naked controller. Each `_RemixMenuItemsPanel<T>` computes once whether its own item snapshot contains checkbox/radio items. When true, every actionable row in that panel reserves the same leading indicator slot (sized from the resolved indicator style) and compound indicators render inside it; ordinary rows leave it empty. Submenus compute this independently. Model the indicator as that one reserved slot, not as an ordinary leading icon that appears only when checked. Expand the label region so trailing content aligns to the directional end through normal flex layout; do not add gutter/gap/offset spec scalars to chase Radix's CSS-absolute positioning — record that difference as a manifest approximation. Wrap visual text/icons in `ExcludeSemantics`; the Naked primitive remains the single semantic owner.
 
 Radio items must remain descendants of one `NakedMenuRadioGroup<T>`. A neutral `Column(mainAxisSize: min, crossAxisAlignment: stretch)` may group them because the current overlay recipe has no inter-child spacing. Do not add a second decorated overlay. Add a regression test that dividers and neighboring ordinary items keep their dimensions around a radio group.
 
@@ -156,21 +191,21 @@ Alternatives rejected:
   - Put a code comment above the panel explaining that one renderer intentionally serves root and submenu overlays.
   - Acceptance: arbitrary nesting renders; selection closes the full hierarchy according to each item's `closeOnActivate`; caller focus nodes are not disposed by Remix.
 
-- [ ] Task 3: Add the indicator and conditional-gutter styling contract and regenerate.
-  - Files: `packages/remix/lib/src/components/menu/menu_spec.dart`, `packages/remix/lib/src/components/menu/menu_style.dart`, `packages/remix/lib/src/utilities/remix_path_icon.dart`, generated `packages/remix/lib/src/components/menu/menu.g.dart`, spec/style tests.
-  - Add `StyleSpec<IconSpec> indicator` plus a nonnegative
-    `compoundLeadingGutter`, nonnegative `trailingLeadingGap`, and signed
-    `submenuChevronEndOffset` with generated styler forwarding and
-    copy/lerp/equality coverage.
+- [ ] Task 3: Add the indicator/per-kind styling contract, Fortal styling, and regenerate.
+  - Files: `packages/remix/lib/src/components/menu/menu_spec.dart`, `packages/remix/lib/src/components/menu/menu_style.dart`, `fortal_menu_styles.dart`, `packages/remix/lib/src/utilities/remix_path_icon.dart`, generated `packages/remix/lib/src/components/menu/menu.g.dart`, spec/style tests.
+  - Add `StyleSpec<IconSpec> indicator` plus nullable
+    `checkboxItem`/`radioItem`/`submenuItem` menu-wide overrides that fall back
+    to `item`, with generated styler forwarding and copy/lerp/equality coverage
+    including the null-inherits-item lerp path. No gutter/gap/offset scalars.
   - Render `RemixPathGlyph.thickCheck` for checked checkbox and selected radio
-    items inside the panel-wide gutter, and add the pinned
+    items inside the reserved panel-wide slot, and add the pinned
     `RemixPathGlyph.thickChevronRight` path for the default submenu affordance.
     These are exact transcriptions of the two Radix nine-unit SVG paths, not
-    `IconData` approximations. Keep default Remix coloring/metrics neutral; PR 7
-    supplies the exact size-specific gutter/icon/trailing geometry.
+    `IconData` approximations, and both need coordinate regression tests.
+    Apply the Fortal indicator/chevron colors and sizes in the same PR.
   - Acceptance: raw `styleSpec` and fluent item styling affect every
     checkbox/radio indicator, mixed ordinary/compound labels share one start
-    coordinate, and an all-ordinary panel reserves no gutter.
+    coordinate, and an all-ordinary panel reserves no indicator slot.
   - Verification: focused spec/style/widget tests pass after `fvm dart run melos run generate`.
 
 - Checkpoint: run the complete menu test directory and manually inspect a three-level submenu in LTR and RTL before changing docs/parity files.
@@ -191,7 +226,10 @@ Alternatives rejected:
     submenus; keep the broader "compositional items" deferral because arbitrary
     custom widgets remain explicitly out of scope. Add checked, unchecked,
     submenu-open, and RTL state evidence and tests.
-  - Until PR 7 applies Fortal indicator tokens, record the neutral indicator treatment as a time-bounded visual approximation instead of claiming exact styling. PR 7 removes that approximation.
+  - Record the permanent flex-row-geometry approximation: standard flex
+    slot/spacing instead of Radix's CSS-absolute indicator and trailing
+    offsets, with zero tolerance for behavior, semantics, paths, colors,
+    sizes, states, and panel-end alignment.
   - Correct stale `naked_ui` beta.7 text to exact beta.8.
   - Acceptance: the parity check proves the expanded menu states without changing family counts.
 
@@ -217,14 +255,16 @@ Use explicit pumps for the 100 ms hover timer. Do not `pumpAndSettle` around men
 
 ### Styling
 
-- Spec copy/lerp/equality includes `indicator`, `compoundLeadingGutter`,
-  `trailingLeadingGap`, and `submenuChevronEndOffset`.
+- Spec copy/lerp/equality includes `indicator` and the nullable
+  `checkboxItem`/`radioItem`/`submenuItem` overrides, including the
+  null-inherits-`item` lerp behavior.
 - Fluent indicator styles and raw specs resolve identically.
 - Checked/radio states feed the same `WidgetStateProvider` as their Naked controller.
 - Open submenu maps to selected state so the existing Fortal `.onSelected(...)` recipe continues to work.
 - Indicator/chevron order is directional in RTL; the exact check/right-chevron
-  paths, trailing auto-end alignment, leading gap, and submenu-only end offset
-  have coordinate-level tests.
+  path data has a coordinate regression test and trailing content has a
+  directional end-alignment test. No offset arithmetic is asserted beyond the
+  recorded approximation boundary.
 - A panel with any checkbox/radio row reserves one common indicator gutter for
   ordinary and compound rows; a panel without compound rows preserves current
   geometry, and nested panels make the decision independently.
@@ -247,20 +287,20 @@ Use explicit pumps for the 100 ms hover timer. Do not `pumpAndSettle` around men
 - [ ] Checkbox/radio/submenu public types compile through `remix.dart`.
 - [ ] Roles and checked/mutual-exclusion states match Flutter semantics exactly once.
 - [ ] LTR/RTL arrows, hover delay, Escape, recursive close, and focus restoration are covered.
-- [ ] Menu parity no longer calls the shipped behaviors deferred; the temporary visual approximation is explicit.
+- [ ] Menu parity no longer calls the shipped behaviors deferred; the permanent flex-row-geometry approximation is explicit in the manifest.
 - [ ] Docs, new playground entry, public API tests, generated code, validation, and two screenshots are included.
 
 ## Risks and mitigations
 
 - Risk: a nested radio group changes overlay layout. Mitigation: keep its wrapper decoration-free and add neighbor/divider golden-free geometry assertions.
-- Risk: modeling the indicator as a normal row icon shifts labels and diverges
-  from Radix's absolute gutter. Mitigation: make compound detection panel-wide,
-  overlay the indicator inside one reserved gutter, and assert label coordinates
-  for mixed and ordinary-only panels.
+- Risk: modeling the indicator as a normal row icon shifts labels between
+  checked and unchecked rows. Mitigation: make compound detection panel-wide,
+  reserve one always-present indicator slot, and assert label coordinates for
+  mixed and ordinary-only panels.
 - Risk: both root and local callbacks surprise callers. Mitigation: preserve Naked's exact order and document/test it.
 - Risk: submenu generic values collide with root selection. Mitigation: all selectable nested values remain `T`; submenu triggers have no value.
 - Risk: visual children duplicate Naked semantics. Mitigation: one shared `ExcludeSemantics` content renderer plus exact-tree tests.
-- Risk: PR 7 conflicts with menu parity files. Mitigation: PR 7 starts from this merged state and removes the named temporary approximation.
+- Risk: PR 7 conflicts with menu parity files. Mitigation: this PR completes the menu parity record in one pass; PR 7 no longer edits menu families.
 
 ## Validation and rollout
 

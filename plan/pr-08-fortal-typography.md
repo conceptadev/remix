@@ -59,7 +59,7 @@ enum FortalTextSize {
 
 enum FortalTextWeight { light, regular, medium, bold }
 enum FortalTextAlign { left, center, right }
-enum FortalTextWrap { wrap, nowrap, pretty, balance }
+enum FortalTextWrap { wrap, nowrap }
 enum FortalCodeVariant { solid, soft, outline, ghost }
 enum FortalKbdVariant { classic, soft }
 enum FortalLinkUnderline { auto, always, hover, none }
@@ -71,7 +71,10 @@ Wrap policy:
 
 - `wrap`: normal Flutter wrapping.
 - `nowrap`: `softWrap: false`; document that overflow follows the available constraints.
-- `pretty` and `balance`: normal wrapping in v1 with named manifest approximations because Flutter has no native equivalent.
+- Radix's `pretty` and `balance` values are deliberately not exposed: Flutter
+  has no native equivalent and an enum value that behaves identically to
+  `wrap` would be speculative API. Record both as deferred upstream values in
+  the manifest; add them only when Flutter can actually implement them.
 - `truncate: true` takes precedence over `wrap`, forcing one line, no soft wrap, and ellipsis.
 
 Responsive Radix props map to ordinary Flutter rebuilds at breakpoints; no responsive-value DSL is added.
@@ -245,9 +248,11 @@ When `size` is explicit, derive geometry from the resolved token font size and
 use the pinned 0.8 type-scale factor. When `size` is null, inherit the ambient
 base and use the upstream unsized 0.75 em factor. In both paths use 1.7
 line-height, 1.75 em minimum width, 0.5 em horizontal padding, 0.05 em bottom
-padding, -0.1 em word spacing, a -0.03 em visual top offset, and
-`.35 em × radiusFactor` radius. Force normal weight, center the single-line
-label, and prevent wrapping.
+padding, -0.1 em word spacing, and `.35 em × radiusFactor` radius. Force
+normal weight, center the single-line label, and prevent wrapping. Radix's
+-0.03 em visual top nudge is deliberately skipped — a transform wrapper for a
+sub-pixel baseline tweak is offset-chasing machinery; record it as a measured
+visual approximation instead.
 
 - classic uses gray1 and the pinned six-layer light/dark em-relative shadow
   stack, resolving all colors from existing gray/white/black tokens and
@@ -329,12 +334,12 @@ flag.
   - Map every typography ID to `components/typography/fortal_<id>_styles.dart`; concatenate `typography_shared.dart` for shared enum inspection without contaminating per-family highContrast detection.
   - Teach size-enum validation that all five intentionally use `FortalTextSize`.
   - Teach named-variant validation to include sibling `typography_widget.dart`, then require all Code/Kbd constructors.
-  - Replace the recipe-function-only highContrast detector for these five
-    hand-written families with family-specific inspection of the matching
-    `FortalText`/`FortalHeading`/`FortalCode`/`FortalKbd`/`FortalLink`
-    constructor. It must detect highContrast on Text, Heading, Code, and Link,
-    reject it for Kbd, and must not let one sibling class satisfy another
-    family's manifest record.
+  - Extend the highContrast detector with the smallest change that reads these
+    five widget constructors (they have no recipe function): detect
+    highContrast on Text, Heading, Code, and Link, reject it for Kbd, and do
+    not let one sibling class satisfy another family's manifest record. Follow
+    the menu precedent — reuse the generic contract mechanisms; do not build a
+    parallel per-family inspection framework.
   - Add exact source files/selectors, upstream props/defaults/states (including
     inherited/omitted size and weight), coverage, visual mappings, deferred
     capabilities, and approximations.
@@ -378,13 +383,14 @@ flag.
   explicit token line-height, family fallback, padding/radius, and every
   effects-backed ring/fill/foreground for four variants and high contrast.
 - Assert Kbd's unsized 0.75 em and explicit-size 0.8 token factors,
-  normal weight, 1.7 line-height, -0.03 em top offset,
+  normal weight, 1.7 line-height,
   min-width/padding/radius, and every classic effect layer in light/dark; soft
-  has no classic shadow.
+  has no classic shadow. Assert no transform wrapper exists for the skipped
+  -0.03 em top nudge.
 - Assert Link inherited/explicit metrics, native underline in
   idle/hover/focus/highContrast, the documented underline-offset tolerance, and
   effect outline/radius geometry without size movement.
-- `truncate` wins over every wrap enum; nowrap/pretty/balance mappings are explicit.
+- `truncate` wins over both wrap enum values; the nowrap mapping is explicit.
 
 ### Interaction and semantics
 
@@ -408,7 +414,7 @@ flag.
   mixed-run baseline/wrapping through `WidgetSpan` is deferred with rich-text
   composition.
 - Leading trim is deferred; normal Flutter font metrics remain. State the pixel tolerance used in screenshots.
-- `pretty` and `balance` map to normal wrapping; `nowrap`/truncate map directly.
+- `pretty` and `balance` are not exposed; both are recorded as deferred upstream values. `nowrap`/truncate map directly. Kbd's -0.03 em top nudge is a recorded visual approximation with no transform wrapper.
 - Responsive values map to application rebuilds rather than a prop-object DSL.
 - Code uses the closest installed platform font from the pinned fallback list; glyph widths may differ when Menlo/Consolas are unavailable.
 - Kbd uses Flutter box-shadow rasterization; retain all layers and document a small pixel/color tolerance.

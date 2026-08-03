@@ -1,6 +1,6 @@
 # Plan: Add Fortal recipes for the Phase 1 components
 
-> Theme Skeleton, SegmentedControl, TextArea, and DataList from the pinned Radix 3.3 source; finish menu indicator/trailing geometry; audit the intentionally unmapped CheckboxGroup visual family; and advance the executable parity ledger atomically.
+> Theme Skeleton, SegmentedControl, TextArea, and DataList from the pinned Radix 3.3 source; audit the intentionally unmapped CheckboxGroup visual family; and advance the executable parity ledger atomically. Menu styling is complete in PR 1 and is not touched here.
 
 ## PR contract
 
@@ -9,9 +9,9 @@
 - Compatibility: additive generated wrappers/enums/tokens plus internal TextField
   recipe refactoring and a disclosed Fortal TextField soft-variant parity
   correction; no migration.
-- Primary outcome: four new mapped Fortal families, exact menu item
-  indicator color/size/gutter and submenu-trailing geometry, and a checker-enforced audit of CheckboxGroup's
-  supported composition and intentionally unmapped visual anatomy.
+- Primary outcome: four new mapped Fortal families and a checker-enforced
+  audit of CheckboxGroup's supported composition and intentionally unmapped
+  visual anatomy.
 - Out of scope: a styled `FortalCheckboxGroup`, typography (PR 8), SegmentedControl sliding-indicator behavior, browser TextArea resizing, DataList's compositional child API/responsive prop DSL/leading trim, and unrelated component gaps.
 
 ## Context
@@ -27,7 +27,9 @@
   size/variant/color/highContrast. This PR records that family in a
   schema/checker-validated `unmappedUpstreamFamilies` inventory instead of
   silently calling the composition mapped parity.
-- PR 1 leaves one explicit temporary menu-indicator visual approximation. This PR closes and removes it.
+- PR 1 ships complete menu indicator/chevron styling with a permanent
+  flex-row-geometry manifest approximation. This PR does not edit the menu
+  family, its recipe, or its parity record.
 
 Reference authority is the pinned `@radix-ui/themes@3.3.0` source declared in `reference/radix_themes_3_3_0/manifest.json`; the live docs are navigation aids: [Skeleton](https://www.radix-ui.com/themes/docs/components/skeleton), [Checkbox Group](https://www.radix-ui.com/themes/docs/components/checkbox-group), [Segmented Control](https://www.radix-ui.com/themes/docs/components/segmented-control), [Text Area](https://www.radix-ui.com/themes/docs/components/text-area), and [Data List](https://www.radix-ui.com/themes/docs/components/data-list). Feature-comparison captures for all six touched families (`skeleton`, `segmented-control`, `text-area`, `data-list`, `dropdown-menu`, `checkbox-group`) are in `radix-reference/` with expected deltas indexed in `radix-reference/README.md`.
 
@@ -89,7 +91,6 @@ Add narrowly named tokens to `packages/remix/lib/src/fortal/fortal_theme.dart` o
 | `textAreaPaddingY1` | `DoubleToken`, `space1 - fixed borderWidth1` (`4 × scaling - 1` at the current theme) | Bordered size-1 vertical inset. |
 | `dataListRowGap3` | `DoubleToken`, 20 × scaling | Radix `space4 × 1.25`. |
 | `dataListLabelMinWidth` | `DoubleToken`, fixed 120 logical px | Horizontal implicit label minimum; the pinned CSS uses literal `120px`. |
-| `menuSubmenuChevronEndOffset` | `DoubleToken`, -2 × scaling | Pinned submenu-chevron end pull; a named signed token avoids an inline recipe formula. |
 
 Reuse existing `textFieldPadding1/2/3`, `selectSpace1Half`, space, radius, text, gray/accent, focus, and shadow tokens for every other metric. Add light/dark/scaling resolution coverage to `fortal_tokens_test.dart` / `fortal_theme_resolution_test.dart`, including assertions that the two literal CSS lengths remain fixed while derived spacing metrics scale. Do not introduce a token when a current one is exact.
 
@@ -186,25 +187,11 @@ In `components/data_list/fortal_data_list_styles.dart`:
 
 Expose global `highContrast` for the data-driven list because per-label recipe props do not exist. Manifest-defer Radix's compositional Root/Item/Label/Value model, per-label color/highContrast/width props, responsive breakpoints, and CSS leading trim with a clear Flutter alternative/tolerance. Do not silently claim them.
 
-### Menu and CheckboxGroup
+### CheckboxGroup
 
-- Extend `_fortalMenuItemStyler` to style the new `indicator` and
-  `compoundLeadingGutter` fields. Resolve the panel-wide size1/size2 gutter and
-  indicator centering from the pinned base-menu padding rules; mixed ordinary
-  and compound rows must share the same label start, while ordinary-only panels
-  retain the original inset.
-- Verify the pinned thick-check indicator for checked checkbox/selected radio
-  items, its absent unchecked state, and the directional submenu chevron in
-  solid/soft, size1/2, disabled, highContrast, light/dark, LTR/RTL.
-- Use the exact existing `RemixPathGlyph.thickCheck` transcription for both
-  compound item kinds and PR 1's exact `thickChevronRight` transcription for
-  submenus; no glyph-shape tolerance is justified. Set the trailing slot's
-  leading gap to `space4`, align it to the directional row end, and set only the
-  default submenu chevron's end offset to
-  `menuSubmenuChevronEndOffset`. Test the paths and coordinates at both sizes
-  and directions; a caller-supplied replacement `trailingIcon` keeps the shared
-  end alignment/gap but not the submenu-only chevron offset.
-- Remove PR 1's temporary neutral-indicator approximation and update menu evidence/selectors/states if needed.
+Menu styling, evidence, and the flex-row-geometry approximation are complete
+in PR 1; this PR makes no menu changes.
+
 - Add a Fortal section to CheckboxGroup docs showing
   `RemixCheckboxGroupItem(style: fortalCheckboxStyle(...))`. Do not create
   `FortalCheckboxGroup` or `FortalCheckboxGroupItem` in this series because the
@@ -220,7 +207,7 @@ Expose global `highContrast` for the data-driven list because per-label recipe p
 
 - [ ] Task 1: Add failing token, enum/default, wrapper, and resolved-metric tests.
   - Files: `test/fortal/fortal_tokens_test.dart`, `fortal_theme_resolution_test.dart`, `fortal_control_matrix_test.dart`, `test/components/fortal_widget_test.dart`, both public-API tests.
-  - Acceptance: all eight new tokens, four wrappers, enum domains/defaults,
+  - Acceptance: all seven new tokens, four wrappers, enum domains/defaults,
     named constructors, generic inference, and scale/light/dark values are
     specified before recipes exist; the classic indicator token retains all
     five shadow-2 layers with fixed 1 px shape insets.
@@ -241,13 +228,12 @@ Expose global `highContrast` for the data-driven list because per-label recipe p
 
 - Checkpoint: run all TextField/TextArea, Skeleton, SegmentedControl, token, control-matrix, and wrapper tests before DataList/parity-ledger work.
 
-- [ ] Task 4: Implement DataList and finish Menu/CheckboxGroup presentation.
-  - Files: new DataList Fortal part/generated file,
-    `menu/fortal_menu_styles.dart`, menu parity tests, CheckboxGroup
+- [ ] Task 4: Implement DataList and the CheckboxGroup audit surface.
+  - Files: new DataList Fortal part/generated file, CheckboxGroup
     docs/playground.
-  - Acceptance: four recipes and exact menu indicator/gutter/trailing geometry cover
-    light/dark/high-contrast/state matrices with no new checkbox-group visual
-    type; docs label the group composition supported rather than mapped parity.
+  - Acceptance: four recipes cover light/dark/high-contrast/state matrices with
+    no new checkbox-group visual type; docs label the group composition
+    supported rather than mapped parity.
 
 - [ ] Task 5: Advance the parity contract from 20/3 to 24/3.
   - Files: `reference/.../manifest.json`, `manifest.schema.json`,
@@ -285,7 +271,7 @@ Expose global `highContrast` for the data-driven list because per-label recipe p
 - At nondefault scaling, assert `textAreaMinHeight3` and
   `dataListLabelMinWidth` remain 80/120 while space-derived row gaps and padding
   scale.
-- Resolve light/dark and at least two accent colors; DataList highContrast and menu highContrast must use intended roles.
+- Resolve light/dark and at least two accent colors; DataList highContrast must use intended roles.
 - Assert default constructors and all generated named constructors; generic SegmentedControl inference remains intact.
 
 ### States and semantics
@@ -299,12 +285,11 @@ Expose global `highContrast` for the data-driven list because per-label recipe p
   opacity split: TextField is 0.60 and TextArea is 0.65; both use `accent12`
   placeholders and `accent8` focus outlines.
 - DataList styles do not change list/list-item or custom-child semantics.
-- Menu indicators track checked/selected/open/disabled state and remain excluded beneath Naked semantics.
 - CheckboxGroup focus/semantics tests still pass with `fortalCheckboxStyle` item styling.
 
 ### Parity evidence
 
-- One dedicated `*_fortal_parity_test.dart` per new mapped family plus menu indicator parity coverage.
+- One dedicated `*_fortal_parity_test.dart` per new mapped family.
 - Every manifest enum/state is named by coverage and by an exact evidence case.
 - Checker validates recipe `highContrast` exposure against manifest (`data_list` true; other new families false).
 - Checker validates `checkbox_group` as an intentionally unmapped upstream
@@ -323,20 +308,16 @@ Expose global `highContrast` for the data-driven list because per-label recipe p
 ## Acceptance criteria
 
 - [ ] `FortalSkeleton`, `FortalSegmentedControl<T>`, `FortalTextArea`, and `FortalDataList` are generated, exported, documented, and tested.
-- [ ] All styling resolves from Fortal tokens; the eight justified new tokens have theme/scaling tests.
+- [ ] All styling resolves from Fortal tokens; the seven justified new tokens have theme/scaling tests.
 - [ ] Existing FortalTextField output is unchanged outside the disclosed
   `accent12`-at-0.60 soft placeholder and `accent8` focus parity correction;
   FortalTextArea retains its distinct 0.65 soft-placeholder opacity.
-- [ ] Menu indicators, panel-wide conditional gutter, exact check/chevron paths,
-  and submenu trailing geometry are fully Fortal-styled and the temporary
-  approximation is removed.
 - [ ] CheckboxGroup remains a nonvisual Remix coordinator composed with the
   existing Fortal checkbox recipe, and its omitted Radix visual anatomy is
   checker-audited rather than silently counted as mapped.
 - [ ] Manifest/evidence/checker/tests/fixture all agree on 24 mapped + 3 extensions = 27 families.
 - [ ] Segmented slide/separators, TextArea resize/auto-grow, and DataList
-  compositional/per-label/responsive/trim gaps are explicit approximations;
-  exact available menu vectors are not mislabeled as approximations.
+  compositional/per-label/responsive/trim gaps are explicit approximations.
 - [ ] Light/dark side-by-side Radix screenshots and all shared validation results are in the PR.
 
 ## Risks and mitigations
