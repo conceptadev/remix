@@ -15,7 +15,7 @@
 - `RemixCheckbox` is a non-generic visual widget with `bool? selected`; changing it to carry `T` would be breaking and unnecessary.
 - Flutter has `RadioGroup`, used by `RemixRadioGroup`, but no equivalent checkbox-group coordinator.
 - The pinned Radix Themes 3.3 CheckboxGroup is not merely a passive inherited value. It supports controlled values, required/disabled state, orientation, loop, RTL direction, and one-tab-stop roving focus.
-- `NakedToggleGroup` contains a private roving implementation that cannot be reused without wrapping checkboxes in the wrong toggle semantics. Implement the minimal coordinator in Remix and leave an upstream extraction as a separate follow-up.
+- `NakedToggleGroup` contains a private, substantial roving implementation that cannot be reused without wrapping checkboxes in the wrong toggle semantics. Implement only the bounded registration/order/navigation behavior CheckboxGroup needs; do not copy the private Naked controller wholesale. Leave an upstream reusable-roving extraction as a separate follow-up.
 - Flutter has no checkbox-group semantics role. The correct native tree is a labeled container with explicit checkbox children, not a fabricated role.
 
 Official references: [Radix Themes Checkbox Group](https://www.radix-ui.com/themes/docs/components/checkbox-group), [Flutter FocusTraversalGroup](https://api.flutter.dev/flutter/widgets/FocusTraversalGroup-class.html), and [Flutter Semantics](https://api.flutter.dev/flutter/widgets/Semantics-class.html).
@@ -74,7 +74,10 @@ class RemixCheckboxGroupItem<T> extends StatefulWidget {
 
 Contract details:
 
-- `values` is controlled. Copy it with `Set.unmodifiable(Set.of(values))` for comparisons/use during a build.
+- `values` is controlled. The const widget retains the supplied set, then takes
+  `Set.unmodifiable(Set.of(values))` once per build for all comparisons and
+  scope consumers. Document that callers must not mutate it during a build;
+  Dart cannot copy it in a const initializer.
 - Every callback receives a new `Set.unmodifiable` snapshot. Checking adds the value; unchecking removes it; never mutate the caller's set.
 - Effective group enabled state is `enabled && onChanged != null`. Group and item disabled states combine.
 - Group items are binary; do not expose `tristate` because set membership has only present/absent states.
@@ -87,12 +90,18 @@ Put a class-site comment on `RemixCheckboxGroupItem` stating that it intentional
 
 ## Focus and keyboard contract
 
-The private group controller registers items in widget order and maintains one roving tab target:
+The private group controller registers item identities, recomputes their current
+widget-hierarchy order after reconciliation, and maintains one roving tab
+target. An append-only registration list is not an ordering source because a
+keyed item can move without unregistering:
 
-1. Keep the last focused enabled item when possible.
-2. Otherwise use the first checked and enabled item.
-3. Otherwise use the first enabled item.
-4. If none are enabled, the group has no tab stop.
+1. On initial completed layout, an enabled `autofocus` item becomes the target
+   and requests focus once. A group that is disabled at that moment does not
+   defer autofocus until a later enable.
+2. Otherwise keep the last focused enabled item when possible.
+3. Otherwise use the first checked and enabled item.
+4. Otherwise use the first enabled item.
+5. If none are enabled, the group has no tab stop.
 
 Arrow behavior:
 
@@ -104,29 +113,56 @@ Arrow behavior:
 
 Skip disabled items. `loop: true` wraps; `false` clamps without moving. Arrow/Home/End only move focus and do not toggle. Space/Enter activation remains owned by `RemixCheckbox`/`NakedCheckbox`.
 
-Use `FocusTraversalGroup(policy: WidgetOrderTraversalPolicy())` and `Shortcuts`/`Actions` around the group. Mirror Naked's external-focus-node hygiene: snapshot caller-owned `canRequestFocus` and `skipTraversal`, never make a node focusable when the caller disabled it, and restore original properties on unregister/dispose. Internally owned nodes are disposed; caller-owned nodes are not.
+Use `FocusTraversalGroup(policy: WidgetOrderTraversalPolicy())` and
+`Shortcuts`/`Actions` around the group. Wrap each composed checkbox with
+`ExcludeFocusTraversal(excluding: !isRovingTarget)` so only the target
+participates in Tab traversal; arrow/Home/End navigation requests the registered
+`FocusNode` directly, which remains possible through the traversal exclusion.
+Use `ExcludeFocus(excluding: !effectiveEnabled || !callerCanRequestFocus)` for
+disabled/ineligible entries, and
+`ExcludeFocusTraversal(excluding: !isRovingTarget || callerSkipTraversal)` for
+Tab/arrow eligibility. Skip an originally `skipTraversal` caller node in the
+group's target and arrow order, while leaving it available to the caller's own
+direct focus request. Do not drive roving behavior by assigning
+`canRequestFocus`/`skipTraversal`: the inner `NakedFocusableDetector` builds its
+own `Focus` and can overwrite those assignments.
 
-When the focused item is removed or becomes disabled, repair focus to the nearest enabled neighbor (then wrap if configured) after the current build. When a nonfocused item changes, do not steal focus. Reordering follows current widget registration order.
+For a caller-owned node, snapshot its original `canRequestFocus` and
+`skipTraversal` before mounting the Naked checkbox, treat those values as
+eligibility constraints, and restore them on node replacement,
+unregister/dispose after the inner Focus is gone. Internally owned nodes are
+disposed; caller-owned nodes are never disposed or made more focusable than
+their original contract.
+
+When the focused item is removed or becomes disabled, repair focus to the nearest enabled neighbor (then wrap if configured) after the current build. When a nonfocused item changes, do not steal focus. Reordering follows the current widget hierarchy, not historical registration order.
+
+Refresh the ordered-entry view after layout/rebuild from the attached group
+focus subtree in `WidgetOrderTraversalPolicy` order, map those nodes back to the
+registered entries, and discard detached entries. Target selection, arrow
+movement, and neighbor repair must all consume that refreshed view. The
+registration collection owns identity/lifecycle only; it must not preserve stale
+pre-reorder indices.
 
 ## Semantics contract
 
 - Default wrapper: `Semantics(container: true, explicitChildNodes: true, label: semanticLabel, isRequired: isRequired, child: ...)`.
 - Do not set a nonexistent group role or check state on the group.
 - Each composed `RemixCheckbox` supplies exactly one checkbox node with label, checked, enabled, focus, and tap action.
-- `excludeSemantics: true` excludes the complete group and all options.
+- `excludeSemantics: true` wraps the complete group in `ExcludeSemantics`, excluding the container and all options.
 - Required state belongs to the group. Do not mark every item required.
 - A disabled group leaves no semantic tap actions on options and no focusable nodes.
 
 ## Approach
 
-Implement a private stateful `_RemixCheckboxGroupController<T>`, inherited scope, and item registration entry inside `checkbox_group_widget.dart`. The scope provides the immutable value snapshot, effective callback, combined configuration, and controller. The item resolves membership and forwards all visual props to `RemixCheckbox(selected: values.contains(value), ...)`.
+Implement a private stateful `_RemixCheckboxGroupController<T>`, inherited scope, and item registration entry inside `checkbox_group_widget.dart`. The scope provides the immutable value snapshot, effective callback, combined configuration, and controller. The item resolves membership and forwards all visual props to `RemixCheckbox(selected: values.contains(value), ...)`, except that group-owned item `autofocus` is consumed by the coordinator and the composed checkbox always receives `autofocus: false`. This prevents Naked's inner focusable detector from racing or bypassing the one-shot roving target decision.
 
-Keep the group layout-transparent: `child` controls Row/Column/Grid and visible labels. This matches `RemixRadioGroup`'s coordinator role and lets existing `fortalCheckboxStyle` style group items without a new group recipe.
+Keep the group layout-transparent: `child` controls Row/Column/Grid and visible labels. This matches `RemixRadioGroup`'s coordinator role and lets existing `fortalCheckboxStyle` style group items without a new group recipe. Because pinned Radix CheckboxGroup does have root/item spacing, label-row, and propagated visual props, PR 7 must add a checker-enforced intentionally-unmapped upstream-family record; documentation alone is not allowed to imply full visual parity.
 
 Alternatives rejected:
 
 - Make `RemixCheckbox<T>` generic — breaking public API with no visual benefit.
 - Use `NakedToggleOption` as a focus wrapper — introduces toggle roles/actions around checkbox roles.
+- Copy Naked's complete private toggle controller — imports substantial selection-specific machinery and still relies on focus-node mutations that the nested checkbox Focus can overwrite.
 - Omit roving focus — diverges from the pinned CheckboxGroup contract and creates too many tab stops.
 - Add a styled label/row to each group item — invents visual anatomy and conflicts with the nonvisual coordinator scope.
 
@@ -138,7 +174,12 @@ Alternatives rejected:
 
 - [ ] Task 2: Write failing roving-focus tests.
   - Files: `checkbox_group_widget_test.dart`.
-  - Cover initial target priority, Tab entry/exit, vertical/horizontal arrows, RTL, Home/End, loop/clamp, disabled skipping, activation separation, dynamic removal/disable/reorder, autofocus assertions, and external-node restoration.
+  - Cover initial target priority, Tab entry/exit,
+    `ExcludeFocusTraversal` plus direct arrow requests, vertical/horizontal
+    arrows, RTL, Home/End, loop/clamp, disabled/caller-canRequestFocus/skipTraversal skipping,
+    activation separation, dynamic removal/disable, stable-key reorder without
+    unregister/register, autofocus assertions, inner-autofocus suppression, and
+    external-node restoration.
   - Acceptance: each test has a focusable widget before and after the group so group tab boundaries are observable.
 
 - [ ] Task 3: Implement scope, controller, and composed item.
@@ -164,7 +205,7 @@ Alternatives rejected:
 
 ### Controlled data
 
-- Input set is not retained/mutated.
+- Each build uses one immutable input snapshot; neither that snapshot nor the caller's set is mutated.
 - Check emits old values plus item; uncheck emits old values minus item.
 - Emitted sets are new, unmodifiable, and preserve `T`.
 - Rebuilding without accepting the callback leaves UI controlled at the original values.
@@ -174,11 +215,20 @@ Alternatives rejected:
 
 - Exactly one enabled option participates in Tab; Shift-Tab exits correctly.
 - Selected-first/first-enabled/last-focused target priority is deterministic.
+- Enabled autofocus is a one-shot initial override; disabled initial autofocus does not fire later.
+- Item autofocus is handled only by the group coordinator; the inner
+  `RemixCheckbox`/Naked checkbox always receives `autofocus: false`.
 - All directional keys follow the table above under LTR/RTL.
 - Space and Enter toggle only the focused checkbox and emit once.
 - Disabled options are skipped and cannot autofocus.
 - Removing/disabling the focused node repairs focus without a framework exception.
+- Reordering stable-key items refreshes arrow/target/repair order from the
+  current focus hierarchy even when registration identities never changed.
 - User focus-node properties are restored and user nodes survive unmount.
+- A non-target remains directly focusable by arrow navigation while Tab skips
+  it; a caller node that originally disallowed focus never becomes eligible,
+  and one originally marked `skipTraversal` is skipped by group navigation but
+  remains directly requestable by its owner.
 
 ### Semantics
 
@@ -197,6 +247,7 @@ Alternatives rejected:
 
 - [ ] Controlled typed sets are immutable at both input and callback boundaries.
 - [ ] One-tab-stop roving focus matches orientation, loop, disabled, and RTL behavior.
+- [ ] Roving traversal is implemented with focus-exclusion wrappers rather than node-property mutations that Naked can overwrite.
 - [ ] `RemixCheckbox` remains unchanged and owns all option visuals/checkbox semantics.
 - [ ] The group uses native container/required semantics without a fake role.
 - [ ] Dynamic item and external focus-node cases are covered.
@@ -205,7 +256,10 @@ Alternatives rejected:
 
 ## Risks and mitigations
 
-- Risk: manipulating caller focus-node traversal fields leaks after disposal. Mitigation: snapshot/restore and test both normal removal and group disposal.
+- Risk: Naked's inner `Focus` temporarily writes properties on a caller node.
+  Mitigation: use outer exclusion widgets for behavior, treat the original node
+  flags as eligibility, restore them only after the inner Focus unmounts, and
+  test replacement, normal removal, and group disposal.
 - Risk: registry order differs from visual order in unusual custom layouts. Mitigation: document widget order as keyboard order; custom visual reordering must reorder children too.
 - Risk: label semantics duplicate visible text. Mitigation: required item semantic label plus a documented `ExcludeSemantics`/merged-label pattern and exact tree tests.
 - Risk: generic equality changes while mounted. Mitigation: document stable equality/hash requirement and key entries by stable widget identity plus value validation.

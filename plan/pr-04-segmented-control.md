@@ -17,6 +17,8 @@
 - The pre-rewrite Remix history (`7f8750b11`, PR #479) contains visual inspiration but used a Pressable implementation without the current semantics/focus contract. Do not copy its behavior.
 - Pinned Radix 3.3 SegmentedControl uses controlled single ToggleGroup semantics, equal-width columns, sizes 1-3, surface/classic variants, and does not emit an empty selection when the selected item is activated.
 - `NakedToggleOption` already suppresses callback when its value equals the selected value.
+- Pinned Naked exposes each option as a button with selected state; it does not
+  expose checkbox/checked semantics. Tests must lock that exact contract.
 
 Official reference: [Radix Themes Segmented Control](https://www.radix-ui.com/themes/docs/components/segmented-control).
 
@@ -70,6 +72,8 @@ class RemixSegmentedControlItemSpec
   final StyleSpec<FlexBoxSpec> container;
   final StyleSpec<TextSpec> label;
   final StyleSpec<IconSpec> icon;
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
 }
 ```
 
@@ -79,18 +83,28 @@ Use the same public assertions as ToggleGroup:
 - selected value is null or matches exactly one item;
 - at most one autofocus item;
 - label/icon requirement and semantic label for icon-only items;
-- copied, unmodifiable item list.
+- const-compatible collection handling: retain the caller list on the widget,
+  document no mutation during a build, and take one unmodifiable snapshot when
+  rendering/asserting. Do not claim constructor-time copying.
 
 `onChanged == null` disables the group through Naked. An active item cannot toggle itself to null. `orientation` and per-item disabled state are intentional Flutter extensions; document them.
 
 ## Layout and state contract
 
 - Force the resolved container direction from `orientation` after style resolution so both fluent and raw-spec paths agree, matching ToggleGroup's `_withOrientation` precedent.
+- Resolve the track under a `WidgetStateProvider` containing `.disabled` when
+  `!enabled || onChanged == null`, so the group-level container recipe can
+  style the disabled Radix track. This derives state directly from controlled
+  inputs and adds no controller or selection state machine.
 - Every item receives the same main-axis extent, based on the largest intrinsic item within available constraints. Keep cross-axis sizing controlled by the resolved item spec.
 - In bounded horizontal space, use all available width only when the caller's container style requests it; the default remains intrinsic-width. In intrinsic mode, the track width is `largest segment intrinsic width × item count`.
 - Apply the analogous rule vertically for item height.
 - Encapsulate equalization in a private layout widget with focused layout tests; start with `IntrinsicWidth + Row/Expanded` (and vertical analogue), but change implementation if Flutter's intrinsic/flex assertions reveal a safer custom `MultiChildRenderObjectWidget` is needed. The acceptance contract, not the mechanism, is fixed.
 - Each option's Naked state controller feeds `WidgetStateProvider`; selected/disabled/hover/focus/press styles resolve inside that provider.
+- Render each option surface through `RemixFlexBoxWithEffects` using
+  `container` plus `containerEffects`. This is required for offset focus
+  outlines and selected inset/shadow stacks without changing geometry; add the
+  same explicit nullable-effects lerp override used by adjacent Remix specs.
 - Wrap visual icon/text in `ExcludeSemantics`; Naked owns the one accessible option node.
 - v1 paints a static selected surface through `onSelected`. It does not reserve or animate a sliding indicator layer.
 
@@ -111,11 +125,16 @@ Alternatives rejected:
 
 - [ ] Task 2: Add failing spec/style and equal-layout tests.
   - Files: new `segmented_control_spec_test.dart`, `segmented_control_style_test.dart`, widget layout tests.
-  - Acceptance: track/item nested style resolution, raw spec, state variants, and equal extents are independently specified before implementation.
+  - Acceptance: track/item nested style resolution, group-disabled track state,
+    raw spec, item effects
+    copy/lerp/merge, state variants, and equal extents are independently
+    specified before implementation.
 
 - [ ] Task 3: Implement the dedicated component and generate code.
   - Files: new `packages/remix/lib/src/components/segmented_control/segmented_control.dart`, `_spec.dart`, `_style.dart`, `_widget.dart`, generated `.g.dart`; `packages/remix/lib/remix.dart`.
-  - Reuse Naked types directly and carry over only Remix's small data-to-widget/style glue.
+  - Reuse Naked types directly, render item surfaces through
+    `RemixFlexBoxWithEffects`, and carry over only Remix's small
+    data-to-widget/style glue.
   - Acceptance: there is no dependency on the public `RemixToggleGroup` widget or spec.
 
 - Checkpoint: run segmented-control and existing toggle-group tests together. Any ToggleGroup regression blocks docs work.
@@ -146,15 +165,19 @@ Alternatives rejected:
 ### Semantics
 
 - Group label is a container with explicit children.
-- Each option exposes its selected/checked, enabled, focused, and tap state exactly once.
+- Each option exposes button and selected state, plus enabled/focused/tap state,
+  exactly once; it does not expose checked/checkbox state.
 - Icon-only options use `semanticLabel`; visual text/icon is excluded beneath Naked.
 - `excludeSemantics` removes the group subtree.
 
 ### Style/layout
 
 - Group and per-item styles merge in the same state context.
+- Null callback and explicit group disable resolve the track's disabled variant as well as disabling options.
 - Raw spec and fluent styles produce equivalent anatomy.
 - Selected, disabled, hovered, focused, and pressed variants resolve.
+- Selected inset/shadow layers and offset focus outlines resolve through
+  `containerEffects` without changing layout.
 - Item main-axis extents match within a pixel for all supported constraint/orientation cases.
 - Focus decoration does not change geometry.
 
@@ -170,6 +193,7 @@ Alternatives rejected:
 - [ ] Naked remains the sole selection, activation, semantics, and roving-focus implementation.
 - [ ] Selected values cannot toggle off; disabled and orientation behavior is covered.
 - [ ] Segment extents are equal without forced full width by default.
+- [ ] Item effects can express selected inset/shadow and offset focus layers without geometry changes.
 - [ ] Sliding indicator/separators are explicitly out of v1 and carried into PR 7's parity approximation.
 - [ ] Spec/style/widget/public API/docs/playground/screenshots/generated code all pass the shared gate.
 

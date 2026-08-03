@@ -24,6 +24,34 @@ Establish the source-backed constraints that every implementation PR must preser
 
 Do not use `packages/remix/scripts/playground_component.sh` as the source of truth: it still assumes an older playground path. Run the workspace app directly as documented in `01-conventions.md`.
 
+### Post-review validation evidence
+
+The plan was re-reviewed on the plan branch at `7e60b62` without changing
+implementation code. These probes close the contracts that were ambiguous in
+the first draft:
+
+| Question | Verified result | Consequence for the plans |
+| --- | --- | --- |
+| Clean baseline | `melos bootstrap`, Remix analysis, and `melos run ci` pass under FVM Flutter 3.44.0 / Dart 3.12.0; all 2,109 Flutter tests pass. | Existing failures are not being hidden by the plan work. |
+| Const collection copying | A const constructor cannot call `List.unmodifiable` or `Set.unmodifiable`. | Preserve const public APIs and snapshot collections at consumption/emission time. |
+| TextArea constructor shape | Dart 3.12 accepts super-parameters together with an explicit `super(...)` initializer when forwarded names are not duplicated. | The constructor-only subtype sketch is language-valid; its generated Fortal target remains an implementation-time compile gate. |
+| Checkbox roving focus | `ExcludeFocusTraversal` leaves one Tab stop while direct `FocusNode.requestFocus()` still reaches excluded siblings. | Roving traversal uses wrappers, not mutations as its primary mechanism. |
+| Equal segment layout | The proposed intrinsic `Flex` plus `Expanded` composition equalizes horizontal and vertical extents in a focused widget test. | Keep the simple private layout first, with constraint/high-scale tests before considering a render object. |
+| TextField semantics | A real semantics dump repeats label/hint/helper text, and an interactive trailing button is absorbed by Naked's `MergeSemantics`. | PR 5 includes a shared TextField semantics-boundary correction, not only TextArea hint alignment. |
+| TextField outer hit fallback | Naked's selection detector currently owns multi-tap callback policy and pressed transitions, while a normal `GestureDetector` adds a semantic tap action. | PR 5 requires a semantics-silent fallback that preserves `onTapAlwaysCalled`, pressed down/up/cancel, focus-node lifecycle, and child gesture precedence. |
+| Menu radio activation | Pinned Naked beta.8 invokes both root selection and group change even when the selected radio item is activated again. | Tests require re-emission; they do not speculate about suppression. |
+| Menu vectors/geometry | `RemixPathGlyph.thickCheck` exactly transcribes Radix's nine-unit check path; the pinned right-chevron path is absent locally. Radix also auto-end-aligns the trailing slot with `space4` leading padding and a -2 × scaling submenu-icon end margin. | PRs 1/7 use exact path assets and explicit trailing geometry rather than an unjustified glyph tolerance. |
+| Skeleton child identity | Switching between a direct child and a nested loading branch changes the Flutter element path even when the child has a stable key. | PR 2 keeps one child wrapper path across loading toggles and tests local-state retention/single mount. |
+| Checkbox-group reconciliation | Keyed children can reorder without unregistering, and forwarding item autofocus lets Naked bypass group arbitration. | PR 3 derives order from the current focus hierarchy and consumes autofocus in the group while passing `autofocus: false` inward. |
+| DataList minimum width | Flutter `Table` cannot shrink a column below its minimum intrinsic width; the pinned horizontal layout also owns a 120 px label minimum. | PR 6 bounds the horizontal no-overflow guarantee and documents caller-owned vertical fallback below it. |
+| Focus/effect rendering | The repository already has `fortalFocusOutline` and multi-layer `RemixBoxEffectsSpec` rendering. | Offset/inset/multi-layer outlines use effects instead of `foregroundDecoration`. |
+| Segmented classic shadows | Existing `FortalTokens.shadow2` is an ordinary `BoxShadowToken`, not the `RemixBoxShadowListToken` accepted by the effects renderer; Radix paints it on a 1 px inset pseudo-element. | PR 7 adds a derived inset-capable shadow-2 token and verifies all five layers/shape insets. |
+| Typography color inheritance | Pinned Text/Heading and null-color ghost Code set no foreground color; they inherit. | PR 8 preserves ambient color for those null-color paths and uses accent roles only where upstream does. |
+| Parity schema counts | `manifest.schema.json` pins the aggregate family array length as well as the checker. | PRs 7/8 update schema min/max atomically with 27/32 totals. |
+
+Scratch probes lived only under the gitignored `.context` directory and were
+removed after validation.
+
 ## Architecture findings
 
 ### Styled component anatomy
@@ -60,17 +88,17 @@ The installed source contains button, accordion, popover, checkbox, dialog, menu
 - `NakedToggleGroup<T>` / `NakedToggleOption<T>` with single selection, orientation, looping roving focus, Home/End, and RTL-aware navigation.
 - `NakedTextField` with native multiline arguments and editable semantics.
 
-No Naked primitive is needed for Skeleton or DataList because neither introduces interaction state. Flutter has no checkbox-group coordinator, so PR 3 owns that small headless layer in Remix.
+No Naked primitive is needed for Skeleton or DataList because neither introduces interaction state. Flutter has no checkbox-group coordinator, so PR 3 owns a bounded private registration and roving-focus layer while continuing to delegate each option's activation and semantics to `RemixCheckbox`/Naked.
 
 ## Reference behavior by proposed component
 
 | Surface | Required baseline | Deliberate Flutter adaptation |
 | --- | --- | --- |
-| Menu item variants | Checkbox items, radio group/items, and recursive submenu; preserve Naked keyboard/focus behavior. | Add one shared indicator slot and reuse one recursive Remix renderer/spec tree. |
+| Menu item variants | Checkbox items, radio group/items, and recursive submenu; preserve Naked keyboard/focus behavior. | Add an indicator style plus a panel-wide conditional leading gutter, and reuse one recursive Remix renderer/spec tree. |
 | Skeleton | Loading defaults true; child geometry is preserved; loading content is noninteractive and absent from accessibility; pulse is 1000 ms. | Respect `MediaQuery.disableAnimationsOf`; expose no fake progress semantics. |
 | CheckboxGroup | Controlled set, required/disabled, orientation, loop, RTL-aware roving focus. | No fabricated group role exists in Flutter; options retain checkbox semantics inside a labeled container. |
 | SegmentedControl | Controlled single selection; equal segments; sizes 1-3; surface/classic variants. | Orientation and item-disabled are useful extensions. Sliding selection and Radix separators are recorded approximations for v1. |
-| TextArea | Same editable as TextField with multiline defaults; Radix sizes 1-3 and classic/surface/soft recipes. | No browser drag-resize; Flutter constraints and line counts are the public layout mechanism. |
+| TextArea | Same editable as TextField with two-line multiline defaults; Radix sizes 1-3 and classic/surface/soft recipes. | No browser drag-resize; Flutter constraints and line counts are the public layout mechanism, and the default unbounded `maxLines` auto-grows rather than behaving like a fixed web textarea. |
 | DataList | Semantic label/value rows; horizontal aligned label column or vertical stack; sizes 1-3. | Use `Table` horizontally so labels align across rows; preserve custom-child semantics. |
 | Typography | Text/Heading/Code/Kbd/Link sizes 1-9 and component variants. | Flutter has heading, keyboard-key, and link semantics but no code role, CSS tag polymorphism, trim, or browser wrap modes. |
 
@@ -83,8 +111,8 @@ Flutter's `Semantics` API and `SemanticsRole` are the authority for the native t
 - Menu checkbox/radio options expose `SemanticsRole.menuItemCheckbox` / `menuItemRadio`, checked state, mutual exclusion for radio, enabled state, and one tap action.
 - Skeleton loading output contributes no semantics and suppresses child pointer actions. When `loading == false`, the original child semantics and interaction return.
 - Checkbox-group options remain checkboxes. The group is a container with an optional label and required state; do not invent an unavailable role.
-- Segmented options retain the Naked toggle group's checked/selected semantics and keyboard actions.
-- TextArea exposes `isTextField`, `isMultiline`, enabled/read-only state, label/hint/error exactly once.
+- Segmented options retain Naked's button + selected semantics and keyboard actions; do not assert checkbox/checked semantics.
+- TextArea exposes `isTextField`, `isMultiline`, enabled/read-only state, and label/hint/helper/error exactly once.
 - DataList uses list/list-item roles. A string row combines label and value once; a custom child retains its own interactive semantics.
 - Heading sets `header: true` and `headingLevel` 1-6. Kbd sets `keyboardKey: true`. An actionable Link exposes link state/action exactly once; inert text must not pretend to be a link.
 
@@ -98,8 +126,8 @@ Fortal parity is executable, not a documentation-only checklist:
 - `packages/remix/reference/radix_themes_3_3_0/manifest.json` currently describes 20 mapped families and three Fortal extensions.
 - `coverage_evidence.json` and each per-family parity test are part of the contract.
 - `tool/fortal_parity/chromium/fixture.html` and `generate.mjs` produce the pinned computed styles and a fixed 1440x1280 reference image.
-- PR 7 raises the mapped count to 24 (27 total including extensions); PR 8 raises it to 29 (32 total including extensions). Update hard-coded checker counts and success text in the same PR.
-- CheckboxGroup adds no separate mapped Fortal family: the group is nonvisual and its options use the already mapped Fortal Checkbox recipe. Its Radix composition is documented and tested without inventing a `FortalCheckboxGroup` type.
+- PR 7 raises the mapped count to 24 (27 total including extensions); PR 8 raises it to 29 (32 total including extensions). Update manifest-schema min/max, hard-coded checker counts, and success text in the same PR.
+- CheckboxGroup adds no separate mapped Fortal family in this series: the Remix group is intentionally layout-transparent and its options use the already mapped Fortal Checkbox recipe. PR 7 adds a checker-enforced `unmappedUpstreamFamilies` record for Radix CheckboxGroup's root/item gap, label row, and propagated size/variant/color/high-contrast anatomy so this is an audited scope decision rather than a silent parity claim. A future styled group API must remove that record and add a mapped family atomically.
 - The fixture currently lays out 20 probes in four columns. Expand it for the added probes (five columns and a smaller cell minimum is the recommended starting point) while preserving the exact output dimensions.
 - The Chromium image is evidence of Radix's web output, not an oracle that validates Flutter rendering.
 
@@ -135,5 +163,12 @@ Toast, sheet, context menu, hover card, combobox, table, and date picker remain 
 - SegmentedControl is a dedicated public component over the same Naked primitives, not a styled ToggleGroup wrapper.
 - TextArea is a constructor-only subtype/facade over `RemixTextField`, not a second spec tree.
 - CheckboxGroup is a headless coordinator that composes `RemixCheckbox`.
-- Fortal typography is a hand-written Fortal-only module because its meaning depends on Fortal tokens.
-- There are no implementation-blocking user decisions left. Any unavoidable public-API deviation discovered during a PR must be called out before expanding scope.
+- Const collection-owning public constructors retain the caller collection, as existing Remix components do; every implementation snapshots at consumption/emission and documents no mutation during a build.
+- CheckboxGroup remains intentionally unmapped visually in this series, with an executable upstream-inventory record added in PR 7.
+- PR 5 corrects the shared TextField semantics boundary so visible label/hint/helper text is announced once and interactive accessories remain independent nodes.
+- Skeleton loading toggles preserve a mounted child's identity/local state.
+- CheckboxGroup ordering follows the current focus hierarchy, not historical registration order; group-owned autofocus is never forwarded to the inner checkbox.
+- Horizontal DataList documents its intrinsic minimum-width boundary and caller-owned vertical fallback.
+- Offset or layered focus/selected surfaces use Remix effects, not a one-layer foreground decoration shortcut.
+- Fortal typography is a hand-written Fortal-only module because its meaning depends on Fortal tokens; upstream null-color inheritance is preserved.
+- The post-review choices above close the known implementation-blocking decisions. Any unavoidable public-API deviation discovered during a PR must be called out before expanding scope.

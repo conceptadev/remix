@@ -54,7 +54,7 @@ class RemixSkeletonSpec with _$RemixSkeletonSpec {
 Semantics of spec fields:
 
 - `container` owns explicit width/height/constraints, base color, decoration, radius, and opacity.
-- `pulseColor` is the alternate fill. When both base and pulse colors resolve, interpolate color; otherwise animate the resolved container opacity as a generic Remix fallback.
+- `pulseColor` is the alternate fill. When both base and pulse colors resolve, interpolate color; otherwise multiply the resolved caller opacity by the pulse factor as a generic Remix fallback. Never replace or normalize away caller opacity.
 - `duration` is one forward pulse leg and defaults to 1000 ms. The reverse leg uses `repeat(reverse: true)`.
 - A zero or negative duration is rejected in debug assertions and handled defensively as the default in release.
 
@@ -62,17 +62,34 @@ Do not add semantic label/value props: a skeleton is decorative, not a progress 
 
 ## Rendering contract
 
-When `loading == false`, return `child ?? const SizedBox.shrink()` with its original semantics and interaction intact and no pulse controller ticking.
+When a child exists, keep one stable child element path across every `loading`
+toggle. Use the same layout-transparent host and wrapper chain in both states;
+when `loading == false` its exclusion/opacity/pointer/focus/ticker flags are all
+inactive, so the child's original semantics and interaction pass through and no
+pulse controller ticks. A childless, nonloading skeleton returns
+`SizedBox.shrink()`.
 
 When loading:
 
 1. Resolve the style/spec once through `RemixStyleSpecBuilder`.
-2. Mount a private stateful pulse body only for the loading branch.
-3. If a child exists, place an invisible copy in a `Stack` to determine intrinsic size. Wrap that child with `TickerMode(enabled: false)`, `IgnorePointer`, `ExcludeFocus`, and `ExcludeSemantics`; use opacity only for paint hiding, not as the accessibility control.
+2. Mount a private stateful pulse body only as the loading overlay; adding or
+   removing that sibling must not reparent the child subtree.
+3. If a child exists, keep that single child instance as the non-positioned
+   sizing child in a stable `Stack(fit: StackFit.passthrough)` wrapper chain.
+   Toggle `TickerMode`, `IgnorePointer`, `ExcludeFocus`, `ExcludeSemantics`, and
+   paint opacity on those existing wrappers. Never mount an invisible duplicate
+   of the child. When loaded, the same wrappers become behaviorally transparent;
+   when loading, the child remains mounted for intrinsic size and local state
+   but is inert and hidden. Use opacity only for paint hiding, not as the
+   accessibility control.
 4. Fill that geometry with the animated styled box. If no child exists, the styled box's explicit constraints determine size.
 5. Wrap the complete loading subtree in `ExcludeSemantics` as defense in depth.
 6. In `didChangeDependencies`, stop the controller and set a deterministic base-frame value when animations are disabled; resume `repeat(reverse: true)` when enabled again.
 7. In `didUpdateWidget`, update duration and resolved endpoints without replacing the controller. Dispose it exactly once.
+8. When `loading` changes from false to true while focus is inside the child,
+   the loading subtree must relinquish focus by the next frame. Prefer the
+   natural `ExcludeFocus` transition; explicitly unfocus the subtree if the
+   target SDK leaves a descendant as `primaryFocus`.
 
 The base and pulse frames must not affect layout. Interpolate paint properties or an overlay box spec, never child dimensions.
 
@@ -103,7 +120,10 @@ Alternatives rejected:
 
 - [ ] Task 4: Cover reduced motion and dynamic updates.
   - Files: `skeleton_widget_test.dart`.
-  - Toggle `MediaQueryData(disableAnimations: true/false)` at runtime, change duration/style, remove the child, and unmount while pulsing.
+  - Toggle `MediaQueryData(disableAnimations: true/false)` at runtime, change
+    duration/style, switch to loading while a descendant is already focused,
+    toggle loading around a keyed stateful child, remove the child, and unmount
+    while pulsing.
   - Acceptance: disabled mode schedules no repeating frame; resuming animates; all controllers dispose cleanly.
 
 - [ ] Task 5: Add docs and playground examples.
@@ -125,6 +145,10 @@ Alternatives rejected:
 - The loading subtree has no label, button, text-field, or tap semantic node from the child.
 - Tapping the hidden child does not invoke it; Tab traversal does not focus it; its ticker is disabled.
 - `loading: false` restores pointer, keyboard focus, and the child's exact semantics.
+- A keyed stateful child's identity and local state survive
+  loaded-to-loading-to-loaded transitions; it is never mounted twice.
+- Changing from loaded to loading while the child is focused removes focus from
+  the hidden subtree and does not leave it as `primaryFocus`.
 - Pumping 500/1000 ms changes only paint color/opacity, not geometry.
 - `disableAnimations: true` remains visually static and has no transient callback/ticker exception.
 - Switching reduced motion and duration at runtime behaves deterministically.
@@ -147,7 +171,10 @@ Never use `pumpAndSettle` in this test directory. Use `pump()`, `pump(const Dura
 ## Acceptance criteria
 
 - [ ] Loading placeholders preserve child geometry and do not change size over the pulse.
+- [ ] Loading toggles preserve the identity/local state of an existing child
+  while mounting the pulse overlay only for the loading branch.
 - [ ] Hidden descendants cannot receive pointer input, keyboard focus, semantics, or tick animations.
+- [ ] Entering loading state actively releases any focus already held inside the hidden child.
 - [ ] Reduced motion is honored initially and after `MediaQuery` changes.
 - [ ] No loading or progress semantics are fabricated.
 - [ ] Mix spec/style/widget and generated/public APIs are covered.
@@ -157,6 +184,10 @@ Never use `pumpAndSettle` in this test directory. Use `pump()`, `pump(const Dura
 ## Risks and mitigations
 
 - Risk: an invisible child remains focusable. Mitigation: test and use `ExcludeFocus` in addition to pointer/semantics wrappers.
+- Risk: switching between a direct child and a nested loading subtree remounts
+  stateful content. Mitigation: keep one stable child wrapper path across both
+  branches and assert keyed local-state retention and single mount/dispose
+  counts.
 - Risk: resolving a color from arbitrary decoration is lossy. Mitigation: interpolate the supported resolved fill when present and document/test opacity fallback for other decorations.
 - Risk: reduced motion is checked only once. Mitigation: own the transition in `didChangeDependencies` and test runtime changes.
 - Risk: loop tests never settle. Mitigation: explicit frame pumps and teardown assertions.

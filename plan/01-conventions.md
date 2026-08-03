@@ -8,7 +8,9 @@ Make every PR independently reviewable, release-ready, and consistent with the c
 
 - Primary outcome: the same quality gate and evidence shape for each PR.
 - Out of scope: restoring removed screenshot automation or adding unrelated components.
-- Compatibility posture: additive public APIs only; no migrations or flags.
+- Compatibility posture: additive public APIs, plus the explicitly named
+  TextField semantics and Fortal TextField parity corrections in PRs 5 and 7;
+  no migrations or flags.
 
 ## Starting a PR
 
@@ -51,7 +53,13 @@ Do not create spec/style files or tests for a nonvisual coordinator or a facade 
 - Add compile-time construction coverage to `packages/remix/test/public_api_test.dart`.
 - Update `packages/remix/test/public_api_compatibility_test.dart` for the intended stable names, constructor shapes, enum values, named constructors, and generic inference.
 - Prefer controlled APIs: input state plus callback, with callbacks receiving a fresh immutable snapshot.
-- Public collections are copied at the boundary; do not retain caller-owned mutable lists/sets.
+- Keep collection-owning constructors `const`, matching the existing
+  `RemixMenu` and `RemixToggleGroup` APIs. Because Dart cannot call
+  `List.unmodifiable` or `Set.unmodifiable` in a const initializer, document
+  that callers must not mutate a collection during a build and take a fresh
+  unmodifiable snapshot when the component consumes it or emits it from a
+  callback. Do not claim both constructor-time defensive copying and a const
+  constructor.
 - Assertions must reject ambiguous models (duplicate values, multiple autofocus items, invalid line ranges, or both/neither value sources).
 - Avoid exposing Naked implementation types unless the existing neighboring API already does so.
 
@@ -59,7 +67,11 @@ Do not create spec/style files or tests for a nonvisual coordinator or a facade 
 
 - Keep structure and interaction in the Remix widget; keep Radix visual policy in Fortal recipes.
 - Resolve all Fortal colors, spacing, radii, typography, durations, and shadows from tokens. If the exact Radix value lacks a token, add a narrowly named token and its light/dark resolution tests rather than copying literals through recipes.
-- Use `foregroundDecoration` for focus rings so focus does not change layout.
+- Use `RemixBoxEffectsSpec` / `Remix*WithEffects` for focus outlines when CSS
+  outline offset, inset rings, or multiple paint layers matter. A plain
+  `foregroundDecoration` is acceptable only for a single in-bounds decoration
+  that the pinned source does not offset or stack. Neither approach may change
+  layout; `fortalFocusOutline` is the local offset-outline precedent.
 - Keep recipes memoized in the same way as adjacent `fortal_*_styles.dart` files.
 - Use widget-state variants for selected, checked, disabled, hover, focus, and pressed visuals; do not rebuild a headless state machine in styling code.
 - Use directional alignment and padding. Add an RTL test whenever an icon, chevron, arrow key, or horizontal order is involved.
@@ -77,7 +89,7 @@ For every behavior-bearing widget test:
 6. Exercise high text scale and narrow constraints for layout components.
 7. Exercise dynamic update/removal when a coordinator owns focus registration.
 
-Use the platform model exposed by [Flutter Semantics](https://api.flutter.dev/flutter/widgets/Semantics-class.html). Do not invent roles to imitate HTML. Preserve child semantics when a slot can contain an interactive widget. Visual-only icons/labels beneath an explicit semantic wrapper should use `ExcludeSemantics`.
+Use the platform model exposed by [Flutter Semantics](https://api.flutter.dev/flutter/widgets/Semantics-class.html). Do not invent roles to imitate HTML. Preserve child semantics when a slot can contain an interactive widget, and keep nested interactive accessories outside any parent `MergeSemantics` boundary. Visual-only icons/labels beneath an explicit semantic wrapper should use `ExcludeSemantics`. When `excludeSemantics` means removal of a complete composite, implement it with an outer `ExcludeSemantics` rather than relying on `Semantics(excludeSemantics: true)` to hide only selected descendants.
 
 Looping animations must honor [`MediaQuery.disableAnimationsOf`](https://api.flutter.dev/flutter/widgets/MediaQuery/disableAnimationsOf.html). Pump explicit durations in tests; never call `pumpAndSettle` while an animation repeats.
 
@@ -145,12 +157,20 @@ Any PR that changes a mapped Fortal family must update the contract atomically:
 
 1. Recipe/source and generated wrapper.
 2. Family entry in `packages/remix/reference/radix_themes_3_3_0/manifest.json`.
-3. Evidence in `coverage_evidence.json`.
-4. Source selectors, family sets/counts, state requirements, probe expectations, and success text in `packages/remix/tool/fortal_parity/check.dart`.
-5. Per-family parity and shared control/widget tests.
-6. Chromium fixture probes in `tool/fortal_parity/chromium/fixture.html`.
-7. Regenerated `reference/radix_themes_3_3_0/chromium/computed-styles.json` and `families-light.png`.
-8. Reference README when commands, counts, or dependency wording change.
+3. Matching aggregate count/schema changes in
+   `packages/remix/reference/radix_themes_3_3_0/manifest.schema.json`.
+4. Evidence in `coverage_evidence.json`.
+5. Source selectors, family sets/counts, state requirements, probe expectations, and success text in `packages/remix/tool/fortal_parity/check.dart`.
+6. Per-family parity and shared control/widget tests.
+7. Chromium fixture probes in `tool/fortal_parity/chromium/fixture.html`.
+8. Regenerated `reference/radix_themes_3_3_0/chromium/computed-styles.json` and `families-light.png`.
+9. Reference README when commands, counts, or dependency wording change.
+
+If an upstream family is intentionally not mapped, it must still have a
+schema-validated inventory record with pinned source files/selectors, the
+reason it is unmapped, the supported Flutter composition, and the condition
+that would reopen mapping. The checker must reject an untracked omission; an
+unmapped record does not increase mapped/extension family counts.
 
 Regenerate the web fixture with:
 
@@ -164,22 +184,23 @@ Keep the output at 1440x1280. Record a manifest approximation for a real platfor
 
 ## Required validation
 
-During implementation, run the narrowest test file after each behavioral slice. Before handing off any PR, return to the repository root and run in order:
+During implementation, run the narrowest test file after each behavioral slice. Before handing off any PR, return to the repository root and run the nonduplicative release gate in order:
 
 ```bash
 fvm dart format --output=none --set-exit-if-changed packages/remix/lib packages/remix/test packages/playground/lib
 fvm dart run melos run generate
-git diff --exit-code -- packages/remix/lib/src '**/*.g.dart'
+git diff --check
+# Review every intentional generated-file diff before continuing.
 fvm dart analyze packages/remix
-fvm dart run melos run generate:check
-fvm dart run melos run docs:check
-fvm dart run melos run fortal:parity:check
-fvm dart run melos run test:flutter
-fvm dart run melos run mix:consumer:check
 fvm dart run melos run ci
 ```
 
-The `git diff --exit-code` line is only a generated-drift check after generation: inspect and stage intentional source/generated changes first, or substitute `git status --short` plus a reviewed generated diff. The completion report must name every command actually run and distinguish unrelated pre-existing failures.
+`melos run ci` is the aggregate gate for generation drift, docs, Fortal parity,
+Flutter tests, and the Mix consumer. Run its constituent scripts separately
+only to diagnose a failure; running all of them immediately before the
+aggregate command adds time without additional evidence. The completion report
+must name every command actually run, confirm that generated diffs were
+reviewed, and distinguish unrelated pre-existing failures.
 
 ## PR description checklist
 
