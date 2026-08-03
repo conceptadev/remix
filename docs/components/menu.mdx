@@ -39,20 +39,18 @@ class _MenuExampleState extends State<MenuExample> {
           value: 'History',
           leadingIcon: Icons.history,
           label: 'History',
-          style: menuItemStyle,
         ),
         RemixMenuItem(
           value: 'Settings',
           leadingIcon: Icons.settings,
           label: 'Settings',
-          style: menuItemStyle,
         ),
         const RemixMenuDivider(),
         RemixMenuItem(
           value: 'Logout',
           leadingIcon: Icons.logout,
           label: 'Logout',
-          style: menuItemStyle.onHovered(
+          style: MenuItemStyler().onHovered(
             MenuItemStyler()
                 .color(Colors.redAccent.withValues(alpha: 0.05))
                 .label(TextStyler().color(Colors.redAccent))
@@ -114,7 +112,8 @@ class _MenuExampleState extends State<MenuExample> {
               ],
             ),
           ),
-        );
+        )
+        .item(menuItemStyle);
   }
 
   MenuItemStyler get menuItemStyle {
@@ -130,6 +129,140 @@ class _MenuExampleState extends State<MenuExample> {
 ```
 </CodeGroup>
 
+## Checkboxes, radio groups, and submenus
+
+Checkboxes and radio groups are controlled. Keep their current value in your
+widget state and update that state from `onChanged`. Submenus can contain any
+menu item data, including another submenu.
+
+<CodeGroup title="Controlled compound items" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class CompoundMenuExample extends StatefulWidget {
+  const CompoundMenuExample({super.key});
+
+  @override
+  State<CompoundMenuExample> createState() => _CompoundMenuExampleState();
+}
+
+class _CompoundMenuExampleState extends State<CompoundMenuExample> {
+  bool showStatus = true;
+  String density = 'comfortable';
+
+  @override
+  Widget build(BuildContext context) {
+    return FortalMenu<String>.soft(
+      trigger: const RemixMenuTrigger(label: 'View options'),
+      onSelected: (value) => debugPrint('Root selected: $value'),
+      items: [
+        RemixMenuCheckboxItem(
+          value: 'show-status',
+          label: 'Show status',
+          checked: showStatus,
+          closeOnActivate: false,
+          onChanged: (next) => setState(() => showStatus = next),
+        ),
+        RemixMenuRadioGroup(
+          value: density,
+          onChanged: (next) => setState(() => density = next),
+          items: const [
+            RemixMenuRadioItem(
+              value: 'compact',
+              label: 'Compact',
+              closeOnActivate: false,
+            ),
+            RemixMenuRadioItem(
+              value: 'comfortable',
+              label: 'Comfortable',
+              closeOnActivate: false,
+            ),
+          ],
+        ),
+        const RemixMenuDivider(),
+        const RemixMenuSubmenu(
+          label: 'Share',
+          items: [
+            RemixMenuItem(value: 'copy-link', label: 'Copy link'),
+            RemixMenuSubmenu(
+              label: 'More',
+              items: [
+                RemixMenuItem(value: 'email', label: 'Email'),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+`RemixMenuCheckboxItem.checked` and `RemixMenuRadioGroup.value` are never
+changed internally. On activation, `RemixMenu.onSelected` runs first, followed
+by the checkbox or radio-group `onChanged`. Selecting the already-selected
+radio item re-emits its value. A checkbox or radio item is disabled when neither
+its local callback nor the root `onSelected` callback is supplied.
+
+`closeOnActivate` defaults to `true`. Set it to `false` for settings that should
+remain visible while they are changed. Submenus open after a 100 ms hover delay
+by default. The directional forward-arrow opens a focused submenu, the reverse
+arrow closes it, and Escape closes it and restores focus to its trigger. These
+directions are mirrored automatically in right-to-left layouts.
+
+| Key | Behavior |
+| --- | --- |
+| Down / Up arrow | Move focus between enabled items |
+| Enter / Space | Activate the focused item |
+| Right arrow in LTR / Left arrow in RTL | Open the focused submenu and focus its first item |
+| Left arrow in LTR / Right arrow in RTL | Close the current submenu and focus its trigger |
+| Escape | Close the current menu level and restore trigger focus |
+
+The root `items` list, each radio group's `items`, and every submenu's `items`
+are copied to immutable snapshots when their panel is built. Rebuild the menu
+after changing a source list; do not rely on mutating a visible panel in place.
+
+## Compound-item styling
+
+Compound rows use the same `MenuItemStyler` as ordinary rows, including
+hovered, focused, pressed, disabled, and selected-state variants. An open
+submenu trigger contributes `WidgetState.selected`.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final sharedItemStyle = MenuItemStyler()
+    .paddingX(12)
+    .spacing(8)
+    .onSelected(.color(Colors.indigo.withValues(alpha: 0.08)));
+
+final choiceItemStyle = MenuItemStyler().indicator(
+  IconStyler().size(9).color(Colors.indigo),
+);
+
+final appMenuStyle = MenuStyler()
+    .item(sharedItemStyle)
+    .checkboxItem(choiceItemStyle)
+    .radioItem(choiceItemStyle)
+    .submenuItem(
+      MenuItemStyler().trailingIcon(IconStyler().color(Colors.indigo)),
+    );
+```
+
+`item` is the shared foundation for every actionable row. The semantic
+`checkboxItem`, `radioItem`, and `submenuItem` styles merge after it, and an
+individual item's `style` merges last. `RemixMenuRadioGroup` is behavioral and
+does not add another styling layer. Use the normal `MenuItemStyler` flex,
+padding, and spacing methods for layout.
+
+The renderer reserves one leading choice slot for every row in a panel when
+that panel directly contains a checkbox or radio group. Nested submenu panels
+decide this independently. A custom `trailingIcon` replaces the default
+directional submenu chevron.
+
 ## Fortal widgets
 
 Remix includes a Fortal-themed widget for this component:
@@ -144,27 +277,43 @@ class FortalMenuExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final choiceItemStyle = MenuItemStyler().indicator(
+      IconStyler().color(Colors.indigo),
+    );
+    final menuStyle = MenuStyler()
+        .checkboxItem(choiceItemStyle)
+        .radioItem(choiceItemStyle);
     final items = <RemixMenuItemData<String>>[
-      RemixMenuItem(
+      const RemixMenuItem(
         value: 'edit',
         label: 'Edit',
         leadingIcon: Icons.edit,
       ),
-      RemixMenuItem(
-        value: 'delete',
-        label: 'Delete',
-        leadingIcon: Icons.delete,
+      const RemixMenuCheckboxItem(
+        value: 'show-status',
+        label: 'Show status',
+        checked: true,
+      ),
+      const RemixMenuRadioGroup(
+        value: 'comfortable',
+        items: [
+          RemixMenuRadioItem(value: 'compact', label: 'Compact'),
+          RemixMenuRadioItem(value: 'comfortable', label: 'Comfortable'),
+        ],
       ),
     ];
+
     return Row(
       spacing: 16,
       children: [
-        FortalMenu.solid(
+        FortalMenu<String>.solid(
+          style: menuStyle,
           trigger: const RemixMenuTrigger(label: 'Solid', icon: Icons.menu),
           items: items,
           onSelected: (value) => debugPrint(value),
         ),
-        FortalMenu.soft(
+        FortalMenu<String>.soft(
+          style: menuStyle,
           trigger: const RemixMenuTrigger(label: 'Soft', icon: Icons.menu),
           items: items,
           onSelected: (value) => debugPrint(value),
@@ -175,6 +324,10 @@ class FortalMenuExample extends StatelessWidget {
 }
 ```
 </CodeGroup>
+
+The generated default, `solid`, and `soft` constructors all accept `style:`.
+Pass a reusable `MenuStyler`; its fields merge after the Fortal recipe. A null
+override preserves the recipe unchanged.
 
 <Info>
   See the [fortalMenuStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/menu/fortal_menu_styles.dart) for all available options.
@@ -222,7 +375,7 @@ Optional. Controls how one widget replaces another widget in the tree.
 
 #### `items` → `List<RemixMenuItemData<T>>`
 
-**Required**. The list of menu items and dividers. Use [RemixMenuItem] for selectable items and [RemixMenuDivider] for separators.
+**Required**. The list of ordinary items, checkbox items, radio groups, submenus, and dividers.
 
 #### `controller` → `MenuController?`
 
@@ -279,6 +432,8 @@ Optional. The style configuration for the menu.
 #### `styleSpec` → `MenuSpec?`
 
 Optional. A raw resolved style spec that bypasses fluent style resolution.
+For semantic item fields, `null` inherits the raw `item` spec and a supplied
+value completely replaces it; per-item fluent styles remain bypassed.
 
 
 ### Menu Style Methods
@@ -293,7 +448,19 @@ Configures the menu overlay container style.
 
 #### `item(MenuItemStyler value)`
 
-Configures the default menu item style.
+Configures the shared default for every actionable menu row.
+
+#### `checkboxItem(MenuItemStyler value)`
+
+Configures the menu-wide checkbox-row override after `item`.
+
+#### `radioItem(MenuItemStyler value)`
+
+Configures the menu-wide radio-row override after `item`.
+
+#### `submenuItem(MenuItemStyler value)`
+
+Configures the menu-wide submenu-trigger override after `item`.
 
 #### `divider(DividerStyler value)`
 
@@ -454,6 +621,10 @@ Configures the leading icon style.
 #### `trailingIcon(IconStyler value)`
 
 Configures the trailing icon style.
+
+#### `indicator(IconStyler value)`
+
+Configures the checkbox and radio indicator style.
 
 #### `alignment(Alignment value)`
 
