@@ -388,7 +388,7 @@ class FortalMenu<T> extends StatelessWidget {
 
   final bool highContrast;
 
-  final FortalMenuStyleOverride? style;
+  final Style<MenuSpec>? style;
 
   final RemixMenuTrigger trigger;
 
@@ -1111,8 +1111,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
   ];
 }
 
-class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
-    with _FortalMenuStyleOverrideMixin<MenuStyler> {
+class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
   final Prop<StyleSpec<MenuTriggerSpec>>? $trigger;
   final Prop<StyleSpec<FlexBoxSpec>>? $overlay;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;

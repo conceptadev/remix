@@ -37,23 +37,11 @@ class MenuTriggerSpec with _$MenuTriggerSpec {
 /// values use `MenuTriggerSpec` as their runtime type.
 typedef RemixMenuTriggerSpec = MenuTriggerSpec;
 
-/// Style override accepted by generated Fortal menu recipes.
-///
-/// [MenuStyler] is the only implementation. This source-declared type
-/// keeps the generated recipe field type-safe while the concrete styler is
-/// emitted into this library's generated part.
-sealed class FortalMenuStyleOverride {
-  const FortalMenuStyleOverride();
-}
-
-mixin _FortalMenuStyleOverrideMixin<T extends Mix<Object?>>
-    implements FortalMenuStyleOverride {}
-
 /// Resolved visual properties for a [RemixMenu].
 ///
 /// The menu spec owns the trigger, overlay, shared and semantic item styles,
 /// and divider style used when rendering the menu and its popup content.
-@MixableSpec(extraStylerMixins: [_FortalMenuStyleOverrideMixin])
+@MixableSpec()
 class MenuSpec with _$MenuSpec {
   /// Style spec for the trigger content.
   @override

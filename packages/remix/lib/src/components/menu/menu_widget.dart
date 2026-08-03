@@ -65,7 +65,8 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
     this.closeOnActivate = true,
     this.semanticLabel,
     this.style = const MenuItemStyler.create(),
-  });
+  }) : assert(label != '', 'Item labels must not be empty'),
+       assert(semanticLabel != '', 'Item semantic labels must not be empty');
 }
 
 /// A controlled checkbox item in a [RemixMenu].
@@ -591,6 +592,10 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
       value: item.value,
       checked: item.checked,
       onChanged: item.onChanged,
+      // Deliberate duplication of Naked's enabled formula: Naked's root menu
+      // scope installs an internal selection handler even when the public
+      // onSelected is null, so its own callback guard can never disable an
+      // item. Remix must gate on the public callbacks itself.
       enabled:
           item.enabled && (item.onChanged != null || hasRootSelectionCallback),
       semanticLabel: item.semanticLabel ?? item.label,
@@ -642,6 +647,8 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
             .map(
               (item) => NakedMenuRadioItem<T>(
                 value: item.value,
+                // Same public-callback gate as checkbox items; see
+                // _buildCheckboxItem for why Naked cannot own this.
                 enabled:
                     item.enabled &&
                     (group.onChanged != null || hasRootSelectionCallback),

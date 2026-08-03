@@ -975,6 +975,10 @@ void main() {
 
     test('compound labels and semantic labels must not be empty', () {
       expect(
+        () => RemixMenuItem<String>(value: 'ordinary', label: ''),
+        throwsAssertionError,
+      );
+      expect(
         () => RemixMenuCheckboxItem<String>(
           value: 'checkbox',
           label: '',
