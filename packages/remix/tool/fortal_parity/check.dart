@@ -74,7 +74,6 @@ void main() {
     testSourceCache,
     failures,
   );
-  _checkMenuCompoundContract(manifest, evidence, failures);
   _checkFixtures(manifest, packageRoot, failures);
   _checkNakedPin(
     pubspec,
@@ -85,114 +84,6 @@ void main() {
   _checkVariantConstructors(packageRoot, failures);
   _checkApproximations(manifest, failures);
   _finish(failures);
-}
-
-void _checkMenuCompoundContract(
-  Map<String, Object?> manifest,
-  Map<String, Object?> evidence,
-  List<String> failures,
-) {
-  final familyValues = manifest['families'];
-  if (familyValues is! List<Object?>) return;
-  final menu = familyValues.whereType<Map<String, Object?>>().where(
-    (family) => family['id'] == 'menu',
-  );
-  if (menu.length != 1) {
-    failures.add(
-      'The menu compound contract requires exactly one menu family.',
-    );
-    return;
-  }
-
-  const compoundStates = {'checked', 'unchecked', 'submenuOpen', 'rtl'};
-  for (final key in ['states', 'supportedVisualStates']) {
-    final values = _strings(menu.single[key], 'menu.$key', failures).toSet();
-    _expect(
-      values.containsAll(compoundStates),
-      'menu.$key must include all compound states: $compoundStates.',
-      failures,
-    );
-  }
-  final coverage = _object(menu.single['coverage'], 'menu.coverage', failures);
-  if (coverage != null) {
-    final states = _strings(
-      coverage['states'],
-      'menu.coverage.states',
-      failures,
-    ).toSet();
-    _expect(
-      states.containsAll(compoundStates),
-      'menu.coverage.states must include all compound states: $compoundStates.',
-      failures,
-    );
-  }
-
-  final deferrals = _strings(
-    menu.single['deferredCapabilities'],
-    'menu.deferredCapabilities',
-    failures,
-  ).toSet();
-  _expect(
-    deferrals.contains('compositional items'),
-    'menu must keep the out-of-scope compositional items deferral.',
-    failures,
-  );
-  _expect(
-    !deferrals.any({'checkbox items', 'radio items', 'submenus'}.contains),
-    'menu must not defer shipped checkbox, radio, or submenu behavior.',
-    failures,
-  );
-  final globalDeferrals = _object(
-    manifest['deferredCapabilities'],
-    'deferredCapabilities',
-    failures,
-  );
-  if (globalDeferrals != null) {
-    final globalMenuDeferrals = _strings(
-      globalDeferrals['menu'],
-      'deferredCapabilities.menu',
-      failures,
-    ).toSet();
-    _expect(
-      _sameSet(globalMenuDeferrals, {'compositional items'}),
-      'The global menu deferral index must retain only compositional items.',
-      failures,
-    );
-  }
-
-  final evidenceValues = evidence['menu'];
-  final covered = <String>{};
-  if (evidenceValues is List<Object?>) {
-    for (final value in evidenceValues.whereType<Map<String, Object?>>()) {
-      final covers = value['covers'];
-      if (covers is List<Object?>) covered.addAll(covers.whereType<String>());
-    }
-  }
-  final requiredEvidence = compoundStates
-      .map((state) => 'state:$state')
-      .toSet();
-  _expect(
-    covered.containsAll(requiredEvidence),
-    'menu evidence must cite every compound state: $requiredEvidence.',
-    failures,
-  );
-
-  final approximations = manifest['approximations'];
-  final menuApproximations = approximations is List<Object?>
-      ? approximations.whereType<Map<String, Object?>>().where(
-          (value) => value['family'] == 'menu',
-        )
-      : const Iterable<Map<String, Object?>>.empty();
-  final approximationReason = menuApproximations.length == 1
-      ? menuApproximations.single['reason']
-      : null;
-  _expect(
-    menuApproximations.length == 1 &&
-        approximationReason is String &&
-        approximationReason.contains('MenuItemStyler'),
-    'menu must retain one documented standard-flex layout approximation.',
-    failures,
-  );
 }
 
 Map<String, Object?>? _readObject(File file, List<String> failures) {

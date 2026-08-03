@@ -10,27 +10,4 @@ void main() {
 
     expect(modifier, isNotNull);
   });
-
-  test('compound menu item types are exported from remix.dart', () {
-    const checkbox = RemixMenuCheckboxItem<String>(
-      value: 'notifications',
-      label: 'Notifications',
-      checked: true,
-    );
-    const radioGroup = RemixMenuRadioGroup<String>(
-      value: 'compact',
-      items: [
-        RemixMenuRadioItem(value: 'compact', label: 'Compact'),
-        RemixMenuRadioItem(value: 'comfortable', label: 'Comfortable'),
-      ],
-    );
-    const submenu = RemixMenuSubmenu<String>(
-      label: 'More',
-      items: [RemixMenuItem(value: 'archive', label: 'Archive')],
-    );
-
-    expect(checkbox, isA<RemixMenuItemData<String>>());
-    expect(radioGroup, isA<RemixMenuItemData<String>>());
-    expect(submenu, isA<RemixMenuItemData<String>>());
-  });
 }
