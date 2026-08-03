@@ -15,7 +15,7 @@
 
 - `packages/remix/lib/src/components/menu/menu_widget.dart` currently switches exhaustively over only `RemixMenuItem<T>` and `RemixMenuDivider<T>`.
 - The root renderer and submenu need the same overlay/item/divider resolution; copying the current `overlayBuilder` would create two spec trees that drift.
-- `RemixMenuItemSpec` already owns label, leading icon, and trailing icon slots.
+- `MenuItemSpec` already owns label, leading icon, and trailing icon slots.
   It needs an `indicator` `IconSpec` for the shared check indicator (pinned
   Radix uses `ThickCheckIcon` for both checked checkbox and selected radio
   items), a compound-item leading-gutter metric, and trailing-slot geometry.
@@ -28,7 +28,7 @@
 - There is no menu playground entry today. This PR creates it.
 - The pinned parity manifest currently lists compound items as deferred even though its source selectors already include checkbox, radio, and submenu selectors.
 
-Official behavior references: [Radix Themes Dropdown Menu](https://www.radix-ui.com/themes/docs/components/dropdown-menu) and [Radix Dropdown Menu primitive keyboard interactions](https://www.radix-ui.com/primitives/docs/components/dropdown-menu).
+Official behavior references: [Radix Themes Dropdown Menu](https://www.radix-ui.com/themes/docs/components/dropdown-menu) and [Radix Dropdown Menu primitive keyboard interactions](https://www.radix-ui.com/primitives/docs/components/dropdown-menu). Feature-comparison capture: `radix-reference/dropdown-menu.png` (usage and expected deltas in `radix-reference/README.md`; the pinned 3.3.0 artifact stays the exact-value authority).
 
 ## Public API
 
@@ -46,7 +46,7 @@ final class RemixMenuCheckboxItem<T> extends RemixMenuItemData<T> {
     this.enabled = true,
     this.closeOnActivate = true,
     this.semanticLabel,
-    this.style = const RemixMenuItemStyler.create(),
+    this.style = const MenuItemStyler.create(),
   });
 
   final T value;
@@ -79,7 +79,7 @@ final class RemixMenuRadioItem<T> {
     this.enabled = true,
     this.closeOnActivate = true,
     this.semanticLabel,
-    this.style = const RemixMenuItemStyler.create(),
+    this.style = const MenuItemStyler.create(),
   });
   // Fields mirror a selectable item; values in a group must be unique.
 }
@@ -102,7 +102,7 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
     this.semanticLabel,
     this.onOpen,
     this.onClose,
-    this.style = const RemixMenuItemStyler.create(),
+    this.style = const MenuItemStyler.create(),
   });
 }
 ```

@@ -20,7 +20,7 @@
 - Pinned Naked exposes each option as a button with selected state; it does not
   expose checkbox/checked semantics. Tests must lock that exact contract.
 
-Official reference: [Radix Themes Segmented Control](https://www.radix-ui.com/themes/docs/components/segmented-control).
+Official reference: [Radix Themes Segmented Control](https://www.radix-ui.com/themes/docs/components/segmented-control). Feature-comparison capture: `radix-reference/segmented-control.png` (usage and expected deltas — no sliding indicator/separators in v1 — in `radix-reference/README.md`).
 
 ## Public API and specs
 
@@ -36,7 +36,7 @@ class RemixSegmentedControlItem<T> {
     this.enabled = true,
     this.focusNode,
     this.autofocus = false,
-    this.style = const RemixSegmentedControlItemStyler.create(),
+    this.style = const SegmentedControlItemStyler.create(),
   });
 }
 
@@ -51,23 +51,23 @@ class RemixSegmentedControl<T> extends StatelessWidget {
     this.loop = true,
     this.semanticLabel,
     this.excludeSemantics = false,
-    this.style = const RemixSegmentedControlStyler.create(),
+    this.style = const SegmentedControlStyler.create(),
     this.styleSpec,
   });
 }
 
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixSegmentedControlSpec with _$RemixSegmentedControlSpec {
+class SegmentedControlSpec with _$SegmentedControlSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
-  final StyleSpec<RemixSegmentedControlItemSpec> item;
+  final StyleSpec<SegmentedControlItemSpec> item;
 }
 
 @MixableSpec(
   extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
 )
-class RemixSegmentedControlItemSpec
-    with _$RemixSegmentedControlItemSpec {
+class SegmentedControlItemSpec
+    with _$SegmentedControlItemSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
   final StyleSpec<TextSpec> label;

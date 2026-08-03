@@ -26,11 +26,11 @@
   absorption of an interactive trailing button into the field node. This PR
   must correct the shared TextField boundary rather than reproduce it in the
   new facade.
-- Because `RemixTextField` is not final and TextArea changes constructor defaults only, a constructor-only subtype keeps one widget implementation and preserves identity of `RemixTextFieldStyler` / `RemixTextFieldSpec`.
+- Because `RemixTextField` is not final and TextArea changes constructor defaults only, a constructor-only subtype keeps one widget implementation and preserves identity of `TextFieldStyler` / `TextFieldSpec`.
 - A composing `StatelessWidget` would work, but it would duplicate every forwarding field and add a needless widget boundary. A subtype still forwards constructor fields once while inheriting the proven build path.
 - Radix 3.3 TextArea supports sizes 1-3 and classic/surface/soft variants; those are Fortal recipe concerns. Its browser `resize` prop does not map to a native Flutter drag handle.
 
-Official references: [Radix Themes Text Area](https://www.radix-ui.com/themes/docs/components/text-area), [Flutter EditableText](https://api.flutter.dev/flutter/widgets/EditableText-class.html), and [Flutter text-field semantics testing](https://api.flutter.dev/flutter/flutter_test/matchesSemantics.html).
+Official references: [Radix Themes Text Area](https://www.radix-ui.com/themes/docs/components/text-area), [Flutter EditableText](https://api.flutter.dev/flutter/widgets/EditableText-class.html), and [Flutter text-field semantics testing](https://api.flutter.dev/flutter/flutter_test/matchesSemantics.html). Feature-comparison capture: `radix-reference/text-area.png` (usage and expected deltas in `radix-reference/README.md`).
 
 ## Public API
 
@@ -66,7 +66,7 @@ class RemixTextArea extends RemixTextField {
          obscureText: false,
        );
 
-  static final styleFrom = RemixTextFieldStyler.new;
+  static final styleFrom = TextFieldStyler.new;
 }
 ```
 
@@ -76,7 +76,7 @@ Constructor rules:
 - Expose `minLines` and `maxLines` overrides with the same valid relationships as Flutter. Add descriptive assertions for positive values and `maxLines >= minLines` when both are non-null.
 - Forward all current `RemixTextField` arguments except `obscureText`, `obscuringCharacter`, and `expands`, which are fixed to nonsecure multiline behavior. Include controller/focus/undo/group, capitalization/direction, length/input formatters, editing callbacks, cursor/selection configuration, scroll/controller physics, autofill/content insertion, restoration/IME/context menu/spellcheck/magnifier, pointer/focus flags, leading/trailing, semantics, and style/styleSpec.
 - Keep `keyboardType` and `textInputAction` overridable because multiline content may still use address or done actions.
-- Keep the style types named `RemixTextFieldStyler` and `RemixTextFieldSpec`; do not introduce aliases that imply separate anatomy.
+- Keep the style types named `TextFieldStyler` and `TextFieldSpec` (the canonical post-#100 names); do not introduce aliases that imply separate anatomy.
 
 Put a class-site comment explaining the facade decision: TextArea is the same accessible editor with multiline defaults, so a forked spec/build would drift.
 
@@ -161,6 +161,10 @@ Alternatives rejected:
 
 - [ ] Task 3: Implement the constructor-only subtype and shared TextField fixes.
   - Files: `packages/remix/lib/src/components/textfield/textfield.dart`, new `textarea_widget.dart`, `textfield_widget.dart`.
+  - Land the shared TextField hint/semantics corrections as their own commit(s),
+    green against the complete existing textfield test directory, before the
+    facade commit, so the behavior correction to the shipped component stays
+    independently bisectable inside the PR.
   - Forward the complete supported constructor surface; add the facade rationale comment.
   - Acceptance: `RemixTextArea` inherits the exact existing `build` and
     introduces no override/spec/style state; moving label/hint/helper/accessory
@@ -171,7 +175,7 @@ Alternatives rejected:
 
 - [ ] Task 4: Prove styling and dynamic behavior are identical.
   - Files: `textarea_widget_test.dart`.
-  - Test fluent `RemixTextFieldStyler`, raw `RemixTextFieldSpec`, independent
+  - Test fluent `TextFieldStyler`, raw `TextFieldSpec`, independent
     leading/trailing interactive semantics, controller replacement, focus,
     text entry with newline, line override validation, and error state updates.
   - Acceptance: there are no `textarea_spec_test.dart` or `textarea_style_test.dart` files because there are no corresponding production types.

@@ -18,7 +18,7 @@
 - `NakedToggleGroup` contains a private, substantial roving implementation that cannot be reused without wrapping checkboxes in the wrong toggle semantics. Implement only the bounded registration/order/navigation behavior CheckboxGroup needs; do not copy the private Naked controller wholesale. Leave an upstream reusable-roving extraction as a separate follow-up.
 - Flutter has no checkbox-group semantics role. The correct native tree is a labeled container with explicit checkbox children, not a fabricated role.
 
-Official references: [Radix Themes Checkbox Group](https://www.radix-ui.com/themes/docs/components/checkbox-group), [Flutter FocusTraversalGroup](https://api.flutter.dev/flutter/widgets/FocusTraversalGroup-class.html), and [Flutter Semantics](https://api.flutter.dev/flutter/widgets/Semantics-class.html).
+Official references: [Radix Themes Checkbox Group](https://www.radix-ui.com/themes/docs/components/checkbox-group), [Flutter FocusTraversalGroup](https://api.flutter.dev/flutter/widgets/FocusTraversalGroup-class.html), and [Flutter Semantics](https://api.flutter.dev/flutter/widgets/Semantics-class.html). Feature-comparison capture: `radix-reference/checkbox-group.png` (behavior comparison only — visuals are intentionally unmapped this series; see `radix-reference/README.md`).
 
 ## Public API
 
@@ -62,7 +62,7 @@ class RemixCheckboxGroupItem<T> extends StatefulWidget {
     this.uncheckedIcon,
     this.enableFeedback = true,
     this.mouseCursor = SystemMouseCursors.click,
-    this.style = const RemixCheckboxStyler.create(),
+    this.style = const CheckboxStyler.create(),
     this.styleSpec,
   });
 

@@ -18,7 +18,7 @@
 - A visual-only `ExcludeSemantics` is insufficient by itself: hidden descendants could still accept pointer or keyboard focus. Loading content needs `IgnorePointer`, `ExcludeFocus`, and `ExcludeSemantics` together.
 - Flutter exposes the platform animation preference through [`MediaQuery.disableAnimationsOf`](https://api.flutter.dev/flutter/widgets/MediaQuery/disableAnimationsOf.html).
 
-Official reference: [Radix Themes Skeleton](https://www.radix-ui.com/themes/docs/components/skeleton).
+Official reference: [Radix Themes Skeleton](https://www.radix-ui.com/themes/docs/components/skeleton). Feature-comparison capture: `radix-reference/skeleton.png` (usage and expected deltas in `radix-reference/README.md`).
 
 ## Public API and spec
 
@@ -30,20 +30,20 @@ class RemixSkeleton extends StatelessWidget {
     super.key,
     this.child,
     this.loading = true,
-    this.style = const RemixSkeletonStyler.create(),
+    this.style = const SkeletonStyler.create(),
     this.styleSpec,
   });
 
   final Widget? child;
   final bool loading;
-  final RemixSkeletonStyler style;
-  final RemixSkeletonSpec? styleSpec;
+  final SkeletonStyler style;
+  final SkeletonSpec? styleSpec;
 
-  static final styleFrom = RemixSkeletonStyler.new;
+  static final styleFrom = SkeletonStyler.new;
 }
 
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixSkeletonSpec with _$RemixSkeletonSpec {
+class SkeletonSpec with _$SkeletonSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   final Color? pulseColor;

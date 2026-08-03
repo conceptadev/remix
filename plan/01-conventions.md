@@ -1,6 +1,6 @@
 # Plan: Component-gap implementation conventions
 
-> Shared execution, testing, documentation, screenshot, and review contract for all eight PRs.
+> Shared execution, testing, documentation, screenshot, and review contract for all ten planned PRs.
 
 ## Objective
 
@@ -36,7 +36,7 @@ packages/remix/lib/src/components/<name>/
   fortal_<name>_styles.dart     # only when the Fortal recipe lands
 ```
 
-Follow the current Mix annotation and variant APIs from the repository's `mix` skill and the concrete nearest-neighbor component named by the PR plan. Prefer immutable public data models, `const` constructors where legal, directional geometry (`EdgeInsetsDirectional`, `AlignmentDirectional`), and resolver-time token lookup.
+Follow the current Mix annotation and variant APIs from the repository's `mix` skill and the concrete nearest-neighbor component named by the PR plan. After rebasing #100, new generated families use canonical `{Component}Spec` and `{Component}Styler` names while the widget remains `Remix{Component}`; do not add legacy `Remix*Spec`/`Remix*Styler` aliases to brand-new APIs. Prefer immutable public data models, `const` constructors where legal, directional geometry (`EdgeInsetsDirectional`, `AlignmentDirectional`), and resolver-time token lookup.
 
 Every PR description must contain a short **Reuse and duplication** section:
 
@@ -91,7 +91,21 @@ For every behavior-bearing widget test:
 
 Use the platform model exposed by [Flutter Semantics](https://api.flutter.dev/flutter/widgets/Semantics-class.html). Do not invent roles to imitate HTML. Preserve child semantics when a slot can contain an interactive widget, and keep nested interactive accessories outside any parent `MergeSemantics` boundary. Visual-only icons/labels beneath an explicit semantic wrapper should use `ExcludeSemantics`. When `excludeSemantics` means removal of a complete composite, implement it with an outer `ExcludeSemantics` rather than relying on `Semantics(excludeSemantics: true)` to hide only selected descendants.
 
+Flutter 3.44's `matchesSemantics`/`isSemantics` arguments cover labels, flags, and actions but do not expose a role argument. Assert roles through `tester.getSemantics(finder).getSemanticsData().role`, then use the matcher appropriate to exact versus partial remaining properties. Never omit the role assertion merely because the convenience matcher lacks it.
+
 Looping animations must honor [`MediaQuery.disableAnimationsOf`](https://api.flutter.dev/flutter/widgets/MediaQuery/disableAnimationsOf.html). Pump explicit durations in tests; never call `pumpAndSettle` while an animation repeats.
+
+## Scope, overlay, and lifecycle checklist
+
+Do not introduce a general `RemixScope` or Remix-owned application wrapper. A scope is justified only when one component family owns real shared lifecycle/state that cannot live in a leaf widget.
+
+- `FortalScope` remains design-token/theme infrastructure only.
+- Menu, select, popover, and tooltip continue to consume the nearest caller-owned Overlay; dialogs continue to consume the caller-owned Navigator.
+- PR 10 adds only `RemixToastScope`, because a bounded queue, timers, controller attachment, dismissal futures, and one portal region require a stable owner.
+- A coordinator that accepts an external controller disposes only its internally created controller, detaches external state on widget replacement/disposal, and rejects simultaneous attachment to multiple owners.
+- Cancel Timer, Ticker, listener, FocusNode, and portal resources on every removal/disposal path. Tests must finish without pending asynchronous work or framework exceptions.
+- Prefer `OverlayPortal` when overlay content must inherit live Directionality/MediaQuery/localization/Mix/Fortal state and must not outlive its owner. Mount the portal owner in a stable app shell; never in a recycled/offstage list item.
+- Missing host capabilities throw focused diagnostics that name the required Overlay/Navigator/scope and show a minimal valid tree. Do not claim MaterialApp or Scaffold is mandatory when WidgetsApp/Overlay is sufficient.
 
 ## Test layout
 
@@ -114,7 +128,7 @@ Test names should state observable behavior. Prefer selectors by type/key/semant
 
 ## Docs contract
 
-Each Phase 1 PR adds or updates a page under `docs/components/` and updates root `docs.json`. Model frontmatter and the CodeGroup shape on `docs/components/spinner.mdx`.
+Each component PR (PRs 1-6, 9, and 10) adds or updates a page under `docs/components/` and updates root `docs.json`. Model frontmatter and the CodeGroup shape on `docs/components/spinner.mdx`.
 
 Each page contains:
 
@@ -140,7 +154,7 @@ cd packages/playground
 fvm flutter run -d chrome
 ```
 
-Open `?component=<slug>` when direct selection is useful. The playground already runs inside `FortalScope` and exposes brightness switching; do not add a second app-level theme wrapper.
+Open `?component=<slug>` when direct selection is useful. The playground already runs inside `FortalScope` and exposes brightness switching; do not add a second app-level theme wrapper. PR 10 installs one `RemixToastScope` in the stable playground preview shell rather than creating a scope per button/example.
 
 For every PR description attach:
 
@@ -149,7 +163,7 @@ For every PR description attach:
 - a keyboard-focus state for interactive surfaces;
 - a short caption naming any expected Radix difference.
 
-For PRs 7 and 8, also capture the matching Radix Themes 3.3 state and present Flutter and Radix side by side. Do this manually; commit no new atlas harness or general screenshot binary. The only committed reference image regenerated by these PRs is the existing parity fixture output.
+For PRs 7, 8, and 9, also capture the matching Radix Themes 3.3 state and present Flutter and Radix side by side. PR 10 captures Fortal light/dark stacked Toast evidence but no Radix comparison because Toast is an extension. Do this manually; commit no new atlas harness or general screenshot binary. The only committed reference image regenerated by mapped-family PRs is the existing parity fixture output.
 
 ## Fortal parity update protocol
 
@@ -181,6 +195,8 @@ npm run generate
 ```
 
 Keep the output at 1440x1280. Record a manifest approximation for a real platform or v1 difference; never silently omit an upstream prop/state.
+
+For a Fortal extension such as Toast, update the manifest/evidence family entry, expected extension set, total count, success text, and relevant tests. Keep upstream source files/selectors empty and do not add a Chromium probe for a Radix Themes component that does not exist.
 
 ## Required validation
 
@@ -218,4 +234,4 @@ reviewed, and distinguish unrelated pre-existing failures.
 
 ## Rollout and rollback
 
-No feature flags, staged deploys, or data migrations are required. Each component is an additive package release. Roll back by reverting its single PR; PRs 7/8 must be reverted with their manifest/evidence/checker/fixture changes as one unit so the parity gate remains internally consistent.
+No feature flags, staged deploys, or data migrations are required. Each component is an additive package release. Roll back by reverting its single PR; PRs 7/8/9 must each be reverted with their manifest/evidence/checker/fixture changes as one unit, and PR 10 with its extension-ledger changes as one unit, so the parity gate remains internally consistent.

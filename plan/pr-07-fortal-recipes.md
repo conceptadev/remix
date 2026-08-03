@@ -19,9 +19,9 @@
 - Fortal recipes are parts of their Remix component libraries and use `@MixWidget(target: Remix<Name>.new)` to generate `Fortal*` wrappers in the component `.g.dart`.
 - The current parity contract has 20 mapped Radix families plus three Fortal extensions. This PR adds `skeleton`, `segmented_control`, `text_area`, and `data_list`: 24 mapped, three extensions, 27 total.
 - `packages/remix/tool/fortal_parity/check.dart` hard-codes family sets, exact counts, style-source paths, evidence owners, computed-style probe ownership, and success text. Updating only the manifest will fail by design.
-- TextArea intentionally shares `RemixTextFieldStyler` and its visual-state helpers. Its Fortal source should be `components/textfield/fortal_textarea_styles.dart`, registered as a part of `textfield.dart` and special-cased in the parity source map.
+- TextArea intentionally shares `TextFieldStyler` and its visual-state helpers. Its Fortal source should be `components/textfield/fortal_textarea_styles.dart`, registered as a part of `textfield.dart` and special-cased in the parity source map.
 - Remix CheckboxGroup is a nonvisual, layout-transparent coordinator and its
-  options accept `RemixCheckboxStyler`, so `fortalCheckboxStyle(...)` supplies
+  options accept `CheckboxStyler`, so `fortalCheckboxStyle(...)` supplies
   checkbox visuals without another wrapper/spec. Pinned Radix CheckboxGroup
   nevertheless owns a column gap, optional label-row gap, and propagation of
   size/variant/color/highContrast. This PR records that family in a
@@ -29,7 +29,7 @@
   silently calling the composition mapped parity.
 - PR 1 leaves one explicit temporary menu-indicator visual approximation. This PR closes and removes it.
 
-Reference authority is the pinned `@radix-ui/themes@3.3.0` source declared in `reference/radix_themes_3_3_0/manifest.json`; the live docs are navigation aids: [Skeleton](https://www.radix-ui.com/themes/docs/components/skeleton), [Checkbox Group](https://www.radix-ui.com/themes/docs/components/checkbox-group), [Segmented Control](https://www.radix-ui.com/themes/docs/components/segmented-control), [Text Area](https://www.radix-ui.com/themes/docs/components/text-area), and [Data List](https://www.radix-ui.com/themes/docs/components/data-list).
+Reference authority is the pinned `@radix-ui/themes@3.3.0` source declared in `reference/radix_themes_3_3_0/manifest.json`; the live docs are navigation aids: [Skeleton](https://www.radix-ui.com/themes/docs/components/skeleton), [Checkbox Group](https://www.radix-ui.com/themes/docs/components/checkbox-group), [Segmented Control](https://www.radix-ui.com/themes/docs/components/segmented-control), [Text Area](https://www.radix-ui.com/themes/docs/components/text-area), and [Data List](https://www.radix-ui.com/themes/docs/components/data-list). Feature-comparison captures for all six touched families (`skeleton`, `segmented-control`, `text-area`, `data-list`, `dropdown-menu`, `checkbox-group`) are in `radix-reference/` with expected deltas indexed in `radix-reference/README.md`.
 
 ## Generated public surface
 
@@ -37,13 +37,13 @@ Add these recipe APIs and generated wrappers:
 
 ```dart
 @MixWidget(target: RemixSkeleton.new)
-RemixSkeletonStyler fortalSkeletonStyle();
+SkeletonStyler fortalSkeletonStyle();
 
 enum FortalSegmentedControlSize { size1, size2, size3 }
 enum FortalSegmentedControlVariant { surface, classic }
 
 @MixWidget(target: RemixSegmentedControl.new)
-RemixSegmentedControlStyler fortalSegmentedControlStyle({
+SegmentedControlStyler fortalSegmentedControlStyle({
   FortalSegmentedControlVariant variant = .surface,
   FortalSegmentedControlSize size = .size2,
 });
@@ -52,7 +52,7 @@ enum FortalTextAreaSize { size1, size2, size3 }
 enum FortalTextAreaVariant { classic, surface, soft }
 
 @MixWidget(target: RemixTextArea.new)
-RemixTextFieldStyler fortalTextAreaStyle({
+TextFieldStyler fortalTextAreaStyle({
   FortalTextAreaVariant variant = .surface,
   FortalTextAreaSize size = .size2,
 });
@@ -60,7 +60,7 @@ RemixTextFieldStyler fortalTextAreaStyle({
 enum FortalDataListSize { size1, size2, size3 }
 
 @MixWidget(target: RemixDataList.new)
-RemixDataListStyler fortalDataListStyle({
+DataListStyler fortalDataListStyle({
   FortalDataListSize size = .size2,
   bool highContrast = false,
 });
@@ -130,7 +130,7 @@ In `components/segmented_control/fortal_segmented_control_styles.dart`:
   `grayA3` and removes every selected ring/shadow;
 - focus uses `fortalFocusOutline`/`RemixBoxEffectsSpec` at 2 px with the pinned
   -1 px offset. Selected inset, classic shadows, and focus outline compose in
-  `RemixSegmentedControlItemSpec.containerEffects`; do not flatten them into
+  `SegmentedControlItemSpec.containerEffects`; do not flatten them into
   `foregroundDecoration`.
 
 The Remix constructor's orientation and item-disabled support flow through. The recipe does not implement the upstream 100 ms translated indicator, inactive/active duplicate-label crossfade, or separators. Add explicit manifest approximations with visual tolerance and screenshot captions for those v1 differences.

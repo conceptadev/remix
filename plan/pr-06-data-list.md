@@ -26,7 +26,7 @@
   upstream composition difference explicitly rather than claiming it maps one
   for one.
 
-Official references: [Radix Themes Data List](https://www.radix-ui.com/themes/docs/components/data-list), [Flutter Table](https://api.flutter.dev/flutter/widgets/Table-class.html), and [SemanticsRole](https://api.flutter.dev/flutter/dart-ui/SemanticsRole.html).
+Official references: [Radix Themes Data List](https://www.radix-ui.com/themes/docs/components/data-list), [Flutter Table](https://api.flutter.dev/flutter/widgets/Table-class.html), and [SemanticsRole](https://api.flutter.dev/flutter/dart-ui/SemanticsRole.html). Feature-comparison capture: `radix-reference/data-list.png` (usage and expected deltas in `radix-reference/README.md`).
 
 ## Public API
 
@@ -56,7 +56,7 @@ class RemixDataList extends StatelessWidget {
     this.orientation = Axis.horizontal,
     this.semanticLabel,
     this.excludeSemantics = false,
-    this.style = const RemixDataListStyler.create(),
+    this.style = const DataListStyler.create(),
     this.styleSpec,
   });
 }
@@ -85,7 +85,7 @@ Validation and semantics of item fields:
 
 ```dart
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
-class RemixDataListSpec with _$RemixDataListSpec {
+class DataListSpec with _$DataListSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   final StyleSpec<BoxSpec> labelContainer;

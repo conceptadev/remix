@@ -26,7 +26,7 @@
 - Flutter provides explicit `header`/`headingLevel`, `keyboardKey`, and `link`/`linkUrl` semantics, but no code role, CSS `as` element, leading-trim layout, or pretty/balanced line wrapping.
 - `NakedButton` is appropriate only for an actionable Link. It already owns pointer, keyboard, focus, feedback, and widget-state behavior.
 
-Official references: [Text](https://www.radix-ui.com/themes/docs/components/text), [Heading](https://www.radix-ui.com/themes/docs/components/heading), [Code](https://www.radix-ui.com/themes/docs/components/code), [Kbd](https://www.radix-ui.com/themes/docs/components/kbd), [Link](https://www.radix-ui.com/themes/docs/components/link), plus Flutter [`headingLevel`](https://api.flutter.dev/flutter/widgets/SemanticsProperties/headingLevel.html) and [`keyboardKey`](https://api.flutter.dev/flutter/widgets/SemanticsProperties/keyboardKey.html).
+Official references: [Text](https://www.radix-ui.com/themes/docs/components/text), [Heading](https://www.radix-ui.com/themes/docs/components/heading), [Code](https://www.radix-ui.com/themes/docs/components/code), [Kbd](https://www.radix-ui.com/themes/docs/components/kbd), [Link](https://www.radix-ui.com/themes/docs/components/link), plus Flutter [`headingLevel`](https://api.flutter.dev/flutter/widgets/SemanticsProperties/headingLevel.html) and [`keyboardKey`](https://api.flutter.dev/flutter/widgets/SemanticsProperties/keyboardKey.html). Feature-comparison captures: `radix-reference/text.png`, `heading.png`, `code.png`, `kbd.png`, and `link.png`, with expected deltas indexed in `radix-reference/README.md`.
 
 ## Module architecture
 
