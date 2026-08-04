@@ -28,8 +28,9 @@
 - **FEAT**: Expose every Fortal recipe parameter on its generated widget,
   including `highContrast` and Avatar's `fallbackLength`, while retaining both
   the unnamed `variant:` constructor and generated named variant constructors.
-- **FIX**: Pin `naked_ui 1.0.0-beta.8` so open labelled tooltips retain one
-  interactive semantics node without hiding unlabelled overlay semantics.
+- **FIX**: Allow `naked_ui` releases compatible with `^1.0.0-beta.8` so open
+  labelled tooltips retain one interactive semantics node without hiding
+  unlabelled overlay semantics.
 - **FIX**: Keep dialog titles and actions fixed while structured descriptions
   and body content scroll within bounded dialogs.
 - **FIX**: Resolve Fortal Avatar icon geometry through scaled design tokens for
