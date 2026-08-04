@@ -1,0 +1,305 @@
+---
+title: Data List
+description: A semantic label/value list with a shared horizontal label column or a stacked vertical layout
+keywords: [flutter, remix, data list, definition list, metadata, label, value, dl, dt, dd]
+---
+
+A semantic label/value list for metadata such as account details, order
+summaries, and configuration values. Horizontal orientation lays every row
+out in one shared two-column table, so labels align across all items;
+vertical orientation stacks each label above its value.
+
+## When to use this
+
+- **Account or profile metadata**: Name, email, company, and similar pairs
+- **Order and record summaries**: Ids, dates, totals, and statuses
+- **Configuration readouts**: Setting names with their current values
+- **Definition-style content**: Any display-only term/description pairing
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class DataListExample extends StatelessWidget {
+  const DataListExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixDataList(
+      semanticLabel: 'Account details',
+      items: const [
+        RemixDataListItem(label: 'Name', value: 'Leo Farias'),
+        RemixDataListItem(label: 'Email', value: 'leo@example.com'),
+        RemixDataListItem(label: 'Company', value: 'Bitwild'),
+      ],
+      style: style,
+    );
+  }
+
+  DataListStyler get style {
+    return DataListStyler()
+        .minLabelWidth(120)
+        .columnSpacing(24)
+        .rowSpacing(12)
+        .labelColor(Colors.grey);
+  }
+}
+```
+</CodeGroup>
+
+## Orientation and narrow widths
+
+The constructor's `orientation` always wins over styles, and the renderer
+never switches orientation on its own. A bounded horizontal list needs at
+least the resolved label column minimum (the greater of `minLabelWidth` and
+the widest label) plus `columnSpacing` plus the value column's minimum
+intrinsic width; below that bound, rebuild with `Axis.vertical`.
+
+<CodeGroup title="Caller-owned vertical fallback" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class ResponsiveDataListExample extends StatelessWidget {
+  const ResponsiveDataListExample({super.key});
+
+  static const items = [
+    RemixDataListItem(label: 'Name', value: 'Leo Farias'),
+    RemixDataListItem(label: 'Email', value: 'leo@example.com'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final vertical = constraints.maxWidth < 240;
+
+        return RemixDataList(
+          orientation: vertical ? Axis.vertical : Axis.horizontal,
+          items: items,
+          style: DataListStyler()
+              .minLabelWidth(120)
+              .columnSpacing(24)
+              .rowSpacing(12)
+              .labelValueSpacing(4),
+        );
+      },
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Custom value widgets
+
+An item takes either a string `value` or one custom `child` widget. A custom
+child inherits the resolved value typography and keeps its own semantics, so
+interactive values stay actionable. A display-only child can opt into a
+single summarized announcement with `semanticValue`, which excludes the
+child's own semantics entirely — never combine `semanticValue` with an
+interactive child.
+
+<CodeGroup title="Custom value widgets" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class DataListCustomValueExample extends StatelessWidget {
+  const DataListCustomValueExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixDataList(
+      items: [
+        const RemixDataListItem(
+          label: 'Status',
+          semanticValue: 'Authorized',
+          alignment: RemixDataListItemAlignment.center,
+          child: RemixBadge(label: 'Authorized'),
+        ),
+        RemixDataListItem(
+          label: 'API key',
+          alignment: RemixDataListItemAlignment.center,
+          child: RemixButton(label: 'Reveal key', onPressed: () {}),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Per-item alignment
+
+Each item aligns its label and value cells with `start`, `center`, `end`,
+`baseline`, or `stretch`. `baseline` is the default and applies to string
+values, where both cells expose a text baseline; two deterministic
+adaptations are documented Radix deltas:
+
+- A custom-child row requesting `baseline` maps to `start`/top, because an
+  arbitrary widget may expose no text baseline.
+- Vertical orientation maps `baseline` to `start`, because stacked cells
+  share no horizontal baseline.
+
+## Semantics
+
+- The root exposes one `list` node, named by `semanticLabel` when provided.
+- Every row is one `listItem` node. A string row announces its label and
+  value from that single node; the visible texts are excluded so nothing is
+  read twice.
+- A custom child without `semanticValue` keeps its own semantics — including
+  actions — as children of the row node.
+- `excludeSemantics` removes the entire list from the semantics tree.
+
+Flutter has no definition-list role, so the list/list-item pairing is the
+documented adaptation of Radix's `dl`/`dt`/`dd` structure.
+
+## Constructor
+
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixDataList remixDataListConstructor({
+  Key? key,
+  required List<RemixDataListItem> items,
+  Axis orientation = Axis.horizontal,
+  String? semanticLabel,
+  bool excludeSemantics = false,
+  DataListStyler style = const DataListStyler.create(),
+  DataListSpec? styleSpec,
+}) => throw UnimplementedError();
+
+RemixDataListItem remixDataListItemConstructor({
+  required String label,
+  String? value,
+  Widget? child,
+  String? semanticValue,
+  RemixDataListItemAlignment alignment = RemixDataListItemAlignment.baseline,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `items` → `List<RemixDataListItem>`
+
+Required. The rows to display; may be empty. The list is retained as
+supplied, so do not mutate it during build — each build reads one immutable
+snapshot of the current contents.
+
+#### `orientation` → `Axis`
+
+Optional. Layout axis, defaulting to `Axis.horizontal`. The constructor
+always wins; orientation is intentionally absent from `DataListSpec`.
+
+#### `semanticLabel` → `String?`
+
+Optional. Accessible name announced for the list itself.
+
+#### `excludeSemantics` → `bool`
+
+Optional. Removes the entire list, rows included, from semantics. Defaults
+to `false`.
+
+#### `style` → `DataListStyler`
+
+Optional. The style configuration for typography, cell containers, and
+layout metrics.
+
+#### `styleSpec` → `DataListSpec?`
+
+Optional. A pre-resolved style spec that bypasses style resolution. Useful
+for performance when sharing resolved styles across multiple instances.
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
+
+### Item Properties
+
+#### `label` → `String`
+
+Required and nonempty. The visible label, also announced as the row's
+semantic label.
+
+#### `value` → `String?`
+
+The string value, rendered with the value typography. Exactly one of
+`value` or `child` must be provided; a provided `value` must be nonempty.
+
+#### `child` → `Widget?`
+
+A custom value widget that inherits the resolved value typography and keeps
+its own semantics unless `semanticValue` summarizes it.
+
+#### `semanticValue` → `String?`
+
+Optional noninteractive summary announced instead of the child's semantics.
+Valid only together with `child` and must be nonempty when provided.
+
+#### `alignment` → `RemixDataListItemAlignment`
+
+Optional. Cross-cell alignment for this row, defaulting to
+`RemixDataListItemAlignment.baseline`.
+
+### Style Methods
+
+#### `label(TextStyler value)` / `value(TextStyler value)`
+
+Sets the label or value text slot.
+
+#### `labelTextStyle(TextStyleMix style)` / `valueTextStyle(TextStyleMix style)`
+
+Sets the label or value text style.
+
+#### `labelColor(Color color)` / `valueColor(Color color)`
+
+Sets the label or value text color.
+
+#### `labelContainer(BoxStyler value)` / `valueContainer(BoxStyler value)`
+
+Styles the cell containers around the label or value without coupling the
+text styles.
+
+#### `rowSpacing(double value)`
+
+Sets the gap between items along the list's main axis.
+
+#### `columnSpacing(double value)`
+
+Sets the directional horizontal gap between the label and value columns.
+
+#### `labelValueSpacing(double value)`
+
+Sets the inner vertical gap between label and value in vertical orientation.
+
+#### `minLabelWidth(double value)`
+
+Sets the minimum width of the shared horizontal label column.
+
+#### `padding(EdgeInsetsGeometryMix value)` / `margin(EdgeInsetsGeometryMix value)`
+
+Sets outer container padding or margin.
+
+#### `color(Color value)` / `decoration(DecorationMix value)`
+
+Sets the outer container background or decoration.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `animate(AnimationConfig value)`
+
+Configures implicit animation for style transitions.
+
+#### `call({Key? key, required List<RemixDataListItem> items, Axis orientation, String? semanticLabel, bool excludeSemantics})`
+
+Creates a `RemixDataList` widget with this style applied.
