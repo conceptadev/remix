@@ -224,6 +224,12 @@ The root `items` list, each radio group's `items`, and every submenu's `items`
 are copied to immutable snapshots when their panel is built. Rebuild the menu
 after changing a source list; do not rely on mutating a visible panel in place.
 
+For dynamic menus, including lists that are filtered, have items inserted, or
+are reordered, supply a stable caller-owned `key:` on each ordinary item,
+checkbox item, radio group, radio item, submenu, and divider. Build keys from
+application-owned item identity and keep them stable across rebuilds. Item keys
+are not derived automatically from labels or values.
+
 ## Compound-item styling
 
 Compound rows use the same `MenuItemStyler` as ordinary rows, including
@@ -280,7 +286,7 @@ class FortalMenuExample extends StatelessWidget {
     final choiceItemStyle = MenuItemStyler().indicator(
       IconStyler().color(Colors.indigo),
     );
-    final menuStyle = MenuStyler()
+    final customStyle = MenuStyler()
         .checkboxItem(choiceItemStyle)
         .radioItem(choiceItemStyle);
     final items = <RemixMenuItemData<String>>[
@@ -306,14 +312,18 @@ class FortalMenuExample extends StatelessWidget {
     return Row(
       spacing: 16,
       children: [
-        FortalMenu<String>.solid(
-          style: menuStyle,
+        RemixMenu<String>(
+          style: fortalMenuStyle(
+            variant: FortalMenuVariant.solid,
+          ).merge(customStyle),
           trigger: const RemixMenuTrigger(label: 'Solid', icon: Icons.menu),
           items: items,
           onSelected: (value) => debugPrint(value),
         ),
-        FortalMenu<String>.soft(
-          style: menuStyle,
+        RemixMenu<String>(
+          style: fortalMenuStyle(
+            variant: FortalMenuVariant.soft,
+          ).merge(customStyle),
           trigger: const RemixMenuTrigger(label: 'Soft', icon: Icons.menu),
           items: items,
           onSelected: (value) => debugPrint(value),
@@ -325,9 +335,10 @@ class FortalMenuExample extends StatelessWidget {
 ```
 </CodeGroup>
 
-The generated default, `solid`, and `soft` constructors all accept `style:`.
-Pass a reusable `MenuStyler`; its fields merge after the Fortal recipe. A null
-override preserves the recipe unchanged.
+The generated `FortalMenu`, `FortalMenu.solid`, and `FortalMenu.soft`
+constructors apply only the selected recipe. For reusable menu-wide
+customization, pass `fortalMenuStyle(...).merge(customStyle)` to
+`RemixMenu.style`; the custom fields merge after the recipe.
 
 <Info>
   See the [fortalMenuStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/menu/fortal_menu_styles.dart) for all available options.
