@@ -13,6 +13,7 @@ import 'entries/divider_entry.dart';
 import 'entries/progress_entry.dart';
 import 'entries/radio_entry.dart';
 import 'entries/select_entry.dart';
+import 'entries/segmented_control_entry.dart';
 import 'entries/slider_entry.dart';
 import 'entries/spinner_entry.dart';
 import 'entries/switch_entry.dart';
@@ -40,6 +41,10 @@ final Map<String, WidgetBuilder> components = {
   'select': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildSelectExample()),
+  ),
+  'segmented-control': (context) => FortalScope(
+    brightness: Theme.of(context).brightness,
+    child: PreviewShell(child: buildSegmentedControlExample()),
   ),
   'switch': (context) => FortalScope(
     brightness: Theme.of(context).brightness,

@@ -138,6 +138,10 @@
           "href": "/components/select"
         },
         {
+          "title": "Segmented Control",
+          "href": "/components/segmented_control"
+        },
+        {
           "title": "Slider",
           "href": "/components/slider"
         },
