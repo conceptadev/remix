@@ -18,6 +18,7 @@ void main() {
     const progress = RemixProgress(value: 0.5);
     const tabBar = RemixTabBar(child: Text('Tabs'));
     const spinner = RemixSpinner();
+    const skeleton = RemixSkeleton(child: Text('Jane Appleseed'));
 
     expect(button.label, 'Save');
     expect(card.child, isA<Text>());
@@ -28,6 +29,8 @@ void main() {
     expect(progress.value, 0.5);
     expect(tabBar.child, isA<Text>());
     expect(spinner, isA<RemixSpinner>());
+    expect(skeleton.child, isA<Text>());
+    expect(skeleton.loading, isTrue);
   });
 
   test('generated wrappers preserve generic and named constructors', () {
