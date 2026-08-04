@@ -471,6 +471,69 @@ void main() {
         expect(tester.getSize(find.byType(RemixSkeleton)), const Size(40, 40));
       });
 
+      testWidgets('reaches both endpoints despite a container animation', (
+        tester,
+      ) async {
+        // The pulse already owns this animation. Handing each tick's
+        // decoration to a container that is also implicitly animating makes
+        // the implicit animation chase the pulse, damping it so the fill
+        // never reaches pulseColor.
+        await _pumpSkeleton(
+          tester,
+          RemixSkeleton(
+            style: SkeletonStyler()
+                .container(
+                  BoxStyler()
+                      .size(_childSize.width, _childSize.height)
+                      .color(_baseColor)
+                      .animate(
+                        AnimationConfig.linear(
+                          const Duration(milliseconds: 300),
+                        ),
+                      ),
+                )
+                .pulseColor(_pulseColor)
+                .duration(_leg),
+          ),
+        );
+
+        expect(_pulseDecoration(tester).color, isSameColorAs(_baseColor));
+
+        await tester.pump(const Duration(milliseconds: 500));
+        expect(_pulseDecoration(tester).color, isSameColorAs(_midColor));
+
+        await tester.pump(const Duration(milliseconds: 500));
+        expect(_pulseDecoration(tester).color, isSameColorAs(_pulseColor));
+      });
+
+      testWidgets('keeps container modifiers while interpolating the fill', (
+        tester,
+      ) async {
+        // This branch rebuilds the container StyleSpec by hand, so the
+        // caller's modifiers have to be carried across explicitly.
+        await _pumpSkeleton(
+          tester,
+          RemixSkeleton(
+            style: SkeletonStyler()
+                .container(
+                  BoxStyler()
+                      .size(_childSize.width, _childSize.height)
+                      .color(_baseColor)
+                      .wrap(WidgetModifierConfig.opacity(0.4)),
+                )
+                .pulseColor(_pulseColor)
+                .duration(_leg),
+          ),
+        );
+
+        expect(_pulseOpacities(tester), [0.4]);
+
+        await tester.pump(const Duration(milliseconds: 500));
+
+        expect(_pulseOpacities(tester), [0.4]);
+        expect(_pulseDecoration(tester).color, isSameColorAs(_midColor));
+      });
+
       testWidgets('falls back to opacity when a foreground decoration covers '
           'the fill', (tester) async {
         // A foreground decoration paints on top of the fill, so lerping the

@@ -65,8 +65,8 @@ class RemixSkeleton extends StyleWidget<SkeletonSpec> {
     if (child == null) return _SkeletonPulse(spec: spec);
 
     return ExcludeSemantics(
-      // Defense in depth: whatever the loading branch renders, including
-      // the pulse overlay, stays out of the semantics tree.
+      // The single semantics control for both states. It sits outside the
+      // Stack so it covers the pulse overlay as well as the hidden child.
       excluding: loading,
       child: Stack(
         // Provably a no-op: the single non-positioned child sizes the
@@ -86,16 +86,13 @@ class RemixSkeleton extends StyleWidget<SkeletonSpec> {
               // Also releases focus already held inside the child:
               // FocusNode.descendantsAreFocusable unfocuses on the way down.
               excluding: loading,
-              child: ExcludeSemantics(
-                excluding: loading,
-                child: IgnorePointer(
-                  ignoring: loading,
-                  child: Opacity(
-                    // Paint hiding only. ExcludeSemantics above is the
-                    // accessibility control.
-                    opacity: loading ? 0 : 1,
-                    child: child,
-                  ),
+              child: IgnorePointer(
+                ignoring: loading,
+                child: Opacity(
+                  // Paint hiding only. The ExcludeSemantics wrapping the
+                  // Stack is the accessibility control.
+                  opacity: loading ? 0 : 1,
+                  child: child,
                 ),
               ),
             ),
@@ -195,10 +192,17 @@ class _SkeletonPulseState extends State<_SkeletonPulse>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) => Box(
-        styleSpec: container.copyWith(
+        // A fresh StyleSpec rather than copyWith, which cannot clear a field.
+        // Any animation the caller put on the container has to be dropped
+        // here: the pulse already animates this decoration, and an implicit
+        // animation re-driven from a value that changes every tick chases the
+        // pulse instead of tracking it, damping it so the fill never reaches
+        // pulseColor. Modifiers still belong to the caller, so they carry over.
+        styleSpec: StyleSpec(
           spec: container.spec.copyWith(
             decoration: fillPulse(_controller.value),
           ),
+          widgetModifiers: container.widgetModifiers,
         ),
       ),
     );
@@ -245,7 +249,6 @@ Decoration Function(double t)? _fillPulse(BoxSpec box, Color? pulseColor) {
 
       return (t) => ShapeDecoration(
         color: Color.lerp(color, pulseColor, t),
-        image: shape.image,
         shadows: shape.shadows,
         shape: shape.shape,
       );
