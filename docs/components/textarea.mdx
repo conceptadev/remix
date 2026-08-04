@@ -1,0 +1,256 @@
+---
+title: TextArea
+description: A multiline text editor with native auto-growth, labels, supporting text, validation, and Remix styling
+keywords: [flutter, remix, textarea, multiline, textfield, form, editor]
+---
+
+`RemixTextArea` is the multiline constructor for Remix's existing text editor.
+It uses the same `TextFieldStyler`, `TextFieldSpec`, controller, focus, input,
+selection, and accessibility pipeline as `RemixTextField`.
+
+## When to use this
+
+- **Long-form input**: Comments, descriptions, notes, and messages
+- **Multiple paragraphs**: Content where line breaks must be preserved
+- **Growing forms**: Editors that should expand naturally inside parent constraints
+- **Validated content**: Multiline fields with labels, helper text, and errors
+
+Use `RemixTextField` for compact single-line values such as names, search, and
+email addresses.
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class TextAreaExample extends StatelessWidget {
+  const TextAreaExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      width: 360,
+      child: RemixTextArea(
+        label: 'Notes',
+        hintText: 'Add details',
+        helperText: 'Line breaks are preserved',
+      ),
+    );
+  }
+}
+```
+</CodeGroup>
+
+The default editor starts at two lines, uses the multiline keyboard and newline
+action, and grows with its content because `maxLines` is `null`. Flutter lays it
+out within the constraints supplied by its parent. TextArea does not add a
+browser-style drag-resize handle or a fixed height.
+
+## Controlled value, validation, and length
+
+<CodeGroup title="Controlled value and validation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FeedbackEditor extends StatefulWidget {
+  const FeedbackEditor({super.key});
+
+  @override
+  State<FeedbackEditor> createState() => _FeedbackEditorState();
+}
+
+class _FeedbackEditorState extends State<FeedbackEditor> {
+  final controller = TextEditingController();
+  bool showError = false;
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixTextArea(
+      controller: controller,
+      label: 'Feedback',
+      hintText: 'What could be better?',
+      helperText: showError ? 'Feedback is required' : 'Up to 500 characters',
+      error: showError,
+      maxLength: 500,
+      minLines: 3,
+      maxLines: 8,
+      onChanged: (value) {
+        if (showError && value.trim().isNotEmpty) {
+          setState(() => showError = false);
+        }
+      },
+    );
+  }
+}
+```
+</CodeGroup>
+
+When setting both line limits, `maxLines` must be greater than or equal to
+`minLines`, and both values must be positive. Set both together when overriding
+the default two-line minimum with a smaller maximum.
+
+## Disabled and read-only
+
+<CodeGroup title="Disabled and read-only states" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class TextAreaStates extends StatelessWidget {
+  const TextAreaStates({super.key, required this.savedController});
+
+  final TextEditingController savedController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 16,
+      children: [
+        const RemixTextArea(
+          label: 'Disabled notes',
+          hintText: 'Editing is unavailable',
+          enabled: false,
+        ),
+        RemixTextArea(
+          controller: savedController,
+          label: 'Saved notes',
+          readOnly: true,
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+A read-only TextArea remains focusable and selectable. A disabled TextArea does
+not accept input or expose an editing action.
+
+## Custom styling
+
+TextArea deliberately reuses the TextField anatomy. Use `TextFieldStyler` for
+fluent styling or provide a resolved `TextFieldSpec`; there are no separate
+TextArea style or spec types.
+
+<CodeGroup title="Custom Remix styling" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class StyledTextArea extends StatelessWidget {
+  const StyledTextArea({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixTextArea(
+      label: 'Project summary',
+      hintText: 'Describe the project',
+      helperText: 'Markdown is supported',
+      style: TextFieldStyler()
+          .backgroundColor(const Color(0xFFF8FAFC))
+          .textColor(const Color(0xFF172033))
+          .hintColor(const Color(0xFF667085))
+          .paddingAll(14)
+          .borderRadiusAll(const Radius.circular(12))
+          .border(
+            BoxBorderMix.all(
+              BorderSideMix(color: const Color(0xFF7C3AED), width: 1.5),
+            ),
+          )
+          .onFocused(
+            TextFieldStyler().border(
+              BoxBorderMix.all(
+                BorderSideMix(color: const Color(0xFF8B5CF6), width: 2.5),
+              ),
+            ),
+          ),
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Constructor
+
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:remix/remix.dart';
+
+RemixTextArea remixTextAreaConstructor({
+  Key? key,
+  TextEditingController? controller,
+  FocusNode? focusNode,
+  String? label,
+  String? hintText,
+  String? helperText,
+  bool error = false,
+  TextInputType? keyboardType = TextInputType.multiline,
+  TextInputAction? textInputAction = TextInputAction.newline,
+  TextCapitalization textCapitalization = TextCapitalization.none,
+  TextDirection? textDirection,
+  bool enabled = true,
+  bool readOnly = false,
+  bool autofocus = false,
+  int? maxLines,
+  int? minLines = 2,
+  int? maxLength,
+  MaxLengthEnforcement? maxLengthEnforcement,
+  ValueChanged<String>? onChanged,
+  VoidCallback? onEditingComplete,
+  ValueChanged<String>? onSubmitted,
+  AppPrivateCommandCallback? onAppPrivateCommand,
+  List<TextInputFormatter>? inputFormatters,
+  bool? showCursor,
+  bool autocorrect = true,
+  bool enableSuggestions = true,
+  SmartDashesType? smartDashesType,
+  SmartQuotesType? smartQuotesType,
+  DragStartBehavior dragStartBehavior = DragStartBehavior.start,
+  bool enableInteractiveSelection = true,
+  TextSelectionControls? selectionControls,
+  GestureTapCallback? onTap,
+  TapRegionCallback? onTapOutside,
+  TapRegionUpCallback? onPressUpOutside,
+  bool onTapAlwaysCalled = false,
+  ScrollController? scrollController,
+  ScrollPhysics? scrollPhysics,
+  Iterable<String>? autofillHints,
+  ContentInsertionConfiguration? contentInsertionConfiguration,
+  Clip clipBehavior = Clip.hardEdge,
+  String? restorationId,
+  bool stylusHandwritingEnabled = true,
+  bool enableIMEPersonalizedLearning = true,
+  EditableTextContextMenuBuilder? contextMenuBuilder,
+  SpellCheckConfiguration? spellCheckConfiguration,
+  TextMagnifierConfiguration? magnifierConfiguration,
+  bool canRequestFocus = true,
+  bool? ignorePointers,
+  UndoHistoryController? undoController,
+  Object groupId = EditableText,
+  Widget? leading,
+  Widget? trailing,
+  String? semanticLabel,
+  String? semanticHint,
+  bool excludeSemantics = false,
+  TextFieldStyler style = const TextFieldStyler.create(),
+  TextFieldSpec? styleSpec,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+`obscureText`, `obscuringCharacter`, and `expands` are intentionally absent.
+TextArea always uses nonsecure, nonexpanding multiline behavior. Override
+`keyboardType` or `textInputAction` when a multiline workflow needs a more
+specific keyboard or a completion action.

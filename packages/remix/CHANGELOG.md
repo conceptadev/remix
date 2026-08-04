@@ -1,5 +1,11 @@
 ## Unreleased
 
+- **FEAT**: Add `RemixTextArea`, a constructor-only multiline facade over
+  `RemixTextField` with two-line auto-growing defaults and the canonical
+  `TextFieldStyler` / `TextFieldSpec` styling surface.
+- **FIX**: Top-align multiline TextField hints and expose label, hint, helper,
+  error, and interactive accessory semantics once without narrowing the
+  existing composite tap target.
 - **FEAT**: Add the Remix rendering subsystem for layered inset and outer
   shadows, gradients, outlines, backdrop blur, blend modes, and ordered color
   filters used by the Radix-accurate Fortal recipes.

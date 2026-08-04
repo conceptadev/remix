@@ -154,6 +154,10 @@
           "href": "/components/tabs"
         },
         {
+          "title": "TextArea",
+          "href": "/components/textarea"
+        },
+        {
           "title": "TextField",
           "href": "/components/textfield"
         },
