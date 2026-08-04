@@ -323,7 +323,6 @@ class FortalMenu<T> extends StatelessWidget {
     this.variant = .solid,
     this.size = .size2,
     this.highContrast = false,
-    this.style,
     required this.trigger,
     required this.items,
     this.controller,
@@ -344,7 +343,6 @@ class FortalMenu<T> extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
-    this.style,
     required this.trigger,
     required this.items,
     this.controller,
@@ -365,7 +363,6 @@ class FortalMenu<T> extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
-    this.style,
     required this.trigger,
     required this.items,
     this.controller,
@@ -387,8 +384,6 @@ class FortalMenu<T> extends StatelessWidget {
   final FortalMenuSize size;
 
   final bool highContrast;
-
-  final Style<MenuSpec>? style;
 
   final RemixMenuTrigger trigger;
 
@@ -426,7 +421,6 @@ class FortalMenu<T> extends StatelessWidget {
         variant: this.variant,
         size: this.size,
         highContrast: this.highContrast,
-        style: this.style,
       ),
       trigger: this.trigger,
       items: this.items,

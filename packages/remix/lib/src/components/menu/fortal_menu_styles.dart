@@ -12,10 +12,6 @@ MenuStyler fortalMenuStyle({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
   bool highContrast = false,
-  // Typed as the Mix supertype because the generated MenuStyler cannot be
-  // named in this signature: the widget generator resolves same-build
-  // generated classes as InvalidType.
-  Style<MenuSpec>? style,
 }) {
   final metrics = _fortalMenuMetrics(size);
   final base = MenuStyler()
@@ -42,7 +38,7 @@ MenuStyler fortalMenuStyle({
       )
       .divider(_fortalMenuDividerStyler(metrics));
 
-  return base.merge(style as MenuStyler?);
+  return base;
 }
 
 /// Fortal item recipe for per-item style overrides.

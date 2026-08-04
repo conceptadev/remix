@@ -565,38 +565,31 @@ void main() {
         expect(menu.style.$radioItem, Prop.maybeMix(radioItemStyle));
       });
 
-      test('Fortal recipe merges an optional menu-wide style last', () {
+      test('RemixMenu composes a Fortal recipe with custom styling', () {
         final choiceItemStyle = MenuItemStyler().indicator(
           IconStyler().size(13),
         );
-        final override = MenuStyler()
+        final customStyle = MenuStyler()
             .checkboxItem(choiceItemStyle)
             .radioItem(choiceItemStyle);
-        final base = fortalMenuStyle(
-          variant: .soft,
-          size: .size1,
-          highContrast: true,
-        );
-
-        final customized = fortalMenuStyle(
-          variant: .soft,
-          size: .size1,
-          highContrast: true,
-          style: override,
-        );
-
-        expect(customized, base.merge(override));
-        expect(customized.$checkboxItem, Prop.maybeMix(choiceItemStyle));
-        expect(customized.$radioItem, Prop.maybeMix(choiceItemStyle));
-        expect(
-          fortalMenuStyle(
+        final menu = RemixMenu<String>(
+          style: fortalMenuStyle(
             variant: .soft,
             size: .size1,
             highContrast: true,
-            style: null,
-          ),
-          base,
+          ).merge(customStyle),
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: const [
+            RemixMenuCheckboxItem(
+              value: 'checked',
+              label: 'Checked',
+              checked: true,
+            ),
+          ],
         );
+
+        expect(menu.style.$checkboxItem, Prop.maybeMix(choiceItemStyle));
+        expect(menu.style.$radioItem, Prop.maybeMix(choiceItemStyle));
       });
     });
 

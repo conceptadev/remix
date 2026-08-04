@@ -54,7 +54,6 @@ void main() {
 
   test('generated wrappers preserve generic and named constructors', () {
     const menu = FortalMenu<String>.soft(
-      style: MenuStyler.create(),
       trigger: RemixMenuTrigger(label: 'Actions'),
       items: [RemixMenuItem(value: 'save', label: 'Save')],
     );
@@ -66,7 +65,6 @@ void main() {
     const button = FortalButton.soft(label: 'Save');
 
     expect(menu.variant, FortalMenuVariant.soft);
-    expect(menu.style, isA<MenuStyler>());
     expect(select.variant, FortalSelectVariant.ghost);
     expect(radio.variant, FortalRadioVariant.soft);
     expect(button.variant, FortalButtonVariant.soft);

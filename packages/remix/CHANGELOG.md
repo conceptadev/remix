@@ -3,9 +3,9 @@
 - **BREAKING** **FEAT**: Add checkbox items, radio groups, and submenus to the
   sealed `RemixMenuItemData` hierarchy. Downstream exhaustive switches must
   handle the new cases or add a wildcard; no runtime migration is required.
-- **FEAT**: Let the generated `FortalMenu`, `FortalMenu.solid`, and
-  `FortalMenu.soft` constructors accept a reusable menu-wide `style:` override
-  that merges after the Fortal recipe.
+- **FEAT**: Support reusable menu-wide customization by passing
+  `fortalMenuStyle(...).merge(customStyle)` to `RemixMenu.style`; generated
+  `FortalMenu` constructors remain recipe-only.
 - **FEAT**: Add the Remix rendering subsystem for layered inset and outer
   shadows, gradients, outlines, backdrop blur, blend modes, and ordered color
   filters used by the Radix-accurate Fortal recipes.
