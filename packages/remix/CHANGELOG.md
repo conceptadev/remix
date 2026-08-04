@@ -1,5 +1,15 @@
 ## Unreleased
 
+- **FEAT**: Add `RemixDataList`, a semantic label/value list mapped from
+  Radix DataList. Horizontal orientation shares one negotiated label column
+  across every row, supports intrinsic-width parents, and lets string values
+  wrap unbroken identifiers at grapheme-safe boundaries while custom value
+  widgets retain their intrinsic sizing; vertical orientation stacks label
+  above value. Rows expose one `list`/`listItem` semantics pair with full-row
+  bounds, interactive custom values stay actionable, `semanticValue` opts a
+  display-only child into a summarized announcement, and
+  `RemixDataListItem.key` gives rows stable identity across reorder, insertion,
+  and removal.
 - **FEAT**: Add the Remix rendering subsystem for layered inset and outer
   shadows, gradients, outlines, backdrop blur, blend modes, and ordered color
   filters used by the Radix-accurate Fortal recipes.
@@ -35,8 +45,9 @@
   to a composed whole-surface opacity fade whenever a gradient, image, or
   foreground decoration would mask that fill, and honours
   `MediaQuery.disableAnimationsOf` initially and on runtime changes.
-- **FIX**: Pin `naked_ui 1.0.0-beta.8` so open labelled tooltips retain one
-  interactive semantics node without hiding unlabelled overlay semantics.
+- **FIX**: Allow `naked_ui` releases compatible with `^1.0.0-beta.8` so open
+  labelled tooltips retain one interactive semantics node without hiding
+  unlabelled overlay semantics.
 - **FIX**: Keep dialog titles and actions fixed while structured descriptions
   and body content scroll within bounded dialogs.
 - **FIX**: Resolve Fortal Avatar icon geometry through scaled design tokens for
