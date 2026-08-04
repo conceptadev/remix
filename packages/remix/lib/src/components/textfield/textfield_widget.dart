@@ -262,21 +262,26 @@ class RemixTextField extends StatelessWidget {
   Widget _buildResolved(
     TextFieldSpec spec,
     WidgetStatesController styleController,
-    FocusNode effectiveFocusNode,
-  ) {
+    FocusNode effectiveFocusNode, {
+    required ValueChanged<bool> onEditablePressChange,
+    required ValueChanged<bool> onFallbackPressChange,
+  }) {
     final isMultiline = expands || maxLines != 1 || (minLines ?? 1) > 1;
     final hintAlignment = isMultiline
         ? AlignmentDirectional.topStart
         : AlignmentDirectional.centerStart;
-    final baseSemanticHint = semanticHint ?? hintText;
+    final acceptsPointerEvents = enabled && ignorePointers != true;
     final effectiveSemanticErrorText = error
         ? _joinSemanticText([helperText])
         : null;
-    final effectiveSemanticHint = _joinSemanticText([
-      if (!error || baseSemanticHint != effectiveSemanticErrorText)
-        baseSemanticHint,
+    final joinedSemanticHint = _joinSemanticText([
+      semanticHint ?? hintText,
       if (!error) helperText,
     ]);
+    final effectiveSemanticHint =
+        joinedSemanticHint == effectiveSemanticErrorText
+        ? null
+        : joinedSemanticHint;
 
     final nakedTextField = NakedTextField(
       groupId: groupId,
@@ -338,7 +343,7 @@ class RemixTextField extends StatelessWidget {
       spellCheckConfiguration: spellCheckConfiguration,
       magnifierConfiguration: magnifierConfiguration,
       onFocusChange: (value) => styleController.update(.focused, value),
-      onPressChange: (value) => styleController.update(.pressed, value),
+      onPressChange: acceptsPointerEvents ? onEditablePressChange : null,
       ignorePointers: ignorePointers,
       semanticLabel: semanticLabel ?? label,
       semanticHint: effectiveSemanticHint,
@@ -374,25 +379,34 @@ class RemixTextField extends StatelessWidget {
               )
             : styledEditableText;
 
-        return editableWithHint;
+        return error
+            ? Semantics(
+                validationResult: SemanticsValidationResult.invalid,
+                child: editableWithHint,
+              )
+            : editableWithHint;
       },
     );
 
-    final withAccessories = RemixFlexBoxWithEffects(
+    final withAccessories = RemixBoxWithEffects(
       styleSpec: spec.container,
-      direction: Axis.horizontal,
       containerEffects: spec.containerEffects,
-      children: [
-        ?leading,
-        // ignore: avoid-flexible-outside-flex
-        Expanded(child: nakedTextField),
-        ?trailing,
-      ],
+      child: Row(
+        spacing: spec.spacing ?? 0,
+        crossAxisAlignment:
+            spec.crossAxisAlignment ?? CrossAxisAlignment.center,
+        textBaseline: TextBaseline.alphabetic,
+        children: [
+          ?leading,
+          Expanded(child: nakedTextField),
+          ?trailing,
+        ],
+      ),
     );
 
     final needsWrapper = label != null || helperText != null;
     Widget composite = needsWrapper
-        ? ColumnBox(
+        ? FlexBox(
             styleSpec: spec.layout,
             children: [
               if (label != null)
@@ -409,9 +423,9 @@ class RemixTextField extends StatelessWidget {
         : withAccessories;
 
     composite = _RemixTextFieldFallbackGestureDetector(
-      enabled: enabled,
+      enabled: acceptsPointerEvents,
       onTapAlwaysCalled: onTapAlwaysCalled,
-      onPressChange: (pressed) => styleController.update(.pressed, pressed),
+      onPressChange: onFallbackPressChange,
       onTap: () {
         if (canRequestFocus && effectiveFocusNode.canRequestFocus) {
           effectiveFocusNode.requestFocus();
@@ -448,6 +462,7 @@ class _RemixTextFieldBody extends StatefulWidget {
 
 class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   late final WidgetStatesController _styleController;
+  final _activePressSources = <_RemixTextFieldPressSource>{};
   FocusNode? _internalFocusNode;
 
   FocusNode get _effectiveFocusNode =>
@@ -490,6 +505,22 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
     _styleController
       ..update(.disabled, !widget.config.enabled || widget.config.readOnly)
       ..update(.error, widget.config.error);
+
+    if (!widget.config.enabled || widget.config.ignorePointers == true) {
+      _activePressSources.clear();
+      _styleController.update(.pressed, false);
+    }
+  }
+
+  void _updatePressSource(_RemixTextFieldPressSource source, bool pressed) {
+    if (!mounted) return;
+
+    if (pressed) {
+      _activePressSources.add(source);
+    } else {
+      _activePressSources.remove(source);
+    }
+    _styleController.update(.pressed, _activePressSources.isNotEmpty);
   }
 
   @override
@@ -507,11 +538,20 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
       style: _baseStyle.merge(config.style),
       styleSpec: config.styleSpec,
       controller: _styleController,
-      builder: (context, spec) =>
-          config._buildResolved(spec, _styleController, _effectiveFocusNode),
+      builder: (context, spec) => config._buildResolved(
+        spec,
+        _styleController,
+        _effectiveFocusNode,
+        onEditablePressChange: (pressed) =>
+            _updatePressSource(.editable, pressed),
+        onFallbackPressChange: (pressed) =>
+            _updatePressSource(.fallback, pressed),
+      ),
     );
   }
 }
+
+enum _RemixTextFieldPressSource { editable, fallback }
 
 class _RemixTextFieldFallbackGestureDetector extends StatelessWidget {
   const _RemixTextFieldFallbackGestureDetector({
@@ -530,52 +570,19 @@ class _RemixTextFieldFallbackGestureDetector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gestures = <Type, GestureRecognizerFactory>{};
+    if (!enabled) return child;
 
-    if (enabled) {
-      void handleTapUp(TapDragUpDetails details) {
-        onPressChange(false);
-        if (details.consecutiveTapCount == 1 || onTapAlwaysCalled) {
-          onTap();
-        }
-      }
-
-      void configure(BaseTapAndDragGestureRecognizer recognizer) {
-        recognizer
-          ..dragStartBehavior = DragStartBehavior.down
-          ..onTapDown = (_) {
-            onPressChange(true);
-          }
-          ..onTapUp = handleTapUp
-          ..onCancel = () => onPressChange(false);
-      }
-
-      switch (defaultTargetPlatform) {
-        case TargetPlatform.android:
-        case TargetPlatform.fuchsia:
-        case TargetPlatform.iOS:
-          gestures[TapAndHorizontalDragGestureRecognizer] =
-              GestureRecognizerFactoryWithHandlers<
-                TapAndHorizontalDragGestureRecognizer
-              >(
-                () => TapAndHorizontalDragGestureRecognizer(debugOwner: this),
-                configure,
-              );
-        case TargetPlatform.linux:
-        case TargetPlatform.macOS:
-        case TargetPlatform.windows:
-          gestures[TapAndPanGestureRecognizer] =
-              GestureRecognizerFactoryWithHandlers<TapAndPanGestureRecognizer>(
-                () => TapAndPanGestureRecognizer(debugOwner: this),
-                configure,
-              );
-      }
-    }
-
-    return RawGestureDetector(
-      gestures: gestures,
+    return TextSelectionGestureDetector(
+      onTapTrackReset: () => onPressChange(false),
+      onTapDown: (_) => onPressChange(true),
+      onSingleTapUp: (_) => onPressChange(false),
+      onSingleTapCancel: () => onPressChange(false),
+      onUserTap: onTap,
+      onDoubleTapDown: (_) => onPressChange(false),
+      onTripleTapDown: (_) => onPressChange(false),
+      onDragSelectionStart: (_) => onPressChange(false),
+      onUserTapAlwaysCalled: onTapAlwaysCalled,
       behavior: HitTestBehavior.translucent,
-      excludeFromSemantics: true,
       child: child,
     );
   }
@@ -584,10 +591,13 @@ class _RemixTextFieldFallbackGestureDetector extends StatelessWidget {
 String? _joinSemanticText(Iterable<String?> values) {
   final pieces = <String>[];
   for (final value in values) {
-    if (value == null || value.trim().isEmpty || pieces.contains(value)) {
+    final normalized = value?.trim();
+    if (normalized == null ||
+        normalized.isEmpty ||
+        pieces.contains(normalized)) {
       continue;
     }
-    pieces.add(value);
+    pieces.add(normalized);
   }
 
   return pieces.isEmpty ? null : pieces.join('\n');
@@ -595,14 +605,14 @@ String? _joinSemanticText(Iterable<String?> values) {
 
 /// Baseline style merged beneath the user-supplied style.
 ///
-/// It seeds the vertical [ColumnBox] wrapper (the [TextFieldSpec.layout])
-/// with the default min-size / start-alignment layout and an 8px vertical
-/// spacing. Merging it underneath the caller's style means customizing a
-/// single layout property (e.g. `.layout(.spacing(12))`) keeps
-/// the remaining defaults instead of falling back to `ColumnBox`'s
-/// `mainAxisSize: max` / `crossAxisAlignment: center`.
+/// It seeds the [FlexBox] wrapper (the [TextFieldSpec.layout]) with a vertical,
+/// min-size, start-aligned layout and 8px spacing. Merging it underneath the
+/// caller's style means customizing a single layout property (for example,
+/// `.layout(.spacing(12))`) keeps the remaining defaults instead of falling
+/// back to `FlexBox`'s horizontal / max / center defaults.
 final TextFieldStyler _baseStyle = TextFieldStyler(
   layout: FlexBoxStyler()
+      .direction(.vertical)
       .mainAxisSize(.min)
       .crossAxisAlignment(.start)
       .spacing(8),

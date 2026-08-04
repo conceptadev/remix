@@ -166,7 +166,7 @@ void main() {
       expectSameSpec(
         TextFieldStyler().color(Colors.white).textColor(Colors.black),
         TextFieldStyler(
-          container: FlexBoxStyler(
+          container: BoxStyler(
             decoration: BoxDecorationMix(color: Colors.white),
           ),
           text: TextStyler(style: TextStyleMix(color: Colors.black)),

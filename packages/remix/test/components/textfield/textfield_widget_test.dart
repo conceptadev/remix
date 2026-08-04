@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -49,8 +51,7 @@ void main() {
       var spec = fortalTextFieldStyle(
         variant: FortalTextFieldVariant.surface,
       ).resolve(context).spec;
-      var decoration =
-          spec.container.spec.box!.spec.decoration! as BoxDecoration;
+      var decoration = spec.container.spec.decoration! as BoxDecoration;
 
       expect(spec.text.spec.style?.color, colors.gray.scale.step(12));
       expect(decoration.color, colors.colorSurface);
@@ -61,7 +62,7 @@ void main() {
       spec = fortalTextFieldStyle(
         variant: FortalTextFieldVariant.soft,
       ).resolve(context).spec;
-      decoration = spec.container.spec.box!.spec.decoration! as BoxDecoration;
+      decoration = spec.container.spec.decoration! as BoxDecoration;
 
       expect(spec.text.spec.style?.color, colors.accent.scale.step(12));
       expect(decoration.color, colors.accent.scale.alphaStep(3));
@@ -547,6 +548,31 @@ void main() {
         }
       });
 
+      testWidgets('marks an error field as semantically invalid', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            const RemixTextField(
+              semanticLabel: 'Email address',
+              helperText: 'Enter a valid email',
+              error: true,
+            ),
+          );
+          await tester.pump();
+
+          final fields = _textFieldSemanticNodes(tester);
+          expect(fields, hasLength(1));
+          expect(
+            fields.single.getSemanticsData().validationResult,
+            SemanticsValidationResult.invalid,
+          );
+        } finally {
+          semantics.dispose();
+        }
+      });
+
       testWidgets('deduplicates matching error and hint text', (tester) async {
         final semantics = tester.ensureSemantics();
         try {
@@ -611,6 +637,27 @@ void main() {
           }
         },
       );
+
+      testWidgets('deduplicates normalized supporting text', (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            const RemixTextField(
+              semanticLabel: 'Summary',
+              hintText: 'Add details',
+              helperText: '  Add details  ',
+            ),
+          );
+          await tester.pump();
+
+          final fields = _textFieldSemanticNodes(tester);
+          expect(fields, hasLength(1));
+          expect(fields.single.getSemanticsData().hint, 'Add details');
+          expect(_semanticTextOccurrences(tester, 'Add details'), 1);
+        } finally {
+          semantics.dispose();
+        }
+      });
 
       testWidgets('interactive accessories keep independent semantic actions', (
         tester,
@@ -743,13 +790,20 @@ void main() {
         'label, helper, and container padding retain the tap target',
         (tester) async {
           var taps = 0;
+          bool? focusedDuringTap;
+          final focusNode = FocusNode();
+          addTearDown(focusNode.dispose);
 
           await tester.pumpRemixApp(
             RemixTextField(
               label: 'Field label',
               helperText: 'Field helper',
               hintText: 'Field hint',
-              onTap: () => taps++,
+              focusNode: focusNode,
+              onTap: () {
+                taps++;
+                focusedDuringTap = focusNode.hasFocus;
+              },
               onTapAlwaysCalled: true,
               style: TextFieldStyler().width(280).paddingAll(24),
             ),
@@ -759,13 +813,26 @@ void main() {
           final editable = tester.widget<EditableText>(
             find.byType(EditableText),
           );
-          final container = find.byType(RowBox);
+          final inputRow = find.descendant(
+            of: find.byType(RemixTextField),
+            matching: find.byType(Row),
+          );
+          expect(inputRow, findsOneWidget);
+          final container = find.descendant(
+            of: find.byType(RemixTextField),
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is Box &&
+                  widget.styleSpec?.spec.padding == const EdgeInsets.all(24),
+            ),
+          );
           expect(container, findsOneWidget);
 
           await tester.tap(find.text('Field label'));
           await tester.pump();
           expect(taps, 1);
           expect(editable.focusNode.hasFocus, isTrue);
+          expect(focusedDuringTap, isFalse);
 
           await tester.tap(find.text('Field helper'));
           await tester.pump();
@@ -803,6 +870,43 @@ void main() {
         );
       }
 
+      for (final platform in TargetPlatform.values) {
+        testWidgets(
+          'fallback multi-tap matches the editable on ${platform.name}',
+          (tester) async {
+            debugDefaultTargetPlatformOverride = platform;
+            try {
+              var fallbackTaps = 0;
+              await tester.pumpRemixApp(
+                RemixTextField(
+                  label: 'Fallback target',
+                  onTap: () => fallbackTaps++,
+                ),
+              );
+
+              for (var index = 0; index < 4; index++) {
+                await tester.tap(find.text('Fallback target'));
+                await tester.pump(const Duration(milliseconds: 50));
+              }
+
+              var editableTaps = 0;
+              await tester.pumpRemixApp(
+                RemixTextField(onTap: () => editableTaps++),
+              );
+
+              for (var index = 0; index < 4; index++) {
+                await tester.tap(find.byType(EditableText));
+                await tester.pump(const Duration(milliseconds: 50));
+              }
+
+              expect(fallbackTaps, editableTaps);
+            } finally {
+              debugDefaultTargetPlatformOverride = null;
+            }
+          },
+        );
+      }
+
       testWidgets('accessory taps do not activate or focus the field', (
         tester,
       ) async {
@@ -813,6 +917,9 @@ void main() {
           RemixTextField(
             onTap: () => fieldTaps++,
             onTapAlwaysCalled: true,
+            style: TextFieldStyler(
+              cursorColor: Colors.blue,
+            ).onPressed(TextFieldStyler(cursorColor: Colors.red)),
             trailing: IconButton(
               key: const ValueKey('clear-accessory'),
               onPressed: () => accessoryTaps++,
@@ -825,11 +932,49 @@ void main() {
         final focusNode = tester
             .widget<EditableText>(find.byType(EditableText))
             .focusNode;
-        await tester.tap(find.byKey(const ValueKey('clear-accessory')));
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.byKey(const ValueKey('clear-accessory'))),
+        );
+        await tester.pump();
+
+        expect(
+          tester
+              .widget<NakedTextField>(find.byType(NakedTextField))
+              .cursorColor,
+          Colors.blue,
+        );
+        expect(accessoryTaps, 0);
+        expect(fieldTaps, 0);
+        expect(focusNode.hasFocus, isFalse);
+
+        await gesture.up();
         await tester.pump();
 
         expect(accessoryTaps, 1);
         expect(fieldTaps, 0);
+        expect(focusNode.hasFocus, isFalse);
+      });
+
+      testWidgets('ignorePointers disables fallback interaction', (
+        tester,
+      ) async {
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+        var taps = 0;
+
+        await tester.pumpRemixApp(
+          RemixTextField(
+            label: 'Ignored target',
+            focusNode: focusNode,
+            ignorePointers: true,
+            onTap: () => taps++,
+          ),
+        );
+
+        await tester.tap(find.text('Ignored target'));
+        await tester.pump();
+
+        expect(taps, 0);
         expect(focusNode.hasFocus, isFalse);
       });
 
@@ -945,12 +1090,289 @@ void main() {
         await tester.pump();
         expect(cursorColor(), Colors.blue);
 
+        await tester.pump(kDoubleTapTimeout);
         gesture = await tester.startGesture(location);
         await tester.pump();
         expect(cursorColor(), Colors.red);
         await gesture.cancel();
         await tester.pump();
         expect(cursorColor(), Colors.blue);
+      });
+
+      testWidgets('selection drag cancels editable pressed styling', (
+        tester,
+      ) async {
+        final controller = TextEditingController(
+          text: 'Drag across this editable text to select it',
+        );
+        addTearDown(controller.dispose);
+
+        await tester.pumpRemixApp(
+          SizedBox(
+            width: 360,
+            child: RemixTextField(
+              controller: controller,
+              style: TextFieldStyler(
+                cursorColor: Colors.blue,
+              ).onPressed(TextFieldStyler(cursorColor: Colors.red)),
+            ),
+          ),
+        );
+        await tester.pump();
+
+        Color? cursorColor() => tester
+            .widget<NakedTextField>(find.byType(NakedTextField))
+            .cursorColor;
+        final editable = find.byType(EditableText);
+        final gesture = await tester.startGesture(
+          tester.getCenter(editable),
+          kind: PointerDeviceKind.mouse,
+        );
+        await tester.pump(kPressTimeout);
+        expect(cursorColor(), Colors.red);
+
+        await gesture.moveBy(const Offset(50, 0));
+        await tester.pump(const Duration(milliseconds: 16));
+        await gesture.moveBy(const Offset(50, 0));
+        await tester.pump();
+        expect(cursorColor(), Colors.blue);
+        expect(controller.selection.isCollapsed, isFalse);
+
+        await gesture.up();
+      });
+
+      testWidgets('editable and fallback press sources overlap safely', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixTextField(
+            label: 'Fallback target',
+            style: TextFieldStyler(
+              cursorColor: Colors.blue,
+            ).onPressed(TextFieldStyler(cursorColor: Colors.red)),
+          ),
+        );
+        await tester.pump();
+
+        Color? cursorColor() => tester
+            .widget<NakedTextField>(find.byType(NakedTextField))
+            .cursorColor;
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.byType(EditableText)),
+        );
+        await tester.pump(kPressTimeout);
+        expect(cursorColor(), Colors.red);
+        expect(
+          NakedTextFieldState.of(
+            tester.element(find.byType(EditableText)),
+          ).isPressed,
+          isTrue,
+        );
+
+        // Both the outer composite fallback and Naked's editable detector see
+        // an editable press. Releasing either source must not clear the other.
+        final onEditablePressChange = tester
+            .widget<NakedTextField>(find.byType(NakedTextField))
+            .onPressChange;
+        expect(onEditablePressChange, isNotNull);
+        onEditablePressChange!(false);
+        await tester.pump();
+        expect(cursorColor(), Colors.red);
+
+        await gesture.up();
+        await tester.pump();
+        expect(cursorColor(), Colors.blue);
+      });
+
+      for (final region in ['fallback', 'editable']) {
+        testWidgets('rapid double-tap clears $region pressed styling', (
+          tester,
+        ) async {
+          await tester.pumpRemixApp(
+            RemixTextField(
+              label: 'Press target',
+              style: TextFieldStyler(
+                cursorColor: Colors.blue,
+              ).onPressed(TextFieldStyler(cursorColor: Colors.red)),
+            ),
+          );
+
+          final target = region == 'fallback'
+              ? find.text('Press target')
+              : find.byType(EditableText);
+          await tester.tap(target);
+          await tester.pump(const Duration(milliseconds: 50));
+          await tester.tap(target);
+          await tester.pump();
+
+          final textField = tester.widget<NakedTextField>(
+            find.byType(NakedTextField),
+          );
+          expect(textField.cursorColor, Colors.blue);
+        });
+      }
+
+      for (final textFieldCase in [
+        (
+          name: 'TextField',
+          build: (Key key, TextFieldStyler style) =>
+              RemixTextField(key: key, style: style),
+        ),
+        (
+          name: 'TextArea',
+          build: (Key key, TextFieldStyler style) =>
+              RemixTextArea(key: key, style: style),
+        ),
+      ]) {
+        testWidgets(
+          '${textFieldCase.name} consumes generated input-row controls',
+          (tester) async {
+            const fieldKey = ValueKey('generated-row-controls-field');
+            await tester.pumpRemixApp(
+              textFieldCase.build(
+                fieldKey,
+                TextFieldStyler().spacing(12).crossAxisAlignment(.start),
+              ),
+            );
+            await tester.pump();
+
+            final inputRow = find.descendant(
+              of: find.byKey(fieldKey),
+              matching: find.byType(Row),
+            );
+            expect(inputRow, findsOneWidget);
+            final row = tester.widget<Row>(inputRow);
+            expect(row.spacing, 12);
+            expect(row.crossAxisAlignment, CrossAxisAlignment.start);
+          },
+        );
+
+        testWidgets(
+          '${textFieldCase.name} renders the generated Box container surface',
+          (tester) async {
+            const fieldKey = ValueKey('box-surface-field');
+            await tester.pumpRemixApp(
+              textFieldCase.build(
+                fieldKey,
+                TextFieldStyler(
+                  container: BoxStyler()
+                      .color(Colors.amber)
+                      .paddingAll(7)
+                      .alignment(.center),
+                ),
+              ),
+            );
+            await tester.pump();
+
+            expect(tester.takeException(), isNull);
+            final boxes = tester.widgetList<Box>(
+              find.descendant(
+                of: find.byKey(fieldKey),
+                matching: find.byType(Box),
+              ),
+            );
+            final container = boxes.singleWhere(
+              (box) =>
+                  box.styleSpec?.spec.decoration ==
+                  const BoxDecoration(color: Colors.amber),
+            );
+            expect(container.styleSpec?.spec.padding, const EdgeInsets.all(7));
+            expect(container.styleSpec?.spec.alignment, Alignment.center);
+            expect(
+              find.descendant(
+                of: find.byKey(fieldKey),
+                matching: find.byType(Row),
+              ),
+              findsOneWidget,
+            );
+          },
+        );
+      }
+
+      testWidgets(
+        'TextField fluent baseline alignment renders text and accessories',
+        (tester) async {
+          final controller = TextEditingController(text: 'Baseline input');
+          addTearDown(controller.dispose);
+
+          await tester.pumpRemixApp(
+            RemixTextField(
+              controller: controller,
+              leading: const Text('Leading'),
+              trailing: const Text('Trailing'),
+              style: TextFieldStyler().crossAxisAlignment(.baseline),
+            ),
+          );
+          await tester.pump();
+
+          expect(tester.takeException(), isNull);
+          final row = tester.widget<Row>(find.byType(Row));
+          final editable = tester.widget<EditableText>(
+            find.byType(EditableText),
+          );
+          expect(row.crossAxisAlignment, CrossAxisAlignment.baseline);
+          expect(row.textBaseline, TextBaseline.alphabetic);
+          expect(editable.controller.text, 'Baseline input');
+          expect(find.text('Leading'), findsOneWidget);
+          expect(find.text('Trailing'), findsOneWidget);
+        },
+      );
+
+      testWidgets(
+        'TextArea raw baseline spec renders multiline text and accessories',
+        (tester) async {
+          final controller = TextEditingController(text: 'First\nsecond');
+          addTearDown(controller.dispose);
+
+          await tester.pumpRemixApp(
+            RemixTextArea(
+              controller: controller,
+              leading: const Text('Leading'),
+              trailing: const Text('Trailing'),
+              styleSpec: const TextFieldSpec(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+              ),
+            ),
+          );
+          await tester.pump();
+
+          expect(tester.takeException(), isNull);
+          final row = tester.widget<Row>(find.byType(Row));
+          final editable = tester.widget<EditableText>(
+            find.byType(EditableText),
+          );
+          expect(row.crossAxisAlignment, CrossAxisAlignment.baseline);
+          expect(row.textBaseline, TextBaseline.alphabetic);
+          expect(editable.controller.text, 'First\nsecond');
+          expect(find.text('Leading'), findsOneWidget);
+          expect(find.text('Trailing'), findsOneWidget);
+        },
+      );
+
+      testWidgets('input row follows ambient text direction', (tester) async {
+        const fieldKey = ValueKey('ambient-direction-field');
+        const leadingKey = ValueKey('leading');
+        const trailingKey = ValueKey('trailing');
+        await tester.pumpRemixApp(
+          const RemixTextField(
+            key: fieldKey,
+            leading: SizedBox(key: leadingKey, width: 20, height: 20),
+            trailing: SizedBox(key: trailingKey, width: 20, height: 20),
+          ),
+          textDirection: TextDirection.rtl,
+        );
+        await tester.pump();
+
+        final inputRow = find.descendant(
+          of: find.byKey(fieldKey),
+          matching: find.byType(Row),
+        );
+        expect(inputRow, findsOneWidget);
+        expect(tester.widget<Row>(inputRow).textDirection, isNull);
+        expect(
+          tester.getCenter(find.byKey(leadingKey)).dx,
+          greaterThan(tester.getCenter(find.byKey(trailingKey)).dx),
+        );
       });
 
       testWidgets('owns, swaps, and disposes only internal focus nodes', (
@@ -1121,7 +1543,7 @@ void main() {
         await tester.pumpRemixApp(
           RemixTextField(
             style: TextFieldStyler().container(
-              FlexBoxStyler(
+              BoxStyler(
                 decoration: BoxDecorationMix(color: Colors.grey),
                 padding: EdgeInsetsGeometryMix.all(16),
               ),
@@ -1146,17 +1568,110 @@ void main() {
         await tester.pumpAndSettle();
 
         final flex = tester
-            .widget<ColumnBox>(find.byType(ColumnBox))
+            .widget<FlexBox>(find.byType(FlexBox))
             .styleSpec
             ?.spec
             .flex
             ?.spec;
 
         // Customizing spacing keeps the min-size / start-alignment defaults
-        // instead of falling back to ColumnBox's max / center.
+        // instead of falling back to FlexBox's max / center.
+        expect(flex?.direction, Axis.vertical);
         expect(flex?.spacing, 12);
         expect(flex?.mainAxisSize, MainAxisSize.min);
         expect(flex?.crossAxisAlignment, CrossAxisAlignment.start);
+      });
+
+      testWidgets('default layout remains vertical', (tester) async {
+        await tester.pumpRemixApp(
+          const RemixTextField(
+            label: 'Label',
+            hintText: 'Hint',
+            helperText: 'Helper',
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final flex = tester
+            .widget<FlexBox>(find.byType(FlexBox))
+            .styleSpec
+            ?.spec
+            .flex
+            ?.spec;
+
+        expect(flex?.direction, Axis.vertical);
+        expect(
+          tester.getCenter(find.text('Label')).dy,
+          lessThan(tester.getCenter(find.text('Hint')).dy),
+        );
+        expect(
+          tester.getCenter(find.text('Hint')).dy,
+          lessThan(tester.getCenter(find.text('Helper')).dy),
+        );
+      });
+
+      testWidgets('raw default spec layout remains vertical', (tester) async {
+        await tester.pumpRemixApp(
+          const RemixTextField(
+            label: 'Label',
+            hintText: 'Hint',
+            helperText: 'Helper',
+            styleSpec: TextFieldSpec(),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final flex = tester.widget<FlexBox>(find.byType(FlexBox));
+        final resolved = flex.styleSpec?.spec.flex?.spec;
+
+        expect(resolved?.direction, Axis.vertical);
+        expect(resolved?.mainAxisSize, MainAxisSize.min);
+        expect(resolved?.crossAxisAlignment, CrossAxisAlignment.start);
+        expect(resolved?.spacing, 8);
+        expect(
+          tester.getCenter(find.text('Label')).dy,
+          lessThan(tester.getCenter(find.text('Hint')).dy),
+        );
+        expect(
+          tester.getCenter(find.text('Hint')).dy,
+          lessThan(tester.getCenter(find.text('Helper')).dy),
+        );
+      });
+
+      testWidgets('explicit row layout is honored without assertion', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixTextField(
+            label: 'Label',
+            hintText: 'Hint',
+            helperText: 'Helper',
+            style: TextFieldStyler()
+                .container(BoxStyler().width(200))
+                .layout(
+                  FlexBoxStyler()
+                      .row()
+                      .mainAxisSize(.min)
+                      .crossAxisAlignment(.center),
+                ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        final flex = tester
+            .widget<FlexBox>(find.byType(FlexBox))
+            .styleSpec
+            ?.spec
+            .flex
+            ?.spec;
+        final labelCenter = tester.getCenter(find.text('Label'));
+        final hintCenter = tester.getCenter(find.text('Hint'));
+        final helperCenter = tester.getCenter(find.text('Helper'));
+
+        expect(flex?.direction, Axis.horizontal);
+        expect(labelCenter.dx, lessThan(hintCenter.dx));
+        expect(hintCenter.dx, lessThan(helperCenter.dx));
       });
 
       testWidgets('applies width and height constraints', (tester) async {
@@ -1204,11 +1719,7 @@ void main() {
       testWidgets('uses styleSpec when provided', (tester) async {
         const spec = TextFieldSpec(
           container: StyleSpec(
-            spec: FlexBoxSpec(
-              box: StyleSpec(
-                spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
-              ),
-            ),
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
           ),
           textAlign: TextAlign.center,
           cursorWidth: 3.0,
@@ -1217,15 +1728,15 @@ void main() {
         await tester.pumpRemixApp(const RemixTextField(styleSpec: spec));
         await tester.pumpAndSettle();
 
-        final rowBoxDecorations = tester
-            .widgetList<RowBox>(find.byType(RowBox))
-            .map((box) => box.styleSpec?.spec.box?.spec.decoration);
+        final boxDecorations = tester
+            .widgetList<Box>(find.byType(Box))
+            .map((box) => box.styleSpec?.spec.decoration);
         final textField = tester.widget<NakedTextField>(
           find.byType(NakedTextField),
         );
 
         expect(
-          rowBoxDecorations,
+          boxDecorations,
           contains(equals(const BoxDecoration(color: Colors.red))),
         );
         expect(textField.textAlign, TextAlign.center);

@@ -49,10 +49,10 @@ TextFieldStyler _fortalTextFieldBaseStyler(
   return TextFieldStyler(
         container: .height(metrics.height)
             .paddingX(metrics.paddingX)
-            .spacing(metrics.spacing)
-            .crossAxisAlignment(.center)
             .borderRadiusAll(metrics.radius)
             .clipBehavior(.antiAlias),
+        spacing: metrics.spacing,
+        crossAxisAlignment: .center,
         text: .style(metrics.text.mix()),
         hintText: .style(metrics.text.mix()).textHeightBehavior(
           TextHeightBehaviorMix()

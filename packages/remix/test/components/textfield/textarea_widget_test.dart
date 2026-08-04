@@ -1,3 +1,5 @@
+import 'dart:ui' show SemanticsInputType;
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -233,8 +235,6 @@ void main() {
     testWidgets('uses the canonical fluent styler and raw spec unchanged', (
       tester,
     ) async {
-      expect(RemixTextArea.styleFrom(), isA<TextFieldStyler>());
-
       await tester.pumpRemixApp(
         RemixTextArea(
           style: TextFieldStyler()
@@ -263,6 +263,50 @@ void main() {
       expect(naked.cursorColor, Colors.orange);
       expect(naked.cursorWidth, 5);
       expect(naked.textAlign, TextAlign.center);
+    });
+
+    testWidgets('multiline scrolling cancels editable pressed styling', (
+      tester,
+    ) async {
+      final controller = TextEditingController(
+        text: List.generate(12, (index) => 'Line $index').join('\n'),
+      );
+      final scrollController = ScrollController();
+      addTearDown(controller.dispose);
+      addTearDown(scrollController.dispose);
+
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 320,
+          child: RemixTextArea(
+            controller: controller,
+            scrollController: scrollController,
+            minLines: 2,
+            maxLines: 2,
+            style: TextFieldStyler(
+              cursorColor: Colors.blue,
+            ).onPressed(TextFieldStyler(cursorColor: Colors.red)),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      Color? cursorColor() => tester
+          .widget<NakedTextField>(find.byType(NakedTextField))
+          .cursorColor;
+      final editable = find.byType(EditableText);
+      final gesture = await tester.startGesture(tester.getCenter(editable));
+      await tester.pump(kPressTimeout);
+      expect(cursorColor(), Colors.red);
+
+      await gesture.moveBy(const Offset(0, -40));
+      await tester.pump(const Duration(milliseconds: 16));
+      await gesture.moveBy(const Offset(0, -40));
+      await tester.pump();
+      expect(cursorColor(), Colors.blue);
+      expect(scrollController.offset, greaterThan(0));
+
+      await gesture.up();
     });
 
     testWidgets(
@@ -423,12 +467,16 @@ void main() {
 
     testWidgets('exposes enabled multiline semantics once', (tester) async {
       final semantics = tester.ensureSemantics();
+      final controller = TextEditingController(text: 'abc');
+      addTearDown(controller.dispose);
       try {
         await tester.pumpRemixApp(
-          const RemixTextArea(
+          RemixTextArea(
+            controller: controller,
             label: 'Notes',
             hintText: 'Add details',
             helperText: 'Markdown supported',
+            maxLength: 10,
           ),
         );
         await tester.pump();
@@ -442,15 +490,21 @@ void main() {
         expect(fields, hasLength(1));
         expect(
           fields.single,
-          isSemantics(
+          matchesSemantics(
             label: 'Notes',
+            value: 'abc',
             hint: 'Add details\nMarkdown supported',
+            textDirection: TextDirection.ltr,
+            maxValueLength: 10,
+            currentValueLength: 3,
+            inputType: SemanticsInputType.text,
             isTextField: true,
             isMultiline: true,
+            isFocusable: true,
             hasEnabledState: true,
             isEnabled: true,
-            isReadOnly: false,
             hasTapAction: true,
+            hasFocusAction: true,
           ),
         );
       } finally {
@@ -512,7 +566,7 @@ void main() {
       (name: 'read-only', enabled: true, readOnly: true),
       (name: 'disabled', enabled: false, readOnly: false),
     ]) {
-      testWidgets('${state.name} keeps multiline field semantics', (
+      testWidgets('${state.name} keeps exact multiline field semantics', (
         tester,
       ) async {
         final semantics = tester.ensureSemantics();
@@ -535,14 +589,19 @@ void main() {
           expect(fields, hasLength(1));
           expect(
             fields.single,
-            isSemantics(
+            matchesSemantics(
               label: 'Notes',
+              value: '',
+              textDirection: TextDirection.ltr,
+              currentValueLength: 0,
+              inputType: SemanticsInputType.text,
               isTextField: true,
               isMultiline: true,
+              isFocusable: true,
               hasEnabledState: true,
               isEnabled: state.enabled,
               isReadOnly: true,
-              hasTapAction: false,
+              hasFocusAction: state.enabled,
             ),
           );
         } finally {

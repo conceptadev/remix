@@ -3,6 +3,22 @@
 - **FEAT**: Add `RemixTextArea`, a constructor-only multiline facade over
   `RemixTextField` with two-line auto-growing defaults and the canonical
   `TextFieldStyler` / `TextFieldSpec` styling surface.
+- **BREAKING**: Change `TextFieldSpec.container` and
+  `TextFieldStyler.container` from `FlexBoxSpec` / `FlexBoxStyler` to
+  `BoxSpec` / `BoxStyler` because TextField and TextArea always render their
+  input anatomy as a fixed horizontal row. The full forwarded Box surface is
+  honored, generated `spacing` and `crossAxisAlignment` methods control the row
+  directly, and the row follows the ambient text direction. Misleading Flex
+  direction, main-axis, vertical-direction, text-direction, text-baseline, and
+  `flex(FlexStyler)` container methods are no longer exposed.
+- **FIX**: Render the separate label/input/helper `layout` as a real `FlexBox`
+  so its full generated Flex direction surface is truthful. The base style
+  preserves the existing vertical, min-size, start-aligned layout with 8px
+  spacing, while explicit row layouts are now honored without a forced-column
+  assertion.
+- **FIX**: Remove the unreleased `RemixTextArea.styleFrom` affordance because
+  the shared `TextFieldStyler` callable constructs a single-line
+  `RemixTextField`. Pass a `TextFieldStyler` to `RemixTextArea.style` instead.
 - **FIX**: Top-align multiline TextField hints and expose label, hint, helper,
   error, and interactive accessory semantics once without narrowing the
   existing composite tap target.

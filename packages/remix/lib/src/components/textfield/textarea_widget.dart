@@ -85,6 +85,4 @@ class RemixTextArea extends RemixTextField {
          expands: false,
          obscureText: false,
        );
-
-  static final styleFrom = TextFieldStyler.new;
 }

@@ -139,7 +139,9 @@ not accept input or expose an editing action.
 
 TextArea deliberately reuses the TextField anatomy. Use `TextFieldStyler` for
 fluent styling or provide a resolved `TextFieldSpec`; there are no separate
-TextArea style or spec types.
+TextArea style or spec types. `RemixTextArea` intentionally has no `styleFrom`
+callable because `TextFieldStyler`'s callable creates a `RemixTextField`; pass
+the styler through `style` as shown below.
 
 <CodeGroup title="Custom Remix styling" defaultLanguage="dart">
 ```dart

@@ -73,9 +73,8 @@ class _TextAreaExampleState extends State<_TextAreaExample> {
           remix: [
             field(
               const RemixTextArea(
-                key: ValueKey('textarea-empty-focused'),
-                autofocus: true,
-                label: 'Empty and focused',
+                key: ValueKey('textarea-empty'),
+                label: 'Empty',
                 hintText: 'Start typing at the top…',
               ),
             ),
