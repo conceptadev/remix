@@ -65,14 +65,14 @@ With Remix, you get:
 Add Remix to your project:
 
 ```bash
-flutter pub add remix
+flutter pub add remix:^1.0.0-beta.1
 ```
 
 Or add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  remix: ^1.0.0
+  remix: ^1.0.0-beta.1
 ```
 
 ### Your First Component
