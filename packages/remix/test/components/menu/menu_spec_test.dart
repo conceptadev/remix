@@ -337,19 +337,49 @@ void main() {
         expect(semanticStyles(present.lerp(absent, 1)), [null, null, null]);
       });
 
-      test('interpolates an absent semantic style from the item fallback', () {
+      test('extrapolates before zero using the item fallback', () {
         const start = MenuSpec(
           item: StyleSpec(
-            spec: MenuItemSpec(
-              indicator: StyleSpec(spec: IconSpec(size: 4)),
-            ),
+            spec: MenuItemSpec(indicator: StyleSpec(spec: IconSpec(size: 8))),
           ),
         );
         const end = MenuSpec(
           checkboxItem: StyleSpec(
-            spec: MenuItemSpec(
-              indicator: StyleSpec(spec: IconSpec(size: 20)),
-            ),
+            spec: MenuItemSpec(indicator: StyleSpec(spec: IconSpec(size: 16))),
+          ),
+        );
+
+        final result = start.lerp(end, -0.5);
+
+        expect(result.checkboxItem?.spec.indicator.spec.size, 4);
+      });
+
+      test('extrapolates beyond one using the item fallback', () {
+        const start = MenuSpec(
+          item: StyleSpec(
+            spec: MenuItemSpec(indicator: StyleSpec(spec: IconSpec(size: 8))),
+          ),
+        );
+        const end = MenuSpec(
+          checkboxItem: StyleSpec(
+            spec: MenuItemSpec(indicator: StyleSpec(spec: IconSpec(size: 16))),
+          ),
+        );
+
+        final result = start.lerp(end, 1.5);
+
+        expect(result.checkboxItem?.spec.indicator.spec.size, 20);
+      });
+
+      test('interpolates an absent semantic style from the item fallback', () {
+        const start = MenuSpec(
+          item: StyleSpec(
+            spec: MenuItemSpec(indicator: StyleSpec(spec: IconSpec(size: 4))),
+          ),
+        );
+        const end = MenuSpec(
+          checkboxItem: StyleSpec(
+            spec: MenuItemSpec(indicator: StyleSpec(spec: IconSpec(size: 20))),
           ),
         );
 
@@ -372,16 +402,12 @@ void main() {
       test('interpolates semantic styles when both endpoints define them', () {
         const start = MenuSpec(
           radioItem: StyleSpec(
-            spec: MenuItemSpec(
-              indicator: StyleSpec(spec: IconSpec(size: 4)),
-            ),
+            spec: MenuItemSpec(indicator: StyleSpec(spec: IconSpec(size: 4))),
           ),
         );
         const end = MenuSpec(
           radioItem: StyleSpec(
-            spec: MenuItemSpec(
-              indicator: StyleSpec(spec: IconSpec(size: 20)),
-            ),
+            spec: MenuItemSpec(indicator: StyleSpec(spec: IconSpec(size: 20))),
           ),
         );
 

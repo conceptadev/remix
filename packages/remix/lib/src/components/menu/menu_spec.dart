@@ -114,8 +114,8 @@ class MenuSpec with _$MenuSpec {
       StyleSpec<MenuItemSpec> nextFallback,
     ) {
       if (current == null && next == null) return null;
-      if (t <= 0) return current;
-      if (t >= 1) return next;
+      if (t == 0) return current;
+      if (t == 1) return next;
       return (current ?? currentFallback).lerp(next ?? nextFallback, t);
     }
 
