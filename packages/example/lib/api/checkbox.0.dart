@@ -31,6 +31,7 @@ class _CheckboxExampleState extends State<CheckboxExample> {
             _isChecked = value ?? false;
           });
         },
+        label: 'Receive updates',
         style: style,
       ),
     );

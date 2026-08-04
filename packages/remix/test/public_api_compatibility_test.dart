@@ -6,6 +6,11 @@ void main() {
   test('core constructors retain the origin/main data-driven surface', () {
     const button = RemixButton(label: 'Save');
     const card = RemixCard(child: Text('Passive'));
+    const checkbox = RemixCheckbox(
+      selected: false,
+      label: 'Receive updates',
+      minimumTapTargetSize: Size.zero,
+    );
     const menu = RemixMenu<String>(
       trigger: RemixMenuTrigger(label: 'Actions'),
       items: [RemixMenuItem(value: 'save', label: 'Save')],
@@ -21,6 +26,8 @@ void main() {
 
     expect(button.label, 'Save');
     expect(card.child, isA<Text>());
+    expect(checkbox.label, 'Receive updates');
+    expect(checkbox.minimumTapTargetSize, Size.zero);
     expect(menu.trigger, isA<RemixMenuTrigger>());
     expect(menu.items.single, isA<RemixMenuItem<String>>());
     expect(select.items.single, isA<RemixSelectItem<String>>());
@@ -41,11 +48,18 @@ void main() {
     );
     const radio = FortalRadio<String>.soft(value: 'one');
     const button = FortalButton.soft(label: 'Save');
+    const checkbox = FortalCheckbox.soft(
+      selected: false,
+      label: 'Receive updates',
+      minimumTapTargetSize: Size.zero,
+    );
 
     expect(menu.variant, FortalMenuVariant.soft);
     expect(select.variant, FortalSelectVariant.ghost);
     expect(radio.variant, FortalRadioVariant.soft);
     expect(button.variant, FortalButtonVariant.soft);
+    expect(checkbox.label, 'Receive updates');
+    expect(checkbox.minimumTapTargetSize, Size.zero);
   });
 
   test('theme configuration exposes only canonical names', () {
