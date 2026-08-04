@@ -1,0 +1,371 @@
+---
+title: Skeleton
+description: A decorative loading placeholder that preserves the geometry of the content it replaces
+keywords: [flutter, remix, skeleton, loading, placeholder, shimmer, pulse]
+---
+
+A decorative loading placeholder that preserves the geometry of the content it replaces.
+
+## When to use this
+
+- **Content-shaped loading**: Stand in for text lines, avatars, or cards while data arrives, without the layout jumping when it lands.
+- **Wrapping real content**: Keep the child mounted so its measured size — and its local state — survive the loading toggle.
+- **Perceived performance**: Show the shape of the page immediately instead of an empty region.
+
+**When not to use this**: do not use a skeleton to report determinate progress. It is decorative and exposes no progress semantics. Use `RemixProgress` for a measurable percentage, or `RemixSpinner` with a `semanticsLabel` for an indeterminate operation that should be announced.
+
+## Basic implementation
+
+Wrap the real content. The skeleton takes the child's size, so the loading and
+loaded states occupy exactly the same space.
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class SkeletonExample extends StatelessWidget {
+  const SkeletonExample({super.key, required this.loading});
+
+  final bool loading;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8,
+      children: [
+        RemixSkeleton(
+          loading: loading,
+          style: placeholder,
+          child: const Text('Jane Appleseed'),
+        ),
+        RemixSkeleton(
+          loading: loading,
+          style: placeholder,
+          child: const Text('jane@example.com'),
+        ),
+      ],
+    );
+  }
+
+  SkeletonStyler get placeholder {
+    return SkeletonStyler()
+        .container(
+          BoxStyler()
+              .color(const Color(0x14000000))
+              .borderRounded(4),
+        )
+        .pulseColor(const Color(0x29000000));
+  }
+}
+```
+</CodeGroup>
+
+## Controlled loading state
+
+`loading` is an ordinary input, so the caller owns the state. Toggling it never
+remounts the child: a keyed stateful child keeps its identity and local state
+across the transition.
+
+<CodeGroup title="Controlled loading state" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class ProfileCard extends StatefulWidget {
+  const ProfileCard({super.key});
+
+  @override
+  State<ProfileCard> createState() => _ProfileCardState();
+}
+
+class _ProfileCardState extends State<ProfileCard> {
+  bool _loading = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12,
+      children: [
+        RemixSkeleton(
+          loading: _loading,
+          style: SkeletonStyler().container(
+            BoxStyler()
+                .color(const Color(0x14000000))
+                .shapeCircle(),
+          ),
+          child: const RemixAvatar(label: 'Jane Appleseed'),
+        ),
+        RemixButton(
+          label: _loading ? 'Finish loading' : 'Reload',
+          onPressed: () => setState(() => _loading = !_loading),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Placeholder shapes
+
+Without a child the container's own constraints decide the size. That covers
+standalone rectangles, text lines, and circles.
+
+<CodeGroup title="Placeholder shapes" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class SkeletonShapes extends StatelessWidget {
+  const SkeletonShapes({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 16,
+      children: [
+        RemixSkeleton(style: circle),
+        RemixSkeleton(style: textLine),
+        RemixSkeleton(style: block),
+      ],
+    );
+  }
+
+  SkeletonStyler get base {
+    return SkeletonStyler()
+        .container(BoxStyler().color(const Color(0x14000000)))
+        .pulseColor(const Color(0x29000000));
+  }
+
+  SkeletonStyler get circle =>
+      base.container(BoxStyler().size(40, 40).shapeCircle());
+
+  SkeletonStyler get textLine =>
+      base.container(BoxStyler().size(200, 12).borderRounded(6));
+
+  SkeletonStyler get block =>
+      base.container(BoxStyler().size(160, 80).borderRounded(8));
+}
+```
+</CodeGroup>
+
+## Announcing loading
+
+A skeleton is deliberately silent. When an application needs to announce that a
+region is loading, render a separate labelled status region beside it.
+
+<CodeGroup title="Announcing loading" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
+import 'package:remix/remix.dart';
+
+class AnnouncedLoading extends StatelessWidget {
+  const AnnouncedLoading({super.key, required this.loading});
+
+  final bool loading;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        RemixSkeleton(
+          loading: loading,
+          style: SkeletonStyler().container(
+            BoxStyler().color(const Color(0x14000000)),
+          ),
+          child: const Text('Monthly revenue'),
+        ),
+        if (loading)
+          Semantics(
+            role: SemanticsRole.status,
+            label: 'Loading monthly revenue',
+            child: const SizedBox.shrink(),
+          ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Styling
+
+`SkeletonStyler` keeps the placeholder's Box API nested under `container`, so
+geometry, fill, radius, borders, and widget modifiers are configured with a
+`BoxStyler`. `pulseColor` and `duration` configure the animation itself.
+
+<CodeGroup title="Styling" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+SkeletonStyler skeletonStyle() {
+  return SkeletonStyler()
+      .container(
+        BoxStyler()
+            .size(240, 16)
+            .color(const Color(0x14000000))
+            .borderRounded(4),
+      )
+      .pulseColor(const Color(0x29000000))
+      .duration(const Duration(milliseconds: 1000));
+}
+
+SkeletonSpec skeletonSpec() {
+  return const SkeletonSpec(
+    container: StyleSpec(
+      spec: BoxSpec(
+        constraints: BoxConstraints.tightFor(width: 240, height: 16),
+      ),
+    ),
+    pulseColor: Color(0x29000000),
+    duration: Duration(milliseconds: 1000),
+  );
+}
+```
+</CodeGroup>
+
+<Info>
+  Remix ships no opinionated skeleton visuals yet: the unstyled component draws
+  nothing until you give the container a fill or size. A Fortal recipe with the
+  Radix gray-alpha values arrives with the rest of the Fortal recipe work.
+</Info>
+
+## Behavior
+
+### Interaction and focus
+
+While `loading` is true the child stays mounted for its size and local state,
+but it is inert: pointer input is ignored, keyboard traversal skips it, its
+animations stop ticking, and it is painted at zero opacity. Focus already held
+inside the child is released as the skeleton enters the loading state.
+
+### Semantics
+
+The loading subtree contributes nothing to the semantics tree — no label, no
+role, no actions. Set `loading` to false and the child's original semantics
+return unchanged. No loading or progress role is fabricated.
+
+### Reduced motion
+
+The pulse honours the platform animation preference through
+`MediaQuery.disableAnimationsOf`. When animations are disabled the placeholder
+paints its base frame and schedules no further frames, and it resumes pulsing if
+the preference changes back while it is mounted.
+
+### Text direction
+
+The placeholder has no directional content, so it renders identically in LTR and
+RTL. Directionality comes from whatever the child itself needs.
+
+## Differences from Radix
+
+Checked against the pinned `@radix-ui/themes@3.3.0` `skeleton.css`.
+
+- **Wrapped text renders as one block, not one bar per line.** Radix relies on
+  `box-decoration-break: clone`, so an inline skeleton around text that wraps
+  gets a separate background box per line. Flutter has no equivalent, and
+  deriving line boxes would mean introspecting text layout, so a Remix skeleton
+  paints a single rectangle over the child's whole box. Compose one skeleton per
+  line when you want the striped look — see the two-line example above.
+- **A childless skeleton has no intrinsic size.** Radix falls back to
+  `height: var(--space-3)` for an empty skeleton. The unstyled Remix component
+  is deliberately unopinionated and draws nothing until the container gets a
+  size or fill; the Fortal recipe supplies the token default.
+- Radix has no reduced-motion behavior for Skeleton; honouring
+  `MediaQuery.disableAnimationsOf` is a Flutter adaptation.
+- Radix pins its pulse to gray alpha 3 → 4 over 1000 ms. Remix keeps the 1000 ms
+  leg but leaves the colors to the caller: with a plain `color` and a
+  `pulseColor` the fill interpolates between them. When there is no unmasked
+  fill to animate — no `color` at all, or a gradient, image, or
+  `foregroundDecoration` painting over it — the whole container fades between
+  full and half opacity instead, composed with any opacity the caller already
+  applied rather than replacing it. Radix solves the same problem by
+  force-clearing `background-image`; Remix leaves your decoration intact and
+  changes how it pulses.
+- **Suppression goes further than upstream.** Radix only sets
+  `pointer-events: none` and hides the content visually; it leaves hidden
+  content focusable and readable by assistive technology. Remix also applies
+  `ExcludeFocus`, `ExcludeSemantics`, and `TickerMode`.
+- Like Radix, there is no shimmer gradient and no progress semantics.
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixSkeleton remixSkeletonConstructor({
+  Key? key,
+  Widget? child,
+  bool loading = true,
+  Style<SkeletonSpec> style = const SkeletonStyler.create(),
+  StyleSpec<SkeletonSpec>? styleSpec,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+## Properties
+### Widget Properties
+
+#### `child` → `Widget?`
+
+Optional. The content the placeholder stands in for. When present it sizes the
+skeleton in both states, so toggling `loading` never changes the layout. When
+absent, the container's own constraints decide the size and a non-loading
+skeleton collapses to nothing.
+
+#### `loading` → `bool`
+
+Optional, defaults to `true`. Whether to show the placeholder instead of the
+child.
+
+#### `style` → `Style<SkeletonSpec>`
+
+Optional. The style configuration for the skeleton. A `SkeletonStyler` is the
+generated fluent implementation.
+
+#### `styleSpec` → `StyleSpec<SkeletonSpec>?`
+
+Optional. A pre-resolved style spec that bypasses style resolution. Wrap a raw
+`SkeletonSpec` with `const StyleSpec(spec: SkeletonSpec(...))`.
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
+
+### Style Methods
+
+#### `pulseColor(Color value)`
+
+Sets the alternate fill the pulse animates toward. Requires a plain container
+`color` with nothing painted over it; when a gradient, image, or
+`foregroundDecoration` would mask the fill, the pulse fades the whole container
+instead so the animation stays visible.
+
+#### `duration(Duration value)`
+
+Sets the length of one forward pulse leg. Defaults to 1000 ms; the reverse leg
+takes the same time.
+
+#### `container(BoxStyler value)`
+
+Sets the placeholder container directly. Every Box style method — `size`,
+`color`, `borderRounded`, `shapeCircle`, `padding`, and the rest — stays on the
+nested `BoxStyler`; these methods are not exposed directly on `SkeletonStyler`.
+
+#### `animate(AnimationConfig value)`
+
+Configures implicit animation for style transitions.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `call({Key? key, Widget? child, bool loading = true})`
+
+Creates a `RemixSkeleton` widget with this style applied.

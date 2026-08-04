@@ -14,6 +14,7 @@ import 'entries/divider_entry.dart';
 import 'entries/progress_entry.dart';
 import 'entries/radio_entry.dart';
 import 'entries/select_entry.dart';
+import 'entries/skeleton_entry.dart';
 import 'entries/slider_entry.dart';
 import 'entries/spinner_entry.dart';
 import 'entries/switch_entry.dart';
@@ -82,6 +83,10 @@ final Map<String, WidgetBuilder> components = {
   'progress': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildProgressExample()),
+  ),
+  'skeleton': (context) => FortalScope(
+    brightness: Theme.of(context).brightness,
+    child: PreviewShell(child: buildSkeletonExample()),
   ),
   'spinner': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
