@@ -262,11 +262,26 @@ class RemixTextField extends StatelessWidget {
   Widget _buildResolved(
     TextFieldSpec spec,
     WidgetStatesController styleController,
+    FocusNode effectiveFocusNode,
   ) {
-    return NakedTextField(
+    final isMultiline = expands || maxLines != 1 || (minLines ?? 1) > 1;
+    final hintAlignment = isMultiline
+        ? AlignmentDirectional.topStart
+        : AlignmentDirectional.centerStart;
+    final baseSemanticHint = semanticHint ?? hintText;
+    final effectiveSemanticErrorText = error
+        ? _joinSemanticText([helperText])
+        : null;
+    final effectiveSemanticHint = _joinSemanticText([
+      if (!error || baseSemanticHint != effectiveSemanticErrorText)
+        baseSemanticHint,
+      if (!error) helperText,
+    ]);
+
+    final nakedTextField = NakedTextField(
       groupId: groupId,
       controller: controller,
-      focusNode: focusNode,
+      focusNode: effectiveFocusNode,
       undoController: undoController,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
@@ -322,14 +337,12 @@ class RemixTextField extends StatelessWidget {
       canRequestFocus: canRequestFocus,
       spellCheckConfiguration: spellCheckConfiguration,
       magnifierConfiguration: magnifierConfiguration,
-      onHoverChange: (value) => styleController.update(.hovered, value),
       onFocusChange: (value) => styleController.update(.focused, value),
       onPressChange: (value) => styleController.update(.pressed, value),
       ignorePointers: ignorePointers,
       semanticLabel: semanticLabel ?? label,
-      semanticHint: semanticHint ?? hintText,
-      semanticErrorText: error ? helperText : null,
-      excludeSemantics: excludeSemantics,
+      semanticHint: effectiveSemanticHint,
+      semanticErrorText: effectiveSemanticErrorText,
       builder: (BuildContext context, _, Widget editableText) {
         final textFieldState = NakedTextFieldState.of(context);
         final styledEditableText = StyleSpecBuilder(
@@ -342,13 +355,18 @@ class RemixTextField extends StatelessWidget {
 
         final editableWithHint = hintText != null
             ? Stack(
-                alignment: AlignmentDirectional.centerStart,
+                alignment: hintAlignment,
                 children: [
                   if (textFieldState.text.isEmpty)
                     Positioned.fill(
                       child: Align(
-                        alignment: AlignmentDirectional.centerStart,
-                        child: StyledText(hintText!, styleSpec: spec.hintText),
+                        alignment: hintAlignment,
+                        child: ExcludeSemantics(
+                          child: StyledText(
+                            hintText!,
+                            styleSpec: spec.hintText,
+                          ),
+                        ),
                       ),
                     ),
                   styledEditableText,
@@ -356,33 +374,63 @@ class RemixTextField extends StatelessWidget {
               )
             : styledEditableText;
 
-        final withAccessories = RemixFlexBoxWithEffects(
-          styleSpec: spec.container,
-          direction: Axis.horizontal,
-          containerEffects: spec.containerEffects,
-          children: [
-            ?leading,
-            // ignore: avoid-flexible-outside-flex
-            Expanded(child: editableWithHint),
-            ?trailing,
-          ],
-        );
-
-        final needsWrapper = label != null || helperText != null;
-
-        return needsWrapper
-            ? ColumnBox(
-                styleSpec: spec.layout,
-                children: [
-                  if (label != null) StyledText(label!, styleSpec: spec.label),
-                  withAccessories,
-                  if (helperText != null)
-                    StyledText(helperText!, styleSpec: spec.helperText),
-                ],
-              )
-            : withAccessories;
+        return editableWithHint;
       },
     );
+
+    final withAccessories = RemixFlexBoxWithEffects(
+      styleSpec: spec.container,
+      direction: Axis.horizontal,
+      containerEffects: spec.containerEffects,
+      children: [
+        ?leading,
+        // ignore: avoid-flexible-outside-flex
+        Expanded(child: nakedTextField),
+        ?trailing,
+      ],
+    );
+
+    final needsWrapper = label != null || helperText != null;
+    Widget composite = needsWrapper
+        ? ColumnBox(
+            styleSpec: spec.layout,
+            children: [
+              if (label != null)
+                ExcludeSemantics(
+                  child: StyledText(label!, styleSpec: spec.label),
+                ),
+              withAccessories,
+              if (helperText != null)
+                ExcludeSemantics(
+                  child: StyledText(helperText!, styleSpec: spec.helperText),
+                ),
+            ],
+          )
+        : withAccessories;
+
+    composite = _RemixTextFieldFallbackGestureDetector(
+      enabled: enabled,
+      onTapAlwaysCalled: onTapAlwaysCalled,
+      onPressChange: (pressed) => styleController.update(.pressed, pressed),
+      onTap: () {
+        if (canRequestFocus && effectiveFocusNode.canRequestFocus) {
+          effectiveFocusNode.requestFocus();
+        }
+        onTap?.call();
+      },
+      child: composite,
+    );
+
+    if (enabled) {
+      composite = MouseRegion(
+        onEnter: (_) => styleController.update(.hovered, true),
+        onExit: (_) => styleController.update(.hovered, false),
+        cursor: SystemMouseCursors.text,
+        child: composite,
+      );
+    }
+
+    return excludeSemantics ? ExcludeSemantics(child: composite) : composite;
   }
 
   @override
@@ -400,6 +448,10 @@ class _RemixTextFieldBody extends StatefulWidget {
 
 class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   late final WidgetStatesController _styleController;
+  FocusNode? _internalFocusNode;
+
+  FocusNode get _effectiveFocusNode =>
+      widget.config.focusNode ?? _internalFocusNode!;
 
   @override
   void initState() {
@@ -408,11 +460,33 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
       if (!widget.config.enabled || widget.config.readOnly) .disabled,
       if (widget.config.error) .error,
     });
+    if (widget.config.focusNode == null) {
+      _internalFocusNode = FocusNode(
+        debugLabel: '${widget.config.runtimeType} (internal)',
+      );
+    }
   }
 
   @override
   void didUpdateWidget(_RemixTextFieldBody oldWidget) {
     super.didUpdateWidget(oldWidget);
+    final oldExternalFocusNode = oldWidget.config.focusNode;
+    final newExternalFocusNode = widget.config.focusNode;
+
+    if (!identical(oldExternalFocusNode, newExternalFocusNode)) {
+      if (oldExternalFocusNode == null && newExternalFocusNode != null) {
+        final obsoleteInternalNode = _internalFocusNode!;
+        _internalFocusNode = null;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          obsoleteInternalNode.dispose();
+        });
+      } else if (oldExternalFocusNode != null && newExternalFocusNode == null) {
+        _internalFocusNode = FocusNode(
+          debugLabel: '${widget.config.runtimeType} (internal)',
+        );
+      }
+    }
+
     _styleController
       ..update(.disabled, !widget.config.enabled || widget.config.readOnly)
       ..update(.error, widget.config.error);
@@ -421,6 +495,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   @override
   void dispose() {
     _styleController.dispose();
+    _internalFocusNode?.dispose();
     super.dispose();
   }
 
@@ -432,9 +507,90 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
       style: _baseStyle.merge(config.style),
       styleSpec: config.styleSpec,
       controller: _styleController,
-      builder: (context, spec) => config._buildResolved(spec, _styleController),
+      builder: (context, spec) =>
+          config._buildResolved(spec, _styleController, _effectiveFocusNode),
     );
   }
+}
+
+class _RemixTextFieldFallbackGestureDetector extends StatelessWidget {
+  const _RemixTextFieldFallbackGestureDetector({
+    required this.enabled,
+    required this.onTapAlwaysCalled,
+    required this.onPressChange,
+    required this.onTap,
+    required this.child,
+  });
+
+  final bool enabled;
+  final bool onTapAlwaysCalled;
+  final ValueChanged<bool> onPressChange;
+  final VoidCallback onTap;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final gestures = <Type, GestureRecognizerFactory>{};
+
+    if (enabled) {
+      void handleTapUp(TapDragUpDetails details) {
+        onPressChange(false);
+        if (details.consecutiveTapCount == 1 || onTapAlwaysCalled) {
+          onTap();
+        }
+      }
+
+      void configure(BaseTapAndDragGestureRecognizer recognizer) {
+        recognizer
+          ..dragStartBehavior = DragStartBehavior.down
+          ..onTapDown = (_) {
+            onPressChange(true);
+          }
+          ..onTapUp = handleTapUp
+          ..onCancel = () => onPressChange(false);
+      }
+
+      switch (defaultTargetPlatform) {
+        case TargetPlatform.android:
+        case TargetPlatform.fuchsia:
+        case TargetPlatform.iOS:
+          gestures[TapAndHorizontalDragGestureRecognizer] =
+              GestureRecognizerFactoryWithHandlers<
+                TapAndHorizontalDragGestureRecognizer
+              >(
+                () => TapAndHorizontalDragGestureRecognizer(debugOwner: this),
+                configure,
+              );
+        case TargetPlatform.linux:
+        case TargetPlatform.macOS:
+        case TargetPlatform.windows:
+          gestures[TapAndPanGestureRecognizer] =
+              GestureRecognizerFactoryWithHandlers<TapAndPanGestureRecognizer>(
+                () => TapAndPanGestureRecognizer(debugOwner: this),
+                configure,
+              );
+      }
+    }
+
+    return RawGestureDetector(
+      gestures: gestures,
+      behavior: HitTestBehavior.translucent,
+      excludeFromSemantics: true,
+      child: child,
+    );
+  }
+}
+
+String? _joinSemanticText(Iterable<String?> values) {
+  final pieces = <String>[];
+  for (final value in values) {
+    if (value == null || value.trim().isEmpty || pieces.contains(value)) {
+      continue;
+    }
+    pieces.add(value);
+  }
+
+  return pieces.isEmpty ? null : pieces.join('\n');
 }
 
 /// Baseline style merged beneath the user-supplied style.
