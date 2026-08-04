@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -8,6 +9,63 @@ void main() {
     expect(textArea, isA<RemixTextField>());
     expect(textArea.minLines, 2);
     expect(textArea.maxLines, isNull);
+  });
+
+  test('the data list family is constructible from the public API', () {
+    const item = RemixDataListItem(
+      key: ValueKey<String>('status'),
+      label: 'Status',
+      value: 'Active',
+      alignment: RemixDataListItemAlignment.center,
+    );
+    const rawStyleSpec = StyleSpec<DataListSpec>(
+      spec: DataListSpec(
+        rowSpacing: 8,
+        columnSpacing: 16,
+        labelValueSpacing: 4,
+        minLabelWidth: 120,
+      ),
+    );
+    const raw = RemixDataList(
+      key: ValueKey<String>('raw'),
+      items: [item],
+      orientation: Axis.vertical,
+      semanticLabel: 'Account details',
+      excludeSemantics: true,
+      styleSpec: rawStyleSpec,
+    );
+    final Style<DataListSpec> style = raw.style;
+    final StyleSpec<DataListSpec>? styleSpec = raw.styleSpec;
+
+    final DataListStyler styler = RemixDataList.styleFrom(
+      rowSpacing: 12,
+      columnSpacing: 20,
+      labelValueSpacing: 6,
+      minLabelWidth: 144,
+    );
+    final items = <RemixDataListItem>[item];
+    const forwardedKey = ValueKey<String>('forwarded');
+    final called = styler(
+      key: forwardedKey,
+      items: items,
+      orientation: Axis.vertical,
+      semanticLabel: 'Forwarded account details',
+      excludeSemantics: true,
+    );
+
+    expect(raw, isA<RemixDataList>());
+    expect(raw.items.single, same(item));
+    expect(style, isA<DataListStyler>());
+    expect(styleSpec, same(rawStyleSpec));
+    expect(styleSpec?.spec, isA<DataListSpec>());
+    expect(styler, isA<DataListStyler>());
+    expect(called, isA<RemixDataList>());
+    expect(called.key, forwardedKey);
+    expect(called.style, same(styler));
+    expect(called.items, same(items));
+    expect(called.orientation, Axis.vertical);
+    expect(called.semanticLabel, 'Forwarded account details');
+    expect(called.excludeSemantics, isTrue);
   });
 
   test('mode-aware Fortal filters are constructible from the public API', () {

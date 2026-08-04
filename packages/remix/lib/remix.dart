@@ -11,6 +11,7 @@ export 'src/components/dialog/dialog.dart';
 export 'src/components/icon_button/icon_button.dart';
 export 'src/components/card/card.dart';
 export 'src/components/checkbox/checkbox.dart';
+export 'src/components/data_list/data_list.dart';
 export 'src/components/divider/divider.dart';
 export 'src/components/menu/menu.dart';
 export 'src/components/popover/popover.dart';

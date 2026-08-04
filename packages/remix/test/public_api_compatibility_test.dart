@@ -19,6 +19,9 @@ void main() {
     const tabBar = RemixTabBar(child: Text('Tabs'));
     const spinner = RemixSpinner();
     const textArea = RemixTextArea(label: 'Notes');
+    const dataList = RemixDataList(
+      items: [RemixDataListItem(label: 'Status', value: 'Active')],
+    );
 
     expect(button.label, 'Save');
     expect(card.child, isA<Text>());
@@ -31,6 +34,16 @@ void main() {
     expect(spinner, isA<RemixSpinner>());
     expect(textArea, isA<RemixTextField>());
     expect(textArea.label, 'Notes');
+    expect(dataList.items.single, isA<RemixDataListItem>());
+    expect(dataList.items.single.label, 'Status');
+    expect(dataList.items.single.value, 'Active');
+    expect(
+      dataList.items.single.alignment,
+      RemixDataListItemAlignment.baseline,
+    );
+    expect(dataList.orientation, Axis.horizontal);
+    expect(dataList.style, isA<DataListStyler>());
+    expect(dataList.styleSpec, isNull);
   });
 
   test('generated wrappers preserve generic and named constructors', () {
