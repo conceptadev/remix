@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart'
     show
         BoxParentData,
+        RenderObject,
+        RenderParagraph,
         RenderProxyBox,
         RenderTable,
         SemanticsConfiguration,

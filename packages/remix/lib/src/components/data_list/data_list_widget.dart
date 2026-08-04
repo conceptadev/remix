@@ -87,15 +87,16 @@ class RemixDataListItem {
 ///
 /// ## Layout contract
 ///
-/// For a bounded horizontal list, the supported width is at least the
-/// resolved label column minimum (the greater of `minLabelWidth` and every
-/// label's minimum intrinsic width) plus `columnSpacing` plus the value
-/// column's minimum intrinsic width. Down to that bound, a long label wraps
-/// rather than starving the value column, which never shrinks below its
-/// minimum intrinsic width. Below the bound the pinned label column cannot
-/// fit and content overflows; the renderer never switches orientation on its
-/// own, so rebuild with [orientation] set to [Axis.vertical] when the
-/// available width is below the minimum.
+/// In a bounded horizontal list, textual values can shrink to their widest
+/// grapheme cluster and break long tokens only between grapheme clusters.
+/// Their announced value remains the caller's original string. Custom value
+/// widgets keep their normal minimum intrinsic width instead. The narrowest
+/// supported width is therefore the resolved label column minimum (the greater
+/// of `minLabelWidth` and every label's minimum intrinsic width), plus
+/// `columnSpacing`, plus the greatest value minimum for the rows. Below that
+/// structural bound content can overflow; the renderer never switches
+/// orientation on its own, so rebuild with [orientation] set to [Axis.vertical]
+/// when the available width is below the minimum.
 ///
 /// ## Example
 ///
@@ -269,8 +270,11 @@ Widget _valueCell(
   final value = item.value;
   Widget content;
   if (value != null) {
-    // String values keep the full column width so long text can wrap.
-    content = StyledText(value, styleSpec: spec.value);
+    // String values keep the full column width and expose a grapheme-level
+    // minimum intrinsic width so unbroken identifiers can wrap.
+    content = _BreakableDataListValue(
+      child: StyledText(value, styleSpec: spec.value),
+    );
   } else {
     // Arbitrary children inherit the resolved value typography the same way
     // Radix cascades `dd` styles onto custom markup.
@@ -359,72 +363,133 @@ class _HorizontalDataListLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final rows = <TableRow>[];
-        for (var index = 0; index < items.length; index += 1) {
-          final item = items[index];
-          final alignment = _cellAlignment(item);
-          final rowGap = index == items.length - 1 ? 0.0 : metrics.rowSpacing;
+    final rows = <TableRow>[];
+    for (var index = 0; index < items.length; index += 1) {
+      final item = items[index];
+      final alignment = _cellAlignment(item);
+      final rowGap = index == items.length - 1 ? 0.0 : metrics.rowSpacing;
 
-          final summarized = item.value != null || item.semanticValue != null;
-          final valueCell = _valueCell(item, spec, alignChildStart: true);
+      final summarized = item.value != null || item.semanticValue != null;
+      final valueCell = _valueCell(item, spec, alignChildStart: true);
 
-          rows.add(
-            TableRow(
-              key: item.key,
-              children: [
-                _DataListCellAlignment(
-                  verticalAlignment: alignment,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: rowGap),
-                    child: _labelCell(item, spec),
-                  ),
-                ),
-                _DataListCellAlignment(
-                  verticalAlignment: alignment,
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.only(
-                      start: metrics.columnSpacing,
-                      bottom: rowGap,
-                    ),
-                    child: _HorizontalRowSemantics(
-                      item: item,
-                      child: summarized
-                          ? ExcludeSemantics(child: valueCell)
-                          : valueCell,
-                    ),
-                  ),
-                ),
-              ],
+      rows.add(
+        TableRow(
+          key: item.key,
+          children: [
+            _DataListCellAlignment(
+              verticalAlignment: alignment,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: rowGap),
+                child: _labelCell(item, spec),
+              ),
             ),
-          );
-        }
-
-        return _DataListTable(
-          columnWidths: <int, TableColumnWidth>{
-            0: MaxColumnWidth(
-              FixedColumnWidth(metrics.minLabelWidth),
-              const IntrinsicColumnWidth(),
+            _DataListCellAlignment(
+              verticalAlignment: alignment,
+              child: Padding(
+                padding: EdgeInsetsDirectional.only(
+                  start: metrics.columnSpacing,
+                  bottom: rowGap,
+                ),
+                child: _HorizontalRowSemantics(
+                  item: item,
+                  child: summarized
+                      ? ExcludeSemantics(child: valueCell)
+                      : valueCell,
+                ),
+              ),
             ),
-            // Bounded width: flex, so long values wrap and shrink — floored
-            // at the value content's minimum intrinsic width so a long label
-            // wraps instead of collapsing the value column to zero. Unbounded
-            // width: intrinsic, because a flex column cannot resolve without a
-            // finite width.
-            1: constraints.hasBoundedWidth
-                ? const MaxColumnWidth(
-                    FlexColumnWidth(),
-                    IntrinsicColumnWidth(),
-                  )
-                : const IntrinsicColumnWidth(),
-          },
-          textDirection: Directionality.of(context),
-          textBaseline: TextBaseline.alphabetic,
-          children: rows,
-        );
+          ],
+        ),
+      );
+    }
+
+    return _DataListTable(
+      columnWidths: <int, TableColumnWidth>{
+        0: MaxColumnWidth(
+          FixedColumnWidth(metrics.minLabelWidth),
+          const IntrinsicColumnWidth(),
+        ),
+        // Intrinsic sizing preserves natural width under an unbounded parent;
+        // flex fills a finite parent. Text values report one grapheme cluster
+        // as their minimum while custom children retain their own minimum.
+        1: const IntrinsicColumnWidth(flex: 1.0),
       },
+      textDirection: Directionality.of(context),
+      textBaseline: TextBaseline.alphabetic,
+      children: rows,
     );
+  }
+}
+
+/// Lets a textual value shrink to its widest grapheme cluster.
+///
+/// Flutter's paragraph layout already performs emergency line breaks only at
+/// grapheme boundaries. Its minimum intrinsic width is word-based, though,
+/// which prevents a table column from becoming narrow enough to use those
+/// breaks for an identifier without spaces. This render proxy changes only
+/// that intrinsic-width signal; layout, painting, baselines, and semantics
+/// continue to come from the original [StyledText].
+class _BreakableDataListValue extends SingleChildRenderObjectWidget {
+  const _BreakableDataListValue({required super.child});
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _RenderBreakableDataListValue();
+  }
+}
+
+class _RenderBreakableDataListValue extends RenderProxyBox {
+  @override
+  double computeMinIntrinsicWidth(double height) {
+    final paragraph = _findParagraph(child);
+    if (paragraph == null) return super.computeMinIntrinsicWidth(height);
+
+    final plainText = paragraph.text.toPlainText(
+      includeSemanticsLabels: false,
+      includePlaceholders: false,
+    );
+    if (plainText.isEmpty) return 0.0;
+
+    final painter = TextPainter(
+      text: paragraph.text,
+      textAlign: paragraph.textAlign,
+      textDirection: paragraph.textDirection,
+      textScaler: paragraph.textScaler,
+      locale: paragraph.locale,
+      strutStyle: paragraph.strutStyle,
+      textWidthBasis: paragraph.textWidthBasis,
+      textHeightBehavior: paragraph.textHeightBehavior,
+    )..layout();
+
+    var widestCluster = 0.0;
+    var offset = 0;
+    for (final cluster in plainText.characters) {
+      final end = offset + cluster.length;
+      final boxes = painter.getBoxesForSelection(
+        TextSelection(baseOffset: offset, extentOffset: end),
+      );
+      final width = boxes.fold<double>(
+        0.0,
+        (total, box) => total + box.right - box.left,
+      );
+      if (width > widestCluster) widestCluster = width;
+      offset = end;
+    }
+    painter.dispose();
+
+    return widestCluster;
+  }
+
+  static RenderParagraph? _findParagraph(RenderObject? root) {
+    if (root == null) return null;
+    if (root is RenderParagraph) return root;
+
+    RenderParagraph? paragraph;
+    root.visitChildren((child) {
+      paragraph ??= _findParagraph(child);
+    });
+
+    return paragraph;
   }
 }
 

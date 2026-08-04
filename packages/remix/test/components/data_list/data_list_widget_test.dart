@@ -1,6 +1,7 @@
 import 'dart:ui' show SemanticsRole;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show RenderParagraph;
 import 'package:flutter/semantics.dart' hide SemanticsRole;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -175,6 +176,48 @@ void main() {
         expect(_table, findsOneWidget);
         expect(find.text('Name'), findsOneWidget);
         expect(find.text('leo@example.com'), findsOneWidget);
+      });
+
+      testWidgets('horizontal orientation answers intrinsic dimensions', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          IntrinsicWidth(
+            child: RemixDataList(
+              style: _metricStyle().columnSpacing(12.0),
+              items: const [
+                RemixDataListItem(label: 'Name', value: 'Leo'),
+                RemixDataListItem(label: 'Email', value: 'leo@example.com'),
+              ],
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(_table, findsOneWidget);
+        expect(tester.getSize(_table).width, isPositive);
+      });
+
+      testWidgets('horizontal orientation renders as AlertDialog content', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          AlertDialog(
+            content: RemixDataList(
+              style: _metricStyle(),
+              items: const [
+                RemixDataListItem(label: 'Name', value: 'Leo'),
+                RemixDataListItem(label: 'Email', value: 'leo@example.com'),
+              ],
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(find.byType(AlertDialog), findsOneWidget);
+        expect(_table, findsOneWidget);
       });
 
       testWidgets('vertical orientation stacks items without a Table', (
@@ -883,11 +926,11 @@ void main() {
       });
 
       testWidgets(
-        'long label keeps a min-intrinsic value column and wraps at ~240px',
+        'long label leaves a grapheme-wide text value column at ~240px',
         (tester) async {
           // FlutterTest font: 10px/char. Label ideal 260px would eat the
-          // whole 240px bound; the value column must keep its min intrinsic
-          // width (longest word, 40px) while the label wraps.
+          // whole 240px bound; the textual value keeps one grapheme (10px)
+          // while both columns wrap.
           await tester.pumpRemixApp(
             SizedBox(
               width: 240,
@@ -908,19 +951,19 @@ void main() {
           expect(tester.getSize(_table).width, equals(240.0));
 
           final valueSize = tester.getSize(find.text('Dddd Eeee'));
-          expect(valueSize.width, equals(40.0));
+          expect(valueSize.width, equals(10.0));
           expect(valueSize.height, greaterThanOrEqualTo(20.0));
 
           final labelSize = tester.getSize(
             find.text('Aaaaaaaa Bbbbbbbb Cccccccc'),
           );
-          expect(labelSize.width, equals(200.0));
+          expect(labelSize.width, equals(230.0));
           expect(labelSize.height, greaterThanOrEqualTo(20.0));
         },
       );
 
       testWidgets(
-        'long label and long value keep both columns at 200% text scale',
+        'long label keeps a scaled grapheme-wide value minimum at 200%',
         (tester) async {
           await tester.pumpRemixApp(
             MediaQuery(
@@ -942,13 +985,13 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(tester.takeException(), isNull);
-          // At 2x both columns land exactly on their min intrinsic widths:
-          // label 2 * 80 = 160, value 2 * 40 = 80.
+          // At 2x the textual value keeps one scaled grapheme (20px), and the
+          // label receives the rest of the bounded width.
           expect(tester.getSize(_table).width, equals(240.0));
-          expect(tester.getSize(find.text('Dddd Eeee')).width, equals(80.0));
+          expect(tester.getSize(find.text('Dddd Eeee')).width, equals(20.0));
           expect(
             tester.getSize(find.text('Aaaaaaaa Bbbbbbbb Cccccccc')).width,
-            equals(160.0),
+            equals(220.0),
           );
         },
       );
@@ -1317,6 +1360,139 @@ void main() {
     group('Text Scale and Width Bounds', () {
       const longValue =
           'Uma descrição razoavelmente longa que quebra em várias linhas';
+
+      testWidgets(
+        'bounded textual IDs break within the value column at scale and RTL',
+        (tester) async {
+          const value = 'usr_01JAVERYLONGIDENTIFIERWITHOUTBREAKS_987654321';
+
+          for (final textDirection in TextDirection.values) {
+            for (final scale in [1.0, 2.0]) {
+              await tester.pumpRemixApp(
+                MediaQuery(
+                  data: MediaQueryData(textScaler: TextScaler.linear(scale)),
+                  child: SizedBox(
+                    width: 180,
+                    child: RemixDataList(
+                      style: _metricStyle()
+                          .minLabelWidth(60.0)
+                          .columnSpacing(12.0),
+                      items: const [
+                        RemixDataListItem(label: 'ID', value: value),
+                      ],
+                    ),
+                  ),
+                ),
+                textDirection: textDirection,
+              );
+              await tester.pumpAndSettle();
+
+              expect(tester.takeException(), isNull);
+              final tableRect = tester.getRect(_table);
+              final valueRect = tester.getRect(find.text(value));
+              expect(
+                valueRect.left,
+                greaterThanOrEqualTo(tableRect.left),
+                reason:
+                    'the value must stay inside its table at ${scale}x '
+                    'in ${textDirection.name}',
+              );
+              expect(
+                valueRect.right,
+                lessThanOrEqualTo(tableRect.right),
+                reason:
+                    'the value must stay inside its table at ${scale}x '
+                    'in ${textDirection.name}',
+              );
+              expect(
+                valueRect.height,
+                greaterThan(10.0 * scale),
+                reason:
+                    'the unbroken value must wrap at ${scale}x '
+                    'in ${textDirection.name}',
+              );
+            }
+          }
+        },
+      );
+
+      testWidgets(
+        'bounded textual values preserve grapheme clusters and semantics',
+        (tester) async {
+          final handle = tester.ensureSemantics();
+          const cluster = 'e\u0301';
+          const value = '$cluster$cluster$cluster$cluster$cluster';
+
+          await tester.pumpRemixApp(
+            SizedBox(
+              width: 36,
+              child: RemixDataList(
+                style: _metricStyle().minLabelWidth(20.0).columnSpacing(4.0),
+                items: const [RemixDataListItem(label: 'I', value: value)],
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          expect(tester.takeException(), isNull);
+          final tableRect = tester.getRect(_table);
+          final valueFinder = find.text(value);
+          final valueRect = tester.getRect(valueFinder);
+          expect(valueRect.left, greaterThanOrEqualTo(tableRect.left));
+          expect(valueRect.right, lessThanOrEqualTo(tableRect.right));
+          expect(valueRect.height, greaterThan(10.0));
+
+          final paragraph = tester.renderObject<RenderParagraph>(valueFinder);
+          for (
+            var offset = 0;
+            offset < value.length;
+            offset += cluster.length
+          ) {
+            final boxes = paragraph.getBoxesForSelection(
+              TextSelection(
+                baseOffset: offset,
+                extentOffset: offset + cluster.length,
+              ),
+            );
+            expect(boxes, isNotEmpty);
+            expect(
+              boxes.map((box) => box.top).toSet(),
+              hasLength(1),
+              reason: 'a grapheme cluster must not cross a line boundary',
+            );
+          }
+
+          expect(
+            _rowNodes(tester).single.getSemanticsData().value,
+            equals(value),
+          );
+          handle.dispose();
+        },
+      );
+
+      testWidgets('bounded custom children keep their intrinsic width', (
+        tester,
+      ) async {
+        const probeKey = ValueKey('bounded-custom-value');
+        await tester.pumpRemixApp(
+          SizedBox(
+            width: 70,
+            child: RemixDataList(
+              style: _metricStyle().minLabelWidth(20.0).columnSpacing(10.0),
+              items: const [
+                RemixDataListItem(
+                  label: 'I',
+                  child: SizedBox(key: probeKey, width: 60, height: 10),
+                ),
+              ],
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(tester.getSize(find.byKey(probeKey)).width, equals(60.0));
+      });
 
       testWidgets('soft-wrappable values wrap at 200% and 300% scale', (
         tester,

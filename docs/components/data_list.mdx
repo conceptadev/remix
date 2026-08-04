@@ -53,12 +53,19 @@ class DataListExample extends StatelessWidget {
 ## Orientation and narrow widths
 
 The constructor's `orientation` always wins over styles, and the renderer
-never switches orientation on its own. A bounded horizontal list needs at
-least the resolved label column minimum (the greater of `minLabelWidth` and
-every label's minimum intrinsic width) plus `columnSpacing` plus the value
-column's minimum intrinsic width. Down to that bound a long label wraps
-rather than starving the value column, which never shrinks below its minimum
-intrinsic width; below the bound, rebuild with `Axis.vertical`.
+never switches orientation on its own. In a bounded horizontal list, string
+values can shrink to their widest Unicode grapheme cluster. Long identifiers
+without spaces then wrap at grapheme-safe character boundaries instead of
+overflowing, including under text scaling and RTL; the accessible value stays
+exactly as supplied. Custom value widgets retain their normal minimum intrinsic
+width.
+
+The narrowest supported width is the resolved label column minimum (the greater
+of `minLabelWidth` and every label's minimum intrinsic width), plus
+`columnSpacing`, plus the greatest value minimum across the rows. For a string
+that minimum is its widest grapheme cluster; for a custom child it is the
+child's intrinsic minimum. Below that structural bound, rebuild with
+`Axis.vertical`.
 
 <CodeGroup title="Caller-owned vertical fallback" defaultLanguage="dart">
 ```dart
