@@ -13,6 +13,10 @@ The value type must be non-nullable (`T extends Object`). `null` is reserved for
 `selectedValue` to represent no selection; item values themselves cannot be
 null, and `onChanged` only emits non-null item values.
 
+<Info>
+  No Fortal preset ships for this component yet, so there is no `FortalSegmentedControl` and no themed default. An unstyled `RemixSegmentedControl` renders as bare text with no track, selected surface, or focus ring. Every example below passes an explicit style, and your app must do the same.
+</Info>
+
 ## Basic implementation
 
 <CodeGroup title="Controlled segmented control" defaultLanguage="dart">
@@ -124,6 +128,8 @@ import 'package:remix/remix.dart';
 Widget layoutSelector({
   required String value,
   required ValueChanged<String> onChanged,
+  // Required, not optional: there is no themed preset to fall back on.
+  required SegmentedControlStyler style,
 }) {
   return RemixSegmentedControl<String>(
     semanticLabel: 'Layout',
@@ -141,6 +147,7 @@ Widget layoutSelector({
     ],
     selectedValue: value,
     onChanged: onChanged,
+    style: style,
   );
 }
 ```
@@ -187,7 +194,17 @@ after it. Put selected, disabled, hover, focus, and press variants on
 and offset focus outlines without changing geometry. A raw `styleSpec` is
 authoritative and bypasses fluent group and per-item styles.
 
+Both stylers start empty. Nothing supplies a track background, segment padding,
+selected surface, or focus ring unless you do, so treat `style` as required
+rather than optional.
+
 ## v1 visual scope
+
+No Fortal preset ships for this component in v1. There is no
+`FortalSegmentedControl` widget and no `fortalSegmentedControlStyle` recipe, so
+a Fortal-themed application must hand the control a `SegmentedControlStyler`
+built from `FortalTokens` (or from its own design tokens). A Radix-parity preset
+is a follow-up, not a hidden default: callers own the visual layer today.
 
 The selected surface is static in v1. A sliding indicator and separator
 treatment are intentionally not reserved or animated; those remain parity

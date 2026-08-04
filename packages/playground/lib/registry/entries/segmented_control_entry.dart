@@ -19,6 +19,10 @@ class _RemixSegmentedControlPreviewState
   String _view = 'grid';
   String _density = 'comfortable';
 
+  // Deliberate: this preview hand-rolls a style instead of reaching for a
+  // themed preset. No Fortal recipe ships for the segmented control in v1, so
+  // an unstyled RemixSegmentedControl would render as bare text. Replace this
+  // with the Fortal preset once one exists.
   SegmentedControlStyler _style(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final disabledForeground = colors.onSurface.withValues(alpha: 0.35);

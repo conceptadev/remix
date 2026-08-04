@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' show PointerDeviceKind;
 
 import 'package:flutter/material.dart';
@@ -50,6 +51,29 @@ Finder _trackBox() => find
       matching: find.byType(Box),
     )
     .first;
+
+/// Labels long enough to wrap, so each segment's minimum intrinsic width
+/// (its longest word) is strictly smaller than its maximum (a single line).
+const _wrappableItems = <RemixSegmentedControlItem<String>>[
+  RemixSegmentedControlItem(value: 'a', label: 'Wrappable long label'),
+  RemixSegmentedControlItem(value: 'b', label: 'Another long one'),
+];
+
+double _largestSegmentExtent(
+  WidgetTester tester,
+  double Function(RenderBox segment) measure,
+) {
+  final options = find.byType(NakedToggleOption<String>);
+  var largest = 0.0;
+  for (var index = 0; index < options.evaluate().length; index++) {
+    largest = math.max(
+      largest,
+      measure(tester.renderObject<RenderBox>(options.at(index))),
+    );
+  }
+
+  return largest;
+}
 
 void _expectContained(Rect inner, Rect outer) {
   expect(inner.left, greaterThanOrEqualTo(outer.left));
@@ -1998,6 +2022,164 @@ void main() {
         track.getMaxIntrinsicWidth(trackHeight),
         closeTo(expectedWidth, 0.01),
       );
+    });
+
+    testWidgets(
+      'horizontal main-axis intrinsics separate segment minimums from maximums',
+      (tester) async {
+        const spacing = 6.0;
+
+        await tester.pumpRemixApp(
+          RemixSegmentedControl<String>(
+            items: _wrappableItems,
+            selectedValue: 'a',
+            onChanged: (_) {},
+            style: SegmentedControlStyler().spacing(spacing),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final track = tester.renderObject<RenderBox>(_trackBox());
+        final segmentMin = _largestSegmentExtent(
+          tester,
+          (segment) => segment.getMinIntrinsicWidth(double.infinity),
+        );
+        final segmentMax = _largestSegmentExtent(
+          tester,
+          (segment) => segment.getMaxIntrinsicWidth(double.infinity),
+        );
+
+        // Guards the fixture: if the labels did not wrap, both segment getters
+        // would agree and the track assertions could not tell them apart.
+        expect(segmentMin, lessThan(segmentMax));
+
+        expect(
+          track.getMinIntrinsicWidth(double.infinity),
+          closeTo(segmentMin * 2 + spacing, 0.01),
+        );
+        expect(
+          track.getMaxIntrinsicWidth(double.infinity),
+          closeTo(segmentMax * 2 + spacing, 0.01),
+        );
+      },
+    );
+
+    testWidgets(
+      'vertical main-axis intrinsics separate segment minimums from maximums',
+      (tester) async {
+        const spacing = 8.0;
+
+        await tester.pumpRemixApp(
+          RemixSegmentedControl<String>(
+            items: _wrappableItems,
+            selectedValue: 'a',
+            onChanged: (_) {},
+            orientation: Axis.vertical,
+            // A quarter turn swaps each segment's width and height intrinsics,
+            // which is what makes its minimum and maximum heights differ.
+            style: SegmentedControlStyler()
+                .spacing(spacing)
+                .item(SegmentedControlItemStyler().wrap(.rotatedBox(1))),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final track = tester.renderObject<RenderBox>(_trackBox());
+        final segmentMin = _largestSegmentExtent(
+          tester,
+          (segment) => segment.getMinIntrinsicHeight(double.infinity),
+        );
+        final segmentMax = _largestSegmentExtent(
+          tester,
+          (segment) => segment.getMaxIntrinsicHeight(double.infinity),
+        );
+
+        expect(segmentMin, lessThan(segmentMax));
+
+        expect(
+          track.getMinIntrinsicHeight(double.infinity),
+          closeTo(segmentMin * 2 + spacing, 0.01),
+        );
+        expect(
+          track.getMaxIntrinsicHeight(double.infinity),
+          closeTo(segmentMax * 2 + spacing, 0.01),
+        );
+      },
+    );
+
+    testWidgets('an intrinsic-column parent wraps instead of overflowing', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixSegmentedControl<String>(
+          items: _wrappableItems,
+          selectedValue: 'a',
+          onChanged: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final segmentMin = _largestSegmentExtent(
+        tester,
+        (segment) => segment.getMinIntrinsicWidth(double.infinity),
+      );
+      final segmentMax = _largestSegmentExtent(
+        tester,
+        (segment) => segment.getMaxIntrinsicWidth(double.infinity),
+      );
+      // Sits between the two segment minimums and the two maximums, so a track
+      // that reports maximums from computeMinIntrinsicWidth cannot shrink into
+      // it while a correct one can.
+      final parentWidth = segmentMin + segmentMax;
+
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: parentWidth,
+          child: Table(
+            defaultColumnWidth: const IntrinsicColumnWidth(),
+            children: [
+              TableRow(
+                children: [
+                  RemixSegmentedControl<String>(
+                    items: _wrappableItems,
+                    selectedValue: 'a',
+                    onChanged: (_) {},
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getSize(_trackBox()).width,
+        lessThanOrEqualTo(parentWidth + 0.01),
+      );
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('an IntrinsicWidth parent still sizes to segment maximums', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        IntrinsicWidth(
+          child: RemixSegmentedControl<String>(
+            items: _wrappableItems,
+            selectedValue: 'a',
+            onChanged: (_) {},
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final segmentMax = _largestSegmentExtent(
+        tester,
+        (segment) => segment.getMaxIntrinsicWidth(double.infinity),
+      );
+
+      expect(tester.getSize(_trackBox()).width, closeTo(segmentMax * 2, 0.01));
     });
 
     testWidgets('vertical segments use equal intrinsic heights', (

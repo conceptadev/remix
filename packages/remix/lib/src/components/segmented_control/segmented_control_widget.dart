@@ -443,27 +443,54 @@ class _RenderEqualSegmentLayout extends RenderBox
 
   double get _totalSpacing => _saturatingProduct(spacing, _gapCount);
 
-  double _desiredMainExtent(double crossExtent) => _saturatingSum(
-    _saturatingProduct(_largestIntrinsicMainExtent(crossExtent), childCount),
-    _totalSpacing,
-  );
+  /// Main-axis extent of [childCount] equal segments plus the gaps between
+  /// them, each segment sized from the largest child.
+  ///
+  /// [minimum] selects each child's minimum intrinsic extent, which is what the
+  /// `computeMin*` overrides must report; layout and the `computeMax*`
+  /// overrides ask for the maximum. Deliberate: conflating the two makes an
+  /// intrinsic-sizing parent believe the track cannot shrink, so labels
+  /// overflow instead of wrapping.
+  double _desiredMainExtent(double crossExtent, {required bool minimum}) =>
+      _saturatingSum(
+        _saturatingProduct(
+          _largestIntrinsicMainExtent(crossExtent, minimum: minimum),
+          childCount,
+        ),
+        _totalSpacing,
+      );
 
-  double _largestIntrinsicMainExtent(double crossExtent) {
+  double _largestIntrinsicMainExtent(
+    double crossExtent, {
+    required bool minimum,
+  }) {
     var largest = 0.0;
     var child = firstChild;
     while (child != null) {
-      var extent = orientation == Axis.horizontal
-          ? child.getMaxIntrinsicWidth(crossExtent)
-          : child.getMaxIntrinsicHeight(crossExtent);
-      if (!extent.isFinite) {
-        extent = orientation == Axis.horizontal
-            ? child.getMinIntrinsicWidth(crossExtent)
-            : child.getMinIntrinsicHeight(crossExtent);
+      var extent = _childMainExtent(child, crossExtent, minimum: minimum);
+      // An unbounded maximum falls back to that child's minimum so a single
+      // child cannot push the whole track to infinity. A minimum has no
+      // smaller fallback; the saturating helpers clamp it downstream.
+      if (!minimum && !extent.isFinite) {
+        extent = _childMainExtent(child, crossExtent, minimum: true);
       }
       largest = math.max(largest, extent);
       child = childAfter(child);
     }
     return largest;
+  }
+
+  double _childMainExtent(
+    RenderBox child,
+    double crossExtent, {
+    required bool minimum,
+  }) {
+    return switch ((orientation, minimum)) {
+      (Axis.horizontal, true) => child.getMinIntrinsicWidth(crossExtent),
+      (Axis.horizontal, false) => child.getMaxIntrinsicWidth(crossExtent),
+      (Axis.vertical, true) => child.getMinIntrinsicHeight(crossExtent),
+      (Axis.vertical, false) => child.getMaxIntrinsicHeight(crossExtent),
+    };
   }
 
   ({double mainExtent, double effectiveSpacing}) _mainAxisLayout(
@@ -476,7 +503,8 @@ class _RenderEqualSegmentLayout extends RenderBox
     final crossExtent = orientation == Axis.horizontal
         ? constraints.maxHeight
         : constraints.maxWidth;
-    final desiredMainExtent = _desiredMainExtent(crossExtent);
+    // Layout wants the natural size, which is the maximum intrinsic extent.
+    final desiredMainExtent = _desiredMainExtent(crossExtent, minimum: false);
     final maxMainExtent = orientation == Axis.horizontal
         ? constraints.maxWidth
         : constraints.maxHeight;
@@ -622,7 +650,7 @@ class _RenderEqualSegmentLayout extends RenderBox
   @override
   double computeMinIntrinsicWidth(double height) {
     if (orientation == Axis.horizontal) {
-      return _desiredMainExtent(height);
+      return _desiredMainExtent(height, minimum: true);
     }
     var largest = 0.0;
     var child = firstChild;
@@ -639,7 +667,7 @@ class _RenderEqualSegmentLayout extends RenderBox
   @override
   double computeMaxIntrinsicWidth(double height) {
     if (orientation == Axis.horizontal) {
-      return _desiredMainExtent(height);
+      return _desiredMainExtent(height, minimum: false);
     }
     var largest = 0.0;
     var child = firstChild;
@@ -656,7 +684,7 @@ class _RenderEqualSegmentLayout extends RenderBox
   @override
   double computeMinIntrinsicHeight(double width) {
     if (orientation == Axis.vertical) {
-      return _desiredMainExtent(width);
+      return _desiredMainExtent(width, minimum: true);
     }
     var largest = 0.0;
     var child = firstChild;
@@ -673,7 +701,7 @@ class _RenderEqualSegmentLayout extends RenderBox
   @override
   double computeMaxIntrinsicHeight(double width) {
     if (orientation == Axis.vertical) {
-      return _desiredMainExtent(width);
+      return _desiredMainExtent(width, minimum: false);
     }
     var largest = 0.0;
     var child = firstChild;
