@@ -103,7 +103,10 @@ void main() {
         initial: DataListStyler(),
         modify: (style) => style.label(TextStyler().fontSize(12)),
         expect: (style) {
-          expect(style, equals(DataListStyler.label(TextStyler().fontSize(12))));
+          expect(
+            style,
+            equals(DataListStyler.label(TextStyler().fontSize(12))),
+          );
         },
       );
 
@@ -112,7 +115,10 @@ void main() {
         initial: DataListStyler(),
         modify: (style) => style.value(TextStyler().fontSize(14)),
         expect: (style) {
-          expect(style, equals(DataListStyler.value(TextStyler().fontSize(14))));
+          expect(
+            style,
+            equals(DataListStyler.value(TextStyler().fontSize(14))),
+          );
         },
       );
 
@@ -199,7 +205,9 @@ void main() {
           expect(
             style.$label,
             equals(
-              Prop.maybeMix(TextStyler(style: TextStyleMix(color: Colors.grey))),
+              Prop.maybeMix(
+                TextStyler(style: TextStyleMix(color: Colors.grey)),
+              ),
             ),
           );
         },
@@ -235,20 +243,26 @@ void main() {
         },
       );
 
-      test('call creates a RemixDataList with this style', () {
+      test('generated call forwards widget arguments and this style', () {
         final style = DataListStyler().rowSpacing(8.0);
+        const key = ValueKey('account-data');
+        const items = [RemixDataListItem(label: 'Name', value: 'Leo')];
 
         final widget = style(
-          items: const [RemixDataListItem(label: 'Name', value: 'Leo')],
+          key: key,
+          items: items,
           orientation: Axis.vertical,
           semanticLabel: 'Account',
+          excludeSemantics: true,
         );
 
         expect(widget, isA<RemixDataList>());
+        expect(widget.key, same(key));
         expect(widget.style, same(style));
+        expect(widget.items, same(items));
         expect(widget.orientation, equals(Axis.vertical));
         expect(widget.semanticLabel, equals('Account'));
-        expect(widget.items, hasLength(1));
+        expect(widget.excludeSemantics, isTrue);
       });
     });
 

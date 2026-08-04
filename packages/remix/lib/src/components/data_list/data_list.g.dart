@@ -754,6 +754,23 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     return merge(DataListStyler(modifier: value));
   }
 
+  RemixDataList call({
+    Key? key,
+    required List<RemixDataListItem> items,
+    Axis orientation = Axis.horizontal,
+    String? semanticLabel,
+    bool excludeSemantics = false,
+  }) {
+    return RemixDataList(
+      key: key,
+      style: this,
+      items: items,
+      orientation: orientation,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+    );
+  }
+
   /// Merges with another [DataListStyler].
   @override
   DataListStyler merge(DataListStyler? other) {

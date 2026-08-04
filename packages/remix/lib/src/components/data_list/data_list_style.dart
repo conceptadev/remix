@@ -21,22 +21,4 @@ extension RemixDataListStylerRemixHelpers on DataListStyler {
   DataListStyler valueColor(Color color) {
     return value(TextStyler(style: TextStyleMix(color: color)));
   }
-
-  /// Creates a [RemixDataList] widget with this style applied.
-  RemixDataList call({
-    Key? key,
-    required List<RemixDataListItem> items,
-    Axis orientation = Axis.horizontal,
-    String? semanticLabel,
-    bool excludeSemantics = false,
-  }) {
-    return RemixDataList(
-      key: key,
-      items: items,
-      orientation: orientation,
-      semanticLabel: semanticLabel,
-      excludeSemantics: excludeSemantics,
-      style: this,
-    );
-  }
 }

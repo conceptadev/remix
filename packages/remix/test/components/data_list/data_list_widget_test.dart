@@ -12,12 +12,17 @@ import '../../helpers/test_helpers.dart';
 final Finder _table = find.byWidgetPredicate((widget) => widget is Table);
 
 /// Deterministic typography for geometry assertions: the FlutterTest font has
-/// a 0.75em ascent and 0.25em descent, and `height: 1.0` pins the line height
-/// to the font size.
+/// a 0.75em ascent and 0.25em descent, `height: 1.0` pins the line height to
+/// the font size, and `letterSpacing: 0` suppresses the inherited Material
+/// bodyMedium letter spacing so glyph advances are exactly 1em.
 DataListStyler _metricStyle({double labelSize = 10, double valueSize = 10}) {
   return DataListStyler()
-      .labelTextStyle(TextStyleMix(fontSize: labelSize, height: 1.0))
-      .valueTextStyle(TextStyleMix(fontSize: valueSize, height: 1.0));
+      .labelTextStyle(
+        TextStyleMix(fontSize: labelSize, height: 1.0, letterSpacing: 0),
+      )
+      .valueTextStyle(
+        TextStyleMix(fontSize: valueSize, height: 1.0, letterSpacing: 0),
+      );
 }
 
 SemanticsNode? _findNode(
@@ -47,6 +52,29 @@ List<SemanticsNode> _rowNodes(WidgetTester tester) {
     return true;
   });
   return rows;
+}
+
+/// Maps a semantics node's rect through its ancestor transforms into global
+/// coordinates, then divides out the root view's device-pixel-ratio scale so
+/// the result is comparable with [WidgetTester.getRect].
+Rect _globalSemanticsRect(WidgetTester tester, SemanticsNode node) {
+  var rect = node.rect;
+  SemanticsNode? current = node;
+  while (current != null) {
+    final transform = current.transform;
+    if (transform != null) {
+      rect = MatrixUtils.transformRect(transform, rect);
+    }
+    current = current.parent;
+  }
+  final scale = tester.view.devicePixelRatio;
+
+  return Rect.fromLTRB(
+    rect.left / scale,
+    rect.top / scale,
+    rect.right / scale,
+    rect.bottom / scale,
+  );
 }
 
 int _countNodesWithLabel(WidgetTester tester, String label) {
@@ -180,13 +208,21 @@ void main() {
         handle.dispose();
       });
 
-      testWidgets('renders with raw styleSpec parameter', (tester) async {
-        await tester.pumpRemixApp(
-          const RemixDataList(
-            styleSpec: DataListSpec(),
-            items: [RemixDataListItem(label: 'Name', value: 'Leo')],
-          ),
+      testWidgets('direct StyleSpec is const and bypasses style resolution', (
+        tester,
+      ) async {
+        const widget = RemixDataList(
+          style: _FailIfResolvedDataListStyler(),
+          styleSpec: StyleSpec(spec: DataListSpec()),
+          items: [RemixDataListItem(label: 'Name', value: 'Leo')],
         );
+        final Style<DataListSpec> style = widget.style;
+        final StyleSpec<DataListSpec>? styleSpec = widget.styleSpec;
+
+        expect(style, isA<_FailIfResolvedDataListStyler>());
+        expect(styleSpec?.spec, equals(const DataListSpec()));
+
+        await tester.pumpRemixApp(widget);
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDataList), findsOneWidget);
@@ -230,6 +266,91 @@ void main() {
 
         expect(find.text('Name'), findsOneWidget);
         expect(find.text('Email'), findsOneWidget);
+      });
+
+      testWidgets('rejects a blank label at build time', (tester) async {
+        await tester.pumpRemixApp(
+          const RemixDataList(
+            items: [RemixDataListItem(label: '   ', value: 'Leo')],
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      });
+
+      testWidgets('rejects a blank label at build time (vertical)', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          const RemixDataList(
+            orientation: Axis.vertical,
+            items: [RemixDataListItem(label: '\n', value: 'Leo')],
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      });
+
+      testWidgets('rejects a blank value at build time', (tester) async {
+        await tester.pumpRemixApp(
+          const RemixDataList(
+            items: [RemixDataListItem(label: 'Name', value: '   ')],
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      });
+
+      testWidgets('rejects a blank semanticValue at build time', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          const RemixDataList(
+            items: [
+              RemixDataListItem(
+                label: 'Name',
+                semanticValue: ' \t ',
+                child: SizedBox(width: 10, height: 10),
+              ),
+            ],
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      });
+
+      testWidgets('rejects a blank semanticLabel at build time', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          const RemixDataList(
+            semanticLabel: '  ',
+            items: [RemixDataListItem(label: 'Name', value: 'Leo')],
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      });
+
+      testWidgets('padded caller text is displayed and announced verbatim', (
+        tester,
+      ) async {
+        final handle = tester.ensureSemantics();
+        await tester.pumpRemixApp(
+          const RemixDataList(
+            items: [RemixDataListItem(label: ' Name ', value: ' Leo ')],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        // Blank rejection is validation only — the renderer never trims or
+        // rewrites what the caller displays and announces.
+        expect(tester.takeException(), isNull);
+        expect(find.text(' Name '), findsOneWidget);
+        final row = _rowNodes(tester).single.getSemanticsData();
+        expect(row.label, equals(' Name '));
+        expect(row.value, equals(' Leo '));
+        handle.dispose();
       });
 
       testWidgets('rejects negative resolved rowSpacing', (tester) async {
@@ -279,7 +400,7 @@ void main() {
       ) async {
         final handle = tester.ensureSemantics();
         await tester.pumpRemixApp(
-          const RemixDataList(
+          RemixDataList(
             items: [
               RemixDataListItem(label: 'Name', value: 'Leo'),
               RemixDataListItem(label: 'Email', value: 'leo@example.com'),
@@ -311,7 +432,7 @@ void main() {
       ) async {
         final handle = tester.ensureSemantics();
         await tester.pumpRemixApp(
-          const RemixDataList(
+          RemixDataList(
             orientation: Axis.vertical,
             items: [RemixDataListItem(label: 'Name', value: 'Leo')],
           ),
@@ -328,49 +449,47 @@ void main() {
         handle.dispose();
       });
 
-      testWidgets(
-        'custom interactive child keeps its action and label once',
-        (tester) async {
-          final handle = tester.ensureSemantics();
-          var pressed = 0;
-          await tester.pumpRemixApp(
-            RemixDataList(
-              items: [
-                RemixDataListItem(
-                  label: 'Status',
-                  child: RemixButton(
-                    label: 'Copy',
-                    onPressed: () => pressed += 1,
-                  ),
+      testWidgets('custom interactive child keeps its action and label once', (
+        tester,
+      ) async {
+        final handle = tester.ensureSemantics();
+        var pressed = 0;
+        await tester.pumpRemixApp(
+          RemixDataList(
+            items: [
+              RemixDataListItem(
+                label: 'Status',
+                child: RemixButton(
+                  label: 'Copy',
+                  onPressed: () => pressed += 1,
                 ),
-              ],
-            ),
-          );
-          await tester.pumpAndSettle();
+              ),
+            ],
+          ),
+        );
+        await tester.pumpAndSettle();
 
-          final rows = _rowNodes(tester);
-          expect(rows, hasLength(1));
-          final row = rows.single.getSemanticsData();
-          expect(row.role, equals(SemanticsRole.listItem));
-          expect(row.label, equals('Status'));
+        final rows = _rowNodes(tester);
+        expect(rows, hasLength(1));
+        final row = rows.single.getSemanticsData();
+        expect(row.role, equals(SemanticsRole.listItem));
+        expect(row.label, equals('Status'));
 
-          // The button survives as its own actionable node under the row.
-          final button = _findNode(
-            rows.single,
-            (data) =>
-                data.label == 'Copy' && data.hasAction(SemanticsAction.tap),
-          );
-          expect(button, isNotNull);
+        // The button survives as its own actionable node under the row.
+        final button = _findNode(
+          rows.single,
+          (data) => data.label == 'Copy' && data.hasAction(SemanticsAction.tap),
+        );
+        expect(button, isNotNull);
 
-          // The visual label is not announced a second time.
-          expect(_countNodesWithLabel(tester, 'Status'), equals(1));
+        // The visual label is not announced a second time.
+        expect(_countNodesWithLabel(tester, 'Status'), equals(1));
 
-          await tester.tap(find.text('Copy'));
-          await tester.pumpAndSettle();
-          expect(pressed, equals(1));
-          handle.dispose();
-        },
-      );
+        await tester.tap(find.text('Copy'));
+        await tester.pumpAndSettle();
+        expect(pressed, equals(1));
+        handle.dispose();
+      });
 
       testWidgets(
         'semanticValue summarizes a noninteractive child into one node',
@@ -398,6 +517,176 @@ void main() {
 
           // The child's own semantics are excluded by the summary.
           expect(_countNodesWithLabel(tester, 'Complex Widget'), isZero);
+          handle.dispose();
+        },
+      );
+
+      testWidgets(
+        'horizontal row node covers the full visible row including the label',
+        (tester) async {
+          final handle = tester.ensureSemantics();
+          await tester.pumpRemixApp(
+            SizedBox(
+              width: 400,
+              child: RemixDataList(
+                style: _metricStyle()
+                    .minLabelWidth(140.0)
+                    .columnSpacing(24.0)
+                    .rowSpacing(12.0),
+                items: const [
+                  RemixDataListItem(label: 'Name', value: 'Leo'),
+                  RemixDataListItem(label: 'Email', value: 'leo@example.com'),
+                ],
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          final rows = _rowNodes(tester);
+          expect(rows, hasLength(2));
+
+          final tableRect = tester.getRect(_table);
+          final firstRowRect = _globalSemanticsRect(tester, rows[0]);
+          final secondRowRect = _globalSemanticsRect(tester, rows[1]);
+
+          // Touch exploration over the excluded visible label must land
+          // inside the row's semantic bounds.
+          expect(firstRowRect.left, equals(tableRect.left));
+          expect(firstRowRect.width, equals(tableRect.width));
+          expect(
+            firstRowRect.contains(tester.getRect(find.text('Name')).center),
+            isTrue,
+          );
+          expect(
+            secondRowRect.contains(tester.getRect(find.text('Email')).center),
+            isTrue,
+          );
+
+          // Rows tile the table without overlapping hit regions.
+          expect(
+            secondRowRect.top,
+            greaterThanOrEqualTo(firstRowRect.bottom - 0.01),
+          );
+          handle.dispose();
+        },
+      );
+
+      testWidgets('expanded row bounds leave nested control geometry intact', (
+        tester,
+      ) async {
+        final handle = tester.ensureSemantics();
+        await tester.pumpRemixApp(
+          SizedBox(
+            width: 400,
+            child: RemixDataList(
+              style: _metricStyle().minLabelWidth(140.0).columnSpacing(24.0),
+              items: [
+                RemixDataListItem(
+                  label: 'Status',
+                  child: RemixButton(label: 'Copy', onPressed: () {}),
+                ),
+              ],
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final rows = _rowNodes(tester);
+        final rowRect = _globalSemanticsRect(tester, rows.single);
+        final tableRect = tester.getRect(_table);
+        expect(rowRect.left, equals(tableRect.left));
+        expect(rowRect.width, equals(tableRect.width));
+
+        // The nested button's node keeps its own true geometry — the row
+        // expansion must not swallow or displace it.
+        final buttonNode = _findNode(
+          rows.single,
+          (data) => data.label == 'Copy' && data.hasAction(SemanticsAction.tap),
+        );
+        expect(buttonNode, isNotNull);
+        final buttonNodeRect = _globalSemanticsRect(tester, buttonNode!);
+        final buttonRect = tester.getRect(find.byType(RemixButton));
+        expect(buttonNodeRect.width, lessThan(rowRect.width));
+        expect(
+          (buttonNodeRect.center - buttonRect.center).distance,
+          lessThan(0.1),
+        );
+        expect(rowRect.contains(buttonRect.center), isTrue);
+        handle.dispose();
+      });
+
+      testWidgets(
+        'RTL row nodes cover the full row and keep nested action geometry',
+        (tester) async {
+          final handle = tester.ensureSemantics();
+          var pressed = 0;
+          await tester.pumpRemixApp(
+            SizedBox(
+              width: 400,
+              child: RemixDataList(
+                style: _metricStyle()
+                    .minLabelWidth(140.0)
+                    .columnSpacing(24.0)
+                    .rowSpacing(12.0),
+                items: [
+                  const RemixDataListItem(label: 'Name', value: 'Leo'),
+                  RemixDataListItem(
+                    label: 'Status',
+                    child: RemixButton(
+                      label: 'Copy',
+                      onPressed: () => pressed += 1,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            textDirection: TextDirection.rtl,
+          );
+          await tester.pumpAndSettle();
+
+          final rows = _rowNodes(tester);
+          expect(rows, hasLength(2));
+
+          final tableRect = tester.getRect(_table);
+          final firstRowRect = _globalSemanticsRect(tester, rows[0]);
+          final secondRowRect = _globalSemanticsRect(tester, rows[1]);
+
+          // The trailing (right-side) label column is inside each row's
+          // expanded semantic rect, and rows span the full table width.
+          for (final rowRect in [firstRowRect, secondRowRect]) {
+            expect(rowRect.left, equals(tableRect.left));
+            expect(rowRect.width, equals(tableRect.width));
+          }
+          final nameCenter = tester.getRect(find.text('Name')).center;
+          expect(nameCenter.dx, greaterThan(tableRect.center.dx));
+          expect(firstRowRect.contains(nameCenter), isTrue);
+          expect(
+            secondRowRect.contains(tester.getRect(find.text('Status')).center),
+            isTrue,
+          );
+
+          // The nested action keeps its true rect and stays actionable. In
+          // RTL a start-aligned custom child abuts the gap before the
+          // trailing label column: its right edge sits exactly at
+          // tableRight - minLabelWidth - columnSpacing.
+          final buttonNode = _findNode(
+            rows[1],
+            (data) =>
+                data.label == 'Copy' && data.hasAction(SemanticsAction.tap),
+          );
+          expect(buttonNode, isNotNull);
+          final buttonNodeRect = _globalSemanticsRect(tester, buttonNode!);
+          final buttonRect = tester.getRect(find.byType(RemixButton));
+          expect(buttonRect.right, equals(tableRect.right - 140.0 - 24.0));
+          expect(
+            (buttonNodeRect.center - buttonRect.center).distance,
+            lessThan(0.1),
+          );
+          expect(buttonNodeRect.width, lessThan(secondRowRect.width));
+
+          await tester.tap(find.text('Copy'));
+          await tester.pumpAndSettle();
+          expect(pressed, equals(1));
           handle.dispose();
         },
       );
@@ -465,15 +754,19 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        final labelWidths = ['A', 'BBBB', 'CCCCCCCC']
-            .map((label) => tester.getSize(find.text(label)).width)
-            .toList();
+        final labelWidths = [
+          'A',
+          'BBBB',
+          'CCCCCCCC',
+        ].map((label) => tester.getSize(find.text(label)).width).toList();
         expect(labelWidths[0], equals(labelWidths[1]));
         expect(labelWidths[1], equals(labelWidths[2]));
 
-        final valueLefts = ['first', 'second', 'third']
-            .map((value) => tester.getTopLeft(find.text(value)).dx)
-            .toList();
+        final valueLefts = [
+          'first',
+          'second',
+          'third',
+        ].map((value) => tester.getTopLeft(find.text(value)).dx).toList();
         expect(valueLefts[0], equals(valueLefts[1]));
         expect(valueLefts[1], equals(valueLefts[2]));
 
@@ -510,9 +803,7 @@ void main() {
             width: 400,
             child: RemixDataList(
               style: _metricStyle().minLabelWidth(10.0).columnSpacing(12.0),
-              items: const [
-                RemixDataListItem(label: 'CCCCCCCC', value: 'v'),
-              ],
+              items: const [RemixDataListItem(label: 'CCCCCCCC', value: 'v')],
             ),
           ),
         );
@@ -566,9 +857,7 @@ void main() {
         );
       });
 
-      testWidgets('rowSpacing separates consecutive rows only', (
-        tester,
-      ) async {
+      testWidgets('rowSpacing separates consecutive rows only', (tester) async {
         await tester.pumpRemixApp(
           SizedBox(
             width: 400,
@@ -592,6 +881,77 @@ void main() {
         // No trailing gap after the last row: two lines plus one gap.
         expect(tableHeight, equals(32.0));
       });
+
+      testWidgets(
+        'long label keeps a min-intrinsic value column and wraps at ~240px',
+        (tester) async {
+          // FlutterTest font: 10px/char. Label ideal 260px would eat the
+          // whole 240px bound; the value column must keep its min intrinsic
+          // width (longest word, 40px) while the label wraps.
+          await tester.pumpRemixApp(
+            SizedBox(
+              width: 240,
+              child: RemixDataList(
+                style: _metricStyle(),
+                items: const [
+                  RemixDataListItem(
+                    label: 'Aaaaaaaa Bbbbbbbb Cccccccc',
+                    value: 'Dddd Eeee',
+                  ),
+                ],
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          expect(tester.takeException(), isNull);
+          expect(tester.getSize(_table).width, equals(240.0));
+
+          final valueSize = tester.getSize(find.text('Dddd Eeee'));
+          expect(valueSize.width, equals(40.0));
+          expect(valueSize.height, greaterThanOrEqualTo(20.0));
+
+          final labelSize = tester.getSize(
+            find.text('Aaaaaaaa Bbbbbbbb Cccccccc'),
+          );
+          expect(labelSize.width, equals(200.0));
+          expect(labelSize.height, greaterThanOrEqualTo(20.0));
+        },
+      );
+
+      testWidgets(
+        'long label and long value keep both columns at 200% text scale',
+        (tester) async {
+          await tester.pumpRemixApp(
+            MediaQuery(
+              data: const MediaQueryData(textScaler: TextScaler.linear(2.0)),
+              child: SizedBox(
+                width: 240,
+                child: RemixDataList(
+                  style: _metricStyle(),
+                  items: const [
+                    RemixDataListItem(
+                      label: 'Aaaaaaaa Bbbbbbbb Cccccccc',
+                      value: 'Dddd Eeee',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          expect(tester.takeException(), isNull);
+          // At 2x both columns land exactly on their min intrinsic widths:
+          // label 2 * 80 = 160, value 2 * 40 = 80.
+          expect(tester.getSize(_table).width, equals(240.0));
+          expect(tester.getSize(find.text('Dddd Eeee')).width, equals(80.0));
+          expect(
+            tester.getSize(find.text('Aaaaaaaa Bbbbbbbb Cccccccc')).width,
+            equals(160.0),
+          );
+        },
+      );
 
       testWidgets(
         'custom child keeps its natural width at the value column start',
@@ -887,6 +1247,73 @@ void main() {
       });
     });
 
+    group('Row Identity', () {
+      const itemA = RemixDataListItem(
+        key: ValueKey('a'),
+        label: 'Alpha',
+        child: _StatefulValue(id: 'A'),
+      );
+      const itemB = RemixDataListItem(
+        key: ValueKey('b'),
+        label: 'Beta',
+        child: _StatefulValue(id: 'B'),
+      );
+      const itemC = RemixDataListItem(
+        key: ValueKey('c'),
+        label: 'Gamma',
+        child: _StatefulValue(id: 'C'),
+      );
+
+      Future<void> pumpItems(
+        WidgetTester tester,
+        Axis orientation,
+        List<RemixDataListItem> items,
+      ) {
+        return tester.pumpRemixApp(
+          SizedBox(
+            width: 400,
+            child: RemixDataList(orientation: orientation, items: items),
+          ),
+        );
+      }
+
+      for (final orientation in Axis.values) {
+        testWidgets(
+          'keyed rows keep custom-value state across reorder, insertion, '
+          'and removal (${orientation.name})',
+          (tester) async {
+            await pumpItems(tester, orientation, const [itemA, itemB]);
+            await tester.pumpAndSettle();
+            await tester.tap(find.text('A:0'));
+            await tester.pump();
+            expect(find.text('A:1'), findsOneWidget);
+
+            // Reorder: state must follow the keyed row, not the position.
+            await pumpItems(tester, orientation, const [itemB, itemA]);
+            await tester.pumpAndSettle();
+            expect(find.text('A:1'), findsOneWidget);
+            expect(find.text('B:0'), findsOneWidget);
+            expect(
+              tester.getTopLeft(find.text('A:1')).dy,
+              greaterThan(tester.getTopLeft(find.text('B:0')).dy),
+            );
+
+            // Insertion above keeps existing state.
+            await pumpItems(tester, orientation, const [itemC, itemB, itemA]);
+            await tester.pumpAndSettle();
+            expect(find.text('A:1'), findsOneWidget);
+            expect(find.text('C:0'), findsOneWidget);
+
+            // Removal of a sibling keeps state.
+            await pumpItems(tester, orientation, const [itemC, itemA]);
+            await tester.pumpAndSettle();
+            expect(find.text('A:1'), findsOneWidget);
+            expect(find.text('B:0'), findsNothing);
+          },
+        );
+      }
+    });
+
     group('Text Scale and Width Bounds', () {
       const longValue =
           'Uma descrição razoavelmente longa que quebra em várias linhas';
@@ -967,4 +1394,36 @@ void main() {
       });
     });
   });
+}
+
+/// Position-independent stateful probe: taps increment a counter that must
+/// stay attached to this widget's row identity across list mutations.
+class _StatefulValue extends StatefulWidget {
+  const _StatefulValue({required this.id});
+
+  final String id;
+
+  @override
+  State<_StatefulValue> createState() => _StatefulValueState();
+}
+
+class _StatefulValueState extends State<_StatefulValue> {
+  var _count = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => setState(() => _count += 1),
+      child: Text('${widget.id}:$_count'),
+    );
+  }
+}
+
+final class _FailIfResolvedDataListStyler extends DataListStyler {
+  const _FailIfResolvedDataListStyler() : super.create();
+
+  @override
+  StyleSpec<DataListSpec> resolve(BuildContext context) {
+    throw StateError('Direct styleSpec must bypass style resolution.');
+  }
 }

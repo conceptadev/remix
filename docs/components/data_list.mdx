@@ -55,8 +55,10 @@ class DataListExample extends StatelessWidget {
 The constructor's `orientation` always wins over styles, and the renderer
 never switches orientation on its own. A bounded horizontal list needs at
 least the resolved label column minimum (the greater of `minLabelWidth` and
-the widest label) plus `columnSpacing` plus the value column's minimum
-intrinsic width; below that bound, rebuild with `Axis.vertical`.
+every label's minimum intrinsic width) plus `columnSpacing` plus the value
+column's minimum intrinsic width. Down to that bound a long label wraps
+rather than starving the value column, which never shrinks below its minimum
+intrinsic width; below the bound, rebuild with `Axis.vertical`.
 
 <CodeGroup title="Caller-owned vertical fallback" defaultLanguage="dart">
 ```dart
@@ -170,11 +172,12 @@ RemixDataList remixDataListConstructor({
   Axis orientation = Axis.horizontal,
   String? semanticLabel,
   bool excludeSemantics = false,
-  DataListStyler style = const DataListStyler.create(),
-  DataListSpec? styleSpec,
+  Style<DataListSpec> style = const DataListStyler.create(),
+  StyleSpec<DataListSpec>? styleSpec,
 }) => throw UnimplementedError();
 
 RemixDataListItem remixDataListItemConstructor({
+  LocalKey? key,
   required String label,
   String? value,
   Widget? child,
@@ -201,22 +204,24 @@ always wins; orientation is intentionally absent from `DataListSpec`.
 
 #### `semanticLabel` → `String?`
 
-Optional. Accessible name announced for the list itself.
+Optional. Accessible name announced for the list itself. When provided it
+must not be whitespace-only (asserted in debug builds).
 
 #### `excludeSemantics` → `bool`
 
 Optional. Removes the entire list, rows included, from semantics. Defaults
 to `false`.
 
-#### `style` → `DataListStyler`
+#### `style` → `Style<DataListSpec>`
 
 Optional. The style configuration for typography, cell containers, and
 layout metrics.
 
-#### `styleSpec` → `DataListSpec?`
+#### `styleSpec` → `StyleSpec<DataListSpec>?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful
-for performance when sharing resolved styles across multiple instances.
+for performance when sharing resolved styles across multiple instances. Pass
+the resolved data as `const StyleSpec(spec: DataListSpec(...))`.
 
 #### `key` → `Key?`
 
@@ -224,15 +229,25 @@ Optional. Controls how one widget replaces another widget in the tree.
 
 ### Item Properties
 
+#### `key` → `LocalKey?`
+
+Optional stable identity for the row. Without a key, rows are matched by
+position, so a stateful custom `child` keeps its state at the old position
+after a reorder and can end up attached to the wrong label. Provide a key
+whenever items with custom children are reordered, inserted, or removed.
+
 #### `label` → `String`
 
-Required and nonempty. The visible label, also announced as the row's
-semantic label.
+Required. The visible label, also announced as the row's semantic label. It
+must be nonempty and not whitespace-only: the constructor rejects the empty
+string and debug builds additionally reject trimmed-blank text. Displayed
+text is never trimmed.
 
 #### `value` → `String?`
 
 The string value, rendered with the value typography. Exactly one of
-`value` or `child` must be provided; a provided `value` must be nonempty.
+`value` or `child` must be provided; a provided `value` must be nonempty
+and not whitespace-only.
 
 #### `child` → `Widget?`
 
@@ -242,7 +257,8 @@ its own semantics unless `semanticValue` summarizes it.
 #### `semanticValue` → `String?`
 
 Optional noninteractive summary announced instead of the child's semantics.
-Valid only together with `child` and must be nonempty when provided.
+Valid only together with `child`; when provided it must be nonempty and not
+whitespace-only.
 
 #### `alignment` → `RemixDataListItemAlignment`
 

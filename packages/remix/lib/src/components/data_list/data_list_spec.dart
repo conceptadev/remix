@@ -7,7 +7,10 @@ part of 'data_list.dart';
 /// label minimum. Orientation is deliberately not part of the spec: it is
 /// semantic layout behavior owned by the [RemixDataList] constructor, so
 /// styles cannot override it.
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(
+  target: RemixDataList.new,
+  extraStylerMixins: [RemixBoxStylerMixin],
+)
 class DataListSpec with _$DataListSpec {
   @override
   @MixableField(forwardStyler: true)

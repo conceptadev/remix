@@ -13,6 +13,7 @@ enum RemixDataListItemAlignment { start, center, end, baseline, stretch }
 @immutable
 class RemixDataListItem {
   const RemixDataListItem({
+    this.key,
     required this.label,
     this.value,
     this.child,
@@ -36,10 +37,25 @@ class RemixDataListItem {
          'RemixDataListItem.semanticValue must be nonempty when provided.',
        );
 
+  /// Stable identity for this row across list mutations.
+  ///
+  /// Without a key, rows are matched by position, so a stateful [child]
+  /// keeps its state at the old position after a reorder and can end up
+  /// attached to the wrong label. Provide a key whenever items with custom
+  /// children are reordered, inserted, or removed.
+  final LocalKey? key;
+
   /// Visible label text, also announced as the row's semantic label.
+  ///
+  /// Must be nonempty and not whitespace-only: the const constructor rejects
+  /// the empty string, and the renderer additionally rejects trimmed-blank
+  /// text in debug builds. The text itself is never trimmed.
   final String label;
 
   /// String value rendered with the data list's value typography.
+  ///
+  /// When provided, must be nonempty and not whitespace-only; it is
+  /// announced as the row's accessible value verbatim.
   final String? value;
 
   /// Custom value widget that keeps its own semantics unless [semanticValue]
@@ -50,7 +66,7 @@ class RemixDataListItem {
   ///
   /// Only for display-only children: it excludes the child's semantics
   /// entirely, so an interactive child must omit it to keep its actions
-  /// reachable.
+  /// reachable. When provided, must be nonempty and not whitespace-only.
   final String? semanticValue;
 
   /// Cross-cell alignment for this row.
@@ -74,9 +90,11 @@ class RemixDataListItem {
 /// For a bounded horizontal list, the supported width is at least the
 /// resolved label column minimum (the greater of `minLabelWidth` and every
 /// label's minimum intrinsic width) plus `columnSpacing` plus the value
-/// column's minimum intrinsic width. Below that bound the pinned label column
-/// cannot fit and content overflows; the renderer never switches orientation
-/// on its own, so rebuild with [orientation] set to [Axis.vertical] when the
+/// column's minimum intrinsic width. Down to that bound, a long label wraps
+/// rather than starving the value column, which never shrinks below its
+/// minimum intrinsic width. Below the bound the pinned label column cannot
+/// fit and content overflows; the renderer never switches orientation on its
+/// own, so rebuild with [orientation] set to [Axis.vertical] when the
 /// available width is below the minimum.
 ///
 /// ## Example
@@ -95,7 +113,7 @@ class RemixDataListItem {
 // `Table` is reused as the horizontal layout because it is the one primitive
 // that negotiates a single shared label-column width across every row;
 // independent per-item Rows would let the columns drift.
-class RemixDataList extends StatelessWidget {
+class RemixDataList extends StyleWidget<DataListSpec> {
   /// Creates a data list from [items].
   const RemixDataList({
     super.key,
@@ -103,8 +121,8 @@ class RemixDataList extends StatelessWidget {
     this.orientation = Axis.horizontal,
     this.semanticLabel,
     this.excludeSemantics = false,
-    this.style = const DataListStyler.create(),
-    this.styleSpec,
+    super.style = const DataListStyler.create(),
+    super.styleSpec,
   });
 
   static final styleFrom = DataListStyler.new;
@@ -121,53 +139,72 @@ class RemixDataList extends StatelessWidget {
   final Axis orientation;
 
   /// Optional accessible name for the list itself.
+  ///
+  /// When provided, must not be whitespace-only (asserted in debug builds).
   final String? semanticLabel;
 
   /// Whether to remove the entire list, rows included, from semantics.
   final bool excludeSemantics;
 
-  /// The style configuration for the data list.
-  final DataListStyler style;
-
-  /// Optional raw style spec that bypasses fluent style resolution.
-  final DataListSpec? styleSpec;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, DataListSpec spec) {
     // One immutable snapshot per build enforces the no-mutation-during-build
     // contract for everything rendered below.
     final rows = List<RemixDataListItem>.unmodifiable(items);
+    assert(_debugItemsHaveAccessibleText(rows));
+    assert(
+      semanticLabel == null || semanticLabel!.trim().isNotEmpty,
+      'RemixDataList.semanticLabel must not be blank when provided: it '
+      'becomes the accessible name of the list.',
+    );
 
-    return RemixStyleSpecBuilder<DataListSpec>(
-      style: style,
-      styleSpec: styleSpec,
-      builder: (context, spec) {
-        final metrics = _DataListMetrics.resolve(spec);
+    final metrics = _DataListMetrics.resolve(spec);
 
-        final Widget layout = orientation == Axis.horizontal
-            ? _HorizontalDataListLayout(
-                items: rows,
-                spec: spec,
-                metrics: metrics,
-              )
-            : _VerticalDataListLayout(
-                items: rows,
-                spec: spec,
-                metrics: metrics,
-              );
+    final Widget layout = orientation == Axis.horizontal
+        ? _HorizontalDataListLayout(items: rows, spec: spec, metrics: metrics)
+        : _VerticalDataListLayout(items: rows, spec: spec, metrics: metrics);
 
-        final content = Semantics(
-          role: SemanticsRole.list,
-          container: true,
-          explicitChildNodes: true,
-          label: semanticLabel,
-          child: Box(styleSpec: spec.container, child: layout),
-        );
+    final content = Semantics(
+      role: SemanticsRole.list,
+      container: true,
+      explicitChildNodes: true,
+      label: semanticLabel,
+      child: Box(styleSpec: spec.container, child: layout),
+    );
 
-        return excludeSemantics ? ExcludeSemantics(child: content) : content;
-      },
+    return excludeSemantics ? ExcludeSemantics(child: content) : content;
+  }
+}
+
+/// Debug guard for accessible names: [RemixDataListItem.label],
+/// [RemixDataListItem.value], and [RemixDataListItem.semanticValue] are
+/// announced by assistive technology, so a whitespace-only string would
+/// produce a silently unlabeled row. The const item constructor can only
+/// reject exactly empty strings (trimming is not constant-evaluable), so the
+/// renderer rejects trimmed-blank strings here. Displayed caller text is
+/// never trimmed or rewritten.
+bool _debugItemsHaveAccessibleText(List<RemixDataListItem> items) {
+  for (final item in items) {
+    assert(
+      item.label.trim().isNotEmpty,
+      'RemixDataListItem.label must not be blank: it is announced as the '
+      'accessible row label.',
+    );
+    final value = item.value;
+    assert(
+      value == null || value.trim().isNotEmpty,
+      'RemixDataListItem.value must not be blank when provided: it is '
+      'announced as the accessible row value.',
+    );
+    final semanticValue = item.semanticValue;
+    assert(
+      semanticValue == null || semanticValue.trim().isNotEmpty,
+      'RemixDataListItem.semanticValue must not be blank when provided: it '
+      'replaces the announcement of the child.',
     );
   }
+
+  return true;
 }
 
 /// Resolved non-negative geometry, defaulting every absent scalar to zero.
@@ -253,16 +290,17 @@ Widget _valueCell(
   return Box(styleSpec: spec.valueContainer, child: content);
 }
 
-/// One list-item semantics node per row.
+/// One list-item semantics node per vertical row.
 ///
 /// A string value or a [RemixDataListItem.semanticValue] summary collapses
 /// the row to a single label/value node and excludes the visible descendants.
 /// A custom child without a summary keeps its own semantics — including
 /// actions — as explicit child nodes of the row.
 ///
-/// In horizontal orientation this wraps only the value cell, because a
-/// [Table] offers no shared widget ancestor spanning both cells of a row;
-/// the excluded label cell keeps announcements nonduplicated either way.
+/// Horizontal rows use [_HorizontalRowSemantics] instead: a [Table] offers no
+/// shared widget ancestor spanning both cells of a row, so the row node is
+/// attached to the value cell and its bounds are expanded at the render level
+/// to cover the full row.
 class _RowSemantics extends StatelessWidget {
   const _RowSemantics({required this.item, required this.child});
 
@@ -329,8 +367,12 @@ class _HorizontalDataListLayout extends StatelessWidget {
           final alignment = _cellAlignment(item);
           final rowGap = index == items.length - 1 ? 0.0 : metrics.rowSpacing;
 
+          final summarized = item.value != null || item.semanticValue != null;
+          final valueCell = _valueCell(item, spec, alignChildStart: true);
+
           rows.add(
             TableRow(
+              key: item.key,
               children: [
                 _DataListCellAlignment(
                   verticalAlignment: alignment,
@@ -346,9 +388,11 @@ class _HorizontalDataListLayout extends StatelessWidget {
                       start: metrics.columnSpacing,
                       bottom: rowGap,
                     ),
-                    child: _RowSemantics(
+                    child: _HorizontalRowSemantics(
                       item: item,
-                      child: _valueCell(item, spec, alignChildStart: true),
+                      child: summarized
+                          ? ExcludeSemantics(child: valueCell)
+                          : valueCell,
                     ),
                   ),
                 ),
@@ -363,11 +407,16 @@ class _HorizontalDataListLayout extends StatelessWidget {
               FixedColumnWidth(metrics.minLabelWidth),
               const IntrinsicColumnWidth(),
             ),
-            // Bounded width: flex, so long values wrap and shrink. Unbounded
+            // Bounded width: flex, so long values wrap and shrink — floored
+            // at the value content's minimum intrinsic width so a long label
+            // wraps instead of collapsing the value column to zero. Unbounded
             // width: intrinsic, because a flex column cannot resolve without a
             // finite width.
             1: constraints.hasBoundedWidth
-                ? const FlexColumnWidth()
+                ? const MaxColumnWidth(
+                    FlexColumnWidth(),
+                    IntrinsicColumnWidth(),
+                  )
                 : const IntrinsicColumnWidth(),
           },
           textDirection: Directionality.of(context),
@@ -452,6 +501,123 @@ class _RenderDataListTable extends RenderTable {
   }
 }
 
+/// Announces one list-item node per horizontal row, bounded to the full row.
+///
+/// Same announcement contract as [_RowSemantics]; summarized rows exclude
+/// their visible value content at the widget layer, so this widget only
+/// carries the row node itself.
+class _HorizontalRowSemantics extends SingleChildRenderObjectWidget {
+  const _HorizontalRowSemantics({required this.item, super.child});
+
+  final RemixDataListItem item;
+
+  @override
+  _RenderDataListRowSemantics createRenderObject(BuildContext context) {
+    return _RenderDataListRowSemantics(
+      label: item.label,
+      summary: item.value ?? item.semanticValue,
+      textDirection: Directionality.of(context),
+    );
+  }
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderDataListRowSemantics renderObject,
+  ) {
+    renderObject
+      ..label = item.label
+      ..summary = item.value ?? item.semanticValue
+      ..textDirection = Directionality.of(context);
+  }
+}
+
+/// The render side of [_HorizontalRowSemantics]: a semantics boundary with
+/// the listItem role whose bounds expand from the value cell to the full
+/// table row.
+///
+/// The visible label cell is excluded from semantics, so without the
+/// expansion, touch exploration over the label would fall outside the row's
+/// semantic rect. Expanding [semanticBounds] in this node's own coordinate
+/// space leaves every descendant transform untouched, so nested interactive
+/// value semantics keep their true geometry.
+class _RenderDataListRowSemantics extends RenderProxyBox {
+  _RenderDataListRowSemantics({
+    required String label,
+    required String? summary,
+    required TextDirection textDirection,
+  }) : _label = label,
+       _summary = summary,
+       _textDirection = textDirection;
+
+  String _label;
+  set label(String value) {
+    if (value == _label) return;
+    _label = value;
+    markNeedsSemanticsUpdate();
+  }
+
+  String? _summary;
+  set summary(String? value) {
+    if (value == _summary) return;
+    _summary = value;
+    markNeedsSemanticsUpdate();
+  }
+
+  TextDirection _textDirection;
+  set textDirection(TextDirection value) {
+    if (value == _textDirection) return;
+    _textDirection = value;
+    markNeedsSemanticsUpdate();
+  }
+
+  @override
+  Rect get semanticBounds {
+    // Translate the enclosing table row's box into this node's coordinate
+    // space by accumulating the parent-data offsets up to the table cell.
+    var offset = Offset.zero;
+    RenderObject? node = this;
+    while (node != null) {
+      final parentData = node.parentData;
+      final parent = node.parent;
+      if (parentData is TableCellParentData && parent is RenderTable) {
+        offset += parentData.offset;
+        final rowBox = parent.getRowBox(parentData.y!);
+
+        return Rect.fromLTRB(
+          -offset.dx,
+          rowBox.top - offset.dy,
+          rowBox.width - offset.dx,
+          rowBox.bottom - offset.dy,
+        );
+      }
+      if (parentData is BoxParentData) {
+        offset += parentData.offset;
+        node = parent;
+        continue;
+      }
+      break;
+    }
+
+    return super.semanticBounds;
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..isSemanticBoundary = true
+      ..explicitChildNodes = true
+      ..role = SemanticsRole.listItem
+      ..textDirection = _textDirection
+      ..label = _label;
+    final summary = _summary;
+    if (summary != null) {
+      config.value = summary;
+    }
+  }
+}
+
 /// Applies per-cell vertical alignment without [TableCell]'s built-in
 /// `cell`-role [Semantics] wrapper.
 class _DataListCellAlignment extends ParentDataWidget<TableCellParentData> {
@@ -503,24 +669,28 @@ class _VerticalDataListLayout extends StatelessWidget {
     }
   }
 
+  Widget _row(RemixDataListItem item) {
+    final row = _RowSemantics(
+      item: item,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: _itemAlignment(item),
+        spacing: metrics.labelValueSpacing,
+        children: [_labelCell(item, spec), _valueCell(item, spec)],
+      ),
+    );
+    final key = item.key;
+
+    return key == null ? row : KeyedSubtree(key: key, child: row);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: metrics.rowSpacing,
-      children: [
-        for (final item in items)
-          _RowSemantics(
-            item: item,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: _itemAlignment(item),
-              spacing: metrics.labelValueSpacing,
-              children: [_labelCell(item, spec), _valueCell(item, spec)],
-            ),
-          ),
-      ],
+      children: [for (final item in items) _row(item)],
     );
   }
 }
