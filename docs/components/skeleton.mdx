@@ -249,14 +249,32 @@ RTL. Directionality comes from whatever the child itself needs.
 
 ## Differences from Radix
 
-- Radix Themes has no reduced-motion behavior for Skeleton; honouring
+Checked against the pinned `@radix-ui/themes@3.3.0` `skeleton.css`.
+
+- **Wrapped text renders as one block, not one bar per line.** Radix relies on
+  `box-decoration-break: clone`, so an inline skeleton around text that wraps
+  gets a separate background box per line. Flutter has no equivalent, and
+  deriving line boxes would mean introspecting text layout, so a Remix skeleton
+  paints a single rectangle over the child's whole box. Compose one skeleton per
+  line when you want the striped look — see the two-line example above.
+- **A childless skeleton has no intrinsic size.** Radix falls back to
+  `height: var(--space-3)` for an empty skeleton. The unstyled Remix component
+  is deliberately unopinionated and draws nothing until the container gets a
+  size or fill; the Fortal recipe supplies the token default.
+- Radix has no reduced-motion behavior for Skeleton; honouring
   `MediaQuery.disableAnimationsOf` is a Flutter adaptation.
-- Radix pins its pulse to gray alpha 3 → 4. Remix leaves the colors to the
-  caller: with a plain `color` and a `pulseColor` the fill interpolates between
-  them. When there is no plain fill to animate — no `color` at all, or a
-  gradient painting over it — the whole container fades between full and half
-  opacity instead, composed with any opacity the caller already applied rather
-  than replacing it.
+- Radix pins its pulse to gray alpha 3 → 4 over 1000 ms. Remix keeps the 1000 ms
+  leg but leaves the colors to the caller: with a plain `color` and a
+  `pulseColor` the fill interpolates between them. When there is no plain fill
+  to animate — no `color` at all, or a gradient painting over it — the whole
+  container fades between full and half opacity instead, composed with any
+  opacity the caller already applied rather than replacing it. Radix solves the
+  same problem by force-clearing `background-image`; Remix leaves your
+  decoration intact and changes how it pulses.
+- **Suppression goes further than upstream.** Radix only sets
+  `pointer-events: none` and hides the content visually; it leaves hidden
+  content focusable and readable by assistive technology. Remix also applies
+  `ExcludeFocus`, `ExcludeSemantics`, and `TickerMode`.
 - Like Radix, there is no shimmer gradient and no progress semantics.
 
 ## Constructor
