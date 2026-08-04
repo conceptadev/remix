@@ -22,7 +22,7 @@ class _SkeletonPreviewState extends State<_SkeletonPreview> {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
     final base = SkeletonStyler()
-        .color(onSurface.withValues(alpha: 0.08))
+        .container(BoxStyler().color(onSurface.withValues(alpha: 0.08)))
         .pulseColor(onSurface.withValues(alpha: 0.16));
 
     return SpacedColumn(
@@ -49,12 +49,12 @@ class _SkeletonPreviewState extends State<_SkeletonPreview> {
           children: [
             RemixSkeleton(
               loading: _loading,
-              style: base.borderRounded(4),
+              style: base.container(BoxStyler().borderRounded(4)),
               child: const Text('Jane Appleseed — jane@example.com'),
             ),
             RemixSkeleton(
               loading: _loading,
-              style: base.borderRounded(6),
+              style: base.container(BoxStyler().borderRounded(6)),
               child: RemixButton(label: 'Open profile', onPressed: () {}),
             ),
           ],
@@ -70,19 +70,31 @@ class _SkeletonPreviewState extends State<_SkeletonPreview> {
               spacing: 16,
               crossAxisAlignment: .start,
               children: [
-                RemixSkeleton(style: base.size(40, 40).shapeCircle()),
+                RemixSkeleton(
+                  style: base.container(BoxStyler().size(40, 40).shapeCircle()),
+                ),
                 SpacedColumn(
                   spacing: 8,
                   mainAxisSize: .min,
                   crossAxisAlignment: .start,
                   children: [
-                    RemixSkeleton(style: base.size(180, 12).borderRounded(6)),
-                    RemixSkeleton(style: base.size(120, 12).borderRounded(6)),
+                    RemixSkeleton(
+                      style: base.container(
+                        BoxStyler().size(180, 12).borderRounded(6),
+                      ),
+                    ),
+                    RemixSkeleton(
+                      style: base.container(
+                        BoxStyler().size(120, 12).borderRounded(6),
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
-            RemixSkeleton(style: base.size(320, 88).borderRounded(8)),
+            RemixSkeleton(
+              style: base.container(BoxStyler().size(320, 88).borderRounded(8)),
+            ),
           ],
         ),
 

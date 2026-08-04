@@ -10,9 +10,12 @@ void main() {
       duration: Duration(milliseconds: 1000),
     );
     final style = SkeletonStyler()
-        .size(120, 24)
-        .color(const Color(0xFFEEEEEE))
-        .borderRounded(4)
+        .container(
+          BoxStyler()
+              .size(120, 24)
+              .color(const Color(0xFFEEEEEE))
+              .borderRounded(4),
+        )
         .pulseColor(const Color(0xFFCCCCCC))
         .duration(const Duration(milliseconds: 1000));
 
@@ -20,7 +23,9 @@ void main() {
       RemixSkeleton(style: style, child: const Text('Jane')),
       isA<RemixSkeleton>(),
     );
-    expect(RemixSkeleton(styleSpec: spec), isA<RemixSkeleton>());
+    const raw = RemixSkeleton(styleSpec: StyleSpec(spec: spec));
+    expect(raw, isA<RemixSkeleton>());
+    expect(raw.styleSpec?.spec, spec);
     expect(
       style(child: const Text('Jane'), loading: false),
       isA<RemixSkeleton>(),

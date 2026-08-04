@@ -51,9 +51,12 @@ class SkeletonExample extends StatelessWidget {
 
   SkeletonStyler get placeholder {
     return SkeletonStyler()
-        .color(const Color(0x14000000))
-        .pulseColor(const Color(0x29000000))
-        .borderRounded(4);
+        .container(
+          BoxStyler()
+              .color(const Color(0x14000000))
+              .borderRounded(4),
+        )
+        .pulseColor(const Color(0x29000000));
   }
 }
 ```
@@ -88,7 +91,11 @@ class _ProfileCardState extends State<ProfileCard> {
       children: [
         RemixSkeleton(
           loading: _loading,
-          style: SkeletonStyler().color(const Color(0x14000000)).shapeCircle(),
+          style: SkeletonStyler().container(
+            BoxStyler()
+                .color(const Color(0x14000000))
+                .shapeCircle(),
+          ),
           child: const RemixAvatar(label: 'Jane Appleseed'),
         ),
         RemixButton(
@@ -129,15 +136,18 @@ class SkeletonShapes extends StatelessWidget {
 
   SkeletonStyler get base {
     return SkeletonStyler()
-        .color(const Color(0x14000000))
+        .container(BoxStyler().color(const Color(0x14000000)))
         .pulseColor(const Color(0x29000000));
   }
 
-  SkeletonStyler get circle => base.size(40, 40).shapeCircle();
+  SkeletonStyler get circle =>
+      base.container(BoxStyler().size(40, 40).shapeCircle());
 
-  SkeletonStyler get textLine => base.size(200, 12).borderRounded(6);
+  SkeletonStyler get textLine =>
+      base.container(BoxStyler().size(200, 12).borderRounded(6));
 
-  SkeletonStyler get block => base.size(160, 80).borderRounded(8);
+  SkeletonStyler get block =>
+      base.container(BoxStyler().size(160, 80).borderRounded(8));
 }
 ```
 </CodeGroup>
@@ -164,7 +174,9 @@ class AnnouncedLoading extends StatelessWidget {
       children: [
         RemixSkeleton(
           loading: loading,
-          style: SkeletonStyler().color(const Color(0x14000000)),
+          style: SkeletonStyler().container(
+            BoxStyler().color(const Color(0x14000000)),
+          ),
           child: const Text('Monthly revenue'),
         ),
         if (loading)
@@ -182,9 +194,9 @@ class AnnouncedLoading extends StatelessWidget {
 
 ## Styling
 
-`SkeletonStyler` forwards the full Box surface onto the placeholder container,
-so geometry, fill, radius, borders, and widget modifiers all resolve there.
-`pulseColor` and `duration` configure the animation itself.
+`SkeletonStyler` keeps the placeholder's Box API nested under `container`, so
+geometry, fill, radius, borders, and widget modifiers are configured with a
+`BoxStyler`. `pulseColor` and `duration` configure the animation itself.
 
 <CodeGroup title="Styling" defaultLanguage="dart">
 ```dart
@@ -193,10 +205,13 @@ import 'package:remix/remix.dart';
 
 SkeletonStyler skeletonStyle() {
   return SkeletonStyler()
-      .size(240, 16)
-      .color(const Color(0x14000000))
+      .container(
+        BoxStyler()
+            .size(240, 16)
+            .color(const Color(0x14000000))
+            .borderRounded(4),
+      )
       .pulseColor(const Color(0x29000000))
-      .borderRounded(4)
       .duration(const Duration(milliseconds: 1000));
 }
 
@@ -265,12 +280,13 @@ Checked against the pinned `@radix-ui/themes@3.3.0` `skeleton.css`.
   `MediaQuery.disableAnimationsOf` is a Flutter adaptation.
 - Radix pins its pulse to gray alpha 3 → 4 over 1000 ms. Remix keeps the 1000 ms
   leg but leaves the colors to the caller: with a plain `color` and a
-  `pulseColor` the fill interpolates between them. When there is no plain fill
-  to animate — no `color` at all, or a gradient painting over it — the whole
-  container fades between full and half opacity instead, composed with any
-  opacity the caller already applied rather than replacing it. Radix solves the
-  same problem by force-clearing `background-image`; Remix leaves your
-  decoration intact and changes how it pulses.
+  `pulseColor` the fill interpolates between them. When there is no unmasked
+  fill to animate — no `color` at all, or a gradient, image, or
+  `foregroundDecoration` painting over it — the whole container fades between
+  full and half opacity instead, composed with any opacity the caller already
+  applied rather than replacing it. Radix solves the same problem by
+  force-clearing `background-image`; Remix leaves your decoration intact and
+  changes how it pulses.
 - **Suppression goes further than upstream.** Radix only sets
   `pointer-events: none` and hides the content visually; it leaves hidden
   content focusable and readable by assistive technology. Remix also applies
@@ -287,8 +303,8 @@ RemixSkeleton remixSkeletonConstructor({
   Key? key,
   Widget? child,
   bool loading = true,
-  SkeletonStyler style = const SkeletonStyler.create(),
-  SkeletonSpec? styleSpec,
+  Style<SkeletonSpec> style = const SkeletonStyler.create(),
+  StyleSpec<SkeletonSpec>? styleSpec,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -308,13 +324,15 @@ skeleton collapses to nothing.
 Optional, defaults to `true`. Whether to show the placeholder instead of the
 child.
 
-#### `style` → `SkeletonStyler`
+#### `style` → `Style<SkeletonSpec>`
 
-Optional. The style configuration for the skeleton.
+Optional. The style configuration for the skeleton. A `SkeletonStyler` is the
+generated fluent implementation.
 
-#### `styleSpec` → `SkeletonSpec?`
+#### `styleSpec` → `StyleSpec<SkeletonSpec>?`
 
-Optional. A pre-resolved style spec that bypasses style resolution.
+Optional. A pre-resolved style spec that bypasses style resolution. Wrap a raw
+`SkeletonSpec` with `const StyleSpec(spec: SkeletonSpec(...))`.
 
 #### `key` → `Key?`
 
@@ -325,7 +343,9 @@ Optional. Controls how one widget replaces another widget in the tree.
 #### `pulseColor(Color value)`
 
 Sets the alternate fill the pulse animates toward. Requires a plain container
-`color` to interpolate from; without one the pulse fades the container instead.
+`color` with nothing painted over it; when a gradient, image, or
+`foregroundDecoration` would mask the fill, the pulse fades the whole container
+instead so the animation stays visible.
 
 #### `duration(Duration value)`
 
@@ -335,8 +355,8 @@ takes the same time.
 #### `container(BoxStyler value)`
 
 Sets the placeholder container directly. Every Box style method — `size`,
-`color`, `borderRounded`, `shapeCircle`, `padding`, and the rest — is also
-forwarded onto `SkeletonStyler` itself.
+`color`, `borderRounded`, `shapeCircle`, `padding`, and the rest — stays on the
+nested `BoxStyler`; these methods are not exposed directly on `SkeletonStyler`.
 
 #### `animate(AnimationConfig value)`
 

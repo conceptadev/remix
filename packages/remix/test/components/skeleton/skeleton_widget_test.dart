@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
@@ -449,9 +451,9 @@ void main() {
           tester,
           RemixSkeleton(
             style: SkeletonStyler()
-                .size(40, 40)
-                .color(_baseColor)
-                .shapeCircle()
+                .container(
+                  BoxStyler().size(40, 40).color(_baseColor).shapeCircle(),
+                )
                 .pulseColor(_pulseColor)
                 .duration(_leg),
           ),
@@ -469,6 +471,105 @@ void main() {
         expect(tester.getSize(find.byType(RemixSkeleton)), const Size(40, 40));
       });
 
+      testWidgets('falls back to opacity when a foreground decoration covers '
+          'the fill', (tester) async {
+        // A foreground decoration paints on top of the fill, so lerping the
+        // fill can be entirely invisible.
+        await _pumpSkeleton(
+          tester,
+          RemixSkeleton(
+            style: SkeletonStyler()
+                .container(
+                  BoxStyler()
+                      .size(_childSize.width, _childSize.height)
+                      .color(_baseColor)
+                      .foregroundDecoration(
+                        BoxDecorationMix(color: const Color(0xFF112233)),
+                      ),
+                )
+                .pulseColor(_pulseColor)
+                .duration(_leg),
+          ),
+        );
+
+        final size = tester.getSize(find.byType(RemixSkeleton));
+        expect(_pulseOpacities(tester), [1.0]);
+
+        await tester.pump(const Duration(milliseconds: 500));
+
+        expect(_pulseOpacities(tester), [0.75]);
+        // The base fill is left alone, and the foreground still paints.
+        expect(_pulseDecoration(tester).color, isSameColorAs(_baseColor));
+        expect(
+          (_foregroundDecorationOf(tester)! as BoxDecoration).color,
+          isSameColorAs(const Color(0xFF112233)),
+        );
+        // Swapping branches must not disturb layout.
+        expect(tester.getSize(find.byType(RemixSkeleton)), size);
+        expect(size, _childSize);
+      });
+
+      testWidgets('falls back to opacity when a box image covers the fill', (
+        tester,
+      ) async {
+        // An opaque DecorationImage paints over the fill, so lerping the fill
+        // would animate nothing visible.
+        await _pumpSkeleton(
+          tester,
+          RemixSkeleton(
+            style: SkeletonStyler()
+                .container(
+                  BoxStyler()
+                      .size(_childSize.width, _childSize.height)
+                      .color(_baseColor)
+                      .backgroundImage(_testImage, fit: BoxFit.cover),
+                )
+                .pulseColor(_pulseColor)
+                .duration(_leg),
+          ),
+        );
+
+        expect(_pulseDecoration(tester).image, isNotNull);
+        expect(_pulseOpacities(tester), [1.0]);
+
+        await tester.pump(const Duration(milliseconds: 500));
+
+        expect(_pulseOpacities(tester), [0.75]);
+        expect(_pulseDecoration(tester).color, isSameColorAs(_baseColor));
+      });
+
+      testWidgets('falls back to opacity when a shape image covers the fill', (
+        tester,
+      ) async {
+        await _pumpSkeleton(
+          tester,
+          RemixSkeleton(
+            style: SkeletonStyler()
+                .container(
+                  BoxStyler()
+                      .size(40, 40)
+                      .color(_baseColor)
+                      .shapeCircle()
+                      .backgroundImage(_testImage, fit: BoxFit.cover),
+                )
+                .pulseColor(_pulseColor)
+                .duration(_leg),
+          ),
+        );
+
+        final decoration = _decorationOf(tester) as ShapeDecoration;
+        expect(decoration.image, isNotNull);
+        expect(_pulseOpacities(tester), [1.0]);
+
+        await tester.pump(const Duration(milliseconds: 500));
+
+        expect(_pulseOpacities(tester), [0.75]);
+        expect(
+          (_decorationOf(tester) as ShapeDecoration).color,
+          isSameColorAs(_baseColor),
+        );
+      });
+
       testWidgets('falls back to opacity when a gradient covers the fill', (
         tester,
       ) async {
@@ -478,9 +579,12 @@ void main() {
           tester,
           RemixSkeleton(
             style: SkeletonStyler()
-                .size(_childSize.width, _childSize.height)
-                .color(_baseColor)
-                .linearGradient(colors: const [_baseColor, _pulseColor])
+                .container(
+                  BoxStyler()
+                      .size(_childSize.width, _childSize.height)
+                      .color(_baseColor)
+                      .linearGradient(colors: const [_baseColor, _pulseColor]),
+                )
                 .pulseColor(_pulseColor)
                 .duration(_leg),
           ),
@@ -502,7 +606,9 @@ void main() {
           tester,
           RemixSkeleton(
             style: SkeletonStyler()
-                .size(_childSize.width, _childSize.height)
+                .container(
+                  BoxStyler().size(_childSize.width, _childSize.height),
+                )
                 .pulseColor(_pulseColor)
                 .duration(_leg),
           ),
@@ -524,8 +630,11 @@ void main() {
           tester,
           RemixSkeleton(
             style: SkeletonStyler()
-                .size(_childSize.width, _childSize.height)
-                .container(BoxStyler().wrap(WidgetModifierConfig.opacity(0.4)))
+                .container(
+                  BoxStyler()
+                      .size(_childSize.width, _childSize.height)
+                      .wrap(WidgetModifierConfig.opacity(0.4)),
+                )
                 .duration(_leg),
           ),
         );
@@ -556,6 +665,40 @@ void main() {
 
         expect(_pulseDecoration(tester).color, isSameColorAs(_baseColor));
         expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('holds the opacity fallback static as well', (tester) async {
+        // The fallback branch owns every masked paint, so it has to respect
+        // reduced motion exactly like the fill-interpolating branch.
+        RemixSkeleton build() => RemixSkeleton(
+          style: SkeletonStyler()
+              .container(
+                BoxStyler()
+                    .size(_childSize.width, _childSize.height)
+                    .color(_baseColor)
+                    .foregroundDecoration(
+                      BoxDecorationMix(color: const Color(0xFF112233)),
+                    ),
+              )
+              .pulseColor(_pulseColor)
+              .duration(_leg),
+        );
+
+        await _pumpSkeleton(tester, build(), disableAnimations: true);
+
+        expect(_pulseOpacities(tester), [1.0]);
+        expect(tester.binding.hasScheduledFrame, isFalse);
+
+        await tester.pump(const Duration(milliseconds: 500));
+
+        expect(_pulseOpacities(tester), [1.0]);
+        expect(tester.takeException(), isNull);
+
+        // And it resumes when the preference flips back.
+        await _pumpSkeleton(tester, build());
+        await tester.pump(const Duration(milliseconds: 500));
+
+        expect(_pulseOpacities(tester), [0.75]);
       });
 
       testWidgets('stops pulsing when reduced motion turns on at runtime', (
@@ -682,14 +825,23 @@ const _buttonLabel = 'Save';
 
 final Color _midColor = Color.lerp(_baseColor, _pulseColor, 0.5)!;
 
+/// A 1x1 opaque PNG, so decoration-image cases need no asset or network.
+final MemoryImage _testImage = MemoryImage(
+  base64Decode(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGA'
+    'hKmMIQAAAABJRU5ErkJggg==',
+  ),
+);
+
 /// Geometry only: the resolved decoration carries no fill, so the pulse takes
 /// the generic opacity fallback.
-SkeletonStyler _blockStyle() =>
-    SkeletonStyler().size(_childSize.width, _childSize.height).borderRounded(4);
+SkeletonStyler _blockStyle() => SkeletonStyler().container(
+  BoxStyler().size(_childSize.width, _childSize.height).borderRounded(4),
+);
 
 /// Both endpoints resolve, so the pulse interpolates the container fill.
 SkeletonStyler _pulseStyle({Color? pulseColor, Duration? leg}) => _blockStyle()
-    .color(_baseColor)
+    .container(BoxStyler().color(_baseColor))
     .pulseColor(pulseColor ?? _pulseColor)
     .duration(leg ?? _leg);
 
@@ -746,6 +898,14 @@ Decoration _decorationOf(WidgetTester tester) {
 
 BoxDecoration _pulseDecoration(WidgetTester tester) =>
     _decorationOf(tester) as BoxDecoration;
+
+Decoration? _foregroundDecorationOf(WidgetTester tester) {
+  return tester
+      .widget<Container>(
+        find.descendant(of: _boxes(), matching: find.byType(Container)),
+      )
+      .foregroundDecoration;
+}
 
 List<double> _pulseOpacities(WidgetTester tester) {
   return tester

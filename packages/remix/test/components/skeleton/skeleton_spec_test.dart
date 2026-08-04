@@ -202,22 +202,19 @@ void main() {
               builder: (context) {
                 specs = {
                   'rectangle': SkeletonStyler()
-                      .size(120, 24)
-                      .borderRounded(4)
+                      .container(BoxStyler().size(120, 24).borderRounded(4))
                       .resolve(context)
                       .spec,
                   'circle': SkeletonStyler()
-                      .size(40, 40)
-                      .shapeCircle()
+                      .container(BoxStyler().size(40, 40).shapeCircle())
                       .resolve(context)
                       .spec,
                   'textLine': SkeletonStyler()
-                      .height(12)
-                      .maxWidth(200)
+                      .container(BoxStyler().height(12).maxWidth(200))
                       .resolve(context)
                       .spec,
                   'childSized': SkeletonStyler()
-                      .color(const Color(0xFFEEEEEE))
+                      .container(BoxStyler().color(const Color(0xFFEEEEEE)))
                       .resolve(context)
                       .spec,
                 };

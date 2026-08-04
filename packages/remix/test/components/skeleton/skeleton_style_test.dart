@@ -100,8 +100,8 @@ void main() {
       );
     });
 
-    group('Container forwarding', () {
-      testWidgets('Box anchors resolve onto the container spec', (
+    group('Nested container surface', () {
+      testWidgets('Box styling resolves through the container styler', (
         tester,
       ) async {
         late SkeletonSpec spec;
@@ -111,10 +111,13 @@ void main() {
             home: Builder(
               builder: (context) {
                 spec = SkeletonStyler()
-                    .size(120, 24)
-                    .color(_baseColor)
-                    .borderRounded(4)
-                    .paddingAll(2)
+                    .container(
+                      BoxStyler()
+                          .size(120, 24)
+                          .color(_baseColor)
+                          .borderRounded(4)
+                          .paddingAll(2),
+                    )
                     .resolve(context)
                     .spec;
 
@@ -136,7 +139,7 @@ void main() {
         expect(decoration.borderRadius, BorderRadius.circular(4));
       });
 
-      testWidgets('a forwarded anchor merges instead of replacing', (
+      testWidgets('nested container styles merge instead of replacing', (
         tester,
       ) async {
         late SkeletonSpec spec;
@@ -147,7 +150,7 @@ void main() {
               builder: (context) {
                 spec = SkeletonStyler()
                     .container(BoxStyler().color(_baseColor))
-                    .borderRounded(4)
+                    .container(BoxStyler().borderRounded(4))
                     .resolve(context)
                     .spec;
 
@@ -161,6 +164,23 @@ void main() {
 
         expect(decoration.color, _baseColor);
         expect(decoration.borderRadius, BorderRadius.circular(4));
+      });
+
+      test('does not expose misleading direct Box methods', () {
+        final dynamic style = SkeletonStyler();
+
+        expect(
+          () => style.alignment(Alignment.center),
+          throwsA(isA<NoSuchMethodError>()),
+        );
+        expect(
+          () => style.clipBehavior(Clip.hardEdge),
+          throwsA(isA<NoSuchMethodError>()),
+        );
+        expect(
+          () => style.textStyle(TextStyler()),
+          throwsA(isA<NoSuchMethodError>()),
+        );
       });
     });
 
@@ -247,23 +267,17 @@ void main() {
     });
 
     group('Call method', () {
-      test('creates a RemixSkeleton carrying this style', () {
+      test('forwards key, child, loading, and style to RemixSkeleton', () {
+        final key = UniqueKey();
+        const child = Text('Ready');
         final style = SkeletonStyler().pulseColor(_pulseColor);
-        final skeleton = style();
+        final skeleton = style(key: key, child: child, loading: false);
 
         expect(skeleton, isA<RemixSkeleton>());
+        expect(skeleton.key, same(key));
         expect(skeleton.style, style);
-        expect(skeleton.loading, isTrue);
-      });
-
-      test('forwards child and loading', () {
-        final skeleton = SkeletonStyler()(
-          loading: false,
-          child: const Text('Ready'),
-        );
-
         expect(skeleton.loading, isFalse);
-        expect(skeleton.child, isA<Text>());
+        expect(skeleton.child, same(child));
       });
     });
 
@@ -271,11 +285,13 @@ void main() {
       testWidgets('bypasses the styler entirely', (tester) async {
         await tester.pumpRemixApp(
           RemixSkeleton(
-            style: SkeletonStyler().size(300, 300),
-            styleSpec: const SkeletonSpec(
-              container: StyleSpec(
-                spec: BoxSpec(
-                  constraints: BoxConstraints.tightFor(width: 64, height: 16),
+            style: SkeletonStyler().container(BoxStyler().size(300, 300)),
+            styleSpec: const StyleSpec(
+              spec: SkeletonSpec(
+                container: StyleSpec(
+                  spec: BoxSpec(
+                    constraints: BoxConstraints.tightFor(width: 64, height: 16),
+                  ),
                 ),
               ),
             ),
