@@ -23,6 +23,15 @@ void main() {
     const progress = RemixProgress(value: 0.5);
     const tabBar = RemixTabBar(child: Text('Tabs'));
     const spinner = RemixSpinner();
+    const checkboxGroup = RemixCheckboxGroup<String>(
+      values: {'one'},
+      child: RemixCheckboxGroupItem<String>(
+        value: 'one',
+        label: 'One',
+        semanticLabel: 'Option one',
+        minimumTapTargetSize: Size.zero,
+      ),
+    );
 
     expect(button.label, 'Save');
     expect(card.child, isA<Text>());
@@ -35,6 +44,14 @@ void main() {
     expect(progress.value, 0.5);
     expect(tabBar.child, isA<Text>());
     expect(spinner, isA<RemixSpinner>());
+    expect(checkbox.selected, isFalse);
+    expect(checkboxGroup.values.single, 'one');
+    expect(checkboxGroup.child, isA<RemixCheckboxGroupItem<String>>());
+    final checkboxGroupItem =
+        checkboxGroup.child as RemixCheckboxGroupItem<String>;
+    expect(checkboxGroupItem.label, 'One');
+    expect(checkboxGroupItem.semanticLabel, 'Option one');
+    expect(checkboxGroupItem.minimumTapTargetSize, Size.zero);
   });
 
   test('generated wrappers preserve generic and named constructors', () {

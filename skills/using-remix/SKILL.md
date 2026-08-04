@@ -120,15 +120,15 @@ their calling context must be below that caller-owned `Navigator`.
 
 ## Component Catalog
 
-Remix ships 21 components. Each styled leaf widget accepts `style` (a
+Remix ships 22 components. Each styled leaf widget accepts `style` (a
 `*Styler`) and has a `Fortal*` preset counterpart. Behavioral roots and
-groups (`RemixTabs`, `RemixRadioGroup`, and `RemixAccordionGroup`) intentionally
-have neither a styler nor a Fortal wrapper.
+groups (`RemixTabs`, `RemixRadioGroup`, `RemixCheckboxGroup`, and
+`RemixAccordionGroup`) intentionally have neither a styler nor a Fortal wrapper.
 
 | Category | Remix widgets | Fortal presets |
 |----------|---------------|----------------|
 | **Actions** | `RemixButton`, `RemixIconButton`, `RemixToggle` | `FortalButton`, `FortalIconButton`, `FortalToggle` |
-| **Forms** | `RemixCheckbox`, `RemixRadio` + `RemixRadioGroup`, `RemixSwitch`, `RemixSlider`, `RemixTextField`, `RemixSelect` | `FortalCheckbox`, `FortalRadio`, `FortalSwitch`, `FortalSlider`, `FortalTextField`, `FortalSelect` |
+| **Forms** | `RemixCheckbox`, `RemixCheckboxGroup` + `RemixCheckboxGroupItem`, `RemixRadio` + `RemixRadioGroup`, `RemixSwitch`, `RemixSlider`, `RemixTextField`, `RemixSelect` | `FortalCheckbox`, `FortalRadio`, `FortalSwitch`, `FortalSlider`, `FortalTextField`, `FortalSelect` |
 | **Data display** | `RemixAvatar`, `RemixBadge`, `RemixCard`, `RemixCallout`, `RemixProgress`, `RemixSpinner`, `RemixDivider` | `FortalAvatar`, `FortalBadge`, `FortalCard`, `FortalCallout`, `FortalProgress`, `FortalSpinner`, `FortalDivider` |
 | **Overlays** | `RemixDialog` (+ `showRemixDialog`), `RemixTooltip`, `RemixMenu` | `FortalDialog`, `FortalTooltip`, `FortalMenu` |
 | **Navigation** | `RemixTabs` + `RemixTabBar`/`RemixTab`/`RemixTabView`, `RemixAccordion` + `RemixAccordionGroup` | `FortalTabBar`/`FortalTab`/`FortalTabView` (no `FortalTabs` — use `RemixTabs`), `FortalAccordion` |
@@ -500,7 +500,7 @@ For deeper Mix-level styling (specs, `StyleSpec`, `BoxStyler`, `TextStyler`,
 
 ## Additional Resources
 
-- **`references/components.md`** — full constructor parameters for all 21
+- **`references/components.md`** — full constructor parameters for all 22
   components and their Fortal presets.
 - **`references/fortal-reference.md`** — every Fortal variant/size per
   component, `FortalScope`/`FortalThemeConfig`, and the complete token
