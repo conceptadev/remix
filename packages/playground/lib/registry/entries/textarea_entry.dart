@@ -13,27 +13,18 @@ class _TextAreaExample extends StatefulWidget {
 }
 
 class _TextAreaExampleState extends State<_TextAreaExample> {
-  late final TextEditingController _remixController;
-  late final TextEditingController _materialController;
-  late final TextEditingController _remixReadOnlyController;
-  late final TextEditingController _materialReadOnlyController;
-
-  @override
-  void initState() {
-    super.initState();
-    _remixController = TextEditingController(
-      text: 'First paragraph.\nSecond paragraph.',
-    );
-    _materialController = TextEditingController(
-      text: 'First paragraph.\nSecond paragraph.',
-    );
-    _remixReadOnlyController = TextEditingController(
-      text: 'This content can be selected but not changed.',
-    );
-    _materialReadOnlyController = TextEditingController(
-      text: 'This content can be selected but not changed.',
-    );
-  }
+  final _remixController = TextEditingController(
+    text: 'First paragraph.\nSecond paragraph.',
+  );
+  final _materialController = TextEditingController(
+    text: 'First paragraph.\nSecond paragraph.',
+  );
+  final _remixReadOnlyController = TextEditingController(
+    text: 'This content can be selected but not changed.',
+  );
+  final _materialReadOnlyController = TextEditingController(
+    text: 'This content can be selected but not changed.',
+  );
 
   @override
   void dispose() {
