@@ -36,6 +36,9 @@ void main() {
     const progress = RemixProgress(value: 0.5);
     const tabBar = RemixTabBar(child: Text('Tabs'));
     const spinner = RemixSpinner();
+    const dataList = RemixDataList(
+      items: [RemixDataListItem(label: 'Status', value: 'Active')],
+    );
 
     expect(button.label, 'Save');
     expect(card.child, isA<Text>());
@@ -50,6 +53,16 @@ void main() {
     expect(progress.value, 0.5);
     expect(tabBar.child, isA<Text>());
     expect(spinner, isA<RemixSpinner>());
+    expect(dataList.items.single, isA<RemixDataListItem>());
+    expect(dataList.items.single.label, 'Status');
+    expect(dataList.items.single.value, 'Active');
+    expect(
+      dataList.items.single.alignment,
+      RemixDataListItemAlignment.baseline,
+    );
+    expect(dataList.orientation, Axis.horizontal);
+    expect(dataList.style, isA<DataListStyler>());
+    expect(dataList.styleSpec, isNull);
   });
 
   test('menu data retains caller-owned identity', () {

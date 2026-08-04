@@ -5,6 +5,7 @@ import 'dart:typed_data';
 const _expectedIntegrity =
     'sha512-I0/h2CRNTpYNB7Mi3xFIvSsQq5a108d7kK8dTO5zp5b9HR5QJXKag6B8tjpz2ITkVYkFdkGk45doNkSr7OxwNw==';
 const _expectedNakedUiVersion = '1.0.0-beta.8';
+const _expectedNakedUiConstraint = '^1.0.0-beta.8';
 const _expectedMappedFamilies = <String>{
   'avatar',
   'badge',
@@ -632,11 +633,10 @@ void _checkNakedPin(
   final packageSource = packagePubspec.readAsStringSync();
   _expect(
     RegExp(
-      '^  naked_ui: ${RegExp.escape(_expectedNakedUiVersion)}\\s*\$',
+      '^  naked_ui: ${RegExp.escape(_expectedNakedUiConstraint)}\\s*\$',
       multiLine: true,
     ).hasMatch(packageSource),
-    'Remix must declare the exact naked_ui $_expectedNakedUiVersion '
-    'dependency.',
+    'Remix must constrain naked_ui to $_expectedNakedUiConstraint.',
     failures,
   );
   final workspaceSource = workspacePubspec.readAsStringSync();
@@ -831,7 +831,7 @@ Never _finish(List<String> failures) {
   stdout.writeln(
     'Verified @radix-ui/themes 3.3.0 contract: '
     '20 mapped families, 3 Fortal extensions, Chromium fixtures, '
-    'coverage ledger, hosted Naked $_expectedNakedUiVersion pin, and no '
+    'coverage ledger, hosted Naked $_expectedNakedUiVersion resolution, and no '
     'undocumented approximations.',
   );
   exit(0);

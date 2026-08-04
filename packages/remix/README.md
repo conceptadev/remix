@@ -65,14 +65,14 @@ With Remix, you get:
 Add Remix to your project:
 
 ```bash
-flutter pub add remix
+flutter pub add remix:^1.0.0-beta.1
 ```
 
 Or add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  remix: ^1.0.0
+  remix: ^1.0.0-beta.1
 ```
 
 ### Your First Component
@@ -285,6 +285,7 @@ Remix provides a comprehensive set of production-ready components:
 - **Avatar** - User avatars and images
 - **Badge** - Status indicators and labels
 - **Card** - Content containers
+- **DataList** - Label/value metadata lists with a shared label column
 - **Divider** - Visual separators
 - **Progress** - Progress indicators
 - **Spinner** - Loading states
