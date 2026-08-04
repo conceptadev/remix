@@ -1116,10 +1116,6 @@ void main() {
 
     test('compound labels and semantic labels must not be empty', () {
       expect(
-        () => RemixMenuItem<String>(value: 'ordinary', label: ''),
-        throwsAssertionError,
-      );
-      expect(
         () => RemixMenuCheckboxItem<String>(
           value: 'checkbox',
           label: '',
@@ -1572,6 +1568,85 @@ void main() {
   });
 
   group('RemixMenu submenus', () {
+    testWidgets(
+      'omitted submenu side follows direction and explicit right stays physical',
+      (tester) async {
+        await tester.binding.setSurfaceSize(const Size(1200, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
+        Future<void> expectPlacement({
+          required TextDirection direction,
+          required OverlaySide expectedSide,
+          bool explicitRight = false,
+        }) async {
+          final menuController = MenuController();
+          final submenuController = MenuController();
+          final submenu = explicitRight
+              ? RemixMenuSubmenu<String>(
+                  controller: submenuController,
+                  label: 'More',
+                  positioning: const OverlayPositionConfig(
+                    side: OverlaySide.right,
+                    alignment: OverlayAlignment.start,
+                    sideOffset: 4,
+                  ),
+                  items: const [
+                    RemixMenuItem(value: 'archive', label: 'Archive'),
+                  ],
+                )
+              : RemixMenuSubmenu<String>(
+                  controller: submenuController,
+                  label: 'More',
+                  items: const [
+                    RemixMenuItem(value: 'archive', label: 'Archive'),
+                  ],
+                );
+
+          await tester.pumpRemixApp(
+            RemixMenu<String>(
+              controller: menuController,
+              trigger: const RemixMenuTrigger(label: 'Options'),
+              items: [submenu],
+            ),
+            textDirection: direction,
+          );
+          menuController.open();
+          await tester.pump();
+          submenuController.open();
+          await tester.pump();
+          await tester.pump();
+
+          final triggerRect = tester.getRect(find.text('More'));
+          final childRect = tester.getRect(find.text('Archive'));
+          final placement = OverlayPlacement.of(
+            tester.element(find.text('Archive')),
+          );
+
+          expect(placement.side, expectedSide);
+          expect(placement.wasFlipped, isFalse);
+          if (expectedSide == OverlaySide.right) {
+            expect(childRect.left, greaterThan(triggerRect.right));
+          } else {
+            expect(childRect.right, lessThan(triggerRect.left));
+          }
+        }
+
+        await expectPlacement(
+          direction: TextDirection.ltr,
+          expectedSide: OverlaySide.right,
+        );
+        await expectPlacement(
+          direction: TextDirection.rtl,
+          expectedSide: OverlaySide.left,
+        );
+        await expectPlacement(
+          direction: TextDirection.rtl,
+          expectedSide: OverlaySide.right,
+          explicitRight: true,
+        );
+      },
+    );
+
     testWidgets('hover opens only after the configured 100 ms delay', (
       tester,
     ) async {
@@ -2072,36 +2147,43 @@ void main() {
       },
     );
 
-    testWidgets('raw and fluent indicator styles control the shared path', (
+    testWidgets('raw and fluent indicators stay size 13 at 200%', (
       tester,
     ) async {
       Future<Size> indicatorSize({required bool raw}) async {
         final controller = MenuController();
         await tester.pumpRemixApp(
-          RemixMenu<String>(
-            controller: controller,
-            trigger: const RemixMenuTrigger(label: 'Options'),
-            items: const [
-              RemixMenuCheckboxItem(
-                value: 'notifications',
-                label: 'Notifications',
-                checked: true,
-              ),
-            ],
-            style: raw
-                ? const MenuStyler.create()
-                : MenuStyler().item(
-                    MenuItemStyler().indicator(IconStyler().size(13)),
-                  ),
-            styleSpec: raw
-                ? const MenuSpec(
-                    item: StyleSpec(
-                      spec: MenuItemSpec(
-                        indicator: StyleSpec(spec: IconSpec(size: 13)),
+          MediaQuery(
+            data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+            child: RemixMenu<String>(
+              controller: controller,
+              trigger: const RemixMenuTrigger(label: 'Options'),
+              items: const [
+                RemixMenuCheckboxItem(
+                  value: 'notifications',
+                  label: 'Notifications',
+                  checked: true,
+                ),
+              ],
+              style: raw
+                  ? const MenuStyler.create()
+                  : MenuStyler().item(
+                      MenuItemStyler().indicator(
+                        IconStyler().size(13).applyTextScaling(false),
                       ),
                     ),
-                  )
-                : null,
+              styleSpec: raw
+                  ? const MenuSpec(
+                      item: StyleSpec(
+                        spec: MenuItemSpec(
+                          indicator: StyleSpec(
+                            spec: IconSpec(size: 13, applyTextScaling: false),
+                          ),
+                        ),
+                      ),
+                    )
+                  : null,
+            ),
           ),
         );
         await tester.pump();
@@ -2113,6 +2195,14 @@ void main() {
         expect(
           tester.widget<RemixPathIcon>(indicator).glyph,
           RemixPathGlyph.thickCheck,
+        );
+        expect(
+          tester
+              .widget<RemixPathIcon>(indicator)
+              .styleSpec
+              .spec
+              .applyTextScaling,
+          isFalse,
         );
         return tester.getSize(indicator);
       }

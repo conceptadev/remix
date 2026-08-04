@@ -69,8 +69,7 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
     this.closeOnActivate = true,
     this.semanticLabel,
     this.style = const MenuItemStyler.create(),
-  }) : assert(label != '', 'Item labels must not be empty'),
-       assert(semanticLabel != '', 'Item semantic labels must not be empty');
+  });
 }
 
 /// A controlled checkbox item in a [RemixMenu].
@@ -202,6 +201,17 @@ final class RemixMenuRadioItem<T> {
 /// The list must not be mutated while a panel is being built. Each nested
 /// panel consumes an immutable snapshot independently from its parent.
 final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
+  static const _defaultLtrPositioning = OverlayPositionConfig(
+    side: OverlaySide.right,
+    alignment: OverlayAlignment.start,
+    sideOffset: 4,
+  );
+  static const _defaultRtlPositioning = OverlayPositionConfig(
+    side: OverlaySide.left,
+    alignment: OverlayAlignment.start,
+    sideOffset: 4,
+  );
+
   const RemixMenuSubmenu({
     super.key,
     required this.label,
@@ -211,17 +221,15 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
     this.controller,
     this.enabled = true,
     this.hoverDelay = const Duration(milliseconds: 100),
-    this.positioning = const OverlayPositionConfig(
-      side: OverlaySide.right,
-      alignment: OverlayAlignment.start,
-      sideOffset: 4,
-    ),
+    OverlayPositionConfig? positioning,
     this.focusNode,
     this.semanticLabel,
     this.onOpen,
     this.onClose,
     this.style = const MenuItemStyler.create(),
-  }) : assert(label != '', 'Item labels must not be empty'),
+  }) : positioning = positioning ?? _defaultLtrPositioning,
+       _usesDefaultPositioning = positioning == null,
+       assert(label != '', 'Item labels must not be empty'),
        assert(semanticLabel != '', 'Item semantic labels must not be empty');
 
   /// The visible submenu trigger label.
@@ -246,7 +254,13 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
   final Duration hoverDelay;
 
   /// Child-panel placement relative to the submenu trigger.
+  ///
+  /// When omitted, the panel opens toward logical end: right in left-to-right
+  /// layouts and left in right-to-left layouts. An explicit configuration
+  /// keeps its physical [OverlayPositionConfig.side] in either direction.
   final OverlayPositionConfig positioning;
+
+  final bool _usesDefaultPositioning;
 
   /// Optional caller-owned focus node for the submenu trigger.
   final FocusNode? focusNode;
@@ -263,6 +277,11 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
   /// Per-trigger visual style applied after the menu-wide shared and submenu
   /// item styles.
   final MenuItemStyler style;
+
+  OverlayPositionConfig _resolvePositioning(TextDirection direction) =>
+      _usesDefaultPositioning && direction == TextDirection.rtl
+      ? _defaultRtlPositioning
+      : positioning;
 }
 
 /// Data class representing a menu divider.
@@ -564,7 +583,11 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
                 item,
                 hasChoiceItems,
               ),
-              RemixMenuSubmenu<T>() => _buildSubmenu(item, hasChoiceItems),
+              RemixMenuSubmenu<T>() => _buildSubmenu(
+                context,
+                item,
+                hasChoiceItems,
+              ),
               RemixMenuDivider<T>() => StyleSpecBuilder(
                 key: item.key,
                 styleSpec: dividerStyleSpec,
@@ -688,13 +711,17 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
     );
   }
 
-  Widget _buildSubmenu(RemixMenuSubmenu<T> submenu, bool reserveChoiceSlot) {
+  Widget _buildSubmenu(
+    BuildContext context,
+    RemixMenuSubmenu<T> submenu,
+    bool reserveChoiceSlot,
+  ) {
     return NakedMenuSubmenu<T>(
       key: submenu.key,
       controller: submenu.controller,
       enabled: submenu.enabled,
       hoverDelay: submenu.hoverDelay,
-      positioning: submenu.positioning,
+      positioning: submenu._resolvePositioning(Directionality.of(context)),
       focusNode: submenu.focusNode,
       semanticLabel: submenu.semanticLabel ?? submenu.label,
       onOpen: submenu.onOpen,

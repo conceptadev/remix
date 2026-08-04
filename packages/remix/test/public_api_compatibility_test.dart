@@ -95,6 +95,39 @@ void main() {
     );
   });
 
+  testWidgets('ordinary menu items remain accessible when icon-only', (
+    tester,
+  ) async {
+    final controller = MenuController();
+    final item = RemixMenuItem<String>(
+      value: 'favorite',
+      label: '',
+      leadingIcon: Icons.star,
+      semanticLabel: 'Favorite item',
+    );
+    final semantics = tester.ensureSemantics();
+
+    await tester.pumpWidget(
+      FortalScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: RemixMenu<String>(
+              controller: controller,
+              trigger: const RemixMenuTrigger(label: 'Actions'),
+              items: [item],
+            ),
+          ),
+        ),
+      ),
+    );
+    controller.open();
+    await tester.pump();
+
+    expect(find.byIcon(Icons.star), findsOneWidget);
+    expect(find.bySemanticsLabel('Favorite item'), findsOneWidget);
+    semantics.dispose();
+  });
+
   test('generated wrappers preserve generic and named constructors', () {
     const menu = FortalMenu<String>.soft(
       trigger: RemixMenuTrigger(label: 'Actions'),
