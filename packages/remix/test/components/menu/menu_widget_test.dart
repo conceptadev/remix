@@ -1946,9 +1946,131 @@ void main() {
             .ancestor(of: find.text('Nested'), matching: find.byType(FlexBox))
             .first,
       );
-      expect(rootRow.children.first, isA<SizedBox>());
+      expect(rootRow.children.first, isA<Visibility>());
       expect(nestedRow.children.first, isA<Expanded>());
     });
+
+    testWidgets('default size-9 choice slots scale to 18 at 200%', (
+      tester,
+    ) async {
+      final controller = MenuController();
+      await tester.pumpRemixApp(
+        MediaQuery(
+          data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+          child: RemixMenu<String>(
+            controller: controller,
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            style: MenuStyler().item(
+              MenuItemStyler().indicator(IconStyler().applyTextScaling(true)),
+            ),
+            items: const [
+              RemixMenuCheckboxItem(
+                value: 'checked',
+                label: 'Checked',
+                checked: true,
+              ),
+              RemixMenuCheckboxItem(
+                value: 'unchecked',
+                label: 'Unchecked',
+                checked: false,
+              ),
+            ],
+          ),
+        ),
+      );
+
+      controller.open();
+      await tester.pump();
+
+      Finder slotFor(String label) {
+        final row = tester.widget<FlexBox>(
+          find
+              .ancestor(of: find.text(label), matching: find.byType(FlexBox))
+              .first,
+        );
+        return find.byWidget(row.children.first);
+      }
+
+      final checkedIndicator = tester.widget<RemixPathIcon>(
+        find.byKey(const ValueKey('remix-menu-indicator-Checked')),
+      );
+      expect(checkedIndicator.styleSpec.spec.size, 9);
+      expect(tester.getSize(slotFor('Checked')), const Size.square(18));
+      expect(tester.getSize(slotFor('Unchecked')), const Size.square(18));
+    });
+
+    testWidgets(
+      'maintained choice slots remain excluded from duplicate semantics',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+        final controller = MenuController();
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            controller: controller,
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            items: const [
+              RemixMenuCheckboxItem(
+                value: 'checked',
+                label: 'Checked',
+                checked: true,
+                semanticLabel: 'Checked choice',
+              ),
+              RemixMenuCheckboxItem(
+                value: 'unchecked',
+                label: 'Unchecked',
+                checked: false,
+                semanticLabel: 'Unchecked choice',
+              ),
+            ],
+          ),
+        );
+
+        controller.open();
+        await tester.pump();
+
+        for (final (label, visible) in [
+          ('Checked', true),
+          ('Unchecked', false),
+        ]) {
+          final row = find
+              .ancestor(of: find.text(label), matching: find.byType(FlexBox))
+              .first;
+          final slot = tester.widget<FlexBox>(row).children.first;
+
+          expect(
+            slot,
+            isA<Visibility>()
+                .having((slot) => slot.visible, 'visible', visible)
+                .having((slot) => slot.maintainState, 'maintainState', isTrue)
+                .having(
+                  (slot) => slot.maintainAnimation,
+                  'maintainAnimation',
+                  isTrue,
+                )
+                .having((slot) => slot.maintainSize, 'maintainSize', isTrue)
+                .having(
+                  (slot) => slot.maintainSemantics,
+                  'maintainSemantics',
+                  isTrue,
+                )
+                .having(
+                  (slot) => slot.maintainInteractivity,
+                  'maintainInteractivity',
+                  isTrue,
+                )
+                .having((slot) => slot.child, 'child', isA<RemixPathIcon>()),
+          );
+          expect(
+            find.ancestor(of: row, matching: find.byType(ExcludeSemantics)),
+            findsOneWidget,
+          );
+        }
+
+        expect(find.bySemanticsLabel('Checked choice'), findsOneWidget);
+        expect(find.bySemanticsLabel('Unchecked choice'), findsOneWidget);
+        semantics.dispose();
+      },
+    );
 
     testWidgets('raw and fluent indicator styles control the shared path', (
       tester,

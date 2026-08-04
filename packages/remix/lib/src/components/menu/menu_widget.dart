@@ -802,15 +802,13 @@ class _RemixMenuItemContent extends StatelessWidget {
       styleSpec: spec.container,
       children: [
         if (reserveChoiceSlot)
-          SizedBox.square(
-            dimension: indicatorSize,
-            child: showIndicator
-                ? RemixPathIcon(
-                    key: ValueKey('remix-menu-indicator-$label'),
-                    glyph: RemixPathGlyph.thickCheck,
-                    styleSpec: indicatorSpec,
-                  )
-                : null,
+          Visibility.maintain(
+            visible: showIndicator,
+            child: RemixPathIcon(
+              key: ValueKey('remix-menu-indicator-$label'),
+              glyph: RemixPathGlyph.thickCheck,
+              styleSpec: indicatorSpec,
+            ),
           ),
         if (leadingIcon != null)
           StyledIcon(icon: leadingIcon!, styleSpec: spec.leadingIcon),
