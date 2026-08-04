@@ -52,6 +52,49 @@ void main() {
     expect(spinner, isA<RemixSpinner>());
   });
 
+  test('menu data retains caller-owned identity', () {
+    const ordinaryKey = ValueKey<String>('ordinary');
+    const checkboxKey = ValueKey<String>('checkbox');
+    const radioGroupKey = ValueKey<String>('radio-group');
+    const radioItemKey = ValueKey<String>('radio-item');
+    const submenuKey = ValueKey<String>('submenu');
+    const dividerKey = ValueKey<String>('divider');
+    const items = <RemixMenuItemData<String>>[
+      RemixMenuItem(key: ordinaryKey, value: 'ordinary', label: 'Ordinary'),
+      RemixMenuCheckboxItem(
+        key: checkboxKey,
+        value: 'checkbox',
+        label: 'Checkbox',
+        checked: true,
+      ),
+      RemixMenuRadioGroup(
+        key: radioGroupKey,
+        value: 'radio',
+        items: [
+          RemixMenuRadioItem(key: radioItemKey, value: 'radio', label: 'Radio'),
+        ],
+      ),
+      RemixMenuSubmenu(
+        key: submenuKey,
+        label: 'Submenu',
+        items: [RemixMenuItem(value: 'nested', label: 'Nested')],
+      ),
+      RemixMenuDivider(key: dividerKey),
+    ];
+
+    expect(items.map((item) => item.key), [
+      ordinaryKey,
+      checkboxKey,
+      radioGroupKey,
+      submenuKey,
+      dividerKey,
+    ]);
+    expect(
+      (items[2] as RemixMenuRadioGroup<String>).items.single.key,
+      radioItemKey,
+    );
+  });
+
   test('generated wrappers preserve generic and named constructors', () {
     const menu = FortalMenu<String>.soft(
       trigger: RemixMenuTrigger(label: 'Actions'),

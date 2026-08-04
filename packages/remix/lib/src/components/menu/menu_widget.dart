@@ -24,7 +24,10 @@ class RemixMenuTrigger {
 /// This ensures type safety and exhaustive pattern matching when
 /// handling ordinary, checkbox, radio, submenu, and divider data.
 sealed class RemixMenuItemData<T> {
-  const RemixMenuItemData();
+  const RemixMenuItemData({this.key});
+
+  /// Optional caller-owned identity for the rendered item root.
+  final Key? key;
 }
 
 /// Data class representing a selectable menu item.
@@ -57,6 +60,7 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
   final MenuItemStyler style;
 
   const RemixMenuItem({
+    super.key,
     required this.value,
     required this.label,
     this.leadingIcon,
@@ -75,6 +79,7 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
 /// [value] and [onChanged] with the toggled checked value, in that order.
 final class RemixMenuCheckboxItem<T> extends RemixMenuItemData<T> {
   const RemixMenuCheckboxItem({
+    super.key,
     required this.value,
     required this.label,
     required this.checked,
@@ -128,6 +133,7 @@ final class RemixMenuCheckboxItem<T> extends RemixMenuItemData<T> {
 /// [MenuStyler.radioItem] or override an individual radio item's style.
 final class RemixMenuRadioGroup<T> extends RemixMenuItemData<T> {
   const RemixMenuRadioGroup({
+    super.key,
     required this.value,
     required this.items,
     this.onChanged,
@@ -150,6 +156,7 @@ final class RemixMenuRadioGroup<T> extends RemixMenuItemData<T> {
 /// A selectable item in a [RemixMenuRadioGroup].
 final class RemixMenuRadioItem<T> {
   const RemixMenuRadioItem({
+    this.key,
     required this.value,
     required this.label,
     this.leadingIcon,
@@ -160,6 +167,9 @@ final class RemixMenuRadioItem<T> {
     this.style = const MenuItemStyler.create(),
   }) : assert(label != '', 'Item labels must not be empty'),
        assert(semanticLabel != '', 'Item semantic labels must not be empty');
+
+  /// Optional caller-owned identity for the rendered radio item root.
+  final Key? key;
 
   /// The value reported to both root and group callbacks.
   final T value;
@@ -193,6 +203,7 @@ final class RemixMenuRadioItem<T> {
 /// panel consumes an immutable snapshot independently from its parent.
 final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
   const RemixMenuSubmenu({
+    super.key,
     required this.label,
     required this.items,
     this.leadingIcon,
@@ -258,7 +269,7 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
 ///
 /// Used with [RemixMenu]'s items list to visually separate groups of items.
 final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
-  const RemixMenuDivider();
+  const RemixMenuDivider({super.key});
 }
 
 // ============================================================================
@@ -555,6 +566,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
               ),
               RemixMenuSubmenu<T>() => _buildSubmenu(item, hasChoiceItems),
               RemixMenuDivider<T>() => StyleSpecBuilder(
+                key: item.key,
                 styleSpec: dividerStyleSpec,
                 builder: (context, dividerSpec) =>
                     RemixDivider(styleSpec: dividerSpec),
@@ -567,6 +579,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
 
   Widget _buildOrdinaryItem(RemixMenuItem<T> item, bool reserveChoiceSlot) {
     return NakedMenuItem<T>(
+      key: item.key,
       value: item.value,
       enabled: item.enabled,
       semanticLabel: item.semanticLabel ?? item.label,
@@ -589,6 +602,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
     bool reserveChoiceSlot,
   ) {
     return NakedMenuCheckboxItem<T>(
+      key: item.key,
       value: item.value,
       checked: item.checked,
       onChanged: item.onChanged,
@@ -633,6 +647,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
     );
 
     return NakedMenuRadioGroup<T>(
+      key: group.key,
       value: group.value,
       onChanged: group.onChanged,
       enabled: group.enabled,
@@ -646,6 +661,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
         children: radioItems
             .map(
               (item) => NakedMenuRadioItem<T>(
+                key: item.key,
                 value: item.value,
                 // Same public-callback gate as checkbox items; see
                 // _buildCheckboxItem for why Naked cannot own this.
@@ -674,6 +690,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
 
   Widget _buildSubmenu(RemixMenuSubmenu<T> submenu, bool reserveChoiceSlot) {
     return NakedMenuSubmenu<T>(
+      key: submenu.key,
       controller: submenu.controller,
       enabled: submenu.enabled,
       hoverDelay: submenu.hoverDelay,

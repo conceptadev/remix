@@ -162,6 +162,147 @@ void main() {
     });
   });
 
+  group('RemixMenu item identity', () {
+    testWidgets('caller-owned keys reach every rendered item root', (
+      tester,
+    ) async {
+      const ordinaryKey = ValueKey<String>('ordinary-root');
+      const checkboxKey = ValueKey<String>('checkbox-root');
+      const radioGroupKey = ValueKey<String>('radio-group-root');
+      const radioItemKey = ValueKey<String>('radio-item-root');
+      const submenuKey = ValueKey<String>('submenu-root');
+      const dividerKey = ValueKey<String>('divider-root');
+      final controller = MenuController();
+
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: controller,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          onSelected: (_) {},
+          items: const [
+            RemixMenuItem(
+              key: ordinaryKey,
+              value: 'ordinary',
+              label: 'Ordinary',
+            ),
+            RemixMenuCheckboxItem(
+              key: checkboxKey,
+              value: 'checkbox',
+              label: 'Checkbox',
+              checked: true,
+            ),
+            RemixMenuRadioGroup(
+              key: radioGroupKey,
+              value: 'radio',
+              items: [
+                RemixMenuRadioItem(
+                  key: radioItemKey,
+                  value: 'radio',
+                  label: 'Radio',
+                ),
+              ],
+            ),
+            RemixMenuSubmenu(
+              key: submenuKey,
+              label: 'More',
+              items: [RemixMenuItem(value: 'nested', label: 'Nested')],
+            ),
+            RemixMenuDivider(key: dividerKey),
+          ],
+        ),
+      );
+
+      controller.open();
+      await tester.pump();
+
+      expect(
+        tester.widget(find.byKey(ordinaryKey)),
+        isA<NakedMenuItem<String>>(),
+      );
+      expect(
+        tester.widget(find.byKey(checkboxKey)),
+        isA<NakedMenuCheckboxItem<String>>(),
+      );
+      expect(
+        tester.widget(find.byKey(radioGroupKey)),
+        isA<NakedMenuRadioGroup<String>>(),
+      );
+      expect(
+        tester.widget(find.byKey(radioItemKey)),
+        isA<NakedMenuRadioItem<String>>(),
+      );
+      expect(
+        tester.widget(find.byKey(submenuKey)),
+        isA<NakedMenuSubmenu<String>>(),
+      );
+      expect(
+        tester.widget(find.byKey(dividerKey)),
+        isA<StyleSpecBuilder<DividerSpec>>(),
+      );
+    });
+
+    testWidgets('keyed open submenu retains state after sibling reorder', (
+      tester,
+    ) async {
+      const alphaKey = ValueKey<String>('alpha-submenu');
+      const betaKey = ValueKey<String>('beta-submenu');
+      final controller = MenuController();
+      late StateSetter reorder;
+      var reordered = false;
+
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            reorder = setState;
+            final alpha = RemixMenuSubmenu<String>(
+              key: alphaKey,
+              label: 'Alpha',
+              items: const [
+                RemixMenuItem(value: 'alpha-child', label: 'Alpha child'),
+              ],
+            );
+            final beta = RemixMenuSubmenu<String>(
+              key: betaKey,
+              label: 'Beta',
+              items: const [
+                RemixMenuItem(value: 'beta-child', label: 'Beta child'),
+              ],
+            );
+
+            return RemixMenu<String>(
+              controller: controller,
+              trigger: const RemixMenuTrigger(label: 'Options'),
+              items: reordered ? [beta, alpha] : [alpha, beta],
+            );
+          },
+        ),
+      );
+
+      controller.open();
+      await tester.pump();
+      expect(
+        tester.getTopLeft(find.text('Alpha')).dy,
+        lessThan(tester.getTopLeft(find.text('Beta')).dy),
+      );
+
+      await tester.tap(find.text('Alpha'));
+      await tester.pump();
+      expect(find.text('Alpha child'), findsOneWidget);
+      expect(find.text('Beta child'), findsNothing);
+
+      reorder(() => reordered = true);
+      await tester.pump();
+      await tester.pump();
+
+      expect(
+        tester.getTopLeft(find.text('Beta')).dy,
+        lessThan(tester.getTopLeft(find.text('Alpha')).dy),
+      );
+      expect(find.text('Alpha child'), findsOneWidget);
+      expect(find.text('Beta child'), findsNothing);
+    });
+  });
+
   group('RemixMenu Interaction Tests', () {
     testWidgets('menu opens when trigger is tapped', (tester) async {
       await tester.pumpRemixApp(
