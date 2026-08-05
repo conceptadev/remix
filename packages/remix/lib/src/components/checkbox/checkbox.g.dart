@@ -9,6 +9,8 @@ part of 'checkbox.dart';
 mixin _$CheckboxSpec implements Spec<CheckboxSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<IconSpec> get indicator;
+  StyleSpec<TextSpec> get label;
+  double get labelSpacing;
   RemixBoxEffectsSpec? get containerEffects;
 
   @override
@@ -18,11 +20,15 @@ mixin _$CheckboxSpec implements Spec<CheckboxSpec>, Diagnosticable {
   CheckboxSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<IconSpec>? indicator,
+    StyleSpec<TextSpec>? label,
+    double? labelSpacing,
     RemixBoxEffectsSpec? containerEffects,
   }) {
     return CheckboxSpec(
       container: container ?? this.container,
       indicator: indicator ?? this.indicator,
+      label: label ?? this.label,
+      labelSpacing: labelSpacing ?? this.labelSpacing,
       containerEffects: containerEffects ?? this.containerEffects,
     );
   }
@@ -32,6 +38,8 @@ mixin _$CheckboxSpec implements Spec<CheckboxSpec>, Diagnosticable {
     return CheckboxSpec(
       container: container.lerp(other?.container, t),
       indicator: indicator.lerp(other?.indicator, t),
+      label: label.lerp(other?.label, t),
+      labelSpacing: MixOps.lerp(labelSpacing, other?.labelSpacing, t),
       containerEffects: MixOps.lerpSnap(
         containerEffects,
         other?.containerEffects,
@@ -41,7 +49,13 @@ mixin _$CheckboxSpec implements Spec<CheckboxSpec>, Diagnosticable {
   }
 
   @override
-  List<Object?> get props => [container, indicator, containerEffects];
+  List<Object?> get props => [
+    container,
+    indicator,
+    label,
+    labelSpacing,
+    containerEffects,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -85,6 +99,8 @@ mixin _$CheckboxSpec implements Spec<CheckboxSpec>, Diagnosticable {
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('indicator', indicator))
+      ..add(DiagnosticsProperty('label', label))
+      ..add(DoubleProperty('labelSpacing', labelSpacing))
       ..add(DiagnosticsProperty('containerEffects', containerEffects));
   }
 }
@@ -115,7 +131,9 @@ class FortalCheckbox extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
+    this.label,
     this.semanticLabel,
+    this.minimumTapTargetSize = const Size.square(48),
     this.mouseCursor = SystemMouseCursors.click,
   });
 
@@ -133,7 +151,9 @@ class FortalCheckbox extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
+    this.label,
     this.semanticLabel,
+    this.minimumTapTargetSize = const Size.square(48),
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalCheckboxVariant.classic;
 
@@ -151,7 +171,9 @@ class FortalCheckbox extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
+    this.label,
     this.semanticLabel,
+    this.minimumTapTargetSize = const Size.square(48),
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalCheckboxVariant.surface;
 
@@ -169,7 +191,9 @@ class FortalCheckbox extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
+    this.label,
     this.semanticLabel,
+    this.minimumTapTargetSize = const Size.square(48),
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalCheckboxVariant.soft;
 
@@ -199,7 +223,11 @@ class FortalCheckbox extends StatelessWidget {
 
   final bool enableFeedback;
 
+  final String? label;
+
   final String? semanticLabel;
+
+  final Size minimumTapTargetSize;
 
   final MouseCursor mouseCursor;
 
@@ -222,7 +250,9 @@ class FortalCheckbox extends StatelessWidget {
       focusNode: this.focusNode,
       autofocus: this.autofocus,
       enableFeedback: this.enableFeedback,
+      label: this.label,
       semanticLabel: this.semanticLabel,
+      minimumTapTargetSize: this.minimumTapTargetSize,
       mouseCursor: this.mouseCursor,
     );
   }
@@ -233,25 +263,33 @@ class FortalCheckbox extends StatelessWidget {
 // **************************************************************************
 
 class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
-    with RemixBoxStylerMixin<CheckboxStyler> {
+    with RemixBoxStylerMixin<CheckboxStyler>, LabelStyleMixin<CheckboxStyler> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<IconSpec>>? $indicator;
+  final Prop<StyleSpec<TextSpec>>? $label;
+  final Prop<double>? $labelSpacing;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
   const CheckboxStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<IconSpec>>? indicator,
+    Prop<StyleSpec<TextSpec>>? label,
+    Prop<double>? labelSpacing,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $indicator = indicator,
+       $label = label,
+       $labelSpacing = labelSpacing,
        $containerEffects = containerEffects;
 
   CheckboxStyler({
     BoxStyler? container,
     IconStyler? indicator,
+    TextStyler? label,
+    double? labelSpacing,
     RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -259,6 +297,8 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
   }) : this.create(
          container: Prop.maybeMix(container),
          indicator: Prop.maybeMix(indicator),
+         label: Prop.maybeMix(label),
+         labelSpacing: Prop.maybe(labelSpacing),
          containerEffects: Prop.maybeMix(containerEffects),
          variants: variants,
          modifier: modifier,
@@ -269,6 +309,10 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
       CheckboxStyler().container(value);
   factory CheckboxStyler.indicator(IconStyler value) =>
       CheckboxStyler().indicator(value);
+  factory CheckboxStyler.label(TextStyler value) =>
+      CheckboxStyler().label(value);
+  factory CheckboxStyler.labelSpacing(double value) =>
+      CheckboxStyler().labelSpacing(value);
   factory CheckboxStyler.containerEffects(RemixBoxEffectsMix value) =>
       CheckboxStyler().containerEffects(value);
   factory CheckboxStyler.alignment(AlignmentGeometry value) =>
@@ -748,6 +792,17 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     return merge(CheckboxStyler(indicator: value));
   }
 
+  /// Sets the label.
+  @override
+  CheckboxStyler label(TextStyler value) {
+    return merge(CheckboxStyler(label: value));
+  }
+
+  /// Sets the labelSpacing.
+  CheckboxStyler labelSpacing(double value) {
+    return merge(CheckboxStyler(labelSpacing: value));
+  }
+
   /// Sets the containerEffects.
   CheckboxStyler containerEffects(RemixBoxEffectsMix value) {
     return merge(CheckboxStyler(containerEffects: value));
@@ -782,6 +837,8 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     return CheckboxStyler.create(
       container: MixOps.merge($container, other?.$container),
       indicator: MixOps.merge($indicator, other?.$indicator),
+      label: MixOps.merge($label, other?.$label),
+      labelSpacing: MixOps.merge($labelSpacing, other?.$labelSpacing),
       containerEffects: MixOps.merge(
         $containerEffects,
         other?.$containerEffects,
@@ -798,6 +855,8 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     final spec = CheckboxSpec(
       container: MixOps.resolve(context, $container),
       indicator: MixOps.resolve(context, $indicator),
+      label: MixOps.resolve(context, $label),
+      labelSpacing: MixOps.resolve(context, $labelSpacing),
       containerEffects: MixOps.resolve(context, $containerEffects),
     );
 
@@ -814,6 +873,8 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     properties
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('indicator', $indicator))
+      ..add(DiagnosticsProperty('label', $label))
+      ..add(DiagnosticsProperty('labelSpacing', $labelSpacing))
       ..add(DiagnosticsProperty('containerEffects', $containerEffects));
   }
 
@@ -821,6 +882,8 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
   List<Object?> get props => [
     $container,
     $indicator,
+    $label,
+    $labelSpacing,
     $containerEffects,
     $animation,
     $modifier,

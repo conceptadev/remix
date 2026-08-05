@@ -5,6 +5,9 @@ import 'package:remix/remix.dart';
 
 import 'empty_state.dart';
 
+const _dataGridTargetExtent = 48.0;
+const _dataGridRowExtent = _dataGridTargetExtent + 1;
+
 enum DataGridSortDirection { ascending, descending }
 
 class DataGridSort {
@@ -101,7 +104,8 @@ class DataGrid<T> extends StatelessWidget {
                         ))
                   else
                     SizedBox(
-                      height: rows.length * 48,
+                      // Reserve 48px content plus the row divider.
+                      height: rows.length * _dataGridRowExtent,
                       child: ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: rows.length,
@@ -138,7 +142,7 @@ class DataGrid<T> extends StatelessWidget {
         : null;
 
     return Container(
-      height: 44,
+      height: _dataGridRowExtent,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: MixScope.tokenOf(FortalTokens.grayA2, context),
@@ -152,7 +156,7 @@ class DataGrid<T> extends StatelessWidget {
         children: [
           if (_selectable)
             SizedBox(
-              width: 42,
+              width: _dataGridTargetExtent,
               child: Center(
                 child: FortalCheckbox(
                   key: const ValueKey('grid-select-all'),
@@ -323,7 +327,7 @@ class _DataGridRowState<T> extends State<_DataGridRow<T>> {
       onExit: (_) => setState(() => _hovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 120),
-        height: 48,
+        height: _dataGridRowExtent,
         padding: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
           color: background,
@@ -337,7 +341,7 @@ class _DataGridRowState<T> extends State<_DataGridRow<T>> {
           children: [
             if (widget.selectable)
               SizedBox(
-                width: 42,
+                width: _dataGridTargetExtent,
                 child: Center(
                   child: FortalCheckbox(
                     key: const ValueKey('grid-row-checkbox'),

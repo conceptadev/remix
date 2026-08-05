@@ -1325,6 +1325,10 @@
         "open",
         "highlighted",
         "disabled",
+        "checked",
+        "unchecked",
+        "submenuOpen",
+        "rtl",
         "escape",
         "focusRestored",
         "highContrast"
@@ -1343,7 +1347,7 @@
         ".rt-BaseMenuSubTrigger"
       ],
       "flutterExceptions": [
-        "The visual recipe maps supported Radix states onto the established data-driven RemixMenuItem list; compound menu items are deferred."
+        "Checkbox, radio, and submenu behavior delegates to the pinned Naked beta.8 primitives; Remix uses one standard leading flex slot and normal item spacing instead of Radix's CSS-specific absolute row geometry."
       ],
       "coverage": {
         "enums": [
@@ -1357,6 +1361,10 @@
           "open",
           "highlighted",
           "disabled",
+          "checked",
+          "unchecked",
+          "submenuOpen",
+          "rtl",
           "escape",
           "focusRestored",
           "highContrast"
@@ -1406,15 +1414,16 @@
         "open",
         "highlighted",
         "disabled",
+        "checked",
+        "unchecked",
+        "submenuOpen",
+        "rtl",
         "escape",
         "focusRestored",
         "highContrast"
       ],
       "deferredCapabilities": [
-        "compositional items",
-        "checkbox items",
-        "radio items",
-        "submenus"
+        "compositional items"
       ],
       "visualMapping": {
         "color": "FortalScope.accent",
@@ -3209,6 +3218,13 @@
       "flutter": "RemixDialog with modal=false disables modal accessibility route scoping, but showRemixDialog remains a RawDialogRoute whose barrier blocks background pointer input.",
       "reason": "Flutter Navigator dialog routes are modal routes; non-modal pointer interaction requires a separate OverlayEntry lifecycle rather than the approved dialog route API.",
       "tolerance": "Interaction-model boundary only; no visual tolerance. The route barrier and both accessibility modes are covered by dialog_widget_test.dart."
+    },
+    {
+      "family": "menu",
+      "upstream": "Radix Themes uses CSS absolute positioning and size-specific conditional offsets for checkbox, radio, submenu, and trailing content geometry.",
+      "flutter": "Remix uses the exact pinned check and chevron paths, colors, sizes, and states with one private leading flex slot and normal MenuItemStyler spacing.",
+      "reason": "Standard MenuItemStyler flex, padding, and spacing keep the layout reusable and avoid menu-only public gutter and offset APIs.",
+      "tolerance": "Pixel placement of the leading choice slot and trailing-content spacing may differ; behavior, semantics, paths, colors, sizes, state precedence, directionality, and panel-end alignment have no tolerance."
     }
   ],
   "upstreamInventory": {
@@ -4211,10 +4227,7 @@
       "interactive card behavior"
     ],
     "menu": [
-      "compositional items",
-      "checkbox items",
-      "radio items",
-      "submenus"
+      "compositional items"
     ],
     "select": [
       "structured content",

@@ -284,6 +284,26 @@
       "test": "test/components/menu/menu_widget_test.dart",
       "case": "onSelected callback fires when item is selected",
       "covers": ["state:selected"]
+    },
+    {
+      "test": "test/components/menu/menu_widget_test.dart",
+      "case": "exposes role, checked state, callback order, and rebuild",
+      "covers": ["state:checked", "state:unchecked"]
+    },
+    {
+      "test": "test/components/menu/menu_widget_test.dart",
+      "case": "open submenus resolve existing selected-state recipes",
+      "covers": ["state:submenuOpen"]
+    },
+    {
+      "test": "test/components/menu/menu_widget_test.dart",
+      "case": "${variant.name} distinguishes checked, highlighted, and submenu-open surfaces",
+      "covers": ["state:highlighted"]
+    },
+    {
+      "test": "test/components/menu/menu_widget_test.dart",
+      "case": "directional arrows and Escape restore submenu focus",
+      "covers": ["state:rtl", "state:escape", "state:focusRestored"]
     }
   ],
   "icon_button": [

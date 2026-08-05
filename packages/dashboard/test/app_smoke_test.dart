@@ -298,7 +298,7 @@ void main() {
     expect(find.text('11–20 of 24'), findsOneWidget);
   });
 
-  testWidgets('grid checkboxes preserve their Fortal square size', (
+  testWidgets('grid checkboxes preserve a 14 square inside a 48 target', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(1400, 900);
@@ -310,12 +310,25 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('nav-customers')).first);
     await tester.pump();
 
+    final selectAll = find.byKey(const ValueKey('grid-select-all')).first;
+    final rowCheckbox = find.byKey(const ValueKey('grid-row-checkbox')).first;
+
+    expect(tester.getSize(selectAll), const Size.square(48));
+    expect(tester.getSize(rowCheckbox), const Size.square(48));
     expect(
-      tester.getSize(find.byKey(const ValueKey('grid-select-all')).first),
+      tester.getSize(
+        find
+            .descendant(of: selectAll, matching: find.byType(DecoratedBox))
+            .first,
+      ),
       const Size.square(14),
     );
     expect(
-      tester.getSize(find.byKey(const ValueKey('grid-row-checkbox')).first),
+      tester.getSize(
+        find
+            .descendant(of: rowCheckbox, matching: find.byType(DecoratedBox))
+            .first,
+      ),
       const Size.square(14),
     );
   });

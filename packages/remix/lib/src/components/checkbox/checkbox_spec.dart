@@ -11,7 +11,8 @@ part of 'checkbox.dart';
 /// 3. **Widget classes** (like [RemixCheckbox]) consume specs to render UI
 ///
 /// The CheckboxSpec contains [StyleSpec] properties for the visual pieces of
-/// the checkbox: the container (checkbox box) and the indicator icon (checkmark).
+/// the checkbox: the container (checkbox box), indicator icon (checkmark), and
+/// optional label.
 ///
 /// ## Architecture Overview
 ///
@@ -24,7 +25,7 @@ part of 'checkbox.dart';
 ///
 /// A checkbox component consists of these styled elements:
 /// ```
-/// [container] (the checkbox box)
+/// [container] (the checkbox box)  [label]
 ///   └── [indicator] (checkmark icon)
 /// ```
 ///
@@ -48,12 +49,14 @@ part of 'checkbox.dart';
 /// Each [StyleSpec] property corresponds to a visual element:
 /// - [container]: The checkbox box styling (background, border, size, padding)
 /// - [indicator]: The checkmark icon styling (color, size)
+/// - [label]: The optional visible label styling
+/// - [labelSpacing]: The gap between the checkbox box and visible label
 ///
 /// See also:
 /// - [CheckboxStyler] for the styling API
 /// - [RemixCheckbox] for the widget implementation
 /// - [Spec] for the base specification pattern
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin])
 class CheckboxSpec with _$CheckboxSpec {
   /// Styling specification for the checkbox box container.
   ///
@@ -71,6 +74,14 @@ class CheckboxSpec with _$CheckboxSpec {
   /// and other icon-specific properties.
   @override
   final StyleSpec<IconSpec> indicator;
+
+  /// Styling specification for the optional visible checkbox label.
+  @override
+  final StyleSpec<TextSpec> label;
+
+  /// Gap between the checkbox box and its optional visible label.
+  @override
+  final double labelSpacing;
 
   @override
   @MixableField(setterType: RemixBoxEffectsMix)
@@ -96,16 +107,20 @@ class CheckboxSpec with _$CheckboxSpec {
   const CheckboxSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<IconSpec>? indicator,
+    StyleSpec<TextSpec>? label,
+    double? labelSpacing,
     this.containerEffects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
-       indicator = indicator ?? const StyleSpec(spec: IconSpec());
+       indicator = indicator ?? const StyleSpec(spec: IconSpec()),
+       label = label ?? const StyleSpec(spec: TextSpec()),
+       labelSpacing = labelSpacing ?? 8;
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
   @override
   CheckboxSpec lerp(CheckboxSpec? other, double t) {
+    if (other == null) return this;
     final generated = super.lerp(other, t);
-    if (other == null) return generated;
     return generated.copyWith(
       containerEffects: RemixBoxEffectsSpec.lerpNullable(
         containerEffects,

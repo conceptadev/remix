@@ -39,6 +39,7 @@ class _CheckboxExampleState extends State<CheckboxExample> {
           _isChecked = value ?? false;
         });
       },
+      label: 'Receive updates',
       style: style,
     );
   }
@@ -85,10 +86,12 @@ class _FortalCheckboxExampleState extends State<FortalCheckboxExample> {
       children: [
         FortalCheckbox.surface(
           selected: _isChecked,
+          label: 'Surface checkbox',
           onChanged: (value) => setState(() => _isChecked = value ?? false),
         ),
         FortalCheckbox.soft(
           selected: _isChecked,
+          label: 'Soft checkbox',
           onChanged: (value) => setState(() => _isChecked = value ?? false),
         ),
       ],
@@ -120,7 +123,9 @@ RemixCheckbox remixCheckboxConstructor({
   FocusNode? focusNode,
   bool autofocus = false,
   bool enableFeedback = true,
+  String? label,
   String? semanticLabel,
+  Size minimumTapTargetSize = const Size.square(48),
   MouseCursor mouseCursor = SystemMouseCursors.click,
   CheckboxStyler style = const CheckboxStyler.create(),
   CheckboxSpec? styleSpec,
@@ -172,6 +177,10 @@ Optional. The icon to display when the checkbox is in indeterminate state. Defau
 
 Optional. Whether to provide haptic feedback when the checkbox is toggled. Defaults to true.
 
+#### `label` → `String?`
+
+Optional. A visible label included in the same pointer, focus, and semantics target as the checkbox. It becomes the accessible name unless `semanticLabel` overrides it.
+
 #### `style` → `CheckboxStyler`
 
 Optional. The style configuration for the checkbox.
@@ -186,7 +195,11 @@ Optional. The focus node for the checkbox.
 
 #### `semanticLabel` → `String?`
 
-Optional. The semantic label for the checkbox.
+Optional. Overrides the accessible name derived from `label`. Use it for icon-only checkboxes or when assistive technology needs more context than the visible label.
+
+#### `minimumTapTargetSize` → `Size`
+
+Optional. Minimum pointer, focus, and semantics target size. Defaults to `Size.square(48)` to satisfy common Android and iOS target-size guidance. `Size.zero` is an explicit compact opt-out for compositions that provide their own accessible target.
 
 #### `mouseCursor` → `MouseCursor`
 
@@ -202,6 +215,18 @@ Sets the checkbox container style.
 #### `indicator(IconStyler value)`
 
 Sets the checkbox indicator style.
+
+#### `label(TextStyler value)`
+
+Sets the visible label text style.
+
+#### `labelSpacing(double value)`
+
+Sets the gap between the checkbox square and its visible label. Defaults to 8 logical pixels.
+
+#### `labelColor(Color value)`
+
+Sets the visible label color through the generated `LabelStyleMixin` API.
 
 #### `shape(ShapeBorderMix value)`
 

@@ -4,6 +4,13 @@ import 'package:remix/remix.dart';
 
 import '../helpers/test_helpers.dart';
 
+typedef _StyleAwareFortalMenuConstructor =
+    FortalMenu<String> Function({
+      required RemixMenuTrigger trigger,
+      required List<RemixMenuItemData<String>> items,
+      MenuStyler? style,
+    });
+
 void main() {
   group('Fortal widgets', () {
     test('named constructors pin variants and infer generic types', () {
@@ -28,6 +35,18 @@ void main() {
       expect(menu.variant, FortalMenuVariant.soft);
       expect(select, isA<FortalSelect<String>>());
       expect(select.variant, FortalSelectVariant.ghost);
+    });
+
+    test('FortalMenu constructors do not expose style overrides', () {
+      final constructors = [
+        FortalMenu<String>.new,
+        FortalMenu<String>.solid,
+        FortalMenu<String>.soft,
+      ];
+
+      for (final constructor in constructors) {
+        expect(constructor, isNot(isA<_StyleAwareFortalMenuConstructor>()));
+      }
     });
 
     testWidgets('renders FortalAccordion', (tester) async {
@@ -258,15 +277,39 @@ void main() {
       expect(find.byType(RemixTooltip), findsOneWidget);
     });
 
-    testWidgets('renders FortalMenu', (tester) async {
+    testWidgets('forwards FortalMenu recipe parameters', (tester) async {
       await tester.pumpRemixApp(
-        FortalMenu<String>(
-          trigger: const RemixMenuTrigger(label: 'Menu'),
-          items: const [RemixMenuItem(value: 'a', label: 'A')],
+        const FortalMenu<String>.soft(
+          size: .size1,
+          highContrast: true,
+          trigger: RemixMenuTrigger(label: 'Menu'),
+          items: [
+            RemixMenuCheckboxItem(
+              value: 'checked',
+              label: 'Checked',
+              checked: true,
+            ),
+          ],
         ),
       );
+
       expect(find.byType(FortalMenu<String>), findsOneWidget);
       expect(find.byType(RemixMenu<String>), findsOneWidget);
+
+      final generated = tester.widget<FortalMenu<String>>(
+        find.byType(FortalMenu<String>),
+      );
+      expect(generated.variant, FortalMenuVariant.soft);
+      expect(generated.size, FortalMenuSize.size1);
+      expect(generated.highContrast, isTrue);
+
+      final menu = tester.widget<RemixMenu<String>>(
+        find.byType(RemixMenu<String>),
+      );
+      expect(
+        menu.style,
+        fortalMenuStyle(variant: .soft, size: .size1, highContrast: true),
+      );
     });
 
     testWidgets('renders FortalSelect', (tester) async {
