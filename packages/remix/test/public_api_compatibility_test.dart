@@ -19,6 +19,7 @@ void main() {
     const tabBar = RemixTabBar(child: Text('Tabs'));
     const spinner = RemixSpinner();
     const textArea = RemixTextArea(label: 'Notes');
+    const skeleton = RemixSkeleton(child: Text('Jane Appleseed'));
     const dataList = RemixDataList(
       items: [RemixDataListItem(label: 'Status', value: 'Active')],
     );
@@ -34,6 +35,8 @@ void main() {
     expect(spinner, isA<RemixSpinner>());
     expect(textArea, isA<RemixTextField>());
     expect(textArea.label, 'Notes');
+    expect(skeleton.child, isA<Text>());
+    expect(skeleton.loading, isTrue);
     expect(dataList.items.single, isA<RemixDataListItem>());
     expect(dataList.items.single.label, 'Status');
     expect(dataList.items.single.value, 'Active');
