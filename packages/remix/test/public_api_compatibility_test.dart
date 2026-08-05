@@ -48,6 +48,7 @@ void main() {
     const segmentedControl = RemixSegmentedControl<String>(
       items: [segmentedItem],
       selectedValue: 'list',
+    );
     const textArea = RemixTextArea(label: 'Notes');
     const checkboxGroup = RemixCheckboxGroup<String>(
       values: {'one'},
