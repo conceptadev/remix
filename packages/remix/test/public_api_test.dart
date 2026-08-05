@@ -43,6 +43,39 @@ void main() {
     },
   );
 
+  test('the skeleton family is constructible from the public API', () {
+    const spec = SkeletonSpec(
+      container: StyleSpec(spec: BoxSpec()),
+      pulseColor: Color(0xFFCCCCCC),
+      duration: Duration(milliseconds: 1000),
+    );
+    final style = SkeletonStyler()
+        .container(
+          BoxStyler()
+              .size(120, 24)
+              .color(const Color(0xFFEEEEEE))
+              .borderRounded(4),
+        )
+        .pulseColor(const Color(0xFFCCCCCC))
+        .duration(const Duration(milliseconds: 1000));
+
+    expect(
+      RemixSkeleton(style: style, child: const Text('Jane')),
+      isA<RemixSkeleton>(),
+    );
+    const raw = RemixSkeleton(styleSpec: StyleSpec(spec: spec));
+    expect(raw, isA<RemixSkeleton>());
+    expect(raw.styleSpec?.spec, spec);
+    expect(
+      style(child: const Text('Jane'), loading: false),
+      isA<RemixSkeleton>(),
+    );
+    expect(
+      RemixSkeleton.styleFrom(pulseColor: const Color(0xFFCCCCCC)),
+      isA<SkeletonStyler>(),
+    );
+  });
+
   test('the data list family is constructible from the public API', () {
     const item = RemixDataListItem(
       key: ValueKey<String>('status'),

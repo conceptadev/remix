@@ -38,6 +38,13 @@
 - **FEAT**: Expose every Fortal recipe parameter on its generated widget,
   including `highContrast` and Avatar's `fallbackLength`, while retaining both
   the unnamed `variant:` constructor and generated named variant constructors.
+- **FEAT**: Add `RemixSkeleton`, a decorative loading placeholder that keeps a
+  child mounted for its geometry and local state while suppressing that child's
+  paint, pointer input, keyboard focus, semantics, and tickers. The pulse
+  interpolates the container fill between `color` and `pulseColor`, falls back
+  to a composed whole-surface opacity fade whenever a gradient, image, or
+  foreground decoration would mask that fill, and honours
+  `MediaQuery.disableAnimationsOf` initially and on runtime changes.
 - **FIX**: Allow `naked_ui` releases compatible with `^1.0.0-beta.8` so open
   labelled tooltips retain one interactive semantics node without hiding
   unlabelled overlay semantics.

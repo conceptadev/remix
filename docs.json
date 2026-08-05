@@ -146,6 +146,10 @@
           "href": "/components/select"
         },
         {
+          "title": "Skeleton",
+          "href": "/components/skeleton"
+        },
+        {
           "title": "Slider",
           "href": "/components/slider"
         },

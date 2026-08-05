@@ -26,6 +26,7 @@ void main() {
       items: [segmentedItem],
       selectedValue: 'list',
     );
+    const skeleton = RemixSkeleton(child: Text('Jane Appleseed'));
     const dataList = RemixDataList(
       items: [RemixDataListItem(label: 'Status', value: 'Active')],
     );
@@ -41,6 +42,8 @@ void main() {
     expect(spinner, isA<RemixSpinner>());
     expect(segmentedControl.items.single, segmentedItem);
     expect(segmentedControl.items.single.value, 'list');
+    expect(skeleton.child, isA<Text>());
+    expect(skeleton.loading, isTrue);
     expect(dataList.items.single, isA<RemixDataListItem>());
     expect(dataList.items.single.label, 'Status');
     expect(dataList.items.single.value, 'Active');

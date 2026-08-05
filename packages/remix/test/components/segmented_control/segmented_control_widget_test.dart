@@ -1042,7 +1042,7 @@ void main() {
       semantics.dispose();
     });
 
-    testWidgets('options expose the pinned selected-button semantics', (
+    testWidgets('options expose selected-button mutually exclusive semantics', (
       tester,
     ) async {
       final semantics = tester.ensureSemantics();
@@ -1073,7 +1073,7 @@ void main() {
           hasEnabledState: true,
           isEnabled: true,
           isFocusable: true,
-          isInMutuallyExclusiveGroup: false,
+          isInMutuallyExclusiveGroup: true,
           hasTapAction: true,
           hasFocusAction: true,
           hasCheckedState: false,
@@ -1090,7 +1090,7 @@ void main() {
           hasEnabledState: true,
           isEnabled: true,
           isFocusable: true,
-          isInMutuallyExclusiveGroup: false,
+          isInMutuallyExclusiveGroup: true,
           hasTapAction: true,
           hasFocusAction: true,
           hasCheckedState: false,
