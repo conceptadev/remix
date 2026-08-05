@@ -25,6 +25,35 @@ void main() {
     expect(const SegmentedControlItemSpec(), isA<SegmentedControlItemSpec>());
   });
 
+  test('segmented control styleFrom builds the widget in one step', () {
+    final SegmentedControlStyler styler = RemixSegmentedControl.styleFrom(
+      spacing: 4,
+      mainAxisSize: MainAxisSize.max,
+    );
+    const forwardedKey = ValueKey<String>('forwarded');
+    const items = [RemixSegmentedControlItem<String>(value: 'a', label: 'A')];
+
+    final called = styler<String>(
+      key: forwardedKey,
+      items: items,
+      selectedValue: 'a',
+      orientation: Axis.vertical,
+      loop: false,
+      semanticLabel: 'Forwarded',
+      excludeSemantics: true,
+    );
+
+    expect(called, isA<RemixSegmentedControl<String>>());
+    expect(called.key, forwardedKey);
+    expect(called.items, items);
+    expect(called.selectedValue, 'a');
+    expect(called.orientation, Axis.vertical);
+    expect(called.loop, isFalse);
+    expect(called.semanticLabel, 'Forwarded');
+    expect(called.excludeSemantics, isTrue);
+    expect(called.style, same(styler));
+  });
+
   test(
     'segmented callback receives T while selectedValue remains nullable',
     () {

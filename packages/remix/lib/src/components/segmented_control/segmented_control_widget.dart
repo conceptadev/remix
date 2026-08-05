@@ -443,6 +443,32 @@ class _RenderEqualSegmentLayout extends RenderBox
 
   double get _totalSpacing => _saturatingProduct(spacing, _gapCount);
 
+  /// The gap actually used once [mainExtent] is known, clamped so the gaps can
+  /// never consume the whole track and starve every segment.
+  ///
+  /// Layout and the intrinsic queries must agree on this, so it lives in one
+  /// place: reporting an intrinsic extent derived from the raw [spacing] makes
+  /// an `IntrinsicWidth`/`IntrinsicHeight` parent size the track to zero while
+  /// real layout would have given each segment a positive share.
+  double _effectiveSpacingFor(double mainExtent) {
+    final gapCount = _gapCount;
+    if (gapCount == 0 || spacing < mainExtent / gapCount) return spacing;
+
+    return math.min(spacing, mainExtent / childCount);
+  }
+
+  /// Each segment's share of [mainExtent], used by the cross-axis intrinsic
+  /// overrides to ask children what they need at their real segment size.
+  double _intrinsicChildMainExtent(double mainExtent) {
+    if (childCount == 0) return mainExtent;
+    final totalSpacing = _saturatingProduct(
+      _effectiveSpacingFor(mainExtent),
+      _gapCount,
+    );
+
+    return math.max(0.0, (mainExtent - totalSpacing) / childCount);
+  }
+
   /// Main-axis extent of [childCount] equal segments plus the gaps between
   /// them, each segment sized from the largest child.
   ///
@@ -522,14 +548,10 @@ class _RenderEqualSegmentLayout extends RenderBox
       ),
       _ => math.max(desiredMainExtent, minMainExtent),
     };
-    final gapCount = math.max(0, count - 1);
-    final spacingConsumesMainExtent =
-        gapCount > 0 && spacing >= mainExtent / gapCount;
-    final effectiveSpacing = spacingConsumesMainExtent
-        ? math.min(spacing, mainExtent / count)
-        : spacing;
-
-    return (mainExtent: mainExtent, effectiveSpacing: effectiveSpacing);
+    return (
+      mainExtent: mainExtent,
+      effectiveSpacing: _effectiveSpacingFor(mainExtent),
+    );
   }
 
   BoxConstraints _childConstraints(
@@ -654,9 +676,7 @@ class _RenderEqualSegmentLayout extends RenderBox
     }
     var largest = 0.0;
     var child = firstChild;
-    final childHeight = childCount == 0
-        ? height
-        : math.max(0.0, (height - _totalSpacing) / childCount);
+    final childHeight = _intrinsicChildMainExtent(height);
     while (child != null) {
       largest = math.max(largest, child.getMinIntrinsicWidth(childHeight));
       child = childAfter(child);
@@ -671,9 +691,7 @@ class _RenderEqualSegmentLayout extends RenderBox
     }
     var largest = 0.0;
     var child = firstChild;
-    final childHeight = childCount == 0
-        ? height
-        : math.max(0.0, (height - _totalSpacing) / childCount);
+    final childHeight = _intrinsicChildMainExtent(height);
     while (child != null) {
       largest = math.max(largest, child.getMaxIntrinsicWidth(childHeight));
       child = childAfter(child);
@@ -688,9 +706,7 @@ class _RenderEqualSegmentLayout extends RenderBox
     }
     var largest = 0.0;
     var child = firstChild;
-    final childWidth = childCount == 0
-        ? width
-        : math.max(0.0, (width - _totalSpacing) / childCount);
+    final childWidth = _intrinsicChildMainExtent(width);
     while (child != null) {
       largest = math.max(largest, child.getMinIntrinsicHeight(childWidth));
       child = childAfter(child);
@@ -705,9 +721,7 @@ class _RenderEqualSegmentLayout extends RenderBox
     }
     var largest = 0.0;
     var child = firstChild;
-    final childWidth = childCount == 0
-        ? width
-        : math.max(0.0, (width - _totalSpacing) / childCount);
+    final childWidth = _intrinsicChildMainExtent(width);
     while (child != null) {
       largest = math.max(largest, child.getMaxIntrinsicHeight(childWidth));
       child = childAfter(child);

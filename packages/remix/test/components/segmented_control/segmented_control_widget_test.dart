@@ -2024,6 +2024,64 @@ void main() {
       );
     });
 
+    testWidgets('oversized spacing clamps intrinsics the way layout does', (
+      tester,
+    ) async {
+      // Spacing wider than the track would starve every segment, so layout
+      // clamps it. The intrinsic queries must apply the same clamp or an
+      // intrinsic-sizing parent collapses the track to zero.
+      const trackHeight = 100.0;
+      const spacing = 150.0;
+      const aspectRatio = 2.0;
+
+      Widget buildControl() => RemixSegmentedControl<String>(
+        items: const [
+          RemixSegmentedControlItem(value: 'day', label: 'Day'),
+          RemixSegmentedControlItem(value: 'week', label: 'Week'),
+        ],
+        selectedValue: 'day',
+        onChanged: (_) {},
+        orientation: Axis.vertical,
+        style: SegmentedControlStyler()
+            .mainAxisSize(.max)
+            .spacing(spacing)
+            .item(SegmentedControlItemStyler().wrap(.aspectRatio(aspectRatio))),
+      );
+
+      await tester.pumpRemixApp(
+        SizedBox(height: trackHeight, child: buildControl()),
+      );
+      await tester.pumpAndSettle();
+
+      // effectiveSpacing clamps to trackHeight / childCount == 50.
+      const segmentHeight = (trackHeight - 50.0) / 2;
+      const expectedWidth = segmentHeight * aspectRatio;
+
+      final track = tester.renderObject<RenderBox>(_trackBox());
+      expect(track.size, const Size(expectedWidth, trackHeight));
+      expect(
+        track.getMinIntrinsicWidth(trackHeight),
+        closeTo(expectedWidth, 0.01),
+      );
+      expect(
+        track.getMaxIntrinsicWidth(trackHeight),
+        closeTo(expectedWidth, 0.01),
+      );
+
+      await tester.pumpRemixApp(
+        SizedBox(
+          height: trackHeight,
+          child: IntrinsicWidth(child: buildControl()),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.renderObject<RenderBox>(_trackBox()).size,
+        const Size(expectedWidth, trackHeight),
+      );
+    });
+
     testWidgets(
       'horizontal main-axis intrinsics separate segment minimums from maximums',
       (tester) async {

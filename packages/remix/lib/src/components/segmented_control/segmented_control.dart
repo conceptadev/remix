@@ -14,5 +14,6 @@ import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
 
 part 'segmented_control_spec.dart';
+part 'segmented_control_style.dart';
 part 'segmented_control_widget.dart';
 part 'segmented_control.g.dart';
