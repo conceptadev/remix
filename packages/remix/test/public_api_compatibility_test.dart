@@ -8,7 +8,25 @@ void main() {
     const card = RemixCard(child: Text('Passive'));
     const menu = RemixMenu<String>(
       trigger: RemixMenuTrigger(label: 'Actions'),
-      items: [RemixMenuItem(value: 'save', label: 'Save')],
+      items: [
+        RemixMenuItem(value: 'save', label: 'Save'),
+        RemixMenuCheckboxItem(
+          value: 'notifications',
+          label: 'Notifications',
+          checked: true,
+        ),
+        RemixMenuRadioGroup(
+          value: 'compact',
+          items: [
+            RemixMenuRadioItem(value: 'compact', label: 'Compact'),
+            RemixMenuRadioItem(value: 'comfortable', label: 'Comfortable'),
+          ],
+        ),
+        RemixMenuSubmenu(
+          label: 'More',
+          items: [RemixMenuItem(value: 'archive', label: 'Archive')],
+        ),
+      ],
     );
     const select = RemixSelect<String>(
       trigger: RemixSelectTrigger(placeholder: 'Choose'),
@@ -26,7 +44,11 @@ void main() {
     expect(button.label, 'Save');
     expect(card.child, isA<Text>());
     expect(menu.trigger, isA<RemixMenuTrigger>());
-    expect(menu.items.single, isA<RemixMenuItem<String>>());
+    expect(menu.items, hasLength(4));
+    expect(menu.items[0], isA<RemixMenuItem<String>>());
+    expect(menu.items[1], isA<RemixMenuCheckboxItem<String>>());
+    expect(menu.items[2], isA<RemixMenuRadioGroup<String>>());
+    expect(menu.items[3], isA<RemixMenuSubmenu<String>>());
     expect(select.items.single, isA<RemixSelectItem<String>>());
     expect(slider.value, 0.5);
     expect(progress.value, 0.5);
@@ -44,6 +66,82 @@ void main() {
     expect(dataList.orientation, Axis.horizontal);
     expect(dataList.style, isA<DataListStyler>());
     expect(dataList.styleSpec, isNull);
+  });
+
+  test('menu data retains caller-owned identity', () {
+    const ordinaryKey = ValueKey<String>('ordinary');
+    const checkboxKey = ValueKey<String>('checkbox');
+    const radioGroupKey = ValueKey<String>('radio-group');
+    const radioItemKey = ValueKey<String>('radio-item');
+    const submenuKey = ValueKey<String>('submenu');
+    const dividerKey = ValueKey<String>('divider');
+    const items = <RemixMenuItemData<String>>[
+      RemixMenuItem(key: ordinaryKey, value: 'ordinary', label: 'Ordinary'),
+      RemixMenuCheckboxItem(
+        key: checkboxKey,
+        value: 'checkbox',
+        label: 'Checkbox',
+        checked: true,
+      ),
+      RemixMenuRadioGroup(
+        key: radioGroupKey,
+        value: 'radio',
+        items: [
+          RemixMenuRadioItem(key: radioItemKey, value: 'radio', label: 'Radio'),
+        ],
+      ),
+      RemixMenuSubmenu(
+        key: submenuKey,
+        label: 'Submenu',
+        items: [RemixMenuItem(value: 'nested', label: 'Nested')],
+      ),
+      RemixMenuDivider(key: dividerKey),
+    ];
+
+    expect(items.map((item) => item.key), [
+      ordinaryKey,
+      checkboxKey,
+      radioGroupKey,
+      submenuKey,
+      dividerKey,
+    ]);
+    expect(
+      (items[2] as RemixMenuRadioGroup<String>).items.single.key,
+      radioItemKey,
+    );
+  });
+
+  testWidgets('ordinary menu items remain accessible when icon-only', (
+    tester,
+  ) async {
+    final controller = MenuController();
+    final item = RemixMenuItem<String>(
+      value: 'favorite',
+      label: '',
+      leadingIcon: Icons.star,
+      semanticLabel: 'Favorite item',
+    );
+    final semantics = tester.ensureSemantics();
+
+    await tester.pumpWidget(
+      FortalScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: RemixMenu<String>(
+              controller: controller,
+              trigger: const RemixMenuTrigger(label: 'Actions'),
+              items: [item],
+            ),
+          ),
+        ),
+      ),
+    );
+    controller.open();
+    await tester.pump();
+
+    expect(find.byIcon(Icons.star), findsOneWidget);
+    expect(find.bySemanticsLabel('Favorite item'), findsOneWidget);
+    semantics.dispose();
   });
 
   test('generated wrappers preserve generic and named constructors', () {

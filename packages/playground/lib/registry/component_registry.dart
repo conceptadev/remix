@@ -11,6 +11,7 @@ import 'entries/card_entry.dart';
 import 'entries/checkbox_entry.dart';
 import 'entries/data_list_entry.dart';
 import 'entries/divider_entry.dart';
+import 'entries/menu_entry.dart';
 import 'entries/progress_entry.dart';
 import 'entries/radio_entry.dart';
 import 'entries/select_entry.dart';
@@ -50,6 +51,16 @@ final Map<String, WidgetBuilder> components = {
   'slider': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildSliderExample()),
+  ),
+  // Resolve Fortal inside PreviewShell so its light/dark control owns tokens.
+  'menu': (context) => PreviewShell(
+    child: Builder(
+      builder: (context) => FortalScope(
+        brightness: Theme.of(context).brightness,
+        hasBackground: false,
+        child: buildMenuExample(),
+      ),
+    ),
   ),
   // A consolidated page to preview all components together
   'all': (context) => FortalScope(

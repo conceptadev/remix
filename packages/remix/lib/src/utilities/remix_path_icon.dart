@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 /// Exact nine-unit paths shared by Radix-shaped component recipes.
-enum RemixPathGlyph { chevronDown, thickCheck }
+enum RemixPathGlyph { chevronDown, thickCheck, thickChevronRight }
 
 /// Paints a resolved icon spec with one of the pinned Radix vector paths.
 class RemixPathIcon extends StatelessWidget {
@@ -71,6 +71,7 @@ class _RemixPathIconPainter extends CustomPainter {
     final path = switch (glyph) {
       .chevronDown => _chevronDownPath(),
       .thickCheck => _thickCheckPath(),
+      .thickChevronRight => _thickChevronRightPath(),
     };
     for (final shadow in shadows) {
       canvas.drawPath(path.shift(shadow.offset / scale), shadow.toPaint());
@@ -112,4 +113,17 @@ Path _thickCheckPath() => Path()
   ..lineTo(3.73256, 6.60459)
   ..lineTo(7.49741, 0.840706)
   ..cubicTo(7.72393, 0.493916, 8.18868, 0.396414, 8.53547, 0.62293)
+  ..close();
+
+Path _thickChevronRightPath() => Path()
+  ..moveTo(3.23826, 0.201711)
+  ..cubicTo(3.54108, -0.0809141, 4.01567, -0.0645489, 4.29829, 0.238264)
+  ..lineTo(7.79829, 3.98826)
+  ..cubicTo(8.06724, 4.27642, 8.06724, 4.72359, 7.79829, 5.01174)
+  ..lineTo(4.29829, 8.76174)
+  ..cubicTo(4.01567, 9.06455, 3.54108, 9.08092, 3.23826, 8.79829)
+  ..cubicTo(2.93545, 8.51567, 2.91909, 8.04108, 3.20171, 7.73826)
+  ..lineTo(6.22409, 4.5)
+  ..lineTo(3.20171, 1.26174)
+  ..cubicTo(2.91909, 0.958928, 2.93545, 0.484337, 3.23826, 0.201711)
   ..close();
