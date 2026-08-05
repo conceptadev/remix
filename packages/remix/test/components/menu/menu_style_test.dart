@@ -328,6 +328,9 @@ void main() {
         final trigger = Prop.maybeMix(MenuTriggerStyler());
         final overlay = Prop.maybeMix(FlexBoxStyler());
         final item = Prop.maybeMix(MenuItemStyler());
+        final checkboxItem = Prop.maybeMix(MenuItemStyler());
+        final radioItem = Prop.maybeMix(MenuItemStyler());
+        final submenuItem = Prop.maybeMix(MenuItemStyler());
         final divider = Prop.maybeMix(DividerStyler());
         final variants = <VariantStyle<MenuSpec>>[];
 
@@ -335,6 +338,9 @@ void main() {
           trigger: trigger,
           overlay: overlay,
           item: item,
+          checkboxItem: checkboxItem,
+          radioItem: radioItem,
+          submenuItem: submenuItem,
           divider: divider,
           variants: variants,
         );
@@ -343,6 +349,9 @@ void main() {
         expect(style.$trigger, equals(trigger));
         expect(style.$overlay, equals(overlay));
         expect(style.$item, equals(item));
+        expect(style.$checkboxItem, equals(checkboxItem));
+        expect(style.$radioItem, equals(radioItem));
+        expect(style.$submenuItem, equals(submenuItem));
         expect(style.$divider, equals(divider));
         expect(style.$variants, equals(variants));
       });
@@ -351,12 +360,18 @@ void main() {
         final triggerStyle = MenuTriggerStyler();
         final overlayStyler = FlexBoxStyler();
         final itemStyle = MenuItemStyler();
+        final checkboxItemStyle = MenuItemStyler();
+        final radioItemStyle = MenuItemStyler();
+        final submenuItemStyle = MenuItemStyler();
         final dividerStyle = DividerStyler();
 
         final style = MenuStyler(
           trigger: triggerStyle,
           overlay: overlayStyler,
           item: itemStyle,
+          checkboxItem: checkboxItemStyle,
+          radioItem: radioItemStyle,
+          submenuItem: submenuItemStyle,
           divider: dividerStyle,
         );
 
@@ -364,6 +379,9 @@ void main() {
         expect(style.$trigger, isNotNull);
         expect(style.$overlay, isNotNull);
         expect(style.$item, isNotNull);
+        expect(style.$checkboxItem, isNotNull);
+        expect(style.$radioItem, isNotNull);
+        expect(style.$submenuItem, isNotNull);
         expect(style.$divider, isNotNull);
       });
     });
@@ -393,6 +411,33 @@ void main() {
         modify: (style) => style.item(MenuItemStyler()),
         expect: (style) {
           expect(style.$item, equals(Prop.maybeMix(MenuItemStyler())));
+        },
+      );
+
+      styleMethodTest(
+        'checkboxItem',
+        initial: MenuStyler(),
+        modify: (style) => style.checkboxItem(MenuItemStyler()),
+        expect: (style) {
+          expect(style.$checkboxItem, equals(Prop.maybeMix(MenuItemStyler())));
+        },
+      );
+
+      styleMethodTest(
+        'radioItem',
+        initial: MenuStyler(),
+        modify: (style) => style.radioItem(MenuItemStyler()),
+        expect: (style) {
+          expect(style.$radioItem, equals(Prop.maybeMix(MenuItemStyler())));
+        },
+      );
+
+      styleMethodTest(
+        'submenuItem',
+        initial: MenuStyler(),
+        modify: (style) => style.submenuItem(MenuItemStyler()),
+        expect: (style) {
+          expect(style.$submenuItem, equals(Prop.maybeMix(MenuItemStyler())));
         },
       );
 
@@ -496,6 +541,56 @@ void main() {
         expect(menu.triggerFocusNode, equals(focusNode));
         expect(menu.positioning, same(positioning));
       });
+
+      test('assigned Fortal recipe composes semantic styles before call', () {
+        final radioItemStyle = MenuItemStyler().indicator(
+          IconStyler().size(13),
+        );
+        final menuStyle = fortalMenuStyle(
+          variant: .soft,
+        ).radioItem(radioItemStyle);
+
+        final menu = menuStyle.call<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: const [
+            RemixMenuRadioGroup(
+              value: 'compact',
+              items: [RemixMenuRadioItem(value: 'compact', label: 'Compact')],
+            ),
+          ],
+          onSelected: (_) {},
+        );
+
+        expect(menu, isA<RemixMenu<String>>());
+        expect(menu.style.$radioItem, Prop.maybeMix(radioItemStyle));
+      });
+
+      test('RemixMenu composes a Fortal recipe with custom styling', () {
+        final choiceItemStyle = MenuItemStyler().indicator(
+          IconStyler().size(13),
+        );
+        final customStyle = MenuStyler()
+            .checkboxItem(choiceItemStyle)
+            .radioItem(choiceItemStyle);
+        final menu = RemixMenu<String>(
+          style: fortalMenuStyle(
+            variant: .soft,
+            size: .size1,
+            highContrast: true,
+          ).merge(customStyle),
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: const [
+            RemixMenuCheckboxItem(
+              value: 'checked',
+              label: 'Checked',
+              checked: true,
+            ),
+          ],
+        );
+
+        expect(menu.style.$checkboxItem, Prop.maybeMix(choiceItemStyle));
+        expect(menu.style.$radioItem, Prop.maybeMix(choiceItemStyle));
+      });
     });
 
     group('Core Methods', () {
@@ -515,6 +610,9 @@ void main() {
                 expect(spec.spec.trigger, isA<StyleSpec<MenuTriggerSpec>>());
                 expect(spec.spec.overlay, isA<StyleSpec<FlexBoxSpec>>());
                 expect(spec.spec.item, isA<StyleSpec<MenuItemSpec>>());
+                expect(spec.spec.checkboxItem, isNull);
+                expect(spec.spec.radioItem, isNull);
+                expect(spec.spec.submenuItem, isNull);
                 expect(spec.spec.divider, isA<StyleSpec<DividerSpec>>());
 
                 return Container();
@@ -569,6 +667,7 @@ void main() {
         final label = Prop.maybeMix(TextStyler());
         final leadingIcon = Prop.maybeMix(IconStyler());
         final trailingIcon = Prop.maybeMix(IconStyler());
+        final indicator = Prop.maybeMix(IconStyler());
         final variants = <VariantStyle<MenuItemSpec>>[];
 
         final style = MenuItemStyler.create(
@@ -576,6 +675,7 @@ void main() {
           label: label,
           leadingIcon: leadingIcon,
           trailingIcon: trailingIcon,
+          indicator: indicator,
           variants: variants,
         );
 
@@ -584,6 +684,7 @@ void main() {
         expect(style.$label, equals(label));
         expect(style.$leadingIcon, equals(leadingIcon));
         expect(style.$trailingIcon, equals(trailingIcon));
+        expect(style.$indicator, equals(indicator));
         expect(style.$variants, equals(variants));
       });
 
@@ -592,12 +693,14 @@ void main() {
         final labelStyler = TextStyler();
         final leadingIconStyler = IconStyler();
         final trailingIconStyler = IconStyler();
+        final indicatorStyler = IconStyler();
 
         final style = MenuItemStyler(
           container: containerStyler,
           label: labelStyler,
           leadingIcon: leadingIconStyler,
           trailingIcon: trailingIconStyler,
+          indicator: indicatorStyler,
         );
 
         expect(style, isNotNull);
@@ -605,6 +708,7 @@ void main() {
         expect(style.$label, isNotNull);
         expect(style.$leadingIcon, isNotNull);
         expect(style.$trailingIcon, isNotNull);
+        expect(style.$indicator, isNotNull);
       });
     });
 
@@ -633,6 +737,18 @@ void main() {
         modify: (style) => style.trailingIcon(IconStyler()),
         expect: (style) {
           expect(style.$trailingIcon, equals(Prop.maybeMix(IconStyler())));
+        },
+      );
+
+      styleMethodTest(
+        'indicator',
+        initial: MenuItemStyler(),
+        modify: (style) => style.indicator(IconStyler().size(10)),
+        expect: (style) {
+          expect(
+            style.$indicator,
+            equals(Prop.maybeMix(IconStyler().size(10))),
+          );
         },
       );
 
@@ -830,6 +946,7 @@ void main() {
                 expect(spec.spec.label, isA<StyleSpec<TextSpec>>());
                 expect(spec.spec.leadingIcon, isA<StyleSpec<IconSpec>>());
                 expect(spec.spec.trailingIcon, isA<StyleSpec<IconSpec>>());
+                expect(spec.spec.indicator, isA<StyleSpec<IconSpec>>());
 
                 return Container();
               },
@@ -844,6 +961,30 @@ void main() {
         final mergedStyle = originalStyle.merge(null);
 
         expect(mergedStyle, equals(originalStyle));
+      });
+
+      testWidgets('fluent indicator style resolves like a raw item spec', (
+        tester,
+      ) async {
+        const raw = MenuItemSpec(
+          indicator: StyleSpec(spec: IconSpec(size: 10)),
+        );
+        late MenuItemSpec resolved;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Builder(
+              builder: (context) {
+                resolved = MenuItemStyler()
+                    .indicator(IconStyler().size(10))
+                    .resolve(context)
+                    .spec;
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        );
+
+        expect(resolved, raw);
       });
     });
 

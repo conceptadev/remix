@@ -1,7 +1,12 @@
+import 'dart:ui' show CheckedState, SemanticsRole;
+
+import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/utilities/remix_path_icon.dart';
 
 import '../../helpers/test_helpers.dart';
 
@@ -154,6 +159,147 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixMenu<String>), findsOneWidget);
+    });
+  });
+
+  group('RemixMenu item identity', () {
+    testWidgets('caller-owned keys reach every rendered item root', (
+      tester,
+    ) async {
+      const ordinaryKey = ValueKey<String>('ordinary-root');
+      const checkboxKey = ValueKey<String>('checkbox-root');
+      const radioGroupKey = ValueKey<String>('radio-group-root');
+      const radioItemKey = ValueKey<String>('radio-item-root');
+      const submenuKey = ValueKey<String>('submenu-root');
+      const dividerKey = ValueKey<String>('divider-root');
+      final controller = MenuController();
+
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: controller,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          onSelected: (_) {},
+          items: const [
+            RemixMenuItem(
+              key: ordinaryKey,
+              value: 'ordinary',
+              label: 'Ordinary',
+            ),
+            RemixMenuCheckboxItem(
+              key: checkboxKey,
+              value: 'checkbox',
+              label: 'Checkbox',
+              checked: true,
+            ),
+            RemixMenuRadioGroup(
+              key: radioGroupKey,
+              value: 'radio',
+              items: [
+                RemixMenuRadioItem(
+                  key: radioItemKey,
+                  value: 'radio',
+                  label: 'Radio',
+                ),
+              ],
+            ),
+            RemixMenuSubmenu(
+              key: submenuKey,
+              label: 'More',
+              items: [RemixMenuItem(value: 'nested', label: 'Nested')],
+            ),
+            RemixMenuDivider(key: dividerKey),
+          ],
+        ),
+      );
+
+      controller.open();
+      await tester.pump();
+
+      expect(
+        tester.widget(find.byKey(ordinaryKey)),
+        isA<NakedMenuItem<String>>(),
+      );
+      expect(
+        tester.widget(find.byKey(checkboxKey)),
+        isA<NakedMenuCheckboxItem<String>>(),
+      );
+      expect(
+        tester.widget(find.byKey(radioGroupKey)),
+        isA<NakedMenuRadioGroup<String>>(),
+      );
+      expect(
+        tester.widget(find.byKey(radioItemKey)),
+        isA<NakedMenuRadioItem<String>>(),
+      );
+      expect(
+        tester.widget(find.byKey(submenuKey)),
+        isA<NakedMenuSubmenu<String>>(),
+      );
+      expect(
+        tester.widget(find.byKey(dividerKey)),
+        isA<StyleSpecBuilder<DividerSpec>>(),
+      );
+    });
+
+    testWidgets('keyed open submenu retains state after sibling reorder', (
+      tester,
+    ) async {
+      const alphaKey = ValueKey<String>('alpha-submenu');
+      const betaKey = ValueKey<String>('beta-submenu');
+      final controller = MenuController();
+      late StateSetter reorder;
+      var reordered = false;
+
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            reorder = setState;
+            final alpha = RemixMenuSubmenu<String>(
+              key: alphaKey,
+              label: 'Alpha',
+              items: const [
+                RemixMenuItem(value: 'alpha-child', label: 'Alpha child'),
+              ],
+            );
+            final beta = RemixMenuSubmenu<String>(
+              key: betaKey,
+              label: 'Beta',
+              items: const [
+                RemixMenuItem(value: 'beta-child', label: 'Beta child'),
+              ],
+            );
+
+            return RemixMenu<String>(
+              controller: controller,
+              trigger: const RemixMenuTrigger(label: 'Options'),
+              items: reordered ? [beta, alpha] : [alpha, beta],
+            );
+          },
+        ),
+      );
+
+      controller.open();
+      await tester.pump();
+      expect(
+        tester.getTopLeft(find.text('Alpha')).dy,
+        lessThan(tester.getTopLeft(find.text('Beta')).dy),
+      );
+
+      await tester.tap(find.text('Alpha'));
+      await tester.pump();
+      expect(find.text('Alpha child'), findsOneWidget);
+      expect(find.text('Beta child'), findsNothing);
+
+      reorder(() => reordered = true);
+      await tester.pump();
+      await tester.pump();
+
+      expect(
+        tester.getTopLeft(find.text('Beta')).dy,
+        lessThan(tester.getTopLeft(find.text('Alpha')).dy),
+      );
+      expect(find.text('Alpha child'), findsOneWidget);
+      expect(find.text('Beta child'), findsNothing);
     });
   });
 
@@ -525,6 +671,156 @@ void main() {
 
       expect(tester.widget<Text>(find.text('Copy')).style?.color, Colors.red);
     });
+
+    testWidgets(
+      'menu-wide semantic item styles merge after the shared item style '
+      'and before per-item styles',
+      (tester) async {
+        final style = MenuStyler()
+            .item(
+              MenuItemStyler().label(
+                TextStyler().color(Colors.red).fontSize(13),
+              ),
+            )
+            .checkboxItem(
+              MenuItemStyler().label(TextStyler().color(Colors.green)),
+            )
+            .radioItem(MenuItemStyler().label(TextStyler().color(Colors.blue)))
+            .submenuItem(
+              MenuItemStyler().label(TextStyler().color(Colors.orange)),
+            );
+
+        final controller = MenuController();
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            controller: controller,
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            style: style,
+            items: [
+              const RemixMenuItem(value: 'ordinary', label: 'Ordinary'),
+              const RemixMenuCheckboxItem(
+                value: 'checkbox',
+                label: 'Checkbox',
+                checked: true,
+              ),
+              RemixMenuRadioGroup(
+                value: 'default-radio',
+                onChanged: (_) {},
+                items: [
+                  const RemixMenuRadioItem(
+                    value: 'default-radio',
+                    label: 'Default radio',
+                  ),
+                  RemixMenuRadioItem(
+                    value: 'local-radio',
+                    label: 'Local radio',
+                    style: MenuItemStyler().label(
+                      TextStyler().color(Colors.purple),
+                    ),
+                  ),
+                ],
+              ),
+              const RemixMenuSubmenu(
+                label: 'Submenu',
+                items: [
+                  RemixMenuCheckboxItem(
+                    value: 'nested-checkbox',
+                    label: 'Nested checkbox',
+                    checked: true,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+        controller.open();
+        await tester.pump();
+
+        TextStyle? textStyle(String label) =>
+            tester.widget<Text>(find.text(label)).style;
+
+        expect(textStyle('Ordinary')?.color, Colors.red);
+        expect(textStyle('Checkbox')?.color, Colors.green);
+        expect(textStyle('Default radio')?.color, Colors.blue);
+        expect(textStyle('Local radio')?.color, Colors.purple);
+        expect(textStyle('Submenu')?.color, Colors.orange);
+        for (final label in [
+          'Ordinary',
+          'Checkbox',
+          'Default radio',
+          'Local radio',
+          'Submenu',
+        ]) {
+          expect(textStyle(label)?.fontSize, 13);
+        }
+
+        await tester.tap(find.text('Submenu'));
+        await tester.pump();
+        expect(textStyle('Nested checkbox')?.color, Colors.green);
+        expect(textStyle('Nested checkbox')?.fontSize, 13);
+      },
+    );
+
+    testWidgets(
+      'raw semantic item specs replace the raw shared item spec while null '
+      'semantic specs inherit it',
+      (tester) async {
+        final controller = MenuController();
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            controller: controller,
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            styleSpec: const MenuSpec(
+              item: StyleSpec(
+                spec: MenuItemSpec(
+                  label: StyleSpec(
+                    spec: TextSpec(
+                      style: TextStyle(color: Colors.red, fontSize: 13),
+                    ),
+                  ),
+                ),
+              ),
+              radioItem: StyleSpec(
+                spec: MenuItemSpec(
+                  label: StyleSpec(
+                    spec: TextSpec(style: TextStyle(color: Colors.blue)),
+                  ),
+                ),
+              ),
+            ),
+            items: [
+              const RemixMenuCheckboxItem(
+                value: 'checkbox',
+                label: 'Checkbox',
+                checked: true,
+              ),
+              RemixMenuRadioGroup(
+                value: 'radio',
+                onChanged: (_) {},
+                items: [
+                  RemixMenuRadioItem(
+                    value: 'radio',
+                    label: 'Radio',
+                    style: MenuItemStyler().label(
+                      TextStyler().color(Colors.purple).fontSize(20),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+        controller.open();
+        await tester.pump();
+
+        final checkbox = tester.widget<Text>(find.text('Checkbox')).style;
+        final radio = tester.widget<Text>(find.text('Radio')).style;
+        expect(checkbox?.color, Colors.red);
+        expect(checkbox?.fontSize, 13);
+        expect(radio?.color, Colors.blue);
+        expect(radio?.fontSize, isNull);
+      },
+    );
   });
 
   group('RemixMenu Semantics and Accessibility', () {
@@ -735,6 +1031,1691 @@ void main() {
       expect(selectedValue, equals(MenuAction.copy));
     });
   });
+
+  group('RemixMenu compound data contract', () {
+    test('constructors retain the complete immutable public surface', () {
+      final checkboxChanged = <bool>[];
+      final radioChanged = <String>[];
+      final submenuController = MenuController();
+      final submenuFocusNode = FocusNode();
+      addTearDown(submenuFocusNode.dispose);
+
+      final checkbox = RemixMenuCheckboxItem<String>(
+        value: 'notifications',
+        label: 'Notifications',
+        checked: true,
+        onChanged: checkboxChanged.add,
+        leadingIcon: Icons.notifications,
+        trailingIcon: Icons.keyboard_command_key,
+        enabled: false,
+        closeOnActivate: false,
+        semanticLabel: 'Toggle notifications',
+        style: MenuItemStyler().label(TextStyler().color(Colors.purple)),
+      );
+      final radioItem = RemixMenuRadioItem<String>(
+        value: 'compact',
+        label: 'Compact',
+        leadingIcon: Icons.view_compact,
+        trailingIcon: Icons.keyboard_command_key,
+        enabled: false,
+        closeOnActivate: false,
+        semanticLabel: 'Compact density',
+        style: MenuItemStyler().label(TextStyler().color(Colors.blue)),
+      );
+      final radioGroup = RemixMenuRadioGroup<String>(
+        value: 'compact',
+        items: [radioItem],
+        onChanged: radioChanged.add,
+        enabled: false,
+      );
+      final submenu = RemixMenuSubmenu<String>(
+        label: 'More',
+        items: const [RemixMenuItem(value: 'archive', label: 'Archive')],
+        leadingIcon: Icons.more_horiz,
+        trailingIcon: Icons.chevron_right,
+        controller: submenuController,
+        enabled: false,
+        hoverDelay: const Duration(milliseconds: 250),
+        positioning: const OverlayPositionConfig(
+          side: OverlaySide.left,
+          alignment: OverlayAlignment.end,
+          sideOffset: 8,
+        ),
+        focusNode: submenuFocusNode,
+        semanticLabel: 'More actions',
+        onOpen: () {},
+        onClose: () {},
+        style: MenuItemStyler().label(TextStyler().color(Colors.green)),
+      );
+
+      expect(checkbox.value, 'notifications');
+      expect(checkbox.checked, isTrue);
+      expect(checkbox.onChanged, isNotNull);
+      expect(checkbox.leadingIcon, Icons.notifications);
+      expect(checkbox.trailingIcon, Icons.keyboard_command_key);
+      expect(checkbox.enabled, isFalse);
+      expect(checkbox.closeOnActivate, isFalse);
+      expect(checkbox.semanticLabel, 'Toggle notifications');
+      expect(checkbox, isA<RemixMenuItemData<String>>());
+      expect(radioItem.value, 'compact');
+      expect(radioItem.enabled, isFalse);
+      expect(radioItem.closeOnActivate, isFalse);
+      expect(radioGroup.value, 'compact');
+      expect(radioGroup.items, [same(radioItem)]);
+      expect(radioGroup.onChanged, isNotNull);
+      expect(radioGroup.enabled, isFalse);
+      expect(radioGroup, isA<RemixMenuItemData<String>>());
+      expect(submenu.label, 'More');
+      expect(submenu.items.single, isA<RemixMenuItem<String>>());
+      expect(submenu.controller, same(submenuController));
+      expect(submenu.hoverDelay, const Duration(milliseconds: 250));
+      expect(submenu.positioning.side, OverlaySide.left);
+      expect(submenu.focusNode, same(submenuFocusNode));
+      expect(submenu, isA<RemixMenuItemData<String>>());
+    });
+
+    test('compound labels and semantic labels must not be empty', () {
+      expect(
+        () => RemixMenuCheckboxItem<String>(
+          value: 'checkbox',
+          label: '',
+          checked: false,
+        ),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixMenuRadioItem<String>(value: 'radio', label: ''),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixMenuSubmenu<String>(label: '', items: const []),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixMenuCheckboxItem<String>(
+          value: 'checkbox',
+          label: 'Checkbox',
+          checked: false,
+          semanticLabel: '',
+        ),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixMenuRadioGroup<String?>(value: null, items: const []),
+        throwsAssertionError,
+      );
+    });
+
+    testWidgets('radio groups reject duplicate or missing controlled values', (
+      tester,
+    ) async {
+      Future<Object?> openAndTakeException(
+        RemixMenuRadioGroup<String> group,
+      ) async {
+        final controller = MenuController();
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            controller: controller,
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            items: [group],
+          ),
+        );
+        controller.open();
+        await tester.pump();
+        final exception = tester.takeException();
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        return exception;
+      }
+
+      expect(
+        await openAndTakeException(
+          const RemixMenuRadioGroup(
+            value: 'missing',
+            items: [RemixMenuRadioItem(value: 'present', label: 'Present')],
+          ),
+        ),
+        isA<AssertionError>(),
+      );
+      expect(
+        await openAndTakeException(
+          const RemixMenuRadioGroup(
+            value: 'duplicate',
+            items: [
+              RemixMenuRadioItem(value: 'duplicate', label: 'First'),
+              RemixMenuRadioItem(value: 'duplicate', label: 'Second'),
+            ],
+          ),
+        ),
+        isA<AssertionError>(),
+      );
+    });
+  });
+
+  group('RemixMenu checkbox items', () {
+    testWidgets('exposes role, checked state, callback order, and rebuild', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      var checked = false;
+      final calls = <String>[];
+
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) => RemixMenu<String>(
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            onSelected: (value) => calls.add('root:$value'),
+            items: [
+              RemixMenuCheckboxItem(
+                value: 'notifications',
+                label: 'Notifications',
+                checked: checked,
+                closeOnActivate: false,
+                onChanged: (value) {
+                  calls.add('item:$value');
+                  setState(() => checked = value);
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pump();
+
+      var data = tester
+          .getSemantics(find.text('Notifications'))
+          .getSemanticsData();
+      expect(data.role, SemanticsRole.menuItemCheckbox);
+      expect(data.flagsCollection.isChecked, CheckedState.isFalse);
+
+      await tester.tap(find.text('Notifications'));
+      await tester.pump();
+
+      expect(calls, ['root:notifications', 'item:true']);
+      expect(checked, isTrue);
+      data = tester.getSemantics(find.text('Notifications')).getSemanticsData();
+      expect(data.flagsCollection.isChecked, CheckedState.isTrue);
+      expect(find.text('Notifications'), findsOneWidget);
+      semantics.dispose();
+    });
+
+    testWidgets('supports root-only and item-only callbacks', (tester) async {
+      final calls = <String>[];
+      final rootOnlyController = MenuController();
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: rootOnlyController,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          onSelected: (value) => calls.add('root:$value'),
+          items: const [
+            RemixMenuCheckboxItem(
+              value: 'root',
+              label: 'Root only',
+              checked: false,
+              closeOnActivate: false,
+            ),
+          ],
+        ),
+      );
+      rootOnlyController.open();
+      await tester.pump();
+      await tester.tap(find.text('Root only'));
+      await tester.pump();
+      expect(calls, ['root:root']);
+
+      final itemOnlyController = MenuController();
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: itemOnlyController,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: [
+            RemixMenuCheckboxItem(
+              value: 'item',
+              label: 'Item only',
+              checked: false,
+              closeOnActivate: false,
+              onChanged: (value) => calls.add('item:$value'),
+            ),
+          ],
+        ),
+      );
+      await tester.pump();
+      itemOnlyController.open();
+      await tester.pump();
+      await tester.tap(find.text('Item only'));
+      await tester.pump();
+      expect(calls, ['root:root', 'item:true']);
+    });
+
+    testWidgets('both-null and explicitly disabled items suppress activation', (
+      tester,
+    ) async {
+      final calls = <String>[];
+      final neitherController = MenuController();
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: neitherController,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: const [
+            RemixMenuCheckboxItem(
+              value: 'neither',
+              label: 'Neither callback',
+              checked: false,
+            ),
+          ],
+        ),
+      );
+      await tester.pump();
+      neitherController.open();
+      await tester.pump();
+      final neitherControllerState = NakedMenuItemState.controllerOf<String>(
+        tester.element(find.text('Neither callback')),
+      );
+      expect(neitherControllerState.value, contains(WidgetState.disabled));
+      await tester.tap(find.text('Neither callback'));
+      await tester.pump();
+      expect(find.text('Neither callback'), findsOneWidget);
+
+      final disabledController = MenuController();
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: disabledController,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          onSelected: calls.add,
+          items: [
+            RemixMenuCheckboxItem(
+              value: 'disabled',
+              label: 'Explicitly disabled',
+              checked: false,
+              enabled: false,
+              onChanged: (value) => calls.add('changed:$value'),
+            ),
+          ],
+        ),
+      );
+      await tester.pump();
+      disabledController.open();
+      await tester.pump();
+      await tester.tap(find.text('Explicitly disabled'));
+      await tester.pump();
+      expect(calls, isEmpty);
+    });
+  });
+
+  group('RemixMenu radio groups', () {
+    testWidgets('exposes exclusive roles and updates controlled selection', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      var value = 'compact';
+      final calls = <String>[];
+
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) => RemixMenu<String>(
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            onSelected: (next) => calls.add('root:$next'),
+            items: [
+              RemixMenuRadioGroup(
+                value: value,
+                onChanged: (next) {
+                  calls.add('group:$next');
+                  setState(() => value = next);
+                },
+                items: const [
+                  RemixMenuRadioItem(
+                    value: 'compact',
+                    label: 'Compact',
+                    closeOnActivate: false,
+                  ),
+                  RemixMenuRadioItem(
+                    value: 'comfortable',
+                    label: 'Comfortable',
+                    closeOnActivate: false,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pump();
+
+      final selected = tester
+          .getSemantics(find.text('Compact'))
+          .getSemanticsData();
+      final unselected = tester
+          .getSemantics(find.text('Comfortable'))
+          .getSemanticsData();
+      expect(selected.role, SemanticsRole.menuItemRadio);
+      expect(selected.flagsCollection.isChecked, CheckedState.isTrue);
+      expect(selected.flagsCollection.isInMutuallyExclusiveGroup, isTrue);
+      expect(unselected.role, SemanticsRole.menuItemRadio);
+      expect(unselected.flagsCollection.isChecked, CheckedState.isFalse);
+      expect(unselected.flagsCollection.isInMutuallyExclusiveGroup, isTrue);
+
+      await tester.tap(find.text('Comfortable'));
+      await tester.pump();
+      expect(value, 'comfortable');
+      expect(calls, ['root:comfortable', 'group:comfortable']);
+      expect(
+        tester
+            .getSemantics(find.text('Comfortable'))
+            .getSemanticsData()
+            .flagsCollection
+            .isChecked,
+        CheckedState.isTrue,
+      );
+      semantics.dispose();
+    });
+
+    testWidgets('re-emits the selected value through root then group', (
+      tester,
+    ) async {
+      final calls = <String>[];
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          onSelected: (value) => calls.add('root:$value'),
+          items: [
+            RemixMenuRadioGroup(
+              value: 'compact',
+              onChanged: (value) => calls.add('group:$value'),
+              items: const [
+                RemixMenuRadioItem(
+                  value: 'compact',
+                  label: 'Compact',
+                  closeOnActivate: false,
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pump();
+      await tester.tap(find.text('Compact'));
+      await tester.pump();
+
+      expect(calls, ['root:compact', 'group:compact']);
+    });
+
+    testWidgets('supports root-only and group-only callbacks', (tester) async {
+      final calls = <String>[];
+      final rootOnlyController = MenuController();
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: rootOnlyController,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          onSelected: (value) => calls.add('root:$value'),
+          items: const [
+            RemixMenuRadioGroup(
+              value: 'root',
+              items: [
+                RemixMenuRadioItem(
+                  value: 'root',
+                  label: 'Root only',
+                  closeOnActivate: false,
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+      rootOnlyController.open();
+      await tester.pump();
+      await tester.tap(find.text('Root only'));
+      await tester.pump();
+      expect(calls, ['root:root']);
+
+      final groupOnlyController = MenuController();
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: groupOnlyController,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: [
+            RemixMenuRadioGroup(
+              value: 'group',
+              onChanged: (value) => calls.add('group:$value'),
+              items: const [
+                RemixMenuRadioItem(
+                  value: 'group',
+                  label: 'Group only',
+                  closeOnActivate: false,
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+      await tester.pump();
+      groupOnlyController.open();
+      await tester.pump();
+      await tester.tap(find.text('Group only'));
+      await tester.pump();
+      expect(calls, ['root:root', 'group:group']);
+    });
+
+    testWidgets('both-null radio callbacks disable activation', (tester) async {
+      final controller = MenuController();
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: controller,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: const [
+            RemixMenuRadioGroup(
+              value: 'neither',
+              items: [
+                RemixMenuRadioItem(value: 'neither', label: 'Neither callback'),
+              ],
+            ),
+          ],
+        ),
+      );
+      controller.open();
+      await tester.pump();
+
+      final itemController = NakedMenuItemState.controllerOf<String>(
+        tester.element(find.text('Neither callback')),
+      );
+      expect(itemController.value, contains(WidgetState.disabled));
+      await tester.tap(find.text('Neither callback'));
+      await tester.pump();
+      expect(find.text('Neither callback'), findsOneWidget);
+    });
+
+    testWidgets('group and item disabled states suppress radio callbacks', (
+      tester,
+    ) async {
+      final calls = <String>[];
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          onSelected: calls.add,
+          items: [
+            RemixMenuRadioGroup(
+              value: 'selected',
+              enabled: false,
+              onChanged: calls.add,
+              items: const [
+                RemixMenuRadioItem(value: 'selected', label: 'Group disabled'),
+              ],
+            ),
+            RemixMenuRadioGroup(
+              value: 'selected',
+              onChanged: calls.add,
+              items: const [
+                RemixMenuRadioItem(
+                  value: 'selected',
+                  label: 'Item disabled',
+                  enabled: false,
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pump();
+      await tester.tap(find.text('Group disabled'));
+      await tester.tap(find.text('Item disabled'));
+      await tester.pump();
+
+      expect(calls, isEmpty);
+    });
+  });
+
+  group('RemixMenu submenus', () {
+    testWidgets(
+      'omitted submenu side follows direction and explicit right stays physical',
+      (tester) async {
+        await tester.binding.setSurfaceSize(const Size(1200, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
+        Future<void> expectPlacement({
+          required TextDirection direction,
+          required OverlaySide expectedSide,
+          bool explicitRight = false,
+        }) async {
+          final menuController = MenuController();
+          final submenuController = MenuController();
+          final submenu = explicitRight
+              ? RemixMenuSubmenu<String>(
+                  controller: submenuController,
+                  label: 'More',
+                  positioning: const OverlayPositionConfig(
+                    side: OverlaySide.right,
+                    alignment: OverlayAlignment.start,
+                    sideOffset: 4,
+                  ),
+                  items: const [
+                    RemixMenuItem(value: 'archive', label: 'Archive'),
+                  ],
+                )
+              : RemixMenuSubmenu<String>(
+                  controller: submenuController,
+                  label: 'More',
+                  items: const [
+                    RemixMenuItem(value: 'archive', label: 'Archive'),
+                  ],
+                );
+
+          await tester.pumpRemixApp(
+            RemixMenu<String>(
+              controller: menuController,
+              trigger: const RemixMenuTrigger(label: 'Options'),
+              items: [submenu],
+            ),
+            textDirection: direction,
+          );
+          menuController.open();
+          await tester.pump();
+          submenuController.open();
+          await tester.pump();
+          await tester.pump();
+
+          final triggerRect = tester.getRect(find.text('More'));
+          final childRect = tester.getRect(find.text('Archive'));
+          final placement = OverlayPlacement.of(
+            tester.element(find.text('Archive')),
+          );
+
+          expect(placement.side, expectedSide);
+          expect(placement.wasFlipped, isFalse);
+          if (expectedSide == OverlaySide.right) {
+            expect(childRect.left, greaterThan(triggerRect.right));
+          } else {
+            expect(childRect.right, lessThan(triggerRect.left));
+          }
+        }
+
+        await expectPlacement(
+          direction: TextDirection.ltr,
+          expectedSide: OverlaySide.right,
+        );
+        await expectPlacement(
+          direction: TextDirection.rtl,
+          expectedSide: OverlaySide.left,
+        );
+        await expectPlacement(
+          direction: TextDirection.rtl,
+          expectedSide: OverlaySide.right,
+          explicitRight: true,
+        );
+      },
+    );
+
+    testWidgets('hover opens only after the configured 100 ms delay', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const RemixMenu<String>(
+          trigger: RemixMenuTrigger(label: 'Options'),
+          items: [
+            RemixMenuSubmenu(
+              label: 'More',
+              items: [RemixMenuItem(value: 'archive', label: 'Archive')],
+            ),
+          ],
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pump();
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: Offset.zero);
+      addTearDown(mouse.removePointer);
+      await mouse.moveTo(tester.getCenter(find.text('More')));
+
+      await tester.pump(const Duration(milliseconds: 99));
+      expect(find.text('Archive'), findsNothing);
+      await tester.pump(const Duration(milliseconds: 1));
+      await tester.pump();
+      expect(find.text('Archive'), findsOneWidget);
+    });
+
+    testWidgets('directional arrows and Escape restore submenu focus', (
+      tester,
+    ) async {
+      for (final direction in TextDirection.values) {
+        final focusNode = FocusNode();
+        final controller = MenuController();
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            controller: controller,
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            items: [
+              RemixMenuSubmenu(
+                label: 'More',
+                focusNode: focusNode,
+                items: const [
+                  RemixMenuItem(value: 'archive', label: 'Archive'),
+                ],
+              ),
+            ],
+          ),
+          textDirection: direction,
+        );
+        await tester.pump();
+        controller.open();
+        await tester.pump();
+        focusNode.requestFocus();
+        await tester.pump();
+
+        await tester.sendKeyEvent(
+          direction == TextDirection.ltr
+              ? LogicalKeyboardKey.arrowRight
+              : LogicalKeyboardKey.arrowLeft,
+        );
+        await tester.pump();
+        await tester.pump();
+        expect(find.text('Archive'), findsOneWidget);
+        expect(Focus.of(tester.element(find.text('Archive'))).hasFocus, isTrue);
+
+        await tester.sendKeyEvent(
+          direction == TextDirection.ltr
+              ? LogicalKeyboardKey.arrowLeft
+              : LogicalKeyboardKey.arrowRight,
+        );
+        await tester.pump();
+        await tester.pump();
+        expect(find.text('Archive'), findsNothing);
+        expect(focusNode.hasFocus, isTrue);
+
+        await tester.sendKeyEvent(
+          direction == TextDirection.ltr
+              ? LogicalKeyboardKey.arrowRight
+              : LogicalKeyboardKey.arrowLeft,
+        );
+        await tester.pump();
+        await tester.pump();
+        expect(find.text('Archive'), findsOneWidget);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pump();
+        await tester.pump();
+        expect(find.text('Archive'), findsNothing);
+        expect(focusNode.hasFocus, isTrue);
+        focusNode.dispose();
+      }
+    });
+
+    testWidgets('controller callbacks, disabled trigger, and recursive close', (
+      tester,
+    ) async {
+      final submenuController = MenuController();
+      final calls = <String>[];
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          onSelected: (value) => calls.add('selected:$value'),
+          items: [
+            RemixMenuSubmenu(
+              label: 'Disabled',
+              enabled: false,
+              items: const [RemixMenuItem(value: 'hidden', label: 'Hidden')],
+            ),
+            RemixMenuSubmenu(
+              label: 'More',
+              controller: submenuController,
+              onOpen: () => calls.add('open'),
+              onClose: () => calls.add('close'),
+              items: const [
+                RemixMenuSubmenu(
+                  label: 'Even more',
+                  items: [RemixMenuItem(value: 'archive', label: 'Archive')],
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pump();
+      await tester.tap(find.text('Disabled'));
+      await tester.pump();
+      expect(find.text('Hidden'), findsNothing);
+
+      await tester.tap(find.text('More'));
+      await tester.pump();
+      expect(calls, contains('open'));
+      await tester.tap(find.text('Even more'));
+      await tester.pump();
+      await tester.tap(find.text('Archive'));
+      await tester.pump();
+      await tester.pump();
+      expect(calls, containsAllInOrder(['open', 'selected:archive', 'close']));
+      expect(find.text('More'), findsNothing);
+    });
+
+    testWidgets('caller-owned focus nodes remain usable after unmount', (
+      tester,
+    ) async {
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: [
+            RemixMenuSubmenu(
+              label: 'More',
+              focusNode: focusNode,
+              items: const [RemixMenuItem(value: 'archive', label: 'Archive')],
+            ),
+          ],
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pump();
+      await tester.pumpWidget(const SizedBox.shrink());
+
+      expect(() => focusNode.requestFocus(), returnsNormally);
+    });
+  });
+
+  group('RemixMenu compound rendering', () {
+    testWidgets('vertical item styles remain shrink-wrapped and layout-safe', (
+      tester,
+    ) async {
+      final controller = MenuController();
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: controller,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          style: MenuStyler().item(
+            MenuItemStyler().direction(.vertical).mainAxisSize(.min),
+          ),
+          items: const [
+            RemixMenuItem(
+              value: 'vertical',
+              label: 'Vertical item',
+              trailingIcon: Icons.keyboard_command_key,
+            ),
+          ],
+        ),
+      );
+
+      controller.open();
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Vertical item'), findsOneWidget);
+    });
+
+    testWidgets('overlay spacing applies between adjacent radio rows', (
+      tester,
+    ) async {
+      final controller = MenuController();
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: controller,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          style: MenuStyler().overlay(FlexBoxStyler().spacing(12)),
+          onSelected: (_) {},
+          items: const [
+            RemixMenuRadioGroup(
+              value: 'first',
+              items: [
+                RemixMenuRadioItem(value: 'first', label: 'First radio'),
+                RemixMenuRadioItem(value: 'second', label: 'Second radio'),
+              ],
+            ),
+          ],
+        ),
+      );
+
+      controller.open();
+      await tester.pump();
+
+      Finder rowFor(String label) => find
+          .ancestor(of: find.text(label), matching: find.byType(FlexBox))
+          .first;
+      final first = tester.getRect(rowFor('First radio'));
+      final second = tester.getRect(rowFor('Second radio'));
+
+      expect(second.top - first.bottom, 12);
+    });
+
+    testWidgets('overlay vertical direction applies within radio groups', (
+      tester,
+    ) async {
+      final controller = MenuController();
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          controller: controller,
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          style: MenuStyler().overlay(FlexBoxStyler().verticalDirection(.up)),
+          onSelected: (_) {},
+          items: const [
+            RemixMenuRadioGroup(
+              value: 'first',
+              items: [
+                RemixMenuRadioItem(value: 'first', label: 'First radio'),
+                RemixMenuRadioItem(value: 'second', label: 'Second radio'),
+              ],
+            ),
+          ],
+        ),
+      );
+
+      controller.open();
+      await tester.pump();
+
+      final first = tester.getTopLeft(find.text('First radio'));
+      final second = tester.getTopLeft(find.text('Second radio'));
+
+      expect(second.dy, lessThan(first.dy));
+    });
+
+    testWidgets(
+      'radio wrapper preserves neighboring item and divider geometry',
+      (tester) async {
+        await tester.pumpRemixApp(
+          const RemixMenu<String>(
+            trigger: RemixMenuTrigger(label: 'Options'),
+            items: [
+              RemixMenuItem(value: 'before', label: 'Before'),
+              RemixMenuDivider(),
+              RemixMenuRadioGroup(
+                value: 'radio',
+                items: [RemixMenuRadioItem(value: 'radio', label: 'Radio')],
+              ),
+              RemixMenuDivider(),
+              RemixMenuItem(value: 'after', label: 'After'),
+            ],
+          ),
+        );
+        await tester.tap(find.text('Options'));
+        await tester.pump();
+
+        final beforeRow = find
+            .ancestor(of: find.text('Before'), matching: find.byType(FlexBox))
+            .first;
+        final radioRow = find
+            .ancestor(of: find.text('Radio'), matching: find.byType(FlexBox))
+            .first;
+        final afterRow = find
+            .ancestor(of: find.text('After'), matching: find.byType(FlexBox))
+            .first;
+        expect(
+          tester.getSize(beforeRow).height,
+          tester.getSize(radioRow).height,
+        );
+        expect(
+          tester.getSize(afterRow).height,
+          tester.getSize(radioRow).height,
+        );
+        expect(find.byType(RemixDivider), findsNWidgets(2));
+      },
+    );
+
+    testWidgets('a mixed panel reserves one common choice slot', (
+      tester,
+    ) async {
+      Future<double> ordinaryLabelX(
+        List<RemixMenuItemData<String>> items,
+      ) async {
+        final controller = MenuController();
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            controller: controller,
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            items: items,
+          ),
+        );
+        await tester.pump();
+        controller.open();
+        await tester.pump();
+        return tester.getTopLeft(find.text('Ordinary')).dx;
+      }
+
+      final ordinaryOnlyX = await ordinaryLabelX(const [
+        RemixMenuItem(value: 'ordinary', label: 'Ordinary'),
+      ]);
+      final mixedOrdinaryX = await ordinaryLabelX(const [
+        RemixMenuItem(value: 'ordinary', label: 'Ordinary'),
+        RemixMenuCheckboxItem(
+          value: 'checkbox',
+          label: 'Checkbox',
+          checked: true,
+        ),
+      ]);
+      final checkboxX = tester.getTopLeft(find.text('Checkbox')).dx;
+
+      expect(mixedOrdinaryX, greaterThan(ordinaryOnlyX));
+      expect(checkboxX, mixedOrdinaryX);
+    });
+
+    testWidgets('nested panels decide choice slots independently', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const RemixMenu<String>(
+          trigger: RemixMenuTrigger(label: 'Options'),
+          items: [
+            RemixMenuCheckboxItem(
+              value: 'checkbox',
+              label: 'Checkbox',
+              checked: true,
+            ),
+            RemixMenuSubmenu(
+              label: 'More',
+              items: [RemixMenuItem(value: 'ordinary', label: 'Nested')],
+            ),
+          ],
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pump();
+      await tester.tap(find.text('More'));
+      await tester.pump();
+
+      final rootRow = tester.widget<FlexBox>(
+        find
+            .ancestor(of: find.text('More'), matching: find.byType(FlexBox))
+            .first,
+      );
+      final nestedRow = tester.widget<FlexBox>(
+        find
+            .ancestor(of: find.text('Nested'), matching: find.byType(FlexBox))
+            .first,
+      );
+      expect(rootRow.children.first, isA<Visibility>());
+      expect(nestedRow.children.first, isA<Expanded>());
+    });
+
+    testWidgets('default size-9 choice slots scale to 18 at 200%', (
+      tester,
+    ) async {
+      final controller = MenuController();
+      await tester.pumpRemixApp(
+        MediaQuery(
+          data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+          child: RemixMenu<String>(
+            controller: controller,
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            style: MenuStyler().item(
+              MenuItemStyler().indicator(IconStyler().applyTextScaling(true)),
+            ),
+            items: const [
+              RemixMenuCheckboxItem(
+                value: 'checked',
+                label: 'Checked',
+                checked: true,
+              ),
+              RemixMenuCheckboxItem(
+                value: 'unchecked',
+                label: 'Unchecked',
+                checked: false,
+              ),
+            ],
+          ),
+        ),
+      );
+
+      controller.open();
+      await tester.pump();
+
+      Finder slotFor(String label) {
+        final row = tester.widget<FlexBox>(
+          find
+              .ancestor(of: find.text(label), matching: find.byType(FlexBox))
+              .first,
+        );
+        return find.byWidget(row.children.first);
+      }
+
+      final checkedIndicator = tester.widget<RemixPathIcon>(
+        find.byKey(const ValueKey('remix-menu-indicator-Checked')),
+      );
+      expect(checkedIndicator.styleSpec.spec.size, 9);
+      expect(tester.getSize(slotFor('Checked')), const Size.square(18));
+      expect(tester.getSize(slotFor('Unchecked')), const Size.square(18));
+    });
+
+    testWidgets(
+      'maintained choice slots remain excluded from duplicate semantics',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+        final controller = MenuController();
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            controller: controller,
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            items: const [
+              RemixMenuCheckboxItem(
+                value: 'checked',
+                label: 'Checked',
+                checked: true,
+                semanticLabel: 'Checked choice',
+              ),
+              RemixMenuCheckboxItem(
+                value: 'unchecked',
+                label: 'Unchecked',
+                checked: false,
+                semanticLabel: 'Unchecked choice',
+              ),
+            ],
+          ),
+        );
+
+        controller.open();
+        await tester.pump();
+
+        for (final (label, visible) in [
+          ('Checked', true),
+          ('Unchecked', false),
+        ]) {
+          final row = find
+              .ancestor(of: find.text(label), matching: find.byType(FlexBox))
+              .first;
+          final slot = tester.widget<FlexBox>(row).children.first;
+
+          expect(
+            slot,
+            isA<Visibility>()
+                .having((slot) => slot.visible, 'visible', visible)
+                .having((slot) => slot.maintainState, 'maintainState', isTrue)
+                .having(
+                  (slot) => slot.maintainAnimation,
+                  'maintainAnimation',
+                  isTrue,
+                )
+                .having((slot) => slot.maintainSize, 'maintainSize', isTrue)
+                .having(
+                  (slot) => slot.maintainSemantics,
+                  'maintainSemantics',
+                  isTrue,
+                )
+                .having(
+                  (slot) => slot.maintainInteractivity,
+                  'maintainInteractivity',
+                  isTrue,
+                )
+                .having((slot) => slot.child, 'child', isA<RemixPathIcon>()),
+          );
+          expect(
+            find.ancestor(of: row, matching: find.byType(ExcludeSemantics)),
+            findsOneWidget,
+          );
+        }
+
+        expect(find.bySemanticsLabel('Checked choice'), findsOneWidget);
+        expect(find.bySemanticsLabel('Unchecked choice'), findsOneWidget);
+        semantics.dispose();
+      },
+    );
+
+    testWidgets('raw and fluent indicators stay size 13 at 200%', (
+      tester,
+    ) async {
+      Future<Size> indicatorSize({required bool raw}) async {
+        final controller = MenuController();
+        await tester.pumpRemixApp(
+          MediaQuery(
+            data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+            child: RemixMenu<String>(
+              controller: controller,
+              trigger: const RemixMenuTrigger(label: 'Options'),
+              items: const [
+                RemixMenuCheckboxItem(
+                  value: 'notifications',
+                  label: 'Notifications',
+                  checked: true,
+                ),
+              ],
+              style: raw
+                  ? const MenuStyler.create()
+                  : MenuStyler().item(
+                      MenuItemStyler().indicator(
+                        IconStyler().size(13).applyTextScaling(false),
+                      ),
+                    ),
+              styleSpec: raw
+                  ? const MenuSpec(
+                      item: StyleSpec(
+                        spec: MenuItemSpec(
+                          indicator: StyleSpec(
+                            spec: IconSpec(size: 13, applyTextScaling: false),
+                          ),
+                        ),
+                      ),
+                    )
+                  : null,
+            ),
+          ),
+        );
+        await tester.pump();
+        controller.open();
+        await tester.pump();
+        final indicator = find.byKey(
+          const ValueKey('remix-menu-indicator-Notifications'),
+        );
+        expect(
+          tester.widget<RemixPathIcon>(indicator).glyph,
+          RemixPathGlyph.thickCheck,
+        );
+        expect(
+          tester
+              .widget<RemixPathIcon>(indicator)
+              .styleSpec
+              .spec
+              .applyTextScaling,
+          isFalse,
+        );
+        return tester.getSize(indicator);
+      }
+
+      expect(await indicatorSize(raw: false), const Size.square(13));
+      expect(await indicatorSize(raw: true), const Size.square(13));
+    });
+
+    testWidgets('checked and radio indicators inherit item widget states', (
+      tester,
+    ) async {
+      final hovered = MenuItemStyler().indicator(IconStyler().size(17));
+      final itemStyle = MenuItemStyler()
+          .indicator(IconStyler().size(9))
+          .onHovered(hovered);
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          onSelected: (_) {},
+          style: MenuStyler().checkboxItem(itemStyle).radioItem(itemStyle),
+          items: const [
+            RemixMenuCheckboxItem(
+              value: 'notifications',
+              label: 'Notifications',
+              checked: true,
+              closeOnActivate: false,
+            ),
+            RemixMenuRadioGroup(
+              value: 'compact',
+              items: [
+                RemixMenuRadioItem(
+                  value: 'compact',
+                  label: 'Compact',
+                  closeOnActivate: false,
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pump();
+      final checkboxIndicator = find.byKey(
+        const ValueKey('remix-menu-indicator-Notifications'),
+      );
+      final radioIndicator = find.byKey(
+        const ValueKey('remix-menu-indicator-Compact'),
+      );
+      expect(tester.getSize(checkboxIndicator), const Size.square(9));
+      expect(tester.getSize(radioIndicator), const Size.square(9));
+
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: Offset.zero);
+      addTearDown(mouse.removePointer);
+      await mouse.moveTo(tester.getCenter(find.text('Notifications')));
+      await tester.pump();
+      await tester.pump();
+      expect(
+        WidgetStateProvider.of(tester.element(checkboxIndicator))?.hovered,
+        isTrue,
+      );
+      expect(tester.getSize(checkboxIndicator), const Size.square(17));
+      await mouse.moveTo(tester.getCenter(find.text('Compact')));
+      await tester.pump();
+      await tester.pump();
+      expect(tester.getSize(radioIndicator), const Size.square(17));
+    });
+
+    testWidgets('trailing slots align to the directional panel end', (
+      tester,
+    ) async {
+      for (final direction in TextDirection.values) {
+        final controller = MenuController();
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            controller: controller,
+            trigger: const RemixMenuTrigger(label: 'Options'),
+            style: MenuStyler().item(
+              MenuItemStyler()
+                  .direction(.horizontal)
+                  .mainAxisSize(.max)
+                  .width(220)
+                  .spacing(12),
+            ),
+            items: const [
+              RemixMenuItem(
+                value: 'short',
+                label: 'Short',
+                trailingIcon: Icons.keyboard_command_key,
+              ),
+              RemixMenuItem(
+                value: 'long',
+                label: 'A much longer label',
+                trailingIcon: Icons.keyboard_command_key,
+              ),
+            ],
+          ),
+          textDirection: direction,
+        );
+        await tester.pump();
+        controller.open();
+        await tester.pump();
+        final icons = find.byIcon(Icons.keyboard_command_key);
+        final first = tester.getRect(icons.at(0));
+        final second = tester.getRect(icons.at(1));
+        if (direction == TextDirection.ltr) {
+          expect(first.right, second.right);
+          expect(
+            first.left - tester.getRect(find.text('Short')).right,
+            greaterThanOrEqualTo(12),
+          );
+        } else {
+          expect(first.left, second.left);
+          expect(
+            tester.getRect(find.text('Short')).left - first.right,
+            greaterThanOrEqualTo(12),
+          );
+        }
+      }
+    });
+
+    testWidgets(
+      'default submenu path is directional and custom trailing replaces it',
+      (tester) async {
+        for (final direction in TextDirection.values) {
+          final controller = MenuController();
+          await tester.pumpRemixApp(
+            RemixMenu<String>(
+              controller: controller,
+              trigger: const RemixMenuTrigger(label: 'Options'),
+              items: const [
+                RemixMenuSubmenu(
+                  label: 'Default',
+                  items: [RemixMenuItem(value: 'child', label: 'Child')],
+                ),
+                RemixMenuSubmenu(
+                  label: 'Custom',
+                  trailingIcon: Icons.star,
+                  items: [RemixMenuItem(value: 'other', label: 'Other')],
+                ),
+              ],
+            ),
+            textDirection: direction,
+          );
+          await tester.pump();
+          controller.open();
+          await tester.pump();
+
+          expect(
+            find.byKey(const ValueKey('remix-menu-submenu-chevron-Default')),
+            findsOneWidget,
+          );
+          final chevron = tester.widget<RemixPathIcon>(
+            find.byKey(const ValueKey('remix-menu-submenu-chevron-Default')),
+          );
+          expect(chevron.glyph, RemixPathGlyph.thickChevronRight);
+          expect(chevron.matchTextDirection, isTrue);
+          expect(
+            find.byKey(const ValueKey('remix-menu-submenu-chevron-Custom')),
+            findsNothing,
+          );
+          expect(find.byIcon(Icons.star), findsOneWidget);
+        }
+      },
+    );
+
+    testWidgets('open submenus resolve existing selected-state recipes', (
+      tester,
+    ) async {
+      final itemStyle = MenuItemStyler()
+          .label(TextStyler().color(Colors.red))
+          .onSelected(MenuItemStyler().label(TextStyler().color(Colors.green)));
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          style: MenuStyler().item(itemStyle),
+          items: const [
+            RemixMenuSubmenu(
+              label: 'More',
+              items: [RemixMenuItem(value: 'archive', label: 'Archive')],
+            ),
+          ],
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pump();
+      expect(tester.widget<Text>(find.text('More')).style?.color, Colors.red);
+      await tester.tap(find.text('More'));
+      await tester.pump();
+      expect(tester.widget<Text>(find.text('More')).style?.color, Colors.green);
+    });
+
+    for (final variant in FortalMenuVariant.values) {
+      testWidgets(
+        '${variant.name} distinguishes checked, highlighted, and submenu-open surfaces',
+        (tester) async {
+          final menuController = MenuController();
+          final submenuController = MenuController();
+          await tester.pumpRemixApp(
+            FortalMenu<String>(
+              variant: variant,
+              controller: menuController,
+              trigger: const RemixMenuTrigger(label: 'Options'),
+              onSelected: (_) {},
+              items: [
+                const RemixMenuCheckboxItem(
+                  value: 'checked',
+                  label: 'Checked',
+                  checked: true,
+                  closeOnActivate: false,
+                ),
+                const RemixMenuRadioGroup(
+                  value: 'compact',
+                  items: [
+                    RemixMenuRadioItem(
+                      value: 'compact',
+                      label: 'Compact',
+                      closeOnActivate: false,
+                    ),
+                    RemixMenuRadioItem(
+                      value: 'comfortable',
+                      label: 'Comfortable',
+                      closeOnActivate: false,
+                    ),
+                  ],
+                ),
+                RemixMenuSubmenu(
+                  controller: submenuController,
+                  label: 'More',
+                  items: const [
+                    RemixMenuItem(value: 'archive', label: 'Archive'),
+                  ],
+                ),
+                const RemixMenuItem(
+                  value: 'locked',
+                  label: 'Locked',
+                  enabled: false,
+                ),
+              ],
+            ),
+          );
+
+          menuController.open();
+          await tester.pump();
+
+          final context = tester.element(find.text('Checked'));
+          final highlighted = switch (variant) {
+            .solid => FortalTokens.accent9.resolve(context),
+            .soft => FortalTokens.accentA4.resolve(context),
+          };
+          final submenuOpen = switch (variant) {
+            .solid => FortalTokens.grayA3.resolve(context),
+            .soft => FortalTokens.accentA3.resolve(context),
+          };
+
+          expect(_menuRowColor(tester, 'Checked'), isNull);
+          expect(_menuRowColor(tester, 'Compact'), isNull);
+          expect(_menuRowColor(tester, 'Comfortable'), isNull);
+          expect(_menuRowColor(tester, 'More'), isNull);
+
+          submenuController.open();
+          await tester.pump();
+          expect(_menuRowColor(tester, 'More'), submenuOpen);
+
+          final mouse = await tester.createGesture(
+            kind: PointerDeviceKind.mouse,
+          );
+          await mouse.addPointer(location: Offset.zero);
+          addTearDown(mouse.removePointer);
+
+          await mouse.moveTo(tester.getCenter(find.text('Checked')));
+          await tester.pump();
+          expect(_menuRowColor(tester, 'Checked'), highlighted);
+
+          await mouse.moveTo(tester.getCenter(find.text('Compact')));
+          await tester.pump();
+          expect(_menuRowColor(tester, 'Compact'), highlighted);
+
+          await mouse.moveTo(tester.getCenter(find.text('Comfortable')));
+          await tester.pump();
+          expect(_menuRowColor(tester, 'Comfortable'), highlighted);
+
+          await mouse.moveTo(tester.getCenter(find.text('More')));
+          await tester.pump();
+          expect(_menuRowColor(tester, 'More'), highlighted);
+
+          await mouse.moveTo(tester.getCenter(find.text('Locked')));
+          await tester.pump();
+          expect(_menuRowColor(tester, 'Locked'), Colors.transparent);
+        },
+      );
+    }
+
+    for (final variant in FortalMenuVariant.values) {
+      for (final size in FortalMenuSize.values) {
+        for (final highContrast in [false, true]) {
+          testWidgets(
+            '${variant.name} ${size.name} indicators follow Radix foreground states'
+            '${highContrast ? ' at high contrast' : ''}',
+            (tester) async {
+              final controller = MenuController();
+              await tester.pumpRemixApp(
+                FortalMenu<String>(
+                  controller: controller,
+                  variant: variant,
+                  size: size,
+                  highContrast: highContrast,
+                  trigger: const RemixMenuTrigger(label: 'Options'),
+                  onSelected: (_) {},
+                  items: const [
+                    RemixMenuCheckboxItem(
+                      value: 'checked',
+                      label: 'Checked',
+                      checked: true,
+                      closeOnActivate: false,
+                    ),
+                    RemixMenuRadioGroup(
+                      value: 'compact',
+                      items: [
+                        RemixMenuRadioItem(
+                          value: 'compact',
+                          label: 'Compact',
+                          closeOnActivate: false,
+                        ),
+                      ],
+                    ),
+                    RemixMenuCheckboxItem(
+                      value: 'disabled',
+                      label: 'Disabled',
+                      checked: true,
+                      enabled: false,
+                    ),
+                  ],
+                ),
+              );
+
+              controller.open();
+              await tester.pump();
+
+              IconSpec indicatorSpec(String label) => tester
+                  .widget<RemixPathIcon>(
+                    find.byKey(ValueKey('remix-menu-indicator-$label')),
+                  )
+                  .styleSpec
+                  .spec;
+
+              final context = tester.element(find.text('Checked'));
+              final idleColor = FortalTokens.gray12.resolve(context);
+              final disabledColor = FortalTokens.grayA8.resolve(context);
+              final highlightedColor = switch (variant) {
+                .solid =>
+                  highContrast
+                      ? FortalTokens.accent1.resolve(context)
+                      : FortalTokens.accentContrast.resolve(context),
+                .soft => idleColor,
+              };
+              final expectedSize = switch (size) {
+                .size1 => FortalTokens.selectIndicatorSize1.resolve(context),
+                .size2 => FortalTokens.selectIndicatorSize2.resolve(context),
+              };
+
+              expect(indicatorSpec('Checked').color, idleColor);
+              expect(indicatorSpec('Checked').size, expectedSize);
+              expect(indicatorSpec('Compact').color, idleColor);
+              expect(indicatorSpec('Compact').size, expectedSize);
+              expect(indicatorSpec('Disabled').color, disabledColor);
+              expect(indicatorSpec('Disabled').size, expectedSize);
+
+              final mouse = await tester.createGesture(
+                kind: PointerDeviceKind.mouse,
+              );
+              await mouse.addPointer(location: Offset.zero);
+              addTearDown(mouse.removePointer);
+              await mouse.moveTo(tester.getCenter(find.text('Checked')));
+              await tester.pump();
+
+              expect(indicatorSpec('Checked').color, highlightedColor);
+              expect(indicatorSpec('Checked').size, expectedSize);
+            },
+          );
+        }
+      }
+    }
+
+    for (final size in FortalMenuSize.values) {
+      testWidgets('${size.name} pins the solid panel and Radix icon metrics', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        await tester.pumpRemixApp(
+          FortalMenu<String>(
+            controller: controller,
+            size: size,
+            trigger: const RemixMenuTrigger(label: 'Options', icon: Icons.tune),
+            onSelected: (_) {},
+            items: const [
+              RemixMenuItem(
+                value: 'rename',
+                label: 'Rename',
+                leadingIcon: Icons.edit_outlined,
+              ),
+              RemixMenuSubmenu(
+                label: 'More',
+                items: [RemixMenuItem(value: 'nested', label: 'Nested')],
+              ),
+            ],
+          ),
+        );
+
+        controller.open();
+        await tester.pump();
+
+        final context = tester.element(find.text('Rename'));
+        final contentIconSize = switch (size) {
+          .size1 => FortalTokens.space3.resolve(context),
+          .size2 => FortalTokens.space4.resolve(context),
+        };
+        final subtriggerIconSize = switch (size) {
+          .size1 => FortalTokens.selectIndicatorSize1.resolve(context),
+          .size2 => FortalTokens.selectIndicatorSize2.resolve(context),
+        };
+        final triggerGap = switch (size) {
+          .size1 => FortalTokens.space1.resolve(context),
+          .size2 => FortalTokens.space2.resolve(context),
+        };
+
+        // Radix pins menus to the solid panel with no backdrop blur.
+        final resolved = fortalMenuStyle(size: size).resolve(context).spec;
+        expect(
+          (resolved.overlay.spec.box?.spec.decoration as BoxDecoration?)?.color,
+          FortalTokens.colorPanelSolid.resolve(context),
+        );
+        expect(resolved.containerEffects, isNull);
+
+        // Content icons are text-matched; the subtrigger chevron keeps the
+        // exact Radix icon size.
+        expect(
+          tester.getSize(find.byIcon(Icons.edit_outlined)),
+          Size.square(contentIconSize),
+        );
+        expect(
+          tester
+              .widget<RemixPathIcon>(
+                find.byKey(const ValueKey('remix-menu-submenu-chevron-More')),
+              )
+              .styleSpec
+              .spec
+              .size,
+          subtriggerIconSize,
+        );
+
+        // The trigger content mirrors the base Radix button gap and icon.
+        expect(
+          tester.getSize(find.byIcon(Icons.tune)),
+          Size.square(contentIconSize),
+        );
+        final triggerRow = tester.widget<RowBox>(
+          find
+              .ancestor(of: find.text('Options'), matching: find.byType(RowBox))
+              .first,
+        );
+        expect(triggerRow.styleSpec?.spec.flex?.spec.spacing, triggerGap);
+      });
+    }
+
+    testWidgets('visual labels produce exactly one semantics node', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpRemixApp(
+        const RemixMenu<String>(
+          trigger: RemixMenuTrigger(label: 'Options'),
+          items: [
+            RemixMenuCheckboxItem(
+              value: 'notifications',
+              label: 'Notifications',
+              checked: true,
+              semanticLabel: 'Notification setting',
+            ),
+            RemixMenuRadioGroup(
+              value: 'compact',
+              items: [
+                RemixMenuRadioItem(
+                  value: 'compact',
+                  label: 'Compact',
+                  semanticLabel: 'Compact density',
+                ),
+              ],
+            ),
+            RemixMenuSubmenu(
+              label: 'More',
+              semanticLabel: 'More actions',
+              items: [RemixMenuItem(value: 'archive', label: 'Archive')],
+            ),
+          ],
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pump();
+
+      expect(find.bySemanticsLabel('Notification setting'), findsOneWidget);
+      expect(find.bySemanticsLabel('Compact density'), findsOneWidget);
+      expect(find.bySemanticsLabel('More actions'), findsOneWidget);
+      semantics.dispose();
+    });
+  });
+}
+
+Color? _menuRowColor(WidgetTester tester, String label) {
+  final row = tester.widget<FlexBox>(
+    find.ancestor(of: find.text(label), matching: find.byType(FlexBox)).first,
+  );
+  return (row.styleSpec?.spec.box?.spec.decoration as BoxDecoration?)?.color;
 }
 
 // Test enum for type safety testing

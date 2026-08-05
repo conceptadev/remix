@@ -14,17 +14,7 @@ part of 'checkbox.dart';
 ///     });
 ///   },
 ///   checkedIcon: Icons.check_rounded,
-/// )
-/// ```
-///
-/// Pair with your own label for accessible layouts:
-/// ```dart
-/// Row(
-///   children: [
-///     RemixCheckbox(selected: _isChecked, onChanged: _setChecked),
-///     const SizedBox(width: 8),
-///     const Text('Accept Terms'),
-///   ],
+///   label: 'Receive updates',
 /// )
 /// ```
 class RemixCheckbox extends StatelessWidget {
@@ -40,11 +30,14 @@ class RemixCheckbox extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
+    this.label,
     this.semanticLabel,
+    this.minimumTapTargetSize = const Size.square(48),
     this.mouseCursor = SystemMouseCursors.click,
     this.style = const CheckboxStyler.create(),
     this.styleSpec,
-  });
+  }) : assert(label != '', 'label must not be empty'),
+       assert(semanticLabel != '', 'semanticLabel must not be empty');
 
   /// Whether the checkbox is enabled for interaction.
   final bool enabled;
@@ -87,14 +80,42 @@ class RemixCheckbox extends StatelessWidget {
   /// The focus node for the checkbox.
   final FocusNode? focusNode;
 
+  /// Optional visible label included in the checkbox's interaction target.
+  ///
+  /// The label is also used as the accessible name unless [semanticLabel]
+  /// overrides it.
+  final String? label;
+
   /// The semantic label for the checkbox.
   final String? semanticLabel;
+
+  /// Minimum pointer, focus, and semantics target size.
+  ///
+  /// Defaults to 48 logical pixels on each axis. Pass [Size.zero] to opt into
+  /// compact geometry when the surrounding composition provides its own
+  /// accessible interaction target.
+  final Size minimumTapTargetSize;
 
   /// Cursor when hovering over the checkbox.
   final MouseCursor mouseCursor;
 
   @override
   Widget build(BuildContext context) {
+    assert(
+      label == null || label!.trim().isNotEmpty,
+      'label must not be blank',
+    );
+    assert(
+      semanticLabel == null || semanticLabel!.trim().isNotEmpty,
+      'semanticLabel must not be blank',
+    );
+    assert(
+      minimumTapTargetSize.isFinite &&
+          minimumTapTargetSize.width >= 0 &&
+          minimumTapTargetSize.height >= 0,
+      'minimumTapTargetSize must be finite and non-negative',
+    );
+
     return NakedCheckbox(
       value: selected,
       tristate: tristate,
@@ -106,7 +127,7 @@ class RemixCheckbox extends StatelessWidget {
       enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
-      semanticLabel: semanticLabel,
+      semanticLabel: semanticLabel ?? label,
       builder: (context, state, _) {
         return RemixStyleSpecBuilder<CheckboxSpec>(
           style: style,
@@ -119,12 +140,44 @@ class RemixCheckbox extends StatelessWidget {
                 ? checkedIcon
                 : uncheckedIcon;
 
-            return RemixBoxWithEffects(
+            final checkbox = RemixBoxWithEffects(
               styleSpec: spec.container,
               containerEffects: spec.containerEffects,
               child: iconData != null
                   ? StyledIcon(icon: iconData, styleSpec: spec.indicator)
                   : null,
+            );
+
+            final visibleLabel = label;
+            final content = visibleLabel == null
+                ? Align(widthFactor: 1, heightFactor: 1, child: checkbox)
+                : LayoutBuilder(
+                    builder: (context, constraints) {
+                      final labelWidget = ExcludeSemantics(
+                        child: StyledText(visibleLabel, styleSpec: spec.label),
+                      );
+
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          checkbox,
+                          SizedBox(width: spec.labelSpacing),
+                          if (constraints.hasBoundedWidth)
+                            Flexible(child: labelWidget)
+                          else
+                            labelWidget,
+                        ],
+                      );
+                    },
+                  );
+
+            return ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: minimumTapTargetSize.width,
+                minHeight: minimumTapTargetSize.height,
+              ),
+              child: content,
             );
           },
         );

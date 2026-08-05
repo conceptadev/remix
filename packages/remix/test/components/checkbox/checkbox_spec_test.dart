@@ -10,21 +10,29 @@ void main() {
 
         expect(spec.container, isA<StyleSpec<BoxSpec>>());
         expect(spec.indicator, isA<StyleSpec<IconSpec>>());
+        expect(spec.label, isA<StyleSpec<TextSpec>>());
+        expect(spec.labelSpacing, 8);
         expect(spec.container.spec, isA<BoxSpec>());
         expect(spec.indicator.spec, isA<IconSpec>());
+        expect(spec.label.spec, isA<TextSpec>());
       });
 
       test('creates spec with provided parameters', () {
         final containerSpec = StyleSpec(spec: BoxSpec());
         final indicatorSpec = StyleSpec(spec: IconSpec());
+        final labelSpec = StyleSpec(spec: TextSpec());
 
         final spec = CheckboxSpec(
           container: containerSpec,
           indicator: indicatorSpec,
+          label: labelSpec,
+          labelSpacing: 12,
         );
 
         expect(spec.container, equals(containerSpec));
         expect(spec.indicator, equals(indicatorSpec));
+        expect(spec.label, equals(labelSpec));
+        expect(spec.labelSpacing, 12);
       });
     });
 
@@ -169,6 +177,13 @@ void main() {
         expect(result1, isA<CheckboxSpec>());
         expect(result2, isA<CheckboxSpec>());
       });
+
+      test('interpolates generated label spacing', () {
+        const start = CheckboxSpec(labelSpacing: 8);
+        const end = CheckboxSpec(labelSpacing: 16);
+
+        expect(start.lerp(end, 0.5).labelSpacing, 12);
+      });
     });
 
     group('Equality and Props', () {
@@ -211,9 +226,11 @@ void main() {
       test('props list contains all properties', () {
         const spec = CheckboxSpec();
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(5));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.indicator));
+        expect(spec.props, contains(spec.label));
+        expect(spec.props, contains(spec.labelSpacing));
       });
 
       test('props list with custom properties', () {
@@ -225,9 +242,11 @@ void main() {
           indicator: indicatorSpec,
         );
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(5));
         expect(spec.props, contains(containerSpec));
         expect(spec.props, contains(indicatorSpec));
+        expect(spec.props, contains(spec.label));
+        expect(spec.props, contains(spec.labelSpacing));
       });
     });
 
@@ -317,7 +336,7 @@ void main() {
 
         expect(spec.container, equals(complexContainerSpec));
         expect(spec.indicator, equals(complexIndicatorSpec));
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(5));
       });
     });
   });

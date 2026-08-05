@@ -74,18 +74,11 @@ class _PreviewCheckbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: .min,
-      children: [
-        RemixCheckbox(
-          selected: selected,
-          enabled: enabled,
-          onChanged: (_) {},
-          semanticLabel: label,
-        ),
-        const SizedBox(width: 8),
-        Text(label),
-      ],
+    return RemixCheckbox(
+      selected: selected,
+      enabled: enabled,
+      onChanged: (_) {},
+      label: label,
     );
   }
 }

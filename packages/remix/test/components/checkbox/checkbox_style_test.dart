@@ -16,14 +16,20 @@ void main() {
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final indicator = Prop.maybeMix(IconStyler());
+        final label = Prop.maybeMix(TextStyler());
+        final labelSpacing = Prop.maybe(12.0);
 
         final style = CheckboxStyler.create(
           container: container,
           indicator: indicator,
+          label: label,
+          labelSpacing: labelSpacing,
         );
 
         expect(style, isNotNull);
         expect(style, isA<CheckboxStyler>());
+        expect(style.$label, label);
+        expect(style.$labelSpacing, labelSpacing);
       });
 
       test('constructor with styler parameters', () {
@@ -315,9 +321,11 @@ void main() {
 
       test('props list contains all properties', () {
         const style = CheckboxStyler.create();
-        expect(style.props, hasLength(6));
+        expect(style.props, hasLength(8));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$indicator));
+        expect(style.props, contains(style.$label));
+        expect(style.props, contains(style.$labelSpacing));
         expect(style.props, contains(style.$variants));
         expect(style.props, contains(style.$animation));
         expect(style.props, contains(style.$modifier));

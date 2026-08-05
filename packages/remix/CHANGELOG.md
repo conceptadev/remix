@@ -11,6 +11,17 @@
   navigation, per-item disabled state, and vertical orientation are supported,
   and each segment exposes one merged selected-button semantics node. No
   Fortal preset ships in v1, so callers own the visual layer.
+- **FEAT**: Add an optional styled `RemixCheckbox.label` inside the checkbox's
+  pointer, focus, and single semantics target, with a 48-by-48 default minimum
+  target and an explicit `Size.zero` compact opt-out. Mix now generates the
+  label, label-spacing, interpolation, equality, and fluent label APIs, and
+  generated Fortal checkbox wrappers forward the new widget parameters.
+- **BREAKING** **FEAT**: Add checkbox items, radio groups, and submenus to the
+  sealed `RemixMenuItemData` hierarchy. Downstream exhaustive switches must
+  handle the new cases or add a wildcard; no runtime migration is required.
+- **FEAT**: Support reusable menu-wide customization by passing
+  `fortalMenuStyle(...).merge(customStyle)` to `RemixMenu.style`; generated
+  `FortalMenu` constructors remain recipe-only.
 - **FEAT**: Add `RemixDataList`, a semantic label/value list mapped from
   Radix DataList. Horizontal orientation shares one negotiated label column
   across every row, supports intrinsic-width parents, and lets string values

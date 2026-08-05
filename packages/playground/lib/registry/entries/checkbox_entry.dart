@@ -8,22 +8,32 @@ Widget buildCheckboxExample() {
     width: 360,
     child: ComparisonView(
       remix: const [
-        RemixCheckbox(selected: true, onChanged: _noopNullable),
-        RemixCheckbox(selected: false, onChanged: _noopNullable),
-        RemixCheckbox(tristate: true, selected: null, onChanged: _noopNullable),
-        Row(
-          mainAxisSize: .min,
-          children: [
-            RemixCheckbox(
-              selected: true,
-              onChanged: _noopNullable,
-              semanticLabel: 'With label',
-            ),
-            SizedBox(width: 8),
-            Text('With label'),
-          ],
+        RemixCheckbox(
+          selected: true,
+          semanticLabel: 'Checked checkbox',
+          onChanged: _noopNullable,
         ),
-        RemixCheckbox(selected: false, enabled: false),
+        RemixCheckbox(
+          selected: false,
+          semanticLabel: 'Unchecked checkbox',
+          onChanged: _noopNullable,
+        ),
+        RemixCheckbox(
+          tristate: true,
+          selected: null,
+          semanticLabel: 'Mixed checkbox',
+          onChanged: _noopNullable,
+        ),
+        RemixCheckbox(
+          selected: true,
+          onChanged: _noopNullable,
+          label: 'With label',
+        ),
+        RemixCheckbox(
+          selected: false,
+          enabled: false,
+          semanticLabel: 'Disabled checkbox',
+        ),
       ],
       material: [
         Checkbox(value: true, onChanged: (_) {}),
