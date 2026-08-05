@@ -106,6 +106,10 @@
           "href": "/components/checkbox"
         },
         {
+          "title": "Data List",
+          "href": "/components/data_list"
+        },
+        {
           "title": "Dialog",
           "href": "/components/dialog"
         },
@@ -136,6 +140,10 @@
         {
           "title": "Select",
           "href": "/components/select"
+        },
+        {
+          "title": "Skeleton",
+          "href": "/components/skeleton"
         },
         {
           "title": "Slider",
