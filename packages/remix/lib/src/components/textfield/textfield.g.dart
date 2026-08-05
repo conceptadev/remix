@@ -19,7 +19,9 @@ mixin _$TextFieldSpec implements Spec<TextFieldSpec>, Diagnosticable {
   EdgeInsets? get scrollPadding;
   Brightness? get keyboardAppearance;
   bool? get cursorOpacityAnimates;
-  StyleSpec<FlexBoxSpec> get container;
+  StyleSpec<BoxSpec> get container;
+  double? get spacing;
+  CrossAxisAlignment? get crossAxisAlignment;
   StyleSpec<FlexBoxSpec> get layout;
   StyleSpec<TextSpec> get helperText;
   StyleSpec<TextSpec> get label;
@@ -42,7 +44,9 @@ mixin _$TextFieldSpec implements Spec<TextFieldSpec>, Diagnosticable {
     EdgeInsets? scrollPadding,
     Brightness? keyboardAppearance,
     bool? cursorOpacityAnimates,
-    StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<BoxSpec>? container,
+    double? spacing,
+    CrossAxisAlignment? crossAxisAlignment,
     StyleSpec<FlexBoxSpec>? layout,
     StyleSpec<TextSpec>? helperText,
     StyleSpec<TextSpec>? label,
@@ -63,6 +67,8 @@ mixin _$TextFieldSpec implements Spec<TextFieldSpec>, Diagnosticable {
       cursorOpacityAnimates:
           cursorOpacityAnimates ?? this.cursorOpacityAnimates,
       container: container ?? this.container,
+      spacing: spacing ?? this.spacing,
+      crossAxisAlignment: crossAxisAlignment ?? this.crossAxisAlignment,
       layout: layout ?? this.layout,
       helperText: helperText ?? this.helperText,
       label: label ?? this.label,
@@ -102,6 +108,12 @@ mixin _$TextFieldSpec implements Spec<TextFieldSpec>, Diagnosticable {
         t,
       ),
       container: container.lerp(other?.container, t),
+      spacing: MixOps.lerp(spacing, other?.spacing, t),
+      crossAxisAlignment: MixOps.lerpSnap(
+        crossAxisAlignment,
+        other?.crossAxisAlignment,
+        t,
+      ),
       layout: layout.lerp(other?.layout, t),
       helperText: helperText.lerp(other?.helperText, t),
       label: label.lerp(other?.label, t),
@@ -128,6 +140,8 @@ mixin _$TextFieldSpec implements Spec<TextFieldSpec>, Diagnosticable {
     keyboardAppearance,
     cursorOpacityAnimates,
     container,
+    spacing,
+    crossAxisAlignment,
     layout,
     helperText,
     label,
@@ -187,6 +201,13 @@ mixin _$TextFieldSpec implements Spec<TextFieldSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('keyboardAppearance', keyboardAppearance))
       ..add(DiagnosticsProperty('cursorOpacityAnimates', cursorOpacityAnimates))
       ..add(DiagnosticsProperty('container', container))
+      ..add(DoubleProperty('spacing', spacing))
+      ..add(
+        EnumProperty<CrossAxisAlignment>(
+          'crossAxisAlignment',
+          crossAxisAlignment,
+        ),
+      )
       ..add(DiagnosticsProperty('layout', layout))
       ..add(DiagnosticsProperty('helperText', helperText))
       ..add(DiagnosticsProperty('label', label))
@@ -661,7 +682,9 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
   final Prop<EdgeInsets>? $scrollPadding;
   final Prop<Brightness>? $keyboardAppearance;
   final Prop<bool>? $cursorOpacityAnimates;
-  final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<double>? $spacing;
+  final Prop<CrossAxisAlignment>? $crossAxisAlignment;
   final Prop<StyleSpec<FlexBoxSpec>>? $layout;
   final Prop<StyleSpec<TextSpec>>? $helperText;
   final Prop<StyleSpec<TextSpec>>? $label;
@@ -680,7 +703,9 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     Prop<EdgeInsets>? scrollPadding,
     Prop<Brightness>? keyboardAppearance,
     Prop<bool>? cursorOpacityAnimates,
-    Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<double>? spacing,
+    Prop<CrossAxisAlignment>? crossAxisAlignment,
     Prop<StyleSpec<FlexBoxSpec>>? layout,
     Prop<StyleSpec<TextSpec>>? helperText,
     Prop<StyleSpec<TextSpec>>? label,
@@ -701,6 +726,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
        $keyboardAppearance = keyboardAppearance,
        $cursorOpacityAnimates = cursorOpacityAnimates,
        $container = container,
+       $spacing = spacing,
+       $crossAxisAlignment = crossAxisAlignment,
        $layout = layout,
        $helperText = helperText,
        $label = label,
@@ -719,7 +746,9 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     EdgeInsets? scrollPadding,
     Brightness? keyboardAppearance,
     bool? cursorOpacityAnimates,
-    FlexBoxStyler? container,
+    BoxStyler? container,
+    double? spacing,
+    CrossAxisAlignment? crossAxisAlignment,
     FlexBoxStyler? layout,
     TextStyler? helperText,
     TextStyler? label,
@@ -741,6 +770,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
          keyboardAppearance: Prop.maybe(keyboardAppearance),
          cursorOpacityAnimates: Prop.maybe(cursorOpacityAnimates),
          container: Prop.maybeMix(container),
+         spacing: Prop.maybe(spacing),
+         crossAxisAlignment: Prop.maybe(crossAxisAlignment),
          layout: Prop.maybeMix(layout),
          helperText: Prop.maybeMix(helperText),
          label: Prop.maybeMix(label),
@@ -774,8 +805,12 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
       TextFieldStyler().keyboardAppearance(value);
   factory TextFieldStyler.cursorOpacityAnimates(bool value) =>
       TextFieldStyler().cursorOpacityAnimates(value);
-  factory TextFieldStyler.container(FlexBoxStyler value) =>
+  factory TextFieldStyler.container(BoxStyler value) =>
       TextFieldStyler().container(value);
+  factory TextFieldStyler.spacing(double value) =>
+      TextFieldStyler().spacing(value);
+  factory TextFieldStyler.crossAxisAlignment(CrossAxisAlignment value) =>
+      TextFieldStyler().crossAxisAlignment(value);
   factory TextFieldStyler.layout(FlexBoxStyler value) =>
       TextFieldStyler().layout(value);
   factory TextFieldStyler.helperText(TextStyler value) =>
@@ -784,6 +819,20 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
       TextFieldStyler().label(value);
   factory TextFieldStyler.containerEffects(RemixBoxEffectsMix value) =>
       TextFieldStyler().containerEffects(value);
+  factory TextFieldStyler.alignment(AlignmentGeometry value) =>
+      TextFieldStyler().alignment(value);
+  factory TextFieldStyler.padding(EdgeInsetsGeometryMix value) =>
+      TextFieldStyler().padding(value);
+  factory TextFieldStyler.margin(EdgeInsetsGeometryMix value) =>
+      TextFieldStyler().margin(value);
+  factory TextFieldStyler.constraints(BoxConstraintsMix value) =>
+      TextFieldStyler().constraints(value);
+  factory TextFieldStyler.decoration(DecorationMix value) =>
+      TextFieldStyler().decoration(value);
+  factory TextFieldStyler.foregroundDecoration(DecorationMix value) =>
+      TextFieldStyler().foregroundDecoration(value);
+  factory TextFieldStyler.clipBehavior(Clip value) =>
+      TextFieldStyler().clipBehavior(value);
   factory TextFieldStyler.color(Color value) => TextFieldStyler().color(value);
   factory TextFieldStyler.gradient(GradientMix value) =>
       TextFieldStyler().gradient(value);
@@ -951,125 +1000,121 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory TextFieldStyler.row() => TextFieldStyler().row();
-  factory TextFieldStyler.column() => TextFieldStyler().column();
-  factory TextFieldStyler.alignment(AlignmentGeometry value) =>
-      TextFieldStyler().alignment(value);
-  factory TextFieldStyler.padding(EdgeInsetsGeometryMix value) =>
-      TextFieldStyler().padding(value);
-  factory TextFieldStyler.margin(EdgeInsetsGeometryMix value) =>
-      TextFieldStyler().margin(value);
-  factory TextFieldStyler.constraints(BoxConstraintsMix value) =>
-      TextFieldStyler().constraints(value);
-  factory TextFieldStyler.decoration(DecorationMix value) =>
-      TextFieldStyler().decoration(value);
-  factory TextFieldStyler.foregroundDecoration(DecorationMix value) =>
-      TextFieldStyler().foregroundDecoration(value);
-  factory TextFieldStyler.clipBehavior(Clip value) =>
-      TextFieldStyler().clipBehavior(value);
-  factory TextFieldStyler.direction(Axis value) =>
-      TextFieldStyler().direction(value);
-  factory TextFieldStyler.mainAxisAlignment(MainAxisAlignment value) =>
-      TextFieldStyler().mainAxisAlignment(value);
-  factory TextFieldStyler.crossAxisAlignment(CrossAxisAlignment value) =>
-      TextFieldStyler().crossAxisAlignment(value);
-  factory TextFieldStyler.mainAxisSize(MainAxisSize value) =>
-      TextFieldStyler().mainAxisSize(value);
-  factory TextFieldStyler.spacing(double value) =>
-      TextFieldStyler().spacing(value);
-  factory TextFieldStyler.verticalDirection(VerticalDirection value) =>
-      TextFieldStyler().verticalDirection(value);
-  factory TextFieldStyler.textDirection(TextDirection value) =>
-      TextFieldStyler().textDirection(value);
-  factory TextFieldStyler.textBaseline(TextBaseline value) =>
-      TextFieldStyler().textBaseline(value);
   factory TextFieldStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
   }) => TextFieldStyler().transform(value, alignment: alignment);
 
+  TextFieldStyler alignment(AlignmentGeometry value) {
+    return container(BoxStyler().alignment(value));
+  }
+
+  TextFieldStyler padding(EdgeInsetsGeometryMix value) {
+    return container(BoxStyler().padding(value));
+  }
+
+  TextFieldStyler margin(EdgeInsetsGeometryMix value) {
+    return container(BoxStyler().margin(value));
+  }
+
+  TextFieldStyler constraints(BoxConstraintsMix value) {
+    return container(BoxStyler().constraints(value));
+  }
+
+  TextFieldStyler decoration(DecorationMix value) {
+    return container(BoxStyler().decoration(value));
+  }
+
+  TextFieldStyler foregroundDecoration(DecorationMix value) {
+    return container(BoxStyler().foregroundDecoration(value));
+  }
+
+  TextFieldStyler clipBehavior(Clip value) {
+    return container(BoxStyler().clipBehavior(value));
+  }
+
   TextFieldStyler color(Color value) {
-    return container(FlexBoxStyler().color(value));
+    return container(BoxStyler().color(value));
   }
 
   TextFieldStyler gradient(GradientMix value) {
-    return container(FlexBoxStyler().gradient(value));
+    return container(BoxStyler().gradient(value));
   }
 
   TextFieldStyler border(BoxBorderMix value) {
-    return container(FlexBoxStyler().border(value));
+    return container(BoxStyler().border(value));
   }
 
   TextFieldStyler borderRadius(BorderRadiusGeometryMix value) {
-    return container(FlexBoxStyler().borderRadius(value));
+    return container(BoxStyler().borderRadius(value));
   }
 
   TextFieldStyler elevation(ElevationShadow value) {
-    return container(FlexBoxStyler().elevation(value));
+    return container(BoxStyler().elevation(value));
   }
 
   TextFieldStyler shadow(BoxShadowMix value) {
-    return container(FlexBoxStyler().shadow(value));
+    return container(BoxStyler().shadow(value));
   }
 
   TextFieldStyler shadows(List<BoxShadowMix> value) {
-    return container(FlexBoxStyler().shadows(value));
+    return container(BoxStyler().shadows(value));
   }
 
   TextFieldStyler width(double value) {
-    return container(FlexBoxStyler().width(value));
+    return container(BoxStyler().width(value));
   }
 
   TextFieldStyler height(double value) {
-    return container(FlexBoxStyler().height(value));
+    return container(BoxStyler().height(value));
   }
 
   TextFieldStyler size(double width, double height) {
-    return container(FlexBoxStyler().size(width, height));
+    return container(BoxStyler().size(width, height));
   }
 
   TextFieldStyler minWidth(double value) {
-    return container(FlexBoxStyler().minWidth(value));
+    return container(BoxStyler().minWidth(value));
   }
 
   TextFieldStyler maxWidth(double value) {
-    return container(FlexBoxStyler().maxWidth(value));
+    return container(BoxStyler().maxWidth(value));
   }
 
   TextFieldStyler minHeight(double value) {
-    return container(FlexBoxStyler().minHeight(value));
+    return container(BoxStyler().minHeight(value));
   }
 
   TextFieldStyler maxHeight(double value) {
-    return container(FlexBoxStyler().maxHeight(value));
+    return container(BoxStyler().maxHeight(value));
   }
 
   TextFieldStyler scale(double scale, {Alignment alignment = .center}) {
-    return container(FlexBoxStyler().scale(scale, alignment: alignment));
+    return container(BoxStyler().scale(scale, alignment: alignment));
   }
 
   TextFieldStyler rotate(double radians, {Alignment alignment = .center}) {
-    return container(FlexBoxStyler().rotate(radians, alignment: alignment));
+    return container(BoxStyler().rotate(radians, alignment: alignment));
   }
 
   TextFieldStyler translate(double x, double y, [double z = 0.0]) {
-    return container(FlexBoxStyler().translate(x, y, z));
+    return container(BoxStyler().translate(x, y, z));
   }
 
   TextFieldStyler skew(double skewX, double skewY) {
-    return container(FlexBoxStyler().skew(skewX, skewY));
+    return container(BoxStyler().skew(skewX, skewY));
   }
 
   TextFieldStyler textStyle(TextStyler value) {
-    return container(FlexBoxStyler().textStyle(value));
+    return container(BoxStyler().textStyle(value));
   }
 
   TextFieldStyler image(DecorationImageMix value) {
-    return container(FlexBoxStyler().image(value));
+    return container(BoxStyler().image(value));
   }
 
   TextFieldStyler shape(ShapeBorderMix value) {
-    return container(FlexBoxStyler().shape(value));
+    return container(BoxStyler().shape(value));
   }
 
   TextFieldStyler backgroundImage(
@@ -1079,7 +1124,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     ImageRepeat repeat = .noRepeat,
   }) {
     return container(
-      FlexBoxStyler().backgroundImage(
+      BoxStyler().backgroundImage(
         image,
         fit: fit,
         alignment: alignment,
@@ -1095,7 +1140,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     ImageRepeat repeat = .noRepeat,
   }) {
     return container(
-      FlexBoxStyler().backgroundImageUrl(
+      BoxStyler().backgroundImageUrl(
         url,
         fit: fit,
         alignment: alignment,
@@ -1111,7 +1156,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     ImageRepeat repeat = .noRepeat,
   }) {
     return container(
-      FlexBoxStyler().backgroundImageAsset(
+      BoxStyler().backgroundImageAsset(
         path,
         fit: fit,
         alignment: alignment,
@@ -1128,7 +1173,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     TileMode? tileMode,
   }) {
     return container(
-      FlexBoxStyler().linearGradient(
+      BoxStyler().linearGradient(
         colors: colors,
         stops: stops,
         begin: begin,
@@ -1148,7 +1193,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     TileMode? tileMode,
   }) {
     return container(
-      FlexBoxStyler().radialGradient(
+      BoxStyler().radialGradient(
         colors: colors,
         stops: stops,
         center: center,
@@ -1169,7 +1214,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     TileMode? tileMode,
   }) {
     return container(
-      FlexBoxStyler().sweepGradient(
+      BoxStyler().sweepGradient(
         colors: colors,
         stops: stops,
         center: center,
@@ -1188,7 +1233,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     TileMode? tileMode,
   }) {
     return container(
-      FlexBoxStyler().foregroundLinearGradient(
+      BoxStyler().foregroundLinearGradient(
         colors: colors,
         stops: stops,
         begin: begin,
@@ -1208,7 +1253,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     TileMode? tileMode,
   }) {
     return container(
-      FlexBoxStyler().foregroundRadialGradient(
+      BoxStyler().foregroundRadialGradient(
         colors: colors,
         stops: stops,
         center: center,
@@ -1229,7 +1274,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     TileMode? tileMode,
   }) {
     return container(
-      FlexBoxStyler().foregroundSweepGradient(
+      BoxStyler().foregroundSweepGradient(
         colors: colors,
         stops: stops,
         center: center,
@@ -1240,76 +1285,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     );
   }
 
-  TextFieldStyler row() {
-    return container(FlexBoxStyler().row());
-  }
-
-  TextFieldStyler column() {
-    return container(FlexBoxStyler().column());
-  }
-
-  TextFieldStyler alignment(AlignmentGeometry value) {
-    return container(FlexBoxStyler().alignment(value));
-  }
-
-  TextFieldStyler padding(EdgeInsetsGeometryMix value) {
-    return container(FlexBoxStyler().padding(value));
-  }
-
-  TextFieldStyler margin(EdgeInsetsGeometryMix value) {
-    return container(FlexBoxStyler().margin(value));
-  }
-
-  TextFieldStyler constraints(BoxConstraintsMix value) {
-    return container(FlexBoxStyler().constraints(value));
-  }
-
-  TextFieldStyler decoration(DecorationMix value) {
-    return container(FlexBoxStyler().decoration(value));
-  }
-
-  TextFieldStyler foregroundDecoration(DecorationMix value) {
-    return container(FlexBoxStyler().foregroundDecoration(value));
-  }
-
-  TextFieldStyler clipBehavior(Clip value) {
-    return container(FlexBoxStyler().clipBehavior(value));
-  }
-
-  TextFieldStyler direction(Axis value) {
-    return container(FlexBoxStyler().direction(value));
-  }
-
-  TextFieldStyler mainAxisAlignment(MainAxisAlignment value) {
-    return container(FlexBoxStyler().mainAxisAlignment(value));
-  }
-
-  TextFieldStyler crossAxisAlignment(CrossAxisAlignment value) {
-    return container(FlexBoxStyler().crossAxisAlignment(value));
-  }
-
-  TextFieldStyler mainAxisSize(MainAxisSize value) {
-    return container(FlexBoxStyler().mainAxisSize(value));
-  }
-
-  TextFieldStyler spacing(double value) {
-    return container(FlexBoxStyler().spacing(value));
-  }
-
-  TextFieldStyler verticalDirection(VerticalDirection value) {
-    return container(FlexBoxStyler().verticalDirection(value));
-  }
-
-  TextFieldStyler textDirection(TextDirection value) {
-    return container(FlexBoxStyler().textDirection(value));
-  }
-
-  TextFieldStyler textBaseline(TextBaseline value) {
-    return container(FlexBoxStyler().textBaseline(value));
-  }
-
   TextFieldStyler transform(Matrix4 value, {Alignment alignment = .center}) {
-    return container(FlexBoxStyler().transform(value, alignment: alignment));
+    return container(BoxStyler().transform(value, alignment: alignment));
   }
 
   /// Sets the text.
@@ -1373,8 +1350,18 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
   }
 
   /// Sets the container.
-  TextFieldStyler container(FlexBoxStyler value) {
+  TextFieldStyler container(BoxStyler value) {
     return merge(TextFieldStyler(container: value));
+  }
+
+  /// Sets the spacing.
+  TextFieldStyler spacing(double value) {
+    return merge(TextFieldStyler(spacing: value));
+  }
+
+  /// Sets the crossAxisAlignment.
+  TextFieldStyler crossAxisAlignment(CrossAxisAlignment value) {
+    return merge(TextFieldStyler(crossAxisAlignment: value));
   }
 
   /// Sets the layout.
@@ -1450,6 +1437,11 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
         other?.$cursorOpacityAnimates,
       ),
       container: MixOps.merge($container, other?.$container),
+      spacing: MixOps.merge($spacing, other?.$spacing),
+      crossAxisAlignment: MixOps.merge(
+        $crossAxisAlignment,
+        other?.$crossAxisAlignment,
+      ),
       layout: MixOps.merge($layout, other?.$layout),
       helperText: MixOps.merge($helperText, other?.$helperText),
       label: MixOps.merge($label, other?.$label),
@@ -1480,6 +1472,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
       keyboardAppearance: MixOps.resolve(context, $keyboardAppearance),
       cursorOpacityAnimates: MixOps.resolve(context, $cursorOpacityAnimates),
       container: MixOps.resolve(context, $container),
+      spacing: MixOps.resolve(context, $spacing),
+      crossAxisAlignment: MixOps.resolve(context, $crossAxisAlignment),
       layout: MixOps.resolve(context, $layout),
       helperText: MixOps.resolve(context, $helperText),
       label: MixOps.resolve(context, $label),
@@ -1512,6 +1506,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
         DiagnosticsProperty('cursorOpacityAnimates', $cursorOpacityAnimates),
       )
       ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('spacing', $spacing))
+      ..add(DiagnosticsProperty('crossAxisAlignment', $crossAxisAlignment))
       ..add(DiagnosticsProperty('layout', $layout))
       ..add(DiagnosticsProperty('helperText', $helperText))
       ..add(DiagnosticsProperty('label', $label))
@@ -1533,6 +1529,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     $keyboardAppearance,
     $cursorOpacityAnimates,
     $container,
+    $spacing,
+    $crossAxisAlignment,
     $layout,
     $helperText,
     $label,

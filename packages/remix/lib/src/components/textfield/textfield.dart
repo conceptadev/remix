@@ -18,5 +18,6 @@ import '../../rendering/remix_box_effects.dart';
 part 'textfield_spec.dart';
 part 'textfield_style.dart';
 part 'textfield_widget.dart';
+part 'textarea_widget.dart';
 part 'fortal_textfield_styles.dart';
 part 'textfield.g.dart';

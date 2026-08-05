@@ -41,6 +41,7 @@ void main() {
     const progress = RemixProgress(value: 0.5);
     const tabBar = RemixTabBar(child: Text('Tabs'));
     const spinner = RemixSpinner();
+    const textArea = RemixTextArea(label: 'Notes');
     const checkboxGroup = RemixCheckboxGroup<String>(
       values: {'one'},
       child: RemixCheckboxGroupItem<String>(
@@ -70,6 +71,8 @@ void main() {
     expect(progress.value, 0.5);
     expect(tabBar.child, isA<Text>());
     expect(spinner, isA<RemixSpinner>());
+    expect(textArea, isA<RemixTextField>());
+    expect(textArea.label, 'Notes');
     expect(checkbox.selected, isFalse);
     expect(checkboxGroup.values.single, 'one');
     expect(checkboxGroup.child, isA<RemixCheckboxGroupItem<String>>());

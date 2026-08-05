@@ -136,19 +136,32 @@ class TextFieldSpec with _$TextFieldSpec {
 
   /// Styling specification for the text field's container.
   ///
-  /// Controls the text field's layout, background, borders, padding,
-  /// and other visual container properties. Uses [FlexBoxSpec]
-  /// to support flexible layout arrangements.
+  /// Controls the text field's background, borders, padding, constraints, and
+  /// other box styling. The input anatomy is rendered separately as a fixed
+  /// horizontal row.
   @override
   @MixableField(forwardStyler: true)
-  final StyleSpec<FlexBoxSpec> container;
+  final StyleSpec<BoxSpec> container;
 
-  /// Styling specification for the vertical layout that wraps the label,
-  /// input container, and helper text.
+  /// Spacing between the leading widget, editor, and trailing widget.
   ///
-  /// Rendered as a [ColumnBox], so its [FlexBoxSpec] controls the vertical
-  /// spacing between the label, field, and helper text, as well as any
-  /// horizontal spacing (padding/alignment) around them.
+  /// This is an explicit generated control because the input container's
+  /// direction is fixed to a row while its child spacing remains configurable.
+  @override
+  final double? spacing;
+
+  /// Cross-axis alignment for the input row's editor and accessories.
+  ///
+  /// Baseline alignment uses [TextBaseline.alphabetic].
+  @override
+  final CrossAxisAlignment? crossAxisAlignment;
+
+  /// Styling specification for the layout that wraps the label, input
+  /// container, and helper text.
+  ///
+  /// Rendered as a [FlexBox], so its full [FlexBoxSpec] controls the direction,
+  /// spacing, alignment, and box styling around the label, field, and helper
+  /// text. The base style defaults this layout to a vertical column.
   @override
   final StyleSpec<FlexBoxSpec> layout;
 
@@ -179,7 +192,9 @@ class TextFieldSpec with _$TextFieldSpec {
   /// - Cursor width defaults to 2.0 logical pixels
   /// - Selection styles default to tight sizing
   /// - Scroll padding defaults to 20.0 on all sides
-  /// - All [StyleSpec] properties default to empty specifications
+  /// - The outer layout defaults to a vertical, min-size, start-aligned flex
+  ///   with 8 logical pixels between the label, input, and helper
+  /// - All other [StyleSpec] properties default to empty specifications
   ///
   /// Example:
   /// ```dart
@@ -202,7 +217,9 @@ class TextFieldSpec with _$TextFieldSpec {
     this.scrollPadding = const EdgeInsets.all(20.0),
     this.keyboardAppearance,
     this.cursorOpacityAnimates,
-    StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<BoxSpec>? container,
+    this.spacing,
+    this.crossAxisAlignment,
     StyleSpec<FlexBoxSpec>? layout,
     StyleSpec<TextSpec>? helperText,
     StyleSpec<TextSpec>? label,
@@ -211,8 +228,8 @@ class TextFieldSpec with _$TextFieldSpec {
        hintText = hintText ?? const StyleSpec(spec: TextSpec()),
        helperText = helperText ?? const StyleSpec(spec: TextSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
-       container = container ?? const StyleSpec(spec: FlexBoxSpec()),
-       layout = layout ?? const StyleSpec(spec: FlexBoxSpec());
+       container = container ?? const StyleSpec(spec: BoxSpec()),
+       layout = layout ?? _defaultTextFieldLayout;
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
@@ -229,6 +246,19 @@ class TextFieldSpec with _$TextFieldSpec {
     );
   }
 }
+
+const _defaultTextFieldLayout = StyleSpec(
+  spec: FlexBoxSpec(
+    flex: StyleSpec(
+      spec: FlexSpec(
+        direction: Axis.vertical,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: 8,
+      ),
+    ),
+  ),
+);
 
 /// Backward-compatible name for [TextFieldSpec].
 ///

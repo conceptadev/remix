@@ -293,15 +293,14 @@ void main() {
             ).build(context),
           );
           expect(
-            resolved.spec.container.spec.box?.spec.constraints?.maxHeight,
+            resolved.spec.container.spec.constraints?.maxHeight,
             entry.value,
             reason: '$variant ${entry.key}',
           );
           expect(resolved.spec.containerEffects?.behindContent, isNotNull);
           if (entry.key == FortalTextFieldSize.size2) {
             final decoration =
-                resolved.spec.container.spec.box!.spec.decoration
-                    as BoxDecoration;
+                resolved.spec.container.spec.decoration as BoxDecoration;
             recipes.add((
               color: decoration.color,
               containerEffects: resolved.spec.containerEffects,

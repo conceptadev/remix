@@ -21,6 +21,7 @@ import 'entries/slider_entry.dart';
 import 'entries/spinner_entry.dart';
 import 'entries/switch_entry.dart';
 import 'entries/textfield_entry.dart';
+import 'entries/textarea_entry.dart';
 import 'entries/tooltip_entry.dart';
 
 // Map component slugs to a builder that returns the component inside FortalScope.
@@ -32,6 +33,10 @@ final Map<String, WidgetBuilder> components = {
   'textfield': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildTextFieldExample()),
+  ),
+  'textarea': (context) => FortalScope(
+    brightness: Theme.of(context).brightness,
+    child: PreviewShell(child: buildTextAreaExample()),
   ),
   'checkbox': (context) => FortalScope(
     brightness: Theme.of(context).brightness,

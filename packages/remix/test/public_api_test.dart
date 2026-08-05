@@ -5,6 +5,14 @@ import 'package:remix/remix.dart';
 enum Interest { design, code }
 
 void main() {
+  test('RemixTextArea is exported as the multiline TextField facade', () {
+    const textArea = RemixTextArea();
+
+    expect(textArea, isA<RemixTextField>());
+    expect(textArea.minLines, 2);
+    expect(textArea.maxLines, isNull);
+  });
+
   test('the skeleton family is constructible from the public API', () {
     const spec = SkeletonSpec(
       container: StyleSpec(spec: BoxSpec()),
