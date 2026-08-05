@@ -42,6 +42,15 @@ void main() {
     const tabBar = RemixTabBar(child: Text('Tabs'));
     const spinner = RemixSpinner();
     const textArea = RemixTextArea(label: 'Notes');
+    const checkboxGroup = RemixCheckboxGroup<String>(
+      values: {'one'},
+      child: RemixCheckboxGroupItem<String>(
+        value: 'one',
+        label: 'One',
+        semanticLabel: 'Option one',
+        minimumTapTargetSize: Size.zero,
+      ),
+    );
     const skeleton = RemixSkeleton(child: Text('Jane Appleseed'));
     const dataList = RemixDataList(
       items: [RemixDataListItem(label: 'Status', value: 'Active')],
@@ -64,6 +73,14 @@ void main() {
     expect(spinner, isA<RemixSpinner>());
     expect(textArea, isA<RemixTextField>());
     expect(textArea.label, 'Notes');
+    expect(checkbox.selected, isFalse);
+    expect(checkboxGroup.values.single, 'one');
+    expect(checkboxGroup.child, isA<RemixCheckboxGroupItem<String>>());
+    final checkboxGroupItem =
+        checkboxGroup.child as RemixCheckboxGroupItem<String>;
+    expect(checkboxGroupItem.label, 'One');
+    expect(checkboxGroupItem.semanticLabel, 'Option one');
+    expect(checkboxGroupItem.minimumTapTargetSize, Size.zero);
     expect(skeleton.child, isA<Text>());
     expect(skeleton.loading, isTrue);
     expect(dataList.items.single, isA<RemixDataListItem>());

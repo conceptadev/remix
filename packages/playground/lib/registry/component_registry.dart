@@ -9,6 +9,7 @@ import 'entries/button_entry.dart';
 import 'entries/callout_entry.dart';
 import 'entries/card_entry.dart';
 import 'entries/checkbox_entry.dart';
+import 'entries/checkbox_group_entry.dart';
 import 'entries/data_list_entry.dart';
 import 'entries/divider_entry.dart';
 import 'entries/menu_entry.dart';
@@ -40,6 +41,10 @@ final Map<String, WidgetBuilder> components = {
   'checkbox': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildCheckboxExample()),
+  ),
+  'checkbox_group': (context) => FortalScope(
+    brightness: Theme.of(context).brightness,
+    child: PreviewShell(child: buildCheckboxGroupExample()),
   ),
   'radio': (context) => FortalScope(
     brightness: Theme.of(context).brightness,

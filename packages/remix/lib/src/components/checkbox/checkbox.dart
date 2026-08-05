@@ -16,5 +16,6 @@ import '../../utilities/selected_mixin.dart';
 part 'checkbox_spec.dart';
 part 'checkbox_style.dart';
 part 'checkbox_widget.dart';
+part 'checkbox_group_widget.dart';
 part 'fortal_checkbox_styles.dart';
 part 'checkbox.g.dart';
