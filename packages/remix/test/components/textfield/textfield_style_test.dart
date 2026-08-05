@@ -46,7 +46,7 @@ void main() {
         final selectionWidthStyle = Prop.maybe(BoxWidthStyle.max);
         final scrollPadding = Prop.maybe(const EdgeInsets.all(10));
         final keyboardAppearance = Prop.maybe(Brightness.dark);
-        final container = Prop.maybeMix(FlexBoxStyler());
+        final container = Prop.maybeMix(BoxStyler());
         final helperText = Prop.maybeMix(TextStyler());
         final label = Prop.maybeMix(TextStyler());
         final variants = <VariantStyle<TextFieldSpec>>[];
@@ -110,7 +110,7 @@ void main() {
           selectionWidthStyle: BoxWidthStyle.max,
           scrollPadding: const EdgeInsets.all(10),
           keyboardAppearance: Brightness.dark,
-          container: FlexBoxStyler(),
+          container: BoxStyler(),
           helperText: TextStyler(),
           label: TextStyler(),
           animation: AnimationConfig.linear(const Duration(milliseconds: 200)),
@@ -165,7 +165,7 @@ void main() {
             style.$container,
             equals(
               Prop.maybeMix(
-                FlexBoxStyler(decoration: BoxDecorationMix(color: Colors.grey)),
+                BoxStyler(decoration: BoxDecorationMix(color: Colors.grey)),
               ),
             ),
           );
@@ -175,9 +175,9 @@ void main() {
       styleMethodTest(
         'container() sets container styling',
         initial: TextFieldStyler(),
-        modify: (style) => style.container(FlexBoxStyler()),
+        modify: (style) => style.container(BoxStyler()),
         expect: (style) {
-          expect(style, equals(TextFieldStyler.container(FlexBoxStyler())));
+          expect(style, equals(TextFieldStyler.container(BoxStyler())));
         },
       );
 
@@ -298,7 +298,18 @@ void main() {
         initial: TextFieldStyler(),
         modify: (style) => style.spacing(12),
         expect: (style) {
-          expect(style, equals(TextFieldStyler.spacing(12)));
+          expect(style, equals(TextFieldStyler(spacing: 12)));
+          expect(TextFieldStyler.spacing(12), equals(style));
+        },
+      );
+
+      styleMethodTest(
+        'crossAxisAlignment() aligns the input row',
+        initial: TextFieldStyler(),
+        modify: (style) => style.crossAxisAlignment(.start),
+        expect: (style) {
+          expect(style, equals(TextFieldStyler(crossAxisAlignment: .start)));
+          expect(TextFieldStyler.crossAxisAlignment(.start), equals(style));
         },
       );
 

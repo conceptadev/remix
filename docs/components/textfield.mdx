@@ -452,9 +452,18 @@ Optional. The style configuration for the text field.
 
 ### Style Methods
 
+The input anatomy is always a horizontal row. Forwarded container methods are
+the full `BoxStyler` surface, while generated `spacing` and
+`crossAxisAlignment` methods control that row directly. The row follows the
+ambient text direction; direction and main-axis controls are intentionally not
+part of its styling API. The separate `layout` styler wraps the label, input
+row, and helper text in a real Flex layout. It defaults to a vertical, min-size,
+start-aligned layout with 8 pixels of spacing, and its full Flex direction and
+alignment surface is honored.
+
 #### `color(Color value)`
 
-Sets text color
+Sets the container color. Use `textColor` for editable text.
 
 #### `text(TextStyler value)`
 
@@ -464,9 +473,14 @@ Sets editable text style using a TextStyler.
 
 Sets background color
 
-#### `container(FlexBoxStyler value)`
+#### `container(BoxStyler value)`
 
-Sets container that wraps editable text area
+Styles the box around the fixed input row.
+
+#### `layout(FlexBoxStyler value)`
+
+Styles the label/input/helper layout. Its full Flex direction, spacing, and
+alignment controls are supported.
 
 #### `borderRadius(BorderRadiusGeometryMix radius)`
 
@@ -538,7 +552,12 @@ Sets margin
 
 #### `spacing(double value)`
 
-Sets flex spacing
+Sets spacing between the leading widget, editor, and trailing widget.
+
+#### `crossAxisAlignment(CrossAxisAlignment value)`
+
+Aligns the editor and accessories on the input row's cross axis.
+`CrossAxisAlignment.baseline` uses `TextBaseline.alphabetic`.
 
 #### `decoration(DecorationMix value)`
 
@@ -591,10 +610,6 @@ Sets a foreground decoration painted on top of the component.
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
 Applies a matrix transformation to the component.
-
-#### `flex(FlexStyler value)`
-
-Configures the flex layout properties.
 
 #### `labelStyle(TextStyleMix value)`
 

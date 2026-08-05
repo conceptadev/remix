@@ -48,6 +48,7 @@ void main() {
     const segmentedControl = RemixSegmentedControl<String>(
       items: [segmentedItem],
       selectedValue: 'list',
+    const textArea = RemixTextArea(label: 'Notes');
     const checkboxGroup = RemixCheckboxGroup<String>(
       values: {'one'},
       child: RemixCheckboxGroupItem<String>(
@@ -79,6 +80,8 @@ void main() {
     expect(spinner, isA<RemixSpinner>());
     expect(segmentedControl.items.single, segmentedItem);
     expect(segmentedControl.items.single.value, 'list');
+    expect(textArea, isA<RemixTextField>());
+    expect(textArea.label, 'Notes');
     expect(checkbox.selected, isFalse);
     expect(checkboxGroup.values.single, 'one');
     expect(checkboxGroup.child, isA<RemixCheckboxGroupItem<String>>());

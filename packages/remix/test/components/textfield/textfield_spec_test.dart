@@ -23,7 +23,26 @@ void main() {
         expect(spec.selectionWidthStyle, equals(BoxWidthStyle.tight));
         expect(spec.scrollPadding, equals(const EdgeInsets.all(20.0)));
         expect(spec.keyboardAppearance, isNull);
-        expect(spec.container, equals(const StyleSpec(spec: FlexBoxSpec())));
+        expect(spec.container, equals(const StyleSpec(spec: BoxSpec())));
+        expect(spec.spacing, isNull);
+        expect(spec.crossAxisAlignment, isNull);
+        expect(
+          spec.layout,
+          equals(
+            const StyleSpec(
+              spec: FlexBoxSpec(
+                flex: StyleSpec(
+                  spec: FlexSpec(
+                    direction: Axis.vertical,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 8,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
         expect(spec.helperText, equals(const StyleSpec(spec: TextSpec())));
         expect(spec.label, equals(const StyleSpec(spec: TextSpec())));
       });
@@ -41,7 +60,10 @@ void main() {
         const selectionWidthStyle = BoxWidthStyle.max;
         const scrollPadding = EdgeInsets.all(10);
         const keyboardAppearance = Brightness.dark;
-        final container = StyleSpec(spec: const FlexBoxSpec());
+        final container = StyleSpec(spec: const BoxSpec());
+        const spacing = 12.0;
+        const crossAxisAlignment = CrossAxisAlignment.start;
+        final layout = StyleSpec(spec: const FlexBoxSpec());
         final helperText = StyleSpec(spec: const TextSpec());
         final label = StyleSpec(spec: const TextSpec());
 
@@ -59,6 +81,9 @@ void main() {
           scrollPadding: scrollPadding,
           keyboardAppearance: keyboardAppearance,
           container: container,
+          spacing: spacing,
+          crossAxisAlignment: crossAxisAlignment,
+          layout: layout,
           helperText: helperText,
           label: label,
         );
@@ -76,6 +101,9 @@ void main() {
         expect(spec.scrollPadding, equals(scrollPadding));
         expect(spec.keyboardAppearance, equals(keyboardAppearance));
         expect(spec.container, equals(container));
+        expect(spec.spacing, equals(spacing));
+        expect(spec.crossAxisAlignment, equals(crossAxisAlignment));
+        expect(spec.layout, equals(layout));
         expect(spec.helperText, equals(helperText));
         expect(spec.label, equals(label));
       });
@@ -98,6 +126,9 @@ void main() {
         expect(copy.scrollPadding, equals(spec.scrollPadding));
         expect(copy.keyboardAppearance, equals(spec.keyboardAppearance));
         expect(copy.container, equals(spec.container));
+        expect(copy.spacing, equals(spec.spacing));
+        expect(copy.crossAxisAlignment, equals(spec.crossAxisAlignment));
+        expect(copy.layout, equals(spec.layout));
         expect(copy.helperText, equals(spec.helperText));
         expect(copy.label, equals(spec.label));
       });
@@ -140,6 +171,18 @@ void main() {
 
         expect(copy.textAlign, equals(TextAlign.center));
         expect(copy.textAlign, isNot(equals(spec.textAlign)));
+      });
+
+      test('returns copy with new input row controls', () {
+        const spec = TextFieldSpec();
+
+        final copy = spec.copyWith(
+          spacing: 12,
+          crossAxisAlignment: CrossAxisAlignment.end,
+        );
+
+        expect(copy.spacing, 12);
+        expect(copy.crossAxisAlignment, CrossAxisAlignment.end);
       });
     });
 
@@ -212,6 +255,15 @@ void main() {
 
         expect(result.scrollPadding, equals(const EdgeInsets.all(15)));
       });
+
+      test('interpolates input row spacing', () {
+        const spec1 = TextFieldSpec(spacing: 4);
+        const spec2 = TextFieldSpec(spacing: 12);
+
+        final result = spec1.lerp(spec2, 0.5);
+
+        expect(result.spacing, 8);
+      });
     });
 
     group('Equality & Props', () {
@@ -231,9 +283,12 @@ void main() {
       });
 
       test('props includes all relevant properties', () {
-        const spec = TextFieldSpec();
+        const spec = TextFieldSpec(
+          spacing: 13,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+        );
 
-        expect(spec.props.length, equals(17));
+        expect(spec.props.length, equals(19));
         expect(spec.props, contains(spec.text));
         expect(spec.props, contains(spec.hintText));
         expect(spec.props, contains(spec.textAlign));
@@ -247,6 +302,8 @@ void main() {
         expect(spec.props, contains(spec.scrollPadding));
         expect(spec.props, contains(spec.keyboardAppearance));
         expect(spec.props, contains(spec.container));
+        expect(spec.props, contains(13));
+        expect(spec.props, contains(CrossAxisAlignment.baseline));
         expect(spec.props, contains(spec.layout));
         expect(spec.props, contains(spec.helperText));
         expect(spec.props, contains(spec.label));
@@ -277,6 +334,9 @@ void main() {
         expect(properties.any((p) => p.name == 'scrollPadding'), isTrue);
         expect(properties.any((p) => p.name == 'keyboardAppearance'), isTrue);
         expect(properties.any((p) => p.name == 'container'), isTrue);
+        expect(properties.any((p) => p.name == 'spacing'), isTrue);
+        expect(properties.any((p) => p.name == 'crossAxisAlignment'), isTrue);
+        expect(properties.any((p) => p.name == 'layout'), isTrue);
         expect(properties.any((p) => p.name == 'helperText'), isTrue);
         expect(properties.any((p) => p.name == 'label'), isTrue);
       });

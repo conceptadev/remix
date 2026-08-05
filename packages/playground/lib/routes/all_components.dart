@@ -15,6 +15,7 @@ import '../registry/entries/select_entry.dart';
 import '../registry/entries/slider_entry.dart';
 import '../registry/entries/spinner_entry.dart';
 import '../registry/entries/switch_entry.dart';
+import '../registry/entries/textarea_entry.dart';
 import '../registry/entries/tooltip_entry.dart';
 
 class AllComponentsPage extends StatelessWidget {
@@ -57,6 +58,7 @@ class AllComponentsPage extends StatelessWidget {
         _section('Slider', buildSliderExample()),
         _section('Spinner', buildSpinnerExample()),
         _section('Switch', buildSwitchExample()),
+        _section('TextArea', buildTextAreaExample()),
         _section('Tooltip', buildTooltipExample()),
       ],
     );
