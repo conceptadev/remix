@@ -1,0 +1,488 @@
+---
+title: Checkbox Group
+description: A controlled coordinator for a typed set of checkbox options, with group-level disabled and required semantics
+keywords: [flutter, remix, checkbox, checkbox-group, multi-select, selection, form, input, accessibility]
+---
+
+A controlled coordinator that manages a typed `Set<T>` of checkbox options.
+
+`RemixCheckboxGroup` is behavioral only. It owns the selected values plus the
+group-wide enabled/required configuration; its `child` owns group layout, and
+each item renders its required visible label inside the composed
+[`RemixCheckbox`](/components/checkbox). The indicator, label gap, label, and
+48-by-48 minimum target therefore act as one control.
+
+## When to use this
+
+- **Typed multi-select**: Collect a set of enum or string values from a fixed list of options
+- **Grouped form fields**: Give several related checkboxes one accessible name and one required state
+- **Filter bars**: Lay out options horizontally without giving up group semantics
+- **Bulk toggles**: Emit a whole new selection set on every change instead of tracking booleans by hand
+
+Use a plain [`RemixCheckbox`](/components/checkbox) for a single independent
+boolean, and [`RemixRadioGroup`](/components/radio) when exactly one option may
+be selected.
+
+## Basic implementation
+
+The group is vertical here only because its `child` is a `Column`. Each item
+owns its visible label, pointer target, focus, and single checkbox semantics
+node; no outer `Row` or `ExcludeSemantics` composition is needed.
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+enum Interest { design, code, research }
+
+class CheckboxGroupExample extends StatefulWidget {
+  const CheckboxGroupExample({super.key});
+
+  @override
+  State<CheckboxGroupExample> createState() => _CheckboxGroupExampleState();
+}
+
+class _CheckboxGroupExampleState extends State<CheckboxGroupExample> {
+  Set<Interest> _interests = {Interest.design};
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12,
+      children: [
+        RemixCheckboxGroup<Interest>(
+          values: _interests,
+          onChanged: (values) => setState(() => _interests = values),
+          semanticLabel: 'Interests',
+          isRequired: true,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8,
+            children: [
+              _InterestOption(value: Interest.design, label: 'Design'),
+              _InterestOption(value: Interest.code, label: 'Code'),
+              // Disabling a single option leaves the rest of the group active.
+              _InterestOption(
+                value: Interest.research,
+                label: 'Research',
+                enabled: false,
+              ),
+            ],
+          ),
+        ),
+        // `values` is controlled: the group renders exactly what you pass in.
+        Text('Selected: ${_interests.map((i) => i.name).join(', ')}'),
+      ],
+    );
+  }
+}
+
+class _InterestOption extends StatelessWidget {
+  const _InterestOption({
+    required this.value,
+    required this.label,
+    this.enabled = true,
+  });
+
+  final Interest value;
+  final String label;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixCheckboxGroupItem<Interest>(
+      value: value,
+      label: label,
+      enabled: enabled,
+      style: style,
+    );
+  }
+
+  CheckboxStyler get style {
+    return CheckboxStyler()
+        .size(20, 20)
+        .icon(IconStyler().size(16).color(Colors.white))
+        .onSelected(CheckboxStyler().fillColor(Colors.grey.shade900))
+        .borderRadiusAll(const Radius.circular(3))
+        .border(
+          BoxBorderMix.all(BorderSideMix().color(Colors.black87).width(2)),
+        );
+  }
+}
+```
+</CodeGroup>
+
+## Horizontal layout
+
+The group adds no layout of its own, so a horizontal filter bar is just a `Row`
+in the `child`. Widget order is also keyboard order.
+
+<CodeGroup title="Horizontal filters" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FilterBarExample extends StatefulWidget {
+  const FilterBarExample({super.key});
+
+  @override
+  State<FilterBarExample> createState() => _FilterBarExampleState();
+}
+
+class _FilterBarExampleState extends State<FilterBarExample> {
+  Set<String> _filters = {'open'};
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixCheckboxGroup<String>(
+      values: _filters,
+      onChanged: (values) => setState(() => _filters = values),
+      semanticLabel: 'Filters',
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 16,
+        children: [
+          RemixCheckboxGroupItem<String>(
+            value: 'open',
+            label: 'Open',
+            style: _optionStyle(),
+          ),
+          RemixCheckboxGroupItem<String>(
+            value: 'closed',
+            label: 'Closed',
+            style: _optionStyle(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+CheckboxStyler _optionStyle() {
+  return CheckboxStyler()
+      .size(20, 20)
+      .icon(IconStyler().size(16).color(Colors.white))
+      .onSelected(CheckboxStyler().fillColor(Colors.grey.shade900))
+      .borderRadiusAll(const Radius.circular(3))
+      .border(
+        BoxBorderMix.all(BorderSideMix().color(Colors.black87).width(2)),
+      );
+}
+```
+</CodeGroup>
+
+## Disabled state
+
+The effective group state is `enabled && onChanged != null`, and it combines
+with each item's own `enabled`. A disabled group leaves no focusable nodes and
+no semantic tap actions on any option.
+
+<CodeGroup title="Disabled group and item" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class DisabledCheckboxGroupExample extends StatelessWidget {
+  const DisabledCheckboxGroupExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 16,
+      children: [
+        // The whole group is disabled.
+        RemixCheckboxGroup<String>(
+          values: const {'archived'},
+          enabled: false,
+          onChanged: (values) {},
+          semanticLabel: 'Status',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 16,
+            children: [
+              RemixCheckboxGroupItem<String>(
+                value: 'archived',
+                label: 'Archived',
+                style: _optionStyle(),
+              ),
+              RemixCheckboxGroupItem<String>(
+                value: 'muted',
+                label: 'Muted',
+                style: _optionStyle(),
+              ),
+            ],
+          ),
+        ),
+        // Omitting onChanged disables the group too.
+        RemixCheckboxGroup<String>(
+          values: const {'archived'},
+          semanticLabel: 'Read only status',
+          child: RemixCheckboxGroupItem<String>(
+            value: 'archived',
+            label: 'Archived',
+            style: _optionStyle(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+CheckboxStyler _optionStyle() {
+  return CheckboxStyler()
+      .size(20, 20)
+      .icon(IconStyler().size(16).color(Colors.white))
+      .onSelected(CheckboxStyler().fillColor(Colors.grey.shade900))
+      .borderRadiusAll(const Radius.circular(3))
+      .border(
+        BoxBorderMix.all(BorderSideMix().color(Colors.black87).width(2)),
+      );
+}
+```
+</CodeGroup>
+
+## Fortal widgets
+
+There is no Fortal checkbox-group widget, because the group has no visuals of
+its own. Style the **items** with the existing Fortal checkbox recipe; the
+group stays unstyled. Fortal keeps its 14/16/20 indicator geometry inside the
+item's default 48-pixel interaction target.
+
+<CodeGroup title="Fortal-styled items" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalCheckboxGroupExample extends StatefulWidget {
+  const FortalCheckboxGroupExample({super.key});
+
+  @override
+  State<FortalCheckboxGroupExample> createState() =>
+      _FortalCheckboxGroupExampleState();
+}
+
+class _FortalCheckboxGroupExampleState
+    extends State<FortalCheckboxGroupExample> {
+  Set<String> _selected = {'design'};
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixCheckboxGroup<String>(
+      values: _selected,
+      onChanged: (values) => setState(() => _selected = values),
+      semanticLabel: 'Interests',
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 8,
+        children: [
+          RemixCheckboxGroupItem<String>(
+            value: 'design',
+            label: 'Design',
+            style: fortalCheckboxStyle(variant: FortalCheckboxVariant.surface),
+          ),
+          RemixCheckboxGroupItem<String>(
+            value: 'code',
+            label: 'Code',
+            style: fortalCheckboxStyle(variant: FortalCheckboxVariant.soft),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [fortalCheckboxStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/checkbox/fortal_checkbox_styles.dart) for all available options.
+</Info>
+
+## Controlled values
+
+- `values` is controlled. The group holds no selection state; it renders exactly what you pass and takes one immutable snapshot per build.
+- Do not mutate the set you passed in while the group is building. A `const` widget cannot copy it in its initializer.
+- Every callback receives a **new** `Set.unmodifiable` snapshot that preserves `T`. Checking adds the value, unchecking removes it, and your set is never mutated.
+- Value types are non-nullable by construction: the group and item are bounded by `T extends Object`, so a nullable type argument or a `null` value cannot compile. Values must be unique among mounted items and stable in `==`/`hashCode` while mounted. Duplicate values and more than one `autofocus: true` raise a descriptive `FlutterError` in debug builds.
+
+## Keyboard
+
+Every enabled option is an ordinary Tab stop in widget order — the same
+behavior as a native HTML checkbox group:
+
+| Key | Behavior |
+| --- | --- |
+| `Tab` | Move to the next enabled option, then out of the group |
+| `Shift` + `Tab` | Move to the previous enabled option, then out of the group |
+| `Space` / `Enter` | Toggle the focused option |
+
+Disabled options and disabled groups are skipped in the default
+(`NavigationMode.traditional`) Tab traversal. Under `NavigationMode.directional`
+(d-pad/TV navigation) Flutter deliberately keeps disabled widgets focusable so
+users can discover them — activation stays suppressed. Caller-owned
+`focusNode`s pass straight through to the composed checkbox and are never
+disposed by the group.
+
+<Info>
+  **Known difference from Radix Themes.** Radix's `CheckboxGroup` roves focus:
+  the group is a single Tab stop, and Arrow/Home/End move between options, with
+  `orientation`, `loop`, and RTL awareness. Remix v1 deliberately uses standard
+  Flutter traversal instead — the private registration, focus-order refresh, and
+  node-restoration layer roving requires is the group's largest source of code
+  and risk, and it only changes how keyboard users move *between* options, which
+  Tab already reaches. `orientation` and `loop` are omitted for the same reason:
+  they only have meaning alongside roving focus, and they will land with it.
+  This will be reopened on real user or parity demand.
+</Info>
+
+## Accessibility
+
+- The group renders `Semantics(container: true, explicitChildNodes: true)` with `semanticLabel` as its name and `isRequired` on the container. Flutter has no checkbox-group role, so no role is fabricated.
+- Required state belongs to the group. Individual options are never marked required.
+- A required group must carry a nonblank `semanticLabel` — "required" without an accessible name is unactionable for screen-reader users. Debug builds enforce this unless `excludeSemantics` is true.
+- Each item requires a nonblank visible `label`. That label is its accessible name by default; optional `semanticLabel` overrides the accessible name without rewriting the visible text.
+- Each option contributes exactly one checkbox node with its resolved name, checked state, enabled state, focus state, and tap action — all supplied by the composed `RemixCheckbox`. The visible label is excluded internally from creating a duplicate text node.
+- The default `minimumTapTargetSize` is 48 by 48 logical pixels, and taps on the indicator, label gap, visible label, or padded edge activate the same control. `Size.zero` is an explicit compact opt-out.
+- `excludeSemantics: true` wraps the whole group in `ExcludeSemantics`, removing the container **and** every option from the semantics tree.
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+// Checkbox Group
+RemixCheckboxGroup<T> remixCheckboxGroupConstructor<T extends Object>({
+  Key? key,
+  required Set<T> values,
+  required Widget child,
+  ValueChanged<Set<T>>? onChanged,
+  bool enabled = true,
+  bool isRequired = false,
+  String? semanticLabel,
+  bool excludeSemantics = false,
+}) => throw UnimplementedError();
+
+// Checkbox Group Item
+RemixCheckboxGroupItem<T> remixCheckboxGroupItemConstructor<T extends Object>({
+  Key? key,
+  required T value,
+  required String label,
+  String? semanticLabel,
+  bool enabled = true,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  IconData checkedIcon = Icons.check_rounded,
+  IconData? uncheckedIcon,
+  bool enableFeedback = true,
+  Size minimumTapTargetSize = const Size.square(48),
+  MouseCursor mouseCursor = SystemMouseCursors.click,
+  CheckboxStyler style = const CheckboxStyler.create(),
+  CheckboxSpec? styleSpec,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+
+## Properties
+### RemixCheckboxGroup
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
+
+#### `values` → `Set<T>`
+
+**Required**. The currently selected values. Controlled by the caller; the group never mutates it.
+
+#### `child` → `Widget`
+
+**Required**. The subtree that lays out the group's options. The group adds no layout of its own.
+
+#### `onChanged` → `ValueChanged<Set<T>>?`
+
+Optional. Called with a new unmodifiable set whenever an option is toggled. When null, the group is disabled.
+
+#### `enabled` → `bool`
+
+Optional. Whether the group is enabled for interaction. Combines with each item's `enabled`.
+
+#### `isRequired` → `bool`
+
+Optional. Whether the group is required. Announced once on the group container, never on individual options. A required group must have a nonblank `semanticLabel` (unless `excludeSemantics` is true), so "required" has an accessible name.
+
+#### `semanticLabel` → `String?`
+
+Optional. The accessible name of the group. Must not be blank when provided, and must be present when `isRequired` is true and the group is not excluded from semantics.
+
+#### `excludeSemantics` → `bool`
+
+Optional. Whether to exclude the group container and all options from the semantics tree.
+
+### RemixCheckboxGroupItem
+
+#### `value` → `T`
+
+**Required**. The value this option contributes to the group's set. Non-null by the `T extends Object` bound; must be unique among mounted items and stable in `==`/`hashCode`.
+
+#### `label` → `String`
+
+**Required**. The visible label rendered inside the checkbox interaction target. It is the accessible name by default and must not be blank (whitespace-only labels are rejected in debug builds).
+
+#### `semanticLabel` → `String?`
+
+Optional. Overrides the accessible name derived from `label` without changing the visible text. Must not be blank when provided.
+
+#### `enabled` → `bool`
+
+Optional. Whether this option is enabled. Combines with the group's enabled state.
+
+#### `focusNode` → `FocusNode?`
+
+Optional. A caller-owned focus node. The group never disposes it.
+
+#### `autofocus` → `bool`
+
+Optional. Whether this option requests focus on mount. At most one mounted item per group may set this.
+
+#### `checkedIcon` → `IconData`
+
+Optional. The icon shown when this option is selected. Defaults to Icons.check_rounded.
+
+#### `uncheckedIcon` → `IconData?`
+
+Optional. The icon shown when this option is not selected.
+
+#### `enableFeedback` → `bool`
+
+Optional. Whether to provide haptic feedback when the option is toggled. Defaults to true.
+
+#### `minimumTapTargetSize` → `Size`
+
+Optional. Minimum pointer, focus, and semantics target size. Defaults to `Size.square(48)`. Pass `Size.zero` only when an enclosing composition provides an accessible target.
+
+#### `mouseCursor` → `MouseCursor`
+
+Optional. Cursor when hovering over the option.
+
+#### `style` → `CheckboxStyler`
+
+Optional. The style configuration forwarded to the composed `RemixCheckbox`. See the [Checkbox](/components/checkbox) page for every available style method.
+Use `label(...)`, `labelColor(...)`, and `labelSpacing(...)` to style the
+visible label and its gap.
+
+#### `styleSpec` → `CheckboxSpec?`
+
+Optional. A pre-resolved style spec forwarded to the composed `RemixCheckbox`.
+
+<Info>
+  There is no `tristate` on group items: set membership has only present and
+  absent states. Use `RemixCheckbox` directly when you need an indeterminate
+  checkbox.
+</Info>

@@ -21,7 +21,7 @@ Generic named constructors infer `T` from values, item lists, and callbacks.
 ## Table of Contents
 
 - [Actions](#actions): Button, IconButton, Toggle
-- [Forms](#forms): Checkbox, Radio, Switch, Slider, TextField, Select
+- [Forms](#forms): Checkbox, Checkbox Group, Radio, Switch, Slider, TextField, Select
 - [Data Display](#data-display): Avatar, Badge, Card, Callout, Progress, Spinner, Divider
 - [Overlays](#overlays): Dialog, Tooltip, Menu
 - [Navigation](#navigation): Tabs, Accordion
@@ -129,10 +129,64 @@ Fortal preset: `FortalToggle` — `variant` (`ghost|outline`), `size` (`size1–
 | `autofocus` | `bool` | `false` | no |
 | `enableFeedback` | `bool` | `true` | no |
 | `focusNode` | `FocusNode?` | `null` | no |
+| `label` | `String?` | `null` | no |
 | `semanticLabel` | `String?` | `null` | no |
+| `minimumTapTargetSize` | `Size` | `Size.square(48)` | no |
 | `mouseCursor` | `MouseCursor` | `SystemMouseCursors.click` | no |
 
-Fortal preset: `FortalCheckbox` — `variant` (`surface|soft`), `size` (`size1–size3`).
+The visible `label` is inside the pointer/focus/single-semantics target;
+`semanticLabel` overrides its accessible name. `Size.zero` explicitly opts out
+of the default minimum target. Fortal preset: `FortalCheckbox` — `variant`
+(`surface|soft`), `size` (`size1–size3`), preserving 14/16/20 visual squares
+inside the 48px target.
+
+### RemixCheckboxGroup\<T\>
+
+Purely behavioral — no `style`/`styleSpec` and no layout; the `child` owns the
+Row/Column, while each item owns its visible label and is styled individually.
+`values` is controlled and every callback receives a new unmodifiable set.
+`T extends Object`, so nullable value types cannot compile.
+
+| Parameter | Type | Default | Required |
+|-----------|------|---------|----------|
+| `values` | `Set<T>` | — | yes |
+| `child` | `Widget` | — | yes |
+| `onChanged` | `ValueChanged<Set<T>>?` | `null` | no (null disables the group) |
+| `enabled` | `bool` | `true` | no |
+| `isRequired` | `bool` | `false` | no (needs a nonblank `semanticLabel` unless `excludeSemantics`) |
+| `semanticLabel` | `String?` | `null` | no (must be nonblank when provided) |
+| `excludeSemantics` | `bool` | `false` | no |
+
+### RemixCheckboxGroupItem\<T\>
+
+Must be a descendant of a matching `RemixCheckboxGroup<T>` (throws otherwise).
+Composes `RemixCheckbox`, so `CheckboxStyler`/`fortalCheckboxStyle()` styles it.
+No `tristate`: set membership is binary.
+
+| Parameter | Type | Default | Required |
+|-----------|------|---------|----------|
+| `value` | `T` | — | yes |
+| `label` | `String` | — | yes (must not be blank) |
+| `semanticLabel` | `String?` | `null` | no (nonblank accessible-name override) |
+| `enabled` | `bool` | `true` | no |
+| `focusNode` | `FocusNode?` | `null` | no |
+| `autofocus` | `bool` | `false` | no |
+| `checkedIcon` | `IconData` | `Icons.check_rounded` | no |
+| `uncheckedIcon` | `IconData?` | `null` | no |
+| `enableFeedback` | `bool` | `true` | no |
+| `minimumTapTargetSize` | `Size` | `Size.square(48)` | no |
+| `mouseCursor` | `MouseCursor` | `SystemMouseCursors.click` | no |
+
+The indicator, label gap, visible label, and padded edge are one interaction
+and semantics target. The visible label supplies the accessible name unless
+`semanticLabel` overrides it; no outer `Row`/`ExcludeSemantics` label pattern
+is needed.
+
+Keyboard: every enabled option is an ordinary Tab stop in widget order, and
+Space/Enter toggle the focused option. Unlike Radix Themes, the group does not
+rove focus with arrow keys. Disabled options are skipped in traditional Tab
+traversal but stay focusable (never activatable) under
+`NavigationMode.directional`.
 
 ### RemixRadioGroup\<T\>
 
