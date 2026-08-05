@@ -5,6 +5,96 @@ import 'package:remix/remix.dart';
 enum Interest { design, code }
 
 void main() {
+  test('the skeleton family is constructible from the public API', () {
+    const spec = SkeletonSpec(
+      container: StyleSpec(spec: BoxSpec()),
+      pulseColor: Color(0xFFCCCCCC),
+      duration: Duration(milliseconds: 1000),
+    );
+    final style = SkeletonStyler()
+        .container(
+          BoxStyler()
+              .size(120, 24)
+              .color(const Color(0xFFEEEEEE))
+              .borderRounded(4),
+        )
+        .pulseColor(const Color(0xFFCCCCCC))
+        .duration(const Duration(milliseconds: 1000));
+
+    expect(
+      RemixSkeleton(style: style, child: const Text('Jane')),
+      isA<RemixSkeleton>(),
+    );
+    const raw = RemixSkeleton(styleSpec: StyleSpec(spec: spec));
+    expect(raw, isA<RemixSkeleton>());
+    expect(raw.styleSpec?.spec, spec);
+    expect(
+      style(child: const Text('Jane'), loading: false),
+      isA<RemixSkeleton>(),
+    );
+    expect(
+      RemixSkeleton.styleFrom(pulseColor: const Color(0xFFCCCCCC)),
+      isA<SkeletonStyler>(),
+    );
+  });
+
+  test('the data list family is constructible from the public API', () {
+    const item = RemixDataListItem(
+      key: ValueKey<String>('status'),
+      label: 'Status',
+      value: 'Active',
+      alignment: RemixDataListItemAlignment.center,
+    );
+    const rawStyleSpec = StyleSpec<DataListSpec>(
+      spec: DataListSpec(
+        rowSpacing: 8,
+        columnSpacing: 16,
+        labelValueSpacing: 4,
+        minLabelWidth: 120,
+      ),
+    );
+    const raw = RemixDataList(
+      key: ValueKey<String>('raw'),
+      items: [item],
+      orientation: Axis.vertical,
+      semanticLabel: 'Account details',
+      excludeSemantics: true,
+      styleSpec: rawStyleSpec,
+    );
+    final Style<DataListSpec> style = raw.style;
+    final StyleSpec<DataListSpec>? styleSpec = raw.styleSpec;
+
+    final DataListStyler styler = RemixDataList.styleFrom(
+      rowSpacing: 12,
+      columnSpacing: 20,
+      labelValueSpacing: 6,
+      minLabelWidth: 144,
+    );
+    final items = <RemixDataListItem>[item];
+    const forwardedKey = ValueKey<String>('forwarded');
+    final called = styler(
+      key: forwardedKey,
+      items: items,
+      orientation: Axis.vertical,
+      semanticLabel: 'Forwarded account details',
+      excludeSemantics: true,
+    );
+
+    expect(raw, isA<RemixDataList>());
+    expect(raw.items.single, same(item));
+    expect(style, isA<DataListStyler>());
+    expect(styleSpec, same(rawStyleSpec));
+    expect(styleSpec?.spec, isA<DataListSpec>());
+    expect(styler, isA<DataListStyler>());
+    expect(called, isA<RemixDataList>());
+    expect(called.key, forwardedKey);
+    expect(called.style, same(styler));
+    expect(called.items, same(items));
+    expect(called.orientation, Axis.vertical);
+    expect(called.semanticLabel, 'Forwarded account details');
+    expect(called.excludeSemantics, isTrue);
+  });
+
   test('mode-aware Fortal filters are constructible from the public API', () {
     final modifier = fortalModeAwareFilter(
       light: const [RemixCssColorFilterOperation.brightness(1.1)],

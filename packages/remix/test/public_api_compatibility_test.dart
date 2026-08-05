@@ -32,6 +32,10 @@ void main() {
         minimumTapTargetSize: Size.zero,
       ),
     );
+    const skeleton = RemixSkeleton(child: Text('Jane Appleseed'));
+    const dataList = RemixDataList(
+      items: [RemixDataListItem(label: 'Status', value: 'Active')],
+    );
 
     expect(button.label, 'Save');
     expect(card.child, isA<Text>());
@@ -52,6 +56,18 @@ void main() {
     expect(checkboxGroupItem.label, 'One');
     expect(checkboxGroupItem.semanticLabel, 'Option one');
     expect(checkboxGroupItem.minimumTapTargetSize, Size.zero);
+    expect(skeleton.child, isA<Text>());
+    expect(skeleton.loading, isTrue);
+    expect(dataList.items.single, isA<RemixDataListItem>());
+    expect(dataList.items.single.label, 'Status');
+    expect(dataList.items.single.value, 'Active');
+    expect(
+      dataList.items.single.alignment,
+      RemixDataListItemAlignment.baseline,
+    );
+    expect(dataList.orientation, Axis.horizontal);
+    expect(dataList.style, isA<DataListStyler>());
+    expect(dataList.styleSpec, isNull);
   });
 
   test('generated wrappers preserve generic and named constructors', () {
