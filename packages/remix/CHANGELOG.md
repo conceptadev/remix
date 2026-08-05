@@ -17,6 +17,12 @@
   children. Debug builds validate duplicate values, duplicate autofocus, and
   blank accessible names, and require a nonblank group `semanticLabel`
   whenever `isRequired` is true and semantics are not excluded.
+- **BREAKING** **FEAT**: Add checkbox items, radio groups, and submenus to the
+  sealed `RemixMenuItemData` hierarchy. Downstream exhaustive switches must
+  handle the new cases or add a wildcard; no runtime migration is required.
+- **FEAT**: Support reusable menu-wide customization by passing
+  `fortalMenuStyle(...).merge(customStyle)` to `RemixMenu.style`; generated
+  `FortalMenu` constructors remain recipe-only.
 - **FEAT**: Add `RemixDataList`, a semantic label/value list mapped from
   Radix DataList. Horizontal orientation shares one negotiated label column
   across every row, supports intrinsic-width parents, and lets string values

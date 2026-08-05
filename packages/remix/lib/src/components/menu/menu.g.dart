@@ -95,6 +95,9 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get overlay;
   RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<MenuItemSpec> get item;
+  StyleSpec<MenuItemSpec>? get checkboxItem;
+  StyleSpec<MenuItemSpec>? get radioItem;
+  StyleSpec<MenuItemSpec>? get submenuItem;
   StyleSpec<DividerSpec> get divider;
 
   @override
@@ -106,6 +109,9 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
     StyleSpec<FlexBoxSpec>? overlay,
     RemixBoxEffectsSpec? containerEffects,
     StyleSpec<MenuItemSpec>? item,
+    StyleSpec<MenuItemSpec>? checkboxItem,
+    StyleSpec<MenuItemSpec>? radioItem,
+    StyleSpec<MenuItemSpec>? submenuItem,
     StyleSpec<DividerSpec>? divider,
   }) {
     return MenuSpec(
@@ -113,6 +119,9 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
       overlay: overlay ?? this.overlay,
       containerEffects: containerEffects ?? this.containerEffects,
       item: item ?? this.item,
+      checkboxItem: checkboxItem ?? this.checkboxItem,
+      radioItem: radioItem ?? this.radioItem,
+      submenuItem: submenuItem ?? this.submenuItem,
       divider: divider ?? this.divider,
     );
   }
@@ -128,6 +137,9 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
         t,
       ),
       item: item.lerp(other?.item, t),
+      checkboxItem: checkboxItem?.lerp(other?.checkboxItem, t),
+      radioItem: radioItem?.lerp(other?.radioItem, t),
+      submenuItem: submenuItem?.lerp(other?.submenuItem, t),
       divider: divider.lerp(other?.divider, t),
     );
   }
@@ -138,6 +150,9 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
     overlay,
     containerEffects,
     item,
+    checkboxItem,
+    radioItem,
+    submenuItem,
     divider,
   ];
 
@@ -185,6 +200,9 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('overlay', overlay))
       ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('item', item))
+      ..add(DiagnosticsProperty('checkboxItem', checkboxItem))
+      ..add(DiagnosticsProperty('radioItem', radioItem))
+      ..add(DiagnosticsProperty('submenuItem', submenuItem))
       ..add(DiagnosticsProperty('divider', divider));
   }
 }
@@ -199,6 +217,7 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get leadingIcon;
   StyleSpec<IconSpec> get trailingIcon;
+  StyleSpec<IconSpec> get indicator;
 
   @override
   Type get type => MenuItemSpec;
@@ -209,12 +228,14 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? leadingIcon,
     StyleSpec<IconSpec>? trailingIcon,
+    StyleSpec<IconSpec>? indicator,
   }) {
     return MenuItemSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       leadingIcon: leadingIcon ?? this.leadingIcon,
       trailingIcon: trailingIcon ?? this.trailingIcon,
+      indicator: indicator ?? this.indicator,
     );
   }
 
@@ -225,11 +246,18 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
       label: label.lerp(other?.label, t),
       leadingIcon: leadingIcon.lerp(other?.leadingIcon, t),
       trailingIcon: trailingIcon.lerp(other?.trailingIcon, t),
+      indicator: indicator.lerp(other?.indicator, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, label, leadingIcon, trailingIcon];
+  List<Object?> get props => [
+    container,
+    label,
+    leadingIcon,
+    trailingIcon,
+    indicator,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -274,7 +302,8 @@ mixin _$MenuItemSpec implements Spec<MenuItemSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('leadingIcon', leadingIcon))
-      ..add(DiagnosticsProperty('trailingIcon', trailingIcon));
+      ..add(DiagnosticsProperty('trailingIcon', trailingIcon))
+      ..add(DiagnosticsProperty('indicator', indicator));
   }
 }
 
@@ -1081,6 +1110,9 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
   final Prop<StyleSpec<FlexBoxSpec>>? $overlay;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<MenuItemSpec>>? $item;
+  final Prop<StyleSpec<MenuItemSpec>>? $checkboxItem;
+  final Prop<StyleSpec<MenuItemSpec>>? $radioItem;
+  final Prop<StyleSpec<MenuItemSpec>>? $submenuItem;
   final Prop<StyleSpec<DividerSpec>>? $divider;
 
   const MenuStyler.create({
@@ -1088,6 +1120,9 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
     Prop<StyleSpec<FlexBoxSpec>>? overlay,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<MenuItemSpec>>? item,
+    Prop<StyleSpec<MenuItemSpec>>? checkboxItem,
+    Prop<StyleSpec<MenuItemSpec>>? radioItem,
+    Prop<StyleSpec<MenuItemSpec>>? submenuItem,
     Prop<StyleSpec<DividerSpec>>? divider,
     super.variants,
     super.modifier,
@@ -1096,6 +1131,9 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
        $overlay = overlay,
        $containerEffects = containerEffects,
        $item = item,
+       $checkboxItem = checkboxItem,
+       $radioItem = radioItem,
+       $submenuItem = submenuItem,
        $divider = divider;
 
   MenuStyler({
@@ -1103,6 +1141,9 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
     FlexBoxStyler? overlay,
     RemixBoxEffectsMix? containerEffects,
     MenuItemStyler? item,
+    MenuItemStyler? checkboxItem,
+    MenuItemStyler? radioItem,
+    MenuItemStyler? submenuItem,
     DividerStyler? divider,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -1112,6 +1153,9 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
          overlay: Prop.maybeMix(overlay),
          containerEffects: Prop.maybeMix(containerEffects),
          item: Prop.maybeMix(item),
+         checkboxItem: Prop.maybeMix(checkboxItem),
+         radioItem: Prop.maybeMix(radioItem),
+         submenuItem: Prop.maybeMix(submenuItem),
          divider: Prop.maybeMix(divider),
          variants: variants,
          modifier: modifier,
@@ -1125,6 +1169,12 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
   factory MenuStyler.containerEffects(RemixBoxEffectsMix value) =>
       MenuStyler().containerEffects(value);
   factory MenuStyler.item(MenuItemStyler value) => MenuStyler().item(value);
+  factory MenuStyler.checkboxItem(MenuItemStyler value) =>
+      MenuStyler().checkboxItem(value);
+  factory MenuStyler.radioItem(MenuItemStyler value) =>
+      MenuStyler().radioItem(value);
+  factory MenuStyler.submenuItem(MenuItemStyler value) =>
+      MenuStyler().submenuItem(value);
   factory MenuStyler.divider(DividerStyler value) =>
       MenuStyler().divider(value);
 
@@ -1146,6 +1196,21 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
   /// Sets the item.
   MenuStyler item(MenuItemStyler value) {
     return merge(MenuStyler(item: value));
+  }
+
+  /// Sets the checkboxItem.
+  MenuStyler checkboxItem(MenuItemStyler value) {
+    return merge(MenuStyler(checkboxItem: value));
+  }
+
+  /// Sets the radioItem.
+  MenuStyler radioItem(MenuItemStyler value) {
+    return merge(MenuStyler(radioItem: value));
+  }
+
+  /// Sets the submenuItem.
+  MenuStyler submenuItem(MenuItemStyler value) {
+    return merge(MenuStyler(submenuItem: value));
   }
 
   /// Sets the divider.
@@ -1187,6 +1252,9 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
         other?.$containerEffects,
       ),
       item: MixOps.merge($item, other?.$item),
+      checkboxItem: MixOps.merge($checkboxItem, other?.$checkboxItem),
+      radioItem: MixOps.merge($radioItem, other?.$radioItem),
+      submenuItem: MixOps.merge($submenuItem, other?.$submenuItem),
       divider: MixOps.merge($divider, other?.$divider),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
@@ -1202,6 +1270,9 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
       overlay: MixOps.resolve(context, $overlay),
       containerEffects: MixOps.resolve(context, $containerEffects),
       item: MixOps.resolve(context, $item),
+      checkboxItem: MixOps.resolve(context, $checkboxItem),
+      radioItem: MixOps.resolve(context, $radioItem),
+      submenuItem: MixOps.resolve(context, $submenuItem),
       divider: MixOps.resolve(context, $divider),
     );
 
@@ -1220,6 +1291,9 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
       ..add(DiagnosticsProperty('overlay', $overlay))
       ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('item', $item))
+      ..add(DiagnosticsProperty('checkboxItem', $checkboxItem))
+      ..add(DiagnosticsProperty('radioItem', $radioItem))
+      ..add(DiagnosticsProperty('submenuItem', $submenuItem))
       ..add(DiagnosticsProperty('divider', $divider));
   }
 
@@ -1229,6 +1303,9 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
     $overlay,
     $containerEffects,
     $item,
+    $checkboxItem,
+    $radioItem,
+    $submenuItem,
     $divider,
     $animation,
     $modifier,
@@ -1242,25 +1319,29 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $leadingIcon;
   final Prop<StyleSpec<IconSpec>>? $trailingIcon;
+  final Prop<StyleSpec<IconSpec>>? $indicator;
 
   const MenuItemStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? leadingIcon,
     Prop<StyleSpec<IconSpec>>? trailingIcon,
+    Prop<StyleSpec<IconSpec>>? indicator,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $label = label,
        $leadingIcon = leadingIcon,
-       $trailingIcon = trailingIcon;
+       $trailingIcon = trailingIcon,
+       $indicator = indicator;
 
   MenuItemStyler({
     FlexBoxStyler? container,
     TextStyler? label,
     IconStyler? leadingIcon,
     IconStyler? trailingIcon,
+    IconStyler? indicator,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<MenuItemSpec>>? variants,
@@ -1269,6 +1350,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
          label: Prop.maybeMix(label),
          leadingIcon: Prop.maybeMix(leadingIcon),
          trailingIcon: Prop.maybeMix(trailingIcon),
+         indicator: Prop.maybeMix(indicator),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -1282,6 +1364,8 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
       MenuItemStyler().leadingIcon(value);
   factory MenuItemStyler.trailingIcon(IconStyler value) =>
       MenuItemStyler().trailingIcon(value);
+  factory MenuItemStyler.indicator(IconStyler value) =>
+      MenuItemStyler().indicator(value);
   factory MenuItemStyler.color(Color value) => MenuItemStyler().color(value);
   factory MenuItemStyler.gradient(GradientMix value) =>
       MenuItemStyler().gradient(value);
@@ -1827,6 +1911,11 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     return merge(MenuItemStyler(trailingIcon: value));
   }
 
+  /// Sets the indicator.
+  MenuItemStyler indicator(IconStyler value) {
+    return merge(MenuItemStyler(indicator: value));
+  }
+
   /// Sets the animation configuration.
   @override
   MenuItemStyler animate(AnimationConfig value) {
@@ -1858,6 +1947,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
       label: MixOps.merge($label, other?.$label),
       leadingIcon: MixOps.merge($leadingIcon, other?.$leadingIcon),
       trailingIcon: MixOps.merge($trailingIcon, other?.$trailingIcon),
+      indicator: MixOps.merge($indicator, other?.$indicator),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1872,6 +1962,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
       label: MixOps.resolve(context, $label),
       leadingIcon: MixOps.resolve(context, $leadingIcon),
       trailingIcon: MixOps.resolve(context, $trailingIcon),
+      indicator: MixOps.resolve(context, $indicator),
     );
 
     return StyleSpec(
@@ -1888,7 +1979,8 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('leadingIcon', $leadingIcon))
-      ..add(DiagnosticsProperty('trailingIcon', $trailingIcon));
+      ..add(DiagnosticsProperty('trailingIcon', $trailingIcon))
+      ..add(DiagnosticsProperty('indicator', $indicator));
   }
 
   @override
@@ -1897,6 +1989,7 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     $label,
     $leadingIcon,
     $trailingIcon,
+    $indicator,
     $animation,
     $modifier,
     $variants,
