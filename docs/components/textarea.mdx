@@ -143,6 +143,16 @@ TextArea style or spec types. `RemixTextArea` intentionally has no `styleFrom`
 callable because `TextFieldStyler`'s callable creates a `RemixTextField`; pass
 the styler through `style` as shown below.
 
+<Warning>
+Do not pass `fortalTextFieldStyle()` to a TextArea. That preset pins the input
+container to a single-line height, so the editor stops growing and taller
+content scrolls inside a one-line box with no layout error to signal it. There
+is no Fortal TextArea preset: Radix Themes' TextArea is not part of this
+package's mapped parity surface, so its metrics have no reference data to
+derive from. Style TextArea with `TextFieldStyler` directly, using `minHeight`
+rather than `height` for any floor you need.
+</Warning>
+
 <CodeGroup title="Custom Remix styling" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';

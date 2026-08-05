@@ -259,194 +259,6 @@ class RemixTextField extends StatelessWidget {
 
   static final styleFrom = TextFieldStyler.new;
 
-  Widget _buildResolved(
-    TextFieldSpec spec,
-    WidgetStatesController styleController,
-    FocusNode effectiveFocusNode, {
-    required ValueChanged<bool> onEditablePressChange,
-    required ValueChanged<bool> onFallbackPressChange,
-  }) {
-    final isMultiline = expands || maxLines != 1 || (minLines ?? 1) > 1;
-    final hintAlignment = isMultiline
-        ? AlignmentDirectional.topStart
-        : AlignmentDirectional.centerStart;
-    final acceptsPointerEvents = enabled && ignorePointers != true;
-    final effectiveSemanticErrorText = error
-        ? _joinSemanticText([helperText])
-        : null;
-    final joinedSemanticHint = _joinSemanticText([
-      semanticHint ?? hintText,
-      if (!error) helperText,
-    ]);
-    final effectiveSemanticHint =
-        joinedSemanticHint == effectiveSemanticErrorText
-        ? null
-        : joinedSemanticHint;
-
-    final nakedTextField = NakedTextField(
-      groupId: groupId,
-      controller: controller,
-      focusNode: effectiveFocusNode,
-      undoController: undoController,
-      keyboardType: keyboardType,
-      textInputAction: textInputAction,
-      textCapitalization: textCapitalization,
-      textAlign: spec.textAlign ?? .start,
-      textDirection: textDirection,
-      readOnly: readOnly,
-      showCursor: showCursor,
-      autofocus: autofocus,
-      obscuringCharacter: obscuringCharacter,
-      obscureText: obscureText,
-      autocorrect: autocorrect,
-      smartDashesType: smartDashesType,
-      smartQuotesType: smartQuotesType,
-      enableSuggestions: enableSuggestions,
-      maxLines: maxLines,
-      minLines: minLines,
-      expands: expands,
-      maxLength: maxLength,
-      maxLengthEnforcement: maxLengthEnforcement,
-      onChanged: onChanged,
-      onEditingComplete: onEditingComplete,
-      onSubmitted: onSubmitted,
-      onAppPrivateCommand: onAppPrivateCommand,
-      inputFormatters: inputFormatters,
-      enabled: enabled,
-      error: error,
-      cursorWidth: spec.cursorWidth ?? 2.0,
-      cursorHeight: spec.cursorHeight,
-      cursorRadius: spec.cursorRadius,
-      cursorOpacityAnimates: spec.cursorOpacityAnimates,
-      cursorColor: spec.cursorColor,
-      selectionHeightStyle: spec.selectionHeightStyle ?? .tight,
-      selectionWidthStyle: spec.selectionWidthStyle ?? .tight,
-      keyboardAppearance: spec.keyboardAppearance,
-      scrollPadding: spec.scrollPadding ?? const .all(20.0),
-      dragStartBehavior: dragStartBehavior,
-      enableInteractiveSelection: enableInteractiveSelection,
-      selectionControls: selectionControls,
-      onTap: onTap,
-      onTapAlwaysCalled: onTapAlwaysCalled,
-      onTapOutside: onTapOutside,
-      scrollController: scrollController,
-      scrollPhysics: scrollPhysics,
-      autofillHints: autofillHints,
-      contentInsertionConfiguration: contentInsertionConfiguration,
-      clipBehavior: clipBehavior,
-      restorationId: restorationId,
-      onTapUpOutside: onPressUpOutside,
-      stylusHandwritingEnabled: stylusHandwritingEnabled,
-      enableIMEPersonalizedLearning: enableIMEPersonalizedLearning,
-      contextMenuBuilder: contextMenuBuilder,
-      canRequestFocus: canRequestFocus,
-      spellCheckConfiguration: spellCheckConfiguration,
-      magnifierConfiguration: magnifierConfiguration,
-      onFocusChange: (value) => styleController.update(.focused, value),
-      onPressChange: acceptsPointerEvents ? onEditablePressChange : null,
-      ignorePointers: ignorePointers,
-      semanticLabel: semanticLabel ?? label,
-      semanticHint: effectiveSemanticHint,
-      semanticErrorText: effectiveSemanticErrorText,
-      builder: (BuildContext context, _, Widget editableText) {
-        final textFieldState = NakedTextFieldState.of(context);
-        final styledEditableText = StyleSpecBuilder(
-          styleSpec: spec.text,
-          builder: (context, textSpec) => DefaultTextStyle.merge(
-            style: textSpec.style,
-            child: editableText,
-          ),
-        );
-
-        final editableWithHint = hintText != null
-            ? Stack(
-                alignment: hintAlignment,
-                children: [
-                  if (textFieldState.text.isEmpty)
-                    Positioned.fill(
-                      child: Align(
-                        alignment: hintAlignment,
-                        child: ExcludeSemantics(
-                          child: StyledText(
-                            hintText!,
-                            styleSpec: spec.hintText,
-                          ),
-                        ),
-                      ),
-                    ),
-                  styledEditableText,
-                ],
-              )
-            : styledEditableText;
-
-        return error
-            ? Semantics(
-                validationResult: SemanticsValidationResult.invalid,
-                child: editableWithHint,
-              )
-            : editableWithHint;
-      },
-    );
-
-    final withAccessories = RemixBoxWithEffects(
-      styleSpec: spec.container,
-      containerEffects: spec.containerEffects,
-      child: Row(
-        spacing: spec.spacing ?? 0,
-        crossAxisAlignment:
-            spec.crossAxisAlignment ?? CrossAxisAlignment.center,
-        textBaseline: TextBaseline.alphabetic,
-        children: [
-          ?leading,
-          Expanded(child: nakedTextField),
-          ?trailing,
-        ],
-      ),
-    );
-
-    final needsWrapper = label != null || helperText != null;
-    Widget composite = needsWrapper
-        ? FlexBox(
-            styleSpec: spec.layout,
-            children: [
-              if (label != null)
-                ExcludeSemantics(
-                  child: StyledText(label!, styleSpec: spec.label),
-                ),
-              withAccessories,
-              if (helperText != null)
-                ExcludeSemantics(
-                  child: StyledText(helperText!, styleSpec: spec.helperText),
-                ),
-            ],
-          )
-        : withAccessories;
-
-    composite = _RemixTextFieldFallbackGestureDetector(
-      enabled: acceptsPointerEvents,
-      onTapAlwaysCalled: onTapAlwaysCalled,
-      onPressChange: onFallbackPressChange,
-      onTap: () {
-        if (canRequestFocus && effectiveFocusNode.canRequestFocus) {
-          effectiveFocusNode.requestFocus();
-        }
-        onTap?.call();
-      },
-      child: composite,
-    );
-
-    if (enabled) {
-      composite = MouseRegion(
-        onEnter: (_) => styleController.update(.hovered, true),
-        onExit: (_) => styleController.update(.hovered, false),
-        cursor: SystemMouseCursors.text,
-        child: composite,
-      );
-    }
-
-    return excludeSemantics ? ExcludeSemantics(child: composite) : composite;
-  }
-
   @override
   Widget build(BuildContext context) => _RemixTextFieldBody(config: this);
 }
@@ -490,6 +302,12 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
 
     if (!identical(oldExternalFocusNode, newExternalFocusNode)) {
       if (oldExternalFocusNode == null && newExternalFocusNode != null) {
+        // Deliberate: the dispose must be deferred, not synchronous. This
+        // state's didUpdateWidget runs before NakedTextField's, and Naked
+        // reads the outgoing node's `hasFocus` to decide whether to move
+        // focus onto the incoming one. Disposing here detaches the node and
+        // unfocuses it first, so focus would be silently dropped across a
+        // null -> external swap.
         final obsoleteInternalNode = _internalFocusNode!;
         _internalFocusNode = null;
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -530,6 +348,202 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
     super.dispose();
   }
 
+  Widget _buildResolved(TextFieldSpec spec) {
+    final config = widget.config;
+    final isMultiline =
+        config.expands || config.maxLines != 1 || (config.minLines ?? 1) > 1;
+    final hintAlignment = isMultiline
+        ? AlignmentDirectional.topStart
+        : AlignmentDirectional.centerStart;
+    final acceptsPointerEvents =
+        config.enabled && config.ignorePointers != true;
+    final effectiveSemanticErrorText = config.error
+        ? _joinSemanticText([config.helperText])
+        : null;
+    final joinedSemanticHint = _joinSemanticText([
+      config.semanticHint ?? config.hintText,
+      if (!config.error) config.helperText,
+    ]);
+    // Deliberate: NakedTextField concatenates semanticHint and
+    // semanticErrorText unconditionally without deduplicating, so a hint that
+    // already equals the error text would be announced twice. Dropping the
+    // hint here is what keeps the announcement single.
+    final effectiveSemanticHint =
+        joinedSemanticHint == effectiveSemanticErrorText
+        ? null
+        : joinedSemanticHint;
+
+    final nakedTextField = NakedTextField(
+      groupId: config.groupId,
+      controller: config.controller,
+      focusNode: _effectiveFocusNode,
+      undoController: config.undoController,
+      keyboardType: config.keyboardType,
+      textInputAction: config.textInputAction,
+      textCapitalization: config.textCapitalization,
+      textAlign: spec.textAlign ?? .start,
+      textDirection: config.textDirection,
+      readOnly: config.readOnly,
+      showCursor: config.showCursor,
+      autofocus: config.autofocus,
+      obscuringCharacter: config.obscuringCharacter,
+      obscureText: config.obscureText,
+      autocorrect: config.autocorrect,
+      smartDashesType: config.smartDashesType,
+      smartQuotesType: config.smartQuotesType,
+      enableSuggestions: config.enableSuggestions,
+      maxLines: config.maxLines,
+      minLines: config.minLines,
+      expands: config.expands,
+      maxLength: config.maxLength,
+      maxLengthEnforcement: config.maxLengthEnforcement,
+      onChanged: config.onChanged,
+      onEditingComplete: config.onEditingComplete,
+      onSubmitted: config.onSubmitted,
+      onAppPrivateCommand: config.onAppPrivateCommand,
+      inputFormatters: config.inputFormatters,
+      enabled: config.enabled,
+      error: config.error,
+      cursorWidth: spec.cursorWidth ?? 2.0,
+      cursorHeight: spec.cursorHeight,
+      cursorRadius: spec.cursorRadius,
+      cursorOpacityAnimates: spec.cursorOpacityAnimates,
+      cursorColor: spec.cursorColor,
+      selectionHeightStyle: spec.selectionHeightStyle ?? .tight,
+      selectionWidthStyle: spec.selectionWidthStyle ?? .tight,
+      keyboardAppearance: spec.keyboardAppearance,
+      scrollPadding: spec.scrollPadding ?? const .all(20.0),
+      dragStartBehavior: config.dragStartBehavior,
+      enableInteractiveSelection: config.enableInteractiveSelection,
+      selectionControls: config.selectionControls,
+      onTap: config.onTap,
+      onTapAlwaysCalled: config.onTapAlwaysCalled,
+      onTapOutside: config.onTapOutside,
+      scrollController: config.scrollController,
+      scrollPhysics: config.scrollPhysics,
+      autofillHints: config.autofillHints,
+      contentInsertionConfiguration: config.contentInsertionConfiguration,
+      clipBehavior: config.clipBehavior,
+      restorationId: config.restorationId,
+      onTapUpOutside: config.onPressUpOutside,
+      stylusHandwritingEnabled: config.stylusHandwritingEnabled,
+      enableIMEPersonalizedLearning: config.enableIMEPersonalizedLearning,
+      contextMenuBuilder: config.contextMenuBuilder,
+      canRequestFocus: config.canRequestFocus,
+      spellCheckConfiguration: config.spellCheckConfiguration,
+      magnifierConfiguration: config.magnifierConfiguration,
+      onFocusChange: (value) => _styleController.update(.focused, value),
+      onPressChange: acceptsPointerEvents
+          ? (bool pressed) => _updatePressSource(.editable, pressed)
+          : null,
+      ignorePointers: config.ignorePointers,
+      semanticLabel: config.semanticLabel ?? config.label,
+      semanticHint: effectiveSemanticHint,
+      semanticErrorText: effectiveSemanticErrorText,
+      builder: (BuildContext context, _, Widget editableText) {
+        final textFieldState = NakedTextFieldState.of(context);
+        final styledEditableText = StyleSpecBuilder(
+          styleSpec: spec.text,
+          builder: (context, textSpec) => DefaultTextStyle.merge(
+            style: textSpec.style,
+            child: editableText,
+          ),
+        );
+
+        final editableWithHint = config.hintText != null
+            ? Stack(
+                alignment: hintAlignment,
+                children: [
+                  if (textFieldState.text.isEmpty)
+                    Positioned.fill(
+                      child: Align(
+                        alignment: hintAlignment,
+                        child: ExcludeSemantics(
+                          child: StyledText(
+                            config.hintText!,
+                            styleSpec: spec.hintText,
+                          ),
+                        ),
+                      ),
+                    ),
+                  styledEditableText,
+                ],
+              )
+            : styledEditableText;
+
+        return config.error
+            ? Semantics(
+                validationResult: SemanticsValidationResult.invalid,
+                child: editableWithHint,
+              )
+            : editableWithHint;
+      },
+    );
+
+    final withAccessories = RemixBoxWithEffects(
+      styleSpec: spec.container,
+      containerEffects: spec.containerEffects,
+      child: Row(
+        spacing: spec.spacing ?? 0,
+        crossAxisAlignment:
+            spec.crossAxisAlignment ?? CrossAxisAlignment.center,
+        textBaseline: TextBaseline.alphabetic,
+        children: [
+          ?config.leading,
+          Expanded(child: nakedTextField),
+          ?config.trailing,
+        ],
+      ),
+    );
+
+    final needsWrapper = config.label != null || config.helperText != null;
+    Widget composite = needsWrapper
+        ? FlexBox(
+            styleSpec: spec.layout,
+            children: [
+              if (config.label != null)
+                ExcludeSemantics(
+                  child: StyledText(config.label!, styleSpec: spec.label),
+                ),
+              withAccessories,
+              if (config.helperText != null)
+                ExcludeSemantics(
+                  child: StyledText(
+                    config.helperText!,
+                    styleSpec: spec.helperText,
+                  ),
+                ),
+            ],
+          )
+        : withAccessories;
+
+    composite = _RemixTextFieldFallbackGestureDetector(
+      enabled: acceptsPointerEvents,
+      onTapAlwaysCalled: config.onTapAlwaysCalled,
+      onPressChange: (bool pressed) => _updatePressSource(.fallback, pressed),
+      onTap: () {
+        if (config.canRequestFocus && _effectiveFocusNode.canRequestFocus) {
+          _effectiveFocusNode.requestFocus();
+        }
+        config.onTap?.call();
+      },
+      child: composite,
+    );
+
+    if (config.enabled) {
+      composite = MouseRegion(
+        onEnter: (_) => _styleController.update(.hovered, true),
+        onExit: (_) => _styleController.update(.hovered, false),
+        cursor: SystemMouseCursors.text,
+        child: composite,
+      );
+    }
+
+    return config.excludeSemantics
+        ? ExcludeSemantics(child: composite)
+        : composite;
+  }
+
   @override
   Widget build(BuildContext context) {
     final config = widget.config;
@@ -538,15 +552,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
       style: _baseStyle.merge(config.style),
       styleSpec: config.styleSpec,
       controller: _styleController,
-      builder: (context, spec) => config._buildResolved(
-        spec,
-        _styleController,
-        _effectiveFocusNode,
-        onEditablePressChange: (pressed) =>
-            _updatePressSource(.editable, pressed),
-        onFallbackPressChange: (pressed) =>
-            _updatePressSource(.fallback, pressed),
-      ),
+      builder: (context, spec) => _buildResolved(spec),
     );
   }
 }
