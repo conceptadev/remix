@@ -92,3 +92,19 @@ class _DashboardActionPopoverState extends State<DashboardActionPopover> {
     );
   }
 }
+
+/// Positioning for a [DashboardActionPopover] anchored to a data table's
+/// trailing "actions" column: it expands from the row's end edge instead of
+/// [DashboardActionPopover.positioning]'s default start edge, so the popover
+/// never overshoots the table when the column sits at the table's own edge.
+const dataTableActionsPositioning = OverlayPositionConfig(
+  side: OverlaySide.bottom,
+  alignment: OverlayAlignment.end,
+  sideOffset: 4,
+);
+
+/// The compact kebab trigger shared by every data table actions column.
+const dataTableActionsTrigger = Padding(
+  padding: EdgeInsets.all(6),
+  child: Icon(Icons.more_horiz, size: 18),
+);

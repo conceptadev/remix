@@ -286,6 +286,8 @@ Remix provides a comprehensive set of production-ready components:
 - **Badge** - Status indicators and labels
 - **Card** - Content containers
 - **DataList** - Label/value metadata lists with a shared label column
+- **DataTable** - Controlled tables with shared column headers, sorting, selection, and pagination
+- **Skeleton** - Loading placeholders that mirror their content
 - **Divider** - Visual separators
 - **Progress** - Progress indicators
 - **Spinner** - Loading states

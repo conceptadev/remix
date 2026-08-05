@@ -45,6 +45,7 @@ void main() {
     const dataList = RemixDataList(
       items: [RemixDataListItem(label: 'Status', value: 'Active')],
     );
+    const dataTable = RemixDataTable<String>(rows: [], columns: []);
 
     expect(button.label, 'Save');
     expect(card.child, isA<Text>());
@@ -73,6 +74,18 @@ void main() {
     expect(dataList.orientation, Axis.horizontal);
     expect(dataList.style, isA<DataListStyler>());
     expect(dataList.styleSpec, isNull);
+    expect(dataTable.pageIndex, 0);
+    expect(dataTable.pageSize, 10);
+    expect(dataTable.pageSizeOptions, const [10, 20, 50]);
+    expect(dataTable.minimumWidth, 0);
+    expect(dataTable.selectedRowIds, isEmpty);
+    expect(dataTable.labels.rowsPerPage, 'Rows per page');
+    expect(
+      dataTable.pageRangeFormatter,
+      same(remixDefaultDataTablePageRangeFormatter),
+    );
+    expect(dataTable.style, isA<DataTableStyler>());
+    expect(dataTable.styleSpec, isNull);
   });
 
   test('menu data retains caller-owned identity', () {

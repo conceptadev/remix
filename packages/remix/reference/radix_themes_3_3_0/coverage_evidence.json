@@ -245,6 +245,29 @@
       "covers": ["state:disabled"]
     }
   ],
+  "data_table": [
+    {
+      "test": "test/components/data_table/data_table_fortal_parity_test.dart",
+      "case": "public contract has the pinned enum order and Radix defaults",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:variant.surface",
+        "enum:variant.ghost"
+      ]
+    },
+    {
+      "test": "test/components/data_table/data_table_widget_test.dart",
+      "case": "emits table, row, columnHeader, and cell roles",
+      "covers": ["state:idle", "state:passive"]
+    },
+    {
+      "test": "test/components/data_table/data_table_fortal_parity_test.dart",
+      "case": "hover and selection are pure color layers on the row",
+      "covers": ["state:hovered", "state:selected"]
+    }
+  ],
   "dialog": [
     {
       "test": "test/components/dialog/dialog_widget_test.dart",

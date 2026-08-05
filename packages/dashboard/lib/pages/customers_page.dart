@@ -3,8 +3,10 @@ import 'package:remix/remix.dart';
 
 import '../data/customers.dart';
 import '../data/models.dart';
+import '../utils/date_format.dart';
+import '../utils/pagination.dart';
 import '../widgets/action_popover.dart';
-import '../widgets/data_grid.dart';
+import '../widgets/data_table_cell_text.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/page_header.dart';
 import '../widgets/toast.dart';
@@ -20,8 +22,11 @@ class CustomersPage extends StatefulWidget {
 
 class _CustomersPageState extends State<CustomersPage> {
   String _query = '';
-  DataGridSort _sort = const DataGridSort('joined', .descending);
-  Set<String> _selectedIds = {};
+  RemixDataTableSort _sort = const RemixDataTableSort(
+    columnId: 'joined',
+    direction: .descending,
+  );
+  Set<Object> _selectedIds = {};
   int _page = 0;
   int _rowsPerPage = 10;
 
@@ -34,12 +39,11 @@ class _CustomersPageState extends State<CustomersPage> {
       return haystack.contains(_query) && haystack.contains(globalQuery);
     }).toList();
     filtered.sort(_compareCustomers);
-    final maxPage = filtered.isEmpty
-        ? 0
-        : (filtered.length - 1) ~/ _rowsPerPage;
-    final safePage = _page.clamp(0, maxPage);
-    final start = safePage * _rowsPerPage;
-    final visible = filtered.skip(start).take(_rowsPerPage).toList();
+    final (page: safePage, items: visible) = paginate(
+      filtered,
+      page: _page,
+      rowsPerPage: _rowsPerPage,
+    );
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(32),
@@ -113,23 +117,26 @@ class _CustomersPageState extends State<CustomersPage> {
               return Row(children: [search, const Spacer(), ?selection]);
             },
           ),
-          DataGrid<Customer>(
+          FortalDataTable<Customer>.surface(
             key: const ValueKey('data-grid-customers'),
             rows: visible,
             columns: _columns,
+            semanticLabel: 'Customers',
+            minimumWidth: 840,
             sort: _sort,
             onSortChanged: (sort) => setState(() {
               _sort = sort;
               _page = 0;
             }),
             rowId: (customer) => customer.id,
-            selectedIds: _selectedIds,
+            selectedRowIds: _selectedIds,
             onSelectionChanged: (ids) => setState(() => _selectedIds = ids),
             totalRows: filtered.length,
-            page: safePage,
-            rowsPerPage: _rowsPerPage,
+            pageIndex: safePage,
+            pageSize: _rowsPerPage,
+            pageSizeOptions: const [5, 10, 20],
             onPageChanged: (page) => setState(() => _page = page),
-            onRowsPerPageChanged: (count) => setState(() {
+            onPageSizeChanged: (count) => setState(() {
               _rowsPerPage = count;
               _page = 0;
             }),
@@ -152,63 +159,59 @@ class _CustomersPageState extends State<CustomersPage> {
     return _sort.direction == .ascending ? result : -result;
   }
 
-  List<DataGridColumn<Customer>> get _columns => [
-    DataGridColumn(
+  List<RemixDataTableColumn<Customer>> get _columns => [
+    RemixDataTableColumn(
       id: 'name',
       label: 'Customer',
       sortable: true,
-      flex: 2,
+      width: const FlexColumnWidth(2),
       cellBuilder: (context, customer) => Row(
         mainAxisSize: .min,
         spacing: 9,
         children: [
           FortalAvatar(size: .size2, label: customer.initials),
-          Flexible(child: _PrimaryText(customer.name)),
+          Flexible(child: DataTableCellText(customer.name, primary: true)),
         ],
       ),
     ),
-    DataGridColumn(
+    RemixDataTableColumn(
       id: 'email',
       label: 'Email',
-      flex: 2,
-      cellBuilder: (_, customer) => _SecondaryText(customer.email),
+      width: const FlexColumnWidth(2),
+      cellBuilder: (_, customer) => DataTableCellText(customer.email),
     ),
-    DataGridColumn(
+    RemixDataTableColumn(
       id: 'plan',
       label: 'Plan',
-      width: 110,
-      cellBuilder: (_, customer) => _PrimaryText(customer.plan),
+      width: const FixedColumnWidth(110),
+      cellBuilder: (_, customer) =>
+          DataTableCellText(customer.plan, primary: true),
     ),
-    DataGridColumn(
+    RemixDataTableColumn(
       id: 'status',
       label: 'Status',
-      width: 110,
+      width: const FixedColumnWidth(110),
       cellBuilder: (_, customer) => _CustomerStatusBadge(customer.status),
     ),
-    DataGridColumn(
+    RemixDataTableColumn(
       id: 'joined',
       label: 'Joined',
       sortable: true,
-      width: 118,
-      cellBuilder: (_, customer) => _SecondaryText(_date(customer.joinedAt)),
+      width: const FixedColumnWidth(118),
+      cellBuilder: (_, customer) =>
+          DataTableCellText(formatShortDate(customer.joinedAt)),
     ),
-    DataGridColumn(
+    RemixDataTableColumn(
       id: 'actions',
-      label: '',
-      width: 46,
-      align: .right,
+      header: const SizedBox.shrink(),
+      semanticLabel: 'Actions',
+      width: const FixedColumnWidth(64),
+      alignment: .end,
       cellBuilder: (context, customer) => DashboardActionPopover(
         key: ValueKey('customer-actions-${customer.id}'),
         semanticLabel: 'Actions for ${customer.name}',
-        positioning: const OverlayPositionConfig(
-          side: .bottom,
-          alignment: .end,
-          sideOffset: 4,
-        ),
-        trigger: const Padding(
-          padding: EdgeInsets.all(6),
-          child: Icon(Icons.more_horiz, size: 18),
-        ),
+        positioning: dataTableActionsPositioning,
+        trigger: dataTableActionsTrigger,
         actions: const [
           DashboardAction(value: 'view', label: 'View profile'),
           DashboardAction(value: 'email', label: 'Send email'),
@@ -242,50 +245,4 @@ class _CustomerStatusBadge extends StatelessWidget {
       child: FortalBadge(label: label),
     );
   }
-}
-
-class _PrimaryText extends StatelessWidget {
-  const _PrimaryText(this.text);
-  final String text;
-
-  @override
-  Widget build(BuildContext context) => StyledText(
-    text,
-    style: TextStyler(style: FortalTokens.text2.mix())
-        .fontWeight(.w500)
-        .color(FortalTokens.gray12())
-        .maxLines(1)
-        .overflow(.ellipsis),
-  );
-}
-
-class _SecondaryText extends StatelessWidget {
-  const _SecondaryText(this.text);
-  final String text;
-
-  @override
-  Widget build(BuildContext context) => StyledText(
-    text,
-    style: TextStyler(
-      style: FortalTokens.text2.mix(),
-    ).color(FortalTokens.gray11()).maxLines(1).overflow(.ellipsis),
-  );
-}
-
-String _date(DateTime value) {
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-  return '${months[value.month - 1]} ${value.day}, ${value.year}';
 }

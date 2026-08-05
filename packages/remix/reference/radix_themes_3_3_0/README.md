@@ -28,3 +28,12 @@ fvm dart run tool/fortal_parity/check.dart
 
 Chromium reference output is kept under `chromium/` and is never used as a
 self-validating oracle for Flutter rendering.
+
+The `data_table` family is named for the Flutter component but cites Radix
+`Table`. Only the passive visuals are parity claims: cell padding, minimum
+cell height, typography, radius, the `gray-a5` row divider, bold column
+headers, and the surface panel, border, `gray-a2` header background, and
+suppressed last-row divider. Radix's Table has no data engine, so controlled
+sorting, page-scoped selection, pagination, row hover, arbitrary row actions,
+and horizontal scrolling are recorded as Flutter/Fortal extensions in
+`flutterExceptions` rather than parity claims.

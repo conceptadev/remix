@@ -102,6 +102,9 @@ writeFileSync(
 );
 
 const screenshot = join(outputDirectory, 'families-light.png');
+// The completion probe below only checks that the file exists, so a stale
+// capture from a previous run would satisfy it immediately.
+rmSync(screenshot, { force: true });
 await runChromium(
   [
     '--window-size=1440,1280',

@@ -6,7 +6,7 @@
     "tarball": "https://registry.npmjs.org/@radix-ui/themes/-/themes-3.3.0.tgz"
   },
   "generator": {
-    "chromium": "Google Chrome 150.0.7871.127",
+    "chromium": "Google Chrome 150.0.7871.187",
     "viewport": {
       "width": 1440,
       "height": 1280,
@@ -187,6 +187,32 @@
         "transform": "none",
         "filter": "none",
         "backdropFilter": "none",
+        "animationDuration": "0s",
+        "fontSize": "16px",
+        "lineHeight": "24px"
+      }
+    },
+    "data-table": {
+      "className": "rt-TableRoot rt-r-size-2 rt-variant-surface fixture-data-table",
+      "styles": {
+        "display": "block",
+        "position": "relative",
+        "width": "290px",
+        "height": "134px",
+        "minWidth": "auto",
+        "minHeight": "auto",
+        "padding": "0px",
+        "gap": "normal",
+        "borderWidth": "1px",
+        "borderColor": "oklab(0.809353 0.00127596 -0.0170646 / 0.560784)",
+        "borderRadius": "8px",
+        "backgroundColor": "rgba(255, 255, 255, 0.7)",
+        "color": "rgb(28, 32, 36)",
+        "boxShadow": "none",
+        "opacity": "1",
+        "transform": "none",
+        "filter": "none",
+        "backdropFilter": "blur(64px)",
         "animationDuration": "0s",
         "fontSize": "16px",
         "lineHeight": "24px"

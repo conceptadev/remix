@@ -285,8 +285,11 @@ Remix provides a comprehensive set of production-ready components:
 - **Avatar** - User avatars and images
 - **Badge** - Status indicators and labels
 - **Card** - Content containers
+- **DataList** - Label/value metadata lists with a shared label column
+- **DataTable** - Controlled tables with shared column headers, sorting, selection, and pagination
 - **Divider** - Visual separators
 - **Progress** - Progress indicators
+- **Skeleton** - Loading placeholders that mirror their content
 - **Spinner** - Loading states
 
 ### Layout & Navigation

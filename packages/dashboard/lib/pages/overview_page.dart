@@ -4,7 +4,6 @@ import 'package:remix/remix.dart';
 import '../data/activity.dart';
 import '../data/models.dart';
 import '../data/orders.dart';
-import '../widgets/data_grid.dart';
 import '../widgets/page_header.dart';
 import '../widgets/stat_card.dart';
 
@@ -210,36 +209,37 @@ class _RecentOrders extends StatelessWidget {
               ),
             ],
           ),
-          DataGrid<Order>(
+          FortalDataTable<Order>.surface(
             rows: orders.take(5).toList(),
+            semanticLabel: 'Recent orders',
             minimumWidth: 560,
             columns: [
-              DataGridColumn(
+              RemixDataTableColumn(
                 id: 'id',
                 label: 'Order',
-                width: 105,
+                width: const FixedColumnWidth(105),
                 cellBuilder: (_, order) => _OrderText(order.id, primary: true),
               ),
-              DataGridColumn(
+              RemixDataTableColumn(
                 id: 'customer',
                 label: 'Customer',
-                flex: 2,
+                width: const FlexColumnWidth(2),
                 cellBuilder: (_, order) => _OrderText(order.customer),
               ),
-              DataGridColumn(
+              RemixDataTableColumn(
                 id: 'amount',
                 label: 'Amount',
-                width: 100,
-                align: .right,
+                width: const FixedColumnWidth(100),
+                alignment: .end,
                 cellBuilder: (_, order) => _OrderText(
                   '\$${order.amount.toStringAsFixed(2)}',
                   primary: true,
                 ),
               ),
-              DataGridColumn(
+              RemixDataTableColumn(
                 id: 'status',
                 label: 'Status',
-                width: 94,
+                width: const FixedColumnWidth(94),
                 cellBuilder: (_, order) => FortalScope(
                   accent: order.status == .paid ? .green : .amber,
                   hasBackground: false,

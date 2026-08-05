@@ -3,8 +3,10 @@ import 'package:remix/remix.dart';
 
 import '../data/models.dart';
 import '../data/orders.dart';
+import '../utils/date_format.dart';
+import '../utils/pagination.dart';
 import '../widgets/action_popover.dart';
-import '../widgets/data_grid.dart';
+import '../widgets/data_table_cell_text.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/page_header.dart';
 import '../widgets/toast.dart';
@@ -22,7 +24,10 @@ class OrdersPage extends StatefulWidget {
 
 class _OrdersPageState extends State<OrdersPage> {
   _OrderFilter _filter = .all;
-  DataGridSort _sort = const DataGridSort('date', .descending);
+  RemixDataTableSort _sort = const RemixDataTableSort(
+    columnId: 'date',
+    direction: .descending,
+  );
   int _page = 0;
   int _rowsPerPage = 10;
 
@@ -37,14 +42,11 @@ class _OrdersPageState extends State<OrdersPage> {
           .contains(query);
       return statusMatches && queryMatches;
     }).toList()..sort(_compareOrders);
-    final maxPage = filtered.isEmpty
-        ? 0
-        : (filtered.length - 1) ~/ _rowsPerPage;
-    final safePage = _page.clamp(0, maxPage);
-    final visible = filtered
-        .skip(safePage * _rowsPerPage)
-        .take(_rowsPerPage)
-        .toList();
+    final (page: safePage, items: visible) = paginate(
+      filtered,
+      page: _page,
+      rowsPerPage: _rowsPerPage,
+    );
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(32),
@@ -87,20 +89,23 @@ class _OrdersPageState extends State<OrdersPage> {
               ),
             ),
           ),
-          DataGrid<Order>(
+          FortalDataTable<Order>.surface(
             key: const ValueKey('data-grid-orders'),
             rows: visible,
             columns: _columns,
+            semanticLabel: 'Orders',
+            minimumWidth: 840,
             sort: _sort,
             onSortChanged: (sort) => setState(() {
               _sort = sort;
               _page = 0;
             }),
             totalRows: filtered.length,
-            page: safePage,
-            rowsPerPage: _rowsPerPage,
+            pageIndex: safePage,
+            pageSize: _rowsPerPage,
+            pageSizeOptions: const [5, 10, 20],
             onPageChanged: (page) => setState(() => _page = page),
-            onRowsPerPageChanged: (count) => setState(() {
+            onPageSizeChanged: (count) => setState(() {
               _rowsPerPage = count;
               _page = 0;
             }),
@@ -123,58 +128,55 @@ class _OrdersPageState extends State<OrdersPage> {
     return _sort.direction == .ascending ? result : -result;
   }
 
-  List<DataGridColumn<Order>> get _columns => [
-    DataGridColumn(
+  List<RemixDataTableColumn<Order>> get _columns => [
+    RemixDataTableColumn(
       id: 'id',
       label: 'Order',
-      width: 120,
-      cellBuilder: (_, order) => _CellText(order.id, primary: true),
+      width: const FixedColumnWidth(120),
+      cellBuilder: (_, order) => DataTableCellText(order.id, primary: true),
     ),
-    DataGridColumn(
+    RemixDataTableColumn(
       id: 'customer',
       label: 'Customer',
-      flex: 2,
-      cellBuilder: (_, order) => _CellText(order.customer, primary: true),
+      width: const FlexColumnWidth(2),
+      cellBuilder: (_, order) =>
+          DataTableCellText(order.customer, primary: true),
     ),
-    DataGridColumn(
+    RemixDataTableColumn(
       id: 'date',
       label: 'Date',
-      width: 120,
+      width: const FixedColumnWidth(120),
       sortable: true,
-      cellBuilder: (_, order) => _CellText(_date(order.date)),
+      cellBuilder: (_, order) => DataTableCellText(formatShortDate(order.date)),
     ),
-    DataGridColumn(
+    RemixDataTableColumn(
       id: 'amount',
       label: 'Amount',
-      width: 120,
-      align: .right,
+      width: const FixedColumnWidth(120),
+      alignment: .end,
       sortable: true,
-      cellBuilder: (_, order) =>
-          _CellText('\$${order.amount.toStringAsFixed(2)}', primary: true),
+      cellBuilder: (_, order) => DataTableCellText(
+        '\$${order.amount.toStringAsFixed(2)}',
+        primary: true,
+      ),
     ),
-    DataGridColumn(
+    RemixDataTableColumn(
       id: 'status',
       label: 'Status',
-      width: 118,
+      width: const FixedColumnWidth(118),
       cellBuilder: (_, order) => _OrderStatusBadge(order.status),
     ),
-    DataGridColumn(
+    RemixDataTableColumn(
       id: 'actions',
-      label: '',
-      width: 46,
-      align: .right,
+      header: const SizedBox.shrink(),
+      semanticLabel: 'Actions',
+      width: const FixedColumnWidth(64),
+      alignment: .end,
       cellBuilder: (context, order) => DashboardActionPopover(
         key: ValueKey('order-actions-${order.id}'),
         semanticLabel: 'Actions for ${order.id}',
-        positioning: const OverlayPositionConfig(
-          side: .bottom,
-          alignment: .end,
-          sideOffset: 4,
-        ),
-        trigger: const Padding(
-          padding: EdgeInsets.all(6),
-          child: Icon(Icons.more_horiz, size: 18),
-        ),
+        positioning: dataTableActionsPositioning,
+        trigger: dataTableActionsTrigger,
         actions: const [
           DashboardAction(value: 'view', label: 'View order'),
           DashboardAction(value: 'receipt', label: 'Download receipt'),
@@ -210,38 +212,4 @@ class _OrderStatusBadge extends StatelessWidget {
       child: FortalBadge(label: label),
     );
   }
-}
-
-class _CellText extends StatelessWidget {
-  const _CellText(this.text, {this.primary = false});
-  final String text;
-  final bool primary;
-
-  @override
-  Widget build(BuildContext context) => StyledText(
-    text,
-    style: TextStyler(style: FortalTokens.text2.mix())
-        .fontWeight(primary ? .w500 : .w400)
-        .color(primary ? FortalTokens.gray12() : FortalTokens.gray11())
-        .maxLines(1)
-        .overflow(.ellipsis),
-  );
-}
-
-String _date(DateTime value) {
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-  return '${months[value.month - 1]} ${value.day}, ${value.year}';
 }

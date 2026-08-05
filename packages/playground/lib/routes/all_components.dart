@@ -7,6 +7,7 @@ import '../registry/entries/card_entry.dart';
 import '../registry/entries/callout_entry.dart';
 import '../registry/entries/checkbox_entry.dart';
 import '../registry/entries/data_list_entry.dart';
+import '../registry/entries/data_table_entry.dart';
 import '../registry/entries/divider_entry.dart';
 import '../registry/entries/progress_entry.dart';
 import '../registry/entries/radio_entry.dart';
@@ -48,6 +49,7 @@ class AllComponentsPage extends StatelessWidget {
         _section('Callout', buildCalloutExample()),
         _section('Checkbox', buildCheckboxExample()),
         _section('Data List', buildDataListExample()),
+        _section('Data Table', buildDataTableExample()),
         _section('Divider', buildDividerExample()),
         _section('Progress', buildProgressExample()),
         _section('Radio', buildRadioExample()),
