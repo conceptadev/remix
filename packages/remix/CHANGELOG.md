@@ -16,6 +16,18 @@
   target and an explicit `Size.zero` compact opt-out. Mix now generates the
   label, label-spacing, interpolation, equality, and fluent label APIs, and
   generated Fortal checkbox wrappers forward the new widget parameters.
+- **FEAT**: Add `RemixCheckboxGroup<T extends Object>` and
+  `RemixCheckboxGroupItem<T extends Object>`, a controlled, layout-transparent
+  coordinator for a typed `Set<T>` of checkbox options. The group owns selected
+  values plus group-wide enabled/required semantics; items compose
+  `RemixCheckbox`, require a visible `label`, accept `semanticLabel` as an
+  accessible-name override, and forward `minimumTapTargetSize`, so existing
+  `CheckboxStyler`/`fortalCheckboxStyle()` recipes apply unchanged while the
+  entire labeled 48px target stays interactive. Emits a new unmodifiable set
+  per change and renders a labeled semantics container with explicit checkbox
+  children. Debug builds validate duplicate values, duplicate autofocus, and
+  blank accessible names, and require a nonblank group `semanticLabel`
+  whenever `isRequired` is true and semantics are not excluded.
 - **BREAKING** **FEAT**: Add checkbox items, radio groups, and submenus to the
   sealed `RemixMenuItemData` hierarchy. Downstream exhaustive switches must
   handle the new cases or add a wildcard; no runtime migration is required.
