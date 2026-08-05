@@ -1,5 +1,10 @@
 ## Unreleased
 
+- **FEAT**: Add an optional styled `RemixCheckbox.label` inside the checkbox's
+  pointer, focus, and single semantics target, with a 48-by-48 default minimum
+  target and an explicit `Size.zero` compact opt-out. Mix now generates the
+  label, label-spacing, interpolation, equality, and fluent label APIs, and
+  generated Fortal checkbox wrappers forward the new widget parameters.
 - **BREAKING** **FEAT**: Add checkbox items, radio groups, and submenus to the
   sealed `RemixMenuItemData` hierarchy. Downstream exhaustive switches must
   handle the new cases or add a wildcard; no runtime migration is required.

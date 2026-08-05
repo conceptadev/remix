@@ -334,7 +334,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        final smallSize = tester.getSize(find.byType(RemixCheckbox));
+        final smallSize = tester.getSize(find.byType(Box));
 
         final largeStyle = CheckboxStyler().size(32.0, 32.0);
         await tester.pumpRemixApp(
@@ -346,7 +346,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        final largeSize = tester.getSize(find.byType(RemixCheckbox));
+        final largeSize = tester.getSize(find.byType(Box));
 
         expect(largeSize.width, greaterThan(smallSize.width));
         expect(largeSize.height, greaterThan(smallSize.height));
