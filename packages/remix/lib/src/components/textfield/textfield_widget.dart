@@ -328,6 +328,13 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
       _activePressSources.clear();
       _styleController.update(.pressed, false);
     }
+    // Deliberate: the hover MouseRegion is unmounted while disabled and an
+    // unmounted MouseRegion never fires onExit, so the hovered flag must be
+    // cleared here. A pointer still over the field re-acquires it on re-enable
+    // because MouseTracker dispatches enter events to newly mounted regions.
+    if (!widget.config.enabled) {
+      _styleController.update(.hovered, false);
+    }
   }
 
   void _updatePressSource(_RemixTextFieldPressSource source, bool pressed) {
