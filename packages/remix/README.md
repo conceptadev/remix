@@ -288,9 +288,9 @@ Remix provides a comprehensive set of production-ready components:
 - **Card** - Content containers
 - **DataList** - Label/value metadata lists with a shared label column
 - **DataTable** - Controlled tables with shared column headers, sorting, selection, and pagination
-- **Skeleton** - Loading placeholders that mirror their content
 - **Divider** - Visual separators
 - **Progress** - Progress indicators
+- **Skeleton** - Loading placeholders that mirror their content
 - **Spinner** - Loading states
 
 ### Layout & Navigation

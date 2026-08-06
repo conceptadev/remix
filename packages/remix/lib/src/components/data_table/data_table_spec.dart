@@ -62,6 +62,11 @@ class DataTableSpec with _$DataTableSpec {
   /// Null keeps the last row identical to the others. Radix's surface variant
   /// is the one real consumer: it drops the trailing divider so the last row
   /// does not double up with the panel border.
+  ///
+  /// On the styler path the override merges over [bodyRow]; a raw
+  /// [RemixDataTable.styleSpec] carries resolved specs, which cannot merge,
+  /// so there a non-null value replaces [bodyRow] wholesale and must be
+  /// pre-composed by the caller.
   @override
   final StyleSpec<BoxSpec>? lastBodyRow;
 

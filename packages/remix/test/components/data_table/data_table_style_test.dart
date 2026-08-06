@@ -51,6 +51,7 @@ List<Color?> _boxColors(WidgetTester tester) {
 }
 
 Widget _table({
+  List<_Record> rows = _records,
   DataTableStyler? style,
   DataTableSpec? styleSpec,
   bool selectable = false,
@@ -59,7 +60,7 @@ Widget _table({
   List<RemixDataTableColumn<_Record>>? columns,
 }) {
   return RemixDataTable<_Record>(
-    rows: _records,
+    rows: rows,
     columns: columns ?? _columns(),
     minimumWidth: minimumWidth,
     rowId: selectable ? (row) => row.id : null,
@@ -141,6 +142,36 @@ void main() {
       expect(find.byType(SingleChildScrollView), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
+
+    testWidgets(
+      'keeps pagination controls in the viewport while table scrolls',
+      (tester) async {
+        const viewportKey = ValueKey('data-table-viewport');
+        await tester.pumpRemixApp(
+          SizedBox(
+            key: viewportKey,
+            width: 500,
+            child: RemixDataTable<_Record>(
+              rows: _records,
+              columns: _columns(),
+              minimumWidth: 640,
+              totalRows: 42,
+              onPageChanged: (_) {},
+              onPageSizeChanged: (_) {},
+            ),
+          ),
+        );
+
+        expect(tester.getSize(_tableFinder).width, 640);
+        final viewport = tester.getRect(find.byKey(viewportKey));
+        expect(
+          tester
+              .getRect(find.byKey(const ValueKey('remix-data-table-next-page')))
+              .right,
+          lessThanOrEqualTo(viewport.right),
+        );
+      },
+    );
 
     testWidgets('resolves flex columns under an unbounded parent', (
       tester,
@@ -325,6 +356,78 @@ void main() {
       final colors = _boxColors(tester);
       expect(colors.where((c) => c == const Color(0xFF999999)), hasLength(2));
       expect(colors.where((c) => c == const Color(0xFF777777)), hasLength(2));
+    });
+
+    testWidgets('provider-inherited stylers resolve on a hovered row', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        StyleProvider<DataTableSpec>(
+          style: DataTableStyler().bodyRow(
+            BoxStyler()
+                .color(const Color(0xFF777777))
+                .onHovered(BoxStyler().color(const Color(0xFF999999))),
+          ),
+          child: SizedBox(width: 400, child: _table()),
+        ),
+      );
+
+      final pointer = TestPointer(1, PointerDeviceKind.mouse);
+      await tester.sendEventToBinding(
+        pointer.hover(tester.getCenter(find.text('Ada'))),
+      );
+      await tester.pump();
+
+      final colors = _boxColors(tester);
+      expect(colors.where((c) => c == const Color(0xFF999999)), hasLength(2));
+      expect(colors.where((c) => c == const Color(0xFF777777)), hasLength(2));
+    });
+
+    testWidgets('clears a hovered row index when row content changes', (
+      tester,
+    ) async {
+      final style = DataTableStyler().bodyRow(
+        BoxStyler()
+            .color(const Color(0xFF777777))
+            .onHovered(BoxStyler().color(const Color(0xFF999999))),
+      );
+      final c = _Record('c', 'Curie');
+
+      await tester.pumpRemixApp(
+        SizedBox(width: 400, child: _table(style: style)),
+      );
+
+      final pointer = TestPointer(1, PointerDeviceKind.mouse);
+      await tester.sendEventToBinding(
+        pointer.hover(tester.getCenter(find.text('Blaise'))),
+      );
+      await tester.pump();
+      expect(
+        _boxColors(tester).where((c) => c == const Color(0xFF999999)),
+        hasLength(2),
+      );
+
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 400,
+          child: _table(rows: [_records.first], style: style),
+        ),
+      );
+      // Once the hovered MouseRegion is gone, moving the pointer cannot fire
+      // its onExit callback.
+      await tester.sendEventToBinding(pointer.hover(const Offset(1000, 1000)));
+      await tester.pump();
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 400,
+          child: _table(rows: [_records.first, c], style: style),
+        ),
+      );
+
+      expect(
+        _boxColors(tester).where((c) => c == const Color(0xFF999999)),
+        isEmpty,
+      );
     });
 
     testWidgets('selection visuals do not change row geometry', (tester) async {
