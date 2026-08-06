@@ -11,10 +11,12 @@ import '../registry/entries/data_table_entry.dart';
 import '../registry/entries/divider_entry.dart';
 import '../registry/entries/progress_entry.dart';
 import '../registry/entries/radio_entry.dart';
+import '../registry/entries/segmented_control_entry.dart';
 import '../registry/entries/select_entry.dart';
 import '../registry/entries/slider_entry.dart';
 import '../registry/entries/spinner_entry.dart';
 import '../registry/entries/switch_entry.dart';
+import '../registry/entries/textarea_entry.dart';
 import '../registry/entries/tooltip_entry.dart';
 
 class AllComponentsPage extends StatelessWidget {
@@ -53,10 +55,12 @@ class AllComponentsPage extends StatelessWidget {
         _section('Divider', buildDividerExample()),
         _section('Progress', buildProgressExample()),
         _section('Radio', buildRadioExample()),
+        _section('Segmented Control', buildSegmentedControlExample()),
         _section('Select', buildSelectExample()),
         _section('Slider', buildSliderExample()),
         _section('Spinner', buildSpinnerExample()),
         _section('Switch', buildSwitchExample()),
+        _section('TextArea', buildTextAreaExample()),
         _section('Tooltip', buildTooltipExample()),
       ],
     );

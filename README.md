@@ -279,6 +279,7 @@ Remix provides a comprehensive set of production-ready components:
 
 ### Input Components
 - **TextField** - Text input with validation support
+- **TextArea** - Multiline text input with safe auto-growing defaults
 - **Select** - Dropdown selection with keyboard navigation
 
 ### Display Components

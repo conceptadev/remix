@@ -2,7 +2,86 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
+enum Interest { design, code }
+
 void main() {
+  test('segmented control API is constructible from the package barrel', () {
+    const item = RemixSegmentedControlItem<String>(
+      value: 'list',
+      label: 'List',
+    );
+    const control = RemixSegmentedControl<String>(
+      items: [item],
+      selectedValue: 'list',
+    );
+    const unselectedControl = RemixSegmentedControl<int>(
+      items: [RemixSegmentedControlItem<int>(value: 1, label: 'One')],
+      selectedValue: null,
+    );
+
+    expect(control.items.single, item);
+    expect(unselectedControl.items.single.value, 1);
+    expect(unselectedControl.selectedValue, isNull);
+    expect(control.style, isA<SegmentedControlStyler>());
+    expect(const SegmentedControlSpec(), isA<SegmentedControlSpec>());
+    expect(const SegmentedControlItemSpec(), isA<SegmentedControlItemSpec>());
+  });
+
+  test('segmented control styleFrom builds the widget in one step', () {
+    final SegmentedControlStyler styler = RemixSegmentedControl.styleFrom(
+      spacing: 4,
+      mainAxisSize: MainAxisSize.max,
+    );
+    const forwardedKey = ValueKey<String>('forwarded');
+    const items = [RemixSegmentedControlItem<String>(value: 'a', label: 'A')];
+
+    final called = styler<String>(
+      key: forwardedKey,
+      items: items,
+      selectedValue: 'a',
+      orientation: Axis.vertical,
+      loop: false,
+      semanticLabel: 'Forwarded',
+      excludeSemantics: true,
+    );
+
+    expect(called, isA<RemixSegmentedControl<String>>());
+    expect(called.key, forwardedKey);
+    expect(called.items, items);
+    expect(called.selectedValue, 'a');
+    expect(called.orientation, Axis.vertical);
+    expect(called.loop, isFalse);
+    expect(called.semanticLabel, 'Forwarded');
+    expect(called.excludeSemantics, isTrue);
+    expect(called.style, same(styler));
+  });
+
+  test(
+    'segmented callback receives T while selectedValue remains nullable',
+    () {
+      final changes = <String>[];
+
+      final control = RemixSegmentedControl<String>(
+        items: const [RemixSegmentedControlItem(value: 'grid', label: 'Grid')],
+        selectedValue: null,
+        onChanged: changes.add,
+      );
+
+      control.onChanged?.call('grid');
+
+      expect(control.selectedValue, isNull);
+      expect(changes, ['grid']);
+    },
+  );
+
+  test('RemixTextArea is exported as the multiline TextField facade', () {
+    const textArea = RemixTextArea();
+
+    expect(textArea, isA<RemixTextField>());
+    expect(textArea.minLines, 2);
+    expect(textArea.maxLines, isNull);
+  });
+
   test('the skeleton family is constructible from the public API', () {
     const spec = SkeletonSpec(
       container: StyleSpec(spec: BoxSpec()),
@@ -160,5 +239,69 @@ void main() {
     );
 
     expect(modifier, isNotNull);
+  });
+
+  test('checkbox groups are const-constructible over any value type', () {
+    const stringGroup = RemixCheckboxGroup<String>(
+      values: {'design'},
+      child: RemixCheckboxGroupItem<String>(value: 'design', label: 'Design'),
+    );
+    const enumGroup = RemixCheckboxGroup<Interest>(
+      values: {Interest.code},
+      child: RemixCheckboxGroupItem<Interest>(
+        value: Interest.code,
+        label: 'Code',
+      ),
+    );
+
+    expect(stringGroup.values, equals({'design'}));
+    expect(stringGroup.child, isA<RemixCheckboxGroupItem<String>>());
+    expect(enumGroup.values, equals({Interest.code}));
+    expect(enumGroup.child, isA<RemixCheckboxGroupItem<Interest>>());
+  });
+
+  test('checkbox group flags and item passthrough stay on the public API', () {
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+
+    final group = RemixCheckboxGroup<Interest>(
+      values: const {Interest.design},
+      onChanged: (Set<Interest> values) {},
+      enabled: false,
+      isRequired: true,
+      semanticLabel: 'Interests',
+      excludeSemantics: true,
+      child: RemixCheckboxGroupItem<Interest>(
+        value: Interest.design,
+        label: 'Design',
+        semanticLabel: 'Design interest',
+        enabled: false,
+        focusNode: focusNode,
+        autofocus: true,
+        checkedIcon: Icons.done,
+        uncheckedIcon: Icons.close,
+        enableFeedback: false,
+        minimumTapTargetSize: Size.zero,
+        mouseCursor: SystemMouseCursors.basic,
+        style: fortalCheckboxStyle(variant: FortalCheckboxVariant.soft),
+        styleSpec: const CheckboxSpec(),
+      ),
+    );
+
+    final item = group.child as RemixCheckboxGroupItem<Interest>;
+
+    expect(group.onChanged, isA<ValueChanged<Set<Interest>>>());
+    expect(group.enabled, isFalse);
+    expect(group.isRequired, isTrue);
+    expect(group.semanticLabel, 'Interests');
+    expect(group.excludeSemantics, isTrue);
+    expect(item.label, 'Design');
+    expect(item.semanticLabel, 'Design interest');
+    expect(item.focusNode, same(focusNode));
+    expect(item.autofocus, isTrue);
+    expect(item.minimumTapTargetSize, Size.zero);
+    expect(item.style, isA<CheckboxStyler>());
+    expect(item.styleSpec, isA<CheckboxSpec>());
+    expect(RemixCheckboxGroupItem.styleFrom, isNotNull);
   });
 }

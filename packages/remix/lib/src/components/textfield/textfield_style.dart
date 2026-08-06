@@ -21,7 +21,7 @@ extension RemixTextFieldStylerRemixHelpers on TextFieldStyler {
   TextFieldStyler backgroundColor(Color value) {
     return merge(
       TextFieldStyler(
-        container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
@@ -170,9 +170,5 @@ extension RemixTextFieldStylerRemixHelpers on TextFieldStyler {
       excludeSemantics: excludeSemantics,
       style: this,
     );
-  }
-
-  TextFieldStyler flex(FlexStyler value) {
-    return merge(TextFieldStyler(container: FlexBoxStyler().flex(value)));
   }
 }

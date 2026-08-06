@@ -1,0 +1,211 @@
+---
+title: Segmented Control
+description: An equal-segment, controlled single-select control with roving keyboard focus
+keywords: [flutter, remix, segmented control, single select, roving focus, keyboard]
+---
+
+A segmented control switches between a small set of mutually exclusive views
+or modes. It has a persistent track, equal segment extents, and a selected item
+surface. Selection is controlled by `selectedValue`; activating the selected
+item does not clear it or emit another change.
+
+The value type must be non-nullable (`T extends Object`). `null` is reserved for
+`selectedValue` to represent no selection; item values themselves cannot be
+null, and `onChanged` only emits non-null item values.
+
+<Info>
+  No Fortal preset ships for this component yet, so there is no `FortalSegmentedControl` and no themed default. An unstyled `RemixSegmentedControl` renders as bare text with no track, selected surface, or focus ring. Every example below passes an explicit style, and your app must do the same.
+</Info>
+
+## Basic implementation
+
+<CodeGroup title="Controlled segmented control" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class ReportingPeriodControl extends StatefulWidget {
+  const ReportingPeriodControl({super.key});
+
+  @override
+  State<ReportingPeriodControl> createState() =>
+      _ReportingPeriodControlState();
+}
+
+class _ReportingPeriodControlState extends State<ReportingPeriodControl> {
+  String _value = 'week';
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final disabledForeground = colors.onSurface.withValues(alpha: 0.35);
+    final itemStyle = SegmentedControlItemStyler()
+        .paddingX(12)
+        .paddingY(8)
+        .spacing(6)
+        .borderRadius(BorderRadiusGeometryMix.circular(7))
+        .labelColor(colors.onSurfaceVariant)
+        .iconColor(colors.onSurfaceVariant)
+        .onSelected(
+          .color(colors.surface)
+              .labelColor(colors.onSurface)
+              .iconColor(colors.onSurface)
+              .containerEffects(
+                RemixBoxEffectsMix(
+                  behindContent: RemixBoxEffectLayerMix(
+                    shadows: [
+                      RemixBoxShadowMix(
+                        color: colors.shadow.withValues(alpha: 0.18),
+                        offset: const Offset(0, 1),
+                        blurRadius: 3,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+        )
+        .onFocused(
+          .containerEffects(
+            RemixBoxEffectsMix(
+              outline: BorderSideMix(
+                color: colors.primary,
+                width: 2,
+                strokeAlign: BorderSide.strokeAlignInside,
+              ),
+              outlineOffset: 2,
+            ),
+          ),
+        )
+        .onDisabled(
+          .label(TextStyler().color(disabledForeground))
+              .iconColor(disabledForeground),
+        );
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        RemixSegmentedControl<String>(
+          semanticLabel: 'Reporting period',
+          items: const [
+            RemixSegmentedControlItem(value: 'day', label: 'Day'),
+            RemixSegmentedControlItem(value: 'week', label: 'This week'),
+            RemixSegmentedControlItem(value: 'month', label: 'Month'),
+            RemixSegmentedControlItem(
+              value: 'year',
+              label: 'Year',
+              enabled: false,
+            ),
+          ],
+          selectedValue: _value,
+          onChanged: (value) => setState(() => _value = value),
+          style: SegmentedControlStyler()
+              .paddingAll(4)
+              .borderRadius(BorderRadiusGeometryMix.circular(10))
+              .color(colors.surfaceContainerHighest)
+              .item(itemStyle),
+        ),
+        const SizedBox(height: 8),
+        Text('Selected: $_value'),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Icon-only items
+
+Icon-only segments must provide a nonblank `semanticLabel`. Labels and semantic
+labels containing only whitespace are rejected in debug builds. Naked owns the
+single accessible button node; the visual icon and text are excluded beneath
+it, so names and selected state are announced exactly once.
+
+<CodeGroup title="Icon-only layout selector" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+Widget layoutSelector({
+  required String value,
+  required ValueChanged<String> onChanged,
+  // Required, not optional: there is no themed preset to fall back on.
+  required SegmentedControlStyler style,
+}) {
+  return RemixSegmentedControl<String>(
+    semanticLabel: 'Layout',
+    items: const [
+      RemixSegmentedControlItem(
+        value: 'list',
+        icon: Icons.view_list,
+        semanticLabel: 'List view',
+      ),
+      RemixSegmentedControlItem(
+        value: 'grid',
+        icon: Icons.grid_view,
+        semanticLabel: 'Grid view',
+      ),
+    ],
+    selectedValue: value,
+    onChanged: onChanged,
+    style: style,
+  );
+}
+```
+</CodeGroup>
+
+## Vertical orientation
+
+Set `orientation: Axis.vertical` to equalize item heights and use Up/Down arrow
+navigation. Orientation and per-item disabled state are intentional Flutter
+extensions to the Radix model.
+
+## Keyboard behavior
+
+| Key | Behavior |
+| --- | --- |
+| `Tab` | Enters on the selected or first enabled segment; the next Tab exits |
+| `Arrow Left` / `Arrow Right` | Moves horizontal focus, following LTR/RTL direction |
+| `Arrow Up` / `Arrow Down` | Moves vertical focus |
+| `Home` / `End` | Moves to the first / last enabled segment |
+| `Space` / `Enter` | Selects the focused inactive segment |
+
+Arrow movement changes focus only. `loop: true` wraps at the ends; set it to
+false to clamp. A null `onChanged` or `enabled: false` disables the track and
+all items.
+
+Horizontal visual order, keyboard navigation, and semantics all follow the
+nearest `Directionality`. Track styling cannot override that direction; use
+`mainAxisSize` and `spacing` for track layout customization.
+
+## Sizing and wrapping
+
+The default track is intrinsic width (or intrinsic height vertically). Every
+item receives the largest item's main-axis extent. Explicit track constraints
+divide the requested extent equally. In narrow parents, labels wrap inside
+equal segments; keep labels short and use a visible output label when the
+selection needs more explanation.
+
+## Styling anatomy
+
+`SegmentedControlStyler` owns the persistent track. Its nested `item` style is
+the default for every segment, and each `RemixSegmentedControlItem.style` merges
+after it. Put selected, disabled, hover, focus, and press variants on
+`SegmentedControlItemStyler`. `containerEffects` supports inset/shadow stacks
+and offset focus outlines without changing geometry. A raw `styleSpec` is
+authoritative and bypasses fluent group and per-item styles.
+
+Both stylers start empty. Nothing supplies a track background, segment padding,
+selected surface, or focus ring unless you do, so treat `style` as required
+rather than optional.
+
+## v1 visual scope
+
+No Fortal preset ships for this component in v1. There is no
+`FortalSegmentedControl` widget and no `fortalSegmentedControlStyle` recipe, so
+a Fortal-themed application must hand the control a `SegmentedControlStyler`
+built from `FortalTokens` (or from its own design tokens). A Radix-parity preset
+is a follow-up, not a hidden default: callers own the visual layer today.
+
+The selected surface is static in v1. A sliding indicator and separator
+treatment are intentionally not reserved or animated; those remain parity
+follow-ups rather than hidden layout layers in this component.

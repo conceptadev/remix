@@ -1,10 +1,55 @@
 ## Unreleased
 
+- **FEAT**: Add `RemixSegmentedControl`, an equal-segment single-select control
+  mapped from Radix Segmented Control. A custom render object sizes every
+  segment to the largest one and divides an explicit track extent equally,
+  reporting intrinsics that stay consistent with layout so intrinsic-sizing
+  parents wrap labels instead of overflowing. Selection is controlled and
+  never cleared by reactivating the selected segment; `T extends Object` keeps
+  `null` reserved as the no-selection sentinel and `onChanged` non-null.
+  Roving keyboard focus, `Home`/`End`, optional looping, RTL-aware arrow
+  navigation, per-item disabled state, and vertical orientation are supported,
+  and each segment exposes one merged selected-button semantics node. No
+  Fortal preset ships in v1, so callers own the visual layer.
+- **FEAT**: Add `RemixTextArea`, a constructor-only multiline facade over
+  `RemixTextField` with two-line auto-growing defaults and the canonical
+  `TextFieldStyler` / `TextFieldSpec` styling surface.
+- **BREAKING**: Change `TextFieldSpec.container` and
+  `TextFieldStyler.container` from `FlexBoxSpec` / `FlexBoxStyler` to
+  `BoxSpec` / `BoxStyler` because TextField and TextArea always render their
+  input anatomy as a fixed horizontal row. The full forwarded Box surface is
+  honored, generated `spacing` and `crossAxisAlignment` methods control the row
+  directly, and the row follows the ambient text direction. Misleading Flex
+  direction, main-axis, vertical-direction, text-direction, text-baseline, and
+  `flex(FlexStyler)` container methods are no longer exposed.
+- **FIX**: Render the separate label/input/helper `layout` as a real `FlexBox`
+  so its full generated Flex direction surface is truthful. The base style
+  preserves the existing vertical, min-size, start-aligned layout with 8px
+  spacing, while explicit row layouts are now honored without a forced-column
+  assertion.
+- **FIX**: Remove the unreleased `RemixTextArea.styleFrom` affordance because
+  the shared `TextFieldStyler` callable constructs a single-line
+  `RemixTextField`. Pass a `TextFieldStyler` to `RemixTextArea.style` instead.
+- **FIX**: Top-align multiline TextField hints and expose label, hint, helper,
+  error, and interactive accessory semantics once without narrowing the
+  existing composite tap target.
 - **FEAT**: Add an optional styled `RemixCheckbox.label` inside the checkbox's
   pointer, focus, and single semantics target, with a 48-by-48 default minimum
   target and an explicit `Size.zero` compact opt-out. Mix now generates the
   label, label-spacing, interpolation, equality, and fluent label APIs, and
   generated Fortal checkbox wrappers forward the new widget parameters.
+- **FEAT**: Add `RemixCheckboxGroup<T extends Object>` and
+  `RemixCheckboxGroupItem<T extends Object>`, a controlled, layout-transparent
+  coordinator for a typed `Set<T>` of checkbox options. The group owns selected
+  values plus group-wide enabled/required semantics; items compose
+  `RemixCheckbox`, require a visible `label`, accept `semanticLabel` as an
+  accessible-name override, and forward `minimumTapTargetSize`, so existing
+  `CheckboxStyler`/`fortalCheckboxStyle()` recipes apply unchanged while the
+  entire labeled 48px target stays interactive. Emits a new unmodifiable set
+  per change and renders a labeled semantics container with explicit checkbox
+  children. Debug builds validate duplicate values, duplicate autofocus, and
+  blank accessible names, and require a nonblank group `semanticLabel`
+  whenever `isRequired` is true and semantics are not excluded.
 - **BREAKING** **FEAT**: Add checkbox items, radio groups, and submenus to the
   sealed `RemixMenuItemData` hierarchy. Downstream exhaustive switches must
   handle the new cases or add a wildcard; no runtime migration is required.

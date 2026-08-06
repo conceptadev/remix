@@ -9,18 +9,21 @@ import 'entries/button_entry.dart';
 import 'entries/callout_entry.dart';
 import 'entries/card_entry.dart';
 import 'entries/checkbox_entry.dart';
+import 'entries/checkbox_group_entry.dart';
 import 'entries/data_list_entry.dart';
 import 'entries/data_table_entry.dart';
 import 'entries/divider_entry.dart';
 import 'entries/menu_entry.dart';
 import 'entries/progress_entry.dart';
 import 'entries/radio_entry.dart';
+import 'entries/segmented_control_entry.dart';
 import 'entries/select_entry.dart';
 import 'entries/skeleton_entry.dart';
 import 'entries/slider_entry.dart';
 import 'entries/spinner_entry.dart';
 import 'entries/switch_entry.dart';
 import 'entries/textfield_entry.dart';
+import 'entries/textarea_entry.dart';
 import 'entries/tooltip_entry.dart';
 
 // Map component slugs to a builder that returns the component inside FortalScope.
@@ -33,9 +36,17 @@ final Map<String, WidgetBuilder> components = {
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildTextFieldExample()),
   ),
+  'textarea': (context) => FortalScope(
+    brightness: Theme.of(context).brightness,
+    child: PreviewShell(child: buildTextAreaExample()),
+  ),
   'checkbox': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildCheckboxExample()),
+  ),
+  'checkbox_group': (context) => FortalScope(
+    brightness: Theme.of(context).brightness,
+    child: PreviewShell(child: buildCheckboxGroupExample()),
   ),
   'radio': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
@@ -44,6 +55,10 @@ final Map<String, WidgetBuilder> components = {
   'select': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildSelectExample()),
+  ),
+  'segmented-control': (context) => FortalScope(
+    brightness: Theme.of(context).brightness,
+    child: PreviewShell(child: buildSegmentedControlExample()),
   ),
   'switch': (context) => FortalScope(
     brightness: Theme.of(context).brightness,

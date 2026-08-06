@@ -106,6 +106,10 @@
           "href": "/components/checkbox"
         },
         {
+          "title": "Checkbox Group",
+          "href": "/components/checkbox_group"
+        },
+        {
           "title": "Data List",
           "href": "/components/data_list"
         },
@@ -142,6 +146,10 @@
           "href": "/components/radio"
         },
         {
+          "title": "Segmented Control",
+          "href": "/components/segmented_control"
+        },
+        {
           "title": "Select",
           "href": "/components/select"
         },
@@ -164,6 +172,10 @@
         {
           "title": "Tabs",
           "href": "/components/tabs"
+        },
+        {
+          "title": "TextArea",
+          "href": "/components/textarea"
         },
         {
           "title": "TextField",
