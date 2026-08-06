@@ -180,10 +180,12 @@ nearest `Directionality`. Track styling cannot override that direction; use
 ## Sizing and wrapping
 
 The default track is intrinsic width (or intrinsic height vertically). Every
-item receives the largest item's main-axis extent. Explicit track constraints
-divide the requested extent equally. In narrow parents, labels wrap inside
-equal segments; keep labels short and use a visible output label when the
-selection needs more explanation.
+item receives the largest item's main-axis extent, and each segment centers
+its icon and label inside that extent; set an `alignment` on the item
+container style to override. Explicit track constraints divide the requested
+extent equally. In narrow parents, labels wrap inside equal segments; keep
+labels short and use a visible output label when the selection needs more
+explanation.
 
 ## Styling anatomy
 
