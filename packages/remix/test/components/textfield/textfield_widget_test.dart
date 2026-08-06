@@ -1065,6 +1065,53 @@ void main() {
         expect(cursorColor(), Colors.blue);
       });
 
+      testWidgets('disabling while hovered clears hovered styling', (
+        tester,
+      ) async {
+        var enabled = true;
+        late StateSetter rebuild;
+
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) {
+              rebuild = setState;
+              return RemixTextField(
+                label: 'Hover target',
+                enabled: enabled,
+                style: TextFieldStyler(
+                  cursorColor: Colors.blue,
+                ).onHovered(TextFieldStyler(cursorColor: Colors.red)),
+              );
+            },
+          ),
+        );
+        await tester.pump();
+
+        Color? cursorColor() => tester
+            .widget<NakedTextField>(find.byType(NakedTextField))
+            .cursorColor;
+        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        addTearDown(mouse.removePointer);
+        await mouse.addPointer(location: Offset.zero);
+
+        await mouse.moveTo(tester.getCenter(find.text('Hover target')));
+        await tester.pump();
+        expect(cursorColor(), Colors.red);
+
+        rebuild(() => enabled = false);
+        await tester.pump();
+        await mouse.moveTo(const Offset(700, 500));
+        await tester.pump();
+
+        rebuild(() => enabled = true);
+        await tester.pump();
+        expect(cursorColor(), Colors.blue);
+
+        await mouse.moveTo(tester.getCenter(find.text('Hover target')));
+        await tester.pump();
+        expect(cursorColor(), Colors.red);
+      });
+
       testWidgets('fallback press down, up, and cancel drive pressed styling', (
         tester,
       ) async {

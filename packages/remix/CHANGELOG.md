@@ -31,8 +31,13 @@
   the shared `TextFieldStyler` callable constructs a single-line
   `RemixTextField`. Pass a `TextFieldStyler` to `RemixTextArea.style` instead.
 - **FIX**: Top-align multiline TextField hints and expose label, hint, helper,
-  error, and interactive accessory semantics once without narrowing the
-  existing composite tap target.
+  error, and interactive accessory semantics once. The composite gesture tap
+  target is unchanged, but the field's semantic bounds now cover the editable
+  area rather than the full container box; restoring full-box assistive-tech
+  bounds needs an upstream naked_ui hook and is tracked there.
+- **FIX**: Clear TextField hovered styling when the field is disabled while a
+  pointer is over it. The hover region unmounts without an exit event, so the
+  state previously leaked across a disable/re-enable cycle.
 - **FEAT**: Add an optional styled `RemixCheckbox.label` inside the checkbox's
   pointer, focus, and single semantics target, with a 48-by-48 default minimum
   target and an explicit `Size.zero` compact opt-out. Mix now generates the
