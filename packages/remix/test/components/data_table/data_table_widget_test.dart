@@ -594,6 +594,31 @@ void main() {
       expect(find.byType(RemixIconButton), findsNothing);
     });
 
+    testWidgets('rejects a page with more rows than its page size', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixDataTable<_Record>(
+          rows: _records,
+          columns: _columns(),
+          totalRows: 3,
+          pageSize: 2,
+          pageSizeOptions: const [2],
+          onPageChanged: (_) {},
+          onPageSizeChanged: (_) {},
+        ),
+      );
+
+      expect(
+        tester.takeException(),
+        isA<AssertionError>().having(
+          (error) => error.message,
+          'message',
+          contains('exceeds pageSize'),
+        ),
+      );
+    });
+
     testWidgets('keeps pagination outside the structural table node', (
       tester,
     ) async {

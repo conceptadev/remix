@@ -301,7 +301,8 @@ Horizontal scrolling belongs to the table. Under a bounded width it lays out
 at `max(minimumWidth, availableWidth)` inside a horizontal viewport, so flex
 columns never resolve against unbounded constraints and a narrow viewport
 scrolls instead of overflowing. Vertical scrolling, sticky headers, and
-viewport height stay with the parent.
+viewport height stay with the parent. The pagination footer stays pinned to
+the visible width while the header and body scroll.
 
 ## Accessibility
 

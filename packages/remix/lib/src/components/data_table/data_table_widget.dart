@@ -184,7 +184,8 @@ final class RemixDataTableLabels {
 /// table is laid out at `max(minimumWidth, availableWidth)` inside a
 /// horizontal viewport, so flex columns never resolve against unbounded
 /// constraints. Vertical scrolling, sticky headers, and viewport height stay
-/// with the parent.
+/// with the parent. The pagination footer stays pinned to the visible width
+/// while the header and body scroll.
 ///
 /// ## Example
 ///
@@ -355,6 +356,15 @@ class RemixDataTable<T> extends StatelessWidget {
       'RemixDataTable.minimumWidth must be a finite non-negative value.',
     );
 
+    // StyleBuilder merges StyleProvider-inherited styles into the resolved
+    // spec; merge them here too so per-row re-resolution sees the same
+    // widget-state variants. Other Style subtypes (IdentityStyle) carry no
+    // props to re-resolve and are already represented in the spec fallback.
+    final inherited = Style.maybeOf<DataTableSpec>(context);
+    final effectiveStyler = inherited is DataTableStyler
+        ? inherited.merge(style)
+        : style;
+
     return RemixStyleSpecBuilder<DataTableSpec>(
       style: style,
       styleSpec: styleSpec,
@@ -368,7 +378,7 @@ class RemixDataTable<T> extends StatelessWidget {
         // A supplied raw spec has no styler to re-resolve per row, so the
         // table-level values are the final ones in that path.
         styles: _DataTableStyles(
-          styler: styleSpec == null ? style : null,
+          styler: styleSpec == null ? effectiveStyler : null,
           spec: spec,
         ),
       ),
@@ -464,6 +474,11 @@ class RemixDataTable<T> extends StatelessWidget {
     if (total == null) return true;
     assert(total >= 0, 'RemixDataTable.totalRows must not be negative.');
     assert(pageSize > 0, 'RemixDataTable.pageSize must be positive.');
+    assert(
+      rows.length <= pageSize,
+      'RemixDataTable.rows has ${rows.length} rows, which exceeds pageSize '
+      '($pageSize): rows must be exactly the visible page.',
+    );
     assert(
       sizeOptions.isNotEmpty && sizeOptions.every((option) => option > 0),
       'RemixDataTable.pageSizeOptions must be nonempty and positive.',
@@ -582,6 +597,18 @@ class _RemixDataTableView<T> extends StatefulWidget {
 class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
   int? _hoveredRow;
 
+  @override
+  void didUpdateWidget(covariant _RemixDataTableView<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Hover is tracked by row index and MouseRegion.onExit does not fire for
+    // a region unmounted while hovered, so new row content invalidates the
+    // index. The mouse tracker re-enters the correct row on the next frame
+    // when the pointer is still over one.
+    if (_hoveredRow != null && !listEquals(widget.rows, oldWidget.rows)) {
+      _hoveredRow = null;
+    }
+  }
+
   RemixDataTable<T> get _table => widget.table;
 
   bool get _selectable => _table._selectable;
@@ -670,7 +697,7 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
       'DataTableSpec dimensions must resolve to non-negative values.',
     );
 
-    final content = Column(
+    final tableContent = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -681,7 +708,6 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
         // semantics stay caller-owned.
         if (widget.rows.isEmpty && _table.emptyBuilder != null)
           _table.emptyBuilder!(context),
-        if (_table._paginated) _buildFooter(context),
       ],
     );
 
@@ -699,17 +725,35 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
             return IntrinsicWidth(
               child: ConstrainedBox(
                 constraints: BoxConstraints(minWidth: _table.minimumWidth),
-                child: content,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    tableContent,
+                    if (_table._paginated) _buildFooter(context),
+                  ],
+                ),
               ),
             );
           }
 
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: SizedBox(
-              width: math.max(_table.minimumWidth, available),
-              child: content,
-            ),
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SizedBox(
+                  width: math.max(_table.minimumWidth, available),
+                  child: tableContent,
+                ),
+              ),
+              // Deliberate: the footer is a sibling of the scroller, matching
+              // PaginatedDataTable — pagination stays visible while the table
+              // scrolls. Its top border spans the viewport, not the laid-out
+              // table width.
+              if (_table._paginated) _buildFooter(context),
+            ],
           );
         },
       ),
