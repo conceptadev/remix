@@ -1822,6 +1822,49 @@ void main() {
       }
     });
 
+    testWidgets('segment content centers inside a wider segment', (
+      tester,
+    ) async {
+      Widget control({SegmentedControlItemStyler? item}) {
+        return RemixSegmentedControl<String>(
+          items: const [
+            RemixSegmentedControlItem(value: 'day', label: 'Day'),
+            RemixSegmentedControlItem(value: 'week', label: 'A long week'),
+          ],
+          selectedValue: 'day',
+          onChanged: (_) {},
+          style: SegmentedControlStyler(
+            item: (item ?? SegmentedControlItemStyler()).paddingX(12),
+          ),
+        );
+      }
+
+      await tester.pumpRemixApp(control());
+      await tester.pumpAndSettle();
+
+      final options = find.byType(NakedToggleOption<String>);
+      var segment = tester.getRect(options.at(0));
+      var label = tester.getRect(find.text('Day'));
+      final leadingGap = label.left - segment.left;
+      final trailingGap = segment.right - label.right;
+      expect(leadingGap, closeTo(trailingGap, 0.01));
+      expect(leadingGap, greaterThan(12));
+
+      // An explicit item container alignment overrides the centered default.
+      await tester.pumpRemixApp(
+        control(
+          item: SegmentedControlItemStyler().alignment(
+            AlignmentDirectional.centerStart,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      segment = tester.getRect(options.at(0));
+      label = tester.getRect(find.text('Day'));
+      expect(label.left - segment.left, closeTo(12, 0.01));
+    });
+
     testWidgets('horizontal segments fill the shared cross axis', (
       tester,
     ) async {

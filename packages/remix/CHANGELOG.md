@@ -1,5 +1,10 @@
 ## Unreleased
 
+- **FIX**: Center `RemixSegmentedControl` segment content along the main axis,
+  matching the Radix segmented control item anatomy. Equal segments make most
+  surfaces wider than their content, which previously start-aligned the
+  icon/label cluster. An explicit item container `alignment` still overrides
+  the centered default.
 - **FEAT**: Add `RemixSegmentedControl`, an equal-segment single-select control
   mapped from Radix Segmented Control. A custom render object sizes every
   segment to the largest one and divides an explicit track extent equally,

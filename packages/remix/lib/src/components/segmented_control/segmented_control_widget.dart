@@ -296,8 +296,17 @@ class _RemixSegmentedControlItemWidget<T extends Object>
                       return RemixBoxWithEffects(
                         styleSpec: spec.container,
                         containerEffects: spec.containerEffects,
+                        // Equal segments make most surfaces wider than their
+                        // content, so center the main-axis free space the way
+                        // Radix's segmented control item label does. This must
+                        // stay on the Row: a default container alignment would
+                        // make the Box expand into bounded loose constraints
+                        // during the layout's cross-axis measurement pass. An
+                        // explicit item container alignment still overrides by
+                        // shrink-wrapping the Row.
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           spacing: spec.spacing ?? 0,
                           children: [
                             if (data.icon != null)
