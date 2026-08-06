@@ -142,6 +142,10 @@
           "href": "/components/radio"
         },
         {
+          "title": "Segmented Control",
+          "href": "/components/segmented_control"
+        },
+        {
           "title": "Select",
           "href": "/components/select"
         },

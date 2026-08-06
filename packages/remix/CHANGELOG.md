@@ -1,5 +1,16 @@
 ## Unreleased
 
+- **FEAT**: Add `RemixSegmentedControl`, an equal-segment single-select control
+  mapped from Radix Segmented Control. A custom render object sizes every
+  segment to the largest one and divides an explicit track extent equally,
+  reporting intrinsics that stay consistent with layout so intrinsic-sizing
+  parents wrap labels instead of overflowing. Selection is controlled and
+  never cleared by reactivating the selected segment; `T extends Object` keeps
+  `null` reserved as the no-selection sentinel and `onChanged` non-null.
+  Roving keyboard focus, `Home`/`End`, optional looping, RTL-aware arrow
+  navigation, per-item disabled state, and vertical orientation are supported,
+  and each segment exposes one merged selected-button semantics node. No
+  Fortal preset ships in v1, so callers own the visual layer.
 - **FEAT**: Add `RemixTextArea`, a constructor-only multiline facade over
   `RemixTextField` with two-line auto-growing defaults and the canonical
   `TextFieldStyler` / `TextFieldSpec` styling surface.

@@ -41,6 +41,14 @@ void main() {
     const progress = RemixProgress(value: 0.5);
     const tabBar = RemixTabBar(child: Text('Tabs'));
     const spinner = RemixSpinner();
+    const segmentedItem = RemixSegmentedControlItem<String>(
+      value: 'list',
+      label: 'List',
+    );
+    const segmentedControl = RemixSegmentedControl<String>(
+      items: [segmentedItem],
+      selectedValue: 'list',
+    );
     const textArea = RemixTextArea(label: 'Notes');
     const checkboxGroup = RemixCheckboxGroup<String>(
       values: {'one'},
@@ -71,6 +79,8 @@ void main() {
     expect(progress.value, 0.5);
     expect(tabBar.child, isA<Text>());
     expect(spinner, isA<RemixSpinner>());
+    expect(segmentedControl.items.single, segmentedItem);
+    expect(segmentedControl.items.single.value, 'list');
     expect(textArea, isA<RemixTextField>());
     expect(textArea.label, 'Notes');
     expect(checkbox.selected, isFalse);
@@ -194,6 +204,20 @@ void main() {
     expect(button.variant, FortalButtonVariant.soft);
     expect(checkbox.label, 'Receive updates');
     expect(checkbox.minimumTapTargetSize, Size.zero);
+  });
+
+  test('segmented control accepts a non-nullable value callback', () {
+    final changes = <String>[];
+    final control = RemixSegmentedControl<String>(
+      items: const [RemixSegmentedControlItem(value: 'list', label: 'List')],
+      selectedValue: null,
+      onChanged: changes.add,
+    );
+
+    control.onChanged?.call('list');
+
+    expect(control.selectedValue, isNull);
+    expect(changes, ['list']);
   });
 
   test('theme configuration exposes only canonical names', () {

@@ -17,6 +17,7 @@ export 'src/components/menu/menu.dart';
 export 'src/components/popover/popover.dart';
 export 'src/components/progress/progress.dart';
 export 'src/components/radio/radio.dart';
+export 'src/components/segmented_control/segmented_control.dart';
 export 'src/components/select/select.dart';
 export 'src/components/skeleton/skeleton.dart';
 export 'src/components/slider/slider.dart';

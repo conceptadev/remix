@@ -5,6 +5,75 @@ import 'package:remix/remix.dart';
 enum Interest { design, code }
 
 void main() {
+  test('segmented control API is constructible from the package barrel', () {
+    const item = RemixSegmentedControlItem<String>(
+      value: 'list',
+      label: 'List',
+    );
+    const control = RemixSegmentedControl<String>(
+      items: [item],
+      selectedValue: 'list',
+    );
+    const unselectedControl = RemixSegmentedControl<int>(
+      items: [RemixSegmentedControlItem<int>(value: 1, label: 'One')],
+      selectedValue: null,
+    );
+
+    expect(control.items.single, item);
+    expect(unselectedControl.items.single.value, 1);
+    expect(unselectedControl.selectedValue, isNull);
+    expect(control.style, isA<SegmentedControlStyler>());
+    expect(const SegmentedControlSpec(), isA<SegmentedControlSpec>());
+    expect(const SegmentedControlItemSpec(), isA<SegmentedControlItemSpec>());
+  });
+
+  test('segmented control styleFrom builds the widget in one step', () {
+    final SegmentedControlStyler styler = RemixSegmentedControl.styleFrom(
+      spacing: 4,
+      mainAxisSize: MainAxisSize.max,
+    );
+    const forwardedKey = ValueKey<String>('forwarded');
+    const items = [RemixSegmentedControlItem<String>(value: 'a', label: 'A')];
+
+    final called = styler<String>(
+      key: forwardedKey,
+      items: items,
+      selectedValue: 'a',
+      orientation: Axis.vertical,
+      loop: false,
+      semanticLabel: 'Forwarded',
+      excludeSemantics: true,
+    );
+
+    expect(called, isA<RemixSegmentedControl<String>>());
+    expect(called.key, forwardedKey);
+    expect(called.items, items);
+    expect(called.selectedValue, 'a');
+    expect(called.orientation, Axis.vertical);
+    expect(called.loop, isFalse);
+    expect(called.semanticLabel, 'Forwarded');
+    expect(called.excludeSemantics, isTrue);
+    expect(called.style, same(styler));
+  });
+
+  test(
+    'segmented callback receives T while selectedValue remains nullable',
+    () {
+      final changes = <String>[];
+
+      final control = RemixSegmentedControl<String>(
+        items: const [RemixSegmentedControlItem(value: 'grid', label: 'Grid')],
+        selectedValue: null,
+        onChanged: changes.add,
+      );
+
+      control.onChanged?.call('grid');
+
+      expect(control.selectedValue, isNull);
+      expect(changes, ['grid']);
+    },
+  );
+
   test('RemixTextArea is exported as the multiline TextField facade', () {
     const textArea = RemixTextArea();
 
