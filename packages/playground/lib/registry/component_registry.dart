@@ -11,6 +11,7 @@ import 'entries/card_entry.dart';
 import 'entries/checkbox_entry.dart';
 import 'entries/checkbox_group_entry.dart';
 import 'entries/data_list_entry.dart';
+import 'entries/data_table_entry.dart';
 import 'entries/divider_entry.dart';
 import 'entries/menu_entry.dart';
 import 'entries/progress_entry.dart';
@@ -101,6 +102,10 @@ final Map<String, WidgetBuilder> components = {
   'data_list': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildDataListExample()),
+  ),
+  'data_table': (context) => FortalScope(
+    brightness: Theme.of(context).brightness,
+    child: PreviewShell(child: buildDataTableExample()),
   ),
   'divider': (context) => FortalScope(
     brightness: Theme.of(context).brightness,

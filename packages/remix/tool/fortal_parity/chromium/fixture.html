@@ -15,7 +15,7 @@
       .fixture-cell {
         position: relative;
         display: flex;
-        min-height: 190px;
+        min-height: 156px;
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
@@ -35,6 +35,7 @@
       .fixture-slider { width: 240px; flex-grow: 0; }
       .fixture-text-field { width: 250px; }
       .fixture-tooltip { position: relative; }
+      .fixture-data-table { width: 100%; }
     </style>
   </head>
   <body>
@@ -56,6 +57,7 @@
         <article class="fixture-cell"><span class="fixture-label">Callout</span><div id="callout" data-probe class="rt-CalloutRoot rt-r-size-2 rt-variant-soft"><div class="rt-CalloutIcon">!</div><p class="rt-Text rt-r-size-2 rt-CalloutText">Callout text</p></div></article>
         <article class="fixture-cell"><span class="fixture-label">Card</span><button id="card" data-probe class="rt-reset rt-BaseCard rt-Card rt-r-size-1 rt-variant-surface">Interactive card</button></article>
         <article class="fixture-cell"><span class="fixture-label">Checkbox</span><button id="checkbox" data-probe data-state="checked" class="rt-reset rt-BaseCheckboxRoot rt-CheckboxRoot rt-r-size-2 rt-variant-surface"><span class="rt-BaseCheckboxIndicator rt-CheckboxIndicator">✓</span></button></article>
+        <article class="fixture-cell"><span class="fixture-label">Table</span><div id="data-table" data-probe class="rt-TableRoot rt-r-size-2 rt-variant-surface fixture-data-table"><table class="rt-TableRootTable"><thead class="rt-TableHeader"><tr class="rt-TableRow"><th class="rt-TableCell rt-TableColumnHeaderCell">Name</th><th class="rt-TableCell rt-TableColumnHeaderCell">Qty</th></tr></thead><tbody class="rt-TableBody"><tr class="rt-TableRow"><th class="rt-TableCell rt-TableRowHeaderCell">Ada</th><td class="rt-TableCell">3</td></tr><tr class="rt-TableRow"><th class="rt-TableCell rt-TableRowHeaderCell">Blaise</th><td class="rt-TableCell">1</td></tr></tbody></table></div></article>
         <article class="fixture-cell"><span class="fixture-label">Dialog</span><div class="fixture-dialog-overlay"></div><div id="dialog" data-probe data-state="open" class="rt-BaseDialogContent rt-DialogContent rt-r-size-3 rt-r-align-center fixture-dialog-content"><strong>Dialog title</strong><span>Dialog content</span></div></article>
         <article class="fixture-cell"><span class="fixture-label">Divider</span><span id="divider" data-probe role="separator" class="rt-Separator rt-r-orientation-horizontal rt-r-size-4"></span></article>
         <article class="fixture-cell"><span class="fixture-label">Menu</span><div id="menu" data-probe class="rt-BaseMenuContent rt-DropdownMenuContent rt-r-size-2 rt-variant-solid fixture-menu"><div class="rt-BaseMenuItem rt-DropdownMenuItem" data-highlighted>Menu item</div><div class="rt-BaseMenuSeparator rt-DropdownMenuSeparator"></div><div class="rt-BaseMenuItem rt-DropdownMenuItem">Another item</div></div></article>

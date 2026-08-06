@@ -172,6 +172,66 @@ void main() {
     expect(called.excludeSemantics, isTrue);
   });
 
+  test('the data table family is constructible from the public API', () {
+    final columns = <RemixDataTableColumn<String>>[
+      RemixDataTableColumn(
+        id: 'value',
+        label: 'Value',
+        sortable: true,
+        width: const FixedColumnWidth(120),
+        alignment: RemixDataTableCellAlignment.end,
+        cellBuilder: (context, row) => Text(row),
+      ),
+    ];
+    const spec = DataTableSpec(
+      headerMinHeight: 36,
+      rowMinHeight: 44,
+      selectionColumnWidth: 48,
+      sortIconSpacing: 4,
+    );
+    final raw = RemixDataTable<String>(
+      key: const ValueKey<String>('raw'),
+      rows: const ['one'],
+      columns: columns,
+      semanticLabel: 'Values',
+      sort: const RemixDataTableSort(
+        columnId: 'value',
+        direction: RemixDataTableSortDirection.ascending,
+      ),
+      onSortChanged: (_) {},
+      rowId: (row) => row,
+      selectedRowIds: const {'one'},
+      onSelectionChanged: (_) {},
+      totalRows: 1,
+      pageSizeOptions: const [10, 20, 50],
+      onPageChanged: (_) {},
+      onPageSizeChanged: (_) {},
+      minimumWidth: 640,
+      emptyBuilder: (context) => const Text('Empty'),
+      labels: const RemixDataTableLabels(rowsPerPage: 'Per page'),
+      pageRangeFormatter: remixDefaultDataTablePageRangeFormatter,
+      styleSpec: spec,
+    );
+    final DataTableStyler style = raw.style;
+    final DataTableSpec? styleSpec = raw.styleSpec;
+    final DataTableStyler styler = RemixDataTable.styleFrom(rowMinHeight: 44);
+
+    expect(raw, isA<RemixDataTable<String>>());
+    expect(raw.columns, same(columns));
+    expect(style, isA<DataTableStyler>());
+    expect(styleSpec, same(spec));
+    expect(styler, isA<DataTableStyler>());
+
+    const fortal = FortalDataTable<String>.surface(
+      rows: ['one'],
+      columns: [],
+      size: FortalDataTableSize.size3,
+    );
+    expect(fortal, isA<FortalDataTable<String>>());
+    expect(fortal.variant, FortalDataTableVariant.surface);
+    expect(fortalDataTableStyle(), isA<DataTableStyler>());
+  });
+
   test('mode-aware Fortal filters are constructible from the public API', () {
     final modifier = fortalModeAwareFilter(
       light: const [RemixCssColorFilterOperation.brightness(1.1)],

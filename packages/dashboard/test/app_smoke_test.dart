@@ -153,7 +153,9 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('nav-customers')).first);
     await tester.pump();
 
-    expect(find.byKey(const ValueKey('data-grid-customers')), findsOneWidget);
+    // The generated Fortal wrapper forwards the key to the Remix widget it
+    // builds, so the key matches both.
+    expect(find.byKey(const ValueKey('data-grid-customers')), findsWidgets);
     expect(find.text('1–10 of 24'), findsOneWidget);
   });
 
@@ -279,26 +281,30 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('nav-customers')).first);
     await tester.pump();
 
-    final sortName = find.byKey(const ValueKey('sort-name')).first;
+    final sortName = find.text('Customer').first;
     await tester.tap(sortName);
     await tester.pump();
     await tester.tap(sortName);
     await tester.pump();
     expect(find.text('Sofia Young'), findsOneWidget);
 
-    final selectAll = find.byKey(const ValueKey('grid-select-all')).first;
+    final selectAll = find
+        .byKey(const ValueKey('remix-data-table-select-all'))
+        .first;
     await tester.tap(selectAll);
     await tester.pump();
     expect(find.text('10 selected'), findsOneWidget);
 
-    final next = find.byKey(const ValueKey('grid-next')).first;
+    final next = find
+        .byKey(const ValueKey('remix-data-table-next-page'))
+        .first;
     await tester.ensureVisible(next);
     await tester.tap(next);
     await tester.pump();
     expect(find.text('11–20 of 24'), findsOneWidget);
   });
 
-  testWidgets('grid checkboxes preserve a 14 square inside a 48 target', (
+  testWidgets('grid checkboxes fill their cell around a 14 square', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(1400, 900);
@@ -310,11 +316,17 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('nav-customers')).first);
     await tester.pump();
 
-    final selectAll = find.byKey(const ValueKey('grid-select-all')).first;
-    final rowCheckbox = find.byKey(const ValueKey('grid-row-checkbox')).first;
+    final selectAll = find
+        .byKey(const ValueKey('remix-data-table-select-all'))
+        .first;
+    // The header checkbox comes first, so the next one belongs to row one.
+    final rowCheckbox = find.byType(RemixCheckbox).at(1);
 
-    expect(tester.getSize(selectAll), const Size.square(48));
-    expect(tester.getSize(rowCheckbox), const Size.square(48));
+    // The interaction target is the selection cell: the 48px column by the
+    // Radix size-2 row height, rather than a fixed square that would inflate
+    // the row.
+    expect(tester.getSize(selectAll), const Size(48, 44));
+    expect(tester.getSize(rowCheckbox), const Size(48, 44));
     expect(
       tester.getSize(
         find

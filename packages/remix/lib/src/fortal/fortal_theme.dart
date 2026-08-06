@@ -500,6 +500,21 @@ class FortalTokens {
     'fortal.tabs.active-letter-spacing.2',
   );
 
+  /// Table size-1 minimum cell height (36px at 100% scaling).
+  ///
+  /// Radix writes `calc(36px * var(--scaling))` literally, so no existing
+  /// spacing step expresses it.
+  static const dataTableRowHeight1 = DoubleToken('fortal.data-table.height.1');
+
+  /// Table size-2 minimum cell height (44px at 100% scaling).
+  static const dataTableRowHeight2 = DoubleToken('fortal.data-table.height.2');
+
+  /// Table surface border - `color-mix(in oklab, gray-a5, gray-6)`.
+  ///
+  /// The existing `grayStroke*` tokens blend an alpha step with the *same*
+  /// numbered solid step at 25%; Table blends step 5 with step 6 at 50%.
+  static const dataTableBorder = ColorToken('fortal.data-table.border');
+
   /// Select's 1.5 × space-1 measurement (6px at 100% scaling).
   static const selectSpace1Half = DoubleToken('fortal.select.space.1-half');
 
@@ -1014,6 +1029,11 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
       tokens.gray.scale.step(7),
       0.25,
     ),
+    FortalTokens.dataTableBorder: mixOklabPremultiplied(
+      tokens.gray.scale.alphaStep(5),
+      tokens.gray.scale.step(6),
+      0.5,
+    ),
   };
 
   // Build base tokens map
@@ -1032,6 +1052,8 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.space8: 48.0 * scaling,
     FortalTokens.space9: 64.0 * scaling,
     FortalTokens.spinnerSize3: 20.0 * scaling,
+    FortalTokens.dataTableRowHeight1: 36.0 * scaling,
+    FortalTokens.dataTableRowHeight2: 44.0 * scaling,
     FortalTokens.toggleGap1: 2.0 * scaling,
     FortalTokens.toggleGap3: 6.0 * scaling,
     FortalTokens.avatarSize6: 80.0 * scaling,

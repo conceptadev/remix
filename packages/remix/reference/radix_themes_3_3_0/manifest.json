@@ -1075,6 +1075,144 @@
       }
     },
     {
+      "id": "data_table",
+      "fortalType": "FortalDataTable",
+      "radixComponent": "Table",
+      "parity": "mapped",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "ghost"
+          ],
+          "default": "ghost"
+        }
+      },
+      "defaults": {
+        "enabled": true
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "idle",
+        "passive",
+        "hovered",
+        "selected"
+      ],
+      "sourceFiles": [
+        "src/components/table.props.tsx",
+        "src/components/table.css",
+        "src/components/table.tsx"
+      ],
+      "sourceSelectors": [
+        ".rt-TableRoot",
+        ".rt-TableRootTable",
+        ".rt-TableHeader",
+        ".rt-TableBody",
+        ".rt-TableRow",
+        ".rt-TableCell",
+        ".rt-TableColumnHeaderCell",
+        ".rt-TableRowHeaderCell"
+      ],
+      "flutterExceptions": [
+        "The mapped family is named data_table publicly but cites Radix Table. The recipe maps size and variant onto cell padding, minimum cell height, typography, radius, the gray-a5 row divider, bold column headers, and the surface panel, border, gray-a2 header background, and suppressed last-row divider.",
+        "Radix Table is a passive layout. Controlled sorting, page-scoped selection, pagination, row hover, arbitrary row actions, and horizontal scrolling are Flutter and Fortal extensions with no Radix counterpart, built from existing accent and gray control tokens.",
+        "Radix row-header cells use normal weight, but Flutter 3.44 exposes no row-header semantics role and the v1 data-driven API carries no row-header model, so .rt-TableRowHeaderCell is cited and deferred instead of fabricated.",
+        "Row background and divider are painted per cell exactly as .rt-TableCell does upstream, because Flutter's Table has no widget between the table and its cells."
+      ],
+      "coverage": {
+        "enums": [
+          "size.size1",
+          "size.size2",
+          "size.size3",
+          "variant.surface",
+          "variant.ghost"
+        ],
+        "states": [
+          "idle",
+          "passive",
+          "hovered",
+          "selected"
+        ],
+        "tests": [
+          "test/components/data_table/data_table_fortal_parity_test.dart",
+          "test/components/data_table/data_table_widget_test.dart"
+        ]
+      },
+      "upstreamInventory": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3"
+            ],
+            "default": "size2"
+          },
+          "variant": {
+            "values": [
+              "surface",
+              "ghost"
+            ],
+            "default": "ghost"
+          },
+          "layout": {
+            "values": [
+              "auto",
+              "fixed"
+            ],
+            "default": null
+          },
+          "rowAlign": {
+            "values": [
+              "start",
+              "center",
+              "end",
+              "baseline"
+            ],
+            "default": null
+          },
+          "cellJustify": {
+            "values": [
+              "start",
+              "center",
+              "end"
+            ],
+            "default": null
+          }
+        },
+        "states": [
+          "idle",
+          "passive"
+        ],
+        "supportedStyleProps": []
+      },
+      "supportedVisualStates": [
+        "idle",
+        "passive"
+      ],
+      "deferredCapabilities": [
+        "row-header cells (.rt-TableRowHeaderCell): Flutter has no row-header semantics role and the v1 data-driven API has no row-header model",
+        "responsive size and layout objects: Radix resolves breakpoints in CSS while Flutter callers rebuild with a different size",
+        "per-row align and per-cell width, min-width, max-width, and padding props: expressed as column-level TableColumnWidth, column alignment, and cell widgets instead",
+        "layout auto versus fixed: RenderTable always negotiates one shared column map"
+      ],
+      "visualMapping": {
+        "color": "FortalScope.accent",
+        "radius": "FortalScope.radius",
+        "highContrast": "not exposed by Radix Table",
+        "variant": "generated Fortal constructor",
+        "size": "generated Fortal constructor"
+      }
+    },
+    {
       "id": "dialog",
       "fortalType": "FortalDialog",
       "radixComponent": "Dialog.Content",

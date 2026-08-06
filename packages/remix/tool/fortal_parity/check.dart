@@ -13,6 +13,7 @@ const _expectedMappedFamilies = <String>{
   'callout',
   'card',
   'checkbox',
+  'data_table',
   'dialog',
   'divider',
   'menu',
@@ -293,8 +294,8 @@ void _checkFamilies(
     failures,
   );
   _expect(
-    families.length == 23,
-    'Exactly 23 Fortal families must be tracked.',
+    families.length == 24,
+    'Exactly 24 Fortal families must be tracked.',
     failures,
   );
 }
@@ -830,7 +831,7 @@ Never _finish(List<String> failures) {
   }
   stdout.writeln(
     'Verified @radix-ui/themes 3.3.0 contract: '
-    '20 mapped families, 3 Fortal extensions, Chromium fixtures, '
+    '21 mapped families, 3 Fortal extensions, Chromium fixtures, '
     'coverage ledger, hosted Naked $_expectedNakedUiVersion resolution, and no '
     'undocumented approximations.',
   );

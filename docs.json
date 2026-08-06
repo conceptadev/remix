@@ -114,6 +114,10 @@
           "href": "/components/data_list"
         },
         {
+          "title": "Data Table",
+          "href": "/components/data_table"
+        },
+        {
           "title": "Dialog",
           "href": "/components/dialog"
         },

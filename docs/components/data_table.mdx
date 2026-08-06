@@ -1,0 +1,486 @@
+---
+title: Data Table
+description: A controlled table that compares many records under shared column headers, with caller-owned sorting, selection, and pagination
+keywords: [flutter, remix, data table, table, grid, rows, columns, sorting, selection, pagination]
+---
+
+A table for comparing many records under shared column headers. One bounded
+page of rows is laid out with Flutter's core `Table`, so every row negotiates
+the same column widths and the native table/row/cell accessibility roles come
+from the framework itself.
+
+## Data Table versus Data List
+
+They describe different shapes of data, so they are separate components:
+
+- **[Data List](/components/data_list)** describes **one** record as
+  label/value metadata. Every row is a different field of the same subject.
+- **Data Table** compares **many** records under shared column headers. Every
+  row is a different subject and every column is the same field.
+
+Reach for Data List on a detail page and Data Table on an index page.
+
+## When to use this
+
+- **Index and management screens**: Customers, orders, invoices, members
+- **Comparable records**: Anything where the same fields repeat per row
+- **Server-paginated results**: You already hold one page of rows
+- **Caller-owned data operations**: You sort, filter, and slice the data
+
+Data Table is not a spreadsheet or a virtualized grid. Filtering UI,
+multi-column sort, column resizing or reordering, frozen rows, virtualization,
+and cell editing are out of scope.
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class Person {
+  const Person(this.id, this.name, this.role);
+
+  final String id;
+  final String name;
+  final String role;
+}
+
+class DataTableExample extends StatelessWidget {
+  const DataTableExample({super.key});
+
+  static const people = [
+    Person('1', 'Leo Farias', 'Owner'),
+    Person('2', 'Ada Lovelace', 'Engineer'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return FortalDataTable<Person>.surface(
+      semanticLabel: 'Team members',
+      rows: people,
+      columns: [
+        RemixDataTableColumn(
+          id: 'name',
+          label: 'Name',
+          cellBuilder: (context, row) => Text(row.name),
+        ),
+        RemixDataTableColumn(
+          id: 'role',
+          label: 'Role',
+          width: const FixedColumnWidth(140),
+          cellBuilder: (context, row) => Text(row.role),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Controlled sorting
+
+Sorting is a signal, not behavior. Mark a column `sortable`, hold the
+descriptor in your state, and sort the rows yourself. Activating a header
+cycles ascending and descending and emits a new descriptor; the table never
+reorders the rows it was given.
+
+<CodeGroup title="Controlled sorting" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class SortableTableExample extends StatefulWidget {
+  const SortableTableExample({super.key, required this.names});
+
+  final List<String> names;
+
+  @override
+  State<SortableTableExample> createState() => _SortableTableExampleState();
+}
+
+class _SortableTableExampleState extends State<SortableTableExample> {
+  RemixDataTableSort _sort = const RemixDataTableSort(
+    columnId: 'name',
+    direction: RemixDataTableSortDirection.ascending,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final rows = List<String>.of(widget.names)..sort();
+    if (_sort.direction == RemixDataTableSortDirection.descending) {
+      rows.setAll(0, rows.reversed.toList());
+    }
+
+    return FortalDataTable<String>(
+      rows: rows,
+      sort: _sort,
+      onSortChanged: (sort) => setState(() => _sort = sort),
+      columns: [
+        RemixDataTableColumn(
+          id: 'name',
+          label: 'Name',
+          sortable: true,
+          cellBuilder: (context, row) => Text(row),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Selection and pagination
+
+Selection turns on when both `rowId` and `onSelectionChanged` are supplied,
+and pagination turns on when `totalRows`, `onPageChanged`, and
+`onPageSizeChanged` are all supplied. Supplying only part of either group is
+rejected in debug builds rather than producing half-working behavior.
+
+`rows` is already the current page: the table never slices it. Select-all is
+scoped to the visible page and preserves selections made on other pages.
+
+<CodeGroup title="Selection and pagination" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class PagedTableExample extends StatefulWidget {
+  const PagedTableExample({super.key, required this.allRows});
+
+  final List<String> allRows;
+
+  @override
+  State<PagedTableExample> createState() => _PagedTableExampleState();
+}
+
+class _PagedTableExampleState extends State<PagedTableExample> {
+  Set<Object> _selected = {};
+  int _pageIndex = 0;
+  int _pageSize = 10;
+
+  @override
+  Widget build(BuildContext context) {
+    final page = widget.allRows.skip(_pageIndex * _pageSize).take(_pageSize);
+
+    return FortalDataTable<String>.surface(
+      rows: page.toList(),
+      rowId: (row) => row,
+      selectedRowIds: _selected,
+      onSelectionChanged: (ids) => setState(() => _selected = ids),
+      totalRows: widget.allRows.length,
+      pageIndex: _pageIndex,
+      pageSize: _pageSize,
+      onPageChanged: (index) => setState(() => _pageIndex = index),
+      onPageSizeChanged: (size) => setState(() {
+        _pageSize = size;
+        _pageIndex = 0;
+      }),
+      columns: [
+        RemixDataTableColumn(
+          id: 'value',
+          label: 'Value',
+          cellBuilder: (context, row) => Text(row),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Custom cells, headers, and the empty state
+
+A cell builder returns any widget and keeps its own semantics and gestures, so
+badges, avatars, and action menus stay usable. A column with a custom `header`
+must also supply a `semanticLabel`, because the header's accessibility node
+replaces the announcement of its visible content. `emptyBuilder` replaces the
+body rows while the column header and pagination footer stay in place.
+
+<CodeGroup title="Custom cells and the empty state" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class ActionCellExample extends StatelessWidget {
+  const ActionCellExample({super.key, required this.rows});
+
+  final List<String> rows;
+
+  @override
+  Widget build(BuildContext context) {
+    return FortalDataTable<String>.surface(
+      rows: rows,
+      emptyBuilder: (context) => const Padding(
+        padding: EdgeInsets.all(24),
+        child: Text('No results found'),
+      ),
+      columns: [
+        RemixDataTableColumn(
+          id: 'value',
+          label: 'Value',
+          cellBuilder: (context, row) => Text(row),
+        ),
+        RemixDataTableColumn(
+          id: 'actions',
+          header: const SizedBox.shrink(),
+          semanticLabel: 'Actions',
+          width: const FixedColumnWidth(72),
+          alignment: RemixDataTableCellAlignment.end,
+          cellBuilder: (context, row) => FortalIconButton.ghost(
+            icon: Icons.more_horiz,
+            semanticLabel: 'Actions for $row',
+            onPressed: () {},
+          ),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Localization and direction
+
+Remix never reads `MaterialLocalizations`. `labels` carries every built-in
+string the table displays or announces, and `pageRangeFormatter` builds the
+visible range, so an application can translate the component and reorder the
+range without a Material host. `start` and `end` alignments follow
+`Directionality`, and the previous and next chevrons mirror in RTL.
+
+<CodeGroup title="Localized labels" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class LocalizedTableExample extends StatelessWidget {
+  const LocalizedTableExample({super.key, required this.rows});
+
+  final List<String> rows;
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: FortalDataTable<String>(
+        rows: rows,
+        labels: const RemixDataTableLabels(
+          rowsPerPage: 'Linhas por página',
+          previousPage: 'Página anterior',
+          nextPage: 'Próxima página',
+          selectAllRows: 'Selecionar todas as linhas desta página',
+          selectRow: 'Selecionar linha',
+          sortedAscending: 'ordenado de forma crescente',
+          sortedDescending: 'ordenado de forma decrescente',
+        ),
+        pageRangeFormatter: ({
+          required int start,
+          required int end,
+          required int total,
+        }) => '$start–$end de $total',
+        totalRows: 42,
+        onPageChanged: (_) {},
+        onPageSizeChanged: (_) {},
+        columns: [
+          RemixDataTableColumn(
+            id: 'value',
+            label: 'Valor',
+            cellBuilder: (context, row) => Text(row),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Width and scrolling
+
+Horizontal scrolling belongs to the table. Under a bounded width it lays out
+at `max(minimumWidth, availableWidth)` inside a horizontal viewport, so flex
+columns never resolve against unbounded constraints and a narrow viewport
+scrolls instead of overflowing. Vertical scrolling, sticky headers, and
+viewport height stay with the parent.
+
+## Accessibility
+
+- One `table` node carries `semanticLabel`; its children are `row` nodes whose
+  children are `columnHeader` and `cell` nodes.
+- A sortable header is announced once as a button with its current sort state.
+- Selection checkboxes keep their native checkbox semantics exactly once, and
+  select-all is false, true, or mixed for none, all, or some visible rows.
+- Interactive cell content keeps its own actions.
+- Pagination controls sit outside the structural table node, because
+  Flutter's role validation only admits `row` children under a `table`.
+
+## Fortal recipe
+
+`FortalDataTable` maps Radix Themes Table exactly for the passive visuals:
+
+| Size | Cell padding | Minimum row height | Typography | Radius |
+| --- | --- | --- | --- | --- |
+| `size1` | `space2` | 36 × scaling | `text2` | `radius3` |
+| `size2` | `space3` | 44 × scaling | `text2` | `radius4` |
+| `size3` | `space3` / `space4` | `space8` | `text3` | `radius4` |
+
+`surface` adds the panel background, the blended `gray-a5`/`gray-6` border,
+the `gray-a2` header row, a clipped radius, and no divider under the last row.
+`ghost` keeps a transparent surface and every divider.
+
+Sorting, selection, pagination, row hover, and horizontal scrolling have no
+Radix counterpart — Radix's Table is a passive layout. They are recorded as
+Fortal extensions in the parity manifest.
+
+## API Reference
+
+### RemixDataTable Properties
+
+#### `rows` → `List<T>`
+
+Required. The rows of the current page, already sorted and sliced.
+
+#### `columns` → `List<RemixDataTableColumn<T>>`
+
+Required. The columns shared by the header and every row. Ids are unique.
+
+#### `semanticLabel` → `String?`
+
+Optional. Accessible name of the table itself.
+
+#### `sort` → `RemixDataTableSort?` / `onSortChanged` → `ValueChanged<RemixDataTableSort>?`
+
+Optional. The active sort descriptor and the callback that receives the next
+one.
+
+#### `rowId` → `Object Function(T row)?` / `selectedRowIds` → `Set<Object>` / `onSelectionChanged` → `ValueChanged<Set<Object>>?`
+
+Optional. Row identity, the currently selected ids, and the callback that
+receives a fresh unmodifiable set. `rowId` and `onSelectionChanged` are
+supplied together or not at all.
+
+#### `totalRows` → `int?` / `pageIndex` → `int` / `pageSize` → `int` / `pageSizeOptions` → `List<int>`
+
+Optional. Total row count across pages, the zero-based visible page, the page
+size, and the sizes offered by the footer.
+
+#### `onPageChanged` → `ValueChanged<int>?` / `onPageSizeChanged` → `ValueChanged<int>?`
+
+Optional. Pagination callbacks. Supplied together with `totalRows` or not at
+all.
+
+#### `minimumWidth` → `double`
+
+Optional. Lower bound of the laid-out table width before horizontal
+scrolling. Defaults to `0`.
+
+#### `emptyBuilder` → `WidgetBuilder?`
+
+Optional. Replaces the body rows when `rows` is empty.
+
+#### `labels` → `RemixDataTableLabels` / `pageRangeFormatter` → `RemixDataTablePageRangeFormatter`
+
+Optional. Every built-in string and the visible page-range format.
+
+#### `sortableIcon` / `sortAscendingIcon` / `sortDescendingIcon` → `IconData`
+
+Optional. Sort indicators for an inactive, ascending, and descending column.
+
+#### `previousPageIcon` / `nextPageIcon` → `IconData`
+
+Optional. Pagination icons, mirrored in RTL.
+
+### RemixDataTableColumn Properties
+
+#### `id` → `String`
+
+Required. Stable identifier used by sort descriptors. Unique within a table.
+
+#### `cellBuilder` → `Widget Function(BuildContext context, T row)`
+
+Required. Builds this column's cell for one row.
+
+#### `label` → `String?` / `header` → `Widget?`
+
+Exactly one is required. `label` renders with the table's header typography;
+`header` renders arbitrary content and additionally requires `semanticLabel`.
+
+#### `semanticLabel` → `String?`
+
+Accessible name of the column header. Defaults to `label`.
+
+#### `width` → `TableColumnWidth`
+
+Optional. Width shared by this column's header and body cells. Defaults to
+`FlexColumnWidth()`.
+
+#### `alignment` → `RemixDataTableCellAlignment`
+
+Optional. Directional placement of this column's content. Defaults to `start`.
+
+#### `sortable` → `bool`
+
+Optional. Whether activating the header emits a new sort descriptor.
+
+### Style Methods
+
+#### `headerRow(BoxStyler value)` / `bodyRow(BoxStyler value)` / `lastBodyRow(BoxStyler value)`
+
+Sets the row chrome painted behind every cell of the header row, of a body
+row, and of the final body row. `bodyRow` variants such as `onHovered` and
+`onSelected` resolve against that row's own state.
+
+#### `headerCell(BoxStyler value)` / `bodyCell(BoxStyler value)` / `selectionCell(BoxStyler value)`
+
+Sets the inner cell boxes that own padding and per-cell decoration.
+
+#### `cellPadding(EdgeInsetsGeometryMix value)`
+
+Applies one padding to the header, body, and selection cells at once.
+
+#### `rowDivider(BorderSideMix value)`
+
+Draws one divider under the header and body rows.
+
+#### `headerLabel(TextStyler value)` / `cellText(TextStyler value)` / `footerLabel(TextStyler value)`
+
+Sets the header typography, the default typography inherited by cell content,
+and the footer typography.
+
+#### `headerLabelTextStyle` / `headerLabelColor` / `footerLabelTextStyle` / `footerLabelColor`
+
+Convenience setters for the header and footer text style or color.
+
+#### `sortIcon(IconStyler value)` / `sortIconColor(Color color)` / `sortIconSpacing(double value)`
+
+Styles the sort indicator and the gap between it and its label.
+
+#### `footer(FlexBoxStyler value)`
+
+Styles the pagination footer, including its inter-control spacing.
+
+#### `selectionCheckbox(Style<CheckboxSpec> value)` / `pageButton(Style<IconButtonSpec> value)` / `pageSizeSelect(Style<SelectSpec> value)`
+
+Hands the composed controls an unresolved style, so each one still resolves
+its own widget states.
+
+#### `headerMinHeight(double value)` / `rowMinHeight(double value)` / `selectionColumnWidth(double value)`
+
+Sets the header floor, the body row floor, and the width of the optional
+selection column.
+
+#### `padding(EdgeInsetsGeometryMix value)` / `margin(EdgeInsetsGeometryMix value)`
+
+Sets outer container padding or margin.
+
+#### `color(Color value)` / `decoration(DecorationMix value)` / `border(BoxBorderMix value)` / `borderRadius(BorderRadiusGeometryMix value)`
+
+Sets the outer surface background, decoration, border, and radius.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `animate(AnimationConfig value)`
+
+Configures implicit animation for style transitions.
