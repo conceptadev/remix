@@ -23,7 +23,7 @@ The dashboard is evidence, not a source file to move unchanged. Both widgets imp
 
 | Gap | Decision | Why not now | Promotion trigger |
 | --- | --- | --- | --- |
-| DataTable | **Accepted: PR 9** | — | Implement the controlled, host-neutral vertical slice in `pr-09-data-table.md`. |
+| DataTable | **Merged: #109** (+ follow-ups #110-#112) | — | Done: controlled vertical slice, Fortal recipe, mapped parity family, dashboard DataGrid migration. |
 | Toast | **Accepted: PR 10** | — | Implement the focused scope/controller/portal, bounded queue, timer/focus/lifecycle policy, native status/alert semantics, generated Fortal extension, and dashboard migration in `pr-10-toast.md`. |
 | Sheet/Drawer | **Deferred** | It needs modal/nonmodal focus containment, Escape/outside dismissal, direction, safe-area handling, and a decision on drag gestures versus keyboard/desktop behavior. | Reuse the dialog/overlay host contract after those behaviors are specified and tested without requiring `Scaffold`. |
 | ContextMenu | **Deferred until PR 1** | Menu item parity must land first; the remaining work is invocation and anchor behavior, not another menu renderer. | Reuse the recursive menu panel after secondary-click, long-press, keyboard invocation, focus restoration, and RTL positioning are specified. |

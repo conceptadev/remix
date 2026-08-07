@@ -325,12 +325,12 @@ flag.
 
 - Checkpoint: run the typography test directory and both public-API tests; inspect semantics dumps for every widget before parity-ledger changes.
 
-- [ ] Task 4: Advance the parity contract from 24/3 to 29/3.
+- [ ] Task 4: Advance the parity contract from 25/3 to 30/3 (counts rebased after PR 9 merged early; re-verify live values at branch time).
   - Files: `manifest.json`, `manifest.schema.json`, `coverage_evidence.json`,
     `tool/fortal_parity/check.dart`, five parity tests, reference README.
   - Add mapped IDs `text`, `heading`, `code`, `kbd`, and `link`; raise the
-    schema's exact family min/max from 27 to 32 and set checker total/success
-    text to 29 mapped/3 extensions.
+    schema's exact family min/max from 28 to 33 and set checker total/success
+    text to 30 mapped/3 extensions.
   - Map every typography ID to `components/typography/fortal_<id>_styles.dart`; concatenate `typography_shared.dart` for shared enum inspection without contaminating per-family highContrast detection.
   - Teach size-enum validation that all five intentionally use `FortalTextSize`.
   - Teach named-variant validation to include sibling `typography_widget.dart`, then require all Code/Kbd constructors.
@@ -350,10 +350,10 @@ flag.
 - [ ] Task 5: Add five Chromium probes and regenerate evidence.
   - Files: fixture HTML/generator, computed styles JSON, 1440x1280 image.
   - Probe representative Text size/weight, Heading size/line-height, all Code/Kbd variant-critical properties, and actionable Link color/underline/focus baseline.
-  - Keep the PR 7 five-column layout; 29 mapped families should fit in six rows at the established compact cell height.
-  - Acceptance: computed probe IDs exactly equal the 29 mapped set.
+  - Keep the PR 7 five-column layout; 30 mapped families should fit in six rows at the established compact cell height.
+  - Acceptance: computed probe IDs exactly equal the 30 mapped set.
 
-- Checkpoint: `fvm dart run melos run fortal:parity:check` passes with 29/3 and no undocumented approximation.
+- Checkpoint: `fvm dart run melos run fortal:parity:check` passes with 30/3 and no undocumented approximation.
 
 - [ ] Task 6: Add docs, playground, README inventories, and accessibility examples.
   - Files: `docs/components/typography.mdx`, root `docs.json`, `packages/playground/lib/registry/entries/typography_entry.dart`, registry, root and package READMEs kept identical.
@@ -403,7 +403,7 @@ flag.
 ### Parity and manual
 
 - Each family owns real evidence cases for every manifest enum/state.
-- Live Chromium probes preserve Radix 3.3 integrity and all 29 mapped owners.
+- Live Chromium probes preserve Radix 3.3 integrity and all 30 mapped owners.
 - Screen-reader review covers heading navigation, keyboard-key pronunciation, actionable/inert links, and no duplicate labels.
 - Visual review covers light/dark, two accents, high contrast, large text, and platform font fallback.
 
@@ -434,7 +434,7 @@ flag.
 - [ ] Heading, Kbd, and Link semantics are exact, single-node, and behaviorally tested; Code has no invented role.
 - [ ] Link delegates all interaction to Naked only when callback-backed and never launches URLs internally.
 - [ ] All size/weight/variant/underline/accent/highContrast states are tested.
-- [ ] Manifest/evidence/checker/fixture agree on 29 mapped + 3 extensions = 32 families.
+- [ ] Manifest/evidence/checker/fixture agree on 30 mapped + 3 extensions = 33 families.
 - [ ] Docs/playground/README and light/dark Radix comparisons are complete.
 
 ## Risks and mitigations
@@ -454,7 +454,7 @@ flag.
   use native decoration for correct wrapping/semantics, measure and record the
   visual tolerance, and defer a painter until a demonstrated requirement
   justifies it.
-- Risk: PR 7 parity changes conflict. Mitigation: rebase after PR 7 and update cumulative 29/3/32 counts once.
+- Risk: PR 7 parity changes conflict. Mitigation: rebase after PR 7 and update cumulative 30/3/33 counts once.
 
 ## Validation and rollout
 

@@ -1,5 +1,10 @@
 # Plan: Add Remix DataTable
 
+> **Status: merged.** Landed early as #109 with review follow-ups in #110-#112,
+> including the Fortal recipe, the `data_table` mapped parity family (main is
+> now 21 mapped + 3 extensions), and the dashboard DataGrid migration. The
+> remaining ledger PRs (7, 8, 10) use rebased counts; see `00-discovery.md`.
+
 > Add a host-neutral, controlled table for moderate or paginated record sets, with native table semantics, Mix styling, Fortal Radix visuals, and migration of the dashboard prototype.
 
 ## PR contract

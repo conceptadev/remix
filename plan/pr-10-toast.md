@@ -5,7 +5,7 @@
 ## PR contract
 
 - Title: `feat(remix): add toast component`
-- Execution dependency: rebase onto current `origin/main`, then land after PR 9 because both PRs update the Fortal family ledger. The Toast code is otherwise independent of DataTable.
+- Execution dependency: rebase onto current `origin/main`, then land after PRs 7 and 8 because all three update the Fortal family ledger (PR 9 already merged as #109). The Toast code is otherwise independent.
 - Compatibility: additive Remix/Fortal public API plus an internal dashboard migration; no consumer or data migration.
 - Primary outcome: applications can present one or more nonmodal notifications through a caller-hosted Overlay without requiring MaterialApp, Scaffold, Navigator, or a Remix-owned application wrapper.
 - Out of scope: operating-system notifications, banners, snackbars tied to Scaffold geometry, modal alerts, arbitrary custom overlay children, swipe-to-dismiss, notification history/inbox, cross-isolate delivery, persistence across a disposed scope, and a general-purpose `RemixScope`.
@@ -281,7 +281,7 @@ ToastStyler fortalToastStyle({
 - Reuse Fortal panel, stroke, shadow, button, typography, spacing, radius, accent/gray, and existing error tokens. Do not nest `FortalCard` as the implementation or copy its token literals; Toast needs independently styled content/action/close regions and stable keyed motion.
 - `intent` is visual only. It never silently changes `RemixToastPriority`; callers explicitly choose assertive semantics when the content truly needs immediate attention.
 - Toast is not a Radix Themes 3.3 component. Record it as a Fortal extension with empty upstream source/selectors and explicit dashboard/Fortaleza design evidence. Do not fabricate a Radix Chromium probe or claim mapped parity.
-- PR 10 advances the ledger after PR 9 from 30 mapped + 3 extensions to 30 mapped + 4 extensions (34 total). Update manifest, coverage evidence, expected extension set, total count, checker success text, and reference README atomically.
+- PR 10 advances the ledger after PRs 7 and 8 from 30 mapped + 3 extensions to 30 mapped + 4 extensions (34 total; re-verify live counts at branch time). Update manifest, coverage evidence, expected extension set, total count, checker success text, and reference README atomically.
 
 ## Work breakdown
 

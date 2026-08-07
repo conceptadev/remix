@@ -17,7 +17,12 @@
 ## Context
 
 - Fortal recipes are parts of their Remix component libraries and use `@MixWidget(target: Remix<Name>.new)` to generate `Fortal*` wrappers in the component `.g.dart`.
-- The current parity contract has 20 mapped Radix families plus three Fortal extensions. This PR adds `skeleton`, `segmented_control`, `text_area`, and `data_list`: 24 mapped, three extensions, 27 total.
+- Count rebase (2026-08-07): PR 9 merged early (#109), so `data_table` is
+  already a mapped family. The current parity contract has 21 mapped Radix
+  families plus three Fortal extensions. This PR adds `skeleton`,
+  `segmented_control`, `text_area`, and `data_list`: 25 mapped, three
+  extensions, 28 total. Re-verify the live counts from
+  `manifest.json`/`check.dart` at branch time before hard-coding them.
 - `packages/remix/tool/fortal_parity/check.dart` hard-codes family sets, exact counts, style-source paths, evidence owners, computed-style probe ownership, and success text. Updating only the manifest will fail by design.
 - TextArea intentionally shares `TextFieldStyler` and its visual-state helpers. Its Fortal source should be `components/textfield/fortal_textarea_styles.dart`, registered as a part of `textfield.dart` and special-cased in the parity source map.
 - Remix CheckboxGroup is a nonvisual, layout-transparent coordinator and its
@@ -201,7 +206,7 @@ in PR 1; this PR makes no menu changes.
   checker. Record the pinned root/item selectors and source files, upstream
   root gap/item label gap/size/variant/color/highContrast contract, supported
   Remix composition, reason for deferral, and reopen condition. It contributes
-  no evidence owner or Chromium probe and does not change the 24/3 count.
+  no evidence owner or Chromium probe and does not change the 25/3 count.
 
 ## Work breakdown
 
@@ -235,25 +240,25 @@ in PR 1; this PR makes no menu changes.
     no new checkbox-group visual type; docs label the group composition
     supported rather than mapped parity.
 
-- [ ] Task 5: Advance the parity contract from 20/3 to 24/3.
+- [ ] Task 5: Advance the parity contract from 21/3 to 25/3.
   - Files: `reference/.../manifest.json`, `manifest.schema.json`,
     `coverage_evidence.json`, `tool/fortal_parity/check.dart`, per-family parity
     tests, reference README.
-  - Add the four IDs to `_expectedMappedFamilies`, update exact total to 27 and success text to 24 mapped/3 extensions.
+  - Add the four IDs to `_expectedMappedFamilies`, update exact total to 28 and success text to 25 mapped/3 extensions.
   - Map `text_area` to `components/textfield/fortal_textarea_styles.dart` in `_readFortalStylesSource`; standard mappings handle the other three.
   - Add exact source files/selectors, upstream inventories, defaults/enums/states, visual mappings, deferred capabilities, and named approximations described above.
   - Add and validate the `checkbox_group` unmapped-upstream inventory record;
     require unique IDs, real pinned source paths/selectors, a nonempty reason and
     reopen condition, and disjointness from mapped/extension IDs.
-  - Acceptance: evidence owners are exactly `theme + 24 mapped + 3
+  - Acceptance: evidence owners are exactly `theme + 25 mapped + 3
     extensions`, CheckboxGroup is audited but owns no evidence/probe, and every
     cited case string exists in a real test.
 
 - [ ] Task 6: Expand and regenerate the pinned Chromium reference.
   - Files: `tool/fortal_parity/chromium/fixture.html`, `generate.mjs`, committed `reference/.../chromium/computed-styles.json`, `families-light.png`, README if layout description changes.
-  - Add one probe per new mapped family with stable representative states/properties. Change the grid to five columns and roughly 160 px minimum cells now so PR 8's 29 mapped probes also fit; preserve 1440x1280 output.
+  - Add one probe per new mapped family with stable representative states/properties. Change the grid to five columns and roughly 160 px minimum cells now so PR 8's 30 mapped probes also fit; preserve 1440x1280 output.
   - Run `npm ci && npm run generate` in the fixture directory.
-  - Acceptance: normalized computed probe IDs exactly equal the 24-family set and the screenshot signature/dimensions pass.
+  - Acceptance: normalized computed probe IDs exactly equal the 25-family set and the screenshot signature/dimensions pass.
 
 - Checkpoint: run `fvm dart run melos run fortal:parity:check`; do not proceed to screenshots while manifest, evidence, tests, and fixture disagree.
 
@@ -315,7 +320,7 @@ in PR 1; this PR makes no menu changes.
 - [ ] CheckboxGroup remains a nonvisual Remix coordinator composed with the
   existing Fortal checkbox recipe, and its omitted Radix visual anatomy is
   checker-audited rather than silently counted as mapped.
-- [ ] Manifest/evidence/checker/tests/fixture all agree on 24 mapped + 3 extensions = 27 families.
+- [ ] Manifest/evidence/checker/tests/fixture all agree on 25 mapped + 3 extensions = 28 families.
 - [ ] Segmented slide/separators, TextArea resize/auto-grow, and DataList
   compositional/per-label/responsive/trim gaps are explicit approximations.
 - [ ] Light/dark side-by-side Radix screenshots and all shared validation results are in the PR.

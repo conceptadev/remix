@@ -140,9 +140,14 @@ Fortal parity is executable, not a documentation-only checklist:
 - `packages/remix/reference/radix_themes_3_3_0/manifest.json` currently describes 20 mapped families and three Fortal extensions.
 - `coverage_evidence.json` and each per-family parity test are part of the contract.
 - `tool/fortal_parity/chromium/fixture.html` and `generate.mjs` produce the pinned computed styles and a fixed 1440x1280 reference image.
-- PR 7 raises the mapped count to 24 (27 total including extensions); PR 8 raises it to 29 (32 total); PR 9 raises it to 30 (33 total); PR 10 keeps 30 mapped and adds Toast as extension 4 (34 total). Update manifest-schema min/max, hard-coded checker counts, and success text in the same PR.
+- Count rebase (2026-08-07): PR 9 merged early (#109), so main is already at 21
+  mapped + 3 extensions. PR 7 raises the mapped count to 25 (28 total including
+  extensions); PR 8 raises it to 30 (33 total); PR 10 keeps 30 mapped and adds
+  Toast as extension 4 (34 total). Update manifest-schema min/max, hard-coded
+  checker counts, and success text in the same PR, and re-verify live counts at
+  branch time.
 - CheckboxGroup adds no separate mapped Fortal family in this series: the Remix group is intentionally layout-transparent and its options use the already mapped Fortal Checkbox recipe. PR 7 adds a checker-enforced `unmappedUpstreamFamilies` record for Radix CheckboxGroup's root/item gap, label row, and propagated size/variant/color/high-contrast anatomy so this is an audited scope decision rather than a silent parity claim. A future styled group API must remove that record and add a mapped family atomically.
-- The fixture currently lays out 20 probes in four columns. Expand it for the added probes (five columns and a smaller cell minimum is the recommended starting point) while preserving the exact output dimensions.
+- The fixture currently lays out the mapped-family probes in a four-column grid (21 probes after #109). Expand it for the added probes (five columns and a smaller cell minimum is the recommended starting point) while preserving the exact output dimensions.
 - The Chromium image is evidence of Radix's web output, not an oracle that validates Flutter rendering.
 
 PR 1 must also update the existing menu family's manifest/evidence because checkbox, radio, and submenu are currently declared deferred. Correct the parity README's stale `naked_ui` beta.7 wording to beta.8 there.
@@ -150,6 +155,18 @@ PR 1 must also update the existing menu family's manifest/evidence because check
 ## Screenshot finding
 
 The old automated component atlas was intentionally removed in commit `2520131a8` (#83). Do not restore it. Each PR uses the real playground for manually captured light and dark states. Fortal PRs additionally include a side-by-side Radix 3.3 reference comparison in the PR description. The pinned parity fixture remains a separate machine-generated reference artifact.
+
+## Execution status (2026-08-07)
+
+Merged on `origin/main`: PR 1 menu items (#101), PR 2 skeleton (#104), PR 3
+checkbox group (#105 + #106, standard traversal with roving deferred as
+planned), PR 4 segmented control (#108), PR 5 textarea (#107), PR 6 data list
+(#103), and PR 9 data table (#109 with follow-ups #110-#112), including the
+dashboard DataGrid migration and the `data_table` mapped family. Remaining:
+PR 7 Fortal recipes (skeleton, segmented control, textarea, data list — menu
+was completed inside #101), PR 8 Fortal typography, and PR 10 Toast (the
+dashboard `toast.dart` prototype still exists and awaits migration). Remaining
+order: 7 → 8 → 10, serialized on the parity ledger.
 
 ## Dependency graph
 
