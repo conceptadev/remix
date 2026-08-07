@@ -13,13 +13,6 @@ Widget buildDataListExample() {
     ),
   ];
 
-  final style = DataListStyler()
-      .minLabelWidth(96)
-      .columnSpacing(24)
-      .rowSpacing(12)
-      .labelValueSpacing(4)
-      .labelColor(Colors.grey);
-
   Widget materialRow(String label, String value) => Padding(
     padding: const EdgeInsets.only(bottom: 12),
     child: Row(
@@ -43,7 +36,7 @@ Widget buildDataListExample() {
         // value children (a display-only badge and an interactive button).
         SizedBox(
           width: 280,
-          child: RemixDataList(
+          child: FortalDataList(
             semanticLabel: 'Account details',
             items: [
               ...metadata,
@@ -63,17 +56,12 @@ Widget buildDataListExample() {
                 ),
               ),
             ],
-            style: style,
           ),
         ),
         // Vertical: the caller-owned fallback for narrow widths.
         SizedBox(
           width: 200,
-          child: RemixDataList(
-            orientation: Axis.vertical,
-            items: metadata,
-            style: style,
-          ),
+          child: FortalDataList(orientation: Axis.vertical, items: metadata),
         ),
       ],
       material: [

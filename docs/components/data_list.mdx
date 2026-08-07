@@ -50,6 +50,28 @@ class DataListExample extends StatelessWidget {
 ```
 </CodeGroup>
 
+## Fortal recipe
+
+`FortalDataList` maps the pinned Radix Themes 3.3 size typography, root row and
+column gaps, vertical label/value gap, 120 logical-pixel horizontal label
+minimum, and normal/high-contrast label roles.
+
+<CodeGroup title="Fortal data list" defaultLanguage="dart">
+```dart
+import 'package:remix/remix.dart';
+
+const accountDetails = FortalDataList(
+  size: FortalDataListSize.size2,
+  highContrast: true,
+  semanticLabel: 'Account details',
+  items: [
+    RemixDataListItem(label: 'Name', value: 'Leo Farias'),
+    RemixDataListItem(label: 'Email', value: 'leo@example.com'),
+  ],
+);
+```
+</CodeGroup>
+
 ## Orientation and narrow widths
 
 The constructor's `orientation` always wins over styles, and the renderer
@@ -152,6 +174,17 @@ adaptations are documented Radix deltas:
   arbitrary widget may expose no text baseline.
 - Vertical orientation maps `baseline` to `start`, because stacked cells
   share no horizontal baseline.
+
+## Fortal parity boundaries
+
+Radix exposes compositional Root/Item/Label/Value children plus per-label
+color, high-contrast, and width props. Remix keeps its data-driven row model,
+one shared label style, and one global `highContrast` recipe argument. Callers
+rebuild with a different size, orientation, alignment, or width at responsive
+breakpoints. CSS leading trim and its quarter-em edge offsets are not applied;
+Flutter text baselines and untrimmed bounds remain authoritative. Those are
+the only visual tolerances—mapped typography, gaps, shared columns, label
+minimum, and gray roles remain exact.
 
 ## Semantics
 

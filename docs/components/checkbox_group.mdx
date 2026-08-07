@@ -252,7 +252,10 @@ CheckboxStyler _optionStyle() {
 There is no Fortal checkbox-group widget, because the group has no visuals of
 its own. Style the **items** with the existing Fortal checkbox recipe; the
 group stays unstyled. Fortal keeps its 14/16/20 indicator geometry inside the
-item's default 48-pixel interaction target.
+item's default 48-pixel interaction target. The Radix CheckboxGroup family is
+audited separately as intentionally unmapped: caller-owned `Column`/`Row`
+spacing replaces its root and label gaps, while each item receives the mapped
+checkbox size, variant, color, and high-contrast styling.
 
 <CodeGroup title="Fortal-styled items" defaultLanguage="dart">
 ```dart

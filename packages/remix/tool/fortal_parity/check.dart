@@ -22,14 +22,19 @@ const _expectedMappedFamilies = <String>{
   'progress',
   'radio',
   'select',
+  'segmented_control',
   'slider',
+  'skeleton',
   'spinner',
   'switch',
   'tabs',
+  'text_area',
   'text_field',
   'tooltip',
+  'data_list',
 };
 const _expectedExtensions = <String>{'accordion', 'toggle', 'toggle_group'};
+const _expectedUnmappedUpstreamFamilies = <String>{'checkbox_group'};
 
 void main() {
   final packageRoot = Directory.current;
@@ -294,10 +299,11 @@ void _checkFamilies(
     failures,
   );
   _expect(
-    families.length == 24,
-    'Exactly 24 Fortal families must be tracked.',
+    families.length == 28,
+    'Exactly 28 Fortal families must be tracked.',
     failures,
   );
+  _checkUnmappedUpstreamFamilies(manifest, families.keys.toSet(), failures);
 }
 
 String? _readFortalStylesSource(
@@ -305,16 +311,158 @@ String? _readFortalStylesSource(
   String id,
   List<String> failures,
 ) {
-  final componentName = id == 'text_field' ? 'textfield' : id;
+  final componentName = switch (id) {
+    'text_field' || 'text_area' => 'textfield',
+    _ => id,
+  };
+  final recipeName = id == 'text_area' ? 'textarea' : componentName;
   final file = File(
     '${packageRoot.path}/lib/src/components/$componentName/'
-    'fortal_${componentName}_styles.dart',
+    'fortal_${recipeName}_styles.dart',
   );
   if (!file.existsSync()) {
     failures.add('$id is missing Fortal recipe source ${file.path}.');
     return null;
   }
   return file.readAsStringSync();
+}
+
+void _checkUnmappedUpstreamFamilies(
+  Map<String, Object?> manifest,
+  Set<String> trackedFamilyIds,
+  List<String> failures,
+) {
+  final values = manifest['unmappedUpstreamFamilies'];
+  if (values is! List<Object?>) {
+    failures.add('unmappedUpstreamFamilies must be a JSON array.');
+    return;
+  }
+
+  final ids = <String>{};
+  for (final (index, value) in values.indexed) {
+    final path = 'unmappedUpstreamFamilies[$index]';
+    final family = _object(value, path, failures);
+    if (family == null) continue;
+    final id = family['id'];
+    if (id is! String || id.isEmpty) {
+      failures.add('$path.id must be a non-empty string.');
+      continue;
+    }
+    if (!ids.add(id)) failures.add('Duplicate unmapped family id: $id.');
+    _expect(
+      !trackedFamilyIds.contains(id),
+      '$id cannot be both tracked and intentionally unmapped.',
+      failures,
+    );
+
+    final sourceFiles = _strings(
+      family['sourceFiles'],
+      '$path.sourceFiles',
+      failures,
+    ).toSet();
+    final selectors = _strings(
+      family['sourceSelectors'],
+      '$path.sourceSelectors',
+      failures,
+    ).toSet();
+    _expect(
+      sourceFiles.isNotEmpty,
+      '$id must name pinned source files.',
+      failures,
+    );
+    _expect(
+      selectors.isNotEmpty,
+      '$id must name pinned source selectors.',
+      failures,
+    );
+    for (final field in [
+      'supportedRemixComposition',
+      'reason',
+      'reopenCondition',
+    ]) {
+      final text = family[field];
+      _expect(
+        text is String && text.isNotEmpty,
+        '$path.$field must be a non-empty string.',
+        failures,
+      );
+    }
+    _expect(
+      family['upstreamInventory'] is Map<String, Object?>,
+      '$path.upstreamInventory must document the upstream contract.',
+      failures,
+    );
+
+    if (id == 'checkbox_group') {
+      _expect(
+        _sameSet(sourceFiles, const {
+          'src/components/checkbox-group.props.tsx',
+          'src/components/checkbox-group.css',
+          'src/components/checkbox-group.tsx',
+        }),
+        'checkbox_group pinned source files drifted.',
+        failures,
+      );
+      _expect(
+        _sameSet(selectors, const {
+          '.rt-CheckboxGroupRoot',
+          '.rt-CheckboxGroupItem',
+          '.rt-CheckboxGroupItemCheckbox',
+          '.rt-CheckboxGroupItemInner',
+        }),
+        'checkbox_group pinned selectors drifted.',
+        failures,
+      );
+      final inventory = family['upstreamInventory'];
+      if (inventory is Map<String, Object?>) {
+        final enums = _enumKeys(
+          inventory['enums'],
+          '$path.upstreamInventory.enums',
+          failures,
+        );
+        _expect(
+          _sameSet(enums, const {
+            'size.size1',
+            'size.size2',
+            'size.size3',
+            'variant.classic',
+            'variant.surface',
+            'variant.soft',
+          }),
+          'checkbox_group size/variant inventory drifted.',
+          failures,
+        );
+        _expect(
+          _sameSet(
+            _strings(
+              inventory['supportedStyleProps'],
+              '$path.upstreamInventory.supportedStyleProps',
+              failures,
+            ).toSet(),
+            const {'color', 'highContrast'},
+          ),
+          'checkbox_group color/highContrast inventory drifted.',
+          failures,
+        );
+        final layout = _object(
+          inventory['layout'],
+          '$path.upstreamInventory.layout',
+          failures,
+        );
+        _expect(
+          layout?['rootGap'] == 'space1' && layout?['itemLabelGap'] == '0.5em',
+          'checkbox_group pinned gap inventory drifted.',
+          failures,
+        );
+      }
+    }
+  }
+
+  _expect(
+    _sameSet(ids, _expectedUnmappedUpstreamFamilies),
+    'Unmapped upstream family set drifted: $ids.',
+    failures,
+  );
 }
 
 bool _recipeExposesHighContrast(String source) {
@@ -831,7 +979,8 @@ Never _finish(List<String> failures) {
   }
   stdout.writeln(
     'Verified @radix-ui/themes 3.3.0 contract: '
-    '21 mapped families, 3 Fortal extensions, Chromium fixtures, '
+    '25 mapped families, 3 Fortal extensions, 1 audited unmapped family, '
+    'Chromium fixtures, '
     'coverage ledger, hosted Naked $_expectedNakedUiVersion resolution, and no '
     'undocumented approximations.',
   );

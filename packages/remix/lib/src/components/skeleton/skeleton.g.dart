@@ -91,6 +91,29 @@ mixin _$SkeletonSpec implements Spec<SkeletonSpec>, Diagnosticable {
 typedef _$SkeletonSpecMethods = _$SkeletonSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal recipe for [RemixSkeleton].
+class FortalSkeleton extends StatelessWidget {
+  const FortalSkeleton({super.key, this.child, this.loading = true});
+
+  final Widget? child;
+
+  final bool loading;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixSkeleton(
+      key: this.key,
+      style: fortalSkeletonStyle(),
+      child: this.child,
+      loading: this.loading,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 

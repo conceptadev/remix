@@ -72,14 +72,14 @@ class _TextAreaExampleState extends State<_TextAreaExample> {
         child: ComparisonView(
           remix: [
             field(
-              const RemixTextArea(
+              const FortalTextArea.surface(
                 key: ValueKey('textarea-empty'),
                 label: 'Empty',
                 hintText: 'Start typing at the top…',
               ),
             ),
             field(
-              RemixTextArea(
+              FortalTextArea.classic(
                 key: const ValueKey('textarea-filled'),
                 controller: _remixController,
                 label: 'Controlled value',
@@ -87,7 +87,7 @@ class _TextAreaExampleState extends State<_TextAreaExample> {
               ),
             ),
             field(
-              const RemixTextArea(
+              const FortalTextArea.surface(
                 key: ValueKey('textarea-error'),
                 label: 'Project summary',
                 hintText: 'Describe the project',
@@ -96,7 +96,7 @@ class _TextAreaExampleState extends State<_TextAreaExample> {
               ),
             ),
             field(
-              const RemixTextArea(
+              const FortalTextArea.soft(
                 label: 'Limited feedback',
                 hintText: 'Up to 120 characters',
                 maxLength: 120,
@@ -104,7 +104,7 @@ class _TextAreaExampleState extends State<_TextAreaExample> {
               ),
             ),
             field(
-              const RemixTextArea(
+              const FortalTextArea.surface(
                 key: ValueKey('textarea-disabled'),
                 label: 'Disabled',
                 hintText: 'Editing unavailable',
@@ -112,7 +112,7 @@ class _TextAreaExampleState extends State<_TextAreaExample> {
               ),
             ),
             field(
-              RemixTextArea(
+              FortalTextArea.classic(
                 controller: _remixReadOnlyController,
                 label: 'Read only',
                 readOnly: true,

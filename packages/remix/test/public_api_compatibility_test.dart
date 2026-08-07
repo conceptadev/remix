@@ -210,6 +210,11 @@ void main() {
       label: 'Receive updates',
       minimumTapTargetSize: Size.zero,
     );
+    const segmented = FortalSegmentedControl.classic(
+      items: [RemixSegmentedControlItem(value: 'list', label: 'List')],
+      selectedValue: 'list',
+    );
+    const textArea = FortalTextArea.classic();
 
     expect(menu.variant, FortalMenuVariant.soft);
     expect(select.variant, FortalSelectVariant.ghost);
@@ -217,6 +222,9 @@ void main() {
     expect(button.variant, FortalButtonVariant.soft);
     expect(checkbox.label, 'Receive updates');
     expect(checkbox.minimumTapTargetSize, Size.zero);
+    expect(segmented, isA<FortalSegmentedControl<String>>());
+    expect(segmented.variant, FortalSegmentedControlVariant.classic);
+    expect(textArea.variant, FortalTextAreaVariant.classic);
   });
 
   test('segmented control accepts a non-nullable value callback', () {

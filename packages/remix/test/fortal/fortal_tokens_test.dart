@@ -8,6 +8,34 @@ void main() {
       expect(FortalTokens.colorBackground.name, 'fortal.color.background');
     });
 
+    test('keeps the Phase 1 recipe token names stable', () {
+      expect(
+        FortalTokens.skeletonPulseDuration.name,
+        'fortal.skeleton.pulse-duration',
+      );
+      expect(
+        FortalTokens.segmentedControlIndicatorBackground.name,
+        'fortal.segmented-control.indicator-background',
+      );
+      expect(
+        FortalTokens.segmentedControlClassicIndicatorShadows.name,
+        'fortal.segmented-control.classic.indicator-shadows',
+      );
+      expect(
+        FortalTokens.textAreaMinHeight3.name,
+        'fortal.text-area.min-height.3',
+      );
+      expect(
+        FortalTokens.textAreaPaddingY1.name,
+        'fortal.text-area.padding-y.1',
+      );
+      expect(FortalTokens.dataListRowGap3.name, 'fortal.data-list.row-gap.3');
+      expect(
+        FortalTokens.dataListLabelMinWidth.name,
+        'fortal.data-list.label-min-width',
+      );
+    });
+
     testWidgets('radio indicator metrics resolve before size arithmetic', (
       tester,
     ) async {

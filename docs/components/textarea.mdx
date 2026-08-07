@@ -135,6 +135,42 @@ class TextAreaStates extends StatelessWidget {
 A read-only TextArea remains focusable and selectable. A disabled TextArea does
 not accept input or expose an editing action.
 
+## Fortal recipe
+
+Use `FortalTextArea`, `.classic`, `.surface`, or `.soft` for the pinned Radix
+Themes 3.3 sizes and variants. The wrapper forwards the full multiline editor
+API. Its 48/64/80 logical-pixel minimum heights do not force a fixed height, so
+content can still grow within parent constraints.
+
+<CodeGroup title="Fortal TextArea variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalTextAreaExample extends StatelessWidget {
+  const FortalTextAreaExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      spacing: 16,
+      children: [
+        FortalTextArea.classic(label: 'Classic', hintText: 'Add notes'),
+        FortalTextArea.surface(label: 'Surface', hintText: 'Add notes'),
+        FortalTextArea.soft(label: 'Soft', hintText: 'Add notes'),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+The soft placeholder uses `accent12` at 0.65 opacity and the soft focus outline
+uses `accent8`. TextArea does not implement the browser resize handle; Flutter
+uses `minLines`, `maxLines`, constraints, and scrolling. Its default
+`maxLines: null` auto-grows instead of reproducing a fixed browser textarea
+block size.
+
 ## Custom styling
 
 TextArea deliberately reuses the TextField anatomy. Use `TextFieldStyler` for
@@ -145,12 +181,9 @@ the styler through `style` as shown below.
 
 <Warning>
 Do not pass `fortalTextFieldStyle()` to a TextArea. That preset pins the input
-container to a single-line height, so the editor stops growing and taller
-content scrolls inside a one-line box with no layout error to signal it. There
-is no Fortal TextArea preset: Radix Themes' TextArea is not part of this
-package's mapped parity surface, so its metrics have no reference data to
-derive from. Style TextArea with `TextFieldStyler` directly, using `minHeight`
-rather than `height` for any floor you need.
+container to a single-line height. Use `fortalTextAreaStyle()` or the generated
+`FortalTextArea` wrapper, whose recipe uses multiline minimum heights and
+start alignment.
 </Warning>
 
 <CodeGroup title="Custom Remix styling" defaultLanguage="dart">

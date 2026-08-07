@@ -36,17 +36,27 @@ final Map<String, WidgetBuilder> components = {
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildTextFieldExample()),
   ),
-  'textarea': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildTextAreaExample()),
+  'textarea': (context) => PreviewShell(
+    child: Builder(
+      builder: (context) => FortalScope(
+        brightness: Theme.of(context).brightness,
+        hasBackground: false,
+        child: buildTextAreaExample(),
+      ),
+    ),
   ),
   'checkbox': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildCheckboxExample()),
   ),
-  'checkbox_group': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildCheckboxGroupExample()),
+  'checkbox_group': (context) => PreviewShell(
+    child: Builder(
+      builder: (context) => FortalScope(
+        brightness: Theme.of(context).brightness,
+        hasBackground: false,
+        child: buildCheckboxGroupExample(),
+      ),
+    ),
   ),
   'radio': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
@@ -56,9 +66,14 @@ final Map<String, WidgetBuilder> components = {
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildSelectExample()),
   ),
-  'segmented-control': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildSegmentedControlExample()),
+  'segmented-control': (context) => PreviewShell(
+    child: Builder(
+      builder: (context) => FortalScope(
+        brightness: Theme.of(context).brightness,
+        hasBackground: false,
+        child: buildSegmentedControlExample(),
+      ),
+    ),
   ),
   'switch': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
@@ -99,9 +114,14 @@ final Map<String, WidgetBuilder> components = {
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildCalloutExample()),
   ),
-  'data_list': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildDataListExample()),
+  'data_list': (context) => PreviewShell(
+    child: Builder(
+      builder: (context) => FortalScope(
+        brightness: Theme.of(context).brightness,
+        hasBackground: false,
+        child: buildDataListExample(),
+      ),
+    ),
   ),
   'data_table': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
@@ -115,9 +135,14 @@ final Map<String, WidgetBuilder> components = {
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildProgressExample()),
   ),
-  'skeleton': (context) => FortalScope(
-    brightness: Theme.of(context).brightness,
-    child: PreviewShell(child: buildSkeletonExample()),
+  'skeleton': (context) => PreviewShell(
+    child: Builder(
+      builder: (context) => FortalScope(
+        brightness: Theme.of(context).brightness,
+        hasBackground: false,
+        child: buildSkeletonExample(),
+      ),
+    ),
   ),
   'spinner': (context) => FortalScope(
     brightness: Theme.of(context).brightness,

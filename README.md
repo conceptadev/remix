@@ -274,6 +274,7 @@ Remix provides a comprehensive set of production-ready components:
 - **Switch** - Toggle controls
 - **Toggle** - Two-state on/off buttons
 - **Checkbox** - Multiple selection
+- **CheckboxGroup** - Coordinated multiple selection with composable checkbox visuals
 - **Radio** - Single selection from a group
 - **Slider** - Continuous value selection
 
@@ -297,6 +298,7 @@ Remix provides a comprehensive set of production-ready components:
 - **Tabs** - Tabbed navigation
 - **Accordion** - Collapsible content sections
 - **Menu** - Context menus and dropdowns
+- **SegmentedControl** - Equal-segment controlled single selection
 
 ### Overlays
 - **Dialog** - Modal dialogs

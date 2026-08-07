@@ -37,6 +37,11 @@ class FortalTokens {
   /// Neutral surface color for input fields and controls.
   static const colorSurface = ColorToken('fortal.color.surface');
 
+  /// Selected SegmentedControl surface for the active brightness.
+  static const segmentedControlIndicatorBackground = ColorToken(
+    'fortal.segmented-control.indicator-background',
+  );
+
   /// Solid panel background selected for the active brightness.
   static const colorPanelSolid = ColorToken('fortal.color.panel.solid');
 
@@ -456,6 +461,18 @@ class FortalTokens {
   static const textFieldPadding2 = DoubleToken('fortal.text-field.padding.2');
   static const textFieldPadding3 = DoubleToken('fortal.text-field.padding.3');
 
+  /// TextArea metrics that cannot be expressed by existing spacing tokens.
+  static const textAreaMinHeight3 = DoubleToken(
+    'fortal.text-area.min-height.3',
+  );
+  static const textAreaPaddingY1 = DoubleToken('fortal.text-area.padding-y.1');
+
+  /// DataList metrics that cannot be expressed by existing spacing tokens.
+  static const dataListRowGap3 = DoubleToken('fortal.data-list.row-gap.3');
+  static const dataListLabelMinWidth = DoubleToken(
+    'fortal.data-list.label-min-width',
+  );
+
   /// Exact uppercase fallback typography for each Avatar size.
   static const avatarFallback1One = TextStyleToken(
     'fortal.avatar.fallback.1.one',
@@ -648,6 +665,12 @@ class FortalTokens {
   /// Light shadow for gentle elevation and hover states.
   /// Suitable for interactive elements and small modals.
   static const shadow2 = BoxShadowToken('fortal.shadow.2');
+
+  /// Shadow-2 painted on SegmentedControl's fixed one-pixel inset shape.
+  static const segmentedControlClassicIndicatorShadows =
+      RemixBoxShadowListToken(
+        'fortal.segmented-control.classic.indicator-shadows',
+      );
 
   /// Shadow level 3 - Medium elevation.
   ///
@@ -908,6 +931,11 @@ class FortalTokens {
   /// For more substantial transitions like modal appearances,
   /// page transitions, and complex state changes.
   static const transitionSlow = DurationToken('fortal.transition.slow');
+
+  /// One leg of the Radix Skeleton pulse.
+  static const skeletonPulseDuration = DurationToken(
+    'fortal.skeleton.pulse-duration',
+  );
 }
 
 /// Builds the token map for a Fortal scope. Used by [FortalScope].
@@ -920,6 +948,9 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
     // Role and functional tokens
     FortalTokens.colorBackground: tokens.colorBackground,
     FortalTokens.colorSurface: tokens.colorSurface,
+    FortalTokens.segmentedControlIndicatorBackground: theme.isDark
+        ? tokens.gray.scale.alphaStep(3)
+        : tokens.colorBackground,
     FortalTokens.colorPanelSolid: tokens.colorPanelSolid,
     FortalTokens.colorPanelTranslucent: tokens.colorPanelTranslucent,
     FortalTokens.colorPanel: theme.panelBackground == .solid
@@ -1107,6 +1138,10 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.textFieldPadding1: 6.0 * scaling - 1.0,
     FortalTokens.textFieldPadding2: 8.0 * scaling - 1.0,
     FortalTokens.textFieldPadding3: 12.0 * scaling - 1.0,
+    FortalTokens.textAreaMinHeight3: 80.0,
+    FortalTokens.textAreaPaddingY1: 4.0 * scaling - 1.0,
+    FortalTokens.dataListRowGap3: 20.0 * scaling,
+    FortalTokens.dataListLabelMinWidth: 120.0,
     FortalTokens.tabInnerPaddingY1: 2.0 * scaling,
     FortalTokens.tabActiveLetterSpacing1: -0.12 * scaling,
     FortalTokens.tabActiveLetterSpacing2: -0.14 * scaling,
@@ -1335,6 +1370,7 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
     // Durations (token values)
     FortalTokens.transitionFast: Duration(milliseconds: 100),
     FortalTokens.transitionSlow: Duration(milliseconds: 300),
+    FortalTokens.skeletonPulseDuration: Duration(milliseconds: 1000),
   };
 
   return allTokens;

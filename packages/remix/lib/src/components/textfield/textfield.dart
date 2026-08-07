@@ -20,4 +20,5 @@ part 'textfield_style.dart';
 part 'textfield_widget.dart';
 part 'textarea_widget.dart';
 part 'fortal_textfield_styles.dart';
+part 'fortal_textarea_styles.dart';
 part 'textfield.g.dart';

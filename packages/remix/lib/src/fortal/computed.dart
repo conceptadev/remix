@@ -359,10 +359,22 @@ Map<MixToken, Object> _fortalShadowTokens(
   Map<String, List<RemixBoxShadow>> shadows,
 ) {
   final shadow1 = shadows['shadow1']!;
+  final shadow2 = shadows['shadow2']!;
   return {
     FortalTokens.shadow1: _ordinaryShadows(shadow1),
     FortalTokens.shadow1Layers: shadow1,
-    FortalTokens.shadow2: _ordinaryShadows(shadows['shadow2']!),
+    FortalTokens.shadow2: _ordinaryShadows(shadow2),
+    FortalTokens.segmentedControlClassicIndicatorShadows: [
+      for (final shadow in shadow2)
+        RemixBoxShadow(
+          kind: shadow.kind,
+          color: shadow.color,
+          offset: shadow.offset,
+          blurRadius: shadow.blurRadius,
+          spreadRadius: shadow.spreadRadius,
+          shapeInset: 1,
+        ),
+    ],
     FortalTokens.shadow3: _ordinaryShadows(shadows['shadow3']!),
     FortalTokens.shadow4: _ordinaryShadows(shadows['shadow4']!),
     FortalTokens.shadow5: _ordinaryShadows(shadows['shadow5']!),

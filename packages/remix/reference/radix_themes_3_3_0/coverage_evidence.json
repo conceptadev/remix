@@ -652,6 +652,167 @@
       "covers": ["state:leading", "state:trailing"]
     }
   ],
+  "skeleton": [
+    {
+      "test": "test/components/skeleton/skeleton_fortal_parity_test.dart",
+      "case": "recipe matches the pinned Skeleton surface and timing",
+      "covers": ["state:loading"]
+    },
+    {
+      "test": "test/components/skeleton/skeleton_widget_test.dart",
+      "case": "a childless loaded skeleton collapses to nothing",
+      "covers": ["state:loaded"]
+    },
+    {
+      "test": "test/components/skeleton/skeleton_widget_test.dart",
+      "case": "stays on the base frame when animations are disabled",
+      "covers": ["state:animationDisabled"]
+    }
+  ],
+  "segmented_control": [
+    {
+      "test": "test/components/segmented_control/segmented_control_fortal_parity_test.dart",
+      "case": "${size.name} matches pinned track and item metrics",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "state:unselected"
+      ]
+    },
+    {
+      "test": "test/components/segmented_control/segmented_control_fortal_parity_test.dart",
+      "case": "selected surface composes inset fill, ring, and focus",
+      "covers": [
+        "enum:variant.surface",
+        "state:selected",
+        "state:focused"
+      ]
+    },
+    {
+      "test": "test/components/segmented_control/segmented_control_fortal_parity_test.dart",
+      "case": "classic selected state preserves all five shadow-2 layers",
+      "covers": ["enum:variant.classic"]
+    },
+    {
+      "test": "test/components/segmented_control/segmented_control_fortal_parity_test.dart",
+      "case": "unselected hover changes only the label surface",
+      "covers": ["state:hovered", "state:pressed"]
+    },
+    {
+      "test": "test/components/segmented_control/segmented_control_fortal_parity_test.dart",
+      "case": "disabled selected state removes selected ring and inset",
+      "covers": ["state:disabled"]
+    },
+    {
+      "test": "test/components/segmented_control/segmented_control_widget_test.dart",
+      "case": "RTL visual order follows widget and semantics order",
+      "covers": ["state:rtl"]
+    }
+  ],
+  "text_area": [
+    {
+      "test": "test/components/textfield/text_area_fortal_parity_test.dart",
+      "case": "${size.name} matches pinned multiline metrics",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "state:idle"
+      ]
+    },
+    {
+      "test": "test/components/textfield/text_area_fortal_parity_test.dart",
+      "case": "bordered and soft variants use their pinned insets",
+      "covers": [
+        "enum:variant.classic",
+        "enum:variant.surface",
+        "enum:variant.soft"
+      ]
+    },
+    {
+      "test": "test/components/textfield/text_area_fortal_parity_test.dart",
+      "case": "soft TextArea uses accent-12 at 0.65 and accent-8 focus",
+      "covers": ["state:focused"]
+    },
+    {
+      "test": "test/components/textfield/text_area_fortal_parity_test.dart",
+      "case": "disabled and error states reuse TextField visual policy",
+      "covers": ["state:disabled", "state:invalid"]
+    },
+    {
+      "test": "test/components/textfield/textfield_widget_test.dart",
+      "case": "respects readOnly flag",
+      "covers": ["state:readOnly"]
+    },
+    {
+      "test": "test/components/textfield/textfield_widget_test.dart",
+      "case": "hovering labels and accessories retains hovered styling",
+      "covers": ["state:hovered"]
+    }
+  ],
+  "data_list": [
+    {
+      "test": "test/components/data_list/data_list_fortal_parity_test.dart",
+      "case": "${size.name} matches pinned typography and spacing",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "state:idle"
+      ]
+    },
+    {
+      "test": "test/components/data_list/data_list_fortal_parity_test.dart",
+      "case": "high contrast promotes labels to gray-12",
+      "covers": ["state:highContrast"]
+    },
+    {
+      "test": "test/components/data_list/data_list_widget_test.dart",
+      "case": "horizontal orientation renders one shared Table",
+      "covers": ["enum:orientation.horizontal"]
+    },
+    {
+      "test": "test/components/data_list/data_list_widget_test.dart",
+      "case": "vertical orientation stacks items without a Table",
+      "covers": ["enum:orientation.vertical"]
+    },
+    {
+      "test": "test/components/data_list/data_list_widget_test.dart",
+      "case": "start aligns both cells to the row top",
+      "covers": ["enum:alignment.start"]
+    },
+    {
+      "test": "test/components/data_list/data_list_widget_test.dart",
+      "case": "center aligns both cell centers",
+      "covers": ["enum:alignment.center"]
+    },
+    {
+      "test": "test/components/data_list/data_list_widget_test.dart",
+      "case": "end aligns both cell bottoms",
+      "covers": ["enum:alignment.end"]
+    },
+    {
+      "test": "test/components/data_list/data_list_widget_test.dart",
+      "case": "string baseline row aligns text baselines",
+      "covers": ["enum:alignment.baseline"]
+    },
+    {
+      "test": "test/components/data_list/data_list_widget_test.dart",
+      "case": "stretch sizes both cells to the tallest cell",
+      "covers": ["enum:alignment.stretch"]
+    },
+    {
+      "test": "test/components/data_list/data_list_widget_test.dart",
+      "case": "renders a custom child value",
+      "covers": ["state:customChild"]
+    },
+    {
+      "test": "test/components/data_list/data_list_widget_test.dart",
+      "case": "RTL reverses column order and directional gap",
+      "covers": ["state:rtl"]
+    }
+  ],
   "tooltip": [
     {
       "test": "test/components/tooltip/tooltip_widget_test.dart",

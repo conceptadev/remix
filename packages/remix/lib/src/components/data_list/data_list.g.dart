@@ -135,6 +135,50 @@ mixin _$DataListSpec implements Spec<DataListSpec>, Diagnosticable {
 typedef _$DataListSpecMethods = _$DataListSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal recipe for [RemixDataList].
+class FortalDataList extends StatelessWidget {
+  const FortalDataList({
+    super.key,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.items,
+    this.orientation = Axis.horizontal,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  });
+
+  final FortalDataListSize size;
+
+  final bool highContrast;
+
+  final List<RemixDataListItem> items;
+
+  final Axis orientation;
+
+  final String? semanticLabel;
+
+  final bool excludeSemantics;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixDataList(
+      key: this.key,
+      style: fortalDataListStyle(
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
+      items: this.items,
+      orientation: this.orientation,
+      semanticLabel: this.semanticLabel,
+      excludeSemantics: this.excludeSemantics,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 

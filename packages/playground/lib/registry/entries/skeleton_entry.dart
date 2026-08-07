@@ -20,10 +20,7 @@ class _SkeletonPreviewState extends State<_SkeletonPreview> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final onSurface = theme.colorScheme.onSurface;
-    final base = SkeletonStyler()
-        .container(BoxStyler().color(onSurface.withValues(alpha: 0.08)))
-        .pulseColor(onSurface.withValues(alpha: 0.16));
+    final base = fortalSkeletonStyle();
 
     return SpacedColumn(
       spacing: 24,
@@ -47,14 +44,12 @@ class _SkeletonPreviewState extends State<_SkeletonPreview> {
         _Section(
           title: 'Child-sized — no layout shift',
           children: [
-            RemixSkeleton(
+            FortalSkeleton(
               loading: _loading,
-              style: base.container(BoxStyler().borderRounded(4)),
               child: const Text('Jane Appleseed — jane@example.com'),
             ),
-            RemixSkeleton(
+            FortalSkeleton(
               loading: _loading,
-              style: base.container(BoxStyler().borderRounded(6)),
               child: RemixButton(label: 'Open profile', onPressed: () {}),
             ),
           ],

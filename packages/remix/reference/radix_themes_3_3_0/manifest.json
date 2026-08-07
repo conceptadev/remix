@@ -2887,6 +2887,500 @@
       }
     },
     {
+      "id": "skeleton",
+      "fortalType": "FortalSkeleton",
+      "radixComponent": "Skeleton",
+      "parity": "mapped",
+      "enums": {},
+      "defaults": {
+        "loading": true
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "loading",
+        "loaded",
+        "animationDisabled"
+      ],
+      "sourceFiles": [
+        "src/components/skeleton.props.tsx",
+        "src/components/skeleton.css",
+        "src/components/skeleton.tsx"
+      ],
+      "sourceSelectors": [
+        ".rt-Skeleton"
+      ],
+      "flutterExceptions": [
+        "Responsive CSS width and height props map to caller-owned Flutter constraints or child geometry; the Fortal recipe supplies only the pinned childless minimum height, surface, radius, and pulse timing.",
+        "RemixSkeleton owns loading semantics and reduced-motion behavior, so the recipe adds no semantic or motion logic."
+      ],
+      "coverage": {
+        "enums": [],
+        "states": [
+          "loading",
+          "loaded",
+          "animationDisabled"
+        ],
+        "tests": [
+          "test/components/skeleton/skeleton_fortal_parity_test.dart",
+          "test/components/skeleton/skeleton_widget_test.dart"
+        ]
+      },
+      "upstreamInventory": {
+        "enums": {},
+        "states": [
+          "loading",
+          "loaded",
+          "animationEnabled",
+          "animationDisabled",
+          "withChild",
+          "withoutChild"
+        ],
+        "supportedStyleProps": [
+          "width",
+          "height"
+        ]
+      },
+      "supportedVisualStates": [
+        "loading",
+        "loaded",
+        "animationDisabled"
+      ],
+      "deferredCapabilities": [
+        "responsive width and height props: callers use Flutter constraints, responsive builders, or child geometry"
+      ],
+      "visualMapping": {
+        "color": "fixed gray alpha tokens",
+        "radius": "FortalScope.radius",
+        "highContrast": "not exposed by Radix Skeleton",
+        "variant": "not exposed by Radix Skeleton",
+        "size": "caller constraints or child geometry"
+      }
+    },
+    {
+      "id": "segmented_control",
+      "fortalType": "FortalSegmentedControl",
+      "radixComponent": "SegmentedControl.Root",
+      "parity": "mapped",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "classic"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "enabled": true,
+        "orientation": "horizontal",
+        "loop": true
+      },
+      "supportedStyleProps": [
+        "radius"
+      ],
+      "states": [
+        "unselected",
+        "selected",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "rtl"
+      ],
+      "sourceFiles": [
+        "src/components/segmented-control.props.tsx",
+        "src/components/segmented-control.css",
+        "src/components/segmented-control.tsx"
+      ],
+      "sourceSelectors": [
+        ".rt-SegmentedControlRoot",
+        ".rt-SegmentedControlItem",
+        ".rt-SegmentedControlItemLabel"
+      ],
+      "flutterExceptions": [
+        "The standard Remix item-state styler maps the track, inactive and selected labels, selected inset fill, surface ring or five-layer classic shadow, focus outline, and disabled precedence without a Fortal-specific widget.",
+        "Orientation, item-disabled behavior, looping focus traversal, and RTL direction remain constructor and Naked coordinator behavior."
+      ],
+      "coverage": {
+        "enums": [
+          "size.size1",
+          "size.size2",
+          "size.size3",
+          "variant.surface",
+          "variant.classic"
+        ],
+        "states": [
+          "unselected",
+          "selected",
+          "hovered",
+          "pressed",
+          "focused",
+          "disabled",
+          "rtl"
+        ],
+        "tests": [
+          "test/components/segmented_control/segmented_control_fortal_parity_test.dart",
+          "test/components/segmented_control/segmented_control_widget_test.dart"
+        ]
+      },
+      "upstreamInventory": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3"
+            ],
+            "default": "size2"
+          },
+          "variant": {
+            "values": [
+              "surface",
+              "classic"
+            ],
+            "default": "surface"
+          },
+          "orientation": {
+            "values": [
+              "horizontal",
+              "vertical"
+            ],
+            "default": "horizontal"
+          }
+        },
+        "states": [
+          "unselected",
+          "selected",
+          "hovered",
+          "pressed",
+          "focused",
+          "disabled",
+          "rtl"
+        ],
+        "supportedStyleProps": [
+          "radius"
+        ]
+      },
+      "supportedVisualStates": [
+        "unselected",
+        "selected",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "rtl"
+      ],
+      "deferredCapabilities": [
+        "100 ms translated sliding indicator",
+        "duplicate inactive and active labels with opacity crossfade",
+        "CSS separators between inactive items",
+        "responsive size and radius objects"
+      ],
+      "visualMapping": {
+        "color": "fixed surface and gray roles",
+        "radius": "FortalScope.radius",
+        "highContrast": "not exposed by Radix SegmentedControl",
+        "variant": "generated Fortal constructor",
+        "size": "generated Fortal constructor"
+      }
+    },
+    {
+      "id": "text_area",
+      "fortalType": "FortalTextArea",
+      "radixComponent": "TextArea",
+      "parity": "mapped",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "classic",
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "enabled": true,
+        "readOnly": false,
+        "error": false,
+        "maxLines": null
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "focused",
+        "disabled",
+        "readOnly",
+        "invalid"
+      ],
+      "sourceFiles": [
+        "src/components/text-area.props.tsx",
+        "src/components/text-area.css",
+        "src/components/text-area.tsx"
+      ],
+      "sourceSelectors": [
+        ".rt-TextAreaRoot",
+        ".rt-TextAreaInput"
+      ],
+      "flutterExceptions": [
+        "TextArea reuses the corrected private TextField visual-state helpers while retaining multiline minimum heights, start alignment, and distinct padding; its soft placeholder remains accent-12 at 0.65 opacity.",
+        "Flutter text-editing flags and constraints replace textarea DOM attributes and CSS sizing."
+      ],
+      "coverage": {
+        "enums": [
+          "size.size1",
+          "size.size2",
+          "size.size3",
+          "variant.classic",
+          "variant.surface",
+          "variant.soft"
+        ],
+        "states": [
+          "idle",
+          "hovered",
+          "focused",
+          "disabled",
+          "readOnly",
+          "invalid"
+        ],
+        "tests": [
+          "test/components/textfield/text_area_fortal_parity_test.dart",
+          "test/components/textfield/textfield_widget_test.dart"
+        ]
+      },
+      "upstreamInventory": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3"
+            ],
+            "default": "size2"
+          },
+          "variant": {
+            "values": [
+              "classic",
+              "surface",
+              "soft"
+            ],
+            "default": "surface"
+          },
+          "resize": {
+            "values": [
+              "none",
+              "vertical",
+              "horizontal",
+              "both"
+            ],
+            "default": null
+          }
+        },
+        "states": [
+          "idle",
+          "hovered",
+          "focused",
+          "disabled",
+          "readOnly",
+          "invalid"
+        ],
+        "supportedStyleProps": [
+          "color",
+          "radius"
+        ]
+      },
+      "supportedVisualStates": [
+        "idle",
+        "hovered",
+        "focused",
+        "disabled",
+        "readOnly",
+        "invalid"
+      ],
+      "deferredCapabilities": [
+        "browser resize handle and resize-axis prop",
+        "fixed CSS textarea block sizing and browser overflow behavior",
+        "responsive size, radius, and resize objects"
+      ],
+      "visualMapping": {
+        "color": "FortalScope.accent",
+        "radius": "FortalScope.radius",
+        "highContrast": "not exposed by Radix TextArea",
+        "variant": "generated Fortal constructor",
+        "size": "generated Fortal constructor"
+      }
+    },
+    {
+      "id": "data_list",
+      "fortalType": "FortalDataList",
+      "radixComponent": "DataList.Root",
+      "parity": "mapped",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "orientation": {
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "default": "horizontal"
+        },
+        "alignment": {
+          "values": [
+            "start",
+            "center",
+            "end",
+            "baseline",
+            "stretch"
+          ],
+          "default": "baseline"
+        }
+      },
+      "defaults": {
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "highContrast",
+        "customChild",
+        "rtl"
+      ],
+      "sourceFiles": [
+        "src/components/data-list.props.tsx",
+        "src/components/data-list.css",
+        "src/components/data-list.tsx"
+      ],
+      "sourceSelectors": [
+        ".rt-DataListRoot",
+        ".rt-DataListItem",
+        ".rt-DataListLabel",
+        ".rt-DataListValue"
+      ],
+      "flutterExceptions": [
+        "A data-driven RemixDataList maps Radix's shared horizontal label column, vertical stacking, row and column gaps, item alignment, label minimum, typography, and high-contrast label role without claiming the upstream compositional child API.",
+        "The constructor owns orientation and each RemixDataListItem owns alignment; the recipe exposes only size and global highContrast."
+      ],
+      "coverage": {
+        "enums": [
+          "size.size1",
+          "size.size2",
+          "size.size3",
+          "orientation.horizontal",
+          "orientation.vertical",
+          "alignment.start",
+          "alignment.center",
+          "alignment.end",
+          "alignment.baseline",
+          "alignment.stretch"
+        ],
+        "states": [
+          "idle",
+          "highContrast",
+          "customChild",
+          "rtl"
+        ],
+        "tests": [
+          "test/components/data_list/data_list_fortal_parity_test.dart",
+          "test/components/data_list/data_list_widget_test.dart"
+        ]
+      },
+      "upstreamInventory": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3"
+            ],
+            "default": "size2"
+          },
+          "orientation": {
+            "values": [
+              "horizontal",
+              "vertical"
+            ],
+            "default": "horizontal"
+          },
+          "alignment": {
+            "values": [
+              "start",
+              "center",
+              "end",
+              "baseline",
+              "stretch"
+            ],
+            "default": null
+          },
+          "trim": {
+            "values": [
+              "normal",
+              "start",
+              "end",
+              "both"
+            ],
+            "default": "normal"
+          }
+        },
+        "states": [
+          "idle",
+          "highContrast",
+          "customChild",
+          "rtl"
+        ],
+        "supportedStyleProps": [
+          "labelColor",
+          "labelHighContrast",
+          "labelWidth"
+        ]
+      },
+      "supportedVisualStates": [
+        "idle",
+        "highContrast"
+      ],
+      "deferredCapabilities": [
+        "compositional Root, Item, Label, and Value child API",
+        "per-label color, highContrast, and width props",
+        "responsive orientation, size, align, trim, and width objects",
+        "CSS leading trim and value-edge negative margins"
+      ],
+      "visualMapping": {
+        "color": "fixed gray roles",
+        "radius": "not exposed by Radix DataList",
+        "highContrast": "generated Fortal constructor",
+        "variant": "not exposed by Radix DataList",
+        "size": "generated Fortal constructor"
+      }
+    },
+    {
       "id": "tooltip",
       "fortalType": "FortalTooltip",
       "radixComponent": "Tooltip",
@@ -3343,6 +3837,54 @@
       }
     }
   ],
+  "unmappedUpstreamFamilies": [
+    {
+      "id": "checkbox_group",
+      "radixComponent": "CheckboxGroup",
+      "sourceFiles": [
+        "src/components/checkbox-group.props.tsx",
+        "src/components/checkbox-group.css",
+        "src/components/checkbox-group.tsx"
+      ],
+      "sourceSelectors": [
+        ".rt-CheckboxGroupRoot",
+        ".rt-CheckboxGroupItem",
+        ".rt-CheckboxGroupItemCheckbox",
+        ".rt-CheckboxGroupItemInner"
+      ],
+      "upstreamInventory": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3"
+            ],
+            "default": "size2"
+          },
+          "variant": {
+            "values": [
+              "classic",
+              "surface",
+              "soft"
+            ],
+            "default": "surface"
+          }
+        },
+        "supportedStyleProps": [
+          "color",
+          "highContrast"
+        ],
+        "layout": {
+          "rootGap": "space1",
+          "itemLabelGap": "0.5em"
+        }
+      },
+      "supportedRemixComposition": "Use RemixCheckboxGroup for selection, roving focus, semantics, and item layout transparency; apply fortalCheckboxStyle(size:, variant:, highContrast:) to each RemixCheckboxGroupItem.style and let the caller own the root and label spacing.",
+      "reason": "RemixCheckboxGroup deliberately owns no visual or layout anatomy, so a generated FortalCheckboxGroup wrapper would invent a style surface that the underlying coordinator does not have.",
+      "reopenCondition": "Map this family only if RemixCheckboxGroup gains an approved visual root/item-label anatomy that can express the pinned gaps and inherited size, variant, color, and highContrast contract without a Fortal-only wrapper."
+    }
+  ],
   "referenceFixtures": {
     "computedStyles": "reference/radix_themes_3_3_0/chromium/computed-styles.json",
     "screenshot": "reference/radix_themes_3_3_0/chromium/families-light.png",
@@ -3363,6 +3905,76 @@
       "flutter": "Remix uses the exact pinned check and chevron paths, colors, sizes, and states with one private leading flex slot and normal MenuItemStyler spacing.",
       "reason": "Standard MenuItemStyler flex, padding, and spacing keep the layout reusable and avoid menu-only public gutter and offset APIs.",
       "tolerance": "Pixel placement of the leading choice slot and trailing-content spacing may differ; behavior, semantics, paths, colors, sizes, state precedence, directionality, and panel-end alignment have no tolerance."
+    },
+    {
+      "family": "segmented_control",
+      "upstream": "Radix moves one selected indicator between items with a 100 ms translated transition.",
+      "flutter": "Each selected Remix segment paints the pinned inset fill and ring or classic shadow directly in its own standard container-effects layers.",
+      "reason": "A shared translated indicator requires a Fortal-specific render or widget layer outside the approved plain-styler recipe contract.",
+      "tolerance": "The settled selected geometry, fill, ring, shadows, focus, and disabled layers have no tolerance; only the 100 ms movement between items is absent."
+    },
+    {
+      "family": "segmented_control",
+      "upstream": "Radix duplicates each item label and crossfades the inactive and active copies as selection moves.",
+      "flutter": "Remix resolves one label from regular to medium weight with the pinned active letter spacing through widget-state variants.",
+      "reason": "Duplicate labels would require private stacked label widgets instead of the component's standard LabelStyleMixin surface.",
+      "tolerance": "Resolved inactive and active typography has no tolerance; only the intermediate label crossfade is absent."
+    },
+    {
+      "family": "segmented_control",
+      "upstream": "Radix draws separators between adjacent inactive segments and hides them around the selected indicator.",
+      "flutter": "Remix keeps the exact track and item surfaces without separator pseudo-elements.",
+      "reason": "Conditional between-item pseudo-elements are not expressible through the approved standard item styler without a segmented-control-specific widget API.",
+      "tolerance": "A one-pixel inactive separator may be absent; segment sizing, spacing, state colors, and selected geometry have no tolerance."
+    },
+    {
+      "family": "segmented_control",
+      "upstream": "Radix pins `min-width: max-content` on the root, so labels never wrap and the track overflows a parent narrower than its content.",
+      "flutter": "RemixSegmentedControl divides the available main extent equally, and the Fortal recipe holds each label to one line with an ellipsis.",
+      "reason": "The equal-segment render layout shrinks to the incoming constraints rather than forcing an overflow, so a wrapped label would be clipped by the pinned track height.",
+      "tolerance": "Only a label narrower than its natural text truncates with an ellipsis; at or above the natural track width every label, metric, and layer is exact."
+    },
+    {
+      "family": "text_area",
+      "upstream": "Radix exposes responsive CSS resize values none, vertical, horizontal, and both with a browser drag handle.",
+      "flutter": "RemixTextArea uses Flutter constraints, minLines, maxLines, and scrolling and exposes no web drag handle.",
+      "reason": "Flutter's editable text contract has no cross-platform browser resize-handle primitive.",
+      "tolerance": "No drag handle or user resize gesture is expected; variant, size, state, padding, typography, and minimum-height visuals have no tolerance."
+    },
+    {
+      "family": "text_area",
+      "upstream": "Radix applies fixed CSS textarea sizing and browser overflow behavior inside the themed root.",
+      "flutter": "The default RemixTextArea maxLines is null, so content auto-grows until parent constraints require scrolling.",
+      "reason": "Flutter's line and constraint model replaces CSS block sizing and native textarea overflow behavior.",
+      "tolerance": "Content-driven height may differ after the pinned minimum height; the 48, 64, and 80 logical-pixel minimums and all resolved insets have no tolerance."
+    },
+    {
+      "family": "data_list",
+      "upstream": "Radix exposes compositional Root, Item, Label, and Value children.",
+      "flutter": "RemixDataList accepts data-driven RemixDataListItem rows with either a string value or one custom child value.",
+      "reason": "The approved Remix API guarantees one shared label column and deterministic list semantics through a data model rather than arbitrary child anatomy.",
+      "tolerance": "Supported string and custom-child rows preserve their visual geometry and semantics; arbitrary interleaving or nesting of label/value parts is not supported."
+    },
+    {
+      "family": "data_list",
+      "upstream": "Radix Label accepts per-label color, highContrast, and width props.",
+      "flutter": "FortalDataList exposes one global highContrast recipe argument and caller widgets handle exceptional label content or width needs.",
+      "reason": "The data-driven RemixDataList has one shared label styler and shared column width, with no per-label visual-prop surface.",
+      "tolerance": "Global gray-a11 or high-contrast gray-12 roles and the 120 logical-pixel minimum have no tolerance; heterogeneous label colors and widths are deferred."
+    },
+    {
+      "family": "data_list",
+      "upstream": "Radix accepts responsive objects for root orientation and size, item alignment, trim, and label width.",
+      "flutter": "Flutter callers rebuild RemixDataList, RemixDataListItem, and FortalDataList with values selected by their responsive layout.",
+      "reason": "Responsive CSS-object syntax is a framework-level adaptation already owned by Flutter layout builders.",
+      "tolerance": "No visual tolerance after the caller selects equivalent values; automatic CSS breakpoint switching is outside the recipe."
+    },
+    {
+      "family": "data_list",
+      "upstream": "Radix leading trim uses pseudo-content baselines and negative quarter-em value margins with first/last-row exceptions.",
+      "flutter": "Remix uses Flutter text baselines for horizontal rows and untrimmed box bounds for vertical and custom-child rows.",
+      "reason": "Flutter has no CSS leading-trim primitive, and offset arithmetic is outside the approved plain-styler recipe contract.",
+      "tolerance": "Text ink may sit up to 0.25em differently at row edges; shared columns, gaps, alignment selection, typography, and semantic bounds have no tolerance."
     }
   ],
   "upstreamInventory": {
@@ -4225,6 +4837,149 @@
           "radius"
         ]
       },
+      "skeleton": {
+        "enums": {},
+        "states": [
+          "loading",
+          "loaded",
+          "animationEnabled",
+          "animationDisabled",
+          "withChild",
+          "withoutChild"
+        ],
+        "supportedStyleProps": [
+          "width",
+          "height"
+        ]
+      },
+      "segmented_control": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3"
+            ],
+            "default": "size2"
+          },
+          "variant": {
+            "values": [
+              "surface",
+              "classic"
+            ],
+            "default": "surface"
+          },
+          "orientation": {
+            "values": [
+              "horizontal",
+              "vertical"
+            ],
+            "default": "horizontal"
+          }
+        },
+        "states": [
+          "unselected",
+          "selected",
+          "hovered",
+          "pressed",
+          "focused",
+          "disabled",
+          "rtl"
+        ],
+        "supportedStyleProps": [
+          "radius"
+        ]
+      },
+      "text_area": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3"
+            ],
+            "default": "size2"
+          },
+          "variant": {
+            "values": [
+              "classic",
+              "surface",
+              "soft"
+            ],
+            "default": "surface"
+          },
+          "resize": {
+            "values": [
+              "none",
+              "vertical",
+              "horizontal",
+              "both"
+            ],
+            "default": null
+          }
+        },
+        "states": [
+          "idle",
+          "hovered",
+          "focused",
+          "disabled",
+          "readOnly",
+          "invalid"
+        ],
+        "supportedStyleProps": [
+          "color",
+          "radius"
+        ]
+      },
+      "data_list": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3"
+            ],
+            "default": "size2"
+          },
+          "orientation": {
+            "values": [
+              "horizontal",
+              "vertical"
+            ],
+            "default": "horizontal"
+          },
+          "alignment": {
+            "values": [
+              "start",
+              "center",
+              "end",
+              "baseline",
+              "stretch"
+            ],
+            "default": null
+          },
+          "trim": {
+            "values": [
+              "normal",
+              "start",
+              "end",
+              "both"
+            ],
+            "default": "normal"
+          }
+        },
+        "states": [
+          "idle",
+          "highContrast",
+          "customChild",
+          "rtl"
+        ],
+        "supportedStyleProps": [
+          "labelColor",
+          "labelHighContrast",
+          "labelWidth"
+        ]
+      },
       "tooltip": {
         "enums": {},
         "states": [
@@ -4389,6 +5144,26 @@
     "tabs": [
       "wrapping tab bars",
       "tab-bar justification"
+    ],
+    "skeleton": [
+      "responsive width and height props"
+    ],
+    "segmented_control": [
+      "translated sliding indicator",
+      "duplicate-label crossfade",
+      "inactive-item separators",
+      "responsive size and radius objects"
+    ],
+    "text_area": [
+      "browser resize handle and resize-axis prop",
+      "fixed CSS block sizing and browser overflow behavior",
+      "responsive size, radius, and resize objects"
+    ],
+    "data_list": [
+      "compositional Root, Item, Label, and Value children",
+      "per-label color, highContrast, and width props",
+      "responsive orientation, size, align, trim, and width objects",
+      "CSS leading trim and value-edge negative margins"
     ]
   }
 }
