@@ -12,7 +12,7 @@ TextFieldStyler fortalTextAreaStyle({
   FortalTextAreaVariant variant = .surface,
   FortalTextAreaSize size = .size2,
 }) {
-  final metrics = _fortalTextAreaMetrics(size, bordered: variant != .soft);
+  final metrics = _fortalTextAreaMetrics(size);
   final base = _fortalTextInputBaseStyle(
     container: BoxStyler()
         .minHeight(metrics.minHeight)
@@ -39,60 +39,35 @@ TextFieldStyler fortalTextAreaStyle({
   );
 }
 
-class _FortalTextAreaMetrics {
-  const _FortalTextAreaMetrics({
-    required this.minHeight,
-    required this.paddingX,
-    required this.paddingY,
-    required this.spacing,
-    required this.radius,
-    required this.text,
-  });
-
-  final double minHeight;
-  final double paddingX;
-  final double paddingY;
-  final double spacing;
-  final Radius radius;
-  final TextStyleToken text;
-}
-
-_FortalTextAreaMetrics _fortalTextAreaMetrics(
-  FortalTextAreaSize size, {
-  required bool bordered,
-}) => switch (size) {
-  .size1 => _FortalTextAreaMetrics(
+({
+  double minHeight,
+  double paddingX,
+  double paddingY,
+  double spacing,
+  Radius radius,
+  TextStyleToken text,
+})
+_fortalTextAreaMetrics(FortalTextAreaSize size) => switch (size) {
+  .size1 => (
     minHeight: FortalTokens.space8(),
-    paddingX: bordered
-        ? FortalTokens.textFieldPadding1()
-        : FortalTokens.selectSpace1Half(),
-    paddingY: bordered
-        ? FortalTokens.textAreaPaddingY1()
-        : FortalTokens.space1(),
+    paddingX: FortalTokens.selectSpace1Half(),
+    paddingY: FortalTokens.space1(),
     spacing: FortalTokens.space2(),
     radius: FortalTokens.radius2(),
     text: FortalTokens.text1,
   ),
-  .size2 => _FortalTextAreaMetrics(
+  .size2 => (
     minHeight: FortalTokens.space9(),
-    paddingX: bordered
-        ? FortalTokens.textFieldPadding2()
-        : FortalTokens.space2(),
-    paddingY: bordered
-        ? FortalTokens.textFieldPadding1()
-        : FortalTokens.selectSpace1Half(),
+    paddingX: FortalTokens.space2(),
+    paddingY: FortalTokens.selectSpace1Half(),
     spacing: FortalTokens.space2(),
     radius: FortalTokens.radius2(),
     text: FortalTokens.text2,
   ),
-  .size3 => _FortalTextAreaMetrics(
+  .size3 => (
     minHeight: FortalTokens.textAreaMinHeight3(),
-    paddingX: bordered
-        ? FortalTokens.textFieldPadding3()
-        : FortalTokens.space3(),
-    paddingY: bordered
-        ? FortalTokens.textFieldPadding2()
-        : FortalTokens.space2(),
+    paddingX: FortalTokens.space3(),
+    paddingY: FortalTokens.space2(),
     spacing: FortalTokens.space3(),
     radius: FortalTokens.radius3(),
     text: FortalTokens.text3,

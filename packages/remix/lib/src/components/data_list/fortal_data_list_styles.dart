@@ -32,25 +32,13 @@ DataListStyler fortalDataListStyle({
       .minLabelWidth(FortalTokens.dataListLabelMinWidth());
 }
 
-class _FortalDataListMetrics {
-  const _FortalDataListMetrics({required this.text, required this.rowSpacing});
-
-  final TextStyleToken text;
-  final double rowSpacing;
-}
-
-_FortalDataListMetrics _fortalDataListMetrics(FortalDataListSize size) =>
-    switch (size) {
-      .size1 => _FortalDataListMetrics(
-        text: FortalTokens.text1,
-        rowSpacing: FortalTokens.space3(),
-      ),
-      .size2 => _FortalDataListMetrics(
-        text: FortalTokens.text2,
-        rowSpacing: FortalTokens.space4(),
-      ),
-      .size3 => _FortalDataListMetrics(
-        text: FortalTokens.text3,
-        rowSpacing: FortalTokens.dataListRowGap3(),
-      ),
-    };
+({TextStyleToken text, double rowSpacing}) _fortalDataListMetrics(
+  FortalDataListSize size,
+) => switch (size) {
+  .size1 => (text: FortalTokens.text1, rowSpacing: FortalTokens.space3()),
+  .size2 => (text: FortalTokens.text2, rowSpacing: FortalTokens.space4()),
+  .size3 => (
+    text: FortalTokens.text3,
+    rowSpacing: FortalTokens.dataListRowGap3(),
+  ),
+};

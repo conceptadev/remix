@@ -227,54 +227,43 @@ TextFieldStyler _fortalTextInputErrorStyle() => TextFieldStyler(
   ),
 );
 
-class _FortalTextFieldMetrics {
-  const _FortalTextFieldMetrics({
-    required this.height,
-    required this.paddingX,
-    required this.spacing,
-    required this.radius,
-    required this.text,
-  });
-
-  final double height;
-  final double paddingX;
-  final double spacing;
-  final Radius radius;
-  final TextStyleToken text;
-}
-
-_FortalTextFieldMetrics _fortalTextFieldMetrics(
-  FortalTextFieldSize size, {
-  required bool bordered,
-}) => switch (size) {
-  .size1 => _FortalTextFieldMetrics(
-    height: FortalTokens.space5(),
-    paddingX: bordered
-        ? FortalTokens.textFieldPadding1()
-        : FortalTokens.selectSpace1Half(),
-    spacing: FortalTokens.space2(),
-    radius: FortalTokens.radius2OrFull(),
-    text: FortalTokens.text1,
-  ),
-  .size2 => _FortalTextFieldMetrics(
-    height: FortalTokens.space6(),
-    paddingX: bordered
-        ? FortalTokens.textFieldPadding2()
-        : FortalTokens.space2(),
-    spacing: FortalTokens.space2(),
-    radius: FortalTokens.radius2OrFull(),
-    text: FortalTokens.text2,
-  ),
-  .size3 => _FortalTextFieldMetrics(
-    height: FortalTokens.space7(),
-    paddingX: bordered
-        ? FortalTokens.textFieldPadding3()
-        : FortalTokens.space3(),
-    spacing: FortalTokens.space3(),
-    radius: FortalTokens.radius3OrFull(),
-    text: FortalTokens.text3,
-  ),
-};
+({
+  double height,
+  double paddingX,
+  double spacing,
+  Radius radius,
+  TextStyleToken text,
+})
+_fortalTextFieldMetrics(FortalTextFieldSize size, {required bool bordered}) =>
+    switch (size) {
+      .size1 => (
+        height: FortalTokens.space5(),
+        paddingX: bordered
+            ? FortalTokens.textFieldPadding1()
+            : FortalTokens.selectSpace1Half(),
+        spacing: FortalTokens.space2(),
+        radius: FortalTokens.radius2OrFull(),
+        text: FortalTokens.text1,
+      ),
+      .size2 => (
+        height: FortalTokens.space6(),
+        paddingX: bordered
+            ? FortalTokens.textFieldPadding2()
+            : FortalTokens.space2(),
+        spacing: FortalTokens.space2(),
+        radius: FortalTokens.radius2OrFull(),
+        text: FortalTokens.text2,
+      ),
+      .size3 => (
+        height: FortalTokens.space7(),
+        paddingX: bordered
+            ? FortalTokens.textFieldPadding3()
+            : FortalTokens.space3(),
+        spacing: FortalTokens.space3(),
+        radius: FortalTokens.radius3OrFull(),
+        text: FortalTokens.text3,
+      ),
+    };
 
 RemixBoxEffectLayerMix _fortalTextInputInsetRing(Color color) =>
     _fortalTextInputLayer(

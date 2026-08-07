@@ -183,7 +183,7 @@ void main() {
     expect(fortalDataListStyle(), isA<DataListStyler>());
   });
 
-  test('Phase 1 Fortal controls expose generated public wrappers', () {
+  test('new Fortal controls expose generated public wrappers', () {
     const segmented = FortalSegmentedControl<String>.classic(
       items: [RemixSegmentedControlItem(value: 'one', label: 'One')],
       selectedValue: 'one',

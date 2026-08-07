@@ -465,7 +465,6 @@ class FortalTokens {
   static const textAreaMinHeight3 = DoubleToken(
     'fortal.text-area.min-height.3',
   );
-  static const textAreaPaddingY1 = DoubleToken('fortal.text-area.padding-y.1');
 
   /// DataList metrics that cannot be expressed by existing spacing tokens.
   static const dataListRowGap3 = DoubleToken('fortal.data-list.row-gap.3');
@@ -1139,7 +1138,6 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.textFieldPadding2: 8.0 * scaling - 1.0,
     FortalTokens.textFieldPadding3: 12.0 * scaling - 1.0,
     FortalTokens.textAreaMinHeight3: 80.0,
-    FortalTokens.textAreaPaddingY1: 4.0 * scaling - 1.0,
     FortalTokens.dataListRowGap3: 20.0 * scaling,
     FortalTokens.dataListLabelMinWidth: 120.0,
     FortalTokens.tabInnerPaddingY1: 2.0 * scaling,

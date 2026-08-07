@@ -52,7 +52,7 @@ SegmentedControlStyler fortalSegmentedControlStyle({
 
   return SegmentedControlStyler()
       .mainAxisSize(.min)
-      .height(metrics.height)
+      .minHeight(metrics.height)
       .borderRadiusAll(metrics.radius)
       .color(_segmentedControlTrackBackground())
       .clipBehavior(.antiAlias)
@@ -69,8 +69,8 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
   _FortalSegmentedControlMetrics metrics,
 ) {
   final base = SegmentedControlItemStyler()
+      .minHeight(metrics.height)
       .paddingX(metrics.paddingX)
-      .borderRadiusAll(metrics.radius)
       .spacing(metrics.itemGap)
       .label(
         TextStyler()
@@ -82,7 +82,7 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
             // Radix keeps `min-width: max-content` on the track, so a label
             // never wraps and the track overflows a narrow parent instead.
             // The equal-segment layout shrinks to fit, so pin one line and
-            // ellipsize; otherwise the fixed height clips labels mid-word.
+            // ellipsize to preserve the same single-line behavior.
             .maxLines(1)
             .overflow(TextOverflow.ellipsis),
       )
@@ -99,6 +99,7 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
       .icon(IconStyler().color(FortalTokens.grayA8()));
   final disabledSelected = disabled
       .color(Colors.transparent)
+      .borderRadiusAll(metrics.radius)
       .containerEffects(
         RemixBoxEffectsMix(
           behindContent: _fortalSegmentedControlFill(FortalTokens.grayA3()),
@@ -114,9 +115,11 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
             .onDisabled(disabledSelected),
       )
       .onFocused(
-        .containerEffects(
-          fortalFocusOutline(FortalTokens.focus8(), offset: -1),
-        ),
+        SegmentedControlItemStyler()
+            .borderRadiusAll(metrics.radius)
+            .containerEffects(
+              fortalFocusOutline(FortalTokens.focus8(), offset: -1),
+            ),
       )
       .onDisabled(disabled.onSelected(disabledSelected));
 }
@@ -142,6 +145,7 @@ SegmentedControlItemStyler _fortalSegmentedControlSelectedItem(
 
   return SegmentedControlItemStyler()
       .color(Colors.transparent)
+      .borderRadiusAll(metrics.radius)
       .label(
         TextStyler()
             .fontWeight(FortalTokens.fontWeightMedium())

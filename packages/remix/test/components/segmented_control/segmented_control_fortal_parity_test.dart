@@ -16,7 +16,9 @@ void main() {
       final track = result.spec.container.spec;
       final item = result.spec.item.spec;
 
-      expect(track.constraints?.maxHeight, height);
+      expect(track.constraints?.minHeight, height);
+      expect(track.constraints?.maxHeight, double.infinity);
+      expect(item.container.spec.constraints?.minHeight, height);
       expect(item.label.spec.style?.fontSize, fontSize);
       expect(
         item.container.spec.padding?.resolve(TextDirection.ltr),
@@ -24,7 +26,7 @@ void main() {
       );
       expect(item.spacing, gap);
       expect(_radius(track), radius);
-      expect(_radius(item.container.spec), radius);
+      expect(_radiusOrNull(item.container.spec), isNull);
     });
 
     testWidgets('${size.name} metrics and active tracking scale with Fortal', (
@@ -39,7 +41,11 @@ void main() {
       final track = result.spec.container.spec;
       final item = result.spec.item.spec;
 
-      expect(track.constraints?.maxHeight, closeTo(height * 1.1, 1e-9));
+      expect(track.constraints?.minHeight, closeTo(height * 1.1, 1e-9));
+      expect(
+        item.container.spec.constraints?.minHeight,
+        closeTo(height * 1.1, 1e-9),
+      );
       expect(item.label.spec.style?.fontSize, closeTo(fontSize * 1.1, 1e-9));
       expect(
         item.container.spec.padding?.resolve(TextDirection.ltr).horizontal,
@@ -88,6 +94,35 @@ void main() {
       expect(label.maxLines, 1);
       expect(label.overflow, TextOverflow.ellipsis);
     }
+  });
+
+  testWidgets('vertical controls keep one size height per segment', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: FortalScope(
+          child: Center(
+            child: FortalSegmentedControl<String>(
+              orientation: Axis.vertical,
+              items: const [
+                RemixSegmentedControlItem(value: 'day', label: 'Day'),
+                RemixSegmentedControlItem(value: 'week', label: 'Week'),
+              ],
+              selectedValue: 'day',
+              onChanged: (_) {},
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      tester
+          .getSize(find.byKey(const ValueKey('RemixSegmentedControl.track')))
+          .height,
+      64,
+    );
   });
 
   testWidgets('the track paints no layer over the selected indicator', (
@@ -156,18 +191,22 @@ void main() {
     ]);
     expect(effects.overContent?.shadows, isEmpty);
     expect(item.label.spec.style?.color, result.grayA8);
+    expect(_radius(item.container.spec), 4);
   });
 
-  testWidgets('unselected hover changes only the label surface', (
+  testWidgets('inactive hover relies on track clipping and focus stays round', (
     tester,
   ) async {
     final idle = await _resolve(tester);
     final hovered = await _resolve(tester, states: {WidgetState.hovered});
     final pressed = await _resolve(tester, states: {WidgetState.pressed});
+    final focused = await _resolve(tester, states: {WidgetState.focused});
 
     expect(_color(idle.spec.item.spec.container.spec), isNull);
     expect(_color(hovered.spec.item.spec.container.spec), idle.grayA2);
+    expect(_radiusOrNull(hovered.spec.item.spec.container.spec), isNull);
     expect(_color(pressed.spec.item.spec.container.spec), isNull);
+    expect(_radius(focused.spec.item.spec.container.spec), 4);
   });
 
   testWidgets('selected labels use medium tab typography', (tester) async {
@@ -272,6 +311,11 @@ _resolve(
 double _radius(BoxSpec box) =>
     ((box.decoration! as BoxDecoration).borderRadius! as BorderRadius)
         .topLeft
+        .x;
+
+double? _radiusOrNull(BoxSpec box) =>
+    ((box.decoration as BoxDecoration?)?.borderRadius as BorderRadius?)
+        ?.topLeft
         .x;
 
 Color? _color(BoxSpec box) => (box.decoration as BoxDecoration?)?.color;

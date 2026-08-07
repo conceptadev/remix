@@ -1,4 +1,4 @@
-// Single entrypoint for all Fortal design system pieces (Phase 1).
+// Single entrypoint for all Fortal design system pieces.
 
 // Color swatches (Radix colors retained)
 export '../radix/colors/colors.dart';

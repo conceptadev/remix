@@ -22,24 +22,16 @@ void main() {
     });
   }
 
-  testWidgets('bordered and soft variants use their pinned insets', (
+  testWidgets('all variants preserve the pinned outer content insets', (
     tester,
   ) async {
-    const bordered = [
-      EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-      EdgeInsets.symmetric(horizontal: 7, vertical: 5),
-      EdgeInsets.symmetric(horizontal: 11, vertical: 7),
-    ];
-    const soft = [
+    const expected = [
       EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     ];
 
-    for (final variant in [
-      FortalTextAreaVariant.classic,
-      FortalTextAreaVariant.surface,
-    ]) {
+    for (final variant in FortalTextAreaVariant.values) {
       for (var index = 0; index < FortalTextAreaSize.values.length; index++) {
         final result = await _resolve(
           tester,
@@ -48,21 +40,9 @@ void main() {
         );
         expect(
           result.spec.container.spec.padding?.resolve(TextDirection.ltr),
-          bordered[index],
+          expected[index],
         );
       }
-    }
-
-    for (var index = 0; index < FortalTextAreaSize.values.length; index++) {
-      final result = await _resolve(
-        tester,
-        variant: .soft,
-        size: FortalTextAreaSize.values[index],
-      );
-      expect(
-        result.spec.container.spec.padding?.resolve(TextDirection.ltr),
-        soft[index],
-      );
     }
   });
 

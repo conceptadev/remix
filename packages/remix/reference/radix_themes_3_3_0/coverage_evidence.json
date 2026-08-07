@@ -696,7 +696,7 @@
     },
     {
       "test": "test/components/segmented_control/segmented_control_fortal_parity_test.dart",
-      "case": "unselected hover changes only the label surface",
+      "case": "inactive hover relies on track clipping and focus stays round",
       "covers": ["state:hovered", "state:pressed"]
     },
     {
@@ -723,7 +723,7 @@
     },
     {
       "test": "test/components/textfield/text_area_fortal_parity_test.dart",
-      "case": "bordered and soft variants use their pinned insets",
+      "case": "all variants preserve the pinned outer content insets",
       "covers": [
         "enum:variant.classic",
         "enum:variant.surface",

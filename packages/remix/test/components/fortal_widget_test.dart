@@ -246,7 +246,7 @@ void main() {
       expect(find.byType(RemixTextField), findsOneWidget);
     });
 
-    testWidgets('renders the Phase 1 Fortal wrappers', (tester) async {
+    testWidgets('renders the new Fortal wrappers', (tester) async {
       await tester.pumpRemixApp(
         const Column(
           children: [

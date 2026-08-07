@@ -109,7 +109,7 @@ void main() {
     expect(accent, isNotNull);
   });
 
-  testWidgets('Phase 1 recipe tokens resolve exact light and dark values', (
+  testWidgets('component recipe tokens resolve exact light and dark values', (
     tester,
   ) async {
     final light = await _captureRecipeTokens(
@@ -133,12 +133,11 @@ void main() {
       expect(shadows.map((shadow) => shadow.shapeInset), everyElement(1));
     }
     expect(light.textAreaMinHeight3, 80);
-    expect(light.textAreaPaddingY1, 3);
     expect(light.dataListRowGap3, 20);
     expect(light.dataListLabelMinWidth, 120);
   });
 
-  testWidgets('Phase 1 spacing tokens scale while fixed CSS lengths do not', (
+  testWidgets('recipe spacing tokens scale while fixed CSS lengths do not', (
     tester,
   ) async {
     final scaled = await _captureRecipeTokens(
@@ -148,7 +147,6 @@ void main() {
     );
 
     expect(scaled.textAreaMinHeight3, 80);
-    expect(scaled.textAreaPaddingY1, closeTo(3.4, 1e-9));
     expect(scaled.dataListRowGap3, 22);
     expect(scaled.dataListLabelMinWidth, 120);
   });
@@ -162,7 +160,6 @@ Future<
     Color grayA3,
     List<RemixBoxShadow> classicIndicatorShadows,
     double textAreaMinHeight3,
-    double textAreaPaddingY1,
     double dataListRowGap3,
     double dataListLabelMinWidth,
   })
@@ -179,7 +176,6 @@ _captureRecipeTokens(
     Color grayA3,
     List<RemixBoxShadow> classicIndicatorShadows,
     double textAreaMinHeight3,
-    double textAreaPaddingY1,
     double dataListRowGap3,
     double dataListLabelMinWidth,
   })
@@ -211,10 +207,6 @@ _captureRecipeTokens(
             ),
             textAreaMinHeight3: MixScope.tokenOf(
               FortalTokens.textAreaMinHeight3,
-              context,
-            ),
-            textAreaPaddingY1: MixScope.tokenOf(
-              FortalTokens.textAreaPaddingY1,
               context,
             ),
             dataListRowGap3: MixScope.tokenOf(

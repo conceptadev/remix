@@ -13,6 +13,7 @@ const _expectedMappedFamilies = <String>{
   'callout',
   'card',
   'checkbox',
+  'data_list',
   'data_table',
   'dialog',
   'divider',
@@ -31,7 +32,6 @@ const _expectedMappedFamilies = <String>{
   'text_area',
   'text_field',
   'tooltip',
-  'data_list',
 };
 const _expectedExtensions = <String>{'accordion', 'toggle', 'toggle_group'};
 const _expectedUnmappedUpstreamFamilies = <String>{'checkbox_group'};
