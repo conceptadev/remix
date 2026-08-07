@@ -244,7 +244,7 @@ Map pinned Radix 3.3.0 `table.css` exactly where Flutter has the same concept:
 - Radix responsive `layout`, per-row alignment, and per-cell width/min/max/padding props map to concrete `TableColumnWidth`, column alignment, cell widgets/styles, and caller-driven responsive rebuilds in v1. Record unsupported per-row/per-cell overrides and CSS responsive-object syntax explicitly instead of silently claiming them.
 - Do not add new tokens unless an exact pinned metric cannot be expressed by existing Fortal tokens; 36/44 scaled minimum heights may justify narrowly named table tokens only after the token inventory is checked in the failing-test step.
 
-PR 9 advances the parity ledger after PR 8 from 29 mapped + 3 extensions to 30 mapped + 3 extensions. Add `table` source files/selectors, size/variant/default/state inventories, evidence, checker set/count/success text, and one Chromium probe. The mapped family is named `data_table` publicly but cites Radix `Table`; the manifest must state that controlled behavior is a Flutter extension.
+PR 9 advances the parity ledger by one mapped family (as merged: 20 to 21 mapped + 3 extensions, having landed before PRs 7/8). Add `table` source files/selectors, size/variant/default/state inventories, evidence, checker set/count/success text, and one Chromium probe. The mapped family is named `data_table` publicly but cites Radix `Table`; the manifest must state that controlled behavior is a Flutter extension.
 
 ## Work breakdown
 
@@ -266,7 +266,7 @@ PR 9 advances the parity ledger after PR 8 from 29 mapped + 3 extensions to 30 m
   - Files: `fortal_data_table_styles.dart`, generated wrapper, `data_table_fortal_parity_test.dart`, shared control/widget/token tests if needed.
   - Cover sizes 1-3, surface/ghost, light/dark, scaling, hover/selected extension states, sort controls, pagination, last-row divider, and panel background behavior.
 
-- [ ] Task 5: Advance the parity contract from 29/3 to 30/3.
+- [x] Task 5: Advance the parity contract by one mapped family (landed as 20/3 to 21/3).
   - Files: manifest, coverage evidence, checker, Chromium fixture/output, reference README.
   - Cite `src/components/table.props.tsx`, `table.css`, and `table.tsx`; add selectors `.rt-TableRoot`, `.rt-TableRootTable`, `.rt-TableHeader`, `.rt-TableBody`, `.rt-TableRow`, `.rt-TableCell`, `.rt-TableColumnHeaderCell`, and `.rt-TableRowHeaderCell` as supported by the pinned artifact.
 
