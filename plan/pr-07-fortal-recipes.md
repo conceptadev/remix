@@ -17,6 +17,12 @@
 ## Context
 
 - Fortal recipes are parts of their Remix component libraries and use `@MixWidget(target: Remix<Name>.new)` to generate `Fortal*` wrappers in the component `.g.dart`.
+- Design posture (recorded 2026-08-07): a recipe is a plain styler function in
+  the exact shape of the existing 24 recipes — fidelity bends to the standard
+  Remix API, never the reverse. Any Radix detail that would require a
+  Fortal-specific widget/wrapper/utility, a new public API on the Remix
+  component, or offset arithmetic is expressed as the closest standard-styler
+  equivalent and recorded as a manifest approximation instead.
 - Count rebase (2026-08-07): PR 9 merged early (#109), so `data_table` is
   already a mapped family. The current parity contract has 21 mapped Radix
   families plus three Fortal extensions. This PR adds `skeleton`,

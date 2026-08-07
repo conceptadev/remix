@@ -50,6 +50,13 @@ There are deliberately no `@MixableSpec`, `@MixWidget`, `.g.dart`, or Remix base
 
 Put a library/class comment explaining this exception to normal component anatomy: typography is token-defined and behavior-light, so a generated wrapper over a fictional Remix base would be duplication.
 
+Design posture (recorded 2026-08-07): these five widgets are the one agreed
+exception to "no Fortal-specific widgets" and must stay thin — existing Mix
+primitives, tokens, and shared helpers only. No new utility layer, painter,
+transform wrapper, or sub-widget may be added to chase a CSS detail; when an
+exact value cannot be expressed with existing primitives, record the measured
+tolerance in the manifest instead.
+
 ## Shared public types
 
 ```dart
