@@ -17,11 +17,9 @@ import 'package:flutter/rendering.dart'
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 
-import '../../fortal/fortal.dart';
 import '../../utilities/remix_style.dart';
 
 part 'data_list_spec.dart';
 part 'data_list_style.dart';
 part 'data_list_widget.dart';
-part 'fortal_data_list_styles.dart';
 part 'data_list.g.dart';

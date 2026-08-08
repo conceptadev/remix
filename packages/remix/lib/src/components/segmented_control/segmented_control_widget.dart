@@ -70,11 +70,6 @@ class RemixSegmentedControlItem<T extends Object> {
 /// Radix Segmented Control model. Activating the selected segment never clears
 /// the controlled selection.
 ///
-/// The Fortal recipe paints the selected item in place. It does not reproduce
-/// Radix's sliding indicator, duplicate-label crossfade, inactive separators,
-/// or max-content overflow. Changing an item's label with the selection can
-/// therefore cause a small intrinsic-width shift.
-///
 /// [T] must be non-nullable. A null [selectedValue] represents no selection.
 class RemixSegmentedControl<T extends Object> extends StatelessWidget {
   const RemixSegmentedControl({

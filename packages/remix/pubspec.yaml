@@ -14,9 +14,13 @@ topics:
 
 version: 1.0.0-beta.1
 
+# Consumer floor, matching `mix` and `naked_ui`. Intentionally lower than the
+# workspace's own toolchain floor: dev tooling needs a newer SDK than the
+# shipped code does, and consumers should not pay for that. Enforced by
+# tool/check_toolchain.dart.
 environment:
-  sdk: ">=3.12.0 <4.0.0"
-  flutter: ">=3.44.0"
+  sdk: ">=3.11.0 <4.0.0"
+  flutter: ">=3.41.0"
 
 dependencies:
   flutter:

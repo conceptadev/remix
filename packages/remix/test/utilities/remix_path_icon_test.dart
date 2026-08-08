@@ -40,9 +40,8 @@ Future<Path> _recordGlyphPath(WidgetTester tester, RemixPathGlyph glyph) async {
   return recorder.paths.single;
 }
 
-double _perimeter(Path path) => path
-    .computeMetrics()
-    .fold(0.0, (total, metric) => total + metric.length);
+double _perimeter(Path path) =>
+    path.computeMetrics().fold(0.0, (total, metric) => total + metric.length);
 
 void main() {
   // The parity manifest promises the exact Radix Themes 3.3.0 vector paths.

@@ -4,13 +4,28 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
+/// A caller-supplied token, standing in for whatever theme package a host uses.
+///
+/// The point of these tests is that Remix needs no ambient `Overlay` or
+/// `Navigator` of its own, and that whatever `MixScope` the caller installs
+/// reaches overlay and route content. Neither claim is theme-specific, so this
+/// suite deliberately depends on no theme package.
+const _hostAccent = ColorToken('test.host.accent');
+const _hostAccentValue = Color(0xFF3E63DD);
+
 void main() {
   group('Remix host capabilities', () {
-    testWidgets('ordinary Fortal widgets need no Overlay or Navigator', (
+    testWidgets('ordinary widgets need no Overlay or Navigator', (
       tester,
     ) async {
       await tester.pumpWidget(
-        _widgetsHost(FortalButton(label: 'Continue', onPressed: () {})),
+        _widgetsHost(
+          RemixButton(
+            label: 'Continue',
+            style: _buttonStyle(),
+            onPressed: () {},
+          ),
+        ),
       );
 
       expect(find.text('Continue'), findsOneWidget);
@@ -19,10 +34,10 @@ void main() {
     });
 
     group('caller-owned Overlay', () {
-      testWidgets('opens a Fortal menu without a Navigator', (tester) async {
+      testWidgets('opens a menu without a Navigator', (tester) async {
         await tester.pumpWidget(
           _overlayHost(
-            FortalMenu<String>(
+            RemixMenu<String>(
               trigger: const RemixMenuTrigger(label: 'Open menu'),
               items: const [RemixMenuItem(value: 'item', label: 'Menu item')],
             ),
@@ -32,13 +47,13 @@ void main() {
         await tester.tap(find.text('Open menu'));
         await tester.pumpAndSettle();
 
-        _expectThemedOverlayContent(tester, find.text('Menu item'));
+        _expectScopedOverlayContent(tester, find.text('Menu item'));
       });
 
-      testWidgets('opens a Fortal select without a Navigator', (tester) async {
+      testWidgets('opens a select without a Navigator', (tester) async {
         await tester.pumpWidget(
           _overlayHost(
-            FortalSelect<String>(
+            RemixSelect<String>(
               trigger: const RemixSelectTrigger(placeholder: 'Open select'),
               items: const [
                 RemixSelectItem(value: 'item', label: 'Select item'),
@@ -50,13 +65,13 @@ void main() {
         await tester.tap(find.byType(RemixSelect<String>));
         await tester.pumpAndSettle();
 
-        _expectThemedOverlayContent(tester, find.text('Select item'));
+        _expectScopedOverlayContent(tester, find.text('Select item'));
       });
 
-      testWidgets('opens a Fortal popover without a Navigator', (tester) async {
+      testWidgets('opens a popover without a Navigator', (tester) async {
         await tester.pumpWidget(
           _overlayHost(
-            const FortalPopover(
+            const RemixPopover(
               popoverChild: Text('Popover content'),
               child: Text('Open popover'),
             ),
@@ -66,13 +81,13 @@ void main() {
         await tester.tap(find.text('Open popover'));
         await tester.pumpAndSettle();
 
-        _expectThemedOverlayContent(tester, find.text('Popover content'));
+        _expectScopedOverlayContent(tester, find.text('Popover content'));
       });
 
-      testWidgets('opens a Fortal tooltip without a Navigator', (tester) async {
+      testWidgets('opens a tooltip without a Navigator', (tester) async {
         await tester.pumpWidget(
           _overlayHost(
-            const FortalTooltip(
+            const RemixTooltip(
               tooltipChild: Text('Tooltip content'),
               child: Text('Hover target'),
             ),
@@ -88,7 +103,7 @@ void main() {
         await tester.pump(const Duration(milliseconds: 200));
         await tester.pumpAndSettle();
 
-        _expectThemedOverlayContent(tester, find.text('Tooltip content'));
+        _expectScopedOverlayContent(tester, find.text('Tooltip content'));
       });
     });
 
@@ -96,13 +111,14 @@ void main() {
       await tester.pumpWidget(
         _navigatorHost(
           Builder(
-            builder: (context) => FortalButton(
+            builder: (context) => RemixButton(
               label: 'Open dialog',
+              style: _buttonStyle(),
               onPressed: () => showRemixDialog<void>(
                 context: context,
                 transitionDuration: Duration.zero,
                 builder: (context) =>
-                    const Center(child: FortalDialog(title: 'Dialog title')),
+                    const Center(child: RemixDialog(title: 'Dialog title')),
               ),
             ),
           ),
@@ -117,14 +133,20 @@ void main() {
 
       final dialogTitle = find.text('Dialog title');
       expect(dialogTitle, findsOneWidget);
-      _expectFortalInheritance(tester, dialogTitle);
+      _expectScopeInheritance(tester, dialogTitle);
     });
   });
 }
 
+ButtonStyler _buttonStyle() =>
+    ButtonStyler().color(_hostAccent()).paddingX(16).paddingY(8);
+
+Widget _hostScope({required Widget child}) {
+  return MixScope(tokens: {_hostAccent: _hostAccentValue}, child: child);
+}
+
 Widget _widgetsHost(Widget child) {
-  return FortalScope(
-    brightness: .light,
+  return _hostScope(
     child: WidgetsApp(
       color: const Color(0xFFFFFFFF),
       builder: (_, _) => Center(child: child),
@@ -133,8 +155,7 @@ Widget _widgetsHost(Widget child) {
 }
 
 Widget _overlayHost(Widget child) {
-  return FortalScope(
-    brightness: .light,
+  return _hostScope(
     child: WidgetsApp(
       color: const Color(0xFFFFFFFF),
       builder: (_, _) => Overlay.wrap(child: Center(child: child)),
@@ -143,8 +164,7 @@ Widget _overlayHost(Widget child) {
 }
 
 Widget _navigatorHost(Widget child) {
-  return FortalScope(
-    brightness: .light,
+  return _hostScope(
     child: WidgetsApp(
       color: const Color(0xFFFFFFFF),
       builder: (_, _) => Navigator(
@@ -159,16 +179,15 @@ Widget _navigatorHost(Widget child) {
   );
 }
 
-void _expectThemedOverlayContent(WidgetTester tester, Finder content) {
+void _expectScopedOverlayContent(WidgetTester tester, Finder content) {
   expect(find.byType(Overlay), findsOneWidget);
   expect(find.byType(Navigator), findsNothing);
   expect(content, findsOneWidget);
-  _expectFortalInheritance(tester, content);
+  _expectScopeInheritance(tester, content);
 }
 
-void _expectFortalInheritance(WidgetTester tester, Finder content) {
+void _expectScopeInheritance(WidgetTester tester, Finder content) {
   final context = tester.element(content);
-  expect(FortalTheme.maybeOf(context), isNotNull);
   expect(MixScope.maybeOf(context), isNotNull);
-  expect(MixScope.tokenOf(FortalTokens.accent9, context), isA<Color>());
+  expect(MixScope.tokenOf(_hostAccent, context), _hostAccentValue);
 }

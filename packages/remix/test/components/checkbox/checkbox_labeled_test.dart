@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/rendering/remix_box_effects.dart'
-    show RemixBoxWithEffects;
 
 import '../../helpers/test_helpers.dart';
 
@@ -479,51 +477,6 @@ void main() {
       await tester.pump();
       expect(focusNode.hasFocus, isFalse);
       handle.dispose();
-    });
-  });
-
-  group('Fortal labeled checkbox', () {
-    testWidgets('preserves each visual square inside a 48 target', (
-      tester,
-    ) async {
-      const expectedVisualSizes = <FortalCheckboxSize, double>{
-        FortalCheckboxSize.size1: 14,
-        FortalCheckboxSize.size2: 16,
-        FortalCheckboxSize.size3: 20,
-      };
-
-      for (final entry in expectedVisualSizes.entries) {
-        await tester.pumpRemixApp(
-          FortalCheckbox(
-            size: entry.key,
-            selected: false,
-            label: 'Receive updates',
-            onChanged: (_) {},
-          ),
-        );
-
-        expect(
-          tester.getSize(find.byType(FortalCheckbox)).height,
-          greaterThanOrEqualTo(48),
-          reason: entry.key.name,
-        );
-        expect(
-          tester.getSize(find.byType(RemixBoxWithEffects)),
-          Size.square(entry.value),
-          reason: entry.key.name,
-        );
-      }
-    });
-
-    test('generated wrapper forwards label and minimum target size', () {
-      const checkbox = FortalCheckbox.surface(
-        selected: false,
-        label: 'Receive updates',
-        minimumTapTargetSize: Size.zero,
-      );
-
-      expect(checkbox.label, 'Receive updates');
-      expect(checkbox.minimumTapTargetSize, Size.zero);
     });
   });
 

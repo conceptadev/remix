@@ -6,8 +6,7 @@ part of 'textfield.dart';
 /// Text areas and text fields share one accessible editing pipeline and one
 /// styling anatomy. This constructor-only facade supplies safe multiline
 /// defaults without forking a spec or build path that could drift over time.
-/// Scrolling follows the host platform; Fortal does not reproduce Radix's
-/// themed browser scrollbar or resize handle. The inherited [RemixTextField.error]
+/// Scrolling follows the host platform. The inherited [RemixTextField.error]
 /// flag adds Remix's red validation treatment and invalid semantics.
 class RemixTextArea extends RemixTextField {
   const RemixTextArea({

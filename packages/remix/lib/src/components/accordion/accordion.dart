@@ -7,11 +7,9 @@ import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:naked_ui/naked_ui.dart';
 
-import '../../fortal/fortal.dart';
 import '../../utilities/remix_style.dart';
 
 part 'accordion_spec.dart';
 part 'accordion_style.dart';
 part 'accordion_widget.dart';
-part 'fortal_accordion_styles.dart';
 part 'accordion.g.dart';

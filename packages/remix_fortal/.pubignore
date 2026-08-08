@@ -1,0 +1,9 @@
+pubspec_overrides.yaml
+.vscode/*
+.cursor/*
+docs/*
+scripts/*
+test/*
+reference/*
+tool/*
+radix_colors.generated.json

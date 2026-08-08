@@ -6,6 +6,7 @@ resolution: workspace
 
 environment:
   sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0"
 
 dependencies:
   flutter:
@@ -13,6 +14,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   remix:
     path: ../remix
+  remix_fortal:
+    path: ../remix_fortal
 
 dev_dependencies:
   flutter_test:

@@ -9,10 +9,7 @@ import 'package:naked_ui/naked_ui.dart';
 
 import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
-import '../../fortal/fortal.dart';
-import '../../utilities/selected_mixin.dart';
 
-part 'fortal_tabs_styles.dart';
 part 'tabs_spec.dart';
 part 'tabs_style.dart';
 part 'tabs_widget.dart';

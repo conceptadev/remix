@@ -1,4 +1,4 @@
-// Barrel for common style helpers (not part of Fortal tokens).
+// Barrel for common style helpers. Theme-agnostic: these carry no tokens.
 
 export 'mixins/icon_style_mixin.dart';
 export 'mixins/label_style_mixin.dart';

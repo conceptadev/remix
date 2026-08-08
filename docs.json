@@ -194,6 +194,15 @@
           "href": "/components/tooltip"
         }
       ]
+    },
+    {
+      "group": "Fortal",
+      "pages": [
+        {
+          "title": "Overview",
+          "href": "/fortal"
+        }
+      ]
     }
   ]
 }

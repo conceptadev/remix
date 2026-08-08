@@ -3,6 +3,10 @@
 Constructor parameters for every Remix component, verified against
 `packages/remix/lib/src/components/`.
 
+The "Fortal preset: `FortalX`" cross-references below name widgets from the
+separate `remix_fortal` package (`import 'package:remix_fortal/remix_fortal.dart';`),
+not from `remix` itself. See `fortal-reference.md`.
+
 Shared contract for every leaf `Remix*` widget:
 
 - `style` — a `*Styler` (defaults to `const *Styler.create()`).

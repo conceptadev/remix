@@ -7,10 +7,8 @@ import 'package:mix_annotations/mix_annotations.dart';
 
 import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
-import '../../fortal/fortal.dart';
 
 part 'avatar_spec.dart';
 part 'avatar_style.dart';
 part 'avatar_widget.dart';
-part 'fortal_avatar_styles.dart';
 part 'avatar.g.dart';

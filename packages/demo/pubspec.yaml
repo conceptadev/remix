@@ -6,6 +6,7 @@ resolution: workspace
 
 environment:
   sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0"
 
 dependency_overrides:
   accessibility_tools: ^2.8.0
@@ -19,6 +20,8 @@ dependencies:
   widgetbook: ^3.25.0
   remix:
     path: ../remix
+  remix_fortal:
+    path: ../remix_fortal
 
 dev_dependencies:
   flutter_test:

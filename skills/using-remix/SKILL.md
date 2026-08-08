@@ -1,25 +1,58 @@
 ---
 name: using-remix
-description: This skill should be used when the user wants to build Flutter UI with the Remix component library (Mix + Naked UI + Fortal theme) — create screens or widgets with Remix components, style or customize Remix widgets, set up Fortal theming, handle interaction states, or use any Remix/Fortal widget (RemixButton, FortalButton, RemixSelect, FortalTextField, RemixTabs, etc.). Also trigger on mentions of Remix styling, stylers, Fortal tokens/variants, or generic UI requests like "make a button" or "style this form" in a project that depends on the remix package.
+description: This skill should be used when the user wants to build Flutter UI with the Remix component library (Mix + Naked UI) or its companion Fortal theme package (`remix_fortal`) — create screens or widgets with Remix components, style or customize Remix widgets, set up Fortal theming, handle interaction states, or use any Remix/Fortal widget (RemixButton, FortalButton, RemixSelect, FortalTextField, RemixTabs, etc.). Also trigger on mentions of Remix styling, stylers, Fortal tokens/variants, or generic UI requests like "make a button" or "style this form" in a project that depends on the remix or remix_fortal package.
 ---
 
 # Using Remix — Building Flutter Interfaces
 
 Remix is a Flutter design-system library. It combines **Naked UI** (headless
 accessible behavior) with **Mix** (styling engine) to deliver fully styled,
-interaction-aware components. The built-in **Fortal** theme provides
-Radix-inspired design tokens and ready-made preset widgets.
+interaction-aware components. Remix ships no theme; it is commonly paired with
+the separate **Fortal** package (`remix_fortal`), which provides Radix-inspired
+design tokens and ready-made preset widgets.
 
-This skill is for consuming Remix and its built-in Fortal theme. For a
-standalone branded design-system package built on Remix, use the
-`building-remix-design-system` skill instead.
+This skill covers both packages. For a standalone branded design-system package
+built on Remix, use the `building-remix-design-system` skill instead.
 
 ## Quick Start
+
+Remix on its own — author the style, no theme package required:
 
 ```dart
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+
+final submitStyle = ButtonStyler()
+    .color(const Color(0xFF3E63DD))
+    .paddingX(16)
+    .paddingY(10)
+    .borderRadiusAll(const Radius.circular(6))
+    .label(TextStyler().color(const Color(0xFFFFFFFF)))
+    .onHovered(.color(const Color(0xFF3358D4)));
+
+RemixButton(label: 'Submit', style: submitStyle, onPressed: handleSubmit)
 ```
+
+Plain `Remix*` widgets need no ambient token scope, because Remix's own styles
+resolve no design tokens.
+
+### Optional: the Fortal theme package
+
+For a ready-made Radix-inspired theme, add a second package:
+
+```bash
+flutter pub add remix_fortal
+```
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+```
+
+`remix_fortal` does not re-export `remix`. Import both when a file uses base
+Remix widgets or stylers alongside Fortal ones; import only `remix_fortal` when
+it uses Fortal APIs exclusively.
 
 Wrap the app (or a subtree) in `FortalScope` to provide the Fortal tokens:
 
@@ -50,9 +83,8 @@ unnamed constructor with `variant:` when the value is selected dynamically.
 For generic presets, Dart infers `T` from values, items, and callbacks, so
 calls such as `FortalRadio.soft(value: 'option')` do not need `<String>`.
 
-Plain `Remix*` widgets work without `FortalScope`, but anything Fortal
-(`Fortal*` widgets, `fortal*Style()` functions, `FortalTokens`) requires it
-to resolve tokens.
+Anything Fortal (`Fortal*` widgets, `fortal*Style()` functions, `FortalTokens`)
+requires both the `remix_fortal` dependency and an ambient `FortalScope`.
 
 ## Host Capabilities
 
@@ -72,6 +104,7 @@ can use a caller-owned overlay without routing:
 ```dart
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_fortal/remix_fortal.dart';
 
 Widget buildPortalHost() {
   return FortalScope(
@@ -121,7 +154,8 @@ their calling context must be below that caller-owned `Navigator`.
 ## Component Catalog
 
 Remix ships 22 components. Each styled leaf widget accepts `style` (a
-`*Styler`) and has a `Fortal*` preset counterpart. Behavioral roots and
+`*Styler`) and has a `Fortal*` preset counterpart in the separate
+`remix_fortal` package. Behavioral roots and
 groups (`RemixTabs`, `RemixRadioGroup`, `RemixCheckboxGroup`, and
 `RemixAccordionGroup`) intentionally have neither a styler nor a Fortal wrapper.
 
@@ -137,6 +171,11 @@ Full constructor parameters for every component: `references/components.md`.
 All Fortal variants, sizes, and tokens: `references/fortal-reference.md`.
 
 ## Using Components
+
+The fragments below omit imports for brevity. `Remix*` types and `*Styler`
+types come from `package:remix/remix.dart`; every `Fortal*` widget,
+`fortal*Style()` function, and `FortalTokens` entry comes from
+`package:remix_fortal/remix_fortal.dart`.
 
 ### Buttons
 

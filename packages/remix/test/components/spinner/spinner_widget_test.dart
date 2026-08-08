@@ -59,26 +59,6 @@ void main() {
         expect(customPaint.painter, isA<RemixSpinnerPainter>());
       });
 
-      testWidgets('uses rounded fading leaves for the Fortal spinner', (
-        tester,
-      ) async {
-        final expectedRadius = await _resolveFortal(
-          tester,
-          (context) => fortalSpinnerStyle().resolve(context).spec.leafRadius!,
-        );
-
-        await tester.pumpRemixApp(const FortalSpinner());
-        await tester.pump();
-
-        final customPaint = tester.widget<CustomPaint>(spinnerPaint());
-        final painter = customPaint.painter;
-
-        expect(painter, isA<RemixLeafSpinnerPainter>());
-        final leafPainter = painter! as RemixLeafSpinnerPainter;
-        expect(leafPainter.opacity, 0.65);
-        expect(leafPainter.leafRadius, expectedRadius);
-      });
-
       testWidgets('opts into the leaf painter when a leaf field is set', (
         tester,
       ) async {
@@ -450,66 +430,6 @@ void main() {
           semantics.dispose();
         }
       });
-
-      testWidgets('Fortal forwards one labelled loading status node', (
-        tester,
-      ) async {
-        final semantics = tester.ensureSemantics();
-        try {
-          await tester.pumpRemixApp(
-            const FortalSpinner(
-              semanticsLabel: 'Loading workspaces',
-              semanticsValue: 'Connecting',
-            ),
-          );
-          await tester.pump();
-
-          final nodes = tester.semantics
-              .simulatedAccessibilityTraversal()
-              .where(
-                (node) =>
-                    node.getSemanticsData().role ==
-                    SemanticsRole.loadingSpinner,
-              )
-              .toList();
-          expect(nodes, hasLength(1));
-          expect(
-            nodes.single,
-            isSemantics(
-              label: 'Loading workspaces',
-              value: 'Connecting',
-              hasTapAction: false,
-              hasLongPressAction: false,
-              hasIncreaseAction: false,
-              hasDecreaseAction: false,
-            ),
-          );
-
-          final spinner = tester.widget<RemixSpinner>(
-            find.byType(RemixSpinner),
-          );
-          expect(spinner.semanticsLabel, 'Loading workspaces');
-          expect(spinner.semanticsValue, 'Connecting');
-        } finally {
-          semantics.dispose();
-        }
-      });
     });
   });
-}
-
-Future<T> _resolveFortal<T>(
-  WidgetTester tester,
-  T Function(BuildContext context) resolve,
-) async {
-  late T result;
-  await tester.pumpRemixApp(
-    Builder(
-      builder: (context) {
-        result = resolve(context);
-        return const SizedBox.shrink();
-      },
-    ),
-  );
-  return result;
 }

@@ -160,37 +160,18 @@ final destructiveButton = baseButtonStyle
     .label(TextStyler().color(Colors.white));
 ```
 
-## The Fortal Widgets
+## Theming with Fortal
 
-While Remix gives you complete freedom to build any design system, it also includes **Fortal Design System** - a comprehensive set of prebuilt styles based on Radix. These styles provide a polished, modern UI out of the box while maintaining full customizability.
+Remix ships no theme of its own. If you want a polished, Radix Themes-inspired
+starting point instead of authoring every style yourself, add the companion
+[`remix_fortal`](https://pub.dev/packages/remix_fortal) package — it provides
+`FortalScope`, a token system, the `fortal*Style()` recipes, and a matching
+catalog of ready-made `Fortal*` widgets.
 
-### Quick Start with Fortal
+See the [Fortal documentation](https://docs.page/btwld/remix/fortal) to get
+started.
 
-To use Fortal widgets, wrap your app with `FortalScope` to provide the design tokens, then use the generated `Fortal*` widgets. Named constructors select a fixed variant; use the unnamed constructor with `variant:` when the choice is dynamic:
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return FortalScope(
-      child: WidgetsApp(
-        color: Colors.white,
-        builder: (_, _) => Center(
-          child: FortalButton.solid(
-            onPressed: () {},
-            label: 'Fortal Button',
-          ),
-        ),
-      ),
-    );
-  }
-}
-```
-
-### Host Capabilities
+## Host Capabilities
 
 Remix composes inside your existing Flutter host. It does not require a
 `MaterialApp`, `Scaffold`, or Remix-owned application wrapper.
@@ -198,7 +179,7 @@ Remix composes inside your existing Flutter host. It does not require a
 | UI | Caller provides | Compatible hosts |
 |----|-----------------|------------------|
 | Ordinary `Remix*` widgets | The inherited Flutter services used by the widget subtree | Material, Cupertino, Widgets, and router-based hosts |
-| `Fortal*` widgets and recipes | `FortalScope`, in addition to the widget's normal Flutter services | Any Flutter host |
+| Widgets styled by a theme package such as Fortal | That package's token scope, in addition to the widget's normal Flutter services | Any Flutter host |
 | Menu, select, popover, and tooltip | An `Overlay` | Any host exposing an overlay; use `Overlay.wrap` when no `Navigator` is needed |
 | `showRemixDialog` and `showRemixAlertDialog` | A `Navigator` | Any host with a caller-owned navigator |
 
@@ -209,17 +190,15 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 Widget buildPortalHost() {
-  return FortalScope(
-    child: WidgetsApp(
-      color: const Color(0xFFFFFFFF),
-      builder: (_, _) => Overlay.wrap(
-        child: Center(
-          child: FortalMenu<String>.soft(
-            trigger: const RemixMenuTrigger(label: 'Actions'),
-            items: const [
-              RemixMenuItem(value: 'share', label: 'Share'),
-            ],
-          ),
+  return WidgetsApp(
+    color: const Color(0xFFFFFFFF),
+    builder: (_, _) => Overlay.wrap(
+      child: Center(
+        child: RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Actions'),
+          items: const [
+            RemixMenuItem(value: 'share', label: 'Share'),
+          ],
         ),
       ),
     ),
@@ -230,39 +209,6 @@ Widget buildPortalHost() {
 A `MaterialApp`, `CupertinoApp`, `WidgetsApp`, or router with routing configured
 commonly provides a `Navigator` and its overlay already. Dialog helpers push
 routes, so their calling context must be below that caller-owned `Navigator`.
-
-### Customizing Fortal Styles
-
-Generated Fortal widgets call the matching `fortal*Style` recipe internally.
-Use those recipes directly when you need a custom Remix widget composition:
-
-```dart
-final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
-  .borderRadiusAll(const Radius.circular(8))
-  .paddingX(32)
-  .onHovered(.scale(1.05));
-```
-
-### Fortal Design Tokens
-
-Fortal styles are built on a robust token system that includes:
-
-- **Colors**: 12-step accent and gray scales (powered by Radix Colors)
-- **Spacing**: 9-step spacing scale
-- **Border Radius**: 6-step radius scale
-- **Shadows**: 6-level shadow system
-- **Typography**: 9-size type scale
-- **Border Widths**: Consistent stroke weights
-
-You can use these tokens directly in your custom styles:
-
-```dart
-final style = ButtonStyler()
-  .color(FortalTokens.accent9())
-  .paddingAll(FortalTokens.space4())
-  .borderRadiusAll(FortalTokens.radius3())
-  .label(TextStyler().color(FortalTokens.accentContrast()));
-```
 
 ## Components
 

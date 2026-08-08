@@ -44,9 +44,7 @@ double _left(WidgetTester tester, Finder finder) =>
 List<Color?> _boxColors(WidgetTester tester) {
   return tester
       .widgetList<Box>(find.byType(Box))
-      .map(
-        (box) => (box.styleSpec?.spec.decoration as BoxDecoration?)?.color,
-      )
+      .map((box) => (box.styleSpec?.spec.decoration as BoxDecoration?)?.color)
       .toList();
 }
 
@@ -440,10 +438,7 @@ void main() {
           .rowMinHeight(40);
 
       await tester.pumpRemixApp(
-        SizedBox(
-          width: 400,
-          child: _table(selectable: true, style: style),
-        ),
+        SizedBox(width: 400, child: _table(selectable: true, style: style)),
       );
       final unselected = tester.getSize(_tableFinder);
 
@@ -550,9 +545,7 @@ void main() {
           width: 400,
           child: _table(
             selectable: true,
-            style: DataTableStyler().cellPadding(
-              EdgeInsetsGeometryMix.all(9),
-            ),
+            style: DataTableStyler().cellPadding(EdgeInsetsGeometryMix.all(9)),
           ),
         ),
       );
@@ -580,8 +573,7 @@ void main() {
       final borders = tester
           .widgetList<Box>(find.byType(Box))
           .map(
-            (box) =>
-                (box.styleSpec?.spec.decoration as BoxDecoration?)?.border,
+            (box) => (box.styleSpec?.spec.decoration as BoxDecoration?)?.border,
           )
           .whereType<Border>()
           .toList();
