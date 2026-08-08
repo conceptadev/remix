@@ -477,5 +477,33 @@ void main() {
       // widgets, not on RemixAccordion itself. Press behavior is covered in
       // the expansion behavior tests above.
     });
+
+    group('Default transition', () {
+      testWidgets('anchors the panel to the bottom start while expanding', (
+        tester,
+      ) async {
+        // Pins the alignment the builder actually renders, so the
+        // `axisAlignment` spelling it uses to stay on Flutter 3.41 cannot drift
+        // away from `AlignmentDirectional.bottomStart`.
+        final animation = AlwaysStoppedAnimation<double>(0.5);
+
+        await tester.pumpRemixApp(
+          RemixAccordion.defaultAccordionTransitionBuilder(
+            const Text('Panel'),
+            animation,
+          ),
+        );
+
+        final align = tester.widget<Align>(
+          find.descendant(
+            of: find.byType(SizeTransition),
+            matching: find.byType(Align),
+          ),
+        );
+
+        expect(align.alignment, AlignmentDirectional.bottomStart);
+        expect(align.heightFactor, 0.5);
+      });
+    });
   });
 }

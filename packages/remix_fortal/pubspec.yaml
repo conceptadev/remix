@@ -17,9 +17,10 @@ topics:
 # remix reaches 1.0.0 stable.
 version: 0.1.0-beta.1
 
+# Consumer floor, matching `remix` and `mix`. See packages/remix/pubspec.yaml.
 environment:
-  sdk: ">=3.12.0 <4.0.0"
-  flutter: ">=3.44.0"
+  sdk: ">=3.11.0 <4.0.0"
+  flutter: ">=3.41.0"
 
 dependencies:
   flutter:

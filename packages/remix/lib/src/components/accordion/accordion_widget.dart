@@ -94,11 +94,21 @@ class RemixAccordion<T> extends StatelessWidget {
     Widget panel,
     Animation<double> animation,
   ) {
+    // Deliberately the deprecated `axisAlignment` rather than the clearer
+    // `alignment: AlignmentDirectional.bottomStart`. The two are equivalent
+    // here — on the default vertical axis both resolve to
+    // `AlignmentDirectional(-1.0, 1.0)` — but `alignment` was added in Flutter
+    // 3.44, and this package's floor is Mix's 3.41. `axisAlignment` is the only
+    // spelling that compiles across that whole range.
+    //
+    // Swap to `alignment` and drop the ignore once the floor reaches 3.44.
+    // `accordion_widget_test.dart` pins the rendered alignment either way.
     return FadeTransition(
       opacity: animation,
       child: SizeTransition(
         sizeFactor: animation,
-        alignment: AlignmentDirectional.bottomStart,
+        // ignore: deprecated_member_use
+        axisAlignment: 1.0,
         child: panel,
       ),
     );

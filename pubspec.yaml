@@ -22,17 +22,13 @@ melos:
   packages:
     - packages/*
 
-  command:
-    bootstrap:
-      # Single source of truth for the toolchain floor: `melos bootstrap`
-      # rewrites every package's `environment:` from here. Enforced by
-      # tool/check_toolchain.dart, which also explains melos' blind spot.
-      #
-      # Deliberately above `mix`'s own floor (sdk 3.11 / flutter 3.41): the dev
-      # toolchain needs meta 1.18, which ships with Flutter 3.44.
-      environment:
-        sdk: ">=3.12.0 <4.0.0"
-        flutter: ">=3.44.0"
+  # No `command.bootstrap.environment` here on purpose. It rewrites one
+  # `environment:` into every package it manages, and this workspace has two
+  # legitimate floors: the published libraries ship code that runs on Mix's
+  # Flutter 3.41, while the dev toolchain (analyzer, via build_runner) needs
+  # meta 1.18 and therefore Flutter 3.44. Melos offers no per-package
+  # exemption, so a single managed value could only be wrong for one group.
+  # tool/check_toolchain.dart owns both floors and enforces them instead.
 
   scripts:
     generate:
