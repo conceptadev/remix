@@ -441,16 +441,20 @@ void _checkNavigation(
 }
 
 void _checkFortalScopeTopology(Directory workspaceRoot, List<String> failures) {
-  final index = File(
-    '${workspaceRoot.path}/docs/fortal.mdx',
-  ).readAsStringSync();
+  const relativePath = 'docs/fortal.mdx';
+  final page = File('${workspaceRoot.path}/$relativePath');
+  if (!page.existsSync()) {
+    failures.add('Missing $relativePath.');
+
+    return;
+  }
   final topology = RegExp(
     r'return\s+FortalScope\s*\(\s*child:\s*WidgetsApp\s*\(',
     dotAll: true,
   );
-  if (!topology.hasMatch(index)) {
+  if (!topology.hasMatch(page.readAsStringSync())) {
     failures.add(
-      'docs/index.mdx must place the root FortalScope above WidgetsApp.',
+      '$relativePath must place the root FortalScope above WidgetsApp.',
     );
   }
 }

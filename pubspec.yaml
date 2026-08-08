@@ -24,6 +24,12 @@ melos:
 
   command:
     bootstrap:
+      # Single source of truth for the toolchain floor: `melos bootstrap`
+      # rewrites every package's `environment:` from here. Enforced by
+      # tool/check_toolchain.dart, which also explains melos' blind spot.
+      #
+      # Deliberately above `mix`'s own floor (sdk 3.11 / flutter 3.41): the dev
+      # toolchain needs meta 1.18, which ships with Flutter 3.44.
       environment:
         sdk: ">=3.12.0 <4.0.0"
         flutter: ">=3.44.0"
@@ -59,8 +65,13 @@ melos:
       run: dart run tool/check_consumer_mix.dart
       description: Verify consumer tests resolve the declared hosted Mix release
 
+    toolchain:check:
+      run: dart run tool/check_toolchain.dart
+      description: Verify every package declares the melos-managed toolchain floor
+
     ci:
       steps:
+        - toolchain:check
         - mix:consumer:check
         - generate:check
         - docs:check

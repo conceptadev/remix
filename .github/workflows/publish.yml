@@ -5,6 +5,12 @@ name: Publish to pub.dev
 # knob, and `remix_fortal` depends on a hosted `remix`, so a single job would
 # race. The `if` conditions are mutually exclusive — after `refs/tags/` the next
 # character is `v` for remix and `r` for remix_fortal.
+#
+# The split does not order the two publishes: each tag push starts its own run,
+# so `git push --tags` still races. Push remix first, wait for pub.dev to serve
+# it, then push the remix_fortal tag. pub.dev does not verify that a dependency
+# version exists, so the wrong order ships an uninstallable remix_fortal rather
+# than failing the job.
 on:
   push:
     tags:

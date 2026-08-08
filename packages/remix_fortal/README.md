@@ -19,13 +19,6 @@ never use — no token tables, no Radix color data, no parity contract.
 flutter pub add remix_fortal
 ```
 
-Or add it to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  remix_fortal: ^0.1.0-beta.1
-```
-
 `remix_fortal` depends on `remix` and does not re-export it. Import both when you
 need base Remix widgets alongside Fortal ones.
 
