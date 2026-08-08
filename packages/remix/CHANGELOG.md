@@ -1,5 +1,10 @@
 ## Unreleased
 
+- **FEAT**: Lower the supported floor to Dart 3.11 / Flutter 3.41, matching
+  `mix` and `naked_ui`, so the whole family installs together. Only one call
+  required a newer SDK — `SizeTransition.alignment` in the default accordion
+  transition — and it was replaced with the equivalent `axisAlignment`, which
+  renders the identical alignment.
 - **BREAKING**: Fortal (`FortalScope`, `Fortal*` widgets, `fortal*Style()`
   recipes, `FortalTokens`, and the Radix color swatches) moved to the new
   [`remix_fortal`](https://pub.dev/packages/remix_fortal) package. `remix` no
