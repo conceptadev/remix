@@ -38,9 +38,7 @@ void main() {
         container: StyleSpec(spec: BoxSpec(padding: const EdgeInsets.all(1))),
         headerRow: StyleSpec(spec: BoxSpec(padding: const EdgeInsets.all(2))),
         bodyRow: StyleSpec(spec: BoxSpec(padding: const EdgeInsets.all(3))),
-        lastBodyRow: StyleSpec(
-          spec: BoxSpec(padding: const EdgeInsets.all(4)),
-        ),
+        lastBodyRow: StyleSpec(spec: BoxSpec(padding: const EdgeInsets.all(4))),
         headerCell: StyleSpec(spec: BoxSpec(padding: const EdgeInsets.all(5))),
         bodyCell: StyleSpec(spec: BoxSpec(padding: const EdgeInsets.all(6))),
         selectionCell: StyleSpec(

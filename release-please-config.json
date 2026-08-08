@@ -6,7 +6,17 @@
   "include-component-in-tag": false,
   "packages": {
     "packages/remix": {
-      "package-name": "remix"
+      "package-name": "remix",
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "/packages/remix_fortal/pubspec.yaml"
+        }
+      ]
+    },
+    "packages/remix_fortal": {
+      "package-name": "remix_fortal",
+      "include-component-in-tag": true
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_fortal/remix_fortal.dart';
 
 import '../data/activity.dart';
 import '../theme/theme_scope.dart';

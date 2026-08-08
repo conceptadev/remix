@@ -93,7 +93,7 @@ void main() {
 
     testWidgets('operates without a Material ancestor', (tester) async {
       await tester.pumpWidget(
-        FortalScope(
+        MixScope.empty(
           child: Directionality(
             textDirection: TextDirection.ltr,
             child: Align(
@@ -466,10 +466,7 @@ void main() {
 
       expect(await selectAllState(const {}), CheckedState.isFalse);
       expect(await selectAllState(const {'a'}), CheckedState.mixed);
-      expect(
-        await selectAllState(const {'a', 'b', 'c'}),
-        CheckedState.isTrue,
-      );
+      expect(await selectAllState(const {'a', 'b', 'c'}), CheckedState.isTrue);
 
       handle.dispose();
     });
@@ -752,7 +749,7 @@ void main() {
 
     testWidgets('survives a high text scale', (tester) async {
       await tester.pumpWidget(
-        FortalScope(
+        MixScope.empty(
           child: MaterialApp(
             home: MediaQuery(
               data: const MediaQueryData(textScaler: TextScaler.linear(3)),

@@ -4,19 +4,19 @@
     {
       "id": 1,
       "prompt": "Build a settings page with a form that has text fields for name and email, a select dropdown for language preference, some checkboxes for notification options, and a submit button. Use Fortal theming with indigo accent. Make it look polished.",
-      "expected_output": "A complete Flutter widget wrapped in FortalScope(accent: .indigo) using named Fortal variant constructors where the variant is fixed, including FortalSelect.surface without an unnecessary explicit generic type or redundant per-item preset styling, plus FortalTextField, FortalCheckbox, and FortalButton preset widgets.",
+      "expected_output": "A complete Flutter widget importing package:remix_fortal/remix_fortal.dart (plus package:remix/remix.dart only if base Remix types are used), wrapped in FortalScope(accent: .indigo), using named Fortal variant constructors where the variant is fixed, including FortalSelect.surface without an unnecessary explicit generic type or redundant per-item preset styling, plus FortalTextField, FortalCheckbox, and FortalButton preset widgets.",
       "files": []
     },
     {
       "id": 2,
       "prompt": "Create a custom-styled button that has a gradient background, rounded corners, scales down on press, and glows on hover. Don't use Fortal — build a fully custom style from scratch using the Remix fluent API. Show me the complete code.",
-      "expected_output": "A RemixButton with a fully custom ButtonStyler using the fluent API — gradient, borderRounded, .onPressed with scale, .onHovered with shadow/glow, .animate(AnimationConfig...) for transitions. Uses ButtonStyler (not the removed RemixButtonStyle) throughout.",
+      "expected_output": "A RemixButton with a fully custom ButtonStyler using the fluent API — gradient, borderRounded, .onPressed with scale, .onHovered with shadow/glow, .animate(AnimationConfig...) for transitions. Imports only package:remix/remix.dart, since no theme package is needed. Uses ButtonStyler (not the removed RemixButtonStyle) throughout.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "I'm using FortalIconButton but I need a long-press action and a semantic label on it. How do I do that?",
-      "expected_output": "Explains that FortalIconButton forwards the complete RemixIconButton behavior surface and shows a named variant constructor using both onLongPress and semanticLabel directly.",
+      "expected_output": "Explains that FortalIconButton (from the separate remix_fortal package) forwards the complete RemixIconButton behavior surface, and shows a named variant constructor using both onLongPress and semanticLabel directly, with import 'package:remix_fortal/remix_fortal.dart'; present.",
       "files": []
     },
     {
@@ -28,7 +28,7 @@
     {
       "id": 5,
       "prompt": "Can I call showRemixDialog from a subtree that does not have MixScope? I only need a plain Remix dialog, not Fortal tokens.",
-      "expected_output": "Explains that showRemixDialog works without MixScope and only clones tokens plus modifier order when a current scope exists. Distinguishes the scope-optional route helper from Fortal-styled content, which still needs FortalScope so FortalTokens can resolve.",
+      "expected_output": "Explains that showRemixDialog works without MixScope and only clones tokens plus modifier order when a current scope exists. Distinguishes the scope-optional route helper from Fortal-styled content, which additionally needs the remix_fortal package and an ambient FortalScope so FortalTokens can resolve.",
       "files": []
     },
     {

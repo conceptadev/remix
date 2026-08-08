@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   remix:
     path: ../remix
+  remix_fortal:
+    path: ../remix_fortal
 
 dev_dependencies:
   flutter_test:

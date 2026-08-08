@@ -12,13 +12,10 @@ import 'package:naked_ui/naked_ui.dart';
 
 import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
-import '../../fortal/fortal.dart';
 import '../../rendering/remix_box_effects.dart';
 
 part 'textfield_spec.dart';
 part 'textfield_style.dart';
 part 'textfield_widget.dart';
 part 'textarea_widget.dart';
-part 'fortal_textfield_styles.dart';
-part 'fortal_textarea_styles.dart';
 part 'textfield.g.dart';

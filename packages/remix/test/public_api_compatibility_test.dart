@@ -174,7 +174,7 @@ void main() {
     final semantics = tester.ensureSemantics();
 
     await tester.pumpWidget(
-      FortalScope(
+      MixScope.empty(
         child: MaterialApp(
           home: Scaffold(
             body: RemixMenu<String>(
@@ -194,39 +194,6 @@ void main() {
     semantics.dispose();
   });
 
-  test('generated wrappers preserve generic and named constructors', () {
-    const menu = FortalMenu<String>.soft(
-      trigger: RemixMenuTrigger(label: 'Actions'),
-      items: [RemixMenuItem(value: 'save', label: 'Save')],
-    );
-    const select = FortalSelect<String>.ghost(
-      trigger: RemixSelectTrigger(placeholder: 'Choose'),
-      items: [RemixSelectItem(value: 'one', label: 'One')],
-    );
-    const radio = FortalRadio<String>.soft(value: 'one');
-    const button = FortalButton.soft(label: 'Save');
-    const checkbox = FortalCheckbox.soft(
-      selected: false,
-      label: 'Receive updates',
-      minimumTapTargetSize: Size.zero,
-    );
-    const segmented = FortalSegmentedControl.classic(
-      items: [RemixSegmentedControlItem(value: 'list', label: 'List')],
-      selectedValue: 'list',
-    );
-    const textArea = FortalTextArea.classic();
-
-    expect(menu.variant, FortalMenuVariant.soft);
-    expect(select.variant, FortalSelectVariant.ghost);
-    expect(radio.variant, FortalRadioVariant.soft);
-    expect(button.variant, FortalButtonVariant.soft);
-    expect(checkbox.label, 'Receive updates');
-    expect(checkbox.minimumTapTargetSize, Size.zero);
-    expect(segmented, isA<FortalSegmentedControl<String>>());
-    expect(segmented.variant, FortalSegmentedControlVariant.classic);
-    expect(textArea.variant, FortalTextAreaVariant.classic);
-  });
-
   test('segmented control accepts a non-nullable value callback', () {
     final changes = <String>[];
     final control = RemixSegmentedControl<String>(
@@ -239,21 +206,5 @@ void main() {
 
     expect(control.selectedValue, isNull);
     expect(changes, ['list']);
-  });
-
-  test('theme configuration exposes only canonical names', () {
-    const config = FortalThemeConfig(
-      accent: .red,
-      gray: .mauve,
-      brightness: .dark,
-      panelBackground: .solid,
-      radius: .large,
-      scaling: .percent105,
-      hasBackground: false,
-    );
-
-    expect(config.accent, FortalAccentColor.red);
-    expect(config.gray, FortalGrayColor.mauve);
-    expect(config.brightness, Brightness.dark);
   });
 }

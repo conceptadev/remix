@@ -1,4 +1,7 @@
-/// Remix design system widgets, styles, Fortal recipes, and Radix colors.
+/// Remix design system widgets and styles.
+///
+/// Remix ships no theme. For a ready-made Radix Themes-inspired preset, add the
+/// companion `remix_fortal` package.
 library remix;
 
 /// COMPONENTS
@@ -34,9 +37,6 @@ export 'src/components/tooltip/tooltip.dart';
 export 'package:mix/mix.dart';
 export 'package:naked_ui/naked_ui.dart'
     show OverlayAlignment, OverlayPlacement, OverlayPositionConfig, OverlaySide;
-
-/// FORTAL
-export 'src/fortal/fortal.dart';
 
 /// RENDERING
 export 'src/rendering/remix_blend_mode.dart' show RemixBlendMode;

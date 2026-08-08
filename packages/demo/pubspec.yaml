@@ -19,6 +19,8 @@ dependencies:
   widgetbook: ^3.25.0
   remix:
     path: ../remix
+  remix_fortal:
+    path: ../remix_fortal
 
 dev_dependencies:
   flutter_test:

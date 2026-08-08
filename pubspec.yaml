@@ -16,6 +16,7 @@ workspace:
   - packages/example
   - packages/playground
   - packages/remix
+  - packages/remix_fortal
 
 melos:
   packages:
@@ -29,16 +30,24 @@ melos:
 
   scripts:
     generate:
-      exec: dart run build_runner build
+      run: dart run build_runner build
       description: Regenerate Remix sources
+      # remix_fortal's generator resolves package:remix, so it must not build
+      # while remix is rewriting its own lib/.
+      exec:
+        concurrency: 1
+        orderDependents: true
       packageFilters:
-        scope: remix
+        scope: [remix, remix_fortal]
 
     generate:check:
-      exec: dart run tool/check_generated.dart
+      run: dart run ../../tool/check_generated.dart
       description: Regenerate Remix sources and fail only on generated drift
+      exec:
+        concurrency: 1
+        orderDependents: true
       packageFilters:
-        scope: remix
+        scope: [remix, remix_fortal]
 
     test:flutter:
       exec: flutter test --reporter=failures-only
@@ -63,10 +72,8 @@ melos:
       exec: dart run tool/fortal_parity/check.dart
       description: Verify the pinned Radix Themes 3.3.0 parity contract and coverage
       packageFilters:
-        scope: remix
+        scope: remix_fortal
 
     docs:check:
-      exec: dart run tool/validate_docs.dart
+      run: dart run tool/validate_docs.dart
       description: Reject retired APIs in docs and examples, then analyze MDX Dart snippets
-      packageFilters:
-        scope: remix

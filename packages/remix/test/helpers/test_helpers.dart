@@ -10,12 +10,16 @@ extension WidgetTesterHelpers on WidgetTester {
   /// `MaterialApp` and `Scaffold` are conveniences here, not Remix host
   /// requirements. Host-contract tests should provide only the capability
   /// under test, such as `Overlay.wrap` or a caller-owned `Navigator`.
+  ///
+  /// The scope is deliberately token-free: Remix's own styles resolve no design
+  /// tokens, so this harness must not depend on a theme package. Themed
+  /// behavior is covered by `remix_fortal`'s own suite.
   Future<void> pumpRemixApp(
     Widget widget, {
     TextDirection textDirection = TextDirection.ltr,
   }) async {
     await pumpWidget(
-      FortalScope(
+      MixScope.empty(
         child: MaterialApp(
           home: Directionality(
             textDirection: textDirection,
@@ -28,7 +32,7 @@ extension WidgetTesterHelpers on WidgetTester {
 
   /// Pumps a widget with a caller-provided Scaffold for Material interop tests.
   Future<void> pumpRemixAppWithScaffold(Widget scaffold) async {
-    await pumpWidget(FortalScope(child: MaterialApp(home: scaffold)));
+    await pumpWidget(MixScope.empty(child: MaterialApp(home: scaffold)));
   }
 
   /// Finds a widget by its key string
@@ -154,7 +158,7 @@ class PerformanceTestHelper {
   ) async {
     final stopwatch = Stopwatch()..start();
     await tester.pumpWidget(
-      FortalScope(
+      MixScope.empty(
         child: MaterialApp(
           home: Scaffold(body: Center(child: widget)),
         ),

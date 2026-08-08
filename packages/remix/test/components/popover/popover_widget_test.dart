@@ -247,21 +247,5 @@ void main() {
       );
       expect(box.styleSpec, equals(rawContainer));
     });
-
-    testWidgets('FortalPopover supplies the themed overlay style', (
-      tester,
-    ) async {
-      await tester.pumpRemixApp(
-        const FortalPopover(
-          popoverChild: Text('Fortal content'),
-          child: Text('Open Fortal popover'),
-        ),
-      );
-
-      await tester.tap(find.text('Open Fortal popover'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Fortal content'), findsOneWidget);
-    });
   });
 }

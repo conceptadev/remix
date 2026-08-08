@@ -94,11 +94,6 @@ void main() {
       expect(raw.styleSpec, isA<MenuSpec>());
       expect(RemixMenu.styleFrom(), isA<MenuStyler>());
     });
-
-    test('fortal recipes return canonical stylers', () {
-      expect(fortalMenuStyle(), isA<MenuStyler>());
-      expect(fortalMenuItemStyle(), isA<MenuItemStyler>());
-    });
   });
 
   group('deprecated Remix* styler aliases', () {

@@ -6,6 +6,4 @@ demo/macos/Podfile.lock
 docs/*
 scripts/*
 test/*
-reference/*
 tool/*
-radix_colors.generated.json

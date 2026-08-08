@@ -1,5 +1,11 @@
 ## Unreleased
 
+- **BREAKING**: Fortal (`FortalScope`, `Fortal*` widgets, `fortal*Style()`
+  recipes, `FortalTokens`, and the Radix color swatches) moved to the new
+  [`remix_fortal`](https://pub.dev/packages/remix_fortal) package. `remix` no
+  longer exports any Fortal symbol and ships no theme. To keep using Fortal, add
+  `remix_fortal` and import `package:remix_fortal/remix_fortal.dart` alongside
+  `package:remix/remix.dart`.
 - **FIX**: Center `RemixSegmentedControl` segment content along the main axis,
   matching the Radix segmented control item anatomy. Equal segments make most
   surfaces wider than their content, which previously start-aligned the

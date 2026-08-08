@@ -1,0 +1,17 @@
+targets:
+  $default:
+    builders:
+      mix_generator|mix_widget_generator:
+        enabled: true
+        generate_for:
+          - lib/**/*.dart
+      mix_generator|mix_generator:
+        enabled: false
+      mix_generator|spec_styler_generator:
+        enabled: false
+      mix_generator|styler_generator:
+        enabled: false
+      mix_generator|mixable_generator:
+        enabled: false
+      mix_generator|modifier_generator:
+        enabled: false

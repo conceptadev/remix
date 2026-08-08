@@ -1,0 +1,9 @@
+analyzer:
+  errors:
+    non_constant_identifier_names: ignore
+
+linter:
+  rules:
+    # TODO: Turn this to true when all public apis are documented
+    public_member_api_docs: false
+    prefer_relative_imports: true

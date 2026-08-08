@@ -26,9 +26,6 @@ const _fallbackPulseOpacity = 0.5;
 /// Applications that need to announce loading should render their own labelled
 /// status region beside it.
 ///
-/// Fortal's pulse starts and rests on `grayA3` before moving toward `grayA4`;
-/// Radix's CSS `alternate-reverse` phase starts from `grayA4`.
-///
 /// ## Example
 ///
 /// ```dart

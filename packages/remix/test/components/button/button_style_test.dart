@@ -476,57 +476,9 @@ void main() {
       });
     });
   });
-
-  group('FortalButton recipe', () {
-    test('defaults to solid variant and size2', () {
-      expect(
-        fortalButtonStyle(),
-        equals(fortalButtonStyle(variant: .solid, size: .size2)),
-      );
-    });
-
-    for (final variant in FortalButtonVariant.values) {
-      testWidgets('resolves $variant variant', (tester) async {
-        final resolved = await _resolveFortalButtonStyle(
-          tester,
-          fortalButtonStyle(variant: variant),
-        );
-
-        expect(resolved, isA<StyleSpec<ButtonSpec>>());
-        expect(resolved.spec, isA<ButtonSpec>());
-      });
-    }
-
-    testWidgets('each size resolves distinct layout metrics', (tester) async {
-      final resolvedBySize = <FortalButtonSize, StyleSpec<ButtonSpec>>{};
-
-      for (final size in FortalButtonSize.values) {
-        resolvedBySize[size] = await _resolveFortalButtonStyle(
-          tester,
-          fortalButtonStyle(size: size),
-        );
-      }
-
-      final paddings = resolvedBySize.values
-          .map((spec) => spec.spec.container.spec.box?.spec.padding)
-          .toSet();
-      final spacings = resolvedBySize.values
-          .map((spec) => spec.spec.container.spec.flex?.spec.spacing)
-          .toSet();
-      final heights = resolvedBySize.values
-          .map(
-            (spec) => spec.spec.container.spec.box?.spec.constraints?.minHeight,
-          )
-          .toSet();
-
-      expect(paddings, hasLength(FortalButtonSize.values.length));
-      expect(heights, hasLength(FortalButtonSize.values.length));
-      expect(spacings, hasLength(3));
-    });
-  });
 }
 
-Future<StyleSpec<ButtonSpec>> _resolveFortalButtonStyle(
+Future<StyleSpec<ButtonSpec>> _resolveButtonStyle(
   WidgetTester tester,
   ButtonStyler style,
 ) async {
@@ -549,7 +501,7 @@ Future<BoxSpec> _resolveContainerBoxSpec(
   WidgetTester tester,
   ButtonStyler style,
 ) async {
-  final resolved = await _resolveFortalButtonStyle(tester, style);
+  final resolved = await _resolveButtonStyle(tester, style);
 
   return resolved.spec.container.spec.box!.spec;
 }

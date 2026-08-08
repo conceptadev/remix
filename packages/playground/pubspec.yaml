@@ -13,6 +13,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   remix:
     path: ../remix
+  remix_fortal:
+    path: ../remix_fortal
 
 dev_dependencies:
   flutter_test:

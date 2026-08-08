@@ -1,7 +1,22 @@
 # Fortal Theme Reference
 
-Complete reference for Fortal — Remix's built-in, Radix-inspired design
-system: preset widgets, variants, sizes, and tokens.
+Complete reference for Fortal — the Radix-inspired design system that ships as a
+separate package on top of Remix: preset widgets, variants, sizes, and tokens.
+
+## Requires the `remix_fortal` package
+
+Everything on this page lives in `remix_fortal`, not `remix`:
+
+```bash
+flutter pub add remix_fortal
+```
+
+```dart
+import 'package:remix_fortal/remix_fortal.dart';
+```
+
+`remix_fortal` does not re-export `remix`. Import both when a file also uses base
+`Remix*` widgets or `*Styler` types.
 
 ## How Fortal presets work
 

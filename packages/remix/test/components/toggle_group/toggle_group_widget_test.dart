@@ -99,24 +99,6 @@ void main() {
       expect(find.byIcon(Icons.grid_view), findsOneWidget);
     });
 
-    testWidgets('shrink-wraps the segmented-control container', (tester) async {
-      final nodes = _focusNodes();
-      addTearDown(() => _disposeNodes(nodes));
-
-      await tester.pumpRemixApp(
-        FortalToggleGroup<String>(
-          items: _items(nodes),
-          selectedValue: 'list',
-          onChanged: (_) {},
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      final size = tester.getSize(find.byType(FlexBox));
-      expect(size.width, lessThan(400));
-      expect(size.height, lessThan(100));
-    });
-
     testWidgets('styleSpec preserves vertical layout orientation', (
       tester,
     ) async {

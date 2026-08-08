@@ -27,8 +27,12 @@ that:
 - exposes an idiomatic public API in the *target system's* vocabulary, not
   Remix's or Fortal's.
 
-Do not clone Fortal and swap colors — Fortal is a hand-authored theme *inside*
-remix; new design systems are generated, standalone packages.
+`remix_fortal` is the in-repo precedent for the `packages/<name>` shape this
+skill describes: a standalone, separately versioned package that depends on
+`remix`, owns its own token scope, and generates its widget catalog with
+`@MixWidget`. Follow that structure. Do not clone Fortal's *content* and swap
+colors — its values are hand-authored against a pinned Radix parity contract,
+whereas a new design system generates its tokens from its own pinned sources.
 
 ## Architecture at a glance
 

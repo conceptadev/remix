@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_fortal/remix_fortal.dart';
 
 Widget buildSegmentedControlExample() {
   return const SizedBox(width: 340, child: _RemixSegmentedControlPreview());

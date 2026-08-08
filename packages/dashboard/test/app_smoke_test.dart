@@ -6,6 +6,7 @@ import 'package:dashboard/theme/theme_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_fortal/remix_fortal.dart';
 
 void main() {
   testWidgets('renders the dashboard inside one app and one shell', (

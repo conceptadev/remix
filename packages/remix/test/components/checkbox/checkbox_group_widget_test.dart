@@ -541,41 +541,6 @@ void main() {
         expect(tester.getSize(_itemAt(0)).width, 220);
         expect(tester.getSize(find.text(label)).height, greaterThan(48));
       });
-
-      testWidgets('keeps Fortal 14, 16, and 20 visuals inside 48 targets', (
-        tester,
-      ) async {
-        const expectedVisualSizes = <FortalCheckboxSize, double>{
-          FortalCheckboxSize.size1: 14,
-          FortalCheckboxSize.size2: 16,
-          FortalCheckboxSize.size3: 20,
-        };
-
-        for (final entry in expectedVisualSizes.entries) {
-          await tester.pumpRemixApp(
-            RemixCheckboxGroup<String>(
-              values: const {},
-              onChanged: (_) {},
-              child: RemixCheckboxGroupItem<String>(
-                value: 'a',
-                label: 'A',
-                style: fortalCheckboxStyle(size: entry.key),
-              ),
-            ),
-          );
-
-          expect(
-            tester.getSize(_itemAt(0)),
-            const Size.square(48),
-            reason: entry.key.name,
-          );
-          expect(
-            tester.getSize(find.byType(RemixBoxWithEffects)),
-            Size.square(entry.value),
-            reason: entry.key.name,
-          );
-        }
-      });
     });
 
     group('Focus and keyboard', () {
