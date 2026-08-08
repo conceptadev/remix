@@ -6,6 +6,27 @@ void main() {
   group('Fortal semantic tokens', () {
     test('keeps the background token name stable', () {
       expect(FortalTokens.colorBackground.name, 'fortal.color.background');
+      expect(FortalTokens.focusA5.name, 'fortal.focus.a5');
+    });
+
+    testWidgets('focus-a5 resolves from accent alpha step 5', (tester) async {
+      late Color focusA5;
+      late Color accentA5;
+
+      await tester.pumpWidget(
+        FortalScope(
+          accent: .red,
+          child: Builder(
+            builder: (context) {
+              focusA5 = MixScope.tokenOf(FortalTokens.focusA5, context);
+              accentA5 = MixScope.tokenOf(FortalTokens.accentA5, context);
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      expect(focusA5, accentA5);
     });
 
     test('keeps component recipe token names stable', () {

@@ -87,6 +87,9 @@ class FortalTokens {
   /// Solid focus ring color (accent step 8).
   static const focus8 = ColorToken('fortal.focus.8');
 
+  /// Translucent text-selection color (accent alpha step 5).
+  static const focusA5 = ColorToken('fortal.focus.a5');
+
   /// Translucent focus ring color with alpha transparency.
   static const focusA8 = ColorToken('fortal.focus.a8');
 
@@ -1134,9 +1137,9 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.sliderThumbSize1: 13.0 * scaling,
     FortalTokens.sliderThumbSize2: 16.0 * scaling,
     FortalTokens.sliderThumbSize3: 19.0 * scaling,
-    FortalTokens.textFieldPadding1: 6.0 * scaling - 1.0,
-    FortalTokens.textFieldPadding2: 8.0 * scaling - 1.0,
-    FortalTokens.textFieldPadding3: 12.0 * scaling - 1.0,
+    FortalTokens.textFieldPadding1: 6.0 * scaling,
+    FortalTokens.textFieldPadding2: 8.0 * scaling,
+    FortalTokens.textFieldPadding3: 12.0 * scaling,
     FortalTokens.textAreaMinHeight3: 80.0,
     FortalTokens.dataListRowGap3: 20.0 * scaling,
     FortalTokens.dataListLabelMinWidth: 120.0,
@@ -1768,6 +1771,7 @@ Map<ColorToken, Color> _accentColorTokens(FortalThemeColors tokens) {
     FortalTokens.accentTrack: tokens.accent.track,
     FortalTokens.accentContrast: tokens.accent.contrast,
     FortalTokens.focus8: tokens.focus8,
+    FortalTokens.focusA5: tokens.focusA5,
     FortalTokens.focusA8: tokens.focusA8,
     FortalTokens.accent1: scale.step(1),
     FortalTokens.accent2: scale.step(2),

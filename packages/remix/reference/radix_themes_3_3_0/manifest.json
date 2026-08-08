@@ -2806,7 +2806,7 @@
         ".rt-TextFieldSlot"
       ],
       "flutterExceptions": [
-        "error is a documented Fortal extension and must set invalid semantics plus red error/focus roles; Flutter text editing APIs replace input DOM props."
+        "Native invalid semantics remain part of the upstream coverage. Remix's error flag is a Fortal extension that adds red error and focus roles while setting those invalid semantics; Flutter text editing APIs replace input DOM props."
       ],
       "coverage": {
         "enums": [
@@ -3007,7 +3007,7 @@
       ],
       "flutterExceptions": [
         "The standard Remix item-state styler maps the track, inactive and selected labels, selected inset fill, surface ring or five-layer classic shadow, focus outline, and disabled precedence without a Fortal-specific widget.",
-        "Orientation, item-disabled behavior, looping focus traversal, and RTL direction remain constructor and Naked coordinator behavior."
+        "Vertical orientation and per-item disabling are Remix extensions; looping focus traversal and RTL direction remain constructor and Naked coordinator behavior."
       ],
       "coverage": {
         "enums": [
@@ -3047,13 +3047,6 @@
               "classic"
             ],
             "default": "surface"
-          },
-          "orientation": {
-            "values": [
-              "horizontal",
-              "vertical"
-            ],
-            "default": "horizontal"
           }
         },
         "states": [
@@ -3082,6 +3075,7 @@
         "100 ms translated sliding indicator",
         "duplicate inactive and active labels with opacity crossfade",
         "CSS separators between inactive items",
+        "selection-dependent intrinsic-width stability when callers change an item label with the selection",
         "responsive size and radius objects"
       ],
       "visualMapping": {
@@ -3143,8 +3137,9 @@
         ".rt-TextAreaInput"
       ],
       "flutterExceptions": [
-        "TextArea reuses the corrected private TextField visual-state helpers while retaining multiline minimum heights, start alignment, and distinct padding; its soft placeholder remains accent-12 at 0.65 opacity.",
-        "Flutter text-editing flags and constraints replace textarea DOM attributes and CSS sizing."
+        "TextArea reuses the shared TextField visual-state helpers while retaining multiline minimum heights, start alignment, and distinct padding; its soft placeholder remains accent-12 at 0.65 opacity.",
+        "Native invalid semantics remain in parity coverage. Remix's red error treatment is a Fortal extension rather than an upstream TextArea visual state.",
+        "Flutter text-editing flags, constraints, and platform scrolling replace textarea DOM attributes, CSS sizing, the themed 12px browser scrollbar, and the browser resize handle."
       ],
       "coverage": {
         "enums": [
@@ -3214,12 +3209,11 @@
         "hovered",
         "focused",
         "disabled",
-        "readOnly",
-        "invalid"
+        "readOnly"
       ],
       "deferredCapabilities": [
         "browser resize handle and resize-axis prop",
-        "fixed CSS textarea block sizing and browser overflow behavior",
+        "themed 12px browser scrollbar and fixed CSS textarea overflow behavior",
         "responsive size, radius, and resize objects"
       ],
       "visualMapping": {
@@ -3882,7 +3876,7 @@
       },
       "supportedRemixComposition": "Use RemixCheckboxGroup for selection, roving focus, semantics, and item layout transparency; apply fortalCheckboxStyle(size:, variant:, highContrast:) to each RemixCheckboxGroupItem.style and let the caller own the root and label spacing.",
       "reason": "RemixCheckboxGroup deliberately owns no visual or layout anatomy, so a generated FortalCheckboxGroup wrapper would invent a style surface that the underlying coordinator does not have.",
-      "reopenCondition": "Map this family only if RemixCheckboxGroup gains an approved visual root/item-label anatomy that can express the pinned gaps and inherited size, variant, color, and highContrast contract without a Fortal-only wrapper."
+      "reopenCondition": "Map this family only if RemixCheckboxGroup gains a visual root/item-label anatomy that can express the pinned gaps and inherited size, variant, color, and highContrast contract without a Fortal-only wrapper."
     }
   ],
   "referenceFixtures": {
@@ -3896,7 +3890,7 @@
       "family": "dialog",
       "upstream": "Radix Dialog with modal=false permits background pointer interaction while the content is open.",
       "flutter": "RemixDialog with modal=false disables modal accessibility route scoping, but showRemixDialog remains a RawDialogRoute whose barrier blocks background pointer input.",
-      "reason": "Flutter Navigator dialog routes are modal routes; non-modal pointer interaction requires a separate OverlayEntry lifecycle rather than the approved dialog route API.",
+      "reason": "Flutter Navigator dialog routes are modal routes; non-modal pointer interaction requires a separate OverlayEntry lifecycle rather than the current dialog route API.",
       "tolerance": "Interaction-model boundary only; no visual tolerance. The route barrier and both accessibility modes are covered by dialog_widget_test.dart."
     },
     {
@@ -3910,7 +3904,7 @@
       "family": "segmented_control",
       "upstream": "Radix moves one selected indicator between items with a 100 ms translated transition.",
       "flutter": "Each selected Remix segment paints the pinned inset fill and ring or classic shadow directly in its own standard container-effects layers.",
-      "reason": "A shared translated indicator requires a Fortal-specific render or widget layer outside the approved plain-styler recipe contract.",
+      "reason": "A shared translated indicator requires a Fortal-specific render or widget layer outside the plain-styler recipe contract.",
       "tolerance": "The settled selected geometry, fill, ring, shadows, focus, and disabled layers have no tolerance; only the 100 ms movement between items is absent."
     },
     {
@@ -3918,13 +3912,13 @@
       "upstream": "Radix duplicates each item label and crossfades the inactive and active copies as selection moves.",
       "flutter": "Remix resolves one label from regular to medium weight with the pinned active letter spacing through widget-state variants.",
       "reason": "Duplicate labels would require private stacked label widgets instead of the component's standard LabelStyleMixin surface.",
-      "tolerance": "Resolved inactive and active typography has no tolerance; only the intermediate label crossfade is absent."
+      "tolerance": "Resolved inactive and active typography has no tolerance; the intermediate label crossfade is absent, and changing an item's displayed label with the selection may cause a small intrinsic-width shift."
     },
     {
       "family": "segmented_control",
       "upstream": "Radix draws separators between adjacent inactive segments and hides them around the selected indicator.",
       "flutter": "Remix keeps the exact track and item surfaces without separator pseudo-elements.",
-      "reason": "Conditional between-item pseudo-elements are not expressible through the approved standard item styler without a segmented-control-specific widget API.",
+      "reason": "Conditional between-item pseudo-elements are not expressible through the standard item styler without a segmented-control-specific widget API.",
       "tolerance": "A one-pixel inactive separator may be absent; segment sizing, spacing, state colors, and selected geometry have no tolerance."
     },
     {
@@ -3935,16 +3929,23 @@
       "tolerance": "Only a label narrower than its natural text truncates with an ellipsis; at or above the natural track width every label, metric, and layer is exact."
     },
     {
+      "family": "skeleton",
+      "upstream": "Radix's alternate-reverse animation phase begins on gray-a4 and animates toward gray-a3.",
+      "flutter": "RemixSkeleton starts and rests on gray-a3, then pulses toward gray-a4.",
+      "reason": "The shared Flutter phase controller uses the resolved container color as its stable initial and resting value.",
+      "tolerance": "Only the starting phase direction differs; the gray-a3 and gray-a4 endpoints and the one-second leg timing remain exact."
+    },
+    {
       "family": "text_area",
       "upstream": "Radix exposes responsive CSS resize values none, vertical, horizontal, and both with a browser drag handle.",
-      "flutter": "RemixTextArea uses Flutter constraints, minLines, maxLines, and scrolling and exposes no web drag handle.",
+      "flutter": "RemixTextArea uses Flutter constraints, minLines, maxLines, and platform scrolling and exposes no web drag handle.",
       "reason": "Flutter's editable text contract has no cross-platform browser resize-handle primitive.",
       "tolerance": "No drag handle or user resize gesture is expected; variant, size, state, padding, typography, and minimum-height visuals have no tolerance."
     },
     {
       "family": "text_area",
-      "upstream": "Radix applies fixed CSS textarea sizing and browser overflow behavior inside the themed root.",
-      "flutter": "The default RemixTextArea maxLines is null, so content auto-grows until parent constraints require scrolling.",
+      "upstream": "Radix applies fixed CSS textarea sizing, browser overflow behavior, and a themed 12px scrollbar inside the root.",
+      "flutter": "The default RemixTextArea maxLines is null, so content auto-grows until parent constraints require platform scrolling.",
       "reason": "Flutter's line and constraint model replaces CSS block sizing and native textarea overflow behavior.",
       "tolerance": "Content-driven height may differ after the pinned minimum height; the 48, 64, and 80 logical-pixel minimums and all resolved insets have no tolerance."
     },
@@ -3952,7 +3953,7 @@
       "family": "data_list",
       "upstream": "Radix exposes compositional Root, Item, Label, and Value children.",
       "flutter": "RemixDataList accepts data-driven RemixDataListItem rows with either a string value or one custom child value.",
-      "reason": "The approved Remix API guarantees one shared label column and deterministic list semantics through a data model rather than arbitrary child anatomy.",
+      "reason": "The Remix API guarantees one shared label column and deterministic list semantics through a data model rather than arbitrary child anatomy.",
       "tolerance": "Supported string and custom-child rows preserve their visual geometry and semantics; arbitrary interleaving or nesting of label/value parts is not supported."
     },
     {
@@ -3973,7 +3974,7 @@
       "family": "data_list",
       "upstream": "Radix leading trim uses pseudo-content baselines and negative quarter-em value margins with first/last-row exceptions.",
       "flutter": "Remix uses Flutter text baselines for horizontal rows and untrimmed box bounds for vertical and custom-child rows.",
-      "reason": "Flutter has no CSS leading-trim primitive, and offset arithmetic is outside the approved plain-styler recipe contract.",
+      "reason": "Flutter has no CSS leading-trim primitive, and offset arithmetic is outside the plain-styler recipe contract.",
       "tolerance": "Text ink may sit up to 0.25em differently at row edges; shared columns, gaps, alignment selection, typography, and semantic bounds have no tolerance."
     }
   ],
@@ -4868,13 +4869,6 @@
               "classic"
             ],
             "default": "surface"
-          },
-          "orientation": {
-            "values": [
-              "horizontal",
-              "vertical"
-            ],
-            "default": "horizontal"
           }
         },
         "states": [

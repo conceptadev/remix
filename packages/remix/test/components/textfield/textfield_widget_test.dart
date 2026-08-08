@@ -1188,6 +1188,192 @@ void main() {
         await gesture.up();
       });
 
+      testWidgets('nested text selection color reaches focused EditableText', (
+        tester,
+      ) async {
+        const selectionColor = Color(0xFF7C3AED);
+        await tester.pumpRemixApp(
+          RemixTextField(
+            style: TextFieldStyler(
+              text: TextStyler.selectionColor(selectionColor),
+            ),
+          ),
+        );
+
+        await tester.tap(find.byType(EditableText));
+        await tester.pump();
+
+        final editable = tester.widget<EditableText>(find.byType(EditableText));
+        expect(editable.focusNode.hasFocus, isTrue);
+        expect(editable.selectionColor, selectionColor);
+      });
+
+      testWidgets('null nested selection color preserves the ambient style', (
+        tester,
+      ) async {
+        const ambientSelectionColor = Color(0xFFF97316);
+        await tester.pumpRemixApp(
+          DefaultSelectionStyle(
+            selectionColor: ambientSelectionColor,
+            child: RemixTextField(style: TextFieldStyler(text: TextStyler())),
+          ),
+        );
+
+        await tester.tap(find.byType(EditableText));
+        await tester.pump();
+
+        expect(
+          tester.widget<EditableText>(find.byType(EditableText)).selectionColor,
+          ambientSelectionColor,
+        );
+      });
+
+      testWidgets('read-only Fortal fields stay focusable and selectable', (
+        tester,
+      ) async {
+        final controller = TextEditingController(
+          text: 'Selectable read-only value',
+        );
+        final focusNode = FocusNode();
+        addTearDown(controller.dispose);
+        addTearDown(focusNode.dispose);
+        late Color grayA5;
+
+        await tester.pumpRemixApp(
+          Builder(
+            builder: (context) {
+              grayA5 = MixScope.tokenOf(FortalTokens.grayA5, context);
+              return FortalTextField.surface(
+                controller: controller,
+                focusNode: focusNode,
+                readOnly: true,
+              );
+            },
+          ),
+        );
+
+        final editable = find.byType(EditableText);
+        final gesture = await tester.startGesture(
+          tester.getCenter(editable) - const Offset(70, 0),
+          kind: PointerDeviceKind.mouse,
+        );
+        await tester.pump(kPressTimeout);
+        await gesture.moveBy(const Offset(120, 0));
+        await tester.pump();
+        await gesture.up();
+        await tester.pump();
+
+        expect(focusNode.hasFocus, isTrue);
+        expect(controller.selection.isCollapsed, isFalse);
+        expect(tester.widget<EditableText>(editable).selectionColor, grayA5);
+      });
+
+      testWidgets('all Fortal input variants apply read-only color roles', (
+        tester,
+      ) async {
+        final cases = <({String name, TextFieldStyler style, bool textArea})>[
+          for (final variant in FortalTextFieldVariant.values)
+            (
+              name: 'TextField ${variant.name}',
+              style: fortalTextFieldStyle(variant: variant),
+              textArea: false,
+            ),
+          for (final variant in FortalTextAreaVariant.values)
+            (
+              name: 'TextArea ${variant.name}',
+              style: fortalTextAreaStyle(variant: variant),
+              textArea: true,
+            ),
+        ];
+
+        for (final testCase in cases) {
+          final controller = TextEditingController(text: testCase.name);
+          final focusNode = FocusNode();
+          addTearDown(controller.dispose);
+          addTearDown(focusNode.dispose);
+          late Color grayA5;
+          late Color grayA11;
+
+          await tester.pumpRemixApp(
+            Builder(
+              builder: (context) {
+                grayA5 = MixScope.tokenOf(FortalTokens.grayA5, context);
+                grayA11 = MixScope.tokenOf(FortalTokens.grayA11, context);
+                return testCase.textArea
+                    ? RemixTextArea(
+                        controller: controller,
+                        focusNode: focusNode,
+                        readOnly: true,
+                        style: testCase.style,
+                      )
+                    : RemixTextField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        readOnly: true,
+                        style: testCase.style,
+                      );
+              },
+            ),
+          );
+
+          await tester.tap(find.byType(EditableText));
+          controller.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: controller.text.length,
+          );
+          await tester.pump();
+
+          expect(focusNode.hasFocus, isTrue, reason: testCase.name);
+          expect(
+            tester
+                .widget<EditableText>(find.byType(EditableText))
+                .selectionColor,
+            grayA5,
+            reason: testCase.name,
+          );
+          expect(
+            tester
+                .widget<NakedTextField>(find.byType(NakedTextField))
+                .cursorColor,
+            grayA11,
+            reason: testCase.name,
+          );
+          expect(controller.selection.isCollapsed, isFalse);
+        }
+      });
+
+      testWidgets(
+        'disabled fields remain noninteractive during selection drag',
+        (tester) async {
+          final controller = TextEditingController(text: 'Disabled value');
+          final focusNode = FocusNode();
+          addTearDown(controller.dispose);
+          addTearDown(focusNode.dispose);
+
+          await tester.pumpRemixApp(
+            RemixTextField(
+              controller: controller,
+              focusNode: focusNode,
+              enabled: false,
+            ),
+          );
+
+          final editable = find.byType(EditableText);
+          final gesture = await tester.startGesture(
+            tester.getCenter(editable) - const Offset(40, 0),
+            kind: PointerDeviceKind.mouse,
+          );
+          await tester.pump(kPressTimeout);
+          await gesture.moveBy(const Offset(80, 0));
+          await tester.pump();
+          await gesture.up();
+          await tester.pump();
+
+          expect(focusNode.hasFocus, isFalse);
+          expect(controller.selection.isCollapsed, isTrue);
+        },
+      );
+
       testWidgets('editable and fallback press sources overlap safely', (
         tester,
       ) async {

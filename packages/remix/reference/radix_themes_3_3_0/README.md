@@ -21,10 +21,17 @@ does not claim Radix's root/item spacing and inherited visual-prop anatomy.
 Every intentional difference is listed in `approximations`. In addition to the
 Dialog `modal: false` interaction boundary and Menu's flex-based row geometry,
 the ledger records SegmentedControl's static selected surface, single-label
-typography transition, and omitted separators; TextArea's Flutter-native
-growth and absent browser resize handle; and DataList's data-driven anatomy,
-global label styling, caller-owned responsive rebuilds, and untrimmed text
-bounds.
+typography transition, omitted separators, constrained overflow, and possible
+small intrinsic-width shift when a changing label is tied to selection;
+Skeleton's `grayA3` starting/resting phase versus Radix's `grayA4`
+`alternate-reverse` start; TextArea's Flutter-native growth and platform
+scrolling instead of Radix's themed 12px browser scrollbar and resize handle;
+and DataList's data-driven anatomy, global label styling, caller-owned
+responsive rebuilds, and untrimmed text bounds. Segmented Control orientation
+and per-item disabling are Remix extensions, not entries in the pinned upstream
+inventory. TextArea keeps native invalid semantics in coverage, while Remix's
+red `error` treatment is documented as an extension rather than a Radix visual
+state.
 
 Run the contract gate from this package directory:
 
