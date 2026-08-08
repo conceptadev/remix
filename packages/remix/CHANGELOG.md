@@ -1,4 +1,4 @@
-## Unreleased
+## 1.0.0-beta.2
 
 - **FEAT**: Lower the supported floor to Dart 3.11 / Flutter 3.41, matching
   `mix` and `naked_ui`, so the whole family installs together. Only one call
