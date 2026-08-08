@@ -25,6 +25,11 @@ void main() {
         trigger: RemixSelectTrigger(placeholder: 'Pick'),
         items: [RemixSelectItem(value: 'a', label: 'A')],
       );
+      const segmented = FortalSegmentedControl.classic(
+        items: [RemixSegmentedControlItem(value: 'a', label: 'A')],
+        selectedValue: 'a',
+      );
+      const textArea = FortalTextArea.soft();
 
       expect(button.variant, FortalButtonVariant.soft);
       expect(accordion, isA<FortalAccordion<String>>());
@@ -35,6 +40,9 @@ void main() {
       expect(menu.variant, FortalMenuVariant.soft);
       expect(select, isA<FortalSelect<String>>());
       expect(select.variant, FortalSelectVariant.ghost);
+      expect(segmented, isA<FortalSegmentedControl<String>>());
+      expect(segmented.variant, FortalSegmentedControlVariant.classic);
+      expect(textArea.variant, FortalTextAreaVariant.soft);
     });
 
     test('FortalMenu constructors do not expose style overrides', () {
@@ -236,6 +244,33 @@ void main() {
 
       expect(find.byType(FortalTextField), findsOneWidget);
       expect(find.byType(RemixTextField), findsOneWidget);
+    });
+
+    testWidgets('renders the new Fortal wrappers', (tester) async {
+      await tester.pumpRemixApp(
+        const Column(
+          children: [
+            FortalSkeleton(),
+            FortalSegmentedControl<String>(
+              items: [RemixSegmentedControlItem(value: 'a', label: 'A')],
+              selectedValue: 'a',
+            ),
+            FortalTextArea(hintText: 'Notes'),
+            FortalDataList(
+              items: [RemixDataListItem(label: 'Status', value: 'Active')],
+            ),
+          ],
+        ),
+      );
+
+      expect(find.byType(FortalSkeleton), findsOneWidget);
+      expect(find.byType(FortalSegmentedControl<String>), findsOneWidget);
+      expect(find.byType(FortalTextArea), findsOneWidget);
+      expect(find.byType(FortalDataList), findsOneWidget);
+      expect(find.byType(RemixSkeleton), findsOneWidget);
+      expect(find.byType(RemixSegmentedControl<String>), findsOneWidget);
+      expect(find.byType(RemixTextArea), findsOneWidget);
+      expect(find.byType(RemixDataList), findsOneWidget);
     });
 
     testWidgets('renders FortalToggle', (tester) async {

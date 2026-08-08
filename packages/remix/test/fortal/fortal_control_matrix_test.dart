@@ -76,6 +76,30 @@ void main() {
         FortalTextFieldVariant.surface,
         FortalTextFieldVariant.soft,
       ]);
+      expect(FortalSegmentedControlSize.values, [
+        FortalSegmentedControlSize.size1,
+        FortalSegmentedControlSize.size2,
+        FortalSegmentedControlSize.size3,
+      ]);
+      expect(FortalSegmentedControlVariant.values, [
+        FortalSegmentedControlVariant.surface,
+        FortalSegmentedControlVariant.classic,
+      ]);
+      expect(FortalTextAreaSize.values, [
+        FortalTextAreaSize.size1,
+        FortalTextAreaSize.size2,
+        FortalTextAreaSize.size3,
+      ]);
+      expect(FortalTextAreaVariant.values, [
+        FortalTextAreaVariant.classic,
+        FortalTextAreaVariant.surface,
+        FortalTextAreaVariant.soft,
+      ]);
+      expect(FortalDataListSize.values, [
+        FortalDataListSize.size1,
+        FortalDataListSize.size2,
+        FortalDataListSize.size3,
+      ]);
 
       const iconButton = FortalIconButton(
         semanticLabel: 'Add',
@@ -87,6 +111,13 @@ void main() {
       const progress = FortalProgress(value: 0.5);
       const spinner = FortalSpinner();
       const textField = FortalTextField();
+      const skeleton = FortalSkeleton();
+      const segmented = FortalSegmentedControl<int>(
+        items: [RemixSegmentedControlItem(value: 1, label: 'One')],
+        selectedValue: 1,
+      );
+      const textArea = FortalTextArea();
+      const dataList = FortalDataList(items: []);
 
       expect(iconButton.size, FortalIconButtonSize.size2);
       expect(iconButton.variant, FortalIconButtonVariant.solid);
@@ -102,6 +133,13 @@ void main() {
       expect(spinner, isA<FortalSpinner>());
       expect(textField.size, FortalTextFieldSize.size2);
       expect(textField.variant, FortalTextFieldVariant.surface);
+      expect(skeleton, isA<FortalSkeleton>());
+      expect(segmented.size, FortalSegmentedControlSize.size2);
+      expect(segmented.variant, FortalSegmentedControlVariant.surface);
+      expect(textArea.size, FortalTextAreaSize.size2);
+      expect(textArea.variant, FortalTextAreaVariant.surface);
+      expect(dataList.size, FortalDataListSize.size2);
+      expect(dataList.highContrast, isFalse);
     });
 
     testWidgets('icon button sizes resolve exact square and icon metrics', (

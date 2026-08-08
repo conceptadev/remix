@@ -28,6 +28,9 @@ import 'fortal_theme.dart';
 /// Computes solid focus ring color (accent step 8).
 Color computeFocus8(RadixColorScale accent) => accent.step(8);
 
+/// Computes translucent text selection color (accent alpha step 5).
+Color computeFocusA5(RadixColorScale accent) => accent.alphaStep(5);
+
 /// Computes translucent focus ring color (accent alpha step 8).
 Color computeFocusA8(RadixColorScale accent) => accent.alphaStep(8);
 
@@ -359,10 +362,22 @@ Map<MixToken, Object> _fortalShadowTokens(
   Map<String, List<RemixBoxShadow>> shadows,
 ) {
   final shadow1 = shadows['shadow1']!;
+  final shadow2 = shadows['shadow2']!;
   return {
     FortalTokens.shadow1: _ordinaryShadows(shadow1),
     FortalTokens.shadow1Layers: shadow1,
-    FortalTokens.shadow2: _ordinaryShadows(shadows['shadow2']!),
+    FortalTokens.shadow2: _ordinaryShadows(shadow2),
+    FortalTokens.segmentedControlClassicIndicatorShadows: [
+      for (final shadow in shadow2)
+        RemixBoxShadow(
+          kind: shadow.kind,
+          color: shadow.color,
+          offset: shadow.offset,
+          blurRadius: shadow.blurRadius,
+          spreadRadius: shadow.spreadRadius,
+          shapeInset: 1,
+        ),
+    ],
     FortalTokens.shadow3: _ordinaryShadows(shadows['shadow3']!),
     FortalTokens.shadow4: _ordinaryShadows(shadows['shadow4']!),
     FortalTokens.shadow5: _ordinaryShadows(shadows['shadow5']!),
@@ -418,6 +433,7 @@ class FortalThemeColors {
 
   // Focus
   final Color focus8;
+  final Color focusA5;
   final Color focusA8;
 
   const FortalThemeColors({
@@ -432,6 +448,7 @@ class FortalThemeColors {
     required this.colorOverlay,
     required this.shadowStroke,
     required this.focus8,
+    required this.focusA5,
     required this.focusA8,
   });
 }
@@ -523,6 +540,7 @@ FortalThemeColors resolveFortalTokens(FortalThemeConfig theme) {
 
   // Focus
   final Color focus8 = computeFocus8(accent);
+  final Color focusA5 = computeFocusA5(accent);
   final Color focusA8 = computeFocusA8(accent);
 
   return FortalThemeColors(
@@ -537,6 +555,7 @@ FortalThemeColors resolveFortalTokens(FortalThemeConfig theme) {
     colorOverlay: colorOverlay,
     shadowStroke: shadowStroke,
     focus8: focus8,
+    focusA5: focusA5,
     focusA8: focusA8,
   );
 }

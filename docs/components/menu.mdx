@@ -341,6 +341,13 @@ customization, pass `fortalMenuStyle(...).merge(customStyle)` to
 `RemixMenu.style`; the custom fields merge after the recipe.
 
 <Info>
+  Fortal uses the pinned check and submenu-chevron paths, colors, sizes, and
+  states. Their placement uses Remix's standard leading flex slot and item
+  spacing rather than Radix's absolute CSS offsets, so small indicator and
+  trailing-gap differences are the documented visual tolerance.
+</Info>
+
+<Info>
   See the [fortalMenuStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/menu/fortal_menu_styles.dart) for all available options.
 </Info>
 

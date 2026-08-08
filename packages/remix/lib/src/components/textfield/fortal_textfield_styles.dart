@@ -24,219 +24,231 @@ enum FortalTextFieldVariant {
   soft,
 }
 
+Color _resolveNeutralTextInputPlaceholder(BuildContext context) {
+  final color = FortalTokens.grayA10.resolve(context);
+  return color.withValues(alpha: color.a * 0.5);
+}
+
+const _neutralTextInputPlaceholder = ContextToken<Color>(
+  _resolveNeutralTextInputPlaceholder,
+);
+
 /// Fortal-themed preset for [RemixTextField].
 @MixWidget(target: RemixTextField.new)
 TextFieldStyler fortalTextFieldStyle({
   FortalTextFieldVariant variant = .surface,
   FortalTextFieldSize size = .size2,
 }) {
+  final metrics = _fortalTextFieldMetrics(size, bordered: variant != .soft);
+  final base = _fortalTextInputBaseStyle(
+    container: BoxStyler()
+        .height(metrics.height)
+        .paddingX(metrics.paddingX)
+        .borderRadiusAll(metrics.radius)
+        .clipBehavior(.antiAlias),
+    spacing: metrics.spacing,
+    crossAxisAlignment: .center,
+    text: metrics.text,
+    focusColor: variant == .soft
+        ? FortalTokens.accent8()
+        : FortalTokens.focus8(),
+  );
+
   final style = switch (variant) {
-    .classic => _fortalTextFieldClassicStyler(size),
-    .surface => _fortalTextFieldSurfaceStyler(size),
-    .soft => _fortalTextFieldSoftStyler(size),
+    .classic => _fortalApplyClassicTextInput(base),
+    .surface => _fortalApplySurfaceTextInput(base),
+    .soft => _fortalApplySoftTextInput(base, placeholderOpacity: 0.60),
   };
+
   return style.variant(
     ContextVariant.widgetState(.error),
-    _fortalTextFieldErrorStyler(),
+    _fortalTextInputErrorStyle(),
   );
 }
 
-TextFieldStyler _fortalTextFieldBaseStyler(
-  FortalTextFieldSize size, {
-  required bool bordered,
-}) {
-  final metrics = _fortalTextFieldMetrics(size, bordered: bordered);
-  return TextFieldStyler(
-        container: .height(metrics.height)
-            .paddingX(metrics.paddingX)
-            .borderRadiusAll(metrics.radius)
-            .clipBehavior(.antiAlias),
-        spacing: metrics.spacing,
-        crossAxisAlignment: .center,
-        text: .style(metrics.text.mix()),
-        hintText: .style(metrics.text.mix()).textHeightBehavior(
-          TextHeightBehaviorMix()
-              .applyHeightToFirstAscent(false)
-              .applyHeightToLastDescent(true),
-        ),
-        helperText: .style(FortalTokens.text1.mix()),
-        label: .style(FortalTokens.text2.mix()),
-        cursorWidth: 1.5,
-        containerEffects: RemixBoxEffectsMix(
-          behindContent: _fortalTextFieldLayer(),
-          overContent: _fortalTextFieldLayer(),
-        ),
-      )
-      .wrap(.iconTheme(color: FortalTokens.gray11(), size: 16.0))
-      .onFocused(
+TextFieldStyler _fortalTextInputBaseStyle({
+  required BoxStyler container,
+  required double spacing,
+  required CrossAxisAlignment crossAxisAlignment,
+  required TextStyleToken text,
+  required Color focusColor,
+}) =>
+    TextFieldStyler(
+          container: container,
+          spacing: spacing,
+          crossAxisAlignment: crossAxisAlignment,
+          text: .style(text.mix()),
+          hintText: .style(text.mix()).textHeightBehavior(
+            TextHeightBehaviorMix()
+                .applyHeightToFirstAscent(false)
+                .applyHeightToLastDescent(true),
+          ),
+          helperText: .style(FortalTokens.text1.mix()),
+          label: .style(FortalTokens.text2.mix()),
+          cursorWidth: 1.5,
+          containerEffects: RemixBoxEffectsMix(
+            behindContent: _fortalTextInputLayer(),
+            overContent: _fortalTextInputLayer(),
+          ),
+        )
+        .wrap(.iconTheme(color: FortalTokens.gray11(), size: 16.0))
+        .onFocused(
+          .containerEffects(fortalFocusOutline(focusColor, offset: -1)),
+        );
+
+TextFieldStyler _fortalApplyClassicTextInput(TextFieldStyler base) =>
+    _fortalApplyNeutralTextInput(base)
+        .color(FortalTokens.colorSurface())
         .containerEffects(
           RemixBoxEffectsMix(
-            outline: BorderSideMix(
-              color: FortalTokens.focus8(),
-              width: 2,
-              strokeAlign: BorderSide.strokeAlignInside,
+            behindContent: _fortalTextInputLayer(
+              shadowToken: FortalTokens.shadow1Layers,
             ),
-            outlineOffset: -1,
           ),
-        ),
-      );
-}
-
-TextFieldStyler _fortalTextFieldClassicStyler(FortalTextFieldSize size) {
-  return _fortalTextFieldNeutralText(
-        _fortalTextFieldBaseStyler(size, bordered: true),
-      )
-      .color(FortalTokens.colorSurface())
-      .containerEffects(
-        RemixBoxEffectsMix(
-          behindContent: _fortalTextFieldLayer(
-            shadowToken: FortalTokens.shadow1Layers,
-          ),
-        ),
-      )
-      .onDisabled(
-        _fortalTextFieldDisabledText()
-            .color(FortalTokens.colorSurface())
-            .containerEffects(
-              RemixBoxEffectsMix(
-                behindContent: _fortalTextFieldLayer(
-                  gradients: [
-                    RemixLinearGradientMix(
-                      colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
-                    ),
-                  ],
-                  shadowToken: FortalTokens.shadow1Layers,
+        )
+        .onDisabled(
+          _fortalNeutralTextInputDisabledStyle()
+              .color(FortalTokens.colorSurface())
+              .containerEffects(
+                RemixBoxEffectsMix(
+                  behindContent: _fortalTextInputLayer(
+                    gradients: [
+                      RemixLinearGradientMix(
+                        colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
+                      ),
+                    ],
+                    shadowToken: FortalTokens.shadow1Layers,
+                  ),
                 ),
               ),
-            ),
-      );
-}
+        );
 
-TextFieldStyler _fortalTextFieldSurfaceStyler([
-  FortalTextFieldSize size = .size2,
-]) {
-  return _fortalTextFieldNeutralText(
-        _fortalTextFieldBaseStyler(size, bordered: true),
-      )
-      .color(FortalTokens.colorSurface())
-      .containerEffects(
-        RemixBoxEffectsMix(behindContent: _fortalTextFieldLayer()),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix(
-          overContent: _fortalTextFieldInsetRing(FortalTokens.grayA7()),
-        ),
-      )
-      .onDisabled(
-        _fortalTextFieldDisabledText()
-            .color(FortalTokens.colorSurface())
-            .containerEffects(
-              RemixBoxEffectsMix(
-                behindContent: _fortalTextFieldLayer(
-                  gradients: [
-                    RemixLinearGradientMix(
-                      colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
-                    ),
-                  ],
+TextFieldStyler _fortalApplySurfaceTextInput(TextFieldStyler base) =>
+    _fortalApplyNeutralTextInput(base)
+        .color(FortalTokens.colorSurface())
+        .containerEffects(
+          RemixBoxEffectsMix(behindContent: _fortalTextInputLayer()),
+        )
+        .containerEffects(
+          RemixBoxEffectsMix(
+            overContent: _fortalTextInputInsetRing(FortalTokens.grayA7()),
+          ),
+        )
+        .onDisabled(
+          _fortalNeutralTextInputDisabledStyle()
+              .color(FortalTokens.colorSurface())
+              .containerEffects(
+                RemixBoxEffectsMix(
+                  behindContent: _fortalTextInputLayer(
+                    gradients: [
+                      RemixLinearGradientMix(
+                        colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
+                      ),
+                    ],
+                  ),
+                ),
+              )
+              .containerEffects(
+                RemixBoxEffectsMix(
+                  overContent: _fortalTextInputInsetRing(FortalTokens.grayA6()),
                 ),
               ),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix(
-                overContent: _fortalTextFieldInsetRing(FortalTokens.grayA6()),
-              ),
-            ),
-      );
-}
+        );
 
-TextFieldStyler _fortalTextFieldSoftStyler([
-  FortalTextFieldSize size = .size2,
-]) {
-  return _fortalTextFieldBaseStyler(size, bordered: false)
-      .merge(
-        TextFieldStyler(
-          text: .fontWeight(FortalTokens.fontWeightRegular()),
-          hintText: .color(
-            FortalTokens.accentA11(),
-          ).fontWeight(FortalTokens.fontWeightRegular()),
-          cursorColor: FortalTokens.accent12(),
-          helperText: .color(
-            FortalTokens.gray11(),
-          ).fontWeight(FortalTokens.fontWeightRegular()),
-          label: .color(
-            FortalTokens.gray12(),
-          ).fontWeight(FortalTokens.fontWeightMedium()),
-        ),
-      )
-      .textColor(FortalTokens.accent12())
-      .wrap(.iconTheme(color: FortalTokens.accent10()))
-      .color(FortalTokens.accentA3())
-      .containerEffects(
-        RemixBoxEffectsMix(behindContent: _fortalTextFieldLayer()),
-      )
-      .onDisabled(
-        _fortalTextFieldDisabledText()
-            .color(FortalTokens.grayA3())
-            .containerEffects(
-              RemixBoxEffectsMix(behindContent: _fortalTextFieldLayer()),
-            ),
-      );
-}
-
-TextFieldStyler _fortalTextFieldNeutralText(TextFieldStyler base) => base.merge(
-  TextFieldStyler(
-    text: .color(FortalTokens.gray12()),
-    hintText: .color(FortalTokens.grayA10()),
-    cursorColor: FortalTokens.gray12(),
-    helperText: .color(FortalTokens.gray11()),
-    label: .color(
-      FortalTokens.gray12(),
-    ).fontWeight(FortalTokens.fontWeightMedium()),
-  ),
-);
-
-TextFieldStyler _fortalTextFieldDisabledText() =>
-    TextFieldStyler(
-      text: .color(FortalTokens.gray11()),
-      hintText: .color(FortalTokens.grayA8()),
-      cursorColor: FortalTokens.gray8(),
-    ).onFocused(
-      .containerEffects(
-        RemixBoxEffectsMix(
-          outline: BorderSideMix(
-            color: FortalTokens.gray8(),
-            width: 2,
-            strokeAlign: BorderSide.strokeAlignInside,
+TextFieldStyler _fortalApplySoftTextInput(
+  TextFieldStyler base, {
+  required double placeholderOpacity,
+}) => base
+    .merge(
+      TextFieldStyler(
+        text: .fontWeight(FortalTokens.fontWeightRegular()),
+        hintText: .fontWeight(FortalTokens.fontWeightRegular()),
+        cursorColor: FortalTokens.accent12(),
+        helperText: .color(
+          FortalTokens.gray11(),
+        ).fontWeight(FortalTokens.fontWeightRegular()),
+        label: .color(
+          FortalTokens.gray12(),
+        ).fontWeight(FortalTokens.fontWeightMedium()),
+      ),
+    )
+    .textColor(FortalTokens.accent12())
+    .text(.selectionColor(FortalTokens.accentA5()))
+    .onEnabled(
+      .hintText(
+        .color(FortalTokens.accent12().withValues(alpha: placeholderOpacity)),
+      ),
+    )
+    .wrap(.iconTheme(color: FortalTokens.accent10()))
+    .color(FortalTokens.accentA3())
+    .containerEffects(
+      RemixBoxEffectsMix(behindContent: _fortalTextInputLayer()),
+    )
+    .onDisabled(
+      _fortalSoftTextInputDisabledStyle()
+          .color(FortalTokens.grayA3())
+          .containerEffects(
+            RemixBoxEffectsMix(behindContent: _fortalTextInputLayer()),
           ),
-          outlineOffset: -1,
-        ),
+    );
+
+TextFieldStyler _fortalApplyNeutralTextInput(TextFieldStyler base) =>
+    base.merge(
+      TextFieldStyler(
+        text: .color(
+          FortalTokens.gray12(),
+        ).selectionColor(FortalTokens.focusA5()),
+        hintText: .color(_neutralTextInputPlaceholder()),
+        cursorColor: FortalTokens.gray12(),
+        helperText: .color(FortalTokens.gray11()),
+        label: .color(
+          FortalTokens.gray12(),
+        ).fontWeight(FortalTokens.fontWeightMedium()),
       ),
     );
 
-TextFieldStyler _fortalTextFieldErrorStyler() {
-  return TextFieldStyler(
-    helperText: .color(FortalTokens.error11()),
-    label: .color(FortalTokens.error11()),
-    cursorColor: FortalTokens.error9(),
-    containerEffects: RemixBoxEffectsMix(
-      overContent: _fortalTextFieldLayer(
-        shadows: [
-          RemixBoxShadowMix(
-            kind: .inset,
-            color: FortalTokens.errorA7(),
-            spreadRadius: 1,
-          ),
-        ],
-      ),
-      outline: BorderSideMix(
-        color: FortalTokens.error8(),
-        width: 2,
-        strokeAlign: BorderSide.strokeAlignInside,
-      ),
-      outlineOffset: -1,
+TextFieldStyler _fortalTextInputDisabledBaseStyle() =>
+    TextFieldStyler(
+      text: .color(
+        FortalTokens.grayA11(),
+      ).selectionColor(FortalTokens.grayA5()),
+      cursorColor: FortalTokens.grayA11(),
+    ).onFocused(
+      .containerEffects(fortalFocusOutline(FortalTokens.gray8(), offset: -1)),
+    );
+
+TextFieldStyler _fortalNeutralTextInputDisabledStyle() =>
+    _fortalTextInputDisabledBaseStyle().hintText(
+      .color(_neutralTextInputPlaceholder()),
+    );
+
+TextFieldStyler _fortalSoftTextInputDisabledStyle() =>
+    _fortalTextInputDisabledBaseStyle().hintText(
+      .color(FortalTokens.accent12().withValues(alpha: 0.5)),
+    );
+
+TextFieldStyler _fortalTextInputErrorStyle() => TextFieldStyler(
+  helperText: .color(FortalTokens.error11()),
+  label: .color(FortalTokens.error11()),
+  cursorColor: FortalTokens.error9(),
+  containerEffects: RemixBoxEffectsMix(
+    overContent: _fortalTextInputLayer(
+      shadows: [
+        RemixBoxShadowMix(
+          kind: .inset,
+          color: FortalTokens.errorA7(),
+          spreadRadius: 1,
+        ),
+      ],
     ),
-  );
-}
+    outline: BorderSideMix(
+      color: FortalTokens.error8(),
+      width: 2,
+      strokeAlign: BorderSide.strokeAlignInside,
+    ),
+    outlineOffset: -1,
+  ),
+);
 
 ({
   double height,
@@ -276,12 +288,12 @@ _fortalTextFieldMetrics(FortalTextFieldSize size, {required bool bordered}) =>
       ),
     };
 
-RemixBoxEffectLayerMix _fortalTextFieldInsetRing(Color color) =>
-    _fortalTextFieldLayer(
+RemixBoxEffectLayerMix _fortalTextInputInsetRing(Color color) =>
+    _fortalTextInputLayer(
       shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
     );
 
-RemixBoxEffectLayerMix _fortalTextFieldLayer({
+RemixBoxEffectLayerMix _fortalTextInputLayer({
   List<RemixLinearGradientMix>? gradients,
   List<RemixBoxShadowMix>? shadows,
   RemixBoxShadowListToken? shadowToken,

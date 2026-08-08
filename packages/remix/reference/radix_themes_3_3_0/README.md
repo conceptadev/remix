@@ -13,12 +13,25 @@ undocumented approximation. Parameterized cases use their literal Dart test
 description, such as
 `${size.name} matches the pinned dimension and radius`.
 
-The tracked parity approximations are the Dialog `modal: false` interaction
-boundary and the Menu's flex-based row geometry. The dialog boundary changes
-accessibility route scoping while the Navigator route remains pointer-modal.
-Menu behavior, semantics, paths, colors, sizes, and interaction states are
-covered; Remix uses a normal leading flex slot and item spacing instead of
-Radix's CSS-specific absolute indicator and trailing-slot positioning.
+The contract tracks 25 mapped Radix families and three Fortal extensions.
+CheckboxGroup is separately audited in `unmappedUpstreamFamilies`: Remix's
+nonvisual coordinator composes the mapped checkbox recipe on each item, but it
+does not claim Radix's root/item spacing and inherited visual-prop anatomy.
+
+Every intentional difference is listed in `approximations`. In addition to the
+Dialog `modal: false` interaction boundary and Menu's flex-based row geometry,
+the ledger records SegmentedControl's static selected surface, single-label
+typography transition, omitted separators, constrained overflow, and possible
+small intrinsic-width shift when a changing label is tied to selection;
+Skeleton's `grayA3` starting/resting phase versus Radix's `grayA4`
+`alternate-reverse` start; TextArea's Flutter-native growth and platform
+scrolling instead of Radix's themed 12px browser scrollbar and resize handle;
+and DataList's data-driven anatomy, global label styling, caller-owned
+responsive rebuilds, and untrimmed text bounds. Segmented Control orientation
+and per-item disabling are Remix extensions, not entries in the pinned upstream
+inventory. TextArea keeps native invalid semantics in coverage, while Remix's
+red `error` treatment is documented as an extension rather than a Radix visual
+state.
 
 Run the contract gate from this package directory:
 

@@ -6,7 +6,7 @@
     "tarball": "https://registry.npmjs.org/@radix-ui/themes/-/themes-3.3.0.tgz"
   },
   "generator": {
-    "chromium": "Google Chrome 150.0.7871.187",
+    "chromium": "Google Chrome 151.0.7922.109",
     "viewport": {
       "width": 1440,
       "height": 1280,
@@ -197,7 +197,7 @@
       "styles": {
         "display": "block",
         "position": "relative",
-        "width": "290px",
+        "width": "220.406px",
         "height": "134px",
         "minWidth": "auto",
         "minHeight": "auto",
@@ -249,7 +249,7 @@
       "styles": {
         "display": "block",
         "position": "static",
-        "width": "290px",
+        "width": "220.406px",
         "height": "1px",
         "minWidth": "auto",
         "minHeight": "auto",
@@ -554,6 +554,110 @@
         "animationDuration": "0s",
         "fontSize": "14px",
         "lineHeight": "21px"
+      }
+    },
+    "skeleton": {
+      "className": "rt-Skeleton fixture-skeleton",
+      "styles": {
+        "display": "block",
+        "position": "static",
+        "width": "160px",
+        "height": "12px",
+        "minWidth": "auto",
+        "minHeight": "auto",
+        "padding": "0px",
+        "gap": "normal",
+        "borderWidth": "0px",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "3px",
+        "backgroundColor": "rgba(0, 0, 45, 0.09)",
+        "color": "rgba(0, 0, 0, 0)",
+        "boxShadow": "none",
+        "opacity": "1",
+        "transform": "none",
+        "filter": "none",
+        "backdropFilter": "none",
+        "animationDuration": "1s",
+        "fontSize": "16px",
+        "lineHeight": "24px"
+      }
+    },
+    "segmented-control": {
+      "className": "rt-SegmentedControlRoot rt-r-size-2 rt-variant-surface fixture-segmented-control",
+      "styles": {
+        "display": "grid",
+        "position": "relative",
+        "width": "118.719px",
+        "height": "32px",
+        "minWidth": "max-content",
+        "minHeight": "auto",
+        "padding": "0px",
+        "gap": "normal",
+        "borderWidth": "0px",
+        "borderColor": "rgb(28, 32, 36)",
+        "borderRadius": "4px",
+        "backgroundColor": "rgba(255, 255, 255, 0.85)",
+        "color": "rgb(28, 32, 36)",
+        "boxShadow": "none",
+        "opacity": "1",
+        "transform": "none",
+        "filter": "none",
+        "backdropFilter": "none",
+        "animationDuration": "0s",
+        "fontSize": "16px",
+        "lineHeight": "24px"
+      }
+    },
+    "text-area": {
+      "className": "rt-TextAreaRoot rt-r-size-2 rt-variant-surface fixture-text-area",
+      "styles": {
+        "display": "flex",
+        "position": "static",
+        "width": "210px",
+        "height": "64px",
+        "minWidth": "auto",
+        "minHeight": "64px",
+        "padding": "1px",
+        "gap": "normal",
+        "borderWidth": "0px",
+        "borderColor": "rgb(28, 32, 36)",
+        "borderRadius": "4px",
+        "backgroundColor": "rgba(255, 255, 255, 0.85)",
+        "color": "rgb(28, 32, 36)",
+        "boxShadow": "rgba(0, 0, 47, 0.15) 0px 0px 0px 1px inset",
+        "opacity": "1",
+        "transform": "none",
+        "filter": "none",
+        "backdropFilter": "none",
+        "animationDuration": "0s",
+        "fontSize": "16px",
+        "lineHeight": "24px"
+      }
+    },
+    "data-list": {
+      "className": "rt-Text rt-r-size-2 rt-DataListRoot rt-r-orientation-horizontal fixture-data-list",
+      "styles": {
+        "display": "grid",
+        "position": "static",
+        "width": "220.406px",
+        "height": "56px",
+        "minWidth": "auto",
+        "minHeight": "auto",
+        "padding": "0px",
+        "gap": "16px",
+        "borderWidth": "0px",
+        "borderColor": "rgb(28, 32, 36)",
+        "borderRadius": "0px",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(28, 32, 36)",
+        "boxShadow": "none",
+        "opacity": "1",
+        "transform": "none",
+        "filter": "none",
+        "backdropFilter": "none",
+        "animationDuration": "0s",
+        "fontSize": "14px",
+        "lineHeight": "20px"
       }
     },
     "tooltip": {

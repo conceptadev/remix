@@ -487,6 +487,11 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
       },
     );
 
+    final textFieldWithSelection = DefaultSelectionStyle.merge(
+      selectionColor: spec.text.spec.selectionColor,
+      child: nakedTextField,
+    );
+
     final withAccessories = RemixBoxWithEffects(
       styleSpec: spec.container,
       containerEffects: spec.containerEffects,
@@ -497,7 +502,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
         textBaseline: TextBaseline.alphabetic,
         children: [
           ?config.leading,
-          Expanded(child: nakedTextField),
+          Expanded(child: textFieldWithSelection),
           ?config.trailing,
         ],
       ),

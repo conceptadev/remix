@@ -229,11 +229,32 @@ SkeletonSpec skeletonSpec() {
 ```
 </CodeGroup>
 
-<Info>
-  Remix ships no opinionated skeleton visuals yet: the unstyled component draws
-  nothing until you give the container a fill or size. A Fortal recipe with the
-  Radix gray-alpha values arrives with the rest of the Fortal recipe work.
-</Info>
+## Fortal recipe
+
+`FortalSkeleton` applies the pinned Radix Themes 3.3 surface: `grayA3` to
+`grayA4`, `radius1`, a 1000 ms pulse leg, and a scalable `space3` childless
+minimum height. The wrapper deliberately leaves width and height to its child
+or parent constraints.
+
+<CodeGroup title="Fortal skeleton" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+Widget profileSkeleton(bool loading) {
+  return FortalSkeleton(
+    loading: loading,
+    child: const Text('Jane Appleseed'),
+  );
+}
+
+Widget fixedSkeleton() {
+  return RemixSkeleton(
+    style: fortalSkeletonStyle().container(BoxStyler().size(200, 12)),
+  );
+}
+```
+</CodeGroup>
 
 ## Behavior
 
@@ -278,8 +299,9 @@ Checked against the pinned `@radix-ui/themes@3.3.0` `skeleton.css`.
   size or fill; the Fortal recipe supplies the token default.
 - Radix has no reduced-motion behavior for Skeleton; honouring
   `MediaQuery.disableAnimationsOf` is a Flutter adaptation.
-- Radix pins its pulse to gray alpha 3 → 4 over 1000 ms. Remix keeps the 1000 ms
-  leg but leaves the colors to the caller: with a plain `color` and a
+- Radix pins its pulse to gray alpha 3 → 4 over 1000 ms. `FortalSkeleton`
+  matches those values. A raw Remix style leaves the colors to the caller:
+  with a plain `color` and a
   `pulseColor` the fill interpolates between them. When there is no unmasked
   fill to animate — no `color` at all, or a gradient, image, or
   `foregroundDecoration` painting over it — the whole container fades between

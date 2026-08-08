@@ -11,7 +11,7 @@
       body { background: #f4f4f5; }
       .fixture-root { min-height: 1280px; padding: 32px; }
       .fixture-heading { margin: 0 0 24px; font: 700 24px/1.2 system-ui; }
-      .fixture-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+      .fixture-grid { display: grid; grid-template-columns: repeat(5, minmax(160px, 1fr)); gap: 16px; }
       .fixture-cell {
         position: relative;
         display: flex;
@@ -34,6 +34,10 @@
       .fixture-progress { width: 240px; flex-grow: 0; }
       .fixture-slider { width: 240px; flex-grow: 0; }
       .fixture-text-field { width: 250px; }
+      .fixture-skeleton { width: 160px; }
+      .fixture-segmented-control { max-width: 100%; }
+      .fixture-text-area { width: 210px; }
+      .fixture-data-list { width: 100%; }
       .fixture-tooltip { position: relative; }
       .fixture-data-table { width: 100%; }
     </style>
@@ -71,6 +75,10 @@
         <article class="fixture-cell"><span class="fixture-label">Switch</span><button id="switch" data-probe data-state="checked" class="rt-reset rt-SwitchRoot rt-r-size-2 rt-variant-surface"><span class="rt-SwitchThumb"></span></button></article>
         <article class="fixture-cell"><span class="fixture-label">Tabs</span><div id="tabs" data-probe role="tablist" class="rt-BaseTabList rt-TabsList rt-r-size-2"><button role="tab" aria-selected="true" data-state="active" class="rt-reset rt-BaseTabListTrigger rt-TabsTrigger">Active</button><button role="tab" data-state="inactive" class="rt-reset rt-BaseTabListTrigger rt-TabsTrigger">Inactive</button></div></article>
         <article class="fixture-cell"><span class="fixture-label">TextField</span><label id="text-field" data-probe class="rt-TextFieldRoot rt-r-size-2 rt-variant-surface fixture-text-field"><span class="rt-TextFieldSlot">@</span><input class="rt-reset rt-TextFieldInput" value="Text field" readonly /></label></article>
+        <article class="fixture-cell"><span class="fixture-label">Skeleton</span><span id="skeleton" data-probe class="rt-Skeleton fixture-skeleton"></span></article>
+        <article class="fixture-cell"><span class="fixture-label">SegmentedControl</span><div id="segmented-control" data-probe class="rt-SegmentedControlRoot rt-r-size-2 rt-variant-surface fixture-segmented-control"><button class="rt-reset rt-SegmentedControlItem" data-state="on"><span class="rt-SegmentedControlItemLabel"><span class="rt-SegmentedControlItemLabelInactive">List</span><span class="rt-SegmentedControlItemLabelActive">List</span></span><span class="rt-SegmentedControlItemSeparator"></span></button><button class="rt-reset rt-SegmentedControlItem" data-state="off"><span class="rt-SegmentedControlItemLabel"><span class="rt-SegmentedControlItemLabelInactive">Grid</span><span class="rt-SegmentedControlItemLabelActive">Grid</span></span><span class="rt-SegmentedControlItemSeparator"></span></button><span class="rt-SegmentedControlIndicator"></span></div></article>
+        <article class="fixture-cell"><span class="fixture-label">TextArea</span><div id="text-area" data-probe class="rt-TextAreaRoot rt-r-size-2 rt-variant-surface fixture-text-area"><textarea class="rt-reset rt-TextAreaInput" readonly>Text area</textarea></div></article>
+        <article class="fixture-cell"><span class="fixture-label">DataList</span><dl id="data-list" data-probe class="rt-Text rt-r-size-2 rt-DataListRoot rt-r-orientation-horizontal fixture-data-list"><div class="rt-DataListItem rt-r-ai-baseline"><dt class="rt-DataListLabel">Status</dt><dd class="rt-DataListValue">Active</dd></div><div class="rt-DataListItem rt-r-ai-baseline"><dt class="rt-DataListLabel">Owner</dt><dd class="rt-DataListValue">Ada</dd></div></dl></article>
         <article class="fixture-cell"><span class="fixture-label">Tooltip</span><div id="tooltip" data-probe data-state="delayed-open" data-side="top" class="rt-TooltipContent fixture-tooltip"><p class="rt-Text rt-r-size-1 rt-TooltipText">Tooltip content</p><svg class="rt-TooltipArrow" width="16" height="8"><path d="M0 8L8 0l8 8z"></path></svg></div></article>
       </section>
     </main>

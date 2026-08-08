@@ -6,6 +6,51 @@ void main() {
   group('Fortal semantic tokens', () {
     test('keeps the background token name stable', () {
       expect(FortalTokens.colorBackground.name, 'fortal.color.background');
+      expect(FortalTokens.focusA5.name, 'fortal.focus.a5');
+    });
+
+    testWidgets('focus-a5 resolves from accent alpha step 5', (tester) async {
+      late Color focusA5;
+      late Color accentA5;
+
+      await tester.pumpWidget(
+        FortalScope(
+          accent: .red,
+          child: Builder(
+            builder: (context) {
+              focusA5 = MixScope.tokenOf(FortalTokens.focusA5, context);
+              accentA5 = MixScope.tokenOf(FortalTokens.accentA5, context);
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      expect(focusA5, accentA5);
+    });
+
+    test('keeps component recipe token names stable', () {
+      expect(
+        FortalTokens.skeletonPulseDuration.name,
+        'fortal.skeleton.pulse-duration',
+      );
+      expect(
+        FortalTokens.segmentedControlIndicatorBackground.name,
+        'fortal.segmented-control.indicator-background',
+      );
+      expect(
+        FortalTokens.segmentedControlClassicIndicatorShadows.name,
+        'fortal.segmented-control.classic.indicator-shadows',
+      );
+      expect(
+        FortalTokens.textAreaMinHeight3.name,
+        'fortal.text-area.min-height.3',
+      );
+      expect(FortalTokens.dataListRowGap3.name, 'fortal.data-list.row-gap.3');
+      expect(
+        FortalTokens.dataListLabelMinWidth.name,
+        'fortal.data-list.label-min-width',
+      );
     });
 
     testWidgets('radio indicator metrics resolve before size arithmetic', (

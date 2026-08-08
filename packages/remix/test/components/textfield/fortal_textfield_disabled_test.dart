@@ -49,7 +49,7 @@ void main() {
       final colors = _renderedDecorationColors(tester, finder);
 
       // The disabled soft variant paints its onDisabled background
-      // (FortalTokens.accentA3) — the resolved style tree must carry a color.
+      // (FortalTokens.grayA3) — the resolved style tree must carry a color.
       expect(colors, isNotEmpty);
 
       // Regression guard: the debug `Colors.red` background that once shipped in

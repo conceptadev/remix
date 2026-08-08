@@ -11,9 +11,13 @@
     "source",
     "theme",
     "families",
+    "unmappedUpstreamFamilies",
     "referenceFixtures",
     "commonFlutterExceptions",
-    "approximations"
+    "approximations",
+    "upstreamInventory",
+    "visualMapping",
+    "deferredCapabilities"
   ],
   "properties": {
     "$schema": { "type": "string", "minLength": 1 },
@@ -36,25 +40,32 @@
       "required": [
         "enums",
         "resolvedRootDefaults",
-        "autoGray",
         "states",
         "sourceFiles",
-        "coverage"
+        "coverage",
+        "upstreamInventory",
+        "supportedVisualStates"
       ],
       "properties": {
         "enums": { "$ref": "#/$defs/enumMap" },
         "resolvedRootDefaults": { "type": "object" },
-        "autoGray": { "type": "object", "minProperties": 26 },
         "states": { "$ref": "#/$defs/nonEmptyStrings" },
         "sourceFiles": { "$ref": "#/$defs/nonEmptyStrings" },
-        "coverage": { "$ref": "#/$defs/coverage" }
+        "coverage": { "$ref": "#/$defs/coverage" },
+        "upstreamInventory": { "type": "object" },
+        "supportedVisualStates": { "$ref": "#/$defs/nonEmptyStrings" }
       }
     },
     "families": {
       "type": "array",
-      "minItems": 23,
-      "maxItems": 23,
+      "minItems": 28,
+      "maxItems": 28,
       "items": { "$ref": "#/$defs/family" }
+    },
+    "unmappedUpstreamFamilies": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/unmappedUpstreamFamily" }
     },
     "referenceFixtures": {
       "type": "object",
@@ -86,7 +97,10 @@
           }
         ]
       }
-    }
+    },
+    "upstreamInventory": { "type": "object" },
+    "visualMapping": { "type": "object" },
+    "deferredCapabilities": { "type": "object" }
   },
   "$defs": {
     "nonEmptyStrings": {
@@ -144,7 +158,11 @@
         "sourceFiles",
         "sourceSelectors",
         "flutterExceptions",
-        "coverage"
+        "coverage",
+        "upstreamInventory",
+        "supportedVisualStates",
+        "deferredCapabilities",
+        "visualMapping"
       ],
       "properties": {
         "id": { "type": "string", "minLength": 1 },
@@ -163,7 +181,38 @@
         "sourceFiles": { "$ref": "#/$defs/strings" },
         "sourceSelectors": { "$ref": "#/$defs/strings" },
         "flutterExceptions": { "$ref": "#/$defs/nonEmptyStrings" },
-        "coverage": { "$ref": "#/$defs/coverage" }
+        "coverage": { "$ref": "#/$defs/coverage" },
+        "upstreamInventory": { "type": "object" },
+        "supportedVisualStates": { "$ref": "#/$defs/nonEmptyStrings" },
+        "deferredCapabilities": { "$ref": "#/$defs/strings" },
+        "visualMapping": { "type": "object", "minProperties": 5 }
+      }
+    },
+    "unmappedUpstreamFamily": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "radixComponent",
+        "sourceFiles",
+        "sourceSelectors",
+        "upstreamInventory",
+        "supportedRemixComposition",
+        "reason",
+        "reopenCondition"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "radixComponent": { "type": "string", "minLength": 1 },
+        "sourceFiles": { "$ref": "#/$defs/nonEmptyStrings" },
+        "sourceSelectors": { "$ref": "#/$defs/nonEmptyStrings" },
+        "upstreamInventory": {
+          "type": "object",
+          "minProperties": 3
+        },
+        "supportedRemixComposition": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "reopenCondition": { "type": "string", "minLength": 1 }
       }
     },
     "mappingBoundary": {

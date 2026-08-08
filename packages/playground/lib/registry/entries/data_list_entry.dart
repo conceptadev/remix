@@ -13,13 +13,6 @@ Widget buildDataListExample() {
     ),
   ];
 
-  final style = DataListStyler()
-      .minLabelWidth(96)
-      .columnSpacing(24)
-      .rowSpacing(12)
-      .labelValueSpacing(4)
-      .labelColor(Colors.grey);
-
   Widget materialRow(String label, String value) => Padding(
     padding: const EdgeInsets.only(bottom: 12),
     child: Row(
@@ -35,64 +28,62 @@ Widget buildDataListExample() {
     ),
   );
 
-  return SizedBox(
-    width: 640,
-    child: ComparisonView(
-      remix: [
-        // Horizontal: one shared label column, wrapping values, and custom
-        // value children (a display-only badge and an interactive button).
-        SizedBox(
-          width: 280,
-          child: RemixDataList(
-            semanticLabel: 'Account details',
-            items: [
-              ...metadata,
-              const RemixDataListItem(
-                label: 'Status',
-                semanticValue: 'Authorized',
-                alignment: RemixDataListItemAlignment.center,
-                child: FortalBadge(label: 'Authorized'),
-              ),
-              RemixDataListItem(
-                label: 'API key',
-                alignment: RemixDataListItemAlignment.center,
-                child: FortalButton.soft(
-                  size: .size1,
-                  label: 'Reveal',
-                  onPressed: () {},
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: SizedBox(
+      width: 640,
+      child: ComparisonView(
+        remix: [
+          // Horizontal: one shared label column, wrapping values, and custom
+          // value children (a display-only badge and an interactive button).
+          SizedBox(
+            width: 280,
+            child: FortalDataList(
+              semanticLabel: 'Account details',
+              items: [
+                ...metadata,
+                const RemixDataListItem(
+                  label: 'Status',
+                  semanticValue: 'Authorized',
+                  alignment: RemixDataListItemAlignment.center,
+                  child: FortalBadge(label: 'Authorized'),
                 ),
-              ),
-            ],
-            style: style,
+                RemixDataListItem(
+                  label: 'API key',
+                  alignment: RemixDataListItemAlignment.center,
+                  child: FortalButton.soft(
+                    size: .size1,
+                    label: 'Reveal',
+                    onPressed: () {},
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        // Vertical: the caller-owned fallback for narrow widths.
-        SizedBox(
-          width: 200,
-          child: RemixDataList(
-            orientation: Axis.vertical,
-            items: metadata,
-            style: style,
+          // Vertical: the caller-owned fallback for narrow widths.
+          SizedBox(
+            width: 200,
+            child: FortalDataList(orientation: Axis.vertical, items: metadata),
           ),
-        ),
-      ],
-      material: [
-        SizedBox(
-          width: 280,
-          child: Column(
-            mainAxisSize: .min,
-            children: [
-              materialRow('Name', 'Leo Farias'),
-              materialRow('Email', 'leo@example.com'),
-              materialRow(
-                'Bio',
-                'Building composable Flutter design systems with Mix and '
-                    'Remix.',
-              ),
-            ],
+        ],
+        material: [
+          SizedBox(
+            width: 280,
+            child: Column(
+              mainAxisSize: .min,
+              children: [
+                materialRow('Name', 'Leo Farias'),
+                materialRow('Email', 'leo@example.com'),
+                materialRow(
+                  'Bio',
+                  'Building composable Flutter design systems with Mix and '
+                      'Remix.',
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

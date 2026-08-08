@@ -14,8 +14,37 @@ The value type must be non-nullable (`T extends Object`). `null` is reserved for
 null, and `onChanged` only emits non-null item values.
 
 <Info>
-  No Fortal preset ships for this component yet, so there is no `FortalSegmentedControl` and no themed default. An unstyled `RemixSegmentedControl` renders as bare text with no track, selected surface, or focus ring. Every example below passes an explicit style, and your app must do the same.
+  `FortalSegmentedControl<T>` supplies the pinned Radix Themes 3.3 track,
+  sizes, surface/classic variants, typography, selected layers, focus outline,
+  and disabled precedence. A raw `RemixSegmentedControl` remains intentionally
+  unstyled.
 </Info>
+
+## Fortal recipe
+
+<CodeGroup title="Fortal segmented control" defaultLanguage="dart">
+```dart
+import 'package:flutter/foundation.dart';
+import 'package:remix/remix.dart';
+
+FortalSegmentedControl<String> reportingPeriod({
+  required String value,
+  required ValueChanged<String> onChanged,
+}) {
+  return FortalSegmentedControl<String>.classic(
+    semanticLabel: 'Reporting period',
+    size: FortalSegmentedControlSize.size2,
+    items: const [
+      RemixSegmentedControlItem(value: 'day', label: 'Day'),
+      RemixSegmentedControlItem(value: 'week', label: 'Week'),
+      RemixSegmentedControlItem(value: 'month', label: 'Month'),
+    ],
+    selectedValue: value,
+    onChanged: onChanged,
+  );
+}
+```
+</CodeGroup>
 
 ## Basic implementation
 
@@ -200,14 +229,18 @@ Both stylers start empty. Nothing supplies a track background, segment padding,
 selected surface, or focus ring unless you do, so treat `style` as required
 rather than optional.
 
-## v1 visual scope
+## Fortal parity boundaries
 
-No Fortal preset ships for this component in v1. There is no
-`FortalSegmentedControl` widget and no `fortalSegmentedControlStyle` recipe, so
-a Fortal-themed application must hand the control a `SegmentedControlStyler`
-built from `FortalTokens` (or from its own design tokens). A Radix-parity preset
-is a follow-up, not a hidden default: callers own the visual layer today.
+Fortal matches the settled track, item metrics, inactive/active typography,
+selected inset fill, surface ring or five-layer classic shadow, focus outline,
+and disabled state. Three Radix presentation details remain explicit v1
+approximations:
 
-The selected surface is static in v1. A sliding indicator and separator
-treatment are intentionally not reserved or animated; those remain parity
-follow-ups rather than hidden layout layers in this component.
+- The selected surface switches directly on the selected item instead of
+  sliding one shared indicator over 100 ms.
+- One label changes typography in place instead of crossfading duplicate
+  inactive and active labels.
+- Inactive-item separator pseudo-elements are omitted.
+
+These differences do not change selection, focus, keyboard, semantics, item
+geometry, or the resolved selected and disabled layers.
