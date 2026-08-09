@@ -47,10 +47,9 @@ final _remixImport = RegExp(
 final _remixApiReference = RegExp(r'\b(?:Remix|Fortal)[A-Z]\w*');
 
 const _exampleSourceDirectories = <String>[
-  'packages/dashboard/lib',
-  'packages/demo/lib',
-  'packages/example/lib',
-  'packages/playground/lib',
+  'apps/dashboard/lib',
+  'apps/demo/lib',
+  'apps/playground/lib',
   'packages/remix/example',
   'packages/remix_fortal/example',
 ];
