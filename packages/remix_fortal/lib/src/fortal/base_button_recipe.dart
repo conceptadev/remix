@@ -150,23 +150,28 @@ RemixBoxEffectsMix fortalFocusOutline(Color color, {required double offset}) =>
 /// `BorderSide` itself defaults to `strokeAlignInside`, so unset and explicit
 /// resolve to the same -1.0. The parameter is nullable only so tabs can keep
 /// expressing it as absent.
-T fortalFocusRing<T extends Mix<Object?>>(
-  RemixBoxStylerAnchors<T> styler, {
-  Color? color,
-  double? strokeAlign = BorderSide.strokeAlignInside,
-}) => styler.borderAll(
-  color: color ?? _focusRingColor(),
-  width: _focusRingWidth(),
-  strokeAlign: strokeAlign,
-);
+extension FortalFocusRing<T extends Mix<Object?>> on RemixBoxStylerAnchors<T> {
+  T fortalFocusRing({
+    Color? color,
+    double? strokeAlign = BorderSide.strokeAlignInside,
+  }) => borderAll(
+    color: color ?? _focusRingColor(),
+    width: _focusRingWidth(),
+    strokeAlign: strokeAlign,
+  );
+}
 
-/// [fortalFocusRing] for a Mix [FlexBoxStyler], which sits outside Remix's
+/// The same ring for a Mix [FlexBoxStyler], which sits outside Remix's
 /// `RemixBoxStylerAnchors` interface — accordion rings its trigger, not itself.
-FlexBoxStyler fortalFocusRingBox(FlexBoxStyler styler) => styler.borderAll(
-  color: _focusRingColor(),
-  width: _focusRingWidth(),
-  strokeAlign: BorderSide.strokeAlignInside,
-);
+/// Separate extension rather than a differently-named function so both read as
+/// `.fortalFocusRing()`; the receiver type picks the right one.
+extension FortalFocusRingFlexBox on FlexBoxStyler {
+  FlexBoxStyler fortalFocusRing() => borderAll(
+    color: _focusRingColor(),
+    width: _focusRingWidth(),
+    strokeAlign: BorderSide.strokeAlignInside,
+  );
+}
 
 Color _focusRingColor() => FortalTokens.focusA8();
 double _focusRingWidth() => FortalTokens.focusRingWidth();

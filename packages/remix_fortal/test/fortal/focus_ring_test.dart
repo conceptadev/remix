@@ -10,7 +10,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 void main() {
   test('default ring matches the toggle border it replaced', () {
     expect(
-      fortalFocusRing(ToggleStyler()),
+      ToggleStyler().fortalFocusRing(),
       equals(
         ToggleStyler().borderAll(
           color: FortalTokens.focusA8(),
@@ -23,7 +23,7 @@ void main() {
 
   test('default ring matches the toggle group border it replaced', () {
     expect(
-      fortalFocusRing(ToggleGroupItemStyler()),
+      ToggleGroupItemStyler().fortalFocusRing(),
       equals(
         ToggleGroupItemStyler().borderAll(
           color: FortalTokens.focusA8(),
@@ -39,8 +39,7 @@ void main() {
     // than pick up the parameter default — passing null explicitly is what
     // bypasses it.
     expect(
-      fortalFocusRing(
-        TabStyler(),
+      TabStyler().fortalFocusRing(
         color: FortalTokens.focus8(),
         strokeAlign: null,
       ),
@@ -55,7 +54,7 @@ void main() {
 
   test('box ring matches the accordion trigger border it replaced', () {
     expect(
-      fortalFocusRingBox(FlexBoxStyler()),
+      FlexBoxStyler().fortalFocusRing(),
       equals(
         FlexBoxStyler().borderAll(
           color: FortalTokens.focusA8(),
@@ -71,8 +70,8 @@ void main() {
     // unifies tabs onto focus-a8, this fails and forces the decision to be
     // made deliberately rather than as a drive-by.
     expect(
-      fortalFocusRing(TabStyler(), color: FortalTokens.focus8()),
-      isNot(equals(fortalFocusRing(TabStyler()))),
+      TabStyler().fortalFocusRing(color: FortalTokens.focus8()),
+      isNot(equals(TabStyler().fortalFocusRing())),
     );
   });
 }

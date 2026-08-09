@@ -40,7 +40,7 @@ AccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
 }
 
 AccordionStyler _fortalAccordionFocusStyler() {
-  return AccordionStyler().trigger(fortalFocusRingBox(FlexBoxStyler()));
+  return AccordionStyler().trigger(FlexBoxStyler().fortalFocusRing());
 }
 
 AccordionStyler _fortalAccordionDisabledStyler() {
