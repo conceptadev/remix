@@ -6,6 +6,10 @@ import 'package:remix/remix.dart'
         RemixBoxEffectsMix,
         RemixBoxShadowKind,
         RemixBoxShadowMix,
+        RemixBoxStylerAnchors,
+        // Supplies `borderAll` on RemixBoxStylerAnchors; fortalFocusRing
+        // does not compile without it.
+        RemixBoxStylerConvenience,
         RemixCssColorFilterOperation,
         RemixLinearGradientMix,
         RemixOrderedColorFilterModifier;
@@ -127,6 +131,51 @@ RemixBoxEffectsMix fortalFocusOutline(Color color, {required double offset}) =>
       ),
       outlineOffset: offset,
     );
+
+/// The focus ring for stylers that can only express a border.
+///
+/// [fortalFocusOutline] is the preferred form, but it returns a
+/// [RemixBoxEffectsMix] and several stylers — `ToggleStyler`,
+/// `ToggleGroupItemStyler`, `TabStyler` — expose no `containerEffects` slot to
+/// put one in. Those recipes each re-derived the same border, so the width
+/// token lives here instead of in four places.
+extension FortalFocusRing<T extends Mix<Object?>> on RemixBoxStylerAnchors<T> {
+  /// Applies the ring to this styler.
+  ///
+  /// [color] defaults to `focus-a8`. Tabs is the one caller that differs: it
+  /// passes the solid `focus-8`. Whether that is intentional is unresolved —
+  /// the pinned Chromium probes capture computed styles only, not
+  /// `:focus-visible`, so it cannot be settled from the reference fixtures.
+  /// Preserved as-is rather than unified on a guess.
+  ///
+  /// Tabs also leaves [strokeAlign] unset, but that is not a second
+  /// difference: `BorderSide` itself defaults to `strokeAlignInside`, so unset
+  /// and explicit resolve to the same -1.0. The parameter is nullable only so
+  /// tabs can keep expressing it as absent.
+  T fortalFocusRing({
+    Color? color,
+    double? strokeAlign = BorderSide.strokeAlignInside,
+  }) => borderAll(
+    color: color ?? _focusRingColor(),
+    width: _focusRingWidth(),
+    strokeAlign: strokeAlign,
+  );
+}
+
+/// The same ring for a Mix [FlexBoxStyler], which sits outside Remix's
+/// `RemixBoxStylerAnchors` interface — accordion rings its trigger, not itself.
+/// Separate extension rather than a differently-named function so both read as
+/// `.fortalFocusRing()`; the receiver type picks the right one.
+extension FortalFocusRingFlexBox on FlexBoxStyler {
+  FlexBoxStyler fortalFocusRing() => borderAll(
+    color: _focusRingColor(),
+    width: _focusRingWidth(),
+    strokeAlign: BorderSide.strokeAlignInside,
+  );
+}
+
+Color _focusRingColor() => FortalTokens.focusA8();
+double _focusRingWidth() => FortalTokens.focusRingWidth();
 
 /// A one-pixel inset stroke, optionally layered over a fill.
 RemixBoxEffectLayerMix fortalInsetSurface({required List<Color> strokes}) =>

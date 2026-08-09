@@ -149,3 +149,136 @@ class FortalCheckbox extends StatelessWidget {
     );
   }
 }
+
+/// Fortal recipe for [RemixCheckboxGroupItem].
+///
+/// Radix gives a checkbox-group item no visual contract of its own — it is a
+/// checkbox plus a label — so this delegates to [fortalCheckboxStyle] and
+/// inherits its verified parity rather than restating any of it.
+///
+/// It exists because `RemixCheckboxGroup` is behavioral and carries no styler,
+/// so unlike every other Remix item (menu, select, segmented control, toggle
+/// group) there is no parent recipe to push item styling down. Without this,
+/// callers hand-attach a styler to each item and a missed one in a loop renders
+/// unstyled beside its styled siblings.
+class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
+  const FortalCheckboxGroupItem({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.value,
+    required this.label,
+    this.semanticLabel,
+    this.enabled = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.enableFeedback = true,
+    this.minimumTapTargetSize = const Size.square(48),
+    this.mouseCursor = SystemMouseCursors.click,
+  });
+
+  const FortalCheckboxGroupItem.classic({
+    super.key,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.value,
+    required this.label,
+    this.semanticLabel,
+    this.enabled = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.enableFeedback = true,
+    this.minimumTapTargetSize = const Size.square(48),
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalCheckboxVariant.classic;
+
+  const FortalCheckboxGroupItem.surface({
+    super.key,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.value,
+    required this.label,
+    this.semanticLabel,
+    this.enabled = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.enableFeedback = true,
+    this.minimumTapTargetSize = const Size.square(48),
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalCheckboxVariant.surface;
+
+  const FortalCheckboxGroupItem.soft({
+    super.key,
+    this.size = .size2,
+    this.highContrast = false,
+    required this.value,
+    required this.label,
+    this.semanticLabel,
+    this.enabled = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.enableFeedback = true,
+    this.minimumTapTargetSize = const Size.square(48),
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalCheckboxVariant.soft;
+
+  final FortalCheckboxVariant variant;
+
+  final FortalCheckboxSize size;
+
+  final bool highContrast;
+
+  final T value;
+
+  final String label;
+
+  final String? semanticLabel;
+
+  final bool enabled;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  final IconData checkedIcon;
+
+  final IconData? uncheckedIcon;
+
+  final bool enableFeedback;
+
+  final Size minimumTapTargetSize;
+
+  final MouseCursor mouseCursor;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixCheckboxGroupItem<T>(
+      key: this.key,
+      style: fortalCheckboxGroupItemStyle(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ),
+      value: this.value,
+      label: this.label,
+      semanticLabel: this.semanticLabel,
+      enabled: this.enabled,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+      checkedIcon: this.checkedIcon,
+      uncheckedIcon: this.uncheckedIcon,
+      enableFeedback: this.enableFeedback,
+      minimumTapTargetSize: this.minimumTapTargetSize,
+      mouseCursor: this.mouseCursor,
+    );
+  }
+}

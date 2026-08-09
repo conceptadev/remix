@@ -33,13 +33,7 @@ ToggleStyler _fortalToggleBaseStyler(FortalToggleSize size) {
       .merge(_fortalToggleSizeStyler(size));
 }
 
-ToggleStyler _fortalToggleFocusStyler() {
-  return ToggleStyler().borderAll(
-    color: FortalTokens.focusA8(),
-    width: FortalTokens.focusRingWidth(),
-    strokeAlign: BorderSide.strokeAlignInside,
-  );
-}
+ToggleStyler _fortalToggleFocusStyler() => ToggleStyler().fortalFocusRing();
 
 ToggleStyler _fortalToggleDisabledStyler({bool outlined = false}) {
   final style = ToggleStyler()
