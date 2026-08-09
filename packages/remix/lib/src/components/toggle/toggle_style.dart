@@ -28,6 +28,7 @@ extension RemixToggleStylerRemixHelpers on ToggleStyler {
     FocusNode? focusNode,
     bool autofocus = false,
     String? semanticLabel,
+    bool excludeSemantics = false,
     MouseCursor mouseCursor = SystemMouseCursors.click,
   }) {
     return RemixToggle(
@@ -41,6 +42,7 @@ extension RemixToggleStylerRemixHelpers on ToggleStyler {
       focusNode: focusNode,
       autofocus: autofocus,
       semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
       mouseCursor: mouseCursor,
       style: this,
     );

@@ -322,6 +322,7 @@ void main() {
           focusNode: focusNode,
           autofocus: true,
           semanticLabel: 'Test Toggle',
+          excludeSemantics: true,
           mouseCursor: SystemMouseCursors.forbidden,
         );
 
@@ -334,6 +335,7 @@ void main() {
         expect(toggle.focusNode, equals(focusNode));
         expect(toggle.autofocus, isTrue);
         expect(toggle.semanticLabel, equals('Test Toggle'));
+        expect(toggle.excludeSemantics, isTrue);
         expect(toggle.mouseCursor, equals(SystemMouseCursors.forbidden));
 
         focusNode.dispose();
