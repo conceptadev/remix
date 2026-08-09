@@ -3,7 +3,22 @@
 Complete reference for Fortal — the Radix-inspired design system that ships as a
 separate package on top of Remix: preset widgets, variants, sizes, and tokens.
 
-## Requires the `remix_fortal` package
+## Table of Contents
+
+- [Choose Fortal or base Remix](#choose-fortal-or-base-remix)
+- [Install and import](#install-and-import)
+- [Presets and recipes](#presets-and-recipes)
+- [Component variants and sizes](#component-variants--sizes)
+- [Scope and theme configuration](#fortalscope--theme-config)
+- [Tokens](#using-tokens)
+
+## Choose Fortal or base Remix
+
+Use Fortal when the UI should follow its ready-made Radix-inspired visual system. Use base Remix when the user wants a distinct visual language, does not want Fortal's token scales, or needs a fully custom `*Styler`. Fortal is optional and never required for ordinary `Remix*` widgets.
+
+Place `FortalScope` above every subtree that renders Fortal styles. Put it above the application or router when overlay entries and pushed routes must inherit Fortal tokens.
+
+## Install and import
 
 Everything on this page lives in `remix_fortal`, not `remix`:
 
@@ -18,7 +33,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 `remix_fortal` does not re-export `remix`. Import both when a file also uses base
 `Remix*` widgets or `*Styler` types.
 
-## How Fortal presets work
+## Presets and recipes
 
 Each component ships a `fortal<Name>Style(...)` function that returns the
 component's `*Styler`, plus a `Fortal<Name>` preset widget that applies
@@ -51,27 +66,34 @@ explicit `<String>`.
 
 | Component | Preset widget | Variants | Sizes |
 |-----------|--------------|----------|-------|
-| Button | `FortalButton` | `solid`, `soft`, `surface`, `outline`, `ghost` | `size1`–`size4` |
-| IconButton | `FortalIconButton` | `solid`, `soft`, `surface`, `outline`, `ghost` | `size1`–`size4` |
+| Button | `FortalButton` | `classic`, `solid`, `soft`, `surface`, `outline`, `ghost` | `size1`–`size4` |
+| IconButton | `FortalIconButton` | `classic`, `solid`, `soft`, `surface`, `outline`, `ghost` | `size1`–`size4` |
 | Toggle | `FortalToggle` | `ghost`, `outline` | `size1`–`size3` |
-| Checkbox | `FortalCheckbox` | `surface`, `soft` | `size1`–`size3` (16/24/32 px) |
-| Radio | `FortalRadio<T>` | `surface`, `soft` | `size1`–`size3` |
-| Switch | `FortalSwitch` | `surface`, `soft` | `size1`–`size3` |
-| Slider | `FortalSlider` | `surface`, `soft` | `size1`–`size3` (13/16/19 px thumb) |
-| TextField | `FortalTextField` | `surface`, `soft` | `size1`–`size3` |
+| ToggleGroup | `FortalToggleGroup<T>` | `soft`, `surface` | `size1`–`size3` |
+| Checkbox | `FortalCheckbox` | `classic`, `surface`, `soft` | `size1`–`size3` (14/16/20 px) |
+| Radio | `FortalRadio<T>` | `classic`, `surface`, `soft` | `size1`–`size3` |
+| Switch | `FortalSwitch` | `classic`, `surface`, `soft` | `size1`–`size3` |
+| Slider | `FortalSlider` | `classic`, `surface`, `soft` | `size1`–`size3` (13/16/19 px thumb) |
+| TextField | `FortalTextField` | `classic`, `surface`, `soft` | `size1`–`size3` |
+| TextArea | `FortalTextArea` | `classic`, `surface`, `soft` | `size1`–`size3` |
 | Select | `FortalSelect<T>` | `surface`, `soft`, `ghost` | `size1`–`size3` |
+| SegmentedControl | `FortalSegmentedControl<T>` | `surface`, `classic` | `size1`–`size3` |
 | Menu | `FortalMenu<T>` | `solid`, `soft` | `size1`–`size2` |
-| Avatar | `FortalAvatar` | `soft`, `solid` | `size1`–`size4` (24/32/40/64 px) |
+| Popover | `FortalPopover` | — | `size1`–`size4` |
+| Avatar | `FortalAvatar` | `soft`, `solid` | `size1`–`size9` |
 | Badge | `FortalBadge` | `solid`, `soft`, `surface`, `outline` | `size1`–`size3` |
-| Card | `FortalCard` | `surface`, `classic`, `ghost` | `size1`–`size3` |
+| Card | `FortalCard` | `surface`, `classic`, `ghost` | `size1`–`size5` |
 | Callout | `FortalCallout` | `outline`, `surface`, `soft` | `size1`–`size3` |
-| Progress | `FortalProgress` | `surface`, `soft` | `size1`–`size3` (4/8/12 px) |
+| DataList | `FortalDataList` | — | `size1`–`size3` |
+| DataTable | `FortalDataTable<T>` | `surface`, `ghost` | `size1`–`size3` |
+| Progress | `FortalProgress` | `classic`, `surface`, `soft` | `size1`–`size3` (4/8/12 px) |
 | Accordion | `FortalAccordion<T>` | `surface`, `soft` | `size1`–`size3` |
 | Spinner | `FortalSpinner` | — | `size1`–`size3` |
-| Divider | `FortalDivider` | — | `size1`–`size3` (1/2/3 px) |
-| Dialog | `FortalDialog` | — | — |
+| Skeleton | `FortalSkeleton` | — | — |
+| Divider | `FortalDivider` | — | `size1`–`size4` |
+| Dialog | `FortalDialog` | — | `size1`–`size4` |
 | Tooltip | `FortalTooltip` | — | — |
-| Tabs | `FortalTabBar` / `FortalTab` / `FortalTabView` | — | — |
+| Tabs | `FortalTabBar` / `FortalTab` / `FortalTabView` | — | `FortalTab`: `size1`–`size2` |
 
 Variant meanings (consistent across components):
 
@@ -82,12 +104,14 @@ Variant meanings (consistent across components):
 | `surface` | Neutral surface with border |
 | `outline` | Transparent with border |
 | `ghost` | Transparent, no persistent border |
-| `classic` (Card) | Traditional card with shadow |
+| `classic` | Raised treatment with component-specific gradients or shadows |
 
 Notes:
 
 - Enum names are per component: `FortalButtonVariant`, `FortalButtonSize`,
   `FortalCheckboxVariant`, etc.
+- Components that expose `highContrast` use it to strengthen their active or
+  foreground treatment; do not assume the option exists on every family.
 - There is no `FortalTabs` — use `RemixTabs` as the behavioral root.
 - `FortalIconButton` forwards the complete `RemixIconButton` behavior surface,
   including builders, long press, focus, semantics, and cursor options.
@@ -107,6 +131,10 @@ FortalScope(
   accent: FortalAccentColor.indigo,   // default .indigo
   gray: FortalGrayColor.slate,        // default .slate
   brightness: Brightness.light,       // default .light
+  panelBackground: FortalPanelBackground.translucent,
+  radius: FortalRadius.medium,
+  scaling: FortalScaling.percent100,
+  hasBackground: true,
   orderOfModifiers: null,             // optional List<Type>
   child: MyApp(),
 )
@@ -118,6 +146,11 @@ red, ruby, sky, teal, tomato, violet, yellow — plus the neutrals gray,
 mauve, slate, sage, olive, sand.
 
 **Gray scales** (6): gray, mauve, slate, sage, olive, sand.
+
+`panelBackground` selects solid or translucent floating surfaces; `radius`
+selects `none|small|medium|large|full`; `scaling` selects 90%, 95%, 100%, 105%,
+or 110%; and `hasBackground` controls whether the scope paints the resolved
+page background behind its child.
 
 `FortalThemeConfig` is the immutable config object form:
 

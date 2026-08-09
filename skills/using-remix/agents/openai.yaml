@@ -1,0 +1,4 @@
+interface:
+  display_name: "Using Remix"
+  short_description: "Build Flutter UI with Remix and Fortal"
+  default_prompt: "Use $using-remix to build this Flutter interface with the right Remix or Fortal components and host setup."

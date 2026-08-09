@@ -3,6 +3,13 @@
 The pipeline turns pinned design-token sources into committed, strongly-typed
 Dart.
 
+## Table of Contents
+
+- [Directory layout](#directory-layout-node-flavored-example)
+- [Stage contracts](#stage-contracts)
+- [CI](#ci)
+- [Upgrading the source](#upgrading-the-source)
+
 The stage *contract* below is what matters; the runtime is an implementation
 detail. Node is a natural fit when the source tokens are npm packages or JS
 modules — pick whatever single toolchain best reads *the actual source*, as

@@ -4,6 +4,16 @@ The foundation layer turns generated tokens into a runtime API. The patterns
 below are system-agnostic; the code sketches use a placeholder system named
 "Acme" — substitute the target system's name and concepts.
 
+## Table of Contents
+
+- [Theme and token maps](#theme-enum--token-map-builder-sys_themedart)
+- [Scope](#scope-sys_scopedart)
+- [Contextual scopes](#contextualindexed-scopes-layers-elevation-levels-)
+- [Size and density](#sizedensity-scope-sys_layout_scopedart)
+- [Responsive type](#responsivefluid-type-sys_typedart)
+- [Motion](#motion-sys_motiondart)
+- [Mix API cheatsheet](#mix-api-cheatsheet-verified-against-mix-21)
+
 ## Theme enum + token map builder (`<sys>_theme.dart`)
 
 ```dart
