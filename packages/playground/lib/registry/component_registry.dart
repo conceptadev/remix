@@ -25,6 +25,7 @@ import 'entries/switch_entry.dart';
 import 'entries/textfield_entry.dart';
 import 'entries/textarea_entry.dart';
 import 'entries/tooltip_entry.dart';
+import 'entries/typography_entry.dart';
 
 // Map component slugs to a builder that returns the component inside FortalScope.
 final Map<String, WidgetBuilder> components = {
@@ -105,6 +106,18 @@ final Map<String, WidgetBuilder> components = {
   'badge': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildBadgeExample()),
+  ),
+  // Resolve Fortal *inside* PreviewShell so the shell's light/dark control owns
+  // the tokens; reading Theme.of above the shell leaves them stuck on light.
+  'typography': (context) => PreviewShell(
+    initialSize: const Size(900, 1180),
+    child: Builder(
+      builder: (context) => FortalScope(
+        brightness: Theme.of(context).brightness,
+        hasBackground: false,
+        child: buildTypographyExample(),
+      ),
+    ),
   ),
   'card': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
