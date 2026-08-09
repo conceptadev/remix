@@ -36,6 +36,42 @@
       "prompt": "I pass a small Column with ordinary Text widgets as RemixTooltip.tooltipChild. Can the tooltip's custom label styler apply to those nested Text widgets?",
       "expected_output": "Explains that RemixTooltip applies its resolved TooltipStyler.label(...) spec through DefaultTextStyle, so ordinary descendant Text widgets inherit the custom label style while retaining the arbitrary tooltipChild structure.",
       "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "This Flutter app already depends on remix. I want to switch one screen to FortalButton and FortalTextField. Which dependency and imports do I need?",
+      "expected_output": "Adds remix_fortal as a separate dependency, imports package:remix_fortal/remix_fortal.dart, retains an explicit package:remix/remix.dart import only when the file also uses base Remix widgets, stylers, or data classes, and does not claim that either package re-exports the other.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "My Fortal screen opens menus and pushes a Fortal-styled dialog route. Where should FortalScope go relative to MaterialApp.router?",
+      "expected_output": "Places FortalScope above MaterialApp.router so the routed and overlay content inherits Fortal tokens, explains that every subtree rendering Fortal widgets/recipes/tokens needs the scope, and does not invent a Remix-owned app or scaffold wrapper.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Build a Fortal action menu in a WidgetsApp without routing, then explain what changes if I call showRemixAlertDialog from the same feature.",
+      "expected_output": "Uses a caller-owned Overlay (such as Overlay.wrap) for the menu without requiring a Navigator, keeps the content below FortalScope, and explains that showRemixAlertDialog pushes a route and therefore needs a caller-owned Navigator plus a nonempty semanticLabel; it does not add RemixOverlayHost or RemixApp.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Create Fortal-styled tabs for Overview and Billing. I expected a FortalTabs widget; show the correct composition.",
+      "expected_output": "Uses RemixTabs as the behavioral root with FortalTabBar, FortalTab, and FortalTabView children, imports both remix and remix_fortal, and explicitly states that no FortalTabs wrapper exists.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Our app uses Remix for behavior, but the design is fully custom and must not use Radix-like colors or Fortal tokens. Style a primary button from scratch.",
+      "expected_output": "Chooses base Remix rather than adding remix_fortal, imports package:remix/remix.dart, creates a custom ButtonStyler with interaction states, and uses RemixButton without FortalScope or Fortal tokens.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "In a plain Flutter app with no Remix dependencies, write a CustomPainter that draws a sparkline.",
+      "expected_output": "Does not trigger or invoke using-remix, does not add remix or remix_fortal, and answers with ordinary Flutter CustomPainter guidance.",
+      "files": []
     }
   ]
 }

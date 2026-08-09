@@ -33,6 +33,7 @@ class RemixToggle extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
+    this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
     this.style = const ToggleStyler.create(),
     this.styleSpec,
@@ -79,6 +80,12 @@ class RemixToggle extends StatelessWidget {
   /// The semantic label for the toggle.
   final String? semanticLabel;
 
+  /// Whether to exclude this toggle's semantics.
+  ///
+  /// Use this when an ancestor supplies a different semantics contract, such
+  /// as selected destination semantics instead of toggled on/off semantics.
+  final bool excludeSemantics;
+
   /// Cursor when hovering over the toggle.
   final MouseCursor mouseCursor;
 
@@ -95,6 +102,7 @@ class RemixToggle extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
       builder: (context, state, _) {
         return RemixStyleSpecBuilder<ToggleSpec>(
           style: style,

@@ -7,6 +7,60 @@ A comprehensive Flutter component library that combines headless UI behavior wit
 
 Remix brings together the best of both worlds: the robust interaction behavior and accessibility of Naked UI with the flexible, composable styling capabilities of Mix. This combination enables you to create components that are fully customizable, reusable, and maintainable.
 
+## Agent skills
+
+[![skills.sh](https://skills.sh/b/conceptadev/remix)](https://skills.sh/conceptadev/remix)
+
+This repository publishes two skills from its [`skills/`](skills) catalog:
+
+- [`using-remix`](https://skills.sh/conceptadev/remix/using-remix) helps agents build Flutter interfaces with base Remix or the optional Fortal theme.
+- [`building-remix-design-system`](https://skills.sh/conceptadev/remix/building-remix-design-system) helps agents create standalone design-system packages on Remix.
+
+List the available skills without installing them:
+
+```bash
+npx skills add conceptadev/remix --list
+```
+
+Install both skills, or select one:
+
+```bash
+npx skills add conceptadev/remix
+npx skills add conceptadev/remix --skill using-remix -y
+```
+
+Project installs create a local agent-skills directory such as `.agents/`.
+Contributors who do not want that directory in their checkout can install
+globally or use a skill ephemerally:
+
+```bash
+npx skills add conceptadev/remix --skill using-remix -g -y
+npx skills use conceptadev/remix@using-remix
+```
+
+List installed skills and update them later:
+
+```bash
+npx skills ls
+npx skills update
+```
+
+### Vendored Mix skill
+
+This repository commits the project-scoped Mix skill and its lockfile so Codex
+and Claude Code use the same reviewed instructions. Install or refresh the
+canonical copy and Claude symlink with:
+
+```bash
+npx skills add conceptadev/mix --skill mix --agent codex --agent claude-code -y
+```
+
+Update the committed installation from its locked project source with:
+
+```bash
+npx skills update mix --project -y
+```
+
 ## Why Remix?
 
 ### The Problem

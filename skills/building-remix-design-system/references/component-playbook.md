@@ -4,6 +4,14 @@ How to implement one design-system component on Remix, and the Remix/Mix
 behaviors that have produced real bugs in first reviews of packages built
 this way. Code sketches use a placeholder system named "Acme".
 
+## Table of Contents
+
+- [Worksheet first](#1-worksheet-first)
+- [Wrapper decision rule](#2-wrapper-decision-rule)
+- [Recipe shape](#3-recipe-shape)
+- [Remix and Mix gotchas](#4-remixmix-gotchas-each-has-caused-a-real-bug)
+- [Component tests](#5-component-tests)
+
 ## 1. Worksheet first
 
 Create `specs/components/<component>.yaml` before writing code:
