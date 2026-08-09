@@ -1,27 +1,14 @@
 ---
 name: mix
-description: >
-  This skill should be used when working on the Mix Flutter styling
-  framework or any project using the mix package. Applies when the user
-  mentions Mix specs, Mix styles, BoxStyler, TextStyler, Pressable,
-  PressableBox, StyleWidget, MixStyler, fluent chaining, Prop values, Mix types,
-  Mix annotations (@MixableSpec, @MixWidget, @MixableModifier, legacy
-  @MixableStyler, @Mixable), code generation with mix_generator,
-  dot-shorthand policy, style variants (NamedVariant,
-  ContextVariant, WidgetStateVariant, onHovered, onPressed, onDark), implicit
-  animations with .animate(), Phase animations, Keyframe animations, design
-  tokens (MixScope, tokens), widget modifiers (.wrap()), directives, style
-  mixins, melos commands for Mix (gen:build, ci, analyze, exports), or the
-  Mix monorepo packages (mix, mix_annotations, mix_generator, mix_lint,
-  mix_tailwinds).
+description: Use when working with the Mix Flutter styling framework in this repository, including specs, stylers, Prop values, Mix annotations and code generation, fluent APIs, variants, animations, tokens, modifiers, or directives.
 ---
 
 # Mix Framework
 
 Type-safe styling system for Flutter that separates style semantics from widgets.
 
-**Target version:** `mix: 2.0.3` (Dart >=3.11.0, Flutter >=3.41.0)
-Confirm the project's actual version before applying patterns — check `pubspec.yaml`.
+Confirm the actual Mix version before applying patterns. In this repository,
+read `packages/remix/pubspec.yaml` and `packages/remix_fortal/pubspec.yaml`.
 
 ## Source of Truth
 
@@ -122,28 +109,28 @@ final combined = base.merge(elevated);
 - **Prefer `@MixableSpec(target: Widget.new)`** — `@MixableStyler` is legacy/deprecated
 - **Use `@MixWidget` for generated widgets from style factories** — it wraps top-level `Style<S>` variables or functions
 - **Use `@MixableModifier` for generated modifiers** — it emits the modifier contract mixin and `ModifierMix` class
-- **`mix.dart` is generated** — never edit directly; run `melos run exports`
-- **Run codegen after spec changes** — `melos run gen:build`
+- **Run codegen after annotated API or recipe changes** — `melos run generate`
 - **Prop merge semantics** — regular values: last wins (replacement); Mix values: accumulated merge
 - **Variant priority** — ContextVariant/NamedVariant first → StyleVariation second → WidgetStateVariant last (highest)
 
-## Commands
+## Repository Commands
 
 ```bash
-melos bootstrap           # Install dependencies
-melos run gen:build       # Clean + regenerate all *.g.dart files
-melos run ci              # Run all tests (flutter + dart)
-melos run analyze         # Dart + DCM analysis
-melos run fix             # Auto-fix lint issues
-melos run exports         # Regenerate mix.dart barrel file
+melos bootstrap                    # Install workspace dependencies
+melos run generate                 # Regenerate Remix and Fortal sources
+melos run generate:check           # Fail on generated-source drift
+melos run test:flutter             # Run package Flutter tests
+melos run fortal:parity:check      # Verify the Fortal/Radix contract
+melos run docs:check               # Validate documentation and examples
+melos run ci                       # Run the complete workspace gate
 ```
 
 **Pre-commit verification:**
 ```bash
-melos run gen:build && melos run ci && melos run analyze
+melos run ci
 ```
 
-## Monorepo Packages
+## Related Packages
 
 | Package | Purpose |
 |---------|---------|
@@ -152,6 +139,8 @@ melos run gen:build && melos run ci && melos run analyze
 | `mix_generator` | `build_runner` generator producing `*.g.dart` mixins |
 | `mix_lint` | Analysis server plugin with Mix-specific lint rules |
 | `mix_tailwinds` | Tailwind-style utility layer (experimental) |
+| `remix` | Theme-free components built with Mix and Naked UI |
+| `remix_fortal` | Radix Themes-inspired tokens, recipes, and generated Remix wrappers |
 
 ## References
 
