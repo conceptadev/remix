@@ -7,7 +7,7 @@ From the repository root:
 
 ```sh
 fvm dart run melos bootstrap
-cd packages/demo
+cd apps/demo
 fvm flutter run -d chrome
 ```
 

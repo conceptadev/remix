@@ -18,10 +18,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   widgetbook_annotation: ^3.11.0
   widgetbook: ^3.25.0
-  remix:
-    path: ../remix
-  remix_fortal:
-    path: ../remix_fortal
+  # Workspace resolution uses the local packages during development; these
+  # hosted constraints keep the app manifest deployable outside the workspace.
+  remix: ^1.0.0-beta.2
+  remix_fortal: ^0.1.0-beta.1
 
 dev_dependencies:
   flutter_test:

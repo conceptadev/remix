@@ -12,19 +12,19 @@ Flutter Widget Preview integration for Remix components, providing an interactiv
 
 ### Option 1: Use the Script (Recommended)
 ```bash
-cd packages/demo
+cd apps/demo
 ./scripts/preview.sh
 ```
 
 ### Option 2: Direct Command
 ```bash
-cd packages/demo
+cd apps/demo
 fvm flutter widget-preview start
 ```
 
 ### Option 3: Clean and Start
 ```bash
-cd packages/demo
+cd apps/demo
 fvm flutter widget-preview clean
 fvm flutter widget-preview start
 ```
@@ -54,7 +54,7 @@ fvm flutter widget-preview start
 ## Preview Structure
 
 ```
-packages/demo/lib/previews/
+apps/demo/lib/previews/
 ├── preview_helper.dart      # Shared helper function
 ├── button_preview.dart      # Button component previews  
 ├── card_preview.dart        # Card component previews

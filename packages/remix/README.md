@@ -260,7 +260,8 @@ Remix is ideal for:
 
 ## Examples
 
-Check out the `demo` and `example` directories for complete working examples demonstrating:
+Check out `apps/dashboard`, `apps/demo`, and the per-package examples in
+`packages/remix/example` and `packages/remix_fortal/example` for complete working examples demonstrating:
 - Component usage patterns
 - Style composition techniques
 - Design system implementation

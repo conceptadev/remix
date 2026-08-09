@@ -16,7 +16,7 @@ From the repository root:
 
 ```sh
 fvm dart run melos bootstrap
-cd packages/dashboard
+cd apps/dashboard
 fvm flutter run -d macos
 # or: fvm flutter run -d chrome
 ```

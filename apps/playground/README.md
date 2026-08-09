@@ -8,6 +8,6 @@ From the repository root:
 
 ```sh
 fvm dart run melos bootstrap
-cd packages/playground
+cd apps/playground
 fvm flutter run -d chrome
 ```
