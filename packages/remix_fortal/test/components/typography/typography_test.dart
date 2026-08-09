@@ -222,6 +222,149 @@ void main() {
     });
   });
 
+  group('code variants', () {
+    testWidgets('every variant resolves the pinned fill and foreground', (
+      tester,
+    ) async {
+      for (final brightness in Brightness.values) {
+        final tokens = await _accentTokens(tester, brightness);
+        for (final highContrast in [false, true]) {
+          for (final variant in FortalCodeVariant.values) {
+            await _pump(
+              tester,
+              FortalCode(
+                '${variant.name}-$highContrast',
+                variant: variant,
+                highContrast: highContrast,
+              ),
+              brightness: brightness,
+            );
+            final fill = _boxColor(_surface(tester));
+            final fg = _text(
+              tester,
+              '${variant.name}-$highContrast',
+            ).style?.color;
+
+            switch (variant) {
+              case FortalCodeVariant.solid:
+                expect(fill, highContrast ? tokens.accent12 : tokens.accentA9);
+                expect(
+                  fg,
+                  highContrast ? tokens.accent1 : tokens.accentContrast,
+                );
+              case FortalCodeVariant.soft:
+                expect(fill, tokens.accentA3);
+                expect(fg, highContrast ? tokens.accent12 : tokens.accentA11);
+              case FortalCodeVariant.outline:
+                expect(fg, highContrast ? tokens.accent12 : tokens.accentA11);
+              case FortalCodeVariant.ghost:
+                // Upstream gates ghost's colour on an explicit accent, so an
+                // opt-out ghost inherits the ambient foreground.
+                expect(fill, isNull);
+                expect(fg, isNull);
+            }
+          }
+        }
+      }
+    });
+
+    testWidgets('outline draws one ring, two at high contrast', (tester) async {
+      final tokens = await _accentTokens(tester, Brightness.light);
+      for (final highContrast in [false, true]) {
+        await _pump(
+          tester,
+          FortalCode.outline(
+            'ring-$highContrast',
+            size: FortalTextSize.size9,
+            highContrast: highContrast,
+          ),
+        );
+        final shadows = _surface(
+          tester,
+        ).containerEffects!.behindContent!.shadows;
+        expect(shadows, hasLength(highContrast ? 2 : 1));
+        expect(
+          shadows.first.color,
+          highContrast ? tokens.accentA7 : tokens.accentA8,
+        );
+        for (final shadow in shadows) {
+          expect(shadow.spreadRadius, closeTo(0.033 * 60 * 0.95 * 0.95, 1e-9));
+        }
+      }
+    });
+
+    testWidgets('ghost gains the accent foreground only when opted in', (
+      tester,
+    ) async {
+      final tokens = await _accentTokens(tester, Brightness.light);
+      await _pump(
+        tester,
+        const Column(
+          children: [
+            FortalCode.ghost('plain ghost'),
+            FortalCode.ghost('accent ghost', accent: true),
+            FortalCode.ghost(
+              'accent hc ghost',
+              accent: true,
+              highContrast: true,
+            ),
+          ],
+        ),
+      );
+      expect(_text(tester, 'plain ghost').style?.color, isNull);
+      expect(_text(tester, 'accent ghost').style?.color, tokens.accentA11);
+      expect(_text(tester, 'accent hc ghost').style?.color, tokens.accent12);
+    });
+
+    testWidgets('truncation and kbd min-width reach the rendered box', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        const SizedBox(
+          width: 60,
+          child: FortalCode.soft('a very long code sample', truncate: true),
+        ),
+      );
+      final code = _text(tester, 'a very long code sample');
+      expect(code.maxLines, 1);
+      expect(code.overflow, TextOverflow.ellipsis);
+
+      await _pump(
+        tester,
+        const FortalKbd.soft('x', size: FortalTextSize.size2),
+      );
+      expect(
+        _surface(tester).container.spec.constraints?.minWidth,
+        closeTo(1.75 * 14 * 0.8, 1e-9),
+      );
+    });
+  });
+
+  group('focus', () {
+    testWidgets('focused link draws the outline without moving layout', (
+      tester,
+    ) async {
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+      await _pump(
+        tester,
+        FortalLink('focus me', focusNode: focusNode, onPressed: _noop),
+      );
+      final idleSize = tester.getSize(find.text('focus me'));
+
+      focusNode.requestFocus();
+      await tester.pump();
+
+      final effects = _surface(tester).containerEffects!;
+      expect(effects.outline.width, 2);
+      expect(effects.outlineOffset, 2);
+      expect(tester.getSize(find.text('focus me')), idleSize);
+      // Focus replaces the underline rather than stacking both.
+      expect(_underlined(tester, 'focus me'), isFalse);
+    });
+  });
+
   group('theme', () {
     for (final brightness in Brightness.values) {
       testWidgets('kbd classic keeps all six ${brightness.name} layers', (
@@ -436,6 +579,58 @@ Text _text(WidgetTester tester, String text) =>
 BadgeSpec _surface(WidgetTester tester) {
   final widget = tester.widget<RemixBadge>(find.byType(RemixBadge));
   return widget.style.resolve(tester.element(find.byType(RemixBadge))).spec;
+}
+
+Color? _boxColor(BadgeSpec spec) =>
+    (spec.container.spec.decoration as BoxDecoration?)?.color;
+
+Future<
+  ({
+    Color accent1,
+    Color accent12,
+    Color accentA3,
+    Color accentA7,
+    Color accentA8,
+    Color accentA9,
+    Color accentA11,
+    Color accentContrast,
+  })
+>
+_accentTokens(WidgetTester tester, Brightness brightness) async {
+  late ({
+    Color accent1,
+    Color accent12,
+    Color accentA3,
+    Color accentA7,
+    Color accentA8,
+    Color accentA9,
+    Color accentA11,
+    Color accentContrast,
+  })
+  result;
+  await tester.pumpWidget(
+    FortalScope(
+      brightness: brightness,
+      child: Builder(
+        builder: (context) {
+          Color token(ColorToken value) => MixScope.tokenOf(value, context);
+          result = (
+            accent1: token(FortalTokens.accent1),
+            accent12: token(FortalTokens.accent12),
+            accentA3: token(FortalTokens.accentA3),
+            accentA7: token(FortalTokens.accentA7),
+            accentA8: token(FortalTokens.accentA8),
+            accentA9: token(FortalTokens.accentA9),
+            accentA11: token(FortalTokens.accentA11),
+            accentContrast: token(FortalTokens.accentContrast),
+          );
+          return const SizedBox.shrink();
+        },
+      ),
+    ),
+  );
+
+  return result;
 }
 
 bool _underlined(WidgetTester tester, String text) =>
