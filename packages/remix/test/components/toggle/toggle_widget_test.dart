@@ -270,6 +270,48 @@ void main() {
         final toggle = tester.widget<RemixToggle>(find.byType(RemixToggle));
         expect(toggle.semanticLabel, equals('Toggle bold formatting'));
       });
+
+      testWidgets('excludeSemantics allows replacement destination semantics', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+
+        await tester.pumpRemixApp(
+          Semantics(
+            button: true,
+            selected: true,
+            label: 'Overview',
+            onTap: () {},
+            child: RemixToggle(
+              selected: true,
+              onChanged: (value) {},
+              label: 'Overview',
+              excludeSemantics: true,
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final nakedToggle = tester.widget<NakedToggle>(
+          find.byType(NakedToggle),
+        );
+        final destination = find.semantics.byLabel('Overview');
+
+        expect(nakedToggle.excludeSemantics, isTrue);
+        expect(destination, findsOne);
+        expect(
+          destination.evaluate().single,
+          isSemantics(
+            label: 'Overview',
+            isButton: true,
+            isSelected: true,
+            hasSelectedState: true,
+            hasToggledState: false,
+            hasTapAction: true,
+          ),
+        );
+        semantics.dispose();
+      });
     });
 
     group('Layout and Sizing', () {

@@ -22,6 +22,7 @@ class FortalToggle extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
+    this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   });
 
@@ -38,6 +39,7 @@ class FortalToggle extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
+    this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalToggleVariant.ghost;
 
@@ -54,6 +56,7 @@ class FortalToggle extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
+    this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalToggleVariant.outline;
 
@@ -81,6 +84,8 @@ class FortalToggle extends StatelessWidget {
 
   final String? semanticLabel;
 
+  final bool excludeSemantics;
+
   final MouseCursor mouseCursor;
 
   @override
@@ -101,6 +106,7 @@ class FortalToggle extends StatelessWidget {
       focusNode: this.focusNode,
       autofocus: this.autofocus,
       semanticLabel: this.semanticLabel,
+      excludeSemantics: this.excludeSemantics,
       mouseCursor: this.mouseCursor,
     );
   }

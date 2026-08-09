@@ -2,6 +2,16 @@
 
 Context-aware and state-driven styling in Mix.
 
+## Table of Contents
+
+- [Variant hierarchy](#variant-hierarchy)
+- [Priority order](#priority-order)
+- [Built-in variants](#built-in-variant-methods)
+- [Usage patterns](#usage-patterns)
+- [Named variants](#pre-defined-named-variants)
+- [ContextVariant factories](#contextvariant-factory-methods)
+- [StyleVariation](#stylevariation)
+
 ## Variant Hierarchy
 
 **File:** `packages/mix/lib/src/variants/variant.dart`
@@ -64,6 +74,7 @@ Available on all Stylers via `WidgetStateVariantMixin`:
 | `onHovered(style)` | `WidgetState.hovered` |
 | `onPressed(style)` | `WidgetState.pressed` |
 | `onFocused(style)` | `WidgetState.focused` |
+| `onFocusVisible(style)` | `WidgetState.focused` while Flutter's focus highlight mode is `traditional` (keyboard/directional input) — use it for focus rings that should not appear on touch |
 | `onDisabled(style)` | `WidgetState.disabled` |
 | `onEnabled(style)` | Not disabled |
 

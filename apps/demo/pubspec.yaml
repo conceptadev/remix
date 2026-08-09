@@ -1,0 +1,32 @@
+name: demo
+description: Widgetbook catalog for reviewing Remix and Fortal components.
+publish_to: "none"
+version: 1.0.0+1
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0"
+
+dependency_overrides:
+  accessibility_tools: ^2.8.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  widgetbook_annotation: ^3.11.0
+  widgetbook: ^3.25.0
+  # Workspace resolution uses the local packages during development; these
+  # hosted constraints keep the app manifest deployable outside the workspace.
+  remix: ^1.0.0-beta.2
+  remix_fortal: ^0.1.0-beta.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  widgetbook_generator: ^3.24.0
+
+flutter:
+  uses-material-design: true

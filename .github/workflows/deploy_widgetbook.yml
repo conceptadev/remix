@@ -40,13 +40,13 @@ jobs:
         run: melos bootstrap
 
       - name: Build web
-        working-directory: packages/demo
+        working-directory: apps/demo
         run: flutter build web --release --base-href /remix/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: packages/demo/build/web
+          path: apps/demo/build/web
 
   deploy:
     environment:

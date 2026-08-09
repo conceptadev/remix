@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "mix": {
+      "source": "conceptadev/mix",
+      "sourceType": "github",
+      "skillPath": "skills/mix/SKILL.md",
+      "computedHash": "0bcc745ff3debef56b906016a251c6ef73ddbdb7bdbffb58711f613e78849e23"
+    }
+  }
+}

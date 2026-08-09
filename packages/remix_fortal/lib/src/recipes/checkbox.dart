@@ -51,6 +51,28 @@ CheckboxStyler fortalCheckboxStyle({
   };
 }
 
+/// Fortal recipe for [RemixCheckboxGroupItem].
+///
+/// Radix gives a checkbox-group item no visual contract of its own — it is a
+/// checkbox plus a label — so this delegates to [fortalCheckboxStyle] and
+/// inherits its verified parity rather than restating any of it.
+///
+/// It exists because `RemixCheckboxGroup` is behavioral and carries no styler,
+/// so unlike every other Remix item (menu, select, segmented control, toggle
+/// group) there is no parent recipe to push item styling down. Without this,
+/// callers hand-attach a styler to each item and a missed one in a loop renders
+/// unstyled beside its styled siblings.
+@MixWidget(target: RemixCheckboxGroupItem.new)
+CheckboxStyler fortalCheckboxGroupItemStyle({
+  FortalCheckboxVariant variant = .surface,
+  FortalCheckboxSize size = .size2,
+  bool highContrast = false,
+}) => fortalCheckboxStyle(
+  variant: variant,
+  size: size,
+  highContrast: highContrast,
+);
+
 ({double size, double indicatorSize, Radius radius}) _fortalCheckboxMetrics(
   FortalCheckboxSize size,
 ) => switch (size) {
