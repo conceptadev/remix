@@ -10,6 +10,7 @@ import '../widgets/action_popover.dart';
 import '../widgets/data_table_cell_text.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/page_header.dart';
+import '../widgets/status_badge.dart';
 import '../widgets/toast.dart';
 
 class CustomersPage extends StatefulWidget {
@@ -192,7 +193,7 @@ class _CustomersPageState extends State<CustomersPage> {
       id: 'status',
       label: 'Status',
       width: const FixedColumnWidth(110),
-      cellBuilder: (_, customer) => _CustomerStatusBadge(customer.status),
+      cellBuilder: (_, customer) => StatusBadge.customer(customer.status),
     ),
     RemixDataTableColumn(
       id: 'joined',
@@ -227,23 +228,4 @@ class _CustomersPageState extends State<CustomersPage> {
       ),
     ),
   ];
-}
-
-class _CustomerStatusBadge extends StatelessWidget {
-  const _CustomerStatusBadge(this.status);
-  final CustomerStatus status;
-
-  @override
-  Widget build(BuildContext context) {
-    final (label, color) = switch (status) {
-      .active => ('Active', FortalAccentColor.green),
-      .invited => ('Invited', FortalAccentColor.blue),
-      .suspended => ('Suspended', FortalAccentColor.red),
-    };
-    return FortalScope(
-      accent: color,
-      hasBackground: false,
-      child: FortalBadge(label: label),
-    );
-  }
 }

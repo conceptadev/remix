@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import 'typography.dart';
+
 class EmptyState extends StatelessWidget {
   const EmptyState({
     super.key,
@@ -42,16 +44,17 @@ class EmptyState extends StatelessWidget {
               ),
               StyledText(
                 title,
-                style: TextStyler(style: FortalTokens.text3.mix())
-                    .fontWeight(.w600)
-                    .color(FortalTokens.gray12())
-                    .textAlign(.center),
+                style: dashboardText(
+                  FortalTokens.text3,
+                  weight: .w600,
+                ).textAlign(.center),
               ),
               StyledText(
                 body,
-                style: TextStyler(
-                  style: FortalTokens.text2.mix(),
-                ).color(FortalTokens.gray11()).textAlign(.center),
+                style: dashboardText(
+                  FortalTokens.text2,
+                  tone: .muted,
+                ).textAlign(.center),
               ),
               if (action case final action?) ...[
                 const SizedBox(height: 4),

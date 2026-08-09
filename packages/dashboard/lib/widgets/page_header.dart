@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import 'typography.dart';
+
+/// The title, description, and optional actions at the top of a page.
 class PageHeader extends StatelessWidget {
   const PageHeader({
     super.key,
@@ -26,15 +29,11 @@ class PageHeader extends StatelessWidget {
             children: [
               StyledText(
                 title,
-                style: TextStyler(
-                  style: FortalTokens.text6.mix(),
-                ).fontWeight(.w700).color(FortalTokens.gray12()),
+                style: dashboardText(FortalTokens.text6, weight: .w700),
               ),
               StyledText(
                 description,
-                style: TextStyler(
-                  style: FortalTokens.text2.mix(),
-                ).color(FortalTokens.gray11()),
+                style: dashboardText(FortalTokens.text2, tone: .muted),
               ),
             ],
           ),
@@ -45,17 +44,39 @@ class PageHeader extends StatelessWidget {
   }
 }
 
+/// The title of a section inside a card.
 class SectionLabel extends StatelessWidget {
   const SectionLabel(this.label, {super.key});
   final String label;
 
   @override
-  Widget build(BuildContext context) {
-    return StyledText(
-      label,
-      style: TextStyler(
-        style: FortalTokens.text4.mix(),
-      ).fontWeight(.w600).color(FortalTokens.gray12()),
-    );
-  }
+  Widget build(BuildContext context) => StyledText(
+    label,
+    style: dashboardText(FortalTokens.text4, weight: .w600),
+  );
+}
+
+/// A [SectionLabel] with supporting copy beneath it.
+class CardHeading extends StatelessWidget {
+  const CardHeading({
+    super.key,
+    required this.title,
+    required this.description,
+  });
+
+  final String title;
+  final String description;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: .start,
+    spacing: 3,
+    children: [
+      SectionLabel(title),
+      StyledText(
+        description,
+        style: dashboardText(FortalTokens.text2, tone: .muted),
+      ),
+    ],
+  );
 }

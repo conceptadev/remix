@@ -10,6 +10,7 @@ import '../widgets/action_popover.dart';
 import '../widgets/data_table_cell_text.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/page_header.dart';
+import '../widgets/status_badge.dart';
 import '../widgets/toast.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
@@ -69,24 +70,26 @@ class _OrdersPageState extends State<OrdersPage> {
             alignment: .centerLeft,
             child: SingleChildScrollView(
               scrollDirection: .horizontal,
-              child: FortalToggleGroup<_OrderFilter>(
+              child: FortalSegmentedControl<_OrderFilter>(
                 semanticLabel: 'Filter orders by status',
                 selectedValue: _filter,
                 items: const [
-                  RemixToggleGroupItem(value: .all, label: 'All'),
-                  RemixToggleGroupItem(value: .paid, label: 'Paid'),
-                  RemixToggleGroupItem(value: .pending, label: 'Pending'),
-                  RemixToggleGroupItem(value: .refunded, label: 'Refunded'),
-                  RemixToggleGroupItem(value: .cancelled, label: 'Cancelled'),
+                  RemixSegmentedControlItem(value: .all, label: 'All'),
+                  RemixSegmentedControlItem(value: .paid, label: 'Paid'),
+                  RemixSegmentedControlItem(value: .pending, label: 'Pending'),
+                  RemixSegmentedControlItem(
+                    value: .refunded,
+                    label: 'Refunded',
+                  ),
+                  RemixSegmentedControlItem(
+                    value: .cancelled,
+                    label: 'Cancelled',
+                  ),
                 ],
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _filter = value;
-                      _page = 0;
-                    });
-                  }
-                },
+                onChanged: (value) => setState(() {
+                  _filter = value;
+                  _page = 0;
+                }),
               ),
             ),
           ),
@@ -165,7 +168,7 @@ class _OrdersPageState extends State<OrdersPage> {
       id: 'status',
       label: 'Status',
       width: const FixedColumnWidth(118),
-      cellBuilder: (_, order) => _OrderStatusBadge(order.status),
+      cellBuilder: (_, order) => StatusBadge.order(order.status),
     ),
     RemixDataTableColumn(
       id: 'actions',
@@ -192,25 +195,4 @@ class _OrdersPageState extends State<OrdersPage> {
       ),
     ),
   ];
-}
-
-class _OrderStatusBadge extends StatelessWidget {
-  const _OrderStatusBadge(this.status);
-  final OrderStatus status;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = switch (status) {
-      .paid => FortalAccentColor.green,
-      .pending => FortalAccentColor.amber,
-      .refunded => FortalAccentColor.red,
-      .cancelled => FortalAccentColor.gray,
-    };
-    final label = '${status.name[0].toUpperCase()}${status.name.substring(1)}';
-    return FortalScope(
-      accent: color,
-      hasBackground: false,
-      child: FortalBadge(label: label),
-    );
-  }
 }

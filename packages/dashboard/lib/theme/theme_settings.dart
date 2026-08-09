@@ -7,6 +7,7 @@ class ThemeSettings {
     this.appearance = .system,
     this.accentColor = .indigo,
     this.grayColor = .slate,
+    this.panelBackground = .solid,
     this.radius = .medium,
     this.scaling = .percent100,
   });
@@ -14,6 +15,7 @@ class ThemeSettings {
   final ThemeMode appearance;
   final FortalAccentColor accentColor;
   final FortalGrayColor grayColor;
+  final FortalPanelBackground panelBackground;
   final FortalRadius radius;
   final FortalScaling scaling;
 
@@ -25,6 +27,7 @@ class ThemeSettings {
     ThemeMode? appearance,
     FortalAccentColor? accentColor,
     FortalGrayColor? grayColor,
+    FortalPanelBackground? panelBackground,
     FortalRadius? radius,
     FortalScaling? scaling,
   }) {
@@ -32,6 +35,7 @@ class ThemeSettings {
       appearance: appearance ?? this.appearance,
       accentColor: accentColor ?? this.accentColor,
       grayColor: grayColor ?? this.grayColor,
+      panelBackground: panelBackground ?? this.panelBackground,
       radius: radius ?? this.radius,
       scaling: scaling ?? this.scaling,
     );

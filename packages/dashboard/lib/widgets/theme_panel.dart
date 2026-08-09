@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 import '../theme/theme_scope.dart';
 import '../theme/theme_settings.dart';
+import '../utils/text.dart';
+import 'typography.dart';
 
 class ThemePanel extends StatelessWidget {
   const ThemePanel({super.key});
@@ -13,6 +14,25 @@ class ThemePanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final scope = ThemeScope.of(context);
     final settings = scope.settings;
+
+    /// Every discrete theme parameter is an exclusive choice from a short list,
+    /// so they all render as one labelled segmented control over the setting.
+    Widget choice<T extends Object>({
+      required String label,
+      required T selectedValue,
+      required List<RemixSegmentedControlItem<T>> items,
+      required ThemeSettings Function(T value) apply,
+    }) => _Control(
+      label: label,
+      child: FortalSegmentedControl<T>(
+        size: .size1,
+        selectedValue: selectedValue,
+        semanticLabel: label,
+        items: items,
+        onChanged: (value) => scope.onChanged(apply(value)),
+      ),
+    );
+
     return SizedBox(
       key: const ValueKey('theme-panel'),
       width: 360,
@@ -20,26 +40,15 @@ class ThemePanel extends StatelessWidget {
         crossAxisAlignment: .stretch,
         spacing: 18,
         children: [
-          _Control(
+          choice<ThemeMode>(
             label: 'Appearance',
-            child: Align(
-              alignment: .centerLeft,
-              child: FortalToggleGroup<ThemeMode>(
-                size: .size1,
-                selectedValue: settings.appearance,
-                semanticLabel: 'Theme appearance',
-                items: const [
-                  RemixToggleGroupItem(value: .system, label: 'System'),
-                  RemixToggleGroupItem(value: .light, label: 'Light'),
-                  RemixToggleGroupItem(value: .dark, label: 'Dark'),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    scope.onChanged(settings.copyWith(appearance: value));
-                  }
-                },
-              ),
-            ),
+            selectedValue: settings.appearance,
+            items: const [
+              RemixSegmentedControlItem(value: .system, label: 'System'),
+              RemixSegmentedControlItem(value: .light, label: 'Light'),
+              RemixSegmentedControlItem(value: .dark, label: 'Dark'),
+            ],
+            apply: (value) => settings.copyWith(appearance: value),
           ),
           _Control(
             label: 'Accent color',
@@ -65,7 +74,7 @@ class ThemePanel extends StatelessWidget {
               selectedValue: settings.grayColor,
               items: [
                 for (final gray in FortalGrayColor.values)
-                  RemixSelectItem(value: gray, label: _label(gray.name)),
+                  RemixSelectItem(value: gray, label: capitalize(gray.name)),
               ],
               onChanged: (value) {
                 if (value != null) {
@@ -74,64 +83,60 @@ class ThemePanel extends StatelessWidget {
               },
             ),
           ),
-          _Control(
-            label: 'Radius',
-            child: Row(
-              spacing: 10,
-              children: [
-                Expanded(
-                  child: FortalToggleGroup<FortalRadius>(
-                    size: .size1,
-                    selectedValue: settings.radius,
-                    semanticLabel: 'Theme radius',
-                    items: const [
-                      RemixToggleGroupItem(value: .none, label: 'None'),
-                      RemixToggleGroupItem(value: .small, label: 'S'),
-                      RemixToggleGroupItem(value: .medium, label: 'M'),
-                      RemixToggleGroupItem(value: .large, label: 'L'),
-                      RemixToggleGroupItem(value: .full, label: 'Full'),
-                    ],
-                    onChanged: (value) {
-                      if (value != null) {
-                        scope.onChanged(settings.copyWith(radius: value));
-                      }
-                    },
-                  ),
-                ),
-                Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: MixScope.tokenOf(FortalTokens.accent9, context),
-                    borderRadius: BorderRadius.all(
-                      MixScope.tokenOf(FortalTokens.radius3, context),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          _Control(
-            label: 'Scaling',
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: FortalToggleGroup<FortalScaling>(
-                size: .size1,
-                selectedValue: settings.scaling,
-                semanticLabel: 'Theme scaling',
-                items: const [
-                  RemixToggleGroupItem(value: .percent90, label: '90%'),
-                  RemixToggleGroupItem(value: .percent95, label: '95%'),
-                  RemixToggleGroupItem(value: .percent100, label: '100%'),
-                  RemixToggleGroupItem(value: .percent105, label: '105%'),
-                  RemixToggleGroupItem(value: .percent110, label: '110%'),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    scope.onChanged(settings.copyWith(scaling: value));
-                  }
-                },
+          choice<FortalPanelBackground>(
+            label: 'Panel background',
+            selectedValue: settings.panelBackground,
+            items: const [
+              RemixSegmentedControlItem(value: .solid, label: 'Solid'),
+              RemixSegmentedControlItem(
+                value: .translucent,
+                label: 'Translucent',
               ),
+            ],
+            apply: (value) => settings.copyWith(panelBackground: value),
+          ),
+          Row(
+            spacing: 10,
+            children: [
+              Expanded(
+                child: choice<FortalRadius>(
+                  label: 'Radius',
+                  selectedValue: settings.radius,
+                  items: const [
+                    RemixSegmentedControlItem(value: .none, label: 'None'),
+                    RemixSegmentedControlItem(value: .small, label: 'S'),
+                    RemixSegmentedControlItem(value: .medium, label: 'M'),
+                    RemixSegmentedControlItem(value: .large, label: 'L'),
+                    RemixSegmentedControlItem(value: .full, label: 'Full'),
+                  ],
+                  apply: (value) => settings.copyWith(radius: value),
+                ),
+              ),
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: MixScope.tokenOf(FortalTokens.accent9, context),
+                  borderRadius: BorderRadius.all(
+                    MixScope.tokenOf(FortalTokens.radius3, context),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SingleChildScrollView(
+            scrollDirection: .horizontal,
+            child: choice<FortalScaling>(
+              label: 'Scaling',
+              selectedValue: settings.scaling,
+              items: const [
+                RemixSegmentedControlItem(value: .percent90, label: '90%'),
+                RemixSegmentedControlItem(value: .percent95, label: '95%'),
+                RemixSegmentedControlItem(value: .percent100, label: '100%'),
+                RemixSegmentedControlItem(value: .percent105, label: '105%'),
+                RemixSegmentedControlItem(value: .percent110, label: '110%'),
+              ],
+              apply: (value) => settings.copyWith(scaling: value),
             ),
           ),
           Align(
@@ -157,21 +162,26 @@ class _Control extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: .stretch,
+    crossAxisAlignment: .start,
     spacing: 8,
     children: [
       StyledText(
         label,
-        style: TextStyler(
-          style: FortalTokens.text2.mix(),
-        ).fontWeight(.w600).color(FortalTokens.gray12()),
+        style: dashboardText(FortalTokens.text2, weight: .w600),
       ),
       child,
     ],
   );
 }
 
-class _AccentSwatch extends StatefulWidget {
+/// One selectable accent in the theme panel.
+///
+/// The swatch paints the accent itself, so it takes its interaction, focus
+/// ring, keyboard activation, and selected semantics from [RemixToggle] and
+/// supplies only the visual. Re-scoping to [accent] lets the fill come from
+/// the same `accent-9`/`accent-10` steps every other component reads, which is
+/// also why the style below is shared: it names tokens, never a colour.
+class _AccentSwatch extends StatelessWidget {
   const _AccentSwatch({
     super.key,
     required this.accent,
@@ -179,79 +189,47 @@ class _AccentSwatch extends StatefulWidget {
     required this.onPressed,
   });
 
+  static final _ring = ToggleStyler().borderAll(
+    color: FortalTokens.focus8(),
+    width: FortalTokens.focusRingWidth(),
+    strokeAlign: BorderSide.strokeAlignOutside,
+  );
+
+  static final _style =
+      ToggleStyler(
+            container: FlexBoxStyler()
+                .size(30, 30)
+                .alignment(.center)
+                .borderRadiusAll(const Radius.circular(15)),
+            icon: .size(15),
+          )
+          .backgroundColor(FortalTokens.accent9())
+          .iconColor(Colors.transparent)
+          .onHovered(ToggleStyler().backgroundColor(FortalTokens.accent10()))
+          .onPressed(ToggleStyler().backgroundColor(FortalTokens.accent10()))
+          .onSelected(
+            ToggleStyler()
+                .iconColor(FortalTokens.accentContrast())
+                .merge(_ring),
+          )
+          .onFocused(_ring);
+
   final FortalAccentColor accent;
   final bool selected;
   final VoidCallback onPressed;
 
   @override
-  State<_AccentSwatch> createState() => _AccentSwatchState();
+  Widget build(BuildContext context) => FortalScope(
+    accent: accent,
+    hasBackground: false,
+    child: RemixToggle(
+      selected: selected,
+      onChanged: (_) => onPressed(),
+      // RemixToggle requires a label or an icon, so the check is always
+      // mounted and the selected state reveals it.
+      icon: Icons.check,
+      semanticLabel: '${capitalize(accent.name)} accent',
+      style: _style,
+    ),
+  );
 }
-
-class _AccentSwatchState extends State<_AccentSwatch> {
-  bool _focused = false;
-  bool _hovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final ring = MixScope.tokenOf(FortalTokens.focus8, context);
-    return Semantics(
-      button: true,
-      selected: widget.selected,
-      label: '${_label(widget.accent.name)} accent',
-      child: Focus(
-        onFocusChange: (value) => setState(() => _focused = value),
-        onKeyEvent: (_, event) {
-          if (event is KeyDownEvent &&
-              (event.logicalKey == LogicalKeyboardKey.enter ||
-                  event.logicalKey == LogicalKeyboardKey.space)) {
-            widget.onPressed();
-            return .handled;
-          }
-          return .ignored;
-        },
-        child: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          onEnter: (_) => setState(() => _hovered = true),
-          onExit: (_) => setState(() => _hovered = false),
-          child: GestureDetector(
-            onTap: widget.onPressed,
-            child: FortalScope(
-              accent: widget.accent,
-              hasBackground: false,
-              child: Builder(
-                builder: (context) => AnimatedContainer(
-                  duration: const Duration(milliseconds: 120),
-                  width: 30,
-                  height: 30,
-                  alignment: .center,
-                  decoration: BoxDecoration(
-                    color: MixScope.tokenOf(
-                      _hovered ? FortalTokens.accent10 : FortalTokens.accent9,
-                      context,
-                    ),
-                    shape: .circle,
-                    border: widget.selected || _focused
-                        ? Border.all(color: ring, width: 2)
-                        : null,
-                  ),
-                  child: widget.selected
-                      ? Icon(
-                          Icons.check,
-                          size: 15,
-                          color: MixScope.tokenOf(
-                            FortalTokens.accentContrast,
-                            context,
-                          ),
-                        )
-                      : null,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-String _label(String name) => '${name[0].toUpperCase()}${name.substring(1)}';

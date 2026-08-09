@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import 'typography.dart';
+
 void showToast(
   BuildContext context, {
   required String message,
@@ -71,9 +73,7 @@ class _ToastBody extends StatelessWidget {
               Flexible(
                 child: StyledText(
                   message,
-                  style: TextStyler(
-                    style: FortalTokens.text2.mix(),
-                  ).fontWeight(.w500).color(FortalTokens.gray12()),
+                  style: dashboardText(FortalTokens.text2, weight: .w500),
                 ),
               ),
               if (actionLabel case final label?)

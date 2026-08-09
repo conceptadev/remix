@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../../utils/text.dart';
 import '../../widgets/gallery_scaffold.dart';
 import '../../widgets/toast.dart';
 
@@ -25,8 +26,8 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
           description:
               'Classic, solid, soft, surface, outline, and ghost actions.',
           child: GalleryMatrix(
-            rows: FortalButtonVariant.values.map(galleryLabel).toList(),
-            columns: FortalButtonSize.values.map(galleryLabel).toList(),
+            rows: FortalButtonVariant.values.map(enumLabel).toList(),
+            columns: FortalButtonSize.values.map(enumLabel).toList(),
             cellBuilder: (context, row, column) => FortalButton(
               variant: FortalButtonVariant.values[row],
               size: FortalButtonSize.values[column],
@@ -40,8 +41,8 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
           description:
               'Compact icon-only controls with complete focus semantics.',
           child: GalleryMatrix(
-            rows: FortalIconButtonVariant.values.map(galleryLabel).toList(),
-            columns: FortalIconButtonSize.values.map(galleryLabel).toList(),
+            rows: FortalIconButtonVariant.values.map(enumLabel).toList(),
+            columns: FortalIconButtonSize.values.map(enumLabel).toList(),
             cellBuilder: (context, row, column) => FortalIconButton(
               variant: FortalIconButtonVariant.values[row],
               size: FortalIconButtonSize.values[column],
@@ -55,8 +56,8 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
           label: 'Toggle',
           description: 'Ghost and outline toggles remain fully interactive.',
           child: GalleryMatrix(
-            rows: FortalToggleVariant.values.map(galleryLabel).toList(),
-            columns: FortalToggleSize.values.map(galleryLabel).toList(),
+            rows: FortalToggleVariant.values.map(enumLabel).toList(),
+            columns: FortalToggleSize.values.map(enumLabel).toList(),
             cellBuilder: (_, row, column) => FortalToggle(
               variant: FortalToggleVariant.values[row],
               size: FortalToggleSize.values[column],

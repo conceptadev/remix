@@ -139,10 +139,13 @@ void main() {
         .first;
     final overviewNode = tester.getSemantics(overviewSemantics);
     expect(overviewNode.label, 'Overview');
-    expect(
-      overviewNode.getSemanticsData().hasAction(ui.SemanticsAction.tap),
-      isTrue,
-    );
+
+    // A destination is one of a mutually exclusive set, so it must announce
+    // `selected` — not the toggled on/off state RemixToggle emits by default.
+    final data = overviewNode.getSemanticsData();
+    expect(data.hasAction(ui.SemanticsAction.tap), isTrue);
+    expect(data.flagsCollection.isSelected, ui.Tristate.isTrue);
+    expect(data.flagsCollection.isToggled, ui.Tristate.none);
     semantics.dispose();
   });
 
@@ -171,7 +174,22 @@ void main() {
     expect(find.text('View all'), findsOneWidget);
   });
 
-  testWidgets('settings exposes the complete live theme controls', (
+  testWidgets('a status reads the same on every page that shows it', (
+    tester,
+  ) async {
+    // ORD-1045 is refunded and appears in the overview's five-row preview, so
+    // an overview-local status mapping would disagree with the orders page.
+    await tester.pumpWidget(const DashboardApp());
+    expect(find.text('Refunded'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('nav-orders')).first);
+    await tester.pump();
+
+    // The filter offers "Refunded" too, so the badge is the second match.
+    expect(find.text('Refunded'), findsNWidgets(2));
+  });
+
+  testWidgets('settings exposes every live Fortal theme parameter', (
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
@@ -179,11 +197,93 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('nav-settings')).first);
     await tester.pump();
 
-    expect(find.byKey(const ValueKey('theme-panel')), findsOneWidget);
-    expect(find.text('Accent color'), findsOneWidget);
-    expect(find.text('Gray color'), findsOneWidget);
-    expect(find.text('Radius'), findsOneWidget);
-    expect(find.text('Scaling'), findsOneWidget);
+    final panel = find.byKey(const ValueKey('theme-panel'));
+    expect(panel, findsOneWidget);
+    for (final control in const [
+      'Appearance',
+      'Accent color',
+      'Gray color',
+      'Panel background',
+      'Radius',
+      'Scaling',
+    ]) {
+      expect(
+        find.descendant(of: panel, matching: find.text(control)),
+        findsOneWidget,
+        reason: control,
+      );
+    }
+  });
+
+  testWidgets('the panel background control reaches the Fortal scope', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey('nav-settings')).first);
+    await tester.pump();
+
+    final translucent = find.text('Translucent');
+    await tester.ensureVisible(translucent);
+    await tester.tap(translucent);
+    await tester.pump();
+
+    expect(
+      FortalTheme.of(
+        tester.element(find.byType(DashboardShell)),
+      ).panelBackground,
+      FortalPanelBackground.translucent,
+    );
+  });
+
+  testWidgets('the forms gallery covers every Fortal input recipe', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey('nav-galleryForms')).first);
+    await tester.pump();
+
+    expect(find.byType(FortalTextArea), findsWidgets);
+    expect(find.byType(FortalSegmentedControl<String>), findsWidgets);
+    expect(find.byType(RemixCheckboxGroupItem<String>), findsNWidgets(3));
+    expect(find.text('Labelled'), findsOneWidget);
+  });
+
+  testWidgets('the display gallery covers the data list and skeleton', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey('nav-galleryDisplay')).first);
+    await tester.pump();
+
+    expect(find.byType(FortalDataList), findsWidgets);
+    expect(find.byType(FortalSkeleton), findsNWidgets(2));
+
+    await tester.tap(find.text('Show content'));
+    await tester.pump();
+    expect(
+      find.text('Loaded content replaces the placeholder.'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('the overlays gallery exposes the compound menu items', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const DashboardApp());
+    final nav = find.byKey(const ValueKey('nav-galleryOverlays')).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
+    await tester.pump();
+
+    final trigger = find.text('Open menu').first;
+    await tester.ensureVisible(trigger);
+    await tester.tap(trigger);
+    await tester.pump();
+
+    expect(find.text('Show archived'), findsOneWidget);
+    expect(find.text('Newest'), findsOneWidget);
+    expect(find.text('Share'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('actions gallery exposes button, icon button, and toggle', (

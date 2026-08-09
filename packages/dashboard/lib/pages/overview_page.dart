@@ -5,8 +5,11 @@ import 'package:remix_fortal/remix_fortal.dart';
 import '../data/activity.dart';
 import '../data/models.dart';
 import '../data/orders.dart';
+import '../widgets/data_table_cell_text.dart';
 import '../widgets/page_header.dart';
 import '../widgets/stat_card.dart';
+import '../widgets/status_badge.dart';
+import '../widgets/typography.dart';
 
 class OverviewPage extends StatelessWidget {
   const OverviewPage({super.key, required this.onViewOrders});
@@ -97,10 +100,7 @@ class _ActivityCard extends StatelessWidget {
           for (final (index, event) in activityEvents.indexed) ...[
             _ActivityRow(event),
             if (index != activityEvents.length - 1)
-              Container(
-                height: 1,
-                color: MixScope.tokenOf(FortalTokens.grayA5, context),
-              ),
+              const FortalDivider(size: .size4),
           ],
         ],
       ),
@@ -114,7 +114,7 @@ class _ActivityRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (icon, color) = switch (event.kind) {
+    final (icon, accent) = switch (event.kind) {
       .customer => (Icons.person_add_alt, FortalAccentColor.blue),
       .order => (Icons.local_shipping_outlined, FortalAccentColor.indigo),
       .payment => (Icons.payments_outlined, FortalAccentColor.green),
@@ -125,7 +125,7 @@ class _ActivityRow extends StatelessWidget {
       child: Row(
         spacing: 12,
         children: [
-          _ActivityIcon(icon: icon, color: color),
+          _ActivityIcon(icon: icon, accent: accent),
           Expanded(
             child: Column(
               crossAxisAlignment: .start,
@@ -133,24 +133,18 @@ class _ActivityRow extends StatelessWidget {
               children: [
                 StyledText(
                   event.title,
-                  style: TextStyler(
-                    style: FortalTokens.text2.mix(),
-                  ).fontWeight(.w600).color(FortalTokens.gray12()),
+                  style: dashboardText(FortalTokens.text2, weight: .w600),
                 ),
                 StyledText(
                   event.detail,
-                  style: TextStyler(
-                    style: FortalTokens.text1.mix(),
-                  ).color(FortalTokens.gray11()),
+                  style: dashboardText(FortalTokens.text1, tone: .muted),
                 ),
               ],
             ),
           ),
           StyledText(
             event.relativeTime,
-            style: TextStyler(
-              style: FortalTokens.text1.mix(),
-            ).color(FortalTokens.gray10()),
+            style: dashboardText(FortalTokens.text1, tone: .subtle),
           ),
         ],
       ),
@@ -158,32 +152,23 @@ class _ActivityRow extends StatelessWidget {
   }
 }
 
+/// The accent-tinted disc in front of an activity row.
+///
+/// A soft avatar already is this disc — `accent-a3` fill, 32px at size 2 — so
+/// re-scoping to [accent] is the whole widget. Before this it reached into a
+/// Radix colour scale directly and had to pick its own dark-mode branch.
 class _ActivityIcon extends StatelessWidget {
-  const _ActivityIcon({required this.icon, required this.color});
+  const _ActivityIcon({required this.icon, required this.accent});
 
   final IconData icon;
-  final FortalAccentColor color;
+  final FortalAccentColor accent;
 
   @override
-  Widget build(BuildContext context) {
-    final radix = switch (color) {
-      .blue => blue,
-      .green => green,
-      .amber => amber,
-      _ => indigo,
-    };
-    final scale = FortalTheme.of(context).isDark ? radix.dark : radix.light;
-    return Container(
-      width: 32,
-      height: 32,
-      alignment: .center,
-      decoration: BoxDecoration(
-        color: scale.scale.alphaStep(3),
-        shape: .circle,
-      ),
-      child: Icon(icon, size: 16, color: scale.scale.step(11)),
-    );
-  }
+  Widget build(BuildContext context) => FortalScope(
+    accent: accent,
+    hasBackground: false,
+    child: FortalAvatar.soft(icon: icon, size: .size2),
+  );
 }
 
 class _RecentOrders extends StatelessWidget {
@@ -219,20 +204,21 @@ class _RecentOrders extends StatelessWidget {
                 id: 'id',
                 label: 'Order',
                 width: const FixedColumnWidth(105),
-                cellBuilder: (_, order) => _OrderText(order.id, primary: true),
+                cellBuilder: (_, order) =>
+                    DataTableCellText(order.id, primary: true),
               ),
               RemixDataTableColumn(
                 id: 'customer',
                 label: 'Customer',
                 width: const FlexColumnWidth(2),
-                cellBuilder: (_, order) => _OrderText(order.customer),
+                cellBuilder: (_, order) => DataTableCellText(order.customer),
               ),
               RemixDataTableColumn(
                 id: 'amount',
                 label: 'Amount',
                 width: const FixedColumnWidth(100),
                 alignment: .end,
-                cellBuilder: (_, order) => _OrderText(
+                cellBuilder: (_, order) => DataTableCellText(
                   '\$${order.amount.toStringAsFixed(2)}',
                   primary: true,
                 ),
@@ -241,11 +227,7 @@ class _RecentOrders extends StatelessWidget {
                 id: 'status',
                 label: 'Status',
                 width: const FixedColumnWidth(94),
-                cellBuilder: (_, order) => FortalScope(
-                  accent: order.status == .paid ? .green : .amber,
-                  hasBackground: false,
-                  child: FortalBadge(label: order.status.name),
-                ),
+                cellBuilder: (_, order) => StatusBadge.order(order.status),
               ),
             ],
           ),
@@ -253,20 +235,4 @@ class _RecentOrders extends StatelessWidget {
       ),
     );
   }
-}
-
-class _OrderText extends StatelessWidget {
-  const _OrderText(this.value, {this.primary = false});
-  final String value;
-  final bool primary;
-
-  @override
-  Widget build(BuildContext context) => StyledText(
-    value,
-    style: TextStyler(style: FortalTokens.text1.mix())
-        .fontWeight(primary ? .w600 : .w400)
-        .color(primary ? FortalTokens.gray12() : FortalTokens.gray11())
-        .maxLines(1)
-        .overflow(.ellipsis),
-  );
 }

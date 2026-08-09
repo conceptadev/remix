@@ -2,11 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../../utils/text.dart';
 import '../../widgets/gallery_scaffold.dart';
 import '../../widgets/toast.dart';
 
-class GalleryOverlaysPage extends StatelessWidget {
+class GalleryOverlaysPage extends StatefulWidget {
   const GalleryOverlaysPage({super.key});
+
+  @override
+  State<GalleryOverlaysPage> createState() => _GalleryOverlaysPageState();
+}
+
+class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
+  bool _showArchived = true;
+  String _sort = 'newest';
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +29,7 @@ class GalleryOverlaysPage extends StatelessWidget {
           description: 'The complete four-size dialog scale.',
           child: GalleryMatrix(
             rows: const ['Dialog'],
-            columns: FortalDialogSize.values.map(galleryLabel).toList(),
+            columns: FortalDialogSize.values.map(enumLabel).toList(),
             cellBuilder: (context, _, column) => FortalButton.soft(
               size: .size1,
               onPressed: () => showRemixDialog<void>(
@@ -59,7 +68,7 @@ class GalleryOverlaysPage extends StatelessWidget {
               for (final size in FortalPopoverSize.values)
                 FortalPopover(
                   size: size,
-                  semanticLabel: 'Open ${galleryLabel(size)} popover',
+                  semanticLabel: 'Open ${enumLabel(size)} popover',
                   popoverChild: const SizedBox(
                     width: 250,
                     child: Column(
@@ -73,7 +82,7 @@ class GalleryOverlaysPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  child: _OverlayTrigger('Popover ${galleryLabel(size)}'),
+                  child: _OverlayTrigger('Popover ${enumLabel(size)}'),
                 ),
             ],
           ),
@@ -92,8 +101,8 @@ class GalleryOverlaysPage extends StatelessWidget {
           label: 'Menu',
           description: 'Solid and soft menus at both supported density sizes.',
           child: GalleryMatrix(
-            rows: FortalMenuVariant.values.map(galleryLabel).toList(),
-            columns: FortalMenuSize.values.map(galleryLabel).toList(),
+            rows: FortalMenuVariant.values.map(enumLabel).toList(),
+            columns: FortalMenuSize.values.map(enumLabel).toList(),
             cellBuilder: (context, row, column) => FortalMenu<String>(
               variant: FortalMenuVariant.values[row],
               size: FortalMenuSize.values[column],
@@ -101,11 +110,32 @@ class GalleryOverlaysPage extends StatelessWidget {
                 label: 'Open menu',
                 icon: Icons.more_horiz,
               ),
-              items: const <RemixMenuItemData<String>>[
-                RemixMenuItem(value: 'duplicate', label: 'Duplicate'),
-                RemixMenuItem(value: 'share', label: 'Share'),
-                RemixMenuDivider(),
-                RemixMenuItem(value: 'archive', label: 'Archive'),
+              items: <RemixMenuItemData<String>>[
+                const RemixMenuItem(value: 'duplicate', label: 'Duplicate'),
+                const RemixMenuSubmenu(
+                  label: 'Share',
+                  items: [
+                    RemixMenuItem(value: 'share-link', label: 'Copy link'),
+                    RemixMenuItem(value: 'share-email', label: 'Email'),
+                  ],
+                ),
+                const RemixMenuDivider(),
+                RemixMenuCheckboxItem(
+                  value: 'archived',
+                  label: 'Show archived',
+                  checked: _showArchived,
+                  onChanged: (checked) =>
+                      setState(() => _showArchived = checked),
+                ),
+                const RemixMenuDivider(),
+                RemixMenuRadioGroup(
+                  value: _sort,
+                  onChanged: (value) => setState(() => _sort = value),
+                  items: const [
+                    RemixMenuRadioItem(value: 'newest', label: 'Newest'),
+                    RemixMenuRadioItem(value: 'oldest', label: 'Oldest'),
+                  ],
+                ),
               ],
               onSelected: (value) =>
                   showToast(context, message: '$value selected'),
@@ -117,27 +147,15 @@ class GalleryOverlaysPage extends StatelessWidget {
   }
 }
 
+/// The anchor for a popover or tooltip.
+///
+/// A surface badge, not a button: the overlay owns the gesture, so an
+/// interactive control here would either fight it or render disabled.
 class _OverlayTrigger extends StatelessWidget {
   const _OverlayTrigger(this.label);
   final String label;
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-    decoration: BoxDecoration(
-      color: MixScope.tokenOf(FortalTokens.accentA3, context),
-      border: Border.all(
-        color: MixScope.tokenOf(FortalTokens.accentA6, context),
-      ),
-      borderRadius: BorderRadius.all(
-        MixScope.tokenOf(FortalTokens.radius3, context),
-      ),
-    ),
-    child: StyledText(
-      label,
-      style: TextStyler(
-        style: FortalTokens.text2.mix(),
-      ).fontWeight(.w500).color(FortalTokens.accent11()),
-    ),
-  );
+  Widget build(BuildContext context) =>
+      FortalBadge.surface(size: .size3, label: label);
 }

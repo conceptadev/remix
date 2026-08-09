@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../../utils/text.dart';
 import '../../widgets/gallery_scaffold.dart';
 
 class GalleryNavigationPage extends StatelessWidget {
@@ -17,7 +18,7 @@ class GalleryNavigationPage extends StatelessWidget {
         description: 'Both tab sizes with live keyboard and pointer selection.',
         child: GalleryMatrix(
           rows: const ['Tabs'],
-          columns: FortalTabsSize.values.map(galleryLabel).toList(),
+          columns: FortalTabsSize.values.map(enumLabel).toList(),
           cellWidth: 320,
           cellBuilder: (_, _, column) =>
               _TabsDemo(size: FortalTabsSize.values[column]),
@@ -27,8 +28,8 @@ class GalleryNavigationPage extends StatelessWidget {
         label: 'Accordion',
         description: 'Surface and soft disclosure items across three sizes.',
         child: GalleryMatrix(
-          rows: FortalAccordionVariant.values.map(galleryLabel).toList(),
-          columns: FortalAccordionSize.values.map(galleryLabel).toList(),
+          rows: FortalAccordionVariant.values.map(enumLabel).toList(),
+          columns: FortalAccordionSize.values.map(enumLabel).toList(),
           cellWidth: 300,
           cellBuilder: (_, row, column) => _AccordionDemo(
             variant: FortalAccordionVariant.values[row],

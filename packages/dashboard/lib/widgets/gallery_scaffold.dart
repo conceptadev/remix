@@ -3,6 +3,7 @@ import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 import 'page_header.dart';
+import 'typography.dart';
 
 class GalleryPage extends StatelessWidget {
   const GalleryPage({
@@ -49,13 +50,7 @@ class GallerySection extends StatelessWidget {
       crossAxisAlignment: .stretch,
       spacing: 14,
       children: [
-        SectionLabel(label),
-        StyledText(
-          description,
-          style: TextStyler(
-            style: FortalTokens.text2.mix(),
-          ).color(FortalTokens.gray11()),
-        ),
+        CardHeading(title: label, description: description),
         child,
       ],
     ),
@@ -160,17 +155,7 @@ class _MatrixLabel extends StatelessWidget {
     padding: const EdgeInsets.all(10),
     child: StyledText(
       label,
-      style: TextStyler(
-        style: FortalTokens.text1.mix(),
-      ).fontWeight(.w600).color(FortalTokens.gray11()),
+      style: dashboardText(FortalTokens.text1, weight: .w600, tone: .muted),
     ),
   );
-}
-
-String galleryLabel(Enum value) {
-  final name = value.name.replaceAllMapped(
-    RegExp('([A-Z])'),
-    (match) => ' ${match.group(1)!.toLowerCase()}',
-  );
-  return '${name[0].toUpperCase()}${name.substring(1)}';
 }

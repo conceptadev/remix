@@ -7,6 +7,7 @@ import '../theme/theme_scope.dart';
 import '../widgets/action_popover.dart';
 import '../widgets/theme_panel.dart';
 import '../widgets/toast.dart';
+import '../widgets/typography.dart';
 import 'dashboard_page.dart';
 
 class TopBar extends StatefulWidget {
@@ -54,9 +55,7 @@ class _TopBarState extends State<TopBar> {
           if (MediaQuery.sizeOf(context).width > 900) ...[
             StyledText(
               widget.page.section.label,
-              style: TextStyler(
-                style: FortalTokens.text2.mix(),
-              ).color(FortalTokens.gray11()),
+              style: dashboardText(FortalTokens.text2, tone: .muted),
             ),
             Icon(
               Icons.chevron_right,
@@ -67,11 +66,7 @@ class _TopBarState extends State<TopBar> {
           Flexible(
             child: StyledText(
               widget.page.label,
-              style: TextStyler(style: FortalTokens.text4.mix())
-                  .fontWeight(.w700)
-                  .color(FortalTokens.gray12())
-                  .maxLines(1)
-                  .overflow(.ellipsis),
+              style: dashboardTextLine(FortalTokens.text4, weight: .w700),
             ),
           ),
           const Spacer(),
@@ -119,9 +114,10 @@ class _TopBarState extends State<TopBar> {
                       Expanded(
                         child: StyledText(
                           'Notifications',
-                          style: TextStyler(
-                            style: FortalTokens.text3.mix(),
-                          ).fontWeight(.w600).color(FortalTokens.gray12()),
+                          style: dashboardText(
+                            FortalTokens.text3,
+                            weight: .w600,
+                          ),
                         ),
                       ),
                       FortalButton.ghost(
@@ -161,16 +157,17 @@ class _TopBarState extends State<TopBar> {
                             children: [
                               StyledText(
                                 event.title,
-                                style:
-                                    TextStyler(style: FortalTokens.text2.mix())
-                                        .fontWeight(.w600)
-                                        .color(FortalTokens.gray12()),
+                                style: dashboardText(
+                                  FortalTokens.text2,
+                                  weight: .w600,
+                                ),
                               ),
                               StyledText(
                                 event.relativeTime,
-                                style: TextStyler(
-                                  style: FortalTokens.text1.mix(),
-                                ).color(FortalTokens.gray11()),
+                                style: dashboardText(
+                                  FortalTokens.text1,
+                                  tone: .muted,
+                                ),
                               ),
                             ],
                           ),

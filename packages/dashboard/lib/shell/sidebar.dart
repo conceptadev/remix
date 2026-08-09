@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../utils/text.dart';
 import '../widgets/action_popover.dart';
 import '../widgets/toast.dart';
+import '../widgets/typography.dart';
 import 'dashboard_page.dart';
 
 class Sidebar extends StatelessWidget {
@@ -15,21 +16,22 @@ class Sidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final panel = MixScope.tokenOf(FortalTokens.colorPanelSolid, context);
-    final border = MixScope.tokenOf(FortalTokens.grayA5, context);
-
     return Container(
       width: 256,
       decoration: BoxDecoration(
-        color: panel,
-        border: Border(right: BorderSide(color: border)),
+        color: MixScope.tokenOf(FortalTokens.colorPanelSolid, context),
+        border: Border(
+          right: BorderSide(
+            color: MixScope.tokenOf(FortalTokens.grayA5, context),
+          ),
+        ),
       ),
       child: SafeArea(
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
             const _Brand(),
-            Container(height: 1, color: border),
+            const FortalDivider(size: .size4),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(12, 16, 12, 20),
@@ -53,7 +55,7 @@ class Sidebar extends StatelessWidget {
                 ),
               ),
             ),
-            Container(height: 1, color: border),
+            const FortalDivider(size: .size4),
             const _Profile(),
           ],
         ),
@@ -72,25 +74,12 @@ class _Brand extends StatelessWidget {
       child: Row(
         spacing: 12,
         children: [
-          Container(
-            width: 34,
-            height: 34,
-            alignment: .center,
-            decoration: BoxDecoration(
-              color: MixScope.tokenOf(FortalTokens.accent9, context),
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-            ),
-            child: const Icon(
-              Icons.auto_awesome,
-              color: Colors.white,
-              size: 18,
-            ),
-          ),
+          // The brand mark is a solid avatar: accent-9 on accent-contrast,
+          // and it follows the theme's radius setting like every other surface.
+          const FortalAvatar.solid(icon: Icons.auto_awesome, size: .size2),
           StyledText(
             'Remix',
-            style: TextStyler(
-              style: FortalTokens.text5.mix(),
-            ).fontWeight(.w700).color(FortalTokens.gray12()),
+            style: dashboardText(FortalTokens.text5, weight: .w700),
           ),
         ],
       ),
@@ -108,15 +97,29 @@ class _SectionLabel extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
       child: StyledText(
         label.toUpperCase(),
-        style: TextStyler(
-          style: FortalTokens.text1.mix(),
-        ).fontWeight(.w600).letterSpacing(0.7).color(FortalTokens.gray11()),
+        style: dashboardText(
+          FortalTokens.text1,
+          weight: .w600,
+          tone: .muted,
+        ).letterSpacing(0.7),
       ),
     );
   }
 }
 
-class _NavItem extends StatefulWidget {
+/// A sidebar destination.
+///
+/// The Fortal ghost toggle already carries this exact treatment — `gray-12`
+/// when idle, `accent-3`/`accent-11` when selected, plus hover, press, focus
+/// ring and keyboard activation — so the destination only has to stretch it
+/// across the rail.
+///
+/// It does own its semantics, though. `RemixToggle` announces a *toggled*
+/// on/off state and offers no way to opt out, but a rail destination is one of
+/// a mutually exclusive set: `selected` is the contract assistive technology
+/// expects. Excluding the toggle's node and naming the destination here keeps
+/// that, and keeps the rendered label from being announced twice.
+class _NavItem extends StatelessWidget {
   const _NavItem({
     super.key,
     required this.page,
@@ -129,109 +132,25 @@ class _NavItem extends StatefulWidget {
   final VoidCallback onPressed;
 
   @override
-  State<_NavItem> createState() => _NavItemState();
-}
-
-class _NavItemState extends State<_NavItem> {
-  bool _focused = false;
-  bool _hovered = false;
-  bool _pressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final accent = widget.selected
-        ? MixScope.tokenOf(
-            _pressed ? FortalTokens.accentA5 : FortalTokens.accentA3,
-            context,
-          )
-        : MixScope.tokenOf(
-            _pressed
-                ? FortalTokens.grayA4
-                : _hovered
-                ? FortalTokens.grayA3
-                : FortalTokens.grayA1,
-            context,
-          );
-    final foreground = MixScope.tokenOf(
-      widget.selected ? FortalTokens.accent12 : FortalTokens.gray12,
-      context,
-    );
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 2),
-      child: Semantics(
-        button: true,
-        selected: widget.selected,
-        label: widget.page.label,
-        excludeSemantics: true,
-        onTap: widget.onPressed,
-        child: Focus(
-          onFocusChange: (value) => setState(() => _focused = value),
-          onKeyEvent: (_, event) {
-            if (event is KeyDownEvent &&
-                (event.logicalKey == LogicalKeyboardKey.enter ||
-                    event.logicalKey == LogicalKeyboardKey.space)) {
-              widget.onPressed();
-              return .handled;
-            }
-            return .ignored;
-          },
-          child: Builder(
-            builder: (focusContext) => MouseRegion(
-              cursor: SystemMouseCursors.click,
-              onEnter: (_) => setState(() => _hovered = true),
-              onExit: (_) => setState(() => _hovered = false),
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTapDown: (_) => setState(() => _pressed = true),
-                onTapCancel: () => setState(() => _pressed = false),
-                onTapUp: (_) => setState(() => _pressed = false),
-                onTap: () {
-                  Focus.of(focusContext).requestFocus();
-                  widget.onPressed();
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 120),
-                  width: double.infinity,
-                  height: 32,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: accent,
-                    borderRadius: const BorderRadius.all(Radius.circular(6)),
-                    border: _focused
-                        ? Border.all(
-                            color: MixScope.tokenOf(
-                              FortalTokens.focus8,
-                              context,
-                            ),
-                            width: 2,
-                          )
-                        : null,
-                  ),
-                  child: Row(
-                    spacing: 8,
-                    children: [
-                      Icon(widget.page.icon, size: 16, color: foreground),
-                      Expanded(
-                        child: StyledText(
-                          widget.page.label,
-                          style: TextStyler(style: FortalTokens.text2.mix())
-                              .fontWeight(.w500)
-                              .color(foreground)
-                              .maxLines(1)
-                              .overflow(TextOverflow.ellipsis),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 2),
+    child: Semantics(
+      button: true,
+      selected: selected,
+      label: page.label,
+      excludeSemantics: true,
+      onTap: onPressed,
+      child: RemixToggle(
+        selected: selected,
+        onChanged: (_) => onPressed(),
+        label: page.label,
+        icon: page.icon,
+        style: fortalToggleStyle(
+          variant: .ghost,
+        ).container(.mainAxisSize(.max).mainAxisAlignment(.start)),
       ),
-    );
-  }
+    ),
+  );
 }
 
 class _Profile extends StatelessWidget {
@@ -254,15 +173,11 @@ class _Profile extends StatelessWidget {
                 children: [
                   StyledText(
                     'Leo Farias',
-                    style: TextStyler(
-                      style: FortalTokens.text2.mix(),
-                    ).fontWeight(.w600).color(FortalTokens.gray12()),
+                    style: dashboardText(FortalTokens.text2, weight: .w600),
                   ),
                   StyledText(
                     'leo@remix.dev',
-                    style: TextStyler(
-                      style: FortalTokens.text1.mix(),
-                    ).color(FortalTokens.gray11()),
+                    style: dashboardText(FortalTokens.text1, tone: .muted),
                   ),
                 ],
               ),
@@ -287,7 +202,7 @@ class _Profile extends StatelessWidget {
           context,
           message: value == 'signout'
               ? 'Signed out of demo'
-              : '${value[0].toUpperCase()}${value.substring(1)} opened',
+              : '${capitalize(value)} opened',
         ),
       ),
     );

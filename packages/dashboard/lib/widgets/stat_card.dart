@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import 'typography.dart';
+
 class StatCard extends StatelessWidget {
   const StatCard({
     super.key,
@@ -34,34 +36,15 @@ class StatCard extends StatelessWidget {
                 Expanded(
                   child: StyledText(
                     label,
-                    style: TextStyler(
-                      style: FortalTokens.text2.mix(),
-                    ).color(FortalTokens.gray11()),
+                    style: dashboardText(FortalTokens.text2, tone: .muted),
                   ),
                 ),
-                Container(
-                  width: 34,
-                  height: 34,
-                  alignment: .center,
-                  decoration: BoxDecoration(
-                    color: MixScope.tokenOf(FortalTokens.accentA3, context),
-                    borderRadius: BorderRadius.all(
-                      MixScope.tokenOf(FortalTokens.radius3, context),
-                    ),
-                  ),
-                  child: Icon(
-                    icon,
-                    size: 18,
-                    color: MixScope.tokenOf(FortalTokens.accent11, context),
-                  ),
-                ),
+                FortalAvatar.soft(icon: icon, size: .size2),
               ],
             ),
             StyledText(
               value,
-              style: TextStyler(
-                style: FortalTokens.text7.mix(),
-              ).fontWeight(.w700).color(FortalTokens.gray12()),
+              style: dashboardText(FortalTokens.text7, weight: .w700),
             ),
             Wrap(
               spacing: 8,
@@ -78,9 +61,7 @@ class StatCard extends StatelessWidget {
                 ),
                 StyledText(
                   'vs last month',
-                  style: TextStyler(
-                    style: FortalTokens.text1.mix(),
-                  ).color(FortalTokens.gray11()),
+                  style: dashboardText(FortalTokens.text1, tone: .muted),
                 ),
               ],
             ),

@@ -5,6 +5,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 import '../widgets/page_header.dart';
 import '../widgets/theme_panel.dart';
 import '../widgets/toast.dart';
+import '../widgets/typography.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -49,7 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   crossAxisAlignment: .stretch,
                   spacing: 16,
                   children: [
-                    const _CardHeading(
+                    const CardHeading(
                       title: 'Profile',
                       description:
                           'Your personal details and communication preferences.',
@@ -141,7 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   crossAxisAlignment: .stretch,
                   spacing: 16,
                   children: const [
-                    _CardHeading(
+                    CardHeading(
                       title: 'Appearance',
                       description:
                           'Tune every Fortal theme parameter in real time.',
@@ -160,7 +161,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   crossAxisAlignment: .stretch,
                   spacing: 16,
                   children: [
-                    const _CardHeading(
+                    const CardHeading(
                       title: 'Danger zone',
                       description:
                           'Destructive workspace actions cannot be undone.',
@@ -218,32 +219,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
-class _CardHeading extends StatelessWidget {
-  const _CardHeading({required this.title, required this.description});
-  final String title;
-  final String description;
-
-  @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: .start,
-    spacing: 3,
-    children: [
-      StyledText(
-        title,
-        style: TextStyler(
-          style: FortalTokens.text4.mix(),
-        ).fontWeight(.w600).color(FortalTokens.gray12()),
-      ),
-      StyledText(
-        description,
-        style: TextStyler(
-          style: FortalTokens.text2.mix(),
-        ).color(FortalTokens.gray11()),
-      ),
-    ],
-  );
-}
-
 class _PreferenceRow extends StatelessWidget {
   const _PreferenceRow({
     required this.title,
@@ -265,15 +240,11 @@ class _PreferenceRow extends StatelessWidget {
           children: [
             StyledText(
               title,
-              style: TextStyler(
-                style: FortalTokens.text2.mix(),
-              ).fontWeight(.w600).color(FortalTokens.gray12()),
+              style: dashboardText(FortalTokens.text2, weight: .w600),
             ),
             StyledText(
               description,
-              style: TextStyler(
-                style: FortalTokens.text1.mix(),
-              ).color(FortalTokens.gray11()),
+              style: dashboardText(FortalTokens.text1, tone: .muted),
             ),
           ],
         ),

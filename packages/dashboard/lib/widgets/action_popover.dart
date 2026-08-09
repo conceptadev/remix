@@ -53,8 +53,6 @@ class _DashboardActionPopoverState extends State<DashboardActionPopover> {
 
   @override
   Widget build(BuildContext context) {
-    final divider = MixScope.tokenOf(FortalTokens.grayA6, context);
-
     return FortalPopover(
       size: .size1,
       controller: _controller,
@@ -68,10 +66,9 @@ class _DashboardActionPopoverState extends State<DashboardActionPopover> {
           children: [
             for (final action in widget.actions) ...[
               if (action.dividerBefore)
-                Container(
-                  height: 1,
-                  margin: const EdgeInsets.symmetric(vertical: 4),
-                  color: divider,
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4),
+                  child: FortalDivider(size: .size4),
                 ),
               RemixButton(
                 key: ValueKey('dashboard-action-${action.value}'),

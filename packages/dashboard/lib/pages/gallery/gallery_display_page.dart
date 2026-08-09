@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../../utils/text.dart';
 import '../../widgets/gallery_scaffold.dart';
 
 class GalleryDisplayPage extends StatefulWidget {
@@ -12,6 +14,7 @@ class GalleryDisplayPage extends StatefulWidget {
 
 class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
   bool _spinnersRunning = false;
+  bool _skeletonLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +27,8 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
           description:
               'Two visual variants across all nine Radix-compatible sizes.',
           child: GalleryMatrix(
-            rows: FortalAvatarVariant.values.map(galleryLabel).toList(),
-            columns: FortalAvatarSize.values.map(galleryLabel).toList(),
+            rows: FortalAvatarVariant.values.map(enumLabel).toList(),
+            columns: FortalAvatarSize.values.map(enumLabel).toList(),
             cellWidth: 120,
             cellBuilder: (_, row, column) => FortalAvatar(
               variant: FortalAvatarVariant.values[row],
@@ -39,8 +42,8 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
           description:
               'Status labels in solid, soft, surface, and outline variants.',
           child: GalleryMatrix(
-            rows: FortalBadgeVariant.values.map(galleryLabel).toList(),
-            columns: FortalBadgeSize.values.map(galleryLabel).toList(),
+            rows: FortalBadgeVariant.values.map(enumLabel).toList(),
+            columns: FortalBadgeSize.values.map(enumLabel).toList(),
             cellBuilder: (_, row, column) => FortalBadge(
               variant: FortalBadgeVariant.values[row],
               size: FortalBadgeSize.values[column],
@@ -53,8 +56,8 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
           description:
               'Surface, classic, and ghost containers across five spacing sizes.',
           child: GalleryMatrix(
-            rows: FortalCardVariant.values.map(galleryLabel).toList(),
-            columns: FortalCardSize.values.map(galleryLabel).toList(),
+            rows: FortalCardVariant.values.map(enumLabel).toList(),
+            columns: FortalCardSize.values.map(enumLabel).toList(),
             cellWidth: 200,
             cellBuilder: (_, row, column) => SizedBox(
               width: 160,
@@ -70,8 +73,8 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
           label: 'Callout',
           description: 'Contextual information in every variant and size.',
           child: GalleryMatrix(
-            rows: FortalCalloutVariant.values.map(galleryLabel).toList(),
-            columns: FortalCalloutSize.values.map(galleryLabel).toList(),
+            rows: FortalCalloutVariant.values.map(enumLabel).toList(),
+            columns: FortalCalloutSize.values.map(enumLabel).toList(),
             cellWidth: 230,
             cellBuilder: (_, row, column) => SizedBox(
               width: 200,
@@ -84,12 +87,59 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
           ),
         ),
         GallerySection(
+          label: 'Data list',
+          description:
+              'Label and value pairs at every size, horizontal and vertical.',
+          child: GalleryMatrix(
+            rows: const ['Horizontal', 'Vertical'],
+            columns: FortalDataListSize.values.map(enumLabel).toList(),
+            cellWidth: 250,
+            cellBuilder: (_, row, column) => FortalDataList(
+              size: FortalDataListSize.values[column],
+              orientation: row == 0 ? Axis.horizontal : Axis.vertical,
+              items: const [
+                RemixDataListItem(
+                  label: 'Status',
+                  child: FortalBadge(label: 'Active'),
+                ),
+                RemixDataListItem(label: 'Plan', value: 'Enterprise'),
+                RemixDataListItem(label: 'Seats', value: '48'),
+              ],
+            ),
+          ),
+        ),
+        GallerySection(
+          label: 'Skeleton',
+          description:
+              'Placeholder shapes that keep the loaded layout measurements.',
+          child: Column(
+            crossAxisAlignment: .start,
+            spacing: 14,
+            children: [
+              FortalButton.soft(
+                size: .size1,
+                onPressed: () =>
+                    setState(() => _skeletonLoading = !_skeletonLoading),
+                label: _skeletonLoading ? 'Show content' : 'Show skeleton',
+              ),
+              FortalSkeleton(
+                loading: _skeletonLoading,
+                child: const FortalAvatar(label: 'RF', size: .size5),
+              ),
+              FortalSkeleton(
+                loading: _skeletonLoading,
+                child: const Text('Loaded content replaces the placeholder.'),
+              ),
+            ],
+          ),
+        ),
+        GallerySection(
           label: 'Progress',
           description:
               'Determinate progress with classic, surface, and soft treatments.',
           child: GalleryMatrix(
-            rows: FortalProgressVariant.values.map(galleryLabel).toList(),
-            columns: FortalProgressSize.values.map(galleryLabel).toList(),
+            rows: FortalProgressVariant.values.map(enumLabel).toList(),
+            columns: FortalProgressSize.values.map(enumLabel).toList(),
             cellWidth: 210,
             cellBuilder: (_, row, column) => SizedBox(
               width: 170,
@@ -133,7 +183,7 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
                 Row(
                   spacing: 12,
                   children: [
-                    SizedBox(width: 64, child: Text(galleryLabel(size))),
+                    SizedBox(width: 64, child: Text(enumLabel(size))),
                     Expanded(child: FortalDivider(size: size)),
                   ],
                 ),

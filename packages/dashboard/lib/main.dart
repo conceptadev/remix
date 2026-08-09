@@ -53,6 +53,7 @@ class _DashboardAppState extends State<DashboardApp>
         accent: _settings.accentColor,
         gray: _settings.grayColor,
         brightness: brightness,
+        panelBackground: _settings.panelBackground,
         radius: _settings.radius,
         scaling: _settings.scaling,
         child: MaterialApp(
