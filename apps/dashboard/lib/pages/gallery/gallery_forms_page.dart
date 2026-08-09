@@ -12,10 +12,6 @@ class GalleryFormsPage extends StatefulWidget {
   State<GalleryFormsPage> createState() => _GalleryFormsPageState();
 }
 
-/// Shared by every item in the checkbox group: `RemixCheckboxGroupItem` has no
-/// Fortal wrapper, so the recipe has to be attached by hand.
-final _checkboxStyle = fortalCheckboxStyle();
-
 class _GalleryFormsPageState extends State<GalleryFormsPage> {
   bool _checked = true;
   bool _switched = true;
@@ -177,11 +173,7 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
                   ('sms', 'SMS'),
                   ('push', 'Push'),
                 ])
-                  RemixCheckboxGroupItem<String>(
-                    value: value,
-                    label: label,
-                    style: _checkboxStyle,
-                  ),
+                  FortalCheckboxGroupItem<String>(value: value, label: label),
               ],
             ),
           ),
