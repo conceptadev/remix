@@ -8,6 +8,16 @@ confidence it carries. Tools are named below only as examples; at extraction
 time, survey what the current environment actually offers and pick the best
 available capability.
 
+## Table of Contents
+
+- [Critical set](#1-the-critical-set--what-must-come-out-regardless-of-source)
+- [Invariants](#2-the-invariants--hold-these-under-any-tooling)
+- [Classify sources](#3-classify-each-source-by-capability-per-domain)
+- [Extraction modes](#4-extraction-mode-notes-tool-agnostic)
+- [Where values land](#5-where-values-land)
+- [Conflicts and upgrades](#6-conflicts-and-upgrades)
+- [What not to build](#7-what-not-to-build)
+
 ## 1. The critical set — what must come out, regardless of source
 
 Extraction is done when you can fill this, or have explicitly marked a gap:

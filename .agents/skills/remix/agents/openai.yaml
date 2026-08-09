@@ -1,5 +1,0 @@
-interface:
-  display_name: "Remix and Fortal"
-  short_description: "Build and maintain Remix components and Fortal themes."
-  brand_color: "#6750A4"
-  default_prompt: "Use Remix and Fortal to build a themed Flutter component."

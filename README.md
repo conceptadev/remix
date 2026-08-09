@@ -7,6 +7,44 @@ A comprehensive Flutter component library that combines headless UI behavior wit
 
 Remix brings together the best of both worlds: the robust interaction behavior and accessibility of Naked UI with the flexible, composable styling capabilities of Mix. This combination enables you to create components that are fully customizable, reusable, and maintainable.
 
+## Agent skills
+
+[![skills.sh](https://skills.sh/b/conceptadev/remix)](https://skills.sh/conceptadev/remix)
+
+This repository publishes two skills from its [`skills/`](skills) catalog:
+
+- [`using-remix`](https://skills.sh/conceptadev/remix/using-remix) helps agents build Flutter interfaces with base Remix or the optional Fortal theme.
+- [`building-remix-design-system`](https://skills.sh/conceptadev/remix/building-remix-design-system) helps agents create standalone design-system packages on Remix.
+
+List the available skills without installing them:
+
+```bash
+npx skills add conceptadev/remix --list
+```
+
+Install both skills, or select one:
+
+```bash
+npx skills add conceptadev/remix
+npx skills add conceptadev/remix --skill using-remix -y
+```
+
+Project installs create a local agent-skills directory such as `.agents/`.
+Contributors who do not want that directory in their checkout can install
+globally or use a skill ephemerally:
+
+```bash
+npx skills add conceptadev/remix --skill using-remix -g -y
+npx skills use conceptadev/remix@using-remix
+```
+
+List installed skills and update them later:
+
+```bash
+npx skills ls
+npx skills update
+```
+
 ## Why Remix?
 
 ### The Problem

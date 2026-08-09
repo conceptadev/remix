@@ -1,0 +1,4 @@
+interface:
+  display_name: "Building Remix Design Systems"
+  short_description: "Build standalone design systems on Remix"
+  default_prompt: "Use $building-remix-design-system to build this standalone Flutter design-system package on Remix."
