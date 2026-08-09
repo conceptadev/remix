@@ -139,18 +139,19 @@ RemixBoxEffectsMix fortalFocusOutline(Color color, {required double offset}) =>
 /// `ToggleGroupItemStyler`, `TabStyler` — expose no `containerEffects` slot to
 /// put one in. Those recipes each re-derived the same border, so the width
 /// token lives here instead of in four places.
-///
-/// [color] defaults to `focus-a8`. Tabs is the one caller that differs: it
-/// passes the solid `focus-8`. Whether that is intentional is unresolved — the
-/// pinned Chromium probes capture computed styles only, not `:focus-visible`,
-/// so it cannot be settled from the reference fixtures. Preserved as-is rather
-/// than unified on a guess.
-///
-/// Tabs also leaves [strokeAlign] unset, but that is not a second difference:
-/// `BorderSide` itself defaults to `strokeAlignInside`, so unset and explicit
-/// resolve to the same -1.0. The parameter is nullable only so tabs can keep
-/// expressing it as absent.
 extension FortalFocusRing<T extends Mix<Object?>> on RemixBoxStylerAnchors<T> {
+  /// Applies the ring to this styler.
+  ///
+  /// [color] defaults to `focus-a8`. Tabs is the one caller that differs: it
+  /// passes the solid `focus-8`. Whether that is intentional is unresolved —
+  /// the pinned Chromium probes capture computed styles only, not
+  /// `:focus-visible`, so it cannot be settled from the reference fixtures.
+  /// Preserved as-is rather than unified on a guess.
+  ///
+  /// Tabs also leaves [strokeAlign] unset, but that is not a second
+  /// difference: `BorderSide` itself defaults to `strokeAlignInside`, so unset
+  /// and explicit resolve to the same -1.0. The parameter is nullable only so
+  /// tabs can keep expressing it as absent.
   T fortalFocusRing({
     Color? color,
     double? strokeAlign = BorderSide.strokeAlignInside,
