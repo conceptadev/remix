@@ -45,6 +45,22 @@ npx skills ls
 npx skills update
 ```
 
+### Vendored Mix skill
+
+This repository commits the project-scoped Mix skill and its lockfile so Codex
+and Claude Code use the same reviewed instructions. Install or refresh the
+canonical copy and Claude symlink with:
+
+```bash
+npx skills add conceptadev/mix --skill mix --agent codex --agent claude-code -y
+```
+
+Update the committed installation from its locked project source with:
+
+```bash
+npx skills update mix --project -y
+```
+
 ## Why Remix?
 
 ### The Problem
