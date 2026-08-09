@@ -2,6 +2,43 @@ import 'package:flutter/foundation.dart' show internal;
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart' hide AnimationConfig;
 
+final _focusVisibleVariant = ContextVariant('focus_visible', (context) {
+  final override = WidgetStateStyleOverride.maybeOf(context);
+  if (override != null) {
+    return override.states.contains(WidgetState.focused);
+  }
+
+  return WidgetStateProvider.hasStateOf(context, WidgetState.focused) &&
+      remixShouldShowFocusHighlight(context);
+});
+
+/// Adds a focus-visible variant to generated Remix stylers.
+///
+/// Unlike [WidgetState.focused], this variant applies only while Flutter is in
+/// [FocusHighlightMode.traditional]. This matches CSS `:focus-visible` for
+/// focus indicators that should follow keyboard or directional navigation.
+extension FocusVisibleWidgetStateVariantExtension<
+  T extends Style<S>,
+  S extends Spec<S>
+>
+    on MixStyler<T, S> {
+  /// Applies [style] while the widget is focused and focus highlights are
+  /// visible for the current input modality.
+  T onFocusVisible(T style) {
+    return variant(_focusVisibleVariant, style);
+  }
+}
+
+/// Whether Flutter currently allows a focus highlight to be painted.
+///
+/// This is internal Remix infrastructure shared by visuals, such as slider
+/// thumbs, that do not resolve their focus treatment through a Mix variant.
+@internal
+bool remixShouldShowFocusHighlight(BuildContext context) {
+  return _RemixFocusHighlightModeProvider.of(context) ==
+      FocusHighlightMode.traditional;
+}
+
 /// Applies resolved Remix text and icon specs as inherited defaults for
 /// arbitrary component content.
 ///
@@ -67,6 +104,7 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
     required this.styleSpec,
     required this.builder,
     this.controller,
+    this.trackFocusHighlightMode = false,
   });
 
   /// The fluent style to resolve when [styleSpec] is null.
@@ -78,24 +116,106 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
   /// Optional widget state controller for fluent style resolution.
   final WidgetStatesController? controller;
 
+  /// Whether descendants resolve focus visuals from manually provided states.
+  ///
+  /// Controllers enable this automatically. Set it for composite widgets that
+  /// publish each item's focus through their own [WidgetStateProvider].
+  final bool trackFocusHighlightMode;
+
   /// Builds the widget with the resolved or supplied spec.
   final Widget Function(BuildContext context, S spec) builder;
 
   @override
   Widget build(BuildContext context) {
     final spec = styleSpec;
+    late final Widget result;
     if (spec != null) {
-      return StyleSpecBuilder<S>(
+      result = StyleSpecBuilder<S>(
         styleSpec: StyleSpec(spec: spec),
+        builder: builder,
+      );
+    } else {
+      result = StyleBuilder<S>(
+        style: style,
+        controller: controller,
         builder: builder,
       );
     }
 
-    return StyleBuilder<S>(
-      style: style,
-      controller: controller,
-      builder: builder,
-    );
+    final tracksFocusHighlightMode =
+        controller != null || trackFocusHighlightMode;
+    if (!tracksFocusHighlightMode ||
+        _RemixFocusHighlightModeProvider.hasScope(context)) {
+      return result;
+    }
+
+    return _RemixFocusHighlightModeProvider(child: result);
+  }
+}
+
+class _RemixFocusHighlightModeProvider extends StatefulWidget {
+  const _RemixFocusHighlightModeProvider({required this.child});
+
+  static FocusHighlightMode of(BuildContext context) {
+    return context
+            .dependOnInheritedWidgetOfExactType<_RemixFocusHighlightModeScope>()
+            ?.mode ??
+        FocusManager.instance.highlightMode;
+  }
+
+  static bool hasScope(BuildContext context) {
+    return context
+            .getInheritedWidgetOfExactType<_RemixFocusHighlightModeScope>() !=
+        null;
+  }
+
+  final Widget child;
+
+  @override
+  State<_RemixFocusHighlightModeProvider> createState() =>
+      _RemixFocusHighlightModeProviderState();
+}
+
+class _RemixFocusHighlightModeProviderState
+    extends State<_RemixFocusHighlightModeProvider> {
+  late FocusHighlightMode _mode;
+
+  @override
+  void initState() {
+    super.initState();
+    _mode = FocusManager.instance.highlightMode;
+    FocusManager.instance.addHighlightModeListener(_handleModeChange);
+  }
+
+  void _handleModeChange(FocusHighlightMode mode) {
+    if (!mounted || mode == _mode) return;
+
+    setState(() => _mode = mode);
+  }
+
+  @override
+  void dispose() {
+    FocusManager.instance.removeHighlightModeListener(_handleModeChange);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _RemixFocusHighlightModeScope(mode: _mode, child: widget.child);
+  }
+}
+
+class _RemixFocusHighlightModeScope extends InheritedWidget {
+  const _RemixFocusHighlightModeScope({
+    required this.mode,
+    required super.child,
+  });
+
+  final FocusHighlightMode mode;
+
+  @override
+  bool updateShouldNotify(_RemixFocusHighlightModeScope oldWidget) {
+    return mode != oldWidget.mode;
   }
 }
 

@@ -41,7 +41,7 @@ IconButtonStyler fortalIconButtonStyle({
         .outline => _fortalIconButtonOutline(base, highContrast: highContrast),
         .ghost => _fortalIconButtonGhost(base, highContrast: highContrast),
       }
-      .onFocused(.containerEffects(focus))
+      .onFocusVisible(.containerEffects(focus))
       .onDisabled(.containerEffects(disabledFocus));
 }
 

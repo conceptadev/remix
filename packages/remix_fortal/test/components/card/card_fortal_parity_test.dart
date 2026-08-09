@@ -298,7 +298,7 @@ Future<CardSpec> _resolve(
       scaling: scaling,
       child: WidgetsApp(
         color: Colors.black,
-        builder: (context, child) => WidgetStateProvider(
+        builder: (context, child) => WidgetStateStyleOverride(
           states: states,
           child: Builder(
             builder: (context) {

@@ -272,7 +272,7 @@ _resolve(
   await tester.pumpWidget(
     FortalScope(
       scaling: scaling,
-      child: WidgetStateProvider(
+      child: WidgetStateStyleOverride(
         states: states,
         child: Builder(
           builder: (context) {

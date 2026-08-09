@@ -103,6 +103,8 @@ TextFieldStyler _fortalTextInputBaseStyle({
           ),
         )
         .wrap(.iconTheme(color: FortalTokens.gray11(), size: 16.0))
+        // Radix keys text-input rings from :focus/:focus-within, so unlike
+        // control focus rings this intentionally follows raw focus.
         .onFocused(
           .containerEffects(fortalFocusOutline(focusColor, offset: -1)),
         );
@@ -218,6 +220,8 @@ TextFieldStyler _fortalApplyNeutralTextInput(TextFieldStyler base) =>
       ),
     );
 
+// Keep the disabled-color branch on raw focus for the same :focus-within
+// contract as the enabled text input.
 TextFieldStyler _fortalTextInputDisabledBaseStyle() =>
     TextFieldStyler(
       text: .color(

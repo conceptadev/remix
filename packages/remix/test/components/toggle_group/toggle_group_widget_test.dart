@@ -963,6 +963,51 @@ void main() {
       expect(tester.widget<Text>(find.text('List')).style?.color, Colors.grey);
     });
 
+    testWidgets('focus-visible item style tracks highlight mode', (
+      tester,
+    ) async {
+      final previousStrategy = FocusManager.instance.highlightStrategy;
+      addTearDown(() {
+        FocusManager.instance.highlightStrategy = previousStrategy;
+      });
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+      final node = FocusNode();
+      addTearDown(node.dispose);
+
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: [
+            RemixToggleGroupItem(value: 'list', label: 'List', focusNode: node),
+          ],
+          selectedValue: 'list',
+          onChanged: (_) {},
+          style: ToggleGroupStyler(
+            item: ToggleGroupItemStyler()
+                .foregroundColor(Colors.blue)
+                .onFocusVisible(
+                  ToggleGroupItemStyler().foregroundColor(Colors.green),
+                ),
+          ),
+        ),
+      );
+
+      node.requestFocus();
+      await tester.pumpAndSettle();
+      expect(node.hasFocus, isTrue);
+      expect(tester.widget<Text>(find.text('List')).style?.color, Colors.blue);
+
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+      await tester.pump();
+      expect(tester.widget<Text>(find.text('List')).style?.color, Colors.green);
+
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+      await tester.pump();
+      expect(tester.widget<Text>(find.text('List')).style?.color, Colors.blue);
+    });
+
     testWidgets('focus style is removed when the focused item is disabled', (
       tester,
     ) async {

@@ -74,7 +74,7 @@ ToggleGroupStyler fortalToggleGroupStyle({
                 ToggleGroupItemStyler().backgroundColor(selectedPressedColor),
               ),
         )
-        .onFocused(ToggleGroupItemStyler().fortalFocusRing())
+        .onFocusVisible(ToggleGroupItemStyler().fortalFocusRing())
         .onDisabled(
           ToggleGroupItemStyler()
               .backgroundColor(FortalTokens.grayA3())

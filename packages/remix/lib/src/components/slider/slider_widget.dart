@@ -229,7 +229,10 @@ class RemixSlider extends StatelessWidget {
                           containerEffects:
                               (spec.thumbEffects ?? const RemixBoxEffectsSpec())
                                   .merge(
-                                    state.focusedThumbIndex == 0
+                                    state.focusedThumbIndex == 0 &&
+                                            remixShouldShowFocusHighlight(
+                                              context,
+                                            )
                                         ? spec.thumbFocusEffects
                                         : null,
                                   ),

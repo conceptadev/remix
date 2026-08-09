@@ -203,6 +203,7 @@ class RemixToggleGroup<T> extends StatelessWidget {
       child: RemixStyleSpecBuilder<ToggleGroupSpec>(
         style: effectiveStyle,
         styleSpec: styleSpec,
+        trackFocusHighlightMode: true,
         builder: (context, spec) {
           return FlexBox(
             styleSpec: _withOrientation(spec.container),

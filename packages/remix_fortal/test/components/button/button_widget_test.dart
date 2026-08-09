@@ -127,5 +127,68 @@ void main() {
         );
       }
     });
+
+    group('focus-visible ring', () {
+      late FocusHighlightStrategy previousStrategy;
+
+      setUp(() {
+        previousStrategy = FocusManager.instance.highlightStrategy;
+      });
+
+      tearDown(() {
+        FocusManager.instance.highlightStrategy = previousStrategy;
+      });
+
+      for (final autofocus in [false, true]) {
+        testWidgets(
+          '${autofocus ? 'autofocus' : 'programmatic focus'} follows highlight mode',
+          (tester) async {
+            FocusManager.instance.highlightStrategy =
+                FocusHighlightStrategy.alwaysTouch;
+            final focusNode = FocusNode();
+            addTearDown(focusNode.dispose);
+            late ButtonSpec resolved;
+
+            await tester.pumpRemixApp(
+              FortalButton.solid(
+                label: 'Continue',
+                onPressed: () {},
+                autofocus: autofocus,
+                focusNode: focusNode,
+                textBuilder: (context, spec, text) => Builder(
+                  builder: (context) {
+                    resolved = StyleSpecProvider.of<ButtonSpec>(context)!.spec;
+                    return StyledText(text, styleSpec: StyleSpec(spec: spec));
+                  },
+                ),
+              ),
+            );
+            await tester.pumpAndSettle();
+
+            if (!autofocus) {
+              focusNode.requestFocus();
+              await tester.pumpAndSettle();
+            }
+
+            expect(focusNode.hasFocus, isTrue);
+            expect(resolved.containerEffects?.outline.width ?? 0, 0);
+
+            FocusManager.instance.highlightStrategy =
+                FocusHighlightStrategy.alwaysTraditional;
+            await tester.pump();
+
+            expect(focusNode.hasFocus, isTrue);
+            expect(resolved.containerEffects?.outline.width, 2);
+
+            FocusManager.instance.highlightStrategy =
+                FocusHighlightStrategy.alwaysTouch;
+            await tester.pump();
+
+            expect(focusNode.hasFocus, isTrue);
+            expect(resolved.containerEffects?.outline.width ?? 0, 0);
+          },
+        );
+      }
+    });
   });
 }

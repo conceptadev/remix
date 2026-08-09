@@ -314,7 +314,7 @@ Future<SelectSpec> _resolve(
       radius: radius,
       child: WidgetsApp(
         color: Colors.black,
-        builder: (context, child) => WidgetStateProvider(
+        builder: (context, child) => WidgetStateStyleOverride(
           states: states,
           child: Builder(
             builder: (context) {

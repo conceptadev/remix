@@ -61,7 +61,7 @@ SwitchStyler _fortalSwitchBaseStyler(FortalSwitchSize size) {
         ),
       )
       .thumbColor(Colors.white)
-      .onFocused(
+      .onFocusVisible(
         .trackEffects(
           RemixBoxEffectsMix(
             outline: BorderSideMix(

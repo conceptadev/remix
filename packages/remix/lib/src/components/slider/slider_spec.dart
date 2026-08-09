@@ -59,7 +59,8 @@ class SliderSpec with _$SliderSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? thumbEffects;
 
-  /// Additional overlay painted only on the focused thumb.
+  /// Additional overlay painted only when the focused thumb should show a
+  /// focus highlight for the current input modality.
   @override
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? thumbFocusEffects;

@@ -23,7 +23,7 @@ CardStyler fortalCardStyle({
       .paddingAll(metrics.padding)
       .borderRadiusAll(metrics.radius)
       .clipBehavior(Clip.antiAlias)
-      .onFocused(
+      .onFocusVisible(
         .containerEffects(
           RemixBoxEffectsMix(
             outline: BorderSideMix(
@@ -95,7 +95,7 @@ CardStyler _fortalCardSurface(CardStyler base) {
           overContent: _fortalCardSurfaceStroke(FortalTokens.grayStroke6()),
         ),
       )
-      .onFocused(activeFocus)
+      .onFocusVisible(activeFocus)
       .onSelected(open);
 
   return base
@@ -146,7 +146,7 @@ CardStyler _fortalCardClassic(CardStyler base) {
           ),
         ),
       )
-      .onFocused(
+      .onFocusVisible(
         .containerEffects(
           RemixBoxEffectsMix(behindContent: _fortalCardActiveFocus()),
         ).onSelected(open),
@@ -176,10 +176,12 @@ CardStyler _fortalCardClassic(CardStyler base) {
 
 CardStyler _fortalCardGhost(CardStyler base, double ghostMargin) {
   final focused = CardStyler().color(FortalTokens.accentA2());
-  final open = CardStyler().color(FortalTokens.grayA3()).onFocused(focused);
+  final open = CardStyler()
+      .color(FortalTokens.grayA3())
+      .onFocusVisible(focused);
   final pressed = CardStyler()
       .color(FortalTokens.grayA4())
-      .onFocused(focused)
+      .onFocusVisible(focused)
       .onSelected(open);
 
   return base

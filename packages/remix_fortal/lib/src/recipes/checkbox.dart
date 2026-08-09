@@ -31,7 +31,7 @@ CheckboxStyler fortalCheckboxStyle({
           behindContent: _fortalCheckboxLayer(),
           overContent: _fortalCheckboxLayer(),
         ),
-      ).onFocused(
+      ).onFocusVisible(
         .containerEffects(
           RemixBoxEffectsMix(
             outline: BorderSideMix(
