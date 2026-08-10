@@ -30,7 +30,7 @@ extension WidgetTesterHelpers on WidgetTester {
     );
   }
 
-  /// Returns the resolved Mix spec available to a rendered descendant.
+  /// Returns the resolved Mix spec for [finder].
   S resolvedSpecOf<S extends Spec<S>>(Finder finder) {
     final context = element(finder);
     final provider = context
