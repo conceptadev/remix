@@ -7,6 +7,65 @@ import 'package:remix_fortal/remix_fortal.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
+  testWidgets('default style constrains the dialog to 600 pixels', (
+    tester,
+  ) async {
+    final resolved = await resolveInFortalScope(
+      tester,
+      (context) => fortalDialogStyle().build(context),
+    );
+
+    expect(
+      resolved.spec.container.spec.constraints,
+      const BoxConstraints(maxWidth: 600),
+    );
+  });
+
+  test('public contract has the pinned align order and default', () {
+    const dialog = FortalDialog(title: 'Defaults');
+
+    expect(FortalDialogAlign.values, const [
+      FortalDialogAlign.start,
+      FortalDialogAlign.center,
+    ]);
+    expect(dialog.align, FortalDialogAlign.center);
+  });
+
+  testWidgets('default alignment centers the rendered surface', (tester) async {
+    await tester.pumpRemixApp(
+      const SizedBox.expand(child: FortalDialog(title: 'Centered')),
+    );
+    await tester.pumpAndSettle();
+
+    final align = find.descendant(
+      of: find.byType(RemixDialog),
+      matching: find.byType(Align),
+    );
+    expect(align, findsOneWidget);
+    expect(tester.widget<Align>(align).alignment, Alignment.center);
+  });
+
+  testWidgets('start alignment places the rendered surface at the top', (
+    tester,
+  ) async {
+    await tester.pumpRemixApp(
+      const SizedBox.expand(
+        child: FortalDialog(
+          align: FortalDialogAlign.start,
+          title: 'Start aligned',
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final align = find.descendant(
+      of: find.byType(RemixDialog),
+      matching: find.byType(Align),
+    );
+    expect(align, findsOneWidget);
+    expect(tester.widget<Align>(align).alignment, Alignment.topCenter);
+  });
+
   testWidgets('bounded large-text structured content does not overflow', (
     tester,
   ) async {
