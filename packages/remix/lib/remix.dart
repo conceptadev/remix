@@ -59,11 +59,7 @@ export 'src/rendering/remix_box_effects.dart'
 
 /// STYLER CONVENIENCES
 export 'src/utilities/remix_style.dart'
-    show
-        FocusVisibleWidgetStateVariantExtension,
-        RemixBoxStylerAnchors,
-        RemixBoxStylerMixin,
-        RemixBoxStylerConvenience;
+    show RemixBoxStylerAnchors, RemixBoxStylerMixin, RemixBoxStylerConvenience;
 export 'src/utilities/selected_mixin.dart'
     show SelectedWidgetStateVariantExtension;
 

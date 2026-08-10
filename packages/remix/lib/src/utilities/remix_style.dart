@@ -2,33 +2,6 @@ import 'package:flutter/foundation.dart' show internal;
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart' hide AnimationConfig;
 
-final _focusVisibleVariant = ContextVariant('focus_visible', (context) {
-  final override = WidgetStateStyleOverride.maybeOf(context);
-  if (override != null) {
-    return override.states.contains(WidgetState.focused);
-  }
-
-  return WidgetStateProvider.hasStateOf(context, WidgetState.focused) &&
-      remixShouldShowFocusHighlight(context);
-});
-
-/// Adds a focus-visible variant to generated Remix stylers.
-///
-/// Unlike [WidgetState.focused], this variant applies only while Flutter is in
-/// [FocusHighlightMode.traditional]. This matches CSS `:focus-visible` for
-/// focus indicators that should follow keyboard or directional navigation.
-extension FocusVisibleWidgetStateVariantExtension<
-  T extends Style<S>,
-  S extends Spec<S>
->
-    on MixStyler<T, S> {
-  /// Applies [style] while the widget is focused and focus highlights are
-  /// visible for the current input modality.
-  T onFocusVisible(T style) {
-    return variant(_focusVisibleVariant, style);
-  }
-}
-
 /// Whether Flutter currently allows a focus highlight to be painted.
 ///
 /// This is internal Remix infrastructure shared by visuals, such as slider
@@ -116,14 +89,27 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
   /// Optional widget state controller for fluent style resolution.
   final WidgetStatesController? controller;
 
-  /// Whether descendants resolve focus visuals from manually provided states.
+  /// Whether [builder] should rebuild when the focus highlight mode changes.
   ///
-  /// Controllers enable this automatically. Set it for composite widgets that
-  /// publish each item's focus through their own [WidgetStateProvider].
+  /// Mix-managed controller scopes already make [FocusVisibleVariant]
+  /// reactive. Set this for composite widgets that publish focus through a
+  /// manual [WidgetStateProvider], or for visuals that read
+  /// [remixShouldShowFocusHighlight] directly.
   final bool trackFocusHighlightMode;
 
   /// Builds the widget with the resolved or supplied spec.
   final Widget Function(BuildContext context, S spec) builder;
+
+  Widget _buildTracked(BuildContext context, S spec) {
+    if (trackFocusHighlightMode) {
+      // Register a dependency on the Remix scope. This also rebuilds styles
+      // resolved beneath manually mounted WidgetStateProvider instances, where
+      // Mix's focus-visible variant otherwise observes modality on the next
+      // unrelated rebuild.
+      remixShouldShowFocusHighlight(context);
+    }
+    return builder(context, spec);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,19 +118,17 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
     if (spec != null) {
       result = StyleSpecBuilder<S>(
         styleSpec: StyleSpec(spec: spec),
-        builder: builder,
+        builder: _buildTracked,
       );
     } else {
       result = StyleBuilder<S>(
         style: style,
         controller: controller,
-        builder: builder,
+        builder: _buildTracked,
       );
     }
 
-    final tracksFocusHighlightMode =
-        controller != null || trackFocusHighlightMode;
-    if (!tracksFocusHighlightMode ||
+    if (!trackFocusHighlightMode ||
         _RemixFocusHighlightModeProvider.hasScope(context)) {
       return result;
     }

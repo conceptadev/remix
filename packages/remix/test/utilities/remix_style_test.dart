@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix/mix.dart';
 import 'package:remix/src/utilities/remix_style.dart'
-    show
-        FocusVisibleWidgetStateVariantExtension,
-        RemixDefaultContentStyle,
-        RemixStyleSpecBuilder;
+    show RemixDefaultContentStyle, RemixStyleSpecBuilder;
 
 void main() {
   group('focus-visible styling', () {
