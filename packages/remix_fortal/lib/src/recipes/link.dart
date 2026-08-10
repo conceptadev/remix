@@ -105,7 +105,7 @@ BadgeStyler _fortalInteractiveLinkStyle(
   required bool truncate,
   required bool highContrast,
 }) {
-  BadgeStyler resolve({bool hovered = false, bool focused = false}) {
+  BadgeStyler styleFor({bool hovered = false, bool focused = false}) {
     return fortalLinkStyle(
       context,
       size: size,
@@ -120,11 +120,11 @@ BadgeStyler _fortalInteractiveLinkStyle(
     );
   }
 
-  final focusVisible = resolve(
+  final focusVisible = styleFor(
     focused: true,
   ).label(.decoration(TextDecoration.none));
-  return resolve()
-      .onHovered(resolve(hovered: true).onFocusVisible(focusVisible))
+  return styleFor()
+      .onHovered(styleFor(hovered: true).onFocusVisible(focusVisible))
       .onFocusVisible(focusVisible);
 }
 

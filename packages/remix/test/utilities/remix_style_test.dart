@@ -30,7 +30,7 @@ void main() {
           home: RemixStyleSpecBuilder<BoxSpec>(
             style: BoxStyler()
                 .color(Colors.blue)
-                .onFocusVisible(BoxStyler().color(Colors.red)),
+                .onFocusVisible(.color(Colors.red)),
             styleSpec: null,
             controller: controller,
             builder: (context, spec) {
@@ -70,7 +70,7 @@ void main() {
         final child = RemixStyleSpecBuilder<BoxSpec>(
           style: BoxStyler()
               .color(Colors.blue)
-              .onFocusVisible(BoxStyler().color(Colors.red)),
+              .onFocusVisible(.color(Colors.red)),
           styleSpec: null,
           controller: controller,
           builder: (context, spec) {

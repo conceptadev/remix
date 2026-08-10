@@ -2,16 +2,6 @@ import 'package:flutter/foundation.dart' show internal;
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart' hide AnimationConfig;
 
-/// Whether Flutter currently allows a focus highlight to be painted.
-///
-/// This is internal Remix infrastructure shared by visuals, such as slider
-/// thumbs, that do not resolve their focus treatment through a Mix variant.
-@internal
-bool remixShouldShowFocusHighlight(BuildContext context) {
-  return _RemixFocusHighlightModeProvider.of(context) ==
-      FocusHighlightMode.traditional;
-}
-
 /// Applies resolved Remix text and icon specs as inherited defaults for
 /// arbitrary component content.
 ///
@@ -94,7 +84,7 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
   /// Mix-managed controller scopes already make [FocusVisibleVariant]
   /// reactive. Set this for composite widgets that publish focus through a
   /// manual [WidgetStateProvider], or for visuals that read
-  /// [remixShouldShowFocusHighlight] directly.
+  /// [RemixFocusHighlightModeProvider.of] directly.
   final bool trackFocusHighlightMode;
 
   /// Builds the widget with the resolved or supplied spec.
@@ -106,7 +96,7 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
       // resolved beneath manually mounted WidgetStateProvider instances, where
       // Mix's focus-visible variant otherwise observes modality on the next
       // unrelated rebuild.
-      remixShouldShowFocusHighlight(context);
+      RemixFocusHighlightModeProvider.of(context);
     }
     return builder(context, spec);
   }
@@ -129,17 +119,20 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
     }
 
     if (!trackFocusHighlightMode ||
-        _RemixFocusHighlightModeProvider.hasScope(context)) {
+        RemixFocusHighlightModeProvider._hasScope(context)) {
       return result;
     }
 
-    return _RemixFocusHighlightModeProvider(child: result);
+    return RemixFocusHighlightModeProvider._(child: result);
   }
 }
 
-class _RemixFocusHighlightModeProvider extends StatefulWidget {
-  const _RemixFocusHighlightModeProvider({required this.child});
+/// Provides reactive access to Flutter's current focus-highlight mode.
+@internal
+final class RemixFocusHighlightModeProvider extends StatefulWidget {
+  const RemixFocusHighlightModeProvider._({required this.child});
 
+  /// Returns the current mode and subscribes to changes when a scope exists.
   static FocusHighlightMode of(BuildContext context) {
     return context
             .dependOnInheritedWidgetOfExactType<_RemixFocusHighlightModeScope>()
@@ -147,7 +140,7 @@ class _RemixFocusHighlightModeProvider extends StatefulWidget {
         FocusManager.instance.highlightMode;
   }
 
-  static bool hasScope(BuildContext context) {
+  static bool _hasScope(BuildContext context) {
     return context
             .getInheritedWidgetOfExactType<_RemixFocusHighlightModeScope>() !=
         null;
@@ -156,12 +149,12 @@ class _RemixFocusHighlightModeProvider extends StatefulWidget {
   final Widget child;
 
   @override
-  State<_RemixFocusHighlightModeProvider> createState() =>
+  State<RemixFocusHighlightModeProvider> createState() =>
       _RemixFocusHighlightModeProviderState();
 }
 
 class _RemixFocusHighlightModeProviderState
-    extends State<_RemixFocusHighlightModeProvider> {
+    extends State<RemixFocusHighlightModeProvider> {
   late FocusHighlightMode _mode;
 
   @override
