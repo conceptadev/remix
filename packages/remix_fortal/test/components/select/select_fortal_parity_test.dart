@@ -1,9 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+// `RemixFlexBoxWithEffects` is `@internal` to `remix`, but this sibling
+// package's tests need it to inspect how a Remix component renders a Fortal
+// recipe. Suppressed per-use below, so unrelated internal-member uses remain
+// flagged.
+import 'package:remix/src/rendering/remix_box_effects.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../../helpers/test_helpers.dart';
+
 void main() {
+  group('focus-visible behavior', () {
+    late FocusHighlightStrategy previousStrategy;
+
+    setUp(() {
+      previousStrategy = FocusManager.instance.highlightStrategy;
+    });
+
+    tearDown(() {
+      FocusManager.instance.highlightStrategy = previousStrategy;
+    });
+
+    testWidgets('focused select hides its ring in touch mode', (tester) async {
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+
+      await tester.pumpRemixApp(
+        FortalSelect<String>(
+          trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+          items: const [RemixSelectItem(value: 'a', label: 'Apple')],
+          onChanged: (_) {},
+          focusNode: focusNode,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      focusNode.requestFocus();
+      await tester.pumpAndSettle();
+
+      expect(focusNode.hasFocus, isTrue);
+      // ignore: invalid_use_of_internal_member
+      final effectsFinder = find.byType(RemixFlexBoxWithEffects);
+      // ignore: invalid_use_of_internal_member
+      final trigger = tester.widget<RemixFlexBoxWithEffects>(
+        find.descendant(
+          of: find.byType(RemixSelect<String>),
+          matching: effectsFinder,
+        ),
+      );
+      expect(trigger.containerEffects?.overContent, isNull);
+    });
+  });
+
   group('Fortal Select geometry', () {
     for (final (size, expected)
         in <

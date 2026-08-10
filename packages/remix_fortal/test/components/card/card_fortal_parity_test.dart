@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+// `RemixBoxWithEffects` is `@internal` to `remix`, but this sibling package's
+// tests need it to inspect how a Remix component renders a Fortal recipe.
+// Suppressed per-use below, so unrelated internal-member uses remain flagged.
+import 'package:remix/src/rendering/remix_box_effects.dart';
 import 'package:remix_fortal/remix_fortal.dart';
+
+import '../../helpers/test_helpers.dart';
 
 void main() {
   test('public contract has the pinned enum order and defaults', () {
@@ -21,6 +27,39 @@ void main() {
     const card = FortalCard(child: Text('Card'));
     expect(card.size, FortalCardSize.size1);
     expect(card.variant, FortalCardVariant.surface);
+  });
+
+  group('focus-visible behavior', () {
+    late FocusHighlightStrategy previousStrategy;
+
+    setUp(() {
+      previousStrategy = FocusManager.instance.highlightStrategy;
+    });
+
+    tearDown(() {
+      FocusManager.instance.highlightStrategy = previousStrategy;
+    });
+
+    testWidgets('focused card hides its ring in touch mode', (tester) async {
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+
+      await tester.pumpRemixApp(
+        WidgetStateProvider(
+          states: const {WidgetState.focused},
+          child: const FortalCard(child: Text('Card')),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // ignore: invalid_use_of_internal_member
+      final effectsFinder = find.byType(RemixBoxWithEffects);
+      // ignore: invalid_use_of_internal_member
+      final card = tester.widget<RemixBoxWithEffects>(
+        find.descendant(of: find.byType(RemixCard), matching: effectsFinder),
+      );
+      expect(card.containerEffects?.outline.width, 0);
+    });
   });
 
   group('geometry', () {

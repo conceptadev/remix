@@ -146,5 +146,101 @@ void main() {
       expect(tester.takeException(), isNull);
       expect(find.byType(Flexible), findsNothing);
     });
+
+    group('focus-visible ring', () {
+      late FocusHighlightStrategy previousStrategy;
+
+      setUp(() {
+        previousStrategy = FocusManager.instance.highlightStrategy;
+      });
+
+      tearDown(() {
+        FocusManager.instance.highlightStrategy = previousStrategy;
+      });
+
+      testWidgets('outline toggle keeps focus ring when selected', (
+        tester,
+      ) async {
+        FocusManager.instance.highlightStrategy =
+            FocusHighlightStrategy.alwaysTraditional;
+        final focusRingColor = await resolveInFortalScope(
+          tester,
+          (context) => MixScope.tokenOf(FortalTokens.focusA8, context),
+        );
+
+        Future<Color?> borderColorFor({required bool selected}) async {
+          final focusNode = FocusNode();
+          addTearDown(focusNode.dispose);
+          await tester.pumpRemixApp(
+            RemixToggle(
+              selected: selected,
+              onChanged: (_) {},
+              label: 'T',
+              focusNode: focusNode,
+              style: fortalToggleStyle(variant: .outline),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          focusNode.requestFocus();
+          await tester.pumpAndSettle();
+
+          expect(focusNode.hasFocus, isTrue);
+          return _outlineBorderColor(tester);
+        }
+
+        final unselected = await borderColorFor(selected: false);
+        final selected = await borderColorFor(selected: true);
+
+        expect(unselected, focusRingColor);
+        expect(
+          selected,
+          unselected,
+          reason: 'focus ring must survive selection',
+        );
+      });
+
+      testWidgets('outline toggle hides focus ring in touch mode', (
+        tester,
+      ) async {
+        FocusManager.instance.highlightStrategy =
+            FocusHighlightStrategy.alwaysTouch;
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpRemixApp(
+          RemixToggle(
+            selected: false,
+            onChanged: (_) {},
+            label: 'T',
+            focusNode: focusNode,
+            style: fortalToggleStyle(variant: .outline),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final unfocused = _outlineBorderColor(tester);
+
+        focusNode.requestFocus();
+        await tester.pumpAndSettle();
+
+        expect(focusNode.hasFocus, isTrue);
+        expect(_outlineBorderColor(tester), unfocused);
+      });
+    });
   });
+}
+
+Color? _outlineBorderColor(WidgetTester tester) {
+  for (final box in tester.widgetList<DecoratedBox>(
+    find.descendant(
+      of: find.byType(RemixToggle),
+      matching: find.byType(DecoratedBox),
+    ),
+  )) {
+    final decoration = box.decoration;
+    if (decoration is BoxDecoration && decoration.border is Border) {
+      return (decoration.border! as Border).top.color;
+    }
+  }
+  return null;
 }

@@ -90,7 +90,10 @@ ToggleStyler _fortalToggleOutlineStyler(
             )
             .borderAll(color: FortalTokens.accentA5())
             .onHovered(ToggleStyler().backgroundColor(FortalTokens.accentA4()))
-            .onPressed(ToggleStyler().backgroundColor(FortalTokens.accentA5())),
+            .onPressed(ToggleStyler().backgroundColor(FortalTokens.accentA5()))
+            // Mix currently gives widget states priority over onFocusVisible;
+            // remove once it sorts variants by widgetStateDependencies.
+            .onFocusVisible(_fortalToggleFocusStyler()),
       )
       .onFocusVisible(_fortalToggleFocusStyler())
       .onDisabled(_fortalToggleDisabledStyler(outlined: true));
