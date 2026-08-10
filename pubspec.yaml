@@ -30,6 +30,24 @@ melos:
   # exemption, so a single managed value could only be wrong for one group.
   # tool/check_toolchain.dart owns both floors and enforces them instead.
 
+  command:
+    bootstrap:
+      # Mix floors are managed here so `remix` and `remix_fortal` cannot drift
+      # apart. Unlike `environment` above, this is safe to manage centrally:
+      # melos skips any package that does not already declare the dependency
+      # (see `_updateDependencies` in melos), so the apps keep resolving Mix
+      # transitively and never gain a direct dependency.
+      #
+      # Keep these at the versions actually exercised by CI. Declaring an older
+      # floor than we test would claim support for a Mix we never build against.
+      # tool/check_consumer_mix.dart enforces the same equality for anyone who
+      # edits a pubspec without bootstrapping.
+      dependencies:
+        mix: ^2.2.0-beta.2
+        mix_annotations: ^2.2.0-beta.1
+      dev_dependencies:
+        mix_generator: ^2.2.0-beta.2
+
   scripts:
     generate:
       run: dart run build_runner build
