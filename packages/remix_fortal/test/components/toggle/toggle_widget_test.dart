@@ -231,16 +231,8 @@ void main() {
 }
 
 Color? _outlineBorderColor(WidgetTester tester) {
-  for (final box in tester.widgetList<DecoratedBox>(
-    find.descendant(
-      of: find.byType(RemixToggle),
-      matching: find.byType(DecoratedBox),
-    ),
-  )) {
-    final decoration = box.decoration;
-    if (decoration is BoxDecoration && decoration.border is Border) {
-      return (decoration.border! as Border).top.color;
-    }
-  }
-  return null;
+  final spec = tester.resolvedSpecOf<ToggleSpec>(find.text('T'));
+  final decoration = spec.container.spec.box?.spec.decoration;
+  if (decoration is! BoxDecoration || decoration.border is! Border) return null;
+  return (decoration.border! as Border).top.color;
 }

@@ -519,16 +519,7 @@ void main() {
               FocusHighlightStrategy.alwaysTouch;
           final focusNode = FocusNode();
           addTearDown(focusNode.dispose);
-          final style = SliderStyler(
-            thumb: BoxStyler().size(20, 20),
-            thumbFocusEffects: RemixBoxEffectsMix(
-              outline: BorderSideMix(
-                color: Colors.red,
-                width: 3,
-                strokeAlign: BorderSide.strokeAlignInside,
-              ),
-            ),
-          );
+          final style = _sliderFocusStyle();
 
           await tester.pumpRemixApp(
             Builder(
@@ -574,16 +565,7 @@ void main() {
         });
         FocusManager.instance.highlightStrategy =
             FocusHighlightStrategy.alwaysTouch;
-        final style = SliderStyler(
-          thumb: BoxStyler().size(20, 20),
-          thumbFocusEffects: RemixBoxEffectsMix(
-            outline: BorderSideMix(
-              color: Colors.red,
-              width: 3,
-              strokeAlign: BorderSide.strokeAlignInside,
-            ),
-          ),
-        );
+        final style = _sliderFocusStyle();
 
         await tester.pumpRemixApp(
           WidgetStateStyleOverride(
@@ -891,4 +873,17 @@ RemixBoxWithEffects _sliderThumb(WidgetTester tester) {
       .singleWhere(
         (widget) => widget.styleSpec.spec.constraints?.maxWidth == 20,
       );
+}
+
+SliderStyler _sliderFocusStyle() {
+  return SliderStyler(
+    thumb: BoxStyler().size(20, 20),
+    thumbFocusEffects: RemixBoxEffectsMix(
+      outline: BorderSideMix(
+        color: Colors.red,
+        width: 3,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+    ),
+  );
 }

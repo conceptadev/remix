@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-// `RemixBoxWithEffects` is `@internal` to `remix`, but this sibling package's
-// tests need it to inspect how a Remix component renders a Fortal recipe.
-// Suppressed per-use below, so unrelated internal-member uses remain flagged.
-import 'package:remix/src/rendering/remix_box_effects.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -52,13 +48,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // ignore: invalid_use_of_internal_member
-      final effectsFinder = find.byType(RemixBoxWithEffects);
-      // ignore: invalid_use_of_internal_member
-      final card = tester.widget<RemixBoxWithEffects>(
-        find.descendant(of: find.byType(RemixCard), matching: effectsFinder),
-      );
-      expect(card.containerEffects?.outline.width, 0);
+      final spec = tester.resolvedSpecOf<CardSpec>(find.text('Card'));
+      expect(spec.containerEffects?.outline.width, 0);
     });
   });
 
