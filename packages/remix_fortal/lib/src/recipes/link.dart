@@ -124,7 +124,7 @@ BadgeStyler _fortalInteractiveLinkStyle(
     focused: true,
   ).label(.decoration(TextDecoration.none));
   return styleFor()
-      .onHovered(styleFor(hovered: true).onFocusVisible(focusVisible))
+      .onHovered(styleFor(hovered: true))
       .onFocusVisible(focusVisible);
 }
 

@@ -90,9 +90,7 @@ ToggleStyler _fortalToggleOutlineStyler(
             )
             .borderAll(color: FortalTokens.accentA5())
             .onHovered(ToggleStyler().backgroundColor(FortalTokens.accentA4()))
-            .onPressed(ToggleStyler().backgroundColor(FortalTokens.accentA5()))
-            // Selection resolves after the outer focus style, so reapply it here.
-            .onFocusVisible(_fortalToggleFocusStyler()),
+            .onPressed(ToggleStyler().backgroundColor(FortalTokens.accentA5())),
       )
       .onFocusVisible(_fortalToggleFocusStyler())
       .onDisabled(_fortalToggleDisabledStyler(outlined: true));
