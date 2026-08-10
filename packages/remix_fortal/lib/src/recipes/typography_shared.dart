@@ -18,13 +18,10 @@ enum FortalTextSize {
 
 /// Font weights supported by the Fortal typography scale.
 ///
-/// Deliberately a closed enum rather than Flutter's [FontWeight]: `FontWeight`
-/// is an open class accepting any value from 1 to 1000, while Radix ships
-/// exactly these four. Routing through tokens also keeps the concrete weights
-/// overridable through `MixScope` instead of baked into every recipe.
+/// Closed rather than Flutter's [FontWeight], which is an open class accepting
+/// any value from 1 to 1000; Radix ships exactly these four.
 enum FortalTextWeight { light, regular, medium, bold }
 
-/// Maps a [FortalTextSize] onto its pinned text token by exhaustive switch.
 TextStyleToken fortalTextSizeToken(FortalTextSize size) => switch (size) {
   .size1 => FortalTokens.text1,
   .size2 => FortalTokens.text2,
@@ -37,7 +34,6 @@ TextStyleToken fortalTextSizeToken(FortalTextSize size) => switch (size) {
   .size9 => FortalTokens.text9,
 };
 
-/// Maps a [FortalTextWeight] onto its shared font-weight token.
 FontWeightToken fortalTextWeightToken(FortalTextWeight weight) =>
     switch (weight) {
       .light => FortalTokens.fontWeightLight,
@@ -46,11 +42,7 @@ FontWeightToken fortalTextWeightToken(FortalTextWeight weight) =>
       .bold => FortalTokens.fontWeightBold,
     };
 
-/// Applies the shared alignment, wrapping, and truncation policy.
-///
-/// [truncate] deliberately wins over [softWrap], forcing a single ellipsized
-/// line. Alignment is Flutter's [TextAlign] rather than a Radix-shaped subset,
-/// so `start`/`end` stay available for direction-aware layouts.
+/// [truncate] deliberately wins over [softWrap], forcing one ellipsized line.
 TextStyler fortalApplyTextFlow(
   TextStyler style, {
   TextAlign? align,
@@ -65,7 +57,6 @@ TextStyler fortalApplyTextFlow(
   return style.softWrap(softWrap);
 }
 
-/// Resolves the accent foreground shared by Text, Heading, Code, and Link.
 TextStyler fortalAccentForeground(
   TextStyler style, {
   required bool highContrast,
@@ -73,29 +64,22 @@ TextStyler fortalAccentForeground(
   highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
 );
 
-/// Resolves a text token to its concrete [TextStyle] at [context].
-///
 /// Code, Kbd, and Link derive em-relative geometry from the resolved font size,
 /// so unlike the other recipes they cannot stay context-free.
 TextStyle fortalResolveTextToken(BuildContext context, FortalTextSize size) =>
     MixScope.tokenOf(fortalTextSizeToken(size), context);
 
-/// Resolves a colour token at [context].
 Color fortalResolveColor(BuildContext context, ColorToken token) =>
     MixScope.tokenOf(token, context);
 
-/// The em base for the boxed typography formulas.
-///
 /// Falls back to what Flutter actually paints when the ambient style omits a
 /// size. `DefaultTextStyle.fallback().style.fontSize` is null, so reading it
-/// with `!` would always throw rather than ever supply a default.
+/// with `!` always throws rather than supplying a default.
 double fortalResolvedFontSize(TextStyle style) =>
     style.fontSize ?? kDefaultFontSize;
 
-/// Recovers the theme's radius multiplier from the resolved `radius1` token.
-///
-/// Derived rather than duplicating the Fortal radius enum table, so a theme
-/// radius or scaling change flows through automatically.
+/// Derived from the resolved `radius1` rather than duplicating the Fortal
+/// radius enum table, so theme radius and scaling changes flow through.
 double fortalRadiusFactor(BuildContext context) {
   final scaling = FortalTheme.of(context).scaling.factor;
   final radius = MixScope.tokenOf(FortalTokens.radius1, context);
