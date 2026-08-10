@@ -31,22 +31,20 @@ class DialogExample extends StatelessWidget {
       onPressed: () {
         showRemixDialog(
           context: context,
-          builder: (context) => Center(
-            child: FortalDialog(
-              title: 'Revoke access',
-              description:
-                  'This application will no longer be accessible.',
-              actions: [
-                FortalButton.ghost(
-                  label: 'Cancel',
-                  onPressed: () => Navigator.pop(context),
-                ),
-                FortalButton(
-                  label: 'Revoke access',
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
+          builder: (context) => FortalDialog(
+            title: 'Revoke access',
+            description:
+                'This application will no longer be accessible.',
+            actions: [
+              FortalButton.ghost(
+                label: 'Cancel',
+                onPressed: () => Navigator.pop(context),
+              ),
+              FortalButton(
+                label: 'Revoke access',
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
           ),
         );
       },
@@ -74,21 +72,19 @@ Future<void> showDeleteDialog(BuildContext context) async {
   await showRemixAlertDialog<void>(
     context: context,
     semanticLabel: 'Delete project confirmation',
-    builder: (context) => Center(
-      child: FortalDialog(
-        title: 'Delete project?',
-        description: 'This permanently deletes the project and all of its data.',
-        actions: [
-          FortalButton.ghost(
-            label: 'Cancel',
-            onPressed: () => Navigator.pop(context),
-          ),
-          FortalButton(
-            label: 'Delete project',
-            onPressed: () => Navigator.pop(context),
-          ),
-        ],
-      ),
+    builder: (context) => FortalDialog(
+      title: 'Delete project?',
+      description: 'This permanently deletes the project and all of its data.',
+      actions: [
+        FortalButton.ghost(
+          label: 'Cancel',
+          onPressed: () => Navigator.pop(context),
+        ),
+        FortalButton(
+          label: 'Delete project',
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
     ),
   );
 }
@@ -98,6 +94,11 @@ Future<void> showDeleteDialog(BuildContext context) async {
 ## Fortal widgets
 
 Remix includes a Fortal-themed widget for this component:
+
+`FortalDialog` defaults to `FortalDialogSize.size3`,
+`FortalDialogAlign.center`, fills the available width up to 600 logical pixels,
+preserves safe viewport insets, and uses `modal: true`. Set
+`align: FortalDialogAlign.start` to place the surface at the safe top inset.
 
 <CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
@@ -110,6 +111,7 @@ class FortalDialogExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FortalDialog(
+      align: FortalDialogAlign.center,
       title: 'Confirm changes',
       description: 'Save these settings before leaving?',
       actions: [

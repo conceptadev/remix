@@ -10,6 +10,9 @@ part 'popover.g.dart';
 enum FortalPopoverSize { size1, size2, size3, size4 }
 
 /// Fortal-themed preset for [RemixPopover].
+///
+/// The generated [FortalPopover] defaults to [FortalPopoverSize.size2], a
+/// 480-pixel maximum width, and no arrow.
 @MixWidget(target: RemixPopover.new)
 PopoverStyler fortalPopoverStyle({
   FortalPopoverSize size = FortalPopoverSize.size2,
@@ -28,6 +31,7 @@ PopoverStyler fortalPopoverStyle({
   };
 
   return PopoverStyler()
+      .maxWidth(480)
       .paddingAll(padding)
       .borderRadiusAll(radius)
       .color(FortalTokens.colorPanel())

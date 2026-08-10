@@ -5,6 +5,20 @@ import 'package:remix_fortal/remix_fortal.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
+  testWidgets('default style constrains the popover to 480 pixels', (
+    tester,
+  ) async {
+    final resolved = await resolveInFortalScope(
+      tester,
+      (context) => fortalPopoverStyle().build(context),
+    );
+
+    expect(
+      resolved.spec.container.spec.constraints,
+      const BoxConstraints(maxWidth: 480),
+    );
+  });
+
   testWidgets('FortalPopover supplies the themed overlay style', (
     tester,
   ) async {

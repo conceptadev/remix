@@ -271,6 +271,11 @@
   "dialog": [
     {
       "test": "test/components/dialog/dialog_widget_test.dart",
+      "case": "public contract has the pinned align order and default",
+      "covers": ["enum:align.start", "enum:align.center"]
+    },
+    {
+      "test": "test/components/dialog/dialog_widget_test.dart",
       "case": "opens and renders alert content",
       "covers": ["state:closed", "state:open"]
     },

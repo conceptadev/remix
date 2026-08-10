@@ -7,6 +7,9 @@ part of 'popover.dart';
 // **************************************************************************
 
 /// Fortal-themed preset for [RemixPopover].
+///
+/// The generated [FortalPopover] defaults to [FortalPopoverSize.size2], a
+/// 480-pixel maximum width, and no arrow.
 class FortalPopover extends StatelessWidget {
   const FortalPopover({
     super.key,
