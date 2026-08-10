@@ -2,9 +2,110 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix/mix.dart';
 import 'package:remix/src/utilities/remix_style.dart'
-    show RemixDefaultContentStyle;
+    show RemixDefaultContentStyle, RemixStyleSpecBuilder;
 
 void main() {
+  group('focus-visible styling', () {
+    late FocusHighlightStrategy previousStrategy;
+
+    setUp(() {
+      previousStrategy = FocusManager.instance.highlightStrategy;
+    });
+
+    tearDown(() {
+      FocusManager.instance.highlightStrategy = previousStrategy;
+    });
+
+    testWidgets('reacts to focus highlight mode while focus is retained', (
+      tester,
+    ) async {
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+      final controller = WidgetStatesController({WidgetState.focused});
+      addTearDown(controller.dispose);
+      late BoxSpec resolved;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: RemixStyleSpecBuilder<BoxSpec>(
+            style: BoxStyler()
+                .color(Colors.blue)
+                .onFocusVisible(.color(Colors.red)),
+            styleSpec: null,
+            controller: controller,
+            builder: (context, spec) {
+              resolved = spec;
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      expect(_boxColor(resolved), Colors.blue);
+      expect(controller.value, contains(WidgetState.focused));
+
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+      await tester.pump();
+      expect(_boxColor(resolved), Colors.red);
+      expect(controller.value, contains(WidgetState.focused));
+
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+      await tester.pump();
+      expect(_boxColor(resolved), Colors.blue);
+      expect(controller.value, contains(WidgetState.focused));
+    });
+
+    testWidgets('requires focus unless tooling forces the visual state', (
+      tester,
+    ) async {
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+      final controller = WidgetStatesController();
+      addTearDown(controller.dispose);
+      late BoxSpec resolved;
+
+      Widget build({required bool forceFocus}) {
+        final child = RemixStyleSpecBuilder<BoxSpec>(
+          style: BoxStyler()
+              .color(Colors.blue)
+              .onFocusVisible(.color(Colors.red)),
+          styleSpec: null,
+          controller: controller,
+          builder: (context, spec) {
+            resolved = spec;
+            return const SizedBox.shrink();
+          },
+        );
+
+        return MaterialApp(
+          home: forceFocus
+              ? WidgetStateStyleOverride(
+                  states: const {WidgetState.focused},
+                  child: child,
+                )
+              : child,
+        );
+      }
+
+      await tester.pumpWidget(build(forceFocus: false));
+      expect(_boxColor(resolved), Colors.blue);
+
+      controller.focused = true;
+      await tester.pump();
+      expect(_boxColor(resolved), Colors.red);
+
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+      await tester.pump();
+      expect(_boxColor(resolved), Colors.blue);
+
+      await tester.pumpWidget(build(forceFocus: true));
+      expect(_boxColor(resolved), Colors.red);
+    });
+  });
+
   testWidgets(
     'RemixDefaultContentStyle provides defaults while descendants can override',
     (tester) async {
@@ -50,4 +151,8 @@ void main() {
       expect(explicitIcon.size, 13);
     },
   );
+}
+
+Color? _boxColor(BoxSpec spec) {
+  return (spec.decoration as BoxDecoration?)?.color;
 }

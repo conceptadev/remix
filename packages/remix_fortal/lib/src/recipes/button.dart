@@ -41,7 +41,7 @@ ButtonStyler fortalButtonStyle({
         .outline => _fortalButtonOutline(base, highContrast: highContrast),
         .ghost => _fortalButtonGhost(base, highContrast: highContrast),
       }
-      .onFocused(.containerEffects(focus))
+      .onFocusVisible(.containerEffects(focus))
       .onDisabled(.containerEffects(disabledFocus));
 }
 

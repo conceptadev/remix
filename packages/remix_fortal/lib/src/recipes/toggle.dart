@@ -65,7 +65,7 @@ ToggleStyler _fortalToggleGhostStyler(
             .onHovered(ToggleStyler().backgroundColor(FortalTokens.accent4()))
             .onPressed(ToggleStyler().backgroundColor(FortalTokens.accent5())),
       )
-      .onFocused(_fortalToggleFocusStyler())
+      .onFocusVisible(_fortalToggleFocusStyler())
       .onDisabled(_fortalToggleDisabledStyler());
 }
 
@@ -92,7 +92,7 @@ ToggleStyler _fortalToggleOutlineStyler(
             .onHovered(ToggleStyler().backgroundColor(FortalTokens.accentA4()))
             .onPressed(ToggleStyler().backgroundColor(FortalTokens.accentA5())),
       )
-      .onFocused(_fortalToggleFocusStyler())
+      .onFocusVisible(_fortalToggleFocusStyler())
       .onDisabled(_fortalToggleDisabledStyler(outlined: true));
 }
 

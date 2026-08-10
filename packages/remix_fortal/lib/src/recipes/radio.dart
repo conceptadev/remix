@@ -59,7 +59,7 @@ RadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
       behindContent: _fortalRadioLayer(),
       overContent: _fortalRadioLayer(),
     ),
-  ).onFocused(
+  ).onFocusVisible(
     .containerEffects(
       RemixBoxEffectsMix(
         outline: BorderSideMix(

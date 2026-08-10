@@ -125,7 +125,7 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
             .onHovered(.color(Colors.transparent))
             .onDisabled(disabledSelected),
       )
-      .onFocused(
+      .onFocusVisible(
         SegmentedControlItemStyler()
             .borderRadiusAll(metrics.radius)
             .containerEffects(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_box_effects.dart'
+    show RemixBoxWithEffects;
 
 import '../../helpers/test_helpers.dart';
 
@@ -503,6 +505,65 @@ void main() {
         expect(focusNode.hasFocus, isTrue);
         focusNode.dispose();
       });
+
+      for (final useRawSpec in [false, true]) {
+        final source = useRawSpec ? 'raw styleSpec' : 'fluent style';
+        testWidgets('thumb focus effect from $source follows highlight mode', (
+          tester,
+        ) async {
+          final previousStrategy = FocusManager.instance.highlightStrategy;
+          addTearDown(() {
+            FocusManager.instance.highlightStrategy = previousStrategy;
+          });
+          FocusManager.instance.highlightStrategy =
+              FocusHighlightStrategy.alwaysTouch;
+          final focusNode = FocusNode();
+          addTearDown(focusNode.dispose);
+          final style = SliderStyler(
+            thumb: BoxStyler().size(20, 20),
+            thumbFocusEffects: RemixBoxEffectsMix(
+              outline: BorderSideMix(
+                color: Colors.red,
+                width: 3,
+                strokeAlign: BorderSide.strokeAlignInside,
+              ),
+            ),
+          );
+
+          await tester.pumpRemixApp(
+            Builder(
+              builder: (context) => RemixSlider(
+                value: 0.5,
+                onChanged: (value) {},
+                focusNode: focusNode,
+                style: style,
+                styleSpec: useRawSpec ? style.resolve(context).spec : null,
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          focusNode.requestFocus();
+          await tester.pumpAndSettle();
+
+          expect(focusNode.hasFocus, isTrue);
+          expect(_sliderThumb(tester).containerEffects?.outline.width, 0);
+
+          FocusManager.instance.highlightStrategy =
+              FocusHighlightStrategy.alwaysTraditional;
+          await tester.pump();
+
+          expect(focusNode.hasFocus, isTrue);
+          expect(_sliderThumb(tester).containerEffects?.outline.width, 3);
+
+          FocusManager.instance.highlightStrategy =
+              FocusHighlightStrategy.alwaysTouch;
+          await tester.pump();
+
+          expect(focusNode.hasFocus, isTrue);
+          expect(_sliderThumb(tester).containerEffects?.outline.width, 0);
+        });
+      }
     });
 
     group('Snap Divisions', () {
@@ -791,4 +852,12 @@ void main() {
       });
     });
   });
+}
+
+RemixBoxWithEffects _sliderThumb(WidgetTester tester) {
+  return tester
+      .widgetList<RemixBoxWithEffects>(find.byType(RemixBoxWithEffects))
+      .singleWhere(
+        (widget) => widget.styleSpec.spec.constraints?.maxWidth == 20,
+      );
 }

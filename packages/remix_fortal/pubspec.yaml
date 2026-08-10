@@ -37,7 +37,7 @@ dependencies:
   # package. `tool/fortal_parity/check.dart` (_checkRemixHostedPin) fails if the
   # two ever fall out of sync.
   remix: ^1.0.0-beta.2 # x-release-please-version
-  mix: ^2.2.0-beta.2
+  mix: ^2.2.0-beta.3
   mix_annotations: ^2.2.0-beta.1
   naked_ui: ^1.0.0-beta.8
 

@@ -201,6 +201,7 @@ class RemixSegmentedControl<T extends Object> extends StatelessWidget {
         child: RemixStyleSpecBuilder<SegmentedControlSpec>(
           style: style,
           styleSpec: styleSpec,
+          trackFocusHighlightMode: true,
           builder: (context, spec) {
             final textDirection = Directionality.of(context);
             return StyleSpecBuilder<BoxSpec>(

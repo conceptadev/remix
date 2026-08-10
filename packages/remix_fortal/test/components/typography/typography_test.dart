@@ -1,3 +1,5 @@
+import 'dart:ui' show PointerDeviceKind;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -342,26 +344,95 @@ void main() {
   });
 
   group('focus', () {
-    testWidgets('focused link draws the outline without moving layout', (
+    testWidgets('link focus treatment follows the highlight mode', (
       tester,
     ) async {
+      final previousStrategy = FocusManager.instance.highlightStrategy;
+      addTearDown(() {
+        FocusManager.instance.highlightStrategy = previousStrategy;
+      });
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
       final focusNode = FocusNode();
       addTearDown(focusNode.dispose);
       await _pump(
         tester,
-        FortalLink('focus me', focusNode: focusNode, onPressed: _noop),
+        FortalLink(
+          'focus me',
+          underline: FortalLinkUnderline.always,
+          focusNode: focusNode,
+          onPressed: _noop,
+        ),
       );
       final idleSize = tester.getSize(find.text('focus me'));
+      expect(_underlined(tester, 'focus me'), isTrue);
 
       focusNode.requestFocus();
+      await tester.pumpAndSettle();
+
+      expect(focusNode.hasFocus, isTrue);
+      expect(_surface(tester).containerEffects?.outline.width ?? 0, 0);
+      expect(_underlined(tester, 'focus me'), isTrue);
+      expect(tester.getSize(find.text('focus me')), idleSize);
+
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
       await tester.pump();
 
       final effects = _surface(tester).containerEffects!;
       expect(effects.outline.width, 2);
       expect(effects.outlineOffset, 2);
-      expect(tester.getSize(find.text('focus me')), idleSize);
-      // Focus replaces the underline rather than stacking both.
       expect(_underlined(tester, 'focus me'), isFalse);
+      expect(tester.getSize(find.text('focus me')), idleSize);
+
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+      await tester.pump();
+
+      expect(_surface(tester).containerEffects?.outline.width ?? 0, 0);
+      expect(_underlined(tester, 'focus me'), isTrue);
+    });
+
+    testWidgets('focus-visible outline takes precedence over hover underline', (
+      tester,
+    ) async {
+      final previousStrategy = FocusManager.instance.highlightStrategy;
+      addTearDown(() {
+        FocusManager.instance.highlightStrategy = previousStrategy;
+      });
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+
+      await _pump(
+        tester,
+        FortalLink(
+          'hover me',
+          underline: FortalLinkUnderline.hover,
+          focusNode: focusNode,
+          onPressed: _noop,
+        ),
+      );
+      expect(_underlined(tester, 'hover me'), isFalse);
+
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(mouse.removePointer);
+      await mouse.addPointer(location: Offset.zero);
+      await mouse.moveTo(tester.getCenter(find.text('hover me')));
+      await tester.pump();
+      expect(_underlined(tester, 'hover me'), isTrue);
+
+      focusNode.requestFocus();
+      await tester.pumpAndSettle();
+      expect(_surface(tester).containerEffects?.outline.width, 2);
+      expect(_underlined(tester, 'hover me'), isFalse);
+
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+      await tester.pump();
+      expect(_surface(tester).containerEffects?.outline.width ?? 0, 0);
+      expect(_underlined(tester, 'hover me'), isTrue);
     });
   });
 
@@ -578,7 +649,8 @@ Text _text(WidgetTester tester, String text) =>
 
 BadgeSpec _surface(WidgetTester tester) {
   final widget = tester.widget<RemixBadge>(find.byType(RemixBadge));
-  return widget.style.resolve(tester.element(find.byType(RemixBadge))).spec;
+  return widget.styleSpec ??
+      widget.style.resolve(tester.element(find.byType(RemixBadge))).spec;
 }
 
 Color? _boxColor(BadgeSpec spec) =>

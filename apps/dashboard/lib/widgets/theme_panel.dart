@@ -212,7 +212,7 @@ class _AccentSwatch extends StatelessWidget {
                 .iconColor(FortalTokens.accentContrast())
                 .merge(_ring),
           )
-          .onFocused(_ring);
+          .onFocusVisible(_ring);
 
   final FortalAccentColor accent;
   final bool selected;

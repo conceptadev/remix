@@ -71,7 +71,7 @@ AccordionStyler _fortalAccordionSurfaceStyler([
       )
       .onHovered(.trigger(.color(FortalTokens.gray2())))
       .onPressed(.trigger(.color(FortalTokens.gray3())))
-      .onFocused(_fortalAccordionFocusStyler())
+      .onFocusVisible(_fortalAccordionFocusStyler())
       .onDisabled(_fortalAccordionDisabledStyler());
 }
 
@@ -97,7 +97,7 @@ AccordionStyler _fortalAccordionSoftStyler([
       )
       .onHovered(.trigger(.color(FortalTokens.accent3())))
       .onPressed(.trigger(.color(FortalTokens.accent4())))
-      .onFocused(_fortalAccordionFocusStyler())
+      .onFocusVisible(_fortalAccordionFocusStyler())
       .onDisabled(_fortalAccordionDisabledStyler());
 }
 

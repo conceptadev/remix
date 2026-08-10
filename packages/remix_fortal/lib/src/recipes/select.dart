@@ -48,7 +48,7 @@ SelectTriggerStyler _fortalSelectTriggerStyler(
       )
       .icon(.color(FortalTokens.gray12()))
       .chevron(.color(FortalTokens.gray12()).size(size == .size3 ? 11 : 9))
-      .onFocused(
+      .onFocusVisible(
         .containerEffects(
           RemixBoxEffectsMix(overContent: _fortalSelectFocusRing()),
         ),
@@ -266,6 +266,8 @@ SelectMenuItemStyler _fortalSelectItemStyler(
     .soft => SelectMenuItemStyler().color(FortalTokens.accentA4()),
   };
 
+  // Naked's focused option is Radix's roving `data-highlighted` item, not a
+  // CSS focus ring, so this intentionally follows raw focus.
   return base
       .onHovered(highlighted)
       .onFocused(highlighted)

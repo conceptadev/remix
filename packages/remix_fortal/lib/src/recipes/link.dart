@@ -36,8 +36,8 @@ BadgeStyler fortalLinkStyle(
   }
 
   // Every upstream underline rule is gated behind `:where(:any-link, button)`,
-  // so a link with no callback stays plain accent-coloured text. Focus replaces
-  // the underline with the outline rather than stacking both.
+  // so a link with no callback stays plain accent-coloured text. A focus-visible
+  // outline replaces the underline rather than stacking both.
   final underlined =
       actionable &&
       !focused &&
@@ -94,6 +94,38 @@ BadgeStyler fortalLinkStyle(
   }
 
   return style;
+}
+
+BadgeStyler _fortalInteractiveLinkStyle(
+  BuildContext context, {
+  FortalTextSize? size,
+  FortalTextWeight? weight,
+  required FortalLinkUnderline underline,
+  required bool softWrap,
+  required bool truncate,
+  required bool highContrast,
+}) {
+  BadgeStyler styleFor({bool hovered = false, bool focused = false}) {
+    return fortalLinkStyle(
+      context,
+      size: size,
+      weight: weight,
+      underline: underline,
+      softWrap: softWrap,
+      truncate: truncate,
+      highContrast: highContrast,
+      actionable: true,
+      hovered: hovered,
+      focused: focused,
+    );
+  }
+
+  final focusVisible = styleFor(
+    focused: true,
+  ).label(.decoration(TextDecoration.none));
+  return styleFor()
+      .onHovered(styleFor(hovered: true).onFocusVisible(focusVisible))
+      .onFocusVisible(focusVisible);
 }
 
 /// Token-backed text that becomes an accessible link only when actionable.
@@ -189,18 +221,19 @@ class _FortalLinkState extends State<FortalLink> {
         if (_focused != focused) setState(() => _focused = focused);
       },
       excludeSemantics: true,
-      builder: (context, state, child) => fortalLinkStyle(
-        context,
-        size: widget.size,
-        weight: widget.weight,
-        underline: widget.underline,
-        softWrap: widget.softWrap,
-        truncate: widget.truncate,
-        highContrast: widget.highContrast,
-        actionable: true,
-        hovered: state.states.contains(WidgetState.hovered),
-        focused: state.states.contains(WidgetState.focused),
-      )(label: widget.text),
+      builder: (context, _, _) => StyleBuilder<BadgeSpec>(
+        style: _fortalInteractiveLinkStyle(
+          context,
+          size: widget.size,
+          weight: widget.weight,
+          underline: widget.underline,
+          softWrap: widget.softWrap,
+          truncate: widget.truncate,
+          highContrast: widget.highContrast,
+        ),
+        controller: NakedButtonState.controllerOf(context),
+        builder: (_, spec) => RemixBadge(label: widget.text, styleSpec: spec),
+      ),
     );
 
     final link = Semantics(

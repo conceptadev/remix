@@ -99,6 +99,8 @@ MenuItemStyler _fortalMenuItemStyler(
       .trailingIcon(.color(FortalTokens.grayA8()))
       .indicator(.color(FortalTokens.grayA8()));
 
+  // Naked's focused item is Radix's roving `data-highlighted` item, not a
+  // CSS focus ring, so this intentionally follows raw focus.
   return base
       .onHovered(highlighted)
       .onFocused(highlighted)
@@ -145,6 +147,7 @@ MenuItemStyler _fortalMenuSubmenuItemStyler(
         variant == .solid ? FortalTokens.grayA3() : FortalTokens.accentA3(),
       )
       .onHovered(highlighted)
+      // Roving `data-highlighted` state, not a focus-visible ring.
       .onFocused(highlighted)
       .onPressed(highlighted);
 

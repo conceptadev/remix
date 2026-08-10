@@ -67,6 +67,7 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
     required this.styleSpec,
     required this.builder,
     this.controller,
+    this.trackFocusHighlightMode = false,
   });
 
   /// The fluent style to resolve when [styleSpec] is null.
@@ -78,24 +79,120 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
   /// Optional widget state controller for fluent style resolution.
   final WidgetStatesController? controller;
 
+  /// Whether [builder] should rebuild when the focus highlight mode changes.
+  ///
+  /// Mix-managed controller scopes already make [FocusVisibleVariant]
+  /// reactive. Set this for composite widgets that publish focus through a
+  /// manual [WidgetStateProvider], or for visuals that read
+  /// [RemixFocusHighlightModeProvider.of] directly.
+  final bool trackFocusHighlightMode;
+
   /// Builds the widget with the resolved or supplied spec.
   final Widget Function(BuildContext context, S spec) builder;
+
+  Widget _buildTracked(BuildContext context, S spec) {
+    if (trackFocusHighlightMode) {
+      // Register a dependency on the Remix scope. This also rebuilds styles
+      // resolved beneath manually mounted WidgetStateProvider instances, where
+      // Mix's focus-visible variant otherwise observes modality on the next
+      // unrelated rebuild.
+      RemixFocusHighlightModeProvider.of(context);
+    }
+    return builder(context, spec);
+  }
 
   @override
   Widget build(BuildContext context) {
     final spec = styleSpec;
+    late final Widget result;
     if (spec != null) {
-      return StyleSpecBuilder<S>(
+      result = StyleSpecBuilder<S>(
         styleSpec: StyleSpec(spec: spec),
-        builder: builder,
+        builder: _buildTracked,
+      );
+    } else {
+      result = StyleBuilder<S>(
+        style: style,
+        controller: controller,
+        builder: _buildTracked,
       );
     }
 
-    return StyleBuilder<S>(
-      style: style,
-      controller: controller,
-      builder: builder,
-    );
+    if (!trackFocusHighlightMode ||
+        RemixFocusHighlightModeProvider._hasScope(context)) {
+      return result;
+    }
+
+    return RemixFocusHighlightModeProvider._(child: result);
+  }
+}
+
+/// Provides reactive access to Flutter's current focus-highlight mode.
+@internal
+final class RemixFocusHighlightModeProvider extends StatefulWidget {
+  const RemixFocusHighlightModeProvider._({required this.child});
+
+  /// Returns the current mode and subscribes to changes when a scope exists.
+  static FocusHighlightMode of(BuildContext context) {
+    return context
+            .dependOnInheritedWidgetOfExactType<_RemixFocusHighlightModeScope>()
+            ?.mode ??
+        FocusManager.instance.highlightMode;
+  }
+
+  static bool _hasScope(BuildContext context) {
+    return context
+            .getInheritedWidgetOfExactType<_RemixFocusHighlightModeScope>() !=
+        null;
+  }
+
+  final Widget child;
+
+  @override
+  State<RemixFocusHighlightModeProvider> createState() =>
+      _RemixFocusHighlightModeProviderState();
+}
+
+class _RemixFocusHighlightModeProviderState
+    extends State<RemixFocusHighlightModeProvider> {
+  late FocusHighlightMode _mode;
+
+  @override
+  void initState() {
+    super.initState();
+    _mode = FocusManager.instance.highlightMode;
+    FocusManager.instance.addHighlightModeListener(_handleModeChange);
+  }
+
+  void _handleModeChange(FocusHighlightMode mode) {
+    if (!mounted || mode == _mode) return;
+
+    setState(() => _mode = mode);
+  }
+
+  @override
+  void dispose() {
+    FocusManager.instance.removeHighlightModeListener(_handleModeChange);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _RemixFocusHighlightModeScope(mode: _mode, child: widget.child);
+  }
+}
+
+class _RemixFocusHighlightModeScope extends InheritedWidget {
+  const _RemixFocusHighlightModeScope({
+    required this.mode,
+    required super.child,
+  });
+
+  final FocusHighlightMode mode;
+
+  @override
+  bool updateShouldNotify(_RemixFocusHighlightModeScope oldWidget) {
+    return mode != oldWidget.mode;
   }
 }
 
