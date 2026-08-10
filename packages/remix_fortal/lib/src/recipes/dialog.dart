@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
@@ -12,10 +14,25 @@ enum FortalDialogSize { size1, size2, size3, size4 }
 /// Fortal dialog vertical alignment matching Radix Themes 3.3.0.
 enum FortalDialogAlign { start, center }
 
+final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
+  final safeArea = MediaQuery.paddingOf(context);
+  final viewportHeight = MediaQuery.sizeOf(context).height;
+  final horizontal = FortalTokens.space4.resolve(context);
+  final vertical = FortalTokens.space6.resolve(context);
+
+  return EdgeInsets.fromLTRB(
+    math.max(safeArea.left, horizontal),
+    math.max(safeArea.top, vertical),
+    math.max(safeArea.right, horizontal),
+    math.max(safeArea.bottom, math.max(vertical, viewportHeight * 0.06)),
+  );
+});
+
 /// Fortal-themed preset for [RemixDialog].
 ///
 /// The generated [FortalDialog] defaults to [FortalDialogSize.size3],
-/// [FortalDialogAlign.center], a 600-pixel maximum width, and a modal dialog.
+/// [FortalDialogAlign.center], fills up to 600 logical pixels, preserves safe
+/// viewport insets, and is modal.
 @MixWidget(target: RemixDialog.new)
 DialogStyler fortalDialogStyle({
   FortalDialogSize size = FortalDialogSize.size3,
@@ -37,7 +54,14 @@ DialogStyler fortalDialogStyle({
   };
 
   return DialogStyler()
-      .wrap(.align(alignment: alignment))
+      .wrap(
+        .modifier(
+          PaddingModifierMix.create(padding: Prop.token(_dialogViewportInsets)),
+        ).align(alignment: alignment).orderOfModifiers([
+          PaddingModifier,
+          AlignModifier,
+        ]),
+      )
       .title(
         .style(FortalTokens.text5.mix())
             .fontWeight(FortalTokens.fontWeightBold())
@@ -58,7 +82,7 @@ DialogStyler fortalDialogStyle({
             .spacing(FortalTokens.space3())
             .marginTop(FortalTokens.space5()),
       )
-      .maxWidth(600)
+      .width(600)
       .padding(.all(padding))
       .borderRadius(.all(radius))
       .color(FortalTokens.colorPanel())

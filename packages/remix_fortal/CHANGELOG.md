@@ -2,7 +2,8 @@
 
 - **FIX**: Match the pinned Radix Themes dialog and popover layout defaults.
   `FortalDialog` now defaults to centered placement, exposes `start` and
-  `center` alignment options, and has a 600-pixel maximum width;
+  `center` alignment options, fills up to 600 pixels, and preserves safe
+  viewport insets;
   `FortalPopover` has a 480-pixel maximum width.
 - Initial release. Fortal — the Radix Themes-inspired preset theme for
   [Remix](https://pub.dev/packages/remix) — now ships as its own package.

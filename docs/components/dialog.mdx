@@ -96,8 +96,9 @@ Future<void> showDeleteDialog(BuildContext context) async {
 Remix includes a Fortal-themed widget for this component:
 
 `FortalDialog` defaults to `FortalDialogSize.size3`,
-`FortalDialogAlign.center`, a 600 logical-pixel maximum width, and `modal: true`.
-Set `align: FortalDialogAlign.start` to place the surface at the top instead.
+`FortalDialogAlign.center`, fills the available width up to 600 logical pixels,
+preserves safe viewport insets, and uses `modal: true`. Set
+`align: FortalDialogAlign.start` to place the surface at the safe top inset.
 
 <CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart

@@ -9,7 +9,8 @@ part of 'dialog.dart';
 /// Fortal-themed preset for [RemixDialog].
 ///
 /// The generated [FortalDialog] defaults to [FortalDialogSize.size3],
-/// [FortalDialogAlign.center], a 600-pixel maximum width, and a modal dialog.
+/// [FortalDialogAlign.center], fills up to 600 logical pixels, preserves safe
+/// viewport insets, and is modal.
 class FortalDialog extends StatelessWidget {
   const FortalDialog({
     super.key,
