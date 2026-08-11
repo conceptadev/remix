@@ -1,6 +1,7 @@
-# Remix dashboard
+# Dashboard
 
-A polished product dashboard demonstrating Remix's Fortal theme and components.
+A polished product dashboard demonstrating Remix's Fortal theme, components,
+and chart recipes built on `mix_chart`.
 
 ## Preview
 
