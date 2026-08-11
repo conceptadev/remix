@@ -31,9 +31,8 @@ extension RemixIconButtonStylerRemixHelpers on IconButtonStyler {
   /// Sets the minimum size of the icon button.
   IconButtonStyler minimumSize(Size value) {
     return merge(
-      IconButtonStyler().constraintsOnly(
-        minWidth: value.width,
-        minHeight: value.height,
+      IconButtonStyler().constraints(
+        BoxConstraintsMix(minWidth: value.width, minHeight: value.height),
       ),
     );
   }
@@ -41,9 +40,8 @@ extension RemixIconButtonStylerRemixHelpers on IconButtonStyler {
   /// Sets the maximum size of the icon button.
   IconButtonStyler maximumSize(Size value) {
     return merge(
-      IconButtonStyler().constraintsOnly(
-        maxWidth: value.width,
-        maxHeight: value.height,
+      IconButtonStyler().constraints(
+        BoxConstraintsMix(maxWidth: value.width, maxHeight: value.height),
       ),
     );
   }

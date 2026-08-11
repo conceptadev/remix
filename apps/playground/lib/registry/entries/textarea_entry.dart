@@ -47,8 +47,8 @@ class _TextAreaExampleState extends State<_TextAreaExample> {
         .backgroundColor(surface)
         .textColor(foreground)
         .hintColor(muted)
-        .paddingAll(14)
-        .borderRadiusAll(const Radius.circular(12))
+        .padding(.all(14))
+        .borderRadius(.all(const Radius.circular(12)))
         .border(
           BoxBorderMix.all(
             BorderSideMix(color: const Color(0xFF7C3AED), width: 1.5),

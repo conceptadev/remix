@@ -109,8 +109,8 @@ BadgeStyler fortalCodeStyle(
   if (variant == FortalCodeVariant.outline) {
     final ringWidth = math.max(1.0, 0.033 * fontSize);
     style = style.containerEffects(
-      RemixBoxEffectsMix(
-        behindContent: RemixBoxEffectLayerMix(
+      RemixBoxEffectsMix.behindContent(
+        RemixBoxEffectLayerMix(
           shadows: [
             RemixBoxShadowMix(
               kind: .inset,

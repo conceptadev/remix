@@ -365,13 +365,13 @@ void main() {
       styleMethodTest(
         'inherited border helpers',
         initial: ButtonStyler(),
-        modify: (style) => style.borderTop(color: Colors.red, width: 2.0),
+        modify: (style) => style.border(.top(.color(Colors.red).width(2.0))),
         expect: (style) {
           expect(
             style.$container,
             equals(
               Prop.maybeMix(
-                FlexBoxStyler().borderTop(color: Colors.red, width: 2.0),
+                FlexBoxStyler().border(.top(.color(Colors.red).width(2.0))),
               ),
             ),
           );

@@ -67,7 +67,9 @@ class _SkeletonPreviewState extends State<_SkeletonPreview> {
               crossAxisAlignment: .start,
               children: [
                 RemixSkeleton(
-                  style: base.container(BoxStyler().size(40, 40).shapeCircle()),
+                  style: base.container(
+                    BoxStyler().size(40, 40).shape(.circle()),
+                  ),
                 ),
                 SpacedColumn(
                   spacing: 8,
@@ -76,12 +78,12 @@ class _SkeletonPreviewState extends State<_SkeletonPreview> {
                   children: [
                     RemixSkeleton(
                       style: base.container(
-                        BoxStyler().size(180, 12).borderRounded(6),
+                        BoxStyler().size(180, 12).borderRadius(.circular(6)),
                       ),
                     ),
                     RemixSkeleton(
                       style: base.container(
-                        BoxStyler().size(120, 12).borderRounded(6),
+                        BoxStyler().size(120, 12).borderRadius(.circular(6)),
                       ),
                     ),
                   ],
@@ -89,7 +91,9 @@ class _SkeletonPreviewState extends State<_SkeletonPreview> {
               ],
             ),
             RemixSkeleton(
-              style: base.container(BoxStyler().size(320, 88).borderRounded(8)),
+              style: base.container(
+                BoxStyler().size(320, 88).borderRadius(.circular(8)),
+              ),
             ),
           ],
         ),

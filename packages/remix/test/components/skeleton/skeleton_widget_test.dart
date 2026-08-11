@@ -452,7 +452,7 @@ void main() {
           RemixSkeleton(
             style: SkeletonStyler()
                 .container(
-                  BoxStyler().size(40, 40).color(_baseColor).shapeCircle(),
+                  BoxStyler().size(40, 40).color(_baseColor).shape(.circle()),
                 )
                 .pulseColor(_pulseColor)
                 .duration(_leg),
@@ -612,7 +612,7 @@ void main() {
                   BoxStyler()
                       .size(40, 40)
                       .color(_baseColor)
-                      .shapeCircle()
+                      .shape(.circle())
                       .backgroundImage(_testImage, fit: BoxFit.cover),
                 )
                 .pulseColor(_pulseColor)
@@ -899,7 +899,9 @@ final MemoryImage _testImage = MemoryImage(
 /// Geometry only: the resolved decoration carries no fill, so the pulse takes
 /// the generic opacity fallback.
 SkeletonStyler _blockStyle() => SkeletonStyler().container(
-  BoxStyler().size(_childSize.width, _childSize.height).borderRounded(4),
+  BoxStyler()
+      .size(_childSize.width, _childSize.height)
+      .borderRadius(.circular(4)),
 );
 
 /// Both endpoints resolve, so the pulse interpolates the container fill.

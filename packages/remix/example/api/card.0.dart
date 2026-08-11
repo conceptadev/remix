@@ -30,7 +30,7 @@ class CardExample extends StatelessWidget {
     return CardStyler()
         .size(300, 200)
         .backgroundColor(Colors.white)
-        .borderRadiusAll(const Radius.circular(4))
-        .borderAll(color: Colors.grey.shade300);
+        .borderRadius(.all(const Radius.circular(4)))
+        .border(.all(.color(Colors.grey.shade300)));
   }
 }

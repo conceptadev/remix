@@ -31,7 +31,7 @@ class CalloutExample extends StatelessWidget {
         .backgroundColor(Colors.grey.shade200)
         .spacing(12)
         .height(60)
-        .paddingRight(12)
+        .padding(.right(12))
         .icon(
           IconStyler()
               .size(24)
@@ -40,7 +40,7 @@ class CalloutExample extends StatelessWidget {
                 .box(
                   BoxStyler()
                       .color(Colors.blue.shade900)
-                      .paddingX(12)
+                      .padding(.horizontal(12))
                       .height(.infinity),
                 ),
               ),

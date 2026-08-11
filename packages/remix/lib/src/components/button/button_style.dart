@@ -254,11 +254,15 @@ extension RemixButtonStyleDecorationHelpers on ButtonStyler {
     double? strokeAlign,
   }) {
     return container(
-      FlexBoxStyler().borderTop(
-        color: color,
-        width: width,
-        style: style,
-        strokeAlign: strokeAlign,
+      FlexBoxStyler().border(
+        .top(
+          BorderSideMix(
+            color: color,
+            width: width,
+            style: style,
+            strokeAlign: strokeAlign,
+          ),
+        ),
       ),
     );
   }
@@ -270,11 +274,15 @@ extension RemixButtonStyleDecorationHelpers on ButtonStyler {
     double? strokeAlign,
   }) {
     return container(
-      FlexBoxStyler().borderBottom(
-        color: color,
-        width: width,
-        style: style,
-        strokeAlign: strokeAlign,
+      FlexBoxStyler().border(
+        .bottom(
+          BorderSideMix(
+            color: color,
+            width: width,
+            style: style,
+            strokeAlign: strokeAlign,
+          ),
+        ),
       ),
     );
   }
@@ -286,11 +294,15 @@ extension RemixButtonStyleDecorationHelpers on ButtonStyler {
     double? strokeAlign,
   }) {
     return container(
-      FlexBoxStyler().borderLeft(
-        color: color,
-        width: width,
-        style: style,
-        strokeAlign: strokeAlign,
+      FlexBoxStyler().border(
+        .left(
+          BorderSideMix(
+            color: color,
+            width: width,
+            style: style,
+            strokeAlign: strokeAlign,
+          ),
+        ),
       ),
     );
   }
@@ -302,11 +314,15 @@ extension RemixButtonStyleDecorationHelpers on ButtonStyler {
     double? strokeAlign,
   }) {
     return container(
-      FlexBoxStyler().borderRight(
-        color: color,
-        width: width,
-        style: style,
-        strokeAlign: strokeAlign,
+      FlexBoxStyler().border(
+        .right(
+          BorderSideMix(
+            color: color,
+            width: width,
+            style: style,
+            strokeAlign: strokeAlign,
+          ),
+        ),
       ),
     );
   }
@@ -318,11 +334,15 @@ extension RemixButtonStyleDecorationHelpers on ButtonStyler {
     double? strokeAlign,
   }) {
     return container(
-      FlexBoxStyler().borderStart(
-        color: color,
-        width: width,
-        style: style,
-        strokeAlign: strokeAlign,
+      FlexBoxStyler().border(
+        .start(
+          BorderSideMix(
+            color: color,
+            width: width,
+            style: style,
+            strokeAlign: strokeAlign,
+          ),
+        ),
       ),
     );
   }
@@ -334,11 +354,15 @@ extension RemixButtonStyleDecorationHelpers on ButtonStyler {
     double? strokeAlign,
   }) {
     return container(
-      FlexBoxStyler().borderEnd(
-        color: color,
-        width: width,
-        style: style,
-        strokeAlign: strokeAlign,
+      FlexBoxStyler().border(
+        .end(
+          BorderSideMix(
+            color: color,
+            width: width,
+            style: style,
+            strokeAlign: strokeAlign,
+          ),
+        ),
       ),
     );
   }
@@ -350,11 +374,15 @@ extension RemixButtonStyleDecorationHelpers on ButtonStyler {
     double? strokeAlign,
   }) {
     return container(
-      FlexBoxStyler().borderVertical(
-        color: color,
-        width: width,
-        style: style,
-        strokeAlign: strokeAlign,
+      FlexBoxStyler().border(
+        .vertical(
+          BorderSideMix(
+            color: color,
+            width: width,
+            style: style,
+            strokeAlign: strokeAlign,
+          ),
+        ),
       ),
     );
   }
@@ -366,11 +394,15 @@ extension RemixButtonStyleDecorationHelpers on ButtonStyler {
     double? strokeAlign,
   }) {
     return container(
-      FlexBoxStyler().borderHorizontal(
-        color: color,
-        width: width,
-        style: style,
-        strokeAlign: strokeAlign,
+      FlexBoxStyler().border(
+        .horizontal(
+          BorderSideMix(
+            color: color,
+            width: width,
+            style: style,
+            strokeAlign: strokeAlign,
+          ),
+        ),
       ),
     );
   }
@@ -504,11 +536,15 @@ extension RemixButtonStyleDecorationHelpers on ButtonStyler {
     double? spreadRadius,
   }) {
     return container(
-      FlexBoxStyler().shadowOnly(
-        color: color,
-        offset: offset,
-        blurRadius: blurRadius,
-        spreadRadius: spreadRadius,
+      FlexBoxStyler().decoration(
+        .boxShadow([
+          BoxShadowMix(
+            color: color,
+            offset: offset,
+            blurRadius: blurRadius,
+            spreadRadius: spreadRadius,
+          ),
+        ]),
       ),
     );
   }

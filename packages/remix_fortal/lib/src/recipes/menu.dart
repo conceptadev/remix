@@ -24,8 +24,8 @@ MenuStyler fortalMenuStyle({
       .trigger(_fortalMenuTriggerStyler(metrics))
       .overlay(
         FlexBoxStyler()
-            .paddingAll(metrics.contentPadding)
-            .borderRadiusAll(metrics.contentRadius)
+            .padding(.all(metrics.contentPadding))
+            .borderRadius(.all(metrics.contentRadius))
             // Radix pins menus to the solid panel with no backdrop blur,
             // even when the theme panel background is translucent.
             .color(FortalTokens.colorPanelSolid())
@@ -78,8 +78,8 @@ MenuItemStyler _fortalMenuItemStyler(
       .crossAxisAlignment(.center)
       .spacing(FortalTokens.space2())
       .height(metrics.itemHeight)
-      .paddingX(metrics.leadingInset)
-      .borderRadiusAll(metrics.itemRadius)
+      .padding(.horizontal(metrics.leadingInset))
+      .borderRadius(.all(metrics.itemRadius))
       .label(.style(metrics.text.mix()).color(FortalTokens.gray12()))
       // Radix pins only indicator/subtrigger icons (8/10px); content icons
       // follow the repo-wide text-matched sizes used by tabs and toggles.
@@ -161,11 +161,13 @@ MenuItemStyler _fortalMenuSubmenuItemStyler(
 DividerStyler _fortalMenuDividerStyler(_FortalMenuMetrics metrics) =>
     DividerStyler()
         .height(1)
-        .marginOnly(
-          left: metrics.leadingInset,
-          right: metrics.trailingInset,
-          top: FortalTokens.space2(),
-          bottom: FortalTokens.space2(),
+        .margin(
+          .only(
+            left: metrics.leadingInset,
+            right: metrics.trailingInset,
+            top: FortalTokens.space2(),
+            bottom: FortalTokens.space2(),
+          ),
         )
         .color(FortalTokens.grayA6());
 

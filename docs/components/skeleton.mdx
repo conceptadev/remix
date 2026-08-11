@@ -54,7 +54,7 @@ class SkeletonExample extends StatelessWidget {
         .container(
           BoxStyler()
               .color(const Color(0x14000000))
-              .borderRounded(4),
+              .borderRadius(.circular(4)),
         )
         .pulseColor(const Color(0x29000000));
   }
@@ -94,7 +94,7 @@ class _ProfileCardState extends State<ProfileCard> {
           style: SkeletonStyler().container(
             BoxStyler()
                 .color(const Color(0x14000000))
-                .shapeCircle(),
+                .shape(.circle()),
           ),
           child: const RemixAvatar(label: 'Jane Appleseed'),
         ),
@@ -141,13 +141,13 @@ class SkeletonShapes extends StatelessWidget {
   }
 
   SkeletonStyler get circle =>
-      base.container(BoxStyler().size(40, 40).shapeCircle());
+      base.container(BoxStyler().size(40, 40).shape(.circle()));
 
   SkeletonStyler get textLine =>
-      base.container(BoxStyler().size(200, 12).borderRounded(6));
+      base.container(BoxStyler().size(200, 12).borderRadius(.circular(6)));
 
   SkeletonStyler get block =>
-      base.container(BoxStyler().size(160, 80).borderRounded(8));
+      base.container(BoxStyler().size(160, 80).borderRadius(.circular(8)));
 }
 ```
 </CodeGroup>
@@ -209,7 +209,7 @@ SkeletonStyler skeletonStyle() {
         BoxStyler()
             .size(240, 16)
             .color(const Color(0x14000000))
-            .borderRounded(4),
+            .borderRadius(.circular(4)),
       )
       .pulseColor(const Color(0x29000000))
       .duration(const Duration(milliseconds: 1000));
@@ -378,7 +378,7 @@ takes the same time.
 #### `container(BoxStyler value)`
 
 Sets the placeholder container directly. Every Box style method — `size`,
-`color`, `borderRounded`, `shapeCircle`, `padding`, and the rest — stays on the
+`color`, `borderRadius`, `shape`, `padding`, and the rest — stays on the
 nested `BoxStyler`; these methods are not exposed directly on `SkeletonStyler`.
 
 #### `animate(AnimationConfig value)`

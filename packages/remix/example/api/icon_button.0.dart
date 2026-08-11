@@ -45,8 +45,8 @@ class IconButtonExample extends StatelessWidget {
         .iconSize(22)
         .size(40, 40)
         .backgroundColor(Colors.blueGrey.shade50.withValues(alpha: 0.6))
-        .borderAll(color: Colors.blueGrey.shade100, width: 1.5)
-        .borderRadiusAll(const Radius.circular(8))
+        .border(.all(.color(Colors.blueGrey.shade100).width(1.5)))
+        .borderRadius(.all(const Radius.circular(8)))
         .spinner(
           SpinnerStyler()
               .size(22)

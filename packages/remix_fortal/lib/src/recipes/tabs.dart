@@ -16,9 +16,8 @@ enum FortalTabsSize { size1, size2 }
 /// preset takes no `size` — unlike [fortalTabStyle], whose per-tab metrics vary.
 @MixWidget(target: RemixTabBar.new)
 TabBarStyler fortalTabBarStyle() {
-  return TabBarStyler().borderBottom(
-    color: FortalTokens.grayA5(),
-    width: FortalTokens.borderWidth1(),
+  return TabBarStyler().border(
+    .bottom(.color(FortalTokens.grayA5()).width(FortalTokens.borderWidth1())),
   );
 }
 
@@ -62,19 +61,20 @@ TabStyler fortalTabStyle({
         .box(
           BoxStyler()
               .height(metrics.height)
-              .paddingX(metrics.outerPaddingX)
+              .padding(.horizontal(metrics.outerPaddingX))
               .alignment(.center)
-              .borderBottom(
-                color: Colors.transparent,
-                width: FortalTokens.borderWidth2(),
+              .border(
+                .bottom(
+                  .color(Colors.transparent).width(FortalTokens.borderWidth2()),
+                ),
               ),
         ),
       )
       .container(
         .direction(.horizontal)
-            .paddingX(metrics.innerPaddingX)
-            .paddingY(metrics.innerPaddingY)
-            .borderRadiusAll(metrics.radius)
+            .padding(.horizontal(metrics.innerPaddingX))
+            .padding(.vertical(metrics.innerPaddingY))
+            .borderRadius(.all(metrics.radius))
             .mainAxisAlignment(.center)
             .crossAxisAlignment(.center)
             .spacing(FortalTokens.space2()),
@@ -102,11 +102,14 @@ TabStyler fortalTabStyle({
             .icon(.color(FortalTokens.gray12()))
             .wrap(
               .box(
-                BoxStyler().borderBottom(
-                  color: highContrast
-                      ? FortalTokens.accent12()
-                      : FortalTokens.accentIndicator(),
-                  width: FortalTokens.borderWidth2(),
+                BoxStyler().border(
+                  .bottom(
+                    .color(
+                      highContrast
+                          ? FortalTokens.accent12()
+                          : FortalTokens.accentIndicator(),
+                    ).width(FortalTokens.borderWidth2()),
+                  ),
                 ),
               ),
             ),

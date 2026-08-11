@@ -742,11 +742,58 @@ class RemixBoxEffectsMix extends Mix<RemixBoxEffectsSpec> {
        $outline = outline,
        $outlineOffset = outlineOffset;
 
+  /// Blurs whatever is painted behind the box.
+  ///
+  /// Named so `containerEffects(.backdropBlur(64))` reads as one compound
+  /// value, matching the Mix styler policy for compound arguments.
+  factory RemixBoxEffectsMix.backdropBlur(double value) =>
+      RemixBoxEffectsMix(backdropBlur: value);
+
+  /// Paints an outline outside the box's own border.
+  factory RemixBoxEffectsMix.outline(BorderSideMix value) =>
+      RemixBoxEffectsMix(outline: value);
+
+  /// Distance between the box edge and its [outline].
+  factory RemixBoxEffectsMix.outlineOffset(double value) =>
+      RemixBoxEffectsMix(outlineOffset: value);
+
+  /// Shadow and fill layers painted beneath the box's content.
+  factory RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix value) =>
+      RemixBoxEffectsMix(behindContent: value);
+
+  /// Shadow and fill layers painted over the box's content.
+  factory RemixBoxEffectsMix.overContent(RemixBoxEffectLayerMix value) =>
+      RemixBoxEffectsMix(overContent: value);
+
   final Prop<RemixBoxEffectLayerSpec>? $behindContent;
   final Prop<RemixBoxEffectLayerSpec>? $overContent;
   final Prop<double>? $backdropBlur;
   final Prop<BorderSide>? $outline;
   final Prop<double>? $outlineOffset;
+
+  /// Chainable counterpart of [RemixBoxEffectsMix.backdropBlur].
+  ///
+  /// A named constructor and an instance method may share a name in Dart, so
+  /// the same word works as the entry point and as a link in a chain:
+  /// `.containerEffects(.backdropBlur(64).outlineOffset(2))`.
+  RemixBoxEffectsMix backdropBlur(double value) =>
+      merge(RemixBoxEffectsMix(backdropBlur: value));
+
+  /// Chainable counterpart of [RemixBoxEffectsMix.outline].
+  RemixBoxEffectsMix outline(BorderSideMix value) =>
+      merge(RemixBoxEffectsMix(outline: value));
+
+  /// Chainable counterpart of [RemixBoxEffectsMix.outlineOffset].
+  RemixBoxEffectsMix outlineOffset(double value) =>
+      merge(RemixBoxEffectsMix(outlineOffset: value));
+
+  /// Chainable counterpart of [RemixBoxEffectsMix.behindContent].
+  RemixBoxEffectsMix behindContent(RemixBoxEffectLayerMix value) =>
+      merge(RemixBoxEffectsMix(behindContent: value));
+
+  /// Chainable counterpart of [RemixBoxEffectsMix.overContent].
+  RemixBoxEffectsMix overContent(RemixBoxEffectLayerMix value) =>
+      merge(RemixBoxEffectsMix(overContent: value));
 
   @override
   RemixBoxEffectsMix merge(RemixBoxEffectsMix? other) {

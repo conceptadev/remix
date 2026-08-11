@@ -93,7 +93,7 @@ void main() {
           BoxStyler()
               .size(120, 24)
               .color(const Color(0xFFEEEEEE))
-              .borderRounded(4),
+              .borderRadius(.circular(4)),
         )
         .pulseColor(const Color(0xFFCCCCCC))
         .duration(const Duration(milliseconds: 1000));

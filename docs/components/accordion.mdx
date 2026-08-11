@@ -75,11 +75,11 @@ class _AccordionExampleState extends State<AccordionExample> {
 
   AccordionStyler get itemStyle {
     return AccordionStyler()
-        .content(BoxStyler().paddingX(16).paddingTop(8))
+        .content(BoxStyler().padding(.horizontal(16)).padding(.top(8)))
         .wrap(.clipRRect(borderRadius: BorderRadiusGeometryMix.circular(8)))
-        .paddingX(16)
-        .paddingY(14)
-        .borderRounded(8)
+        .padding(.horizontal(16))
+        .padding(.vertical(14))
+        .borderRadius(.circular(8))
         .onHovered(AccordionStyler().backgroundColor(Colors.grey.shade100))
         .decoration(
           BoxDecorationMix(

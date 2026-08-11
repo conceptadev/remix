@@ -79,22 +79,26 @@ class _TabsExampleState extends State<TabsExample> {
 
   TabBarStyler get tabBarStyle {
     return TabBarStyler()
-        .paddingAll(4)
-        .borderRounded(12)
+        .padding(.all(4))
+        .borderRadius(.circular(12))
         .color(const Color(0xFFF4F6FF))
-        .borderAll(color: Colors.indigo.shade100)
-        .shadowOnly(
-          color: Colors.indigo.withValues(alpha: 0.08),
-          blurRadius: 24,
-          offset: const Offset(0, 12),
+        .border(.all(.color(Colors.indigo.shade100)))
+        .decoration(
+          .boxShadow([
+            BoxShadowMix(
+              color: Colors.indigo.withValues(alpha: 0.08),
+              blurRadius: 24,
+              offset: const Offset(0, 12),
+            ),
+          ]),
         );
   }
 
   TabStyler get tabStyle {
     return TabStyler()
-        .paddingX(18)
-        .paddingY(10)
-        .borderRounded(10)
+        .padding(.horizontal(18))
+        .padding(.vertical(10))
+        .borderRadius(.circular(10))
         .color(Colors.transparent)
         .labelFontSize(14)
         .labelFontWeight(FontWeight.w600)
@@ -109,11 +113,15 @@ class _TabsExampleState extends State<TabsExample> {
         .onSelected(
           TabStyler()
               .color(Colors.white)
-              .borderAll(color: Colors.indigo.shade400, width: 2)
-              .shadowOnly(
-                color: Colors.indigo.withValues(alpha: 0.16),
-                blurRadius: 26,
-                offset: const Offset(0, 10),
+              .border(.all(.color(Colors.indigo.shade400).width(2)))
+              .decoration(
+                .boxShadow([
+                  BoxShadowMix(
+                    color: Colors.indigo.withValues(alpha: 0.16),
+                    blurRadius: 26,
+                    offset: const Offset(0, 10),
+                  ),
+                ]),
               )
               .labelColor(Colors.indigo.shade700)
               .iconColor(Colors.indigo.shade600),
@@ -122,14 +130,18 @@ class _TabsExampleState extends State<TabsExample> {
 
   TabViewStyler get tabViewStyle {
     return TabViewStyler()
-        .paddingAll(20)
-        .borderRounded(14)
+        .padding(.all(20))
+        .borderRadius(.circular(14))
         .color(Colors.white)
-        .borderAll(color: Colors.indigo.shade100)
-        .shadowOnly(
-          color: Colors.indigo.withValues(alpha: 0.1),
-          blurRadius: 32,
-          offset: const Offset(0, 16),
+        .border(.all(.color(Colors.indigo.shade100)))
+        .decoration(
+          .boxShadow([
+            BoxShadowMix(
+              color: Colors.indigo.withValues(alpha: 0.1),
+              blurRadius: 32,
+              offset: const Offset(0, 16),
+            ),
+          ]),
         );
   }
 }

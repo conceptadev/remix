@@ -86,36 +86,36 @@ ToggleGroupStyler fortalToggleGroupStyle({
 ToggleGroupStyler _fortalToggleGroupSizeStyler(FortalToggleGroupSize size) {
   return switch (size) {
     .size1 => ToggleGroupStyler(
-      container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius2()),
+      container: FlexBoxStyler().borderRadius(.all(FortalTokens.radius2())),
       item:
           .container(
                 FlexBoxStyler()
-                    .paddingX(FortalTokens.space2())
-                    .paddingY(FortalTokens.space1())
+                    .padding(.horizontal(FortalTokens.space2()))
+                    .padding(.vertical(FortalTokens.space1()))
                     .spacing(FortalTokens.toggleGap1()),
               )
               .label(.style(FortalTokens.text1.mix()))
               .icon(.size(FortalTokens.space3())),
     ),
     .size2 => ToggleGroupStyler(
-      container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius2()),
+      container: FlexBoxStyler().borderRadius(.all(FortalTokens.radius2())),
       item:
           .container(
                 FlexBoxStyler()
-                    .paddingX(FortalTokens.space3())
-                    .paddingY(FortalTokens.space2())
+                    .padding(.horizontal(FortalTokens.space3()))
+                    .padding(.vertical(FortalTokens.space2()))
                     .spacing(FortalTokens.space1()),
               )
               .label(.style(FortalTokens.text2.mix()))
               .icon(.size(FortalTokens.space4())),
     ),
     .size3 => ToggleGroupStyler(
-      container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius3()),
+      container: FlexBoxStyler().borderRadius(.all(FortalTokens.radius3())),
       item:
           .container(
                 FlexBoxStyler()
-                    .paddingX(FortalTokens.space4())
-                    .paddingY(FortalTokens.space2())
+                    .padding(.horizontal(FortalTokens.space4()))
+                    .padding(.vertical(FortalTokens.space2()))
                     .spacing(FortalTokens.toggleGap3()),
               )
               .label(.style(FortalTokens.text3.mix()))

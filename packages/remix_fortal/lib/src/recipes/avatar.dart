@@ -68,7 +68,7 @@ AvatarStyler _fortalAvatarBaseStyler(
       )
       .icon(.size(_fortalAvatarIconSize(size)).color(FortalTokens.accentA11()))
       .square(_fortalAvatarDimension(size))
-      .borderRadiusAll(_fortalAvatarRadius(size));
+      .borderRadius(.all(_fortalAvatarRadius(size)));
 }
 
 double _fortalAvatarDimension(FortalAvatarSize size) => switch (size) {

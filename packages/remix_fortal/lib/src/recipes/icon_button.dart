@@ -25,8 +25,8 @@ IconButtonStyler fortalIconButtonStyle({
     variant == .soft ? FortalTokens.accent8() : FortalTokens.focus8(),
     offset: variant == .classic || variant == .solid ? 2 : -1,
   );
-  final disabledFocus = RemixBoxEffectsMix(
-    outline: BorderSideMix(style: BorderStyle.none),
+  final disabledFocus = RemixBoxEffectsMix.outline(
+    BorderSideMix(style: BorderStyle.none),
   );
 
   return switch (variant) {
@@ -57,11 +57,11 @@ IconButtonStyler _fortalIconButtonBaseStyler(
         .opacity(0.65)
         .leafRadius(FortalTokens.radius1())
         .duration(const Duration(milliseconds: 800)),
-  ).borderRadiusAll(metrics.radius);
+  ).borderRadius(.all(metrics.radius));
 
   if (variant == .ghost) {
     final ghost = fortalIconButtonGhostMetrics(size);
-    style = style.paddingAll(ghost.padding).marginAll(ghost.margin);
+    style = style.padding(.all(ghost.padding)).margin(.all(ghost.margin));
   } else {
     style = style.width(metrics.height).height(metrics.height);
   }
@@ -87,16 +87,14 @@ IconButtonStyler _fortalIconButtonClassic(
   return _fortalIconButtonForeground(base, foreground)
       .color(highContrast ? FortalTokens.accent12() : FortalTokens.accent9())
       .containerEffects(
-        RemixBoxEffectsMix(
-          behindContent: fortalClassicBaseButtonSurface(
-            highContrast: highContrast,
-          ),
+        RemixBoxEffectsMix.behindContent(
+          fortalClassicBaseButtonSurface(highContrast: highContrast),
         ),
       )
       .onHovered(
         .containerEffects(
-          RemixBoxEffectsMix(
-            behindContent: fortalClassicBaseButtonSurface(
+          RemixBoxEffectsMix.behindContent(
+            fortalClassicBaseButtonSurface(
               highContrast: highContrast,
               hovered: true,
             ),
@@ -120,14 +118,14 @@ IconButtonStyler _fortalIconButtonClassic(
       )
       .onPressed(
         .containerEffects(
-              RemixBoxEffectsMix(
-                behindContent: fortalClassicBaseButtonSurface(
+              RemixBoxEffectsMix.behindContent(
+                fortalClassicBaseButtonSurface(
                   highContrast: highContrast,
                   pressed: true,
                 ),
               ),
             )
-            .paddingTop(size == 1 ? 1 : 2)
+            .padding(.top(size == 1 ? 1 : 2))
             .wrap(
               highContrast
                   ? fortalModeAwareFilter(
@@ -156,8 +154,8 @@ IconButtonStyler _fortalIconButtonClassic(
         _fortalIconButtonForeground(IconButtonStyler(), FortalTokens.grayA8())
             .color(FortalTokens.gray2())
             .containerEffects(
-              RemixBoxEffectsMix(
-                behindContent: fortalClassicBaseButtonSurface(
+              RemixBoxEffectsMix.behindContent(
+                fortalClassicBaseButtonSurface(
                   highContrast: false,
                   disabled: true,
                 ),
@@ -253,27 +251,21 @@ IconButtonStyler _fortalIconButtonSurface(
         )
         .color(FortalTokens.accentSurface())
         .containerEffects(
-          RemixBoxEffectsMix(
-            behindContent: fortalInsetSurface(
-              strokes: [FortalTokens.accentA7()],
-            ),
+          RemixBoxEffectsMix.behindContent(
+            fortalInsetSurface(strokes: [FortalTokens.accentA7()]),
           ),
         )
         .onHovered(
           .color(FortalTokens.accentSurface()).containerEffects(
-            RemixBoxEffectsMix(
-              behindContent: fortalInsetSurface(
-                strokes: [FortalTokens.accentA8()],
-              ),
+            RemixBoxEffectsMix.behindContent(
+              fortalInsetSurface(strokes: [FortalTokens.accentA8()]),
             ),
           ),
         )
         .onPressed(
           .color(FortalTokens.accentA3()).containerEffects(
-            RemixBoxEffectsMix(
-              behindContent: fortalInsetSurface(
-                strokes: [FortalTokens.accentA8()],
-              ),
+            RemixBoxEffectsMix.behindContent(
+              fortalInsetSurface(strokes: [FortalTokens.accentA8()]),
             ),
           ),
         )
@@ -281,10 +273,8 @@ IconButtonStyler _fortalIconButtonSurface(
           _fortalIconButtonForeground(IconButtonStyler(), FortalTokens.grayA8())
               .color(FortalTokens.grayA2())
               .containerEffects(
-                RemixBoxEffectsMix(
-                  behindContent: fortalInsetSurface(
-                    strokes: [FortalTokens.grayA6()],
-                  ),
+                RemixBoxEffectsMix.behindContent(
+                  fortalInsetSurface(strokes: [FortalTokens.grayA6()]),
                 ),
               )
               .spinner(.opacity(1)),
@@ -302,19 +292,19 @@ IconButtonStyler _fortalIconButtonOutline(
         highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
       )
       .containerEffects(
-        RemixBoxEffectsMix(behindContent: fortalInsetSurface(strokes: strokes)),
+        RemixBoxEffectsMix.behindContent(fortalInsetSurface(strokes: strokes)),
       )
       .onHovered(
         .color(FortalTokens.accentA2()).containerEffects(
-          RemixBoxEffectsMix(
-            behindContent: fortalInsetSurface(strokes: strokes),
+          RemixBoxEffectsMix.behindContent(
+            fortalInsetSurface(strokes: strokes),
           ),
         ),
       )
       .onPressed(
         .color(FortalTokens.accentA3()).containerEffects(
-          RemixBoxEffectsMix(
-            behindContent: fortalInsetSurface(strokes: strokes),
+          RemixBoxEffectsMix.behindContent(
+            fortalInsetSurface(strokes: strokes),
           ),
         ),
       )
@@ -322,10 +312,8 @@ IconButtonStyler _fortalIconButtonOutline(
         _fortalIconButtonForeground(IconButtonStyler(), FortalTokens.grayA8())
             .color(Colors.transparent)
             .containerEffects(
-              RemixBoxEffectsMix(
-                behindContent: fortalInsetSurface(
-                  strokes: [FortalTokens.grayA7()],
-                ),
+              RemixBoxEffectsMix.behindContent(
+                fortalInsetSurface(strokes: [FortalTokens.grayA7()]),
               ),
             )
             .spinner(.opacity(1)),

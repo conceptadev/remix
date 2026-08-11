@@ -44,10 +44,6 @@ void main() {
 
     test('retain fluent-only conveniences and aliases', () {
       expect(
-        CardStyler().paddingAll(12),
-        CardStyler.padding(EdgeInsetsGeometryMix.all(12)),
-      );
-      expect(
         CardStyler().backgroundColor(Colors.red),
         CardStyler.color(Colors.red),
       );

@@ -43,12 +43,12 @@ class _ToggleExampleState extends State<ToggleExample> {
 
   ToggleStyler get style {
     return ToggleStyler()
-        .paddingX(12)
-        .paddingY(8)
+        .padding(.horizontal(12))
+        .padding(.vertical(8))
         .spacing(6)
         .backgroundColor(Colors.grey.shade100)
         .foregroundColor(Colors.grey.shade700)
-        .borderRadiusAll(const Radius.circular(8))
+        .borderRadius(.all(const Radius.circular(8)))
         .onHovered(ToggleStyler().backgroundColor(Colors.grey.shade200))
         .onPressed(ToggleStyler().scale(0.93))
         .onSelected(

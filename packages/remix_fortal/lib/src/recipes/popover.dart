@@ -32,13 +32,13 @@ PopoverStyler fortalPopoverStyle({
 
   return PopoverStyler()
       .maxWidth(480)
-      .paddingAll(padding)
-      .borderRadiusAll(radius)
+      .padding(.all(padding))
+      .borderRadius(.all(radius))
       .color(FortalTokens.colorPanel())
       .decoration(
         BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),
       )
       .containerEffects(
-        RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
+        RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
       );
 }

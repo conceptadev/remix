@@ -40,10 +40,12 @@ ToggleStyler _fortalToggleDisabledStyler({bool outlined = false}) {
       .backgroundColor(FortalTokens.grayA3())
       .foregroundColor(FortalTokens.gray8());
   return outlined
-      ? style.borderAll(
-          color: FortalTokens.grayA6(),
-          width: FortalTokens.borderWidth1(),
-          strokeAlign: BorderSide.strokeAlignInside,
+      ? style.border(
+          .all(
+            .color(FortalTokens.grayA6())
+                .width(FortalTokens.borderWidth1())
+                .strokeAlign(BorderSide.strokeAlignInside),
+          ),
         )
       : style;
 }
@@ -75,10 +77,12 @@ ToggleStyler _fortalToggleOutlineStyler(
 }) {
   return _fortalToggleBaseStyler(size)
       .backgroundColor(Colors.transparent)
-      .borderAll(
-        color: FortalTokens.gray7(),
-        width: FortalTokens.borderWidth1(),
-        strokeAlign: BorderSide.strokeAlignInside,
+      .border(
+        .all(
+          .color(FortalTokens.gray7())
+              .width(FortalTokens.borderWidth1())
+              .strokeAlign(BorderSide.strokeAlignInside),
+        ),
       )
       .onHovered(ToggleStyler().backgroundColor(FortalTokens.grayA3()))
       .onPressed(ToggleStyler().backgroundColor(FortalTokens.grayA4()))
@@ -88,7 +92,7 @@ ToggleStyler _fortalToggleOutlineStyler(
             .foregroundColor(
               highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
             )
-            .borderAll(color: FortalTokens.accentA5())
+            .border(.all(.color(FortalTokens.accentA5())))
             .onHovered(ToggleStyler().backgroundColor(FortalTokens.accentA4()))
             .onPressed(ToggleStyler().backgroundColor(FortalTokens.accentA5())),
       )
@@ -100,27 +104,27 @@ ToggleStyler _fortalToggleSizeStyler(FortalToggleSize size) {
   return switch (size) {
     .size1 => ToggleStyler(
       container: FlexBoxStyler()
-          .paddingX(FortalTokens.space2())
-          .paddingY(FortalTokens.space1())
-          .borderRadiusAll(FortalTokens.radius2())
+          .padding(.horizontal(FortalTokens.space2()))
+          .padding(.vertical(FortalTokens.space1()))
+          .borderRadius(.all(FortalTokens.radius2()))
           .spacing(FortalTokens.toggleGap1()),
       label: .style(FortalTokens.text1.mix()),
       icon: .size(FortalTokens.space3()),
     ),
     .size2 => ToggleStyler(
       container: FlexBoxStyler()
-          .paddingX(FortalTokens.space3())
-          .paddingY(FortalTokens.space2())
-          .borderRadiusAll(FortalTokens.radius2())
+          .padding(.horizontal(FortalTokens.space3()))
+          .padding(.vertical(FortalTokens.space2()))
+          .borderRadius(.all(FortalTokens.radius2()))
           .spacing(FortalTokens.space1()),
       label: .style(FortalTokens.text2.mix()),
       icon: .size(FortalTokens.space4()),
     ),
     .size3 => ToggleStyler(
       container: FlexBoxStyler()
-          .paddingX(FortalTokens.space4())
-          .paddingY(FortalTokens.space2())
-          .borderRadiusAll(FortalTokens.radius3())
+          .padding(.horizontal(FortalTokens.space4()))
+          .padding(.vertical(FortalTokens.space2()))
+          .borderRadius(.all(FortalTokens.radius3()))
           .spacing(FortalTokens.toggleGap3()),
       label: .style(FortalTokens.text3.mix()),
       icon: .size(FortalTokens.spinnerSize3()),

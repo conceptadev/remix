@@ -63,7 +63,7 @@ class _ToggleExampleState extends State<ToggleExample> {
         .iconColor(Colors.grey.shade700)
         .iconSize(22)
         .backgroundColor(Colors.grey.shade100)
-        .borderRadiusAll(const Radius.circular(8))
+        .borderRadius(.all(const Radius.circular(8)))
         .onHovered(ToggleStyler().backgroundColor(Colors.grey.shade200))
         .onPressed(ToggleStyler().scale(0.93))
         .onSelected(

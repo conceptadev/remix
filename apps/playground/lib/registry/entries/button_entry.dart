@@ -10,9 +10,9 @@ Widget buildButtonExample() {
         label: 'Primary Button',
         onPressed: () {},
         style: ButtonStyler()
-            .paddingX(16)
-            .paddingY(10)
-            .borderRadiusAll(const Radius.circular(8))
+            .padding(.horizontal(16))
+            .padding(.vertical(10))
+            .borderRadius(.all(const Radius.circular(8)))
             .backgroundColor(const Color(0xFF1F2937))
             .foregroundColor(Colors.white),
       ),
@@ -20,9 +20,9 @@ Widget buildButtonExample() {
         label: 'Disabled',
         onPressed: null,
         style: ButtonStyler()
-            .paddingX(16)
-            .paddingY(10)
-            .borderRadiusAll(const Radius.circular(8))
+            .padding(.horizontal(16))
+            .padding(.vertical(10))
+            .borderRadius(.all(const Radius.circular(8)))
             .backgroundColor(const Color(0xFFE5E7EB))
             .foregroundColor(const Color(0xFF9CA3AF)),
       ),
@@ -31,9 +31,9 @@ Widget buildButtonExample() {
         loading: true,
         onPressed: () {},
         style: ButtonStyler()
-            .paddingX(16)
-            .paddingY(10)
-            .borderRadiusAll(const Radius.circular(8))
+            .padding(.horizontal(16))
+            .padding(.vertical(10))
+            .borderRadius(.all(const Radius.circular(8)))
             .backgroundColor(const Color(0xFF1F2937).withValues(alpha: 0.6))
             .foregroundColor(Colors.white.withValues(alpha: 0.7))
             .spinner(.indicatorColor(Colors.white)),
@@ -43,9 +43,9 @@ Widget buildButtonExample() {
         leadingIcon: Icons.star,
         onPressed: () {},
         style: ButtonStyler()
-            .paddingX(16)
-            .paddingY(10)
-            .borderRadiusAll(const Radius.circular(8))
+            .padding(.horizontal(16))
+            .padding(.vertical(10))
+            .borderRadius(.all(const Radius.circular(8)))
             .backgroundColor(const Color(0xFF1F2937))
             .foregroundColor(Colors.white),
       ),
@@ -54,8 +54,8 @@ Widget buildButtonExample() {
         onPressed: () {},
         semanticLabel: 'Favorite',
         style: IconButtonStyler()
-            .paddingAll(10)
-            .borderRadiusAll(const Radius.circular(8))
+            .padding(.all(10))
+            .borderRadius(.all(const Radius.circular(8)))
             .backgroundColor(const Color(0xFF1F2937))
             .foregroundColor(Colors.white),
       ),

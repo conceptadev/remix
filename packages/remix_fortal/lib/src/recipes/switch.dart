@@ -50,11 +50,11 @@ SwitchStyler _fortalSwitchBaseStyler(FortalSwitchSize size) {
         container: .size(
           metrics.width,
           metrics.height,
-        ).paddingAll(1).borderRadiusAll(metrics.radius),
+        ).padding(.all(1)).borderRadius(.all(metrics.radius)),
         thumb: .size(
           metrics.thumbSize,
           metrics.thumbSize,
-        ).borderRadiusAll(metrics.radius),
+        ).borderRadius(.all(metrics.radius)),
         trackEffects: RemixBoxEffectsMix(
           behindContent: _fortalSwitchLayer(),
           overContent: _fortalSwitchLayer(),
@@ -82,10 +82,8 @@ SwitchStyler _fortalSwitchClassicStyler(
   return _fortalSwitchBaseStyler(size)
       .trackColor(FortalTokens.grayA4())
       .trackEffects(
-        RemixBoxEffectsMix(
-          behindContent: _fortalSwitchLayer(
-            shadowToken: FortalTokens.shadow1Layers,
-          ),
+        RemixBoxEffectsMix.behindContent(
+          _fortalSwitchLayer(shadowToken: FortalTokens.shadow1Layers),
         ),
       )
       .thumb(
@@ -99,8 +97,8 @@ SwitchStyler _fortalSwitchClassicStyler(
                   : FortalTokens.accentTrack(),
             )
             .trackEffects(
-              RemixBoxEffectsMix(
-                behindContent: _fortalSwitchLayer(
+              RemixBoxEffectsMix.behindContent(
+                _fortalSwitchLayer(
                   shadows: [
                     RemixBoxShadowMix(
                       kind: .inset,
@@ -135,7 +133,7 @@ SwitchStyler _fortalSwitchClassicStyler(
         SwitchStyler()
             .trackColor(FortalTokens.grayA5())
             .trackEffects(
-              RemixBoxEffectsMix(behindContent: _fortalSwitchLayer()),
+              RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()),
             ),
       )
       .onDisabled(_fortalSwitchDisabledStyler(classic: true));
@@ -147,10 +145,10 @@ SwitchStyler _fortalSwitchSurfaceStyler(
 }) {
   return _fortalSwitchBaseStyler(size)
       .trackColor(FortalTokens.grayA3())
-      .trackEffects(RemixBoxEffectsMix(behindContent: _fortalSwitchLayer()))
+      .trackEffects(RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()))
       .trackEffects(
-        RemixBoxEffectsMix(
-          overContent: _fortalSwitchInsetRing(FortalTokens.grayA5()),
+        RemixBoxEffectsMix.overContent(
+          _fortalSwitchInsetRing(FortalTokens.grayA5()),
         ),
       )
       .thumb(
@@ -164,7 +162,7 @@ SwitchStyler _fortalSwitchSurfaceStyler(
                   : FortalTokens.accentTrack(),
             )
             .trackEffects(
-              RemixBoxEffectsMix(behindContent: _fortalSwitchLayer()),
+              RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()),
             )
             .thumb(
               _fortalSwitchThumbStyler(
@@ -177,7 +175,7 @@ SwitchStyler _fortalSwitchSurfaceStyler(
         SwitchStyler()
             .trackColor(FortalTokens.grayA4())
             .trackEffects(
-              RemixBoxEffectsMix(behindContent: _fortalSwitchLayer()),
+              RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()),
             ),
       )
       .onDisabled(_fortalSwitchDisabledStyler());
@@ -189,7 +187,7 @@ SwitchStyler _fortalSwitchSoftStyler(
 }) {
   return _fortalSwitchBaseStyler(size)
       .trackColor(FortalTokens.grayA3())
-      .trackEffects(RemixBoxEffectsMix(behindContent: _fortalSwitchLayer()))
+      .trackEffects(RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()))
       .thumb(_fortalSwitchSoftThumbStyler(false))
       .onSelected(
         SwitchStyler()
@@ -197,7 +195,7 @@ SwitchStyler _fortalSwitchSoftStyler(
               highContrast ? FortalTokens.accentA6() : FortalTokens.accentA4(),
             )
             .trackEffects(
-              RemixBoxEffectsMix(behindContent: _fortalSwitchLayer()),
+              RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()),
             )
             .thumb(_fortalSwitchSoftThumbStyler(true)),
       )
@@ -205,7 +203,7 @@ SwitchStyler _fortalSwitchSoftStyler(
         SwitchStyler()
             .trackColor(FortalTokens.grayA4())
             .trackEffects(
-              RemixBoxEffectsMix(behindContent: _fortalSwitchLayer()),
+              RemixBoxEffectsMix.behindContent(_fortalSwitchLayer()),
             ),
       )
       .onDisabled(_fortalSwitchDisabledStyler(soft: true));
@@ -247,28 +245,30 @@ SwitchStyler _fortalSwitchDisabledStyler({
   return SwitchStyler()
       .trackColor(trackColor)
       .trackEffects(
-        RemixBoxEffectsMix(
-          behindContent: _fortalSwitchLayer(
+        RemixBoxEffectsMix.behindContent(
+          _fortalSwitchLayer(
             shadowToken: classic ? FortalTokens.shadow1Layers : null,
           ),
         ),
       )
       .trackEffects(
-        RemixBoxEffectsMix(
-          overContent: classic || soft
+        RemixBoxEffectsMix.overContent(
+          classic || soft
               ? _fortalSwitchLayer(shadows: const [])
               : _fortalSwitchInsetRing(FortalTokens.grayA3()),
         ),
       )
       .thumb(
-        BoxStyler().boxShadows([
-          BoxShadowMix(color: FortalTokens.grayA2(), spreadRadius: 1),
-          BoxShadowMix(
-            color: FortalTokens.blackA1(),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
-        ]),
+        BoxStyler().decoration(
+          .boxShadow([
+            BoxShadowMix(color: FortalTokens.grayA2(), spreadRadius: 1),
+            BoxShadowMix(
+              color: FortalTokens.blackA1(),
+              offset: const Offset(0, 1),
+              blurRadius: 3,
+            ),
+          ]),
+        ),
       )
       .thumbColor(FortalTokens.gray2());
 }
@@ -276,68 +276,71 @@ SwitchStyler _fortalSwitchDisabledStyler({
 BoxStyler _fortalSwitchThumbStyler({
   required bool selected,
   required bool highContrast,
-}) => BoxStyler().boxShadows(
-  selected
-      ? [
-          BoxShadowMix(
-            color: FortalTokens.blackA2(),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
-          BoxShadowMix(
-            color: FortalTokens.blackA1(),
-            offset: const Offset(0, 2),
-            blurRadius: 4,
-            spreadRadius: -1,
-          ),
-          BoxShadowMix(
-            color: highContrast
-                ? FortalTokens.blackA2()
-                : FortalTokens.accentA4(),
-            spreadRadius: 1,
-          ),
-          BoxShadowMix(
-            color: FortalTokens.blackA2(),
-            offset: const Offset(-1, 0),
-            blurRadius: 1,
-          ),
-        ]
-      : [
-          BoxShadowMix(color: FortalTokens.blackA2(), spreadRadius: 1),
-          BoxShadowMix(
-            color: FortalTokens.blackA1(),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
-          BoxShadowMix(
-            color: FortalTokens.blackA1(),
-            offset: const Offset(0, 2),
-            blurRadius: 4,
-            spreadRadius: -1,
-          ),
-        ],
+}) => BoxStyler().decoration(
+  .boxShadow(
+    selected
+        ? [
+            BoxShadowMix(
+              color: FortalTokens.blackA2(),
+              offset: const Offset(0, 1),
+              blurRadius: 3,
+            ),
+            BoxShadowMix(
+              color: FortalTokens.blackA1(),
+              offset: const Offset(0, 2),
+              blurRadius: 4,
+              spreadRadius: -1,
+            ),
+            BoxShadowMix(
+              color: highContrast
+                  ? FortalTokens.blackA2()
+                  : FortalTokens.accentA4(),
+              spreadRadius: 1,
+            ),
+            BoxShadowMix(
+              color: FortalTokens.blackA2(),
+              offset: const Offset(-1, 0),
+              blurRadius: 1,
+            ),
+          ]
+        : [
+            BoxShadowMix(color: FortalTokens.blackA2(), spreadRadius: 1),
+            BoxShadowMix(
+              color: FortalTokens.blackA1(),
+              offset: const Offset(0, 1),
+              blurRadius: 3,
+            ),
+            BoxShadowMix(
+              color: FortalTokens.blackA1(),
+              offset: const Offset(0, 2),
+              blurRadius: 4,
+              spreadRadius: -1,
+            ),
+          ],
+  ),
 );
 
-BoxStyler _fortalSwitchSoftThumbStyler(bool selected) =>
-    BoxStyler().boxShadows([
-      BoxShadowMix(color: FortalTokens.blackA1(), spreadRadius: 1),
-      BoxShadowMix(
-        color: selected ? FortalTokens.blackA2() : FortalTokens.blackA1(),
-        offset: const Offset(0, 1),
-        blurRadius: 3,
-      ),
-      BoxShadowMix(
-        color: selected ? FortalTokens.accentA3() : FortalTokens.blackA1(),
-        offset: const Offset(0, 1),
-        blurRadius: 3,
-      ),
-      BoxShadowMix(
-        color: selected ? FortalTokens.accentA3() : FortalTokens.blackA1(),
-        offset: const Offset(0, 2),
-        blurRadius: 4,
-        spreadRadius: -1,
-      ),
-    ]);
+BoxStyler _fortalSwitchSoftThumbStyler(bool selected) => BoxStyler().decoration(
+  .boxShadow([
+    BoxShadowMix(color: FortalTokens.blackA1(), spreadRadius: 1),
+    BoxShadowMix(
+      color: selected ? FortalTokens.blackA2() : FortalTokens.blackA1(),
+      offset: const Offset(0, 1),
+      blurRadius: 3,
+    ),
+    BoxShadowMix(
+      color: selected ? FortalTokens.accentA3() : FortalTokens.blackA1(),
+      offset: const Offset(0, 1),
+      blurRadius: 3,
+    ),
+    BoxShadowMix(
+      color: selected ? FortalTokens.accentA3() : FortalTokens.blackA1(),
+      offset: const Offset(0, 2),
+      blurRadius: 4,
+      spreadRadius: -1,
+    ),
+  ]),
+);
 
 RemixBoxEffectLayerMix _fortalSwitchInsetRing(Color color) =>
     _fortalSwitchLayer(

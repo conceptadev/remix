@@ -44,12 +44,14 @@ class _SliderExampleState extends State<SliderExample> {
     return SliderStyler()
         .thumbSize(const Size(24, 24))
         .thumb(
-          BoxStyler().shapeCircle().shadow(
-            BoxShadowMix()
-                .color(Colors.black45)
-                .blurRadius(4)
-                .offset(x: 0, y: 2),
-          ),
+          BoxStyler()
+              .shape(.circle())
+              .shadow(
+                BoxShadowMix()
+                    .color(Colors.black45)
+                    .blurRadius(4)
+                    .offset(x: 0, y: 2),
+              ),
         )
         .thumbColor(Colors.black)
         .thickness(2)

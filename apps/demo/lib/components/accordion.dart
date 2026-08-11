@@ -17,11 +17,14 @@ Widget buildAvatarUseCase(BuildContext context) {
             controller: RemixAccordionController<String>(min: 0, max: 1),
             child: Box(
               style: BoxStyler()
-                  .borderAll(
-                    color: FortalTokens.gray7(),
-                    strokeAlign: BorderSide.strokeAlignOutside,
+                  .border(
+                    .all(
+                      .color(
+                        FortalTokens.gray7(),
+                      ).strokeAlign(BorderSide.strokeAlignOutside),
+                    ),
                   )
-                  .borderRadiusAll(FortalTokens.radius4())
+                  .borderRadius(.all(FortalTokens.radius4()))
                   .clipBehavior(.hardEdge),
               child: ColumnBox(
                 style: FlexBoxStyler().mainAxisSize(.min),

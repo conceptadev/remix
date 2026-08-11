@@ -41,10 +41,8 @@ BadgeStyler fortalBadgeStyle({
       base
           .color(FortalTokens.accentSurface())
           .containerEffects(
-            RemixBoxEffectsMix(
-              behindContent: fortalInsetSurface(
-                strokes: [FortalTokens.accentA6()],
-              ),
+            RemixBoxEffectsMix.behindContent(
+              fortalInsetSurface(strokes: [FortalTokens.accentA6()]),
             ),
           )
           .foregroundColor(
@@ -53,8 +51,8 @@ BadgeStyler fortalBadgeStyle({
     .outline =>
       base
           .containerEffects(
-            RemixBoxEffectsMix(
-              behindContent: fortalInsetSurface(
+            RemixBoxEffectsMix.behindContent(
+              fortalInsetSurface(
                 strokes: [
                   highContrast
                       ? FortalTokens.accentA7()
@@ -77,7 +75,7 @@ BadgeStyler _fortalBadgeBaseStyler(FortalBadgeSize size) {
     label: .style(
       _fortalBadgeText(size).mix(),
     ).fontWeight(FortalTokens.fontWeightMedium()),
-  ).borderRadiusAll(radius);
+  ).borderRadius(.all(radius));
 }
 
 TextStyleToken _fortalBadgeText(FortalBadgeSize size) => switch (size) {

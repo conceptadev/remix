@@ -57,14 +57,15 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
 final style = CardStyler()
-    .paddingAll(12)
+    .padding(.all(12))
     .backgroundColor(Colors.white)
     .onHovered(.padding(EdgeInsetsGeometryMix.all(16)))
     .onPressed(.color(Colors.grey.shade100));
 ```
 
-Here, `paddingAll` expands to `padding`, and `backgroundColor` aliases `color`.
-They do not add duplicate named factories.
+Here, `backgroundColor` aliases the canonical `color` operation, and
+`.padding(.all(12))` calls `padding` directly. Conveniences and aliases do not
+add duplicate named factories.
 
 Legacy convenience factories map to canonical factories as follows. Their
 fluent convenience methods remain available on an existing styler.

@@ -7,9 +7,6 @@ import 'package:remix/remix.dart'
         RemixBoxShadowKind,
         RemixBoxShadowMix,
         RemixBoxStylerAnchors,
-        // Supplies `borderAll` on RemixBoxStylerAnchors; fortalFocusRing
-        // does not compile without it.
-        RemixBoxStylerConvenience,
         RemixCssColorFilterOperation,
         RemixLinearGradientMix,
         RemixOrderedColorFilterModifier;
@@ -155,10 +152,14 @@ extension FortalFocusRing<T extends Mix<Object?>> on RemixBoxStylerAnchors<T> {
   T fortalFocusRing({
     Color? color,
     double? strokeAlign = BorderSide.strokeAlignInside,
-  }) => borderAll(
-    color: color ?? _focusRingColor(),
-    width: _focusRingWidth(),
-    strokeAlign: strokeAlign,
+  }) => border(
+    .all(
+      BorderSideMix(
+        color: color ?? _focusRingColor(),
+        width: _focusRingWidth(),
+        strokeAlign: strokeAlign,
+      ),
+    ),
   );
 }
 
@@ -167,10 +168,12 @@ extension FortalFocusRing<T extends Mix<Object?>> on RemixBoxStylerAnchors<T> {
 /// Separate extension rather than a differently-named function so both read as
 /// `.fortalFocusRing()`; the receiver type picks the right one.
 extension FortalFocusRingFlexBox on FlexBoxStyler {
-  FlexBoxStyler fortalFocusRing() => borderAll(
-    color: _focusRingColor(),
-    width: _focusRingWidth(),
-    strokeAlign: BorderSide.strokeAlignInside,
+  FlexBoxStyler fortalFocusRing() => border(
+    .all(
+      .color(
+        _focusRingColor(),
+      ).width(_focusRingWidth()).strokeAlign(BorderSide.strokeAlignInside),
+    ),
   );
 }
 

@@ -123,8 +123,9 @@ _FortalDataTableMetrics _fortalDataTableMetrics(FortalDataTableSize size) =>
       ),
     };
 
-BoxStyler _fortalDataTableCell(_FortalDataTableMetrics metrics) =>
-    BoxStyler().paddingX(metrics.paddingX).paddingY(metrics.paddingY);
+BoxStyler _fortalDataTableCell(_FortalDataTableMetrics metrics) => BoxStyler()
+    .padding(.horizontal(metrics.paddingX))
+    .padding(.vertical(metrics.paddingY));
 
 /// Radix draws the row divider as `inset 0 -1px var(--gray-a5)`, which paints
 /// over the cell without reserving layout space. A foreground border is the
@@ -142,8 +143,8 @@ FlexBoxStyler _fortalDataTableFooter() => FlexBoxStyler()
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .spacing(FortalTokens.space2())
-    .paddingX(FortalTokens.space4())
-    .paddingY(FortalTokens.space2())
+    .padding(.horizontal(FortalTokens.space4()))
+    .padding(.vertical(FortalTokens.space2()))
     .foregroundDecoration(
       BoxDecorationMix(border: BoxBorderMix.top(_fortalDataTableDividerSide())),
     );
@@ -156,10 +157,10 @@ DataTableStyler _fortalDataTableSurface(DataTableStyler base, Radius radius) {
           BorderSideMix(color: FortalTokens.dataTableBorder(), width: 1),
         ),
       )
-      .borderRadiusAll(radius)
+      .borderRadius(.all(radius))
       .clipBehavior(Clip.antiAlias)
       .containerEffects(
-        RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
+        RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
       )
       .headerRow(.color(FortalTokens.grayA2()))
       // Radix clears `--table-row-box-shadow` on the surface variant's last

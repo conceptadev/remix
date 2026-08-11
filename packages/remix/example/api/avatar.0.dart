@@ -34,7 +34,7 @@ class AvatarExample extends StatelessWidget {
     return AvatarStyler()
         .backgroundColor(Colors.deepPurpleAccent)
         .size(50, 50)
-        .shapeCircle()
+        .shape(.circle())
         .wrap(.clipOval())
         .foregroundColor(Colors.white)
         .labelFontWeight(FontWeight.bold)
@@ -48,7 +48,7 @@ class AvatarExample extends StatelessWidget {
         .foregroundColor(Colors.white)
         .iconSize(70)
         .icon(IconStyler().wrap(.translate(x: 0, y: 12)))
-        .shapeCircle()
+        .shape(.circle())
         .wrap(.clipOval());
   }
 
@@ -56,6 +56,6 @@ class AvatarExample extends StatelessWidget {
     return AvatarStyler()
         .size(90, 90)
         .backgroundImageUrl('https://i.pravatar.cc/150?img=48')
-        .shapeCircle();
+        .shape(.circle());
   }
 }

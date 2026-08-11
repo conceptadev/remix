@@ -189,10 +189,12 @@ class _AccentSwatch extends StatelessWidget {
     required this.onPressed,
   });
 
-  static final _ring = ToggleStyler().borderAll(
-    color: FortalTokens.focus8(),
-    width: FortalTokens.focusRingWidth(),
-    strokeAlign: BorderSide.strokeAlignOutside,
+  static final _ring = ToggleStyler().border(
+    .all(
+      .color(FortalTokens.focus8())
+          .width(FortalTokens.focusRingWidth())
+          .strokeAlign(BorderSide.strokeAlignOutside),
+    ),
   );
 
   static final _style =
@@ -200,7 +202,7 @@ class _AccentSwatch extends StatelessWidget {
             container: FlexBoxStyler()
                 .size(30, 30)
                 .alignment(.center)
-                .borderRadiusAll(const Radius.circular(15)),
+                .borderRadius(.all(const Radius.circular(15))),
             icon: .size(15),
           )
           .backgroundColor(FortalTokens.accent9())

@@ -113,10 +113,10 @@ import 'package:remix/remix.dart';
 
 final styledPopover = RemixPopover(
   style: PopoverStyler()
-      .paddingAll(16)
+      .padding(.all(16))
       .constraints(BoxConstraintsMix(maxWidth: 320))
       .backgroundColor(Colors.white)
-      .borderRadiusAll(const Radius.circular(12)),
+      .borderRadius(.all(const Radius.circular(12))),
   popoverChild: const Text('Custom popover'),
   child: const Text('Open'),
 );
