@@ -107,7 +107,9 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
   Widget build(BuildContext context) {
     final spec = widget.spec;
     final indicatorColor =
-        spec.indicatorColor ?? Theme.of(context).colorScheme.primary;
+        spec.indicatorColor ??
+        IconTheme.of(context).color ??
+        const Color(0xFF000000);
     final trackColor = spec.trackColor;
     final strokeWidth = spec.strokeWidth ?? 1.5;
     final size = spec.size ?? 24;

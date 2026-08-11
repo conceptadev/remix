@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix/src/rendering/remix_box_effects.dart'
     show RemixBoxWithEffects;
+import 'package:remix/src/utilities/remix_path_icon.dart';
 
 import '../../helpers/test_helpers.dart';
 
@@ -16,6 +17,10 @@ final _itemStyle = CheckboxStyler().size(24, 24);
 
 Finder _itemAt(int index) =>
     find.byType(RemixCheckboxGroupItem<String>).at(index);
+
+Finder _pathGlyph(RemixPathGlyph glyph) => find.byWidgetPredicate(
+  (widget) => widget is RemixPathIcon && widget.glyph == glyph,
+);
 
 /// Wraps [group] between two ordinary focus stops so the group's Tab
 /// boundaries are observable from both sides.
@@ -242,13 +247,13 @@ void main() {
           ),
         );
 
-        expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
 
         await tester.tap(_itemAt(1));
         await tester.pumpAndSettle();
 
         expect(
-          find.byIcon(Icons.check_rounded),
+          _pathGlyph(RemixPathGlyph.check),
           findsOneWidget,
           reason: 'selection is owned by the caller, not the group',
         );
@@ -280,7 +285,7 @@ void main() {
         await tester.pump();
 
         expect(tester.takeException(), isNull);
-        expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
       });
 
       testWidgets('a disabled group suppresses every option', (tester) async {
@@ -399,7 +404,7 @@ void main() {
           boxes[1].styleSpec?.spec.decoration,
           equals(boxes[0].styleSpec?.spec.decoration),
         );
-        expect(find.byIcon(Icons.check_rounded), findsNWidgets(2));
+        expect(_pathGlyph(RemixPathGlyph.check), findsNWidgets(2));
       });
     });
 
@@ -1226,7 +1231,7 @@ void main() {
             );
           }
 
-          expect(find.byIcon(Icons.check_rounded), findsNothing);
+          expect(_pathGlyph(RemixPathGlyph.check), findsNothing);
           expect(
             tester.getSemantics(_itemAt(0)),
             checkbox(label: 'Design', checked: false),
@@ -1241,7 +1246,7 @@ void main() {
               <String>{'design'},
             ]),
           );
-          expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+          expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
           expect(
             tester.getSemantics(_itemAt(0)),
             checkbox(label: 'Design', checked: true),
@@ -1255,13 +1260,13 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(emitted.last, equals({'design', 'code'}));
-          expect(find.byIcon(Icons.check_rounded), findsNWidgets(2));
+          expect(_pathGlyph(RemixPathGlyph.check), findsNWidgets(2));
 
           await tester.tap(_itemAt(0));
           await tester.pumpAndSettle();
 
           expect(emitted.last, equals({'code'}));
-          expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+          expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
           expect(
             tester.getSemantics(_itemAt(0)),
             checkbox(label: 'Design', checked: false),

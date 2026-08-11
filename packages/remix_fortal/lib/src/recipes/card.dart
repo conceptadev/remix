@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
@@ -186,7 +186,7 @@ CardStyler _fortalCardGhost(CardStyler base, double ghostMargin) {
 
   return base
       .marginAll(ghostMargin)
-      .color(Colors.transparent)
+      .color(const Color(0x00000000))
       .onHovered(open)
       .onPressed(pressed)
       .onSelected(open.onPressed(open));

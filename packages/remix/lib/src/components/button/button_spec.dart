@@ -1,5 +1,8 @@
 part of 'button.dart';
 
+/// Placement used when a button contains exactly one legacy icon.
+enum RemixIconAlignment { start, end }
+
 /// Defines the structure and styling properties for a button component.
 ///
 /// ButtonSpec is the resolved specification that describes how a button
@@ -99,7 +102,7 @@ class ButtonSpec with _$ButtonSpec {
 
   /// Placement used when exactly one legacy icon is present.
   @override
-  final IconAlignment? iconAlignment;
+  final RemixIconAlignment? iconAlignment;
 
   /// Creates a ButtonSpec with optional styling specifications.
   ///
