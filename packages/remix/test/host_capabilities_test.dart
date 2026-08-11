@@ -138,8 +138,10 @@ void main() {
   });
 }
 
-ButtonStyler _buttonStyle() =>
-    ButtonStyler().color(_hostAccent()).paddingX(16).paddingY(8);
+ButtonStyler _buttonStyle() => ButtonStyler()
+    .color(_hostAccent())
+    .padding(.horizontal(16))
+    .padding(.vertical(8));
 
 Widget _hostScope({required Widget child}) {
   return MixScope(tokens: {_hostAccent: _hostAccentValue}, child: child);
