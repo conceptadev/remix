@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import 'helpers/test_helpers.dart';
+
 void main() {
   test('new Fortal controls expose generated public wrappers', () {
     const segmented = FortalSegmentedControl<String>.classic(
@@ -66,4 +68,52 @@ void main() {
       expect(fortalDataTableStyle(), isA<DataTableStyler>());
     },
   );
+
+  test('the typography wrappers are constructible from the public API', () {
+    const text = FortalText(
+      'Body',
+      size: FortalTextSize.size3,
+      weight: FortalTextWeight.medium,
+    );
+    const heading = FortalHeading(
+      'Title',
+      headingLevel: 2,
+      size: FortalTextSize.size4,
+      weight: FortalTextWeight.medium,
+    );
+    const code = FortalCode.outline('code', size: FortalTextSize.size2);
+    const kbd = FortalKbd.soft('⌘K', semanticLabel: 'Command K');
+    const link = FortalLink(
+      'Docs',
+      underline: FortalLinkUnderline.always,
+      size: FortalTextSize.size2,
+    );
+
+    expect(text.size, FortalTextSize.size3);
+    expect(text.weight, FortalTextWeight.medium);
+    expect(heading.headingLevel, 2);
+    expect(heading.size, FortalTextSize.size4);
+    expect(code.variant, FortalCodeVariant.outline);
+    expect(kbd.variant, FortalKbdVariant.soft);
+    expect(link.underline, FortalLinkUnderline.always);
+    expect(fortalTextStyle(), isA<TextStyler>());
+    expect(fortalHeadingStyle(), isA<TextStyler>());
+  });
+
+  testWidgets('the context-bound typography recipes are public', (
+    tester,
+  ) async {
+    final recipes = await resolveInFortalScope(
+      tester,
+      (context) => (
+        code: fortalCodeStyle(context),
+        kbd: fortalKbdStyle(context),
+        link: fortalLinkStyle(context, actionable: true),
+      ),
+    );
+
+    expect(recipes.code, isA<BadgeStyler>());
+    expect(recipes.kbd, isA<BadgeStyler>());
+    expect(recipes.link, isA<BadgeStyler>());
+  });
 }

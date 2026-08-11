@@ -36,16 +36,13 @@ class StatCard extends StatelessWidget {
                 Expanded(
                   child: StyledText(
                     label,
-                    style: dashboardText(FortalTokens.text2, tone: .muted),
+                    style: dashboardText(.size2, tone: .muted),
                   ),
                 ),
                 FortalAvatar.soft(icon: icon, size: .size2),
               ],
             ),
-            StyledText(
-              value,
-              style: dashboardText(FortalTokens.text7, weight: .w700),
-            ),
+            FortalText(value, size: .size7, weight: .bold),
             Wrap(
               spacing: 8,
               runSpacing: 6,
@@ -61,7 +58,7 @@ class StatCard extends StatelessWidget {
                 ),
                 StyledText(
                   'vs last month',
-                  style: dashboardText(FortalTokens.text1, tone: .muted),
+                  style: dashboardText(.size1, tone: .muted),
                 ),
               ],
             ),

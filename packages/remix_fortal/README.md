@@ -50,8 +50,24 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-`FortalScope` is a `MixScope`. Place it above your app widget so that overlay and
-route content inherits the tokens.
+`FortalScope` is a `MixScope`. It also installs the Radix theme root's default
+text run — `text3` at `gray-12` — which is what an unsized `FortalText`,
+`FortalCode`, `FortalKbd`, or `FortalLink` measures `1em` against.
+
+Place it above your app widget so that overlay and route content inherits the
+tokens — **except** under `MaterialApp` or `CupertinoApp`, which install their
+own root text style below anything wrapping the app. There, put the scope in
+`builder:` so it still covers routes and overlays:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+final app = MaterialApp(
+  builder: (context, child) => FortalScope(child: child!),
+  home: const Center(child: FortalText('Themed')),
+);
+```
 
 ## Customizing Fortal styles
 
@@ -95,7 +111,15 @@ final style = ButtonStyler()
 
 ## Covered components
 
-Every Remix component has a matching Fortal recipe and generated widget:
+Every Remix component has a matching Fortal recipe and preset widget:
+
+### Typography
+- **FortalText**, **FortalHeading**, **FortalCode**, **FortalKbd**, **FortalLink**
+
+These five families exist only in Fortal — base Remix ships no `RemixText` — and
+they share one nine-step `FortalTextSize` scale plus one `FortalTextWeight`
+enum. See the [Typography guide](https://docs.page/btwld/remix/fortal/typography)
+for controls, semantics, and parity boundaries.
 
 ### Interactive Elements
 - **FortalButton**, **FortalIconButton**, **FortalSwitch**, **FortalToggle**

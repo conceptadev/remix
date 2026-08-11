@@ -5,6 +5,11 @@ import 'package:remix_fortal/remix_fortal.dart';
 import 'typography.dart';
 
 /// The title, description, and optional actions at the top of a page.
+///
+/// Titles are [FortalHeading] so the page publishes a real heading tree: the
+/// page title is level 1 and every card or section title below it is level 2.
+/// The visual size is chosen independently of that level, exactly as Radix
+/// separates `as` from `size`.
 class PageHeader extends StatelessWidget {
   const PageHeader({
     super.key,
@@ -27,13 +32,10 @@ class PageHeader extends StatelessWidget {
             crossAxisAlignment: .start,
             spacing: 4,
             children: [
-              StyledText(
-                title,
-                style: dashboardText(FortalTokens.text6, weight: .w700),
-              ),
+              FortalHeading(title, size: .size6, weight: .bold),
               StyledText(
                 description,
-                style: dashboardText(FortalTokens.text2, tone: .muted),
+                style: dashboardText(.size2, tone: .muted),
               ),
             ],
           ),
@@ -50,10 +52,8 @@ class SectionLabel extends StatelessWidget {
   final String label;
 
   @override
-  Widget build(BuildContext context) => StyledText(
-    label,
-    style: dashboardText(FortalTokens.text4, weight: .w600),
-  );
+  Widget build(BuildContext context) =>
+      FortalHeading(label, headingLevel: 2, size: .size4, weight: .medium);
 }
 
 /// A [SectionLabel] with supporting copy beneath it.
@@ -73,10 +73,7 @@ class CardHeading extends StatelessWidget {
     spacing: 3,
     children: [
       SectionLabel(title),
-      StyledText(
-        description,
-        style: dashboardText(FortalTokens.text2, tone: .muted),
-      ),
+      StyledText(description, style: dashboardText(.size2, tone: .muted)),
     ],
   );
 }

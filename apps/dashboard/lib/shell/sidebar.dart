@@ -77,10 +77,7 @@ class _Brand extends StatelessWidget {
           // The brand mark is a solid avatar: accent-9 on accent-contrast,
           // and it follows the theme's radius setting like every other surface.
           const FortalAvatar.solid(icon: Icons.auto_awesome, size: .size2),
-          StyledText(
-            'Remix',
-            style: dashboardText(FortalTokens.text5, weight: .w700),
-          ),
+          const FortalText('Remix', size: .size5, weight: .bold),
         ],
       ),
     );
@@ -98,8 +95,8 @@ class _SectionLabel extends StatelessWidget {
       child: StyledText(
         label.toUpperCase(),
         style: dashboardText(
-          FortalTokens.text1,
-          weight: .w600,
+          .size1,
+          weight: .medium,
           tone: .muted,
         ).letterSpacing(0.7),
       ),
@@ -171,13 +168,10 @@ class _Profile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: .start,
                 children: [
-                  StyledText(
-                    'Leo Farias',
-                    style: dashboardText(FortalTokens.text2, weight: .w600),
-                  ),
+                  const FortalText('Leo Farias', size: .size2, weight: .medium),
                   StyledText(
                     'leo@remix.dev',
-                    style: dashboardText(FortalTokens.text1, tone: .muted),
+                    style: dashboardText(.size1, tone: .muted),
                   ),
                 ],
               ),

@@ -52,12 +52,45 @@ class _FortalExampleScreenState extends State<FortalExampleScreen> {
                   children: [
                     const FortalBadge.soft(label: 'Remix 1.0'),
                     const SizedBox(height: 16),
-                    const Text(
+                    // FortalHeading carries the visual size and the native
+                    // heading level independently, so a card title can stay
+                    // small and still announce as a level-2 heading.
+                    const FortalHeading(
                       'Build themed Flutter interfaces with Remix widgets and Fortal recipes.',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      headingLevel: 2,
+                      size: .size5,
+                    ),
+                    const SizedBox(height: 12),
+                    const FortalText(
+                      'Every recipe resolves through the active Fortal scope.',
+                      size: .size2,
+                    ),
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 8,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        const FortalCode.soft(
+                          'FortalScope',
+                          size: FortalTextSize.size2,
+                        ),
+                        const FortalKbd.classic(
+                          '⌘K',
+                          size: FortalTextSize.size2,
+                          semanticLabel: 'Command K',
+                        ),
+                        FortalLink(
+                          'Read the docs',
+                          size: FortalTextSize.size2,
+                          linkUrl: Uri.parse(
+                            'https://docs.page/btwld/remix/fortal',
+                          ),
+                          // FortalLink never launches linkUrl; navigation
+                          // stays the caller's job.
+                          onPressed: () => debugPrint('Docs pressed'),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 20),
                     Wrap(

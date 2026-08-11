@@ -190,24 +190,29 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _confirmDelete() async {
     final confirmed = await showRemixDialog<bool>(
       context: context,
-      builder: (context) => FortalDialog(
-        title: 'Delete workspace?',
-        description:
-            'This demo keeps your data safe, but a real action would be permanent.',
-        actions: [
-          FortalButton.soft(
-            onPressed: () => Navigator.of(context).pop(false),
-            label: 'Cancel',
+      builder: (context) => Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: FortalDialog(
+            title: 'Delete workspace?',
+            description:
+                'This demo keeps your data safe, but a real action would be permanent.',
+            actions: [
+              FortalButton.soft(
+                onPressed: () => Navigator.of(context).pop(false),
+                label: 'Cancel',
+              ),
+              FortalScope(
+                accent: .red,
+                hasBackground: false,
+                child: FortalButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  label: 'Delete',
+                ),
+              ),
+            ],
           ),
-          FortalScope(
-            accent: .red,
-            hasBackground: false,
-            child: FortalButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              label: 'Delete',
-            ),
-          ),
-        ],
+        ),
       ),
     );
     if (!mounted || confirmed != true) return;
@@ -238,14 +243,8 @@ class _PreferenceRow extends StatelessWidget {
           crossAxisAlignment: .start,
           spacing: 2,
           children: [
-            StyledText(
-              title,
-              style: dashboardText(FortalTokens.text2, weight: .w600),
-            ),
-            StyledText(
-              description,
-              style: dashboardText(FortalTokens.text1, tone: .muted),
-            ),
+            FortalText(title, size: .size2, weight: .medium),
+            StyledText(description, style: dashboardText(.size1, tone: .muted)),
           ],
         ),
       ),

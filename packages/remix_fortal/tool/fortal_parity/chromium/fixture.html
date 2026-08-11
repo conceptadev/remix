@@ -40,6 +40,9 @@
       .fixture-data-list { width: 100%; }
       .fixture-tooltip { position: relative; }
       .fixture-data-table { width: 100%; }
+      /* Kbd is probed at size 6 rather than the grid's usual size 2: its
+         letter spacing is an em, and only a step whose --letter-spacing-N is
+         non-zero shows that it resolves against Kbd's own 0.8em font size. */
     </style>
   </head>
   <body>
@@ -80,6 +83,11 @@
         <article class="fixture-cell"><span class="fixture-label">TextArea</span><div id="text-area" data-probe class="rt-TextAreaRoot rt-r-size-2 rt-variant-surface fixture-text-area"><textarea class="rt-reset rt-TextAreaInput" readonly>Text area</textarea></div></article>
         <article class="fixture-cell"><span class="fixture-label">DataList</span><dl id="data-list" data-probe class="rt-Text rt-r-size-2 rt-DataListRoot rt-r-orientation-horizontal fixture-data-list"><div class="rt-DataListItem rt-r-ai-baseline"><dt class="rt-DataListLabel">Status</dt><dd class="rt-DataListValue">Active</dd></div><div class="rt-DataListItem rt-r-ai-baseline"><dt class="rt-DataListLabel">Owner</dt><dd class="rt-DataListValue">Ada</dd></div></dl></article>
         <article class="fixture-cell"><span class="fixture-label">Tooltip</span><div id="tooltip" data-probe data-state="delayed-open" data-side="top" class="rt-TooltipContent fixture-tooltip"><p class="rt-Text rt-r-size-1 rt-TooltipText">Tooltip content</p><svg class="rt-TooltipArrow" width="16" height="8"><path d="M0 8L8 0l8 8z"></path></svg></div></article>
+        <article class="fixture-cell"><span class="fixture-label">Text</span><span id="text" data-probe class="rt-Text rt-r-size-3 rt-r-weight-medium">Body text</span></article>
+        <article class="fixture-cell"><span class="fixture-label">Heading</span><h2 id="heading" data-probe class="rt-Heading rt-r-size-6">Heading</h2></article>
+        <article class="fixture-cell"><span class="fixture-label">Code</span><code id="code" data-probe data-accent-color="" class="rt-reset rt-Code rt-r-size-2 rt-variant-soft">code()</code></article>
+        <article class="fixture-cell"><span class="fixture-label">Kbd</span><kbd id="kbd" data-probe class="rt-reset rt-Kbd rt-r-size-6 rt-variant-classic">⌘K</kbd></article>
+        <article class="fixture-cell"><span class="fixture-label">Link</span><a id="link" data-probe data-accent-color="" href="#" class="rt-Text rt-reset rt-Link rt-r-size-3 rt-underline-always">Link text</a></article>
       </section>
     </main>
     <script>
@@ -89,6 +97,10 @@
           'padding', 'gap', 'borderWidth', 'borderColor', 'borderRadius',
           'backgroundColor', 'color', 'boxShadow', 'opacity', 'transform',
           'filter', 'backdropFilter', 'animationDuration', 'fontSize', 'lineHeight',
+          // Typography probes read the resolved type run as well as the box.
+          'fontFamily', 'fontWeight', 'fontStyle', 'letterSpacing', 'wordSpacing',
+          'textDecorationLine', 'textDecorationColor', 'textDecorationThickness',
+          'textUnderlineOffset', 'whiteSpace', 'verticalAlign',
         ];
         const probes = Object.fromEntries(
           [...document.querySelectorAll('[data-probe]')].map((element) => {

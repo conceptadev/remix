@@ -58,8 +58,8 @@
     },
     "families": {
       "type": "array",
-      "minItems": 28,
-      "maxItems": 28,
+      "minItems": 33,
+      "maxItems": 33,
       "items": { "$ref": "#/$defs/family" }
     },
     "unmappedUpstreamFamilies": {

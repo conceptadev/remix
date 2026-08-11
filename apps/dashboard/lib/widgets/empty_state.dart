@@ -42,19 +42,18 @@ class EmptyState extends StatelessWidget {
                   color: MixScope.tokenOf(FortalTokens.gray9, context),
                 ),
               ),
-              StyledText(
+              // An empty state sits inside a page, so it stays a level-2
+              // heading and only drops its visual size.
+              FortalHeading(
                 title,
-                style: dashboardText(
-                  FortalTokens.text3,
-                  weight: .w600,
-                ).textAlign(.center),
+                headingLevel: 2,
+                size: .size3,
+                weight: .medium,
+                align: .center,
               ),
               StyledText(
                 body,
-                style: dashboardText(
-                  FortalTokens.text2,
-                  tone: .muted,
-                ).textAlign(.center),
+                style: dashboardText(.size2, tone: .muted).textAlign(.center),
               ),
               if (action case final action?) ...[
                 const SizedBox(height: 4),

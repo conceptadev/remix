@@ -1378,6 +1378,39 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
   return allTokens;
 }
 
+/// Establishes the Radix theme root's default text run.
+///
+/// `.radix-themes` is not only a token carrier upstream: `color.css` sets
+/// `color: var(--gray-12)` in the same rule as the `data-has-background` fill,
+/// and `typography.css` pins the root to `--default-font-size`
+/// (`--font-size-3`), `--default-line-height`, `--default-letter-spacing`, and
+/// `--default-font-weight`. Those resolve to exactly [FortalTokens.text3] plus
+/// [FortalTokens.gray12] at regular weight.
+///
+/// Without this, "inherits the ambient `DefaultTextStyle`" — the documented
+/// behaviour of an unsized [FortalText], [FortalCode], [FortalKbd], or
+/// [FortalLink] — means "inherits whatever the host happens to supply", so the
+/// em-relative geometry of Code, Kbd, and Link is measured against the host's
+/// default rather than Radix's 16px root.
+///
+/// The font family is deliberately left unset. Radix's `--default-font-family`
+/// is the platform system stack, and a null family is Flutter's equivalent;
+/// naming a concrete family here would pin every consumer to one typeface.
+Widget _fortalRootTextStyle({
+  required Map<MixToken, Object> tokens,
+  required Widget child,
+}) {
+  final root = tokens[FortalTokens.text3]! as TextStyle;
+
+  return DefaultTextStyle(
+    style: root.copyWith(
+      color: tokens[FortalTokens.gray12]! as Color,
+      fontWeight: tokens[FortalTokens.fontWeightRegular]! as FontWeight,
+    ),
+    child: child,
+  );
+}
+
 TextStyle _avatarFallbackText({
   required double fontSize,
   required double letterSpacing,
@@ -1854,7 +1887,7 @@ class FortalScope extends StatelessWidget {
     Widget result = MixScope(
       tokens: tokens,
       orderOfModifiers: orderOfModifiers,
-      child: child,
+      child: _fortalRootTextStyle(tokens: tokens, child: child),
     );
     if (data.hasBackground) {
       result = ColoredBox(
@@ -2139,15 +2172,21 @@ class FortalTheme extends InheritedTheme {
       context.dependOnInheritedWidgetOfExactType<FortalTheme>()?.data;
 
   @override
-  Widget wrap(BuildContext context, Widget child) => FortalTheme(
-    data: data,
-    orderOfModifiers: orderOfModifiers,
-    child: MixScope(
-      tokens: _buildFortalScopeTokens(data),
+  Widget wrap(BuildContext context, Widget child) {
+    final tokens = _buildFortalScopeTokens(data);
+
+    return FortalTheme(
+      data: data,
       orderOfModifiers: orderOfModifiers,
-      child: child,
-    ),
-  );
+      child: MixScope(
+        tokens: tokens,
+        orderOfModifiers: orderOfModifiers,
+        // A cloned scope carries the root text run too, so a dialog route
+        // resolves `1em` exactly as the page that opened it does.
+        child: _fortalRootTextStyle(tokens: tokens, child: child),
+      ),
+    );
+  }
 
   @override
   bool updateShouldNotify(FortalTheme oldWidget) => data != oldWidget.data;

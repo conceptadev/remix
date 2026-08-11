@@ -47,7 +47,7 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
             cellBuilder: (_, row, column) => FortalBadge(
               variant: FortalBadgeVariant.values[row],
               size: FortalBadgeSize.values[column],
-              child: const Text('Active'),
+              label: 'Active',
             ),
           ),
         ),
@@ -64,7 +64,7 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
               child: FortalCard(
                 variant: FortalCardVariant.values[row],
                 size: FortalCardSize.values[column],
-                child: const Text('Card content'),
+                child: const FortalText('Card content', size: .size2),
               ),
             ),
           ),
@@ -81,7 +81,7 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
               child: FortalCallout(
                 variant: FortalCalloutVariant.values[row],
                 size: FortalCalloutSize.values[column],
-                child: const Text('A helpful callout message.'),
+                text: 'A helpful callout message.',
               ),
             ),
           ),
@@ -128,7 +128,10 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
               ),
               FortalSkeleton(
                 loading: _skeletonLoading,
-                child: const Text('Loaded content replaces the placeholder.'),
+                child: const FortalText(
+                  'Loaded content replaces the placeholder.',
+                  size: .size2,
+                ),
               ),
             ],
           ),
@@ -183,7 +186,10 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
                 Row(
                   spacing: 12,
                   children: [
-                    SizedBox(width: 64, child: Text(enumLabel(size))),
+                    SizedBox(
+                      width: 64,
+                      child: FortalText(enumLabel(size), size: .size2),
+                    ),
                     Expanded(child: FortalDivider(size: size)),
                   ],
                 ),

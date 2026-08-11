@@ -48,24 +48,34 @@ class _DashboardAppState extends State<DashboardApp>
     return ThemeScope(
       settings: _settings,
       onChanged: (settings) => setState(() => _settings = settings),
-      child: FortalScope(
-        key: const ValueKey('dashboard-fortal-scope'),
-        accent: _settings.accentColor,
-        gray: _settings.grayColor,
-        brightness: brightness,
-        panelBackground: _settings.panelBackground,
-        radius: _settings.radius,
-        scaling: _settings.scaling,
-        child: MaterialApp(
-          title: 'Remix Dashboard',
-          debugShowCheckedModeBanner: false,
-          scrollBehavior: const AppScrollBehavior(),
-          themeMode: _settings.themeMode,
-          theme: ThemeData(brightness: .light, useMaterial3: true),
-          darkTheme: ThemeData(brightness: .dark, useMaterial3: true),
-          themeAnimationDuration: Duration.zero,
-          home: const DashboardShell(),
+      child: MaterialApp(
+        title: 'Remix Dashboard',
+        debugShowCheckedModeBanner: false,
+        scrollBehavior: const AppScrollBehavior(),
+        themeMode: _settings.themeMode,
+        theme: ThemeData(brightness: .light, useMaterial3: true),
+        darkTheme: ThemeData(brightness: .dark, useMaterial3: true),
+        themeAnimationDuration: Duration.zero,
+        // FortalScope goes *below* MaterialApp and *above* the Navigator.
+        //
+        // MaterialApp always hands WidgetsApp its "put your text in a Material"
+        // fallback style, which WidgetsApp installs as a DefaultTextStyle
+        // around everything beneath it — so a scope placed above MaterialApp
+        // would have its root text run overridden. `builder` wraps the whole
+        // Navigator, so this placement still reaches pushed routes and raw
+        // Overlay entries such as the toast, while keeping Fortal's root text
+        // style the one that wins.
+        builder: (context, child) => FortalScope(
+          key: const ValueKey('dashboard-fortal-scope'),
+          accent: _settings.accentColor,
+          gray: _settings.grayColor,
+          brightness: brightness,
+          panelBackground: _settings.panelBackground,
+          radius: _settings.radius,
+          scaling: _settings.scaling,
+          child: child!,
         ),
+        home: const DashboardShell(),
       ),
     );
   }

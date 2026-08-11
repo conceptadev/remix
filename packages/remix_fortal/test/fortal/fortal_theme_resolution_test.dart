@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -37,6 +38,81 @@ void main() {
     expect(data.radius, FortalRadius.medium);
     expect(data.scaling, FortalScaling.percent100);
     expect(data.hasBackground, isTrue);
+  });
+
+  testWidgets('root scope establishes the Radix root text run', (tester) async {
+    // Upstream `.radix-themes` sets the page's default text run, not just its
+    // tokens: `--default-font-size` is `--font-size-3`, `--default-line-height`
+    // is 1.5, `--default-letter-spacing` is 0, `--default-font-weight` is
+    // regular, and `color.css` adds `color: var(--gray-12)`.
+    for (final (scaling, factor) in const [
+      (FortalScaling.percent90, 0.9),
+      (FortalScaling.percent100, 1.0),
+      (FortalScaling.percent110, 1.1),
+    ]) {
+      for (final brightness in Brightness.values) {
+        late TextStyle root;
+        late Color gray12;
+        await tester.pumpWidget(
+          FortalScope(
+            brightness: brightness,
+            scaling: scaling,
+            child: Builder(
+              builder: (context) {
+                root = DefaultTextStyle.of(context).style;
+                gray12 = MixScope.tokenOf(FortalTokens.gray12, context);
+
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+
+        final reason = '${scaling.name}/${brightness.name}';
+        expect(root.fontSize, closeTo(16 * factor, 1e-9), reason: reason);
+        expect(root.height, closeTo(1.5, 1e-9), reason: reason);
+        expect(root.letterSpacing, 0, reason: reason);
+        expect(root.fontWeight, FontWeight.w400, reason: reason);
+        expect(root.color, gray12, reason: reason);
+        // Radix's `--default-font-family` is the platform system stack, so the
+        // root deliberately pins no family.
+        expect(root.fontFamily, isNull, reason: reason);
+      }
+    }
+  });
+
+  testWidgets('unsized typography measures 1em against the root, not the host', (
+    tester,
+  ) async {
+    // The host supplies a deliberately wrong ambient size; the scope must win.
+    await tester.pumpWidget(
+      DefaultTextStyle(
+        style: const TextStyle(fontSize: 40),
+        child: const FortalScope(
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: Column(
+              children: [FortalText('body'), FortalCode.soft('code')],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.widget<Text>(find.text('body')).style?.fontSize, isNull);
+    expect(
+      tester
+          .renderObject<RenderParagraph>(find.text('body'))
+          .text
+          .style
+          ?.fontSize,
+      16,
+    );
+    // Code's em geometry is derived from the resolved ambient size.
+    expect(
+      tester.widget<Text>(find.text('code')).style?.fontSize,
+      closeTo(16 * 0.95 * 0.95, 1e-9),
+    );
   });
 
   testWidgets('nested scopes inherit unspecified values without repainting', (

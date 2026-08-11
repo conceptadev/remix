@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
@@ -35,6 +37,11 @@ BadgeStyler fortalLinkStyle(
     textStyle = textStyle.fontWeight(fortalTextWeightToken(weight)());
   }
 
+  final effectiveText = size == null
+      ? DefaultTextStyle.of(context).style
+      : fortalResolveTextToken(context, size);
+  final fontSize = fortalResolvedFontSize(effectiveText);
+
   // Every upstream underline rule is gated behind `:where(:any-link, button)`,
   // so a link with no callback stays plain accent-coloured text. A focus-visible
   // outline replaces the underline rather than stacking both.
@@ -64,18 +71,19 @@ BadgeStyler fortalLinkStyle(
     textStyle = textStyle
         .decoration(TextDecoration.underline)
         .decorationStyle(TextDecorationStyle.solid)
-        .decorationColor(decorationColor);
+        .decorationColor(decorationColor)
+        // Upstream is `min(2px, max(1px, 0.05em))`. Flutter reads
+        // decorationThickness as a multiple of the font's own underline
+        // thickness rather than a length, so the pinned 1–2 range lands as a
+        // 1×–2× stroke instead of exact pixels; the em breakpoints still fall
+        // where Radix puts them.
+        .decorationThickness(math.min(2, math.max(1, 0.05 * fontSize)));
   }
   textStyle = fortalApplyTextFlow(
     textStyle,
     softWrap: softWrap,
     truncate: truncate,
   );
-
-  final effectiveText = size == null
-      ? DefaultTextStyle.of(context).style
-      : fortalResolveTextToken(context, size);
-  final fontSize = fortalResolvedFontSize(effectiveText);
 
   var style = BadgeStyler()
       .label(textStyle)

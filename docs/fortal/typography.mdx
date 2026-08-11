@@ -1,0 +1,294 @@
+---
+title: Typography
+description: Fortal's Text, Heading, Code, Kbd, and Link widgets on one shared nine-step scale
+keywords: [flutter, remix, fortal, typography, text, heading, code, kbd, link, scale]
+---
+
+Fortal ships five typography families — `FortalText`, `FortalHeading`,
+`FortalCode`, `FortalKbd`, and `FortalLink` — mapped from
+[Radix Themes 3.3.0](https://www.radix-ui.com/themes). They share one nine-step
+size scale (`FortalTextSize`) and one weight enum (`FortalTextWeight`) instead
+of declaring five parallel copies.
+
+These families live only in `remix_fortal`. There is no `RemixText` or
+`RemixHeading`: base Remix stays theme-free, and a `TextStyler` plus your own
+tokens is the equivalent there.
+
+<Card>
+  <img src="/assets/fortal-typography-light.png" alt="The five Fortal typography families in light mode" />
+</Card>
+
+<Card>
+  <img src="/assets/fortal-typography-dark.png" alt="The five Fortal typography families in dark mode" />
+</Card>
+
+## Choosing a widget
+
+| Widget | Use it for | Semantics |
+|--------|-----------|-----------|
+| `FortalText` | Body copy, labels, values | None; one plain `Text` node |
+| `FortalHeading` | Page, section, and card titles | `header` with an explicit `headingLevel` |
+| `FortalCode` | Identifiers, snippets, tokens shown inline | None; Flutter has no code role |
+| `FortalKbd` | One keyboard key or shortcut | `keyboardKey`, inert |
+| `FortalLink` | Text that navigates | `link` **only** when `onPressed` is set |
+
+`FortalText` and `FortalCode` leave `size` and `weight` null by default so an
+omitted size inherits the ambient `DefaultTextStyle`, matching a Radix `Text`
+with no size prop rendering at `1em`. `FortalHeading` defaults to size 6 and
+bold because Radix Heading does.
+
+That `1em` is defined by `FortalScope`, which installs the Radix theme root's
+text run — `text3` (16px, 1.5 line height) at `gray-12`, regular weight. So an
+unsized `FortalCode` resolves `0.95 × 0.95 × 16px`, exactly as upstream does.
+Under `MaterialApp` or `CupertinoApp` the scope must sit in `builder:` for that
+to hold; see [scope placement](/fortal#scope-placement).
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+class TypographyExample extends StatelessWidget {
+  const TypographyExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12,
+      children: [
+        FortalHeading('Release notes', size: FortalTextSize.size6),
+        FortalText(
+          'Every recipe resolves through the active Fortal scope.',
+          size: FortalTextSize.size3,
+        ),
+        Row(
+          spacing: 10,
+          children: [
+            FortalCode.soft('FortalScope', size: FortalTextSize.size2),
+            FortalKbd.classic(
+              '⌘K',
+              size: FortalTextSize.size2,
+              semanticLabel: 'Command K',
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Size, weight, and flow
+
+Every family accepts the same scale and flow controls.
+
+| Control | Type | Applies to |
+|---------|------|------------|
+| `size` | `FortalTextSize?` — `size1`–`size9` | all five |
+| `weight` | `FortalTextWeight?` — `light`, `regular`, `medium`, `bold` | Text, Heading, Code, Link |
+| `align` | `TextAlign?` | Text, Heading |
+| `softWrap` | `bool` (default `true`) | Text, Heading, Code, Link |
+| `truncate` | `bool` (default `false`) | Text, Heading, Code, Link |
+| `accent` | `bool` (default `false`) | Text, Heading, Code |
+| `highContrast` | `bool` (default `false`) | Text, Heading, Code, Link |
+
+`truncate` deliberately wins over `softWrap`: it forces exactly one ellipsized
+line, which is what a table cell or a row with a fixed-width neighbour needs.
+
+Colour is opt-in. `accent: true` takes the surrounding `FortalScope` accent at
+`accent-a11`, and `highContrast: true` promotes it to `accent-12`. Leaving
+`accent` false preserves the inherited foreground, so `highContrast` alone does
+nothing — the same gate Radix puts behind `[data-accent-color]`.
+
+`FortalKbd` is the exception: it pins its own regular weight, line box, and
+`gray-12` foreground so a key cap never follows the surrounding copy.
+
+## Variants
+
+<CodeGroup title="Code and Kbd variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+class TypographyVariantsExample extends StatelessWidget {
+  const TypographyVariantsExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        FortalCode.solid('solid'),
+        FortalCode.soft('soft'),
+        FortalCode.outline('outline'),
+        FortalCode.ghost('ghost'),
+        FortalKbd.classic('⌘K', semanticLabel: 'Command K'),
+        FortalKbd.soft('Esc', semanticLabel: 'Escape'),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+`FortalCode.ghost` is transparent and inherits the ambient foreground unless you
+pass `accent: true`; the other three variants always paint their own accent
+roles.
+
+## Headings and semantic level
+
+`headingLevel` drives the accessibility level only. Changing it never changes
+the visual `size`, which is how Radix separates `as` from `size`. A page title
+can be level 1 at size 6 while an empty-state title stays level 2 at size 3.
+
+<CodeGroup title="Heading level and size" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+class HeadingLevelExample extends StatelessWidget {
+  const HeadingLevelExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8,
+      children: [
+        FortalHeading('Overview', size: FortalTextSize.size6),
+        FortalHeading(
+          'Recent activity',
+          headingLevel: 2,
+          size: FortalTextSize.size4,
+          weight: FortalTextWeight.medium,
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+`FortalHeading` publishes exactly one `Semantics` node with `header: true` and
+the requested level, and excludes the child so the label is not announced
+twice. Pass `semanticLabel` when the announced text should differ from the
+rendered text, or `excludeSemantics: true` to publish nothing at all.
+
+## Actionable versus inert links
+
+Every upstream underline rule is gated behind `:where(:any-link, button)`, so a
+`FortalLink` without `onPressed` is **inert**: styled accent text with no focus
+stop, no link role, and no activation. Give it `onPressed` and it becomes a real
+link — focusable, activatable with pointer, Enter, and Space, and underlined
+according to `underline`.
+
+| `underline` | Behaviour when actionable |
+|-------------|---------------------------|
+| `auto` (default) | Underlines on hover, or always at high contrast |
+| `always` | Always underlined |
+| `hover` | Underlines on hover only |
+| `none` | Never underlined |
+
+A focus-visible outline replaces the underline rather than stacking both, and
+the outline only appears for keyboard focus — a touch or pointer focus keeps the
+idle treatment.
+
+<CodeGroup title="Links" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+class LinkExample extends StatelessWidget {
+  const LinkExample({super.key, required this.onOpenDocs});
+
+  final VoidCallback onOpenDocs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 16,
+      children: [
+        FortalLink(
+          'Read the docs',
+          underline: FortalLinkUnderline.always,
+          linkUrl: Uri.parse('https://docs.page/btwld/remix/fortal'),
+          semanticHint: 'Opens the Fortal documentation',
+          onPressed: onOpenDocs,
+        ),
+        const FortalLink('Not a link yet'),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+`linkUrl` is assistive metadata only and is **never launched**. Navigation stays
+your responsibility inside `onPressed`, which keeps `remix_fortal` free of a URL
+launcher dependency. Passing `linkUrl` without `onPressed` asserts, because an
+announced destination with no activation is a broken promise to assistive
+technology.
+
+Set `enabled: false` to keep the callback and still refuse focus and activation.
+
+## Customizing the recipes
+
+Each widget calls a `fortal*Style` recipe you can use directly. `FortalText` and
+`FortalHeading` return a `TextStyler`; `FortalCode`, `FortalKbd`, and
+`FortalLink` return a `BadgeStyler` and take a `BuildContext`, because their
+geometry is em-relative to the resolved font size.
+
+<CodeGroup title="Recipe customization" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+/// Body text on the Fortal scale with one project-specific neutral tone.
+TextStyler mutedBody() => fortalTextStyle(
+  size: FortalTextSize.size2,
+  weight: FortalTextWeight.medium,
+).color(FortalTokens.gray11());
+
+/// The Fortal Code recipe with a wider inline gutter.
+BadgeStyler roomyCode(BuildContext context) =>
+    fortalCodeStyle(context, size: FortalTextSize.size2)
+        .paddingX(10);
+```
+</CodeGroup>
+
+Starting from the recipe keeps the scale, weights, and flow behaviour Fortal's
+and layers only what your project actually adds. Reaching for a bare
+`TextStyler` instead re-declares the whole type ramp locally.
+
+## Parity boundaries
+
+These are the documented differences from Radix Themes 3.3.0. They are recorded
+in the package's checked-in parity contract and verified in CI.
+
+- **No leading trim.** CSS leading trim has no Flutter primitive, so the token
+  line box is painted untrimmed.
+- **No `pretty` or `balance` wrapping.** Flutter exposes no equivalent line
+  breaker; `softWrap` and `truncate` map the `wrap`/`nowrap` pair.
+- **No responsive prop objects.** Rebuild with the value your Flutter layout
+  picks instead of passing a breakpoint map.
+- **No per-instance colour prop.** Re-scope `FortalScope.accent` around the
+  subtree rather than colouring one run.
+- **`FortalCode` is a box, not an inline span.** Radix renders `code` inline
+  inside a text run; a Flutter box is a sibling widget, so a Code inside a
+  wrapped sentence does not reflow with it.
+- **`FortalKbd` skips the `-0.03em` nudge.** Radix nudges the cap up and aligns
+  it with `vertical-align: text-top`; a standalone Flutter box has no inline
+  baseline to align against.
+- **Link underline geometry is approximate.** Flutter reads
+  `decorationThickness` as a multiple of the font's own underline thickness
+  rather than a CSS length, and exposes no underline offset. The decoration
+  colour approximates Radix's `color-mix(in oklab, …)` with an sRGB blend.
+- **No `Em`, `Strong`, `Quote`, or `Blockquote`.** Use `FortalText` with an
+  explicit weight where Radix would use `Strong`.
