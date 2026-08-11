@@ -101,4 +101,4 @@ melos:
 
     docs:check:
       run: dart run tool/validate_docs.dart
-      description: Reject retired APIs in docs and examples, then analyze MDX Dart snippets
+      description: Validate docs and reject retired APIs across workspace sources

@@ -129,6 +129,18 @@ const _packageLibraryDirectories = <String>[
   'packages/remix_fortal/lib',
 ];
 
+// Test code is part of the canonical-styler contract too. Mix still exposes
+// several retired Remix convenience spellings, so those calls continue to
+// compile and cannot be left to the analyzer alone. Some app test directories
+// are optional today but should be picked up automatically when added later.
+const _testSourceDirectories = <String>[
+  'apps/dashboard/test',
+  'apps/demo/test',
+  'apps/playground/test',
+  'packages/remix/test',
+  'packages/remix_fortal/test',
+];
+
 const _consumerDocumentationDirectories = <String>['skills/using-remix'];
 const _consumerDocumentationFiles = <String>[
   'README.md',
@@ -218,6 +230,13 @@ Future<void> main() async {
     'package library source',
     failures,
   );
+  final testSourceCount = _checkDartSources(
+    workspaceRoot,
+    _testSourceDirectories,
+    'test source',
+    failures,
+    requireDirectories: false,
+  );
 
   _checkNavigation(workspaceRoot, docsConfig, failures);
   _checkFortalScopeTopology(workspaceRoot, failures);
@@ -275,6 +294,7 @@ Future<void> main() async {
     '${extraction.skipped} skipped Dart examples, plus '
     '$exampleSourceCount app/example Dart sources, plus '
     '$packageLibrarySourceCount package library Dart sources, plus '
+    '$testSourceCount test Dart sources, plus '
     '$consumerDocumentationCount consumer-facing Markdown files.',
   );
 }
@@ -340,15 +360,18 @@ int _checkDartSources(
   Directory workspaceRoot,
   List<String> directories,
   String missingDirectoryLabel,
-  List<String> failures,
-) {
+  List<String> failures, {
+  bool requireDirectories = true,
+}) {
   final sources = <File>[];
   for (final relativeDirectory in directories) {
     final directory = Directory('${workspaceRoot.path}/$relativeDirectory');
     if (!directory.existsSync()) {
-      failures.add(
-        'Missing $missingDirectoryLabel directory: $relativeDirectory.',
-      );
+      if (requireDirectories) {
+        failures.add(
+          'Missing $missingDirectoryLabel directory: $relativeDirectory.',
+        );
+      }
       continue;
     }
     sources.addAll(
