@@ -135,9 +135,7 @@ AccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
   return switch (size) {
     .size1 => AccordionStyler(
       container: .borderRadius(.all(FortalTokens.radius3())),
-      trigger: FlexBoxStyler()
-          .paddingX(FortalTokens.space2())
-          .paddingY(FortalTokens.space2()),
+      trigger: FlexBoxStyler().padding(.all(FortalTokens.space2())),
       leadingIcon: .size(FortalTokens.space4()),
       title: .style(FortalTokens.text2.mix()),
       trailingIcon: .size(FortalTokens.space4()),
@@ -145,9 +143,7 @@ AccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
     ),
     .size2 => AccordionStyler(
       container: .borderRadius(.all(FortalTokens.radius4())),
-      trigger: FlexBoxStyler()
-          .paddingX(FortalTokens.space3())
-          .paddingY(FortalTokens.space3()),
+      trigger: FlexBoxStyler().padding(.all(FortalTokens.space3())),
       leadingIcon: .size(FortalTokens.spinnerSize3()),
       title: .style(FortalTokens.accordionText2.mix()),
       trailingIcon: .size(FortalTokens.spinnerSize3()),
@@ -155,9 +151,7 @@ AccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
     ),
     .size3 => AccordionStyler(
       container: .borderRadius(.all(FortalTokens.radius5())),
-      trigger: FlexBoxStyler()
-          .paddingX(FortalTokens.space4())
-          .paddingY(FortalTokens.space4()),
+      trigger: FlexBoxStyler().padding(.all(FortalTokens.space4())),
       leadingIcon: .size(FortalTokens.space5()),
       title: .style(FortalTokens.text3.mix()),
       trailingIcon: .size(FortalTokens.space5()),
