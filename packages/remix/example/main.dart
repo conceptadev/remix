@@ -104,7 +104,7 @@ final _cardStyle = CardStyler()
     .color(Colors.white)
     .padding(.all(24))
     .borderRadius(.all(const Radius.circular(12)))
-    .border(.all(.color(_border)));
+    .border(.color(_border));
 
 final _badgeStyle = BadgeStyler()
     .color(_accent.withValues(alpha: 0.12))
@@ -128,7 +128,7 @@ final _toggleStyle = ToggleStyler()
     .padding(.horizontal(12))
     .padding(.vertical(8))
     .borderRadius(.all(const Radius.circular(6)))
-    .border(.all(.color(_border)))
+    .border(.color(_border))
     .label(TextStyler().color(_ink).fontSize(14))
     .icon(IconStyler().color(_ink).size(16))
     .onSelected(

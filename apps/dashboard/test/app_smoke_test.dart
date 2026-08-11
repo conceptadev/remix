@@ -396,9 +396,7 @@ void main() {
     await tester.pump();
     expect(find.text('10 selected'), findsOneWidget);
 
-    final next = find
-        .byKey(const ValueKey('remix-data-table-next-page'))
-        .first;
+    final next = find.byKey(const ValueKey('remix-data-table-next-page')).first;
     await tester.ensureVisible(next);
     await tester.tap(next);
     await tester.pump();

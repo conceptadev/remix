@@ -169,11 +169,9 @@ extension FortalFocusRing<T extends Mix<Object?>> on RemixBoxStylerAnchors<T> {
 /// `.fortalFocusRing()`; the receiver type picks the right one.
 extension FortalFocusRingFlexBox on FlexBoxStyler {
   FlexBoxStyler fortalFocusRing() => border(
-    .all(
-      .color(
-        _focusRingColor(),
-      ).width(_focusRingWidth()).strokeAlign(BorderSide.strokeAlignInside),
-    ),
+    .color(
+      _focusRingColor(),
+    ).width(_focusRingWidth()).strokeAlign(BorderSide.strokeAlignInside),
   );
 }
 

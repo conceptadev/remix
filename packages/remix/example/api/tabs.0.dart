@@ -82,7 +82,7 @@ class _TabsExampleState extends State<TabsExample> {
         .padding(.all(4))
         .borderRadius(.circular(12))
         .color(const Color(0xFFF4F6FF))
-        .border(.all(.color(Colors.indigo.shade100)))
+        .border(.color(Colors.indigo.shade100))
         .decoration(
           .boxShadow([
             BoxShadowMix(
@@ -113,7 +113,7 @@ class _TabsExampleState extends State<TabsExample> {
         .onSelected(
           TabStyler()
               .color(Colors.white)
-              .border(.all(.color(Colors.indigo.shade400).width(2)))
+              .border(.color(Colors.indigo.shade400).width(2))
               .decoration(
                 .boxShadow([
                   BoxShadowMix(
@@ -133,7 +133,7 @@ class _TabsExampleState extends State<TabsExample> {
         .padding(.all(20))
         .borderRadius(.circular(14))
         .color(Colors.white)
-        .border(.all(.color(Colors.indigo.shade100)))
+        .border(.color(Colors.indigo.shade100))
         .decoration(
           .boxShadow([
             BoxShadowMix(

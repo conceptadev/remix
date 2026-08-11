@@ -14,9 +14,11 @@ void main() {
       equals(
         ToggleStyler().border(
           .all(
-            .color(FortalTokens.focusA8())
-                .width(FortalTokens.focusRingWidth())
-                .strokeAlign(BorderSide.strokeAlignInside),
+            BorderSideMix(
+              color: FortalTokens.focusA8(),
+              width: FortalTokens.focusRingWidth(),
+              strokeAlign: BorderSide.strokeAlignInside,
+            ),
           ),
         ),
       ),
@@ -29,9 +31,11 @@ void main() {
       equals(
         ToggleGroupItemStyler().border(
           .all(
-            .color(FortalTokens.focusA8())
-                .width(FortalTokens.focusRingWidth())
-                .strokeAlign(BorderSide.strokeAlignInside),
+            BorderSideMix(
+              color: FortalTokens.focusA8(),
+              width: FortalTokens.focusRingWidth(),
+              strokeAlign: BorderSide.strokeAlignInside,
+            ),
           ),
         ),
       ),
@@ -50,7 +54,10 @@ void main() {
       equals(
         TabStyler().border(
           .all(
-            .color(FortalTokens.focus8()).width(FortalTokens.focusRingWidth()),
+            BorderSideMix(
+              color: FortalTokens.focus8(),
+              width: FortalTokens.focusRingWidth(),
+            ),
           ),
         ),
       ),
@@ -62,11 +69,9 @@ void main() {
       FlexBoxStyler().fortalFocusRing(),
       equals(
         FlexBoxStyler().border(
-          .all(
-            .color(FortalTokens.focusA8())
-                .width(FortalTokens.focusRingWidth())
-                .strokeAlign(BorderSide.strokeAlignInside),
-          ),
+          .color(FortalTokens.focusA8())
+              .width(FortalTokens.focusRingWidth())
+              .strokeAlign(BorderSide.strokeAlignInside),
         ),
       ),
     );

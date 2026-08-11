@@ -63,7 +63,7 @@ class _SelectExampleState extends State<SelectExample> {
         .trigger(
           SelectTriggerStyler()
               .color(Colors.transparent)
-              .border(.all(.color(const Color(0xFF898988))))
+              .border(.color(const Color(0xFF898988)))
               .padding(.vertical(10))
               .padding(.horizontal(12))
               .borderRadius(.all(const Radius.circular(12))),

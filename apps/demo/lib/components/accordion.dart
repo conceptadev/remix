@@ -18,11 +18,9 @@ Widget buildAvatarUseCase(BuildContext context) {
             child: Box(
               style: BoxStyler()
                   .border(
-                    .all(
-                      .color(
-                        FortalTokens.gray7(),
-                      ).strokeAlign(BorderSide.strokeAlignOutside),
-                    ),
+                    .color(
+                      FortalTokens.gray7(),
+                    ).strokeAlign(BorderSide.strokeAlignOutside),
                   )
                   .borderRadius(.all(FortalTokens.radius4()))
                   .clipBehavior(.hardEdge),
