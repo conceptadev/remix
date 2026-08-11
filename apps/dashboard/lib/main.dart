@@ -57,7 +57,7 @@ class _DashboardAppState extends State<DashboardApp>
         radius: _settings.radius,
         scaling: _settings.scaling,
         child: MaterialApp(
-          title: 'Remix Dashboard',
+          title: 'Dashboard',
           debugShowCheckedModeBanner: false,
           scrollBehavior: const AppScrollBehavior(),
           themeMode: _settings.themeMode,

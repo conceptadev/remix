@@ -17,6 +17,7 @@ export 'src/recipes/badge.dart';
 export 'src/recipes/button.dart';
 export 'src/recipes/callout.dart';
 export 'src/recipes/card.dart';
+export 'src/recipes/chart.dart';
 export 'src/recipes/checkbox.dart';
 export 'src/recipes/code.dart';
 export 'src/recipes/data_list.dart';

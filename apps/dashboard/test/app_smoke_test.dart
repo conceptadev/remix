@@ -5,6 +5,7 @@ import 'package:dashboard/shell/dashboard_shell.dart';
 import 'package:dashboard/theme/theme_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
@@ -21,6 +22,24 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Overview'), findsWidgets);
+  });
+
+  testWidgets('uses a text-only Dashboard brand', (tester) async {
+    await tester.pumpWidget(const DashboardApp());
+
+    final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+    expect(app.title, 'Dashboard');
+
+    final brand = find.byKey(const ValueKey('dashboard-brand'));
+    expect(brand, findsOneWidget);
+    expect(
+      find.descendant(of: brand, matching: find.text('Dashboard')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: brand, matching: find.byIcon(Icons.auto_awesome)),
+      findsNothing,
+    );
   });
 
   testWidgets('account surfaces preserve their avatar and profile triggers', (
@@ -163,16 +182,23 @@ void main() {
     expect(find.text('1–10 of 24'), findsOneWidget);
   });
 
-  testWidgets('overview presents metrics, activity, and recent orders', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const DashboardApp());
+  testWidgets(
+    'overview presents metrics, charts, activity, and recent orders',
+    (tester) async {
+      await tester.pumpWidget(const DashboardApp());
 
-    expect(find.text('\$84,420'), findsOneWidget);
-    expect(find.text('Recent activity'), findsOneWidget);
-    expect(find.text('Recent orders'), findsOneWidget);
-    expect(find.text('View all'), findsOneWidget);
-  });
+      expect(find.text('\$84,420'), findsOneWidget);
+      expect(find.text('Revenue trend'), findsOneWidget);
+      expect(find.text('Order volume'), findsOneWidget);
+      expect(find.text('Channel mix'), findsOneWidget);
+      expect(find.byType(FortalLineChart), findsOneWidget);
+      expect(find.byType(FortalBarChart), findsOneWidget);
+      expect(find.byType(PieChart), findsOneWidget);
+      expect(find.text('Recent activity'), findsOneWidget);
+      expect(find.text('Recent orders'), findsOneWidget);
+      expect(find.text('View all'), findsOneWidget);
+    },
+  );
 
   testWidgets('a status reads the same on every page that shows it', (
     tester,
@@ -309,6 +335,8 @@ void main() {
       'customers': 'Manage customer access, plans, and account status.',
       'orders': 'Review transactions and fulfillment status.',
       'settings': 'Manage your profile, preferences, and workspace.',
+      'charts':
+          'Fortal-native chart patterns for comparison, composition, interaction, and empty states.',
       'galleryActions':
           'Interactive actions across every Fortal variant and size.',
       'galleryForms':
@@ -396,9 +424,7 @@ void main() {
     await tester.pump();
     expect(find.text('10 selected'), findsOneWidget);
 
-    final next = find
-        .byKey(const ValueKey('remix-data-table-next-page'))
-        .first;
+    final next = find.byKey(const ValueKey('remix-data-table-next-page')).first;
     await tester.ensureVisible(next);
     await tester.tap(next);
     await tester.pump();
