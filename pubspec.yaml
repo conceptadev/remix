@@ -43,7 +43,7 @@ melos:
       # tool/check_consumer_mix.dart enforces the same equality for anyone who
       # edits a pubspec without bootstrapping.
       dependencies:
-        mix: ^2.2.0-beta.3
+        mix: ^2.2.0-beta.4
         mix_annotations: ^2.2.0-beta.1
       dev_dependencies:
         mix_generator: ^2.2.0-beta.2

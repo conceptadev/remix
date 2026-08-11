@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 /// Fortal's counterpart to `packages/remix/test/helpers/test_helpers.dart`.
@@ -27,6 +28,15 @@ extension WidgetTesterHelpers on WidgetTester {
         ),
       ),
     );
+  }
+
+  /// Returns the resolved Mix spec for [finder].
+  S resolvedSpecOf<S extends Spec<S>>(Finder finder) {
+    final context = element(finder);
+    final provider = context
+        .getInheritedWidgetOfExactType<StyleSpecProvider<S>>();
+    expect(provider, isNotNull, reason: 'No StyleSpecProvider<$S> found');
+    return provider!.spec.spec;
   }
 }
 

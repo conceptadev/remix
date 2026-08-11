@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../../helpers/test_helpers.dart';
+
 void main() {
   test('public contract has the pinned enum order and defaults', () {
     expect(FortalCardSize.values, [
@@ -21,6 +23,34 @@ void main() {
     const card = FortalCard(child: Text('Card'));
     expect(card.size, FortalCardSize.size1);
     expect(card.variant, FortalCardVariant.surface);
+  });
+
+  group('focus-visible behavior', () {
+    late FocusHighlightStrategy previousStrategy;
+
+    setUp(() {
+      previousStrategy = FocusManager.instance.highlightStrategy;
+    });
+
+    tearDown(() {
+      FocusManager.instance.highlightStrategy = previousStrategy;
+    });
+
+    testWidgets('focused card hides its ring in touch mode', (tester) async {
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+
+      await tester.pumpRemixApp(
+        WidgetStateProvider(
+          states: const {WidgetState.focused},
+          child: const FortalCard(child: Text('Card')),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final spec = tester.resolvedSpecOf<CardSpec>(find.text('Card'));
+      expect(spec.containerEffects?.outline.width, 0);
+    });
   });
 
   group('geometry', () {

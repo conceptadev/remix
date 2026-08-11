@@ -3,7 +3,52 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../../helpers/test_helpers.dart';
+
 void main() {
+  group('focus-visible behavior', () {
+    late FocusHighlightStrategy previousStrategy;
+
+    setUp(() {
+      previousStrategy = FocusManager.instance.highlightStrategy;
+    });
+
+    tearDown(() {
+      FocusManager.instance.highlightStrategy = previousStrategy;
+    });
+
+    testWidgets('focused item hides its ring in touch mode', (tester) async {
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+
+      await tester.pumpRemixApp(
+        FortalSegmentedControl<String>(
+          items: [
+            RemixSegmentedControlItem(
+              value: 'a',
+              label: 'Alpha',
+              focusNode: focusNode,
+            ),
+          ],
+          selectedValue: null,
+          onChanged: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      focusNode.requestFocus();
+      await tester.pumpAndSettle();
+
+      expect(focusNode.hasFocus, isTrue);
+      final spec = tester.resolvedSpecOf<SegmentedControlItemSpec>(
+        find.text('Alpha'),
+      );
+      expect(spec.containerEffects?.outline.width, 0);
+    });
+  });
+
   for (final (size, height, fontSize, paddingX, gap, radius, activeSpacing)
       in const [
         (FortalSegmentedControlSize.size1, 24.0, 12.0, 12.0, 4.0, 4.0, -0.12),

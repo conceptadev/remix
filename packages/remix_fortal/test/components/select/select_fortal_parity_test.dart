@@ -3,7 +3,47 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../../helpers/test_helpers.dart';
+
 void main() {
+  group('focus-visible behavior', () {
+    late FocusHighlightStrategy previousStrategy;
+
+    setUp(() {
+      previousStrategy = FocusManager.instance.highlightStrategy;
+    });
+
+    tearDown(() {
+      FocusManager.instance.highlightStrategy = previousStrategy;
+    });
+
+    testWidgets('focused select hides its ring in touch mode', (tester) async {
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+
+      await tester.pumpRemixApp(
+        FortalSelect<String>(
+          trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+          items: const [RemixSelectItem(value: 'a', label: 'Apple')],
+          onChanged: (_) {},
+          focusNode: focusNode,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      focusNode.requestFocus();
+      await tester.pumpAndSettle();
+
+      expect(focusNode.hasFocus, isTrue);
+      final spec = tester.resolvedSpecOf<SelectTriggerSpec>(
+        find.text('Choose'),
+      );
+      expect(spec.containerEffects?.overContent, isNull);
+    });
+  });
+
   group('Fortal Select geometry', () {
     for (final (size, expected)
         in <

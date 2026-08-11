@@ -519,16 +519,7 @@ void main() {
               FocusHighlightStrategy.alwaysTouch;
           final focusNode = FocusNode();
           addTearDown(focusNode.dispose);
-          final style = SliderStyler(
-            thumb: BoxStyler().size(20, 20),
-            thumbFocusEffects: RemixBoxEffectsMix(
-              outline: BorderSideMix(
-                color: Colors.red,
-                width: 3,
-                strokeAlign: BorderSide.strokeAlignInside,
-              ),
-            ),
-          );
+          final style = _sliderFocusStyle();
 
           await tester.pumpRemixApp(
             Builder(
@@ -564,6 +555,28 @@ void main() {
           expect(_sliderThumb(tester).containerEffects?.outline.width, 0);
         });
       }
+
+      testWidgets('forced focus state renders the thumb focus effect', (
+        tester,
+      ) async {
+        final previousStrategy = FocusManager.instance.highlightStrategy;
+        addTearDown(() {
+          FocusManager.instance.highlightStrategy = previousStrategy;
+        });
+        FocusManager.instance.highlightStrategy =
+            FocusHighlightStrategy.alwaysTouch;
+        final style = _sliderFocusStyle();
+
+        await tester.pumpRemixApp(
+          WidgetStateStyleOverride(
+            states: const {WidgetState.focused},
+            child: RemixSlider(value: 0.5, onChanged: (value) {}, style: style),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(_sliderThumb(tester).containerEffects?.outline.width, 3);
+      });
     });
 
     group('Snap Divisions', () {
@@ -860,4 +873,17 @@ RemixBoxWithEffects _sliderThumb(WidgetTester tester) {
       .singleWhere(
         (widget) => widget.styleSpec.spec.constraints?.maxWidth == 20,
       );
+}
+
+SliderStyler _sliderFocusStyle() {
+  return SliderStyler(
+    thumb: BoxStyler().size(20, 20),
+    thumbFocusEffects: RemixBoxEffectsMix(
+      outline: BorderSideMix(
+        color: Colors.red,
+        width: 3,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+    ),
+  );
 }

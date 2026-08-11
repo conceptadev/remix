@@ -125,10 +125,12 @@ class RemixSlider extends StatelessWidget {
             final trackThickness = spec.trackThickness > 0
                 ? spec.trackThickness
                 : SliderSpec.defaultTrackStrokeWidth;
-            final shouldShowThumbFocusEffect =
-                state.focusedThumbIndex == 0 &&
-                RemixFocusHighlightModeProvider.of(context) ==
-                    FocusHighlightMode.traditional;
+            final override = WidgetStateStyleOverride.maybeOf(context);
+            final shouldShowThumbFocusEffect = override != null
+                ? override.states.contains(WidgetState.focused)
+                : state.focusedThumbIndex == 0 &&
+                      RemixFocusHighlightModeProvider.of(context) ==
+                          FocusHighlightMode.traditional;
 
             // Slider height accommodates both thumb and track:
             // - thumb.height + trackThickness: ensures thumb has clearance above/below

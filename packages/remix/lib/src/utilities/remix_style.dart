@@ -118,10 +118,7 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
       );
     }
 
-    if (!trackFocusHighlightMode ||
-        RemixFocusHighlightModeProvider._hasScope(context)) {
-      return result;
-    }
+    if (!trackFocusHighlightMode) return result;
 
     return RemixFocusHighlightModeProvider._(child: result);
   }
@@ -138,12 +135,6 @@ final class RemixFocusHighlightModeProvider extends StatefulWidget {
             .dependOnInheritedWidgetOfExactType<_RemixFocusHighlightModeScope>()
             ?.mode ??
         FocusManager.instance.highlightMode;
-  }
-
-  static bool _hasScope(BuildContext context) {
-    return context
-            .getInheritedWidgetOfExactType<_RemixFocusHighlightModeScope>() !=
-        null;
   }
 
   final Widget child;
