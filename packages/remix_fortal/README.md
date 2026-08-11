@@ -52,7 +52,8 @@ class MyApp extends StatelessWidget {
 
 `FortalScope` is a `MixScope`. It also installs the Radix theme root's default
 text run — `text3` at `gray-12` — which is what an unsized `FortalText`,
-`FortalCode`, `FortalKbd`, or `FortalLink` measures `1em` against.
+`FortalCode`, `FortalKbd`, or `FortalLink` measures `1em` against when no
+closer `DefaultTextStyle` is present.
 
 Place it above your app widget so that overlay and route content inherits the
 tokens — **except** under `MaterialApp` or `CupertinoApp`, which install their
@@ -68,6 +69,11 @@ final app = MaterialApp(
   home: const Center(child: FortalText('Themed')),
 );
 ```
+
+This is a fallback, not a forced global style. A nearer `DefaultTextStyle`,
+including one installed by `Material` or `Scaffold`, still wins. Use an
+explicit `size: FortalTextSize.size3` when exact 16px Radix root sizing is
+required inside such a surface.
 
 ## Customizing Fortal styles
 

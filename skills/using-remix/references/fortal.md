@@ -200,7 +200,8 @@ page background behind its child.
 `FortalScope` also installs the Radix theme root's default text run — `text3`
 (16px, 1.5 line height, 0 letter spacing) at `gray-12`, regular weight, with no
 pinned font family. That is what an unsized `FortalText`, `FortalCode`,
-`FortalKbd`, or `FortalLink` measures `1em` against, so placement matters:
+`FortalKbd`, or `FortalLink` measures `1em` against when there is no closer
+`DefaultTextStyle`, so placement matters:
 
 | Host | Put the scope |
 | --- | --- |
@@ -219,7 +220,12 @@ Those apps pass `WidgetsApp` their own root `DefaultTextStyle`, which lands
 below anything wrapping the app. A scope placed above `MaterialApp` still
 supplies tokens, but its root text run is overridden. `builder:` sits below that
 style and above the `Navigator`, so pushed routes and raw `Overlay` entries
-still inherit the scope.
+receive the Fortal fallback.
+
+Normal Flutter inheritance still applies below the scope. A nearer
+`DefaultTextStyle`, including one from `Material` or `Scaffold`, wins. Unsized
+Fortal typography deliberately inherits it; use `size: FortalTextSize.size3`
+when a component needs the exact 16px Radix root size inside such a surface.
 
 If text inside a hand-rolled `OverlayEntry` renders red and monospace with a
 yellow double underline, the scope is in the wrong place: that is Flutter's

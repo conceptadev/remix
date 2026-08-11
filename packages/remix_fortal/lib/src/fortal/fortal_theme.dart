@@ -1387,11 +1387,12 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
 /// `--default-font-weight`. Those resolve to exactly [FortalTokens.text3] plus
 /// [FortalTokens.gray12] at regular weight.
 ///
-/// Without this, "inherits the ambient `DefaultTextStyle`" — the documented
-/// behaviour of an unsized [FortalText], [FortalCode], [FortalKbd], or
-/// [FortalLink] — means "inherits whatever the host happens to supply", so the
-/// em-relative geometry of Code, Kbd, and Link is measured against the host's
-/// default rather than Radix's 16px root.
+/// Without this fallback, "inherits the ambient `DefaultTextStyle`" — the
+/// documented behaviour of an unsized [FortalText], [FortalCode], [FortalKbd],
+/// or [FortalLink] — means "inherits whatever the outer host happens to
+/// supply", so the em-relative geometry of Code, Kbd, and Link is measured
+/// against that host instead of Radix's 16px root. A nearer descendant
+/// `DefaultTextStyle` still wins through Flutter's normal inheritance.
 ///
 /// The font family is deliberately left unset. Radix's `--default-font-family`
 /// is the platform system stack, and a null family is Flutter's equivalent;
@@ -2181,8 +2182,9 @@ class FortalTheme extends InheritedTheme {
       child: MixScope(
         tokens: tokens,
         orderOfModifiers: orderOfModifiers,
-        // A cloned scope carries the root text run too, so a dialog route
-        // resolves `1em` exactly as the page that opened it does.
+        // A cloned scope carries the same root fallback, so a dialog route
+        // resolves `1em` from the same baseline when no nearer text style is
+        // present.
         child: _fortalRootTextStyle(tokens: tokens, child: child),
       ),
     );

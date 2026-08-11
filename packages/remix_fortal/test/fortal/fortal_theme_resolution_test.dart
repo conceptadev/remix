@@ -81,7 +81,7 @@ void main() {
     }
   });
 
-  testWidgets('unsized typography measures 1em against the root, not the host', (
+  testWidgets('scope fallback overrides an outer host text style', (
     tester,
   ) async {
     // The host supplies a deliberately wrong ambient size; the scope must win.
@@ -112,6 +112,37 @@ void main() {
     expect(
       tester.widget<Text>(find.text('code')).style?.fontSize,
       closeTo(16 * 0.95 * 0.95, 1e-9),
+    );
+  });
+
+  testWidgets('unsized typography inherits a nearer text style', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const FortalScope(
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: DefaultTextStyle(
+            style: TextStyle(fontSize: 20, letterSpacing: 2),
+            child: Column(
+              children: [FortalText('body'), FortalCode.soft('code')],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      tester
+          .renderObject<RenderParagraph>(find.text('body'))
+          .text
+          .style
+          ?.fontSize,
+      20,
+    );
+    expect(
+      tester.widget<Text>(find.text('code')).style?.fontSize,
+      closeTo(20 * 0.95 * 0.95, 1e-9),
     );
   });
 
