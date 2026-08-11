@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
@@ -66,4 +67,35 @@ void main() {
       expect(fortalDataTableStyle(), isA<DataTableStyler>());
     },
   );
+
+  test('Fortal chart wrappers are constructible from the public API', () {
+    final line = FortalLineChart(
+      series: [
+        LineSeries(
+          id: 'revenue',
+          label: 'Revenue',
+          points: [ChartPoint(id: 'monday', x: 0, y: 18)],
+        ),
+      ],
+    );
+    final bar = FortalBarChart(
+      groups: [
+        BarGroup(
+          id: 'q1',
+          label: 'Q1',
+          bars: [BarValue(id: 'actual', label: 'Actual', toY: 42)],
+        ),
+      ],
+    );
+    final pie = FortalPieChart(
+      slices: [PieSlice(id: 'direct', label: 'Direct', value: 64)],
+    );
+
+    expect(line, isA<FortalLineChart>());
+    expect(bar, isA<FortalBarChart>());
+    expect(pie, isA<FortalPieChart>());
+    expect(fortalLineChartStyle(), isA<LineChartStyler>());
+    expect(fortalBarChartStyle(), isA<BarChartStyler>());
+    expect(fortalPieChartStyle(), isA<PieChartStyler>());
+  });
 }

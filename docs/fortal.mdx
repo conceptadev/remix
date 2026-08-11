@@ -98,6 +98,39 @@ final style = ButtonStyler()
   .label(TextStyler().color(FortalTokens.accentContrast()));
 ```
 
+## Charts
+
+Fortal provides themed line, bar, and pie recipes backed by `mix_chart`. Add
+both packages because `remix_fortal` deliberately does not re-export its
+dependencies:
+
+```bash
+flutter pub add mix_chart remix_fortal
+```
+
+```dart
+import 'package:mix_chart/mix_chart.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+final chart = FortalLineChart(
+  semanticsLabel: 'Weekly revenue',
+  series: [
+    LineSeries(
+      id: 'revenue',
+      label: 'Revenue',
+      points: [
+        ChartPoint(id: 'mon', x: 0, y: 18),
+        ChartPoint(id: 'tue', x: 1, y: 31),
+      ],
+    ),
+  ],
+);
+```
+
+Use `FortalLineChart`, `FortalBarChart`, and `FortalPieChart` for the ready-made
+widgets. Their matching `fortal*ChartStyle()` recipes can style the underlying
+`mix_chart` widgets directly.
+
 ## Covered components
 
 Every Remix component has a matching Fortal recipe and generated widget. See the

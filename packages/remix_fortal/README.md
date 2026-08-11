@@ -69,6 +69,39 @@ final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
   .onHovered(.scale(1.05));
 ```
 
+## Charts
+
+Fortal includes themed line, bar, and pie chart recipes backed by
+[`mix_chart`](https://pub.dev/packages/mix_chart). Add `mix_chart` directly when
+constructing chart data; Fortal intentionally does not re-export dependencies.
+
+```bash
+flutter pub add mix_chart remix_fortal
+```
+
+```dart
+import 'package:mix_chart/mix_chart.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+final chart = FortalLineChart(
+  semanticsLabel: 'Weekly revenue',
+  series: [
+    LineSeries(
+      id: 'revenue',
+      label: 'Revenue',
+      points: [
+        ChartPoint(id: 'mon', x: 0, y: 18),
+        ChartPoint(id: 'tue', x: 1, y: 31),
+      ],
+    ),
+  ],
+);
+```
+
+The generated widgets are `FortalLineChart`, `FortalBarChart`, and
+`FortalPieChart`. Use `fortalLineChartStyle`, `fortalBarChartStyle`, or
+`fortalPieChartStyle` when composing the underlying `mix_chart` widgets.
+
 ## Design tokens
 
 Fortal styles are built on a token system that includes:
@@ -108,6 +141,7 @@ Every Remix component has a matching Fortal recipe and generated widget:
 - **FortalAvatar**, **FortalBadge**, **FortalCard**, **FortalDataList**
 - **FortalDataTable**, **FortalDivider**, **FortalProgress**
 - **FortalSkeleton**, **FortalSpinner**
+- **FortalLineChart**, **FortalBarChart**, **FortalPieChart**
 
 ### Layout & Navigation
 - **FortalTabBar**, **FortalTab**, **FortalTabView**, **FortalAccordion**

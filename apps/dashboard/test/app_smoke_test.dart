@@ -163,16 +163,23 @@ void main() {
     expect(find.text('1–10 of 24'), findsOneWidget);
   });
 
-  testWidgets('overview presents metrics, activity, and recent orders', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const DashboardApp());
+  testWidgets(
+    'overview presents metrics, charts, activity, and recent orders',
+    (tester) async {
+      await tester.pumpWidget(const DashboardApp());
 
-    expect(find.text('\$84,420'), findsOneWidget);
-    expect(find.text('Recent activity'), findsOneWidget);
-    expect(find.text('Recent orders'), findsOneWidget);
-    expect(find.text('View all'), findsOneWidget);
-  });
+      expect(find.text('\$84,420'), findsOneWidget);
+      expect(find.text('Revenue trend'), findsOneWidget);
+      expect(find.text('Order volume'), findsOneWidget);
+      expect(find.text('Channel mix'), findsOneWidget);
+      expect(find.byType(FortalLineChart), findsOneWidget);
+      expect(find.byType(FortalBarChart), findsOneWidget);
+      expect(find.byType(FortalPieChart), findsOneWidget);
+      expect(find.text('Recent activity'), findsOneWidget);
+      expect(find.text('Recent orders'), findsOneWidget);
+      expect(find.text('View all'), findsOneWidget);
+    },
+  );
 
   testWidgets('a status reads the same on every page that shows it', (
     tester,
@@ -309,6 +316,8 @@ void main() {
       'customers': 'Manage customer access, plans, and account status.',
       'orders': 'Review transactions and fulfillment status.',
       'settings': 'Manage your profile, preferences, and workspace.',
+      'charts':
+          'Fortal-native chart patterns for comparison, composition, interaction, and empty states.',
       'galleryActions':
           'Interactive actions across every Fortal variant and size.',
       'galleryForms':
@@ -396,9 +405,7 @@ void main() {
     await tester.pump();
     expect(find.text('10 selected'), findsOneWidget);
 
-    final next = find
-        .byKey(const ValueKey('remix-data-table-next-page'))
-        .first;
+    final next = find.byKey(const ValueKey('remix-data-table-next-page')).first;
     await tester.ensureVisible(next);
     await tester.tap(next);
     await tester.pump();
