@@ -21,6 +21,7 @@ enum DashboardPage {
   customers(DashboardSection.data, 'Customers', Icons.people_outline),
   orders(DashboardSection.data, 'Orders', Icons.receipt_long_outlined),
   settings(DashboardSection.settings, 'Settings', Icons.settings_outlined),
+  charts(DashboardSection.components, 'Charts', Icons.insert_chart_outlined),
   galleryActions(
     DashboardSection.components,
     'Actions',

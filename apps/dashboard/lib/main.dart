@@ -49,7 +49,7 @@ class _DashboardAppState extends State<DashboardApp>
       settings: _settings,
       onChanged: (settings) => setState(() => _settings = settings),
       child: MaterialApp(
-        title: 'Remix Dashboard',
+        title: 'Dashboard',
         debugShowCheckedModeBanner: false,
         scrollBehavior: const AppScrollBehavior(),
         themeMode: _settings.themeMode,
