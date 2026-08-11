@@ -56,7 +56,7 @@ class ChartsPage extends StatelessWidget {
             _ChartSection(
               title: 'Pie & donut',
               description:
-                  'Part-to-whole views with direct labels, legends, badges, and safe empty states.',
+                  'Part-to-whole views with clean legends, interaction, badges, and safe empty states.',
               cards: [
                 _trafficPie(palette),
                 _InteractiveProductMix(palette: palette),
@@ -387,14 +387,14 @@ Widget _trackedBars(List<Color> palette) => _ChartCard(
 );
 
 Widget _trafficPie(List<Color> palette) {
-  final slices = _channelSlices(palette);
+  final slices = _channelSlices();
   return _ChartCard(
     title: 'Traffic channels',
-    description: 'Direct labels use the strongest readable foreground.',
+    description: 'Legend-first labels keep the plot clean and easy to scan.',
     chartPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
     chart: FortalPieChart(
       palette: palette,
-      showLabels: true,
+      showLabels: false,
       semanticsLabel: 'Traffic share by device',
       slices: slices,
       valueFormatter: (value) => '${value.toInt()}%',
@@ -436,7 +436,7 @@ class _InteractiveProductMixState extends State<_InteractiveProductMix> {
       chartPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       chart: FortalPieChart(
         palette: widget.palette,
-        centerRadius: 52,
+        centerRadius: 40,
         semanticsLabel: 'Product mix',
         slices: slices,
         selectedSliceIds: {?_selected},
@@ -465,7 +465,7 @@ Widget _badgePie(BuildContext context, List<Color> palette) {
   final panel = MixScope.tokenOf(FortalTokens.colorPanel, context);
   final border = MixScope.tokenOf(FortalTokens.grayStroke6, context);
   final iconColor = MixScope.tokenOf(FortalTokens.gray12, context);
-  final base = _channelSlices(palette, showLabels: false);
+  final base = _channelSlices();
   final slices = [
     for (var index = 0; index < base.length; index++)
       PieSlice(
@@ -701,7 +701,7 @@ List<BarGroup> _trackedRevenue(List<Color> palette) {
   ];
 }
 
-List<PieSlice> _channelSlices(List<Color> palette, {bool showLabels = true}) {
+List<PieSlice> _channelSlices() {
   const source = [
     ('mobile', 'Mobile', 46.0),
     ('desktop', 'Desktop', 31.0),
@@ -714,16 +714,7 @@ List<PieSlice> _channelSlices(List<Color> palette, {bool showLabels = true}) {
         id: source[index].$1,
         label: source[index].$2,
         value: source[index].$3,
-        style: PieSliceStyler()
-            .radius(72)
-            .showLabel(showLabels)
-            .labelPosition(0.62)
-            .label(
-              TextStyler()
-                  .style(FortalTokens.text1.mix())
-                  .fontWeight(.w700)
-                  .color(_strongestForeground(palette[index])),
-            ),
+        style: PieSliceStyler().radius(72),
       ),
   ];
 }
@@ -733,35 +724,20 @@ List<PieSlice> _productSlices() => [
     id: 'core',
     label: 'Core',
     value: 54,
-    style: PieSliceStyler().radius(44),
+    style: PieSliceStyler().radius(36),
   ),
   PieSlice(
     id: 'teams',
     label: 'Teams',
     value: 27,
-    style: PieSliceStyler().radius(44),
+    style: PieSliceStyler().radius(36),
   ),
   PieSlice(
     id: 'enterprise',
     label: 'Enterprise',
     value: 19,
-    style: PieSliceStyler().radius(44),
+    style: PieSliceStyler().radius(36),
   ),
 ];
-
-Color _strongestForeground(Color background) {
-  const light = Colors.white;
-  const dark = Colors.black;
-  return _contrastRatio(background, light) >= _contrastRatio(background, dark)
-      ? light
-      : dark;
-}
-
-double _contrastRatio(Color a, Color b) {
-  final lighter = a.computeLuminance() >= b.computeLuminance() ? a : b;
-  final darker = identical(lighter, a) ? b : a;
-  return (lighter.computeLuminance() + 0.05) /
-      (darker.computeLuminance() + 0.05);
-}
 
 const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];

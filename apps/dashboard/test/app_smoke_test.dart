@@ -23,6 +23,24 @@ void main() {
     expect(find.text('Overview'), findsWidgets);
   });
 
+  testWidgets('uses a text-only Dashboard brand', (tester) async {
+    await tester.pumpWidget(const DashboardApp());
+
+    final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+    expect(app.title, 'Dashboard');
+
+    final brand = find.byKey(const ValueKey('dashboard-brand'));
+    expect(brand, findsOneWidget);
+    expect(
+      find.descendant(of: brand, matching: find.text('Dashboard')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: brand, matching: find.byIcon(Icons.auto_awesome)),
+      findsNothing,
+    );
+  });
+
   testWidgets('account surfaces preserve their avatar and profile triggers', (
     tester,
   ) async {

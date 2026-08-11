@@ -51,6 +51,7 @@ class ChartLegend extends StatelessWidget {
               RowBox(
                 style: FlexBoxStyler()
                     .spacing(itemGap)
+                    .mainAxisSize(.min)
                     .crossAxisAlignment(.center),
                 children: [
                   _LegendMark(item),

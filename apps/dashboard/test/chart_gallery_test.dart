@@ -135,23 +135,6 @@ void main() {
       expect(badgeSpec.radius!, lessThanOrEqualTo(48));
     }
 
-    final labeledPie = tester
-        .widgetList<FortalPieChart>(find.byType(FortalPieChart))
-        .singleWhere((chart) => chart.showLabels);
-    for (final (index, slice) in labeledPie.slices.indexed) {
-      final labelColor = slice.style!
-          .resolve(context)
-          .spec
-          .label!
-          .spec
-          .style!
-          .color!;
-      expect(
-        _contrastRatio(labelColor, palette[index]),
-        greaterThanOrEqualTo(4.5),
-      );
-    }
-
     expect(
       find.byKey(const ValueKey('legend-pattern-plan-dashed')),
       findsWidgets,
@@ -202,12 +185,82 @@ void main() {
     }
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('traffic pie keeps names in its clean legend', (tester) async {
+    await _pumpCompactCharts(tester);
+
+    final traffic = tester.widget<FortalPieChart>(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is FortalPieChart &&
+            widget.semanticsLabel == 'Traffic share by device',
+      ),
+    );
+    expect(traffic.showLabels, isFalse);
+
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('selected gallery donut preserves visual clearance', (
+    tester,
+  ) async {
+    await _pumpCompactCharts(tester);
+
+    final interactiveFinder = find.byWidgetPredicate(
+      (widget) =>
+          widget is FortalPieChart && widget.semanticsLabel == 'Product mix',
+    );
+    final interactive = tester.widget<FortalPieChart>(interactiveFinder);
+    final availableRadius = tester.getSize(interactiveFinder).shortestSide / 2;
+    final chartContext = tester.element(interactiveFinder);
+
+    const selectedSliceExpansion = 8.0;
+    const visualClearance = 4.0;
+    for (final slice in interactive.slices.where(
+      (slice) => interactive.selectedSliceIds.contains(slice.id),
+    )) {
+      final radius = slice.style!.resolve(chartContext).spec.radius;
+      expect(radius, isNotNull);
+      expect(
+        interactive.centerRadius +
+            radius! +
+            selectedSliceExpansion +
+            visualClearance,
+        lessThanOrEqualTo(availableRadius),
+      );
+    }
+
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('compact pie legends use the available horizontal space', (
+    tester,
+  ) async {
+    await _pumpCompactCharts(tester);
+
+    final coreCenter = tester.getCenter(find.text('Core 54%'));
+    final teamsCenter = tester.getCenter(find.text('Teams 27%'));
+    final enterpriseCenter = tester.getCenter(find.text('Enterprise 19%'));
+
+    expect(teamsCenter.dy, closeTo(coreCenter.dy, 0.5));
+    expect(enterpriseCenter.dy - coreCenter.dy, lessThanOrEqualTo(24.5));
+    expect(tester.takeException(), isNull);
+  });
 }
 
-double _contrastRatio(Color a, Color b) {
-  final aLuminance = a.computeLuminance();
-  final bLuminance = b.computeLuminance();
-  final lighter = aLuminance >= bLuminance ? aLuminance : bLuminance;
-  final darker = aLuminance >= bLuminance ? bLuminance : aLuminance;
-  return (lighter + 0.05) / (darker + 0.05);
+Future<void> _pumpCompactCharts(WidgetTester tester) async {
+  tester.view.physicalSize = const Size(390, 844);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+
+  await tester.pumpWidget(const DashboardApp());
+  await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
+  for (var frame = 0; frame < 5; frame++) {
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+  await tester.tap(find.byKey(const ValueKey('nav-charts')).first);
+  for (var frame = 0; frame < 5; frame++) {
+    await tester.pump(const Duration(milliseconds: 100));
+  }
 }
