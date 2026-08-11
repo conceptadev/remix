@@ -636,7 +636,9 @@ void main() {
       test('props list contains all properties', () {
         final style = AccordionStyler();
 
-        expect(style.props, hasLength(8));
+        expect(style.props, hasLength(10));
+        expect(style.props, contains(style.$container));
+        expect(style.props, contains(style.$containerEffects));
         expect(style.props, contains(style.$trigger));
         expect(style.props, contains(style.$leadingIcon));
         expect(style.props, contains(style.$title));

@@ -66,28 +66,27 @@ extension RemixAccordionStylerRemixHelpers on AccordionStyler {
     return content(BoxStyler(decoration: value));
   }
 
-  /// Style when the accordion is expanded.
-  AccordionStyler onExpanded<T>(AccordionStyler value) {
-    return variants([
-      VariantStyle(
-        ContextVariant('onExpanded', (context) {
-          return NakedAccordionItemState.of<T>(context).isExpanded;
-        }),
-        value,
-      ),
-    ]);
-  }
+  /// Style applied while the item is expanded.
+  ///
+  /// Expansion is not a built-in [WidgetState]. [RemixAccordion] mirrors it
+  /// onto the trigger's own [WidgetStatesController] as [WidgetState.selected]
+  /// (see `_buildDefaultTrigger` in accordion_widget.dart), so this reads
+  /// back through the ordinary [onSelected] variant instead of a type-keyed
+  /// `NakedAccordionItemState<T>` lookup. That keeps it callable from a
+  /// non-generic recipe such as `fortalAccordionStyle()`, where binding `T`
+  /// to `dynamic` would otherwise never match `NakedAccordionItemState<String>`.
+  ///
+  /// Only the trigger's own resolution sees this state. leadingIcon, title,
+  /// and trailingIcon are nested under trigger and share it, but content and
+  /// container resolve independently and won't react to it.
+  AccordionStyler onExpanded(AccordionStyler value) => onSelected(value);
 
-  /// Style when accordion is collapsed
-  AccordionStyler onCollapsed<T>(AccordionStyler value) {
-    return variants([
-      VariantStyle(
-        ContextVariant('onCollapsed', (context) {
-          return !NakedAccordionItemState.of<T>(context).isExpanded;
-        }),
-        value,
-      ),
-    ]);
+  /// Style applied while the item is collapsed. See [onExpanded].
+  AccordionStyler onCollapsed(AccordionStyler value) {
+    return variant(
+      ContextVariant.not(ContextVariant.widgetState(.selected)),
+      value,
+    );
   }
 
   /// Style when the accordion item can collapse.

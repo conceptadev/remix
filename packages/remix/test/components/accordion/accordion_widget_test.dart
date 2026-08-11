@@ -271,6 +271,53 @@ void main() {
       });
     });
 
+    group('Expansion-Conditional Styling', () {
+      testWidgets(
+        'onExpanded and onCollapsed react to a live expand/collapse tap, '
+        'confirming AccordionStyler.onExpanded is usable without a generic '
+        'recipe binding T',
+        (tester) async {
+          final style = AccordionStyler()
+              .trigger(.color(Colors.blue))
+              .onExpanded(.trigger(.color(Colors.green)))
+              .onCollapsed(.trigger(.color(Colors.red)));
+
+          await tester.pumpRemixApp(
+            RemixAccordionGroup<String>(
+              controller: RemixAccordionController<String>(),
+              child: RemixAccordion<String>(
+                value: 'item1',
+                title: 'Test Title',
+                style: style,
+                child: const Text('Content'),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          Color? triggerColor() {
+            final box = tester.widget<FlexBox>(find.byType(FlexBox));
+            final decoration =
+                box.styleSpec?.spec.box?.spec.decoration as BoxDecoration?;
+
+            return decoration?.color;
+          }
+
+          expect(triggerColor(), Colors.red);
+
+          await tester.tap(find.text('Test Title'));
+          await tester.pumpAndSettle();
+
+          expect(triggerColor(), Colors.green);
+
+          await tester.tap(find.text('Test Title'));
+          await tester.pumpAndSettle();
+
+          expect(triggerColor(), Colors.red);
+        },
+      );
+    });
+
     group('Disabled State', () {
       testWidgets('does not expand when disabled', (tester) async {
         await tester.pumpRemixApp(
