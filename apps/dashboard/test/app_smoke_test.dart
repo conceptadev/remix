@@ -5,6 +5,7 @@ import 'package:dashboard/shell/dashboard_shell.dart';
 import 'package:dashboard/theme/theme_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
@@ -192,7 +193,7 @@ void main() {
       expect(find.text('Channel mix'), findsOneWidget);
       expect(find.byType(FortalLineChart), findsOneWidget);
       expect(find.byType(FortalBarChart), findsOneWidget);
-      expect(find.byType(FortalPieChart), findsOneWidget);
+      expect(find.byType(PieChart), findsOneWidget);
       expect(find.text('Recent activity'), findsOneWidget);
       expect(find.text('Recent orders'), findsOneWidget);
       expect(find.text('View all'), findsOneWidget);

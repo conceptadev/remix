@@ -4,7 +4,7 @@ import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 import 'chart_legend.dart';
-import 'page_header.dart';
+import 'dashboard_chart_card.dart';
 
 class AnalyticsCharts extends StatelessWidget {
   const AnalyticsCharts({super.key});
@@ -14,179 +14,103 @@ class AnalyticsCharts extends StatelessWidget {
     final palette = resolveFortalChartPalette(context);
     final gap = MixScope.tokenOf(FortalTokens.space4, context);
     final chartInset = MixScope.tokenOf(FortalTokens.space2, context);
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth;
-        final columns = width >= 1120
-            ? 3
-            : width >= 720
-            ? 2
-            : 1;
-        final itemWidth = (width - (columns - 1) * gap) / columns;
-
-        return Wrap(
-          spacing: gap,
-          runSpacing: gap,
-          children: [
-            SizedBox(
-              width: itemWidth,
-              child: _AnalyticsCard(
-                title: 'Revenue trend',
-                description: 'Seven-day net revenue',
-                child: FortalLineChart(
-                  palette: palette,
-                  semanticsLabel: 'Seven-day net revenue',
-                  showMarkers: true,
-                  series: [_revenueSeries()],
-                  xAxis: ChartAxis.numeric(
-                    min: 0,
-                    max: 6,
-                    interval: 1,
-                    labelFormatter: _dayLabel,
-                  ),
-                  yAxis: ChartAxis.numeric(
-                    min: 0,
-                    max: 100,
-                    interval: 25,
-                    labelFormatter: _currencyLabel,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: itemWidth,
-              child: _AnalyticsCard(
-                title: 'Order volume',
-                description: 'Actual versus plan',
-                legend: ChartLegend(
-                  key: const ValueKey('overview-order-legend'),
-                  semanticLabel: 'Order volume series',
-                  items: [
-                    ChartLegendItem(
-                      id: 'actual',
-                      label: 'Actual',
-                      color: palette[0],
-                    ),
-                    ChartLegendItem(
-                      id: 'plan',
-                      label: 'Plan',
-                      color: palette[1],
-                      pattern: .dashed,
-                    ),
-                  ],
-                ),
-                child: FortalBarChart(
-                  key: const ValueKey('overview-order-chart'),
-                  palette: palette,
-                  semanticsLabel: 'Quarterly actual and planned orders',
-                  groups: _orderGroups(palette),
-                  xAxis: ChartAxis.numeric(
-                    min: 0,
-                    max: 3,
-                    interval: 1,
-                    labelFormatter: _quarterLabel,
-                  ),
-                  yAxis: ChartAxis.numeric(min: 0, max: 100, interval: 25),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: itemWidth,
-              child: _AnalyticsCard(
-                title: 'Channel mix',
-                description: 'Revenue contribution',
-                chartPadding: EdgeInsets.symmetric(
-                  horizontal: chartInset,
-                  vertical: chartInset,
-                ),
-                chartPaddingKey: const ValueKey(
-                  'overview-channel-chart-safe-area',
-                ),
-                legend: ChartLegend(
-                  key: const ValueKey('overview-channel-legend'),
-                  semanticLabel: 'Revenue contribution legend',
-                  items: [
-                    ChartLegendItem(
-                      id: 'direct',
-                      label: 'Direct',
-                      value: '46%',
-                      color: palette[0],
-                      pattern: .dot,
-                    ),
-                    ChartLegendItem(
-                      id: 'partners',
-                      label: 'Partners',
-                      value: '31%',
-                      color: palette[1],
-                      pattern: .dot,
-                    ),
-                    ChartLegendItem(
-                      id: 'marketplace',
-                      label: 'Marketplace',
-                      value: '23%',
-                      color: palette[2],
-                      pattern: .dot,
-                    ),
-                  ],
-                ),
-                child: FortalPieChart(
-                  palette: palette,
-                  semanticsLabel: 'Revenue contribution by channel',
-                  centerRadius: 44,
-                  slices: _channelSlices(),
-                  valueFormatter: (value) => '${value.toInt()}%',
-                ),
-              ),
-            ),
-          ],
+    final cardPadding = MixScope.tokenOf(FortalTokens.space4, context);
+    final cardHeight = 328 + cardPadding * 2;
+    final slices = _channelSlices();
+    final gridStyle = GridBoxStyler.equalColumns(3)
+        .autoRows(GridTrack.fixed(cardHeight))
+        .gap(gap)
+        .onConstraints(
+          const Breakpoint.maxWidth(1119),
+          GridBoxStyler.equalColumns(2).gap(gap),
+        )
+        .onConstraints(
+          const Breakpoint.maxWidth(719),
+          GridBoxStyler.equalColumns(1).gap(gap),
         );
-      },
-    );
-  }
-}
 
-class _AnalyticsCard extends StatelessWidget {
-  const _AnalyticsCard({
-    required this.title,
-    required this.description,
-    required this.child,
-    this.legend,
-    this.chartPadding = EdgeInsets.zero,
-    this.chartPaddingKey,
-  });
-
-  final String title;
-  final String description;
-  final Widget child;
-  final Widget? legend;
-  final EdgeInsets chartPadding;
-  final Key? chartPaddingKey;
-
-  @override
-  Widget build(BuildContext context) {
-    final gap = MixScope.tokenOf(FortalTokens.space4, context);
-
-    return FortalCard(
-      size: .size2,
-      child: SizedBox(
-        height: 328,
-        child: Column(
-          crossAxisAlignment: .stretch,
-          children: [
-            CardHeading(title: title, description: description),
-            SizedBox(height: gap),
-            Expanded(
-              child: Padding(
-                key: chartPaddingKey,
-                padding: chartPadding,
-                child: child,
-              ),
+    return GridBox(
+      key: const ValueKey('overview-chart-grid'),
+      style: gridStyle,
+      children: [
+        DashboardChartCard(
+          title: 'Revenue trend',
+          description: 'Seven-day net revenue',
+          chartPadding: EdgeInsets.zero,
+          chart: FortalLineChart(
+            palette: palette,
+            semanticsLabel: 'Seven-day net revenue',
+            showMarkers: true,
+            series: [_revenueSeries()],
+            xAxis: ChartAxis.numeric(
+              min: 0,
+              max: 6,
+              interval: 1,
+              labelFormatter: _dayLabel,
             ),
-            if (legend case final legend?) ...[SizedBox(height: gap), legend],
-          ],
+            yAxis: ChartAxis.numeric(
+              min: 0,
+              max: 100,
+              interval: 25,
+              labelFormatter: _currencyLabel,
+            ),
+          ),
         ),
-      ),
+        DashboardChartCard(
+          title: 'Order volume',
+          description: 'Actual versus plan',
+          chartPadding: EdgeInsets.zero,
+          legend: ChartLegend(
+            key: const ValueKey('overview-order-legend'),
+            semanticLabel: 'Order volume series',
+            items: [
+              ChartLegendItem(id: 'actual', label: 'Actual', color: palette[0]),
+              ChartLegendItem(
+                id: 'plan',
+                label: 'Plan',
+                color: palette[1],
+                pattern: .dashed,
+              ),
+            ],
+          ),
+          chart: FortalBarChart(
+            key: const ValueKey('overview-order-chart'),
+            palette: palette,
+            semanticsLabel: 'Quarterly actual and planned orders',
+            groups: _orderGroups(palette),
+            xAxis: ChartAxis.numeric(
+              min: 0,
+              max: 3,
+              interval: 1,
+              labelFormatter: _quarterLabel,
+            ),
+            yAxis: ChartAxis.numeric(min: 0, max: 100, interval: 25),
+          ),
+        ),
+        DashboardChartCard(
+          title: 'Channel mix',
+          description: 'Revenue contribution',
+          chartPadding: EdgeInsets.symmetric(
+            horizontal: chartInset,
+            vertical: chartInset,
+          ),
+          chartPaddingKey: const ValueKey('overview-channel-chart-safe-area'),
+          legend: ChartLegend(
+            key: const ValueKey('overview-channel-legend'),
+            semanticLabel: 'Revenue contribution legend',
+            items: percentagePieLegendItems(slices: slices, palette: palette),
+          ),
+          chart: PieChart(
+            style: fortalPieChartStyle(
+              palette: palette,
+              centerRadius: 44,
+            ).slice(PieSliceStyler().radius(36)),
+            semanticsLabel: 'Revenue contribution by channel',
+            slices: slices,
+            valueFormatter: (value) => '${value.toInt()}%',
+          ),
+        ),
+      ],
     );
   }
 }
@@ -241,24 +165,9 @@ BarGroup _orderGroup(
 );
 
 List<PieSlice> _channelSlices() => [
-  PieSlice(
-    id: 'direct',
-    label: 'Direct',
-    value: 46,
-    style: PieSliceStyler().radius(36),
-  ),
-  PieSlice(
-    id: 'partners',
-    label: 'Partners',
-    value: 31,
-    style: PieSliceStyler().radius(36),
-  ),
-  PieSlice(
-    id: 'marketplace',
-    label: 'Marketplace',
-    value: 23,
-    style: PieSliceStyler().radius(36),
-  ),
+  PieSlice(id: 'direct', label: 'Direct', value: 46),
+  PieSlice(id: 'partners', label: 'Partners', value: 31),
+  PieSlice(id: 'marketplace', label: 'Marketplace', value: 23),
 ];
 
 String _dayLabel(double value) {

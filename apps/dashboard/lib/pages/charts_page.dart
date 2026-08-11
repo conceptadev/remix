@@ -4,6 +4,7 @@ import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 import '../widgets/chart_legend.dart';
+import '../widgets/dashboard_chart_card.dart';
 import '../widgets/page_header.dart';
 import '../widgets/typography.dart';
 
@@ -116,50 +117,9 @@ class _ChartSection extends StatelessWidget {
   }
 }
 
-class _ChartCard extends StatelessWidget {
-  const _ChartCard({
-    required this.title,
-    required this.description,
-    required this.chart,
-    this.legend,
-    this.chartPadding,
-  });
-
-  final String title;
-  final String description;
-  final Widget chart;
-  final Widget? legend;
-  final EdgeInsets? chartPadding;
-
-  @override
-  Widget build(BuildContext context) {
-    final gap = MixScope.tokenOf(FortalTokens.space4, context);
-    final defaultInset = MixScope.tokenOf(FortalTokens.space2, context);
-
-    return FortalCard(
-      size: .size2,
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          CardHeading(title: title, description: description),
-          SizedBox(height: gap),
-          Expanded(
-            child: Padding(
-              padding:
-                  chartPadding ?? EdgeInsets.symmetric(vertical: defaultInset),
-              child: chart,
-            ),
-          ),
-          if (legend case final legend?) ...[SizedBox(height: gap), legend],
-        ],
-      ),
-    );
-  }
-}
-
 Widget _revenueMomentum(List<Color> palette) {
   final color = palette[0];
-  return _ChartCard(
+  return DashboardChartCard(
     title: 'Revenue momentum',
     description: 'Area fill and markers preserve exact point values.',
     chart: FortalLineChart(
@@ -197,7 +157,7 @@ Widget _revenueMomentum(List<Color> palette) {
   );
 }
 
-Widget _linePatterns(List<Color> palette) => _ChartCard(
+Widget _linePatterns(List<Color> palette) => DashboardChartCard(
   title: 'Per-series patterns',
   description: 'Solid circles and dashed squares reinforce color differences.',
   chart: FortalLineChart(
@@ -237,7 +197,7 @@ Widget _linePatterns(List<Color> palette) => _ChartCard(
   ),
 );
 
-Widget _stepGaps(List<Color> palette) => _ChartCard(
+Widget _stepGaps(List<Color> palette) => DashboardChartCard(
   title: 'Steps and gaps',
   description: 'Missing values remain honest gaps instead of invented data.',
   chart: FortalLineChart(
@@ -273,30 +233,33 @@ Widget _stepGaps(List<Color> palette) => _ChartCard(
   ),
 );
 
-Widget _viewportLabels(List<Color> palette) => _ChartCard(
+Widget _viewportLabels(List<Color> palette) => DashboardChartCard(
   title: 'Viewport labels',
   description:
       'Tokenized widget labels stay readable while panning and zooming.',
-  chart: FortalLineChart(
-    palette: palette,
-    showMarkers: true,
-    semanticsLabel: 'Revenue chart with scalable horizontal viewport',
-    series: [
-      LineSeries(
-        id: 'viewport-revenue',
-        label: 'Revenue',
-        points: _points('viewport', [18, 24, 22, 34, 31, 42, 48]),
+  chart: LayoutBuilder(
+    builder: (context, constraints) => FortalLineChart(
+      palette: palette,
+      showMarkers: true,
+      semanticsLabel: 'Revenue chart with scalable horizontal viewport',
+      series: [
+        LineSeries(
+          id: 'viewport-revenue',
+          label: 'Revenue',
+          points: _points('viewport', [18, 24, 22, 34, 31, 42, 48]),
+        ),
+      ],
+      viewport: ChartViewport(axis: .horizontal, maxScale: 3),
+      xAxis: ChartAxis.numeric(
+        min: 0,
+        max: 6,
+        interval: constraints.maxWidth < 360 ? 3 : 1,
+        labelFormatter: _weekdayLabel,
+        labelBuilder: (_, label) =>
+            FortalBadge.soft(size: .size1, label: label.formattedValue),
       ),
-    ],
-    viewport: ChartViewport(axis: .horizontal, maxScale: 3),
-    xAxis: ChartAxis.numeric(
-      min: 0,
-      max: 6,
-      interval: 1,
-      labelFormatter: _weekdayLabel,
-      labelBuilder: (_, label) => FortalBadge.soft(label: label.formattedValue),
+      yAxis: ChartAxis.numeric(min: 0, max: 60, interval: 10),
     ),
-    yAxis: ChartAxis.numeric(min: 0, max: 60, interval: 10),
   ),
   legend: ChartLegend(
     semanticLabel: 'Viewport revenue legend',
@@ -310,7 +273,7 @@ Widget _viewportLabels(List<Color> palette) => _ChartCard(
   ),
 );
 
-Widget _groupedBars(List<Color> palette) => _ChartCard(
+Widget _groupedBars(List<Color> palette) => DashboardChartCard(
   title: 'Actual versus plan',
   description: 'Solid and outlined bars remain distinct without color.',
   chart: FortalBarChart(
@@ -334,7 +297,7 @@ Widget _groupedBars(List<Color> palette) => _ChartCard(
   ),
 );
 
-Widget _stackedBars(List<Color> palette) => _ChartCard(
+Widget _stackedBars(List<Color> palette) => DashboardChartCard(
   title: 'Revenue mix',
   description: 'Stacked segments expose composition and totals together.',
   chart: FortalBarChart(
@@ -352,7 +315,7 @@ Widget _stackedBars(List<Color> palette) => _ChartCard(
   ),
 );
 
-Widget _floatingBars(List<Color> palette) => _ChartCard(
+Widget _floatingBars(List<Color> palette) => DashboardChartCard(
   title: 'Floating changes',
   description: 'Range bars encode gains and declines from a real baseline.',
   chart: FortalBarChart(
@@ -369,7 +332,7 @@ Widget _floatingBars(List<Color> palette) => _ChartCard(
   ),
 );
 
-Widget _trackedBars(List<Color> palette) => _ChartCard(
+Widget _trackedBars(List<Color> palette) => DashboardChartCard(
   title: 'Tracks and labels',
   description: 'Visible tracks provide scale context before interaction.',
   chart: FortalBarChart(
@@ -388,29 +351,21 @@ Widget _trackedBars(List<Color> palette) => _ChartCard(
 
 Widget _trafficPie(List<Color> palette) {
   final slices = _channelSlices();
-  return _ChartCard(
+  return DashboardChartCard(
     title: 'Traffic channels',
     description: 'Legend-first labels keep the plot clean and easy to scan.',
     chartPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-    chart: FortalPieChart(
-      palette: palette,
-      showLabels: false,
+    chart: PieChart(
+      style: fortalPieChartStyle(
+        palette: palette,
+      ).slice(PieSliceStyler().radius(72)),
       semanticsLabel: 'Traffic share by device',
       slices: slices,
       valueFormatter: (value) => '${value.toInt()}%',
     ),
     legend: ChartLegend(
       semanticLabel: 'Traffic channel legend',
-      items: [
-        for (var index = 0; index < slices.length; index++)
-          ChartLegendItem(
-            id: slices[index].id.toString(),
-            label: slices[index].label,
-            value: '${slices[index].value.toInt()}%',
-            color: palette[index],
-            pattern: .dot,
-          ),
-      ],
+      items: percentagePieLegendItems(slices: slices, palette: palette),
     ),
   );
 }
@@ -430,13 +385,15 @@ class _InteractiveProductMixState extends State<_InteractiveProductMix> {
   @override
   Widget build(BuildContext context) {
     final slices = _productSlices();
-    return _ChartCard(
+    return DashboardChartCard(
       title: 'Interactive product mix',
       description: 'Selection expands one stable slice and preserves its ID.',
       chartPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      chart: FortalPieChart(
-        palette: widget.palette,
-        centerRadius: 40,
+      chart: PieChart(
+        style: fortalPieChartStyle(
+          palette: widget.palette,
+          centerRadius: 40,
+        ).slice(PieSliceStyler().radius(36)),
         semanticsLabel: 'Product mix',
         slices: slices,
         selectedSliceIds: {?_selected},
@@ -445,16 +402,10 @@ class _InteractiveProductMixState extends State<_InteractiveProductMix> {
       ),
       legend: ChartLegend(
         semanticLabel: 'Product mix legend',
-        items: [
-          for (var index = 0; index < slices.length; index++)
-            ChartLegendItem(
-              id: slices[index].id.toString(),
-              label: slices[index].label,
-              value: '${slices[index].value.toInt()}%',
-              color: widget.palette[index],
-              pattern: .dot,
-            ),
-        ],
+        items: percentagePieLegendItems(
+          slices: slices,
+          palette: widget.palette,
+        ),
       ),
     );
   }
@@ -472,7 +423,6 @@ Widget _badgePie(BuildContext context, List<Color> palette) {
         id: base[index].id,
         label: base[index].label,
         value: base[index].value,
-        style: PieSliceStyler().radius(48).badgePosition(0.72),
         badge: Box(
           style: BoxStyler()
               .size(26, 26)
@@ -488,34 +438,27 @@ Widget _badgePie(BuildContext context, List<Color> palette) {
       ),
   ];
 
-  return _ChartCard(
+  return DashboardChartCard(
     title: 'Badge markers',
     description: 'Ordinary tokenized widgets can annotate individual slices.',
     chartPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-    chart: FortalPieChart(
-      palette: palette,
-      centerRadius: 34,
+    chart: PieChart(
+      style: fortalPieChartStyle(
+        palette: palette,
+        centerRadius: 34,
+      ).slice(PieSliceStyler().radius(48).badgePosition(0.72)),
       semanticsLabel: 'Device traffic with badge markers',
       slices: slices,
       valueFormatter: (value) => '${value.toInt()}%',
     ),
     legend: ChartLegend(
       semanticLabel: 'Badge marker chart legend',
-      items: [
-        for (var index = 0; index < slices.length; index++)
-          ChartLegendItem(
-            id: slices[index].id.toString(),
-            label: slices[index].label,
-            value: '${slices[index].value.toInt()}%',
-            color: palette[index],
-            pattern: .dot,
-          ),
-      ],
+      items: percentagePieLegendItems(slices: slices, palette: palette),
     ),
   );
 }
 
-Widget _emptyPie(List<Color> palette) => _ChartCard(
+Widget _emptyPie(List<Color> palette) => DashboardChartCard(
   title: 'Safe empty state',
   description: 'Zero-value data produces an explicit, stable empty state.',
   chartPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -637,11 +580,11 @@ List<BarGroup> _stackedRevenue(List<Color> palette) {
 
 List<BarGroup> _floatingChanges(List<Color> palette) {
   const ranges = [
-    (13.0, 18.0),
-    (14.0, 18.0),
+    (12.0, 18.0),
+    (18.0, 14.0),
     (14.0, 22.0),
-    (17.0, 22.0),
-    (18.0, 25.0),
+    (22.0, 17.0),
+    (17.0, 25.0),
     (25.0, 31.0),
   ];
   return [
@@ -714,30 +657,14 @@ List<PieSlice> _channelSlices() {
         id: source[index].$1,
         label: source[index].$2,
         value: source[index].$3,
-        style: PieSliceStyler().radius(72),
       ),
   ];
 }
 
 List<PieSlice> _productSlices() => [
-  PieSlice(
-    id: 'core',
-    label: 'Core',
-    value: 54,
-    style: PieSliceStyler().radius(36),
-  ),
-  PieSlice(
-    id: 'teams',
-    label: 'Teams',
-    value: 27,
-    style: PieSliceStyler().radius(36),
-  ),
-  PieSlice(
-    id: 'enterprise',
-    label: 'Enterprise',
-    value: 19,
-    style: PieSliceStyler().radius(36),
-  ),
+  PieSlice(id: 'core', label: 'Core', value: 54),
+  PieSlice(id: 'teams', label: 'Teams', value: 27),
+  PieSlice(id: 'enterprise', label: 'Enterprise', value: 19),
 ];
 
 const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];

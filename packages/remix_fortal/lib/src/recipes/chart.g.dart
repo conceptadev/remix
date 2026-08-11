@@ -204,7 +204,8 @@ class FortalBarChart extends StatelessWidget {
 /// A positive [centerRadius] renders a donut. Labels are hidden by default so
 /// category names can be presented in a caller-owned legend without forcing
 /// low-contrast text onto arbitrary categorical colors. Generates
-/// [FortalPieChart] through `mix_generator`.
+/// [FortalPieChart] through `mix_generator`. For advanced chart-level geometry,
+/// pass this recipe directly to [PieChart.style] and merge a [PieSliceStyler].
 class FortalPieChart extends StatelessWidget {
   const FortalPieChart({
     super.key,

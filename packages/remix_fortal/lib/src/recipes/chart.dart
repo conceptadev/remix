@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
@@ -124,7 +125,8 @@ BarChartStyler fortalBarChartStyle({
 /// A positive [centerRadius] renders a donut. Labels are hidden by default so
 /// category names can be presented in a caller-owned legend without forcing
 /// low-contrast text onto arbitrary categorical colors. Generates
-/// [FortalPieChart] through `mix_generator`.
+/// [FortalPieChart] through `mix_generator`. For advanced chart-level geometry,
+/// pass this recipe directly to [PieChart.style] and merge a [PieSliceStyler].
 @MixWidget(target: PieChart.new)
 PieChartStyler fortalPieChartStyle({
   bool highContrast = false,
@@ -137,6 +139,7 @@ PieChartStyler fortalPieChartStyle({
       .centerRadius(centerRadius)
       .centerColor(FortalTokens.colorPanel())
       .sliceSpacing(FortalTokens.borderWidth2())
+      .selectedSliceRadiusOffset(FortalTokens.space2())
       .slice(
         PieSliceStyler()
             .showLabel(showLabels)

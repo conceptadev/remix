@@ -86,6 +86,27 @@ void main() {
 
       expect(resolved.spec.palette, palette);
     });
+
+    testWidgets('pie selection expansion follows Fortal spacing', (
+      tester,
+    ) async {
+      late StyleSpec<PieChartSpec> resolved;
+      late double expectedOffset;
+
+      await tester.pumpWidget(
+        FortalScope(
+          child: Builder(
+            builder: (context) {
+              expectedOffset = MixScope.tokenOf(FortalTokens.space2, context);
+              resolved = fortalPieChartStyle().build(context);
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+
+      expect(resolved.spec.selectedSliceRadiusOffset, expectedOffset);
+    });
   });
 
   group('generated Fortal chart widgets', () {

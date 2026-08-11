@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
@@ -23,6 +24,28 @@ final class ChartLegendItem {
   final ChartLegendPattern pattern;
 
   String get displayLabel => value == null ? label : '$label $value';
+}
+
+List<ChartLegendItem> percentagePieLegendItems({
+  required List<PieSlice> slices,
+  required List<Color> palette,
+  ChartLegendPattern pattern = .dot,
+}) {
+  assert(
+    palette.length >= slices.length,
+    'The palette must provide a color for every pie slice.',
+  );
+
+  return List.unmodifiable([
+    for (final (index, slice) in slices.indexed)
+      ChartLegendItem(
+        id: slice.id.toString(),
+        label: slice.label,
+        value: '${slice.value.toInt()}%',
+        color: palette[index],
+        pattern: pattern,
+      ),
+  ]);
 }
 
 class ChartLegend extends StatelessWidget {

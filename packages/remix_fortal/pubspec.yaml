@@ -39,7 +39,7 @@ dependencies:
   remix: ^1.0.0-beta.2 # x-release-please-version
   mix: ^2.2.0-beta.4
   mix_annotations: ^2.2.0-beta.1
-  mix_chart: ^0.0.1-beta.0
+  mix_chart: ^0.0.1-beta.1
   naked_ui: ^1.0.0-beta.8
 
 dev_dependencies:

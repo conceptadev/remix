@@ -100,7 +100,20 @@ final chart = FortalLineChart(
 
 The generated widgets are `FortalLineChart`, `FortalBarChart`, and
 `FortalPieChart`. Use `fortalLineChartStyle`, `fortalBarChartStyle`, or
-`fortalPieChartStyle` when composing the underlying `mix_chart` widgets.
+`fortalPieChartStyle` when composing the underlying `mix_chart` widgets. Keep
+shared geometry on the chart-level slice style so individual slices remain
+data-only:
+
+```dart
+final donut = PieChart(
+  style: fortalPieChartStyle(centerRadius: 40)
+      .slice(PieSliceStyler().radius(36)),
+  slices: [
+    PieSlice(id: 'core', label: 'Core', value: 54),
+    PieSlice(id: 'teams', label: 'Teams', value: 46),
+  ],
+);
+```
 
 ## Design tokens
 
