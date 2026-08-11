@@ -150,6 +150,28 @@ void main() {
         expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
       });
 
+      testWidgets('renders container effects on the outer panel', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixAccordionGroup<String>(
+            controller: RemixAccordionController<String>(),
+            child: RemixAccordion<String>(
+              value: 'item1',
+              title: 'Test Title',
+              style: AccordionStyler(
+                containerEffects: RemixBoxEffectsMix(backdropBlur: 4),
+              ),
+              child: const Text('Content'),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        expect(find.byType(BackdropFilter), findsOneWidget);
+      });
+
       testWidgets(
         'shows add icon when collapsed and remove icon when expanded',
         (tester) async {
@@ -273,14 +295,12 @@ void main() {
 
     group('Expansion-Conditional Styling', () {
       testWidgets(
-        'onExpanded and onCollapsed react to a live expand/collapse tap, '
-        'confirming AccordionStyler.onExpanded is usable without a generic '
-        'recipe binding T',
+        'onExpanded and onCollapsed style the panel across live taps',
         (tester) async {
           final style = AccordionStyler()
-              .trigger(.color(Colors.blue))
-              .onExpanded(.trigger(.color(Colors.green)))
-              .onCollapsed(.trigger(.color(Colors.red)));
+              .container(.color(Colors.blue))
+              .onExpanded<String>(.container(.color(Colors.green)))
+              .onCollapsed<String>(.container(.color(Colors.red)));
 
           await tester.pumpRemixApp(
             RemixAccordionGroup<String>(
@@ -295,25 +315,69 @@ void main() {
           );
           await tester.pumpAndSettle();
 
-          Color? triggerColor() {
-            final box = tester.widget<FlexBox>(find.byType(FlexBox));
-            final decoration =
-                box.styleSpec?.spec.box?.spec.decoration as BoxDecoration?;
-
-            return decoration?.color;
+          Color? panelColor() {
+            return tester
+                .widgetList<Box>(find.byType(Box))
+                .map(
+                  (box) =>
+                      (box.styleSpec?.spec.decoration as BoxDecoration?)?.color,
+                )
+                .where((color) => color != null)
+                .single;
           }
 
-          expect(triggerColor(), Colors.red);
+          expect(panelColor(), Colors.red);
 
           await tester.tap(find.text('Test Title'));
           await tester.pumpAndSettle();
 
-          expect(triggerColor(), Colors.green);
+          expect(panelColor(), Colors.green);
 
           await tester.tap(find.text('Test Title'));
           await tester.pumpAndSettle();
 
-          expect(triggerColor(), Colors.red);
+          expect(panelColor(), Colors.red);
+        },
+      );
+
+      testWidgets(
+        'onCanExpand and onCanCollapse style the panel across live taps',
+        (tester) async {
+          final style = AccordionStyler()
+              .container(.color(Colors.blue))
+              .onCanExpand<String>(.container(.color(Colors.green)))
+              .onCanCollapse(.container(.color(Colors.red)));
+
+          await tester.pumpRemixApp(
+            RemixAccordionGroup<String>(
+              controller: RemixAccordionController<String>(min: 0, max: 1),
+              child: RemixAccordion<String>(
+                value: 'item1',
+                title: 'Test Title',
+                style: style,
+                child: const Text('Content'),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          Color? panelColor() {
+            return tester
+                .widgetList<Box>(find.byType(Box))
+                .map(
+                  (box) =>
+                      (box.styleSpec?.spec.decoration as BoxDecoration?)?.color,
+                )
+                .where((color) => color != null)
+                .single;
+          }
+
+          expect(panelColor(), Colors.green);
+
+          await tester.tap(find.text('Test Title'));
+          await tester.pumpAndSettle();
+
+          expect(panelColor(), Colors.red);
         },
       );
     });

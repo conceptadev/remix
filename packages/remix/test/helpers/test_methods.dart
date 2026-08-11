@@ -59,14 +59,14 @@ void widgetControllerTest<S extends Spec<S>>(
         )
         .toList();
 
-    if (controllerElements.isEmpty) {
-      throw Exception(
-        'WidgetStatesController not found in StyleBuilder widget.',
-      );
-    }
+    expect(
+      controllerElements,
+      hasLength(1),
+      reason: 'Expected exactly one controller-backed StyleBuilder<$S>.',
+    );
 
     final controller =
-        (controllerElements.first.widget as StyleBuilder<S>).controller!;
+        (controllerElements.single.widget as StyleBuilder<S>).controller!;
 
     final states = controller.value;
     expect(states, equals(expectedStates));

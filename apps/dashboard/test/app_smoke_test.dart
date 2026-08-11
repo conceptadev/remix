@@ -258,8 +258,11 @@ void main() {
     expect(find.byType(FortalDataList), findsWidgets);
     expect(find.byType(FortalSkeleton), findsNWidgets(2));
 
-    await tester.tap(find.text('Show content'));
+    final showContent = find.text('Show content');
+    await tester.ensureVisible(showContent);
+    await tester.tap(showContent);
     await tester.pump();
+    expect(find.text('Show skeleton'), findsOneWidget);
     expect(
       find.text('Loaded content replaces the placeholder.'),
       findsOneWidget,
@@ -297,6 +300,25 @@ void main() {
     expect(find.text('Button'), findsWidgets);
     expect(find.text('Icon button'), findsOneWidget);
     expect(find.text('Toggle'), findsOneWidget);
+  });
+
+  testWidgets('accordion gallery presents each item as a separate panel', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const DashboardApp());
+    final nav = find.byKey(const ValueKey('nav-galleryNavigation')).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
+    await tester.pump();
+
+    final group = tester.widget<RemixAccordionGroup<String>>(
+      find.byType(RemixAccordionGroup<String>).first,
+    );
+    final items = group.child as Column;
+
+    expect(items.spacing, 8);
+    expect(items.children, hasLength(2));
+    expect(items.children, everyElement(isA<FortalAccordion<String>>()));
   });
 
   testWidgets('every sidebar destination renders without replacing the shell', (
@@ -396,9 +418,7 @@ void main() {
     await tester.pump();
     expect(find.text('10 selected'), findsOneWidget);
 
-    final next = find
-        .byKey(const ValueKey('remix-data-table-next-page'))
-        .first;
+    final next = find.byKey(const ValueKey('remix-data-table-next-page')).first;
     await tester.ensureVisible(next);
     await tester.tap(next);
     await tester.pump();

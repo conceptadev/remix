@@ -2,6 +2,34 @@ part of 'accordion.dart';
 
 typedef RemixAccordionController<T> = NakedAccordionController<T>;
 
+final class _RemixAccordionStyleState extends InheritedWidget {
+  const _RemixAccordionStyleState({
+    required this.isExpanded,
+    required this.canCollapse,
+    required this.canExpand,
+    required super.child,
+  });
+
+  static _RemixAccordionStyleState of(BuildContext context) {
+    final state = context
+        .dependOnInheritedWidgetOfExactType<_RemixAccordionStyleState>();
+    assert(state != null, 'No RemixAccordion style state found in context.');
+
+    return state!;
+  }
+
+  final bool isExpanded;
+  final bool canCollapse;
+  final bool canExpand;
+
+  @override
+  bool updateShouldNotify(_RemixAccordionStyleState oldWidget) {
+    return isExpanded != oldWidget.isExpanded ||
+        canCollapse != oldWidget.canCollapse ||
+        canExpand != oldWidget.canExpand;
+  }
+}
+
 /// A purely behavioral accordion group component that manages expansion state.
 ///
 /// The [RemixAccordionGroup] manages which accordion items are expanded/collapsed
@@ -174,26 +202,10 @@ class RemixAccordion<T> extends StatelessWidget {
     BuildContext context,
     NakedAccordionItemState<T> state,
   ) {
-    // Expansion is not a WidgetState, so it rides alongside the trigger's
-    // own hover/press/focus/disabled states as `selected`.
-    // `AccordionStyler.onExpanded` reads it back through the ordinary
-    // `.onSelected` variant, which is how it stays callable without a
-    // generic recipe binding T. This builds a fresh controller from `state`
-    // (itself already current on every rebuild) rather than mutating
-    // `NakedAccordionItemState.controllerOf<T>(context)`: naked_ui's
-    // NakedStateScope re-syncs that controller's value from an *unmodifiable*
-    // states snapshot on every hover/focus/press change, so writing to it
-    // externally throws `Unsupported operation: Cannot change an
-    // unmodifiable set`.
-    final controller = WidgetStatesController({
-      ...state.states,
-      if (state.isExpanded) WidgetState.selected,
-    });
-
     return RemixStyleSpecBuilder<AccordionSpec>(
       style: style,
       styleSpec: styleSpec,
-      controller: controller,
+      controller: NakedAccordionItemState.controllerOf<T>(context),
       builder: (context, spec) {
         return FlexBox(
           styleSpec: spec.trigger,
@@ -241,36 +253,48 @@ class RemixAccordion<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = NakedAccordionScope.of<T>(context).controller;
+    final isExpanded = controller.contains(value);
+    final canCollapse = isExpanded && controller.values.length > controller.min;
+    final canExpand =
+        !isExpanded &&
+        (controller.max == null || controller.values.length < controller.max!);
+
     // One panel wraps the trigger and the (conditionally mounted) content so
     // a single clip + radius crops both, matching the Radix Table idiom:
     // the container owns the outer shape, its children stay flat, and the
     // interior seam is a plain divider rather than two independently
     // rounded boxes. See fortalAccordionStyle for the divider half of that
     // treatment.
-    return RemixStyleSpecBuilder<AccordionSpec>(
-      style: style,
-      styleSpec: styleSpec,
-      builder: (context, spec) {
-        return RemixBoxWithEffects(
-          styleSpec: spec.container,
-          containerEffects: spec.containerEffects,
-          child: NakedAccordion<T>(
-            value: value,
-            transitionBuilder: _buildTransitionWrapper,
-            enabled: enabled,
-            mouseCursor: mouseCursor,
-            enableFeedback: enableFeedback,
-            autofocus: autofocus,
-            focusNode: focusNode,
-            onFocusChange: onFocusChange,
-            onHoverChange: onHoverChange,
-            onPressChange: (pressed) => onPressChange?.call(pressed),
-            semanticLabel: semanticLabel ?? title,
-            child: child,
-            builder: builder ?? _buildDefaultTrigger,
-          ),
-        );
-      },
+    return _RemixAccordionStyleState(
+      isExpanded: isExpanded,
+      canCollapse: canCollapse,
+      canExpand: canExpand,
+      child: RemixStyleSpecBuilder<AccordionSpec>(
+        style: style,
+        styleSpec: styleSpec,
+        builder: (context, spec) {
+          return RemixBoxWithEffects(
+            styleSpec: spec.container,
+            containerEffects: spec.containerEffects,
+            child: NakedAccordion<T>(
+              value: value,
+              transitionBuilder: _buildTransitionWrapper,
+              enabled: enabled,
+              mouseCursor: mouseCursor,
+              enableFeedback: enableFeedback,
+              autofocus: autofocus,
+              focusNode: focusNode,
+              onFocusChange: onFocusChange,
+              onHoverChange: onHoverChange,
+              onPressChange: (pressed) => onPressChange?.call(pressed),
+              semanticLabel: semanticLabel ?? title,
+              child: child,
+              builder: builder ?? _buildDefaultTrigger,
+            ),
+          );
+        },
+      ),
     );
   }
 }
