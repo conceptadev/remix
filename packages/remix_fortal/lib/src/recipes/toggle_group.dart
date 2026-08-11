@@ -55,30 +55,25 @@ ToggleGroupStyler fortalToggleGroupStyle({
       spacing: 0,
     ),
     item: .alignment(.center)
-        .foregroundColor(FortalTokens.gray11())
+        .labelColor(FortalTokens.gray11())
+        .iconColor(FortalTokens.gray11())
         .labelFontWeight(FortalTokens.fontWeightMedium())
-        .onHovered(
-          ToggleGroupItemStyler().backgroundColor(FortalTokens.grayA3()),
-        )
-        .onPressed(
-          ToggleGroupItemStyler().backgroundColor(FortalTokens.grayA4()),
-        )
+        .onHovered(ToggleGroupItemStyler().color(FortalTokens.grayA3()))
+        .onPressed(ToggleGroupItemStyler().color(FortalTokens.grayA4()))
         .onSelected(
           ToggleGroupItemStyler()
-              .backgroundColor(selectedColor)
-              .foregroundColor(selectedForeground)
-              .onHovered(
-                ToggleGroupItemStyler().backgroundColor(selectedHoverColor),
-              )
-              .onPressed(
-                ToggleGroupItemStyler().backgroundColor(selectedPressedColor),
-              ),
+              .color(selectedColor)
+              .labelColor(selectedForeground)
+              .iconColor(selectedForeground)
+              .onHovered(ToggleGroupItemStyler().color(selectedHoverColor))
+              .onPressed(ToggleGroupItemStyler().color(selectedPressedColor)),
         )
         .onFocusVisible(ToggleGroupItemStyler().fortalFocusRing())
         .onDisabled(
           ToggleGroupItemStyler()
-              .backgroundColor(FortalTokens.grayA3())
-              .foregroundColor(FortalTokens.gray8()),
+              .color(FortalTokens.grayA3())
+              .labelColor(FortalTokens.gray8())
+              .iconColor(FortalTokens.gray8()),
         ),
   ).merge(_fortalToggleGroupSizeStyler(size));
 }

@@ -101,9 +101,9 @@ void main() {
       );
 
       styleMethodTest(
-        'iconButtonSize sets container size constraints',
+        'size sets container size constraints',
         initial: IconButtonStyler(),
-        modify: (style) => style.iconButtonSize(48.0),
+        modify: (style) => style.size(48.0, 48.0),
         expect: (style) {
           expect(
             style.$container,

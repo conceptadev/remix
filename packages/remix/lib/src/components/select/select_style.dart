@@ -52,13 +52,6 @@ extension RemixSelectStylerRemixHelpers on SelectStyler {
   }
 }
 
-/// Style configuration for the visible [RemixSelect] trigger.
-extension RemixSelectTriggerStylerRemixHelpers on SelectTriggerStyler {
-  SelectTriggerStyler flex(FlexStyler value) {
-    return merge(SelectTriggerStyler(container: FlexBoxStyler().flex(value)));
-  }
-}
-
 /// Style configuration for an item in a [RemixSelect] menu.
 extension RemixSelectMenuItemStylerRemixHelpers on SelectMenuItemStyler {
   /// Sets label styling (delegates to text for consistency with mixin)
@@ -108,9 +101,5 @@ extension RemixSelectMenuItemStylerRemixHelpers on SelectMenuItemStyler {
 
   SelectMenuItemStyler labelDecorationColor(Color value) {
     return label(TextStyler(style: TextStyleMix(decorationColor: value)));
-  }
-
-  SelectMenuItemStyler flex(FlexStyler value) {
-    return merge(SelectMenuItemStyler(container: FlexBoxStyler().flex(value)));
   }
 }

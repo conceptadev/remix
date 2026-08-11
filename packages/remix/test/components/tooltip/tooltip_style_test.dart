@@ -109,9 +109,9 @@ void main() {
       );
 
       styleMethodTest(
-        'backgroundColor() sets background color',
+        'color() sets background color',
         initial: TooltipStyler(),
-        modify: (style) => style.backgroundColor(Colors.blue),
+        modify: (style) => style.color(Colors.blue),
         expect: (style) {
           expect(
             style.$container,

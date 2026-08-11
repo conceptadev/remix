@@ -119,7 +119,7 @@ Widget buildStatusToggleGroup({
       RemixToggleGroupItem(
         value: 'published',
         label: 'Published',
-        style: ToggleGroupItemStyler().foregroundColor(Colors.green),
+        style: ToggleGroupItemStyler().labelColor(Colors.green).iconColor(Colors.green),
       ),
     ],
     selectedValue: value,
@@ -129,7 +129,7 @@ Widget buildStatusToggleGroup({
           .padding(.horizontal(12))
           .padding(.vertical(8))
           .onSelected(
-            ToggleGroupItemStyler().backgroundColor(Colors.green.shade50),
+            ToggleGroupItemStyler().color(Colors.green.shade50),
           ),
     ),
   );

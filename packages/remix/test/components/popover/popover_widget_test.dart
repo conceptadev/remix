@@ -13,9 +13,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixPopover(
           popoverChild: const Text('Popover content'),
-          style: PopoverStyler()
-              .backgroundColor(Colors.purple)
-              .padding(.all(12)),
+          style: PopoverStyler().color(Colors.purple).padding(.all(12)),
           child: const Text('Open popover'),
         ),
       );

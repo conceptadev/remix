@@ -40,7 +40,7 @@ class _TextfieldExampleState extends State<TextfieldExample> {
   TextFieldStyler get style {
     return TextFieldStyler()
         .color(Colors.grey.shade800)
-        .backgroundColor(Colors.white)
+        .color(Colors.white)
         .borderRadius(.all(const Radius.circular(8.0)))
         .height(44)
         .padding(.horizontal(12))

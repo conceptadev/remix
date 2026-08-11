@@ -2,20 +2,6 @@ part of 'callout.dart';
 
 /// Style configuration for [RemixCallout] layout, icon, and text.
 extension RemixCalloutStylerRemixHelpers on CalloutStyler {
-  /// Sets container background color
-  CalloutStyler backgroundColor(Color value) {
-    return merge(
-      CalloutStyler(
-        container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
-      ),
-    );
-  }
-
-  /// Sets the foreground color (icon and text) of the callout.
-  CalloutStyler foregroundColor(Color value) {
-    return iconColor(value).textColor(value);
-  }
-
   /// Sets the callout content text style.
   CalloutStyler contentTextStyle(TextStyleMix value) {
     return text(TextStyler(style: value));
@@ -70,9 +56,5 @@ extension RemixCalloutStylerRemixHelpers on CalloutStyler {
       style: this,
       child: child,
     );
-  }
-
-  CalloutStyler flex(FlexStyler value) {
-    return merge(CalloutStyler(container: FlexBoxStyler().flex(value)));
   }
 }

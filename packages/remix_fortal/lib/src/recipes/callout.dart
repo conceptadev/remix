@@ -19,9 +19,12 @@ CalloutStyler fortalCalloutStyle({
   FortalCalloutSize size = .size2,
   bool highContrast = false,
 }) {
-  final base = _fortalCalloutBaseStyler(size).foregroundColor(
-    highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
-  );
+  final contentColor = highContrast
+      ? FortalTokens.accent12()
+      : FortalTokens.accentA11();
+  final base = _fortalCalloutBaseStyler(
+    size,
+  ).iconColor(contentColor).textColor(contentColor);
   return switch (variant) {
     .soft => base.color(FortalTokens.accentA3()),
     .surface =>

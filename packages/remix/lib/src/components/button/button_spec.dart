@@ -30,8 +30,8 @@ part of 'button.dart';
 /// ```dart
 /// // Style creates and populates the spec
 /// final style = ButtonStyler()
-///   .backgroundColor(Colors.blue)
-///   .foregroundColor(Colors.white)
+///   .color(Colors.blue)
+///   .label(.color(Colors.white))
 ///   .iconSize(20.0);
 ///
 /// // Widget receives the resolved spec

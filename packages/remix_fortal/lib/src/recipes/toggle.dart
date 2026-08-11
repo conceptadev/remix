@@ -28,7 +28,8 @@ ToggleStyler fortalToggleStyle({
 ToggleStyler _fortalToggleBaseStyler(FortalToggleSize size) {
   return ToggleStyler()
       .container(.mainAxisSize(.min))
-      .foregroundColor(FortalTokens.gray12())
+      .labelColor(FortalTokens.gray12())
+      .iconColor(FortalTokens.gray12())
       .labelFontWeight(FortalTokens.fontWeightMedium())
       .merge(_fortalToggleSizeStyler(size));
 }
@@ -37,8 +38,9 @@ ToggleStyler _fortalToggleFocusStyler() => ToggleStyler().fortalFocusRing();
 
 ToggleStyler _fortalToggleDisabledStyler({bool outlined = false}) {
   final style = ToggleStyler()
-      .backgroundColor(FortalTokens.grayA3())
-      .foregroundColor(FortalTokens.gray8());
+      .color(FortalTokens.grayA3())
+      .labelColor(FortalTokens.gray8())
+      .iconColor(FortalTokens.gray8());
   return outlined
       ? style.border(
           .color(FortalTokens.grayA6())
@@ -52,18 +54,20 @@ ToggleStyler _fortalToggleGhostStyler(
   FortalToggleSize size, {
   required bool highContrast,
 }) {
+  final selectedContent = highContrast
+      ? FortalTokens.accent12()
+      : FortalTokens.accent11();
   return _fortalToggleBaseStyler(size)
-      .backgroundColor(Colors.transparent)
-      .onHovered(ToggleStyler().backgroundColor(FortalTokens.grayA3()))
-      .onPressed(ToggleStyler().backgroundColor(FortalTokens.grayA4()))
+      .color(Colors.transparent)
+      .onHovered(ToggleStyler().color(FortalTokens.grayA3()))
+      .onPressed(ToggleStyler().color(FortalTokens.grayA4()))
       .onSelected(
         ToggleStyler()
-            .backgroundColor(FortalTokens.accent3())
-            .foregroundColor(
-              highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
-            )
-            .onHovered(ToggleStyler().backgroundColor(FortalTokens.accent4()))
-            .onPressed(ToggleStyler().backgroundColor(FortalTokens.accent5())),
+            .color(FortalTokens.accent3())
+            .labelColor(selectedContent)
+            .iconColor(selectedContent)
+            .onHovered(ToggleStyler().color(FortalTokens.accent4()))
+            .onPressed(ToggleStyler().color(FortalTokens.accent5())),
       )
       .onFocusVisible(_fortalToggleFocusStyler())
       .onDisabled(_fortalToggleDisabledStyler());
@@ -73,24 +77,26 @@ ToggleStyler _fortalToggleOutlineStyler(
   FortalToggleSize size, {
   required bool highContrast,
 }) {
+  final selectedContent = highContrast
+      ? FortalTokens.accent12()
+      : FortalTokens.accent11();
   return _fortalToggleBaseStyler(size)
-      .backgroundColor(Colors.transparent)
+      .color(Colors.transparent)
       .border(
         .color(FortalTokens.gray7())
             .width(FortalTokens.borderWidth1())
             .strokeAlign(BorderSide.strokeAlignInside),
       )
-      .onHovered(ToggleStyler().backgroundColor(FortalTokens.grayA3()))
-      .onPressed(ToggleStyler().backgroundColor(FortalTokens.grayA4()))
+      .onHovered(ToggleStyler().color(FortalTokens.grayA3()))
+      .onPressed(ToggleStyler().color(FortalTokens.grayA4()))
       .onSelected(
         ToggleStyler()
-            .backgroundColor(FortalTokens.accentA3())
-            .foregroundColor(
-              highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
-            )
+            .color(FortalTokens.accentA3())
+            .labelColor(selectedContent)
+            .iconColor(selectedContent)
             .border(.color(FortalTokens.accentA5()))
-            .onHovered(ToggleStyler().backgroundColor(FortalTokens.accentA4()))
-            .onPressed(ToggleStyler().backgroundColor(FortalTokens.accentA5())),
+            .onHovered(ToggleStyler().color(FortalTokens.accentA4()))
+            .onPressed(ToggleStyler().color(FortalTokens.accentA5())),
       )
       .onFocusVisible(_fortalToggleFocusStyler())
       .onDisabled(_fortalToggleDisabledStyler(outlined: true));

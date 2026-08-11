@@ -34,23 +34,25 @@ AvatarStyler fortalAvatarStyle({
   int fallbackLength = 1,
 }) {
   final base = _fortalAvatarBaseStyler(size, fallbackLength: fallbackLength);
+  final softContent = highContrast
+      ? FortalTokens.accent12()
+      : FortalTokens.accentA11();
+  final solidContent = highContrast
+      ? FortalTokens.accent1()
+      : FortalTokens.accentContrast();
   return switch (variant) {
     .soft =>
       base
-          .backgroundColor(FortalTokens.accentA3())
-          .foregroundColor(
-            highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
-          ),
+          .color(FortalTokens.accentA3())
+          .labelColor(softContent)
+          .iconColor(softContent),
     .solid =>
       base
-          .backgroundColor(
+          .color(
             highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
           )
-          .foregroundColor(
-            highContrast
-                ? FortalTokens.accent1()
-                : FortalTokens.accentContrast(),
-          ),
+          .labelColor(solidContent)
+          .iconColor(solidContent),
   };
 }
 
@@ -59,6 +61,7 @@ AvatarStyler _fortalAvatarBaseStyler(
   required int fallbackLength,
 }) {
   final fallbackText = _fortalAvatarFallbackText(size, fallbackLength);
+  final dimension = _fortalAvatarDimension(size);
   return AvatarStyler()
       .clipBehavior(.hardEdge)
       .label(
@@ -67,7 +70,7 @@ AvatarStyler _fortalAvatarBaseStyler(
         ).fontWeight(FortalTokens.fontWeightMedium()),
       )
       .icon(.size(_fortalAvatarIconSize(size)).color(FortalTokens.accentA11()))
-      .square(_fortalAvatarDimension(size))
+      .size(dimension, dimension)
       .borderRadius(.all(_fortalAvatarRadius(size)));
 }
 

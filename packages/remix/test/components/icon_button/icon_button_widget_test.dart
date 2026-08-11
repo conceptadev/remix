@@ -501,7 +501,7 @@ void main() {
 
     group('Layout and Sizing', () {
       testWidgets('icon button adapts to custom size', (tester) async {
-        final smallStyle = IconButtonStyler().iconButtonSize(32.0);
+        final smallStyle = IconButtonStyler().size(32.0, 32.0);
         await tester.pumpRemixApp(
           RemixIconButton(icon: Icons.add, onPressed: () {}, style: smallStyle),
         );
@@ -509,7 +509,7 @@ void main() {
 
         final smallSize = tester.getSize(find.byType(RemixIconButton));
 
-        final largeStyle = IconButtonStyler().iconButtonSize(64.0);
+        final largeStyle = IconButtonStyler().size(64.0, 64.0);
         await tester.pumpRemixApp(
           RemixIconButton(icon: Icons.add, onPressed: () {}, style: largeStyle),
         );

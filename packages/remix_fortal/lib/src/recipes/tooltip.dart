@@ -17,5 +17,5 @@ TooltipStyler fortalTooltipStyle() {
       .padding(.vertical(FortalTokens.space1()))
       .padding(.horizontal(FortalTokens.space2()))
       .label(.color(FortalTokens.gray1()))
-      .backgroundColor(FortalTokens.gray12());
+      .color(FortalTokens.gray12());
 }

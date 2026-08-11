@@ -37,7 +37,8 @@ final fluent = CardStyler().color(Colors.blue);
 | Canonical style operation | Expose both a named factory and a matching fluent method. |
 | Direct child styler field | Expose a field factory such as `MenuStyler.trigger(...)`. |
 | Primary nested container | Forward one compatible canonical surface from the nested styler. |
-| Alias or expanded convenience | Keep it fluent-only and use its canonical operation in contextual shorthand. |
+| Alias of a canonical operation | Do not add one. A canonical operation has exactly one spelling. |
+| Slot-forwarding convenience (`titleColor`, `labelFontSize`) | Keep it fluent-only. It names a child slot rather than duplicating a canonical operation. |
 | Styler lifecycle or composition (`animate`, `variants`, `wrap`, `modifier`, `merge`) | Keep it fluent-only because it configures or combines an existing parent styler. |
 | Generic variant or callable widget helper | Keep it as an extension method; it operates on an existing styler. |
 | Name conflict | Give the component-specific behavior a descriptive name and reserve the canonical name for the generated surface. |
@@ -48,9 +49,8 @@ directly to generated `*.g.dart` files.
 ### Canonical operations and conveniences
 
 Canonical operations include APIs such as `color`, `padding`, `borderRadius`,
-`scale`, and direct child fields such as `label`. Expanded conveniences and
-aliases remain fluent-only. For example, use the canonical factory inside a
-variant:
+`scale`, and direct child fields such as `label`. Each has exactly one
+spelling, so contextual shorthand always resolves to the same operation:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -58,31 +58,51 @@ import 'package:remix/remix.dart';
 
 final style = CardStyler()
     .padding(.all(12))
-    .backgroundColor(Colors.white)
+    .color(Colors.white)
     .onHovered(.padding(EdgeInsetsGeometryMix.all(16)))
     .onPressed(.color(Colors.grey.shade100));
 ```
 
-Here, `backgroundColor` aliases the canonical `color` operation, and
-`.padding(.all(12))` calls `padding` directly. Conveniences and aliases do not
-add duplicate named factories.
+Here every call names its operation once: `color` sets the container color and
+`.padding(.all(12))` calls `padding` directly.
 
-Legacy convenience factories map to canonical factories as follows. Their
-fluent convenience methods remain available on an existing styler.
+### Removed aliases
 
-| Legacy convenience factory | Canonical contextual replacement |
+Stylers previously carried handwritten aliases that re-spelled an operation the
+generated surface already exposed. They are removed. Each maps to its canonical
+form:
+
+| Removed | Canonical replacement |
 | --- | --- |
 | `backgroundColor(value)` | `.color(value)` |
+| `flex(value)` | `.container(FlexBoxStyler().flex(value))` (`.trigger(...)` on `AccordionStyler`) |
+| `minimumSize(size)` / `maximumSize(size)` | `.constraints(BoxConstraintsMix(minWidth: …, minHeight: …))` / `.constraints(BoxConstraintsMix(maxWidth: …, maxHeight: …))` |
+| `ButtonStyler.fixedSize(size)` | `.size(size.width, size.height)` |
+| `ButtonStyler.foregroundColor(value)` | `.label(.color(value)).icon(.color(value))` |
+| `ButtonStyler.modifierRotate(radians)` | `.wrap(.rotate(radians: radians))` |
+| `IconButtonStyler.foregroundColor(value)` | `.iconColor(value)` |
+| `IconButtonStyler.iconButtonSize(value)` | `.size(value, value)` |
+| `AvatarStyler.square(value)` / `sizeWH(w, h)` | `.size(value, value)` / `.size(w, h)` |
+| `AvatarStyler.foregroundColor(value)` | `.labelColor(value).iconColor(value)` |
+| `ToggleStyler.foregroundColor(value)` | `.labelColor(value).iconColor(value)` |
+| `ToggleGroupItemStyler.foregroundColor(value)` | `.labelColor(value).iconColor(value)` |
+| `BadgeStyler.foregroundColor(value)` | `.labelColor(value)` |
+| `CalloutStyler.foregroundColor(value)` | `.iconColor(value).textColor(value)` |
+
+### Slot-forwarding conveniences
+
+These remain. They are not aliases: each names a child slot that has no
+canonical spelling of its own on the parent styler, and they read better than
+the nested form they expand to.
+
+| Convenience | Expands to |
+| --- | --- |
 | `AccordionStyler.titleColor(value)` | `.title(.color(value))` |
 | `titleFontSize(value)` / `titleFontWeight(value)` | `.title(.fontSize(value))` / `.title(.fontWeight(value))` |
 | `titleStyle(value)` | `.title(.style(value))` |
 | `leadingIconColor(value)` / `leadingIconSize(value)` | `.leadingIcon(.color(value))` / `.leadingIcon(.size(value))` |
 | `trailingIconColor(value)` / `trailingIconSize(value)` | `.trailingIcon(.color(value))` / `.trailingIcon(.size(value))` |
 | `contentColor(value)` / `contentPadding(value)` / `contentDecoration(value)` | `.content(.color(value))` / `.content(.padding(value))` / `.content(.decoration(value))` |
-| `AvatarStyler.square(value)` | `.size(value, value)` |
-| `AvatarStyler.foregroundColor(value)` | `.label(.color(value)).iconColor(value)` |
-| `BadgeStyler.foregroundColor(value)` | `.label(.color(value))` |
-| `CalloutStyler.foregroundColor(value)` | `.icon(.color(value)).textColor(value)` |
 | `CalloutStyler.iconSize(value)` | `.icon(.size(value))` |
 | `CalloutStyler.textStyle(value)` | `.text(.style(value))` |
 
@@ -128,15 +148,20 @@ final checkboxStyle = CheckboxStyler()
 
 ## Resolved naming conflicts
 
-Three legacy helpers used names that now belong to a canonical forwarded
+Two legacy helpers used names that now belong to a canonical forwarded
 surface. Their component-specific behavior remains available under explicit
 names:
 
 | Styler | Canonical generated API | Component-specific helper |
 | --- | --- | --- |
 | `TextFieldStyler` | `color` styles the container | `textColor` styles editable text |
-| `ButtonStyler` | `rotate` transforms the container | `modifierRotate` rotates the complete widget with a modifier |
 | `CalloutStyler` | `textStyle(TextStyler)` applies the container text style | `contentTextStyle(TextStyleMix)` styles callout content |
+
+`ButtonStyler` was a third case: `rotate` transformed the container while
+`modifierRotate` rotated the complete widget. The distinction is already
+carried by the canonical surface itself — `rotate` is a container transform
+and `wrap(.rotate(...))` is a widget modifier — so the alias was removed
+rather than given a disambiguating name.
 
 This keeps contextual shorthand predictable while preserving each specialized
 operation without ambiguous overloads.

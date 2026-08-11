@@ -13,8 +13,9 @@ Widget buildButtonExample() {
             .padding(.horizontal(16))
             .padding(.vertical(10))
             .borderRadius(.all(const Radius.circular(8)))
-            .backgroundColor(const Color(0xFF1F2937))
-            .foregroundColor(Colors.white),
+            .color(const Color(0xFF1F2937))
+            .label(.color(Colors.white))
+            .icon(.color(Colors.white)),
       ),
       RemixButton(
         label: 'Disabled',
@@ -23,8 +24,9 @@ Widget buildButtonExample() {
             .padding(.horizontal(16))
             .padding(.vertical(10))
             .borderRadius(.all(const Radius.circular(8)))
-            .backgroundColor(const Color(0xFFE5E7EB))
-            .foregroundColor(const Color(0xFF9CA3AF)),
+            .color(const Color(0xFFE5E7EB))
+            .label(.color(const Color(0xFF9CA3AF)))
+            .icon(.color(const Color(0xFF9CA3AF))),
       ),
       RemixButton(
         label: 'Loading',
@@ -34,8 +36,9 @@ Widget buildButtonExample() {
             .padding(.horizontal(16))
             .padding(.vertical(10))
             .borderRadius(.all(const Radius.circular(8)))
-            .backgroundColor(const Color(0xFF1F2937).withValues(alpha: 0.6))
-            .foregroundColor(Colors.white.withValues(alpha: 0.7))
+            .color(const Color(0xFF1F2937).withValues(alpha: 0.6))
+            .label(.color(Colors.white.withValues(alpha: 0.7)))
+            .icon(.color(Colors.white.withValues(alpha: 0.7)))
             .spinner(.indicatorColor(Colors.white)),
       ),
       RemixButton(
@@ -46,8 +49,9 @@ Widget buildButtonExample() {
             .padding(.horizontal(16))
             .padding(.vertical(10))
             .borderRadius(.all(const Radius.circular(8)))
-            .backgroundColor(const Color(0xFF1F2937))
-            .foregroundColor(Colors.white),
+            .color(const Color(0xFF1F2937))
+            .label(.color(Colors.white))
+            .icon(.color(Colors.white)),
       ),
       RemixIconButton(
         icon: Icons.star,
@@ -56,8 +60,8 @@ Widget buildButtonExample() {
         style: IconButtonStyler()
             .padding(.all(10))
             .borderRadius(.all(const Radius.circular(8)))
-            .backgroundColor(const Color(0xFF1F2937))
-            .foregroundColor(Colors.white),
+            .color(const Color(0xFF1F2937))
+            .iconColor(Colors.white),
       ),
     ],
     material: [

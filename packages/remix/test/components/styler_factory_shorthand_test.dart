@@ -43,10 +43,7 @@ void main() {
     });
 
     test('retain fluent-only conveniences and aliases', () {
-      expect(
-        CardStyler().backgroundColor(Colors.red),
-        CardStyler.color(Colors.red),
-      );
+      expect(CardStyler().color(Colors.red), CardStyler.color(Colors.red));
     });
 
     test('support contextual shorthand for selected state', () {
@@ -60,7 +57,7 @@ void main() {
       final padding = EdgeInsetsGeometryMix.all(12);
       final textStyle = TextStyleMix(fontSize: 14);
 
-      expect(CardStyler().backgroundColor(color), CardStyler.color(color));
+      expect(CardStyler().color(color), CardStyler.color(color));
       expect(
         AccordionStyler().titleColor(color),
         AccordionStyler.title(TextStyler.color(color)),
@@ -73,9 +70,9 @@ void main() {
         AccordionStyler().contentPadding(padding),
         AccordionStyler.content(BoxStyler.padding(padding)),
       );
-      expect(AvatarStyler().square(24), AvatarStyler.size(24, 24));
+      expect(AvatarStyler().size(24, 24), AvatarStyler.size(24, 24));
       expect(
-        BadgeStyler().foregroundColor(color),
+        BadgeStyler().labelColor(color),
         BadgeStyler.label(TextStyler.color(color)),
       );
       expect(

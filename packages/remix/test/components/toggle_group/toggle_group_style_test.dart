@@ -18,7 +18,7 @@ void main() {
     styleMethodTest(
       'sets the group background color',
       initial: ToggleGroupStyler(),
-      modify: (style) => style.backgroundColor(Colors.blue),
+      modify: (style) => style.color(Colors.blue),
       expect: (style) {
         expect(style, ToggleGroupStyler.color(Colors.blue));
       },
@@ -48,7 +48,7 @@ void main() {
     styleMethodTest(
       'sets foreground color on label and icon',
       initial: ToggleGroupItemStyler(),
-      modify: (style) => style.foregroundColor(Colors.red),
+      modify: (style) => style.labelColor(Colors.red).iconColor(Colors.red),
       expect: (style) {
         expect(style.$label, isNotNull);
         expect(style.$icon, isNotNull);
@@ -58,9 +58,8 @@ void main() {
     styleMethodTest(
       'adds a selected-state variant',
       initial: ToggleGroupItemStyler(),
-      modify: (style) => style.onSelected(
-        ToggleGroupItemStyler().backgroundColor(Colors.purple),
-      ),
+      modify: (style) =>
+          style.onSelected(ToggleGroupItemStyler().color(Colors.purple)),
       expect: (style) {
         expect(style.$variants, hasLength(1));
       },

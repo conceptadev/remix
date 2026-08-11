@@ -41,10 +41,10 @@ class IconButtonExample extends StatelessWidget {
 
   IconButtonStyler get style {
     return IconButtonStyler()
-        .foregroundColor(Colors.blueGrey.shade700)
+        .iconColor(Colors.blueGrey.shade700)
         .iconSize(22)
         .size(40, 40)
-        .backgroundColor(Colors.blueGrey.shade50.withValues(alpha: 0.6))
+        .color(Colors.blueGrey.shade50.withValues(alpha: 0.6))
         .border(.color(Colors.blueGrey.shade100).width(1.5))
         .borderRadius(.all(const Radius.circular(8)))
         .spinner(
@@ -54,12 +54,12 @@ class IconButtonExample extends StatelessWidget {
               .indicatorColor(Colors.blueGrey.shade600),
         )
         .onHovered(
-          IconButtonStyler().backgroundColor(
+          IconButtonStyler().color(
             Colors.blueGrey.shade100.withValues(alpha: 0.4),
           ),
         )
         .onPressed(
-          IconButtonStyler().backgroundColor(
+          IconButtonStyler().color(
             Colors.blueGrey.shade100.withValues(alpha: 0.8),
           ),
         );

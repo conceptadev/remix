@@ -28,7 +28,7 @@ class CalloutExample extends StatelessWidget {
 
   CalloutStyler get style {
     return CalloutStyler()
-        .backgroundColor(Colors.grey.shade200)
+        .color(Colors.grey.shade200)
         .spacing(12)
         .height(60)
         .padding(.right(12))

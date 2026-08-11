@@ -186,9 +186,9 @@ void main() {
         },
       );
       styleMethodTest(
-        'flex',
+        'container flex',
         initial: ButtonStyler(),
-        modify: (style) => style.flex(FlexStyler()),
+        modify: (style) => style.container(FlexBoxStyler().flex(FlexStyler())),
         expect: (style) {
           expect(
             style.$container,
@@ -241,7 +241,7 @@ void main() {
         'modifierRotate',
         initial: ButtonStyler(),
         modify: (style) =>
-            style.modifierRotate(0.5, alignment: Alignment.topLeft),
+            style.wrap(.rotate(radians: 0.5, alignment: Alignment.topLeft)),
         expect: (style) {
           expect(
             style.$modifier,

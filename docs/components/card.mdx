@@ -37,7 +37,7 @@ class CardExample extends StatelessWidget {
   CardStyler get style {
     return CardStyler()
         .size(300, 200)
-        .backgroundColor(const Color(0xFF111827))
+        .color(const Color(0xFF111827))
         .padding(EdgeInsetsGeometryMix.all(24))
         .borderRadius(.all(const Radius.circular(4)))
         .border(.color(Colors.grey.shade300));
@@ -118,10 +118,6 @@ Optional. The widget below this widget in the tree.  This widget can only have o
 #### `padding(EdgeInsetsGeometryMix value)`
 
 Sets container padding
-
-#### `backgroundColor(Color value)`
-
-Sets card background color
 
 #### `borderRadius(BorderRadiusGeometryMix radius)`
 

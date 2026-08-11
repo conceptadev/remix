@@ -26,7 +26,7 @@ BadgeStyler fortalBadgeStyle({
           .color(
             highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
           )
-          .foregroundColor(
+          .labelColor(
             highContrast
                 ? FortalTokens.accent1()
                 : FortalTokens.accentContrast(),
@@ -34,7 +34,7 @@ BadgeStyler fortalBadgeStyle({
     .soft =>
       base
           .color(FortalTokens.accentA3())
-          .foregroundColor(
+          .labelColor(
             highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
           ),
     .surface =>
@@ -45,7 +45,7 @@ BadgeStyler fortalBadgeStyle({
               fortalInsetSurface(strokes: [FortalTokens.accentA6()]),
             ),
           )
-          .foregroundColor(
+          .labelColor(
             highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
           ),
     .outline =>
@@ -62,7 +62,7 @@ BadgeStyler fortalBadgeStyle({
               ),
             ),
           )
-          .foregroundColor(
+          .labelColor(
             highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
           ),
   };

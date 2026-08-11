@@ -78,27 +78,21 @@ void main() {
       );
 
       styleMethodTest(
-        'backgroundColor sets container background color',
+        'color sets container background color',
         initial: CalloutStyler(),
-        modify: (style) => style.backgroundColor(Colors.yellow),
+        modify: (style) => style.color(Colors.yellow),
         expect: (style) {
           expect(
             style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  decoration: BoxDecorationMix(color: Colors.yellow),
-                ),
-              ),
-            ),
+            equals(Prop.maybeMix(FlexBoxStyler().color(Colors.yellow))),
           );
         },
       );
 
       styleMethodTest(
-        'foregroundColor sets both icon and text color',
+        'iconColor and textColor set content color',
         initial: CalloutStyler(),
-        modify: (style) => style.foregroundColor(Colors.red),
+        modify: (style) => style.iconColor(Colors.red).textColor(Colors.red),
         expect: (style) {
           expect(
             style.$icon,
@@ -304,10 +298,12 @@ void main() {
       styleMethodTest(
         'flex sets flex styler',
         initial: CalloutStyler(),
-        modify: (style) => style.flex(
-          FlexStyler(
-            direction: Axis.vertical,
-            mainAxisAlignment: MainAxisAlignment.center,
+        modify: (style) => style.container(
+          FlexBoxStyler().flex(
+            FlexStyler(
+              direction: Axis.vertical,
+              mainAxisAlignment: MainAxisAlignment.center,
+            ),
           ),
         ),
         expect: (style) {

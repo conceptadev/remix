@@ -36,9 +36,9 @@ void main() {
 
     group('Style Methods', () {
       styleMethodTest(
-        'backgroundColor sets background color',
+        'color sets background color',
         initial: BadgeStyler(),
-        modify: (style) => style.backgroundColor(Colors.blue),
+        modify: (style) => style.color(Colors.blue),
         expect: (style) {
           expect(
             style.$container,
@@ -52,9 +52,9 @@ void main() {
       );
 
       styleMethodTest(
-        'foregroundColor sets text color',
+        'labelColor sets text color',
         initial: BadgeStyler(),
-        modify: (style) => style.foregroundColor(Colors.green),
+        modify: (style) => style.labelColor(Colors.green),
         expect: (style) {
           expect(
             style.$label,

@@ -47,10 +47,10 @@ class IconButtonExample extends StatelessWidget {
 
   IconButtonStyler get style {
     return IconButtonStyler()
-        .foregroundColor(Colors.blueGrey.shade700)
+        .iconColor(Colors.blueGrey.shade700)
         .iconSize(22)
         .size(40, 40)
-        .backgroundColor(Colors.blueGrey.shade50.withValues(alpha: 0.6))
+        .color(Colors.blueGrey.shade50.withValues(alpha: 0.6))
         .border(.color(Colors.blueGrey.shade100).width(1.5))
         .borderRadius(.all(const Radius.circular(8)))
         .spinner(
@@ -61,11 +61,11 @@ class IconButtonExample extends StatelessWidget {
         )
         .onHovered(
           IconButtonStyler()
-              .backgroundColor(Colors.blueGrey.shade100.withValues(alpha: 0.4)),
+              .color(Colors.blueGrey.shade100.withValues(alpha: 0.4)),
         )
         .onPressed(
           IconButtonStyler()
-              .backgroundColor(Colors.blueGrey.shade100.withValues(alpha: 0.8)),
+              .color(Colors.blueGrey.shade100.withValues(alpha: 0.8)),
         );
   }
 }
@@ -240,13 +240,9 @@ Configures the loading spinner style.
 
 Sets background color
 
-#### `backgroundColor(Color value)`
+#### `iconColor(Color value)`
 
-Sets the background color of the icon button container.
-
-#### `foregroundColor(Color value)`
-
-Sets the foreground color (icon color) of the icon button.
+Sets the icon color.
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
@@ -256,9 +252,10 @@ Sets padding
 
 Sets border radius
 
-#### `iconButtonSize(double size)`
+#### `size(double width, double height)`
 
-Sets size (width and height - icon buttons are square)
+Sets size. Icon buttons are square, so pass the same value twice:
+`.size(40, 40)`.
 
 #### `border(BoxBorderMix value)`
 

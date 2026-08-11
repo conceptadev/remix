@@ -262,7 +262,7 @@ void main() {
 
       testWidgets('applies custom background color', (tester) async {
         await tester.pumpRemixApp(
-          RemixTextField(style: TextFieldStyler().backgroundColor(Colors.grey)),
+          RemixTextField(style: TextFieldStyler().color(Colors.grey)),
         );
         await tester.pumpAndSettle();
 

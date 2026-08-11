@@ -32,20 +32,22 @@ class AvatarExample extends StatelessWidget {
 
   AvatarStyler get labelStyle {
     return AvatarStyler()
-        .backgroundColor(Colors.deepPurpleAccent)
+        .color(Colors.deepPurpleAccent)
         .size(50, 50)
         .shape(.circle())
         .wrap(.clipOval())
-        .foregroundColor(Colors.white)
+        .labelColor(Colors.white)
+        .iconColor(Colors.white)
         .labelFontWeight(FontWeight.bold)
         .labelFontSize(15);
   }
 
   AvatarStyler get iconStyle {
     return AvatarStyler()
-        .backgroundColor(Colors.deepOrangeAccent)
+        .color(Colors.deepOrangeAccent)
         .size(70, 70)
-        .foregroundColor(Colors.white)
+        .labelColor(Colors.white)
+        .iconColor(Colors.white)
         .iconSize(70)
         .icon(IconStyler().wrap(.translate(x: 0, y: 12)))
         .shape(.circle())

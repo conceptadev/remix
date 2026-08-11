@@ -229,9 +229,9 @@ void main() {
       );
 
       styleMethodTest(
-        'flex',
+        'container flex',
         initial: MenuTriggerStyler(),
-        modify: (style) => style.flex(FlexStyler()),
+        modify: (style) => style.container(FlexBoxStyler().flex(FlexStyler())),
         expect: (style) {
           expect(
             style.$container,
@@ -848,9 +848,9 @@ void main() {
       );
 
       styleMethodTest(
-        'flex',
+        'container flex',
         initial: MenuItemStyler(),
-        modify: (style) => style.flex(FlexStyler()),
+        modify: (style) => style.container(FlexBoxStyler().flex(FlexStyler())),
         expect: (style) {
           expect(
             style.$container,

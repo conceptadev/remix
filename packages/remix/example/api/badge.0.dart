@@ -39,7 +39,7 @@ class BadgeExample extends StatelessWidget {
               .wrap(.align(alignment: .center))
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
-        .foregroundColor(Colors.greenAccent.shade700)
+        .labelColor(Colors.greenAccent.shade700)
         .labelColor(Colors.white)
         .labelFontWeight(FontWeight.bold)
         .labelFontSize(15);
@@ -55,7 +55,7 @@ class BadgeExample extends StatelessWidget {
               .wrap(.align(alignment: .center))
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
-        .foregroundColor(Colors.redAccent)
+        .labelColor(Colors.redAccent)
         .wrap(.iconTheme(color: Colors.white, size: 15));
   }
 }
