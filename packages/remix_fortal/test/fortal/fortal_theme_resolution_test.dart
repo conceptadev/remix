@@ -81,7 +81,7 @@ void main() {
     }
   });
 
-  testWidgets('scope fallback overrides an outer host text style', (
+  testWidgets('unsized typography measures 1em against the root, not the host', (
     tester,
   ) async {
     // The host supplies a deliberately wrong ambient size; the scope must win.
