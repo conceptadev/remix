@@ -33,6 +33,10 @@ import 'package:remix_fortal/remix_fortal.dart';
 `remix_fortal` does not re-export `remix`. Import both when a file also uses base
 `Remix*` widgets or `*Styler` types.
 
+Charts also use `mix_chart` data models. Add and import `mix_chart` directly;
+Fortal provides the themed recipes and generated wrappers without re-exporting
+the chart package.
+
 ## Presets and recipes
 
 Each component ships a `fortal<Name>Style(...)` function that returns the
@@ -86,6 +90,9 @@ explicit `<String>`.
 | Callout | `FortalCallout` | `outline`, `surface`, `soft` | `size1`–`size3` |
 | DataList | `FortalDataList` | — | `size1`–`size3` |
 | DataTable | `FortalDataTable<T>` | `surface`, `ghost` | `size1`–`size3` |
+| LineChart | `FortalLineChart` | — | — |
+| BarChart | `FortalBarChart` | — | — |
+| PieChart | `FortalPieChart` | — | — |
 | Progress | `FortalProgress` | `classic`, `surface`, `soft` | `size1`–`size3` (4/8/12 px) |
 | Accordion | `FortalAccordion<T>` | `surface`, `soft` | `size1`–`size3` |
 | Spinner | `FortalSpinner` | — | `size1`–`size3` |
