@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
@@ -109,7 +109,7 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
       .label(TextStyler().color(FortalTokens.grayA8()))
       .icon(IconStyler().color(FortalTokens.grayA8()));
   final disabledSelected = disabled
-      .color(Colors.transparent)
+      .color(const Color(0x00000000))
       .borderRadius(.all(metrics.radius))
       .containerEffects(
         RemixBoxEffectsMix(
@@ -122,7 +122,7 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
       .onHovered(.color(FortalTokens.grayA2()))
       .onSelected(
         selected
-            .onHovered(.color(Colors.transparent))
+            .onHovered(.color(const Color(0x00000000)))
             .onDisabled(disabledSelected),
       )
       .onFocusVisible(
@@ -155,7 +155,7 @@ SegmentedControlItemStyler _fortalSegmentedControlSelectedItem(
   };
 
   return SegmentedControlItemStyler()
-      .color(Colors.transparent)
+      .color(const Color(0x00000000))
       .borderRadius(.all(metrics.radius))
       .label(
         TextStyler()

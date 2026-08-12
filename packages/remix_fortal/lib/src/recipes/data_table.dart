@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
@@ -74,7 +74,7 @@ DataTableStyler fortalDataTableStyle({
       .headerRow(_fortalDataTableRowDivider())
       .bodyRow(
         _fortalDataTableRowDivider()
-            .color(Colors.transparent)
+            .color(const Color(0x00000000))
             // Hover and selection are Fortal extensions. Both are pure color
             // layers, so a row never changes geometry when either applies.
             .onHovered(.color(FortalTokens.grayA3()))
@@ -91,7 +91,7 @@ DataTableStyler fortalDataTableStyle({
 
   return switch (variant) {
     .surface => _fortalDataTableSurface(base, metrics.radius),
-    .ghost => base.color(Colors.transparent),
+    .ghost => base.color(const Color(0x00000000)),
   };
 }
 

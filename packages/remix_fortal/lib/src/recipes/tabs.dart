@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
@@ -65,7 +65,9 @@ TabStyler fortalTabStyle({
               .alignment(.center)
               .border(
                 .bottom(
-                  .color(Colors.transparent).width(FortalTokens.borderWidth2()),
+                  .color(
+                    const Color(0x00000000),
+                  ).width(FortalTokens.borderWidth2()),
                 ),
               ),
         ),

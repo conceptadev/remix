@@ -14,3 +14,18 @@ jobs:
     with:
       flutter-version: "3.44.0"
       run-dcm: false
+
+  fortal-icons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
+        with:
+          version: "0.11.24"
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: packages/remix_fortal/tool/radix_icons/uv.lock
+      - name: Verify generated Fortal icons
+        run: uv run --frozen --project packages/remix_fortal/tool/radix_icons glyphpact --config packages/remix_fortal/tool/radix_icons/glyphpact.json --check
+      - name: Verify icon integrity contract
+        run: uv run --frozen --project packages/remix_fortal/tool/radix_icons python packages/remix_fortal/tool/radix_icons/verify.py

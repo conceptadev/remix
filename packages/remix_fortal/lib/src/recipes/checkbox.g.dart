@@ -17,9 +17,9 @@ class FortalCheckbox extends StatelessWidget {
     this.onChanged,
     this.enabled = true,
     this.tristate = false,
-    this.checkedIcon = Icons.check_rounded,
+    this.checkedIcon,
     this.uncheckedIcon,
-    this.indeterminateIcon = Icons.horizontal_rule,
+    this.indeterminateIcon,
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
@@ -37,9 +37,9 @@ class FortalCheckbox extends StatelessWidget {
     this.onChanged,
     this.enabled = true,
     this.tristate = false,
-    this.checkedIcon = Icons.check_rounded,
+    this.checkedIcon,
     this.uncheckedIcon,
-    this.indeterminateIcon = Icons.horizontal_rule,
+    this.indeterminateIcon,
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
@@ -57,9 +57,9 @@ class FortalCheckbox extends StatelessWidget {
     this.onChanged,
     this.enabled = true,
     this.tristate = false,
-    this.checkedIcon = Icons.check_rounded,
+    this.checkedIcon,
     this.uncheckedIcon,
-    this.indeterminateIcon = Icons.horizontal_rule,
+    this.indeterminateIcon,
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
@@ -77,9 +77,9 @@ class FortalCheckbox extends StatelessWidget {
     this.onChanged,
     this.enabled = true,
     this.tristate = false,
-    this.checkedIcon = Icons.check_rounded,
+    this.checkedIcon,
     this.uncheckedIcon,
-    this.indeterminateIcon = Icons.horizontal_rule,
+    this.indeterminateIcon,
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
@@ -103,11 +103,11 @@ class FortalCheckbox extends StatelessWidget {
 
   final bool tristate;
 
-  final IconData checkedIcon;
+  final IconData? checkedIcon;
 
   final IconData? uncheckedIcon;
 
-  final IconData indeterminateIcon;
+  final IconData? indeterminateIcon;
 
   final FocusNode? focusNode;
 
@@ -173,7 +173,7 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.enabled = true,
     this.focusNode,
     this.autofocus = false,
-    this.checkedIcon = Icons.check_rounded,
+    this.checkedIcon,
     this.uncheckedIcon,
     this.enableFeedback = true,
     this.minimumTapTargetSize = const Size.square(48),
@@ -190,7 +190,7 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.enabled = true,
     this.focusNode,
     this.autofocus = false,
-    this.checkedIcon = Icons.check_rounded,
+    this.checkedIcon,
     this.uncheckedIcon,
     this.enableFeedback = true,
     this.minimumTapTargetSize = const Size.square(48),
@@ -207,7 +207,7 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.enabled = true,
     this.focusNode,
     this.autofocus = false,
-    this.checkedIcon = Icons.check_rounded,
+    this.checkedIcon,
     this.uncheckedIcon,
     this.enableFeedback = true,
     this.minimumTapTargetSize = const Size.square(48),
@@ -224,7 +224,7 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.enabled = true,
     this.focusNode,
     this.autofocus = false,
-    this.checkedIcon = Icons.check_rounded,
+    this.checkedIcon,
     this.uncheckedIcon,
     this.enableFeedback = true,
     this.minimumTapTargetSize = const Size.square(48),
@@ -249,7 +249,7 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
 
   final bool autofocus;
 
-  final IconData checkedIcon;
+  final IconData? checkedIcon;
 
   final IconData? uncheckedIcon;
 

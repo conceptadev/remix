@@ -199,7 +199,7 @@ specifies it, and don't fight the min-size default.
 
 ### One-icon alignment is style-driven
 
-`ButtonStyler.iconAlignment(IconAlignment.start|end)` controls which
+`ButtonStyler.iconAlignment(RemixIconAlignment.start|end)` controls which
 side of the label a **single** icon occupies. It applies regardless of whether
 the caller supplied `leadingIcon` or `trailingIcon`. When both icons are
 present, Remix deliberately preserves leading → label → trailing order. Test

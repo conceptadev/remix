@@ -187,11 +187,15 @@ class RemixAccordion<T> extends StatelessWidget {
             if (title != null)
               // ignore: avoid-flexible-outside-flex
               Expanded(child: StyledText(title!, styleSpec: spec.title)),
-            StyledIcon(
-              icon:
-                  trailingIcon ?? (state.isExpanded ? Icons.remove : Icons.add),
-              styleSpec: spec.trailingIcon,
-            ),
+            if (trailingIcon case final icon?)
+              StyledIcon(icon: icon, styleSpec: spec.trailingIcon)
+            else
+              RemixPathIcon(
+                glyph: state.isExpanded
+                    ? RemixPathGlyph.minus
+                    : RemixPathGlyph.plus,
+                styleSpec: spec.trailingIcon,
+              ),
           ],
         );
       },

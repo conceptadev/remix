@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
@@ -60,7 +60,7 @@ SwitchStyler _fortalSwitchBaseStyler(FortalSwitchSize size) {
           overContent: _fortalSwitchLayer(),
         ),
       )
-      .thumbColor(Colors.white)
+      .thumbColor(const Color(0xFFFFFFFF))
       .onFocusVisible(
         .trackEffects(
           RemixBoxEffectsMix(

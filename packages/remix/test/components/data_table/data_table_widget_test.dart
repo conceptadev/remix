@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart' hide SemanticsRole;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/utilities/remix_path_icon.dart';
 
 import '../../helpers/test_helpers.dart';
 
@@ -23,6 +24,10 @@ const _records = [
 
 /// The renderer uses a private [Table] subclass, so match by subtype.
 final Finder _tableFinder = find.byWidgetPredicate((widget) => widget is Table);
+
+Finder _pathGlyph(RemixPathGlyph glyph) => find.byWidgetPredicate(
+  (widget) => widget is RemixPathIcon && widget.glyph == glyph,
+);
 
 List<RemixDataTableColumn<_Record>> _columns({bool sortable = false}) {
   return [
@@ -714,22 +719,20 @@ void main() {
 
       final ltr = await pumpPagination(TextDirection.ltr);
       expect(
-        tester
-            .widget<RemixIconButton>(
-              find.byKey(const ValueKey('remix-data-table-previous-page')),
-            )
-            .icon,
-        Icons.chevron_left,
+        find.descendant(
+          of: find.byKey(const ValueKey('remix-data-table-previous-page')),
+          matching: _pathGlyph(RemixPathGlyph.chevronLeft),
+        ),
+        findsOneWidget,
       );
 
       final rtl = await pumpPagination(TextDirection.rtl);
       expect(
-        tester
-            .widget<RemixIconButton>(
-              find.byKey(const ValueKey('remix-data-table-previous-page')),
-            )
-            .icon,
-        Icons.chevron_right,
+        find.descendant(
+          of: find.byKey(const ValueKey('remix-data-table-previous-page')),
+          matching: _pathGlyph(RemixPathGlyph.chevronRight),
+        ),
+        findsOneWidget,
       );
       // Icon and position mirror together, so "previous" always points back.
       expect(rtl.left, lessThan(ltr.left));

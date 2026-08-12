@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart' show internal;
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart' hide AnimationConfig;
 
 /// Applies resolved Remix text and icon specs as inherited defaults for

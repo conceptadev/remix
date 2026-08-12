@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
@@ -146,7 +146,7 @@ CheckboxStyler _fortalCheckboxClassic(CheckboxStyler base, bool highContrast) {
               RemixLinearGradientMix(
                 colors: [
                   FortalTokens.whiteA3(),
-                  Colors.transparent,
+                  const Color(0x00000000),
                   FortalTokens.blackA1(),
                 ],
               ),

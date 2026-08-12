@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:remix/remix.dart'
     show
@@ -217,7 +217,7 @@ RemixBoxEffectLayerMix fortalClassicBaseButtonSurface({
         RemixLinearGradientMix(
           colors: [
             FortalTokens.blackA1(),
-            Colors.transparent,
+            const Color(0x00000000),
             FortalTokens.whiteA1(),
           ],
           stops: const [-0.2, 0.4, 1],
@@ -248,7 +248,7 @@ RemixBoxEffectLayerMix fortalClassicBaseButtonSurface({
           : pressed
           ? FortalTokens.blackA2()
           : FortalTokens.blackA1(),
-      Colors.transparent,
+      const Color(0x00000000),
       highContrast
           ? pressed
                 ? FortalTokens.whiteA3()
@@ -266,20 +266,25 @@ RemixBoxEffectLayerMix fortalClassicBaseButtonSurface({
     RemixLinearGradientMix(colors: [afterColor, afterColor]),
     if (pressed)
       RemixLinearGradientMix(
-        colors: [FortalTokens.blackA1(), Colors.transparent],
+        colors: [FortalTokens.blackA1(), const Color(0x00000000)],
       )
     else ...[
       RemixLinearGradientMix(
         colors: [
-          Colors.transparent,
-          Colors.transparent,
+          const Color(0x00000000),
+          const Color(0x00000000),
           FortalTokens.grayA4(),
           FortalTokens.grayA4(),
         ],
         stops: const [0, 0.5, 0.5, 1],
       ),
       RemixLinearGradientMix(
-        colors: [Colors.transparent, Colors.transparent, baseColor, baseColor],
+        colors: [
+          const Color(0x00000000),
+          const Color(0x00000000),
+          baseColor,
+          baseColor,
+        ],
         stops: const [0, 0.5, 0.8, 1],
       ),
     ],

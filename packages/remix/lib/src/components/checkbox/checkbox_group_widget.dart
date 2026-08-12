@@ -187,7 +187,7 @@ class RemixCheckboxGroupItem<T extends Object> extends StatefulWidget {
     this.enabled = true,
     this.focusNode,
     this.autofocus = false,
-    this.checkedIcon = Icons.check_rounded,
+    this.checkedIcon,
     this.uncheckedIcon,
     this.enableFeedback = true,
     this.minimumTapTargetSize = const Size.square(48),
@@ -234,7 +234,7 @@ class RemixCheckboxGroupItem<T extends Object> extends StatefulWidget {
   final bool autofocus;
 
   /// The icon shown when this option is selected.
-  final IconData checkedIcon;
+  final IconData? checkedIcon;
 
   /// The icon shown when this option is not selected.
   final IconData? uncheckedIcon;

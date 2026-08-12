@@ -41,11 +41,11 @@ class FortalDataTable<T> extends StatelessWidget {
     this.emptyBuilder,
     this.labels = const RemixDataTableLabels(),
     this.pageRangeFormatter = remixDefaultDataTablePageRangeFormatter,
-    this.sortableIcon = Icons.unfold_more,
-    this.sortAscendingIcon = Icons.keyboard_arrow_up,
-    this.sortDescendingIcon = Icons.keyboard_arrow_down,
-    this.previousPageIcon = Icons.chevron_left,
-    this.nextPageIcon = Icons.chevron_right,
+    this.sortableIcon,
+    this.sortAscendingIcon,
+    this.sortDescendingIcon,
+    this.previousPageIcon,
+    this.nextPageIcon,
   });
 
   const FortalDataTable.surface({
@@ -69,11 +69,11 @@ class FortalDataTable<T> extends StatelessWidget {
     this.emptyBuilder,
     this.labels = const RemixDataTableLabels(),
     this.pageRangeFormatter = remixDefaultDataTablePageRangeFormatter,
-    this.sortableIcon = Icons.unfold_more,
-    this.sortAscendingIcon = Icons.keyboard_arrow_up,
-    this.sortDescendingIcon = Icons.keyboard_arrow_down,
-    this.previousPageIcon = Icons.chevron_left,
-    this.nextPageIcon = Icons.chevron_right,
+    this.sortableIcon,
+    this.sortAscendingIcon,
+    this.sortDescendingIcon,
+    this.previousPageIcon,
+    this.nextPageIcon,
   }) : variant = FortalDataTableVariant.surface;
 
   const FortalDataTable.ghost({
@@ -97,11 +97,11 @@ class FortalDataTable<T> extends StatelessWidget {
     this.emptyBuilder,
     this.labels = const RemixDataTableLabels(),
     this.pageRangeFormatter = remixDefaultDataTablePageRangeFormatter,
-    this.sortableIcon = Icons.unfold_more,
-    this.sortAscendingIcon = Icons.keyboard_arrow_up,
-    this.sortDescendingIcon = Icons.keyboard_arrow_down,
-    this.previousPageIcon = Icons.chevron_left,
-    this.nextPageIcon = Icons.chevron_right,
+    this.sortableIcon,
+    this.sortAscendingIcon,
+    this.sortDescendingIcon,
+    this.previousPageIcon,
+    this.nextPageIcon,
   }) : variant = FortalDataTableVariant.ghost;
 
   final FortalDataTableSize size;
@@ -144,15 +144,15 @@ class FortalDataTable<T> extends StatelessWidget {
 
   final RemixDataTablePageRangeFormatter pageRangeFormatter;
 
-  final IconData sortableIcon;
+  final IconData? sortableIcon;
 
-  final IconData sortAscendingIcon;
+  final IconData? sortAscendingIcon;
 
-  final IconData sortDescendingIcon;
+  final IconData? sortDescendingIcon;
 
-  final IconData previousPageIcon;
+  final IconData? previousPageIcon;
 
-  final IconData nextPageIcon;
+  final IconData? nextPageIcon;
 
   @override
   Widget build(BuildContext context) {

@@ -83,10 +83,25 @@ melos:
       run: dart run tool/check_toolchain.dart
       description: Verify every package declares the melos-managed toolchain floor
 
+    material:check:
+      run: dart run tool/check_material_independence.dart
+      description: Verify published Remix libraries contain no direct Material usage
+
+    fortal:icons:generate:
+      run: uv run --frozen --project packages/remix_fortal/tool/radix_icons glyphpact --config packages/remix_fortal/tool/radix_icons/glyphpact.json
+      description: Regenerate the locked FortalIcons font and Dart provider
+
+    fortal:icons:check:
+      steps:
+        - uv run --frozen --project packages/remix_fortal/tool/radix_icons glyphpact --config packages/remix_fortal/tool/radix_icons/glyphpact.json --check
+        - uv run --frozen --project packages/remix_fortal/tool/radix_icons python packages/remix_fortal/tool/radix_icons/verify.py
+      description: Verify the pinned Radix snapshot and generated icon artifacts
+
     ci:
       steps:
         - toolchain:check
         - mix:consumer:check
+        - material:check
         - generate:check
         - docs:check
         - fortal:parity:check

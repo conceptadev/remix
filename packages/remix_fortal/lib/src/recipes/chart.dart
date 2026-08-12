@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:mix_chart/mix_chart.dart';
@@ -172,7 +172,7 @@ Prop<List<Color>> _paletteProp({
 }
 
 ChartFrameStyler _fortalFrameStyle() => ChartFrameStyler()
-    .backgroundColor(Colors.transparent)
+    .backgroundColor(MixColors.transparent)
     .showBorder(false)
     .clip(true);
 
