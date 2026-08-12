@@ -32,9 +32,7 @@ class PageHeader extends StatelessWidget {
             crossAxisAlignment: .start,
             spacing: 4,
             children: [
-              DashboardTextTone(
-                child: FortalHeading(title, size: .size6, weight: .bold),
-              ),
+              FortalHeading(title, size: .size6, weight: .bold),
               StyledText(
                 description,
                 style: dashboardText(.size2, tone: .muted),
@@ -54,9 +52,8 @@ class SectionLabel extends StatelessWidget {
   final String label;
 
   @override
-  Widget build(BuildContext context) => DashboardTextTone(
-    child: FortalHeading(label, headingLevel: 2, size: .size4, weight: .medium),
-  );
+  Widget build(BuildContext context) =>
+      FortalHeading(label, headingLevel: 2, size: .size4, weight: .medium);
 }
 
 /// A [SectionLabel] with supporting copy beneath it.

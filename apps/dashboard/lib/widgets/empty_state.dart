@@ -44,14 +44,12 @@ class EmptyState extends StatelessWidget {
               ),
               // An empty state sits inside a page, so it stays a level-2
               // heading and only drops its visual size.
-              DashboardTextTone(
-                child: FortalHeading(
-                  title,
-                  headingLevel: 2,
-                  size: .size3,
-                  weight: .medium,
-                  align: .center,
-                ),
+              FortalHeading(
+                title,
+                headingLevel: 2,
+                size: .size3,
+                weight: .medium,
+                align: .center,
               ),
               StyledText(
                 body,
