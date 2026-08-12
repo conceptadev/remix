@@ -133,9 +133,7 @@ class _ActivityRow extends StatelessWidget {
               crossAxisAlignment: .start,
               spacing: 2,
               children: [
-                DashboardTextTone(
-                  child: FortalText(event.title, size: .size2, weight: .medium),
-                ),
+                FortalText(event.title, size: .size2, weight: .medium),
                 StyledText(
                   event.detail,
                   style: dashboardText(.size1, tone: .muted),

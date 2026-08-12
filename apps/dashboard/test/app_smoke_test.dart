@@ -749,6 +749,31 @@ void main() {
     expect(painted(activityTitle), mauve);
   });
 
+  testWidgets('drawer sidebar text follows the gray theme too', (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byIcon(Icons.menu));
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    final brand = find.descendant(
+      of: find.byKey(const ValueKey('dashboard-brand')),
+      matching: find.text('Dashboard'),
+    );
+    expect(
+      tester.renderObject<RenderParagraph>(brand).text.style!.color,
+      MixScope.tokenOf(
+        FortalTokens.gray12,
+        tester.element(find.byType(DashboardShell)),
+      ),
+    );
+  });
+
   testWidgets('top bar search filters the active data page', (tester) async {
     tester.view.physicalSize = const Size(1400, 900);
     tester.view.devicePixelRatio = 1;

@@ -37,30 +37,26 @@ TextStyler dashboardText(
   TextTone tone = TextTone.strong,
 }) => fortalTextStyle(size: size, weight: weight).color(tone._color());
 
-/// Puts a dashboard [TextTone] on the ambient text run for [child].
+/// Restores Fortal's neutral foreground under a Material surface.
 ///
-/// Fortal's typography widgets deliberately expose no colour parameter: the
-/// neutral tone is inherited context, not a per-instance prop. This dashboard
-/// runs under `MaterialApp`, so the nearest `DefaultTextStyle` inside a page is
-/// the one `Material` installs, whose foreground is Material's — not Fortal's
-/// `gray12`. Restating the tone here is how a `FortalText` or `FortalHeading`
-/// keeps the dashboard's neutral scale while keeping its whole public API,
-/// including heading semantics.
+/// `FortalScope` establishes the Radix root run at `gray12`, but `Scaffold`
+/// and `Drawer` each install their own `DefaultTextStyle` below it, coloured
+/// from Material's `colorScheme.onSurface`. Anything inheriting its colour —
+/// every unsized [FortalText] and [FortalHeading] — would take Material's
+/// foreground instead of the active gray scale.
 ///
-/// Only the colour is merged; size, weight, and flow stay with the widget.
-class DashboardTextTone extends StatelessWidget {
-  const DashboardTextTone({
-    super.key,
-    this.tone = TextTone.strong,
-    required this.child,
-  });
+/// This re-asserts the scale once per Material surface rather than at each
+/// call site: Fortal models neutral tone as inherited context, so the fix
+/// belongs at the boundary that broke the inheritance. [dashboardText]'s
+/// explicit tones still override it, and both follow live theme changes.
+class DashboardSurfaceTone extends StatelessWidget {
+  const DashboardSurfaceTone({super.key, required this.child});
 
-  final TextTone tone;
   final Widget child;
 
   @override
   Widget build(BuildContext context) => DefaultTextStyle.merge(
-    style: TextStyle(color: MixScope.tokenOf(tone._color, context)),
+    style: TextStyle(color: MixScope.tokenOf(TextTone.strong._color, context)),
     child: child,
   );
 }

@@ -11,6 +11,7 @@ import '../pages/gallery/gallery_typography_page.dart';
 import '../pages/orders_page.dart';
 import '../pages/overview_page.dart';
 import '../pages/settings_page.dart';
+import '../widgets/typography.dart';
 import 'dashboard_page.dart';
 import 'sidebar.dart';
 import 'top_bar.dart';
@@ -55,34 +56,44 @@ class _DashboardShellState extends State<DashboardShell> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.transparent,
+      // Scaffold and Drawer are the two Material surfaces in this app, and each
+      // installs its own DefaultTextStyle below FortalScope's root run.
       drawer: compact
           ? Drawer(
               width: 256,
               semanticLabel: 'Dashboard navigation',
-              child: Sidebar(selected: _selected, onSelected: _select),
+              child: DashboardSurfaceTone(
+                child: Sidebar(selected: _selected, onSelected: _select),
+              ),
             )
           : null,
-      body: Row(
-        children: [
-          if (!compact) Sidebar(selected: _selected, onSelected: _select),
-          Expanded(
-            child: Column(
-              children: [
-                TopBar(
-                  page: _selected,
-                  onMenuPressed: compact
-                      ? () => _scaffoldKey.currentState?.openDrawer()
-                      : null,
-                  onSearchChanged: (value) =>
-                      setState(() => _searchQuery = value.trim().toLowerCase()),
-                ),
-                Expanded(
-                  child: IndexedStack(index: _selected.index, children: pages),
-                ),
-              ],
+      body: DashboardSurfaceTone(
+        child: Row(
+          children: [
+            if (!compact) Sidebar(selected: _selected, onSelected: _select),
+            Expanded(
+              child: Column(
+                children: [
+                  TopBar(
+                    page: _selected,
+                    onMenuPressed: compact
+                        ? () => _scaffoldKey.currentState?.openDrawer()
+                        : null,
+                    onSearchChanged: (value) => setState(
+                      () => _searchQuery = value.trim().toLowerCase(),
+                    ),
+                  ),
+                  Expanded(
+                    child: IndexedStack(
+                      index: _selected.index,
+                      children: pages,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -72,9 +72,7 @@ class _Brand extends StatelessWidget {
     return Box(
       key: const ValueKey('dashboard-brand'),
       style: BoxStyler().paddingAll(FortalTokens.space4()),
-      child: const DashboardTextTone(
-        child: FortalText('Dashboard', size: .size5, weight: .bold),
-      ),
+      child: const FortalText('Dashboard', size: .size5, weight: .bold),
     );
   }
 }
@@ -163,13 +161,7 @@ class _Profile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: .start,
                 children: [
-                  const DashboardTextTone(
-                    child: FortalText(
-                      'Leo Farias',
-                      size: .size2,
-                      weight: .medium,
-                    ),
-                  ),
+                  const FortalText('Leo Farias', size: .size2, weight: .medium),
                   StyledText(
                     'leo@remix.dev',
                     style: dashboardText(.size1, tone: .muted),

@@ -42,9 +42,7 @@ class StatCard extends StatelessWidget {
                 FortalAvatar.soft(icon: icon, size: .size2),
               ],
             ),
-            DashboardTextTone(
-              child: FortalText(value, size: .size7, weight: .bold),
-            ),
+            FortalText(value, size: .size7, weight: .bold),
             Wrap(
               spacing: 8,
               runSpacing: 6,

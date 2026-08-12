@@ -115,13 +115,11 @@ class _TopBarState extends State<TopBar> {
                   Row(
                     children: [
                       const Expanded(
-                        child: DashboardTextTone(
-                          child: FortalHeading(
-                            'Notifications',
-                            headingLevel: 2,
-                            size: .size3,
-                            weight: .medium,
-                          ),
+                        child: FortalHeading(
+                          'Notifications',
+                          headingLevel: 2,
+                          size: .size3,
+                          weight: .medium,
                         ),
                       ),
                       FortalButton.ghost(
@@ -159,12 +157,10 @@ class _TopBarState extends State<TopBar> {
                             crossAxisAlignment: .start,
                             spacing: 2,
                             children: [
-                              DashboardTextTone(
-                                child: FortalText(
-                                  event.title,
-                                  size: .size2,
-                                  weight: .medium,
-                                ),
+                              FortalText(
+                                event.title,
+                                size: .size2,
+                                weight: .medium,
                               ),
                               StyledText(
                                 event.relativeTime,
