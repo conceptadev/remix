@@ -201,6 +201,10 @@
         {
           "title": "Overview",
           "href": "/fortal"
+        },
+        {
+          "title": "Typography",
+          "href": "/fortal/typography"
         }
       ]
     }

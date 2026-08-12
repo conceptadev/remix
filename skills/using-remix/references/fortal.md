@@ -9,6 +9,7 @@ separate package on top of Remix: preset widgets, variants, sizes, and tokens.
 - [Install and import](#install-and-import)
 - [Presets and recipes](#presets-and-recipes)
 - [Component variants and sizes](#component-variants--sizes)
+- [Typography](#typography)
 - [Scope and theme configuration](#fortalscope--theme-config)
 - [Tokens](#using-tokens)
 
@@ -16,7 +17,7 @@ separate package on top of Remix: preset widgets, variants, sizes, and tokens.
 
 Use Fortal when the UI should follow its ready-made Radix-inspired visual system. Use base Remix when the user wants a distinct visual language, does not want Fortal's token scales, or needs a fully custom `*Styler`. Fortal is optional and never required for ordinary `Remix*` widgets.
 
-Place `FortalScope` above every subtree that renders Fortal styles. Put it above the application or router when overlay entries and pushed routes must inherit Fortal tokens.
+Place `FortalScope` above every subtree that renders Fortal styles. Put it above the application or router when overlay entries and pushed routes must inherit Fortal tokens — **except** under `MaterialApp` or `CupertinoApp`, where it belongs in `builder:`. See [Scope placement](#fortalscope--theme-config).
 
 ## Install and import
 
@@ -101,6 +102,11 @@ explicit `<String>`.
 | Dialog | `FortalDialog` | — | `size1`–`size4` |
 | Tooltip | `FortalTooltip` | — | — |
 | Tabs | `FortalTabBar` / `FortalTab` / `FortalTabView` | — | `FortalTab`: `size1`–`size2` |
+| Text | `FortalText` | — | `FortalTextSize.size1`–`size9` |
+| Heading | `FortalHeading` | — | `FortalTextSize.size1`–`size9` (default `size6`) |
+| Code | `FortalCode` | `solid`, `soft`, `outline`, `ghost` | `FortalTextSize.size1`–`size9` |
+| Kbd | `FortalKbd` | `classic`, `soft` | `FortalTextSize.size1`–`size9` |
+| Link | `FortalLink` | — | `FortalTextSize.size1`–`size9` |
 
 Variant meanings (consistent across components):
 
@@ -131,6 +137,43 @@ Notes:
 
 ---
 
+## Typography
+
+`FortalText`, `FortalHeading`, `FortalCode`, `FortalKbd`, and `FortalLink` exist
+only in Fortal — base Remix ships no `RemixText`. All five share one
+`FortalTextSize` (`size1`–`size9`) and one `FortalTextWeight` (`light`,
+`regular`, `medium`, `bold`) instead of five parallel enums.
+
+```dart
+FortalHeading('Overview', size: .size6)                    // level 1 by default
+FortalHeading('Recent activity', headingLevel: 2, size: .size4, weight: .medium)
+FortalText('Body copy', size: .size3)
+FortalCode.soft('FortalScope', size: .size2)
+FortalKbd.classic('⌘K', semanticLabel: 'Command K')
+FortalLink('Read the docs', onPressed: openDocs)
+```
+
+Rules that matter when writing code:
+
+- Omitting `size` on `FortalText`, `FortalCode`, `FortalKbd`, or `FortalLink`
+  inherits the ambient `DefaultTextStyle`, matching an unsized Radix `Text` at
+  `1em`. `FortalHeading` defaults to `size6` and `bold`.
+- `headingLevel` drives accessibility only; it never changes the visual `size`.
+  Page titles are level 1, sections and cards below them level 2.
+- Colour is opt-in: `accent: true` gives `accent-a11` and adding
+  `highContrast: true` promotes it to `accent-12`. `highContrast` alone does
+  nothing. `FortalKbd` pins `gray-12` and its own regular weight.
+- `truncate: true` wins over `softWrap` and forces one ellipsized line.
+- A `FortalLink` **without** `onPressed` is inert styled text: no focus stop, no
+  link role, no activation. Only an actionable link underlines.
+- `linkUrl` is assistive metadata and is never launched; navigation belongs in
+  `onPressed`. Passing `linkUrl` without `onPressed` asserts.
+- No leading trim, `pretty`/`balance` wrapping, responsive prop objects, or
+  per-instance colour prop. Re-scope `FortalScope.accent` for a coloured
+  subtree.
+
+---
+
 ## FortalScope & Theme Config
 
 ```dart
@@ -158,6 +201,47 @@ mauve, slate, sage, olive, sand.
 selects `none|small|medium|large|full`; `scaling` selects 90%, 95%, 100%, 105%,
 or 110%; and `hasBackground` controls whether the scope paints the resolved
 page background behind its child.
+
+### Scope placement
+
+The **outermost** `FortalScope` also establishes the Radix theme root's default
+text run — `text3` (16px, 1.5 line height, 0 letter spacing) at `gray-12`,
+regular weight, with no pinned font family. That is what an unsized
+`FortalText`, `FortalCode`, `FortalKbd`, or `FortalLink` measures `1em` against
+when there is no closer `DefaultTextStyle`, so placement matters:
+
+| Host | Put the scope |
+| --- | --- |
+| `WidgetsApp`, router, or a custom host | Above the app |
+| `MaterialApp`, `CupertinoApp` | In `builder:` |
+
+A **nested** scope re-scopes tokens only. It inherits the closest text style
+instead of restating the root run, so wrapping a subtree in
+`FortalScope(accent: .red, hasBackground: false, ...)` re-themes its tokens
+without resizing or recoloring the text already running through it.
+
+```dart
+// MaterialApp / CupertinoApp
+MaterialApp(
+  builder: (context, child) => FortalScope(child: child!),
+  home: const MyScreen(),
+)
+```
+
+Those apps pass `WidgetsApp` their own root `DefaultTextStyle`, which lands
+below anything wrapping the app. A scope placed above `MaterialApp` still
+supplies tokens, but its root text run is overridden. `builder:` sits below that
+style and above the `Navigator`, so pushed routes and raw `Overlay` entries
+receive the Fortal fallback.
+
+Normal Flutter inheritance still applies below the scope. A nearer
+`DefaultTextStyle`, including one from `Material` or `Scaffold`, wins. Unsized
+Fortal typography deliberately inherits it; use `size: FortalTextSize.size3`
+when a component needs the exact 16px Radix root size inside such a surface.
+
+If text inside a hand-rolled `OverlayEntry` renders red and monospace with a
+yellow double underline, the scope is in the wrong place: that is Flutter's
+"put your text in a Material" fallback style.
 
 `FortalThemeConfig` is the immutable config object form:
 

@@ -100,7 +100,8 @@
       "radius": "medium",
       "scaling": "100%",
       "hasBackground": true,
-      "panelBlurLogicalPixels": 64
+      "panelBlurLogicalPixels": 64,
+      "rootTextStyle": "text3 at gray-12 and regular weight: --default-font-size is --font-size-3, --default-line-height is 1.5, --default-letter-spacing is 0em, and color.css sets color: var(--gray-12) on .radix-themes"
     },
     "sourceFiles": [
       "src/components/theme.props.tsx",
@@ -226,7 +227,8 @@
         "nestedExplicitAuto",
         "paintedBackground",
         "translucentPanel",
-        "solidPanel"
+        "solidPanel",
+        "rootTextStyle"
       ]
     },
     "supportedVisualStates": [
@@ -235,7 +237,8 @@
       "nestedInherit",
       "paintedBackground",
       "translucentPanel",
-      "solidPanel"
+      "solidPanel",
+      "rootTextStyle"
     ],
     "states": [
       "rootDefaultLight",
@@ -243,7 +246,8 @@
       "nestedInherit",
       "paintedBackground",
       "translucentPanel",
-      "solidPanel"
+      "solidPanel",
+      "rootTextStyle"
     ],
     "coverage": {
       "enums": [
@@ -305,7 +309,8 @@
         "nestedInherit",
         "paintedBackground",
         "translucentPanel",
-        "solidPanel"
+        "solidPanel",
+        "rootTextStyle"
       ],
       "tests": [
         "test/fortal/fortal_theme_resolution_test.dart",
@@ -3830,6 +3835,907 @@
         "variant": "generated Fortal constructor",
         "size": "generated Fortal constructor"
       }
+    },
+    {
+      "id": "text",
+      "fortalType": "FortalText",
+      "radixComponent": "Text",
+      "parity": "mapped",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4",
+            "size5",
+            "size6",
+            "size7",
+            "size8",
+            "size9"
+          ],
+          "default": null
+        },
+        "weight": {
+          "values": [
+            "light",
+            "regular",
+            "medium",
+            "bold"
+          ],
+          "default": null
+        }
+      },
+      "defaults": {
+        "size": null,
+        "weight": null,
+        "align": null,
+        "softWrap": true,
+        "truncate": false,
+        "accent": false,
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "accent",
+        "highContrast",
+        "truncated"
+      ],
+      "sourceFiles": [
+        "src/components/text.props.tsx",
+        "src/components/text.css",
+        "src/styles/tokens/typography.css"
+      ],
+      "sourceSelectors": [
+        ".rt-Text",
+        ".rt-high-contrast"
+      ],
+      "flutterExceptions": [
+        "An omitted size renders at the ambient DefaultTextStyle, matching an unsized Radix Text at 1em; only an explicit size resolves a token.",
+        "The `as` element choice and `asChild` map to Flutter widget composition; FortalText always renders exactly one Text node.",
+        "Radix `wrap` covers pretty and balance line breaking; Flutter exposes no equivalent line breaker, so the recipe maps only the wrap/nowrap pair onto softWrap and folds truncate into one ellipsized line.",
+        "CSS leading trim has no Flutter primitive, so the token line box is painted untrimmed.",
+        "Radix `align` accepts left, center, and right; the recipe forwards Flutter's TextAlign so start and end are also reachable."
+      ],
+      "coverage": {
+        "enums": [
+          "size.size1",
+          "size.size2",
+          "size.size3",
+          "size.size4",
+          "size.size5",
+          "size.size6",
+          "size.size7",
+          "size.size8",
+          "size.size9",
+          "weight.light",
+          "weight.regular",
+          "weight.medium",
+          "weight.bold"
+        ],
+        "states": [
+          "idle",
+          "accent",
+          "highContrast",
+          "truncated"
+        ],
+        "tests": [
+          "test/components/typography/typography_test.dart"
+        ]
+      },
+      "upstreamInventory": {
+        "enums": {
+          "as": {
+            "values": [
+              "span",
+              "div",
+              "label",
+              "p"
+            ],
+            "default": "span"
+          },
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3",
+              "size4",
+              "size5",
+              "size6",
+              "size7",
+              "size8",
+              "size9"
+            ],
+            "default": null
+          },
+          "weight": {
+            "values": [
+              "light",
+              "regular",
+              "medium",
+              "bold"
+            ],
+            "default": null
+          },
+          "align": {
+            "values": [
+              "left",
+              "center",
+              "right"
+            ],
+            "default": null
+          },
+          "trim": {
+            "values": [
+              "normal",
+              "start",
+              "end",
+              "both"
+            ],
+            "default": null
+          },
+          "wrap": {
+            "values": [
+              "wrap",
+              "nowrap",
+              "pretty",
+              "balance"
+            ],
+            "default": null
+          }
+        },
+        "states": [
+          "idle",
+          "highContrast"
+        ],
+        "supportedStyleProps": [
+          "color",
+          "highContrast"
+        ]
+      },
+      "supportedVisualStates": [
+        "idle",
+        "accent",
+        "highContrast",
+        "truncated"
+      ],
+      "deferredCapabilities": [
+        "as and asChild element polymorphism",
+        "responsive size, weight, align, trim, and wrap objects",
+        "pretty and balance text wrapping",
+        "leading trim",
+        "per-instance color prop: callers re-scope FortalScope.accent"
+      ],
+      "visualMapping": {
+        "color": "FortalScope.accent through accent: true",
+        "radius": "not exposed by Radix Text",
+        "highContrast": "generated Fortal constructor",
+        "variant": "not exposed by Radix Text",
+        "size": "generated Fortal constructor"
+      }
+    },
+    {
+      "id": "heading",
+      "fortalType": "FortalHeading",
+      "radixComponent": "Heading",
+      "parity": "mapped",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4",
+            "size5",
+            "size6",
+            "size7",
+            "size8",
+            "size9"
+          ],
+          "default": "size6"
+        },
+        "weight": {
+          "values": [
+            "light",
+            "regular",
+            "medium",
+            "bold"
+          ],
+          "default": "bold"
+        }
+      },
+      "defaults": {
+        "headingLevel": 1,
+        "size": "size6",
+        "weight": "bold",
+        "align": null,
+        "softWrap": true,
+        "truncate": false,
+        "accent": false,
+        "highContrast": false,
+        "excludeSemantics": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "accent",
+        "highContrast",
+        "truncated",
+        "semantic"
+      ],
+      "sourceFiles": [
+        "src/components/heading.props.tsx",
+        "src/components/heading.css",
+        "src/styles/tokens/typography.css"
+      ],
+      "sourceSelectors": [
+        ".rt-Heading",
+        ".rt-high-contrast"
+      ],
+      "flutterExceptions": [
+        "Radix `as` selects an h1\u2013h6 element that carries the visual and the semantic level together; Flutter splits them, so headingLevel drives a Semantics header node while size stays purely visual.",
+        "`--heading-font-size-adjust` is 1, so headings reuse the raw token size and differ from body text only in the pinned line box.",
+        "Radix `wrap` covers pretty and balance line breaking; Flutter exposes no equivalent line breaker, so the recipe maps only the wrap/nowrap pair onto softWrap and folds truncate into one ellipsized line.",
+        "CSS leading trim has no Flutter primitive, so the token line box is painted untrimmed."
+      ],
+      "coverage": {
+        "enums": [
+          "size.size1",
+          "size.size2",
+          "size.size3",
+          "size.size4",
+          "size.size5",
+          "size.size6",
+          "size.size7",
+          "size.size8",
+          "size.size9",
+          "weight.light",
+          "weight.regular",
+          "weight.medium",
+          "weight.bold"
+        ],
+        "states": [
+          "idle",
+          "accent",
+          "highContrast",
+          "truncated",
+          "semantic"
+        ],
+        "tests": [
+          "test/components/typography/typography_test.dart"
+        ]
+      },
+      "upstreamInventory": {
+        "enums": {
+          "as": {
+            "values": [
+              "h1",
+              "h2",
+              "h3",
+              "h4",
+              "h5",
+              "h6"
+            ],
+            "default": "h1"
+          },
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3",
+              "size4",
+              "size5",
+              "size6",
+              "size7",
+              "size8",
+              "size9"
+            ],
+            "default": "size6"
+          },
+          "weight": {
+            "values": [
+              "light",
+              "regular",
+              "medium",
+              "bold"
+            ],
+            "default": "bold"
+          },
+          "align": {
+            "values": [
+              "left",
+              "center",
+              "right"
+            ],
+            "default": null
+          },
+          "trim": {
+            "values": [
+              "normal",
+              "start",
+              "end",
+              "both"
+            ],
+            "default": null
+          },
+          "wrap": {
+            "values": [
+              "wrap",
+              "nowrap",
+              "pretty",
+              "balance"
+            ],
+            "default": null
+          }
+        },
+        "states": [
+          "idle",
+          "highContrast"
+        ],
+        "supportedStyleProps": [
+          "color",
+          "highContrast"
+        ]
+      },
+      "supportedVisualStates": [
+        "idle",
+        "accent",
+        "highContrast",
+        "truncated"
+      ],
+      "deferredCapabilities": [
+        "as and asChild element polymorphism",
+        "responsive size, weight, align, trim, and wrap objects",
+        "pretty and balance text wrapping",
+        "leading trim",
+        "per-instance color prop: callers re-scope FortalScope.accent"
+      ],
+      "visualMapping": {
+        "color": "FortalScope.accent through accent: true",
+        "radius": "not exposed by Radix Heading",
+        "highContrast": "FortalHeading constructor",
+        "variant": "not exposed by Radix Heading",
+        "size": "FortalHeading constructor"
+      }
+    },
+    {
+      "id": "code",
+      "fortalType": "FortalCode",
+      "radixComponent": "Code",
+      "parity": "mapped",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4",
+            "size5",
+            "size6",
+            "size7",
+            "size8",
+            "size9"
+          ],
+          "default": null
+        },
+        "variant": {
+          "values": [
+            "solid",
+            "soft",
+            "outline",
+            "ghost"
+          ],
+          "default": "soft"
+        },
+        "weight": {
+          "values": [
+            "light",
+            "regular",
+            "medium",
+            "bold"
+          ],
+          "default": null
+        }
+      },
+      "defaults": {
+        "size": null,
+        "variant": "soft",
+        "weight": null,
+        "softWrap": true,
+        "truncate": false,
+        "accent": false,
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "accent",
+        "highContrast",
+        "truncated"
+      ],
+      "sourceFiles": [
+        "src/components/code.props.tsx",
+        "src/components/code.css",
+        "src/styles/tokens/typography.css"
+      ],
+      "sourceSelectors": [
+        ".rt-Code",
+        ".rt-variant-solid",
+        ".rt-variant-soft",
+        ".rt-variant-outline",
+        ".rt-variant-ghost",
+        ".rt-high-contrast"
+      ],
+      "flutterExceptions": [
+        "Radix renders Code as an inline element inside a text run; RemixBadge paints a standalone box, so a Code inside a wrapped sentence is a sibling widget rather than an inline span.",
+        "`--code-font-weight: inherit` becomes an optional weight argument because a Flutter TextStyler cannot inherit one property in isolation.",
+        "Ghost inherits the ambient foreground unless the caller opts into the local accent, matching the upstream `[data-accent-color]` gate.",
+        "The Link-nested hover, solid high-contrast hover filter, and ::selection rules need an actionable ancestor FortalCode never has.",
+        "Radix `wrap` covers pretty and balance line breaking; Flutter exposes no equivalent line breaker, so the recipe maps only the wrap/nowrap pair onto softWrap and folds truncate into one ellipsized line.",
+        "CSS leading trim has no Flutter primitive, so the token line box is painted untrimmed."
+      ],
+      "coverage": {
+        "enums": [
+          "size.size1",
+          "size.size2",
+          "size.size3",
+          "size.size4",
+          "size.size5",
+          "size.size6",
+          "size.size7",
+          "size.size8",
+          "size.size9",
+          "variant.solid",
+          "variant.soft",
+          "variant.outline",
+          "variant.ghost",
+          "weight.light",
+          "weight.regular",
+          "weight.medium",
+          "weight.bold"
+        ],
+        "states": [
+          "idle",
+          "accent",
+          "highContrast",
+          "truncated"
+        ],
+        "tests": [
+          "test/components/typography/typography_test.dart"
+        ]
+      },
+      "upstreamInventory": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3",
+              "size4",
+              "size5",
+              "size6",
+              "size7",
+              "size8",
+              "size9"
+            ],
+            "default": null
+          },
+          "variant": {
+            "values": [
+              "solid",
+              "soft",
+              "outline",
+              "ghost"
+            ],
+            "default": "soft"
+          },
+          "weight": {
+            "values": [
+              "light",
+              "regular",
+              "medium",
+              "bold"
+            ],
+            "default": null
+          },
+          "wrap": {
+            "values": [
+              "wrap",
+              "nowrap",
+              "pretty",
+              "balance"
+            ],
+            "default": null
+          }
+        },
+        "states": [
+          "idle",
+          "highContrast"
+        ],
+        "supportedStyleProps": [
+          "color",
+          "highContrast"
+        ]
+      },
+      "supportedVisualStates": [
+        "idle",
+        "accent",
+        "highContrast",
+        "truncated"
+      ],
+      "deferredCapabilities": [
+        "asChild element polymorphism",
+        "responsive size and wrap objects",
+        "pretty and balance text wrapping",
+        "per-instance color prop: callers re-scope FortalScope.accent",
+        "inline flow inside a surrounding text run",
+        "actionable Code hover, filter, and ::selection treatments"
+      ],
+      "visualMapping": {
+        "color": "FortalScope.accent",
+        "radius": "FortalScope.radius through the resolved radius factor",
+        "highContrast": "FortalCode constructor",
+        "variant": "FortalCode constructor",
+        "size": "FortalCode constructor"
+      }
+    },
+    {
+      "id": "kbd",
+      "fortalType": "FortalKbd",
+      "radixComponent": "Kbd",
+      "parity": "mapped",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4",
+            "size5",
+            "size6",
+            "size7",
+            "size8",
+            "size9"
+          ],
+          "default": null
+        },
+        "variant": {
+          "values": [
+            "classic",
+            "soft"
+          ],
+          "default": "classic"
+        }
+      },
+      "defaults": {
+        "size": null,
+        "variant": "classic",
+        "excludeSemantics": false
+      },
+      "supportedStyleProps": [
+        "radius"
+      ],
+      "states": [
+        "idle",
+        "explicitDark",
+        "semantic"
+      ],
+      "sourceFiles": [
+        "src/components/kbd.props.tsx",
+        "src/components/kbd.css",
+        "src/styles/tokens/typography.css"
+      ],
+      "sourceSelectors": [
+        ".rt-Kbd",
+        ".rt-variant-classic",
+        ".rt-variant-soft"
+      ],
+      "flutterExceptions": [
+        "Radix uses two type-scale factors: an explicit size multiplies its token by 0.8, while an unsized Kbd renders at 0.75em of the ambient style. Because `--letter-spacing-N` is an em, an explicit size also re-resolves its letter spacing against Kbd's own 0.8 font size.",
+        "The inherited path keeps Flutter absolute letter-spacing inheritance: an ambient DefaultTextStyle carries a resolved value with no em intent left to rescale.",
+        "`vertical-align: text-top` positions the cap inside a surrounding text run; a standalone Flutter box has no inline baseline to align against.",
+        "The hover, open, active, and focus-visible rules apply only when Kbd is nested in an anchor or button, which FortalKbd never is.",
+        "Kbd publishes one native keyboardKey Semantics node and no tap action, because it is inert upstream."
+      ],
+      "coverage": {
+        "enums": [
+          "size.size1",
+          "size.size2",
+          "size.size3",
+          "size.size4",
+          "size.size5",
+          "size.size6",
+          "size.size7",
+          "size.size8",
+          "size.size9",
+          "variant.classic",
+          "variant.soft"
+        ],
+        "states": [
+          "idle",
+          "explicitDark",
+          "semantic"
+        ],
+        "tests": [
+          "test/components/typography/typography_test.dart"
+        ]
+      },
+      "upstreamInventory": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3",
+              "size4",
+              "size5",
+              "size6",
+              "size7",
+              "size8",
+              "size9"
+            ],
+            "default": null
+          },
+          "variant": {
+            "values": [
+              "classic",
+              "soft"
+            ],
+            "default": "classic"
+          }
+        },
+        "states": [
+          "idle",
+          "hovered",
+          "open",
+          "pressed",
+          "focused"
+        ],
+        "supportedStyleProps": []
+      },
+      "supportedVisualStates": [
+        "idle",
+        "explicitDark"
+      ],
+      "deferredCapabilities": [
+        "asChild element polymorphism",
+        "responsive size objects",
+        "the -0.03em vertical nudge and text-top inline alignment",
+        "actionable Kbd hover, open, active, and focus-visible treatments"
+      ],
+      "visualMapping": {
+        "color": "fixed gray roles",
+        "radius": "FortalScope.radius through the resolved radius factor",
+        "highContrast": "not exposed by Radix Kbd",
+        "variant": "FortalKbd constructor",
+        "size": "FortalKbd constructor"
+      }
+    },
+    {
+      "id": "link",
+      "fortalType": "FortalLink",
+      "radixComponent": "Link",
+      "parity": "mapped",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4",
+            "size5",
+            "size6",
+            "size7",
+            "size8",
+            "size9"
+          ],
+          "default": null
+        },
+        "weight": {
+          "values": [
+            "light",
+            "regular",
+            "medium",
+            "bold"
+          ],
+          "default": null
+        },
+        "underline": {
+          "values": [
+            "auto",
+            "always",
+            "hover",
+            "none"
+          ],
+          "default": "auto"
+        }
+      },
+      "defaults": {
+        "size": null,
+        "weight": null,
+        "underline": "auto",
+        "softWrap": true,
+        "truncate": false,
+        "highContrast": false,
+        "enabled": true,
+        "autofocus": false,
+        "enableFeedback": true,
+        "excludeSemantics": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "focused",
+        "disabled",
+        "highContrast",
+        "inert",
+        "truncated",
+        "semantic"
+      ],
+      "sourceFiles": [
+        "src/components/link.props.tsx",
+        "src/components/link.css",
+        "src/styles/tokens/typography.css"
+      ],
+      "sourceSelectors": [
+        ".rt-Link",
+        ".rt-underline-auto",
+        ".rt-underline-hover",
+        ".rt-underline-always",
+        ".rt-high-contrast"
+      ],
+      "flutterExceptions": [
+        "Every upstream underline rule is gated behind `:where(:any-link, button)`, so a FortalLink with no onPressed stays inert accent text with no focus stop, link role, or activation.",
+        "`text-underline-offset` has no Flutter TextStyle equivalent, so the underline sits at the font's own offset.",
+        "Flutter reads decorationThickness as a multiple of the font underline thickness rather than a CSS length, so the pinned `min(2px, max(1px, 0.05em))` ramp lands as a 1x\u20132x stroke.",
+        "The decoration colour approximates Radix `color-mix(in oklab, \u2026)` with an sRGB Color.lerp.",
+        "A focus-visible outline replaces the underline rather than stacking both, matching the upstream `text-decoration-line: none` override.",
+        "linkUrl is assistive metadata only and is never launched; navigation stays the caller responsibility in onPressed.",
+        "Radix `wrap` covers pretty and balance line breaking; Flutter exposes no equivalent line breaker, so the recipe maps only the wrap/nowrap pair onto softWrap and folds truncate into one ellipsized line.",
+        "CSS leading trim has no Flutter primitive, so the token line box is painted untrimmed."
+      ],
+      "coverage": {
+        "enums": [
+          "size.size1",
+          "size.size2",
+          "size.size3",
+          "size.size4",
+          "size.size5",
+          "size.size6",
+          "size.size7",
+          "size.size8",
+          "size.size9",
+          "weight.light",
+          "weight.regular",
+          "weight.medium",
+          "weight.bold",
+          "underline.auto",
+          "underline.always",
+          "underline.hover",
+          "underline.none"
+        ],
+        "states": [
+          "idle",
+          "hovered",
+          "focused",
+          "disabled",
+          "highContrast",
+          "inert",
+          "truncated",
+          "semantic"
+        ],
+        "tests": [
+          "test/components/typography/typography_test.dart"
+        ]
+      },
+      "upstreamInventory": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3",
+              "size4",
+              "size5",
+              "size6",
+              "size7",
+              "size8",
+              "size9"
+            ],
+            "default": null
+          },
+          "weight": {
+            "values": [
+              "light",
+              "regular",
+              "medium",
+              "bold"
+            ],
+            "default": null
+          },
+          "underline": {
+            "values": [
+              "auto",
+              "always",
+              "hover",
+              "none"
+            ],
+            "default": "auto"
+          },
+          "trim": {
+            "values": [
+              "normal",
+              "start",
+              "end",
+              "both"
+            ],
+            "default": null
+          },
+          "wrap": {
+            "values": [
+              "wrap",
+              "nowrap",
+              "pretty",
+              "balance"
+            ],
+            "default": null
+          }
+        },
+        "states": [
+          "idle",
+          "hovered",
+          "focused",
+          "disabled",
+          "highContrast"
+        ],
+        "supportedStyleProps": [
+          "color",
+          "highContrast"
+        ]
+      },
+      "supportedVisualStates": [
+        "idle",
+        "hovered",
+        "focused",
+        "disabled",
+        "highContrast",
+        "inert",
+        "truncated"
+      ],
+      "deferredCapabilities": [
+        "asChild element polymorphism",
+        "responsive size, weight, trim, and wrap objects",
+        "pretty and balance text wrapping",
+        "leading trim",
+        "per-instance color prop: callers re-scope FortalScope.accent",
+        "text-underline-offset",
+        "the coarse-pointer active tap highlight",
+        "the transparent underline when the only child is a non-ghost Code",
+        "URL launching: onPressed owns navigation"
+      ],
+      "visualMapping": {
+        "color": "FortalScope.accent",
+        "radius": "FortalScope.radius through the resolved radius factor",
+        "highContrast": "FortalLink constructor",
+        "variant": "not exposed by Radix Link",
+        "size": "FortalLink constructor"
+      }
     }
   ],
   "unmappedUpstreamFamilies": [
@@ -3977,6 +4883,27 @@
       "flutter": "Remix uses Flutter text baselines for horizontal rows and untrimmed box bounds for vertical and custom-child rows.",
       "reason": "Flutter has no CSS leading-trim primitive, and offset arithmetic is outside the plain-styler recipe contract.",
       "tolerance": "Text ink may sit up to 0.25em differently at row edges; shared columns, gaps, alignment selection, typography, and semantic bounds have no tolerance."
+    },
+    {
+      "family": "kbd",
+      "upstream": "Radix nudges the key cap up by `top: -0.03em` with `position: relative` and aligns it with `vertical-align: text-top`.",
+      "flutter": "FortalKbd paints the pinned cap geometry, fills, and six-layer classic shadow stack in normal flow.",
+      "reason": "A transform wrapper for a sub-pixel baseline tweak sits outside the plain-styler recipe contract, and a standalone Flutter box has no inline text run to align against.",
+      "tolerance": "Vertical placement inside a surrounding line may differ by up to 0.03em; font size, letter spacing, minimum width, padding, radius, fills, and every shadow layer have no tolerance."
+    },
+    {
+      "family": "link",
+      "upstream": "Radix sets `text-decoration-thickness: min(2px, max(1px, 0.05em))` and `text-underline-offset: calc(0.025em + 2px)`.",
+      "flutter": "The recipe sets decorationThickness to the same `min(2, max(1, 0.05 x fontSize))` ramp and leaves the underline at the font offset.",
+      "reason": "Flutter expresses decorationThickness as a multiple of the font underline thickness and offers no underline-offset property.",
+      "tolerance": "Underline offset and absolute stroke width may differ by a fraction of a logical pixel; the breakpoints of the ramp, the decoration line, style, and colour have no tolerance."
+    },
+    {
+      "family": "link",
+      "upstream": "Radix blends the underline colour with `color-mix(in oklab, var(--accent-aN), var(--gray-a6))`.",
+      "flutter": "The recipe blends the same two resolved tokens with an sRGB Color.lerp at 0.5.",
+      "reason": "Flutter has no OKLab colour-mix primitive, and shipping one for a single decoration colour is outside the recipe contract.",
+      "tolerance": "The blended underline colour may differ by a few 8-bit channel steps; the accent step selected per underline mode and contrast has no tolerance."
     }
   ],
   "upstreamInventory": {
@@ -4184,6 +5111,37 @@
       }
     },
     "families": {
+      "accordion": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3"
+            ],
+            "default": "size2"
+          },
+          "variant": {
+            "values": [
+              "surface",
+              "soft"
+            ],
+            "default": "surface"
+          }
+        },
+        "states": [
+          "collapsed",
+          "expanded",
+          "hovered",
+          "pressed",
+          "focused",
+          "disabled"
+        ],
+        "supportedStyleProps": [
+          "color",
+          "radius"
+        ]
+      },
       "avatar": {
         "enums": {
           "size": {
@@ -4383,6 +5341,156 @@
           "highContrast"
         ]
       },
+      "code": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3",
+              "size4",
+              "size5",
+              "size6",
+              "size7",
+              "size8",
+              "size9"
+            ],
+            "default": null
+          },
+          "variant": {
+            "values": [
+              "solid",
+              "soft",
+              "outline",
+              "ghost"
+            ],
+            "default": "soft"
+          },
+          "weight": {
+            "values": [
+              "light",
+              "regular",
+              "medium",
+              "bold"
+            ],
+            "default": null
+          },
+          "wrap": {
+            "values": [
+              "wrap",
+              "nowrap",
+              "pretty",
+              "balance"
+            ],
+            "default": null
+          }
+        },
+        "states": [
+          "idle",
+          "highContrast"
+        ],
+        "supportedStyleProps": [
+          "color",
+          "highContrast"
+        ]
+      },
+      "data_list": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3"
+            ],
+            "default": "size2"
+          },
+          "orientation": {
+            "values": [
+              "horizontal",
+              "vertical"
+            ],
+            "default": "horizontal"
+          },
+          "alignment": {
+            "values": [
+              "start",
+              "center",
+              "end",
+              "baseline",
+              "stretch"
+            ],
+            "default": null
+          },
+          "trim": {
+            "values": [
+              "normal",
+              "start",
+              "end",
+              "both"
+            ],
+            "default": "normal"
+          }
+        },
+        "states": [
+          "idle",
+          "highContrast",
+          "customChild",
+          "rtl"
+        ],
+        "supportedStyleProps": [
+          "labelColor",
+          "labelHighContrast",
+          "labelWidth"
+        ]
+      },
+      "data_table": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3"
+            ],
+            "default": "size2"
+          },
+          "variant": {
+            "values": [
+              "surface",
+              "ghost"
+            ],
+            "default": "ghost"
+          },
+          "layout": {
+            "values": [
+              "auto",
+              "fixed"
+            ],
+            "default": null
+          },
+          "rowAlign": {
+            "values": [
+              "start",
+              "center",
+              "end",
+              "baseline"
+            ],
+            "default": null
+          },
+          "cellJustify": {
+            "values": [
+              "start",
+              "center",
+              "end"
+            ],
+            "default": null
+          }
+        },
+        "states": [
+          "idle",
+          "passive"
+        ],
+        "supportedStyleProps": []
+      },
       "dialog": {
         "enums": {
           "size": {
@@ -4439,34 +5547,71 @@
           "color"
         ]
       },
-      "menu": {
+      "heading": {
         "enums": {
+          "as": {
+            "values": [
+              "h1",
+              "h2",
+              "h3",
+              "h4",
+              "h5",
+              "h6"
+            ],
+            "default": "h1"
+          },
           "size": {
             "values": [
               "size1",
-              "size2"
+              "size2",
+              "size3",
+              "size4",
+              "size5",
+              "size6",
+              "size7",
+              "size8",
+              "size9"
             ],
-            "default": "size2"
+            "default": "size6"
           },
-          "variant": {
+          "weight": {
             "values": [
-              "solid",
-              "soft"
+              "light",
+              "regular",
+              "medium",
+              "bold"
             ],
-            "default": "solid"
+            "default": "bold"
+          },
+          "align": {
+            "values": [
+              "left",
+              "center",
+              "right"
+            ],
+            "default": null
+          },
+          "trim": {
+            "values": [
+              "normal",
+              "start",
+              "end",
+              "both"
+            ],
+            "default": null
+          },
+          "wrap": {
+            "values": [
+              "wrap",
+              "nowrap",
+              "pretty",
+              "balance"
+            ],
+            "default": null
           }
         },
         "states": [
-          "closed",
-          "open",
-          "highlighted",
-          "disabled",
-          "checked",
-          "unchecked",
-          "submenuOpen",
-          "rtl",
-          "escape",
-          "focusRestored",
+          "idle",
           "highContrast"
         ],
         "supportedStyleProps": [
@@ -4509,6 +5654,139 @@
         "supportedStyleProps": [
           "color",
           "radius",
+          "highContrast"
+        ]
+      },
+      "kbd": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3",
+              "size4",
+              "size5",
+              "size6",
+              "size7",
+              "size8",
+              "size9"
+            ],
+            "default": null
+          },
+          "variant": {
+            "values": [
+              "classic",
+              "soft"
+            ],
+            "default": "classic"
+          }
+        },
+        "states": [
+          "idle",
+          "hovered",
+          "open",
+          "pressed",
+          "focused"
+        ],
+        "supportedStyleProps": []
+      },
+      "link": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3",
+              "size4",
+              "size5",
+              "size6",
+              "size7",
+              "size8",
+              "size9"
+            ],
+            "default": null
+          },
+          "weight": {
+            "values": [
+              "light",
+              "regular",
+              "medium",
+              "bold"
+            ],
+            "default": null
+          },
+          "underline": {
+            "values": [
+              "auto",
+              "always",
+              "hover",
+              "none"
+            ],
+            "default": "auto"
+          },
+          "trim": {
+            "values": [
+              "normal",
+              "start",
+              "end",
+              "both"
+            ],
+            "default": null
+          },
+          "wrap": {
+            "values": [
+              "wrap",
+              "nowrap",
+              "pretty",
+              "balance"
+            ],
+            "default": null
+          }
+        },
+        "states": [
+          "idle",
+          "hovered",
+          "focused",
+          "disabled",
+          "highContrast"
+        ],
+        "supportedStyleProps": [
+          "color",
+          "highContrast"
+        ]
+      },
+      "menu": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2"
+            ],
+            "default": "size2"
+          },
+          "variant": {
+            "values": [
+              "solid",
+              "soft"
+            ],
+            "default": "solid"
+          }
+        },
+        "states": [
+          "closed",
+          "open",
+          "highlighted",
+          "disabled",
+          "checked",
+          "unchecked",
+          "submenuOpen",
+          "rtl",
+          "escape",
+          "focusRestored",
+          "highContrast"
+        ],
+        "supportedStyleProps": [
+          "color",
           "highContrast"
         ]
       },
@@ -4602,6 +5880,37 @@
           "highContrast"
         ]
       },
+      "segmented_control": {
+        "enums": {
+          "size": {
+            "values": [
+              "size1",
+              "size2",
+              "size3"
+            ],
+            "default": "size2"
+          },
+          "variant": {
+            "values": [
+              "surface",
+              "classic"
+            ],
+            "default": "surface"
+          }
+        },
+        "states": [
+          "unselected",
+          "selected",
+          "hovered",
+          "pressed",
+          "focused",
+          "disabled",
+          "rtl"
+        ],
+        "supportedStyleProps": [
+          "radius"
+        ]
+      },
       "select": {
         "enums": {
           "size": {
@@ -4648,6 +5957,21 @@
           "triggerRadius",
           "contentColor",
           "contentHighContrast"
+        ]
+      },
+      "skeleton": {
+        "enums": {},
+        "states": [
+          "loading",
+          "loaded",
+          "animationEnabled",
+          "animationDisabled",
+          "withChild",
+          "withoutChild"
+        ],
+        "supportedStyleProps": [
+          "width",
+          "height"
         ]
       },
       "slider": {
@@ -4805,84 +6129,74 @@
           "highContrast"
         ]
       },
-      "text_field": {
+      "text": {
         "enums": {
+          "as": {
+            "values": [
+              "span",
+              "div",
+              "label",
+              "p"
+            ],
+            "default": "span"
+          },
           "size": {
             "values": [
               "size1",
               "size2",
-              "size3"
+              "size3",
+              "size4",
+              "size5",
+              "size6",
+              "size7",
+              "size8",
+              "size9"
             ],
-            "default": "size2"
+            "default": null
           },
-          "variant": {
+          "weight": {
             "values": [
-              "classic",
-              "surface",
-              "soft"
+              "light",
+              "regular",
+              "medium",
+              "bold"
             ],
-            "default": "surface"
+            "default": null
+          },
+          "align": {
+            "values": [
+              "left",
+              "center",
+              "right"
+            ],
+            "default": null
+          },
+          "trim": {
+            "values": [
+              "normal",
+              "start",
+              "end",
+              "both"
+            ],
+            "default": null
+          },
+          "wrap": {
+            "values": [
+              "wrap",
+              "nowrap",
+              "pretty",
+              "balance"
+            ],
+            "default": null
           }
         },
         "states": [
           "idle",
-          "hovered",
-          "focused",
-          "disabled",
-          "readOnly",
-          "invalid",
-          "leading",
-          "trailing"
+          "highContrast"
         ],
         "supportedStyleProps": [
           "color",
-          "radius"
-        ]
-      },
-      "skeleton": {
-        "enums": {},
-        "states": [
-          "loading",
-          "loaded",
-          "animationEnabled",
-          "animationDisabled",
-          "withChild",
-          "withoutChild"
-        ],
-        "supportedStyleProps": [
-          "width",
-          "height"
-        ]
-      },
-      "segmented_control": {
-        "enums": {
-          "size": {
-            "values": [
-              "size1",
-              "size2",
-              "size3"
-            ],
-            "default": "size2"
-          },
-          "variant": {
-            "values": [
-              "surface",
-              "classic"
-            ],
-            "default": "surface"
-          }
-        },
-        "states": [
-          "unselected",
-          "selected",
-          "hovered",
-          "pressed",
-          "focused",
-          "disabled",
-          "rtl"
-        ],
-        "supportedStyleProps": [
-          "radius"
+          "highContrast"
         ]
       },
       "text_area": {
@@ -4926,74 +6240,7 @@
           "radius"
         ]
       },
-      "data_list": {
-        "enums": {
-          "size": {
-            "values": [
-              "size1",
-              "size2",
-              "size3"
-            ],
-            "default": "size2"
-          },
-          "orientation": {
-            "values": [
-              "horizontal",
-              "vertical"
-            ],
-            "default": "horizontal"
-          },
-          "alignment": {
-            "values": [
-              "start",
-              "center",
-              "end",
-              "baseline",
-              "stretch"
-            ],
-            "default": null
-          },
-          "trim": {
-            "values": [
-              "normal",
-              "start",
-              "end",
-              "both"
-            ],
-            "default": "normal"
-          }
-        },
-        "states": [
-          "idle",
-          "highContrast",
-          "customChild",
-          "rtl"
-        ],
-        "supportedStyleProps": [
-          "labelColor",
-          "labelHighContrast",
-          "labelWidth"
-        ]
-      },
-      "tooltip": {
-        "enums": {},
-        "states": [
-          "closed",
-          "delayedOpen",
-          "instantOpen",
-          "triggerHovered",
-          "contentHovered",
-          "focused",
-          "touch",
-          "escape",
-          "outsideTap",
-          "ownerRejected",
-          "collisionFlipped",
-          "collisionShifted"
-        ],
-        "supportedStyleProps": []
-      },
-      "accordion": {
+      "text_field": {
         "enums": {
           "size": {
             "values": [
@@ -5005,6 +6252,7 @@
           },
           "variant": {
             "values": [
+              "classic",
               "surface",
               "soft"
             ],
@@ -5012,12 +6260,14 @@
           }
         },
         "states": [
-          "collapsed",
-          "expanded",
+          "idle",
           "hovered",
-          "pressed",
           "focused",
-          "disabled"
+          "disabled",
+          "readOnly",
+          "invalid",
+          "leading",
+          "trailing"
         ],
         "supportedStyleProps": [
           "color",
@@ -5097,6 +6347,24 @@
           "radius",
           "highContrast"
         ]
+      },
+      "tooltip": {
+        "enums": {},
+        "states": [
+          "closed",
+          "delayedOpen",
+          "instantOpen",
+          "triggerHovered",
+          "contentHovered",
+          "focused",
+          "touch",
+          "escape",
+          "outsideTap",
+          "ownerRejected",
+          "collisionFlipped",
+          "collisionShifted"
+        ],
+        "supportedStyleProps": []
       }
     }
   },
@@ -5114,23 +6382,67 @@
     "card": [
       "interactive card behavior"
     ],
+    "code": [
+      "asChild element polymorphism",
+      "responsive size and wrap objects",
+      "per-instance color prop",
+      "inline flow inside a surrounding text run",
+      "actionable Code hover, filter, and ::selection treatments"
+    ],
+    "data_list": [
+      "compositional Root, Item, Label, and Value children",
+      "per-label color, highContrast, and width props",
+      "responsive orientation, size, align, trim, and width objects",
+      "CSS leading trim and value-edge negative margins"
+    ],
+    "heading": [
+      "as and asChild element polymorphism",
+      "responsive size, weight, align, trim, and wrap objects",
+      "pretty and balance text wrapping",
+      "leading trim",
+      "per-instance color prop"
+    ],
+    "kbd": [
+      "asChild element polymorphism",
+      "responsive size objects",
+      "the -0.03em vertical nudge and text-top inline alignment",
+      "actionable Kbd hover, open, active, and focus-visible treatments"
+    ],
+    "link": [
+      "asChild element polymorphism",
+      "responsive size, weight, trim, and wrap objects",
+      "per-instance color prop",
+      "text-underline-offset",
+      "the coarse-pointer active tap highlight",
+      "the transparent underline around a non-ghost Code only child",
+      "URL launching"
+    ],
     "menu": [
       "compositional items"
+    ],
+    "progress": [
+      "indeterminate mode",
+      "custom maximum",
+      "animation controls"
+    ],
+    "segmented_control": [
+      "translated sliding indicator",
+      "duplicate-label crossfade",
+      "inactive-item separators",
+      "responsive size and radius objects"
     ],
     "select": [
       "structured content",
       "independent trigger/content variants"
+    ],
+    "skeleton": [
+      "responsive width and height props"
     ],
     "slider": [
       "multiple thumbs",
       "range values",
       "vertical orientation",
       "inversion"
-    ],
-    "progress": [
-      "indeterminate mode",
-      "custom maximum",
-      "animation controls"
     ],
     "spinner": [
       "loading gate",
@@ -5140,25 +6452,17 @@
       "wrapping tab bars",
       "tab-bar justification"
     ],
-    "skeleton": [
-      "responsive width and height props"
-    ],
-    "segmented_control": [
-      "translated sliding indicator",
-      "duplicate-label crossfade",
-      "inactive-item separators",
-      "responsive size and radius objects"
+    "text": [
+      "as and asChild element polymorphism",
+      "responsive size, weight, align, trim, and wrap objects",
+      "pretty and balance text wrapping",
+      "leading trim",
+      "per-instance color prop"
     ],
     "text_area": [
       "browser resize handle and resize-axis prop",
       "fixed CSS block sizing and browser overflow behavior",
       "responsive size, radius, and resize objects"
-    ],
-    "data_list": [
-      "compositional Root, Item, Label, and Value children",
-      "per-label color, highContrast, and width props",
-      "responsive orientation, size, align, trim, and width objects",
-      "CSS leading trim and value-edge negative margins"
     ]
   }
 }

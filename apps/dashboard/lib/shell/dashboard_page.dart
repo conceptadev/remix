@@ -46,6 +46,11 @@ enum DashboardPage {
     DashboardSection.components,
     'Navigation',
     Icons.segment_outlined,
+  ),
+  galleryTypography(
+    DashboardSection.components,
+    'Typography',
+    Icons.title_outlined,
   );
 
   const DashboardPage(this.section, this.label, this.icon);

@@ -71,9 +71,8 @@ class _ToastBody extends StatelessWidget {
                 color: MixScope.tokenOf(FortalTokens.accent11, context),
               ),
               Flexible(
-                child: StyledText(
-                  message,
-                  style: dashboardText(FortalTokens.text2, weight: .w500),
+                child: DashboardTextTone(
+                  child: FortalText(message, size: .size2, weight: .medium),
                 ),
               ),
               if (actionLabel case final label?)

@@ -2,8 +2,12 @@ import 'dart:ui' as ui;
 
 import 'package:dashboard/main.dart';
 import 'package:dashboard/shell/dashboard_shell.dart';
+import 'package:dashboard/theme/theme_scope.dart';
 import 'package:dashboard/theme/theme_settings.dart';
+import 'package:dashboard/utils/text.dart';
+import 'package:dashboard/widgets/page_header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
@@ -286,6 +290,7 @@ void main() {
 
     final showContent = find.text('Show content');
     await tester.ensureVisible(showContent);
+    await tester.pump();
     await tester.tap(showContent);
     await tester.pump();
     expect(find.text('Show skeleton'), findsOneWidget);
@@ -313,6 +318,124 @@ void main() {
     expect(find.text('Newest'), findsOneWidget);
     expect(find.text('Share'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('overlay gallery popovers shrink-wrap vertical content', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1400, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    final nav = find.byKey(const ValueKey('nav-galleryOverlays')).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
+    await tester.pump();
+
+    await tester.tap(find.text('Popover Size1'));
+    await tester.pump();
+
+    final content = find.ancestor(
+      of: find.text('Quick note'),
+      matching: find.byWidgetPredicate(
+        (widget) => widget is SizedBox && widget.width == 250,
+      ),
+    );
+    expect(content, findsOneWidget);
+    expect(tester.getSize(content).height, lessThan(120));
+  });
+
+  testWidgets('dashboard action popovers shrink-wrap their actions', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1400, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey('sidebar-account-trigger')));
+    await tester.pump();
+
+    final content = find.ancestor(
+      of: find.text('View profile'),
+      matching: find.byWidgetPredicate(
+        (widget) => widget is SizedBox && widget.width == 180,
+      ),
+    );
+    expect(content, findsOneWidget);
+    expect(tester.getSize(content).height, lessThan(180));
+  });
+
+  testWidgets('notification popover shrink-wraps its activity', (tester) async {
+    tester.view.physicalSize = const Size(1400, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byIcon(Icons.notifications_none));
+    await tester.pump();
+
+    final content = find.ancestor(
+      of: find.text('Mark all read'),
+      matching: find.byWidgetPredicate(
+        (widget) => widget is SizedBox && widget.width == 330,
+      ),
+    );
+    expect(content, findsOneWidget);
+    expect(tester.getSize(content).height, lessThan(300));
+  });
+
+  testWidgets('overlay gallery dialogs are centered and bounded', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1400, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    final nav = find.byKey(const ValueKey('nav-galleryOverlays')).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
+    await tester.pump();
+
+    await tester.tap(find.text('Open').first);
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    final rect = _dialogSurfaceRect(tester);
+    expect(rect.width, lessThanOrEqualTo(600));
+    expect(rect.height, lessThan(300));
+    expect(rect.center.dx, closeTo(700, 0.01));
+    expect(rect.center.dy, closeTo(_dialogCenterY, 0.01));
+  });
+
+  testWidgets('settings confirmation dialog is centered', (tester) async {
+    tester.view.physicalSize = const Size(1400, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey('nav-settings')).first);
+    await tester.pump();
+
+    final trigger = find.text('Delete workspace');
+    await tester.ensureVisible(trigger);
+    await tester.tap(trigger);
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    final rect = _dialogSurfaceRect(tester);
+    expect(rect.height, lessThan(240));
+    expect(rect.center.dx, closeTo(700, 0.01));
+    expect(rect.center.dy, closeTo(_dialogCenterY, 0.01));
   });
 
   testWidgets('actions gallery exposes button, icon button, and toggle', (
@@ -369,6 +492,8 @@ void main() {
           'Real dialog, popover, tooltip, and menu triggers for every recipe.',
       'galleryNavigation':
           'Tabs and disclosure patterns for organizing dense interfaces.',
+      'galleryTypography':
+          'Text, headings, code, keys, and links on one shared scale.',
     };
 
     for (final entry in destinations.entries) {
@@ -494,6 +619,156 @@ void main() {
     );
   });
 
+  testWidgets('the typography gallery renders all five Fortal families', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1440, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    final nav = find.byKey(const ValueKey('nav-galleryTypography')).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
+    await tester.pump();
+
+    // The nine-step scale, four weights, and every Code and Kbd variant are on
+    // the page at once, so each family appears many times over.
+    expect(find.byType(FortalText), findsWidgets);
+    expect(find.byType(FortalHeading), findsWidgets);
+    expect(find.byType(FortalCode), findsWidgets);
+    expect(find.byType(FortalKbd), findsWidgets);
+    expect(find.byType(FortalLink), findsWidgets);
+    for (final underline in FortalLinkUnderline.values) {
+      expect(find.text(enumLabel(underline)), findsOneWidget);
+    }
+    expect(find.text('Inert'), findsOneWidget);
+    expect(find.text('Disabled'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('an actionable gallery link activates, an inert one does not', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1440, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    final nav = find.byKey(const ValueKey('nav-galleryTypography')).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
+    await tester.pump();
+
+    final always = find.text('Always');
+    await tester.ensureVisible(always);
+    await tester.tap(always);
+    await tester.pump();
+    expect(find.text('Always link activated'), findsOneWidget);
+
+    final inert = find.text('Inert');
+    await tester.ensureVisible(inert);
+    await tester.tap(inert, warnIfMissed: false);
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+
+    // Let the toast's own dismissal timer run out rather than leaving it
+    // pending past the end of the test.
+    await tester.pump(const Duration(seconds: 5));
+  });
+
+  testWidgets('the typography gallery fits the compact breakpoint', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byIcon(Icons.menu));
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    await tester.tap(find.byKey(const ValueKey('nav-galleryTypography')).first);
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    expect(
+      find.text('Text, headings, code, keys, and links on one shared scale.'),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('page and section titles publish one heading tree', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await tester.pumpWidget(const DashboardApp());
+
+    // The page title is level 1 and every card section under it is level 2,
+    // independent of the visual size each one picks.
+    final title = tester.getSemantics(
+      find.descendant(
+        of: find.byType(PageHeader),
+        matching: find.text('Overview'),
+      ),
+    );
+    expect(title.getSemanticsData().flagsCollection.isHeader, isTrue);
+    expect(title.getSemanticsData().headingLevel, 1);
+
+    for (final section in const ['Recent activity', 'Recent orders']) {
+      final node = tester.getSemantics(find.text(section));
+      expect(
+        node.getSemanticsData().flagsCollection.isHeader,
+        isTrue,
+        reason: section,
+      );
+      expect(node.getSemanticsData().headingLevel, 2, reason: section);
+    }
+    semantics.dispose();
+  });
+
+  testWidgets('dashboard-owned strong text follows the live gray theme', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const DashboardApp());
+
+    // Both titles sit inside a Material surface, whose own `DefaultTextStyle`
+    // would otherwise supply the foreground instead of Fortal's `gray12`.
+    final pageTitle = find.descendant(
+      of: find.byType(PageHeader),
+      matching: find.text('Overview'),
+    );
+    final activityTitle = find.text('Payment received');
+    Color painted(Finder finder) =>
+        tester.renderObject<RenderParagraph>(finder).text.style!.color!;
+    Color gray12() => MixScope.tokenOf(
+      FortalTokens.gray12,
+      tester.element(find.byType(DashboardShell)),
+    );
+
+    final slate = gray12();
+    expect(painted(pageTitle), slate);
+    expect(painted(activityTitle), slate);
+
+    final themeScope = tester.widget<ThemeScope>(find.byType(ThemeScope));
+    themeScope.onChanged(
+      themeScope.settings.copyWith(grayColor: FortalGrayColor.mauve),
+    );
+    await tester.pump();
+
+    final mauve = gray12();
+    expect(mauve, isNot(slate));
+    expect(painted(pageTitle), mauve);
+    expect(painted(activityTitle), mauve);
+  });
+
   testWidgets('top bar search filters the active data page', (tester) async {
     tester.view.physicalSize = const Size(1400, 900);
     tester.view.devicePixelRatio = 1;
@@ -515,3 +790,26 @@ void main() {
     expect(find.text('Olivia Martin'), findsOneWidget);
   });
 }
+
+/// The bounds of the dialog panel itself.
+///
+/// `FortalDialog` wraps its surface in padding and align modifiers that carry
+/// the safe viewport insets, so the widget's own rect is the whole viewport.
+/// The panel is the align's child, which is what the size and centring
+/// assertions are about.
+Rect _dialogSurfaceRect(WidgetTester tester) {
+  final align = find.descendant(
+    of: find.byType(RemixDialog),
+    matching: find.byType(Align),
+  );
+  final surface = tester.widget<Align>(align.first).child!;
+
+  return tester.getRect(find.byWidget(surface));
+}
+
+/// Where a centred dialog panel actually sits vertically.
+///
+/// The dialog centres inside its safe padded viewport, not the raw one. The
+/// bottom inset is `viewportHeight * 0.06` (54 at this height) while the top is
+/// `space6` (32), so the panel rides 11 logical pixels above the true centre.
+const _dialogCenterY = 439.0;

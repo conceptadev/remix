@@ -72,9 +72,8 @@ class _Brand extends StatelessWidget {
     return Box(
       key: const ValueKey('dashboard-brand'),
       style: BoxStyler().paddingAll(FortalTokens.space4()),
-      child: StyledText(
-        'Dashboard',
-        style: dashboardText(FortalTokens.text5, weight: .w700),
+      child: const DashboardTextTone(
+        child: FortalText('Dashboard', size: .size5, weight: .bold),
       ),
     );
   }
@@ -91,8 +90,8 @@ class _SectionLabel extends StatelessWidget {
       child: StyledText(
         label.toUpperCase(),
         style: dashboardText(
-          FortalTokens.text1,
-          weight: .w600,
+          .size1,
+          weight: .medium,
           tone: .muted,
         ).letterSpacing(0.7),
       ),
@@ -164,13 +163,16 @@ class _Profile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: .start,
                 children: [
-                  StyledText(
-                    'Leo Farias',
-                    style: dashboardText(FortalTokens.text2, weight: .w600),
+                  const DashboardTextTone(
+                    child: FortalText(
+                      'Leo Farias',
+                      size: .size2,
+                      weight: .medium,
+                    ),
                   ),
                   StyledText(
                     'leo@remix.dev',
-                    style: dashboardText(FortalTokens.text1, tone: .muted),
+                    style: dashboardText(.size1, tone: .muted),
                   ),
                 ],
               ),

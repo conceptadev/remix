@@ -155,7 +155,7 @@ class _MatrixLabel extends StatelessWidget {
     padding: const EdgeInsets.all(10),
     child: StyledText(
       label,
-      style: dashboardText(FortalTokens.text1, weight: .w600, tone: .muted),
+      style: dashboardText(.size1, weight: .medium, tone: .muted),
     ),
   );
 }

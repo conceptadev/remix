@@ -9,6 +9,7 @@ Use the category that contains the component being built:
 | Data display | [data-display.md](data-display.md) | Avatar, Badge, Card, Callout, DataList, DataTable, Progress, Skeleton, Spinner, Divider |
 | Overlays | [overlays.md](overlays.md) | Popover, Dialog, Tooltip, Menu |
 | Navigation | [navigation.md](navigation.md) | Tabs, Accordion |
+| Typography | [fortal.md](fortal.md#typography) | Text, Heading, Code, Kbd, Link — Fortal only |
 
 Every styled leaf `Remix*` widget accepts `style` (a `*Styler`) and
 `styleSpec` (an optional resolved `Remix*Spec`). Behavioral roots and groups
