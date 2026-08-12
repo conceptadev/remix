@@ -69,19 +69,12 @@ class _Brand extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        spacing: 12,
-        children: [
-          // The brand mark is a solid avatar: accent-9 on accent-contrast,
-          // and it follows the theme's radius setting like every other surface.
-          const FortalAvatar.solid(icon: Icons.auto_awesome, size: .size2),
-          StyledText(
-            'Remix',
-            style: dashboardText(FortalTokens.text5, weight: .w700),
-          ),
-        ],
+    return Box(
+      key: const ValueKey('dashboard-brand'),
+      style: BoxStyler().paddingAll(FortalTokens.space4()),
+      child: StyledText(
+        'Dashboard',
+        style: dashboardText(FortalTokens.text5, weight: .w700),
       ),
     );
   }

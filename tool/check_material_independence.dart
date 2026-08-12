@@ -55,11 +55,11 @@ void main() {
   }
 
   if (failures.isEmpty) {
-    stdout.writeln('Published Remix libraries are independent of Material.');
+    stdout.writeln('Published Remix libraries have no direct Material usage.');
     return;
   }
 
-  stderr.writeln('Material independence validation failed:');
+  stderr.writeln('Direct Material usage validation failed:');
   for (final failure in failures) {
     stderr.writeln('- $failure');
   }

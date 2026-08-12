@@ -41,23 +41,31 @@ class RemixPathIcon extends StatelessWidget {
     builder: (context, spec) {
       final theme = IconTheme.of(context);
       var size = spec.size ?? theme.size ?? 9;
-      if (spec.applyTextScaling == true) {
+      final applyTextScaling =
+          spec.applyTextScaling ?? theme.applyTextScaling ?? false;
+      if (applyTextScaling) {
         size = MediaQuery.textScalerOf(context).scale(size);
       }
       final opacity = (spec.opacity ?? theme.opacity ?? 1).clamp(0.0, 1.0);
       final baseColor = spec.color ?? theme.color ?? const Color(0xFF000000);
       final color = baseColor.withValues(alpha: baseColor.a * opacity);
-      return SizedBox.square(
+      final icon = SizedBox.square(
         dimension: size,
         child: CustomPaint(
           painter: _RemixPathIconPainter(
             glyph: glyph,
             color: color,
-            shadows: spec.shadows ?? const [],
+            shadows: spec.shadows ?? theme.shadows ?? const [],
+            blendMode: spec.blendMode ?? BlendMode.srcOver,
             flipHorizontally:
-                matchTextDirection && Directionality.of(context) == .rtl,
+                matchTextDirection &&
+                (spec.textDirection ?? Directionality.of(context)) == .rtl,
           ),
         ),
+      );
+      return Semantics(
+        label: spec.semanticsLabel,
+        child: ExcludeSemantics(child: icon),
       );
     },
   );
@@ -68,12 +76,14 @@ class _RemixPathIconPainter extends CustomPainter {
     required this.glyph,
     required this.color,
     required this.shadows,
+    required this.blendMode,
     required this.flipHorizontally,
   });
 
   final RemixPathGlyph glyph;
   final Color color;
   final List<Shadow> shadows;
+  final BlendMode blendMode;
   final bool flipHorizontally;
 
   @override
@@ -103,7 +113,12 @@ class _RemixPathIconPainter extends CustomPainter {
     for (final shadow in shadows) {
       canvas.drawPath(path.shift(shadow.offset / scale), shadow.toPaint());
     }
-    canvas.drawPath(path, Paint()..color = color);
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = color
+        ..blendMode = blendMode,
+    );
     canvas.restore();
   }
 
@@ -111,6 +126,7 @@ class _RemixPathIconPainter extends CustomPainter {
   bool shouldRepaint(_RemixPathIconPainter oldDelegate) =>
       glyph != oldDelegate.glyph ||
       color != oldDelegate.color ||
+      blendMode != oldDelegate.blendMode ||
       flipHorizontally != oldDelegate.flipHorizontally ||
       !listEquals(shadows, oldDelegate.shadows);
 }

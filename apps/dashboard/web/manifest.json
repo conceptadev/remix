@@ -1,6 +1,6 @@
 {
-    "name": "Remix Dashboard",
-    "short_name": "Remix Dashboard",
+    "name": "Dashboard",
+    "short_name": "Dashboard",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

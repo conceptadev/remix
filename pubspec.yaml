@@ -85,7 +85,7 @@ melos:
 
     material:check:
       run: dart run tool/check_material_independence.dart
-      description: Verify published Remix libraries do not depend on Material
+      description: Verify published Remix libraries contain no direct Material usage
 
     fortal:icons:generate:
       run: uv run --frozen --project packages/remix_fortal/tool/radix_icons glyphpact --config packages/remix_fortal/tool/radix_icons/glyphpact.json

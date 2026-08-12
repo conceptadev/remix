@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../pages/charts_page.dart';
 import '../pages/customers_page.dart';
 import '../pages/gallery/gallery_actions_page.dart';
 import '../pages/gallery/gallery_display_page.dart';
@@ -39,6 +40,7 @@ class _DashboardShellState extends State<DashboardShell> {
       CustomersPage(globalQuery: _searchQuery),
       OrdersPage(globalQuery: _searchQuery),
       const SettingsPage(),
+      const ChartsPage(),
       const GalleryActionsPage(),
       const GalleryFormsPage(),
       const GalleryDisplayPage(),

@@ -72,21 +72,69 @@ final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
 ## Icons
 
 Fortal includes the complete 318-glyph Radix Icons 1.3.2 catalog. Each glyph is
-a static `IconData` constant, so release builds can retain only the referenced
-font glyphs:
+a static `IconData` constant, allowing Flutter release builds to subset the font
+to referenced glyphs:
 
 ```dart
 const Icon(FortalIcons.check)
 ```
 
 There is deliberately no runtime name-to-icon map because dynamic lookup would
-keep the full font. Pass `FortalIcons` constants to any widget that accepts
-`IconData`; Fortal controls otherwise retain Remix's inline Radix-shaped vector
-defaults, so merely using those controls does not retain the icon font.
+keep the full catalog reachable. Pass `FortalIcons` constants to any widget that
+accepts `IconData`; Fortal controls otherwise use Remix's inline Radix-shaped
+vector defaults. The font remains a declared `remix_fortal` package asset, so
+applications should measure their release artifact rather than assume that
+referencing no catalog constants removes the asset entirely.
 
 The `shadow`, `shadowInner`, `shadowNone`, `shadowOuter`, and
 `transparencyGrid` glyphs approximate Radix's partial opacity as opaque
 coverage; the other 313 glyphs are lossless conversions.
+
+## Charts
+
+Fortal includes themed line, bar, and pie chart recipes backed by
+[`mix_chart`](https://pub.dev/packages/mix_chart). Add `mix_chart` directly when
+constructing chart data; Fortal intentionally does not re-export dependencies.
+
+```bash
+flutter pub add mix_chart remix_fortal
+```
+
+```dart
+import 'package:mix_chart/mix_chart.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+final chart = FortalLineChart(
+  semanticsLabel: 'Weekly revenue',
+  series: [
+    LineSeries(
+      id: 'revenue',
+      label: 'Revenue',
+      points: [
+        ChartPoint(id: 'mon', x: 0, y: 18),
+        ChartPoint(id: 'tue', x: 1, y: 31),
+      ],
+    ),
+  ],
+);
+```
+
+The generated widgets are `FortalLineChart`, `FortalBarChart`, and
+`FortalPieChart`. Use `fortalLineChartStyle`, `fortalBarChartStyle`, or
+`fortalPieChartStyle` when composing the underlying `mix_chart` widgets. Keep
+shared geometry on the chart-level slice style so individual slices remain
+data-only:
+
+```dart
+final donut = PieChart(
+  style: fortalPieChartStyle(centerRadius: 40)
+      .slice(PieSliceStyler().radius(36)),
+  slices: [
+    PieSlice(id: 'core', label: 'Core', value: 54),
+    PieSlice(id: 'teams', label: 'Teams', value: 46),
+  ],
+);
+```
 
 ## Design tokens
 
@@ -127,6 +175,7 @@ Every Remix component has a matching Fortal recipe and generated widget:
 - **FortalAvatar**, **FortalBadge**, **FortalCard**, **FortalDataList**
 - **FortalDataTable**, **FortalDivider**, **FortalProgress**
 - **FortalSkeleton**, **FortalSpinner**
+- **FortalLineChart**, **FortalBarChart**, **FortalPieChart**
 
 ### Layout & Navigation
 - **FortalTabBar**, **FortalTab**, **FortalTabView**, **FortalAccordion**
