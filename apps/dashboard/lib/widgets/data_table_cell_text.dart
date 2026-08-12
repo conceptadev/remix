@@ -13,12 +13,12 @@ class DataTableCellText extends StatelessWidget {
 
   // Only two styles exist, and a table renders one per cell per build.
   static final _primary = dashboardTextLine(
-    FortalTokens.text2,
-    weight: FontWeight.w500,
+    FortalTextSize.size2,
+    weight: FortalTextWeight.medium,
   );
   static final _secondary = dashboardTextLine(
-    FortalTokens.text2,
-    weight: FontWeight.w400,
+    FortalTextSize.size2,
+    weight: FortalTextWeight.regular,
     tone: TextTone.muted,
   );
 

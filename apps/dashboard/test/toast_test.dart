@@ -4,6 +4,7 @@ import 'package:dashboard/theme/theme_scope.dart';
 import 'package:dashboard/theme/theme_settings.dart';
 import 'package:dashboard/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -60,6 +61,29 @@ void main() {
 
     expect(actionCount, 1);
     expect(find.text('Customer archived'), findsNothing);
+
+    await tester.pump(const Duration(seconds: 4));
+  });
+
+  testWidgets('toast text resolves against the Fortal root, not a fallback', (
+    tester,
+  ) async {
+    final context = await _pumpDashboard(tester);
+
+    showToast(context, message: 'Saved');
+    await tester.pump();
+
+    // A raw OverlayEntry has no Material ancestor, so before FortalScope moved
+    // below MaterialApp this inherited Flutter's "put your text in a Material"
+    // style: red, monospace, with a yellow double underline.
+    final style = tester
+        .renderObject<RenderParagraph>(find.text('Saved'))
+        .text
+        .style!;
+
+    expect(style.decoration, anyOf(isNull, TextDecoration.none));
+    expect(style.fontFamily, isNot('monospace'));
+    expect(style.color, MixScope.tokenOf(FortalTokens.gray12, context));
 
     await tester.pump(const Duration(seconds: 4));
   });

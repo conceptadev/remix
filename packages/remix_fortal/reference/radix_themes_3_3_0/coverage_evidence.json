@@ -2,6 +2,21 @@
   "theme": [
     {
       "test": "test/fortal/fortal_theme_resolution_test.dart",
+      "case": "root scope establishes the Radix root text run",
+      "covers": ["state:rootTextStyle"]
+    },
+    {
+      "test": "test/fortal/fortal_theme_resolution_test.dart",
+      "case": "unsized typography measures 1em against the root, not the host",
+      "covers": ["state:rootTextStyle"]
+    },
+    {
+      "test": "test/fortal/fortal_theme_resolution_test.dart",
+      "case": "a nested scope preserves the nearest text style",
+      "covers": ["state:rootTextStyle", "state:nestedInherit"]
+    },
+    {
+      "test": "test/fortal/fortal_theme_resolution_test.dart",
       "case": "root scope resolves the documented defaults",
       "covers": [
         "enum:appearance.light",
@@ -937,6 +952,274 @@
       "test": "test/components/toggle_group/toggle_group_widget_test.dart",
       "case": "RTL inverts horizontal arrow direction",
       "covers": ["state:rtl"]
+    }
+  ],
+  "text": [
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "all nine sizes resolve the pinned scale across scaling",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:size.size4",
+        "enum:size.size5",
+        "enum:size.size6",
+        "enum:size.size7",
+        "enum:size.size8",
+        "enum:size.size9",
+        "state:idle"
+      ]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "weights map to the shared Fortal tokens",
+      "covers": [
+        "enum:weight.light",
+        "enum:weight.regular",
+        "enum:weight.medium",
+        "enum:weight.bold"
+      ]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "truncate wins over softWrap and TextAlign passes through",
+      "covers": ["state:truncated"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "text and heading take the accent only when opted in",
+      "covers": ["state:accent", "state:highContrast"]
+    }
+  ],
+  "heading": [
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "heading keeps the pinned line boxes and bold size6 default",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:size.size4",
+        "enum:size.size5",
+        "enum:size.size6",
+        "enum:size.size7",
+        "enum:size.size8",
+        "enum:size.size9",
+        "state:idle"
+      ]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "weights map to the shared Fortal tokens",
+      "covers": [
+        "enum:weight.light",
+        "enum:weight.regular",
+        "enum:weight.medium",
+        "enum:weight.bold"
+      ]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "text and heading take the accent only when opted in",
+      "covers": ["state:accent", "state:highContrast"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "heading flow settings match the shared text flow",
+      "covers": ["state:truncated"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "heading publishes one exact header node",
+      "covers": ["state:semantic"]
+    }
+  ],
+  "code": [
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "code letter spacing adds the pinned -0.007em to the token",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:size.size4",
+        "enum:size.size5",
+        "enum:size.size6",
+        "enum:size.size7",
+        "enum:size.size8",
+        "enum:size.size9"
+      ]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "code applies the nested Radix font-size adjustments",
+      "covers": ["enum:variant.soft", "enum:variant.ghost", "state:idle"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "every variant resolves the pinned fill and foreground",
+      "covers": [
+        "enum:variant.solid",
+        "enum:variant.soft",
+        "enum:variant.outline",
+        "enum:variant.ghost",
+        "state:highContrast"
+      ]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "outline draws one ring, two at high contrast",
+      "covers": ["enum:variant.outline", "state:highContrast"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "ghost gains the accent foreground only when opted in",
+      "covers": ["enum:variant.ghost", "state:accent"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "truncation and kbd min-width reach the rendered box",
+      "covers": ["state:truncated"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "weights map to the shared Fortal tokens",
+      "covers": [
+        "enum:weight.light",
+        "enum:weight.regular",
+        "enum:weight.medium",
+        "enum:weight.bold"
+      ]
+    }
+  ],
+  "kbd": [
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "an explicit kbd size scales its letter spacing by 0.8 too",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:size.size4",
+        "enum:size.size5",
+        "enum:size.size6",
+        "enum:size.size7",
+        "enum:size.size8",
+        "enum:size.size9",
+        "state:idle"
+      ]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "kbd uses distinct unsized and explicit type factors",
+      "covers": ["state:idle"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "classic and soft resolve their pinned fills in both modes",
+      "covers": [
+        "enum:variant.classic",
+        "enum:variant.soft",
+        "state:explicitDark"
+      ]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "soft draws no key-cap stack",
+      "covers": ["enum:variant.soft"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "kbd publishes one keyboard-key node without an action",
+      "covers": ["state:semantic"]
+    }
+  ],
+  "link": [
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "underline thickness follows the pinned min/max ramp",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3",
+        "enum:size.size4",
+        "enum:size.size5",
+        "enum:size.size6",
+        "enum:size.size7",
+        "enum:size.size8",
+        "enum:size.size9",
+        "enum:underline.always"
+      ]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "size and weight resolve the shared typography tokens",
+      "covers": [
+        "enum:weight.light",
+        "enum:weight.regular",
+        "enum:weight.medium",
+        "enum:weight.bold"
+      ]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "actionable links underline per mode",
+      "covers": [
+        "enum:underline.auto",
+        "enum:underline.always",
+        "enum:underline.none"
+      ]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "an unlined link carries no decoration metrics",
+      "covers": ["enum:underline.none"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "high-contrast auto underlines from a different accent step",
+      "covers": ["enum:underline.auto", "enum:underline.always"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "focus-visible outline takes precedence over hover underline",
+      "covers": ["enum:underline.hover", "state:hovered", "state:focused"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "foreground follows accent and high contrast in both modes",
+      "covers": ["state:idle", "state:highContrast"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "link focus treatment follows the highlight mode",
+      "covers": ["state:focused"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "disabled link cannot focus or activate",
+      "covers": ["state:disabled"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "inert links never underline; upstream gates on anchors",
+      "covers": ["state:inert"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "inert link exposes no interactive metadata",
+      "covers": ["state:inert"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "flow settings reach an actionable and an inert link",
+      "covers": ["state:truncated"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "actionable link is one link node with no nested button",
+      "covers": ["state:semantic"]
     }
   ]
 }

@@ -18,6 +18,7 @@ import '../registry/entries/spinner_entry.dart';
 import '../registry/entries/switch_entry.dart';
 import '../registry/entries/textarea_entry.dart';
 import '../registry/entries/tooltip_entry.dart';
+import '../registry/entries/typography_entry.dart';
 
 class AllComponentsPage extends StatelessWidget {
   const AllComponentsPage({super.key});
@@ -62,6 +63,7 @@ class AllComponentsPage extends StatelessWidget {
         _section('Switch', buildSwitchExample()),
         _section('TextArea', buildTextAreaExample()),
         _section('Tooltip', buildTooltipExample()),
+        _section('Typography', buildTypographyExample()),
       ],
     );
   }

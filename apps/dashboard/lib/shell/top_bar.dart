@@ -55,7 +55,7 @@ class _TopBarState extends State<TopBar> {
           if (MediaQuery.sizeOf(context).width > 900) ...[
             StyledText(
               widget.page.section.label,
-              style: dashboardText(FortalTokens.text2, tone: .muted),
+              style: dashboardText(.size2, tone: .muted),
             ),
             Icon(
               Icons.chevron_right,
@@ -64,9 +64,11 @@ class _TopBarState extends State<TopBar> {
             ),
           ],
           Flexible(
+            // The breadcrumb repeats the page title the page header already
+            // publishes as a heading, so it stays plain truncating text.
             child: StyledText(
               widget.page.label,
-              style: dashboardTextLine(FortalTokens.text4, weight: .w700),
+              style: dashboardTextLine(.size4, weight: .bold),
             ),
           ),
           const Spacer(),
@@ -106,17 +108,19 @@ class _TopBarState extends State<TopBar> {
             popoverChild: SizedBox(
               width: 330,
               child: Column(
+                mainAxisSize: .min,
                 crossAxisAlignment: .stretch,
                 spacing: 10,
                 children: [
                   Row(
                     children: [
-                      Expanded(
-                        child: StyledText(
-                          'Notifications',
-                          style: dashboardText(
-                            FortalTokens.text3,
-                            weight: .w600,
+                      const Expanded(
+                        child: DashboardTextTone(
+                          child: FortalHeading(
+                            'Notifications',
+                            headingLevel: 2,
+                            size: .size3,
+                            weight: .medium,
                           ),
                         ),
                       ),
@@ -155,19 +159,16 @@ class _TopBarState extends State<TopBar> {
                             crossAxisAlignment: .start,
                             spacing: 2,
                             children: [
-                              StyledText(
-                                event.title,
-                                style: dashboardText(
-                                  FortalTokens.text2,
-                                  weight: .w600,
+                              DashboardTextTone(
+                                child: FortalText(
+                                  event.title,
+                                  size: .size2,
+                                  weight: .medium,
                                 ),
                               ),
                               StyledText(
                                 event.relativeTime,
-                                style: dashboardText(
-                                  FortalTokens.text1,
-                                  tone: .muted,
-                                ),
+                                style: dashboardText(.size1, tone: .muted),
                               ),
                             ],
                           ),

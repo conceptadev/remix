@@ -34,23 +34,31 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
               size: .size1,
               onPressed: () => showRemixDialog<void>(
                 context: context,
-                builder: (dialogContext) => FortalDialog(
-                  size: FortalDialogSize.values[column],
-                  title: 'Invite teammates',
-                  description: 'Share this workspace with your collaborators.',
-                  actions: [
-                    FortalButton.soft(
-                      onPressed: () => Navigator.of(dialogContext).pop(),
-                      label: 'Cancel',
+                builder: (dialogContext) => Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    child: FortalDialog(
+                      size: FortalDialogSize.values[column],
+                      title: 'Invite teammates',
+                      description:
+                          'Share this workspace with your collaborators.',
+                      actions: [
+                        FortalButton.soft(
+                          onPressed: () => Navigator.of(dialogContext).pop(),
+                          label: 'Cancel',
+                        ),
+                        FortalButton(
+                          onPressed: () => Navigator.of(dialogContext).pop(),
+                          label: 'Send invite',
+                        ),
+                      ],
+                      child: const Padding(
+                        padding: EdgeInsets.only(top: 12),
+                        child: FortalTextField(
+                          hintText: 'teammate@example.com',
+                        ),
+                      ),
                     ),
-                    FortalButton(
-                      onPressed: () => Navigator.of(dialogContext).pop(),
-                      label: 'Send invite',
-                    ),
-                  ],
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 12),
-                    child: FortalTextField(hintText: 'teammate@example.com'),
                   ),
                 ),
               ),
@@ -72,6 +80,7 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
                   popoverChild: const SizedBox(
                     width: 250,
                     child: Column(
+                      mainAxisSize: .min,
                       crossAxisAlignment: .start,
                       spacing: 8,
                       children: [

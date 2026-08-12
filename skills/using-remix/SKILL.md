@@ -61,8 +61,14 @@ Also import `package:remix/remix.dart` when the file uses `Remix*` widgets,
 ## Place FortalScope correctly
 
 Every subtree that renders a `Fortal*` widget, a `fortal*Style()` recipe, or a
-`FortalTokens` value needs `FortalScope`. Place the scope above the application
-or router when overlay entries and pushed routes must inherit its tokens:
+`FortalTokens` value needs `FortalScope`. The outermost scope also establishes
+the Radix theme root's default text run — `text3` at `gray-12` — which is what
+an unsized `FortalText`, `FortalCode`, `FortalKbd`, or `FortalLink` measures
+`1em` against.
+
+Placement depends on the host, and getting it wrong costs that text run:
+
+**`WidgetsApp` or a custom host — put the scope above the app.**
 
 ```dart
 FortalScope(
@@ -75,6 +81,33 @@ FortalScope(
   ),
 )
 ```
+
+**`MaterialApp` or `CupertinoApp` — put the scope in `builder`.**
+
+```dart
+MaterialApp(
+  builder: (context, child) => FortalScope(
+    accent: FortalAccentColor.indigo,
+    child: child!,
+  ),
+  home: const MyScreen(),
+)
+```
+
+Those apps hand `WidgetsApp` their own root `DefaultTextStyle`, which is
+installed *below* anything wrapping the app — so a scope placed above
+`MaterialApp` still supplies tokens but loses the root text run. `builder` wraps
+the whole `Navigator`, so this placement still reaches pushed routes and raw
+`Overlay` entries.
+
+Symptom of the wrong placement under `MaterialApp`: text in a hand-rolled
+`OverlayEntry` renders red, monospace, with a yellow double underline — that is
+Flutter's "put your text in a Material" fallback, not a Remix bug.
+
+A nested `FortalScope` re-scopes tokens only; it inherits the closest text style
+rather than restating the root run, so re-scoping a subtree for a different
+accent or scaling leaves the text running through it at its current size and
+color.
 
 Ordinary `Remix*` widgets with fully custom styles do not need `FortalScope`.
 
@@ -173,6 +206,7 @@ Read only the references needed for the task:
 | Tabs and accordions | [Navigation](references/navigation.md) |
 | Fluent styling, state/context variants, animation, callable styles | [Styling](references/styling.md) |
 | Fortal setup, presets, variants, sizes, scope, and tokens | [Fortal](references/fortal.md) |
+| Text, headings, inline code, keyboard keys, and links | [Fortal](references/fortal.md#typography) |
 
 ## Verify the result
 

@@ -7,6 +7,7 @@ import '../pages/gallery/gallery_display_page.dart';
 import '../pages/gallery/gallery_forms_page.dart';
 import '../pages/gallery/gallery_navigation_page.dart';
 import '../pages/gallery/gallery_overlays_page.dart';
+import '../pages/gallery/gallery_typography_page.dart';
 import '../pages/orders_page.dart';
 import '../pages/overview_page.dart';
 import '../pages/settings_page.dart';
@@ -35,6 +36,8 @@ class _DashboardShellState extends State<DashboardShell> {
   Widget build(BuildContext context) {
     final compact =
         MediaQuery.sizeOf(context).width < dashboardCompactBreakpoint;
+    // IndexedStack is keyed by DashboardPage.index, so this list must stay in
+    // enum order.
     final pages = <Widget>[
       OverviewPage(onViewOrders: () => _select(.orders)),
       CustomersPage(globalQuery: _searchQuery),
@@ -46,6 +49,7 @@ class _DashboardShellState extends State<DashboardShell> {
       const GalleryDisplayPage(),
       const GalleryOverlaysPage(),
       const GalleryNavigationPage(),
+      const GalleryTypographyPage(),
     ];
 
     return Scaffold(

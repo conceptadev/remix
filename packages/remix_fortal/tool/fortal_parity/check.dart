@@ -13,10 +13,14 @@ const _expectedMappedFamilies = <String>{
   'callout',
   'card',
   'checkbox',
+  'code',
   'data_list',
   'data_table',
   'dialog',
   'divider',
+  'heading',
+  'kbd',
+  'link',
   'menu',
   'icon_button',
   'popover',
@@ -29,12 +33,24 @@ const _expectedMappedFamilies = <String>{
   'spinner',
   'switch',
   'tabs',
+  'text',
   'text_area',
   'text_field',
   'tooltip',
 };
 const _expectedExtensions = <String>{'accordion', 'toggle', 'toggle_group'};
 const _expectedUnmappedUpstreamFamilies = <String>{'checkbox_group'};
+
+/// The five typography families publish one shared nine-step `FortalTextSize`
+/// instead of five parallel size enums, so their `size` resolves against the
+/// shared typography source rather than a per-family Dart enum.
+const _sharedTextSizeFamilies = <String>{
+  'code',
+  'heading',
+  'kbd',
+  'link',
+  'text',
+};
 
 void main() {
   final packageRoot = Directory.current;
@@ -318,11 +334,51 @@ void _checkFamilies(
     failures,
   );
   _expect(
-    families.length == 28,
-    'Exactly 28 Fortal families must be tracked.',
+    families.length == 33,
+    'Exactly 33 Fortal families must be tracked.',
     failures,
   );
   _checkUnmappedUpstreamFamilies(manifest, families.keys.toSet(), failures);
+  _checkGlobalUpstreamInventory(manifest, families.keys.toSet(), failures);
+}
+
+/// The manifest keeps a second, family-independent upstream inventory so the
+/// upstream contract can be read without the Fortal mapping beside it. Nothing
+/// kept the two in step, and `data_table` was tracked with no inventory entry;
+/// requiring set equality makes a new family fail until both are written.
+void _checkGlobalUpstreamInventory(
+  Map<String, Object?> manifest,
+  Set<String> trackedFamilyIds,
+  List<String> failures,
+) {
+  final inventory = _object(
+    manifest['upstreamInventory'],
+    'upstreamInventory',
+    failures,
+  );
+  if (inventory == null) return;
+  _expect(
+    inventory['theme'] is Map<String, Object?>,
+    'upstreamInventory.theme must be a JSON object.',
+    failures,
+  );
+  final families = _object(
+    inventory['families'],
+    'upstreamInventory.families',
+    failures,
+  );
+  if (families == null) return;
+  final ids = families.keys.toSet();
+  _expect(
+    _sameSet(ids, trackedFamilyIds),
+    'Global upstream inventory drifted from the tracked family set. Missing '
+    '${trackedFamilyIds.difference(ids)}, unexpected '
+    '${ids.difference(trackedFamilyIds)}.',
+    failures,
+  );
+  for (final entry in families.entries) {
+    _object(entry.value, 'upstreamInventory.families.${entry.key}', failures);
+  }
 }
 
 String? _readFortalStylesSource(
@@ -341,7 +397,20 @@ String? _readFortalStylesSource(
     failures.add('$id is missing Fortal recipe source ${file.path}.');
     return null;
   }
-  return file.readAsStringSync();
+  final source = file.readAsStringSync();
+  if (!_sharedTextSizeFamilies.contains(id)) return source;
+
+  // The shared scale, weights, and flow helpers live beside the five
+  // typography recipes rather than inside any one of them.
+  final shared = File(
+    '${packageRoot.path}/lib/src/recipes/typography_shared.dart',
+  );
+  if (!shared.existsSync()) {
+    failures.add('$id is missing shared typography source ${shared.path}.');
+    return source;
+  }
+
+  return '$source\n${shared.readAsStringSync()}';
 }
 
 void _checkUnmappedUpstreamFamilies(
@@ -482,9 +551,14 @@ void _checkUnmappedUpstreamFamilies(
   );
 }
 
+/// Code, Kbd, and Link derive em-relative geometry from the resolved font size,
+/// so their recipes take a leading positional [BuildContext] before the named
+/// block. Without allowing it here every context-bound recipe would read as
+/// exposing no `highContrast`.
 bool _recipeExposesHighContrast(String source) {
   return RegExp(
-    r'\bfortal[A-Za-z0-9_]+Style\s*\(\s*\{[^}]*'
+    r'\bfortal[A-Za-z0-9_]+Style\s*\('
+    r'\s*(?:BuildContext\s+[A-Za-z0-9_]+\s*,\s*)?\{[^}]*'
     r'\bbool\s+highContrast\b',
     dotAll: true,
   ).hasMatch(source);
@@ -532,7 +606,9 @@ Set<String> _familyEnumKeys({
           .split('_')
           .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
           .join();
-      final candidates = {'$fortalType$suffix', 'Fortal$idType$suffix'};
+      final candidates = kind == 'size' && _sharedTextSizeFamilies.contains(id)
+          ? {'FortalTextSize'}
+          : {'$fortalType$suffix', 'Fortal$idType$suffix'};
       RegExpMatch? enumMatch;
       for (final candidate in candidates) {
         enumMatch = RegExp(
@@ -1087,7 +1163,7 @@ Never _finish(List<String> failures) {
   }
   stdout.writeln(
     'Verified @radix-ui/themes 3.3.0 contract: '
-    '25 mapped families, 3 Fortal extensions, 1 audited unmapped family, '
+    '30 mapped families, 3 Fortal extensions, 1 audited unmapped family, '
     'Chromium fixtures, '
     'coverage ledger, hosted Naked $_expectedNakedUiVersion resolution, and no '
     'undocumented approximations.',
