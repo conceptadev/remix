@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
@@ -85,7 +85,7 @@ SliderStyler _fortalSliderSurface(
 }) => base
     .track(.color(FortalTokens.grayA3()))
     .range(.color(FortalTokens.accentTrack()))
-    .thumbColor(Colors.white)
+    .thumbColor(const Color(0xFFFFFFFF))
     .trackEffects(
       RemixBoxEffectsMix(
         behindContent: fortalInsetSurface(strokes: [FortalTokens.grayA5()]),
@@ -115,7 +115,7 @@ SliderStyler _fortalSliderClassic(
 }) => base
     .track(.color(FortalTokens.grayA3()))
     .range(.color(FortalTokens.accentTrack()))
-    .thumbColor(Colors.white)
+    .thumbColor(const Color(0xFFFFFFFF))
     .trackEffects(
       RemixBoxEffectsMix(
         overContent: RemixBoxEffectLayerMix(
@@ -177,7 +177,7 @@ SliderStyler _fortalSliderSoft(
 }) => base
     .track(.color(FortalTokens.grayA4()))
     .range(.color(FortalTokens.accent6()))
-    .thumbColor(Colors.white)
+    .thumbColor(const Color(0xFFFFFFFF))
     .trackEffects(
       RemixBoxEffectsMix(
         behindContent: RemixBoxEffectLayerMix(
@@ -256,7 +256,7 @@ SliderStyler _fortalSliderDisabled(
           ),
   };
   return track
-      .range(.color(Colors.transparent))
+      .range(.color(const Color(0x00000000)))
       .thumbColor(FortalTokens.gray1())
       .rangeEffects(
         RemixBoxEffectsMix(

@@ -50,7 +50,7 @@ extension RemixIconButtonStylerRemixHelpers on IconButtonStyler {
 
   RemixIconButton call({
     Key? key,
-    required IconData icon,
+    required IconData? icon,
     RemixIconButtonIconBuilder? iconBuilder,
     RemixIconButtonLoadingBuilder? loadingBuilder,
     bool loading = false,

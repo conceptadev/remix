@@ -155,7 +155,7 @@ class FortalIconButton extends StatelessWidget {
 
   final bool highContrast;
 
-  final IconData icon;
+  final IconData? icon;
 
   final RemixIconButtonIconBuilder? iconBuilder;
 

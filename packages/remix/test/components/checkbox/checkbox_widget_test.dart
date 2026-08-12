@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/utilities/remix_path_icon.dart';
 
 import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
@@ -63,7 +64,7 @@ void main() {
 
         expect(find.byType(RemixCheckbox), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
       });
 
       testWidgets('renders indeterminate state when tristate is true', (
@@ -76,7 +77,7 @@ void main() {
 
         expect(find.byType(RemixCheckbox), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.dash), findsOneWidget);
       });
     });
 
@@ -114,15 +115,15 @@ void main() {
     });
 
     group('Icon Handling', () {
-      testWidgets('uses default checked icon', (tester) async {
+      testWidgets('uses default checked path', (tester) async {
         await tester.pumpRemixApp(
           RemixCheckbox(selected: true, onChanged: (value) {}),
         );
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixCheckbox), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
-        expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+        expect(find.byType(StyledIcon), findsNothing);
+        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
       });
 
       testWidgets('uses custom checked icon', (tester) async {
@@ -318,7 +319,7 @@ void main() {
 
         expect(find.byType(RemixCheckbox), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
       });
     });
 
@@ -400,7 +401,7 @@ void main() {
 
         expect(find.byType(RemixCheckbox), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.dash), findsOneWidget);
       });
 
       testWidgets('handles tristate with true selected', (tester) async {
@@ -411,8 +412,12 @@ void main() {
 
         expect(find.byType(RemixCheckbox), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
       });
     });
   });
 }
+
+Finder _pathGlyph(RemixPathGlyph glyph) => find.byWidgetPredicate(
+  (widget) => widget is RemixPathIcon && widget.glyph == glyph,
+);

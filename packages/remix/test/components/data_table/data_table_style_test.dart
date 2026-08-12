@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/utilities/remix_path_icon.dart';
 
 import '../../helpers/test_helpers.dart';
 
@@ -278,7 +279,11 @@ void main() {
       final header = tester.widget<Text>(find.text('Name'));
       expect(header.style?.color, const Color(0xFF00FF00));
       expect(
-        tester.widget<Icon>(find.byIcon(Icons.unfold_more)).color,
+        tester
+            .widget<RemixPathIcon>(find.byType(RemixPathIcon))
+            .styleSpec
+            .spec
+            .color,
         const Color(0xFF0000FF),
       );
     });

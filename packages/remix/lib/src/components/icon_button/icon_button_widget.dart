@@ -30,12 +30,18 @@ class RemixIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
     this.style = const IconButtonStyler.create(),
     this.styleSpec,
-  }) : assert(semanticLabel == null || semanticLabel != '');
+  }) : assert(
+         icon != null || iconBuilder != null,
+         'Either icon or iconBuilder must be provided.',
+       ),
+       assert(semanticLabel == null || semanticLabel != '');
 
   static final styleFrom = IconButtonStyler.new;
 
   /// The icon rendered by the button.
-  final IconData icon;
+  ///
+  /// May be null when [iconBuilder] supplies the icon widget.
+  final IconData? icon;
   final RemixIconButtonIconBuilder? iconBuilder;
   final String? semanticLabel;
   final RemixIconButtonLoadingBuilder? loadingBuilder;
@@ -61,7 +67,7 @@ class RemixIconButton extends StatelessWidget {
         builder: (context, spec) => builder(context, spec, icon),
       );
     }
-    return StyledIcon(icon: icon, styleSpec: styleSpec);
+    return StyledIcon(icon: icon!, styleSpec: styleSpec);
   }
 
   @override

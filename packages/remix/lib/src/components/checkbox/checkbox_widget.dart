@@ -24,9 +24,9 @@ class RemixCheckbox extends StatelessWidget {
     this.onChanged,
     this.enabled = true,
     this.tristate = false,
-    this.checkedIcon = Icons.check_rounded,
+    this.checkedIcon,
     this.uncheckedIcon,
-    this.indeterminateIcon = Icons.horizontal_rule,
+    this.indeterminateIcon,
     this.focusNode,
     this.autofocus = false,
     this.enableFeedback = true,
@@ -50,7 +50,7 @@ class RemixCheckbox extends StatelessWidget {
   final bool tristate;
 
   /// The icon to display when the checkbox is checked.
-  final IconData checkedIcon;
+  final IconData? checkedIcon;
 
   /// Whether the checkbox should automatically request focus when it is created.
   final bool autofocus;
@@ -59,7 +59,7 @@ class RemixCheckbox extends StatelessWidget {
   final IconData? uncheckedIcon;
 
   /// The icon to display when the checkbox is in indeterminate state (null value).
-  final IconData indeterminateIcon;
+  final IconData? indeterminateIcon;
 
   /// The callback function that is called when the checkbox is tapped.
   /// When [tristate] is true, the value can be null.
@@ -134,18 +134,41 @@ class RemixCheckbox extends StatelessWidget {
           styleSpec: styleSpec,
           controller: NakedCheckboxState.controllerOf(context),
           builder: (context, spec) {
-            final iconData = tristate && selected == null
-                ? indeterminateIcon
-                : selected == true
-                ? checkedIcon
-                : uncheckedIcon;
+            final indicator = switch ((
+              tristate && selected == null,
+              selected,
+            )) {
+              (true, _) =>
+                indeterminateIcon == null
+                    ? RemixPathIcon(
+                        glyph: RemixPathGlyph.dash,
+                        styleSpec: spec.indicator,
+                      )
+                    : StyledIcon(
+                        icon: indeterminateIcon,
+                        styleSpec: spec.indicator,
+                      ),
+              (false, true) =>
+                checkedIcon == null
+                    ? RemixPathIcon(
+                        glyph: RemixPathGlyph.check,
+                        styleSpec: spec.indicator,
+                      )
+                    : StyledIcon(icon: checkedIcon, styleSpec: spec.indicator),
+              (false, false) =>
+                uncheckedIcon == null
+                    ? null
+                    : StyledIcon(
+                        icon: uncheckedIcon,
+                        styleSpec: spec.indicator,
+                      ),
+              (false, null) => null,
+            };
 
             final checkbox = RemixBoxWithEffects(
               styleSpec: spec.container,
               containerEffects: spec.containerEffects,
-              child: iconData != null
-                  ? StyledIcon(icon: iconData, styleSpec: spec.indicator)
-                  : null,
+              child: indicator,
             );
 
             final visibleLabel = label;

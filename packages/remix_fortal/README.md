@@ -29,7 +29,7 @@ Wrap your app with `FortalScope` to provide the design tokens, then use the
 constructor with `variant:` when the choice is dynamic:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 class MyApp extends StatelessWidget {
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return FortalScope(
       child: WidgetsApp(
-        color: Colors.white,
+        color: const Color(0xFFFFFFFF),
         builder: (_, _) => Center(
           child: FortalButton.solid(
             onPressed: () {},
@@ -81,7 +81,7 @@ Fortal widgets call the matching `fortal*Style` recipe internally. Use those
 recipes directly when you need a custom Remix widget composition:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
@@ -90,6 +90,27 @@ final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
   .paddingX(32)
   .onHovered(.scale(1.05));
 ```
+
+## Icons
+
+Fortal includes the complete 318-glyph Radix Icons 1.3.2 catalog. Each glyph is
+a static `IconData` constant, allowing Flutter release builds to subset the font
+to referenced glyphs:
+
+```dart
+const Icon(FortalIcons.check)
+```
+
+There is deliberately no runtime name-to-icon map because dynamic lookup would
+keep the full catalog reachable. Pass `FortalIcons` constants to any widget that
+accepts `IconData`; Fortal controls otherwise use Remix's inline Radix-shaped
+vector defaults. The font remains a declared `remix_fortal` package asset, so
+applications should measure their release artifact rather than assume that
+referencing no catalog constants removes the asset entirely.
+
+The `shadow`, `shadowInner`, `shadowNone`, `shadowOuter`, and
+`transparencyGrid` glyphs approximate Radix's partial opacity as opaque
+coverage; the other 313 glyphs are lossless conversions.
 
 ## Charts
 

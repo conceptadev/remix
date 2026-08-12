@@ -39,7 +39,7 @@ loading, content stays laid out (invisible) with a spinner overlay to prevent
 layout shift.
 
 Icon placement is style-driven when exactly one icon is present:
-`ButtonStyler().iconAlignment(IconAlignment.end)` places it after the
+`ButtonStyler().iconAlignment(RemixIconAlignment.end)` places it after the
 label, regardless of whether the value came from `leadingIcon` or
 `trailingIcon`. With both icons present, Remix preserves
 leading → label → trailing order.

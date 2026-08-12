@@ -7,3 +7,7 @@ test/*
 reference/*
 tool/*
 radix_colors.generated.json
+lib/src/radix/icons/generated/.glyphpact.json
+lib/src/radix/icons/generated/ATTRIBUTION.md
+lib/src/radix/icons/generated/iconfont.lock.json
+lib/src/radix/icons/generated/iconfont.report.json

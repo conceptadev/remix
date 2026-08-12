@@ -2,7 +2,7 @@
 
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:remix/remix.dart'
     show RemixBoxShadow, RemixBoxShadowKind, RemixBoxShadowListToken;
@@ -961,7 +961,7 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
         : tokens.colorPanelTranslucent,
     FortalTokens.colorOverlay: tokens.colorOverlay,
     FortalTokens.sliderHighContrastOverlay: theme.isDark
-        ? Colors.transparent
+        ? const Color(0x00000000)
         : tokens.blackAlpha[8]!,
     FortalTokens.error3: (theme.isDark ? radix.red.dark : radix.red.light).scale
         .step(3),
@@ -1535,7 +1535,7 @@ List<RemixBoxShadow> _cardClassicShadows(
   final bottom = isDark ? colors.blackAlpha[5]! : colors.blackAlpha[1]!;
   return [
     shadow(border, spread: inner ? 1 : 0),
-    shadow(Colors.transparent, spread: inner ? 1 : 0),
+    shadow(const Color(0x00000000), spread: inner ? 1 : 0),
     shadow(subtle, spread: inner ? 0.5 : 0),
     shadow(middle, offset: const Offset(0, 1), blur: 1, spread: inner ? 0 : -1),
     shadow(

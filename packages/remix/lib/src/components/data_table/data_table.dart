@@ -4,7 +4,7 @@ import 'dart:math' as math;
 import 'dart:ui' show SemanticsRole;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/rendering.dart'
     show RenderTable, SemanticsConfiguration;
 import 'package:mix/mix.dart';
@@ -12,6 +12,7 @@ import 'package:mix_annotations/mix_annotations.dart';
 
 import '../../rendering/remix_box_effects.dart';
 import '../../utilities/remix_style.dart';
+import '../../utilities/remix_path_icon.dart';
 import '../checkbox/checkbox.dart';
 import '../icon_button/icon_button.dart';
 import '../select/select.dart';
