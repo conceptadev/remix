@@ -6,7 +6,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 import '../helpers/test_helpers.dart';
 
 void main() {
-  test('exposes stable tree-shakable icon metadata', () {
+  test('exposes stable icon metadata', () {
     expect(FortalIcons.accessibility.codePoint, 0xE000);
     expect(FortalIcons.accessibility.fontFamily, 'FortalIcons');
     expect(FortalIcons.accessibility.fontPackage, 'remix_fortal');
@@ -79,29 +79,28 @@ void main() {
     expect(find.byType(RemixDataTable<int>), findsOneWidget);
   });
 
-  testWidgets(
-    'renders outline, filled, even-odd, directional, and approximated glyphs',
-    (tester) async {
-      const representatives = [
-        FortalIcons.check,
-        FortalIcons.heartFilled,
-        FortalIcons.borderSplit,
-        FortalIcons.arrowLeft,
-        FortalIcons.shadow,
-      ];
+  testWidgets('builds representative generated glyph categories', (
+    tester,
+  ) async {
+    const representatives = [
+      FortalIcons.check,
+      FortalIcons.heartFilled,
+      FortalIcons.borderSplit,
+      FortalIcons.arrowLeft,
+      FortalIcons.shadow,
+    ];
 
-      await tester.pumpWidget(
-        WidgetsApp(
-          color: const Color(0xFFFFFFFF),
-          builder: (context, child) =>
-              Row(children: [for (final icon in representatives) Icon(icon)]),
-        ),
-      );
+    await tester.pumpWidget(
+      WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        builder: (context, child) =>
+            Row(children: [for (final icon in representatives) Icon(icon)]),
+      ),
+    );
 
-      expect(find.byType(Icon), findsNWidgets(representatives.length));
-      for (final icon in representatives) {
-        expect(find.byIcon(icon), findsOneWidget);
-      }
-    },
-  );
+    expect(find.byType(Icon), findsNWidgets(representatives.length));
+    for (final icon in representatives) {
+      expect(find.byIcon(icon), findsOneWidget);
+    }
+  });
 }

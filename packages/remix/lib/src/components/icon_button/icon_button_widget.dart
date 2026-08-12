@@ -14,7 +14,7 @@ typedef RemixIconButtonLoadingBuilder =
 class RemixIconButton extends StatelessWidget {
   const RemixIconButton({
     super.key,
-    this.icon,
+    required this.icon,
     this.iconBuilder,
     this.semanticLabel,
     this.loadingBuilder,
@@ -30,12 +30,17 @@ class RemixIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
     this.style = const IconButtonStyler.create(),
     this.styleSpec,
-  }) : assert(icon != null || iconBuilder != null),
+  }) : assert(
+         icon != null || iconBuilder != null,
+         'Either icon or iconBuilder must be provided.',
+       ),
        assert(semanticLabel == null || semanticLabel != '');
 
   static final styleFrom = IconButtonStyler.new;
 
   /// The icon rendered by the button.
+  ///
+  /// May be null when [iconBuilder] supplies the icon widget.
   final IconData? icon;
   final RemixIconButtonIconBuilder? iconBuilder;
   final String? semanticLabel;

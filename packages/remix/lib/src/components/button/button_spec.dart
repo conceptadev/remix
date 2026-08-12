@@ -1,6 +1,6 @@
 part of 'button.dart';
 
-/// Placement used when a button contains exactly one legacy icon.
+/// Placement used when a button contains exactly one icon.
 enum RemixIconAlignment { start, end }
 
 /// Defines the structure and styling properties for a button component.
@@ -100,7 +100,7 @@ class ButtonSpec with _$ButtonSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
-  /// Placement used when exactly one legacy icon is present.
+  /// Placement used when exactly one icon is present.
   @override
   final RemixIconAlignment? iconAlignment;
 

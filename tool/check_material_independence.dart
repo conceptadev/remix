@@ -3,7 +3,7 @@ import 'dart:io';
 const _publishedPackages = ['remix', 'remix_fortal'];
 
 final _forbiddenLibraryDirective = RegExp(
-  r'''^\s*(?:import|export)\s+['"]package:(?:flutter/material\.dart|material_ui/[^'"]+)['"]''',
+  r'''^\s*(?:import|export)\s+['"]package:(?:flutter/(?:material\.dart|src/material/[^'"]+)|material_ui/[^'"]+)['"]''',
   multiLine: true,
 );
 

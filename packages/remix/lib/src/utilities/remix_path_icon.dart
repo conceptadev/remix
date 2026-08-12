@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 
-/// Exact nine-unit paths shared by Radix-shaped component recipes.
+/// Pinned Radix-derived paths shared by component defaults.
 enum RemixPathGlyph {
   chevronDown(9),
   thickCheck(9),

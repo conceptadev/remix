@@ -28,6 +28,7 @@ void main() {
                   ),
                 ),
                 RemixIconButton(
+                  icon: null,
                   iconBuilder: (context, spec, icon) =>
                       const SizedBox.square(dimension: 12),
                   semanticLabel: 'Custom icon',
