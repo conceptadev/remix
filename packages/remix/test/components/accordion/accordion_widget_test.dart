@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/utilities/remix_path_icon.dart';
 
 import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
@@ -166,17 +167,15 @@ void main() {
 
           await tester.pumpAndSettle();
 
-          // When collapsed, should show add icon
-          expect(find.byIcon(Icons.add), findsOneWidget);
-          expect(find.byIcon(Icons.remove), findsNothing);
+          expect(_pathGlyph(RemixPathGlyph.plus), findsOneWidget);
+          expect(_pathGlyph(RemixPathGlyph.minus), findsNothing);
 
           // Tap to expand
           await tester.tap(find.text('Test Title'));
           await tester.pumpAndSettle();
 
-          // When expanded, should show remove icon
-          expect(find.byIcon(Icons.remove), findsOneWidget);
-          expect(find.byIcon(Icons.add), findsNothing);
+          expect(_pathGlyph(RemixPathGlyph.minus), findsOneWidget);
+          expect(_pathGlyph(RemixPathGlyph.plus), findsNothing);
         },
       );
     });
@@ -507,3 +506,7 @@ void main() {
     });
   });
 }
+
+Finder _pathGlyph(RemixPathGlyph glyph) => find.byWidgetPredicate(
+  (widget) => widget is RemixPathIcon && widget.glyph == glyph,
+);

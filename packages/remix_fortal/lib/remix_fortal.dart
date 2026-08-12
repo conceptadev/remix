@@ -7,6 +7,9 @@
 /// widgets or stylers.
 library remix_fortal;
 
+/// ICONS
+export 'src/radix/icons.dart';
+
 /// THEME
 export 'src/fortal/fortal.dart';
 
