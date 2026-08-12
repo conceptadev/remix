@@ -5,7 +5,9 @@ import 'package:remix/remix.dart';
 void main() {
   test('keeps RemixButtonStyler source-compatible during migration', () {
     // ignore: deprecated_member_use
-    final RemixButtonStyler legacy = RemixButtonStyler().paddingX(12);
+    final RemixButtonStyler legacy = RemixButtonStyler().padding(
+      .horizontal(12),
+    );
     // ignore: deprecated_member_use
     const emptyLegacy = RemixButtonStyler.create();
     // ignore: deprecated_member_use

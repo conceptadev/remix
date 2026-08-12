@@ -425,8 +425,8 @@ Widget _badgePie(BuildContext context, List<Color> palette) {
               .size(26, 26)
               .alignment(.center)
               .color(panel)
-              .borderAll(color: border)
-              .borderRounded(99),
+              .border(.color(border))
+              .borderRadius(.circular(99)),
           child: StyledIcon(
             icon: icons[index],
             style: IconStyler().size(14).color(iconColor),

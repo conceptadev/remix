@@ -102,22 +102,22 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
 
 final _cardStyle = CardStyler()
     .color(Colors.white)
-    .paddingAll(24)
-    .borderRadiusAll(const Radius.circular(12))
-    .borderAll(color: _border);
+    .padding(.all(24))
+    .borderRadius(.all(const Radius.circular(12)))
+    .border(.color(_border));
 
 final _badgeStyle = BadgeStyler()
     .color(_accent.withValues(alpha: 0.12))
-    .paddingX(8)
-    .paddingY(2)
-    .borderRadiusAll(const Radius.circular(999))
+    .padding(.horizontal(8))
+    .padding(.vertical(2))
+    .borderRadius(.all(const Radius.circular(999)))
     .label(TextStyler().color(_accent).fontSize(12));
 
 final _buttonStyle = ButtonStyler()
     .color(_accent)
-    .paddingX(16)
-    .paddingY(10)
-    .borderRadiusAll(const Radius.circular(6))
+    .padding(.horizontal(16))
+    .padding(.vertical(10))
+    .borderRadius(.all(const Radius.circular(6)))
     .label(TextStyler().color(Colors.white).fontWeight(FontWeight.w500))
     .icon(IconStyler().color(Colors.white).size(16))
     .animate(AnimationConfig.spring(const Duration(milliseconds: 200)))
@@ -125,10 +125,10 @@ final _buttonStyle = ButtonStyler()
     .onPressed(.scale(0.98));
 
 final _toggleStyle = ToggleStyler()
-    .paddingX(12)
-    .paddingY(8)
-    .borderRadiusAll(const Radius.circular(6))
-    .borderAll(color: _border)
+    .padding(.horizontal(12))
+    .padding(.vertical(8))
+    .borderRadius(.all(const Radius.circular(6)))
+    .border(.color(_border))
     .label(TextStyler().color(_ink).fontSize(14))
     .icon(IconStyler().color(_ink).size(16))
     .onSelected(

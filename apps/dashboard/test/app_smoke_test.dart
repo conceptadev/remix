@@ -180,8 +180,8 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('nav-customers')).first);
     await tester.pump();
 
-    // The generated Fortal wrapper forwards the key to the Remix widget it
-    // builds, so the key matches both.
+    // FortalDataTable forwards the key to the Remix widget it builds, so the
+    // key matches both.
     expect(find.byKey(const ValueKey('data-grid-customers')), findsWidgets);
     expect(find.text('1–10 of 24'), findsOneWidget);
   });
@@ -293,6 +293,7 @@ void main() {
     await tester.pump();
     await tester.tap(showContent);
     await tester.pump();
+    expect(find.text('Show skeleton'), findsOneWidget);
     expect(
       find.text('Loaded content replaces the placeholder.'),
       findsOneWidget,
@@ -448,6 +449,25 @@ void main() {
     expect(find.text('Button'), findsWidgets);
     expect(find.text('Icon button'), findsOneWidget);
     expect(find.text('Toggle'), findsOneWidget);
+  });
+
+  testWidgets('accordion gallery presents each item as a separate panel', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const DashboardApp());
+    final nav = find.byKey(const ValueKey('nav-galleryNavigation')).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
+    await tester.pump();
+
+    final group = tester.widget<RemixAccordionGroup<String>>(
+      find.byType(RemixAccordionGroup<String>).first,
+    );
+    final items = group.child as Column;
+
+    expect(items.spacing, 8);
+    expect(items.children, hasLength(2));
+    expect(items.children, everyElement(isA<FortalAccordion<String>>()));
   });
 
   testWidgets('every sidebar destination renders without replacing the shell', (

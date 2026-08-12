@@ -81,17 +81,13 @@ void main() {
       );
 
       styleMethodTest(
-        'backgroundColor',
+        'color',
         initial: ToggleStyler(),
-        modify: (style) => style.backgroundColor(Colors.blue),
+        modify: (style) => style.color(Colors.blue),
         expect: (style) {
           expect(
             style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
-              ),
-            ),
+            equals(Prop.maybeMix(FlexBoxStyler().color(Colors.blue))),
           );
         },
       );
@@ -212,9 +208,9 @@ void main() {
       );
 
       styleMethodTest(
-        'flex',
+        'container flex',
         initial: ToggleStyler(),
-        modify: (style) => style.flex(FlexStyler()),
+        modify: (style) => style.container(FlexBoxStyler().flex(FlexStyler())),
         expect: (style) {
           expect(
             style.$container,

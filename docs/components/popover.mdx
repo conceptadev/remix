@@ -113,10 +113,10 @@ import 'package:remix/remix.dart';
 
 final styledPopover = RemixPopover(
   style: PopoverStyler()
-      .paddingAll(16)
+      .padding(.all(16))
       .constraints(BoxConstraintsMix(maxWidth: 320))
-      .backgroundColor(Colors.white)
-      .borderRadiusAll(const Radius.circular(12)),
+      .color(Colors.white)
+      .borderRadius(.all(const Radius.circular(12))),
   popoverChild: const Text('Custom popover'),
   child: const Text('Open'),
 );
@@ -165,6 +165,6 @@ RemixPopover remixPopoverConstructor({
 ## Style methods
 
 The styler includes the standard Remix container methods, including `container`,
-`padding`, `margin`, `alignment`, `color`, `backgroundColor`, `border`,
+`padding`, `margin`, `alignment`, `color`, `border`,
 `borderRadius`, `shadow`, `constraints`, `decoration`, `foregroundDecoration`,
 `transform`, `animate`, `variants`, `wrap`, and `modifier`.

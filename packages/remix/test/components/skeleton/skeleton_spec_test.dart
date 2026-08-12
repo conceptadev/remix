@@ -202,11 +202,13 @@ void main() {
               builder: (context) {
                 specs = {
                   'rectangle': SkeletonStyler()
-                      .container(BoxStyler().size(120, 24).borderRounded(4))
+                      .container(
+                        BoxStyler().size(120, 24).borderRadius(.circular(4)),
+                      )
                       .resolve(context)
                       .spec,
                   'circle': SkeletonStyler()
-                      .container(BoxStyler().size(40, 40).shapeCircle())
+                      .container(BoxStyler().size(40, 40).shape(.circle()))
                       .resolve(context)
                       .spec,
                   'textLine': SkeletonStyler()

@@ -261,8 +261,8 @@ widgets, resolve against context:
 ```dart
 // In a styler chain:
 ButtonStyler()
-    .backgroundColor(FortalTokens.accent9())
-    .borderRadiusAll(FortalTokens.radius3())
+    .color(FortalTokens.accent9())
+    .borderRadius(.all(FortalTokens.radius3()))
 
 // In a widget build:
 Container(color: FortalTokens.colorBackground.resolve(context))

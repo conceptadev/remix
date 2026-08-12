@@ -32,41 +32,45 @@ class ButtonExample extends StatelessWidget {
 
   ButtonStyler get destructiveStyle {
     return ButtonStyler()
-        .paddingX(16)
-        .paddingY(10)
-        .backgroundColor(const Color(0xFF4D1919))
+        .padding(.horizontal(16))
+        .padding(.vertical(10))
+        .color(const Color(0xFF4D1919))
         .shadow(
           BoxShadowMix().color(Colors.redAccent).blurRadius(10).spreadRadius(0),
         )
         .label(TextStyler().uppercase().color(Colors.redAccent))
-        .shapeBeveledRectangle(
-          borderRadius: BorderRadiusMix()
-              .bottomLeft(const Radius.circular(12))
-              .topRight(const Radius.circular(12)),
-          side: BorderSideMix.width(1).color(Colors.redAccent),
+        .shape(
+          .beveledRectangle(
+            borderRadius: BorderRadiusMix()
+                .bottomLeft(const Radius.circular(12))
+                .topRight(const Radius.circular(12)),
+            side: BorderSideMix.width(1).color(Colors.redAccent),
+          ),
         )
         .wrap(.scale(x: 1, y: 1))
         .onPressed(ButtonStyler().wrap(.scale(x: 0.90, y: 0.90)))
         .onHovered(
           ButtonStyler()
-              .backgroundColor(const Color(0xFF732D2D))
+              .color(const Color(0xFF732D2D))
               .animate(.spring(300.ms)),
         )
-        .onFocused(ButtonStyler().backgroundColor(const Color(0xFF732D2D)));
+        .onFocused(ButtonStyler().color(const Color(0xFF732D2D)));
   }
 
   ButtonStyler get successStyle {
     return destructiveStyle
-        .backgroundColor(const Color.fromARGB(255, 15, 61, 15))
+        .color(const Color.fromARGB(255, 15, 61, 15))
         .label(TextStyler().uppercase().color(Colors.greenAccent))
-        .shapeBeveledRectangle(side: BorderSideMix().color(Colors.greenAccent))
+        .shape(
+          .beveledRectangle(side: BorderSideMix().color(Colors.greenAccent)),
+        )
         .shadow(
           BoxShadowMix()
               .color(Colors.greenAccent)
               .blurRadius(10)
               .spreadRadius(0),
         )
-        .onHovered(ButtonStyler().backgroundColor(const Color(0xFF357857)))
-        .onFocused(ButtonStyler().backgroundColor(const Color(0xFF357857)));
+        .onHovered(ButtonStyler().color(const Color(0xFF357857)))
+        .onFocused(ButtonStyler().color(const Color(0xFF357857)));
   }
 }

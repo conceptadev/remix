@@ -118,10 +118,10 @@ class _MenuExampleState extends State<MenuExample> {
 
   MenuItemStyler get menuItemStyle {
     return MenuItemStyler()
-        .paddingAll(6)
+        .padding(.all(6))
         .leadingIcon(IconStyler().size(20).color(Colors.blueGrey.shade800))
         .spacing(8)
-        .borderRadiusAll(const Radius.circular(8))
+        .borderRadius(.all(const Radius.circular(8)))
         .label(TextStyler().color(Colors.blueGrey.shade800))
         .onHovered(MenuItemStyler().color(Colors.blueGrey.shade50));
   }
@@ -242,7 +242,7 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
 final sharedItemStyle = MenuItemStyler()
-    .paddingX(12)
+    .padding(.horizontal(12))
     .spacing(8)
     .onSelected(.color(Colors.indigo.withValues(alpha: 0.08)));
 
@@ -685,10 +685,6 @@ Sets a foreground decoration painted on top of the component.
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
 Applies a matrix transformation to the component.
-
-#### `flex(FlexStyler value)`
-
-Configures the flex layout properties.
 
 #### `animate(AnimationConfig value)`
 

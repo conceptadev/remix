@@ -45,20 +45,24 @@ class _SwitchExampleState extends State<SwitchExample> {
         .thumbColor(Colors.grey.shade600)
         .trackColor(Colors.deepPurpleAccent.shade200)
         .size(65, 30)
-        .borderRadiusAll(const Radius.circular(40))
+        .borderRadius(.all(const Radius.circular(40)))
         .alignment(_selected.value ? .centerRight : .centerLeft)
         .animate(AnimationConfig.easeOut(300.ms))
         .thumb(
           BoxStyler()
               .color(Colors.white)
               .size(40, 30)
-              .borderRounded(40)
+              .borderRadius(.circular(40))
               .scale(0.85)
-              .shadowOnly(
-                color: Colors.black.withValues(alpha: 0.1),
-                offset: const Offset(2, 4),
-                blurRadius: 4,
-                spreadRadius: 3,
+              .decoration(
+                .boxShadow([
+                  BoxShadowMix(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    offset: const Offset(2, 4),
+                    blurRadius: 4,
+                    spreadRadius: 3,
+                  ),
+                ]),
               )
               .keyframeAnimation(
                 trigger: _selected,

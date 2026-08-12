@@ -8,10 +8,6 @@ extension RemixTabBarStylerRemixHelpers on TabBarStyler {
   RemixTabBar call({Key? key, required Widget child}) {
     return RemixTabBar(key: key, style: this, child: child);
   }
-
-  TabBarStyler flex(FlexStyler value) {
-    return merge(TabBarStyler(container: FlexBoxStyler().flex(value)));
-  }
 }
 
 /// Style builder for [RemixTabView].
@@ -66,9 +62,5 @@ extension RemixTabStylerRemixHelpers on TabStyler {
       child: child,
       builder: builder,
     );
-  }
-
-  TabStyler flex(FlexStyler value) {
-    return merge(TabStyler(container: FlexBoxStyler().flex(value)));
   }
 }

@@ -2,52 +2,6 @@ part of 'icon_button.dart';
 
 /// Style configuration for [RemixIconButton] container, icon, and loading spinner.
 extension RemixIconButtonStylerRemixHelpers on IconButtonStyler {
-  /// Sets the background color of the icon button container.
-  IconButtonStyler backgroundColor(Color value) {
-    return color(value);
-  }
-
-  /// Sets the foreground color (icon color) of the icon button.
-  IconButtonStyler foregroundColor(Color value) {
-    return iconColor(value);
-  }
-
-  /// Sets size (width and height - icon buttons are square)
-  IconButtonStyler iconButtonSize(double size) {
-    return merge(
-      IconButtonStyler(
-        container: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minWidth: size,
-            maxWidth: size,
-            minHeight: size,
-            maxHeight: size,
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Sets the minimum size of the icon button.
-  IconButtonStyler minimumSize(Size value) {
-    return merge(
-      IconButtonStyler().constraintsOnly(
-        minWidth: value.width,
-        minHeight: value.height,
-      ),
-    );
-  }
-
-  /// Sets the maximum size of the icon button.
-  IconButtonStyler maximumSize(Size value) {
-    return merge(
-      IconButtonStyler().constraintsOnly(
-        maxWidth: value.width,
-        maxHeight: value.height,
-      ),
-    );
-  }
-
   RemixIconButton call({
     Key? key,
     required IconData? icon,

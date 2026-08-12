@@ -44,11 +44,11 @@ class _TextAreaExampleState extends State<_TextAreaExample> {
     final muted = isDark ? const Color(0xFFB8BDC7) : const Color(0xFF667085);
 
     final customStyle = TextFieldStyler()
-        .backgroundColor(surface)
+        .color(surface)
         .textColor(foreground)
         .hintColor(muted)
-        .paddingAll(14)
-        .borderRadiusAll(const Radius.circular(12))
+        .padding(.all(14))
+        .borderRadius(.all(const Radius.circular(12)))
         .border(
           BoxBorderMix.all(
             BorderSideMix(color: const Color(0xFF7C3AED), width: 1.5),

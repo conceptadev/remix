@@ -41,7 +41,7 @@ SelectTriggerStyler _fortalSelectTriggerStyler(
       .direction(.horizontal)
       .mainAxisAlignment(.spaceBetween)
       .crossAxisAlignment(.center)
-      .borderRadiusAll(radius)
+      .borderRadius(.all(radius))
       .label(_fortalSelectTriggerText(size, color: FortalTokens.gray12()))
       .placeholder(
         _fortalSelectTriggerText(size, color: FortalTokens.grayA10()),
@@ -50,7 +50,7 @@ SelectTriggerStyler _fortalSelectTriggerStyler(
       .chevron(.color(FortalTokens.gray12()).size(size == .size3 ? 11 : 9))
       .onFocusVisible(
         .containerEffects(
-          RemixBoxEffectsMix(overContent: _fortalSelectFocusRing()),
+          RemixBoxEffectsMix.overContent(_fortalSelectFocusRing()),
         ),
       )
       .merge(_fortalSelectTriggerSizeStyler(variant, size));
@@ -92,25 +92,31 @@ SelectTriggerStyler _fortalSelectTriggerSizeStyler(
     return switch (size) {
       .size1 || .size2 =>
         style
-            .paddingX(FortalTokens.space2())
-            .paddingY(FortalTokens.space1())
-            .marginX(FortalTokens.selectGhostMarginX12())
-            .marginY(FortalTokens.selectGhostMarginY12()),
+            .padding(.horizontal(FortalTokens.space2()))
+            .padding(.vertical(FortalTokens.space1()))
+            .margin(.horizontal(FortalTokens.selectGhostMarginX12()))
+            .margin(.vertical(FortalTokens.selectGhostMarginY12())),
       .size3 =>
         style
-            .paddingX(FortalTokens.space3())
-            .paddingY(FortalTokens.selectSpace1Half())
-            .marginX(FortalTokens.selectGhostMarginX3())
-            .marginY(FortalTokens.selectGhostMarginY3()),
+            .padding(.horizontal(FortalTokens.space3()))
+            .padding(.vertical(FortalTokens.selectSpace1Half()))
+            .margin(.horizontal(FortalTokens.selectGhostMarginX3()))
+            .margin(.vertical(FortalTokens.selectGhostMarginY3())),
     };
   }
   return switch (size) {
     .size1 =>
-      style.height(FortalTokens.space5()).paddingX(FortalTokens.space2()),
+      style
+          .height(FortalTokens.space5())
+          .padding(.horizontal(FortalTokens.space2())),
     .size2 =>
-      style.height(FortalTokens.space6()).paddingX(FortalTokens.space3()),
+      style
+          .height(FortalTokens.space6())
+          .padding(.horizontal(FortalTokens.space3())),
     .size3 =>
-      style.height(FortalTokens.space7()).paddingX(FortalTokens.space4()),
+      style
+          .height(FortalTokens.space7())
+          .padding(.horizontal(FortalTokens.space4())),
   };
 }
 
@@ -132,21 +138,21 @@ SelectTriggerStyler _fortalSelectSurfaceTrigger(SelectTriggerStyler base) {
       .chevronOpacity(0.9)
       .color(FortalTokens.colorSurface())
       .containerEffects(
-        RemixBoxEffectsMix(
-          behindContent: fortalInsetSurface(strokes: [FortalTokens.grayA7()]),
+        RemixBoxEffectsMix.behindContent(
+          fortalInsetSurface(strokes: [FortalTokens.grayA7()]),
         ),
       )
       .onHovered(
         .containerEffects(
-          RemixBoxEffectsMix(
-            behindContent: fortalInsetSurface(strokes: [FortalTokens.grayA8()]),
+          RemixBoxEffectsMix.behindContent(
+            fortalInsetSurface(strokes: [FortalTokens.grayA8()]),
           ),
         ),
       )
       .onSelected(
         .containerEffects(
-          RemixBoxEffectsMix(
-            behindContent: fortalInsetSurface(strokes: [FortalTokens.grayA8()]),
+          RemixBoxEffectsMix.behindContent(
+            fortalInsetSurface(strokes: [FortalTokens.grayA8()]),
           ),
         ),
       )
@@ -156,10 +162,8 @@ SelectTriggerStyler _fortalSelectSurfaceTrigger(SelectTriggerStyler base) {
             .icon(.color(FortalTokens.grayA9()))
             .chevron(.color(FortalTokens.grayA9()))
             .containerEffects(
-              RemixBoxEffectsMix(
-                behindContent: fortalInsetSurface(
-                  strokes: [FortalTokens.grayA6()],
-                ),
+              RemixBoxEffectsMix.behindContent(
+                fortalInsetSurface(strokes: [FortalTokens.grayA6()]),
               ),
             ),
       );
@@ -206,17 +210,17 @@ SelectContentStyler _fortalSelectContentStyler(FortalSelectSize size) {
       ? FortalTokens.radius3()
       : FortalTokens.radius4();
   return SelectContentStyler()
-      .paddingAll(
-        size == .size1 ? FortalTokens.space1() : FortalTokens.space2(),
+      .padding(
+        .all(size == .size1 ? FortalTokens.space1() : FortalTokens.space2()),
       )
-      .borderRadiusAll(radius)
+      .borderRadius(.all(radius))
       .color(FortalTokens.colorPanel())
       .decoration(
         BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),
       )
       .clipBehavior(Clip.antiAlias)
       .containerEffects(
-        RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
+        RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
       );
 }
 
@@ -230,8 +234,8 @@ SelectMenuItemStyler _fortalSelectItemStyler(
       .direction(.horizontal)
       .crossAxisAlignment(.center)
       .height(metrics.itemHeight)
-      .paddingX(metrics.indicatorWidth)
-      .borderRadiusAll(metrics.itemRadius)
+      .padding(.horizontal(metrics.indicatorWidth))
+      .borderRadius(.all(metrics.itemRadius))
       .text(
         TextStyler(style: metrics.itemText.mix()).color(FortalTokens.gray12()),
       )

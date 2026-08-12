@@ -1,6 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
+final _removedComponentBackgroundColorInvocation = RegExp(
+  r'\b(?:Remix)?(?:Accordion|Avatar|Badge|Button|Callout|Card|Dialog|'
+  r'IconButton|Popover|TextField|Toggle|ToggleGroup|ToggleGroupItem|Tooltip)'
+  r'Styler(?:<[^>]+>)?(?:\.[A-Za-z0-9_]+)?\s*'
+  r'\((?:[^()]|\([^()]*\)){0,1200}?\)'
+  r'(?:\s*\.[A-Za-z0-9_]+\s*\((?:[^()]|\([^()]*\)){0,1200}?\))*'
+  r'\s*\.backgroundColor\s*\(',
+);
+
 final _retiredApis = <(RegExp, String)>[
   (
     RegExp(
@@ -36,6 +45,78 @@ final _retiredApis = <(RegExp, String)>[
     RegExp(r'generated Fortal', caseSensitive: false),
     'stale generated-wrapper claim',
   ),
+  (
+    RegExp(
+      r'\.(paddingTop|paddingBottom|paddingLeft|paddingRight|paddingX|'
+      r'paddingY|paddingAll|paddingStart|paddingEnd|paddingOnly)\s*\(',
+    ),
+    'retired Box padding convenience; use padding(.all/.horizontal/.vertical/'
+        '.top/.bottom/.left/.right/.start/.end/.only/.symmetric/.directional(...))',
+  ),
+  (
+    RegExp(
+      r'\.(marginTop|marginBottom|marginLeft|marginRight|marginX|marginY|'
+      r'marginAll|marginStart|marginEnd|marginOnly)\s*\(',
+    ),
+    'retired Box margin convenience; use margin(.all/.horizontal/.vertical/'
+        '.top/.bottom/.left/.right/.start/.end/.only/.symmetric/.directional(...))',
+  ),
+  (
+    RegExp(r'\.constraintsOnly\s*\('),
+    'retired Box constraints convenience; use '
+        'constraints(.width/.height(...)) or constraints(BoxConstraintsMix(...))',
+  ),
+  (
+    RegExp(
+      r'\.(borderTop|borderBottom|borderLeft|borderRight|borderStart|'
+      r'borderEnd|borderVertical|borderHorizontal|borderAll)\s*\(',
+    ),
+    'retired Box border-side convenience; use '
+        'border(.top/.bottom/.left/.right/.start/.end/.vertical/.horizontal/.all(...))',
+  ),
+  (
+    RegExp(
+      r'\.(borderRadiusAll|borderRadiusTop|borderRadiusBottom|'
+      r'borderRadiusLeft|borderRadiusRight|borderRadiusTopLeft|'
+      r'borderRadiusTopRight|borderRadiusBottomLeft|borderRadiusBottomRight|'
+      r'borderRadiusTopStart|borderRadiusTopEnd|borderRadiusBottomStart|'
+      r'borderRadiusBottomEnd)\s*\(',
+    ),
+    'retired Box borderRadius convenience; use '
+        'borderRadius(.all/.top/.bottom/.left/.right/...(radius))',
+  ),
+  (
+    RegExp(
+      r'\.(borderRounded|borderRoundedTop|borderRoundedBottom|'
+      r'borderRoundedLeft|borderRoundedRight|borderRoundedTopLeft|'
+      r'borderRoundedTopRight|borderRoundedBottomLeft|'
+      r'borderRoundedBottomRight|borderRoundedTopStart|borderRoundedTopEnd|'
+      r'borderRoundedBottomStart|borderRoundedBottomEnd)\s*\(',
+    ),
+    'retired Box borderRounded convenience; use borderRadius(.circular(x)) '
+        'or nest .circular(x) inside a directional shorthand',
+  ),
+  (
+    RegExp(
+      r'\.(shapeCircle|shapeStadium|shapeRoundedRectangle|'
+      r'shapeBeveledRectangle|shapeContinuousRectangle|shapeStar|'
+      r'shapeLinear|shapeSuperellipse)\s*\(',
+    ),
+    'retired Box shape convenience; use '
+        'shape(.circle/.stadium/.roundedRectangle/...(...))',
+  ),
+  (
+    RegExp(r'\.(shadowOnly|boxShadows|boxElevation)\s*\('),
+    'retired Box shadow convenience; use decoration(.boxShadow([...]))',
+  ),
+  (
+    RegExp(r'\.transformReset\s*\('),
+    'retired Box transform convenience; use transform(Matrix4.identity())',
+  ),
+  (
+    _removedComponentBackgroundColorInvocation,
+    'retired component backgroundColor alias; use color',
+  ),
 ];
 
 final _iconButtonInvocation = RegExp(
@@ -52,6 +133,25 @@ const _exampleSourceDirectories = <String>[
   'apps/playground/lib',
   'packages/remix/example',
   'packages/remix_fortal/example',
+];
+
+// Package library sources aren't examples, but the same retired-API sweep
+// applies: doc comments quote call sites and drift the same way prose does.
+const _packageLibraryDirectories = <String>[
+  'packages/remix/lib',
+  'packages/remix_fortal/lib',
+];
+
+// Test code is part of the canonical-styler contract too. Mix still exposes
+// several retired Remix convenience spellings, so those calls continue to
+// compile and cannot be left to the analyzer alone. Some app test directories
+// are optional today but should be picked up automatically when added later.
+const _testSourceDirectories = <String>[
+  'apps/dashboard/test',
+  'apps/demo/test',
+  'apps/playground/test',
+  'packages/remix/test',
+  'packages/remix_fortal/test',
 ];
 
 const _consumerDocumentationDirectories = <String>['skills/using-remix'];
@@ -81,6 +181,13 @@ final _staleConsumerDocumentationClaims = <(RegExp, String)>[
       caseSensitive: false,
     ),
     'stale IconButton child-slot claim',
+  ),
+  (
+    RegExp(
+      r'`?\.backgroundColor\(\)`?\s+(?:is|was|remains)\s+(?:an?\s+)?alias\b',
+      caseSensitive: false,
+    ),
+    'stale component backgroundColor alias claim',
   ),
 ];
 
@@ -131,7 +238,25 @@ Future<void> main() async {
     workspaceRoot,
     failures,
   );
-  final exampleSourceCount = _checkExampleSources(workspaceRoot, failures);
+  final exampleSourceCount = _checkDartSources(
+    workspaceRoot,
+    _exampleSourceDirectories,
+    'app/example source',
+    failures,
+  );
+  final packageLibrarySourceCount = _checkDartSources(
+    workspaceRoot,
+    _packageLibraryDirectories,
+    'package library source',
+    failures,
+  );
+  final testSourceCount = _checkDartSources(
+    workspaceRoot,
+    _testSourceDirectories,
+    'test source',
+    failures,
+    requireDirectories: false,
+  );
 
   _checkNavigation(workspaceRoot, docsConfig, failures);
   _checkFortalScopeTopology(workspaceRoot, failures);
@@ -188,6 +313,8 @@ Future<void> main() async {
     '${snippets.length} analyzable Dart examples, and '
     '${extraction.skipped} skipped Dart examples, plus '
     '$exampleSourceCount app/example Dart sources, plus '
+    '$packageLibrarySourceCount package library Dart sources, plus '
+    '$testSourceCount test Dart sources, plus '
     '$consumerDocumentationCount consumer-facing Markdown files.',
   );
 }
@@ -249,12 +376,22 @@ int _checkConsumerDocumentation(
   return documents.length;
 }
 
-int _checkExampleSources(Directory workspaceRoot, List<String> failures) {
+int _checkDartSources(
+  Directory workspaceRoot,
+  List<String> directories,
+  String missingDirectoryLabel,
+  List<String> failures, {
+  bool requireDirectories = true,
+}) {
   final sources = <File>[];
-  for (final relativeDirectory in _exampleSourceDirectories) {
+  for (final relativeDirectory in directories) {
     final directory = Directory('${workspaceRoot.path}/$relativeDirectory');
     if (!directory.existsSync()) {
-      failures.add('Missing app/example source directory: $relativeDirectory.');
+      if (requireDirectories) {
+        failures.add(
+          'Missing $missingDirectoryLabel directory: $relativeDirectory.',
+        );
+      }
       continue;
     }
     sources.addAll(

@@ -87,8 +87,8 @@ import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
-  .borderRadiusAll(const Radius.circular(8))
-  .paddingX(32)
+  .borderRadius(.all(const Radius.circular(8)))
+  .padding(.horizontal(32))
   .onHovered(.scale(1.05));
 ```
 
@@ -178,8 +178,8 @@ import 'package:remix_fortal/remix_fortal.dart';
 
 final style = ButtonStyler()
   .color(FortalTokens.accent9())
-  .paddingAll(FortalTokens.space4())
-  .borderRadiusAll(FortalTokens.radius3())
+  .padding(.all(FortalTokens.space4()))
+  .borderRadius(.all(FortalTokens.radius3()))
   .label(TextStyler().color(FortalTokens.accentContrast()));
 ```
 

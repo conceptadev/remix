@@ -9,6 +9,8 @@ void main() {
       test('creates spec with default values when no parameters provided', () {
         const spec = AccordionSpec();
 
+        expect(spec.container, isA<StyleSpec<BoxSpec>>());
+        expect(spec.containerEffects, isNull);
         expect(spec.trigger, isA<StyleSpec<FlexBoxSpec>>());
         expect(spec.leadingIcon, isA<StyleSpec<IconSpec>>());
         expect(spec.title, isA<StyleSpec<TextSpec>>());
@@ -17,11 +19,20 @@ void main() {
       });
 
       test('creates spec with custom values', () {
+        final customContainer = StyleSpec(spec: BoxSpec());
+        const customEffects = RemixBoxEffectsSpec(backdropBlur: 4);
         final customTrigger = StyleSpec(spec: FlexBoxSpec());
         final customTitle = StyleSpec(spec: TextSpec());
 
-        final spec = AccordionSpec(trigger: customTrigger, title: customTitle);
+        final spec = AccordionSpec(
+          container: customContainer,
+          containerEffects: customEffects,
+          trigger: customTrigger,
+          title: customTitle,
+        );
 
+        expect(spec.container, equals(customContainer));
+        expect(spec.containerEffects, equals(customEffects));
         expect(spec.trigger, equals(customTrigger));
         expect(spec.title, equals(customTitle));
       });
@@ -30,15 +41,21 @@ void main() {
     group('copyWith', () {
       test('returns new instance with updated properties', () {
         const originalSpec = AccordionSpec();
+        final newContainer = StyleSpec(spec: BoxSpec());
+        const newEffects = RemixBoxEffectsSpec(backdropBlur: 4);
         final newTrigger = StyleSpec(spec: FlexBoxSpec());
         final newTitle = StyleSpec(spec: TextSpec());
 
         final updatedSpec = originalSpec.copyWith(
+          container: newContainer,
+          containerEffects: newEffects,
           trigger: newTrigger,
           title: newTitle,
         );
 
         expect(updatedSpec, isNot(same(originalSpec)));
+        expect(updatedSpec.container, equals(newContainer));
+        expect(updatedSpec.containerEffects, equals(newEffects));
         expect(updatedSpec.trigger, equals(newTrigger));
         expect(updatedSpec.title, equals(newTitle));
         expect(updatedSpec.leadingIcon, equals(originalSpec.leadingIcon));
@@ -54,6 +71,11 @@ void main() {
           final updatedSpec = originalSpec.copyWith();
 
           expect(updatedSpec, isNot(same(originalSpec)));
+          expect(updatedSpec.container, equals(originalSpec.container));
+          expect(
+            updatedSpec.containerEffects,
+            equals(originalSpec.containerEffects),
+          );
           expect(updatedSpec.trigger, equals(originalSpec.trigger));
           expect(updatedSpec.title, equals(originalSpec.title));
           expect(updatedSpec.leadingIcon, equals(originalSpec.leadingIcon));
@@ -135,6 +157,19 @@ void main() {
         expect(result, isNot(same(spec2)));
         expect(result, isA<AccordionSpec>());
       });
+
+      test('interpolates container effects instead of snap-lerping', () {
+        const spec1 = AccordionSpec(
+          containerEffects: RemixBoxEffectsSpec(backdropBlur: 0),
+        );
+        const spec2 = AccordionSpec(
+          containerEffects: RemixBoxEffectsSpec(backdropBlur: 10),
+        );
+
+        final result = spec1.lerp(spec2, 0.5);
+
+        expect(result.containerEffects?.backdropBlur, 5);
+      });
     });
 
     group('Equality and Props', () {
@@ -164,7 +199,9 @@ void main() {
       test('props list contains all properties', () {
         const spec = AccordionSpec();
 
-        expect(spec.props, hasLength(5));
+        expect(spec.props, hasLength(7));
+        expect(spec.props, contains(spec.container));
+        expect(spec.props, contains(spec.containerEffects));
         expect(spec.props, contains(spec.trigger));
         expect(spec.props, contains(spec.leadingIcon));
         expect(spec.props, contains(spec.title));
@@ -197,9 +234,11 @@ void main() {
         spec.debugFillProperties(builder);
 
         final properties = builder.properties;
-        expect(properties, hasLength(5));
+        expect(properties, hasLength(7));
 
         final propertyNames = properties.map((p) => p.name).toList();
+        expect(propertyNames, contains('container'));
+        expect(propertyNames, contains('containerEffects'));
         expect(propertyNames, contains('trigger'));
         expect(propertyNames, contains('leadingIcon'));
         expect(propertyNames, contains('title'));

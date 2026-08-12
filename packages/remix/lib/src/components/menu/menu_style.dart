@@ -1,15 +1,5 @@
 part of 'menu.dart';
 
-/// Style configuration for [RemixMenu] trigger content.
-///
-/// Naked menu behavior wraps the trigger in a button; this style only controls
-/// the visible trigger content.
-extension RemixMenuTriggerStylerRemixHelpers on MenuTriggerStyler {
-  MenuTriggerStyler flex(FlexStyler value) {
-    return merge(MenuTriggerStyler(container: FlexBoxStyler().flex(value)));
-  }
-}
-
 /// Style configuration for [RemixMenu] trigger, overlay, shared and semantic
 /// item defaults, and dividers.
 extension RemixMenuStylerRemixHelpers on MenuStyler {
@@ -63,12 +53,5 @@ extension RemixMenuStylerRemixHelpers on MenuStyler {
       positioning: positioning,
       style: this,
     );
-  }
-}
-
-/// Style configuration for an item in a [RemixMenu].
-extension RemixMenuItemStylerRemixHelpers on MenuItemStyler {
-  MenuItemStyler flex(FlexStyler value) {
-    return merge(MenuItemStyler(container: FlexBoxStyler().flex(value)));
   }
 }

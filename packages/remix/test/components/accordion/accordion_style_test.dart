@@ -15,6 +15,10 @@ void main() {
       });
 
       test('create constructor with all parameters', () {
+        final container = Prop.maybeMix(BoxStyler());
+        final containerEffects = Prop.maybeMix(
+          RemixBoxEffectsMix(backdropBlur: 4),
+        );
         final trigger = Prop.maybeMix(FlexBoxStyler());
         final leadingIcon = Prop.maybeMix(IconStyler());
         final title = Prop.maybeMix(TextStyler());
@@ -23,6 +27,8 @@ void main() {
         final variants = <VariantStyle<AccordionSpec>>[];
 
         final style = AccordionStyler.create(
+          container: container,
+          containerEffects: containerEffects,
           trigger: trigger,
           leadingIcon: leadingIcon,
           title: title,
@@ -32,6 +38,8 @@ void main() {
         );
 
         expect(style, isNotNull);
+        expect(style.$container, equals(container));
+        expect(style.$containerEffects, equals(containerEffects));
         expect(style.$trigger, equals(trigger));
         expect(style.$leadingIcon, equals(leadingIcon));
         expect(style.$title, equals(title));
@@ -41,17 +49,23 @@ void main() {
       });
 
       test('constructor with styler parameters', () {
+        final containerStyler = BoxStyler();
+        final containerEffects = RemixBoxEffectsMix(backdropBlur: 4);
         final triggerStyler = FlexBoxStyler();
         final titleStyler = TextStyler();
         final contentStyler = BoxStyler();
 
         final style = AccordionStyler(
+          container: containerStyler,
+          containerEffects: containerEffects,
           trigger: triggerStyler,
           title: titleStyler,
           content: contentStyler,
         );
 
         expect(style, isNotNull);
+        expect(style.$container, isNotNull);
+        expect(style.$containerEffects, isNotNull);
         expect(style.$trigger, isNotNull);
         expect(style.$title, isNotNull);
         expect(style.$content, isNotNull);
@@ -59,6 +73,28 @@ void main() {
     });
 
     group('Style Methods', () {
+      styleMethodTest(
+        'container',
+        initial: AccordionStyler(),
+        modify: (style) => style.container(BoxStyler()),
+        expect: (style) {
+          expect(style.$container, equals(Prop.maybeMix(BoxStyler())));
+        },
+      );
+
+      styleMethodTest(
+        'containerEffects',
+        initial: AccordionStyler(),
+        modify: (style) =>
+            style.containerEffects(RemixBoxEffectsMix(backdropBlur: 4)),
+        expect: (style) {
+          expect(
+            style.$containerEffects,
+            equals(Prop.maybeMix(RemixBoxEffectsMix(backdropBlur: 4))),
+          );
+        },
+      );
+
       styleMethodTest(
         'trigger',
         initial: AccordionStyler(),
@@ -255,9 +291,9 @@ void main() {
       );
 
       styleMethodTest(
-        'flex',
+        'container flex',
         initial: AccordionStyler(),
-        modify: (style) => style.flex(FlexStyler()),
+        modify: (style) => style.trigger(FlexBoxStyler().flex(FlexStyler())),
         expect: (style) {
           expect(
             style.$trigger,
@@ -267,17 +303,13 @@ void main() {
       );
 
       styleMethodTest(
-        'backgroundColor',
+        'color targets the trigger slot',
         initial: AccordionStyler(),
-        modify: (style) => style.backgroundColor(Colors.red),
+        modify: (style) => style.color(Colors.red),
         expect: (style) {
           expect(
             style.$trigger,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(decoration: BoxDecorationMix(color: Colors.red)),
-              ),
-            ),
+            equals(Prop.maybeMix(FlexBoxStyler().color(Colors.red))),
           );
         },
       );
@@ -474,6 +506,18 @@ void main() {
     });
 
     group('Factory Constructors', () {
+      test('container factory', () {
+        final style = AccordionStyler.container(BoxStyler());
+        expect(style.$container, isNotNull);
+      });
+
+      test('containerEffects factory', () {
+        final style = AccordionStyler.containerEffects(
+          RemixBoxEffectsMix(backdropBlur: 4),
+        );
+        expect(style.$containerEffects, isNotNull);
+      });
+
       test('color factory', () {
         final style = AccordionStyler.color(Colors.red);
         expect(style.$trigger, isNotNull);
@@ -593,7 +637,7 @@ void main() {
       });
 
       test('call creates RemixAccordion with this style', () {
-        final style = AccordionStyler().backgroundColor(Colors.blue);
+        final style = AccordionStyler().color(Colors.blue);
 
         final accordion = style.call<String>(
           value: 'details',
@@ -636,7 +680,9 @@ void main() {
       test('props list contains all properties', () {
         final style = AccordionStyler();
 
-        expect(style.props, hasLength(8));
+        expect(style.props, hasLength(10));
+        expect(style.props, contains(style.$container));
+        expect(style.props, contains(style.$containerEffects));
         expect(style.props, contains(style.$trigger));
         expect(style.props, contains(style.$leadingIcon));
         expect(style.props, contains(style.$title));

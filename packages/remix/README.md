@@ -22,10 +22,10 @@ Flutter developers commonly face these challenges when building custom UIs:
 
 ```dart
 final style = ButtonStyler()
-  .paddingX(16)
-  .paddingY(10)
+  .padding(.horizontal(16))
+  .padding(.vertical(10))
   .color(Colors.blue)
-  .borderRadiusAll(const Radius.circular(8))
+  .borderRadius(.all(const Radius.circular(8)))
   .animate(AnimationConfig.spring(300.ms))
   .onHovered(.color(Colors.blue.shade700));
 
@@ -39,10 +39,10 @@ RemixButton(
 Or using callable styles:
 ```dart
 final button = ButtonStyler()
-  .paddingX(16)
-  .paddingY(10)
+  .padding(.horizontal(16))
+  .padding(.vertical(10))
   .color(Colors.blue)
-  .borderRadiusAll(const Radius.circular(8))
+  .borderRadius(.all(const Radius.circular(8)))
   .onHovered(.color(Colors.blue.shade700))
   .animate(AnimationConfig.spring(300.ms));
 
@@ -86,10 +86,10 @@ import 'package:remix/remix.dart';
 class MyApp extends StatelessWidget {
 
   final button = ButtonStyler()
-    .paddingX(16)
-    .paddingY(10)
+    .padding(.horizontal(16))
+    .padding(.vertical(10))
     .color(Colors.blue)
-    .borderRadiusAll(const Radius.circular(8))
+    .borderRadius(.all(const Radius.circular(8)))
     .label(TextStyler().color(Colors.white));
 
   @override
@@ -113,10 +113,10 @@ Easily define how components should look in different interaction states.
 
 ```dart
 final button = ButtonStyler()
-  .paddingX(16)
-  .paddingY(10)
+  .padding(.horizontal(16))
+  .padding(.vertical(10))
   .color(Colors.blue)
-  .borderRadiusAll(const Radius.circular(8))
+  .borderRadius(.all(const Radius.circular(8)))
   .label(TextStyler().color(Colors.white))
   .onHovered(.color(Colors.blue.shade700))
   .onPressed(.scale(0.95));
@@ -128,10 +128,10 @@ Make your button style smoothly animate when its state changes by chaining `.ani
 
 ```dart
 final style = ButtonStyler()
-  .paddingX(16)
-  .paddingY(10)
+  .padding(.horizontal(16))
+  .padding(.vertical(10))
   .color(Colors.blue)
-  .borderRadiusAll(const Radius.circular(8))
+  .borderRadius(.all(const Radius.circular(8)))
   .animate(AnimationConfig.spring(300.ms))
   .onHovered(.color(Colors.blue.shade700))
   .onPressed(.scale(0.95));
@@ -147,9 +147,9 @@ Create base styles and extend them to build variants:
 
 ```dart
 final baseButtonStyle = ButtonStyler()
-    .paddingX(16)
-    .paddingY(10)
-    .borderRadiusAll(const Radius.circular(8));
+    .padding(.horizontal(16))
+    .padding(.vertical(10))
+    .borderRadius(.all(const Radius.circular(8)));
 
 final primaryButton = baseButtonStyle
     .color(Colors.blue)

@@ -13,6 +13,35 @@ An accordion component that manages expansion state of content panels with min/m
 - **Settings panels**: Group related settings that can be shown/hidden
 - **Navigation menus**: Create collapsible menu structures with nested content
 
+## Anatomy
+
+An accordion item is one panel with two parts inside it:
+
+- **`container`** — the outer panel. It owns the shared frame: fill, border,
+  radius, and the clip that crops both parts into that rounded shape. Use
+  `containerEffects` for layered fills, strokes, and backdrop blur painted with
+  it.
+- **`trigger`** — the always-visible header row (leading icon, title, trailing
+  icon). It owns only its own internal layout, such as padding and spacing.
+- **`content`** — the expanded body. It owns its own padding and any interior
+  divider, drawn as a foreground border so it does not inset the body by a pixel.
+
+Because the container supplies the rounding, neither the trigger nor the content
+rounds its own corners, so an expanded trigger meets its content with no notch.
+
+Widget-state variants (`onHovered`, `onPressed`, `onFocused`, `onFocusVisible`,
+`onDisabled`) describe interaction with the **trigger**, but may style any part
+of the item, including the container. The expanded content is not a separate
+hover or press target — moving the pointer into it clears the hovered state.
+
+<Warning>
+  The top-level Box shorthand on `AccordionStyler` (`.color()`, `.padding()`,
+  `.borderRadius()`, `.decoration()`, ...) forwards to `trigger`, not to
+  `container`. That forwarding predates the panel and is kept for backward
+  compatibility; reach for `.container(...)` explicitly when you mean the
+  outer frame.
+</Warning>
+
 ## Basic implementation
 
 <CodeGroup title="Basic implementation" defaultLanguage="dart">
@@ -75,26 +104,32 @@ class _AccordionExampleState extends State<AccordionExample> {
 
   AccordionStyler get itemStyle {
     return AccordionStyler()
-        .content(BoxStyler().paddingX(16).paddingTop(8))
-        .wrap(.clipRRect(borderRadius: BorderRadiusGeometryMix.circular(8)))
-        .paddingX(16)
-        .paddingY(14)
-        .borderRounded(8)
-        .onHovered(AccordionStyler().backgroundColor(Colors.grey.shade100))
-        .decoration(
-          BoxDecorationMix(
-            color: Colors.white,
-            border: BoxBorderMix.all(
-              BorderSideMix().color(Colors.grey.shade300).width(1),
-            ),
-            borderRadius: BorderRadiusMix.circular(8),
-          ),
+        // The container owns the shared frame — one fill, one border, one
+        // radius, and the clip that crops the trigger and the content into it.
+        .container(
+          BoxStyler()
+              .color(Colors.white)
+              .border(
+                BoxBorderMix.all(
+                  BorderSideMix().color(Colors.grey.shade300).width(1),
+                ),
+              )
+              .borderRadius(.circular(8))
+              .clipBehavior(Clip.antiAlias),
         )
+        // Trigger and content own only their own internal layout.
         .trigger(
           FlexBoxStyler()
               .direction(Axis.horizontal)
               .mainAxisAlignment(MainAxisAlignment.spaceBetween)
-              .spacing(12),
+              .spacing(12)
+              .padding(.horizontal(16))
+              .padding(.vertical(14)),
+        )
+        .content(BoxStyler().padding(.horizontal(16)).padding(.bottom(14)))
+        // A widget-state variant tracks the trigger, and can style any part.
+        .onHovered(
+          AccordionStyler().container(BoxStyler().color(Colors.grey.shade100)),
         )
         .leadingIcon(IconStyler().color(Colors.grey.shade700).size(20))
         .title(
@@ -139,7 +174,10 @@ class _FortalAccordionExampleState extends State<FortalAccordionExample> {
   Widget build(BuildContext context) {
     return RemixAccordionGroup(
       controller: controller,
+      // Each item is its own bordered panel, so adjacent items need spacing
+      // between them rather than a shared divider.
       child: Column(
+        spacing: 8,
         children: [
           FortalAccordion.surface(
             value: 'item1',
@@ -287,6 +325,16 @@ Optional. The transition builder for the accordion item.
 
 ### Style Methods
 
+#### `container(BoxStyler value)`
+
+Configures the outer panel: fill, border, radius, and clipping shared by the
+trigger and the content. Not reachable through the top-level Box shorthand,
+which forwards to `trigger`.
+
+#### `containerEffects(RemixBoxEffectsMix value)`
+
+Configures layered fills, strokes, and backdrop blur painted with `container`.
+
 #### `trigger(FlexBoxStyler value)`
 
 Configures the trigger row style.
@@ -306,6 +354,9 @@ Configures the trailing icon style.
 #### `content(BoxStyler value)`
 
 Configures the expanded content container style.
+
+The methods below are the top-level Box shorthand. Each forwards to `trigger`,
+not to `container`.
 
 #### `backgroundColor(Color value)` / `color(Color value)`
 
@@ -414,6 +465,12 @@ Applies a style while the item can be collapsed.
 #### `onCanExpand<T>(AccordionStyler value)`
 
 Applies a style while the item can be expanded.
+
+#### `onHovered` / `onPressed` / `onFocused` / `onFocusVisible` / `onDisabled`
+
+Applies a style while the trigger is in that interaction state. The state is
+resolved once for the whole item, so these reach `container` and
+`containerEffects` as well as the trigger, title, icons, and content.
 
 #### `animate(AnimationConfig value)`
 

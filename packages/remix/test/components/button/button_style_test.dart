@@ -186,9 +186,9 @@ void main() {
         },
       );
       styleMethodTest(
-        'flex',
+        'container flex',
         initial: ButtonStyler(),
-        modify: (style) => style.flex(FlexStyler()),
+        modify: (style) => style.container(FlexBoxStyler().flex(FlexStyler())),
         expect: (style) {
           expect(
             style.$container,
@@ -238,10 +238,10 @@ void main() {
       );
 
       styleMethodTest(
-        'modifierRotate',
+        'widget modifier rotation',
         initial: ButtonStyler(),
         modify: (style) =>
-            style.modifierRotate(0.5, alignment: Alignment.topLeft),
+            style.wrap(.rotate(radians: 0.5, alignment: Alignment.topLeft)),
         expect: (style) {
           expect(
             style.$modifier,
@@ -286,9 +286,9 @@ void main() {
       );
 
       styleMethodTest(
-        'transformReset',
+        'identity container transform',
         initial: ButtonStyler(),
-        modify: (style) => style.transformReset(),
+        modify: (style) => style.transform(Matrix4.identity()),
         expect: (style) {
           expect(style.$container, isNotNull);
         },
@@ -327,7 +327,7 @@ void main() {
 
         final resetBox = await _resolveContainerBoxSpec(
           tester,
-          ButtonStyler().transformReset(),
+          ButtonStyler().transform(Matrix4.identity()),
         );
         expect(
           resetBox.transform?.storage,
@@ -356,7 +356,7 @@ void main() {
       styleMethodTest(
         'inherited spacing helpers',
         initial: ButtonStyler(),
-        modify: (style) => style.paddingStart(4.0).marginEnd(8.0),
+        modify: (style) => style.padding(.start(4.0)).margin(.end(8.0)),
         expect: (style) {
           expect(style.$container, isNotNull);
         },
@@ -365,13 +365,13 @@ void main() {
       styleMethodTest(
         'inherited border helpers',
         initial: ButtonStyler(),
-        modify: (style) => style.borderTop(color: Colors.red, width: 2.0),
+        modify: (style) => style.border(.top(.color(Colors.red).width(2.0))),
         expect: (style) {
           expect(
             style.$container,
             equals(
               Prop.maybeMix(
-                FlexBoxStyler().borderTop(color: Colors.red, width: 2.0),
+                FlexBoxStyler().border(.top(.color(Colors.red).width(2.0))),
               ),
             ),
           );
@@ -381,7 +381,7 @@ void main() {
       styleMethodTest(
         'inherited shape and constraint helpers',
         initial: ButtonStyler(),
-        modify: (style) => style.shapeStadium().minHeight(32.0),
+        modify: (style) => style.shape(.stadium()).minHeight(32.0),
         expect: (style) {
           expect(style.$container, isNotNull);
         },

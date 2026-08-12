@@ -43,18 +43,18 @@ class _ToggleExampleState extends State<ToggleExample> {
 
   ToggleStyler get style {
     return ToggleStyler()
-        .paddingX(12)
-        .paddingY(8)
+        .padding(.horizontal(12))
+        .padding(.vertical(8))
         .spacing(6)
-        .backgroundColor(Colors.grey.shade100)
-        .foregroundColor(Colors.grey.shade700)
-        .borderRadiusAll(const Radius.circular(8))
-        .onHovered(ToggleStyler().backgroundColor(Colors.grey.shade200))
+        .color(Colors.grey.shade100)
+        .labelColor(Colors.grey.shade700).iconColor(Colors.grey.shade700)
+        .borderRadius(.all(const Radius.circular(8)))
+        .onHovered(ToggleStyler().color(Colors.grey.shade200))
         .onPressed(ToggleStyler().scale(0.93))
         .onSelected(
           ToggleStyler()
-              .backgroundColor(Colors.deepPurple.shade50)
-              .foregroundColor(Colors.deepPurple),
+              .color(Colors.deepPurple.shade50)
+              .labelColor(Colors.deepPurple).iconColor(Colors.deepPurple),
         )
         .animate(AnimationConfig.easeOut(200.ms));
   }
@@ -196,14 +196,6 @@ Configures the label text style.
 
 Configures the icon style.
 
-#### `backgroundColor(Color value)`
-
-Sets the toggle background color.
-
-#### `foregroundColor(Color value)`
-
-Sets the label and icon color.
-
 #### `shape(ShapeBorderMix value)`
 
 Sets the toggle shape.
@@ -239,10 +231,6 @@ Sets a foreground decoration painted on top of the component.
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
 Applies a matrix transformation to the component.
-
-#### `flex(FlexStyler value)`
-
-Configures the flex layout properties.
 
 #### `labelStyle(TextStyleMix value)`
 

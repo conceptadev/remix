@@ -71,7 +71,7 @@ class _Brand extends StatelessWidget {
   Widget build(BuildContext context) {
     return Box(
       key: const ValueKey('dashboard-brand'),
-      style: BoxStyler().paddingAll(FortalTokens.space4()),
+      style: BoxStyler().padding(.all(FortalTokens.space4())),
       child: const FortalText('Dashboard', size: .size5, weight: .bold),
     );
   }

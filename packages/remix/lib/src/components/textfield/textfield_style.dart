@@ -17,15 +17,6 @@ extension RemixTextFieldStylerRemixHelpers on TextFieldStyler {
     );
   }
 
-  /// Sets background color
-  TextFieldStyler backgroundColor(Color value) {
-    return merge(
-      TextFieldStyler(
-        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
-      ),
-    );
-  }
-
   /// Sets hint text color
   TextFieldStyler hintColor(Color value) {
     return merge(
@@ -40,7 +31,7 @@ extension RemixTextFieldStylerRemixHelpers on TextFieldStyler {
   /// Example:
   /// ```dart
   /// final textField = TextFieldStyler()
-  ///   .backgroundColor(Colors.grey.shade100)
+  ///   .color(Colors.grey.shade100)
   ///   .borderRadius(BorderRadiusMix.circular(8));
   ///
   /// // Use it like a function

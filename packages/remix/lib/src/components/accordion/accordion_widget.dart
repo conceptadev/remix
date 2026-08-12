@@ -2,6 +2,34 @@ part of 'accordion.dart';
 
 typedef RemixAccordionController<T> = NakedAccordionController<T>;
 
+final class _RemixAccordionStyleState extends InheritedWidget {
+  const _RemixAccordionStyleState({
+    required this.isExpanded,
+    required this.canCollapse,
+    required this.canExpand,
+    required super.child,
+  });
+
+  static _RemixAccordionStyleState of(BuildContext context) {
+    final state = context
+        .dependOnInheritedWidgetOfExactType<_RemixAccordionStyleState>();
+    assert(state != null, 'No RemixAccordion style state found in context.');
+
+    return state!;
+  }
+
+  final bool isExpanded;
+  final bool canCollapse;
+  final bool canExpand;
+
+  @override
+  bool updateShouldNotify(_RemixAccordionStyleState oldWidget) {
+    return isExpanded != oldWidget.isExpanded ||
+        canCollapse != oldWidget.canCollapse ||
+        canExpand != oldWidget.canExpand;
+  }
+}
+
 /// A purely behavioral accordion group component that manages expansion state.
 ///
 /// The [RemixAccordionGroup] manages which accordion items are expanded/collapsed
@@ -170,79 +198,172 @@ class RemixAccordion<T> extends StatelessWidget {
 
   static final styleFrom = AccordionStyler.new;
 
+  @override
+  Widget build(BuildContext context) => _RemixAccordionBody<T>(config: this);
+}
+
+class _RemixAccordionBody<T> extends StatefulWidget {
+  const _RemixAccordionBody({required this.config});
+
+  final RemixAccordion<T> config;
+
+  @override
+  State<_RemixAccordionBody<T>> createState() => _RemixAccordionBodyState<T>();
+}
+
+class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
+  // NakedAccordion tracks these same states, but only publishes them below
+  // itself — and the panel container is mounted above it. Mirroring the
+  // trigger's interaction states here is what lets one resolved spec drive
+  // the container, the trigger, and the content alike.
+  late final WidgetStatesController _statesController;
+
+  RemixAccordion<T> get _config => widget.config;
+
+  @override
+  void initState() {
+    super.initState();
+    _statesController = WidgetStatesController({
+      if (!_config.enabled) .disabled,
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant _RemixAccordionBody<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final enabled = _config.enabled;
+    _statesController.update(.disabled, !enabled);
+    // Deliberate: the trigger's hover region and gesture detector go inert
+    // while disabled, so neither ever reports the exit. Hover and press
+    // captured just before disabling would otherwise stick.
+    if (!enabled) {
+      _statesController
+        ..update(.hovered, false)
+        ..update(.pressed, false);
+    }
+  }
+
+  @override
+  void dispose() {
+    _statesController.dispose();
+    super.dispose();
+  }
+
+  void _handleFocusChange(bool focused) {
+    _statesController.update(.focused, focused);
+    _config.onFocusChange?.call(focused);
+  }
+
+  void _handleHoverChange(bool hovered) {
+    _statesController.update(.hovered, hovered);
+    _config.onHoverChange?.call(hovered);
+  }
+
+  void _handlePressChange(bool pressed) {
+    _statesController.update(.pressed, pressed);
+    _config.onPressChange?.call(pressed);
+  }
+
   Widget _buildDefaultTrigger(
-    BuildContext context,
+    AccordionSpec spec,
     NakedAccordionItemState<T> state,
   ) {
-    return RemixStyleSpecBuilder<AccordionSpec>(
-      style: style,
-      styleSpec: styleSpec,
-      controller: NakedAccordionItemState.controllerOf<T>(context),
-      builder: (context, spec) {
-        return FlexBox(
-          styleSpec: spec.trigger,
-          children: [
-            if (leadingIcon != null)
-              StyledIcon(icon: leadingIcon!, styleSpec: spec.leadingIcon),
-            if (title != null)
-              // ignore: avoid-flexible-outside-flex
-              Expanded(child: StyledText(title!, styleSpec: spec.title)),
-            if (trailingIcon case final icon?)
-              StyledIcon(icon: icon, styleSpec: spec.trailingIcon)
-            else
-              RemixPathIcon(
-                glyph: state.isExpanded
-                    ? RemixPathGlyph.minus
-                    : RemixPathGlyph.plus,
-                styleSpec: spec.trailingIcon,
-              ),
-          ],
-        );
-      },
+    final leadingIcon = _config.leadingIcon;
+    final title = _config.title;
+
+    return FlexBox(
+      styleSpec: spec.trigger,
+      children: [
+        if (leadingIcon != null)
+          StyledIcon(icon: leadingIcon, styleSpec: spec.leadingIcon),
+        if (title != null)
+          // ignore: avoid-flexible-outside-flex
+          Expanded(child: StyledText(title, styleSpec: spec.title)),
+        if (_config.trailingIcon case final icon?)
+          StyledIcon(icon: icon, styleSpec: spec.trailingIcon)
+        else
+          RemixPathIcon(
+            glyph: state.isExpanded
+                ? RemixPathGlyph.minus
+                : RemixPathGlyph.plus,
+            styleSpec: spec.trailingIcon,
+          ),
+      ],
     );
   }
 
-  Widget _buildTransitionWrapper(Widget panel) {
-    return Builder(
-      builder: (context) {
-        // Access accordion controller from scope to check expanded state
-        final scope = NakedAccordionScope.of<T>(context);
-        final isExpanded = scope.controller.contains(value);
-        final child = isExpanded
-            ? RemixStyleSpecBuilder<AccordionSpec>(
-                style: style,
-                styleSpec: styleSpec,
-                builder: (context, spec) {
-                  return Box(styleSpec: spec.content, child: panel);
-                },
-              )
-            : const SizedBox.shrink();
+  // [isExpanded] is threaded down from build rather than re-read from the
+  // scope here: this state rebuilds from the same InheritedNotifier, and as
+  // NakedAccordion's ancestor it always hands down a fresh closure before
+  // NakedAccordion rebuilds. One read keeps the panel and the trigger from
+  // ever disagreeing about the same frame.
+  Widget _buildTransitionWrapper(
+    AccordionSpec spec,
+    bool isExpanded,
+    Widget panel,
+  ) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 200),
+      transitionBuilder: _config.transitionBuilder,
+      child: isExpanded
+          ? Box(styleSpec: spec.content, child: panel)
+          : const SizedBox.shrink(),
+    );
+  }
 
-        return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          transitionBuilder: transitionBuilder,
-          child: child,
-        );
-      },
+  Widget _buildItem(AccordionSpec spec, bool isExpanded) {
+    // One panel wraps the trigger and the (conditionally mounted) content so
+    // a single clip + radius crops both, matching the Radix Table idiom:
+    // the container owns the outer shape, its children stay flat, and the
+    // interior seam is a plain divider rather than two independently
+    // rounded boxes. See fortalAccordionStyle for the divider half of that
+    // treatment.
+    return RemixBoxWithEffects(
+      styleSpec: spec.container,
+      containerEffects: spec.containerEffects,
+      child: NakedAccordion<T>(
+        value: _config.value,
+        transitionBuilder: (panel) =>
+            _buildTransitionWrapper(spec, isExpanded, panel),
+        enabled: _config.enabled,
+        mouseCursor: _config.mouseCursor,
+        enableFeedback: _config.enableFeedback,
+        autofocus: _config.autofocus,
+        focusNode: _config.focusNode,
+        onFocusChange: _handleFocusChange,
+        onHoverChange: _handleHoverChange,
+        // Always non-null: NakedAccordion only wires up press detection when
+        // a callback is supplied, and the panel's pressed styling needs it
+        // whether or not the caller asked to observe presses.
+        onPressChange: _handlePressChange,
+        semanticLabel: _config.semanticLabel ?? _config.title,
+        child: _config.child,
+        builder:
+            _config.builder ??
+            (context, state) => _buildDefaultTrigger(spec, state),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return NakedAccordion<T>(
-      value: value,
-      transitionBuilder: _buildTransitionWrapper,
-      enabled: enabled,
-      mouseCursor: mouseCursor,
-      enableFeedback: enableFeedback,
-      autofocus: autofocus,
-      focusNode: focusNode,
-      onFocusChange: onFocusChange,
-      onHoverChange: onHoverChange,
-      onPressChange: (pressed) => onPressChange?.call(pressed),
-      semanticLabel: semanticLabel ?? title,
-      child: child,
-      builder: builder ?? _buildDefaultTrigger,
+    final controller = NakedAccordionScope.of<T>(context).controller;
+    final isExpanded = controller.contains(_config.value);
+    final canCollapse = isExpanded && controller.values.length > controller.min;
+    final canExpand =
+        !isExpanded &&
+        (controller.max == null || controller.values.length < controller.max!);
+
+    return _RemixAccordionStyleState(
+      isExpanded: isExpanded,
+      canCollapse: canCollapse,
+      canExpand: canExpand,
+      child: RemixStyleSpecBuilder<AccordionSpec>(
+        style: _config.style,
+        styleSpec: _config.styleSpec,
+        controller: _statesController,
+        builder: (context, spec) => _buildItem(spec, isExpanded),
+      ),
     );
   }
 }

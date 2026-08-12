@@ -70,8 +70,8 @@ class _ReportingPeriodControlState extends State<ReportingPeriodControl> {
     final colors = Theme.of(context).colorScheme;
     final disabledForeground = colors.onSurface.withValues(alpha: 0.35);
     final itemStyle = SegmentedControlItemStyler()
-        .paddingX(12)
-        .paddingY(8)
+        .padding(.horizontal(12))
+        .padding(.vertical(8))
         .spacing(6)
         .borderRadius(BorderRadiusGeometryMix.circular(7))
         .labelColor(colors.onSurfaceVariant)
@@ -129,7 +129,7 @@ class _ReportingPeriodControlState extends State<ReportingPeriodControl> {
           selectedValue: _value,
           onChanged: (value) => setState(() => _value = value),
           style: SegmentedControlStyler()
-              .paddingAll(4)
+              .padding(.all(4))
               .borderRadius(BorderRadiusGeometryMix.circular(10))
               .color(colors.surfaceContainerHighest)
               .item(itemStyle),

@@ -10,32 +10,35 @@ Widget buildButtonExample() {
         label: 'Primary Button',
         onPressed: () {},
         style: ButtonStyler()
-            .paddingX(16)
-            .paddingY(10)
-            .borderRadiusAll(const Radius.circular(8))
-            .backgroundColor(const Color(0xFF1F2937))
-            .foregroundColor(Colors.white),
+            .padding(.horizontal(16))
+            .padding(.vertical(10))
+            .borderRadius(.all(const Radius.circular(8)))
+            .color(const Color(0xFF1F2937))
+            .label(.color(Colors.white))
+            .icon(.color(Colors.white)),
       ),
       RemixButton(
         label: 'Disabled',
         onPressed: null,
         style: ButtonStyler()
-            .paddingX(16)
-            .paddingY(10)
-            .borderRadiusAll(const Radius.circular(8))
-            .backgroundColor(const Color(0xFFE5E7EB))
-            .foregroundColor(const Color(0xFF9CA3AF)),
+            .padding(.horizontal(16))
+            .padding(.vertical(10))
+            .borderRadius(.all(const Radius.circular(8)))
+            .color(const Color(0xFFE5E7EB))
+            .label(.color(const Color(0xFF9CA3AF)))
+            .icon(.color(const Color(0xFF9CA3AF))),
       ),
       RemixButton(
         label: 'Loading',
         loading: true,
         onPressed: () {},
         style: ButtonStyler()
-            .paddingX(16)
-            .paddingY(10)
-            .borderRadiusAll(const Radius.circular(8))
-            .backgroundColor(const Color(0xFF1F2937).withValues(alpha: 0.6))
-            .foregroundColor(Colors.white.withValues(alpha: 0.7))
+            .padding(.horizontal(16))
+            .padding(.vertical(10))
+            .borderRadius(.all(const Radius.circular(8)))
+            .color(const Color(0xFF1F2937).withValues(alpha: 0.6))
+            .label(.color(Colors.white.withValues(alpha: 0.7)))
+            .icon(.color(Colors.white.withValues(alpha: 0.7)))
             .spinner(.indicatorColor(Colors.white)),
       ),
       RemixButton(
@@ -43,21 +46,22 @@ Widget buildButtonExample() {
         leadingIcon: Icons.star,
         onPressed: () {},
         style: ButtonStyler()
-            .paddingX(16)
-            .paddingY(10)
-            .borderRadiusAll(const Radius.circular(8))
-            .backgroundColor(const Color(0xFF1F2937))
-            .foregroundColor(Colors.white),
+            .padding(.horizontal(16))
+            .padding(.vertical(10))
+            .borderRadius(.all(const Radius.circular(8)))
+            .color(const Color(0xFF1F2937))
+            .label(.color(Colors.white))
+            .icon(.color(Colors.white)),
       ),
       RemixIconButton(
         icon: Icons.star,
         onPressed: () {},
         semanticLabel: 'Favorite',
         style: IconButtonStyler()
-            .paddingAll(10)
-            .borderRadiusAll(const Radius.circular(8))
-            .backgroundColor(const Color(0xFF1F2937))
-            .foregroundColor(Colors.white),
+            .padding(.all(10))
+            .borderRadius(.all(const Radius.circular(8)))
+            .color(const Color(0xFF1F2937))
+            .iconColor(Colors.white),
       ),
     ],
     material: [

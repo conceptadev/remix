@@ -62,13 +62,13 @@ class _ToggleExampleState extends State<ToggleExample> {
         .size(40, 40)
         .iconColor(Colors.grey.shade700)
         .iconSize(22)
-        .backgroundColor(Colors.grey.shade100)
-        .borderRadiusAll(const Radius.circular(8))
-        .onHovered(ToggleStyler().backgroundColor(Colors.grey.shade200))
+        .color(Colors.grey.shade100)
+        .borderRadius(.all(const Radius.circular(8)))
+        .onHovered(ToggleStyler().color(Colors.grey.shade200))
         .onPressed(ToggleStyler().scale(0.93))
         .onSelected(
           ToggleStyler()
-              .backgroundColor(Colors.deepPurple.shade50)
+              .color(Colors.deepPurple.shade50)
               .iconColor(Colors.deepPurple),
         )
         .animate(AnimationConfig.easeOut(200.ms));

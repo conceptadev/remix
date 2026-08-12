@@ -29,9 +29,9 @@ void main() {
 
     group('Style Methods', () {
       styleMethodTest(
-        'square method sets equal width and height',
+        'size sets equal width and height',
         initial: AvatarStyler(),
-        modify: (style) => style.square(50.0),
+        modify: (style) => style.size(50.0, 50.0),
         expect: (style) {
           expect(
             style.$container,
@@ -52,9 +52,9 @@ void main() {
       );
 
       styleMethodTest(
-        'sizeWH method sets width and height',
+        'size sets width and height',
         initial: AvatarStyler(),
-        modify: (style) => style.sizeWH(100.0, 80.0),
+        modify: (style) => style.size(100.0, 80.0),
         expect: (style) {
           expect(
             style.$container,
@@ -102,9 +102,9 @@ void main() {
       );
 
       styleMethodTest(
-        'backgroundColor method sets background color',
+        'color sets background color',
         initial: AvatarStyler(),
-        modify: (style) => style.backgroundColor(Colors.green),
+        modify: (style) => style.color(Colors.green),
         expect: (style) {
           expect(
             style.$container,
@@ -118,9 +118,10 @@ void main() {
       );
 
       styleMethodTest(
-        'foregroundColor method sets label and icon color',
+        'labelColor and iconColor set content color',
         initial: AvatarStyler(),
-        modify: (style) => style.foregroundColor(Colors.purple),
+        modify: (style) =>
+            style.labelColor(Colors.purple).iconColor(Colors.purple),
         expect: (style) {
           expect(
             style.$label,
@@ -334,7 +335,7 @@ void main() {
 
     group('Style Integration', () {
       test('style can be used to create RemixAvatar widget', () {
-        final style = AvatarStyler().square(50.0);
+        final style = AvatarStyler().size(50.0, 50.0);
         final avatar = RemixAvatar(style: style, label: 'Test User');
 
         expect(avatar, isA<RemixAvatar>());
@@ -344,8 +345,9 @@ void main() {
 
       test('style methods can be chained', () {
         final style = AvatarStyler()
-            .square(100.0)
-            .foregroundColor(Colors.white)
+            .size(100.0, 100.0)
+            .labelColor(Colors.white)
+            .iconColor(Colors.white)
             .iconColor(Colors.yellow);
 
         expect(style, isA<AvatarStyler>());
@@ -376,7 +378,7 @@ void main() {
 
       test('merge with other style returns new instance', () {
         final style1 = AvatarStyler();
-        final style2 = AvatarStyler().square(50.0);
+        final style2 = AvatarStyler().size(50.0, 50.0);
         final mergedStyle = style1.merge(style2);
 
         expect(mergedStyle, isNot(same(style1)));
@@ -394,14 +396,14 @@ void main() {
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = AvatarStyler().square(50.0);
-        final style2 = AvatarStyler().square(100.0);
+        final style1 = AvatarStyler().size(50.0, 50.0);
+        final style2 = AvatarStyler().size(100.0, 100.0);
         expect(style1, isNot(equals(style2)));
       });
 
       test('styles with same properties are equal', () {
-        final style1 = AvatarStyler().square(50.0);
-        final style2 = AvatarStyler().square(50.0);
+        final style1 = AvatarStyler().size(50.0, 50.0);
+        final style2 = AvatarStyler().size(50.0, 50.0);
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });

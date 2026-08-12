@@ -115,8 +115,8 @@ void main() {
                       BoxStyler()
                           .size(120, 24)
                           .color(_baseColor)
-                          .borderRounded(4)
-                          .paddingAll(2),
+                          .borderRadius(.circular(4))
+                          .padding(.all(2)),
                     )
                     .resolve(context)
                     .spec;
@@ -150,7 +150,7 @@ void main() {
               builder: (context) {
                 spec = SkeletonStyler()
                     .container(BoxStyler().color(_baseColor))
-                    .container(BoxStyler().borderRounded(4))
+                    .container(BoxStyler().borderRadius(.circular(4)))
                     .resolve(context)
                     .spec;
 

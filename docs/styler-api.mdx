@@ -8,10 +8,9 @@ style operations. This symmetry lets a state variant use Dart's contextual dot
 shorthand without constructing another styler explicitly:
 
 Styler and spec names are unprefixed: use `ButtonStyler`, `CardStyler`,
-`MenuStyler`, and so on. The former `RemixXStyler` names are retained as
-deprecated compatibility aliases, and the former `RemixXSpec` names are
-retained as typedefs. Widgets and data classes keep the `Remix` prefix
-(`RemixButton`, `RemixMenu`, `RemixMenuItem`).
+`MenuStyler`, and so on. Deprecated `RemixXStyler` aliases and `RemixXSpec`
+typedefs are available for source compatibility. Widgets and data classes use
+the `Remix` prefix (`RemixButton`, `RemixMenu`, `RemixMenuItem`).
 
 ```dart
 final style = ButtonStyler()
@@ -37,7 +36,8 @@ final fluent = CardStyler().color(Colors.blue);
 | Canonical style operation | Expose both a named factory and a matching fluent method. |
 | Direct child styler field | Expose a field factory such as `MenuStyler.trigger(...)`. |
 | Primary nested container | Forward one compatible canonical surface from the nested styler. |
-| Alias or expanded convenience | Keep it fluent-only and use its canonical operation in contextual shorthand. |
+| Alias of a canonical operation | Do not add one. A canonical operation has exactly one spelling. |
+| Slot-forwarding convenience (`titleColor`, `labelFontSize`) | Keep it fluent-only. It names a child slot rather than duplicating a canonical operation. |
 | Styler lifecycle or composition (`animate`, `variants`, `wrap`, `modifier`, `merge`) | Keep it fluent-only because it configures or combines an existing parent styler. |
 | Generic variant or callable widget helper | Keep it as an extension method; it operates on an existing styler. |
 | Name conflict | Give the component-specific behavior a descriptive name and reserve the canonical name for the generated surface. |
@@ -48,40 +48,36 @@ directly to generated `*.g.dart` files.
 ### Canonical operations and conveniences
 
 Canonical operations include APIs such as `color`, `padding`, `borderRadius`,
-`scale`, and direct child fields such as `label`. Expanded conveniences and
-aliases remain fluent-only. For example, use the canonical factory inside a
-variant:
+`scale`, and direct child fields such as `label`. Each has exactly one
+spelling, so contextual shorthand always resolves to the same operation:
 
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
 final style = CardStyler()
-    .paddingAll(12)
-    .backgroundColor(Colors.white)
+    .padding(.all(12))
+    .color(Colors.white)
     .onHovered(.padding(EdgeInsetsGeometryMix.all(16)))
     .onPressed(.color(Colors.grey.shade100));
 ```
 
-Here, `paddingAll` expands to `padding`, and `backgroundColor` aliases `color`.
-They do not add duplicate named factories.
+Here every call names its operation once: `color` sets the container color and
+`.padding(.all(12))` calls `padding` directly.
 
-Legacy convenience factories map to canonical factories as follows. Their
-fluent convenience methods remain available on an existing styler.
+### Slot-forwarding conveniences
 
-| Legacy convenience factory | Canonical contextual replacement |
+Each slot-forwarding convenience names a child slot that has no canonical
+spelling of its own on the parent styler.
+
+| Convenience | Expands to |
 | --- | --- |
-| `backgroundColor(value)` | `.color(value)` |
 | `AccordionStyler.titleColor(value)` | `.title(.color(value))` |
 | `titleFontSize(value)` / `titleFontWeight(value)` | `.title(.fontSize(value))` / `.title(.fontWeight(value))` |
 | `titleStyle(value)` | `.title(.style(value))` |
 | `leadingIconColor(value)` / `leadingIconSize(value)` | `.leadingIcon(.color(value))` / `.leadingIcon(.size(value))` |
 | `trailingIconColor(value)` / `trailingIconSize(value)` | `.trailingIcon(.color(value))` / `.trailingIcon(.size(value))` |
 | `contentColor(value)` / `contentPadding(value)` / `contentDecoration(value)` | `.content(.color(value))` / `.content(.padding(value))` / `.content(.decoration(value))` |
-| `AvatarStyler.square(value)` | `.size(value, value)` |
-| `AvatarStyler.foregroundColor(value)` | `.label(.color(value)).iconColor(value)` |
-| `BadgeStyler.foregroundColor(value)` | `.label(.color(value))` |
-| `CalloutStyler.foregroundColor(value)` | `.icon(.color(value)).textColor(value)` |
 | `CalloutStyler.iconSize(value)` | `.icon(.size(value))` |
 | `CalloutStyler.textStyle(value)` | `.text(.style(value))` |
 
@@ -105,10 +101,9 @@ forwards only the compatible `Box` surface. This exposes operations such as
 `color`, `padding`, and `scale` without leaking popup layout controls through
 the root select styler.
 
-The upstream forwarded `transform` factory currently accepts `Alignment`
-rather than the wider `AlignmentGeometry` accepted by the former handwritten
-helpers. Use a direct child styler when a directional alignment is required,
-for example `CardStyler.container(BoxStyler(transform: matrix,
+The forwarded `transform` factory accepts `Alignment`. Use a direct child
+styler when a directional alignment is required, for example
+`CardStyler.container(BoxStyler(transform: matrix,
 transformAlignment: AlignmentDirectional.centerStart))`.
 
 ### Variants and selected state
@@ -125,17 +120,18 @@ final checkboxStyle = CheckboxStyler()
     .onSelected(.color(Colors.green));
 ```
 
-## Resolved naming conflicts
+## Component-specific operations
 
-Three legacy helpers used names that now belong to a canonical forwarded
-surface. Their component-specific behavior remains available under explicit
-names:
+Component-specific operations use explicit names when a canonical operation
+already occupies the shorter name:
 
 | Styler | Canonical generated API | Component-specific helper |
 | --- | --- | --- |
 | `TextFieldStyler` | `color` styles the container | `textColor` styles editable text |
-| `ButtonStyler` | `rotate` transforms the container | `modifierRotate` rotates the complete widget with a modifier |
 | `CalloutStyler` | `textStyle(TextStyler)` applies the container text style | `contentTextStyle(TextStyleMix)` styles callout content |
+
+`ButtonStyler.rotate` transforms the container, while
+`ButtonStyler.wrap(.rotate(...))` rotates the complete widget.
 
 This keeps contextual shorthand predictable while preserving each specialized
 operation without ambiguous overloads.
