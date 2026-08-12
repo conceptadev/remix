@@ -8,10 +8,9 @@ style operations. This symmetry lets a state variant use Dart's contextual dot
 shorthand without constructing another styler explicitly:
 
 Styler and spec names are unprefixed: use `ButtonStyler`, `CardStyler`,
-`MenuStyler`, and so on. The former `RemixXStyler` names are retained as
-deprecated compatibility aliases, and the former `RemixXSpec` names are
-retained as typedefs. Widgets and data classes keep the `Remix` prefix
-(`RemixButton`, `RemixMenu`, `RemixMenuItem`).
+`MenuStyler`, and so on. Deprecated `RemixXStyler` aliases and `RemixXSpec`
+typedefs are available for source compatibility. Widgets and data classes use
+the `Remix` prefix (`RemixButton`, `RemixMenu`, `RemixMenuItem`).
 
 ```dart
 final style = ButtonStyler()
@@ -66,34 +65,10 @@ final style = CardStyler()
 Here every call names its operation once: `color` sets the container color and
 `.padding(.all(12))` calls `padding` directly.
 
-### Removed aliases
-
-Stylers previously carried handwritten aliases that re-spelled an operation the
-generated surface already exposed. They are removed. Each maps to its canonical
-form:
-
-| Removed | Canonical replacement |
-| --- | --- |
-| `backgroundColor(value)` | `.color(value)` |
-| `flex(value)` | `.container(FlexBoxStyler().flex(value))` (`.trigger(...)` on `AccordionStyler`) |
-| `minimumSize(size)` / `maximumSize(size)` | `.constraints(BoxConstraintsMix(minWidth: …, minHeight: …))` / `.constraints(BoxConstraintsMix(maxWidth: …, maxHeight: …))` |
-| `ButtonStyler.fixedSize(size)` | `.size(size.width, size.height)` |
-| `ButtonStyler.foregroundColor(value)` | `.label(.color(value)).icon(.color(value))` |
-| `ButtonStyler.modifierRotate(radians)` | `.wrap(.rotate(radians: radians))` |
-| `IconButtonStyler.foregroundColor(value)` | `.iconColor(value)` |
-| `IconButtonStyler.iconButtonSize(value)` | `.size(value, value)` |
-| `AvatarStyler.square(value)` / `sizeWH(w, h)` | `.size(value, value)` / `.size(w, h)` |
-| `AvatarStyler.foregroundColor(value)` | `.labelColor(value).iconColor(value)` |
-| `ToggleStyler.foregroundColor(value)` | `.labelColor(value).iconColor(value)` |
-| `ToggleGroupItemStyler.foregroundColor(value)` | `.labelColor(value).iconColor(value)` |
-| `BadgeStyler.foregroundColor(value)` | `.labelColor(value)` |
-| `CalloutStyler.foregroundColor(value)` | `.iconColor(value).textColor(value)` |
-
 ### Slot-forwarding conveniences
 
-These remain. They are not aliases: each names a child slot that has no
-canonical spelling of its own on the parent styler, and they read better than
-the nested form they expand to.
+Each slot-forwarding convenience names a child slot that has no canonical
+spelling of its own on the parent styler.
 
 | Convenience | Expands to |
 | --- | --- |
@@ -126,10 +101,9 @@ forwards only the compatible `Box` surface. This exposes operations such as
 `color`, `padding`, and `scale` without leaking popup layout controls through
 the root select styler.
 
-The upstream forwarded `transform` factory currently accepts `Alignment`
-rather than the wider `AlignmentGeometry` accepted by the former handwritten
-helpers. Use a direct child styler when a directional alignment is required,
-for example `CardStyler.container(BoxStyler(transform: matrix,
+The forwarded `transform` factory accepts `Alignment`. Use a direct child
+styler when a directional alignment is required, for example
+`CardStyler.container(BoxStyler(transform: matrix,
 transformAlignment: AlignmentDirectional.centerStart))`.
 
 ### Variants and selected state
@@ -146,22 +120,18 @@ final checkboxStyle = CheckboxStyler()
     .onSelected(.color(Colors.green));
 ```
 
-## Resolved naming conflicts
+## Component-specific operations
 
-Two legacy helpers used names that now belong to a canonical forwarded
-surface. Their component-specific behavior remains available under explicit
-names:
+Component-specific operations use explicit names when a canonical operation
+already occupies the shorter name:
 
 | Styler | Canonical generated API | Component-specific helper |
 | --- | --- | --- |
 | `TextFieldStyler` | `color` styles the container | `textColor` styles editable text |
 | `CalloutStyler` | `textStyle(TextStyler)` applies the container text style | `contentTextStyle(TextStyleMix)` styles callout content |
 
-`ButtonStyler` was a third case: `rotate` transformed the container while
-`modifierRotate` rotated the complete widget. The distinction is already
-carried by the canonical surface itself — `rotate` is a container transform
-and `wrap(.rotate(...))` is a widget modifier — so the alias was removed
-rather than given a disambiguating name.
+`ButtonStyler.rotate` transforms the container, while
+`ButtonStyler.wrap(.rotate(...))` rotates the complete widget.
 
 This keeps contextual shorthand predictable while preserving each specialized
 operation without ambiguous overloads.

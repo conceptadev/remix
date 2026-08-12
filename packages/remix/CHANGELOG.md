@@ -108,6 +108,15 @@
   `RemixBoxStylerMixin` are unchanged. Public styler extension names such as
   `RemixCardStylerRemixHelpers` are also unchanged, so explicit extension
   invocation stays source-compatible.
+- **BREAKING**: Remove handwritten component styler aliases that duplicate the
+  generated API. Use `color` for component surfaces; explicit child-slot
+  methods such as `labelColor`, `iconColor`, `textColor`, and `contentTextStyle`
+  for component parts; `size(width, height)` for square and fixed sizes; and
+  `wrap(.rotate(...))` for whole-widget rotation.
+- **BREAKING**: Remove `RemixBoxStylerConvenience` and its shorthand methods.
+  Use the canonical compound forms such as `padding(.all(value))`,
+  `margin(.horizontal(value))`, `border(.color(value))`,
+  `borderRadius(.circular(value))`, and `transform(Matrix4.identity())`.
 - **BREAKING**: Rename Fortal recipe helpers from `fortalXStyler()` to
   `fortalXStyle()` so `@MixWidget` can infer every generated `FortalX` name.
   Remix component styler types such as `ButtonStyler` and
