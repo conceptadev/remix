@@ -7,6 +7,8 @@ part of 'accordion.dart';
 // **************************************************************************
 
 mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
+  StyleSpec<BoxSpec> get container;
+  RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<FlexBoxSpec> get trigger;
   StyleSpec<IconSpec> get leadingIcon;
   StyleSpec<TextSpec> get title;
@@ -18,6 +20,8 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
 
   @override
   AccordionSpec copyWith({
+    StyleSpec<BoxSpec>? container,
+    RemixBoxEffectsSpec? containerEffects,
     StyleSpec<FlexBoxSpec>? trigger,
     StyleSpec<IconSpec>? leadingIcon,
     StyleSpec<TextSpec>? title,
@@ -25,6 +29,8 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
     StyleSpec<BoxSpec>? content,
   }) {
     return AccordionSpec(
+      container: container ?? this.container,
+      containerEffects: containerEffects ?? this.containerEffects,
       trigger: trigger ?? this.trigger,
       leadingIcon: leadingIcon ?? this.leadingIcon,
       title: title ?? this.title,
@@ -36,6 +42,12 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
   @override
   AccordionSpec lerp(AccordionSpec? other, double t) {
     return AccordionSpec(
+      container: container.lerp(other?.container, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
       trigger: trigger.lerp(other?.trigger, t),
       leadingIcon: leadingIcon.lerp(other?.leadingIcon, t),
       title: title.lerp(other?.title, t),
@@ -46,6 +58,8 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
 
   @override
   List<Object?> get props => [
+    container,
+    containerEffects,
     trigger,
     leadingIcon,
     title,
@@ -93,6 +107,8 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('trigger', trigger))
       ..add(DiagnosticsProperty('leadingIcon', leadingIcon))
       ..add(DiagnosticsProperty('title', title))
@@ -112,6 +128,8 @@ typedef _$AccordionSpecMethods = _$AccordionSpec; // ignore: unused_element
 
 class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     with RemixBoxStylerMixin<AccordionStyler> {
+  final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<FlexBoxSpec>>? $trigger;
   final Prop<StyleSpec<IconSpec>>? $leadingIcon;
   final Prop<StyleSpec<TextSpec>>? $title;
@@ -119,6 +137,8 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
   final Prop<StyleSpec<BoxSpec>>? $content;
 
   const AccordionStyler.create({
+    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<FlexBoxSpec>>? trigger,
     Prop<StyleSpec<IconSpec>>? leadingIcon,
     Prop<StyleSpec<TextSpec>>? title,
@@ -127,13 +147,17 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     super.variants,
     super.modifier,
     super.animation,
-  }) : $trigger = trigger,
+  }) : $container = container,
+       $containerEffects = containerEffects,
+       $trigger = trigger,
        $leadingIcon = leadingIcon,
        $title = title,
        $trailingIcon = trailingIcon,
        $content = content;
 
   AccordionStyler({
+    BoxStyler? container,
+    RemixBoxEffectsMix? containerEffects,
     FlexBoxStyler? trigger,
     IconStyler? leadingIcon,
     TextStyler? title,
@@ -143,6 +167,8 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     WidgetModifierConfig? modifier,
     List<VariantStyle<AccordionSpec>>? variants,
   }) : this.create(
+         container: Prop.maybeMix(container),
+         containerEffects: Prop.maybeMix(containerEffects),
          trigger: Prop.maybeMix(trigger),
          leadingIcon: Prop.maybeMix(leadingIcon),
          title: Prop.maybeMix(title),
@@ -153,6 +179,10 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
          animation: animation,
        );
 
+  factory AccordionStyler.container(BoxStyler value) =>
+      AccordionStyler().container(value);
+  factory AccordionStyler.containerEffects(RemixBoxEffectsMix value) =>
+      AccordionStyler().containerEffects(value);
   factory AccordionStyler.trigger(FlexBoxStyler value) =>
       AccordionStyler().trigger(value);
   factory AccordionStyler.leadingIcon(IconStyler value) =>
@@ -691,6 +721,16 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     return trigger(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
+  /// Sets the container.
+  AccordionStyler container(BoxStyler value) {
+    return merge(AccordionStyler(container: value));
+  }
+
+  /// Sets the containerEffects.
+  AccordionStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(AccordionStyler(containerEffects: value));
+  }
+
   /// Sets the trigger.
   AccordionStyler trigger(FlexBoxStyler value) {
     return merge(AccordionStyler(trigger: value));
@@ -743,6 +783,11 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
   @override
   AccordionStyler merge(AccordionStyler? other) {
     return AccordionStyler.create(
+      container: MixOps.merge($container, other?.$container),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       trigger: MixOps.merge($trigger, other?.$trigger),
       leadingIcon: MixOps.merge($leadingIcon, other?.$leadingIcon),
       title: MixOps.merge($title, other?.$title),
@@ -758,6 +803,8 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
   @override
   StyleSpec<AccordionSpec> resolve(BuildContext context) {
     final spec = AccordionSpec(
+      container: MixOps.resolve(context, $container),
+      containerEffects: MixOps.resolve(context, $containerEffects),
       trigger: MixOps.resolve(context, $trigger),
       leadingIcon: MixOps.resolve(context, $leadingIcon),
       title: MixOps.resolve(context, $title),
@@ -776,6 +823,8 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
+      ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('trigger', $trigger))
       ..add(DiagnosticsProperty('leadingIcon', $leadingIcon))
       ..add(DiagnosticsProperty('title', $title))
@@ -785,6 +834,8 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
 
   @override
   List<Object?> get props => [
+    $container,
+    $containerEffects,
     $trigger,
     $leadingIcon,
     $title,

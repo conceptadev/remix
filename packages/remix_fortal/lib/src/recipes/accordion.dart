@@ -25,9 +25,18 @@ AccordionStyler fortalAccordionStyle({
   };
 }
 
+// Panel anatomy follows the mapped Table family (see data_table.dart):
+// `container` alone owns radius, border, fill, and clipping, while trigger
+// and content stay flat rectangles that simply get cropped to its rounded
+// shape. That is what lets an expanded trigger meet its content with no
+// corner notch — neither part rounds its own corners, so there is no curve
+// for the divider to miss. The divider itself is a foreground border (see
+// `_fortalAccordionBorderSide`), matching the Table row divider technique so
+// it paints without insetting content by a pixel.
 AccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
   return AccordionStyler()
-      .trigger(.direction(.horizontal).clipBehavior(.antiAlias))
+      .container(.clipBehavior(.antiAlias))
+      .trigger(.direction(.horizontal))
       .leadingIcon(.color(FortalTokens.gray11()))
       .title(
         .fontWeight(
@@ -55,19 +64,22 @@ AccordionStyler _fortalAccordionSurfaceStyler([
   FortalAccordionSize size = .size2,
 ]) {
   return _fortalAccordionBaseStyler(size)
+      .container(
+        .color(
+          FortalTokens.gray2(),
+        ).border(.all(_fortalAccordionBorderSide(FortalTokens.gray6()))),
+      )
       .trigger(.color(FortalTokens.gray1()))
       .content(
         BoxStyler()
-            .borderTop(
-              color: FortalTokens.gray6(),
-              width: FortalTokens.borderWidth1(),
-            )
-            .color(FortalTokens.gray2())
-            .wrap(
-              .defaultTextStyle(
-                style: TextStyleMix().color(FortalTokens.gray12()),
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BoxBorderMix.top(
+                  _fortalAccordionBorderSide(FortalTokens.gray6()),
+                ),
               ),
-            ),
+            )
+            .wrap(_fortalAccordionContentTypography(FortalTokens.gray12())),
       )
       .onHovered(.trigger(.color(FortalTokens.gray2())))
       .onPressed(.trigger(.color(FortalTokens.gray3())))
@@ -79,21 +91,24 @@ AccordionStyler _fortalAccordionSoftStyler([
   FortalAccordionSize size = .size2,
 ]) {
   return _fortalAccordionBaseStyler(size)
+      .container(
+        .color(
+          FortalTokens.accent2(),
+        ).border(.all(_fortalAccordionBorderSide(FortalTokens.accent6()))),
+      )
       .trigger(.color(FortalTokens.accent2()))
       .title(.color(FortalTokens.accent12()))
       .trailingIcon(.color(FortalTokens.accent11()))
       .content(
         BoxStyler()
-            .borderTop(
-              color: FortalTokens.accent6(),
-              width: FortalTokens.borderWidth1(),
-            )
-            .color(FortalTokens.accent2())
-            .wrap(
-              .defaultTextStyle(
-                style: TextStyleMix().color(FortalTokens.accent12()),
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BoxBorderMix.top(
+                  _fortalAccordionBorderSide(FortalTokens.accent6()),
+                ),
               ),
-            ),
+            )
+            .wrap(_fortalAccordionContentTypography(FortalTokens.accent12())),
       )
       .onHovered(.trigger(.color(FortalTokens.accent3())))
       .onPressed(.trigger(.color(FortalTokens.accent4())))
@@ -101,46 +116,46 @@ AccordionStyler _fortalAccordionSoftStyler([
       .onDisabled(_fortalAccordionDisabledStyler());
 }
 
+/// The 1px edge shared by the panel's outer border and the trigger/content
+/// divider, so the seam reads as a continuation of the frame rather than an
+/// unrelated line.
+BorderSideMix _fortalAccordionBorderSide(Color color) =>
+    BorderSideMix(color: color, width: FortalTokens.borderWidth1());
+
+/// Pins accordion content to the 14px type-scale step (`text2`) regardless
+/// of accordion size, so content never renders larger than its own
+/// trigger's title (measured 14/15/16px at size1/size2/size3). [color]
+/// supplies the variant's own content tint.
+WidgetModifierConfig _fortalAccordionContentTypography(Color color) =>
+    WidgetModifierConfig.defaultTextStyle(
+      style: FortalTokens.text2.mix(),
+    ).defaultTextStyle(style: TextStyleMix().color(color));
+
 AccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
   return switch (size) {
     .size1 => AccordionStyler(
-      trigger: FlexBoxStyler()
-          .paddingX(FortalTokens.space2())
-          .paddingY(FortalTokens.space2())
-          .borderRadiusAll(FortalTokens.radius3()),
+      container: .borderRadius(.all(FortalTokens.radius3())),
+      trigger: FlexBoxStyler().padding(.all(FortalTokens.space2())),
       leadingIcon: .size(FortalTokens.space4()),
       title: .style(FortalTokens.text2.mix()),
       trailingIcon: .size(FortalTokens.space4()),
-      content: BoxStyler()
-          .paddingAll(FortalTokens.space2())
-          .borderRadiusBottom(FortalTokens.radius3())
-          .clipBehavior(.antiAlias),
+      content: .padding(.all(FortalTokens.space2())),
     ),
     .size2 => AccordionStyler(
-      trigger: FlexBoxStyler()
-          .paddingX(FortalTokens.space3())
-          .paddingY(FortalTokens.space3())
-          .borderRadiusAll(FortalTokens.radius4()),
+      container: .borderRadius(.all(FortalTokens.radius4())),
+      trigger: FlexBoxStyler().padding(.all(FortalTokens.space3())),
       leadingIcon: .size(FortalTokens.spinnerSize3()),
       title: .style(FortalTokens.accordionText2.mix()),
       trailingIcon: .size(FortalTokens.spinnerSize3()),
-      content: BoxStyler()
-          .paddingAll(FortalTokens.space3())
-          .borderRadiusBottom(FortalTokens.radius4())
-          .clipBehavior(.antiAlias),
+      content: .padding(.all(FortalTokens.space3())),
     ),
     .size3 => AccordionStyler(
-      trigger: FlexBoxStyler()
-          .paddingX(FortalTokens.space4())
-          .paddingY(FortalTokens.space4())
-          .borderRadiusAll(FortalTokens.radius5()),
+      container: .borderRadius(.all(FortalTokens.radius5())),
+      trigger: FlexBoxStyler().padding(.all(FortalTokens.space4())),
       leadingIcon: .size(FortalTokens.space5()),
       title: .style(FortalTokens.text3.mix()),
       trailingIcon: .size(FortalTokens.space5()),
-      content: BoxStyler()
-          .paddingAll(FortalTokens.space4())
-          .borderRadiusBottom(FortalTokens.radius5())
-          .clipBehavior(.antiAlias),
+      content: .padding(.all(FortalTokens.space4())),
     ),
   };
 }

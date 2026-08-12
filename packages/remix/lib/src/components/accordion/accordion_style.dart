@@ -66,52 +66,51 @@ extension RemixAccordionStylerRemixHelpers on AccordionStyler {
     return content(BoxStyler(decoration: value));
   }
 
-  /// Style when the accordion is expanded.
+  /// Style applied while the item is expanded.
+  ///
+  /// The item state is provided above the panel's style builder, so the same
+  /// variant can target the container, trigger, content, icons, or title.
   AccordionStyler onExpanded<T>(AccordionStyler value) {
-    return variants([
-      VariantStyle(
-        ContextVariant('onExpanded', (context) {
-          return NakedAccordionItemState.of<T>(context).isExpanded;
-        }),
-        value,
+    return variant(
+      ContextVariant(
+        'onExpanded',
+        (context) => _RemixAccordionStyleState.of(context).isExpanded,
       ),
-    ]);
+      value,
+    );
   }
 
-  /// Style when accordion is collapsed
+  /// Style applied while the item is collapsed. See [onExpanded].
   AccordionStyler onCollapsed<T>(AccordionStyler value) {
-    return variants([
-      VariantStyle(
-        ContextVariant('onCollapsed', (context) {
-          return !NakedAccordionItemState.of<T>(context).isExpanded;
-        }),
-        value,
+    return variant(
+      ContextVariant(
+        'onCollapsed',
+        (context) => !_RemixAccordionStyleState.of(context).isExpanded,
       ),
-    ]);
+      value,
+    );
   }
 
   /// Style when the accordion item can collapse.
   AccordionStyler onCanCollapse(AccordionStyler value) {
-    return variants([
-      VariantStyle(
-        ContextVariant('onCanCollapse', (context) {
-          return NakedAccordionItemState.of(context).canCollapse;
-        }),
-        value,
+    return variant(
+      ContextVariant(
+        'onCanCollapse',
+        (context) => _RemixAccordionStyleState.of(context).canCollapse,
       ),
-    ]);
+      value,
+    );
   }
 
   /// Style when the accordion item can expand.
   AccordionStyler onCanExpand<T>(AccordionStyler value) {
-    return variants([
-      VariantStyle(
-        ContextVariant('onCanExpand', (context) {
-          return NakedAccordionItemState.of<T>(context).canExpand;
-        }),
-        value,
+    return variant(
+      ContextVariant(
+        'onCanExpand',
+        (context) => _RemixAccordionStyleState.of(context).canExpand,
       ),
-    ]);
+      value,
+    );
   }
 
   /// Creates a [RemixAccordion] widget with this style applied.

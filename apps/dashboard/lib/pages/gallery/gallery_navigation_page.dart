@@ -118,6 +118,7 @@ class _AccordionDemoState extends State<_AccordionDemo> {
     controller: _controller,
     initialExpandedValues: const ['details'],
     child: Column(
+      spacing: 8,
       children: [
         FortalAccordion<String>(
           variant: widget.variant,
