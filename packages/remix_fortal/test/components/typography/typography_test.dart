@@ -104,6 +104,49 @@ void main() {
       expect(explicit.fontWeight, FontWeight.normal);
     });
 
+    testWidgets('an explicit kbd size scales its letter spacing by 0.8 too', (
+      tester,
+    ) async {
+      // Upstream `--letter-spacing-N` is an em, so it re-resolves against
+      // Kbd's own 0.8em rather than the token's own font size.
+      for (var i = 0; i < FortalTextSize.values.length; i++) {
+        final size = FortalTextSize.values[i];
+        final label = 'kbd$i';
+        await _pump(tester, FortalKbd.soft(label, size: size));
+        final style = _text(tester, label).style!;
+        expect(style.fontSize, closeTo(_fontSizes[i] * 0.8, 1e-9));
+        expect(style.letterSpacing, closeTo(_letterSpacings[i] * 0.8, 1e-9));
+        expect(
+          _surface(tester).container.spec.constraints?.minWidth,
+          closeTo(1.75 * _fontSizes[i] * 0.8, 1e-9),
+          reason: size.name,
+        );
+      }
+
+      // The inherited path keeps Flutter's absolute letter-spacing
+      // inheritance; there is no em intent left to rescale.
+      await _pump(tester, const FortalKbd.soft('inherited'));
+      expect(_text(tester, 'inherited').style?.letterSpacing, 2);
+    });
+
+    testWidgets('code letter spacing adds the pinned -0.007em to the token', (
+      tester,
+    ) async {
+      for (var i = 0; i < FortalTextSize.values.length; i++) {
+        final size = FortalTextSize.values[i];
+        final label = 'code$i';
+        await _pump(tester, FortalCode.soft(label, size: size));
+        final style = _text(tester, label).style!;
+        final fontSize = _fontSizes[i] * 0.95 * 0.95;
+        expect(style.fontSize, closeTo(fontSize, 1e-9));
+        expect(
+          style.letterSpacing,
+          closeTo(_letterSpacings[i] - 0.007 * fontSize, 1e-9),
+          reason: size.name,
+        );
+      }
+    });
+
     testWidgets('weights map to the shared Fortal tokens', (tester) async {
       const weights = {
         FortalTextWeight.light: FontWeight.w300,
@@ -111,9 +154,26 @@ void main() {
         FortalTextWeight.medium: FontWeight.w500,
         FortalTextWeight.bold: FontWeight.w700,
       };
-      for (final entry in weights.entries) {
-        await _pump(tester, FortalText(entry.key.name, weight: entry.key));
-        expect(_text(tester, entry.key.name).style?.fontWeight, entry.value);
+      // Text, Heading, Code, and Link all read the same four weight tokens;
+      // Kbd deliberately pins regular regardless of the ambient style.
+      final builders = <String, Widget Function(String, FortalTextWeight)>{
+        'text': (label, weight) => FortalText(label, weight: weight),
+        'heading': (label, weight) => FortalHeading(label, weight: weight),
+        'code': (label, weight) => FortalCode.soft(label, weight: weight),
+        'link': (label, weight) =>
+            FortalLink(label, weight: weight, onPressed: _noop),
+      };
+
+      for (final builder in builders.entries) {
+        for (final entry in weights.entries) {
+          final label = '${builder.key}-${entry.key.name}';
+          await _pump(tester, builder.value(label, entry.key));
+          expect(
+            _text(tester, label).style?.fontWeight,
+            entry.value,
+            reason: label,
+          );
+        }
       }
     });
   });
@@ -340,6 +400,221 @@ void main() {
         _surface(tester).container.spec.constraints?.minWidth,
         closeTo(1.75 * 14 * 0.8, 1e-9),
       );
+    });
+  });
+
+  group('kbd variants', () {
+    testWidgets('classic and soft resolve their pinned fills in both modes', (
+      tester,
+    ) async {
+      for (final brightness in Brightness.values) {
+        final gray1 = await _resolveToken(
+          tester,
+          FortalTokens.gray1,
+          brightness: brightness,
+        );
+        final grayA3 = await _resolveToken(
+          tester,
+          FortalTokens.grayA3,
+          brightness: brightness,
+        );
+        final gray12 = await _resolveToken(
+          tester,
+          FortalTokens.gray12,
+          brightness: brightness,
+        );
+
+        for (final (variant, fill) in [
+          (FortalKbdVariant.classic, gray1),
+          (FortalKbdVariant.soft, grayA3),
+        ]) {
+          final label = '${variant.name}-${brightness.name}';
+          await _pump(
+            tester,
+            FortalKbd(label, variant: variant),
+            brightness: brightness,
+          );
+          expect(_boxColor(_surface(tester)), fill, reason: label);
+          expect(_text(tester, label).style?.color, gray12, reason: label);
+        }
+      }
+    });
+
+    testWidgets('soft draws no key-cap stack', (tester) async {
+      await _pump(tester, const FortalKbd.soft('soft'));
+      expect(_surface(tester).containerEffects?.behindContent, isNull);
+    });
+  });
+
+  group('link', () {
+    testWidgets('underline thickness follows the pinned min/max ramp', (
+      tester,
+    ) async {
+      // Upstream is `min(2px, max(1px, 0.05em))`, so the ramp is flat at 1
+      // through size5, rises through size8, and clamps at 2 for size9.
+      const expected = [1.0, 1, 1, 1, 1, 1.2, 1.4, 1.75, 2];
+      for (var i = 0; i < FortalTextSize.values.length; i++) {
+        final size = FortalTextSize.values[i];
+        final label = 'link$i';
+        await _pump(
+          tester,
+          FortalLink(
+            label,
+            size: size,
+            underline: FortalLinkUnderline.always,
+            onPressed: _noop,
+          ),
+        );
+        final style = _text(tester, label).style!;
+        expect(style.fontSize, closeTo(_fontSizes[i], 1e-9));
+        expect(
+          style.decorationThickness,
+          closeTo(expected[i], 1e-9),
+          reason: size.name,
+        );
+        expect(style.decorationStyle, TextDecorationStyle.solid);
+      }
+    });
+
+    testWidgets('an unlined link carries no decoration metrics', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        FortalLink(
+          'plain',
+          underline: FortalLinkUnderline.none,
+          onPressed: _noop,
+        ),
+      );
+      final style = _text(tester, 'plain').style!;
+      expect(style.decoration, anyOf(isNull, TextDecoration.none));
+      expect(style.decorationThickness, isNull);
+    });
+
+    testWidgets('foreground follows accent and high contrast in both modes', (
+      tester,
+    ) async {
+      for (final brightness in Brightness.values) {
+        final accentA11 = await _resolveToken(
+          tester,
+          FortalTokens.accentA11,
+          brightness: brightness,
+        );
+        final accent12 = await _resolveToken(
+          tester,
+          FortalTokens.accent12,
+          brightness: brightness,
+        );
+
+        await _pump(
+          tester,
+          Column(
+            children: [
+              FortalLink('plain-${brightness.name}', onPressed: _noop),
+              FortalLink(
+                'high-${brightness.name}',
+                highContrast: true,
+                onPressed: _noop,
+              ),
+            ],
+          ),
+          brightness: brightness,
+        );
+        expect(
+          _text(tester, 'plain-${brightness.name}').style?.color,
+          accentA11,
+        );
+        expect(_text(tester, 'high-${brightness.name}').style?.color, accent12);
+      }
+    });
+
+    testWidgets('high-contrast auto underlines from a different accent step', (
+      tester,
+    ) async {
+      final accentA5 = await _resolveToken(tester, FortalTokens.accentA5);
+      final accentA6 = await _resolveToken(tester, FortalTokens.accentA6);
+      final grayA6 = await _resolveToken(tester, FortalTokens.grayA6);
+
+      await _pump(
+        tester,
+        Column(
+          children: [
+            FortalLink(
+              'always',
+              underline: FortalLinkUnderline.always,
+              onPressed: _noop,
+            ),
+            FortalLink(
+              'auto high',
+              underline: FortalLinkUnderline.auto,
+              highContrast: true,
+              onPressed: _noop,
+            ),
+          ],
+        ),
+      );
+
+      // Color.lerp is the recorded sRGB approximation of Radix's OKLab mix.
+      expect(
+        _text(tester, 'always').style?.decorationColor,
+        Color.lerp(accentA5, grayA6, 0.5),
+      );
+      expect(
+        _text(tester, 'auto high').style?.decorationColor,
+        Color.lerp(accentA6, grayA6, 0.5),
+      );
+    });
+
+    testWidgets('size and weight resolve the shared typography tokens', (
+      tester,
+    ) async {
+      const weights = {
+        FortalTextWeight.light: FontWeight.w300,
+        FortalTextWeight.regular: FontWeight.w400,
+        FortalTextWeight.medium: FontWeight.w500,
+        FortalTextWeight.bold: FontWeight.w700,
+      };
+      for (final entry in weights.entries) {
+        await _pump(
+          tester,
+          FortalLink(
+            entry.key.name,
+            size: FortalTextSize.size4,
+            weight: entry.key,
+            onPressed: _noop,
+          ),
+        );
+        final style = _text(tester, entry.key.name).style!;
+        expect(style.fontWeight, entry.value);
+        expect(style.fontSize, 18);
+      }
+    });
+
+    testWidgets('flow settings reach an actionable and an inert link', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        Column(
+          children: [
+            FortalLink('wrapped', onPressed: _noop),
+            FortalLink('clipped', truncate: true, onPressed: _noop),
+            const FortalLink('inert clipped', truncate: true),
+          ],
+        ),
+      );
+
+      expect(_text(tester, 'wrapped').softWrap, isTrue);
+      for (final label in ['clipped', 'inert clipped']) {
+        expect(_text(tester, label).softWrap, isFalse, reason: label);
+        expect(_text(tester, label).maxLines, 1, reason: label);
+        expect(
+          _text(tester, label).overflow,
+          TextOverflow.ellipsis,
+          reason: label,
+        );
+      }
     });
   });
 
@@ -617,7 +892,146 @@ void main() {
       expect(focusNode.hasFocus, isFalse);
     });
   });
+
+  group('accent', () {
+    testWidgets('text and heading take the accent only when opted in', (
+      tester,
+    ) async {
+      final accentA11 = await _resolveToken(tester, FortalTokens.accentA11);
+      final accent12 = await _resolveToken(tester, FortalTokens.accent12);
+
+      await _pump(
+        tester,
+        const Column(
+          children: [
+            FortalText('inherited text'),
+            FortalText('accent text', accent: true),
+            FortalText('accent hc text', accent: true, highContrast: true),
+            FortalHeading('inherited heading'),
+            FortalHeading('accent heading', accent: true),
+            FortalHeading(
+              'accent hc heading',
+              accent: true,
+              highContrast: true,
+            ),
+          ],
+        ),
+      );
+
+      // highContrast alone is inert: upstream gates the colour on the accent.
+      expect(_text(tester, 'inherited text').style?.color, isNull);
+      expect(_text(tester, 'accent text').style?.color, accentA11);
+      expect(_text(tester, 'accent hc text').style?.color, accent12);
+      expect(_text(tester, 'inherited heading').style?.color, isNull);
+      expect(_text(tester, 'accent heading').style?.color, accentA11);
+      expect(_text(tester, 'accent hc heading').style?.color, accent12);
+    });
+
+    testWidgets('heading flow settings match the shared text flow', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        const Column(
+          children: [
+            FortalHeading('heading wrap'),
+            FortalHeading('heading nowrap', softWrap: false),
+            FortalHeading('heading clipped', truncate: true),
+            FortalHeading('heading aligned', align: TextAlign.end),
+          ],
+        ),
+      );
+
+      expect(_text(tester, 'heading wrap').softWrap, isTrue);
+      expect(_text(tester, 'heading nowrap').softWrap, isFalse);
+      expect(_text(tester, 'heading clipped').maxLines, 1);
+      expect(_text(tester, 'heading clipped').overflow, TextOverflow.ellipsis);
+      expect(_text(tester, 'heading aligned').textAlign, TextAlign.end);
+    });
+  });
+
+  group('defaults', () {
+    test('public wrappers keep their documented default arguments', () {
+      const text = FortalText('t');
+      const heading = FortalHeading('h');
+      const code = FortalCode('c');
+      const kbd = FortalKbd('k');
+      const link = FortalLink('l');
+
+      expect(text.size, isNull);
+      expect(text.weight, isNull);
+      expect(text.align, isNull);
+      expect(text.softWrap, isTrue);
+      expect(text.truncate, isFalse);
+      expect(text.accent, isFalse);
+      expect(text.highContrast, isFalse);
+
+      expect(heading.headingLevel, 1);
+      expect(heading.size, FortalTextSize.size6);
+      expect(heading.weight, FortalTextWeight.bold);
+      expect(heading.excludeSemantics, isFalse);
+
+      expect(code.size, isNull);
+      expect(code.variant, FortalCodeVariant.soft);
+      expect(code.weight, isNull);
+
+      expect(kbd.size, isNull);
+      expect(kbd.variant, FortalKbdVariant.classic);
+      expect(kbd.excludeSemantics, isFalse);
+
+      expect(link.size, isNull);
+      expect(link.weight, isNull);
+      expect(link.underline, FortalLinkUnderline.auto);
+      expect(link.enabled, isTrue);
+      expect(link.onPressed, isNull);
+      expect(link.linkUrl, isNull);
+      expect(link.autofocus, isFalse);
+      expect(link.enableFeedback, isTrue);
+      expect(link.mouseCursor, SystemMouseCursors.click);
+    });
+
+    test('named variant constructors pin their variant', () {
+      expect(const FortalCode.solid('c').variant, FortalCodeVariant.solid);
+      expect(const FortalCode.soft('c').variant, FortalCodeVariant.soft);
+      expect(const FortalCode.outline('c').variant, FortalCodeVariant.outline);
+      expect(const FortalCode.ghost('c').variant, FortalCodeVariant.ghost);
+      expect(const FortalKbd.classic('k').variant, FortalKbdVariant.classic);
+      expect(const FortalKbd.soft('k').variant, FortalKbdVariant.soft);
+    });
+
+    testWidgets('excludeSemantics drops the published node', (tester) async {
+      final handle = tester.ensureSemantics();
+      await _pump(
+        tester,
+        const Column(
+          children: [
+            FortalHeading('Silent heading', excludeSemantics: true),
+            FortalKbd('Silent key', excludeSemantics: true),
+            FortalLink('Silent link', excludeSemantics: true),
+          ],
+        ),
+      );
+
+      for (final label in ['Silent heading', 'Silent key', 'Silent link']) {
+        expect(find.bySemanticsLabel(label), findsNothing, reason: label);
+      }
+      handle.dispose();
+    });
+  });
 }
+
+const _fontSizes = [12.0, 14, 16, 18, 20, 24, 28, 35, 60];
+const _letterSpacings = [
+  0.0025 * 12,
+  0.0,
+  0.0,
+  -0.0025 * 18,
+  -0.005 * 20,
+  -0.00625 * 24,
+  -0.0075 * 28,
+  -0.01 * 35,
+  -0.025 * 60,
+];
 
 void _noop() {}
 
@@ -696,6 +1110,28 @@ _accentTokens(WidgetTester tester, Brightness brightness) async {
             accentA11: token(FortalTokens.accentA11),
             accentContrast: token(FortalTokens.accentContrast),
           );
+          return const SizedBox.shrink();
+        },
+      ),
+    ),
+  );
+
+  return result;
+}
+
+Future<Color> _resolveToken(
+  WidgetTester tester,
+  ColorToken token, {
+  Brightness brightness = Brightness.light,
+}) async {
+  late Color result;
+  await tester.pumpWidget(
+    FortalScope(
+      brightness: brightness,
+      child: Builder(
+        builder: (context) {
+          result = MixScope.tokenOf(token, context);
+
           return const SizedBox.shrink();
         },
       ),

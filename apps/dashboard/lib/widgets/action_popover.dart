@@ -61,6 +61,7 @@ class _DashboardActionPopoverState extends State<DashboardActionPopover> {
       popoverChild: SizedBox(
         width: widget.width,
         child: Column(
+          mainAxisSize: .min,
           crossAxisAlignment: .stretch,
           spacing: 2,
           children: [

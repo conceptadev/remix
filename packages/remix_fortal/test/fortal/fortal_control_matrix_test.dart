@@ -101,6 +101,41 @@ void main() {
         FortalDataListSize.size2,
         FortalDataListSize.size3,
       ]);
+      // Text, Heading, Code, Kbd, and Link share one nine-step scale and one
+      // weight enum instead of declaring five parallel copies.
+      expect(FortalTextSize.values, [
+        FortalTextSize.size1,
+        FortalTextSize.size2,
+        FortalTextSize.size3,
+        FortalTextSize.size4,
+        FortalTextSize.size5,
+        FortalTextSize.size6,
+        FortalTextSize.size7,
+        FortalTextSize.size8,
+        FortalTextSize.size9,
+      ]);
+      expect(FortalTextWeight.values, [
+        FortalTextWeight.light,
+        FortalTextWeight.regular,
+        FortalTextWeight.medium,
+        FortalTextWeight.bold,
+      ]);
+      expect(FortalCodeVariant.values, [
+        FortalCodeVariant.solid,
+        FortalCodeVariant.soft,
+        FortalCodeVariant.outline,
+        FortalCodeVariant.ghost,
+      ]);
+      expect(FortalKbdVariant.values, [
+        FortalKbdVariant.classic,
+        FortalKbdVariant.soft,
+      ]);
+      expect(FortalLinkUnderline.values, [
+        FortalLinkUnderline.auto,
+        FortalLinkUnderline.always,
+        FortalLinkUnderline.hover,
+        FortalLinkUnderline.none,
+      ]);
 
       const iconButton = FortalIconButton(
         semanticLabel: 'Add',
@@ -141,6 +176,26 @@ void main() {
       expect(textArea.variant, FortalTextAreaVariant.surface);
       expect(dataList.size, FortalDataListSize.size2);
       expect(dataList.highContrast, isFalse);
+
+      // Typography sizes are nullable so an omitted size inherits the ambient
+      // style, exactly as an unsized Radix Text renders at 1em.
+      const text = FortalText('Body');
+      const heading = FortalHeading('Title');
+      const code = FortalCode('code');
+      const kbd = FortalKbd('Esc');
+      const link = FortalLink('Docs');
+
+      expect(text.size, isNull);
+      expect(text.weight, isNull);
+      expect(heading.size, FortalTextSize.size6);
+      expect(heading.weight, FortalTextWeight.bold);
+      expect(heading.headingLevel, 1);
+      expect(code.size, isNull);
+      expect(code.variant, FortalCodeVariant.soft);
+      expect(kbd.size, isNull);
+      expect(kbd.variant, FortalKbdVariant.classic);
+      expect(link.size, isNull);
+      expect(link.underline, FortalLinkUnderline.auto);
     });
 
     testWidgets('icon button sizes resolve exact square and icon metrics', (

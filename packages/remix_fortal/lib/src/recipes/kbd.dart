@@ -22,6 +22,12 @@ BadgeStyler fortalKbdStyle(
       ? DefaultTextStyle.of(context).style
       : fortalResolveTextToken(context, size);
   final fontSize = fortalResolvedFontSize(base) * (size == null ? 0.75 : 0.8);
+  // Upstream `--letter-spacing-N` is em-relative, so an explicit size resolves
+  // it against Kbd's own `0.8em` rather than the token's own font size. The
+  // inherited path keeps Flutter's absolute inheritance instead: an ambient
+  // DefaultTextStyle carries a resolved letter spacing with no em intent left
+  // to rescale.
+  final letterSpacing = (base.letterSpacing ?? 0) * (size == null ? 1 : 0.8);
 
   // Kbd pins its own weight and line box regardless of the inherited style, so
   // it stays a key cap rather than following surrounding copy.
@@ -29,7 +35,7 @@ BadgeStyler fortalKbdStyle(
       .fontSize(fontSize)
       .fontWeight(FortalTokens.fontWeightRegular())
       .height(1.7)
-      .letterSpacing(base.letterSpacing ?? 0)
+      .letterSpacing(letterSpacing)
       .wordSpacing(-0.1 * fontSize)
       .textAlign(TextAlign.center)
       .softWrap(false)

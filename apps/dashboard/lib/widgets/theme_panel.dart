@@ -165,9 +165,8 @@ class _Control extends StatelessWidget {
     crossAxisAlignment: .start,
     spacing: 8,
     children: [
-      StyledText(
-        label,
-        style: dashboardText(FortalTokens.text2, weight: .w600),
+      DashboardTextTone(
+        child: FortalText(label, size: .size2, weight: .medium),
       ),
       child,
     ],

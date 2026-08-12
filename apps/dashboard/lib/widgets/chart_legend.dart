@@ -80,11 +80,7 @@ class ChartLegend extends StatelessWidget {
                   _LegendMark(item),
                   StyledText(
                     item.displayLabel,
-                    style: dashboardText(
-                      FortalTokens.text1,
-                      weight: .w500,
-                      tone: .muted,
-                    ),
+                    style: dashboardText(.size1, weight: .medium, tone: .muted),
                   ),
                 ],
               ),

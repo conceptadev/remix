@@ -58,6 +58,63 @@ class MyApp extends StatelessWidget {
 [host capabilities](/#host-capabilities) table. Place it above your app widget so
 that overlay and route content inherits the tokens.
 
+## Scope placement
+
+The **outermost** `FortalScope` carries more than tokens: it also establishes
+the Radix theme root's default text run — `text3` (16px, 1.5 line height, 0
+letter spacing) at `gray-12`, regular weight, with no pinned font family. That
+mirrors `.radix-themes` upstream, and it is what an unsized `FortalText`,
+`FortalCode`, `FortalKbd`, or `FortalLink` measures its `1em` against when no
+closer `DefaultTextStyle` is present.
+
+A **nested** scope only re-scopes tokens. It inherits the closest text style in
+effect rather than restating the root run, so re-scoping a subtree for a
+different accent or scaling never resizes or recolors the text already running
+through it.
+
+Where the outermost scope goes therefore depends on your host:
+
+| Host | Put `FortalScope` |
+|------|-------------------|
+| `WidgetsApp`, a router, or a custom host | Above the app, as in the Quick Start above |
+| `MaterialApp` or `CupertinoApp` | Inside `builder:` |
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+class MyMaterialApp extends StatelessWidget {
+  const MyMaterialApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      builder: (context, child) => FortalScope(child: child!),
+      home: const Center(child: FortalText('Themed')),
+    );
+  }
+}
+```
+
+`MaterialApp` and `CupertinoApp` hand `WidgetsApp` their own root
+`DefaultTextStyle`, and `WidgetsApp` installs it below everything that wraps the
+app. A scope placed above `MaterialApp` still supplies tokens, but its root text
+run is overridden. `builder:` sits below that style and above the `Navigator`,
+so pushed routes and raw `Overlay` entries receive the Fortal fallback.
+
+The root run is a fallback, and it follows Flutter's normal text-style cascade.
+A nearer `DefaultTextStyle` wins, and widgets such as `Material` and `Scaffold`
+commonly install one. Unsized Fortal typography inside those surfaces
+intentionally inherits that local run. Pass an explicit
+`size: FortalTextSize.size3` when a component must remain at the exact Radix
+root size regardless of its host.
+
+<Warning>
+  If text inside a hand-rolled `OverlayEntry` renders red and monospace with a
+  yellow double underline, the scope is above `MaterialApp` rather than inside
+  `builder:`. That is Flutter's "put your text in a Material" fallback style.
+</Warning>
+
 ## Customizing Fortal Styles
 
 Fortal widgets call the matching `fortal*Style` recipe internally. Use those
@@ -98,6 +155,14 @@ final style = ButtonStyler()
   .label(TextStyler().color(FortalTokens.accentContrast()));
 ```
 
+## Typography
+
+Fortal adds five typography families that base Remix has no counterpart for:
+`FortalText`, `FortalHeading`, `FortalCode`, `FortalKbd`, and `FortalLink`. They
+share one nine-step `FortalTextSize` scale and one `FortalTextWeight` enum. See
+[Typography](/fortal/typography) for widget selection, controls, semantics,
+recipe customization, and the documented parity boundaries.
+
 ## Charts
 
 Fortal provides themed line, bar, and pie recipes backed by `mix_chart`. Add
@@ -133,6 +198,6 @@ widgets. Their matching `fortal*ChartStyle()` recipes can style the underlying
 
 ## Covered components
 
-Every Remix component has a matching Fortal recipe and generated widget. See the
+Every Remix component has a matching Fortal recipe and preset widget. See the
 `## Fortal widgets` section on each [component page](/components/button) for its
 variants, sizes, and recipe source.

@@ -60,8 +60,7 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
         ),
         GallerySection(
           label: 'Segmented control',
-          description:
-              'Exclusive selection in surface and classic treatments.',
+          description: 'Exclusive selection in surface and classic treatments.',
           child: GalleryMatrix(
             rows: FortalSegmentedControlVariant.values.map(enumLabel).toList(),
             columns: FortalSegmentedControlSize.values.map(enumLabel).toList(),
@@ -72,14 +71,8 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
               selectedValue: _density,
               semanticLabel: 'Row density',
               items: const [
-                RemixSegmentedControlItem(
-                  value: 'compact',
-                  label: 'Compact',
-                ),
-                RemixSegmentedControlItem(
-                  value: 'comfortable',
-                  label: 'Cozy',
-                ),
+                RemixSegmentedControlItem(value: 'compact', label: 'Compact'),
+                RemixSegmentedControlItem(value: 'comfortable', label: 'Cozy'),
               ],
               onChanged: (value) => setState(() => _density = value),
             ),

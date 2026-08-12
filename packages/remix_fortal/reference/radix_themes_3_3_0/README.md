@@ -13,7 +13,14 @@ undocumented approximation. Parameterized cases use their literal Dart test
 description, such as
 `${size.name} matches the pinned dimension and radius`.
 
-The contract tracks 25 mapped Radix families and three Fortal extensions.
+The contract tracks 30 mapped Radix families and three Fortal extensions.
+Text, Heading, Code, Kbd, and Link publish one shared nine-step
+`FortalTextSize`, so their `size` enum resolves against
+`lib/src/recipes/typography_shared.dart` rather than five parallel per-family
+enums. `upstreamInventory.families` must name exactly the tracked family set,
+so a new family fails the gate until both the Fortal mapping and the
+family-independent upstream record are written.
+
 CheckboxGroup is separately audited in `unmappedUpstreamFamilies`: Remix's
 nonvisual coordinator composes the mapped checkbox recipe on each item, but it
 does not claim Radix's root/item spacing and inherited visual-prop anatomy.
@@ -26,8 +33,11 @@ small intrinsic-width shift when a changing label is tied to selection;
 Skeleton's `grayA3` starting/resting phase versus Radix's `grayA4`
 `alternate-reverse` start; TextArea's Flutter-native growth and platform
 scrolling instead of Radix's themed 12px browser scrollbar and resize handle;
-and DataList's data-driven anatomy, global label styling, caller-owned
-responsive rebuilds, and untrimmed text bounds. Segmented Control orientation
+DataList's data-driven anatomy, global label styling, caller-owned
+responsive rebuilds, and untrimmed text bounds; Kbd's omitted `-0.03em`
+vertical nudge and `text-top` inline alignment; and Link's font-relative
+decoration thickness, absent underline offset, and sRGB approximation of
+Radix's OKLab decoration-colour mix. Segmented Control orientation
 and per-item disabling are Remix extensions, not entries in the pinned upstream
 inventory. TextArea keeps native invalid semantics in coverage, while Remix's
 red `error` treatment is documented as an extension rather than a Radix visual

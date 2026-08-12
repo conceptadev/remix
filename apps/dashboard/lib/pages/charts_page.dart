@@ -105,10 +105,7 @@ class _ChartSection extends StatelessWidget {
           spacing: titleGap,
           children: [
             SectionLabel(title),
-            StyledText(
-              description,
-              style: dashboardText(FortalTokens.text2, tone: .muted),
-            ),
+            StyledText(description, style: dashboardText(.size2, tone: .muted)),
           ],
         ),
         GridBox(style: gridStyle, children: cards),
@@ -479,10 +476,7 @@ Widget _emptyPie(List<Color> palette) => DashboardChartCard(
             icon: Icons.inbox_outlined,
             style: IconStyler().size(20).color(FortalTokens.gray11()),
           ),
-          StyledText(
-            'No data yet',
-            style: dashboardText(FortalTokens.text1, tone: .muted),
-          ),
+          StyledText('No data yet', style: dashboardText(.size1, tone: .muted)),
         ],
       ),
     ],
