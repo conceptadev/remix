@@ -236,11 +236,11 @@ class RemixDataTable<T> extends StatelessWidget {
     this.emptyBuilder,
     this.labels = const RemixDataTableLabels(),
     this.pageRangeFormatter = remixDefaultDataTablePageRangeFormatter,
-    this.sortableIcon = Icons.unfold_more,
-    this.sortAscendingIcon = Icons.keyboard_arrow_up,
-    this.sortDescendingIcon = Icons.keyboard_arrow_down,
-    this.previousPageIcon = Icons.chevron_left,
-    this.nextPageIcon = Icons.chevron_right,
+    this.sortableIcon,
+    this.sortAscendingIcon,
+    this.sortDescendingIcon,
+    this.previousPageIcon,
+    this.nextPageIcon,
     this.style = const DataTableStyler.create(),
     this.styleSpec,
   });
@@ -307,19 +307,19 @@ class RemixDataTable<T> extends StatelessWidget {
   final RemixDataTablePageRangeFormatter pageRangeFormatter;
 
   /// Indicator shown on a sortable column that is not the active sort.
-  final IconData sortableIcon;
+  final IconData? sortableIcon;
 
   /// Indicator shown on the ascending active sort column.
-  final IconData sortAscendingIcon;
+  final IconData? sortAscendingIcon;
 
   /// Indicator shown on the descending active sort column.
-  final IconData sortDescendingIcon;
+  final IconData? sortDescendingIcon;
 
   /// Icon of the previous-page button. Mirrored with [nextPageIcon] in RTL.
-  final IconData previousPageIcon;
+  final IconData? previousPageIcon;
 
   /// Icon of the next-page button. Mirrored with [previousPageIcon] in RTL.
-  final IconData nextPageIcon;
+  final IconData? nextPageIcon;
 
   /// The style configuration for the table.
   final DataTableStyler style;
@@ -914,6 +914,14 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
     final end = start == 0 ? 0 : start + visible - 1;
     final lastPage = total == 0 ? 0 : (total - 1) ~/ pageSize;
     final isRtl = Directionality.of(context) == TextDirection.rtl;
+    final previousIcon = isRtl ? _table.nextPageIcon : _table.previousPageIcon;
+    final nextIcon = isRtl ? _table.previousPageIcon : _table.nextPageIcon;
+    final previousGlyph = isRtl
+        ? RemixPathGlyph.chevronRight
+        : RemixPathGlyph.chevronLeft;
+    final nextGlyph = isRtl
+        ? RemixPathGlyph.chevronLeft
+        : RemixPathGlyph.chevronRight;
 
     return RowBox(
       styleSpec: _spec.footer,
@@ -946,7 +954,13 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
             key: const ValueKey('remix-data-table-previous-page'),
             // Chevrons are mirrored so "previous" always points toward the
             // start of the reading direction.
-            icon: isRtl ? _table.nextPageIcon : _table.previousPageIcon,
+            icon: previousIcon,
+            iconBuilder: previousIcon == null
+                ? (context, spec, _) => RemixPathIcon(
+                    glyph: previousGlyph,
+                    styleSpec: StyleSpec(spec: spec),
+                  )
+                : null,
             semanticLabel: _table.labels.previousPage,
             enabled: pageIndex > 0,
             onPressed: () => _table.onPageChanged?.call(pageIndex - 1),
@@ -956,7 +970,13 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
           _spec.pageButton,
           RemixIconButton(
             key: const ValueKey('remix-data-table-next-page'),
-            icon: isRtl ? _table.previousPageIcon : _table.nextPageIcon,
+            icon: nextIcon,
+            iconBuilder: nextIcon == null
+                ? (context, spec, _) => RemixPathIcon(
+                    glyph: nextGlyph,
+                    styleSpec: StyleSpec(spec: spec),
+                  )
+                : null,
             semanticLabel: _table.labels.nextPage,
             enabled: pageIndex < lastPage,
             onPressed: () => _table.onPageChanged?.call(pageIndex + 1),
@@ -978,9 +998,9 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
 const double _defaultSelectionExtent = 48;
 
 typedef _DataTableSortIcons = ({
-  IconData sortable,
-  IconData ascending,
-  IconData descending,
+  IconData? sortable,
+  IconData? ascending,
+  IconData? descending,
 });
 
 /// One header cell: the table's only `columnHeader` semantics node.
@@ -1027,6 +1047,23 @@ class _DataTableHeaderCell extends StatelessWidget {
     final icons = sortIcons;
     if (onSort == null || icons == null) return content;
 
+    final icon = switch (sortState) {
+      RemixDataTableSortDirection.ascending => icons.ascending,
+      RemixDataTableSortDirection.descending => icons.descending,
+      null => icons.sortable,
+    };
+    final indicator = icon == null
+        ? RemixPathIcon(
+            glyph: switch (sortState) {
+              RemixDataTableSortDirection.ascending => RemixPathGlyph.caretUp,
+              RemixDataTableSortDirection.descending =>
+                RemixPathGlyph.caretDown,
+              null => RemixPathGlyph.caretSort,
+            },
+            styleSpec: styles.sortIcon(context),
+          )
+        : StyledIcon(icon: icon, styleSpec: styles.sortIcon(context));
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       spacing: styles.spec.sortIconSpacing ?? 0.0,
@@ -1034,14 +1071,7 @@ class _DataTableHeaderCell extends StatelessWidget {
         // The indicator keeps its natural size and the label yields, so a
         // narrow fixed column shrinks the text instead of overflowing.
         Flexible(child: content),
-        StyledIcon(
-          icon: switch (sortState) {
-            RemixDataTableSortDirection.ascending => icons.ascending,
-            RemixDataTableSortDirection.descending => icons.descending,
-            null => icons.sortable,
-          },
-          styleSpec: styles.sortIcon(context),
-        ),
+        indicator,
       ],
     );
   }

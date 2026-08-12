@@ -4,7 +4,7 @@ import 'dart:math';
 import 'dart:ui' show SemanticsRole;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 

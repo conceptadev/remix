@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
@@ -190,14 +190,14 @@ SelectTriggerStyler _fortalSelectGhostTrigger(SelectTriggerStyler base) {
       .placeholderOpacity(0.6)
       .icon(.color(FortalTokens.accent12()))
       .chevron(.color(FortalTokens.accent12()))
-      .color(Colors.transparent)
+      .color(const Color(0x00000000))
       .onHovered(.color(FortalTokens.accentA3()))
       .onSelected(.color(FortalTokens.accentA3()))
       .onDisabled(
         .label(.color(FortalTokens.grayA11()))
             .icon(.color(FortalTokens.grayA9()))
             .chevron(.color(FortalTokens.grayA9()))
-            .color(Colors.transparent),
+            .color(const Color(0x00000000)),
       );
 }
 
@@ -274,7 +274,7 @@ SelectMenuItemStyler _fortalSelectItemStyler(
       .onPressed(highlighted)
       .onDisabled(
         .color(
-          Colors.transparent,
+          const Color(0x00000000),
         ).text(.color(FortalTokens.grayA8())).iconColor(FortalTokens.grayA8()),
       );
 }

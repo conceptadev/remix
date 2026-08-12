@@ -279,12 +279,15 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
         if (title != null)
           // ignore: avoid-flexible-outside-flex
           Expanded(child: StyledText(title, styleSpec: spec.title)),
-        StyledIcon(
-          icon:
-              _config.trailingIcon ??
-              (state.isExpanded ? Icons.remove : Icons.add),
-          styleSpec: spec.trailingIcon,
-        ),
+        if (_config.trailingIcon case final icon?)
+          StyledIcon(icon: icon, styleSpec: spec.trailingIcon)
+        else
+          RemixPathIcon(
+            glyph: state.isExpanded
+                ? RemixPathGlyph.minus
+                : RemixPathGlyph.plus,
+            styleSpec: spec.trailingIcon,
+          ),
       ],
     );
   }

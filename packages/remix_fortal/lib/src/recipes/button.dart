@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
@@ -325,7 +325,7 @@ ButtonStyler _fortalButtonOutline(
       )
       .onDisabled(
         _fortalButtonForeground(ButtonStyler(), FortalTokens.grayA8())
-            .color(Colors.transparent)
+            .color(const Color(0x00000000))
             .containerEffects(
               RemixBoxEffectsMix(
                 behindContent: fortalInsetSurface(
@@ -345,14 +345,14 @@ ButtonStyler _fortalButtonGhost(
           base,
           highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
         )
-        .color(Colors.transparent)
+        .color(const Color(0x00000000))
         .onHovered(.color(FortalTokens.accentA3()))
         .onPressed(.color(FortalTokens.accentA4()))
         .onDisabled(
           _fortalButtonForeground(
             ButtonStyler(),
             FortalTokens.grayA8(),
-          ).color(Colors.transparent).spinner(.opacity(1)),
+          ).color(const Color(0x00000000)).spinner(.opacity(1)),
         );
 
 ButtonStyler _fortalButtonDisabledFill() => _fortalButtonForeground(

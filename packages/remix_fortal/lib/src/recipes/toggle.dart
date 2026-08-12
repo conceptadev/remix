@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
@@ -53,7 +53,7 @@ ToggleStyler _fortalToggleGhostStyler(
   required bool highContrast,
 }) {
   return _fortalToggleBaseStyler(size)
-      .backgroundColor(Colors.transparent)
+      .backgroundColor(const Color(0x00000000))
       .onHovered(ToggleStyler().backgroundColor(FortalTokens.grayA3()))
       .onPressed(ToggleStyler().backgroundColor(FortalTokens.grayA4()))
       .onSelected(
@@ -74,7 +74,7 @@ ToggleStyler _fortalToggleOutlineStyler(
   required bool highContrast,
 }) {
   return _fortalToggleBaseStyler(size)
-      .backgroundColor(Colors.transparent)
+      .backgroundColor(const Color(0x00000000))
       .borderAll(
         color: FortalTokens.gray7(),
         width: FortalTokens.borderWidth1(),

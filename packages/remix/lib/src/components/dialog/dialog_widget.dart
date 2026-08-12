@@ -50,7 +50,7 @@ Future<T?> showRemixDialog<T>({
 }) {
   return showNakedDialog(
     context: context,
-    barrierColor: barrierColor ?? Colors.black54,
+    barrierColor: barrierColor ?? const Color(0x8A000000),
     barrierDismissible: barrierDismissible,
     barrierLabel: barrierLabel,
     useRootNavigator: useRootNavigator,
@@ -89,7 +89,7 @@ Future<T?> showRemixAlertDialog<T>({
 }) {
   return showNakedAlertDialog(
     context: context,
-    barrierColor: barrierColor ?? Colors.black54,
+    barrierColor: barrierColor ?? const Color(0x8A000000),
     semanticLabel: semanticLabel,
     barrierLabel: barrierLabel,
     barrierDismissible: barrierDismissible,
