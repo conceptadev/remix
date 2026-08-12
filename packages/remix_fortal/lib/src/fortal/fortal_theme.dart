@@ -1394,6 +1394,12 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
 /// against that host instead of Radix's 16px root. A nearer descendant
 /// `DefaultTextStyle` still wins through Flutter's normal inheritance.
 ///
+/// Only the outermost [FortalScope] installs this. A nested scope re-scopes
+/// tokens for its subtree and nothing more: upstream, `.radix-themes` inside
+/// another `.radix-themes` still inherits `color` and the font properties from
+/// its parent chain, and a nested scope that reinstalled the root run here
+/// would silently replace whatever `DefaultTextStyle` the subtree sits in.
+///
 /// The font family is deliberately left unset. Radix's `--default-font-family`
 /// is the platform system stack, and a null family is Flutter's equivalent;
 /// naming a concrete family here would pin every consumer to one typeface.
@@ -1880,15 +1886,19 @@ class FortalScope extends StatelessWidget {
       scaling: scaling,
       hasBackground: hasBackground,
     );
-    final data = _resolveFortalTheme(
-      config,
-      parent: FortalTheme.maybeOf(context),
-    );
+    final parent = FortalTheme.maybeOf(context);
+    final data = _resolveFortalTheme(config, parent: parent);
     final tokens = _buildFortalScopeTokens(data);
     Widget result = MixScope(
       tokens: tokens,
       orderOfModifiers: orderOfModifiers,
-      child: _fortalRootTextStyle(tokens: tokens, child: child),
+      // Theme-root identity, not `hasBackground`, decides who owns the text
+      // run: a scope nested for its accent or scaling must leave the current
+      // run alone, while a root scope with `hasBackground: false` still
+      // establishes it.
+      child: parent == null
+          ? _fortalRootTextStyle(tokens: tokens, child: child)
+          : child,
     );
     if (data.hasBackground) {
       result = ColoredBox(
@@ -2172,23 +2182,23 @@ class FortalTheme extends InheritedTheme {
   static FortalThemeData? maybeOf(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<FortalTheme>()?.data;
 
+  /// Rebuilds only the theme and its Mix tokens.
+  ///
+  /// The captured subtree's text run is *not* synthesized here.
+  /// `DefaultTextStyle` is itself an [InheritedTheme], so
+  /// `InheritedTheme.capture` already carries the actual nearest ambient run
+  /// across to the new route; installing the Radix root run alongside it would
+  /// overwrite that capture with a value the source context never had.
   @override
-  Widget wrap(BuildContext context, Widget child) {
-    final tokens = _buildFortalScopeTokens(data);
-
-    return FortalTheme(
-      data: data,
+  Widget wrap(BuildContext context, Widget child) => FortalTheme(
+    data: data,
+    orderOfModifiers: orderOfModifiers,
+    child: MixScope(
+      tokens: _buildFortalScopeTokens(data),
       orderOfModifiers: orderOfModifiers,
-      child: MixScope(
-        tokens: tokens,
-        orderOfModifiers: orderOfModifiers,
-        // A cloned scope carries the same root fallback, so a dialog route
-        // resolves `1em` from the same baseline when no nearer text style is
-        // present.
-        child: _fortalRootTextStyle(tokens: tokens, child: child),
-      ),
-    );
-  }
+      child: child,
+    ),
+  );
 
   @override
   bool updateShouldNotify(FortalTheme oldWidget) => data != oldWidget.data;

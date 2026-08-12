@@ -37,18 +37,23 @@ omitted size inherits the ambient `DefaultTextStyle`, matching a Radix `Text`
 with no size prop rendering at `1em`. `FortalHeading` defaults to size 6 and
 bold because Radix Heading does.
 
-At the scope boundary, that `1em` is defined by `FortalScope`, which installs
-the Radix theme root's text run — `text3` (16px, 1.5 line height) at `gray-12`,
-regular weight. With no closer `DefaultTextStyle`, an unsized `FortalCode`
-therefore resolves `0.95 × 0.95 × 16px`, exactly as upstream does. Under
-`MaterialApp` or `CupertinoApp` the scope belongs in `builder:` so the fallback
-reaches routes and raw overlays; see [scope placement](/fortal#scope-placement).
+At the scope boundary, that `1em` is defined by the outermost `FortalScope`,
+which establishes the Radix theme root's text run — `text3` (16px, 1.5 line
+height) at `gray-12`, regular weight. With no closer `DefaultTextStyle`, an
+unsized `FortalCode` therefore resolves `0.95 × 0.95 × 16px`, exactly as
+upstream does. Under `MaterialApp` or `CupertinoApp` the scope belongs in
+`builder:` so the fallback reaches routes and raw overlays; see
+[scope placement](/fortal#scope-placement).
 
 A nearer `DefaultTextStyle` still wins by design. In particular, `Material`
 and `Scaffold` commonly establish a local run. Unsized Fortal widgets inherit
 that run just as Radix text inherits a nearer CSS font size. Specify
 `size: FortalTextSize.size3` when exact root sizing is required inside one of
 those surfaces.
+
+A nested `FortalScope` is not a new root: it re-scopes tokens and inherits the
+closest text style, so re-theming a subtree for a different accent or scaling
+leaves the surrounding `1em` intact.
 
 ## Basic implementation
 

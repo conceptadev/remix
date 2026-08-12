@@ -146,6 +146,49 @@ void main() {
     );
   });
 
+  testWidgets('a nested scope preserves the nearest text style', (
+    tester,
+  ) async {
+    // Accent and scaling are the two reasons a real subtree re-scopes; neither
+    // is a reason to restate the run the surrounding page already set.
+    await tester.pumpWidget(
+      const FortalScope(
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: DefaultTextStyle(
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 2,
+              color: Color(0xFF00FF00),
+            ),
+            child: FortalScope(
+              accent: .red,
+              scaling: .percent110,
+              child: Column(
+                children: [FortalText('body'), FortalCode.soft('code')],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final body = tester
+        .renderObject<RenderParagraph>(find.text('body'))
+        .text
+        .style!;
+    expect(body.fontSize, 20);
+    expect(body.fontWeight, FontWeight.w700);
+    expect(body.letterSpacing, 2);
+    expect(body.color, const Color(0xFF00FF00));
+    // Code keeps deriving its em geometry from that preserved ambient size.
+    expect(
+      tester.widget<Text>(find.text('code')).style?.fontSize,
+      closeTo(20 * 0.95 * 0.95, 1e-9),
+    );
+  });
+
   testWidgets('nested scopes inherit unspecified values without repainting', (
     tester,
   ) async {
@@ -183,38 +226,24 @@ void main() {
     expect(inner.hasBackground, isFalse);
   });
 
-  testWidgets('captured themes rebuild their Mix token scope', (tester) async {
-    late BuildContext sourceContext;
+  testWidgets('captured themes rebuild tokens and keep their nearest style', (
+    tester,
+  ) async {
+    // `DefaultTextStyle` is itself an `InheritedTheme`, so the capture already
+    // carries the actual nearest run across; the theme only has to rebuild the
+    // Mix tokens a route would otherwise lose.
+    final root = await _captureThemes(tester, ambient: null);
+    expect(root.accent, isNotNull);
+    expect(root.text.fontSize, 16);
+    expect(root.text.color, root.gray12);
 
-    await tester.pumpWidget(
-      FortalScope(
-        accent: .red,
-        child: Builder(
-          builder: (context) {
-            sourceContext = context;
-            return const SizedBox();
-          },
-        ),
-      ),
+    final nested = await _captureThemes(
+      tester,
+      ambient: const TextStyle(fontSize: 20, letterSpacing: 2),
     );
-
-    final captured = InheritedTheme.capture(
-      from: sourceContext,
-      to: tester.element(find.byType(FortalScope)),
-    );
-    late Color accent;
-    await tester.pumpWidget(
-      captured.wrap(
-        Builder(
-          builder: (context) {
-            accent = MixScope.tokenOf(FortalTokens.accent9, context);
-            return const SizedBox();
-          },
-        ),
-      ),
-    );
-
-    expect(accent, isNotNull);
+    expect(nested.accent, isNotNull);
+    expect(nested.text.fontSize, 20);
+    expect(nested.text.letterSpacing, 2);
   });
 
   testWidgets('component recipe tokens resolve exact light and dark values', (
@@ -258,6 +287,59 @@ void main() {
     expect(scaled.dataListRowGap3, 22);
     expect(scaled.dataListLabelMinWidth, 120);
   });
+}
+
+/// Pumps a scope, captures its themes from a descendant, and re-pumps that
+/// capture on its own so the wrapped values are the ones under assertion.
+///
+/// A non-null [ambient] inserts a nearer text style and a nested scope beneath
+/// it, which is the shape of a subtree that re-scopes tokens mid-page.
+Future<({Color accent, Color gray12, TextStyle text})> _captureThemes(
+  WidgetTester tester, {
+  required TextStyle? ambient,
+}) async {
+  late BuildContext sourceContext;
+  final probe = Builder(
+    builder: (context) {
+      sourceContext = context;
+      return const SizedBox();
+    },
+  );
+
+  await tester.pumpWidget(
+    FortalScope(
+      accent: .red,
+      child: ambient == null
+          ? probe
+          : DefaultTextStyle(
+              style: ambient,
+              child: FortalScope(scaling: .percent110, child: probe),
+            ),
+    ),
+  );
+
+  final captured = InheritedTheme.capture(
+    from: sourceContext,
+    to: tester.element(find.byType(FortalScope).first),
+  );
+  late ({Color accent, Color gray12, TextStyle text}) result;
+  await tester.pumpWidget(
+    captured.wrap(
+      Builder(
+        builder: (context) {
+          result = (
+            accent: MixScope.tokenOf(FortalTokens.accent9, context),
+            gray12: MixScope.tokenOf(FortalTokens.gray12, context),
+            text: DefaultTextStyle.of(context).style,
+          );
+
+          return const SizedBox();
+        },
+      ),
+    ),
+  );
+
+  return result;
 }
 
 Future<

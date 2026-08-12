@@ -12,6 +12,11 @@
     },
     {
       "test": "test/fortal/fortal_theme_resolution_test.dart",
+      "case": "a nested scope preserves the nearest text style",
+      "covers": ["state:rootTextStyle", "state:nestedInherit"]
+    },
+    {
+      "test": "test/fortal/fortal_theme_resolution_test.dart",
       "case": "root scope resolves the documented defaults",
       "covers": [
         "enum:appearance.light",

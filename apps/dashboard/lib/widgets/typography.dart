@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
@@ -35,6 +36,34 @@ TextStyler dashboardText(
   FortalTextWeight? weight,
   TextTone tone = TextTone.strong,
 }) => fortalTextStyle(size: size, weight: weight).color(tone._color());
+
+/// Puts a dashboard [TextTone] on the ambient text run for [child].
+///
+/// Fortal's typography widgets deliberately expose no colour parameter: the
+/// neutral tone is inherited context, not a per-instance prop. This dashboard
+/// runs under `MaterialApp`, so the nearest `DefaultTextStyle` inside a page is
+/// the one `Material` installs, whose foreground is Material's — not Fortal's
+/// `gray12`. Restating the tone here is how a `FortalText` or `FortalHeading`
+/// keeps the dashboard's neutral scale while keeping its whole public API,
+/// including heading semantics.
+///
+/// Only the colour is merged; size, weight, and flow stay with the widget.
+class DashboardTextTone extends StatelessWidget {
+  const DashboardTextTone({
+    super.key,
+    this.tone = TextTone.strong,
+    required this.child,
+  });
+
+  final TextTone tone;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => DefaultTextStyle.merge(
+    style: TextStyle(color: MixScope.tokenOf(tone._color, context)),
+    child: child,
+  );
+}
 
 /// Single-line [dashboardText] that ellipsizes, for text sharing a row with a
 /// fixed-width neighbour.

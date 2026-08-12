@@ -4,6 +4,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 
 import '../../utils/text.dart';
 import '../../widgets/gallery_scaffold.dart';
+import '../../widgets/typography.dart';
 
 class GalleryDisplayPage extends StatefulWidget {
   const GalleryDisplayPage({super.key});
@@ -64,7 +65,9 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
               child: FortalCard(
                 variant: FortalCardVariant.values[row],
                 size: FortalCardSize.values[column],
-                child: const FortalText('Card content', size: .size2),
+                child: const DashboardTextTone(
+                  child: FortalText('Card content', size: .size2),
+                ),
               ),
             ),
           ),
@@ -128,9 +131,11 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
               ),
               FortalSkeleton(
                 loading: _skeletonLoading,
-                child: const FortalText(
-                  'Loaded content replaces the placeholder.',
-                  size: .size2,
+                child: const DashboardTextTone(
+                  child: FortalText(
+                    'Loaded content replaces the placeholder.',
+                    size: .size2,
+                  ),
                 ),
               ),
             ],
@@ -188,7 +193,9 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
                   children: [
                     SizedBox(
                       width: 64,
-                      child: FortalText(enumLabel(size), size: .size2),
+                      child: DashboardTextTone(
+                        child: FortalText(enumLabel(size), size: .size2),
+                      ),
                     ),
                     Expanded(child: FortalDivider(size: size)),
                   ],

@@ -50,10 +50,11 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-`FortalScope` is a `MixScope`. It also installs the Radix theme root's default
-text run — `text3` at `gray-12` — which is what an unsized `FortalText`,
-`FortalCode`, `FortalKbd`, or `FortalLink` measures `1em` against when no
-closer `DefaultTextStyle` is present.
+`FortalScope` is a `MixScope`. The outermost one also establishes the Radix
+theme root's default text run — `text3` at `gray-12` — which is what an unsized
+`FortalText`, `FortalCode`, `FortalKbd`, or `FortalLink` measures `1em` against
+when no closer `DefaultTextStyle` is present. A nested scope only re-scopes
+tokens; it inherits the closest text style rather than restating the root run.
 
 Place it above your app widget so that overlay and route content inherits the
 tokens — **except** under `MaterialApp` or `CupertinoApp`, which install their

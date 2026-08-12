@@ -60,14 +60,19 @@ that overlay and route content inherits the tokens.
 
 ## Scope placement
 
-`FortalScope` carries more than tokens: it also installs the Radix theme root's
-default text run — `text3` (16px, 1.5 line height, 0 letter spacing) at
-`gray-12`, regular weight, with no pinned font family. That mirrors
-`.radix-themes` upstream, and it is what an unsized `FortalText`, `FortalCode`,
-`FortalKbd`, or `FortalLink` measures its `1em` against when no closer
-`DefaultTextStyle` is present.
+The **outermost** `FortalScope` carries more than tokens: it also establishes
+the Radix theme root's default text run — `text3` (16px, 1.5 line height, 0
+letter spacing) at `gray-12`, regular weight, with no pinned font family. That
+mirrors `.radix-themes` upstream, and it is what an unsized `FortalText`,
+`FortalCode`, `FortalKbd`, or `FortalLink` measures its `1em` against when no
+closer `DefaultTextStyle` is present.
 
-Where the scope goes therefore depends on your host:
+A **nested** scope only re-scopes tokens. It inherits the closest text style in
+effect rather than restating the root run, so re-scoping a subtree for a
+different accent or scaling never resizes or recolors the text already running
+through it.
+
+Where the outermost scope goes therefore depends on your host:
 
 | Host | Put `FortalScope` |
 |------|-------------------|
@@ -97,11 +102,12 @@ app. A scope placed above `MaterialApp` still supplies tokens, but its root text
 run is overridden. `builder:` sits below that style and above the `Navigator`,
 so pushed routes and raw `Overlay` entries receive the Fortal fallback.
 
-The fallback still follows Flutter's normal text-style cascade. A nearer
-`DefaultTextStyle` wins, and widgets such as `Material` and `Scaffold` commonly
-install one. Unsized Fortal typography inside those surfaces intentionally
-inherits that local run. Pass an explicit `size: FortalTextSize.size3` when a
-component must remain at the exact Radix root size regardless of its host.
+The root run is a fallback, and it follows Flutter's normal text-style cascade.
+A nearer `DefaultTextStyle` wins, and widgets such as `Material` and `Scaffold`
+commonly install one. Unsized Fortal typography inside those surfaces
+intentionally inherits that local run. Pass an explicit
+`size: FortalTextSize.size3` when a component must remain at the exact Radix
+root size regardless of its host.
 
 <Warning>
   If text inside a hand-rolled `OverlayEntry` renders red and monospace with a

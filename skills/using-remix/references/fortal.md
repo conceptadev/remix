@@ -204,16 +204,21 @@ page background behind its child.
 
 ### Scope placement
 
-`FortalScope` also installs the Radix theme root's default text run — `text3`
-(16px, 1.5 line height, 0 letter spacing) at `gray-12`, regular weight, with no
-pinned font family. That is what an unsized `FortalText`, `FortalCode`,
-`FortalKbd`, or `FortalLink` measures `1em` against when there is no closer
-`DefaultTextStyle`, so placement matters:
+The **outermost** `FortalScope` also establishes the Radix theme root's default
+text run — `text3` (16px, 1.5 line height, 0 letter spacing) at `gray-12`,
+regular weight, with no pinned font family. That is what an unsized
+`FortalText`, `FortalCode`, `FortalKbd`, or `FortalLink` measures `1em` against
+when there is no closer `DefaultTextStyle`, so placement matters:
 
 | Host | Put the scope |
 | --- | --- |
 | `WidgetsApp`, router, or a custom host | Above the app |
 | `MaterialApp`, `CupertinoApp` | In `builder:` |
+
+A **nested** scope re-scopes tokens only. It inherits the closest text style
+instead of restating the root run, so wrapping a subtree in
+`FortalScope(accent: .red, hasBackground: false, ...)` re-themes its tokens
+without resizing or recoloring the text already running through it.
 
 ```dart
 // MaterialApp / CupertinoApp

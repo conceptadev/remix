@@ -243,7 +243,9 @@ class _PreferenceRow extends StatelessWidget {
           crossAxisAlignment: .start,
           spacing: 2,
           children: [
-            FortalText(title, size: .size2, weight: .medium),
+            DashboardTextTone(
+              child: FortalText(title, size: .size2, weight: .medium),
+            ),
             StyledText(description, style: dashboardText(.size1, tone: .muted)),
           ],
         ),

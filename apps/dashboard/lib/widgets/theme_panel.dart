@@ -5,6 +5,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 import '../theme/theme_scope.dart';
 import '../theme/theme_settings.dart';
 import '../utils/text.dart';
+import 'typography.dart';
 
 class ThemePanel extends StatelessWidget {
   const ThemePanel({super.key});
@@ -164,7 +165,9 @@ class _Control extends StatelessWidget {
     crossAxisAlignment: .start,
     spacing: 8,
     children: [
-      FortalText(label, size: .size2, weight: .medium),
+      DashboardTextTone(
+        child: FortalText(label, size: .size2, weight: .medium),
+      ),
       child,
     ],
   );

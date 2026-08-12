@@ -2,10 +2,12 @@ import 'dart:ui' as ui;
 
 import 'package:dashboard/main.dart';
 import 'package:dashboard/shell/dashboard_shell.dart';
+import 'package:dashboard/theme/theme_scope.dart';
 import 'package:dashboard/theme/theme_settings.dart';
 import 'package:dashboard/utils/text.dart';
 import 'package:dashboard/widgets/page_header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
@@ -710,6 +712,41 @@ void main() {
       expect(node.getSemanticsData().headingLevel, 2, reason: section);
     }
     semantics.dispose();
+  });
+
+  testWidgets('dashboard-owned strong text follows the live gray theme', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const DashboardApp());
+
+    // Both titles sit inside a Material surface, whose own `DefaultTextStyle`
+    // would otherwise supply the foreground instead of Fortal's `gray12`.
+    final pageTitle = find.descendant(
+      of: find.byType(PageHeader),
+      matching: find.text('Overview'),
+    );
+    final activityTitle = find.text('Payment received');
+    Color painted(Finder finder) =>
+        tester.renderObject<RenderParagraph>(finder).text.style!.color!;
+    Color gray12() => MixScope.tokenOf(
+      FortalTokens.gray12,
+      tester.element(find.byType(DashboardShell)),
+    );
+
+    final slate = gray12();
+    expect(painted(pageTitle), slate);
+    expect(painted(activityTitle), slate);
+
+    final themeScope = tester.widget<ThemeScope>(find.byType(ThemeScope));
+    themeScope.onChanged(
+      themeScope.settings.copyWith(grayColor: FortalGrayColor.mauve),
+    );
+    await tester.pump();
+
+    final mauve = gray12();
+    expect(mauve, isNot(slate));
+    expect(painted(pageTitle), mauve);
+    expect(painted(activityTitle), mauve);
   });
 
   testWidgets('top bar search filters the active data page', (tester) async {
