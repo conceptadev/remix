@@ -45,11 +45,11 @@ void widgetControllerTest<S extends Spec<S>>(
 
     await act?.call(tester);
 
-    // A multi-part spec (e.g. a panel wrapping an interactive trigger) can
-    // mount more than one StyleBuilder<S> — one per RemixStyleSpecBuilder
-    // call in the widget. Only the one wired to a WidgetStatesController
-    // tracks interaction state, so filter for that instead of assuming
-    // there is exactly one StyleBuilder<S> in the tree.
+    // Interaction state belongs to exactly one controller-backed
+    // StyleBuilder<S> per widget: that is the resolution every part of the
+    // spec shares. Filtering on the controller pins that invariant, and keeps
+    // the lookup honest if a widget ever mounts an extra StyleBuilder<S>
+    // (a raw styleSpec pass, say) alongside it.
     final controllerElements = find
         .byType(StyleBuilder<S>)
         .evaluate()

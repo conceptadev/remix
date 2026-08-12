@@ -92,5 +92,24 @@ Purely behavioral — no `style`/`styleSpec`. `controller` is **required**
 
 \* Either `title` or `builder` must be provided.
 
+Anatomy — one panel, two parts. `container` owns the shared frame (fill,
+border, radius, clipping); `trigger` owns the header row's internal layout;
+`content` owns the expanded body's padding and its interior divider. Because
+the container supplies the rounding, an expanded trigger meets its content
+with no notch. `containerEffects` paints layered fills, strokes, and backdrop
+blur with the container.
+
+The top-level Box shorthand (`.color()`, `.padding()`, `.borderRadius()`, ...)
+forwards to `trigger`, not `container` — reach `.container(...)` explicitly for
+the outer frame.
+
+Widget-state variants (`onHovered`, `onPressed`, `onFocused`,
+`onFocusVisible`, `onDisabled`) describe interaction with the **trigger** but
+resolve once for the whole item, so they may style `container` too. The
+expanded content is not a separate hover/press target.
+
+Each item is its own bordered panel, so space adjacent items
+(`Column(spacing: 8, ...)`) instead of expecting a shared divider.
+
 Fortal preset: `FortalAccordion<T>` — `variant` (`surface|soft`), `size`
 (`size1–size3`).

@@ -6,6 +6,16 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
 
+/// The single coloured [Box] in the tree is the outer panel: every test that
+/// uses this styles `container(...)` and nothing else that paints a fill.
+Color? _panelColor(WidgetTester tester) {
+  return tester
+      .widgetList<Box>(find.byType(Box))
+      .map((box) => (box.styleSpec?.spec.decoration as BoxDecoration?)?.color)
+      .where((color) => color != null)
+      .single;
+}
+
 void main() {
   group('RemixAccordionGroup', () {
     group('Basic Rendering', () {
@@ -315,28 +325,17 @@ void main() {
           );
           await tester.pumpAndSettle();
 
-          Color? panelColor() {
-            return tester
-                .widgetList<Box>(find.byType(Box))
-                .map(
-                  (box) =>
-                      (box.styleSpec?.spec.decoration as BoxDecoration?)?.color,
-                )
-                .where((color) => color != null)
-                .single;
-          }
-
-          expect(panelColor(), Colors.red);
+          expect(_panelColor(tester), Colors.red);
 
           await tester.tap(find.text('Test Title'));
           await tester.pumpAndSettle();
 
-          expect(panelColor(), Colors.green);
+          expect(_panelColor(tester), Colors.green);
 
           await tester.tap(find.text('Test Title'));
           await tester.pumpAndSettle();
 
-          expect(panelColor(), Colors.red);
+          expect(_panelColor(tester), Colors.red);
         },
       );
 
@@ -361,25 +360,247 @@ void main() {
           );
           await tester.pumpAndSettle();
 
-          Color? panelColor() {
-            return tester
-                .widgetList<Box>(find.byType(Box))
-                .map(
-                  (box) =>
-                      (box.styleSpec?.spec.decoration as BoxDecoration?)?.color,
-                )
-                .where((color) => color != null)
-                .single;
-          }
-
-          expect(panelColor(), Colors.green);
+          expect(_panelColor(tester), Colors.green);
 
           await tester.tap(find.text('Test Title'));
           await tester.pumpAndSettle();
 
-          expect(panelColor(), Colors.red);
+          expect(_panelColor(tester), Colors.red);
         },
       );
+    });
+
+    // The panel container is mounted above NakedAccordion, which publishes its
+    // interaction states only to its own descendants. These pin that the
+    // container still observes the trigger's states, and only the trigger's.
+    group('Interaction-Conditional Panel Styling', () {
+      testWidgets('onDisabled styles the panel from the first frame', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixAccordionGroup<String>(
+            controller: RemixAccordionController<String>(),
+            child: RemixAccordion<String>(
+              value: 'item1',
+              title: 'Test Title',
+              enabled: false,
+              style: AccordionStyler()
+                  .container(.color(Colors.blue))
+                  .onDisabled(.container(.color(Colors.red))),
+              child: const Text('Content'),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(_panelColor(tester), Colors.red);
+      });
+
+      testWidgets('onDisabled styles the panel when enabled flips at runtime', (
+        tester,
+      ) async {
+        final controller = RemixAccordionController<String>();
+        addTearDown(controller.dispose);
+        var enabled = true;
+
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RemixAccordionGroup<String>(
+                  controller: controller,
+                  child: RemixAccordion<String>(
+                    value: 'item1',
+                    title: 'Test Title',
+                    enabled: enabled,
+                    style: AccordionStyler()
+                        .container(.color(Colors.blue))
+                        .onDisabled(.container(.color(Colors.red))),
+                    child: const Text('Content'),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => setState(() => enabled = false),
+                  child: const Text('Disable'),
+                ),
+              ],
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(_panelColor(tester), Colors.blue);
+
+        await tester.tap(find.text('Disable'));
+        await tester.pumpAndSettle();
+
+        expect(_panelColor(tester), Colors.red);
+      });
+
+      testWidgets('onDisabled reaches containerEffects as well as container', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixAccordionGroup<String>(
+            controller: RemixAccordionController<String>(),
+            child: RemixAccordion<String>(
+              value: 'item1',
+              title: 'Test Title',
+              enabled: false,
+              style: AccordionStyler().onDisabled(
+                .containerEffects(RemixBoxEffectsMix(backdropBlur: 4)),
+              ),
+              child: const Text('Content'),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byType(BackdropFilter), findsOneWidget);
+      });
+
+      testWidgets('onHovered styles the panel from the trigger, and clears '
+          'when the pointer moves into the expanded content', (tester) async {
+        await tester.pumpRemixApp(
+          RemixAccordionGroup<String>(
+            controller: RemixAccordionController<String>(),
+            initialExpandedValues: const ['item1'],
+            child: RemixAccordion<String>(
+              value: 'item1',
+              title: 'Test Title',
+              style: AccordionStyler()
+                  .container(.color(Colors.blue))
+                  .onHovered(.container(.color(Colors.green))),
+              child: const Text('Panel body'),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final gesture = await tester.createGesture(kind: .mouse);
+        await gesture.addPointer(location: Offset.zero);
+        addTearDown(gesture.removePointer);
+
+        await gesture.moveTo(tester.getCenter(find.text('Test Title')));
+        await tester.pumpAndSettle();
+
+        expect(_panelColor(tester), Colors.green);
+
+        await gesture.moveTo(tester.getCenter(find.text('Panel body')));
+        await tester.pumpAndSettle();
+
+        expect(_panelColor(tester), Colors.blue);
+      });
+
+      testWidgets('onPressed styles the panel while the trigger is held, and '
+          'not while the expanded content is', (tester) async {
+        await tester.pumpRemixApp(
+          RemixAccordionGroup<String>(
+            controller: RemixAccordionController<String>(),
+            initialExpandedValues: const ['item1'],
+            child: RemixAccordion<String>(
+              value: 'item1',
+              title: 'Test Title',
+              style: AccordionStyler()
+                  .container(.color(Colors.blue))
+                  .onPressed(.container(.color(Colors.green))),
+              child: const Text('Panel body'),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final trigger = await tester.startGesture(
+          tester.getCenter(find.text('Test Title')),
+        );
+        await tester.pumpAndSettle();
+
+        expect(_panelColor(tester), Colors.green);
+
+        await trigger.up();
+        await tester.pumpAndSettle();
+
+        expect(_panelColor(tester), Colors.blue);
+      });
+
+      testWidgets('onPressed ignores presses on the expanded content', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixAccordionGroup<String>(
+            controller: RemixAccordionController<String>(),
+            initialExpandedValues: const ['item1'],
+            child: RemixAccordion<String>(
+              value: 'item1',
+              title: 'Test Title',
+              style: AccordionStyler()
+                  .container(.color(Colors.blue))
+                  .onPressed(.container(.color(Colors.green))),
+              child: const Text('Panel body'),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final content = await tester.startGesture(
+          tester.getCenter(find.text('Panel body')),
+        );
+        await tester.pumpAndSettle();
+
+        expect(_panelColor(tester), Colors.blue);
+
+        await content.up();
+        await tester.pumpAndSettle();
+      });
+
+      testWidgets('onFocused and onFocusVisible style the panel, the latter '
+          'only while the highlight mode is traditional', (tester) async {
+        final previousStrategy = FocusManager.instance.highlightStrategy;
+        addTearDown(() {
+          FocusManager.instance.highlightStrategy = previousStrategy;
+        });
+        FocusManager.instance.highlightStrategy =
+            FocusHighlightStrategy.alwaysTouch;
+
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpRemixApp(
+          RemixAccordionGroup<String>(
+            controller: RemixAccordionController<String>(),
+            child: RemixAccordion<String>(
+              value: 'item1',
+              title: 'Test Title',
+              focusNode: focusNode,
+              style: AccordionStyler()
+                  .container(.color(Colors.blue))
+                  .onFocused(.container(.color(Colors.green)))
+                  .onFocusVisible(.container(.color(Colors.orange))),
+              child: const Text('Content'),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(_panelColor(tester), Colors.blue);
+
+        focusNode.requestFocus();
+        await tester.pumpAndSettle();
+
+        expect(_panelColor(tester), Colors.green);
+
+        FocusManager.instance.highlightStrategy =
+            FocusHighlightStrategy.alwaysTraditional;
+        await tester.pumpAndSettle();
+
+        expect(_panelColor(tester), Colors.orange);
+
+        focusNode.unfocus();
+        await tester.pumpAndSettle();
+
+        expect(_panelColor(tester), Colors.blue);
+      });
     });
 
     group('Disabled State', () {
@@ -538,6 +759,55 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(focusState, isFalse);
+      });
+
+      testWidgets('forwards focus, hover, and press exactly once per '
+          'transition', (tester) async {
+        final focusEvents = <bool>[];
+        final hoverEvents = <bool>[];
+        final pressEvents = <bool>[];
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpRemixApp(
+          RemixAccordionGroup<String>(
+            controller: RemixAccordionController<String>(),
+            child: RemixAccordion<String>(
+              value: 'item1',
+              title: 'Test Title',
+              focusNode: focusNode,
+              onFocusChange: focusEvents.add,
+              onHoverChange: hoverEvents.add,
+              onPressChange: pressEvents.add,
+              child: const Text('Content'),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final triggerCenter = tester.getCenter(find.text('Test Title'));
+
+        final pointer = await tester.createGesture(kind: .mouse);
+        await pointer.addPointer(location: Offset.zero);
+        addTearDown(pointer.removePointer);
+        await pointer.moveTo(triggerCenter);
+        await tester.pumpAndSettle();
+        await pointer.moveTo(Offset.zero);
+        await tester.pumpAndSettle();
+
+        focusNode.requestFocus();
+        await tester.pumpAndSettle();
+        focusNode.unfocus();
+        await tester.pumpAndSettle();
+
+        final press = await tester.startGesture(triggerCenter);
+        await tester.pumpAndSettle();
+        await press.up();
+        await tester.pumpAndSettle();
+
+        expect(hoverEvents, [true, false]);
+        expect(focusEvents, [true, false]);
+        expect(pressEvents, [true, false]);
       });
     });
 
