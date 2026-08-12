@@ -3505,7 +3505,8 @@
       "sourceFiles": [],
       "sourceSelectors": [],
       "flutterExceptions": [
-        "Fortal extension: excluded from the Radix parity score and styled from shared Fortal tokens."
+        "Fortal extension: excluded from the Radix parity score and styled from shared Fortal tokens.",
+        "Panel anatomy (container radius, border, fill, and clipping) has no Radix Accordion source of its own — Radix Themes ships none — and instead derives from the mapped Table family's container/row-divider treatment (see data_table.dart)."
       ],
       "coverage": {
         "enums": [

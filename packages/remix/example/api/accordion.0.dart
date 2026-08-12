@@ -86,26 +86,32 @@ class _AccordionExampleState extends State<AccordionExample> {
 
   AccordionStyler get itemStyle {
     return AccordionStyler()
-        .content(BoxStyler().padding(.horizontal(16)).padding(.top(8)))
-        .wrap(.clipRRect(borderRadius: .circular(8)))
-        .padding(.horizontal(16))
-        .padding(.vertical(14))
-        .borderRadius(.circular(8))
-        .onHovered(AccordionStyler().color(Colors.grey.shade100))
-        .decoration(
-          BoxDecorationMix(
-            color: Colors.white,
-            border: BoxBorderMix.all(
-              BorderSideMix().color(Colors.grey.shade300).width(1),
-            ),
-            borderRadius: BorderRadiusMix.circular(8),
-          ),
+        // The container owns the shared frame — one fill, one border, one
+        // radius, and the clip that crops the trigger and the content into it.
+        .container(
+          BoxStyler()
+              .color(Colors.white)
+              .border(
+                BoxBorderMix.all(
+                  BorderSideMix().color(Colors.grey.shade300).width(1),
+                ),
+              )
+              .borderRounded(8)
+              .clipBehavior(.antiAlias),
         )
+        // Trigger and content own only their own internal layout.
         .trigger(
           FlexBoxStyler()
               .direction(.horizontal)
               .mainAxisAlignment(.spaceBetween)
-              .spacing(12),
+              .spacing(12)
+              .paddingX(16)
+              .paddingY(14),
+        )
+        .content(BoxStyler().paddingX(16).paddingBottom(14))
+        // A widget-state variant tracks the trigger, and can style any part.
+        .onHovered(
+          AccordionStyler().container(BoxStyler().color(Colors.grey.shade100)),
         )
         .leadingIcon(IconStyler().color(Colors.grey.shade700).size(20))
         .title(

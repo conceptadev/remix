@@ -45,30 +45,28 @@ void widgetControllerTest<S extends Spec<S>>(
 
     await act?.call(tester);
 
-    // Use find to get all descendants of type StyleBuilder
-    final finder = find.byType(StyleBuilder<S>);
-    ftest.expect(finder, ftest.findsOneWidget);
-
-    final styleBuilderElements = finder
+    // Interaction state belongs to exactly one controller-backed
+    // StyleBuilder<S> per widget: that is the resolution every part of the
+    // spec shares. Filtering on the controller pins that invariant, and keeps
+    // the lookup honest if a widget ever mounts an extra StyleBuilder<S>
+    // (a raw styleSpec pass, say) alongside it.
+    final controllerElements = find
+        .byType(StyleBuilder<S>)
         .evaluate()
         .whereType<StatefulElement>()
+        .where(
+          (element) => (element.widget as StyleBuilder<S>).controller != null,
+        )
         .toList();
 
-    if (styleBuilderElements.isEmpty) {
-      throw Exception('StyleBuilder widget not found in widget tree.');
-    }
+    expect(
+      controllerElements,
+      hasLength(1),
+      reason: 'Expected exactly one controller-backed StyleBuilder<$S>.',
+    );
 
-    // Get the controller from the first StyleBuilder's widget
-    final styleBuilderWidget =
-        styleBuilderElements.first.widget as StyleBuilder<S>;
-
-    final controller = styleBuilderWidget.controller;
-
-    if (controller == null) {
-      throw Exception(
-        'WidgetStatesController not found in StyleBuilder widget.',
-      );
-    }
+    final controller =
+        (controllerElements.single.widget as StyleBuilder<S>).controller!;
 
     final states = controller.value;
     expect(states, equals(expectedStates));

@@ -15,33 +15,22 @@ Widget buildAvatarUseCase(BuildContext context) {
           width: 400,
           child: RemixAccordionGroup(
             controller: RemixAccordionController<String>(min: 0, max: 1),
-            child: Box(
-              style: BoxStyler()
-                  .border(
-                    .color(
-                      FortalTokens.gray7(),
-                    ).strokeAlign(BorderSide.strokeAlignOutside),
-                  )
-                  .borderRadius(.all(FortalTokens.radius4()))
-                  .clipBehavior(.hardEdge),
-              child: ColumnBox(
-                style: FlexBoxStyler().mainAxisSize(.min),
-                children: [
-                  const FortalAccordion(
-                    value: 'accordion1',
-                    title: 'Is it accessible?',
-                    child: Text('Yes, it is accessible.'),
+            child: const Column(
+              spacing: 8,
+              children: [
+                FortalAccordion(
+                  value: 'accordion1',
+                  title: 'Is it accessible?',
+                  child: Text('Yes, it is accessible.'),
+                ),
+                FortalAccordion(
+                  value: 'accordion2',
+                  title: 'What payment methods are accepted?',
+                  child: Text(
+                    'Major credit and debit cards like Visa, MasterCard, and American Express, as well as digital payment options like PayPal and Apple Pay.',
                   ),
-                  const FortalDivider(),
-                  const FortalAccordion(
-                    value: 'accordion2',
-                    title: 'What payment methods are accepted?',
-                    child: Text(
-                      'Major credit and debit cards like Visa, MasterCard, and American Express, as well as digital payment options like PayPal and Apple Pay.',
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
