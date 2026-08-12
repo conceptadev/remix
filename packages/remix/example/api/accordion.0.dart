@@ -96,7 +96,7 @@ class _AccordionExampleState extends State<AccordionExample> {
                   BorderSideMix().color(Colors.grey.shade300).width(1),
                 ),
               )
-              .borderRounded(8)
+              .borderRadius(.circular(8))
               .clipBehavior(.antiAlias),
         )
         // Trigger and content own only their own internal layout.
@@ -105,10 +105,10 @@ class _AccordionExampleState extends State<AccordionExample> {
               .direction(.horizontal)
               .mainAxisAlignment(.spaceBetween)
               .spacing(12)
-              .paddingX(16)
-              .paddingY(14),
+              .padding(.horizontal(16))
+              .padding(.vertical(14)),
         )
-        .content(BoxStyler().paddingX(16).paddingBottom(14))
+        .content(BoxStyler().padding(.horizontal(16)).padding(.bottom(14)))
         // A widget-state variant tracks the trigger, and can style any part.
         .onHovered(
           AccordionStyler().container(BoxStyler().color(Colors.grey.shade100)),
