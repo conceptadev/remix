@@ -238,7 +238,7 @@ void main() {
       );
 
       styleMethodTest(
-        'modifierRotate',
+        'widget modifier rotation',
         initial: ButtonStyler(),
         modify: (style) =>
             style.wrap(.rotate(radians: 0.5, alignment: Alignment.topLeft)),
@@ -286,7 +286,7 @@ void main() {
       );
 
       styleMethodTest(
-        'transformReset',
+        'identity container transform',
         initial: ButtonStyler(),
         modify: (style) => style.transform(Matrix4.identity()),
         expect: (style) {

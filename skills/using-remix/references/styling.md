@@ -39,10 +39,10 @@ e.g. `.padding(.horizontal(x))`), `.width()` / `.height()` / `.size()`, `.scale(
 `.column()`. Component-part mixins add `.label*()` (color, fontSize,
 fontWeight, letterSpacing, …), `.icon*()` (color, size, opacity, …), and
 `.spinner*()` (indicatorColor, size, strokeWidth, …) where the component has
-those parts. `.backgroundColor()` is an alias on Accordion, Avatar, Badge,
-Button, Callout, Card, Dialog, IconButton, TextField, Toggle, and Tooltip
-stylers. It is not universal; use the component's `.color()` method where
-available and check the per-component reference for exact surface area.
+those parts. Use the canonical `.color()` method for component surfaces and
+check the per-component reference for exact surface area. Keep slot-specific
+color methods such as `.labelColor()`, `.iconColor()`, and `.textColor()` for
+the corresponding component parts.
 
 ### Interaction States
 

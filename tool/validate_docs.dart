@@ -1,6 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
+final _removedComponentBackgroundColorInvocation = RegExp(
+  r'\b(?:Remix)?(?:Accordion|Avatar|Badge|Button|Callout|Card|Dialog|'
+  r'IconButton|Popover|TextField|Toggle|ToggleGroup|ToggleGroupItem|Tooltip)'
+  r'Styler(?:<[^>]+>)?(?:\.[A-Za-z0-9_]+)?\s*'
+  r'\((?:[^()]|\([^()]*\)){0,1200}?\)'
+  r'(?:\s*\.[A-Za-z0-9_]+\s*\((?:[^()]|\([^()]*\)){0,1200}?\))*'
+  r'\s*\.backgroundColor\s*\(',
+);
+
 final _retiredApis = <(RegExp, String)>[
   (
     RegExp(
@@ -104,6 +113,10 @@ final _retiredApis = <(RegExp, String)>[
     RegExp(r'\.transformReset\s*\('),
     'retired Box transform convenience; use transform(Matrix4.identity())',
   ),
+  (
+    _removedComponentBackgroundColorInvocation,
+    'retired component backgroundColor alias; use color',
+  ),
 ];
 
 final _iconButtonInvocation = RegExp(
@@ -168,6 +181,13 @@ final _staleConsumerDocumentationClaims = <(RegExp, String)>[
       caseSensitive: false,
     ),
     'stale IconButton child-slot claim',
+  ),
+  (
+    RegExp(
+      r'`?\.backgroundColor\(\)`?\s+(?:is|was|remains)\s+(?:an?\s+)?alias\b',
+      caseSensitive: false,
+    ),
+    'stale component backgroundColor alias claim',
   ),
 ];
 
