@@ -157,9 +157,9 @@ void main() {
       );
 
       styleMethodTest(
-        'backgroundColor() sets background color',
+        'color() sets background color',
         initial: TextFieldStyler(),
-        modify: (style) => style.backgroundColor(Colors.grey),
+        modify: (style) => style.color(Colors.grey),
         expect: (style) {
           expect(
             style.$container,
@@ -497,7 +497,7 @@ void main() {
       testWidgets('call method creates RemixTextField with common parameters', (
         tester,
       ) async {
-        final style = TextFieldStyler().backgroundColor(Colors.grey.shade100);
+        final style = TextFieldStyler().color(Colors.grey.shade100);
         final controller = TextEditingController();
         final focusNode = FocusNode();
 

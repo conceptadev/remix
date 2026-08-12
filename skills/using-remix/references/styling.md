@@ -18,10 +18,10 @@ Every component's style is a chainable, immutable `*Styler`:
 
 ```dart
 ButtonStyler()
-    .color(Colors.blue)          // container fill (universal primitive)
-    .borderRounded(12)           // circular radius shortcut
-    .paddingX(24)
-    .paddingY(12)
+    .color(Colors.blue)              // container fill (universal primitive)
+    .borderRadius(.circular(12))     // circular radius shortcut
+    .padding(.horizontal(24))
+    .padding(.vertical(12))
     .labelColor(Colors.white)
     .labelFontSize(16)
     .labelFontWeight(FontWeight.w600)
@@ -31,18 +31,18 @@ ButtonStyler()
 ```
 
 Fluent surface shared by container-based stylers: `.color()`, `.gradient()`,
-`.border*()`, `.borderRadius*()` / `.borderRounded()`, `.shadow()` /
-`.shadows()` / `.elevation()`, `.padding*()` / `.margin*()` (incl.
-`.paddingX/.paddingY`), `.width()` / `.height()` / `.size()`, `.scale()` /
+`.border()` / `.borderRadius()`, `.shadow()` /
+`.shadows()` / `.elevation()`, `.padding()` / `.margin()` (compound forms,
+e.g. `.padding(.horizontal(x))`), `.width()` / `.height()` / `.size()`, `.scale()` /
 `.rotate()` / `.translate()`. Flex-based ones add `.spacing()`,
 `.direction()`, `.mainAxisAlignment()`, `.crossAxisAlignment()`, `.row()`,
 `.column()`. Component-part mixins add `.label*()` (color, fontSize,
 fontWeight, letterSpacing, …), `.icon*()` (color, size, opacity, …), and
 `.spinner*()` (indicatorColor, size, strokeWidth, …) where the component has
-those parts. `.backgroundColor()` is an alias on Accordion, Avatar, Badge,
-Button, Callout, Card, Dialog, IconButton, TextField, Toggle, and Tooltip
-stylers. It is not universal; use the component's `.color()` method where
-available and check the per-component reference for exact surface area.
+those parts. Use the canonical `.color()` method for component surfaces and
+check the per-component reference for exact surface area. Keep slot-specific
+color methods such as `.labelColor()`, `.iconColor()`, and `.textColor()` for
+the corresponding component parts.
 
 ### Interaction States
 
@@ -54,7 +54,7 @@ ButtonStyler()
     .labelColor(Colors.white)
     .onHovered(ButtonStyler().color(Colors.blue.shade700))
     .onPressed(ButtonStyler().scale(0.97))
-    .onFocused(ButtonStyler().borderAll(color: Colors.white, width: 2))
+    .onFocused(ButtonStyler().border(.all(.color(Colors.white).width(2))))
     .onDisabled(ButtonStyler().color(Colors.grey))
 ```
 
@@ -73,8 +73,8 @@ Respond to platform, brightness, and form factor:
 
 ```dart
 ButtonStyler()
-    .paddingX(24)
-    .onMobile(ButtonStyler().paddingX(16).labelFontSize(14))
+    .padding(.horizontal(24))
+    .onMobile(ButtonStyler().padding(.horizontal(16)).labelFontSize(14))
     .onDark(ButtonStyler().color(Colors.blue.shade800))
 ```
 
@@ -108,8 +108,8 @@ directly:
 final primaryButton = ButtonStyler()
     .color(Colors.blue)
     .labelColor(Colors.white)
-    .paddingX(24)
-    .borderRounded(8);
+    .padding(.horizontal(24))
+    .borderRadius(.circular(8));
 
 primaryButton(label: 'Save', onPressed: save)   // → RemixButton
 ```
@@ -129,8 +129,8 @@ Call the token inside styler chains; `.mix()` for text-style tokens;
 ```dart
 ButtonStyler()
     .color(FortalTokens.accent9())
-    .paddingAll(FortalTokens.space4())
-    .borderRadiusAll(FortalTokens.radius3())
+    .padding(.all(FortalTokens.space4()))
+    .borderRadius(.all(FortalTokens.radius3()))
     .label(TextStyler().style(FortalTokens.text2.mix())
         .color(FortalTokens.accentContrast()))
 

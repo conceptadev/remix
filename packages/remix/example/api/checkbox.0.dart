@@ -42,7 +42,7 @@ class _CheckboxExampleState extends State<CheckboxExample> {
         .size(24, 24)
         .icon(IconStyler().size(20).color(Colors.white))
         .onSelected(CheckboxStyler().fillColor(Colors.grey.shade900))
-        .borderRadiusAll(const Radius.circular(3))
+        .borderRadius(.all(const Radius.circular(3)))
         .border(
           BoxBorderMix.all(BorderSideMix().color(Colors.black87).width(2)),
         );

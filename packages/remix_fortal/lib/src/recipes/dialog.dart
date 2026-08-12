@@ -80,7 +80,7 @@ DialogStyler fortalDialogStyle({
             .mainAxisAlignment(.end)
             .crossAxisAlignment(.center)
             .spacing(FortalTokens.space3())
-            .marginTop(FortalTokens.space5()),
+            .margin(.top(FortalTokens.space5())),
       )
       .width(600)
       .padding(.all(padding))
@@ -90,6 +90,6 @@ DialogStyler fortalDialogStyle({
         BoxDecorationMix.create(boxShadow: FortalTokens.shadow6.mix()),
       )
       .containerEffects(
-        RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
+        RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
       );
 }

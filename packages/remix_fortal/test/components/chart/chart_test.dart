@@ -109,7 +109,7 @@ void main() {
     });
   });
 
-  group('generated Fortal chart widgets', () {
+  group('Fortal chart widgets', () {
     test('forward recipe and chart constructor parameters', () {
       final line = FortalLineChart(
         highContrast: true,

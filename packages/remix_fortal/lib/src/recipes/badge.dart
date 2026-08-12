@@ -26,7 +26,7 @@ BadgeStyler fortalBadgeStyle({
           .color(
             highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
           )
-          .foregroundColor(
+          .labelColor(
             highContrast
                 ? FortalTokens.accent1()
                 : FortalTokens.accentContrast(),
@@ -34,27 +34,25 @@ BadgeStyler fortalBadgeStyle({
     .soft =>
       base
           .color(FortalTokens.accentA3())
-          .foregroundColor(
+          .labelColor(
             highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
           ),
     .surface =>
       base
           .color(FortalTokens.accentSurface())
           .containerEffects(
-            RemixBoxEffectsMix(
-              behindContent: fortalInsetSurface(
-                strokes: [FortalTokens.accentA6()],
-              ),
+            RemixBoxEffectsMix.behindContent(
+              fortalInsetSurface(strokes: [FortalTokens.accentA6()]),
             ),
           )
-          .foregroundColor(
+          .labelColor(
             highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
           ),
     .outline =>
       base
           .containerEffects(
-            RemixBoxEffectsMix(
-              behindContent: fortalInsetSurface(
+            RemixBoxEffectsMix.behindContent(
+              fortalInsetSurface(
                 strokes: [
                   highContrast
                       ? FortalTokens.accentA7()
@@ -64,7 +62,7 @@ BadgeStyler fortalBadgeStyle({
               ),
             ),
           )
-          .foregroundColor(
+          .labelColor(
             highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
           ),
   };
@@ -77,7 +75,7 @@ BadgeStyler _fortalBadgeBaseStyler(FortalBadgeSize size) {
     label: .style(
       _fortalBadgeText(size).mix(),
     ).fontWeight(FortalTokens.fontWeightMedium()),
-  ).borderRadiusAll(radius);
+  ).borderRadius(.all(radius));
 }
 
 TextStyleToken _fortalBadgeText(FortalBadgeSize size) => switch (size) {

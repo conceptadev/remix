@@ -47,10 +47,10 @@ class _TextfieldExampleState extends State<TextfieldExample> {
   TextFieldStyler get style {
     return TextFieldStyler()
         .color(Colors.grey.shade800)
-        .backgroundColor(Colors.white)
-        .borderRadiusAll(const Radius.circular(8.0))
+        .color(Colors.white)
+        .borderRadius(.all(const Radius.circular(8.0)))
         .height(44)
-        .paddingX(12)
+        .padding(.horizontal(12))
         .spacing(8)
         .label(
           TextStyler()
@@ -468,10 +468,6 @@ Sets the container color. Use `textColor` for editable text.
 #### `text(TextStyler value)`
 
 Sets editable text style using a TextStyler.
-
-#### `backgroundColor(Color value)`
-
-Sets background color
 
 #### `container(BoxStyler value)`
 

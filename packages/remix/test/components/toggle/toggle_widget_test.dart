@@ -364,7 +364,7 @@ void main() {
 
       testWidgets('applies multiple style methods', (tester) async {
         final customStyle = ToggleStyler()
-            .backgroundColor(Colors.blue)
+            .color(Colors.blue)
             .labelColor(Colors.white)
             .iconColor(Colors.white)
             .padding(EdgeInsetsGeometryMix.all(8.0))

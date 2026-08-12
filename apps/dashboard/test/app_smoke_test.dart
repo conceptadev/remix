@@ -180,8 +180,8 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('nav-customers')).first);
     await tester.pump();
 
-    // The generated Fortal wrapper forwards the key to the Remix widget it
-    // builds, so the key matches both.
+    // FortalDataTable forwards the key to the Remix widget it builds, so the
+    // key matches both.
     expect(find.byKey(const ValueKey('data-grid-customers')), findsWidgets);
     expect(find.text('1–10 of 24'), findsOneWidget);
   });

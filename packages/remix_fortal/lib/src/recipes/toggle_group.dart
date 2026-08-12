@@ -55,30 +55,25 @@ ToggleGroupStyler fortalToggleGroupStyle({
       spacing: 0,
     ),
     item: .alignment(.center)
-        .foregroundColor(FortalTokens.gray11())
+        .labelColor(FortalTokens.gray11())
+        .iconColor(FortalTokens.gray11())
         .labelFontWeight(FortalTokens.fontWeightMedium())
-        .onHovered(
-          ToggleGroupItemStyler().backgroundColor(FortalTokens.grayA3()),
-        )
-        .onPressed(
-          ToggleGroupItemStyler().backgroundColor(FortalTokens.grayA4()),
-        )
+        .onHovered(ToggleGroupItemStyler().color(FortalTokens.grayA3()))
+        .onPressed(ToggleGroupItemStyler().color(FortalTokens.grayA4()))
         .onSelected(
           ToggleGroupItemStyler()
-              .backgroundColor(selectedColor)
-              .foregroundColor(selectedForeground)
-              .onHovered(
-                ToggleGroupItemStyler().backgroundColor(selectedHoverColor),
-              )
-              .onPressed(
-                ToggleGroupItemStyler().backgroundColor(selectedPressedColor),
-              ),
+              .color(selectedColor)
+              .labelColor(selectedForeground)
+              .iconColor(selectedForeground)
+              .onHovered(ToggleGroupItemStyler().color(selectedHoverColor))
+              .onPressed(ToggleGroupItemStyler().color(selectedPressedColor)),
         )
         .onFocusVisible(ToggleGroupItemStyler().fortalFocusRing())
         .onDisabled(
           ToggleGroupItemStyler()
-              .backgroundColor(FortalTokens.grayA3())
-              .foregroundColor(FortalTokens.gray8()),
+              .color(FortalTokens.grayA3())
+              .labelColor(FortalTokens.gray8())
+              .iconColor(FortalTokens.gray8()),
         ),
   ).merge(_fortalToggleGroupSizeStyler(size));
 }
@@ -86,36 +81,36 @@ ToggleGroupStyler fortalToggleGroupStyle({
 ToggleGroupStyler _fortalToggleGroupSizeStyler(FortalToggleGroupSize size) {
   return switch (size) {
     .size1 => ToggleGroupStyler(
-      container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius2()),
+      container: FlexBoxStyler().borderRadius(.all(FortalTokens.radius2())),
       item:
           .container(
                 FlexBoxStyler()
-                    .paddingX(FortalTokens.space2())
-                    .paddingY(FortalTokens.space1())
+                    .padding(.horizontal(FortalTokens.space2()))
+                    .padding(.vertical(FortalTokens.space1()))
                     .spacing(FortalTokens.toggleGap1()),
               )
               .label(.style(FortalTokens.text1.mix()))
               .icon(.size(FortalTokens.space3())),
     ),
     .size2 => ToggleGroupStyler(
-      container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius2()),
+      container: FlexBoxStyler().borderRadius(.all(FortalTokens.radius2())),
       item:
           .container(
                 FlexBoxStyler()
-                    .paddingX(FortalTokens.space3())
-                    .paddingY(FortalTokens.space2())
+                    .padding(.horizontal(FortalTokens.space3()))
+                    .padding(.vertical(FortalTokens.space2()))
                     .spacing(FortalTokens.space1()),
               )
               .label(.style(FortalTokens.text2.mix()))
               .icon(.size(FortalTokens.space4())),
     ),
     .size3 => ToggleGroupStyler(
-      container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius3()),
+      container: FlexBoxStyler().borderRadius(.all(FortalTokens.radius3())),
       item:
           .container(
                 FlexBoxStyler()
-                    .paddingX(FortalTokens.space4())
-                    .paddingY(FortalTokens.space2())
+                    .padding(.horizontal(FortalTokens.space4()))
+                    .padding(.vertical(FortalTokens.space2()))
                     .spacing(FortalTokens.toggleGap3()),
               )
               .label(.style(FortalTokens.text3.mix()))

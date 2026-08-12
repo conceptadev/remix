@@ -13,9 +13,9 @@ TooltipStyler fortalTooltipStyle() {
         label: .style(FortalTokens.text1.mix()),
         waitDuration: const Duration(milliseconds: 200),
       )
-      .borderRadiusAll(FortalTokens.radius2())
-      .paddingY(FortalTokens.space1())
-      .paddingX(FortalTokens.space2())
+      .borderRadius(.all(FortalTokens.radius2()))
+      .padding(.vertical(FortalTokens.space1()))
+      .padding(.horizontal(FortalTokens.space2()))
       .label(.color(FortalTokens.gray1()))
-      .backgroundColor(FortalTokens.gray12());
+      .color(FortalTokens.gray12());
 }

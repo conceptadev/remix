@@ -157,9 +157,9 @@ Base Remix example:
 ```dart
 final submitStyle = ButtonStyler()
     .color(const Color(0xFF3E63DD))
-    .paddingX(16)
-    .paddingY(10)
-    .borderRounded(6)
+    .padding(.horizontal(16))
+    .padding(.vertical(10))
+    .borderRadius(.circular(6))
     .labelColor(const Color(0xFFFFFFFF))
     .onHovered(ButtonStyler().color(const Color(0xFF3358D4)));
 
@@ -173,8 +173,8 @@ RemixButton(
   label: 'Save',
   onPressed: save,
   style: fortalButtonStyle(variant: .solid)
-      .paddingX(32)
-      .borderRounded(8),
+      .padding(.horizontal(32))
+      .borderRadius(.circular(8)),
 )
 ```
 

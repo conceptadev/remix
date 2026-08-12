@@ -17,7 +17,7 @@ SkeletonStyler fortalSkeletonStyle() {
         BoxStyler()
             .minHeight(FortalTokens.space3())
             .color(FortalTokens.grayA3())
-            .borderRadiusAll(FortalTokens.radius1()),
+            .borderRadius(.all(FortalTokens.radius1())),
       )
       .pulseColor(FortalTokens.grayA4())
       .duration(FortalTokens.skeletonPulseDuration());

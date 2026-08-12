@@ -48,7 +48,7 @@ void main() {
 
   group('SegmentedControlItemStyler', () {
     test('exposes a box surface and explicit content spacing', () {
-      final container = BoxStyler().paddingAll(4);
+      final container = BoxStyler().padding(.all(4));
       final style = SegmentedControlItemStyler(
         container: container,
         spacing: 6,
@@ -89,10 +89,10 @@ void main() {
 
     test('container effects merge through the generated item styler', () {
       final merged = SegmentedControlItemStyler()
-          .containerEffects(RemixBoxEffectsMix(outlineOffset: 2))
+          .containerEffects(RemixBoxEffectsMix.outlineOffset(2))
           .merge(
             SegmentedControlItemStyler().containerEffects(
-              RemixBoxEffectsMix(backdropBlur: 3),
+              RemixBoxEffectsMix.backdropBlur(3),
             ),
           );
 

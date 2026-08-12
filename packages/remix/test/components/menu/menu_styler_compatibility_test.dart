@@ -45,8 +45,14 @@ void main() {
 
       expect(triggerStyle, isA<MenuTriggerStyler>());
       expect(itemStyle, isA<MenuItemStyler>());
-      expect(MenuTriggerStyler().flex(FlexStyler()), isA<MenuTriggerStyler>());
-      expect(MenuItemStyler().flex(FlexStyler()), isA<MenuItemStyler>());
+      expect(
+        MenuTriggerStyler().container(FlexBoxStyler().flex(FlexStyler())),
+        isA<MenuTriggerStyler>(),
+      );
+      expect(
+        MenuItemStyler().container(FlexBoxStyler().flex(FlexStyler())),
+        isA<MenuItemStyler>(),
+      );
     });
 
     testWidgets('resolves to canonical specs', (tester) async {
@@ -128,9 +134,7 @@ void main() {
       final legacyFactory = RemixMenuTriggerStyler.color(Colors.blue);
 
       final MenuTriggerStyler canonical = legacy;
-      final legacyFlex = RemixMenuTriggerStylerRemixHelpers(
-        legacy,
-      ).flex(FlexStyler());
+      final legacyFlex = legacy.container(FlexBoxStyler().flex(FlexStyler()));
 
       expect(canonical, same(legacy));
       expect(legacy.merge(emptyLegacy), isA<MenuTriggerStyler>());
@@ -150,9 +154,7 @@ void main() {
       final legacyFactory = RemixMenuItemStyler.color(Colors.blue);
 
       final MenuItemStyler canonical = legacy;
-      final legacyFlex = RemixMenuItemStylerRemixHelpers(
-        legacy,
-      ).flex(FlexStyler());
+      final legacyFlex = legacy.container(FlexBoxStyler().flex(FlexStyler()));
 
       expect(canonical, same(legacy));
       expect(legacy.merge(emptyLegacy), isA<MenuItemStyler>());

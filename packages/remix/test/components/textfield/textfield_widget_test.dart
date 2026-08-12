@@ -262,7 +262,7 @@ void main() {
 
       testWidgets('applies custom background color', (tester) async {
         await tester.pumpRemixApp(
-          RemixTextField(style: TextFieldStyler().backgroundColor(Colors.grey)),
+          RemixTextField(style: TextFieldStyler().color(Colors.grey)),
         );
         await tester.pumpAndSettle();
 
@@ -779,7 +779,7 @@ void main() {
                 focusedDuringTap = focusNode.hasFocus;
               },
               onTapAlwaysCalled: true,
-              style: TextFieldStyler().width(280).paddingAll(24),
+              style: TextFieldStyler().width(280).padding(.all(24)),
             ),
           );
           await tester.pump();
@@ -1350,7 +1350,7 @@ void main() {
                 TextFieldStyler(
                   container: BoxStyler()
                       .color(Colors.amber)
-                      .paddingAll(7)
+                      .padding(.all(7))
                       .alignment(.center),
                 ),
               ),

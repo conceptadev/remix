@@ -65,10 +65,8 @@ BadgeStyler fortalKbdStyle(
 
   if (variant == FortalKbdVariant.classic) {
     style = style.containerEffects(
-      RemixBoxEffectsMix(
-        behindContent: RemixBoxEffectLayerMix(
-          shadows: _fortalKbdShadows(context, fontSize),
-        ),
+      RemixBoxEffectsMix.behindContent(
+        RemixBoxEffectLayerMix(shadows: _fortalKbdShadows(context, fontSize)),
       ),
     );
   }

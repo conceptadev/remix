@@ -33,7 +33,7 @@ void main() {
       );
     });
 
-    test('retain field factories for composite stylers', () {
+    test('match field factories with fluent methods', () {
       final trigger = MenuTriggerStyler.color(Colors.black);
 
       expect(MenuStyler.trigger(trigger), MenuStyler().trigger(trigger));
@@ -42,15 +42,8 @@ void main() {
       expect(TextFieldStyler.layout(layout), TextFieldStyler().layout(layout));
     });
 
-    test('retain fluent-only conveniences and aliases', () {
-      expect(
-        CardStyler().paddingAll(12),
-        CardStyler.padding(EdgeInsetsGeometryMix.all(12)),
-      );
-      expect(
-        CardStyler().backgroundColor(Colors.red),
-        CardStyler.color(Colors.red),
-      );
+    test('support canonical color factory and fluent forms', () {
+      expect(CardStyler().color(Colors.red), CardStyler.color(Colors.red));
     });
 
     test('support contextual shorthand for selected state', () {
@@ -59,12 +52,12 @@ void main() {
       expect(style.$variants, hasLength(1));
     });
 
-    test('replace legacy convenience factories with canonical factories', () {
+    test('match slot conveniences with nested factories', () {
       const color = Colors.indigo;
       final padding = EdgeInsetsGeometryMix.all(12);
       final textStyle = TextStyleMix(fontSize: 14);
 
-      expect(CardStyler().backgroundColor(color), CardStyler.color(color));
+      expect(CardStyler().color(color), CardStyler.color(color));
       expect(
         AccordionStyler().titleColor(color),
         AccordionStyler.title(TextStyler.color(color)),
@@ -77,9 +70,9 @@ void main() {
         AccordionStyler().contentPadding(padding),
         AccordionStyler.content(BoxStyler.padding(padding)),
       );
-      expect(AvatarStyler().square(24), AvatarStyler.size(24, 24));
+      expect(AvatarStyler().size(24, 24), AvatarStyler.size(24, 24));
       expect(
-        BadgeStyler().foregroundColor(color),
+        BadgeStyler().labelColor(color),
         BadgeStyler.label(TextStyler.color(color)),
       );
       expect(
@@ -93,9 +86,7 @@ void main() {
       expect(contextual.$variants, hasLength(2));
     });
 
-    testWidgets('resolve forwarded APIs like legacy nested styles', (
-      tester,
-    ) async {
+    testWidgets('resolve forwarded APIs to their nested specs', (tester) async {
       late BuildContext context;
       await tester.pumpWidget(
         MaterialApp(
@@ -108,10 +99,10 @@ void main() {
         ),
       );
 
-      void expectSameSpec<S extends Spec<S>>(Style<S> actual, Style<S> legacy) {
+      void expectSameSpec<S extends Spec<S>>(Style<S> actual, Style<S> nested) {
         expect(
           actual.resolve(context).spec,
-          equals(legacy.resolve(context).spec),
+          equals(nested.resolve(context).spec),
         );
       }
 

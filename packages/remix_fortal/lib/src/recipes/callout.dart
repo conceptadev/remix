@@ -19,24 +19,25 @@ CalloutStyler fortalCalloutStyle({
   FortalCalloutSize size = .size2,
   bool highContrast = false,
 }) {
-  final base = _fortalCalloutBaseStyler(size).foregroundColor(
-    highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
-  );
+  final contentColor = highContrast
+      ? FortalTokens.accent12()
+      : FortalTokens.accentA11();
+  final base = _fortalCalloutBaseStyler(
+    size,
+  ).iconColor(contentColor).textColor(contentColor);
   return switch (variant) {
     .soft => base.color(FortalTokens.accentA3()),
     .surface =>
       base
           .color(FortalTokens.accentA2())
           .containerEffects(
-            RemixBoxEffectsMix(
-              behindContent: fortalInsetSurface(
-                strokes: [FortalTokens.accentA6()],
-              ),
+            RemixBoxEffectsMix.behindContent(
+              fortalInsetSurface(strokes: [FortalTokens.accentA6()]),
             ),
           ),
     .outline => base.containerEffects(
-      RemixBoxEffectsMix(
-        behindContent: fortalInsetSurface(strokes: [FortalTokens.accentA7()]),
+      RemixBoxEffectsMix.behindContent(
+        fortalInsetSurface(strokes: [FortalTokens.accentA7()]),
       ),
     ),
   };
@@ -52,7 +53,7 @@ CalloutStyler _fortalCalloutBaseStyler(FortalCalloutSize size) {
         .padding(EdgeInsetsGeometryMix.all(_fortalCalloutPadding(size))),
     text: .style(_fortalCalloutText(size).mix()),
     icon: .size(_fortalCalloutIconSize(size)),
-  ).borderRadiusAll(radius);
+  ).borderRadius(.all(radius));
 }
 
 double _fortalCalloutPadding(FortalCalloutSize size) => switch (size) {

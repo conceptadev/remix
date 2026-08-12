@@ -291,9 +291,9 @@ void main() {
       );
 
       styleMethodTest(
-        'flex',
+        'container flex',
         initial: AccordionStyler(),
-        modify: (style) => style.flex(FlexStyler()),
+        modify: (style) => style.trigger(FlexBoxStyler().flex(FlexStyler())),
         expect: (style) {
           expect(
             style.$trigger,
@@ -303,17 +303,13 @@ void main() {
       );
 
       styleMethodTest(
-        'backgroundColor',
+        'color targets the trigger slot',
         initial: AccordionStyler(),
-        modify: (style) => style.backgroundColor(Colors.red),
+        modify: (style) => style.color(Colors.red),
         expect: (style) {
           expect(
             style.$trigger,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(decoration: BoxDecorationMix(color: Colors.red)),
-              ),
-            ),
+            equals(Prop.maybeMix(FlexBoxStyler().color(Colors.red))),
           );
         },
       );
@@ -641,7 +637,7 @@ void main() {
       });
 
       test('call creates RemixAccordion with this style', () {
-        final style = AccordionStyler().backgroundColor(Colors.blue);
+        final style = AccordionStyler().color(Colors.blue);
 
         final accordion = style.call<String>(
           value: 'details',

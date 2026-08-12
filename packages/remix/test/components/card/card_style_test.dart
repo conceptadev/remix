@@ -66,9 +66,9 @@ void main() {
       );
 
       styleMethodTest(
-        'backgroundColor sets container background color',
+        'color sets container background color',
         initial: CardStyler(),
-        modify: (style) => style.backgroundColor(Colors.blue),
+        modify: (style) => style.color(Colors.blue),
         expect: (style) {
           expect(
             style.$container,

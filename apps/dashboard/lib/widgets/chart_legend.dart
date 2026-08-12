@@ -104,7 +104,10 @@ class _LegendMark extends StatelessWidget {
     return switch (item.pattern) {
       .solid => Box(
         key: key,
-        style: BoxStyler().size(18, 4).color(item.color).borderRounded(radius),
+        style: BoxStyler()
+            .size(18, 4)
+            .color(item.color)
+            .borderRadius(.circular(radius)),
       ),
       .dashed => RowBox(
         key: key,
@@ -115,7 +118,7 @@ class _LegendMark extends StatelessWidget {
               style: BoxStyler()
                   .size(7, 4)
                   .color(item.color)
-                  .borderRounded(radius),
+                  .borderRadius(.circular(radius)),
             ),
         ],
       ),
@@ -123,12 +126,15 @@ class _LegendMark extends StatelessWidget {
         key: key,
         style: BoxStyler()
             .size(14, 14)
-            .borderAll(color: item.color, width: 2)
-            .borderRounded(radius),
+            .border(.color(item.color).width(2))
+            .borderRadius(.circular(radius)),
       ),
       .dot => Box(
         key: key,
-        style: BoxStyler().size(10, 10).color(item.color).borderRounded(99),
+        style: BoxStyler()
+            .size(10, 10)
+            .color(item.color)
+            .borderRadius(.circular(99)),
       ),
     };
   }

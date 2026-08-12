@@ -128,7 +128,9 @@ void main() {
         fluentBuilds += 1;
 
         return ToggleGroupStyler(
-          item: ToggleGroupItemStyler().foregroundColor(Colors.blue),
+          item: ToggleGroupItemStyler()
+              .labelColor(Colors.blue)
+              .iconColor(Colors.blue),
         );
       });
       const rawSpec = ToggleGroupSpec(
@@ -175,7 +177,9 @@ void main() {
             RemixToggleGroupItem(
               value: 'list',
               label: 'List',
-              style: ToggleGroupItemStyler().foregroundColor(Colors.green),
+              style: ToggleGroupItemStyler()
+                  .labelColor(Colors.green)
+                  .iconColor(Colors.green),
             ),
           ],
           selectedValue: 'list',
@@ -194,13 +198,18 @@ void main() {
       final style =
           ToggleGroupStyler(
             item: ToggleGroupItemStyler()
-                .foregroundColor(Colors.red)
+                .labelColor(Colors.red)
+                .iconColor(Colors.red)
                 .onSelected(
-                  ToggleGroupItemStyler().foregroundColor(Colors.blue),
+                  ToggleGroupItemStyler()
+                      .labelColor(Colors.blue)
+                      .iconColor(Colors.blue),
                 ),
           ).onRtl(
             ToggleGroupStyler(
-              item: ToggleGroupItemStyler().foregroundColor(Colors.green),
+              item: ToggleGroupItemStyler()
+                  .labelColor(Colors.green)
+                  .iconColor(Colors.green),
             ),
           );
 
@@ -233,9 +242,18 @@ void main() {
     ) async {
       final style = ToggleGroupStyler(
         item: ToggleGroupItemStyler()
-            .foregroundColor(Colors.red)
-            .onSelected(ToggleGroupItemStyler().foregroundColor(Colors.blue))
-            .onRtl(ToggleGroupItemStyler().foregroundColor(Colors.green)),
+            .labelColor(Colors.red)
+            .iconColor(Colors.red)
+            .onSelected(
+              ToggleGroupItemStyler()
+                  .labelColor(Colors.blue)
+                  .iconColor(Colors.blue),
+            )
+            .onRtl(
+              ToggleGroupItemStyler()
+                  .labelColor(Colors.green)
+                  .iconColor(Colors.green),
+            ),
       );
 
       await tester.pumpRemixApp(
@@ -332,9 +350,12 @@ void main() {
           selectedValue: 'list',
           style: ToggleGroupStyler(
             item: ToggleGroupItemStyler()
-                .foregroundColor(Colors.red)
+                .labelColor(Colors.red)
+                .iconColor(Colors.red)
                 .onDisabled(
-                  ToggleGroupItemStyler().foregroundColor(Colors.grey),
+                  ToggleGroupItemStyler()
+                      .labelColor(Colors.grey)
+                      .iconColor(Colors.grey),
                 ),
           ),
         ),
@@ -904,8 +925,13 @@ void main() {
       var selectedValue = 'list';
       final style = ToggleGroupStyler(
         item: ToggleGroupItemStyler()
-            .foregroundColor(Colors.red)
-            .onSelected(ToggleGroupItemStyler().foregroundColor(Colors.blue)),
+            .labelColor(Colors.red)
+            .iconColor(Colors.red)
+            .onSelected(
+              ToggleGroupItemStyler()
+                  .labelColor(Colors.blue)
+                  .iconColor(Colors.blue),
+            ),
       );
 
       await tester.pumpRemixApp(
@@ -948,12 +974,17 @@ void main() {
           onChanged: (_) {},
           style: ToggleGroupStyler(
             item: ToggleGroupItemStyler()
-                .foregroundColor(Colors.red)
+                .labelColor(Colors.red)
+                .iconColor(Colors.red)
                 .onSelected(
-                  ToggleGroupItemStyler().foregroundColor(Colors.blue),
+                  ToggleGroupItemStyler()
+                      .labelColor(Colors.blue)
+                      .iconColor(Colors.blue),
                 )
                 .onDisabled(
-                  ToggleGroupItemStyler().foregroundColor(Colors.grey),
+                  ToggleGroupItemStyler()
+                      .labelColor(Colors.grey)
+                      .iconColor(Colors.grey),
                 ),
           ),
         ),
@@ -984,9 +1015,12 @@ void main() {
           onChanged: (_) {},
           style: ToggleGroupStyler(
             item: ToggleGroupItemStyler()
-                .foregroundColor(Colors.blue)
+                .labelColor(Colors.blue)
+                .iconColor(Colors.blue)
                 .onFocusVisible(
-                  ToggleGroupItemStyler().foregroundColor(Colors.green),
+                  ToggleGroupItemStyler()
+                      .labelColor(Colors.green)
+                      .iconColor(Colors.green),
                 ),
           ),
         ),
@@ -1034,12 +1068,17 @@ void main() {
               onChanged: (_) {},
               style: ToggleGroupStyler(
                 item: ToggleGroupItemStyler()
-                    .foregroundColor(Colors.red)
+                    .labelColor(Colors.red)
+                    .iconColor(Colors.red)
                     .onFocused(
-                      ToggleGroupItemStyler().foregroundColor(Colors.green),
+                      ToggleGroupItemStyler()
+                          .labelColor(Colors.green)
+                          .iconColor(Colors.green),
                     )
                     .onDisabled(
-                      ToggleGroupItemStyler().foregroundColor(Colors.grey),
+                      ToggleGroupItemStyler()
+                          .labelColor(Colors.grey)
+                          .iconColor(Colors.grey),
                     ),
               ),
             );
@@ -1068,22 +1107,29 @@ void main() {
               value: 'list',
               label: 'List',
               style: ToggleGroupItemStyler().onSelected(
-                ToggleGroupItemStyler().foregroundColor(Colors.purple),
+                ToggleGroupItemStyler()
+                    .labelColor(Colors.purple)
+                    .iconColor(Colors.purple),
               ),
             ),
             RemixToggleGroupItem(
               value: 'grid',
               label: 'Grid',
-              style: ToggleGroupItemStyler().foregroundColor(Colors.green),
+              style: ToggleGroupItemStyler()
+                  .labelColor(Colors.green)
+                  .iconColor(Colors.green),
             ),
           ],
           selectedValue: 'list',
           onChanged: (_) {},
           style: ToggleGroupStyler(
             item: ToggleGroupItemStyler()
-                .foregroundColor(Colors.red)
+                .labelColor(Colors.red)
+                .iconColor(Colors.red)
                 .onSelected(
-                  ToggleGroupItemStyler().foregroundColor(Colors.blue),
+                  ToggleGroupItemStyler()
+                      .labelColor(Colors.blue)
+                      .iconColor(Colors.blue),
                 ),
           ),
         ),

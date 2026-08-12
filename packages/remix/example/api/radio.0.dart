@@ -61,7 +61,7 @@ class _RadioExampleState extends State<RadioExample> {
 
   RadioStyler get style {
     return RadioStyler()
-        .borderRadiusAll(const Radius.circular(30))
+        .borderRadius(.all(const Radius.circular(30)))
         .size(22, 22)
         .border(
           BoxBorderMix.all(

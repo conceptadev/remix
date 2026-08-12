@@ -64,7 +64,7 @@ SegmentedControlStyler fortalSegmentedControlStyle({
   return SegmentedControlStyler()
       .mainAxisSize(.min)
       .minHeight(metrics.height)
-      .borderRadiusAll(metrics.radius)
+      .borderRadius(.all(metrics.radius))
       .color(_segmentedControlTrackBackground())
       .clipBehavior(.antiAlias)
       .item(item)
@@ -81,7 +81,7 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
 ) {
   final base = SegmentedControlItemStyler()
       .minHeight(metrics.height)
-      .paddingX(metrics.paddingX)
+      .padding(.horizontal(metrics.paddingX))
       .spacing(metrics.itemGap)
       .label(
         TextStyler()
@@ -110,7 +110,7 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
       .icon(IconStyler().color(FortalTokens.grayA8()));
   final disabledSelected = disabled
       .color(const Color(0x00000000))
-      .borderRadiusAll(metrics.radius)
+      .borderRadius(.all(metrics.radius))
       .containerEffects(
         RemixBoxEffectsMix(
           behindContent: _fortalSegmentedControlFill(FortalTokens.grayA3()),
@@ -127,7 +127,7 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
       )
       .onFocusVisible(
         SegmentedControlItemStyler()
-            .borderRadiusAll(metrics.radius)
+            .borderRadius(.all(metrics.radius))
             .containerEffects(
               fortalFocusOutline(FortalTokens.focus8(), offset: -1),
             ),
@@ -156,7 +156,7 @@ SegmentedControlItemStyler _fortalSegmentedControlSelectedItem(
 
   return SegmentedControlItemStyler()
       .color(const Color(0x00000000))
-      .borderRadiusAll(metrics.radius)
+      .borderRadius(.all(metrics.radius))
       .label(
         TextStyler()
             .fontWeight(FortalTokens.fontWeightMedium())

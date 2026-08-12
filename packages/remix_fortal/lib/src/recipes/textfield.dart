@@ -54,8 +54,8 @@ TextFieldStyler fortalTextFieldStyle({
   final base = _fortalTextInputBaseStyle(
     container: BoxStyler()
         .height(metrics.height)
-        .paddingX(metrics.paddingX)
-        .borderRadiusAll(metrics.radius)
+        .padding(.horizontal(metrics.paddingX))
+        .borderRadius(.all(metrics.radius))
         .clipBehavior(.antiAlias),
     spacing: metrics.spacing,
     crossAxisAlignment: .center,
@@ -113,18 +113,16 @@ TextFieldStyler _fortalApplyClassicTextInput(TextFieldStyler base) =>
     _fortalApplyNeutralTextInput(base)
         .color(FortalTokens.colorSurface())
         .containerEffects(
-          RemixBoxEffectsMix(
-            behindContent: _fortalTextInputLayer(
-              shadowToken: FortalTokens.shadow1Layers,
-            ),
+          RemixBoxEffectsMix.behindContent(
+            _fortalTextInputLayer(shadowToken: FortalTokens.shadow1Layers),
           ),
         )
         .onDisabled(
           _fortalNeutralTextInputDisabledStyle()
               .color(FortalTokens.colorSurface())
               .containerEffects(
-                RemixBoxEffectsMix(
-                  behindContent: _fortalTextInputLayer(
+                RemixBoxEffectsMix.behindContent(
+                  _fortalTextInputLayer(
                     gradients: [
                       RemixLinearGradientMix(
                         colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
@@ -140,19 +138,19 @@ TextFieldStyler _fortalApplySurfaceTextInput(TextFieldStyler base) =>
     _fortalApplyNeutralTextInput(base)
         .color(FortalTokens.colorSurface())
         .containerEffects(
-          RemixBoxEffectsMix(behindContent: _fortalTextInputLayer()),
+          RemixBoxEffectsMix.behindContent(_fortalTextInputLayer()),
         )
         .containerEffects(
-          RemixBoxEffectsMix(
-            overContent: _fortalTextInputInsetRing(FortalTokens.grayA7()),
+          RemixBoxEffectsMix.overContent(
+            _fortalTextInputInsetRing(FortalTokens.grayA7()),
           ),
         )
         .onDisabled(
           _fortalNeutralTextInputDisabledStyle()
               .color(FortalTokens.colorSurface())
               .containerEffects(
-                RemixBoxEffectsMix(
-                  behindContent: _fortalTextInputLayer(
+                RemixBoxEffectsMix.behindContent(
+                  _fortalTextInputLayer(
                     gradients: [
                       RemixLinearGradientMix(
                         colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
@@ -162,8 +160,8 @@ TextFieldStyler _fortalApplySurfaceTextInput(TextFieldStyler base) =>
                 ),
               )
               .containerEffects(
-                RemixBoxEffectsMix(
-                  overContent: _fortalTextInputInsetRing(FortalTokens.grayA6()),
+                RemixBoxEffectsMix.overContent(
+                  _fortalTextInputInsetRing(FortalTokens.grayA6()),
                 ),
               ),
         );
@@ -194,14 +192,12 @@ TextFieldStyler _fortalApplySoftTextInput(
     )
     .wrap(.iconTheme(color: FortalTokens.accent10()))
     .color(FortalTokens.accentA3())
-    .containerEffects(
-      RemixBoxEffectsMix(behindContent: _fortalTextInputLayer()),
-    )
+    .containerEffects(RemixBoxEffectsMix.behindContent(_fortalTextInputLayer()))
     .onDisabled(
       _fortalSoftTextInputDisabledStyle()
           .color(FortalTokens.grayA3())
           .containerEffects(
-            RemixBoxEffectsMix(behindContent: _fortalTextInputLayer()),
+            RemixBoxEffectsMix.behindContent(_fortalTextInputLayer()),
           ),
     );
 
@@ -337,8 +333,10 @@ TextFieldStyler fortalTextAreaStyle({
   final base = _fortalTextInputBaseStyle(
     container: BoxStyler()
         .minHeight(metrics.minHeight)
-        .paddingOnly(horizontal: metrics.paddingX, vertical: metrics.paddingY)
-        .borderRadiusAll(metrics.radius)
+        .padding(
+          .symmetric(horizontal: metrics.paddingX, vertical: metrics.paddingY),
+        )
+        .borderRadius(.all(metrics.radius))
         .clipBehavior(.antiAlias),
     spacing: metrics.spacing,
     crossAxisAlignment: .start,

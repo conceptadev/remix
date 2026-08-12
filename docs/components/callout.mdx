@@ -34,10 +34,10 @@ class CalloutExample extends StatelessWidget {
 
   CalloutStyler get style {
     return CalloutStyler()
-        .backgroundColor(Colors.grey.shade200)
+        .color(Colors.grey.shade200)
         .spacing(12)
         .height(60)
-        .paddingRight(12)
+        .padding(.right(12))
         .icon(
           IconStyler()
               .size(24)
@@ -46,7 +46,7 @@ class CalloutExample extends StatelessWidget {
                 .box(
                   BoxStyler()
                       .color(Colors.blue.shade900)
-                      .paddingX(12)
+                      .padding(.horizontal(12))
                       .height(double.infinity),
                 ),
               ),
@@ -152,14 +152,6 @@ Sets container padding
 
 Sets container margin
 
-#### `backgroundColor(Color value)`
-
-Sets container background color
-
-#### `foregroundColor(Color value)`
-
-Sets the foreground color (icon and text) of the callout
-
 #### `shape(ShapeBorderMix value)`
 
 Sets the shape of the callout
@@ -207,10 +199,6 @@ Sets a foreground decoration painted on top of the component.
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
 Applies a matrix transformation to the component.
-
-#### `flex(FlexStyler value)`
-
-Configures the flex layout properties.
 
 #### `icon(IconStyler value)`
 

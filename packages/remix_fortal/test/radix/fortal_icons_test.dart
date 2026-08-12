@@ -54,9 +54,7 @@ void main() {
     expect(table.nextPageIcon, FortalIcons.chevronRight);
   });
 
-  testWidgets('generated Fortal wrappers keep the direct Remix targets', (
-    tester,
-  ) async {
+  testWidgets('Fortal controls keep the direct Remix targets', (tester) async {
     await tester.pumpRemixApp(
       Column(
         children: [

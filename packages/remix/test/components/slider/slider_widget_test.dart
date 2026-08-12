@@ -878,8 +878,8 @@ RemixBoxWithEffects _sliderThumb(WidgetTester tester) {
 SliderStyler _sliderFocusStyle() {
   return SliderStyler(
     thumb: BoxStyler().size(20, 20),
-    thumbFocusEffects: RemixBoxEffectsMix(
-      outline: BorderSideMix(
+    thumbFocusEffects: RemixBoxEffectsMix.outline(
+      BorderSideMix(
         color: Colors.red,
         width: 3,
         strokeAlign: BorderSide.strokeAlignInside,

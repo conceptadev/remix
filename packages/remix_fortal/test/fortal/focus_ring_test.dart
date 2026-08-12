@@ -12,10 +12,14 @@ void main() {
     expect(
       ToggleStyler().fortalFocusRing(),
       equals(
-        ToggleStyler().borderAll(
-          color: FortalTokens.focusA8(),
-          width: FortalTokens.focusRingWidth(),
-          strokeAlign: BorderSide.strokeAlignInside,
+        ToggleStyler().border(
+          .all(
+            BorderSideMix(
+              color: FortalTokens.focusA8(),
+              width: FortalTokens.focusRingWidth(),
+              strokeAlign: BorderSide.strokeAlignInside,
+            ),
+          ),
         ),
       ),
     );
@@ -25,10 +29,14 @@ void main() {
     expect(
       ToggleGroupItemStyler().fortalFocusRing(),
       equals(
-        ToggleGroupItemStyler().borderAll(
-          color: FortalTokens.focusA8(),
-          width: FortalTokens.focusRingWidth(),
-          strokeAlign: BorderSide.strokeAlignInside,
+        ToggleGroupItemStyler().border(
+          .all(
+            BorderSideMix(
+              color: FortalTokens.focusA8(),
+              width: FortalTokens.focusRingWidth(),
+              strokeAlign: BorderSide.strokeAlignInside,
+            ),
+          ),
         ),
       ),
     );
@@ -44,9 +52,13 @@ void main() {
         strokeAlign: null,
       ),
       equals(
-        TabStyler().borderAll(
-          color: FortalTokens.focus8(),
-          width: FortalTokens.focusRingWidth(),
+        TabStyler().border(
+          .all(
+            BorderSideMix(
+              color: FortalTokens.focus8(),
+              width: FortalTokens.focusRingWidth(),
+            ),
+          ),
         ),
       ),
     );
@@ -56,10 +68,10 @@ void main() {
     expect(
       FlexBoxStyler().fortalFocusRing(),
       equals(
-        FlexBoxStyler().borderAll(
-          color: FortalTokens.focusA8(),
-          width: FortalTokens.focusRingWidth(),
-          strokeAlign: BorderSide.strokeAlignInside,
+        FlexBoxStyler().border(
+          .color(FortalTokens.focusA8())
+              .width(FortalTokens.focusRingWidth())
+              .strokeAlign(BorderSide.strokeAlignInside),
         ),
       ),
     );

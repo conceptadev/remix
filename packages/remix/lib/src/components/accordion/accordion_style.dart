@@ -2,15 +2,6 @@ part of 'accordion.dart';
 
 /// Style configuration for [RemixAccordion] trigger, icons, title, and content.
 extension RemixAccordionStylerRemixHelpers on AccordionStyler {
-  /// Sets the background color of the trigger.
-  AccordionStyler backgroundColor(Color value) {
-    return merge(
-      AccordionStyler(
-        trigger: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
-      ),
-    );
-  }
-
   /// Sets title color.
   AccordionStyler titleColor(Color value) {
     return title(TextStyler(style: TextStyleMix(color: value)));
@@ -154,9 +145,5 @@ extension RemixAccordionStylerRemixHelpers on AccordionStyler {
       child: child,
       builder: builder,
     );
-  }
-
-  AccordionStyler flex(FlexStyler value) {
-    return merge(AccordionStyler(trigger: FlexBoxStyler().flex(value)));
   }
 }

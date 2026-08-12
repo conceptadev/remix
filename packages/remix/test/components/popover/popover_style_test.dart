@@ -42,7 +42,7 @@ void main() {
       modify: (style) => style
           .padding(EdgeInsetsGeometryMix.all(12))
           .margin(EdgeInsetsGeometryMix.all(8))
-          .backgroundColor(Colors.purple)
+          .color(Colors.purple)
           .alignment(Alignment.center),
       expect: (style) => expect(style.$container, isNotNull),
     );
@@ -63,7 +63,7 @@ void main() {
     });
 
     test('call creates a RemixPopover with this style', () {
-      final style = PopoverStyler().backgroundColor(Colors.purple);
+      final style = PopoverStyler().color(Colors.purple);
 
       final widget = style(
         popoverChild: const Text('Content'),

@@ -45,7 +45,7 @@ class TooltipExample extends StatelessWidget {
   TooltipStyler get styleDefault {
     return TooltipStyler()
         .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 8))
-        .backgroundColor(Colors.black87)
+        .color(Colors.black87)
         .borderRadius(BorderRadiusGeometryMix.all(const .circular(6)))
         .wrap(
           .defaultTextStyle(

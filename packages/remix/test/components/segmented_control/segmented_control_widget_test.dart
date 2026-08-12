@@ -1829,7 +1829,7 @@ void main() {
           selectedValue: 'a',
           onChanged: (_) {},
           style: SegmentedControlStyler(
-            item: SegmentedControlItemStyler().paddingAll(8),
+            item: SegmentedControlItemStyler().padding(.all(8)),
           ),
         ),
       );
@@ -1858,7 +1858,7 @@ void main() {
           ],
           selectedValue: 'day',
           onChanged: (_) {},
-          style: SegmentedControlStyler().constraintsOnly(width: 300),
+          style: SegmentedControlStyler().constraints(.width(300)),
         ),
       );
       await tester.pumpAndSettle();
@@ -1883,7 +1883,9 @@ void main() {
           selectedValue: 'day',
           onChanged: (_) {},
           style: SegmentedControlStyler(
-            item: (item ?? SegmentedControlItemStyler()).paddingX(12),
+            item: (item ?? SegmentedControlItemStyler()).padding(
+              .horizontal(12),
+            ),
           ),
         );
       }
@@ -1930,7 +1932,7 @@ void main() {
             onChanged: (_) {},
             style: SegmentedControlStyler()
                 .mainAxisSize(.max)
-                .item(SegmentedControlItemStyler().paddingAll(8)),
+                .item(SegmentedControlItemStyler().padding(.all(8))),
           ),
         ),
       );
@@ -2350,7 +2352,7 @@ void main() {
           onChanged: (_) {},
           orientation: Axis.vertical,
           style: SegmentedControlStyler(
-            item: SegmentedControlItemStyler().paddingY(12),
+            item: SegmentedControlItemStyler().padding(.vertical(12)),
           ),
         ),
       );
@@ -2388,7 +2390,7 @@ void main() {
                 onChanged: (_) {},
                 orientation: Axis.vertical,
                 style: SegmentedControlStyler(
-                  item: SegmentedControlItemStyler().paddingAll(4),
+                  item: SegmentedControlItemStyler().padding(.all(4)),
                 ),
               ),
             ),
@@ -2430,7 +2432,7 @@ void main() {
           onChanged: (_) {},
           orientation: Axis.vertical,
           style: SegmentedControlStyler(
-            item: SegmentedControlItemStyler().paddingAll(8),
+            item: SegmentedControlItemStyler().padding(.all(8)),
           ),
         ),
       );
@@ -2459,7 +2461,7 @@ void main() {
           selectedValue: 'one',
           onChanged: (_) {},
           orientation: Axis.vertical,
-          style: SegmentedControlStyler().constraintsOnly(height: 240),
+          style: SegmentedControlStyler().constraints(.height(240)),
         ),
       );
       await tester.pumpAndSettle();
@@ -2521,7 +2523,7 @@ void main() {
               selectedValue: 'short',
               onChanged: (_) {},
               style: SegmentedControlStyler(
-                item: SegmentedControlItemStyler().paddingAll(4),
+                item: SegmentedControlItemStyler().padding(.all(4)),
               ),
             ),
           ),
@@ -2553,7 +2555,7 @@ void main() {
             style: SegmentedControlStyler()
                 .mainAxisSize(.max)
                 .spacing(6)
-                .paddingAll(4),
+                .padding(.all(4)),
           ),
         ),
         textDirection: TextDirection.rtl,

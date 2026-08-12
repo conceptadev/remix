@@ -144,16 +144,19 @@ class _MenuExampleState extends State<MenuExample> {
           ),
         )
         .divider(
-          DividerStyler().color(Colors.blueGrey.shade100).height(1).marginY(6),
+          DividerStyler()
+              .color(Colors.blueGrey.shade100)
+              .height(1)
+              .margin(.vertical(6)),
         );
   }
 
   MenuItemStyler get menuItemStyle {
     return MenuItemStyler()
-        .paddingAll(6)
+        .padding(.all(6))
         .leadingIcon(IconStyler().size(20).color(Colors.blueGrey.shade800))
         .spacing(8)
-        .borderRadiusAll(const Radius.circular(8))
+        .borderRadius(.all(const Radius.circular(8)))
         .label(TextStyler().color(Colors.blueGrey.shade800))
         .onHovered(MenuItemStyler().color(Colors.blueGrey.shade50));
   }
