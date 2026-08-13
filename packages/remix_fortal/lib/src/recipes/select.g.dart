@@ -24,6 +24,7 @@ class FortalSelect<T> extends StatelessWidget {
     this.onOpen,
     this.onClose,
     this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
     this.semanticLabel,
     this.closeOnSelect = true,
     this.focusNode,
@@ -44,6 +45,7 @@ class FortalSelect<T> extends StatelessWidget {
     this.onOpen,
     this.onClose,
     this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
     this.semanticLabel,
     this.closeOnSelect = true,
     this.focusNode,
@@ -64,6 +66,7 @@ class FortalSelect<T> extends StatelessWidget {
     this.onOpen,
     this.onClose,
     this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
     this.semanticLabel,
     this.closeOnSelect = true,
     this.focusNode,
@@ -84,6 +87,7 @@ class FortalSelect<T> extends StatelessWidget {
     this.onOpen,
     this.onClose,
     this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
     this.semanticLabel,
     this.closeOnSelect = true,
     this.focusNode,
@@ -111,6 +115,8 @@ class FortalSelect<T> extends StatelessWidget {
 
   final bool enabled;
 
+  final MouseCursor mouseCursor;
+
   final String? semanticLabel;
 
   final bool closeOnSelect;
@@ -134,6 +140,7 @@ class FortalSelect<T> extends StatelessWidget {
       onOpen: this.onOpen,
       onClose: this.onClose,
       enabled: this.enabled,
+      mouseCursor: this.mouseCursor,
       semanticLabel: this.semanticLabel,
       closeOnSelect: this.closeOnSelect,
       focusNode: this.focusNode,

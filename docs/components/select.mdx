@@ -176,6 +176,7 @@ RemixSelect<T> remixSelectConstructor<T>({
   VoidCallback? onOpen,
   VoidCallback? onClose,
   bool enabled = true,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
   String? semanticLabel,
   bool closeOnSelect = true,
   FocusNode? focusNode,
@@ -220,6 +221,11 @@ Optional. Called when the dropdown closes.
 #### `enabled` → `bool`
 
 Optional. Whether the select is enabled and can be interacted with.
+
+#### `mouseCursor` → `MouseCursor`
+
+Optional. The mouse cursor for the select trigger. Defaults to
+`SystemMouseCursors.click`; disabled selects use `SystemMouseCursors.basic`.
 
 #### `semanticLabel` → `String?`
 
