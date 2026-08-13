@@ -1,3 +1,10 @@
+## 0.1.0-beta.3
+
+- **FEAT**: Regenerate the Fortal Select wrappers for the new trigger indicator
+  icons and `mouseCursor`, so `FortalSelect` exposes `collapsedIcon`,
+  `expandedIcon`, and a cursor alongside the base component.
+- Raise the `remix` floor to `^1.0.0-beta.4`.
+
 ## 0.1.0-beta.2
 
 - **FEAT**: Add Fortal-themed line, bar, and pie chart recipes and generated

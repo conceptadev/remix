@@ -1,3 +1,17 @@
+## 1.0.0-beta.4
+
+- **BREAKING**: `RemixSelectTrigger` gains `collapsedIcon` and `expandedIcon`,
+  replacing the hardcoded trigger chevron. Each state falls back independently,
+  so a trigger that only sets one keeps the default for the other.
+- **FEAT**: Forward semantic and behavioral parameters that the underlying Naked
+  primitives already supported. `RemixRadio` and `RemixMenu` gain
+  `semanticLabel` and `excludeSemantics`, `RemixSwitch` gains
+  `excludeSemantics`, and the matching `Styler.call(...)` helpers accept the
+  same values, closing eight audited gaps.
+- **FIX**: Add `mouseCursor` to `RemixSelect` and `SelectStyler.call`, defaulting
+  to `SystemMouseCursors.click` and forwarding it to `NakedSelect`, so a
+  disabled trigger keeps the basic cursor.
+
 ## 1.0.0-beta.3
 
 - **BREAKING**: Remove handwritten component styler aliases that duplicate the
