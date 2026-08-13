@@ -5,6 +5,7 @@ import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
+/// Summary of a Styler-to-widget constructor parity check.
 final class ParityCheckResult {
   const ParityCheckResult({required this.callsChecked, required this.issues});
 
@@ -12,6 +13,12 @@ final class ParityCheckResult {
   final List<String> issues;
 }
 
+/// Checks every recognized `Styler.call()` under [componentsRoot].
+///
+/// Parameter names, requiredness, declared types, and defaults must match the
+/// sibling widget's unnamed constructor. A nullable helper parameter is also
+/// accepted when its returned widget invocation applies that constructor's
+/// declared default with `parameter ?? defaultValue`.
 ParityCheckResult checkStylerCallParity(Directory componentsRoot) {
   final files =
       componentsRoot
