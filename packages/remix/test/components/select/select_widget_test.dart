@@ -73,6 +73,95 @@ void main() {
     });
 
     group('Interaction', () {
+      testWidgets('uses the click cursor by default', (tester) async {
+        final key = UniqueKey();
+
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            key: key,
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final select = tester.widget<RemixSelect<String>>(
+          find.byType(RemixSelect<String>),
+        );
+        final nakedSelect = tester.widget<NakedSelect<String>>(
+          find.byType(NakedSelect<String>),
+        );
+        final mouseRegion = tester.widget<MouseRegion>(
+          find
+              .descendant(
+                of: find.byKey(key),
+                matching: find.byType(MouseRegion),
+              )
+              .first,
+        );
+
+        expect(select.mouseCursor, SystemMouseCursors.click);
+        expect(nakedSelect.mouseCursor, SystemMouseCursors.click);
+        expect(mouseRegion.cursor, SystemMouseCursors.click);
+      });
+
+      testWidgets('forwards a custom mouse cursor to the trigger', (
+        tester,
+      ) async {
+        final key = UniqueKey();
+
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            key: key,
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            mouseCursor: SystemMouseCursors.help,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final nakedSelect = tester.widget<NakedSelect<String>>(
+          find.byType(NakedSelect<String>),
+        );
+        final mouseRegion = tester.widget<MouseRegion>(
+          find
+              .descendant(
+                of: find.byKey(key),
+                matching: find.byType(MouseRegion),
+              )
+              .first,
+        );
+
+        expect(nakedSelect.mouseCursor, SystemMouseCursors.help);
+        expect(mouseRegion.cursor, SystemMouseCursors.help);
+      });
+
+      testWidgets('uses the basic cursor when disabled', (tester) async {
+        final key = UniqueKey();
+
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            key: key,
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            enabled: false,
+            mouseCursor: SystemMouseCursors.help,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final mouseRegion = tester.widget<MouseRegion>(
+          find
+              .descendant(
+                of: find.byKey(key),
+                matching: find.byType(MouseRegion),
+              )
+              .first,
+        );
+
+        expect(mouseRegion.cursor, SystemMouseCursors.basic);
+      });
+
       testWidgets('opens dropdown when tapped', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
@@ -298,6 +387,22 @@ void main() {
     });
 
     group('Styling', () {
+      testWidgets('style call forwards a custom mouse cursor', (tester) async {
+        await tester.pumpRemixApp(
+          SelectStyler().call<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            mouseCursor: SystemMouseCursors.help,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final select = tester.widget<RemixSelect<String>>(
+          find.byType(RemixSelect<String>),
+        );
+        expect(select.mouseCursor, SystemMouseCursors.help);
+      });
+
       testWidgets('item styling uses the typed select-option controller', (
         tester,
       ) async {

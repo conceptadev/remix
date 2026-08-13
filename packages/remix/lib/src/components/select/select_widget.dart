@@ -85,6 +85,7 @@ class RemixSelect<T> extends StatefulWidget {
     this.onOpen,
     this.onClose,
     this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
     this.semanticLabel,
     this.closeOnSelect = true,
     this.focusNode,
@@ -118,6 +119,9 @@ class RemixSelect<T> extends StatefulWidget {
 
   /// Whether the select is enabled and can be interacted with.
   final bool enabled;
+
+  /// The mouse cursor for the select trigger.
+  final MouseCursor mouseCursor;
 
   /// Semantic label for accessibility.
   final String? semanticLabel;
@@ -235,6 +239,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       onChanged: _handleChanged,
       closeOnSelect: widget.closeOnSelect,
       enabled: widget.enabled,
+      mouseCursor: widget.mouseCursor,
       triggerFocusNode: widget.focusNode,
       semanticLabel: widget.semanticLabel,
       positioning: widget.positioning,
