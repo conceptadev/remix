@@ -187,6 +187,7 @@ RemixTabs remixTabsConstructor({
   String? selectedTabId,
   ValueChanged<String>? onChanged,
   Axis orientation = Axis.horizontal,
+  NakedTabActivationMode activationMode = NakedTabActivationMode.automatic,
   bool enabled = true,
   VoidCallback? onEscapePressed,
 }) => throw UnimplementedError();
@@ -225,6 +226,7 @@ RemixTabView remixTabViewConstructor({
   Key? key,
   required String tabId,
   required Widget child,
+  bool maintainState = true,
   TabViewStyler style = const TabViewStyler.create(),
   TabViewSpec? styleSpec,
 }) => throw UnimplementedError();
@@ -259,6 +261,10 @@ Optional. Called when the selected tab changes.
 
 Optional. The tab list orientation.
 
+#### `activationMode` → `NakedTabActivationMode`
+
+Optional. Whether moving focus automatically selects the focused tab. Defaults to `NakedTabActivationMode.automatic`; use `manual` when selection should require explicit activation.
+
 #### `enabled` → `bool`
 
 Optional. Whether the tabs are enabled.
@@ -272,6 +278,10 @@ Optional. Called when Escape is pressed while a tab has focus.
 `RemixTabBar`, `RemixTab`, and `RemixTabView` each accept their matching
 `Remix*Styler` through `style` and an optional raw `Remix*Spec` through
 `styleSpec`. A raw spec bypasses fluent style resolution.
+
+#### `maintainState` → `bool`
+
+Optional on `RemixTabView`. Whether the panel keeps its state while hidden. Defaults to `true`.
 
 
 ### Tab Bar Style Methods
@@ -554,6 +564,6 @@ Sets custom tab view variants.
 
 Applies widget modifiers to the tab view.
 
-#### `call({Key? key, required String tabId, required Widget child})`
+#### `call({Key? key, required String tabId, required Widget child, bool maintainState = true})`
 
 Creates a `RemixTabView` widget with this style applied.

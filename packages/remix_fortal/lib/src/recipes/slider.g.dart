@@ -24,6 +24,9 @@ class FortalSlider extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.snapDivisions,
+    this.semanticLabel,
+    this.semanticFormatterCallback,
+    this.excludeSemantics = false,
   });
 
   const FortalSlider.classic({
@@ -41,6 +44,9 @@ class FortalSlider extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.snapDivisions,
+    this.semanticLabel,
+    this.semanticFormatterCallback,
+    this.excludeSemantics = false,
   }) : variant = FortalSliderVariant.classic;
 
   const FortalSlider.surface({
@@ -58,6 +64,9 @@ class FortalSlider extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.snapDivisions,
+    this.semanticLabel,
+    this.semanticFormatterCallback,
+    this.excludeSemantics = false,
   }) : variant = FortalSliderVariant.surface;
 
   const FortalSlider.soft({
@@ -75,6 +84,9 @@ class FortalSlider extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.snapDivisions,
+    this.semanticLabel,
+    this.semanticFormatterCallback,
+    this.excludeSemantics = false,
   }) : variant = FortalSliderVariant.soft;
 
   final FortalSliderVariant variant;
@@ -105,6 +117,12 @@ class FortalSlider extends StatelessWidget {
 
   final int? snapDivisions;
 
+  final String? semanticLabel;
+
+  final NakedSliderSemanticFormatterCallback? semanticFormatterCallback;
+
+  final bool excludeSemantics;
+
   @override
   Widget build(BuildContext context) {
     return RemixSlider(
@@ -125,6 +143,9 @@ class FortalSlider extends StatelessWidget {
       focusNode: this.focusNode,
       autofocus: this.autofocus,
       snapDivisions: this.snapDivisions,
+      semanticLabel: this.semanticLabel,
+      semanticFormatterCallback: this.semanticFormatterCallback,
+      excludeSemantics: this.excludeSemantics,
     );
   }
 }

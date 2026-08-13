@@ -39,6 +39,8 @@ class RemixRadio<T> extends StatelessWidget {
     this.mouseCursor,
     this.focusNode,
     this.autofocus = false,
+    this.semanticLabel,
+    this.excludeSemantics = false,
     this.style = const RadioStyler.create(),
     this.styleSpec,
   });
@@ -66,6 +68,12 @@ class RemixRadio<T> extends StatelessWidget {
 
   /// The mouse cursor to use when hovering over the radio button.
   final MouseCursor? mouseCursor;
+
+  /// The semantic label for the radio button.
+  final String? semanticLabel;
+
+  /// Whether to hide the radio button and its visual subtree from semantics.
+  final bool excludeSemantics;
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +118,8 @@ class RemixRadio<T> extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       toggleable: toggleable,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
       builder: (context, _, __) {
         return RemixStyleSpecBuilder<RadioSpec>(
           style: style,

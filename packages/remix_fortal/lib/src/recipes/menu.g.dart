@@ -27,6 +27,8 @@ class FortalMenu<T> extends StatelessWidget {
     this.closeOnClickOutside = true,
     this.triggerFocusNode,
     this.positioning = const OverlayPositionConfig(),
+    this.semanticLabel,
+    this.excludeSemantics = false,
   });
 
   const FortalMenu.solid({
@@ -47,6 +49,8 @@ class FortalMenu<T> extends StatelessWidget {
     this.closeOnClickOutside = true,
     this.triggerFocusNode,
     this.positioning = const OverlayPositionConfig(),
+    this.semanticLabel,
+    this.excludeSemantics = false,
   }) : variant = FortalMenuVariant.solid;
 
   const FortalMenu.soft({
@@ -67,6 +71,8 @@ class FortalMenu<T> extends StatelessWidget {
     this.closeOnClickOutside = true,
     this.triggerFocusNode,
     this.positioning = const OverlayPositionConfig(),
+    this.semanticLabel,
+    this.excludeSemantics = false,
   }) : variant = FortalMenuVariant.soft;
 
   final FortalMenuVariant variant;
@@ -103,6 +109,10 @@ class FortalMenu<T> extends StatelessWidget {
 
   final OverlayPositionConfig positioning;
 
+  final String? semanticLabel;
+
+  final bool excludeSemantics;
+
   @override
   Widget build(BuildContext context) {
     return RemixMenu<T>(
@@ -126,6 +136,8 @@ class FortalMenu<T> extends StatelessWidget {
       closeOnClickOutside: this.closeOnClickOutside,
       triggerFocusNode: this.triggerFocusNode,
       positioning: this.positioning,
+      semanticLabel: this.semanticLabel,
+      excludeSemantics: this.excludeSemantics,
     );
   }
 }

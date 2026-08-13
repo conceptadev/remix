@@ -86,6 +86,8 @@ import 'package:remix/remix.dart';
 RemixProgress remixProgressConstructor({
   Key? key,
   required double value,
+  String? semanticsLabel,
+  String? semanticsValue,
   ProgressStyler style = const ProgressStyler.create(),
   ProgressSpec? styleSpec,
 }) => throw UnimplementedError();
@@ -111,6 +113,14 @@ Optional. Controls how one widget replaces another widget in the tree.
 #### `value` → `double`
 
 **Required**. The progress value between 0 and 1.  This value determines how much of the progress bar is filled. A value of 0 means empty, while 1 means completely filled.
+
+#### `semanticsLabel` → `String?`
+
+Optional. The accessible name for a non-decorative progress indicator. When omitted, the progress indicator remains decorative.
+
+#### `semanticsValue` → `String?`
+
+Optional. The accessible progress value used with `semanticsLabel`. When omitted, Remix announces the rounded 0–100 value.
 
 
 ### Style Methods
@@ -179,6 +189,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
-#### `call({Key? key, required double value})`
+#### `call({Key? key, required double value, String? semanticsLabel, String? semanticsValue})`
 
 Creates a `RemixProgress` widget with this style applied.

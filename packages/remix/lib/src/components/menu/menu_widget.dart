@@ -342,6 +342,8 @@ class RemixMenu<T> extends StatefulWidget {
     this.closeOnClickOutside = true,
     this.triggerFocusNode,
     this.positioning = const OverlayPositionConfig(),
+    this.semanticLabel,
+    this.excludeSemantics = false,
     this.style = const MenuStyler.create(),
     this.styleSpec,
   });
@@ -387,6 +389,16 @@ class RemixMenu<T> extends StatefulWidget {
 
   /// Overlay positioning configuration.
   final OverlayPositionConfig positioning;
+
+  /// The semantic label for the menu trigger.
+  final String? semanticLabel;
+
+  /// Whether to hide the menu trigger from the semantic tree.
+  ///
+  /// Naked applies this to the trigger only. The overlay content is mounted
+  /// into the ambient [Overlay], a sibling subtree that `ExcludeSemantics`
+  /// cannot reach, so an open menu keeps announcing its items.
+  final bool excludeSemantics;
 
   /// The style configuration for the menu.
   final MenuStyler style;
@@ -457,6 +469,8 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       closeOnClickOutside: widget.closeOnClickOutside,
       triggerFocusNode: widget.triggerFocusNode,
       positioning: widget.positioning,
+      semanticLabel: widget.semanticLabel,
+      excludeSemantics: widget.excludeSemantics,
       // Render trigger from RemixMenuTrigger data
       builder: (context, state, _) {
         return RemixStyleSpecBuilder<MenuSpec>(

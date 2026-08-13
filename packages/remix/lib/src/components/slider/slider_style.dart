@@ -64,6 +64,9 @@ extension RemixSliderStylerRemixHelpers on SliderStyler {
     FocusNode? focusNode,
     bool autofocus = false,
     int? snapDivisions,
+    String? semanticLabel,
+    NakedSliderSemanticFormatterCallback? semanticFormatterCallback,
+    bool excludeSemantics = false,
   }) {
     return RemixSlider(
       key: key,
@@ -78,6 +81,9 @@ extension RemixSliderStylerRemixHelpers on SliderStyler {
       focusNode: focusNode,
       autofocus: autofocus,
       snapDivisions: snapDivisions,
+      semanticLabel: semanticLabel,
+      semanticFormatterCallback: semanticFormatterCallback,
+      excludeSemantics: excludeSemantics,
       style: this,
     );
   }

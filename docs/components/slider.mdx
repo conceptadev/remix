@@ -119,6 +119,7 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 RemixSlider remixSliderConstructor({
@@ -134,6 +135,9 @@ RemixSlider remixSliderConstructor({
   FocusNode? focusNode,
   bool autofocus = false,
   int? snapDivisions,
+  String? semanticLabel,
+  NakedSliderSemanticFormatterCallback? semanticFormatterCallback,
+  bool excludeSemantics = false,
   SliderStyler style = const SliderStyler.create(),
   SliderSpec? styleSpec,
 }) => throw UnimplementedError();
@@ -199,6 +203,18 @@ Optional. Whether the slider should automatically request focus when it is creat
 #### `snapDivisions` → `int?`
 
 Optional. Optional snapping divisions for interaction only (no visual ticks). When provided, the slider snaps to these discrete steps but does not render any division marks on the track.
+
+#### `semanticLabel` → `String?`
+
+Optional. The accessible label for the slider's single thumb.
+
+#### `semanticFormatterCallback` → `NakedSliderSemanticFormatterCallback?`
+
+Optional. Formats the semantic value for the slider's single thumb. Remix forwards it to Naked as a one-element formatter list.
+
+#### `excludeSemantics` → `bool`
+
+Optional. Whether to hide the slider from the semantics tree. Defaults to `false`.
 
 
 ### Style Methods
@@ -299,6 +315,6 @@ Sets style variants.
 
 Sets the widget modifier.
 
-#### `call({ ... })`
+#### `call({Key? key, required double value, ValueChanged<double>? onChanged, ValueChanged<double>? onChangeStart, ValueChanged<double>? onChangeEnd, double min = 0.0, double max = 1.0, bool enabled = true, bool enableFeedback = true, FocusNode? focusNode, bool autofocus = false, int? snapDivisions, String? semanticLabel, NakedSliderSemanticFormatterCallback? semanticFormatterCallback, bool excludeSemantics = false})`
 
 Creates a RemixSlider widget with this style applied.

@@ -20,6 +20,7 @@ class FortalSwitch extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
+    this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   });
 
@@ -35,6 +36,7 @@ class FortalSwitch extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
+    this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalSwitchVariant.classic;
 
@@ -50,6 +52,7 @@ class FortalSwitch extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
+    this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalSwitchVariant.surface;
 
@@ -65,6 +68,7 @@ class FortalSwitch extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
+    this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalSwitchVariant.soft;
 
@@ -88,6 +92,8 @@ class FortalSwitch extends StatelessWidget {
 
   final String? semanticLabel;
 
+  final bool excludeSemantics;
+
   final MouseCursor mouseCursor;
 
   @override
@@ -106,6 +112,7 @@ class FortalSwitch extends StatelessWidget {
       focusNode: this.focusNode,
       autofocus: this.autofocus,
       semanticLabel: this.semanticLabel,
+      excludeSemantics: this.excludeSemantics,
       mouseCursor: this.mouseCursor,
     );
   }

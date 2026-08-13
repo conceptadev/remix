@@ -24,6 +24,7 @@ class RemixSwitch extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
+    this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
     this.style = const SwitchStyler.create(),
     this.styleSpec,
@@ -61,6 +62,9 @@ class RemixSwitch extends StatelessWidget {
   /// The semantic label for the switch.
   final String? semanticLabel;
 
+  /// Whether to hide the switch and its visual subtree from semantics.
+  final bool excludeSemantics;
+
   /// Cursor when hovering over the switch.
   final MouseCursor mouseCursor;
 
@@ -86,6 +90,7 @@ class RemixSwitch extends StatelessWidget {
       autofocus: autofocus,
       semanticLabel: semanticLabel,
       asSwitch: true,
+      excludeSemantics: excludeSemantics,
       builder: (context, state, _) {
         return RemixStyleSpecBuilder<SwitchSpec>(
           style: _buildStyle(),

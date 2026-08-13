@@ -34,6 +34,8 @@ extension RemixMenuStylerRemixHelpers on MenuStyler {
     bool closeOnClickOutside = true,
     FocusNode? triggerFocusNode,
     OverlayPositionConfig positioning = const OverlayPositionConfig(),
+    String? semanticLabel,
+    bool excludeSemantics = false,
   }) {
     return RemixMenu(
       key: key,
@@ -51,6 +53,8 @@ extension RemixMenuStylerRemixHelpers on MenuStyler {
       closeOnClickOutside: closeOnClickOutside,
       triggerFocusNode: triggerFocusNode,
       positioning: positioning,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
       style: this,
     );
   }

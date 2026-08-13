@@ -139,6 +139,7 @@ RemixSwitch remixSwitchConstructor({
   FocusNode? focusNode,
   bool autofocus = false,
   String? semanticLabel,
+  bool excludeSemantics = false,
   MouseCursor mouseCursor = SystemMouseCursors.click,
   SwitchStyler style = const SwitchStyler.create(),
   SwitchSpec? styleSpec,
@@ -189,6 +190,10 @@ Optional. Whether the switch should automatically request focus when it is creat
 #### `semanticLabel` → `String?`
 
 Optional. The semantic label for the switch.
+
+#### `excludeSemantics` → `bool`
+
+Optional. Whether to hide the switch and its visual subtree from the semantics tree. Defaults to `false`.
 
 #### `mouseCursor` → `MouseCursor`
 
@@ -261,6 +266,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
-#### `call({ ... })`
+#### `call({..., String? semanticLabel, bool excludeSemantics = false, ...})`
 
 Creates a `RemixSwitch` widget with this style applied.

@@ -11,6 +11,8 @@ extension RemixRadioStylerRemixHelpers on RadioStyler {
     MouseCursor? mouseCursor,
     FocusNode? focusNode,
     bool autofocus = false,
+    String? semanticLabel,
+    bool excludeSemantics = false,
   }) {
     return RemixRadio(
       key: key,
@@ -20,6 +22,8 @@ extension RemixRadioStylerRemixHelpers on RadioStyler {
       mouseCursor: mouseCursor,
       focusNode: focusNode,
       autofocus: autofocus,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
       style: this,
     );
   }

@@ -38,6 +38,7 @@ class RemixTabs extends StatelessWidget {
     this.selectedTabId,
     this.onChanged,
     this.orientation = .horizontal,
+    this.activationMode = NakedTabActivationMode.automatic,
     this.enabled = true,
     this.onEscapePressed,
   }) : assert(
@@ -63,6 +64,9 @@ class RemixTabs extends StatelessWidget {
   /// The tab list orientation.
   final Axis orientation;
 
+  /// Whether moving focus also selects the focused tab.
+  final NakedTabActivationMode activationMode;
+
   /// Called when Escape is pressed while a tab has focus.
   final VoidCallback? onEscapePressed;
 
@@ -73,6 +77,7 @@ class RemixTabs extends StatelessWidget {
       selectedTabId: selectedTabId,
       onChanged: onChanged,
       orientation: orientation,
+      activationMode: activationMode,
       enabled: enabled,
       onEscapePressed: onEscapePressed,
       child: child,
@@ -240,6 +245,7 @@ class RemixTabView extends StatelessWidget {
     super.key,
     required this.tabId,
     required this.child,
+    this.maintainState = true,
     this.style = const TabViewStyler.create(),
     this.styleSpec,
   });
@@ -249,6 +255,9 @@ class RemixTabView extends StatelessWidget {
 
   /// The content to show when this tab is selected.
   final Widget child;
+
+  /// Whether to maintain the content's state while this tab is hidden.
+  final bool maintainState;
 
   /// Style applied to the tab view container.
   final TabViewStyler style;
@@ -262,6 +271,7 @@ class RemixTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     return NakedTabView(
       tabId: tabId,
+      maintainState: maintainState,
       child: RemixStyleSpecBuilder<TabViewSpec>(
         style: style,
         styleSpec: styleSpec,
