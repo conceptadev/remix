@@ -28,8 +28,8 @@ CheckboxStyler fortalCheckboxStyle({
         ).alignment(.center).borderRadius(.all(metrics.radius)),
         indicator: .size(metrics.indicatorSize),
         containerEffects: RemixBoxEffectsMix(
-          behindContent: _fortalCheckboxLayer(),
-          overContent: _fortalCheckboxLayer(),
+          behindContent: RemixBoxEffectLayerMix(),
+          overContent: RemixBoxEffectLayerMix(),
         ),
       ).onFocusVisible(
         .containerEffects(
@@ -99,10 +99,12 @@ CheckboxStyler _fortalCheckboxSurface(CheckboxStyler base, bool highContrast) {
         highContrast ? FortalTokens.accent12() : FortalTokens.accentIndicator(),
       )
       .containerEffects(
-        RemixBoxEffectsMix.behindContent(_fortalCheckboxLayer()),
+        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
       )
       .containerEffects(
-        RemixBoxEffectsMix.overContent(_fortalCheckboxLayer(shadows: const [])),
+        RemixBoxEffectsMix.overContent(
+          RemixBoxEffectLayerMix(shadows: const []),
+        ),
       )
       .indicatorColor(
         highContrast ? FortalTokens.accent1() : FortalTokens.accentContrast(),
@@ -111,7 +113,7 @@ CheckboxStyler _fortalCheckboxSurface(CheckboxStyler base, bool highContrast) {
   return base
       .color(FortalTokens.colorSurface())
       .containerEffects(
-        RemixBoxEffectsMix.behindContent(_fortalCheckboxLayer()),
+        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
       )
       .containerEffects(
         RemixBoxEffectsMix.overContent(
@@ -123,7 +125,7 @@ CheckboxStyler _fortalCheckboxSurface(CheckboxStyler base, bool highContrast) {
       .onDisabled(
         .color(FortalTokens.grayA3())
             .containerEffects(
-              RemixBoxEffectsMix.behindContent(_fortalCheckboxLayer()),
+              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
             )
             .containerEffects(
               RemixBoxEffectsMix.overContent(
@@ -141,7 +143,7 @@ CheckboxStyler _fortalCheckboxClassic(CheckboxStyler base, bool highContrast) {
       )
       .containerEffects(
         RemixBoxEffectsMix.behindContent(
-          _fortalCheckboxLayer(
+          RemixBoxEffectLayerMix(
             gradients: [
               RemixLinearGradientMix(
                 colors: [
@@ -169,7 +171,9 @@ CheckboxStyler _fortalCheckboxClassic(CheckboxStyler base, bool highContrast) {
         ),
       )
       .containerEffects(
-        RemixBoxEffectsMix.overContent(_fortalCheckboxLayer(shadows: const [])),
+        RemixBoxEffectsMix.overContent(
+          RemixBoxEffectLayerMix(shadows: const []),
+        ),
       )
       .indicatorColor(
         highContrast ? FortalTokens.accent1() : FortalTokens.accentContrast(),
@@ -179,7 +183,7 @@ CheckboxStyler _fortalCheckboxClassic(CheckboxStyler base, bool highContrast) {
       .color(FortalTokens.colorSurface())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(
-          _fortalCheckboxLayer(shadowToken: FortalTokens.shadow1Layers),
+          RemixBoxEffectLayerMix(shadowToken: FortalTokens.shadow1Layers),
         ),
       )
       .containerEffects(
@@ -193,7 +197,7 @@ CheckboxStyler _fortalCheckboxClassic(CheckboxStyler base, bool highContrast) {
         .color(FortalTokens.grayA3())
             .containerEffects(
               RemixBoxEffectsMix.behindContent(
-                _fortalCheckboxLayer(
+                RemixBoxEffectLayerMix(
                   gradients: const [],
                   shadowToken: FortalTokens.shadow1Layers,
                 ),
@@ -201,7 +205,7 @@ CheckboxStyler _fortalCheckboxClassic(CheckboxStyler base, bool highContrast) {
             )
             .containerEffects(
               RemixBoxEffectsMix.overContent(
-                _fortalCheckboxLayer(shadows: const []),
+                RemixBoxEffectLayerMix(shadows: const []),
               ),
             )
             .indicatorColor(FortalTokens.grayA8()),
@@ -216,30 +220,20 @@ CheckboxStyler _fortalCheckboxSoft(CheckboxStyler base, bool highContrast) {
   return base
       .color(FortalTokens.accentA5())
       .containerEffects(
-        RemixBoxEffectsMix.behindContent(_fortalCheckboxLayer()),
+        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
       )
       .onSelected(selected)
       .onIndeterminate(selected)
       .onDisabled(
         .color(FortalTokens.grayA3())
             .containerEffects(
-              RemixBoxEffectsMix.behindContent(_fortalCheckboxLayer()),
+              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
             )
             .indicatorColor(FortalTokens.grayA8()),
       );
 }
 
 RemixBoxEffectLayerMix _fortalCheckboxInsetRing(Color color) =>
-    _fortalCheckboxLayer(
+    RemixBoxEffectLayerMix(
       shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
     );
-
-RemixBoxEffectLayerMix _fortalCheckboxLayer({
-  List<RemixLinearGradientMix>? gradients,
-  List<RemixBoxShadowMix>? shadows,
-  RemixBoxShadowListToken? shadowToken,
-}) => RemixBoxEffectLayerMix(
-  gradients: gradients,
-  shadows: shadows,
-  shadowToken: shadowToken,
-);

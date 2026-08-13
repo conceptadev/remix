@@ -98,8 +98,8 @@ TextFieldStyler _fortalTextInputBaseStyle({
           label: .style(FortalTokens.text2.mix()),
           cursorWidth: 1.5,
           containerEffects: RemixBoxEffectsMix(
-            behindContent: _fortalTextInputLayer(),
-            overContent: _fortalTextInputLayer(),
+            behindContent: RemixBoxEffectLayerMix(),
+            overContent: RemixBoxEffectLayerMix(),
           ),
         )
         .wrap(.iconTheme(color: FortalTokens.gray11(), size: 16.0))
@@ -114,7 +114,7 @@ TextFieldStyler _fortalApplyClassicTextInput(TextFieldStyler base) =>
         .color(FortalTokens.colorSurface())
         .containerEffects(
           RemixBoxEffectsMix.behindContent(
-            _fortalTextInputLayer(shadowToken: FortalTokens.shadow1Layers),
+            RemixBoxEffectLayerMix(shadowToken: FortalTokens.shadow1Layers),
           ),
         )
         .onDisabled(
@@ -122,7 +122,7 @@ TextFieldStyler _fortalApplyClassicTextInput(TextFieldStyler base) =>
               .color(FortalTokens.colorSurface())
               .containerEffects(
                 RemixBoxEffectsMix.behindContent(
-                  _fortalTextInputLayer(
+                  RemixBoxEffectLayerMix(
                     gradients: [
                       RemixLinearGradientMix(
                         colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
@@ -138,7 +138,7 @@ TextFieldStyler _fortalApplySurfaceTextInput(TextFieldStyler base) =>
     _fortalApplyNeutralTextInput(base)
         .color(FortalTokens.colorSurface())
         .containerEffects(
-          RemixBoxEffectsMix.behindContent(_fortalTextInputLayer()),
+          RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
         )
         .containerEffects(
           RemixBoxEffectsMix.overContent(
@@ -150,7 +150,7 @@ TextFieldStyler _fortalApplySurfaceTextInput(TextFieldStyler base) =>
               .color(FortalTokens.colorSurface())
               .containerEffects(
                 RemixBoxEffectsMix.behindContent(
-                  _fortalTextInputLayer(
+                  RemixBoxEffectLayerMix(
                     gradients: [
                       RemixLinearGradientMix(
                         colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
@@ -192,12 +192,14 @@ TextFieldStyler _fortalApplySoftTextInput(
     )
     .wrap(.iconTheme(color: FortalTokens.accent10()))
     .color(FortalTokens.accentA3())
-    .containerEffects(RemixBoxEffectsMix.behindContent(_fortalTextInputLayer()))
+    .containerEffects(
+      RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+    )
     .onDisabled(
       _fortalSoftTextInputDisabledStyle()
           .color(FortalTokens.grayA3())
           .containerEffects(
-            RemixBoxEffectsMix.behindContent(_fortalTextInputLayer()),
+            RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
           ),
     );
 
@@ -243,7 +245,7 @@ TextFieldStyler _fortalTextInputErrorStyle() => TextFieldStyler(
   label: .color(FortalTokens.error11()),
   cursorColor: FortalTokens.error9(),
   containerEffects: RemixBoxEffectsMix(
-    overContent: _fortalTextInputLayer(
+    overContent: RemixBoxEffectLayerMix(
       shadows: [
         RemixBoxShadowMix(
           kind: .inset,
@@ -300,19 +302,9 @@ _fortalTextFieldMetrics(FortalTextFieldSize size, {required bool bordered}) =>
     };
 
 RemixBoxEffectLayerMix _fortalTextInputInsetRing(Color color) =>
-    _fortalTextInputLayer(
+    RemixBoxEffectLayerMix(
       shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
     );
-
-RemixBoxEffectLayerMix _fortalTextInputLayer({
-  List<RemixLinearGradientMix>? gradients,
-  List<RemixBoxShadowMix>? shadows,
-  RemixBoxShadowListToken? shadowToken,
-}) => RemixBoxEffectLayerMix(
-  gradients: gradients,
-  shadows: shadows,
-  shadowToken: shadowToken,
-);
 
 /// Radix Themes TextArea size presets.
 enum FortalTextAreaSize { size1, size2, size3 }
