@@ -62,7 +62,7 @@ void main() {
 
     testWidgets('renders a trailing icon', (tester) async {
       await tester.pumpCarbonApp(
-        CarbonButton(label: 'Add', icon: Icons.add, onPressed: () {}),
+        CarbonButton(label: 'Add', trailingIcon: Icons.add, onPressed: () {}),
       );
       await tester.pumpAndSettle();
       expect(find.text('Add'), findsOneWidget);
@@ -88,7 +88,7 @@ void main() {
           CarbonButton(
             label: kind.name,
             kind: kind,
-            icon: Icons.add,
+            trailingIcon: Icons.add,
             onPressed: () {},
           ),
         );
@@ -197,6 +197,39 @@ void main() {
           reason: 'kind=${testCase.kind}',
         );
       }
+    });
+
+    testWidgets('focus visuals follow Flutter highlight modality', (
+      tester,
+    ) async {
+      final previousStrategy = FocusManager.instance.highlightStrategy;
+      addTearDown(() {
+        FocusManager.instance.highlightStrategy = previousStrategy;
+      });
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+
+      await tester.pumpCarbonApp(
+        CarbonButton(label: 'Focused', focusNode: focusNode, onPressed: () {}),
+      );
+      await tester.pumpAndSettle();
+      focusNode.requestFocus();
+      await tester.pump();
+
+      expect(focusNode.hasFocus, isTrue);
+      expect(_foregroundDecorations(tester), isEmpty);
+
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+      await tester.pump();
+      expect(_foregroundDecorations(tester), hasLength(1));
+
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTouch;
+      await tester.pump();
+      expect(_foregroundDecorations(tester), isEmpty);
     });
 
     testWidgets('dark tertiary hover and press use inverse text', (
@@ -309,6 +342,10 @@ void main() {
 }
 
 Decoration _foregroundDecoration(WidgetTester tester) {
+  return _foregroundDecorations(tester).single;
+}
+
+List<Decoration> _foregroundDecorations(WidgetTester tester) {
   return tester
       .widgetList<DecoratedBox>(
         find.descendant(
@@ -316,8 +353,9 @@ Decoration _foregroundDecoration(WidgetTester tester) {
           matching: find.byType(DecoratedBox),
         ),
       )
-      .firstWhere((box) => box.position == DecorationPosition.foreground)
-      .decoration;
+      .where((box) => box.position == DecorationPosition.foreground)
+      .map((box) => box.decoration)
+      .toList();
 }
 
 Color? _backgroundColor(WidgetTester tester) {

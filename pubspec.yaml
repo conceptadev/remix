@@ -56,24 +56,28 @@ melos:
 
   scripts:
     generate:
-      run: dart run build_runner build
-      description: Regenerate Remix sources
+      description: Regenerate library sources
       # remix_fortal's generator resolves package:remix, so it must not build
       # while remix is rewriting its own lib/.
       exec:
+        command: dart run build_runner build
         concurrency: 1
         orderDependents: true
       packageFilters:
-        scope: [remix, remix_fortal]
+        scope: [remix, remix_fortal, carbon]
 
     generate:check:
-      run: dart run ../../tool/check_generated.dart
-      description: Regenerate Remix sources and fail only on generated drift
+      description: Regenerate library sources and fail only on generated drift
       exec:
+        command: dart run ../../tool/check_generated.dart
         concurrency: 1
         orderDependents: true
       packageFilters:
-        scope: [remix, remix_fortal]
+        scope: [remix, remix_fortal, carbon]
+
+    carbon:tokens:check:
+      run: node packages/carbon/tool/verify_generated.mjs
+      description: Verify Carbon token sources reproduce committed Dart output
 
     dcm:check:
       exec: dcm analyze lib --fatal-style --fatal-warnings --no-congratulate
@@ -120,13 +124,14 @@ melos:
         - toolchain:check
         - mix:consumer:check
         - material:check
+        - carbon:tokens:check
         - generate:check
         - docs:check
         - fortal:parity:check
         - dcm:check
         - dcm:check:carbon
         - test:flutter
-      description: Verify hosted Mix, generated sources, docs, Fortal parity, DCM, and tests
+      description: Verify dependencies, generated sources, docs, parity, DCM, and tests
 
     fortal:parity:check:
       exec: dart run tool/fortal_parity/check.dart

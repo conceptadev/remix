@@ -13,8 +13,9 @@ topics:
   - styling
   - carbon
 
-# Not publishable while Remix is a path dependency. Switch to the hosted Remix
-# release and remove this line when Carbon is ready to publish.
+# Publication still requires the package-name and IBM trademark review tracked
+# in the architecture ADR. Runtime dependencies already use hosted constraints,
+# so git consumers exercise the same resolution contract as a future release.
 publish_to: none
 
 # Pre-1.0: foundations + Carbon equivalents of the Remix component set.
@@ -27,15 +28,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  mix: ^2.1.0
-  naked_ui: ^1.0.0-beta.3
-  remix:
-    path: ../remix
+  mix: ^2.2.0-beta.4
+  mix_annotations: ^2.2.0-beta.1
+  # Release Please keeps this aligned with the sibling Remix release. The
+  # workspace resolves it locally; git consumers resolve the hosted version.
+  remix: ^1.0.0-beta.4 # x-release-please-version
 
 dev_dependencies:
+  build_runner: ^2.10.1
   dart_code_metrics_presets: ^2.32.0
   flutter_test:
     sdk: flutter
-
-flutter:
-  uses-material-design: true
+  mix_generator: ^2.2.0-beta.2

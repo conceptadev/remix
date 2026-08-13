@@ -206,7 +206,7 @@ const sizeTokenName = (dartName) =>
     + '}\n\n'
     + '/// Every indexed role family (levels 01–03), grouped from the theme roles.\n'
     + '/// The contextual layer model resolves against these; a test asserts the\n'
-    + `/// hand-written aliases cover every family here (${familyNames.length} at this baseline).\n`
+    + `/// CarbonLayer resolves its aliases from every family here (${familyNames.length} at this baseline).\n`
     + 'const Map<String, List<ColorToken>> carbonIndexedRoleFamilies = {\n'
     + familyEntries.join('\n') + '\n};\n');
 }

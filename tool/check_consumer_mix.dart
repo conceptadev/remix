@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
-/// Publishable packages whose runtime Mix constraints are a consumer contract.
+/// Library packages whose runtime Mix constraints are a consumer contract.
 ///
 /// Both are checked because the workspace resolves a single Mix version for
 /// everything; a constraint bumped in one package and forgotten in the other
 /// still resolves locally and only fails once a consumer installs them.
-const _publishedPackages = ['remix', 'remix_fortal'];
+const _libraryPackages = ['remix', 'remix_fortal', 'carbon'];
 
 /// Runtime Mix dependencies a consumer resolves alongside those packages.
 ///
@@ -31,7 +31,7 @@ void main() {
   final failures = <String>[];
   final declarations = <String, Map<String, String>>{};
 
-  for (final package in _publishedPackages) {
+  for (final package in _libraryPackages) {
     final pubspecFile = File(
       '${workspaceRoot.path}/packages/$package/pubspec.yaml',
     );
@@ -86,14 +86,14 @@ void main() {
   // other is a publishing hazard the single workspace lockfile cannot surface.
   for (final dependency in _runtimeDependencies) {
     final declared = {
-      for (final package in _publishedPackages)
+      for (final package in _libraryPackages)
         if (declarations[package]?[dependency] case final constraint?)
           package: constraint,
     };
     final distinct = declared.values.toSet();
     if (distinct.length > 1) {
       failures.add(
-        '$dependency constraints diverge across published packages: '
+        '$dependency constraints diverge across library packages: '
         '${declared.entries.map((e) => '${e.key} ${e.value}').join(', ')}',
       );
     }

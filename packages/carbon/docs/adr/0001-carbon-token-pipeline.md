@@ -49,45 +49,32 @@ The generated output is ordinary, reviewable Dart.
   overrides; component tokens keep fallbacks and missing-theme omissions.
 - No invented radius/elevation scale — Carbon's button radius is `0`.
 
-### 4. Depend on Remix 1.0; prefer hand-written facades for divergent anatomy
+### 4. Reuse Remix behavior through generated wrappers when anatomy matches
 
-`carbon → remix (path)`. Interaction behavior stays in one place. Components use
-a generated `@MixWidget` wrapper only when Carbon and Remix anatomy match and the
-public API reads as Carbon; otherwise a hand-written Carbon facade composes Remix
-or Naked UI internally. The Button slice is a hand-written facade over
-`RemixButtonStyler`, keeping the public API in Carbon terminology and avoiding
-leaked Remix-only types. The main entry point does not re-export Remix or Mix.
+`carbon → remix` uses a hosted constraint, which the Dart workspace resolves to
+the sibling package during development. Interaction behavior stays in one
+place. When Carbon and Remix anatomy match, a Carbon recipe targets the Remix
+widget with `@MixWidget(target: ...)` and explicitly curates the target
+parameters it exposes. A hand-written facade is reserved for a real anatomy or
+behavior mismatch. The main entry point does not re-export Remix or Mix.
 
-Button deliberately does not use `@MixWidget`, even though its anatomy matches
-`RemixButton`, because the generator contract cannot preserve its public and
-visual behavior:
+Button is the reference implementation. Its generated wrapper targets
+`RemixButton`, while the recipe retains Carbon's `kind`, nullable contextual
+`size`, and loading-specific visual treatment. The current generator deduplicates
+compatible recipe/target parameters, so one `loading` field drives both the
+recipe and Remix behavior. Carbon keeps the source term `kind`; generated named
+constructors are optional convenience and do not dictate public vocabulary.
 
-- Carbon names the component choice `kind`; `mix_generator` only emits named
-  constructors from a named, non-nullable enum parameter named exactly
-  `variant`. Renaming Carbon's public input only to trigger generation would
-  violate the source design system's vocabulary.
-- Carbon loading buttons keep their kind colors while genuinely disabled
-  buttons use the disabled treatment. The style recipe therefore needs a
-  `loading` input, but `RemixButtonStyler.call()` already declares `loading`.
-  `mix_generator` rejects factory/call parameter-name collisions rather than
-  generating two ambiguous widget fields.
+Components that reuse a Remix target should:
 
-The hand-written facade still uses Mix widget-state variants for interaction:
-`.onHovered`, `.onPressed`, `.onFocused`, and `.onDisabled`. It also exposes
-manual Carbon-shaped constructors only when Carbon's API benefits from them;
-generated constructor naming is not allowed to dictate public vocabulary.
-
-Future components should use `@MixWidget` when the wrapper decision rule is
-fully satisfied. For those components:
-
-1. add `mix_annotations` plus the package-local `build_runner` and
-   `mix_generator` development dependencies;
-2. use a `variant` enum only when `variant` is also the target component's
-   natural public term, allowing generated named constructors;
-3. commit the generated part and extend the workspace generation check to
-   prove regeneration is a no-op;
-4. fall back to a hand-written facade on anatomy, behavior, vocabulary, or
-   factory/call parameter collisions.
+1. keep `mix_annotations`, `build_runner`, and `mix_generator` aligned with the
+   workspace versions;
+2. use a direct target and an explicit `widgetParameters: .only(...)` surface;
+3. share compatible recipe/target fields when styling depends on behavior;
+4. commit the generated part and let the workspace generation check prove it is
+   reproducible;
+5. use a hand-written facade only when anatomy or behavior truly requires an
+   adapter.
 
 An architecture checkpoint follows the Button, Text Input and Modal slices to
 decide whether to keep depending on external Remix components or extract a
@@ -97,8 +84,8 @@ neutral shared component layer.
 
 - Faithful, reproducible, upgradeable tokens with CI drift protection.
 - One (Node) toolchain for token work; Dart/Flutter only for the library itself.
-- Slightly more per-component work than a blanket generated wrapper, in exchange
-  for a clean, Carbon-shaped public API.
+- Thin, reproducible wrappers reuse Remix behavior without mirroring its widget
+  implementation, while curated parameters keep a Carbon-shaped public API.
 
 ## Follow-ups requiring product decisions (see brief §13)
 

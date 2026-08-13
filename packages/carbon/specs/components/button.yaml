@@ -55,6 +55,7 @@ states:
 tokens:
   role:
     - focus            # focus ring color
+    - focusInset       # 1px contrast separator inside the focus ring
     - textOnColor      # label/icon on solid fills
     - textOnColorDisabled
     - textDisabled     # ghost/tertiary disabled label
@@ -88,16 +89,16 @@ shape:
 
 behavior:
   keyboard: Enter/Space activate (provided by Naked UI via RemixButton)
-  focus: 2px focus-colored ring
+  focus: 2px focus-colored ring with a 1px focusInset separator, shown for keyboard focus
   pointer: hover + active states
   screen_reader: semanticLabel defaults to label
-  rtl: horizontal padding is symmetric (paddingX); icon slot follows text direction
+  rtl: horizontal padding is symmetric; trailing icon follows text direction
 
 approximations:
-  - Carbon renders the focus ring as an inset box-shadow. This slice paints a
-    2px border in the container's foreground decoration: no layout shift, and
-    each kind's own border stays intact. Golden coverage still pending (needs
-    the approved Figma kit reference).
+  - Carbon renders the focus treatment as inset box-shadows. This slice paints
+    the 1px inset separator and 2px focus ring as a compound foreground
+    decoration: no layout shift, and each kind's own border stays intact.
+    Golden coverage still pending (needs the approved Figma kit reference).
   - Loading state is non-interactive via the disabled widget-state; visually it
     keeps the kind's rest colors with a textOnColor spinner (upstream Carbon
     animates the transition, which this slice does not yet).

@@ -363,7 +363,7 @@ class CarbonTokens {
 
 /// Every indexed role family (levels 01–03), grouped from the theme roles.
 /// The contextual layer model resolves against these; a test asserts the
-/// hand-written aliases cover every family here (15 at this baseline).
+/// CarbonLayer resolves its aliases from every family here (15 at this baseline).
 const Map<String, List<ColorToken>> carbonIndexedRoleFamilies = {
   'borderStrong': [CarbonTokens.borderStrong01, CarbonTokens.borderStrong02, CarbonTokens.borderStrong03],
   'borderSubtle': [CarbonTokens.borderSubtle01, CarbonTokens.borderSubtle02, CarbonTokens.borderSubtle03],

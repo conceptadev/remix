@@ -1,9 +1,9 @@
 # Carbon for Flutter
 
 A Flutter-native implementation of the [IBM Carbon Design System](https://carbondesignsystem.com),
-built on the same interaction and styling foundations as Remix 1.0 — [Naked UI](https://pub.dev/packages/naked_ui)
-for behavior and [Mix](https://pub.dev/packages/mix) for styling — but with Carbon's
-own generated palette, role tokens, themes, layered surfaces, contextual sizes,
+built on Remix 1.0's [Naked UI](https://pub.dev/packages/naked_ui) behavior and
+[Mix](https://pub.dev/packages/mix) styling foundations, but with Carbon's own
+generated palette, role tokens, themes, layered surfaces, contextual sizes,
 density, typography, motion and component tokens.
 
 > **Status: pre-1.0.** This release delivers the token/foundation layer and the
@@ -61,6 +61,8 @@ CarbonScope(
   use only where a primitive is genuinely required.
 
 ```dart
+import 'package:mix/mix.dart';
+
 Box(
   style: BoxStyler()
       .color(CarbonTokens.layer01())
@@ -97,7 +99,7 @@ and `tool/upstream/carbon-source-lock.json`.
 
 | Package | Version |
 | --- | --- |
-| `@carbon/themes` | 11.76.0 |
+| `@carbon/themes` | 11.76.1 |
 | `@carbon/colors` | 11.53.0 |
 | `@carbon/layout` | 11.54.0 |
 | `@carbon/type` | 11.62.0 |

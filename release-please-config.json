@@ -11,6 +11,10 @@
         {
           "type": "generic",
           "path": "/packages/remix_fortal/pubspec.yaml"
+        },
+        {
+          "type": "generic",
+          "path": "/packages/carbon/pubspec.yaml"
         }
       ]
     },

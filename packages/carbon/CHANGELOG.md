@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `CarbonButton` is now generated from its `ButtonStyler` recipe with a direct
+  `RemixButton` target, matching the `remix_fortal` reuse model and removing the
+  hand-maintained behavior facade.
+- Renamed the public recipe to `carbonButtonStyle()` and the trailing-icon
+  parameter to `trailingIcon`, matching the generated Remix anatomy.
+- Button focus treatment now uses focus-visible modality, so pointer focus does
+  not show a keyboard ring.
+- Carbon participates in workspace generation, dependency, documentation, and
+  Material-independence checks; its separate token generator is also part of
+  the root CI sequence.
+- `CarbonLayer` resolves directly from the generated indexed role-family table
+  instead of maintaining a duplicate hand-written map.
+- Aligned Remix/Mix dependencies with the workspace, removed unused direct
+  Naked UI and Material-font declarations, and switched Remix from a path to a
+  hosted constraint.
+
 ## 0.0.2
 
 Full-package review round: correctness fixes, consolidation, and performance.

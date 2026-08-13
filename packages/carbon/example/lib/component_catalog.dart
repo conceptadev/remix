@@ -52,7 +52,7 @@ List<AtlasRow> _buttonRows(Iterable<CarbonSize> sizes, {IconData? icon}) {
                 label: icon == null ? _kindLabel(kind) : 'Action',
                 kind: kind,
                 size: size,
-                icon: icon,
+                trailingIcon: icon,
                 loading: loading,
                 enabled: enabled,
                 onPressed: enabled ? () {} : null,

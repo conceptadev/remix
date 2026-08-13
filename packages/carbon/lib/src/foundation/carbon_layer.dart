@@ -78,97 +78,14 @@ class CarbonLayerData {
   /// Current layer level, 1–3.
   final int level;
 
-  // Alias -> [level01, level02, level03]. Mirrors the generated
-  // `carbonIndexedRoleFamilies`; a token test asserts full coverage so new
-  // upstream families cannot be missed silently.
-  static const Map<CarbonContextualColor, List<ColorToken>> _families = {
-    CarbonContextualColor.layer: [
-      CarbonTokens.layer01,
-      CarbonTokens.layer02,
-      CarbonTokens.layer03,
-    ],
-    CarbonContextualColor.layerHover: [
-      CarbonTokens.layerHover01,
-      CarbonTokens.layerHover02,
-      CarbonTokens.layerHover03,
-    ],
-    CarbonContextualColor.layerActive: [
-      CarbonTokens.layerActive01,
-      CarbonTokens.layerActive02,
-      CarbonTokens.layerActive03,
-    ],
-    CarbonContextualColor.layerSelected: [
-      CarbonTokens.layerSelected01,
-      CarbonTokens.layerSelected02,
-      CarbonTokens.layerSelected03,
-    ],
-    CarbonContextualColor.layerSelectedHover: [
-      CarbonTokens.layerSelectedHover01,
-      CarbonTokens.layerSelectedHover02,
-      CarbonTokens.layerSelectedHover03,
-    ],
-    CarbonContextualColor.layerAccent: [
-      CarbonTokens.layerAccent01,
-      CarbonTokens.layerAccent02,
-      CarbonTokens.layerAccent03,
-    ],
-    CarbonContextualColor.layerAccentHover: [
-      CarbonTokens.layerAccentHover01,
-      CarbonTokens.layerAccentHover02,
-      CarbonTokens.layerAccentHover03,
-    ],
-    CarbonContextualColor.layerAccentActive: [
-      CarbonTokens.layerAccentActive01,
-      CarbonTokens.layerAccentActive02,
-      CarbonTokens.layerAccentActive03,
-    ],
-    CarbonContextualColor.layerBackground: [
-      CarbonTokens.layerBackground01,
-      CarbonTokens.layerBackground02,
-      CarbonTokens.layerBackground03,
-    ],
-    CarbonContextualColor.field: [
-      CarbonTokens.field01,
-      CarbonTokens.field02,
-      CarbonTokens.field03,
-    ],
-    CarbonContextualColor.fieldHover: [
-      CarbonTokens.fieldHover01,
-      CarbonTokens.fieldHover02,
-      CarbonTokens.fieldHover03,
-    ],
-    CarbonContextualColor.borderSubtle: [
-      CarbonTokens.borderSubtle01,
-      CarbonTokens.borderSubtle02,
-      CarbonTokens.borderSubtle03,
-    ],
-    CarbonContextualColor.borderSubtleSelected: [
-      CarbonTokens.borderSubtleSelected01,
-      CarbonTokens.borderSubtleSelected02,
-      CarbonTokens.borderSubtleSelected03,
-    ],
-    CarbonContextualColor.borderStrong: [
-      CarbonTokens.borderStrong01,
-      CarbonTokens.borderStrong02,
-      CarbonTokens.borderStrong03,
-    ],
-    CarbonContextualColor.borderTile: [
-      CarbonTokens.borderTile01,
-      CarbonTokens.borderTile02,
-      CarbonTokens.borderTile03,
-    ],
-  };
-
   /// The indexed [ColorToken] for [alias] at this layer level.
   ///
   /// `borderSubtle` also has a level-0 variant (`borderSubtle00`) used directly
   /// on the page background; every alias here is defined for levels 1–3.
   ColorToken color(CarbonContextualColor alias) {
-    final tokens = _families[alias]!;
     final targetLevel = level.clamp(1, 3).toInt();
     var currentLevel = 1;
-
-    for (final token in tokens) {
+    for (final token in carbonIndexedRoleFamilies[alias.name]!) {
       if (currentLevel == targetLevel) return token;
       currentLevel++;
     }

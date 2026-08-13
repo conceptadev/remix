@@ -75,6 +75,16 @@ Map<String, List<int>> _generatedSnapshot(Directory root) {
   final snapshot = <String, List<int>>{};
   for (final entity in root.listSync(recursive: true, followLinks: false)) {
     if (entity is! File || !entity.path.endsWith('.g.dart')) continue;
+    // build_runner outputs in these packages are Dart parts. Carbon also owns
+    // standalone `.g.dart` token tables produced by its deterministic Node
+    // pipeline; those belong to `carbon:tokens:check` and must not be deleted
+    // or compared by this checker.
+    if (!RegExp(
+      r'^part of\s',
+      multiLine: true,
+    ).hasMatch(entity.readAsStringSync())) {
+      continue;
+    }
     snapshot[_relativePath(root, entity)] = entity.readAsBytesSync();
   }
   return snapshot;
