@@ -653,6 +653,20 @@ void main() {
         expect(accordion.child, isA<Text>());
         expect(accordion.enabled, isFalse);
       });
+
+      test('call treats a null transition builder as the widget default', () {
+        final accordion = AccordionStyler().call<String>(
+          value: 'details',
+          title: 'Details',
+          child: const Text('Content'),
+          transitionBuilder: null,
+        );
+
+        expect(
+          accordion.transitionBuilder,
+          equals(RemixAccordion.defaultAccordionTransitionBuilder),
+        );
+      });
     });
 
     group('Equality', () {

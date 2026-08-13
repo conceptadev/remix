@@ -89,7 +89,9 @@ melos:
       description: Verify published Remix libraries contain no direct Material usage
 
     styler:parity:check:
-      run: dart run tool/check_styler_call_parity.dart
+      steps:
+        - dart run tool/check_styler_call_parity_test.dart
+        - dart run tool/check_styler_call_parity.dart
       description: Verify each Styler.call() matches its widget constructor
 
     fortal:icons:generate:

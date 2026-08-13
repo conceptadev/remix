@@ -122,8 +122,7 @@ extension RemixAccordionStylerRemixHelpers on AccordionStyler {
     ValueChanged<bool>? onHoverChange,
     ValueChanged<bool>? onPressChange,
     String? semanticLabel,
-    Widget Function(Widget, Animation<double>) transitionBuilder =
-        RemixAccordion.defaultAccordionTransitionBuilder,
+    Widget Function(Widget, Animation<double>)? transitionBuilder,
   }) {
     return RemixAccordion(
       key: key,
@@ -140,7 +139,8 @@ extension RemixAccordionStylerRemixHelpers on AccordionStyler {
       onHoverChange: onHoverChange,
       onPressChange: onPressChange,
       semanticLabel: semanticLabel,
-      transitionBuilder: transitionBuilder,
+      transitionBuilder:
+          transitionBuilder ?? RemixAccordion.defaultAccordionTransitionBuilder,
       style: this,
       child: child,
       builder: builder,

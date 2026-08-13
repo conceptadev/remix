@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
 
 final class ParityCheckResult {
   const ParityCheckResult({required this.callsChecked, required this.issues});
@@ -141,15 +142,24 @@ ParityCheckResult checkStylerCallParity(Directory componentsRoot) {
       for (final name in sharedNames) {
         final callParameter = callParameters[name]!;
         final constructorParameter = constructorParameters[name]!;
-        if (callParameter.type.key != constructorParameter.type.key) {
+        final usesConstructorDefaultFallback = _usesConstructorDefaultFallback(
+          method: method,
+          widgetName: widgetName,
+          parameterName: name,
+          callParameter: callParameter,
+          constructorParameter: constructorParameter,
+        );
+        if (!usesConstructorDefaultFallback &&
+            callParameter.type.key != constructorParameter.type.key) {
           issues.add(
             '$methodLocation: $stylerName.call() parameter `$name` has type '
             '`${callParameter.type.display}`; the $widgetName constructor '
             'declares `${constructorParameter.type.display}`.',
           );
         }
-        if (callParameter.defaultValue?.key !=
-            constructorParameter.defaultValue?.key) {
+        if (!usesConstructorDefaultFallback &&
+            callParameter.defaultValue?.key !=
+                constructorParameter.defaultValue?.key) {
           issues.add(
             '$methodLocation: $stylerName.call() parameter `$name` has '
             'default ${_displayDefault(callParameter.defaultValue)}; the '
@@ -233,11 +243,13 @@ final class _ParameterShape {
   const _ParameterShape({
     required this.type,
     required this.defaultValue,
+    required this.defaultExpression,
     required this.isRequired,
   });
 
   final _DeclaredSource type;
   final _DeclaredSource? defaultValue;
+  final Expression? defaultExpression;
   final bool isRequired;
 }
 
@@ -308,6 +320,10 @@ Map<String, _ParameterShape> _namedParameters(
       ),
       _ => null,
     };
+    final defaultExpression = switch (parameter) {
+      DefaultFormalParameter(:final defaultValue) => defaultValue,
+      _ => null,
+    };
     if (shapes.containsKey(name)) {
       issues.add(
         '${_location(parsed, parameter)}: $owner declares duplicate named '
@@ -318,10 +334,134 @@ Map<String, _ParameterShape> _namedParameters(
     shapes[name] = _ParameterShape(
       type: type,
       defaultValue: defaultValue,
+      defaultExpression: defaultExpression,
       isRequired: parameter.isRequiredNamed,
     );
   }
   return shapes;
+}
+
+bool _usesConstructorDefaultFallback({
+  required MethodDeclaration method,
+  required String widgetName,
+  required String parameterName,
+  required _ParameterShape callParameter,
+  required _ParameterShape constructorParameter,
+}) {
+  final constructorDefault = constructorParameter.defaultExpression;
+  if (callParameter.isRequired ||
+      constructorParameter.isRequired ||
+      callParameter.defaultExpression != null ||
+      constructorDefault == null ||
+      !_isNullableVersionOf(callParameter.type, constructorParameter.type)) {
+    return false;
+  }
+
+  final visitor = _ReturnedWidgetInvocationVisitor(widgetName);
+  method.body.accept(visitor);
+  if (visitor.argumentLists.length != 1) return false;
+
+  final matchingArguments = visitor.argumentLists.single.arguments
+      .whereType<NamedExpression>()
+      .where((argument) => argument.name.label.name == parameterName)
+      .toList();
+  if (matchingArguments.length != 1) return false;
+
+  final expression = _unparenthesized(matchingArguments.single.expression);
+  if (expression is! BinaryExpression || expression.operator.lexeme != '??') {
+    return false;
+  }
+
+  final left = _unparenthesized(expression.leftOperand);
+  if (left is! SimpleIdentifier || left.name != parameterName) return false;
+
+  return _matchesConstructorDefault(
+    _unparenthesized(expression.rightOperand),
+    _unparenthesized(constructorDefault),
+    widgetName,
+  );
+}
+
+bool _isNullableVersionOf(
+  _DeclaredSource callType,
+  _DeclaredSource constructorType,
+) {
+  final key = callType.key;
+  return key.endsWith('?') &&
+      key.substring(0, key.length - 1) == constructorType.key;
+}
+
+Expression _unparenthesized(Expression expression) {
+  while (expression is ParenthesizedExpression) {
+    expression = expression.expression;
+  }
+  return expression;
+}
+
+bool _matchesConstructorDefault(
+  Expression candidate,
+  Expression constructorDefault,
+  String widgetName,
+) {
+  if (_DeclaredSource.fromNode(candidate).key ==
+      _DeclaredSource.fromNode(constructorDefault).key) {
+    return true;
+  }
+
+  if (constructorDefault is! SimpleIdentifier) return false;
+  return switch (candidate) {
+    PrefixedIdentifier(:final prefix, :final identifier) =>
+      prefix.name == widgetName && identifier.name == constructorDefault.name,
+    PropertyAccess(:final target?, :final propertyName) =>
+      target is SimpleIdentifier &&
+          target.name == widgetName &&
+          propertyName.name == constructorDefault.name,
+    _ => false,
+  };
+}
+
+final class _ReturnedWidgetInvocationVisitor extends RecursiveAstVisitor<void> {
+  _ReturnedWidgetInvocationVisitor(this.widgetName);
+
+  final String widgetName;
+  final List<ArgumentList> argumentLists = [];
+
+  @override
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
+    if (node.constructorName.name == null &&
+        _namedTypeName(node.constructorName.type) == widgetName &&
+        _isReturnedExpression(node)) {
+      argumentLists.add(node.argumentList);
+    }
+    super.visitInstanceCreationExpression(node);
+  }
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    // Without resolution, constructor invocations without `new` are parsed as
+    // target-less method invocations. The declared Remix return type and the
+    // sibling constructor lookup provide the missing context.
+    if (node.target == null &&
+        node.methodName.name == widgetName &&
+        _isReturnedExpression(node)) {
+      argumentLists.add(node.argumentList);
+    }
+    super.visitMethodInvocation(node);
+  }
+}
+
+bool _isReturnedExpression(Expression expression) {
+  AstNode node = expression;
+  while (true) {
+    final parent = node.parent;
+    if (parent is! ParenthesizedExpression) break;
+    node = parent;
+  }
+  return switch (node.parent) {
+    ReturnStatement(:final expression) => identical(expression, node),
+    ExpressionFunctionBody(:final expression) => identical(expression, node),
+    _ => false,
+  };
 }
 
 Map<String, _DeclaredSource> _fieldTypes(ClassDeclaration declaration) {
