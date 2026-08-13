@@ -4,7 +4,7 @@ import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 void main() {
-  group('Fortal BaseButton policy', () {
+  group('Fortal BaseButton shared states', () {
     late FocusHighlightStrategy previousHighlightStrategy;
 
     setUp(() {

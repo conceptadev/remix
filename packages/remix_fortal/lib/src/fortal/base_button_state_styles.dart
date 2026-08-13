@@ -7,9 +7,9 @@ import 'fortal_theme.dart';
 /// Shared Radix BaseButton variants implemented by Button and IconButton.
 enum FortalBaseButtonVariant { classic, solid, soft, surface, outline, ghost }
 
-/// One resolved visual-state fragment from the shared BaseButton recipe.
-final class FortalBaseButtonStatePolicy {
-  const FortalBaseButtonStatePolicy({
+/// One visual-state style fragment from the shared BaseButton recipe.
+final class FortalBaseButtonStateStyle {
+  const FortalBaseButtonStateStyle({
     this.foreground,
     this.background,
     this.effects,
@@ -24,9 +24,9 @@ final class FortalBaseButtonStatePolicy {
   final double? spinnerOpacity;
 }
 
-/// State policy shared by the concrete Button and IconButton stylers.
-final class FortalBaseButtonPolicy {
-  const FortalBaseButtonPolicy({
+/// Visual state styles shared by the concrete Button and IconButton stylers.
+final class FortalBaseButtonStateStyles {
+  const FortalBaseButtonStateStyles({
     required this.idle,
     required this.hovered,
     required this.pressed,
@@ -35,40 +35,40 @@ final class FortalBaseButtonPolicy {
     required this.disabledFocus,
   });
 
-  final FortalBaseButtonStatePolicy idle;
-  final FortalBaseButtonStatePolicy hovered;
-  final FortalBaseButtonStatePolicy pressed;
-  final FortalBaseButtonStatePolicy disabled;
-  final FortalBaseButtonStatePolicy focusVisible;
-  final FortalBaseButtonStatePolicy disabledFocus;
+  final FortalBaseButtonStateStyle idle;
+  final FortalBaseButtonStateStyle hovered;
+  final FortalBaseButtonStateStyle pressed;
+  final FortalBaseButtonStateStyle disabled;
+  final FortalBaseButtonStateStyle focusVisible;
+  final FortalBaseButtonStateStyle disabledFocus;
 }
 
-FortalBaseButtonPolicy fortalBaseButtonPolicy({
+FortalBaseButtonStateStyles fortalBaseButtonStateStyles({
   required FortalBaseButtonVariant variant,
   required bool highContrast,
 }) {
   final states = switch (variant) {
-    .classic => _classicPolicy(highContrast: highContrast),
-    .solid => _solidPolicy(highContrast: highContrast),
-    .soft => _softPolicy(highContrast: highContrast),
-    .surface => _surfacePolicy(highContrast: highContrast),
-    .outline => _outlinePolicy(highContrast: highContrast),
-    .ghost => _ghostPolicy(highContrast: highContrast),
+    .classic => _classicStateStyles(highContrast: highContrast),
+    .solid => _solidStateStyles(highContrast: highContrast),
+    .soft => _softStateStyles(highContrast: highContrast),
+    .surface => _surfaceStateStyles(highContrast: highContrast),
+    .outline => _outlineStateStyles(highContrast: highContrast),
+    .ghost => _ghostStateStyles(highContrast: highContrast),
   };
   final focusColor = variant == .soft
       ? FortalTokens.accent8()
       : FortalTokens.focus8();
   final focusOffset = variant == .classic || variant == .solid ? 2.0 : -1.0;
 
-  return FortalBaseButtonPolicy(
+  return FortalBaseButtonStateStyles(
     idle: states.idle,
     hovered: states.hovered,
     pressed: states.pressed,
     disabled: states.disabled,
-    focusVisible: FortalBaseButtonStatePolicy(
+    focusVisible: FortalBaseButtonStateStyle(
       effects: fortalFocusOutline(focusColor, offset: focusOffset),
     ),
-    disabledFocus: FortalBaseButtonStatePolicy(
+    disabledFocus: FortalBaseButtonStateStyle(
       effects: RemixBoxEffectsMix.outline(
         BorderSideMix(style: BorderStyle.none),
       ),
@@ -76,20 +76,20 @@ FortalBaseButtonPolicy fortalBaseButtonPolicy({
   );
 }
 
-typedef _InteractionStates = ({
-  FortalBaseButtonStatePolicy idle,
-  FortalBaseButtonStatePolicy hovered,
-  FortalBaseButtonStatePolicy pressed,
-  FortalBaseButtonStatePolicy disabled,
+typedef _InteractionStateStyles = ({
+  FortalBaseButtonStateStyle idle,
+  FortalBaseButtonStateStyle hovered,
+  FortalBaseButtonStateStyle pressed,
+  FortalBaseButtonStateStyle disabled,
 });
 
-_InteractionStates _classicPolicy({required bool highContrast}) {
+_InteractionStateStyles _classicStateStyles({required bool highContrast}) {
   final foreground = highContrast
       ? FortalTokens.gray1()
       : FortalTokens.accentContrast();
 
   return (
-    idle: FortalBaseButtonStatePolicy(
+    idle: FortalBaseButtonStateStyle(
       foreground: foreground,
       background: highContrast
           ? FortalTokens.accent12()
@@ -98,7 +98,7 @@ _InteractionStates _classicPolicy({required bool highContrast}) {
         fortalClassicBaseButtonSurface(highContrast: highContrast),
       ),
     ),
-    hovered: FortalBaseButtonStatePolicy(
+    hovered: FortalBaseButtonStateStyle(
       effects: RemixBoxEffectsMix.behindContent(
         fortalClassicBaseButtonSurface(
           highContrast: highContrast,
@@ -107,7 +107,7 @@ _InteractionStates _classicPolicy({required bool highContrast}) {
       ),
       modifier: _hoverFilter(highContrast, classic: true),
     ),
-    pressed: FortalBaseButtonStatePolicy(
+    pressed: FortalBaseButtonStateStyle(
       effects: RemixBoxEffectsMix.behindContent(
         fortalClassicBaseButtonSurface(
           highContrast: highContrast,
@@ -116,7 +116,7 @@ _InteractionStates _classicPolicy({required bool highContrast}) {
       ),
       modifier: _pressedFilter(highContrast),
     ),
-    disabled: FortalBaseButtonStatePolicy(
+    disabled: FortalBaseButtonStateStyle(
       foreground: FortalTokens.grayA8(),
       background: FortalTokens.gray2(),
       effects: RemixBoxEffectsMix.behindContent(
@@ -128,31 +128,31 @@ _InteractionStates _classicPolicy({required bool highContrast}) {
   );
 }
 
-_InteractionStates _solidPolicy({required bool highContrast}) {
+_InteractionStateStyles _solidStateStyles({required bool highContrast}) {
   final foreground = highContrast
       ? FortalTokens.gray1()
       : FortalTokens.accentContrast();
 
   return (
-    idle: FortalBaseButtonStatePolicy(
+    idle: FortalBaseButtonStateStyle(
       foreground: foreground,
       background: highContrast
           ? FortalTokens.accent12()
           : FortalTokens.accent9(),
     ),
-    hovered: FortalBaseButtonStatePolicy(
+    hovered: FortalBaseButtonStateStyle(
       background: highContrast
           ? FortalTokens.accent12()
           : FortalTokens.accent10(),
       modifier: _hoverFilter(highContrast, classic: false),
     ),
-    pressed: FortalBaseButtonStatePolicy(
+    pressed: FortalBaseButtonStateStyle(
       background: highContrast
           ? FortalTokens.accent12()
           : FortalTokens.accent10(),
       modifier: _pressedFilter(highContrast),
     ),
-    disabled: FortalBaseButtonStatePolicy(
+    disabled: FortalBaseButtonStateStyle(
       foreground: FortalTokens.grayA8(),
       background: FortalTokens.grayA3(),
       spinnerOpacity: 1,
@@ -161,24 +161,24 @@ _InteractionStates _solidPolicy({required bool highContrast}) {
   );
 }
 
-_InteractionStates _softPolicy({required bool highContrast}) => (
-  idle: FortalBaseButtonStatePolicy(
+_InteractionStateStyles _softStateStyles({required bool highContrast}) => (
+  idle: FortalBaseButtonStateStyle(
     foreground: highContrast
         ? FortalTokens.accent12()
         : FortalTokens.accentA11(),
     background: FortalTokens.accentA3(),
   ),
-  hovered: FortalBaseButtonStatePolicy(background: FortalTokens.accentA4()),
-  pressed: FortalBaseButtonStatePolicy(background: FortalTokens.accentA5()),
-  disabled: FortalBaseButtonStatePolicy(
+  hovered: FortalBaseButtonStateStyle(background: FortalTokens.accentA4()),
+  pressed: FortalBaseButtonStateStyle(background: FortalTokens.accentA5()),
+  disabled: FortalBaseButtonStateStyle(
     foreground: FortalTokens.grayA8(),
     background: FortalTokens.grayA3(),
     spinnerOpacity: 1,
   ),
 );
 
-_InteractionStates _surfacePolicy({required bool highContrast}) => (
-  idle: FortalBaseButtonStatePolicy(
+_InteractionStateStyles _surfaceStateStyles({required bool highContrast}) => (
+  idle: FortalBaseButtonStateStyle(
     foreground: highContrast
         ? FortalTokens.accent12()
         : FortalTokens.accentA11(),
@@ -187,19 +187,19 @@ _InteractionStates _surfacePolicy({required bool highContrast}) => (
       fortalInsetSurface(strokes: [FortalTokens.accentA7()]),
     ),
   ),
-  hovered: FortalBaseButtonStatePolicy(
+  hovered: FortalBaseButtonStateStyle(
     background: FortalTokens.accentSurface(),
     effects: RemixBoxEffectsMix.behindContent(
       fortalInsetSurface(strokes: [FortalTokens.accentA8()]),
     ),
   ),
-  pressed: FortalBaseButtonStatePolicy(
+  pressed: FortalBaseButtonStateStyle(
     background: FortalTokens.accentA3(),
     effects: RemixBoxEffectsMix.behindContent(
       fortalInsetSurface(strokes: [FortalTokens.accentA8()]),
     ),
   ),
-  disabled: FortalBaseButtonStatePolicy(
+  disabled: FortalBaseButtonStateStyle(
     foreground: FortalTokens.grayA8(),
     background: FortalTokens.grayA2(),
     effects: RemixBoxEffectsMix.behindContent(
@@ -209,7 +209,7 @@ _InteractionStates _surfacePolicy({required bool highContrast}) => (
   ),
 );
 
-_InteractionStates _outlinePolicy({required bool highContrast}) {
+_InteractionStateStyles _outlineStateStyles({required bool highContrast}) {
   final strokes = highContrast
       ? [FortalTokens.accentA7(), FortalTokens.grayA11()]
       : [FortalTokens.accentA8()];
@@ -218,21 +218,21 @@ _InteractionStates _outlinePolicy({required bool highContrast}) {
   );
 
   return (
-    idle: FortalBaseButtonStatePolicy(
+    idle: FortalBaseButtonStateStyle(
       foreground: highContrast
           ? FortalTokens.accent12()
           : FortalTokens.accentA11(),
       effects: effects,
     ),
-    hovered: FortalBaseButtonStatePolicy(
+    hovered: FortalBaseButtonStateStyle(
       background: FortalTokens.accentA2(),
       effects: effects,
     ),
-    pressed: FortalBaseButtonStatePolicy(
+    pressed: FortalBaseButtonStateStyle(
       background: FortalTokens.accentA3(),
       effects: effects,
     ),
-    disabled: FortalBaseButtonStatePolicy(
+    disabled: FortalBaseButtonStateStyle(
       foreground: FortalTokens.grayA8(),
       background: const Color(0x00000000),
       effects: RemixBoxEffectsMix.behindContent(
@@ -243,16 +243,16 @@ _InteractionStates _outlinePolicy({required bool highContrast}) {
   );
 }
 
-_InteractionStates _ghostPolicy({required bool highContrast}) => (
-  idle: FortalBaseButtonStatePolicy(
+_InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
+  idle: FortalBaseButtonStateStyle(
     foreground: highContrast
         ? FortalTokens.accent12()
         : FortalTokens.accentA11(),
     background: const Color(0x00000000),
   ),
-  hovered: FortalBaseButtonStatePolicy(background: FortalTokens.accentA3()),
-  pressed: FortalBaseButtonStatePolicy(background: FortalTokens.accentA4()),
-  disabled: FortalBaseButtonStatePolicy(
+  hovered: FortalBaseButtonStateStyle(background: FortalTokens.accentA3()),
+  pressed: FortalBaseButtonStateStyle(background: FortalTokens.accentA4()),
+  disabled: FortalBaseButtonStateStyle(
     foreground: FortalTokens.grayA8(),
     background: const Color(0x00000000),
     spinnerOpacity: 1,

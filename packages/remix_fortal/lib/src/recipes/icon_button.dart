@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import '../fortal/base_button_policy.dart';
+import '../fortal/base_button_state_styles.dart';
 import '../fortal/fortal.dart';
 
 part 'icon_button.g.dart';
@@ -22,14 +22,14 @@ IconButtonStyler fortalIconButtonStyle({
 }) {
   final index = size.index + 1;
   final base = _fortalIconButtonBaseStyler(variant, index);
-  final policy = fortalBaseButtonPolicy(
+  final stateStyles = fortalBaseButtonStateStyles(
     variant: _fortalBaseButtonVariant(variant),
     highContrast: highContrast,
   );
 
-  return _applyFortalIconButtonPolicy(
+  return _applyFortalIconButtonStateStyles(
     base,
-    policy,
+    stateStyles,
     pressedPaddingTop: variant == .classic ? (index == 1 ? 1 : 2) : null,
   );
 }
@@ -76,35 +76,44 @@ FortalBaseButtonVariant _fortalBaseButtonVariant(
   .ghost => .ghost,
 };
 
-IconButtonStyler _applyFortalIconButtonPolicy(
+IconButtonStyler _applyFortalIconButtonStateStyles(
   IconButtonStyler base,
-  FortalBaseButtonPolicy policy, {
+  FortalBaseButtonStateStyles stateStyles, {
   required double? pressedPaddingTop,
 }) {
-  var pressed = _applyFortalIconButtonState(IconButtonStyler(), policy.pressed);
+  var pressed = _applyFortalIconButtonState(
+    IconButtonStyler(),
+    stateStyles.pressed,
+  );
   if (pressedPaddingTop != null) {
     pressed = pressed.padding(.top(pressedPaddingTop));
   }
 
-  return _applyFortalIconButtonState(base, policy.idle)
+  return _applyFortalIconButtonState(base, stateStyles.idle)
       .onHovered(
-        _applyFortalIconButtonState(IconButtonStyler(), policy.hovered),
+        _applyFortalIconButtonState(IconButtonStyler(), stateStyles.hovered),
       )
       .onPressed(pressed)
       .onDisabled(
-        _applyFortalIconButtonState(IconButtonStyler(), policy.disabled),
+        _applyFortalIconButtonState(IconButtonStyler(), stateStyles.disabled),
       )
       .onFocusVisible(
-        _applyFortalIconButtonState(IconButtonStyler(), policy.focusVisible),
+        _applyFortalIconButtonState(
+          IconButtonStyler(),
+          stateStyles.focusVisible,
+        ),
       )
       .onDisabled(
-        _applyFortalIconButtonState(IconButtonStyler(), policy.disabledFocus),
+        _applyFortalIconButtonState(
+          IconButtonStyler(),
+          stateStyles.disabledFocus,
+        ),
       );
 }
 
 IconButtonStyler _applyFortalIconButtonState(
   IconButtonStyler style,
-  FortalBaseButtonStatePolicy state,
+  FortalBaseButtonStateStyle state,
 ) {
   var result = style;
   final foreground = state.foreground;

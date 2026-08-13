@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import '../fortal/base_button_policy.dart';
+import '../fortal/base_button_state_styles.dart';
 import '../fortal/fortal.dart';
 
 part 'button.g.dart';
@@ -22,14 +22,14 @@ ButtonStyler fortalButtonStyle({
 }) {
   final index = size.index + 1;
   final base = _fortalButtonBaseStyler(variant, index);
-  final policy = fortalBaseButtonPolicy(
+  final stateStyles = fortalBaseButtonStateStyles(
     variant: _fortalBaseButtonVariant(variant),
     highContrast: highContrast,
   );
 
-  return _applyFortalButtonPolicy(
+  return _applyFortalButtonStateStyles(
     base,
-    policy,
+    stateStyles,
     pressedPaddingTop: variant == .classic ? (index == 1 ? 1 : 2) : null,
   );
 }
@@ -80,31 +80,31 @@ FortalBaseButtonVariant _fortalBaseButtonVariant(FortalButtonVariant variant) =>
       .ghost => .ghost,
     };
 
-ButtonStyler _applyFortalButtonPolicy(
+ButtonStyler _applyFortalButtonStateStyles(
   ButtonStyler base,
-  FortalBaseButtonPolicy policy, {
+  FortalBaseButtonStateStyles stateStyles, {
   required double? pressedPaddingTop,
 }) {
-  var pressed = _applyFortalButtonState(ButtonStyler(), policy.pressed);
+  var pressed = _applyFortalButtonState(ButtonStyler(), stateStyles.pressed);
   if (pressedPaddingTop != null) {
     pressed = pressed.padding(.top(pressedPaddingTop));
   }
 
-  return _applyFortalButtonState(base, policy.idle)
-      .onHovered(_applyFortalButtonState(ButtonStyler(), policy.hovered))
+  return _applyFortalButtonState(base, stateStyles.idle)
+      .onHovered(_applyFortalButtonState(ButtonStyler(), stateStyles.hovered))
       .onPressed(pressed)
-      .onDisabled(_applyFortalButtonState(ButtonStyler(), policy.disabled))
+      .onDisabled(_applyFortalButtonState(ButtonStyler(), stateStyles.disabled))
       .onFocusVisible(
-        _applyFortalButtonState(ButtonStyler(), policy.focusVisible),
+        _applyFortalButtonState(ButtonStyler(), stateStyles.focusVisible),
       )
       .onDisabled(
-        _applyFortalButtonState(ButtonStyler(), policy.disabledFocus),
+        _applyFortalButtonState(ButtonStyler(), stateStyles.disabledFocus),
       );
 }
 
 ButtonStyler _applyFortalButtonState(
   ButtonStyler style,
-  FortalBaseButtonStatePolicy state,
+  FortalBaseButtonStateStyle state,
 ) {
   var result = style;
   final foreground = state.foreground;
