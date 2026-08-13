@@ -241,7 +241,6 @@ const sizeTokenName = (dartName) =>
   const groups = snapshot.componentTokens;
   const allNames = [];
   const declLines = [];
-  const groupMeta = [];
   for (const group of Object.keys(groups).sort()) {
     const names = Object.keys(groups[group]).sort();
     declLines.push(`\n  // ${group} (${names.length})`);
@@ -249,9 +248,6 @@ const sizeTokenName = (dartName) =>
       allNames.push(n);
       declLines.push(`  static const ${dartIdentifier(n)} = ColorToken('${KEY.comp(n)}');`);
     }
-    groupMeta.push(`  '${group}': [\n`
-      + names.map((n) => `    CarbonComponentTokens.${dartIdentifier(n)},`).join('\n')
-      + '\n  ],');
   }
   uniq(allNames, 'CarbonComponentTokens');
 
@@ -287,9 +283,6 @@ const sizeTokenName = (dartName) =>
     + '  CarbonComponentTokens._();\n'
     + declLines.join('\n') + '\n'
     + '}\n\n'
-    + '/// Component tokens grouped by the Carbon component that owns them.\n'
-    + 'const Map<String, List<ColorToken>> carbonComponentTokenGroups = {\n'
-    + groupMeta.join('\n') + '\n};\n\n'
     + themeFns.join('\n'));
 }
 
@@ -308,13 +301,11 @@ const sizeTokenName = (dartName) =>
     const b = snapshot.layout.breakpoints[k];
     return `  CarbonBreakpointData(name: '${k}', width: ${d(b.widthPx)}, columns: ${b.columns}, margin: ${d(b.marginPx)}),`;
   });
-  const fluid = snapshot.layout.fluidSpacing.map(
-    (f) => `  CarbonFluidSpaceData(${d(f.value)}, CarbonSpaceUnit.${f.unit}),`);
   const controlSizes = sizeEntries.map(
     ([dartName, s]) => `  '${dartName}': ${d(s.px)},`);
 
   emit('carbon_layout.g.dart',
-    header('Carbon layout values (spacing, sizes, breakpoints, fluid spacing).',
+    header('Carbon layout values (spacing, sizes and breakpoints).',
       `@carbon/layout ${P.packages['@carbon/layout']}`)
     + "import 'package:mix/mix.dart';\n\n"
     + "import '../carbon_token_types.dart';\n"
@@ -322,14 +313,9 @@ const sizeTokenName = (dartName) =>
     + '/// Fixed spacing, container, icon and control-size token values (logical px).\n'
     + 'final Map<SpaceToken, double> carbonSpacingValues = {\n'
     + spacingVals.join('\n') + '\n};\n\n'
-    + `/// The 13-step fixed spacing scale in logical pixels.\n`
-    + `const List<double> carbonFixedSpacingPx = [${spacing.map((s) => d(s.px)).join(', ')}];\n\n`
     + '/// Responsive breakpoints, ordered small to large.\n'
     + 'const List<CarbonBreakpointData> carbonBreakpoints = [\n'
     + bps.join('\n') + '\n];\n\n'
-    + '/// Fluid spacing steps (viewport-relative data preserved).\n'
-    + 'const List<CarbonFluidSpaceData> carbonFluidSpacing = [\n'
-    + fluid.join('\n') + '\n];\n\n'
     + '/// Control sizes (default heights) in logical pixels, keyed by size name.\n'
     + 'const Map<String, double> carbonControlSizePx = {\n'
     + controlSizes.join('\n') + '\n};\n');

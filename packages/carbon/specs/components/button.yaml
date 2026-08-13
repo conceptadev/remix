@@ -41,7 +41,7 @@ sizes:               # Carbon control-size scale (height in logical px)
   default: lg
   contextual: inherits CarbonLayoutScope size when `size` is null, clamped to range
 
-density: not size-driven for Button (Carbon buttons do not use condensed/normal)
+density: not implemented for Button (Carbon buttons do not use condensed/normal)
 
 states:
   - rest

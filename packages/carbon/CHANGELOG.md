@@ -19,6 +19,20 @@
 - Aligned Remix/Mix dependencies with the workspace, removed unused direct
   Naked UI and Material-font declarations, and switched Remix from a path to a
   hosted constraint.
+- Simplified `CarbonLayoutScope` to its implemented size responsibility;
+  `sizeOf` / `maybeSizeOf` replace the unused `CarbonLayoutData` carrier.
+- Narrowed the package entrypoint to stable consumer APIs. Generated inventory
+  collections remain internal inputs for `CarbonSize`, `CarbonType`,
+  `CarbonMotion`, and token-provenance tests.
+
+### Removed
+
+- Removed the unused pre-1.0 `CarbonDensity` API. Density can return with the
+  first component whose Carbon behavior actually depends on it.
+- Stopped publicly exporting raw generated layout, fluid-type, and easing
+  collections that duplicate the foundation APIs.
+- Removed generated fixed/fluid-spacing inventories and component-group metadata
+  with no runtime consumer; the normalized snapshot remains their audit source.
 
 ## 0.0.2
 

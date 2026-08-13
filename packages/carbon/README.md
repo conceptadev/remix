@@ -4,7 +4,7 @@ A Flutter-native implementation of the [IBM Carbon Design System](https://carbon
 built on Remix 1.0's [Naked UI](https://pub.dev/packages/naked_ui) behavior and
 [Mix](https://pub.dev/packages/mix) styling foundations, but with Carbon's own
 generated palette, role tokens, themes, layered surfaces, contextual sizes,
-density, typography, motion and component tokens.
+typography, motion and component tokens.
 
 > **Status: pre-1.0.** This release delivers the token/foundation layer and the
 > Button vertical slice. It is **not** the full Carbon React catalog — see the
@@ -46,7 +46,7 @@ CarbonScope(
 | `CarbonScope` | Resolves Carbon tokens into a `MixScope`; selects one of the four themes; accepts typed overrides (colors, font family). |
 | `CarbonTheme` | `white`, `g10`, `g90`, `g100` — with matching `brightness`. |
 | `CarbonLayer` | Contextual layer model (levels 1–3). Resolves aliases like `layer`, `field`, `borderSubtle` to the correct indexed role token. |
-| `CarbonLayoutScope` | Contextual `CarbonSize` (`xs`–`x2l`) and `CarbonDensity` (`condensed`/`normal`); components clamp into their supported range. |
+| `CarbonLayoutScope` | Contextual `CarbonSize` (`xs`–`x2l`), available through `sizeOf`/`maybeSizeOf`; components clamp into their supported range. |
 | `CarbonType` | Fixed styles as Mix tokens; a viewport-aware resolver for Carbon's fluid type. |
 | `CarbonMotion` | Carbon easing curves by intent/mode, plus reduced-motion-aware `duration`/`curve` helpers. |
 

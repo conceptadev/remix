@@ -20,21 +20,14 @@ export 'src/foundation/carbon_motion.dart';
 // ---------------------------------------------------------------------------
 // Tokens (public handles, shared types, provenance)
 // ---------------------------------------------------------------------------
-export 'src/tokens/carbon_token_types.dart';
+export 'src/tokens/carbon_token_types.dart'
+    show CarbonBreakpointData, CarbonFluidTypeStyle, CarbonTextStyleData;
 export 'src/tokens/generated/carbon_tokens.g.dart';
 export 'src/tokens/generated/carbon_palette.g.dart';
 export 'src/tokens/generated/carbon_source_manifest.g.dart';
 export 'src/tokens/generated/carbon_component_tokens.g.dart'
-    show CarbonComponentTokens, carbonComponentTokenGroups;
-export 'src/tokens/generated/carbon_layout.g.dart'
-    show
-        carbonFixedSpacingPx,
-        carbonBreakpoints,
-        carbonFluidSpacing,
-        carbonControlSizePx;
-export 'src/tokens/generated/carbon_type.g.dart'
-    show carbonFluidTypeStyles, CarbonFontFamilies;
-export 'src/tokens/generated/carbon_motion.g.dart' show CarbonEasings;
+    show CarbonComponentTokens;
+export 'src/tokens/generated/carbon_type.g.dart' show CarbonFontFamilies;
 
 // ---------------------------------------------------------------------------
 // Components

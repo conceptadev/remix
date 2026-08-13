@@ -27,7 +27,7 @@ const _carbonButtonFocusBorder = ContextToken(_resolveCarbonButtonFocusBorder);
 const _carbonButtonHeight = ContextToken(_resolveCarbonButtonHeight);
 
 double _resolveCarbonButtonHeight(BuildContext context) =>
-    (CarbonLayoutScope.maybeOf(context)?.size ?? CarbonSize.lg)
+    (CarbonLayoutScope.maybeSizeOf(context) ?? CarbonSize.lg)
         .clampTo(.sm, .x2l)
         .height;
 

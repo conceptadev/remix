@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND.
-// Carbon layout values (spacing, sizes, breakpoints, fluid spacing).
+// Carbon layout values (spacing, sizes and breakpoints).
 //
 // Source: IBM Carbon Design System (Apache-2.0)
 //   repo commit b288a66af010622bedc6de4d6d0b81ee3c9f5520 (2026-07-09)
@@ -41,9 +41,6 @@ final Map<SpaceToken, double> carbonSpacingValues = {
   CarbonTokens.sizeXxLarge: 80.0,
 };
 
-/// The 13-step fixed spacing scale in logical pixels.
-const List<double> carbonFixedSpacingPx = [2.0, 4.0, 8.0, 12.0, 16.0, 24.0, 32.0, 40.0, 48.0, 64.0, 80.0, 96.0, 160.0];
-
 /// Responsive breakpoints, ordered small to large.
 const List<CarbonBreakpointData> carbonBreakpoints = [
   CarbonBreakpointData(name: 'sm', width: 320.0, columns: 4, margin: 0.0),
@@ -51,14 +48,6 @@ const List<CarbonBreakpointData> carbonBreakpoints = [
   CarbonBreakpointData(name: 'lg', width: 1056.0, columns: 16, margin: 16.0),
   CarbonBreakpointData(name: 'xlg', width: 1312.0, columns: 16, margin: 16.0),
   CarbonBreakpointData(name: 'max', width: 1584.0, columns: 16, margin: 24.0),
-];
-
-/// Fluid spacing steps (viewport-relative data preserved).
-const List<CarbonFluidSpaceData> carbonFluidSpacing = [
-  CarbonFluidSpaceData(0.0, CarbonSpaceUnit.px),
-  CarbonFluidSpaceData(2.0, CarbonSpaceUnit.vw),
-  CarbonFluidSpaceData(5.0, CarbonSpaceUnit.vw),
-  CarbonFluidSpaceData(10.0, CarbonSpaceUnit.vw),
 ];
 
 /// Control sizes (default heights) in logical pixels, keyed by size name.

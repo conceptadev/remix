@@ -1,6 +1,7 @@
 import 'package:carbon/carbon.dart';
 import 'package:carbon/src/foundation/carbon_theme.dart';
 import 'package:carbon/src/tokens/generated/carbon_component_tokens.g.dart';
+import 'package:carbon/src/tokens/generated/carbon_layout.g.dart';
 import 'package:carbon/src/tokens/generated/carbon_themes.g.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,24 +26,6 @@ void main() {
   });
 
   group('Fixed layout scale', () {
-    test('spacing is the 13-step 2..160px scale', () {
-      expect(carbonFixedSpacingPx, [
-        2,
-        4,
-        8,
-        12,
-        16,
-        24,
-        32,
-        40,
-        48,
-        64,
-        80,
-        96,
-        160,
-      ]);
-    });
-
     test('breakpoints match Carbon widths and columns', () {
       final widths = {for (final b in carbonBreakpoints) b.name: b.width};
       expect(widths, {
@@ -183,13 +166,6 @@ void main() {
         ),
         isFalse,
       );
-    });
-
-    test('component groups cover all 78 tokens', () {
-      final grouped = carbonComponentTokenGroups.values
-          .expand((tokens) => tokens)
-          .toSet();
-      expect(grouped.length, 78);
     });
   });
 

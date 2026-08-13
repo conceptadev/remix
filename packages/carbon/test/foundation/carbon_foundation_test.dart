@@ -27,6 +27,71 @@ void main() {
     });
   });
 
+  group('CarbonLayoutScope', () {
+    testWidgets('distinguishes an absent scope from the default size', (
+      tester,
+    ) async {
+      late CarbonSize defaultSize;
+      late CarbonSize? maybeSize;
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Builder(
+            builder: (context) {
+              defaultSize = CarbonLayoutScope.sizeOf(context);
+              maybeSize = CarbonLayoutScope.maybeSizeOf(context);
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+
+      expect(defaultSize, CarbonSize.md);
+      expect(maybeSize, isNull);
+    });
+
+    testWidgets('inherits and overrides the contextual size', (tester) async {
+      late CarbonSize outerSize;
+      late CarbonSize inheritedSize;
+      late CarbonSize overriddenSize;
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: CarbonLayoutScope(
+            size: CarbonSize.sm,
+            child: Builder(
+              builder: (context) {
+                outerSize = CarbonLayoutScope.sizeOf(context);
+                return CarbonLayoutScope(
+                  child: Builder(
+                    builder: (context) {
+                      inheritedSize = CarbonLayoutScope.sizeOf(context);
+                      return CarbonLayoutScope(
+                        size: CarbonSize.xl,
+                        child: Builder(
+                          builder: (context) {
+                            overriddenSize = CarbonLayoutScope.sizeOf(context);
+                            return const SizedBox();
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      expect(outerSize, CarbonSize.sm);
+      expect(inheritedSize, CarbonSize.sm);
+      expect(overriddenSize, CarbonSize.xl);
+    });
+  });
+
   group('CarbonLayer', () {
     test('resolves contextual aliases to indexed role tokens', () {
       expect(
@@ -161,10 +226,6 @@ void main() {
           CarbonMotionIntent.standard,
           CarbonMotionMode.productive,
         ),
-        CarbonEasings.standardProductive,
-      );
-      expect(
-        CarbonEasings.standardProductive,
         const Cubic(0.2, 0.0, 0.38, 0.9),
       );
     });

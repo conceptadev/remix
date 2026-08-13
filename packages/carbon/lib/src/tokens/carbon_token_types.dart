@@ -27,21 +27,6 @@ class CarbonBreakpointData {
   final double margin;
 }
 
-/// The unit a fluid spacing step is expressed in.
-enum CarbonSpaceUnit { px, vw }
-
-/// A fluid spacing step: either a fixed pixel value or a viewport-relative one.
-@immutable
-class CarbonFluidSpaceData {
-  const CarbonFluidSpaceData(this.value, this.unit);
-
-  final double value;
-  final CarbonSpaceUnit unit;
-
-  /// Resolves against a viewport [width] (logical pixels).
-  double resolve(double width) => unit == .vw ? width * value / 100.0 : value;
-}
-
 /// One (possibly partial) set of text-style measurements. Fields are nullable so
 /// fluid breakpoint overrides can carry only the properties Carbon changes.
 @immutable
