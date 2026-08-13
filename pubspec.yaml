@@ -31,6 +31,11 @@ melos:
   # tool/check_toolchain.dart owns both floors and enforces them instead.
 
   command:
+    version:
+      # The aggregate workspace changelog is not published and duplicates the
+      # per-package ones, so a `melos version` run should not create it.
+      workspaceChangelog: false
+
     bootstrap:
       # Mix floors are managed here so `remix` and `remix_fortal` cannot drift
       # apart. Unlike `environment` above, this is safe to manage centrally:
