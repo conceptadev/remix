@@ -110,7 +110,7 @@ class RemixAccordion<T> extends StatelessWidget {
     this.onHoverChange,
     this.onPressChange,
     this.semanticLabel,
-    this.transitionBuilder = defaultAccordionTransitionBuilder,
+    this.transitionBuilder = RemixAccordion.defaultAccordionTransitionBuilder,
     this.style = const AccordionStyler.create(),
     this.styleSpec,
   }) : assert(

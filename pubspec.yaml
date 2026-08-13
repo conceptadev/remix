@@ -4,6 +4,7 @@ environment:
   flutter: ">=3.44.0"
 
 dev_dependencies:
+  analyzer: ^10.2.0
   melos: ^7.1.1
   flutter_lints: ^6.0.0
   build_runner: ^2.10.1
@@ -87,6 +88,10 @@ melos:
       run: dart run tool/check_material_independence.dart
       description: Verify published Remix libraries contain no direct Material usage
 
+    styler:parity:check:
+      run: dart run tool/check_styler_call_parity.dart
+      description: Verify each Styler.call() matches its widget constructor
+
     fortal:icons:generate:
       run: uv run --frozen --project packages/remix_fortal/tool/radix_icons glyphpact --config packages/remix_fortal/tool/radix_icons/glyphpact.json
       description: Regenerate the locked FortalIcons font and Dart provider
@@ -102,11 +107,12 @@ melos:
         - toolchain:check
         - mix:consumer:check
         - material:check
+        - styler:parity:check
         - generate:check
         - docs:check
         - fortal:parity:check
         - test:flutter
-      description: Verify generated sources, docs, Fortal parity, and tests
+      description: Verify Styler parity, generated sources, docs, Fortal parity, and tests
 
     fortal:parity:check:
       exec: dart run tool/fortal_parity/check.dart
