@@ -13,6 +13,36 @@ A dropdown select component for choosing from a list of options.
 - **Settings**: Enable users to choose configuration values
 - **Data entry**: Provide structured input options in forms
 
+## Anatomy
+
+The select trigger is a fixed horizontal row with four visual slots:
+
+- **`container`** — layout, fill, border, effects, and spacing for the trigger.
+- **`icon`** — an optional content icon before the label or placeholder.
+- **`label` / `placeholder`** — the selected item label or empty-state text.
+- **`indicator`** — the affordance that communicates collapsed or expanded
+  state. It is styled separately from `icon`.
+
+Customize the indicator glyph for either state through `RemixSelectTrigger`:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+void main() {
+  RemixSelectTrigger(
+    placeholder: 'Select an option',
+    icon: Icons.language,
+    collapsedIcon: Icons.add,
+    expandedIcon: Icons.remove,
+  );
+}
+```
+
+Each state falls back independently. A null `collapsedIcon` uses the built-in
+downward chevron, while a null `expandedIcon` uses the built-in upward chevron.
+Those defaults are internal vector paths and do not require Material icons.
+
 ## Basic implementation
 
 <CodeGroup title="Basic implementation" defaultLanguage="dart">
@@ -198,6 +228,10 @@ Optional. Controls how one widget replaces another widget in the tree.
 
 **Required**. The trigger data that defines the select's button.
 
+`RemixSelectTrigger` requires a `placeholder` and optionally accepts a leading
+content `icon`, `collapsedIcon`, and `expandedIcon`. Omitted state icons fall
+back independently to the built-in indicator for that state.
+
 #### `items` → `List<RemixSelectItem<T>>`
 
 **Required**. The list of selectable items.
@@ -303,7 +337,21 @@ Sets trigger label styling.
 
 #### `icon(IconStyler value)`
 
-Sets trigger icon styling.
+Styles the optional trigger content icon.
+
+#### `indicator(IconStyler value)`
+
+Styles the collapsed/expanded indicator independently from the content icon.
+
+#### `indicatorOpacity(double value)`
+
+Sets the opacity of the collapsed/expanded indicator.
+
+<Warning>
+  `chevron` and `chevronOpacity` were renamed to `indicator` and
+  `indicatorOpacity`. The indicator may now use any caller-provided glyph, so
+  the semantic name is the only supported spelling.
+</Warning>
 
 #### `alignment(Alignment value)`
 

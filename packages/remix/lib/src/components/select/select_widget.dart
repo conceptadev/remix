@@ -12,11 +12,25 @@ class RemixSelectTrigger {
   /// Placeholder text to display when no value is selected.
   final String placeholder;
 
-  /// Optional icon to display before the label/placeholder.
-  /// When provided, icon appears in leading position (before text).
+  /// Optional content icon to display before the label/placeholder.
   final IconData? icon;
 
-  const RemixSelectTrigger({required this.placeholder, this.icon});
+  /// Optional indicator icon to display while the select is collapsed.
+  ///
+  /// When null, the default downward chevron is displayed.
+  final IconData? collapsedIcon;
+
+  /// Optional indicator icon to display while the select is expanded.
+  ///
+  /// When null, the default upward chevron is displayed.
+  final IconData? expandedIcon;
+
+  const RemixSelectTrigger({
+    required this.placeholder,
+    this.icon,
+    this.collapsedIcon,
+    this.expandedIcon,
+  });
 }
 
 /// Data class representing a selectable option.
@@ -376,6 +390,10 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
     return StyleSpecBuilder<SelectTriggerSpec>(
       styleSpec: styleSpec,
       builder: (context, spec) {
+        final indicatorIcon = isOpen
+            ? trigger.expandedIcon
+            : trigger.collapsedIcon;
+
         return RemixFlexBoxWithEffects(
           styleSpec: spec.container,
           direction: Axis.horizontal,
@@ -393,16 +411,22 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
                 ),
               ),
             ),
-            Transform.rotate(
-              angle: isOpen ? math.pi : 0,
-              child: Opacity(
-                opacity: spec.chevronOpacity ?? 1,
-                child: RemixPathIcon(
-                  key: const ValueKey('fortal-select-chevron'),
-                  glyph: RemixPathGlyph.chevronDown,
-                  styleSpec: spec.chevron,
-                ),
-              ),
+            Opacity(
+              opacity: spec.indicatorOpacity ?? 1,
+              child: indicatorIcon == null
+                  ? Transform.rotate(
+                      angle: isOpen ? math.pi : 0,
+                      child: RemixPathIcon(
+                        key: const ValueKey('remix-select-indicator'),
+                        glyph: RemixPathGlyph.chevronDown,
+                        styleSpec: spec.indicator,
+                      ),
+                    )
+                  : StyledIcon(
+                      key: const ValueKey('remix-select-indicator'),
+                      icon: indicatorIcon,
+                      styleSpec: spec.indicator,
+                    ),
             ),
           ],
         );

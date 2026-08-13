@@ -266,12 +266,15 @@ void main() {
         final container = Prop.maybeMix(FlexBoxStyler());
         final label = Prop.maybeMix(TextStyler());
         final icon = Prop.maybeMix(IconStyler());
+        final indicator = Prop.maybeMix(IconStyler());
         final variants = <VariantStyle<SelectTriggerSpec>>[];
 
         final style = SelectTriggerStyler.create(
           container: container,
           label: label,
           icon: icon,
+          indicator: indicator,
+          indicatorOpacity: Prop.maybe(0.5),
           variants: variants,
         );
 
@@ -279,6 +282,8 @@ void main() {
         expect(style.$container, equals(container));
         expect(style.$label, equals(label));
         expect(style.$icon, equals(icon));
+        expect(style.$indicator, equals(indicator));
+        expect(style.$indicatorOpacity, Prop.maybe(0.5));
         expect(style.$variants, equals(variants));
       });
     });
@@ -310,6 +315,34 @@ void main() {
             style.$icon,
             equals(Prop.maybeMix(IconStyler(color: Colors.red))),
           );
+        },
+      );
+
+      styleMethodTest(
+        'indicator',
+        initial: SelectTriggerStyler(),
+        modify: (style) => style.indicator(IconStyler(color: Colors.blue)),
+        expect: (style) {
+          expect(
+            style.$indicator,
+            equals(Prop.maybeMix(IconStyler(color: Colors.blue))),
+          );
+          expect(
+            style,
+            equals(
+              SelectTriggerStyler.indicator(IconStyler(color: Colors.blue)),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'indicatorOpacity',
+        initial: SelectTriggerStyler(),
+        modify: (style) => style.indicatorOpacity(0.5),
+        expect: (style) {
+          expect(style.$indicatorOpacity, Prop.maybe(0.5));
+          expect(style, equals(SelectTriggerStyler.indicatorOpacity(0.5)));
         },
       );
 
@@ -398,7 +431,9 @@ void main() {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
       ) async {
-        final style = SelectTriggerStyler();
+        final style = SelectTriggerStyler()
+            .indicator(IconStyler(color: Colors.blue, size: 18))
+            .indicatorOpacity(0.5);
 
         await tester.pumpWidget(
           MaterialApp(
@@ -411,6 +446,10 @@ void main() {
                 expect(spec.spec.container, isA<StyleSpec<FlexBoxSpec>>());
                 expect(spec.spec.label, isA<StyleSpec<TextSpec>>());
                 expect(spec.spec.icon, isA<StyleSpec<IconSpec>>());
+                expect(spec.spec.indicator, isA<StyleSpec<IconSpec>>());
+                expect(spec.spec.indicator.spec.color, Colors.blue);
+                expect(spec.spec.indicator.spec.size, 18);
+                expect(spec.spec.indicatorOpacity, 0.5);
 
                 return Container();
               },
@@ -426,6 +465,27 @@ void main() {
 
         expect(mergedStyle, equals(originalStyle));
       });
+
+      test('merge combines indicator properties', () {
+        final indicator = IconStyler(color: Colors.blue, size: 18);
+        final style = SelectTriggerStyler(indicator: indicator);
+        final other = SelectTriggerStyler(indicatorOpacity: 0.5);
+
+        final merged = style.merge(other);
+
+        expect(merged.$indicator, equals(Prop.maybeMix(indicator)));
+        expect(merged.$indicatorOpacity, equals(Prop.maybe(0.5)));
+      });
+
+      test('props list contains indicator properties', () {
+        final style = SelectTriggerStyler(
+          indicator: IconStyler(color: Colors.blue),
+          indicatorOpacity: 0.5,
+        );
+
+        expect(style.props, contains(style.$indicator));
+        expect(style.props, contains(style.$indicatorOpacity));
+      });
     });
 
     group('Equality', () {
@@ -438,11 +498,11 @@ void main() {
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = SelectTriggerStyler().label(
-          TextStyler(style: TextStyleMix(color: Colors.blue)),
+        final style1 = SelectTriggerStyler().indicator(
+          IconStyler(color: Colors.blue),
         );
-        final style2 = SelectTriggerStyler().label(
-          TextStyler(style: TextStyleMix(color: Colors.red)),
+        final style2 = SelectTriggerStyler().indicator(
+          IconStyler(color: Colors.red),
         );
 
         expect(style1, isNot(equals(style2)));

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -181,34 +182,46 @@ void main() {
         expect(spec.container, isA<StyleSpec<FlexBoxSpec>>());
         expect(spec.label, isA<StyleSpec<TextSpec>>());
         expect(spec.icon, isA<StyleSpec<IconSpec>>());
+        expect(spec.indicator, isA<StyleSpec<IconSpec>>());
       });
 
       test('creates spec with provided parameters', () {
         final container = StyleSpec(spec: FlexBoxSpec());
         final label = StyleSpec(spec: TextSpec());
         final icon = StyleSpec(spec: IconSpec());
+        final indicator = StyleSpec(spec: IconSpec());
 
         final spec = SelectTriggerSpec(
           container: container,
           label: label,
           icon: icon,
+          indicator: indicator,
+          indicatorOpacity: 0.5,
         );
 
         expect(spec.container, equals(container));
         expect(spec.label, equals(label));
         expect(spec.icon, equals(icon));
+        expect(spec.indicator, equals(indicator));
+        expect(spec.indicatorOpacity, 0.5);
       });
     });
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
         const originalSpec = SelectTriggerSpec();
-        final newContainer = StyleSpec(spec: FlexBoxSpec());
+        final newIndicator = StyleSpec(
+          spec: IconSpec(color: const Color(0xFF0000FF), size: 18),
+        );
 
-        final updatedSpec = originalSpec.copyWith(container: newContainer);
+        final updatedSpec = originalSpec.copyWith(
+          indicator: newIndicator,
+          indicatorOpacity: 0.5,
+        );
 
         expect(updatedSpec, isNot(same(originalSpec)));
-        expect(updatedSpec.container, equals(newContainer));
+        expect(updatedSpec.indicator, equals(newIndicator));
+        expect(updatedSpec.indicatorOpacity, 0.5);
       });
 
       test('preserves immutability - original spec unchanged', () {
@@ -236,30 +249,36 @@ void main() {
 
       test('interpolates between two specs at t=0.0', () {
         final spec1 = SelectTriggerSpec(
-          container: StyleSpec(spec: FlexBoxSpec()),
+          indicator: StyleSpec(spec: IconSpec(color: const Color(0xFF0000FF))),
+          indicatorOpacity: 0,
         );
         final spec2 = SelectTriggerSpec(
-          container: StyleSpec(spec: FlexBoxSpec()),
+          indicator: StyleSpec(spec: IconSpec(color: const Color(0xFFFF0000))),
+          indicatorOpacity: 1,
         );
 
         final result = spec1.lerp(spec2, 0.0);
 
         expect(result, isNot(same(spec1)));
-        expect(result.container, equals(spec1.container));
+        expect(result.indicator, equals(spec1.indicator));
+        expect(result.indicatorOpacity, spec1.indicatorOpacity);
       });
 
       test('interpolates between two specs at t=1.0', () {
         final spec1 = SelectTriggerSpec(
-          container: StyleSpec(spec: FlexBoxSpec()),
+          indicator: StyleSpec(spec: IconSpec(color: const Color(0xFF0000FF))),
+          indicatorOpacity: 0,
         );
         final spec2 = SelectTriggerSpec(
-          container: StyleSpec(spec: FlexBoxSpec()),
+          indicator: StyleSpec(spec: IconSpec(color: const Color(0xFFFF0000))),
+          indicatorOpacity: 1,
         );
 
         final result = spec1.lerp(spec2, 1.0);
 
         expect(result, isNot(same(spec2)));
-        expect(result.container, equals(spec2.container));
+        expect(result.indicator, equals(spec2.indicator));
+        expect(result.indicatorOpacity, spec2.indicatorOpacity);
       });
     });
 
@@ -274,14 +293,7 @@ void main() {
 
       test('two specs with different properties are not equal', () {
         const spec1 = SelectTriggerSpec();
-        final spec2 = SelectTriggerSpec(
-          container: StyleSpec(
-            spec: FlexBoxSpec(),
-            animation: AnimationConfig.linear(
-              const Duration(milliseconds: 100),
-            ),
-          ),
-        );
+        const spec2 = SelectTriggerSpec(indicatorOpacity: 0.5);
 
         expect(spec1, isNot(equals(spec2)));
       });
@@ -293,16 +305,20 @@ void main() {
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.icon));
+        expect(spec.props, contains(spec.indicator));
+        expect(spec.props, contains(spec.indicatorOpacity));
       });
     });
 
     group('Diagnostic Support', () {
       test('debugFillProperties works without throwing', () {
-        const spec = SelectTriggerSpec();
+        const spec = SelectTriggerSpec(indicatorOpacity: 0.5);
+        final properties = DiagnosticPropertiesBuilder();
 
+        expect(() => spec.debugFillProperties(properties), returnsNormally);
         expect(
-          () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
-          returnsNormally,
+          properties.properties.map((property) => property.name),
+          containsAll(['indicator', 'indicatorOpacity']),
         );
       });
 

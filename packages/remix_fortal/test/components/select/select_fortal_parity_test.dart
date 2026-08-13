@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+// Deliberate: RemixPathIcon/RemixPathGlyph stay unexported, but this suite
+// pins the *glyph* the trigger draws, not just that some widget sits under the
+// indicator key. Exporting them to satisfy a test would widen the public API
+// for no consumer, so the private import is the cheaper coupling. If that file
+// moves, retarget this import rather than weakening the assertion.
+import 'package:remix/src/utilities/remix_path_icon.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -54,7 +60,7 @@ void main() {
               double triggerPadding,
               double gap,
               double triggerRadius,
-              double chevron,
+              double triggerIndicatorSize,
               double contentPadding,
               double contentRadius,
               double itemHeight,
@@ -72,7 +78,7 @@ void main() {
               triggerPadding: 8,
               gap: 4,
               triggerRadius: 3,
-              chevron: 9,
+              triggerIndicatorSize: 9,
               contentPadding: 4,
               contentRadius: 6,
               itemHeight: 24,
@@ -89,7 +95,7 @@ void main() {
               triggerPadding: 12,
               gap: 6,
               triggerRadius: 4,
-              chevron: 9,
+              triggerIndicatorSize: 9,
               contentPadding: 8,
               contentRadius: 8,
               itemHeight: 32,
@@ -106,7 +112,7 @@ void main() {
               triggerPadding: 16,
               gap: 8,
               triggerRadius: 6,
-              chevron: 11,
+              triggerIndicatorSize: 11,
               contentPadding: 8,
               contentRadius: 8,
               itemHeight: 32,
@@ -135,7 +141,7 @@ void main() {
         );
         expect(trigger.container.spec.flex!.spec.spacing, expected.gap);
         expect(_radius(triggerBox), expected.triggerRadius);
-        expect(trigger.chevron.spec.size, expected.chevron);
+        expect(trigger.indicator.spec.size, expected.triggerIndicatorSize);
 
         expect(
           content.container.spec.padding,
@@ -178,7 +184,7 @@ void main() {
       expect(item.indicator.spec.constraints!.minWidth, closeTo(22, 1e-9));
       expect(item.icon.spec.size, closeTo(8.8, 1e-9));
       expect(item.text.spec.style!.fontSize, closeTo(13.2, 1e-9));
-      expect(spec.trigger.spec.chevron.spec.size, 9);
+      expect(spec.trigger.spec.indicator.spec.size, 9);
     });
 
     testWidgets('full radius promotes only the trigger to a pill', (
@@ -242,7 +248,8 @@ void main() {
         disabledHover.trigger.spec.label.spec.style!.color,
         tokens.grayA11,
       );
-      expect(disabledHover.trigger.spec.chevron.spec.color, tokens.grayA9);
+      expect(idle.trigger.spec.indicatorOpacity, 0.9);
+      expect(disabledHover.trigger.spec.indicator.spec.color, tokens.grayA9);
     });
 
     testWidgets('focus ring straddles the trigger edge with solid focus8', (
@@ -306,7 +313,7 @@ void main() {
     );
   });
 
-  testWidgets('uses the pinned Radix chevron and thick-check vector paths', (
+  testWidgets('uses the pinned Radix indicator and thick-check vector paths', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -324,7 +331,14 @@ void main() {
       ),
     );
 
-    expect(find.byKey(const ValueKey('fortal-select-chevron')), findsOneWidget);
+    final triggerIndicator = find.byKey(
+      const ValueKey('remix-select-indicator'),
+    );
+    expect(triggerIndicator, findsOneWidget);
+    expect(
+      tester.widget<RemixPathIcon>(triggerIndicator).glyph,
+      RemixPathGlyph.chevronDown,
+    );
     expect(find.byIcon(Icons.keyboard_arrow_down), findsNothing);
 
     await tester.tap(find.byType(RemixSelect<String>));

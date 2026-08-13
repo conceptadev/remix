@@ -28,6 +28,13 @@ final _retiredApis = <(RegExp, String)>[
     RegExp(r'\bentries\s*:'),
     'renamed Menu/Select collection argument; use items',
   ),
+  // Narrow on purpose: the slot spellings always end in `(` or `:`, so the
+  // pinned `RemixPathGlyph.chevronDown` / `FortalIcons.chevron*` glyph names
+  // and prose about the chevron the indicator draws stay legal.
+  (
+    RegExp(r'\bchevron(?:Opacity)?\s*[(:]|\$chevron(?:Opacity)?\b'),
+    'renamed Select trigger indicator slot; use indicator/indicatorOpacity',
+  ),
   (
     RegExp(
       r'\b(?:RemixPaintShadow(?:Kind|Mix|ListToken)?|RemixSurface(?:Layer|Effects)?(?:Spec|Mix)?|remixSurface(?:Box|FlexBox))\b',
