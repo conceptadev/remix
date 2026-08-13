@@ -42,6 +42,7 @@ extension RemixSwitchStylerRemixHelpers on SwitchStyler {
     FocusNode? focusNode,
     bool autofocus = false,
     String? semanticLabel,
+    bool excludeSemantics = false,
     MouseCursor mouseCursor = SystemMouseCursors.click,
   }) {
     return RemixSwitch(
@@ -53,6 +54,7 @@ extension RemixSwitchStylerRemixHelpers on SwitchStyler {
       focusNode: focusNode,
       autofocus: autofocus,
       semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
       mouseCursor: mouseCursor,
       style: this,
     );

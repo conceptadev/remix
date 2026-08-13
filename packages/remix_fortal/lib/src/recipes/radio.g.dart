@@ -19,6 +19,8 @@ class FortalRadio<T> extends StatelessWidget {
     this.mouseCursor,
     this.focusNode,
     this.autofocus = false,
+    this.semanticLabel,
+    this.excludeSemantics = false,
   });
 
   /// Raised treatment with Radix's classic shadow and gradient layers.
@@ -32,6 +34,8 @@ class FortalRadio<T> extends StatelessWidget {
     this.mouseCursor,
     this.focusNode,
     this.autofocus = false,
+    this.semanticLabel,
+    this.excludeSemantics = false,
   }) : variant = FortalRadioVariant.classic;
 
   /// Surface treatment with neutral border.
@@ -45,6 +49,8 @@ class FortalRadio<T> extends StatelessWidget {
     this.mouseCursor,
     this.focusNode,
     this.autofocus = false,
+    this.semanticLabel,
+    this.excludeSemantics = false,
   }) : variant = FortalRadioVariant.surface;
 
   /// Soft accent treatment.
@@ -58,6 +64,8 @@ class FortalRadio<T> extends StatelessWidget {
     this.mouseCursor,
     this.focusNode,
     this.autofocus = false,
+    this.semanticLabel,
+    this.excludeSemantics = false,
   }) : variant = FortalRadioVariant.soft;
 
   final FortalRadioVariant variant;
@@ -78,6 +86,10 @@ class FortalRadio<T> extends StatelessWidget {
 
   final bool autofocus;
 
+  final String? semanticLabel;
+
+  final bool excludeSemantics;
+
   @override
   Widget build(BuildContext context) {
     return RemixRadio<T>(
@@ -93,6 +105,8 @@ class FortalRadio<T> extends StatelessWidget {
       mouseCursor: this.mouseCursor,
       focusNode: this.focusNode,
       autofocus: this.autofocus,
+      semanticLabel: this.semanticLabel,
+      excludeSemantics: this.excludeSemantics,
     );
   }
 }

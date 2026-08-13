@@ -375,6 +375,8 @@ RemixMenu<T> remixMenuConstructor<T>({
   bool closeOnClickOutside = true,
   FocusNode? triggerFocusNode,
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
+  String? semanticLabel,
+  bool excludeSemantics = false,
   MenuStyler style = const MenuStyler.create(),
   MenuSpec? styleSpec,
 }) => throw UnimplementedError();
@@ -445,6 +447,14 @@ Optional. Optional focus node for the trigger.
 
 Optional. Overlay positioning configuration.
 
+#### `semanticLabel` → `String?`
+
+Optional. The accessible label for the menu trigger.
+
+#### `excludeSemantics` → `bool`
+
+Optional. Whether to hide the menu trigger from the semantics tree. Defaults to `false`. This applies to the trigger only — the overlay is mounted separately, so an open menu keeps announcing its items.
+
 #### `style` → `MenuStyler`
 
 Optional. The style configuration for the menu.
@@ -502,7 +512,7 @@ Applies widget modifiers such as clipping, opacity, or scaling.
 
 Sets the widget modifier.
 
-#### `call<T>({ ... })`
+#### `call<T>({..., String? semanticLabel, bool excludeSemantics = false})`
 
 Creates a RemixMenu widget with this style applied.
 

@@ -16,8 +16,19 @@ extension RemixTabBarStylerRemixHelpers on TabBarStyler {
 /// tab.
 extension RemixTabViewStylerRemixHelpers on TabViewStyler {
   /// Creates a [RemixTabView] widget with this style applied.
-  RemixTabView call({Key? key, required String tabId, required Widget child}) {
-    return RemixTabView(key: key, tabId: tabId, style: this, child: child);
+  RemixTabView call({
+    Key? key,
+    required String tabId,
+    required Widget child,
+    bool maintainState = true,
+  }) {
+    return RemixTabView(
+      key: key,
+      tabId: tabId,
+      maintainState: maintainState,
+      style: this,
+      child: child,
+    );
   }
 }
 

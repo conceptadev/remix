@@ -94,6 +94,8 @@ import 'package:remix/remix.dart';
 
 RemixSpinner remixSpinnerConstructor({
   Key? key,
+  String? semanticsLabel,
+  String? semanticsValue,
   SpinnerStyler style = const SpinnerStyler.create(),
   SpinnerSpec? styleSpec,
 }) => throw UnimplementedError();
@@ -115,6 +117,14 @@ Optional. A pre-resolved style spec that bypasses style resolution. Useful for p
 #### `key` → `Key?`
 
 Optional. Controls how one widget replaces another widget in the tree.
+
+#### `semanticsLabel` → `String?`
+
+Optional. The accessible name for a non-decorative loading spinner. When omitted, the spinner remains decorative.
+
+#### `semanticsValue` → `String?`
+
+Optional. Status text announced with `semanticsLabel`.
 
 
 ### Style Methods
@@ -151,6 +161,6 @@ Configures implicit animation for style transitions.
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
-#### `call()`
+#### `call({Key? key, String? semanticsLabel, String? semanticsValue})`
 
 Creates a `RemixSpinner` widget with this style applied.

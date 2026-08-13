@@ -30,6 +30,9 @@ class RemixSlider extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.snapDivisions,
+    this.semanticLabel,
+    this.semanticFormatterCallback,
+    this.excludeSemantics = false,
     this.style = const SliderStyler.create(),
     this.styleSpec,
   }) : assert(min <= max, 'Slider min must be less than or equal to max'),
@@ -86,6 +89,15 @@ class RemixSlider extends StatelessWidget {
   /// The focus node for the slider.
   final FocusNode? focusNode;
 
+  /// The semantic label for the slider's single thumb.
+  final String? semanticLabel;
+
+  /// Formats the semantic value for the slider's single thumb.
+  final NakedSliderSemanticFormatterCallback? semanticFormatterCallback;
+
+  /// Whether to hide the slider from the semantic tree.
+  final bool excludeSemantics;
+
   double get _effectiveStep {
     final divisions = snapDivisions;
     if (divisions != null) return (max - min) / divisions;
@@ -113,6 +125,11 @@ class RemixSlider extends StatelessWidget {
       enableFeedback: enableFeedback,
       focusNodes: focusNode == null ? null : [focusNode],
       autofocusThumbIndex: autofocus ? 0 : null,
+      semanticLabels: semanticLabel == null ? null : [semanticLabel],
+      semanticFormatterCallbacks: semanticFormatterCallback == null
+          ? null
+          : [semanticFormatterCallback],
+      excludeSemantics: excludeSemantics,
       builder: (context, state, _) {
         return RemixStyleSpecBuilder<SliderSpec>(
           style: style,

@@ -190,6 +190,8 @@ RemixRadio<T> remixRadioConstructor<T>({
   MouseCursor? mouseCursor,
   FocusNode? focusNode,
   bool autofocus = false,
+  String? semanticLabel,
+  bool excludeSemantics = false,
   RadioStyler style = const RadioStyler.create(),
   RadioSpec? styleSpec,
 }) => throw UnimplementedError();
@@ -248,6 +250,14 @@ Optional. The focus node for the radio button.
 
 Optional. The mouse cursor to use when hovering over the radio button.
 
+#### `semanticLabel` → `String?`
+
+Optional. The accessible label for this radio button.
+
+#### `excludeSemantics` → `bool`
+
+Optional. Whether to hide the radio button and its visual subtree from the semantics tree. Defaults to `false`.
+
 
 #### `indicator(BoxStyler value)`
 
@@ -297,6 +307,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
-#### `call<T>({required T value, bool enabled = true, bool autofocus = false, bool toggleable = false, FocusNode? focusNode, MouseCursor? mouseCursor})`
+#### `call<T>({Key? key, required T value, bool enabled = true, bool toggleable = false, MouseCursor? mouseCursor, FocusNode? focusNode, bool autofocus = false, String? semanticLabel, bool excludeSemantics = false})`
 
 Creates a `RemixRadio<T>` widget with this style applied.

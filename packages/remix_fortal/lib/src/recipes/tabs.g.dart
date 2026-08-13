@@ -27,11 +27,18 @@ class FortalTabBar extends StatelessWidget {
 
 /// Fortal-themed preset for [RemixTabView].
 class FortalTabView extends StatelessWidget {
-  const FortalTabView({super.key, required this.tabId, required this.child});
+  const FortalTabView({
+    super.key,
+    required this.tabId,
+    required this.child,
+    this.maintainState = true,
+  });
 
   final String tabId;
 
   final Widget child;
+
+  final bool maintainState;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +47,7 @@ class FortalTabView extends StatelessWidget {
       style: fortalTabViewStyle(),
       tabId: this.tabId,
       child: this.child,
+      maintainState: this.maintainState,
     );
   }
 }
