@@ -1,14 +1,13 @@
-name: Prepare Version PR
+name: Prepare Version Bump
 
-# Opens a pull request that bumps versions and changelogs from conventional
+# Pushes a branch that bumps versions and changelogs from conventional
 # commits. It never tags and never publishes: `publish.yml` fires on a tag push,
 # so the tag is pushed by hand after this PR is reviewed and merged.
 #
-# Requires "Allow GitHub Actions to create and approve pull requests"
-# (Settings -> Actions -> General). `GITHUB_TOKEN` cannot open a pull request
-# without it, and that restriction applies to the `gh` CLI too, because `gh`
-# authenticates with the same token. If the setting cannot be enabled, supply a
-# PAT or GitHub App token as `GH_TOKEN` on the final step instead.
+# It pushes a branch and prints its compare link rather than opening the pull
+# request itself. Opening one from a workflow needs "Allow GitHub Actions to
+# create and approve pull requests", which is off by default and also grants
+# approval rights, so the one click is cheaper than the permission.
 
 on:
   workflow_dispatch:
@@ -28,7 +27,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   version:
@@ -103,19 +101,17 @@ jobs:
           git commit -m "chore(release): version packages"
           git push --set-upstream origin release/version-packages --force
 
-      - name: Open pull request
+      - name: Summarise
         if: steps.bump.outputs.versioned == 'true'
         run: |
-          set -euo pipefail
-          existing=$(gh pr list --head release/version-packages --state open --json number --jq 'length')
-          if [ "$existing" -gt 0 ]; then
-            echo "A pull request is already open for release/version-packages; it now carries the new commit."
-            exit 0
-          fi
-          gh pr create \
-            --title "chore(release): version packages" \
-            --body "Opened by the Prepare Version PR workflow. Review the versions and changelogs, merge, then push the release tags in order — \`remix-v*\` first, wait for pub.dev to serve it, then \`remix_fortal-v*\`." \
-            --base main \
-            --head release/version-packages
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          url="${{ github.server_url }}/${{ github.repository }}/compare/main...release/version-packages?expand=1"
+          {
+            echo "### Versions bumped"
+            echo
+            echo "[Open the pull request]($url)"
+            echo
+            echo "After merging, push the release tags in order:"
+            echo '1. `remix-v<version>` — wait until pub.dev serves it'
+            echo '2. `remix_fortal-v<version>`'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "Open the pull request: $url"
