@@ -1,3 +1,31 @@
+## 1.0.0-beta.3
+
+- **BREAKING**: Remove handwritten component styler aliases that duplicate the
+  generated API. Use `color` for component surfaces; explicit child-slot
+  methods such as `labelColor`, `iconColor`, `textColor`, and `contentTextStyle`
+  for component parts; `size(width, height)` for square and fixed sizes; and
+  `wrap(.rotate(...))` for whole-widget rotation.
+- **BREAKING**: Remove `RemixBoxStylerConvenience` and its shorthand methods.
+  Use the canonical compound forms such as `padding(.all(value))`,
+  `margin(.horizontal(value))`, `border(.color(value))`,
+  `borderRadius(.circular(value))`, and `transform(Matrix4.identity())`.
+- **BREAKING**: Remove direct Material usage from the published packages.
+  `remix` no longer imports `package:flutter/material.dart`, ships no Material
+  default icons, and sets `uses-material-design: false`. Hosts on `WidgetsApp`
+  or `CupertinoApp` no longer pull Material in through Remix.
+- **FEAT**: Give `RemixAccordion` a panel container that owns the item's
+  border, radius, fill, and clipping, removing the notched seam between an
+  expanded trigger and its content. `AccordionSpec` gains `container` and
+  `containerEffects`; `trigger` remains the forwarded part.
+- **FIX**: Correct focus-visible state handling.
+- **FIX**: Respect input modality when showing focus rings, so a pointer
+  interaction no longer leaves a keyboard focus ring behind.
+- **FIX**: Make checkbox styles value-comparable.
+- **FIX**: Forward `excludeSemantics` on toggle.
+- Raise the `naked_ui` floor to `^1.0.0-beta.10`, which adds
+  `NakedAccordion.itemBuilder` and tracks accordion press state whenever the
+  item is enabled rather than only when a callback is supplied.
+
 ## 1.0.0-beta.2
 
 - **FEAT**: Lower the supported floor to Dart 3.11 / Flutter 3.41, matching
@@ -108,15 +136,6 @@
   `RemixBoxStylerMixin` are unchanged. Public styler extension names such as
   `RemixCardStylerRemixHelpers` are also unchanged, so explicit extension
   invocation stays source-compatible.
-- **BREAKING**: Remove handwritten component styler aliases that duplicate the
-  generated API. Use `color` for component surfaces; explicit child-slot
-  methods such as `labelColor`, `iconColor`, `textColor`, and `contentTextStyle`
-  for component parts; `size(width, height)` for square and fixed sizes; and
-  `wrap(.rotate(...))` for whole-widget rotation.
-- **BREAKING**: Remove `RemixBoxStylerConvenience` and its shorthand methods.
-  Use the canonical compound forms such as `padding(.all(value))`,
-  `margin(.horizontal(value))`, `border(.color(value))`,
-  `borderRadius(.circular(value))`, and `transform(Matrix4.identity())`.
 - **BREAKING**: Rename Fortal recipe helpers from `fortalXStyler()` to
   `fortalXStyle()` so `@MixWidget` can infer every generated `FortalX` name.
   Remix component styler types such as `ButtonStyler` and
