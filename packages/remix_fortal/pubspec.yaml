@@ -15,7 +15,7 @@ topics:
 # Pre-release because every dependency below is itself a pre-release; pub warns
 # when a stable package is built on beta foundations. Graduate to 0.1.0 when
 # remix reaches 1.0.0 stable.
-version: 0.1.0-beta.1
+version: 0.1.0-beta.2
 
 # Consumer floor, matching `remix` and `mix`. See packages/remix/pubspec.yaml.
 environment:
@@ -36,7 +36,7 @@ dependencies:
   # — otherwise pub could resolve a `remix` whose symbols collide with this
   # package. `tool/fortal_parity/check.dart` (_checkRemixHostedPin) fails if the
   # two ever fall out of sync.
-  remix: ^1.0.0-beta.2 # x-release-please-version
+  remix: ^1.0.0-beta.3 # x-release-please-version
   mix: ^2.2.0-beta.4
   mix_annotations: ^2.2.0-beta.1
   mix_chart: ^0.0.1-beta.1
