@@ -100,9 +100,9 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
   StyleSpec<TextSpec> get label;
   StyleSpec<TextSpec> get placeholder;
   StyleSpec<IconSpec> get icon;
-  StyleSpec<IconSpec> get chevron;
+  StyleSpec<IconSpec> get indicator;
   RemixBoxEffectsSpec? get containerEffects;
-  double? get chevronOpacity;
+  double? get indicatorOpacity;
   double? get placeholderOpacity;
 
   @override
@@ -114,9 +114,9 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
     StyleSpec<TextSpec>? label,
     StyleSpec<TextSpec>? placeholder,
     StyleSpec<IconSpec>? icon,
-    StyleSpec<IconSpec>? chevron,
+    StyleSpec<IconSpec>? indicator,
     RemixBoxEffectsSpec? containerEffects,
-    double? chevronOpacity,
+    double? indicatorOpacity,
     double? placeholderOpacity,
   }) {
     return SelectTriggerSpec(
@@ -124,9 +124,9 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
       label: label ?? this.label,
       placeholder: placeholder ?? this.placeholder,
       icon: icon ?? this.icon,
-      chevron: chevron ?? this.chevron,
+      indicator: indicator ?? this.indicator,
       containerEffects: containerEffects ?? this.containerEffects,
-      chevronOpacity: chevronOpacity ?? this.chevronOpacity,
+      indicatorOpacity: indicatorOpacity ?? this.indicatorOpacity,
       placeholderOpacity: placeholderOpacity ?? this.placeholderOpacity,
     );
   }
@@ -138,13 +138,17 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
       label: label.lerp(other?.label, t),
       placeholder: placeholder.lerp(other?.placeholder, t),
       icon: icon.lerp(other?.icon, t),
-      chevron: chevron.lerp(other?.chevron, t),
+      indicator: indicator.lerp(other?.indicator, t),
       containerEffects: MixOps.lerpSnap(
         containerEffects,
         other?.containerEffects,
         t,
       ),
-      chevronOpacity: MixOps.lerp(chevronOpacity, other?.chevronOpacity, t),
+      indicatorOpacity: MixOps.lerp(
+        indicatorOpacity,
+        other?.indicatorOpacity,
+        t,
+      ),
       placeholderOpacity: MixOps.lerp(
         placeholderOpacity,
         other?.placeholderOpacity,
@@ -159,9 +163,9 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
     label,
     placeholder,
     icon,
-    chevron,
+    indicator,
     containerEffects,
-    chevronOpacity,
+    indicatorOpacity,
     placeholderOpacity,
   ];
 
@@ -209,9 +213,9 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('placeholder', placeholder))
       ..add(DiagnosticsProperty('icon', icon))
-      ..add(DiagnosticsProperty('chevron', chevron))
+      ..add(DiagnosticsProperty('indicator', indicator))
       ..add(DiagnosticsProperty('containerEffects', containerEffects))
-      ..add(DoubleProperty('chevronOpacity', chevronOpacity))
+      ..add(DoubleProperty('indicatorOpacity', indicatorOpacity))
       ..add(DoubleProperty('placeholderOpacity', placeholderOpacity));
   }
 }
@@ -1016,9 +1020,9 @@ class SelectTriggerStyler
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<TextSpec>>? $placeholder;
   final Prop<StyleSpec<IconSpec>>? $icon;
-  final Prop<StyleSpec<IconSpec>>? $chevron;
+  final Prop<StyleSpec<IconSpec>>? $indicator;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
-  final Prop<double>? $chevronOpacity;
+  final Prop<double>? $indicatorOpacity;
   final Prop<double>? $placeholderOpacity;
 
   const SelectTriggerStyler.create({
@@ -1026,9 +1030,9 @@ class SelectTriggerStyler
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<TextSpec>>? placeholder,
     Prop<StyleSpec<IconSpec>>? icon,
-    Prop<StyleSpec<IconSpec>>? chevron,
+    Prop<StyleSpec<IconSpec>>? indicator,
     Prop<RemixBoxEffectsSpec>? containerEffects,
-    Prop<double>? chevronOpacity,
+    Prop<double>? indicatorOpacity,
     Prop<double>? placeholderOpacity,
     super.variants,
     super.modifier,
@@ -1037,9 +1041,9 @@ class SelectTriggerStyler
        $label = label,
        $placeholder = placeholder,
        $icon = icon,
-       $chevron = chevron,
+       $indicator = indicator,
        $containerEffects = containerEffects,
-       $chevronOpacity = chevronOpacity,
+       $indicatorOpacity = indicatorOpacity,
        $placeholderOpacity = placeholderOpacity;
 
   SelectTriggerStyler({
@@ -1047,9 +1051,9 @@ class SelectTriggerStyler
     TextStyler? label,
     TextStyler? placeholder,
     IconStyler? icon,
-    IconStyler? chevron,
+    IconStyler? indicator,
     RemixBoxEffectsMix? containerEffects,
-    double? chevronOpacity,
+    double? indicatorOpacity,
     double? placeholderOpacity,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -1059,9 +1063,9 @@ class SelectTriggerStyler
          label: Prop.maybeMix(label),
          placeholder: Prop.maybeMix(placeholder),
          icon: Prop.maybeMix(icon),
-         chevron: Prop.maybeMix(chevron),
+         indicator: Prop.maybeMix(indicator),
          containerEffects: Prop.maybeMix(containerEffects),
-         chevronOpacity: Prop.maybe(chevronOpacity),
+         indicatorOpacity: Prop.maybe(indicatorOpacity),
          placeholderOpacity: Prop.maybe(placeholderOpacity),
          variants: variants,
          modifier: modifier,
@@ -1076,12 +1080,12 @@ class SelectTriggerStyler
       SelectTriggerStyler().placeholder(value);
   factory SelectTriggerStyler.icon(IconStyler value) =>
       SelectTriggerStyler().icon(value);
-  factory SelectTriggerStyler.chevron(IconStyler value) =>
-      SelectTriggerStyler().chevron(value);
+  factory SelectTriggerStyler.indicator(IconStyler value) =>
+      SelectTriggerStyler().indicator(value);
   factory SelectTriggerStyler.containerEffects(RemixBoxEffectsMix value) =>
       SelectTriggerStyler().containerEffects(value);
-  factory SelectTriggerStyler.chevronOpacity(double value) =>
-      SelectTriggerStyler().chevronOpacity(value);
+  factory SelectTriggerStyler.indicatorOpacity(double value) =>
+      SelectTriggerStyler().indicatorOpacity(value);
   factory SelectTriggerStyler.placeholderOpacity(double value) =>
       SelectTriggerStyler().placeholderOpacity(value);
   factory SelectTriggerStyler.color(Color value) =>
@@ -1639,9 +1643,9 @@ class SelectTriggerStyler
     return merge(SelectTriggerStyler(icon: value));
   }
 
-  /// Sets the chevron.
-  SelectTriggerStyler chevron(IconStyler value) {
-    return merge(SelectTriggerStyler(chevron: value));
+  /// Sets the indicator.
+  SelectTriggerStyler indicator(IconStyler value) {
+    return merge(SelectTriggerStyler(indicator: value));
   }
 
   /// Sets the containerEffects.
@@ -1649,9 +1653,9 @@ class SelectTriggerStyler
     return merge(SelectTriggerStyler(containerEffects: value));
   }
 
-  /// Sets the chevronOpacity.
-  SelectTriggerStyler chevronOpacity(double value) {
-    return merge(SelectTriggerStyler(chevronOpacity: value));
+  /// Sets the indicatorOpacity.
+  SelectTriggerStyler indicatorOpacity(double value) {
+    return merge(SelectTriggerStyler(indicatorOpacity: value));
   }
 
   /// Sets the placeholderOpacity.
@@ -1690,12 +1694,15 @@ class SelectTriggerStyler
       label: MixOps.merge($label, other?.$label),
       placeholder: MixOps.merge($placeholder, other?.$placeholder),
       icon: MixOps.merge($icon, other?.$icon),
-      chevron: MixOps.merge($chevron, other?.$chevron),
+      indicator: MixOps.merge($indicator, other?.$indicator),
       containerEffects: MixOps.merge(
         $containerEffects,
         other?.$containerEffects,
       ),
-      chevronOpacity: MixOps.merge($chevronOpacity, other?.$chevronOpacity),
+      indicatorOpacity: MixOps.merge(
+        $indicatorOpacity,
+        other?.$indicatorOpacity,
+      ),
       placeholderOpacity: MixOps.merge(
         $placeholderOpacity,
         other?.$placeholderOpacity,
@@ -1714,9 +1721,9 @@ class SelectTriggerStyler
       label: MixOps.resolve(context, $label),
       placeholder: MixOps.resolve(context, $placeholder),
       icon: MixOps.resolve(context, $icon),
-      chevron: MixOps.resolve(context, $chevron),
+      indicator: MixOps.resolve(context, $indicator),
       containerEffects: MixOps.resolve(context, $containerEffects),
-      chevronOpacity: MixOps.resolve(context, $chevronOpacity),
+      indicatorOpacity: MixOps.resolve(context, $indicatorOpacity),
       placeholderOpacity: MixOps.resolve(context, $placeholderOpacity),
     );
 
@@ -1735,9 +1742,9 @@ class SelectTriggerStyler
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('placeholder', $placeholder))
       ..add(DiagnosticsProperty('icon', $icon))
-      ..add(DiagnosticsProperty('chevron', $chevron))
+      ..add(DiagnosticsProperty('indicator', $indicator))
       ..add(DiagnosticsProperty('containerEffects', $containerEffects))
-      ..add(DiagnosticsProperty('chevronOpacity', $chevronOpacity))
+      ..add(DiagnosticsProperty('indicatorOpacity', $indicatorOpacity))
       ..add(DiagnosticsProperty('placeholderOpacity', $placeholderOpacity));
   }
 
@@ -1747,9 +1754,9 @@ class SelectTriggerStyler
     $label,
     $placeholder,
     $icon,
-    $chevron,
+    $indicator,
     $containerEffects,
-    $chevronOpacity,
+    $indicatorOpacity,
     $placeholderOpacity,
     $animation,
     $modifier,

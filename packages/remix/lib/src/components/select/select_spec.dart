@@ -44,13 +44,17 @@ class SelectTriggerSpec with _$SelectTriggerSpec {
   final StyleSpec<TextSpec> placeholder;
   @override
   final StyleSpec<IconSpec> icon;
+
+  /// Style for the collapsed/expanded trigger affordance.
   @override
-  final StyleSpec<IconSpec> chevron;
+  final StyleSpec<IconSpec> indicator;
   @override
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
+
+  /// Opacity applied to the collapsed/expanded trigger affordance.
   @override
-  final double? chevronOpacity;
+  final double? indicatorOpacity;
   @override
   final double? placeholderOpacity;
 
@@ -59,15 +63,15 @@ class SelectTriggerSpec with _$SelectTriggerSpec {
     StyleSpec<TextSpec>? label,
     StyleSpec<TextSpec>? placeholder,
     StyleSpec<IconSpec>? icon,
-    StyleSpec<IconSpec>? chevron,
+    StyleSpec<IconSpec>? indicator,
     this.containerEffects,
-    this.chevronOpacity,
+    this.indicatorOpacity,
     this.placeholderOpacity,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        placeholder = placeholder ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
-       chevron = chevron ?? const StyleSpec(spec: IconSpec());
+       indicator = indicator ?? const StyleSpec(spec: IconSpec());
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.

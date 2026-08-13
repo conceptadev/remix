@@ -56,7 +56,7 @@ void main() {
         expect(find.byIcon(Icons.star), findsOneWidget);
       });
 
-      testWidgets('shows dropdown chevron', (tester) async {
+      testWidgets('shows the default select indicator', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
@@ -66,9 +66,98 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          find.byKey(const ValueKey('fortal-select-chevron')),
+          find.byKey(const ValueKey('remix-select-indicator')),
           findsOneWidget,
         );
+      });
+
+      testWidgets(
+        'renders custom indicator icons for collapsed and expanded states',
+        (tester) async {
+          await tester.pumpRemixApp(
+            RemixSelect<String>(
+              trigger: const RemixSelectTrigger(
+                placeholder: 'Select',
+                collapsedIcon: Icons.add,
+                expandedIcon: Icons.remove,
+              ),
+              items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          expect(find.byIcon(Icons.add), findsOneWidget);
+          expect(find.byIcon(Icons.remove), findsNothing);
+          expect(
+            find.ancestor(
+              of: find.byIcon(Icons.add),
+              matching: find.byType(Transform),
+            ),
+            findsNothing,
+          );
+
+          await tester.tap(find.byType(RemixSelect<String>));
+          await tester.pumpAndSettle();
+
+          expect(find.byIcon(Icons.add), findsNothing);
+          expect(find.byIcon(Icons.remove), findsOneWidget);
+          expect(
+            find.ancestor(
+              of: find.byIcon(Icons.remove),
+              matching: find.byType(Transform),
+            ),
+            findsNothing,
+          );
+        },
+      );
+
+      testWidgets('falls back to the collapsed indicator independently', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(
+              placeholder: 'Select',
+              expandedIcon: Icons.remove,
+            ),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final indicator = find.byKey(const ValueKey('remix-select-indicator'));
+        expect(tester.widget(indicator), isNot(isA<StyledIcon>()));
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        expect(find.byIcon(Icons.remove), findsOneWidget);
+        expect(tester.widget(indicator), isA<StyledIcon>());
+      });
+
+      testWidgets('falls back to the expanded indicator independently', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(
+              placeholder: 'Select',
+              collapsedIcon: Icons.add,
+            ),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final indicator = find.byKey(const ValueKey('remix-select-indicator'));
+        expect(find.byIcon(Icons.add), findsOneWidget);
+        expect(tester.widget(indicator), isA<StyledIcon>());
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        expect(find.byIcon(Icons.add), findsNothing);
+        expect(tester.widget(indicator), isNot(isA<StyledIcon>()));
       });
     });
 
@@ -181,7 +270,7 @@ void main() {
         expect(find.text('Option B'), findsOneWidget);
       });
 
-      testWidgets('rotates the chevron when opened', (tester) async {
+      testWidgets('rotates the default indicator when opened', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
@@ -190,9 +279,9 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        final chevron = find.byKey(const ValueKey('fortal-select-chevron'));
+        final indicator = find.byKey(const ValueKey('remix-select-indicator'));
         final transformFinder = find.ancestor(
-          of: chevron,
+          of: indicator,
           matching: find.byType(Transform),
         );
         final closedTransform = tester
@@ -401,6 +490,35 @@ void main() {
           find.byType(RemixSelect<String>),
         );
         expect(select.mouseCursor, SystemMouseCursors.help);
+      });
+
+      testWidgets('styles the content icon and indicator independently', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(
+              placeholder: 'Select',
+              icon: Icons.star,
+              collapsedIcon: Icons.add,
+            ),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            style: SelectStyler().trigger(
+              SelectTriggerStyler()
+                  .icon(IconStyler(color: Colors.red, size: 17))
+                  .indicator(IconStyler(color: Colors.blue, size: 23)),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final contentIcon = tester.widget<Icon>(find.byIcon(Icons.star));
+        final indicator = tester.widget<Icon>(find.byIcon(Icons.add));
+
+        expect(contentIcon.color, Colors.red);
+        expect(contentIcon.size, 17);
+        expect(indicator.color, Colors.blue);
+        expect(indicator.size, 23);
       });
 
       testWidgets('item styling uses the typed select-option controller', (

@@ -222,7 +222,9 @@ Fortal preset: `FortalTextArea` — `variant` (`classic|surface|soft`), `size`
 `RemixSelectTrigger` and `RemixSelectItem<T>` are **data classes**, not
 widgets:
 
-- **RemixSelectTrigger**: `placeholder` (required), `icon` (optional).
+- **RemixSelectTrigger**: `placeholder` (required), `icon` (optional content
+  icon), `collapsedIcon` / `expandedIcon` (optional indicator glyphs; each
+  falls back independently to the built-in chevron for that state).
 - **RemixSelectItem\<T\>**: `value` (required), `label` (required),
   `enabled` (default true), `style` (a `SelectMenuItemStyler`),
   `semanticLabel`.
