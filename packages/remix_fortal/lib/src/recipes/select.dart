@@ -47,7 +47,7 @@ SelectTriggerStyler _fortalSelectTriggerStyler(
         _fortalSelectTriggerText(size, color: FortalTokens.grayA10()),
       )
       .icon(.color(FortalTokens.gray12()))
-      .chevron(.color(FortalTokens.gray12()).size(size == .size3 ? 11 : 9))
+      .indicator(.color(FortalTokens.gray12()).size(size == .size3 ? 11 : 9))
       .onFocusVisible(
         .containerEffects(
           RemixBoxEffectsMix.overContent(_fortalSelectFocusRing()),
@@ -135,7 +135,7 @@ RemixBoxEffectLayerMix _fortalSelectFocusRing() {
 
 SelectTriggerStyler _fortalSelectSurfaceTrigger(SelectTriggerStyler base) {
   return base
-      .chevronOpacity(0.9)
+      .indicatorOpacity(0.9)
       .color(FortalTokens.colorSurface())
       .containerEffects(
         RemixBoxEffectsMix.behindContent(
@@ -160,7 +160,7 @@ SelectTriggerStyler _fortalSelectSurfaceTrigger(SelectTriggerStyler base) {
         .color(FortalTokens.grayA2())
             .label(.color(FortalTokens.grayA11()))
             .icon(.color(FortalTokens.grayA9()))
-            .chevron(.color(FortalTokens.grayA9()))
+            .indicator(.color(FortalTokens.grayA9()))
             .containerEffects(
               RemixBoxEffectsMix.behindContent(
                 fortalInsetSurface(strokes: [FortalTokens.grayA6()]),
@@ -175,14 +175,14 @@ SelectTriggerStyler _fortalSelectSoftTrigger(SelectTriggerStyler base) {
       .placeholder(.color(FortalTokens.accent12()))
       .placeholderOpacity(0.6)
       .icon(.color(FortalTokens.accent12()))
-      .chevron(.color(FortalTokens.accent12()))
+      .indicator(.color(FortalTokens.accent12()))
       .color(FortalTokens.accentA3())
       .onHovered(.color(FortalTokens.accentA4()))
       .onSelected(.color(FortalTokens.accentA4()))
       .onDisabled(
         .label(.color(FortalTokens.grayA11()))
             .icon(.color(FortalTokens.grayA9()))
-            .chevron(.color(FortalTokens.grayA9()))
+            .indicator(.color(FortalTokens.grayA9()))
             .color(FortalTokens.grayA3()),
       );
 }
@@ -193,14 +193,14 @@ SelectTriggerStyler _fortalSelectGhostTrigger(SelectTriggerStyler base) {
       .placeholder(.color(FortalTokens.accent12()))
       .placeholderOpacity(0.6)
       .icon(.color(FortalTokens.accent12()))
-      .chevron(.color(FortalTokens.accent12()))
+      .indicator(.color(FortalTokens.accent12()))
       .color(const Color(0x00000000))
       .onHovered(.color(FortalTokens.accentA3()))
       .onSelected(.color(FortalTokens.accentA3()))
       .onDisabled(
         .label(.color(FortalTokens.grayA11()))
             .icon(.color(FortalTokens.grayA9()))
-            .chevron(.color(FortalTokens.grayA9()))
+            .indicator(.color(FortalTokens.grayA9()))
             .color(const Color(0x00000000)),
       );
 }
