@@ -1,4 +1,15 @@
 analyzer:
+  # Keep this list in sync with Flutter's AnalysisOptionsMigration so
+  # `flutter pub get` does not rewrite this file during publish (dirty git
+  # working tree makes `dart pub publish` fail with exit code 65).
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
   errors:
     non_constant_identifier_names: ignore
 
