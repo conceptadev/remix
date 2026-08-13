@@ -4,7 +4,8 @@ environment:
   flutter: ">=3.44.0"
 
 dev_dependencies:
-  melos: ^7.1.1
+  melos: ^8.2.1
+  dart_code_metrics_presets: ^2.32.0
   flutter_lints: ^6.0.0
   build_runner: ^2.10.1
   pub_semver: ^2.2.0
@@ -14,6 +15,8 @@ workspace:
   - apps/dashboard
   - apps/demo
   - apps/playground
+  - packages/carbon
+  - packages/carbon/example
   - packages/remix
   - packages/remix_fortal
 
@@ -21,6 +24,9 @@ melos:
   packages:
     - apps/*
     - packages/*
+    # `packages/*` does not cross path separators; nested workspace members
+    # must be listed explicitly or melos scripts silently skip them.
+    - packages/carbon/example
 
   # No `command.bootstrap.environment` here on purpose. It rewrites one
   # `environment:` into every package it manages, and this workspace has two
@@ -69,6 +75,18 @@ melos:
       packageFilters:
         scope: [remix, remix_fortal]
 
+    dcm:check:
+      exec: dcm analyze lib --fatal-style --fatal-warnings --no-congratulate
+      description: Run Remix Dart Code Metrics with all severities fatal
+      packageFilters:
+        scope: [remix, remix_fortal]
+
+    dcm:check:carbon:
+      exec: dcm analyze lib --fatal-style --fatal-warnings --no-congratulate
+      description: Run Carbon Dart Code Metrics with all severities fatal
+      packageFilters:
+        scope: carbon
+
     test:flutter:
       exec: flutter test --reporter=failures-only
       description: Run flutter test
@@ -105,8 +123,10 @@ melos:
         - generate:check
         - docs:check
         - fortal:parity:check
+        - dcm:check
+        - dcm:check:carbon
         - test:flutter
-      description: Verify generated sources, docs, Fortal parity, and tests
+      description: Verify hosted Mix, generated sources, docs, Fortal parity, DCM, and tests
 
     fortal:parity:check:
       exec: dart run tool/fortal_parity/check.dart

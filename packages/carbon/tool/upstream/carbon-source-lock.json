@@ -1,0 +1,47 @@
+{
+  "carbonCommit": "b288a66af010622bedc6de4d6d0b81ee3c9f5520",
+  "carbonCommitDate": "2026-07-09",
+  "carbonRepo": "https://github.com/carbon-design-system/carbon",
+  "description": "Pinned IBM Carbon token sources for the carbon Flutter package. Development-only; not required by consumers.",
+  "extractionSchemaVersion": 1,
+  "integrity": {
+    "@carbon/colors": {
+      "integrity": "sha512-PvvBsNFng3IRoBp1f7SsHewmuxMTIsCoyl09ksjrQw5iwNSwScKJ3gcSVVLr1rhjQ0p/DakVANupnAaKp03ReA==",
+      "resolved": "https://registry.npmjs.org/@carbon/colors/-/colors-11.53.0.tgz",
+      "version": "11.53.0"
+    },
+    "@carbon/grid": {
+      "integrity": "sha512-VqRy0gxb+jOzu9c2IiDsCt8m6S08/AEv35M6ehCi1zI8ANVKGG8mLQJvpnYUY80ZtsuCDEmVkcNrcRfz2nkbeg==",
+      "resolved": "https://registry.npmjs.org/@carbon/grid/-/grid-11.57.0.tgz",
+      "version": "11.57.0"
+    },
+    "@carbon/layout": {
+      "integrity": "sha512-Jz+kBUKnjx83qHRQI3stz1dhX1JLITdUGxpf0R2YvsghBpT4DQpx1BmHH2zWOFx/Oh/rJijMOCFTSkLizSbySg==",
+      "resolved": "https://registry.npmjs.org/@carbon/layout/-/layout-11.54.0.tgz",
+      "version": "11.54.0"
+    },
+    "@carbon/motion": {
+      "integrity": "sha512-EhMVu6YFak+DzaYv5VPReRhmT8NT9RWMIpN6pWTByseATszOn+gvPu27ggiXMiOxOzTuqgUTKpp+n6jvNyBeZw==",
+      "resolved": "https://registry.npmjs.org/@carbon/motion/-/motion-11.47.0.tgz",
+      "version": "11.47.0"
+    },
+    "@carbon/themes": {
+      "integrity": "sha512-Oml4pqSoJrTb9hU4uCCIqMKLLV8Ej7zoen7j3fOQoL9rPOBia91/oz73dY1neqpZc6hPbtzbERLKIM5YCHFzLA==",
+      "resolved": "https://registry.npmjs.org/@carbon/themes/-/themes-11.76.1.tgz",
+      "version": "11.76.1"
+    },
+    "@carbon/type": {
+      "integrity": "sha512-qSNCK8AUGGAumGz43ZDFwTEW19xTsE9cfYPstxIHYkIobflOiqynwyMj00r2w1oRpPx7YhXIBI9AAJYJL2qjhQ==",
+      "resolved": "https://registry.npmjs.org/@carbon/type/-/type-11.62.0.tgz",
+      "version": "11.62.0"
+    }
+  },
+  "license": "Apache-2.0",
+  "pinnedVersions": {
+    "@carbon/colors": "11.53.0",
+    "@carbon/layout": "11.54.0",
+    "@carbon/motion": "11.47.0",
+    "@carbon/themes": "11.76.1",
+    "@carbon/type": "11.62.0"
+  }
+}
