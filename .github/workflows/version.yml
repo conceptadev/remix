@@ -1,0 +1,90 @@
+name: Prepare Version PR
+
+# Opens a pull request that bumps versions and changelogs from conventional
+# commits. It never tags and never publishes: `publish.yml` fires on a tag push,
+# so the tag is pushed by hand after this PR is reviewed and merged.
+#
+# The PR is created with `gh` rather than by the workflow itself, so this does
+# not depend on "Allow GitHub Actions to create and approve pull requests".
+
+on:
+  workflow_dispatch:
+    inputs:
+      remix_version:
+        description: "Optional exact version for remix (e.g. 1.0.0-beta.5)"
+        required: false
+        default: ""
+      remix_fortal_version:
+        description: "Optional exact version for remix_fortal (e.g. 0.1.0-beta.4)"
+        required: false
+        default: ""
+      graduate:
+        description: "Graduate the prerelease line to stable instead of bumping beta"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  version:
+    name: Bump versions and changelogs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # melos derives each package's last release from its `<package>-v*`
+          # tag, so the full history and all tags must be present. A shallow
+          # clone makes it walk every commit and rewrite the whole changelog.
+          fetch-depth: 0
+
+      - uses: kuhnroyal/flutter-fvm-config-action@v2
+        id: fvm-config-action
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
+
+      - name: Configure git
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Bump versions
+        run: |
+          set -euo pipefail
+          dart pub global activate melos
+          melos bootstrap
+
+          branch="release/version-packages"
+          git checkout -b "$branch"
+
+          overrides=""
+          if [ -n "${{ inputs.remix_version }}" ]; then
+            overrides="$overrides -V remix:${{ inputs.remix_version }}"
+          fi
+          if [ -n "${{ inputs.remix_fortal_version }}" ]; then
+            overrides="$overrides -V remix_fortal:${{ inputs.remix_fortal_version }}"
+          fi
+
+          if [ "${{ inputs.graduate }}" = "true" ]; then
+            melos version --graduate --no-git-tag-version --yes $overrides
+          else
+            melos version --prerelease --preid beta --no-git-tag-version --yes $overrides
+          fi
+
+          if git diff --quiet HEAD; then
+            echo "No packages required versioning."
+            exit 0
+          fi
+
+          git push --set-upstream origin "$branch" --force
+          gh pr create \
+            --title "chore(release): version packages" \
+            --body "Opened by the Prepare Version PR workflow. Review the versions and changelogs, merge, then push the release tags in order — \`remix-v*\` first, wait for pub.dev to serve it, then \`remix_fortal-v*\`." \
+            --base main \
+            --head "$branch" || echo "A pull request already exists for $branch."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

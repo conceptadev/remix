@@ -49,6 +49,25 @@ melos:
         mix_generator: ^2.2.0-beta.2
 
   scripts:
+    # Named `release:*` rather than `version`: a script named `version` shadows
+    # melos's built-in `melos version` command, so the script body could never
+    # invoke it.
+    release:version:
+      # Bumps the beta line rather than graduating to a stable major: breaking
+      # changes during a prerelease increment `beta.N`, they do not force 2.0.0.
+      #
+      # Tags are left to the release step. `publish.yml` fires on a tag push, so
+      # tagging here would publish before the version PR is reviewed.
+      run: >-
+        melos version --prerelease --preid beta --no-git-tag-version --yes
+      description: >-
+        Bump prerelease versions and changelogs from conventional commits
+
+    release:graduate:
+      # For the 1.0.0 release: drops the prerelease suffix from every package.
+      run: melos version --graduate --no-git-tag-version --yes
+      description: Graduate the prerelease line to stable versions
+
     generate:
       run: dart run build_runner build
       description: Regenerate Remix sources

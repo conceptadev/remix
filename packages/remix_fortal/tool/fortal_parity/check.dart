@@ -957,8 +957,9 @@ void _checkRemixHostedPin(
   List<String> failures,
 ) {
   final source = packagePubspec.readAsStringSync();
-  // The trailing `# x-release-please-version` annotation is what lets
-  // release-please rewrite this floor when `remix` bumps, so it must be allowed.
+  // `melos version` rewrites this floor when `remix` bumps, because
+  // remix_fortal depends on it. A trailing comment is still tolerated so the
+  // line can carry a note without failing the contract.
   final declared = RegExp(
     r'^  remix:\s*\^?([^\s#]+)\s*(?:#.*)?$',
     multiLine: true,
