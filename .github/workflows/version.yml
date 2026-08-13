@@ -1,21 +1,23 @@
-name: Prepare Version PR
+name: Prepare Version Bump
 
-# Opens a pull request that bumps versions and changelogs from conventional
+# Pushes a branch that bumps versions and changelogs from conventional
 # commits. It never tags and never publishes: `publish.yml` fires on a tag push,
 # so the tag is pushed by hand after this PR is reviewed and merged.
 #
-# The PR is created with `gh` rather than by the workflow itself, so this does
-# not depend on "Allow GitHub Actions to create and approve pull requests".
+# It pushes a branch and prints its compare link rather than opening the pull
+# request itself. Opening one from a workflow needs "Allow GitHub Actions to
+# create and approve pull requests", which is off by default and also grants
+# approval rights, so the one click is cheaper than the permission.
 
 on:
   workflow_dispatch:
     inputs:
       remix_version:
-        description: "Optional exact version for remix (e.g. 1.0.0-beta.5)"
+        description: "Exact version for remix (e.g. 1.0.0-beta.5). Cannot be combined with graduate."
         required: false
         default: ""
       remix_fortal_version:
-        description: "Optional exact version for remix_fortal (e.g. 0.1.0-beta.4)"
+        description: "Exact version for remix_fortal (e.g. 0.1.0-beta.4). Cannot be combined with graduate."
         required: false
         default: ""
       graduate:
@@ -25,7 +27,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   version:
@@ -53,13 +54,9 @@ jobs:
           git config user.email 'github-actions[bot]@users.noreply.github.com'
 
       - name: Bump versions
+        id: bump
         run: |
           set -euo pipefail
-          dart pub global activate melos
-          melos bootstrap
-
-          branch="release/version-packages"
-          git checkout -b "$branch"
 
           overrides=""
           if [ -n "${{ inputs.remix_version }}" ]; then
@@ -69,22 +66,52 @@ jobs:
             overrides="$overrides -V remix_fortal:${{ inputs.remix_fortal_version }}"
           fi
 
-          if [ "${{ inputs.graduate }}" = "true" ]; then
-            melos version --graduate --no-git-tag-version --yes $overrides
-          else
-            melos version --prerelease --preid beta --no-git-tag-version --yes $overrides
+          # melos rejects manual versions combined with either mode:
+          # "Cannot use manualVersions with asPrerelease or asStableRelease."
+          if [ -n "$overrides" ] && [ "${{ inputs.graduate }}" = "true" ]; then
+            echo "::error::Exact versions cannot be combined with graduate. Choose one."
+            exit 1
           fi
 
-          if git diff --quiet HEAD; then
+          dart pub global activate melos
+          melos bootstrap
+
+          git checkout -b release/version-packages
+
+          # `--no-git-commit-version` is what makes the diff check below
+          # meaningful. melos commits by default, which would leave a clean tree
+          # and make a successful run look like "nothing to version". It also
+          # implies --no-git-tag-version.
+          if [ -n "$overrides" ]; then
+            melos version --no-git-commit-version --yes $overrides
+          elif [ "${{ inputs.graduate }}" = "true" ]; then
+            melos version --graduate --no-git-commit-version --yes
+          else
+            melos version --prerelease --preid beta --no-git-commit-version --yes
+          fi
+
+          if git diff --quiet && git diff --cached --quiet; then
             echo "No packages required versioning."
+            echo "versioned=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          echo "versioned=true" >> "$GITHUB_OUTPUT"
 
-          git push --set-upstream origin "$branch" --force
-          gh pr create \
-            --title "chore(release): version packages" \
-            --body "Opened by the Prepare Version PR workflow. Review the versions and changelogs, merge, then push the release tags in order — \`remix-v*\` first, wait for pub.dev to serve it, then \`remix_fortal-v*\`." \
-            --base main \
-            --head "$branch" || echo "A pull request already exists for $branch."
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git add -A
+          git commit -m "chore(release): version packages"
+          git push --set-upstream origin release/version-packages --force
+
+      - name: Summarise
+        if: steps.bump.outputs.versioned == 'true'
+        run: |
+          url="${{ github.server_url }}/${{ github.repository }}/compare/main...release/version-packages?expand=1"
+          {
+            echo "### Versions bumped"
+            echo
+            echo "[Open the pull request]($url)"
+            echo
+            echo "After merging, push the release tags in order:"
+            echo '1. `remix-v<version>` — wait until pub.dev serves it'
+            echo '2. `remix_fortal-v<version>`'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "Open the pull request: $url"

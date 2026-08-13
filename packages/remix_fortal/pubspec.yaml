@@ -35,7 +35,8 @@ dependencies:
   # `remix` has to cut its Fortal-free release before `remix_fortal` is published
   # — otherwise pub could resolve a `remix` whose symbols collide with this
   # package. `tool/fortal_parity/check.dart` (_checkRemixHostedPin) fails if the
-  # two ever fall out of sync.
+  # two ever fall out of sync. `melos version` rewrites this line when `remix`
+  # bumps, because remix_fortal depends on it.
   remix: ^1.0.0-beta.4
   mix: ^2.2.0-beta.4
   mix_annotations: ^2.2.0-beta.1
