@@ -4601,7 +4601,7 @@
         ".rt-high-contrast"
       ],
       "flutterExceptions": [
-        "Every upstream underline rule is gated behind `:where(:any-link, button)`, so a FortalLink with no onPressed stays inert accent text with no focus stop, link role, or activation.",
+        "Every upstream underline rule is gated behind `:where(:any-link, button)`, so a FortalLink with no onPressed is disabled exactly as `enabled: false` is: it keeps the accent colour but gives up its underline, focus stop, link role, and activation.",
         "`text-underline-offset` has no Flutter TextStyle equivalent, so the underline sits at the font's own offset.",
         "Flutter reads decorationThickness as a multiple of the font underline thickness rather than a CSS length, so the pinned `min(2px, max(1px, 0.05em))` ramp lands as a 1x\u20132x stroke.",
         "The decoration colour approximates Radix `color-mix(in oklab, \u2026)` with an sRGB Color.lerp.",

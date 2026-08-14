@@ -30,7 +30,7 @@ tokens is the equivalent there.
 | `FortalHeading` | Page, section, and card titles | `header` with an explicit `headingLevel` |
 | `FortalCode` | Identifiers, snippets, tokens shown inline | None; Flutter has no code role |
 | `FortalKbd` | One keyboard key or shortcut | `keyboardKey`, inert |
-| `FortalLink` | Text that navigates | `link` **only** when `onPressed` is set |
+| `FortalLink` | Text that navigates | `link` **only** while enabled and given an `onPressed` |
 
 `FortalText` and `FortalCode` leave `size` and `weight` null by default so an
 omitted size inherits the ambient `DefaultTextStyle`, matching a Radix `Text`
@@ -192,13 +192,17 @@ the requested level, and excludes the child so the label is not announced
 twice. Pass `semanticLabel` when the announced text should differ from the
 rendered text, or `excludeSemantics: true` to publish nothing at all.
 
-## Actionable versus inert links
+## Actionable versus disabled links
+
+A `FortalLink` without `onPressed` is **disabled**, the same as one with
+`enabled: false` — a null callback disables a Flutter control. It keeps the
+accent colour but gives up its focus stop, link role, and activation. Give it
+`onPressed` and it becomes a real link: focusable, activatable with pointer and
+Enter, and underlined according to `underline`.
 
 Every upstream underline rule is gated behind `:where(:any-link, button)`, so a
-`FortalLink` without `onPressed` is **inert**: styled accent text with no focus
-stop, no link role, no enabled state, and no activation. Give it `onPressed` and
-it becomes a real link — focusable, activatable with pointer and Enter, and
-underlined according to `underline`.
+disabled link never underlines regardless of `underline`. For accent-coloured
+text that was never meant to be followed, use `FortalText(accent: true)`.
 
 Space does **not** activate a link. That is the Button role's key; a link takes
 Enter, matching an anchor on the web.
@@ -236,7 +240,7 @@ class LinkExample extends StatelessWidget {
           semanticHint: 'Opens the Fortal documentation',
           onPressed: onOpenDocs,
         ),
-        const FortalLink('Not a link yet'),
+        const FortalLink('Not available yet'),
       ],
     );
   }
@@ -250,7 +254,8 @@ launcher dependency. Passing `linkUrl` without `onPressed` asserts, because an
 announced destination with no activation is a broken promise to assistive
 technology.
 
-Set `enabled: false` to keep the callback and still refuse focus and activation.
+`enabled: false` keeps the callback and still refuses focus and activation, so
+a link that is only temporarily unavailable can hold on to its destination.
 
 ## Customizing the recipes
 

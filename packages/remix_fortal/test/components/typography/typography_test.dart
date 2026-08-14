@@ -1,4 +1,4 @@
-import 'dart:ui' show PointerDeviceKind;
+import 'dart:ui' show PointerDeviceKind, Tristate;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -848,17 +848,18 @@ void main() {
       handle.dispose();
     });
 
-    testWidgets('inert link is prose, not a disabled control', (tester) async {
+    testWidgets('a link with no callback is a disabled link', (tester) async {
       final handle = tester.ensureSemantics();
       await _pump(tester, const FortalLink('Read more'));
 
-      expect(find.byType(NakedLink), findsNothing);
-      // No enabled state either: a link with no callback is body text, and
-      // announcing it as unavailable would be wrong.
-      expect(
-        tester.getSemantics(find.bySemanticsLabel('Read more')),
-        matchesSemantics(label: 'Read more'),
-      );
+      // `onPressed: null` disables the link the way it disables any Flutter
+      // control: still one node, but no Link role, destination, or tap.
+      final data = tester
+          .getSemantics(find.bySemanticsLabel('Read more'))
+          .getSemanticsData();
+      expect(data.flagsCollection.isEnabled, Tristate.isFalse);
+      expect(data.flagsCollection.isLink, isFalse);
+      expect(data.linkUrl, isNull);
       handle.dispose();
     });
   });

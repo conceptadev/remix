@@ -25,7 +25,6 @@ void main() {
           const RemixLink(
             label: 'ignored',
             child: Icon(Icons.open_in_new, key: ValueKey('icon')),
-            // Interactive so the child path is exercised under NakedLink too.
           ),
         );
         await tester.pumpAndSettle();
@@ -164,38 +163,51 @@ void main() {
         handle.dispose();
       });
 
-      testWidgets('a link with no callback is prose, not a disabled control', (
+      // `onPressed: null` and `enabled: false` mean the same thing here, the
+      // way they do on every Flutter control. NakedLink gates the Link role on
+      // effective-enabled, so both announce as unavailable text rather than as
+      // an unavailable link.
+      testWidgets('both ways of disabling a link announce identically', (
         tester,
       ) async {
         final handle = tester.ensureSemantics();
 
-        await tester.pumpRemixApp(const RemixLink(label: 'Read more'));
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+        var activations = 0;
 
-        expect(find.byType(NakedLink), findsNothing);
-        expect(
-          tester.getSemantics(find.bySemanticsLabel('Read more')),
-          matchesSemantics(label: 'Read more'),
-        );
-        handle.dispose();
-      });
+        for (final link in [
+          RemixLink(label: 'Go', focusNode: focusNode),
+          RemixLink(
+            label: 'Go',
+            enabled: false,
+            focusNode: focusNode,
+            onPressed: () => activations++,
+          ),
+        ]) {
+          await tester.pumpRemixApp(link);
 
-      // NakedLink gates the Link role on effective-enabled, so a disabled link
-      // announces as unavailable text rather than as an unavailable link.
-      testWidgets('a disabled link announces disabled and drops the role', (
-        tester,
-      ) async {
-        final handle = tester.ensureSemantics();
+          // Both go through the primitive. A special-cased render path for
+          // the callback-less case is what this guards against: it would fork
+          // the state scope and let one LinkStyler resolve two ways.
+          expect(find.byType(NakedLink), findsOneWidget);
 
-        await tester.pumpRemixApp(
-          RemixLink(label: 'Go', enabled: false, onPressed: () {}),
-        );
+          final data = tester
+              .getSemantics(find.bySemanticsLabel('Go'))
+              .getSemanticsData();
+          expect(data.flagsCollection.isEnabled, Tristate.isFalse);
+          expect(data.flagsCollection.isLink, isFalse);
+          expect(data.hasAction(SemanticsAction.tap), isFalse);
+          expect(data.linkUrl, isNull);
 
-        final data = tester
-            .getSemantics(find.bySemanticsLabel('Go'))
-            .getSemanticsData();
-        expect(data.flagsCollection.isEnabled, Tristate.isFalse);
-        expect(data.flagsCollection.isLink, isFalse);
-        expect(data.hasAction(SemanticsAction.tap), isFalse);
+          // Behaviour, not just semantics: neither spelling takes focus or
+          // fires a callback.
+          await tester.tap(find.text('Go'));
+          focusNode.requestFocus();
+          await tester.pump();
+          expect(focusNode.hasFocus, isFalse);
+          expect(activations, 0);
+        }
         handle.dispose();
       });
 
@@ -246,13 +258,13 @@ void main() {
     });
 
     group('interaction state', () {
-      testWidgets('neither path inherits an ancestor widget state', (
+      testWidgets('an ancestor widget state does not reach the link style', (
         tester,
       ) async {
-        // One LinkStyler must behave the same whether or not the link is
-        // actionable. The actionable path is isolated by its own Naked state
-        // controller; the inert path publishes an empty scope for the same
-        // reason. Without that, a link inside a hovered card renders hovered.
+        // The link resolves against its own Naked state controller, so a
+        // hovered ancestor must not paint it hovered. Enabled and disabled
+        // both go through that controller, so one LinkStyler stays honest
+        // either way.
         final style = LinkStyler()
             .label(TextStyler().color(Colors.black))
             .onHovered(LinkStyler().label(TextStyler().color(Colors.red)));

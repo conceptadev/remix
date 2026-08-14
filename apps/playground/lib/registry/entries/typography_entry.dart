@@ -77,26 +77,30 @@ Widget buildTypographyExample() {
                 underline: FortalLinkUnderline.none,
                 onPressed: () {},
               ),
+              // Two spellings of the same state: a null callback disables the
+              // link exactly as `enabled: false` does.
               FortalLink('Disabled', enabled: false, onPressed: () {}),
-              const FortalLink('Inert'),
+              const FortalLink('Disabled (no callback)'),
             ],
           ),
           const SizedBox(height: 24),
           const _SectionLabel('Accent and high contrast'),
           const SizedBox(height: 12),
-          const Wrap(
+          Wrap(
             spacing: 18,
             runSpacing: 12,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              FortalText('Accent text', accent: true),
-              FortalText(
+              const FortalText('Accent text', accent: true),
+              const FortalText(
                 'Accent high contrast',
                 accent: true,
                 highContrast: true,
               ),
-              FortalCode.soft('accent code', highContrast: true),
-              FortalLink('Accent link', highContrast: true),
+              const FortalCode.soft('accent code', highContrast: true),
+              // Actionable on purpose: this row is about accent colour, and a
+              // callback-less link would show the disabled treatment instead.
+              FortalLink('Accent link', highContrast: true, onPressed: () {}),
             ],
           ),
           const SizedBox(height: 24),

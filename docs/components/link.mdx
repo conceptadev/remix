@@ -38,7 +38,7 @@ class LinkExample extends StatelessWidget {
           style: style,
           onPressed: () => debugPrint('navigate'),
         ),
-        // No callback: inert prose, not a disabled control.
+        // No callback: a disabled link, same as `enabled: false`.
         const RemixLink(label: 'Coming soon'),
       ],
     );
@@ -91,11 +91,14 @@ class LinkUrlExample extends StatelessWidget {
 ```
 </CodeGroup>
 
-## Inert and disabled are different
+## Two ways to disable, one behaviour
 
-A link with no `onPressed` is prose: no Link role, no focus stop, no enabled state.
-A link with an `onPressed` and `enabled: false` is a disabled control and announces
-itself as unavailable.
+`onPressed: null` and `enabled: false` both disable the link, exactly as a null
+callback disables any other Flutter control. A disabled link announces itself as
+unavailable and gives up its Link role, destination, focus stop, and tap action.
+
+For text that was never meant to be followed, use ordinary text rather than a
+link with no callback.
 
 ## Fortal widgets
 
@@ -182,7 +185,7 @@ text and icon themes, so an icon beside the text picks up the link colour.
 
 #### `onPressed` → `VoidCallback?`
 
-Optional. Performs the navigation. When null the link is inert styled text.
+Optional. Performs the navigation. A null callback disables the link.
 
 #### `enabled` → `bool`
 
@@ -258,9 +261,37 @@ Sets label/text decoration (underline, strikethrough, etc.).
 
 Sets label/text decoration color.
 
+#### `labelStyle(TextStyleMix value)`
+
+Sets label/text style using TextStyleMix directly.
+
+#### `labelFontStyle(FontStyle value)`
+
+Sets label/text font style (italic/normal).
+
+#### `labelFontFamily(String value)`
+
+Sets label/text font family.
+
+#### `labelLetterSpacing(double value)`
+
+Sets label/text letter spacing.
+
+#### `labelWordSpacing(double value)`
+
+Sets label/text word spacing.
+
+#### `labelHeight(double value)`
+
+Sets label/text line height.
+
 #### `padding(EdgeInsetsGeometryMix value)`
 
 Sets padding.
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+Sets margin.
 
 #### `borderRadius(BorderRadiusGeometryMix radius)`
 
@@ -269,6 +300,22 @@ Sets border radius, used by the focus ring.
 #### `decoration(DecorationMix value)`
 
 Sets decoration.
+
+#### `foregroundDecoration(DecorationMix value)`
+
+Sets a foreground decoration painted on top of the component.
+
+#### `alignment(Alignment value)`
+
+Sets container alignment.
+
+#### `constraints(BoxConstraintsMix value)`
+
+Sets constraints.
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+Applies a matrix transformation to the component.
 
 #### `animate(AnimationConfig value)`
 

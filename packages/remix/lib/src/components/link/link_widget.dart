@@ -45,11 +45,14 @@ class RemixLink extends StatelessWidget {
          'Either a non-empty label or a child must be provided so the link '
          'has a name.',
        ),
-       // An inert link publishes no destination, so a linkUrl passed without a
-       // callback would be silently dropped rather than merely unused.
+       // A link publishes its destination only while it can be followed. A
+       // link disabled through `enabled` may be re-enabled and is therefore
+       // fine to give a destination; one with no callback at all never can be,
+       // so a linkUrl there is silently dead.
        assert(
          linkUrl == null || onPressed != null,
-         'linkUrl needs an onPressed: an inert link exposes no destination.',
+         'linkUrl needs an onPressed: a link with no callback never publishes '
+         'a destination.',
        );
 
   static final styleFrom = LinkStyler.new;
@@ -62,8 +65,9 @@ class RemixLink extends StatelessWidget {
 
   /// Performs the navigation when the link activates.
   ///
-  /// A null callback makes the link inert: styled text with no link role, no
-  /// focus stop, and no activation.
+  /// A null callback disables the link, as it does on every other Flutter
+  /// control: no Link role, no destination, no focus stop, and no activation.
+  /// Use ordinary text for prose that was never meant to be followed.
   final VoidCallback? onPressed;
 
   /// Whether an otherwise actionable link may activate.
@@ -120,48 +124,14 @@ class RemixLink extends StatelessWidget {
     );
   }
 
-  /// Renders a link with no callback as what it is: prose.
-  ///
-  /// HTML's `<a>` without an `href` has no role, no focus stop, and — the part
-  /// that matters here — no disabled state. `NakedLink` folds `enabled` and
-  /// `onPressed` into a single effective-enabled flag and publishes
-  /// `hasEnabledState` for both, so routing this case through it would
-  /// announce ordinary body text as unavailable. `enabled: false` with a real
-  /// callback still goes through [NakedLink], because that *is* a disabled
-  /// link.
-  ///
-  /// Collapse this back into a single [NakedLink] path once the primitive
-  /// stops claiming an enabled state for a callback-less Link.
-  Widget _buildInert(BuildContext context) {
-    // The empty scope is load-bearing, not defensive. Without it the style
-    // resolves against whatever WidgetStateProvider an ancestor publishes, so
-    // an inert link inside a hovered card would render its hover variant. The
-    // actionable path is already isolated by its own Naked state controller;
-    // this keeps one LinkStyler behaving the same on both paths.
-    final content = WidgetStateProvider(
-      states: const {},
-      child: RemixStyleSpecBuilder<LinkSpec>(
-        style: style,
-        styleSpec: styleSpec,
-        builder: _buildContent,
-      ),
-    );
-
-    if (excludeSemantics) return ExcludeSemantics(child: content);
-    if (semanticLabel == null && semanticHint == null) return content;
-
-    return Semantics(
-      label: semanticLabel,
-      hint: semanticHint,
-      excludeSemantics: semanticLabel != null,
-      child: content,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (onPressed == null) return _buildInert(context);
-
+    // One path on purpose. `NakedLink` derives the role, destination, focus
+    // stop, and activation from `enabled && onPressed != null`, so a
+    // callback-less link is a disabled link — the same meaning `onPressed:
+    // null` carries on every other Flutter control. Rendering that case
+    // separately to dodge the disabled state would fork the state scope and
+    // let one LinkStyler resolve differently on each path.
     return NakedLink(
       onPressed: onPressed,
       linkUrl: linkUrl,

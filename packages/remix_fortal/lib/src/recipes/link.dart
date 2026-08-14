@@ -15,9 +15,9 @@ enum FortalLinkUnderline { auto, always, hover, none }
 /// resolved font size.
 ///
 /// [actionable] gates every state-dependent rule, matching upstream's
-/// `:where(:any-link, button)`. It is not merely cosmetic: an inert link
-/// carries no hover or focus-visible variant at all, so it cannot pick up
-/// underlines from an ancestor that publishes those widget states.
+/// `:where(:any-link, button)`. A non-actionable link carries no hover or
+/// focus-visible variant at all, so it stays plain accent text no matter what
+/// widget states are resolved around it.
 LinkStyler fortalLinkStyle(
   BuildContext context, {
   FortalTextSize? size,
@@ -152,10 +152,13 @@ LinkStyler _fortalLinkStateStyle(
 
 /// Token-backed text that becomes an accessible link only when actionable.
 ///
-/// With no [onPressed] this renders inert styled text: no focus stop, link
-/// role, enabled state, or activation. `linkUrl` is assistive metadata only and
-/// is never launched; navigation stays the caller's responsibility in
-/// [onPressed].
+/// A null [onPressed] disables the link just as [enabled] `false` does: accent
+/// text with no focus stop, link role, or activation, and never underlined.
+/// Reach for `FortalText(accent: true)` when the text was never meant to
+/// navigate.
+///
+/// `linkUrl` is assistive metadata only and is never launched; navigation stays
+/// the caller's responsibility in [onPressed].
 ///
 /// An actionable link activates on pointer and Enter. Space belongs to the
 /// Button role and is deliberately left unclaimed.
