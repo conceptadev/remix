@@ -1,15 +1,13 @@
 # Carbon for Flutter
 
 A Flutter-native implementation of the [IBM Carbon Design System](https://carbondesignsystem.com),
-built on Remix 1.0's [Naked UI](https://pub.dev/packages/naked_ui) behavior and
-[Mix](https://pub.dev/packages/mix) styling foundations, but with Carbon's own
-generated palette, role tokens, themes, layered surfaces, contextual sizes,
-typography, motion and component tokens.
+built with Remix/Naked UI behavior and Mix styling foundations. The public API
+is Carbon-specific; Remix and Mix are implementation details and are not
+re-exported.
 
-> **Status: pre-1.0.** This release delivers the token/foundation layer and the
-> Button vertical slice. It is **not** the full Carbon React catalog — see the
-> roadmap below. Token values are reproducibly generated from pinned official
-> Carbon sources; see [Provenance](#provenance).
+> **Status: pre-1.0.** The package covers all 41 component families in the
+> pinned Carbon React 1.114.0 catalog plus three Carbon chart extensions. APIs
+> can still change before the first stable release.
 
 ## Install
 
@@ -23,8 +21,8 @@ dependencies:
 
 ## Quick start
 
-Wrap your app (or any subtree) in a `CarbonScope` and use Carbon widgets and
-tokens inside it.
+Wrap an application or subtree in `CarbonScope`, then use Carbon components
+and semantic tokens inside it.
 
 ```dart
 import 'package:carbon/carbon.dart';
@@ -39,26 +37,67 @@ CarbonScope(
 );
 ```
 
-## Foundation
+## Component coverage
+
+The catalog contains 44 tested families:
+
+- Inputs and selection: Button, Checkbox, Content Switcher, Date Picker,
+  Dropdown, File Uploader, Form, Multiselect, Number Input, Radio Button,
+  Search, Select, Slider, Text Input and Toggle.
+- Navigation and disclosure: Accordion, AI Label, Breadcrumb, Menu, Menu
+  Button, Pagination, Popover, Tabs, Toggletip, Tooltip, Tree View and UI Shell.
+- Content and feedback: Code Snippet, Contained List, Data Table, Inline
+  Loading, Link, List, Loading, Modal, Notification, Progress Bar, Progress
+  Indicator, Structured List, Tag and Tile.
+- Data visualization: Bar Chart, Line Chart and Pie Chart.
+
+The [component comparison matrix](reference/carbon_1_114_0/component_matrix.md)
+records every public Carbon API, its official upstream family, and whether the
+implementation is Carbon-native or reuses a Remix/Mix primitive. The machine-
+readable source of truth is
+[`manifest.json`](reference/carbon_1_114_0/manifest.json).
+
+Remix-only Avatar, Badge, Card, Data List, Divider, Skeleton, Toggle Button and
+Toggle Group are intentionally not added to the Carbon surface. Where Carbon
+has a related but different concept—such as Tag, Tile, Contained List or
+Content Switcher—the package exposes the Carbon contract instead.
+
+## Component atlas
+
+The example is a live atlas for every component family across all four Carbon
+themes. Run it from the example package:
+
+![Carbon component atlas](docs/images/component-atlas.jpg)
+
+```sh
+cd packages/carbon/example
+flutter run
+```
+
+The atlas catalog is also verified against the pinned manifest and smoke-tests
+every family:
+
+```sh
+flutter test
+```
+
+## Foundations
 
 | API | Purpose |
 | --- | --- |
-| `CarbonScope` | Resolves Carbon tokens into a `MixScope`; selects one of the four themes; accepts typed overrides (colors, font family). |
-| `CarbonTheme` | `white`, `g10`, `g90`, `g100` — with matching `brightness`. |
-| `CarbonLayer` | Contextual layer model (levels 1–3). Resolves aliases like `layer`, `field`, `borderSubtle` to the correct indexed role token. |
-| `CarbonLayoutScope` | Contextual `CarbonSize` (`xs`–`x2l`), available through `sizeOf`/`maybeSizeOf`; components clamp into their supported range. |
-| `CarbonType` | Fixed styles as Mix tokens; a viewport-aware resolver for Carbon's fluid type. |
-| `CarbonMotion` | Carbon easing curves by intent/mode, plus reduced-motion-aware `duration`/`curve` helpers. |
+| `CarbonScope` | Resolves Carbon tokens into a `MixScope`, selects a theme and accepts typed overrides. |
+| `CarbonTheme` | `white`, `g10`, `g90`, `g100`, with matching brightness. |
+| `CarbonLayer` | Resolves contextual layer, field and border roles for nested surfaces. |
+| `CarbonLayoutScope` | Supplies contextual `CarbonSize` (`xs`–`x2l`) to components. |
+| `CarbonType` | Provides fixed Mix tokens and viewport-aware fluid typography. |
+| `CarbonMotion` | Provides intent-based easing and reduced-motion-aware durations. |
 
-### Tokens
+Token APIs are separated by intent:
 
-- **Role tokens** — `CarbonTokens.*` (234 semantic color roles identical across all
-  four themes, plus spacing, control sizes, fixed type styles, motion durations,
-  font weights). Prefer these in component code.
-- **Component tokens** — `CarbonComponentTokens.*` (Button, Tag, Notification,
-  Status, Content Switcher), namespaced separately.
-- **Primitive palette** — `CarbonPalette.*` (the raw IBM Design Language colors);
-  use only where a primitive is genuinely required.
+- `CarbonTokens.*`: semantic color, spacing, size, type and motion roles.
+- `CarbonComponentTokens.*`: component-specific roles.
+- `CarbonPalette.*`: raw IBM Design Language colors, for cases where a
+  semantic role does not apply.
 
 ```dart
 import 'package:mix/mix.dart';
@@ -70,80 +109,57 @@ Box(
 );
 ```
 
-### Contextual layers
+## Generation and provenance
 
-```dart
-CarbonLayer( // steps up to level 2 inside a level-1 subtree
-  child: Builder(builder: (context) {
-    final layer = CarbonLayer.of(context).color(CarbonContextualColor.layer);
-    // -> CarbonTokens.layer02
-    return const SizedBox();
-  }),
-);
+Component wrappers use `mix_generator`; generated files are committed so
+consumers do not run code generation. Maintainers can regenerate them with:
+
+```sh
+dart run build_runner build
 ```
 
-### Fluid typography
+Token values are generated from pinned official Carbon packages rather than
+hand-copied. The pipeline and normalized snapshot live under `tool/`; verify
+that a fresh generation is byte-identical with:
 
-```dart
-Text(
-  'Responsive heading',
-  style: CarbonType.fluidTextStyle(context, 'fluidHeading05'),
-);
+```sh
+node tool/verify_generated.mjs
 ```
 
-## Provenance
-
-Every token value is generated from the pinned official Carbon npm packages —
-never hand-copied. See `lib/src/tokens/generated/carbon_source_manifest.g.dart`
-and `tool/upstream/carbon-source-lock.json`.
-
-| Package | Version |
+| Source | Pinned version |
 | --- | --- |
-| `@carbon/themes` | 11.76.1 |
-| `@carbon/colors` | 11.53.0 |
-| `@carbon/layout` | 11.54.0 |
-| `@carbon/type` | 11.62.0 |
-| `@carbon/motion` | 11.47.0 |
+| `@carbon/react` | 1.114.0 |
+| `@carbon/styles` | 1.113.0 |
+| `@carbon/themes` | 11.79.0 |
+| `@carbon/colors` | 11.56.0 |
+| `@carbon/layout` | 11.57.0 |
+| `@carbon/type` | 11.65.0 |
+| `@carbon/motion` | 11.50.0 |
 
-Carbon repo commit: `b288a66af010622bedc6de4d6d0b81ee3c9f5520` (2026-07-09).
-
-The pipeline (extract → normalize → generate → verify) lives under `tool/`; see
-[`tool/README.md`](tool/README.md). Consumers never run it — the normalized
-snapshot and generated Dart are committed. It is deterministic: regenerating from
-the same source lock is byte-identical, enforced by `tool/verify_generated.mjs`
-in the `Carbon tokens` GitHub workflow (`.github/workflows/carbon_tokens.yml`).
+Carbon repository commit:
+`188d23202ec1092322dee92cf0df9d9958224ae4` (2026-08-13). Integrity hashes
+and resolved tarballs are recorded in `reference/carbon_1_114_0/manifest.json`
+and `tool/upstream/carbon-source-lock.json`.
 
 ## Fonts
 
-Carbon typography uses IBM Plex. This package does **not** bundle the fonts; pass
-a bundled family through `CarbonScope` — it applies to every fixed text-style
-token *and* to `CarbonType.fluidTextStyle`:
+Carbon typography uses IBM Plex. The package does not bundle fonts; include
+them in the application and select the family through the scope:
 
 ```dart
 CarbonScope(
   theme: CarbonTheme.white,
-  overrides: const CarbonThemeOverrides(fontFamily: CarbonFontFamilies.sans),
+  overrides: const CarbonThemeOverrides(
+    fontFamily: CarbonFontFamilies.sans,
+  ),
   child: app,
 );
 ```
 
-`CarbonFontFamilies` exposes each official Plex stack as a usable family name
-(e.g. `CarbonFontFamilies.sans == 'IBM Plex Sans'`) plus a separate
-`*Fallback` list for `TextStyle.fontFamilyFallback`. IBM Plex is licensed under
-the SIL Open Font License; see `NOTICE`.
-
-## Roadmap
-
-- **Now:** tokens + foundation, Carbon Button.
-- **Next:** Text Input and Modal vertical slices, then an architecture checkpoint.
-- **Then:** the initial overlap set (Checkbox, Radio, Toggle, Slider, Select,
-  Dropdown, Tabs, Accordion, Tooltip, Overflow Menu, Tag, Tile, Inline
-  Notification, …) followed by Carbon-native breadth (Data Table, Pagination, …).
-
-See `docs/adr/0001-carbon-token-pipeline.md` for the architecture decision record.
+IBM Plex is licensed under the SIL Open Font License; see `NOTICE`.
 
 ## Licensing
 
 Licensed under Apache-2.0. Carbon token values are derived from the Apache-2.0
-IBM Carbon Design System. "IBM", "Carbon" and "IBM Plex" are IBM trademarks; this
-is an independent community implementation. See `LICENSE` and `NOTICE`.
+IBM Carbon Design System. "IBM", "Carbon" and "IBM Plex" are IBM trademarks;
+this is an independent community implementation. See `LICENSE` and `NOTICE`.

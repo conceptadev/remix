@@ -32,4 +32,4 @@ export 'src/tokens/generated/carbon_type.g.dart' show CarbonFontFamilies;
 // ---------------------------------------------------------------------------
 // Components
 // ---------------------------------------------------------------------------
-export 'src/components/button/button.dart';
+export 'src/components/components.dart';

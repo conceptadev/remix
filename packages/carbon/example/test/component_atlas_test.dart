@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:carbon_example/component_catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -5,24 +8,47 @@ import 'package:mix_atlas/golden.dart';
 import 'package:mix_atlas/mix_atlas.dart';
 
 void main() {
-  test('catalog covers Carbon button variants and themes', () {
+  test('catalog covers every pinned Carbon family', () {
     carbonAtlasCatalog.validate();
 
-    final atlas = carbonAtlasCatalog.atlases.first;
-    final iconAtlas = carbonAtlasCatalog.atlases.last;
+    final manifest =
+        jsonDecode(
+              File(
+                '../reference/carbon_1_114_0/manifest.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    final manifestFamilies = <dynamic>[
+      ...manifest['coreFamilies'] as List<dynamic>,
+      ...manifest['extensions'] as List<dynamic>,
+    ];
+    final expectedIds =
+        manifestFamilies
+            .map(
+              (family) => (family as Map<String, dynamic>)['id']
+                  .toString()
+                  .replaceAll('_', '-'),
+            )
+            .toList()
+          ..sort();
+    final actualIds =
+        carbonAtlasCatalog.atlases.map((atlas) => atlas.id).toList()..sort();
+    final buttonAtlas = carbonAtlasCatalog.atlases.firstWhere(
+      (atlas) => atlas.id == 'button',
+    );
     final metadata = atlasCatalogMetadata(carbonAtlasCatalog);
 
     expect(carbonAtlasCatalog.themes, hasLength(4));
-    expect(carbonAtlasCatalog.atlases, hasLength(2));
-    expect(atlas.rows, hasLength(35));
-    expect(atlas.scenarios, hasLength(6));
-    expect(iconAtlas.id, 'button-icons');
-    expect(iconAtlas.rows, hasLength(14));
-    expect(iconAtlas.scenarios, hasLength(6));
+    expect(actualIds, expectedIds);
+    expect(actualIds, hasLength(44));
+    expect(buttonAtlas.rows, hasLength(35));
+    expect(buttonAtlas.scenarios, hasLength(6));
     expect(metadata['schema'], 'mix_atlas/catalog/v1');
   });
 
-  testWidgets('live viewer renders the Carbon catalog', (tester) async {
+  testWidgets('live viewer renders the complete Carbon catalog', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1440, 900);
     addTearDown(tester.view.reset);
 
@@ -31,54 +57,39 @@ void main() {
     );
 
     expect(find.text('Carbon for Flutter'), findsOneWidget);
-    expect(find.text('Kind / Size'), findsOneWidget);
-    expect(find.text('210 cells'), findsOneWidget);
-    expect(find.text('White'), findsOneWidget);
+    expect(find.text('Accordion'), findsWidgets);
+    expect(find.text('W'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('icon button atlas renders every cell with an icon', (
-    tester,
-  ) async {
-    final atlas = carbonAtlasCatalog.atlases.last;
+  for (final atlas in carbonAtlasCatalog.atlases) {
+    testWidgets('${atlas.id} atlas renders without exceptions', (tester) async {
+      tester.view.physicalSize = const Size(1600, 1200);
+      addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Builder(
-          builder: (context) => carbonAtlasCatalog.themes.first.builder(
-            context,
-            SingleChildScrollView(child: AtlasView(atlas: atlas)),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => carbonAtlasCatalog.themes.first.builder(
+              context,
+              SingleChildScrollView(child: AtlasView(atlas: atlas)),
+            ),
           ),
         ),
-      ),
-    );
-    await tester.pump();
+      );
+      await tester.pump();
 
-    expect(find.byIcon(Icons.add), findsNWidgets(84));
-    expect(tester.takeException(), isNull);
-  });
+      expect(tester.takeException(), isNull);
+    });
+  }
 
   testWidgets('button atlas - white', (tester) async {
     await expectAtlasGolden(
       tester,
-      atlas: carbonAtlasCatalog.atlases.first,
+      atlas: carbonAtlasCatalog.atlases.firstWhere(
+        (atlas) => atlas.id == 'button',
+      ),
       theme: carbonAtlasCatalog.themes.first,
-    );
-  });
-
-  testWidgets('button icon atlas - white', (tester) async {
-    await expectAtlasGolden(
-      tester,
-      atlas: carbonAtlasCatalog.atlases.last,
-      theme: carbonAtlasCatalog.themes.first,
-    );
-  });
-
-  testWidgets('button icon atlas - gray 100', (tester) async {
-    await expectAtlasGolden(
-      tester,
-      atlas: carbonAtlasCatalog.atlases.last,
-      theme: carbonAtlasCatalog.themes.last,
     );
   });
 }

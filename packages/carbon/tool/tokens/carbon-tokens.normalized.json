@@ -1256,16 +1256,16 @@
     }
   },
   "provenance": {
-    "carbonCommit": "b288a66af010622bedc6de4d6d0b81ee3c9f5520",
-    "carbonCommitDate": "2026-07-09",
+    "carbonCommit": "188d23202ec1092322dee92cf0df9d9958224ae4",
+    "carbonCommitDate": "2026-08-13",
     "extractionSchemaVersion": 1,
     "license": "Apache-2.0",
     "packages": {
-      "@carbon/colors": "11.53.0",
-      "@carbon/layout": "11.54.0",
-      "@carbon/motion": "11.47.0",
-      "@carbon/themes": "11.76.1",
-      "@carbon/type": "11.62.0"
+      "@carbon/colors": "11.56.0",
+      "@carbon/layout": "11.57.0",
+      "@carbon/motion": "11.50.0",
+      "@carbon/themes": "11.79.0",
+      "@carbon/type": "11.65.0"
     }
   },
   "themes": {

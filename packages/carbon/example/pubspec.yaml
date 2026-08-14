@@ -1,5 +1,5 @@
 name: carbon_example
-description: Example gallery for the carbon package (themes, sizes, buttons).
+description: Complete component atlas for the Carbon for Flutter package.
 publish_to: "none"
 resolution: workspace
 

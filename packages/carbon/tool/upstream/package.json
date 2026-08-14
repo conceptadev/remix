@@ -9,10 +9,10 @@
     "postinstall": "node -e \"process.stdout.write('carbon upstream token sources installed\\n')\""
   },
   "dependencies": {
-    "@carbon/colors": "11.53.0",
-    "@carbon/layout": "11.54.0",
-    "@carbon/motion": "11.47.0",
-    "@carbon/themes": "11.76.1",
-    "@carbon/type": "11.62.0"
+    "@carbon/colors": "11.56.0",
+    "@carbon/layout": "11.57.0",
+    "@carbon/motion": "11.50.0",
+    "@carbon/themes": "11.79.0",
+    "@carbon/type": "11.65.0"
   }
 }

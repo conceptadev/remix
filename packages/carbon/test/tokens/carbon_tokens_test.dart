@@ -12,10 +12,10 @@ void main() {
     test('records the pinned Carbon baseline', () {
       expect(
         CarbonSourceManifest.carbonCommit,
-        'b288a66af010622bedc6de4d6d0b81ee3c9f5520',
+        '188d23202ec1092322dee92cf0df9d9958224ae4',
       );
       expect(CarbonSourceManifest.license, 'Apache-2.0');
-      expect(CarbonSourceManifest.packageVersions['@carbon/themes'], '11.76.1');
+      expect(CarbonSourceManifest.packageVersions['@carbon/themes'], '11.79.0');
     });
 
     test('inventory counts match the baseline', () {

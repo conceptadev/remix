@@ -25,8 +25,8 @@ const require = createRequire(join(upstreamDir, 'noop.js'));
 
 // The Carbon research baseline (see project brief §2). Kept here so the lock and
 // every generated manifest agree on provenance.
-const CARBON_COMMIT = 'b288a66af010622bedc6de4d6d0b81ee3c9f5520';
-const CARBON_COMMIT_DATE = '2026-07-09';
+const CARBON_COMMIT = '188d23202ec1092322dee92cf0df9d9958224ae4';
+const CARBON_COMMIT_DATE = '2026-08-13';
 const EXTRACTION_SCHEMA_VERSION = 1;
 
 // The pinned package versions come from the upstream manifest itself, so
@@ -84,11 +84,17 @@ async function main() {
 
   // --- Component tokens (per-theme values with fallbacks preserved) ---
   const componentGroups = {
-    button: themes.buttonTokens.buttonTokens,
-    tag: themes.tagTokens.tagTokens,
-    notification: themes.notificationTokens.notificationTokens,
-    status: themes.statusTokens.statusTokens,
-    contentSwitcher: themes.contentSwitcherTokens.contentSwitcherTokens,
+    button: componentTokenGroup(themes.buttonTokens, 'buttonTokens'),
+    tag: componentTokenGroup(themes.tagTokens, 'tagTokens'),
+    notification: componentTokenGroup(
+      themes.notificationTokens,
+      'notificationTokens',
+    ),
+    status: componentTokenGroup(themes.statusTokens, 'statusTokens'),
+    contentSwitcher: componentTokenGroup(
+      themes.contentSwitcherTokens,
+      'contentSwitcherTokens',
+    ),
   };
   const componentTokens = {};
   for (const [group, obj] of Object.entries(componentGroups)) {
@@ -174,6 +180,17 @@ async function main() {
   console.log(`  palette=${Object.keys(palette).length}`
     + ` roles=234x4 component=${compCount}`
     + ` type=${Object.keys(typeStyles).length}+${Object.keys(fluidTypeStyles).length}fluid`);
+}
+
+// Carbon 11.79 flattened these exports from `{ buttonTokens: {...} }` to the
+// token map itself. Accept the earlier shape as well so a deliberate downgrade
+// remains inspectable and fails on version assertions, not a shape exception.
+function componentTokenGroup(value, legacyKey) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new TypeError(`Invalid Carbon component token export: ${legacyKey}`);
+  }
+  const legacyValue = value[legacyKey];
+  return legacyValue && typeof legacyValue === 'object' ? legacyValue : value;
 }
 
 function writeSourceLock(upstreamDir) {

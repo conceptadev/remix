@@ -2,8 +2,8 @@
 // Public Carbon token handles.
 //
 // Source: IBM Carbon Design System (Apache-2.0)
-//   repo commit b288a66af010622bedc6de4d6d0b81ee3c9f5520 (2026-07-09)
-//   @carbon/themes 11.76.1, @carbon/layout 11.54.0, @carbon/type 11.62.0, @carbon/motion 11.47.0
+//   repo commit 188d23202ec1092322dee92cf0df9d9958224ae4 (2026-08-13)
+//   @carbon/themes 11.79.0, @carbon/layout 11.57.0, @carbon/type 11.65.0, @carbon/motion 11.50.0
 // Regenerate: node tool/generate_tokens.mjs
 // SPDX-License-Identifier: Apache-2.0
 import 'package:mix/mix.dart';

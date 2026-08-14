@@ -1,0 +1,403 @@
+{
+  "$schema": "./manifest.schema.json",
+  "schemaVersion": 1,
+  "source": {
+    "catalogUrl": "https://carbondesignsystem.com/components/overview/components/",
+    "reactPackage": "@carbon/react",
+    "reactVersion": "1.114.0",
+    "reactIntegrity": "sha512-tS2YdY8zgPM9SRW4RFvTcgTGI2oew8/V9fyJgavg4ungoDLPcO4x+QQPV88eK5aG5CFpmfHVoEbc96r8FClYwQ==",
+    "stylesPackage": "@carbon/styles",
+    "stylesVersion": "1.113.0",
+    "stylesIntegrity": "sha512-Z7nYrujMEg8ceSdkZJDXOJm+S4RSjOBCARgqv+gTYSecoTr9fhj7eGzselcHQ5i0wE2m1eXKd1jJIYjkB859NQ==",
+    "gitRepository": "https://github.com/carbon-design-system/carbon",
+    "gitCommit": "188d23202ec1092322dee92cf0df9d9958224ae4",
+    "license": "Apache-2.0"
+  },
+  "coreFamilies": [
+    {
+      "id": "accordion",
+      "publicApi": ["CarbonAccordionGroup", "CarbonAccordion"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixAccordionGroup", "RemixAccordion"],
+      "semanticPrimitive": "disclosure",
+      "sourceFiles": ["scss/components/accordion/_accordion.scss", "es/components/Accordion/Accordion.d.ts"]
+    },
+    {
+      "id": "ai_label",
+      "publicApi": ["CarbonAiLabel"],
+      "strategy": "carbon_composite",
+      "remixBase": ["RemixPopover"],
+      "semanticPrimitive": "disclosure",
+      "sourceFiles": ["scss/components/ai-label/_ai-label.scss", "es/components/AILabel/index.d.ts"]
+    },
+    {
+      "id": "breadcrumb",
+      "publicApi": ["CarbonBreadcrumb", "CarbonBreadcrumbItem"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "navigation",
+      "sourceFiles": ["scss/components/breadcrumb/_breadcrumb.scss", "es/components/Breadcrumb/Breadcrumb.d.ts"]
+    },
+    {
+      "id": "button",
+      "publicApi": ["CarbonButton"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixButton"],
+      "semanticPrimitive": "button",
+      "sourceFiles": ["scss/components/button/_button.scss", "es/components/Button/Button.d.ts"]
+    },
+    {
+      "id": "checkbox",
+      "publicApi": ["CarbonCheckbox", "CarbonCheckboxGroup", "CarbonCheckboxGroupItem"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixCheckbox", "RemixCheckboxGroup", "RemixCheckboxGroupItem"],
+      "semanticPrimitive": "checkbox",
+      "sourceFiles": ["scss/components/checkbox/_checkbox.scss", "es/components/Checkbox/Checkbox.d.ts"]
+    },
+    {
+      "id": "code_snippet",
+      "publicApi": ["CarbonCodeSnippet"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "code",
+      "sourceFiles": ["scss/components/code-snippet/_code-snippet.scss", "es/components/CodeSnippet/CodeSnippet.d.ts"]
+    },
+    {
+      "id": "contained_list",
+      "publicApi": ["CarbonContainedList", "CarbonContainedListItem"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "list",
+      "sourceFiles": ["scss/components/contained-list/_contained-list.scss", "es/components/ContainedList/ContainedList.d.ts"]
+    },
+    {
+      "id": "content_switcher",
+      "publicApi": ["CarbonContentSwitcher"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixSegmentedControl"],
+      "semanticPrimitive": "single_select_group",
+      "sourceFiles": ["scss/components/content-switcher/_content-switcher.scss", "es/components/ContentSwitcher/ContentSwitcher.d.ts"]
+    },
+    {
+      "id": "data_table",
+      "publicApi": ["CarbonDataTable"],
+      "strategy": "remix_adapter",
+      "remixBase": ["RemixDataTable"],
+      "semanticPrimitive": "table",
+      "sourceFiles": ["scss/components/data-table/_data-table.scss", "es/components/DataTable/DataTable.d.ts"]
+    },
+    {
+      "id": "date_picker",
+      "publicApi": ["CarbonDatePicker", "CarbonDateRangePicker"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "date_input",
+      "sourceFiles": ["scss/components/date-picker/_date-picker.scss", "es/components/DatePicker/DatePicker.d.ts"]
+    },
+    {
+      "id": "dropdown",
+      "publicApi": ["CarbonDropdown"],
+      "strategy": "remix_adapter",
+      "remixBase": ["RemixSelect"],
+      "semanticPrimitive": "combobox",
+      "sourceFiles": ["scss/components/dropdown/_dropdown.scss", "es/components/Dropdown/Dropdown.d.ts"]
+    },
+    {
+      "id": "file_uploader",
+      "publicApi": ["CarbonFileUploader", "CarbonFileUploadItem"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "file_input",
+      "sourceFiles": ["scss/components/file-uploader/_file-uploader.scss", "es/components/FileUploader/FileUploader.d.ts"]
+    },
+    {
+      "id": "form",
+      "publicApi": ["CarbonForm", "CarbonFormGroup"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "form",
+      "sourceFiles": ["scss/components/form/_form.scss", "es/components/Form/Form.d.ts"]
+    },
+    {
+      "id": "inline_loading",
+      "publicApi": ["CarbonInlineLoading"],
+      "strategy": "carbon_composite",
+      "remixBase": ["RemixSpinner"],
+      "semanticPrimitive": "status",
+      "sourceFiles": ["scss/components/inline-loading/_inline-loading.scss", "es/components/InlineLoading/InlineLoading.d.ts"]
+    },
+    {
+      "id": "link",
+      "publicApi": ["CarbonLink"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "link",
+      "sourceFiles": ["scss/components/link/_link.scss", "es/components/Link/Link.d.ts"]
+    },
+    {
+      "id": "list",
+      "publicApi": ["CarbonUnorderedList", "CarbonOrderedList", "CarbonListItem"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "list",
+      "sourceFiles": ["scss/components/list/_list.scss", "es/components/ListItem/ListItem.d.ts"]
+    },
+    {
+      "id": "loading",
+      "publicApi": ["CarbonLoading"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixSpinner"],
+      "semanticPrimitive": "loading_spinner",
+      "sourceFiles": ["scss/components/loading/_loading.scss", "es/components/Loading/Loading.d.ts"]
+    },
+    {
+      "id": "menu",
+      "publicApi": ["CarbonMenu"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixMenu"],
+      "semanticPrimitive": "menu",
+      "sourceFiles": ["scss/components/menu/_menu.scss", "es/components/Menu/Menu.d.ts"]
+    },
+    {
+      "id": "menu_button",
+      "publicApi": ["CarbonMenuButton", "CarbonOverflowMenu"],
+      "strategy": "carbon_composite",
+      "remixBase": ["RemixButton", "RemixIconButton", "RemixMenu"],
+      "semanticPrimitive": "menu_button",
+      "sourceFiles": ["scss/components/menu-button/_menu-button.scss", "es/components/MenuButton/index.d.ts"]
+    },
+    {
+      "id": "modal",
+      "publicApi": ["CarbonModal", "showCarbonModal", "showCarbonAlertModal"],
+      "strategy": "remix_adapter",
+      "remixBase": ["RemixDialog", "showRemixDialog", "showRemixAlertDialog"],
+      "semanticPrimitive": "dialog",
+      "sourceFiles": ["scss/components/modal/_modal.scss", "es/components/Modal/Modal.d.ts"]
+    },
+    {
+      "id": "multiselect",
+      "publicApi": ["CarbonMultiselect"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "multi_select_combobox",
+      "sourceFiles": ["scss/components/multiselect/_multiselect.scss", "es/components/MultiSelect/MultiSelect.d.ts"]
+    },
+    {
+      "id": "notification",
+      "publicApi": ["CarbonNotification"],
+      "strategy": "remix_adapter",
+      "remixBase": ["RemixCallout"],
+      "semanticPrimitive": "status_or_alert",
+      "sourceFiles": ["scss/components/notification/_inline-notification.scss", "scss/components/notification/_toast-notification.scss", "es/components/Notification/Notification.d.ts"]
+    },
+    {
+      "id": "number_input",
+      "publicApi": ["CarbonNumberInput"],
+      "strategy": "carbon_composite",
+      "remixBase": ["RemixTextField", "RemixIconButton"],
+      "semanticPrimitive": "spin_button",
+      "sourceFiles": ["scss/components/number-input/_number-input.scss", "es/components/NumberInput/NumberInput.d.ts"]
+    },
+    {
+      "id": "pagination",
+      "publicApi": ["CarbonPagination"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "navigation",
+      "sourceFiles": ["scss/components/pagination/_pagination.scss", "es/components/Pagination/Pagination.d.ts"]
+    },
+    {
+      "id": "popover",
+      "publicApi": ["CarbonPopover"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixPopover"],
+      "semanticPrimitive": "popover",
+      "sourceFiles": ["scss/components/popover/_popover.scss", "es/components/Popover/index.d.ts"]
+    },
+    {
+      "id": "progress_bar",
+      "publicApi": ["CarbonProgressBar"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixProgress"],
+      "semanticPrimitive": "progress_bar",
+      "sourceFiles": ["scss/components/progress-bar/_progress-bar.scss", "es/components/ProgressBar/ProgressBar.d.ts"]
+    },
+    {
+      "id": "progress_indicator",
+      "publicApi": ["CarbonProgressIndicator", "CarbonProgressStep"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "ordered_progress",
+      "sourceFiles": ["scss/components/progress-indicator/_progress-indicator.scss", "es/components/ProgressIndicator/ProgressIndicator.d.ts"]
+    },
+    {
+      "id": "radio_button",
+      "publicApi": ["CarbonRadioButton", "CarbonRadioButtonGroup"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixRadio", "RemixRadioGroup"],
+      "semanticPrimitive": "radio",
+      "sourceFiles": ["scss/components/radio-button/_radio-button.scss", "es/components/RadioButton/RadioButton.d.ts"]
+    },
+    {
+      "id": "search",
+      "publicApi": ["CarbonSearch"],
+      "strategy": "carbon_composite",
+      "remixBase": ["RemixTextField"],
+      "semanticPrimitive": "search_field",
+      "sourceFiles": ["scss/components/search/_search.scss", "es/components/Search/Search.d.ts"]
+    },
+    {
+      "id": "select",
+      "publicApi": ["CarbonSelect", "CarbonSelectItem", "CarbonSelectItemGroup"],
+      "strategy": "remix_adapter",
+      "remixBase": ["RemixSelect"],
+      "semanticPrimitive": "select",
+      "sourceFiles": ["scss/components/select/_select.scss", "es/components/Select/Select.d.ts"]
+    },
+    {
+      "id": "slider",
+      "publicApi": ["CarbonSlider"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixSlider"],
+      "semanticPrimitive": "slider",
+      "sourceFiles": ["scss/components/slider/_slider.scss", "es/components/Slider/Slider.d.ts"]
+    },
+    {
+      "id": "structured_list",
+      "publicApi": ["CarbonStructuredList", "CarbonStructuredListRow", "CarbonStructuredListCell"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "structured_list",
+      "sourceFiles": ["scss/components/structured-list/_structured-list.scss", "es/components/StructuredList/StructuredList.d.ts"]
+    },
+    {
+      "id": "tabs",
+      "publicApi": ["CarbonTabs", "CarbonTabBar", "CarbonTab", "CarbonTabView"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixTabs", "RemixTabBar", "RemixTab", "RemixTabView"],
+      "semanticPrimitive": "tabs",
+      "sourceFiles": ["scss/components/tabs/_tabs.scss", "es/components/Tabs/Tabs.d.ts"]
+    },
+    {
+      "id": "tag",
+      "publicApi": ["CarbonTag"],
+      "strategy": "remix_adapter",
+      "remixBase": ["RemixBadge"],
+      "semanticPrimitive": "label_or_button",
+      "sourceFiles": ["scss/components/tag/_tag.scss", "es/components/Tag/Tag.d.ts"]
+    },
+    {
+      "id": "text_input",
+      "publicApi": ["CarbonTextInput", "CarbonTextArea", "CarbonPasswordInput"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixTextField", "RemixTextArea"],
+      "semanticPrimitive": "text_field",
+      "sourceFiles": ["scss/components/text-input/_text-input.scss", "scss/components/text-area/_text-area.scss", "es/components/TextInput/TextInput.d.ts"]
+    },
+    {
+      "id": "tile",
+      "publicApi": ["CarbonTile", "CarbonClickableTile", "CarbonSelectableTile", "CarbonExpandableTile"],
+      "strategy": "remix_adapter",
+      "remixBase": ["RemixCard"],
+      "semanticPrimitive": "group_or_action",
+      "sourceFiles": ["scss/components/tile/_tile.scss", "es/components/Tile/Tile.d.ts"]
+    },
+    {
+      "id": "toggle",
+      "publicApi": ["CarbonToggle"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixSwitch"],
+      "semanticPrimitive": "toggle_switch",
+      "sourceFiles": ["scss/components/toggle/_toggle.scss", "es/components/Toggle/Toggle.d.ts"]
+    },
+    {
+      "id": "toggletip",
+      "publicApi": ["CarbonToggletip"],
+      "strategy": "carbon_composite",
+      "remixBase": ["RemixPopover"],
+      "semanticPrimitive": "disclosure",
+      "sourceFiles": ["scss/components/toggletip/_toggletip.scss", "es/components/Toggletip/index.d.ts"]
+    },
+    {
+      "id": "tooltip",
+      "publicApi": ["CarbonTooltip"],
+      "strategy": "remix_recipe",
+      "remixBase": ["RemixTooltip"],
+      "semanticPrimitive": "tooltip",
+      "sourceFiles": ["scss/components/tooltip/_tooltip.scss", "es/components/Tooltip/Tooltip.d.ts"]
+    },
+    {
+      "id": "tree_view",
+      "publicApi": ["CarbonTreeView", "CarbonTreeNode"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "tree",
+      "sourceFiles": ["scss/components/treeview/_treeview.scss", "es/components/TreeView/TreeView.d.ts"]
+    },
+    {
+      "id": "ui_shell",
+      "publicApi": ["CarbonUiShell", "CarbonHeader", "CarbonSideNav"],
+      "strategy": "carbon_native",
+      "remixBase": [],
+      "semanticPrimitive": "application_shell",
+      "sourceFiles": ["scss/components/ui-shell/_ui-shell.scss", "es/components/UIShell/index.d.ts"]
+    }
+  ],
+  "extensions": [
+    {
+      "id": "bar_chart",
+      "publicApi": ["CarbonBarChart"],
+      "strategy": "mix_chart_recipe",
+      "remixBase": [],
+      "semanticPrimitive": "data_visualization"
+    },
+    {
+      "id": "line_chart",
+      "publicApi": ["CarbonLineChart"],
+      "strategy": "mix_chart_recipe",
+      "remixBase": [],
+      "semanticPrimitive": "data_visualization"
+    },
+    {
+      "id": "pie_chart",
+      "publicApi": ["CarbonPieChart"],
+      "strategy": "mix_chart_recipe",
+      "remixBase": [],
+      "semanticPrimitive": "data_visualization"
+    }
+  ],
+  "excludedRemixFamilies": [
+    {
+      "id": "avatar",
+      "reason": "No component in the official Carbon core catalog."
+    },
+    {
+      "id": "badge",
+      "reason": "Carbon Tag has narrower labeling semantics and receives its own adapter."
+    },
+    {
+      "id": "card",
+      "reason": "Carbon Tile has explicit interaction variants and receives its own adapter."
+    },
+    {
+      "id": "data_list",
+      "reason": "Carbon Contained List and Structured List have different row contracts."
+    },
+    {
+      "id": "divider",
+      "reason": "Carbon uses contextual border tokens instead of a standalone core divider."
+    },
+    {
+      "id": "skeleton",
+      "reason": "Carbon exposes component skeleton states and dedicated skeleton primitives rather than a one-to-one catalog family."
+    },
+    {
+      "id": "toggle_button",
+      "reason": "RemixToggle is a selected pressable; Carbon Toggle is implemented from RemixSwitch."
+    },
+    {
+      "id": "toggle_group",
+      "reason": "Carbon Content Switcher is implemented from RemixSegmentedControl to avoid duplicate semantics."
+    }
+  ]
+}

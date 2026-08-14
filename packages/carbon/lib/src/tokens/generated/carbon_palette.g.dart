@@ -2,8 +2,8 @@
 // IBM Carbon primitive color palette.
 //
 // Source: IBM Carbon Design System (Apache-2.0)
-//   repo commit b288a66af010622bedc6de4d6d0b81ee3c9f5520 (2026-07-09)
-//   @carbon/colors 11.53.0 (246 scalar colors)
+//   repo commit 188d23202ec1092322dee92cf0df9d9958224ae4 (2026-08-13)
+//   @carbon/colors 11.56.0 (246 scalar colors)
 // Regenerate: node tool/generate_tokens.mjs
 // SPDX-License-Identifier: Apache-2.0
 import 'package:flutter/widgets.dart';

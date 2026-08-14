@@ -18,7 +18,7 @@ topics:
 # so git consumers exercise the same resolution contract as a future release.
 publish_to: none
 
-# Pre-1.0: foundations + Carbon equivalents of the Remix component set.
+# Pre-1.0: foundations + the pinned Carbon core and chart component catalog.
 version: 0.0.2
 
 environment:
@@ -30,6 +30,7 @@ dependencies:
     sdk: flutter
   mix: ^2.2.0-beta.4
   mix_annotations: ^2.2.0-beta.1
+  mix_chart: ^0.0.1-beta.1
   # Release Please keeps this aligned with the sibling Remix release. The
   # workspace resolves it locally; git consumers resolve the hosted version.
   remix: ^1.0.0-beta.4 # x-release-please-version
