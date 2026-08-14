@@ -51,10 +51,13 @@ class MyApp extends StatelessWidget {
 ```
 
 `FortalScope` is a `MixScope`. The outermost one also establishes the Radix
-theme root's default text run — `text3` at `gray-12` — which is what an unsized
-`FortalText`, `FortalCode`, `FortalKbd`, or `FortalLink` measures `1em` against
-when no closer `DefaultTextStyle` is present. A nested scope only re-scopes
-tokens; it inherits the closest text style rather than restating the root run.
+theme root's `text3` at `gray-12` run as a courtesy `DefaultTextStyle` for bare
+Flutter `Text`. Fortal typography does not depend on that inherited run:
+unsized `FortalText`, `FortalCode`, `FortalKbd`, and `FortalLink` resolve their
+documented defaults directly from the active scope's tokens. A nested scope
+re-scopes those tokens without restating the courtesy bare-`Text` run. The one
+deliberate foreground exception is transparent, non-accent `FortalCode.ghost`,
+which blends with its surrounding text unless explicitly restyled.
 
 Place it above your app widget so that overlay and route content inherits the
 tokens — **except** under `MaterialApp` or `CupertinoApp`, which install their
@@ -72,9 +75,12 @@ final app = MaterialApp(
 ```
 
 This is a fallback, not a forced global style. A nearer `DefaultTextStyle`,
-including one installed by `Material` or `Scaffold`, still wins. Use an
-explicit `size: FortalTextSize.size3` when exact 16px Radix root sizing is
-required inside such a surface.
+including one installed by `Material` or `Scaffold`, still wins for bare
+Flutter `Text`. Fortal typography ignores that ambient run for token metrics
+and default roles: an omitted size uses `text3`, while an explicit `size:`
+selects another token size. This is a deliberate deviation from Radix's
+ambient CSS `1em` behavior. The sole ambient field retained by Fortal
+typography is the foreground of transparent, non-accent `FortalCode.ghost`.
 
 ## Customizing Fortal styles
 

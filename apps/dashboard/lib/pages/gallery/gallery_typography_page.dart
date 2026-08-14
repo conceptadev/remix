@@ -188,7 +188,7 @@ class GalleryTypographyPage extends StatelessWidget {
             runSpacing: 12,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: const [
-              FortalText('Inherited', size: .size3),
+              FortalText('Neutral', size: .size3),
               FortalText('Accent', size: .size3, accent: true),
               FortalText(
                 'Accent high contrast',

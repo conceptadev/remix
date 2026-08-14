@@ -62,11 +62,15 @@ Also import `package:remix/remix.dart` when the file uses `Remix*` widgets,
 
 Every subtree that renders a `Fortal*` widget, a `fortal*Style()` recipe, or a
 `FortalTokens` value needs `FortalScope`. The outermost scope also establishes
-the Radix theme root's default text run — `text3` at `gray-12` — which is what
-an unsized `FortalText`, `FortalCode`, `FortalKbd`, or `FortalLink` measures
-`1em` against.
+a courtesy `DefaultTextStyle` for bare Flutter `Text`: the Radix theme root run
+of `text3` at `gray-12`, regular weight, and no pinned font family. This is a
+fallback for ordinary Flutter text, analogous to Material's `bodyMedium`; it
+does not supply the text run for Fortal typography, which resolves its own
+token defaults. Transparent, non-accent `FortalCode.ghost` deliberately keeps
+only the ambient foreground so inline code can blend with surrounding text.
 
-Placement depends on the host, and getting it wrong costs that text run:
+Placement depends on the host, and getting it wrong costs that courtesy
+bare-`Text` fallback:
 
 **`WidgetsApp` or a custom host — put the scope above the app.**
 
@@ -96,18 +100,20 @@ MaterialApp(
 
 Those apps hand `WidgetsApp` their own root `DefaultTextStyle`, which is
 installed *below* anything wrapping the app — so a scope placed above
-`MaterialApp` still supplies tokens but loses the root text run. `builder` wraps
-the whole `Navigator`, so this placement still reaches pushed routes and raw
-`Overlay` entries.
+`MaterialApp` still supplies tokens but loses the courtesy text fallback.
+`builder` wraps the whole `Navigator`, so bare `Text` in pushed routes and raw
+`Overlay` entries receives that fallback.
 
-Symptom of the wrong placement under `MaterialApp`: text in a hand-rolled
-`OverlayEntry` renders red, monospace, with a yellow double underline — that is
-Flutter's "put your text in a Material" fallback, not a Remix bug.
+Symptom of the wrong placement under `MaterialApp`: **bare Flutter `Text`** in
+a hand-rolled `OverlayEntry` renders red, monospace, with a yellow double
+underline — that is Flutter's "put your text in a Material" fallback, not a
+Remix bug. Fortal typography pins its own token run; non-accent ghost Code only
+retains the ambient foreground.
 
-A nested `FortalScope` re-scopes tokens only; it inherits the closest text style
-rather than restating the root run, so re-scoping a subtree for a different
-accent or scaling leaves the text running through it at its current size and
-color.
+A nested `FortalScope` re-scopes tokens only; it does not restate the courtesy
+bare-`Text` run. Re-scoping a subtree for a different accent or scaling leaves
+the surrounding Flutter text inheritance unchanged while Fortal typography
+resolves against the nested tokens.
 
 Ordinary `Remix*` widgets with fully custom styles do not need `FortalScope`.
 

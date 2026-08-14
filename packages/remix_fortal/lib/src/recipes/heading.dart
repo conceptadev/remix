@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
+import '../fortal/fortal.dart';
 import 'typography_shared.dart';
 
 /// Fortal-themed heading style on the Radix nine-step scale.
@@ -37,9 +38,12 @@ TextStyler fortalHeadingStyle({
   var style = TextStyler(
     style: fortalTextSizeToken(size).mix(),
   ).height(lineHeight).fontWeight(fortalTextWeightToken(weight)());
-  if (accent) {
-    style = fortalAccentForeground(style, highContrast: highContrast);
-  }
+  // Neutral headings pin `gray12` from the tokens rather than inheriting the
+  // ambient foreground, matching fortalTextStyle's token-default contract.
+  style = accent
+      ? fortalAccentForeground(style, highContrast: highContrast)
+      : style.color(FortalTokens.gray12());
+  style = style.inherit(false);
 
   return fortalApplyTextFlow(
     style,

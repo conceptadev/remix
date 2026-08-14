@@ -1378,7 +1378,7 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
   return allTokens;
 }
 
-/// Establishes the Radix theme root's default text run.
+/// Establishes a courtesy default text run for bare [Text] descendants.
 ///
 /// `.radix-themes` is not only a token carrier upstream: `color.css` sets
 /// `color: var(--gray-12)` in the same rule as the `data-has-background` fill,
@@ -1387,12 +1387,10 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
 /// `--default-font-weight`. Those resolve to exactly [FortalTokens.text3] plus
 /// [FortalTokens.gray12] at regular weight.
 ///
-/// Without this fallback, "inherits the ambient `DefaultTextStyle`" — the
-/// documented behaviour of an unsized [FortalText], [FortalCode], [FortalKbd],
-/// or [FortalLink] — means "inherits whatever the outer host happens to
-/// supply", so the em-relative geometry of Code, Kbd, and Link is measured
-/// against that host instead of Radix's 16px root. A nearer descendant
-/// `DefaultTextStyle` still wins through Flutter's normal inheritance.
+/// Fortal text recipes resolve and pin their own runs. This fallback keeps
+/// deliberately bare [Text] descendants aligned with Radix's root typography
+/// and neutral foreground. A nearer descendant `DefaultTextStyle` still wins
+/// through Flutter's normal inheritance.
 ///
 /// Only the outermost [FortalScope] installs this. A nested scope re-scopes
 /// tokens for its subtree and nothing more: upstream, `.radix-themes` inside

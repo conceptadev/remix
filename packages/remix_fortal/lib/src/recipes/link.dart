@@ -76,17 +76,22 @@ LinkStyler _fortalLinkStateStyle(
     TextStyler(),
     highContrast: highContrast,
   );
-  if (size != null) {
-    textStyle = textStyle.style(fortalTextSizeToken(size).mix());
-  }
+  // An omitted size anchors to the root `text3` token rather than the ambient
+  // `DefaultTextStyle`, so a host text run cannot change the link's metrics or
+  // its em-relative underline geometry.
+  textStyle = textStyle.style(
+    fortalTextSizeToken(size ?? FortalTextSize.size3).mix(),
+  );
   if (weight != null) {
     textStyle = textStyle.fontWeight(fortalTextWeightToken(weight)());
   }
+  textStyle = textStyle.inherit(false);
 
-  final effectiveText = size == null
-      ? DefaultTextStyle.of(context).style
-      : fortalResolveTextToken(context, size);
-  final fontSize = fortalResolvedFontSize(effectiveText);
+  final effectiveText = fortalResolveTextToken(
+    context,
+    size ?? FortalTextSize.size3,
+  );
+  final fontSize = effectiveText.fontSize!;
 
   // Every upstream underline rule is gated behind `:where(:any-link, button)`,
   // so a link with no callback stays plain accent-coloured text. A focus-visible
@@ -227,7 +232,7 @@ class FortalLink extends StatelessWidget {
         softWrap: softWrap,
         truncate: truncate,
         highContrast: highContrast,
-        actionable: onPressed != null,
+        actionable: enabled && onPressed != null,
       ),
     );
   }
