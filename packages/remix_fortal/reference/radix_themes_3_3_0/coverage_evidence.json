@@ -7,12 +7,12 @@
     },
     {
       "test": "test/fortal/fortal_theme_resolution_test.dart",
-      "case": "unsized typography measures 1em against the root, not the host",
+      "case": "root scope keeps a courtesy DefaultTextStyle for bare Text",
       "covers": ["state:rootTextStyle"]
     },
     {
       "test": "test/fortal/fortal_theme_resolution_test.dart",
-      "case": "a nested scope preserves the nearest text style",
+      "case": "a nested scope reanchors unsized typography to its tokens",
       "covers": ["state:rootTextStyle", "state:nestedInherit"]
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "test": "test/components/typography/typography_test.dart",
-      "case": "code applies the nested Radix font-size adjustments",
+      "case": "code applies nested factors to the text3 token",
       "covers": ["enum:variant.soft", "enum:variant.ghost", "state:idle"]
     },
     {
@@ -1076,6 +1076,16 @@
       "test": "test/components/typography/typography_test.dart",
       "case": "ghost gains the accent foreground only when opted in",
       "covers": ["enum:variant.ghost", "state:accent"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "ghost preserves ambient Paint until a composed color overrides it",
+      "covers": ["enum:variant.ghost", "state:idle"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "later merged ghost recipe replaces the ambient fallback",
+      "covers": ["enum:variant.ghost", "state:idle"]
     },
     {
       "test": "test/components/typography/typography_test.dart",
@@ -1112,7 +1122,7 @@
     },
     {
       "test": "test/components/typography/typography_test.dart",
-      "case": "kbd uses distinct unsized and explicit type factors",
+      "case": "kbd applies distinct unsized and explicit token factors",
       "covers": ["state:idle"]
     },
     {
@@ -1200,6 +1210,15 @@
       "test": "test/components/typography/typography_test.dart",
       "case": "disabled link cannot focus or activate",
       "covers": ["state:disabled"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "disabled links never underline even with a callback",
+      "covers": [
+        "enum:underline.auto",
+        "enum:underline.always",
+        "state:disabled"
+      ]
     },
     {
       "test": "test/components/typography/typography_test.dart",

@@ -344,7 +344,11 @@ void main() {
       ),
     );
     expect(content, findsOneWidget);
-    expect(tester.getSize(content).height, lessThan(120));
+    final title = find.text('Quick note');
+    final body = find.text('Popover content inherits the active Fortal scope.');
+    final expectedHeight =
+        tester.getSize(title).height + 8 + tester.getSize(body).height;
+    expect(tester.getSize(content).height, expectedHeight);
   });
 
   testWidgets('dashboard action popovers shrink-wrap their actions', (

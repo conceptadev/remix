@@ -177,8 +177,8 @@ void main() {
       expect(dataList.size, FortalDataListSize.size2);
       expect(dataList.highContrast, isFalse);
 
-      // Typography sizes are nullable so an omitted size inherits the ambient
-      // style, exactly as an unsized Radix Text renders at 1em.
+      // Typography sizes stay nullable so recipes can distinguish an omitted
+      // size (the text3 token default) from an explicit token selection.
       const text = FortalText('Body');
       const heading = FortalHeading('Title');
       const code = FortalCode('code');

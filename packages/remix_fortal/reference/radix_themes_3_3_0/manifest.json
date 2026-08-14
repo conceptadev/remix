@@ -3895,7 +3895,7 @@
         ".rt-high-contrast"
       ],
       "flutterExceptions": [
-        "An omitted size renders at the ambient DefaultTextStyle, matching an unsized Radix Text at 1em; only an explicit size resolves a token.",
+        "An omitted size and weight resolve the text3 and regular tokens, and neutral text resolves gray-12, rather than inheriting the ambient DefaultTextStyle. This deliberately differs from an unsized Radix Text rendering at 1em; an explicit size selects another token.",
         "The `as` element choice and `asChild` map to Flutter widget composition; FortalText always renders exactly one Text node.",
         "Radix `wrap` covers pretty and balance line breaking; Flutter exposes no equivalent line breaker, so the recipe maps only the wrap/nowrap pair onto softWrap and folds truncate into one ellipsized line.",
         "CSS leading trim has no Flutter primitive, so the token line box is painted untrimmed.",
@@ -4082,6 +4082,7 @@
       "flutterExceptions": [
         "Radix `as` selects an h1\u2013h6 element that carries the visual and the semantic level together; Flutter splits them, so headingLevel drives a Semantics header node while size stays purely visual.",
         "`--heading-font-size-adjust` is 1, so headings reuse the raw token size and differ from body text only in the pinned line box.",
+        "A neutral FortalHeading resolves gray-12 rather than inheriting the ambient foreground; accent is an explicit opt-in.",
         "Radix `wrap` covers pretty and balance line breaking; Flutter exposes no equivalent line breaker, so the recipe maps only the wrap/nowrap pair onto softWrap and folds truncate into one ellipsized line.",
         "CSS leading trim has no Flutter primitive, so the token line box is painted untrimmed."
       ],
@@ -4279,8 +4280,9 @@
       ],
       "flutterExceptions": [
         "Radix renders Code as an inline element inside a text run; RemixBadge paints a standalone box, so a Code inside a wrapped sentence is a sibling widget rather than an inline span.",
-        "`--code-font-weight: inherit` becomes an optional weight argument because a Flutter TextStyler cannot inherit one property in isolation.",
-        "Ghost inherits the ambient foreground unless the caller opts into the local accent, matching the upstream `[data-accent-color]` gate.",
+        "An omitted size anchors the upstream Code factors to the text3 token rather than the ambient 1em run.",
+        "`--code-font-weight: inherit` becomes an optional weight argument. When omitted, the non-inheriting Flutter TextStyle leaves weight unset and therefore uses the engine's regular weight rather than the ambient weight.",
+        "Ghost uses the ambient foreground as a post-composition fallback unless the caller opts into the local accent, matching the upstream `[data-accent-color]` gate while allowing an explicit recipe foreground to win.",
         "The Link-nested hover, solid high-contrast hover filter, and ::selection rules need an actionable ancestor FortalCode never has.",
         "Radix `wrap` covers pretty and balance line breaking; Flutter exposes no equivalent line breaker, so the recipe maps only the wrap/nowrap pair onto softWrap and folds truncate into one ellipsized line.",
         "CSS leading trim has no Flutter primitive, so the token line box is painted untrimmed."
@@ -4442,8 +4444,8 @@
         ".rt-variant-soft"
       ],
       "flutterExceptions": [
-        "Radix uses two type-scale factors: an explicit size multiplies its token by 0.8, while an unsized Kbd renders at 0.75em of the ambient style. Because `--letter-spacing-N` is an em, an explicit size also re-resolves its letter spacing against Kbd's own 0.8 font size.",
-        "The inherited path keeps Flutter absolute letter-spacing inheritance: an ambient DefaultTextStyle carries a resolved value with no em intent left to rescale.",
+        "Radix uses two type-scale factors: an explicit size multiplies its token by 0.8, while an unsized Kbd renders at 0.75em. Fortal keeps those factors but anchors an omitted size to the text3 token rather than the ambient DefaultTextStyle. Because `--letter-spacing-N` is an em, an explicit size also re-resolves its letter spacing against Kbd's own 0.8 font size.",
+        "The unsized path keeps the text3 token's resolved letter spacing instead of inheriting the ambient DefaultTextStyle's absolute value.",
         "`vertical-align: text-top` positions the cap inside a surrounding text run; a standalone Flutter box has no inline baseline to align against.",
         "The hover, open, active, and focus-visible rules apply only when Kbd is nested in an anchor or button, which FortalKbd never is.",
         "Kbd publishes one native keyboardKey Semantics node and no tap action, because it is inert upstream."
@@ -4602,6 +4604,8 @@
       ],
       "flutterExceptions": [
         "Every upstream underline rule is gated behind `:where(:any-link, button)`, so a FortalLink with no onPressed is disabled exactly as `enabled: false` is: it keeps the accent colour but gives up its underline, focus stop, link role, and activation.",
+        "An omitted size resolves the text3 token rather than inheriting the ambient 1em run.",
+        "An omitted weight stays unset on a non-inheriting Flutter TextStyle and therefore uses the engine's regular weight rather than the ambient weight.",
         "`text-underline-offset` has no Flutter TextStyle equivalent, so the underline sits at the font's own offset.",
         "Flutter reads decorationThickness as a multiple of the font underline thickness rather than a CSS length, so the pinned `min(2px, max(1px, 0.05em))` ramp lands as a 1x\u20132x stroke.",
         "The decoration colour approximates Radix `color-mix(in oklab, \u2026)` with an sRGB Color.lerp.",

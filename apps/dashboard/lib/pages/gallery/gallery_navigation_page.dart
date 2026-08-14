@@ -80,14 +80,14 @@ class _TabsDemoState extends State<_TabsDemo> {
           tabId: 'overview',
           child: const Padding(
             padding: EdgeInsets.all(8),
-            child: Text('Overview content'),
+            child: FortalText('Overview content'),
           ),
         ),
         FortalTabView(
           tabId: 'activity',
           child: const Padding(
             padding: EdgeInsets.all(8),
-            child: Text('Activity content'),
+            child: FortalText('Activity content'),
           ),
         ),
       ],
@@ -125,7 +125,7 @@ class _AccordionDemoState extends State<_AccordionDemo> {
           size: widget.size,
           value: 'details',
           title: 'What is Fortal?',
-          child: const Text(
+          child: const FortalText(
             'A Radix-inspired theme and component system for Flutter.',
           ),
         ),
@@ -134,7 +134,7 @@ class _AccordionDemoState extends State<_AccordionDemo> {
           size: widget.size,
           value: 'tokens',
           title: 'Does it support tokens?',
-          child: const Text(
+          child: const FortalText(
             'Every recipe resolves through the active Mix scope.',
           ),
         ),

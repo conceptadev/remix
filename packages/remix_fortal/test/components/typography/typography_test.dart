@@ -1,6 +1,7 @@
 import 'dart:ui' show PointerDeviceKind, Tristate;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
@@ -57,25 +58,25 @@ void main() {
       expect(style.fontWeight, FontWeight.w700);
     });
 
-    testWidgets('code applies the nested Radix font-size adjustments', (
+    testWidgets('code applies nested factors to the text3 token', (
       tester,
     ) async {
       await _pump(
         tester,
         const Column(
           children: [
-            FortalCode.soft('ambient'),
+            FortalCode.soft('unsized'),
             FortalCode.soft('explicit', size: FortalTextSize.size2),
             FortalCode.ghost('ghost', size: FortalTextSize.size2),
           ],
         ),
       );
 
-      final ambient = _text(tester, 'ambient').style!;
-      expect(ambient.fontSize, closeTo(20 * 0.95 * 0.95, 1e-9));
-      expect(ambient.height, 1.25);
-      expect(ambient.letterSpacing, closeTo(2 - 0.007 * 18.05, 1e-9));
-      expect(ambient.fontFamily, 'Menlo');
+      final unsized = _text(tester, 'unsized').style!;
+      expect(unsized.fontSize, closeTo(16 * 0.95 * 0.95, 1e-9));
+      expect(unsized.height, 1.25);
+      expect(unsized.letterSpacing, closeTo(-0.007 * 14.44, 1e-9));
+      expect(unsized.fontFamily, 'Menlo');
 
       final explicit = _text(tester, 'explicit').style!;
       expect(explicit.fontSize, closeTo(14 * 0.95 * 0.95, 1e-9));
@@ -85,20 +86,23 @@ void main() {
       expect(_text(tester, 'ghost').style!.fontSize, closeTo(14 * 0.95, 1e-9));
     });
 
-    testWidgets('kbd uses distinct unsized and explicit type factors', (
+    testWidgets('kbd applies distinct unsized and explicit token factors', (
       tester,
     ) async {
       await _pump(
         tester,
         const Column(
           children: [
-            FortalKbd.soft('ambient'),
+            FortalKbd.soft('unsized'),
             FortalKbd.soft('explicit', size: FortalTextSize.size2),
           ],
         ),
       );
 
-      expect(_text(tester, 'ambient').style?.fontSize, 15);
+      expect(
+        _text(tester, 'unsized').style?.fontSize,
+        closeTo(16 * 0.75, 1e-9),
+      );
       final explicit = _text(tester, 'explicit').style!;
       expect(explicit.fontSize, closeTo(11.2, 1e-9));
       expect(explicit.height, 1.7);
@@ -125,10 +129,10 @@ void main() {
         );
       }
 
-      // The inherited path keeps Flutter's absolute letter-spacing
-      // inheritance; there is no em intent left to rescale.
-      await _pump(tester, const FortalKbd.soft('inherited'));
-      expect(_text(tester, 'inherited').style?.letterSpacing, 2);
+      // The unsized path remains anchored to text3, whose letter spacing is
+      // zero, instead of inheriting the hostile run's 2px spacing.
+      await _pump(tester, const FortalKbd.soft('unsized'));
+      expect(_text(tester, 'unsized').style?.letterSpacing, 0);
     });
 
     testWidgets('code letter spacing adds the pinned -0.007em to the token', (
@@ -207,31 +211,235 @@ void main() {
   });
 
   group('regressions', () {
-    testWidgets('em geometry survives an ambient style with no fontSize', (
+    testWidgets(
+      'token-default typography isolates every hostile ambient field',
+      (tester) async {
+        final gray12 = await _resolveToken(tester, FortalTokens.gray12);
+        final accentA11 = await _resolveToken(tester, FortalTokens.accentA11);
+        final samples = Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const FortalText('body copy'),
+            const FortalHeading('section heading'),
+            const FortalCode.soft('soft code'),
+            const FortalCode.ghost('ghost code'),
+            const FortalKbd.soft('command key'),
+            const FortalLink('inert link'),
+            FortalLink('actionable link', onPressed: _noop),
+          ],
+        );
+        const labels = [
+          'body copy',
+          'section heading',
+          'soft code',
+          'ghost code',
+          'command key',
+          'inert link',
+          'actionable link',
+        ];
+
+        await _pump(tester, samples, ambient: const TextStyle());
+        final baselineSizes = {
+          for (final label in labels) label: tester.getSize(find.text(label)),
+        };
+
+        await _pump(
+          tester,
+          samples,
+          ambient: const TextStyle(
+            color: Colors.green,
+            backgroundColor: Colors.yellow,
+            fontFamily: 'Hostile family',
+            fontSize: 20,
+            fontWeight: FontWeight.w900,
+            fontStyle: FontStyle.italic,
+            height: 2,
+            letterSpacing: 2,
+            wordSpacing: 13,
+            decoration: TextDecoration.lineThrough,
+            shadows: [Shadow(color: Colors.red, blurRadius: 3)],
+          ),
+        );
+
+        for (final entry in baselineSizes.entries) {
+          expect(
+            tester.getSize(find.text(entry.key)),
+            entry.value,
+            reason: entry.key,
+          );
+        }
+
+        final expected = <String, (double, Color)>{
+          'body copy': (16, gray12),
+          'section heading': (24, gray12),
+          'soft code': (16 * 0.95 * 0.95, accentA11),
+          'ghost code': (16 * 0.95, Colors.green),
+          'command key': (16 * 0.75, gray12),
+          'inert link': (16, accentA11),
+          'actionable link': (16, accentA11),
+        };
+        for (final entry in expected.entries) {
+          final style = _renderedTextStyle(tester, entry.key);
+          expect(style.inherit, isFalse, reason: entry.key);
+          expect(
+            style.fontSize,
+            closeTo(entry.value.$1, 1e-9),
+            reason: entry.key,
+          );
+          expect(style.color, entry.value.$2, reason: entry.key);
+          expect(style.fontStyle, isNull, reason: entry.key);
+          expect(style.backgroundColor, isNull, reason: entry.key);
+          expect(style.shadows, isNull, reason: entry.key);
+          expect(
+            style.decoration,
+            anyOf(isNull, TextDecoration.none),
+            reason: entry.key,
+          );
+        }
+        expect(
+          _renderedTextStyle(tester, 'body copy').fontWeight,
+          FontWeight.w400,
+        );
+        expect(
+          _renderedTextStyle(tester, 'section heading').fontWeight,
+          FontWeight.w700,
+        );
+        expect(
+          _renderedTextStyle(tester, 'command key').fontWeight,
+          FontWeight.w400,
+        );
+        expect(_renderedTextStyle(tester, 'soft code').fontFamily, 'Menlo');
+        expect(_renderedTextStyle(tester, 'ghost code').fontFamily, 'Menlo');
+        for (final label in [
+          'body copy',
+          'section heading',
+          'command key',
+          'inert link',
+          'actionable link',
+        ]) {
+          expect(
+            _renderedTextStyle(tester, label).fontFamily,
+            isNull,
+            reason: label,
+          );
+        }
+      },
+    );
+
+    testWidgets(
+      'ghost preserves ambient Paint until a composed color overrides it',
+      (tester) async {
+        final ambientPaint = Paint()
+          ..color = Colors.green
+          ..strokeWidth = 2;
+        final composedPaint = Paint()
+          ..color = Colors.orange
+          ..strokeWidth = 3;
+
+        await _pump(
+          tester,
+          Builder(
+            builder: (context) => Column(
+              children: [
+                fortalCodeStyle(context, variant: FortalCodeVariant.ghost)(
+                  label: 'paint ghost',
+                ),
+                fortalCodeStyle(
+                  context,
+                  variant: FortalCodeVariant.ghost,
+                ).label(TextStyler().color(Colors.orange))(
+                  label: 'custom ghost',
+                ),
+                fortalCodeStyle(
+                  context,
+                  variant: FortalCodeVariant.ghost,
+                ).label(TextStyler().foreground(composedPaint))(
+                  label: 'custom paint ghost',
+                ),
+              ],
+            ),
+          ),
+          ambient: TextStyle(foreground: ambientPaint),
+        );
+
+        expect(tester.takeException(), isNull);
+        final inherited = _renderedTextStyle(tester, 'paint ghost');
+        expect(inherited.color, isNull);
+        expect(inherited.foreground, same(ambientPaint));
+
+        final customized = _renderedTextStyle(tester, 'custom ghost');
+        expect(customized.color, Colors.orange);
+        expect(customized.foreground, isNull);
+
+        final paintCustomized = _renderedTextStyle(
+          tester,
+          'custom paint ghost',
+        );
+        expect(paintCustomized.color, isNull);
+        expect(paintCustomized.foreground, same(composedPaint));
+      },
+    );
+
+    testWidgets('later merged ghost recipe replaces the ambient fallback', (
       tester,
     ) async {
+      final nearerPaint = Paint()..color = Colors.green;
+      late BadgeStyler outerRecipe;
+      late BadgeStyler nearerRecipe;
+
       await _pump(
         tester,
         Column(
           children: [
-            const FortalCode.soft('code'),
-            const FortalKbd.soft('kbd'),
-            const FortalLink('inert'),
-            FortalLink('actionable', onPressed: _noop),
+            DefaultTextStyle(
+              style: const TextStyle(color: Colors.red),
+              child: Builder(
+                builder: (context) {
+                  outerRecipe = fortalCodeStyle(
+                    context,
+                    variant: FortalCodeVariant.ghost,
+                  );
+                  return const SizedBox.shrink();
+                },
+              ),
+            ),
+            DefaultTextStyle(
+              style: TextStyle(foreground: nearerPaint),
+              child: Builder(
+                builder: (context) {
+                  nearerRecipe = fortalCodeStyle(
+                    context,
+                    variant: FortalCodeVariant.ghost,
+                  );
+                  return const SizedBox.shrink();
+                },
+              ),
+            ),
           ],
         ),
-        ambient: const TextStyle(color: Colors.purple),
       );
 
-      expect(tester.takeException(), isNull);
-      expect(
-        _text(tester, 'code').style?.fontSize,
-        closeTo(kDefaultFontSize * 0.95 * 0.95, 1e-9),
+      await _pump(
+        tester,
+        Column(
+          children: [
+            outerRecipe.merge(nearerRecipe)(label: 'paint later'),
+            nearerRecipe.merge(outerRecipe)(label: 'color later'),
+          ],
+        ),
       );
+
+      final paintLater = _renderedTextStyle(tester, 'paint later');
+      expect(paintLater.color, isNull);
+      expect(paintLater.foreground, same(nearerPaint));
+      expect(paintLater.debugLabel, isNull);
+
+      final colorLater = _renderedTextStyle(tester, 'color later');
       expect(
-        _text(tester, 'kbd').style?.fontSize,
-        closeTo(kDefaultFontSize * 0.75, 1e-9),
+        (colorLater.foreground?.color ?? colorLater.color)?.toARGB32(),
+        Colors.red.toARGB32(),
       );
+      expect(colorLater.debugLabel, isNull);
     });
 
     testWidgets('inert links never underline; upstream gates on anchors', (
@@ -253,6 +461,34 @@ void main() {
 
       expect(_underlined(tester, 'inert always'), isFalse);
       expect(_underlined(tester, 'inert high auto'), isFalse);
+    });
+
+    testWidgets('disabled links never underline even with a callback', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        Column(
+          children: [
+            FortalLink(
+              'disabled always',
+              enabled: false,
+              underline: FortalLinkUnderline.always,
+              onPressed: _noop,
+            ),
+            FortalLink(
+              'disabled high auto',
+              enabled: false,
+              highContrast: true,
+              underline: FortalLinkUnderline.auto,
+              onPressed: _noop,
+            ),
+          ],
+        ),
+      );
+
+      expect(_underlined(tester, 'disabled always'), isFalse);
+      expect(_underlined(tester, 'disabled high auto'), isFalse);
     });
 
     testWidgets('actionable links underline per mode', (tester) async {
@@ -325,7 +561,14 @@ void main() {
                 // Upstream gates ghost's colour on an explicit accent, so an
                 // opt-out ghost inherits the ambient foreground.
                 expect(fill, isNull);
-                expect(fg, isNull);
+                expect(fg, Colors.purple);
+                expect(
+                  _renderedTextStyle(
+                    tester,
+                    '${variant.name}-$highContrast',
+                  ).color,
+                  Colors.purple,
+                );
             }
           }
         }
@@ -375,7 +618,7 @@ void main() {
           ],
         ),
       );
-      expect(_text(tester, 'plain ghost').style?.color, isNull);
+      expect(_renderedTextStyle(tester, 'plain ghost').color, Colors.purple);
       expect(_text(tester, 'accent ghost').style?.color, tokens.accentA11);
       expect(_text(tester, 'accent hc ghost').style?.color, tokens.accent12);
     });
@@ -923,15 +1166,18 @@ void main() {
     ) async {
       final accentA11 = await _resolveToken(tester, FortalTokens.accentA11);
       final accent12 = await _resolveToken(tester, FortalTokens.accent12);
+      final gray12 = await _resolveToken(tester, FortalTokens.gray12);
 
       await _pump(
         tester,
         const Column(
           children: [
-            FortalText('inherited text'),
+            FortalText('neutral text'),
+            FortalText('neutral hc text', highContrast: true),
             FortalText('accent text', accent: true),
             FortalText('accent hc text', accent: true, highContrast: true),
-            FortalHeading('inherited heading'),
+            FortalHeading('neutral heading'),
+            FortalHeading('neutral hc heading', highContrast: true),
             FortalHeading('accent heading', accent: true),
             FortalHeading(
               'accent hc heading',
@@ -943,10 +1189,12 @@ void main() {
       );
 
       // highContrast alone is inert: upstream gates the colour on the accent.
-      expect(_text(tester, 'inherited text').style?.color, isNull);
+      expect(_text(tester, 'neutral text').style?.color, gray12);
+      expect(_text(tester, 'neutral hc text').style?.color, gray12);
       expect(_text(tester, 'accent text').style?.color, accentA11);
       expect(_text(tester, 'accent hc text').style?.color, accent12);
-      expect(_text(tester, 'inherited heading').style?.color, isNull);
+      expect(_text(tester, 'neutral heading').style?.color, gray12);
+      expect(_text(tester, 'neutral hc heading').style?.color, gray12);
       expect(_text(tester, 'accent heading').style?.color, accentA11);
       expect(_text(tester, 'accent hc heading').style?.color, accent12);
     });
@@ -1084,6 +1332,9 @@ Future<void> _pump(
 
 Text _text(WidgetTester tester, String text) =>
     tester.widget<Text>(find.text(text));
+
+TextStyle _renderedTextStyle(WidgetTester tester, String text) =>
+    tester.renderObject<RenderParagraph>(find.text(text)).text.style!;
 
 BadgeSpec _surface(WidgetTester tester) {
   final widget = tester.widget<RemixBadge>(find.byType(RemixBadge));

@@ -84,8 +84,8 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
                       crossAxisAlignment: .start,
                       spacing: 8,
                       children: [
-                        Text('Quick note'),
-                        Text(
+                        FortalText('Quick note'),
+                        FortalText(
                           'Popover content inherits the active Fortal scope.',
                         ),
                       ],

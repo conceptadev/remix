@@ -8,10 +8,14 @@ part of 'text.dart';
 
 /// Fortal-themed body text on the Radix nine-step scale.
 ///
-/// Omitted [size] and [weight] inherit the ambient `DefaultTextStyle`, matching
-/// Radix, where Text without a size prop renders at the inherited `1em`.
-/// Set [accent] to take the surrounding [FortalScope]'s accent colour; leaving
-/// it false preserves the inherited foreground.
+/// Omitted [size] and [weight] resolve to the Radix root run (`text3`,
+/// regular) from the active [FortalScope]'s tokens rather than the ambient
+/// `DefaultTextStyle`. This deliberately deviates from Radix's CSS `1em`
+/// inheritance: a token default cannot be silently replaced by a host-installed
+/// text run (a `Material` surface, or a host with no run at all), which keeps
+/// Fortal text a function of the theme alone. Set [accent] to take the
+/// surrounding [FortalScope]'s accent colour; leaving it false uses the
+/// neutral `gray12` foreground.
 class FortalText extends StatelessWidget {
   const FortalText(
     this.text, {

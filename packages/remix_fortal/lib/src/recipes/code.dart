@@ -12,8 +12,9 @@ enum FortalCodeVariant { solid, soft, outline, ghost }
 /// Fortal-themed inline code on the Radix nine-step scale.
 ///
 /// Geometry is em-relative to the resolved font size, so this recipe takes a
-/// [context]: an explicit [size] resolves its text token, and an omitted one
-/// inherits the ambient `DefaultTextStyle` exactly as Radix's `1em` does.
+/// [context]. An omitted [size] anchors to the root `text3` token — not the
+/// ambient `DefaultTextStyle` — while keeping upstream's separate unsized
+/// factors, so a host text run cannot change Code's geometry.
 BadgeStyler fortalCodeStyle(
   BuildContext context, {
   FortalTextSize? size,
@@ -24,17 +25,15 @@ BadgeStyler fortalCodeStyle(
   bool accent = false,
   bool highContrast = false,
 }) {
-  final base = size == null
-      ? DefaultTextStyle.of(context).style
-      : fortalResolveTextToken(context, size);
-  final baseFontSize = fortalResolvedFontSize(base);
+  final base = fortalResolveTextToken(context, size ?? FortalTextSize.size3);
+  final baseFontSize = base.fontSize!;
 
   // Radix nests two adjustments: --code-font-size-adjust is 0.95, and
   // --code-variant-font-size-adjust multiplies it by 0.95 again for every
   // variant except ghost, which keeps the outer value.
   final decorated = variant != FortalCodeVariant.ghost;
   final fontSize = baseFontSize * (decorated ? 0.95 * 0.95 : 0.95);
-  // An explicit size keeps its token's absolute line box; the inherited path
+  // An explicit size keeps its token's absolute line box; the unsized path
   // uses the pinned unitless 1.25.
   final lineHeight = size == null
       ? 1.25
@@ -52,7 +51,8 @@ BadgeStyler fortalCodeStyle(
       ])
       .fontSize(fontSize)
       .height(lineHeight)
-      .letterSpacing(letterSpacing);
+      .letterSpacing(letterSpacing)
+      .inherit(false);
   if (weight != null) {
     textStyle = textStyle.fontWeight(fortalTextWeightToken(weight)());
   }
@@ -84,8 +84,22 @@ BadgeStyler fortalCodeStyle(
       foreground = highContrast ? accent12 : accentA11;
     case .ghost:
       // Ghost is transparent and inherits the ambient colour unless the caller
-      // opts into the local accent.
-      if (accent) foreground = highContrast ? accent12 : accentA11;
+      // opts into the local accent. Apply only that intended ambient field
+      // after Mix composition so an explicit recipe colour or foreground can
+      // override it without creating an invalid Flutter TextStyle.
+      if (accent) {
+        foreground = highContrast ? accent12 : accentA11;
+      } else {
+        textStyle = textStyle.merge(
+          TextStyler.create(
+            style: Prop<TextStyle>.directives([
+              _AmbientCodeForegroundDirective(
+                DefaultTextStyle.of(context).style,
+              ),
+            ]),
+          ),
+        );
+      }
   }
   if (foreground != null) textStyle = textStyle.color(foreground);
 
@@ -134,6 +148,61 @@ BadgeStyler fortalCodeStyle(
 
   return style;
 }
+
+final class _AmbientCodeForegroundDirective extends Directive<TextStyle> {
+  _AmbientCodeForegroundDirective(TextStyle ambient)
+    : color = ambient.color,
+      foreground = ambient.foreground;
+
+  final Color? color;
+  final Paint? foreground;
+
+  @override
+  String get key => 'fortal_code_ambient_foreground';
+
+  @override
+  TextStyle apply(TextStyle style) {
+    final hasAmbientFallback = _ambientCodeForegroundFallbacks[style] ?? false;
+    if (!hasAmbientFallback &&
+        (style.color != null || style.foreground != null)) {
+      return style;
+    }
+    if (color == null && foreground == null) return style;
+
+    late final TextStyle result;
+    if (foreground case final paint?) {
+      result = style.copyWith(foreground: paint);
+    } else if (style.foreground != null) {
+      // Mix concatenates directives when recipes merge. If an earlier fallback
+      // supplied a Paint, copyWith cannot clear it in favour of a Color. Keep
+      // the equivalent Paint representation so the later recipe still wins
+      // without producing an invalid TextStyle(color:, foreground:).
+      result = style.copyWith(foreground: Paint()..color = color!);
+    } else {
+      result = style.copyWith(color: color);
+    }
+
+    // Expando keeps provenance out of TextStyle's visual and diagnostic
+    // fields, works with assertions disabled, and does not retain resolved
+    // styles after Mix finishes applying the directive list.
+    _ambientCodeForegroundFallbacks[result] = true;
+    return result;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _AmbientCodeForegroundDirective &&
+          other.color == color &&
+          other.foreground == foreground;
+
+  @override
+  int get hashCode => Object.hash(color, foreground);
+}
+
+final _ambientCodeForegroundFallbacks = Expando<bool>(
+  'fortal_code_ambient_foreground',
+);
 
 /// Token-backed standalone code text with the Radix Code variants.
 ///

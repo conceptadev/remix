@@ -122,10 +122,10 @@ AccordionStyler _fortalAccordionSoftStyler([
 BorderSideMix _fortalAccordionBorderSide(Color color) =>
     BorderSideMix(color: color, width: FortalTokens.borderWidth1());
 
-/// Pins accordion content to the 14px type-scale step (`text2`) regardless
-/// of accordion size, so content never renders larger than its own
-/// trigger's title (measured 14/15/16px at size1/size2/size3). [color]
-/// supplies the variant's own content tint.
+/// Pins bare [Text] accordion content to the 14px type-scale step (`text2`)
+/// regardless of accordion size, so content never renders larger than its own
+/// trigger's title (measured 14/15/16px at size1/size2/size3). Fortal text
+/// children pin their own run. [color] supplies the variant's own content tint.
 WidgetModifierConfig _fortalAccordionContentTypography(Color color) =>
     WidgetModifierConfig.defaultTextStyle(
       style: FortalTokens.text2.mix(),

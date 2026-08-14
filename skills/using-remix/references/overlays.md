@@ -88,7 +88,9 @@ variant.
 Spec timing defaults: `waitDuration` 300ms (hover delay), `showDuration`
 1500ms (touch long-press), `dismissDuration` 100ms (hover-exit grace).
 The tooltip styler's `label(...)` spec is applied through `DefaultTextStyle`,
-so normal `Text` descendants inside an arbitrary `tooltipChild` inherit it.
+so bare `Text` descendants inside an arbitrary `tooltipChild` inherit it.
+Fortal typography children pin their own token run instead; transparent,
+non-accent `FortalCode.ghost` retains only the ambient foreground.
 
 Fortal preset: `FortalTooltip` — same params, no variant/size.
 

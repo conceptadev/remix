@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
@@ -36,30 +35,6 @@ TextStyler dashboardText(
   FortalTextWeight? weight,
   TextTone tone = TextTone.strong,
 }) => fortalTextStyle(size: size, weight: weight).color(tone._color());
-
-/// Restores Fortal's neutral foreground under a Material surface.
-///
-/// `FortalScope` establishes the Radix root run at `gray12`, but `Scaffold`
-/// and `Drawer` each install their own `DefaultTextStyle` below it, coloured
-/// from Material's `colorScheme.onSurface`. Anything inheriting its colour —
-/// every unsized [FortalText] and [FortalHeading] — would take Material's
-/// foreground instead of the active gray scale.
-///
-/// This re-asserts the scale once per Material surface rather than at each
-/// call site: Fortal models neutral tone as inherited context, so the fix
-/// belongs at the boundary that broke the inheritance. [dashboardText]'s
-/// explicit tones still override it, and both follow live theme changes.
-class DashboardSurfaceTone extends StatelessWidget {
-  const DashboardSurfaceTone({super.key, required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) => DefaultTextStyle.merge(
-    style: TextStyle(color: MixScope.tokenOf(TextTone.strong._color, context)),
-    child: child,
-  );
-}
 
 /// Single-line [dashboardText] that ellipsizes, for text sharing a row with a
 /// fixed-width neighbour.
