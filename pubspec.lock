@@ -476,10 +476,10 @@ packages:
     dependency: transitive
     description:
       name: naked_ui
-      sha256: cb6c35fc10cf62142da74b491c0033d53c0e8c4f2a6ef895751c1713e47c41b9
+      sha256: "65159cee8d20cb92cda3a5661d845055b1a0b08c72e86d09ed94caccbd7990e2"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-beta.10"
+    version: "1.0.0-beta.11"
   nested:
     dependency: transitive
     description:
