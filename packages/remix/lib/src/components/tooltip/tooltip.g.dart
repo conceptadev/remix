@@ -681,6 +681,23 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     return merge(TooltipStyler(modifier: value));
   }
 
+  RemixTooltip call({
+    Key? key,
+    required Widget tooltipChild,
+    required Widget child,
+    String? tooltipSemantics,
+    OverlayPositionConfig positioning = const OverlayPositionConfig(),
+  }) {
+    return RemixTooltip(
+      key: key,
+      style: this,
+      tooltipChild: tooltipChild,
+      child: child,
+      tooltipSemantics: tooltipSemantics,
+      positioning: positioning,
+    );
+  }
+
   /// Merges with another [TooltipStyler].
   @override
   TooltipStyler merge(TooltipStyler? other) {

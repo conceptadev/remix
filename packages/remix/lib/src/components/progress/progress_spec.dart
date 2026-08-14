@@ -1,7 +1,10 @@
 part of 'progress.dart';
 
 /// Resolved visual values for a [RemixProgress].
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(
+  target: RemixProgress.new,
+  extraStylerMixins: [RemixBoxStylerMixin],
+)
 class ProgressSpec with _$ProgressSpec {
   @override
   @MixableField(forwardStyler: true)

@@ -9,6 +9,5 @@ import '../../utilities/remix_style.dart';
 import '../../rendering/remix_box_effects.dart';
 
 part 'card_spec.dart';
-part 'card_style.dart';
 part 'card_widget.dart';
 part 'card.g.dart';

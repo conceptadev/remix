@@ -56,7 +56,10 @@ part of 'checkbox.dart';
 /// - [CheckboxStyler] for the styling API
 /// - [RemixCheckbox] for the widget implementation
 /// - [Spec] for the base specification pattern
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin])
+@MixableSpec(
+  target: RemixCheckbox.new,
+  extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin],
+)
 class CheckboxSpec with _$CheckboxSpec {
   /// Styling specification for the checkbox box container.
   ///

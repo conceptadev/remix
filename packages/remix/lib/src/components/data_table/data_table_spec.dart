@@ -37,7 +37,10 @@ part of 'data_table.dart';
 ///
 /// Geometry scalars stay null here and default to zero at render time; the
 /// unopinionated Remix renderer carries no Radix metrics.
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(
+  target: RemixDataTable.new,
+  extraStylerMixins: [RemixBoxStylerMixin],
+)
 class DataTableSpec with _$DataTableSpec {
   /// Outer surface: panel background, border, radius, and clipping.
   @override

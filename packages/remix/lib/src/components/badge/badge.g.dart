@@ -633,6 +633,21 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     return merge(BadgeStyler(modifier: value));
   }
 
+  RemixBadge call({
+    Key? key,
+    String? label,
+    Widget? child,
+    RemixBadgeLabelBuilder? labelBuilder,
+  }) {
+    return RemixBadge(
+      key: key,
+      style: this,
+      label: label,
+      child: child,
+      labelBuilder: labelBuilder,
+    );
+  }
+
   /// Merges with another [BadgeStyler].
   @override
   BadgeStyler merge(BadgeStyler? other) {

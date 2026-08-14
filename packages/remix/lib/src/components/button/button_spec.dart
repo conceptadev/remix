@@ -58,6 +58,7 @@ enum RemixIconAlignment { start, end }
 /// - [RemixButton] for the widget implementation
 /// - [Spec] for the base specification pattern
 @MixableSpec(
+  target: RemixButton.new,
   extraStylerMixins: [
     RemixBoxStylerMixin,
     LabelStyleMixin,

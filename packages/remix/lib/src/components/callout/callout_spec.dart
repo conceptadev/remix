@@ -1,7 +1,10 @@
 part of 'callout.dart';
 
 /// Resolved visual values for a [RemixCallout].
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, IconStyleMixin])
+@MixableSpec(
+  target: RemixCallout.new,
+  extraStylerMixins: [RemixBoxStylerMixin, IconStyleMixin],
+)
 class CalloutSpec with _$CalloutSpec {
   @override
   @MixableField(forwardStyler: true)

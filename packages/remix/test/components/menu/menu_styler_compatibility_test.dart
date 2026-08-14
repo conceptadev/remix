@@ -112,9 +112,7 @@ void main() {
       final legacyFactory = RemixMenuStyler.trigger(MenuTriggerStyler());
 
       final MenuStyler canonical = legacy;
-      final legacyWidget = RemixMenuStylerRemixHelpers(
-        legacy,
-      ).call<String>(trigger: trigger, items: items);
+      final legacyWidget = legacy.call<String>(trigger: trigger, items: items);
 
       expect(canonical, same(legacy));
       expect(legacy.merge(emptyLegacy), isA<MenuStyler>());

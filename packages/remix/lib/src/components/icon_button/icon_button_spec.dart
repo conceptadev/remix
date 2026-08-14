@@ -1,7 +1,10 @@
 part of 'icon_button.dart';
 
 /// Resolved visual properties for a [RemixIconButton].
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, IconStyleMixin])
+@MixableSpec(
+  target: RemixIconButton.new,
+  extraStylerMixins: [RemixBoxStylerMixin, IconStyleMixin],
+)
 class IconButtonSpec with _$IconButtonSpec {
   @override
   @MixableField(forwardStyler: true)

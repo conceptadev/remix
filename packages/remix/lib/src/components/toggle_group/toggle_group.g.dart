@@ -769,6 +769,31 @@ class ToggleGroupStyler extends MixStyler<ToggleGroupStyler, ToggleGroupSpec>
     return merge(ToggleGroupStyler(modifier: value));
   }
 
+  RemixToggleGroup<T> call<T>({
+    Key? key,
+    required List<RemixToggleGroupItem<T>> items,
+    required T? selectedValue,
+    ValueChanged<T?>? onChanged,
+    bool enabled = true,
+    Axis orientation = .horizontal,
+    bool loop = true,
+    String? semanticLabel,
+    bool excludeSemantics = false,
+  }) {
+    return RemixToggleGroup<T>(
+      key: key,
+      style: this,
+      items: items,
+      selectedValue: selectedValue,
+      onChanged: onChanged,
+      enabled: enabled,
+      orientation: orientation,
+      loop: loop,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+    );
+  }
+
   /// Merges with another [ToggleGroupStyler].
   @override
   ToggleGroupStyler merge(ToggleGroupStyler? other) {

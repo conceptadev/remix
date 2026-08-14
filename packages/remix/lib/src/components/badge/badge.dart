@@ -10,6 +10,5 @@ import '../../utilities/remix_style.dart';
 import '../../rendering/remix_box_effects.dart';
 
 part 'badge_spec.dart';
-part 'badge_style.dart';
 part 'badge_widget.dart';
 part 'badge.g.dart';

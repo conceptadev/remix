@@ -46,15 +46,4 @@ extension RemixCalloutStylerRemixHelpers on CalloutStyler {
   CalloutStyler textDecorationColor(Color value) {
     return text(TextStyler(style: TextStyleMix(decorationColor: value)));
   }
-
-  /// Creates a [RemixCallout] widget with this style applied.
-  RemixCallout call({Key? key, String? text, IconData? icon, Widget? child}) {
-    return RemixCallout(
-      key: key,
-      text: text,
-      icon: icon,
-      style: this,
-      child: child,
-    );
-  }
 }

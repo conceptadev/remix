@@ -12,6 +12,5 @@ import '../../utilities/remix_style.dart';
 
 part 'spinner_painter.dart';
 part 'spinner_spec.dart';
-part 'spinner_style.dart';
 part 'spinner_widget.dart';
 part 'spinner.g.dart';

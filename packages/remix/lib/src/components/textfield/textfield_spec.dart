@@ -49,7 +49,10 @@ part of 'textfield.dart';
 /// - [TextFieldStyler] for the styling API
 /// - [RemixTextField] for the widget implementation
 /// - [Spec] for the base specification pattern
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin])
+@MixableSpec(
+  target: RemixTextField.new,
+  extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin],
+)
 class TextFieldSpec with _$TextFieldSpec {
   /// Styling specification for the input text.
   ///

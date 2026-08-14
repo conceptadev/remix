@@ -11,6 +11,5 @@ import '../../utilities/remix_style.dart';
 import '../../style/style.dart';
 
 part 'toggle_spec.dart';
-part 'toggle_style.dart';
 part 'toggle_widget.dart';
 part 'toggle.g.dart';

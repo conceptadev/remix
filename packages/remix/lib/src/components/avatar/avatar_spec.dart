@@ -2,6 +2,7 @@ part of 'avatar.dart';
 
 /// Resolved visual properties for a [RemixAvatar].
 @MixableSpec(
+  target: RemixAvatar.new,
   extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
 )
 class AvatarSpec with _$AvatarSpec {

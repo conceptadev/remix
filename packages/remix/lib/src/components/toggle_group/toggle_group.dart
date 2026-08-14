@@ -10,6 +10,5 @@ import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
 
 part 'toggle_group_spec.dart';
-part 'toggle_group_style.dart';
 part 'toggle_group_widget.dart';
 part 'toggle_group.g.dart';
