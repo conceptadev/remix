@@ -17,6 +17,7 @@ export 'src/components/checkbox/checkbox.dart';
 export 'src/components/data_list/data_list.dart';
 export 'src/components/data_table/data_table.dart';
 export 'src/components/divider/divider.dart';
+export 'src/components/link/link.dart';
 export 'src/components/menu/menu.dart';
 export 'src/components/popover/popover.dart';
 export 'src/components/progress/progress.dart';

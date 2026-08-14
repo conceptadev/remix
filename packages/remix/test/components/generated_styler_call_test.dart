@@ -10,6 +10,7 @@ void main() {
       final calloutStyle = CalloutStyler();
       final cardStyle = CardStyler();
       final dividerStyle = DividerStyler();
+      final linkStyle = LinkStyler();
       final popoverStyle = PopoverStyler();
 
       expect(avatarStyle.call().style, same(avatarStyle));
@@ -17,6 +18,7 @@ void main() {
       expect(calloutStyle.call(text: 'Notice').style, same(calloutStyle));
       expect(cardStyle.call().style, same(cardStyle));
       expect(dividerStyle.call().style, same(dividerStyle));
+      expect(linkStyle.call(label: 'Docs').style, same(linkStyle));
       expect(
         popoverStyle
             .call(

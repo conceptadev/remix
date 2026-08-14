@@ -1,0 +1,330 @@
+---
+title: Link
+description: Styled text that navigates when activated
+keywords: [flutter, remix, link, anchor, navigation, href, hyperlink]
+---
+
+Text that takes the user somewhere else.
+
+## When to use this
+
+- **Navigation**: Move to another route, document, or external destination
+- **Inline references**: Link a word or phrase inside a paragraph
+- **Secondary actions that navigate**: "View all", "Read the docs", "Learn more"
+
+Reach for `RemixButton` instead when activation changes state in place — submitting,
+toggling, opening a dialog. The distinction is not cosmetic: a link publishes the
+Link role and activates on Enter only, while a button publishes the Button role and
+also activates on Space.
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class LinkExample extends StatelessWidget {
+  const LinkExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      spacing: 16,
+      children: [
+        RemixLink(
+          label: 'Read the docs',
+          style: style,
+          onPressed: () => debugPrint('navigate'),
+        ),
+        // No callback: a disabled link, same as `enabled: false`.
+        const RemixLink(label: 'Coming soon'),
+      ],
+    );
+  }
+
+  LinkStyler get style {
+    return LinkStyler()
+        .labelColor(Colors.indigo)
+        .onHovered(
+          LinkStyler().label(
+            TextStyler()
+                .decoration(TextDecoration.underline)
+                .decorationColor(Colors.indigo),
+          ),
+        );
+  }
+}
+```
+</CodeGroup>
+
+## Navigation stays yours
+
+`RemixLink` never launches anything. `onPressed` performs the navigation, so the
+component works the same with a router, a URL launcher, or a scroll controller.
+
+`linkUrl` is assistive metadata that rides along on the semantics node. On Flutter
+web it also becomes an anchor `href`, so omit it when `onPressed` already navigates —
+otherwise a single click has two navigation owners.
+
+<CodeGroup title="Destination metadata" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class LinkUrlExample extends StatelessWidget {
+  const LinkUrlExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixLink(
+      label: 'Remix on GitHub',
+      // Safe here: the callback hands off to the platform rather than routing
+      // in-app, so the web anchor and the callback agree on the destination.
+      linkUrl: Uri.parse('https://github.com/btwld/remix'),
+      semanticHint: 'Opens in a new window',
+      onPressed: () => debugPrint('launch'),
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Two ways to disable, one behaviour
+
+`onPressed: null` and `enabled: false` both disable the link, exactly as a null
+callback disables any other Flutter control. A disabled link announces itself as
+unavailable and gives up its Link role, destination, focus stop, and tap action.
+
+For text that was never meant to be followed, use ordinary text rather than a
+link with no callback.
+
+## Fortal widgets
+
+Remix includes a Fortal-themed widget for this component:
+
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+class FortalLinkExample extends StatelessWidget {
+  const FortalLinkExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 16,
+      children: [
+        FortalLink('Auto', onPressed: () {}),
+        FortalLink(
+          'Always',
+          underline: FortalLinkUnderline.always,
+          onPressed: () {},
+        ),
+        FortalLink(
+          'On hover',
+          underline: FortalLinkUnderline.hover,
+          onPressed: () {},
+        ),
+        FortalLink(
+          'None',
+          underline: FortalLinkUnderline.none,
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [fortalLinkStyle source code](https://github.com/btwld/remix/blob/main/packages/remix_fortal/lib/src/recipes/link.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixLink remixLinkConstructor({
+  Key? key,
+  String? label,
+  Widget? child,
+  VoidCallback? onPressed,
+  bool enabled = true,
+  Uri? linkUrl,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  bool enableFeedback = true,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
+  String? semanticLabel,
+  String? semanticHint,
+  bool excludeSemantics = false,
+  LinkStyler style = const LinkStyler.create(),
+  LinkSpec? styleSpec,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+## Properties
+### Widget Properties
+
+#### `label` → `String?`
+
+Optional. The link text, rendered with the resolved label style. Either `label` or
+`child` must be provided.
+
+#### `child` → `Widget?`
+
+Optional. Arbitrary link content used instead of `label`. It inherits the resolved
+text and icon themes, so an icon beside the text picks up the link colour.
+
+#### `onPressed` → `VoidCallback?`
+
+Optional. Performs the navigation. A null callback disables the link.
+
+#### `enabled` → `bool`
+
+Optional. Whether an otherwise actionable link may activate. Defaults to `true`.
+
+#### `linkUrl` → `Uri?`
+
+Optional. Destination exposed through Link semantics. Never launched.
+
+#### `focusNode` → `FocusNode?`
+
+Optional. Caller-owned focus node.
+
+#### `autofocus` → `bool`
+
+Optional. Whether the link requests focus when first built. Defaults to `false`.
+
+#### `enableFeedback` → `bool`
+
+Optional. Whether accepted activations provide platform feedback. Defaults to `true`.
+
+#### `mouseCursor` → `MouseCursor`
+
+Optional. Cursor shown while the link is actionable. Defaults to `SystemMouseCursors.click`.
+
+#### `semanticLabel` → `String?`
+
+Optional. Accessible name that replaces the visible text for screen readers.
+
+#### `semanticHint` → `String?`
+
+Optional. Describes a non-obvious result of following the link.
+
+#### `excludeSemantics` → `bool`
+
+Optional. Hides the link and its subtree from semantics. Defaults to `false`.
+
+#### `style` → `LinkStyler`
+
+Optional. The style configuration for the link.
+
+#### `styleSpec` → `LinkSpec?`
+
+Optional. A pre-resolved style spec that bypasses style resolution.
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
+
+### Style Methods
+
+#### `label(TextStyler value)`
+
+Configures the label text style using a TextStyler.
+
+#### `labelColor(Color value)`
+
+Sets label/text color.
+
+#### `labelFontSize(double value)`
+
+Sets label/text font size.
+
+#### `labelFontWeight(FontWeight value)`
+
+Sets label/text font weight.
+
+#### `labelDecoration(TextDecoration value)`
+
+Sets label/text decoration (underline, strikethrough, etc.).
+
+#### `labelDecorationColor(Color value)`
+
+Sets label/text decoration color.
+
+#### `labelStyle(TextStyleMix value)`
+
+Sets label/text style using TextStyleMix directly.
+
+#### `labelFontStyle(FontStyle value)`
+
+Sets label/text font style (italic/normal).
+
+#### `labelFontFamily(String value)`
+
+Sets label/text font family.
+
+#### `labelLetterSpacing(double value)`
+
+Sets label/text letter spacing.
+
+#### `labelWordSpacing(double value)`
+
+Sets label/text word spacing.
+
+#### `labelHeight(double value)`
+
+Sets label/text line height.
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+Sets padding.
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+Sets margin.
+
+#### `borderRadius(BorderRadiusGeometryMix radius)`
+
+Sets border radius, used by the focus ring.
+
+#### `decoration(DecorationMix value)`
+
+Sets decoration.
+
+#### `foregroundDecoration(DecorationMix value)`
+
+Sets a foreground decoration painted on top of the component.
+
+#### `alignment(Alignment value)`
+
+Sets container alignment.
+
+#### `constraints(BoxConstraintsMix value)`
+
+Sets constraints.
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+Applies a matrix transformation to the component.
+
+#### `animate(AnimationConfig value)`
+
+Sets animation.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `call({Key? key, String? label, Widget? child, VoidCallback? onPressed, ...})`
+
+Creates a `RemixLink` widget with this style applied.

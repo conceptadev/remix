@@ -164,8 +164,12 @@ Rules that matter when writing code:
   `highContrast: true` promotes it to `accent-12`. `highContrast` alone does
   nothing. `FortalKbd` pins `gray-12` and its own regular weight.
 - `truncate: true` wins over `softWrap` and forces one ellipsized line.
-- A `FortalLink` **without** `onPressed` is inert styled text: no focus stop, no
-  link role, no activation. Only an actionable link underlines.
+- A `FortalLink` **without** `onPressed` is disabled, exactly like one with
+  `enabled: false`: no focus stop, no link role, no activation. Only an
+  actionable link underlines. For accent text that never navigates, use
+  `FortalText(accent: true)`.
+- An actionable link activates on pointer and **Enter**, not Space. Use
+  `FortalButton` when Space should activate.
 - `linkUrl` is assistive metadata and is never launched; navigation belongs in
   `onPressed`. Passing `linkUrl` without `onPressed` asserts.
 - No leading trim, `pretty`/`balance` wrapping, responsive prop objects, or

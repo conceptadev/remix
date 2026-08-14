@@ -643,12 +643,12 @@ void main() {
     for (final underline in FortalLinkUnderline.values) {
       expect(find.text(enumLabel(underline)), findsOneWidget);
     }
-    expect(find.text('Inert'), findsOneWidget);
     expect(find.text('Disabled'), findsOneWidget);
+    expect(find.text('Disabled (no callback)'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('an actionable gallery link activates, an inert one does not', (
+  testWidgets('an actionable gallery link activates, a disabled one does not', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(1440, 900);
@@ -668,9 +668,9 @@ void main() {
     await tester.pump();
     expect(find.text('Always link activated'), findsOneWidget);
 
-    final inert = find.text('Inert');
-    await tester.ensureVisible(inert);
-    await tester.tap(inert, warnIfMissed: false);
+    final disabled = find.text('Disabled (no callback)');
+    await tester.ensureVisible(disabled);
+    await tester.tap(disabled, warnIfMissed: false);
     await tester.pump();
     expect(tester.takeException(), isNull);
 

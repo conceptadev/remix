@@ -115,7 +115,7 @@ void main() {
 
     expect(recipes.code, isA<BadgeStyler>());
     expect(recipes.kbd, isA<BadgeStyler>());
-    expect(recipes.link, isA<BadgeStyler>());
+    expect(recipes.link, isA<LinkStyler>());
   });
 
   test('Fortal chart wrappers are constructible from the public API', () {

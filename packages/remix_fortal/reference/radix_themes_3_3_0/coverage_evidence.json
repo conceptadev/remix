@@ -1208,7 +1208,7 @@
     },
     {
       "test": "test/components/typography/typography_test.dart",
-      "case": "inert link exposes no interactive metadata",
+      "case": "a link with no callback is a disabled link",
       "covers": ["state:inert"]
     },
     {
