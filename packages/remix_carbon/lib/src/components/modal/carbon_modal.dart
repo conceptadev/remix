@@ -117,35 +117,36 @@ class _CarbonModalBase extends StatelessWidget {
       label: semanticLabel ?? title,
       container: true,
       explicitChildNodes: true,
-      child: Stack(
-        children: [
-          RemixDialog(
-            child: child,
-            title: title,
-            description: description,
-            actions: actionButtons,
-            scrollable: scrollable,
-            modal: modal,
-            semanticLabel: semanticLabel,
-            style: style,
-          ),
-          if (onClose case final closeHandler?)
-            PositionedDirectional(
-              top: 0,
-              end: 0,
-              child: CarbonIconButton(
-                icon: CarbonIcons.close,
-                semanticLabel: closeSemanticLabel,
-                size: .lg,
-                onPressed: closeHandler,
-                style: carbonIconButtonForegroundStyle(
-                  CarbonTokens.iconPrimary,
-                  hoveredBackground: _carbonModalHover(),
-                  pressedBackground: _carbonModalActive(),
-                ).icon(IconStyler().size(CarbonTokens.iconSize02())),
-              ),
+      child: Center(
+        child: Stack(
+          children: [
+            style(
+              child: child,
+              title: title,
+              description: description,
+              actions: actionButtons,
+              scrollable: scrollable,
+              modal: modal,
+              semanticLabel: semanticLabel,
             ),
-        ],
+            if (onClose case final closeHandler?)
+              PositionedDirectional(
+                top: 0,
+                end: 0,
+                child: CarbonIconButton(
+                  icon: CarbonIcons.close,
+                  semanticLabel: closeSemanticLabel,
+                  size: .lg,
+                  onPressed: closeHandler,
+                  style: carbonIconButtonForegroundStyle(
+                    CarbonTokens.iconPrimary,
+                    hoveredBackground: _carbonModalHover(),
+                    pressedBackground: _carbonModalActive(),
+                  ).icon(IconStyler().size(CarbonTokens.iconSize02())),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

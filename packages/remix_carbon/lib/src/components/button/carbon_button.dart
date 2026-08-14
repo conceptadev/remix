@@ -267,25 +267,25 @@ class CarbonIconButton extends StatelessWidget {
   final IconButtonStyler style;
 
   @override
-  Widget build(BuildContext context) => RemixIconButton(
-    icon: icon,
-    semanticLabel: semanticLabel,
-    loading: loading,
-    enabled: enabled,
-    onPressed: onPressed,
-    onLongPress: onLongPress,
-    focusNode: focusNode,
-    autofocus: autofocus,
-    enableFeedback: enableFeedback,
-    semanticHint: semanticHint,
-    excludeSemantics: excludeSemantics,
-    mouseCursor: mouseCursor,
-    style: carbonIconButtonStyle(
-      kind: kind,
-      size: size,
-      loading: loading,
-    ).merge(style),
-  );
+  Widget build(BuildContext context) =>
+      carbonIconButtonStyle(
+        kind: kind,
+        size: size,
+        loading: loading,
+      ).merge(style)(
+        icon: icon,
+        semanticLabel: semanticLabel,
+        loading: loading,
+        enabled: enabled,
+        onPressed: onPressed,
+        onLongPress: onLongPress,
+        focusNode: focusNode,
+        autofocus: autofocus,
+        enableFeedback: enableFeedback,
+        semanticHint: semanticHint,
+        excludeSemantics: excludeSemantics,
+        mouseCursor: mouseCursor,
+      );
 }
 
 // Carbon buttons share height, padding, label typography and focus ring.

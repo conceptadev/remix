@@ -1,94 +1,140 @@
 import 'package:remix_carbon/remix_carbon.dart';
 import 'package:flutter/material.dart';
-import 'package:mix_atlas/mix_atlas.dart';
 
-/// Complete Carbon 1.114.0 component catalog used by the live atlas and tests.
-final carbonAtlasCatalog = AtlasCatalog(
-  id: 'carbon',
-  label: 'Carbon for Flutter',
-  themes: [for (final theme in CarbonTheme.values) _atlasTheme(theme)],
-  atlases: [
-    _accordionAtlas,
-    _aiLabelAtlas,
-    _barChartAtlas,
-    _breadcrumbAtlas,
-    _buttonAtlas,
-    _checkboxAtlas,
-    _codeSnippetAtlas,
-    _containedListAtlas,
-    _contentSwitcherAtlas,
-    _dataTableAtlas,
-    _datePickerAtlas,
-    _dropdownAtlas,
-    _fileUploaderAtlas,
-    _formAtlas,
-    _inlineLoadingAtlas,
-    _lineChartAtlas,
-    _linkAtlas,
-    _listAtlas,
-    _loadingAtlas,
-    _menuAtlas,
-    _menuButtonAtlas,
-    _modalAtlas,
-    _multiselectAtlas,
-    _notificationAtlas,
-    _numberInputAtlas,
-    _paginationAtlas,
-    _pieChartAtlas,
-    _popoverAtlas,
-    _progressBarAtlas,
-    _progressIndicatorAtlas,
-    _radioButtonAtlas,
-    _searchAtlas,
-    _selectAtlas,
-    _sliderAtlas,
-    _structuredListAtlas,
-    _tabsAtlas,
-    _tagAtlas,
-    _textInputAtlas,
-    _tileAtlas,
-    _toggleAtlas,
-    _toggletipAtlas,
-    _tooltipAtlas,
-    _treeViewAtlas,
-    _uiShellAtlas,
+typedef ComponentExampleBuilder = Widget Function(BuildContext context);
+
+@immutable
+class ComponentExample {
+  const ComponentExample({
+    required this.id,
+    required this.label,
+    required this.builder,
+  });
+
+  final String id;
+  final String label;
+  final ComponentExampleBuilder builder;
+}
+
+@immutable
+class ComponentDemo {
+  const ComponentDemo({
+    required this.id,
+    required this.label,
+    required this.category,
+    required this.summary,
+    required this.examples,
+  });
+
+  final String id;
+  final String label;
+  final String category;
+  final String summary;
+  final List<ComponentExample> examples;
+}
+
+/// Lets a live example report an interaction to the catalog status bar.
+class CatalogEventScope extends InheritedWidget {
+  const CatalogEventScope({
+    super.key,
+    required this.onEvent,
+    required super.child,
+  });
+
+  final ValueChanged<String> onEvent;
+
+  static void report(BuildContext context, String event) {
+    context.dependOnInheritedWidgetOfExactType<CatalogEventScope>()?.onEvent(
+      event,
+    );
+  }
+
+  @override
+  bool updateShouldNotify(CatalogEventScope oldWidget) =>
+      oldWidget.onEvent != onEvent;
+}
+
+/// Complete Carbon 1.114.0 component catalog used by the live workbench.
+final carbonComponentCatalog = <ComponentDemo>[
+  _accordionDemo,
+  _aiLabelDemo,
+  _barChartDemo,
+  _breadcrumbDemo,
+  _buttonDemo,
+  _checkboxDemo,
+  _codeSnippetDemo,
+  _containedListDemo,
+  _contentSwitcherDemo,
+  _dataTableDemo,
+  _datePickerDemo,
+  _dropdownDemo,
+  _fileUploaderDemo,
+  _formDemo,
+  _inlineLoadingDemo,
+  _lineChartDemo,
+  _linkDemo,
+  _listDemo,
+  _loadingDemo,
+  _menuDemo,
+  _menuButtonDemo,
+  _modalDemo,
+  _multiselectDemo,
+  _notificationDemo,
+  _numberInputDemo,
+  _paginationDemo,
+  _pieChartDemo,
+  _popoverDemo,
+  _progressBarDemo,
+  _progressIndicatorDemo,
+  _radioButtonDemo,
+  _searchDemo,
+  _selectDemo,
+  _sliderDemo,
+  _structuredListDemo,
+  _tabsDemo,
+  _tagDemo,
+  _textInputDemo,
+  _tileDemo,
+  _toggleDemo,
+  _toggletipDemo,
+  _tooltipDemo,
+  _treeViewDemo,
+  _uiShellDemo,
+];
+
+ComponentDemo _sample(
+  String id,
+  String label,
+  ComponentExampleBuilder builder,
+) => ComponentDemo(
+  id: id,
+  label: label,
+  category: _categoryFor(id),
+  summary: _summaryFor(id, label),
+  examples: [
+    ComponentExample(id: 'example', label: 'Example', builder: builder),
   ],
 );
 
-ComponentAtlas _sample(
+ComponentDemo _samples(
   String id,
   String label,
-  Widget Function(BuildContext context) builder,
-) => ComponentAtlas(
+  List<(String, String, ComponentExampleBuilder)> examples,
+) => ComponentDemo(
   id: id,
   label: label,
-  scenarios: const [AtlasScenarios.base],
-  rows: [AtlasRow('example', (context, _) => builder(context))],
-);
-
-ComponentAtlas _samples(
-  String id,
-  String label,
-  List<(String, String, Widget Function(BuildContext))> rows,
-) => ComponentAtlas(
-  id: id,
-  label: label,
-  rowAxes: const [AtlasAxis('variant', 'Variant')],
-  scenarios: const [AtlasScenarios.base],
-  rows: [
-    for (final (rowId, rowLabel, builder) in rows)
-      AtlasRow(
-        rowId,
-        (context, _) => builder(context),
-        values: {'variant': AtlasAxisValue(rowId, rowLabel)},
-      ),
+  category: _categoryFor(id),
+  summary: _summaryFor(id, label),
+  examples: [
+    for (final (exampleId, exampleLabel, builder) in examples)
+      ComponentExample(id: exampleId, label: exampleLabel, builder: builder),
   ],
 );
 
 Widget _width(double width, Widget child) =>
     SizedBox(width: width, child: child);
 
-final _accordionAtlas = _sample(
+final _accordionDemo = _sample(
   'accordion',
   'Accordion',
   (_) => _width(
@@ -114,7 +160,7 @@ final _accordionAtlas = _sample(
   ),
 );
 
-final _aiLabelAtlas = _samples('ai-label', 'AI label', [
+final _aiLabelDemo = _samples('ai-label', 'AI label', [
   (
     'standard',
     'Standard',
@@ -133,7 +179,7 @@ final _aiLabelAtlas = _samples('ai-label', 'AI label', [
   ),
 ]);
 
-final _barChartAtlas = _sample(
+final _barChartDemo = _sample(
   'bar-chart',
   'Bar chart',
   (_) => SizedBox(
@@ -153,118 +199,142 @@ final _barChartAtlas = _sample(
   ),
 );
 
-final _breadcrumbAtlas = _sample(
+final _breadcrumbDemo = _sample(
   'breadcrumb',
   'Breadcrumb',
-  (_) => CarbonBreadcrumb(
+  (context) => CarbonBreadcrumb(
     items: [
-      CarbonBreadcrumbItem(label: 'Home', onPressed: () {}),
-      CarbonBreadcrumbItem(label: 'Projects', onPressed: () {}),
+      CarbonBreadcrumbItem(
+        label: 'Home',
+        onPressed: () => CatalogEventScope.report(context, 'Home selected'),
+      ),
+      CarbonBreadcrumbItem(
+        label: 'Projects',
+        onPressed: () => CatalogEventScope.report(context, 'Projects selected'),
+      ),
       const CarbonBreadcrumbItem(label: 'Carbon', current: true),
     ],
   ),
 );
 
-const _buttonScenarios = [
-  ...AtlasScenarios.interactive,
-  AtlasScenario(
-    'loading',
-    label: 'Loading',
-    states: {WidgetState.disabled},
-    props: {'loading': true},
-  ),
-];
-
-final _buttonAtlas = ComponentAtlas(
+final _buttonDemo = ComponentDemo(
   id: 'button',
   label: 'Button',
-  rowAxes: const [AtlasAxis('kind', 'Kind'), AtlasAxis('size', 'Size')],
-  scenarios: _buttonScenarios,
-  rows: [
+  category: _categoryFor('button'),
+  summary: _summaryFor('button', 'Button'),
+  examples: [
     for (final kind in CarbonButtonKind.values)
-      for (final size in CarbonSize.values.skip(1))
-        AtlasRow(
-          '${kind.name}-${size.name}',
-          (_, cell) {
-            final loading = cell.propOr('loading', false);
-            final enabled = !cell.disabled && !loading;
-            return SizedBox(
-              width: 272,
-              child: CarbonButton(
-                label: _kindLabel(kind),
+      ComponentExample(
+        id: kind.name,
+        label: _kindLabel(kind),
+        builder: (context) => Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final size in CarbonSize.values.skip(1))
+              CarbonButton(
+                label: _sizeLabel(size),
                 kind: kind,
                 size: size,
-                loading: loading,
-                enabled: enabled,
-                onPressed: enabled ? () {} : null,
+                onPressed: () => CatalogEventScope.report(
+                  context,
+                  '${_kindLabel(kind)} / ${_sizeLabel(size)} pressed',
+                ),
               ),
-            );
-          },
-          values: {
-            'kind': AtlasAxisValue(kind.name, _kindLabel(kind)),
-            'size': AtlasAxisValue(size.name, _sizeLabel(size)),
-          },
+          ],
         ),
-    for (final size in CarbonSize.values.skip(1))
-      AtlasRow(
-        'icon-${size.name}',
-        (_, cell) {
-          final loading = cell.propOr('loading', false);
-          final enabled = !cell.disabled && !loading;
-          return CarbonIconButton(
-            icon: CarbonIcons.add,
-            semanticLabel: 'Add',
-            size: size,
-            loading: loading,
-            enabled: enabled,
-            onPressed: enabled ? () {} : null,
-          );
-        },
-        values: {
-          'kind': const AtlasAxisValue('icon', 'Icon'),
-          'size': AtlasAxisValue(size.name, _sizeLabel(size)),
-        },
       ),
+    ComponentExample(
+      id: 'icon-and-states',
+      label: 'Icon and states',
+      builder: (context) => Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          for (final size in CarbonSize.values.skip(1))
+            CarbonIconButton(
+              icon: CarbonIcons.add,
+              semanticLabel: 'Add (${_sizeLabel(size)})',
+              size: size,
+              onPressed: () => CatalogEventScope.report(
+                context,
+                '${_sizeLabel(size)} icon button pressed',
+              ),
+            ),
+          const CarbonButton(label: 'Disabled', enabled: false),
+          const CarbonButton(label: 'Loading', loading: true),
+        ],
+      ),
+    ),
   ],
 );
 
-final _checkboxAtlas = _samples('checkbox', 'Checkbox', [
+final _checkboxDemo = _samples('checkbox', 'Checkbox', [
   (
     'unchecked',
     'Unchecked',
-    (_) => _width(
-      240,
-      CarbonCheckbox(
-        selected: false,
-        label: 'Email updates',
-        onChanged: (_) {},
+    (_) => _Controlled(
+      initialValue: false,
+      builder: (context, selected, onChanged) => _width(
+        240,
+        CarbonCheckbox(
+          selected: selected,
+          label: 'Email updates',
+          onChanged: (next) {
+            onChanged(next ?? false);
+            CatalogEventScope.report(
+              context,
+              'Email updates ${next == true ? 'enabled' : 'disabled'}',
+            );
+          },
+        ),
       ),
     ),
   ),
   (
     'checked',
     'Checked',
-    (_) => _width(
-      240,
-      CarbonCheckbox(selected: true, label: 'Email updates', onChanged: (_) {}),
+    (_) => _Controlled(
+      initialValue: true,
+      builder: (context, selected, onChanged) => _width(
+        240,
+        CarbonCheckbox(
+          selected: selected,
+          label: 'Email updates',
+          onChanged: (next) {
+            onChanged(next ?? false);
+            CatalogEventScope.report(
+              context,
+              'Email updates ${next == true ? 'enabled' : 'disabled'}',
+            );
+          },
+        ),
+      ),
     ),
   ),
   (
     'mixed',
     'Indeterminate',
-    (_) => _width(
-      240,
-      CarbonCheckbox(
-        selected: null,
-        tristate: true,
-        label: 'Select all',
-        onChanged: (_) {},
+    (_) => _Controlled<bool?>(
+      initialValue: null,
+      builder: (context, selected, onChanged) => _width(
+        240,
+        CarbonCheckbox(
+          selected: selected,
+          tristate: true,
+          label: 'Select all',
+          onChanged: (next) {
+            onChanged(next);
+            CatalogEventScope.report(context, 'Select all changed to $next');
+          },
+        ),
       ),
     ),
   ),
 ]);
 
-final _codeSnippetAtlas = _samples('code-snippet', 'Code snippet', [
+final _codeSnippetDemo = _samples('code-snippet', 'Code snippet', [
   (
     'inline',
     'Inline',
@@ -284,10 +354,10 @@ final _codeSnippetAtlas = _samples('code-snippet', 'Code snippet', [
   ),
 ]);
 
-final _containedListAtlas = _sample(
+final _containedListDemo = _sample(
   'contained-list',
   'Contained list',
-  (_) => _width(
+  (context) => _width(
     420,
     CarbonContainedList(
       label: 'Repositories',
@@ -295,7 +365,8 @@ final _containedListAtlas = _sample(
         CarbonContainedListItem(
           label: 'remix',
           description: 'Updated now',
-          onPressed: () {},
+          onPressed: () =>
+              CatalogEventScope.report(context, 'remix repository selected'),
         ),
         const CarbonContainedListItem(
           label: 'carbon',
@@ -306,24 +377,33 @@ final _containedListAtlas = _sample(
   ),
 );
 
-final _contentSwitcherAtlas = _sample(
+final _contentSwitcherDemo = _sample(
   'content-switcher',
   'Content switcher',
-  (_) => _width(
-    420,
-    CarbonContentSwitcher<String>(
-      selectedValue: 'list',
-      onChanged: (_) {},
-      items: const [
-        CarbonContentSwitcherItem(value: 'list', label: 'List'),
-        CarbonContentSwitcherItem(value: 'grid', label: 'Grid'),
-        CarbonContentSwitcherItem(value: 'chart', label: 'Chart'),
-      ],
+  (_) => _Controlled(
+    initialValue: 'list',
+    builder: (context, selected, onChanged) => _width(
+      420,
+      CarbonContentSwitcher<String>(
+        selectedValue: selected,
+        onChanged: (next) {
+          onChanged(next);
+          CatalogEventScope.report(
+            context,
+            '${_titleCase(next)} view selected',
+          );
+        },
+        items: const [
+          CarbonContentSwitcherItem(value: 'list', label: 'List'),
+          CarbonContentSwitcherItem(value: 'grid', label: 'Grid'),
+          CarbonContentSwitcherItem(value: 'chart', label: 'Chart'),
+        ],
+      ),
     ),
   ),
 );
 
-final _dataTableAtlas = _sample(
+final _dataTableDemo = _sample(
   'data-table',
   'Data table',
   (_) => _width(
@@ -347,61 +427,82 @@ final _dataTableAtlas = _sample(
   ),
 );
 
-final _datePickerAtlas = _samples('date-picker', 'Date picker', [
+final _datePickerDemo = _samples('date-picker', 'Date picker', [
   (
     'single',
     'Single',
-    (_) => _width(
-      320,
-      CarbonDatePicker(
-        label: 'Launch date',
-        value: DateTime(2026, 8, 13),
-        onChanged: (_) {},
+    (_) => _Controlled<DateTime?>(
+      initialValue: DateTime(2026, 8, 13),
+      builder: (context, value, onChanged) => _width(
+        320,
+        CarbonDatePicker(
+          label: 'Launch date',
+          value: value,
+          onChanged: (next) {
+            onChanged(next);
+            CatalogEventScope.report(context, 'Launch date changed');
+          },
+        ),
       ),
     ),
   ),
   (
     'range',
     'Range',
-    (_) => _width(
-      640,
-      CarbonDateRangePicker(
-        startDate: DateTime(2026, 8, 13),
-        endDate: DateTime(2026, 8, 20),
-        onChanged: (_, _) {},
+    (_) => _Controlled<(DateTime?, DateTime?)>(
+      initialValue: (DateTime(2026, 8, 13), DateTime(2026, 8, 20)),
+      builder: (context, range, onChanged) => _width(
+        640,
+        CarbonDateRangePicker(
+          startDate: range.$1,
+          endDate: range.$2,
+          onChanged: (start, end) {
+            onChanged((start, end));
+            CatalogEventScope.report(context, 'Date range changed');
+          },
+        ),
       ),
     ),
   ),
 ]);
 
-final _dropdownAtlas = _sample(
+final _dropdownDemo = _sample(
   'dropdown',
   'Dropdown',
-  (_) => _width(
-    320,
-    CarbonDropdown<String>(
-      titleText: 'Region',
-      label: 'Choose a region',
-      selectedItem: 'us-east',
-      onChanged: (_) {},
-      items: const [
-        CarbonSelectItem(value: 'us-east', label: 'US East'),
-        CarbonSelectItem(value: 'eu-west', label: 'EU West'),
-      ],
+  (_) => _Controlled<String?>(
+    initialValue: 'us-east',
+    builder: (context, selected, onChanged) => _width(
+      320,
+      CarbonDropdown<String>(
+        titleText: 'Region',
+        label: 'Choose a region',
+        selectedItem: selected,
+        onChanged: (next) {
+          onChanged(next);
+          CatalogEventScope.report(context, 'Region changed to $next');
+        },
+        items: const [
+          CarbonSelectItem(value: 'us-east', label: 'US East'),
+          CarbonSelectItem(value: 'eu-west', label: 'EU West'),
+        ],
+      ),
     ),
   ),
 );
 
-final _fileUploaderAtlas = _sample(
+final _fileUploaderDemo = _sample(
   'file-uploader',
   'File uploader',
-  (_) => _width(
+  (context) => _width(
     420,
     CarbonFileUploader(
       labelTitle: 'Upload documents',
       labelDescription: 'PDF files up to 5 MB',
       buttonLabel: 'Add files',
-      onBrowse: () {},
+      onBrowse: () => CatalogEventScope.report(
+        context,
+        'Browse requested (demo does not access local files)',
+      ),
       items: const [
         CarbonFileUploadItem(
           name: 'design-system.pdf',
@@ -412,30 +513,40 @@ final _fileUploaderAtlas = _sample(
   ),
 );
 
-final _formAtlas = _sample(
+final _formDemo = _sample(
   'form',
   'Form',
-  (_) => _width(
-    420,
-    CarbonForm(
-      semanticLabel: 'Profile form',
-      children: [
-        const CarbonTextInput(label: 'Name', hintText: 'Ada Lovelace'),
-        CarbonCheckbox(
-          selected: true,
-          label: 'Public profile',
-          onChanged: (_) {},
-        ),
-        Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: CarbonButton(label: 'Save', onPressed: () {}),
-        ),
-      ],
+  (_) => _Controlled(
+    initialValue: true,
+    builder: (context, isPublic, onChanged) => _width(
+      420,
+      CarbonForm(
+        semanticLabel: 'Profile form',
+        children: [
+          const CarbonTextInput(label: 'Name', hintText: 'Ada Lovelace'),
+          CarbonCheckbox(
+            selected: isPublic,
+            label: 'Public profile',
+            onChanged: (next) {
+              onChanged(next ?? false);
+              CatalogEventScope.report(context, 'Profile visibility changed');
+            },
+          ),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: CarbonButton(
+              label: 'Save',
+              onPressed: () =>
+                  CatalogEventScope.report(context, 'Profile saved'),
+            ),
+          ),
+        ],
+      ),
     ),
   ),
 );
 
-final _inlineLoadingAtlas = _samples('inline-loading', 'Inline loading', [
+final _inlineLoadingDemo = _samples('inline-loading', 'Inline loading', [
   (
     'active',
     'Active',
@@ -459,7 +570,7 @@ final _inlineLoadingAtlas = _samples('inline-loading', 'Inline loading', [
   ),
 ]);
 
-final _lineChartAtlas = _sample(
+final _lineChartDemo = _sample(
   'line-chart',
   'Line chart',
   (_) => SizedBox(
@@ -485,13 +596,16 @@ final _lineChartAtlas = _sample(
   ),
 );
 
-final _linkAtlas = _sample(
+final _linkDemo = _sample(
   'link',
   'Link',
-  (_) => CarbonLink(label: 'Read the Carbon guidance', onPressed: () {}),
+  (context) => CarbonLink(
+    label: 'Read the Carbon guidance',
+    onPressed: () => CatalogEventScope.report(context, 'Guidance link pressed'),
+  ),
 );
 
-final _listAtlas = _samples('list', 'List', [
+final _listDemo = _samples('list', 'List', [
   (
     'unordered',
     'Unordered',
@@ -520,7 +634,7 @@ final _listAtlas = _samples('list', 'List', [
   ),
 ]);
 
-final _loadingAtlas = _samples('loading', 'Loading', [
+final _loadingDemo = _samples('loading', 'Loading', [
   ('regular', 'Regular', (_) => const CarbonLoading(withOverlay: false)),
   (
     'small',
@@ -536,125 +650,169 @@ List<CarbonMenuItemData<String>> get _menuItems => [
   const CarbonMenuItem(value: 'delete', label: 'Delete'),
 ];
 
-final _menuAtlas = _sample(
+final _menuDemo = _sample(
   'menu',
   'Menu',
-  (_) => CarbonMenu<String>(
+  (context) => CarbonMenu<String>(
     trigger: const CarbonMenuTrigger(label: 'Actions'),
     items: _menuItems,
-    onSelected: (_) {},
+    onSelected: (value) =>
+        CatalogEventScope.report(context, '${_titleCase(value)} selected'),
   ),
 );
 
-final _menuButtonAtlas = _samples('menu-button', 'Menu button', [
+final _menuButtonDemo = _samples('menu-button', 'Menu button', [
   (
     'button',
     'Menu button',
-    (_) => CarbonMenuButton<String>(
+    (context) => CarbonMenuButton<String>(
       label: 'Create',
       items: _menuItems,
-      onSelected: (_) {},
+      onSelected: (value) =>
+          CatalogEventScope.report(context, '${_titleCase(value)} selected'),
     ),
   ),
   (
     'overflow',
     'Overflow',
-    (_) => CarbonOverflowMenu<String>(items: _menuItems, onSelected: (_) {}),
+    (context) => CarbonOverflowMenu<String>(
+      items: _menuItems,
+      onSelected: (value) =>
+          CatalogEventScope.report(context, '${_titleCase(value)} selected'),
+    ),
   ),
 ]);
 
-final _modalAtlas = _sample(
+final _modalDemo = _sample(
   'modal',
   'Modal',
-  (_) => CarbonModal(
-    size: CarbonModalSize.small,
-    title: 'Delete project?',
-    description: 'This action cannot be undone.',
-    onClose: () {},
-    actions: [
-      CarbonButton(
-        label: 'Cancel',
-        kind: CarbonButtonKind.secondary,
-        onPressed: () {},
-      ),
-      CarbonButton(
-        label: 'Delete',
-        kind: CarbonButtonKind.danger,
-        onPressed: () {},
-      ),
-    ],
+  (context) => CarbonButton(
+    label: 'Open modal',
+    onPressed: () async {
+      final result = await showCarbonModal<String>(
+        context: context,
+        builder: (modalContext) => CarbonModal(
+          size: CarbonModalSize.small,
+          title: 'Delete project?',
+          description: 'This action cannot be undone.',
+          onClose: () => Navigator.pop(modalContext, 'closed'),
+          actions: [
+            CarbonButton(
+              label: 'Cancel',
+              kind: CarbonButtonKind.secondary,
+              onPressed: () => Navigator.pop(modalContext, 'cancelled'),
+            ),
+            CarbonButton(
+              label: 'Delete',
+              kind: CarbonButtonKind.danger,
+              onPressed: () => Navigator.pop(modalContext, 'deleted'),
+            ),
+          ],
+        ),
+      );
+      if (context.mounted) {
+        CatalogEventScope.report(context, 'Modal ${result ?? 'dismissed'}');
+      }
+    },
   ),
 );
 
-final _multiselectAtlas = _sample(
+final _multiselectDemo = _sample(
   'multiselect',
   'Multiselect',
-  (_) => _width(
-    320,
-    CarbonMultiselect<String>(
-      label: 'Projects',
-      placeholder: 'Choose projects',
-      selectedValues: const {'carbon', 'remix'},
-      onChanged: (_) {},
-      items: const [
-        CarbonMultiselectItem(value: 'carbon', label: 'Carbon'),
-        CarbonMultiselectItem(value: 'remix', label: 'Remix'),
-        CarbonMultiselectItem(value: 'fortal', label: 'Fortal'),
-      ],
+  (_) => _Controlled<Set<String>>(
+    initialValue: const {'carbon', 'remix'},
+    builder: (context, selected, onChanged) => _width(
+      320,
+      CarbonMultiselect<String>(
+        label: 'Projects',
+        placeholder: 'Choose projects',
+        selectedValues: selected,
+        onChanged: (next) {
+          onChanged(next);
+          CatalogEventScope.report(context, '${next.length} projects selected');
+        },
+        items: const [
+          CarbonMultiselectItem(value: 'carbon', label: 'Carbon'),
+          CarbonMultiselectItem(value: 'remix', label: 'Remix'),
+          CarbonMultiselectItem(value: 'fortal', label: 'Fortal'),
+        ],
+      ),
     ),
   ),
 );
 
-final _notificationAtlas = _samples('notification', 'Notification', [
+final _notificationDemo = _samples('notification', 'Notification', [
   for (final kind in CarbonNotificationKind.values)
     (
       kind.name,
       _titleCase(kind.name),
-      (_) => _width(
+      (context) => _width(
         520,
         CarbonNotification(
           kind: kind,
           title: '${_titleCase(kind.name)} notification',
           subtitle: 'A concise message with the next useful detail.',
           actionLabel: 'View',
-          onAction: () {},
-          onClose: () {},
+          onAction: () => CatalogEventScope.report(
+            context,
+            '${_titleCase(kind.name)} notification action pressed',
+          ),
+          onClose: () => CatalogEventScope.report(
+            context,
+            '${_titleCase(kind.name)} notification closed',
+          ),
         ),
       ),
     ),
 ]);
 
-final _numberInputAtlas = _sample(
+final _numberInputDemo = _sample(
   'number-input',
   'Number input',
-  (_) => _width(
-    240,
-    CarbonNumberInput(
-      value: 3,
-      min: 0,
-      max: 10,
-      label: 'Guests',
-      onChanged: (_) {},
+  (_) => _Controlled<num>(
+    initialValue: 3,
+    builder: (context, value, onChanged) => _width(
+      240,
+      CarbonNumberInput(
+        value: value,
+        min: 0,
+        max: 10,
+        label: 'Guests',
+        onChanged: (next) {
+          onChanged(next);
+          CatalogEventScope.report(context, 'Guest count changed to $next');
+        },
+      ),
     ),
   ),
 );
 
-final _paginationAtlas = _sample(
+final _paginationDemo = _sample(
   'pagination',
   'Pagination',
-  (_) => _width(
-    680,
-    CarbonPagination(
-      page: 2,
-      pageSize: 10,
-      totalItems: 42,
-      onPageChanged: (_) {},
-      onPageSizeChanged: (_) {},
+  (_) => _Controlled<(int, int)>(
+    initialValue: (2, 10),
+    builder: (context, state, onChanged) => _width(
+      680,
+      CarbonPagination(
+        page: state.$1,
+        pageSize: state.$2,
+        totalItems: 42,
+        onPageChanged: (page) {
+          onChanged((page, state.$2));
+          CatalogEventScope.report(context, 'Page $page selected');
+        },
+        onPageSizeChanged: (pageSize) {
+          onChanged((1, pageSize));
+          CatalogEventScope.report(context, 'Page size changed to $pageSize');
+        },
+      ),
     ),
   ),
 );
 
-final _pieChartAtlas = _sample(
+final _pieChartDemo = _sample(
   'pie-chart',
   'Pie chart',
   (_) => SizedBox(
@@ -672,7 +830,7 @@ final _pieChartAtlas = _sample(
   ),
 );
 
-final _popoverAtlas = _sample(
+final _popoverDemo = _sample(
   'popover',
   'Popover',
   (_) => const CarbonPopover(
@@ -685,7 +843,7 @@ final _popoverAtlas = _sample(
   ),
 );
 
-final _progressBarAtlas = _samples('progress-bar', 'Progress bar', [
+final _progressBarDemo = _samples('progress-bar', 'Progress bar', [
   (
     'active',
     'Active',
@@ -713,7 +871,7 @@ final _progressBarAtlas = _samples('progress-bar', 'Progress bar', [
   ),
 ]);
 
-final _progressIndicatorAtlas = _sample(
+final _progressIndicatorDemo = _sample(
   'progress-indicator',
   'Progress indicator',
   (_) => _width(
@@ -729,74 +887,106 @@ final _progressIndicatorAtlas = _sample(
   ),
 );
 
-final _radioButtonAtlas = _sample(
+final _radioButtonDemo = _sample(
   'radio-button',
   'Radio button',
-  (_) => CarbonRadioButtonGroup<String>(
-    groupValue: 'weekly',
-    onChanged: (_) {},
-    semanticLabel: 'Digest frequency',
-    child: const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CarbonRadioButton(value: 'daily', label: 'Daily'),
-        CarbonRadioButton(value: 'weekly', label: 'Weekly'),
-      ],
+  (_) => _Controlled<String?>(
+    initialValue: 'weekly',
+    builder: (context, selected, onChanged) => CarbonRadioButtonGroup<String>(
+      groupValue: selected,
+      onChanged: (next) {
+        onChanged(next);
+        CatalogEventScope.report(
+          context,
+          next == null
+              ? 'Digest frequency cleared'
+              : '${_titleCase(next)} selected',
+        );
+      },
+      semanticLabel: 'Digest frequency',
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CarbonRadioButton(value: 'daily', label: 'Daily'),
+          CarbonRadioButton(value: 'weekly', label: 'Weekly'),
+        ],
+      ),
     ),
   ),
 );
 
-final _searchAtlas = _sample(
+final _searchDemo = _sample(
   'search',
   'Search',
-  (_) => _width(
+  (context) => _width(
     360,
-    CarbonSearch(labelText: 'Search projects', onChanged: (_) {}),
+    CarbonSearch(
+      labelText: 'Search projects',
+      onChanged: (value) => CatalogEventScope.report(
+        context,
+        value.isEmpty ? 'Project search cleared' : 'Searching for “$value”',
+      ),
+    ),
   ),
 );
 
-final _selectAtlas = _sample(
+final _selectDemo = _sample(
   'select',
   'Select',
-  (_) => _width(
-    320,
-    CarbonSelect<String>(
-      label: 'Environment',
-      placeholder: 'Choose environment',
-      selectedValue: 'production',
-      onChanged: (_) {},
-      items: const [
-        CarbonSelectItemGroup(
-          label: 'Cloud',
-          items: [
-            CarbonSelectItem(value: 'production', label: 'Production'),
-            CarbonSelectItem(value: 'staging', label: 'Staging'),
-          ],
-        ),
-      ],
+  (_) => _Controlled<String?>(
+    initialValue: 'production',
+    builder: (context, selected, onChanged) => _width(
+      320,
+      CarbonSelect<String>(
+        label: 'Environment',
+        placeholder: 'Choose environment',
+        selectedValue: selected,
+        onChanged: (next) {
+          onChanged(next);
+          CatalogEventScope.report(context, 'Environment changed to $next');
+        },
+        items: const [
+          CarbonSelectItemGroup(
+            label: 'Cloud',
+            items: [
+              CarbonSelectItem(value: 'production', label: 'Production'),
+              CarbonSelectItem(value: 'staging', label: 'Staging'),
+            ],
+          ),
+        ],
+      ),
     ),
   ),
 );
 
-final _sliderAtlas = _sample(
+final _sliderDemo = _sample(
   'slider',
   'Slider',
-  (_) => _width(
-    360,
-    CarbonSlider(
-      value: 64,
-      min: 0,
-      max: 100,
-      onChanged: (_) {},
-      semanticLabel: 'Volume',
+  (_) => _Controlled<double>(
+    initialValue: 64,
+    builder: (context, value, onChanged) => _width(
+      360,
+      CarbonSlider(
+        value: value,
+        min: 0,
+        max: 100,
+        onChanged: (next) {
+          onChanged(next);
+          CatalogEventScope.report(
+            context,
+            'Volume changed to ${next.round()}',
+          );
+        },
+        semanticLabel: 'Volume',
+      ),
     ),
   ),
 );
 
-final _structuredListAtlas = _sample(
+final _structuredListDemo = _sample(
   'structured-list',
   'Structured list',
-  (_) => _width(
+  (context) => _width(
     560,
     CarbonStructuredList(
       semanticLabel: 'Plans',
@@ -811,7 +1001,8 @@ final _structuredListAtlas = _sample(
         CarbonStructuredListRow(
           semanticLabel: 'Starter plan',
           selected: true,
-          onPressed: () {},
+          onPressed: () =>
+              CatalogEventScope.report(context, 'Starter plan selected'),
           cells: const [
             CarbonStructuredListCell(child: Text('Starter')),
             CarbonStructuredListCell(child: Text(r'$9 / month')),
@@ -822,51 +1013,65 @@ final _structuredListAtlas = _sample(
   ),
 );
 
-final _tabsAtlas = _sample(
+final _tabsDemo = _sample(
   'tabs',
   'Tabs',
-  (_) => _width(
-    520,
-    CarbonTabs(
-      selectedTabId: 'overview',
-      onChanged: (_) {},
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          CarbonTabBar(
-            child: Row(
-              children: [
-                CarbonTab(tabId: 'overview', label: 'Overview'),
-                CarbonTab(tabId: 'activity', label: 'Activity'),
-              ],
+  (_) => _Controlled(
+    initialValue: 'overview',
+    builder: (context, selected, onChanged) => _width(
+      520,
+      CarbonTabs(
+        selectedTabId: selected,
+        onChanged: (next) {
+          onChanged(next);
+          CatalogEventScope.report(context, '${_titleCase(next)} tab selected');
+        },
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            CarbonTabBar(
+              child: Row(
+                children: [
+                  CarbonTab(tabId: 'overview', label: 'Overview'),
+                  CarbonTab(tabId: 'activity', label: 'Activity'),
+                ],
+              ),
             ),
-          ),
-          CarbonTabView(tabId: 'overview', child: Text('Overview content')),
-          CarbonTabView(tabId: 'activity', child: Text('Activity content')),
-        ],
+            CarbonTabView(tabId: 'overview', child: Text('Overview content')),
+            CarbonTabView(tabId: 'activity', child: Text('Activity content')),
+          ],
+        ),
       ),
     ),
   ),
 );
 
-final _tagAtlas = _sample(
+final _tagDemo = _sample(
   'tag',
   'Tag',
-  (_) => Wrap(
-    spacing: 8,
-    runSpacing: 8,
-    children: [
-      for (final kind in CarbonTagKind.values)
-        CarbonTag(
-          label: _titleCase(kind.name),
-          kind: kind,
-          onRemove: kind == CarbonTagKind.blue ? () {} : null,
-        ),
-    ],
+  (_) => _Controlled<Set<CarbonTagKind>>(
+    initialValue: CarbonTagKind.values.toSet(),
+    builder: (context, visibleKinds, onChanged) => Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        for (final kind in visibleKinds)
+          CarbonTag(
+            label: _titleCase(kind.name),
+            kind: kind,
+            onRemove: kind == CarbonTagKind.blue
+                ? () {
+                    onChanged({...visibleKinds}..remove(kind));
+                    CatalogEventScope.report(context, 'Blue tag removed');
+                  }
+                : null,
+          ),
+      ],
+    ),
   ),
 );
 
-final _textInputAtlas = _samples('text-input', 'Text input', [
+final _textInputDemo = _samples('text-input', 'Text input', [
   (
     'input',
     'Text input',
@@ -896,7 +1101,7 @@ final _textInputAtlas = _samples('text-input', 'Text input', [
   ),
 ]);
 
-final _tileAtlas = _samples('tile', 'Tile', [
+final _tileDemo = _samples('tile', 'Tile', [
   (
     'static',
     'Static',
@@ -905,11 +1110,12 @@ final _tileAtlas = _samples('tile', 'Tile', [
   (
     'clickable',
     'Clickable',
-    (_) => _width(
+    (context) => _width(
       300,
       CarbonClickableTile(
         semanticLabel: 'Open analytics',
-        onPressed: () {},
+        onPressed: () =>
+            CatalogEventScope.report(context, 'Analytics tile pressed'),
         child: const Text('Analytics'),
       ),
     ),
@@ -917,13 +1123,22 @@ final _tileAtlas = _samples('tile', 'Tile', [
   (
     'selectable',
     'Selectable',
-    (_) => _width(
-      300,
-      CarbonSelectableTile(
-        selected: true,
-        semanticLabel: 'Starter plan',
-        onChanged: (_) {},
-        child: const Text('Starter plan'),
+    (_) => _Controlled(
+      initialValue: true,
+      builder: (context, selected, onChanged) => _width(
+        300,
+        CarbonSelectableTile(
+          selected: selected,
+          semanticLabel: 'Starter plan',
+          onChanged: (next) {
+            onChanged(next);
+            CatalogEventScope.report(
+              context,
+              'Starter plan ${next ? 'selected' : 'deselected'}',
+            );
+          },
+          child: const Text('Starter plan'),
+        ),
       ),
     ),
   ),
@@ -941,26 +1156,47 @@ final _tileAtlas = _samples('tile', 'Tile', [
   ),
 ]);
 
-final _toggleAtlas = _samples('toggle', 'Toggle', [
+final _toggleDemo = _samples('toggle', 'Toggle', [
   (
     'regular',
     'Regular',
-    (_) =>
-        CarbonToggle(selected: true, label: 'Notifications', onChanged: (_) {}),
+    (_) => _Controlled(
+      initialValue: true,
+      builder: (context, selected, onChanged) => CarbonToggle(
+        selected: selected,
+        label: 'Notifications',
+        onChanged: (next) {
+          onChanged(next);
+          CatalogEventScope.report(
+            context,
+            'Notifications ${next ? 'enabled' : 'disabled'}',
+          );
+        },
+      ),
+    ),
   ),
   (
     'small',
     'Small',
-    (_) => CarbonToggle(
-      selected: false,
-      label: 'Compact mode',
-      size: CarbonToggleSize.small,
-      onChanged: (_) {},
+    (_) => _Controlled(
+      initialValue: false,
+      builder: (context, selected, onChanged) => CarbonToggle(
+        selected: selected,
+        label: 'Compact mode',
+        size: CarbonToggleSize.small,
+        onChanged: (next) {
+          onChanged(next);
+          CatalogEventScope.report(
+            context,
+            'Compact mode ${next ? 'enabled' : 'disabled'}',
+          );
+        },
+      ),
     ),
   ),
 ]);
 
-final _toggletipAtlas = _sample(
+final _toggletipDemo = _sample(
   'toggletip',
   'Toggletip',
   (_) => const CarbonToggletip(
@@ -969,7 +1205,7 @@ final _toggletipAtlas = _sample(
   ),
 );
 
-final _tooltipAtlas = _sample(
+final _tooltipDemo = _sample(
   'tooltip',
   'Tooltip',
   (_) => const CarbonTooltip(
@@ -979,68 +1215,124 @@ final _tooltipAtlas = _sample(
   ),
 );
 
-final _treeViewAtlas = _sample(
+final _treeViewDemo = _sample(
   'tree-view',
   'Tree view',
-  (_) => _width(
-    320,
-    CarbonTreeView<String>(
-      semanticLabel: 'Project files',
-      initialExpandedIds: const {'lib'},
-      selectedId: 'main',
-      onSelected: (_) {},
-      nodes: const [
-        CarbonTreeNode(
-          id: 'lib',
-          label: 'lib',
-          children: [
-            CarbonTreeNode(id: 'main', label: 'main.dart'),
-            CarbonTreeNode(id: 'theme', label: 'theme.dart'),
-          ],
-        ),
-        CarbonTreeNode(id: 'readme', label: 'README.md'),
-      ],
-    ),
-  ),
-);
-
-final _uiShellAtlas = _sample(
-  'ui-shell',
-  'UI shell',
-  (_) => SizedBox(
-    width: 680,
-    height: 300,
-    child: CarbonUiShell(
-      header: const CarbonHeader(
-        companyName: 'IBM',
-        productName: 'Carbon Studio',
-      ),
-      sideNav: CarbonSideNav(
-        items: [
-          CarbonSideNavItem(
-            label: 'Dashboard',
-            selected: true,
-            onPressed: () {},
+  (_) => _Controlled<String?>(
+    initialValue: 'main',
+    builder: (context, selected, onChanged) => _width(
+      320,
+      CarbonTreeView<String>(
+        semanticLabel: 'Project files',
+        initialExpandedIds: const {'lib'},
+        selectedId: selected,
+        onSelected: (next) {
+          onChanged(next);
+          CatalogEventScope.report(context, '$next selected');
+        },
+        nodes: const [
+          CarbonTreeNode(
+            id: 'lib',
+            label: 'lib',
+            children: [
+              CarbonTreeNode(id: 'main', label: 'main.dart'),
+              CarbonTreeNode(id: 'theme', label: 'theme.dart'),
+            ],
           ),
-          CarbonSideNavItem(label: 'Projects', onPressed: () {}),
-          CarbonSideNavItem(label: 'Settings', onPressed: () {}),
+          CarbonTreeNode(id: 'readme', label: 'README.md'),
         ],
       ),
-      child: const Padding(
-        padding: EdgeInsets.all(24),
-        child: Text('Application content'),
+    ),
+  ),
+);
+
+final _uiShellDemo = _sample(
+  'ui-shell',
+  'UI shell',
+  (_) => _Controlled(
+    initialValue: 'Dashboard',
+    builder: (context, selected, onChanged) => SizedBox(
+      width: 680,
+      height: 300,
+      child: CarbonUiShell(
+        header: const CarbonHeader(
+          companyName: 'IBM',
+          productName: 'Carbon Studio',
+        ),
+        sideNav: CarbonSideNav(
+          items: [
+            for (final item in ['Dashboard', 'Projects', 'Settings'])
+              CarbonSideNavItem(
+                label: item,
+                selected: selected == item,
+                onPressed: () {
+                  onChanged(item);
+                  CatalogEventScope.report(context, '$item selected');
+                },
+              ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Text('$selected content'),
+        ),
       ),
     ),
   ),
 );
 
-AtlasTheme _atlasTheme(CarbonTheme theme) => AtlasTheme(
-  theme.name,
-  label: _themeLabel(theme),
-  brightness: theme.brightness,
-  background: _themeBackground(theme),
-  builder: (_, child) => CarbonScope(theme: theme, child: child),
-);
+String _categoryFor(String id) => switch (id) {
+  'bar-chart' || 'data-table' || 'line-chart' || 'pie-chart' => 'Data display',
+  'breadcrumb' ||
+  'content-switcher' ||
+  'link' ||
+  'menu' ||
+  'menu-button' ||
+  'pagination' ||
+  'tabs' ||
+  'tree-view' ||
+  'ui-shell' => 'Navigation',
+  'checkbox' ||
+  'date-picker' ||
+  'dropdown' ||
+  'file-uploader' ||
+  'form' ||
+  'multiselect' ||
+  'number-input' ||
+  'radio-button' ||
+  'search' ||
+  'select' ||
+  'slider' ||
+  'text-input' ||
+  'toggle' => 'Inputs',
+  'inline-loading' ||
+  'loading' ||
+  'modal' ||
+  'notification' ||
+  'progress-bar' ||
+  'progress-indicator' ||
+  'tooltip' ||
+  'toggletip' => 'Feedback',
+  _ => 'Content',
+};
+
+String _summaryFor(String id, String label) => switch (id) {
+  'ui-shell' =>
+    'Application chrome with a header, side navigation, and content.',
+  'data-table' =>
+    'Structured tabular data using Carbon spacing and type tokens.',
+  'form' =>
+    'A composed form that demonstrates Carbon inputs and actions together.',
+  'modal' =>
+    'A route-backed dialog with accessible dismissal and action handling.',
+  'button' =>
+    'Action hierarchy, sizes, icon-only controls, and non-interactive states.',
+  'loading' || 'inline-loading' =>
+    'Progress feedback with Carbon motion, status, and accessibility behavior.',
+  'bar-chart' || 'line-chart' || 'pie-chart' =>
+    'A token-driven Carbon data visualization with semantic labeling.',
+  _ => 'A live $label implementation using the public remix_carbon API.',
+};
 
 String _kindLabel(CarbonButtonKind kind) => switch (kind) {
   .primary => 'Primary',
@@ -1061,22 +1353,29 @@ String _sizeLabel(CarbonSize size) => switch (size) {
   .x2l => '2× large',
 };
 
-String _themeLabel(CarbonTheme theme) => switch (theme) {
-  .white => 'W',
-  .g10 => '10',
-  .g90 => '90',
-  .g100 => '100',
-};
-
-Color _themeBackground(CarbonTheme theme) => switch (theme) {
-  .white => const Color(0xFFFFFFFF),
-  .g10 => const Color(0xFFF4F4F4),
-  .g90 => const Color(0xFF262626),
-  .g100 => const Color(0xFF161616),
-};
-
 String _titleCase(String value) =>
     '${value.substring(0, 1).toUpperCase()}${value.substring(1)}';
+
+typedef _ControlledBuilder<T> =
+    Widget Function(BuildContext context, T value, ValueChanged<T> onChanged);
+
+class _Controlled<T> extends StatefulWidget {
+  const _Controlled({required this.initialValue, required this.builder});
+
+  final T initialValue;
+  final _ControlledBuilder<T> builder;
+
+  @override
+  State<_Controlled<T>> createState() => _ControlledState<T>();
+}
+
+class _ControlledState<T> extends State<_Controlled<T>> {
+  late T value = widget.initialValue;
+
+  @override
+  Widget build(BuildContext context) =>
+      widget.builder(context, value, (next) => setState(() => value = next));
+}
 
 class _ListWidth extends StatelessWidget {
   const _ListWidth({required this.child});

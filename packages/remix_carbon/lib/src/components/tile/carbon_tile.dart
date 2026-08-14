@@ -48,7 +48,7 @@ class CarbonTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tile = RemixCard(style: _carbonTileStyle(context), child: child);
+    final tile = _carbonTileStyle(context)(child: child);
     if (semanticLabel == null) return tile;
 
     return Semantics(label: semanticLabel, container: true, child: tile);
@@ -82,15 +82,12 @@ class CarbonClickableTile extends StatelessWidget {
     focusNode: focusNode,
     autofocus: autofocus,
     excludeChildSemantics: true,
-    builder: (context, focused, hovered, pressed) => RemixCard(
-      style: _carbonTileStyle(
-        context,
-        focused: focused,
-        hovered: hovered,
-        pressed: pressed,
-      ),
-      child: child,
-    ),
+    builder: (context, focused, hovered, pressed) => _carbonTileStyle(
+      context,
+      focused: focused,
+      hovered: hovered,
+      pressed: pressed,
+    )(child: child),
   );
 }
 
@@ -124,35 +121,35 @@ class CarbonSelectableTile extends StatelessWidget {
     focusNode: focusNode,
     autofocus: autofocus,
     excludeChildSemantics: true,
-    builder: (context, focused, hovered, pressed) => RemixCard(
-      style: _carbonTileStyle(
-        context,
-        focused: focused,
-        hovered: hovered,
-        pressed: pressed,
-        selected: selected,
-      ),
-      child: Row(
-        crossAxisAlignment: .start,
-        children: [
-          Expanded(child: child),
-          SizedBox(width: CarbonTokens.spacing05.resolve(context)),
-          ExcludeSemantics(
-            child: Icon(
-              selected
-                  ? CarbonIcons.checkboxCheckedFilled
-                  : CarbonIcons.checkbox,
-              size: CarbonTokens.iconSize01.resolve(context),
-              color:
-                  (selected
-                          ? CarbonTokens.iconInteractive
-                          : CarbonTokens.iconSecondary)
-                      .resolve(context),
-            ),
+    builder: (context, focused, hovered, pressed) =>
+        _carbonTileStyle(
+          context,
+          focused: focused,
+          hovered: hovered,
+          pressed: pressed,
+          selected: selected,
+        )(
+          child: Row(
+            crossAxisAlignment: .start,
+            children: [
+              Expanded(child: child),
+              SizedBox(width: CarbonTokens.spacing05.resolve(context)),
+              ExcludeSemantics(
+                child: Icon(
+                  selected
+                      ? CarbonIcons.checkboxCheckedFilled
+                      : CarbonIcons.checkbox,
+                  size: CarbonTokens.iconSize01.resolve(context),
+                  color:
+                      (selected
+                              ? CarbonTokens.iconInteractive
+                              : CarbonTokens.iconSecondary)
+                          .resolve(context),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
+        ),
   );
 }
 
@@ -199,76 +196,78 @@ class _CarbonExpandableTileState extends State<CarbonExpandableTile> {
   }
 
   @override
-  Widget build(BuildContext context) => RemixCard(
-    style: _carbonTileStyle(context).padding(.all(0)),
-    child: Column(
-      mainAxisSize: .min,
-      crossAxisAlignment: .stretch,
-      children: [
-        CarbonActionSurface(
-          semanticLabel: widget.semanticLabel ?? widget.title,
-          expanded: _expanded,
-          enabled: widget.enabled,
-          onPressed: _toggle,
-          builder: (context, focused, hovered, pressed) => Box(
-            style: BoxStyler()
-                .minHeight(64)
-                .padding(.all(CarbonTokens.spacing05()))
-                .color(
-                  pressed
-                      ? CarbonLayer.of(
-                          context,
-                        ).color(.layerActive).resolve(context)
-                      : hovered
-                      ? CarbonLayer.of(
-                          context,
-                        ).color(.layerHover).resolve(context)
-                      : const Color(0x00000000),
-                )
-                .border(
-                  BoxBorderMix.all(
-                    BorderSideMix(
-                      color: focused
-                          ? CarbonTokens.focus()
+  Widget build(BuildContext context) =>
+      _carbonTileStyle(context).padding(.all(0))(
+        child: Column(
+          mainAxisSize: .min,
+          crossAxisAlignment: .stretch,
+          children: [
+            CarbonActionSurface(
+              semanticLabel: widget.semanticLabel ?? widget.title,
+              expanded: _expanded,
+              enabled: widget.enabled,
+              onPressed: _toggle,
+              builder: (context, focused, hovered, pressed) => Box(
+                style: BoxStyler()
+                    .minHeight(64)
+                    .padding(.all(CarbonTokens.spacing05()))
+                    .color(
+                      pressed
+                          ? CarbonLayer.of(
+                              context,
+                            ).color(.layerActive).resolve(context)
+                          : hovered
+                          ? CarbonLayer.of(
+                              context,
+                            ).color(.layerHover).resolve(context)
                           : const Color(0x00000000),
-                      width: 2,
+                    )
+                    .border(
+                      BoxBorderMix.all(
+                        BorderSideMix(
+                          color: focused
+                              ? CarbonTokens.focus()
+                              : const Color(0x00000000),
+                          width: 2,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ExcludeSemantics(
-                    child: StyledText(
-                      widget.title,
-                      style: TextStyler()
-                          .style(CarbonTokens.headingCompact01.mix())
-                          .color(CarbonTokens.textPrimary()),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ExcludeSemantics(
+                        child: StyledText(
+                          widget.title,
+                          style: TextStyler()
+                              .style(CarbonTokens.headingCompact01.mix())
+                              .color(CarbonTokens.textPrimary()),
+                        ),
+                      ),
                     ),
-                  ),
+                    ExcludeSemantics(
+                      child: Icon(
+                        _expanded
+                            ? CarbonIcons.chevronUp
+                            : CarbonIcons.chevronDown,
+                        size: CarbonTokens.iconSize01.resolve(context),
+                        color: CarbonTokens.iconPrimary.resolve(context),
+                      ),
+                    ),
+                  ],
                 ),
-                ExcludeSemantics(
-                  child: Icon(
-                    _expanded ? CarbonIcons.chevronUp : CarbonIcons.chevronDown,
-                    size: CarbonTokens.iconSize01.resolve(context),
-                    color: CarbonTokens.iconPrimary.resolve(context),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            if (_expanded)
+              Padding(
+                padding: .fromLTRB(
+                  CarbonTokens.spacing05.resolve(context),
+                  0,
+                  CarbonTokens.spacing05.resolve(context),
+                  CarbonTokens.spacing05.resolve(context),
+                ),
+                child: widget.child,
+              ),
+          ],
         ),
-        if (_expanded)
-          Padding(
-            padding: .fromLTRB(
-              CarbonTokens.spacing05.resolve(context),
-              0,
-              CarbonTokens.spacing05.resolve(context),
-              CarbonTokens.spacing05.resolve(context),
-            ),
-            child: widget.child,
-          ),
-      ],
-    ),
-  );
+      );
 }

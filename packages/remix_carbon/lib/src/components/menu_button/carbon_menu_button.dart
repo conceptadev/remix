@@ -44,22 +44,22 @@ class CarbonMenuButton<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final menu = RemixMenu<T>(
-      trigger: RemixMenuTrigger(
-        label: label,
-        trailingIcon: CarbonIcons.chevronDown,
-      ),
-      items: items,
-      controller: controller,
-      onSelected: onSelected,
-      onOpen: onOpen,
-      onClose: onClose,
-      positioning: positioning,
-      semanticLabel: label,
-      style: carbonMenuStyle(
-        size: carbonMenuSizeFor(size),
-      ).trigger(_carbonMenuButtonTriggerStyle(kind: kind, size: size)),
-    );
+    final menu =
+        carbonMenuStyle(
+          size: carbonMenuSizeFor(size),
+        ).trigger(_carbonMenuButtonTriggerStyle(kind: kind, size: size))(
+          trigger: RemixMenuTrigger(
+            label: label,
+            trailingIcon: CarbonIcons.chevronDown,
+          ),
+          items: items,
+          controller: controller,
+          onSelected: onSelected,
+          onOpen: onOpen,
+          onClose: onClose,
+          positioning: positioning,
+          semanticLabel: label,
+        );
 
     if (enabled) return menu;
 
@@ -96,20 +96,20 @@ class CarbonOverflowMenu<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final menu = RemixMenu<T>(
-      trigger: const RemixMenuTrigger(
-        label: '',
-        icon: CarbonIcons.overflowMenuVertical,
-      ),
-      items: items,
-      controller: controller,
-      onSelected: onSelected,
-      positioning: positioning,
-      semanticLabel: semanticLabel,
-      style: carbonMenuStyle().trigger(
-        _carbonMenuButtonTriggerStyle(kind: .ghost, size: .md, square: true),
-      ),
-    );
+    final menu =
+        carbonMenuStyle().trigger(
+          _carbonMenuButtonTriggerStyle(kind: .ghost, size: .md, square: true),
+        )(
+          trigger: const RemixMenuTrigger(
+            label: '',
+            icon: CarbonIcons.overflowMenuVertical,
+          ),
+          items: items,
+          controller: controller,
+          onSelected: onSelected,
+          positioning: positioning,
+          semanticLabel: semanticLabel,
+        );
 
     if (enabled) return menu;
 

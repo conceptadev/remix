@@ -3,6 +3,7 @@ import 'dart:ui' show SemanticsRole;
 import 'package:remix_carbon/remix_carbon.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:remix/remix.dart';
 
 import '../helpers/pump.dart';
 
@@ -53,6 +54,12 @@ void main() {
     await tester.tap(find.text('Open modal'));
     await tester.pumpAndSettle();
     expect(find.text('Confirm'), findsOneWidget);
+    expect(
+      tester.getCenter(find.byType(RemixDialog)).dx,
+      moreOrLessEquals(
+        tester.view.physicalSize.width / tester.view.devicePixelRatio / 2,
+      ),
+    );
     await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
     expect(find.text('Confirm'), findsNothing);

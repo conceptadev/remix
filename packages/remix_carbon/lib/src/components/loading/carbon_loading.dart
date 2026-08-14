@@ -44,9 +44,8 @@ class CarbonLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!active) return const SizedBox.shrink();
 
-    final spinner = RemixSpinner(
+    final spinner = carbonLoadingStyle(small: small)(
       semanticsLabel: description,
-      style: carbonLoadingStyle(small: small),
     );
     if (!withOverlay) return spinner;
 

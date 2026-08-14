@@ -1,5 +1,5 @@
 name: remix_carbon_example
-description: Complete component atlas for the Carbon for Flutter package.
+description: Interactive component catalog for the Carbon for Flutter package.
 publish_to: "none"
 resolution: workspace
 
@@ -12,11 +12,6 @@ dependencies:
     sdk: flutter
   remix_carbon:
     path: ../
-  mix_atlas:
-    git:
-      url: https://github.com/btwld/mix.git
-      ref: 476b3cef650fa4a0e1d4dc950970556bc0fb26cb
-      path: packages/mix_atlas
 
 dev_dependencies:
   dart_code_metrics_presets: ^2.32.0

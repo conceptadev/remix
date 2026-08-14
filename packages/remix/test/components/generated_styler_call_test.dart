@@ -29,8 +29,18 @@ void main() {
     });
 
     test('preserve generic types and forward the owning style', () {
+      const collapsedIcon = IconData(0xe001);
+      const expandedIcon = IconData(0xe002);
+      final accordionStyle = AccordionStyler();
       final dataTableStyle = DataTableStyler();
       final segmentedControlStyle = SegmentedControlStyler();
+      final accordion = accordionStyle<String>(
+        value: 'details',
+        title: 'Details',
+        collapsedIcon: collapsedIcon,
+        expandedIcon: expandedIcon,
+        child: const SizedBox.shrink(),
+      );
       final table = dataTableStyle.call<String>(
         rows: const ['Ada'],
         columns: const [
@@ -46,6 +56,10 @@ void main() {
         selectedValue: 'list',
       );
 
+      expect(accordion, isA<RemixAccordion<String>>());
+      expect(accordion.style, same(accordionStyle));
+      expect(accordion.collapsedIcon, collapsedIcon);
+      expect(accordion.expandedIcon, expandedIcon);
       expect(table, isA<RemixDataTable<String>>());
       expect(table.style, same(dataTableStyle));
       expect(segmentedControl, isA<RemixSegmentedControl<String>>());

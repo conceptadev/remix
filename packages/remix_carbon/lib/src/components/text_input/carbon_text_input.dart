@@ -341,33 +341,38 @@ class _CarbonPasswordInputState extends State<CarbonPasswordInput> {
       semanticLabel: widget.semanticLabel,
       semanticHint: widget.semanticHint,
       size: widget.size,
-      trailing: RemixIconButton(
-        icon: _obscureText ? CarbonIcons.view : CarbonIcons.viewOff,
-        semanticLabel: toggleLabel,
-        enabled: widget.enabled && !widget.readOnly,
-        onPressed: widget.enabled && !widget.readOnly
-            ? () => setState(() => _obscureText = !_obscureText)
-            : null,
-        style: IconButtonStyler()
-            .size(controlSize, controlSize)
-            .color(const Color(0x00000000))
-            .icon(
-              IconStyler()
-                  .size(CarbonTokens.iconSize01())
-                  .color(CarbonTokens.iconPrimary()),
-            )
-            .onHovered(.color(CarbonTokens.backgroundHover()))
-            .onPressed(.color(CarbonTokens.backgroundActive()))
-            .onFocusVisible(
-              .containerEffects(
-                RemixBoxEffectsMix(
-                  outline: BorderSideMix(color: CarbonTokens.focus(), width: 2),
-                  outlineOffset: -2,
+      trailing:
+          IconButtonStyler()
+              .size(controlSize, controlSize)
+              .color(const Color(0x00000000))
+              .icon(
+                IconStyler()
+                    .size(CarbonTokens.iconSize01())
+                    .color(CarbonTokens.iconPrimary()),
+              )
+              .onHovered(.color(CarbonTokens.backgroundHover()))
+              .onPressed(.color(CarbonTokens.backgroundActive()))
+              .onFocusVisible(
+                .containerEffects(
+                  RemixBoxEffectsMix(
+                    outline: BorderSideMix(
+                      color: CarbonTokens.focus(),
+                      width: 2,
+                    ),
+                    outlineOffset: -2,
+                  ),
                 ),
-              ),
-            )
-            .onDisabled(.icon(IconStyler().color(CarbonTokens.iconDisabled()))),
-      ),
+              )
+              .onDisabled(
+                .icon(IconStyler().color(CarbonTokens.iconDisabled())),
+              )(
+            icon: _obscureText ? CarbonIcons.view : CarbonIcons.viewOff,
+            semanticLabel: toggleLabel,
+            enabled: widget.enabled && !widget.readOnly,
+            onPressed: widget.enabled && !widget.readOnly
+                ? () => setState(() => _obscureText = !_obscureText)
+                : null,
+          ),
     );
   }
 }

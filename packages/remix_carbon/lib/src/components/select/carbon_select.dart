@@ -297,27 +297,27 @@ class CarbonSelect<T extends Object> extends StatelessWidget {
       }
     }
 
-    final select = RemixSelect<_CarbonSelectValue<T>>(
-      trigger: RemixSelectTrigger(
-        placeholder: placeholder,
-        collapsedIcon: CarbonIcons.chevronDown,
-        expandedIcon: CarbonIcons.chevronUp,
-      ),
-      items: mapped,
-      selectedValue: selectedValue == null
-          ? null
-          : _CarbonSelectValue.item(selectedValue!),
-      positioning: positioning,
-      onChanged: readOnly ? null : (next) => onChanged?.call(next?.value),
-      enabled: enabled,
-      semanticLabel: semanticLabel ?? label,
-      focusNode: focusNode,
-      style: carbonSelectStyle(
-        size: size,
-        invalid: errorText != null,
-        readOnly: readOnly,
-      ),
-    );
+    final select =
+        carbonSelectStyle(
+          size: size,
+          invalid: errorText != null,
+          readOnly: readOnly,
+        ).call<_CarbonSelectValue<T>>(
+          trigger: RemixSelectTrigger(
+            placeholder: placeholder,
+            collapsedIcon: CarbonIcons.chevronDown,
+            expandedIcon: CarbonIcons.chevronUp,
+          ),
+          items: mapped,
+          selectedValue: selectedValue == null
+              ? null
+              : _CarbonSelectValue.item(selectedValue!),
+          positioning: positioning,
+          onChanged: readOnly ? null : (next) => onChanged?.call(next?.value),
+          enabled: enabled,
+          semanticLabel: semanticLabel ?? label,
+          focusNode: focusNode,
+        );
 
     return CarbonFieldFrame(
       label: label,

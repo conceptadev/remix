@@ -130,14 +130,13 @@ class CarbonRadioButton<T> extends StatelessWidget {
         child: Row(
           mainAxisSize: .min,
           children: [
-            RemixRadio<T>(
+            carbonRadioButtonStyle()(
               value: value,
               enabled: effectiveEnabled,
               toggleable: toggleable,
               focusNode: focusNode,
               autofocus: autofocus,
               semanticLabel: semanticLabel ?? label,
-              style: carbonRadioButtonStyle(),
             ),
             SizedBox(width: CarbonTokens.spacing03.resolve(context)),
             ExcludeSemantics(

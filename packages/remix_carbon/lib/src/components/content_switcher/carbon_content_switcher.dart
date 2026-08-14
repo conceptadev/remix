@@ -135,7 +135,7 @@ class CarbonContentSwitcher<T extends Object> extends StatelessWidget {
   final CarbonSize? size;
 
   @override
-  Widget build(BuildContext context) => RemixSegmentedControl<T>(
+  Widget build(BuildContext context) => carbonContentSwitcherStyle(size: size)(
     items: items
         .map(
           (item) => RemixSegmentedControlItem<T>(
@@ -156,6 +156,5 @@ class CarbonContentSwitcher<T extends Object> extends StatelessWidget {
     loop: loop,
     semanticLabel: semanticLabel,
     excludeSemantics: excludeSemantics,
-    style: carbonContentSwitcherStyle(size: size),
   );
 }

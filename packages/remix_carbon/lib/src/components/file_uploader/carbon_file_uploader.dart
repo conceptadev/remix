@@ -185,9 +185,7 @@ class CarbonFileUploadItem extends StatelessWidget {
             SizedBox(width: CarbonTokens.spacing05.resolve(context)),
             ExcludeSemantics(
               child: switch (status) {
-                .uploading => RemixSpinner(
-                  style: carbonLoadingStyle(small: true),
-                ),
+                .uploading => carbonLoadingStyle(small: true)(),
                 .complete => Icon(
                   CarbonIcons.checkmarkFilled,
                   size: CarbonTokens.iconSize02.resolve(context),

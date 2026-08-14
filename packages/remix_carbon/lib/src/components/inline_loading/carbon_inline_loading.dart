@@ -96,7 +96,7 @@ class _CarbonInlineLoadingState extends State<CarbonInlineLoading> {
 
   Widget _statusIndicator(BuildContext context) => switch (widget.status) {
     .inactive => const SizedBox.square(dimension: 16),
-    .active => RemixSpinner(style: carbonLoadingStyle(small: true)),
+    .active => carbonLoadingStyle(small: true)(),
     .finished => Icon(
       CarbonIcons.checkmarkFilled,
       size: 16,

@@ -153,8 +153,9 @@ class _CarbonAccordionBase<T> extends StatelessWidget {
   final AccordionStyler style;
 
   @override
-  Widget build(BuildContext context) => RemixAccordion<T>(
+  Widget build(BuildContext context) => style<T>(
     value: value,
+    child: child,
     title: title,
     leadingIcon: leadingIcon,
     trailingIcon: trailingIcon,
@@ -170,8 +171,6 @@ class _CarbonAccordionBase<T> extends StatelessWidget {
     onPressChange: onPressChange,
     semanticLabel: semanticLabel,
     transitionBuilder: transitionBuilder,
-    style: style,
-    child: child,
   );
 }
 

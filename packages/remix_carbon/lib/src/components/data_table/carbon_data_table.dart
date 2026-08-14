@@ -208,7 +208,7 @@ class CarbonDataTable<T> extends StatelessWidget {
   final CarbonDataTableLabels labels;
 
   @override
-  Widget build(BuildContext context) => RemixDataTable<T>(
+  Widget build(BuildContext context) => carbonDataTableStyle()(
     rows: rows,
     columns: [
       for (final column in columns)
@@ -272,6 +272,5 @@ class CarbonDataTable<T> extends StatelessWidget {
       sortedAscending: labels.sortedAscending,
       sortedDescending: labels.sortedDescending,
     ),
-    style: carbonDataTableStyle(),
   );
 }

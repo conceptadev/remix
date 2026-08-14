@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-import 'atlas.dart';
+import 'catalog_app.dart';
 
-void main() => runApp(const CarbonAtlasApp());
+void main() => runApp(const CarbonCatalogApp());

@@ -62,20 +62,21 @@ Toggle Group are intentionally not added to the Carbon surface. Where Carbon
 has a related but different concept—such as Tag, Tile, Contained List or
 Content Switcher—the package exposes the Carbon contract instead.
 
-## Component atlas
+## Component catalog
 
-The example is a live atlas for every component family across all four Carbon
-themes. Run it from the example package:
+The example is a responsive, interactive catalog for every component family
+across all four Carbon themes. Search or browse the component index, switch
+themes, and exercise each component's live behavior:
 
-![Carbon component atlas](docs/images/component-atlas.jpg)
+![Remix Carbon component catalog](docs/images/component-catalog.jpg)
 
 ```sh
 cd packages/remix_carbon/example
 flutter run
 ```
 
-The atlas catalog is also verified against the pinned manifest and smoke-tests
-every family:
+The catalog is verified against the pinned manifest, smoke-tests every family,
+and tests its responsive navigation and interactions:
 
 ```sh
 flutter test

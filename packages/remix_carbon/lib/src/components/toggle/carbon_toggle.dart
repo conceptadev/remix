@@ -102,14 +102,13 @@ class CarbonToggle extends StatelessWidget {
           Row(
             mainAxisSize: .min,
             children: [
-              RemixSwitch(
+              carbonToggleStyle(size: size)(
                 selected: selected,
                 onChanged: onChanged,
                 enabled: interactive,
                 focusNode: focusNode,
                 autofocus: autofocus,
                 semanticLabel: semanticLabel ?? label,
-                style: carbonToggleStyle(size: size),
               ),
               SizedBox(width: CarbonTokens.spacing03.resolve(context)),
               ExcludeSemantics(

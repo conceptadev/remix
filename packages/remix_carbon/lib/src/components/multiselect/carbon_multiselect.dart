@@ -163,7 +163,7 @@ class CarbonMultiselect<T extends Object> extends StatelessWidget {
     required String triggerLabel,
     required bool interactive,
     required MenuStyler style,
-  }) => .new(
+  }) => style(
     controller: controller,
     triggerFocusNode: focusNode,
     trigger: RemixMenuTrigger(
@@ -186,7 +186,6 @@ class CarbonMultiselect<T extends Object> extends StatelessWidget {
               : null,
         ),
     ],
-    style: style,
   );
 
   @override

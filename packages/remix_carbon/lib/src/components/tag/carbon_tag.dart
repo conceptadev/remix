@@ -51,63 +51,65 @@ class CarbonTag extends StatelessWidget {
       label: label,
       container: true,
       explicitChildNodes: removable,
-      child: RemixBadge(
-        style: BadgeStyler()
-            .height(height)
-            .padding(
-              .left(CarbonTokens.spacing03()).right(
-                removable ? CarbonTokens.spacing02() : CarbonTokens.spacing03(),
-              ),
-            )
-            .borderRadius(.all(.circular(height / 2)))
-            .color(
-              disabled ? CarbonTokens.layerSelectedDisabled() : background(),
-            )
-            .border(
-              BoxBorderMix.all(
-                BorderSideMix(
-                  color: disabled ? CarbonTokens.borderDisabled() : border(),
-                  width: 1,
+      child:
+          BadgeStyler()
+              .height(height)
+              .padding(
+                .left(CarbonTokens.spacing03()).right(
+                  removable
+                      ? CarbonTokens.spacing02()
+                      : CarbonTokens.spacing03(),
                 ),
-              ),
-            )
-            .label(
-              .style(
-                CarbonTokens.label01.mix(),
-              ).color(disabled ? CarbonTokens.textDisabled() : foreground()),
-            ),
-        child: Row(
-          mainAxisSize: .min,
-          children: [
-            ExcludeSemantics(
-              child: StyledText(
-                label,
-                style: TextStyler()
-                    .style(CarbonTokens.label01.mix())
-                    .color(
-                      disabled ? CarbonTokens.textDisabled() : foreground(),
+              )
+              .borderRadius(.all(.circular(height / 2)))
+              .color(
+                disabled ? CarbonTokens.layerSelectedDisabled() : background(),
+              )
+              .border(
+                BoxBorderMix.all(
+                  BorderSideMix(
+                    color: disabled ? CarbonTokens.borderDisabled() : border(),
+                    width: 1,
+                  ),
+                ),
+              )
+              .label(
+                .style(
+                  CarbonTokens.label01.mix(),
+                ).color(disabled ? CarbonTokens.textDisabled() : foreground()),
+              )(
+            child: Row(
+              mainAxisSize: .min,
+              children: [
+                ExcludeSemantics(
+                  child: StyledText(
+                    label,
+                    style: TextStyler()
+                        .style(CarbonTokens.label01.mix())
+                        .color(
+                          disabled ? CarbonTokens.textDisabled() : foreground(),
+                        ),
+                  ),
+                ),
+                if (removable) ...[
+                  SizedBox(width: CarbonTokens.spacing02.resolve(context)),
+                  SizedBox.square(
+                    dimension: height - 4,
+                    child: CarbonIconButton(
+                      icon: CarbonIcons.close,
+                      semanticLabel: removeLabel ?? 'Remove $label',
+                      enabled: !disabled,
+                      onPressed: disabled ? null : onRemove,
+                      size: .sm,
+                      style: carbonIconButtonForegroundStyle(
+                        foreground,
+                      ).size(height - 4, height - 4),
                     ),
-              ),
+                  ),
+                ],
+              ],
             ),
-            if (removable) ...[
-              SizedBox(width: CarbonTokens.spacing02.resolve(context)),
-              SizedBox.square(
-                dimension: height - 4,
-                child: CarbonIconButton(
-                  icon: CarbonIcons.close,
-                  semanticLabel: removeLabel ?? 'Remove $label',
-                  enabled: !disabled,
-                  onPressed: disabled ? null : onRemove,
-                  size: .sm,
-                  style: carbonIconButtonForegroundStyle(
-                    foreground,
-                  ).size(height - 4, height - 4),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
+          ),
     );
   }
 }

@@ -2,7 +2,7 @@
 
 This is the human-readable view of `manifest.json`. It defines the package's
 scope: every listed family has a Carbon public API, public export, focused test
-and atlas example. Internal reuse is selected by behavior and semantics; it
+and interactive catalog example. Internal reuse is selected by behavior and semantics; it
 does not add the corresponding Remix API to Carbon's public surface.
 
 ## Implementation strategies

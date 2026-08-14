@@ -93,8 +93,7 @@ class CarbonNotification extends StatelessWidget {
       label: semanticLabel ?? title,
       container: true,
       explicitChildNodes: true,
-      child: RemixCallout(
-        style: calloutStyle,
+      child: calloutStyle(
         child: Row(
           crossAxisAlignment: .start,
           children: [
