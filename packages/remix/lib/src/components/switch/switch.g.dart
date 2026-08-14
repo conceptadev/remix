@@ -652,6 +652,33 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     return merge(SwitchStyler(modifier: value));
   }
 
+  RemixSwitch call({
+    Key? key,
+    required bool selected,
+    ValueChanged<bool>? onChanged,
+    bool enabled = true,
+    bool enableFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    String? semanticLabel,
+    bool excludeSemantics = false,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+  }) {
+    return RemixSwitch(
+      key: key,
+      style: this,
+      selected: selected,
+      onChanged: onChanged,
+      enabled: enabled,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+      mouseCursor: mouseCursor,
+    );
+  }
+
   /// Merges with another [SwitchStyler].
   @override
   SwitchStyler merge(SwitchStyler? other) {

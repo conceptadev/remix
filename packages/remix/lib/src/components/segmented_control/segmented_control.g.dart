@@ -778,6 +778,31 @@ class SegmentedControlStyler
     return merge(SegmentedControlStyler(modifier: value));
   }
 
+  RemixSegmentedControl<T> call<T extends Object>({
+    Key? key,
+    required List<RemixSegmentedControlItem<T>> items,
+    required T? selectedValue,
+    ValueChanged<T>? onChanged,
+    bool enabled = true,
+    Axis orientation = .horizontal,
+    bool loop = true,
+    String? semanticLabel,
+    bool excludeSemantics = false,
+  }) {
+    return RemixSegmentedControl<T>(
+      key: key,
+      style: this,
+      items: items,
+      selectedValue: selectedValue,
+      onChanged: onChanged,
+      enabled: enabled,
+      orientation: orientation,
+      loop: loop,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+    );
+  }
+
   /// Merges with another [SegmentedControlStyler].
   @override
   SegmentedControlStyler merge(SegmentedControlStyler? other) {

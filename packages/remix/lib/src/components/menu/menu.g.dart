@@ -1113,6 +1113,47 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
     return merge(MenuStyler(modifier: value));
   }
 
+  RemixMenu<T> call<T>({
+    Key? key,
+    required RemixMenuTrigger trigger,
+    required List<RemixMenuItemData<T>> items,
+    MenuController? controller,
+    ValueChanged<T>? onSelected,
+    VoidCallback? onOpen,
+    VoidCallback? onClose,
+    VoidCallback? onCanceled,
+    RawMenuAnchorOpenRequestedCallback? onOpenRequested,
+    RawMenuAnchorCloseRequestedCallback? onCloseRequested,
+    bool consumeOutsideTaps = true,
+    bool useRootOverlay = false,
+    bool closeOnClickOutside = true,
+    FocusNode? triggerFocusNode,
+    OverlayPositionConfig positioning = const OverlayPositionConfig(),
+    String? semanticLabel,
+    bool excludeSemantics = false,
+  }) {
+    return RemixMenu<T>(
+      key: key,
+      style: this,
+      trigger: trigger,
+      items: items,
+      controller: controller,
+      onSelected: onSelected,
+      onOpen: onOpen,
+      onClose: onClose,
+      onCanceled: onCanceled,
+      onOpenRequested: onOpenRequested,
+      onCloseRequested: onCloseRequested,
+      consumeOutsideTaps: consumeOutsideTaps,
+      useRootOverlay: useRootOverlay,
+      closeOnClickOutside: closeOnClickOutside,
+      triggerFocusNode: triggerFocusNode,
+      positioning: positioning,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+    );
+  }
+
   /// Merges with another [MenuStyler].
   @override
   MenuStyler merge(MenuStyler? other) {

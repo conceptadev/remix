@@ -683,6 +683,43 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     return merge(CheckboxStyler(modifier: value));
   }
 
+  RemixCheckbox call({
+    Key? key,
+    required bool? selected,
+    ValueChanged<bool?>? onChanged,
+    bool enabled = true,
+    bool tristate = false,
+    IconData? checkedIcon,
+    IconData? uncheckedIcon,
+    IconData? indeterminateIcon,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    bool enableFeedback = true,
+    String? label,
+    String? semanticLabel,
+    Size minimumTapTargetSize = const Size.square(48),
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+  }) {
+    return RemixCheckbox(
+      key: key,
+      style: this,
+      selected: selected,
+      onChanged: onChanged,
+      enabled: enabled,
+      tristate: tristate,
+      checkedIcon: checkedIcon,
+      uncheckedIcon: uncheckedIcon,
+      indeterminateIcon: indeterminateIcon,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      enableFeedback: enableFeedback,
+      label: label,
+      semanticLabel: semanticLabel,
+      minimumTapTargetSize: minimumTapTargetSize,
+      mouseCursor: mouseCursor,
+    );
+  }
+
   /// Merges with another [CheckboxStyler].
   @override
   CheckboxStyler merge(CheckboxStyler? other) {

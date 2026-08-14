@@ -39,7 +39,8 @@ final fluent = CardStyler().color(Colors.blue);
 | Alias of a canonical operation | Do not add one. A canonical operation has exactly one spelling. |
 | Slot-forwarding convenience (`titleColor`, `labelFontSize`) | Keep it fluent-only. It names a child slot rather than duplicating a canonical operation. |
 | Styler lifecycle or composition (`animate`, `variants`, `wrap`, `modifier`, `merge`) | Keep it fluent-only because it configures or combines an existing parent styler. |
-| Generic variant or callable widget helper | Keep it as an extension method; it operates on an existing styler. |
+| Generic variant helper | Keep it as an extension method; it operates on an existing styler. |
+| Callable widget helper | Generate it with `@MixableSpec(target: RemixWidget.new)` so it stays aligned with the widget constructor. |
 | Name conflict | Give the component-specific behavior a descriptive name and reserve the canonical name for the generated surface. |
 
 Factories are generated from each component spec. Do not add public methods

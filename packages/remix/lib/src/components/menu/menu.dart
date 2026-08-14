@@ -13,6 +13,5 @@ import '../../utilities/remix_style.dart';
 import '../divider/divider.dart';
 
 part 'menu_spec.dart';
-part 'menu_style.dart';
 part 'menu_widget.dart';
 part 'menu.g.dart';

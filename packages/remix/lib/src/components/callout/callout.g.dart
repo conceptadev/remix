@@ -715,6 +715,16 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     return merge(CalloutStyler(modifier: value));
   }
 
+  RemixCallout call({Key? key, String? text, IconData? icon, Widget? child}) {
+    return RemixCallout(
+      key: key,
+      style: this,
+      text: text,
+      icon: icon,
+      child: child,
+    );
+  }
+
   /// Merges with another [CalloutStyler].
   @override
   CalloutStyler merge(CalloutStyler? other) {

@@ -284,6 +284,19 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec> {
     return merge(SpinnerStyler(modifier: value));
   }
 
+  RemixSpinner call({
+    Key? key,
+    String? semanticsLabel,
+    String? semanticsValue,
+  }) {
+    return RemixSpinner(
+      key: key,
+      style: this,
+      semanticsLabel: semanticsLabel,
+      semanticsValue: semanticsValue,
+    );
+  }
+
   /// Merges with another [SpinnerStyler].
   @override
   SpinnerStyler merge(SpinnerStyler? other) {

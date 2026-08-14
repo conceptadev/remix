@@ -5,7 +5,7 @@ part of 'radio.dart';
 /// The spec is populated by [RadioStyler] and consumed by the widget when
 /// building the control. It provides two [StyleSpec] segments representing the
 /// container (outer ring) and the indicator fill shown when the radio is selected.
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(target: RemixRadio.new, extraStylerMixins: [RemixBoxStylerMixin])
 class RadioSpec with _$RadioSpec {
   @override
   @MixableField(forwardStyler: true)

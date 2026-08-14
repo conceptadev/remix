@@ -1,7 +1,7 @@
 part of 'divider.dart';
 
 /// Resolved visual values for a [RemixDivider].
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(target: RemixDivider.new, extraStylerMixins: [RemixBoxStylerMixin])
 class DividerSpec with _$DividerSpec {
   @override
   @MixableField(forwardStyler: true)

@@ -22,20 +22,4 @@ extension RemixProgressStylerRemixHelpers on ProgressStyler {
       ),
     );
   }
-
-  /// Creates a [RemixProgress] widget with this style applied.
-  RemixProgress call({
-    Key? key,
-    required double value,
-    String? semanticsLabel,
-    String? semanticsValue,
-  }) {
-    return RemixProgress(
-      key: key,
-      value: value,
-      semanticsLabel: semanticsLabel,
-      semanticsValue: semanticsValue,
-      style: this,
-    );
-  }
 }

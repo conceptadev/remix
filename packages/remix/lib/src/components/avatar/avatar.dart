@@ -9,6 +9,5 @@ import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
 
 part 'avatar_spec.dart';
-part 'avatar_style.dart';
 part 'avatar_widget.dart';
 part 'avatar.g.dart';

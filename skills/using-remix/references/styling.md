@@ -114,11 +114,11 @@ final primaryButton = ButtonStyler()
 primaryButton(label: 'Save', onPressed: save)   // → RemixButton
 ```
 
-Generic surfaces use `call<T>()`: Accordion, Menu, Radio, and Select. Dart can
-usually infer `T` from the required values or item lists. All other leaf
-component stylers use a non-generic `call()` method. Behavioral group/root
-widgets such as `RemixAccordionGroup`, `RemixRadioGroup`, and `RemixTabs` are
-constructed directly because they do not have stylers.
+Generic surfaces use `call<T>()`: Accordion, Menu, Radio, SegmentedControl,
+Select, and ToggleGroup. Dart can usually infer `T` from the required values or
+item lists. All other leaf component stylers use a non-generic `call()` method.
+Behavioral group/root widgets such as `RemixAccordionGroup`, `RemixRadioGroup`,
+and `RemixTabs` are constructed directly because they do not have stylers.
 
 ### Styling with Fortal Tokens
 

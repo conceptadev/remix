@@ -1,7 +1,7 @@
 part of 'spinner.dart';
 
 /// Resolved visual values for an eight-leaf [RemixSpinner].
-@MixableSpec()
+@MixableSpec(target: RemixSpinner.new)
 class SpinnerSpec with _$SpinnerSpec {
   @override
   final double? size;

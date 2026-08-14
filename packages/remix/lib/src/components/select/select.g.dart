@@ -957,6 +957,42 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     return merge(SelectStyler(modifier: value));
   }
 
+  RemixSelect<T> call<T>({
+    Key? key,
+    required RemixSelectTrigger trigger,
+    required List<RemixSelectItem<T>> items,
+    T? selectedValue,
+    OverlayPositionConfig positioning = const OverlayPositionConfig(
+      side: .bottom,
+      alignment: .center,
+    ),
+    ValueChanged<T?>? onChanged,
+    VoidCallback? onOpen,
+    VoidCallback? onClose,
+    bool enabled = true,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+    String? semanticLabel,
+    bool closeOnSelect = true,
+    FocusNode? focusNode,
+  }) {
+    return RemixSelect<T>(
+      key: key,
+      style: this,
+      trigger: trigger,
+      items: items,
+      selectedValue: selectedValue,
+      positioning: positioning,
+      onChanged: onChanged,
+      onOpen: onOpen,
+      onClose: onClose,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      semanticLabel: semanticLabel,
+      closeOnSelect: closeOnSelect,
+      focusNode: focusNode,
+    );
+  }
+
   /// Merges with another [SelectStyler].
   @override
   SelectStyler merge(SelectStyler? other) {

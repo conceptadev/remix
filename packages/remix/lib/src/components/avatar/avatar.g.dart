@@ -639,6 +639,33 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     return merge(AvatarStyler(modifier: value));
   }
 
+  RemixAvatar call({
+    Key? key,
+    ImageProvider<Object>? backgroundImage,
+    ImageProvider<Object>? foregroundImage,
+    ImageErrorListener? onBackgroundImageError,
+    ImageErrorListener? onForegroundImageError,
+    Widget? child,
+    String? label,
+    RemixAvatarLabelBuilder? labelBuilder,
+    IconData? icon,
+    RemixAvatarIconBuilder? iconBuilder,
+  }) {
+    return RemixAvatar(
+      key: key,
+      style: this,
+      backgroundImage: backgroundImage,
+      foregroundImage: foregroundImage,
+      onBackgroundImageError: onBackgroundImageError,
+      onForegroundImageError: onForegroundImageError,
+      child: child,
+      label: label,
+      labelBuilder: labelBuilder,
+      icon: icon,
+      iconBuilder: iconBuilder,
+    );
+  }
+
   /// Merges with another [AvatarStyler].
   @override
   AvatarStyler merge(AvatarStyler? other) {
