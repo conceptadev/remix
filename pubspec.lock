@@ -473,13 +473,12 @@ packages:
     source: hosted
     version: "2.0.5"
   naked_ui:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/naked_ui"
-      ref: "feat/naked-link"
-      resolved-ref: "9bd2b3a8502560015c3b1782af1696c82657fbce"
-      url: "https://github.com/btwld/naked_ui.git"
-    source: git
+      name: naked_ui
+      sha256: cb6c35fc10cf62142da74b491c0033d53c0e8c4f2a6ef895751c1713e47c41b9
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0-beta.10"
   nested:
     dependency: transitive
