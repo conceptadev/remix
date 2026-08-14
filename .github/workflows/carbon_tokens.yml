@@ -7,11 +7,11 @@ on:
   push:
     branches: [main]
     paths:
-      - "packages/carbon/**"
+      - "packages/remix_carbon/**"
   pull_request:
     branches: [main]
     paths:
-      - "packages/carbon/**"
+      - "packages/remix_carbon/**"
 
 jobs:
   verify-generated:
@@ -22,5 +22,5 @@ jobs:
         with:
           node-version: "22"
       - name: Verify generated tokens are reproducible
-        working-directory: packages/carbon/tool
+        working-directory: packages/remix_carbon/tool
         run: node verify_generated.mjs

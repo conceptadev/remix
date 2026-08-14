@@ -15,8 +15,8 @@ workspace:
   - apps/dashboard
   - apps/demo
   - apps/playground
-  - packages/carbon
-  - packages/carbon/example
+  - packages/remix_carbon
+  - packages/remix_carbon/example
   - packages/remix
   - packages/remix_fortal
 
@@ -26,7 +26,7 @@ melos:
     - packages/*
     # `packages/*` does not cross path separators; nested workspace members
     # must be listed explicitly or melos scripts silently skip them.
-    - packages/carbon/example
+    - packages/remix_carbon/example
 
   # No `command.bootstrap.environment` here on purpose. It rewrites one
   # `environment:` into every package it manages, and this workspace has two
@@ -88,7 +88,7 @@ melos:
         concurrency: 1
         orderDependents: true
       packageFilters:
-        scope: [remix, remix_fortal, carbon]
+        scope: [remix, remix_fortal, remix_carbon]
 
     generate:check:
       description: Regenerate library sources and fail only on generated drift
@@ -97,21 +97,24 @@ melos:
         concurrency: 1
         orderDependents: true
       packageFilters:
-        scope: [remix, remix_fortal, carbon]
+        scope: [remix, remix_fortal, remix_carbon]
 
-    carbon:tokens:check:
-      run: node packages/carbon/tool/verify_generated.mjs
+    remix_carbon:tokens:check:
+      run: node packages/remix_carbon/tool/verify_generated.mjs
       description: Verify Carbon token sources reproduce committed Dart output
 
-    carbon:icons:generate:
-      run: uv run --frozen --project packages/carbon/tool/carbon_icons glyphpact --config packages/carbon/tool/carbon_icons/glyphpact.json
+    remix_carbon:icons:generate:
+      steps:
+        - uv run --frozen --project packages/remix_carbon/tool/carbon_icons python packages/remix_carbon/tool/carbon_icons/prepare.py
+        - uv run --frozen --project packages/remix_carbon/tool/carbon_icons glyphpact --config packages/remix_carbon/tool/carbon_icons/glyphpact.json
       description: Regenerate the locked CarbonIcons font and Dart provider
 
-    carbon:icons:check:
+    remix_carbon:icons:check:
       steps:
-        - uv run --frozen --project packages/carbon/tool/carbon_icons glyphpact --config packages/carbon/tool/carbon_icons/glyphpact.json --check
-        - uv run --frozen --project packages/carbon/tool/carbon_icons python packages/carbon/tool/carbon_icons/verify.py
-      description: Verify the pinned Carbon icon subset and generated artifacts
+        - uv run --frozen --project packages/remix_carbon/tool/carbon_icons python packages/remix_carbon/tool/carbon_icons/prepare.py
+        - uv run --frozen --project packages/remix_carbon/tool/carbon_icons glyphpact --config packages/remix_carbon/tool/carbon_icons/glyphpact.json --check
+        - uv run --frozen --project packages/remix_carbon/tool/carbon_icons python packages/remix_carbon/tool/carbon_icons/verify.py
+      description: Verify the complete pinned Carbon icon catalog and generated artifacts
 
     dcm:check:
       exec: dcm analyze lib --fatal-style --fatal-warnings --no-congratulate
@@ -119,11 +122,11 @@ melos:
       packageFilters:
         scope: [remix, remix_fortal]
 
-    dcm:check:carbon:
+    dcm:check:remix_carbon:
       exec: dcm analyze lib --fatal-style --fatal-warnings --no-congratulate
       description: Run Carbon Dart Code Metrics with all severities fatal
       packageFilters:
-        scope: carbon
+        scope: remix_carbon
 
     test:flutter:
       exec: flutter test --reporter=failures-only
@@ -158,13 +161,13 @@ melos:
         - toolchain:check
         - mix:consumer:check
         - material:check
-        - carbon:tokens:check
-        - carbon:icons:check
+        - remix_carbon:tokens:check
+        - remix_carbon:icons:check
         - generate:check
         - docs:check
         - fortal:parity:check
         - dcm:check
-        - dcm:check:carbon
+        - dcm:check:remix_carbon
         - test:flutter
       description: Verify dependencies, generated sources, docs, parity, DCM, and tests
 

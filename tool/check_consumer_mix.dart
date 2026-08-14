@@ -8,7 +8,7 @@ import 'package:yaml/yaml.dart';
 /// Both are checked because the workspace resolves a single Mix version for
 /// everything; a constraint bumped in one package and forgotten in the other
 /// still resolves locally and only fails once a consumer installs them.
-const _libraryPackages = ['remix', 'remix_fortal', 'carbon'];
+const _libraryPackages = ['remix', 'remix_fortal', 'remix_carbon'];
 
 /// Runtime Mix dependencies a consumer resolves alongside those packages.
 ///

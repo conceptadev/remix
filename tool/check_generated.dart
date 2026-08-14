@@ -77,7 +77,8 @@ Map<String, List<int>> _generatedSnapshot(Directory root) {
     if (entity is! File || !entity.path.endsWith('.g.dart')) continue;
     // build_runner outputs in these packages are Dart parts. Carbon also owns
     // standalone `.g.dart` token tables produced by its deterministic Node
-    // pipeline; those belong to `carbon:tokens:check` and must not be deleted
+    // pipeline; those belong to `remix_carbon:tokens:check` and must not be
+    // deleted
     // or compared by this checker.
     if (!RegExp(
       r'^part of\s',

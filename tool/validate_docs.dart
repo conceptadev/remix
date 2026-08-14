@@ -140,7 +140,7 @@ const _exampleSourceDirectories = <String>[
   'apps/playground/lib',
   'packages/remix/example',
   'packages/remix_fortal/example',
-  'packages/carbon/example/lib',
+  'packages/remix_carbon/example/lib',
 ];
 
 // Package library sources aren't examples, but the same retired-API sweep
@@ -148,7 +148,7 @@ const _exampleSourceDirectories = <String>[
 const _packageLibraryDirectories = <String>[
   'packages/remix/lib',
   'packages/remix_fortal/lib',
-  'packages/carbon/lib',
+  'packages/remix_carbon/lib',
 ];
 
 // Test code is part of the canonical-styler contract too. Mix still exposes
@@ -161,7 +161,7 @@ const _testSourceDirectories = <String>[
   'apps/playground/test',
   'packages/remix/test',
   'packages/remix_fortal/test',
-  'packages/carbon/test',
+  'packages/remix_carbon/test',
 ];
 
 const _consumerDocumentationDirectories = <String>['skills/using-remix'];
@@ -169,7 +169,7 @@ const _consumerDocumentationFiles = <String>[
   'README.md',
   'packages/remix/README.md',
   'packages/remix_fortal/README.md',
-  'packages/carbon/README.md',
+  'packages/remix_carbon/README.md',
 ];
 
 final _staleConsumerDocumentationClaims = <(RegExp, String)>[

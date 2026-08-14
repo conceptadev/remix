@@ -1,6 +1,6 @@
 import 'dart:io';
 
-const _libraryPackages = ['remix', 'remix_fortal', 'carbon'];
+const _libraryPackages = ['remix', 'remix_fortal', 'remix_carbon'];
 
 final _forbiddenLibraryDirective = RegExp(
   r'''^\s*(?:import|export)\s+['"]package:(?:flutter/(?:material\.dart|src/material/[^'"]+)|material_ui/[^'"]+)['"]''',
