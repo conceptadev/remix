@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
-import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../fortal/fortal.dart';
@@ -14,7 +13,12 @@ enum FortalLinkUnderline { auto, always, hover, none }
 ///
 /// Takes a [context] because the focus outline's radius is em-relative to the
 /// resolved font size.
-BadgeStyler fortalLinkStyle(
+///
+/// [actionable] gates every state-dependent rule, matching upstream's
+/// `:where(:any-link, button)`. It is not merely cosmetic: an inert link
+/// carries no hover or focus-visible variant at all, so it cannot pick up
+/// underlines from an ancestor that publishes those widget states.
+LinkStyler fortalLinkStyle(
   BuildContext context, {
   FortalTextSize? size,
   FortalTextWeight? weight,
@@ -23,8 +27,50 @@ BadgeStyler fortalLinkStyle(
   bool truncate = false,
   bool highContrast = false,
   required bool actionable,
-  bool hovered = false,
-  bool focused = false,
+}) {
+  LinkStyler styleFor({bool hovered = false, bool focused = false}) =>
+      _fortalLinkStateStyle(
+        context,
+        size: size,
+        weight: weight,
+        underline: underline,
+        softWrap: softWrap,
+        truncate: truncate,
+        highContrast: highContrast,
+        actionable: actionable,
+        hovered: hovered,
+        focused: focused,
+      );
+
+  if (!actionable) return styleFor();
+
+  // The focus-visible snapshot already drops the underline via `focused`; the
+  // explicit `none` also clears any decoration inherited through the merge.
+  final focusVisible = styleFor(
+    focused: true,
+  ).label(.decoration(TextDecoration.none));
+
+  return styleFor()
+      .onHovered(styleFor(hovered: true))
+      .onFocusVisible(focusVisible);
+}
+
+/// Resolves one point in the link's state space.
+///
+/// Separate from [fortalLinkStyle] because the public recipe returns a style
+/// carrying Mix variants, and building those variants needs the flat snapshots
+/// they are built from.
+LinkStyler _fortalLinkStateStyle(
+  BuildContext context, {
+  required FortalTextSize? size,
+  required FortalTextWeight? weight,
+  required FortalLinkUnderline underline,
+  required bool softWrap,
+  required bool truncate,
+  required bool highContrast,
+  required bool actionable,
+  required bool hovered,
+  required bool focused,
 }) {
   var textStyle = fortalAccentForeground(
     TextStyler(),
@@ -85,7 +131,7 @@ BadgeStyler fortalLinkStyle(
     truncate: truncate,
   );
 
-  var style = BadgeStyler()
+  var style = LinkStyler()
       .label(textStyle)
       .borderRadius(
         BorderRadiusGeometryMix.circular(
@@ -104,44 +150,16 @@ BadgeStyler fortalLinkStyle(
   return style;
 }
 
-BadgeStyler _fortalInteractiveLinkStyle(
-  BuildContext context, {
-  FortalTextSize? size,
-  FortalTextWeight? weight,
-  required FortalLinkUnderline underline,
-  required bool softWrap,
-  required bool truncate,
-  required bool highContrast,
-}) {
-  BadgeStyler styleFor({bool hovered = false, bool focused = false}) {
-    return fortalLinkStyle(
-      context,
-      size: size,
-      weight: weight,
-      underline: underline,
-      softWrap: softWrap,
-      truncate: truncate,
-      highContrast: highContrast,
-      actionable: true,
-      hovered: hovered,
-      focused: focused,
-    );
-  }
-
-  final focusVisible = styleFor(
-    focused: true,
-  ).label(.decoration(TextDecoration.none));
-  return styleFor()
-      .onHovered(styleFor(hovered: true))
-      .onFocusVisible(focusVisible);
-}
-
 /// Token-backed text that becomes an accessible link only when actionable.
 ///
 /// With no [onPressed] this renders inert styled text: no focus stop, link
-/// role, or activation. `linkUrl` is assistive metadata only and is never
-/// launched; navigation stays the caller's responsibility in [onPressed].
-class FortalLink extends StatefulWidget {
+/// role, enabled state, or activation. `linkUrl` is assistive metadata only and
+/// is never launched; navigation stays the caller's responsibility in
+/// [onPressed].
+///
+/// An actionable link activates on pointer and Enter. Space belongs to the
+/// Button role and is deliberately left unclaimed.
+class FortalLink extends StatelessWidget {
   const FortalLink(
     this.text, {
     super.key,
@@ -185,76 +203,29 @@ class FortalLink extends StatefulWidget {
   final bool excludeSemantics;
 
   @override
-  State<FortalLink> createState() => _FortalLinkState();
-}
-
-class _FortalLinkState extends State<FortalLink> {
-  // Mirrored from NakedButton because the link Semantics node must sit *outside*
-  // the button: NakedButton implements `excludeSemantics: true` as an
-  // ExcludeSemantics wrapper, which would suppress a node placed inside it.
-  bool _focused = false;
-
-  @override
   Widget build(BuildContext context) {
-    if (widget.onPressed == null) {
-      final content = fortalLinkStyle(
+    return RemixLink(
+      label: text,
+      onPressed: onPressed,
+      enabled: enabled,
+      linkUrl: linkUrl,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      enableFeedback: enableFeedback,
+      mouseCursor: mouseCursor,
+      semanticLabel: semanticLabel,
+      semanticHint: semanticHint,
+      excludeSemantics: excludeSemantics,
+      style: fortalLinkStyle(
         context,
-        size: widget.size,
-        weight: widget.weight,
-        underline: widget.underline,
-        softWrap: widget.softWrap,
-        truncate: widget.truncate,
-        highContrast: widget.highContrast,
-        actionable: false,
-      )(label: widget.text);
-
-      if (widget.excludeSemantics) return ExcludeSemantics(child: content);
-      if (widget.semanticLabel == null) return content;
-
-      return Semantics(
-        label: widget.semanticLabel,
-        excludeSemantics: true,
-        child: content,
-      );
-    }
-
-    final button = NakedButton(
-      onPressed: widget.enabled ? widget.onPressed : null,
-      enabled: widget.enabled,
-      mouseCursor: widget.mouseCursor,
-      enableFeedback: widget.enableFeedback,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      onFocusChange: (focused) {
-        if (_focused != focused) setState(() => _focused = focused);
-      },
-      excludeSemantics: true,
-      builder: (context, _, _) => StyleBuilder<BadgeSpec>(
-        style: _fortalInteractiveLinkStyle(
-          context,
-          size: widget.size,
-          weight: widget.weight,
-          underline: widget.underline,
-          softWrap: widget.softWrap,
-          truncate: widget.truncate,
-          highContrast: widget.highContrast,
-        ),
-        controller: NakedButtonState.controllerOf(context),
-        builder: (_, spec) => RemixBadge(label: widget.text, styleSpec: spec),
+        size: size,
+        weight: weight,
+        underline: underline,
+        softWrap: softWrap,
+        truncate: truncate,
+        highContrast: highContrast,
+        actionable: onPressed != null,
       ),
     );
-
-    final link = Semantics(
-      link: true,
-      enabled: widget.enabled,
-      focused: _focused,
-      linkUrl: widget.linkUrl,
-      label: widget.semanticLabel ?? widget.text,
-      hint: widget.semanticHint,
-      onTap: widget.enabled ? widget.onPressed : null,
-      child: button,
-    );
-
-    return widget.excludeSemantics ? ExcludeSemantics(child: link) : link;
   }
 }

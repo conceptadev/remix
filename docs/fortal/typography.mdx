@@ -196,9 +196,12 @@ rendered text, or `excludeSemantics: true` to publish nothing at all.
 
 Every upstream underline rule is gated behind `:where(:any-link, button)`, so a
 `FortalLink` without `onPressed` is **inert**: styled accent text with no focus
-stop, no link role, and no activation. Give it `onPressed` and it becomes a real
-link — focusable, activatable with pointer, Enter, and Space, and underlined
-according to `underline`.
+stop, no link role, no enabled state, and no activation. Give it `onPressed` and
+it becomes a real link — focusable, activatable with pointer and Enter, and
+underlined according to `underline`.
+
+Space does **not** activate a link. That is the Button role's key; a link takes
+Enter, matching an anchor on the web.
 
 | `underline` | Behaviour when actionable |
 |-------------|---------------------------|
@@ -252,9 +255,9 @@ Set `enabled: false` to keep the callback and still refuse focus and activation.
 ## Customizing the recipes
 
 Each widget calls a `fortal*Style` recipe you can use directly. `FortalText` and
-`FortalHeading` return a `TextStyler`; `FortalCode`, `FortalKbd`, and
-`FortalLink` return a `BadgeStyler` and take a `BuildContext`, because their
-geometry is em-relative to the resolved font size.
+`FortalHeading` return a `TextStyler`; `FortalCode` and `FortalKbd` return a
+`BadgeStyler` and `FortalLink` returns a `LinkStyler`. All three take a
+`BuildContext`, because their geometry is em-relative to the resolved font size.
 
 <CodeGroup title="Recipe customization" defaultLanguage="dart">
 ```dart

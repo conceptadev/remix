@@ -130,6 +130,10 @@
           "href": "/components/icon_button"
         },
         {
+          "title": "Link",
+          "href": "/components/link"
+        },
+        {
           "title": "Menu",
           "href": "/components/menu"
         },

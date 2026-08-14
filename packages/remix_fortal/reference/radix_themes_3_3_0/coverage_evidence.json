@@ -1208,7 +1208,7 @@
     },
     {
       "test": "test/components/typography/typography_test.dart",
-      "case": "inert link exposes no interactive metadata",
+      "case": "inert link is prose, not a disabled control",
       "covers": ["state:inert"]
     },
     {

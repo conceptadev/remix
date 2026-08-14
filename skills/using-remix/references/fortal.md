@@ -165,7 +165,9 @@ Rules that matter when writing code:
   nothing. `FortalKbd` pins `gray-12` and its own regular weight.
 - `truncate: true` wins over `softWrap` and forces one ellipsized line.
 - A `FortalLink` **without** `onPressed` is inert styled text: no focus stop, no
-  link role, no activation. Only an actionable link underlines.
+  link role, no enabled state, no activation. Only an actionable link underlines.
+- An actionable link activates on pointer and **Enter**, not Space. Use
+  `FortalButton` when Space should activate.
 - `linkUrl` is assistive metadata and is never launched; navigation belongs in
   `onPressed`. Passing `linkUrl` without `onPressed` asserts.
 - No leading trim, `pretty`/`balance` wrapping, responsive prop objects, or

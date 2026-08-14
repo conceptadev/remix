@@ -7,6 +7,8 @@ import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../../helpers/test_helpers.dart';
+
 void main() {
   group('metrics', () {
     testWidgets('all nine sizes resolve the pinned scale across scaling', (
@@ -646,7 +648,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(focusNode.hasFocus, isTrue);
-      expect(_surface(tester).containerEffects?.outline.width ?? 0, 0);
+      expect(
+        _linkSurface(tester, 'focus me').containerEffects?.outline.width ?? 0,
+        0,
+      );
       expect(_underlined(tester, 'focus me'), isTrue);
       expect(tester.getSize(find.text('focus me')), idleSize);
 
@@ -654,7 +659,7 @@ void main() {
           FocusHighlightStrategy.alwaysTraditional;
       await tester.pump();
 
-      final effects = _surface(tester).containerEffects!;
+      final effects = _linkSurface(tester, 'focus me').containerEffects!;
       expect(effects.outline.width, 2);
       expect(effects.outlineOffset, 2);
       expect(_underlined(tester, 'focus me'), isFalse);
@@ -664,7 +669,10 @@ void main() {
           FocusHighlightStrategy.alwaysTouch;
       await tester.pump();
 
-      expect(_surface(tester).containerEffects?.outline.width ?? 0, 0);
+      expect(
+        _linkSurface(tester, 'focus me').containerEffects?.outline.width ?? 0,
+        0,
+      );
       expect(_underlined(tester, 'focus me'), isTrue);
     });
 
@@ -700,13 +708,19 @@ void main() {
 
       focusNode.requestFocus();
       await tester.pumpAndSettle();
-      expect(_surface(tester).containerEffects?.outline.width, 2);
+      expect(
+        _linkSurface(tester, 'hover me').containerEffects?.outline.width,
+        2,
+      );
       expect(_underlined(tester, 'hover me'), isFalse);
 
       FocusManager.instance.highlightStrategy =
           FocusHighlightStrategy.alwaysTouch;
       await tester.pump();
-      expect(_surface(tester).containerEffects?.outline.width ?? 0, 0);
+      expect(
+        _linkSurface(tester, 'hover me').containerEffects?.outline.width ?? 0,
+        0,
+      );
       expect(_underlined(tester, 'hover me'), isTrue);
     });
   });
@@ -824,30 +838,35 @@ void main() {
           hasEnabledState: true,
           isEnabled: true,
           hasTapAction: true,
+          // NakedLink publishes the focus stop through the same node, so
+          // assistive tech can move focus here without a separate target.
+          hasFocusAction: true,
         ),
       );
       expect(node.getSemanticsData().linkUrl, url);
+      expect(find.byType(NakedButton), findsNothing);
       handle.dispose();
     });
 
-    testWidgets('inert link exposes no interactive metadata', (tester) async {
+    testWidgets('inert link is prose, not a disabled control', (tester) async {
       final handle = tester.ensureSemantics();
       await _pump(tester, const FortalLink('Read more'));
 
-      expect(find.byType(NakedButton), findsNothing);
+      expect(find.byType(NakedLink), findsNothing);
+      // No enabled state either: a link with no callback is body text, and
+      // announcing it as unavailable would be wrong.
       expect(
-        tester
-            .getSemantics(find.bySemanticsLabel('Read more'))
-            .getSemanticsData()
-            .linkUrl,
-        isNull,
+        tester.getSemantics(find.bySemanticsLabel('Read more')),
+        matchesSemantics(label: 'Read more'),
       );
       handle.dispose();
     });
   });
 
   group('interaction', () {
-    testWidgets('pointer, Enter, and Space each activate once', (tester) async {
+    testWidgets('pointer and Enter activate once each; Space does not', (
+      tester,
+    ) async {
       var activations = 0;
       final focusNode = FocusNode();
       addTearDown(focusNode.dispose);
@@ -867,6 +886,10 @@ void main() {
       await tester.pump();
       await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       expect(activations, 2);
+      await tester.sendKeyEvent(LogicalKeyboardKey.numpadEnter);
+      expect(activations, 3);
+      // A Link takes Enter, not Space. Space scrolls the page for a real
+      // anchor; the previous Button-backed recipe activated on it by mistake.
       await tester.sendKeyEvent(LogicalKeyboardKey.space);
       expect(activations, 3);
     });
@@ -1066,6 +1089,14 @@ BadgeSpec _surface(WidgetTester tester) {
   return widget.styleSpec ??
       widget.style.resolve(tester.element(find.byType(RemixBadge))).spec;
 }
+
+/// Reads a link's *resolved* spec.
+///
+/// [RemixLink] resolves its style beneath the Naked state scope, so reading the
+/// widget's own `style` field would report the idle snapshot; the published
+/// provider is the only place the hover and focus-visible variants have landed.
+LinkSpec _linkSurface(WidgetTester tester, String text) =>
+    tester.resolvedSpecOf<LinkSpec>(find.text(text));
 
 Color? _boxColor(BadgeSpec spec) =>
     (spec.container.spec.decoration as BoxDecoration?)?.color;
