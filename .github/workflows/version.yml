@@ -1,0 +1,117 @@
+name: Prepare Version Bump
+
+# Pushes a branch that bumps versions and changelogs from conventional
+# commits. It never tags and never publishes: `publish.yml` fires on a tag push,
+# so the tag is pushed by hand after this PR is reviewed and merged.
+#
+# It pushes a branch and prints its compare link rather than opening the pull
+# request itself. Opening one from a workflow needs "Allow GitHub Actions to
+# create and approve pull requests", which is off by default and also grants
+# approval rights, so the one click is cheaper than the permission.
+
+on:
+  workflow_dispatch:
+    inputs:
+      remix_version:
+        description: "Exact version for remix (e.g. 1.0.0-beta.5). Cannot be combined with graduate."
+        required: false
+        default: ""
+      remix_fortal_version:
+        description: "Exact version for remix_fortal (e.g. 0.1.0-beta.4). Cannot be combined with graduate."
+        required: false
+        default: ""
+      graduate:
+        description: "Graduate the prerelease line to stable instead of bumping beta"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  version:
+    name: Bump versions and changelogs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # melos derives each package's last release from its `<package>-v*`
+          # tag, so the full history and all tags must be present. A shallow
+          # clone makes it walk every commit and rewrite the whole changelog.
+          fetch-depth: 0
+
+      - uses: kuhnroyal/flutter-fvm-config-action@v2
+        id: fvm-config-action
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
+
+      - name: Configure git
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Bump versions
+        id: bump
+        run: |
+          set -euo pipefail
+
+          overrides=""
+          if [ -n "${{ inputs.remix_version }}" ]; then
+            overrides="$overrides -V remix:${{ inputs.remix_version }}"
+          fi
+          if [ -n "${{ inputs.remix_fortal_version }}" ]; then
+            overrides="$overrides -V remix_fortal:${{ inputs.remix_fortal_version }}"
+          fi
+
+          # melos rejects manual versions combined with either mode:
+          # "Cannot use manualVersions with asPrerelease or asStableRelease."
+          if [ -n "$overrides" ] && [ "${{ inputs.graduate }}" = "true" ]; then
+            echo "::error::Exact versions cannot be combined with graduate. Choose one."
+            exit 1
+          fi
+
+          dart pub global activate melos
+          melos bootstrap
+
+          git checkout -b release/version-packages
+
+          # `--no-git-commit-version` is what makes the diff check below
+          # meaningful. melos commits by default, which would leave a clean tree
+          # and make a successful run look like "nothing to version". It also
+          # implies --no-git-tag-version.
+          if [ -n "$overrides" ]; then
+            melos version --no-git-commit-version --yes $overrides
+          elif [ "${{ inputs.graduate }}" = "true" ]; then
+            melos version --graduate --no-git-commit-version --yes
+          else
+            melos version --prerelease --preid beta --no-git-commit-version --yes
+          fi
+
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No packages required versioning."
+            echo "versioned=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "versioned=true" >> "$GITHUB_OUTPUT"
+
+          git add -A
+          git commit -m "chore(release): version packages"
+          git push --set-upstream origin release/version-packages --force
+
+      - name: Summarise
+        if: steps.bump.outputs.versioned == 'true'
+        run: |
+          url="${{ github.server_url }}/${{ github.repository }}/compare/main...release/version-packages?expand=1"
+          {
+            echo "### Versions bumped"
+            echo
+            echo "[Open the pull request]($url)"
+            echo
+            echo "After merging, push the release tags in order:"
+            echo '1. `remix-v<version>` — wait until pub.dev serves it'
+            echo '2. `remix_fortal-v<version>`'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "Open the pull request: $url"
