@@ -134,7 +134,13 @@ melos:
       exec: dcm analyze lib --fatal-style --fatal-warnings --no-congratulate
       description: Run Carbon Dart Code Metrics with all severities fatal
       packageFilters:
-        scope: remix_carbon
+        scope: [remix_carbon, remix_carbon_example]
+
+    remix_carbon:catalog:web:
+      exec: flutter build web --release
+      description: Build the Remix Carbon component catalog for the web
+      packageFilters:
+        scope: remix_carbon_example
 
     test:flutter:
       exec: flutter test --reporter=failures-only
@@ -176,6 +182,7 @@ melos:
         - fortal:parity:check
         - dcm:check
         - dcm:check:remix_carbon
+        - remix_carbon:catalog:web
         - test:flutter
       description: Verify dependencies, generated sources, docs, parity, DCM, and tests
 

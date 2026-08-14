@@ -245,6 +245,7 @@ class CarbonSelect<T extends Object> extends StatelessWidget {
 
   bool _debugItemsAreValid() {
     final values = <T>{};
+    var selectedValueIsVisible = selectedValue == null;
     for (final entry in items) {
       final entryItems = switch (entry) {
         CarbonSelectItem<T>() => [entry],
@@ -254,10 +255,13 @@ class CarbonSelect<T extends Object> extends StatelessWidget {
         if (!values.add(item.value)) {
           throw FlutterError('CarbonSelect item values must be unique.');
         }
+        if (!item.hidden && item.value == selectedValue) {
+          selectedValueIsVisible = true;
+        }
       }
     }
     assert(
-      selectedValue == null || values.contains(selectedValue),
+      selectedValueIsVisible,
       'CarbonSelect selectedValue must match a visible entry.',
     );
 
@@ -268,16 +272,23 @@ class CarbonSelect<T extends Object> extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(_debugItemsAreValid());
     final mapped = <RemixSelectItem<_CarbonSelectValue<T>>>[];
+    _CarbonSelectValue<T>? mappedSelectedValue;
     var groupIndex = 0;
     for (final entry in items) {
       switch (entry) {
         case CarbonSelectItem<T>():
-          if (!entry.hidden) mapped.add(_mapItem(entry));
+          if (!entry.hidden) {
+            final mappedItem = _mapItem(entry);
+            mapped.add(mappedItem);
+            if (entry.value == selectedValue) {
+              mappedSelectedValue = mappedItem.value;
+            }
+          }
         case CarbonSelectItemGroup<T>():
           final currentGroup = groupIndex++;
           mapped.add(
             RemixSelectItem(
-              value: _CarbonSelectValue.group(currentGroup),
+              value: _CarbonSelectValue.group(currentGroup, entry.label),
               label: entry.label,
               enabled: false,
               style: SelectMenuItemStyler()
@@ -291,7 +302,11 @@ class CarbonSelect<T extends Object> extends StatelessWidget {
           );
           for (final item in entry.items) {
             if (!item.hidden) {
-              mapped.add(_mapItem(item, groupEnabled: entry.enabled));
+              final mappedItem = _mapItem(item, groupEnabled: entry.enabled);
+              mapped.add(mappedItem);
+              if (item.value == selectedValue) {
+                mappedSelectedValue = mappedItem.value;
+              }
             }
           }
       }
@@ -309,9 +324,7 @@ class CarbonSelect<T extends Object> extends StatelessWidget {
             expandedIcon: CarbonIcons.chevronUp,
           ),
           items: mapped,
-          selectedValue: selectedValue == null
-              ? null
-              : _CarbonSelectValue.item(selectedValue!),
+          selectedValue: mappedSelectedValue,
           positioning: positioning,
           onChanged: readOnly ? null : (next) => onChanged?.call(next?.value),
           enabled: enabled,
@@ -334,7 +347,10 @@ class CarbonSelect<T extends Object> extends StatelessWidget {
     CarbonSelectItem<T> item, {
     bool groupEnabled = true,
   }) => .new(
-    value: _CarbonSelectValue.item(item.value),
+    value: _CarbonSelectValue.item(
+      item.value,
+      item.semanticLabel ?? item.label,
+    ),
     label: item.label,
     enabled: groupEnabled && item.enabled,
     semanticLabel: item.semanticLabel,
@@ -343,11 +359,14 @@ class CarbonSelect<T extends Object> extends StatelessWidget {
 
 @immutable
 final class _CarbonSelectValue<T extends Object> {
-  const _CarbonSelectValue.item(this.value) : groupIndex = null;
-  const _CarbonSelectValue.group(this.groupIndex) : value = null;
+  const _CarbonSelectValue.item(this.value, this.semanticValue)
+    : groupIndex = null;
+  const _CarbonSelectValue.group(this.groupIndex, this.semanticValue)
+    : value = null;
 
   final T? value;
   final int? groupIndex;
+  final String semanticValue;
 
   @override
   bool operator ==(Object other) =>
@@ -357,4 +376,7 @@ final class _CarbonSelectValue<T extends Object> {
 
   @override
   int get hashCode => Object.hash(value, groupIndex);
+
+  @override
+  String toString() => semanticValue;
 }

@@ -72,7 +72,7 @@ themes, and exercise each component's live behavior:
 
 ```sh
 cd packages/remix_carbon/example
-flutter run
+flutter run -d chrome
 ```
 
 The catalog is verified against the pinned manifest, smoke-tests every family,
@@ -80,6 +80,7 @@ and tests its responsive navigation and interactions:
 
 ```sh
 flutter test
+flutter build web --release
 ```
 
 ## Foundations

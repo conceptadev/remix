@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:remix_carbon/remix_carbon.dart';
 import 'package:flutter/material.dart';
 
@@ -55,7 +57,7 @@ class CatalogEventScope extends InheritedWidget {
 }
 
 /// Complete Carbon 1.114.0 component catalog used by the live workbench.
-final carbonComponentCatalog = <ComponentDemo>[
+final carbonComponentCatalog = [
   _accordionDemo,
   _aiLabelDemo,
   _barChartDemo,
@@ -102,11 +104,13 @@ final carbonComponentCatalog = <ComponentDemo>[
   _uiShellDemo,
 ];
 
+final defaultCarbonComponentDemo = _buttonDemo;
+
 ComponentDemo _sample(
   String id,
   String label,
   ComponentExampleBuilder builder,
-) => ComponentDemo(
+) => .new(
   id: id,
   label: label,
   category: _categoryFor(id),
@@ -120,7 +124,7 @@ ComponentDemo _samples(
   String id,
   String label,
   List<(String, String, ComponentExampleBuilder)> examples,
-) => ComponentDemo(
+) => .new(
   id: id,
   label: label,
   category: _categoryFor(id),
@@ -140,16 +144,16 @@ final _accordionDemo = _sample(
   (_) => _width(
     420,
     CarbonAccordionGroup<String>(
-      controller: CarbonAccordionController<String>(min: 0, max: 1),
+      controller: CarbonAccordionController(min: 0, max: 1),
       initialExpandedValues: const ['first'],
       child: const Column(
         children: [
-          CarbonAccordion<String>(
+          CarbonAccordion(
             value: 'first',
             title: 'What is Carbon?',
             child: Text('IBM’s open-source design system.'),
           ),
-          CarbonAccordion<String>(
+          CarbonAccordion(
             value: 'second',
             title: 'How is this implemented?',
             child: Text('Flutter behavior with Mix styling.'),
@@ -172,7 +176,7 @@ final _aiLabelDemo = _samples('ai-label', 'AI label', [
     'inline',
     'Inline',
     (_) => const CarbonAiLabel(
-      kind: CarbonAiLabelKind.inline,
+      kind: .inline,
       textLabel: 'Generated',
       content: Text('Review this content before publishing.'),
     ),
@@ -250,7 +254,7 @@ final _buttonDemo = ComponentDemo(
       builder: (context) => Wrap(
         spacing: 8,
         runSpacing: 8,
-        crossAxisAlignment: WrapCrossAlignment.center,
+        crossAxisAlignment: .center,
         children: [
           for (final size in CarbonSize.values.skip(1))
             CarbonIconButton(
@@ -270,49 +274,28 @@ final _buttonDemo = ComponentDemo(
   ],
 );
 
+ComponentExampleBuilder _emailUpdatesCheckbox(bool initialValue) =>
+    (_) => _Controlled(
+      initialValue: initialValue,
+      builder: (context, selected, onChanged) => _width(
+        240,
+        CarbonCheckbox(
+          selected: selected,
+          label: 'Email updates',
+          onChanged: (next) {
+            onChanged(next ?? false);
+            CatalogEventScope.report(
+              context,
+              'Email updates ${next == true ? 'enabled' : 'disabled'}',
+            );
+          },
+        ),
+      ),
+    );
+
 final _checkboxDemo = _samples('checkbox', 'Checkbox', [
-  (
-    'unchecked',
-    'Unchecked',
-    (_) => _Controlled(
-      initialValue: false,
-      builder: (context, selected, onChanged) => _width(
-        240,
-        CarbonCheckbox(
-          selected: selected,
-          label: 'Email updates',
-          onChanged: (next) {
-            onChanged(next ?? false);
-            CatalogEventScope.report(
-              context,
-              'Email updates ${next == true ? 'enabled' : 'disabled'}',
-            );
-          },
-        ),
-      ),
-    ),
-  ),
-  (
-    'checked',
-    'Checked',
-    (_) => _Controlled(
-      initialValue: true,
-      builder: (context, selected, onChanged) => _width(
-        240,
-        CarbonCheckbox(
-          selected: selected,
-          label: 'Email updates',
-          onChanged: (next) {
-            onChanged(next ?? false);
-            CatalogEventScope.report(
-              context,
-              'Email updates ${next == true ? 'enabled' : 'disabled'}',
-            );
-          },
-        ),
-      ),
-    ),
-  ),
+  ('unchecked', 'Unchecked', _emailUpdatesCheckbox(false)),
+  ('checked', 'Checked', _emailUpdatesCheckbox(true)),
   (
     'mixed',
     'Indeterminate',
@@ -326,7 +309,10 @@ final _checkboxDemo = _samples('checkbox', 'Checkbox', [
           label: 'Select all',
           onChanged: (next) {
             onChanged(next);
-            CatalogEventScope.report(context, 'Select all changed to $next');
+            CatalogEventScope.report(
+              context,
+              'Select all changed to ${next?.toString() ?? 'null'}',
+            );
           },
         ),
       ),
@@ -340,14 +326,14 @@ final _codeSnippetDemo = _samples('code-snippet', 'Code snippet', [
     'Inline',
     (_) => const CarbonCodeSnippet(
       code: 'flutter pub add remix_carbon',
-      type: CarbonCodeSnippetType.inline,
+      type: .inline,
     ),
   ),
   (
     'multi',
     'Multiline',
     (_) => const CarbonCodeSnippet(
-      type: CarbonCodeSnippetType.multi,
+      type: .multi,
       code:
           'CarbonScope(\n  child: CarbonButton(\n    label: \'Save\',\n  ),\n);',
     ),
@@ -479,7 +465,10 @@ final _dropdownDemo = _sample(
         selectedItem: selected,
         onChanged: (next) {
           onChanged(next);
-          CatalogEventScope.report(context, 'Region changed to $next');
+          CatalogEventScope.report(
+            context,
+            'Region changed to ${next ?? 'null'}',
+          );
         },
         items: const [
           CarbonSelectItem(value: 'us-east', label: 'US East'),
@@ -555,18 +544,12 @@ final _inlineLoadingDemo = _samples('inline-loading', 'Inline loading', [
   (
     'complete',
     'Complete',
-    (_) => const CarbonInlineLoading(
-      label: 'Changes saved',
-      status: CarbonInlineLoadingStatus.finished,
-    ),
+    (_) => const CarbonInlineLoading(label: 'Changes saved', status: .finished),
   ),
   (
     'error',
     'Error',
-    (_) => const CarbonInlineLoading(
-      label: 'Could not save',
-      status: CarbonInlineLoadingStatus.error,
-    ),
+    (_) => const CarbonInlineLoading(label: 'Could not save', status: .error),
   ),
 ]);
 
@@ -688,34 +671,36 @@ final _modalDemo = _sample(
   'Modal',
   (context) => CarbonButton(
     label: 'Open modal',
-    onPressed: () async {
-      final result = await showCarbonModal<String>(
-        context: context,
-        builder: (modalContext) => CarbonModal(
-          size: CarbonModalSize.small,
-          title: 'Delete project?',
-          description: 'This action cannot be undone.',
-          onClose: () => Navigator.pop(modalContext, 'closed'),
-          actions: [
-            CarbonButton(
-              label: 'Cancel',
-              kind: CarbonButtonKind.secondary,
-              onPressed: () => Navigator.pop(modalContext, 'cancelled'),
-            ),
-            CarbonButton(
-              label: 'Delete',
-              kind: CarbonButtonKind.danger,
-              onPressed: () => Navigator.pop(modalContext, 'deleted'),
-            ),
-          ],
-        ),
-      );
-      if (context.mounted) {
-        CatalogEventScope.report(context, 'Modal ${result ?? 'dismissed'}');
-      }
-    },
+    onPressed: () => unawaited(_showModal(context)),
   ),
 );
+
+Future<void> _showModal(BuildContext context) async {
+  final result = await showCarbonModal<String>(
+    context: context,
+    builder: (modalContext) => CarbonModal(
+      size: .small,
+      title: 'Delete project?',
+      description: 'This action cannot be undone.',
+      onClose: () => Navigator.pop(modalContext, 'closed'),
+      actions: [
+        CarbonButton(
+          label: 'Cancel',
+          kind: .secondary,
+          onPressed: () => Navigator.pop(modalContext, 'cancelled'),
+        ),
+        CarbonButton(
+          label: 'Delete',
+          kind: .danger,
+          onPressed: () => Navigator.pop(modalContext, 'deleted'),
+        ),
+      ],
+    ),
+  );
+  if (context.mounted) {
+    CatalogEventScope.report(context, 'Modal ${result ?? 'dismissed'}');
+  }
+}
 
 final _multiselectDemo = _sample(
   'multiselect',
@@ -836,7 +821,7 @@ final _popoverDemo = _sample(
   (_) => const CarbonPopover(
     semanticLabel: 'Show deployment details',
     popoverChild: Padding(
-      padding: EdgeInsets.all(16),
+      padding: .all(16),
       child: Text('Deployed 3 minutes ago'),
     ),
     child: Text('Deployment details'),
@@ -865,7 +850,7 @@ final _progressBarDemo = _samples('progress-bar', 'Progress bar', [
         value: 0.42,
         label: 'Uploading',
         helperText: 'Upload interrupted',
-        status: CarbonProgressBarStatus.error,
+        status: .error,
       ),
     ),
   ),
@@ -905,7 +890,7 @@ final _radioButtonDemo = _sample(
       },
       semanticLabel: 'Digest frequency',
       child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           CarbonRadioButton(value: 'daily', label: 'Daily'),
           CarbonRadioButton(value: 'weekly', label: 'Weekly'),
@@ -943,7 +928,10 @@ final _selectDemo = _sample(
         selectedValue: selected,
         onChanged: (next) {
           onChanged(next);
-          CatalogEventScope.report(context, 'Environment changed to $next');
+          CatalogEventScope.report(
+            context,
+            'Environment changed to ${next ?? 'null'}',
+          );
         },
         items: const [
           CarbonSelectItemGroup(
@@ -1027,7 +1015,7 @@ final _tabsDemo = _sample(
           CatalogEventScope.report(context, '${_titleCase(next)} tab selected');
         },
         child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             CarbonTabBar(
               child: Row(
@@ -1059,7 +1047,7 @@ final _tagDemo = _sample(
           CarbonTag(
             label: _titleCase(kind.name),
             kind: kind,
-            onRemove: kind == CarbonTagKind.blue
+            onRemove: kind == .blue
                 ? () {
                     onChanged({...visibleKinds}..remove(kind));
                     CatalogEventScope.report(context, 'Blue tag removed');
@@ -1183,7 +1171,7 @@ final _toggleDemo = _samples('toggle', 'Toggle', [
       builder: (context, selected, onChanged) => CarbonToggle(
         selected: selected,
         label: 'Compact mode',
-        size: CarbonToggleSize.small,
+        size: .small,
         onChanged: (next) {
           onChanged(next);
           CatalogEventScope.report(
@@ -1273,7 +1261,7 @@ final _uiShellDemo = _sample(
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const .all(24),
           child: Text('$selected content'),
         ),
       ),

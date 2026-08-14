@@ -116,6 +116,7 @@ void main() {
   testWidgets('catalog navigation becomes a drawer on narrow screens', (
     tester,
   ) async {
+    final semantics = tester.ensureSemantics();
     tester.view.physicalSize = const Size(430, 860);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
@@ -129,7 +130,9 @@ void main() {
     await tester.tap(find.byKey(const Key('open-navigation')));
     await tester.pump(const Duration(milliseconds: 300));
     expect(find.byKey(const Key('component-accordion')), findsOneWidget);
+    expect(find.bySemanticsLabel('Component navigation'), findsOneWidget);
     expect(tester.takeException(), isNull);
+    semantics.dispose();
   });
 
   testWidgets('catalog search stays synchronized across breakpoints', (

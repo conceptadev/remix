@@ -30,6 +30,19 @@
 - Narrowed the package entrypoint to stable consumer APIs. Generated inventory
   collections remain internal inputs for `CarbonSize`, `CarbonType`,
   `CarbonMotion`, and token-provenance tests.
+- Added the responsive component catalog to Carbon's DCM and release web-build
+  gates, and consolidated its duplicated navigation and checkbox setup.
+
+### Fixed
+
+- Select-based controls now expose the selected option's accessible label
+  instead of a private adapter object's runtime name.
+- Date-picker triggers expose the formatted selected date as their semantic
+  value while retaining a stable accessible name.
+- The catalog's narrow-screen drawer now has a route label for assistive
+  technologies.
+- Added the catalog's generated Flutter web scaffold so it runs in standards
+  mode and can be built as a release web application.
 
 ### Removed
 

@@ -8,6 +8,7 @@ void main() {
   testWidgets('CarbonDatePicker selects a date from its calendar', (
     tester,
   ) async {
+    final semantics = tester.ensureSemantics();
     DateTime? selected = DateTime(2026, 8, 13);
     await tester.pumpCarbonApp(
       StatefulBuilder(
@@ -19,6 +20,10 @@ void main() {
       ),
     );
 
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Choose Start date')),
+      isSemantics(label: 'Choose Start date', value: '2026-08-13'),
+    );
     await tester.tap(find.bySemanticsLabel('Choose Start date'));
     await tester.pumpAndSettle();
     await tester.tap(find.bySemanticsLabel('August 20, 2026'));
@@ -26,6 +31,11 @@ void main() {
 
     expect(selected, DateTime(2026, 8, 20));
     expect(find.text('2026-08-20'), findsOneWidget);
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Choose Start date')),
+      isSemantics(label: 'Choose Start date', value: '2026-08-20'),
+    );
+    semantics.dispose();
   });
 
   testWidgets('CarbonDatePicker disables dates outside its bounds', (

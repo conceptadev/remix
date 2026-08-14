@@ -11,7 +11,7 @@ class CarbonCatalogApp extends StatefulWidget {
 }
 
 class _CarbonCatalogAppState extends State<CarbonCatalogApp> {
-  CarbonTheme theme = CarbonTheme.white;
+  CarbonTheme theme = .white;
 
   @override
   Widget build(BuildContext context) {
@@ -54,14 +54,9 @@ class _CatalogWorkbenchState extends State<_CatalogWorkbench> {
   static const _wideBreakpoint = 900.0;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final searchController = TextEditingController();
-  String selectedId = 'button';
+  ComponentDemo selectedDemo = defaultCarbonComponentDemo;
   String query = '';
   String lastEvent = 'Select a component and interact with its live examples.';
-
-  ComponentDemo get selectedDemo => carbonComponentCatalog.firstWhere(
-    (component) => component.id == selectedId,
-    orElse: () => carbonComponentCatalog.first,
-  );
 
   List<ComponentDemo> get filteredComponents {
     final normalized = query.trim().toLowerCase();
@@ -79,11 +74,22 @@ class _CatalogWorkbenchState extends State<_CatalogWorkbench> {
 
   void selectComponent(ComponentDemo component, {required bool closeDrawer}) {
     setState(() {
-      selectedId = component.id;
+      selectedDemo = component;
       lastEvent = '${component.label} examples loaded.';
     });
     if (closeDrawer) Navigator.of(context).pop();
   }
+
+  Widget _navigation(_CatalogPalette palette, {required bool closeDrawer}) =>
+      _CatalogNavigation(
+        palette: palette,
+        searchController: searchController,
+        components: filteredComponents,
+        selectedId: selectedDemo.id,
+        onQueryChanged: (value) => setState(() => query = value),
+        onSelected: (component) =>
+            selectComponent(component, closeDrawer: closeDrawer),
+      );
 
   @override
   void dispose() {
@@ -106,17 +112,10 @@ class _CatalogWorkbenchState extends State<_CatalogWorkbench> {
               ? null
               : Drawer(
                   width: 292,
+                  semanticLabel: 'Component navigation',
                   backgroundColor: palette.layer,
                   child: SafeArea(
-                    child: _CatalogNavigation(
-                      palette: palette,
-                      searchController: searchController,
-                      components: filteredComponents,
-                      selectedId: selectedId,
-                      onQueryChanged: (value) => setState(() => query = value),
-                      onSelected: (component) =>
-                          selectComponent(component, closeDrawer: true),
-                    ),
+                    child: _navigation(palette, closeDrawer: true),
                   ),
                 ),
           body: Column(
@@ -129,21 +128,12 @@ class _CatalogWorkbenchState extends State<_CatalogWorkbench> {
               ),
               Expanded(
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: .stretch,
                   children: [
                     if (isWide)
                       SizedBox(
                         width: 272,
-                        child: _CatalogNavigation(
-                          palette: palette,
-                          searchController: searchController,
-                          components: filteredComponents,
-                          selectedId: selectedId,
-                          onQueryChanged: (value) =>
-                              setState(() => query = value),
-                          onSelected: (component) =>
-                              selectComponent(component, closeDrawer: false),
-                        ),
+                        child: _navigation(palette, closeDrawer: false),
                       ),
                     Expanded(
                       child: CatalogEventScope(
@@ -202,7 +192,7 @@ class _CatalogHeader extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
-              fontWeight: FontWeight.w600,
+              fontWeight: .w600,
               letterSpacing: .1,
             ),
           ),
@@ -226,7 +216,7 @@ class _CatalogHeader extends StatelessWidget {
             initialValue: theme,
             onSelected: onThemeChanged,
             color: const Color(0xFF262626),
-            position: PopupMenuPosition.under,
+            position: .under,
             itemBuilder: (context) => [
               for (final option in CarbonTheme.values)
                 PopupMenuItem(
@@ -242,7 +232,7 @@ class _CatalogHeader extends StatelessWidget {
               label: 'Theme: ${_themeName(theme)}',
               child: Container(
                 height: 48,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const .symmetric(horizontal: 16),
                 color: const Color(0xFF262626),
                 child: Row(
                   children: [
@@ -253,7 +243,7 @@ class _CatalogHeader extends StatelessWidget {
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                       ),
                     ),
                     const SizedBox(width: 6),
@@ -306,10 +296,10 @@ class _CatalogNavigation extends StatelessWidget {
         border: Border(right: BorderSide(color: palette.border)),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const .all(16),
             child: CarbonSearch(
               key: const Key('catalog-search'),
               controller: searchController,
@@ -320,33 +310,33 @@ class _CatalogNavigation extends StatelessWidget {
           Expanded(
             child: components.isEmpty
                 ? Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: const .all(24),
                     child: Text(
                       'No components match this search.',
                       style: TextStyle(color: palette.textSecondary),
                     ),
                   )
                 : ListView(
-                    padding: const EdgeInsets.only(bottom: 24),
+                    padding: const .only(bottom: 24),
                     children: [
                       for (final category in categories)
                         if (components.any(
                           (component) => component.category == category,
                         )) ...[
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+                            padding: const .fromLTRB(16, 20, 16, 8),
                             child: Text(
                               category.toUpperCase(),
                               style: TextStyle(
                                 color: palette.textSecondary,
                                 fontSize: 11,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: .w600,
                                 letterSpacing: .8,
                               ),
                             ),
                           ),
                           for (final component in components.where(
-                            (component) => component.category == category,
+                            (candidate) => candidate.category == category,
                           ))
                             _NavigationItem(
                               component: component,
@@ -406,7 +396,7 @@ class _NavigationItem extends StatelessWidget {
               style: TextStyle(
                 color: palette.textPrimary,
                 fontSize: 14,
-                fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                fontWeight: selected ? .w600 : .w400,
               ),
             ),
           ),
@@ -430,20 +420,20 @@ class _ComponentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       key: const Key('component-page-scroll'),
-      padding: const EdgeInsets.fromLTRB(32, 36, 32, 72),
+      padding: const .fromLTRB(32, 36, 32, 72),
       child: Align(
         alignment: AlignmentDirectional.topStart,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1120),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               Text(
                 'COMPONENT  /  ${component.category.toUpperCase()}',
                 style: const TextStyle(
                   color: Color(0xFF0F62FE),
                   fontSize: 12,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: .w600,
                   letterSpacing: .8,
                 ),
               ),
@@ -455,7 +445,7 @@ class _ComponentPage extends StatelessWidget {
                   color: palette.textPrimary,
                   fontSize: 40,
                   height: 1.1,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: .w300,
                   letterSpacing: -.8,
                 ),
               ),
@@ -500,10 +490,10 @@ class _ExamplePanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 28, bottom: 12),
+          padding: const .only(top: 28, bottom: 12),
           child: Row(
             children: [
               Container(width: 8, height: 8, color: const Color(0xFF24A148)),
@@ -513,7 +503,7 @@ class _ExamplePanel extends StatelessWidget {
                 style: TextStyle(
                   color: palette.textPrimary,
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: .w600,
                 ),
               ),
               const Spacer(),
@@ -522,7 +512,7 @@ class _ExamplePanel extends StatelessWidget {
                 style: TextStyle(
                   color: palette.textSecondary,
                   fontSize: 10,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: .w600,
                   letterSpacing: 1,
                 ),
               ),
@@ -533,12 +523,12 @@ class _ExamplePanel extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: 152),
           decoration: BoxDecoration(
             color: palette.canvas,
-            border: Border.all(color: palette.border),
+            border: .all(color: palette.border),
           ),
           child: LayoutBuilder(
             builder: (context, constraints) => SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.all(24),
+              scrollDirection: .horizontal,
+              padding: const .all(24),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   minWidth: (constraints.maxWidth - 48).clamp(
@@ -570,20 +560,20 @@ class _CatalogStatusBar extends StatelessWidget {
     return Container(
       key: const Key('catalog-status'),
       height: 32,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const .symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: palette.layer,
         border: Border(top: BorderSide(color: palette.border)),
       ),
       child: Row(
+        spacing: 8,
         children: [
           const Icon(Icons.bolt, color: Color(0xFF0F62FE), size: 14),
-          const SizedBox(width: 8),
           Expanded(
             child: Text(
               message,
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               style: TextStyle(color: palette.textSecondary, fontSize: 11),
             ),
           ),

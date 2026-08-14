@@ -166,16 +166,21 @@ class _CarbonDatePickerState extends State<CarbonDatePicker> {
         ],
       ),
     );
+    final semanticTrigger = Semantics(
+      excludeSemantics: true,
+      label: 'Choose $fieldLabel',
+      value: widget.value == null ? null : displayValue,
+      child: trigger,
+    );
     final picker = CarbonPopover(
       controller: _controller,
-      semanticLabel: 'Choose $fieldLabel',
       border: true,
       positioning: const OverlayPositionConfig(
         side: .bottom,
         alignment: .start,
       ),
       popoverChild: _calendar(context),
-      child: trigger,
+      child: semanticTrigger,
     );
 
     return CarbonFieldFrame(

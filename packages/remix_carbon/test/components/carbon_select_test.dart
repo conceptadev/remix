@@ -37,6 +37,54 @@ void main() {
     expect(selected, 'na');
   });
 
+  testWidgets('CarbonSelect exposes the selected item as its semantic value', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+
+    await tester.pumpCarbonApp(
+      const CarbonSelect<String>(
+        label: 'Region',
+        placeholder: 'Choose a region',
+        items: [
+          CarbonSelectItem(value: 'global', label: 'Global'),
+          CarbonSelectItem(
+            value: 'na',
+            label: 'North America',
+            semanticLabel: 'North American region',
+          ),
+        ],
+        selectedValue: 'na',
+      ),
+    );
+
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Region')),
+      isSemantics(label: 'Region', value: 'North American region'),
+    );
+    semantics.dispose();
+  });
+
+  testWidgets('CarbonSelect rejects a hidden selected item', (tester) async {
+    await tester.pumpCarbonApp(
+      const CarbonSelect<String>(
+        placeholder: 'Choose a region',
+        items: [
+          CarbonSelectItem(value: 'global', label: 'Global'),
+          CarbonSelectItem(value: 'hidden', label: 'Hidden', hidden: true),
+        ],
+        selectedValue: 'hidden',
+      ),
+    );
+
+    final error = tester.takeException();
+    expect(error, isA<AssertionError>());
+    expect(
+      error.toString(),
+      contains('selectedValue must match a visible entry'),
+    );
+  });
+
   testWidgets(
     'Carbon select recipe matches field geometry and disabled state',
     (tester) async {

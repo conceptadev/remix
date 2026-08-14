@@ -21,6 +21,8 @@ align_ui_flutter/
 **/example/android/
 **/example/ios/
 **/example/web/
+!packages/remix_carbon/example/web/
+!packages/remix_carbon/example/web/**
 **/example/windows/
 **/example/macos/
 **/example/linux/
