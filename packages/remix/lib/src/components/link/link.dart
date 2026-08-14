@@ -11,6 +11,5 @@ import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
 
 part 'link_spec.dart';
-part 'link_style.dart';
 part 'link_widget.dart';
 part 'link.g.dart';

@@ -633,6 +633,39 @@ class LinkStyler extends MixStyler<LinkStyler, LinkSpec>
     return merge(LinkStyler(modifier: value));
   }
 
+  RemixLink call({
+    Key? key,
+    String? label,
+    Widget? child,
+    VoidCallback? onPressed,
+    bool enabled = true,
+    Uri? linkUrl,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    bool enableFeedback = true,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+    String? semanticLabel,
+    String? semanticHint,
+    bool excludeSemantics = false,
+  }) {
+    return RemixLink(
+      key: key,
+      style: this,
+      label: label,
+      child: child,
+      onPressed: onPressed,
+      enabled: enabled,
+      linkUrl: linkUrl,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      enableFeedback: enableFeedback,
+      mouseCursor: mouseCursor,
+      semanticLabel: semanticLabel,
+      semanticHint: semanticHint,
+      excludeSemantics: excludeSemantics,
+    );
+  }
+
   /// Merges with another [LinkStyler].
   @override
   LinkStyler merge(LinkStyler? other) {

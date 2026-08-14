@@ -5,7 +5,10 @@ part of 'link.dart';
 /// A link is a text run, not a control surface, so the spec carries only a
 /// [container] box and a [label] text style. Focus rings and other decoration
 /// layers arrive through [containerEffects] rather than extra slots.
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin])
+@MixableSpec(
+  target: RemixLink.new,
+  extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin],
+)
 class LinkSpec with _$LinkSpec {
   @override
   @MixableField(forwardStyler: true)
