@@ -17,6 +17,16 @@ workspace:
   - packages/remix
   - packages/remix_fortal
 
+# TEMPORARY: RemixLink/FortalLink are built on `NakedLink`, which is unreleased
+# and lives on btwld/naked_ui#65. Drop this override and raise the `naked_ui`
+# floor in packages/remix and packages/remix_fortal once that PR ships.
+dependency_overrides:
+  naked_ui:
+    git:
+      url: https://github.com/btwld/naked_ui.git
+      ref: feat/naked-link
+      path: packages/naked_ui
+
 melos:
   packages:
     - apps/*
