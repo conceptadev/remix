@@ -2,8 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layout_scope.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_component_tokens.g.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
+import '../_shared/carbon_icon_button_style.dart';
 import '../button/carbon_button.dart';
 
 enum CarbonTagKind {
@@ -91,16 +93,15 @@ class CarbonTag extends StatelessWidget {
               SizedBox(width: CarbonTokens.spacing02.resolve(context)),
               SizedBox.square(
                 dimension: height - 4,
-                child: RemixButton(
-                  label: '×',
+                child: CarbonIconButton(
+                  icon: CarbonIcons.close,
                   semanticLabel: removeLabel ?? 'Remove $label',
                   enabled: !disabled,
                   onPressed: disabled ? null : onRemove,
-                  style: carbonButtonStyle(kind: .ghost, size: .sm)
-                      .height(height - 4)
-                      .padding(.all(0))
-                      .spacing(0)
-                      .mainAxisAlignment(.center),
+                  size: .sm,
+                  style: carbonIconButtonForegroundStyle(
+                    foreground,
+                  ).size(height - 4, height - 4),
                 ),
               ),
             ],

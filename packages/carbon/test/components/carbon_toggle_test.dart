@@ -63,4 +63,32 @@ void main() {
     expect(result.small.container.spec.constraints?.minHeight, 16);
     expect(result.small.thumb.spec.constraints?.minWidth, 10);
   });
+
+  testWidgets('CarbonToggle paints and positions its controlled on state', (
+    tester,
+  ) async {
+    await tester.pumpCarbonApp(
+      CarbonToggle(selected: true, label: 'Notifications', onChanged: (_) {}),
+    );
+
+    final trackFinder = find.descendant(
+      of: find.byType(RemixSwitch),
+      matching: find.byType(DecoratedBox),
+    );
+    final track = tester.widget<DecoratedBox>(trackFinder.first);
+    final thumbFinder = find.descendant(
+      of: find.byType(RemixSwitch),
+      matching: find.byType(Box),
+    );
+    final context = tester.element(find.byType(RemixSwitch));
+
+    expect(
+      (track.decoration as BoxDecoration).color,
+      CarbonTokens.supportSuccess.resolve(context),
+    );
+    expect(
+      tester.getCenter(thumbFinder.first).dx,
+      greaterThan(tester.getCenter(find.byType(RemixSwitch)).dx),
+    );
+  });
 }

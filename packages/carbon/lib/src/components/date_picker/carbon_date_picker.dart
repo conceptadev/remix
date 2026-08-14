@@ -3,6 +3,7 @@ import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layer.dart';
 import '../../foundation/carbon_layout_scope.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../_shared/carbon_field_frame.dart';
 import '../button/carbon_button.dart';
@@ -152,15 +153,14 @@ class _CarbonDatePickerState extends State<CarbonDatePicker> {
             ),
           ),
           ExcludeSemantics(
-            child: StyledText(
-              '▦',
-              style: TextStyler()
-                  .style(CarbonTokens.headingCompact01.mix())
-                  .color(
-                    widget.enabled
-                        ? CarbonTokens.iconPrimary()
-                        : CarbonTokens.iconDisabled(),
-                  ),
+            child: Icon(
+              CarbonIcons.calendar,
+              size: CarbonTokens.iconSize01.resolve(context),
+              color:
+                  (widget.enabled
+                          ? CarbonTokens.iconPrimary
+                          : CarbonTokens.iconDisabled)
+                      .resolve(context),
             ),
           ),
         ],
@@ -217,10 +217,14 @@ class _CarbonDatePickerState extends State<CarbonDatePicker> {
                 ),
                 _monthButton(
                   label: 'Previous month',
-                  symbol: '‹',
+                  icon: CarbonIcons.caretLeft,
                   month: previous,
                 ),
-                _monthButton(label: 'Next month', symbol: '›', month: next),
+                _monthButton(
+                  label: 'Next month',
+                  icon: CarbonIcons.caretRight,
+                  month: next,
+                ),
               ],
             ),
             SizedBox(height: CarbonTokens.spacing03.resolve(context)),
@@ -262,20 +266,18 @@ class _CarbonDatePickerState extends State<CarbonDatePicker> {
 
   Widget _monthButton({
     required String label,
-    required String symbol,
+    required IconData icon,
     required DateTime month,
   }) {
     final enabled = _monthHasSelectableDate(month);
 
     return SizedBox.square(
       dimension: CarbonSize.sm.height,
-      child: RemixButton(
-        label: symbol,
+      child: CarbonIconButton(
+        icon: icon,
         semanticLabel: label,
-        style: carbonButtonStyle(
-          kind: .ghost,
-          size: .sm,
-        ).padding(.all(0)).spacing(0).mainAxisAlignment(.center),
+        kind: .ghost,
+        size: .sm,
         enabled: enabled,
         onPressed: enabled ? () => setState(() => _visibleMonth = month) : null,
       ),

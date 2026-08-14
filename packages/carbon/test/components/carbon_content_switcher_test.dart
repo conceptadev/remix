@@ -48,6 +48,39 @@ void main() {
       disabled.textDisabled,
     );
   });
+
+  testWidgets('CarbonContentSwitcher paints its controlled selection', (
+    tester,
+  ) async {
+    await tester.pumpCarbonApp(
+      CarbonContentSwitcher<String>(
+        selectedValue: 'list',
+        onChanged: (_) {},
+        items: const [
+          CarbonContentSwitcherItem(value: 'list', label: 'List'),
+          CarbonContentSwitcherItem(value: 'grid', label: 'Grid'),
+        ],
+      ),
+    );
+
+    final surfaces = tester.widgetList<Box>(
+      find.descendant(
+        of: find.byType(RemixSegmentedControl<String>),
+        matching: find.byType(Box),
+      ),
+    );
+    final context = tester.element(find.byType(RemixSegmentedControl<String>));
+
+    expect(
+      surfaces.any(
+        (surface) =>
+            surface.styleSpec != null &&
+            _background(surface.styleSpec!.spec) ==
+                CarbonTokens.layerSelectedInverse.resolve(context),
+      ),
+      isTrue,
+    );
+  });
 }
 
 Future<({SegmentedControlSpec spec, Color textInverse, Color textDisabled})>
@@ -73,3 +106,5 @@ _resolve(WidgetTester tester, {Set<WidgetState> states = const {}}) async {
   );
   return result;
 }
+
+Color? _background(BoxSpec spec) => (spec.decoration as BoxDecoration?)?.color;

@@ -41,7 +41,7 @@ void main() {
     expect(carbonAtlasCatalog.themes, hasLength(4));
     expect(actualIds, expectedIds);
     expect(actualIds, hasLength(44));
-    expect(buttonAtlas.rows, hasLength(35));
+    expect(buttonAtlas.rows, hasLength(40));
     expect(buttonAtlas.scenarios, hasLength(6));
     expect(metadata['schema'], 'mix_atlas/catalog/v1');
   });

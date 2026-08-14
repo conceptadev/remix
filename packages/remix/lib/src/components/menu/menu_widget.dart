@@ -7,7 +7,7 @@ part of 'menu.dart';
 /// Data class representing a menu trigger.
 ///
 /// Used with [RemixMenu] to define the trigger button that opens the menu.
-/// The trigger displays an optional icon (leading position) and label text.
+/// The trigger displays optional leading/trailing icons and label text.
 class RemixMenuTrigger {
   /// The text label to display in the trigger.
   final String label;
@@ -16,7 +16,10 @@ class RemixMenuTrigger {
   /// When provided, icon appears in leading position (before text).
   final IconData? icon;
 
-  const RemixMenuTrigger({required this.label, this.icon});
+  /// Optional icon displayed after the label.
+  final IconData? trailingIcon;
+
+  const RemixMenuTrigger({required this.label, this.icon, this.trailingIcon});
 }
 
 /// Base sealed class for all menu item types.
@@ -492,6 +495,11 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
                     widget.trigger.label,
                     styleSpec: triggerSpec.label,
                   ),
+                  if (widget.trigger.trailingIcon != null)
+                    StyledIcon(
+                      icon: widget.trigger.trailingIcon!,
+                      styleSpec: triggerSpec.icon,
+                    ),
                 ],
               ),
             );

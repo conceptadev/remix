@@ -5,8 +5,10 @@ import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layer.dart';
 import '../../foundation/carbon_layout_scope.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../_shared/carbon_field_frame.dart';
+import '../_shared/carbon_menu_size.dart';
 import '../menu/carbon_menu.dart';
 
 const _carbonMultiselectField = ContextToken(_resolveCarbonMultiselectField);
@@ -112,63 +114,56 @@ class CarbonMultiselect<T extends Object> extends StatelessWidget {
     final borderColor = errorText == null
         ? _carbonMultiselectBorder()
         : CarbonTokens.supportError();
-    final menuStyle =
-        carbonMenuStyle(
-          size: switch (size.clampTo(.xs, .lg)) {
-            .xs => .xSmall,
-            .sm => .small,
-            .md => .medium,
-            .lg || .xl || .x2l => .large,
-          },
-        ).trigger(
-          MenuTriggerStyler()
-              .width(.infinity)
-              .height(height)
-              .mainAxisSize(.max)
-              .mainAxisAlignment(.spaceBetween)
-              .padding(.horizontal(CarbonTokens.spacing05()))
-              .color(
-                readOnly ? const Color(0x00000000) : _carbonMultiselectField(),
-              )
-              .border(
-                BoxBorderMix.bottom(
-                  BorderSideMix(
-                    color: borderColor,
-                    width: errorText == null ? 1 : 2,
-                  ),
-                ),
-              )
-              .label(
-                .style(CarbonTokens.bodyCompact01.mix())
-                    .color(
-                      enabled
-                          ? selected.isEmpty
-                                ? CarbonTokens.textPlaceholder()
-                                : CarbonTokens.textPrimary()
-                          : CarbonTokens.textDisabled(),
-                    )
-                    .maxLines(1)
-                    .overflow(.ellipsis),
-              )
-              .onHovered(
-                .color(
-                  readOnly
-                      ? const Color(0x00000000)
-                      : _carbonMultiselectFieldHover(),
-                ),
-              )
-              .onFocusVisible(
-                .border(
-                  BoxBorderMix.all(
-                    BorderSideMix(color: CarbonTokens.focus(), width: 2),
-                  ),
-                ),
+    final menuStyle = carbonMenuStyle(size: carbonMenuSizeFor(size)).trigger(
+      MenuTriggerStyler()
+          .width(.infinity)
+          .height(height)
+          .mainAxisSize(.max)
+          .mainAxisAlignment(.spaceBetween)
+          .padding(.horizontal(CarbonTokens.spacing05()))
+          .color(readOnly ? const Color(0x00000000) : _carbonMultiselectField())
+          .border(
+            BoxBorderMix.bottom(
+              BorderSideMix(
+                color: borderColor,
+                width: errorText == null ? 1 : 2,
               ),
-        );
+            ),
+          )
+          .label(
+            .style(CarbonTokens.bodyCompact01.mix())
+                .color(
+                  enabled
+                      ? selected.isEmpty
+                            ? CarbonTokens.textPlaceholder()
+                            : CarbonTokens.textPrimary()
+                      : CarbonTokens.textDisabled(),
+                )
+                .maxLines(1)
+                .overflow(.ellipsis),
+          )
+          .onHovered(
+            .color(
+              readOnly
+                  ? const Color(0x00000000)
+                  : _carbonMultiselectFieldHover(),
+            ),
+          )
+          .onFocusVisible(
+            .border(
+              BoxBorderMix.all(
+                BorderSideMix(color: CarbonTokens.focus(), width: 2),
+              ),
+            ),
+          ),
+    );
     final menu = RemixMenu<T>(
       controller: controller,
       triggerFocusNode: focusNode,
-      trigger: RemixMenuTrigger(label: triggerLabel),
+      trigger: RemixMenuTrigger(
+        label: triggerLabel,
+        trailingIcon: CarbonIcons.chevronDown,
+      ),
       semanticLabel: semanticLabel ?? label ?? placeholder,
       positioning: positioning,
       items: [

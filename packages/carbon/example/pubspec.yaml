@@ -19,6 +19,7 @@ dependencies:
       path: packages/mix_atlas
 
 dev_dependencies:
+  dart_code_metrics_presets: ^2.32.0
   flutter_test:
     sdk: flutter
 

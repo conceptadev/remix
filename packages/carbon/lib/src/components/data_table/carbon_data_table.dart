@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layer.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../checkbox/carbon_checkbox.dart';
 import '../select/carbon_select.dart';
@@ -257,6 +258,11 @@ class CarbonDataTable<T> extends StatelessWidget {
     onPageSizeChanged: onPageSizeChanged,
     minimumWidth: minimumWidth,
     emptyBuilder: emptyBuilder,
+    sortableIcon: CarbonIcons.arrowsVertical,
+    sortAscendingIcon: CarbonIcons.arrowUp,
+    sortDescendingIcon: CarbonIcons.arrowDown,
+    previousPageIcon: CarbonIcons.caretLeft,
+    nextPageIcon: CarbonIcons.caretRight,
     labels: RemixDataTableLabels(
       rowsPerPage: labels.rowsPerPage,
       previousPage: labels.previousPage,

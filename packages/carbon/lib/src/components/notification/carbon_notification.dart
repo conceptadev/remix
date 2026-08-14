@@ -3,8 +3,10 @@ import 'dart:ui' show SemanticsRole;
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_component_tokens.g.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
+import '../_shared/carbon_icon_button_style.dart';
 import '../button/carbon_button.dart';
 
 enum CarbonNotificationKind { info, success, warning, error }
@@ -83,16 +85,15 @@ class CarbonNotification extends StatelessWidget {
           crossAxisAlignment: .start,
           children: [
             ExcludeSemantics(
-              child: StyledText(
+              child: Icon(
                 switch (kind) {
-                  .info => 'i',
-                  .success => '✓',
-                  .warning => '!',
-                  .error => '×',
+                  .info => CarbonIcons.informationFilled,
+                  .success => CarbonIcons.checkmarkFilled,
+                  .warning => CarbonIcons.warningFilled,
+                  .error => CarbonIcons.errorFilled,
                 },
-                style: TextStyler()
-                    .style(CarbonTokens.headingCompact01.mix())
-                    .color(statusColor()),
+                size: CarbonTokens.iconSize02.resolve(context),
+                color: statusColor.resolve(context),
               ),
             ),
             SizedBox(width: CarbonTokens.spacing05.resolve(context)),
@@ -133,12 +134,13 @@ class CarbonNotification extends StatelessWidget {
             ],
             if (!hideCloseButton && onClose != null) ...[
               SizedBox(width: CarbonTokens.spacing03.resolve(context)),
-              CarbonButton(
-                label: '×',
+              CarbonIconButton(
+                icon: CarbonIcons.close,
                 semanticLabel: 'Close $title',
                 kind: .ghost,
                 size: .sm,
                 onPressed: onClose,
+                style: carbonIconButtonForegroundStyle(foreground),
               ),
             ],
           ],

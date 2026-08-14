@@ -1,0 +1,18 @@
+{
+  "input": "../../reference/carbon_icons_11_86_0/icons",
+  "output": "../../lib/src/icons/generated",
+  "fontFamily": "CarbonIcons",
+  "className": "CarbonIcons",
+  "catalog": false,
+  "fontPackage": "carbon",
+  "startCodepoint": "0xE000",
+  "unitsPerEm": 1000,
+  "padding": 0,
+  "clipToViewBox": true,
+  "policy": {
+    "lossy": "error",
+    "unrepresentable": "error"
+  },
+  "jobs": 1,
+  "copyright": "Carbon Icons Copyright IBM Corp., Apache-2.0"
+}

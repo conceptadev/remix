@@ -103,6 +103,16 @@ melos:
       run: node packages/carbon/tool/verify_generated.mjs
       description: Verify Carbon token sources reproduce committed Dart output
 
+    carbon:icons:generate:
+      run: uv run --frozen --project packages/carbon/tool/carbon_icons glyphpact --config packages/carbon/tool/carbon_icons/glyphpact.json
+      description: Regenerate the locked CarbonIcons font and Dart provider
+
+    carbon:icons:check:
+      steps:
+        - uv run --frozen --project packages/carbon/tool/carbon_icons glyphpact --config packages/carbon/tool/carbon_icons/glyphpact.json --check
+        - uv run --frozen --project packages/carbon/tool/carbon_icons python packages/carbon/tool/carbon_icons/verify.py
+      description: Verify the pinned Carbon icon subset and generated artifacts
+
     dcm:check:
       exec: dcm analyze lib --fatal-style --fatal-warnings --no-congratulate
       description: Run Remix Dart Code Metrics with all severities fatal
@@ -149,6 +159,7 @@ melos:
         - mix:consumer:check
         - material:check
         - carbon:tokens:check
+        - carbon:icons:check
         - generate:check
         - docs:check
         - fortal:parity:check

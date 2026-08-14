@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layer.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../_shared/carbon_action_surface.dart';
 
@@ -137,15 +138,16 @@ class CarbonSelectableTile extends StatelessWidget {
           Expanded(child: child),
           SizedBox(width: CarbonTokens.spacing05.resolve(context)),
           ExcludeSemantics(
-            child: StyledText(
-              selected ? '●' : '○',
-              style: TextStyler()
-                  .style(CarbonTokens.bodyCompact01.mix())
-                  .color(
-                    selected
-                        ? CarbonTokens.iconInteractive()
-                        : CarbonTokens.iconSecondary(),
-                  ),
+            child: Icon(
+              selected
+                  ? CarbonIcons.checkboxCheckedFilled
+                  : CarbonIcons.checkbox,
+              size: CarbonTokens.iconSize01.resolve(context),
+              color:
+                  (selected
+                          ? CarbonTokens.iconInteractive
+                          : CarbonTokens.iconSecondary)
+                      .resolve(context),
             ),
           ),
         ],
@@ -246,11 +248,10 @@ class _CarbonExpandableTileState extends State<CarbonExpandableTile> {
                   ),
                 ),
                 ExcludeSemantics(
-                  child: StyledText(
-                    _expanded ? '−' : '+',
-                    style: TextStyler()
-                        .style(CarbonTokens.headingCompact01.mix())
-                        .color(CarbonTokens.iconPrimary()),
+                  child: Icon(
+                    _expanded ? CarbonIcons.chevronUp : CarbonIcons.chevronDown,
+                    size: CarbonTokens.iconSize01.resolve(context),
+                    color: CarbonTokens.iconPrimary.resolve(context),
                   ),
                 ),
               ],

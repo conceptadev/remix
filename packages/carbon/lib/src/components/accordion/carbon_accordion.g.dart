@@ -13,7 +13,7 @@ class CarbonAccordion<T> extends StatelessWidget {
     this.size = .medium,
     required this.value,
     required this.child,
-    this.title,
+    required this.title,
     this.leadingIcon,
     this.trailingIcon,
     this.enabled = true,
@@ -34,7 +34,7 @@ class CarbonAccordion<T> extends StatelessWidget {
 
   final Widget child;
 
-  final String? title;
+  final String title;
 
   final IconData? leadingIcon;
 
@@ -62,7 +62,7 @@ class CarbonAccordion<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RemixAccordion<T>(
+    return _CarbonAccordionBase<T>(
       key: this.key,
       style: carbonAccordionStyle(size: this.size),
       value: this.value,

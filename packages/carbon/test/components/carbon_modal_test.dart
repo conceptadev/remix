@@ -57,4 +57,43 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Confirm'), findsNothing);
   });
+
+  testWidgets('CarbonModal exposes the official close action', (tester) async {
+    var closed = false;
+    final semantics = tester.ensureSemantics();
+
+    await tester.pumpCarbonApp(
+      CarbonModal(
+        title: 'Preferences',
+        onClose: () => closed = true,
+        closeSemanticLabel: 'Dismiss preferences',
+        actions: [
+          CarbonButton(label: 'Cancel', onPressed: () {}),
+          CarbonButton(label: 'Save', onPressed: () {}),
+        ],
+      ),
+    );
+
+    expect(find.byIcon(CarbonIcons.close), findsOneWidget);
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Dismiss preferences')),
+      isSemantics(
+        label: 'Dismiss preferences',
+        hasTapAction: true,
+        isEnabled: true,
+        isButton: true,
+      ),
+    );
+    final actionSizes = tester
+        .widgetList<CarbonButton>(find.byType(CarbonButton))
+        .map((button) => tester.getSize(find.byWidget(button)))
+        .toList(growable: false);
+    expect(actionSizes, hasLength(2));
+    expect(actionSizes.first.width, actionSizes.last.width);
+    expect(actionSizes.first.width, greaterThan(150));
+
+    await tester.tap(find.bySemanticsLabel('Dismiss preferences'));
+    expect(closed, isTrue);
+    semantics.dispose();
+  });
 }

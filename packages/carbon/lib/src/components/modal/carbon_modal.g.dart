@@ -18,6 +18,8 @@ class CarbonModal extends StatelessWidget {
     this.scrollable = false,
     this.modal = true,
     this.semanticLabel,
+    this.onClose,
+    this.closeSemanticLabel = 'Close',
   });
 
   final CarbonModalSize size;
@@ -36,6 +38,10 @@ class CarbonModal extends StatelessWidget {
 
   final String? semanticLabel;
 
+  final VoidCallback? onClose;
+
+  final String closeSemanticLabel;
+
   @override
   Widget build(BuildContext context) {
     return _CarbonModalBase(
@@ -48,6 +54,8 @@ class CarbonModal extends StatelessWidget {
       scrollable: this.scrollable,
       modal: this.modal,
       semanticLabel: this.semanticLabel,
+      onClose: this.onClose,
+      closeSemanticLabel: this.closeSemanticLabel,
     );
   }
 }

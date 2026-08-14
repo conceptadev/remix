@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart';
-import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layout_scope.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
+import '../_shared/carbon_icon_button_style.dart';
 import '../button/carbon_button.dart';
 import '../text_input/carbon_text_input.dart';
 
@@ -106,54 +107,28 @@ class _CarbonSearchState extends State<CarbonSearch> {
       onSubmitted: widget.onSubmitted,
       semanticLabel: widget.labelText,
       size: size,
-      leading: const ExcludeSemantics(child: _CarbonSearchGlyph()),
+      leading: ExcludeSemantics(
+        child: Icon(
+          CarbonIcons.search,
+          size: CarbonTokens.iconSize01.resolve(context),
+          color: CarbonTokens.iconSecondary.resolve(context),
+        ),
+      ),
       trailing: canClear
           ? SizedBox.square(
               dimension: size.height,
-              child: RemixButton(
-                style: carbonButtonStyle(
-                  kind: .ghost,
-                  size: size,
-                ).padding(.all(0)).spacing(0).mainAxisAlignment(.center),
-                label: '×',
+              child: CarbonIconButton(
+                icon: CarbonIcons.close,
                 semanticLabel: widget.clearButtonLabel,
+                kind: .ghost,
+                size: size,
                 onPressed: _clear,
+                style: carbonIconButtonForegroundStyle(
+                  CarbonTokens.iconPrimary,
+                ),
               ),
             )
           : null,
     );
   }
-}
-
-class _CarbonSearchGlyph extends StatelessWidget {
-  const _CarbonSearchGlyph();
-
-  @override
-  Widget build(BuildContext context) => CustomPaint(
-    size: const Size.square(16),
-    painter: _CarbonSearchGlyphPainter(
-      CarbonTokens.iconSecondary.resolve(context),
-    ),
-  );
-}
-
-class _CarbonSearchGlyphPainter extends CustomPainter {
-  const _CarbonSearchGlyphPainter(this.color);
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = .stroke
-      ..strokeWidth = 1.5
-      ..strokeCap = .square;
-    canvas.drawCircle(const Offset(6.5, 6.5), 4.75, paint);
-    canvas.drawLine(const Offset(10, 10), const Offset(14.5, 14.5), paint);
-  }
-
-  @override
-  bool shouldRepaint(_CarbonSearchGlyphPainter oldDelegate) =>
-      oldDelegate.color != color;
 }

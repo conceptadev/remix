@@ -150,6 +150,144 @@ ButtonStyler carbonButtonStyle({
   };
 }
 
+/// Carbon's square icon-button recipe.
+IconButtonStyler carbonIconButtonStyle({
+  CarbonButtonKind kind = .ghost,
+  CarbonSize? size,
+  bool loading = false,
+}) {
+  final extent = size == null
+      ? _carbonButtonHeight()
+      : size.clampTo(.sm, .x2l).height;
+  final base = IconButtonStyler()
+      .size(extent, extent)
+      .borderRadius(.all(.zero))
+      .icon(.size(CarbonTokens.iconSize01()))
+      .spinner(.size(CarbonTokens.iconSize01()).strokeWidth(2))
+      .onFocusVisible(
+        .foregroundDecoration(
+          ShapeDecorationMix.create(
+            shape: Prop.token(_carbonButtonFocusBorder),
+          ),
+        ),
+      );
+
+  return switch (kind) {
+    .primary => _fillIconStyle(
+      base,
+      fill: CarbonComponentTokens.buttonPrimary,
+      hover: CarbonComponentTokens.buttonPrimaryHover,
+      active: CarbonComponentTokens.buttonPrimaryActive,
+      loading: loading,
+    ),
+    .secondary => _fillIconStyle(
+      base,
+      fill: CarbonComponentTokens.buttonSecondary,
+      hover: CarbonComponentTokens.buttonSecondaryHover,
+      active: CarbonComponentTokens.buttonSecondaryActive,
+      loading: loading,
+    ),
+    .danger => _fillIconStyle(
+      base,
+      fill: CarbonComponentTokens.buttonDangerPrimary,
+      hover: CarbonComponentTokens.buttonDangerHover,
+      active: CarbonComponentTokens.buttonDangerActive,
+      loading: loading,
+    ),
+    .tertiary => _outlineIconStyle(
+      base,
+      line: CarbonComponentTokens.buttonTertiary,
+      hover: CarbonComponentTokens.buttonTertiaryHover,
+      active: CarbonComponentTokens.buttonTertiaryActive,
+      loading: loading,
+    ),
+    .dangerTertiary => _outlineIconStyle(
+      base,
+      line: CarbonComponentTokens.buttonDangerSecondary,
+      hover: CarbonComponentTokens.buttonDangerHover,
+      active: CarbonComponentTokens.buttonDangerActive,
+      loading: loading,
+    ),
+    .ghost => _ghostIconStyle(
+      base,
+      foreground: CarbonTokens.linkPrimary,
+      hoverFill: CarbonTokens.backgroundHover,
+      hoverForeground: CarbonTokens.linkPrimaryHover,
+      activeFill: CarbonTokens.backgroundActive,
+      activeForeground: CarbonTokens.linkPrimaryHover,
+      loading: loading,
+    ),
+    .dangerGhost => _ghostIconStyle(
+      base,
+      foreground: CarbonComponentTokens.buttonDangerSecondary,
+      hoverFill: CarbonComponentTokens.buttonDangerHover,
+      hoverForeground: CarbonTokens.textOnColor,
+      activeFill: CarbonComponentTokens.buttonDangerActive,
+      activeForeground: CarbonTokens.textOnColor,
+      loading: loading,
+    ),
+  };
+}
+
+/// An icon-only Carbon action with an explicit accessible name.
+class CarbonIconButton extends StatelessWidget {
+  const CarbonIconButton({
+    super.key,
+    required this.icon,
+    required this.semanticLabel,
+    this.kind = .ghost,
+    this.size,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.style = const IconButtonStyler.create(),
+  }) : assert(semanticLabel != '');
+
+  final IconData icon;
+  final String semanticLabel;
+  final CarbonButtonKind kind;
+  final CarbonSize? size;
+  final bool loading;
+  final bool enabled;
+  final VoidCallback? onPressed;
+  final VoidCallback? onLongPress;
+  final FocusNode? focusNode;
+  final bool autofocus;
+  final bool enableFeedback;
+  final String? semanticHint;
+  final bool excludeSemantics;
+  final MouseCursor mouseCursor;
+  final IconButtonStyler style;
+
+  @override
+  Widget build(BuildContext context) => RemixIconButton(
+    icon: icon,
+    semanticLabel: semanticLabel,
+    loading: loading,
+    enabled: enabled,
+    onPressed: onPressed,
+    onLongPress: onLongPress,
+    focusNode: focusNode,
+    autofocus: autofocus,
+    enableFeedback: enableFeedback,
+    semanticHint: semanticHint,
+    excludeSemantics: excludeSemantics,
+    mouseCursor: mouseCursor,
+    style: carbonIconButtonStyle(
+      kind: kind,
+      size: size,
+      loading: loading,
+    ).merge(style),
+  );
+}
+
 // Carbon buttons share height, padding, label typography and focus ring.
 ButtonStyler _carbonButtonBaseStyle(double height, CarbonButtonKind kind) {
   return ButtonStyler()
@@ -274,3 +412,80 @@ ButtonStyler _disabledFill() => _foreground(
 
 ButtonStyler _foreground(ButtonStyler style, Color color) =>
     style.label(.color(color)).icon(.color(color));
+
+IconButtonStyler _fillIconStyle(
+  IconButtonStyler base, {
+  required ColorToken fill,
+  required ColorToken hover,
+  required ColorToken active,
+  required bool loading,
+}) => base
+    .color(fill())
+    .icon(.color(CarbonTokens.textOnColor()))
+    .spinner(.indicatorColor(CarbonTokens.textOnColor()))
+    .onHovered(.color(hover()))
+    .onPressed(.color(active()))
+    .onDisabled(
+      loading
+          ? IconButtonStyler()
+                .color(fill())
+                .spinner(.indicatorColor(CarbonTokens.textOnColor()))
+          : IconButtonStyler()
+                .color(CarbonComponentTokens.buttonDisabled())
+                .icon(.color(CarbonTokens.textOnColorDisabled())),
+    );
+
+IconButtonStyler _outlineIconStyle(
+  IconButtonStyler base, {
+  required ColorToken line,
+  required ColorToken hover,
+  required ColorToken active,
+  required bool loading,
+}) => base
+    .color(const Color(0x00000000))
+    .border(.color(line()).width(1))
+    .icon(.color(line()))
+    .spinner(.indicatorColor(line()))
+    .onHovered(
+      IconButtonStyler()
+          .color(hover())
+          .icon(.color(CarbonTokens.textInverse())),
+    )
+    .onPressed(
+      IconButtonStyler()
+          .color(active())
+          .icon(.color(CarbonTokens.textInverse())),
+    )
+    .onDisabled(
+      loading
+          ? IconButtonStyler()
+                .border(.color(line()).width(1))
+                .spinner(.indicatorColor(line()))
+          : IconButtonStyler()
+                .border(.color(CarbonTokens.borderDisabled()).width(1))
+                .icon(.color(CarbonTokens.iconDisabled())),
+    );
+
+IconButtonStyler _ghostIconStyle(
+  IconButtonStyler base, {
+  required ColorToken foreground,
+  required ColorToken hoverFill,
+  required ColorToken hoverForeground,
+  required ColorToken activeFill,
+  required ColorToken activeForeground,
+  required bool loading,
+}) => base
+    .color(const Color(0x00000000))
+    .icon(.color(foreground()))
+    .spinner(.indicatorColor(foreground()))
+    .onHovered(
+      IconButtonStyler().color(hoverFill()).icon(.color(hoverForeground())),
+    )
+    .onPressed(
+      IconButtonStyler().color(activeFill()).icon(.color(activeForeground())),
+    )
+    .onDisabled(
+      loading
+          ? IconButtonStyler().spinner(.indicatorColor(foreground()))
+          : IconButtonStyler().icon(.color(CarbonTokens.iconDisabled())),
+    );

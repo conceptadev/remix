@@ -93,12 +93,12 @@ class CarbonToggle extends StatelessWidget {
                   .style(CarbonTokens.label01.mix())
                   .color(
                     interactive
-                        ? CarbonTokens.textPrimary()
+                        ? CarbonTokens.textSecondary()
                         : CarbonTokens.textDisabled(),
                   ),
             ),
           ),
-          SizedBox(height: CarbonTokens.spacing03.resolve(context)),
+          SizedBox(height: CarbonTokens.spacing05.resolve(context)),
           Row(
             mainAxisSize: .min,
             children: [
@@ -116,7 +116,7 @@ class CarbonToggle extends StatelessWidget {
                 child: StyledText(
                   selected ? labelB : labelA,
                   style: TextStyler()
-                      .style(CarbonTokens.label01.mix())
+                      .style(CarbonTokens.body01.mix())
                       .color(
                         interactive
                             ? CarbonTokens.textPrimary()

@@ -40,9 +40,9 @@
     },
     {
       "id": "button",
-      "publicApi": ["CarbonButton"],
+      "publicApi": ["CarbonButton", "CarbonIconButton"],
       "strategy": "remix_recipe",
-      "remixBase": ["RemixButton"],
+      "remixBase": ["RemixButton", "RemixIconButton"],
       "semanticPrimitive": "button",
       "sourceFiles": ["scss/components/button/_button.scss", "es/components/Button/Button.d.ts"]
     },

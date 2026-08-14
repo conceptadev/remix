@@ -205,6 +205,26 @@ final _buttonAtlas = ComponentAtlas(
             'size': AtlasAxisValue(size.name, _sizeLabel(size)),
           },
         ),
+    for (final size in CarbonSize.values.skip(1))
+      AtlasRow(
+        'icon-${size.name}',
+        (_, cell) {
+          final loading = cell.propOr('loading', false);
+          final enabled = !cell.disabled && !loading;
+          return CarbonIconButton(
+            icon: CarbonIcons.add,
+            semanticLabel: 'Add',
+            size: size,
+            loading: loading,
+            enabled: enabled,
+            onPressed: enabled ? () {} : null,
+          );
+        },
+        values: {
+          'kind': const AtlasAxisValue('icon', 'Icon'),
+          'size': AtlasAxisValue(size.name, _sizeLabel(size)),
+        },
+      ),
   ],
 );
 
@@ -550,6 +570,7 @@ final _modalAtlas = _sample(
     size: CarbonModalSize.small,
     title: 'Delete project?',
     description: 'This action cannot be undone.',
+    onClose: () {},
     actions: [
       CarbonButton(
         label: 'Cancel',
@@ -954,7 +975,7 @@ final _tooltipAtlas = _sample(
   (_) => const CarbonTooltip(
     tooltipSemantics: 'Create a project',
     tooltipChild: Text('Create a project'),
-    child: Icon(Icons.add),
+    child: Icon(CarbonIcons.add),
   ),
 );
 

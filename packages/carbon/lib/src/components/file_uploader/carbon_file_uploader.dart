@@ -2,8 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layer.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../button/carbon_button.dart';
+import '../loading/carbon_loading.dart';
 
 /// Lifecycle states displayed by [CarbonFileUploadItem].
 enum CarbonFileUploadStatus { uploading, complete, error, editing }
@@ -182,26 +184,31 @@ class CarbonFileUploadItem extends StatelessWidget {
             ),
             SizedBox(width: CarbonTokens.spacing05.resolve(context)),
             ExcludeSemantics(
-              child: StyledText(
-                switch (status) {
-                  .uploading => '…',
-                  .complete => '✓',
-                  .error => '!',
-                  .editing => '○',
-                },
-                style: TextStyler()
-                    .style(CarbonTokens.headingCompact01.mix())
-                    .color(
-                      error
-                          ? CarbonTokens.supportError()
-                          : CarbonTokens.iconPrimary(),
-                    ),
-              ),
+              child: switch (status) {
+                .uploading => RemixSpinner(
+                  style: carbonLoadingStyle(small: true),
+                ),
+                .complete => Icon(
+                  CarbonIcons.checkmarkFilled,
+                  size: CarbonTokens.iconSize02.resolve(context),
+                  color: CarbonTokens.supportSuccess.resolve(context),
+                ),
+                .error => Icon(
+                  CarbonIcons.warningFilled,
+                  size: CarbonTokens.iconSize02.resolve(context),
+                  color: CarbonTokens.supportError.resolve(context),
+                ),
+                .editing => Icon(
+                  CarbonIcons.circleDash,
+                  size: CarbonTokens.iconSize02.resolve(context),
+                  color: CarbonTokens.iconPrimary.resolve(context),
+                ),
+              },
             ),
             if (onDelete != null) ...[
               SizedBox(width: CarbonTokens.spacing03.resolve(context)),
-              CarbonButton(
-                label: '×',
+              CarbonIconButton(
+                icon: CarbonIcons.close,
                 semanticLabel: 'Remove $name',
                 kind: .ghost,
                 size: .sm,

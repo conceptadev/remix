@@ -1,5 +1,3 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
@@ -7,6 +5,7 @@ import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layer.dart';
 import '../../foundation/carbon_layout_scope.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 
 part 'carbon_text_input.g.dart';
@@ -86,21 +85,20 @@ TextFieldStyler carbonTextInputStyle({
       ? _carbonTextInputHeight()
       : size.clampTo(.xs, .lg).height;
 
-  return _carbonTextEntryStyle(
-        BoxStyler()
-            .height(height)
-            .padding(.horizontal(CarbonTokens.spacing05()))
-            .color(_carbonField())
-            .border(
-              BoxBorderMix.bottom(
-                BorderSideMix(color: _carbonFieldBorder(), width: 1),
-              ),
+  return _carbonTextEntryStates(
+    _carbonTextEntryStyle(
+      BoxStyler()
+          .height(height)
+          .padding(.horizontal(CarbonTokens.spacing05()))
+          .color(_carbonField())
+          .border(
+            BoxBorderMix.bottom(
+              BorderSideMix(color: _carbonFieldBorder(), width: 1),
             ),
-      )
-      .onHovered(TextFieldStyler().color(_carbonFieldHover()))
-      .onFocused(_carbonFocusStyle())
-      .variant(ContextVariant.widgetState(.error), _carbonInvalidStyle())
-      .onDisabled(readOnly ? _carbonReadOnlyStyle() : _carbonDisabledStyle());
+          ),
+    ),
+    readOnly: readOnly,
+  );
 }
 
 /// Carbon's multiline text area, generated over [RemixTextArea] so multiline
@@ -147,28 +145,35 @@ TextFieldStyler carbonTextInputStyle({
   }),
 )
 TextFieldStyler carbonTextAreaStyle({bool readOnly = false}) {
-  return _carbonTextEntryStyle(
-        BoxStyler()
-            .minHeight(80)
-            .padding(
-              .symmetric(
-                horizontal: CarbonTokens.spacing05(),
-                vertical: CarbonTokens.spacing04(),
-              ),
-            )
-            .color(_carbonField())
-            .border(
-              BoxBorderMix.bottom(
-                BorderSideMix(color: _carbonFieldBorder(), width: 1),
-              ),
+  return _carbonTextEntryStates(
+    _carbonTextEntryStyle(
+      BoxStyler()
+          .minHeight(80)
+          .padding(
+            .symmetric(
+              horizontal: CarbonTokens.spacing05(),
+              vertical: CarbonTokens.spacing04(),
             ),
-      )
-      .crossAxisAlignment(.start)
-      .onHovered(TextFieldStyler().color(_carbonFieldHover()))
-      .onFocused(_carbonFocusStyle())
-      .variant(ContextVariant.widgetState(.error), _carbonInvalidStyle())
-      .onDisabled(readOnly ? _carbonReadOnlyStyle() : _carbonDisabledStyle());
+          )
+          .color(_carbonField())
+          .border(
+            BoxBorderMix.bottom(
+              BorderSideMix(color: _carbonFieldBorder(), width: 1),
+            ),
+          ),
+    ).crossAxisAlignment(.start),
+    readOnly: readOnly,
+  );
 }
+
+TextFieldStyler _carbonTextEntryStates(
+  TextFieldStyler style, {
+  required bool readOnly,
+}) => style
+    .onHovered(TextFieldStyler().color(_carbonFieldHover()))
+    .onFocused(_carbonFocusStyle())
+    .variant(ContextVariant.widgetState(.error), _carbonInvalidStyle())
+    .onDisabled(readOnly ? _carbonReadOnlyStyle() : _carbonDisabledStyle());
 
 TextFieldStyler _carbonTextEntryStyle(BoxStyler container) {
   return TextFieldStyler()
@@ -337,14 +342,7 @@ class _CarbonPasswordInputState extends State<CarbonPasswordInput> {
       semanticHint: widget.semanticHint,
       size: widget.size,
       trailing: RemixIconButton(
-        icon: null,
-        iconBuilder: (context, spec, _) => CustomPaint(
-          size: Size.square(spec.size ?? 16),
-          painter: _PasswordVisibilityPainter(
-            color: spec.color ?? CarbonTokens.iconPrimary.resolve(context),
-            hidden: _obscureText,
-          ),
-        ),
+        icon: _obscureText ? CarbonIcons.view : CarbonIcons.viewOff,
         semanticLabel: toggleLabel,
         enabled: widget.enabled && !widget.readOnly,
         onPressed: widget.enabled && !widget.readOnly
@@ -372,40 +370,4 @@ class _CarbonPasswordInputState extends State<CarbonPasswordInput> {
       ),
     );
   }
-}
-
-class _PasswordVisibilityPainter extends CustomPainter {
-  const _PasswordVisibilityPainter({required this.color, required this.hidden});
-
-  final Color color;
-  final bool hidden;
-
-  @override
-  void paint(ui.Canvas canvas, ui.Size size) {
-    final stroke = ui.Paint()
-      ..color = color
-      ..style = ui.PaintingStyle.stroke
-      ..strokeWidth = 1.5;
-    final center = ui.Offset(size.width / 2, size.height / 2);
-    final eye = ui.Rect.fromCenter(
-      center: center,
-      width: size.width - 2,
-      height: size.height * 0.58,
-    );
-
-    canvas
-      ..drawOval(eye, stroke)
-      ..drawCircle(center, size.shortestSide * 0.13, stroke);
-    if (hidden) {
-      canvas.drawLine(
-        const ui.Offset(1, 1),
-        ui.Offset(size.width - 1, size.height - 1),
-        stroke,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(_PasswordVisibilityPainter oldDelegate) =>
-      oldDelegate.color != color || oldDelegate.hidden != hidden;
 }

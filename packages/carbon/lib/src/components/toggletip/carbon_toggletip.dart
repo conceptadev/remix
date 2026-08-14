@@ -43,6 +43,10 @@ class CarbonToggletip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final actionContent = actions;
+    final trigger = DefaultTextStyle.merge(
+      style: TextStyle(color: CarbonTokens.textPrimary.resolve(context)),
+      child: child,
+    );
 
     return CarbonPopover(
       highContrast: true,
@@ -62,7 +66,7 @@ class CarbonToggletip extends StatelessWidget {
       onOpen: onOpen,
       onClose: onClose,
       semanticLabel: semanticLabel,
-      child: child,
+      child: trigger,
     );
   }
 }

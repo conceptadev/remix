@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 
 enum CarbonProgressStepState {
@@ -66,22 +67,17 @@ class CarbonProgressStep extends StatelessWidget {
           children: [
             Row(
               children: [
-                Box(
-                  style: BoxStyler()
-                      .width(16)
-                      .height(16)
-                      .borderRadius(.all(.circular(8)))
-                      .color(color())
-                      .alignment(.center),
-                  child: StyledText(
+                SizedBox.square(
+                  dimension: 16,
+                  child: Icon(
                     switch (resolvedState) {
-                      .complete => '✓',
-                      .invalid => '!',
-                      .current || .incomplete || .disabled => '',
+                      .complete => CarbonIcons.checkmarkOutline,
+                      .current => CarbonIcons.incomplete,
+                      .invalid => CarbonIcons.errorFilled,
+                      .incomplete || .disabled => CarbonIcons.circleDash,
                     },
-                    style: TextStyler()
-                        .style(CarbonTokens.label01.mix())
-                        .color(CarbonTokens.textOnColor()),
+                    size: 16,
+                    color: color.resolve(context),
                   ),
                 ),
                 if (includeConnector)

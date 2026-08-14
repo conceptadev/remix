@@ -69,6 +69,29 @@ void main() {
       expect(find.byIcon(Icons.add), findsOneWidget);
     });
 
+    testWidgets('CarbonIconButton requires a semantic label and activates', (
+      tester,
+    ) async {
+      var presses = 0;
+      final semantics = tester.ensureSemantics();
+      await tester.pumpCarbonApp(
+        CarbonIconButton(
+          icon: CarbonIcons.copy,
+          semanticLabel: 'Copy code',
+          onPressed: () => presses++,
+        ),
+      );
+
+      expect(find.byIcon(CarbonIcons.copy), findsOneWidget);
+      expect(
+        tester.getSemantics(find.byType(CarbonIconButton)),
+        isSemantics(label: 'Copy code', isButton: true, hasTapAction: true),
+      );
+      await tester.tap(find.byType(CarbonIconButton));
+      expect(presses, 1);
+      semantics.dispose();
+    });
+
     testWidgets('uses Carbon spacing between labels and trailing icons', (
       tester,
     ) async {

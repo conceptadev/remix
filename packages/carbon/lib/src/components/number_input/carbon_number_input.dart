@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layout_scope.dart';
+import '../../icons/icons.dart';
 import '../button/carbon_button.dart';
 import '../text_input/carbon_text_input.dart';
 
@@ -127,14 +127,14 @@ class _CarbonNumberInputState extends State<CarbonNumberInput> {
             mainAxisSize: .min,
             children: [
               _stepper(
-                symbol: '−',
+                icon: CarbonIcons.subtract,
                 semanticLabel: 'Decrease $label',
                 onPressed: _canChange && decrease != current
                     ? () => _change(current - widget.step)
                     : null,
               ),
               _stepper(
-                symbol: '+',
+                icon: CarbonIcons.add,
                 semanticLabel: 'Increase $label',
                 onPressed: _canChange && increase != current
                     ? () => _change(current + widget.step)
@@ -179,18 +179,16 @@ class _CarbonNumberInputState extends State<CarbonNumberInput> {
   }
 
   Widget _stepper({
-    required String symbol,
+    required IconData icon,
     required String semanticLabel,
     required VoidCallback? onPressed,
   }) => SizedBox.square(
     dimension: widget.size.clampTo(.sm, .lg).height,
-    child: RemixButton(
-      style: carbonButtonStyle(
-        kind: .ghost,
-        size: widget.size.clampTo(.sm, .lg),
-      ).padding(.all(0)).spacing(0).mainAxisAlignment(.center),
-      label: symbol,
+    child: CarbonIconButton(
+      icon: icon,
       semanticLabel: semanticLabel,
+      kind: .ghost,
+      size: widget.size.clampTo(.sm, .lg),
       onPressed: onPressed,
     ),
   );

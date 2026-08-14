@@ -51,6 +51,36 @@ void main() {
     },
   );
 
+  testWidgets('CarbonCheckbox renders its controlled selected state', (
+    tester,
+  ) async {
+    await tester.pumpCarbonApp(
+      CarbonCheckbox(selected: true, label: 'Email updates', onChanged: (_) {}),
+    );
+
+    final surface = tester.widget<DecoratedBox>(
+      find
+          .descendant(
+            of: find.byType(RemixCheckbox),
+            matching: find.byType(DecoratedBox),
+          )
+          .first,
+    );
+    final context = tester.element(find.byType(RemixCheckbox));
+
+    expect(
+      (surface.decoration as BoxDecoration).color,
+      CarbonTokens.iconPrimary.resolve(context),
+    );
+    expect(
+      find.descendant(
+        of: find.byType(RemixCheckbox),
+        matching: find.byType(CustomPaint),
+      ),
+      findsWidgets,
+    );
+  });
+
   testWidgets('CarbonCheckboxGroup owns immutable typed membership', (
     tester,
   ) async {

@@ -5,6 +5,7 @@ import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layer.dart';
 import '../../foundation/carbon_layout_scope.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../button/carbon_button.dart';
 import '../select/carbon_select.dart';
@@ -67,10 +68,6 @@ class CarbonPagination extends StatelessWidget {
     final pageCount = math.max(1, (totalItems / pageSize).ceil());
     final start = totalItems == 0 ? 0 : (page - 1) * pageSize + 1;
     final end = math.min(page * pageSize, totalItems);
-    final buttonStyle = carbonButtonStyle(
-      kind: .ghost,
-      size: .md,
-    ).padding(.all(0)).spacing(0).mainAxisAlignment(.center);
 
     return Semantics(
       role: .navigation,
@@ -141,26 +138,28 @@ class CarbonPagination extends StatelessWidget {
             SizedBox(width: CarbonTokens.spacing03.resolve(context)),
             SizedBox.square(
               dimension: CarbonSize.md.height,
-              child: RemixButton(
-                label: '‹',
+              child: CarbonIconButton(
+                icon: CarbonIcons.caretLeft,
                 semanticLabel: previousPageLabel,
+                kind: .ghost,
+                size: .md,
                 enabled: page > 1 && onPageChanged != null,
                 onPressed: page > 1
                     ? () => onPageChanged?.call(page - 1)
                     : null,
-                style: buttonStyle,
               ),
             ),
             SizedBox.square(
               dimension: CarbonSize.md.height,
-              child: RemixButton(
-                label: '›',
+              child: CarbonIconButton(
+                icon: CarbonIcons.caretRight,
                 semanticLabel: nextPageLabel,
+                kind: .ghost,
+                size: .md,
                 enabled: page < pageCount && onPageChanged != null,
                 onPressed: page < pageCount
                     ? () => onPageChanged?.call(page + 1)
                     : null,
-                style: buttonStyle,
               ),
             ),
           ],

@@ -5,8 +5,10 @@ import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layer.dart';
 import '../../foundation/carbon_layout_scope.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../_shared/carbon_action_surface.dart';
+import '../_shared/carbon_icon_button_style.dart';
 import '../button/carbon_button.dart';
 
 /// Immutable node data consumed by [CarbonTreeView].
@@ -102,10 +104,6 @@ class _CarbonTreeViewState<T extends Object> extends State<CarbonTreeView<T>> {
     final hasChildren = node.children.isNotEmpty;
     final expanded = hasChildren && _expanded.contains(node.id);
     final selected = widget.selectedId == node.id;
-    final buttonStyle = carbonButtonStyle(
-      kind: .ghost,
-      size: .sm,
-    ).padding(.all(0)).spacing(0).mainAxisAlignment(.center);
 
     return Column(
       mainAxisSize: .min,
@@ -130,16 +128,22 @@ class _CarbonTreeViewState<T extends Object> extends State<CarbonTreeView<T>> {
                 SizedBox.square(
                   dimension: CarbonSize.sm.height,
                   child: hasChildren
-                      ? RemixButton(
-                          label: expanded ? '−' : '+',
+                      ? CarbonIconButton(
+                          icon: expanded
+                              ? CarbonIcons.caretDown
+                              : CarbonIcons.caretRight,
                           semanticLabel: expanded
                               ? 'Collapse ${node.label}'
                               : 'Expand ${node.label}',
+                          kind: .ghost,
+                          size: .sm,
                           enabled: node.enabled,
                           onPressed: node.enabled
                               ? () => _toggleExpanded(node.id)
                               : null,
-                          style: buttonStyle,
+                          style: carbonIconButtonForegroundStyle(
+                            CarbonTokens.iconPrimary,
+                          ),
                         )
                       : const SizedBox.shrink(),
                 ),

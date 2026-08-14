@@ -471,6 +471,71 @@
           "label": "2× large"
         }
       }
+    },
+    {
+      "id": "icon-sm",
+      "values": {
+        "kind": {
+          "id": "icon",
+          "label": "Icon"
+        },
+        "size": {
+          "id": "sm",
+          "label": "Small"
+        }
+      }
+    },
+    {
+      "id": "icon-md",
+      "values": {
+        "kind": {
+          "id": "icon",
+          "label": "Icon"
+        },
+        "size": {
+          "id": "md",
+          "label": "Medium"
+        }
+      }
+    },
+    {
+      "id": "icon-lg",
+      "values": {
+        "kind": {
+          "id": "icon",
+          "label": "Icon"
+        },
+        "size": {
+          "id": "lg",
+          "label": "Large"
+        }
+      }
+    },
+    {
+      "id": "icon-xl",
+      "values": {
+        "kind": {
+          "id": "icon",
+          "label": "Icon"
+        },
+        "size": {
+          "id": "xl",
+          "label": "Extra large"
+        }
+      }
+    },
+    {
+      "id": "icon-x2l",
+      "values": {
+        "kind": {
+          "id": "icon",
+          "label": "Icon"
+        },
+        "size": {
+          "id": "x2l",
+          "label": "2× large"
+        }
+      }
     }
   ],
   "columns": [

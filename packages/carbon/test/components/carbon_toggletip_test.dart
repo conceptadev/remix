@@ -43,4 +43,24 @@ void main() {
     expect(spec.constraints?.maxWidth, 288);
     expect(spec.padding, const EdgeInsets.all(16));
   });
+
+  testWidgets('high-contrast content does not recolor the trigger', (
+    tester,
+  ) async {
+    Color? inheritedTriggerColor;
+    await tester.pumpCarbonApp(
+      CarbonToggletip(
+        content: const Text('Details'),
+        child: Builder(
+          builder: (context) {
+            inheritedTriggerColor = DefaultTextStyle.of(context).style.color;
+            return const Text('Visible trigger');
+          },
+        ),
+      ),
+    );
+
+    final context = tester.element(find.text('Visible trigger'));
+    expect(inheritedTriggerColor, CarbonTokens.textPrimary.resolve(context));
+  });
 }

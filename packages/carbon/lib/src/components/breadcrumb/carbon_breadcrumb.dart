@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../link/carbon_link.dart';
 
@@ -112,11 +113,10 @@ class _CollapsedBreadcrumbItem extends StatelessWidget {
   Widget build(BuildContext context) => Semantics(
     label: 'Collapsed breadcrumb items',
     child: ExcludeSemantics(
-      child: StyledText(
-        '…',
-        style: TextStyler()
-            .style(CarbonTokens.bodyCompact01.mix())
-            .color(CarbonTokens.textSecondary()),
+      child: Icon(
+        CarbonIcons.overflowMenuHorizontal,
+        size: CarbonTokens.iconSize01.resolve(context),
+        color: CarbonTokens.iconSecondary.resolve(context),
       ),
     ),
   );

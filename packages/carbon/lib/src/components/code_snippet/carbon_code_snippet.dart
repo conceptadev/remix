@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layer.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../button/carbon_button.dart';
 
@@ -61,8 +62,8 @@ class _CarbonCodeSnippetState extends State<CarbonCodeSnippet> {
       children: [
         Expanded(child: StyledText(widget.code, style: codeStyle)),
         SizedBox(width: CarbonTokens.spacing05.resolve(context)),
-        CarbonButton(
-          label: 'Copy',
+        CarbonIconButton(
+          icon: CarbonIcons.copy,
           kind: .ghost,
           size: .sm,
           semanticLabel: widget.copyLabel,
@@ -107,6 +108,9 @@ class _CarbonCodeSnippetState extends State<CarbonCodeSnippet> {
               alignment: AlignmentDirectional.centerStart,
               child: CarbonButton(
                 label: _expanded ? 'Show less' : 'Show more',
+                trailingIcon: _expanded
+                    ? CarbonIcons.chevronUp
+                    : CarbonIcons.chevronDown,
                 kind: .ghost,
                 size: .sm,
                 onPressed: () => setState(() => _expanded = !_expanded),

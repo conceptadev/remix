@@ -2,8 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layer.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../_shared/carbon_action_surface.dart';
+import '../_shared/carbon_icon_button_style.dart';
 import '../button/carbon_button.dart';
 
 /// Carbon application shell that fixes the header above navigation/content.
@@ -85,15 +87,15 @@ class CarbonHeader extends StatelessWidget {
           if (onMenuPressed != null)
             SizedBox.square(
               dimension: 48,
-              child: RemixButton(
-                label: '☰',
+              child: CarbonIconButton(
+                icon: CarbonIcons.menu,
                 semanticLabel: 'Open navigation',
+                kind: .ghost,
+                size: .lg,
                 onPressed: onMenuPressed,
-                style: carbonButtonStyle(kind: .ghost, size: .lg)
-                    .padding(.all(0))
-                    .spacing(0)
-                    .mainAxisAlignment(.center)
-                    .label(.color(CarbonTokens.textInverse())),
+                style: carbonIconButtonForegroundStyle(
+                  CarbonTokens.textInverse,
+                ),
               ),
             ),
           Expanded(

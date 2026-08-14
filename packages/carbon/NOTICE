@@ -14,6 +14,11 @@ packages at the commit and versions recorded in
 `tool/upstream/carbon-source-lock.json` and
 `lib/src/tokens/generated/carbon_source_manifest.g.dart`.
 
+This product also includes a generated font subset of Carbon Icons 11.86.0.
+The official 32 px SVG sources are distributed by IBM in `@carbon/icons` and
+are vendored under `reference/carbon_icons_11_86_0/`. The sources and generated
+font are licensed under the Apache License, Version 2.0.
+
 This package expects, but does not bundle, the IBM Plex fonts:
 
   IBM Plex

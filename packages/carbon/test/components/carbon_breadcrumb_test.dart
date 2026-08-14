@@ -51,7 +51,7 @@ void main() {
       ),
     );
 
-    expect(find.text('…'), findsOneWidget);
+    expect(find.byIcon(CarbonIcons.overflowMenuHorizontal), findsOneWidget);
     expect(find.text('Two'), findsNothing);
   });
 }

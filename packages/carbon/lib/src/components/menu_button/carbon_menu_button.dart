@@ -2,8 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layout_scope.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_component_tokens.g.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
+import '../_shared/carbon_menu_size.dart';
 import '../button/carbon_button.dart';
 import '../menu/carbon_menu.dart';
 
@@ -43,7 +45,10 @@ class CarbonMenuButton<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final menu = RemixMenu<T>(
-      trigger: RemixMenuTrigger(label: '$label  ▾'),
+      trigger: RemixMenuTrigger(
+        label: label,
+        trailingIcon: CarbonIcons.chevronDown,
+      ),
       items: items,
       controller: controller,
       onSelected: onSelected,
@@ -52,7 +57,7 @@ class CarbonMenuButton<T> extends StatelessWidget {
       positioning: positioning,
       semanticLabel: label,
       style: carbonMenuStyle(
-        size: _menuSize(size),
+        size: carbonMenuSizeFor(size),
       ).trigger(_carbonMenuButtonTriggerStyle(kind: kind, size: size)),
     );
 
@@ -92,7 +97,10 @@ class CarbonOverflowMenu<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final menu = RemixMenu<T>(
-      trigger: const RemixMenuTrigger(label: '•••'),
+      trigger: const RemixMenuTrigger(
+        label: '',
+        icon: CarbonIcons.overflowMenuVertical,
+      ),
       items: items,
       controller: controller,
       onSelected: onSelected,
@@ -114,13 +122,6 @@ class CarbonOverflowMenu<T> extends StatelessWidget {
   }
 }
 
-CarbonMenuSize _menuSize(CarbonSize size) => switch (size.clampTo(.xs, .lg)) {
-  .xs => .xSmall,
-  .sm => .small,
-  .md => .medium,
-  .lg || .xl || .x2l => .large,
-};
-
 MenuTriggerStyler _carbonMenuButtonTriggerStyle({
   required CarbonButtonKind kind,
   required CarbonSize size,
@@ -137,7 +138,8 @@ MenuTriggerStyler _carbonMenuButtonTriggerStyle({
       .padding(square ? .all(0) : .horizontal(CarbonTokens.spacing05()))
       .mainAxisAlignment(square ? .center : .spaceBetween)
       .crossAxisAlignment(.center)
-      .label(.style(CarbonTokens.bodyCompact01.mix()).color(foreground));
+      .label(.style(CarbonTokens.bodyCompact01.mix()).color(foreground))
+      .icon(.size(CarbonTokens.iconSize01()).color(foreground));
 
   return switch (kind) {
     .primary =>
@@ -158,12 +160,14 @@ MenuTriggerStyler _carbonMenuButtonTriggerStyle({
           .onHovered(
             MenuTriggerStyler()
                 .color(CarbonComponentTokens.buttonTertiaryHover())
-                .label(.color(CarbonTokens.textInverse())),
+                .label(.color(CarbonTokens.textInverse()))
+                .icon(.color(CarbonTokens.iconInverse())),
           )
           .onPressed(
             MenuTriggerStyler()
                 .color(CarbonComponentTokens.buttonTertiaryActive())
-                .label(.color(CarbonTokens.textInverse())),
+                .label(.color(CarbonTokens.textInverse()))
+                .icon(.color(CarbonTokens.iconInverse())),
           ),
     .ghost =>
       base

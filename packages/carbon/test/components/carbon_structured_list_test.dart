@@ -32,6 +32,14 @@ void main() {
               CarbonStructuredListCell(child: Text(r'$9')),
             ],
           ),
+          CarbonStructuredListRow(
+            semanticLabel: 'Team plan',
+            onPressed: () {},
+            cells: const [
+              CarbonStructuredListCell(child: Text('Team')),
+              CarbonStructuredListCell(child: Text(r'$29')),
+            ],
+          ),
         ],
       ),
     );
@@ -44,6 +52,8 @@ void main() {
       tester.getSemantics(find.bySemanticsLabel('Starter plan')),
       isSemantics(isSelected: true, hasSelectedState: true),
     );
+    expect(find.byIcon(CarbonIcons.radioButtonChecked), findsOneWidget);
+    expect(find.byIcon(CarbonIcons.radioButton), findsOneWidget);
     await tester.tap(find.bySemanticsLabel('Starter plan'));
     expect(selected, isTrue);
     semantics.dispose();

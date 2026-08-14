@@ -3,6 +3,7 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layer.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 
 part 'carbon_accordion.g.dart';
@@ -23,7 +24,7 @@ Color _resolveCarbonAccordionHover(BuildContext context) =>
 
 /// Carbon's visual recipe for an accordion item.
 @MixWidget(
-  target: RemixAccordion.new,
+  target: _CarbonAccordionBase.new,
   widgetParameters: .only({
     'value',
     'child',
@@ -111,6 +112,67 @@ AccordionStyler carbonAccordionStyle({CarbonAccordionSize size = .medium}) {
             .leadingIcon(.color(CarbonTokens.iconDisabled()))
             .trailingIcon(.color(CarbonTokens.iconDisabled())),
       );
+}
+
+class _CarbonAccordionBase<T> extends StatelessWidget {
+  const _CarbonAccordionBase({
+    super.key,
+    required this.value,
+    required this.child,
+    required this.title,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.enableFeedback = true,
+    this.autofocus = false,
+    this.focusNode,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChange,
+    this.semanticLabel,
+    this.transitionBuilder = RemixAccordion.defaultAccordionTransitionBuilder,
+    this.style = const AccordionStyler.create(),
+  });
+
+  final T value;
+  final Widget child;
+  final String title;
+  final IconData? leadingIcon;
+  final IconData? trailingIcon;
+  final bool enabled;
+  final MouseCursor mouseCursor;
+  final bool enableFeedback;
+  final bool autofocus;
+  final FocusNode? focusNode;
+  final ValueChanged<bool>? onFocusChange;
+  final ValueChanged<bool>? onHoverChange;
+  final ValueChanged<bool>? onPressChange;
+  final String? semanticLabel;
+  final Widget Function(Widget, Animation<double>) transitionBuilder;
+  final AccordionStyler style;
+
+  @override
+  Widget build(BuildContext context) => RemixAccordion<T>(
+    value: value,
+    title: title,
+    leadingIcon: leadingIcon,
+    trailingIcon: trailingIcon,
+    collapsedIcon: CarbonIcons.chevronRight,
+    expandedIcon: CarbonIcons.chevronDown,
+    enabled: enabled,
+    mouseCursor: mouseCursor,
+    enableFeedback: enableFeedback,
+    autofocus: autofocus,
+    focusNode: focusNode,
+    onFocusChange: onFocusChange,
+    onHoverChange: onHoverChange,
+    onPressChange: onPressChange,
+    semanticLabel: semanticLabel,
+    transitionBuilder: transitionBuilder,
+    style: style,
+    child: child,
+  );
 }
 
 /// Coordinates the expansion state of descendant [CarbonAccordion] items.

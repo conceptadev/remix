@@ -1,8 +1,7 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../loading/carbon_loading.dart';
 
@@ -98,63 +97,15 @@ class _CarbonInlineLoadingState extends State<CarbonInlineLoading> {
   Widget _statusIndicator(BuildContext context) => switch (widget.status) {
     .inactive => const SizedBox.square(dimension: 16),
     .active => RemixSpinner(style: carbonLoadingStyle(small: true)),
-    .finished => CustomPaint(
-      size: const Size.square(16),
-      painter: _InlineStatusPainter(
-        color: CarbonTokens.supportSuccess.resolve(context),
-        error: false,
-      ),
+    .finished => Icon(
+      CarbonIcons.checkmarkFilled,
+      size: 16,
+      color: CarbonTokens.supportSuccess.resolve(context),
     ),
-    .error => CustomPaint(
-      size: const Size.square(16),
-      painter: _InlineStatusPainter(
-        color: CarbonTokens.supportError.resolve(context),
-        error: true,
-      ),
+    .error => Icon(
+      CarbonIcons.errorFilled,
+      size: 16,
+      color: CarbonTokens.supportError.resolve(context),
     ),
   };
-}
-
-class _InlineStatusPainter extends CustomPainter {
-  const _InlineStatusPainter({required this.color, required this.error});
-
-  final Color color;
-  final bool error;
-
-  @override
-  void paint(ui.Canvas canvas, ui.Size size) {
-    final stroke = ui.Paint()
-      ..color = color
-      ..style = ui.PaintingStyle.stroke
-      ..strokeWidth = 1.75
-      ..strokeCap = ui.StrokeCap.square;
-    canvas.drawCircle(
-      ui.Offset(size.width / 2, size.height / 2),
-      size.shortestSide / 2 - 1,
-      stroke,
-    );
-    if (error) {
-      canvas
-        ..drawLine(
-          ui.Offset(size.width * 0.34, size.height * 0.34),
-          ui.Offset(size.width * 0.66, size.height * 0.66),
-          stroke,
-        )
-        ..drawLine(
-          ui.Offset(size.width * 0.66, size.height * 0.34),
-          ui.Offset(size.width * 0.34, size.height * 0.66),
-          stroke,
-        );
-    } else {
-      final check = ui.Path()
-        ..moveTo(size.width * 0.28, size.height * 0.52)
-        ..lineTo(size.width * 0.44, size.height * 0.68)
-        ..lineTo(size.width * 0.73, size.height * 0.35);
-      canvas.drawPath(check, stroke);
-    }
-  }
-
-  @override
-  bool shouldRepaint(_InlineStatusPainter oldDelegate) =>
-      oldDelegate.color != color || oldDelegate.error != error;
 }

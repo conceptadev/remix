@@ -30,6 +30,11 @@ export 'src/tokens/generated/carbon_component_tokens.g.dart'
 export 'src/tokens/generated/carbon_type.g.dart' show CarbonFontFamilies;
 
 // ---------------------------------------------------------------------------
+// Icons
+// ---------------------------------------------------------------------------
+export 'src/icons/icons.dart';
+
+// ---------------------------------------------------------------------------
 // Components
 // ---------------------------------------------------------------------------
 export 'src/components/components.dart';

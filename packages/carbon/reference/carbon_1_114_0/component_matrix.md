@@ -22,7 +22,7 @@ does not add the corresponding Remix API to Carbon's public surface.
 | `accordion` | `CarbonAccordionGroup`, `CarbonAccordion` | `remix_recipe` | `RemixAccordionGroup`, `RemixAccordion` |
 | `ai_label` | `CarbonAiLabel` | `carbon_composite` | `RemixPopover` |
 | `breadcrumb` | `CarbonBreadcrumb`, `CarbonBreadcrumbItem` | `carbon_native` | Carbon-native |
-| `button` | `CarbonButton` | `remix_recipe` | `RemixButton` |
+| `button` | `CarbonButton`, `CarbonIconButton` | `remix_recipe` | `RemixButton`, `RemixIconButton` |
 | `checkbox` | `CarbonCheckbox`, `CarbonCheckboxGroup`, `CarbonCheckboxGroupItem` | `remix_recipe` | `RemixCheckbox`, `RemixCheckboxGroup`, `RemixCheckboxGroupItem` |
 | `code_snippet` | `CarbonCodeSnippet` | `carbon_native` | Carbon-native |
 | `contained_list` | `CarbonContainedList`, `CarbonContainedListItem` | `carbon_native` | Carbon-native |

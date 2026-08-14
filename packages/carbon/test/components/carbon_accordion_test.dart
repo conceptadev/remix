@@ -34,6 +34,8 @@ void main() {
     );
 
     expect(find.text('First panel'), findsNothing);
+    expect(find.byIcon(CarbonIcons.chevronRight), findsNWidgets(2));
+    expect(find.byIcon(CarbonIcons.chevronDown), findsNothing);
     expect(
       tester.getSemantics(find.text('First section')),
       isSemantics(
@@ -49,6 +51,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(controller.values, {'first'});
     expect(find.text('First panel'), findsOneWidget);
+    expect(find.byIcon(CarbonIcons.chevronRight), findsOneWidget);
+    expect(find.byIcon(CarbonIcons.chevronDown), findsOneWidget);
 
     await tester.tap(find.text('Second section'));
     await tester.pumpAndSettle();

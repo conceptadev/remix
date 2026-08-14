@@ -17,6 +17,7 @@ void main() {
 
       expect(trigger.label, equals('Options'));
       expect(trigger.icon, isNull);
+      expect(trigger.trailingIcon, isNull);
     });
 
     test('creates trigger with label and icon', () {
@@ -24,6 +25,16 @@ void main() {
 
       expect(trigger.label, equals('Options'));
       expect(trigger.icon, equals(Icons.more_vert));
+    });
+
+    test('creates trigger with a trailing icon', () {
+      const trigger = RemixMenuTrigger(
+        label: 'Options',
+        trailingIcon: Icons.expand_more,
+      );
+
+      expect(trigger.label, equals('Options'));
+      expect(trigger.trailingIcon, equals(Icons.expand_more));
     });
   });
 
@@ -103,6 +114,24 @@ void main() {
 
       expect(find.text('Options'), findsOneWidget);
       expect(find.byIcon(Icons.more_vert), findsOneWidget);
+    });
+
+    testWidgets('renders a trailing icon after the trigger label', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(
+            label: 'Options',
+            trailingIcon: Icons.expand_more,
+          ),
+          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Options'), findsOneWidget);
+      expect(find.byIcon(Icons.expand_more), findsOneWidget);
     });
 
     testWidgets('renders menu with multiple items', (tester) async {

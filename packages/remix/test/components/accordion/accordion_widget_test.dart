@@ -159,6 +159,39 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
+
+        await tester.tap(find.text('Test Title'));
+        await tester.pumpAndSettle();
+
+        expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
+      });
+
+      testWidgets('switches custom collapsed and expanded icons', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixAccordionGroup<String>(
+            controller: RemixAccordionController<String>(),
+            child: RemixAccordion<String>(
+              value: 'item1',
+              title: 'Test Title',
+              collapsedIcon: Icons.chevron_right,
+              expandedIcon: Icons.keyboard_arrow_down,
+              child: const Text('Content'),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        expect(find.byIcon(Icons.chevron_right), findsOneWidget);
+        expect(find.byIcon(Icons.keyboard_arrow_down), findsNothing);
+
+        await tester.tap(find.text('Test Title'));
+        await tester.pumpAndSettle();
+
+        expect(find.byIcon(Icons.chevron_right), findsNothing);
+        expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
       });
 
       testWidgets('renders container effects on the outer panel', (

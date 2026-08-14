@@ -3,6 +3,7 @@ import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layer.dart';
 import '../../foundation/carbon_layout_scope.dart';
+import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../_shared/carbon_field_frame.dart';
 
@@ -297,7 +298,11 @@ class CarbonSelect<T extends Object> extends StatelessWidget {
     }
 
     final select = RemixSelect<_CarbonSelectValue<T>>(
-      trigger: RemixSelectTrigger(placeholder: placeholder),
+      trigger: RemixSelectTrigger(
+        placeholder: placeholder,
+        collapsedIcon: CarbonIcons.chevronDown,
+        expandedIcon: CarbonIcons.chevronUp,
+      ),
       items: mapped,
       selectedValue: selectedValue == null
           ? null
