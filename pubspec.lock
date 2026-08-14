@@ -457,13 +457,14 @@ packages:
     source: hosted
     version: "0.0.1-beta.1"
   mix_generator:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: mix_generator
-      sha256: "28bf9e71a5a79a02189bec1d5f9d4b0fa560532a36228ff8613272240b091b55"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.0-beta.2"
+      path: "packages/mix_generator"
+      ref: "367b1f916498008be89867d0fd192c383f877542"
+      resolved-ref: "367b1f916498008be89867d0fd192c383f877542"
+      url: "https://github.com/conceptadev/mix.git"
+    source: git
+    version: "2.2.0-beta.3"
   mustache_template:
     dependency: transitive
     description:

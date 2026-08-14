@@ -695,6 +695,37 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     return merge(ToggleStyler(modifier: value));
   }
 
+  RemixToggle call({
+    Key? key,
+    required bool selected,
+    ValueChanged<bool>? onChanged,
+    bool enabled = true,
+    String? label,
+    IconData? icon,
+    bool enableFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    String? semanticLabel,
+    bool excludeSemantics = false,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+  }) {
+    return RemixToggle(
+      key: key,
+      style: this,
+      selected: selected,
+      onChanged: onChanged,
+      enabled: enabled,
+      label: label,
+      icon: icon,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+      mouseCursor: mouseCursor,
+    );
+  }
+
   /// Merges with another [ToggleStyler].
   @override
   ToggleStyler merge(ToggleStyler? other) {

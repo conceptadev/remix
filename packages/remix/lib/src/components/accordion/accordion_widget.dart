@@ -110,10 +110,12 @@ class RemixAccordion<T> extends StatelessWidget {
     this.onHoverChange,
     this.onPressChange,
     this.semanticLabel,
-    this.transitionBuilder = defaultAccordionTransitionBuilder,
+    Widget Function(Widget, Animation<double>)? transitionBuilder,
     this.style = const AccordionStyler.create(),
     this.styleSpec,
-  }) : assert(
+  }) : transitionBuilder =
+           transitionBuilder ?? defaultAccordionTransitionBuilder,
+       assert(
          title != null || builder != null,
          'Either title or builder must be provided',
        );

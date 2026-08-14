@@ -11,6 +11,5 @@ import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
 
 part 'tabs_spec.dart';
-part 'tabs_style.dart';
 part 'tabs_widget.dart';
 part 'tabs.g.dart';

@@ -1,7 +1,10 @@
 part of 'accordion.dart';
 
 /// Resolved visual properties for a [RemixAccordion].
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(
+  target: RemixAccordion.new,
+  extraStylerMixins: [RemixBoxStylerMixin],
+)
 class AccordionSpec with _$AccordionSpec {
   /// Outer panel: radius, border, fill, and clipping shared by [trigger] and
   /// [content].

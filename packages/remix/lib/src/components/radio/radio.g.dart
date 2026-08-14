@@ -633,6 +633,31 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     return merge(RadioStyler(modifier: value));
   }
 
+  RemixRadio<T> call<T>({
+    Key? key,
+    required T value,
+    bool enabled = true,
+    bool toggleable = false,
+    MouseCursor? mouseCursor,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    String? semanticLabel,
+    bool excludeSemantics = false,
+  }) {
+    return RemixRadio<T>(
+      key: key,
+      style: this,
+      value: value,
+      enabled: enabled,
+      toggleable: toggleable,
+      mouseCursor: mouseCursor,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+    );
+  }
+
   /// Merges with another [RadioStyler].
   @override
   RadioStyler merge(RadioStyler? other) {

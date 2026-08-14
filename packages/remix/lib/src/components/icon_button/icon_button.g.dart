@@ -667,6 +667,43 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     return merge(IconButtonStyler(modifier: value));
   }
 
+  RemixIconButton call({
+    Key? key,
+    required IconData? icon,
+    RemixIconButtonIconBuilder? iconBuilder,
+    String? semanticLabel,
+    RemixIconButtonLoadingBuilder? loadingBuilder,
+    bool loading = false,
+    bool enabled = true,
+    bool enableFeedback = true,
+    VoidCallback? onPressed,
+    VoidCallback? onLongPress,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    String? semanticHint,
+    bool excludeSemantics = false,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+  }) {
+    return RemixIconButton(
+      key: key,
+      style: this,
+      icon: icon,
+      iconBuilder: iconBuilder,
+      semanticLabel: semanticLabel,
+      loadingBuilder: loadingBuilder,
+      loading: loading,
+      enabled: enabled,
+      enableFeedback: enableFeedback,
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticHint: semanticHint,
+      excludeSemantics: excludeSemantics,
+      mouseCursor: mouseCursor,
+    );
+  }
+
   /// Merges with another [IconButtonStyler].
   @override
   IconButtonStyler merge(IconButtonStyler? other) {

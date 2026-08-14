@@ -25,62 +25,6 @@ extension RemixCheckboxStylerRemixHelpers on CheckboxStyler {
     );
   }
 
-  /// Creates a [RemixCheckbox] widget with this style applied.
-  ///
-  /// Example:
-  /// ```dart
-  /// final checkbox = CheckboxStyler()
-  ///   .fillColor(Colors.blue)
-  ///   .size(24, 24);
-  ///
-  /// // Use it like a function
-  /// checkbox(
-  ///   selected: isChecked,
-  ///   onChanged: (value) => setState(() => isChecked = value),
-  /// )
-  /// ```
-  ///
-  /// This forwarding surface remains explicit because Mix's generated
-  /// `@MixableSpec(target:)` call requires the target to extend [StyleWidget].
-  /// [RemixCheckbox] instead resolves its style inside [NakedCheckbox] with the
-  /// Naked state controller so state variants stay synchronized.
-  RemixCheckbox call({
-    Key? key,
-    required bool? selected,
-    ValueChanged<bool?>? onChanged,
-    bool enabled = true,
-    bool tristate = false,
-    IconData? checkedIcon,
-    IconData? uncheckedIcon,
-    IconData? indeterminateIcon,
-    FocusNode? focusNode,
-    bool autofocus = false,
-    bool enableFeedback = true,
-    String? label,
-    String? semanticLabel,
-    Size minimumTapTargetSize = const Size.square(48),
-    MouseCursor mouseCursor = SystemMouseCursors.click,
-  }) {
-    return RemixCheckbox(
-      key: key,
-      selected: selected,
-      onChanged: onChanged,
-      enabled: enabled,
-      tristate: tristate,
-      checkedIcon: checkedIcon,
-      uncheckedIcon: uncheckedIcon,
-      indeterminateIcon: indeterminateIcon,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      enableFeedback: enableFeedback,
-      label: label,
-      semanticLabel: semanticLabel,
-      minimumTapTargetSize: minimumTapTargetSize,
-      mouseCursor: mouseCursor,
-      style: this,
-    );
-  }
-
   CheckboxStyler icon(IconStyler value) {
     return merge(CheckboxStyler(indicator: value));
   }

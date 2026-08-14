@@ -679,6 +679,29 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     return merge(DialogStyler(modifier: value));
   }
 
+  RemixDialog call({
+    Key? key,
+    Widget? child,
+    String? title,
+    String? description,
+    List<Widget>? actions,
+    bool scrollable = false,
+    bool modal = true,
+    String? semanticLabel,
+  }) {
+    return RemixDialog(
+      key: key,
+      style: this,
+      child: child,
+      title: title,
+      description: description,
+      actions: actions,
+      scrollable: scrollable,
+      modal: modal,
+      semanticLabel: semanticLabel,
+    );
+  }
+
   /// Merges with another [DialogStyler].
   @override
   DialogStyler merge(DialogStyler? other) {

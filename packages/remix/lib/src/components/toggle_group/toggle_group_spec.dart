@@ -1,7 +1,10 @@
 part of 'toggle_group.dart';
 
 /// Resolved visual properties for a [RemixToggleGroup].
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(
+  target: RemixToggleGroup.new,
+  extraStylerMixins: [RemixBoxStylerMixin],
+)
 class ToggleGroupSpec with _$ToggleGroupSpec {
   /// Layout and decoration for the group container.
   @override

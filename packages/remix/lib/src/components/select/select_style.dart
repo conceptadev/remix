@@ -1,59 +1,5 @@
 part of 'select.dart';
 
-/// Style configuration for [RemixSelect] trigger and menu overlay.
-extension RemixSelectStylerRemixHelpers on SelectStyler {
-  /// Creates a [RemixSelect] widget with this style applied.
-  ///
-  /// Example:
-  /// ```dart
-  /// SelectStyler()
-  ///   .trigger(...)
-  ///   .menuContainer(...)
-  ///   .call<String>(
-  ///     trigger: RemixSelectTrigger(placeholder: 'Select an option'),
-  ///     items: [
-  ///       RemixSelectItem(value: 'apple', label: 'Apple'),
-  ///       RemixSelectItem(value: 'banana', label: 'Banana'),
-  ///     ],
-  ///   )
-  /// ```
-  RemixSelect<T> call<T>({
-    Key? key,
-    required RemixSelectTrigger trigger,
-    required List<RemixSelectItem<T>> items,
-    T? selectedValue,
-    OverlayPositionConfig positioning = const OverlayPositionConfig(
-      side: .bottom,
-      alignment: .center,
-    ),
-    ValueChanged<T?>? onChanged,
-    VoidCallback? onOpen,
-    VoidCallback? onClose,
-    bool enabled = true,
-    MouseCursor mouseCursor = SystemMouseCursors.click,
-    bool closeOnSelect = true,
-    String? semanticLabel,
-    FocusNode? focusNode,
-  }) {
-    return RemixSelect(
-      key: key,
-      trigger: trigger,
-      items: items,
-      selectedValue: selectedValue,
-      positioning: positioning,
-      onChanged: onChanged,
-      onOpen: onOpen,
-      onClose: onClose,
-      enabled: enabled,
-      mouseCursor: mouseCursor,
-      semanticLabel: semanticLabel,
-      closeOnSelect: closeOnSelect,
-      focusNode: focusNode,
-      style: this,
-    );
-  }
-}
-
 /// Style configuration for an item in a [RemixSelect] menu.
 extension RemixSelectMenuItemStylerRemixHelpers on SelectMenuItemStyler {
   /// Sets label styling (delegates to text for consistency with mixin)

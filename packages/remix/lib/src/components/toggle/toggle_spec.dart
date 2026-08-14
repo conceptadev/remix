@@ -2,6 +2,7 @@ part of 'toggle.dart';
 
 /// Resolved visual properties for a [RemixToggle].
 @MixableSpec(
+  target: RemixToggle.new,
   extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
 )
 class ToggleSpec with _$ToggleSpec {

@@ -12,6 +12,5 @@ import '../../rendering/remix_box_effects.dart';
 import '../spinner/spinner.dart';
 
 part 'icon_button_spec.dart';
-part 'icon_button_style.dart';
 part 'icon_button_widget.dart';
 part 'icon_button.g.dart';

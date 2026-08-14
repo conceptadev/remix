@@ -12,6 +12,5 @@ import '../../utilities/remix_style.dart';
 import '../spinner/spinner.dart';
 
 part 'button_spec.dart';
-part 'button_style.dart';
 part 'button_widget.dart';
 part 'button.g.dart';

@@ -644,6 +644,7 @@ void main() {
           title: 'Details',
           child: const Text('Content'),
           enabled: false,
+          transitionBuilder: null,
         );
 
         expect(accordion, isA<RemixAccordion<String>>());
@@ -652,6 +653,10 @@ void main() {
         expect(accordion.title, 'Details');
         expect(accordion.child, isA<Text>());
         expect(accordion.enabled, isFalse);
+        expect(
+          accordion.transitionBuilder,
+          same(RemixAccordion.defaultAccordionTransitionBuilder),
+        );
       });
     });
 

@@ -1,5 +1,10 @@
 ## 1.0.0-beta.4
 
+- **BREAKING**: Replace handwritten component `Styler.call(...)` extensions
+  with generator-owned instance methods. Ordinary `.call(...)` and callable
+  styler syntax remain source-compatible, but explicit references to the old
+  `Remix*StylerRemixHelpers` call extensions are removed.
+- **FEAT**: Add a generated callable widget surface to `DataTableStyler`.
 - **BREAKING**: `RemixSelectTrigger` gains `collapsedIcon` and `expandedIcon`,
   replacing the hardcoded trigger chevron. Each state falls back independently,
   so a trigger that only sets one keeps the default for the other.

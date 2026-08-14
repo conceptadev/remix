@@ -1,7 +1,10 @@
 part of 'segmented_control.dart';
 
 /// Resolved visual properties for a [RemixSegmentedControl].
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(
+  target: RemixSegmentedControl.new,
+  extraStylerMixins: [RemixBoxStylerMixin],
+)
 class SegmentedControlSpec with _$SegmentedControlSpec {
   /// Layout and decoration for the persistent control track.
   @override

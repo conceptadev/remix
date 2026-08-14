@@ -9,6 +9,5 @@ import 'package:naked_ui/naked_ui.dart';
 import '../../utilities/remix_style.dart';
 
 part 'tooltip_spec.dart';
-part 'tooltip_style.dart';
 part 'tooltip_widget.dart';
 part 'tooltip.g.dart';

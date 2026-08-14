@@ -14,9 +14,7 @@ void main() {
     final legacyFactory = RemixButtonStyler.color(Colors.blue);
 
     final ButtonStyler canonical = legacy;
-    final legacyWidget = RemixButtonStylerRemixHelpers(
-      legacy,
-    ).call(label: 'Legacy button');
+    final legacyWidget = legacy.call(label: 'Legacy button');
 
     expect(canonical, same(legacy));
     expect(legacy.merge(emptyLegacy), isA<ButtonStyler>());

@@ -1,7 +1,7 @@
 part of 'select.dart';
 
 /// Resolved visual values for a [RemixSelect].
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(target: RemixSelect.new, extraStylerMixins: [RemixBoxStylerMixin])
 class SelectSpec with _$SelectSpec {
   @override
   final StyleSpec<SelectTriggerSpec> trigger;

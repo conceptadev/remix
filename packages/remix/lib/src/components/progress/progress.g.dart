@@ -700,6 +700,21 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     return merge(ProgressStyler(modifier: value));
   }
 
+  RemixProgress call({
+    Key? key,
+    required double value,
+    String? semanticsLabel,
+    String? semanticsValue,
+  }) {
+    return RemixProgress(
+      key: key,
+      style: this,
+      value: value,
+      semanticsLabel: semanticsLabel,
+      semanticsValue: semanticsValue,
+    );
+  }
+
   /// Merges with another [ProgressStyler].
   @override
   ProgressStyler merge(ProgressStyler? other) {

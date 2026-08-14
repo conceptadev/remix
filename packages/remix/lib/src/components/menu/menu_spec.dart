@@ -41,7 +41,7 @@ typedef RemixMenuTriggerSpec = MenuTriggerSpec;
 ///
 /// The menu spec owns the trigger, overlay, shared and semantic item styles,
 /// and divider style used when rendering the menu and its popup content.
-@MixableSpec()
+@MixableSpec(target: RemixMenu.new)
 class MenuSpec with _$MenuSpec {
   /// Style spec for the trigger content.
   @override

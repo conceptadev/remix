@@ -625,6 +625,43 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     return merge(PopoverStyler(modifier: value));
   }
 
+  RemixPopover call({
+    Key? key,
+    required Widget popoverChild,
+    required Widget child,
+    OverlayPositionConfig positioning = const OverlayPositionConfig(),
+    bool consumeOutsideTaps = true,
+    bool useRootOverlay = false,
+    bool openOnTap = true,
+    FocusNode? triggerFocusNode,
+    VoidCallback? onOpen,
+    VoidCallback? onClose,
+    RawMenuAnchorOpenRequestedCallback? onOpenRequested,
+    RawMenuAnchorCloseRequestedCallback? onCloseRequested,
+    MenuController? controller,
+    String? semanticLabel,
+    bool excludeSemantics = false,
+  }) {
+    return RemixPopover(
+      key: key,
+      style: this,
+      popoverChild: popoverChild,
+      child: child,
+      positioning: positioning,
+      consumeOutsideTaps: consumeOutsideTaps,
+      useRootOverlay: useRootOverlay,
+      openOnTap: openOnTap,
+      triggerFocusNode: triggerFocusNode,
+      onOpen: onOpen,
+      onClose: onClose,
+      onOpenRequested: onOpenRequested,
+      onCloseRequested: onCloseRequested,
+      controller: controller,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+    );
+  }
+
   /// Merges with another [PopoverStyler].
   @override
   PopoverStyler merge(PopoverStyler? other) {
