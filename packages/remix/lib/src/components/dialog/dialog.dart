@@ -11,6 +11,5 @@ import '../../rendering/remix_box_effects.dart';
 import '../../utilities/remix_style.dart';
 
 part 'dialog_spec.dart';
-part 'dialog_style.dart';
 part 'dialog_widget.dart';
 part 'dialog.g.dart';

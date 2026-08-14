@@ -10,6 +10,5 @@ import '../../rendering/remix_box_effects.dart';
 import '../../utilities/remix_style.dart';
 
 part 'popover_spec.dart';
-part 'popover_style.dart';
 part 'popover_widget.dart';
 part 'popover.g.dart';

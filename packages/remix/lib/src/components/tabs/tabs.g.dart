@@ -802,6 +802,10 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     return merge(TabBarStyler(modifier: value));
   }
 
+  RemixTabBar call({Key? key, required Widget child}) {
+    return RemixTabBar(key: key, style: this, child: child);
+  }
+
   /// Merges with another [TabBarStyler].
   @override
   TabBarStyler merge(TabBarStyler? other) {
@@ -1423,6 +1427,43 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     return merge(TabStyler(modifier: value));
   }
 
+  RemixTab call({
+    Key? key,
+    required String tabId,
+    Widget? child,
+    String? label,
+    IconData? icon,
+    bool enabled = true,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+    bool enableFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    ValueChanged<bool>? onFocusChange,
+    ValueChanged<bool>? onHoverChange,
+    ValueChanged<bool>? onPressChange,
+    ValueWidgetBuilder<NakedTabState>? builder,
+    String? semanticLabel,
+  }) {
+    return RemixTab(
+      key: key,
+      style: this,
+      tabId: tabId,
+      child: child,
+      label: label,
+      icon: icon,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      onFocusChange: onFocusChange,
+      onHoverChange: onHoverChange,
+      onPressChange: onPressChange,
+      builder: builder,
+      semanticLabel: semanticLabel,
+    );
+  }
+
   /// Merges with another [TabStyler].
   @override
   TabStyler merge(TabStyler? other) {
@@ -1990,6 +2031,21 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
   /// Sets the widget modifier.
   TabViewStyler modifier(WidgetModifierConfig value) {
     return merge(TabViewStyler(modifier: value));
+  }
+
+  RemixTabView call({
+    Key? key,
+    required String tabId,
+    required Widget child,
+    bool maintainState = true,
+  }) {
+    return RemixTabView(
+      key: key,
+      style: this,
+      tabId: tabId,
+      child: child,
+      maintainState: maintainState,
+    );
   }
 
   /// Merges with another [TabViewStyler].

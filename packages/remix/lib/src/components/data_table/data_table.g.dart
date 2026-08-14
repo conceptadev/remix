@@ -963,6 +963,62 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     return merge(DataTableStyler(modifier: value));
   }
 
+  RemixDataTable<T> call<T>({
+    Key? key,
+    required List<T> rows,
+    required List<RemixDataTableColumn<T>> columns,
+    String? semanticLabel,
+    RemixDataTableSort? sort,
+    ValueChanged<RemixDataTableSort>? onSortChanged,
+    Object Function(T row)? rowId,
+    Set<Object> selectedRowIds = const {},
+    ValueChanged<Set<Object>>? onSelectionChanged,
+    int? totalRows,
+    int pageIndex = 0,
+    int pageSize = 10,
+    List<int> pageSizeOptions = const [10, 20, 50],
+    ValueChanged<int>? onPageChanged,
+    ValueChanged<int>? onPageSizeChanged,
+    double minimumWidth = 0,
+    WidgetBuilder? emptyBuilder,
+    RemixDataTableLabels labels = const RemixDataTableLabels(),
+    RemixDataTablePageRangeFormatter pageRangeFormatter =
+        remixDefaultDataTablePageRangeFormatter,
+    IconData? sortableIcon,
+    IconData? sortAscendingIcon,
+    IconData? sortDescendingIcon,
+    IconData? previousPageIcon,
+    IconData? nextPageIcon,
+  }) {
+    return RemixDataTable<T>(
+      key: key,
+      style: this,
+      rows: rows,
+      columns: columns,
+      semanticLabel: semanticLabel,
+      sort: sort,
+      onSortChanged: onSortChanged,
+      rowId: rowId,
+      selectedRowIds: selectedRowIds,
+      onSelectionChanged: onSelectionChanged,
+      totalRows: totalRows,
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+      pageSizeOptions: pageSizeOptions,
+      onPageChanged: onPageChanged,
+      onPageSizeChanged: onPageSizeChanged,
+      minimumWidth: minimumWidth,
+      emptyBuilder: emptyBuilder,
+      labels: labels,
+      pageRangeFormatter: pageRangeFormatter,
+      sortableIcon: sortableIcon,
+      sortAscendingIcon: sortAscendingIcon,
+      sortDescendingIcon: sortDescendingIcon,
+      previousPageIcon: previousPageIcon,
+      nextPageIcon: nextPageIcon,
+    );
+  }
+
   /// Merges with another [DataTableStyler].
   @override
   DataTableStyler merge(DataTableStyler? other) {

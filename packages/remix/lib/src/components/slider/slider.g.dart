@@ -803,6 +803,43 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     return merge(SliderStyler(modifier: value));
   }
 
+  RemixSlider call({
+    Key? key,
+    required double value,
+    ValueChanged<double>? onChanged,
+    ValueChanged<double>? onChangeStart,
+    ValueChanged<double>? onChangeEnd,
+    double min = 0.0,
+    double max = 1.0,
+    bool enabled = true,
+    bool enableFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    int? snapDivisions,
+    String? semanticLabel,
+    NakedSliderSemanticFormatterCallback? semanticFormatterCallback,
+    bool excludeSemantics = false,
+  }) {
+    return RemixSlider(
+      key: key,
+      style: this,
+      value: value,
+      onChanged: onChanged,
+      onChangeStart: onChangeStart,
+      onChangeEnd: onChangeEnd,
+      min: min,
+      max: max,
+      enabled: enabled,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      snapDivisions: snapDivisions,
+      semanticLabel: semanticLabel,
+      semanticFormatterCallback: semanticFormatterCallback,
+      excludeSemantics: excludeSemantics,
+    );
+  }
+
   /// Merges with another [SliderStyler].
   @override
   SliderStyler merge(SliderStyler? other) {

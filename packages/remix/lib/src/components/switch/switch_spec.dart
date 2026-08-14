@@ -1,7 +1,7 @@
 part of 'switch.dart';
 
 /// Resolved visual values for a [RemixSwitch].
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(target: RemixSwitch.new, extraStylerMixins: [RemixBoxStylerMixin])
 class SwitchSpec with _$SwitchSpec {
   @override
   @MixableField(forwardStyler: true)

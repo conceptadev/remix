@@ -1,7 +1,7 @@
 part of 'popover.dart';
 
 /// Resolved visual properties for a [RemixPopover] overlay.
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(target: RemixPopover.new, extraStylerMixins: [RemixBoxStylerMixin])
 class PopoverSpec with _$PopoverSpec {
   @override
   @MixableField(forwardStyler: true)

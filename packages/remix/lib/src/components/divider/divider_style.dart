@@ -12,9 +12,4 @@ extension RemixDividerStylerRemixHelpers on DividerStyler {
       ),
     );
   }
-
-  /// Creates a [RemixDivider] widget with this style applied.
-  RemixDivider call({Key? key}) {
-    return RemixDivider(key: key, style: this);
-  }
 }

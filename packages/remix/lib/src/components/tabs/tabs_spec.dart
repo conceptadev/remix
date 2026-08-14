@@ -1,7 +1,7 @@
 part of 'tabs.dart';
 
 /// Resolved visual values for a [RemixTabBar].
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(target: RemixTabBar.new, extraStylerMixins: [RemixBoxStylerMixin])
 class TabBarSpec with _$TabBarSpec {
   @override
   @MixableField(forwardStyler: true)
@@ -19,6 +19,7 @@ typedef RemixTabBarSpec = TabBarSpec;
 
 /// Resolved visual values for an individual [RemixTab].
 @MixableSpec(
+  target: RemixTab.new,
   extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
 )
 class TabSpec with _$TabSpec {
@@ -46,7 +47,7 @@ class TabSpec with _$TabSpec {
 typedef RemixTabSpec = TabSpec;
 
 /// Resolved visual values for a [RemixTabView].
-@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+@MixableSpec(target: RemixTabView.new, extraStylerMixins: [RemixBoxStylerMixin])
 class TabViewSpec with _$TabViewSpec {
   @override
   @MixableField(forwardStyler: true)

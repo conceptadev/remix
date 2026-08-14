@@ -616,6 +616,10 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     return merge(CardStyler(modifier: value));
   }
 
+  RemixCard call({Key? key, Widget? child}) {
+    return RemixCard(key: key, style: this, child: child);
+  }
+
   /// Merges with another [CardStyler].
   @override
   CardStyler merge(CardStyler? other) {

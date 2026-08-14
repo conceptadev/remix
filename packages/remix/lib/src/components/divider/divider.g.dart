@@ -597,6 +597,10 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     return merge(DividerStyler(modifier: value));
   }
 
+  RemixDivider call({Key? key}) {
+    return RemixDivider(key: key, style: this);
+  }
+
   /// Merges with another [DividerStyler].
   @override
   DividerStyler merge(DividerStyler? other) {

@@ -29,7 +29,7 @@ class FortalAccordion<T> extends StatelessWidget {
     this.onHoverChange,
     this.onPressChange,
     this.semanticLabel,
-    this.transitionBuilder = RemixAccordion.defaultAccordionTransitionBuilder,
+    this.transitionBuilder,
   });
 
   const FortalAccordion.surface({
@@ -52,7 +52,7 @@ class FortalAccordion<T> extends StatelessWidget {
     this.onHoverChange,
     this.onPressChange,
     this.semanticLabel,
-    this.transitionBuilder = RemixAccordion.defaultAccordionTransitionBuilder,
+    this.transitionBuilder,
   }) : variant = FortalAccordionVariant.surface;
 
   const FortalAccordion.soft({
@@ -75,7 +75,7 @@ class FortalAccordion<T> extends StatelessWidget {
     this.onHoverChange,
     this.onPressChange,
     this.semanticLabel,
-    this.transitionBuilder = RemixAccordion.defaultAccordionTransitionBuilder,
+    this.transitionBuilder,
   }) : variant = FortalAccordionVariant.soft;
 
   final FortalAccordionVariant variant;
@@ -116,7 +116,7 @@ class FortalAccordion<T> extends StatelessWidget {
 
   final String? semanticLabel;
 
-  final Widget Function(Widget, Animation<double>) transitionBuilder;
+  final Widget Function(Widget, Animation<double>)? transitionBuilder;
 
   @override
   Widget build(BuildContext context) {
