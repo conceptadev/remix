@@ -120,14 +120,17 @@ melos:
       description: Verify published Remix libraries contain no direct Material usage
 
     fortal:icons:generate:
-      run: uv run --frozen --project packages/remix_fortal/tool/radix_icons glyphpact --config packages/remix_fortal/tool/radix_icons/glyphpact.json
-      description: Regenerate the locked FortalIcons font and Dart provider
+      steps:
+        - uv run --frozen --project packages/remix_fortal/tool/radix_icons glyphpact --config packages/remix_fortal/tool/radix_icons/glyphpact.json
+        - uv run --frozen --project packages/remix_fortal/tool/radix_icons python packages/remix_fortal/tool/radix_icons/generate_icons_index.py
+      description: Regenerate the locked FortalIcons font, Dart provider, and opt-in index
 
     fortal:icons:check:
       steps:
         - uv run --frozen --project packages/remix_fortal/tool/radix_icons glyphpact --config packages/remix_fortal/tool/radix_icons/glyphpact.json --check
+        - uv run --frozen --project packages/remix_fortal/tool/radix_icons python -m unittest discover -s packages/remix_fortal/tool/radix_icons -p 'test_*.py'
         - uv run --frozen --project packages/remix_fortal/tool/radix_icons python packages/remix_fortal/tool/radix_icons/verify.py
-      description: Verify the pinned Radix snapshot and generated icon artifacts
+      description: Verify the pinned Radix snapshot, generated icon artifacts, and opt-in index
 
     ci:
       steps:

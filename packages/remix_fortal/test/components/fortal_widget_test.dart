@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../helpers/contrast.dart';
 import '../helpers/test_helpers.dart';
 
 typedef _StyleAwareFortalMenuConstructor =
@@ -109,51 +110,162 @@ void main() {
       expect(find.byType(RemixBadge), findsOneWidget);
     });
 
-    testWidgets('non-solid FortalBadge variants use accessible accent text', (
+    testWidgets(
+      'non-solid FortalBadge variants use the low-contrast A11 label',
+      (tester) async {
+        final colors = resolveFortalTokens(const FortalThemeConfig());
+
+        for (final variant in [
+          FortalBadgeVariant.soft,
+          FortalBadgeVariant.surface,
+          FortalBadgeVariant.outline,
+        ]) {
+          await tester.pumpRemixApp(
+            FortalBadge(label: variant.name, variant: variant),
+          );
+          await tester.pumpAndSettle();
+
+          final label = tester.widget<Text>(find.text(variant.name));
+          expect(
+            label.style?.color,
+            colors.accent.scale.alphaStep(11),
+            reason:
+                '${variant.name} badges use the Radix low-contrast text step',
+          );
+        }
+      },
+    );
+
+    testWidgets('default soft badge pairs accentA3 fill with accentA11 label', (
       tester,
     ) async {
-      final colors = resolveFortalTokens(const FortalThemeConfig());
+      late Color fill;
+      late Color label;
+      late Color accentA3;
+      late Color accentA11;
+      late Color accent12;
 
-      for (final variant in [
-        FortalBadgeVariant.soft,
-        FortalBadgeVariant.surface,
-        FortalBadgeVariant.outline,
-      ]) {
-        await tester.pumpRemixApp(
-          FortalBadge(label: variant.name, variant: variant),
-        );
-        await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        FortalScope(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            builder: (context, child) {
+              final spec = fortalBadgeStyle(variant: .soft).build(context).spec;
+              fill = (spec.container.spec.decoration as BoxDecoration).color!;
+              label = spec.label.spec.style!.color!;
+              accentA3 = FortalTokens.accentA3.resolve(context);
+              accentA11 = FortalTokens.accentA11.resolve(context);
+              accent12 = FortalTokens.accent12.resolve(context);
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
 
-        final label = tester.widget<Text>(find.text(variant.name));
-        expect(
-          label.style?.color,
-          colors.accent.scale.alphaStep(11),
-          reason: '${variant.name} badges use the accent text step',
-        );
-      }
+      expect(fill, accentA3);
+      expect(label, accentA11);
+      expect(label, isNot(accent12));
     });
 
-    test('accent text step meets WCAG AA over soft badge backgrounds', () {
+    testWidgets('highContrast soft badge promotes the label to accent12', (
+      tester,
+    ) async {
+      late Color fill;
+      late Color label;
+      late Color accentA3;
+      late Color accent12;
+
+      await tester.pumpWidget(
+        FortalScope(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            builder: (context, child) {
+              final spec = fortalBadgeStyle(
+                variant: .soft,
+                highContrast: true,
+              ).build(context).spec;
+              fill = (spec.container.spec.decoration as BoxDecoration).color!;
+              label = spec.label.spec.style!.color!;
+              accentA3 = FortalTokens.accentA3.resolve(context);
+              accent12 = FortalTokens.accent12.resolve(context);
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      expect(fill, accentA3);
+      expect(label, accent12);
+    });
+
+    test('contrast helper matches WCAG black-on-white and gray-on-white', () {
+      const black = Color(0xFF000000);
+      const white = Color(0xFFFFFFFF);
+      const gray = Color(0xFF767676);
+
+      expect(contrastRatio(black, white), 21.0);
+      expect(contrastRatio(gray, white), closeTo(4.54, 0.01));
+      expect(
+        compositedContrast(foreground: black, fill: white, panel: white),
+        21.0,
+      );
+      expect(
+        compositedContrast(foreground: gray, fill: white, panel: white),
+        closeTo(4.54, 0.01),
+      );
+    });
+
+    test(
+      'highContrast soft labels meet WCAG AA on A3 over colorPanelSolid',
+      () {
+        for (final brightness in Brightness.values) {
+          for (final accent in FortalAccentColor.values) {
+            final colors = resolveFortalTokens(
+              FortalThemeConfig(accent: accent, brightness: brightness),
+            );
+            final ratio = compositedContrast(
+              foreground: colors.accent.scale.step(12),
+              fill: colors.accent.scale.alphaStep(3),
+              panel: colors.colorPanelSolid,
+            );
+
+            expect(
+              ratio,
+              greaterThanOrEqualTo(4.5),
+              reason:
+                  '${accent.name}/${brightness.name} highContrast soft '
+                  'accent12 over accentA3 over colorPanelSolid',
+            );
+          }
+        }
+      },
+    );
+
+    test('default soft labels miss WCAG AA for some light accents only', () {
+      final failures = <Brightness, List<FortalAccentColor>>{};
+
       for (final brightness in Brightness.values) {
+        final failedAccents = <FortalAccentColor>[];
         for (final accent in FortalAccentColor.values) {
           final colors = resolveFortalTokens(
             FortalThemeConfig(accent: accent, brightness: brightness),
           );
-          final background = Color.alphaBlend(
-            colors.accent.scale.alphaStep(3),
-            colors.colorBackground,
+          final ratio = compositedContrast(
+            foreground: colors.accent.scale.alphaStep(11),
+            fill: colors.accent.scale.alphaStep(3),
+            panel: colors.colorPanelSolid,
           );
-          final foreground = colors.accent.scale.step(12);
-
-          expect(
-            _contrastRatio(foreground, background),
-            greaterThanOrEqualTo(4.5),
-            reason:
-                '${accent.name}/${brightness.name} soft badges must meet '
-                'WCAG AA contrast',
-          );
+          if (ratio < 4.5) failedAccents.add(accent);
         }
+        failures[brightness] = failedAccents;
       }
+
+      expect(failures[Brightness.light], isNotEmpty);
+      expect(
+        failures[Brightness.light],
+        isNot(hasLength(FortalAccentColor.values.length)),
+      );
+      expect(failures[Brightness.dark], isEmpty);
     });
 
     testWidgets('renders FortalButton', (tester) async {
@@ -385,17 +497,4 @@ void main() {
       expect(find.byType(FortalTabView), findsNWidgets(2));
     });
   });
-}
-
-double _contrastRatio(Color first, Color second) {
-  final firstLuminance = first.computeLuminance();
-  final secondLuminance = second.computeLuminance();
-  final lighter = firstLuminance > secondLuminance
-      ? firstLuminance
-      : secondLuminance;
-  final darker = firstLuminance > secondLuminance
-      ? secondLuminance
-      : firstLuminance;
-
-  return (lighter + 0.05) / (darker + 0.05);
 }

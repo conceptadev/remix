@@ -108,16 +108,37 @@ to referenced glyphs:
 const Icon(FortalIcons.check)
 ```
 
-There is deliberately no runtime name-to-icon map because dynamic lookup would
-keep the full catalog reachable. Pass `FortalIcons` constants to any widget that
-accepts `IconData`; Fortal controls otherwise use Remix's inline Radix-shaped
-vector defaults. The font remains a declared `remix_fortal` package asset, so
-applications should measure their release artifact rather than assume that
-referencing no catalog constants removes the asset entirely.
+There is deliberately no runtime name-to-icon map on `FortalIcons` itself
+because dynamic lookup would keep the full catalog reachable. Pass
+`FortalIcons` constants to any widget that accepts `IconData`; Fortal controls
+otherwise use Remix's inline Radix-shaped vector defaults. The font remains a
+declared `remix_fortal` package asset, so applications should measure their
+release artifact rather than assume that referencing no catalog constants
+removes the asset entirely.
+
+Catalogs, galleries, and drift tests that must enumerate every glyph can import
+the opt-in index. An application that never imports it keeps full font
+subsetting:
+
+```dart
+import 'package:remix_fortal/icons_index.dart';
+
+final icon = fortalIconsByName['check'];
+```
 
 The `shadow`, `shadowInner`, `shadowNone`, `shadowOuter`, and
 `transparencyGrid` glyphs approximate Radix's partial opacity as opaque
 coverage; the other 313 glyphs are lossless conversions.
+
+## Soft variants and contrast
+
+Default `fortalBadgeStyle(variant: .soft)` pairs fill `accentA3` with label
+`accentA11`. That is the Radix step-11 **low-contrast text** role, not a WCAG
+AA 4.5:1 guarantee. In light mode, compositing that label over the fill over
+`colorPanelSolid` (a badge inside a card) misses 4.5:1 for some of the 31
+accents. Dark-mode default and `highContrast: true` — which promotes the label
+to `accent12` -- pass AA on that composite. Use `highContrast: true` when
+light-mode soft labels must meet WCAG AA.
 
 ## Charts
 

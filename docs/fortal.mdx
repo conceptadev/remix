@@ -198,6 +198,31 @@ Use `FortalLineChart`, `FortalBarChart`, and `FortalPieChart` for the ready-made
 widgets. Their matching `fortal*ChartStyle()` recipes can style the underlying
 `mix_chart` widgets directly.
 
+## Icons
+
+Fortal includes the complete 318-glyph Radix Icons 1.3.2 catalog as static
+`FortalIcons` constants so Flutter can subset the font. There is no
+name-to-icon map on that class.
+
+Catalogs, galleries, and drift tests that must enumerate every glyph can import
+the opt-in index. An application that never imports it keeps full font
+subsetting:
+
+```dart
+import 'package:remix_fortal/icons_index.dart';
+
+final icon = fortalIconsByName['check'];
+```
+
+## Soft variants and contrast
+
+Default `fortalBadgeStyle(variant: .soft)` pairs fill `accentA3` with label
+`accentA11`. Step 11 is Radix **low-contrast text**, not a WCAG AA 4.5:1
+guarantee against that fill composited over `colorPanelSolid`. In light mode
+some of the 31 accents miss 4.5:1 on that composite. Dark-mode default and
+`highContrast: true` (label `accent12`) pass AA. Use `highContrast: true` when
+light-mode soft labels must meet WCAG AA.
+
 ## Covered components
 
 Every Remix component has a matching Fortal recipe and preset widget. The
