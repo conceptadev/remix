@@ -146,6 +146,14 @@ melos:
       packageFilters:
         scope: remix_fortal
 
+    docs:catalog:
+      run: dart run tool/generate_fortal_catalog.dart
+      description: Regenerate the Fortal widget catalog from the parity manifest
+
     docs:check:
-      run: dart run tool/validate_docs.dart
-      description: Validate docs and reject retired APIs across workspace sources
+      # The catalog is rendered from the same manifest `fortal:parity:check`
+      # holds against the recipes, so a stale page is drift, not a doc edit.
+      steps:
+        - dart run tool/validate_docs.dart
+        - dart run tool/generate_fortal_catalog.dart --check
+      description: Validate docs, reject retired APIs, and fail on catalog drift
