@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -66,4 +67,34 @@ class _TabState extends ValueNotifier<String> {
     this.value = value;
     notifyListeners();
   }
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixTabs)
+Widget buildTabsCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    cellWidth: 220,
+    columns: labelsOf(FortalTabsSize.values),
+    rows: noRowAxis,
+    // Size is set on the tabs, not on the bar: the Fortal tab-list border is a
+    // single hairline at every Radix size, so only per-tab metrics vary.
+    cell: (row, column) => RemixTabs(
+      selectedTabId: 'one',
+      child: FortalTabBar(
+        child: RowBox(
+          children: [
+            FortalTab(
+              tabId: 'one',
+              label: 'One',
+              size: FortalTabsSize.values[column],
+            ),
+            FortalTab(
+              tabId: 'two',
+              label: 'Two',
+              size: FortalTabsSize.values[column],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

@@ -594,6 +594,18 @@ Set<String> _familyEnumKeys({
           '$id.enums.$kind.default is not one of its documented values.',
         );
       }
+      if (stylesSource != null &&
+          fortalType is String &&
+          fortalType.isNotEmpty) {
+        _checkRecipeDefault(
+          id: id,
+          kind: kind,
+          fortalType: fortalType,
+          manifestDefault: defaultValue,
+          stylesSource: stylesSource,
+          failures: failures,
+        );
+      }
     }
 
     Iterable<String> expectedValues = documentedValues;
@@ -601,14 +613,11 @@ Set<String> _familyEnumKeys({
       if (stylesSource == null || fortalType is! String || fortalType.isEmpty) {
         continue;
       }
-      final suffix = '${kind[0].toUpperCase()}${kind.substring(1)}';
-      final idType = id
-          .split('_')
-          .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
-          .join();
-      final candidates = kind == 'size' && _sharedTextSizeFamilies.contains(id)
-          ? {'FortalTextSize'}
-          : {'$fortalType$suffix', 'Fortal$idType$suffix'};
+      final candidates = _fortalEnumCandidates(
+        id: id,
+        kind: kind,
+        fortalType: fortalType,
+      );
       RegExpMatch? enumMatch;
       for (final candidate in candidates) {
         enumMatch = RegExp(
@@ -1024,6 +1033,118 @@ String? _lockEntry(String source, String dependency) {
   }
   return lines.sublist(start, end).join('\n');
 }
+
+/// The Dart enum names a family's `kind` could publish, most specific first.
+///
+/// The typography families share one nine-step scale and one weight enum
+/// instead of five parallel copies, so their `size` and `weight` anchor on the
+/// shared names. Every other kind is named after either the widget type or the
+/// manifest id, which differ for the families whose id is not a straight
+/// lower-snake of the type (`icon_button` publishes `FortalIconButtonVariant`,
+/// while `tabs` publishes `FortalTabsSize` against a `FortalTabBar` type).
+Set<String> _fortalEnumCandidates({
+  required String id,
+  required String kind,
+  required String fortalType,
+}) {
+  if (_sharedTextSizeFamilies.contains(id)) {
+    if (kind == 'size') return {'FortalTextSize'};
+    if (kind == 'weight') return {'FortalTextWeight'};
+  }
+  final suffix = '${kind[0].toUpperCase()}${kind.substring(1)}';
+  final idType = id
+      .split('_')
+      .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
+      .join();
+  return {'$fortalType$suffix', 'Fortal$idType$suffix'};
+}
+
+/// Verifies the manifest's recorded default is the one a caller actually gets.
+///
+/// The membership check in [_familyEnumKeys] only proves the default names one
+/// of its own documented values, so it stays green when a recipe's `= .size2`
+/// becomes `= .size3` — the manifest would then publish a default no caller
+/// receives. This reads the recipe signature, which is where the default is
+/// authored: `melos generate:check` already fails on any drift between a recipe
+/// and the widget constructor generated from it, so the recipe is the single
+/// place worth comparing against.
+void _checkRecipeDefault({
+  required String id,
+  required String kind,
+  required String fortalType,
+  required Object? manifestDefault,
+  required String stylesSource,
+  required List<String> failures,
+}) {
+  final candidates = _fortalEnumCandidates(
+    id: id,
+    kind: kind,
+    fortalType: fortalType,
+  );
+  final enumName = candidates.firstWhere(
+    (candidate) => RegExp(
+      'enum\\s+${RegExp.escape(candidate)}\\s*\\{',
+    ).hasMatch(stylesSource),
+    orElse: () => '',
+  );
+  // `orientation`, `activationMode`, and `alignment` name Flutter and Naked
+  // types the recipes take directly, so they have no Fortal enum to anchor on
+  // and no recipe-authored default to compare. `size` and `variant` are
+  // contractually required to resolve, and [_familyEnumKeys] already fails
+  // when they do not, so staying quiet here cannot hide a missing mapping.
+  if (enumName.isEmpty) return;
+
+  final actual = _recipeEnumDefault(stylesSource, enumName, kind);
+  if (!actual.resolved) {
+    failures.add(
+      '$id.enums.$kind.default records ${_defaultLabel(manifestDefault)} but '
+      'the recipe declares no $enumName $kind parameter.',
+    );
+    return;
+  }
+  if (actual.value != manifestDefault) {
+    failures.add(
+      '$id.enums.$kind.default is ${_defaultLabel(manifestDefault)} but the '
+      'recipe defaults $kind to ${_defaultLabel(actual.value)}.',
+    );
+  }
+}
+
+/// The default a caller gets for [parameter] where the recipe types it as
+/// [enumName].
+///
+/// `resolved: false` means no such parameter exists. `(resolved: true, value:
+/// null)` is the nullable no-default shape the typography families use so an
+/// omitted size resolves from tokens rather than a pinned enum value, which is
+/// exactly what a `null` default in the manifest records.
+///
+/// Anchoring on [enumName] rather than [parameter] alone keeps TextField and
+/// TextArea apart: they share `textfield.dart`, so a bare `size` search would
+/// read whichever signature happened to come first.
+({bool resolved, String? value}) _recipeEnumDefault(
+  String source,
+  String enumName,
+  String parameter,
+) {
+  // Doc comments cite defaults in prose (`defaults to [FortalDialogSize.size3]`),
+  // so strip comments before matching rather than risk reading documentation as
+  // the declaration.
+  final code = source
+      .replaceAll(RegExp(r'//[^\n]*'), '')
+      .replaceAll(RegExp(r'/\*.*?\*/', dotAll: true), '');
+  final escaped = RegExp.escape(enumName);
+  final withDefault = RegExp(
+    '\\b$escaped\\s+$parameter\\s*=\\s*(?:$escaped)?\\.([A-Za-z0-9_]+)',
+  ).firstMatch(code);
+  if (withDefault != null) return (resolved: true, value: withDefault.group(1));
+  if (RegExp('\\b$escaped\\?\\s+$parameter\\s*[,)]').hasMatch(code)) {
+    return (resolved: true, value: null);
+  }
+  return (resolved: false, value: null);
+}
+
+String _defaultLabel(Object? value) =>
+    value == null ? 'no default (nullable)' : "'$value'";
 
 Set<String> _dartEnumValues(String body) {
   return body

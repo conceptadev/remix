@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart' hide Badge;
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -23,10 +24,23 @@ Widget buildBadgeUseCase(BuildContext context) {
             label: 'size',
             options: FortalBadgeSize.values,
             labelBuilder: (size) => size.name,
-            initialOption: FortalBadgeSize.size2,
+            initialOption: FortalBadgeSize.size1,
           ),
         ),
       ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixBadge)
+Widget buildBadgeCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    columns: labelsOf(FortalBadgeSize.values),
+    rows: labelsOf(FortalBadgeVariant.values),
+    cell: (row, column) => FortalBadge(
+      label: 'Badge',
+      size: FortalBadgeSize.values[column],
+      variant: FortalBadgeVariant.values[row],
     ),
   );
 }

@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:demo/helpers/use_case_state.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -66,6 +67,32 @@ Widget buildToggleGroupUseCase(BuildContext context) {
           semanticLabel: 'View style',
         ),
       ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixToggleGroup)
+Widget buildToggleGroupCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    cellWidth: 260,
+    columns: labelsOf(FortalToggleGroupSize.values),
+    rows: labelsOf(FortalToggleGroupVariant.values),
+    cell: (row, column) => FortalToggleGroup<String>(
+      items: const [
+        RemixToggleGroupItem(
+          value: 'list',
+          label: 'List',
+          icon: Icons.view_list,
+        ),
+        RemixToggleGroupItem(
+          value: 'grid',
+          label: 'Grid',
+          icon: Icons.grid_view,
+        ),
+      ],
+      selectedValue: 'list',
+      size: FortalToggleGroupSize.values[column],
+      variant: FortalToggleGroupVariant.values[row],
     ),
   );
 }

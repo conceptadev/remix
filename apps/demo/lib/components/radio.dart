@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:demo/helpers/string.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -78,3 +79,21 @@ class _ThemeState extends ValueNotifier<Theme> {
 }
 
 _ThemeState _state = _ThemeState(Theme.dark);
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixRadio)
+Widget buildRadioCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    columns: labelsOf(FortalRadioSize.values),
+    rows: labelsOf(FortalRadioVariant.values),
+    // A radio reads its selected state from the group above it, so each cell
+    // carries its own group with that cell's value already selected.
+    cell: (row, column) => RemixRadioGroup<String>(
+      groupValue: 'on',
+      child: FortalRadio<String>(
+        value: 'on',
+        size: FortalRadioSize.values[column],
+        variant: FortalRadioVariant.values[row],
+      ),
+    ),
+  );
+}

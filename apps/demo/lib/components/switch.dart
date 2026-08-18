@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:demo/helpers/use_case_state.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -32,6 +33,19 @@ Widget buildSwitchUseCase(BuildContext context) {
           ),
         ),
       ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixSwitch)
+Widget buildSwitchCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    columns: labelsOf(FortalSwitchSize.values),
+    rows: labelsOf(FortalSwitchVariant.values),
+    cell: (row, column) => FortalSwitch(
+      selected: true,
+      size: FortalSwitchSize.values[column],
+      variant: FortalSwitchVariant.values[row],
     ),
   );
 }
