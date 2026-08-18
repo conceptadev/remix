@@ -26,6 +26,8 @@ def _glyph_names(report: dict) -> list[str]:
         raise ValueError(f"Expected 318 report glyphs, found {len(glyphs or [])}")
     names: list[str] = []
     for glyph in glyphs:
+        if not isinstance(glyph, dict):
+            raise ValueError(f"Invalid report glyph entry: {glyph!r}")
         name = glyph.get("name")
         if not isinstance(name, str) or not name.isidentifier():
             raise ValueError(f"Invalid glyph Dart name: {name!r}")

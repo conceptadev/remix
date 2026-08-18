@@ -241,6 +241,33 @@ void main() {
       },
     );
 
+    test('default soft labels miss WCAG AA for some light accents only', () {
+      final failures = <Brightness, List<FortalAccentColor>>{};
+
+      for (final brightness in Brightness.values) {
+        final failedAccents = <FortalAccentColor>[];
+        for (final accent in FortalAccentColor.values) {
+          final colors = resolveFortalTokens(
+            FortalThemeConfig(accent: accent, brightness: brightness),
+          );
+          final ratio = compositedContrast(
+            foreground: colors.accent.scale.alphaStep(11),
+            fill: colors.accent.scale.alphaStep(3),
+            panel: colors.colorPanelSolid,
+          );
+          if (ratio < 4.5) failedAccents.add(accent);
+        }
+        failures[brightness] = failedAccents;
+      }
+
+      expect(failures[Brightness.light], isNotEmpty);
+      expect(
+        failures[Brightness.light],
+        isNot(hasLength(FortalAccentColor.values.length)),
+      );
+      expect(failures[Brightness.dark], isEmpty);
+    });
+
     testWidgets('renders FortalButton', (tester) async {
       await tester.pumpRemixApp(const FortalButton(label: 'Save'));
 

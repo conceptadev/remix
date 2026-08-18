@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    uses: btwld/dart-actions/.github/workflows/ci.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
+    uses: conceptadev/dart-actions/.github/workflows/ci.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
     with:
@@ -27,5 +27,7 @@ jobs:
           cache-dependency-glob: packages/remix_fortal/tool/radix_icons/uv.lock
       - name: Verify generated Fortal icons
         run: uv run --frozen --project packages/remix_fortal/tool/radix_icons glyphpact --config packages/remix_fortal/tool/radix_icons/glyphpact.json --check
+      - name: Test Fortal icon index generator
+        run: uv run --frozen --project packages/remix_fortal/tool/radix_icons python -m unittest discover -s packages/remix_fortal/tool/radix_icons -p 'test_*.py'
       - name: Verify icon integrity contract
         run: uv run --frozen --project packages/remix_fortal/tool/radix_icons python packages/remix_fortal/tool/radix_icons/verify.py

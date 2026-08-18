@@ -27,7 +27,7 @@ jobs:
     if: >-
       startsWith(github.ref, 'refs/tags/remix-v') ||
       startsWith(github.ref, 'refs/tags/v')
-    uses: btwld/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
+    uses: conceptadev/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
     with:
       packages_folder_path: "packages"
       packages: "remix"
@@ -37,7 +37,7 @@ jobs:
 
   publish-remix-fortal:
     if: startsWith(github.ref, 'refs/tags/remix_fortal-v')
-    uses: btwld/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
+    uses: conceptadev/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
     with:
       packages_folder_path: "packages"
       packages: "remix_fortal"
