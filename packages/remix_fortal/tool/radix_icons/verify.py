@@ -205,6 +205,10 @@ def verify_generated(source_hashes: dict[str, str]) -> None:
     )
     library = (PACKAGE_ROOT / "lib" / "remix_fortal.dart").read_text(encoding="utf-8")
     _require("export 'src/radix/icons.dart';" in library, "FortalIcons is not publicly exported")
+    _require(
+        "icons_index" not in library and "fortalIconsByName" not in library,
+        "Opt-in icons index must not be exported from remix_fortal.dart",
+    )
     pubspec = (PACKAGE_ROOT / "pubspec.yaml").read_text(encoding="utf-8")
     _require("family: FortalIcons" in pubspec, "FortalIcons family is not registered")
     _require(
@@ -213,6 +217,36 @@ def verify_generated(source_hashes: dict[str, str]) -> None:
     )
     notice = (PACKAGE_ROOT / "THIRD_PARTY_NOTICES.md").read_text(encoding="utf-8")
     _require("Radix Icons 1.3.2" in notice and "MIT License" in notice, "Missing Radix notice")
+
+    _verify_icons_index(report)
+
+
+def _verify_icons_index(report: dict[str, Any]) -> None:
+    # Import is local so `python verify.py --write-manifest` does not need the
+    # generator module on sys.path until generated artifacts are checked.
+    tool_dir = Path(__file__).resolve().parent
+    if str(tool_dir) not in sys.path:
+        sys.path.insert(0, str(tool_dir))
+    from generate_icons_index import (  # noqa: PLC0415
+        INDEX_PATH,
+        check_artifacts,
+        load_glyph_names,
+    )
+
+    check_artifacts()
+    names = load_glyph_names()
+    _require(names == [glyph["name"] for glyph in report["glyphs"]], "Index names drifted from the report")
+    index = INDEX_PATH.read_text(encoding="utf-8")
+    _require("const Map<String, IconData> fortalIconsByName" in index, "Missing fortalIconsByName")
+    _require(
+        "import 'package:remix_fortal/remix_fortal.dart'" not in index,
+        "Index must not import the main library",
+    )
+    for name in names:
+        _require(
+            f"'{name}': FortalIcons.{name}" in index,
+            f"Index is missing FortalIcons.{name}",
+        )
 
 
 def main() -> int:
