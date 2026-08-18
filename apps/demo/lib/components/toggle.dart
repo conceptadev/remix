@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:demo/helpers/use_case_state.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -37,6 +38,20 @@ Widget buildToggleUseCase(BuildContext context) {
           ),
         ),
       ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixToggle)
+Widget buildToggleCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    columns: labelsOf(FortalToggleSize.values),
+    rows: labelsOf(FortalToggleVariant.values),
+    cell: (row, column) => FortalToggle(
+      selected: true,
+      icon: Icons.alarm_sharp,
+      size: FortalToggleSize.values[column],
+      variant: FortalToggleVariant.values[row],
     ),
   );
 }

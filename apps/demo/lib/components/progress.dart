@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -34,6 +35,22 @@ Widget buildProgressUseCase(BuildContext context) {
             ),
           ),
         ),
+      ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixProgress)
+Widget buildProgressCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    columns: labelsOf(FortalProgressSize.values),
+    rows: labelsOf(FortalProgressVariant.values),
+    cell: (row, column) => SizedBox(
+      width: 120,
+      child: FortalProgress(
+        value: 0.6,
+        size: FortalProgressSize.values[column],
+        variant: FortalProgressVariant.values[row],
       ),
     ),
   );

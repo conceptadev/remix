@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -27,6 +28,18 @@ Widget buildDividerUseCase(BuildContext context) {
           ),
         ),
       ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixDivider)
+Widget buildDividerCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    columns: labelsOf(FortalDividerSize.values),
+    rows: noRowAxis,
+    cell: (row, column) => SizedBox(
+      width: 120,
+      child: FortalDivider(size: FortalDividerSize.values[column]),
     ),
   );
 }

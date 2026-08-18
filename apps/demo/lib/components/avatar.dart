@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -34,12 +35,25 @@ Widget buildAvatarUseCase(BuildContext context) {
                 label: 'size',
                 options: FortalAvatarSize.values,
                 labelBuilder: (size) => size.name,
-                initialOption: FortalAvatarSize.size4,
+                initialOption: FortalAvatarSize.size3,
               ),
             ),
           ],
         ),
       ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixAvatar)
+Widget buildAvatarCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    columns: labelsOf(FortalAvatarSize.values),
+    rows: labelsOf(FortalAvatarVariant.values),
+    cell: (row, column) => FortalAvatar(
+      label: 'RF',
+      size: FortalAvatarSize.values[column],
+      variant: FortalAvatarVariant.values[row],
     ),
   );
 }

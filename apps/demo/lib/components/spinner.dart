@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -21,5 +22,15 @@ Widget buildSpinnerUseCase(BuildContext context) {
         ),
       ),
     ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixSpinner)
+Widget buildSpinnerCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    columns: labelsOf(FortalSpinnerSize.values),
+    rows: noRowAxis,
+    cell: (row, column) =>
+        FortalSpinner(size: FortalSpinnerSize.values[column]),
   );
 }

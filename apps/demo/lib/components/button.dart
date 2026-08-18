@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:demo/addons/icon_data_knob.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -59,6 +60,20 @@ Widget buildButtonUseCase(BuildContext context) {
           ),
         ),
       ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixButton)
+Widget buildButtonCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    columns: labelsOf(FortalButtonSize.values),
+    rows: labelsOf(FortalButtonVariant.values),
+    cell: (row, column) => FortalButton(
+      label: 'Button',
+      onPressed: () {},
+      size: FortalButtonSize.values[column],
+      variant: FortalButtonVariant.values[row],
     ),
   );
 }

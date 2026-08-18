@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -72,6 +73,25 @@ Widget buildAlertDialogUseCase(BuildContext context) {
           );
         },
       ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixDialog)
+Widget buildDialogCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    cellWidth: 340,
+    columns: labelsOf(FortalDialogSize.values),
+    rows: labelsOf(FortalDialogAlign.values),
+    // Built inline rather than through showRemixDialog: routed modal dialogs
+    // cannot be shown side by side, and the surface metrics these two enums
+    // drive are visible without the route.
+    cell: (row, column) => FortalDialog(
+      size: FortalDialogSize.values[column],
+      align: FortalDialogAlign.values[row],
+      title: 'Title',
+      description: 'Description',
+      child: const FortalText('Body'),
     ),
   );
 }

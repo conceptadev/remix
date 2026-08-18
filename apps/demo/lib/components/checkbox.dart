@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:demo/helpers/use_case_state.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -36,6 +37,19 @@ Widget buildCheckboxUseCase(BuildContext context) {
           ),
         ),
       ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixCheckbox)
+Widget buildCheckboxCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    columns: labelsOf(FortalCheckboxSize.values),
+    rows: labelsOf(FortalCheckboxVariant.values),
+    cell: (row, column) => FortalCheckbox(
+      selected: true,
+      size: FortalCheckboxSize.values[column],
+      variant: FortalCheckboxVariant.values[row],
     ),
   );
 }
