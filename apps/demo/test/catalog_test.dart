@@ -27,6 +27,7 @@ import 'package:demo/components/textarea.dart' as textarea;
 import 'package:demo/components/textfield.dart' as textfield;
 import 'package:demo/components/toggle.dart' as toggle;
 import 'package:demo/components/toggle_group.dart' as toggle_group;
+import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -74,6 +75,20 @@ final catalogs = <String, WidgetBuilder>{
   'toggle group': toggle_group.buildToggleGroupCatalogUseCase,
 };
 
+/// Code and Link are the only catalogs with three Fortal enum axes. Keep their
+/// expected cell counts independent from the matrix construction so dropping
+/// an axis cannot leave the smoke test green.
+final threeAxisCatalogCellCounts = <String, int>{
+  'code':
+      FortalTextSize.values.length *
+      FortalCodeVariant.values.length *
+      FortalTextWeight.values.length,
+  'link':
+      FortalTextSize.values.length *
+      FortalLinkUnderline.values.length *
+      FortalTextWeight.values.length,
+};
+
 void main() {
   for (final entry in catalogs.entries) {
     testWidgets('${entry.key} catalog renders every combination', (
@@ -95,6 +110,14 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
 
       expect(tester.takeException(), isNull);
+      if (threeAxisCatalogCellCounts[entry.key] case final expected?) {
+        final matrix = tester.widget<CatalogMatrix>(find.byType(CatalogMatrix));
+        expect(
+          matrix.columns.length * matrix.rows.length,
+          expected,
+          reason: '${entry.key} must render every Fortal enum combination',
+        );
+      }
     });
   }
 }

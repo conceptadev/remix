@@ -116,11 +116,12 @@ String _render(Map<String, Object?> manifest, Directory packageRoot) {
     ..writeln('</Card>')
     ..writeln()
     ..writeln(
-      'A `—` default means the parameter is nullable with no pinned value. '
-      'That is the typography path: an omitted size or weight resolves from '
-      'the active scope\'s tokens (`text3`, regular) rather than from an '
-      'enum, so a host text run cannot resize Fortal text. See '
-      '[Typography](/fortal/typography).',
+      'A `—` value means the widget does not expose that axis. When values '
+      'are listed but their default is `—`, the parameter is nullable with '
+      'no pinned value. That is the typography path: an omitted size or '
+      'weight resolves from the active scope\'s tokens (`text3`, regular) '
+      'rather than from an enum, so a host text run cannot resize Fortal '
+      'text. See [Typography](/fortal/typography).',
     )
     ..writeln();
 

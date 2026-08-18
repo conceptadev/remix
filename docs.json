@@ -207,6 +207,10 @@
           "href": "/fortal"
         },
         {
+          "title": "Catalog",
+          "href": "/fortal/catalog"
+        },
+        {
           "title": "Typography",
           "href": "/fortal/typography"
         }
