@@ -18,7 +18,6 @@ REPORT_PATH = (
     PACKAGE_ROOT / "lib" / "src" / "radix" / "icons" / "generated" / "iconfont.report.json"
 )
 INDEX_PATH = PACKAGE_ROOT / "lib" / "icons_index.dart"
-EXPECTED_PATH = PACKAGE_ROOT / "test" / "radix" / "fortal_icons_by_name_expected.dart"
 
 
 def _glyph_names(report: dict) -> list[str]:
@@ -63,21 +62,6 @@ def render_icons_index(names: list[str]) -> str:
     )
 
 
-def render_expected_index(names: list[str]) -> str:
-    return (
-        "// GENERATED CODE - DO NOT MODIFY BY HAND.\n"
-        "// Generated from lib/src/radix/icons/generated/iconfont.report.json.\n"
-        "\n"
-        "import 'package:flutter/widgets.dart';\n"
-        "import 'package:remix_fortal/remix_fortal.dart';\n"
-        "\n"
-        "/// [FortalIcons] statics keyed by Dart member name, for index identity tests.\n"
-        "const Map<String, IconData> expectedFortalIconsByName = {\n"
-        f"{_map_entries(names)},\n"
-        "};\n"
-    )
-
-
 def load_glyph_names() -> list[str]:
     report = json.loads(REPORT_PATH.read_text(encoding="utf-8"))
     if not isinstance(report, dict):
@@ -87,10 +71,7 @@ def load_glyph_names() -> list[str]:
 
 def expected_artifacts() -> dict[Path, str]:
     names = load_glyph_names()
-    return {
-        INDEX_PATH: render_icons_index(names),
-        EXPECTED_PATH: render_expected_index(names),
-    }
+    return {INDEX_PATH: render_icons_index(names)}
 
 
 def write_artifacts() -> None:

@@ -203,6 +203,10 @@ def verify_generated(source_hashes: dict[str, str]) -> None:
         "export 'icons/generated/fortal_icons.dart';" in public_export,
         "Missing generated-provider export",
     )
+    _require(
+        "icons_index" not in public_export and "fortalIconsByName" not in public_export,
+        "Opt-in icons index must not be re-exported from the icons barrel",
+    )
     library = (PACKAGE_ROOT / "lib" / "remix_fortal.dart").read_text(encoding="utf-8")
     _require("export 'src/radix/icons.dart';" in library, "FortalIcons is not publicly exported")
     _require(
