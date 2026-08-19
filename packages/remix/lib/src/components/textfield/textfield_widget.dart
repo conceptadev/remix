@@ -451,7 +451,10 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
           ? (bool pressed) => _updatePressSource(.editable, pressed)
           : null,
       ignorePointers: config.ignorePointers,
-      excludeSemantics: config.excludeSemantics,
+      // excludeSemantics is deliberately not forwarded: Remix excludes the
+      // whole composite below, which also covers the label, helper, and
+      // accessories that live outside this subtree. Forwarding as well would
+      // be a second, redundant boundary inside the first.
       semanticLabel: config.semanticLabel ?? config.label,
       semanticHint: effectiveSemanticHint,
       semanticErrorText: effectiveSemanticErrorText,

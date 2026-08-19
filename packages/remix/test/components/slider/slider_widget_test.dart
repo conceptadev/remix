@@ -944,6 +944,69 @@ void main() {
         expect(thumb.center.dx, greaterThan(slider.center.dx));
       });
 
+      // A track thicker than the thumb drives the horizontal inset, so the
+      // thumb must travel across the inset track, not the full slider box.
+      Widget thickTrackSlider({required double value}) {
+        return SizedBox(
+          width: 240,
+          child: RemixSlider(
+            value: value,
+            onChanged: (_) {},
+            style: SliderStyler(
+              thumb: BoxStyler().size(20, 20),
+            ).trackThickness(60),
+          ),
+        );
+      }
+
+      testWidgets('thumb centers on the track start at the minimum value', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(thickTrackSlider(value: 0));
+        await tester.pumpAndSettle();
+
+        final slider = tester.getRect(find.byType(RemixSlider));
+        final thumb = tester.getRect(find.byWidget(_sliderThumb(tester)));
+        // horizontalOverflow = max(thumb 20 / 2, track 60 / 2) = 30.
+        expect(thumb.center.dx, moreOrLessEquals(slider.left + 30));
+      });
+
+      testWidgets('thumb centers on the track end at the maximum value', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(thickTrackSlider(value: 1));
+        await tester.pumpAndSettle();
+
+        final slider = tester.getRect(find.byType(RemixSlider));
+        final thumb = tester.getRect(find.byWidget(_sliderThumb(tester)));
+        expect(thumb.center.dx, moreOrLessEquals(slider.right - 30));
+      });
+
+      testWidgets('thumb centers on the track midpoint at the middle value', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(thickTrackSlider(value: 0.5));
+        await tester.pumpAndSettle();
+
+        final slider = tester.getRect(find.byType(RemixSlider));
+        final thumb = tester.getRect(find.byWidget(_sliderThumb(tester)));
+        expect(thumb.center.dx, moreOrLessEquals(slider.center.dx));
+      });
+
+      testWidgets('RTL thumb centers on the track end at the minimum value', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          thickTrackSlider(value: 0),
+          textDirection: TextDirection.rtl,
+        );
+        await tester.pumpAndSettle();
+
+        final slider = tester.getRect(find.byType(RemixSlider));
+        final thumb = tester.getRect(find.byWidget(_sliderThumb(tester)));
+        expect(thumb.center.dx, moreOrLessEquals(slider.right - 30));
+      });
+
       testWidgets('semantic increase and decrease change the value', (
         tester,
       ) async {

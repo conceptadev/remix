@@ -4,15 +4,15 @@ String? _resolveDismissibleBarrierLabel({
   required bool barrierDismissible,
   required String? barrierLabel,
 }) {
-  if (!barrierDismissible) return barrierLabel;
-
-  final provided = barrierLabel?.trim();
   assert(
-    provided != null && provided.isNotEmpty,
+    !barrierDismissible ||
+        (barrierLabel != null && barrierLabel.trim().isNotEmpty),
     'showRemixDialog requires a nonblank localized barrierLabel when '
     'barrierDismissible is true.',
   );
-  return provided;
+  // Trim only for the check above; the caller-supplied label is passed
+  // through unmodified on both branches.
+  return barrierLabel;
 }
 
 WidgetBuilder _captureMixScope(BuildContext context, WidgetBuilder builder) {

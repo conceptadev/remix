@@ -38,7 +38,8 @@ class _SwitchExampleState extends State<SwitchExample> {
 
   @override
   Widget build(BuildContext context) {
-    return RemixSwitch(semanticLabel: 'Toggle', 
+    return RemixSwitch(
+      semanticLabel: 'Toggle',
       style: style,
       selected: _selected.value,
       onChanged: (value) {

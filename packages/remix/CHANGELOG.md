@@ -31,6 +31,10 @@
   render and the root modifiers are not re-applied per row.
 - **FIX**: `RemixSlider` paints the range from Naked direction-aware visual
   percentages.
+- **FIX**: `RemixSlider` centers the thumb on the track when the track is
+  thicker than the thumb. The thumb previously ignored the horizontal inset
+  the track takes from its padding, so it sat
+  `trackThickness / 2 - thumbWidth / 2` short of the track at every value.
 - **FIX**: `RemixRadio` uses `NakedRadioState.isSelected` and forwards
   grouping to `NakedRadioGroup`.
 - **BREAKING**: Replace handwritten component `Styler.call(...)` extensions

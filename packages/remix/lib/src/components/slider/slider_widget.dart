@@ -180,7 +180,14 @@ class RemixSlider extends StatelessWidget {
                     0.0,
                     constraints.maxWidth - horizontalPadding,
                   );
-                  final thumbPosition = availableWidth * thumbVisual;
+                  // The thumb is a direct child of the outer Stack, so it must
+                  // re-apply the inset the track gets from its Padding, then
+                  // back off half its own width to center on the track point.
+                  // When the thumb is the widest element both terms cancel.
+                  final thumbPosition =
+                      horizontalOverflow -
+                      thumbSize.width / 2 +
+                      availableWidth * thumbVisual;
 
                   return Stack(
                     alignment: .centerLeft,

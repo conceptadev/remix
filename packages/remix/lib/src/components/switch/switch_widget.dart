@@ -89,11 +89,11 @@ class RemixSwitch extends StatelessWidget {
       semanticLabel.trim().isNotEmpty,
       'RemixSwitch.semanticLabel must be a nonblank accessible name.',
     );
-    final effectiveOnChanged = enabled && onChanged != null ? onChanged : null;
-
+    // Forwarded raw: NakedToggle derives interactivity from
+    // enabled && onChanged != null itself.
     return NakedToggle(
       value: selected,
-      onChanged: effectiveOnChanged,
+      onChanged: onChanged,
       enabled: enabled,
       mouseCursor: mouseCursor,
       enableFeedback: enableFeedback,
