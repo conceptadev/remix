@@ -103,6 +103,10 @@ melos:
       packageFilters:
         dirExists: test
 
+    version:align:check:
+      run: dart run tool/check_version_alignment.dart
+      description: Verify remix and remix_fortal carry the identical version
+
     mix:consumer:check:
       run: dart run tool/check_consumer_mix.dart
       description: Verify consumer tests resolve the declared hosted Mix release
@@ -131,6 +135,7 @@ melos:
     ci:
       steps:
         - toolchain:check
+        - version:align:check
         - mix:consumer:check
         - material:check
         - generate:check
