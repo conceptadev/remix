@@ -1,3 +1,12 @@
+## 1.0.0-beta.5
+
+> Note: This release has breaking changes.
+
+ - **FEAT**(remix): add styler field metadata, raise Mix floor to 2.2.0-beta.5 (#158).
+ - **BREAKING** **REFACTOR**(remix): make interactive components visual-only over naked_ui (#157).
+ - **BREAKING** **REFACTOR**(remix): generate callable component stylers (#152).
+ - **BREAKING** **FEAT**(remix): add RemixLink and rebuild FortalLink on it (#151).
+
 ## 1.0.0-beta.4
 
 - **BREAKING**: `RemixIconButton.semanticLabel` is required and must be
