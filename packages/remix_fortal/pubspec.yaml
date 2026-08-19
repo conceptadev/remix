@@ -41,7 +41,7 @@ dependencies:
   mix: ^2.2.0-beta.4
   mix_annotations: ^2.2.0-beta.1
   mix_chart: ^0.0.1-beta.1
-  naked_ui: ^1.0.0-beta.11
+  naked_ui: ^1.0.0-beta.12
 
 dev_dependencies:
   flutter_test:

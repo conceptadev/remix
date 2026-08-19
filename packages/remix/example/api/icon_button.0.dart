@@ -25,11 +25,13 @@ class IconButtonExample extends StatelessWidget {
         children: [
           RemixIconButton(
             icon: CupertinoIcons.heart,
+            semanticLabel: 'Favorite',
             onPressed: () {},
             style: style,
           ),
           RemixIconButton(
             icon: CupertinoIcons.heart,
+            semanticLabel: 'Favorite',
             onPressed: () {},
             style: style,
             loading: true,

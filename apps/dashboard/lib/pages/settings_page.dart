@@ -190,6 +190,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _confirmDelete() async {
     final confirmed = await showRemixDialog<bool>(
       context: context,
+      barrierLabel: 'Dismiss',
       builder: (context) => Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),

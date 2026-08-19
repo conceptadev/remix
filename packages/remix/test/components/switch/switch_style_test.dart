@@ -321,7 +321,11 @@ void main() {
       ) async {
         final style = SwitchStyler();
 
-        final switchWidget = style.call(selected: false, onChanged: (v) {});
+        final switchWidget = style.call(
+          selected: false,
+          semanticLabel: 'Toggle',
+          onChanged: (v) {},
+        );
 
         expect(switchWidget, isA<RemixSwitch>());
         expect(switchWidget.selected, equals(false));

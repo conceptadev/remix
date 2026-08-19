@@ -396,8 +396,10 @@ void main() {
         void onTap() {}
         void onTapUpOutside(PointerUpEvent event) {}
 
+        final semantics = tester.ensureSemantics();
         await tester.pumpRemixApp(
           RemixTextField(
+            label: 'Email',
             onTap: onTap,
             onTapAlwaysCalled: true,
             onPressUpOutside: onTapUpOutside,
@@ -414,13 +416,23 @@ void main() {
         expect(textField.onTapAlwaysCalled, isTrue);
         expect(textField.onTapUpOutside, same(onTapUpOutside));
         expect(textField.ignorePointers, isTrue);
+
+        // Remix owns the exclusion for the whole composite, so it must not
+        // also forward it and nest a second boundary inside the first.
+        // (The label and helper have their own exclusions outside this
+        // subtree; those publish through Naked's semanticLabel instead.)
         expect(textField.excludeSemantics, isFalse);
         expect(
-          tester
-              .widget<RemixTextField>(find.byType(RemixTextField))
-              .excludeSemantics,
-          isTrue,
+          find.descendant(
+            of: find.byType(NakedTextField),
+            matching: find.byType(ExcludeSemantics),
+          ),
+          findsNothing,
         );
+        // The label lives outside NakedTextField; excluding the composite
+        // must hide it too.
+        expect(find.bySemanticsLabel('Email'), findsNothing);
+        semantics.dispose();
       });
 
       testWidgets('uses semantic label parameter', (tester) async {

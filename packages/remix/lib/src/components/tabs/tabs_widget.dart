@@ -107,12 +107,14 @@ class RemixTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RemixStyleSpecBuilder<TabBarSpec>(
-      style: style,
-      styleSpec: styleSpec,
-      builder: (context, spec) {
-        return FlexBox(styleSpec: spec.container, children: [child]);
-      },
+    return NakedTabBar(
+      child: RemixStyleSpecBuilder<TabBarSpec>(
+        style: style,
+        styleSpec: styleSpec,
+        builder: (context, spec) {
+          return FlexBox(styleSpec: spec.container, children: [child]);
+        },
+      ),
     );
   }
 }

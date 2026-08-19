@@ -158,9 +158,9 @@ class RemixButton extends StatelessWidget {
   /// Provides additional context about what will happen when the button is activated.
   final String? semanticHint;
 
-  /// Whether to exclude child semantics.
+  /// Whether to hide the complete control from the semantic tree.
   ///
-  /// When true, the semantics of child widgets will be excluded.
+  /// When true, the button and its subtree are excluded from accessibility.
   /// Defaults to false.
   final bool excludeSemantics;
 
@@ -174,8 +174,6 @@ class RemixButton extends StatelessWidget {
 
   /// Optional raw style spec that bypasses fluent style resolution.
   final ButtonSpec? styleSpec;
-
-  bool get _isEnabled => enabled && !loading && onPressed != null;
 
   ButtonStyler _buildStyle() => composeStyle(style);
 
@@ -259,33 +257,33 @@ class RemixButton extends StatelessWidget {
     );
 
     // Layer spinner above the content while keeping size stable.
-    final layered = Stack(
-      alignment: .center,
-      children: [contentRow, if (loading) spinner],
-    );
-
-    return MergeSemantics(
-      child: Semantics(
-        excludeSemantics: excludeSemantics,
-        liveRegion: loading,
-        label: semanticLabel ?? label,
-        hint: semanticHint,
-        child: layered,
+    // Visual children are excluded from semantics: NakedButton already
+    // publishes the accessible name, hint, and actions.
+    return ExcludeSemantics(
+      child: Stack(
+        alignment: .center,
+        children: [contentRow, if (loading) spinner],
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final allowsInteraction = enabled && !loading;
+
     return NakedButton(
-      onPressed: _isEnabled ? onPressed : null,
-      onLongPress: _isEnabled ? onLongPress : null,
-      enabled: _isEnabled,
+      // Naked UI beta.12 derives semantic actions from callback presence, so
+      // remove callbacks whenever this wrapper disallows interaction.
+      onPressed: allowsInteraction ? onPressed : null,
+      onLongPress: allowsInteraction ? onLongPress : null,
+      enabled: allowsInteraction,
       mouseCursor: mouseCursor,
       enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
       semanticLabel: semanticLabel ?? label,
+      semanticHint: semanticHint,
+      excludeSemantics: excludeSemantics,
       builder: (context, _, _) {
         return RemixStyleSpecBuilder<ButtonSpec>(
           style: _buildStyle(),

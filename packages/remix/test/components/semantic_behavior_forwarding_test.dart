@@ -41,9 +41,12 @@ void main() {
     testWidgets('RemixRadio and RadioStyler.call forward semantics', (
       tester,
     ) async {
-      final defaultRadio = RadioStyler().call<String>(value: 'default');
+      final defaultRadio = RadioStyler().call<String>(
+        value: 'default',
+        semanticLabel: 'Default option',
+      );
 
-      expect(defaultRadio.semanticLabel, isNull);
+      expect(defaultRadio.semanticLabel, 'Default option');
       expect(defaultRadio.excludeSemantics, isFalse);
 
       await tester.pumpRemixApp(
@@ -57,7 +60,7 @@ void main() {
       var nakedRadio = tester.widget<NakedRadio<String>>(
         find.byType(NakedRadio<String>),
       );
-      expect(nakedRadio.semanticLabel, isNull);
+      expect(nakedRadio.semanticLabel, 'Default option');
       expect(nakedRadio.excludeSemantics, isFalse);
 
       final labeledRadio = RadioStyler().call<String>(
@@ -263,7 +266,10 @@ void main() {
     testWidgets('RemixSwitch and SwitchStyler.call forward excludeSemantics', (
       tester,
     ) async {
-      final defaultSwitch = SwitchStyler().call(selected: false);
+      final defaultSwitch = SwitchStyler().call(
+        selected: false,
+        semanticLabel: 'Notifications',
+      );
 
       expect(defaultSwitch.excludeSemantics, isFalse);
 

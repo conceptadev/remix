@@ -186,6 +186,7 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
                 variant: FortalRadioVariant.values[row],
                 size: FortalRadioSize.values[column],
                 value: 1,
+                semanticLabel: 'Option',
               ),
             ),
           ),

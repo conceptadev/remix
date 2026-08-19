@@ -13,7 +13,10 @@ void main() {
       trigger: RemixSelectTrigger(placeholder: 'Choose'),
       items: [RemixSelectItem(value: 'one', label: 'One')],
     );
-    const radio = FortalRadio<String>.soft(value: 'one');
+    const radio = FortalRadio<String>.soft(
+      value: 'one',
+      semanticLabel: 'Option',
+    );
     const button = FortalButton.soft(label: 'Save');
     const checkbox = FortalCheckbox.soft(
       selected: false,

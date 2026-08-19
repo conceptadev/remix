@@ -39,6 +39,7 @@ class _SwitchExampleState extends State<SwitchExample> {
   @override
   Widget build(BuildContext context) {
     return RemixSwitch(
+      semanticLabel: 'Toggle',
       style: style,
       selected: _selected.value,
       onChanged: (value) {
@@ -107,10 +108,12 @@ class _FortalSwitchExampleState extends State<FortalSwitchExample> {
       children: [
         FortalSwitch.surface(
           selected: _value,
+          semanticLabel: 'Notifications',
           onChanged: (v) => setState(() => _value = v),
         ),
         FortalSwitch.soft(
           selected: _value,
+          semanticLabel: 'Notifications',
           onChanged: (v) => setState(() => _value = v),
         ),
       ],
@@ -133,12 +136,12 @@ import 'package:remix/remix.dart';
 RemixSwitch remixSwitchConstructor({
   Key? key,
   required bool selected,
+  required String semanticLabel,
   ValueChanged<bool>? onChanged,
   bool enabled = true,
   bool enableFeedback = true,
   FocusNode? focusNode,
   bool autofocus = false,
-  String? semanticLabel,
   bool excludeSemantics = false,
   MouseCursor mouseCursor = SystemMouseCursors.click,
   SwitchStyler style = const SwitchStyler.create(),
@@ -187,9 +190,9 @@ Optional. The focus node for the switch.
 
 Optional. Whether the switch should automatically request focus when it is created.
 
-#### `semanticLabel` → `String?`
+#### `semanticLabel` → `String`
 
-Optional. The semantic label for the switch.
+Required. The accessible name announced for this switch. Must be nonblank — an adjacent `Text` label is not the accessible name.
 
 #### `excludeSemantics` → `bool`
 
@@ -266,6 +269,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
-#### `call({..., String? semanticLabel, bool excludeSemantics = false, ...})`
+#### `call({..., required String semanticLabel, bool excludeSemantics = false, ...})`
 
 Creates a `RemixSwitch` widget with this style applied.
