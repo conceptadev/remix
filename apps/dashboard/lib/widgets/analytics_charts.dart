@@ -16,16 +16,10 @@ class AnalyticsCharts extends StatelessWidget {
     final chartInset = MixScope.tokenOf(FortalTokens.space2, context);
     final slices = _channelSlices();
     // Omit autoRows: Mix 1031 defaults implicit rows to content height.
-    final GridBoxStyler gridStyle = GridBoxStyler.equalColumns(3)
+    final GridBoxStyler gridStyle = .equalColumns(3)
         .gap(gap)
-        .onConstraints(
-          const Breakpoint.maxWidth(1119),
-          GridBoxStyler.equalColumns(2).gap(gap),
-        )
-        .onConstraints(
-          const Breakpoint.maxWidth(719),
-          GridBoxStyler.equalColumns(1).gap(gap),
-        );
+        .onConstraints(const .maxWidth(1119), .equalColumns(2).gap(gap))
+        .onConstraints(const .maxWidth(719), .equalColumns(1).gap(gap));
 
     return GridBox(
       key: const ValueKey('overview-chart-grid'),

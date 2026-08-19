@@ -30,12 +30,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final GridBoxStyler profileFields = GridBoxStyler.equalColumns(2)
-        .gap(14)
-        .onConstraints(
-          const Breakpoint.maxWidth(560),
-          GridBoxStyler.equalColumns(1).gap(14),
-        );
+    final GridBoxStyler profileFields = .equalColumns(
+      2,
+    ).gap(14).onConstraints(const .maxWidth(560), .equalColumns(1).gap(14));
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(32),

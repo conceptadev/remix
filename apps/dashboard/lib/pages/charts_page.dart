@@ -88,12 +88,9 @@ class _ChartSection extends StatelessWidget {
     final gap = MixScope.tokenOf(FortalTokens.space4, context);
     final titleGap = MixScope.tokenOf(FortalTokens.space2, context);
     // Omit autoRows: Mix 1031 defaults implicit rows to content height.
-    final GridBoxStyler gridStyle = GridBoxStyler.equalColumns(2)
-        .gap(gap)
-        .onConstraints(
-          const Breakpoint.maxWidth(860),
-          GridBoxStyler.equalColumns(1).gap(gap),
-        );
+    final GridBoxStyler gridStyle = .equalColumns(
+      2,
+    ).gap(gap).onConstraints(const .maxWidth(860), .equalColumns(1).gap(gap));
 
     return Column(
       crossAxisAlignment: .stretch,

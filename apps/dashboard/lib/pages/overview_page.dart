@@ -24,23 +24,17 @@ class OverviewPage extends StatelessWidget {
     final metricGap = MixScope.tokenOf(FortalTokens.space4, context);
     final bandGap = MixScope.tokenOf(FortalTokens.space5, context);
     // Omit autoRows: Mix 1031 defaults implicit rows to content height.
-    final GridBoxStyler metricsStyle = GridBoxStyler.equalColumns(4)
+    final GridBoxStyler metricsStyle = .equalColumns(4)
         .gap(metricGap)
-        .onConstraints(
-          const Breakpoint.maxWidth(900),
-          GridBoxStyler.equalColumns(2).gap(metricGap),
-        )
-        .onConstraints(
-          const Breakpoint.maxWidth(520),
-          GridBoxStyler.equalColumns(1).gap(metricGap),
-        );
-    final GridBoxStyler activityStyle = GridBoxStyler.equalColumns(2)
+        .onConstraints(const .maxWidth(900), .equalColumns(2).gap(metricGap))
+        .onConstraints(const .maxWidth(520), .equalColumns(1).gap(metricGap));
+    final GridBoxStyler activityStyle = .equalColumns(2)
         .gap(bandGap)
         .onConstraints(
           // Old LayoutBuilder used content width ≥ 1050. This Grid sees
           // that slot minus page padding on both sides (space6 × 2 = 64).
-          const Breakpoint.maxWidth(985),
-          GridBoxStyler.equalColumns(1).gap(bandGap),
+          const .maxWidth(985),
+          .equalColumns(1).gap(bandGap),
         );
 
     return SingleChildScrollView(
