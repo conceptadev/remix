@@ -48,7 +48,7 @@ class _RadioExampleState extends State<RadioExample> {
             spacing: 8,
             mainAxisSize: MainAxisSize.min,
             children: [
-              RemixRadio<String>(value: 'option1', style: style),
+              RemixRadio<String>(value: 'option1', semanticLabel: 'Option 1', style: style),
               const Text('Option 1'),
             ],
           ),
@@ -56,7 +56,7 @@ class _RadioExampleState extends State<RadioExample> {
             spacing: 8,
             mainAxisSize: MainAxisSize.min,
             children: [
-              RemixRadio<String>(value: 'option2', style: style),
+              RemixRadio<String>(value: 'option2', semanticLabel: 'Option 2', style: style),
               const Text('Option 2'),
             ],
           ),
@@ -141,6 +141,7 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
             children: [
               FortalRadio.surface(
                 value: 'surface',
+                semanticLabel: 'Surface',
               ),
               const SizedBox(width: 8),
               const Text('Surface'),
@@ -150,6 +151,7 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
             children: [
               FortalRadio.soft(
                 value: 'soft',
+                semanticLabel: 'Soft',
               ),
               const SizedBox(width: 8),
               const Text('Soft'),
@@ -185,12 +187,12 @@ RemixRadioGroup<T> remixRadioGroupConstructor<T>({
 RemixRadio<T> remixRadioConstructor<T>({
   Key? key,
   required T value,
+  required String semanticLabel,
   bool enabled = true,
   bool toggleable = false,
   MouseCursor? mouseCursor,
   FocusNode? focusNode,
   bool autofocus = false,
-  String? semanticLabel,
   bool excludeSemantics = false,
   RadioStyler style = const RadioStyler.create(),
   RadioSpec? styleSpec,
@@ -250,9 +252,9 @@ Optional. The focus node for the radio button.
 
 Optional. The mouse cursor to use when hovering over the radio button.
 
-#### `semanticLabel` → `String?`
+#### `semanticLabel` → `String`
 
-Optional. The accessible label for this radio button.
+Required. The accessible name announced for this radio button. Must be nonblank — an adjacent `Text` label is not the accessible name.
 
 #### `excludeSemantics` → `bool`
 
@@ -307,6 +309,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
-#### `call<T>({Key? key, required T value, bool enabled = true, bool toggleable = false, MouseCursor? mouseCursor, FocusNode? focusNode, bool autofocus = false, String? semanticLabel, bool excludeSemantics = false})`
+#### `call<T>({Key? key, required T value, required String semanticLabel, bool enabled = true, bool toggleable = false, MouseCursor? mouseCursor, FocusNode? focusNode, bool autofocus = false, bool excludeSemantics = false})`
 
 Creates a `RemixRadio<T>` widget with this style applied.

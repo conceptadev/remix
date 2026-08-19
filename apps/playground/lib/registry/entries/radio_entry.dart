@@ -51,7 +51,11 @@ class _RemixLabeledRadio extends StatelessWidget {
     return Row(
       mainAxisSize: .min,
       children: [
-        RemixRadio<String>(value: value, enabled: enabled),
+        RemixRadio<String>(
+          semanticLabel: 'Option',
+          value: value,
+          enabled: enabled,
+        ),
         const SizedBox(width: 8),
         Text(label),
       ],

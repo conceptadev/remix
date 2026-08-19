@@ -18,6 +18,7 @@ Widget buildDividerUseCase(BuildContext context) {
             onPressed: () {
               showRemixDialog(
                 context: context,
+                barrierLabel: 'Dismiss',
                 builder: (context) => Center(
                   child: FortalDialog(
                     title: 'Revoke access',

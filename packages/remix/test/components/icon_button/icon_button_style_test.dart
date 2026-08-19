@@ -310,7 +310,7 @@ void main() {
     group('Call Method', () {
       test('call method creates RemixIconButton with minimal parameters', () {
         const style = IconButtonStyler.create();
-        final button = style.call(icon: Icons.add);
+        final button = style.call(icon: Icons.add, semanticLabel: 'Add');
 
         expect(button, isA<RemixIconButton>());
         expect(button.icon, equals(Icons.add));

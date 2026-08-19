@@ -17,6 +17,7 @@ Widget buildSwitchUseCase(BuildContext context) {
     child: Scaffold(
       body: Center(
         child: FortalSwitch(
+          semanticLabel: 'Toggle',
           selected: context.knobs.boolean(label: 'Toggle', initialValue: true),
           enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           onChanged: (value) => knobState.updateKnob('Toggle', value),
@@ -43,6 +44,7 @@ Widget buildSwitchCatalogUseCase(BuildContext context) {
     columns: labelsOf(FortalSwitchSize.values),
     rows: labelsOf(FortalSwitchVariant.values),
     cell: (row, column) => FortalSwitch(
+      semanticLabel: 'Toggle',
       selected: true,
       size: FortalSwitchSize.values[column],
       variant: FortalSwitchVariant.values[row],

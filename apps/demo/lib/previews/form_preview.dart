@@ -26,13 +26,31 @@ Widget previewSwitchStates() {
     Column(
       mainAxisAlignment: .center,
       children: [
-        RemixSwitch(selected: true, onChanged: (value) {}),
+        RemixSwitch(
+          semanticLabel: 'Toggle',
+          selected: true,
+          onChanged: (value) {},
+        ),
         const SizedBox(height: 12),
-        RemixSwitch(selected: false, onChanged: (value) {}),
+        RemixSwitch(
+          semanticLabel: 'Toggle',
+          selected: false,
+          onChanged: (value) {},
+        ),
         const SizedBox(height: 12),
-        RemixSwitch(selected: true, enabled: false, onChanged: (value) {}),
+        RemixSwitch(
+          semanticLabel: 'Toggle',
+          selected: true,
+          enabled: false,
+          onChanged: (value) {},
+        ),
         const SizedBox(height: 12),
-        RemixSwitch(selected: false, enabled: false, onChanged: (value) {}),
+        RemixSwitch(
+          semanticLabel: 'Toggle',
+          selected: false,
+          enabled: false,
+          onChanged: (value) {},
+        ),
       ],
     ),
   );
@@ -101,7 +119,11 @@ class _PreviewRadio extends StatelessWidget {
       child: Row(
         mainAxisSize: .min,
         children: [
-          RemixRadio<String>(value: value, enabled: enabled),
+          RemixRadio<String>(
+            semanticLabel: 'Option',
+            value: value,
+            enabled: enabled,
+          ),
           const SizedBox(width: 8),
           Text(label),
         ],

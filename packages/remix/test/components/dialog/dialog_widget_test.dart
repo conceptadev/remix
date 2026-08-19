@@ -279,6 +279,7 @@ void main() {
             builder: (context) => TextButton(
               onPressed: () => showRemixDialog<void>(
                 context: context,
+                barrierLabel: 'Dismiss',
                 builder: (context) => const RemixDialog(title: 'Plain dialog'),
               ),
               child: const Text('Open'),
@@ -303,6 +304,7 @@ void main() {
           builder: (context) => TextButton(
             onPressed: () => showRemixDialog<void>(
               context: context,
+              barrierLabel: 'Dismiss',
               builder: (context) {
                 builderHasScope = MixScope.maybeOf(context) != null;
                 return const RemixDialog(title: 'Scoped dialog');
@@ -319,6 +321,32 @@ void main() {
       expect(builderHasScope, isTrue);
       expect(find.text('Scoped dialog'), findsOneWidget);
     });
+
+    testWidgets(
+      'requires a nonblank barrierLabel when the barrier is dismissible',
+      (tester) async {
+        late BuildContext hostContext;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Builder(
+              builder: (context) {
+                hostContext = context;
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        );
+
+        expect(
+          () => showRemixDialog<void>(
+            context: hostContext,
+            barrierDismissible: true,
+            builder: (context) => const RemixDialog(title: 'Needs label'),
+          ),
+          throwsAssertionError,
+        );
+      },
+    );
   });
 
   group('RemixDialog', () {
@@ -335,7 +363,10 @@ void main() {
 
       testWidgets('renders dialog with description only', (tester) async {
         await tester.pumpRemixApp(
-          RemixDialog(description: 'Dialog Description'),
+          RemixDialog(
+            description: 'Dialog Description',
+            semanticLabel: 'Dialog Description',
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -585,6 +616,90 @@ void main() {
     });
 
     group('Accessibility', () {
+      testWidgets(
+        'showRemixDialog exposes dialog role, route name, and closed-loop tab wrap',
+        (tester) async {
+          final semantics = tester.ensureSemantics();
+          final cancelFocus = FocusNode(debugLabel: 'dialog-cancel');
+          final confirmFocus = FocusNode(debugLabel: 'dialog-confirm');
+          addTearDown(cancelFocus.dispose);
+          addTearDown(confirmFocus.dispose);
+          try {
+            await tester.pumpRemixApp(
+              Builder(
+                builder: (context) => RemixButton(
+                  label: 'Open',
+                  onPressed: () => showRemixDialog<void>(
+                    context: context,
+                    barrierLabel: 'Dismiss',
+                    transitionDuration: Duration.zero,
+                    builder: (context) => RemixDialog(
+                      title: 'Invite teammates',
+                      semanticLabel: 'Invite teammates',
+                      actions: [
+                        RemixButton(
+                          label: 'Cancel',
+                          focusNode: cancelFocus,
+                          onPressed: () {},
+                        ),
+                        RemixButton(
+                          label: 'Send',
+                          focusNode: confirmFocus,
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+
+            await tester.tap(find.text('Open'));
+            await tester.pump();
+            await tester.pump();
+
+            expect(find.byType(RemixDialog), findsOneWidget);
+
+            final root = tester
+                .binding
+                .renderViews
+                .single
+                .owner!
+                .semanticsOwner!
+                .rootSemanticsNode!;
+            final dialogs = _collectSemanticsNodes(
+              root,
+              (node) => node.getSemanticsData().role == SemanticsRole.dialog,
+            );
+            expect(dialogs, hasLength(1));
+            final data = dialogs.single.getSemanticsData();
+            expect(data.label, 'Invite teammates');
+            expect(data.flagsCollection.namesRoute, isTrue);
+            expect(data.flagsCollection.scopesRoute, isTrue);
+
+            cancelFocus.requestFocus();
+            await tester.pump();
+            expect(cancelFocus.hasFocus, isTrue);
+
+            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+            await tester.pump();
+            expect(confirmFocus.hasFocus, isTrue);
+
+            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+            await tester.pump();
+            expect(cancelFocus.hasFocus, isTrue);
+
+            await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+            await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+            await tester.pump();
+            expect(confirmFocus.hasFocus, isTrue);
+          } finally {
+            semantics.dispose();
+          }
+        },
+      );
+
       testWidgets('dialog with semantic label uses provided label', (
         tester,
       ) async {
@@ -679,7 +794,11 @@ void main() {
         );
 
         await tester.pumpRemixApp(
-          RemixDialog(description: 'Styled Description', style: customStyle),
+          RemixDialog(
+            description: 'Styled Description',
+            semanticLabel: 'Styled Description',
+            style: customStyle,
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -787,22 +906,12 @@ void main() {
     });
 
     group('Edge Cases', () {
-      testWidgets('handles empty title gracefully', (tester) async {
-        await tester.pumpRemixApp(RemixDialog(title: ''));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
-        expect(find.byType(StyledText), findsOneWidget);
+      test('rejects an empty title without a semantic label or child', () {
+        expect(() => RemixDialog(title: ''), throwsAssertionError);
       });
 
-      testWidgets('handles empty description gracefully', (tester) async {
-        await tester.pumpRemixApp(RemixDialog(description: ''));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
-        expect(find.byType(StyledText), findsOneWidget);
+      test('rejects a description-only dialog without a semantic label', () {
+        expect(() => RemixDialog(description: ''), throwsAssertionError);
       });
 
       testWidgets('handles null actions gracefully', (tester) async {

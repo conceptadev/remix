@@ -17,7 +17,7 @@ void main() {
     test('named constructors pin variants and infer generic types', () {
       const button = FortalButton.soft(label: 'Save');
       const accordion = FortalAccordion.soft(value: 'item', child: SizedBox());
-      const radio = FortalRadio.soft(value: 'option');
+      const radio = FortalRadio.soft(value: 'option', semanticLabel: 'Option');
       const menu = FortalMenu.soft(
         trigger: RemixMenuTrigger(label: 'Menu'),
         items: [RemixMenuItem(value: 'a', label: 'A')],
@@ -194,7 +194,9 @@ void main() {
     });
 
     testWidgets('renders FortalIconButton', (tester) async {
-      await tester.pumpRemixApp(const FortalIconButton(icon: Icons.add));
+      await tester.pumpRemixApp(
+        const FortalIconButton(icon: Icons.add, semanticLabel: 'Add'),
+      );
 
       expect(find.byType(FortalIconButton), findsOneWidget);
       expect(find.byType(RemixIconButton), findsOneWidget);
@@ -211,7 +213,7 @@ void main() {
       await tester.pumpRemixApp(
         const RemixRadioGroup<String>(
           groupValue: 'option',
-          child: FortalRadio<String>(value: 'option'),
+          child: FortalRadio<String>(value: 'option', semanticLabel: 'Option'),
         ),
       );
 
@@ -234,7 +236,9 @@ void main() {
     });
 
     testWidgets('renders FortalSwitch', (tester) async {
-      await tester.pumpRemixApp(const FortalSwitch(selected: true));
+      await tester.pumpRemixApp(
+        const FortalSwitch(semanticLabel: 'Toggle', selected: true),
+      );
 
       expect(find.byType(FortalSwitch), findsOneWidget);
       expect(find.byType(RemixSwitch), findsOneWidget);

@@ -34,6 +34,7 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
               size: .size1,
               onPressed: () => showRemixDialog<void>(
                 context: context,
+                barrierLabel: 'Dismiss',
                 builder: (dialogContext) => Center(
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 600),

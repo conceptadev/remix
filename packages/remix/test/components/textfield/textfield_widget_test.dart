@@ -414,7 +414,7 @@ void main() {
         expect(textField.onTapAlwaysCalled, isTrue);
         expect(textField.onTapUpOutside, same(onTapUpOutside));
         expect(textField.ignorePointers, isTrue);
-        expect(textField.excludeSemantics, isFalse);
+        expect(textField.excludeSemantics, isTrue);
         expect(
           tester
               .widget<RemixTextField>(find.byType(RemixTextField))

@@ -1,9 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
+
+List<SemanticsNode> _collectSemanticsNodes(
+  SemanticsNode root,
+  bool Function(SemanticsNode) predicate,
+) {
+  final nodes = <SemanticsNode>[];
+  bool visitor(SemanticsNode node) {
+    if (!node.isMergedIntoParent && predicate(node)) nodes.add(node);
+    node.visitChildren(visitor);
+    return true;
+  }
+
+  visitor(root);
+  return nodes;
+}
+
+/// Opacities rendered inside the option rows of an open `RemixSelect<String>`.
+List<double> _optionOpacities(WidgetTester tester) => tester
+    .widgetList<Opacity>(
+      find.descendant(
+        of: find.byType(NakedSelectOption<String>),
+        matching: find.byType(Opacity),
+      ),
+    )
+    .map((widget) => widget.opacity)
+    .toList();
 
 void main() {
   group('RemixSelect', () {
@@ -11,6 +39,7 @@ void main() {
       testWidgets('renders select with minimal props', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [
               RemixSelectItem(value: 'a', label: 'Option A'),
@@ -27,6 +56,7 @@ void main() {
       testWidgets('renders select with selected value', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [
               RemixSelectItem(value: 'a', label: 'Option A'),
@@ -44,6 +74,7 @@ void main() {
       testWidgets('renders trigger with icon', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(
               placeholder: 'Select',
               icon: Icons.star,
@@ -59,6 +90,7 @@ void main() {
       testWidgets('shows the default select indicator', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
           ),
@@ -76,6 +108,7 @@ void main() {
         (tester) async {
           await tester.pumpRemixApp(
             RemixSelect<String>(
+              onChanged: (_) {},
               trigger: const RemixSelectTrigger(
                 placeholder: 'Select',
                 collapsedIcon: Icons.add,
@@ -116,6 +149,7 @@ void main() {
       ) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(
               placeholder: 'Select',
               expandedIcon: Icons.remove,
@@ -140,6 +174,7 @@ void main() {
       ) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(
               placeholder: 'Select',
               collapsedIcon: Icons.add,
@@ -167,6 +202,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             key: key,
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
@@ -201,6 +237,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             key: key,
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
@@ -230,6 +267,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             key: key,
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
@@ -254,6 +292,7 @@ void main() {
       testWidgets('opens dropdown when tapped', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [
               RemixSelectItem(value: 'a', label: 'Option A'),
@@ -273,6 +312,7 @@ void main() {
       testWidgets('rotates the default indicator when opened', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
           ),
@@ -329,6 +369,7 @@ void main() {
       testWidgets('does not open when disabled', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             enabled: false,
@@ -379,6 +420,7 @@ void main() {
       ) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [
               RemixSelectItem(value: 'a', label: 'Option A'),
@@ -403,6 +445,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             onOpen: () => onOpenCalled = true,
@@ -421,6 +464,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             onClose: () => onCloseCalled = true,
@@ -444,6 +488,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             focusNode: focusNode,
@@ -460,6 +505,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             focusNode: focusNode,
@@ -497,6 +543,7 @@ void main() {
       ) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(
               placeholder: 'Select',
               icon: Icons.star,
@@ -526,6 +573,7 @@ void main() {
       ) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
           ),
@@ -563,6 +611,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             style: customStyle,
@@ -582,6 +631,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             style: customStyle,
@@ -595,6 +645,7 @@ void main() {
       testWidgets('applies item styling', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: [
               RemixSelectItem(
@@ -615,6 +666,7 @@ void main() {
       testWidgets('applies select-level default item styling', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             style: SelectStyler().item(
@@ -640,6 +692,7 @@ void main() {
       ) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: [
               RemixSelectItem(
@@ -671,12 +724,78 @@ void main() {
           Colors.blue,
         );
       });
+
+      testWidgets('renders widget modifiers from the per-item style', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            onChanged: (_) {},
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: [
+              RemixSelectItem(
+                value: 'a',
+                label: 'Option A',
+                style: SelectMenuItemStyler().wrap(.opacity(0.42)),
+              ),
+            ],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        expect(_optionOpacities(tester), contains(0.42));
+      });
+
+      testWidgets('renders widget modifiers from the select-wide item style', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            onChanged: (_) {},
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            style: SelectStyler().item(
+              SelectMenuItemStyler().wrap(.opacity(0.42)),
+            ),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        expect(_optionOpacities(tester), contains(0.42));
+      });
+
+      testWidgets('does not re-apply root widget modifiers to each option', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            onChanged: (_) {},
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            style: SelectStyler().wrap(.opacity(0.42)),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        // Root modifiers belong to the trigger and the overlay, not to rows.
+        expect(_optionOpacities(tester), isNot(contains(0.42)));
+      });
     });
 
     group('Type Safety', () {
       testWidgets('works with String type', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
           ),
@@ -689,6 +808,7 @@ void main() {
       testWidgets('works with int type', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<int>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 1, label: 'Option 1')],
           ),
@@ -701,6 +821,7 @@ void main() {
       testWidgets('works with enum type', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<TestEnum>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [
               RemixSelectItem(value: TestEnum.option1, label: 'Option 1'),
@@ -717,6 +838,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSelect<CustomOption>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: [RemixSelectItem(value: option1, label: 'Option 1')],
           ),
@@ -731,6 +853,7 @@ void main() {
       testWidgets('renders disabled item', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [
               RemixSelectItem(value: 'a', label: 'Option A', enabled: false),
@@ -750,6 +873,7 @@ void main() {
       testWidgets('shows check icon for selected item', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [
               RemixSelectItem(value: 'a', label: 'Option A'),
@@ -774,6 +898,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [
               RemixSelectItem(
@@ -802,6 +927,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
           ),
@@ -824,6 +950,7 @@ void main() {
       testWidgets('accepts positioning OverlayPositionConfig', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             positioning: const OverlayPositionConfig(
@@ -846,6 +973,7 @@ void main() {
           Row(
             children: [
               RemixSelect<String>(
+                onChanged: (_) {},
                 trigger: const RemixSelectTrigger(placeholder: 'Select'),
                 items: const [
                   RemixSelectItem(value: 'a', label: 'Option A'),
@@ -868,6 +996,7 @@ void main() {
           Row(
             children: [
               RemixSelect<String>(
+                onChanged: (_) {},
                 trigger: const RemixSelectTrigger(placeholder: 'Select'),
                 items: const [
                   RemixSelectItem(value: 'a', label: 'Option A'),
@@ -891,6 +1020,7 @@ void main() {
       testWidgets('handles empty items list', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [],
           ),
@@ -903,6 +1033,7 @@ void main() {
       testWidgets('handles null selectedValue', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             selectedValue: null,
@@ -919,6 +1050,7 @@ void main() {
         // The assertion happens during widget build, so we catch it via takeException.
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             selectedValue: 'z',
@@ -933,6 +1065,7 @@ void main() {
       testWidgets('handles rapid open/close', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
           ),
@@ -952,6 +1085,7 @@ void main() {
       testWidgets('applies semanticLabel to select', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             semanticLabel: 'Custom Select Label',
@@ -969,6 +1103,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             key: key,
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
@@ -984,6 +1119,7 @@ void main() {
       testWidgets('renders all items in dropdown', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
+            onChanged: (_) {},
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [
               RemixSelectItem(value: 'a', label: 'Option A'),
@@ -1032,6 +1168,305 @@ void main() {
 
         expect(find.text('Option B'), findsOneWidget);
         expect(find.text('Option A'), findsNothing);
+      });
+    });
+
+    group('Enabled contract and accessibility', () {
+      testWidgets('onChanged == null cannot open by pointer', (tester) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+        expect(find.text('Option A'), findsNothing);
+      });
+
+      testWidgets('onChanged == null cannot open by Enter or Space', (
+        tester,
+      ) async {
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            focusNode: focusNode,
+          ),
+        );
+        await tester.pumpAndSettle();
+        focusNode.requestFocus();
+        await tester.pump();
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(find.text('Option A'), findsNothing);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.space);
+        await tester.pumpAndSettle();
+        expect(find.text('Option A'), findsNothing);
+      });
+
+      testWidgets('onChanged == null cannot open by semantic tap', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixSelect<String>(
+              trigger: const RemixSelectTrigger(placeholder: 'Select'),
+              items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          final root = tester.getSemantics(find.byType(Scaffold));
+          final triggers = _collectSemanticsNodes(
+            root,
+            (node) => node.getSemanticsData().label.contains('Select'),
+          );
+          expect(triggers, isNotEmpty);
+          expect(
+            triggers.any(
+              (node) => node.getSemanticsData().hasAction(SemanticsAction.tap),
+            ),
+            isFalse,
+          );
+          expect(find.text('Option A'), findsNothing);
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('announces selected item label instead of T.toString()', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixSelect<CustomOption>(
+              trigger: const RemixSelectTrigger(placeholder: 'Fruit'),
+              items: [
+                RemixSelectItem(
+                  value: CustomOption('Apple'),
+                  label: 'Apple',
+                  semanticLabel: 'Green apple',
+                ),
+              ],
+              selectedValue: CustomOption('Apple'),
+              onChanged: (_) {},
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          final root = tester.getSemantics(find.byType(Scaffold));
+          final triggers = _collectSemanticsNodes(
+            root,
+            (node) =>
+                node.getSemanticsData().value == 'Green apple' ||
+                node.getSemanticsData().value == 'Apple',
+          );
+          expect(triggers, isNotEmpty);
+          expect(triggers.first.getSemanticsData().value, 'Green apple');
+          expect(
+            triggers.first.getSemanticsData().value,
+            isNot(contains('CustomOption')),
+          );
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('duplicate item values fail in debug', (tester) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [
+              RemixSelectItem(value: 'a', label: 'One'),
+              RemixSelectItem(value: 'a', label: 'Two'),
+            ],
+            onChanged: (_) {},
+          ),
+        );
+        expect(tester.takeException(), isAssertionError);
+      });
+
+      testWidgets('unknown selectedValue fails in debug', (tester) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'One')],
+            selectedValue: 'missing',
+            onChanged: (_) {},
+          ),
+        );
+        expect(tester.takeException(), isAssertionError);
+      });
+
+      testWidgets('blank trigger placeholder fails in debug', (tester) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: '   '),
+            items: const [RemixSelectItem(value: 'a', label: 'One')],
+            onChanged: (_) {},
+          ),
+        );
+        expect(tester.takeException(), isAssertionError);
+      });
+
+      testWidgets('blank item label fails in debug', (tester) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: '   ')],
+            onChanged: (_) {},
+          ),
+        );
+        expect(tester.takeException(), isAssertionError);
+      });
+
+      testWidgets('blank item semanticLabel fails in debug', (tester) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [
+              RemixSelectItem(value: 'a', label: 'One', semanticLabel: '   '),
+            ],
+            onChanged: (_) {},
+          ),
+        );
+        expect(tester.takeException(), isAssertionError);
+      });
+
+      testWidgets('selected and disabled option semantics', (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixSelect<String>(
+              trigger: const RemixSelectTrigger(placeholder: 'Select'),
+              items: const [
+                RemixSelectItem(value: 'a', label: 'Chosen'),
+                RemixSelectItem(value: 'b', label: 'Skipped', enabled: false),
+              ],
+              selectedValue: 'a',
+              onChanged: (_) {},
+            ),
+          );
+          await tester.pumpAndSettle();
+          await tester.tap(find.byType(RemixSelect<String>));
+          await tester.pumpAndSettle();
+
+          expect(
+            tester.getSemantics(find.bySemanticsLabel('Skipped')),
+            isSemantics(label: 'Skipped', isEnabled: false),
+          );
+          expect(find.bySemanticsLabel('Chosen'), findsWidgets);
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('Enter and Space open an enabled select', (tester) async {
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            focusNode: focusNode,
+            onChanged: (_) {},
+          ),
+        );
+        await tester.pumpAndSettle();
+        focusNode.requestFocus();
+        await tester.pump();
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(find.text('Option A'), findsOneWidget);
+      });
+
+      testWidgets('Escape closes and restores focus', (tester) async {
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            focusNode: focusNode,
+            onChanged: (_) {},
+          ),
+        );
+        await tester.pumpAndSettle();
+        focusNode.requestFocus();
+        await tester.pump();
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(find.text('Option A'), findsOneWidget);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        expect(find.text('Option A'), findsNothing);
+        expect(focusNode.hasFocus, isTrue);
+      });
+
+      testWidgets('option activation changes selection', (tester) async {
+        String? selected;
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) {
+              return RemixSelect<String>(
+                trigger: const RemixSelectTrigger(placeholder: 'Select'),
+                items: const [
+                  RemixSelectItem(value: 'a', label: 'Option A'),
+                  RemixSelectItem(value: 'b', label: 'Option B'),
+                ],
+                selectedValue: selected,
+                onChanged: (value) => setState(() => selected = value),
+              );
+            },
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Option B'));
+        await tester.pumpAndSettle();
+        expect(selected, 'b');
+      });
+
+      testWidgets('exit animation leaves no stale option semantics', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixSelect<String>(
+              trigger: const RemixSelectTrigger(placeholder: 'Select'),
+              items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+              onChanged: (_) {},
+            ),
+          );
+          await tester.pumpAndSettle();
+          await tester.tap(find.byType(RemixSelect<String>));
+          await tester.pumpAndSettle();
+          expect(find.bySemanticsLabel('Option A'), findsOneWidget);
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+          await tester.pumpAndSettle();
+          expect(find.text('Option A'), findsNothing);
+          expect(find.bySemanticsLabel('Option A'), findsNothing);
+        } finally {
+          semantics.dispose();
+        }
       });
     });
   });

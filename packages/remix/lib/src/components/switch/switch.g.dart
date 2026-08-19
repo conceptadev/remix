@@ -655,12 +655,12 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
   RemixSwitch call({
     Key? key,
     required bool selected,
+    required String semanticLabel,
     ValueChanged<bool>? onChanged,
     bool enabled = true,
     bool enableFeedback = true,
     FocusNode? focusNode,
     bool autofocus = false,
-    String? semanticLabel,
     bool excludeSemantics = false,
     MouseCursor mouseCursor = SystemMouseCursors.click,
   }) {
@@ -668,12 +668,12 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
       key: key,
       style: this,
       selected: selected,
+      semanticLabel: semanticLabel,
       onChanged: onChanged,
       enabled: enabled,
       enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
-      semanticLabel: semanticLabel,
       excludeSemantics: excludeSemantics,
       mouseCursor: mouseCursor,
     );

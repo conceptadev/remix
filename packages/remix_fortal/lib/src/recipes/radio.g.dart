@@ -14,12 +14,12 @@ class FortalRadio<T> extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.value,
+    required this.semanticLabel,
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
     this.focusNode,
     this.autofocus = false,
-    this.semanticLabel,
     this.excludeSemantics = false,
   });
 
@@ -29,12 +29,12 @@ class FortalRadio<T> extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.value,
+    required this.semanticLabel,
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
     this.focusNode,
     this.autofocus = false,
-    this.semanticLabel,
     this.excludeSemantics = false,
   }) : variant = FortalRadioVariant.classic;
 
@@ -44,12 +44,12 @@ class FortalRadio<T> extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.value,
+    required this.semanticLabel,
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
     this.focusNode,
     this.autofocus = false,
-    this.semanticLabel,
     this.excludeSemantics = false,
   }) : variant = FortalRadioVariant.surface;
 
@@ -59,12 +59,12 @@ class FortalRadio<T> extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.value,
+    required this.semanticLabel,
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
     this.focusNode,
     this.autofocus = false,
-    this.semanticLabel,
     this.excludeSemantics = false,
   }) : variant = FortalRadioVariant.soft;
 
@@ -76,6 +76,8 @@ class FortalRadio<T> extends StatelessWidget {
 
   final T value;
 
+  final String semanticLabel;
+
   final bool enabled;
 
   final bool toggleable;
@@ -85,8 +87,6 @@ class FortalRadio<T> extends StatelessWidget {
   final FocusNode? focusNode;
 
   final bool autofocus;
-
-  final String? semanticLabel;
 
   final bool excludeSemantics;
 
@@ -100,12 +100,12 @@ class FortalRadio<T> extends StatelessWidget {
         highContrast: this.highContrast,
       ),
       value: this.value,
+      semanticLabel: this.semanticLabel,
       enabled: this.enabled,
       toggleable: this.toggleable,
       mouseCursor: this.mouseCursor,
       focusNode: this.focusNode,
       autofocus: this.autofocus,
-      semanticLabel: this.semanticLabel,
       excludeSemantics: this.excludeSemantics,
     );
   }

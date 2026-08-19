@@ -14,12 +14,12 @@ class FortalSwitch extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.selected,
+    required this.semanticLabel,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
-    this.semanticLabel,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   });
@@ -30,12 +30,12 @@ class FortalSwitch extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.selected,
+    required this.semanticLabel,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
-    this.semanticLabel,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalSwitchVariant.classic;
@@ -46,12 +46,12 @@ class FortalSwitch extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.selected,
+    required this.semanticLabel,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
-    this.semanticLabel,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalSwitchVariant.surface;
@@ -62,12 +62,12 @@ class FortalSwitch extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.selected,
+    required this.semanticLabel,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
-    this.semanticLabel,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalSwitchVariant.soft;
@@ -80,6 +80,8 @@ class FortalSwitch extends StatelessWidget {
 
   final bool selected;
 
+  final String semanticLabel;
+
   final ValueChanged<bool>? onChanged;
 
   final bool enabled;
@@ -89,8 +91,6 @@ class FortalSwitch extends StatelessWidget {
   final FocusNode? focusNode;
 
   final bool autofocus;
-
-  final String? semanticLabel;
 
   final bool excludeSemantics;
 
@@ -106,12 +106,12 @@ class FortalSwitch extends StatelessWidget {
         highContrast: this.highContrast,
       ),
       selected: this.selected,
+      semanticLabel: this.semanticLabel,
       onChanged: this.onChanged,
       enabled: this.enabled,
       enableFeedback: this.enableFeedback,
       focusNode: this.focusNode,
       autofocus: this.autofocus,
-      semanticLabel: this.semanticLabel,
       excludeSemantics: this.excludeSemantics,
       mouseCursor: this.mouseCursor,
     );

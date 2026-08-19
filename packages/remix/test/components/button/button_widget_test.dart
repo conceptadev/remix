@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
@@ -462,97 +463,265 @@ void main() {
     });
 
     group('Semantics and Accessibility', () {
-      testWidgets('semanticLabel overrides default label', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Button Text',
-            semanticLabel: 'Custom Semantic Label',
-            onPressed: () {},
-          ),
-        );
+      List<SemanticsNode> collectButtons(WidgetTester tester) {
+        final root = tester.getSemantics(find.byType(Scaffold));
+        final nodes = <SemanticsNode>[];
+        bool visitor(SemanticsNode node) {
+          if (!node.isMergedIntoParent &&
+              node.getSemanticsData().flagsCollection.isButton) {
+            nodes.add(node);
+          }
+          node.visitChildren(visitor);
+          return true;
+        }
 
-        await tester.pumpAndSettle();
+        visitor(root);
+        return nodes;
+      }
 
-        // Verify semantics widget is present
-        expect(find.byType(Semantics), findsAtLeastNWidgets(1));
+      testWidgets('exposes exactly one button node and one accessible name', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixButton(label: 'Save', onPressed: () {}),
+          );
+          await tester.pumpAndSettle();
 
-        // Test that the semantic label is applied by checking accessibility
-        final semantics = tester.getSemantics(find.byType(RemixButton));
-        expect(semantics.label, equals('Custom Semantic Label'));
+          final buttons = collectButtons(tester);
+          expect(buttons, hasLength(1));
+          expect(buttons.single.label, 'Save');
+          expect(find.semantics.byLabel('Save'), findsOne);
+        } finally {
+          semantics.dispose();
+        }
       });
 
-      testWidgets('semanticHint provides action context', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Save',
-            semanticHint: 'Saves the current document',
-            onPressed: () {},
-          ),
-        );
+      testWidgets('semanticLabel overrides the visible label', (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixButton(
+              label: 'Button Text',
+              semanticLabel: 'Custom Semantic Label',
+              onPressed: () {},
+            ),
+          );
+          await tester.pumpAndSettle();
 
-        await tester.pumpAndSettle();
-
-        // Verify semantics widget is present
-        expect(find.byType(Semantics), findsAtLeastNWidgets(1));
-
-        // Test that the semantic hint is applied by checking accessibility
-        final semantics = tester.getSemantics(find.byType(RemixButton));
-        // Note: The hint might not be applied as expected, so we'll just verify the button renders
-        expect(semantics, isNotNull);
+          final buttons = collectButtons(tester);
+          expect(buttons, hasLength(1));
+          expect(buttons.single.label, 'Custom Semantic Label');
+          expect(buttons.single.label, isNot(contains('Button Text')));
+        } finally {
+          semantics.dispose();
+        }
       });
 
-      testWidgets('excludeSemantics excludes child semantics', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(label: 'Test', excludeSemantics: true, onPressed: () {}),
-        );
+      testWidgets('semanticHint lives on the same button node', (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixButton(
+              label: 'Save',
+              semanticHint: 'Saves the current document',
+              onPressed: () {},
+            ),
+          );
+          await tester.pumpAndSettle();
 
-        await tester.pumpAndSettle();
-
-        // Find the specific Semantics widget that has excludeSemantics set
-        final semanticsWidgets = tester.widgetList<Semantics>(
-          find.byType(Semantics),
-        );
-        final excludeSemanticsWidget = semanticsWidgets.firstWhere(
-          (semantics) => semantics.excludeSemantics == true,
-          orElse: () => throw StateError(
-            'No Semantics widget with excludeSemantics found',
-          ),
-        );
-        expect(excludeSemanticsWidget.excludeSemantics, isTrue);
+          final buttons = collectButtons(tester);
+          expect(buttons, hasLength(1));
+          expect(
+            buttons.single.getSemanticsData().hint,
+            'Saves the current document',
+          );
+        } finally {
+          semantics.dispose();
+        }
       });
 
-      testWidgets('loading state updates live region', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(label: 'Loading', loading: true, onPressed: () {}),
-        );
+      testWidgets('tap-only button exposes tap and not long-press', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixButton(label: 'Save', onPressed: () {}),
+          );
+          await tester.pumpAndSettle();
 
-        await tester
-            .pump(); // Use pump() instead of pumpAndSettle() to avoid timeout
-
-        // Verify semantics widget is present
-        expect(find.byType(Semantics), findsAtLeastNWidgets(1));
-
-        // Test that the button is in loading state by checking for spinner
-        expect(find.byType(RemixSpinner), findsOneWidget);
+          expect(
+            find.semantics.byLabel('Save').evaluate().single,
+            isSemantics(
+              label: 'Save',
+              isButton: true,
+              hasEnabledState: true,
+              isEnabled: true,
+              hasTapAction: true,
+              hasLongPressAction: false,
+            ),
+          );
+        } finally {
+          semantics.dispose();
+        }
       });
 
-      testWidgets('MergeSemantics wraps content properly', (tester) async {
-        await tester.pumpRemixApp(RemixButton(label: 'Test', onPressed: () {}));
+      testWidgets('long-press-only button exposes long-press and not tap', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixButton(label: 'Hold', onLongPress: () {}),
+          );
+          await tester.pumpAndSettle();
 
-        await tester.pumpAndSettle();
-
-        expect(find.byType(MergeSemantics), findsOneWidget);
+          expect(
+            find.semantics.byLabel('Hold').evaluate().single,
+            isSemantics(
+              label: 'Hold',
+              isButton: true,
+              hasEnabledState: true,
+              isEnabled: true,
+              hasTapAction: false,
+              hasLongPressAction: true,
+            ),
+          );
+        } finally {
+          semantics.dispose();
+        }
       });
 
-      testWidgets('default semantic label uses button label', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(label: 'Default Label', onPressed: () {}),
-        );
+      testWidgets('button with both actions exposes tap and long-press', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixButton(label: 'Menu', onPressed: () {}, onLongPress: () {}),
+          );
+          await tester.pumpAndSettle();
 
-        await tester.pumpAndSettle();
+          expect(
+            find.semantics.byLabel('Menu').evaluate().single,
+            isSemantics(
+              label: 'Menu',
+              isButton: true,
+              hasEnabledState: true,
+              isEnabled: true,
+              hasTapAction: true,
+              hasLongPressAction: true,
+            ),
+          );
+        } finally {
+          semantics.dispose();
+        }
+      });
 
-        final semantics = tester.getSemantics(find.byType(RemixButton));
-        expect(semantics.label, equals('Default Label'));
+      testWidgets('disabled button stays one non-interactive node', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          var pressed = 0;
+          await tester.pumpRemixApp(
+            RemixButton(
+              label: 'Save',
+              enabled: false,
+              onPressed: () => pressed++,
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          expect(
+            find.semantics.byLabel('Save').evaluate().single,
+            isSemantics(
+              label: 'Save',
+              isButton: true,
+              hasEnabledState: true,
+              isEnabled: false,
+            ),
+          );
+          await tester.tap(find.byType(RemixButton));
+          await tester.pump();
+          expect(pressed, 0);
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('loading stays one non-interactive button node', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          var pressed = 0;
+          await tester.pumpRemixApp(
+            RemixButton(
+              label: 'Save',
+              loading: true,
+              onPressed: () => pressed++,
+            ),
+          );
+          await tester.pump();
+
+          expect(find.byType(RemixSpinner), findsOneWidget);
+          final buttons = collectButtons(tester);
+          expect(buttons, hasLength(1));
+          expect(
+            buttons.single,
+            isSemantics(
+              label: 'Save',
+              isButton: true,
+              hasEnabledState: true,
+              isEnabled: false,
+            ),
+          );
+          await tester.tap(find.byType(RemixButton));
+          await tester.pump();
+          expect(pressed, 0);
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('excludeSemantics hides the complete control', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixButton(
+              label: 'Test',
+              excludeSemantics: true,
+              onPressed: () {},
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          expect(find.semantics.byLabel('Test'), findsNothing);
+          expect(collectButtons(tester), isEmpty);
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('visible label is not republished as a second name', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixButton(label: 'Save', onPressed: () {}),
+          );
+          await tester.pumpAndSettle();
+
+          expect(find.semantics.byLabel('Save'), findsOne);
+        } finally {
+          semantics.dispose();
+        }
       });
     });
 

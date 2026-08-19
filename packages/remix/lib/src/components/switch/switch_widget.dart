@@ -6,6 +6,7 @@ part of 'switch.dart';
 ///
 /// ```dart
 /// RemixSwitch(
+///   semanticLabel: 'Enable feature',
 ///   selected: _isEnabled,
 ///   onChanged: (value) {
 ///     setState(() {
@@ -18,17 +19,20 @@ class RemixSwitch extends StatelessWidget {
   const RemixSwitch({
     super.key,
     required this.selected,
+    required this.semanticLabel,
     this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
-    this.semanticLabel,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
     this.style = const SwitchStyler.create(),
     this.styleSpec,
-  });
+  }) : assert(
+         semanticLabel != '',
+         'RemixSwitch.semanticLabel must be a nonblank accessible name.',
+       );
 
   /// Whether this switch is enabled.
   final bool enabled;
@@ -59,8 +63,11 @@ class RemixSwitch extends StatelessWidget {
   /// Whether the switch should automatically request focus when it is created.
   final bool autofocus;
 
-  /// The semantic label for the switch.
-  final String? semanticLabel;
+  /// Accessible name for this switch.
+  ///
+  /// Required and must be nonblank. A bare switch must not be unnamed;
+  /// do not rely on adjacent [Text] as the accessible composition.
+  final String semanticLabel;
 
   /// Whether to hide the switch and its visual subtree from semantics.
   final bool excludeSemantics;
@@ -78,6 +85,10 @@ class RemixSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(
+      semanticLabel.trim().isNotEmpty,
+      'RemixSwitch.semanticLabel must be a nonblank accessible name.',
+    );
     final effectiveOnChanged = enabled && onChanged != null ? onChanged : null;
 
     return NakedToggle(

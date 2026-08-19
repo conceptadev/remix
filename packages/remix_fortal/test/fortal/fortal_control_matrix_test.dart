@@ -142,8 +142,11 @@ void main() {
         icon: Icons.add,
       );
       const checkbox = FortalCheckbox(selected: false);
-      const radio = FortalRadio<int>(value: 1);
-      const switchControl = FortalSwitch(selected: false);
+      const radio = FortalRadio<int>(value: 1, semanticLabel: 'Option');
+      const switchControl = FortalSwitch(
+        semanticLabel: 'Toggle',
+        selected: false,
+      );
       const progress = FortalProgress(value: 0.5);
       const spinner = FortalSpinner();
       const textField = FortalTextField();

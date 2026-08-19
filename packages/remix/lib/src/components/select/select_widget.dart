@@ -121,8 +121,9 @@ class RemixSelect<T> extends StatefulWidget {
 
   /// Called when the selected value changes.
   ///
-  /// When null, selection changes are ignored, but an enabled select can still
-  /// open so its options can be inspected.
+  /// When null, the select is disabled. NakedSelect derives interactivity
+  /// from this callback; a no-op wrapper must not be used to fake a
+  /// read-only inspectable mode.
   final ValueChanged<T?>? onChanged;
 
   /// Called when the dropdown opens.
@@ -183,24 +184,37 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         .merge(widget.style);
   }
 
-  Widget _buildOverlayMenu(
-    SelectSpec spec,
-    Prop<StyleSpec<SelectMenuItemSpec>>? defaultItemStyle,
-  ) {
-    final menuContainerSpec = spec.menuContainer;
+  /// Carries only the item branch of [style], merged with the row's own style.
+  ///
+  /// A row must resolve under its own option states, so it cannot reuse the
+  /// menu's already-resolved spec. It must not resolve the whole [SelectStyler]
+  /// either: that re-applies the root animation and widget modifiers the
+  /// trigger and overlay already own, once per row.
+  SelectStyler _itemStyle(SelectStyler style, RemixSelectItem<T> item) {
+    return SelectStyler.create(
+      item: MixOps.merge(
+        style.$item,
+        Prop.maybeMix<StyleSpec<SelectMenuItemSpec>>(item.style),
+      ),
+    );
+  }
 
+  /// Menu chrome resolves once from [spec], without option states; each row
+  /// re-resolves its own branch from [style]. The two inputs are two different
+  /// resolution scopes, not a duplicated one.
+  Widget _buildOverlayMenu(SelectSpec spec, SelectStyler style) {
     return _AnimatedOverlayMenu(
       controller: animationController,
       duration: const Duration(milliseconds: 150),
       curve: Curves.easeInOut,
       content: spec.content,
-      menuContainer: menuContainerSpec,
+      menuContainer: spec.menuContainer,
       children: widget.items
           .map(
             (item) => _RemixSelectItemWidget(
               data: item,
-              defaultStyle: widget.styleSpec == null ? defaultItemStyle : null,
-              defaultStyleSpec: widget.styleSpec == null ? null : spec.item,
+              itemStyle: _itemStyle(style, item),
+              selectStyleSpec: widget.styleSpec,
             ),
           )
           .toList(),
@@ -211,24 +225,45 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     final selectedValue = widget.selectedValue;
     if (selectedValue == null) return null;
 
-    RemixSelectItem<T>? selectedItem;
     for (final item in widget.items) {
-      if (item.value == selectedValue) {
-        selectedItem = item;
-        break;
-      }
+      if (item.value == selectedValue) return item;
+    }
+    return null;
+  }
+
+  /// Returns true so the whole check, loop included, is stripped in release.
+  bool _debugValidate(RemixSelectItem<T>? selectedItem) {
+    assert(
+      widget.trigger.placeholder.trim().isNotEmpty,
+      'RemixSelect trigger placeholder must be a nonblank string.',
+    );
+
+    final seen = <T>{};
+    for (final item in widget.items) {
+      assert(
+        item.label.trim().isNotEmpty,
+        'RemixSelect item labels must be nonblank. Value: ${item.value}',
+      );
+      final semanticLabel = item.semanticLabel;
+      assert(
+        semanticLabel == null || semanticLabel.trim().isNotEmpty,
+        'RemixSelect item semantic labels must be nonblank when provided. '
+        'Value: ${item.value}',
+      );
+      assert(
+        seen.add(item.value),
+        'RemixSelect item values must be unique. Duplicate: ${item.value}',
+      );
     }
 
     assert(
-      selectedItem != null,
-      'RemixSelect: selectedValue "$selectedValue" not found in items. '
-      'Ensure selectedValue matches one of the item values.',
+      widget.selectedValue == null || selectedItem != null,
+      'RemixSelect selectedValue "${widget.selectedValue}" is not present '
+      'in items. Do not treat an unmatched selection as the placeholder.',
     );
 
-    return selectedItem;
+    return true;
   }
-
-  void _handleChanged(T? value) => widget.onChanged?.call(value);
 
   @override
   void dispose() {
@@ -240,29 +275,42 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   Widget build(BuildContext context) {
     final style = _buildStyle();
     final selectedItem = _findSelectedItem();
+    assert(_debugValidate(selectedItem));
+    final hasSelection = widget.selectedValue != null;
 
     return NakedSelect<T>(
       overlayBuilder: (context, info) {
         return RemixStyleSpecBuilder<SelectSpec>(
           style: style,
           styleSpec: widget.styleSpec,
-          builder: (context, spec) => _buildOverlayMenu(spec, style.$item),
+          builder: (context, spec) => _buildOverlayMenu(spec, style),
         );
       },
       value: widget.selectedValue,
-      onChanged: _handleChanged,
+      onChanged: widget.onChanged,
       closeOnSelect: widget.closeOnSelect,
       enabled: widget.enabled,
       mouseCursor: widget.mouseCursor,
       triggerFocusNode: widget.focusNode,
       semanticLabel: widget.semanticLabel,
+      semanticValue: selectedItem?.semanticLabel ?? selectedItem?.label,
       positioning: widget.positioning,
       onOpen: () {
         animationController.forward();
         widget.onOpen?.call();
       },
+      onCloseRequested: (hide) {
+        // Naked owns open state. Play the reverse visual, then complete close.
+        if (animationController.value == 0) {
+          hide();
+          return;
+        }
+        animationController.reverse().whenComplete(hide);
+      },
       onClose: () {
-        animationController.reverse();
+        if (animationController.status != .dismissed) {
+          animationController.value = 0;
+        }
         widget.onClose?.call();
       },
       builder: (context, state, _) {
@@ -271,14 +319,16 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
           styleSpec: widget.styleSpec,
           controller: NakedSelectState.controllerOf<T>(context),
           builder: (context, spec) {
-            final triggerSpec = spec.trigger;
-
             return _RemixSelectTriggerWidget(
               trigger: widget.trigger,
-              displayLabel: selectedItem?.label ?? widget.trigger.placeholder,
-              isPlaceholder: selectedItem == null,
+              displayLabel:
+                  selectedItem?.label ??
+                  (hasSelection
+                      ? '${widget.selectedValue}'
+                      : widget.trigger.placeholder),
+              isPlaceholder: !hasSelection,
               isOpen: state.isOpen,
-              styleSpec: triggerSpec,
+              styleSpec: spec.trigger,
             );
           },
         );
@@ -439,26 +489,15 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
 class _RemixSelectItemWidget<T> extends StatelessWidget {
   const _RemixSelectItemWidget({
     required this.data,
-    this.defaultStyle,
-    this.defaultStyleSpec,
+    required this.itemStyle,
+    this.selectStyleSpec,
   });
 
   final RemixSelectItem<T> data;
-  final Prop<StyleSpec<SelectMenuItemSpec>>? defaultStyle;
-  final StyleSpec<SelectMenuItemSpec>? defaultStyleSpec;
 
-  StyleSpec<SelectMenuItemSpec> _resolveStyle(BuildContext context) {
-    final rawDefault = defaultStyleSpec;
-    if (rawDefault != null) return rawDefault;
-
-    final itemStyle = MixOps.merge(
-      defaultStyle,
-      Prop.maybeMix<StyleSpec<SelectMenuItemSpec>>(data.style),
-    );
-
-    return MixOps.resolve(context, itemStyle) ??
-        const StyleSpec(spec: SelectMenuItemSpec());
-  }
+  /// A [SelectStyler] carrying only this row's merged item branch.
+  final SelectStyler itemStyle;
+  final SelectSpec? selectStyleSpec;
 
   @override
   Widget build(BuildContext context) {
@@ -466,40 +505,33 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
       value: data.value,
       enabled: data.enabled,
       semanticLabel: data.semanticLabel ?? data.label,
-      builder: (context, states, _) {
-        final controller = NakedSelectOptionState.controllerOf<T>(context);
-
-        return ExcludeSemantics(
-          child: ListenableBuilder(
-            listenable: controller,
-            builder: (context, _) {
-              return WidgetStateProvider(
-                states: controller.value,
-                child: Builder(
-                  builder: (context) => StyleSpecBuilder(
-                    styleSpec: _resolveStyle(context),
-                    builder: (context, spec) => RowBox(
-                      styleSpec: spec.container,
-                      children: [
-                        // ignore: avoid-flexible-outside-flex
-                        Expanded(
-                          child: StyledText(data.label, styleSpec: spec.text),
-                        ),
-                        if (states.isSelected)
-                          Box(
-                            styleSpec: spec.indicator,
-                            child: RemixPathIcon(
-                              key: const ValueKey('fortal-select-indicator'),
-                              glyph: RemixPathGlyph.thickCheck,
-                              styleSpec: spec.icon,
-                            ),
-                          ),
-                      ],
+      builder: (context, state, _) {
+        return RemixStyleSpecBuilder<SelectSpec>(
+          style: itemStyle,
+          styleSpec: selectStyleSpec,
+          controller: NakedSelectOptionState.controllerOf<T>(context),
+          // The item spec is built here rather than unwrapped with `.spec` so
+          // the item's own animation and widget modifiers still render.
+          builder: (context, spec) => StyleSpecBuilder<SelectMenuItemSpec>(
+            styleSpec: spec.item,
+            builder: (context, item) => ExcludeSemantics(
+              child: RowBox(
+                styleSpec: item.container,
+                children: [
+                  // ignore: avoid-flexible-outside-flex
+                  Expanded(child: StyledText(data.label, styleSpec: item.text)),
+                  if (state.isSelected)
+                    Box(
+                      styleSpec: item.indicator,
+                      child: RemixPathIcon(
+                        key: const ValueKey('fortal-select-indicator'),
+                        glyph: RemixPathGlyph.thickCheck,
+                        styleSpec: item.icon,
+                      ),
                     ),
-                  ),
-                ),
-              );
-            },
+                ],
+              ),
+            ),
           ),
         );
       },

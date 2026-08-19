@@ -1,5 +1,20 @@
 part of 'dialog.dart';
 
+String? _resolveDismissibleBarrierLabel({
+  required bool barrierDismissible,
+  required String? barrierLabel,
+}) {
+  if (!barrierDismissible) return barrierLabel;
+
+  final provided = barrierLabel?.trim();
+  assert(
+    provided != null && provided.isNotEmpty,
+    'showRemixDialog requires a nonblank localized barrierLabel when '
+    'barrierDismissible is true.',
+  );
+  return provided;
+}
+
 WidgetBuilder _captureMixScope(BuildContext context, WidgetBuilder builder) {
   final scope = MixScope.maybeOf(context);
   if (scope == null) return builder;
@@ -18,6 +33,7 @@ WidgetBuilder _captureMixScope(BuildContext context, WidgetBuilder builder) {
 /// ```dart
 /// await showRemixDialog<String>(
 ///   context: context,
+///   barrierLabel: 'Dismiss',
 ///   builder: (context) => RemixDialog(
 ///     title: 'Delete Item',
 ///     description: 'Are you sure you want to delete this item?',
@@ -48,11 +64,15 @@ Future<T?> showRemixDialog<T>({
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,
 }) {
+  final resolvedBarrierLabel = _resolveDismissibleBarrierLabel(
+    barrierDismissible: barrierDismissible,
+    barrierLabel: barrierLabel,
+  );
   return showNakedDialog(
     context: context,
     barrierColor: barrierColor ?? const Color(0x8A000000),
     barrierDismissible: barrierDismissible,
-    barrierLabel: barrierLabel,
+    barrierLabel: resolvedBarrierLabel,
     useRootNavigator: useRootNavigator,
     routeSettings: routeSettings,
     anchorPoint: anchorPoint,
@@ -138,6 +158,13 @@ class RemixDialog extends StatelessWidget {
   }) : assert(
          child != null || title != null || description != null,
          'Either child, title, or description must be provided',
+       ),
+       assert(
+         (semanticLabel != null && semanticLabel != '') ||
+             (title != null && title != '') ||
+             child != null,
+         'RemixDialog requires semanticLabel or title, or a custom child '
+         'whose caller owns dialog semantics.',
        );
 
   /// Custom body content.
@@ -178,6 +205,13 @@ class RemixDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(
+      (semanticLabel != null && semanticLabel!.trim().isNotEmpty) ||
+          (title != null && title!.trim().isNotEmpty) ||
+          child != null,
+      'RemixDialog requires semanticLabel or title, or a custom child '
+      'whose caller owns dialog semantics.',
+    );
     final content = RemixStyleSpecBuilder<DialogSpec>(
       style: style,
       styleSpec: styleSpec,

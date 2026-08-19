@@ -9,13 +9,15 @@ void main() {
   group('RemixIconButton', () {
     group('Basic Rendering', () {
       testWidgets('renders icon button with minimal props', (tester) async {
-        await tester.pumpRemixApp(RemixIconButton(icon: Icons.add));
+        await tester.pumpRemixApp(
+          RemixIconButton(semanticLabel: 'Action', icon: Icons.add),
+        );
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixIconButton), findsOneWidget);
         expect(
-          tester.widget<NakedButton>(find.byType(NakedButton)).enabled,
-          isFalse,
+          tester.widget<NakedButton>(find.byType(NakedButton)).onPressed,
+          isNull,
         );
         expect(find.byType(Box), findsOneWidget);
         expect(find.byType(StyledIcon), findsOneWidget);
@@ -51,7 +53,12 @@ void main() {
     group('Loading State', () {
       testWidgets('shows spinner when loading is true', (tester) async {
         await tester.pumpRemixApp(
-          RemixIconButton(icon: Icons.save, onPressed: () {}, loading: true),
+          RemixIconButton(
+            semanticLabel: 'Action',
+            icon: Icons.save,
+            onPressed: () {},
+            loading: true,
+          ),
         );
         await tester.pump(); // Use pump() for loading states
 
@@ -62,7 +69,12 @@ void main() {
 
       testWidgets('hides spinner when loading is false', (tester) async {
         await tester.pumpRemixApp(
-          RemixIconButton(icon: Icons.save, onPressed: () {}, loading: false),
+          RemixIconButton(
+            semanticLabel: 'Action',
+            icon: Icons.save,
+            onPressed: () {},
+            loading: false,
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -75,6 +87,7 @@ void main() {
         int callbackCount = 0;
         await tester.pumpRemixApp(
           RemixIconButton(
+            semanticLabel: 'Action',
             icon: Icons.save,
             onPressed: () => callbackCount++,
             loading: true,
@@ -104,6 +117,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixIconButton(
+            semanticLabel: 'Action',
             icon: Icons.star,
             onPressed: () {},
             iconBuilder: customIconBuilder,
@@ -127,6 +141,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixIconButton(
+            semanticLabel: 'Action',
             icon: Icons.save,
             onPressed: () {},
             loading: true,
@@ -144,7 +159,11 @@ void main() {
       testWidgets('calls onPressed when tapped', (tester) async {
         int callbackCount = 0;
         await tester.pumpRemixApp(
-          RemixIconButton(icon: Icons.add, onPressed: () => callbackCount++),
+          RemixIconButton(
+            semanticLabel: 'Action',
+            icon: Icons.add,
+            onPressed: () => callbackCount++,
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -158,6 +177,7 @@ void main() {
         int callbackCount = 0;
         await tester.pumpRemixApp(
           RemixIconButton(
+            semanticLabel: 'Action',
             icon: Icons.add,
             onPressed: () {},
             onLongPress: () => callbackCount++,
@@ -171,24 +191,24 @@ void main() {
         expect(callbackCount, equals(1));
       });
 
-      testWidgets('does not call callbacks when disabled', (tester) async {
-        int pressedCount = 0;
-        int longPressCount = 0;
+      testWidgets('long-press-only button fires onLongPress', (tester) async {
+        var longPressCount = 0;
         await tester.pumpRemixApp(
           RemixIconButton(
+            semanticLabel: 'Action',
             icon: Icons.add,
-            onPressed: null,
             onLongPress: () => longPressCount++,
           ),
         );
         await tester.pumpAndSettle();
 
         await tester.tap(find.byType(RemixIconButton));
-        await tester.longPress(find.byType(RemixIconButton));
-        await tester.pumpAndSettle();
+        await tester.pump();
+        expect(longPressCount, 0);
 
-        expect(pressedCount, equals(0));
-        expect(longPressCount, equals(0));
+        await tester.longPress(find.byType(RemixIconButton));
+        await tester.pump();
+        expect(longPressCount, 1);
       });
 
       testWidgets('does not call callbacks when enabled is false', (
@@ -198,6 +218,7 @@ void main() {
         int longPressCount = 0;
         await tester.pumpRemixApp(
           RemixIconButton(
+            semanticLabel: 'Action',
             icon: Icons.add,
             enabled: false,
             onPressed: () => pressedCount++,
@@ -222,6 +243,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixIconButton(
+            semanticLabel: 'Action',
             icon: Icons.add,
             onPressed: () {},
             autofocus: true,
@@ -240,6 +262,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixIconButton(
+            semanticLabel: 'Action',
             icon: Icons.add,
             onPressed: () {},
             focusNode: focusNode,
@@ -314,34 +337,85 @@ void main() {
             isButton: true,
             hasEnabledState: true,
             isEnabled: false,
-            isLiveRegion: true,
-            hasTapAction: false,
           ),
         );
         semantics.dispose();
       });
 
-      testWidgets('default and disabled labels remain single button nodes', (
+      test('rejects an empty accessible name', () {
+        expect(
+          () => RemixIconButton(icon: Icons.add, semanticLabel: ''),
+          throwsAssertionError,
+        );
+      });
+
+      testWidgets('rejects a whitespace-only accessible name', (tester) async {
+        await tester.pumpWidget(
+          MixScope.empty(
+            child: const MaterialApp(
+              home: RemixIconButton(icon: Icons.add, semanticLabel: '   '),
+            ),
+          ),
+        );
+        expect(tester.takeException(), isAssertionError);
+      });
+
+      testWidgets('never announces the generic Icon Button fallback', (
         tester,
       ) async {
         final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            const RemixIconButton(semanticLabel: 'Block', icon: Icons.block),
+          );
+          await tester.pumpAndSettle();
 
-        await tester.pumpRemixApp(const RemixIconButton(icon: Icons.block));
-        await tester.pumpAndSettle();
+          expect(find.semantics.byLabel('Icon Button'), findsNothing);
+          final button = find.semantics.byLabel('Block');
+          expect(button, findsOne);
+          expect(
+            button.evaluate().single,
+            isSemantics(
+              label: 'Block',
+              isButton: true,
+              hasEnabledState: true,
+              isEnabled: false,
+              hasTapAction: false,
+            ),
+          );
+        } finally {
+          semantics.dispose();
+        }
+      });
 
-        final button = find.semantics.byLabel('Icon Button');
-        expect(button, findsOne);
-        expect(
-          button.evaluate().single,
-          isSemantics(
-            label: 'Icon Button',
-            isButton: true,
-            hasEnabledState: true,
-            isEnabled: false,
-            hasTapAction: false,
-          ),
-        );
-        semantics.dispose();
+      testWidgets('long-press-only exposes long-press without tap', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixIconButton(
+              icon: Icons.add,
+              semanticLabel: 'More actions',
+              onLongPress: () {},
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          expect(
+            find.semantics.byLabel('More actions').evaluate().single,
+            isSemantics(
+              label: 'More actions',
+              isButton: true,
+              hasEnabledState: true,
+              isEnabled: true,
+              hasTapAction: false,
+              hasLongPressAction: true,
+            ),
+          );
+        } finally {
+          semantics.dispose();
+        }
       });
 
       testWidgets('excludeSemantics hides the complete button contract', (
@@ -372,7 +446,11 @@ void main() {
 
       testWidgets('renders correctly in enabled state', (tester) async {
         await tester.pumpRemixApp(
-          RemixIconButton(icon: Icons.add, onPressed: () {}),
+          RemixIconButton(
+            semanticLabel: 'Action',
+            icon: Icons.add,
+            onPressed: () {},
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -383,7 +461,11 @@ void main() {
 
       testWidgets('renders correctly in disabled state', (tester) async {
         await tester.pumpRemixApp(
-          RemixIconButton(icon: Icons.add, onPressed: null),
+          RemixIconButton(
+            semanticLabel: 'Action',
+            icon: Icons.add,
+            onPressed: null,
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -394,7 +476,12 @@ void main() {
 
       testWidgets('renders correctly when enabled is false', (tester) async {
         await tester.pumpRemixApp(
-          RemixIconButton(icon: Icons.add, enabled: false, onPressed: () {}),
+          RemixIconButton(
+            semanticLabel: 'Action',
+            icon: Icons.add,
+            enabled: false,
+            onPressed: () {},
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -418,6 +505,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixIconButton(
+            semanticLabel: 'Action',
             icon: Icons.add,
             onPressed: () {},
             style: customStyle,
@@ -437,6 +525,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixIconButton(
+            semanticLabel: 'Action',
             icon: Icons.add,
             onPressed: () {},
             style: customStyle,
@@ -453,6 +542,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixIconButton(
+            semanticLabel: 'Action',
             icon: Icons.save,
             onPressed: () {},
             loading: true,
@@ -467,7 +557,11 @@ void main() {
 
       testWidgets('uses default style when none provided', (tester) async {
         await tester.pumpRemixApp(
-          RemixIconButton(icon: Icons.add, onPressed: () {}),
+          RemixIconButton(
+            semanticLabel: 'Action',
+            icon: Icons.add,
+            onPressed: () {},
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -484,7 +578,12 @@ void main() {
         );
 
         await tester.pumpRemixApp(
-          RemixIconButton(icon: Icons.add, onPressed: () {}, styleSpec: spec),
+          RemixIconButton(
+            semanticLabel: 'Action',
+            icon: Icons.add,
+            onPressed: () {},
+            styleSpec: spec,
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -503,7 +602,12 @@ void main() {
       testWidgets('icon button adapts to custom size', (tester) async {
         final smallStyle = IconButtonStyler().size(32.0, 32.0);
         await tester.pumpRemixApp(
-          RemixIconButton(icon: Icons.add, onPressed: () {}, style: smallStyle),
+          RemixIconButton(
+            semanticLabel: 'Action',
+            icon: Icons.add,
+            onPressed: () {},
+            style: smallStyle,
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -511,7 +615,12 @@ void main() {
 
         final largeStyle = IconButtonStyler().size(64.0, 64.0);
         await tester.pumpRemixApp(
-          RemixIconButton(icon: Icons.add, onPressed: () {}, style: largeStyle),
+          RemixIconButton(
+            semanticLabel: 'Action',
+            icon: Icons.add,
+            onPressed: () {},
+            style: largeStyle,
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -525,7 +634,11 @@ void main() {
     group('Edge Cases', () {
       testWidgets('handles null onPressed gracefully', (tester) async {
         await tester.pumpRemixApp(
-          RemixIconButton(icon: Icons.add, onPressed: null),
+          RemixIconButton(
+            semanticLabel: 'Action',
+            icon: Icons.add,
+            onPressed: null,
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -536,7 +649,12 @@ void main() {
 
       testWidgets('handles loading state with null onPressed', (tester) async {
         await tester.pumpRemixApp(
-          RemixIconButton(icon: Icons.save, onPressed: null, loading: true),
+          RemixIconButton(
+            semanticLabel: 'Action',
+            icon: Icons.save,
+            onPressed: null,
+            loading: true,
+          ),
         );
         await tester.pump(); // Use pump() for loading states
 
@@ -555,7 +673,11 @@ void main() {
 
         for (final icon in icons) {
           await tester.pumpRemixApp(
-            RemixIconButton(icon: icon, onPressed: () {}),
+            RemixIconButton(
+              semanticLabel: 'Action',
+              icon: icon,
+              onPressed: () {},
+            ),
           );
           await tester.pumpAndSettle();
 
