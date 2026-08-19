@@ -229,7 +229,8 @@ typedef _$TabViewSpecMethods = _$TabViewSpec; // ignore: unused_element
 // **************************************************************************
 
 class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
-    with RemixBoxStylerMixin<TabBarStyler> {
+    with RemixBoxStylerMixin<TabBarStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
 
   const TabBarStyler.create({
@@ -774,6 +775,14 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'animation',
+    'modifier',
+    'variants',
+  };
+
   /// Sets the container.
   TabBarStyler container(FlexBoxStyler value) {
     return merge(TabBarStyler(container: value));
@@ -843,7 +852,8 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     with
         RemixBoxStylerMixin<TabStyler>,
         LabelStyleMixin<TabStyler>,
-        IconStyleMixin<TabStyler> {
+        IconStyleMixin<TabStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -1387,6 +1397,16 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'label',
+    'icon',
+    'animation',
+    'modifier',
+    'variants',
+  };
+
   /// Sets the container.
   TabStyler container(FlexBoxStyler value) {
     return merge(TabStyler(container: value));
@@ -1514,7 +1534,8 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
 }
 
 class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
-    with RemixBoxStylerMixin<TabViewStyler> {
+    with RemixBoxStylerMixin<TabViewStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
 
   const TabViewStyler.create({
@@ -2004,6 +2025,14 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
   TabViewStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   TabViewStyler container(BoxStyler value) {

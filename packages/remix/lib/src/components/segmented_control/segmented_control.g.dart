@@ -207,7 +207,8 @@ typedef _$SegmentedControlItemSpecMethods = _$SegmentedControlItemSpec; // ignor
 
 class SegmentedControlStyler
     extends MixStyler<SegmentedControlStyler, SegmentedControlSpec>
-    with RemixBoxStylerMixin<SegmentedControlStyler> {
+    with RemixBoxStylerMixin<SegmentedControlStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<MainAxisSize>? $mainAxisSize;
   final Prop<double>? $spacing;
@@ -733,6 +734,17 @@ class SegmentedControlStyler
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'mainAxisSize',
+    'spacing',
+    'item',
+    'animation',
+    'modifier',
+    'variants',
+  };
+
   /// Sets the container.
   SegmentedControlStyler container(BoxStyler value) {
     return merge(SegmentedControlStyler(container: value));
@@ -861,7 +873,8 @@ class SegmentedControlItemStyler
     with
         RemixBoxStylerMixin<SegmentedControlItemStyler>,
         LabelStyleMixin<SegmentedControlItemStyler>,
-        IconStyleMixin<SegmentedControlItemStyler> {
+        IconStyleMixin<SegmentedControlItemStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<double>? $spacing;
   final Prop<StyleSpec<TextSpec>>? $label;
@@ -1399,6 +1412,18 @@ class SegmentedControlItemStyler
   }) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'spacing',
+    'label',
+    'icon',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   SegmentedControlItemStyler container(BoxStyler value) {

@@ -10,23 +10,6 @@ dev_dependencies:
   pub_semver: ^2.2.0
   yaml: ^3.1.3
 
-dependency_overrides:
-  # Point runtime Mix at conceptadev/mix#1031 so GridBox can size implicit
-  # rows to content. Published remix / remix_fortal keep hosted Mix
-  # constraints; tool/check_consumer_mix.dart will fail while this override
-  # is in place.
-  mix:
-    git:
-      url: https://github.com/conceptadev/mix.git
-      ref: 60c2cf70165866eae5fbe90d62215400c75926b8
-      path: packages/mix
-  # Remove this pin after conceptadev/mix#1025 ships in mix_generator.
-  mix_generator:
-    git:
-      url: https://github.com/conceptadev/mix.git
-      ref: 367b1f916498008be89867d0fd192c383f877542
-      path: packages/mix_generator
-
 workspace:
   - apps/dashboard
   - apps/demo
@@ -65,10 +48,14 @@ melos:
       # tool/check_consumer_mix.dart enforces the same equality for anyone who
       # edits a pubspec without bootstrapping.
       dependencies:
-        mix: ^2.2.0-beta.4
+        # beta.5 is the floor, not a preference: mix_generator 2.2.0-beta.3
+        # emits `implements StylerFieldMetadata`, and that symbol first ships
+        # in mix 2.2.0-beta.5. Lowering this constraint compiles here but
+        # breaks any consumer that resolves beta.4.
+        mix: ^2.2.0-beta.5
         mix_annotations: ^2.2.0-beta.1
       dev_dependencies:
-        mix_generator: ^2.2.0-beta.2
+        mix_generator: ^2.2.0-beta.3
 
   scripts:
     # Named `release:*` rather than `version`: a script named `version` shadows

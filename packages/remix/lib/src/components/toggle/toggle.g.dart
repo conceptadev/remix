@@ -98,7 +98,8 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     with
         RemixBoxStylerMixin<ToggleStyler>,
         LabelStyleMixin<ToggleStyler>,
-        IconStyleMixin<ToggleStyler> {
+        IconStyleMixin<ToggleStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -654,6 +655,16 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
   ToggleStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'label',
+    'icon',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   ToggleStyler container(FlexBoxStyler value) {

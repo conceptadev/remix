@@ -104,9 +104,8 @@ typedef _$IconButtonSpecMethods = _$IconButtonSpec; // ignore: unused_element
 // **************************************************************************
 
 class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
-    with
-        RemixBoxStylerMixin<IconButtonStyler>,
-        IconStyleMixin<IconButtonStyler> {
+    with RemixBoxStylerMixin<IconButtonStyler>, IconStyleMixin<IconButtonStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<StyleSpec<SpinnerSpec>>? $spinner;
@@ -622,6 +621,17 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
   IconButtonStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'icon',
+    'spinner',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   IconButtonStyler container(BoxStyler value) {

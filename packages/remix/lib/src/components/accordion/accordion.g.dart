@@ -127,7 +127,8 @@ typedef _$AccordionSpecMethods = _$AccordionSpec; // ignore: unused_element
 // **************************************************************************
 
 class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
-    with RemixBoxStylerMixin<AccordionStyler> {
+    with RemixBoxStylerMixin<AccordionStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<FlexBoxSpec>>? $trigger;
@@ -720,6 +721,20 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
   AccordionStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return trigger(FlexBoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'containerEffects',
+    'trigger',
+    'leadingIcon',
+    'title',
+    'trailingIcon',
+    'content',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   AccordionStyler container(BoxStyler value) {

@@ -320,7 +320,8 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     with
         RemixBoxStylerMixin<MenuTriggerStyler>,
         LabelStyleMixin<MenuTriggerStyler>,
-        IconStyleMixin<MenuTriggerStyler> {
+        IconStyleMixin<MenuTriggerStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -888,6 +889,16 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'label',
+    'icon',
+    'animation',
+    'modifier',
+    'variants',
+  };
+
   /// Sets the container.
   MenuTriggerStyler container(FlexBoxStyler value) {
     return merge(MenuTriggerStyler(container: value));
@@ -977,7 +988,8 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
   ];
 }
 
-class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
+class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<MenuTriggerSpec>>? $trigger;
   final Prop<StyleSpec<FlexBoxSpec>>? $overlay;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
@@ -1049,6 +1061,21 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
       MenuStyler().submenuItem(value);
   factory MenuStyler.divider(DividerStyler value) =>
       MenuStyler().divider(value);
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'trigger',
+    'overlay',
+    'containerEffects',
+    'item',
+    'checkboxItem',
+    'radioItem',
+    'submenuItem',
+    'divider',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the trigger.
   MenuStyler trigger(MenuTriggerStyler value) {
@@ -1227,7 +1254,8 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec> {
 }
 
 class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
-    with RemixBoxStylerMixin<MenuItemStyler> {
+    with RemixBoxStylerMixin<MenuItemStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $leadingIcon;
@@ -1803,6 +1831,18 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
   MenuItemStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'label',
+    'leadingIcon',
+    'trailingIcon',
+    'indicator',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   MenuItemStyler container(FlexBoxStyler value) {
