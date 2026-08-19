@@ -1,0 +1,43 @@
+component: Plan
+flutter_name: AgentPlan
+status: complete
+
+source:
+  ref: in-transcript task plan
+  files: []
+  docs: internal worksheets
+
+anatomy:
+  - summary (36 floor, 14px inset, caret, one-line title, completed/total)
+  - item viewport (248 max, live-edge, px 8 / pb 8)
+  - item rows (36 floor, mark, one-line title, optional trailing detail)
+  - empty copy
+states:
+  - pending
+  - inProgress
+  - completed
+  - cancelled
+tokens: {}
+non_token_measurements:
+  - viewport max-height 248, pad 8 / 0 / 8 / 8
+  - summary min-height 36, px 14, py 4
+  - summary title 15/semibold, one-line truncate, 10px before count
+  - summary hover chevron muted/50 → muted
+  - trigger radius 6, focus-visible 2px inset host-ink ring
+  - row min-height 36, px 6, py 4, gap 10
+  - title 14 / 20, one-line truncate
+  - completed 1px current-color strike
+  - cancelled quieter, unstruck
+  - detail 14 / ink@0.55, same row, shrink
+  - empty 14 muted, px 6 py 8
+  - count 12 medium tabular-nums
+behavior:
+  - Completion count is completed/total
+  - Collapses when every item is done
+  - Follows the live edge while items are active
+  - Empty list shows No tasks yet and stays open
+approximations:
+  - Status is a 6px mark; the mark's 4px top pad is balanced on the row
+  - Count uses host-ink tabular figures
+  - List viewport is own; no conversation 12px gutter
+  - No header icon; the caret is the affordance

@@ -1,0 +1,52 @@
+component: Composer
+flutter_name: AgentComposer
+status: complete
+
+source:
+  ref: industry agent-run composer contract
+  files: []
+  docs: internal worksheets
+
+anatomy:
+  - surface (RemixCard, host background)
+  - field (RemixTextArea, borderless, hidden scrollbar)
+  - toolbar (32px min-height, 4px gap)
+  - leading slot
+  - trailing slot
+  - send / stop (32×32 circular RemixIconButton)
+
+kinds: []
+sizes: []
+states:
+  - idle
+  - composing
+  - running (send becomes stop)
+  - disabled (instrument at 60% opacity)
+  - empty (send disabled)
+  - canSubmit false
+tokens: {}
+non_token_measurements:
+  - card pad 8
+  - card radius 16
+  - field pad 8 horizontal / 6 top
+  - toolbar min-height 32
+  - toolbar gap 4
+  - send/stop 32 circular
+  - send arrow 16
+  - stop square 12, fill inset 3/24, rx 2/24
+  - send/stop glyph spring (opacity, y±3, scale 0.8)
+  - rest border ink@0.16
+  - focus border ink@0.25, color ease 150ms
+  - hint 14/24 ink@0.55
+  - empty/disabled send opacity 0.5
+  - disabled opacity 0.6
+behavior:
+  - Field and send/stop share one card
+  - Enter submits when the field is not composing and Shift is not held
+  - Shift+Enter inserts a newline
+  - IME composition ignores Enter
+  - Focus remains in the field after submit
+  - Send/stop glyph springs; reduced motion snaps
+  - Host owns Overlay if a trailing picker needs one
+approximations:
+  - Default chrome is a local styler, not a design-token system

@@ -26,6 +26,7 @@ Inspect the project's `pubspec.yaml` before assuming Remix is in use.
 | Accessible component behavior with a custom visual system | `remix`; use `Remix*` widgets and `*Styler`s |
 | Ready-made Radix-inspired visuals | `remix_fortal`; use `FortalScope` and `Fortal*` widgets |
 | Fortal tokens with a customized composition | both packages; apply `fortal*Style()` to a `Remix*` widget |
+| Agent-run surfaces (composer, transcript, permission, plan) | `remix_agent`; use `Agent*` widgets. Depends on `remix` only. No Fortal recipes in v1. |
 | A visual system unrelated to Fortal | base Remix styling; do not add `remix_fortal` |
 
 Remix ships no theme. Fortal is optional, lives in a separate package, depends

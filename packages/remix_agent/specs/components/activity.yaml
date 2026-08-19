@@ -1,0 +1,46 @@
+component: Activity
+flutter_name: AgentActivity
+status: complete
+
+source:
+  ref: in-transcript activity ledger
+  files: []
+  docs: internal worksheets
+
+anatomy:
+  - working status (28px muted host title, no chevron)
+  - completed trigger (shrink-wrap title + 6px + trailing chevron, 28px, 14/medium muted truncate)
+  - live ledger (working: 208 well; py 8, item gap 2, 4px end pad, hidden scrollbar, 12px fade when capped)
+  - item rows (36 floor, mark, title, optional child)
+states:
+  - working
+  - complete
+tokens: {}
+non_token_measurements:
+  - trigger height 28
+  - working 14 / regular muted
+  - completed 14 / medium muted, gap 6, trailing chevron
+  - completed trigger shrink-wraps; 6px-radius ring hugs the cluster
+  - completed hover muted → ink (title and chevron), 150ms ease
+  - completed chevron rest muted/70
+  - focus-visible 2px inset ring, 6px radius
+  - working ledger well 208 (fixed height, not shrink-wrap)
+  - ledger py 8, item gap 2, end pad 4, scrollbar hidden
+  - row min-height 36, px 6, py 4
+  - new row enter opacity 0 / +6px y, 180ms ease / layout spring
+  - ledger reveal clip/ease 220 open / 140 close, 4px y
+  - fade 12 when capped (top while working, both ends when complete)
+behavior:
+  - Items are id, title, status, optional child
+  - No built-in item kinds
+  - Host title is the live label and the completed summary
+  - Follows while working and collapses when complete
+  - Opening a completed ledger pins the viewport to the top
+  - Reduced motion snaps row enter, hover, and ledger reveal
+approximations:
+  - No thinking shimmer; the host title is the live copy
+  - Fade is a dstIn mask, not CSS mask-image
+  - List viewport is own; no conversation 12px gutter
+  - Completed chevron rest is muted/70 of host ink; group hover lifts it to ink
+  - Ledger reveal is clip-fade-translate, not a motion library
+  - Working well is a fixed height; live-edge follow is scroll, not a y-offset stack

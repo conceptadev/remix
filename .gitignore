@@ -1,3 +1,6 @@
+# Local reference checkouts (not part of Remix)
+.local/
+
 # Miscellaneous
 *.class
 *.log
@@ -24,6 +27,9 @@ align_ui_flutter/
 **/example/windows/
 **/example/macos/
 **/example/linux/
+# remix_agent catalog is a web host; keep its index/manifest in tree.
+!/packages/remix_agent/example/web/
+!/packages/remix_agent/example/web/**
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line

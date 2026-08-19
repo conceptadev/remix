@@ -1,0 +1,23 @@
+component: Message
+flutter_name: AgentMessage
+status: implemented (vertical slice)
+anatomy: [avatar, header, body, expand pill, footer]
+states: [user, assistant]
+tokens: {}
+non_token_measurements:
+  - group spacing 6
+  - user bubble max 82% of row
+  - user bubble min 36
+  - user bubble pad 14 / 10
+  - user bubble fill-only
+  - conversation run 14 / 24
+  - long copy clamp 4 lines
+  - collapsed fade 68% → transparent
+  - expand pill 8 gutter, 28 height, 8 pad, 12/medium/muted, 4 caret gap
+behavior:
+  - User rows align end and are width-capped; assistant rows fill
+  - align / showAvatar / expand / maxWidth override the role defaults
+  - placeholderAvatar keeps alignment without painting an avatar
+  - Header and footer sit outside the user bubble
+  - Long copy clamps to 4 lines with a bottom fade; the expand pill sits inside the bubble
+approximations: []

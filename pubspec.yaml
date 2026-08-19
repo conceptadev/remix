@@ -24,11 +24,14 @@ workspace:
   - apps/playground
   - packages/remix
   - packages/remix_fortal
+  - packages/remix_agent
+  - packages/remix_agent/example
 
 melos:
   packages:
     - apps/*
     - packages/*
+    - packages/remix_agent/example
 
   # No `command.bootstrap.environment` here on purpose. It rewrites one
   # `environment:` into every package it manages, and this workspace has two

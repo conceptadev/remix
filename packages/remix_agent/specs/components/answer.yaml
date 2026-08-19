@@ -1,0 +1,40 @@
+component: Answer
+flutter_name: AgentAnswer
+status: complete
+
+source:
+  ref: streaming answer surface
+  files: []
+  docs: internal worksheets
+
+anatomy:
+  - body (14 / 24 at host ink 90%)
+  - completion row (12px under the body, items-center, gap 2)
+  - copy / retry (28×28, 6px radius, muted hover wash, press scale 0.9)
+  - feedback (same row, complete only; cluster may grow past one icon)
+  - sources trigger (same row, inline, 6px radius, 6px x-pad, muted→ink hover)
+  - sources well (8px under the row, 12 radius, muted wash, 8 pad)
+states:
+  - streaming
+  - complete
+  - error
+tokens: {}
+non_token_measurements:
+  - body 14 / 24, ink@0.90
+  - completion offset 12
+  - action gap 2
+  - copy / retry 28×28, radius 6, hover wash ink@0.06, press scale 0.9
+  - action / sources focus-visible 2px inset host-ink ring, radius 6
+  - sources trigger min-height 28, 6px radius, 6px x-pad, 12 muted→ink, inner gap 8
+  - sources well offset 8, radius 12, pad 8, wash ink@0.06
+  - completion chrome 220ms ease-out fade + 4px rise (120ms opacity when reduced)
+  - sources well 220ms in / 140ms out clip+opacity+4px y (snap when reduced)
+behavior:
+  - Child is host-rendered conversation
+  - Completion chrome appears only when complete or errored
+  - showActions override can keep chrome hidden after settle
+  - Feedback paints only when status is complete
+  - Sources trigger sits inline in the action row; expanded list uses sourcesContent
+approximations:
+  - Host supplies copy / retry / feedback / sources widgets
+  - No citation engine; the well is chrome around host content

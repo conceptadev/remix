@@ -1,0 +1,16 @@
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+  errors:
+    non_constant_identifier_names: ignore
+
+linter:
+  rules:
+    public_member_api_docs: false
+    prefer_relative_imports: true

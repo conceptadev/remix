@@ -1,0 +1,52 @@
+component: Execution
+flutter_name: AgentExecution
+status: complete
+
+source:
+  ref: in-transcript tool output disclosure
+  files: []
+  docs: internal worksheets
+
+anatomy:
+  - trigger (36px floor, 4px vertical inset, 6px radius, 2px inset focus-visible ring)
+  - kind icon (16px host slot; Mix terminal glyph when omitted)
+  - title (14/medium, ink@0.90, one-line truncate)
+  - optional meta (12 muted)
+  - tool (11px mono truncate on the trigger)
+  - status (12px host-ink mark, 4px gap, 11/medium muted label)
+  - trailing chevron (14px, ink@0.50, muted on trigger hover)
+  - output well (clipped 12-radius ink wash, no stroke)
+  - log (14 / ink@0.80, mono, wrap)
+  - copy / retry (28×28, 6px radius, hover wash; gap 2, px 8, pb 6, trailing 11px status)
+states:
+  - running
+  - success
+  - error
+  - cancelled
+tokens: {}
+non_token_measurements:
+  - trigger min-height 36, py 4, gap 8
+  - kind slot 16 (16+8 aligns with well)
+  - trigger radius 6, focus-visible 2px inset host-ink ring
+  - title 14 / medium / ink@0.90
+  - status mark 12, gap 4, label 11 / medium muted
+  - trailing chevron 14, rest ink@0.50, hover muted
+  - well indent 24 start / 6 top
+  - well radius 12, wash ink@0.08, no hairline
+  - log pad 12 (end 12 is the transcript gutter)
+  - footer gap 2, px 8, pb 6
+  - copy / retry 28×28, radius 6, hover wash ink@0.06
+  - tool / footer status 11 / ink@0.55
+  - log 14 / ink@0.80
+behavior:
+  - Open while running
+  - collapseOnComplete hides the body after settle
+  - Reopenable; working again forces open
+  - Tool and status stay on the trigger in every state
+  - Meta does not replace the status word
+  - Copy/retry only after settle, inside the well
+approximations:
+  - Status mark and label are host-ink, not a semantic palette
+  - Kind is a host slot; default is a Mix terminal glyph, not a kind catalog
+  - Host supplies copy/retry widgets; execution paints the 28×28 slots
+  - Transcript reserves a 12px end gutter; the log does not hide the bar

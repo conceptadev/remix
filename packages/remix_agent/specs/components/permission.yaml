@@ -1,0 +1,61 @@
+component: Permission
+flutter_name: AgentPermission
+status: complete
+
+source:
+  ref: in-transcript tool permission machine
+  files: []
+  docs: internal worksheets
+
+anatomy:
+  - status well (32×32 Mix Box, 12-radius, RemixSpinner / local marks)
+  - title + status chip (RemixBadge, always)
+  - tool name (truncated mono)
+  - description (muted, leading-5)
+  - view details (12/medium muted→ink, 2px focus-visible ring, 14px down chevron)
+  - parameter rows (12px, items-center, shared minmax(0, 7rem) label)
+  - allow once / always allow (if handler) / deny
+states:
+  - pending
+  - deciding
+  - allowed
+  - running
+  - complete
+  - denied
+  - error
+tokens: {}
+non_token_measurements:
+  - card radius 16, overflow clipped
+  - card pad 16
+  - status well 32×32, radius 12, mt 2
+  - header gap 12
+  - status chip 11/medium, rounded-full, px 8 / py 2
+  - tool run 12 mono truncate, mt 2
+  - description 14 muted, height 20/14, mt 8
+  - view details 12/medium muted, hover ink, 6px-radius 2px inset ring
+  - 14px down chevron, rotates 180 when open
+  - 16 between view details and parameter well
+  - parameter gap 12, shared label minmax(0, 112)
+  - parameter well paper fill, 20% ink stroke
+  - footer hairline, py 12
+  - allow once / always allow press 0.97
+  - always allow paper-filled outline
+  - deny hover fill + label ink
+  - footer fade 220ms (+4px enter); details clip/fade/translate 4px 220/140
+  - reduced motion: footer 120ms fade, details snap, no press scale
+behavior:
+  - Actions exist only while pending
+  - Always allow is omitted when the host passes no handler
+  - Card remains in the transcript after a decision
+  - Pending details start closed and are toggleable
+  - Details use collapse-when-complete for deciding/running, not an accordion group
+  - Default title is a generic question; the tool name appears once
+  - Status chip is on the title row in every state
+  - Parameters are dedicated rows, not a definition list
+  - Parameter values wrap long tokens in the value column
+approximations:
+  - Status well paints local 16px permission, check, close, and alert marks; busy is RemixSpinner
+  - Error well mark uses danger luminance; other marks stay ink/muted
+  - Status chip is RemixBadge with ink-alpha tints and danger luminance, not a named palette
+  - Parameter columns share a 12px row with minmax(0, 7rem) label; Mix Grid has no minmax or content-sized rows
+  - Details/footer motion is clip-fade-translate, not a motion library
