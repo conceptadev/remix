@@ -74,7 +74,12 @@ jobs:
           # meaningful. melos commits by default, which would leave a clean tree
           # and make a successful run look like "nothing to version". It also
           # implies --no-git-tag-version.
-          melos version --no-git-commit-version --yes $overrides
+          # `< /dev/null` because manual `-V` versioning asks whether you want
+          # an extra changelog entry. melos only skips that prompt when
+          # `stdin.hasTerminal` is false, and `--yes` does not cover it, so the
+          # redirect is what guarantees the default instead of a runner that
+          # happens to have no tty.
+          melos version --no-git-commit-version --yes $overrides < /dev/null
 
           # The pair must land aligned; verify rather than trust the inputs.
           dart run tool/check_version_alignment.dart
