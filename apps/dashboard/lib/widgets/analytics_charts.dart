@@ -14,11 +14,9 @@ class AnalyticsCharts extends StatelessWidget {
     final palette = resolveFortalChartPalette(context);
     final gap = MixScope.tokenOf(FortalTokens.space4, context);
     final chartInset = MixScope.tokenOf(FortalTokens.space2, context);
-    final cardPadding = MixScope.tokenOf(FortalTokens.space4, context);
-    final cardHeight = 328 + cardPadding * 2;
     final slices = _channelSlices();
-    final gridStyle = GridBoxStyler.equalColumns(3)
-        .autoRows(GridTrack.fixed(cardHeight))
+    // Omit autoRows: Mix 1031 defaults implicit rows to content height.
+    final GridBoxStyler gridStyle = GridBoxStyler.equalColumns(3)
         .gap(gap)
         .onConstraints(
           const Breakpoint.maxWidth(1119),

@@ -19,69 +19,79 @@ class OverviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => SingleChildScrollView(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          crossAxisAlignment: .stretch,
-          spacing: 24,
-          children: [
-            const PageHeader(
-              title: 'Overview',
-              description: 'A snapshot of your workspace performance.',
-            ),
-            Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              children: const [
-                StatCard(
-                  label: 'Revenue',
-                  value: '\$84,420',
-                  delta: 12.4,
-                  icon: Icons.payments_outlined,
-                ),
-                StatCard(
-                  label: 'Active customers',
-                  value: '2,420',
-                  delta: 8.2,
-                  icon: Icons.people_outline,
-                ),
-                StatCard(
-                  label: 'Open orders',
-                  value: '184',
-                  delta: -2.8,
-                  icon: Icons.inventory_2_outlined,
-                ),
-                StatCard(
-                  label: 'Fulfillment',
-                  value: '94.2%',
-                  delta: 4.1,
-                  icon: Icons.local_shipping_outlined,
-                  progress: 94.2,
-                ),
-              ],
-            ),
-            const AnalyticsCharts(),
-            if (constraints.maxWidth >= 1050)
-              Row(
-                crossAxisAlignment: .start,
-                spacing: 20,
-                children: [
-                  const Expanded(child: _ActivityCard()),
-                  Expanded(child: _RecentOrders(onViewOrders: onViewOrders)),
-                ],
-              )
-            else
-              Column(
-                crossAxisAlignment: .stretch,
-                spacing: 20,
-                children: [
-                  const _ActivityCard(),
-                  _RecentOrders(onViewOrders: onViewOrders),
-                ],
+    final pagePadding = MixScope.tokenOf(FortalTokens.space8, context);
+    final pageGap = MixScope.tokenOf(FortalTokens.space6, context);
+    final metricGap = MixScope.tokenOf(FortalTokens.space4, context);
+    final bandGap = MixScope.tokenOf(FortalTokens.space5, context);
+    // Omit autoRows: Mix 1031 defaults implicit rows to content height.
+    final GridBoxStyler metricsStyle = GridBoxStyler.equalColumns(4)
+        .gap(metricGap)
+        .onConstraints(
+          const Breakpoint.maxWidth(900),
+          GridBoxStyler.equalColumns(2).gap(metricGap),
+        )
+        .onConstraints(
+          const Breakpoint.maxWidth(520),
+          GridBoxStyler.equalColumns(1).gap(metricGap),
+        );
+    final GridBoxStyler activityStyle = GridBoxStyler.equalColumns(2)
+        .gap(bandGap)
+        .onConstraints(
+          const Breakpoint.maxWidth(1049),
+          GridBoxStyler.equalColumns(1).gap(bandGap),
+        );
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(pagePadding),
+      child: Column(
+        crossAxisAlignment: .stretch,
+        spacing: pageGap,
+        children: [
+          const PageHeader(
+            title: 'Overview',
+            description: 'A snapshot of your workspace performance.',
+          ),
+          GridBox(
+            key: const ValueKey('overview-metrics-grid'),
+            style: metricsStyle,
+            children: const [
+              StatCard(
+                label: 'Revenue',
+                value: '\$84,420',
+                delta: 12.4,
+                icon: Icons.payments_outlined,
               ),
-          ],
-        ),
+              StatCard(
+                label: 'Active customers',
+                value: '2,420',
+                delta: 8.2,
+                icon: Icons.people_outline,
+              ),
+              StatCard(
+                label: 'Open orders',
+                value: '184',
+                delta: -2.8,
+                icon: Icons.inventory_2_outlined,
+              ),
+              StatCard(
+                label: 'Fulfillment',
+                value: '94.2%',
+                delta: 4.1,
+                icon: Icons.local_shipping_outlined,
+                progress: 94.2,
+              ),
+            ],
+          ),
+          const AnalyticsCharts(),
+          GridBox(
+            key: const ValueKey('overview-activity-orders-grid'),
+            style: activityStyle,
+            children: [
+              const _ActivityCard(),
+              _RecentOrders(onViewOrders: onViewOrders),
+            ],
+          ),
+        ],
       ),
     );
   }

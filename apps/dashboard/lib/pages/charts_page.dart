@@ -87,9 +87,8 @@ class _ChartSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final gap = MixScope.tokenOf(FortalTokens.space4, context);
     final titleGap = MixScope.tokenOf(FortalTokens.space2, context);
-    final cardHeight = 420 * FortalTheme.of(context).scaling.factor;
+    // Omit autoRows: Mix 1031 defaults implicit rows to content height.
     final GridBoxStyler gridStyle = GridBoxStyler.equalColumns(2)
-        .autoRows(GridTrack.fixed(cardHeight))
         .gap(gap)
         .onConstraints(
           const Breakpoint.maxWidth(860),

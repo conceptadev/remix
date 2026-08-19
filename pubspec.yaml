@@ -11,6 +11,15 @@ dev_dependencies:
   yaml: ^3.1.3
 
 dependency_overrides:
+  # Point runtime Mix at conceptadev/mix#1031 so GridBox can size implicit
+  # rows to content. Published remix / remix_fortal keep hosted Mix
+  # constraints; tool/check_consumer_mix.dart will fail while this override
+  # is in place.
+  mix:
+    git:
+      url: https://github.com/conceptadev/mix.git
+      ref: 60c2cf70165866eae5fbe90d62215400c75926b8
+      path: packages/mix
   # Remove this pin after conceptadev/mix#1025 ships in mix_generator.
   mix_generator:
     git:

@@ -433,13 +433,14 @@ packages:
     source: hosted
     version: "2.0.0"
   mix:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: mix
-      sha256: "824337a20e80da644f2ca47d73e8f2b05bd2a2507ba803f952e4a0dae707d308"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.0-beta.4"
+      path: "packages/mix"
+      ref: "60c2cf70165866eae5fbe90d62215400c75926b8"
+      resolved-ref: "60c2cf70165866eae5fbe90d62215400c75926b8"
+      url: "https://github.com/conceptadev/mix.git"
+    source: git
+    version: "2.2.0-beta.5"
   mix_annotations:
     dependency: transitive
     description:

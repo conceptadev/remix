@@ -1,4 +1,5 @@
 import 'package:dashboard/main.dart';
+import 'package:dashboard/pages/charts_page.dart';
 import 'package:dashboard/theme/theme_settings.dart';
 import 'package:dashboard/widgets/analytics_charts.dart';
 import 'package:flutter/material.dart';
@@ -349,6 +350,29 @@ void main() {
     final compact = await pumpAt(700);
     expect(compact[1].dy, greaterThan(compact[0].dy));
     expect(compact[2].dy, greaterThan(compact[1].dy));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('charts gallery two-column rows share height', (tester) async {
+    tester.view.physicalSize = const Size(1200, 3600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      const FortalScope(child: MaterialApp(home: ChartsPage())),
+    );
+
+    Rect card(String title) => tester.getRect(
+      find
+          .ancestor(of: find.text(title), matching: find.byType(FortalCard))
+          .first,
+    );
+
+    final momentum = card('Revenue momentum');
+    final patterns = card('Per-series patterns');
+    expect(patterns.top, closeTo(momentum.top, 0.5));
+    expect(patterns.height, closeTo(momentum.height, 0.5));
     expect(tester.takeException(), isNull);
   });
 }
