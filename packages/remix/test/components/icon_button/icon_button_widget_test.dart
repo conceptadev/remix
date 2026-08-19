@@ -320,6 +320,7 @@ void main() {
           RemixIconButton(
             icon: Icons.save,
             onPressed: () {},
+            onLongPress: () {},
             loading: true,
             semanticLabel: 'Save item',
             semanticHint: 'Saves the selected item',
@@ -337,9 +338,41 @@ void main() {
             isButton: true,
             hasEnabledState: true,
             isEnabled: false,
+            hasTapAction: false,
+            hasLongPressAction: false,
           ),
         );
         semantics.dispose();
+      });
+
+      testWidgets('disabled owner exposes no semantic actions', (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixIconButton(
+              icon: Icons.block,
+              semanticLabel: 'Blocked action',
+              enabled: false,
+              onPressed: () {},
+              onLongPress: () {},
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          expect(
+            find.semantics.byLabel('Blocked action').evaluate().single,
+            isSemantics(
+              label: 'Blocked action',
+              isButton: true,
+              hasEnabledState: true,
+              isEnabled: false,
+              hasTapAction: false,
+              hasLongPressAction: false,
+            ),
+          );
+        } finally {
+          semantics.dispose();
+        }
       });
 
       test('rejects an empty accessible name', () {

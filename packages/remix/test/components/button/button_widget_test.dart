@@ -626,11 +626,13 @@ void main() {
         final semantics = tester.ensureSemantics();
         try {
           var pressed = 0;
+          var longPressed = 0;
           await tester.pumpRemixApp(
             RemixButton(
               label: 'Save',
               enabled: false,
               onPressed: () => pressed++,
+              onLongPress: () => longPressed++,
             ),
           );
           await tester.pumpAndSettle();
@@ -642,11 +644,15 @@ void main() {
               isButton: true,
               hasEnabledState: true,
               isEnabled: false,
+              hasTapAction: false,
+              hasLongPressAction: false,
             ),
           );
           await tester.tap(find.byType(RemixButton));
+          await tester.longPress(find.byType(RemixButton));
           await tester.pump();
           expect(pressed, 0);
+          expect(longPressed, 0);
         } finally {
           semantics.dispose();
         }
@@ -658,11 +664,13 @@ void main() {
         final semantics = tester.ensureSemantics();
         try {
           var pressed = 0;
+          var longPressed = 0;
           await tester.pumpRemixApp(
             RemixButton(
               label: 'Save',
               loading: true,
               onPressed: () => pressed++,
+              onLongPress: () => longPressed++,
             ),
           );
           await tester.pump();
@@ -677,11 +685,15 @@ void main() {
               isButton: true,
               hasEnabledState: true,
               isEnabled: false,
+              hasTapAction: false,
+              hasLongPressAction: false,
             ),
           );
           await tester.tap(find.byType(RemixButton));
+          await tester.longPress(find.byType(RemixButton));
           await tester.pump();
           expect(pressed, 0);
+          expect(longPressed, 0);
         } finally {
           semantics.dispose();
         }

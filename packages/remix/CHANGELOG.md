@@ -11,7 +11,8 @@
   `snapDivisions == null || snapDivisions > 0`.
 - **BREAKING**: `showRemixDialog` requires a nonblank `barrierLabel` when
   `barrierDismissible` is true. `RemixDialog` requires `semanticLabel` or
-  `title`, or a custom child whose caller owns dialog semantics.
+  `title` when it owns the dialog role; a caller-owned ancestor dialog may
+  provide the role and accessible name instead.
 - **BREAKING**: `RemixTextField.readOnly` no longer resolves as
   `WidgetState.disabled`. A read-only field is styled as enabled, so themes
   that relied on the disabled visual for read-only need a dedicated recipe.

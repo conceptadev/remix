@@ -1,15 +1,20 @@
 part of 'dialog.dart';
 
+String? _nonblank(String? value) =>
+    value == null || value.trim().isEmpty ? null : value;
+
 String? _resolveDismissibleBarrierLabel({
   required bool barrierDismissible,
   required String? barrierLabel,
 }) {
-  assert(
-    !barrierDismissible ||
-        (barrierLabel != null && barrierLabel.trim().isNotEmpty),
-    'showRemixDialog requires a nonblank localized barrierLabel when '
-    'barrierDismissible is true.',
-  );
+  if (barrierDismissible &&
+      (barrierLabel == null || barrierLabel.trim().isEmpty)) {
+    throw ArgumentError.value(
+      barrierLabel,
+      'barrierLabel',
+      'Dismissible dialogs require a nonblank localized barrier label.',
+    );
+  }
   // Trim only for the check above; the caller-supplied label is passed
   // through unmodified on both branches.
   return barrierLabel;
@@ -158,13 +163,6 @@ class RemixDialog extends StatelessWidget {
   }) : assert(
          child != null || title != null || description != null,
          'Either child, title, or description must be provided',
-       ),
-       assert(
-         (semanticLabel != null && semanticLabel != '') ||
-             (title != null && title != '') ||
-             child != null,
-         'RemixDialog requires semanticLabel or title, or a custom child '
-         'whose caller owns dialog semantics.',
        );
 
   /// Custom body content.
@@ -193,6 +191,10 @@ class RemixDialog extends StatelessWidget {
   final bool modal;
 
   /// Semantic label for accessibility.
+  ///
+  /// A standalone dialog requires this or a nonblank [title]. A dialog nested
+  /// under a caller-owned [NakedDialog] inherits that ancestor's dialog role
+  /// and accessible name.
   final String? semanticLabel;
 
   /// The style configuration for the dialog.
@@ -205,13 +207,15 @@ class RemixDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    assert(
-      (semanticLabel != null && semanticLabel!.trim().isNotEmpty) ||
-          (title != null && title!.trim().isNotEmpty) ||
-          child != null,
-      'RemixDialog requires semanticLabel or title, or a custom child '
-      'whose caller owns dialog semantics.',
-    );
+    final resolvedSemanticLabel = _nonblank(semanticLabel) ?? _nonblank(title);
+    final hasDialogAncestor =
+        context.findAncestorWidgetOfExactType<NakedDialog>() != null;
+    if (!hasDialogAncestor && resolvedSemanticLabel == null) {
+      throw ArgumentError(
+        'A standalone RemixDialog requires a nonblank semanticLabel or title.',
+      );
+    }
+
     final content = RemixStyleSpecBuilder<DialogSpec>(
       style: style,
       styleSpec: styleSpec,
@@ -285,13 +289,11 @@ class RemixDialog extends StatelessWidget {
       },
     );
 
-    final hasDialogAncestor =
-        context.findAncestorWidgetOfExactType<NakedDialog>() != null;
     if (hasDialogAncestor) return content;
 
     return NakedDialog(
       modal: modal,
-      semanticLabel: semanticLabel ?? title,
+      semanticLabel: resolvedSemanticLabel,
       child: content,
     );
   }

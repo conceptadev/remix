@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -337,14 +338,17 @@ void main() {
           ),
         );
 
-        expect(
-          () => showRemixDialog<void>(
-            context: hostContext,
-            barrierDismissible: true,
-            builder: (context) => const RemixDialog(title: 'Needs label'),
-          ),
-          throwsAssertionError,
-        );
+        for (final barrierLabel in <String?>[null, '   ']) {
+          expect(
+            () => showRemixDialog<void>(
+              context: hostContext,
+              barrierDismissible: true,
+              barrierLabel: barrierLabel,
+              builder: (context) => const RemixDialog(title: 'Needs label'),
+            ),
+            throwsArgumentError,
+          );
+        }
       },
     );
   });
@@ -378,7 +382,9 @@ void main() {
 
       testWidgets('renders dialog with child only', (tester) async {
         final testChild = Icon(Icons.star, key: ValueKey('test_icon'));
-        await tester.pumpRemixApp(RemixDialog(child: testChild));
+        await tester.pumpRemixApp(
+          RemixDialog(semanticLabel: 'Star dialog', child: testChild),
+        );
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
@@ -464,6 +470,7 @@ void main() {
       testWidgets('child composes with actions', (tester) async {
         await tester.pumpRemixApp(
           RemixDialog(
+            semanticLabel: 'Action dialog',
             child: Text('Body'),
             actions: [Text('Cancel'), Text('Delete')],
           ),
@@ -482,7 +489,11 @@ void main() {
 
       testWidgets('a lone child fills the container directly', (tester) async {
         await tester.pumpRemixApp(
-          RemixDialog(child: Text('Only child'), scrollable: true),
+          RemixDialog(
+            semanticLabel: 'Custom dialog',
+            child: Text('Only child'),
+            scrollable: true,
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -728,14 +739,68 @@ void main() {
       testWidgets('dialog with child preserves child semantics', (
         tester,
       ) async {
+        final semantics = tester.ensureSemantics();
         final testChild = Icon(Icons.star, semanticLabel: 'Star Icon');
-        await tester.pumpRemixApp(RemixDialog(child: testChild));
-        await tester.pumpAndSettle();
+        try {
+          await tester.pumpRemixApp(
+            RemixDialog(semanticLabel: 'Star dialog', child: testChild),
+          );
+          await tester.pumpAndSettle();
 
-        expect(find.byIcon(Icons.star), findsOneWidget);
-        // Child semantics should be preserved
-        final iconSemantics = tester.getSemantics(find.byIcon(Icons.star));
-        expect(iconSemantics.label, contains('Star Icon'));
+          expect(find.byIcon(Icons.star), findsOneWidget);
+          final iconSemantics = tester.getSemantics(find.byIcon(Icons.star));
+          expect(iconSemantics.label, contains('Star Icon'));
+
+          final root = tester
+              .binding
+              .renderViews
+              .single
+              .owner!
+              .semanticsOwner!
+              .rootSemanticsNode!;
+          final dialogs = _collectSemanticsNodes(
+            root,
+            (node) => node.getSemanticsData().role == SemanticsRole.dialog,
+          );
+          expect(dialogs, hasLength(1));
+          expect(dialogs.single.getSemanticsData().label, 'Star dialog');
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('caller-owned ancestor supplies the only dialog role', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            NakedDialog(
+              semanticLabel: 'Caller-owned dialog',
+              child: RemixDialog(child: Text('Custom body')),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          final root = tester
+              .binding
+              .renderViews
+              .single
+              .owner!
+              .semanticsOwner!
+              .rootSemanticsNode!;
+          final dialogs = _collectSemanticsNodes(
+            root,
+            (node) => node.getSemanticsData().role == SemanticsRole.dialog,
+          );
+          expect(dialogs, hasLength(1));
+          expect(
+            dialogs.single.getSemanticsData().label,
+            'Caller-owned dialog',
+          );
+        } finally {
+          semantics.dispose();
+        }
       });
     });
 
@@ -889,13 +954,17 @@ void main() {
 
       testWidgets('dialog with child adapts to child size', (tester) async {
         final smallChild = Icon(Icons.star, size: 16.0);
-        await tester.pumpRemixApp(RemixDialog(child: smallChild));
+        await tester.pumpRemixApp(
+          RemixDialog(semanticLabel: 'Small icon', child: smallChild),
+        );
         await tester.pumpAndSettle();
 
         final smallSize = tester.getSize(find.byType(RemixDialog));
 
         final largeChild = Icon(Icons.star, size: 32.0);
-        await tester.pumpRemixApp(RemixDialog(child: largeChild));
+        await tester.pumpRemixApp(
+          RemixDialog(semanticLabel: 'Large icon', child: largeChild),
+        );
         await tester.pumpAndSettle();
 
         final largeSize = tester.getSize(find.byType(RemixDialog));
@@ -906,13 +975,30 @@ void main() {
     });
 
     group('Edge Cases', () {
-      test('rejects an empty title without a semantic label or child', () {
-        expect(() => RemixDialog(title: ''), throwsAssertionError);
+      testWidgets('rejects a standalone child-only dialog without a name', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(RemixDialog(child: Icon(Icons.star)));
+
+        expect(tester.takeException(), isA<ArgumentError>());
       });
 
-      test('rejects a description-only dialog without a semantic label', () {
-        expect(() => RemixDialog(description: ''), throwsAssertionError);
+      testWidgets('rejects an empty title without a semantic label or child', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(RemixDialog(title: ''));
+
+        expect(tester.takeException(), isA<ArgumentError>());
       });
+
+      testWidgets(
+        'rejects a description-only dialog without a semantic label',
+        (tester) async {
+          await tester.pumpRemixApp(RemixDialog(description: 'Description'));
+
+          expect(tester.takeException(), isA<ArgumentError>());
+        },
+      );
 
       testWidgets('handles null actions gracefully', (tester) async {
         await tester.pumpRemixApp(

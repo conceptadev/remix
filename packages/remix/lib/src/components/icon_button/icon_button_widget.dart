@@ -84,10 +84,14 @@ class RemixIconButton extends StatelessWidget {
       semanticLabel.trim().isNotEmpty,
       'RemixIconButton.semanticLabel must be a nonblank accessible name.',
     );
+    final allowsInteraction = enabled && !loading;
+
     return NakedButton(
-      onPressed: onPressed,
-      onLongPress: onLongPress,
-      enabled: enabled && !loading,
+      // Naked UI beta.12 derives semantic actions from callback presence, so
+      // remove callbacks whenever this wrapper disallows interaction.
+      onPressed: allowsInteraction ? onPressed : null,
+      onLongPress: allowsInteraction ? onLongPress : null,
+      enabled: allowsInteraction,
       mouseCursor: mouseCursor,
       enableFeedback: enableFeedback,
       focusNode: focusNode,
