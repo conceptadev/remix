@@ -35,14 +35,14 @@ void main() {
   testWidgets('activity and recent orders sit side-by-side then stack', (
     tester,
   ) async {
-    await _pumpOverview(tester, width: 1200);
+    await _pumpOverview(tester, width: 1050);
     final wideActivity = _cardAround(tester, find.text('Recent activity'));
     final wideOrders = _cardAround(tester, find.text('Recent orders'));
     expect(wideOrders.top, closeTo(wideActivity.top, 0.5));
     expect(wideOrders.height, closeTo(wideActivity.height, 0.5));
     expect(wideOrders.left, greaterThan(wideActivity.right));
 
-    await _pumpOverview(tester, width: 800);
+    await _pumpOverview(tester, width: 1049);
     final stackedActivity = _cardAround(tester, find.text('Recent activity'));
     final stackedOrders = _cardAround(tester, find.text('Recent orders'));
     expect(stackedOrders.top, greaterThan(stackedActivity.bottom));

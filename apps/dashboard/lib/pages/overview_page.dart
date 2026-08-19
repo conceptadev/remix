@@ -19,8 +19,8 @@ class OverviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pagePadding = MixScope.tokenOf(FortalTokens.space8, context);
-    final pageGap = MixScope.tokenOf(FortalTokens.space6, context);
+    final pagePadding = MixScope.tokenOf(FortalTokens.space6, context);
+    final pageGap = MixScope.tokenOf(FortalTokens.space5, context);
     final metricGap = MixScope.tokenOf(FortalTokens.space4, context);
     final bandGap = MixScope.tokenOf(FortalTokens.space5, context);
     // Omit autoRows: Mix 1031 defaults implicit rows to content height.
@@ -37,7 +37,9 @@ class OverviewPage extends StatelessWidget {
     final GridBoxStyler activityStyle = GridBoxStyler.equalColumns(2)
         .gap(bandGap)
         .onConstraints(
-          const Breakpoint.maxWidth(1049),
+          // Old LayoutBuilder used content width ≥ 1050. This Grid sees
+          // that slot minus page padding on both sides (space6 × 2 = 64).
+          const Breakpoint.maxWidth(985),
           GridBoxStyler.equalColumns(1).gap(bandGap),
         );
 
