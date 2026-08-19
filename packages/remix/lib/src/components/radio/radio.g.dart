@@ -99,7 +99,8 @@ typedef _$RadioSpecMethods = _$RadioSpec; // ignore: unused_element
 // **************************************************************************
 
 class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
-    with RemixBoxStylerMixin<RadioStyler> {
+    with RemixBoxStylerMixin<RadioStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
@@ -594,6 +595,16 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
   RadioStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'indicator',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   RadioStyler container(BoxStyler value) {

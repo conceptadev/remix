@@ -30,6 +30,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final GridBoxStyler profileFields = .equalColumns(
+      2,
+    ).gap(14).onConstraints(const .maxWidth(560), .equalColumns(1).gap(14));
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(32),
       child: Align(
@@ -55,25 +59,21 @@ class _SettingsPageState extends State<SettingsPage> {
                       description:
                           'Your personal details and communication preferences.',
                     ),
-                    Row(
-                      crossAxisAlignment: .start,
-                      spacing: 14,
+                    GridBox(
+                      key: const ValueKey('settings-profile-fields'),
+                      style: profileFields,
                       children: [
-                        Expanded(
-                          child: FortalTextField(
-                            controller: _nameController,
-                            label: 'Name',
-                            hintText: 'Your name',
-                          ),
+                        FortalTextField(
+                          controller: _nameController,
+                          label: 'Name',
+                          hintText: 'Your name',
                         ),
-                        Expanded(
-                          child: FortalTextField(
-                            controller: _emailController,
-                            label: 'Email',
-                            helperText: 'Domain verification is pending.',
-                            error: true,
-                            keyboardType: .emailAddress,
-                          ),
+                        FortalTextField(
+                          controller: _emailController,
+                          label: 'Email',
+                          helperText: 'Domain verification is pending.',
+                          error: true,
+                          keyboardType: .emailAddress,
                         ),
                       ],
                     ),

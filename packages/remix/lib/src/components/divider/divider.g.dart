@@ -78,7 +78,8 @@ typedef _$DividerSpecMethods = _$DividerSpec; // ignore: unused_element
 // **************************************************************************
 
 class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
-    with RemixBoxStylerMixin<DividerStyler> {
+    with RemixBoxStylerMixin<DividerStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
 
   const DividerStyler.create({
@@ -568,6 +569,14 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
   DividerStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   DividerStyler container(BoxStyler value) {

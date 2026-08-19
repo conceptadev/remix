@@ -100,7 +100,8 @@ typedef _$SwitchSpecMethods = _$SwitchSpec; // ignore: unused_element
 // **************************************************************************
 
 class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
-    with RemixBoxStylerMixin<SwitchStyler> {
+    with RemixBoxStylerMixin<SwitchStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
   final Prop<RemixBoxEffectsSpec>? $trackEffects;
@@ -608,6 +609,17 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
   SwitchStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'thumb',
+    'trackEffects',
+    'thumbEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   SwitchStyler container(BoxStyler value) {

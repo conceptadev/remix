@@ -94,7 +94,8 @@ typedef _$PopoverSpecMethods = _$PopoverSpec; // ignore: unused_element
 // **************************************************************************
 
 class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
-    with RemixBoxStylerMixin<PopoverStyler> {
+    with RemixBoxStylerMixin<PopoverStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
@@ -591,6 +592,15 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
   PopoverStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   PopoverStyler container(BoxStyler value) {

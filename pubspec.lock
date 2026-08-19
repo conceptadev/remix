@@ -436,10 +436,10 @@ packages:
     dependency: transitive
     description:
       name: mix
-      sha256: "824337a20e80da644f2ca47d73e8f2b05bd2a2507ba803f952e4a0dae707d308"
+      sha256: ab19c799a280830cf9facd4818a81187506beaafce0e10ca99d6125c325decfb
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0-beta.4"
+    version: "2.2.0-beta.5"
   mix_annotations:
     dependency: transitive
     description:
@@ -457,13 +457,12 @@ packages:
     source: hosted
     version: "0.0.1-beta.1"
   mix_generator:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/mix_generator"
-      ref: "367b1f916498008be89867d0fd192c383f877542"
-      resolved-ref: "367b1f916498008be89867d0fd192c383f877542"
-      url: "https://github.com/conceptadev/mix.git"
-    source: git
+      name: mix_generator
+      sha256: fd707c5ec5948918b90ed52296408a275871af5eda48178ce8539e4da4a1691f
+      url: "https://pub.dev"
+    source: hosted
     version: "2.2.0-beta.3"
   mustache_template:
     dependency: transitive

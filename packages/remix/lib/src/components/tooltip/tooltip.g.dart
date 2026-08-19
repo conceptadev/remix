@@ -115,7 +115,8 @@ typedef _$TooltipSpecMethods = _$TooltipSpec; // ignore: unused_element
 // **************************************************************************
 
 class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
-    with RemixBoxStylerMixin<TooltipStyler> {
+    with RemixBoxStylerMixin<TooltipStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<Duration>? $waitDuration;
@@ -632,6 +633,18 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
   TooltipStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'label',
+    'waitDuration',
+    'showDuration',
+    'dismissDuration',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   TooltipStyler container(BoxStyler value) {

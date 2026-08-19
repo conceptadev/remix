@@ -125,7 +125,8 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
         RemixBoxStylerMixin<ButtonStyler>,
         LabelStyleMixin<ButtonStyler>,
         IconStyleMixin<ButtonStyler>,
-        SpinnerStyleMixin<ButtonStyler> {
+        SpinnerStyleMixin<ButtonStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -702,6 +703,19 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
   ButtonStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'label',
+    'icon',
+    'spinner',
+    'containerEffects',
+    'iconAlignment',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   ButtonStyler container(FlexBoxStyler value) {
