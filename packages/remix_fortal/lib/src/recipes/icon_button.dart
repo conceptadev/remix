@@ -54,7 +54,7 @@ IconButtonStyler _fortalIconButtonBaseStyler(
     style = style.padding(.all(ghost.padding)).margin(.all(ghost.margin));
   } else {
     style = style
-        .container(.alignment(Alignment.center))
+        .container(.alignment(.center))
         .width(metrics.height)
         .height(metrics.height);
   }

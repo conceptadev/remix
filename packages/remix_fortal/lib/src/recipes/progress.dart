@@ -52,14 +52,10 @@ ProgressStyler _fortalProgressClassicStyler(
 }) {
   return _fortalProgressBaseStyler(size)
       .trackColor(FortalTokens.grayA3())
-      .trackEffects(RemixBoxEffectsMix.behindContent(_fortalProgressLayer()))
       .trackEffects(
         RemixBoxEffectsMix.overContent(
           _fortalProgressLayer(shadowToken: FortalTokens.shadow1Layers),
         ),
-      )
-      .indicatorEffects(
-        RemixBoxEffectsMix.behindContent(_fortalProgressLayer()),
       )
       .indicatorColor(
         highContrast ? FortalTokens.accent12() : FortalTokens.accentTrack(),
@@ -72,7 +68,6 @@ ProgressStyler _fortalProgressSurfaceStyler(
 }) {
   return _fortalProgressBaseStyler(size)
       .trackColor(FortalTokens.grayA3())
-      .trackEffects(RemixBoxEffectsMix.behindContent(_fortalProgressLayer()))
       .trackEffects(
         RemixBoxEffectsMix.overContent(
           _fortalProgressLayer(
@@ -85,9 +80,6 @@ ProgressStyler _fortalProgressSurfaceStyler(
             ],
           ),
         ),
-      )
-      .indicatorEffects(
-        RemixBoxEffectsMix.behindContent(_fortalProgressLayer()),
       )
       .indicatorColor(
         highContrast ? FortalTokens.accent12() : FortalTokens.accentTrack(),
@@ -103,12 +95,6 @@ ProgressStyler _fortalProgressSoftStyler(
       .track(
         .foregroundDecoration(BoxDecorationMix(color: FortalTokens.whiteA1())),
       )
-      .trackEffects(RemixBoxEffectsMix.behindContent(_fortalProgressLayer()))
-      .trackEffects(RemixBoxEffectsMix.overContent(_fortalProgressLayer()))
-      .indicatorEffects(
-        RemixBoxEffectsMix.behindContent(_fortalProgressLayer()),
-      )
-      .indicatorEffects(RemixBoxEffectsMix.overContent(_fortalProgressLayer()))
       .indicatorColor(
         highContrast ? FortalTokens.accent12() : FortalTokens.accent8(),
       )
