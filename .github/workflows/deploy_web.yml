@@ -1,4 +1,4 @@
-name: Deploy Remix showcases
+name: Deploy web showcases
 
 on:
   push:
