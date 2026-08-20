@@ -249,11 +249,12 @@ CheckboxStyler _optionStyle() {
 
 ## Fortal widgets
 
-There is no Fortal checkbox-group widget, because the group root has no visuals of
-its own. Render each option as `FortalCheckboxGroupItem`, which applies `fortalCheckboxGroupItemStyle`
-for you; the group stays unstyled. Fortal keeps its 14/16/20 indicator geometry inside the
-item's default 48-pixel interaction target. The Radix CheckboxGroup family is
-audited separately as intentionally unmapped at the root: caller-owned
+There is no Fortal checkbox-group widget, because the group root has no
+visuals of its own. Render each option as `FortalCheckboxGroupItem`, which
+applies `fortalCheckboxGroupItemStyle` for you; the group stays unstyled.
+Fortal keeps its 14/16/20 indicator geometry inside the item's default
+48-pixel interaction target. The Radix CheckboxGroup family is audited
+separately as intentionally unmapped at the root: caller-owned
 `Column`/`Row` spacing replaces its root layout, while each
 `FortalCheckboxGroupItem` receives the mapped checkbox visuals, size-linked
 `text1`/`text2`/`text3` label typography, and scaled 6/7/8 label gap.
