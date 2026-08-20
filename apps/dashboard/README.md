@@ -3,6 +3,10 @@
 A polished product dashboard demonstrating Remix's Fortal theme, components,
 and chart recipes built on `mix_chart`.
 
+## Live demo
+
+[Open the Fortal dashboard](https://conceptadev.github.io/remix/dashboard/).
+
 ## Preview
 
 ### Desktop

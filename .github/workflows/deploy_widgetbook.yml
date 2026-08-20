@@ -1,7 +1,9 @@
-name: Deploy Widgetbook
+name: Deploy Remix showcases
 
 on:
   push:
+    branches: ["main"]
+  pull_request:
     branches: ["main"]
   workflow_dispatch:
 
@@ -11,9 +13,9 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment
+# Allow only one concurrent Pages run per branch or pull request
 concurrency:
-  group: "pages"
+  group: "pages-${{ github.ref }}"
   cancel-in-progress: false
 
 jobs:
@@ -31,7 +33,7 @@ jobs:
           cache: true
 
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
 
       - name: Install Melos
         run: dart pub global activate melos
@@ -39,16 +41,27 @@ jobs:
       - name: Bootstrap workspace
         run: melos bootstrap
 
-      - name: Build web
+      - name: Build component catalog
         working-directory: apps/demo
         run: flutter build web --release --base-href /remix/
 
+      - name: Build dashboard
+        working-directory: apps/dashboard
+        run: flutter build web --release --base-href /remix/dashboard/
+
+      - name: Assemble Pages site
+        run: |
+          mkdir -p build/pages/dashboard
+          cp -R apps/demo/build/web/. build/pages/
+          cp -R apps/dashboard/build/web/. build/pages/dashboard/
+
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
-          path: apps/demo/build/web
+          path: build/pages
 
   deploy:
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
