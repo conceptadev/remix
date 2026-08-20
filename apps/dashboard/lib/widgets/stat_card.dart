@@ -23,8 +23,10 @@ class StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final positive = delta >= 0;
-    // Width comes from the parent Grid column. A tight stretch cell can
-    // be 1px shorter than the measure pass; keep the column loose then.
+    // Width comes from the parent Grid column; height comes from the row.
+    // `mainAxisSize: .min` matters only when the cell is unbounded — under a
+    // tight cell the Column fills it and the extra space falls below the
+    // content, which is what keeps sibling cards visually equal.
     final column = Column(
       mainAxisSize: .min,
       crossAxisAlignment: .stretch,
@@ -70,19 +72,6 @@ class StatCard extends StatelessWidget {
       ],
     );
 
-    return FortalCard(
-      size: .size2,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          if (!constraints.hasBoundedHeight) return column;
-          return OverflowBox(
-            alignment: .topLeft,
-            minHeight: 0,
-            maxHeight: double.infinity,
-            child: column,
-          );
-        },
-      ),
-    );
+    return FortalCard(size: .size2, child: column);
   }
 }

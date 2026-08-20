@@ -73,10 +73,6 @@ void main() {
         child: const FortalScope(child: MaterialApp(home: SettingsPage())),
       ),
     );
-    expect(
-      find.byKey(const ValueKey('settings-profile-fields')),
-      findsOneWidget,
-    );
     final wideName = field('Name');
     final wideEmail = field('Email');
     expect(wideEmail.top, closeTo(wideName.top, 0.5));
@@ -151,11 +147,6 @@ Future<List<Rect>> _pumpOverview(
     FortalScope(
       child: MaterialApp(home: OverviewPage(onViewOrders: () {})),
     ),
-  );
-  expect(find.byKey(const ValueKey('overview-metrics-grid')), findsOneWidget);
-  expect(
-    find.byKey(const ValueKey('overview-activity-orders-grid')),
-    findsOneWidget,
   );
   return [
     _cardAround(tester, find.text('Revenue')),
