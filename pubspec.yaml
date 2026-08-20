@@ -58,25 +58,14 @@ melos:
         mix_generator: ^2.2.0-beta.3
 
   scripts:
-    # Named `release:*` rather than `version`: a script named `version` shadows
-    # melos's built-in `melos version` command, so the script body could never
-    # invoke it.
-    release:version:
-      # Bumps the beta line rather than graduating to a stable major: breaking
-      # changes during a prerelease increment `beta.N`, they do not force 2.0.0.
-      #
-      # Tags are left to the release step. `publish.yml` fires on a tag push, so
-      # tagging here would publish before the version PR is reviewed.
-      run: >-
-        melos version --prerelease --preid beta --no-git-tag-version --yes
-      description: >-
-        Bump prerelease versions and changelogs from conventional commits
-
-    release:graduate:
-      # For the 1.0.0 release: drops the prerelease suffix from every package.
-      run: melos version --graduate --no-git-tag-version --yes
-      description: Graduate the prerelease line to stable versions
-
+    # No `release:*` versioning scripts here on purpose. They used to wrap
+    # `melos version --prerelease` / `--graduate`, both of which derive a
+    # version per package from that package's own commits — which is exactly
+    # the drift `version:align:check` now rejects. Run against this workspace
+    # they produce `remix 1.0.0-beta.5` and `remix_fortal 0.1.0-beta.4`.
+    #
+    # `.github/workflows/version.yml` is the only supported path: it takes one
+    # version and applies it to both packages with `-V`.
     generate:
       run: dart run build_runner build
       description: Regenerate Remix sources

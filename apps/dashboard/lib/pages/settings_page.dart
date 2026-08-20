@@ -60,7 +60,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           'Your personal details and communication preferences.',
                     ),
                     GridBox(
-                      key: const ValueKey('settings-profile-fields'),
                       style: profileFields,
                       children: [
                         FortalTextField(
@@ -125,7 +124,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     Align(
                       alignment: .centerLeft,
                       child: FortalButton(
-                        key: const ValueKey('save-profile'),
                         onPressed: () => showToast(
                           context,
                           message: 'Profile settings saved',

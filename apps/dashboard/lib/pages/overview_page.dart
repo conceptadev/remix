@@ -48,7 +48,6 @@ class OverviewPage extends StatelessWidget {
             description: 'A snapshot of your workspace performance.',
           ),
           GridBox(
-            key: const ValueKey('overview-metrics-grid'),
             style: metricsStyle,
             children: const [
               StatCard(
@@ -80,7 +79,6 @@ class OverviewPage extends StatelessWidget {
           ),
           const AnalyticsCharts(),
           GridBox(
-            key: const ValueKey('overview-activity-orders-grid'),
             style: activityStyle,
             children: [
               const _ActivityCard(),
