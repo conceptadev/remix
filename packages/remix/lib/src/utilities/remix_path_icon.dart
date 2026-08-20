@@ -6,6 +6,7 @@ import 'package:mix/mix.dart';
 enum RemixPathGlyph {
   chevronDown(9),
   thickCheck(9),
+  thickDividerHorizontal(9),
   thickChevronRight(9),
   plus(15),
   minus(15),
@@ -99,6 +100,7 @@ class _RemixPathIconPainter extends CustomPainter {
     final path = switch (glyph) {
       .chevronDown => _chevronDownPath(),
       .thickCheck => _thickCheckPath(),
+      .thickDividerHorizontal => _thickDividerHorizontalPath(),
       .thickChevronRight => _thickChevronRightPath(),
       .plus => _plusPath(),
       .minus => _minusPath(),
@@ -156,6 +158,16 @@ Path _thickCheckPath() => Path()
   ..lineTo(3.73256, 6.60459)
   ..lineTo(7.49741, 0.840706)
   ..cubicTo(7.72393, 0.493916, 8.18868, 0.396414, 8.53547, 0.62293)
+  ..close();
+
+Path _thickDividerHorizontalPath() => Path()
+  ..moveTo(0.75, 4.5)
+  ..cubicTo(0.75, 4.08579, 1.08579, 3.75, 1.5, 3.75)
+  ..lineTo(7.5, 3.75)
+  ..cubicTo(7.91421, 3.75, 8.25, 4.08579, 8.25, 4.5)
+  ..cubicTo(8.25, 4.91421, 7.91421, 5.25, 7.5, 5.25)
+  ..lineTo(1.5, 5.25)
+  ..cubicTo(1.08579, 5.25, 0.75, 4.91421, 0.75, 4.5)
   ..close();
 
 Path _thickChevronRightPath() => Path()
