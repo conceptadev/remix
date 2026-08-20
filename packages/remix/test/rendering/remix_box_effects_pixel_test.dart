@@ -97,6 +97,47 @@ void main() {
       );
     });
 
+    testWidgets('clips blurred inset shadows to their rounded target', (
+      tester,
+    ) async {
+      final pixels = await _render(
+        tester,
+        size: const Size(40, 30),
+        background: Colors.white,
+        child: Center(
+          child: RemixBoxWithEffects(
+            styleSpec: const StyleSpec(
+              spec: BoxSpec(
+                constraints: BoxConstraints.tightFor(width: 20, height: 12),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.all(Radius.circular(6)),
+                ),
+              ),
+            ),
+            containerEffects: const RemixBoxEffectsSpec(
+              behindContent: RemixBoxEffectLayerSpec(
+                shadows: [
+                  RemixBoxShadow(
+                    kind: RemixBoxShadowKind.inset,
+                    color: Colors.black,
+                    offset: Offset(0, 4),
+                    blurRadius: 3,
+                    spreadRadius: -1,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      for (var x = 0; x < 40; x++) {
+        expect(_pixel(pixels, x, 8), _rgba(Colors.white), reason: 'x=$x');
+        expect(_pixel(pixels, x, 21), _rgba(Colors.white), reason: 'x=$x');
+      }
+    });
+
     testWidgets(
       'orders border, content, foreground decoration, effects, outline',
       (tester) async {

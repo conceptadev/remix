@@ -40,7 +40,6 @@ IconButtonStyler _fortalIconButtonBaseStyler(
 ) {
   final metrics = fortalBaseButtonMetrics(size);
   var style = IconButtonStyler(
-    container: .alignment(Alignment.center),
     icon: .size(_fortalIconButtonIconSize(size)),
     spinner: .size(metrics.spinnerSize)
         .opacity(0.65)
@@ -52,7 +51,10 @@ IconButtonStyler _fortalIconButtonBaseStyler(
     final ghost = fortalIconButtonGhostMetrics(size);
     style = style.padding(.all(ghost.padding)).margin(.all(ghost.margin));
   } else {
-    style = style.width(metrics.height).height(metrics.height);
+    style = style
+        .container(.alignment(Alignment.center))
+        .width(metrics.height)
+        .height(metrics.height);
   }
   return style;
 }

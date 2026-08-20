@@ -196,6 +196,8 @@ class _AccentSwatch extends StatelessWidget {
             container: FlexBoxStyler()
                 .size(30, 30)
                 .alignment(.center)
+                .mainAxisAlignment(.center)
+                .crossAxisAlignment(.center)
                 .borderRadius(.all(const Radius.circular(15))),
             icon: .size(15),
           )

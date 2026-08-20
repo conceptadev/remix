@@ -272,6 +272,10 @@ class _RemixBoxEffectLayerPainter extends CustomPainter
     final layerBounds = targetShape.outerRect
         .expandToInclude(hole.outerRect)
         .inflate(blurExtent);
+    // Clip before filtering because erasing afterward can leave blur fringes
+    // outside the shape on Flutter Web.
+    canvas.save();
+    canvas.clipRRect(targetShape, doAntiAlias: true);
     canvas.saveLayer(layerBounds, Paint());
     if (shadow.blurRadius > 0) {
       final sigma = ui.Shadow.convertRadiusToSigma(shadow.blurRadius);
@@ -291,16 +295,7 @@ class _RemixBoxEffectLayerPainter extends CustomPainter
       ..addRRect(hole);
     canvas.drawPath(shadowPath, Paint()..color = shadow.color);
     if (shadow.blurRadius > 0) canvas.restore();
-    final outsideShape = Path()
-      ..fillType = PathFillType.evenOdd
-      ..addRect(layerBounds)
-      ..addRRect(targetShape);
-    canvas.drawPath(
-      outsideShape,
-      Paint()
-        ..color = const Color(0xFFFFFFFF)
-        ..blendMode = BlendMode.dstOut,
-    );
+    canvas.restore();
     canvas.restore();
   }
 
