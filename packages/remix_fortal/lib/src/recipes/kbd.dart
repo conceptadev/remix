@@ -57,13 +57,12 @@ BadgeStyler fortalKbdStyle(
           0.35 * fontSize * fortalRadiusFactor(context),
         ),
       )
-      .color(
-        variant == FortalKbdVariant.classic
-            ? fortalResolveColor(context, FortalTokens.gray1)
-            : fortalResolveColor(context, FortalTokens.grayA3),
-      );
+      .color(switch (variant) {
+        .classic => fortalResolveColor(context, FortalTokens.gray1),
+        .soft => fortalResolveColor(context, FortalTokens.grayA3),
+      });
 
-  if (variant == FortalKbdVariant.classic) {
+  if (variant == .classic) {
     style = style.containerEffects(
       RemixBoxEffectsMix.behindContent(
         RemixBoxEffectLayerMix(shadows: _fortalKbdShadows(context, fontSize)),

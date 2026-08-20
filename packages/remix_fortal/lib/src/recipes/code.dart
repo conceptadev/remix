@@ -120,7 +120,7 @@ BadgeStyler fortalCodeStyle(
   }
   if (fill != null) style = style.color(fill);
 
-  if (variant == FortalCodeVariant.outline) {
+  if (variant == .outline) {
     final ringWidth = math.max(1.0, 0.033 * fontSize);
     style = style.containerEffects(
       RemixBoxEffectsMix.behindContent(

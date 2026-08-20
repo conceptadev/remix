@@ -143,9 +143,10 @@ MenuItemStyler _fortalMenuSubmenuItemStyler(
     highContrast: highContrast,
   );
   final submenuOpen = MenuItemStyler()
-      .color(
-        variant == .solid ? FortalTokens.grayA3() : FortalTokens.accentA3(),
-      )
+      .color(switch (variant) {
+        .solid => FortalTokens.grayA3(),
+        .soft => FortalTokens.accentA3(),
+      })
       .onHovered(highlighted)
       // Roving `data-highlighted` state, not a focus-visible ring.
       .onFocused(highlighted)
