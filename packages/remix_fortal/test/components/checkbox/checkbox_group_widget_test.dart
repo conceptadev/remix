@@ -50,9 +50,13 @@ void main() {
   testWidgets(
     'fortalCheckboxGroupItemStyle preserves checkbox anatomy across the matrix',
     (tester) async {
-      // Item-only label metrics layer on top of the checkbox recipe. The
-      // checkbox square, indicator bounds, and effects must still resolve
-      // identically for every variant/size/high-contrast combination.
+      // Item-only label metrics layer on top of the checkbox recipe, so the
+      // resolved specs must stay equal on everything else. Deliberate: this
+      // exempts `label`/`labelSpacing` by substitution rather than comparing
+      // the remaining fields one by one, so the StyleSpec's animation and
+      // widget modifiers keep their coverage instead of silently dropping out
+      // of the assertion. `label`/`labelSpacing` are pinned by the typography
+      // test below.
       for (final variant in FortalCheckboxVariant.values) {
         for (final size in FortalCheckboxSize.values) {
           for (final highContrast in const [false, true]) {
@@ -75,19 +79,16 @@ void main() {
             );
 
             expect(
-              wrapped.spec.container,
-              equals(direct.spec.container),
-              reason: '$reason/container',
-            );
-            expect(
-              wrapped.spec.indicator,
-              equals(direct.spec.indicator),
-              reason: '$reason/indicator',
-            );
-            expect(
-              wrapped.spec.containerEffects,
-              equals(direct.spec.containerEffects),
-              reason: '$reason/effects',
+              wrapped,
+              equals(
+                direct.copyWith(
+                  spec: direct.spec.copyWith(
+                    label: wrapped.spec.label,
+                    labelSpacing: wrapped.spec.labelSpacing,
+                  ),
+                ),
+              ),
+              reason: reason,
             );
           }
         }
