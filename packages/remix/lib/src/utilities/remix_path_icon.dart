@@ -10,8 +10,6 @@ enum RemixPathGlyph {
   thickChevronRight(9),
   plus(15),
   minus(15),
-  dash(15),
-  check(15),
   caretSort(15),
   caretUp(15),
   caretDown(15),
@@ -104,8 +102,6 @@ class _RemixPathIconPainter extends CustomPainter {
       .thickChevronRight => _thickChevronRightPath(),
       .plus => _plusPath(),
       .minus => _minusPath(),
-      .dash => _dashPath(),
-      .check => _checkPath(),
       .caretSort => _caretSortPath(),
       .caretUp => _caretUpPath(),
       .caretDown => _caretDownPath(),
@@ -211,30 +207,6 @@ Path _minusPath() => Path()
   ..cubicTo(12.75, 7.77614, 12.5261, 8, 12.25, 8)
   ..lineTo(2.75, 8)
   ..cubicTo(2.47386, 8, 2.25, 7.77614, 2.25, 7.5)
-  ..close();
-
-Path _dashPath() => Path()
-  ..moveTo(5, 7.5)
-  ..cubicTo(5, 7.22386, 5.22386, 7, 5.5, 7)
-  ..lineTo(9.5, 7)
-  ..cubicTo(9.77614, 7, 10, 7.22386, 10, 7.5)
-  ..cubicTo(10, 7.77614, 9.77614, 8, 9.5, 8)
-  ..lineTo(5.5, 8)
-  ..cubicTo(5.22386, 8, 5, 7.77614, 5, 7.5)
-  ..close();
-
-Path _checkPath() => Path()
-  ..moveTo(11.4669, 3.72684)
-  ..cubicTo(11.7558, 3.91574, 11.8369, 4.30308, 11.648, 4.59198)
-  ..lineTo(7.39799, 11.092)
-  ..cubicTo(7.29783, 11.2452, 7.13556, 11.3467, 6.95402, 11.3699)
-  ..cubicTo(6.77247, 11.3931, 6.58989, 11.3355, 6.45446, 11.2124)
-  ..lineTo(3.70446, 8.71241)
-  ..cubicTo(3.44905, 8.48022, 3.43023, 8.08494, 3.66242, 7.82953)
-  ..cubicTo(3.89461, 7.57412, 4.28989, 7.55529, 4.5453, 7.78749)
-  ..lineTo(6.75292, 9.79441)
-  ..lineTo(10.6018, 3.90792)
-  ..cubicTo(10.7907, 3.61902, 11.178, 3.53795, 11.4669, 3.72684)
   ..close();
 
 Path _caretSortPath() => Path()

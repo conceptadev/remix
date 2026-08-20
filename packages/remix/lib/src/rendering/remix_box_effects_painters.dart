@@ -276,7 +276,6 @@ class _RemixBoxEffectLayerPainter extends CustomPainter
     // outside the shape on Flutter Web.
     canvas.save();
     canvas.clipRRect(targetShape, doAntiAlias: true);
-    canvas.saveLayer(layerBounds, Paint());
     if (shadow.blurRadius > 0) {
       final sigma = ui.Shadow.convertRadiusToSigma(shadow.blurRadius);
       canvas.saveLayer(
@@ -295,7 +294,6 @@ class _RemixBoxEffectLayerPainter extends CustomPainter
       ..addRRect(hole);
     canvas.drawPath(shadowPath, Paint()..color = shadow.color);
     if (shadow.blurRadius > 0) canvas.restore();
-    canvas.restore();
     canvas.restore();
   }
 
