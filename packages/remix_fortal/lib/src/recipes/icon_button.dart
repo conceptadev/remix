@@ -20,8 +20,10 @@ IconButtonStyler fortalIconButtonStyle({
   FortalIconButtonSize size = .size2,
   bool highContrast = false,
 }) {
-  final index = size.index + 1;
-  final base = _fortalIconButtonBaseStyler(variant, index);
+  final base = _fortalIconButtonBaseStyler(
+    variant,
+    _fortalBaseButtonSize(size),
+  );
   final stateStyles = fortalBaseButtonStateStyles(
     variant: _fortalBaseButtonVariant(variant),
     highContrast: highContrast,
@@ -30,17 +32,16 @@ IconButtonStyler fortalIconButtonStyle({
   return _applyFortalIconButtonStateStyles(
     base,
     stateStyles,
-    pressedPaddingTop: variant == .classic ? (index == 1 ? 1 : 2) : null,
+    pressedPaddingTop: variant == .classic ? (size == .size1 ? 1 : 2) : null,
   );
 }
 
 IconButtonStyler _fortalIconButtonBaseStyler(
   FortalIconButtonVariant variant,
-  int size,
+  FortalBaseButtonSize size,
 ) {
   final metrics = fortalBaseButtonMetrics(size);
   var style = IconButtonStyler(
-    container: .alignment(Alignment.center),
     icon: .size(_fortalIconButtonIconSize(size)),
     spinner: .size(metrics.spinnerSize)
         .opacity(0.65)
@@ -52,17 +53,19 @@ IconButtonStyler _fortalIconButtonBaseStyler(
     final ghost = fortalIconButtonGhostMetrics(size);
     style = style.padding(.all(ghost.padding)).margin(.all(ghost.margin));
   } else {
-    style = style.width(metrics.height).height(metrics.height);
+    style = style
+        .container(.alignment(.center))
+        .width(metrics.height)
+        .height(metrics.height);
   }
   return style;
 }
 
-double _fortalIconButtonIconSize(int size) => switch (size) {
-  1 => FortalTokens.space3(),
-  2 => FortalTokens.space4(),
-  3 => FortalTokens.spinnerSize3(),
-  4 => FortalTokens.space5(),
-  _ => throw ArgumentError.value(size, 'size', 'Expected a size from 1 to 4.'),
+double _fortalIconButtonIconSize(FortalBaseButtonSize size) => switch (size) {
+  .size1 => FortalTokens.space3(),
+  .size2 => FortalTokens.space4(),
+  .size3 => FortalTokens.spinnerSize3(),
+  .size4 => FortalTokens.space5(),
 };
 
 FortalBaseButtonVariant _fortalBaseButtonVariant(
@@ -75,6 +78,14 @@ FortalBaseButtonVariant _fortalBaseButtonVariant(
   .outline => .outline,
   .ghost => .ghost,
 };
+
+FortalBaseButtonSize _fortalBaseButtonSize(FortalIconButtonSize size) =>
+    switch (size) {
+      .size1 => .size1,
+      .size2 => .size2,
+      .size3 => .size3,
+      .size4 => .size4,
+    };
 
 IconButtonStyler _applyFortalIconButtonStateStyles(
   IconButtonStyler base,

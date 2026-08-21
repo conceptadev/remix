@@ -100,7 +100,8 @@ typedef _$SwitchSpecMethods = _$SwitchSpec; // ignore: unused_element
 // **************************************************************************
 
 class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
-    with RemixBoxStylerMixin<SwitchStyler> {
+    with RemixBoxStylerMixin<SwitchStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
   final Prop<RemixBoxEffectsSpec>? $trackEffects;
@@ -609,6 +610,17 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'thumb',
+    'trackEffects',
+    'thumbEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
+
   /// Sets the container.
   SwitchStyler container(BoxStyler value) {
     return merge(SwitchStyler(container: value));
@@ -655,12 +667,12 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
   RemixSwitch call({
     Key? key,
     required bool selected,
+    required String semanticLabel,
     ValueChanged<bool>? onChanged,
     bool enabled = true,
     bool enableFeedback = true,
     FocusNode? focusNode,
     bool autofocus = false,
-    String? semanticLabel,
     bool excludeSemantics = false,
     MouseCursor mouseCursor = SystemMouseCursors.click,
   }) {
@@ -668,12 +680,12 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
       key: key,
       style: this,
       selected: selected,
+      semanticLabel: semanticLabel,
       onChanged: onChanged,
       enabled: enabled,
       enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
-      semanticLabel: semanticLabel,
       excludeSemantics: excludeSemantics,
       mouseCursor: mouseCursor,
     );

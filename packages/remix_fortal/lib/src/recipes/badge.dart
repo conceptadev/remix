@@ -35,6 +35,8 @@ BadgeStyler fortalBadgeStyle({
       base
           .color(FortalTokens.accentA3())
           .labelColor(
+            // Step 11 is Radix low-contrast text, not WCAG AA 4.5:1 on
+            // accentA3 over colorPanelSolid. highContrast promotes accent12.
             highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
           ),
     .surface =>

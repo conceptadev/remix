@@ -247,13 +247,13 @@ void main() {
           ),
         );
 
-        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
 
         await tester.tap(_itemAt(1));
         await tester.pumpAndSettle();
 
         expect(
-          _pathGlyph(RemixPathGlyph.check),
+          _pathGlyph(RemixPathGlyph.thickCheck),
           findsOneWidget,
           reason: 'selection is owned by the caller, not the group',
         );
@@ -285,7 +285,7 @@ void main() {
         await tester.pump();
 
         expect(tester.takeException(), isNull);
-        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
       });
 
       testWidgets('a disabled group suppresses every option', (tester) async {
@@ -404,7 +404,7 @@ void main() {
           boxes[1].styleSpec?.spec.decoration,
           equals(boxes[0].styleSpec?.spec.decoration),
         );
-        expect(_pathGlyph(RemixPathGlyph.check), findsNWidgets(2));
+        expect(_pathGlyph(RemixPathGlyph.thickCheck), findsNWidgets(2));
       });
     });
 
@@ -1231,7 +1231,7 @@ void main() {
             );
           }
 
-          expect(_pathGlyph(RemixPathGlyph.check), findsNothing);
+          expect(_pathGlyph(RemixPathGlyph.thickCheck), findsNothing);
           expect(
             tester.getSemantics(_itemAt(0)),
             checkbox(label: 'Design', checked: false),
@@ -1246,7 +1246,7 @@ void main() {
               <String>{'design'},
             ]),
           );
-          expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
+          expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
           expect(
             tester.getSemantics(_itemAt(0)),
             checkbox(label: 'Design', checked: true),
@@ -1260,13 +1260,13 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(emitted.last, equals({'design', 'code'}));
-          expect(_pathGlyph(RemixPathGlyph.check), findsNWidgets(2));
+          expect(_pathGlyph(RemixPathGlyph.thickCheck), findsNWidgets(2));
 
           await tester.tap(_itemAt(0));
           await tester.pumpAndSettle();
 
           expect(emitted.last, equals({'code'}));
-          expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
+          expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
           expect(
             tester.getSemantics(_itemAt(0)),
             checkbox(label: 'Design', checked: false),

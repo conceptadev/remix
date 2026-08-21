@@ -36,6 +36,7 @@ Widget buildRadioUseCase(BuildContext context) {
                           mainAxisSize: .min,
                           children: [
                             FortalRadio(
+                              semanticLabel: 'Option',
                               variant: context.knobs.object.dropdown(
                                 label: 'variant',
                                 options: FortalRadioVariant.values,
@@ -90,6 +91,7 @@ Widget buildRadioCatalogUseCase(BuildContext context) {
     cell: (row, column) => RemixRadioGroup<String>(
       groupValue: 'on',
       child: FortalRadio<String>(
+        semanticLabel: 'Option',
         value: 'on',
         size: FortalRadioSize.values[column],
         variant: FortalRadioVariant.values[row],

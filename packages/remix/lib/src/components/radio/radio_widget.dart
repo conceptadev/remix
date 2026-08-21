@@ -13,14 +13,20 @@ part of 'radio.dart';
 ///     children: [
 ///       Row(
 ///         children: [
-///           RemixRadio<String>(value: 'option1'),
+///           RemixRadio<String>(
+///             value: 'option1',
+///             semanticLabel: 'Option 1',
+///           ),
 ///           const SizedBox(width: 8),
 ///           const Text('Option 1'),
 ///         ],
 ///       ),
 ///       Row(
 ///         children: [
-///           RemixRadio<String>(value: 'option2'),
+///           RemixRadio<String>(
+///             value: 'option2',
+///             semanticLabel: 'Option 2',
+///           ),
 ///           const SizedBox(width: 8),
 ///           const Text('Option 2'),
 ///         ],
@@ -34,16 +40,19 @@ class RemixRadio<T> extends StatelessWidget {
   const RemixRadio({
     super.key,
     required this.value,
+    required this.semanticLabel,
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
     this.focusNode,
     this.autofocus = false,
-    this.semanticLabel,
     this.excludeSemantics = false,
     this.style = const RadioStyler.create(),
     this.styleSpec,
-  });
+  }) : assert(
+         semanticLabel != '',
+         'RemixRadio.semanticLabel must be a nonblank accessible name.',
+       );
 
   final RadioStyler style;
 
@@ -69,58 +78,32 @@ class RemixRadio<T> extends StatelessWidget {
   /// The mouse cursor to use when hovering over the radio button.
   final MouseCursor? mouseCursor;
 
-  /// The semantic label for the radio button.
-  final String? semanticLabel;
+  /// Accessible name for this radio.
+  ///
+  /// Required and must be nonblank. A bare radio must not be unnamed;
+  /// do not rely on adjacent [Text] as the accessible composition.
+  final String semanticLabel;
 
   /// Whether to hide the radio button and its visual subtree from semantics.
   final bool excludeSemantics;
 
   @override
   Widget build(BuildContext context) {
-    final registry = RadioGroup.maybeOf<T>(context);
-    final groupScope = _RemixRadioGroupScope.maybeOf<T>(context);
-
-    // Always require registry - same as NakedRadio
-    if (registry == null) {
-      throw FlutterError.fromParts([
-        ErrorSummary(
-          'RemixRadio<$T> must be used within a RemixRadioGroup<$T>.',
-        ),
-        ErrorDescription(
-          'No RemixRadioGroup<$T> ancestor was found in the widget tree.',
-        ),
-        ErrorHint(
-          'Wrap your RemixRadio widgets with a RemixRadioGroup:\n'
-          'RemixRadioGroup<$T>(\n'
-          '  groupValue: selectedValue,\n'
-          '  onChanged: (value) { ... },\n'
-          '  child: Column(\n'
-          '    children: [\n'
-          '      RemixRadio<$T>(value: ...),\n'
-          '      RemixRadio<$T>(value: ...),\n'
-          '    ],\n'
-          '  ),\n'
-          ')',
-        ),
-      ]);
-    }
-
-    final effectiveEnabled = enabled && (groupScope?.enabled ?? true);
-
-    // Check if selected
-    final isSelected = registry.groupValue == value;
-
-    // NakedRadio handles semantics through RawRadio - no need for wrapper
+    assert(
+      semanticLabel.trim().isNotEmpty,
+      'RemixRadio.semanticLabel must be a nonblank accessible name.',
+    );
+    // NakedRadio owns missing-group validation and group participation.
     return NakedRadio<T>(
       value: value,
-      enabled: effectiveEnabled,
+      enabled: enabled,
       mouseCursor: mouseCursor,
       focusNode: focusNode,
       autofocus: autofocus,
       toggleable: toggleable,
       semanticLabel: semanticLabel,
       excludeSemantics: excludeSemantics,
-      builder: (context, _, __) {
+      builder: (context, state, _) {
         return RemixStyleSpecBuilder<RadioSpec>(
           style: style,
           styleSpec: styleSpec,
@@ -129,7 +112,7 @@ class RemixRadio<T> extends StatelessWidget {
             return RemixBoxWithEffects(
               styleSpec: spec.container,
               containerEffects: spec.containerEffects,
-              child: isSelected ? Box(styleSpec: spec.indicator) : null,
+              child: state.isSelected ? Box(styleSpec: spec.indicator) : null,
             );
           },
         );

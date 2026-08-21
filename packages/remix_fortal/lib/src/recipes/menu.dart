@@ -62,7 +62,6 @@ MenuItemStyler fortalMenuItemStyle({
 /// content treatment (gap, text token, icon) without button chrome.
 MenuTriggerStyler _fortalMenuTriggerStyler(_FortalMenuMetrics metrics) =>
     MenuTriggerStyler()
-        .crossAxisAlignment(.center)
         .spacing(metrics.triggerGap)
         .label(.style(metrics.text.mix()).color(FortalTokens.gray12()))
         .icon(.color(FortalTokens.gray12()).size(metrics.contentIconSize));
@@ -74,8 +73,6 @@ MenuItemStyler _fortalMenuItemStyler(
 }) {
   final base = MenuItemStyler()
       .direction(.horizontal)
-      .mainAxisSize(.max)
-      .crossAxisAlignment(.center)
       .spacing(FortalTokens.space2())
       .height(metrics.itemHeight)
       .padding(.horizontal(metrics.leadingInset))
@@ -143,9 +140,10 @@ MenuItemStyler _fortalMenuSubmenuItemStyler(
     highContrast: highContrast,
   );
   final submenuOpen = MenuItemStyler()
-      .color(
-        variant == .solid ? FortalTokens.grayA3() : FortalTokens.accentA3(),
-      )
+      .color(switch (variant) {
+        .solid => FortalTokens.grayA3(),
+        .soft => FortalTokens.accentA3(),
+      })
       .onHovered(highlighted)
       // Roving `data-highlighted` state, not a focus-visible ring.
       .onFocused(highlighted)

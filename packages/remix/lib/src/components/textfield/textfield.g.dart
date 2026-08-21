@@ -225,9 +225,8 @@ typedef _$TextFieldSpecMethods = _$TextFieldSpec; // ignore: unused_element
 // **************************************************************************
 
 class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
-    with
-        RemixBoxStylerMixin<TextFieldStyler>,
-        LabelStyleMixin<TextFieldStyler> {
+    with RemixBoxStylerMixin<TextFieldStyler>, LabelStyleMixin<TextFieldStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<TextSpec>>? $hintText;
   final Prop<TextAlign>? $textAlign;
@@ -846,6 +845,32 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
   TextFieldStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'text',
+    'hintText',
+    'textAlign',
+    'cursorWidth',
+    'cursorHeight',
+    'cursorRadius',
+    'cursorColor',
+    'selectionHeightStyle',
+    'selectionWidthStyle',
+    'scrollPadding',
+    'keyboardAppearance',
+    'cursorOpacityAnimates',
+    'container',
+    'spacing',
+    'crossAxisAlignment',
+    'layout',
+    'helperText',
+    'label',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the text.
   TextFieldStyler text(TextStyler value) {

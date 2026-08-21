@@ -42,12 +42,12 @@ void main() {
     final focusNode = FocusNode();
     addTearDown(controller.dispose);
     addTearDown(focusNode.dispose);
-    late Color grayA5;
+    late Color focusA5;
 
     await tester.pumpRemixApp(
       Builder(
         builder: (context) {
-          grayA5 = MixScope.tokenOf(FortalTokens.grayA5, context);
+          focusA5 = MixScope.tokenOf(FortalTokens.focusA5, context);
           return FortalTextField.surface(
             controller: controller,
             focusNode: focusNode,
@@ -70,39 +70,49 @@ void main() {
 
     expect(focusNode.hasFocus, isTrue);
     expect(controller.selection.isCollapsed, isFalse);
-    expect(tester.widget<EditableText>(editable).selectionColor, grayA5);
+    // Read-only is not disabled: selection uses the enabled focused role.
+    expect(tester.widget<EditableText>(editable).selectionColor, focusA5);
   });
   testWidgets('all Fortal input variants apply read-only color roles', (
     tester,
   ) async {
-    final cases = <({String name, TextFieldStyler style, bool textArea})>[
-      for (final variant in FortalTextFieldVariant.values)
-        (
-          name: 'TextField ${variant.name}',
-          style: fortalTextFieldStyle(variant: variant),
-          textArea: false,
-        ),
-      for (final variant in FortalTextAreaVariant.values)
-        (
-          name: 'TextArea ${variant.name}',
-          style: fortalTextAreaStyle(variant: variant),
-          textArea: true,
-        ),
-    ];
+    final cases =
+        <({String name, TextFieldStyler style, bool textArea, bool soft})>[
+          for (final variant in FortalTextFieldVariant.values)
+            (
+              name: 'TextField ${variant.name}',
+              style: fortalTextFieldStyle(variant: variant),
+              textArea: false,
+              soft: variant == FortalTextFieldVariant.soft,
+            ),
+          for (final variant in FortalTextAreaVariant.values)
+            (
+              name: 'TextArea ${variant.name}',
+              style: fortalTextAreaStyle(variant: variant),
+              textArea: true,
+              soft: variant == FortalTextAreaVariant.soft,
+            ),
+        ];
 
     for (final testCase in cases) {
       final controller = TextEditingController(text: testCase.name);
       final focusNode = FocusNode();
       addTearDown(controller.dispose);
       addTearDown(focusNode.dispose);
-      late Color grayA5;
-      late Color grayA11;
+      late Color expectedSelection;
+      late Color expectedCursor;
 
       await tester.pumpRemixApp(
         Builder(
           builder: (context) {
-            grayA5 = MixScope.tokenOf(FortalTokens.grayA5, context);
-            grayA11 = MixScope.tokenOf(FortalTokens.grayA11, context);
+            expectedSelection = MixScope.tokenOf(
+              testCase.soft ? FortalTokens.accentA5 : FortalTokens.focusA5,
+              context,
+            );
+            expectedCursor = MixScope.tokenOf(
+              testCase.soft ? FortalTokens.accent12 : FortalTokens.gray12,
+              context,
+            );
             return testCase.textArea
                 ? RemixTextArea(
                     controller: controller,
@@ -130,12 +140,12 @@ void main() {
       expect(focusNode.hasFocus, isTrue, reason: testCase.name);
       expect(
         tester.widget<EditableText>(find.byType(EditableText)).selectionColor,
-        grayA5,
+        expectedSelection,
         reason: testCase.name,
       );
       expect(
         tester.widget<NakedTextField>(find.byType(NakedTextField)).cursorColor,
-        grayA11,
+        expectedCursor,
         reason: testCase.name,
       );
       expect(controller.selection.isCollapsed, isFalse);

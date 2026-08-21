@@ -1,9 +1,60 @@
+import 'dart:ui' show SemanticsRole, Tristate;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
+
+List<SemanticsNode> _collectSemanticsNodes(
+  SemanticsNode root,
+  bool Function(SemanticsNode) predicate,
+) {
+  final nodes = <SemanticsNode>[];
+
+  bool visitor(SemanticsNode node) {
+    if (!node.isMergedIntoParent && predicate(node)) nodes.add(node);
+    node.visitChildren(visitor);
+    return true;
+  }
+
+  visitor(root);
+  return nodes;
+}
+
+Widget _threeRemixTabs({
+  required String selectedTabId,
+  required ValueChanged<String> onChanged,
+  NakedTabActivationMode activationMode = NakedTabActivationMode.automatic,
+  Key? tab1Key,
+  Key? tab2Key,
+  Key? tab3Key,
+}) {
+  return RemixTabs(
+    selectedTabId: selectedTabId,
+    onChanged: onChanged,
+    activationMode: activationMode,
+    child: Column(
+      children: [
+        RemixTabBar(
+          child: Row(
+            children: [
+              RemixTab(key: tab1Key, tabId: 'tab1', label: 'Tab 1'),
+              RemixTab(key: tab2Key, tabId: 'tab2', label: 'Tab 2'),
+              RemixTab(key: tab3Key, tabId: 'tab3', label: 'Tab 3'),
+            ],
+          ),
+        ),
+        RemixTabView(tabId: 'tab1', child: const Text('Content 1')),
+        RemixTabView(tabId: 'tab2', child: const Text('Content 2')),
+        RemixTabView(tabId: 'tab3', child: const Text('Content 3')),
+      ],
+    ),
+  );
+}
 
 void main() {
   group('RemixTabs', () {
@@ -1024,6 +1075,186 @@ void main() {
 
         expect(find.byType(RemixTab), findsOneWidget);
       });
+    });
+
+    group('Semantic tree and keyboard behavior', () {
+      testWidgets(
+        'exposes one tab-bar, tab roles on children, and one tab-panel',
+        (tester) async {
+          final semantics = tester.ensureSemantics();
+          try {
+            await tester.pumpRemixApp(
+              _threeRemixTabs(selectedTabId: 'tab1', onChanged: (_) {}),
+            );
+            await tester.pumpAndSettle();
+
+            final root = tester.getSemantics(find.byType(Scaffold));
+            expect(
+              _collectSemanticsNodes(
+                root,
+                (node) => node.getSemanticsData().role == SemanticsRole.tabBar,
+              ),
+              hasLength(1),
+            );
+            expect(
+              _collectSemanticsNodes(
+                root,
+                (node) => node.getSemanticsData().role == SemanticsRole.tab,
+              ),
+              hasLength(3),
+            );
+            final panels = _collectSemanticsNodes(
+              root,
+              (node) => node.getSemanticsData().role == SemanticsRole.tabPanel,
+            );
+            expect(panels, hasLength(1));
+          } finally {
+            semantics.dispose();
+          }
+        },
+      );
+
+      testWidgets('selected panel matches the selected tab', (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            _threeRemixTabs(selectedTabId: 'tab2', onChanged: (_) {}),
+          );
+          await tester.pumpAndSettle();
+
+          expect(find.text('Content 2'), findsOneWidget);
+          expect(find.text('Content 1'), findsNothing);
+
+          final tab2 = tester.getSemantics(find.bySemanticsLabel('Tab 2'));
+          expect(tab2.getSemanticsData().role, SemanticsRole.tab);
+          expect(
+            tab2.getSemanticsData().flagsCollection.isSelected,
+            Tristate.isTrue,
+          );
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets(
+        'automatic activation: Arrow, Home, and End change selection',
+        (tester) async {
+          String selected = 'tab1';
+          final tab1 = UniqueKey();
+          final tab2 = UniqueKey();
+          final tab3 = UniqueKey();
+
+          await tester.pumpRemixApp(
+            StatefulBuilder(
+              builder: (context, setState) {
+                return _threeRemixTabs(
+                  selectedTabId: selected,
+                  onChanged: (id) => setState(() => selected = id),
+                  tab1Key: tab1,
+                  tab2Key: tab2,
+                  tab3Key: tab3,
+                );
+              },
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.byKey(tab1));
+          await tester.pump();
+          expect(selected, 'tab1');
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          await tester.pump();
+          expect(selected, 'tab2');
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.end);
+          await tester.pump();
+          expect(selected, 'tab3');
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.home);
+          await tester.pump();
+          expect(selected, 'tab1');
+        },
+      );
+
+      testWidgets(
+        'manual activation: arrows move focus; Enter and Space select',
+        (tester) async {
+          String selected = 'tab1';
+          final tab1 = UniqueKey();
+          final tab2 = UniqueKey();
+          final tab3 = UniqueKey();
+
+          await tester.pumpRemixApp(
+            StatefulBuilder(
+              builder: (context, setState) {
+                return _threeRemixTabs(
+                  selectedTabId: selected,
+                  activationMode: NakedTabActivationMode.manual,
+                  onChanged: (id) => setState(() => selected = id),
+                  tab1Key: tab1,
+                  tab2Key: tab2,
+                  tab3Key: tab3,
+                );
+              },
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.byKey(tab1));
+          await tester.pump();
+          expect(selected, 'tab1');
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          await tester.pump();
+          expect(selected, 'tab1');
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          await tester.pump();
+          expect(selected, 'tab2');
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          await tester.pump();
+          expect(selected, 'tab2');
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.space);
+          await tester.pump();
+          expect(selected, 'tab3');
+        },
+      );
+
+      testWidgets(
+        'automatic activation: Enter and Space re-activate focused tab',
+        (tester) async {
+          final changes = <String>[];
+          final tab1 = UniqueKey();
+
+          await tester.pumpRemixApp(
+            StatefulBuilder(
+              builder: (context, setState) {
+                return _threeRemixTabs(
+                  selectedTabId: changes.isEmpty ? 'tab2' : changes.last,
+                  onChanged: (id) => setState(() => changes.add(id)),
+                  tab1Key: tab1,
+                );
+              },
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.byKey(tab1));
+          await tester.pump();
+          expect(changes, ['tab1']);
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          await tester.pump();
+          await tester.sendKeyEvent(LogicalKeyboardKey.space);
+          await tester.pump();
+
+          // Already-selected activations are no-ops on the controller.
+          expect(changes, ['tab1']);
+        },
+      );
     });
   });
 }

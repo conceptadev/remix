@@ -94,7 +94,8 @@ typedef _$SkeletonSpecMethods = _$SkeletonSpec; // ignore: unused_element
 // SpecStylerGenerator
 // **************************************************************************
 
-class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec> {
+class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<Color>? $pulseColor;
   final Prop<Duration>? $duration;
@@ -132,6 +133,16 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec> {
       SkeletonStyler().pulseColor(value);
   factory SkeletonStyler.duration(Duration value) =>
       SkeletonStyler().duration(value);
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'pulseColor',
+    'duration',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   SkeletonStyler container(BoxStyler value) {

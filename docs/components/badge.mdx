@@ -114,6 +114,15 @@ class FortalBadgeExample extends StatelessWidget {
   See the [fortalBadgeStyle source code](https://github.com/btwld/remix/blob/main/packages/remix_fortal/lib/src/recipes/badge.dart) for all available options.
 </Info>
 
+<Warning>
+  Default soft badges pair `accentA3` fill with `accentA11` label — Radix
+  low-contrast text, not a WCAG AA 4.5:1 guarantee. In light mode some accents
+  miss 4.5:1 when that label is composited over the fill over
+  `colorPanelSolid`. Dark-mode default and `highContrast: true` (`accent12`)
+  pass AA. Use `highContrast: true` when light-mode soft labels must meet
+  WCAG AA.
+</Warning>
+
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart

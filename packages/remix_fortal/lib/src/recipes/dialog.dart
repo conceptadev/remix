@@ -78,7 +78,6 @@ DialogStyler fortalDialogStyle({
       .actions(
         FlexBoxStyler()
             .mainAxisAlignment(.end)
-            .crossAxisAlignment(.center)
             .spacing(FortalTokens.space3())
             .margin(.top(FortalTokens.space5())),
       )

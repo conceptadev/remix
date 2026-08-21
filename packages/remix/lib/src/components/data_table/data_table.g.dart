@@ -213,7 +213,8 @@ typedef _$DataTableSpecMethods = _$DataTableSpec; // ignore: unused_element
 // **************************************************************************
 
 class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
-    with RemixBoxStylerMixin<DataTableStyler> {
+    with RemixBoxStylerMixin<DataTableStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $headerRow;
   final Prop<StyleSpec<BoxSpec>>? $bodyRow;
@@ -839,6 +840,33 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
   DataTableStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'headerRow',
+    'bodyRow',
+    'lastBodyRow',
+    'headerCell',
+    'bodyCell',
+    'selectionCell',
+    'footer',
+    'headerLabel',
+    'cellText',
+    'footerLabel',
+    'sortIcon',
+    'selectionCheckbox',
+    'pageButton',
+    'pageSizeSelect',
+    'headerMinHeight',
+    'rowMinHeight',
+    'selectionColumnWidth',
+    'sortIconSpacing',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   DataTableStyler container(BoxStyler value) {

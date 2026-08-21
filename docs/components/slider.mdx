@@ -154,11 +154,11 @@ Optional. Controls how one widget replaces another widget in the tree.
 
 #### `min` → `double`
 
-Optional. The minimum value the slider can have.
+Optional. The minimum value the slider can have. Must be strictly less than `max`.
 
 #### `max` → `double`
 
-Optional. The maximum value the slider can have.
+Optional. The maximum value the slider can have. Must be strictly greater than `min`.
 
 #### `onChanged` → `ValueChanged<double>?`
 
@@ -202,7 +202,7 @@ Optional. Whether the slider should automatically request focus when it is creat
 
 #### `snapDivisions` → `int?`
 
-Optional. Optional snapping divisions for interaction only (no visual ticks). When provided, the slider snaps to these discrete steps but does not render any division marks on the track.
+Optional. Optional snapping divisions for interaction only (no visual ticks). When provided it must be greater than 0, and the slider snaps to these discrete steps but does not render any division marks on the track.
 
 #### `semanticLabel` → `String?`
 

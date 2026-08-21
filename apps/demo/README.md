@@ -3,6 +3,10 @@
 This package is the Widgetbook catalog for reviewing Remix components, Fortal
 presets, variants, states, and preview scenarios.
 
+## Live catalog
+
+[Open the Remix component catalog](https://conceptadev.github.io/remix/).
+
 From the repository root:
 
 ```sh

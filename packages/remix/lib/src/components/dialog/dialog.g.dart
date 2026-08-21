@@ -115,7 +115,8 @@ typedef _$DialogSpecMethods = _$DialogSpec; // ignore: unused_element
 // **************************************************************************
 
 class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
-    with RemixBoxStylerMixin<DialogStyler> {
+    with RemixBoxStylerMixin<DialogStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<TextSpec>>? $title;
@@ -630,6 +631,18 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
   DialogStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'containerEffects',
+    'title',
+    'description',
+    'actions',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   DialogStyler container(BoxStyler value) {

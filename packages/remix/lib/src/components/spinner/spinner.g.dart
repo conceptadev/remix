@@ -138,7 +138,8 @@ typedef _$SpinnerSpecMethods = _$SpinnerSpec; // ignore: unused_element
 // SpecStylerGenerator
 // **************************************************************************
 
-class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec> {
+class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
+    implements StylerFieldMetadata {
   final Prop<double>? $size;
   final Prop<double>? $strokeWidth;
   final Prop<Color>? $indicatorColor;
@@ -215,6 +216,22 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec> {
       SpinnerStyler().leafRadius(value);
   factory SpinnerStyler.duration(Duration value) =>
       SpinnerStyler().duration(value);
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'size',
+    'strokeWidth',
+    'indicatorColor',
+    'trackColor',
+    'trackStrokeWidth',
+    'color',
+    'opacity',
+    'leafRadius',
+    'duration',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the size.
   SpinnerStyler size(double value) {

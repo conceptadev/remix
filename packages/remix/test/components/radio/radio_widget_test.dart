@@ -1,9 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
+
+List<SemanticsNode> _collectSemanticsNodes(
+  SemanticsNode root,
+  bool Function(SemanticsNode) predicate,
+) {
+  final nodes = <SemanticsNode>[];
+
+  bool visitor(SemanticsNode node) {
+    if (!node.isMergedIntoParent && predicate(node)) nodes.add(node);
+    node.visitChildren(visitor);
+    return true;
+  }
+
+  visitor(root);
+  return nodes;
+}
+
+Finder _boxesIn(Finder radio) =>
+    find.descendant(of: radio, matching: find.byType(Box));
+
+void _expectIndicatorOnlyOn(
+  WidgetTester tester, {
+  required Finder selected,
+  required List<Finder> unselected,
+}) {
+  expect(selected, findsOneWidget);
+  expect(_boxesIn(selected), findsNWidgets(2));
+  for (final radio in unselected) {
+    expect(radio, findsOneWidget);
+    expect(_boxesIn(radio), findsOneWidget);
+  }
+}
 
 void main() {
   group('RemixRadio', () {
@@ -17,7 +50,10 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: selectedValue,
             onChanged: (value) => selectedValue = value,
-            child: RemixRadio<String>(value: 'option1'),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -32,7 +68,10 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: 'option2',
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1'),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -47,7 +86,10 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: 'option1',
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1'),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -58,7 +100,9 @@ void main() {
       testWidgets('throws error when used without RemixRadioGroup', (
         tester,
       ) async {
-        await tester.pumpRemixApp(RemixRadio<String>(value: 'option1'));
+        await tester.pumpRemixApp(
+          RemixRadio<String>(semanticLabel: 'Option', value: 'option1'),
+        );
         await tester.pumpAndSettle();
 
         expect(tester.takeException(), isA<FlutterError>());
@@ -75,9 +119,9 @@ void main() {
             onChanged: (value) => selectedValue = value,
             child: Column(
               children: [
-                RemixRadio<String>(value: 'option1'),
-                RemixRadio<String>(value: 'option2'),
-                RemixRadio<String>(value: 'option3'),
+                RemixRadio<String>(semanticLabel: 'Option', value: 'option1'),
+                RemixRadio<String>(semanticLabel: 'Option', value: 'option2'),
+                RemixRadio<String>(semanticLabel: 'Option', value: 'option3'),
               ],
             ),
           ),
@@ -98,8 +142,14 @@ void main() {
                 onChanged: (value) => setState(() => selectedValue = value),
                 child: Column(
                   children: [
-                    RemixRadio<String>(value: 'option1'),
-                    RemixRadio<String>(value: 'option2'),
+                    RemixRadio<String>(
+                      semanticLabel: 'Option',
+                      value: 'option1',
+                    ),
+                    RemixRadio<String>(
+                      semanticLabel: 'Option',
+                      value: 'option2',
+                    ),
                   ],
                 ),
               );
@@ -116,7 +166,10 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: null,
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1'),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -130,7 +183,10 @@ void main() {
         await tester.pumpRemixApp(
           RemixRadioGroup<String>(
             groupValue: selectedValue,
-            child: RemixRadio<String>(value: 'option1'),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -138,10 +194,6 @@ void main() {
         await tester.tap(find.byType(RemixRadio<String>));
         await tester.pumpAndSettle();
 
-        final nakedRadio = tester.widget<NakedRadio<String>>(
-          find.byType(NakedRadio<String>),
-        );
-        expect(nakedRadio.enabled, isFalse);
         expect(selectedValue, isNull);
       });
     });
@@ -162,7 +214,10 @@ void main() {
                     capturedValue = value;
                   });
                 },
-                child: RemixRadio<String>(value: 'option1'),
+                child: RemixRadio<String>(
+                  semanticLabel: 'Option',
+                  value: 'option1',
+                ),
               );
             },
           ),
@@ -183,7 +238,11 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: selectedValue,
             onChanged: (value) => onChangedCalled = true,
-            child: RemixRadio<String>(value: 'option1', enabled: false),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+              enabled: false,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -203,7 +262,11 @@ void main() {
               return RemixRadioGroup<String>(
                 groupValue: selectedValue,
                 onChanged: (value) => setState(() => selectedValue = value),
-                child: RemixRadio<String>(value: 'option1', toggleable: true),
+                child: RemixRadio<String>(
+                  semanticLabel: 'Option',
+                  value: 'option1',
+                  toggleable: true,
+                ),
               );
             },
           ),
@@ -223,7 +286,11 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: null,
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1', autofocus: true),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+              autofocus: true,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -238,7 +305,11 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: null,
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1', focusNode: focusNode),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+              focusNode: focusNode,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -254,7 +325,11 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: null,
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1', focusNode: focusNode),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+              focusNode: focusNode,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -275,7 +350,11 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: null,
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1', style: customStyle),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+              style: customStyle,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -292,7 +371,11 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: 'option1',
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1', style: customStyle),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+              style: customStyle,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -307,7 +390,11 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: null,
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1', style: customStyle),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+              style: customStyle,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -322,7 +409,11 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: null,
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1', style: customStyle),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+              style: customStyle,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -339,7 +430,11 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: null,
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1', style: customStyle),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+              style: customStyle,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -361,7 +456,11 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: 'option1',
             onChanged: (value) {},
-            child: const RemixRadio<String>(value: 'option1', styleSpec: spec),
+            child: const RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+              styleSpec: spec,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -387,7 +486,10 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: 'option1',
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1'),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -400,7 +502,7 @@ void main() {
           RemixRadioGroup<int>(
             groupValue: 1,
             onChanged: (value) {},
-            child: RemixRadio<int>(value: 1),
+            child: RemixRadio<int>(semanticLabel: 'Option', value: 1),
           ),
         );
         await tester.pumpAndSettle();
@@ -413,7 +515,10 @@ void main() {
           RemixRadioGroup<TestEnum>(
             groupValue: TestEnum.option1,
             onChanged: (value) {},
-            child: RemixRadio<TestEnum>(value: TestEnum.option1),
+            child: RemixRadio<TestEnum>(
+              semanticLabel: 'Option',
+              value: TestEnum.option1,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -428,7 +533,10 @@ void main() {
           RemixRadioGroup<CustomOption>(
             groupValue: option1,
             onChanged: (value) {},
-            child: RemixRadio<CustomOption>(value: option1),
+            child: RemixRadio<CustomOption>(
+              semanticLabel: 'Option',
+              value: option1,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -447,7 +555,10 @@ void main() {
               return RemixRadioGroup<String>(
                 groupValue: selectedValue,
                 onChanged: (value) => setState(() => selectedValue = value),
-                child: RemixRadio<String>(value: 'option1'),
+                child: RemixRadio<String>(
+                  semanticLabel: 'Option',
+                  value: 'option1',
+                ),
               );
             },
           ),
@@ -467,7 +578,11 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: null,
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1', mouseCursor: null),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+              mouseCursor: null,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -481,6 +596,7 @@ void main() {
             groupValue: null,
             onChanged: (value) {},
             child: RemixRadio<String>(
+              semanticLabel: 'Option',
               value: 'option1',
               mouseCursor: SystemMouseCursors.click,
             ),
@@ -496,7 +612,11 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: null,
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1', toggleable: true),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+              toggleable: true,
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -513,7 +633,11 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: null,
             onChanged: (value) {},
-            child: RemixRadio<String>(key: key, value: 'option1'),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              key: key,
+              value: 'option1',
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -538,15 +662,24 @@ void main() {
                     children: [
                       SizedBox(
                         height: 50,
-                        child: RemixRadio<String>(value: 'option1'),
+                        child: RemixRadio<String>(
+                          semanticLabel: 'Option',
+                          value: 'option1',
+                        ),
                       ),
                       SizedBox(
                         height: 50,
-                        child: RemixRadio<String>(value: 'option2'),
+                        child: RemixRadio<String>(
+                          semanticLabel: 'Option',
+                          value: 'option2',
+                        ),
                       ),
                       SizedBox(
                         height: 50,
-                        child: RemixRadio<String>(value: 'option3'),
+                        child: RemixRadio<String>(
+                          semanticLabel: 'Option',
+                          value: 'option3',
+                        ),
                       ),
                     ],
                   ),
@@ -585,11 +718,17 @@ void main() {
                     children: [
                       SizedBox(
                         height: 50,
-                        child: RemixRadio<String>(value: 'option1'),
+                        child: RemixRadio<String>(
+                          semanticLabel: 'Option',
+                          value: 'option1',
+                        ),
                       ),
                       SizedBox(
                         height: 50,
-                        child: RemixRadio<String>(value: 'option2'),
+                        child: RemixRadio<String>(
+                          semanticLabel: 'Option',
+                          value: 'option2',
+                        ),
                       ),
                     ],
                   ),
@@ -615,12 +754,266 @@ void main() {
           RemixRadioGroup<String>(
             groupValue: null,
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1', style: customStyle),
+            child: RemixRadio<String>(
+              semanticLabel: 'Option',
+              value: 'option1',
+              style: customStyle,
+            ),
           ),
         );
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixRadio<String>), findsOneWidget);
+      });
+    });
+
+    group('Accessible naming and Naked selection', () {
+      test('rejects an empty accessible name', () {
+        expect(
+          () => RemixRadio<String>(value: 'a', semanticLabel: ''),
+          throwsAssertionError,
+        );
+      });
+
+      testWidgets('selected indicator follows Naked state', (tester) async {
+        String? selected = 'option2';
+        final first = find.byKey(const ValueKey('radio-first'));
+        final second = find.byKey(const ValueKey('radio-second'));
+
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) {
+              return RemixRadioGroup<String>(
+                groupValue: selected,
+                onChanged: (value) => setState(() => selected = value),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: RemixRadio<String>(
+                        key: const ValueKey('radio-first'),
+                        value: 'option1',
+                        semanticLabel: 'First',
+                        style: RadioStyler().size(24, 24),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: RemixRadio<String>(
+                        key: const ValueKey('radio-second'),
+                        value: 'option2',
+                        semanticLabel: 'Second',
+                        style: RadioStyler().size(24, 24),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        _expectIndicatorOnlyOn(tester, selected: second, unselected: [first]);
+
+        await tester.tap(first);
+        await tester.pumpAndSettle();
+
+        expect(selected, 'option1');
+        _expectIndicatorOnlyOn(tester, selected: first, unselected: [second]);
+      });
+
+      testWidgets('group semantic label and role', (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixRadioGroup<String>(
+              groupValue: 'option1',
+              onChanged: (_) {},
+              semanticLabel: 'Plan',
+              child: const RemixRadio<String>(
+                value: 'option1',
+                semanticLabel: 'Starter',
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          expect(find.bySemanticsLabel('Plan'), findsOneWidget);
+          expect(find.bySemanticsLabel('Starter'), findsOneWidget);
+
+          final root = tester
+              .binding
+              .renderViews
+              .single
+              .owner!
+              .semanticsOwner!
+              .rootSemanticsNode!;
+          // Flutter's RadioGroup publishes the single radioGroup role node
+          // and accepts no label, so NakedRadioGroup puts the label on a
+          // plain container around it. Two nodes; never a second role node.
+          final roleNodes = _collectSemanticsNodes(
+            root,
+            (node) => node.getSemanticsData().role == SemanticsRole.radioGroup,
+          );
+          expect(roleNodes, hasLength(1));
+          final labeled = _collectSemanticsNodes(
+            root,
+            (node) => node.getSemanticsData().label == 'Plan',
+          );
+          expect(labeled, hasLength(1));
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('group keyboard navigation moves selection', (tester) async {
+        String? selected = 'a';
+        final nodes = List<FocusNode>.generate(
+          3,
+          (index) => FocusNode(debugLabel: 'radio-$index'),
+        );
+        addTearDown(() {
+          for (final node in nodes) {
+            node.dispose();
+          }
+        });
+
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) {
+              return RemixRadioGroup<String>(
+                groupValue: selected,
+                onChanged: (value) => setState(() => selected = value),
+                child: Column(
+                  children: [
+                    RemixRadio<String>(
+                      key: const ValueKey('radio-a'),
+                      value: 'a',
+                      semanticLabel: 'Alpha',
+                      focusNode: nodes[0],
+                    ),
+                    RemixRadio<String>(
+                      key: const ValueKey('radio-b'),
+                      value: 'b',
+                      semanticLabel: 'Bravo',
+                      focusNode: nodes[1],
+                    ),
+                    RemixRadio<String>(
+                      key: const ValueKey('radio-c'),
+                      value: 'c',
+                      semanticLabel: 'Charlie',
+                      focusNode: nodes[2],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        nodes[0].requestFocus();
+        await tester.pump();
+        expect(nodes[0].hasFocus, isTrue);
+        expect(selected, 'a');
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.pumpAndSettle();
+        expect(selected, 'b');
+        expect(nodes[1].hasFocus, isTrue);
+        _expectIndicatorOnlyOn(
+          tester,
+          selected: find.byKey(const ValueKey('radio-b')),
+          unselected: [
+            find.byKey(const ValueKey('radio-a')),
+            find.byKey(const ValueKey('radio-c')),
+          ],
+        );
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await tester.pumpAndSettle();
+        expect(selected, 'c');
+        expect(nodes[2].hasFocus, isTrue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+        await tester.pumpAndSettle();
+        expect(selected, 'b');
+        expect(nodes[1].hasFocus, isTrue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+        await tester.pumpAndSettle();
+        expect(selected, 'a');
+        expect(nodes[0].hasFocus, isTrue);
+
+        // Flutter RadioGroup binds arrows and Space, not Home/End.
+        await tester.sendKeyEvent(LogicalKeyboardKey.home);
+        await tester.pumpAndSettle();
+        expect(selected, 'a');
+        expect(nodes[0].hasFocus, isTrue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.end);
+        await tester.pumpAndSettle();
+        expect(selected, 'a');
+        expect(nodes[0].hasFocus, isTrue);
+
+        nodes[2].requestFocus();
+        await tester.pump();
+        await tester.sendKeyEvent(LogicalKeyboardKey.space);
+        await tester.pumpAndSettle();
+        expect(selected, 'c');
+        expect(nodes[2].hasFocus, isTrue);
+        _expectIndicatorOnlyOn(
+          tester,
+          selected: find.byKey(const ValueKey('radio-c')),
+          unselected: [
+            find.byKey(const ValueKey('radio-a')),
+            find.byKey(const ValueKey('radio-b')),
+          ],
+        );
+      });
+
+      testWidgets('disabled group does not change selection', (tester) async {
+        String? selected = 'option1';
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) {
+              return RemixRadioGroup<String>(
+                groupValue: selected,
+                onChanged: null,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: RemixRadio<String>(
+                        value: 'option1',
+                        semanticLabel: 'First',
+                      ),
+                    ),
+                    SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: RemixRadio<String>(
+                        value: 'option2',
+                        semanticLabel: 'Second',
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byType(RemixRadio<String>).last,
+          warnIfMissed: false,
+        );
+        await tester.pumpAndSettle();
+        expect(selected, 'option1');
       });
     });
   });

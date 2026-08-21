@@ -402,7 +402,8 @@ typedef _$SelectMenuItemSpecMethods = _$SelectMenuItemSpec; // ignore: unused_el
 // **************************************************************************
 
 class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
-    with RemixBoxStylerMixin<SelectStyler> {
+    with RemixBoxStylerMixin<SelectStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<SelectTriggerSpec>>? $trigger;
   final Prop<StyleSpec<SelectContentSpec>>? $content;
   final Prop<StyleSpec<FlexBoxSpec>>? $menuContainer;
@@ -914,6 +915,17 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     );
   }
 
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'trigger',
+    'content',
+    'menuContainer',
+    'item',
+    'animation',
+    'modifier',
+    'variants',
+  };
+
   /// Sets the trigger.
   SelectStyler trigger(SelectTriggerStyler value) {
     return merge(SelectStyler(trigger: value));
@@ -1051,7 +1063,8 @@ class SelectTriggerStyler
     with
         RemixBoxStylerMixin<SelectTriggerStyler>,
         LabelStyleMixin<SelectTriggerStyler>,
-        IconStyleMixin<SelectTriggerStyler> {
+        IconStyleMixin<SelectTriggerStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<TextSpec>>? $placeholder;
@@ -1657,6 +1670,21 @@ class SelectTriggerStyler
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'label',
+    'placeholder',
+    'icon',
+    'indicator',
+    'containerEffects',
+    'indicatorOpacity',
+    'placeholderOpacity',
+    'animation',
+    'modifier',
+    'variants',
+  };
+
   /// Sets the container.
   SelectTriggerStyler container(FlexBoxStyler value) {
     return merge(SelectTriggerStyler(container: value));
@@ -1802,7 +1830,8 @@ class SelectTriggerStyler
 
 class SelectContentStyler
     extends MixStyler<SelectContentStyler, SelectContentSpec>
-    with RemixBoxStylerMixin<SelectContentStyler> {
+    with RemixBoxStylerMixin<SelectContentStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
@@ -2308,6 +2337,15 @@ class SelectContentStyler
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
+
   /// Sets the container.
   SelectContentStyler container(BoxStyler value) {
     return merge(SelectContentStyler(container: value));
@@ -2393,7 +2431,8 @@ class SelectMenuItemStyler
     extends MixStyler<SelectMenuItemStyler, SelectMenuItemSpec>
     with
         RemixBoxStylerMixin<SelectMenuItemStyler>,
-        IconStyleMixin<SelectMenuItemStyler> {
+        IconStyleMixin<SelectMenuItemStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
@@ -2973,6 +3012,17 @@ class SelectMenuItemStyler
   }) {
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'text',
+    'indicator',
+    'icon',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   SelectMenuItemStyler container(FlexBoxStyler value) {

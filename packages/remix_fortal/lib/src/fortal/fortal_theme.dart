@@ -416,6 +416,17 @@ class FortalTokens {
     'fortal.checkbox.indicator-size.3',
   );
 
+  /// Checkbox-group label gaps derived from Radix's size-linked `0.5em`.
+  static const checkboxGroupItemGap1 = DoubleToken(
+    'fortal.checkbox-group.item-gap.1',
+  );
+  static const checkboxGroupItemGap2 = DoubleToken(
+    'fortal.checkbox-group.item-gap.2',
+  );
+  static const checkboxGroupItemGap3 = DoubleToken(
+    'fortal.checkbox-group.item-gap.3',
+  );
+
   /// Radio indicators are 40% of their control size in Radix Themes.
   ///
   /// These values need dedicated tokens because arithmetic on an unresolved
@@ -1111,6 +1122,9 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.checkboxIndicatorSize1: 9.0 * scaling,
     FortalTokens.checkboxIndicatorSize2: 10.0 * scaling,
     FortalTokens.checkboxIndicatorSize3: 12.0 * scaling,
+    FortalTokens.checkboxGroupItemGap1: 6.0 * scaling,
+    FortalTokens.checkboxGroupItemGap2: 7.0 * scaling,
+    FortalTokens.checkboxGroupItemGap3: 8.0 * scaling,
     FortalTokens.radioIndicatorSize1: 5.6 * scaling,
     FortalTokens.radioIndicatorSize2: 6.4 * scaling,
     FortalTokens.radioIndicatorSize3: 8.0 * scaling,

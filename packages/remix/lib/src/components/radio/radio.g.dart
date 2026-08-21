@@ -99,7 +99,8 @@ typedef _$RadioSpecMethods = _$RadioSpec; // ignore: unused_element
 // **************************************************************************
 
 class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
-    with RemixBoxStylerMixin<RadioStyler> {
+    with RemixBoxStylerMixin<RadioStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
@@ -595,6 +596,16 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'indicator',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
+
   /// Sets the container.
   RadioStyler container(BoxStyler value) {
     return merge(RadioStyler(container: value));
@@ -636,24 +647,24 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
   RemixRadio<T> call<T>({
     Key? key,
     required T value,
+    required String semanticLabel,
     bool enabled = true,
     bool toggleable = false,
     MouseCursor? mouseCursor,
     FocusNode? focusNode,
     bool autofocus = false,
-    String? semanticLabel,
     bool excludeSemantics = false,
   }) {
     return RemixRadio<T>(
       key: key,
       style: this,
       value: value,
+      semanticLabel: semanticLabel,
       enabled: enabled,
       toggleable: toggleable,
       mouseCursor: mouseCursor,
       focusNode: focusNode,
       autofocus: autofocus,
-      semanticLabel: semanticLabel,
       excludeSemantics: excludeSemantics,
     );
   }

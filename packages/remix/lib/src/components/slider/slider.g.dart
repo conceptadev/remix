@@ -157,7 +157,8 @@ typedef _$SliderSpecMethods = _$SliderSpec; // ignore: unused_element
 // **************************************************************************
 
 class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
-    with RemixBoxStylerMixin<SliderStyler> {
+    with RemixBoxStylerMixin<SliderStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $track;
   final Prop<Color>? $trackColor;
   final Prop<double>? $trackWidth;
@@ -719,6 +720,25 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
   SliderStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return thumb(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'track',
+    'trackColor',
+    'trackWidth',
+    'trackEffects',
+    'range',
+    'rangeColor',
+    'rangeWidth',
+    'rangeEffects',
+    'thumb',
+    'thumbEffects',
+    'thumbFocusEffects',
+    'blendMode',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the track.
   SliderStyler track(BoxStyler value) {

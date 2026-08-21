@@ -240,7 +240,10 @@ void main() {
       test('call method creates RemixRadio with required parameters', () {
         final style = RadioStyler();
 
-        final radio = style.call<String>(value: 'option1');
+        final radio = style.call<String>(
+          value: 'option1',
+          semanticLabel: 'Option',
+        );
 
         expect(radio, isA<RemixRadio<String>>());
         expect(radio.value, equals('option1'));
@@ -255,6 +258,7 @@ void main() {
 
         final radio = style.call<int>(
           value: 42,
+          semanticLabel: 'Option',
           enabled: false,
           autofocus: true,
           toggleable: true,

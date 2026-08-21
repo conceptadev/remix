@@ -53,9 +53,9 @@ CheckboxStyler fortalCheckboxStyle({
 
 /// Fortal recipe for [RemixCheckboxGroupItem].
 ///
-/// Radix gives a checkbox-group item no visual contract of its own — it is a
-/// checkbox plus a label — so this delegates to [fortalCheckboxStyle] and
-/// inherits its verified parity rather than restating any of it.
+/// Combines the mapped checkbox recipe with Radix's size-linked item label
+/// typography and `0.5em` label gap. The behavioral group remains layout
+/// transparent, so callers continue to own root direction and spacing.
 ///
 /// It exists because `RemixCheckboxGroup` is behavioral and carries no styler,
 /// so unlike every other Remix item (menu, select, segmented control, toggle
@@ -67,11 +67,28 @@ CheckboxStyler fortalCheckboxGroupItemStyle({
   FortalCheckboxVariant variant = .surface,
   FortalCheckboxSize size = .size2,
   bool highContrast = false,
-}) => fortalCheckboxStyle(
-  variant: variant,
-  size: size,
-  highContrast: highContrast,
-);
+}) {
+  final checkbox = fortalCheckboxStyle(
+    variant: variant,
+    size: size,
+    highContrast: highContrast,
+  );
+
+  return switch (size) {
+    .size1 =>
+      checkbox
+          .label(.style(FortalTokens.text1.mix()))
+          .labelSpacing(FortalTokens.checkboxGroupItemGap1()),
+    .size2 =>
+      checkbox
+          .label(.style(FortalTokens.text2.mix()))
+          .labelSpacing(FortalTokens.checkboxGroupItemGap2()),
+    .size3 =>
+      checkbox
+          .label(.style(FortalTokens.text3.mix()))
+          .labelSpacing(FortalTokens.checkboxGroupItemGap3()),
+  };
+}
 
 ({double size, double indicatorSize, Radius radius}) _fortalCheckboxMetrics(
   FortalCheckboxSize size,

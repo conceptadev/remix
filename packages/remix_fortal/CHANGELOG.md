@@ -1,3 +1,17 @@
+## 1.0.0-beta.5
+
+> Note: This release has breaking changes.
+
+ - **REFACTOR**(fortal): consolidate base button state styling.
+ - **FIX**(ci): make the version workflow able to complete (#149).
+ - **FEAT**(remix): add styler field metadata, raise Mix floor to 2.2.0-beta.5 (#158).
+ - **FEAT**(fortal): add opt-in icon index and document soft AA (#155).
+ - **DOCS**(fortal): reference catalog, generated from the parity manifest (#154).
+ - **BREAKING** **REFACTOR**(remix): make interactive components visual-only over naked_ui (#157).
+ - **BREAKING** **REFACTOR**(fortal): default unsized typography from tokens, not ambient text (#153).
+ - **BREAKING** **REFACTOR**(remix): generate callable component stylers (#152).
+ - **BREAKING** **FEAT**(remix): add RemixLink and rebuild FortalLink on it (#151).
+
 ## 0.1.0-beta.3
 
 - **FEAT**: Regenerate the Fortal Select wrappers for the new trigger indicator

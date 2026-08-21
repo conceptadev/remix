@@ -35,7 +35,11 @@ class RemixSlider extends StatelessWidget {
     this.excludeSemantics = false,
     this.style = const SliderStyler.create(),
     this.styleSpec,
-  }) : assert(min <= max, 'Slider min must be less than or equal to max'),
+  }) : assert(min < max, 'Slider min must be less than max'),
+       assert(
+         snapDivisions == null || snapDivisions > 0,
+         'Slider snapDivisions must be greater than 0',
+       ),
        assert(
          value >= min && value <= max,
          'Slider value must be between min and max values',
@@ -166,43 +170,24 @@ class RemixSlider extends StatelessWidget {
               height: sliderHeight,
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  /// **Value Normalization Algorithm**
-                  /// Converts the slider's actual value to a 0.0-1.0 range for positioning.
-                  /// Formula: (current - min) / (max - min)
-                  ///
-                  /// This normalization is essential because:
-                  /// - UI positioning works in pixel coordinates (0 to width)
-                  /// - Slider values can be any range (e.g., -50 to 150, 0 to 1000)
-                  /// - We need a consistent way to map between value space and pixel space
-                  final valueRange = (max - min).abs() < 1e-6
-                      ? 1.0
-                      : (max - min);
-                  final normalizedValue = ((value - min) / valueRange).clamp(
-                    0.0,
-                    1.0,
-                  );
-
-                  /// **Thumb Position Calculation**
-                  /// Maps normalized value (0.0-1.0) to actual pixel position.
-                  ///
-                  /// **Algorithm:**
-                  /// Available space = total width - padding for thumb overflow
-                  /// Thumb position = available space × normalized value
-                  ///
-                  /// **Why subtract horizontalPadding:**
-                  /// The thumb needs space to move beyond the track edges when at min/max.
-                  /// Without this adjustment, the thumb would be clipped at the edges.
-                  ///
-                  /// **Example:**
-                  /// - Constraints width: 300px
-                  /// - Horizontal padding: derived from thumb size/track thickness
-                  /// - Available space: width - horizontal padding
-                  /// - At 50% value: thumb positioned at availableSpace / 2
+                  // Visual placement comes from Naked so LTR, RTL, and
+                  // inverted tracks match the interaction layer.
+                  final originVisual = state.visualPercentageOf(0);
+                  final thumbVisual = state.visualPercentageAt(0);
+                  final rangeStart = math.min(originVisual, thumbVisual);
+                  final rangeSpan = (thumbVisual - originVisual).abs();
                   final availableWidth = math.max(
                     0.0,
                     constraints.maxWidth - horizontalPadding,
                   );
-                  final thumbPosition = availableWidth * normalizedValue;
+                  // The thumb is a direct child of the outer Stack, so it must
+                  // re-apply the inset the track gets from its Padding, then
+                  // back off half its own width to center on the track point.
+                  // When the thumb is the widest element both terms cancel.
+                  final thumbPosition =
+                      horizontalOverflow -
+                      thumbSize.width / 2 +
+                      availableWidth * thumbVisual;
 
                   return Stack(
                     alignment: .centerLeft,
@@ -212,37 +197,47 @@ class RemixSlider extends StatelessWidget {
                         child: SizedBox(
                           width: double.infinity,
                           height: constraints.maxHeight,
-                          child: Stack(
-                            alignment: Alignment.centerLeft,
-                            children: [
-                              SizedBox(
-                                width: double.infinity,
-                                height: spec.trackWidth,
-                                child: RemixBoxWithEffects(
-                                  styleSpec: _sliderRailStyle(
-                                    spec.track,
-                                    color: spec.trackColor,
-                                    thickness: spec.trackWidth,
-                                  ),
-                                  containerEffects: spec.trackEffects,
-                                ),
-                              ),
-                              FractionallySizedBox(
-                                widthFactor: normalizedValue,
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  height: spec.rangeWidth,
-                                  child: RemixBoxWithEffects(
-                                    styleSpec: _sliderRailStyle(
-                                      spec.range,
-                                      color: spec.rangeColor,
-                                      thickness: spec.rangeWidth,
+                          child: LayoutBuilder(
+                            builder: (context, trackConstraints) {
+                              final trackWidth = trackConstraints.maxWidth;
+                              return Stack(
+                                alignment: Alignment.centerLeft,
+                                children: [
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: spec.trackWidth,
+                                    child: RemixBoxWithEffects(
+                                      styleSpec: _sliderRailStyle(
+                                        spec.track,
+                                        color: spec.trackColor,
+                                        thickness: spec.trackWidth,
+                                      ),
+                                      containerEffects: spec.trackEffects,
                                     ),
-                                    containerEffects: spec.rangeEffects,
                                   ),
-                                ),
-                              ),
-                            ],
+                                  Positioned(
+                                    left: rangeStart * trackWidth,
+                                    width: rangeSpan * trackWidth,
+                                    top: 0,
+                                    bottom: 0,
+                                    child: Center(
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        height: spec.rangeWidth,
+                                        child: RemixBoxWithEffects(
+                                          styleSpec: _sliderRailStyle(
+                                            spec.range,
+                                            color: spec.rangeColor,
+                                            thickness: spec.rangeWidth,
+                                          ),
+                                          containerEffects: spec.rangeEffects,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -339,264 +334,4 @@ double _resolveTightDimension({
   if (finiteMin != null) return finiteMin;
 
   return fallback;
-}
-
-/// Custom painter for drawing slider track (no divisions).
-///
-/// This painter renders two visual elements:
-/// 1. **Track**: The full-width background rail
-/// 2. **Range**: The filled portion showing current progress
-///
-/// **Coordinate System:**
-/// Uses standard Canvas coordinates where (0,0) is top-left.
-/// Track is drawn horizontally across the full width at vertical center.
-///
-/// **Performance Considerations:**
-/// Repaints only when value or colors change.
-class _TrackPainter extends CustomPainter {
-  /// Normalized value between 0.0 and 1.0 representing current position.
-  final double value;
-
-  /// Paint configuration for the range (filled) portion.
-  final Paint range;
-
-  /// Paint configuration for the track (unfilled) background.
-  final Paint track;
-
-  // Divisions removed.
-
-  const _TrackPainter({
-    required this.value,
-    required this.range,
-    required this.track,
-  });
-
-  // Ticks removed: no division rendering
-
-  /// Draws a horizontal line segment representing part of the slider track.
-  ///
-  /// **Purpose:**
-  /// This helper method is used to draw both the track (full width)
-  /// and the range (partial width based on current value).
-  ///
-  /// **Parameters:**
-  /// - `initialOffset`: Starting point of the line segment
-  /// - `endOffset`: Ending point of the line segment
-  /// - `paint`: Visual styling for the line (color, thickness, etc.)
-  ///
-  /// **Usage:**
-  /// Called twice in paint(): once for track, once for range.
-  void drawLine(
-    Canvas canvas,
-    Offset initialOffset,
-    Offset endOffset,
-    Paint paint,
-  ) {
-    canvas.drawLine(initialOffset, endOffset, paint);
-  }
-
-  /// Main painting method that renders the complete slider track.
-  ///
-  /// **Rendering Order (important for layering):**
-  /// 1. Track (full-width background)
-  /// 2. Range (progress fill)
-  ///
-  /// **Why This Order:**
-  /// - Track provides the foundation
-  /// - Range is drawn last over it
-  ///
-  /// **Coordinate Calculations:**
-  /// - All elements use `size.midY` for vertical centering
-  /// - Track spans full width: (0, midY) to (width, midY)
-  /// - Range spans partial width: (0, midY) to (width × value, midY)
-  ///
-  /// **Value Mapping:**
-  /// The normalized value (0.0-1.0) is multiplied by width to get
-  /// the pixel position where the range should end.
-  @override
-  void paint(Canvas canvas, Size size) {
-    final initialOffset = Offset(0, size.midY);
-    final endOffset = Offset(size.width, size.midY);
-
-    // Draw the track (full width background)
-    drawLine(canvas, initialOffset, endOffset, track);
-
-    // Ticks removed: do not draw divisions
-
-    // Draw the range (progress fill from start to current value)
-    drawLine(
-      canvas,
-      initialOffset,
-      Offset(size.width * value, size.midY),
-      range,
-    );
-  }
-
-  @override
-  bool shouldRepaint(_TrackPainter oldDelegate) {
-    return value != oldDelegate.value ||
-        range != oldDelegate.range ||
-        track != oldDelegate.track;
-  }
-}
-
-/// Convenience extension for finding the vertical center of a Size.
-///
-/// **Purpose:**
-/// Provides a clean, readable way to get the Y coordinate for horizontally
-/// centering elements within a given height. Used extensively in track
-/// painting to ensure all elements align on the same horizontal line.
-///
-/// **Usage:**
-/// `size.midY` instead of `size.height / 2`
-extension on Size {
-  /// Returns the Y coordinate at the vertical center of this size.
-  ///
-  /// Equivalent to `height / 2` but more semantically clear.
-  double get midY => height / 2;
-}
-
-/// Helper function to create a Paint object from color and width
-Paint _createPaint(Color color, double width) {
-  return Paint()
-    ..color = color
-    ..strokeWidth = width
-    ..strokeCap = .round
-    ..style = .stroke
-    ..isAntiAlias = true;
-}
-
-// Animated track widget for smooth color transitions
-class _AnimatedTrack extends StatefulWidget {
-  const _AnimatedTrack({
-    required this.value,
-    required this.rangeColor,
-    required this.rangeWidth,
-    required this.trackColor,
-    required this.trackWidth,
-    required this.duration,
-    required this.curve,
-  });
-
-  final double value;
-  final Color rangeColor;
-  final double rangeWidth;
-  final Color trackColor;
-  final double trackWidth;
-  final Duration duration;
-  final Curve curve;
-
-  @override
-  _AnimatedTrackState createState() => .new();
-}
-
-class _AnimatedTrackState extends State<_AnimatedTrack> {
-  _TrackProperties? _oldProperties;
-
-  @override
-  void initState() {
-    super.initState();
-    _oldProperties = _TrackProperties(
-      rangeColor: widget.rangeColor,
-      rangeWidth: widget.rangeWidth,
-      trackColor: widget.trackColor,
-      trackWidth: widget.trackWidth,
-    );
-  }
-
-  @override
-  void didUpdateWidget(covariant _AnimatedTrack oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _oldProperties = _TrackProperties(
-      rangeColor: oldWidget.rangeColor,
-      rangeWidth: oldWidget.rangeWidth,
-      trackColor: oldWidget.trackColor,
-      trackWidth: oldWidget.trackWidth,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TweenAnimationBuilder(
-      tween: _TrackPropertiesTween(
-        begin: _oldProperties,
-        end: _TrackProperties(
-          rangeColor: widget.rangeColor,
-          rangeWidth: widget.rangeWidth,
-          trackColor: widget.trackColor,
-          trackWidth: widget.trackWidth,
-        ),
-      ),
-      duration: widget.duration,
-      curve: widget.curve,
-      builder: (context, value, child) {
-        return CustomPaint(
-          painter: _TrackPainter(
-            value: widget.value,
-            range: _createPaint(value.rangeColor, value.rangeWidth),
-            track: _createPaint(value.trackColor, value.trackWidth),
-          ),
-        );
-      },
-    );
-  }
-}
-
-// Helper class for animating track properties
-class _TrackProperties {
-  final Color rangeColor;
-  final double rangeWidth;
-  final Color trackColor;
-  final double trackWidth;
-
-  const _TrackProperties({
-    required this.rangeColor,
-    required this.rangeWidth,
-    required this.trackColor,
-    required this.trackWidth,
-  });
-
-  @override
-  bool operator ==(Object other) {
-    return other is _TrackProperties &&
-        rangeColor == other.rangeColor &&
-        rangeWidth == other.rangeWidth &&
-        trackColor == other.trackColor &&
-        trackWidth == other.trackWidth;
-  }
-
-  @override
-  int get hashCode =>
-      rangeColor.hashCode ^
-      rangeWidth.hashCode ^
-      trackColor.hashCode ^
-      trackWidth.hashCode;
-}
-
-// Tween for animating between track states
-class _TrackPropertiesTween extends Tween<_TrackProperties> {
-  _TrackPropertiesTween({required super.begin, required super.end});
-
-  @override
-  _TrackProperties lerp(double t) {
-    // Use null-safe fallbacks since lerp methods can return null
-    return _TrackProperties(
-      rangeColor:
-          Color.lerp(begin?.rangeColor, end?.rangeColor, t) ??
-          begin?.rangeColor ??
-          end!.rangeColor,
-      rangeWidth:
-          lerpDouble(begin?.rangeWidth, end?.rangeWidth, t) ??
-          begin?.rangeWidth ??
-          end!.rangeWidth,
-      trackColor:
-          Color.lerp(begin?.trackColor, end?.trackColor, t) ??
-          begin?.trackColor ??
-          end!.trackColor,
-      trackWidth:
-          lerpDouble(begin?.trackWidth, end?.trackWidth, t) ??
-          begin?.trackWidth ??
-          end!.trackWidth,
-    );
-  }
 }

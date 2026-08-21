@@ -60,9 +60,10 @@ TextFieldStyler fortalTextFieldStyle({
     spacing: metrics.spacing,
     crossAxisAlignment: .center,
     text: metrics.text,
-    focusColor: variant == .soft
-        ? FortalTokens.accent8()
-        : FortalTokens.focus8(),
+    focusColor: switch (variant) {
+      .soft => FortalTokens.accent8(),
+      .classic || .surface => FortalTokens.focus8(),
+    },
   );
 
   final style = switch (variant) {
@@ -333,9 +334,10 @@ TextFieldStyler fortalTextAreaStyle({
     spacing: metrics.spacing,
     crossAxisAlignment: .start,
     text: metrics.text,
-    focusColor: variant == .soft
-        ? FortalTokens.accent8()
-        : FortalTokens.focus8(),
+    focusColor: switch (variant) {
+      .soft => FortalTokens.accent8(),
+      .classic || .surface => FortalTokens.focus8(),
+    },
   );
 
   final style = switch (variant) {

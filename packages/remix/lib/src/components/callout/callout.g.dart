@@ -104,7 +104,8 @@ typedef _$CalloutSpecMethods = _$CalloutSpec; // ignore: unused_element
 // **************************************************************************
 
 class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
-    with RemixBoxStylerMixin<CalloutStyler>, IconStyleMixin<CalloutStyler> {
+    with RemixBoxStylerMixin<CalloutStyler>, IconStyleMixin<CalloutStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -670,6 +671,17 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
   CalloutStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'text',
+    'icon',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   CalloutStyler container(FlexBoxStyler value) {

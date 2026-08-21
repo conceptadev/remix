@@ -139,7 +139,8 @@ typedef _$DataListSpecMethods = _$DataListSpec; // ignore: unused_element
 // **************************************************************************
 
 class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
-    with RemixBoxStylerMixin<DataListStyler> {
+    with RemixBoxStylerMixin<DataListStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $labelContainer;
   final Prop<StyleSpec<BoxSpec>>? $valueContainer;
@@ -685,6 +686,22 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
   DataListStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'labelContainer',
+    'valueContainer',
+    'label',
+    'value',
+    'rowSpacing',
+    'columnSpacing',
+    'labelValueSpacing',
+    'minLabelWidth',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   DataListStyler container(BoxStyler value) {

@@ -22,8 +22,9 @@ so a new family fails the gate until both the Fortal mapping and the
 family-independent upstream record are written.
 
 CheckboxGroup is separately audited in `unmappedUpstreamFamilies`: Remix's
-nonvisual coordinator composes the mapped checkbox recipe on each item, but it
-does not claim Radix's root/item spacing and inherited visual-prop anatomy.
+nonvisual coordinator leaves root direction and spacing caller-owned, while
+`FortalCheckboxGroupItem` maps the checkbox visuals plus Radix's size-linked
+item typography and scaled 6/7/8 label gaps.
 
 Every intentional difference is listed in `approximations`. In addition to the
 Dialog `modal: false` interaction boundary and Menu's flex-based row geometry,

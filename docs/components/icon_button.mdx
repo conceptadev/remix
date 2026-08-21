@@ -32,11 +32,13 @@ class IconButtonExample extends StatelessWidget {
       children: [
         RemixIconButton(
           icon: CupertinoIcons.heart,
+          semanticLabel: 'Favorite',
           onPressed: () {},
           style: style,
         ),
         RemixIconButton(
           icon: CupertinoIcons.heart,
+          semanticLabel: 'Favorite',
           onPressed: () {},
           style: style,
           loading: true,
@@ -92,22 +94,27 @@ class FortalIconButtonExample extends StatelessWidget {
       children: [
         FortalIconButton.solid(
           icon: Icons.add,
+          semanticLabel: 'Add',
           onPressed: () {},
         ),
         FortalIconButton.soft(
           icon: Icons.edit,
+          semanticLabel: 'Edit',
           onPressed: () {},
         ),
         FortalIconButton.surface(
           icon: Icons.layers,
+          semanticLabel: 'Layers',
           onPressed: () {},
         ),
         FortalIconButton.outline(
           icon: Icons.border_style,
+          semanticLabel: 'Border style',
           onPressed: () {},
         ),
         FortalIconButton.ghost(
           icon: Icons.delete,
+          semanticLabel: 'Delete',
           onPressed: () {},
         ),
       ],
@@ -130,6 +137,7 @@ import 'package:remix/remix.dart';
 RemixIconButton remixIconButtonConstructor({
   Key? key,
   required IconData icon,
+  required String semanticLabel,
   RemixIconButtonIconBuilder? iconBuilder,
   RemixIconButtonLoadingBuilder? loadingBuilder,
   bool loading = false,
@@ -139,7 +147,6 @@ RemixIconButton remixIconButtonConstructor({
   VoidCallback? onLongPress,
   FocusNode? focusNode,
   bool autofocus = false,
-  String? semanticLabel,
   String? semanticHint,
   bool excludeSemantics = false,
   MouseCursor mouseCursor = SystemMouseCursors.click,
@@ -205,9 +212,9 @@ Optional. Callback function called when the button is long pressed.
 
 Optional. Optional focus node to control the button's focus behavior.
 
-#### `semanticLabel` → `String?`
+#### `semanticLabel` → `String`
 
-Optional. The semantic label for the button.  Used by screen readers to describe the button.
+Required. The accessible name screen readers announce for this icon-only button. Must be nonblank — there is no generic fallback name.
 
 #### `semanticHint` → `String?`
 

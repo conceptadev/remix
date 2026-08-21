@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 import 'shell/dashboard_shell.dart';
@@ -6,7 +8,13 @@ import 'theme/scroll_behavior.dart';
 import 'theme/theme_scope.dart';
 import 'theme/theme_settings.dart';
 
-void main() => runApp(const DashboardApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Web paints to canvas; without a live semantics tree the page has no
+  // accessible names for browser review or Playwright clicks.
+  if (kIsWeb) SemanticsBinding.instance.ensureSemantics();
+  runApp(const DashboardApp());
+}
 
 class DashboardApp extends StatefulWidget {
   const DashboardApp({super.key, this.initialSettings = const ThemeSettings()});

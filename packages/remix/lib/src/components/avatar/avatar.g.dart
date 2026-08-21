@@ -98,7 +98,8 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     with
         RemixBoxStylerMixin<AvatarStyler>,
         LabelStyleMixin<AvatarStyler>,
-        IconStyleMixin<AvatarStyler> {
+        IconStyleMixin<AvatarStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -598,6 +599,16 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
   AvatarStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'label',
+    'icon',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   AvatarStyler container(BoxStyler value) {

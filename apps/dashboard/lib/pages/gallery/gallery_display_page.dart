@@ -29,7 +29,8 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
           child: GalleryMatrix(
             rows: FortalAvatarVariant.values.map(enumLabel).toList(),
             columns: FortalAvatarSize.values.map(enumLabel).toList(),
-            cellWidth: 120,
+            // Size9 is 160px; preserve its 20px cell padding and divider.
+            cellWidth: 181,
             cellBuilder: (_, row, column) => FortalAvatar(
               variant: FortalAvatarVariant.values[row],
               size: FortalAvatarSize.values[column],

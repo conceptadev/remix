@@ -115,7 +115,8 @@ typedef _$CheckboxSpecMethods = _$CheckboxSpec; // ignore: unused_element
 // **************************************************************************
 
 class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
-    with RemixBoxStylerMixin<CheckboxStyler>, LabelStyleMixin<CheckboxStyler> {
+    with RemixBoxStylerMixin<CheckboxStyler>, LabelStyleMixin<CheckboxStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<IconSpec>>? $indicator;
   final Prop<StyleSpec<TextSpec>>? $label;
@@ -633,6 +634,18 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
   CheckboxStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'indicator',
+    'label',
+    'labelSpacing',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   CheckboxStyler container(BoxStyler value) {

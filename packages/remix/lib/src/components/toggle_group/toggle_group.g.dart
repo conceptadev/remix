@@ -175,7 +175,8 @@ typedef _$ToggleGroupItemSpecMethods = _$ToggleGroupItemSpec; // ignore: unused_
 // **************************************************************************
 
 class ToggleGroupStyler extends MixStyler<ToggleGroupStyler, ToggleGroupSpec>
-    with RemixBoxStylerMixin<ToggleGroupStyler> {
+    with RemixBoxStylerMixin<ToggleGroupStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<ToggleGroupItemSpec>>? $item;
 
@@ -736,6 +737,15 @@ class ToggleGroupStyler extends MixStyler<ToggleGroupStyler, ToggleGroupSpec>
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'item',
+    'animation',
+    'modifier',
+    'variants',
+  };
+
   /// Sets the container.
   ToggleGroupStyler container(FlexBoxStyler value) {
     return merge(ToggleGroupStyler(container: value));
@@ -844,7 +854,8 @@ class ToggleGroupItemStyler
     with
         RemixBoxStylerMixin<ToggleGroupItemStyler>,
         LabelStyleMixin<ToggleGroupItemStyler>,
-        IconStyleMixin<ToggleGroupItemStyler> {
+        IconStyleMixin<ToggleGroupItemStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -1420,6 +1431,16 @@ class ToggleGroupItemStyler
   }) {
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'label',
+    'icon',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   ToggleGroupItemStyler container(FlexBoxStyler value) {

@@ -68,6 +68,7 @@ Widget buildSelectCatalogUseCase(BuildContext context) {
       trigger: const RemixSelectTrigger(placeholder: 'Select...'),
       items: [RemixSelectItem(value: 'apple', label: 'Apple')],
       selectedValue: 'apple',
+      onChanged: (_) {},
       size: FortalSelectSize.values[column],
       variant: FortalSelectVariant.values[row],
     ),

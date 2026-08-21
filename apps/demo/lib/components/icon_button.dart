@@ -27,6 +27,7 @@ Widget buildIconButtonUseCase(BuildContext context) {
           onPressed: () {
             _showToast(context, 'RemixIconButton pressed');
           },
+          semanticLabel: 'Add',
           enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           loading: context.knobs.boolean(label: 'Loading', initialValue: false),
           icon: context.knobs.iconData(label: 'Icon', initialValue: Icons.add)!,
@@ -54,6 +55,7 @@ Widget buildIconButtonCatalogUseCase(BuildContext context) {
     rows: labelsOf(FortalIconButtonVariant.values),
     cell: (row, column) => FortalIconButton(
       icon: Icons.add,
+      semanticLabel: 'Add',
       onPressed: () {},
       size: FortalIconButtonSize.values[column],
       variant: FortalIconButtonVariant.values[row],

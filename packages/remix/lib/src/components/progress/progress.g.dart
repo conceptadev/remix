@@ -121,7 +121,8 @@ typedef _$ProgressSpecMethods = _$ProgressSpec; // ignore: unused_element
 // **************************************************************************
 
 class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
-    with RemixBoxStylerMixin<ProgressStyler> {
+    with RemixBoxStylerMixin<ProgressStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $track;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
@@ -646,6 +647,19 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
   ProgressStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'track',
+    'indicator',
+    'trackContainer',
+    'trackEffects',
+    'indicatorEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   ProgressStyler container(BoxStyler value) {

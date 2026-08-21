@@ -23,54 +23,55 @@ class StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final positive = delta >= 0;
-    return FortalCard(
-      size: .size2,
-      child: SizedBox(
-        width: 220,
-        child: Column(
-          crossAxisAlignment: .stretch,
-          spacing: 12,
+    // Width comes from the parent Grid column; height comes from the row.
+    // `mainAxisSize: .min` matters only when the cell is unbounded — under a
+    // tight cell the Column fills it and the extra space falls below the
+    // content, which is what keeps sibling cards visually equal.
+    final column = Column(
+      mainAxisSize: .min,
+      crossAxisAlignment: .stretch,
+      spacing: 12,
+      children: [
+        Row(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: StyledText(
-                    label,
-                    style: dashboardText(.size2, tone: .muted),
-                  ),
-                ),
-                FortalAvatar.soft(icon: icon, size: .size2),
-              ],
-            ),
-            FortalText(value, size: .size7, weight: .bold),
-            Wrap(
-              spacing: 8,
-              runSpacing: 6,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                FortalScope(
-                  accent: positive ? .green : .red,
-                  hasBackground: false,
-                  child: FortalBadge(
-                    label:
-                        '${positive ? '↑' : '↓'} ${delta.abs().toStringAsFixed(1)}%',
-                  ),
-                ),
-                StyledText(
-                  'vs last month',
-                  style: dashboardText(.size1, tone: .muted),
-                ),
-              ],
-            ),
-            if (progress case final value?)
-              FortalProgress(
-                value: value / 100,
-                size: .size1,
-                semanticsLabel: '$label progress',
+            Expanded(
+              child: StyledText(
+                label,
+                style: dashboardText(.size2, tone: .muted),
               ),
+            ),
+            FortalAvatar.soft(icon: icon, size: .size2),
           ],
         ),
-      ),
+        FortalText(value, size: .size7, weight: .bold),
+        Wrap(
+          spacing: 8,
+          runSpacing: 6,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            FortalScope(
+              accent: positive ? .green : .red,
+              hasBackground: false,
+              child: FortalBadge(
+                label:
+                    '${positive ? '↑' : '↓'} ${delta.abs().toStringAsFixed(1)}%',
+              ),
+            ),
+            StyledText(
+              'vs last month',
+              style: dashboardText(.size1, tone: .muted),
+            ),
+          ],
+        ),
+        if (progress case final value?)
+          FortalProgress(
+            value: value / 100,
+            size: .size1,
+            semanticsLabel: '$label progress',
+          ),
+      ],
     );
+
+    return FortalCard(size: .size2, child: column);
   }
 }

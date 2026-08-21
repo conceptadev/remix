@@ -125,6 +125,9 @@ Notes:
   `FortalCheckboxVariant`, etc.
 - Components that expose `highContrast` use it to strengthen their active or
   foreground treatment; do not assume the option exists on every family.
+  Soft badges pair `accentA3` / `accentA11` (Radix low-contrast text). That
+  pairing is not WCAG AA 4.5:1 in light mode for every accent when composited
+  over `colorPanelSolid`; pass `highContrast: true` (`accent12`) for AA.
 - There is no `FortalTabs` — use `RemixTabs` as the behavioral root.
 - `FortalIconButton` forwards the complete `RemixIconButton` behavior surface,
   including builders, long press, focus, semantics, and cursor options.

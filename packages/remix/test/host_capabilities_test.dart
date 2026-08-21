@@ -58,6 +58,7 @@ void main() {
               items: const [
                 RemixSelectItem(value: 'item', label: 'Select item'),
               ],
+              onChanged: (_) {},
             ),
           ),
         );
@@ -116,6 +117,7 @@ void main() {
               style: _buttonStyle(),
               onPressed: () => showRemixDialog<void>(
                 context: context,
+                barrierLabel: 'Dismiss',
                 transitionDuration: Duration.zero,
                 builder: (context) =>
                     const Center(child: RemixDialog(title: 'Dialog title')),

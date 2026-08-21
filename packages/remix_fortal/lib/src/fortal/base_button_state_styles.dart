@@ -55,10 +55,18 @@ FortalBaseButtonStateStyles fortalBaseButtonStateStyles({
     .outline => _outlineStateStyles(highContrast: highContrast),
     .ghost => _ghostStateStyles(highContrast: highContrast),
   };
-  final focusColor = variant == .soft
-      ? FortalTokens.accent8()
-      : FortalTokens.focus8();
-  final focusOffset = variant == .classic || variant == .solid ? 2.0 : -1.0;
+  final focusColor = switch (variant) {
+    .soft => FortalTokens.accent8(),
+    .classic ||
+    .solid ||
+    .surface ||
+    .outline ||
+    .ghost => FortalTokens.focus8(),
+  };
+  final focusOffset = switch (variant) {
+    .classic || .solid => 2.0,
+    .soft || .surface || .outline || .ghost => -1.0,
+  };
 
   return FortalBaseButtonStateStyles(
     idle: states.idle,

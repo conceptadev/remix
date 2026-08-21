@@ -4783,11 +4783,12 @@
         "layout": {
           "rootGap": "space1",
           "itemLabelGap": "0.5em"
-        }
+        },
+        "itemTypography": "Text size1/text1, size2/text2, and size3/text3"
       },
-      "supportedRemixComposition": "Use RemixCheckboxGroup for selection, roving focus, semantics, and item layout transparency; render each option as FortalCheckboxGroupItem(size:, variant:, highContrast:), which applies the checkbox recipe for you, and let the caller own the root and label spacing. Callers that need a per-item override can still pass fortalCheckboxStyle(...) to RemixCheckboxGroupItem.style directly.",
-      "reason": "RemixCheckboxGroup deliberately owns no visual or layout anatomy, so generating a FortalCheckboxGroup wrapper would invent a style surface that the underlying coordinator does not have.",
-      "reopenCondition": "Map this family only if RemixCheckboxGroup gains a visual root/item-label anatomy that can express the pinned gaps and inherited size, variant, color, and highContrast contract without a Fortal-only wrapper."
+      "supportedRemixComposition": "Use RemixCheckboxGroup for selection, roving focus, semantics, and layout transparency; render each option as FortalCheckboxGroupItem(size:, variant:, highContrast:), which maps the checkbox recipe, size-linked text1/text2/text3 label typography, and scaled 6/7/8 item-label gaps. The caller continues to own root direction and spacing. Callers that need a per-item override can pass a CheckboxStyler to RemixCheckboxGroupItem.style directly.",
+      "reason": "RemixCheckboxGroup deliberately owns no visual or root-layout anatomy, so generating a FortalCheckboxGroup wrapper would invent a root style surface that the underlying coordinator does not have. FortalCheckboxGroupItem maps the item-level typography, label gap, and checkbox visuals independently.",
+      "reopenCondition": "Map the remaining root contract only if RemixCheckboxGroup gains layout anatomy that can express the pinned root direction and gap without a Fortal-only wrapper."
     }
   ],
   "referenceFixtures": {

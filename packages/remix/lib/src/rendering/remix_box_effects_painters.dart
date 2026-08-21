@@ -268,11 +268,20 @@ class _RemixBoxEffectLayerPainter extends CustomPainter
       return;
     }
 
+    // Deliberate: this blurs through a layer rather than the `MaskFilter` paint
+    // `_paintOuterShadows` builds. The two agree from blurRadius 3 up but
+    // diverge by ~5% below it, and the Fortal classic recipes pin inset shadows
+    // at blurRadius 0.5, so they are not interchangeable here. The extent runs
+    // just under 3 sigma below radius 2; that measures at <=1/255 and the clip
+    // discards it regardless.
     final blurExtent = shadow.blurRadius * 2 + 1;
     final layerBounds = targetShape.outerRect
         .expandToInclude(hole.outerRect)
         .inflate(blurExtent);
-    canvas.saveLayer(layerBounds, Paint());
+    // Clip before filtering because erasing afterward can leave blur fringes
+    // outside the shape on Flutter Web.
+    canvas.save();
+    canvas.clipRRect(targetShape, doAntiAlias: true);
     if (shadow.blurRadius > 0) {
       final sigma = ui.Shadow.convertRadiusToSigma(shadow.blurRadius);
       canvas.saveLayer(
@@ -291,16 +300,6 @@ class _RemixBoxEffectLayerPainter extends CustomPainter
       ..addRRect(hole);
     canvas.drawPath(shadowPath, Paint()..color = shadow.color);
     if (shadow.blurRadius > 0) canvas.restore();
-    final outsideShape = Path()
-      ..fillType = PathFillType.evenOdd
-      ..addRect(layerBounds)
-      ..addRRect(targetShape);
-    canvas.drawPath(
-      outsideShape,
-      Paint()
-        ..color = const Color(0xFFFFFFFF)
-        ..blendMode = BlendMode.dstOut,
-    );
     canvas.restore();
   }
 

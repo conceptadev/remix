@@ -13,6 +13,14 @@ import 'package:remix/remix.dart'
 
 import 'fortal_theme.dart';
 
+/// The Radix BaseButton size scale shared by Button and IconButton.
+///
+/// Deliberate: this mirrors [FortalBaseButtonVariant]. Button and IconButton
+/// each own a size enum, so the shared metrics need a common type — passing the
+/// raw `size.index + 1` instead would drop every switch below to a wildcard and
+/// defer an unknown size to a runtime throw.
+enum FortalBaseButtonSize { size1, size2, size3, size4 }
+
 /// Shared Radix BaseButton metrics used by Button and IconButton recipes.
 ({
   double height,
@@ -22,8 +30,8 @@ import 'fortal_theme.dart';
   TextStyleToken text,
   double spinnerSize,
 })
-fortalBaseButtonMetrics(int size) => switch (size) {
-  1 => (
+fortalBaseButtonMetrics(FortalBaseButtonSize size) => switch (size) {
+  .size1 => (
     height: FortalTokens.space5(),
     paddingX: FortalTokens.space2(),
     gap: FortalTokens.space1(),
@@ -31,7 +39,7 @@ fortalBaseButtonMetrics(int size) => switch (size) {
     text: FortalTokens.text1,
     spinnerSize: FortalTokens.space3(),
   ),
-  2 => (
+  .size2 => (
     height: FortalTokens.space6(),
     paddingX: FortalTokens.space3(),
     gap: FortalTokens.space2(),
@@ -39,7 +47,7 @@ fortalBaseButtonMetrics(int size) => switch (size) {
     text: FortalTokens.text2,
     spinnerSize: FortalTokens.space4(),
   ),
-  3 => (
+  .size3 => (
     height: FortalTokens.space7(),
     paddingX: FortalTokens.space4(),
     gap: FortalTokens.space3(),
@@ -47,7 +55,7 @@ fortalBaseButtonMetrics(int size) => switch (size) {
     text: FortalTokens.text3,
     spinnerSize: FortalTokens.space4(),
   ),
-  4 => (
+  .size4 => (
     height: FortalTokens.space8(),
     paddingX: FortalTokens.space5(),
     gap: FortalTokens.space3(),
@@ -55,68 +63,62 @@ fortalBaseButtonMetrics(int size) => switch (size) {
     text: FortalTokens.text4,
     spinnerSize: FortalTokens.spinnerSize3(),
   ),
-  _ => throw ArgumentError.value(size, 'size', 'Expected a size from 1 to 4.'),
 };
 
 /// Content-box metrics for the ghost BaseButton variant.
 ({double paddingX, double paddingY, double marginX, double marginY, double gap})
-fortalBaseButtonGhostMetrics(int size) => switch (size) {
-  1 => (
+fortalBaseButtonGhostMetrics(FortalBaseButtonSize size) => switch (size) {
+  .size1 => (
     paddingX: FortalTokens.space2(),
     paddingY: FortalTokens.space1(),
     marginX: FortalTokens.baseButtonGhostMarginX12(),
     marginY: FortalTokens.baseButtonGhostMarginY12(),
     gap: FortalTokens.space1(),
   ),
-  2 => (
+  .size2 => (
     paddingX: FortalTokens.space2(),
     paddingY: FortalTokens.space1(),
     marginX: FortalTokens.baseButtonGhostMarginX12(),
     marginY: FortalTokens.baseButtonGhostMarginY12(),
     gap: FortalTokens.space1(),
   ),
-  3 => (
+  .size3 => (
     paddingX: FortalTokens.space3(),
     paddingY: FortalTokens.baseButtonGhostPaddingY3(),
     marginX: FortalTokens.baseButtonGhostMarginX3(),
     marginY: FortalTokens.baseButtonGhostMarginY3(),
     gap: FortalTokens.space2(),
   ),
-  4 => (
+  .size4 => (
     paddingX: FortalTokens.space4(),
     paddingY: FortalTokens.space2(),
     marginX: FortalTokens.baseButtonGhostMarginX4(),
     marginY: FortalTokens.baseButtonGhostMarginY4(),
     gap: FortalTokens.space2(),
   ),
-  _ => throw ArgumentError.value(size, 'size', 'Expected a size from 1 to 4.'),
 };
 
 /// Content-box metrics for the ghost IconButton variant.
-({double padding, double margin}) fortalIconButtonGhostMetrics(int size) =>
-    switch (size) {
-      1 => (
-        padding: FortalTokens.space1(),
-        margin: FortalTokens.iconButtonGhostMargin1(),
-      ),
-      2 => (
-        padding: FortalTokens.iconButtonGhostPadding2(),
-        margin: FortalTokens.iconButtonGhostMargin2(),
-      ),
-      3 => (
-        padding: FortalTokens.space2(),
-        margin: FortalTokens.iconButtonGhostMargin3(),
-      ),
-      4 => (
-        padding: FortalTokens.space3(),
-        margin: FortalTokens.iconButtonGhostMargin4(),
-      ),
-      _ => throw ArgumentError.value(
-        size,
-        'size',
-        'Expected a size from 1 to 4.',
-      ),
-    };
+({double padding, double margin}) fortalIconButtonGhostMetrics(
+  FortalBaseButtonSize size,
+) => switch (size) {
+  .size1 => (
+    padding: FortalTokens.space1(),
+    margin: FortalTokens.iconButtonGhostMargin1(),
+  ),
+  .size2 => (
+    padding: FortalTokens.iconButtonGhostPadding2(),
+    margin: FortalTokens.iconButtonGhostMargin2(),
+  ),
+  .size3 => (
+    padding: FortalTokens.space2(),
+    margin: FortalTokens.iconButtonGhostMargin3(),
+  ),
+  .size4 => (
+    padding: FortalTokens.space3(),
+    margin: FortalTokens.iconButtonGhostMargin4(),
+  ),
+};
 
 /// A CSS outline that does not affect layout.
 RemixBoxEffectsMix fortalFocusOutline(Color color, {required double offset}) =>

@@ -6,11 +6,10 @@ import 'package:mix/mix.dart';
 enum RemixPathGlyph {
   chevronDown(9),
   thickCheck(9),
+  thickDividerHorizontal(9),
   thickChevronRight(9),
   plus(15),
   minus(15),
-  dash(15),
-  check(15),
   caretSort(15),
   caretUp(15),
   caretDown(15),
@@ -99,11 +98,10 @@ class _RemixPathIconPainter extends CustomPainter {
     final path = switch (glyph) {
       .chevronDown => _chevronDownPath(),
       .thickCheck => _thickCheckPath(),
+      .thickDividerHorizontal => _thickDividerHorizontalPath(),
       .thickChevronRight => _thickChevronRightPath(),
       .plus => _plusPath(),
       .minus => _minusPath(),
-      .dash => _dashPath(),
-      .check => _checkPath(),
       .caretSort => _caretSortPath(),
       .caretUp => _caretUpPath(),
       .caretDown => _caretDownPath(),
@@ -158,6 +156,16 @@ Path _thickCheckPath() => Path()
   ..cubicTo(7.72393, 0.493916, 8.18868, 0.396414, 8.53547, 0.62293)
   ..close();
 
+Path _thickDividerHorizontalPath() => Path()
+  ..moveTo(0.75, 4.5)
+  ..cubicTo(0.75, 4.08579, 1.08579, 3.75, 1.5, 3.75)
+  ..lineTo(7.5, 3.75)
+  ..cubicTo(7.91421, 3.75, 8.25, 4.08579, 8.25, 4.5)
+  ..cubicTo(8.25, 4.91421, 7.91421, 5.25, 7.5, 5.25)
+  ..lineTo(1.5, 5.25)
+  ..cubicTo(1.08579, 5.25, 0.75, 4.91421, 0.75, 4.5)
+  ..close();
+
 Path _thickChevronRightPath() => Path()
   ..moveTo(3.23826, 0.201711)
   ..cubicTo(3.54108, -0.0809141, 4.01567, -0.0645489, 4.29829, 0.238264)
@@ -199,30 +207,6 @@ Path _minusPath() => Path()
   ..cubicTo(12.75, 7.77614, 12.5261, 8, 12.25, 8)
   ..lineTo(2.75, 8)
   ..cubicTo(2.47386, 8, 2.25, 7.77614, 2.25, 7.5)
-  ..close();
-
-Path _dashPath() => Path()
-  ..moveTo(5, 7.5)
-  ..cubicTo(5, 7.22386, 5.22386, 7, 5.5, 7)
-  ..lineTo(9.5, 7)
-  ..cubicTo(9.77614, 7, 10, 7.22386, 10, 7.5)
-  ..cubicTo(10, 7.77614, 9.77614, 8, 9.5, 8)
-  ..lineTo(5.5, 8)
-  ..cubicTo(5.22386, 8, 5, 7.77614, 5, 7.5)
-  ..close();
-
-Path _checkPath() => Path()
-  ..moveTo(11.4669, 3.72684)
-  ..cubicTo(11.7558, 3.91574, 11.8369, 4.30308, 11.648, 4.59198)
-  ..lineTo(7.39799, 11.092)
-  ..cubicTo(7.29783, 11.2452, 7.13556, 11.3467, 6.95402, 11.3699)
-  ..cubicTo(6.77247, 11.3931, 6.58989, 11.3355, 6.45446, 11.2124)
-  ..lineTo(3.70446, 8.71241)
-  ..cubicTo(3.44905, 8.48022, 3.43023, 8.08494, 3.66242, 7.82953)
-  ..cubicTo(3.89461, 7.57412, 4.28989, 7.55529, 4.5453, 7.78749)
-  ..lineTo(6.75292, 9.79441)
-  ..lineTo(10.6018, 3.90792)
-  ..cubicTo(10.7907, 3.61902, 11.178, 3.53795, 11.4669, 3.72684)
   ..close();
 
 Path _caretSortPath() => Path()

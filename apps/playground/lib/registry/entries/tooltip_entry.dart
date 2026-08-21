@@ -12,11 +12,19 @@ Widget buildTooltipExample() {
       remix: [
         RemixTooltip(
           tooltipChild: const Text('More info'),
-          child: RemixIconButton(icon: Icons.info_outline, onPressed: () {}),
+          child: RemixIconButton(
+            icon: Icons.info_outline,
+            semanticLabel: 'More info',
+            onPressed: () {},
+          ),
         ),
         RemixTooltip(
           tooltipChild: const Text('Settings'),
-          child: RemixIconButton(icon: Icons.settings, onPressed: () {}),
+          child: RemixIconButton(
+            icon: Icons.settings,
+            semanticLabel: 'Settings',
+            onPressed: () {},
+          ),
         ),
       ],
       material: [

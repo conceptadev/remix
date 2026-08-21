@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:dashboard/main.dart';
 import 'package:dashboard/shell/dashboard_shell.dart';
+import 'package:dashboard/shell/top_bar.dart';
 import 'package:dashboard/theme/theme_scope.dart';
 import 'package:dashboard/theme/theme_settings.dart';
 import 'package:dashboard/utils/text.dart';
@@ -300,6 +301,23 @@ void main() {
     );
   });
 
+  testWidgets('avatar gallery renders the largest preset at full size', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey('nav-galleryDisplay')).first);
+    await tester.pump();
+
+    final largestAvatars = find.byWidgetPredicate(
+      (widget) =>
+          widget is FortalAvatar && widget.size == FortalAvatarSize.size9,
+    );
+    expect(largestAvatars, findsNWidgets(2));
+    for (var index = 0; index < 2; index++) {
+      expect(tester.getSize(largestAvatars.at(index)), const Size.square(160));
+    }
+  });
+
   testWidgets('the overlays gallery exposes the compound menu items', (
     tester,
   ) async {
@@ -554,6 +572,62 @@ void main() {
 
     final shell = tester.element(find.byType(DashboardShell));
     expect(FortalTheme.of(shell).accent, FortalAccentColor.grass);
+  });
+
+  testWidgets('theme swatch centers its selected checkmark', (tester) async {
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey('nav-settings')).first);
+    await tester.pump();
+
+    final swatch = find.byKey(const ValueKey('accent-indigo'));
+    final toggle = find.descendant(
+      of: swatch,
+      matching: find.byType(RemixToggle),
+    );
+    final check = find.descendant(
+      of: swatch,
+      matching: find.byIcon(Icons.check),
+    );
+
+    expect(tester.getCenter(check), tester.getCenter(toggle));
+  });
+
+  testWidgets('top bar icon buttons stay square while hovered and open', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1400, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    final topBar = find.byType(TopBar);
+    final surfaces = find.descendant(
+      of: topBar,
+      matching: find.byKey(const ValueKey('remix-icon-button-surface')),
+    );
+    expect(surfaces, findsNWidgets(3));
+
+    void expectSquareSurfaces() {
+      for (final surface in surfaces.evaluate()) {
+        final size = tester.getSize(
+          find.byElementPredicate((element) => element == surface),
+        );
+        expect(size.width, size.height);
+      }
+    }
+
+    expectSquareSurfaces();
+    final notifications = find.byIcon(Icons.notifications_none);
+    final mouse = await tester.createGesture(kind: ui.PointerDeviceKind.mouse);
+    addTearDown(mouse.removePointer);
+    await mouse.addPointer(location: tester.getCenter(notifications));
+    await tester.pump();
+    expectSquareSurfaces();
+
+    await tester.tap(notifications);
+    await tester.pump();
+    expectSquareSurfaces();
   });
 
   testWidgets('grid sorts, selects the page, and paginates', (tester) async {

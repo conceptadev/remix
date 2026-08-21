@@ -8,9 +8,14 @@ Widget buildSwitchExample() {
     width: 360,
     child: ComparisonView(
       remix: const [
-        RemixSwitch(selected: true, onChanged: _noop),
-        RemixSwitch(selected: false, onChanged: _noop),
-        RemixSwitch(selected: false, enabled: false, onChanged: _noop),
+        RemixSwitch(semanticLabel: 'Toggle', selected: true, onChanged: _noop),
+        RemixSwitch(semanticLabel: 'Toggle', selected: false, onChanged: _noop),
+        RemixSwitch(
+          semanticLabel: 'Toggle',
+          selected: false,
+          enabled: false,
+          onChanged: _noop,
+        ),
       ],
       material: [
         Switch(value: true, onChanged: (_) {}),

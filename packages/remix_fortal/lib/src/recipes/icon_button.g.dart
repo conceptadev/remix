@@ -14,8 +14,8 @@ class FortalIconButton extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.icon,
+    required this.semanticLabel,
     this.iconBuilder,
-    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -34,8 +34,8 @@ class FortalIconButton extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.icon,
+    required this.semanticLabel,
     this.iconBuilder,
-    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -54,8 +54,8 @@ class FortalIconButton extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.icon,
+    required this.semanticLabel,
     this.iconBuilder,
-    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -74,8 +74,8 @@ class FortalIconButton extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.icon,
+    required this.semanticLabel,
     this.iconBuilder,
-    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -94,8 +94,8 @@ class FortalIconButton extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.icon,
+    required this.semanticLabel,
     this.iconBuilder,
-    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -114,8 +114,8 @@ class FortalIconButton extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.icon,
+    required this.semanticLabel,
     this.iconBuilder,
-    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -134,8 +134,8 @@ class FortalIconButton extends StatelessWidget {
     this.size = .size2,
     this.highContrast = false,
     required this.icon,
+    required this.semanticLabel,
     this.iconBuilder,
-    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -157,9 +157,9 @@ class FortalIconButton extends StatelessWidget {
 
   final IconData? icon;
 
-  final RemixIconButtonIconBuilder? iconBuilder;
+  final String semanticLabel;
 
-  final String? semanticLabel;
+  final RemixIconButtonIconBuilder? iconBuilder;
 
   final RemixIconButtonLoadingBuilder? loadingBuilder;
 
@@ -193,8 +193,8 @@ class FortalIconButton extends StatelessWidget {
         highContrast: this.highContrast,
       ),
       icon: this.icon,
-      iconBuilder: this.iconBuilder,
       semanticLabel: this.semanticLabel,
+      iconBuilder: this.iconBuilder,
       loadingBuilder: this.loadingBuilder,
       loading: this.loading,
       enabled: this.enabled,

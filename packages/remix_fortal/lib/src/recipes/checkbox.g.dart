@@ -152,9 +152,9 @@ class FortalCheckbox extends StatelessWidget {
 
 /// Fortal recipe for [RemixCheckboxGroupItem].
 ///
-/// Radix gives a checkbox-group item no visual contract of its own — it is a
-/// checkbox plus a label — so this delegates to [fortalCheckboxStyle] and
-/// inherits its verified parity rather than restating any of it.
+/// Combines the mapped checkbox recipe with Radix's size-linked item label
+/// typography and `0.5em` label gap. The behavioral group remains layout
+/// transparent, so callers continue to own root direction and spacing.
 ///
 /// It exists because `RemixCheckboxGroup` is behavioral and carries no styler,
 /// so unlike every other Remix item (menu, select, segmented control, toggle

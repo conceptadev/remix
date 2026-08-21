@@ -99,7 +99,8 @@ typedef _$BadgeSpecMethods = _$BadgeSpec; // ignore: unused_element
 // **************************************************************************
 
 class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
-    with RemixBoxStylerMixin<BadgeStyler>, LabelStyleMixin<BadgeStyler> {
+    with RemixBoxStylerMixin<BadgeStyler>, LabelStyleMixin<BadgeStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
@@ -593,6 +594,16 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
   BadgeStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'label',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   BadgeStyler container(BoxStyler value) {

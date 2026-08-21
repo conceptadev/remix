@@ -99,7 +99,8 @@ typedef _$LinkSpecMethods = _$LinkSpec; // ignore: unused_element
 // **************************************************************************
 
 class LinkStyler extends MixStyler<LinkStyler, LinkSpec>
-    with RemixBoxStylerMixin<LinkStyler>, LabelStyleMixin<LinkStyler> {
+    with RemixBoxStylerMixin<LinkStyler>, LabelStyleMixin<LinkStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
@@ -593,6 +594,16 @@ class LinkStyler extends MixStyler<LinkStyler, LinkSpec>
   LinkStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'label',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   LinkStyler container(BoxStyler value) {
