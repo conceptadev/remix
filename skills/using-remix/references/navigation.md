@@ -1,6 +1,6 @@
 # Navigation Components
 
-Constructor details for Remix tabs and accordions. Fortal widgets mentioned here live in the separate `remix_fortal` package; see [Fortal](fortal.md).
+Constructor details for Remix tabs, accordions, and disclosures. Fortal widgets mentioned here live in the separate `remix_fortal` package; see [Fortal](fortal.md).
 
 ## Components
 
@@ -113,3 +113,44 @@ Each item is its own bordered panel, so space adjacent items
 
 Fortal preset: `FortalAccordion<T>` — `variant` (`surface|soft`), `size`
 (`size1–size3`).
+
+### RemixDisclosure
+
+A standalone trigger and one inline content panel. Use this when panels do
+not need `RemixAccordionGroup` coordination. Radix Primitives calls the same
+anatomy Collapsible.
+
+| Parameter | Type | Default | Required |
+|-----------|------|---------|----------|
+| `trigger` | `Widget` | — | yes |
+| `content` | `Widget` | — | yes |
+| `triggerBuilder` | `ValueWidgetBuilder<NakedDisclosureState>?` | `null` | no |
+| `expanded` | `bool?` | `null` | no |
+| `defaultExpanded` | `bool` | `false` | no |
+| `onExpandedChanged` | `ValueChanged<bool>?` | `null` | no |
+| `enabled` | `bool` | `true` | no |
+| `semanticLabel` / `semanticHint` | `String?` | `null` | no |
+| `animationStyle` | `AnimationStyle` | 200ms ease | no |
+| `transitionBuilder` | `NakedDisclosureTransitionBuilder` | fade + size | no |
+
+Omit `expanded` for uncontrolled state; `defaultExpanded` only applies then.
+In controlled mode the owner stays the source of truth.
+
+Anatomy — one panel, two parts. `container` owns the shared frame (fill,
+border, radius, clipping); `trigger` and `content` stay flat inside it.
+Because the container supplies the rounding, an expanded trigger meets its
+content with no notch. `containerEffects` paints layered fills, strokes, and
+backdrop blur with the container.
+
+The top-level Box shorthand (`.color()`, `.padding()`, `.borderRadius()`, ...)
+forwards to `trigger`, not `container` — reach `.container(...)` explicitly for
+the outer frame.
+
+Widget-state variants (`onHovered`, `onPressed`, `onFocused`,
+`onFocusVisible`, `onDisabled`) describe interaction with the **trigger** but
+resolve once for the whole item, so they may style `container` too.
+`onExpanded` / `onCollapsed` select expansion-specific styles.
+
+Fortal preset: `FortalDisclosure` — `variant` (`surface|soft`), `size`
+(`size1–size3`). Radix Themes does not style Collapsible; this is a Fortal
+extension using the same panel treatment as standalone accordion items.

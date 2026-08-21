@@ -209,7 +209,7 @@ Read only the references needed for the task:
 | Form controls, text areas, and selection | [Forms](references/forms.md) |
 | Cards, data lists/tables, loading, and display widgets | [Data display](references/data-display.md) |
 | Popovers, dialogs, tooltips, menus, and host requirements | [Overlays](references/overlays.md) |
-| Tabs and accordions | [Navigation](references/navigation.md) |
+| Tabs, accordions, and disclosures | [Navigation](references/navigation.md) |
 | Fluent styling, state/context variants, animation, callable styles | [Styling](references/styling.md) |
 | Fortal setup, presets, variants, sizes, scope, and tokens | [Fortal](references/fortal.md) |
 | Text, headings, inline code, keyboard keys, and links | [Fortal](references/fortal.md#typography) |
