@@ -1,3 +1,7 @@
+## 1.0.0-beta.6
+
+ - **FIX**: correct dashboard showcase and checkbox indicator regressions (#162).
+
 ## 1.0.0-beta.5
 
 > Note: This release has breaking changes.

@@ -15,7 +15,7 @@ topics:
 # Pre-release because every dependency below is itself a pre-release; pub warns
 # when a stable package is built on beta foundations. Graduate to 0.1.0 when
 # remix reaches 1.0.0 stable.
-version: 1.0.0-beta.5
+version: 1.0.0-beta.6
 
 # Consumer floor, matching `remix` and `mix`. See packages/remix/pubspec.yaml.
 environment:
@@ -37,7 +37,7 @@ dependencies:
   # package. `tool/fortal_parity/check.dart` (_checkRemixHostedPin) fails if the
   # two ever fall out of sync. `melos version` rewrites this line when `remix`
   # bumps, because remix_fortal depends on it.
-  remix: ^1.0.0-beta.5
+  remix: ^1.0.0-beta.6
   mix: ^2.2.0-beta.5
   mix_annotations: ^2.2.0-beta.1
   mix_chart: ^0.0.1-beta.1
