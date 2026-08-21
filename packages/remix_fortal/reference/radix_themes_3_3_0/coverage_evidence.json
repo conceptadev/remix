@@ -876,11 +876,17 @@
   "disclosure": [
     {
       "test": "test/components/disclosure/disclosure_style_test.dart",
-      "case": "all variant and size combinations produce complete styles",
+      "case": "each size resolves distinct layout metrics",
       "covers": [
         "enum:size.size1",
         "enum:size.size2",
-        "enum:size.size3",
+        "enum:size.size3"
+      ]
+    },
+    {
+      "test": "test/components/disclosure/disclosure_style_test.dart",
+      "case": "variants resolve distinct visual treatments",
+      "covers": [
         "enum:variant.surface",
         "enum:variant.soft"
       ]
