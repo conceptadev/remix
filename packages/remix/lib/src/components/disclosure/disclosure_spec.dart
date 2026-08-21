@@ -6,7 +6,12 @@ part of 'disclosure.dart';
   extraStylerMixins: [RemixBoxStylerMixin],
 )
 class DisclosureSpec with _$DisclosureSpec {
-  /// Outer container around the trigger and content.
+  /// Outer panel: radius, border, fill, and clipping shared by [trigger] and
+  /// [content].
+  ///
+  /// Not [forwardStyler]-forwarded: [trigger] already forwards the top-level
+  /// Box shorthand (`.color()`, `.borderRadius()`, ...), and a spec cannot
+  /// forward two fields without colliding. Reach [container] explicitly.
   @override
   final StyleSpec<BoxSpec> container;
 
@@ -33,10 +38,12 @@ class DisclosureSpec with _$DisclosureSpec {
        trigger = trigger ?? const StyleSpec(spec: BoxSpec()),
        content = content ?? const StyleSpec(spec: BoxSpec());
 
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
   @override
   DisclosureSpec lerp(DisclosureSpec? other, double t) {
+    if (other == null) return this;
     final generated = super.lerp(other, t);
-    if (other == null) return generated;
 
     return generated.copyWith(
       containerEffects: RemixBoxEffectsSpec.lerpNullable(

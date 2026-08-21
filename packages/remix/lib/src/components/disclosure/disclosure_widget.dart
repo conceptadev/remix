@@ -156,14 +156,18 @@ class RemixDisclosure extends StatelessWidget {
     Animation<double> animation,
     Widget child,
   ) {
+    // Deliberately the deprecated `axisAlignment` rather than
+    // `alignment: AlignmentDirectional.topStart`. `alignment` was added in
+    // Flutter 3.44, and this package's floor is Mix's 3.41.
+    //
+    // Swap to `alignment` and drop the ignore once the floor reaches 3.44.
+    // `disclosure_widget_test.dart` pins the rendered alignment either way.
     return FadeTransition(
       opacity: animation,
       child: SizeTransition(
         sizeFactor: animation,
-        // `alignment` is only available from Flutter 3.44. Keep the equivalent
-        // spelling while Remix supports Flutter 3.41 consumers.
         // ignore: deprecated_member_use
-        axisAlignment: -1,
+        axisAlignment: -1.0,
         child: child,
       ),
     );
@@ -191,10 +195,13 @@ class RemixDisclosure extends StatelessWidget {
       transitionBuilder: transitionBuilder,
       animationStyle: animationStyle,
       builder: (context, state, child) {
-        final resolvedTrigger =
-            triggerBuilder?.call(context, state, child) ?? child!;
-        return _RemixDisclosureTrigger(child: resolvedTrigger);
+        return _RemixDisclosureTrigger(
+          child: triggerBuilder?.call(context, state, child) ?? child!,
+        );
       },
+      // Style resolves here, below the disclosure state scope, then the
+      // trigger and content look the spec up as descendants. That is what
+      // lets one resolution drive onExpanded/onHovered across every part.
       itemBuilder: (context, state, child) {
         return RemixStyleSpecBuilder<DisclosureSpec>(
           style: style,

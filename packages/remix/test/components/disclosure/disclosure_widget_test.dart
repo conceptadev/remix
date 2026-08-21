@@ -218,6 +218,39 @@ void main() {
       semantics.dispose();
     });
 
+    group('Default transition', () {
+      testWidgets('anchors the panel to the top start while expanding', (
+        tester,
+      ) async {
+        // Pins the alignment the builder actually renders, so the
+        // `axisAlignment` spelling it uses to stay on Flutter 3.41 cannot drift
+        // away from `AlignmentDirectional.topStart`.
+        final animation = AlwaysStoppedAnimation<double>(0.5);
+
+        await tester.pumpRemixApp(
+          Builder(
+            builder: (context) {
+              return RemixDisclosure.defaultDisclosureTransitionBuilder(
+                context,
+                animation,
+                const Text('Panel'),
+              );
+            },
+          ),
+        );
+
+        final align = tester.widget<Align>(
+          find.descendant(
+            of: find.byType(SizeTransition),
+            matching: find.byType(Align),
+          ),
+        );
+
+        expect(align.alignment, AlignmentDirectional.topStart);
+        expect(align.heightFactor, 0.5);
+      });
+    });
+
     test('styleFrom and callable stylers preserve the style', () {
       final style = RemixDisclosure.styleFrom(
         trigger: BoxStyler().padding(.all(8)),

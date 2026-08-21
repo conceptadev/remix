@@ -33,7 +33,11 @@ DisclosureStyler _fortalDisclosureBaseStyler(FortalDisclosureSize size) {
   final metrics = _fortalDisclosureMetrics(size);
 
   return DisclosureStyler()
-      .container(.clipBehavior(.antiAlias))
+      .container(
+        BoxStyler()
+            .clipBehavior(.antiAlias)
+            .borderRadius(.all(metrics.radius)),
+      )
       .trigger(
         BoxStyler()
             .width(.infinity)
@@ -60,8 +64,7 @@ DisclosureStyler _fortalDisclosureBaseStyler(FortalDisclosureSize size) {
                 iconSize: metrics.iconSize,
               ),
             ),
-      )
-      .container(.borderRadius(.all(metrics.radius)));
+      );
 }
 
 DisclosureStyler _fortalDisclosureSurfaceStyler(FortalDisclosureSize size) {
@@ -149,11 +152,7 @@ WidgetModifierConfig _fortalDisclosureTypography({
   required double iconSize,
 }) {
   return WidgetModifierConfig.defaultTextStyle(style: style.mix())
-      .merge(
-        WidgetModifierConfig.defaultTextStyle(
-          style: TextStyleMix(color: color),
-        ),
-      )
+      .defaultTextStyle(style: TextStyleMix().color(color))
       .merge(WidgetModifierConfig.iconTheme(color: iconColor, size: iconSize));
 }
 
@@ -162,7 +161,7 @@ WidgetModifierConfig _fortalDisclosureForeground({
   required Color iconColor,
 }) {
   return WidgetModifierConfig.defaultTextStyle(
-    style: TextStyleMix(color: color),
+    style: TextStyleMix().color(color),
   ).merge(WidgetModifierConfig.iconTheme(color: iconColor));
 }
 
