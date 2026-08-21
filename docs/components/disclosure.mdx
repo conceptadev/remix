@@ -4,13 +4,10 @@ description: A standalone trigger that expands and collapses one inline content 
 keywords: [flutter, remix, disclosure, collapsible, expandable, radix]
 ---
 
-`RemixDisclosure` pairs one interactive trigger with one inline content panel.
-It is the standalone choice when the panels do not need the coordination that
-`RemixAccordionGroup` provides.
+`RemixDisclosure` is a standalone trigger and one inline panel. Use
+`RemixAccordionGroup` when panels need to coordinate.
 
-Radix Primitives calls this component **Collapsible** and exposes Root, Trigger,
-and Content parts. Remix uses the WAI-ARIA and Naked UI name **Disclosure**, with
-the same anatomy represented by `RemixDisclosure(trigger:, content:)`.
+Radix Primitives calls the same anatomy **Collapsible**.
 
 ## Basic usage
 
@@ -57,9 +54,7 @@ class _AccountDisclosureState extends State<AccountDisclosure> {
 }
 ```
 
-Omit `expanded` to use internal state. `defaultExpanded` only selects the
-initial value in that uncontrolled mode. In controlled mode, the owner remains
-the source of truth and may accept or reject each `onExpandedChanged` request.
+Omit `expanded` for internal state. `defaultExpanded` only applies then.
 
 ## Fortal widget
 
@@ -77,39 +72,29 @@ final disclosure = SizedBox(
 );
 ```
 
-`FortalDisclosure.surface` and `FortalDisclosure.soft` provide three size
-presets. Radix Themes does not ship a styled Collapsible, so these are Fortal
-extensions built from the shared panel, typography, radius, and interaction
-tokens rather than a claimed Radix Themes visual match.
+`FortalDisclosure.surface` and `FortalDisclosure.soft` provide three sizes.
+Radix Themes has no styled Collapsible; these presets reuse Fortal panel tokens.
 
 ## Styling
 
-`DisclosureStyler` forwards top-level box methods such as `padding`, `color`,
-and `borderRadius` to the trigger. Style the other parts explicitly:
+`DisclosureStyler` forwards top-level box methods to the trigger:
 
-- `container(...)` wraps the trigger and content as one visual panel.
-- `containerEffects(...)` adds layered shadows, strokes, or backdrop blur.
-- `trigger(...)` styles the interactive hit target.
-- `content(...)` styles the revealed inline panel.
-- `onExpanded(...)` and `onCollapsed(...)` select expansion-specific styles.
-- Standard widget-state variants such as `onHovered`, `onPressed`,
-  `onFocusVisible`, and `onDisabled` apply across the whole resolved spec.
+- `container(...)` — frame around trigger and content
+- `containerEffects(...)` — shadows, strokes, backdrop blur
+- `trigger(...)` / `content(...)`
+- `onExpanded(...)` / `onCollapsed(...)`
+- `onHovered`, `onPressed`, `onFocusVisible`, `onDisabled`
 
-The default panel transition combines a top-anchored size transition with a
-fade over 200 milliseconds. Supply `animationStyle` to change its timing, or
-use `AnimationStyle.noAnimation` for an immediate transition.
+Default transition is a 200ms top-anchored fade and size. Use
+`AnimationStyle.noAnimation` to skip it.
 
 ## Keyboard and accessibility
 
-- Space and Enter toggle the disclosure while its trigger has focus.
-- The trigger publishes button semantics and its expanded or collapsed state.
-- `semanticLabel` replaces trigger-descendant semantics when the visual trigger
-  does not provide a clear accessible name; `semanticHint` adds context.
-- Focusable controls inside the content remain in normal traversal while open
-  and are removed from traversal when collapsed.
-- Collapsing while focus is inside the content returns focus to the trigger
-  when the trigger remains interactive. Disabling alone does not move focus.
+- Space and Enter toggle the focused trigger.
+- The trigger publishes button semantics and expanded state.
+- `semanticLabel` replaces trigger-descendant semantics; `semanticHint` adds context.
+- Open content stays in traversal; collapsed content is removed.
+- Collapse returns focus to the trigger if it is still interactive.
 
-Radix `Collapsible.Content.forceMount` has no `NakedDisclosure` equivalent.
-Without a transition the collapsed panel is unmounted immediately; with a
-transition it stays mounted only until the exit animation finishes.
+`Collapsible.Content.forceMount` has no equivalent. Without a transition the
+panel unmounts immediately; with one it stays mounted until the exit finishes.

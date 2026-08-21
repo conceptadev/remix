@@ -48,10 +48,6 @@ final class _RemixDisclosureContent extends StatelessWidget {
 }
 
 /// A standalone trigger that expands or collapses one inline content panel.
-///
-/// The API follows the Radix Collapsible anatomy: [trigger] and [content] are
-/// distinct parts assembled under one root. Expansion may be uncontrolled via
-/// [defaultExpanded], or controlled with [expanded] and [onExpandedChanged].
 class RemixDisclosure extends StatelessWidget {
   const RemixDisclosure({
     super.key,
@@ -83,69 +79,32 @@ class RemixDisclosure extends StatelessWidget {
   }) : transitionBuilder =
            transitionBuilder ?? defaultDisclosureTransitionBuilder;
 
-  /// The interactive part that toggles [content].
   final Widget trigger;
-
-  /// The inline panel controlled by [trigger].
   final Widget content;
-
-  /// Optionally rebuilds [trigger] from the current disclosure state.
   final ValueWidgetBuilder<NakedDisclosureState>? triggerBuilder;
 
-  /// Whether the content is expanded in controlled mode.
-  ///
-  /// Leave null to let the disclosure own its state.
+  /// Controlled expanded state. Null lets the widget own its state.
   final bool? expanded;
-
-  /// Initial state for an uncontrolled disclosure.
   final bool defaultExpanded;
-
-  /// Called when interaction requests a new expanded value.
   final ValueChanged<bool>? onExpandedChanged;
-
-  /// Whether trigger interaction is enabled.
   final bool enabled;
-
-  /// Mouse cursor used while the trigger is interactive.
   final MouseCursor mouseCursor;
-
-  /// Whether activation provides platform feedback.
   final bool enableFeedback;
-
-  /// Focus node associated with the trigger.
   final FocusNode? focusNode;
-
-  /// Whether the trigger requests focus when first built.
   final bool autofocus;
-
-  /// Called when trigger focus changes.
   final ValueChanged<bool>? onFocusChange;
-
-  /// Called when trigger hover changes.
   final ValueChanged<bool>? onHoverChange;
-
-  /// Called when trigger press state changes.
   final ValueChanged<bool>? onPressChange;
 
-  /// Accessible name that replaces trigger-descendant semantics when nonempty.
+  /// Replaces trigger-descendant semantics when nonempty.
   final String? semanticLabel;
-
-  /// Additional context announced with the trigger's accessible name.
   final String? semanticHint;
-
-  /// Whether to hide the trigger and content from the semantics tree.
   final bool excludeSemantics;
-
-  /// Transition applied while the content opens and closes.
   final NakedDisclosureTransitionBuilder transitionBuilder;
-
-  /// Curves and durations used by [transitionBuilder].
   final AnimationStyle animationStyle;
-
-  /// Style configuration for the root, trigger, and content.
   final DisclosureStyler style;
 
-  /// Optional resolved style that bypasses [style].
+  /// Bypasses [style] when provided.
   final DisclosureSpec? styleSpec;
 
   static final styleFrom = DisclosureStyler.new;
@@ -156,12 +115,7 @@ class RemixDisclosure extends StatelessWidget {
     Animation<double> animation,
     Widget child,
   ) {
-    // Deliberately the deprecated `axisAlignment` rather than
-    // `alignment: AlignmentDirectional.topStart`. `alignment` was added in
-    // Flutter 3.44, and this package's floor is Mix's 3.41.
-    //
-    // Swap to `alignment` and drop the ignore once the floor reaches 3.44.
-    // `disclosure_widget_test.dart` pins the rendered alignment either way.
+    // `alignment` landed in Flutter 3.44; Remix still supports 3.41 consumers.
     return FadeTransition(
       opacity: animation,
       child: SizeTransition(
@@ -199,9 +153,6 @@ class RemixDisclosure extends StatelessWidget {
           child: triggerBuilder?.call(context, state, child) ?? child!,
         );
       },
-      // Style resolves here, below the disclosure state scope, then the
-      // trigger and content look the spec up as descendants. That is what
-      // lets one resolution drive onExpanded/onHovered across every part.
       itemBuilder: (context, state, child) {
         return RemixStyleSpecBuilder<DisclosureSpec>(
           style: style,

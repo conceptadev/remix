@@ -7,10 +7,6 @@ part of 'disclosure.dart';
 // **************************************************************************
 
 /// Fortal-themed preset for [RemixDisclosure].
-///
-/// Radix Primitives calls this anatomy Collapsible: one root containing a
-/// trigger and content. Radix Themes does not style that primitive, so Fortal
-/// applies the same panel treatment as its standalone accordion items.
 class FortalDisclosure extends StatelessWidget {
   const FortalDisclosure({
     super.key,

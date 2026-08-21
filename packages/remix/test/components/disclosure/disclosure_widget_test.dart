@@ -222,9 +222,6 @@ void main() {
       testWidgets('anchors the panel to the top start while expanding', (
         tester,
       ) async {
-        // Pins the alignment the builder actually renders, so the
-        // `axisAlignment` spelling it uses to stay on Flutter 3.41 cannot drift
-        // away from `AlignmentDirectional.topStart`.
         final animation = AlwaysStoppedAnimation<double>(0.5);
 
         await tester.pumpRemixApp(

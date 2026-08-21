@@ -14,10 +14,6 @@ enum FortalDisclosureSize { size1, size2, size3 }
 enum FortalDisclosureVariant { surface, soft }
 
 /// Fortal-themed preset for [RemixDisclosure].
-///
-/// Radix Primitives calls this anatomy Collapsible: one root containing a
-/// trigger and content. Radix Themes does not style that primitive, so Fortal
-/// applies the same panel treatment as its standalone accordion items.
 @MixWidget(target: RemixDisclosure.new)
 DisclosureStyler fortalDisclosureStyle({
   FortalDisclosureVariant variant = .surface,

@@ -1,8 +1,6 @@
 part of 'disclosure.dart';
 
-/// Disclosure-specific state variants.
 extension RemixDisclosureStylerRemixHelpers on DisclosureStyler {
-  /// Style applied while the content panel is expanded.
   DisclosureStyler onExpanded(DisclosureStyler value) {
     return variant(
       ContextVariant(
@@ -13,7 +11,6 @@ extension RemixDisclosureStylerRemixHelpers on DisclosureStyler {
     );
   }
 
-  /// Style applied while the content panel is collapsed.
   DisclosureStyler onCollapsed(DisclosureStyler value) {
     return variant(
       ContextVariant(
