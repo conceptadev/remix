@@ -40,7 +40,6 @@ SelectTriggerStyler _fortalSelectTriggerStyler(
   final base = SelectTriggerStyler()
       .direction(.horizontal)
       .mainAxisAlignment(.spaceBetween)
-      .crossAxisAlignment(.center)
       .borderRadius(.all(radius))
       .label(_fortalSelectTriggerText(size, color: FortalTokens.gray12()))
       .placeholder(
@@ -232,7 +231,6 @@ SelectMenuItemStyler _fortalSelectItemStyler(
   final metrics = _fortalSelectContentMetrics(size);
   final base = SelectMenuItemStyler()
       .direction(.horizontal)
-      .crossAxisAlignment(.center)
       .height(metrics.itemHeight)
       .padding(.horizontal(metrics.indicatorWidth))
       .borderRadius(.all(metrics.itemRadius))

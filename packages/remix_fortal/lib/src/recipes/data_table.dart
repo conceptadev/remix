@@ -141,7 +141,6 @@ BorderSideMix _fortalDataTableDividerSide() =>
 
 FlexBoxStyler _fortalDataTableFooter() => FlexBoxStyler()
     .direction(.horizontal)
-    .crossAxisAlignment(.center)
     .spacing(FortalTokens.space2())
     .padding(.horizontal(FortalTokens.space4()))
     .padding(.vertical(FortalTokens.space2()))

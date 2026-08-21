@@ -39,11 +39,7 @@ ButtonStyler _fortalButtonBaseStyler(
 ) {
   final metrics = fortalBaseButtonMetrics(size);
   var style = ButtonStyler(
-    container: .direction(.horizontal)
-        .mainAxisAlignment(.center)
-        .mainAxisSize(.min)
-        .crossAxisAlignment(.center)
-        .spacing(metrics.gap),
+    container: .direction(.horizontal).mainAxisSize(.min).spacing(metrics.gap),
     label: .style(metrics.text.mix()).fontWeight(
       variant == .ghost
           ? FortalTokens.fontWeightRegular()
