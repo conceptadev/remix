@@ -274,9 +274,10 @@ SliderStyler _fortalSliderDisabled(
         BoxStyler().decoration(
           .boxShadow([
             BoxShadowMix(
-              color: variant == .soft
-                  ? FortalTokens.gray5()
-                  : FortalTokens.gray6(),
+              color: switch (variant) {
+                .soft => FortalTokens.gray5(),
+                .classic || .surface => FortalTokens.gray6(),
+              },
               spreadRadius: 1,
             ),
           ]),

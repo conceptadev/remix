@@ -87,8 +87,8 @@ SelectTriggerStyler _fortalSelectTriggerSizeStyler(
     .size2 => FortalTokens.selectSpace1Half(),
     .size3 => FortalTokens.space2(),
   });
-  if (variant == .ghost) {
-    return switch (size) {
+  return switch (variant) {
+    .ghost => switch (size) {
       .size1 || .size2 =>
         style
             .padding(.horizontal(FortalTokens.space2()))
@@ -101,21 +101,21 @@ SelectTriggerStyler _fortalSelectTriggerSizeStyler(
             .padding(.vertical(FortalTokens.selectSpace1Half()))
             .margin(.horizontal(FortalTokens.selectGhostMarginX3()))
             .margin(.vertical(FortalTokens.selectGhostMarginY3())),
-    };
-  }
-  return switch (size) {
-    .size1 =>
-      style
-          .height(FortalTokens.space5())
-          .padding(.horizontal(FortalTokens.space2())),
-    .size2 =>
-      style
-          .height(FortalTokens.space6())
-          .padding(.horizontal(FortalTokens.space3())),
-    .size3 =>
-      style
-          .height(FortalTokens.space7())
-          .padding(.horizontal(FortalTokens.space4())),
+    },
+    .surface || .soft => switch (size) {
+      .size1 =>
+        style
+            .height(FortalTokens.space5())
+            .padding(.horizontal(FortalTokens.space2())),
+      .size2 =>
+        style
+            .height(FortalTokens.space6())
+            .padding(.horizontal(FortalTokens.space3())),
+      .size3 =>
+        style
+            .height(FortalTokens.space7())
+            .padding(.horizontal(FortalTokens.space4())),
+    },
   };
 }
 
@@ -205,12 +205,16 @@ SelectTriggerStyler _fortalSelectGhostTrigger(SelectTriggerStyler base) {
 }
 
 SelectContentStyler _fortalSelectContentStyler(FortalSelectSize size) {
-  final radius = size == .size1
-      ? FortalTokens.radius3()
-      : FortalTokens.radius4();
+  final radius = switch (size) {
+    .size1 => FortalTokens.radius3(),
+    .size2 || .size3 => FortalTokens.radius4(),
+  };
   return SelectContentStyler()
       .padding(
-        .all(size == .size1 ? FortalTokens.space1() : FortalTokens.space2()),
+        .all(switch (size) {
+          .size1 => FortalTokens.space1(),
+          .size2 || .size3 => FortalTokens.space2(),
+        }),
       )
       .borderRadius(.all(radius))
       .color(FortalTokens.colorPanel())
