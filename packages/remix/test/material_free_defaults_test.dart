@@ -62,7 +62,7 @@ void main() {
     await tester.pump();
 
     expect(tester.takeException(), isNull);
-    expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
+    expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
     expect(_pathGlyph(RemixPathGlyph.plus), findsOneWidget);
     expect(_pathGlyph(RemixPathGlyph.caretSort), findsOneWidget);
     expect(_pathGlyph(RemixPathGlyph.chevronLeft), findsOneWidget);

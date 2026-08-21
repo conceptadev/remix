@@ -31,7 +31,7 @@ BadgeStyler fortalCodeStyle(
   // Radix nests two adjustments: --code-font-size-adjust is 0.95, and
   // --code-variant-font-size-adjust multiplies it by 0.95 again for every
   // variant except ghost, which keeps the outer value.
-  final decorated = variant != FortalCodeVariant.ghost;
+  final decorated = variant != .ghost;
   final fontSize = baseFontSize * (decorated ? 0.95 * 0.95 : 0.95);
   // An explicit size keeps its token's absolute line box; the unsized path
   // uses the pinned unitless 1.25.
@@ -120,7 +120,7 @@ BadgeStyler fortalCodeStyle(
   }
   if (fill != null) style = style.color(fill);
 
-  if (variant == FortalCodeVariant.outline) {
+  if (variant == .outline) {
     final ringWidth = math.max(1.0, 0.033 * fontSize);
     style = style.containerEffects(
       RemixBoxEffectsMix.behindContent(

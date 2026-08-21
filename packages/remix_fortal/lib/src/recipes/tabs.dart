@@ -78,7 +78,6 @@ TabStyler fortalTabStyle({
             .padding(.vertical(metrics.innerPaddingY))
             .borderRadius(.all(metrics.radius))
             .mainAxisAlignment(.center)
-            .crossAxisAlignment(.center)
             .spacing(FortalTokens.space2()),
       )
       .onHovered(

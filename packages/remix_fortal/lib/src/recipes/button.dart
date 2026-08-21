@@ -20,8 +20,7 @@ ButtonStyler fortalButtonStyle({
   FortalButtonSize size = .size2,
   bool highContrast = false,
 }) {
-  final index = size.index + 1;
-  final base = _fortalButtonBaseStyler(variant, index);
+  final base = _fortalButtonBaseStyler(variant, _fortalBaseButtonSize(size));
   final stateStyles = fortalBaseButtonStateStyles(
     variant: _fortalBaseButtonVariant(variant),
     highContrast: highContrast,
@@ -30,18 +29,17 @@ ButtonStyler fortalButtonStyle({
   return _applyFortalButtonStateStyles(
     base,
     stateStyles,
-    pressedPaddingTop: variant == .classic ? (index == 1 ? 1 : 2) : null,
+    pressedPaddingTop: variant == .classic ? (size == .size1 ? 1 : 2) : null,
   );
 }
 
-ButtonStyler _fortalButtonBaseStyler(FortalButtonVariant variant, int size) {
+ButtonStyler _fortalButtonBaseStyler(
+  FortalButtonVariant variant,
+  FortalBaseButtonSize size,
+) {
   final metrics = fortalBaseButtonMetrics(size);
   var style = ButtonStyler(
-    container: .direction(.horizontal)
-        .mainAxisAlignment(.center)
-        .mainAxisSize(.min)
-        .crossAxisAlignment(.center)
-        .spacing(metrics.gap),
+    container: .direction(.horizontal).mainAxisSize(.min).spacing(metrics.gap),
     label: .style(metrics.text.mix()).fontWeight(
       variant == .ghost
           ? FortalTokens.fontWeightRegular()
@@ -78,6 +76,14 @@ FortalBaseButtonVariant _fortalBaseButtonVariant(FortalButtonVariant variant) =>
       .surface => .surface,
       .outline => .outline,
       .ghost => .ghost,
+    };
+
+FortalBaseButtonSize _fortalBaseButtonSize(FortalButtonSize size) =>
+    switch (size) {
+      .size1 => .size1,
+      .size2 => .size2,
+      .size3 => .size3,
+      .size4 => .size4,
     };
 
 ButtonStyler _applyFortalButtonStateStyles(
