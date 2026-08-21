@@ -116,9 +116,8 @@ Fortal preset: `FortalAccordion<T>` — `variant` (`surface|soft`), `size`
 
 ### RemixDisclosure
 
-A standalone trigger and one inline content panel. Use this when panels do
-not need `RemixAccordionGroup` coordination. Radix Primitives calls the same
-anatomy Collapsible.
+Standalone trigger and one inline panel. Use this when items do not need
+`RemixAccordionGroup` coordination.
 
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
@@ -133,24 +132,8 @@ anatomy Collapsible.
 | `animationStyle` | `AnimationStyle` | 200ms ease | no |
 | `transitionBuilder` | `NakedDisclosureTransitionBuilder` | fade + size | no |
 
-Omit `expanded` for uncontrolled state; `defaultExpanded` only applies then.
-In controlled mode the owner stays the source of truth.
-
-Anatomy — one panel, two parts. `container` owns the shared frame (fill,
-border, radius, clipping); `trigger` and `content` stay flat inside it.
-Because the container supplies the rounding, an expanded trigger meets its
-content with no notch. `containerEffects` paints layered fills, strokes, and
-backdrop blur with the container.
-
-The top-level Box shorthand (`.color()`, `.padding()`, `.borderRadius()`, ...)
-forwards to `trigger`, not `container` — reach `.container(...)` explicitly for
-the outer frame.
-
-Widget-state variants (`onHovered`, `onPressed`, `onFocused`,
-`onFocusVisible`, `onDisabled`) describe interaction with the **trigger** but
-resolve once for the whole item, so they may style `container` too.
-`onExpanded` / `onCollapsed` select expansion-specific styles.
+Omit `expanded` for uncontrolled state. Top-level Box shorthand forwards to
+`trigger`; style the frame with `.container(...)`.
 
 Fortal preset: `FortalDisclosure` — `variant` (`surface|soft`), `size`
-(`size1–size3`). Radix Themes does not style Collapsible; this is a Fortal
-extension using the same panel treatment as standalone accordion items.
+(`size1–size3`).

@@ -6,26 +6,18 @@ part of 'disclosure.dart';
   extraStylerMixins: [RemixBoxStylerMixin],
 )
 class DisclosureSpec with _$DisclosureSpec {
-  /// Outer panel: radius, border, fill, and clipping shared by [trigger] and
-  /// [content].
-  ///
-  /// Not [forwardStyler]-forwarded: [trigger] already forwards the top-level
-  /// Box shorthand (`.color()`, `.borderRadius()`, ...), and a spec cannot
-  /// forward two fields without colliding. Reach [container] explicitly.
+  /// Outer panel. Not forwarded — top-level Box shorthand goes to [trigger].
   @override
   final StyleSpec<BoxSpec> container;
 
-  /// Layered fills, strokes, and backdrop blur painted with [container].
   @override
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
-  /// Interactive trigger surface.
   @override
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> trigger;
 
-  /// Inline content panel revealed by the trigger.
   @override
   final StyleSpec<BoxSpec> content;
 
@@ -55,8 +47,4 @@ class DisclosureSpec with _$DisclosureSpec {
   }
 }
 
-/// Backward-compatible name for [DisclosureSpec].
-///
-/// The generated style API is based on [DisclosureSpec], so resolved values use
-/// `DisclosureSpec` as their runtime type.
 typedef RemixDisclosureSpec = DisclosureSpec;
