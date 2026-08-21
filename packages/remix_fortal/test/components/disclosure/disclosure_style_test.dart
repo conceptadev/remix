@@ -31,6 +31,44 @@ void main() {
       }
     });
 
+    testWidgets('each size resolves distinct layout metrics', (tester) async {
+      final paddings = <EdgeInsetsGeometry?>{};
+      final radii = <BorderRadiusGeometry?>{};
+
+      for (final size in FortalDisclosureSize.values) {
+        final spec = await _resolve(tester, fortalDisclosureStyle(size: size));
+        final decoration = spec.container.spec.decoration as BoxDecoration?;
+
+        paddings.add(spec.trigger.spec.padding);
+        radii.add(decoration?.borderRadius);
+      }
+
+      expect(paddings, hasLength(FortalDisclosureSize.values.length));
+      expect(radii, hasLength(FortalDisclosureSize.values.length));
+      expect(paddings, isNot(contains(null)));
+      expect(radii, isNot(contains(null)));
+    });
+
+    testWidgets('variants resolve distinct visual treatments', (tester) async {
+      final containerColors = <Color?>{};
+      final triggerColors = <Color?>{};
+
+      for (final variant in FortalDisclosureVariant.values) {
+        final spec = await _resolve(
+          tester,
+          fortalDisclosureStyle(variant: variant),
+        );
+
+        containerColors.add(_color(spec.container));
+        triggerColors.add(_color(spec.trigger));
+      }
+
+      expect(containerColors, hasLength(FortalDisclosureVariant.values.length));
+      expect(triggerColors, hasLength(FortalDisclosureVariant.values.length));
+      expect(containerColors, isNot(contains(null)));
+      expect(triggerColors, isNot(contains(null)));
+    });
+
     testWidgets('hovered, pressed, focused, and disabled states resolve', (
       tester,
     ) async {
