@@ -26,6 +26,7 @@ export 'src/recipes/code.dart';
 export 'src/recipes/data_list.dart';
 export 'src/recipes/data_table.dart';
 export 'src/recipes/dialog.dart';
+export 'src/recipes/disclosure.dart';
 export 'src/recipes/divider.dart';
 export 'src/recipes/heading.dart';
 export 'src/recipes/icon_button.dart';

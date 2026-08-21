@@ -21,6 +21,7 @@ import 'package:demo/components/code.dart' as _demo_components_code;
 import 'package:demo/components/data_list.dart' as _demo_components_data_list;
 import 'package:demo/components/data_table.dart' as _demo_components_data_table;
 import 'package:demo/components/dialog.dart' as _demo_components_dialog;
+import 'package:demo/components/disclosure.dart' as _demo_components_disclosure;
 import 'package:demo/components/divider.dart' as _demo_components_divider;
 import 'package:demo/components/heading.dart' as _demo_components_heading;
 import 'package:demo/components/icon_button.dart'
@@ -228,6 +229,23 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Dialog Component',
             builder: _demo_components_dialog.buildDividerUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixDisclosure',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder: _demo_components_disclosure.buildDisclosureCatalogUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Fortal',
+            builder: _demo_components_disclosure.buildFortalDisclosureUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Remix',
+            builder: _demo_components_disclosure.buildRemixDisclosureUseCase,
           ),
         ],
       ),

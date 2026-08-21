@@ -18,6 +18,21 @@ void main() {
     expect(frame, isA<BoxStyler>());
   });
 
+  test(
+    'the Fortal disclosure wrapper is constructible from the public API',
+    () {
+      const disclosure = FortalDisclosure.soft(
+        trigger: Text('Details'),
+        content: Text('Account details'),
+        size: FortalDisclosureSize.size3,
+      );
+
+      expect(disclosure.variant, FortalDisclosureVariant.soft);
+      expect(disclosure.size, FortalDisclosureSize.size3);
+      expect(fortalDisclosureStyle(), isA<DisclosureStyler>());
+    },
+  );
+
   test('new Fortal controls expose generated public wrappers', () {
     const segmented = FortalSegmentedControl<String>.classic(
       items: [RemixSegmentedControlItem(value: 'one', label: 'One')],

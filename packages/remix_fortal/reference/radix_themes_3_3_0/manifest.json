@@ -3578,6 +3578,99 @@
       }
     },
     {
+      "id": "disclosure",
+      "fortalType": "FortalDisclosure",
+      "radixComponent": "Collapsible",
+      "parity": "extension",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "expanded": null,
+        "defaultExpanded": false,
+        "enabled": true
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius"
+      ],
+      "states": [
+        "collapsed",
+        "expanded",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled"
+      ],
+      "sourceFiles": [],
+      "sourceSelectors": [],
+      "flutterExceptions": [
+        "Radix Primitives calls this component Collapsible; Remix uses the WAI-ARIA/Naked UI name Disclosure while preserving the Root, Trigger, and Content anatomy.",
+        "Radix Themes 3.3.0 ships no styled Collapsible, so Fortal treats the recipe as an extension and derives its panel treatment from the mapped Table family."
+      ],
+      "coverage": {
+        "enums": [
+          "size.size1",
+          "size.size2",
+          "size.size3",
+          "variant.surface",
+          "variant.soft"
+        ],
+        "states": [
+          "collapsed",
+          "expanded",
+          "hovered",
+          "pressed",
+          "focused",
+          "disabled"
+        ],
+        "tests": [
+          "test/components/disclosure/disclosure_widget_test.dart",
+          "test/components/disclosure/disclosure_style_test.dart"
+        ]
+      },
+      "upstreamInventory": {
+        "enums": {},
+        "states": [
+          "open",
+          "closed",
+          "disabled"
+        ],
+        "supportedStyleProps": []
+      },
+      "supportedVisualStates": [
+        "collapsed",
+        "expanded",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled"
+      ],
+      "deferredCapabilities": [
+        "Radix Collapsible.Content forceMount has no NakedDisclosure equivalent."
+      ],
+      "visualMapping": {
+        "color": "FortalScope.accent",
+        "radius": "FortalScope.radius",
+        "variant": "generated Fortal constructor",
+        "size": "generated Fortal constructor"
+      }
+    },
+    {
       "id": "toggle",
       "fortalType": "FortalToggle",
       "radixComponent": null,
@@ -5146,6 +5239,15 @@
           "color",
           "radius"
         ]
+      },
+      "disclosure": {
+        "enums": {},
+        "states": [
+          "open",
+          "closed",
+          "disabled"
+        ],
+        "supportedStyleProps": []
       },
       "avatar": {
         "enums": {
