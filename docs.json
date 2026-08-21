@@ -122,6 +122,10 @@
           "href": "/components/dialog"
         },
         {
+          "title": "Disclosure",
+          "href": "/components/disclosure"
+        },
+        {
           "title": "Divider",
           "href": "/components/divider"
         },

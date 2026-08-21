@@ -18,6 +18,10 @@ void main() {
     test('named constructors pin variants and infer generic types', () {
       const button = FortalButton.soft(label: 'Save');
       const accordion = FortalAccordion.soft(value: 'item', child: SizedBox());
+      const disclosure = FortalDisclosure.soft(
+        trigger: SizedBox(),
+        content: SizedBox(),
+      );
       const radio = FortalRadio.soft(value: 'option', semanticLabel: 'Option');
       const menu = FortalMenu.soft(
         trigger: RemixMenuTrigger(label: 'Menu'),
@@ -36,6 +40,7 @@ void main() {
       expect(button.variant, FortalButtonVariant.soft);
       expect(accordion, isA<FortalAccordion<String>>());
       expect(accordion.variant, FortalAccordionVariant.soft);
+      expect(disclosure.variant, FortalDisclosureVariant.soft);
       expect(radio, isA<FortalRadio<String>>());
       expect(radio.variant, FortalRadioVariant.soft);
       expect(menu, isA<FortalMenu<String>>());
@@ -45,6 +50,18 @@ void main() {
       expect(segmented, isA<FortalSegmentedControl<String>>());
       expect(segmented.variant, FortalSegmentedControlVariant.classic);
       expect(textArea.variant, FortalTextAreaVariant.soft);
+    });
+
+    testWidgets('renders FortalDisclosure', (tester) async {
+      await tester.pumpRemixApp(
+        const FortalDisclosure(
+          trigger: Text('Details'),
+          content: Text('Content'),
+        ),
+      );
+
+      expect(find.byType(FortalDisclosure), findsOneWidget);
+      expect(find.byType(RemixDisclosure), findsOneWidget);
     });
 
     test('FortalMenu constructors do not expose style overrides', () {
