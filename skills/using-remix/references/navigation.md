@@ -1,6 +1,6 @@
 # Navigation Components
 
-Constructor details for Remix tabs and accordions. Fortal widgets mentioned here live in the separate `remix_fortal` package; see [Fortal](fortal.md).
+Constructor details for Remix tabs, accordions, and disclosures. Fortal widgets mentioned here live in the separate `remix_fortal` package; see [Fortal](fortal.md).
 
 ## Components
 
@@ -112,4 +112,28 @@ Each item is its own bordered panel, so space adjacent items
 (`Column(spacing: 8, ...)`) instead of expecting a shared divider.
 
 Fortal preset: `FortalAccordion<T>` — `variant` (`surface|soft`), `size`
+(`size1–size3`).
+
+### RemixDisclosure
+
+Standalone trigger and one inline panel. Use this when items do not need
+`RemixAccordionGroup` coordination.
+
+| Parameter | Type | Default | Required |
+|-----------|------|---------|----------|
+| `trigger` | `Widget` | — | yes |
+| `content` | `Widget` | — | yes |
+| `triggerBuilder` | `ValueWidgetBuilder<NakedDisclosureState>?` | `null` | no |
+| `expanded` | `bool?` | `null` | no |
+| `defaultExpanded` | `bool` | `false` | no |
+| `onExpandedChanged` | `ValueChanged<bool>?` | `null` | no |
+| `enabled` | `bool` | `true` | no |
+| `semanticLabel` / `semanticHint` | `String?` | `null` | no |
+| `animationStyle` | `AnimationStyle` | 200ms ease | no |
+| `transitionBuilder` | `NakedDisclosureTransitionBuilder` | fade + size | no |
+
+Omit `expanded` for uncontrolled state. Top-level Box shorthand forwards to
+`trigger`; style the frame with `.container(...)`.
+
+Fortal preset: `FortalDisclosure` — `variant` (`surface|soft`), `size`
 (`size1–size3`).

@@ -27,7 +27,7 @@ dependencies:
     sdk: flutter
   mix: ^2.2.0-beta.5
   mix_annotations: ^2.2.0-beta.1
-  naked_ui: ^1.0.0-beta.12
+  naked_ui: 1.0.0-beta.14
 
 dev_dependencies:
   flutter_test:

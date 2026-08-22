@@ -5,6 +5,20 @@ import 'package:remix/remix.dart';
 enum Interest { design, code }
 
 void main() {
+  test('disclosure API is constructible from the package barrel', () {
+    const disclosure = RemixDisclosure(
+      trigger: Text('Details'),
+      content: Text('Account details'),
+      defaultExpanded: true,
+    );
+
+    expect(disclosure.trigger, isA<Text>());
+    expect(disclosure.content, isA<Text>());
+    expect(disclosure.defaultExpanded, isTrue);
+    expect(disclosure.style, isA<DisclosureStyler>());
+    expect(const DisclosureSpec(), isA<DisclosureSpec>());
+  });
+
   test('segmented control API is constructible from the package barrel', () {
     const item = RemixSegmentedControlItem<String>(
       value: 'list',
