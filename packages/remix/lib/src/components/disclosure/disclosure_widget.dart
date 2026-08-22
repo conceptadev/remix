@@ -161,7 +161,7 @@ class RemixDisclosure extends StatelessWidget {
           builder: (context, spec) {
             return _RemixDisclosureStyleScope(
               spec: spec,
-              child: RemixBoxWithEffects(
+              child: RemixBoxAdapter(
                 styleSpec: spec.container,
                 containerEffects: spec.containerEffects,
                 child: child,

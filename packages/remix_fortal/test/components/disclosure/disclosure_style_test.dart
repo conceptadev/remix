@@ -69,6 +69,26 @@ void main() {
       expect(triggerColors, isNot(contains(null)));
     });
 
+    testWidgets('surface frame paints above edge-to-edge child backgrounds', (
+      tester,
+    ) async {
+      for (final variant in FortalDisclosureVariant.values) {
+        final spec = await _resolve(
+          tester,
+          fortalDisclosureStyle(variant: variant),
+        );
+        final box = spec.container.spec;
+        final background = box.decoration! as BoxDecoration;
+        final foreground = box.foregroundDecoration! as BoxDecoration;
+        final border = foreground.border! as Border;
+
+        expect(background.border, isNull);
+        expect(box.padding, const EdgeInsets.all(1));
+        expect(foreground.borderRadius, background.borderRadius);
+        expect(border.top.width, 1);
+      }
+    });
+
     testWidgets('hovered, pressed, focused, and disabled states resolve', (
       tester,
     ) async {

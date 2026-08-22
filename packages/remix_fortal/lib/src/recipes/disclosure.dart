@@ -29,11 +29,6 @@ DisclosureStyler _fortalDisclosureBaseStyler(FortalDisclosureSize size) {
   final metrics = _fortalDisclosureMetrics(size);
 
   return DisclosureStyler()
-      .container(
-        BoxStyler()
-            .clipBehavior(.antiAlias)
-            .borderRadius(.all(metrics.radius)),
-      )
       .trigger(
         BoxStyler()
             .width(.infinity)
@@ -64,11 +59,15 @@ DisclosureStyler _fortalDisclosureBaseStyler(FortalDisclosureSize size) {
 }
 
 DisclosureStyler _fortalDisclosureSurfaceStyler(FortalDisclosureSize size) {
+  final metrics = _fortalDisclosureMetrics(size);
   return _fortalDisclosureBaseStyler(size)
       .container(
-        .color(
-          FortalTokens.gray2(),
-        ).border(.all(_fortalDisclosureBorderSide(FortalTokens.gray6()))),
+        fortalSurfaceFrame(
+          fillColor: FortalTokens.gray2(),
+          borderColor: FortalTokens.gray6(),
+          borderWidth: FortalTokens.borderWidth1(),
+          radius: metrics.radius,
+        ),
       )
       .trigger(.color(FortalTokens.gray1()))
       .content(
@@ -87,11 +86,15 @@ DisclosureStyler _fortalDisclosureSurfaceStyler(FortalDisclosureSize size) {
 }
 
 DisclosureStyler _fortalDisclosureSoftStyler(FortalDisclosureSize size) {
+  final metrics = _fortalDisclosureMetrics(size);
   return _fortalDisclosureBaseStyler(size)
       .container(
-        .color(
-          FortalTokens.accent2(),
-        ).border(.all(_fortalDisclosureBorderSide(FortalTokens.accent6()))),
+        fortalSurfaceFrame(
+          fillColor: FortalTokens.accent2(),
+          borderColor: FortalTokens.accent6(),
+          borderWidth: FortalTokens.borderWidth1(),
+          radius: metrics.radius,
+        ),
       )
       .trigger(
         BoxStyler()
