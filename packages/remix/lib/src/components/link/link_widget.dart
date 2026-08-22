@@ -117,7 +117,7 @@ class RemixLink extends StatelessWidget {
             child: child!,
           );
 
-    return RemixBoxWithEffects(
+    return RemixBoxAdapter(
       styleSpec: spec.container,
       containerEffects: spec.containerEffects,
       child: content,

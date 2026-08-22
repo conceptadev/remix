@@ -52,7 +52,7 @@ class RemixCallout extends StatelessWidget {
       builder: (context, spec) {
         // For raw constructor, use provided child directly
         if (child != null) {
-          return RemixFlexBoxWithEffects(
+          return RemixFlexBoxAdapter(
             styleSpec: spec.container,
             direction: Axis.horizontal,
             containerEffects: spec.containerEffects,
@@ -83,7 +83,7 @@ class RemixCallout extends StatelessWidget {
           );
         }
 
-        return RemixFlexBoxWithEffects(
+        return RemixFlexBoxAdapter(
           styleSpec: spec.container,
           direction: Axis.horizontal,
           containerEffects: spec.containerEffects,

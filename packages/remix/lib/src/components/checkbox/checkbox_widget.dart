@@ -165,7 +165,7 @@ class RemixCheckbox extends StatelessWidget {
               (false, null) => null,
             };
 
-            final checkbox = RemixBoxWithEffects(
+            final checkbox = RemixBoxAdapter(
               styleSpec: spec.container,
               containerEffects: spec.containerEffects,
               child: indicator,

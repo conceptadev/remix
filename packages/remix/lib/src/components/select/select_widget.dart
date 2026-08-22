@@ -399,7 +399,7 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
             opacity: fadeAnimation.value,
             child: StyleSpecBuilder<SelectContentSpec>(
               styleSpec: widget.content,
-              builder: (context, spec) => RemixBoxWithEffects(
+              builder: (context, spec) => RemixBoxAdapter(
                 styleSpec: spec.container,
                 containerEffects: spec.containerEffects,
                 child: ColumnBox(
@@ -444,7 +444,7 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
             ? trigger.expandedIcon
             : trigger.collapsedIcon;
 
-        return RemixFlexBoxWithEffects(
+        return RemixFlexBoxAdapter(
           styleSpec: spec.container,
           direction: Axis.horizontal,
           containerEffects: spec.containerEffects,

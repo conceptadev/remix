@@ -59,7 +59,7 @@ class RemixProgress extends StatelessWidget {
           child: Stack(
             children: [
               // Track background
-              RemixBoxWithEffects(
+              RemixBoxAdapter(
                 styleSpec: spec.track,
                 containerEffects: spec.trackEffects,
               ),
@@ -70,7 +70,7 @@ class RemixProgress extends StatelessWidget {
 
                   return SizedBox(
                     width: biggestSize.width * value.clamp(0.0, 1.0),
-                    child: RemixBoxWithEffects(
+                    child: RemixBoxAdapter(
                       styleSpec: spec.indicator,
                       containerEffects: spec.indicatorEffects,
                     ),

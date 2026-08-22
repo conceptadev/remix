@@ -1,9 +1,13 @@
 part of 'remix_box_effects.dart';
 
-/// A Mix [Box] that inserts advanced paint at the decoration boundary.
+/// Routes a resolved Mix [Box] surface through the simplest valid renderer.
+///
+/// Ordinary surfaces remain real Mix Boxes. Only non-empty advanced effects
+/// use [_RemixAdvancedSurface], while CSS-style negative margins are handled by
+/// the independent outer-layout adapter.
 @internal
-final class RemixBoxWithEffects extends StatelessWidget {
-  const RemixBoxWithEffects({
+final class RemixBoxAdapter extends StatelessWidget {
+  const RemixBoxAdapter({
     super.key,
     required this.styleSpec,
     this.containerEffects,
@@ -21,28 +25,44 @@ final class RemixBoxWithEffects extends StatelessWidget {
     return StyleSpecBuilder<BoxSpec>(
       styleSpec: styleSpec,
       builder: (context, spec) {
-        if (effects.isEmpty &&
-            (spec.margin == null || spec.margin!.isNonNegative)) {
+        final margin = spec.margin;
+        if (effects.isEmpty && (margin == null || margin.isNonNegative)) {
           return Box(
             styleSpec: StyleSpec(spec: spec),
             child: child,
           );
         }
-        _validateBoxDecoration(spec.decoration, effects: effects, flex: false);
-        return _RemixDecoratedBox(
-          spec: spec,
-          containerEffects: effects,
-          child: child,
+
+        final innerSpec = _withoutOuterBoxLayout(spec);
+        final Widget inner;
+        if (effects.isEmpty) {
+          inner = Box(
+            styleSpec: StyleSpec(spec: innerSpec),
+            child: child,
+          );
+        } else {
+          _validateBoxDecoration(spec.decoration);
+          inner = _RemixAdvancedSurface(
+            spec: innerSpec,
+            containerEffects: effects,
+            child: child,
+          );
+        }
+        return _applyRemixOuterBoxLayout(
+          margin: margin,
+          transform: spec.transform,
+          transformAlignment: spec.transformAlignment,
+          child: inner,
         );
       },
     );
   }
 }
 
-/// A Mix [FlexBox] that inserts advanced paint at the nested Box boundary.
+/// Flex counterpart of [RemixBoxAdapter].
 @internal
-final class RemixFlexBoxWithEffects extends StatelessWidget {
-  const RemixFlexBoxWithEffects({
+final class RemixFlexBoxAdapter extends StatelessWidget {
+  const RemixFlexBoxAdapter({
     super.key,
     required this.styleSpec,
     this.direction,
@@ -73,7 +93,6 @@ final class RemixFlexBoxWithEffects extends StatelessWidget {
           };
         }
 
-        _validateBoxDecoration(box?.decoration, effects: effects, flex: true);
         final flex = spec.flex?.spec;
         assert(
           direction == null ||
@@ -94,7 +113,7 @@ final class RemixFlexBoxWithEffects extends StatelessWidget {
           spacing: flex?.spacing ?? 0,
           children: children,
         );
-        return RemixBoxWithEffects(
+        return RemixBoxAdapter(
           styleSpec: spec.box ?? const StyleSpec(spec: BoxSpec()),
           containerEffects: effects,
           child: content,
@@ -194,22 +213,12 @@ void _validateEffectLayer(RemixBoxEffectLayerSpec layer, String name) {
   }
 }
 
-void _validateBoxDecoration(
-  Decoration? decoration, {
-  required RemixBoxEffectsSpec effects,
-  required bool flex,
-}) {
+void _validateBoxDecoration(Decoration? decoration) {
   final unsupported =
       (decoration != null && decoration is! BoxDecoration) ||
       decoration is BoxDecoration && decoration.shape == BoxShape.circle;
   if (!unsupported) return;
 
-  if (effects.isEmpty) {
-    throw FlutterError(
-      'Negative Remix ${flex ? 'FlexBox' : 'Box'} margins require a '
-      'rectangular BoxDecoration.',
-    );
-  }
   throw FlutterError(
     'Remix box effects require a rectangular BoxDecoration. '
     'ShapeDecoration and BoxShape.circle are not supported.',
@@ -217,9 +226,9 @@ void _validateBoxDecoration(
 }
 
 /// Internal Box equivalent that inserts box effect layers at the decoration
-/// boundary, inside constraints and margin.
-class _RemixDecoratedBox extends StatelessWidget {
-  const _RemixDecoratedBox({
+/// boundary, inside constraints and outside CSS margin and transforms.
+class _RemixAdvancedSurface extends StatelessWidget {
+  const _RemixAdvancedSurface({
     required this.spec,
     required this.containerEffects,
     this.child,
@@ -354,222 +363,6 @@ class _RemixDecoratedBox extends StatelessWidget {
     if (spec.constraints case final constraints?) {
       current = ConstrainedBox(constraints: constraints, child: current);
     }
-    if (spec.margin case final margin?) {
-      current = margin.isNonNegative
-          ? Padding(padding: margin, child: current)
-          : _RemixNegativeMargin(margin: margin, child: current);
-    }
-    if (spec.transform case final transform?) {
-      current = Transform(
-        transform: transform,
-        alignment: spec.transformAlignment,
-        child: current,
-      );
-    }
     return current;
-  }
-}
-
-/// Lays out a child using CSS margin arithmetic when one or more insets are
-/// negative.
-///
-/// Flutter's [Padding] intentionally rejects negative values, while Radix's
-/// ghost controls use a negative margin to cancel their visual padding in
-/// surrounding layout. This render object keeps the padded child paintable at
-/// its full size while reporting the margin-adjusted footprint to its parent.
-class _RemixNegativeMargin extends SingleChildRenderObjectWidget {
-  const _RemixNegativeMargin({required this.margin, required super.child});
-
-  final EdgeInsetsGeometry margin;
-
-  @override
-  RenderObject createRenderObject(BuildContext context) =>
-      _RenderRemixNegativeMargin(
-        margin: margin,
-        textDirection: Directionality.maybeOf(context),
-      );
-
-  @override
-  void updateRenderObject(
-    BuildContext context,
-    _RenderRemixNegativeMargin renderObject,
-  ) {
-    renderObject
-      ..margin = margin
-      ..textDirection = Directionality.maybeOf(context);
-  }
-}
-
-class _RenderRemixNegativeMargin extends RenderShiftedBox {
-  _RenderRemixNegativeMargin({
-    required EdgeInsetsGeometry margin,
-    required TextDirection? textDirection,
-    RenderBox? child,
-  }) : _margin = margin,
-       _textDirection = textDirection,
-       super(child);
-
-  EdgeInsets? _resolvedMarginCache;
-
-  EdgeInsets get _resolvedMargin =>
-      _resolvedMarginCache ??= margin.resolve(textDirection);
-
-  EdgeInsetsGeometry get margin => _margin;
-  EdgeInsetsGeometry _margin;
-
-  set margin(EdgeInsetsGeometry value) {
-    if (_margin == value) return;
-    _margin = value;
-    _markNeedsResolution();
-  }
-
-  TextDirection? get textDirection => _textDirection;
-  TextDirection? _textDirection;
-
-  set textDirection(TextDirection? value) {
-    if (_textDirection == value) return;
-    _textDirection = value;
-    _markNeedsResolution();
-  }
-
-  void _markNeedsResolution() {
-    _resolvedMarginCache = null;
-    markNeedsLayout();
-  }
-
-  double _intrinsicExtent(double childExtent, double marginExtent) =>
-      math.max(0, childExtent + marginExtent);
-
-  @override
-  double computeMinIntrinsicWidth(double height) {
-    final resolved = _resolvedMargin;
-    return _intrinsicExtent(
-      child?.getMinIntrinsicWidth(math.max(0, height - resolved.vertical)) ?? 0,
-      resolved.horizontal,
-    );
-  }
-
-  @override
-  double computeMaxIntrinsicWidth(double height) {
-    final resolved = _resolvedMargin;
-    return _intrinsicExtent(
-      child?.getMaxIntrinsicWidth(math.max(0, height - resolved.vertical)) ?? 0,
-      resolved.horizontal,
-    );
-  }
-
-  @override
-  double computeMinIntrinsicHeight(double width) {
-    final resolved = _resolvedMargin;
-    return _intrinsicExtent(
-      child?.getMinIntrinsicHeight(math.max(0, width - resolved.horizontal)) ??
-          0,
-      resolved.vertical,
-    );
-  }
-
-  @override
-  double computeMaxIntrinsicHeight(double width) {
-    final resolved = _resolvedMargin;
-    return _intrinsicExtent(
-      child?.getMaxIntrinsicHeight(math.max(0, width - resolved.horizontal)) ??
-          0,
-      resolved.vertical,
-    );
-  }
-
-  Size _constrainOuterSize(BoxConstraints constraints, Size childSize) {
-    final resolved = _resolvedMargin;
-    return constraints.constrain(
-      Size(
-        math.max(0, childSize.width + resolved.horizontal),
-        math.max(0, childSize.height + resolved.vertical),
-      ),
-    );
-  }
-
-  @override
-  @protected
-  Size computeDryLayout(covariant BoxConstraints constraints) {
-    final resolved = _resolvedMargin;
-    final currentChild = child;
-    if (currentChild == null) {
-      return constraints.constrain(
-        Size(math.max(0, resolved.horizontal), math.max(0, resolved.vertical)),
-      );
-    }
-    return _constrainOuterSize(
-      constraints,
-      currentChild.getDryLayout(constraints.deflate(resolved)),
-    );
-  }
-
-  @override
-  double? computeDryBaseline(
-    covariant BoxConstraints constraints,
-    TextBaseline baseline,
-  ) {
-    final currentChild = child;
-    if (currentChild == null) return null;
-    final resolved = _resolvedMargin;
-    final childBaseline = currentChild.getDryBaseline(
-      constraints.deflate(resolved),
-      baseline,
-    );
-    return childBaseline == null ? null : childBaseline + resolved.top;
-  }
-
-  @override
-  void performLayout() {
-    final resolved = _resolvedMargin;
-    final currentChild = child;
-    if (currentChild == null) {
-      size = constraints.constrain(
-        Size(math.max(0, resolved.horizontal), math.max(0, resolved.vertical)),
-      );
-      return;
-    }
-
-    currentChild.layout(constraints.deflate(resolved), parentUsesSize: true);
-    (currentChild.parentData! as BoxParentData).offset = Offset(
-      resolved.left,
-      resolved.top,
-    );
-    size = _constrainOuterSize(constraints, currentChild.size);
-  }
-
-  @override
-  Rect get paintBounds {
-    final currentChild = child;
-    if (currentChild == null) return Offset.zero & size;
-    final offset = (currentChild.parentData! as BoxParentData).offset;
-    return (Offset.zero & size).expandToInclude(
-      currentChild.paintBounds.shift(offset),
-    );
-  }
-
-  @override
-  Rect get semanticBounds => paintBounds;
-
-  @override
-  bool hitTest(BoxHitTestResult result, {required Offset position}) {
-    if (child == null || !hasSize) return false;
-    if (!hitTestChildren(result, position: position)) return false;
-    result.add(BoxHitTestEntry(this, position));
-    return true;
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin))
-      ..add(
-        EnumProperty<TextDirection>(
-          'textDirection',
-          textDirection,
-          defaultValue: null,
-        ),
-      );
   }
 }

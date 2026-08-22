@@ -10,4 +10,5 @@ import 'remix_blend_mode.dart';
 
 part 'remix_box_effects_model.dart';
 part 'remix_box_effects_adapter.dart';
+part 'remix_box_outer_layout.dart';
 part 'remix_box_effects_painters.dart';

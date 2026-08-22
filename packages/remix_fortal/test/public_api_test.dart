@@ -6,6 +6,17 @@ import 'package:remix_fortal/remix_fortal.dart';
 import 'helpers/test_helpers.dart';
 
 void main() {
+  test('the Fortal surface frame helper is public', () {
+    final frame = fortalSurfaceFrame(
+      fillColor: const Color(0xFFFFFFFF),
+      borderColor: const Color(0xFF000000),
+      borderWidth: 1,
+      radius: const Radius.circular(8),
+    );
+
+    expect(frame, isA<BoxStyler>());
+  });
+
   test('new Fortal controls expose generated public wrappers', () {
     const segmented = FortalSegmentedControl<String>.classic(
       items: [RemixSegmentedControlItem(value: 'one', label: 'One')],

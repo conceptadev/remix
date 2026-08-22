@@ -108,10 +108,10 @@ class RemixSwitch extends StatelessWidget {
           styleSpec: styleSpec,
           controller: NakedToggleState.controllerOf(context),
           builder: (context, spec) {
-            return RemixBoxWithEffects(
+            return RemixBoxAdapter(
               styleSpec: spec.container,
               containerEffects: spec.trackEffects,
-              child: RemixBoxWithEffects(
+              child: RemixBoxAdapter(
                 styleSpec: spec.thumb,
                 containerEffects: spec.thumbEffects,
               ),

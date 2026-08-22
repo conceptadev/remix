@@ -581,7 +581,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
           item is RemixMenuCheckboxItem<T> || item is RemixMenuRadioGroup<T>,
     );
 
-    return RemixFlexBoxWithEffects(
+    return RemixFlexBoxAdapter(
       styleSpec: overlayStyleSpec,
       direction: Axis.vertical,
       containerEffects: containerEffects,

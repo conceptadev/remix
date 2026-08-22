@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix/src/rendering/remix_box_effects.dart'
-    show RemixBoxWithEffects, RemixFlexBoxWithEffects;
+    show RemixBoxAdapter, RemixFlexBoxAdapter;
 
 void main() {
   group('RemixBoxEffectsSpec', () {
@@ -22,7 +22,7 @@ void main() {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: RemixBoxWithEffects(
+          child: RemixBoxAdapter(
             styleSpec: const StyleSpec(spec: BoxSpec()),
             containerEffects: const RemixBoxEffectsSpec(
               backdropBlur: double.infinity,
@@ -105,7 +105,7 @@ void main() {
         await tester.pumpWidget(
           Directionality(
             textDirection: TextDirection.ltr,
-            child: RemixBoxWithEffects(
+            child: RemixBoxAdapter(
               styleSpec: const StyleSpec(spec: BoxSpec()),
               containerEffects: effects,
             ),
@@ -148,7 +148,7 @@ void main() {
     testWidgets('rejects outline stroke alignment other than inside', (
       tester,
     ) async {
-      Widget build(double strokeAlign) => RemixBoxWithEffects(
+      Widget build(double strokeAlign) => RemixBoxAdapter(
         styleSpec: const StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
         containerEffects: RemixBoxEffectsSpec(
           outline: BorderSide(strokeAlign: strokeAlign),
@@ -210,7 +210,7 @@ void main() {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: RemixBoxWithEffects(
+          child: RemixBoxAdapter(
             styleSpec: const StyleSpec(spec: BoxSpec()),
             child: const SizedBox.square(dimension: 12),
           ),
@@ -229,13 +229,13 @@ void main() {
           textDirection: TextDirection.ltr,
           child: Column(
             children: [
-              RemixBoxWithEffects(
+              RemixBoxAdapter(
                 styleSpec: const StyleSpec(spec: BoxSpec()),
                 containerEffects: const RemixBoxEffectsSpec(
                   behindContent: RemixBoxEffectLayerSpec(),
                 ),
               ),
-              RemixFlexBoxWithEffects(
+              RemixFlexBoxAdapter(
                 styleSpec: const StyleSpec(spec: FlexBoxSpec()),
                 direction: Axis.horizontal,
                 containerEffects: const RemixBoxEffectsSpec(
@@ -252,13 +252,93 @@ void main() {
       expect(find.byType(CustomPaint), findsNothing);
     });
 
+    testWidgets('keeps the real Mix Box for an effects-free negative margin', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  key: const ValueKey('negative-footprint'),
+                  child: RemixBoxAdapter(
+                    styleSpec: const StyleSpec(
+                      spec: BoxSpec(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        margin: EdgeInsets.symmetric(
+                          horizontal: -8,
+                          vertical: -4,
+                        ),
+                        decoration: ShapeDecoration(
+                          color: Colors.blue,
+                          shape: StadiumBorder(),
+                        ),
+                      ),
+                    ),
+                    child: const SizedBox(width: 20, height: 10),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(Box), findsOneWidget);
+      expect(find.byType(CustomPaint), findsNothing);
+      expect(tester.takeException(), isNull);
+      expect(
+        tester.getSize(find.byKey(const ValueKey('negative-footprint'))),
+        const Size(20, 10),
+      );
+    });
+
+    testWidgets('keeps a real Mix Box around negative-margin Flex content', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Center(
+            child: RemixFlexBoxAdapter(
+              styleSpec: const StyleSpec(
+                spec: FlexBoxSpec(
+                  box: StyleSpec(
+                    spec: BoxSpec(
+                      margin: EdgeInsets.all(-4),
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(),
+                    ),
+                  ),
+                  flex: StyleSpec(spec: FlexSpec(direction: Axis.horizontal)),
+                ),
+              ),
+              direction: Axis.horizontal,
+              children: const [SizedBox.square(dimension: 12)],
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(Box), findsOneWidget);
+      expect(find.byType(Flex), findsOneWidget);
+      expect(find.byType(CustomPaint), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('accepts a radius-only rectangular Box decoration', (
       tester,
     ) async {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: RemixBoxWithEffects(
+          child: RemixBoxAdapter(
             styleSpec: const StyleSpec(
               spec: BoxSpec(
                 decoration: BoxDecoration(
@@ -284,7 +364,7 @@ void main() {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: RemixBoxWithEffects(
+          child: RemixBoxAdapter(
             styleSpec: const StyleSpec(spec: BoxSpec()),
             containerEffects: const RemixBoxEffectsSpec(
               outline: BorderSide(color: Colors.green, width: 2),
@@ -308,7 +388,7 @@ void main() {
         await tester.pumpWidget(
           Directionality(
             textDirection: TextDirection.ltr,
-            child: RemixBoxWithEffects(
+            child: RemixBoxAdapter(
               styleSpec: StyleSpec(spec: BoxSpec(decoration: invalid)),
               containerEffects: RemixBoxEffectsSpec(backdropBlur: 1),
               child: const SizedBox.square(dimension: 20),
@@ -363,7 +443,7 @@ void main() {
                 key: const ValueKey('effects-host'),
                 width: 100,
                 height: 80,
-                child: RemixBoxWithEffects(
+                child: RemixBoxAdapter(
                   styleSpec: spec,
                   containerEffects: const RemixBoxEffectsSpec(
                     behindContent: RemixBoxEffectLayerSpec(
@@ -412,7 +492,7 @@ void main() {
             children: [
               SizedBox(
                 key: const ValueKey('negative-footprint'),
-                child: RemixBoxWithEffects(
+                child: RemixBoxAdapter(
                   styleSpec: const StyleSpec(
                     spec: BoxSpec(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -433,7 +513,7 @@ void main() {
                   child: const SizedBox(width: 20, height: 10),
                 ),
               ),
-              RemixBoxWithEffects(
+              RemixBoxAdapter(
                 key: const ValueKey('null-child'),
                 styleSpec: const StyleSpec(
                   spec: BoxSpec(
@@ -468,7 +548,7 @@ void main() {
         Directionality(
           textDirection: TextDirection.ltr,
           child: Center(
-            child: RemixBoxWithEffects(
+            child: RemixBoxAdapter(
               styleSpec: const StyleSpec(
                 spec: BoxSpec(
                   constraints: BoxConstraints.tightFor(width: 30, height: 20),
@@ -521,7 +601,7 @@ void main() {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: RemixBoxWithEffects(
+          child: RemixBoxAdapter(
             styleSpec: const StyleSpec(
               spec: BoxSpec(
                 clipBehavior: Clip.hardEdge,
@@ -565,7 +645,7 @@ void main() {
         Widget build(double width) => Directionality(
           textDirection: TextDirection.ltr,
           child: Center(
-            child: RemixBoxWithEffects(
+            child: RemixBoxAdapter(
               key: const ValueKey('animated-box'),
               styleSpec: StyleSpec(
                 spec: BoxSpec(
@@ -626,7 +706,7 @@ void main() {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: RemixFlexBoxWithEffects(
+          child: RemixFlexBoxAdapter(
             styleSpec: StyleSpec(
               spec: FlexBoxSpec(
                 box: StyleSpec(
@@ -677,7 +757,7 @@ void main() {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
-          child: RemixFlexBoxWithEffects(
+          child: RemixFlexBoxAdapter(
             styleSpec: const StyleSpec(
               spec: FlexBoxSpec(
                 box: StyleSpec(spec: BoxSpec(decoration: BoxDecoration())),
