@@ -6,7 +6,7 @@ part of 'remix_box_effects.dart';
 /// dedicated [_RemixBoxEffectsRenderer], while CSS-style negative margins are
 /// handled by the independent outer-layout adapter.
 @internal
-final class RemixBoxAdapter extends StatelessWidget {
+final class RemixBoxAdapter extends StatefulWidget {
   const RemixBoxAdapter({
     super.key,
     required this.styleSpec,
@@ -19,11 +19,23 @@ final class RemixBoxAdapter extends StatelessWidget {
   final Widget? child;
 
   @override
+  State<RemixBoxAdapter> createState() => _RemixBoxAdapterState();
+}
+
+final class _RemixBoxAdapterState extends State<RemixBoxAdapter> {
+  final GlobalKey _childKey = GlobalKey(
+    debugLabel: 'RemixBoxAdapter logical child',
+  );
+
+  @override
   Widget build(BuildContext context) {
-    final effects = containerEffects ?? const RemixBoxEffectsSpec();
+    final effects = widget.containerEffects ?? const RemixBoxEffectsSpec();
+    final child = widget.child == null
+        ? null
+        : KeyedSubtree(key: _childKey, child: widget.child!);
     _validateEffects(effects);
     return StyleSpecBuilder<BoxSpec>(
-      styleSpec: styleSpec,
+      styleSpec: widget.styleSpec,
       builder: (context, spec) {
         final margin = spec.margin;
         if (_canUseStandardMixRendering(effects: effects, margin: margin)) {
@@ -82,39 +94,18 @@ final class RemixFlexBoxAdapter extends StatelessWidget {
     return StyleSpecBuilder<FlexBoxSpec>(
       styleSpec: styleSpec,
       builder: (context, spec) {
-        final box = spec.box?.spec;
-        if (_canUseStandardMixRendering(
-          effects: effects,
-          margin: box?.margin,
-        )) {
-          final resolved = StyleSpec(spec: spec);
-          return switch (direction) {
-            Axis.horizontal => RowBox(styleSpec: resolved, children: children),
-            Axis.vertical => ColumnBox(styleSpec: resolved, children: children),
-            null => FlexBox(styleSpec: resolved, children: children),
-          };
-        }
-
-        final flex = spec.flex?.spec;
-        assert(
-          direction == null ||
-              flex?.direction == null ||
-              direction == flex!.direction,
-          'The forced and styled flex directions must agree.',
-        );
-        final content = Flex(
-          direction: flex?.direction ?? direction ?? Axis.horizontal,
-          mainAxisAlignment: flex?.mainAxisAlignment ?? MainAxisAlignment.start,
-          mainAxisSize: flex?.mainAxisSize ?? MainAxisSize.max,
-          crossAxisAlignment:
-              flex?.crossAxisAlignment ?? CrossAxisAlignment.center,
-          textDirection: flex?.textDirection,
-          verticalDirection: flex?.verticalDirection ?? VerticalDirection.down,
-          textBaseline: flex?.textBaseline,
-          clipBehavior: flex?.clipBehavior ?? Clip.none,
-          spacing: flex?.spacing ?? 0,
-          children: children,
-        );
+        final flexStyleSpec = StyleSpec(spec: FlexBoxSpec(flex: spec.flex));
+        final content = switch (direction) {
+          Axis.horizontal => RowBox(
+            styleSpec: flexStyleSpec,
+            children: children,
+          ),
+          Axis.vertical => ColumnBox(
+            styleSpec: flexStyleSpec,
+            children: children,
+          ),
+          null => FlexBox(styleSpec: flexStyleSpec, children: children),
+        };
         return RemixBoxAdapter(
           styleSpec: spec.box ?? const StyleSpec(spec: BoxSpec()),
           containerEffects: effects,

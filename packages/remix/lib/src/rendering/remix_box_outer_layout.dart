@@ -43,6 +43,9 @@ Widget _applyRemixOuterBoxLayout({
 /// ghost controls use a negative margin to cancel their visual padding in
 /// surrounding layout. This render object keeps the padded child paintable at
 /// its full size while reporting the margin-adjusted footprint to its parent.
+/// If the negative totals exceed the child's extent, that reported footprint
+/// clamps to zero. Overflow remains hit-testable here, although an ancestor's
+/// own bounds can still prevent the hit test from reaching this render object.
 class _RemixNegativeMargin extends SingleChildRenderObjectWidget {
   const _RemixNegativeMargin({required this.margin, required super.child});
 
@@ -215,7 +218,14 @@ class _RenderRemixNegativeMargin extends RenderShiftedBox {
   }
 
   @override
-  Rect get semanticBounds => paintBounds;
+  Rect get semanticBounds {
+    final currentChild = child;
+    if (currentChild == null) return Offset.zero & size;
+    final offset = (currentChild.parentData! as BoxParentData).offset;
+    return (Offset.zero & size).expandToInclude(
+      currentChild.semanticBounds.shift(offset),
+    );
+  }
 
   @override
   bool hitTest(BoxHitTestResult result, {required Offset position}) {
