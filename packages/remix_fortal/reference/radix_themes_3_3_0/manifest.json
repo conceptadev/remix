@@ -3619,7 +3619,7 @@
       "sourceFiles": [],
       "sourceSelectors": [],
       "flutterExceptions": [
-        "Radix Primitives calls this component Collapsible; Remix uses the WAI-ARIA/Naked UI name Disclosure while preserving the Root, Trigger, and Content anatomy.",
+        "Radix Primitives calls this component Collapsible; Remix uses the WAI-ARIA/Naked UI name Disclosure with trigger and content slots on one widget.",
         "Radix Themes 3.3.0 ships no styled Collapsible, so Fortal treats the recipe as an extension and derives its panel treatment from the mapped Table family."
       ],
       "coverage": {

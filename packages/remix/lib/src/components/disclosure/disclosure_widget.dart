@@ -115,7 +115,15 @@ class RemixDisclosure extends StatelessWidget {
     Animation<double> animation,
     Widget child,
   ) {
-    // `alignment` landed in Flutter 3.44; Remix still supports 3.41 consumers.
+    // Deliberately the deprecated `axisAlignment` rather than the clearer
+    // `alignment: AlignmentDirectional.topStart`. The two are equivalent
+    // here — on the default vertical axis both resolve to
+    // `AlignmentDirectional(-1.0, -1.0)` — but `alignment` was added in Flutter
+    // 3.44, and this package's floor is Mix's 3.41. `axisAlignment` is the only
+    // spelling that compiles across that whole range.
+    //
+    // Swap to `alignment` and drop the ignore once the floor reaches 3.44.
+    // `disclosure_widget_test.dart` pins the rendered alignment either way.
     return FadeTransition(
       opacity: animation,
       child: SizeTransition(

@@ -128,12 +128,23 @@ Standalone trigger and one inline panel. Use this when items do not need
 | `defaultExpanded` | `bool` | `false` | no |
 | `onExpandedChanged` | `ValueChanged<bool>?` | `null` | no |
 | `enabled` | `bool` | `true` | no |
+| `mouseCursor` | `MouseCursor` | `SystemMouseCursors.click` | no |
+| `enableFeedback` | `bool` | `true` | no |
+| `autofocus` | `bool` | `false` | no |
+| `focusNode` | `FocusNode?` | `null` | no |
+| `onFocusChange` / `onHoverChange` / `onPressChange` | callbacks | `null` | no |
 | `semanticLabel` / `semanticHint` | `String?` | `null` | no |
+| `excludeSemantics` | `bool` | `false` | no |
 | `animationStyle` | `AnimationStyle` | 200ms ease | no |
 | `transitionBuilder` | `NakedDisclosureTransitionBuilder` | fade + size | no |
 
-Omit `expanded` for uncontrolled state. Top-level Box shorthand forwards to
-`trigger`; style the frame with `.container(...)`.
+Omit `expanded` for uncontrolled state. `defaultExpanded` only applies then.
+Top-level Box shorthand forwards to `trigger`; style the frame with
+`.container(...)`.
+
+Widget-state variants (`onHovered`, `onPressed`, `onFocused`,
+`onFocusVisible`, `onDisabled`) describe interaction with the **trigger** but
+resolve once for the whole item, so they may style `container` too.
 
 Fortal preset: `FortalDisclosure` — `variant` (`surface|soft`), `size`
 (`size1–size3`).

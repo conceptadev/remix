@@ -7,12 +7,13 @@ keywords: [flutter, remix, disclosure, collapsible, expandable, radix]
 `RemixDisclosure` is a standalone trigger and one inline panel. Use
 `RemixAccordionGroup` when panels need to coordinate.
 
-Radix Primitives calls the same anatomy **Collapsible**.
+Radix Primitives names this **Collapsible**.
 
 ## Basic usage
 
 ```dart
 import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 class AccountDisclosure extends StatefulWidget {
@@ -33,7 +34,7 @@ class _AccountDisclosureState extends State<AccountDisclosure> {
         expanded: expanded,
         onExpandedChanged: (value) => setState(() => expanded = value),
         trigger: const Text('Account details'),
-        triggerBuilder: (context, state, child) {
+        triggerBuilder: (context, NakedDisclosureState state, child) {
           return Row(
             children: [
               Expanded(child: child!),
@@ -60,6 +61,7 @@ Omit `expanded` for internal state. `defaultExpanded` only applies then.
 
 ```dart
 import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 final disclosure = SizedBox(
@@ -67,23 +69,34 @@ final disclosure = SizedBox(
   child: FortalDisclosure.soft(
     size: FortalDisclosureSize.size2,
     trigger: const Text('Repository details'),
+    triggerBuilder: (context, NakedDisclosureState state, child) {
+      return Row(
+        children: [
+          Expanded(child: child!),
+          Icon(state.isExpanded ? Icons.remove : Icons.add),
+        ],
+      );
+    },
     content: const Text('Three packages and twelve contributors'),
   ),
 );
 ```
 
-`FortalDisclosure.surface` and `FortalDisclosure.soft` provide three sizes.
-Radix Themes has no styled Collapsible; these presets reuse Fortal panel tokens.
+`FortalDisclosure` has no trailing-icon slot; compose the expand indicator
+with `triggerBuilder`. `FortalDisclosure.surface` and `FortalDisclosure.soft`
+provide three sizes. Radix Themes has no styled Collapsible; these presets
+reuse Fortal panel tokens.
 
 ## Styling
 
-`DisclosureStyler` forwards top-level box methods to the trigger:
+`DisclosureStyler` forwards top-level box methods such as `padding`, `color`,
+and `borderRadius` to the trigger. Style the other parts explicitly:
 
 - `container(...)` — frame around trigger and content
 - `containerEffects(...)` — shadows, strokes, backdrop blur
 - `trigger(...)` / `content(...)`
 - `onExpanded(...)` / `onCollapsed(...)`
-- `onHovered`, `onPressed`, `onFocusVisible`, `onDisabled`
+- `onHovered`, `onPressed`, `onFocused`, `onFocusVisible`, `onDisabled`
 
 Default transition is a 200ms top-anchored fade and size. Use
 `AnimationStyle.noAnimation` to skip it.
