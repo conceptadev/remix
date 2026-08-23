@@ -150,14 +150,14 @@ FlexBoxStyler _fortalDataTableFooter() => FlexBoxStyler()
 
 DataTableStyler _fortalDataTableSurface(DataTableStyler base, Radius radius) {
   return base
-      .color(FortalTokens.colorPanel())
-      .border(
-        BoxBorderMix.all(
-          BorderSideMix(color: FortalTokens.dataTableBorder(), width: 1),
+      .container(
+        fortalSurfaceFrame(
+          fillColor: FortalTokens.colorPanel(),
+          borderColor: FortalTokens.dataTableBorder(),
+          borderWidth: FortalTokens.borderWidth1(),
+          radius: radius,
         ),
       )
-      .borderRadius(.all(radius))
-      .clipBehavior(Clip.antiAlias)
       .containerEffects(
         RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
       )

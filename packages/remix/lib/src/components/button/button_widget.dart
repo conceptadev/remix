@@ -249,7 +249,7 @@ class RemixButton extends StatelessWidget {
         .toList();
 
     // Create content row with visibility control for loading state
-    final contentRow = RemixFlexBoxWithEffects(
+    final contentRow = RemixFlexBoxAdapter(
       styleSpec: spec.container,
       direction: Axis.horizontal,
       containerEffects: spec.containerEffects,
