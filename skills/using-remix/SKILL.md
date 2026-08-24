@@ -148,6 +148,22 @@ FortalScope(
 )
 ```
 
+`RemixMenuTrigger` is a configuration object, not a widget. The same object
+works with `FortalMenu`. For richer visual content, use
+`RemixMenuTrigger.builder` and return non-interactive content — never a nested
+button:
+
+```dart
+FortalMenu<String>(
+  trigger: RemixMenuTrigger.builder(
+    label: 'Account menu',
+    builder: (context, state, defaultTrigger) =>
+        const FortalAvatar(label: 'LF'),
+  ),
+  items: const [RemixMenuItem(value: 'profile', label: 'View profile')],
+)
+```
+
 ## Choose a styling path
 
 1. Prefer a `Fortal*` preset for standard Fortal UI. Use a named constructor

@@ -10,6 +10,14 @@ import 'package:remix/src/utilities/remix_path_icon.dart';
 
 import '../../helpers/test_helpers.dart';
 
+Widget _constMenuTriggerBuilder(
+  BuildContext context,
+  NakedMenuState state,
+  Widget? child,
+) {
+  return child ?? const SizedBox.shrink();
+}
+
 void main() {
   group('RemixMenuTrigger', () {
     test('creates trigger with label', () {
@@ -17,6 +25,7 @@ void main() {
 
       expect(trigger.label, equals('Options'));
       expect(trigger.icon, isNull);
+      expect(trigger.builder, isNull);
     });
 
     test('creates trigger with label and icon', () {
@@ -24,7 +33,98 @@ void main() {
 
       expect(trigger.label, equals('Options'));
       expect(trigger.icon, equals(Icons.more_vert));
+      expect(trigger.builder, isNull);
     });
+
+    test('creates const builder trigger with label and optional icon', () {
+      const trigger = RemixMenuTrigger.builder(
+        label: 'Account menu',
+        icon: Icons.person,
+        builder: _constMenuTriggerBuilder,
+      );
+
+      expect(trigger.label, equals('Account menu'));
+      expect(trigger.icon, equals(Icons.person));
+      expect(trigger.builder, same(_constMenuTriggerBuilder));
+    });
+  });
+
+  group('RemixMenuTrigger.builder', () {
+    testWidgets(
+      'receives the styled default child and closed/open menu state',
+      (tester) async {
+        final openStates = <bool>[];
+        Widget? receivedChild;
+
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            trigger: RemixMenuTrigger.builder(
+              label: 'Options',
+              icon: Icons.more_vert,
+              builder: (context, state, child) {
+                openStates.add(state.isOpen);
+                receivedChild = child;
+                return child!;
+              },
+            ),
+            items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(openStates, isNotEmpty);
+        expect(openStates.first, isFalse);
+        expect(receivedChild, isA<RowBox>());
+        expect(find.text('Options'), findsOneWidget);
+        expect(find.byIcon(Icons.more_vert), findsOneWidget);
+
+        await tester.tap(find.text('Options'));
+        await tester.pumpAndSettle();
+
+        expect(openStates, contains(true));
+        expect(find.text('Copy'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'can replace the default child and still open, select, and restore focus',
+      (tester) async {
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+        String? selected;
+
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            triggerFocusNode: focusNode,
+            trigger: RemixMenuTrigger.builder(
+              label: 'Account menu',
+              builder: (context, state, child) => const Text('LF'),
+            ),
+            items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
+            onSelected: (value) => selected = value,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('LF'), findsOneWidget);
+        expect(find.text('Account menu'), findsNothing);
+
+        focusNode.requestFocus();
+        await tester.pump();
+        expect(focusNode.hasFocus, isTrue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(find.text('Copy'), findsOneWidget);
+
+        await tester.tap(find.text('Copy'));
+        await tester.pumpAndSettle();
+
+        expect(selected, 'copy');
+        expect(find.text('Copy'), findsNothing);
+        expect(focusNode.hasFocus, isTrue);
+      },
+    );
   });
 
   group('RemixMenuItem', () {
