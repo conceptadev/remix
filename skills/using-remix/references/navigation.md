@@ -142,9 +142,13 @@ Omit `expanded` for uncontrolled state. `defaultExpanded` only applies then.
 Top-level Box shorthand forwards to `trigger`; style the frame with
 `.container(...)`.
 
+`onExpanded(...)` and `onCollapsed(...)` are item-wide style helpers, so their
+styles may target `container`, `trigger`, or `content`.
+
 Widget-state variants (`onHovered`, `onPressed`, `onFocused`,
 `onFocusVisible`, `onDisabled`) describe interaction with the **trigger** but
 resolve once for the whole item, so they may style `container` too.
 
 Fortal preset: `FortalDisclosure` — `variant` (`surface|soft`), `size`
-(`size1–size3`).
+(`size1–size3`). `FortalDisclosure` has no trailing-icon slot; compose the
+expand indicator with `triggerBuilder`.
