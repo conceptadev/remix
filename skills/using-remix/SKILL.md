@@ -5,10 +5,11 @@ description: >-
   companion Fortal theme package (`remix_fortal`): selecting Remix or Fortal,
   adding dependencies, placing `FortalScope`, composing overlays or routes,
   choosing Remix/Fortal components, or styling `Remix*` widgets with stylers,
-  states, variants, recipes, and tokens. Also trigger for Remix/Fortal widget
-  names or a UI request in a project that already depends on `remix` or
-  `remix_fortal`. Do not trigger for generic Flutter UI work when neither
-  package is present or requested.
+  states, variants, recipes, and tokens. Also trigger when building or auditing
+  a Remix/Fortal reference showcase or component gallery, for Remix/Fortal
+  widget names, or for a UI request in a project that already depends on
+  `remix` or `remix_fortal`. Do not trigger for generic Flutter UI work when
+  neither package is present or requested.
 ---
 
 # Using Remix
@@ -229,10 +230,14 @@ Read only the references needed for the task:
 | Fluent styling, state/context variants, animation, callable styles | [Styling](references/styling.md) |
 | Fortal setup, presets, variants, sizes, scope, and tokens | [Fortal](references/fortal.md) |
 | Text, headings, inline code, keyboard keys, and links | [Fortal](references/fortal.md#typography) |
+| Reference apps, product examples, variant matrices, and showcase audits | [Reference showcases](references/reference-showcases.md) |
 
 ## Verify the result
 
 - Keep imports aligned with the selected package layer.
 - Confirm Fortal content and route/overlay builders are below `FortalScope`.
 - Confirm overlays and dialogs have the required caller-owned host capability.
+- For showcases, verify product examples and exhaustive coverage use their
+  respective rules instead of forcing one abstraction or contrast policy onto
+  both.
 - Run the project's formatter, analyzer, and relevant Flutter tests.
