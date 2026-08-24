@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix/src/rendering/remix_box_effects.dart'
-    show RemixBoxWithEffects;
+    show RemixBoxAdapter;
 import 'package:remix/src/utilities/remix_path_icon.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -449,7 +449,7 @@ void main() {
           tester.getSize(
             find.descendant(
               of: find.byKey(compactKey),
-              matching: find.byType(RemixBoxWithEffects),
+              matching: find.byType(RemixBoxAdapter),
             ),
           ),
           const Size.square(16),
@@ -478,7 +478,7 @@ void main() {
 
         final item = find.byKey(itemKey);
         final targetRect = tester.getRect(item);
-        final boxRect = tester.getRect(find.byType(RemixBoxWithEffects));
+        final boxRect = tester.getRect(find.byType(RemixBoxAdapter));
         final labelRect = tester.getRect(find.text(label));
         final locations = <Offset>[
           boxRect.center,
@@ -512,7 +512,7 @@ void main() {
           textDirection: TextDirection.rtl,
         );
 
-        final boxRect = tester.getRect(find.byType(RemixBoxWithEffects));
+        final boxRect = tester.getRect(find.byType(RemixBoxAdapter));
         final labelRect = tester.getRect(find.text(label));
         expect(boxRect.left, greaterThan(labelRect.left));
         expect(boxRect.left - labelRect.right, 12);

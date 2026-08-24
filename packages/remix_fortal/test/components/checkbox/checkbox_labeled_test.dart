@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-// `RemixBoxWithEffects` is `@internal` to `remix`, but this sibling package's
+// `RemixBoxAdapter` is `@internal` to `remix`, but this sibling package's
 // tests need it to measure how a Remix component renders a Fortal recipe.
 // Suppressed per-use below, so a future accidental internal-member use still
 // gets flagged.
@@ -40,7 +40,7 @@ void main() {
         );
         expect(
           // ignore: invalid_use_of_internal_member
-          tester.getSize(find.byType(RemixBoxWithEffects)),
+          tester.getSize(find.byType(RemixBoxAdapter)),
           Size.square(entry.value),
           reason: entry.key.name,
         );

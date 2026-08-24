@@ -45,7 +45,7 @@ void main() {
       await tester.pumpAndSettle();
 
       RemixBoxEffectsSpec? paintedEffects() => tester
-          .widget<RemixBoxWithEffects>(find.byType(RemixBoxWithEffects))
+          .widget<RemixBoxAdapter>(find.byType(RemixBoxAdapter))
           .containerEffects;
 
       expect(paintedEffects()?.outline.width ?? 0, 0, reason: 'idle');

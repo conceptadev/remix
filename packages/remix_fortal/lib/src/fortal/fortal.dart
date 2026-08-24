@@ -6,6 +6,7 @@ export '../radix/colors/colors.dart';
 // Computed helpers and shared types
 export 'computed.dart';
 export 'base_button_recipe.dart';
+export 'surface_frame.dart';
 // Theme tokens and scope builder (consolidated)
 export 'fortal_theme.dart';
 

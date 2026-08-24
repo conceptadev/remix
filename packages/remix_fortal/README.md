@@ -237,6 +237,7 @@ for controls, semantics, and parity boundaries.
 
 ### Layout & Navigation
 - **FortalTabBar**, **FortalTab**, **FortalTabView**, **FortalAccordion**
+- **FortalDisclosure**
 - **FortalMenu**, **FortalSegmentedControl**, **FortalToggleGroup**
 
 There is no `FortalTabs`: the behavioral root stays `RemixTabs`, which takes no

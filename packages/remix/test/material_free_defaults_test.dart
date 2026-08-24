@@ -27,6 +27,10 @@ void main() {
                     child: Text('Panel'),
                   ),
                 ),
+                const RemixDisclosure(
+                  trigger: Text('Disclosure trigger'),
+                  content: Text('Disclosure content'),
+                ),
                 RemixIconButton(
                   icon: null,
                   iconBuilder: (context, spec, icon) =>

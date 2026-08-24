@@ -503,7 +503,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
       child: nakedTextField,
     );
 
-    final withAccessories = RemixBoxWithEffects(
+    final withAccessories = RemixBoxAdapter(
       styleSpec: spec.container,
       containerEffects: spec.containerEffects,
       child: Row(

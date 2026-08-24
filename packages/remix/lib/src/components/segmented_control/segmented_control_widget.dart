@@ -294,7 +294,7 @@ class _RemixSegmentedControlItemWidget<T extends Object>
                   child: StyleSpecBuilder<SegmentedControlItemSpec>(
                     styleSpec: _resolveStyle(context),
                     builder: (context, spec) {
-                      return RemixBoxWithEffects(
+                      return RemixBoxAdapter(
                         styleSpec: spec.container,
                         containerEffects: spec.containerEffects,
                         // Equal segments make most surfaces wider than their

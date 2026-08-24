@@ -28,6 +28,7 @@ A `—` value means the widget does not expose that axis. When values are listed
 | `FortalDataList` | `size1`, `size2`, `size3` | `size2` | — | — |
 | `FortalDataTable` | `size1`, `size2`, `size3` | `size2` | `surface`, `ghost` | `ghost` |
 | `FortalDialog` | `size1`, `size2`, `size3`, `size4` | `size3` | — | — |
+| `FortalDisclosure` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
 | `FortalDivider` | `size1`, `size2`, `size3`, `size4` | `size1` | — | — |
 | `FortalHeading` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | `size6` | — | — |
 | `FortalIconButton` | `size1`, `size2`, `size3`, `size4` | `size2` | `classic`, `solid`, `soft`, `surface`, `outline`, `ghost` | `solid` |
@@ -328,6 +329,32 @@ Radix `Dialog.Content` · recipe `packages/remix_fortal/lib/src/recipes/dialog.d
 **Documented approximations:**
 
 - Flutter Navigator dialog routes are modal routes; non-modal pointer interaction requires a separate OverlayEntry lifecycle rather than the current dialog route API.
+
+### FortalDisclosure
+
+Radix `Collapsible` · recipe `packages/remix_fortal/lib/src/recipes/disclosure.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `surface`, `soft` | `surface` |
+
+**Named constructors:** `FortalDisclosure.soft`, `FortalDisclosure.surface`
+
+**Other defaults:** `defaultExpanded: false`, `enabled: true`, `expanded: null`
+
+**Style props:** `color`, `radius`
+
+**States:** `collapsed`, `expanded`, `hovered`, `pressed`, `focused`, `disabled`
+
+**Flutter differences:**
+
+- Radix Primitives calls this component Collapsible; Remix uses the WAI-ARIA/Naked UI name Disclosure with trigger and content slots on one widget.
+- Radix Themes 3.3.0 ships no styled Collapsible, so Fortal treats the recipe as an extension and derives its panel treatment from the mapped Table family.
+
+**Not covered:**
+
+- Radix Collapsible.Content forceMount has no NakedDisclosure equivalent.
 
 ### FortalDivider
 

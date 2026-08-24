@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 import 'package:remix/src/rendering/remix_box_effects.dart'
-    show RemixBoxWithEffects;
+    show RemixBoxAdapter;
 
 import '../../helpers/test_helpers.dart';
 
@@ -1144,9 +1144,9 @@ void main() {
   });
 }
 
-RemixBoxWithEffects _sliderThumb(WidgetTester tester) {
+RemixBoxAdapter _sliderThumb(WidgetTester tester) {
   return tester
-      .widgetList<RemixBoxWithEffects>(find.byType(RemixBoxWithEffects))
+      .widgetList<RemixBoxAdapter>(find.byType(RemixBoxAdapter))
       .singleWhere(
         (widget) => widget.styleSpec.spec.constraints?.maxWidth == 20,
       );

@@ -113,7 +113,7 @@ void main() {
   });
 
   group('variants', () {
-    testWidgets('surface uses the panel, the mixed border, and gray-a2', (
+    testWidgets('surface uses a foreground frame above the panel and rows', (
       tester,
     ) async {
       final tokens = await _tokens(tester);
@@ -122,10 +122,16 @@ void main() {
         fortalDataTableStyle(variant: .surface),
       );
       final container = spec.container.spec.decoration! as BoxDecoration;
+      final foreground =
+          spec.container.spec.foregroundDecoration! as BoxDecoration;
+      final border = foreground.border! as Border;
 
       expect(container.color, tokens.panel);
-      expect((container.border! as Border).top.color, tokens.tableBorder);
-      expect((container.border! as Border).top.width, 1);
+      expect(container.border, isNull);
+      expect(border.top.color, tokens.tableBorder);
+      expect(border.top.width, 1);
+      expect(spec.container.spec.padding, const EdgeInsets.all(1));
+      expect(foreground.borderRadius, container.borderRadius);
       expect(spec.container.spec.clipBehavior, Clip.antiAlias);
       expect(_color(spec.headerRow), tokens.grayA2);
     });

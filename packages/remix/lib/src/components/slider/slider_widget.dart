@@ -206,7 +206,7 @@ class RemixSlider extends StatelessWidget {
                                   SizedBox(
                                     width: double.infinity,
                                     height: spec.trackWidth,
-                                    child: RemixBoxWithEffects(
+                                    child: RemixBoxAdapter(
                                       styleSpec: _sliderRailStyle(
                                         spec.track,
                                         color: spec.trackColor,
@@ -224,7 +224,7 @@ class RemixSlider extends StatelessWidget {
                                       child: SizedBox(
                                         width: double.infinity,
                                         height: spec.rangeWidth,
-                                        child: RemixBoxWithEffects(
+                                        child: RemixBoxAdapter(
                                           styleSpec: _sliderRailStyle(
                                             spec.range,
                                             color: spec.rangeColor,
@@ -243,7 +243,7 @@ class RemixSlider extends StatelessWidget {
                       ),
                       Transform.translate(
                         offset: Offset(thumbPosition, 0),
-                        child: RemixBoxWithEffects(
+                        child: RemixBoxAdapter(
                           styleSpec: spec.thumb,
                           containerEffects:
                               (spec.thumbEffects ?? const RemixBoxEffectsSpec())

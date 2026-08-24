@@ -96,6 +96,7 @@ explicit `<String>`.
 | PieChart | `FortalPieChart` | — | — |
 | Progress | `FortalProgress` | `classic`, `surface`, `soft` | `size1`–`size3` (4/8/12 px) |
 | Accordion | `FortalAccordion<T>` | `surface`, `soft` | `size1`–`size3` |
+| Disclosure | `FortalDisclosure` | `surface`, `soft` | `size1`–`size3` |
 | Spinner | `FortalSpinner` | — | `size1`–`size3` |
 | Skeleton | `FortalSkeleton` | — | — |
 | Divider | `FortalDivider` | — | `size1`–`size4` |

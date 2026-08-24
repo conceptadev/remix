@@ -4,8 +4,8 @@ import 'dart:typed_data';
 
 const _expectedIntegrity =
     'sha512-I0/h2CRNTpYNB7Mi3xFIvSsQq5a108d7kK8dTO5zp5b9HR5QJXKag6B8tjpz2ITkVYkFdkGk45doNkSr7OxwNw==';
-const _expectedNakedUiVersion = '1.0.0-beta.12';
-const _expectedNakedUiConstraint = '^1.0.0-beta.12';
+const _expectedNakedUiVersion = '1.0.0-beta.14';
+const _expectedNakedUiConstraint = '1.0.0-beta.14';
 const _expectedMappedFamilies = <String>{
   'avatar',
   'badge',
@@ -38,7 +38,12 @@ const _expectedMappedFamilies = <String>{
   'text_field',
   'tooltip',
 };
-const _expectedExtensions = <String>{'accordion', 'toggle', 'toggle_group'};
+const _expectedExtensions = <String>{
+  'accordion',
+  'disclosure',
+  'toggle',
+  'toggle_group',
+};
 const _expectedUnmappedUpstreamFamilies = <String>{'checkbox_group'};
 
 /// The five typography families publish one shared nine-step `FortalTextSize`
@@ -305,6 +310,9 @@ void _checkFamilies(
       '$id.deferredCapabilities',
       failures,
     );
+    if (id == 'disclosure') {
+      _checkDisclosurePrimitiveContract(family, failures);
+    }
     _checkCoverage(
       owner: id,
       enums: _familyEnumKeys(
@@ -334,8 +342,8 @@ void _checkFamilies(
     failures,
   );
   _expect(
-    families.length == 33,
-    'Exactly 33 Fortal families must be tracked.',
+    families.length == 34,
+    'Exactly 34 Fortal families must be tracked.',
     failures,
   );
   _checkUnmappedUpstreamFamilies(manifest, families.keys.toSet(), failures);
@@ -379,6 +387,85 @@ void _checkGlobalUpstreamInventory(
   for (final entry in families.entries) {
     _object(entry.value, 'upstreamInventory.families.${entry.key}', failures);
   }
+  final disclosure = _object(
+    families['disclosure'],
+    'upstreamInventory.families.disclosure',
+    failures,
+  );
+  if (disclosure != null) {
+    _checkDisclosureUpstreamInventory(
+      disclosure,
+      'upstreamInventory.families.disclosure',
+      failures,
+    );
+  }
+}
+
+void _checkDisclosurePrimitiveContract(
+  Map<String, Object?> family,
+  List<String> failures,
+) {
+  _expect(
+    family['radixComponent'] == 'Collapsible' &&
+        family['parity'] == 'extension',
+    'disclosure must map the Radix Collapsible primitive as a Fortal extension.',
+    failures,
+  );
+  _expect(
+    _strings(family['sourceFiles'], 'disclosure.sourceFiles', failures).isEmpty,
+    'disclosure must not claim Radix Themes source files.',
+    failures,
+  );
+  _expect(
+    _strings(
+      family['sourceSelectors'],
+      'disclosure.sourceSelectors',
+      failures,
+    ).isEmpty,
+    'disclosure must not claim Radix Themes style selectors.',
+    failures,
+  );
+  final inventory = _object(
+    family['upstreamInventory'],
+    'disclosure.upstreamInventory',
+    failures,
+  );
+  if (inventory != null) {
+    _checkDisclosureUpstreamInventory(
+      inventory,
+      'disclosure.upstreamInventory',
+      failures,
+    );
+  }
+}
+
+void _checkDisclosureUpstreamInventory(
+  Map<String, Object?> inventory,
+  String path,
+  List<String> failures,
+) {
+  final enums = _object(inventory['enums'], '$path.enums', failures);
+  _expect(
+    enums != null && enums.isEmpty,
+    '$path.enums must remain empty because Radix Collapsible exposes no enums.',
+    failures,
+  );
+  final states = _strings(inventory['states'], '$path.states', failures);
+  _expect(
+    _sameSet(states.toSet(), const {'open', 'closed', 'disabled'}),
+    '$path.states must be exactly open, closed, and disabled.',
+    failures,
+  );
+  final styleProps = _strings(
+    inventory['supportedStyleProps'],
+    '$path.supportedStyleProps',
+    failures,
+  );
+  _expect(
+    styleProps.isEmpty,
+    '$path.supportedStyleProps must remain empty because Radix Themes does not style Collapsible.',
+    failures,
+  );
 }
 
 String? _readFortalStylesSource(
@@ -905,7 +992,7 @@ void _checkNakedPin(
   File workspaceLock,
   List<String> failures,
 ) {
-  // naked_ui is now pinned in three pubspecs; all of them must agree.
+  // Both publishable packages must use the same exact hosted release.
   final pinned = RegExp(
     '^  naked_ui: ${RegExp.escape(_expectedNakedUiConstraint)}\\s*\$',
     multiLine: true,
@@ -1285,7 +1372,7 @@ Never _finish(List<String> failures) {
   }
   stdout.writeln(
     'Verified @radix-ui/themes 3.3.0 contract: '
-    '30 mapped families, 3 Fortal extensions, 1 audited unmapped family, '
+    '30 mapped families, 4 Fortal extensions, 1 audited unmapped family, '
     'Chromium fixtures, '
     'coverage ledger, hosted Naked $_expectedNakedUiVersion resolution, and no '
     'undocumented approximations.',

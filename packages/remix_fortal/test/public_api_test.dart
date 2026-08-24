@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
@@ -6,6 +7,32 @@ import 'package:remix_fortal/remix_fortal.dart';
 import 'helpers/test_helpers.dart';
 
 void main() {
+  test('the Fortal surface frame helper is public', () {
+    final frame = fortalSurfaceFrame(
+      fillColor: const Color(0xFFFFFFFF),
+      borderColor: const Color(0xFF000000),
+      borderWidth: 1,
+      radius: const Radius.circular(8),
+    );
+
+    expect(frame, isA<BoxStyler>());
+  });
+
+  test(
+    'the Fortal disclosure wrapper is constructible from the public API',
+    () {
+      const disclosure = FortalDisclosure.soft(
+        trigger: Text('Details'),
+        content: Text('Account details'),
+        size: FortalDisclosureSize.size3,
+      );
+
+      expect(disclosure.variant, FortalDisclosureVariant.soft);
+      expect(disclosure.size, FortalDisclosureSize.size3);
+      expect(fortalDisclosureStyle(), isA<DisclosureStyler>());
+    },
+  );
+
   test('new Fortal controls expose generated public wrappers', () {
     const segmented = FortalSegmentedControl<String>.classic(
       items: [RemixSegmentedControlItem(value: 'one', label: 'One')],

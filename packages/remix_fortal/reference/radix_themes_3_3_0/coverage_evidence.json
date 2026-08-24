@@ -873,6 +873,40 @@
       "covers": ["state:disabled"]
     }
   ],
+  "disclosure": [
+    {
+      "test": "test/components/disclosure/disclosure_style_test.dart",
+      "case": "each size resolves distinct layout metrics",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3"
+      ]
+    },
+    {
+      "test": "test/components/disclosure/disclosure_style_test.dart",
+      "case": "variants resolve distinct visual treatments",
+      "covers": [
+        "enum:variant.surface",
+        "enum:variant.soft"
+      ]
+    },
+    {
+      "test": "test/components/disclosure/disclosure_widget_test.dart",
+      "case": "shows collapsed and expanded states",
+      "covers": ["state:collapsed", "state:expanded"]
+    },
+    {
+      "test": "test/components/disclosure/disclosure_style_test.dart",
+      "case": "hovered, pressed, focused, and disabled states resolve",
+      "covers": [
+        "state:hovered",
+        "state:pressed",
+        "state:focused",
+        "state:disabled"
+      ]
+    }
+  ],
   "toggle": [
     {
       "test": "test/components/toggle/toggle_widget_test.dart",

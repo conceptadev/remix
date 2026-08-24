@@ -7,7 +7,7 @@ import '../../helpers/test_helpers.dart';
 
 // Panel anatomy derives from the mapped Table family (see
 // packages/remix_fortal/lib/src/recipes/data_table.dart): the container owns
-// radius, border, fill, and clipping so the trigger and content crop into
+// radius, foreground frame, fill, and clipping so the trigger and content crop into
 // one rounded shape instead of each rounding their own corners. These tests
 // pin that contract directly, plus the content font size that keeps a
 // passage from ever reading larger than its own title.
@@ -34,14 +34,17 @@ void main() {
     ) async {
       final tokens = await _tokens(tester);
       final spec = await _resolve(tester, fortalAccordionStyle());
-      final border = _border(spec.container.spec);
+      final box = spec.container.spec;
+      final border = _foregroundBorder(box);
 
       expect(border?.top.color, tokens.gray6);
       expect(border?.top.width, 1);
-      // A regular (inset) border, unlike the foreground divider between
-      // trigger and content: it insets the whole panel uniformly instead of
-      // eating into one child's own padding.
-      expect(spec.container.spec.decoration, isA<BoxDecoration>());
+      expect((box.decoration as BoxDecoration).border, isNull);
+      expect(box.padding, const EdgeInsets.all(1));
+      expect(
+        (box.foregroundDecoration as BoxDecoration).borderRadius,
+        (box.decoration as BoxDecoration).borderRadius,
+      );
     });
 
     testWidgets('soft container carries the accent panel border', (
@@ -49,7 +52,7 @@ void main() {
     ) async {
       final tokens = await _tokens(tester);
       final spec = await _resolve(tester, fortalAccordionStyle(variant: .soft));
-      final border = _border(spec.container.spec);
+      final border = _foregroundBorder(spec.container.spec);
 
       expect(border?.top.color, tokens.accent6);
     });
@@ -105,8 +108,8 @@ void main() {
           .spec;
       final containerDecoration = containerSpec.decoration as BoxDecoration;
 
-      // The container is the single ancestor whose decoration carries the
-      // panel's border and radius, above both the trigger and the content.
+      // The container is the single decorated ancestor above both the trigger
+      // and content; its foreground decoration carries the visible frame.
       final containerBoxes = find.byWidgetPredicate(
         (widget) =>
             widget is DecoratedBox && widget.decoration == containerDecoration,
@@ -158,8 +161,8 @@ DefaultTextStyleModifier _defaultTextStyleModifier(StyleSpec<BoxSpec> box) {
       .single;
 }
 
-Border? _border(BoxSpec box) =>
-    (box.decoration as BoxDecoration?)?.border as Border?;
+Border? _foregroundBorder(BoxSpec box) =>
+    (box.foregroundDecoration as BoxDecoration?)?.border as Border?;
 
 double _radius(BoxSpec box) => (box.decoration as BoxDecoration).borderRadius!
     .resolve(TextDirection.ltr)

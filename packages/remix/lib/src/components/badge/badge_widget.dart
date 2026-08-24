@@ -59,7 +59,7 @@ class RemixBadge extends StatelessWidget {
                 icon: StyleSpec(spec: IconSpec(color: foreground)),
                 child: child!,
               );
-        return RemixBoxWithEffects(
+        return RemixBoxAdapter(
           styleSpec: spec.container,
           containerEffects: spec.containerEffects,
           child: content,
