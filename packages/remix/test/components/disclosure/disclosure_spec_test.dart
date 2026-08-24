@@ -41,6 +41,19 @@ void main() {
       expect(result.trigger.spec.constraints?.minHeight, 24);
     });
 
+    test('interpolates container effects instead of snap-lerping', () {
+      const spec1 = DisclosureSpec(
+        containerEffects: RemixBoxEffectsSpec(backdropBlur: 0),
+      );
+      const spec2 = DisclosureSpec(
+        containerEffects: RemixBoxEffectsSpec(backdropBlur: 10),
+      );
+
+      final result = spec1.lerp(spec2, 0.5);
+
+      expect(result.containerEffects?.backdropBlur, 5);
+    });
+
     test('supports diagnostics', () {
       const spec = DisclosureSpec();
 
