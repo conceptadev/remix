@@ -9,6 +9,7 @@ void main() {
       final badgeStyle = BadgeStyler();
       final calloutStyle = CalloutStyler();
       final cardStyle = CardStyler();
+      final disclosureStyle = DisclosureStyler();
       final dividerStyle = DividerStyler();
       final linkStyle = LinkStyler();
       final popoverStyle = PopoverStyler();
@@ -17,6 +18,15 @@ void main() {
       expect(badgeStyle.call().style, same(badgeStyle));
       expect(calloutStyle.call(text: 'Notice').style, same(calloutStyle));
       expect(cardStyle.call().style, same(cardStyle));
+      expect(
+        disclosureStyle
+            .call(
+              trigger: const SizedBox.shrink(),
+              content: const SizedBox.shrink(),
+            )
+            .style,
+        same(disclosureStyle),
+      );
       expect(dividerStyle.call().style, same(dividerStyle));
       expect(linkStyle.call(label: 'Docs').style, same(linkStyle));
       expect(

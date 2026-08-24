@@ -9,6 +9,7 @@ import 'package:demo/components/code.dart' as code;
 import 'package:demo/components/data_list.dart' as data_list;
 import 'package:demo/components/data_table.dart' as data_table;
 import 'package:demo/components/dialog.dart' as dialog;
+import 'package:demo/components/disclosure.dart' as disclosure;
 import 'package:demo/components/divider.dart' as divider;
 import 'package:demo/components/heading.dart' as heading;
 import 'package:demo/components/icon_button.dart' as icon_button;
@@ -38,7 +39,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 /// exactly one size or variant still renders everywhere else. Pumping each one
 /// is what turns "it analyzes" into "it draws".
 ///
-/// Four of the 33 manifest families have no catalog on purpose. Tooltip and
+/// Four of the 34 manifest families have no catalog on purpose. Tooltip and
 /// Skeleton publish no size or variant at all, so a matrix would have nothing
 /// to vary. Menu and Popover paint only their overlay surface — their trigger
 /// is a caller-supplied widget that neither enum touches — so a grid of closed
@@ -55,6 +56,7 @@ final catalogs = <String, WidgetBuilder>{
   'data list': data_list.buildDataListCatalogUseCase,
   'data table': data_table.buildDataTableCatalogUseCase,
   'dialog': dialog.buildDialogCatalogUseCase,
+  'disclosure': disclosure.buildDisclosureCatalogUseCase,
   'divider': divider.buildDividerCatalogUseCase,
   'heading': heading.buildHeadingCatalogUseCase,
   'icon button': icon_button.buildIconButtonCatalogUseCase,

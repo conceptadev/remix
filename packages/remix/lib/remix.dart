@@ -16,6 +16,7 @@ export 'src/components/card/card.dart';
 export 'src/components/checkbox/checkbox.dart';
 export 'src/components/data_list/data_list.dart';
 export 'src/components/data_table/data_table.dart';
+export 'src/components/disclosure/disclosure.dart';
 export 'src/components/divider/divider.dart';
 export 'src/components/link/link.dart';
 export 'src/components/menu/menu.dart';
