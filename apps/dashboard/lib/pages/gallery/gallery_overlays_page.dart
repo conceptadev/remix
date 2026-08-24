@@ -26,40 +26,36 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
       sections: [
         GallerySection(
           label: 'Dialog',
-          description: 'The complete four-size dialog scale.',
-          child: GalleryMatrix(
-            rows: const ['Dialog'],
-            columns: FortalDialogSize.values.map(enumLabel).toList(),
-            cellBuilder: (context, _, column) => FortalButton.soft(
+          description:
+              'Both viewport alignments across the complete four-size scale.',
+          child: GalleryEnumMatrix(
+            rows: FortalDialogAlign.values,
+            columns: FortalDialogSize.values,
+            cellBuilder: (context, align, size) => FortalButton.soft(
               size: .size1,
+              semanticLabel:
+                  'Open ${enumLabel(align)} ${enumLabel(size)} dialog',
               onPressed: () => showRemixDialog<void>(
                 context: context,
                 barrierLabel: 'Dismiss',
-                builder: (dialogContext) => Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 600),
-                    child: FortalDialog(
-                      size: FortalDialogSize.values[column],
-                      title: 'Invite teammates',
-                      description:
-                          'Share this workspace with your collaborators.',
-                      actions: [
-                        FortalButton.soft(
-                          onPressed: () => Navigator.of(dialogContext).pop(),
-                          label: 'Cancel',
-                        ),
-                        FortalButton(
-                          onPressed: () => Navigator.of(dialogContext).pop(),
-                          label: 'Send invite',
-                        ),
-                      ],
-                      child: const Padding(
-                        padding: EdgeInsets.only(top: 12),
-                        child: FortalTextField(
-                          hintText: 'teammate@example.com',
-                        ),
-                      ),
+                builder: (dialogContext) => FortalDialog(
+                  align: align,
+                  size: size,
+                  title: 'Invite teammates',
+                  description: 'Share this workspace with your collaborators.',
+                  actions: [
+                    FortalButton.soft(
+                      onPressed: () => Navigator.of(dialogContext).pop(),
+                      label: 'Cancel',
                     ),
+                    FortalButton(
+                      onPressed: () => Navigator.of(dialogContext).pop(),
+                      label: 'Send invite',
+                    ),
+                  ],
+                  child: const Padding(
+                    padding: EdgeInsets.only(top: 12),
+                    child: FortalTextField(hintText: 'teammate@example.com'),
                   ),
                 ),
               ),
@@ -110,12 +106,12 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
         GallerySection(
           label: 'Menu',
           description: 'Solid and soft menus at both supported density sizes.',
-          child: GalleryMatrix(
-            rows: FortalMenuVariant.values.map(enumLabel).toList(),
-            columns: FortalMenuSize.values.map(enumLabel).toList(),
-            cellBuilder: (context, row, column) => FortalMenu<String>(
-              variant: FortalMenuVariant.values[row],
-              size: FortalMenuSize.values[column],
+          child: GalleryEnumMatrix(
+            rows: FortalMenuVariant.values,
+            columns: FortalMenuSize.values,
+            cellBuilder: (context, variant, size) => FortalMenu<String>(
+              variant: variant,
+              size: size,
               trigger: const RemixMenuTrigger(
                 label: 'Open menu',
                 icon: Icons.more_horiz,
@@ -167,5 +163,5 @@ class _OverlayTrigger extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      FortalBadge.surface(size: .size3, label: label);
+      FortalBadge.surface(size: .size3, highContrast: true, label: label);
 }

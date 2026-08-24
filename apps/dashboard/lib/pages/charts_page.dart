@@ -248,8 +248,11 @@ Widget _viewportLabels(List<Color> palette) => DashboardChartCard(
         max: 6,
         interval: constraints.maxWidth < 360 ? 3 : 1,
         labelFormatter: _weekdayLabel,
-        labelBuilder: (_, label) =>
-            FortalBadge.soft(size: .size1, label: label.formattedValue),
+        labelBuilder: (_, label) => FortalBadge.soft(
+          size: .size1,
+          highContrast: true,
+          label: label.formattedValue,
+        ),
       ),
       yAxis: ChartAxis.numeric(min: 0, max: 60, interval: 10),
     ),

@@ -3,6 +3,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 
 import '../data/models.dart';
 import '../utils/text.dart';
+import 'accent_scope.dart';
 
 /// A domain status rendered as a Fortal badge in a status-specific accent.
 ///
@@ -40,9 +41,8 @@ class StatusBadge extends StatelessWidget {
   final FortalAccentColor accent;
 
   @override
-  Widget build(BuildContext context) => FortalScope(
+  Widget build(BuildContext context) => DashboardAccentScope(
     accent: accent,
-    hasBackground: false,
-    child: FortalBadge(label: label),
+    child: FortalBadge(highContrast: true, label: label),
   );
 }
