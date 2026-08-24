@@ -4,7 +4,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 
 import '../data/activity.dart';
 import '../theme/theme_scope.dart';
-import '../widgets/action_popover.dart';
+import '../widgets/action_menu.dart';
 import '../widgets/theme_panel.dart';
 import '../widgets/toast.dart';
 import '../widgets/typography.dart';
@@ -224,7 +224,7 @@ class _TopBarState extends State<TopBar> {
               icon: Icons.palette_outlined,
             ),
           ),
-          DashboardActionPopover(
+          DashboardActionMenu(
             key: const ValueKey('topbar-account-trigger'),
             semanticLabel: 'Account menu',
             positioning: const OverlayPositionConfig(

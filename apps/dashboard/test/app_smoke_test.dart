@@ -52,17 +52,14 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    expect(
-      find.byKey(const ValueKey('sidebar-account-trigger')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const ValueKey('topbar-account-trigger')),
-      findsOneWidget,
-    );
+    final sidebar = find.byKey(const ValueKey('sidebar-account-trigger'));
+    final topBar = find.byKey(const ValueKey('topbar-account-trigger'));
+    expect(sidebar, findsOneWidget);
+    expect(topBar, findsOneWidget);
+    expect(tester.getSize(topBar).width, lessThanOrEqualTo(48));
     expect(find.text('Account actions'), findsNothing);
 
-    await tester.tap(find.byKey(const ValueKey('sidebar-account-trigger')));
+    await tester.tap(sidebar);
     await tester.pump();
 
     expect(find.text('View profile'), findsOneWidget);
@@ -87,6 +84,25 @@ void main() {
     expect(find.text('View profile'), findsOneWidget);
     expect(find.text('Send email'), findsOneWidget);
     expect(find.text('Archive'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('order rows retain compact kebab actions', (tester) async {
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey('nav-orders')).first);
+    await tester.pump();
+
+    final trigger = find.byKey(const ValueKey('order-actions-ORD-1048'));
+    expect(trigger, findsOneWidget);
+    expect(tester.getSize(trigger).width, lessThanOrEqualTo(46));
+
+    await tester.ensureVisible(trigger);
+    await tester.tap(trigger);
+    await tester.pump();
+
+    expect(find.text('View order'), findsOneWidget);
+    expect(find.text('Download receipt'), findsOneWidget);
+    expect(find.text('Issue refund'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -369,7 +385,7 @@ void main() {
     expect(tester.getSize(content).height, expectedHeight);
   });
 
-  testWidgets('dashboard action popovers shrink-wrap their actions', (
+  testWidgets('dashboard action menus expose menu semantics and width', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(1400, 900);
@@ -377,18 +393,85 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
+    final semantics = tester.ensureSemantics();
     await tester.pumpWidget(const DashboardApp());
     await tester.tap(find.byKey(const ValueKey('sidebar-account-trigger')));
     await tester.pump();
 
-    final content = find.ancestor(
-      of: find.text('View profile'),
-      matching: find.byWidgetPredicate(
-        (widget) => widget is SizedBox && widget.width == 180,
-      ),
+    expect(
+      tester.getSemantics(find.text('View profile')).getSemanticsData().role,
+      ui.SemanticsRole.menuItem,
     );
-    expect(content, findsOneWidget);
-    expect(tester.getSize(content).height, lessThan(180));
+    expect(
+      find.byKey(const ValueKey('dashboard-action-profile')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('dashboard-action-preferences')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('dashboard-action-signout')),
+      findsOneWidget,
+    );
+    expect(
+      tester.getTopLeft(find.text('View profile')).dy,
+      lessThan(tester.getTopLeft(find.text('Preferences')).dy),
+    );
+    expect(
+      tester.getTopLeft(find.text('Preferences')).dy,
+      lessThan(tester.getTopLeft(find.text('Sign out')).dy),
+    );
+
+    final panel = find
+        .ancestor(
+          of: find.text('View profile'),
+          matching: find.byType(ColumnBox),
+        )
+        .first;
+    final divider = find.descendant(
+      of: panel,
+      matching: find.byType(RemixDivider),
+    );
+    expect(divider, findsOneWidget);
+    final dividerY = tester.getCenter(divider).dy;
+    expect(
+      dividerY,
+      greaterThan(tester.getTopLeft(find.text('Preferences')).dy),
+    );
+    expect(dividerY, lessThan(tester.getTopLeft(find.text('Sign out')).dy));
+
+    final overlay = find
+        .ancestor(
+          of: find
+              .ancestor(
+                of: find.text('View profile'),
+                matching: find.byType(ColumnBox),
+              )
+              .first,
+          matching: find.byType(Box),
+        )
+        .first;
+    expect(tester.getSize(overlay).width, 180);
+    expect(tester.getSize(overlay).height, lessThan(180));
+    final contentInset = FortalTokens.space1.resolve(
+      tester.element(find.text('View profile')),
+    );
+    expect(
+      tester
+          .getSize(find.byKey(const ValueKey('dashboard-action-profile')))
+          .width,
+      180 - contentInset * 2,
+    );
+
+    await tester.tap(find.text('View profile'));
+    await tester.pump();
+
+    expect(find.text('View profile'), findsNothing);
+    expect(find.text('Profile opened'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    semantics.dispose();
+    await tester.pump(const Duration(seconds: 4));
   });
 
   testWidgets('notification popover shrink-wraps its activity', (tester) async {

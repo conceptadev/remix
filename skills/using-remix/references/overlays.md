@@ -109,10 +109,18 @@ Fortal preset: `FortalTooltip` — same params, no variant/size.
 | `useRootOverlay` | `bool` | `false` | no |
 | `positioning` | `OverlayPositionConfig` | `OverlayPositionConfig()` | no |
 | `triggerFocusNode` | `FocusNode?` | `null` | no |
+| `semanticLabel` | `String?` | `null` | no |
+| `excludeSemantics` | `bool` | `false` | no |
 
-`RemixMenuTrigger` and item entries are **data classes**, not widgets:
+`RemixMenuTrigger` and item entries are **configuration objects**, not widgets.
+The same `RemixMenuTrigger` is the trigger for `FortalMenu`; there is no
+separate Fortal trigger type.
 
-- **RemixMenuTrigger**: `label` (required), `icon` (optional).
+- **RemixMenuTrigger**: `label` (required), `icon` (optional). Use
+  `RemixMenuTrigger.builder(label:, icon:, builder:)` for custom visual
+  content. The builder receives `NakedMenuState` and the styled default
+  trigger; returned content must not be a nested interactive control.
+  `label` is the accessible fallback for any builder-backed trigger.
 - **RemixMenuItem\<T\>**: `value` (required), `label` (required),
   `leadingIcon`, `trailingIcon`, `enabled` (default true), `closeOnActivate`
   (default true), `semanticLabel`, `style`.

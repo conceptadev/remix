@@ -3,7 +3,7 @@ import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 import '../utils/text.dart';
-import '../widgets/action_popover.dart';
+import '../widgets/action_menu.dart';
 import '../widgets/toast.dart';
 import '../widgets/typography.dart';
 import 'dashboard_page.dart';
@@ -150,7 +150,7 @@ class _Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(14),
-      child: DashboardActionPopover(
+      child: DashboardActionMenu(
         key: const ValueKey('sidebar-account-trigger'),
         semanticLabel: 'Workspace account menu',
         trigger: Row(

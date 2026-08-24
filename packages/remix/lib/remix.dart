@@ -38,7 +38,12 @@ export 'src/components/tooltip/tooltip.dart';
 /// EXTERNAL DEPENDENCIES
 export 'package:mix/mix.dart';
 export 'package:naked_ui/naked_ui.dart'
-    show OverlayAlignment, OverlayPlacement, OverlayPositionConfig, OverlaySide;
+    show
+        NakedMenuState,
+        OverlayAlignment,
+        OverlayPlacement,
+        OverlayPositionConfig,
+        OverlaySide;
 
 /// RENDERING
 export 'src/rendering/remix_blend_mode.dart' show RemixBlendMode;

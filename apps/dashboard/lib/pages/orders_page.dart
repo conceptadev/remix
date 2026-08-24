@@ -6,7 +6,7 @@ import '../data/models.dart';
 import '../data/orders.dart';
 import '../utils/date_format.dart';
 import '../utils/pagination.dart';
-import '../widgets/action_popover.dart';
+import '../widgets/action_menu.dart';
 import '../widgets/data_table_cell_text.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/page_header.dart';
@@ -176,7 +176,7 @@ class _OrdersPageState extends State<OrdersPage> {
       semanticLabel: 'Actions',
       width: const FixedColumnWidth(64),
       alignment: .end,
-      cellBuilder: (context, order) => DashboardActionPopover(
+      cellBuilder: (context, order) => DashboardActionMenu(
         key: ValueKey('order-actions-${order.id}'),
         semanticLabel: 'Actions for ${order.id}',
         positioning: dataTableActionsPositioning,
