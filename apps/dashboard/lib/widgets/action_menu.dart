@@ -54,11 +54,10 @@ class DashboardActionMenu extends StatelessWidget {
 
     return FortalMenu<String>(
       size: .size1,
-      semanticLabel: semanticLabel,
       positioning: positioning,
       trigger: RemixMenuTrigger.builder(
         label: semanticLabel,
-        builder: (context, state, defaultTrigger) => trigger,
+        builder: (_, _, _) => trigger,
       ),
       items: [
         for (final action in actions) ...[

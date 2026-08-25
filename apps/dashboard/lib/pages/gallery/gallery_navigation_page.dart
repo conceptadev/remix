@@ -3,6 +3,7 @@ import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 import '../../utils/text.dart';
+import '../../widgets/disclosure_trigger.dart';
 import '../../widgets/gallery_scaffold.dart';
 
 class GalleryNavigationPage extends StatelessWidget {
@@ -11,33 +12,72 @@ class GalleryNavigationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GalleryPage(
     title: 'Navigation',
-    intro: 'Tabs and disclosure patterns for organizing dense interfaces.',
+    intro:
+        'Tabs, standalone disclosures, and coordinated accordions for organizing dense interfaces.',
     sections: [
       GallerySection(
         label: 'Tabs',
         description: 'Both tab sizes with live keyboard and pointer selection.',
-        child: GalleryMatrix(
+        child: GalleryMatrix<String, FortalTabsSize>(
           rows: const ['Tabs'],
-          columns: FortalTabsSize.values.map(enumLabel).toList(),
+          columns: FortalTabsSize.values,
+          rowLabelBuilder: (label) => label,
+          columnLabelBuilder: enumLabel,
           cellWidth: 320,
-          cellBuilder: (_, _, column) =>
-              _TabsDemo(size: FortalTabsSize.values[column]),
+          cellBuilder: (_, _, size) => _TabsDemo(size: size),
+        ),
+      ),
+      GallerySection(
+        label: 'Disclosure',
+        description:
+            'Independent expandable panels in every Fortal variant and size.',
+        child: GalleryEnumMatrix(
+          rows: FortalDisclosureVariant.values,
+          columns: FortalDisclosureSize.values,
+          cellWidth: 300,
+          cellBuilder: (_, variant, size) =>
+              _DisclosureDemo(variant: variant, size: size),
         ),
       ),
       GallerySection(
         label: 'Accordion',
-        description: 'Surface and soft disclosure items across three sizes.',
-        child: GalleryMatrix(
-          rows: FortalAccordionVariant.values.map(enumLabel).toList(),
-          columns: FortalAccordionSize.values.map(enumLabel).toList(),
+        description:
+            'Coordinated disclosure items where only one panel stays open.',
+        child: GalleryEnumMatrix(
+          rows: FortalAccordionVariant.values,
+          columns: FortalAccordionSize.values,
           cellWidth: 300,
-          cellBuilder: (_, row, column) => _AccordionDemo(
-            variant: FortalAccordionVariant.values[row],
-            size: FortalAccordionSize.values[column],
-          ),
+          cellBuilder: (_, variant, size) =>
+              _AccordionDemo(variant: variant, size: size),
         ),
       ),
     ],
+  );
+}
+
+class _DisclosureDemo extends StatelessWidget {
+  const _DisclosureDemo({required this.variant, required this.size});
+
+  final FortalDisclosureVariant variant;
+  final FortalDisclosureSize size;
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 280,
+    child: FortalDisclosure(
+      key: ValueKey('disclosure-${variant.name}-${size.name}'),
+      variant: variant,
+      size: size,
+      defaultExpanded: true,
+      animationStyle: dashboardDisclosureAnimationStyle,
+      semanticLabel:
+          '${enumLabel(variant)} ${enumLabel(size)} shipping details',
+      semanticHint: 'Toggles shipping details',
+      trigger: const Text('Shipping details'),
+      triggerBuilder: (context, state, child) =>
+          DashboardDisclosureTrigger(expanded: state.isExpanded, child: child!),
+      content: const Text('Delivery takes 3–5 business days.'),
+    ),
   );
 }
 

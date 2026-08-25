@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:dashboard/main.dart';
+import 'package:dashboard/pages/gallery/gallery_navigation_page.dart';
 import 'package:dashboard/shell/dashboard_shell.dart';
 import 'package:dashboard/shell/top_bar.dart';
 import 'package:dashboard/theme/theme_scope.dart';
@@ -508,7 +509,9 @@ void main() {
     await tester.tap(nav);
     await tester.pump();
 
-    await tester.tap(find.text('Open').first);
+    final trigger = find.bySemanticsLabel('Open Center Size3 dialog');
+    await tester.ensureVisible(trigger);
+    await tester.tap(trigger);
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -529,6 +532,13 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
     await tester.tap(find.byKey(const ValueKey('nav-settings')).first);
     await tester.pump();
+
+    final dangerZone = find.byKey(const ValueKey('settings-danger-zone'));
+    await tester.ensureVisible(dangerZone.first);
+    await tester.tap(find.text('Danger zone'));
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
 
     final trigger = find.text('Delete workspace');
     await tester.ensureVisible(trigger);
@@ -575,6 +585,41 @@ void main() {
     expect(items.children, everyElement(isA<FortalAccordion<String>>()));
   });
 
+  testWidgets('navigation gallery disclosure collapses independently', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const DashboardApp());
+    final nav = find.byKey(const ValueKey('nav-galleryNavigation')).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
+    await tester.pump();
+
+    final gallery = find.byType(GalleryNavigationPage);
+    final disclosureFinder = find.descendant(
+      of: gallery,
+      matching: find.byType(FortalDisclosure),
+    );
+    final disclosureCount = tester
+        .widgetList<FortalDisclosure>(disclosureFinder)
+        .length;
+
+    final panelCopy = find.descendant(
+      of: gallery,
+      matching: find.text('Delivery takes 3–5 business days.'),
+    );
+    expect(panelCopy, findsNWidgets(disclosureCount));
+
+    final trigger = find.bySemanticsLabel('Surface Size1 shipping details');
+    await tester.ensureVisible(trigger);
+    await tester.pump();
+    await tester.tap(trigger);
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    expect(panelCopy, findsNWidgets(disclosureCount - 1));
+  });
+
   testWidgets('every sidebar destination renders without replacing the shell', (
     tester,
   ) async {
@@ -596,7 +641,7 @@ void main() {
       'galleryOverlays':
           'Real dialog, popover, tooltip, and menu triggers for every recipe.',
       'galleryNavigation':
-          'Tabs and disclosure patterns for organizing dense interfaces.',
+          'Tabs, standalone disclosures, and coordinated accordions for organizing dense interfaces.',
       'galleryTypography':
           'Text, headings, code, keys, and links on one shared scale.',
     };

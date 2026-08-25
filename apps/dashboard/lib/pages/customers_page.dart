@@ -86,6 +86,7 @@ class _CustomersPageState extends State<CustomersPage> {
                       children: [
                         FortalBadge(
                           size: .size2,
+                          highContrast: true,
                           label: '${_selectedIds.length} selected',
                         ),
                         FortalButton.ghost(
