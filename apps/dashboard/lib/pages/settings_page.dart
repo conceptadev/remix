@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
-import '../widgets/accent_scope.dart';
+import '../widgets/app_accent_scope.dart';
 import '../widgets/disclosure_trigger.dart';
 import '../widgets/page_header.dart';
 import '../widgets/theme_panel.dart';
@@ -155,7 +155,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
-              DashboardAccentScope(
+              AppAccentScope(
                 accent: .red,
                 child: FortalDisclosure.soft(
                   key: const ValueKey('settings-danger-zone'),
@@ -206,7 +206,7 @@ class _SettingsPageState extends State<SettingsPage> {
             onPressed: () => Navigator.of(context).pop(false),
             label: 'Cancel',
           ),
-          DashboardAccentScope(
+          AppAccentScope(
             accent: .red,
             child: FortalButton(
               onPressed: () => Navigator.of(context).pop(true),

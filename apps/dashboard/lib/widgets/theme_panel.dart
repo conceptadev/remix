@@ -5,7 +5,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 import '../theme/theme_scope.dart';
 import '../theme/theme_settings.dart';
 import '../utils/text.dart';
-import 'accent_scope.dart';
+import 'app_accent_scope.dart';
 
 class ThemePanel extends StatelessWidget {
   const ThemePanel({super.key});
@@ -223,7 +223,7 @@ class _AccentSwatch extends StatelessWidget {
   final VoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context) => DashboardAccentScope(
+  Widget build(BuildContext context) => AppAccentScope(
     accent: accent,
     child: RemixToggle(
       selected: selected,

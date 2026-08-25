@@ -5,7 +5,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 import '../data/activity.dart';
 import '../data/models.dart';
 import '../data/orders.dart';
-import '../widgets/accent_scope.dart';
+import '../widgets/app_accent_scope.dart';
 import '../widgets/analytics_charts.dart';
 import '../widgets/data_table_cell_text.dart';
 import '../widgets/page_header.dart';
@@ -168,7 +168,7 @@ class _ActivityIcon extends StatelessWidget {
   final FortalAccentColor accent;
 
   @override
-  Widget build(BuildContext context) => DashboardAccentScope(
+  Widget build(BuildContext context) => AppAccentScope(
     accent: accent,
     child: FortalAvatar.soft(icon: icon, size: .size2),
   );

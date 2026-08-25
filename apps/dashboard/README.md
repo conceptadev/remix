@@ -17,7 +17,7 @@ implementation.
   variant or size therefore becomes a rendered cell instead of silently
   drifting from a parallel label list.
 - Variants describe visual treatment. Product intent such as success or danger
-  is expressed with a local `DashboardAccentScope`, which overrides only the
+  is expressed with a local `AppAccentScope`, which overrides only the
   accent and inherits the active brightness, gray, radius, scaling, and panel
   settings.
 - Meaningful product and interactive badge labels opt into high contrast

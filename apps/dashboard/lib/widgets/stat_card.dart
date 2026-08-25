@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
-import 'accent_scope.dart';
+import 'app_accent_scope.dart';
 import 'typography.dart';
 
 class StatCard extends StatelessWidget {
@@ -50,7 +50,7 @@ class StatCard extends StatelessWidget {
           runSpacing: 6,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            DashboardAccentScope(
+            AppAccentScope(
               accent: positive ? .green : .red,
               child: FortalBadge(
                 highContrast: true,

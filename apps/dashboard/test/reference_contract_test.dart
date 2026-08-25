@@ -408,7 +408,7 @@ void main() {
       }
     });
 
-    testWidgets('a dashboard accent scope overrides only the local accent', (
+    testWidgets('an app accent scope overrides only the local accent', (
       tester,
     ) async {
       await tester.pumpWidget(
