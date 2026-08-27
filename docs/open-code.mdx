@@ -45,7 +45,7 @@ The command is called `remix`. How you reach it depends on how it is installed:
 
 ```bash
 # Project-local dev dependency (recommended, and the only option today)
-remix <command>
+dart run remix_cli:remix <command>
 
 # Global install — available once remix_cli is published to pub.dev
 dart pub global activate remix_cli
@@ -59,7 +59,7 @@ cannot install each other's templates.
 <Note>
 The examples below are written as `remix <command>` to match the tool's own
 usage output. If you are using the project-local form, prefix each one with
-`dart run remix_cli:` — for example `remix init`.
+`dart run remix_cli:` — for example `dart run remix_cli:remix init`.
 </Note>
 
 ```
@@ -75,6 +75,8 @@ Global options:
 Available commands:
   add    Install one bundled registry item.
   init   Initialize Remix source installation settings.
+
+Run "remix help <command>" for more information about a command.
 ```
 
 ## 1. Initialize
