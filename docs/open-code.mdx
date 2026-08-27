@@ -1,0 +1,304 @@
+---
+title: Open Code
+description: Install editable Remix component source into your app with the remix CLI
+---
+
+Fortal gives you a themed catalog you *depend on*. **Open code** gives you the
+opposite trade: `remix_cli` copies a small, readable Theme and Button
+implementation **into your application**, and from that moment your team owns
+the file. No wrapper, no subclass, no theme-override escape hatch — you edit the
+source.
+
+Remix keeps everything that is genuinely hard: rendering, pointer and keyboard
+handling, focus management, accessibility semantics, and the loading/disabled
+interaction rules. The installed file only decides what things look like.
+
+<Info>
+`remix_cli` is pre-1.0 and versioned independently from `remix` and
+`remix_fortal`. It is not yet published to pub.dev.
+</Info>
+
+## When to choose open code
+
+| | Fortal | Open code |
+|---|---|---|
+| You get | A dependency | Source files in `lib/` |
+| Restyling | Token and style overrides | Edit the recipe |
+| Upgrades | `flutter pub upgrade` | You own it; rerun `add --diff` to compare |
+| Best for | Ship fast on a Radix-like system | A house design system you intend to diverge |
+
+Pick open code when the design system is *yours* and you expect to keep
+changing it. Pick Fortal when you want a good catalog and no maintenance.
+
+## Install
+
+Add the CLI as a project-local dev dependency so the version is pinned in your
+lockfile rather than in a global install:
+
+```bash
+flutter pub add dev:remix_cli
+```
+
+## 1. Initialize
+
+```bash
+dart run remix_cli:remix init
+```
+
+This writes two files and nothing else:
+
+- `remix.yaml` — your prefix and UI path
+- `lib/ui/ui.dart` — a managed barrel with an export marker block
+
+```yaml
+# remix.yaml
+schema: 1
+prefix: Ui
+paths:
+  ui: lib/ui
+```
+
+Choose the naming and location up front, because the prefix is baked into every
+identifier the CLI renders:
+
+```bash
+dart run remix_cli:remix init --prefix Acme --ui-path lib/design_system
+```
+
+`--prefix Acme` produces `AcmeButton`, `AcmeButtonVariant`, `AcmeThemeData`,
+and `acmeButtonStyle`. The prefix must be an UpperCamel Dart identifier whose
+lowercased form is not a reserved word, and the UI path must live under `lib/`.
+
+`init` is also a repair command. Run it again and it recreates whichever of the
+two files is missing, telling you exactly which one it touched:
+
+```
+Created remix.yaml; preserved lib/ui/ui.dart.
+```
+
+## 2. Preview before you write
+
+Never let a generator surprise you. Both preview modes run the full preflight —
+path safety, dependency sections, registry resolution — and then stop before any
+file is written or any process runs.
+
+```bash
+dart run remix_cli:remix add button --dry-run
+```
+
+```
+Items: theme -> button
+Dependencies: remix@^1.0.0-beta.6, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
+theme: missing; lib/ui/theme/tokens.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart
+button: missing; lib/ui/components/button.dart
+Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, components/button.dart
+Generated: lib/ui/components/button.g.dart
+```
+
+For the actual source, use `--diff`, which renders the proposed files, formats
+them, and shows a real `git diff` against what you have:
+
+```bash
+dart run remix_cli:remix add button --diff
+```
+
+## 3. Add
+
+```bash
+dart run remix_cli:remix add button
+```
+
+Button depends on Theme in the registry, so both are installed, dependencies
+first. The command then runs a fixed sequence and stops at the first failure:
+
+1. `flutter --version --machine` — requires Flutter 3.44+
+2. `flutter pub add` — only for requirements you are actually missing
+3. `flutter pub get`, then verify the **resolved** versions in `pubspec.lock`
+4. Write the authored files and update the managed barrel
+5. `dart format` the files it wrote
+6. `dart run build_runner build --build-filter=...` — scoped to the generated targets only
+7. `dart analyze lib/ui`
+
+```
+Added theme.
+Added button.
+Generated lib/ui/components/button.g.dart.
+```
+
+Then use it like any widget:
+
+```dart
+import 'package:flutter/widgets.dart';
+
+import 'ui/ui.dart';
+
+class SignUpButton extends StatelessWidget {
+  const SignUpButton({super.key, required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return UiButton.primary(label: 'Create account', onPressed: onPressed);
+  }
+}
+```
+
+## What lands in your app
+
+```
+lib/ui/
+├── ui.dart                     # managed barrel — CLI owns the marker block
+├── theme/
+│   ├── tokens.dart             # token surface the recipe reads
+│   ├── theme_data.dart         # light() / dark() / copyWith()
+│   └── theme_scope.dart        # inherited scope
+└── components/
+    ├── button.dart             # the recipe — yours to edit
+    └── button.g.dart           # generated adapter — do not edit
+```
+
+`button.dart` is a styler function plus two enums:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+enum UiButtonVariant { primary, secondary, outline, ghost, destructive }
+
+enum UiButtonSize { small, medium, large }
+
+@MixWidget(name: 'UiButton', target: RemixButton.new)
+ButtonStyler uiButtonStyle({
+  UiButtonVariant variant = UiButtonVariant.primary,
+  UiButtonSize size = UiButtonSize.medium,
+  ButtonStyler style = const ButtonStyler.create(),
+}) {
+  return _base(size)
+      .merge(_variantStyle(variant))
+      .onDisabled(
+        ButtonStyler().wrap(WidgetModifierConfig.opacity(0.5)),
+      )
+      .merge(style);
+}
+
+ButtonStyler _base(UiButtonSize size) => ButtonStyler().minHeight(
+  switch (size) {
+    UiButtonSize.small => 32,
+    UiButtonSize.medium => 36,
+    UiButtonSize.large => 40,
+  },
+);
+
+ButtonStyler _variantStyle(UiButtonVariant variant) => switch (variant) {
+  UiButtonVariant.primary => ButtonStyler().color(const Color(0xFF171717)),
+  _ => ButtonStyler(),
+};
+```
+
+`@MixWidget` generates `UiButton` into `button.g.dart`, including one named
+constructor per variant (`UiButton.primary`, `.secondary`, `.outline`,
+`.ghost`, `.destructive`).
+
+## The three levels of customization
+
+**Edit the recipe** — change it for the whole app, permanently. It is your file.
+
+**Retheme a subtree** — one `copyWith` restyles every button beneath it, because
+the recipe reads tokens and the scope decides what tokens resolve to:
+
+```dart
+UiThemeScope(
+  data: const UiThemeData.light().copyWith(
+    primary: const Color(0xFF4F46E5),
+    radius: const Radius.circular(999),
+  ),
+  child: child,
+)
+```
+
+**Override one instance** — `style` is merged **last**, so it beats the resolved
+recipe without forking it:
+
+```dart
+UiButton.primary(
+  label: 'Just this one',
+  style: ButtonStyler()
+      .color(const Color(0xFF7C3AED))
+      .onHovered(ButtonStyler().color(const Color(0xFF5B21B6))),
+  onPressed: publish,
+)
+```
+
+<Warning>
+State fragments merge by state, not by depth. An override that must beat the
+recipe's hover fill has to be declared as a hover fragment too — a bare
+`.color(...)` only replaces the idle one.
+</Warning>
+
+## Updating an installed item
+
+There is no update protocol, by design: the file is yours and the CLI will not
+guess how to merge your edits. Review, then decide:
+
+```bash
+dart run remix_cli:remix add button --diff       # see what changed upstream
+dart run remix_cli:remix add button --overwrite  # replace, losing local edits
+```
+
+`--overwrite` replaces **only the item you named**. Already-installed registry
+dependencies are left alone:
+
+```
+Preserved theme.
+Updated button.
+```
+
+Without `--overwrite`, a fully installed item is a successful no-op, and a
+*partially* installed one is an error rather than a silent repair — use
+`--diff` or `--overwrite` deliberately.
+
+## Dependency rules
+
+The CLI checks your `pubspec.yaml` but never rewrites a declaration you already
+made. It adds only what is missing, and preserves hosted, path, Git,
+custom-hosted, and override declarations byte-for-byte.
+
+Section placement is enforced, because the installed source lives under your
+`lib/` and is compiled into anything that depends on your package:
+
+| Package | Required section |
+|---|---|
+| `remix`, `mix_annotations` | `dependencies` |
+| `build_runner`, `mix_generator` | either (build-time only) |
+
+A runtime package declared only under `dev_dependencies` fails **before** any
+process runs or file is written:
+
+```
+remix is declared under dev_dependencies but installed source imports it at
+runtime. Move remix to dependencies in pubspec.yaml and rerun. No source was
+written.
+```
+
+Declaring the same package in both sections is rejected the same way. Fix your
+manifest and rerun — the CLI will not edit it for you.
+
+## Catalog
+
+The bundled registry is deliberately small:
+
+| Item | Installs | Depends on |
+|---|---|---|
+| `theme` | `tokens.dart`, `theme_data.dart`, `theme_scope.dart` | — |
+| `button` | `components/button.dart` + generated adapter | `theme` |
+
+## Exit codes
+
+- `0` — success, including help, version, dry-run, diff, and no-op reruns
+- `64` — invalid command or arguments
+- `1` — configuration, registry, dependency, process, generation, analysis, or filesystem failure
+
+If generation or analysis fails *after* installation, the authored source stays
+on disk for inspection. Fix the reported problem and rerun the same command.
