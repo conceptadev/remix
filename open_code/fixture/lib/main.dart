@@ -121,6 +121,10 @@ class AcmeThemeSection extends StatefulWidget {
 
 class _AcmeThemeSectionState extends State<AcmeThemeSection> {
   String _lastAction = 'nothing pressed yet';
+  bool _subscribed = false;
+  bool? _partial;
+  Set<String> _interests = const {'design'};
+  String _tab = 'account';
 
   void _record(String action) => setState(() => _lastAction = action);
 
@@ -263,6 +267,134 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                       onPressed: () => _record('untouched neighbour'),
                     ),
                   ],
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Checkbox sizes and states', color: data.mutedForeground),
+                Wrap(
+                  spacing: 20,
+                  runSpacing: 12,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    for (final size in AcmeCheckboxSize.values)
+                      AcmeCheckbox(
+                        size: size,
+                        selected: _subscribed,
+                        label: size.name,
+                        // `tristate` is false here, so Remix never emits
+                        // null; the parameter type stays nullable because the
+                        // same callback serves the tristate case below.
+                        onChanged: (value) => setState(() {
+                          _subscribed = value ?? false;
+                          _lastAction = 'checkbox ${size.name} -> $value';
+                        }),
+                      ),
+                    // Tristate: `selected` cycles false -> true -> null, and
+                    // Remix swaps the check glyph for the indeterminate one.
+                    AcmeCheckbox(
+                      selected: _partial,
+                      tristate: true,
+                      label: 'Indeterminate',
+                      onChanged: (value) => setState(() {
+                        _partial = value;
+                        _lastAction = 'tristate -> $value';
+                      }),
+                    ),
+                    const AcmeCheckbox(
+                      selected: true,
+                      enabled: false,
+                      label: 'Disabled',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Checkbox group', color: data.mutedForeground),
+                // The group owns the selected set; each option is styled by
+                // the same recipe through its own generated adapter.
+                RemixCheckboxGroup<String>(
+                  values: _interests,
+                  semanticLabel: 'Interests',
+                  onChanged: (values) => setState(() {
+                    _interests = values;
+                    _lastAction = 'interests -> ${values.join(', ')}';
+                  }),
+                  child: const Wrap(
+                    spacing: 20,
+                    runSpacing: 8,
+                    children: [
+                      AcmeCheckboxGroupItem<String>(
+                        value: 'design',
+                        label: 'Design',
+                      ),
+                      AcmeCheckboxGroupItem<String>(
+                        value: 'code',
+                        label: 'Code',
+                      ),
+                      AcmeCheckboxGroupItem<String>(
+                        value: 'research',
+                        label: 'Research',
+                        enabled: false,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Tabs', color: data.mutedForeground),
+                // `RemixTabs` is behavioral and carries no recipe: it owns
+                // selection and keyboard traversal while the three generated
+                // adapters own everything visible.
+                RemixTabs(
+                  selectedTabId: _tab,
+                  onChanged: (id) => setState(() {
+                    _tab = id;
+                    _lastAction = 'tab -> $id';
+                  }),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const AcmeTabBar(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AcmeTab(
+                              tabId: 'account',
+                              label: 'Account',
+                              icon: checkGlyph,
+                            ),
+                            AcmeTab(tabId: 'billing', label: 'Billing'),
+                            AcmeTab(
+                              tabId: 'archived',
+                              label: 'Archived',
+                              enabled: false,
+                            ),
+                          ],
+                        ),
+                      ),
+                      AcmeTabView(
+                        tabId: 'account',
+                        child: Text(
+                          'Account panel',
+                          style: TextStyle(color: data.foreground),
+                        ),
+                      ),
+                      AcmeTabView(
+                        tabId: 'billing',
+                        child: Text(
+                          'Billing panel',
+                          style: TextStyle(color: data.foreground),
+                        ),
+                      ),
+                      AcmeTabView(
+                        tabId: 'archived',
+                        child: Text(
+                          'Archived panel',
+                          style: TextStyle(color: data.foreground),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 16),
 

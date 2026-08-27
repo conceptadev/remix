@@ -1,11 +1,12 @@
 # remix_cli
 
-`remix_cli` installs editable Theme and Button source into a Flutter
-application. Remix remains the behavior dependency; the application owns its
-tokens, theme values, component recipe, and generated adapter.
+`remix_cli` installs editable component source into a Flutter application.
+Remix remains the behavior dependency; the application owns its tokens, theme
+values, component recipes, and generated adapters.
 
-The 0.1.0 catalog is intentionally small: `button` depends on `theme`. There is
-no remote registry, update command, registry lockfile, or content-hash protocol.
+The 0.1.0 catalog is intentionally small: `button`, `checkbox`, and `tabs`,
+each depending on `theme`. There is no remote registry, update command,
+registry lockfile, or content-hash protocol.
 
 ## Install project-locally
 
@@ -56,7 +57,7 @@ dart run remix_cli:remix init --prefix Acme --ui-path lib/design_system
 with a managed export block. Repeating the same command is safe. A different
 configuration is refused instead of silently rewriting an existing project.
 
-## Add Button
+## Add a component
 
 ```shell
 dart run remix_cli:remix add button
@@ -80,6 +81,19 @@ lib/ui/
     button.dart
     button.g.dart
 ```
+
+One `add` installs one item. Repeat it for `checkbox` and `tabs`; each drops
+one authored file and one generated part beside Button and extends the barrel.
+
+| Item | Widgets it generates |
+|---|---|
+| `button` | `UiButton` |
+| `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` |
+| `tabs` | `UiTabBar`, `UiTab`, `UiTabView` |
+
+`RemixCheckboxGroup` and `RemixTabs` are behavioral and carry no style, so the
+registry has nothing to render for them: import them from
+`package:remix/remix.dart` and put the installed adapters inside.
 
 The authored files are application source. A normal rerun preserves them. The
 generated part is owned by the consumer's resolved generator and should be

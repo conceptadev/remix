@@ -781,7 +781,7 @@ void main() {
     testWidgets('the unnamed constructor takes dynamic values', (tester) async {
       for (final variant in AcmeButtonVariant.values) {
         for (final size in AcmeButtonSize.values) {
-          await _pumpButton(
+          await _pumpInScope(
             tester,
             AcmeButton(variant: variant, size: size, label: 'Go'),
           );
@@ -814,7 +814,7 @@ void main() {
       expect(named.keys, containsAll(AcmeButtonVariant.values));
 
       for (final entry in named.entries) {
-        await _pumpButton(tester, entry.value);
+        await _pumpInScope(tester, entry.value);
 
         expect(entry.value.variant, entry.key);
         expect(entry.value.size, AcmeButtonSize.medium);
@@ -828,7 +828,7 @@ void main() {
     testWidgets('named constructors still accept size and style', (
       tester,
     ) async {
-      await _pumpButton(
+      await _pumpInScope(
         tester,
         AcmeButton.destructive(
           label: 'Delete',
@@ -851,7 +851,7 @@ void main() {
       final focusNode = FocusNode(debugLabel: 'ui-button');
       addTearDown(focusNode.dispose);
 
-      await _pumpButton(
+      await _pumpInScope(
         tester,
         AcmeButton(
           key: const ValueKey<String>('forwarded'),
@@ -938,7 +938,7 @@ void main() {
       var builds = 0;
       SpinnerSpec? receivedSpec;
 
-      await _pumpButton(
+      await _pumpInScope(
         tester,
         AcmeButton.primary(
           label: 'Save',
@@ -967,7 +967,7 @@ void main() {
       var pressed = 0;
       var longPressed = 0;
 
-      await _pumpButton(
+      await _pumpInScope(
         tester,
         AcmeButton.primary(
           label: 'Go',
@@ -987,7 +987,7 @@ void main() {
     });
 
     testWidgets('hovering repaints with the hover fill', (tester) async {
-      await _pumpButton(
+      await _pumpInScope(
         tester,
         AcmeButton.primary(label: 'Go', onPressed: () {}),
       );
@@ -1016,7 +1016,7 @@ void main() {
       addTearDown(focusNode.dispose);
       var focusChanges = 0;
 
-      await _pumpButton(
+      await _pumpInScope(
         tester,
         AcmeButton.primary(
           label: 'Go',
@@ -1038,7 +1038,7 @@ void main() {
     ) async {
       final handle = tester.ensureSemantics();
 
-      await _pumpButton(
+      await _pumpInScope(
         tester,
         AcmeButton.destructive(
           label: 'Delete',
@@ -1070,7 +1070,7 @@ void main() {
     ) async {
       final handle = tester.ensureSemantics();
 
-      await _pumpButton(
+      await _pumpInScope(
         tester,
         AcmeButton.primary(label: 'Publish', onPressed: () {}),
       );
@@ -1083,7 +1083,7 @@ void main() {
     testWidgets('excludeSemantics hides the whole control', (tester) async {
       final handle = tester.ensureSemantics();
 
-      await _pumpButton(
+      await _pumpInScope(
         tester,
         AcmeButton.primary(
           label: 'Hidden',
@@ -1106,7 +1106,7 @@ void main() {
       final handle = tester.ensureSemantics();
       var pressed = 0;
 
-      await _pumpButton(
+      await _pumpInScope(
         tester,
         AcmeButton.primary(
           label: 'Go',
@@ -1137,7 +1137,7 @@ void main() {
     ) async {
       var pressed = 0;
 
-      await _pumpButton(
+      await _pumpInScope(
         tester,
         AcmeButton.primary(
           label: 'Saving',
@@ -1157,14 +1157,14 @@ void main() {
 
     testWidgets('loading does not change the footprint', (tester) async {
       for (final size in AcmeButtonSize.values) {
-        await _pumpButton(
+        await _pumpInScope(
           tester,
           AcmeButton(size: size, label: 'Saving', onPressed: () {}),
         );
         await tester.pumpAndSettle();
         final idle = tester.getSize(find.byType(AcmeButton));
 
-        await _pumpButton(
+        await _pumpInScope(
           tester,
           AcmeButton(
             size: size,
@@ -1179,6 +1179,859 @@ void main() {
         expect(loading, idle, reason: size.name);
         expect(idle.height, greaterThanOrEqualTo(_minHeights[size]!));
       }
+    });
+  });
+
+  group('acmeCheckboxStyle sizes', () {
+    const expected = <AcmeCheckboxSize, _CheckboxMetrics>{
+      AcmeCheckboxSize.small: (
+        box: 16.0,
+        indicator: 10.0,
+        gap: 8.0,
+        labelSize: 14.0,
+      ),
+      AcmeCheckboxSize.medium: (
+        box: 18.0,
+        indicator: 11.0,
+        gap: 8.0,
+        labelSize: 14.0,
+      ),
+      AcmeCheckboxSize.large: (
+        box: 20.0,
+        indicator: 13.0,
+        gap: 10.0,
+        labelSize: 16.0,
+      ),
+    };
+
+    test('every size is covered', () {
+      expect(expected.keys, containsAll(AcmeCheckboxSize.values));
+      expect(expected, hasLength(AcmeCheckboxSize.values.length));
+    });
+
+    for (final entry in expected.entries) {
+      testWidgets('${entry.key.name} has its exact metrics', (tester) async {
+        final spec = await _checkboxSpec(
+          tester,
+          theme: const AcmeThemeData.light(),
+          size: entry.key,
+        );
+        final metrics = entry.value;
+
+        expect(
+          _checkboxConstraints(spec),
+          BoxConstraints.tight(Size.square(metrics.box)),
+        );
+        expect(spec.spec.indicator.spec.size, metrics.indicator);
+        expect(spec.spec.labelSpacing, metrics.gap);
+        expect(spec.spec.label.spec.style?.fontSize, metrics.labelSize);
+        expect(spec.spec.container.spec.alignment, Alignment.center);
+      });
+    }
+  });
+
+  group('acmeCheckboxStyle appearance', () {
+    for (final theme in _themes) {
+      testWidgets('unchecked reads as an empty outlined box in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _checkboxSpec(tester, theme: theme.data);
+
+        expect(_checkboxBackground(spec), theme.data.background);
+        expect(
+          _checkboxBorder(spec),
+          Border.all(color: theme.data.border, width: 1),
+        );
+        expect(spec.spec.label.spec.style?.color, theme.data.foreground);
+        // Unchecked renders no indicator at all, so the recipe deliberately
+        // leaves its color to the states that can show one.
+        expect(spec.spec.indicator.spec.color, isNull);
+      });
+
+      testWidgets('checked fills with primary in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _checkboxSpec(
+          tester,
+          theme: theme.data,
+          selected: true,
+        );
+
+        expect(_checkboxBackground(spec), theme.data.primary);
+        expect(
+          _checkboxBorder(spec),
+          Border.all(color: theme.data.primary, width: 1),
+        );
+        expect(spec.spec.indicator.spec.color, theme.data.primaryForeground);
+      });
+
+      testWidgets('the checked glyph clears 4.5:1 in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _checkboxSpec(
+          tester,
+          theme: theme.data,
+          selected: true,
+        );
+        final surface = Color.alphaBlend(
+          _checkboxBackground(spec)!,
+          theme.data.background,
+        );
+        final glyph = Color.alphaBlend(
+          spec.spec.indicator.spec.color!,
+          surface,
+        );
+
+        expect(_contrastRatio(glyph, surface), greaterThanOrEqualTo(4.5));
+      });
+    }
+
+    testWidgets('the corner radius is clamped to the box, not the control', (
+      tester,
+    ) async {
+      const light = AcmeThemeData.light();
+      final cases = <Radius, Radius>{
+        // The shipped themes ask for 8, which a 16-20px box cannot wear.
+        light.radius: const Radius.circular(4),
+        // A pill theme would otherwise draw a circle, which reads as a radio.
+        const Radius.circular(999): const Radius.circular(4),
+        // A theme asking for less than the cap still wins.
+        const Radius.circular(2): const Radius.circular(2),
+        Radius.zero: Radius.zero,
+      };
+
+      for (final entry in cases.entries) {
+        final spec = await _checkboxSpec(
+          tester,
+          theme: light.copyWith(radius: entry.key),
+        );
+
+        expect(
+          _checkboxBorderRadius(spec),
+          BorderRadius.all(entry.value),
+          reason: '${entry.key}',
+        );
+      }
+    });
+  });
+
+  group('acmeCheckboxStyle states', () {
+    for (final theme in _themes) {
+      testWidgets('an unchecked box hovers onto accent in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _checkboxSpec(
+          tester,
+          theme: theme.data,
+          hovered: true,
+        );
+
+        expect(_checkboxBackground(spec), theme.data.accent);
+      });
+
+      testWidgets('a checked box dims its own fill in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _checkboxSpec(
+          tester,
+          theme: theme.data,
+          selected: true,
+          hovered: true,
+        );
+        final dimmed = theme.data.primary.withValues(alpha: 0.9);
+
+        // The nested hover fragment inside the checked fragment wins over the
+        // top-level one: a hovered checked box must not fall back to accent.
+        expect(_checkboxBackground(spec), dimmed);
+        expect(_checkboxBorder(spec), Border.all(color: dimmed, width: 1));
+      });
+
+      testWidgets('focus-visible draws the ring in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _checkboxSpec(
+          tester,
+          theme: theme.data,
+          focused: true,
+        );
+        final effects = spec.spec.containerEffects;
+
+        expect(effects, isNotNull);
+        expect(effects!.outline.color, theme.data.focusRing);
+        expect(effects.outline.width, 2);
+        expect(effects.outline.strokeAlign, BorderSide.strokeAlignInside);
+        expect(effects.outline.style, BorderStyle.solid);
+        expect(effects.outlineOffset, 2);
+      });
+    }
+
+    testWidgets('idle draws no ring', (tester) async {
+      final spec = await _checkboxSpec(
+        tester,
+        theme: const AcmeThemeData.light(),
+      );
+
+      expect(spec.spec.containerEffects?.outline.width ?? 0, 0);
+    });
+
+    testWidgets('focus-visible needs traditional highlight modality', (
+      tester,
+    ) async {
+      final spec = await _checkboxSpec(
+        tester,
+        theme: const AcmeThemeData.light(),
+        focused: true,
+        highlightStrategy: FocusHighlightStrategy.alwaysTouch,
+      );
+
+      expect(spec.spec.containerEffects?.outline.width ?? 0, 0);
+    });
+
+    testWidgets('disabled fades the control and clears the ring', (
+      tester,
+    ) async {
+      final spec = await _checkboxSpec(
+        tester,
+        theme: const AcmeThemeData.light(),
+        enabled: false,
+      );
+
+      expect(
+        spec.widgetModifiers,
+        contains(
+          isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
+        ),
+      );
+      expect(spec.spec.containerEffects?.outline.style, BorderStyle.none);
+    });
+
+    testWidgets('disabled wins over focus-visible', (tester) async {
+      // Declared last in the recipe, so it beats every earlier fragment. A
+      // disabled control is not focusable under traditional traversal, so the
+      // ordering is asserted on the styler itself; the fragments below set no
+      // colors, which is why a bare resolution is trustworthy here.
+      final spec = await _resolveCheckbox(
+        tester,
+        theme: const AcmeThemeData.light(),
+        states: const {WidgetState.focused, WidgetState.disabled},
+      );
+
+      expect(spec.spec.containerEffects?.outline.style, BorderStyle.none);
+      expect(
+        spec.widgetModifiers,
+        contains(
+          isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
+        ),
+      );
+    });
+
+    testWidgets('indeterminate wears the checked surface', (tester) async {
+      const theme = AcmeThemeData.light();
+      final spec = await _checkboxSpec(
+        tester,
+        theme: theme,
+        selected: null,
+        tristate: true,
+      );
+
+      expect(_checkboxBackground(spec), theme.primary);
+      expect(spec.spec.indicator.spec.color, theme.primaryForeground);
+    });
+  });
+
+  group('acmeCheckboxStyle customization', () {
+    testWidgets('the caller style merges last', (tester) async {
+      final spec = await _checkboxSpec(
+        tester,
+        theme: const AcmeThemeData.light(),
+        style: CheckboxStyler()
+            .color(const Color(0xFF7C3AED))
+            .label(.color(const Color(0xFFFFFF00))),
+      );
+
+      expect(_checkboxBackground(spec), const Color(0xFF7C3AED));
+      expect(spec.spec.label.spec.style?.color, const Color(0xFFFFFF00));
+      // Untouched recipe values survive.
+      expect(spec.spec.labelSpacing, 8);
+      expect(spec.spec.indicator.spec.size, 11);
+    });
+
+    testWidgets('an idle override does not reach the checked fragment', (
+      tester,
+    ) async {
+      const theme = AcmeThemeData.light();
+      final style = CheckboxStyler().color(const Color(0xFF7C3AED));
+
+      final idle = await _checkboxSpec(tester, theme: theme, style: style);
+      final checked = await _checkboxSpec(
+        tester,
+        theme: theme,
+        style: style,
+        selected: true,
+      );
+
+      expect(_checkboxBackground(idle), const Color(0xFF7C3AED));
+      expect(_checkboxBackground(checked), theme.primary);
+    });
+
+    testWidgets('a matching state fragment does override the recipe', (
+      tester,
+    ) async {
+      final checked = await _checkboxSpec(
+        tester,
+        theme: const AcmeThemeData.light(),
+        style: CheckboxStyler().onSelected(
+          CheckboxStyler().color(const Color(0xFF5B21B6)),
+        ),
+        selected: true,
+      );
+
+      expect(_checkboxBackground(checked), const Color(0xFF5B21B6));
+    });
+
+    test('an empty caller style leaves the recipe untouched', () {
+      expect(
+        acmeCheckboxStyle(style: const CheckboxStyler.create()),
+        acmeCheckboxStyle(),
+      );
+    });
+
+    test('a group option resolves the same recipe as a lone checkbox', () {
+      for (final size in AcmeCheckboxSize.values) {
+        expect(
+          acmeCheckboxGroupItemStyle(size: size),
+          acmeCheckboxStyle(size: size),
+          reason: size.name,
+        );
+      }
+    });
+  });
+
+  group('AcmeCheckbox generated API', () {
+    testWidgets('forwards the complete safe RemixCheckbox surface', (
+      tester,
+    ) async {
+      final focusNode = FocusNode(debugLabel: 'ui-checkbox');
+      addTearDown(focusNode.dispose);
+
+      await _pumpInScope(
+        tester,
+        AcmeCheckbox(
+          key: const ValueKey<String>('forwarded'),
+          size: AcmeCheckboxSize.large,
+          style: CheckboxStyler().labelSpacing(20),
+          selected: null,
+          onChanged: (_) {},
+          enabled: true,
+          tristate: true,
+          checkedIcon: _leading,
+          uncheckedIcon: _trailing,
+          indeterminateIcon: _leading,
+          focusNode: focusNode,
+          autofocus: true,
+          enableFeedback: false,
+          label: 'Some selected',
+          semanticLabel: 'Partially selected',
+          minimumTapTargetSize: const Size.square(44),
+          mouseCursor: SystemMouseCursors.grab,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final remix = tester.widget<RemixCheckbox>(find.byType(RemixCheckbox));
+      expect(remix.key, const ValueKey<String>('forwarded'));
+      expect(remix.selected, isNull);
+      expect(remix.tristate, isTrue);
+      expect(remix.enabled, isTrue);
+      expect(remix.onChanged, isNotNull);
+      expect(remix.checkedIcon, _leading);
+      expect(remix.uncheckedIcon, _trailing);
+      expect(remix.indeterminateIcon, _leading);
+      expect(remix.focusNode, same(focusNode));
+      expect(remix.autofocus, isTrue);
+      expect(remix.enableFeedback, isFalse);
+      expect(remix.label, 'Some selected');
+      expect(remix.semanticLabel, 'Partially selected');
+      expect(remix.minimumTapTargetSize, const Size.square(44));
+      expect(remix.mouseCursor, SystemMouseCursors.grab);
+      expect(
+        remix.style,
+        acmeCheckboxStyle(
+          size: AcmeCheckboxSize.large,
+          style: CheckboxStyler().labelSpacing(20),
+        ),
+      );
+      expect(remix.styleSpec, isNull);
+      expect(focusNode.hasFocus, isTrue);
+    });
+
+    testWidgets('toggling reaches the callback and repaints', (tester) async {
+      bool? received;
+
+      await _pumpInScope(
+        tester,
+        AcmeCheckbox(
+          selected: false,
+          label: 'Email me',
+          onChanged: (value) => received = value,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        _checkboxBackground(_resolvedSpecOf<CheckboxSpec>(tester)),
+        const AcmeThemeData.light().background,
+      );
+
+      await tester.tap(find.byType(AcmeCheckbox));
+      await tester.pumpAndSettle();
+
+      expect(received, isTrue);
+    });
+
+    testWidgets('publishes checkbox semantics and honours enabled', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      var toggles = 0;
+
+      await _pumpInScope(
+        tester,
+        AcmeCheckbox(
+          selected: true,
+          label: 'Email me',
+          enabled: false,
+          onChanged: (_) => toggles += 1,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byType(AcmeCheckbox), warnIfMissed: false);
+      await tester.pumpAndSettle();
+
+      expect(toggles, 0);
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Email me')),
+        isSemantics(
+          isChecked: true,
+          hasCheckedState: true,
+          hasEnabledState: true,
+          isEnabled: false,
+        ),
+      );
+      handle.dispose();
+    });
+
+    testWidgets('a group option toggles the group set', (tester) async {
+      Set<String> values = const {'design'};
+
+      await tester.pumpWidget(
+        AcmeThemeScope(
+          data: const AcmeThemeData.light(),
+          child: _host(
+            StatefulBuilder(
+              builder: (context, setState) => RemixCheckboxGroup<String>(
+                values: values,
+                semanticLabel: 'Interests',
+                onChanged: (next) => setState(() => values = next),
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AcmeCheckboxGroupItem<String>(
+                      value: 'design',
+                      label: 'Design',
+                    ),
+                    AcmeCheckboxGroupItem<String>(
+                      value: 'code',
+                      label: 'Code',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Every option is styled by the recipe without a per-call-site styler.
+      for (final provider in tester.widgetList<StyleSpecProvider<CheckboxSpec>>(
+        find.byType(StyleSpecProvider<CheckboxSpec>),
+      )) {
+        expect(provider.spec.spec.labelSpacing, 8);
+      }
+
+      await tester.tap(find.text('Code'));
+      await tester.pumpAndSettle();
+
+      expect(values, {'design', 'code'});
+    });
+  });
+
+  group('acmeTabBarStyle and acmeTabViewStyle', () {
+    for (final theme in _themes) {
+      testWidgets('the strip carries one hairline in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolveTabBar(tester, theme: theme.data);
+        final flex = spec.spec.container.spec.flex?.spec;
+
+        expect(
+          _flexBorder(spec.spec.container),
+          Border(bottom: BorderSide(color: theme.data.border, width: 1)),
+        );
+        expect(flex?.direction, Axis.horizontal);
+        expect(flex?.mainAxisSize, MainAxisSize.min);
+        expect(flex?.crossAxisAlignment, CrossAxisAlignment.end);
+      });
+    }
+
+    testWidgets('the panel is pushed clear of the strip', (tester) async {
+      final spec = await _resolveTabView(
+        tester,
+        theme: const AcmeThemeData.light(),
+      );
+
+      expect(spec.spec.container.spec.padding, const EdgeInsets.only(top: 16));
+    });
+
+    testWidgets('both recipes take a caller style that merges last', (
+      tester,
+    ) async {
+      final bar = await _resolveTabBar(
+        tester,
+        theme: const AcmeThemeData.light(),
+        style: TabBarStyler().color(const Color(0xFF7C3AED)),
+      );
+      final view = await _resolveTabView(
+        tester,
+        theme: const AcmeThemeData.light(),
+        style: TabViewStyler().padding(.top(40)),
+      );
+
+      expect(
+        _flexDecoration(bar.spec.container)?.color,
+        const Color(0xFF7C3AED),
+      );
+      expect(view.spec.container.spec.padding, const EdgeInsets.only(top: 40));
+    });
+  });
+
+  group('acmeTabStyle sizes', () {
+    const expected = <AcmeTabSize, _Metrics>{
+      AcmeTabSize.small: (
+        minHeight: 32.0,
+        paddingX: 10.0,
+        gap: 6.0,
+        labelSize: 14.0,
+        iconSize: 16.0,
+      ),
+      AcmeTabSize.medium: (
+        minHeight: 36.0,
+        paddingX: 12.0,
+        gap: 8.0,
+        labelSize: 14.0,
+        iconSize: 16.0,
+      ),
+      AcmeTabSize.large: (
+        minHeight: 40.0,
+        paddingX: 16.0,
+        gap: 8.0,
+        labelSize: 16.0,
+        iconSize: 18.0,
+      ),
+    };
+
+    test('every size is covered', () {
+      expect(expected.keys, containsAll(AcmeTabSize.values));
+      expect(expected, hasLength(AcmeTabSize.values.length));
+    });
+
+    for (final entry in expected.entries) {
+      testWidgets('${entry.key.name} has its exact metrics', (tester) async {
+        final spec = await _resolveTab(
+          tester,
+          theme: const AcmeThemeData.light(),
+          size: entry.key,
+        );
+        final metrics = entry.value;
+        final box = spec.spec.container.spec.box?.spec;
+        final flex = spec.spec.container.spec.flex?.spec;
+
+        expect(box?.constraints?.minHeight, metrics.minHeight);
+        expect(
+          box?.padding,
+          EdgeInsets.symmetric(horizontal: metrics.paddingX),
+        );
+        expect(flex?.spacing, metrics.gap);
+        expect(spec.spec.label.spec.style?.fontSize, metrics.labelSize);
+        expect(spec.spec.label.spec.style?.fontWeight, FontWeight.w500);
+        expect(spec.spec.icon.spec.size, metrics.iconSize);
+      });
+    }
+  });
+
+  group('acmeTabStyle states', () {
+    for (final theme in _themes) {
+      testWidgets('an unselected tab is muted in ${theme.name}', (tester) async {
+        final spec = await _resolveTab(tester, theme: theme.data);
+
+        expect(spec.spec.label.spec.style?.color, theme.data.mutedForeground);
+        expect(spec.spec.icon.spec.color, theme.data.mutedForeground);
+        // The selected edge is already present, merely transparent, so
+        // selecting a tab repaints instead of reflowing the strip.
+        expect(
+          _flexBorder(spec.spec.container),
+          const Border(
+            bottom: BorderSide(color: Color(0x00000000), width: 2),
+          ),
+        );
+      });
+
+      testWidgets('hover promotes the content in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolveTab(
+          tester,
+          theme: theme.data,
+          states: const {WidgetState.hovered},
+        );
+
+        expect(spec.spec.label.spec.style?.color, theme.data.foreground);
+        expect(spec.spec.icon.spec.color, theme.data.foreground);
+        expect(_flexDecoration(spec.spec.container)?.color, theme.data.accent);
+      });
+
+      testWidgets('the selected tab is marked in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolveTab(
+          tester,
+          theme: theme.data,
+          states: const {WidgetState.selected},
+        );
+
+        expect(spec.spec.label.spec.style?.color, theme.data.foreground);
+        expect(
+          _flexBorder(spec.spec.container),
+          Border(bottom: BorderSide(color: theme.data.primary, width: 2)),
+        );
+      });
+
+      testWidgets('a hovered selected tab keeps both marks in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolveTab(
+          tester,
+          theme: theme.data,
+          states: const {WidgetState.selected, WidgetState.hovered},
+        );
+
+        expect(_flexDecoration(spec.spec.container)?.color, theme.data.accent);
+        expect(
+          _flexBorder(spec.spec.container),
+          Border(bottom: BorderSide(color: theme.data.primary, width: 2)),
+        );
+      });
+
+      testWidgets('focus-visible draws a ring that takes no space in '
+          '${theme.name}', (tester) async {
+        final spec = await _resolveTab(
+          tester,
+          theme: theme.data,
+          states: const {WidgetState.focused},
+        );
+
+        // A foreground decoration, because a real border would inset the
+        // label; `TabSpec` has no effects layer to paint an outline into.
+        expect(
+          _flexForegroundBorder(spec.spec.container),
+          Border.all(
+            color: theme.data.focusRing,
+            width: 2,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        );
+      });
+    }
+
+    testWidgets('idle draws no ring', (tester) async {
+      final spec = await _resolveTab(
+        tester,
+        theme: const AcmeThemeData.light(),
+      );
+
+      expect(_flexForegroundBorder(spec.spec.container), isNull);
+    });
+
+    testWidgets('disabled fades the tab and clears the ring', (tester) async {
+      final spec = await _resolveTab(
+        tester,
+        theme: const AcmeThemeData.light(),
+        states: const {WidgetState.focused, WidgetState.disabled},
+      );
+
+      expect(
+        spec.widgetModifiers,
+        contains(
+          isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
+        ),
+      );
+      // Merging leaves the ring's color and width in place and turns its
+      // style off, which is what stops Flutter painting it.
+      expect(
+        (_flexForegroundBorder(spec.spec.container) as Border?)?.top.style,
+        BorderStyle.none,
+      );
+    });
+
+    testWidgets('the caller style merges last', (tester) async {
+      final spec = await _resolveTab(
+        tester,
+        theme: const AcmeThemeData.light(),
+        style: TabStyler().color(const Color(0xFF7C3AED)).minHeight(60),
+      );
+
+      expect(_flexDecoration(spec.spec.container)?.color, const Color(0xFF7C3AED));
+      expect(spec.spec.container.spec.box?.spec.constraints?.minHeight, 60);
+      // Untouched recipe values survive.
+      expect(spec.spec.icon.spec.size, 16);
+    });
+
+    test('an empty caller style leaves the recipe untouched', () {
+      expect(acmeTabStyle(style: const TabStyler.create()), acmeTabStyle());
+      expect(
+        acmeTabBarStyle(style: const TabBarStyler.create()),
+        acmeTabBarStyle(),
+      );
+      expect(
+        acmeTabViewStyle(style: const TabViewStyler.create()),
+        acmeTabViewStyle(),
+      );
+    });
+  });
+
+  group('Acme tabs delegate behavior to Remix', () {
+    testWidgets('forwards the curated RemixTab surface', (tester) async {
+      final focusNode = FocusNode(debugLabel: 'ui-tab');
+      addTearDown(focusNode.dispose);
+
+      await _pumpTabs(
+        tester,
+        selected: 'one',
+        tabs: [
+          AcmeTab(
+            key: const ValueKey<String>('forwarded'),
+            size: AcmeTabSize.large,
+            style: TabStyler().minHeight(48),
+            tabId: 'one',
+            label: 'One',
+            icon: _leading,
+            enabled: true,
+            mouseCursor: SystemMouseCursors.grab,
+            enableFeedback: false,
+            focusNode: focusNode,
+            onFocusChange: (_) {},
+            onHoverChange: (_) {},
+            onPressChange: (_) {},
+            semanticLabel: 'First tab',
+          ),
+        ],
+      );
+      await tester.pumpAndSettle();
+
+      final remix = tester.widget<RemixTab>(find.byType(RemixTab));
+      expect(remix.key, const ValueKey<String>('forwarded'));
+      expect(remix.tabId, 'one');
+      expect(remix.label, 'One');
+      expect(remix.icon, _leading);
+      expect(remix.enabled, isTrue);
+      expect(remix.mouseCursor, SystemMouseCursors.grab);
+      expect(remix.enableFeedback, isFalse);
+      expect(remix.focusNode, same(focusNode));
+      expect(remix.onFocusChange, isNotNull);
+      expect(remix.onHoverChange, isNotNull);
+      expect(remix.onPressChange, isNotNull);
+      expect(remix.semanticLabel, 'First tab');
+      expect(
+        remix.style,
+        acmeTabStyle(
+          size: AcmeTabSize.large,
+          style: TabStyler().minHeight(48),
+        ),
+      );
+      expect(remix.styleSpec, isNull);
+      // `builder` would drag `package:naked_ui` into the adapter, so it is
+      // deliberately outside the generated surface.
+      expect(remix.builder, isNull);
+    });
+
+    testWidgets('selecting a tab reports it and swaps the panel', (
+      tester,
+    ) async {
+      final selections = <String>[];
+
+      await _pumpTabs(
+        tester,
+        selected: 'one',
+        onChanged: selections.add,
+        tabs: const [
+          AcmeTab(tabId: 'one', label: 'One'),
+          AcmeTab(tabId: 'two', label: 'Two'),
+        ],
+        views: const [
+          AcmeTabView(tabId: 'one', child: Text('Panel one')),
+          AcmeTabView(tabId: 'two', child: Text('Panel two')),
+        ],
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Panel one'), findsOneWidget);
+
+      await tester.tap(find.text('Two'));
+      await tester.pumpAndSettle();
+
+      expect(selections, ['two']);
+    });
+
+    testWidgets('a disabled tab is not selectable', (tester) async {
+      final selections = <String>[];
+
+      await _pumpTabs(
+        tester,
+        selected: 'one',
+        onChanged: selections.add,
+        tabs: const [
+          AcmeTab(tabId: 'one', label: 'One'),
+          AcmeTab(tabId: 'two', label: 'Two', enabled: false),
+        ],
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Two'), warnIfMissed: false);
+      await tester.pumpAndSettle();
+
+      expect(selections, isEmpty);
+    });
+
+    testWidgets('the strip publishes a tab bar with named tabs', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+
+      await _pumpTabs(
+        tester,
+        selected: 'one',
+        tabs: const [
+          AcmeTab(tabId: 'one', label: 'One'),
+          AcmeTab(tabId: 'two', label: 'Two', semanticLabel: 'Second'),
+        ],
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.bySemanticsLabel('One'), findsOneWidget);
+      expect(find.bySemanticsLabel('Second'), findsOneWidget);
+      handle.dispose();
     });
   });
 }
@@ -1267,15 +2120,16 @@ Future<StyleSpec<ButtonSpec>> _resolveStyle(
   return resolved;
 }
 
-Future<void> _pumpButton(
+/// Mounts one widget under a theme scope, centered, with no host framework.
+Future<void> _pumpInScope(
   WidgetTester tester,
-  Widget button, {
+  Widget child, {
   AcmeThemeData theme = const AcmeThemeData.light(),
 }) {
   return tester.pumpWidget(
     AcmeThemeScope(
       data: theme,
-      child: _host(Center(child: button)),
+      child: _host(Center(child: child)),
     ),
   );
 }
@@ -1324,6 +2178,221 @@ void _expectContent(StyleSpec<ButtonSpec> spec, Color expected) {
   expect(_iconColor(spec), expected, reason: 'icon');
   expect(_spinnerColor(spec), expected, reason: 'spinner');
 }
+
+typedef _CheckboxMetrics = ({
+  double box,
+  double indicator,
+  double gap,
+  double labelSize,
+});
+
+/// Resolves a recipe against a theme and a set of widget states.
+///
+/// One generic body because every recipe in this layer is the same shape: a
+/// `Style<S>` built from tokens, resolved under a `MixScope` and a set of
+/// widget states.
+Future<StyleSpec<S>> _resolve<S extends Spec<S>>(
+  WidgetTester tester,
+  Style<S> style, {
+  required AcmeThemeData theme,
+  Set<WidgetState> states = const {},
+  FocusHighlightStrategy highlightStrategy =
+      FocusHighlightStrategy.alwaysTraditional,
+}) async {
+  final previousStrategy = FocusManager.instance.highlightStrategy;
+  FocusManager.instance.highlightStrategy = highlightStrategy;
+  addTearDown(() => FocusManager.instance.highlightStrategy = previousStrategy);
+
+  late StyleSpec<S> resolved;
+  await tester.pumpWidget(
+    AcmeThemeScope(
+      data: theme,
+      child: _host(
+        WidgetStateProvider(
+          states: states,
+          child: _Probe((context) => resolved = style.build(context)),
+        ),
+      ),
+    ),
+  );
+
+  return resolved;
+}
+
+/// Resolves the Checkbox recipe the way a consumer sees it: under a real
+/// `AcmeCheckbox`.
+///
+/// Bare `Style.build` cannot stand in for the colored fragments. Remix keys
+/// its indeterminate variant on
+/// `NakedCheckboxState.maybeOf(context)?.isChecked == null`, which is equally
+/// true when there is no checkbox above the context at all — so a resolution
+/// with no widget silently wears the checked surface. Driving the real states
+/// also proves the recipe against the interactions Remix actually reports.
+Future<StyleSpec<CheckboxSpec>> _checkboxSpec(
+  WidgetTester tester, {
+  required AcmeThemeData theme,
+  bool? selected = false,
+  bool tristate = false,
+  bool enabled = true,
+  bool hovered = false,
+  bool focused = false,
+  AcmeCheckboxSize size = AcmeCheckboxSize.medium,
+  CheckboxStyler? style,
+  FocusHighlightStrategy highlightStrategy =
+      FocusHighlightStrategy.alwaysTraditional,
+}) async {
+  final previousStrategy = FocusManager.instance.highlightStrategy;
+  FocusManager.instance.highlightStrategy = highlightStrategy;
+  addTearDown(() => FocusManager.instance.highlightStrategy = previousStrategy);
+
+  final focusNode = FocusNode(debugLabel: 'checkbox-probe');
+  addTearDown(focusNode.dispose);
+
+  await _pumpInScope(
+    tester,
+    AcmeCheckbox(
+      size: size,
+      style: style ?? const CheckboxStyler.create(),
+      selected: selected,
+      tristate: tristate,
+      enabled: enabled,
+      label: 'Probe',
+      focusNode: focusNode,
+      onChanged: (_) {},
+    ),
+    theme: theme,
+  );
+  await tester.pumpAndSettle();
+
+  if (focused) {
+    focusNode.requestFocus();
+    await tester.pumpAndSettle();
+  }
+  if (hovered) {
+    final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    addTearDown(pointer.removePointer);
+    await pointer.addPointer(location: Offset.zero);
+    await tester.pump();
+    await pointer.moveTo(tester.getCenter(find.byType(AcmeCheckbox)));
+    await tester.pumpAndSettle();
+  }
+
+  return _resolvedSpecOf<CheckboxSpec>(tester);
+}
+
+/// Resolves the Checkbox recipe without a widget.
+///
+/// Only sound for assertions about effects and modifiers, which no fragment
+/// keyed on the live checkbox state touches. See [_checkboxSpec].
+Future<StyleSpec<CheckboxSpec>> _resolveCheckbox(
+  WidgetTester tester, {
+  required AcmeThemeData theme,
+  Set<WidgetState> states = const {},
+}) => _resolve(
+  tester,
+  acmeCheckboxStyle(),
+  theme: theme,
+  states: states,
+);
+
+Future<StyleSpec<TabSpec>> _resolveTab(
+  WidgetTester tester, {
+  required AcmeThemeData theme,
+  AcmeTabSize size = AcmeTabSize.medium,
+  TabStyler? style,
+  Set<WidgetState> states = const {},
+}) => _resolve(
+  tester,
+  acmeTabStyle(size: size, style: style ?? const TabStyler.create()),
+  theme: theme,
+  states: states,
+);
+
+Future<StyleSpec<TabBarSpec>> _resolveTabBar(
+  WidgetTester tester, {
+  required AcmeThemeData theme,
+  TabBarStyler? style,
+}) => _resolve(
+  tester,
+  acmeTabBarStyle(style: style ?? const TabBarStyler.create()),
+  theme: theme,
+);
+
+Future<StyleSpec<TabViewSpec>> _resolveTabView(
+  WidgetTester tester, {
+  required AcmeThemeData theme,
+  TabViewStyler? style,
+}) => _resolve(
+  tester,
+  acmeTabViewStyle(style: style ?? const TabViewStyler.create()),
+  theme: theme,
+);
+
+/// Mounts [tabs] and [views] inside the behavioral `RemixTabs` root.
+Future<void> _pumpTabs(
+  WidgetTester tester, {
+  required String selected,
+  required List<Widget> tabs,
+  List<Widget> views = const [],
+  ValueChanged<String>? onChanged,
+  AcmeThemeData theme = const AcmeThemeData.light(),
+}) {
+  return tester.pumpWidget(
+    AcmeThemeScope(
+      data: theme,
+      child: _host(
+        RemixTabs(
+          selectedTabId: selected,
+          onChanged: onChanged,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AcmeTabBar(
+                child: Row(mainAxisSize: MainAxisSize.min, children: tabs),
+              ),
+              ...views,
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+/// The spec a rendered Remix widget actually resolved.
+///
+/// Remix publishes it below the widget for its own subtree, which is the only
+/// place the resolved recipe is observable from outside.
+StyleSpec<S> _resolvedSpecOf<S extends Spec<S>>(WidgetTester tester) {
+  return tester
+      .widget<StyleSpecProvider<S>>(find.byType(StyleSpecProvider<S>))
+      .spec;
+}
+
+BoxConstraints? _checkboxConstraints(StyleSpec<CheckboxSpec> spec) =>
+    spec.spec.container.spec.constraints;
+
+BoxDecoration? _checkboxDecoration(StyleSpec<CheckboxSpec> spec) =>
+    spec.spec.container.spec.decoration as BoxDecoration?;
+
+Color? _checkboxBackground(StyleSpec<CheckboxSpec> spec) =>
+    _checkboxDecoration(spec)?.color;
+
+BoxBorder? _checkboxBorder(StyleSpec<CheckboxSpec> spec) =>
+    _checkboxDecoration(spec)?.border;
+
+BorderRadiusGeometry? _checkboxBorderRadius(StyleSpec<CheckboxSpec> spec) =>
+    _checkboxDecoration(spec)?.borderRadius;
+
+BoxDecoration? _flexDecoration(StyleSpec<FlexBoxSpec> container) =>
+    container.spec.box?.spec.decoration as BoxDecoration?;
+
+BoxBorder? _flexBorder(StyleSpec<FlexBoxSpec> container) =>
+    _flexDecoration(container)?.border;
+
+BoxBorder? _flexForegroundBorder(StyleSpec<FlexBoxSpec> container) =>
+    (container.spec.box?.spec.foregroundDecoration as BoxDecoration?)?.border;
 
 /// WCAG 2 contrast ratio between two opaque colors.
 double _contrastRatio(Color first, Color second) {

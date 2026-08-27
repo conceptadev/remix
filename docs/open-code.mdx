@@ -245,6 +245,9 @@ lib/ui/
     └── button.g.dart           # generated adapter — do not edit
 ```
 
+Every later `add` drops one more pair into `components/` and extends the
+barrel's marker block. Nothing already on disk is touched.
+
 `button.dart` is a styler function plus two enums:
 
 ```dart
@@ -416,12 +419,23 @@ manifest and rerun — the CLI will not edit it for you.
 
 ## Catalog
 
-The bundled registry is deliberately small:
+The bundled registry is deliberately small, and every component depends on
+`theme`:
 
-| Item | Installs | Depends on |
+| Item | Installs | Widgets you get |
 |---|---|---|
-| `theme` | `tokens.dart`, `theme_data.dart`, `theme_scope.dart` | — |
-| `button` | `components/button.dart` + generated adapter | `theme` |
+| `theme` | `tokens.dart`, `theme_data.dart`, `theme_scope.dart` | `UiTokens`, `UiThemeData`, `UiThemeScope` |
+| `button` | `components/button.dart` + generated adapter | `UiButton` |
+| `checkbox` | `components/checkbox.dart` + generated adapter | `UiCheckbox`, `UiCheckboxGroupItem` |
+| `tabs` | `components/tabs.dart` + generated adapter | `UiTabBar`, `UiTab`, `UiTabView` |
+
+One `add` installs one item. The names above use the default `Ui` prefix;
+`--prefix Acme` gives you `AcmeButton` and friends.
+
+Some Remix widgets are behavioral and carry no style, so the registry has
+nothing to render for them. `RemixCheckboxGroup` and `RemixTabs` are the two
+in this catalog: import them from `package:remix/remix.dart` and put the
+installed adapters inside.
 
 ## Exit codes
 

@@ -23,8 +23,28 @@ const _fixtureAppFiles = <String>[
   'test/open_code_test.dart',
 ];
 
-const _expectedGeneratedFile = 'expected/acme_button.g.dart';
-const _generatedAppFile = 'lib/ui/components/button.g.dart';
+/// The registry items the CLI installs, in invocation order.
+///
+/// Each is added by its own `remix add`, which is the only supported call
+/// shape. Theme arrives as the first item's registry dependency.
+const _registryItems = <String>['button', 'checkbox', 'tabs'];
+
+const _generatedAppFiles = <String>[
+  'lib/ui/components/button.g.dart',
+  'lib/ui/components/checkbox.g.dart',
+  'lib/ui/components/tabs.g.dart',
+];
+
+/// Generated adapters compared byte-for-byte against a committed snapshot.
+///
+/// Representative shapes rather than every component: `button` is the
+/// single-adapter case, `tabs` the multi-adapter one. These guard *generator*
+/// drift, which is shape-wide; the fixture's behavior tests are the stronger
+/// per-component guard.
+const _generatedSnapshots = <String, String>{
+  'lib/ui/components/button.g.dart': 'expected/acme_button.g.dart',
+  'lib/ui/components/tabs.g.dart': 'expected/acme_tabs.g.dart',
+};
 
 const _installedUiFiles = <String>[
   'ui.dart',
@@ -33,6 +53,10 @@ const _installedUiFiles = <String>[
   'theme/theme_scope.dart',
   'components/button.dart',
   'components/button.g.dart',
+  'components/checkbox.dart',
+  'components/checkbox.g.dart',
+  'components/tabs.dart',
+  'components/tabs.g.dart',
 ];
 
 const _requiredRuntimeDependencies = <String>['remix', 'mix_annotations'];
@@ -119,7 +143,8 @@ Future<_Failure?> _run(Directory repositoryRoot, {required bool keep}) async {
       ..writeln('')
       ..writeln('Review local source against the registry:')
       ..writeln(
-        '  cd ${app.path} && ${sdk.dart} run remix_cli:remix add button --diff',
+        '  cd ${app.path} && ${sdk.dart} run remix_cli:remix add '
+        '${_registryItems.first} --diff',
       );
   }
 
@@ -177,14 +202,16 @@ Future<_Failure?> _checkInTemporaryApp({
   );
   if (init != null) return _Failure('remix init failed in the fresh app');
 
-  final add = await _runProcess(
-    sdk.dart,
-    ['run', 'remix_cli:remix', 'add', 'button'],
-    workingDirectory: app.path,
-    environment: environment,
-  );
-  if (add != null) return _Failure('remix add button failed in the fresh app');
-  _step('CLI installed Theme, Button, dependencies, and generated output.');
+  for (final item in _registryItems) {
+    final add = await _runProcess(
+      sdk.dart,
+      ['run', 'remix_cli:remix', 'add', item],
+      workingDirectory: app.path,
+      environment: environment,
+    );
+    if (add != null) return _Failure('remix add $item failed in the fresh app');
+  }
+  _step('CLI installed Theme, every item, dependencies, and generated output.');
 
   final installedFailure = _verifyInstalledUi(app);
   if (installedFailure != null) return installedFailure;
@@ -264,14 +291,21 @@ dependency_overrides:
   if (currentCheckoutFailure != null) return currentCheckoutFailure;
   _step('Current-source override resolves only Remix and remix_cli locally.');
 
-  final generated = File('${app.path}/$_generatedAppFile');
-  if (!generated.existsSync()) {
-    return _Failure('CLI produced no $_generatedAppFile before regeneration.');
+  for (final relative in _generatedAppFiles) {
+    final generated = File('${app.path}/$relative');
+    if (!generated.existsSync()) {
+      return _Failure('CLI produced no $relative before regeneration.');
+    }
+    generated.deleteSync();
   }
-  generated.deleteSync();
   final regenerate = await _runProcess(
     sdk.dart,
-    ['run', 'build_runner', 'build', '--build-filter=$_generatedAppFile'],
+    [
+      'run',
+      'build_runner',
+      'build',
+      for (final relative in _generatedAppFiles) '--build-filter=$relative',
+    ],
     workingDirectory: app.path,
     environment: environment,
   );
@@ -413,7 +447,7 @@ Future<Object> _resolveToolchain(Directory root, String pinned) async {
 
 _Failure? _verifyFixtureContract(Directory fixtureRoot) {
   final problems = <String>[];
-  for (final relative in [..._fixtureAppFiles, _expectedGeneratedFile]) {
+  for (final relative in [..._fixtureAppFiles, ..._generatedSnapshots.values]) {
     if (!File('${fixtureRoot.path}/$relative').existsSync()) {
       problems.add('open_code/fixture/$relative is missing');
     }
@@ -598,17 +632,19 @@ _Failure? _verifyGeneratedFixture({
   required Directory app,
   required Directory fixtureRoot,
 }) {
-  final generated = File('${app.path}/$_generatedAppFile');
-  if (!generated.existsSync()) {
-    return _Failure('generation produced no $_generatedAppFile');
-  }
-  final expected = File('${fixtureRoot.path}/$_expectedGeneratedFile');
-  if (!_sameBytes(expected.readAsBytesSync(), generated.readAsBytesSync())) {
-    return _Failure(
-      '$_generatedAppFile differs from open_code/fixture/'
-      '$_expectedGeneratedFile. Regenerate with --keep and review the diff; '
-      'do not hand-edit generated source.',
-    );
+  for (final entry in _generatedSnapshots.entries) {
+    final generated = File('${app.path}/${entry.key}');
+    if (!generated.existsSync()) {
+      return _Failure('generation produced no ${entry.key}');
+    }
+    final expected = File('${fixtureRoot.path}/${entry.value}');
+    if (!_sameBytes(expected.readAsBytesSync(), generated.readAsBytesSync())) {
+      return _Failure(
+        '${entry.key} differs from open_code/fixture/${entry.value}. '
+        'Regenerate with --keep and review the diff; do not hand-edit '
+        'generated source.',
+      );
+    }
   }
   return null;
 }

@@ -22,15 +22,23 @@ void main() {
   });
 
   group('fixture contract', () {
-    test('requires the committed generated adapter', () {
-      final fixture = Directory('${sandbox.path}/fixture');
-      _writeValidFixture(fixture);
-      File('${fixture.path}/expected/acme_button.g.dart').deleteSync();
+    test('requires every committed generated adapter', () {
+      const snapshots = [
+        'expected/acme_button.g.dart',
+        'expected/acme_tabs.g.dart',
+      ];
 
-      expect(
-        checker.fixtureContractProblem(fixture),
-        contains('expected/acme_button.g.dart is missing'),
-      );
+      for (var index = 0; index < snapshots.length; index += 1) {
+        final fixture = Directory('${sandbox.path}/fixture$index');
+        _writeValidFixture(fixture);
+        File('${fixture.path}/${snapshots[index]}').deleteSync();
+
+        expect(
+          checker.fixtureContractProblem(fixture),
+          contains('${snapshots[index]} is missing'),
+          reason: snapshots[index],
+        );
+      }
     });
 
     test('rejects a consumer build.yaml', () {
@@ -150,6 +158,7 @@ void _writeValidFixture(Directory fixture) {
     'lib/main.dart',
     'test/open_code_test.dart',
     'expected/acme_button.g.dart',
+    'expected/acme_tabs.g.dart',
   ];
   for (final relative in files) {
     final file = File('${fixture.path}/$relative');
@@ -175,6 +184,10 @@ void _writeInstalledUi(Directory app) {
     'theme/theme_scope.dart',
     'components/button.dart',
     'components/button.g.dart',
+    'components/checkbox.dart',
+    'components/checkbox.g.dart',
+    'components/tabs.dart',
+    'components/tabs.g.dart',
   ];
   for (final relative in files) {
     final file = File('${app.path}/lib/ui/$relative');

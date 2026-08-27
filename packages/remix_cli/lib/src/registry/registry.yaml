@@ -30,3 +30,35 @@ items:
       - "@ui/components/button.g.dart"
     exports:
       - components/button.dart
+
+  checkbox:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/checkbox/checkbox.dart.tmpl
+        target: "@ui/components/checkbox.dart"
+    generated:
+      - "@ui/components/checkbox.g.dart"
+    exports:
+      - components/checkbox.dart
+
+  tabs:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/tabs/tabs.dart.tmpl
+        target: "@ui/components/tabs.dart"
+    generated:
+      - "@ui/components/tabs.g.dart"
+    exports:
+      - components/tabs.dart
