@@ -9,7 +9,23 @@ part of 'tabs.dart';
 /// The application's tab-strip recipe.
 ///
 /// The strip is the rule the tabs sit on: one hairline along its bottom edge,
-/// in the same `border` token every other control outline uses.
+/// in the same `border` token every other control outline uses. It spans its
+/// container rather than hugging the tabs, so the rule lines up with the card
+/// or page edge beside it.
+///
+/// The strip does not scroll. Tabs wider than the container are a layout
+/// decision, and the scroll view belongs **outside** the bar:
+///
+/// ```dart
+/// SingleChildScrollView(
+///   scrollDirection: Axis.horizontal,
+///   child: PlaygroundTabBar(child: Row(children: tabs)),
+/// )
+/// ```
+///
+/// Not inside it. Flutter's tab-bar semantics role requires every direct
+/// semantics child of the bar to be a tab, and a scroll view inserted between
+/// them adds a node of its own, which trips that assertion at runtime.
 ///
 /// `RemixTabs` — the behavioral root that owns selection, roving focus, and
 /// arrow-key traversal — carries no styler and therefore no recipe. Compose it

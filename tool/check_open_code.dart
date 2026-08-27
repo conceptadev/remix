@@ -6,7 +6,7 @@
 /// ```
 ///
 /// The checker writes only to a guarded system-temporary directory. It installs
-/// this checkout's `remix_cli`, lets the CLI create the Theme and Button, then
+/// this checkout's `remix_cli`, lets the CLI install every registry item, then
 /// tests the installed source first with hosted Remix and again with a temporary
 /// override to the current Remix checkout.
 library;
@@ -27,12 +27,21 @@ const _fixtureAppFiles = <String>[
 ///
 /// Each is added by its own `remix add`, which is the only supported call
 /// shape. Theme arrives as the first item's registry dependency.
-const _registryItems = <String>['button', 'checkbox', 'tabs'];
-
-const _generatedAppFiles = <String>[
-  'lib/ui/components/button.g.dart',
-  'lib/ui/components/checkbox.g.dart',
-  'lib/ui/components/tabs.g.dart',
+const _registryItems = <String>[
+  'avatar',
+  'badge',
+  'button',
+  'callout',
+  'card',
+  'checkbox',
+  'divider',
+  'icon_button',
+  'link',
+  'progress',
+  'skeleton',
+  'spinner',
+  'tabs',
+  'toggle',
 ];
 
 /// Generated adapters compared byte-for-byte against a committed snapshot.
@@ -46,17 +55,24 @@ const _generatedSnapshots = <String, String>{
   'lib/ui/components/tabs.g.dart': 'expected/acme_tabs.g.dart',
 };
 
-const _installedUiFiles = <String>[
+/// Every file the CLI is expected to leave under `lib/ui/`, and nothing else.
+///
+/// Derived from [_registryItems] rather than restated: an item that installed
+/// a file this list does not name would be a boundary violation, and a list
+/// maintained by hand would drift into agreeing with whatever the CLI did.
+final _installedUiFiles = <String>[
   'ui.dart',
   'theme/tokens.dart',
   'theme/theme_data.dart',
   'theme/theme_scope.dart',
-  'components/button.dart',
-  'components/button.g.dart',
-  'components/checkbox.dart',
-  'components/checkbox.g.dart',
-  'components/tabs.dart',
-  'components/tabs.g.dart',
+  for (final item in _registryItems) ...[
+    'components/$item.dart',
+    'components/$item.g.dart',
+  ],
+];
+
+final _generatedAppFiles = <String>[
+  for (final item in _registryItems) 'lib/ui/components/$item.g.dart',
 ];
 
 const _requiredRuntimeDependencies = <String>['remix', 'mix_annotations'];

@@ -4,9 +4,11 @@
 Remix remains the behavior dependency; the application owns its tokens, theme
 values, component recipes, and generated adapters.
 
-The 0.1.0 catalog is intentionally small: `button`, `checkbox`, and `tabs`,
-each depending on `theme`. There is no remote registry, update command,
-registry lockfile, or content-hash protocol.
+The 0.1.0 catalog covers the simple and compound Remix components: `avatar`,
+`badge`, `button`, `callout`, `card`, `checkbox`, `divider`, `icon_button`,
+`link`, `progress`, `skeleton`, `spinner`, `tabs`, and `toggle`, each
+depending on `theme`. There is no remote registry, update command, registry
+lockfile, or content-hash protocol.
 
 ## Install project-locally
 
@@ -82,14 +84,13 @@ lib/ui/
     button.g.dart
 ```
 
-One `add` installs one item. Repeat it for `checkbox` and `tabs`; each drops
-one authored file and one generated part beside Button and extends the barrel.
+One `add` installs one item. Repeat it for each component you want; every item
+drops one authored file and one generated part into `components/` and extends
+the barrel, leaving everything already on disk untouched.
 
-| Item | Widgets it generates |
-|---|---|
-| `button` | `UiButton` |
-| `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` |
-| `tabs` | `UiTabBar`, `UiTab`, `UiTabView` |
+Most items generate one widget. Three do not: `checkbox` also generates
+`UiCheckboxGroupItem`, and `tabs` generates `UiTabBar`, `UiTab`, and
+`UiTabView`.
 
 `RemixCheckboxGroup` and `RemixTabs` are behavioral and carry no style, so the
 registry has nothing to render for them: import them from

@@ -125,6 +125,7 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
   bool? _partial;
   Set<String> _interests = const {'design'};
   String _tab = 'account';
+  Set<AcmeToggleVariant> _pinned = const {AcmeToggleVariant.outline};
 
   void _record(String action) => setState(() => _lastAction = action);
 
@@ -270,7 +271,10 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                 ),
                 const SizedBox(height: 16),
 
-                _Label('Checkbox sizes and states', color: data.mutedForeground),
+                _Label(
+                  'Checkbox sizes and states',
+                  color: data.mutedForeground,
+                ),
                 Wrap(
                   spacing: 20,
                   runSpacing: 12,
@@ -354,22 +358,29 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const AcmeTabBar(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            AcmeTab(
-                              tabId: 'account',
-                              label: 'Account',
-                              icon: checkGlyph,
-                            ),
-                            AcmeTab(tabId: 'billing', label: 'Billing'),
-                            AcmeTab(
-                              tabId: 'archived',
-                              label: 'Archived',
-                              enabled: false,
-                            ),
-                          ],
+                      // The scroll view goes outside the bar, never inside
+                      // it: Flutter's tab-bar semantics role requires every
+                      // direct semantics child to be a tab, and a scroll view
+                      // between them adds a node of its own.
+                      const SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: AcmeTabBar(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AcmeTab(
+                                tabId: 'account',
+                                label: 'Account',
+                                icon: checkGlyph,
+                              ),
+                              AcmeTab(tabId: 'billing', label: 'Billing'),
+                              AcmeTab(
+                                tabId: 'archived',
+                                label: 'Archived',
+                                enabled: false,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       AcmeTabView(
@@ -391,6 +402,169 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                         child: Text(
                           'Archived panel',
                           style: TextStyle(color: data.foreground),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Badges', color: data.mutedForeground),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    for (final variant in AcmeBadgeVariant.values)
+                      AcmeBadge(variant: variant, label: variant.name),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Icon buttons', color: data.mutedForeground),
+                for (final size in AcmeIconButtonSize.values)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        for (final variant in AcmeIconButtonVariant.values)
+                          AcmeIconButton(
+                            variant: variant,
+                            size: size,
+                            icon: checkGlyph,
+                            semanticLabel: '${variant.name} ${size.name}',
+                            onPressed: () =>
+                                _record('icon ${variant.name} / ${size.name}'),
+                          ),
+                        const AcmeIconButton(
+                          icon: crossGlyph,
+                          semanticLabel: 'Disabled',
+                          enabled: false,
+                        ),
+                        AcmeIconButton(
+                          icon: checkGlyph,
+                          semanticLabel: 'Loading',
+                          loading: true,
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+                const SizedBox(height: 16),
+
+                _Label('Toggles', color: data.mutedForeground),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    for (final variant in AcmeToggleVariant.values)
+                      AcmeToggle(
+                        variant: variant,
+                        selected: _pinned.contains(variant),
+                        label: variant.name,
+                        icon: checkGlyph,
+                        onChanged: (value) => setState(() {
+                          if (value) {
+                            _pinned = {..._pinned, variant};
+                          } else {
+                            _pinned = {..._pinned}..remove(variant);
+                          }
+                          _lastAction = 'toggle ${variant.name} -> $value';
+                        }),
+                      ),
+                    const AcmeToggle(
+                      selected: true,
+                      enabled: false,
+                      label: 'Disabled',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Avatars, spinners, links', color: data.mutedForeground),
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 12,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    for (final size in AcmeAvatarSize.values)
+                      AcmeAvatar(size: size, label: 'AC'),
+                    const AcmeAvatar(icon: checkGlyph),
+                    for (final size in AcmeSpinnerSize.values)
+                      AcmeSpinner(size: size, semanticsLabel: size.name),
+                    AcmeLink(label: 'A link', onPressed: () => _record('link')),
+                    const AcmeLink(label: 'A disabled link'),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Progress and skeleton', color: data.mutedForeground),
+                for (final size in AcmeProgressSize.values)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: AcmeProgress(
+                      value: 0.35,
+                      size: size,
+                      semanticsLabel: 'Upload ${size.name}',
+                    ),
+                  ),
+                const Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: [
+                    // The wrapped child keeps sizing the placeholder in both
+                    // states, so switching `loading` never reflows the row.
+                    AcmeSkeleton(child: Text('Placeholder for a name')),
+                    AcmeSkeleton(loading: false, child: Text('Loaded')),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Card, callout, divider', color: data.mutedForeground),
+                AcmeCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'A card groups related content.',
+                        style: TextStyle(color: data.foreground),
+                      ),
+                      const SizedBox(height: 12),
+                      const AcmeDivider(),
+                      const SizedBox(height: 12),
+                      const AcmeCallout(
+                        icon: checkGlyph,
+                        text: 'Everything is in order.',
+                      ),
+                      const SizedBox(height: 8),
+                      const AcmeCallout.destructive(
+                        icon: crossGlyph,
+                        text: 'This deletes the workspace for everyone.',
+                      ),
+                      const SizedBox(height: 12),
+                      // A vertical rule needs a bounded height, which is what
+                      // an IntrinsicHeight row gives it.
+                      IntrinsicHeight(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Left',
+                              style: TextStyle(color: data.foreground),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              child: AcmeDivider(orientation: Axis.vertical),
+                            ),
+                            Text(
+                              'Right',
+                              style: TextStyle(color: data.foreground),
+                            ),
+                          ],
                         ),
                       ),
                     ],

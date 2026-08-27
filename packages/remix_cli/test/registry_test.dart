@@ -262,7 +262,11 @@ items:
 /// these is a break in a consumer's source, so it is pinned here rather than
 /// left to the fixture, which only sees the `Acme` rendering.
 const _componentSurfaces = <String, List<String>>{
+  'avatar': ['Avatar', 'AvatarSize', '_AvatarStyle'],
+  'badge': ['Badge', 'BadgeVariant', '_BadgeStyle'],
   'button': ['Button', 'ButtonVariant', 'ButtonSize', '_ButtonStyle'],
+  'callout': ['Callout', 'CalloutVariant', '_CalloutStyle'],
+  'card': ['Card', '_CardStyle'],
   'checkbox': [
     'Checkbox',
     'CheckboxGroupItem',
@@ -270,6 +274,17 @@ const _componentSurfaces = <String, List<String>>{
     '_CheckboxStyle',
     '_CheckboxGroupItemStyle',
   ],
+  'divider': ['Divider', '_DividerStyle'],
+  'icon_button': [
+    'IconButton',
+    'IconButtonVariant',
+    'IconButtonSize',
+    '_IconButtonStyle',
+  ],
+  'link': ['Link', '_LinkStyle'],
+  'progress': ['Progress', 'ProgressSize', '_ProgressStyle'],
+  'skeleton': ['Skeleton', '_SkeletonStyle'],
+  'spinner': ['Spinner', 'SpinnerSize', '_SpinnerStyle'],
   'tabs': [
     'TabBar',
     'Tab',
@@ -279,6 +294,7 @@ const _componentSurfaces = <String, List<String>>{
     '_TabBarStyle',
     '_TabViewStyle',
   ],
+  'toggle': ['Toggle', 'ToggleVariant', 'ToggleSize', '_ToggleStyle'],
 };
 
 RegistryCatalog parse(String source) => RegistryCatalog.parse(

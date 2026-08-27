@@ -4,6 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/cli.dart';
 import 'package:remix_cli/src/installer.dart';
 import 'package:remix_cli/src/process_runner.dart';
+import 'package:remix_cli/src/registry.dart';
 import 'package:test/test.dart';
 
 import 'test_support.dart';
@@ -331,29 +332,40 @@ packages:
   test(
     'diff after a clean long-prefix install has no formatter-only changes',
     () async {
-      final caseRoot = createFlutterPackage();
-      addTearDown(() => caseRoot.deleteSync(recursive: true));
-      await Installer(
-        projectRoot: caseRoot,
-        writeOut: (_) {},
-      ).initialize(const InitOptions(prefix: 'Playground', uiPath: 'lib/ui'));
-      writeRequiredPubspec(caseRoot);
-      writeRequiredLock(caseRoot);
-      await Installer(
-        projectRoot: caseRoot,
-        writeOut: (_) {},
-        processRunner: happyRunner(caseRoot, runRealFormatter: true),
-      ).add(const AddOptions(item: 'button', mode: AddMode.write));
-      final before = snapshotFiles(caseRoot);
-      final output = <String>[];
+      // Every item, at the longest prefix the repository dogfoods. A template
+      // laid out for a four-character prefix can wrap differently at ten, and
+      // the formatter would then rewrite the file the CLI just wrote — which
+      // shows up for a consumer as an `add --diff` that never comes back
+      // clean.
+      final catalog = await RegistryCatalog.loadBundled();
+      final items = catalog.items.keys.where((name) => name != 'theme');
+      expect(items, isNotEmpty);
 
-      await Installer(
-        projectRoot: caseRoot,
-        writeOut: output.add,
-      ).add(const AddOptions(item: 'button', mode: AddMode.diff));
+      for (final item in items) {
+        final caseRoot = createFlutterPackage();
+        addTearDown(() => caseRoot.deleteSync(recursive: true));
+        await Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+        ).initialize(const InitOptions(prefix: 'Playground', uiPath: 'lib/ui'));
+        writeRequiredPubspec(caseRoot);
+        writeRequiredLock(caseRoot);
+        await Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+          processRunner: happyRunner(caseRoot, runRealFormatter: true),
+        ).add(AddOptions(item: item, mode: AddMode.write));
+        final before = snapshotFiles(caseRoot);
+        final output = <String>[];
 
-      expect(snapshotFiles(caseRoot), before);
-      expect(output.last, 'No authored-source differences.');
+        await Installer(
+          projectRoot: caseRoot,
+          writeOut: output.add,
+        ).add(AddOptions(item: item, mode: AddMode.diff));
+
+        expect(snapshotFiles(caseRoot), before, reason: item);
+        expect(output.last, 'No authored-source differences.', reason: item);
+      }
     },
   );
 

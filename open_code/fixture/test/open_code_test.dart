@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:open_code_fixture/main.dart';
 import 'package:open_code_fixture/ui/ui.dart';
 import 'package:remix/remix.dart';
 
@@ -768,13 +769,6 @@ void main() {
 
       expect(_background(hovered), const Color(0xFF5B21B6));
     });
-
-    test('an empty caller style leaves the recipe untouched', () {
-      expect(
-        acmeButtonStyle(style: const ButtonStyler.create()),
-        acmeButtonStyle(),
-      );
-    });
   });
 
   group('AcmeButton generated API', () {
@@ -1489,13 +1483,6 @@ void main() {
       expect(_checkboxBackground(checked), const Color(0xFF5B21B6));
     });
 
-    test('an empty caller style leaves the recipe untouched', () {
-      expect(
-        acmeCheckboxStyle(style: const CheckboxStyler.create()),
-        acmeCheckboxStyle(),
-      );
-    });
-
     test('a group option resolves the same recipe as a lone checkbox', () {
       for (final size in AcmeCheckboxSize.values) {
         expect(
@@ -1641,10 +1628,7 @@ void main() {
                       value: 'design',
                       label: 'Design',
                     ),
-                    AcmeCheckboxGroupItem<String>(
-                      value: 'code',
-                      label: 'Code',
-                    ),
+                    AcmeCheckboxGroupItem<String>(value: 'code', label: 'Code'),
                   ],
                 ),
               ),
@@ -1681,7 +1665,9 @@ void main() {
           Border(bottom: BorderSide(color: theme.data.border, width: 1)),
         );
         expect(flex?.direction, Axis.horizontal);
-        expect(flex?.mainAxisSize, MainAxisSize.min);
+        // Max, so the rule spans its container rather than stopping at the
+        // last tab.
+        expect(flex?.mainAxisSize, MainAxisSize.max);
         expect(flex?.crossAxisAlignment, CrossAxisAlignment.end);
       });
     }
@@ -1773,7 +1759,9 @@ void main() {
 
   group('acmeTabStyle states', () {
     for (final theme in _themes) {
-      testWidgets('an unselected tab is muted in ${theme.name}', (tester) async {
+      testWidgets('an unselected tab is muted in ${theme.name}', (
+        tester,
+      ) async {
         final spec = await _resolveTab(tester, theme: theme.data);
 
         expect(spec.spec.label.spec.style?.color, theme.data.mutedForeground);
@@ -1782,9 +1770,7 @@ void main() {
         // selecting a tab repaints instead of reflowing the strip.
         expect(
           _flexBorder(spec.spec.container),
-          const Border(
-            bottom: BorderSide(color: Color(0x00000000), width: 2),
-          ),
+          const Border(bottom: BorderSide(color: Color(0x00000000), width: 2)),
         );
       });
 
@@ -1892,22 +1878,13 @@ void main() {
         style: TabStyler().color(const Color(0xFF7C3AED)).minHeight(60),
       );
 
-      expect(_flexDecoration(spec.spec.container)?.color, const Color(0xFF7C3AED));
+      expect(
+        _flexDecoration(spec.spec.container)?.color,
+        const Color(0xFF7C3AED),
+      );
       expect(spec.spec.container.spec.box?.spec.constraints?.minHeight, 60);
       // Untouched recipe values survive.
       expect(spec.spec.icon.spec.size, 16);
-    });
-
-    test('an empty caller style leaves the recipe untouched', () {
-      expect(acmeTabStyle(style: const TabStyler.create()), acmeTabStyle());
-      expect(
-        acmeTabBarStyle(style: const TabBarStyler.create()),
-        acmeTabBarStyle(),
-      );
-      expect(
-        acmeTabViewStyle(style: const TabViewStyler.create()),
-        acmeTabViewStyle(),
-      );
     });
   });
 
@@ -1955,10 +1932,7 @@ void main() {
       expect(remix.semanticLabel, 'First tab');
       expect(
         remix.style,
-        acmeTabStyle(
-          size: AcmeTabSize.large,
-          style: TabStyler().minHeight(48),
-        ),
+        acmeTabStyle(size: AcmeTabSize.large, style: TabStyler().minHeight(48)),
       );
       expect(remix.styleSpec, isNull);
       // `builder` would drag `package:naked_ui` into the adapter, so it is
@@ -2033,6 +2007,1028 @@ void main() {
       expect(find.bySemanticsLabel('Second'), findsOneWidget);
       handle.dispose();
     });
+  });
+
+  group('the gallery renders every installed component', () {
+    // The gallery is the only place the installed widgets are composed the way
+    // an application composes them, so it is where a layout mistake — an
+    // unbounded vertical divider, a bar that collapses to nothing — actually
+    // shows up. A recipe can resolve perfectly and still not lay out.
+    for (final size in const [Size(1200, 3000), Size(420, 3000)]) {
+      testWidgets('at ${size.width.toInt()}x${size.height.toInt()}', (
+        tester,
+      ) async {
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+
+        await tester.pumpWidget(const AcmeGalleryApp());
+        // Not `pumpAndSettle`: the gallery holds a spinner and a skeleton,
+        // and both animate forever by design.
+        await tester.pump(const Duration(milliseconds: 100));
+
+        expect(tester.takeException(), isNull);
+        expect(find.byType(AcmeThemeSection), findsNWidgets(3));
+        for (final finder in [
+          find.byType(AcmeButton),
+          find.byType(AcmeCheckbox),
+          find.byType(AcmeTab),
+          find.byType(AcmeBadge),
+          find.byType(AcmeIconButton),
+          find.byType(AcmeToggle),
+          find.byType(AcmeAvatar),
+          find.byType(AcmeSpinner),
+          find.byType(AcmeLink),
+          find.byType(AcmeProgress),
+          find.byType(AcmeSkeleton),
+          find.byType(AcmeCard),
+          find.byType(AcmeCallout),
+          find.byType(AcmeDivider),
+        ]) {
+          expect(finder, findsWidgets);
+        }
+      });
+    }
+  });
+
+  group('acmeCardStyle', () {
+    for (final theme in _themes) {
+      testWidgets('is an outlined surface in ${theme.name}', (tester) async {
+        final spec = await _resolve(tester, acmeCardStyle(), theme: theme.data);
+        final box = spec.spec.container.spec;
+
+        // The page fill on purpose: a card is told apart by its outline, not
+        // by a second surface color. See the recipe's own note.
+        expect(_boxBackground(spec.spec.container), theme.data.background);
+        expect(
+          _boxBorder(spec.spec.container),
+          Border.all(color: theme.data.border, width: 1),
+        );
+        expect(
+          _boxBorderRadius(spec.spec.container),
+          BorderRadius.all(theme.data.radius),
+        );
+        expect(box.padding, const EdgeInsets.all(16));
+      });
+    }
+
+    testWidgets('the caller style merges last', (tester) async {
+      final spec = await _resolve(
+        tester,
+        acmeCardStyle(style: CardStyler().color(const Color(0xFF7C3AED))),
+        theme: const AcmeThemeData.light(),
+      );
+
+      expect(_boxBackground(spec.spec.container), const Color(0xFF7C3AED));
+      expect(spec.spec.container.spec.padding, const EdgeInsets.all(16));
+    });
+
+    testWidgets('renders its child inside a RemixCard', (tester) async {
+      await _pumpInScope(tester, const AcmeCard(child: Text('Contents')));
+
+      expect(find.byType(RemixCard), findsOneWidget);
+      expect(find.text('Contents'), findsOneWidget);
+      expect(
+        tester.widget<RemixCard>(find.byType(RemixCard)).style,
+        acmeCardStyle(),
+      );
+    });
+  });
+
+  group('acmeBadgeStyle', () {
+    for (final theme in _themes) {
+      for (final entry in <AcmeBadgeVariant, ({Color fill, Color content})>{
+        AcmeBadgeVariant.primary: (
+          fill: theme.data.primary,
+          content: theme.data.primaryForeground,
+        ),
+        AcmeBadgeVariant.secondary: (
+          fill: theme.data.secondary,
+          content: theme.data.secondaryForeground,
+        ),
+        AcmeBadgeVariant.destructive: (
+          fill: theme.data.destructive,
+          content: theme.data.destructiveForeground,
+        ),
+        AcmeBadgeVariant.outline: (
+          fill: const Color(0x00000000),
+          content: theme.data.foreground,
+        ),
+      }.entries) {
+        testWidgets('${entry.key.name} in ${theme.name}', (tester) async {
+          final spec = await _resolve(
+            tester,
+            acmeBadgeStyle(variant: entry.key),
+            theme: theme.data,
+          );
+
+          expect(_boxBackground(spec.spec.container), entry.value.fill);
+          expect(spec.spec.label.spec.style?.color, entry.value.content);
+          expect(
+            _boxBorder(spec.spec.container),
+            entry.key == AcmeBadgeVariant.outline
+                ? Border.all(color: theme.data.border, width: 1)
+                : isNull,
+          );
+          // The composited label has to stay readable on the page.
+          final surface = Color.alphaBlend(
+            entry.value.fill,
+            theme.data.background,
+          );
+          expect(
+            _contrastRatio(
+              Color.alphaBlend(entry.value.content, surface),
+              surface,
+            ),
+            greaterThanOrEqualTo(4.5),
+          );
+        });
+      }
+    }
+
+    testWidgets('shares one geometry across every variant', (tester) async {
+      for (final variant in AcmeBadgeVariant.values) {
+        final spec = await _resolve(
+          tester,
+          acmeBadgeStyle(variant: variant),
+          theme: const AcmeThemeData.light(),
+        );
+
+        expect(
+          spec.spec.container.spec.padding,
+          const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+          reason: variant.name,
+        );
+        expect(spec.spec.label.spec.style?.fontSize, 12, reason: variant.name);
+        expect(
+          spec.spec.label.spec.style?.fontWeight,
+          FontWeight.w500,
+          reason: variant.name,
+        );
+      }
+    });
+
+    testWidgets('every named constructor pins its own variant', (tester) async {
+      final named = <AcmeBadgeVariant, AcmeBadge>{
+        AcmeBadgeVariant.primary: const AcmeBadge.primary(label: 'A'),
+        AcmeBadgeVariant.secondary: const AcmeBadge.secondary(label: 'A'),
+        AcmeBadgeVariant.outline: const AcmeBadge.outline(label: 'A'),
+        AcmeBadgeVariant.destructive: const AcmeBadge.destructive(label: 'A'),
+      };
+
+      expect(named.keys, containsAll(AcmeBadgeVariant.values));
+      for (final entry in named.entries) {
+        await _pumpInScope(tester, entry.value);
+
+        expect(entry.value.variant, entry.key);
+        expect(
+          tester.widget<RemixBadge>(find.byType(RemixBadge)).style,
+          acmeBadgeStyle(variant: entry.key),
+        );
+      }
+    });
+  });
+
+  group('acmeDividerStyle', () {
+    for (final theme in _themes) {
+      testWidgets('is a hairline in the border token in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeDividerStyle(),
+          theme: theme.data,
+        );
+
+        expect(_boxBackground(spec.spec.container), theme.data.border);
+      });
+    }
+
+    testWidgets('each orientation pins one axis and stretches the other', (
+      tester,
+    ) async {
+      final horizontal = await _resolve(
+        tester,
+        acmeDividerStyle(),
+        theme: const AcmeThemeData.light(),
+      );
+      final vertical = await _resolve(
+        tester,
+        acmeDividerStyle(orientation: Axis.vertical),
+        theme: const AcmeThemeData.light(),
+      );
+
+      // The pinned axis is tight; the other stays unbounded so the wrapping
+      // FractionallySizedBox can stretch it to the parent.
+      expect(horizontal.spec.container.spec.constraints?.maxHeight, 1);
+      expect(horizontal.spec.container.spec.constraints?.minHeight, 1);
+      expect(
+        horizontal.spec.container.spec.constraints?.maxWidth,
+        double.infinity,
+      );
+      expect(vertical.spec.container.spec.constraints?.maxWidth, 1);
+      expect(vertical.spec.container.spec.constraints?.minWidth, 1);
+      expect(
+        vertical.spec.container.spec.constraints?.maxHeight,
+        double.infinity,
+      );
+      expect(horizontal, isNot(vertical));
+    });
+
+    testWidgets('renders full width in a bounded parent', (tester) async {
+      await _pumpInScope(
+        tester,
+        const SizedBox(width: 200, child: AcmeDivider()),
+      );
+      await tester.pumpAndSettle();
+
+      expect(tester.getSize(find.byType(RemixDivider)).width, 200);
+    });
+  });
+
+  group('acmeSpinnerStyle', () {
+    const diameters = <AcmeSpinnerSize, double>{
+      AcmeSpinnerSize.small: 16,
+      AcmeSpinnerSize.medium: 20,
+      AcmeSpinnerSize.large: 24,
+    };
+
+    test('every size is covered', () {
+      expect(diameters.keys, containsAll(AcmeSpinnerSize.values));
+    });
+
+    for (final theme in _themes) {
+      testWidgets('takes the foreground color in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeSpinnerStyle(),
+          theme: theme.data,
+        );
+
+        expect(spec.spec.color, theme.data.foreground);
+        expect(spec.spec.duration, const Duration(milliseconds: 800));
+      });
+    }
+
+    for (final entry in diameters.entries) {
+      testWidgets('${entry.key.name} is ${entry.value}px', (tester) async {
+        final spec = await _resolve(
+          tester,
+          acmeSpinnerStyle(size: entry.key),
+          theme: const AcmeThemeData.light(),
+        );
+
+        expect(spec.spec.size, entry.value);
+      });
+    }
+
+    testWidgets('the caller style merges last', (tester) async {
+      final spec = await _resolve(
+        tester,
+        acmeSpinnerStyle(style: SpinnerStyler().size(64)),
+        theme: const AcmeThemeData.light(),
+      );
+
+      expect(spec.spec.size, 64);
+      expect(spec.spec.color, const AcmeThemeData.light().foreground);
+    });
+  });
+
+  group('acmeSkeletonStyle', () {
+    for (final theme in _themes) {
+      testWidgets('pulses between the two neutral surfaces in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeSkeletonStyle(),
+          theme: theme.data,
+        );
+
+        expect(_boxBackground(spec.spec.container), theme.data.muted);
+        expect(spec.spec.pulseColor, theme.data.accent);
+        expect(
+          _boxBorderRadius(spec.spec.container),
+          BorderRadius.all(theme.data.radius),
+        );
+        expect(spec.spec.duration, const Duration(milliseconds: 1000));
+      });
+    }
+
+    testWidgets('a wrapped child keeps sizing both states', (tester) async {
+      await _pumpInScope(
+        tester,
+        const AcmeSkeleton(loading: false, child: Text('Jane Appleseed')),
+      );
+      await tester.pumpAndSettle();
+      final loaded = tester.getSize(find.byType(AcmeSkeleton));
+
+      await _pumpInScope(
+        tester,
+        const AcmeSkeleton(child: Text('Jane Appleseed')),
+      );
+      await tester.pump();
+
+      expect(tester.getSize(find.byType(AcmeSkeleton)), loaded);
+    });
+  });
+
+  group('acmeProgressStyle', () {
+    const thicknesses = <AcmeProgressSize, double>{
+      AcmeProgressSize.small: 4,
+      AcmeProgressSize.medium: 6,
+      AcmeProgressSize.large: 8,
+    };
+
+    test('every size is covered', () {
+      expect(thicknesses.keys, containsAll(AcmeProgressSize.values));
+    });
+
+    for (final theme in _themes) {
+      testWidgets('track and indicator take their tokens in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeProgressStyle(),
+          theme: theme.data,
+        );
+
+        expect(_boxBackground(spec.spec.track), theme.data.muted);
+        expect(_boxBackground(spec.spec.indicator), theme.data.primary);
+      });
+    }
+
+    for (final entry in thicknesses.entries) {
+      testWidgets('${entry.key.name} is a ${entry.value}px rounded bar', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeProgressStyle(size: entry.key),
+          theme: const AcmeThemeData.light(),
+        );
+        final radius = BorderRadius.all(Radius.circular(entry.value / 2));
+
+        for (final part in [
+          spec.spec.container,
+          spec.spec.track,
+          spec.spec.indicator,
+        ]) {
+          expect(part.spec.constraints?.maxHeight, entry.value);
+          expect(_boxBorderRadius(part), radius);
+        }
+        // The bar spans its parent; the indicator is sized by Remix from the
+        // value, so only the container and the track claim the full width.
+        expect(spec.spec.container.spec.constraints?.maxWidth, double.infinity);
+        expect(spec.spec.track.spec.constraints?.maxWidth, double.infinity);
+        expect(spec.spec.container.spec.clipBehavior, Clip.antiAlias);
+      });
+    }
+
+    testWidgets('publishes its progress semantics', (tester) async {
+      final handle = tester.ensureSemantics();
+
+      await _pumpInScope(
+        tester,
+        const SizedBox(
+          width: 200,
+          child: AcmeProgress(value: 0.4, semanticsLabel: 'Upload'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.bySemanticsLabel('Upload'), findsOneWidget);
+      expect(tester.getSize(find.byType(RemixProgress)).width, 200);
+      handle.dispose();
+    });
+  });
+
+  group('acmeAvatarStyle', () {
+    const expected = <AcmeAvatarSize, ({double diameter, double labelSize})>{
+      AcmeAvatarSize.small: (diameter: 32, labelSize: 12),
+      AcmeAvatarSize.medium: (diameter: 40, labelSize: 14),
+      AcmeAvatarSize.large: (diameter: 48, labelSize: 16),
+    };
+
+    test('every size is covered', () {
+      expect(expected.keys, containsAll(AcmeAvatarSize.values));
+    });
+
+    for (final entry in expected.entries) {
+      testWidgets('${entry.key.name} is a circle with scaled initials', (
+        tester,
+      ) async {
+        const theme = AcmeThemeData.light();
+        final spec = await _resolve(
+          tester,
+          acmeAvatarStyle(size: entry.key),
+          theme: theme,
+        );
+
+        expect(
+          spec.spec.container.spec.constraints,
+          BoxConstraints.tight(Size.square(entry.value.diameter)),
+        );
+        expect(
+          _boxBorderRadius(spec.spec.container),
+          const BorderRadius.all(Radius.circular(999)),
+        );
+        expect(spec.spec.label.spec.style?.fontSize, entry.value.labelSize);
+        expect(spec.spec.label.spec.style?.color, theme.mutedForeground);
+        expect(spec.spec.icon.spec.color, theme.mutedForeground);
+        expect(_boxBackground(spec.spec.container), theme.muted);
+      });
+    }
+
+    testWidgets('renders its initials through Remix', (tester) async {
+      await _pumpInScope(tester, const AcmeAvatar(label: 'AC'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(RemixAvatar), findsOneWidget);
+      expect(find.text('AC'), findsOneWidget);
+    });
+  });
+
+  group('acmeLinkStyle', () {
+    for (final theme in _themes) {
+      testWidgets('is underlined body text in ${theme.name}', (tester) async {
+        final spec = await _resolve(tester, acmeLinkStyle(), theme: theme.data);
+
+        expect(spec.spec.label.spec.style?.color, theme.data.foreground);
+        expect(
+          spec.spec.label.spec.style?.decoration,
+          TextDecoration.underline,
+        );
+        expect(spec.spec.label.spec.style?.decorationColor, theme.data.border);
+        // Inline text: the recipe must not pin a size, or a link inside a
+        // heading would render at body scale.
+        expect(spec.spec.label.spec.style?.fontSize, isNull);
+      });
+
+      testWidgets('hover and focus promote the underline in ${theme.name}', (
+        tester,
+      ) async {
+        for (final states in const [
+          {WidgetState.hovered},
+          {WidgetState.focused},
+        ]) {
+          final spec = await _resolve(
+            tester,
+            acmeLinkStyle(),
+            theme: theme.data,
+            states: states,
+          );
+
+          expect(
+            spec.spec.label.spec.style?.decorationColor,
+            theme.data.foreground,
+            reason: '$states',
+          );
+        }
+      });
+    }
+
+    testWidgets('disabled fades the link', (tester) async {
+      final spec = await _resolve(
+        tester,
+        acmeLinkStyle(),
+        theme: const AcmeThemeData.light(),
+        states: const {WidgetState.disabled},
+      );
+
+      expect(
+        spec.widgetModifiers,
+        contains(
+          isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
+        ),
+      );
+    });
+
+    testWidgets('a link with no callback is disabled by Remix', (tester) async {
+      final handle = tester.ensureSemantics();
+      var pressed = 0;
+
+      await _pumpInScope(tester, const AcmeLink(label: 'Docs'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(AcmeLink), warnIfMissed: false);
+      await tester.pumpAndSettle();
+
+      expect(pressed, 0);
+      expect(find.text('Docs'), findsOneWidget);
+
+      await _pumpInScope(
+        tester,
+        AcmeLink(label: 'Docs', onPressed: () => pressed += 1),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(AcmeLink));
+      await tester.pumpAndSettle();
+
+      expect(pressed, 1);
+      handle.dispose();
+    });
+  });
+
+  group('acmeCalloutStyle', () {
+    for (final theme in _themes) {
+      testWidgets('neutral sits on the muted surface in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeCalloutStyle(),
+          theme: theme.data,
+        );
+
+        expect(_flexDecoration(spec.spec.container)?.color, theme.data.muted);
+        expect(
+          _flexBorder(spec.spec.container),
+          Border.all(color: theme.data.border, width: 1),
+        );
+        expect(spec.spec.text.spec.style?.color, theme.data.foreground);
+        expect(spec.spec.icon.spec.color, theme.data.mutedForeground);
+      });
+
+      testWidgets('destructive is outline-only in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeCalloutStyle(variant: AcmeCalloutVariant.destructive),
+          theme: theme.data,
+        );
+
+        expect(
+          _flexDecoration(spec.spec.container)?.color,
+          const Color(0x00000000),
+        );
+        expect(
+          _flexBorder(spec.spec.container),
+          Border.all(color: theme.data.destructive, width: 1),
+        );
+        // The sentence stays in `foreground`: `destructive` is a fill color,
+        // and on the dark page it measures below the 4.5:1 body-text floor.
+        expect(spec.spec.text.spec.style?.color, theme.data.foreground);
+        expect(spec.spec.icon.spec.color, theme.data.destructive);
+        expect(
+          _contrastRatio(theme.data.foreground, theme.data.background),
+          greaterThanOrEqualTo(4.5),
+        );
+        // The border and the glyph are non-text, where WCAG asks for 3:1.
+        expect(
+          _contrastRatio(theme.data.destructive, theme.data.background),
+          greaterThanOrEqualTo(3.0),
+        );
+      });
+    }
+
+    testWidgets('both tones share one layout', (tester) async {
+      for (final variant in AcmeCalloutVariant.values) {
+        final spec = await _resolve(
+          tester,
+          acmeCalloutStyle(variant: variant),
+          theme: const AcmeThemeData.light(),
+        );
+        final box = spec.spec.container.spec.box?.spec;
+        final flex = spec.spec.container.spec.flex?.spec;
+
+        expect(
+          box?.padding,
+          const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          reason: variant.name,
+        );
+        expect(flex?.spacing, 8, reason: variant.name);
+        expect(
+          flex?.crossAxisAlignment,
+          CrossAxisAlignment.start,
+          reason: variant.name,
+        );
+        expect(spec.spec.text.spec.style?.fontSize, 14, reason: variant.name);
+        expect(spec.spec.icon.spec.size, 16, reason: variant.name);
+      }
+    });
+
+    testWidgets('the named constructors pin their tone', (tester) async {
+      for (final entry in <AcmeCalloutVariant, AcmeCallout>{
+        AcmeCalloutVariant.neutral: const AcmeCallout.neutral(text: 'Note'),
+        AcmeCalloutVariant.destructive: const AcmeCallout.destructive(
+          text: 'Note',
+        ),
+      }.entries) {
+        await _pumpInScope(tester, entry.value);
+
+        expect(entry.value.variant, entry.key);
+        expect(find.text('Note'), findsOneWidget);
+      }
+    });
+  });
+
+  group('acmeIconButtonStyle', () {
+    const edges = <AcmeIconButtonSize, ({double edge, double iconSize})>{
+      AcmeIconButtonSize.small: (edge: 32, iconSize: 16),
+      AcmeIconButtonSize.medium: (edge: 36, iconSize: 16),
+      AcmeIconButtonSize.large: (edge: 40, iconSize: 18),
+    };
+
+    test('every size is covered', () {
+      expect(edges.keys, containsAll(AcmeIconButtonSize.values));
+    });
+
+    for (final entry in edges.entries) {
+      testWidgets('${entry.key.name} is a square with a centered glyph', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeIconButtonStyle(size: entry.key),
+          theme: const AcmeThemeData.light(),
+        );
+
+        expect(
+          spec.spec.container.spec.constraints,
+          BoxConstraints.tight(Size.square(entry.value.edge)),
+        );
+        expect(spec.spec.container.spec.alignment, Alignment.center);
+        expect(spec.spec.icon.spec.size, entry.value.iconSize);
+        expect(spec.spec.spinner.spec.size, entry.value.iconSize);
+      });
+    }
+
+    for (final theme in _themes) {
+      testWidgets('filled variants dim their own fill in ${theme.name}', (
+        tester,
+      ) async {
+        final fills = <AcmeIconButtonVariant, Color>{
+          AcmeIconButtonVariant.primary: theme.data.primary,
+          AcmeIconButtonVariant.secondary: theme.data.secondary,
+          AcmeIconButtonVariant.destructive: theme.data.destructive,
+        };
+
+        for (final entry in fills.entries) {
+          final idle = await _resolve(
+            tester,
+            acmeIconButtonStyle(variant: entry.key),
+            theme: theme.data,
+          );
+          final hovered = await _resolve(
+            tester,
+            acmeIconButtonStyle(variant: entry.key),
+            theme: theme.data,
+            states: const {WidgetState.hovered},
+          );
+          final pressed = await _resolve(
+            tester,
+            acmeIconButtonStyle(variant: entry.key),
+            theme: theme.data,
+            states: const {WidgetState.pressed},
+          );
+
+          expect(_boxBackground(idle.spec.container), entry.value);
+          expect(
+            _boxBackground(hovered.spec.container),
+            entry.value.withValues(alpha: 0.9),
+            reason: '${entry.key.name} hovered',
+          );
+          expect(
+            _boxBackground(pressed.spec.container),
+            entry.value.withValues(alpha: 0.8),
+            reason: '${entry.key.name} pressed',
+          );
+        }
+      });
+
+      testWidgets('outline and ghost hover onto accent in ${theme.name}', (
+        tester,
+      ) async {
+        for (final variant in const [
+          AcmeIconButtonVariant.outline,
+          AcmeIconButtonVariant.ghost,
+        ]) {
+          final idle = await _resolve(
+            tester,
+            acmeIconButtonStyle(variant: variant),
+            theme: theme.data,
+          );
+          final hovered = await _resolve(
+            tester,
+            acmeIconButtonStyle(variant: variant),
+            theme: theme.data,
+            states: const {WidgetState.hovered},
+          );
+
+          expect(_boxBackground(idle.spec.container), const Color(0x00000000));
+          expect(idle.spec.icon.spec.color, theme.data.foreground);
+          expect(
+            _boxBorder(idle.spec.container),
+            variant == AcmeIconButtonVariant.outline
+                ? Border.all(color: theme.data.border, width: 1)
+                : isNull,
+          );
+          expect(_boxBackground(hovered.spec.container), theme.data.accent);
+          expect(hovered.spec.icon.spec.color, theme.data.accentForeground);
+          expect(
+            hovered.spec.spinner.spec.color,
+            theme.data.accentForeground,
+            reason: variant.name,
+          );
+        }
+      });
+    }
+
+    testWidgets('focus-visible rings and disabled clears it', (tester) async {
+      const theme = AcmeThemeData.light();
+      final focused = await _resolve(
+        tester,
+        acmeIconButtonStyle(),
+        theme: theme,
+        states: const {WidgetState.focused},
+      );
+      final disabled = await _resolve(
+        tester,
+        acmeIconButtonStyle(),
+        theme: theme,
+        states: const {WidgetState.focused, WidgetState.disabled},
+      );
+
+      expect(focused.spec.containerEffects?.outline.color, theme.focusRing);
+      expect(focused.spec.containerEffects?.outline.width, 2);
+      expect(focused.spec.containerEffects?.outlineOffset, 2);
+      expect(disabled.spec.containerEffects?.outline.style, BorderStyle.none);
+      expect(
+        disabled.widgetModifiers,
+        contains(
+          isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
+        ),
+      );
+    });
+
+    testWidgets('forwards the safe RemixIconButton surface', (tester) async {
+      var pressed = 0;
+
+      await _pumpInScope(
+        tester,
+        AcmeIconButton.outline(
+          icon: _leading,
+          semanticLabel: 'Confirm',
+          semanticHint: 'Applies the change',
+          size: AcmeIconButtonSize.large,
+          style: IconButtonStyler().size(60, 60),
+          onPressed: () => pressed += 1,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final remix = tester.widget<RemixIconButton>(
+        find.byType(RemixIconButton),
+      );
+      expect(remix.icon, _leading);
+      expect(remix.semanticLabel, 'Confirm');
+      expect(remix.semanticHint, 'Applies the change');
+      expect(remix.styleSpec, isNull);
+      expect(
+        remix.style,
+        acmeIconButtonStyle(
+          variant: AcmeIconButtonVariant.outline,
+          size: AcmeIconButtonSize.large,
+          style: IconButtonStyler().size(60, 60),
+        ),
+      );
+
+      await tester.tap(find.byType(AcmeIconButton));
+      await tester.pumpAndSettle();
+      expect(pressed, 1);
+    });
+
+    testWidgets('a loading icon button shows the Remix spinner', (
+      tester,
+    ) async {
+      await _pumpInScope(
+        tester,
+        AcmeIconButton.primary(
+          icon: _leading,
+          semanticLabel: 'Saving',
+          loading: true,
+          onPressed: () {},
+        ),
+      );
+      await tester.pump();
+
+      expect(find.byType(RemixSpinner), findsOneWidget);
+    });
+  });
+
+  group('acmeToggleStyle', () {
+    for (final theme in _themes) {
+      testWidgets('off is transparent with foreground content in '
+          '${theme.name}', (tester) async {
+        for (final variant in AcmeToggleVariant.values) {
+          final spec = await _resolve(
+            tester,
+            acmeToggleStyle(variant: variant),
+            theme: theme.data,
+          );
+
+          expect(
+            _flexDecoration(spec.spec.container)?.color,
+            const Color(0x00000000),
+            reason: variant.name,
+          );
+          expect(spec.spec.label.spec.style?.color, theme.data.foreground);
+          expect(spec.spec.icon.spec.color, theme.data.foreground);
+          expect(
+            _flexBorder(spec.spec.container),
+            variant == AcmeToggleVariant.outline
+                ? Border.all(color: theme.data.border, width: 1)
+                : isNull,
+            reason: variant.name,
+          );
+        }
+      });
+
+      testWidgets('hover and on stay distinguishable in ${theme.name}', (
+        tester,
+      ) async {
+        final hovered = await _resolve(
+          tester,
+          acmeToggleStyle(),
+          theme: theme.data,
+          states: const {WidgetState.hovered},
+        );
+        final on = await _resolve(
+          tester,
+          acmeToggleStyle(),
+          theme: theme.data,
+          states: const {WidgetState.selected},
+        );
+
+        expect(
+          _flexDecoration(hovered.spec.container)?.color,
+          theme.data.muted,
+        );
+        expect(hovered.spec.label.spec.style?.color, theme.data.foreground);
+        expect(_flexDecoration(on.spec.container)?.color, theme.data.accent);
+        expect(on.spec.label.spec.style?.color, theme.data.accentForeground);
+        expect(theme.data.muted, isNot(theme.data.accent));
+      });
+    }
+
+    testWidgets('sizes match the button scale', (tester) async {
+      const heights = <AcmeToggleSize, double>{
+        AcmeToggleSize.small: 32,
+        AcmeToggleSize.medium: 36,
+        AcmeToggleSize.large: 40,
+      };
+      expect(heights.keys, containsAll(AcmeToggleSize.values));
+
+      for (final entry in heights.entries) {
+        final spec = await _resolve(
+          tester,
+          acmeToggleStyle(size: entry.key),
+          theme: const AcmeThemeData.light(),
+        );
+
+        expect(
+          spec.spec.container.spec.box?.spec.constraints?.minHeight,
+          entry.value,
+          reason: entry.key.name,
+        );
+      }
+    });
+
+    testWidgets('focus-visible rings without moving the label', (tester) async {
+      const theme = AcmeThemeData.light();
+      final idle = await _resolve(tester, acmeToggleStyle(), theme: theme);
+      final focused = await _resolve(
+        tester,
+        acmeToggleStyle(),
+        theme: theme,
+        states: const {WidgetState.focused},
+      );
+
+      expect(_flexForegroundBorder(idle.spec.container), isNull);
+      expect(
+        _flexForegroundBorder(focused.spec.container),
+        Border.all(
+          color: theme.focusRing,
+          width: 2,
+          strokeAlign: BorderSide.strokeAlignInside,
+        ),
+      );
+      expect(
+        idle.spec.container.spec.box?.spec.padding,
+        focused.spec.container.spec.box?.spec.padding,
+      );
+    });
+
+    testWidgets('disabled fades the control and clears the ring', (
+      tester,
+    ) async {
+      final spec = await _resolve(
+        tester,
+        acmeToggleStyle(),
+        theme: const AcmeThemeData.light(),
+        states: const {WidgetState.focused, WidgetState.disabled},
+      );
+
+      expect(
+        spec.widgetModifiers,
+        contains(
+          isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
+        ),
+      );
+      expect(
+        (_flexForegroundBorder(spec.spec.container) as Border?)?.top.style,
+        BorderStyle.none,
+      );
+    });
+
+    testWidgets('toggling reaches the callback and reports its state', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      final changes = <bool>[];
+
+      await _pumpInScope(
+        tester,
+        AcmeToggle.outline(
+          selected: false,
+          label: 'Bold',
+          onChanged: changes.add,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byType(AcmeToggle));
+      await tester.pumpAndSettle();
+
+      expect(changes, [true]);
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Bold')),
+        isSemantics(hasEnabledState: true, isEnabled: true),
+      );
+      handle.dispose();
+    });
+  });
+
+  test('an empty caller style leaves every recipe untouched', () {
+    // The `style` seam has to be free when it is unused: a recipe that
+    // resolved differently with `const XStyler.create()` than without it would
+    // make every generated adapter subtly different from the recipe it calls.
+    expect(
+      acmeAvatarStyle(style: const AvatarStyler.create()),
+      acmeAvatarStyle(),
+    );
+    expect(acmeBadgeStyle(style: const BadgeStyler.create()), acmeBadgeStyle());
+    expect(
+      acmeButtonStyle(style: const ButtonStyler.create()),
+      acmeButtonStyle(),
+    );
+    expect(
+      acmeCalloutStyle(style: const CalloutStyler.create()),
+      acmeCalloutStyle(),
+    );
+    expect(acmeCardStyle(style: const CardStyler.create()), acmeCardStyle());
+    expect(
+      acmeCheckboxStyle(style: const CheckboxStyler.create()),
+      acmeCheckboxStyle(),
+    );
+    expect(
+      acmeDividerStyle(style: const DividerStyler.create()),
+      acmeDividerStyle(),
+    );
+    expect(
+      acmeIconButtonStyle(style: const IconButtonStyler.create()),
+      acmeIconButtonStyle(),
+    );
+    expect(acmeLinkStyle(style: const LinkStyler.create()), acmeLinkStyle());
+    expect(
+      acmeProgressStyle(style: const ProgressStyler.create()),
+      acmeProgressStyle(),
+    );
+    expect(
+      acmeSkeletonStyle(style: const SkeletonStyler.create()),
+      acmeSkeletonStyle(),
+    );
+    expect(
+      acmeSpinnerStyle(style: const SpinnerStyler.create()),
+      acmeSpinnerStyle(),
+    );
+    expect(acmeTabStyle(style: const TabStyler.create()), acmeTabStyle());
+    expect(
+      acmeTabBarStyle(style: const TabBarStyler.create()),
+      acmeTabBarStyle(),
+    );
+    expect(
+      acmeTabViewStyle(style: const TabViewStyler.create()),
+      acmeTabViewStyle(),
+    );
+    expect(
+      acmeToggleStyle(style: const ToggleStyler.create()),
+      acmeToggleStyle(),
+    );
   });
 }
 
@@ -2288,12 +3284,7 @@ Future<StyleSpec<CheckboxSpec>> _resolveCheckbox(
   WidgetTester tester, {
   required AcmeThemeData theme,
   Set<WidgetState> states = const {},
-}) => _resolve(
-  tester,
-  acmeCheckboxStyle(),
-  theme: theme,
-  states: states,
-);
+}) => _resolve(tester, acmeCheckboxStyle(), theme: theme, states: states);
 
 Future<StyleSpec<TabSpec>> _resolveTab(
   WidgetTester tester, {
@@ -2373,17 +3364,26 @@ StyleSpec<S> _resolvedSpecOf<S extends Spec<S>>(WidgetTester tester) {
 BoxConstraints? _checkboxConstraints(StyleSpec<CheckboxSpec> spec) =>
     spec.spec.container.spec.constraints;
 
-BoxDecoration? _checkboxDecoration(StyleSpec<CheckboxSpec> spec) =>
-    spec.spec.container.spec.decoration as BoxDecoration?;
-
 Color? _checkboxBackground(StyleSpec<CheckboxSpec> spec) =>
-    _checkboxDecoration(spec)?.color;
+    _boxBackground(spec.spec.container);
 
 BoxBorder? _checkboxBorder(StyleSpec<CheckboxSpec> spec) =>
-    _checkboxDecoration(spec)?.border;
+    _boxBorder(spec.spec.container);
 
 BorderRadiusGeometry? _checkboxBorderRadius(StyleSpec<CheckboxSpec> spec) =>
-    _checkboxDecoration(spec)?.borderRadius;
+    _boxBorderRadius(spec.spec.container);
+
+BoxDecoration? _boxDecoration(StyleSpec<BoxSpec> container) =>
+    container.spec.decoration as BoxDecoration?;
+
+Color? _boxBackground(StyleSpec<BoxSpec> container) =>
+    _boxDecoration(container)?.color;
+
+BoxBorder? _boxBorder(StyleSpec<BoxSpec> container) =>
+    _boxDecoration(container)?.border;
+
+BorderRadiusGeometry? _boxBorderRadius(StyleSpec<BoxSpec> container) =>
+    _boxDecoration(container)?.borderRadius;
 
 BoxDecoration? _flexDecoration(StyleSpec<FlexBoxSpec> container) =>
     container.spec.box?.spec.decoration as BoxDecoration?;

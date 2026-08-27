@@ -17,7 +17,7 @@ Yes. `remix_cli` installs authored Theme and Button source into the application,
 and `@MixWidget` generates the forwarding adapter there. The application edits
 the visual recipe; Remix still handles the difficult behavioral contract.
 
-The initial catalog contains only two items:
+The initial catalog contained only two items:
 
 ```text
 theme -> button
@@ -26,6 +26,14 @@ theme -> button
 Button depends on Theme. Installing Button resolves that graph in a stable
 order, adds its hosted dependencies, exports the authored files, and generates
 `button.g.dart` in the consumer.
+
+**Since:** the catalog has grown to fourteen components on the same two
+mechanisms — one authored file plus one generated part per item, every item
+depending on `theme`. Nothing in the decision below changed to accommodate
+them: no schema field, no installer branch, and no addition to the fifteen
+theme tokens. Compound components (a checkbox group option, a tab bar with its
+tabs and panels) fit by declaring more than one `@MixWidget` in the same file.
+The current catalog is listed in `docs/open-code.mdx`.
 
 ## Ownership boundary
 
@@ -89,8 +97,8 @@ The installer still protects application source:
 - validation and dependency failures happen before authored-source writes;
 - generation targets only the parts declared by resolved items.
 
-This is enough distribution machinery for the first Theme and Button without
-pretending the MVP has an update system.
+This is enough distribution machinery for a growing catalog without pretending
+the MVP has an update system.
 
 ## Dependency cost
 

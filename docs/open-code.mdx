@@ -4,9 +4,9 @@ description: Install editable Remix component source into your app with the remi
 ---
 
 Fortal gives you a themed catalog you *depend on*. **Open code** gives you the
-opposite trade: `remix_cli` copies a small, readable Theme and Button
-implementation **into your application**, and from that moment your team owns
-the file. No wrapper, no subclass, no theme-override escape hatch — you edit the
+opposite trade: `remix_cli` copies a small, readable theme and one file per
+component **into your application**, and from that moment your team owns those
+files. No wrapper, no subclass, no theme-override escape hatch — you edit the
 source.
 
 Remix keeps everything that is genuinely hard: rendering, pointer and keyboard
@@ -422,15 +422,32 @@ manifest and rerun — the CLI will not edit it for you.
 The bundled registry is deliberately small, and every component depends on
 `theme`:
 
-| Item | Installs | Widgets you get |
+`theme` installs `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`,
+giving you `UiTokens`, `UiThemeData`, and `UiThemeScope`. Every other item
+installs one authored file plus its generated adapter under
+`components/<item>.dart`, and depends on `theme`:
+
+| Item | Widgets you get | Axes |
 |---|---|---|
-| `theme` | `tokens.dart`, `theme_data.dart`, `theme_scope.dart` | `UiTokens`, `UiThemeData`, `UiThemeScope` |
-| `button` | `components/button.dart` + generated adapter | `UiButton` |
-| `checkbox` | `components/checkbox.dart` + generated adapter | `UiCheckbox`, `UiCheckboxGroupItem` |
-| `tabs` | `components/tabs.dart` + generated adapter | `UiTabBar`, `UiTab`, `UiTabView` |
+| `avatar` | `UiAvatar` | size |
+| `badge` | `UiBadge` | variant |
+| `button` | `UiButton` | variant, size |
+| `callout` | `UiCallout` | variant |
+| `card` | `UiCard` | — |
+| `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` | size |
+| `divider` | `UiDivider` | orientation |
+| `icon_button` | `UiIconButton` | variant, size |
+| `link` | `UiLink` | — |
+| `progress` | `UiProgress` | size |
+| `skeleton` | `UiSkeleton` | — |
+| `spinner` | `UiSpinner` | size |
+| `tabs` | `UiTabBar`, `UiTab`, `UiTabView` | size |
+| `toggle` | `UiToggle` | variant, size |
 
 One `add` installs one item. The names above use the default `Ui` prefix;
-`--prefix Acme` gives you `AcmeButton` and friends.
+`--prefix Acme` gives you `AcmeButton` and friends. A recipe whose axis is
+named `variant` also gets one named constructor per value, so
+`UiBadge.destructive(label: 'Failing')` works out of the box.
 
 Some Remix widgets are behavioral and carry no style, so the registry has
 nothing to render for them. `RemixCheckboxGroup` and `RemixTabs` are the two

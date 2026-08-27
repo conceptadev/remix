@@ -62,3 +62,179 @@ items:
       - "@ui/components/tabs.g.dart"
     exports:
       - components/tabs.dart
+
+  avatar:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/avatar/avatar.dart.tmpl
+        target: "@ui/components/avatar.dart"
+    generated:
+      - "@ui/components/avatar.g.dart"
+    exports:
+      - components/avatar.dart
+
+  badge:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/badge/badge.dart.tmpl
+        target: "@ui/components/badge.dart"
+    generated:
+      - "@ui/components/badge.g.dart"
+    exports:
+      - components/badge.dart
+
+  callout:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/callout/callout.dart.tmpl
+        target: "@ui/components/callout.dart"
+    generated:
+      - "@ui/components/callout.g.dart"
+    exports:
+      - components/callout.dart
+
+  card:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/card/card.dart.tmpl
+        target: "@ui/components/card.dart"
+    generated:
+      - "@ui/components/card.g.dart"
+    exports:
+      - components/card.dart
+
+  divider:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/divider/divider.dart.tmpl
+        target: "@ui/components/divider.dart"
+    generated:
+      - "@ui/components/divider.g.dart"
+    exports:
+      - components/divider.dart
+
+  icon_button:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/icon_button/icon_button.dart.tmpl
+        target: "@ui/components/icon_button.dart"
+    generated:
+      - "@ui/components/icon_button.g.dart"
+    exports:
+      - components/icon_button.dart
+
+  link:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/link/link.dart.tmpl
+        target: "@ui/components/link.dart"
+    generated:
+      - "@ui/components/link.g.dart"
+    exports:
+      - components/link.dart
+
+  progress:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/progress/progress.dart.tmpl
+        target: "@ui/components/progress.dart"
+    generated:
+      - "@ui/components/progress.g.dart"
+    exports:
+      - components/progress.dart
+
+  skeleton:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/skeleton/skeleton.dart.tmpl
+        target: "@ui/components/skeleton.dart"
+    generated:
+      - "@ui/components/skeleton.g.dart"
+    exports:
+      - components/skeleton.dart
+
+  spinner:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/spinner/spinner.dart.tmpl
+        target: "@ui/components/spinner.dart"
+    generated:
+      - "@ui/components/spinner.g.dart"
+    exports:
+      - components/spinner.dart
+
+  toggle:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/toggle/toggle.dart.tmpl
+        target: "@ui/components/toggle.dart"
+    generated:
+      - "@ui/components/toggle.g.dart"
+    exports:
+      - components/toggle.dart

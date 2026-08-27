@@ -1,7 +1,7 @@
 # Application-owned Remix UI
 
 This example is installed by `remix_cli`. It gives an application editable
-Theme and Button source while Remix continues to own rendering, interaction,
+theme and component source while Remix continues to own rendering, interaction,
 focus, loading, disabled behavior, and accessibility.
 
 The registry source lives in `packages/remix_cli/lib/src/registry/`. There is
@@ -19,6 +19,10 @@ flutter pub add dev:remix_cli
 dart run remix_cli:remix init --prefix Acme
 dart run remix_cli:remix add button
 ```
+
+One `add` installs one item. The catalog is `theme` plus `avatar`, `badge`,
+`button`, `callout`, `card`, `checkbox`, `divider`, `icon_button`, `link`,
+`progress`, `skeleton`, `spinner`, `tabs`, and `toggle`.
 
 Until the separate public-release gate is complete, contributors can point the
 development dependency at a checkout or staged package:
@@ -48,12 +52,15 @@ lib/ui/
     button.g.dart     generated; do not hand-edit
 ```
 
+Every later `add` drops one more pair into `components/` and extends the
+barrel's managed block. Nothing already on disk is touched.
+
 The CLI does not create or modify `build.yaml`.
 
 ## Source ownership
 
 After installation, the application owns every authored file. Change token
-values, add a variant, rename a size, or replace the recipe. A normal `add`
+values, add a variant, rename a size, or replace a recipe. A normal `add`
 rerun preserves existing authored files. It can recreate a missing generated
 part, refresh the managed export block, and run the focused checks without
 resetting local work.
@@ -167,7 +174,7 @@ fvm dart run tool/check_open_code.dart
 ```
 
 The full check creates a guarded temporary Flutter app, installs the checkout
-CLI with prefix `Acme`, and proves generation, analysis, and all behavior tests
-against hosted Remix. It then overrides Remix to the current checkout,
+CLI with prefix `Acme`, adds every registry item, and proves generation,
+analysis, and all behavior tests against hosted Remix. It then overrides Remix to the current checkout,
 regenerates without a consumer `build.yaml`, and repeats the checks. Pass
 `--keep` to retain the generated gallery for inspection.
