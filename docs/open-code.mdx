@@ -32,17 +32,55 @@ changing it. Pick Fortal when you want a good catalog and no maintenance.
 
 ## Install
 
-Add the CLI as a project-local dev dependency so the version is pinned in your
-lockfile rather than in a global install:
+Add the CLI as a project-local dev dependency so its version is pinned in your
+lockfile, not in a machine-global install:
 
 ```bash
 flutter pub add dev:remix_cli
 ```
 
+## Running the CLI
+
+The command is called `remix`. How you reach it depends on how it is installed:
+
+```bash
+# Project-local dev dependency (recommended, and the only option today)
+remix <command>
+
+# Global install — available once remix_cli is published to pub.dev
+dart pub global activate remix_cli
+remix <command>
+```
+
+Prefer the project-local form even after publishing: it pins the CLI *and* its
+bundled registry snapshot per project, so two apps on different Remix versions
+cannot install each other's templates.
+
+<Note>
+The examples below are written as `remix <command>` to match the tool's own
+usage output. If you are using the project-local form, prefix each one with
+`dart run remix_cli:` — for example `remix init`.
+</Note>
+
+```
+$ remix --help
+Install editable Remix UI source.
+
+Usage: remix <command> [arguments]
+
+Global options:
+-h, --help       Print this usage information.
+    --version    Print the remix_cli version.
+
+Available commands:
+  add    Install one bundled registry item.
+  init   Initialize Remix source installation settings.
+```
+
 ## 1. Initialize
 
 ```bash
-dart run remix_cli:remix init
+remix init
 ```
 
 This writes two files and nothing else:
@@ -62,7 +100,7 @@ Choose the naming and location up front, because the prefix is baked into every
 identifier the CLI renders:
 
 ```bash
-dart run remix_cli:remix init --prefix Acme --ui-path lib/design_system
+remix init --prefix Acme --ui-path lib/design_system
 ```
 
 `--prefix Acme` produces `AcmeButton`, `AcmeButtonVariant`, `AcmeThemeData`,
@@ -83,7 +121,7 @@ path safety, dependency sections, registry resolution — and then stop before a
 file is written or any process runs.
 
 ```bash
-dart run remix_cli:remix add button --dry-run
+remix add button --dry-run
 ```
 
 ```
@@ -99,13 +137,13 @@ For the actual source, use `--diff`, which renders the proposed files, formats
 them, and shows a real `git diff` against what you have:
 
 ```bash
-dart run remix_cli:remix add button --diff
+remix add button --diff
 ```
 
 ## 3. Add
 
 ```bash
-dart run remix_cli:remix add button
+remix add button
 ```
 
 Button depends on Theme in the registry, so both are installed, dependencies
@@ -143,6 +181,53 @@ class SignUpButton extends StatelessWidget {
   }
 }
 ```
+
+## Configuration
+
+`remix.yaml` is the entire configuration surface — two settings, no plugins, no
+presets, no per-component overrides:
+
+```yaml
+schema: 1
+prefix: Ui       # type prefix for every generated identifier
+paths:
+  ui: lib/ui     # where installed source lives
+```
+
+| Key | Default | Rules |
+|---|---|---|
+| `schema` | `1` | Must be exactly `1`. Anything else is rejected. |
+| `prefix` | `Ui` | ASCII UpperCamel Dart identifier. Its lowercased form must not be a Dart reserved word — `Class` and `Is` are rejected. |
+| `paths.ui` | `lib/ui` | Project-relative, normalized, no traversal, must be under `lib/`. Symlinks that escape the package root are rejected. |
+
+Unknown keys are an error rather than a warning, so a typo fails loudly instead
+of silently reverting to a default:
+
+```
+$ remix init
+FormatException: configuration has unknown keys: style.
+```
+
+The prefix drives two identifier casings at once. With `prefix: Acme` you get
+the type `AcmeButton` and the function `acmeButtonStyle`.
+
+<Warning>
+Choose `prefix` and `paths.ui` before your first `add`. The CLI will not rename
+or move source it has already installed.
+
+Running `init` with different values against an existing `remix.yaml` is a hard
+error, not a migration:
+
+```
+FormatException: Existing remix.yaml does not match the requested prefix and UI path.
+```
+
+Editing `remix.yaml` by hand afterwards is worse, because installed state is
+tracked by *file path*, not by content. `remix add button` would still see
+`lib/ui/components/button.dart` on disk, report `Preserved button.`, and leave
+the old prefix in place. To actually change a prefix you must rename the
+identifiers yourself, or delete the installed files and reinstall.
+</Warning>
 
 ## What lands in your app
 
@@ -237,27 +322,68 @@ recipe's hover fill has to be declared as a hover fragment too — a bare
 `.color(...)` only replaces the idle one.
 </Warning>
 
-## Updating an installed item
+## Updating
 
-There is no update protocol, by design: the file is yours and the CLI will not
-guess how to merge your edits. Review, then decide:
+There is no update protocol, and that is the deliberate trade you accept with
+open code. The CLI tracks no versions, no content hashes, and no lockfile for
+installed source. It cannot tell an upstream improvement from your intentional
+edit, so it will never merge for you.
+
+What you get instead is a repeatable review loop. Bump the CLI, then diff:
 
 ```bash
-dart run remix_cli:remix add button --diff       # see what changed upstream
-dart run remix_cli:remix add button --overwrite  # replace, losing local edits
+flutter pub upgrade remix_cli     # new CLI = new bundled registry snapshot
+remix add button --diff           # your file vs. the new template
+```
+
+`--diff` renders the new template, formats it, and runs a real `git diff`
+against what is on disk. If the output is empty you are current:
+
+```
+No authored-source differences.
+```
+
+If you like the upstream version, take it wholesale:
+
+```bash
+remix add button --overwrite
 ```
 
 `--overwrite` replaces **only the item you named**. Already-installed registry
-dependencies are left alone:
+dependencies are untouched, so updating Button never silently rewrites a Theme
+you have customized:
 
 ```
 Preserved theme.
 Updated button.
 ```
 
-Without `--overwrite`, a fully installed item is a successful no-op, and a
-*partially* installed one is an error rather than a silent repair — use
-`--diff` or `--overwrite` deliberately.
+If you only want part of the upstream change, copy it out of the diff by hand.
+That is the intended workflow — the file is yours.
+
+### Reinstall behavior
+
+| State of the item | `add` | `add --overwrite` |
+|---|---|---|
+| Not installed | Installs it, reports `Added` | Installs it, reports `Added` |
+| Fully installed | Successful no-op, reports `Preserved` | Re-renders, reports `Updated` |
+| Partially installed | **Error** — refuses to guess | Re-renders every file, reports `Updated` |
+
+A partial install is an error rather than a silent repair because the CLI
+cannot know whether the missing file was deleted on purpose. Use `--diff` to
+look, then `--overwrite` deliberately.
+
+<Note>
+Generated adapters are not your problem. `button.g.dart` is regenerated
+whenever its authored source is rewritten or the adapter is missing, and the
+CLI verifies the file exists afterwards rather than assuming the build worked.
+</Note>
+
+### Removing an item
+
+There is no `remove` command. Delete the files and the matching `export` lines
+from the managed block in `lib/ui/ui.dart`. The next `add` will treat the item
+as missing and reinstall it cleanly.
 
 ## Dependency rules
 
@@ -277,9 +403,10 @@ A runtime package declared only under `dev_dependencies` fails **before** any
 process runs or file is written:
 
 ```
-remix is declared under dev_dependencies but installed source imports it at
-runtime. Move remix to dependencies in pubspec.yaml and rerun. No source was
-written.
+$ remix add button
+FormatException: remix is declared under dev_dependencies but installed source
+imports it at runtime. Move remix to dependencies in pubspec.yaml and rerun.
+No source was written.
 ```
 
 Declaring the same package in both sections is rejected the same way. Fix your
