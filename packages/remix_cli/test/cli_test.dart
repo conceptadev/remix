@@ -1,0 +1,136 @@
+import 'dart:io';
+
+import 'package:remix_cli/src/cli.dart';
+import 'package:test/test.dart';
+import 'package:yaml/yaml.dart';
+
+void main() {
+  test('--help prints usage successfully', () async {
+    final output = <String>[];
+
+    final code = await runRemixCli(
+      ['--help'],
+      writeOut: output.add,
+      writeError: fail,
+    );
+
+    expect(code, successExitCode);
+    expect(output.join('\n'), contains('Usage: remix <command>'));
+  });
+
+  test('command help is routed through the injected writer', () async {
+    final output = <String>[];
+
+    final code = await runRemixCli(
+      ['init', '--help'],
+      writeOut: output.add,
+      writeError: fail,
+    );
+
+    expect(code, successExitCode);
+    expect(output.join('\n'), contains('Usage: remix init'));
+  });
+
+  test('missing and unknown commands are usage errors', () async {
+    final errors = <String>[];
+
+    expect(
+      await runRemixCli([], writeOut: fail, writeError: errors.add),
+      usageExitCode,
+    );
+    expect(errors.join('\n'), contains('Usage: remix <command>'));
+
+    errors.clear();
+    expect(
+      await runRemixCli(['unknown'], writeOut: fail, writeError: errors.add),
+      usageExitCode,
+    );
+    expect(errors.join('\n'), contains('Could not find a command named'));
+  });
+
+  test('--version agrees with pubspec.yaml', () async {
+    final output = <String>[];
+    final pubspec =
+        loadYaml(File('pubspec.yaml').readAsStringSync()) as YamlMap;
+
+    final code = await runRemixCli(
+      ['--version'],
+      writeOut: output.add,
+      writeError: fail,
+    );
+
+    expect(code, successExitCode);
+    expect(output, [pubspec['version']]);
+  });
+
+  test('init dispatches parsed defaults and custom values', () async {
+    InitOptions? received;
+    Future<void> onInit(InitOptions options) async => received = options;
+
+    expect(
+      await runRemixCli(
+        ['init'],
+        writeOut: fail,
+        writeError: fail,
+        onInit: onInit,
+      ),
+      successExitCode,
+    );
+    expect(received!.prefix, 'Ui');
+    expect(received!.uiPath, 'lib/ui');
+
+    await runRemixCli(
+      ['init', '--prefix', 'Acme', '--ui-path', 'lib/design_system'],
+      writeOut: fail,
+      writeError: fail,
+      onInit: onInit,
+    );
+    expect(received!.prefix, 'Acme');
+    expect(received!.uiPath, 'lib/design_system');
+  });
+
+  test('add dispatches one item and mode', () async {
+    AddOptions? received;
+
+    final code = await runRemixCli(
+      ['add', 'button', '--diff'],
+      writeOut: fail,
+      writeError: fail,
+      onAdd: (options) async => received = options,
+    );
+
+    expect(code, successExitCode);
+    expect(received!.item, 'button');
+    expect(received!.mode, AddMode.diff);
+  });
+
+  test('mutually exclusive add modes fail before dispatch', () async {
+    var dispatched = false;
+    final errors = <String>[];
+
+    final code = await runRemixCli(
+      ['add', 'button', '--dry-run', '--overwrite'],
+      writeOut: fail,
+      writeError: errors.add,
+      onAdd: (_) async => dispatched = true,
+    );
+
+    expect(code, usageExitCode);
+    expect(dispatched, isFalse);
+    expect(errors.join('\n'), contains('mutually exclusive'));
+  });
+
+  test('runtime handler failures use a stable failure exit', () async {
+    final errors = <String>[];
+
+    final code = await runRemixCli(
+      ['init'],
+      writeOut: fail,
+      writeError: errors.add,
+      onInit: (_) async => throw StateError('broken'),
+    );
+
+    expect(code, failureExitCode);
+    expect(errors.single, contains('broken'));
+  });
+}

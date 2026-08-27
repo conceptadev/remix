@@ -1,0 +1,32 @@
+schema: 1
+items:
+  theme:
+    dependencies:
+      remix: ^1.0.0-beta.6
+    files:
+      - source: templates/theme/tokens.dart.tmpl
+        target: "@ui/theme/tokens.dart"
+      - source: templates/theme/theme_data.dart.tmpl
+        target: "@ui/theme/theme_data.dart"
+      - source: templates/theme/theme_scope.dart.tmpl
+        target: "@ui/theme/theme_scope.dart"
+    exports:
+      - theme/tokens.dart
+      - theme/theme_data.dart
+      - theme/theme_scope.dart
+
+  button:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/button/button.dart.tmpl
+        target: "@ui/components/button.dart"
+    generated:
+      - "@ui/components/button.g.dart"
+    exports:
+      - components/button.dart

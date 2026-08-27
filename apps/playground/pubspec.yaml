@@ -16,10 +16,15 @@ dependencies:
   # hosted constraints keep the app manifest deployable outside the workspace.
   remix: ^1.0.0-beta.7
   remix_fortal: ^1.0.0-beta.7
+  mix_annotations: ^2.2.0-beta.1
 
 dev_dependencies:
+  build_runner: ^2.10.1
   flutter_test:
     sdk: flutter
+  mix_generator: ^2.2.0-beta.3
+  # Project-local CLI pin for the application-owned UI source.
+  remix_cli: ^0.1.0
 
 flutter:
   uses-material-design: true

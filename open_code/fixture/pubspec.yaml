@@ -1,0 +1,23 @@
+name: open_code_fixture
+description: A fresh application that proves remix_cli installs compiling, generated, behaviorally tested source.
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0"
+
+# This is deliberately the pre-install manifest. The checker adds remix_cli as
+# a temporary path development dependency, then the CLI adds every source
+# dependency itself. Keeping the fixture minimal proves that installation is
+# complete and does not rely on a hand-maintained consumer manifest.
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

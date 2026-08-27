@@ -19,6 +19,12 @@ const _publishedFloor = {'sdk': '>=3.11.0 <4.0.0', 'flutter': '>=3.41.0'};
 /// that never reaches them, since dev dependencies are not published.
 const _workspaceFloor = {'sdk': '>=3.12.0 <4.0.0', 'flutter': '>=3.44.0'};
 
+/// The floor for pure-Dart workspace tools.
+///
+/// These packages use the workspace Dart SDK but must not claim a Flutter
+/// consumer constraint merely because they live beside Flutter packages.
+const _pureDartFloor = {'sdk': '>=3.12.0 <4.0.0'};
+
 /// Packages whose `environment` is the consumer contract rather than a
 /// development detail. Every other workspace member gets [_workspaceFloor].
 const _publishedPackages = {
@@ -26,6 +32,9 @@ const _publishedPackages = {
   'packages/remix_fortal',
   'packages/remix_ui_icons',
 };
+
+/// Workspace tools that intentionally declare no Flutter environment key.
+const _pureDartPackages = {'packages/remix_cli'};
 
 /// Verifies every workspace package declares the floor its role requires.
 ///
@@ -54,8 +63,12 @@ void main() {
   }
 
   final unknown = _publishedPackages.difference(members.toSet());
-  if (unknown.isNotEmpty) {
-    stderr.writeln('Published packages missing from the workspace: $unknown.');
+  final unknownPureDart = _pureDartPackages.difference(members.toSet());
+  if (unknown.isNotEmpty || unknownPureDart.isNotEmpty) {
+    stderr.writeln(
+      'Packages assigned a toolchain role are missing from the workspace: '
+      '${{...unknown, ...unknownPureDart}}.',
+    );
     exitCode = 1;
 
     return;
@@ -64,9 +77,7 @@ void main() {
   final failures = <String>[];
   // '.' is the workspace root, which is a package in its own right.
   for (final relativePath in ['.', ...members]) {
-    final expected = _publishedPackages.contains(relativePath)
-        ? _publishedFloor
-        : _workspaceFloor;
+    final expected = _expectedFloor(relativePath);
     final pubspec = File(
       relativePath == '.'
           ? rootPubspec.path
@@ -99,6 +110,13 @@ void main() {
         );
       }
     }
+    if (_pureDartPackages.contains(relativePath) &&
+        environment.containsKey('flutter')) {
+      failures.add(
+        '$relativePath is a pure-Dart package but declares '
+        'environment.flutter ${environment['flutter']}.',
+      );
+    }
   }
 
   if (failures.isNotEmpty) {
@@ -118,7 +136,16 @@ void main() {
   stdout.writeln(
     'Toolchain floors are consistent: ${_publishedPackages.length} published '
     'packages on Flutter ${_publishedFloor['flutter']}, '
-    '${members.length + 1 - _publishedPackages.length} workspace-only packages '
+    '${_pureDartPackages.length} pure-Dart tool on Dart '
+    '${_pureDartFloor['sdk']}, and '
+    '${members.length + 1 - _publishedPackages.length - _pureDartPackages.length} '
+    'workspace-only packages '
     'on Flutter ${_workspaceFloor['flutter']}.',
   );
+}
+
+Map<String, String> _expectedFloor(String relativePath) {
+  if (_publishedPackages.contains(relativePath)) return _publishedFloor;
+  if (_pureDartPackages.contains(relativePath)) return _pureDartFloor;
+  return _workspaceFloor;
 }

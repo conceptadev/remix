@@ -1,0 +1,200 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import 'tokens.dart';
+
+/// The concrete values behind [{{typePrefix}}Tokens] for one brightness.
+///
+/// This is application-owned data: change a hex value, add a field, or drop
+/// one, and only this layer moves. `{{typePrefix}}ThemeScope` turns an instance into the
+/// `MixScope` token map that every recipe resolves against.
+@immutable
+class {{typePrefix}}ThemeData {
+  /// Creates a theme with an explicit value for every token.
+  const {{typePrefix}}ThemeData({
+    required this.background,
+    required this.foreground,
+    required this.primary,
+    required this.primaryForeground,
+    required this.secondary,
+    required this.secondaryForeground,
+    required this.muted,
+    required this.mutedForeground,
+    required this.accent,
+    required this.accentForeground,
+    required this.destructive,
+    required this.destructiveForeground,
+    required this.border,
+    required this.focusRing,
+    required this.radius,
+  });
+
+  /// The neutral light theme.
+  const {{typePrefix}}ThemeData.light()
+    : background = const Color(0xFFFFFFFF),
+      foreground = const Color(0xFF171717),
+      primary = const Color(0xFF171717),
+      primaryForeground = const Color(0xFFFAFAFA),
+      secondary = const Color(0xFFF5F5F5),
+      secondaryForeground = const Color(0xFF171717),
+      muted = const Color(0xFFF5F5F5),
+      mutedForeground = const Color(0xFF737373),
+      accent = const Color(0xFFE5E5E5),
+      accentForeground = const Color(0xFF171717),
+      destructive = const Color(0xFFB91C1C),
+      destructiveForeground = const Color(0xFFFFFFFF),
+      border = const Color(0xFFE5E5E5),
+      focusRing = const Color(0xFF737373),
+      radius = const Radius.circular(8);
+
+  /// The neutral dark theme.
+  const {{typePrefix}}ThemeData.dark()
+    : background = const Color(0xFF0A0A0A),
+      foreground = const Color(0xFFFAFAFA),
+      primary = const Color(0xFFFAFAFA),
+      primaryForeground = const Color(0xFF171717),
+      secondary = const Color(0xFF262626),
+      secondaryForeground = const Color(0xFFFAFAFA),
+      muted = const Color(0xFF262626),
+      mutedForeground = const Color(0xFFA3A3A3),
+      accent = const Color(0xFF404040),
+      accentForeground = const Color(0xFFFAFAFA),
+      destructive = const Color(0xFFDC2626),
+      destructiveForeground = const Color(0xFFFFFFFF),
+      border = const Color(0xFF404040),
+      focusRing = const Color(0xFFA3A3A3),
+      radius = const Radius.circular(8);
+
+  /// Value for [{{typePrefix}}Tokens.background].
+  final Color background;
+
+  /// Value for [{{typePrefix}}Tokens.foreground].
+  final Color foreground;
+
+  /// Value for [{{typePrefix}}Tokens.primary].
+  final Color primary;
+
+  /// Value for [{{typePrefix}}Tokens.primaryForeground].
+  final Color primaryForeground;
+
+  /// Value for [{{typePrefix}}Tokens.secondary].
+  final Color secondary;
+
+  /// Value for [{{typePrefix}}Tokens.secondaryForeground].
+  final Color secondaryForeground;
+
+  /// Value for [{{typePrefix}}Tokens.muted].
+  final Color muted;
+
+  /// Value for [{{typePrefix}}Tokens.mutedForeground].
+  final Color mutedForeground;
+
+  /// Value for [{{typePrefix}}Tokens.accent].
+  final Color accent;
+
+  /// Value for [{{typePrefix}}Tokens.accentForeground].
+  final Color accentForeground;
+
+  /// Value for [{{typePrefix}}Tokens.destructive].
+  final Color destructive;
+
+  /// Value for [{{typePrefix}}Tokens.destructiveForeground].
+  final Color destructiveForeground;
+
+  /// Value for [{{typePrefix}}Tokens.border].
+  final Color border;
+
+  /// Value for [{{typePrefix}}Tokens.focusRing].
+  final Color focusRing;
+
+  /// Value for [{{typePrefix}}Tokens.radius].
+  final Radius radius;
+
+  /// This theme's values keyed by the token that resolves them.
+  ///
+  /// Returned unmodifiable so a caller cannot mutate a theme that widgets
+  /// already read from; use [copyWith] to derive a changed theme instead.
+  Map<MixToken<Object?>, Object> get tokens =>
+      Map<MixToken<Object?>, Object>.unmodifiable(<MixToken<Object?>, Object>{
+        {{typePrefix}}Tokens.background: background,
+        {{typePrefix}}Tokens.foreground: foreground,
+        {{typePrefix}}Tokens.primary: primary,
+        {{typePrefix}}Tokens.primaryForeground: primaryForeground,
+        {{typePrefix}}Tokens.secondary: secondary,
+        {{typePrefix}}Tokens.secondaryForeground: secondaryForeground,
+        {{typePrefix}}Tokens.muted: muted,
+        {{typePrefix}}Tokens.mutedForeground: mutedForeground,
+        {{typePrefix}}Tokens.accent: accent,
+        {{typePrefix}}Tokens.accentForeground: accentForeground,
+        {{typePrefix}}Tokens.destructive: destructive,
+        {{typePrefix}}Tokens.destructiveForeground: destructiveForeground,
+        {{typePrefix}}Tokens.border: border,
+        {{typePrefix}}Tokens.focusRing: focusRing,
+        {{typePrefix}}Tokens.radius: radius,
+      });
+
+  /// Returns a copy of this theme with the given values replaced.
+  {{typePrefix}}ThemeData copyWith({
+    Color? background,
+    Color? foreground,
+    Color? primary,
+    Color? primaryForeground,
+    Color? secondary,
+    Color? secondaryForeground,
+    Color? muted,
+    Color? mutedForeground,
+    Color? accent,
+    Color? accentForeground,
+    Color? destructive,
+    Color? destructiveForeground,
+    Color? border,
+    Color? focusRing,
+    Radius? radius,
+  }) => {{typePrefix}}ThemeData(
+    background: background ?? this.background,
+    foreground: foreground ?? this.foreground,
+    primary: primary ?? this.primary,
+    primaryForeground: primaryForeground ?? this.primaryForeground,
+    secondary: secondary ?? this.secondary,
+    secondaryForeground: secondaryForeground ?? this.secondaryForeground,
+    muted: muted ?? this.muted,
+    mutedForeground: mutedForeground ?? this.mutedForeground,
+    accent: accent ?? this.accent,
+    accentForeground: accentForeground ?? this.accentForeground,
+    destructive: destructive ?? this.destructive,
+    destructiveForeground: destructiveForeground ?? this.destructiveForeground,
+    border: border ?? this.border,
+    focusRing: focusRing ?? this.focusRing,
+    radius: radius ?? this.radius,
+  );
+
+  List<Object?> get _fields => [
+    background,
+    foreground,
+    primary,
+    primaryForeground,
+    secondary,
+    secondaryForeground,
+    muted,
+    mutedForeground,
+    accent,
+    accentForeground,
+    destructive,
+    destructiveForeground,
+    border,
+    focusRing,
+    radius,
+  ];
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is {{typePrefix}}ThemeData && listEquals(other._fields, _fields);
+
+  @override
+  int get hashCode => Object.hashAll(_fields);
+
+  @override
+  String toString() => '{{typePrefix}}ThemeData(background: $background, radius: $radius)';
+}
