@@ -4316,6 +4316,60 @@ void main() {
     });
   });
 
+  group('acmePopover opens', () {
+    // The gallery shipped a popover that could not open: `RemixPopover` opens
+    // on a tap of its own child, and the button used as the trigger consumed
+    // that tap first. Nothing failed — the panel simply never appeared, and
+    // the only assertion covering it checked that the trigger rendered.
+
+    testWidgets('a plain child opens it on tap', (tester) async {
+      await _pumpInScope(
+        tester,
+        _overlaid(
+          const AcmePopover(
+            popoverChild: Text('Filters go here.'),
+            semanticLabel: 'Filters',
+            child: AcmeCard(child: Text('Filter')),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Filters go here.'), findsNothing);
+
+      await tester.tap(find.text('Filter'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Filters go here.'), findsOneWidget);
+    });
+
+    testWidgets('a button trigger needs a controller', (tester) async {
+      final controller = MenuController();
+
+      await _pumpInScope(
+        tester,
+        _overlaid(
+          AcmePopover(
+            controller: controller,
+            popoverChild: const Text('Filters go here.'),
+            semanticLabel: 'Filters',
+            child: AcmeButton.outline(
+              label: 'Filter',
+              onPressed: () => controller.open(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // The button consumes the tap, so `openOnTap` never fires — this is the
+      // trap. The controller is what makes the trigger work.
+      await tester.tap(find.text('Filter'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Filters go here.'), findsOneWidget);
+    });
+  });
+
   group(
     'resolved content clears its WCAG floor over the surface it lands on',
     () {

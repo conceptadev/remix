@@ -18,6 +18,25 @@ part 'popover.g.dart';
 /// `background`, the same token the page uses, because this vocabulary has no
 /// separate surface step — see the theme's own comments if you add one.
 ///
+/// One composition trap worth knowing: `RemixPopover` opens on a tap of its
+/// own `child`, so a trigger that handles its own taps never lets the popover
+/// see one. A `PlaygroundButton` with an `onPressed` is exactly that, and a
+/// popover built the obvious way silently never opens. Drive it from a
+/// `MenuController` when the trigger has to be a button:
+///
+/// ```dart
+/// final filters = MenuController();
+///
+/// PlaygroundPopover(
+///   controller: filters,
+///   popoverChild: const Text('Filters go here.'),
+///   child: PlaygroundButton.outline(
+///     label: 'Filter',
+///     onPressed: () => filters.isOpen ? filters.close() : filters.open(),
+///   ),
+/// )
+/// ```
+///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it:
 ///

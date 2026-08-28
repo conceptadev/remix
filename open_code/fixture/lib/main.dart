@@ -145,6 +145,10 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
   final RemixAccordionController<String> _sections =
       RemixAccordionController<String>();
 
+  /// Drives the popover from its trigger button. See the popover below for
+  /// why `openOnTap` alone does not work when the trigger is a button.
+  final MenuController _filters = MenuController();
+
   void _record(String action) => setState(() => _lastAction = action);
 
   @override
@@ -762,7 +766,13 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                         onPressed: () => _record('tooltip anchor'),
                       ),
                     ),
+                    // The trigger drives the popover through a controller
+                    // rather than relying on `openOnTap`. `RemixPopover`
+                    // opens on a tap of its own child, and a button with its
+                    // own `onPressed` consumes that tap before the popover
+                    // sees it — a trigger built the obvious way never opens.
                     AcmePopover(
+                      controller: _filters,
                       popoverChild: Text(
                         'Filters go here.',
                         style: TextStyle(color: data.foreground),
@@ -770,7 +780,10 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                       semanticLabel: 'Filters',
                       child: AcmeButton.outline(
                         label: 'Filter',
-                        onPressed: () => _record('popover'),
+                        onPressed: () {
+                          _filters.isOpen ? _filters.close() : _filters.open();
+                          _record('popover');
+                        },
                       ),
                     ),
                     AcmeMenu<String>(
