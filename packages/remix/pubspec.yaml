@@ -27,7 +27,13 @@ dependencies:
     sdk: flutter
   mix: ^2.2.0-beta.5
   mix_annotations: ^2.2.0-beta.1
-  naked_ui: 1.0.0-beta.14
+  # Ranged, not pinned: pub.dev rejects an exact hosted constraint with
+  # "your dependency should allow more than one version" and the publish
+  # exits 65. The floor is the release the Fortal parity contract was
+  # validated against; the exact tested resolution is enforced on the
+  # workspace lockfile by tool/fortal_parity/check.dart, which also requires
+  # both published packages to carry this identical constraint.
+  naked_ui: ^1.0.0-beta.14
 
 dev_dependencies:
   flutter_test:
