@@ -4742,6 +4742,76 @@ void main() {
     }
   });
 
+  group('every recipe that fades when disabled actually does', () {
+    // A disabled fragment is the easiest thing in a recipe to declare and
+    // never look at again: it is invisible in the gallery, and the states
+    // above it are the ones a reader exercises by hand. Six of these were
+    // declared and undriven until this group existed, so it enumerates rather
+    // than sampling.
+    const theme = AcmeThemeData.light();
+    const states = {WidgetState.disabled};
+    final faded = contains(
+      isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
+    );
+
+    final probes = <String, Future<List<Object>?> Function(WidgetTester)>{
+      'menu/trigger': (tester) async => (await _resolve(
+        tester,
+        acmeMenuStyle(),
+        theme: theme,
+        states: states,
+      )).spec.trigger.widgetModifiers,
+      'menu/item': (tester) async => (await _resolve(
+        tester,
+        acmeMenuStyle(),
+        theme: theme,
+        states: states,
+      )).spec.item.widgetModifiers,
+      'radio': (tester) async => (await _resolve(
+        tester,
+        acmeRadioStyle(),
+        theme: theme,
+        states: states,
+      )).widgetModifiers,
+      'segmented_control': (tester) async => (await _resolve(
+        tester,
+        acmeSegmentedControlStyle(),
+        theme: theme,
+        states: states,
+      )).spec.item.widgetModifiers,
+      'select/trigger': (tester) async => (await _resolve(
+        tester,
+        acmeSelectStyle(),
+        theme: theme,
+        states: states,
+      )).spec.trigger.widgetModifiers,
+      'select/item': (tester) async => (await _resolve(
+        tester,
+        acmeSelectStyle(),
+        theme: theme,
+        states: states,
+      )).spec.item.widgetModifiers,
+      'textfield': (tester) async => (await _resolve(
+        tester,
+        acmeTextFieldStyle(),
+        theme: theme,
+        states: states,
+      )).widgetModifiers,
+      'toggle_group': (tester) async => (await _resolve(
+        tester,
+        acmeToggleGroupStyle(),
+        theme: theme,
+        states: states,
+      )).spec.item.widgetModifiers,
+    };
+
+    for (final entry in probes.entries) {
+      testWidgets(entry.key, (tester) async {
+        expect(await entry.value(tester), faded);
+      });
+    }
+  });
+
   group('a non-empty caller style beats the recipe it merges into', () {
     // Every recipe's doc comment makes the same promise: "[style] is merged
     // last, so a single call site can override any part of the resolved recipe

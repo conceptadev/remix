@@ -34,6 +34,15 @@ development dependency at a checkout or staged package:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
+Two host notes travel with the catalog. An installed text field needs an
+`Overlay` ancestor once it takes focus, for its selection handles —
+`MaterialApp`, `CupertinoApp`, and any `WidgetsApp` with routes already provide
+one, a bare `WidgetsApp(builder: ...)` does not. And four Remix widgets are
+behavioral, carry no style, and therefore have no registry item:
+`RemixCheckboxGroup`, `RemixRadioGroup`, `RemixTabs`, and
+`RemixAccordionGroup`. Import those from `package:remix/remix.dart` and put the
+installed adapters inside them.
+
 `init` creates `remix.yaml` and a managed barrel at `lib/ui/ui.dart`. The
 default prefix is `Ui`; `--prefix Acme` produces names such as
 `AcmeThemeScope`, `AcmeButton`, and `acmeButtonStyle`. A different source root
