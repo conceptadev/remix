@@ -35,11 +35,13 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Install Melos
-        run: dart pub global activate melos
-
+      # Resolve the workspace and run its own melos rather than installing one
+      # globally: melos delegates to the version pinned in the root pubspec, so
+      # a global install cannot decide the version.
       - name: Bootstrap workspace
-        run: melos bootstrap
+        run: |
+          dart pub get
+          dart run melos bootstrap
 
       - name: Build component catalog
         working-directory: apps/demo
