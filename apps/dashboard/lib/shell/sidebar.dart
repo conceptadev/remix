@@ -104,11 +104,10 @@ class _SectionLabel extends StatelessWidget {
 /// ring and keyboard activation — so the destination only has to stretch it
 /// across the rail.
 ///
-/// It does own its semantics, though. `RemixToggle` announces a *toggled*
-/// on/off state and offers no way to opt out, but a rail destination is one of
-/// a mutually exclusive set: `selected` is the contract assistive technology
-/// expects. Excluding the toggle's node and naming the destination here keeps
-/// that, and keeps the rendered label from being announced twice.
+/// It does own its semantics, though. `RemixToggle.excludeSemantics` lets the
+/// destination suppress the toggle's on/off state and supply selected-button
+/// semantics instead. Naming the destination here also keeps the rendered
+/// label from being announced twice.
 class _NavItem extends StatelessWidget {
   const _NavItem({
     super.key,
