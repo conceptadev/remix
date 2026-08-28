@@ -139,11 +139,20 @@ const _focusRingWidth = 2.0;
 /// Opacity applied to the whole section while disabled.
 const _disabledOpacity = 0.5;
 
-/// Hovering promotes the icons and leaves the title alone.
+/// Hovering underlines the title and promotes the icons.
 ///
-/// The title is already at full strength, so brightening it too would leave
-/// the open state with nothing left to say.
-AccordionStyler _hoverStyle() => _icons({{typePrefix}}Tokens.foreground());
+/// The icons alone were not enough: they move from `mutedForeground` to
+/// `foreground`, which at 16px is invisible next to a title that is already
+/// at full strength — a hovered row looked exactly like a resting one. The
+/// underline is what a reader actually sees, and it is what shadcn's own
+/// accordion trigger uses (`hover:underline`).
+///
+/// The title's *weight* stays out of it, because that is what the open state
+/// uses; leaving it here would erase the difference between "the pointer is
+/// here" and "this section is open".
+AccordionStyler _hoverStyle() => _icons(
+  {{typePrefix}}Tokens.foreground(),
+).title(.decoration(TextDecoration.underline));
 
 /// The open section: promoted icons *and* a heavier title.
 ///

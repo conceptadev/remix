@@ -57,7 +57,17 @@ CheckboxStyler playgroundCheckboxStyle({
   final checked = _checkedStyle();
 
   return _base()
-      .onHovered(.color(PlaygroundTokens.accent()))
+      // The outline has to survive the hover fill, exactly as it does on the
+      // radio beside it: `accent` on `border` is 1.09:1 in the shipped light
+      // theme, so tinting the box alone leaves an unchecked checkbox with no
+      // visible edge while the pointer is on it.
+      .onHovered(
+        CheckboxStyler()
+            .color(PlaygroundTokens.accent())
+            .border(
+              .color(PlaygroundTokens.mutedForeground()).width(_borderWidth),
+            ),
+      )
       .onSelected(checked)
       .onIndeterminate(checked)
       .onFocusVisible(_focusVisibleStyle())

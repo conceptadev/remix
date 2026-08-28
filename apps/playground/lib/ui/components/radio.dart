@@ -49,7 +49,18 @@ RadioStyler playgroundRadioStyle({
       .color(PlaygroundTokens.background())
       .border(.color(PlaygroundTokens.border()).width(_borderWidth))
       .indicator(BoxStyler().size(_dot, _dot).borderRadius(.all(_circular)))
-      .onHovered(.color(PlaygroundTokens.accent()))
+      // The ring has to survive the hover fill. `accent` on `border` is
+      // 1.09:1 in the shipped light theme, so tinting the disc alone erased
+      // the outline and left a hovered empty radio reading as a filled one —
+      // the opposite of what it means. Darkening the ring is what keeps the
+      // circle a circle.
+      .onHovered(
+        RadioStyler()
+            .color(PlaygroundTokens.accent())
+            .border(
+              .color(PlaygroundTokens.mutedForeground()).width(_borderWidth),
+            ),
+      )
       .onSelected(_selectedStyle())
       .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle())

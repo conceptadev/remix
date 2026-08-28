@@ -57,7 +57,17 @@ CheckboxStyler {{valuePrefix}}CheckboxStyle({
   final checked = _checkedStyle();
 
   return _base()
-      .onHovered(.color({{typePrefix}}Tokens.accent()))
+      // The outline has to survive the hover fill, exactly as it does on the
+      // radio beside it: `accent` on `border` is 1.09:1 in the shipped light
+      // theme, so tinting the box alone leaves an unchecked checkbox with no
+      // visible edge while the pointer is on it.
+      .onHovered(
+        CheckboxStyler()
+            .color({{typePrefix}}Tokens.accent())
+            .border(
+              .color({{typePrefix}}Tokens.mutedForeground()).width(_borderWidth),
+            ),
+      )
       .onSelected(checked)
       .onIndeterminate(checked)
       .onFocusVisible(_focusVisibleStyle())
