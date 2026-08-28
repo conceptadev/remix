@@ -163,6 +163,28 @@ void main() {
       },
     );
 
+    testWidgets('visual text transforms preserve authored heading semantics', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpRemixApp(
+        RemixNavigationList<String>(
+          sections: _sections,
+          selectedValue: 'overview',
+          onSelected: (_) {},
+          style: NavigationListStyler().sectionLabel(TextStyler().uppercase()),
+        ),
+      );
+
+      expect(find.text('WORKSPACE'), findsOneWidget);
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Workspace')),
+        isSemantics(label: 'Workspace', isHeader: true),
+      );
+      expect(find.bySemanticsLabel('WORKSPACE'), findsNothing);
+      semantics.dispose();
+    });
+
     testWidgets('semanticLabel replaces destination visible-text semantics', (
       tester,
     ) async {

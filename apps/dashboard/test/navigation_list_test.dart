@@ -110,11 +110,11 @@ void main() {
       ui.SemanticsRole.navigation,
     );
 
-    final header = find.semantics.byLabel('WORKSPACE');
+    final header = find.semantics.byLabel('Workspace');
     expect(header, findsOne);
     expect(
       header.evaluate().single,
-      isSemantics(label: 'WORKSPACE', isHeader: true),
+      isSemantics(label: 'Workspace', isHeader: true),
     );
 
     final destination = find.semantics.byLabel('Overview');
@@ -123,7 +123,7 @@ void main() {
       destination.evaluate().single,
       isSemantics(label: 'Overview', isHeader: false),
     );
-    expect(find.semantics.byLabel('EMPTY'), findsNothing);
+    expect(find.semantics.byLabel('Empty'), findsNothing);
     handle.dispose();
   });
 

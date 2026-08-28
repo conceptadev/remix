@@ -59,7 +59,6 @@ class _DashboardShellState extends State<DashboardShell> {
       drawer: compact
           ? Drawer(
               width: dashboardSidebarWidth,
-              semanticLabel: 'Dashboard navigation',
               child: Sidebar(selected: _selected, onSelected: _select),
             )
           : null,

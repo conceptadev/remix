@@ -100,7 +100,8 @@ the list-level state.
 ## Semantics and keyboard behavior
 
 - The root publishes one `navigation` landmark, named by `semanticLabel` when supplied
-- Section labels are separate header nodes; empty sections and orphan headings are skipped
+- Section labels are separate header nodes; visual text transforms preserve their authored accessible names
+- Empty sections and orphan headings are skipped
 - Every destination publishes one button node with selected state and no toggled state
 - A destination's `semanticLabel` replaces its visible label for accessibility services
 - `excludeSemantics` removes the complete landmark and destination subtree
@@ -215,8 +216,9 @@ final style = NavigationListStyler()
 The public `FortalNavigationList<T>` wrapper is produced by Mix code
 generation. Its recipe uses compact uppercase section headings, a 12
 logical-pixel section gap, a 2 logical-pixel destination gap, and full-width
-ghost `size2` toggle rows. The optional `highContrast` flag strengthens
-heading and selected-destination content without changing those metrics.
+ghost `size2` toggle content inside a 48 logical-pixel minimum target. The
+optional `highContrast` flag strengthens heading and selected-destination
+content without changing those metrics.
 
 Navigation List is a Fortal extension, not a Radix Themes parity family, so it
 is intentionally absent from the generated Radix parity catalog.

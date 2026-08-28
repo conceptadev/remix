@@ -55,7 +55,7 @@ void main() {
     expect(selected, 'customers');
   });
 
-  testWidgets('recipe reuses ghost size2 toggle states and full-width rows', (
+  testWidgets('recipe uses ghost size2 content in 48-high full-width rows', (
     tester,
   ) async {
     await tester.pumpRemixApp(
@@ -75,6 +75,7 @@ void main() {
       selectedBox?.padding,
       const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     );
+    expect(selectedBox?.constraints?.minHeight, 48);
     expect(selectedFlex?.spacing, 4);
     expect(selectedFlex?.mainAxisSize, MainAxisSize.max);
     expect(selectedFlex?.mainAxisAlignment, MainAxisAlignment.start);
@@ -92,6 +93,32 @@ void main() {
     );
     expect(selected.label.spec.style?.fontSize, 14);
     expect(selected.icon.spec.size, 16);
+  });
+
+  testWidgets('destination rows meet mobile tap-target guidelines', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+
+    await tester.pumpRemixApp(
+      SizedBox(
+        width: 256,
+        child: FortalNavigationList<String>(
+          sections: _sections,
+          selectedValue: 'overview',
+          onSelected: (_) {},
+        ),
+      ),
+    );
+
+    expect(
+      tester.getSize(find.byType(RemixToggle).first).height,
+      greaterThanOrEqualTo(48),
+    );
+    await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
+    await expectLater(tester, meetsGuideline(iOSTapTargetGuideline));
+    await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+    semantics.dispose();
   });
 
   testWidgets('high contrast keeps selected content distinct', (tester) async {

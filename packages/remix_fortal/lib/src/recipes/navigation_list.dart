@@ -12,13 +12,15 @@ const _sectionLabelHorizontalPadding = 10.0;
 const _sectionLabelVerticalPadding = 6.0;
 const _sectionLabelLetterSpacing = 0.7;
 const _destinationSpacing = 2.0;
+const _minimumDestinationTargetHeight = 48.0;
 
 /// Fortal-themed preset for [RemixNavigationList].
 ///
 /// The recipe keeps section labels compact and muted, separates sections with
-/// Fortal's `space3` token, and reuses the ghost `size2` toggle treatment for
-/// full-width destinations. [highContrast] strengthens section and selected
-/// destination content without changing layout.
+/// Fortal's `space3` token, and reuses the ghost `size2` toggle treatment inside
+/// full-width destinations with a 48-logical-pixel minimum height. [highContrast]
+/// strengthens section and selected destination content without changing
+/// layout.
 @MixWidget(target: RemixNavigationList.new)
 NavigationListStyler fortalNavigationListStyle({bool highContrast = false}) {
   return NavigationListStyler(
@@ -36,10 +38,13 @@ NavigationListStyler fortalNavigationListStyle({bool highContrast = false}) {
           ),
         ),
     destinations: FlexBoxStyler().spacing(_destinationSpacing),
-    destination: fortalToggleStyle(
-      variant: .ghost,
-      size: .size2,
-      highContrast: highContrast,
-    ).container(.mainAxisSize(.max).mainAxisAlignment(.start)),
+    destination:
+        fortalToggleStyle(
+              variant: .ghost,
+              size: .size2,
+              highContrast: highContrast,
+            )
+            .minHeight(_minimumDestinationTargetHeight)
+            .container(.mainAxisSize(.max).mainAxisAlignment(.start)),
   );
 }

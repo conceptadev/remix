@@ -11,6 +11,25 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 void main() {
+  testWidgets('shell switches to the drawer strictly below 720 pixels', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    tester.view.physicalSize = const Size(720, 800);
+    await tester.pumpWidget(const DashboardApp());
+    expect(tester.widget<Scaffold>(find.byType(Scaffold)).drawer, isNull);
+    expect(find.byKey(const ValueKey('dashboard-menu')), findsNothing);
+
+    tester.view.physicalSize = const Size(719, 800);
+    await tester.pumpWidget(const DashboardApp());
+    expect(tester.widget<Scaffold>(find.byType(Scaffold)).drawer, isNotNull);
+    expect(find.byKey(const ValueKey('dashboard-menu')), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('shell headers align in the sidebar and compact drawer', (
     tester,
   ) async {

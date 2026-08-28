@@ -9,9 +9,10 @@ part of 'navigation_list.dart';
 /// Fortal-themed preset for [RemixNavigationList].
 ///
 /// The recipe keeps section labels compact and muted, separates sections with
-/// Fortal's `space3` token, and reuses the ghost `size2` toggle treatment for
-/// full-width destinations. [highContrast] strengthens section and selected
-/// destination content without changing layout.
+/// Fortal's `space3` token, and reuses the ghost `size2` toggle treatment inside
+/// full-width destinations with a 48-logical-pixel minimum height. [highContrast]
+/// strengthens section and selected destination content without changing
+/// layout.
 class FortalNavigationList<T extends Object> extends StatelessWidget {
   const FortalNavigationList({
     super.key,

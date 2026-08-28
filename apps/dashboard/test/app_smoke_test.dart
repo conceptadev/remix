@@ -151,6 +151,70 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('compact drawer exposes one dashboard navigation name', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    expect(find.bySemanticsLabel('Dashboard navigation'), findsOneWidget);
+    semantics.dispose();
+  });
+
+  testWidgets('compact selection restores focus to the menu trigger', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pump();
+    final menuTrigger = find.semantics.byLabel('Open navigation');
+    ui.Tristate menuFocusState() => menuTrigger
+        .evaluate()
+        .single
+        .getSemanticsData()
+        .flagsCollection
+        .isFocused;
+    expect(menuFocusState(), ui.Tristate.isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(
+      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
+      isTrue,
+    );
+
+    await tester.tap(
+      find.byKey(const ValueKey(DashboardPage.galleryForms)).first,
+    );
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    expect(
+      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
+      isFalse,
+    );
+    expect(menuFocusState(), ui.Tristate.isTrue);
+    semantics.dispose();
+  });
+
   testWidgets('compact settings render without horizontal overflow', (
     tester,
   ) async {
@@ -348,9 +412,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(
-      find.byKey(const ValueKey(DashboardPage.galleryForms)).first,
-    );
+    final nav = find.byKey(const ValueKey(DashboardPage.galleryForms)).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
     await tester.pump();
 
     expect(find.byType(FortalTextArea), findsWidgets);
@@ -363,9 +427,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(
-      find.byKey(const ValueKey(DashboardPage.galleryDisplay)).first,
-    );
+    final nav = find.byKey(const ValueKey(DashboardPage.galleryDisplay)).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
     await tester.pump();
 
     expect(find.byType(FortalDataList), findsWidgets);
@@ -387,9 +451,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(
-      find.byKey(const ValueKey(DashboardPage.galleryDisplay)).first,
-    );
+    final nav = find.byKey(const ValueKey(DashboardPage.galleryDisplay)).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
     await tester.pump();
 
     final largestAvatars = find.byWidgetPredicate(

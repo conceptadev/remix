@@ -57,7 +57,8 @@ class RemixNavigationSection<T extends Object> {
 
   /// Optional visible and semantic section heading.
   ///
-  /// When provided, it must contain at least one non-whitespace character.
+  /// Visual text transforms do not rewrite this authored accessible name. When
+  /// provided, it must contain at least one non-whitespace character.
   final String? label;
 
   /// Destinations rendered in visual and focus-traversal order.
@@ -267,6 +268,8 @@ class RemixNavigationList<T extends Object> extends StatelessWidget {
                         if (section.label case final label?)
                           Semantics(
                             header: true,
+                            label: label,
+                            excludeSemantics: true,
                             child: StyledText(
                               label,
                               styleSpec: spec.sectionLabel,
