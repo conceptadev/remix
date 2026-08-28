@@ -4,7 +4,7 @@ environment:
   flutter: ">=3.44.0"
 
 dev_dependencies:
-  melos: ^7.1.1
+  melos: ^8.5.0
   flutter_lints: ^6.0.0
   build_runner: ^2.10.1
   pub_semver: ^2.2.0
@@ -67,20 +67,20 @@ melos:
     # `.github/workflows/version.yml` is the only supported path: it takes one
     # version and applies it to both packages with `-V`.
     generate:
-      run: dart run build_runner build
       description: Regenerate Remix sources
       # remix_fortal's generator resolves package:remix, so it must not build
       # while remix is rewriting its own lib/.
       exec:
+        command: dart run build_runner build
         concurrency: 1
         orderDependents: true
       packageFilters:
         scope: [remix, remix_fortal]
 
     generate:check:
-      run: dart run ../../tool/check_generated.dart
       description: Regenerate Remix sources and fail only on generated drift
       exec:
+        command: dart run ../../tool/check_generated.dart
         concurrency: 1
         orderDependents: true
       packageFilters:
