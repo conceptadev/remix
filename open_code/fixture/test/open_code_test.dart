@@ -3824,6 +3824,44 @@ void main() {
       });
     }
 
+    testWidgets('a pill radius cannot clip away the selection column', (
+      tester,
+    ) async {
+      // The table is the one recipe here that both rounds its frame and clips
+      // to it, so a theme radius larger than the rows can absorb stops
+      // trimming the header fill and starts removing the select-all checkbox.
+      // A single radius token has to serve pill buttons too, so the recipe
+      // bounds its own frame rather than asking the theme not to.
+      final pill = await _resolve(
+        tester,
+        acmeDataTableStyle(),
+        theme: const AcmeThemeData.light().copyWith(
+          radius: const Radius.circular(999),
+        ),
+      );
+
+      final radius = _boxBorderRadius(pill.spec.container) as BorderRadius?;
+      // Half the 40px header, which is the recipe's own bound: an arc of
+      // radius r has finished turning r from the corner.
+      expect(radius?.topLeft.x, lessThanOrEqualTo(20.0));
+      expect(pill.spec.container.spec.clipBehavior, Clip.antiAlias);
+    });
+
+    testWidgets('a radius under the bound still reaches the frame', (
+      tester,
+    ) async {
+      // Clamping must not become hardcoding: the theme still owns the corner
+      // in the direction that fits.
+      final square = await _resolve(
+        tester,
+        acmeDataTableStyle(),
+        theme: const AcmeThemeData.light().copyWith(radius: Radius.zero),
+      );
+
+      final radius = _boxBorderRadius(square.spec.container) as BorderRadius?;
+      expect(radius?.topLeft, Radius.zero);
+    });
+
     testWidgets('the last body row drops its rule', (tester) async {
       const theme = AcmeThemeData.light();
       final spec = await _resolve(tester, acmeDataTableStyle(), theme: theme);

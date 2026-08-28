@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
@@ -42,7 +44,7 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
 }) => DataTableStyler()
     .color({{typePrefix}}Tokens.background())
     .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
-    .borderRadius(.all({{typePrefix}}Tokens.radius()))
+    .borderRadius(.all(_frameRadius()))
     .clipBehavior(Clip.antiAlias)
     // The header sits on `muted` so a long table keeps its column names
     // legible while the body scrolls under them.
@@ -120,6 +122,39 @@ const _sortIconSpacing = 4.0;
 
 /// Gap between the footer's controls.
 const _footerGap = 12.0;
+
+/// The frame's corner radius, bounded so the clip cannot eat a corner cell.
+///
+/// This is the one recipe here that both rounds its frame and clips to it.
+/// The clip is not optional: the header sits on `muted` and would otherwise
+/// square off the top two corners inside the rounded border. But the corner
+/// arc is carved out of the first and last rows, and the leading cell of both
+/// is the selection column — so past a certain radius the clip stops trimming
+/// a fill and starts removing a checkbox.
+///
+/// The bound is the geometry, not a taste: an arc of radius r has finished
+/// turning r from the corner, so a radius no larger than half the header's
+/// height is fully out of the way by the row's own content line. Rows are
+/// taller than the header, so the header is what binds.
+///
+/// Clamping rather than hardcoding leaves the theme in charge in the other
+/// direction: `radius: Radius.zero` still gives a square table. The checkbox
+/// recipe clamps for the same class of reason at a different scale.
+const _maxFrameRadius = _headerHeight / 2;
+
+/// The theme's corner radius, clamped to [_maxFrameRadius].
+///
+/// A top-level final rather than a per-call closure because `ContextToken`
+/// equality is resolver identity: rebuilding one per call would make two
+/// identical recipes compare unequal.
+final _frameRadius = ContextToken<Radius>((context) {
+  final radius = {{typePrefix}}Tokens.radius.resolve(context);
+
+  return Radius.elliptical(
+    math.min(radius.x, _maxFrameRadius),
+    math.min(radius.y, _maxFrameRadius),
+  );
+});
 
 /// One hairline in the `border` token, shared by every rule the table draws.
 BorderSideMix _rule() =>
