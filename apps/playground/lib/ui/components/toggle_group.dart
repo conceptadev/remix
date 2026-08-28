@@ -18,6 +18,9 @@ enum PlaygroundToggleGroupVariant {
 }
 
 /// The control densities this application offers for a toggle group.
+///
+/// These are compact, web-oriented defaults. A touch-first application should
+/// raise them to meet platform hit-target guidance.
 enum PlaygroundToggleGroupSize {
   /// 32px minimum height.
   small,
@@ -64,7 +67,7 @@ ToggleGroupStyler playgroundToggleGroupStyle({
 /// component for the latter.
 const _gap = 4.0;
 
-/// Width of the outline the `outline` variant draws.
+/// Width of the outline every option draws, in every state.
 const _borderWidth = 1.0;
 
 /// Width of the keyboard focus ring.
@@ -73,7 +76,8 @@ const _focusRingWidth = 2.0;
 /// Opacity applied to an option while disabled.
 const _disabledOpacity = 0.5;
 
-/// A fill that paints nothing, used while an option is off.
+/// A colour that paints nothing, used for the `ghost` outline and for the
+/// resting fill.
 const _noFill = Color(0x00000000);
 
 /// Geometry and type scale for one [PlaygroundToggleGroupSize].
@@ -115,7 +119,7 @@ ToggleGroupItemStyler _itemStyle(
   _PlaygroundToggleGroupMetrics metrics,
   PlaygroundToggleGroupVariant variant,
 ) {
-  var style = _content(PlaygroundTokens.foreground())
+  return _content(PlaygroundTokens.foreground())
       .color(_noFill)
       .direction(.horizontal)
       .mainAxisSize(.min)
@@ -126,26 +130,35 @@ ToggleGroupItemStyler _itemStyle(
       .spacing(metrics.gap)
       .borderRadius(.all(PlaygroundTokens.radius()))
       .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
-      .icon(.size(metrics.iconSize));
-
-  if (variant == .outline) {
-    style = style.border(
-      .all(
-        BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
-      ),
-    );
-  }
-
-  return style
+      .icon(.size(metrics.iconSize))
+      // The outline is present in every state and every variant, and only its
+      // colour changes: Flutter insets a container's content by its border
+      // widths, so an outline that appeared on selection would nudge the label
+      // sideways. `ghost` simply paints its copy in nothing.
+      .border(.all(_edge(_variantEdge(variant))))
       .onHovered(ToggleGroupItemStyler().color(PlaygroundTokens.muted()))
       .onSelected(
-        _content(
-          PlaygroundTokens.accentForeground(),
-        ).color(PlaygroundTokens.accent()),
+        _content(PlaygroundTokens.accentForeground())
+            .color(PlaygroundTokens.accent())
+            // The outline, not the fill, is what says "on". `muted` and
+            // `accent` are 1.155:1 apart in the light theme, so hover and on
+            // would otherwise be the same shade to most readers — and a state
+            // told apart by colour alone is one a lot of people cannot read.
+            .border(.all(_edge(PlaygroundTokens.primary()))),
       )
       .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle());
 }
+
+/// The resting outline colour for one variant.
+Color _variantEdge(PlaygroundToggleGroupVariant variant) => switch (variant) {
+  .ghost => _noFill,
+  .outline => PlaygroundTokens.border(),
+};
+
+/// One outline side, at the width every state shares.
+BorderSideMix _edge(Color color) =>
+    BorderSideMix(color: color, width: _borderWidth);
 
 /// Applies one content color to the label and the icons.
 ToggleGroupItemStyler _content(Color foreground) =>

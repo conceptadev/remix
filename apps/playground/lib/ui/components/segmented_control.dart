@@ -10,6 +10,9 @@ part 'segmented_control.g.dart';
 ///
 /// These name the outer track, which is what lines up with a button beside
 /// it. Each segment is shorter by the track inset on both sides.
+///
+/// These are compact, web-oriented defaults. A touch-first application should
+/// raise them to meet platform hit-target guidance.
 enum PlaygroundSegmentedControlSize {
   /// A 32px track.
   small,
@@ -75,7 +78,14 @@ const _segmentGap = 0.0;
 /// smaller radius, or its corners stand proud of the track's.
 const _segmentRadiusInset = _trackInset;
 
+/// Width of the chosen segment's outline.
+const _borderWidth = 1.0;
+
 /// Width of the keyboard focus ring.
+///
+/// It carries no offset, unlike the button's. Segments sit flush against each
+/// other inside a 3px track inset, so a ring pushed outward would cross into
+/// the neighbouring segment.
 const _focusRingWidth = 2.0;
 
 /// Opacity applied to a segment while disabled.
@@ -142,9 +152,21 @@ SegmentedControlItemStyler _itemStyle(
     // full strength, and a second text colour would compete with the chosen
     // segment for "this is the current section".
     .onHovered(SegmentedControlItemStyler().color(PlaygroundTokens.accent()))
+    // Three cues, because the fill alone is not one: `background` on a
+    // `muted` track measures 1.09:1 in the light theme, so a reader looking
+    // for "which section am I in" would be reading a 1.09:1 difference and a
+    // font weight. The outline is what actually draws the segment.
     .onSelected(
       SegmentedControlItemStyler()
           .color(PlaygroundTokens.background())
+          .border(
+            .all(
+              BorderSideMix(
+                color: PlaygroundTokens.border(),
+                width: _borderWidth,
+              ),
+            ),
+          )
           .label(.fontWeight(FontWeight.w500)),
     )
     .onFocusVisible(_focusVisibleStyle())

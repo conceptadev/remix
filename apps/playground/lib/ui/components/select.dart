@@ -10,6 +10,9 @@ part 'select.g.dart';
 ///
 /// The same 32/36/40px heights the text field uses, because the trigger is a
 /// field: it shows the current value and it sits in the same forms.
+///
+/// These are compact, web-oriented defaults. A touch-first application should
+/// raise them to meet platform hit-target guidance.
 enum PlaygroundSelectSize {
   /// 32px minimum height.
   small,
@@ -48,10 +51,10 @@ SelectStyler playgroundSelectStyle({
   final metrics = _metricsFor(size);
 
   return SelectStyler()
-      .trigger(_triggerStyle(metrics))
+      .trigger(_triggerStyle(size, metrics))
       .content(_contentStyle())
       .menuContainer(FlexBoxStyler().direction(.vertical).mainAxisSize(.min))
-      .item(_itemStyle(metrics))
+      .item(_itemStyle(size, metrics))
       .merge(style);
 }
 
@@ -64,8 +67,15 @@ const _paddingX = 12.0;
 /// Gap between a row's text and its icons.
 const _gap = 8.0;
 
-/// Size of the trigger's chevron and an option's check mark.
-const _iconSize = 16.0;
+/// Size of the trigger's chevron and an option's check mark, per size.
+///
+/// It scales with the control for the same reason the label does: a large
+/// select sits beside a large button, and a chevron that stayed at the medium
+/// size would read as a smaller control wearing the same height.
+double _iconSizeFor(PlaygroundSelectSize size) => switch (size) {
+  .small || .medium => 16.0,
+  .large => 18.0,
+};
 
 /// Inset between the panel edge and its rows.
 const _panelPadding = 4.0;
@@ -119,6 +129,7 @@ _PlaygroundSelectMetrics _metricsFor(PlaygroundSelectSize size) =>
 
 /// The closed control: a field showing the current value and a chevron.
 SelectTriggerStyler _triggerStyle(
+  PlaygroundSelectSize size,
   _PlaygroundSelectMetrics metrics,
 ) => SelectTriggerStyler()
     .direction(.horizontal)
@@ -141,8 +152,19 @@ SelectTriggerStyler _triggerStyle(
       .fontSize(metrics.textSize).color(PlaygroundTokens.mutedForeground()),
     )
     .placeholderOpacity(_placeholderOpacity)
-    .icon(.size(_iconSize).color(PlaygroundTokens.mutedForeground()))
-    .onHovered(SelectTriggerStyler().color(PlaygroundTokens.accent()))
+    .icon(.size(_iconSizeFor(size)).color(PlaygroundTokens.mutedForeground()))
+    // The content moves with the surface. Tinting the box alone would
+    // leave the placeholder at `mutedForeground` on `accent`, which is
+    // 3.76:1 in the light theme — under the 4.5:1 floor for text this
+    // size, and only while the pointer is on it, which is the worst kind
+    // of contrast bug to notice.
+    .onHovered(
+      SelectTriggerStyler()
+          .color(PlaygroundTokens.accent())
+          .label(.color(PlaygroundTokens.accentForeground()))
+          .placeholder(.color(PlaygroundTokens.accentForeground()))
+          .icon(.color(PlaygroundTokens.accentForeground())),
+    )
     .onFocusVisible(
       SelectTriggerStyler().containerEffects(
         RemixBoxEffectsMix(
@@ -186,23 +208,25 @@ SelectContentStyler _contentStyle() => SelectContentStyler()
 /// `accent` marks the row under the pointer *and* the row the arrow keys are
 /// on, because a select is as often driven by the keyboard as by the mouse.
 /// The chosen option is marked by its check icon, which Remix renders.
-SelectMenuItemStyler _itemStyle(_PlaygroundSelectMetrics metrics) =>
-    SelectMenuItemStyler()
-        .direction(.horizontal)
-        .crossAxisAlignment(.center)
-        .minHeight(_rowHeight)
-        .padding(.symmetric(horizontal: _paddingX, vertical: _rowPaddingY))
-        .spacing(_gap)
-        .borderRadius(.all(PlaygroundTokens.radius()))
-        .label(.fontSize(metrics.textSize).color(PlaygroundTokens.foreground()))
-        .icon(.size(_iconSize).color(PlaygroundTokens.foreground()))
-        .onHovered(_highlighted())
-        .onFocused(_highlighted())
-        .onDisabled(
-          SelectMenuItemStyler().wrap(
-            WidgetModifierConfig.opacity(_disabledOpacity),
-          ),
-        );
+SelectMenuItemStyler _itemStyle(
+  PlaygroundSelectSize size,
+  _PlaygroundSelectMetrics metrics,
+) => SelectMenuItemStyler()
+    .direction(.horizontal)
+    .crossAxisAlignment(.center)
+    .minHeight(_rowHeight)
+    .padding(.symmetric(horizontal: _paddingX, vertical: _rowPaddingY))
+    .spacing(_gap)
+    .borderRadius(.all(PlaygroundTokens.radius()))
+    .label(.fontSize(metrics.textSize).color(PlaygroundTokens.foreground()))
+    .icon(.size(_iconSizeFor(size)).color(PlaygroundTokens.foreground()))
+    .onHovered(_highlighted())
+    .onFocused(_highlighted())
+    .onDisabled(
+      SelectMenuItemStyler().wrap(
+        WidgetModifierConfig.opacity(_disabledOpacity),
+      ),
+    );
 
 /// The option under the pointer or the keyboard cursor.
 SelectMenuItemStyler _highlighted() => SelectMenuItemStyler()

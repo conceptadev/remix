@@ -15,6 +15,9 @@ part 'textfield.g.dart';
 ///
 /// The same 32/36/40px heights the button uses, so a field and the button
 /// that submits it line up in a row.
+///
+/// These are compact, web-oriented defaults. A touch-first application should
+/// raise them to meet platform hit-target guidance.
 enum {{typePrefix}}TextFieldSize {
   /// 32px minimum height.
   small,
@@ -32,6 +35,12 @@ enum {{typePrefix}}TextFieldSize {
 /// composition, focus, selection, and the input accessibility semantics —
 /// including announcing the error state. This recipe supplies the surface, the
 /// text colors, and the focus/error/disabled fragments.
+///
+/// There is deliberately no hover fragment, unlike the select trigger this
+/// otherwise matches. A select is a button that opens something, so it has to
+/// say "I am pressable"; a text field's affordance is the I-beam cursor Remix
+/// already sets, and tinting the box on hover would only compete with the
+/// focus ring that follows a moment later.
 ///
 /// One host requirement travels with it: `EditableText` asserts on an
 /// `Overlay` ancestor the moment the field takes focus, for its selection

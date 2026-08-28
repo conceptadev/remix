@@ -290,7 +290,7 @@ items:
 const _componentSurfaces =
     <String, ({List<String> widgets, List<String> types})>{
       'accordion': (widgets: ['Accordion'], types: []),
-  'avatar': (widgets: ['Avatar'], types: ['AvatarSize']),
+      'avatar': (widgets: ['Avatar'], types: ['AvatarSize']),
       'badge': (widgets: ['Badge'], types: ['BadgeVariant']),
       'button': (widgets: ['Button'], types: ['ButtonVariant', 'ButtonSize']),
       'callout': (widgets: ['Callout'], types: ['CalloutVariant']),
@@ -300,14 +300,14 @@ const _componentSurfaces =
         types: ['CheckboxSize'],
       ),
       'dialog': (widgets: ['Dialog'], types: []),
-  'divider': (widgets: ['Divider'], types: []),
+      'divider': (widgets: ['Divider'], types: []),
       'icon_button': (
         widgets: ['IconButton'],
         types: ['IconButtonVariant', 'IconButtonSize'],
       ),
       'link': (widgets: ['Link'], types: []),
-  'menu': (widgets: ['Menu'], types: []),
-  'popover': (widgets: ['Popover'], types: []),
+      'menu': (widgets: ['Menu'], types: []),
+      'popover': (widgets: ['Popover'], types: []),
       'progress': (widgets: ['Progress'], types: ['ProgressSize']),
       'radio': (widgets: ['Radio'], types: ['RadioSize']),
       'segmented_control': (
@@ -315,7 +315,7 @@ const _componentSurfaces =
         types: ['SegmentedControlSize'],
       ),
       'select': (widgets: ['Select'], types: ['SelectSize']),
-  'skeleton': (widgets: ['Skeleton'], types: []),
+      'skeleton': (widgets: ['Skeleton'], types: []),
       'slider': (widgets: ['Slider'], types: ['SliderSize']),
       'spinner': (widgets: ['Spinner'], types: ['SpinnerSize']),
       'switch': (widgets: ['Switch'], types: ['SwitchSize']),
@@ -325,7 +325,7 @@ const _componentSurfaces =
         types: ['TextFieldSize'],
       ),
       'toggle': (widgets: ['Toggle'], types: ['ToggleVariant', 'ToggleSize']),
-  'tooltip': (widgets: ['Tooltip'], types: []),
+      'tooltip': (widgets: ['Tooltip'], types: []),
       'toggle_group': (
         widgets: ['ToggleGroup'],
         types: ['ToggleGroupVariant', 'ToggleGroupSize'],

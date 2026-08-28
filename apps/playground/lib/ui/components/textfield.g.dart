@@ -13,6 +13,12 @@ part of 'textfield.dart';
 /// including announcing the error state. This recipe supplies the surface, the
 /// text colors, and the focus/error/disabled fragments.
 ///
+/// There is deliberately no hover fragment, unlike the select trigger this
+/// otherwise matches. A select is a button that opens something, so it has to
+/// say "I am pressable"; a text field's affordance is the I-beam cursor Remix
+/// already sets, and tinting the box on hover would only compete with the
+/// focus ring that follows a moment later.
+///
 /// One host requirement travels with it: `EditableText` asserts on an
 /// `Overlay` ancestor the moment the field takes focus, for its selection
 /// handles and magnifier. Any application with a `Navigator` — `MaterialApp`,

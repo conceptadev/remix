@@ -10,6 +10,9 @@ part 'slider.g.dart';
 ///
 /// These name the rail's thickness; the thumb scales with it so the two stay
 /// in proportion at every size.
+///
+/// These are compact, web-oriented defaults. A touch-first application should
+/// raise them to meet platform hit-target guidance.
 enum {{typePrefix}}SliderSize {
   /// A 4px rail.
   small,
@@ -86,6 +89,10 @@ SliderStyler {{valuePrefix}}SliderStyle({
               ),
             ),
       )
+      // A thumb is a grab target, so it answers the pointer. The outline
+      // keeps identifying it; only the fill moves, which is why hovering does
+      // not make the thumb harder to find on a light rail.
+      .onHovered(SliderStyler().thumbColor({{typePrefix}}Tokens.accent()))
       .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle())
       .merge(style);

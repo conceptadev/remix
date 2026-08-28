@@ -10,6 +10,9 @@ part 'switch.g.dart';
 ///
 /// A switch is wider than it is tall, so these name the track height; the
 /// width follows from it at a fixed ratio.
+///
+/// These are compact, web-oriented defaults. A touch-first application should
+/// raise them to meet platform hit-target guidance.
 enum PlaygroundSwitchSize {
   /// A 16px track.
   small,
@@ -47,11 +50,31 @@ SwitchStyler playgroundSwitchStyle({
       .padding(.all(_thumbInset))
       .borderRadius(.all(_pill))
       .trackColor(PlaygroundTokens.muted())
+      // Both boxes are outlined, and neither outline is decoration. `muted`
+      // on `background` measures 1.09:1 in the light theme and `background`
+      // on `muted` is the same pair inverted — so with no edge, an off switch
+      // is a pale shape on a pale page holding an invisible thumb. The `on`
+      // track does not need the help (`primary` on `background` is 17.9:1),
+      // but keeping the outline in both states is what stops the control
+      // changing size when it flips.
+      .border(
+        .all(
+          BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
+        ),
+      )
       .thumb(
         BoxStyler()
             .size(metrics.thumbSize, metrics.thumbSize)
             .borderRadius(.all(_pill))
-            .color(PlaygroundTokens.background()),
+            .color(PlaygroundTokens.background())
+            .border(
+              .all(
+                BorderSideMix(
+                  color: PlaygroundTokens.border(),
+                  width: _borderWidth,
+                ),
+              ),
+            ),
       )
       .onSelected(SwitchStyler().trackColor(PlaygroundTokens.primary()))
       .onFocusVisible(_focusVisibleStyle())
@@ -70,6 +93,9 @@ const _thumbInset = 2.0;
 
 /// A radius large enough to round any track or thumb in this scale.
 const _pill = Radius.circular(999);
+
+/// Width of the track and thumb outlines.
+const _borderWidth = 1.0;
 
 /// Width of the keyboard focus ring.
 const _focusRingWidth = 2.0;

@@ -91,6 +91,12 @@ const _iconSize = 16.0;
 /// Vertical space a divider claims between two groups of rows.
 const _dividerMargin = 4.0;
 
+/// Width of the keyboard focus ring on the trigger.
+const _focusRingWidth = 2.0;
+
+/// Opacity applied to a trigger or a row the reader cannot use.
+const _disabledOpacity = 0.5;
+
 /// The lift that separates the panel from whatever it covers.
 ///
 /// A shadow is nearly invisible on a dark page, so it is a *second* cue; the
@@ -103,9 +109,12 @@ final _shadow = RemixBoxShadowMix(
 
 /// The control that opens the menu.
 ///
-/// It is deliberately quiet — no fill, no border — because the trigger is
-/// usually already a button or an icon button with a recipe of its own, and
-/// two competing surfaces would read as a control inside a control.
+/// It is deliberately quiet at rest — no fill, no outline — because the
+/// trigger usually already wraps a button or an icon button with a recipe of
+/// its own, and two competing surfaces would read as a control inside a
+/// control. It still answers hover and focus, because a caller is equally
+/// free to wrap a bare `Text`, and that caller must not end up with a
+/// keyboard-reachable control that shows nothing when it is reached.
 MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
     .direction(.horizontal)
     .mainAxisSize(.min)
@@ -120,7 +129,28 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
       ).fontWeight(FontWeight.w500).color(PlaygroundTokens.foreground()),
     )
     .icon(.size(_iconSize).color(PlaygroundTokens.foreground()))
-    .onHovered(MenuTriggerStyler().color(PlaygroundTokens.accent()));
+    .onHovered(MenuTriggerStyler().color(PlaygroundTokens.accent()))
+    // A trigger is keyboard-reachable whether or not it wraps a control that
+    // rings itself, so it rings too. A *foreground* decoration, because
+    // `MenuTriggerSpec` has no `containerEffects` layer and a real border
+    // would nudge the label.
+    .onFocusVisible(
+      MenuTriggerStyler().foregroundDecoration(
+        BoxDecorationMix(
+          border: .all(
+            BorderSideMix(
+              color: PlaygroundTokens.focusRing(),
+              width: _focusRingWidth,
+              strokeAlign: BorderSide.strokeAlignInside,
+            ),
+          ),
+          borderRadius: .all(PlaygroundTokens.radius()),
+        ),
+      ),
+    )
+    .onDisabled(
+      MenuTriggerStyler().wrap(WidgetModifierConfig.opacity(_disabledOpacity)),
+    );
 
 /// One row, in every kind the menu can hold.
 ///
@@ -144,9 +174,6 @@ MenuItemStyler _itemStyle() => MenuItemStyler()
       MenuItemStyler().wrap(WidgetModifierConfig.opacity(_disabledOpacity)),
     );
 
-/// Opacity applied to a row the reader cannot choose.
-const _disabledOpacity = 0.5;
-
 /// The row under the pointer or the keyboard cursor.
 MenuItemStyler _highlighted() => MenuItemStyler()
     .color(PlaygroundTokens.accent())
@@ -162,4 +189,4 @@ DividerStyler _dividerStyle() => DividerStyler()
     .color(PlaygroundTokens.border())
     .height(_borderWidth)
     .margin(.symmetric(vertical: _dividerMargin))
-    .wrap(WidgetModifierConfig.fractionallySizedBox(widthFactor: 1).align());
+    .wrap(WidgetModifierConfig.fractionallySizedBox(widthFactor: 1));

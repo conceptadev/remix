@@ -27,7 +27,7 @@ Button depends on Theme. Installing Button resolves that graph in a stable
 order, adds its hosted dependencies, exports the authored files, and generates
 `button.g.dart` in the consumer.
 
-**Since:** the catalog has grown to fourteen components on the same two
+**Since:** the catalog has grown to twenty-six components on the same two
 mechanisms — one authored file plus one generated part per item, every item
 depending on `theme`. Nothing in the decision below changed to accommodate
 them: no schema field, no installer branch, and no addition to the fifteen

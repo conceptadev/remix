@@ -11,6 +11,9 @@ part 'tabs.g.dart';
 /// Only the individual tab takes a size. The bar's hairline and the panel's
 /// leading gap read the same at every density, so giving them a size
 /// parameter would add an axis with nothing behind it.
+///
+/// These are compact, web-oriented defaults. A touch-first application should
+/// raise them to meet platform hit-target guidance.
 enum {{typePrefix}}TabSize {
   /// A 32px tab.
   small,

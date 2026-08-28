@@ -19,6 +19,9 @@ enum {{typePrefix}}ToggleVariant {
 ///
 /// The same 32/36/40px heights the button uses, because a toggle usually sits
 /// in a row beside one.
+///
+/// These are compact, web-oriented defaults. A touch-first application should
+/// raise them to meet platform hit-target guidance.
 enum {{typePrefix}}ToggleSize {
   /// 32px minimum height.
   small,
@@ -59,14 +62,19 @@ ToggleStyler {{valuePrefix}}ToggleStyle({
       .onHovered(ToggleStyler().color({{typePrefix}}Tokens.muted()))
       .onSelected(
         _content({{typePrefix}}Tokens.accentForeground())
-            .color({{typePrefix}}Tokens.accent()),
+            .color({{typePrefix}}Tokens.accent())
+            // The outline, not the fill, is what says "on". `muted` and
+            // `accent` are 1.155:1 apart in the light theme, so hover and on
+            // would otherwise be the same shade to most readers — and a state
+            // told apart by colour alone is one a lot of people cannot read.
+            .border(.all(_edge({{typePrefix}}Tokens.primary()))),
       )
       .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle())
       .merge(style);
 }
 
-/// Width of the outline the `outline` variant draws.
+/// Width of the outline every toggle draws, in every state.
 const _borderWidth = 1.0;
 
 /// Width of the keyboard focus ring.
@@ -127,18 +135,23 @@ ToggleStyler _base(_{{typePrefix}}ToggleMetrics metrics) =>
         .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
         .icon(.size(metrics.iconSize));
 
+/// The outline is present in every state and every variant, and only its
+/// colour changes: Flutter insets a container's content by its border widths,
+/// so an outline that appeared on selection would nudge the label sideways.
+/// `ghost` simply paints its copy in nothing.
 ToggleStyler _variantStyle({{typePrefix}}ToggleVariant variant) =>
-    switch (variant) {
-      .ghost => ToggleStyler(),
-      .outline => ToggleStyler().border(
-        .all(
-          BorderSideMix(
-            color: {{typePrefix}}Tokens.border(),
-            width: _borderWidth,
-          ),
-        ),
+    ToggleStyler().border(
+      .all(
+        _edge(switch (variant) {
+          .ghost => _noFill,
+          .outline => {{typePrefix}}Tokens.border(),
+        }),
       ),
-    };
+    );
+
+/// One outline side, at the width every state shares.
+BorderSideMix _edge(Color color) =>
+    BorderSideMix(color: color, width: _borderWidth);
 
 /// Applies one content color to the label and the icons.
 ToggleStyler _content(Color foreground) =>

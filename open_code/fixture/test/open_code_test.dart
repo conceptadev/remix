@@ -841,8 +841,6 @@ void main() {
     testWidgets('forwards the complete safe RemixButton surface', (
       tester,
     ) async {
-      var pressed = 0;
-      var longPressed = 0;
       final focusNode = FocusNode(debugLabel: 'ui-button');
       addTearDown(focusNode.dispose);
 
@@ -869,8 +867,8 @@ void main() {
           loadingBuilder: (context, spec) => RemixSpinner(styleSpec: spec),
           loading: false,
           enabled: true,
-          onPressed: () => pressed += 1,
-          onLongPress: () => longPressed += 1,
+          onPressed: () {},
+          onLongPress: () {},
           focusNode: focusNode,
           autofocus: true,
           enableFeedback: false,
@@ -922,8 +920,8 @@ void main() {
       expect(find.byType(RemixSpinner), findsNothing);
       expect(_minHeight(_resolvedSpec(tester)), 44);
       expect(focusNode.hasFocus, isTrue);
-      expect(pressed, 0);
-      expect(longPressed, 0);
+      // Both callbacks arrived on the Remix widget above; nothing here taps,
+      // so their *behavior* is the next test's subject rather than this one's.
     });
 
     testWidgets('forwards and renders the custom loading builder', (
@@ -1009,23 +1007,19 @@ void main() {
     testWidgets('focus is delegated to the supplied node', (tester) async {
       final focusNode = FocusNode(debugLabel: 'delegated');
       addTearDown(focusNode.dispose);
-      var focusChanges = 0;
 
       await _pumpInScope(
         tester,
-        AcmeButton.primary(
-          label: 'Go',
-          focusNode: focusNode,
-          onPressed: () => focusChanges += 1,
-        ),
+        AcmeButton.primary(label: 'Go', focusNode: focusNode, onPressed: () {}),
       );
       await tester.pumpAndSettle();
 
       expect(focusNode.hasFocus, isFalse);
       focusNode.requestFocus();
       await tester.pumpAndSettle();
+      // The node the caller owns is the node Remix focuses: if the adapter
+      // dropped `focusNode` on the way through, this stays false.
       expect(focusNode.hasFocus, isTrue);
-      expect(focusChanges, 0);
     });
 
     testWidgets('publishes its accessible name, hint, and action', (
@@ -2866,11 +2860,16 @@ void main() {
           );
           expect(spec.spec.label.spec.style?.color, theme.data.foreground);
           expect(spec.spec.icon.spec.color, theme.data.foreground);
+          // The outline is always there and only its colour changes, so the
+          // label never moves when the toggle is switched on.
           expect(
             _flexBorder(spec.spec.container),
-            variant == AcmeToggleVariant.outline
-                ? Border.all(color: theme.data.border, width: 1)
-                : isNull,
+            Border.all(
+              color: variant == AcmeToggleVariant.outline
+                  ? theme.data.border
+                  : const Color(0x00000000),
+              width: 1,
+            ),
             reason: variant.name,
           );
         }
@@ -2899,7 +2898,16 @@ void main() {
         expect(hovered.spec.label.spec.style?.color, theme.data.foreground);
         expect(_flexDecoration(on.spec.container)?.color, theme.data.accent);
         expect(on.spec.label.spec.style?.color, theme.data.accentForeground);
-        expect(theme.data.muted, isNot(theme.data.accent));
+        // `muted` and `accent` are 1.155:1 apart in the light theme, so the
+        // fill cannot be the difference. The outline is.
+        expect(
+          _flexBorder(on.spec.container),
+          Border.all(color: theme.data.primary, width: 1),
+        );
+        expect(
+          _flexBorder(hovered.spec.container)?.top.color,
+          isNot(theme.data.primary),
+        );
       });
     }
 
@@ -2945,12 +2953,46 @@ void main() {
           strokeAlign: BorderSide.strokeAlignInside,
         ),
       );
-      // The ring must not arrive as a real border: Flutter insets a
-      // container's content by its border widths, so focusing would nudge the
-      // label. This is the assertion that would fail if the recipe reached
-      // for `.border(...)` instead of `.foregroundDecoration(...)`.
-      expect(_flexBorder(idle.spec.container), isNull);
-      expect(_flexBorder(focused.spec.container), isNull);
+      // And the ring genuinely does not move the label. Measured rather than
+      // inferred: asserting *how* the ring is built only proves the mechanism
+      // the recipe happens to use today, while this fails for any focus
+      // fragment that changes the box's geometry by any means.
+      final focusNode = FocusNode(debugLabel: 'toggle-geometry');
+      addTearDown(focusNode.dispose);
+      final previousStrategy = FocusManager.instance.highlightStrategy;
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+      addTearDown(
+        () => FocusManager.instance.highlightStrategy = previousStrategy,
+      );
+
+      await _pumpInScope(
+        tester,
+        AcmeToggle(
+          selected: false,
+          label: 'Bold',
+          focusNode: focusNode,
+          onChanged: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+      final restingLabel = tester.getRect(find.text('Bold'));
+      final restingControl = tester.getSize(find.byType(AcmeToggle));
+
+      focusNode.requestFocus();
+      await tester.pumpAndSettle();
+
+      expect(
+        _flexForegroundBorder(
+          _resolvedSpecOf<ToggleSpec>(tester).spec.container,
+        ),
+        isNotNull,
+      );
+      expect(tester.getRect(find.text('Bold')), restingLabel);
+      // The control's own footprint too. A symmetric change — extra padding,
+      // a real border — leaves a centred label where it was while still
+      // pushing every neighbour in the row sideways.
+      expect(tester.getSize(find.byType(AcmeToggle)), restingControl);
     });
 
     testWidgets('disabled fades the control and clears the ring', (
@@ -3527,9 +3569,12 @@ void main() {
             expect(item.label.spec.style?.color, theme.data.foreground);
             expect(
               _flexBorder(item.container),
-              variant == AcmeToggleGroupVariant.outline
-                  ? Border.all(color: theme.data.border, width: 1)
-                  : isNull,
+              Border.all(
+                color: variant == AcmeToggleGroupVariant.outline
+                    ? theme.data.border
+                    : const Color(0x00000000),
+                width: 1,
+              ),
               reason: variant.name,
             );
           }
@@ -4289,6 +4334,396 @@ void main() {
       }
     },
   );
+
+  group('acmeAccordionStyle states and surface', () {
+    testWidgets('focus-visible rings the section', (tester) async {
+      const theme = AcmeThemeData.light();
+      final idle = await _resolve(tester, acmeAccordionStyle(), theme: theme);
+      final focused = await _resolve(
+        tester,
+        acmeAccordionStyle(),
+        theme: theme,
+        states: const {WidgetState.focused},
+      );
+
+      expect(idle.spec.containerEffects?.outline.width ?? 0, 0);
+      expect(focused.spec.containerEffects?.outline.color, theme.focusRing);
+      expect(focused.spec.containerEffects?.outline.width, 2);
+      // No offset, unlike the button's: sections stack directly on each other
+      // and an outward ring would cross into its neighbours.
+      expect(focused.spec.containerEffects?.outlineOffset ?? 0, 0);
+    });
+
+    testWidgets('disabled fades the section and wins over focus-visible', (
+      tester,
+    ) async {
+      final spec = await _resolve(
+        tester,
+        acmeAccordionStyle(),
+        theme: const AcmeThemeData.light(),
+        states: const {WidgetState.focused, WidgetState.disabled},
+      );
+
+      expect(
+        spec.widgetModifiers,
+        contains(
+          isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
+        ),
+      );
+      expect(spec.spec.containerEffects?.outline.style, BorderStyle.none);
+    });
+
+    testWidgets('forwards the curated RemixAccordion surface', (tester) async {
+      final focusNode = FocusNode(debugLabel: 'ui-accordion');
+      addTearDown(focusNode.dispose);
+      final controller = RemixAccordionController<String>();
+      addTearDown(controller.dispose);
+      var presses = 0;
+
+      await _pumpInScope(
+        tester,
+        RemixAccordionGroup<String>(
+          controller: controller,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AcmeAccordion<String>(
+                value: 'shipping',
+                title: 'Shipping',
+                leadingIcon: _leading,
+                trailingIcon: _trailing,
+                enabled: true,
+                mouseCursor: SystemMouseCursors.grab,
+                enableFeedback: false,
+                focusNode: focusNode,
+                onPressChange: (_) => presses += 1,
+                semanticLabel: 'Shipping section',
+                child: const Text('Two to four business days.'),
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final remix = tester.widget<RemixAccordion<String>>(
+        find.byType(RemixAccordion<String>),
+      );
+      expect(remix.value, 'shipping');
+      expect(remix.title, 'Shipping');
+      expect(remix.leadingIcon, _leading);
+      expect(remix.trailingIcon, _trailing);
+      expect(remix.mouseCursor, SystemMouseCursors.grab);
+      expect(remix.enableFeedback, isFalse);
+      expect(remix.focusNode, same(focusNode));
+      expect(remix.onPressChange, isNotNull);
+      expect(remix.semanticLabel, 'Shipping section');
+      expect(remix.style, acmeAccordionStyle());
+      expect(remix.styleSpec, isNull);
+      // `builder` would drag `package:naked_ui` into the adapter, so it is
+      // deliberately outside the generated surface.
+      expect(remix.builder, isNull);
+
+      focusNode.requestFocus();
+      await tester.pumpAndSettle();
+      expect(focusNode.hasFocus, isTrue);
+    });
+  });
+
+  group('the grouped controls cover every size they declare', () {
+    const toggleGroup = <AcmeToggleGroupSize, ({double minHeight, double gap})>{
+      AcmeToggleGroupSize.small: (minHeight: 32, gap: 6),
+      AcmeToggleGroupSize.medium: (minHeight: 36, gap: 8),
+      AcmeToggleGroupSize.large: (minHeight: 40, gap: 8),
+    };
+    const segmented =
+        <AcmeSegmentedControlSize, ({double minHeight, double labelSize})>{
+          AcmeSegmentedControlSize.small: (minHeight: 26, labelSize: 13),
+          AcmeSegmentedControlSize.medium: (minHeight: 30, labelSize: 14),
+          AcmeSegmentedControlSize.large: (minHeight: 34, labelSize: 14),
+        };
+
+    test('every size is covered', () {
+      expect(toggleGroup.keys, containsAll(AcmeToggleGroupSize.values));
+      expect(segmented.keys, containsAll(AcmeSegmentedControlSize.values));
+    });
+
+    for (final entry in toggleGroup.entries) {
+      testWidgets('a toggle group option at ${entry.key.name}', (tester) async {
+        final spec = await _resolve(
+          tester,
+          acmeToggleGroupStyle(size: entry.key),
+          theme: const AcmeThemeData.light(),
+        );
+        final item = spec.spec.item.spec;
+
+        expect(
+          item.container.spec.box?.spec.constraints?.minHeight,
+          entry.value.minHeight,
+        );
+        expect(item.container.spec.flex?.spec.spacing, entry.value.gap);
+      });
+    }
+
+    for (final entry in segmented.entries) {
+      testWidgets('a segment at ${entry.key.name}', (tester) async {
+        final spec = await _resolve(
+          tester,
+          acmeSegmentedControlStyle(size: entry.key),
+          theme: const AcmeThemeData.light(),
+        );
+        final item = spec.spec.item.spec;
+
+        // The segment plus the track's 3px inset on both sides is what makes
+        // the outer track 32/36/40, matching the button beside it.
+        expect(
+          item.container.spec.constraints?.minHeight,
+          entry.value.minHeight,
+        );
+        expect(entry.value.minHeight + 6, isIn(const [32.0, 36.0, 40.0]));
+        expect(item.label.spec.style?.fontSize, entry.value.labelSize);
+      });
+    }
+  });
+
+  group('a non-empty caller style beats the recipe it merges into', () {
+    // Every recipe's doc comment makes the same promise: "[style] is merged
+    // last, so a single call site can override any part of the resolved recipe
+    // without forking it." The empty-style test above only proves the seam
+    // costs nothing when unused. This proves it is a seam at all — reverse any
+    // recipe's final `.merge(style)` and the matching row here goes red.
+    const override = Color(0xFF7C3AED);
+    const theme = AcmeThemeData.light();
+
+    final probes = <String, Future<Object?> Function(WidgetTester)>{
+      'accordion': (tester) async => _flexDecoration(
+        (await _resolve(
+          tester,
+          acmeAccordionStyle(style: AccordionStyler().color(override)),
+          theme: theme,
+        )).spec.trigger,
+      )?.color,
+      'avatar': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeAvatarStyle(style: AvatarStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      ),
+      'badge': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeBadgeStyle(style: BadgeStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      ),
+      'button': (tester) async => _background(
+        await _resolve(
+          tester,
+          acmeButtonStyle(style: ButtonStyler().color(override)),
+          theme: theme,
+        ),
+      ),
+      'callout': (tester) async => _flexDecoration(
+        (await _resolve(
+          tester,
+          acmeCalloutStyle(style: CalloutStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      )?.color,
+      'card': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeCardStyle(style: CardStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      ),
+      // Through a real widget, because a bare resolution also activates the
+      // indeterminate fragment — see [_checkboxSpec] — and a state fragment
+      // legitimately beats a base-level caller override.
+      'checkbox': (tester) async => _checkboxBackground(
+        await _checkboxSpec(
+          tester,
+          theme: theme,
+          style: CheckboxStyler().color(override),
+        ),
+      ),
+      'dialog': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeDialogStyle(style: DialogStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      ),
+      'divider': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeDividerStyle(style: DividerStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      ),
+      'icon_button': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeIconButtonStyle(style: IconButtonStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      ),
+      'link': (tester) async => (await _resolve(
+        tester,
+        acmeLinkStyle(style: LinkStyler().label(.color(override))),
+        theme: theme,
+      )).spec.label.spec.style?.color,
+      'menu': (tester) async => _flexDecoration(
+        (await _resolve(
+          tester,
+          acmeMenuStyle(
+            style: MenuStyler().overlay(FlexBoxStyler().color(override)),
+          ),
+          theme: theme,
+        )).spec.overlay,
+      )?.color,
+      'popover': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmePopoverStyle(style: PopoverStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      ),
+      'progress': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeProgressStyle(
+            style: ProgressStyler().indicator(BoxStyler().color(override)),
+          ),
+          theme: theme,
+        )).spec.indicator,
+      ),
+      'radio': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeRadioStyle(style: RadioStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      ),
+      'segmented_control': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeSegmentedControlStyle(
+            style: SegmentedControlStyler().color(override),
+          ),
+          theme: theme,
+        )).spec.container,
+      ),
+      'select': (tester) async => _flexDecoration(
+        (await _resolve(
+          tester,
+          acmeSelectStyle(
+            style: SelectStyler().trigger(
+              SelectTriggerStyler().color(override),
+            ),
+          ),
+          theme: theme,
+        )).spec.trigger.spec.container,
+      )?.color,
+      'skeleton': (tester) async => (await _resolve(
+        tester,
+        acmeSkeletonStyle(style: SkeletonStyler().pulseColor(override)),
+        theme: theme,
+      )).spec.pulseColor,
+      'slider': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeSliderStyle(style: SliderStyler().thumbColor(override)),
+          theme: theme,
+        )).spec.thumb,
+      ),
+      'spinner': (tester) async => (await _resolve(
+        tester,
+        acmeSpinnerStyle(style: SpinnerStyler().color(override)),
+        theme: theme,
+      )).spec.color,
+      'switch': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeSwitchStyle(style: SwitchStyler().trackColor(override)),
+          theme: theme,
+        )).spec.container,
+      ),
+      'tabs/tab': (tester) async => _flexDecoration(
+        (await _resolve(
+          tester,
+          acmeTabStyle(style: TabStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      )?.color,
+      'tabs/bar': (tester) async => _flexDecoration(
+        (await _resolve(
+          tester,
+          acmeTabBarStyle(style: TabBarStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      )?.color,
+      'tabs/view': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeTabViewStyle(style: TabViewStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      ),
+      'textfield': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeTextFieldStyle(style: TextFieldStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      ),
+      'textfield/area': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeTextAreaStyle(style: TextFieldStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      ),
+      'toggle': (tester) async => _flexDecoration(
+        (await _resolve(
+          tester,
+          acmeToggleStyle(style: ToggleStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      )?.color,
+      'toggle_group': (tester) async => _flexDecoration(
+        (await _resolve(
+          tester,
+          acmeToggleGroupStyle(
+            style: ToggleGroupStyler().item(
+              ToggleGroupItemStyler().color(override),
+            ),
+          ),
+          theme: theme,
+        )).spec.item.spec.container,
+      )?.color,
+      'tooltip': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeTooltipStyle(style: TooltipStyler().color(override)),
+          theme: theme,
+        )).spec.container,
+      ),
+    };
+
+    test('every registry item is probed', () {
+      // The catalog is 26 items; `tabs` and `textfield` publish more than one
+      // recipe, so the probe count is higher than the item count.
+      expect(probes, hasLength(29));
+    });
+
+    for (final entry in probes.entries) {
+      testWidgets(entry.key, (tester) async {
+        expect(await entry.value(tester), override);
+      });
+    }
+  });
 
   test('an empty caller style leaves every recipe untouched', () {
     // The `style` seam has to be free when it is unused: a recipe that

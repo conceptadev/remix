@@ -47,13 +47,19 @@ const _labelSize = 12.0;
 /// How long the pointer must rest before the tooltip appears.
 ///
 /// Long enough that crossing a toolbar does not strobe a row of bubbles.
+/// Remix passes this straight through as Naked UI's `hoverDelay`.
 const _waitDuration = Duration(milliseconds: 500);
 
-/// How long the tooltip stays after the pointer leaves.
+/// How long a *touch*-triggered tooltip stays up after the press ends.
+///
+/// Remix maps this onto Naked UI's `touchDelay`, so despite the name it has
+/// nothing to say about hovering: a finger has no hover state, and this is
+/// the whole time a touch user gets to read the bubble.
 const _showDuration = Duration(milliseconds: 1500);
 
-/// How long the pointer must be away before the wait restarts.
+/// The grace period between the pointer leaving and the bubble closing.
 ///
-/// Short: moving between two adjacent controls should show the second
-/// tooltip immediately rather than making the reader wait again.
+/// Remix maps this onto Naked UI's `dismissDelay`. Short, but not zero: a
+/// pointer that clips the anchor's edge on its way somewhere else should not
+/// snap the bubble shut mid-sentence.
 const _dismissDuration = Duration(milliseconds: 100);

@@ -51,18 +51,15 @@ const _thickness = 1.0;
 ///
 /// A `FractionallySizedBox` rather than an explicit width or height: the
 /// divider does not know how wide its parent is, and a fixed length would be
-/// wrong the moment the layout changed.
+/// wrong the moment the layout changed. It centres on the cross axis by
+/// itself, so it needs no `.align()` after it.
 DividerStyler _extent(Axis orientation) => switch (orientation) {
   .horizontal =>
     DividerStyler()
         .height(_thickness)
-        .wrap(
-          WidgetModifierConfig.fractionallySizedBox(widthFactor: 1).align(),
-        ),
+        .wrap(WidgetModifierConfig.fractionallySizedBox(widthFactor: 1)),
   .vertical =>
     DividerStyler()
         .width(_thickness)
-        .wrap(
-          WidgetModifierConfig.fractionallySizedBox(heightFactor: 1).align(),
-        ),
+        .wrap(WidgetModifierConfig.fractionallySizedBox(heightFactor: 1)),
 };

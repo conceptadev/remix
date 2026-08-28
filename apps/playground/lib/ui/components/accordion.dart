@@ -122,6 +122,10 @@ const _iconSize = 16.0;
 const _contentGap = 16.0;
 
 /// Width of the keyboard focus ring.
+///
+/// It carries no offset, unlike the button's. Sections stack directly on top
+/// of one another, so a ring pushed outward would cross into the section
+/// above and below it.
 const _focusRingWidth = 2.0;
 
 /// Opacity applied to the whole section while disabled.
