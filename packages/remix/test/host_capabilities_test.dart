@@ -33,6 +33,38 @@ void main() {
       expect(find.byType(Navigator), findsNothing);
     });
 
+    testWidgets('navigation lists need no Material, Overlay, or Navigator', (
+      tester,
+    ) async {
+      String? selected;
+      await tester.pumpWidget(
+        _widgetsHost(
+          RemixNavigationList<String>(
+            sections: const [
+              RemixNavigationSection(
+                destinations: [
+                  RemixNavigationDestination(
+                    value: 'overview',
+                    label: 'Overview',
+                  ),
+                ],
+              ),
+            ],
+            selectedValue: null,
+            onSelected: (value) => selected = value,
+          ),
+        ),
+      );
+
+      expect(find.text('Overview'), findsOneWidget);
+      expect(find.byType(Overlay), findsNothing);
+      expect(find.byType(Navigator), findsNothing);
+
+      await tester.tap(find.text('Overview'));
+      await tester.pump();
+      expect(selected, 'overview');
+    });
+
     group('caller-owned Overlay', () {
       testWidgets('opens a menu without a Navigator', (tester) async {
         await tester.pumpWidget(

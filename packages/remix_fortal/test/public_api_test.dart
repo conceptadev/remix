@@ -83,6 +83,28 @@ void main() {
   });
 
   test(
+    'the Fortal navigation list wrapper is constructible from the public API',
+    () {
+      const navigation = FortalNavigationList<String>(
+        sections: [
+          RemixNavigationSection(
+            destinations: [
+              RemixNavigationDestination(value: 'overview', label: 'Overview'),
+            ],
+          ),
+        ],
+        selectedValue: 'overview',
+        semanticLabel: 'Primary navigation',
+        highContrast: true,
+      );
+
+      expect(navigation, isA<FortalNavigationList<String>>());
+      expect(navigation.highContrast, isTrue);
+      expect(fortalNavigationListStyle(), isA<NavigationListStyler>());
+    },
+  );
+
+  test(
     'the Fortal data table wrapper is constructible from the public API',
     () {
       const fortal = FortalDataTable<String>.surface(

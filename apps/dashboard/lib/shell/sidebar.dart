@@ -38,10 +38,11 @@ class Sidebar extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(12, 16, 12, 20),
-                child: DashboardNavigationList(
+                child: FortalNavigationList<DashboardPage>(
                   sections: dashboardNavSections,
-                  selected: selected,
+                  selectedValue: selected,
                   onSelected: onSelected,
+                  semanticLabel: 'Dashboard navigation',
                 ),
               ),
             ),

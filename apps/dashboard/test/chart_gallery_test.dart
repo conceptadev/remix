@@ -1,5 +1,6 @@
 import 'package:dashboard/main.dart';
 import 'package:dashboard/pages/charts_page.dart';
+import 'package:dashboard/shell/dashboard_page.dart';
 import 'package:dashboard/theme/theme_settings.dart';
 import 'package:dashboard/widgets/analytics_charts.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ void main() {
       const DashboardApp(initialSettings: ThemeSettings(appearance: .light)),
     );
 
-    final destination = find.byKey(const ValueKey('nav-charts'));
+    final destination = find.byKey(const ValueKey(DashboardPage.charts));
     expect(destination, findsOneWidget);
     await tester.tap(destination);
     await tester.pump();
@@ -63,7 +64,7 @@ void main() {
         initialSettings: ThemeSettings(appearance: .dark, accentColor: .orange),
       ),
     );
-    await tester.tap(find.byKey(const ValueKey('nav-charts')));
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.charts)));
     await tester.pump();
 
     final page = find.byKey(const ValueKey('charts-page'));
@@ -388,7 +389,7 @@ Future<void> _pumpCompactCharts(WidgetTester tester) async {
   for (var frame = 0; frame < 5; frame++) {
     await tester.pump(const Duration(milliseconds: 100));
   }
-  await tester.tap(find.byKey(const ValueKey('nav-charts')).first);
+  await tester.tap(find.byKey(const ValueKey(DashboardPage.charts)).first);
   for (var frame = 0; frame < 5; frame++) {
     await tester.pump(const Duration(milliseconds: 100));
   }

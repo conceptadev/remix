@@ -237,12 +237,16 @@ for controls, semantics, and parity boundaries.
 
 ### Layout & Navigation
 - **FortalTabBar**, **FortalTab**, **FortalTabView**, **FortalAccordion**
-- **FortalDisclosure**
+- **FortalDisclosure**, **FortalNavigationList**
 - **FortalMenu**, **FortalSegmentedControl**, **FortalToggleGroup**
 
 There is no `FortalTabs`: the behavioral root stays `RemixTabs`, which takes no
 style. The same applies to the other behavioral roots (`RemixRadioGroup`,
 `RemixCheckboxGroup`, `RemixAccordionGroup`).
+
+`FortalNavigationList` is a Fortal extension rather than a Radix Themes parity
+family. It applies compact uppercase section headings and the ghost `size2`
+toggle treatment to the public `RemixNavigationList` behavior.
 
 ### Overlays
 - **FortalDialog**, **FortalTooltip**, **FortalPopover**, **FortalCallout**

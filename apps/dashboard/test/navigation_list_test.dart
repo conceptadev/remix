@@ -6,28 +6,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
-const _sections = <DashboardNavSection>[
-  DashboardNavSection(
+const _sections = <RemixNavigationSection<DashboardPage>>[
+  RemixNavigationSection(
     label: 'Workspace',
     destinations: [
-      DashboardNavDestination(
+      RemixNavigationDestination(
         value: DashboardPage.overview,
         label: 'Overview',
         icon: Icons.space_dashboard_outlined,
       ),
     ],
   ),
-  DashboardNavSection(
+  RemixNavigationSection(
     label: 'Data',
     destinations: [
-      DashboardNavDestination(
+      RemixNavigationDestination(
         value: DashboardPage.customers,
         label: 'Customers',
         icon: Icons.people_outline,
       ),
-      DashboardNavDestination(
+      RemixNavigationDestination(
         value: DashboardPage.orders,
         label: 'Orders',
         icon: Icons.receipt_long_outlined,
@@ -37,17 +38,34 @@ const _sections = <DashboardNavSection>[
 ];
 
 void main() {
+  test('dashboard data uses the public immutable navigation records', () {
+    expect(
+      dashboardNavSections,
+      isA<List<RemixNavigationSection<DashboardPage>>>(),
+    );
+    expect(
+      dashboardNavSections.expand((section) => section.destinations).length,
+      DashboardPage.values.length,
+    );
+    expect(
+      () => dashboardNavSections.add(
+        const RemixNavigationSection(destinations: []),
+      ),
+      throwsUnsupportedError,
+    );
+  });
+
   testWidgets('activation emits unselected and selected destinations once', (
     tester,
   ) async {
     final emitted = <DashboardPage>[];
     await _pumpNavigationList(tester, onSelected: emitted.add);
 
-    await tester.tap(find.byKey(const ValueKey('nav-customers')));
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)));
     await tester.pump();
     expect(emitted, [DashboardPage.customers]);
 
-    await tester.tap(find.byKey(const ValueKey('nav-overview')));
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.overview)));
     await tester.pump();
     expect(emitted, [DashboardPage.customers, DashboardPage.overview]);
   });
@@ -59,7 +77,7 @@ void main() {
     final emitted = <DashboardPage>[];
     await _pumpNavigationList(tester, onSelected: emitted.add);
 
-    await tester.tap(find.byKey(const ValueKey('nav-overview')));
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.overview)));
     await tester.pump();
     expect(emitted, [DashboardPage.overview]);
 
@@ -80,13 +98,13 @@ void main() {
       tester,
       sections: const [
         ..._sections,
-        DashboardNavSection(label: 'Empty', destinations: []),
+        RemixNavigationSection(label: 'Empty', destinations: []),
       ],
     );
 
     expect(
       tester
-          .getSemantics(find.byType(DashboardNavigationList))
+          .getSemantics(find.bySemanticsLabel('Dashboard navigation'))
           .getSemanticsData()
           .role,
       ui.SemanticsRole.navigation,
@@ -166,9 +184,9 @@ void main() {
   testWidgets('builds in scrolling and fixed-height column hosts', (
     tester,
   ) async {
-    DashboardNavigationList buildList() => DashboardNavigationList(
+    FortalNavigationList<DashboardPage> buildList() => FortalNavigationList(
       sections: _sections,
-      selected: DashboardPage.overview,
+      selectedValue: DashboardPage.overview,
       onSelected: (_) {},
     );
 
@@ -176,7 +194,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(
       find.descendant(
-        of: find.byType(DashboardNavigationList),
+        of: find.byType(RemixNavigationList<DashboardPage>),
         matching: find.byType(Scrollable),
       ),
       findsNothing,
@@ -189,7 +207,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(
       find.descendant(
-        of: find.byType(DashboardNavigationList),
+        of: find.byType(RemixNavigationList<DashboardPage>),
         matching: find.byType(Scrollable),
       ),
       findsNothing,
@@ -208,12 +226,12 @@ void main() {
           ).copyWith(textScaler: const TextScaler.linear(2)),
           child: SizedBox(
             width: 256,
-            child: DashboardNavigationList(
+            child: FortalNavigationList<DashboardPage>(
               sections: const [
-                DashboardNavSection(
+                RemixNavigationSection(
                   label: 'Workspace',
                   destinations: [
-                    DashboardNavDestination(
+                    RemixNavigationDestination(
                       value: DashboardPage.overview,
                       label:
                           'Overview of every active workspace and its status',
@@ -222,7 +240,7 @@ void main() {
                   ],
                 ),
               ],
-              selected: DashboardPage.overview,
+              selectedValue: DashboardPage.overview,
               onSelected: (_) {},
             ),
           ),
@@ -242,9 +260,9 @@ void main() {
         textDirection: TextDirection.rtl,
         child: SizedBox(
           width: 256,
-          child: DashboardNavigationList(
+          child: FortalNavigationList<DashboardPage>(
             sections: _sections,
-            selected: DashboardPage.overview,
+            selectedValue: DashboardPage.overview,
             onSelected: (_) {},
           ),
         ),
@@ -258,7 +276,7 @@ void main() {
     tester,
   ) async {
     final handle = tester.ensureSemantics();
-    await _pumpNavigationList(tester, selected: null);
+    await _pumpNavigationList(tester, selectedValue: null);
 
     for (final section in _sections) {
       for (final destination in section.destinations) {
@@ -275,16 +293,17 @@ void main() {
 
 Future<void> _pumpNavigationList(
   WidgetTester tester, {
-  List<DashboardNavSection> sections = _sections,
-  DashboardPage? selected = DashboardPage.overview,
+  List<RemixNavigationSection<DashboardPage>> sections = _sections,
+  DashboardPage? selectedValue = DashboardPage.overview,
   ValueChanged<DashboardPage>? onSelected,
 }) {
   return _pumpPage(
     tester,
-    DashboardNavigationList(
+    FortalNavigationList<DashboardPage>(
       sections: sections,
-      selected: selected,
+      selectedValue: selectedValue,
       onSelected: onSelected ?? (_) {},
+      semanticLabel: 'Dashboard navigation',
     ),
   );
 }

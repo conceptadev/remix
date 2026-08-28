@@ -20,6 +20,7 @@ export 'src/components/disclosure/disclosure.dart';
 export 'src/components/divider/divider.dart';
 export 'src/components/link/link.dart';
 export 'src/components/menu/menu.dart';
+export 'src/components/navigation_list/navigation_list.dart';
 export 'src/components/popover/popover.dart';
 export 'src/components/progress/progress.dart';
 export 'src/components/radio/radio.dart';

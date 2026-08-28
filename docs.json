@@ -142,6 +142,10 @@
           "href": "/components/menu"
         },
         {
+          "title": "Navigation List",
+          "href": "/components/navigation_list"
+        },
+        {
           "title": "Popover",
           "href": "/components/popover"
         },

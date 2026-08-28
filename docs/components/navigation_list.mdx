@@ -1,0 +1,283 @@
+---
+title: Navigation List
+description: A controlled vertical list of in-app destinations with navigation semantics
+keywords: [flutter, remix, navigation, sidebar, destination, accessibility, keyboard]
+---
+
+A navigation list presents sections of destinations that select an in-app
+view. It owns destination interaction, selected state presentation, ordinary
+Tab traversal, and navigation semantics. The application continues to own its
+sidebar or drawer shell, scrolling, routing, and dismissal behavior.
+
+## When to use this
+
+- **Application sidebars**: Select one page or workspace view
+- **Settings navigation**: Move between in-place settings panels
+- **Drawer content**: Reuse the same destination data in a compact host
+- **Sectioned navigation**: Group destinations under semantic headings
+
+Use `RemixLink` for a true URL or document link. Navigation-list destinations
+behave as selected buttons: both Enter and Space activate them, and activation
+does not itself change routes or browser history.
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+enum AppPage { overview, customers, orders }
+
+class AppNavigation extends StatelessWidget {
+  const AppNavigation({
+    super.key,
+    required this.selectedPage,
+    required this.onSelected,
+  });
+
+  final AppPage? selectedPage;
+  final ValueChanged<AppPage> onSelected;
+
+  static const sections = [
+    RemixNavigationSection(
+      label: 'Workspace',
+      destinations: [
+        RemixNavigationDestination(
+          value: AppPage.overview,
+          label: 'Overview',
+          icon: Icons.space_dashboard_outlined,
+        ),
+      ],
+    ),
+    RemixNavigationSection(
+      label: 'Data',
+      destinations: [
+        RemixNavigationDestination(
+          value: AppPage.customers,
+          label: 'Customers',
+          icon: Icons.people_outline,
+        ),
+        RemixNavigationDestination(
+          value: AppPage.orders,
+          label: 'Orders',
+          icon: Icons.receipt_long_outlined,
+        ),
+      ],
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixNavigationList<AppPage>(
+      sections: sections,
+      selectedValue: selectedPage,
+      onSelected: onSelected,
+      semanticLabel: 'Primary navigation',
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Controlled selection
+
+`selectedValue` is the only source of selected state. A null value means no
+destination is selected; otherwise it must match one destination. Activating
+an already-selected destination calls `onSelected` again. That reselection can
+close a drawer, reset nested content, or scroll the current view without
+inventing a second callback.
+
+Destination values must be unique across every section and retain stable
+equality and hash codes while rendered. At most one destination may request
+autofocus. Rebuild with new section and destination lists when content or order
+changes instead of mutating the supplied lists.
+
+`onSelected: null` and `enabled: false` both disable the complete list while
+preserving selected styling. A destination's own `enabled` value combines with
+the list-level state.
+
+## Semantics and keyboard behavior
+
+- The root publishes one `navigation` landmark, named by `semanticLabel` when supplied
+- Section labels are separate header nodes; empty sections and orphan headings are skipped
+- Every destination publishes one button node with selected state and no toggled state
+- A destination's `semanticLabel` replaces its visible label for accessibility services
+- `excludeSemantics` removes the complete landmark and destination subtree
+- `Tab` and `Shift+Tab` traverse enabled destinations in visual order
+- `Enter` and `Space` activate the focused destination
+
+Arrow keys, Home, and End do not rove within the list. This preserves ordinary
+document traversal instead of applying menu, tab, or toggle-group behavior.
+
+## Shell and scrolling boundary
+
+The navigation list renders only sections and destinations. It does not create
+a `Drawer`, `SafeArea`, scroll view, route, scrim, header, footer, or responsive
+breakpoint. Wrap it in the host your application needs:
+
+<CodeGroup title="Application-owned sidebar shell" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+Widget buildSidebar({
+  required String? selectedPage,
+  required ValueChanged<String> selectPage,
+}) {
+  return SizedBox(
+    width: 256,
+    child: SafeArea(
+      child: Column(
+        children: [
+          const Text('Acme'),
+          Expanded(
+            child: SingleChildScrollView(
+              child: RemixNavigationList<String>(
+                sections: const [
+                  RemixNavigationSection(
+                    destinations: [
+                      RemixNavigationDestination(
+                        value: 'overview',
+                        label: 'Overview',
+                      ),
+                    ],
+                  ),
+                ],
+                selectedValue: selectedPage,
+                onSelected: selectPage,
+              ),
+            ),
+          ),
+          const Text('Account'),
+        ],
+      ),
+    ),
+  );
+}
+```
+</CodeGroup>
+
+Ordinary use requires no Material ancestor, Overlay, Navigator, router, or
+SafeArea. Drawer dismissal and focus restoration stay with the caller that
+owns the drawer.
+
+## Styling
+
+`NavigationListStyler` exposes five slots:
+
+| Slot | Responsibility |
+| --- | --- |
+| `container` | Layout and decoration for the section list |
+| `section` | Layout and decoration for one heading plus destination group |
+| `sectionLabel` | Heading typography and modifiers |
+| `destinations` | Layout and spacing between destination rows |
+| `destination` | Default `ToggleStyler` for every destination |
+
+The component forces the three structural FlexBox slots into source-order
+vertical layout after style resolution. Styles can change spacing, alignment,
+decoration, and sizing, but cannot reorder the navigation or its semantics.
+
+A destination's `style` merges after the list's default destination style, so
+local exceptions retain shared hover, focus, selected, and disabled variants.
+A raw `NavigationListSpec` is authoritative and bypasses both fluent layers.
+
+<CodeGroup title="Fluent styling" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final style = NavigationListStyler()
+    .spacing(12)
+    .section(
+      FlexBoxStyler()
+          .spacing(6),
+    )
+    .destinations(
+      FlexBoxStyler()
+          .spacing(2),
+    )
+    .sectionLabel(
+      TextStyler()
+          .uppercase()
+          .fontSize(12),
+    )
+    .destination(
+      ToggleStyler()
+          .mainAxisSize(MainAxisSize.max)
+          .mainAxisAlignment(MainAxisAlignment.start),
+    );
+```
+</CodeGroup>
+
+## Fortal recipe
+
+The public `FortalNavigationList<T>` wrapper is produced by Mix code
+generation. Its recipe uses compact uppercase section headings, a 12
+logical-pixel section gap, a 2 logical-pixel destination gap, and full-width
+ghost `size2` toggle rows. The optional `highContrast` flag strengthens
+heading and selected-destination content without changing those metrics.
+
+Navigation List is a Fortal extension, not a Radix Themes parity family, so it
+is intentionally absent from the generated Radix parity catalog.
+
+<CodeGroup title="Fortal navigation list" defaultLanguage="dart">
+```dart
+import 'package:remix/remix.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+const navigation = FortalNavigationList<String>(
+  sections: [
+    RemixNavigationSection(
+      label: 'Workspace',
+      destinations: [
+        RemixNavigationDestination(
+          value: 'overview',
+          label: 'Overview',
+        ),
+      ],
+    ),
+  ],
+  selectedValue: 'overview',
+  semanticLabel: 'Primary navigation',
+);
+```
+</CodeGroup>
+
+## Constructors
+
+<CodeGroup title="Public API" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixNavigationList<T> remixNavigationListConstructor<T extends Object>({
+  Key? key,
+  required List<RemixNavigationSection<T>> sections,
+  required T? selectedValue,
+  ValueChanged<T>? onSelected,
+  bool enabled = true,
+  String? semanticLabel,
+  bool excludeSemantics = false,
+  NavigationListStyler style = const NavigationListStyler.create(),
+  NavigationListSpec? styleSpec,
+}) => throw UnimplementedError();
+
+RemixNavigationSection<T> remixNavigationSectionConstructor<T extends Object>({
+  String? label,
+  required List<RemixNavigationDestination<T>> destinations,
+}) => throw UnimplementedError();
+
+RemixNavigationDestination<T>
+    remixNavigationDestinationConstructor<T extends Object>({
+  required T value,
+  required String label,
+  IconData? icon,
+  String? semanticLabel,
+  bool enabled = true,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  ToggleStyler style = const ToggleStyler.create(),
+}) => throw UnimplementedError();
+```
+</CodeGroup>

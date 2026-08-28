@@ -13,8 +13,14 @@ class GalleryNavigationPage extends StatelessWidget {
   Widget build(BuildContext context) => GalleryPage(
     title: 'Navigation',
     intro:
-        'Tabs, standalone disclosures, and coordinated accordions for organizing dense interfaces.',
+        'Sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
     sections: [
+      const GallerySection(
+        label: 'Navigation list',
+        description:
+            'A controlled Fortal sidebar recipe with headings, selected state, and ordinary Tab traversal.',
+        child: _NavigationListDemo(),
+      ),
       GallerySection(
         label: 'Tabs',
         description: 'Both tab sizes with live keyboard and pointer selection.',
@@ -52,6 +58,56 @@ class GalleryNavigationPage extends StatelessWidget {
         ),
       ),
     ],
+  );
+}
+
+class _NavigationListDemo extends StatefulWidget {
+  const _NavigationListDemo();
+
+  @override
+  State<_NavigationListDemo> createState() => _NavigationListDemoState();
+}
+
+class _NavigationListDemoState extends State<_NavigationListDemo> {
+  static const _sections = <RemixNavigationSection<String>>[
+    RemixNavigationSection(
+      label: 'Workspace',
+      destinations: [
+        RemixNavigationDestination(
+          value: 'overview',
+          label: 'Overview',
+          icon: Icons.space_dashboard_outlined,
+        ),
+        RemixNavigationDestination(
+          value: 'activity',
+          label: 'Activity',
+          icon: Icons.timeline_outlined,
+        ),
+      ],
+    ),
+    RemixNavigationSection(
+      label: 'Manage',
+      destinations: [
+        RemixNavigationDestination(
+          value: 'settings',
+          label: 'Settings',
+          icon: Icons.settings_outlined,
+        ),
+      ],
+    ),
+  ];
+
+  String _selected = 'overview';
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 280,
+    child: FortalNavigationList<String>(
+      sections: _sections,
+      selectedValue: _selected,
+      onSelected: (value) => setState(() => _selected = value),
+      semanticLabel: 'Gallery navigation example',
+    ),
   );
 }
 

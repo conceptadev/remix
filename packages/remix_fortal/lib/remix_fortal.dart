@@ -33,6 +33,7 @@ export 'src/recipes/icon_button.dart';
 export 'src/recipes/kbd.dart';
 export 'src/recipes/link.dart';
 export 'src/recipes/menu.dart';
+export 'src/recipes/navigation_list.dart';
 export 'src/recipes/popover.dart';
 export 'src/recipes/progress.dart';
 export 'src/recipes/radio.dart';
