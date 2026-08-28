@@ -30,7 +30,7 @@ Map<String, List<int>> snapshotFiles(Directory root) {
 
 void writeRequiredPubspec(
   Directory root, {
-  String remix = '^1.0.0-beta.6',
+  String remix = '^1.0.0-beta.7',
   String mixAnnotations = '^2.2.0-beta.1',
   String buildRunner = '^2.10.1',
   String mixGenerator = '^2.2.0-beta.3',
@@ -51,7 +51,7 @@ dev_dependencies:
 
 void writeRequiredLock(
   Directory root, {
-  String remix = '1.0.0-beta.6',
+  String remix = '1.0.0-beta.7',
   String mixAnnotations = '2.2.0-beta.1',
   String buildRunner = '2.10.1',
   String mixGenerator = '2.2.0-beta.3',

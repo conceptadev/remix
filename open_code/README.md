@@ -22,7 +22,8 @@ dart run remix_cli:remix add button
 
 One `add` installs one item. The catalog is `theme` plus
 `accordion`, `avatar`, `badge`, `button`, `callout`, `card`, `checkbox`,
-`data_list`, `data_table`, `dialog`, `divider`, `icon_button`, `link`,
+`data_list`, `data_table`, `dialog`, `disclosure`, `divider`, `icon_button`,
+`link`,
 `menu`, `popover`, `progress`, `radio`, `segmented_control`, `select`,
 `skeleton`, `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toggle`,
 `toggle_group`, and `tooltip`.

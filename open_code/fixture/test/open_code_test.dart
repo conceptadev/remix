@@ -4361,6 +4361,77 @@ void main() {
     });
   });
 
+  group('acmeDisclosureStyle', () {
+    // `onExpanded` resolves through the live `NakedDisclosureState`, so the
+    // recipe can only be observed on a real widget — the same constraint the
+    // checkbox's `onIndeterminate` imposes on its probes.
+    for (final theme in _themes) {
+      testWidgets('the trigger is a full-width row target in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _disclosureSpec(tester, theme: theme.data);
+
+        // Frameless on purpose: the accordion's rule separates neighbours,
+        // and a lone disclosure has none. The trigger carries the geometry.
+        expect(_boxBorder(spec.spec.container), isNull);
+        expect(spec.spec.trigger.spec.constraints?.minHeight, 44);
+        expect(
+          _boxBorderRadius(spec.spec.trigger),
+          BorderRadius.all(theme.data.radius),
+        );
+        expect(
+          spec.spec.content.spec.padding,
+          const EdgeInsets.only(left: 12, right: 12, top: 4),
+        );
+        expect(_boxBackground(spec.spec.trigger), isNull);
+      });
+
+      testWidgets('hovering tints the trigger in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _disclosureSpec(
+          tester,
+          theme: theme.data,
+          hovered: true,
+        );
+
+        expect(_boxBackground(spec.spec.trigger), theme.data.accent);
+      });
+
+      testWidgets('the open trigger holds a muted fill in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _disclosureSpec(
+          tester,
+          theme: theme.data,
+          expanded: true,
+        );
+
+        // `muted` rather than `accent`: the two must differ, or hovering a
+        // closed section would look identical to one that is open.
+        expect(_boxBackground(spec.spec.trigger), theme.data.muted);
+      });
+    }
+
+    testWidgets('tapping the trigger reveals the content', (tester) async {
+      await _pumpInScope(
+        tester,
+        const AcmeDisclosure(
+          trigger: Text('Show details'),
+          content: Text('The full breakdown.'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('The full breakdown.'), findsNothing);
+
+      await tester.tap(find.text('Show details'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('The full breakdown.'), findsOneWidget);
+    });
+  });
+
   group(
     'resolved content clears its WCAG floor over the surface it lands on',
     () {
@@ -4793,6 +4864,11 @@ void main() {
     );
 
     final probes = <String, Future<List<Object>?> Function(WidgetTester)>{
+      'disclosure': (tester) async => (await _disclosureSpec(
+        tester,
+        theme: theme,
+        enabled: false,
+      )).widgetModifiers,
       'menu/trigger': (tester) async => (await _resolve(
         tester,
         acmeMenuStyle(),
@@ -5445,6 +5521,37 @@ Future<StyleSpec<CheckboxSpec>> _checkboxSpec(
   }
 
   return _resolvedSpecOf<CheckboxSpec>(tester);
+}
+
+Future<StyleSpec<DisclosureSpec>> _disclosureSpec(
+  WidgetTester tester, {
+  required AcmeThemeData theme,
+  bool expanded = false,
+  bool enabled = true,
+  bool hovered = false,
+}) async {
+  await _pumpInScope(
+    tester,
+    AcmeDisclosure(
+      defaultExpanded: expanded,
+      enabled: enabled,
+      trigger: const Text('Probe'),
+      content: const Text('Probe content'),
+    ),
+    theme: theme,
+  );
+  await tester.pumpAndSettle();
+
+  if (hovered) {
+    final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    addTearDown(pointer.removePointer);
+    await pointer.addPointer(location: Offset.zero);
+    await tester.pump();
+    await pointer.moveTo(tester.getCenter(find.text('Probe')));
+    await tester.pumpAndSettle();
+  }
+
+  return _resolvedSpecOf<DisclosureSpec>(tester);
 }
 
 Future<StyleSpec<TabSpec>> _resolveTab(

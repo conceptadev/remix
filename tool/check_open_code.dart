@@ -38,6 +38,7 @@ const _registryItems = <String>[
   'data_list',
   'data_table',
   'dialog',
+  'disclosure',
   'divider',
   'icon_button',
   'link',

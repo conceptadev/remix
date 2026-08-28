@@ -309,6 +309,7 @@ const _componentSurfaces =
       'data_list': (widgets: ['DataList'], types: []),
       'data_table': (widgets: ['DataTable'], types: []),
       'dialog': (widgets: ['Dialog'], types: []),
+      'disclosure': (widgets: ['Disclosure'], types: []),
       'divider': (widgets: ['Divider'], types: []),
       'icon_button': (
         widgets: ['IconButton'],

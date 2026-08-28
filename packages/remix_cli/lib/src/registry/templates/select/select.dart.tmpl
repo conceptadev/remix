@@ -189,7 +189,7 @@ SelectContentStyler _contentStyle() => SelectContentStyler()
     .minWidth(_panelMinWidth)
     .maxHeight(_panelMaxHeight)
     .containerEffects(
-      .behindContent(RemixBoxEffectLayerMix(shadows: [_shadow])),
+      .behindContent(.shadows([_shadow])),
     );
 
 /// One option row.

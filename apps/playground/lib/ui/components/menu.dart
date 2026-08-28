@@ -42,9 +42,7 @@ MenuStyler playgroundMenuStyle({
           .padding(.all(_panelPadding))
           .minWidth(_panelMinWidth),
     )
-    .containerEffects(
-      .behindContent(RemixBoxEffectLayerMix(shadows: [_shadow])),
-    )
+    .containerEffects(.behindContent(.shadows([_shadow])))
     .item(_itemStyle())
     .divider(_dividerStyle())
     .merge(style);

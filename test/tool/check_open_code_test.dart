@@ -93,7 +93,7 @@ name: open_code_fixture
 dependencies:
   flutter:
     sdk: flutter
-  remix: ^1.0.0-beta.6
+  remix: ^1.0.0-beta.7
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -222,6 +222,7 @@ const _registryItems = <String>[
   'data_list',
   'data_table',
   'dialog',
+  'disclosure',
   'divider',
   'icon_button',
   'link',

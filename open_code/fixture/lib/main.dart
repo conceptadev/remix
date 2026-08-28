@@ -850,6 +850,17 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                 ),
                 const SizedBox(height: 16),
 
+                _Label('Disclosure', color: data.mutedForeground),
+                // The accordion's standalone sibling: one collapsible
+                // section, open by default so the gallery shows the revealed
+                // content and the expanded trigger fill.
+                const AcmeDisclosure(
+                  defaultExpanded: true,
+                  trigger: const Text('Show details'),
+                  content: const Text('The full breakdown, revealed.'),
+                ),
+                const SizedBox(height: 16),
+
                 _Label('Dialog', color: data.mutedForeground),
                 // Rendered in place rather than over a barrier: the gallery is
                 // showing the panel's recipe, and Remix owns the presentation.

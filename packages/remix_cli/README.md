@@ -6,7 +6,8 @@ values, component recipes, and generated adapters.
 
 The 0.1.0 catalog covers the Remix component surface:
 `accordion`, `avatar`, `badge`, `button`, `callout`, `card`, `checkbox`,
-`data_list`, `data_table`, `dialog`, `divider`, `icon_button`, `link`,
+`data_list`, `data_table`, `dialog`, `disclosure`, `divider`, `icon_button`,
+`link`,
 `menu`, `popover`, `progress`, `radio`, `segmented_control`, `select`,
 `skeleton`, `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toggle`,
 `toggle_group`, and `tooltip`,

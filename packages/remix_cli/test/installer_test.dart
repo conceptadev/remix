@@ -67,7 +67,7 @@ void main() {
       expect(runner.calls[1].arguments, [
         'pub',
         'add',
-        'remix@^1.0.0-beta.6',
+        'remix@^1.0.0-beta.7',
         'mix_annotations@^2.2.0-beta.1',
         'dev:build_runner@^2.10.1',
         'dev:mix_generator@^2.2.0-beta.3',
@@ -136,7 +136,7 @@ workspace:
 ''');
       File(p.join(remixMember.path, 'pubspec.yaml')).writeAsStringSync('''
 name: remix
-version: 1.0.0-beta.6
+version: 1.0.0-beta.7
 environment:
   sdk: ">=3.11.0 <4.0.0"
 ''');
@@ -484,7 +484,7 @@ packages:
 ''',
         '''  remix:
     hosted: https://packages.example.test
-    version: ^1.0.0-beta.6
+    version: ^1.0.0-beta.7
 ''',
       ];
       for (final declaration in declarations) {
@@ -586,7 +586,7 @@ dependencies:
     sdk: flutter
   mix_annotations: ^2.2.0-beta.1
 dev_dependencies:
-  remix: ^1.0.0-beta.6
+  remix: ^1.0.0-beta.7
   build_runner: ^2.10.1
   mix_generator: ^2.2.0-beta.3
 '''
@@ -596,7 +596,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  remix: ^1.0.0-beta.6
+  remix: ^1.0.0-beta.7
 dev_dependencies:
   mix_annotations: ^2.2.0-beta.1
   build_runner: ^2.10.1
@@ -647,7 +647,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  remix: ^1.0.0-beta.6
+  remix: ^1.0.0-beta.7
   mix_annotations: ^2.2.0-beta.1
   build_runner: ^2.10.1
   mix_generator: ^2.2.0-beta.3
@@ -679,10 +679,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  remix: ^1.0.0-beta.6
+  remix: ^1.0.0-beta.7
   mix_annotations: ^2.2.0-beta.1
 dev_dependencies:
-  remix: ^1.0.0-beta.6
+  remix: ^1.0.0-beta.7
   build_runner: ^2.10.1
   mix_generator: ^2.2.0-beta.3
 ''');

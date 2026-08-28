@@ -100,9 +100,9 @@ melos:
         flutter: true
 
     test:cli:
-      run: dart test
       description: Run the pure-Dart remix_cli test suite
       exec:
+        command: dart test
         concurrency: 1
       packageFilters:
         scope: remix_cli

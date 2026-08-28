@@ -11,6 +11,7 @@ export 'components/checkbox.dart';
 export 'components/data_list.dart';
 export 'components/data_table.dart';
 export 'components/dialog.dart';
+export 'components/disclosure.dart';
 export 'components/divider.dart';
 export 'components/icon_button.dart';
 export 'components/link.dart';
