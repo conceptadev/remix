@@ -23,7 +23,6 @@ part of 'switch.dart';
 class PlaygroundSwitch extends StatelessWidget {
   const PlaygroundSwitch({
     super.key,
-    this.size = .medium,
     this.style = const SwitchStyler.create(),
     required this.selected,
     required this.semanticLabel,
@@ -35,8 +34,6 @@ class PlaygroundSwitch extends StatelessWidget {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   });
-
-  final PlaygroundSwitchSize size;
 
   final SwitchStyler style;
 
@@ -62,7 +59,7 @@ class PlaygroundSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixSwitch(
       key: this.key,
-      style: playgroundSwitchStyle(size: this.size, style: this.style),
+      style: playgroundSwitchStyle(style: this.style),
       selected: this.selected,
       semanticLabel: this.semanticLabel,
       onChanged: this.onChanged,

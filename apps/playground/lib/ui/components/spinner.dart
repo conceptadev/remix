@@ -6,22 +6,6 @@ import '../theme/tokens.dart';
 
 part 'spinner.g.dart';
 
-/// The sizes this application offers for a standalone spinner.
-///
-/// A button draws its own spinner from the button recipe, so these are the
-/// sizes for a spinner that stands on its own: inline beside a label, in a
-/// row, or centered in an empty panel.
-enum PlaygroundSpinnerSize {
-  /// A 16px spinner, matching an inline icon.
-  small,
-
-  /// A 20px spinner. The default.
-  medium,
-
-  /// A 24px spinner, for a panel waiting on its first load.
-  large,
-}
-
 /// The application's Spinner recipe.
 ///
 /// The spinner is the one component here that is pure motion: Remix owns the
@@ -36,10 +20,9 @@ enum PlaygroundSpinnerSize {
 /// the resolved recipe without forking it.
 @MixWidget(target: RemixSpinner.new)
 SpinnerStyler playgroundSpinnerStyle({
-  PlaygroundSpinnerSize size = .medium,
   SpinnerStyler style = const SpinnerStyler.create(),
 }) => SpinnerStyler()
-    .size(_diameterFor(size))
+    .size(_diameter)
     .color(PlaygroundTokens.foreground())
     .duration(_duration)
     .merge(style);
@@ -47,8 +30,10 @@ SpinnerStyler playgroundSpinnerStyle({
 /// One full revolution.
 const _duration = Duration(milliseconds: 800);
 
-double _diameterFor(PlaygroundSpinnerSize size) => switch (size) {
-  .small => 16.0,
-  .medium => 20.0,
-  .large => 24.0,
-};
+/// The spinner's diameter.
+///
+/// One size, not a scale. A button draws its own spinner from the button
+/// recipe, so this is the standalone case — inline beside a label, or centred
+/// in a panel — and 20 reads at the weight of the text it stands in for. A
+/// call site that needs another sets `.size(...)` through [style].
+const _diameter = 20.0;

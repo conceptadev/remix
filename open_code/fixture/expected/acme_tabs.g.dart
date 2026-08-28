@@ -94,7 +94,6 @@ class AcmeTabBar extends StatelessWidget {
 class AcmeTab extends StatelessWidget {
   const AcmeTab({
     super.key,
-    this.size = .medium,
     this.style = const TabStyler.create(),
     required this.tabId,
     this.child,
@@ -110,8 +109,6 @@ class AcmeTab extends StatelessWidget {
     this.onPressChange,
     this.semanticLabel,
   });
-
-  final AcmeTabSize size;
 
   final TabStyler style;
 
@@ -145,7 +142,7 @@ class AcmeTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTab(
       key: this.key,
-      style: acmeTabStyle(size: this.size, style: this.style),
+      style: acmeTabStyle(style: this.style),
       tabId: this.tabId,
       child: this.child,
       label: this.label,

@@ -6,22 +6,6 @@ import '../theme/tokens.dart';
 
 part 'radio.g.dart';
 
-/// The control densities this application offers for a radio.
-///
-/// The same box edges the checkbox uses, so a form that mixes the two lines
-/// up. These are box edges, not hit targets: Remix keeps a minimum pointer,
-/// focus, and semantics target around whatever the recipe draws.
-enum {{typePrefix}}RadioSize {
-  /// A 16px circle.
-  small,
-
-  /// An 18px circle. The default.
-  medium,
-
-  /// A 20px circle.
-  large,
-}
-
 /// The application's Radio recipe.
 ///
 /// Remix owns the rendering, the single-selection behavior, arrow-key
@@ -56,22 +40,15 @@ enum {{typePrefix}}RadioSize {
 /// declared as a selected fragment too (`RadioStyler().onSelected(...)`).
 @MixWidget(target: RemixRadio.new)
 RadioStyler {{valuePrefix}}RadioStyle({
-  {{typePrefix}}RadioSize size = .medium,
   RadioStyler style = const RadioStyler.create(),
 }) {
-  final metrics = _metricsFor(size);
-
   return RadioStyler()
-      .size(metrics.diameter, metrics.diameter)
+      .size(_diameter, _diameter)
       .alignment(.center)
       .borderRadius(.all(_circular))
       .color({{typePrefix}}Tokens.background())
       .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
-      .indicator(
-        BoxStyler()
-            .size(metrics.dot, metrics.dot)
-            .borderRadius(.all(_circular)),
-      )
+      .indicator(BoxStyler().size(_dot, _dot).borderRadius(.all(_circular)))
       .onHovered(.color({{typePrefix}}Tokens.accent()))
       .onSelected(_selectedStyle())
       .onFocusVisible(_focusVisibleStyle())
@@ -120,14 +97,12 @@ const _focusRingOffset = 2.0;
 /// Opacity applied to the whole control while disabled.
 const _disabledOpacity = 0.5;
 
-/// Geometry for one [{{typePrefix}}RadioSize].
-typedef _{{typePrefix}}RadioMetrics = ({double diameter, double dot});
+/// The circle's diameter, matching shadcn's `h-4 w-4` and the checkbox beside
+/// it — the two are chosen from the same list and must not differ in weight.
+const _diameter = 16.0;
 
-_{{typePrefix}}RadioMetrics _metricsFor({{typePrefix}}RadioSize size) => switch (size) {
-  .small => (diameter: 16.0, dot: 6.0),
-  .medium => (diameter: 18.0, dot: 7.0),
-  .large => (diameter: 20.0, dot: 8.0),
-};
+/// The chosen dot.
+const _dot = 6.0;
 
 /// The chosen option: a `primary` ring around a `primary` dot.
 ///

@@ -6,24 +6,6 @@ import '../theme/tokens.dart';
 
 part 'switch.g.dart';
 
-/// The control densities this application offers for a switch.
-///
-/// A switch is wider than it is tall, so these name the track height; the
-/// width follows from it at a fixed ratio.
-///
-/// These are compact, web-oriented defaults. A touch-first application should
-/// raise them to meet platform hit-target guidance.
-enum {{typePrefix}}SwitchSize {
-  /// A 16px track.
-  small,
-
-  /// A 20px track. The default.
-  medium,
-
-  /// A 24px track.
-  large,
-}
-
 /// The application's Switch recipe.
 ///
 /// Remix owns the rendering, the toggle behavior, the switch accessibility
@@ -40,13 +22,10 @@ enum {{typePrefix}}SwitchSize {
 /// declared as a selected fragment too (`SwitchStyler().onSelected(...)`).
 @MixWidget(target: RemixSwitch.new)
 SwitchStyler {{valuePrefix}}SwitchStyle({
-  {{typePrefix}}SwitchSize size = .medium,
   SwitchStyler style = const SwitchStyler.create(),
 }) {
-  final metrics = _metricsFor(size);
-
   return SwitchStyler()
-      .size(metrics.trackHeight * _trackRatio, metrics.trackHeight)
+      .size(_trackHeight * _trackRatio, _trackHeight)
       .padding(.all(_thumbInset))
       .borderRadius(.all(_pill))
       .trackColor({{typePrefix}}Tokens.muted())
@@ -60,7 +39,7 @@ SwitchStyler {{valuePrefix}}SwitchStyle({
       .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
       .thumb(
         BoxStyler()
-            .size(metrics.thumbSize, metrics.thumbSize)
+            .size(_thumbSize, _thumbSize)
             .borderRadius(.all(_pill))
             .color({{typePrefix}}Tokens.background())
             .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth)),
@@ -95,21 +74,17 @@ const _focusRingOffset = 2.0;
 /// Opacity applied to the whole control while disabled.
 const _disabledOpacity = 0.5;
 
-/// Geometry for one [{{typePrefix}}SwitchSize].
+/// The track's height, matching shadcn's `h-5`.
 ///
-/// The thumb is the track height minus the inset on both sides, so it always
-/// sits flush inside the track.
-typedef _{{typePrefix}}SwitchMetrics = ({double trackHeight, double thumbSize});
+/// One size, not a scale. A call site that needs another sets `.size(...)`
+/// through [style].
+const _trackHeight = 20.0;
 
-_{{typePrefix}}SwitchMetrics _metricsFor({{typePrefix}}SwitchSize size) {
-  final trackHeight = switch (size) {
-    .small => 16.0,
-    .medium => 20.0,
-    .large => 24.0,
-  };
-
-  return (trackHeight: trackHeight, thumbSize: trackHeight - _thumbInset * 2);
-}
+/// The thumb, sized so it sits flush inside the track.
+///
+/// Derived rather than stated: it is the track height minus the inset on both
+/// sides, so the two cannot drift apart.
+const _thumbSize = _trackHeight - _thumbInset * 2;
 
 /// The keyboard focus ring.
 ///

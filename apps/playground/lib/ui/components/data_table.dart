@@ -85,9 +85,9 @@ DataTableStyler playgroundDataTableStyle({
           .border(.top(_rule())),
     )
     // The application's own controls, not restatements of them.
-    .selectionCheckbox(playgroundCheckboxStyle(size: .small))
+    .selectionCheckbox(playgroundCheckboxStyle())
     .pageButton(playgroundIconButtonStyle(variant: .ghost, size: .small))
-    .pageSizeSelect(playgroundSelectStyle(size: .small))
+    .pageSizeSelect(playgroundSelectStyle())
     .merge(style);
 
 /// Width of the frame, the row rules, and the footer rule.

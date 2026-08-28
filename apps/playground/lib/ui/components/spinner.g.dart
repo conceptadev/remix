@@ -21,13 +21,10 @@ part of 'spinner.dart';
 class PlaygroundSpinner extends StatelessWidget {
   const PlaygroundSpinner({
     super.key,
-    this.size = .medium,
     this.style = const SpinnerStyler.create(),
     this.semanticsLabel,
     this.semanticsValue,
   });
-
-  final PlaygroundSpinnerSize size;
 
   final SpinnerStyler style;
 
@@ -39,7 +36,7 @@ class PlaygroundSpinner extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixSpinner(
       key: this.key,
-      style: playgroundSpinnerStyle(size: this.size, style: this.style),
+      style: playgroundSpinnerStyle(style: this.style),
       semanticsLabel: this.semanticsLabel,
       semanticsValue: this.semanticsValue,
     );

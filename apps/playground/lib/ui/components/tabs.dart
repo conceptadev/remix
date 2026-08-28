@@ -6,25 +6,6 @@ import '../theme/tokens.dart';
 
 part 'tabs.g.dart';
 
-/// The control densities this application offers for a tab.
-///
-/// Only the individual tab takes a size. The bar's hairline and the panel's
-/// leading gap read the same at every density, so giving them a size
-/// parameter would add an axis with nothing behind it.
-///
-/// These are compact, web-oriented defaults. A touch-first application should
-/// raise them to meet platform hit-target guidance.
-enum PlaygroundTabSize {
-  /// A 32px tab.
-  small,
-
-  /// A 36px tab. The default.
-  medium,
-
-  /// A 40px tab.
-  large,
-}
-
 /// The application's tab-strip recipe.
 ///
 /// The strip is the rule the tabs sit on: one hairline along its bottom edge,
@@ -117,11 +98,8 @@ TabBarStyler playgroundTabBarStyle({
     'semanticLabel',
   }),
 )
-TabStyler playgroundTabStyle({
-  PlaygroundTabSize size = .medium,
-  TabStyler style = const TabStyler.create(),
-}) {
-  return _base(_metricsFor(size))
+TabStyler playgroundTabStyle({TabStyler style = const TabStyler.create()}) {
+  return _base()
       .onHovered(_activeContent().color(PlaygroundTokens.accent()))
       .onSelected(_selectedStyle())
       .onFocusVisible(_focusVisibleStyle())
@@ -160,55 +138,40 @@ const _focusRingWidth = 2.0;
 /// Opacity applied to the whole tab while disabled.
 const _disabledOpacity = 0.5;
 
-/// Geometry and type scale for one [PlaygroundTabSize].
-typedef _PlaygroundTabMetrics = ({
-  double minHeight,
-  double paddingX,
-  double gap,
-  double labelSize,
-  double iconSize,
-});
+/// The tab's resting height, matching shadcn's `h-9` on its tab list and the
+/// button beside it.
+///
+/// One size, not a scale. A call site that needs another sets `.minHeight(...)`
+/// through [style].
+const _minHeight = 36.0;
 
-_PlaygroundTabMetrics _metricsFor(PlaygroundTabSize size) => switch (size) {
-  .small => (
-    minHeight: 32.0,
-    paddingX: 10.0,
-    gap: 6.0,
-    labelSize: 14.0,
-    iconSize: 16.0,
-  ),
-  .medium => (
-    minHeight: 36.0,
-    paddingX: 12.0,
-    gap: 8.0,
-    labelSize: 14.0,
-    iconSize: 16.0,
-  ),
-  .large => (
-    minHeight: 40.0,
-    paddingX: 16.0,
-    gap: 8.0,
-    labelSize: 16.0,
-    iconSize: 18.0,
-  ),
-};
+/// Horizontal inset inside a tab.
+const _paddingX = 12.0;
+
+/// Gap between a tab's icon and its label.
+const _gap = 8.0;
+
+/// Label size, matching body copy.
+const _labelSize = 14.0;
+
+/// Size of a tab's leading icon.
+const _iconSize = 16.0;
 
 /// Layout, typography, and the unselected content color.
 ///
 /// An unselected tab is a destination, not the current one, so it uses
 /// `mutedForeground`; hover and selection both promote it to `foreground`.
-TabStyler _base(_PlaygroundTabMetrics metrics) =>
-    _content(PlaygroundTokens.mutedForeground())
-        .direction(.horizontal)
-        .mainAxisSize(.min)
-        .mainAxisAlignment(.center)
-        .crossAxisAlignment(.center)
-        .minHeight(metrics.minHeight)
-        .padding(.horizontal(metrics.paddingX))
-        .spacing(metrics.gap)
-        .border(.bottom(.color(_noEdge).width(_selectedEdgeWidth)))
-        .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
-        .icon(.size(metrics.iconSize));
+TabStyler _base() => _content(PlaygroundTokens.mutedForeground())
+    .direction(.horizontal)
+    .mainAxisSize(.min)
+    .mainAxisAlignment(.center)
+    .crossAxisAlignment(.center)
+    .minHeight(_minHeight)
+    .padding(.horizontal(_paddingX))
+    .spacing(_gap)
+    .border(.bottom(.color(_noEdge).width(_selectedEdgeWidth)))
+    .label(.fontSize(_labelSize).fontWeight(FontWeight.w500))
+    .icon(.size(_iconSize));
 
 /// The selected tab: full-strength content and the `primary` edge.
 ///

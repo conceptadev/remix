@@ -32,7 +32,6 @@ part of 'textfield.dart';
 class PlaygroundTextField extends StatelessWidget {
   const PlaygroundTextField({
     super.key,
-    this.size = .medium,
     this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
@@ -92,8 +91,6 @@ class PlaygroundTextField extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
   });
-
-  final PlaygroundTextFieldSize size;
 
   final TextFieldStyler style;
 
@@ -215,7 +212,7 @@ class PlaygroundTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTextField(
       key: this.key,
-      style: playgroundTextFieldStyle(size: this.size, style: this.style),
+      style: playgroundTextFieldStyle(style: this.style),
       controller: this.controller,
       focusNode: this.focusNode,
       label: this.label,
@@ -288,7 +285,6 @@ class PlaygroundTextField extends StatelessWidget {
 class PlaygroundTextArea extends StatelessWidget {
   const PlaygroundTextArea({
     super.key,
-    this.size = .medium,
     this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
@@ -345,8 +341,6 @@ class PlaygroundTextArea extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
   });
-
-  final PlaygroundTextFieldSize size;
 
   final TextFieldStyler style;
 
@@ -462,7 +456,7 @@ class PlaygroundTextArea extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTextArea(
       key: this.key,
-      style: playgroundTextAreaStyle(size: this.size, style: this.style),
+      style: playgroundTextAreaStyle(style: this.style),
       controller: this.controller,
       focusNode: this.focusNode,
       label: this.label,

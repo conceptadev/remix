@@ -28,7 +28,6 @@ part of 'segmented_control.dart';
 class PlaygroundSegmentedControl<T extends Object> extends StatelessWidget {
   const PlaygroundSegmentedControl({
     super.key,
-    this.size = .medium,
     this.style = const SegmentedControlStyler.create(),
     required this.items,
     required this.selectedValue,
@@ -39,8 +38,6 @@ class PlaygroundSegmentedControl<T extends Object> extends StatelessWidget {
     this.semanticLabel,
     this.excludeSemantics = false,
   });
-
-  final PlaygroundSegmentedControlSize size;
 
   final SegmentedControlStyler style;
 
@@ -64,10 +61,7 @@ class PlaygroundSegmentedControl<T extends Object> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixSegmentedControl<T>(
       key: this.key,
-      style: playgroundSegmentedControlStyle(
-        size: this.size,
-        style: this.style,
-      ),
+      style: playgroundSegmentedControlStyle(style: this.style),
       items: this.items,
       selectedValue: this.selectedValue,
       onChanged: this.onChanged,

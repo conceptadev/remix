@@ -8,22 +8,6 @@ import '../theme/tokens.dart';
 
 part 'checkbox.g.dart';
 
-/// The control densities this application offers for a checkbox.
-///
-/// These are box edges, not hit targets. Remix keeps a 48px minimum pointer,
-/// focus, and semantics target around whatever box the recipe draws, so a
-/// smaller box never produces a smaller touch target.
-enum PlaygroundCheckboxSize {
-  /// A 16px box.
-  small,
-
-  /// An 18px box. The default.
-  medium,
-
-  /// A 20px box.
-  large,
-}
-
 /// The application's Checkbox recipe.
 ///
 /// Everything visual about a checkbox lives in this function: the box
@@ -64,7 +48,6 @@ enum PlaygroundCheckboxSize {
 /// that is the feedback.
 @MixWidget(target: RemixCheckbox.new)
 CheckboxStyler playgroundCheckboxStyle({
-  PlaygroundCheckboxSize size = .medium,
   CheckboxStyler style = const CheckboxStyler.create(),
 }) {
   // Built once and used for both fragments: an indeterminate checkbox is a
@@ -73,7 +56,7 @@ CheckboxStyler playgroundCheckboxStyle({
   // equal, which matters because stylers compare by value.
   final checked = _checkedStyle();
 
-  return _base(_metricsFor(size))
+  return _base()
       .onHovered(.color(PlaygroundTokens.accent()))
       .onSelected(checked)
       .onIndeterminate(checked)
@@ -95,9 +78,8 @@ CheckboxStyler playgroundCheckboxStyle({
 /// both.
 @MixWidget(target: RemixCheckboxGroupItem.new)
 CheckboxStyler playgroundCheckboxGroupItemStyle({
-  PlaygroundCheckboxSize size = .medium,
   CheckboxStyler style = const CheckboxStyler.create(),
-}) => playgroundCheckboxStyle(size: size, style: style);
+}) => playgroundCheckboxStyle(style: style);
 
 /// Alpha applied to the checked fill while hovered.
 const _hoverAlpha = 0.9;
@@ -152,35 +134,32 @@ const _focusRingOffset = 2.0;
 /// Opacity applied to the whole control while disabled.
 const _disabledOpacity = 0.5;
 
-/// Geometry and type scale for one [PlaygroundCheckboxSize].
-typedef _PlaygroundCheckboxMetrics = ({
-  double box,
-  double indicator,
-  double gap,
-  double labelSize,
-});
+/// Side of the box, matching shadcn's `h-4 w-4`.
+const _box = 16.0;
 
-_PlaygroundCheckboxMetrics _metricsFor(PlaygroundCheckboxSize size) =>
-    switch (size) {
-      .small => (box: 16.0, indicator: 10.0, gap: 8.0, labelSize: 14.0),
-      .medium => (box: 18.0, indicator: 11.0, gap: 8.0, labelSize: 14.0),
-      .large => (box: 20.0, indicator: 13.0, gap: 10.0, labelSize: 16.0),
-    };
+/// Side of the check or dash drawn inside the box.
+const _indicator = 10.0;
+
+/// Gap between the box and its label.
+const _gap = 8.0;
+
+/// Label size, matching body copy.
+const _labelSize = 14.0;
 
 /// The unchecked box, the indicator geometry, and the label.
 ///
 /// The indicator gets a size but no color here: Remix renders no indicator at
 /// all while unchecked, so the only states that can show one set their own
 /// content color.
-CheckboxStyler _base(_PlaygroundCheckboxMetrics metrics) => CheckboxStyler()
-    .size(metrics.box, metrics.box)
+CheckboxStyler _base() => CheckboxStyler()
+    .size(_box, _box)
     .alignment(.center)
     .borderRadius(.all(_boxRadius()))
     .color(PlaygroundTokens.background())
     .border(.color(PlaygroundTokens.border()).width(_borderWidth))
-    .indicator(.size(metrics.indicator))
-    .labelSpacing(metrics.gap)
-    .label(.fontSize(metrics.labelSize).color(PlaygroundTokens.foreground()));
+    .indicator(.size(_indicator))
+    .labelSpacing(_gap)
+    .label(.fontSize(_labelSize).color(PlaygroundTokens.foreground()));
 
 /// The checked and indeterminate surface.
 ///

@@ -85,9 +85,9 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
           .border(.top(_rule())),
     )
     // The application's own controls, not restatements of them.
-    .selectionCheckbox({{valuePrefix}}CheckboxStyle(size: .small))
+    .selectionCheckbox({{valuePrefix}}CheckboxStyle())
     .pageButton({{valuePrefix}}IconButtonStyle(variant: .ghost, size: .small))
-    .pageSizeSelect({{valuePrefix}}SelectStyle(size: .small))
+    .pageSizeSelect({{valuePrefix}}SelectStyle())
     .merge(style);
 
 /// Width of the frame, the row rules, and the footer rule.

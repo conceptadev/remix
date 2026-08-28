@@ -11,24 +11,6 @@ import '../theme/tokens.dart';
 
 part 'textfield.g.dart';
 
-/// The control densities this application offers for a text input.
-///
-/// The same 32/36/40px heights the button uses, so a field and the button
-/// that submits it line up in a row.
-///
-/// These are compact, web-oriented defaults. A touch-first application should
-/// raise them to meet platform hit-target guidance.
-enum PlaygroundTextFieldSize {
-  /// 32px minimum height.
-  small,
-
-  /// 36px minimum height. The default.
-  medium,
-
-  /// 40px minimum height.
-  large,
-}
-
 /// The application's TextField recipe.
 ///
 /// Remix owns the rendering, the editing behavior, the label/hint/helper
@@ -54,13 +36,10 @@ enum PlaygroundTextFieldSize {
 /// declared as an error fragment too.
 @MixWidget(target: RemixTextField.new)
 TextFieldStyler playgroundTextFieldStyle({
-  PlaygroundTextFieldSize size = .medium,
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
-  final metrics = _metricsFor(size);
-
-  return _base(metrics)
-      .minHeight(metrics.minHeight)
+  return _base()
+      .minHeight(_minHeight)
       // A single line sits on the field's centre line; the accessories go with
       // it.
       .crossAxisAlignment(.center)
@@ -77,13 +56,10 @@ TextFieldStyler playgroundTextFieldStyle({
 /// [style] is merged **last**, exactly as it is for the single-line field.
 @MixWidget(target: RemixTextArea.new)
 TextFieldStyler playgroundTextAreaStyle({
-  PlaygroundTextFieldSize size = .medium,
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
-  final metrics = _metricsFor(size);
-
-  return _base(metrics)
-      .minHeight(metrics.minHeight * _textAreaLines)
+  return _base()
+      .minHeight(_minHeight * _textAreaLines)
       .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
       .crossAxisAlignment(.start)
       .merge(style);
@@ -129,32 +105,30 @@ const _focusRingOffset = 2.0;
 /// Opacity applied to the whole control while disabled.
 const _disabledOpacity = 0.5;
 
-/// Geometry and type scale for one [PlaygroundTextFieldSize].
-typedef _PlaygroundTextFieldMetrics = ({double minHeight, double textSize});
+/// The field's resting height, matching shadcn's `h-9` and the button beside
+/// it — a field and the button that submits it sit in the same row.
+///
+/// One size, not a scale. A call site that needs another sets `.minHeight(...)`
+/// through [style].
+const _minHeight = 36.0;
 
-_PlaygroundTextFieldMetrics _metricsFor(PlaygroundTextFieldSize size) =>
-    switch (size) {
-      .small => (minHeight: 32.0, textSize: 14.0),
-      .medium => (minHeight: 36.0, textSize: 14.0),
-      .large => (minHeight: 40.0, textSize: 16.0),
-    };
+/// Value and placeholder size, matching body copy.
+const _textSize = 14.0;
 
 /// The surface, the four text roles, and every state fragment.
 ///
 /// Both recipes share this whole body; only the box's height and the
 /// accessory alignment differ between them.
-TextFieldStyler _base(_PlaygroundTextFieldMetrics metrics) => TextFieldStyler()
+TextFieldStyler _base() => TextFieldStyler()
     .color(PlaygroundTokens.background())
     .border(.color(PlaygroundTokens.border()).width(_borderWidth))
     .borderRadius(.all(PlaygroundTokens.radius()))
     .padding(.horizontal(_paddingX))
     .spacing(_accessoryGap)
-    .text(.fontSize(metrics.textSize).color(PlaygroundTokens.foreground()))
+    .text(.fontSize(_textSize).color(PlaygroundTokens.foreground()))
     // The placeholder is not the value: it has to read as the quieter of the
     // two, or an empty field looks filled in.
-    .hintText(
-      .fontSize(metrics.textSize).color(PlaygroundTokens.mutedForeground()),
-    )
+    .hintText(.fontSize(_textSize).color(PlaygroundTokens.mutedForeground()))
     .cursorColor(PlaygroundTokens.foreground())
     .label(
       .fontSize(

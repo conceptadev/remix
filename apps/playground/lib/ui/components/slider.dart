@@ -6,24 +6,6 @@ import '../theme/tokens.dart';
 
 part 'slider.g.dart';
 
-/// The control densities this application offers for a slider.
-///
-/// These name the rail's thickness; the thumb scales with it so the two stay
-/// in proportion at every size.
-///
-/// These are compact, web-oriented defaults. A touch-first application should
-/// raise them to meet platform hit-target guidance.
-enum PlaygroundSliderSize {
-  /// A 4px rail.
-  small,
-
-  /// A 6px rail. The default.
-  medium,
-
-  /// An 8px rail.
-  large,
-}
-
 /// The application's Slider recipe.
 ///
 /// Remix owns the rendering, the drag and keyboard behavior, the mapping from
@@ -64,16 +46,13 @@ enum PlaygroundSliderSize {
   }),
 )
 SliderStyler playgroundSliderStyle({
-  PlaygroundSliderSize size = .medium,
   SliderStyler style = const SliderStyler.create(),
 }) {
-  final metrics = _metricsFor(size);
-
   return SliderStyler()
-      .thickness(metrics.rail)
+      .thickness(_rail)
       .trackColor(PlaygroundTokens.muted())
       .rangeColor(PlaygroundTokens.primary())
-      .thumbSize(Size.square(metrics.thumb))
+      .thumbSize(const Size.square(_thumb))
       .thumbColor(PlaygroundTokens.background())
       .thumb(
         BoxStyler()
@@ -108,25 +87,20 @@ const _focusRingOffset = 2.0;
 /// Opacity applied to the whole control while disabled.
 const _disabledOpacity = 0.5;
 
-/// Geometry for one [PlaygroundSliderSize].
+/// The rail's thickness, matching shadcn's `h-1.5`.
 ///
-/// The thumb is a fixed multiple of the rail, which keeps the grab target
-/// growing with the control instead of staying a constant size on a thicker
-/// rail.
-typedef _PlaygroundSliderMetrics = ({double rail, double thumb});
-
-_PlaygroundSliderMetrics _metricsFor(PlaygroundSliderSize size) {
-  final rail = switch (size) {
-    .small => 4.0,
-    .medium => 6.0,
-    .large => 8.0,
-  };
-
-  return (rail: rail, thumb: rail * _thumbRatio);
-}
+/// One size, not a scale. A call site that needs another sets `.thickness(...)`
+/// through [style].
+const _rail = 6.0;
 
 /// Thumb diameter as a multiple of the rail thickness.
+///
+/// Derived rather than stated, so the grab target keeps its relationship to
+/// the rail if the rail is ever changed.
 const _thumbRatio = 2.5;
+
+/// The thumb's diameter.
+const _thumb = _rail * _thumbRatio;
 
 /// The keyboard focus ring, drawn around the thumb.
 ///

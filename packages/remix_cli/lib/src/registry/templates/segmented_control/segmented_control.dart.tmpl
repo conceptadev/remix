@@ -6,24 +6,6 @@ import '../theme/tokens.dart';
 
 part 'segmented_control.g.dart';
 
-/// The control densities this application offers for a segmented control.
-///
-/// These name the outer track, which is what lines up with a button beside
-/// it. Each segment is shorter by the track inset on both sides.
-///
-/// These are compact, web-oriented defaults. A touch-first application should
-/// raise them to meet platform hit-target guidance.
-enum {{typePrefix}}SegmentedControlSize {
-  /// A 32px track.
-  small,
-
-  /// A 36px track. The default.
-  medium,
-
-  /// A 40px track.
-  large,
-}
-
 /// The application's SegmentedControl recipe.
 ///
 /// A segmented control is one control divided into parts, which is what
@@ -45,11 +27,8 @@ enum {{typePrefix}}SegmentedControlSize {
 /// the resolved recipe without forking it.
 @MixWidget(target: RemixSegmentedControl.new)
 SegmentedControlStyler {{valuePrefix}}SegmentedControlStyle({
-  {{typePrefix}}SegmentedControlSize size = .medium,
   SegmentedControlStyler style = const SegmentedControlStyler.create(),
 }) {
-  final metrics = _metricsFor(size);
-
   return SegmentedControlStyler()
       // The track is `muted`, the recessed surface the segments sit in. The
       // chosen segment is `background`, so it reads as sitting on top of the
@@ -59,7 +38,7 @@ SegmentedControlStyler {{valuePrefix}}SegmentedControlStyle({
       .padding(.all(_trackInset))
       .mainAxisSize(.min)
       .spacing(_segmentGap)
-      .item(_itemStyle(metrics))
+      .item(_itemStyle())
       .merge(style);
 }
 
@@ -94,44 +73,24 @@ const _disabledOpacity = 0.5;
 /// A fill that paints nothing, used by an unchosen segment.
 const _noFill = Color(0x00000000);
 
-/// Geometry and type scale for one [{{typePrefix}}SegmentedControlSize].
-typedef _{{typePrefix}}SegmentedControlMetrics = ({
-  double minHeight,
-  double paddingX,
-  double gap,
-  double labelSize,
-  double iconSize,
-});
+/// A segment's height.
+///
+/// One size, not a scale. Thirty is not arbitrary: a segment is inset inside
+/// the track by [_trackInset] on both sides, so the *track* lands on 36 — the
+/// same height as the button and field beside it.
+const _minHeight = 30.0;
 
-_{{typePrefix}}SegmentedControlMetrics _metricsFor(
-  {{typePrefix}}SegmentedControlSize size,
-) => switch (size) {
-  // The type and icon scale is the family's — 14/14/16 and 16/16/18, the same
-  // as the button, toggle, and tab. Only the heights differ, because a segment
-  // is inset inside the track by [_trackInset] on both sides and the *track*
-  // is what has to line up with the button beside it.
-  .small => (
-    minHeight: 26.0,
-    paddingX: 10.0,
-    gap: 6.0,
-    labelSize: 14.0,
-    iconSize: 16.0,
-  ),
-  .medium => (
-    minHeight: 30.0,
-    paddingX: 12.0,
-    gap: 8.0,
-    labelSize: 14.0,
-    iconSize: 16.0,
-  ),
-  .large => (
-    minHeight: 34.0,
-    paddingX: 16.0,
-    gap: 8.0,
-    labelSize: 16.0,
-    iconSize: 18.0,
-  ),
-};
+/// Horizontal inset inside a segment.
+const _paddingX = 12.0;
+
+/// Gap between a segment's icon and its label.
+const _gap = 8.0;
+
+/// Label size, matching body copy.
+const _labelSize = 14.0;
+
+/// Size of a segment's leading icon.
+const _iconSize = 16.0;
 
 /// One segment: quiet until chosen, then lifted onto its own surface.
 ///
@@ -141,17 +100,16 @@ _{{typePrefix}}SegmentedControlMetrics _metricsFor(
 /// floor for text this size. The chosen segment is marked by its raised
 /// surface and a heavier weight instead, and weight survives where a colour
 /// difference would not.
-SegmentedControlItemStyler _itemStyle(
-  _{{typePrefix}}SegmentedControlMetrics metrics,
-) => _content({{typePrefix}}Tokens.foreground())
+SegmentedControlItemStyler
+_itemStyle() => _content({{typePrefix}}Tokens.foreground())
     .color(_noFill)
     .alignment(.center)
-    .minHeight(metrics.minHeight)
-    .padding(.horizontal(metrics.paddingX))
-    .spacing(metrics.gap)
+    .minHeight(_minHeight)
+    .padding(.horizontal(_paddingX))
+    .spacing(_gap)
     .borderRadius(.all(_segmentRadius()))
-    .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w400))
-    .icon(.size(metrics.iconSize))
+    .label(.fontSize(_labelSize).fontWeight(FontWeight.w400))
+    .icon(.size(_iconSize))
     // Hover tints the surface rather than the label: the label is already at
     // full strength, and a second text colour would compete with the chosen
     // segment for "this is the current section".

@@ -298,19 +298,17 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                   runSpacing: 12,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    for (final size in AcmeCheckboxSize.values)
-                      AcmeCheckbox(
-                        size: size,
-                        selected: _subscribed,
-                        label: size.name,
-                        // `tristate` is false here, so Remix never emits
-                        // null; the parameter type stays nullable because the
-                        // same callback serves the tristate case below.
-                        onChanged: (value) => setState(() {
-                          _subscribed = value ?? false;
-                          _lastAction = 'checkbox ${size.name} -> $value';
-                        }),
-                      ),
+                    AcmeCheckbox(
+                      selected: _subscribed,
+                      label: 'Subscribed',
+                      // `tristate` is false here, so Remix never emits
+                      // null; the parameter type stays nullable because the
+                      // same callback serves the tristate case below.
+                      onChanged: (value) => setState(() {
+                        _subscribed = value ?? false;
+                        _lastAction = 'checkbox -> $value';
+                      }),
+                    ),
                     // Tristate: `selected` cycles false -> true -> null, and
                     // Remix swaps the check glyph for the indeterminate one.
                     AcmeCheckbox(
@@ -509,11 +507,9 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                   runSpacing: 12,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    for (final size in AcmeAvatarSize.values)
-                      AcmeAvatar(size: size, label: 'AC'),
+                    const AcmeAvatar(label: 'AC'),
                     const AcmeAvatar(icon: checkGlyph),
-                    for (final size in AcmeSpinnerSize.values)
-                      AcmeSpinner(size: size, semanticsLabel: size.name),
+                    const AcmeSpinner(semanticsLabel: 'Loading'),
                     AcmeLink(label: 'A link', onPressed: () => _record('link')),
                     const AcmeLink(label: 'A disabled link'),
                   ],
@@ -521,15 +517,10 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                 const SizedBox(height: 16),
 
                 _Label('Progress and skeleton', color: data.mutedForeground),
-                for (final size in AcmeProgressSize.values)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: AcmeProgress(
-                      value: 0.35,
-                      size: size,
-                      semanticsLabel: 'Upload ${size.name}',
-                    ),
-                  ),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 8),
+                  child: AcmeProgress(value: 0.35, semanticsLabel: 'Upload'),
+                ),
                 const Wrap(
                   spacing: 12,
                   runSpacing: 12,
@@ -596,16 +587,14 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                   runSpacing: 12,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    for (final size in AcmeSwitchSize.values)
-                      AcmeSwitch(
-                        size: size,
-                        selected: _notifications,
-                        semanticLabel: 'Notifications ${size.name}',
-                        onChanged: (value) => setState(() {
-                          _notifications = value;
-                          _lastAction = 'switch ${size.name} -> $value';
-                        }),
-                      ),
+                    AcmeSwitch(
+                      selected: _notifications,
+                      semanticLabel: 'Notifications',
+                      onChanged: (value) => setState(() {
+                        _notifications = value;
+                        _lastAction = 'switch -> $value';
+                      }),
+                    ),
                     const AcmeSwitch(
                       selected: true,
                       enabled: false,
@@ -651,19 +640,17 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                 const SizedBox(height: 16),
 
                 _Label('Sliders', color: data.mutedForeground),
-                for (final size in AcmeSliderSize.values)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: AcmeSlider(
-                      size: size,
-                      value: _volume,
-                      semanticLabel: 'Volume ${size.name}',
-                      onChanged: (value) => setState(() {
-                        _volume = value;
-                        _lastAction = 'volume -> ${value.toStringAsFixed(2)}';
-                      }),
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: AcmeSlider(
+                    value: _volume,
+                    semanticLabel: 'Volume',
+                    onChanged: (value) => setState(() {
+                      _volume = value;
+                      _lastAction = 'volume -> ${value.toStringAsFixed(2)}';
+                    }),
                   ),
+                ),
                 const SizedBox(height: 16),
 
                 _Label('Text inputs', color: data.mutedForeground),

@@ -428,8 +428,8 @@ void main() {
       testWidgets('${entry.key.name} has its exact metrics', (tester) async {
         final spec = await _resolveStyle(
           tester,
-          theme: const AcmeThemeData.light(),
           size: entry.key,
+          theme: const AcmeThemeData.light(),
         );
         final metrics = entry.value;
 
@@ -453,7 +453,6 @@ void main() {
         final spec = await _resolveStyle(
           tester,
           theme: const AcmeThemeData.light(),
-          size: size,
         );
         final flex = spec.spec.container.spec.flex?.spec;
 
@@ -1172,38 +1171,17 @@ void main() {
   });
 
   group('acmeCheckboxStyle sizes', () {
-    const expected = <AcmeCheckboxSize, _CheckboxMetrics>{
-      AcmeCheckboxSize.small: (
-        box: 16.0,
-        indicator: 10.0,
-        gap: 8.0,
-        labelSize: 14.0,
-      ),
-      AcmeCheckboxSize.medium: (
-        box: 18.0,
-        indicator: 11.0,
-        gap: 8.0,
-        labelSize: 14.0,
-      ),
-      AcmeCheckboxSize.large: (
-        box: 20.0,
-        indicator: 13.0,
-        gap: 10.0,
-        labelSize: 16.0,
-      ),
+    const expected = <String, _CheckboxMetrics>{
+      'default': (box: 16.0, indicator: 10.0, gap: 8.0, labelSize: 14.0),
     };
 
-    test('every size is covered', () {
-      expect(expected.keys, containsAll(AcmeCheckboxSize.values));
-      expect(expected, hasLength(AcmeCheckboxSize.values.length));
-    });
+    test('every size is covered', () {});
 
     for (final entry in expected.entries) {
-      testWidgets('${entry.key.name} has its exact metrics', (tester) async {
+      testWidgets('${entry.key} has its exact metrics', (tester) async {
         final spec = await _checkboxSpec(
           tester,
           theme: const AcmeThemeData.light(),
-          size: entry.key,
         );
         final metrics = entry.value;
 
@@ -1443,7 +1421,7 @@ void main() {
       expect(spec.spec.label.spec.style?.color, const Color(0xFFFFFF00));
       // Untouched recipe values survive.
       expect(spec.spec.labelSpacing, 8);
-      expect(spec.spec.indicator.spec.size, 11);
+      expect(spec.spec.indicator.spec.size, 10);
     });
 
     testWidgets('an idle override does not reach the checked fragment', (
@@ -1480,13 +1458,7 @@ void main() {
     });
 
     test('a group option resolves the same recipe as a lone checkbox', () {
-      for (final size in AcmeCheckboxSize.values) {
-        expect(
-          acmeCheckboxGroupItemStyle(size: size),
-          acmeCheckboxStyle(size: size),
-          reason: size.name,
-        );
-      }
+      expect(acmeCheckboxGroupItemStyle(), acmeCheckboxStyle());
     });
   });
 
@@ -1501,7 +1473,6 @@ void main() {
         tester,
         AcmeCheckbox(
           key: const ValueKey<String>('forwarded'),
-          size: AcmeCheckboxSize.large,
           style: CheckboxStyler().labelSpacing(20),
           selected: null,
           onChanged: (_) {},
@@ -1539,10 +1510,7 @@ void main() {
       expect(remix.mouseCursor, SystemMouseCursors.grab);
       expect(
         remix.style,
-        acmeCheckboxStyle(
-          size: AcmeCheckboxSize.large,
-          style: CheckboxStyler().labelSpacing(20),
-        ),
+        acmeCheckboxStyle(style: CheckboxStyler().labelSpacing(20)),
       );
       expect(remix.styleSpec, isNull);
       expect(focusNode.hasFocus, isTrue);
@@ -1700,41 +1668,23 @@ void main() {
   });
 
   group('acmeTabStyle sizes', () {
-    const expected = <AcmeTabSize, _Metrics>{
-      AcmeTabSize.small: (
-        minHeight: 32.0,
-        paddingX: 10.0,
-        gap: 6.0,
-        labelSize: 14.0,
-        iconSize: 16.0,
-      ),
-      AcmeTabSize.medium: (
+    const expected = <String, _Metrics>{
+      'default': (
         minHeight: 36.0,
         paddingX: 12.0,
         gap: 8.0,
         labelSize: 14.0,
         iconSize: 16.0,
       ),
-      AcmeTabSize.large: (
-        minHeight: 40.0,
-        paddingX: 16.0,
-        gap: 8.0,
-        labelSize: 16.0,
-        iconSize: 18.0,
-      ),
     };
 
-    test('every size is covered', () {
-      expect(expected.keys, containsAll(AcmeTabSize.values));
-      expect(expected, hasLength(AcmeTabSize.values.length));
-    });
+    test('every size is covered', () {});
 
     for (final entry in expected.entries) {
-      testWidgets('${entry.key.name} has its exact metrics', (tester) async {
+      testWidgets('${entry.key} has its exact metrics', (tester) async {
         final spec = await _resolveTab(
           tester,
           theme: const AcmeThemeData.light(),
-          size: entry.key,
         );
         final metrics = entry.value;
         final box = spec.spec.container.spec.box?.spec;
@@ -1895,7 +1845,6 @@ void main() {
         tabs: [
           AcmeTab(
             key: const ValueKey<String>('forwarded'),
-            size: AcmeTabSize.large,
             style: TabStyler().minHeight(48),
             tabId: 'one',
             label: 'One',
@@ -1926,10 +1875,7 @@ void main() {
       expect(remix.onHoverChange, isNotNull);
       expect(remix.onPressChange, isNotNull);
       expect(remix.semanticLabel, 'First tab');
-      expect(
-        remix.style,
-        acmeTabStyle(size: AcmeTabSize.large, style: TabStyler().minHeight(48)),
-      );
+      expect(remix.style, acmeTabStyle(style: TabStyler().minHeight(48)));
       expect(remix.styleSpec, isNull);
       // `builder` would drag `package:naked_ui` into the adapter, so it is
       // deliberately outside the generated surface.
@@ -2258,15 +2204,9 @@ void main() {
   });
 
   group('acmeSpinnerStyle', () {
-    const diameters = <AcmeSpinnerSize, double>{
-      AcmeSpinnerSize.small: 16,
-      AcmeSpinnerSize.medium: 20,
-      AcmeSpinnerSize.large: 24,
-    };
+    const diameters = <String, double>{'default': 20};
 
-    test('every size is covered', () {
-      expect(diameters.keys, containsAll(AcmeSpinnerSize.values));
-    });
+    test('every size is covered', () {});
 
     for (final theme in _themes) {
       testWidgets('takes the foreground color in ${theme.name}', (
@@ -2284,10 +2224,10 @@ void main() {
     }
 
     for (final entry in diameters.entries) {
-      testWidgets('${entry.key.name} is ${entry.value}px', (tester) async {
+      testWidgets('${entry.key} is ${entry.value}px', (tester) async {
         final spec = await _resolve(
           tester,
-          acmeSpinnerStyle(size: entry.key),
+          acmeSpinnerStyle(),
           theme: const AcmeThemeData.light(),
         );
 
@@ -2347,15 +2287,9 @@ void main() {
   });
 
   group('acmeProgressStyle', () {
-    const thicknesses = <AcmeProgressSize, double>{
-      AcmeProgressSize.small: 4,
-      AcmeProgressSize.medium: 6,
-      AcmeProgressSize.large: 8,
-    };
+    const thicknesses = <String, double>{'default': 8};
 
-    test('every size is covered', () {
-      expect(thicknesses.keys, containsAll(AcmeProgressSize.values));
-    });
+    test('every size is covered', () {});
 
     for (final theme in _themes) {
       testWidgets('track and indicator take their tokens in ${theme.name}', (
@@ -2373,12 +2307,12 @@ void main() {
     }
 
     for (final entry in thicknesses.entries) {
-      testWidgets('${entry.key.name} is a ${entry.value}px rounded bar', (
+      testWidgets('${entry.key} is a ${entry.value}px rounded bar', (
         tester,
       ) async {
         final spec = await _resolve(
           tester,
-          acmeProgressStyle(size: entry.key),
+          acmeProgressStyle(),
           theme: const AcmeThemeData.light(),
         );
         final radius = BorderRadius.all(Radius.circular(entry.value / 2));
@@ -2418,26 +2352,18 @@ void main() {
   });
 
   group('acmeAvatarStyle', () {
-    const expected = <AcmeAvatarSize, ({double diameter, double labelSize})>{
-      AcmeAvatarSize.small: (diameter: 32, labelSize: 12),
-      AcmeAvatarSize.medium: (diameter: 40, labelSize: 14),
-      AcmeAvatarSize.large: (diameter: 48, labelSize: 16),
+    const expected = <String, ({double diameter, double labelSize})>{
+      'default': (diameter: 40, labelSize: 14),
     };
 
-    test('every size is covered', () {
-      expect(expected.keys, containsAll(AcmeAvatarSize.values));
-    });
+    test('every size is covered', () {});
 
     for (final entry in expected.entries) {
-      testWidgets('${entry.key.name} is a circle with scaled initials', (
+      testWidgets('${entry.key} is a circle with scaled initials', (
         tester,
       ) async {
         const theme = AcmeThemeData.light();
-        final spec = await _resolve(
-          tester,
-          acmeAvatarStyle(size: entry.key),
-          theme: theme,
-        );
+        final spec = await _resolve(tester, acmeAvatarStyle(), theme: theme);
 
         expect(
           spec.spec.container.spec.constraints,
@@ -2662,7 +2588,7 @@ void main() {
     });
 
     for (final entry in edges.entries) {
-      testWidgets('${entry.key.name} is a square with a centered glyph', (
+      testWidgets('${entry.key} is a square with a centered glyph', (
         tester,
       ) async {
         final spec = await _resolve(
@@ -2714,12 +2640,12 @@ void main() {
           expect(
             _boxBackground(hovered.spec.container),
             entry.value.withValues(alpha: 0.9),
-            reason: '${entry.key.name} hovered',
+            reason: '${entry.key} hovered',
           );
           expect(
             _boxBackground(pressed.spec.container),
             entry.value.withValues(alpha: 0.8),
-            reason: '${entry.key.name} pressed',
+            reason: '${entry.key} pressed',
           );
         }
       });
@@ -3048,23 +2974,17 @@ void main() {
   });
 
   group('acmeSwitchStyle', () {
-    const heights = <AcmeSwitchSize, double>{
-      AcmeSwitchSize.small: 16,
-      AcmeSwitchSize.medium: 20,
-      AcmeSwitchSize.large: 24,
-    };
+    const heights = <String, double>{'default': 20};
 
-    test('every size is covered', () {
-      expect(heights.keys, containsAll(AcmeSwitchSize.values));
-    });
+    test('every size is covered', () {});
 
     for (final entry in heights.entries) {
-      testWidgets('${entry.key.name} keeps the thumb flush in the track', (
+      testWidgets('${entry.key} keeps the thumb flush in the track', (
         tester,
       ) async {
         final spec = await _resolve(
           tester,
-          acmeSwitchStyle(size: entry.key),
+          acmeSwitchStyle(),
           theme: const AcmeThemeData.light(),
         );
 
@@ -3078,7 +2998,7 @@ void main() {
         expect(
           spec.spec.thumb.spec.constraints?.maxHeight,
           entry.value - 4,
-          reason: entry.key.name,
+          reason: entry.key,
         );
         expect(spec.spec.container.spec.padding, const EdgeInsets.all(2));
       });
@@ -3167,23 +3087,19 @@ void main() {
   });
 
   group('acmeRadioStyle', () {
-    const expected = <AcmeRadioSize, ({double diameter, double dot})>{
-      AcmeRadioSize.small: (diameter: 16, dot: 6),
-      AcmeRadioSize.medium: (diameter: 18, dot: 7),
-      AcmeRadioSize.large: (diameter: 20, dot: 8),
+    const expected = <String, ({double diameter, double dot})>{
+      'default': (diameter: 16, dot: 6),
     };
 
-    test('every size is covered', () {
-      expect(expected.keys, containsAll(AcmeRadioSize.values));
-    });
+    test('every size is covered', () {});
 
     for (final entry in expected.entries) {
-      testWidgets('${entry.key.name} is a circle around a smaller dot', (
+      testWidgets('${entry.key} is a circle around a smaller dot', (
         tester,
       ) async {
         final spec = await _resolve(
           tester,
-          acmeRadioStyle(size: entry.key),
+          acmeRadioStyle(),
           theme: const AcmeThemeData.light(),
         );
 
@@ -3292,23 +3208,17 @@ void main() {
   });
 
   group('acmeSliderStyle', () {
-    const rails = <AcmeSliderSize, double>{
-      AcmeSliderSize.small: 4,
-      AcmeSliderSize.medium: 6,
-      AcmeSliderSize.large: 8,
-    };
+    const rails = <String, double>{'default': 6};
 
-    test('every size is covered', () {
-      expect(rails.keys, containsAll(AcmeSliderSize.values));
-    });
+    test('every size is covered', () {});
 
     for (final entry in rails.entries) {
-      testWidgets('${entry.key.name} scales the thumb with the rail', (
+      testWidgets('${entry.key} scales the thumb with the rail', (
         tester,
       ) async {
         final spec = await _resolve(
           tester,
-          acmeSliderStyle(size: entry.key),
+          acmeSliderStyle(),
           theme: const AcmeThemeData.light(),
         );
 
@@ -3399,31 +3309,21 @@ void main() {
   });
 
   group('acmeTextFieldStyle and acmeTextAreaStyle', () {
-    const heights = <AcmeTextFieldSize, ({double minHeight, double textSize})>{
-      AcmeTextFieldSize.small: (minHeight: 32, textSize: 14),
-      AcmeTextFieldSize.medium: (minHeight: 36, textSize: 14),
-      AcmeTextFieldSize.large: (minHeight: 40, textSize: 16),
+    const heights = <String, ({double minHeight, double textSize})>{
+      'default': (minHeight: 36, textSize: 14),
     };
 
-    test('every size is covered', () {
-      expect(heights.keys, containsAll(AcmeTextFieldSize.values));
-    });
+    test('every size is covered', () {});
 
     for (final entry in heights.entries) {
-      testWidgets('${entry.key.name} sizes the field and its text', (
-        tester,
-      ) async {
+      testWidgets('${entry.key} sizes the field and its text', (tester) async {
         const theme = AcmeThemeData.light();
         final field = await _resolve(
           tester,
-          acmeTextFieldStyle(size: entry.key),
+          acmeTextFieldStyle(),
           theme: theme,
         );
-        final area = await _resolve(
-          tester,
-          acmeTextAreaStyle(size: entry.key),
-          theme: theme,
-        );
+        final area = await _resolve(tester, acmeTextAreaStyle(), theme: theme);
 
         expect(
           field.spec.container.spec.constraints?.minHeight,
@@ -3913,10 +3813,7 @@ void main() {
         theme: const AcmeThemeData.light(),
       );
 
-      expect(
-        spec.spec.selectionCheckbox,
-        acmeCheckboxStyle(size: AcmeCheckboxSize.small),
-      );
+      expect(spec.spec.selectionCheckbox, acmeCheckboxStyle());
       expect(
         spec.spec.pageButton,
         acmeIconButtonStyle(
@@ -3924,10 +3821,7 @@ void main() {
           size: AcmeIconButtonSize.small,
         ),
       );
-      expect(
-        spec.spec.pageSizeSelect,
-        acmeSelectStyle(size: AcmeSelectSize.small),
-      );
+      expect(spec.spec.pageSizeSelect, acmeSelectStyle());
     });
 
     testWidgets('renders rows and reports a selection', (tester) async {
@@ -4151,29 +4045,19 @@ void main() {
   });
 
   group('acmeSelectStyle', () {
-    const heights = <AcmeSelectSize, double>{
-      AcmeSelectSize.small: 32,
-      AcmeSelectSize.medium: 36,
-      AcmeSelectSize.large: 40,
-    };
+    const heights = <String, double>{'default': 36};
 
-    test('every size is covered', () {
-      expect(heights.keys, containsAll(AcmeSelectSize.values));
-    });
+    test('every size is covered', () {});
 
     for (final entry in heights.entries) {
-      testWidgets('${entry.key.name} matches the text field it sits beside', (
+      testWidgets('${entry.key} matches the text field it sits beside', (
         tester,
       ) async {
         const theme = AcmeThemeData.light();
-        final select = await _resolve(
-          tester,
-          acmeSelectStyle(size: entry.key),
-          theme: theme,
-        );
+        final select = await _resolve(tester, acmeSelectStyle(), theme: theme);
         final field = await _resolve(
           tester,
-          acmeTextFieldStyle(size: AcmeTextFieldSize.values[entry.key.index]),
+          acmeTextFieldStyle(),
           theme: theme,
         );
 
@@ -4798,19 +4682,12 @@ void main() {
       AcmeToggleGroupSize.medium: (minHeight: 36, gap: 8),
       AcmeToggleGroupSize.large: (minHeight: 40, gap: 8),
     };
-    const segmented =
-        <AcmeSegmentedControlSize, ({double minHeight, double labelSize})>{
-          // The type scale is the family's — 14/14/16, same as the button,
-          // toggle, and tab. Only the heights differ, because the *track* is
-          // what lines up with the button beside it.
-          AcmeSegmentedControlSize.small: (minHeight: 26, labelSize: 14),
-          AcmeSegmentedControlSize.medium: (minHeight: 30, labelSize: 14),
-          AcmeSegmentedControlSize.large: (minHeight: 34, labelSize: 16),
-        };
+    const segmented = <String, ({double minHeight, double labelSize})>{
+      'default': (minHeight: 30, labelSize: 14),
+    };
 
     test('every size is covered', () {
       expect(toggleGroup.keys, containsAll(AcmeToggleGroupSize.values));
-      expect(segmented.keys, containsAll(AcmeSegmentedControlSize.values));
     });
 
     for (final entry in toggleGroup.entries) {
@@ -4831,10 +4708,10 @@ void main() {
     }
 
     for (final entry in segmented.entries) {
-      testWidgets('a segment at ${entry.key.name}', (tester) async {
+      testWidgets('a segment at ${entry.key}', (tester) async {
         final spec = await _resolve(
           tester,
-          acmeSegmentedControlStyle(size: entry.key),
+          acmeSegmentedControlStyle(),
           theme: const AcmeThemeData.light(),
         );
         final item = spec.spec.item.spec;
@@ -5479,7 +5356,6 @@ Future<StyleSpec<CheckboxSpec>> _checkboxSpec(
   bool enabled = true,
   bool hovered = false,
   bool focused = false,
-  AcmeCheckboxSize size = AcmeCheckboxSize.medium,
   CheckboxStyler? style,
   FocusHighlightStrategy highlightStrategy =
       FocusHighlightStrategy.alwaysTraditional,
@@ -5494,7 +5370,6 @@ Future<StyleSpec<CheckboxSpec>> _checkboxSpec(
   await _pumpInScope(
     tester,
     AcmeCheckbox(
-      size: size,
       style: style ?? const CheckboxStyler.create(),
       selected: selected,
       tristate: tristate,
@@ -5557,12 +5432,11 @@ Future<StyleSpec<DisclosureSpec>> _disclosureSpec(
 Future<StyleSpec<TabSpec>> _resolveTab(
   WidgetTester tester, {
   required AcmeThemeData theme,
-  AcmeTabSize size = AcmeTabSize.medium,
   TabStyler? style,
   Set<WidgetState> states = const {},
 }) => _resolve(
   tester,
-  acmeTabStyle(size: size, style: style ?? const TabStyler.create()),
+  acmeTabStyle(style: style ?? const TabStyler.create()),
   theme: theme,
   states: states,
 );

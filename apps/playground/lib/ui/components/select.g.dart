@@ -28,7 +28,6 @@ part of 'select.dart';
 class PlaygroundSelect<T> extends StatelessWidget {
   const PlaygroundSelect({
     super.key,
-    this.size = .medium,
     this.style = const SelectStyler.create(),
     required this.trigger,
     required this.items,
@@ -46,8 +45,6 @@ class PlaygroundSelect<T> extends StatelessWidget {
     this.closeOnSelect = true,
     this.focusNode,
   });
-
-  final PlaygroundSelectSize size;
 
   final SelectStyler style;
 
@@ -79,7 +76,7 @@ class PlaygroundSelect<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixSelect<T>(
       key: this.key,
-      style: playgroundSelectStyle(size: this.size, style: this.style),
+      style: playgroundSelectStyle(style: this.style),
       trigger: this.trigger,
       items: this.items,
       selectedValue: this.selectedValue,

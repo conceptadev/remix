@@ -47,7 +47,6 @@ part of 'checkbox.dart';
 class PlaygroundCheckbox extends StatelessWidget {
   const PlaygroundCheckbox({
     super.key,
-    this.size = .medium,
     this.style = const CheckboxStyler.create(),
     required this.selected,
     this.onChanged,
@@ -64,8 +63,6 @@ class PlaygroundCheckbox extends StatelessWidget {
     this.minimumTapTargetSize = const Size.square(48),
     this.mouseCursor = SystemMouseCursors.click,
   });
-
-  final PlaygroundCheckboxSize size;
 
   final CheckboxStyler style;
 
@@ -101,7 +98,7 @@ class PlaygroundCheckbox extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixCheckbox(
       key: this.key,
-      style: playgroundCheckboxStyle(size: this.size, style: this.style),
+      style: playgroundCheckboxStyle(style: this.style),
       selected: this.selected,
       onChanged: this.onChanged,
       enabled: this.enabled,
@@ -134,7 +131,6 @@ class PlaygroundCheckbox extends StatelessWidget {
 class PlaygroundCheckboxGroupItem<T extends Object> extends StatelessWidget {
   const PlaygroundCheckboxGroupItem({
     super.key,
-    this.size = .medium,
     this.style = const CheckboxStyler.create(),
     required this.value,
     required this.label,
@@ -148,8 +144,6 @@ class PlaygroundCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.minimumTapTargetSize = const Size.square(48),
     this.mouseCursor = SystemMouseCursors.click,
   });
-
-  final PlaygroundCheckboxSize size;
 
   final CheckboxStyler style;
 
@@ -179,10 +173,7 @@ class PlaygroundCheckboxGroupItem<T extends Object> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixCheckboxGroupItem<T>(
       key: this.key,
-      style: playgroundCheckboxGroupItemStyle(
-        size: this.size,
-        style: this.style,
-      ),
+      style: playgroundCheckboxGroupItemStyle(style: this.style),
       value: this.value,
       label: this.label,
       semanticLabel: this.semanticLabel,

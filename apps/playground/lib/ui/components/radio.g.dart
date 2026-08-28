@@ -41,7 +41,6 @@ part of 'radio.dart';
 class PlaygroundRadio<T> extends StatelessWidget {
   const PlaygroundRadio({
     super.key,
-    this.size = .medium,
     this.style = const RadioStyler.create(),
     required this.value,
     required this.semanticLabel,
@@ -52,8 +51,6 @@ class PlaygroundRadio<T> extends StatelessWidget {
     this.autofocus = false,
     this.excludeSemantics = false,
   });
-
-  final PlaygroundRadioSize size;
 
   final RadioStyler style;
 
@@ -77,7 +74,7 @@ class PlaygroundRadio<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixRadio<T>(
       key: this.key,
-      style: playgroundRadioStyle(size: this.size, style: this.style),
+      style: playgroundRadioStyle(style: this.style),
       value: this.value,
       semanticLabel: this.semanticLabel,
       enabled: this.enabled,

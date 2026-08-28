@@ -6,24 +6,6 @@ import '../theme/tokens.dart';
 
 part 'select.g.dart';
 
-/// The control densities this application offers for a select.
-///
-/// The same 32/36/40px heights the text field uses, because the trigger is a
-/// field: it shows the current value and it sits in the same forms.
-///
-/// These are compact, web-oriented defaults. A touch-first application should
-/// raise them to meet platform hit-target guidance.
-enum PlaygroundSelectSize {
-  /// 32px minimum height.
-  small,
-
-  /// 36px minimum height. The default.
-  medium,
-
-  /// 40px minimum height.
-  large,
-}
-
 /// The application's Select recipe.
 ///
 /// Remix owns the rendering, the overlay, keyboard traversal, the open and
@@ -45,16 +27,13 @@ enum PlaygroundSelectSize {
 /// declared as a focus fragment too.
 @MixWidget(target: RemixSelect.new)
 SelectStyler playgroundSelectStyle({
-  PlaygroundSelectSize size = .medium,
   SelectStyler style = const SelectStyler.create(),
 }) {
-  final metrics = _metricsFor(size);
-
   return SelectStyler()
-      .trigger(_triggerStyle(size, metrics))
+      .trigger(_triggerStyle())
       .content(_contentStyle())
       .menuContainer(.direction(.vertical).mainAxisSize(.min))
-      .item(_itemStyle(size, metrics))
+      .item(_itemStyle())
       .merge(style);
 }
 
@@ -86,10 +65,8 @@ const _gap = 8.0;
 /// It scales with the control for the same reason the label does: a large
 /// select sits beside a large button, and a chevron that stayed at the medium
 /// size would read as a smaller control wearing the same height.
-double _iconSizeFor(PlaygroundSelectSize size) => switch (size) {
-  .small || .medium => 16.0,
-  .large => 18.0,
-};
+/// Size of the trigger's chevron and an option's check mark.
+const _iconSize = 16.0;
 
 /// Inset between the panel edge and its rows.
 const _panelPadding = 4.0;
@@ -131,38 +108,33 @@ final _shadow = RemixBoxShadowMix(
   blurRadius: 12,
 );
 
-/// Geometry and type scale for one [PlaygroundSelectSize].
-typedef _PlaygroundSelectMetrics = ({double minHeight, double textSize});
+/// The trigger's resting height, matching shadcn's `h-9` and the text field
+/// this trigger is styled after.
+///
+/// One size, not a scale. A call site that needs another sets
+/// `.minHeight(...)` through [style].
+const _minHeight = 36.0;
 
-_PlaygroundSelectMetrics _metricsFor(PlaygroundSelectSize size) =>
-    switch (size) {
-      .small => (minHeight: 32.0, textSize: 14.0),
-      .medium => (minHeight: 36.0, textSize: 14.0),
-      .large => (minHeight: 40.0, textSize: 16.0),
-    };
+/// Label, placeholder and option size, matching body copy.
+const _textSize = 14.0;
 
 /// The closed control: a field showing the current value and a chevron.
-SelectTriggerStyler _triggerStyle(
-  PlaygroundSelectSize size,
-  _PlaygroundSelectMetrics metrics,
-) => SelectTriggerStyler()
+SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .mainAxisAlignment(.spaceBetween)
-    .minHeight(metrics.minHeight)
+    .minHeight(_minHeight)
     .padding(.horizontal(_paddingX))
     .spacing(_gap)
     .color(PlaygroundTokens.background())
     .border(.color(PlaygroundTokens.border()).width(_borderWidth))
     .borderRadius(.all(PlaygroundTokens.radius()))
-    .label(.fontSize(metrics.textSize).color(PlaygroundTokens.foreground()))
+    .label(.fontSize(_textSize).color(PlaygroundTokens.foreground()))
     // The placeholder is not a value: it has to read as the quieter of
     // the two, or a select with nothing chosen looks answered.
-    .placeholder(
-      .fontSize(metrics.textSize).color(PlaygroundTokens.mutedForeground()),
-    )
+    .placeholder(.fontSize(_textSize).color(PlaygroundTokens.mutedForeground()))
     .placeholderOpacity(_placeholderOpacity)
-    .icon(.size(_iconSizeFor(size)).color(PlaygroundTokens.mutedForeground()))
+    .icon(.size(_iconSize).color(PlaygroundTokens.mutedForeground()))
     // The content moves with the surface. Tinting the box alone would
     // leave the placeholder at `mutedForeground` on `accent`, which is
     // 3.76:1 in the light theme — under the 4.5:1 floor for text this
@@ -205,18 +177,15 @@ SelectContentStyler _contentStyle() => SelectContentStyler()
 /// `accent` marks the row under the pointer *and* the row the arrow keys are
 /// on, because a select is as often driven by the keyboard as by the mouse.
 /// The chosen option is marked by its check icon, which Remix renders.
-SelectMenuItemStyler _itemStyle(
-  PlaygroundSelectSize size,
-  _PlaygroundSelectMetrics metrics,
-) => SelectMenuItemStyler()
+SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .minHeight(_rowHeight)
     .padding(.symmetric(horizontal: _rowPaddingX, vertical: _rowPaddingY))
     .spacing(_gap)
     .borderRadius(.all(PlaygroundTokens.radius()))
-    .label(.fontSize(metrics.textSize).color(PlaygroundTokens.foreground()))
-    .icon(.size(_iconSizeFor(size)).color(PlaygroundTokens.foreground()))
+    .label(.fontSize(_textSize).color(PlaygroundTokens.foreground()))
+    .icon(.size(_iconSize).color(PlaygroundTokens.foreground()))
     .onHovered(_highlighted())
     .onFocused(_highlighted())
     .onDisabled(SelectMenuItemStyler().wrap(.opacity(_disabledOpacity)));

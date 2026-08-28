@@ -33,7 +33,6 @@ part of 'avatar.dart';
 class PlaygroundAvatar extends StatelessWidget {
   const PlaygroundAvatar({
     super.key,
-    this.size = .medium,
     this.style = const AvatarStyler.create(),
     this.backgroundImage,
     this.foregroundImage,
@@ -45,8 +44,6 @@ class PlaygroundAvatar extends StatelessWidget {
     this.icon,
     this.iconBuilder,
   });
-
-  final PlaygroundAvatarSize size;
 
   final AvatarStyler style;
 
@@ -72,7 +69,7 @@ class PlaygroundAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixAvatar(
       key: this.key,
-      style: playgroundAvatarStyle(size: this.size, style: this.style),
+      style: playgroundAvatarStyle(style: this.style),
       backgroundImage: this.backgroundImage,
       foregroundImage: this.foregroundImage,
       onBackgroundImageError: this.onBackgroundImageError,

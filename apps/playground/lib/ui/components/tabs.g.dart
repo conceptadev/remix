@@ -94,7 +94,6 @@ class PlaygroundTabBar extends StatelessWidget {
 class PlaygroundTab extends StatelessWidget {
   const PlaygroundTab({
     super.key,
-    this.size = .medium,
     this.style = const TabStyler.create(),
     required this.tabId,
     this.child,
@@ -110,8 +109,6 @@ class PlaygroundTab extends StatelessWidget {
     this.onPressChange,
     this.semanticLabel,
   });
-
-  final PlaygroundTabSize size;
 
   final TabStyler style;
 
@@ -145,7 +142,7 @@ class PlaygroundTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTab(
       key: this.key,
-      style: playgroundTabStyle(size: this.size, style: this.style),
+      style: playgroundTabStyle(style: this.style),
       tabId: this.tabId,
       child: this.child,
       label: this.label,

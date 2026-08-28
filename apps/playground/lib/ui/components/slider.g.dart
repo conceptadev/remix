@@ -30,7 +30,6 @@ part of 'slider.dart';
 class PlaygroundSlider extends StatelessWidget {
   const PlaygroundSlider({
     super.key,
-    this.size = .medium,
     this.style = const SliderStyler.create(),
     required this.value,
     this.onChanged,
@@ -46,8 +45,6 @@ class PlaygroundSlider extends StatelessWidget {
     this.semanticLabel,
     this.excludeSemantics = false,
   });
-
-  final PlaygroundSliderSize size;
 
   final SliderStyler style;
 
@@ -81,7 +78,7 @@ class PlaygroundSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixSlider(
       key: this.key,
-      style: playgroundSliderStyle(size: this.size, style: this.style),
+      style: playgroundSliderStyle(style: this.style),
       value: this.value,
       onChanged: this.onChanged,
       onChangeStart: this.onChangeStart,
