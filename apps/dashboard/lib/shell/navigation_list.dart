@@ -2,10 +2,7 @@ import 'package:remix/remix.dart';
 
 import 'dashboard_page.dart';
 
-/// Dashboard destinations grouped in visual and keyboard traversal order.
-///
-/// Shell behavior stays with the sidebar; these immutable records can be passed
-/// directly to the public Remix/Fortal navigation-list API.
+/// Dashboard destinations in visual and keyboard traversal order.
 final List<RemixNavigationSection<DashboardPage>> dashboardNavSections =
     List.unmodifiable([
       for (final section in DashboardSection.values)
