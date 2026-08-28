@@ -212,18 +212,23 @@ dev_dependencies:
 /// Mirrors the checker's own item list; kept here so a new registry item that
 /// the checker forgot still shows up as a failing boundary test.
 const _registryItems = <String>[
+  'accordion',
   'avatar',
   'badge',
   'button',
   'callout',
   'card',
   'checkbox',
+  'dialog',
   'divider',
   'icon_button',
   'link',
+  'menu',
+  'popover',
   'progress',
   'radio',
   'segmented_control',
+  'select',
   'skeleton',
   'slider',
   'spinner',
@@ -232,6 +237,7 @@ const _registryItems = <String>[
   'textfield',
   'toggle',
   'toggle_group',
+  'tooltip',
 ];
 
 void _writeInstalledUi(Directory app) {

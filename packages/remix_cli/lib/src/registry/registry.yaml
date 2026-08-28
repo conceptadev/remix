@@ -334,3 +334,99 @@ items:
       - "@ui/components/toggle_group.g.dart"
     exports:
       - components/toggle_group.dart
+
+  accordion:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/accordion/accordion.dart.tmpl
+        target: "@ui/components/accordion.dart"
+    generated:
+      - "@ui/components/accordion.g.dart"
+    exports:
+      - components/accordion.dart
+
+  dialog:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/dialog/dialog.dart.tmpl
+        target: "@ui/components/dialog.dart"
+    generated:
+      - "@ui/components/dialog.g.dart"
+    exports:
+      - components/dialog.dart
+
+  menu:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/menu/menu.dart.tmpl
+        target: "@ui/components/menu.dart"
+    generated:
+      - "@ui/components/menu.g.dart"
+    exports:
+      - components/menu.dart
+
+  popover:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/popover/popover.dart.tmpl
+        target: "@ui/components/popover.dart"
+    generated:
+      - "@ui/components/popover.g.dart"
+    exports:
+      - components/popover.dart
+
+  select:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/select/select.dart.tmpl
+        target: "@ui/components/select.dart"
+    generated:
+      - "@ui/components/select.g.dart"
+    exports:
+      - components/select.dart
+
+  tooltip:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/tooltip/tooltip.dart.tmpl
+        target: "@ui/components/tooltip.dart"
+    generated:
+      - "@ui/components/tooltip.g.dart"
+    exports:
+      - components/tooltip.dart

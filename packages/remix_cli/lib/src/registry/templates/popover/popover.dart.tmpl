@@ -1,0 +1,60 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/tokens.dart';
+
+part 'popover.g.dart';
+
+/// The application's Popover recipe.
+///
+/// Remix owns the rendering, the overlay, the anchor positioning, the
+/// dismiss-on-outside-tap behavior, focus, and the popover accessibility
+/// semantics; this recipe supplies only the floating panel's surface.
+///
+/// A popover sits *over* arbitrary content, so its edge is doing real work:
+/// it is what tells a reader where the panel stops and the page resumes. That
+/// edge is a `border` hairline plus a soft drop shadow. The fill is
+/// `background`, the same token the page uses, because this vocabulary has no
+/// separate surface step — see the theme's own comments if you add one.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it:
+///
+/// ```dart
+/// {{typePrefix}}Popover(
+///   popoverChild: filters,
+///   child: {{typePrefix}}Button.outline(label: 'Filter'),
+/// )
+/// ```
+@MixWidget(target: RemixPopover.new)
+PopoverStyler {{valuePrefix}}PopoverStyle({
+  PopoverStyler style = const PopoverStyler.create(),
+}) => PopoverStyler()
+    .color({{typePrefix}}Tokens.background())
+    .border(
+      .all(
+        BorderSideMix(color: {{typePrefix}}Tokens.border(), width: _borderWidth),
+      ),
+    )
+    .borderRadius(.all({{typePrefix}}Tokens.radius()))
+    .padding(.all(_padding))
+    .shadow(_shadow)
+    .merge(style);
+
+/// Width of the panel outline.
+const _borderWidth = 1.0;
+
+/// Inset between the panel edge and its content.
+const _padding = 12.0;
+
+/// The lift that separates the panel from whatever it covers.
+///
+/// Deliberately soft and untinted. A shadow is nearly invisible on a dark
+/// page, so it is a *second* cue rather than the primary one; the outline
+/// above is what has to carry the boundary in both themes.
+final _shadow = BoxShadowMix(
+  color: const Color(0x1A000000),
+  offset: const Offset(0, 4),
+  blurRadius: 12,
+);

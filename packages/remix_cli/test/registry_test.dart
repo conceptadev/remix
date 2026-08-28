@@ -289,7 +289,8 @@ items:
 /// `Acme` rendering.
 const _componentSurfaces =
     <String, ({List<String> widgets, List<String> types})>{
-      'avatar': (widgets: ['Avatar'], types: ['AvatarSize']),
+      'accordion': (widgets: ['Accordion'], types: []),
+  'avatar': (widgets: ['Avatar'], types: ['AvatarSize']),
       'badge': (widgets: ['Badge'], types: ['BadgeVariant']),
       'button': (widgets: ['Button'], types: ['ButtonVariant', 'ButtonSize']),
       'callout': (widgets: ['Callout'], types: ['CalloutVariant']),
@@ -298,19 +299,23 @@ const _componentSurfaces =
         widgets: ['Checkbox', 'CheckboxGroupItem'],
         types: ['CheckboxSize'],
       ),
-      'divider': (widgets: ['Divider'], types: []),
+      'dialog': (widgets: ['Dialog'], types: []),
+  'divider': (widgets: ['Divider'], types: []),
       'icon_button': (
         widgets: ['IconButton'],
         types: ['IconButtonVariant', 'IconButtonSize'],
       ),
       'link': (widgets: ['Link'], types: []),
+  'menu': (widgets: ['Menu'], types: []),
+  'popover': (widgets: ['Popover'], types: []),
       'progress': (widgets: ['Progress'], types: ['ProgressSize']),
       'radio': (widgets: ['Radio'], types: ['RadioSize']),
       'segmented_control': (
         widgets: ['SegmentedControl'],
         types: ['SegmentedControlSize'],
       ),
-      'skeleton': (widgets: ['Skeleton'], types: []),
+      'select': (widgets: ['Select'], types: ['SelectSize']),
+  'skeleton': (widgets: ['Skeleton'], types: []),
       'slider': (widgets: ['Slider'], types: ['SliderSize']),
       'spinner': (widgets: ['Spinner'], types: ['SpinnerSize']),
       'switch': (widgets: ['Switch'], types: ['SwitchSize']),
@@ -320,6 +325,7 @@ const _componentSurfaces =
         types: ['TextFieldSize'],
       ),
       'toggle': (widgets: ['Toggle'], types: ['ToggleVariant', 'ToggleSize']),
+  'tooltip': (widgets: ['Tooltip'], types: []),
       'toggle_group': (
         widgets: ['ToggleGroup'],
         types: ['ToggleGroupVariant', 'ToggleGroupSize'],

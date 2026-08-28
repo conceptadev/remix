@@ -429,18 +429,23 @@ installs one authored file plus its generated adapter under
 
 | Item | Widgets you get | Axes |
 |---|---|---|
+| `accordion` | `UiAccordion` | — |
 | `avatar` | `UiAvatar` | size |
 | `badge` | `UiBadge` | variant |
 | `button` | `UiButton` | variant, size |
 | `callout` | `UiCallout` | variant |
 | `card` | `UiCard` | — |
 | `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` | size |
+| `dialog` | `UiDialog` | — |
 | `divider` | `UiDivider` | orientation |
 | `icon_button` | `UiIconButton` | variant, size |
 | `link` | `UiLink` | — |
+| `menu` | `UiMenu` | — |
+| `popover` | `UiPopover` | — |
 | `progress` | `UiProgress` | size |
 | `radio` | `UiRadio` | size |
 | `segmented_control` | `UiSegmentedControl` | size |
+| `select` | `UiSelect` | size |
 | `skeleton` | `UiSkeleton` | — |
 | `slider` | `UiSlider` | size |
 | `spinner` | `UiSpinner` | size |
@@ -449,6 +454,7 @@ installs one authored file plus its generated adapter under
 | `textfield` | `UiTextField`, `UiTextArea` | size |
 | `toggle` | `UiToggle` | variant, size |
 | `toggle_group` | `UiToggleGroup` | variant, size |
+| `tooltip` | `UiTooltip` | — |
 
 One `add` installs one item. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. A recipe whose axis is
@@ -456,14 +462,14 @@ named `variant` also gets one named constructor per value, so
 `UiBadge.destructive(label: 'Failing')` works out of the box.
 
 Some Remix widgets are behavioral and carry no style, so the registry has
-nothing to render for them. `RemixCheckboxGroup`, `RemixRadioGroup`, and
-`RemixTabs` are the three in this catalog: import them from
-`package:remix/remix.dart` and put the installed adapters inside.
+nothing to render for them. `RemixCheckboxGroup`, `RemixRadioGroup`,
+`RemixTabs`, and `RemixAccordionGroup` are the four in this catalog: import
+them from `package:remix/remix.dart` and put the installed adapters inside.
 
-`toggle_group` and `segmented_control` work the other way round. Their options
-are data, not widgets, and the group's own recipe carries the option style — so
-one `add` covers the container *and* every option, and an option in a loop
-cannot be left unstyled.
+`toggle_group`, `segmented_control`, `menu`, and `select` work the other way
+round. Their options are data, not widgets, and the parent's own recipe carries
+the option style — so one `add` covers the container *and* every row, and a row
+in a loop cannot be left unstyled.
 
 One host note: an installed text field needs an `Overlay` ancestor once it
 takes focus, for its selection handles. `MaterialApp`, `CupertinoApp`, and any

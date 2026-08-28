@@ -20,10 +20,11 @@ dart run remix_cli:remix init --prefix Acme
 dart run remix_cli:remix add button
 ```
 
-One `add` installs one item. The catalog is `theme` plus `avatar`, `badge`,
-`button`, `callout`, `card`, `checkbox`, `divider`, `icon_button`, `link`,
-`progress`, `radio`, `segmented_control`, `skeleton`, `slider`, `spinner`,
-`switch`, `tabs`, `textfield`, `toggle`, and `toggle_group`.
+One `add` installs one item. The catalog is `theme` plus
+`accordion`, `avatar`, `badge`, `button`, `callout`, `card`, `checkbox`,
+`dialog`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
+`radio`, `segmented_control`, `select`, `skeleton`, `slider`, `spinner`,
+`switch`, `tabs`, `textfield`, `toggle`, `toggle_group`, and `tooltip`.
 
 Until the separate public-release gate is complete, contributors can point the
 development dependency at a checkout or staged package:

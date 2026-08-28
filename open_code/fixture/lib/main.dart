@@ -138,6 +138,10 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
   double _volume = 0.4;
   String? _weight = 'bold';
   String _view = 'list';
+  // Remix re-exports this as an alias, so the group's controller does not
+  // drag `package:naked_ui` into an application that only depends on Remix.
+  final RemixAccordionController<String> _sections =
+      RemixAccordionController<String>();
 
   void _record(String action) => setState(() => _lastAction = action);
 
@@ -751,6 +755,114 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                           label: 'Timeline',
                         ),
                       ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Overlays', color: data.mutedForeground),
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 12,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    AcmeTooltip(
+                      tooltipChild: const Text('Adds a new workspace'),
+                      child: AcmeButton.secondary(
+                        label: 'Hover me',
+                        onPressed: () => _record('tooltip anchor'),
+                      ),
+                    ),
+                    AcmePopover(
+                      popoverChild: Text(
+                        'Filters go here.',
+                        style: TextStyle(color: data.foreground),
+                      ),
+                      semanticLabel: 'Filters',
+                      child: AcmeButton.outline(
+                        label: 'Filter',
+                        onPressed: () => _record('popover'),
+                      ),
+                    ),
+                    AcmeMenu<String>(
+                      trigger: const RemixMenuTrigger(label: 'Actions'),
+                      semanticLabel: 'Actions',
+                      onSelected: (value) => _record('menu -> $value'),
+                      items: const [
+                        RemixMenuItem(value: 'rename', label: 'Rename'),
+                        RemixMenuItem(value: 'duplicate', label: 'Duplicate'),
+                        RemixMenuDivider<String>(),
+                        RemixMenuItem(
+                          value: 'delete',
+                          label: 'Delete',
+                          enabled: false,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 200,
+                      child: AcmeSelect<String>(
+                        trigger: const RemixSelectTrigger(
+                          placeholder: 'Choose a plan',
+                        ),
+                        selectedValue: _plan,
+                        semanticLabel: 'Plan',
+                        onChanged: (value) => setState(() {
+                          _plan = value;
+                          _lastAction = 'select -> $value';
+                        }),
+                        items: const [
+                          RemixSelectItem(value: 'free', label: 'Free'),
+                          RemixSelectItem(value: 'pro', label: 'Pro'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Accordion', color: data.mutedForeground),
+                // `RemixAccordionGroup` is behavioral and carries no recipe:
+                // it owns which sections are open while the adapter owns the
+                // rows.
+                RemixAccordionGroup<String>(
+                  controller: _sections,
+                  initialExpandedValues: const ['shipping'],
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AcmeAccordion(
+                        value: 'shipping',
+                        title: 'Shipping',
+                        trailingIcon: checkGlyph,
+                        child: Text('Two to four business days.'),
+                      ),
+                      AcmeAccordion(
+                        value: 'returns',
+                        title: 'Returns',
+                        trailingIcon: checkGlyph,
+                        child: Text('Thirty days, unworn.'),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Dialog', color: data.mutedForeground),
+                // Rendered in place rather than over a barrier: the gallery is
+                // showing the panel's recipe, and Remix owns the presentation.
+                AcmeDialog(
+                  title: 'Delete workspace?',
+                  description:
+                      'This removes every project in it, for everyone.',
+                  actions: [
+                    AcmeButton.ghost(
+                      label: 'Cancel',
+                      onPressed: () => _record('dialog cancel'),
+                    ),
+                    AcmeButton.destructive(
+                      label: 'Delete',
+                      onPressed: () => _record('dialog delete'),
                     ),
                   ],
                 ),

@@ -2053,6 +2053,12 @@ void main() {
           find.byType(AcmeTextArea),
           find.byType(AcmeToggleGroup<String>),
           find.byType(AcmeSegmentedControl<String>),
+          find.byType(AcmeAccordion<String>),
+          find.byType(AcmeDialog),
+          find.byType(AcmeMenu<String>),
+          find.byType(AcmePopover),
+          find.byType(AcmeSelect<String>),
+          find.byType(AcmeTooltip),
         ]) {
           expect(finder, findsWidgets);
         }
@@ -3649,6 +3655,398 @@ void main() {
     });
   });
 
+  group('the overlay surfaces', () {
+    for (final theme in _themes) {
+      testWidgets('popover and menu agree on the panel in ${theme.name}', (
+        tester,
+      ) async {
+        final popover = await _resolve(
+          tester,
+          acmePopoverStyle(),
+          theme: theme.data,
+        );
+        final menu = await _resolve(tester, acmeMenuStyle(), theme: theme.data);
+
+        // Two files on purpose, but a menu and a popover anchored to adjacent
+        // buttons must not read as two systems.
+        expect(_boxBackground(popover.spec.container), theme.data.background);
+        expect(
+          _flexDecoration(menu.spec.overlay)?.color,
+          theme.data.background,
+        );
+        expect(
+          _boxBorder(popover.spec.container),
+          Border.all(color: theme.data.border, width: 1),
+        );
+        expect(
+          _flexBorder(menu.spec.overlay),
+          Border.all(color: theme.data.border, width: 1),
+        );
+        expect(
+          _boxBorderRadius(popover.spec.container),
+          BorderRadius.all(theme.data.radius),
+        );
+      });
+
+      testWidgets('the dialog is a wider, heavier popover in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeDialogStyle(),
+          theme: theme.data,
+        );
+
+        expect(_boxBackground(spec.spec.container), theme.data.background);
+        expect(
+          _boxBorder(spec.spec.container),
+          Border.all(color: theme.data.border, width: 1),
+        );
+        expect(spec.spec.container.spec.constraints?.maxWidth, 420);
+        expect(spec.spec.container.spec.padding, const EdgeInsets.all(20));
+        expect(spec.spec.title.spec.style?.fontSize, 18);
+        expect(spec.spec.title.spec.style?.fontWeight, FontWeight.w600);
+        expect(spec.spec.title.spec.style?.color, theme.data.foreground);
+        expect(
+          spec.spec.description.spec.style?.color,
+          theme.data.mutedForeground,
+        );
+        // The decision sits where a reader looks after the description.
+        expect(
+          spec.spec.actions.spec.flex?.spec.mainAxisAlignment,
+          MainAxisAlignment.end,
+        );
+      });
+
+      testWidgets('the tooltip inverts instead of floating in '
+          '${theme.name}', (tester) async {
+        final spec = await _resolve(
+          tester,
+          acmeTooltipStyle(),
+          theme: theme.data,
+        );
+
+        // The one floating surface that is not `background`: a tooltip is a
+        // transient label, not a panel a reader can act in.
+        expect(_boxBackground(spec.spec.container), theme.data.foreground);
+        expect(spec.spec.label.spec.style?.color, theme.data.background);
+        expect(spec.spec.waitDuration, const Duration(milliseconds: 500));
+        expect(spec.spec.showDuration, const Duration(milliseconds: 1500));
+        expect(spec.spec.dismissDuration, const Duration(milliseconds: 100));
+        _expectReadable(
+          theme.data.background,
+          theme.data.foreground,
+          page: theme.data.background,
+          floor: 4.5,
+          reason: 'tooltip label',
+        );
+      });
+    }
+
+    testWidgets('every floating panel lifts off the page', (tester) async {
+      const theme = AcmeThemeData.light();
+      final popover = await _resolve(tester, acmePopoverStyle(), theme: theme);
+      final dialog = await _resolve(tester, acmeDialogStyle(), theme: theme);
+
+      final popoverShadow = _boxDecoration(
+        popover.spec.container,
+      )!.boxShadow!.single;
+      final dialogShadow = _boxDecoration(
+        dialog.spec.container,
+      )!.boxShadow!.single;
+
+      // A dialog is meant to stop the reader, so its lift is the heavier one.
+      expect(dialogShadow.blurRadius, greaterThan(popoverShadow.blurRadius));
+      expect(dialogShadow.offset.dy, greaterThan(popoverShadow.offset.dy));
+    });
+  });
+
+  group('acmeMenuStyle rows', () {
+    for (final theme in _themes) {
+      testWidgets('a row highlights on pointer and on keyboard in '
+          '${theme.name}', (tester) async {
+        final idle = await _resolve(tester, acmeMenuStyle(), theme: theme.data);
+
+        expect(
+          idle.spec.item.spec.label.spec.style?.color,
+          theme.data.foreground,
+        );
+        expect(
+          idle.spec.item.spec.leadingIcon.spec.color,
+          theme.data.mutedForeground,
+        );
+
+        // Hover and focus have to agree: a menu is as often driven by the
+        // arrow keys as by the pointer.
+        for (final states in const [
+          {WidgetState.hovered},
+          {WidgetState.focused},
+        ]) {
+          final spec = await _resolve(
+            tester,
+            acmeMenuStyle(),
+            theme: theme.data,
+            states: states,
+          );
+          final item = spec.spec.item.spec;
+
+          expect(
+            _flexDecoration(item.container)?.color,
+            theme.data.accent,
+            reason: '$states',
+          );
+          expect(
+            item.label.spec.style?.color,
+            theme.data.accentForeground,
+            reason: '$states',
+          );
+          _expectReadable(
+            item.label.spec.style!.color!,
+            theme.data.accent,
+            page: theme.data.background,
+            floor: 4.5,
+            reason: 'menu row $states',
+          );
+        }
+      });
+    }
+
+    testWidgets('the trigger stays quiet so it can wrap a real control', (
+      tester,
+    ) async {
+      const theme = AcmeThemeData.light();
+      final spec = await _resolve(tester, acmeMenuStyle(), theme: theme);
+
+      expect(_flexDecoration(spec.spec.trigger.spec.container)?.color, isNull);
+      expect(_flexBorder(spec.spec.trigger.spec.container), isNull);
+      expect(spec.spec.trigger.spec.label.spec.style?.color, theme.foreground);
+    });
+
+    testWidgets('the divider matches the rule every other component draws', (
+      tester,
+    ) async {
+      const theme = AcmeThemeData.light();
+      final menu = await _resolve(tester, acmeMenuStyle(), theme: theme);
+      final divider = await _resolve(tester, acmeDividerStyle(), theme: theme);
+
+      expect(
+        _boxBackground(menu.spec.divider.spec.container),
+        _boxBackground(divider.spec.container),
+      );
+    });
+  });
+
+  group('acmeSelectStyle', () {
+    const heights = <AcmeSelectSize, double>{
+      AcmeSelectSize.small: 32,
+      AcmeSelectSize.medium: 36,
+      AcmeSelectSize.large: 40,
+    };
+
+    test('every size is covered', () {
+      expect(heights.keys, containsAll(AcmeSelectSize.values));
+    });
+
+    for (final entry in heights.entries) {
+      testWidgets('${entry.key.name} matches the text field it sits beside', (
+        tester,
+      ) async {
+        const theme = AcmeThemeData.light();
+        final select = await _resolve(
+          tester,
+          acmeSelectStyle(size: entry.key),
+          theme: theme,
+        );
+        final field = await _resolve(
+          tester,
+          acmeTextFieldStyle(size: AcmeTextFieldSize.values[entry.key.index]),
+          theme: theme,
+        );
+
+        expect(
+          select
+              .spec
+              .trigger
+              .spec
+              .container
+              .spec
+              .box
+              ?.spec
+              .constraints
+              ?.minHeight,
+          entry.value,
+        );
+        // The trigger is a field, not a button: same height, same border.
+        expect(
+          _flexBorder(select.spec.trigger.spec.container),
+          _boxBorder(field.spec.container),
+        );
+      });
+    }
+
+    for (final theme in _themes) {
+      testWidgets('the placeholder reads quieter than a value in '
+          '${theme.name}', (tester) async {
+        final spec = await _resolve(
+          tester,
+          acmeSelectStyle(),
+          theme: theme.data,
+        );
+        final trigger = spec.spec.trigger.spec;
+
+        expect(trigger.label.spec.style?.color, theme.data.foreground);
+        expect(
+          trigger.placeholder.spec.style?.color,
+          theme.data.mutedForeground,
+        );
+        expect(trigger.icon.spec.color, theme.data.mutedForeground);
+        _expectReadable(
+          trigger.placeholder.spec.style!.color!,
+          _flexDecoration(trigger.container)!.color!,
+          page: theme.data.background,
+          floor: 4.5,
+          reason: 'placeholder',
+        );
+      });
+
+      testWidgets('the panel matches the menu panel in ${theme.name}', (
+        tester,
+      ) async {
+        final select = await _resolve(
+          tester,
+          acmeSelectStyle(),
+          theme: theme.data,
+        );
+        final menu = await _resolve(tester, acmeMenuStyle(), theme: theme.data);
+
+        expect(
+          _boxBackground(select.spec.content.spec.container),
+          _flexDecoration(menu.spec.overlay)?.color,
+        );
+        expect(
+          _boxBorder(select.spec.content.spec.container),
+          _flexBorder(menu.spec.overlay),
+        );
+        // A list of options has to stop somewhere: an unbounded panel grows
+        // past the viewport and takes its dismissal affordances with it.
+        expect(
+          select.spec.content.spec.container.spec.constraints?.maxHeight,
+          320,
+        );
+      });
+    }
+
+    testWidgets('choosing an option reports it', (tester) async {
+      final chosen = <String?>[];
+
+      await _pumpInScope(
+        tester,
+        _overlaid(
+          SizedBox(
+            width: 200,
+            child: AcmeSelect<String>(
+              trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+              semanticLabel: 'Plan',
+              onChanged: chosen.add,
+              items: const [
+                RemixSelectItem(value: 'free', label: 'Free'),
+                RemixSelectItem(value: 'pro', label: 'Pro'),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Choose'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Pro'));
+      await tester.pumpAndSettle();
+
+      expect(chosen, ['pro']);
+    });
+  });
+
+  group('acmeAccordionStyle', () {
+    for (final theme in _themes) {
+      testWidgets('a closed section is a titled rule in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeAccordionStyle(),
+          theme: theme.data,
+        );
+
+        // A rule along the bottom rather than a box of its own, so a stack of
+        // sections reads as one list.
+        expect(
+          _boxBorder(spec.spec.container),
+          Border(bottom: BorderSide(color: theme.data.border, width: 1)),
+        );
+        expect(spec.spec.title.spec.style?.color, theme.data.foreground);
+        expect(spec.spec.title.spec.style?.fontWeight, FontWeight.w500);
+        expect(spec.spec.leadingIcon.spec.color, theme.data.mutedForeground);
+        expect(spec.spec.trailingIcon.spec.color, theme.data.mutedForeground);
+        expect(spec.spec.trigger.spec.box?.spec.constraints?.minHeight, 44);
+      });
+
+      testWidgets('open and hover stay distinguishable in ${theme.name}', (
+        tester,
+      ) async {
+        final hovered = await _resolve(
+          tester,
+          acmeAccordionStyle(),
+          theme: theme.data,
+          states: const {WidgetState.hovered},
+        );
+        final open = await _resolve(
+          tester,
+          acmeAccordionStyle(),
+          theme: theme.data,
+          states: const {WidgetState.selected},
+        );
+
+        // Both promote the icons; only the open one moves the title's weight,
+        // which is what lets a reader find the open section without a pointer.
+        expect(hovered.spec.trailingIcon.spec.color, theme.data.foreground);
+        expect(open.spec.trailingIcon.spec.color, theme.data.foreground);
+        expect(hovered.spec.title.spec.style?.fontWeight, FontWeight.w500);
+        expect(open.spec.title.spec.style?.fontWeight, FontWeight.w600);
+      });
+    }
+
+    testWidgets('a section opens and closes through its group', (tester) async {
+      final controller = RemixAccordionController<String>();
+      addTearDown(controller.dispose);
+
+      await _pumpInScope(
+        tester,
+        RemixAccordionGroup<String>(
+          controller: controller,
+          child: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AcmeAccordion(
+                value: 'shipping',
+                title: 'Shipping',
+                child: Text('Two to four business days.'),
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Two to four business days.'), findsNothing);
+
+      await tester.tap(find.text('Shipping'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Two to four business days.'), findsOneWidget);
+    });
+  });
+
   group(
     'resolved content clears its WCAG floor over the surface it lands on',
     () {
@@ -3897,6 +4295,10 @@ void main() {
     // resolved differently with `const XStyler.create()` than without it would
     // make every generated adapter subtly different from the recipe it calls.
     expect(
+      acmeAccordionStyle(style: const AccordionStyler.create()),
+      acmeAccordionStyle(),
+    );
+    expect(
       acmeAvatarStyle(style: const AvatarStyler.create()),
       acmeAvatarStyle(),
     );
@@ -3911,6 +4313,10 @@ void main() {
     );
     expect(acmeCardStyle(style: const CardStyler.create()), acmeCardStyle());
     expect(
+      acmeDialogStyle(style: const DialogStyler.create()),
+      acmeDialogStyle(),
+    );
+    expect(
       acmeCheckboxStyle(style: const CheckboxStyler.create()),
       acmeCheckboxStyle(),
     );
@@ -3923,6 +4329,11 @@ void main() {
       acmeIconButtonStyle(),
     );
     expect(acmeLinkStyle(style: const LinkStyler.create()), acmeLinkStyle());
+    expect(acmeMenuStyle(style: const MenuStyler.create()), acmeMenuStyle());
+    expect(
+      acmePopoverStyle(style: const PopoverStyler.create()),
+      acmePopoverStyle(),
+    );
     expect(
       acmeProgressStyle(style: const ProgressStyler.create()),
       acmeProgressStyle(),
@@ -3931,6 +4342,10 @@ void main() {
     expect(
       acmeSegmentedControlStyle(style: const SegmentedControlStyler.create()),
       acmeSegmentedControlStyle(),
+    );
+    expect(
+      acmeSelectStyle(style: const SelectStyler.create()),
+      acmeSelectStyle(),
     );
     expect(
       acmeSkeletonStyle(style: const SkeletonStyler.create()),
@@ -3968,6 +4383,10 @@ void main() {
     expect(
       acmeToggleStyle(style: const ToggleStyler.create()),
       acmeToggleStyle(),
+    );
+    expect(
+      acmeTooltipStyle(style: const TooltipStyler.create()),
+      acmeTooltipStyle(),
     );
     expect(
       acmeToggleGroupStyle(style: const ToggleGroupStyler.create()),

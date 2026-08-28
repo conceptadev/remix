@@ -28,18 +28,23 @@ const _fixtureAppFiles = <String>[
 /// Each is added by its own `remix add`, which is the only supported call
 /// shape. Theme arrives as the first item's registry dependency.
 const _registryItems = <String>[
+  'accordion',
   'avatar',
   'badge',
   'button',
   'callout',
   'card',
   'checkbox',
+  'dialog',
   'divider',
   'icon_button',
   'link',
+  'menu',
+  'popover',
   'progress',
   'radio',
   'segmented_control',
+  'select',
   'skeleton',
   'slider',
   'spinner',
@@ -48,6 +53,7 @@ const _registryItems = <String>[
   'textfield',
   'toggle',
   'toggle_group',
+  'tooltip',
 ];
 
 /// Generated adapters compared byte-for-byte against a committed snapshot.

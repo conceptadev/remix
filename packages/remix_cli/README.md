@@ -4,11 +4,11 @@
 Remix remains the behavior dependency; the application owns its tokens, theme
 values, component recipes, and generated adapters.
 
-The 0.1.0 catalog covers the simple, form, and compound Remix components:
-`avatar`, `badge`, `button`, `callout`, `card`, `checkbox`, `divider`,
-`icon_button`, `link`, `progress`, `radio`, `segmented_control`, `skeleton`,
-`slider`, `spinner`, `switch`, `tabs`, `textfield`, `toggle`, and
-`toggle_group`, each depending on `theme`. There is no remote registry, update
+The 0.1.0 catalog covers the simple, form, and overlay Remix components:
+`accordion`, `avatar`, `badge`, `button`, `callout`, `card`, `checkbox`,
+`dialog`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
+`radio`, `segmented_control`, `select`, `skeleton`, `slider`, `spinner`,
+`switch`, `tabs`, `textfield`, `toggle`, `toggle_group`, and `tooltip`, each depending on `theme`. There is no remote registry, update
 command, registry lockfile, or content-hash protocol.
 
 ## Install project-locally
@@ -93,12 +93,12 @@ Most items generate one widget. Three do not: `checkbox` also generates
 `UiCheckboxGroupItem`, `textfield` generates `UiTextField` and `UiTextArea`,
 and `tabs` generates `UiTabBar`, `UiTab`, and `UiTabView`.
 
-`RemixCheckboxGroup`, `RemixRadioGroup`, and `RemixTabs` are behavioral and
-carry no style, so the registry has nothing to render for them: import them
-from `package:remix/remix.dart` and put the installed adapters inside.
-`toggle_group` and `segmented_control` are the opposite case — their options
-are data rather than widgets, so the group's recipe carries the option style
-and one `add` covers both.
+`RemixCheckboxGroup`, `RemixRadioGroup`, `RemixTabs`, and
+`RemixAccordionGroup` are behavioral and carry no style, so the registry has
+nothing to render for them: import them from `package:remix/remix.dart` and put
+the installed adapters inside. `toggle_group`, `segmented_control`, `menu`, and
+`select` are the opposite case — their rows are data rather than widgets, so
+the parent's recipe carries the row style and one `add` covers both.
 
 The authored files are application source. A normal rerun preserves them. The
 generated part is owned by the consumer's resolved generator and should be

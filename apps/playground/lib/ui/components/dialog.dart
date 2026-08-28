@@ -1,0 +1,80 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/tokens.dart';
+
+part 'dialog.g.dart';
+
+/// The application's Dialog recipe.
+///
+/// Remix owns the rendering, the modal barrier, focus trapping, the escape
+/// and barrier dismissal rules, and the dialog accessibility semantics; this
+/// recipe supplies the panel, the two text roles, and the action row.
+///
+/// It is a popover with a title: the same `background` fill, `border`
+/// hairline, and lift, sized wider and padded more because a dialog holds a
+/// decision rather than a control. The two are deliberately separate files —
+/// they have separate update stories, and sharing a surface helper would make
+/// every change to one a change to the other.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it.
+@MixWidget(target: RemixDialog.new)
+DialogStyler playgroundDialogStyle({
+  DialogStyler style = const DialogStyler.create(),
+}) => DialogStyler()
+    .color(PlaygroundTokens.background())
+    .border(
+      .all(
+        BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
+      ),
+    )
+    .borderRadius(.all(PlaygroundTokens.radius()))
+    .padding(.all(_padding))
+    .maxWidth(_maxWidth)
+    .shadow(_shadow)
+    .title(
+      .fontSize(
+        _titleSize,
+      ).fontWeight(FontWeight.w600).color(PlaygroundTokens.foreground()),
+    )
+    .description(
+      .fontSize(_descriptionSize).color(PlaygroundTokens.mutedForeground()),
+    )
+    // The actions sit at the trailing edge, which is where a reader looks for
+    // the decision once they have read the description.
+    .actions(
+      FlexBoxStyler()
+          .direction(.horizontal)
+          .mainAxisAlignment(.end)
+          .spacing(_actionGap),
+    )
+    .merge(style);
+
+/// Width of the panel outline.
+const _borderWidth = 1.0;
+
+/// Inset between the panel edge and its content.
+const _padding = 20.0;
+
+/// The widest a dialog gets before its lines become hard to scan.
+const _maxWidth = 420.0;
+
+/// Title size: the one thing in the dialog that has to be read first.
+const _titleSize = 18.0;
+
+/// Description size, matching body copy.
+const _descriptionSize = 14.0;
+
+/// Gap between the action buttons.
+const _actionGap = 8.0;
+
+/// The lift that separates the panel from the page behind the barrier.
+///
+/// Heavier than a popover's, because a dialog is meant to stop the reader.
+final _shadow = BoxShadowMix(
+  color: const Color(0x26000000),
+  offset: const Offset(0, 8),
+  blurRadius: 24,
+);
