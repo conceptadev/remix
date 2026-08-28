@@ -12,6 +12,7 @@ import '../pages/orders_page.dart';
 import '../pages/overview_page.dart';
 import '../pages/settings_page.dart';
 import 'dashboard_page.dart';
+import 'dashboard_shell_layout.dart';
 import 'sidebar.dart';
 import 'top_bar.dart';
 
@@ -57,7 +58,7 @@ class _DashboardShellState extends State<DashboardShell> {
       backgroundColor: Colors.transparent,
       drawer: compact
           ? Drawer(
-              width: 256,
+              width: dashboardSidebarWidth,
               semanticLabel: 'Dashboard navigation',
               child: Sidebar(selected: _selected, onSelected: _select),
             )

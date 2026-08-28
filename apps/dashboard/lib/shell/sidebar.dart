@@ -7,6 +7,7 @@ import '../widgets/action_menu.dart';
 import '../widgets/toast.dart';
 import '../widgets/typography.dart';
 import 'dashboard_page.dart';
+import 'dashboard_shell_layout.dart';
 import 'navigation_list.dart';
 
 class Sidebar extends StatelessWidget {
@@ -17,22 +18,23 @@ class Sidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 256,
-      decoration: BoxDecoration(
-        color: MixScope.tokenOf(FortalTokens.colorPanelSolid, context),
-        border: Border(
-          right: BorderSide(
-            color: MixScope.tokenOf(FortalTokens.grayA5, context),
+    return Box(
+      style: BoxStyler()
+          .width(dashboardSidebarWidth)
+          .color(FortalTokens.colorPanelSolid())
+          .border(
+            BoxBorderMix.right(
+              BorderSideMix(
+                color: FortalTokens.grayA5(),
+                width: FortalTokens.borderWidth1(),
+              ),
+            ),
           ),
-        ),
-      ),
       child: SafeArea(
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
             const _Brand(),
-            const FortalDivider(size: .size4),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(12, 16, 12, 20),
@@ -57,9 +59,9 @@ class _Brand extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Box(
+    return DashboardShellHeader(
       key: const ValueKey('dashboard-brand'),
-      style: BoxStyler().padding(.all(FortalTokens.space4())),
+      horizontalPadding: FortalTokens.space4(),
       child: const FortalText('Dashboard', size: .size5, weight: .bold),
     );
   }

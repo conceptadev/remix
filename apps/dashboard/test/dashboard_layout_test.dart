@@ -1,5 +1,8 @@
+import 'package:dashboard/main.dart';
 import 'package:dashboard/pages/overview_page.dart';
 import 'package:dashboard/pages/settings_page.dart';
+import 'package:dashboard/shell/dashboard_shell_layout.dart';
+import 'package:dashboard/shell/top_bar.dart';
 import 'package:dashboard/theme/theme_scope.dart';
 import 'package:dashboard/theme/theme_settings.dart';
 import 'package:dashboard/widgets/analytics_charts.dart';
@@ -8,6 +11,38 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 void main() {
+  testWidgets('shell headers align in the sidebar and compact drawer', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    void expectAligned() {
+      final brand = tester.getRect(
+        find.byKey(const ValueKey('dashboard-brand')),
+      );
+      final topBar = tester.getRect(find.byType(TopBar));
+
+      expect(brand.height, dashboardShellHeaderHeight);
+      expect(topBar.height, dashboardShellHeaderHeight);
+      expect(brand.top, closeTo(topBar.top, 0.01));
+      expect(brand.bottom, closeTo(topBar.bottom, 0.01));
+    }
+
+    tester.view.physicalSize = const Size(1000, 800);
+    await tester.pumpWidget(const DashboardApp());
+    expectAligned();
+
+    tester.view.physicalSize = const Size(390, 844);
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expectAligned();
+  });
+
   testWidgets('overview metrics collapse 4 to 2 to 1 and stretch in-row', (
     tester,
   ) async {
