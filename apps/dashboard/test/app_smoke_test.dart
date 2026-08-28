@@ -10,6 +10,7 @@ import 'package:dashboard/utils/text.dart';
 import 'package:dashboard/widgets/page_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
@@ -187,6 +188,59 @@ void main() {
     expect(data.hasAction(ui.SemanticsAction.tap), isTrue);
     expect(data.flagsCollection.isSelected, ui.Tristate.isTrue);
     expect(data.flagsCollection.isToggled, ui.Tristate.none);
+    expect(data.flagsCollection.isFocused, ui.Tristate.isFalse);
+
+    for (var tabs = 0; tabs < 20; tabs++) {
+      if (tester
+              .getSemantics(overviewSemantics)
+              .getSemanticsData()
+              .flagsCollection
+              .isFocused ==
+          ui.Tristate.isTrue) {
+        break;
+      }
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+    }
+
+    expect(
+      tester
+          .getSemantics(overviewSemantics)
+          .getSemanticsData()
+          .flagsCollection
+          .isFocused,
+      ui.Tristate.isTrue,
+    );
+
+    final customersSemantics = find
+        .descendant(
+          of: find.byKey(const ValueKey('nav-customers')).first,
+          matching: find.byType(Semantics),
+        )
+        .first;
+    final customersNode = tester.getSemantics(customersSemantics);
+    customersNode.owner!.performAction(
+      customersNode.id,
+      ui.SemanticsAction.tap,
+    );
+    await tester.pump();
+
+    expect(
+      tester
+          .getSemantics(customersSemantics)
+          .getSemanticsData()
+          .flagsCollection
+          .isSelected,
+      ui.Tristate.isTrue,
+    );
+    expect(
+      tester
+          .getSemantics(overviewSemantics)
+          .getSemanticsData()
+          .flagsCollection
+          .isSelected,
+      ui.Tristate.isFalse,
+    );
     semantics.dispose();
   });
 

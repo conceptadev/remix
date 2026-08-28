@@ -7,6 +7,7 @@ import '../widgets/action_menu.dart';
 import '../widgets/toast.dart';
 import '../widgets/typography.dart';
 import 'dashboard_page.dart';
+import 'navigation_list.dart';
 
 class Sidebar extends StatelessWidget {
   const Sidebar({super.key, required this.selected, required this.onSelected});
@@ -35,23 +36,10 @@ class Sidebar extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(12, 16, 12, 20),
-                child: Column(
-                  crossAxisAlignment: .stretch,
-                  children: [
-                    for (final section in DashboardSection.values) ...[
-                      _SectionLabel(section.label),
-                      for (final page in DashboardPage.values.where(
-                        (page) => page.section == section,
-                      ))
-                        _NavItem(
-                          key: ValueKey('nav-${page.name}'),
-                          page: page,
-                          selected: page == selected,
-                          onPressed: () => onSelected(page),
-                        ),
-                      const SizedBox(height: 12),
-                    ],
-                  ],
+                child: DashboardNavigationList(
+                  sections: dashboardNavSections,
+                  selected: selected,
+                  onSelected: onSelected,
                 ),
               ),
             ),
@@ -75,71 +63,6 @@ class _Brand extends StatelessWidget {
       child: const FortalText('Dashboard', size: .size5, weight: .bold),
     );
   }
-}
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel(this.label);
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
-      child: StyledText(
-        label.toUpperCase(),
-        style: dashboardText(
-          .size1,
-          weight: .medium,
-          tone: .muted,
-        ).letterSpacing(0.7),
-      ),
-    );
-  }
-}
-
-/// A sidebar destination.
-///
-/// The Fortal ghost toggle already carries this exact treatment — `gray-12`
-/// when idle, `accent-3`/`accent-11` when selected, plus hover, press, focus
-/// ring and keyboard activation — so the destination only has to stretch it
-/// across the rail.
-///
-/// It does own its semantics, though. `RemixToggle.excludeSemantics` lets the
-/// destination suppress the toggle's on/off state and supply selected-button
-/// semantics instead. Naming the destination here also keeps the rendered
-/// label from being announced twice.
-class _NavItem extends StatelessWidget {
-  const _NavItem({
-    super.key,
-    required this.page,
-    required this.selected,
-    required this.onPressed,
-  });
-
-  final DashboardPage page;
-  final bool selected;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 2),
-    child: Semantics(
-      button: true,
-      selected: selected,
-      label: page.label,
-      excludeSemantics: true,
-      onTap: onPressed,
-      child: RemixToggle(
-        selected: selected,
-        onChanged: (_) => onPressed(),
-        label: page.label,
-        icon: page.icon,
-        style: fortalToggleStyle(
-          variant: .ghost,
-        ).container(.mainAxisSize(.max).mainAxisAlignment(.start)),
-      ),
-    ),
-  );
 }
 
 class _Profile extends StatelessWidget {
