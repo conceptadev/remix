@@ -68,7 +68,14 @@ jobs:
           dart pub global activate melos
           melos bootstrap
 
-          git checkout -b release/version-packages
+          # Versioning happens on the checked-out branch, and the release
+          # branch is cut afterwards from the modified tree. `melos version`
+          # opens with `git pull --tags -f` to refresh the `<package>-v*` tags
+          # it derives each last release from, and a branch made here with
+          # `git checkout -b` has no upstream, so that pull aborts with "there
+          # is no tracking information for the current branch" before melos
+          # writes anything. Running while the tracking branch actions/checkout
+          # set up is still current is what gives that pull a remote to read.
 
           # `--no-git-commit-version` is what makes the diff check below
           # meaningful. melos commits by default, which would leave a clean tree
@@ -79,7 +86,15 @@ jobs:
           # `stdin.hasTerminal` is false, and `--yes` does not cover it, so the
           # redirect is what guarantees the default instead of a runner that
           # happens to have no tty.
-          melos version --no-git-commit-version --yes $overrides < /dev/null
+          # Scope is explicit so a conventional commit touching remix_cli
+          # cannot pull that independently versioned package into the lockstep
+          # Remix/Fortal release branch.
+          melos version \
+            --scope=remix \
+            --scope=remix_fortal \
+            --no-git-commit-version \
+            --yes \
+            $overrides < /dev/null
 
           # The pair must land aligned; verify rather than trust the inputs.
           dart run tool/check_version_alignment.dart
@@ -90,6 +105,9 @@ jobs:
             exit 0
           fi
           echo "versioned=true" >> "$GITHUB_OUTPUT"
+
+          # Cut the branch now, carrying the working tree melos just wrote.
+          git checkout -b release/version-packages
 
           git add -A
           git commit -m "chore(release): version packages"
