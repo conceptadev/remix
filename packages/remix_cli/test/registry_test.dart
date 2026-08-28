@@ -177,6 +177,13 @@ items:
   test('every component item resolves theme first and owns one file', () async {
     final catalog = await RegistryCatalog.loadBundled();
 
+    // Both directions. Checking only that each listed name exists would let a
+    // new registry item ship with no surface pinned and no rendering asserted.
+    expect(
+      catalog.items.keys.where((name) => name != 'theme').toSet(),
+      _componentSurfaces.keys.toSet(),
+    );
+
     for (final name in _componentSurfaces.keys) {
       final item = catalog.items[name];
       expect(item, isNotNull, reason: name);

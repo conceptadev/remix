@@ -1404,8 +1404,9 @@ void main() {
       // disabled control is not focusable under traditional traversal, so the
       // ordering is asserted on the styler itself; the fragments below set no
       // colors, which is why a bare resolution is trustworthy here.
-      final spec = await _resolveCheckbox(
+      final spec = await _resolve(
         tester,
+        acmeCheckboxStyle(),
         theme: const AcmeThemeData.light(),
         states: const {WidgetState.focused, WidgetState.disabled},
       );
@@ -2437,9 +2438,12 @@ void main() {
           const BorderRadius.all(Radius.circular(999)),
         );
         expect(spec.spec.label.spec.style?.fontSize, entry.value.labelSize);
-        expect(spec.spec.label.spec.style?.color, theme.mutedForeground);
-        expect(spec.spec.icon.spec.color, theme.mutedForeground);
+        // `foreground`, not `mutedForeground`: initials are content, and
+        // `mutedForeground` on `muted` is 4.35:1 in the light theme.
+        expect(spec.spec.label.spec.style?.color, theme.foreground);
+        expect(spec.spec.icon.spec.color, theme.foreground);
         expect(_boxBackground(spec.spec.container), theme.muted);
+        expect(spec.spec.container.spec.clipBehavior, Clip.antiAlias);
       });
     }
 
@@ -2507,28 +2511,38 @@ void main() {
       );
     });
 
-    testWidgets('a link with no callback is disabled by Remix', (tester) async {
-      final handle = tester.ensureSemantics();
-      var pressed = 0;
-
+    testWidgets('a link with no callback wears the disabled fragment', (
+      tester,
+    ) async {
+      // Remix derives "disabled" from `enabled && onPressed != null`, so a
+      // decorative link resolves the recipe's disabled fragment without the
+      // caller ever saying `enabled: false`. Asserting the resolved modifier
+      // is what proves that; a tap that does nothing would only restate that
+      // the widget was built without a callback.
       await _pumpInScope(tester, const AcmeLink(label: 'Docs'));
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(AcmeLink), warnIfMissed: false);
-      await tester.pumpAndSettle();
 
-      expect(pressed, 0);
+      expect(
+        _resolvedSpecOf<LinkSpec>(tester).widgetModifiers,
+        contains(
+          isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
+        ),
+      );
       expect(find.text('Docs'), findsOneWidget);
 
+      var pressed = 0;
       await _pumpInScope(
         tester,
         AcmeLink(label: 'Docs', onPressed: () => pressed += 1),
       );
       await tester.pumpAndSettle();
+
+      expect(_resolvedSpecOf<LinkSpec>(tester).widgetModifiers, isNull);
+
       await tester.tap(find.byType(AcmeLink));
       await tester.pumpAndSettle();
 
       expect(pressed, 1);
-      handle.dispose();
     });
   });
 
@@ -2917,10 +2931,12 @@ void main() {
           strokeAlign: BorderSide.strokeAlignInside,
         ),
       );
-      expect(
-        idle.spec.container.spec.box?.spec.padding,
-        focused.spec.container.spec.box?.spec.padding,
-      );
+      // The ring must not arrive as a real border: Flutter insets a
+      // container's content by its border widths, so focusing would nudge the
+      // label. This is the assertion that would fail if the recipe reached
+      // for `.border(...)` instead of `.foregroundDecoration(...)`.
+      expect(_flexBorder(idle.spec.container), isNull);
+      expect(_flexBorder(focused.spec.container), isNull);
     });
 
     testWidgets('disabled fades the control and clears the ring', (
@@ -2972,6 +2988,172 @@ void main() {
       handle.dispose();
     });
   });
+
+  group(
+    'resolved content clears its WCAG floor over the surface it lands on',
+    () {
+      // The recipes decide which token lands on which surface, and a pairing
+      // that reads fine in one theme can fail in the other. This group resolves
+      // the real specs and measures them rather than trusting the token names:
+      // it is what would have caught `mutedForeground` initials on a `muted`
+      // avatar, which measure 4.35:1 in the light theme.
+      //
+      // 4.5:1 is WCAG 2 for body-size text; 3.0:1 is the non-text floor that
+      // applies to glyphs and component boundaries.
+      for (final theme in _themes) {
+        testWidgets('avatar fallback in ${theme.name}', (tester) async {
+          final spec = await _resolve(
+            tester,
+            acmeAvatarStyle(),
+            theme: theme.data,
+          );
+          final surface = _boxBackground(spec.spec.container)!;
+
+          _expectReadable(
+            spec.spec.label.spec.style!.color!,
+            surface,
+            page: theme.data.background,
+            floor: 4.5,
+            reason: 'initials',
+          );
+          _expectReadable(
+            spec.spec.icon.spec.color!,
+            surface,
+            page: theme.data.background,
+            floor: 3.0,
+            reason: 'fallback glyph',
+          );
+        });
+
+        testWidgets('callout tones in ${theme.name}', (tester) async {
+          for (final variant in AcmeCalloutVariant.values) {
+            final spec = await _resolve(
+              tester,
+              acmeCalloutStyle(variant: variant),
+              theme: theme.data,
+            );
+            final surface = _flexDecoration(spec.spec.container)!.color!;
+
+            _expectReadable(
+              spec.spec.text.spec.style!.color!,
+              surface,
+              page: theme.data.background,
+              floor: 4.5,
+              reason: '${variant.name} sentence',
+            );
+            _expectReadable(
+              spec.spec.icon.spec.color!,
+              surface,
+              page: theme.data.background,
+              floor: 3.0,
+              reason: '${variant.name} glyph',
+            );
+          }
+        });
+
+        testWidgets('link in every state in ${theme.name}', (tester) async {
+          for (final states in const [
+            <WidgetState>{},
+            {WidgetState.hovered},
+            {WidgetState.focused},
+          ]) {
+            final spec = await _resolve(
+              tester,
+              acmeLinkStyle(),
+              theme: theme.data,
+              states: states,
+            );
+
+            _expectReadable(
+              spec.spec.label.spec.style!.color!,
+              const Color(0x00000000),
+              page: theme.data.background,
+              floor: 4.5,
+              reason: '$states',
+            );
+          }
+        });
+
+        testWidgets('tab in every state in ${theme.name}', (tester) async {
+          for (final states in const [
+            <WidgetState>{},
+            {WidgetState.hovered},
+            {WidgetState.selected},
+          ]) {
+            final spec = await _resolve(
+              tester,
+              acmeTabStyle(),
+              theme: theme.data,
+              states: states,
+            );
+
+            _expectReadable(
+              spec.spec.label.spec.style!.color!,
+              _flexDecoration(spec.spec.container)?.color ??
+                  const Color(0x00000000),
+              page: theme.data.background,
+              floor: 4.5,
+              reason: '$states',
+            );
+          }
+        });
+
+        testWidgets('toggle in every state in ${theme.name}', (tester) async {
+          for (final variant in AcmeToggleVariant.values) {
+            for (final states in const [
+              <WidgetState>{},
+              {WidgetState.hovered},
+              {WidgetState.selected},
+            ]) {
+              final spec = await _resolve(
+                tester,
+                acmeToggleStyle(variant: variant),
+                theme: theme.data,
+                states: states,
+              );
+
+              _expectReadable(
+                spec.spec.label.spec.style!.color!,
+                _flexDecoration(spec.spec.container)!.color!,
+                page: theme.data.background,
+                floor: 4.5,
+                reason: '${variant.name} $states',
+              );
+            }
+          }
+        });
+
+        testWidgets('icon button in every variant in ${theme.name}', (
+          tester,
+        ) async {
+          for (final variant in AcmeIconButtonVariant.values) {
+            for (final states in const [
+              <WidgetState>{},
+              {WidgetState.hovered},
+              {WidgetState.pressed},
+            ]) {
+              final spec = await _resolve(
+                tester,
+                acmeIconButtonStyle(variant: variant),
+                theme: theme.data,
+                states: states,
+              );
+
+              // A glyph is the whole content here, so it is held to the
+              // non-text floor rather than the body-text one.
+              _expectReadable(
+                spec.spec.icon.spec.color!,
+                _boxBackground(spec.spec.container)!,
+                page: theme.data.background,
+                floor: 3.0,
+                reason: '${variant.name} $states',
+              );
+            }
+          }
+        });
+      }
+    },
+  );
 
   test('an empty caller style leaves every recipe untouched', () {
     // The `style` seam has to be free when it is unused: a recipe that
@@ -3087,34 +3269,18 @@ Future<StyleSpec<ButtonSpec>> _resolveStyle(
   Set<WidgetState> states = const {},
   FocusHighlightStrategy highlightStrategy =
       FocusHighlightStrategy.alwaysTraditional,
-}) async {
-  final previousStrategy = FocusManager.instance.highlightStrategy;
-  FocusManager.instance.highlightStrategy = highlightStrategy;
-  addTearDown(() => FocusManager.instance.highlightStrategy = previousStrategy);
-
-  final effective =
-      styler ??
+}) => _resolve(
+  tester,
+  styler ??
       acmeButtonStyle(
         variant: variant,
         size: size,
         style: style ?? const ButtonStyler.create(),
-      );
-  late StyleSpec<ButtonSpec> resolved;
-
-  await tester.pumpWidget(
-    AcmeThemeScope(
-      data: theme,
-      child: _host(
-        WidgetStateProvider(
-          states: states,
-          child: _Probe((context) => resolved = effective.build(context)),
-        ),
       ),
-    ),
-  );
-
-  return resolved;
-}
+  theme: theme,
+  states: states,
+  highlightStrategy: highlightStrategy,
+);
 
 /// Mounts one widget under a theme scope, centered, with no host framework.
 Future<void> _pumpInScope(
@@ -3134,13 +3300,8 @@ Future<void> _pumpInScope(
 ///
 /// Remix publishes it below `RemixButton` for its own subtree, which is the
 /// only place the resolved recipe is observable from outside.
-StyleSpec<ButtonSpec> _resolvedSpec(WidgetTester tester) {
-  return tester
-      .widget<StyleSpecProvider<ButtonSpec>>(
-        find.byType(StyleSpecProvider<ButtonSpec>),
-      )
-      .spec;
-}
+StyleSpec<ButtonSpec> _resolvedSpec(WidgetTester tester) =>
+    _resolvedSpecOf<ButtonSpec>(tester);
 
 BoxDecoration? _decoration(StyleSpec<ButtonSpec> spec) =>
     spec.spec.container.spec.box?.spec.decoration as BoxDecoration?;
@@ -3276,16 +3437,6 @@ Future<StyleSpec<CheckboxSpec>> _checkboxSpec(
   return _resolvedSpecOf<CheckboxSpec>(tester);
 }
 
-/// Resolves the Checkbox recipe without a widget.
-///
-/// Only sound for assertions about effects and modifiers, which no fragment
-/// keyed on the live checkbox state touches. See [_checkboxSpec].
-Future<StyleSpec<CheckboxSpec>> _resolveCheckbox(
-  WidgetTester tester, {
-  required AcmeThemeData theme,
-  Set<WidgetState> states = const {},
-}) => _resolve(tester, acmeCheckboxStyle(), theme: theme, states: states);
-
 Future<StyleSpec<TabSpec>> _resolveTab(
   WidgetTester tester, {
   required AcmeThemeData theme,
@@ -3393,6 +3544,26 @@ BoxBorder? _flexBorder(StyleSpec<FlexBoxSpec> container) =>
 
 BoxBorder? _flexForegroundBorder(StyleSpec<FlexBoxSpec> container) =>
     (container.spec.box?.spec.foregroundDecoration as BoxDecoration?)?.border;
+
+/// Asserts [content] stays readable where the recipe actually puts it.
+///
+/// Both colors may be translucent, and the surface may be the page itself, so
+/// each layer is composited before measuring: that is what a reader sees.
+void _expectReadable(
+  Color content,
+  Color surface, {
+  required Color page,
+  required double floor,
+  required String reason,
+}) {
+  final composited = Color.alphaBlend(surface, page);
+
+  expect(
+    _contrastRatio(Color.alphaBlend(content, composited), composited),
+    greaterThanOrEqualTo(floor),
+    reason: reason,
+  );
+}
 
 /// WCAG 2 contrast ratio between two opaque colors.
 double _contrastRatio(Color first, Color second) {

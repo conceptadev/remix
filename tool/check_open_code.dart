@@ -112,6 +112,10 @@ Future<_Failure?> _run(Directory repositoryRoot, {required bool keep}) async {
   final sdk = resolved as _Toolchain;
   _step('Flutter ${sdk.version} from ${sdk.root}');
 
+  final coverageFailure = _verifyRegistryCoverage(repositoryRoot);
+  if (coverageFailure != null) return coverageFailure;
+  _step('Every bundled registry item is installed by this check.');
+
   final fixtureRoot = Directory('${repositoryRoot.path}/open_code/fixture');
   final fixtureFailure = _verifyFixtureContract(fixtureRoot);
   if (fixtureFailure != null) return fixtureFailure;
@@ -458,6 +462,46 @@ Future<Object> _resolveToolchain(Directory root, String pinned) async {
     '${attempts.map((attempt) => '  - $attempt').join('\n')}\n'
     '  Install it with `fvm install $pinned`, or put a matching SDK on PATH.',
     exitCode: 64,
+  );
+}
+
+/// Fails when [_registryItems] and the bundled registry have drifted apart.
+///
+/// This check exists because the failure it prevents is silent: an item added
+/// to `registry.yaml` but not to [_registryItems] is never installed, never
+/// rendered into the fixture, never behavior-tested, and never boundary
+/// checked — and every suite still passes.
+_Failure? _verifyRegistryCoverage(Directory repositoryRoot) {
+  final file = File(
+    '${repositoryRoot.path}/packages/remix_cli/lib/src/registry/registry.yaml',
+  );
+  if (!file.existsSync()) {
+    return _Failure('packages/remix_cli is missing its registry.yaml.');
+  }
+
+  final document = loadYaml(file.readAsStringSync());
+  if (document is! YamlMap || document['items'] is! YamlMap) {
+    return _Failure('registry.yaml is not in the expected shape.');
+  }
+
+  // `theme` is every component's registry dependency, so the CLI installs it
+  // on the first `add` rather than as an item of its own.
+  final bundled = {
+    for (final key in (document['items'] as YamlMap).keys)
+      if (key is String && key != 'theme') key,
+  };
+  final installed = _registryItems.toSet();
+  final problems = <String>[
+    for (final item in bundled.difference(installed))
+      'registry.yaml has $item, which this check never installs',
+    for (final item in installed.difference(bundled))
+      'this check installs $item, which registry.yaml does not define',
+  ]..sort();
+
+  if (problems.isEmpty) return null;
+  return _Failure(
+    'the checker and the bundled registry disagree on the catalog:\n'
+    '${problems.map((problem) => '  - $problem').join('\n')}',
   );
 }
 
@@ -854,6 +898,10 @@ bool _sameBytes(List<int> left, List<int> right) {
 /// Returns the fixture contract error for focused regression tests.
 String? fixtureContractProblem(Directory fixtureRoot) =>
     _verifyFixtureContract(fixtureRoot)?.message;
+
+/// Returns the catalog-drift error for focused regression tests.
+String? registryCoverageProblem(Directory repositoryRoot) =>
+    _verifyRegistryCoverage(repositoryRoot)?.message;
 
 /// Returns installed inventory/import errors for focused regression tests.
 String? installedUiProblem(Directory app) => _verifyInstalledUi(app)?.message;

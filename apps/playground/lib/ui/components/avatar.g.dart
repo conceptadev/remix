@@ -12,11 +12,16 @@ part of 'avatar.dart';
 /// clipping; this recipe supplies the circle, the neutral surface behind it,
 /// and the scale of whatever fallback shows through.
 ///
-/// The surface is `muted` with `mutedForeground` initials, so an avatar with
-/// no image reads as a placeholder rather than as a filled control. An image
-/// covers all of it, which is why the fill only ever shows in the fallback
-/// case. The recipe sets no alignment: Remix already centers whichever
-/// fallback it renders.
+/// The surface is `muted`, so an avatar with no image reads as a placeholder
+/// rather than as a filled control. An image covers all of it, which is why
+/// the fill only ever shows in the fallback case. The recipe sets no
+/// alignment: Remix already centers whichever fallback it renders.
+///
+/// The fallback takes `foreground`, not `mutedForeground`. Initials are the
+/// content — they name a person — and `mutedForeground` on `muted` measures
+/// 4.35:1 in the shipped light theme, under the 4.5:1 WCAG floor for text
+/// this size. `mutedForeground` remains correct for the markers that pair
+/// with it elsewhere; it is not a color to set names in.
 ///
 /// The shape is a full circle rather than the theme's control radius. An
 /// avatar stands for a person or an organisation, and that is a circle in

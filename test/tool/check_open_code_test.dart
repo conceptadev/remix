@@ -21,6 +21,39 @@ void main() {
     expect(checker.fixtureContractProblem(fixture), isNull);
   });
 
+  group('registry coverage', () {
+    test('the checkout catalog and the checker agree', () {
+      expect(checker.registryCoverageProblem(Directory.current), isNull);
+    });
+
+    test('an item the checker never installs is reported', () {
+      final root = Directory('${sandbox.path}/repo');
+      final registry = File(
+        '${root.path}/packages/remix_cli/lib/src/registry/registry.yaml',
+      );
+      registry.parent.createSync(recursive: true);
+      registry.writeAsStringSync('''
+schema: 1
+items:
+  theme:
+    files:
+      - source: templates/theme/tokens.dart.tmpl
+        target: "@ui/theme/tokens.dart"
+  brand_new:
+    files:
+      - source: templates/brand_new/brand_new.dart.tmpl
+        target: "@ui/components/brand_new.dart"
+''');
+
+      final problem = checker.registryCoverageProblem(root);
+
+      expect(problem, contains('registry.yaml has brand_new'));
+      // The reverse direction is reported too, so a removed item cannot leave
+      // the checker installing something that no longer exists.
+      expect(problem, contains('this check installs button'));
+    });
+  });
+
   group('fixture contract', () {
     test('requires every committed generated adapter', () {
       const snapshots = [
