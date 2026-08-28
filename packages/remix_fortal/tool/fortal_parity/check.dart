@@ -5,7 +5,17 @@ import 'dart:typed_data';
 const _expectedIntegrity =
     'sha512-I0/h2CRNTpYNB7Mi3xFIvSsQq5a108d7kK8dTO5zp5b9HR5QJXKag6B8tjpz2ITkVYkFdkGk45doNkSr7OxwNw==';
 const _expectedNakedUiVersion = '1.0.0-beta.14';
-const _expectedNakedUiConstraint = '1.0.0-beta.14';
+
+/// A range, not the exact version, because these are two different guarantees
+/// enforced in two different places. The parity contract is validated against
+/// exactly [_expectedNakedUiVersion], and the *lockfile* check below is what
+/// pins that: the workspace must resolve it hosted, byte-exact. The pubspec
+/// constraint is the consumer surface, and pub.dev refuses to publish an exact
+/// hosted constraint ("your dependency should allow more than one version",
+/// exit 65) — an exact pin here made the v1.0.0-beta.7 publish impossible.
+/// The floor still names the tested release; both packages must carry this
+/// identical string.
+const _expectedNakedUiConstraint = '^1.0.0-beta.14';
 const _expectedMappedFamilies = <String>{
   'avatar',
   'badge',
@@ -992,7 +1002,9 @@ void _checkNakedPin(
   File workspaceLock,
   List<String> failures,
 ) {
-  // Both publishable packages must use the same exact hosted release.
+  // Both publishable packages must carry the identical hosted constraint,
+  // whose floor is the release the parity contract was validated against.
+  // The exact tested resolution is enforced on the lockfile below, not here.
   final pinned = RegExp(
     '^  naked_ui: ${RegExp.escape(_expectedNakedUiConstraint)}\\s*\$',
     multiLine: true,
