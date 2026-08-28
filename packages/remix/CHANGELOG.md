@@ -1,3 +1,10 @@
+## 1.0.0-beta.7
+
+ - **REFACTOR**(remix): simplify composite surface rendering (#165).
+ - **FEAT**(remix): give the two effect Mixes their dot-shorthand pair (#169).
+ - **FEAT**(remix): add RemixMenuTrigger.builder for custom menu triggers (#166).
+ - **FEAT**(remix): add disclosure component (#164).
+
 ## 1.0.0-beta.6
 
  - **FIX**: correct dashboard showcase and checkbox indicator regressions (#162).
