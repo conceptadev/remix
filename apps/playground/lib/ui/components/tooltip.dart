@@ -36,7 +36,10 @@ TooltipStyler playgroundTooltipStyle({
 const _paddingX = 8.0;
 
 /// Vertical inset between the bubble edge and its label.
-const _paddingY = 5.0;
+///
+/// Six, matching the vertical inset a menu and select row already use, and
+/// the only value here that had been off the layer's four-pixel grid.
+const _paddingY = 6.0;
 
 /// Label size, one step below body text: a tooltip annotates, it does not
 /// narrate.
