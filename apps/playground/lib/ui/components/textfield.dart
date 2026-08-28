@@ -96,6 +96,12 @@ TextFieldStyler playgroundTextAreaStyle({
 const _textAreaLines = 2.5;
 
 /// Horizontal inset between the field edge and its content.
+///
+/// Flat across the sizes, unlike the button's 12/16/20. A button's padding is
+/// what gives its label room to breathe, so it grows with the control; a
+/// field's is the gutter before the text cursor, and a wider gutter at a
+/// larger size just moves the caret away from the edge the reader clicked.
+/// The select trigger uses the same value for the same reason.
 const _paddingX = 12.0;
 
 /// Vertical inset, used only by the text area: a single-line field centres its

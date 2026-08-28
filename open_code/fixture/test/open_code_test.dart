@@ -4385,6 +4385,28 @@ void main() {
           }
         });
 
+        testWidgets('dialog and popover text in ${theme.name}', (tester) async {
+          final dialog = await _resolve(
+            tester,
+            acmeDialogStyle(),
+            theme: theme.data,
+          );
+          final surface = _boxBackground(dialog.spec.container)!;
+
+          for (final role in <String, TextStyle?>{
+            'title': dialog.spec.title.spec.style,
+            'description': dialog.spec.description.spec.style,
+          }.entries) {
+            _expectReadable(
+              role.value!.color!,
+              surface,
+              page: theme.data.background,
+              floor: 4.5,
+              reason: role.key,
+            );
+          }
+        });
+
         testWidgets('link in every state in ${theme.name}', (tester) async {
           for (final states in const [
             <WidgetState>{},

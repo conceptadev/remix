@@ -62,6 +62,10 @@ SelectStyler playgroundSelectStyle({
 const _borderWidth = 1.0;
 
 /// Horizontal inset inside the trigger and inside an option row.
+///
+/// Flat across the sizes, matching the text field this trigger is styled
+/// after — see that recipe for why a field's gutter does not grow the way a
+/// button's padding does.
 const _paddingX = 12.0;
 
 /// Gap between a row's text and its icons.
