@@ -35,7 +35,13 @@ abstract final class {{typePrefix}}Tokens {
   /// De-emphasized surface.
   static const muted = ColorToken('ui.color.muted');
 
-  /// Content color used on top of [muted].
+  /// De-emphasized content color.
+  ///
+  /// Despite the name, the shipped themes do **not** clear the 4.5:1 text
+  /// floor against [muted] — the pair measures 4.35:1 in the light theme. Use
+  /// it for text on [background], and for glyphs and other non-text marks
+  /// anywhere; text that lands on a `muted` surface takes [foreground]. Raise
+  /// this value here and that restriction goes away everywhere at once.
   static const mutedForeground = ColorToken('ui.color.muted-foreground');
 
   /// Interaction surface for otherwise transparent controls.
@@ -56,6 +62,12 @@ abstract final class {{typePrefix}}Tokens {
   static const border = ColorToken('ui.color.border');
 
   /// Focus ring color drawn for keyboard focus.
+  ///
+  /// The shipped themes give this the same value as [mutedForeground], which
+  /// is a coincidence worth keeping: a neutral ring reads as the platform
+  /// talking rather than the brand, and it clears the 3:1 non-text floor on
+  /// both pages. Give it a brand color here and every control's focus ring
+  /// follows; nothing else reads this token.
   static const focusRing = ColorToken('ui.color.focus-ring');
 
   /// Corner radius shared by the application's controls.

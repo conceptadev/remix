@@ -219,6 +219,8 @@ const _registryItems = <String>[
   'callout',
   'card',
   'checkbox',
+  'data_list',
+  'data_table',
   'dialog',
   'divider',
   'icon_button',

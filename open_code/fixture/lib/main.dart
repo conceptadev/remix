@@ -138,6 +138,8 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
   double _volume = 0.4;
   String? _weight = 'bold';
   String _view = 'list';
+  // Row ids are `Object` because `rowId` may return any stable key.
+  Set<Object> _members = const {'Ada'};
   // Remix re-exports this as an alias, so the group's controller does not
   // drag `package:naked_ui` into an application that only depends on Remix.
   final RemixAccordionController<String> _sections =
@@ -863,6 +865,45 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                     AcmeButton.destructive(
                       label: 'Delete',
                       onPressed: () => _record('dialog delete'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Data', color: data.mutedForeground),
+                const AcmeDataList(
+                  items: [
+                    RemixDataListItem(label: 'Status', value: 'Active'),
+                    RemixDataListItem(label: 'Plan', value: 'Pro'),
+                    RemixDataListItem(label: 'Seats', value: '12 of 20'),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                // The table's checkboxes, pager, and page-size control are the
+                // application's own recipes: `data_table` is the one registry
+                // item that depends on other items rather than only on theme.
+                AcmeDataTable<Map<String, String>>(
+                  semanticLabel: 'Members',
+                  rows: const [
+                    {'name': 'Ada', 'role': 'Owner'},
+                    {'name': 'Grace', 'role': 'Admin'},
+                  ],
+                  rowId: (row) => row['name']!,
+                  selectedRowIds: _members,
+                  onSelectionChanged: (ids) => setState(() {
+                    _members = ids;
+                    _lastAction = 'members -> ${ids.join(', ')}';
+                  }),
+                  columns: [
+                    RemixDataTableColumn(
+                      id: 'name',
+                      label: 'Name',
+                      cellBuilder: (context, row) => Text(row['name']!),
+                    ),
+                    RemixDataTableColumn(
+                      id: 'role',
+                      label: 'Role',
+                      cellBuilder: (context, row) => Text(row['role']!),
                     ),
                   ],
                 ),

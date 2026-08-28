@@ -2053,6 +2053,8 @@ void main() {
           find.byType(AcmePopover),
           find.byType(AcmeSelect<String>),
           find.byType(AcmeTooltip),
+          find.byType(AcmeDataList),
+          find.byType(AcmeDataTable<Map<String, String>>),
         ]) {
           expect(finder, findsWidgets);
         }
@@ -3700,6 +3702,235 @@ void main() {
     });
   });
 
+  group('acmeDataListStyle', () {
+    for (final theme in _themes) {
+      testWidgets('labels read quieter than their values in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeDataListStyle(),
+          theme: theme.data,
+        );
+
+        // The pairing that makes a list scannable: the eye lands on the
+        // answers and the questions stay legible without competing.
+        expect(spec.spec.label.spec.style?.color, theme.data.mutedForeground);
+        expect(spec.spec.value.spec.style?.color, theme.data.foreground);
+        for (final role in [spec.spec.label, spec.spec.value]) {
+          _expectReadable(
+            role.spec.style!.color!,
+            const Color(0x00000000),
+            page: theme.data.background,
+            floor: 4.5,
+            reason: 'data list text',
+          );
+        }
+      });
+    }
+
+    testWidgets('the label column has a floor, not a fixed width', (
+      tester,
+    ) async {
+      final spec = await _resolve(
+        tester,
+        acmeDataListStyle(),
+        theme: const AcmeThemeData.light(),
+      );
+
+      expect(spec.spec.minLabelWidth, 96);
+      expect(spec.spec.rowSpacing, 12);
+      expect(spec.spec.columnSpacing, 24);
+      expect(spec.spec.labelValueSpacing, 8);
+      // A floor rather than a width: a long label is still allowed to be long.
+      expect(spec.spec.labelContainer.spec.constraints?.maxWidth, isNot(96));
+    });
+
+    testWidgets('renders its pairs through Remix', (tester) async {
+      await _pumpInScope(
+        tester,
+        const AcmeDataList(
+          items: [RemixDataListItem(label: 'Status', value: 'Active')],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(RemixDataList), findsOneWidget);
+      expect(find.text('Status'), findsOneWidget);
+      expect(find.text('Active'), findsOneWidget);
+    });
+  });
+
+  group('acmeDataTableStyle', () {
+    for (final theme in _themes) {
+      testWidgets('the frame matches the card in ${theme.name}', (
+        tester,
+      ) async {
+        final table = await _resolve(
+          tester,
+          acmeDataTableStyle(),
+          theme: theme.data,
+        );
+        final card = await _resolve(tester, acmeCardStyle(), theme: theme.data);
+
+        expect(
+          _boxBackground(table.spec.container),
+          _boxBackground(card.spec.container),
+        );
+        expect(
+          _boxBorder(table.spec.container),
+          _boxBorder(card.spec.container),
+        );
+        expect(table.spec.container.spec.clipBehavior, Clip.antiAlias);
+        // The header sits on `muted` so column names stay legible while the
+        // body scrolls under them.
+        expect(_boxBackground(table.spec.headerRow), theme.data.muted);
+      });
+
+      testWidgets('the three text roles take their tokens in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeDataTableStyle(),
+          theme: theme.data,
+        );
+
+        // `foreground`, not `mutedForeground`: the header sits on `muted`, and
+        // that pairing measures 4.35:1. The weight is what makes a column name
+        // read as a label rather than as data.
+        expect(spec.spec.headerLabel.spec.style?.color, theme.data.foreground);
+        expect(spec.spec.headerLabel.spec.style?.fontWeight, FontWeight.w500);
+        expect(spec.spec.cellText.spec.style?.color, theme.data.foreground);
+        expect(
+          spec.spec.footerLabel.spec.style?.color,
+          theme.data.mutedForeground,
+        );
+        // A column name sits on `muted`, not on the page.
+        _expectReadable(
+          spec.spec.headerLabel.spec.style!.color!,
+          theme.data.muted,
+          page: theme.data.background,
+          floor: 4.5,
+          reason: 'header label',
+        );
+        _expectReadable(
+          spec.spec.cellText.spec.style!.color!,
+          const Color(0x00000000),
+          page: theme.data.background,
+          floor: 4.5,
+          reason: 'cell text',
+        );
+      });
+    }
+
+    testWidgets('the last body row drops its rule', (tester) async {
+      const theme = AcmeThemeData.light();
+      final spec = await _resolve(tester, acmeDataTableStyle(), theme: theme);
+
+      // Otherwise it doubles up with the frame's own bottom edge, which reads
+      // as a two-pixel border on one side only.
+      expect(
+        (_boxBorder(spec.spec.bodyRow) as Border?)?.bottom.color,
+        theme.border,
+      );
+      expect(
+        (_boxBorder(spec.spec.lastBodyRow!) as Border?)?.bottom.style,
+        BorderStyle.none,
+      );
+    });
+
+    testWidgets('every cell shares one padding so the columns line up', (
+      tester,
+    ) async {
+      final spec = await _resolve(
+        tester,
+        acmeDataTableStyle(),
+        theme: const AcmeThemeData.light(),
+      );
+      const padding = EdgeInsets.symmetric(horizontal: 12, vertical: 8);
+
+      for (final cell in [
+        spec.spec.headerCell,
+        spec.spec.bodyCell,
+        spec.spec.selectionCell,
+      ]) {
+        expect(cell.spec.padding, padding);
+      }
+      expect(spec.spec.headerMinHeight, 40);
+      expect(spec.spec.rowMinHeight, 44);
+      expect(spec.spec.selectionColumnWidth, 44);
+    });
+
+    testWidgets('its controls are the recipes the application already owns', (
+      tester,
+    ) async {
+      // The whole reason `data_table` declares `checkbox`, `icon_button`, and
+      // `select` as registry dependencies. Change one of those recipes and the
+      // table's controls change with it — which is what a reader expects, and
+      // what restating them inside a fourth file would quietly break.
+      final spec = await _resolve(
+        tester,
+        acmeDataTableStyle(),
+        theme: const AcmeThemeData.light(),
+      );
+
+      expect(
+        spec.spec.selectionCheckbox,
+        acmeCheckboxStyle(size: AcmeCheckboxSize.small),
+      );
+      expect(
+        spec.spec.pageButton,
+        acmeIconButtonStyle(
+          variant: AcmeIconButtonVariant.ghost,
+          size: AcmeIconButtonSize.small,
+        ),
+      );
+      expect(
+        spec.spec.pageSizeSelect,
+        acmeSelectStyle(size: AcmeSelectSize.small),
+      );
+    });
+
+    testWidgets('renders rows and reports a selection', (tester) async {
+      Set<Object> selected = const {};
+
+      await tester.pumpWidget(
+        AcmeThemeScope(
+          data: const AcmeThemeData.light(),
+          child: _host(
+            StatefulBuilder(
+              builder: (context, setState) =>
+                  AcmeDataTable<Map<String, String>>(
+                    semanticLabel: 'Members',
+                    rows: const [
+                      {'name': 'Ada'},
+                      {'name': 'Grace'},
+                    ],
+                    rowId: (row) => row['name']!,
+                    selectedRowIds: selected,
+                    onSelectionChanged: (ids) => setState(() => selected = ids),
+                    columns: [
+                      RemixDataTableColumn(
+                        id: 'name',
+                        label: 'Name',
+                        cellBuilder: (context, row) => Text(row['name']!),
+                      ),
+                    ],
+                  ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Ada'), findsOneWidget);
+      expect(find.text('Grace'), findsOneWidget);
+      // The selection column really is the installed checkbox.
+      expect(find.byType(RemixCheckbox), findsWidgets);
+    });
+  });
+
   group('the overlay surfaces', () {
     for (final theme in _themes) {
       testWidgets('popover and menu agree on the panel in ${theme.name}', (
@@ -4438,9 +4669,12 @@ void main() {
     };
     const segmented =
         <AcmeSegmentedControlSize, ({double minHeight, double labelSize})>{
-          AcmeSegmentedControlSize.small: (minHeight: 26, labelSize: 13),
+          // The type scale is the family's — 14/14/16, same as the button,
+          // toggle, and tab. Only the heights differ, because the *track* is
+          // what lines up with the button beside it.
+          AcmeSegmentedControlSize.small: (minHeight: 26, labelSize: 14),
           AcmeSegmentedControlSize.medium: (minHeight: 30, labelSize: 14),
-          AcmeSegmentedControlSize.large: (minHeight: 34, labelSize: 14),
+          AcmeSegmentedControlSize.large: (minHeight: 34, labelSize: 16),
         };
 
     test('every size is covered', () {
@@ -4547,6 +4781,18 @@ void main() {
           theme: theme,
           style: CheckboxStyler().color(override),
         ),
+      ),
+      'data_list': (tester) async => (await _resolve(
+        tester,
+        acmeDataListStyle(style: DataListStyler().value(.color(override))),
+        theme: theme,
+      )).spec.value.spec.style?.color,
+      'data_table': (tester) async => _boxBackground(
+        (await _resolve(
+          tester,
+          acmeDataTableStyle(style: DataTableStyler().color(override)),
+          theme: theme,
+        )).spec.container,
       ),
       'dialog': (tester) async => _boxBackground(
         (await _resolve(
@@ -4713,9 +4959,9 @@ void main() {
     };
 
     test('every registry item is probed', () {
-      // The catalog is 26 items; `tabs` and `textfield` publish more than one
+      // The catalog is 28 items; `tabs` and `textfield` publish more than one
       // recipe, so the probe count is higher than the item count.
-      expect(probes, hasLength(29));
+      expect(probes, hasLength(31));
     });
 
     for (final entry in probes.entries) {
@@ -4747,6 +4993,14 @@ void main() {
       acmeCalloutStyle(),
     );
     expect(acmeCardStyle(style: const CardStyler.create()), acmeCardStyle());
+    expect(
+      acmeDataListStyle(style: const DataListStyler.create()),
+      acmeDataListStyle(),
+    );
+    expect(
+      acmeDataTableStyle(style: const DataTableStyler.create()),
+      acmeDataTableStyle(),
+    );
     expect(
       acmeDialogStyle(style: const DialogStyler.create()),
       acmeDialogStyle(),

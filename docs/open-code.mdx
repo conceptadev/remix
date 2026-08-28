@@ -425,7 +425,10 @@ The bundled registry is deliberately small, and every component depends on
 `theme` installs `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`,
 giving you `UiTokens`, `UiThemeData`, and `UiThemeScope`. Every other item
 installs one authored file plus its generated adapter under
-`components/<item>.dart`, and depends on `theme`:
+`components/<item>.dart`, and depends on `theme`. One item depends on more:
+`data_table` also pulls in `checkbox`, `icon_button`, and `select`, because its
+selection column, pager, and page-size control *are* those components — adding
+it installs all four.
 
 | Item | Widgets you get | Axes |
 |---|---|---|
@@ -436,6 +439,8 @@ installs one authored file plus its generated adapter under
 | `callout` | `UiCallout` | variant |
 | `card` | `UiCard` | — |
 | `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` | size |
+| `data_list` | `UiDataList` | — |
+| `data_table` | `UiDataTable` | — |
 | `dialog` | `UiDialog` | — |
 | `divider` | `UiDivider` | orientation |
 | `icon_button` | `UiIconButton` | variant, size |

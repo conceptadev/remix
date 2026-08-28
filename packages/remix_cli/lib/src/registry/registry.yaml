@@ -430,3 +430,42 @@ items:
       - "@ui/components/tooltip.g.dart"
     exports:
       - components/tooltip.dart
+
+  data_list:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/data_list/data_list.dart.tmpl
+        target: "@ui/components/data_list.dart"
+    generated:
+      - "@ui/components/data_list.g.dart"
+    exports:
+      - components/data_list.dart
+
+  # The only item with non-theme dependencies. A table's selection column is a
+  # checkbox, its pager is a pair of icon buttons, and its page-size control is
+  # a select, so its recipe hands `DataTableSpec` the application's own recipes
+  # rather than restating three components inside a fourth.
+  data_table:
+    registryDependencies:
+      - theme
+      - checkbox
+      - icon_button
+      - select
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/data_table/data_table.dart.tmpl
+        target: "@ui/components/data_table.dart"
+    generated:
+      - "@ui/components/data_table.g.dart"
+    exports:
+      - components/data_table.dart

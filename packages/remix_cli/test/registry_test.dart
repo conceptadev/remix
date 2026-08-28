@@ -189,10 +189,17 @@ items:
     for (final name in _componentSurfaces.keys) {
       final item = catalog.items[name];
       expect(item, isNotNull, reason: name);
-      expect(catalog.resolve(name).map((item) => item.name), [
-        'theme',
-        name,
-      ], reason: name);
+      // Dependency-first order, and `theme` always leads because every
+      // component declares it. `data_table` is the one item that needs more:
+      // its selection column, pager, and page-size control are the
+      // application's own checkbox, icon button, and select.
+      expect(
+        catalog.resolve(name).map((item) => item.name),
+        name == 'data_table'
+            ? ['theme', 'checkbox', 'icon_button', 'select', name]
+            : ['theme', name],
+        reason: name,
+      );
       expect(item!.files.single.target, '@ui/components/$name.dart');
       expect(item.generated, ['@ui/components/$name.g.dart']);
       expect(item.exports, ['components/$name.dart']);
@@ -299,6 +306,8 @@ const _componentSurfaces =
         widgets: ['Checkbox', 'CheckboxGroupItem'],
         types: ['CheckboxSize'],
       ),
+      'data_list': (widgets: ['DataList'], types: []),
+      'data_table': (widgets: ['DataTable'], types: []),
       'dialog': (widgets: ['Dialog'], types: []),
       'divider': (widgets: ['Divider'], types: []),
       'icon_button': (

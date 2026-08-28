@@ -23,6 +23,11 @@ part of 'link.dart';
 /// application that has a brand link color changes the two `.color(...)` calls
 /// below.
 ///
+/// There is no pressed fragment. A link's press is over in the time it takes
+/// to navigate, and the destination arriving is the feedback — the same reason
+/// the checkbox has none, arrived at from the other direction: a checkbox
+/// flips its own state, and a link replaces the page.
+///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it. State fragments merge by state, not
 /// by depth: an override that must beat the recipe's hover color has to be
