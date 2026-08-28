@@ -33,7 +33,10 @@ TooltipStyler {{valuePrefix}}TooltipStyle({
     .merge(style);
 
 /// Horizontal inset between the bubble edge and its label.
-const _paddingX = 8.0;
+///
+/// Twelve, matching shadcn's `px-3`. A bubble narrower than that crowds a
+/// short label against its own corner radius.
+const _paddingX = 12.0;
 
 /// Vertical inset between the bubble edge and its label.
 ///

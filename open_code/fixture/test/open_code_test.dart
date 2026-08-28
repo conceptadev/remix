@@ -2079,7 +2079,7 @@ void main() {
           _boxBorderRadius(spec.spec.container),
           BorderRadius.all(theme.data.radius),
         );
-        expect(box.padding, const EdgeInsets.all(16));
+        expect(box.padding, const EdgeInsets.all(24));
       });
     }
 
@@ -2091,7 +2091,7 @@ void main() {
       );
 
       expect(_boxBackground(spec.spec.container), const Color(0xFF7C3AED));
-      expect(spec.spec.container.spec.padding, const EdgeInsets.all(16));
+      expect(spec.spec.container.spec.padding, const EdgeInsets.all(24));
     });
 
     testWidgets('renders its child inside a RemixCard', (tester) async {
@@ -2621,7 +2621,7 @@ void main() {
 
         expect(
           box?.padding,
-          const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           reason: variant.name,
         );
         expect(flex?.spacing, 8, reason: variant.name);
@@ -4017,7 +4017,7 @@ void main() {
           Border.all(color: theme.data.border, width: 1),
         );
         expect(spec.spec.container.spec.constraints?.maxWidth, 420);
-        expect(spec.spec.container.spec.padding, const EdgeInsets.all(20));
+        expect(spec.spec.container.spec.padding, const EdgeInsets.all(24));
         expect(spec.spec.title.spec.style?.fontSize, 18);
         expect(spec.spec.title.spec.style?.fontWeight, FontWeight.w600);
         expect(spec.spec.title.spec.style?.color, theme.data.foreground);
