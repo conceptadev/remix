@@ -48,7 +48,7 @@ enum {{typePrefix}}ToggleSize {
 /// State fragments merge by state, not by depth: an override that must beat
 /// the recipe's on fill has to be declared as a selected fragment too
 /// (`ToggleStyler().onSelected(...)`).
-@MixWidget(name: '{{typePrefix}}Toggle', target: RemixToggle.new)
+@MixWidget(target: RemixToggle.new)
 ToggleStyler {{valuePrefix}}ToggleStyle({
   {{typePrefix}}ToggleVariant variant = .ghost,
   {{typePrefix}}ToggleSize size = .medium,

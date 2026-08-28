@@ -48,7 +48,7 @@ enum PlaygroundToggleSize {
 /// State fragments merge by state, not by depth: an override that must beat
 /// the recipe's on fill has to be declared as a selected fragment too
 /// (`ToggleStyler().onSelected(...)`).
-@MixWidget(name: 'PlaygroundToggle', target: RemixToggle.new)
+@MixWidget(target: RemixToggle.new)
 ToggleStyler playgroundToggleStyle({
   PlaygroundToggleVariant variant = .ghost,
   PlaygroundToggleSize size = .medium,

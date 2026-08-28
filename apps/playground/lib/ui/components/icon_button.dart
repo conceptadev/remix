@@ -68,7 +68,7 @@ enum PlaygroundIconButtonSize {
 /// State fragments merge by state, not by depth: an override that must beat
 /// the recipe's hover fill has to be declared as a hover fragment too
 /// (`IconButtonStyler().onHovered(...)`).
-@MixWidget(name: 'PlaygroundIconButton', target: RemixIconButton.new)
+@MixWidget(target: RemixIconButton.new)
 IconButtonStyler playgroundIconButtonStyle({
   PlaygroundIconButtonVariant variant = .primary,
   PlaygroundIconButtonSize size = .medium,

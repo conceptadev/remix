@@ -33,11 +33,10 @@ enum PlaygroundCheckboxSize {
 /// behavior, the minimum tap target, and the checkbox accessibility
 /// semantics — this recipe never reimplements any of that.
 ///
-/// `@MixWidget(name: 'PlaygroundCheckbox', target: RemixCheckbox.new)`
-/// generates `PlaygroundCheckbox` into `checkbox.g.dart`: an adapter whose
-/// constructor is this function's parameters plus every safe `RemixCheckbox`
-/// parameter, and whose `build` calls
-/// `RemixCheckbox(style: playgroundCheckboxStyle(...), ...)`. Unlike
+/// `@MixWidget(target: RemixCheckbox.new)` generates `PlaygroundCheckbox`
+/// into `checkbox.g.dart`: an adapter whose constructor is this function's
+/// parameters plus every safe `RemixCheckbox` parameter, and whose `build`
+/// calls `RemixCheckbox(style: playgroundCheckboxStyle(...), ...)`. Unlike
 /// Button there is no `variant` parameter, so the generator emits no named
 /// constructors: a checkbox has one look, and its meaningful axes are the
 /// runtime states below.
@@ -63,7 +62,7 @@ enum PlaygroundCheckboxSize {
 /// There is deliberately no pressed fragment. A button needs one because
 /// nothing else about it changes on tap; a checkbox flips its own state, and
 /// that is the feedback.
-@MixWidget(name: 'PlaygroundCheckbox', target: RemixCheckbox.new)
+@MixWidget(target: RemixCheckbox.new)
 CheckboxStyler playgroundCheckboxStyle({
   PlaygroundCheckboxSize size = .medium,
   CheckboxStyler style = const CheckboxStyler.create(),
@@ -94,10 +93,7 @@ CheckboxStyler playgroundCheckboxStyle({
 /// It delegates to [playgroundCheckboxStyle] rather than restating it:
 /// a group option is the same checkbox, so editing the recipe above restyles
 /// both.
-@MixWidget(
-  name: 'PlaygroundCheckboxGroupItem',
-  target: RemixCheckboxGroupItem.new,
-)
+@MixWidget(target: RemixCheckboxGroupItem.new)
 CheckboxStyler playgroundCheckboxGroupItemStyle({
   PlaygroundCheckboxSize size = .medium,
   CheckboxStyler style = const CheckboxStyler.create(),
@@ -166,8 +162,7 @@ typedef _PlaygroundCheckboxMetrics = ({
 
 _PlaygroundCheckboxMetrics _metricsFor(PlaygroundCheckboxSize size) =>
     switch (size) {
-      // Local edit: this app wants a denser small checkbox.
-      .small => (box: 14.0, indicator: 9.0, gap: 6.0, labelSize: 13.0),
+      .small => (box: 16.0, indicator: 10.0, gap: 8.0, labelSize: 14.0),
       .medium => (box: 18.0, indicator: 11.0, gap: 8.0, labelSize: 14.0),
       .large => (box: 20.0, indicator: 13.0, gap: 10.0, labelSize: 16.0),
     };

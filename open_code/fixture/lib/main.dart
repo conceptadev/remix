@@ -24,7 +24,14 @@ class AcmeGalleryApp extends StatelessWidget {
     return WidgetsApp(
       color: const Color(0xFF0A0A0A),
       debugShowCheckedModeBanner: false,
-      builder: (_, _) => const AcmeGallery(),
+      // `EditableText` asserts on an `Overlay` ancestor as soon as it takes
+      // focus, for its selection handles and magnifier. A real application
+      // gets one from its `Navigator`; a `WidgetsApp` built with `builder:`
+      // alone does not, so the gallery supplies it rather than pulling in
+      // MaterialApp and with it a host framework this layer does not use.
+      builder: (_, _) => Overlay(
+        initialEntries: [OverlayEntry(builder: (_) => const AcmeGallery())],
+      ),
     );
   }
 }
@@ -126,6 +133,11 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
   Set<String> _interests = const {'design'};
   String _tab = 'account';
   Set<AcmeToggleVariant> _pinned = const {AcmeToggleVariant.outline};
+  bool _notifications = true;
+  String? _plan = 'pro';
+  double _volume = 0.4;
+  String? _weight = 'bold';
+  String _view = 'list';
 
   void _record(String action) => setState(() => _lastAction = action);
 
@@ -569,6 +581,178 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                       ),
                     ],
                   ),
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Switches and radios', color: data.mutedForeground),
+                Wrap(
+                  spacing: 20,
+                  runSpacing: 12,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    for (final size in AcmeSwitchSize.values)
+                      AcmeSwitch(
+                        size: size,
+                        selected: _notifications,
+                        semanticLabel: 'Notifications ${size.name}',
+                        onChanged: (value) => setState(() {
+                          _notifications = value;
+                          _lastAction = 'switch ${size.name} -> $value';
+                        }),
+                      ),
+                    const AcmeSwitch(
+                      selected: true,
+                      enabled: false,
+                      semanticLabel: 'Disabled switch',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                // `RemixRadioGroup` is behavioral and carries no recipe: it
+                // owns the chosen value while the adapters own the circles.
+                RemixRadioGroup<String>(
+                  groupValue: _plan,
+                  semanticLabel: 'Plan',
+                  onChanged: (value) => setState(() {
+                    _plan = value;
+                    _lastAction = 'plan -> $value';
+                  }),
+                  child: Wrap(
+                    spacing: 20,
+                    runSpacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      for (final plan in const ['free', 'pro'])
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AcmeRadio<String>(value: plan, semanticLabel: plan),
+                            const SizedBox(width: 8),
+                            Text(
+                              plan,
+                              style: TextStyle(color: data.foreground),
+                            ),
+                          ],
+                        ),
+                      const AcmeRadio<String>(
+                        value: 'enterprise',
+                        semanticLabel: 'Enterprise',
+                        enabled: false,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                _Label('Sliders', color: data.mutedForeground),
+                for (final size in AcmeSliderSize.values)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: AcmeSlider(
+                      size: size,
+                      value: _volume,
+                      semanticLabel: 'Volume ${size.name}',
+                      onChanged: (value) => setState(() {
+                        _volume = value;
+                        _lastAction = 'volume -> ${value.toStringAsFixed(2)}';
+                      }),
+                    ),
+                  ),
+                const SizedBox(height: 16),
+
+                _Label('Text inputs', color: data.mutedForeground),
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 12,
+                  children: [
+                    SizedBox(
+                      width: 220,
+                      child: AcmeTextField(
+                        label: 'Workspace',
+                        hintText: 'acme-inc',
+                        helperText: 'Lowercase letters and dashes.',
+                        onChanged: (value) => _record('workspace -> $value'),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 220,
+                      child: AcmeTextField(
+                        label: 'Slug',
+                        hintText: 'acme inc',
+                        helperText: 'Spaces are not allowed.',
+                        error: true,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 220,
+                      child: AcmeTextField(
+                        label: 'Owner',
+                        hintText: 'you@acme.test',
+                        enabled: false,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 220,
+                      child: AcmeTextArea(
+                        label: 'Description',
+                        hintText: 'What is this workspace for?',
+                        onChanged: (value) => _record('description'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                _Label(
+                  'Toggle group and segmented control',
+                  color: data.mutedForeground,
+                ),
+                Wrap(
+                  spacing: 20,
+                  runSpacing: 12,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    // The group's recipe styles every option: the items are
+                    // data, not widgets, so there is no per-item call site to
+                    // forget a styler on.
+                    AcmeToggleGroup<String>(
+                      variant: AcmeToggleGroupVariant.outline,
+                      selectedValue: _weight,
+                      semanticLabel: 'Weight',
+                      onChanged: (value) => setState(() {
+                        _weight = value;
+                        _lastAction = 'weight -> $value';
+                      }),
+                      items: const [
+                        RemixToggleGroupItem(value: 'bold', label: 'Bold'),
+                        RemixToggleGroupItem(value: 'italic', label: 'Italic'),
+                        RemixToggleGroupItem(
+                          value: 'strike',
+                          label: 'Strike',
+                          enabled: false,
+                        ),
+                      ],
+                    ),
+                    AcmeSegmentedControl<String>(
+                      selectedValue: _view,
+                      semanticLabel: 'View',
+                      onChanged: (value) => setState(() {
+                        _view = value;
+                        _lastAction = 'view -> $value';
+                      }),
+                      items: const [
+                        RemixSegmentedControlItem(value: 'list', label: 'List'),
+                        RemixSegmentedControlItem(
+                          value: 'board',
+                          label: 'Board',
+                        ),
+                        RemixSegmentedControlItem(
+                          value: 'timeline',
+                          label: 'Timeline',
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
 

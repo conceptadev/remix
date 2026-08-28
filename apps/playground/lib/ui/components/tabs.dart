@@ -65,7 +65,7 @@ enum PlaygroundTabSize {
 ///   ),
 /// )
 /// ```
-@MixWidget(name: 'PlaygroundTabBar', target: RemixTabBar.new)
+@MixWidget(target: RemixTabBar.new)
 TabBarStyler playgroundTabBarStyle({
   TabBarStyler style = const TabBarStyler.create(),
 }) => TabBarStyler()
@@ -101,7 +101,6 @@ TabBarStyler playgroundTabBarStyle({
 /// depend on. Pass a `child` for custom content, or reach for `RemixTab`
 /// directly on the rare call site that needs the raw state.
 @MixWidget(
-  name: 'PlaygroundTab',
   target: RemixTab.new,
   widgetParameters: .only({
     'tabId',
@@ -136,7 +135,7 @@ TabStyler playgroundTabStyle({
 /// It exists so the panel carries the application's prefix and has one place
 /// to edit, and it earns that by owning the gap between the strip and the
 /// content: without it the panel's first line sits directly on the hairline.
-@MixWidget(name: 'PlaygroundTabView', target: RemixTabView.new)
+@MixWidget(target: RemixTabView.new)
 TabViewStyler playgroundTabViewStyle({
   TabViewStyler style = const TabViewStyler.create(),
 }) => TabViewStyler().padding(.top(_panelGap)).merge(style);

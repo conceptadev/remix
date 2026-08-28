@@ -32,7 +32,7 @@ part 'divider.g.dart';
 ///   style: DividerStyler().color(PlaygroundTokens.muted()),
 /// )
 /// ```
-@MixWidget(name: 'PlaygroundDivider', target: RemixDivider.new)
+@MixWidget(target: RemixDivider.new)
 DividerStyler playgroundDividerStyle({
   Axis orientation = Axis.horizontal,
   DividerStyler style = const DividerStyler.create(),

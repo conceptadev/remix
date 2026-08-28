@@ -42,7 +42,7 @@ enum PlaygroundAvatarSize {
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.
-@MixWidget(name: 'PlaygroundAvatar', target: RemixAvatar.new)
+@MixWidget(target: RemixAvatar.new)
 AvatarStyler playgroundAvatarStyle({
   PlaygroundAvatarSize size = .medium,
   AvatarStyler style = const AvatarStyler.create(),

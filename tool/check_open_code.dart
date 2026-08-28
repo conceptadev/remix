@@ -38,10 +38,16 @@ const _registryItems = <String>[
   'icon_button',
   'link',
   'progress',
+  'radio',
+  'segmented_control',
   'skeleton',
+  'slider',
   'spinner',
+  'switch',
   'tabs',
+  'textfield',
   'toggle',
+  'toggle_group',
 ];
 
 /// Generated adapters compared byte-for-byte against a committed snapshot.
@@ -50,6 +56,12 @@ const _registryItems = <String>[
 /// single-adapter case, `tabs` the multi-adapter one. These guard *generator*
 /// drift, which is shape-wide; the fixture's behavior tests are the stronger
 /// per-component guard.
+///
+/// The generator copies the recipe's doc comment into the adapter, so editing
+/// prose in a template moves these bytes. A snapshot diff that is only
+/// comments is expected and is refreshed, not investigated; a diff that
+/// touches a constructor, a field, or a `build` body is the thing this is
+/// here to catch.
 const _generatedSnapshots = <String, String>{
   'lib/ui/components/button.g.dart': 'expected/acme_button.g.dart',
   'lib/ui/components/tabs.g.dart': 'expected/acme_tabs.g.dart',

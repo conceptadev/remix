@@ -27,7 +27,7 @@ part 'link.g.dart';
 /// the resolved recipe without forking it. State fragments merge by state, not
 /// by depth: an override that must beat the recipe's hover color has to be
 /// declared as a hover fragment too (`LinkStyler().onHovered(...)`).
-@MixWidget(name: 'PlaygroundLink', target: RemixLink.new)
+@MixWidget(target: RemixLink.new)
 LinkStyler playgroundLinkStyle({
   LinkStyler style = const LinkStyler.create(),
 }) => LinkStyler()

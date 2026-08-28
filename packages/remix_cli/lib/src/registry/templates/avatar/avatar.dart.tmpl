@@ -42,7 +42,7 @@ enum {{typePrefix}}AvatarSize {
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.
-@MixWidget(name: '{{typePrefix}}Avatar', target: RemixAvatar.new)
+@MixWidget(target: RemixAvatar.new)
 AvatarStyler {{valuePrefix}}AvatarStyle({
   {{typePrefix}}AvatarSize size = .medium,
   AvatarStyler style = const AvatarStyler.create(),

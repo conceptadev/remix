@@ -33,11 +33,10 @@ enum {{typePrefix}}CheckboxSize {
 /// behavior, the minimum tap target, and the checkbox accessibility
 /// semantics — this recipe never reimplements any of that.
 ///
-/// `@MixWidget(name: '{{typePrefix}}Checkbox', target: RemixCheckbox.new)`
-/// generates `{{typePrefix}}Checkbox` into `checkbox.g.dart`: an adapter whose
-/// constructor is this function's parameters plus every safe `RemixCheckbox`
-/// parameter, and whose `build` calls
-/// `RemixCheckbox(style: {{valuePrefix}}CheckboxStyle(...), ...)`. Unlike
+/// `@MixWidget(target: RemixCheckbox.new)` generates `{{typePrefix}}Checkbox`
+/// into `checkbox.g.dart`: an adapter whose constructor is this function's
+/// parameters plus every safe `RemixCheckbox` parameter, and whose `build`
+/// calls `RemixCheckbox(style: {{valuePrefix}}CheckboxStyle(...), ...)`. Unlike
 /// Button there is no `variant` parameter, so the generator emits no named
 /// constructors: a checkbox has one look, and its meaningful axes are the
 /// runtime states below.
@@ -63,7 +62,7 @@ enum {{typePrefix}}CheckboxSize {
 /// There is deliberately no pressed fragment. A button needs one because
 /// nothing else about it changes on tap; a checkbox flips its own state, and
 /// that is the feedback.
-@MixWidget(name: '{{typePrefix}}Checkbox', target: RemixCheckbox.new)
+@MixWidget(target: RemixCheckbox.new)
 CheckboxStyler {{valuePrefix}}CheckboxStyle({
   {{typePrefix}}CheckboxSize size = .medium,
   CheckboxStyler style = const CheckboxStyler.create(),
@@ -94,10 +93,7 @@ CheckboxStyler {{valuePrefix}}CheckboxStyle({
 /// It delegates to [{{valuePrefix}}CheckboxStyle] rather than restating it:
 /// a group option is the same checkbox, so editing the recipe above restyles
 /// both.
-@MixWidget(
-  name: '{{typePrefix}}CheckboxGroupItem',
-  target: RemixCheckboxGroupItem.new,
-)
+@MixWidget(target: RemixCheckboxGroupItem.new)
 CheckboxStyler {{valuePrefix}}CheckboxGroupItemStyle({
   {{typePrefix}}CheckboxSize size = .medium,
   CheckboxStyler style = const CheckboxStyler.create(),

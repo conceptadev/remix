@@ -439,10 +439,16 @@ installs one authored file plus its generated adapter under
 | `icon_button` | `UiIconButton` | variant, size |
 | `link` | `UiLink` | — |
 | `progress` | `UiProgress` | size |
+| `radio` | `UiRadio` | size |
+| `segmented_control` | `UiSegmentedControl` | size |
 | `skeleton` | `UiSkeleton` | — |
+| `slider` | `UiSlider` | size |
 | `spinner` | `UiSpinner` | size |
+| `switch` | `UiSwitch` | size |
 | `tabs` | `UiTabBar`, `UiTab`, `UiTabView` | size |
+| `textfield` | `UiTextField`, `UiTextArea` | size |
 | `toggle` | `UiToggle` | variant, size |
+| `toggle_group` | `UiToggleGroup` | variant, size |
 
 One `add` installs one item. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. A recipe whose axis is
@@ -450,9 +456,19 @@ named `variant` also gets one named constructor per value, so
 `UiBadge.destructive(label: 'Failing')` works out of the box.
 
 Some Remix widgets are behavioral and carry no style, so the registry has
-nothing to render for them. `RemixCheckboxGroup` and `RemixTabs` are the two
-in this catalog: import them from `package:remix/remix.dart` and put the
-installed adapters inside.
+nothing to render for them. `RemixCheckboxGroup`, `RemixRadioGroup`, and
+`RemixTabs` are the three in this catalog: import them from
+`package:remix/remix.dart` and put the installed adapters inside.
+
+`toggle_group` and `segmented_control` work the other way round. Their options
+are data, not widgets, and the group's own recipe carries the option style — so
+one `add` covers the container *and* every option, and an option in a loop
+cannot be left unstyled.
+
+One host note: an installed text field needs an `Overlay` ancestor once it
+takes focus, for its selection handles. `MaterialApp`, `CupertinoApp`, and any
+`WidgetsApp` with routes already provide one; a bare
+`WidgetsApp(builder: ...)` does not.
 
 ## Exit codes
 

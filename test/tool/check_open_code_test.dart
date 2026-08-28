@@ -222,10 +222,16 @@ const _registryItems = <String>[
   'icon_button',
   'link',
   'progress',
+  'radio',
+  'segmented_control',
   'skeleton',
+  'slider',
   'spinner',
+  'switch',
   'tabs',
+  'textfield',
   'toggle',
+  'toggle_group',
 ];
 
 void _writeInstalledUi(Directory app) {

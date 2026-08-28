@@ -30,7 +30,7 @@ part 'skeleton.g.dart';
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.
-@MixWidget(name: '{{typePrefix}}Skeleton', target: RemixSkeleton.new)
+@MixWidget(target: RemixSkeleton.new)
 SkeletonStyler {{valuePrefix}}SkeletonStyle({
   SkeletonStyler style = const SkeletonStyler.create(),
 }) => SkeletonStyler()

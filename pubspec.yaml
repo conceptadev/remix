@@ -86,8 +86,11 @@ melos:
         command: dart run ../../tool/check_generated.dart
         concurrency: 1
         orderDependents: true
+      # The playground is in scope because it holds a committed, CLI-installed
+      # copy of every registry item. Nothing in the app renders those files, so
+      # a `.g.dart` left behind by a recipe edit would compile and ship green.
       packageFilters:
-        scope: [remix, remix_fortal]
+        scope: [remix, remix_fortal, playground]
 
     test:flutter:
       exec: flutter test --reporter=failures-only
@@ -124,7 +127,11 @@ melos:
       steps:
         - dart test test/tool/check_open_code_test.dart
         - dart run tool/check_open_code.dart
-      description: Test the checker and install Button through remix_cli in a fresh app
+      description: Test the checker and install every registry item in a fresh app
+
+    open-code:dogfood:check:
+      run: dart run tool/check_open_code_dogfood.dart
+      description: Verify the playground's installed source still mirrors the registry
 
     icons:generate:
       steps:
@@ -148,6 +155,7 @@ melos:
         - generate:check
         - docs:check
         - fortal:parity:check
+        - open-code:dogfood:check
         - test:cli
         - test:flutter
         # Last because it is the only step that leaves the workspace: it builds

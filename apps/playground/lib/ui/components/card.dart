@@ -30,7 +30,7 @@ part 'card.g.dart';
 ///   child: summary,
 /// )
 /// ```
-@MixWidget(name: 'PlaygroundCard', target: RemixCard.new)
+@MixWidget(target: RemixCard.new)
 CardStyler playgroundCardStyle({
   CardStyler style = const CardStyler.create(),
 }) => CardStyler()
@@ -48,7 +48,4 @@ CardStyler playgroundCardStyle({
 const _borderWidth = 1.0;
 
 /// Inset between the card edge and its content.
-///
-/// Local edit: this app's cards sit inside dense panels, so they are tighter
-/// than the registry default of 16.
-const _padding = 12.0;
+const _padding = 16.0;

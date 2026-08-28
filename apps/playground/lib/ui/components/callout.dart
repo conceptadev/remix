@@ -52,7 +52,7 @@ enum PlaygroundCalloutVariant {
 ///   text: 'This deletes the workspace for everyone.',
 /// )
 /// ```
-@MixWidget(name: 'PlaygroundCallout', target: RemixCallout.new)
+@MixWidget(target: RemixCallout.new)
 CalloutStyler playgroundCalloutStyle({
   PlaygroundCalloutVariant variant = .neutral,
   CalloutStyler style = const CalloutStyler.create(),

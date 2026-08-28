@@ -15,11 +15,10 @@ part of 'checkbox.dart';
 /// behavior, the minimum tap target, and the checkbox accessibility
 /// semantics — this recipe never reimplements any of that.
 ///
-/// `@MixWidget(name: 'PlaygroundCheckbox', target: RemixCheckbox.new)`
-/// generates `PlaygroundCheckbox` into `checkbox.g.dart`: an adapter whose
-/// constructor is this function's parameters plus every safe `RemixCheckbox`
-/// parameter, and whose `build` calls
-/// `RemixCheckbox(style: playgroundCheckboxStyle(...), ...)`. Unlike
+/// `@MixWidget(target: RemixCheckbox.new)` generates `PlaygroundCheckbox`
+/// into `checkbox.g.dart`: an adapter whose constructor is this function's
+/// parameters plus every safe `RemixCheckbox` parameter, and whose `build`
+/// calls `RemixCheckbox(style: playgroundCheckboxStyle(...), ...)`. Unlike
 /// Button there is no `variant` parameter, so the generator emits no named
 /// constructors: a checkbox has one look, and its meaningful axes are the
 /// runtime states below.

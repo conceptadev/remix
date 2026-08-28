@@ -34,7 +34,7 @@ enum {{typePrefix}}SpinnerSize {
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.
-@MixWidget(name: '{{typePrefix}}Spinner', target: RemixSpinner.new)
+@MixWidget(target: RemixSpinner.new)
 SpinnerStyler {{valuePrefix}}SpinnerStyle({
   {{typePrefix}}SpinnerSize size = .medium,
   SpinnerStyler style = const SpinnerStyler.create(),

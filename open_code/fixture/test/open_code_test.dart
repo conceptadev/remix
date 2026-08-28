@@ -1,4 +1,5 @@
 import 'package:flutter/gestures.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:open_code_fixture/main.dart';
@@ -2045,6 +2046,13 @@ void main() {
           find.byType(AcmeCard),
           find.byType(AcmeCallout),
           find.byType(AcmeDivider),
+          find.byType(AcmeSwitch),
+          find.byType(AcmeRadio<String>),
+          find.byType(AcmeSlider),
+          find.byType(AcmeTextField),
+          find.byType(AcmeTextArea),
+          find.byType(AcmeToggleGroup<String>),
+          find.byType(AcmeSegmentedControl<String>),
         ]) {
           expect(finder, findsWidgets);
         }
@@ -2989,6 +2997,658 @@ void main() {
     });
   });
 
+  group('acmeSwitchStyle', () {
+    const heights = <AcmeSwitchSize, double>{
+      AcmeSwitchSize.small: 16,
+      AcmeSwitchSize.medium: 20,
+      AcmeSwitchSize.large: 24,
+    };
+
+    test('every size is covered', () {
+      expect(heights.keys, containsAll(AcmeSwitchSize.values));
+    });
+
+    for (final entry in heights.entries) {
+      testWidgets('${entry.key.name} keeps the thumb flush in the track', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeSwitchStyle(size: entry.key),
+          theme: const AcmeThemeData.light(),
+        );
+
+        expect(spec.spec.container.spec.constraints?.maxHeight, entry.value);
+        expect(
+          spec.spec.container.spec.constraints?.maxWidth,
+          entry.value * 1.8,
+        );
+        // Track height minus the 2px inset on both sides: the thumb must not
+        // spill out of the rail at any size.
+        expect(
+          spec.spec.thumb.spec.constraints?.maxHeight,
+          entry.value - 4,
+          reason: entry.key.name,
+        );
+        expect(spec.spec.container.spec.padding, const EdgeInsets.all(2));
+      });
+    }
+
+    for (final theme in _themes) {
+      testWidgets('only the track carries the state in ${theme.name}', (
+        tester,
+      ) async {
+        final off = await _resolve(
+          tester,
+          acmeSwitchStyle(),
+          theme: theme.data,
+        );
+        final on = await _resolve(
+          tester,
+          acmeSwitchStyle(),
+          theme: theme.data,
+          states: const {WidgetState.selected},
+        );
+
+        expect(_boxBackground(off.spec.container), theme.data.muted);
+        expect(_boxBackground(on.spec.container), theme.data.primary);
+        // The thumb never changes, so it has to stay visible on both tracks.
+        for (final spec in [off, on]) {
+          expect(_boxBackground(spec.spec.thumb), theme.data.background);
+        }
+        expect(
+          _contrastRatio(theme.data.background, theme.data.primary),
+          greaterThanOrEqualTo(3.0),
+        );
+      });
+    }
+
+    testWidgets('focus rings the track and disabled clears it', (tester) async {
+      const theme = AcmeThemeData.light();
+      final focused = await _resolve(
+        tester,
+        acmeSwitchStyle(),
+        theme: theme,
+        states: const {WidgetState.focused},
+      );
+      final disabled = await _resolve(
+        tester,
+        acmeSwitchStyle(),
+        theme: theme,
+        states: const {WidgetState.focused, WidgetState.disabled},
+      );
+
+      expect(focused.spec.trackEffects?.outline.color, theme.focusRing);
+      expect(focused.spec.trackEffects?.outline.width, 2);
+      expect(disabled.spec.trackEffects?.outline.style, BorderStyle.none);
+      expect(
+        disabled.widgetModifiers,
+        contains(
+          isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
+        ),
+      );
+    });
+
+    testWidgets('toggling reaches the callback and reports switch semantics', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      final changes = <bool>[];
+
+      await _pumpInScope(
+        tester,
+        AcmeSwitch(
+          selected: false,
+          semanticLabel: 'Notifications',
+          onChanged: changes.add,
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(AcmeSwitch));
+      await tester.pumpAndSettle();
+
+      expect(changes, [true]);
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Notifications')),
+        isSemantics(hasEnabledState: true, isEnabled: true, isToggled: false),
+      );
+      handle.dispose();
+    });
+  });
+
+  group('acmeRadioStyle', () {
+    const expected = <AcmeRadioSize, ({double diameter, double dot})>{
+      AcmeRadioSize.small: (diameter: 16, dot: 6),
+      AcmeRadioSize.medium: (diameter: 18, dot: 7),
+      AcmeRadioSize.large: (diameter: 20, dot: 8),
+    };
+
+    test('every size is covered', () {
+      expect(expected.keys, containsAll(AcmeRadioSize.values));
+    });
+
+    for (final entry in expected.entries) {
+      testWidgets('${entry.key.name} is a circle around a smaller dot', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeRadioStyle(size: entry.key),
+          theme: const AcmeThemeData.light(),
+        );
+
+        expect(
+          spec.spec.container.spec.constraints,
+          BoxConstraints.tight(Size.square(entry.value.diameter)),
+        );
+        expect(
+          spec.spec.indicator.spec.constraints,
+          BoxConstraints.tight(Size.square(entry.value.dot)),
+        );
+        for (final part in [spec.spec.container, spec.spec.indicator]) {
+          expect(
+            _boxBorderRadius(part),
+            const BorderRadius.all(Radius.circular(999)),
+          );
+        }
+      });
+    }
+
+    for (final theme in _themes) {
+      testWidgets('chosen keeps an open middle in ${theme.name}', (
+        tester,
+      ) async {
+        final unchosen = await _resolve(
+          tester,
+          acmeRadioStyle(),
+          theme: theme.data,
+        );
+        final chosen = await _resolve(
+          tester,
+          acmeRadioStyle(),
+          theme: theme.data,
+          states: const {WidgetState.selected},
+        );
+
+        expect(_boxBackground(unchosen.spec.container), theme.data.background);
+        expect(
+          _boxBorder(unchosen.spec.container),
+          Border.all(color: theme.data.border, width: 1),
+        );
+        // The surface stays the page color: the dot is the mark, not a fill.
+        expect(_boxBackground(chosen.spec.container), theme.data.background);
+        expect(
+          _boxBorder(chosen.spec.container),
+          Border.all(color: theme.data.primary, width: 1.5),
+        );
+        expect(_boxBackground(chosen.spec.indicator), theme.data.primary);
+        expect(
+          _contrastRatio(theme.data.primary, theme.data.background),
+          greaterThanOrEqualTo(3.0),
+        );
+      });
+
+      testWidgets(
+        'a chosen radio dims its own ring on hover in ${theme.name}',
+        (tester) async {
+          final spec = await _resolve(
+            tester,
+            acmeRadioStyle(),
+            theme: theme.data,
+            states: const {WidgetState.selected, WidgetState.hovered},
+          );
+          final dimmed = theme.data.primary.withValues(alpha: 0.9);
+
+          expect(
+            _boxBorder(spec.spec.container),
+            Border.all(color: dimmed, width: 1.5),
+          );
+          expect(_boxBackground(spec.spec.indicator), dimmed);
+        },
+      );
+    }
+
+    testWidgets('selecting one option clears the other', (tester) async {
+      String? chosen = 'free';
+
+      await tester.pumpWidget(
+        AcmeThemeScope(
+          data: const AcmeThemeData.light(),
+          child: _host(
+            StatefulBuilder(
+              builder: (context, setState) => RemixRadioGroup<String>(
+                groupValue: chosen,
+                semanticLabel: 'Plan',
+                onChanged: (value) => setState(() => chosen = value),
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AcmeRadio<String>(value: 'free', semanticLabel: 'Free'),
+                    AcmeRadio<String>(value: 'pro', semanticLabel: 'Pro'),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.bySemanticsLabel('Pro'));
+      await tester.pumpAndSettle();
+
+      expect(chosen, 'pro');
+    });
+  });
+
+  group('acmeSliderStyle', () {
+    const rails = <AcmeSliderSize, double>{
+      AcmeSliderSize.small: 4,
+      AcmeSliderSize.medium: 6,
+      AcmeSliderSize.large: 8,
+    };
+
+    test('every size is covered', () {
+      expect(rails.keys, containsAll(AcmeSliderSize.values));
+    });
+
+    for (final entry in rails.entries) {
+      testWidgets('${entry.key.name} scales the thumb with the rail', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeSliderStyle(size: entry.key),
+          theme: const AcmeThemeData.light(),
+        );
+
+        expect(spec.spec.trackWidth, entry.value);
+        expect(spec.spec.rangeWidth, entry.value);
+        expect(
+          spec.spec.thumb.spec.constraints,
+          BoxConstraints.tight(Size.square(entry.value * 2.5)),
+        );
+      });
+    }
+
+    for (final theme in _themes) {
+      testWidgets('rail, range, and thumb take their tokens in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeSliderStyle(),
+          theme: theme.data,
+        );
+
+        // The same pairing the progress bar uses: a slider is a progress bar
+        // you can grab.
+        expect(spec.spec.trackColor, theme.data.muted);
+        expect(spec.spec.rangeColor, theme.data.primary);
+        expect(_boxBackground(spec.spec.thumb), theme.data.background);
+        expect(
+          _boxBorder(spec.spec.thumb),
+          Border.all(color: theme.data.primary, width: 2),
+        );
+      });
+    }
+
+    testWidgets('focus rings the thumb and disabled fades the control', (
+      tester,
+    ) async {
+      const theme = AcmeThemeData.light();
+      final focused = await _resolve(
+        tester,
+        acmeSliderStyle(),
+        theme: theme,
+        states: const {WidgetState.focused},
+      );
+      final disabled = await _resolve(
+        tester,
+        acmeSliderStyle(),
+        theme: theme,
+        states: const {WidgetState.disabled},
+      );
+
+      expect(focused.spec.thumbFocusEffects?.outline.color, theme.focusRing);
+      expect(
+        disabled.widgetModifiers,
+        contains(
+          isA<OpacityModifier>().having((m) => m.opacity, 'opacity', 0.5),
+        ),
+      );
+    });
+
+    testWidgets('forwards the curated RemixSlider surface', (tester) async {
+      await _pumpInScope(
+        tester,
+        SizedBox(
+          width: 200,
+          child: AcmeSlider(
+            value: 0.5,
+            min: 0,
+            max: 10,
+            snapDivisions: 5,
+            semanticLabel: 'Volume',
+            onChanged: (_) {},
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final remix = tester.widget<RemixSlider>(find.byType(RemixSlider));
+      expect(remix.min, 0);
+      expect(remix.max, 10);
+      expect(remix.snapDivisions, 5);
+      expect(remix.semanticLabel, 'Volume');
+      expect(remix.style, acmeSliderStyle());
+      // `semanticFormatterCallback` would drag `package:naked_ui` into the
+      // adapter, so it is deliberately outside the generated surface.
+      expect(remix.semanticFormatterCallback, isNull);
+    });
+  });
+
+  group('acmeTextFieldStyle and acmeTextAreaStyle', () {
+    const heights = <AcmeTextFieldSize, ({double minHeight, double textSize})>{
+      AcmeTextFieldSize.small: (minHeight: 32, textSize: 14),
+      AcmeTextFieldSize.medium: (minHeight: 36, textSize: 14),
+      AcmeTextFieldSize.large: (minHeight: 40, textSize: 16),
+    };
+
+    test('every size is covered', () {
+      expect(heights.keys, containsAll(AcmeTextFieldSize.values));
+    });
+
+    for (final entry in heights.entries) {
+      testWidgets('${entry.key.name} sizes the field and its text', (
+        tester,
+      ) async {
+        const theme = AcmeThemeData.light();
+        final field = await _resolve(
+          tester,
+          acmeTextFieldStyle(size: entry.key),
+          theme: theme,
+        );
+        final area = await _resolve(
+          tester,
+          acmeTextAreaStyle(size: entry.key),
+          theme: theme,
+        );
+
+        expect(
+          field.spec.container.spec.constraints?.minHeight,
+          entry.value.minHeight,
+        );
+        expect(field.spec.text.spec.style?.fontSize, entry.value.textSize);
+        // A text area rests taller, because `RemixTextArea` defaults to two
+        // lines and the box must not grow the moment the second one arrives.
+        expect(
+          area.spec.container.spec.constraints?.minHeight,
+          entry.value.minHeight * 2.5,
+        );
+      });
+    }
+
+    for (final theme in _themes) {
+      testWidgets('the four text roles take their tokens in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeTextFieldStyle(),
+          theme: theme.data,
+        );
+
+        expect(spec.spec.text.spec.style?.color, theme.data.foreground);
+        // The placeholder must read as quieter than a real value.
+        expect(
+          spec.spec.hintText.spec.style?.color,
+          theme.data.mutedForeground,
+        );
+        expect(spec.spec.label.spec.style?.color, theme.data.foreground);
+        expect(
+          spec.spec.helperText.spec.style?.color,
+          theme.data.mutedForeground,
+        );
+        expect(spec.spec.cursorColor, theme.data.foreground);
+        expect(
+          _boxBorder(spec.spec.container),
+          Border.all(color: theme.data.border, width: 1),
+        );
+      });
+
+      testWidgets(
+        'error outlines the field and colors the helper in ${theme.name}',
+        (tester) async {
+          final spec = await _resolve(
+            tester,
+            acmeTextFieldStyle(),
+            theme: theme.data,
+            states: const {WidgetState.error},
+          );
+
+          expect(
+            _boxBorder(spec.spec.container),
+            Border.all(color: theme.data.destructive, width: 1),
+          );
+          // The outline carries the tone, where the non-text floor is 3:1.
+          // The message that explains the problem stays `foreground` and gets
+          // heavier, because `destructive` is 4.1:1 on the dark page.
+          expect(spec.spec.helperText.spec.style?.color, theme.data.foreground);
+          expect(spec.spec.helperText.spec.style?.fontWeight, FontWeight.w500);
+          expect(spec.spec.text.spec.style?.color, theme.data.foreground);
+        },
+      );
+    }
+
+    testWidgets('the area only differs in height and alignment', (
+      tester,
+    ) async {
+      const theme = AcmeThemeData.light();
+      final field = await _resolve(tester, acmeTextFieldStyle(), theme: theme);
+      final area = await _resolve(tester, acmeTextAreaStyle(), theme: theme);
+
+      expect(field.spec.crossAxisAlignment, CrossAxisAlignment.center);
+      expect(area.spec.crossAxisAlignment, CrossAxisAlignment.start);
+      // Everything the two share comes from one place in the recipe.
+      expect(area.spec.text.spec.style, field.spec.text.spec.style);
+      expect(area.spec.label.spec.style, field.spec.label.spec.style);
+      expect(_boxBorder(area.spec.container), _boxBorder(field.spec.container));
+    });
+
+    testWidgets('an invalid field announces itself', (tester) async {
+      final handle = tester.ensureSemantics();
+
+      await _pumpInScope(
+        tester,
+        const SizedBox(
+          width: 220,
+          child: AcmeTextField(
+            label: 'Slug',
+            helperText: 'Spaces are not allowed.',
+            error: true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Slug')),
+        isSemantics(validationResult: SemanticsValidationResult.invalid),
+      );
+      handle.dispose();
+    });
+
+    testWidgets('typing reaches the callback', (tester) async {
+      final typed = <String>[];
+
+      await _pumpInScope(
+        tester,
+        _overlaid(
+          SizedBox(
+            width: 220,
+            child: AcmeTextField(label: 'Workspace', onChanged: typed.add),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(EditableText), 'acme');
+      await tester.pumpAndSettle();
+
+      expect(typed, ['acme']);
+    });
+  });
+
+  group('acmeToggleGroupStyle and acmeSegmentedControlStyle', () {
+    for (final theme in _themes) {
+      testWidgets(
+        'a toggle group option mirrors a lone toggle in ${theme.name}',
+        (tester) async {
+          for (final variant in AcmeToggleGroupVariant.values) {
+            final group = await _resolve(
+              tester,
+              acmeToggleGroupStyle(variant: variant),
+              theme: theme.data,
+            );
+            final item = group.spec.item.spec;
+
+            expect(
+              _flexDecoration(item.container)?.color,
+              const Color(0x00000000),
+              reason: variant.name,
+            );
+            expect(item.label.spec.style?.color, theme.data.foreground);
+            expect(
+              _flexBorder(item.container),
+              variant == AcmeToggleGroupVariant.outline
+                  ? Border.all(color: theme.data.border, width: 1)
+                  : isNull,
+              reason: variant.name,
+            );
+          }
+        },
+      );
+
+      testWidgets(
+        'the segmented track recesses its segments in ${theme.name}',
+        (tester) async {
+          final spec = await _resolve(
+            tester,
+            acmeSegmentedControlStyle(),
+            theme: theme.data,
+          );
+
+          // The chosen segment is lifted onto the page color, out of the
+          // track.
+          expect(_boxBackground(spec.spec.container), theme.data.muted);
+          expect(spec.spec.container.spec.padding, const EdgeInsets.all(3));
+          expect(spec.spec.spacing, 0);
+          expect(
+            _boxBackground(spec.spec.item.spec.container),
+            const Color(0x00000000),
+          );
+          // Every segment's label is `foreground`: `mutedForeground` on the
+          // `muted` track measures 4.35:1 in the light theme. The chosen
+          // segment is marked by its raised surface and a heavier weight.
+          expect(
+            spec.spec.item.spec.label.spec.style?.color,
+            theme.data.foreground,
+          );
+          expect(
+            spec.spec.item.spec.label.spec.style?.fontWeight,
+            FontWeight.w400,
+          );
+        },
+      );
+    }
+
+    testWidgets('the segment radius is pulled in by the track inset', (
+      tester,
+    ) async {
+      const light = AcmeThemeData.light();
+      final cases = <Radius, Radius>{
+        // The shipped 8 leaves 5 once the 3px inset is taken off.
+        light.radius: const Radius.circular(5),
+        // A radius smaller than the inset clamps at square rather than going
+        // negative.
+        const Radius.circular(2): Radius.zero,
+        Radius.zero: Radius.zero,
+      };
+
+      for (final entry in cases.entries) {
+        final spec = await _resolve(
+          tester,
+          acmeSegmentedControlStyle(),
+          theme: light.copyWith(radius: entry.key),
+        );
+
+        expect(
+          _boxBorderRadius(spec.spec.item.spec.container),
+          BorderRadius.all(entry.value),
+          reason: '${entry.key}',
+        );
+      }
+    });
+
+    testWidgets('one recipe styles every option without a per-item styler', (
+      tester,
+    ) async {
+      String? weight = 'bold';
+
+      await tester.pumpWidget(
+        AcmeThemeScope(
+          data: const AcmeThemeData.light(),
+          child: _host(
+            StatefulBuilder(
+              builder: (context, setState) => AcmeToggleGroup<String>(
+                selectedValue: weight,
+                semanticLabel: 'Weight',
+                onChanged: (value) => setState(() => weight = value),
+                items: const [
+                  RemixToggleGroupItem(value: 'bold', label: 'Bold'),
+                  RemixToggleGroupItem(value: 'italic', label: 'Italic'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Bold'), findsOneWidget);
+      await tester.tap(find.text('Italic'));
+      await tester.pumpAndSettle();
+
+      expect(weight, 'italic');
+    });
+
+    testWidgets('a segmented control reports the chosen segment', (
+      tester,
+    ) async {
+      final chosen = <String>[];
+
+      await _pumpInScope(
+        tester,
+        AcmeSegmentedControl<String>(
+          selectedValue: 'list',
+          semanticLabel: 'View',
+          onChanged: chosen.add,
+          items: const [
+            RemixSegmentedControlItem(value: 'list', label: 'List'),
+            RemixSegmentedControlItem(value: 'board', label: 'Board'),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Board'));
+      await tester.pumpAndSettle();
+
+      expect(chosen, ['board']);
+    });
+  });
+
   group(
     'resolved content clears its WCAG floor over the surface it lands on',
     () {
@@ -3123,6 +3783,83 @@ void main() {
           }
         });
 
+        testWidgets('text input roles in ${theme.name}', (tester) async {
+          for (final states in const [
+            <WidgetState>{},
+            {WidgetState.error},
+          ]) {
+            final spec = await _resolve(
+              tester,
+              acmeTextFieldStyle(),
+              theme: theme.data,
+              states: states,
+            );
+            final field = _boxBackground(spec.spec.container)!;
+            // The label and the helper are siblings of the field box inside
+            // the recipe's `layout` column, so they sit on the page, not on
+            // the field's own surface.
+            const page = Color(0x00000000);
+
+            for (final role in <String, ({TextStyle? style, Color surface})>{
+              'value': (style: spec.spec.text.spec.style, surface: field),
+              'placeholder': (
+                style: spec.spec.hintText.spec.style,
+                surface: field,
+              ),
+              'label': (style: spec.spec.label.spec.style, surface: page),
+              'helper': (style: spec.spec.helperText.spec.style, surface: page),
+            }.entries) {
+              _expectReadable(
+                role.value.style!.color!,
+                role.value.surface,
+                page: theme.data.background,
+                floor: 4.5,
+                reason: '${role.key} $states',
+              );
+            }
+          }
+        });
+
+        testWidgets('group options in ${theme.name}', (tester) async {
+          for (final states in const [
+            <WidgetState>{},
+            {WidgetState.hovered},
+            {WidgetState.selected},
+          ]) {
+            final toggleGroup = await _resolve(
+              tester,
+              acmeToggleGroupStyle(),
+              theme: theme.data,
+              states: states,
+            );
+            final segmented = await _resolve(
+              tester,
+              acmeSegmentedControlStyle(),
+              theme: theme.data,
+              states: states,
+            );
+
+            _expectReadable(
+              toggleGroup.spec.item.spec.label.spec.style!.color!,
+              _flexDecoration(toggleGroup.spec.item.spec.container)!.color!,
+              page: theme.data.background,
+              floor: 4.5,
+              reason: 'toggle group $states',
+            );
+            // A segment sits on the track, which sits on the page.
+            _expectReadable(
+              segmented.spec.item.spec.label.spec.style!.color!,
+              _boxBackground(segmented.spec.item.spec.container)!,
+              page: Color.alphaBlend(
+                _boxBackground(segmented.spec.container)!,
+                theme.data.background,
+              ),
+              floor: 4.5,
+              reason: 'segmented control $states',
+            );
+          }
+        });
+
         testWidgets('icon button in every variant in ${theme.name}', (
           tester,
         ) async {
@@ -3190,13 +3927,26 @@ void main() {
       acmeProgressStyle(style: const ProgressStyler.create()),
       acmeProgressStyle(),
     );
+    expect(acmeRadioStyle(style: const RadioStyler.create()), acmeRadioStyle());
+    expect(
+      acmeSegmentedControlStyle(style: const SegmentedControlStyler.create()),
+      acmeSegmentedControlStyle(),
+    );
     expect(
       acmeSkeletonStyle(style: const SkeletonStyler.create()),
       acmeSkeletonStyle(),
     );
     expect(
+      acmeSliderStyle(style: const SliderStyler.create()),
+      acmeSliderStyle(),
+    );
+    expect(
       acmeSpinnerStyle(style: const SpinnerStyler.create()),
       acmeSpinnerStyle(),
+    );
+    expect(
+      acmeSwitchStyle(style: const SwitchStyler.create()),
+      acmeSwitchStyle(),
     );
     expect(acmeTabStyle(style: const TabStyler.create()), acmeTabStyle());
     expect(
@@ -3208,8 +3958,20 @@ void main() {
       acmeTabViewStyle(),
     );
     expect(
+      acmeTextFieldStyle(style: const TextFieldStyler.create()),
+      acmeTextFieldStyle(),
+    );
+    expect(
+      acmeTextAreaStyle(style: const TextFieldStyler.create()),
+      acmeTextAreaStyle(),
+    );
+    expect(
       acmeToggleStyle(style: const ToggleStyler.create()),
       acmeToggleStyle(),
+    );
+    expect(
+      acmeToggleGroupStyle(style: const ToggleGroupStyler.create()),
+      acmeToggleGroupStyle(),
     );
   });
 }
@@ -3240,8 +4002,18 @@ const _themes = <({String name, AcmeThemeData data})>[
 const IconData _leading = IconData(0x2713);
 const IconData _trailing = IconData(0x2715);
 
+/// The minimal host: `WidgetsApp` and nothing from Material or Cupertino.
 Widget _host(Widget child) =>
     WidgetsApp(color: const Color(0xFF000000), builder: (_, _) => child);
+
+/// [child] under an `Overlay`, which is what a focused text field requires.
+///
+/// `EditableText` asserts on an `Overlay` ancestor the moment it takes focus,
+/// for its selection handles and magnifier. A real application gets one from
+/// its `Navigator`; the bare `WidgetsApp(builder: ...)` above does not, so the
+/// tests that focus a field add one rather than reaching for `MaterialApp`.
+Widget _overlaid(Widget child) =>
+    Overlay(initialEntries: [OverlayEntry(builder: (_) => child)]);
 
 /// Renders [child] and hands its context back, so a test can read inherited
 /// values from exactly where a real widget would.

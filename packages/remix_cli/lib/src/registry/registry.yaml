@@ -238,3 +238,99 @@ items:
       - "@ui/components/toggle.g.dart"
     exports:
       - components/toggle.dart
+
+  radio:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/radio/radio.dart.tmpl
+        target: "@ui/components/radio.dart"
+    generated:
+      - "@ui/components/radio.g.dart"
+    exports:
+      - components/radio.dart
+
+  segmented_control:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/segmented_control/segmented_control.dart.tmpl
+        target: "@ui/components/segmented_control.dart"
+    generated:
+      - "@ui/components/segmented_control.g.dart"
+    exports:
+      - components/segmented_control.dart
+
+  slider:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/slider/slider.dart.tmpl
+        target: "@ui/components/slider.dart"
+    generated:
+      - "@ui/components/slider.g.dart"
+    exports:
+      - components/slider.dart
+
+  switch:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/switch/switch.dart.tmpl
+        target: "@ui/components/switch.dart"
+    generated:
+      - "@ui/components/switch.g.dart"
+    exports:
+      - components/switch.dart
+
+  textfield:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/textfield/textfield.dart.tmpl
+        target: "@ui/components/textfield.dart"
+    generated:
+      - "@ui/components/textfield.g.dart"
+    exports:
+      - components/textfield.dart
+
+  toggle_group:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/toggle_group/toggle_group.dart.tmpl
+        target: "@ui/components/toggle_group.dart"
+    generated:
+      - "@ui/components/toggle_group.g.dart"
+    exports:
+      - components/toggle_group.dart

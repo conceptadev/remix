@@ -38,7 +38,7 @@ enum PlaygroundBadgeVariant {
 /// ```dart
 /// PlaygroundBadge.destructive(label: 'Failing')
 /// ```
-@MixWidget(name: 'PlaygroundBadge', target: RemixBadge.new)
+@MixWidget(target: RemixBadge.new)
 BadgeStyler playgroundBadgeStyle({
   PlaygroundBadgeVariant variant = .primary,
   BadgeStyler style = const BadgeStyler.create(),

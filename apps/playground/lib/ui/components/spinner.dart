@@ -34,7 +34,7 @@ enum PlaygroundSpinnerSize {
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it.
-@MixWidget(name: 'PlaygroundSpinner', target: RemixSpinner.new)
+@MixWidget(target: RemixSpinner.new)
 SpinnerStyler playgroundSpinnerStyle({
   PlaygroundSpinnerSize size = .medium,
   SpinnerStyler style = const SpinnerStyler.create(),

@@ -47,13 +47,16 @@ enum PlaygroundButtonSize {
 /// behavior, accessibility semantics, and the loading/disabled interaction
 /// rules — this recipe never reimplements any of that.
 ///
-/// `@MixWidget(name: 'PlaygroundButton', target: RemixButton.new)`
-/// generates `PlaygroundButton` into
+/// `@MixWidget(target: RemixButton.new)` generates `PlaygroundButton` into
 /// `button.g.dart`: an adapter whose constructor is this function's
 /// parameters plus every safe `RemixButton` parameter, and whose `build`
 /// calls `RemixButton(style: playgroundButtonStyle(...), ...)`. Because
 /// [variant] is a non-nullable enum, the generator also emits one named
 /// constructor per enum value.
+///
+/// The widget's name comes from this function's name — the generator drops a
+/// trailing `Style` and capitalises what is left — so renaming the recipe
+/// renames the widget. There is nothing to keep in sync.
 ///
 /// [style] is merged **last**, so a single call site can override any part of
 /// the resolved recipe without forking it:
@@ -69,7 +72,7 @@ enum PlaygroundButtonSize {
 /// State fragments merge by state, not by depth: an override that must beat
 /// the recipe's hover fill has to be declared as a hover fragment too
 /// (`ButtonStyler().onHovered(...)`).
-@MixWidget(name: 'PlaygroundButton', target: RemixButton.new)
+@MixWidget(target: RemixButton.new)
 ButtonStyler playgroundButtonStyle({
   PlaygroundButtonVariant variant = .primary,
   PlaygroundButtonSize size = .medium,
@@ -129,7 +132,7 @@ const _spinnerOpacity = 0.65;
 const _spinnerDuration = Duration(milliseconds: 800);
 
 /// Width of the keyboard focus ring.
-const _focusRingWidth = 3.0;
+const _focusRingWidth = 2.0;
 
 /// Distance between the control edge and its focus ring.
 const _focusRingOffset = 2.0;

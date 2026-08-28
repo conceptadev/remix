@@ -15,7 +15,9 @@ void main() {
       ]);
       final button = catalog.items['button']!;
       final source = await catalog.readTemplate(button.files.single);
-      expect(source, contains("name: '{{typePrefix}}Button'"));
+      // The loader returns the raw template, placeholders and all.
+      expect(source, contains('@MixWidget(target: RemixButton.new)'));
+      expect(source, contains('{{valuePrefix}}ButtonStyle'));
     },
   );
 
@@ -216,15 +218,24 @@ items:
         );
         final reason = '${entry.key}/${prefix.type}';
 
-        for (final symbol in entry.value) {
+        for (final widget in entry.value.widgets) {
+          // The recipe is what the generator reads the widget name from, so
+          // this is the widget's name too. Matched as a declaration rather
+          // than a bare substring, because the templates mention their own
+          // identifiers in prose and a doc comment must not satisfy this.
           expect(
             rendered,
             contains(
-              symbol.startsWith('_')
-                  ? '${prefix.value}${symbol.substring(1)}'
-                  : '${prefix.type}$symbol',
+              RegExp('^\\w+ ${prefix.value}${widget}Style\\(', multiLine: true),
             ),
-            reason: '$reason: $symbol',
+            reason: '$reason: ${prefix.type}$widget',
+          );
+        }
+        for (final type in entry.value.types) {
+          expect(
+            rendered,
+            contains(RegExp('^enum ${prefix.type}$type ', multiLine: true)),
+            reason: '$reason: $type',
           );
         }
         expect(rendered, isNot(contains('{{')), reason: reason);
@@ -262,47 +273,58 @@ items:
   });
 }
 
-/// The prefixed identifiers each component template must publish.
+/// The public surface each component template must publish.
 ///
-/// A leading `_` marks a `valuePrefix` name (`acmeButtonStyle`); everything
-/// else takes the `typePrefix` (`AcmeButton`). Renaming or dropping one of
-/// these is a break in a consumer's source, so it is pinned here rather than
-/// left to the fixture, which only sees the `Acme` rendering.
-const _componentSurfaces = <String, List<String>>{
-  'avatar': ['Avatar', 'AvatarSize', '_AvatarStyle'],
-  'badge': ['Badge', 'BadgeVariant', '_BadgeStyle'],
-  'button': ['Button', 'ButtonVariant', 'ButtonSize', '_ButtonStyle'],
-  'callout': ['Callout', 'CalloutVariant', '_CalloutStyle'],
-  'card': ['Card', '_CardStyle'],
-  'checkbox': [
-    'Checkbox',
-    'CheckboxGroupItem',
-    'CheckboxSize',
-    '_CheckboxStyle',
-    '_CheckboxGroupItemStyle',
-  ],
-  'divider': ['Divider', '_DividerStyle'],
-  'icon_button': [
-    'IconButton',
-    'IconButtonVariant',
-    'IconButtonSize',
-    '_IconButtonStyle',
-  ],
-  'link': ['Link', '_LinkStyle'],
-  'progress': ['Progress', 'ProgressSize', '_ProgressStyle'],
-  'skeleton': ['Skeleton', '_SkeletonStyle'],
-  'spinner': ['Spinner', 'SpinnerSize', '_SpinnerStyle'],
-  'tabs': [
-    'TabBar',
-    'Tab',
-    'TabView',
-    'TabSize',
-    '_TabStyle',
-    '_TabBarStyle',
-    '_TabViewStyle',
-  ],
-  'toggle': ['Toggle', 'ToggleVariant', 'ToggleSize', '_ToggleStyle'],
-};
+/// `widgets` are the adapters `@MixWidget` generates. Their names are not
+/// written anywhere: the generator drops a trailing `Style` from the recipe
+/// function's own name and capitalises what is left, so `uiTabBarStyle`
+/// produces `UiTabBar`. Pinning the recipe name therefore pins the widget
+/// name, and the test below asserts exactly that derivation rather than
+/// searching for a string that no longer appears in the template.
+///
+/// `types` are the enums and other names written with the type prefix.
+///
+/// Renaming or dropping any of these breaks a consumer's source, so they are
+/// pinned here rather than left to the fixture, which only ever sees the
+/// `Acme` rendering.
+const _componentSurfaces =
+    <String, ({List<String> widgets, List<String> types})>{
+      'avatar': (widgets: ['Avatar'], types: ['AvatarSize']),
+      'badge': (widgets: ['Badge'], types: ['BadgeVariant']),
+      'button': (widgets: ['Button'], types: ['ButtonVariant', 'ButtonSize']),
+      'callout': (widgets: ['Callout'], types: ['CalloutVariant']),
+      'card': (widgets: ['Card'], types: []),
+      'checkbox': (
+        widgets: ['Checkbox', 'CheckboxGroupItem'],
+        types: ['CheckboxSize'],
+      ),
+      'divider': (widgets: ['Divider'], types: []),
+      'icon_button': (
+        widgets: ['IconButton'],
+        types: ['IconButtonVariant', 'IconButtonSize'],
+      ),
+      'link': (widgets: ['Link'], types: []),
+      'progress': (widgets: ['Progress'], types: ['ProgressSize']),
+      'radio': (widgets: ['Radio'], types: ['RadioSize']),
+      'segmented_control': (
+        widgets: ['SegmentedControl'],
+        types: ['SegmentedControlSize'],
+      ),
+      'skeleton': (widgets: ['Skeleton'], types: []),
+      'slider': (widgets: ['Slider'], types: ['SliderSize']),
+      'spinner': (widgets: ['Spinner'], types: ['SpinnerSize']),
+      'switch': (widgets: ['Switch'], types: ['SwitchSize']),
+      'tabs': (widgets: ['TabBar', 'Tab', 'TabView'], types: ['TabSize']),
+      'textfield': (
+        widgets: ['TextField', 'TextArea'],
+        types: ['TextFieldSize'],
+      ),
+      'toggle': (widgets: ['Toggle'], types: ['ToggleVariant', 'ToggleSize']),
+      'toggle_group': (
+        widgets: ['ToggleGroup'],
+        types: ['ToggleGroupVariant', 'ToggleGroupSize'],
+      ),
+    };
 
 RegistryCatalog parse(String source) => RegistryCatalog.parse(
   source,

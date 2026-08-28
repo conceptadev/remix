@@ -41,7 +41,7 @@ enum PlaygroundProgressSize {
 ///   style: ProgressStyler().indicatorColor(PlaygroundTokens.destructive()),
 /// )
 /// ```
-@MixWidget(name: 'PlaygroundProgress', target: RemixProgress.new)
+@MixWidget(target: RemixProgress.new)
 ProgressStyler playgroundProgressStyle({
   PlaygroundProgressSize size = .medium,
   ProgressStyler style = const ProgressStyler.create(),
