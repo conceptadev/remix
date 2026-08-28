@@ -73,7 +73,14 @@ DisclosureStyler {{valuePrefix}}DisclosureStyle({
     // the trigger instead. The horizontal inset matches the trigger's so the
     // revealed content lines up under the trigger's own.
     .content(
-      .padding(.only(left: _paddingX, right: _paddingX, top: _contentGap)),
+      .padding(
+        .only(
+          left: _paddingX,
+          right: _paddingX,
+          top: _contentGap,
+          bottom: _contentGap,
+        ),
+      ),
     )
     .onHovered(DisclosureStyler().color({{typePrefix}}Tokens.accent()))
     // The open trigger keeps a fill after the pointer leaves, so a reader
@@ -97,32 +104,45 @@ const _paddingX = 12.0;
 /// Vertical inset inside the trigger.
 const _paddingY = 10.0;
 
-/// Gap between the trigger row and the revealed content.
-const _contentGap = 4.0;
+/// Inset above and below the revealed content.
+///
+/// Both sides, not just the top. Without the bottom the last line of content
+/// sits hard against the container's own edge, which is invisible while the
+/// container is undecorated and obvious the moment it is not — the focus ring
+/// is drawn there, and a consumer who gives the container a fill or a border
+/// gets text touching it.
+const _contentGap = 8.0;
 
 /// Width of the keyboard focus ring.
 const _focusRingWidth = 2.0;
 
-/// Distance between the panel edge and its focus ring.
-const _focusRingOffset = 2.0;
-
 /// Opacity applied to the whole section while disabled.
 const _disabledOpacity = 0.5;
 
-/// The keyboard focus ring.
+/// The keyboard focus ring, drawn on the trigger alone.
 ///
-/// It wraps the container — trigger plus any revealed content — because the
-/// effects layer lives there. An outline rather than a border, so focusing
-/// the section never reflows the page around it.
-DisclosureStyler _focusVisibleStyle() => DisclosureStyler().containerEffects(
-  .outline(
-    .color(
-      {{typePrefix}}Tokens.focusRing(),
-    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
-  ).outlineOffset(_focusRingOffset),
+/// Not on the container, which is where the effects layer lives and where the
+/// accordion puts its ring. Keyboard focus is on the trigger, and an expanded
+/// disclosure's container is the trigger *plus* everything it revealed — a
+/// ring there claims the content is focused too, and grows with it.
+///
+/// `foregroundDecoration` is what makes a trigger-only ring possible: it
+/// paints over the box's own bounds rather than beside them, so the ring
+/// takes no layout space and opening the section never reflows the page. A
+/// plain `.border(...)` would push the trigger's content in by two pixels the
+/// moment it took focus.
+DisclosureStyler _focusVisibleStyle() => DisclosureStyler().trigger(
+  .foregroundDecoration(
+    BoxDecorationMix.border(
+      .color({{typePrefix}}Tokens.focusRing()).width(_focusRingWidth),
+    ).borderRadius(.all({{typePrefix}}Tokens.radius())),
+  ),
 );
 
 /// Declared last so it wins over every other state fragment.
+///
+/// The ring is cleared as well as faded: a disabled control that still draws
+/// a focus ring reads as reachable.
 DisclosureStyler _disabledStyle() => DisclosureStyler()
-    .containerEffects(.outline(.style(.none)))
+    .trigger(.foregroundDecoration(BoxDecorationMix.border(.style(.none))))
     .wrap(.opacity(_disabledOpacity));

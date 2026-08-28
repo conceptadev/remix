@@ -4381,7 +4381,7 @@ void main() {
         );
         expect(
           spec.spec.content.spec.padding,
-          const EdgeInsets.only(left: 12, right: 12, top: 4),
+          const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
         );
         expect(_boxBackground(spec.spec.trigger), isNull);
       });

@@ -61,12 +61,22 @@ SelectStyler {{valuePrefix}}SelectStyle({
 /// Width of the trigger and panel outlines.
 const _borderWidth = 1.0;
 
-/// Horizontal inset inside the trigger and inside an option row.
+/// Horizontal inset inside the trigger.
 ///
 /// Flat across the sizes, matching the text field this trigger is styled
 /// after — see that recipe for why a field's gutter does not grow the way a
 /// button's padding does.
 const _paddingX = 12.0;
+
+/// Horizontal inset inside an option row.
+///
+/// The menu's row inset, not the trigger's. The trigger is a field and takes
+/// a field's gutter; an option row is a row in a floating list, and this
+/// recipe claims above that its panel matches the menu's. Sharing the
+/// trigger's 12 here broke that claim in the only place a reader would
+/// notice: a menu and a select opened side by side had their labels on
+/// different left edges.
+const _rowPaddingX = 8.0;
 
 /// Gap between a row's text and its icons.
 const _gap = 8.0;
@@ -188,9 +198,7 @@ SelectContentStyler _contentStyle() => SelectContentStyler()
     .padding(.all(_panelPadding))
     .minWidth(_panelMinWidth)
     .maxHeight(_panelMaxHeight)
-    .containerEffects(
-      .behindContent(.shadows([_shadow])),
-    );
+    .containerEffects(.behindContent(.shadows([_shadow])));
 
 /// One option row.
 ///
@@ -204,7 +212,7 @@ SelectMenuItemStyler _itemStyle(
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .minHeight(_rowHeight)
-    .padding(.symmetric(horizontal: _paddingX, vertical: _rowPaddingY))
+    .padding(.symmetric(horizontal: _rowPaddingX, vertical: _rowPaddingY))
     .spacing(_gap)
     .borderRadius(.all({{typePrefix}}Tokens.radius()))
     .label(.fontSize(metrics.textSize).color({{typePrefix}}Tokens.foreground()))
