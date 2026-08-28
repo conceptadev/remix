@@ -57,9 +57,9 @@ DividerStyler _extent(Axis orientation) => switch (orientation) {
   .horizontal =>
     DividerStyler()
         .height(_thickness)
-        .wrap(WidgetModifierConfig.fractionallySizedBox(widthFactor: 1)),
+        .wrap(.fractionallySizedBox(widthFactor: 1)),
   .vertical =>
     DividerStyler()
         .width(_thickness)
-        .wrap(WidgetModifierConfig.fractionallySizedBox(heightFactor: 1)),
+        .wrap(.fractionallySizedBox(heightFactor: 1)),
 };

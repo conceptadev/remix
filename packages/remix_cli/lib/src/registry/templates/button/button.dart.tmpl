@@ -111,9 +111,18 @@ ContextToken<Color> _dimmed(ColorToken source, double alpha) =>
 final _primaryHoverFill = _dimmed({{typePrefix}}Tokens.primary, _hoverAlpha);
 final _primaryPressedFill = _dimmed({{typePrefix}}Tokens.primary, _pressedAlpha);
 final _secondaryHoverFill = _dimmed({{typePrefix}}Tokens.secondary, _hoverAlpha);
-final _secondaryPressedFill = _dimmed({{typePrefix}}Tokens.secondary, _pressedAlpha);
-final _destructiveHoverFill = _dimmed({{typePrefix}}Tokens.destructive, _hoverAlpha);
-final _destructivePressedFill = _dimmed({{typePrefix}}Tokens.destructive, _pressedAlpha);
+final _secondaryPressedFill = _dimmed(
+  {{typePrefix}}Tokens.secondary,
+  _pressedAlpha,
+);
+final _destructiveHoverFill = _dimmed(
+  {{typePrefix}}Tokens.destructive,
+  _hoverAlpha,
+);
+final _destructivePressedFill = _dimmed(
+  {{typePrefix}}Tokens.destructive,
+  _pressedAlpha,
+);
 final _accentPressedFill = _dimmed({{typePrefix}}Tokens.accent, _pressedAlpha);
 
 /// Opacity of the loading spinner, so it reads as secondary to the label.
@@ -143,29 +152,30 @@ typedef _{{typePrefix}}ButtonMetrics = ({
   double iconSize,
 });
 
-_{{typePrefix}}ButtonMetrics _metricsFor({{typePrefix}}ButtonSize size) => switch (size) {
-  .small => (
-    minHeight: 32.0,
-    paddingX: 12.0,
-    gap: 6.0,
-    labelSize: 14.0,
-    iconSize: 16.0,
-  ),
-  .medium => (
-    minHeight: 36.0,
-    paddingX: 16.0,
-    gap: 8.0,
-    labelSize: 14.0,
-    iconSize: 16.0,
-  ),
-  .large => (
-    minHeight: 40.0,
-    paddingX: 20.0,
-    gap: 8.0,
-    labelSize: 16.0,
-    iconSize: 18.0,
-  ),
-};
+_{{typePrefix}}ButtonMetrics _metricsFor({{typePrefix}}ButtonSize size) =>
+    switch (size) {
+      .small => (
+        minHeight: 32.0,
+        paddingX: 12.0,
+        gap: 6.0,
+        labelSize: 14.0,
+        iconSize: 16.0,
+      ),
+      .medium => (
+        minHeight: 36.0,
+        paddingX: 16.0,
+        gap: 8.0,
+        labelSize: 14.0,
+        iconSize: 16.0,
+      ),
+      .large => (
+        minHeight: 40.0,
+        paddingX: 20.0,
+        gap: 8.0,
+        labelSize: 16.0,
+        iconSize: 18.0,
+      ),
+    };
 
 /// Layout, typography, and spinner defaults shared by every variant.
 ButtonStyler _base(_{{typePrefix}}ButtonMetrics metrics) => ButtonStyler()
@@ -185,28 +195,29 @@ ButtonStyler _base(_{{typePrefix}}ButtonMetrics metrics) => ButtonStyler()
       ).opacity(_spinnerOpacity).duration(_spinnerDuration),
     );
 
-ButtonStyler _variantStyle({{typePrefix}}ButtonVariant variant) => switch (variant) {
-  .primary => _filled(
-    fill: {{typePrefix}}Tokens.primary(),
-    foreground: {{typePrefix}}Tokens.primaryForeground(),
-    hoverFill: _primaryHoverFill(),
-    pressedFill: _primaryPressedFill(),
-  ),
-  .secondary => _filled(
-    fill: {{typePrefix}}Tokens.secondary(),
-    foreground: {{typePrefix}}Tokens.secondaryForeground(),
-    hoverFill: _secondaryHoverFill(),
-    pressedFill: _secondaryPressedFill(),
-  ),
-  .destructive => _filled(
-    fill: {{typePrefix}}Tokens.destructive(),
-    foreground: {{typePrefix}}Tokens.destructiveForeground(),
-    hoverFill: _destructiveHoverFill(),
-    pressedFill: _destructivePressedFill(),
-  ),
-  .outline => _quiet(bordered: true),
-  .ghost => _quiet(bordered: false),
-};
+ButtonStyler _variantStyle({{typePrefix}}ButtonVariant variant) =>
+    switch (variant) {
+      .primary => _filled(
+        fill: {{typePrefix}}Tokens.primary(),
+        foreground: {{typePrefix}}Tokens.primaryForeground(),
+        hoverFill: _primaryHoverFill(),
+        pressedFill: _primaryPressedFill(),
+      ),
+      .secondary => _filled(
+        fill: {{typePrefix}}Tokens.secondary(),
+        foreground: {{typePrefix}}Tokens.secondaryForeground(),
+        hoverFill: _secondaryHoverFill(),
+        pressedFill: _secondaryPressedFill(),
+      ),
+      .destructive => _filled(
+        fill: {{typePrefix}}Tokens.destructive(),
+        foreground: {{typePrefix}}Tokens.destructiveForeground(),
+        hoverFill: _destructiveHoverFill(),
+        pressedFill: _destructivePressedFill(),
+      ),
+      .outline => _quiet(bordered: true),
+      .ghost => _quiet(bordered: false),
+    };
 
 /// A solid variant: its own fill, dimmed on hover and further on press.
 ButtonStyler _filled({
@@ -214,23 +225,22 @@ ButtonStyler _filled({
   required Color foreground,
   required Color hoverFill,
   required Color pressedFill,
-}) => _content(ButtonStyler().color(fill), foreground)
-    .onHovered(ButtonStyler().color(hoverFill))
-    .onPressed(ButtonStyler().color(pressedFill));
+}) => _content(
+  .color(fill),
+  foreground,
+).onHovered(.color(hoverFill)).onPressed(.color(pressedFill));
 
 /// A transparent variant: `accent` is what makes interaction visible.
 ButtonStyler _quiet({required bool bordered}) {
-  var style = _content(ButtonStyler().color(_noFill), {{typePrefix}}Tokens.foreground());
+  var style = _content(.color(_noFill), {{typePrefix}}Tokens.foreground());
   if (bordered) {
-    style = style.border(
-      .all(BorderSideMix(color: {{typePrefix}}Tokens.border(), width: 1)),
-    );
+    style = style.border(.color({{typePrefix}}Tokens.border()).width(1));
   }
 
   return style
       .onHovered(
         _content(
-          ButtonStyler().color({{typePrefix}}Tokens.accent()),
+          .color({{typePrefix}}Tokens.accent()),
           {{typePrefix}}Tokens.accentForeground(),
         ),
       )
@@ -239,7 +249,7 @@ ButtonStyler _quiet({required bool bordered}) {
       // would paint the accent surface under the default foreground.
       .onPressed(
         _content(
-          ButtonStyler().color(_accentPressedFill()),
+          .color(_accentPressedFill()),
           {{typePrefix}}Tokens.accentForeground(),
         ),
       );
@@ -257,14 +267,11 @@ ButtonStyler _content(ButtonStyler style, Color foreground) => style
 /// box without taking layout space, so focusing a button never reflows the
 /// row it sits in.
 ButtonStyler _focusVisibleStyle() => ButtonStyler().containerEffects(
-  RemixBoxEffectsMix(
-    outline: BorderSideMix(
-      color: {{typePrefix}}Tokens.focusRing(),
-      width: _focusRingWidth,
-      strokeAlign: BorderSide.strokeAlignInside,
-    ),
-    outlineOffset: _focusRingOffset,
-  ),
+  .outline(
+    .color(
+      {{typePrefix}}Tokens.focusRing(),
+    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
+  ).outlineOffset(_focusRingOffset),
 );
 
 /// Declared last so it wins over every other state fragment.
@@ -273,7 +280,5 @@ ButtonStyler _focusVisibleStyle() => ButtonStyler().containerEffects(
 /// fades; the focus ring is cleared because a disabled button that still
 /// draws a focus ring reads as actionable.
 ButtonStyler _disabledStyle() => ButtonStyler()
-    .containerEffects(
-      RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

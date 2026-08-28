@@ -57,27 +57,13 @@ SwitchStyler {{valuePrefix}}SwitchStyle({
       // track does not need the help (`primary` on `background` is 17.9:1),
       // but keeping the outline in both states is what stops the control
       // changing size when it flips.
-      .border(
-        .all(
-          BorderSideMix(
-            color: {{typePrefix}}Tokens.border(),
-            width: _borderWidth,
-          ),
-        ),
-      )
+      .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
       .thumb(
         BoxStyler()
             .size(metrics.thumbSize, metrics.thumbSize)
             .borderRadius(.all(_pill))
             .color({{typePrefix}}Tokens.background())
-            .border(
-              .all(
-                BorderSideMix(
-                  color: {{typePrefix}}Tokens.border(),
-                  width: _borderWidth,
-                ),
-              ),
-            ),
+            .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth)),
       )
       .onSelected(SwitchStyler().trackColor({{typePrefix}}Tokens.primary()))
       .onFocusVisible(_focusVisibleStyle())
@@ -122,10 +108,7 @@ _{{typePrefix}}SwitchMetrics _metricsFor({{typePrefix}}SwitchSize size) {
     .large => 24.0,
   };
 
-  return (
-    trackHeight: trackHeight,
-    thumbSize: trackHeight - _thumbInset * 2,
-  );
+  return (trackHeight: trackHeight, thumbSize: trackHeight - _thumbInset * 2);
 }
 
 /// The keyboard focus ring.
@@ -150,7 +133,5 @@ SwitchStyler _focusVisibleStyle() => SwitchStyler().trackEffects(
 /// fades; the focus ring is cleared because a disabled control that still
 /// draws a focus ring reads as actionable.
 SwitchStyler _disabledStyle() => SwitchStyler()
-    .trackEffects(
-      RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .trackEffects(RemixBoxEffectsMix.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

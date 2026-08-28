@@ -145,34 +145,24 @@ _{{typePrefix}}TextFieldMetrics _metricsFor({{typePrefix}}TextFieldSize size) =>
 /// accessory alignment differ between them.
 TextFieldStyler _base(_{{typePrefix}}TextFieldMetrics metrics) => TextFieldStyler()
     .color({{typePrefix}}Tokens.background())
-    .border(
-      .all(
-        BorderSideMix(color: {{typePrefix}}Tokens.border(), width: _borderWidth),
-      ),
-    )
+    .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
     .borderRadius(.all({{typePrefix}}Tokens.radius()))
     .padding(.horizontal(_paddingX))
     .spacing(_accessoryGap)
-    .text(
-      .fontSize(metrics.textSize).color({{typePrefix}}Tokens.foreground()),
-    )
+    .text(.fontSize(metrics.textSize).color({{typePrefix}}Tokens.foreground()))
     // The placeholder is not the value: it has to read as the quieter of the
     // two, or an empty field looks filled in.
     .hintText(
-      .fontSize(
-        metrics.textSize,
-      ).color({{typePrefix}}Tokens.mutedForeground()),
+      .fontSize(metrics.textSize).color({{typePrefix}}Tokens.mutedForeground()),
     )
     .cursorColor({{typePrefix}}Tokens.foreground())
     .label(
-      .fontSize(_labelSize)
-          .fontWeight(FontWeight.w500)
-          .color({{typePrefix}}Tokens.foreground()),
+      .fontSize(
+        _labelSize,
+      ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.foreground()),
     )
-    .helperText(
-      .fontSize(_labelSize).color({{typePrefix}}Tokens.mutedForeground()),
-    )
-    .layout(FlexBoxStyler().direction(.vertical).spacing(_stackGap))
+    .helperText(.fontSize(_labelSize).color({{typePrefix}}Tokens.mutedForeground()))
+    .layout(.direction(.vertical).spacing(_stackGap))
     .onFocusVisible(_focusVisibleStyle())
     .merge(_errorStyle())
     .onDisabled(_disabledStyle());
@@ -183,14 +173,11 @@ TextFieldStyler _base(_{{typePrefix}}TextFieldMetrics metrics) => TextFieldStyle
 /// box without taking layout space, so focusing a field never reflows the form
 /// it sits in — and the field already has a border of its own.
 TextFieldStyler _focusVisibleStyle() => TextFieldStyler().containerEffects(
-  RemixBoxEffectsMix(
-    outline: BorderSideMix(
-      color: {{typePrefix}}Tokens.focusRing(),
-      width: _focusRingWidth,
-      strokeAlign: BorderSide.strokeAlignInside,
-    ),
-    outlineOffset: _focusRingOffset,
-  ),
+  .outline(
+    .color(
+      {{typePrefix}}Tokens.focusRing(),
+    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
+  ).outlineOffset(_focusRingOffset),
 );
 
 /// The invalid field: a `destructive` outline and a `destructive` helper line.
@@ -211,18 +198,9 @@ TextFieldStyler _focusVisibleStyle() => TextFieldStyler().containerEffects(
 TextFieldStyler _errorStyle() => TextFieldStyler().variant(
   ContextVariant.widgetState(.error),
   TextFieldStyler()
-      .border(
-        .all(
-          BorderSideMix(
-            color: {{typePrefix}}Tokens.destructive(),
-            width: _borderWidth,
-          ),
-        ),
-      )
+      .border(.color({{typePrefix}}Tokens.destructive()).width(_borderWidth))
       .helperText(
-        .color(
-          {{typePrefix}}Tokens.foreground(),
-        ).fontWeight(FontWeight.w500),
+        .color({{typePrefix}}Tokens.foreground()).fontWeight(FontWeight.w500),
       ),
 );
 
@@ -232,7 +210,5 @@ TextFieldStyler _errorStyle() => TextFieldStyler().variant(
 /// cleared because a disabled control that still draws a focus ring reads as
 /// editable.
 TextFieldStyler _disabledStyle() => TextFieldStyler()
-    .containerEffects(
-      RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

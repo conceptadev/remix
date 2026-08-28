@@ -66,20 +66,13 @@ RadioStyler {{valuePrefix}}RadioStyle({
       .alignment(.center)
       .borderRadius(.all(_circular))
       .color({{typePrefix}}Tokens.background())
-      .border(
-        .all(
-          BorderSideMix(
-            color: {{typePrefix}}Tokens.border(),
-            width: _borderWidth,
-          ),
-        ),
-      )
+      .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
       .indicator(
         BoxStyler()
             .size(metrics.dot, metrics.dot)
             .borderRadius(.all(_circular)),
       )
-      .onHovered(RadioStyler().color({{typePrefix}}Tokens.accent()))
+      .onHovered(.color({{typePrefix}}Tokens.accent()))
       .onSelected(_selectedStyle())
       .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle())
@@ -102,9 +95,8 @@ const _hoverAlpha = 0.9;
 /// identity: rebuilding one per call would make two identical recipes compare
 /// unequal.
 final _primaryHover = ContextToken<Color>(
-  (context) => {{typePrefix}}Tokens.primary
-      .resolve(context)
-      .withValues(alpha: _hoverAlpha),
+  (context) =>
+      {{typePrefix}}Tokens.primary.resolve(context).withValues(alpha: _hoverAlpha),
 );
 
 /// A radius large enough to round any radio in this scale into a circle.
@@ -131,12 +123,11 @@ const _disabledOpacity = 0.5;
 /// Geometry for one [{{typePrefix}}RadioSize].
 typedef _{{typePrefix}}RadioMetrics = ({double diameter, double dot});
 
-_{{typePrefix}}RadioMetrics _metricsFor({{typePrefix}}RadioSize size) =>
-    switch (size) {
-      .small => (diameter: 16.0, dot: 6.0),
-      .medium => (diameter: 18.0, dot: 7.0),
-      .large => (diameter: 20.0, dot: 8.0),
-    };
+_{{typePrefix}}RadioMetrics _metricsFor({{typePrefix}}RadioSize size) => switch (size) {
+  .small => (diameter: 16.0, dot: 6.0),
+  .medium => (diameter: 18.0, dot: 7.0),
+  .large => (diameter: 20.0, dot: 8.0),
+};
 
 /// The chosen option: a `primary` ring around a `primary` dot.
 ///
@@ -144,14 +135,7 @@ _{{typePrefix}}RadioMetrics _metricsFor({{typePrefix}}RadioSize size) =>
 /// circle would be a checkbox's mark; leaving the middle open is what makes
 /// the dot the thing the eye lands on.
 RadioStyler _selectedStyle() => RadioStyler()
-    .border(
-      .all(
-        BorderSideMix(
-          color: {{typePrefix}}Tokens.primary(),
-          width: _selectedBorderWidth,
-        ),
-      ),
-    )
+    .border(.color({{typePrefix}}Tokens.primary()).width(_selectedBorderWidth))
     .indicatorColor({{typePrefix}}Tokens.primary())
     // Declared inside the selected fragment so a hovered, chosen radio dims
     // its own ring. The top-level hover fragment tints the *surface*, which is
@@ -159,14 +143,7 @@ RadioStyler _selectedStyle() => RadioStyler()
     // carrying the meaning.
     .onHovered(
       RadioStyler()
-          .border(
-            .all(
-              BorderSideMix(
-                color: _primaryHover(),
-                width: _selectedBorderWidth,
-              ),
-            ),
-          )
+          .border(.color(_primaryHover()).width(_selectedBorderWidth))
           .indicatorColor(_primaryHover()),
     );
 
@@ -176,14 +153,11 @@ RadioStyler _selectedStyle() => RadioStyler()
 /// circle without taking layout space, so focusing a radio never reflows the
 /// row it sits in — and the recipe's own ring is already a border.
 RadioStyler _focusVisibleStyle() => RadioStyler().containerEffects(
-  RemixBoxEffectsMix(
-    outline: BorderSideMix(
-      color: {{typePrefix}}Tokens.focusRing(),
-      width: _focusRingWidth,
-      strokeAlign: BorderSide.strokeAlignInside,
-    ),
-    outlineOffset: _focusRingOffset,
-  ),
+  .outline(
+    .color(
+      {{typePrefix}}Tokens.focusRing(),
+    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
+  ).outlineOffset(_focusRingOffset),
 );
 
 /// Declared last so it wins over every other state fragment.
@@ -192,7 +166,5 @@ RadioStyler _focusVisibleStyle() => RadioStyler().containerEffects(
 /// the focus ring is cleared because a disabled control that still draws a
 /// focus ring reads as actionable.
 RadioStyler _disabledStyle() => RadioStyler()
-    .containerEffects(
-      RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

@@ -57,24 +57,13 @@ SwitchStyler playgroundSwitchStyle({
       // track does not need the help (`primary` on `background` is 17.9:1),
       // but keeping the outline in both states is what stops the control
       // changing size when it flips.
-      .border(
-        .all(
-          BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
-        ),
-      )
+      .border(.color(PlaygroundTokens.border()).width(_borderWidth))
       .thumb(
         BoxStyler()
             .size(metrics.thumbSize, metrics.thumbSize)
             .borderRadius(.all(_pill))
             .color(PlaygroundTokens.background())
-            .border(
-              .all(
-                BorderSideMix(
-                  color: PlaygroundTokens.border(),
-                  width: _borderWidth,
-                ),
-              ),
-            ),
+            .border(.color(PlaygroundTokens.border()).width(_borderWidth)),
       )
       .onSelected(SwitchStyler().trackColor(PlaygroundTokens.primary()))
       .onFocusVisible(_focusVisibleStyle())
@@ -144,7 +133,5 @@ SwitchStyler _focusVisibleStyle() => SwitchStyler().trackEffects(
 /// fades; the focus ring is cleared because a disabled control that still
 /// draws a focus ring reads as actionable.
 SwitchStyler _disabledStyle() => SwitchStyler()
-    .trackEffects(
-      RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .trackEffects(RemixBoxEffectsMix.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

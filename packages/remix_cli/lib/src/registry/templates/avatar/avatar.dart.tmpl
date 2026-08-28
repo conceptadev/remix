@@ -57,9 +57,9 @@ AvatarStyler {{valuePrefix}}AvatarStyle({
       .clipBehavior(Clip.antiAlias)
       .color({{typePrefix}}Tokens.muted())
       .label(
-        .fontSize(metrics.labelSize)
-            .fontWeight(FontWeight.w500)
-            .color({{typePrefix}}Tokens.foreground()),
+        .fontSize(
+          metrics.labelSize,
+        ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.foreground()),
       )
       .icon(.size(metrics.iconSize).color({{typePrefix}}Tokens.foreground()))
       .merge(style);

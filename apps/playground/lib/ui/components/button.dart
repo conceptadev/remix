@@ -225,26 +225,22 @@ ButtonStyler _filled({
   required Color foreground,
   required Color hoverFill,
   required Color pressedFill,
-}) => _content(ButtonStyler().color(fill), foreground)
-    .onHovered(ButtonStyler().color(hoverFill))
-    .onPressed(ButtonStyler().color(pressedFill));
+}) => _content(
+  .color(fill),
+  foreground,
+).onHovered(.color(hoverFill)).onPressed(.color(pressedFill));
 
 /// A transparent variant: `accent` is what makes interaction visible.
 ButtonStyler _quiet({required bool bordered}) {
-  var style = _content(
-    ButtonStyler().color(_noFill),
-    PlaygroundTokens.foreground(),
-  );
+  var style = _content(.color(_noFill), PlaygroundTokens.foreground());
   if (bordered) {
-    style = style.border(
-      .all(BorderSideMix(color: PlaygroundTokens.border(), width: 1)),
-    );
+    style = style.border(.color(PlaygroundTokens.border()).width(1));
   }
 
   return style
       .onHovered(
         _content(
-          ButtonStyler().color(PlaygroundTokens.accent()),
+          .color(PlaygroundTokens.accent()),
           PlaygroundTokens.accentForeground(),
         ),
       )
@@ -253,7 +249,7 @@ ButtonStyler _quiet({required bool bordered}) {
       // would paint the accent surface under the default foreground.
       .onPressed(
         _content(
-          ButtonStyler().color(_accentPressedFill()),
+          .color(_accentPressedFill()),
           PlaygroundTokens.accentForeground(),
         ),
       );
@@ -271,14 +267,11 @@ ButtonStyler _content(ButtonStyler style, Color foreground) => style
 /// box without taking layout space, so focusing a button never reflows the
 /// row it sits in.
 ButtonStyler _focusVisibleStyle() => ButtonStyler().containerEffects(
-  RemixBoxEffectsMix(
-    outline: BorderSideMix(
-      color: PlaygroundTokens.focusRing(),
-      width: _focusRingWidth,
-      strokeAlign: BorderSide.strokeAlignInside,
-    ),
-    outlineOffset: _focusRingOffset,
-  ),
+  .outline(
+    .color(
+      PlaygroundTokens.focusRing(),
+    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
+  ).outlineOffset(_focusRingOffset),
 );
 
 /// Declared last so it wins over every other state fragment.
@@ -287,7 +280,5 @@ ButtonStyler _focusVisibleStyle() => ButtonStyler().containerEffects(
 /// fades; the focus ring is cleared because a disabled button that still
 /// draws a focus ring reads as actionable.
 ButtonStyler _disabledStyle() => ButtonStyler()
-    .containerEffects(
-      RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

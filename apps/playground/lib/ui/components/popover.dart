@@ -32,11 +32,7 @@ PopoverStyler playgroundPopoverStyle({
   PopoverStyler style = const PopoverStyler.create(),
 }) => PopoverStyler()
     .color(PlaygroundTokens.background())
-    .border(
-      .all(
-        BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
-      ),
-    )
+    .border(.color(PlaygroundTokens.border()).width(_borderWidth))
     .borderRadius(.all(PlaygroundTokens.radius()))
     .padding(.all(_padding))
     .shadow(_shadow)

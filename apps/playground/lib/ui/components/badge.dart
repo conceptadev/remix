@@ -78,12 +78,10 @@ BadgeStyler _variantStyle(PlaygroundBadgeVariant variant) => switch (variant) {
     fill: PlaygroundTokens.destructive(),
     foreground: PlaygroundTokens.destructiveForeground(),
   ),
-  .outline =>
-    _filled(fill: _noFill, foreground: PlaygroundTokens.foreground()).border(
-      .all(
-        BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
-      ),
-    ),
+  .outline => _filled(
+    fill: _noFill,
+    foreground: PlaygroundTokens.foreground(),
+  ).border(.color(PlaygroundTokens.border()).width(_borderWidth)),
 };
 
 /// One surface and one content color.

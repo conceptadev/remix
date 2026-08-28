@@ -62,5 +62,4 @@ LinkStyler _emphasized() =>
 /// A link with no `onPressed` is disabled by Remix, which is the same meaning
 /// `onPressed: null` carries on every other Flutter control, so this fragment
 /// is also what a decorative link looks like.
-LinkStyler _disabledStyle() =>
-    LinkStyler().wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+LinkStyler _disabledStyle() => LinkStyler().wrap(.opacity(_disabledOpacity));

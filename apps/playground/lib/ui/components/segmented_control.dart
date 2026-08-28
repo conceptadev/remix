@@ -155,7 +155,7 @@ SegmentedControlItemStyler _itemStyle(
     // Hover tints the surface rather than the label: the label is already at
     // full strength, and a second text colour would compete with the chosen
     // segment for "this is the current section".
-    .onHovered(SegmentedControlItemStyler().color(PlaygroundTokens.accent()))
+    .onHovered(.color(PlaygroundTokens.accent()))
     // Three cues, because the fill alone is not one: `background` on a
     // `muted` track measures 1.09:1 in the light theme, so a reader looking
     // for "which section am I in" would be reading a 1.09:1 difference and a
@@ -163,14 +163,7 @@ SegmentedControlItemStyler _itemStyle(
     .onSelected(
       SegmentedControlItemStyler()
           .color(PlaygroundTokens.background())
-          .border(
-            .all(
-              BorderSideMix(
-                color: PlaygroundTokens.border(),
-                width: _borderWidth,
-              ),
-            ),
-          )
+          .border(.color(PlaygroundTokens.border()).width(_borderWidth))
           .label(.fontWeight(FontWeight.w500)),
     )
     .onFocusVisible(_focusVisibleStyle())
@@ -203,18 +196,14 @@ SegmentedControlItemStyler _content(Color foreground) =>
 /// track.
 SegmentedControlItemStyler _focusVisibleStyle() =>
     SegmentedControlItemStyler().containerEffects(
-      RemixBoxEffectsMix(
-        outline: BorderSideMix(
-          color: PlaygroundTokens.focusRing(),
-          width: _focusRingWidth,
-          strokeAlign: BorderSide.strokeAlignInside,
-        ),
+      .outline(
+        .color(
+          PlaygroundTokens.focusRing(),
+        ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
       ),
     );
 
 /// Declared last so it wins over every other state fragment.
 SegmentedControlItemStyler _disabledStyle() => SegmentedControlItemStyler()
-    .containerEffects(
-      RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

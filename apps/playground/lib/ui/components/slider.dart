@@ -81,12 +81,7 @@ SliderStyler playgroundSliderStyle({
             // The thumb is a light disc on a light rail, so its own outline is
             // what separates it from the range it sits on.
             .border(
-              .all(
-                BorderSideMix(
-                  color: PlaygroundTokens.primary(),
-                  width: _thumbBorderWidth,
-                ),
-              ),
+              .color(PlaygroundTokens.primary()).width(_thumbBorderWidth),
             ),
       )
       // A thumb is a grab target, so it answers the pointer. The outline
@@ -153,4 +148,4 @@ SliderStyler _focusVisibleStyle() => SliderStyler().thumbFocusEffects(
 /// A disabled slider keeps its rail and range and simply fades; there is no
 /// ring to clear because the focus effects are already conditional on focus.
 SliderStyler _disabledStyle() =>
-    SliderStyler().wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    SliderStyler().wrap(.opacity(_disabledOpacity));

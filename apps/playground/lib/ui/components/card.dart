@@ -35,11 +35,7 @@ CardStyler playgroundCardStyle({
   CardStyler style = const CardStyler.create(),
 }) => CardStyler()
     .color(PlaygroundTokens.background())
-    .border(
-      .all(
-        BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
-      ),
-    )
+    .border(.color(PlaygroundTokens.border()).width(_borderWidth))
     .borderRadius(.all(PlaygroundTokens.radius()))
     .padding(.all(_padding))
     .merge(style);

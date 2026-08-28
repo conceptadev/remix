@@ -136,7 +136,7 @@ ToggleGroupItemStyler _itemStyle(
       // widths, so an outline that appeared on selection would nudge the label
       // sideways. `ghost` simply paints its copy in nothing.
       .border(.all(_edge(_variantEdge(variant))))
-      .onHovered(ToggleGroupItemStyler().color(PlaygroundTokens.muted()))
+      .onHovered(.color(PlaygroundTokens.muted()))
       .onSelected(
         _content(PlaygroundTokens.accentForeground())
             .color(PlaygroundTokens.accent())
@@ -174,11 +174,9 @@ ToggleGroupItemStyler _focusVisibleStyle() =>
     ToggleGroupItemStyler().foregroundDecoration(
       BoxDecorationMix(
         border: .all(
-          BorderSideMix(
-            color: PlaygroundTokens.focusRing(),
-            width: _focusRingWidth,
-            strokeAlign: BorderSide.strokeAlignInside,
-          ),
+          .color(
+            PlaygroundTokens.focusRing(),
+          ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
         ),
         borderRadius: .all(PlaygroundTokens.radius()),
       ),
@@ -186,7 +184,5 @@ ToggleGroupItemStyler _focusVisibleStyle() =>
 
 /// Declared last so it wins over every other state fragment.
 ToggleGroupItemStyler _disabledStyle() => ToggleGroupItemStyler()
-    .foregroundDecoration(
-      BoxDecorationMix.border(.all(BorderSideMix(style: BorderStyle.none))),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

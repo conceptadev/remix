@@ -59,7 +59,7 @@ ToggleStyler playgroundToggleStyle({
 }) {
   return _base(_metricsFor(size))
       .merge(_variantStyle(variant))
-      .onHovered(ToggleStyler().color(PlaygroundTokens.muted()))
+      .onHovered(.color(PlaygroundTokens.muted()))
       .onSelected(
         _content(PlaygroundTokens.accentForeground())
             .color(PlaygroundTokens.accent())
@@ -167,11 +167,9 @@ ToggleStyler _content(Color foreground) =>
 ToggleStyler _focusVisibleStyle() => ToggleStyler().foregroundDecoration(
   BoxDecorationMix(
     border: .all(
-      BorderSideMix(
-        color: PlaygroundTokens.focusRing(),
-        width: _focusRingWidth,
-        strokeAlign: BorderSide.strokeAlignInside,
-      ),
+      .color(
+        PlaygroundTokens.focusRing(),
+      ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
     ),
     borderRadius: .all(PlaygroundTokens.radius()),
   ),
@@ -183,7 +181,5 @@ ToggleStyler _focusVisibleStyle() => ToggleStyler().foregroundDecoration(
 /// fades; the focus ring is cleared because a disabled control that still
 /// draws a focus ring reads as actionable.
 ToggleStyler _disabledStyle() => ToggleStyler()
-    .foregroundDecoration(
-      BoxDecorationMix.border(.all(BorderSideMix(style: BorderStyle.none))),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

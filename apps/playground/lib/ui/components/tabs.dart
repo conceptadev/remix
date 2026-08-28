@@ -75,11 +75,7 @@ TabBarStyler playgroundTabBarStyle({
     .direction(.horizontal)
     .mainAxisSize(.max)
     .crossAxisAlignment(.end)
-    .border(
-      .bottom(
-        BorderSideMix(color: PlaygroundTokens.border(), width: _barBorderWidth),
-      ),
-    )
+    .border(.bottom(.color(PlaygroundTokens.border()).width(_barBorderWidth)))
     .merge(style);
 
 /// The application's Tab recipe.
@@ -210,9 +206,7 @@ TabStyler _base(_PlaygroundTabMetrics metrics) =>
         .minHeight(metrics.minHeight)
         .padding(.horizontal(metrics.paddingX))
         .spacing(metrics.gap)
-        .border(
-          .bottom(BorderSideMix(color: _noEdge, width: _selectedEdgeWidth)),
-        )
+        .border(.bottom(.color(_noEdge).width(_selectedEdgeWidth)))
         .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
         .icon(.size(metrics.iconSize));
 
@@ -222,9 +216,7 @@ TabStyler _base(_PlaygroundTabMetrics metrics) =>
 /// and only overwrite what they name, so leaving `color` alone here is what
 /// lets a hovered selected tab keep the hover fill *and* the selected edge.
 TabStyler _selectedStyle() => _activeContent().border(
-  .bottom(
-    BorderSideMix(color: PlaygroundTokens.primary(), width: _selectedEdgeWidth),
-  ),
+  .bottom(.color(PlaygroundTokens.primary()).width(_selectedEdgeWidth)),
 );
 
 /// The content color shared by the hovered and selected tabs.
@@ -261,7 +253,5 @@ TabStyler _focusVisibleStyle() => TabStyler().foregroundDecoration(
 /// the focus ring is cleared because a disabled tab that still draws a focus
 /// ring reads as reachable.
 TabStyler _disabledStyle() => TabStyler()
-    .foregroundDecoration(
-      BoxDecorationMix.border(.all(BorderSideMix(style: BorderStyle.none))),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

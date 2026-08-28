@@ -74,14 +74,7 @@ AccordionStyler {{valuePrefix}}AccordionStyle({
     // clickable row rather than the section, and the rule between sections
     // would move with the panel as it opens.
     .container(
-      BoxStyler().border(
-        .bottom(
-          BorderSideMix(
-            color: {{typePrefix}}Tokens.border(),
-            width: _borderWidth,
-          ),
-        ),
-      ),
+      .border(.bottom(.color({{typePrefix}}Tokens.border()).width(_borderWidth))),
     )
     // These *are* the forwarded shorthand, so they land on `trigger`: the row
     // a reader clicks to open the section.
@@ -90,20 +83,16 @@ AccordionStyler {{valuePrefix}}AccordionStyle({
     .minHeight(_triggerHeight)
     .spacing(_gap)
     .title(
-      .fontSize(_titleSize)
-          .fontWeight(FontWeight.w500)
-          .color({{typePrefix}}Tokens.foreground()),
+      .fontSize(
+        _titleSize,
+      ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.foreground()),
     )
-    .leadingIcon(
-      .size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()),
-    )
+    .leadingIcon(.size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()))
     // Both icons are markers, not the state: Remix renders whatever
     // `IconData` the caller passes and does not rotate it, so a chevron that
     // turns is a caller passing a different glyph when the section is open.
-    .trailingIcon(
-      .size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()),
-    )
-    .content(BoxStyler().padding(.only(bottom: _contentGap)))
+    .trailingIcon(.size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()))
+    .content(.padding(.only(bottom: _contentGap)))
     .onHovered(_hoverStyle())
     .onSelected(_openStyle())
     .onFocusVisible(_focusVisibleStyle())
@@ -149,14 +138,12 @@ AccordionStyler _hoverStyle() => _icons({{typePrefix}}Tokens.foreground());
 /// The weight is what separates "open" from "the pointer is here" — the two
 /// states otherwise share the icon promotion, and a reader scanning a
 /// collapsed list needs to find the open one without moving the mouse.
-AccordionStyler _openStyle() => _icons(
-  {{typePrefix}}Tokens.foreground(),
-).title(.fontWeight(FontWeight.w600));
+AccordionStyler _openStyle() =>
+    _icons({{typePrefix}}Tokens.foreground()).title(.fontWeight(FontWeight.w600));
 
 /// Applies one color to both icons.
-AccordionStyler _icons(Color color) => AccordionStyler()
-    .leadingIcon(.color(color))
-    .trailingIcon(.color(color));
+AccordionStyler _icons(Color color) =>
+    AccordionStyler().leadingIcon(.color(color)).trailingIcon(.color(color));
 
 /// The keyboard focus ring.
 ///
@@ -164,18 +151,14 @@ AccordionStyler _icons(Color color) => AccordionStyler()
 /// section without taking layout space, and the section's own border is
 /// already carrying the rule between rows.
 AccordionStyler _focusVisibleStyle() => AccordionStyler().containerEffects(
-  RemixBoxEffectsMix(
-    outline: BorderSideMix(
-      color: {{typePrefix}}Tokens.focusRing(),
-      width: _focusRingWidth,
-      strokeAlign: BorderSide.strokeAlignInside,
-    ),
+  .outline(
+    .color(
+      {{typePrefix}}Tokens.focusRing(),
+    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
   ),
 );
 
 /// Declared last so it wins over every other state fragment.
 AccordionStyler _disabledStyle() => AccordionStyler()
-    .containerEffects(
-      RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

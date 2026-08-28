@@ -74,11 +74,7 @@ AccordionStyler playgroundAccordionStyle({
     // clickable row rather than the section, and the rule between sections
     // would move with the panel as it opens.
     .container(
-      BoxStyler().border(
-        .bottom(
-          BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
-        ),
-      ),
+      .border(.bottom(.color(PlaygroundTokens.border()).width(_borderWidth))),
     )
     // These *are* the forwarded shorthand, so they land on `trigger`: the row
     // a reader clicks to open the section.
@@ -96,7 +92,7 @@ AccordionStyler playgroundAccordionStyle({
     // `IconData` the caller passes and does not rotate it, so a chevron that
     // turns is a caller passing a different glyph when the section is open.
     .trailingIcon(.size(_iconSize).color(PlaygroundTokens.mutedForeground()))
-    .content(BoxStyler().padding(.only(bottom: _contentGap)))
+    .content(.padding(.only(bottom: _contentGap)))
     .onHovered(_hoverStyle())
     .onSelected(_openStyle())
     .onFocusVisible(_focusVisibleStyle())
@@ -155,18 +151,14 @@ AccordionStyler _icons(Color color) =>
 /// section without taking layout space, and the section's own border is
 /// already carrying the rule between rows.
 AccordionStyler _focusVisibleStyle() => AccordionStyler().containerEffects(
-  RemixBoxEffectsMix(
-    outline: BorderSideMix(
-      color: PlaygroundTokens.focusRing(),
-      width: _focusRingWidth,
-      strokeAlign: BorderSide.strokeAlignInside,
-    ),
+  .outline(
+    .color(
+      PlaygroundTokens.focusRing(),
+    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
   ),
 );
 
 /// Declared last so it wins over every other state fragment.
 AccordionStyler _disabledStyle() => AccordionStyler()
-    .containerEffects(
-      RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

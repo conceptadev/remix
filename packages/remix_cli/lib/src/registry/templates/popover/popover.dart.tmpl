@@ -32,11 +32,7 @@ PopoverStyler {{valuePrefix}}PopoverStyle({
   PopoverStyler style = const PopoverStyler.create(),
 }) => PopoverStyler()
     .color({{typePrefix}}Tokens.background())
-    .border(
-      .all(
-        BorderSideMix(color: {{typePrefix}}Tokens.border(), width: _borderWidth),
-      ),
-    )
+    .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
     .borderRadius(.all({{typePrefix}}Tokens.radius()))
     .padding(.all(_padding))
     .shadow(_shadow)

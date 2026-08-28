@@ -74,7 +74,7 @@ CheckboxStyler playgroundCheckboxStyle({
   final checked = _checkedStyle();
 
   return _base(_metricsFor(size))
-      .onHovered(CheckboxStyler().color(PlaygroundTokens.accent()))
+      .onHovered(.color(PlaygroundTokens.accent()))
       .onSelected(checked)
       .onIndeterminate(checked)
       .onFocusVisible(_focusVisibleStyle())
@@ -177,11 +177,7 @@ CheckboxStyler _base(_PlaygroundCheckboxMetrics metrics) => CheckboxStyler()
     .alignment(.center)
     .borderRadius(.all(_boxRadius()))
     .color(PlaygroundTokens.background())
-    .border(
-      .all(
-        BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
-      ),
-    )
+    .border(.color(PlaygroundTokens.border()).width(_borderWidth))
     .indicator(.size(metrics.indicator))
     .labelSpacing(metrics.gap)
     .label(.fontSize(metrics.labelSize).color(PlaygroundTokens.foreground()));
@@ -199,9 +195,8 @@ CheckboxStyler _checkedStyle() => _filled(PlaygroundTokens.primary())
     .onHovered(_filled(_primaryHoverFill()));
 
 /// One fill applied to both the box and its outline.
-CheckboxStyler _filled(Color fill) => CheckboxStyler()
-    .color(fill)
-    .border(.all(BorderSideMix(color: fill, width: _borderWidth)));
+CheckboxStyler _filled(Color fill) =>
+    CheckboxStyler().color(fill).border(.color(fill).width(_borderWidth));
 
 /// The keyboard focus ring.
 ///
@@ -209,14 +204,11 @@ CheckboxStyler _filled(Color fill) => CheckboxStyler()
 /// box without taking layout space, so focusing a checkbox never reflows the
 /// row it sits in.
 CheckboxStyler _focusVisibleStyle() => CheckboxStyler().containerEffects(
-  RemixBoxEffectsMix(
-    outline: BorderSideMix(
-      color: PlaygroundTokens.focusRing(),
-      width: _focusRingWidth,
-      strokeAlign: BorderSide.strokeAlignInside,
-    ),
-    outlineOffset: _focusRingOffset,
-  ),
+  .outline(
+    .color(
+      PlaygroundTokens.focusRing(),
+    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
+  ).outlineOffset(_focusRingOffset),
 );
 
 /// Declared last so it wins over every other state fragment.
@@ -225,7 +217,5 @@ CheckboxStyler _focusVisibleStyle() => CheckboxStyler().containerEffects(
 /// fades; the focus ring is cleared because a disabled control that still
 /// draws a focus ring reads as actionable.
 CheckboxStyler _disabledStyle() => CheckboxStyler()
-    .containerEffects(
-      RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

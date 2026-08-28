@@ -198,28 +198,22 @@ IconButtonStyler _filled({
   required Color foreground,
   required Color hoverFill,
   required Color pressedFill,
-}) => _content(IconButtonStyler().color(fill), foreground)
-    .onHovered(IconButtonStyler().color(hoverFill))
-    .onPressed(IconButtonStyler().color(pressedFill));
+}) => _content(
+  .color(fill),
+  foreground,
+).onHovered(.color(hoverFill)).onPressed(.color(pressedFill));
 
 /// A transparent variant: `accent` is what makes interaction visible.
 IconButtonStyler _quiet({required bool bordered}) {
-  var style = _content(
-    IconButtonStyler().color(_noFill),
-    {{typePrefix}}Tokens.foreground(),
-  );
+  var style = _content(.color(_noFill), {{typePrefix}}Tokens.foreground());
   if (bordered) {
-    style = style.border(
-      .all(
-        BorderSideMix(color: {{typePrefix}}Tokens.border(), width: _borderWidth),
-      ),
-    );
+    style = style.border(.color({{typePrefix}}Tokens.border()).width(_borderWidth));
   }
 
   return style
       .onHovered(
         _content(
-          IconButtonStyler().color({{typePrefix}}Tokens.accent()),
+          .color({{typePrefix}}Tokens.accent()),
           {{typePrefix}}Tokens.accentForeground(),
         ),
       )
@@ -228,7 +222,7 @@ IconButtonStyler _quiet({required bool bordered}) {
       // would paint the accent surface under the default foreground.
       .onPressed(
         _content(
-          IconButtonStyler().color(_accentPressedFill()),
+          .color(_accentPressedFill()),
           {{typePrefix}}Tokens.accentForeground(),
         ),
       );
@@ -244,14 +238,11 @@ IconButtonStyler _content(IconButtonStyler style, Color foreground) =>
 /// box without taking layout space, so focusing a control never reflows the
 /// row it sits in.
 IconButtonStyler _focusVisibleStyle() => IconButtonStyler().containerEffects(
-  RemixBoxEffectsMix(
-    outline: BorderSideMix(
-      color: {{typePrefix}}Tokens.focusRing(),
-      width: _focusRingWidth,
-      strokeAlign: BorderSide.strokeAlignInside,
-    ),
-    outlineOffset: _focusRingOffset,
-  ),
+  .outline(
+    .color(
+      {{typePrefix}}Tokens.focusRing(),
+    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
+  ).outlineOffset(_focusRingOffset),
 );
 
 /// Declared last so it wins over every other state fragment.
@@ -260,7 +251,5 @@ IconButtonStyler _focusVisibleStyle() => IconButtonStyler().containerEffects(
 /// fades; the focus ring is cleared because a disabled button that still
 /// draws a focus ring reads as actionable.
 IconButtonStyler _disabledStyle() => IconButtonStyler()
-    .containerEffects(
-      RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

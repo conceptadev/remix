@@ -75,14 +75,7 @@ TabBarStyler {{valuePrefix}}TabBarStyle({
     .direction(.horizontal)
     .mainAxisSize(.max)
     .crossAxisAlignment(.end)
-    .border(
-      .bottom(
-        BorderSideMix(
-          color: {{typePrefix}}Tokens.border(),
-          width: _barBorderWidth,
-        ),
-      ),
-    )
+    .border(.bottom(.color({{typePrefix}}Tokens.border()).width(_barBorderWidth)))
     .merge(style);
 
 /// The application's Tab recipe.
@@ -176,30 +169,29 @@ typedef _{{typePrefix}}TabMetrics = ({
   double iconSize,
 });
 
-_{{typePrefix}}TabMetrics _metricsFor({{typePrefix}}TabSize size) =>
-    switch (size) {
-      .small => (
-        minHeight: 32.0,
-        paddingX: 10.0,
-        gap: 6.0,
-        labelSize: 14.0,
-        iconSize: 16.0,
-      ),
-      .medium => (
-        minHeight: 36.0,
-        paddingX: 12.0,
-        gap: 8.0,
-        labelSize: 14.0,
-        iconSize: 16.0,
-      ),
-      .large => (
-        minHeight: 40.0,
-        paddingX: 16.0,
-        gap: 8.0,
-        labelSize: 16.0,
-        iconSize: 18.0,
-      ),
-    };
+_{{typePrefix}}TabMetrics _metricsFor({{typePrefix}}TabSize size) => switch (size) {
+  .small => (
+    minHeight: 32.0,
+    paddingX: 10.0,
+    gap: 6.0,
+    labelSize: 14.0,
+    iconSize: 16.0,
+  ),
+  .medium => (
+    minHeight: 36.0,
+    paddingX: 12.0,
+    gap: 8.0,
+    labelSize: 14.0,
+    iconSize: 16.0,
+  ),
+  .large => (
+    minHeight: 40.0,
+    paddingX: 16.0,
+    gap: 8.0,
+    labelSize: 16.0,
+    iconSize: 18.0,
+  ),
+};
 
 /// Layout, typography, and the unselected content color.
 ///
@@ -214,9 +206,7 @@ TabStyler _base(_{{typePrefix}}TabMetrics metrics) =>
         .minHeight(metrics.minHeight)
         .padding(.horizontal(metrics.paddingX))
         .spacing(metrics.gap)
-        .border(
-          .bottom(BorderSideMix(color: _noEdge, width: _selectedEdgeWidth)),
-        )
+        .border(.bottom(.color(_noEdge).width(_selectedEdgeWidth)))
         .label(.fontSize(metrics.labelSize).fontWeight(FontWeight.w500))
         .icon(.size(metrics.iconSize));
 
@@ -226,12 +216,7 @@ TabStyler _base(_{{typePrefix}}TabMetrics metrics) =>
 /// and only overwrite what they name, so leaving `color` alone here is what
 /// lets a hovered selected tab keep the hover fill *and* the selected edge.
 TabStyler _selectedStyle() => _activeContent().border(
-  .bottom(
-    BorderSideMix(
-      color: {{typePrefix}}Tokens.primary(),
-      width: _selectedEdgeWidth,
-    ),
-  ),
+  .bottom(.color({{typePrefix}}Tokens.primary()).width(_selectedEdgeWidth)),
 );
 
 /// The content color shared by the hovered and selected tabs.
@@ -268,7 +253,5 @@ TabStyler _focusVisibleStyle() => TabStyler().foregroundDecoration(
 /// the focus ring is cleared because a disabled tab that still draws a focus
 /// ring reads as reachable.
 TabStyler _disabledStyle() => TabStyler()
-    .foregroundDecoration(
-      BoxDecorationMix.border(.all(BorderSideMix(style: BorderStyle.none))),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

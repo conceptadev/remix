@@ -41,22 +41,16 @@ DataTableStyler playgroundDataTableStyle({
   DataTableStyler style = const DataTableStyler.create(),
 }) => DataTableStyler()
     .color(PlaygroundTokens.background())
-    .border(
-      .all(
-        BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
-      ),
-    )
+    .border(.color(PlaygroundTokens.border()).width(_borderWidth))
     .borderRadius(.all(PlaygroundTokens.radius()))
     .clipBehavior(Clip.antiAlias)
     // The header sits on `muted` so a long table keeps its column names
     // legible while the body scrolls under them.
-    .headerRow(BoxStyler().color(PlaygroundTokens.muted()).border(_rowRule()))
-    .bodyRow(BoxStyler().border(_rowRule()))
+    .headerRow(.color(PlaygroundTokens.muted()).border(_rowRule()))
+    .bodyRow(.border(_rowRule()))
     // Without this the bottom row's rule would double up with the frame's own
     // edge, which reads as a two-pixel border on one side only.
-    .lastBodyRow(
-      BoxStyler().border(.bottom(BorderSideMix(style: BorderStyle.none))),
-    )
+    .lastBodyRow(.border(.bottom(.style(.none))))
     .headerCell(_cell())
     .bodyCell(_cell())
     .selectionCell(_cell())

@@ -145,11 +145,7 @@ _PlaygroundTextFieldMetrics _metricsFor(PlaygroundTextFieldSize size) =>
 /// accessory alignment differ between them.
 TextFieldStyler _base(_PlaygroundTextFieldMetrics metrics) => TextFieldStyler()
     .color(PlaygroundTokens.background())
-    .border(
-      .all(
-        BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
-      ),
-    )
+    .border(.color(PlaygroundTokens.border()).width(_borderWidth))
     .borderRadius(.all(PlaygroundTokens.radius()))
     .padding(.horizontal(_paddingX))
     .spacing(_accessoryGap)
@@ -166,7 +162,7 @@ TextFieldStyler _base(_PlaygroundTextFieldMetrics metrics) => TextFieldStyler()
       ).fontWeight(FontWeight.w500).color(PlaygroundTokens.foreground()),
     )
     .helperText(.fontSize(_labelSize).color(PlaygroundTokens.mutedForeground()))
-    .layout(FlexBoxStyler().direction(.vertical).spacing(_stackGap))
+    .layout(.direction(.vertical).spacing(_stackGap))
     .onFocusVisible(_focusVisibleStyle())
     .merge(_errorStyle())
     .onDisabled(_disabledStyle());
@@ -177,14 +173,11 @@ TextFieldStyler _base(_PlaygroundTextFieldMetrics metrics) => TextFieldStyler()
 /// box without taking layout space, so focusing a field never reflows the form
 /// it sits in — and the field already has a border of its own.
 TextFieldStyler _focusVisibleStyle() => TextFieldStyler().containerEffects(
-  RemixBoxEffectsMix(
-    outline: BorderSideMix(
-      color: PlaygroundTokens.focusRing(),
-      width: _focusRingWidth,
-      strokeAlign: BorderSide.strokeAlignInside,
-    ),
-    outlineOffset: _focusRingOffset,
-  ),
+  .outline(
+    .color(
+      PlaygroundTokens.focusRing(),
+    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
+  ).outlineOffset(_focusRingOffset),
 );
 
 /// The invalid field: a `destructive` outline and a `destructive` helper line.
@@ -205,14 +198,7 @@ TextFieldStyler _focusVisibleStyle() => TextFieldStyler().containerEffects(
 TextFieldStyler _errorStyle() => TextFieldStyler().variant(
   ContextVariant.widgetState(.error),
   TextFieldStyler()
-      .border(
-        .all(
-          BorderSideMix(
-            color: PlaygroundTokens.destructive(),
-            width: _borderWidth,
-          ),
-        ),
-      )
+      .border(.color(PlaygroundTokens.destructive()).width(_borderWidth))
       .helperText(
         .color(PlaygroundTokens.foreground()).fontWeight(FontWeight.w500),
       ),
@@ -224,7 +210,5 @@ TextFieldStyler _errorStyle() => TextFieldStyler().variant(
 /// cleared because a disabled control that still draws a focus ring reads as
 /// editable.
 TextFieldStyler _disabledStyle() => TextFieldStyler()
-    .containerEffects(
-      RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

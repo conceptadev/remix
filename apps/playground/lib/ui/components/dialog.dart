@@ -25,11 +25,7 @@ DialogStyler playgroundDialogStyle({
   DialogStyler style = const DialogStyler.create(),
 }) => DialogStyler()
     .color(PlaygroundTokens.background())
-    .border(
-      .all(
-        BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
-      ),
-    )
+    .border(.color(PlaygroundTokens.border()).width(_borderWidth))
     .borderRadius(.all(PlaygroundTokens.radius()))
     .padding(.all(_padding))
     .maxWidth(_maxWidth)

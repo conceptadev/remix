@@ -25,24 +25,18 @@ DialogStyler {{valuePrefix}}DialogStyle({
   DialogStyler style = const DialogStyler.create(),
 }) => DialogStyler()
     .color({{typePrefix}}Tokens.background())
-    .border(
-      .all(
-        BorderSideMix(color: {{typePrefix}}Tokens.border(), width: _borderWidth),
-      ),
-    )
+    .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
     .borderRadius(.all({{typePrefix}}Tokens.radius()))
     .padding(.all(_padding))
     .maxWidth(_maxWidth)
     .shadow(_shadow)
     .title(
-      .fontSize(_titleSize)
-          .fontWeight(FontWeight.w600)
-          .color({{typePrefix}}Tokens.foreground()),
+      .fontSize(
+        _titleSize,
+      ).fontWeight(FontWeight.w600).color({{typePrefix}}Tokens.foreground()),
     )
     .description(
-      .fontSize(
-        _descriptionSize,
-      ).color({{typePrefix}}Tokens.mutedForeground()),
+      .fontSize(_descriptionSize).color({{typePrefix}}Tokens.mutedForeground()),
     )
     // The actions sit at the trailing edge, which is where a reader looks for
     // the decision once they have read the description.

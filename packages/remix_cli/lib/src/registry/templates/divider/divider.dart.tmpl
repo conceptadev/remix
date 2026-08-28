@@ -54,10 +54,12 @@ const _thickness = 1.0;
 /// wrong the moment the layout changed. It centres on the cross axis by
 /// itself, so it needs no `.align()` after it.
 DividerStyler _extent(Axis orientation) => switch (orientation) {
-  .horizontal => DividerStyler()
-      .height(_thickness)
-      .wrap(WidgetModifierConfig.fractionallySizedBox(widthFactor: 1)),
-  .vertical => DividerStyler()
-      .width(_thickness)
-      .wrap(WidgetModifierConfig.fractionallySizedBox(heightFactor: 1)),
+  .horizontal =>
+    DividerStyler()
+        .height(_thickness)
+        .wrap(.fractionallySizedBox(widthFactor: 1)),
+  .vertical =>
+    DividerStyler()
+        .width(_thickness)
+        .wrap(.fractionallySizedBox(heightFactor: 1)),
 };

@@ -41,24 +41,16 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
   DataTableStyler style = const DataTableStyler.create(),
 }) => DataTableStyler()
     .color({{typePrefix}}Tokens.background())
-    .border(
-      .all(
-        BorderSideMix(color: {{typePrefix}}Tokens.border(), width: _borderWidth),
-      ),
-    )
+    .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
     .borderRadius(.all({{typePrefix}}Tokens.radius()))
     .clipBehavior(Clip.antiAlias)
     // The header sits on `muted` so a long table keeps its column names
     // legible while the body scrolls under them.
-    .headerRow(
-      BoxStyler().color({{typePrefix}}Tokens.muted()).border(_rowRule()),
-    )
-    .bodyRow(BoxStyler().border(_rowRule()))
+    .headerRow(.color({{typePrefix}}Tokens.muted()).border(_rowRule()))
+    .bodyRow(.border(_rowRule()))
     // Without this the bottom row's rule would double up with the frame's own
     // edge, which reads as a two-pixel border on one side only.
-    .lastBodyRow(
-      BoxStyler().border(.bottom(BorderSideMix(style: BorderStyle.none))),
-    )
+    .lastBodyRow(.border(.bottom(.style(.none))))
     .headerCell(_cell())
     .bodyCell(_cell())
     .selectionCell(_cell())
@@ -70,19 +62,15 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
     // floor for text this size. The weight is what makes a column name read
     // as a label rather than as data.
     .headerLabel(
-      .fontSize(_labelSize)
-          .fontWeight(FontWeight.w500)
-          .color({{typePrefix}}Tokens.foreground()),
+      .fontSize(
+        _labelSize,
+      ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.foreground()),
     )
-    .cellText(
-      .fontSize(_textSize).color({{typePrefix}}Tokens.foreground()),
-    )
+    .cellText(.fontSize(_textSize).color({{typePrefix}}Tokens.foreground()))
     .footerLabel(
       .fontSize(_labelSize).color({{typePrefix}}Tokens.mutedForeground()),
     )
-    .sortIcon(
-      .size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()),
-    )
+    .sortIcon(.size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()))
     .sortIconSpacing(_sortIconSpacing)
     .footer(
       FlexBoxStyler()
@@ -96,9 +84,7 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
     )
     // The application's own controls, not restatements of them.
     .selectionCheckbox({{valuePrefix}}CheckboxStyle(size: .small))
-    .pageButton(
-      {{valuePrefix}}IconButtonStyle(variant: .ghost, size: .small),
-    )
+    .pageButton({{valuePrefix}}IconButtonStyle(variant: .ghost, size: .small))
     .pageSizeSelect({{valuePrefix}}SelectStyle(size: .small))
     .merge(style);
 

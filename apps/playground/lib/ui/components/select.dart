@@ -53,7 +53,7 @@ SelectStyler playgroundSelectStyle({
   return SelectStyler()
       .trigger(_triggerStyle(size, metrics))
       .content(_contentStyle())
-      .menuContainer(FlexBoxStyler().direction(.vertical).mainAxisSize(.min))
+      .menuContainer(.direction(.vertical).mainAxisSize(.min))
       .item(_itemStyle(size, metrics))
       .merge(style);
 }
@@ -143,11 +143,7 @@ SelectTriggerStyler _triggerStyle(
     .padding(.horizontal(_paddingX))
     .spacing(_gap)
     .color(PlaygroundTokens.background())
-    .border(
-      .all(
-        BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
-      ),
-    )
+    .border(.color(PlaygroundTokens.border()).width(_borderWidth))
     .borderRadius(.all(PlaygroundTokens.radius()))
     .label(.fontSize(metrics.textSize).color(PlaygroundTokens.foreground()))
     // The placeholder is not a value: it has to read as the quieter of
@@ -170,41 +166,30 @@ SelectTriggerStyler _triggerStyle(
           .icon(.color(PlaygroundTokens.accentForeground())),
     )
     .onFocusVisible(
-      SelectTriggerStyler().containerEffects(
-        RemixBoxEffectsMix(
-          outline: BorderSideMix(
-            color: PlaygroundTokens.focusRing(),
-            width: _focusRingWidth,
-            strokeAlign: BorderSide.strokeAlignInside,
-          ),
-          outlineOffset: _focusRingOffset,
-        ),
+      .containerEffects(
+        .outline(
+          .color(
+            PlaygroundTokens.focusRing(),
+          ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
+        ).outlineOffset(_focusRingOffset),
       ),
     )
     .onDisabled(
       SelectTriggerStyler()
-          .containerEffects(
-            RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-          )
-          .wrap(WidgetModifierConfig.opacity(_disabledOpacity)),
+          .containerEffects(.outline(.style(.none)))
+          .wrap(.opacity(_disabledOpacity)),
     );
 
 /// The floating panel the options live in.
 SelectContentStyler _contentStyle() => SelectContentStyler()
     .color(PlaygroundTokens.background())
-    .border(
-      .all(
-        BorderSideMix(color: PlaygroundTokens.border(), width: _borderWidth),
-      ),
-    )
+    .border(.color(PlaygroundTokens.border()).width(_borderWidth))
     .borderRadius(.all(PlaygroundTokens.radius()))
     .padding(.all(_panelPadding))
     .minWidth(_panelMinWidth)
     .maxHeight(_panelMaxHeight)
     .containerEffects(
-      RemixBoxEffectsMix(
-        behindContent: RemixBoxEffectLayerMix(shadows: [_shadow]),
-      ),
+      .behindContent(RemixBoxEffectLayerMix(shadows: [_shadow])),
     );
 
 /// One option row.
@@ -226,11 +211,7 @@ SelectMenuItemStyler _itemStyle(
     .icon(.size(_iconSizeFor(size)).color(PlaygroundTokens.foreground()))
     .onHovered(_highlighted())
     .onFocused(_highlighted())
-    .onDisabled(
-      SelectMenuItemStyler().wrap(
-        WidgetModifierConfig.opacity(_disabledOpacity),
-      ),
-    );
+    .onDisabled(SelectMenuItemStyler().wrap(.opacity(_disabledOpacity)));
 
 /// The option under the pointer or the keyboard cursor.
 SelectMenuItemStyler _highlighted() => SelectMenuItemStyler()

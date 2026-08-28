@@ -74,7 +74,7 @@ CheckboxStyler {{valuePrefix}}CheckboxStyle({
   final checked = _checkedStyle();
 
   return _base(_metricsFor(size))
-      .onHovered(CheckboxStyler().color({{typePrefix}}Tokens.accent()))
+      .onHovered(.color({{typePrefix}}Tokens.accent()))
       .onSelected(checked)
       .onIndeterminate(checked)
       .onFocusVisible(_focusVisibleStyle())
@@ -115,9 +115,8 @@ const _hoverAlpha = 0.9;
 /// identity: rebuilding one per call would make two identical recipes compare
 /// unequal.
 final _primaryHoverFill = ContextToken<Color>(
-  (context) => {{typePrefix}}Tokens.primary
-      .resolve(context)
-      .withValues(alpha: _hoverAlpha),
+  (context) =>
+      {{typePrefix}}Tokens.primary.resolve(context).withValues(alpha: _hoverAlpha),
 );
 
 /// The largest corner radius a checkbox box may take.
@@ -178,19 +177,10 @@ CheckboxStyler _base(_{{typePrefix}}CheckboxMetrics metrics) => CheckboxStyler()
     .alignment(.center)
     .borderRadius(.all(_boxRadius()))
     .color({{typePrefix}}Tokens.background())
-    .border(
-      .all(
-        BorderSideMix(
-          color: {{typePrefix}}Tokens.border(),
-          width: _borderWidth,
-        ),
-      ),
-    )
+    .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
     .indicator(.size(metrics.indicator))
     .labelSpacing(metrics.gap)
-    .label(
-      .fontSize(metrics.labelSize).color({{typePrefix}}Tokens.foreground()),
-    );
+    .label(.fontSize(metrics.labelSize).color({{typePrefix}}Tokens.foreground()));
 
 /// The checked and indeterminate surface.
 ///
@@ -205,9 +195,8 @@ CheckboxStyler _checkedStyle() => _filled({{typePrefix}}Tokens.primary())
     .onHovered(_filled(_primaryHoverFill()));
 
 /// One fill applied to both the box and its outline.
-CheckboxStyler _filled(Color fill) => CheckboxStyler()
-    .color(fill)
-    .border(.all(BorderSideMix(color: fill, width: _borderWidth)));
+CheckboxStyler _filled(Color fill) =>
+    CheckboxStyler().color(fill).border(.color(fill).width(_borderWidth));
 
 /// The keyboard focus ring.
 ///
@@ -215,14 +204,11 @@ CheckboxStyler _filled(Color fill) => CheckboxStyler()
 /// box without taking layout space, so focusing a checkbox never reflows the
 /// row it sits in.
 CheckboxStyler _focusVisibleStyle() => CheckboxStyler().containerEffects(
-  RemixBoxEffectsMix(
-    outline: BorderSideMix(
-      color: {{typePrefix}}Tokens.focusRing(),
-      width: _focusRingWidth,
-      strokeAlign: BorderSide.strokeAlignInside,
-    ),
-    outlineOffset: _focusRingOffset,
-  ),
+  .outline(
+    .color(
+      {{typePrefix}}Tokens.focusRing(),
+    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
+  ).outlineOffset(_focusRingOffset),
 );
 
 /// Declared last so it wins over every other state fragment.
@@ -231,7 +217,5 @@ CheckboxStyler _focusVisibleStyle() => CheckboxStyler().containerEffects(
 /// fades; the focus ring is cleared because a disabled control that still
 /// draws a focus ring reads as actionable.
 CheckboxStyler _disabledStyle() => CheckboxStyler()
-    .containerEffects(
-      RemixBoxEffectsMix.outline(BorderSideMix(style: BorderStyle.none)),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

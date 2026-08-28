@@ -58,18 +58,15 @@ ProgressStyler {{valuePrefix}}ProgressStyle({
       .borderRadius(.all(_radiusFor(thickness)))
       .clipBehavior(Clip.antiAlias)
       .track(
-        _bar(thickness)
-            .width(double.infinity)
-            .color({{typePrefix}}Tokens.muted()),
+        _bar(thickness).width(double.infinity).color({{typePrefix}}Tokens.muted()),
       )
       .indicator(_bar(thickness).color({{typePrefix}}Tokens.primary()))
       .merge(style);
 }
 
 /// One rounded bar of [thickness], used for both the track and the fill.
-BoxStyler _bar(double thickness) => BoxStyler()
-    .height(thickness)
-    .borderRadius(.all(_radiusFor(thickness)));
+BoxStyler _bar(double thickness) =>
+    BoxStyler().height(thickness).borderRadius(.all(_radiusFor(thickness)));
 
 /// Half of [thickness], which is what makes each end a semicircle at every
 /// size.

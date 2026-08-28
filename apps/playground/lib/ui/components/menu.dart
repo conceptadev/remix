@@ -37,22 +37,13 @@ MenuStyler playgroundMenuStyle({
           .direction(.vertical)
           .mainAxisSize(.min)
           .color(PlaygroundTokens.background())
-          .border(
-            .all(
-              BorderSideMix(
-                color: PlaygroundTokens.border(),
-                width: _borderWidth,
-              ),
-            ),
-          )
+          .border(.color(PlaygroundTokens.border()).width(_borderWidth))
           .borderRadius(.all(PlaygroundTokens.radius()))
           .padding(.all(_panelPadding))
           .minWidth(_panelMinWidth),
     )
     .containerEffects(
-      RemixBoxEffectsMix(
-        behindContent: RemixBoxEffectLayerMix(shadows: [_shadow]),
-      ),
+      .behindContent(RemixBoxEffectLayerMix(shadows: [_shadow])),
     )
     .item(_itemStyle())
     .divider(_dividerStyle())
@@ -129,28 +120,24 @@ MenuTriggerStyler _triggerStyle() => MenuTriggerStyler()
       ).fontWeight(FontWeight.w500).color(PlaygroundTokens.foreground()),
     )
     .icon(.size(_iconSize).color(PlaygroundTokens.foreground()))
-    .onHovered(MenuTriggerStyler().color(PlaygroundTokens.accent()))
+    .onHovered(.color(PlaygroundTokens.accent()))
     // A trigger is keyboard-reachable whether or not it wraps a control that
     // rings itself, so it rings too. A *foreground* decoration, because
     // `MenuTriggerSpec` has no `containerEffects` layer and a real border
     // would nudge the label.
     .onFocusVisible(
-      MenuTriggerStyler().foregroundDecoration(
+      .foregroundDecoration(
         BoxDecorationMix(
           border: .all(
-            BorderSideMix(
-              color: PlaygroundTokens.focusRing(),
-              width: _focusRingWidth,
-              strokeAlign: BorderSide.strokeAlignInside,
-            ),
+            .color(
+              PlaygroundTokens.focusRing(),
+            ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
           ),
           borderRadius: .all(PlaygroundTokens.radius()),
         ),
       ),
     )
-    .onDisabled(
-      MenuTriggerStyler().wrap(WidgetModifierConfig.opacity(_disabledOpacity)),
-    );
+    .onDisabled(MenuTriggerStyler().wrap(.opacity(_disabledOpacity)));
 
 /// One row, in every kind the menu can hold.
 ///
@@ -170,9 +157,7 @@ MenuItemStyler _itemStyle() => MenuItemStyler()
     .trailingIcon(.size(_iconSize).color(PlaygroundTokens.mutedForeground()))
     .onHovered(_highlighted())
     .onFocused(_highlighted())
-    .onDisabled(
-      MenuItemStyler().wrap(WidgetModifierConfig.opacity(_disabledOpacity)),
-    );
+    .onDisabled(MenuItemStyler().wrap(.opacity(_disabledOpacity)));
 
 /// The row under the pointer or the keyboard cursor.
 MenuItemStyler _highlighted() => MenuItemStyler()
@@ -189,4 +174,4 @@ DividerStyler _dividerStyle() => DividerStyler()
     .color(PlaygroundTokens.border())
     .height(_borderWidth)
     .margin(.symmetric(vertical: _dividerMargin))
-    .wrap(WidgetModifierConfig.fractionallySizedBox(widthFactor: 1));
+    .wrap(.fractionallySizedBox(widthFactor: 1));

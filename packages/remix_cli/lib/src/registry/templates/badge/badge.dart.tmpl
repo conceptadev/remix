@@ -81,11 +81,7 @@ BadgeStyler _variantStyle({{typePrefix}}BadgeVariant variant) => switch (variant
   .outline => _filled(
     fill: _noFill,
     foreground: {{typePrefix}}Tokens.foreground(),
-  ).border(
-    .all(
-      BorderSideMix(color: {{typePrefix}}Tokens.border(), width: _borderWidth),
-    ),
-  ),
+  ).border(.color({{typePrefix}}Tokens.border()).width(_borderWidth)),
 };
 
 /// One surface and one content color.

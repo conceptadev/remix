@@ -19,7 +19,7 @@ part of 'skeleton.dart';
 ///
 /// ```dart
 /// PlaygroundSkeleton(
-///   style: SkeletonStyler().container(BoxStyler().size(160, 20)),
+///   style: SkeletonStyler().container(.size(160, 20)),
 /// )
 /// ```
 ///

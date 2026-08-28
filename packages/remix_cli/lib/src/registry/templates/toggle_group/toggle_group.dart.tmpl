@@ -136,7 +136,7 @@ ToggleGroupItemStyler _itemStyle(
       // widths, so an outline that appeared on selection would nudge the label
       // sideways. `ghost` simply paints its copy in nothing.
       .border(.all(_edge(_variantEdge(variant))))
-      .onHovered(ToggleGroupItemStyler().color({{typePrefix}}Tokens.muted()))
+      .onHovered(.color({{typePrefix}}Tokens.muted()))
       .onSelected(
         _content({{typePrefix}}Tokens.accentForeground())
             .color({{typePrefix}}Tokens.accent())
@@ -151,20 +151,18 @@ ToggleGroupItemStyler _itemStyle(
 }
 
 /// The resting outline colour for one variant.
-Color _variantEdge({{typePrefix}}ToggleGroupVariant variant) =>
-    switch (variant) {
-      .ghost => _noFill,
-      .outline => {{typePrefix}}Tokens.border(),
-    };
+Color _variantEdge({{typePrefix}}ToggleGroupVariant variant) => switch (variant) {
+  .ghost => _noFill,
+  .outline => {{typePrefix}}Tokens.border(),
+};
 
 /// One outline side, at the width every state shares.
 BorderSideMix _edge(Color color) =>
     BorderSideMix(color: color, width: _borderWidth);
 
 /// Applies one content color to the label and the icons.
-ToggleGroupItemStyler _content(Color foreground) => ToggleGroupItemStyler()
-    .label(.color(foreground))
-    .icon(.color(foreground));
+ToggleGroupItemStyler _content(Color foreground) =>
+    ToggleGroupItemStyler().label(.color(foreground)).icon(.color(foreground));
 
 /// The keyboard focus ring.
 ///
@@ -176,11 +174,9 @@ ToggleGroupItemStyler _focusVisibleStyle() =>
     ToggleGroupItemStyler().foregroundDecoration(
       BoxDecorationMix(
         border: .all(
-          BorderSideMix(
-            color: {{typePrefix}}Tokens.focusRing(),
-            width: _focusRingWidth,
-            strokeAlign: BorderSide.strokeAlignInside,
-          ),
+          .color(
+            {{typePrefix}}Tokens.focusRing(),
+          ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
         ),
         borderRadius: .all({{typePrefix}}Tokens.radius()),
       ),
@@ -188,7 +184,5 @@ ToggleGroupItemStyler _focusVisibleStyle() =>
 
 /// Declared last so it wins over every other state fragment.
 ToggleGroupItemStyler _disabledStyle() => ToggleGroupItemStyler()
-    .foregroundDecoration(
-      BoxDecorationMix.border(.all(BorderSideMix(style: BorderStyle.none))),
-    )
-    .wrap(WidgetModifierConfig.opacity(_disabledOpacity));
+    .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

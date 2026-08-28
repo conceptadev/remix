@@ -36,12 +36,8 @@ part 'data_list.g.dart';
 DataListStyler {{valuePrefix}}DataListStyle({
   DataListStyler style = const DataListStyler.create(),
 }) => DataListStyler()
-    .label(
-      .fontSize(_textSize).color({{typePrefix}}Tokens.mutedForeground()),
-    )
-    .value(
-      .fontSize(_textSize).color({{typePrefix}}Tokens.foreground()),
-    )
+    .label(.fontSize(_textSize).color({{typePrefix}}Tokens.mutedForeground()))
+    .value(.fontSize(_textSize).color({{typePrefix}}Tokens.foreground()))
     .rowSpacing(_rowSpacing)
     .columnSpacing(_columnSpacing)
     .labelValueSpacing(_labelValueSpacing)

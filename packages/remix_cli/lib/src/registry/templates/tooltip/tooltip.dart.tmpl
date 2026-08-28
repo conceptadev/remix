@@ -26,9 +26,7 @@ TooltipStyler {{valuePrefix}}TooltipStyle({
     .color({{typePrefix}}Tokens.foreground())
     .borderRadius(.all({{typePrefix}}Tokens.radius()))
     .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
-    .label(
-      .fontSize(_labelSize).color({{typePrefix}}Tokens.background()),
-    )
+    .label(.fontSize(_labelSize).color({{typePrefix}}Tokens.background()))
     .waitDuration(_waitDuration)
     .showDuration(_showDuration)
     .dismissDuration(_dismissDuration)

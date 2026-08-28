@@ -114,5 +114,5 @@ CalloutStyler _toned({
   required Color icon,
 }) => CalloutStyler()
     .color(fill)
-    .border(.all(BorderSideMix(color: outline, width: _borderWidth)))
+    .border(.color(outline).width(_borderWidth))
     .icon(.color(icon));
