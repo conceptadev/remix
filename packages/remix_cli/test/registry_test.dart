@@ -176,7 +176,7 @@ items:
     },
   );
 
-  test('every component item resolves theme first and owns one file', () async {
+  test('every item resolves theme first and owns its expected files', () async {
     final catalog = await RegistryCatalog.loadBundled();
 
     // Both directions. Checking only that each listed name exists would let a
@@ -200,9 +200,15 @@ items:
             : ['theme', name],
         reason: name,
       );
-      expect(item!.files.single.target, '@ui/components/$name.dart');
-      expect(item.generated, ['@ui/components/$name.g.dart']);
-      expect(item.exports, ['components/$name.dart']);
+      if (name == 'icons') {
+        expect(item!.files.single.target, '@ui/icons.dart');
+        expect(item.generated, isEmpty);
+        expect(item.exports, ['icons.dart']);
+      } else {
+        expect(item!.files.single.target, '@ui/components/$name.dart');
+        expect(item.generated, ['@ui/components/$name.g.dart']);
+        expect(item.exports, ['components/$name.dart']);
+      }
     }
   });
 
@@ -245,6 +251,13 @@ items:
             reason: '$reason: $type',
           );
         }
+        if (entry.key == 'icons') {
+          expect(
+            rendered,
+            contains('abstract final class ${prefix.type}Icons'),
+            reason: reason,
+          );
+        }
         expect(rendered, isNot(contains('{{')), reason: reason);
         expect(rendered, isNot(contains('}}')), reason: reason);
       }
@@ -253,7 +266,12 @@ items:
 
   test('bundled templates stay inside the allowed import boundary', () async {
     final catalog = await RegistryCatalog.loadBundled();
-    const allowedPackages = {'flutter', 'remix', 'mix_annotations'};
+    const allowedPackages = {
+      'flutter',
+      'remix',
+      'mix_annotations',
+      'remix_ui_icons',
+    };
     final directive = RegExp(r'''(?:import|export|part)\s+['"]([^'"]+)['"]''');
 
     for (final item in catalog.items.values) {
@@ -296,16 +314,14 @@ items:
 /// `Acme` rendering.
 const _componentSurfaces =
     <String, ({List<String> widgets, List<String> types})>{
+      'icons': (widgets: [], types: []),
       'accordion': (widgets: ['Accordion'], types: []),
       'avatar': (widgets: ['Avatar'], types: []),
       'badge': (widgets: ['Badge'], types: ['BadgeVariant']),
       'button': (widgets: ['Button'], types: ['ButtonVariant', 'ButtonSize']),
       'callout': (widgets: ['Callout'], types: ['CalloutVariant']),
       'card': (widgets: ['Card'], types: []),
-      'checkbox': (
-        widgets: ['Checkbox', 'CheckboxGroupItem'],
-        types: [],
-      ),
+      'checkbox': (widgets: ['Checkbox', 'CheckboxGroupItem'], types: []),
       'data_list': (widgets: ['DataList'], types: []),
       'data_table': (widgets: ['DataTable'], types: []),
       'dialog': (widgets: ['Dialog'], types: []),
@@ -320,20 +336,14 @@ const _componentSurfaces =
       'popover': (widgets: ['Popover'], types: []),
       'progress': (widgets: ['Progress'], types: []),
       'radio': (widgets: ['Radio'], types: []),
-      'segmented_control': (
-        widgets: ['SegmentedControl'],
-        types: [],
-      ),
+      'segmented_control': (widgets: ['SegmentedControl'], types: []),
       'select': (widgets: ['Select'], types: []),
       'skeleton': (widgets: ['Skeleton'], types: []),
       'slider': (widgets: ['Slider'], types: []),
       'spinner': (widgets: ['Spinner'], types: []),
       'switch': (widgets: ['Switch'], types: []),
       'tabs': (widgets: ['TabBar', 'Tab', 'TabView'], types: []),
-      'textfield': (
-        widgets: ['TextField', 'TextArea'],
-        types: [],
-      ),
+      'textfield': (widgets: ['TextField', 'TextArea'], types: []),
       'toggle': (widgets: ['Toggle'], types: ['ToggleVariant', 'ToggleSize']),
       'tooltip': (widgets: ['Tooltip'], types: []),
       'toggle_group': (

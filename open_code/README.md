@@ -20,8 +20,8 @@ dart run remix_cli:remix init --prefix Acme
 dart run remix_cli:remix add button
 ```
 
-One `add` installs one item. The catalog is `theme` plus
-`accordion`, `avatar`, `badge`, `button`, `callout`, `card`, `checkbox`,
+One `add` installs one item. The catalog is `theme`, the opt-in `icons` seam,
+plus `accordion`, `avatar`, `badge`, `button`, `callout`, `card`, `checkbox`,
 `data_list`, `data_table`, `dialog`, `disclosure`, `divider`, `icon_button`,
 `link`,
 `menu`, `popover`, `progress`, `radio`, `segmented_control`, `select`,
@@ -65,8 +65,14 @@ lib/ui/
     button.g.dart     generated; do not hand-edit
 ```
 
-Every later `add` drops one more pair into `components/` and extends the
-barrel's managed block. Nothing already on disk is touched.
+Every later component `add` drops one more pair into `components/` and extends
+the barrel's managed block. Nothing already on disk is touched.
+
+`dart run remix_cli:remix add icons` instead adds `lib/ui/icons.dart`, declares
+`remix_ui_icons`, and exposes a small, application-owned `UiIcons` alias set
+without a generated adapter. Add or rename aliases there as the application
+evolves. The complete 318-icon catalog is one direct
+`package:remix_ui_icons/remix_ui_icons.dart` import away.
 
 The CLI does not create or modify `build.yaml`.
 

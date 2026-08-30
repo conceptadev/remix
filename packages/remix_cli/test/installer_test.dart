@@ -348,12 +348,20 @@ packages:
           projectRoot: caseRoot,
           writeOut: (_) {},
         ).initialize(const InitOptions(prefix: 'Playground', uiPath: 'lib/ui'));
-        writeRequiredPubspec(caseRoot);
-        writeRequiredLock(caseRoot);
+        final remixUiIcons = item == 'icons' ? '0.1.0' : null;
+        writeRequiredPubspec(
+          caseRoot,
+          remixUiIcons: remixUiIcons == null ? null : '^$remixUiIcons',
+        );
+        writeRequiredLock(caseRoot, remixUiIcons: remixUiIcons);
         await Installer(
           projectRoot: caseRoot,
           writeOut: (_) {},
-          processRunner: happyRunner(caseRoot, runRealFormatter: true),
+          processRunner: happyRunner(
+            caseRoot,
+            writeLockOnPubGet: false,
+            runRealFormatter: true,
+          ),
         ).add(AddOptions(item: item, mode: AddMode.write));
         final before = snapshotFiles(caseRoot);
         final output = <String>[];

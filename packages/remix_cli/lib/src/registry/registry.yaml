@@ -15,6 +15,17 @@ items:
       - theme/theme_data.dart
       - theme/theme_scope.dart
 
+  icons:
+    registryDependencies:
+      - theme
+    dependencies:
+      remix_ui_icons: ^0.1.0
+    files:
+      - source: templates/icons/icons.dart.tmpl
+        target: "@ui/icons.dart"
+    exports:
+      - icons.dart
+
   button:
     registryDependencies:
       - theme

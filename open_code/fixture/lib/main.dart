@@ -36,16 +36,6 @@ class AcmeGalleryApp extends StatelessWidget {
   }
 }
 
-/// Host-neutral glyphs.
-///
-/// Plain Unicode code points drawn with the default text font, so the gallery
-/// depends on no icon set of its own. Any `IconData` an application already
-/// ships works the same way.
-const IconData checkGlyph = IconData(0x2713);
-
-/// See [checkGlyph].
-const IconData crossGlyph = IconData(0x2715);
-
 /// Theme-wide customization.
 ///
 /// One `copyWith` restyles every button in its section: the recipe reads
@@ -211,7 +201,7 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                     // Generated from the enum, written like any other widget.
                     AcmeButton.primary(
                       label: 'Primary',
-                      leadingIcon: checkGlyph,
+                      leadingIcon: AcmeIcons.check,
                       onPressed: () => _record('primary'),
                     ),
                     AcmeButton.secondary(
@@ -228,7 +218,7 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                     ),
                     AcmeButton.destructive(
                       label: 'Delete',
-                      trailingIcon: crossGlyph,
+                      trailingIcon: AcmeIcons.cross,
                       onPressed: () => _record('destructive'),
                     ),
                   ],
@@ -391,7 +381,7 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                               AcmeTab(
                                 tabId: 'account',
                                 label: 'Account',
-                                icon: checkGlyph,
+                                icon: AcmeIcons.check,
                               ),
                               AcmeTab(tabId: 'billing', label: 'Billing'),
                               AcmeTab(
@@ -454,18 +444,18 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                           AcmeIconButton(
                             variant: variant,
                             size: size,
-                            icon: checkGlyph,
+                            icon: AcmeIcons.check,
                             semanticLabel: '${variant.name} ${size.name}',
                             onPressed: () =>
                                 _record('icon ${variant.name} / ${size.name}'),
                           ),
                         const AcmeIconButton(
-                          icon: crossGlyph,
+                          icon: AcmeIcons.cross,
                           semanticLabel: 'Disabled',
                           enabled: false,
                         ),
                         AcmeIconButton(
-                          icon: checkGlyph,
+                          icon: AcmeIcons.check,
                           semanticLabel: 'Loading',
                           loading: true,
                           onPressed: () {},
@@ -486,7 +476,7 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                         variant: variant,
                         selected: _pinned.contains(variant),
                         label: variant.name,
-                        icon: checkGlyph,
+                        icon: AcmeIcons.check,
                         onChanged: (value) => setState(() {
                           if (value) {
                             _pinned = {..._pinned, variant};
@@ -512,7 +502,7 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     const AcmeAvatar(label: 'AC'),
-                    const AcmeAvatar(icon: checkGlyph),
+                    const AcmeAvatar(icon: AcmeIcons.check),
                     const AcmeSpinner(semanticsLabel: 'Loading'),
                     AcmeLink(label: 'A link', onPressed: () => _record('link')),
                     const AcmeLink(label: 'A disabled link'),
@@ -550,12 +540,12 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                       const AcmeDivider(),
                       const SizedBox(height: 12),
                       const AcmeCallout(
-                        icon: checkGlyph,
+                        icon: AcmeIcons.check,
                         text: 'Everything is in order.',
                       ),
                       const SizedBox(height: 8),
                       const AcmeCallout.destructive(
-                        icon: crossGlyph,
+                        icon: AcmeIcons.cross,
                         text: 'This deletes the workspace for everyone.',
                       ),
                       const SizedBox(height: 12),
@@ -836,13 +826,13 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                       AcmeAccordion(
                         value: 'shipping',
                         title: 'Shipping',
-                        trailingIcon: checkGlyph,
+                        trailingIcon: AcmeIcons.check,
                         child: Text('Two to four business days.'),
                       ),
                       AcmeAccordion(
                         value: 'returns',
                         title: 'Returns',
-                        trailingIcon: checkGlyph,
+                        trailingIcon: AcmeIcons.check,
                         child: Text('Thirty days, unworn.'),
                       ),
                     ],

@@ -419,19 +419,20 @@ manifest and rerun — the CLI will not edit it for you.
 
 ## Catalog
 
-The bundled registry is deliberately small, and every component depends on
-`theme`:
+The bundled registry is deliberately small, and every item after `theme`
+depends on it:
 
 `theme` installs `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`,
-giving you `UiTokens`, `UiThemeData`, and `UiThemeScope`. Every other item
+giving you `UiTokens`, `UiThemeData`, and `UiThemeScope`. Every component item
 installs one authored file plus its generated adapter under
-`components/<item>.dart`, and depends on `theme`. One item depends on more:
-`data_table` also pulls in `checkbox`, `icon_button`, and `select`, because its
-selection column, pager, and page-size control *are* those components — adding
-it installs all four.
+`components/<item>.dart`. Two items differ: `icons` installs app-owned
+`icons.dart` with no generated adapter, while `data_table` also pulls in
+`checkbox`, `icon_button`, and `select`, because its selection column, pager,
+and page-size control *are* those components — adding it installs all four.
 
-| Item | Widgets you get | Axes |
+| Item | Surface you get | Axes |
 |---|---|---|
+| `icons` | `UiIcons` | — |
 | `accordion` | `UiAccordion` | — |
 | `avatar` | `UiAvatar` | — |
 | `badge` | `UiBadge` | variant |
@@ -466,6 +467,11 @@ One `add` installs one item. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. A recipe whose axis is
 named `variant` also gets one named constructor per value, so
 `UiBadge.destructive(label: 'Failing')` works out of the box.
+
+`remix add icons` also declares `remix_ui_icons` and gives you a small alias
+surface to evolve with the application. Import
+`package:remix_ui_icons/remix_ui_icons.dart` directly whenever you need the
+complete 318-icon catalog; static `RemixIcons` references remain tree-shakable.
 
 Some Remix widgets are behavioral and carry no style, so the registry has
 nothing to render for them. `RemixCheckboxGroup`, `RemixRadioGroup`,

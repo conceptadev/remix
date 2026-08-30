@@ -32,9 +32,13 @@ void writeRequiredPubspec(
   Directory root, {
   String remix = '^1.0.0-beta.7',
   String mixAnnotations = '^2.2.0-beta.1',
+  String? remixUiIcons,
   String buildRunner = '^2.10.1',
   String mixGenerator = '^2.2.0-beta.3',
 }) {
+  final remixUiIconsDependency = remixUiIcons == null
+      ? ''
+      : '  remix_ui_icons: $remixUiIcons\n';
   File(p.join(root.path, 'pubspec.yaml')).writeAsStringSync('''name: consumer
 environment:
   sdk: ">=3.12.0 <4.0.0"
@@ -43,7 +47,7 @@ dependencies:
     sdk: flutter
   remix: $remix
   mix_annotations: $mixAnnotations
-dev_dependencies:
+${remixUiIconsDependency}dev_dependencies:
   build_runner: $buildRunner
   mix_generator: $mixGenerator
 ''');
@@ -53,15 +57,19 @@ void writeRequiredLock(
   Directory root, {
   String remix = '1.0.0-beta.7',
   String mixAnnotations = '2.2.0-beta.1',
+  String? remixUiIcons,
   String buildRunner = '2.10.1',
   String mixGenerator = '2.2.0-beta.3',
 }) {
+  final remixUiIconsPackage = remixUiIcons == null
+      ? ''
+      : '  remix_ui_icons:\n    version: "$remixUiIcons"\n';
   File(p.join(root.path, 'pubspec.lock')).writeAsStringSync('''packages:
   remix:
     version: "$remix"
   mix_annotations:
     version: "$mixAnnotations"
-  build_runner:
+${remixUiIconsPackage}  build_runner:
     version: "$buildRunner"
   mix_generator:
     version: "$mixGenerator"

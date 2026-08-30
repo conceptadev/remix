@@ -30,6 +30,7 @@ export 'components/textfield.dart';
 export 'components/toggle.dart';
 export 'components/toggle_group.dart';
 export 'components/tooltip.dart';
+export 'icons.dart';
 export 'theme/theme_data.dart';
 export 'theme/theme_scope.dart';
 export 'theme/tokens.dart';

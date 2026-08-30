@@ -4,10 +4,10 @@
 Remix remains the behavior dependency; the application owns its tokens, theme
 values, component recipes, and generated adapters.
 
-The 0.1.0 catalog covers the Remix component surface:
-`accordion`, `avatar`, `badge`, `button`, `callout`, `card`, `checkbox`,
-`data_list`, `data_table`, `dialog`, `disclosure`, `divider`, `icon_button`,
-`link`,
+The 0.1.0 catalog includes an opt-in `icons` seam and covers the Remix
+component surface: `accordion`, `avatar`, `badge`, `button`, `callout`, `card`,
+`checkbox`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
+`icon_button`, `link`,
 `menu`, `popover`, `progress`, `radio`, `segmented_control`, `select`,
 `skeleton`, `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toggle`,
 `toggle_group`, and `tooltip`,
@@ -90,9 +90,16 @@ lib/ui/
     button.g.dart
 ```
 
-One `add` installs one item. Repeat it for each component you want; every item
-drops one authored file and one generated part into `components/` and extends
-the barrel, leaving everything already on disk untouched.
+One `add` installs one item. Repeat it for each component you want; every
+component item drops one authored file and one generated part into
+`components/` and extends the barrel, leaving everything already on disk
+untouched.
+
+`dart run remix_cli:remix add icons` is the deliberate exception. It adds
+`lib/ui/icons.dart`, declares `remix_ui_icons`, and exposes a small,
+application-owned `UiIcons` alias set with no generated adapter. Add or rename
+aliases there as your interface evolves. The complete 318-icon catalog remains
+one direct `package:remix_ui_icons/remix_ui_icons.dart` import away.
 
 Most items generate one widget. Three do not: `checkbox` also generates
 `UiCheckboxGroupItem`, `textfield` generates `UiTextField` and `UiTextArea`,
@@ -136,7 +143,8 @@ preserved. An incompatible resolved dependency fails before authored-source
 writes.
 
 Section placement is checked but never rewritten. Packages the installed source
-imports at runtime (`remix`, `mix_annotations`) must be declared under
+imports at runtime (`remix`, `mix_annotations`, and `remix_ui_icons` when the
+`icons` item is installed) must be declared under
 `dependencies`; build-only packages (`build_runner`, `mix_generator`) may sit in
 either section. Declaring the same package in both sections is rejected. A
 misplaced declaration fails before any process runs or file is written, and the

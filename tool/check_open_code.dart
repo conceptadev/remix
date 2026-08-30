@@ -28,6 +28,7 @@ const _fixtureAppFiles = <String>[
 /// Each is added by its own `remix add`, which is the only supported call
 /// shape. Theme arrives as the first item's registry dependency.
 const _registryItems = <String>[
+  'icons',
   'accordion',
   'avatar',
   'badge',
@@ -86,20 +87,30 @@ final _installedUiFiles = <String>[
   'theme/tokens.dart',
   'theme/theme_data.dart',
   'theme/theme_scope.dart',
-  for (final item in _registryItems) ...[
-    'components/$item.dart',
-    'components/$item.g.dart',
-  ],
+  for (final item in _registryItems)
+    ...(item == 'icons'
+        ? const ['icons.dart']
+        : ['components/$item.dart', 'components/$item.g.dart']),
 ];
 
 final _generatedAppFiles = <String>[
-  for (final item in _registryItems) 'lib/ui/components/$item.g.dart',
+  for (final item in _registryItems)
+    if (item != 'icons') 'lib/ui/components/$item.g.dart',
 ];
 
-const _requiredRuntimeDependencies = <String>['remix', 'mix_annotations'];
+const _requiredRuntimeDependencies = <String>[
+  'remix',
+  'mix_annotations',
+  'remix_ui_icons',
+];
 const _requiredDevDependencies = <String>['build_runner', 'mix_generator'];
 const _forbiddenDependencies = <String>['mix', 'naked_ui', 'remix_fortal'];
-const _allowedImportPackages = <String>['flutter', 'remix', 'mix_annotations'];
+const _allowedImportPackages = <String>[
+  'flutter',
+  'remix',
+  'mix_annotations',
+  'remix_ui_icons',
+];
 
 Future<void> main(List<String> arguments) async {
   final keep = arguments.contains('--keep');

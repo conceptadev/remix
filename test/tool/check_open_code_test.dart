@@ -212,6 +212,7 @@ dev_dependencies:
 /// Mirrors the checker's own item list; kept here so a new registry item that
 /// the checker forgot still shows up as a failing boundary test.
 const _registryItems = <String>[
+  'icons',
   'accordion',
   'avatar',
   'badge',
@@ -249,10 +250,10 @@ void _writeInstalledUi(Directory app) {
     'theme/tokens.dart',
     'theme/theme_data.dart',
     'theme/theme_scope.dart',
-    for (final item in _registryItems) ...[
-      'components/$item.dart',
-      'components/$item.g.dart',
-    ],
+    for (final item in _registryItems)
+      ...(item == 'icons'
+          ? const ['icons.dart']
+          : ['components/$item.dart', 'components/$item.g.dart']),
   ];
   for (final relative in files) {
     final file = File('${app.path}/lib/ui/$relative');
