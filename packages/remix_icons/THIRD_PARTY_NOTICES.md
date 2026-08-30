@@ -2,8 +2,8 @@
 
 ## Radix Icons 1.3.2
 
-Fortal includes a generated icon font derived from Radix Icons 1.3.2. Five
-sources (`shadow`, `shadow-inner`, `shadow-none`, `shadow-outer`, and
+`remix_icons` includes a generated icon font derived from Radix Icons 1.3.2.
+Five sources (`shadow`, `shadow-inner`, `shadow-none`, `shadow-outer`, and
 `transparency-grid`) contain partial opacity that a monochrome icon font cannot
 represent; their positive alpha is intentionally flattened to opaque coverage.
 

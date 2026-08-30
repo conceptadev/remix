@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the opt-in FortalIcons name → IconData index from the locked report.
+"""Generate the opt-in RemixIcons name → IconData index from the locked report.
 
 The always-imported GlyphPact provider stays map-free so Flutter can subset the
 font. Catalogs, galleries, and drift tests import this extra library instead.
@@ -14,9 +14,7 @@ from pathlib import Path
 
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[2]
-REPORT_PATH = (
-    PACKAGE_ROOT / "lib" / "src" / "radix" / "icons" / "generated" / "iconfont.report.json"
-)
+REPORT_PATH = PACKAGE_ROOT / "lib" / "src" / "generated" / "iconfont.report.json"
 INDEX_PATH = PACKAGE_ROOT / "lib" / "icons_index.dart"
 
 
@@ -38,27 +36,27 @@ def _glyph_names(report: dict) -> list[str]:
 
 
 def _map_entries(names: list[str]) -> str:
-    return ",\n".join(f"  '{name}': FortalIcons.{name}" for name in names)
+    return ",\n".join(f"  '{name}': RemixIcons.{name}" for name in names)
 
 
 def render_icons_index(names: list[str]) -> str:
     return (
         "// GENERATED CODE - DO NOT MODIFY BY HAND.\n"
-        "// Generated from lib/src/radix/icons/generated/iconfont.report.json.\n"
-        "// Do not export this library from remix_fortal.dart -- importing it\n"
-        "// keeps every FortalIcons glyph reachable and defeats font subsetting.\n"
+        "// Generated from lib/src/generated/iconfont.report.json.\n"
+        "// Do not export this library from remix_icons.dart -- importing it\n"
+        "// keeps every RemixIcons glyph reachable and defeats font subsetting.\n"
         "\n"
         "import 'package:flutter/widgets.dart';\n"
         "\n"
-        "import 'src/radix/icons.dart';\n"
+        "import 'remix_icons.dart';\n"
         "\n"
-        "/// Opt-in Dart member name → [IconData] index of every [FortalIcons] constant.\n"
+        "/// Opt-in Dart member name → [IconData] index of every [RemixIcons] constant.\n"
         "///\n"
-        "/// Import `package:remix_fortal/icons_index.dart` from catalogs, galleries,\n"
+        "/// Import `package:remix_icons/icons_index.dart` from catalogs, galleries,\n"
         "/// and drift tests. Applications that only need individual glyphs should\n"
-        "/// import `package:remix_fortal/remix_fortal.dart` and reference\n"
-        "/// [FortalIcons] statics so Flutter can subset the font.\n"
-        "const Map<String, IconData> fortalIconsByName = {\n"
+        "/// import `package:remix_icons/remix_icons.dart` and reference\n"
+        "/// [RemixIcons] statics so Flutter can subset the font.\n"
+        "const Map<String, IconData> remixIconsByName = {\n"
         f"{_map_entries(names)},\n"
         "};\n"
     )
@@ -90,7 +88,7 @@ def check_artifacts() -> None:
         if actual != source:
             raise ValueError(
                 f"{path.relative_to(PACKAGE_ROOT)} is stale; run "
-                "`melos run fortal:icons:generate`"
+                "`melos run icons:generate`"
             )
 
 
@@ -106,11 +104,11 @@ def main() -> int:
     try:
         if args.check:
             check_artifacts()
-            print("Fortal icons index matches the locked 318-glyph report.")
+            print("Remix icons index matches the locked 318-glyph report.")
         else:
             write_artifacts()
     except (OSError, KeyError, TypeError, ValueError) as error:
-        print(f"Fortal icons index generation failed: {error}", file=sys.stderr)
+        print(f"Remix icons index generation failed: {error}", file=sys.stderr)
         return 1
     return 0
 

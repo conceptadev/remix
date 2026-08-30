@@ -1,0 +1,32 @@
+name: remix_icons
+description: Tree-shakable Radix Icons for Flutter applications using Remix.
+repository: https://github.com/btwld/remix
+issue_tracker: https://github.com/btwld/remix/issues
+license: BSD-3-Clause
+resolution: workspace
+topics:
+  - icons
+  - flutter
+  - design-system
+  - remix
+
+version: 0.1.0
+
+# Consumer floor, matching the published Remix packages.
+environment:
+  sdk: ">=3.11.0 <4.0.0"
+  flutter: ">=3.41.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  fonts:
+    - family: RemixIcons
+      fonts:
+        - asset: lib/src/generated/fonts/RemixIcons.otf

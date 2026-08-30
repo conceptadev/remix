@@ -21,7 +21,11 @@ const _workspaceFloor = {'sdk': '>=3.12.0 <4.0.0', 'flutter': '>=3.44.0'};
 
 /// Packages whose `environment` is the consumer contract rather than a
 /// development detail. Every other workspace member gets [_workspaceFloor].
-const _publishedPackages = {'packages/remix', 'packages/remix_fortal'};
+const _publishedPackages = {
+  'packages/remix',
+  'packages/remix_fortal',
+  'packages/remix_icons',
+};
 
 /// Verifies every workspace package declares the floor its role requires.
 ///

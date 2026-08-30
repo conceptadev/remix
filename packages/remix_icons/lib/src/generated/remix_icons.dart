@@ -3,11 +3,11 @@
 
 import 'package:flutter/widgets.dart' as flutter;
 
-/// Constant [flutter.IconData] values backed by the FortalIcons font.
+/// Constant [flutter.IconData] values backed by the RemixIcons font.
 @flutter.staticIconProvider
-abstract final class FortalIcons {
-  static const String _fontFamily = 'FortalIcons';
-  static const String? _fontPackage = 'remix_fortal';
+abstract final class RemixIcons {
+  static const String _fontFamily = 'RemixIcons';
+  static const String? _fontPackage = 'remix_icons';
 
   /// Source: accessibility.svg
   static const flutter.IconData accessibility = flutter.IconData(

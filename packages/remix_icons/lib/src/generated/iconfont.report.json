@@ -81,11 +81,11 @@
   "rangeUtilization": 0.0496875,
   "textFonts": [],
   "font": {
-    "family": "FortalIcons",
+    "family": "RemixIcons",
     "format": "OpenType/CFF",
-    "file": "fonts/FortalIcons.otf",
-    "sha256": "44a8b82470d60dc59b25580edf5e4105e147a624c49cad1a562e0c08777945d6",
-    "bytes": 55636,
+    "file": "fonts/RemixIcons.otf",
+    "sha256": "3efe2695c37ce987b5a855b4448c10ae2941af95e950c0f0881e961b7209ef82",
+    "bytes": 55624,
     "unitsPerEm": 1000,
     "ascent": 1000,
     "descent": 0,
@@ -103,9 +103,9 @@
   },
   "layerFonts": [],
   "dart": {
-    "className": "FortalIcons",
-    "file": "fortal_icons.dart",
-    "fontPackage": "remix_fortal"
+    "className": "RemixIcons",
+    "file": "remix_icons.dart",
+    "fontPackage": "remix_icons"
   },
   "lockFile": "iconfont.lock.json",
   "attributionFile": "ATTRIBUTION.md",
