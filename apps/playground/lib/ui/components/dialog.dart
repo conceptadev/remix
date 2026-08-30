@@ -31,9 +31,10 @@ DialogStyler playgroundDialogStyle({
     .maxWidth(_maxWidth)
     .shadow(_shadow)
     .title(
-      .fontSize(
-        _titleSize,
-      ).fontWeight(FontWeight.w600).color(PlaygroundTokens.foreground()),
+      .fontSize(_titleSize)
+          .fontWeight(FontWeight.w600)
+          .color(PlaygroundTokens.foreground())
+          .wrap(.padding(.only(bottom: _titleDescriptionGap))),
     )
     .description(
       .fontSize(_descriptionSize).color(PlaygroundTokens.mutedForeground()),
@@ -44,7 +45,8 @@ DialogStyler playgroundDialogStyle({
       FlexBoxStyler()
           .direction(.horizontal)
           .mainAxisAlignment(.end)
-          .spacing(_actionGap),
+          .spacing(_actionGap)
+          .margin(.top(_actionsMarginTop)),
     )
     .merge(style);
 
@@ -62,6 +64,12 @@ const _titleSize = 18.0;
 
 /// Description size, matching body copy.
 const _descriptionSize = 14.0;
+
+/// Space between the title and its description.
+const _titleDescriptionGap = 6.0;
+
+/// Space between the dialog body and its decisions.
+const _actionsMarginTop = 16.0;
 
 /// Gap between the action buttons.
 const _actionGap = 8.0;

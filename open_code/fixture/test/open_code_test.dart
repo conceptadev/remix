@@ -3916,6 +3916,13 @@ void main() {
         expect(spec.spec.title.spec.style?.fontWeight, FontWeight.w600);
         expect(spec.spec.title.spec.style?.color, theme.data.foreground);
         expect(
+          spec.spec.title.widgetModifiers!
+              .whereType<PaddingModifier>()
+              .single
+              .padding,
+          const EdgeInsets.only(bottom: 6),
+        );
+        expect(
           spec.spec.description.spec.style?.color,
           theme.data.mutedForeground,
         );
@@ -3923,6 +3930,10 @@ void main() {
         expect(
           spec.spec.actions.spec.flex?.spec.mainAxisAlignment,
           MainAxisAlignment.end,
+        );
+        expect(
+          spec.spec.actions.spec.box?.spec.margin,
+          const EdgeInsets.only(top: 16),
         );
       });
 

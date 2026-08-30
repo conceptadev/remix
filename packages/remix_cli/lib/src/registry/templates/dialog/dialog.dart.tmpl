@@ -33,7 +33,10 @@ DialogStyler {{valuePrefix}}DialogStyle({
     .title(
       .fontSize(
         _titleSize,
-      ).fontWeight(FontWeight.w600).color({{typePrefix}}Tokens.foreground()),
+      )
+          .fontWeight(FontWeight.w600)
+          .color({{typePrefix}}Tokens.foreground())
+          .wrap(.padding(.only(bottom: _titleDescriptionGap))),
     )
     .description(
       .fontSize(_descriptionSize).color({{typePrefix}}Tokens.mutedForeground()),
@@ -44,7 +47,8 @@ DialogStyler {{valuePrefix}}DialogStyle({
       FlexBoxStyler()
           .direction(.horizontal)
           .mainAxisAlignment(.end)
-          .spacing(_actionGap),
+          .spacing(_actionGap)
+          .margin(.top(_actionsMarginTop)),
     )
     .merge(style);
 
@@ -62,6 +66,12 @@ const _titleSize = 18.0;
 
 /// Description size, matching body copy.
 const _descriptionSize = 14.0;
+
+/// Space between the title and its description.
+const _titleDescriptionGap = 6.0;
+
+/// Space between the dialog body and its decisions.
+const _actionsMarginTop = 16.0;
 
 /// Gap between the action buttons.
 const _actionGap = 8.0;
