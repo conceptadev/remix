@@ -4107,6 +4107,27 @@ void main() {
         );
       });
 
+      testWidgets('the chevron is compact and follows the trigger in '
+          '${theme.name}', (tester) async {
+        final idle = await _resolve(
+          tester,
+          acmeSelectStyle(),
+          theme: theme.data,
+        );
+        final hovered = await _resolve(
+          tester,
+          acmeSelectStyle(),
+          theme: theme.data,
+          states: const {WidgetState.hovered},
+        );
+        final idleIndicator = idle.spec.trigger.spec.indicator.spec;
+        final hoveredIndicator = hovered.spec.trigger.spec.indicator.spec;
+
+        expect(idleIndicator.size, 16);
+        expect(idleIndicator.color, theme.data.mutedForeground);
+        expect(hoveredIndicator.color, theme.data.accentForeground);
+      });
+
       testWidgets('the panel matches the menu panel in ${theme.name}', (
         tester,
       ) async {

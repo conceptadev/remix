@@ -135,6 +135,7 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .placeholder(.fontSize(_textSize).color(PlaygroundTokens.mutedForeground()))
     .placeholderOpacity(_placeholderOpacity)
     .icon(.size(_iconSize).color(PlaygroundTokens.mutedForeground()))
+    .indicator(.size(_iconSize).color(PlaygroundTokens.mutedForeground()))
     // The content moves with the surface. Tinting the box alone would
     // leave the placeholder at `mutedForeground` on `accent`, which is
     // 3.76:1 in the light theme — under the 4.5:1 floor for text this
@@ -145,7 +146,8 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
           .color(PlaygroundTokens.accent())
           .label(.color(PlaygroundTokens.accentForeground()))
           .placeholder(.color(PlaygroundTokens.accentForeground()))
-          .icon(.color(PlaygroundTokens.accentForeground())),
+          .icon(.color(PlaygroundTokens.accentForeground()))
+          .indicator(.color(PlaygroundTokens.accentForeground())),
     )
     .onFocusVisible(
       .containerEffects(
