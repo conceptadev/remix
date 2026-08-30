@@ -4,7 +4,7 @@
   "fontFamily": "RemixIcons",
   "className": "RemixIcons",
   "catalog": false,
-  "fontPackage": "remix_icons",
+  "fontPackage": "remix_ui_icons",
   "startCodepoint": "0xE000",
   "unitsPerEm": 1000,
   "padding": 0,

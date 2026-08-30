@@ -8,7 +8,7 @@ void main() {
   ) async {
     expect(identical(FortalIcons.check, RemixIcons.check), isTrue);
     expect(FortalIcons.check.fontFamily, 'RemixIcons');
-    expect(FortalIcons.check.fontPackage, 'remix_icons');
+    expect(FortalIcons.check.fontPackage, 'remix_ui_icons');
 
     await tester.pumpWidget(
       const Directionality(

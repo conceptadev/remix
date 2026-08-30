@@ -24,7 +24,7 @@ const _workspaceFloor = {'sdk': '>=3.12.0 <4.0.0', 'flutter': '>=3.44.0'};
 const _publishedPackages = {
   'packages/remix',
   'packages/remix_fortal',
-  'packages/remix_icons',
+  'packages/remix_ui_icons',
 };
 
 /// Verifies every workspace package declares the floor its role requires.

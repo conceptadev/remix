@@ -48,9 +48,9 @@ dependencies:
   # workspace lockfile by tool/fortal_parity/check.dart, which also requires
   # both published packages to carry this identical constraint.
   naked_ui: ^1.0.0-beta.14
-  # Publish remix_icons before the next remix_fortal release so this remains a
+  # Publish remix_ui_icons before the next remix_fortal release so this remains a
   # valid hosted dependency outside the workspace.
-  remix_icons: ^0.1.0
+  remix_ui_icons: ^0.1.0
 
 dev_dependencies:
   flutter_test:

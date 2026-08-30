@@ -2,7 +2,7 @@ name: Publish to pub.dev
 
 # Three tag-gated jobs rather than one job listing all packages: the reusable
 # publish workflow turns `packages:` into a parallel matrix with no ordering
-# knob, and `remix_fortal` depends on hosted `remix` and `remix_icons`
+# knob, and `remix_fortal` depends on hosted `remix` and `remix_ui_icons`
 # versions, so a single job would race.
 #
 # THE THREE PACKAGES PUBLISH FROM DIFFERENT TAG PATTERNS. This is not a style
@@ -11,7 +11,7 @@ name: Publish to pub.dev
 #
 #   remix          ->  v<version>               (bare, e.g. v1.0.0-beta.5)
 #   remix_fortal   ->  remix_fortal-v<version>
-#   remix_icons    ->  remix_icons-v<version>
+#   remix_ui_icons ->  remix_ui_icons-v<version>
 #
 # Pushing `remix-v<version>` therefore does NOT publish remix. It fails
 # authentication with "this token has 'refs/tags/remix-v...' ref for which
@@ -35,7 +35,7 @@ on:
   push:
     tags:
       - 'remix_fortal-v[0-9]+.[0-9]+.[0-9]+*'
-      - 'remix_icons-v[0-9]+.[0-9]+.[0-9]+*'
+      - 'remix_ui_icons-v[0-9]+.[0-9]+.[0-9]+*'
       - 'v[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
@@ -61,12 +61,12 @@ jobs:
       id-token: write
       contents: read
 
-  publish-remix-icons:
-    if: startsWith(github.ref, 'refs/tags/remix_icons-v')
+  publish-remix-ui-icons:
+    if: startsWith(github.ref, 'refs/tags/remix_ui_icons-v')
     uses: conceptadev/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
     with:
       packages_folder_path: "packages"
-      packages: "remix_icons"
+      packages: "remix_ui_icons"
     permissions:
       id-token: write
       contents: read
