@@ -3974,15 +3974,12 @@ void main() {
       testWidgets('a row highlights on pointer and on keyboard in '
           '${theme.name}', (tester) async {
         final idle = await _resolve(tester, acmeMenuStyle(), theme: theme.data);
+        final idleItem = idle.spec.item.spec;
 
-        expect(
-          idle.spec.item.spec.label.spec.style?.color,
-          theme.data.foreground,
-        );
-        expect(
-          idle.spec.item.spec.leadingIcon.spec.color,
-          theme.data.mutedForeground,
-        );
+        expect(idleItem.label.spec.style?.color, theme.data.foreground);
+        expect(idleItem.leadingIcon.spec.color, theme.data.mutedForeground);
+        expect(idleItem.indicator.spec.size, 16);
+        expect(idleItem.indicator.spec.color, theme.data.mutedForeground);
 
         // Hover and focus have to agree: a menu is as often driven by the
         // arrow keys as by the pointer.
@@ -4005,6 +4002,11 @@ void main() {
           );
           expect(
             item.label.spec.style?.color,
+            theme.data.accentForeground,
+            reason: '$states',
+          );
+          expect(
+            item.indicator.spec.color,
             theme.data.accentForeground,
             reason: '$states',
           );

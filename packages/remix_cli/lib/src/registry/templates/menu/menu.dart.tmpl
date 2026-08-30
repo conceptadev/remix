@@ -155,6 +155,7 @@ MenuItemStyler _itemStyle() => MenuItemStyler()
     .label(.fontSize(_labelSize).color({{typePrefix}}Tokens.foreground()))
     .leadingIcon(.size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()))
     .trailingIcon(.size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()))
+    .indicator(.size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()))
     .onHovered(_highlighted())
     .onFocused(_highlighted())
     .onDisabled(MenuItemStyler().wrap(.opacity(_disabledOpacity)));
@@ -164,7 +165,8 @@ MenuItemStyler _highlighted() => MenuItemStyler()
     .color({{typePrefix}}Tokens.accent())
     .label(.color({{typePrefix}}Tokens.accentForeground()))
     .leadingIcon(.color({{typePrefix}}Tokens.accentForeground()))
-    .trailingIcon(.color({{typePrefix}}Tokens.accentForeground()));
+    .trailingIcon(.color({{typePrefix}}Tokens.accentForeground()))
+    .indicator(.color({{typePrefix}}Tokens.accentForeground()));
 
 /// The rule between two groups of rows.
 ///
