@@ -136,7 +136,7 @@ def verify_generated(source_hashes: dict[str, str]) -> None:
     _require(lock.get("generatorVersion") == "1.1.0", "Unexpected lock generator")
     _require(lock.get("fontFamily") == "RemixIcons", "Unexpected lock font family")
     _require(lock.get("className") == "RemixIcons", "Unexpected lock class")
-    _require(lock.get("fontPackage") == "remix_icons", "Unexpected lock package")
+    _require(lock.get("fontPackage") == "remix_ui_icons", "Unexpected lock package")
     _require(lock.get("startCodepoint") == "0xE000", "Unexpected first codepoint")
     lock_glyphs = lock.get("glyphs", [])
     _require(len(lock_glyphs) == 318, f"Expected 318 locked glyphs, found {len(lock_glyphs)}")
@@ -196,14 +196,14 @@ def verify_generated(source_hashes: dict[str, str]) -> None:
     _require("Map<String" not in dart, "Runtime icon lookup maps defeat font tree shaking")
     _require("Catalog" not in dart, "Runtime icon catalogs must remain disabled")
 
-    library = (PACKAGE_ROOT / "lib" / "remix_icons.dart").read_text(encoding="utf-8")
+    library = (PACKAGE_ROOT / "lib" / "remix_ui_icons.dart").read_text(encoding="utf-8")
     _require(
         "export 'src/generated/remix_icons.dart';" in library,
         "Missing generated-provider export",
     )
     _require(
         "icons_index" not in library and "remixIconsByName" not in library,
-        "Opt-in icons index must not be exported from remix_icons.dart",
+        "Opt-in icons index must not be exported from remix_ui_icons.dart",
     )
     pubspec = (PACKAGE_ROOT / "pubspec.yaml").read_text(encoding="utf-8")
     _require("family: RemixIcons" in pubspec, "RemixIcons family is not registered")
@@ -235,7 +235,7 @@ def _verify_icons_index(report: dict[str, Any]) -> None:
     index = INDEX_PATH.read_text(encoding="utf-8")
     _require("const Map<String, IconData> remixIconsByName" in index, "Missing remixIconsByName")
     _require(
-        "import 'package:remix_icons/remix_icons.dart'" not in index,
+        "import 'package:remix_ui_icons/remix_ui_icons.dart'" not in index,
         "Index must not import the main library",
     )
     for name in names:

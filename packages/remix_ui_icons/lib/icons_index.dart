@@ -1,17 +1,17 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND.
 // Generated from lib/src/generated/iconfont.report.json.
-// Do not export this library from remix_icons.dart -- importing it
+// Do not export this library from remix_ui_icons.dart -- importing it
 // keeps every RemixIcons glyph reachable and defeats font subsetting.
 
 import 'package:flutter/widgets.dart';
 
-import 'remix_icons.dart';
+import 'remix_ui_icons.dart';
 
 /// Opt-in Dart member name → [IconData] index of every [RemixIcons] constant.
 ///
-/// Import `package:remix_icons/icons_index.dart` from catalogs, galleries,
+/// Import `package:remix_ui_icons/icons_index.dart` from catalogs, galleries,
 /// and drift tests. Applications that only need individual glyphs should
-/// import `package:remix_icons/remix_icons.dart` and reference
+/// import `package:remix_ui_icons/remix_ui_icons.dart` and reference
 /// [RemixIcons] statics so Flutter can subset the font.
 const Map<String, IconData> remixIconsByName = {
   'accessibility': RemixIcons.accessibility,

@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:remix_icons/remix_icons.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 void main() {
   test('exposes stable icon metadata', () {
     expect(RemixIcons.accessibility.codePoint, 0xE000);
     expect(RemixIcons.accessibility.fontFamily, 'RemixIcons');
-    expect(RemixIcons.accessibility.fontPackage, 'remix_icons');
+    expect(RemixIcons.accessibility.fontPackage, 'remix_ui_icons');
 
     expect(RemixIcons.check.fontFamily, 'RemixIcons');
     expect(RemixIcons.switchIcon.fontFamily, 'RemixIcons');

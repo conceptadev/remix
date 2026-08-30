@@ -1,12 +1,12 @@
-# remix_icons
+# remix_ui_icons
 
-`remix_icons` provides the complete 318-glyph Radix Icons 1.3.2 catalog as a
+`remix_ui_icons` provides the complete 318-glyph Radix Icons 1.3.2 catalog as a
 Flutter icon font. Every glyph is a static `IconData` constant, allowing
 Flutter release builds to subset the font to the icons an application uses.
 
 ```dart
 import 'package:flutter/widgets.dart';
-import 'package:remix_icons/remix_icons.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 const icon = Icon(RemixIcons.check);
 ```
@@ -17,7 +17,7 @@ galleries, and drift tests that must enumerate every glyph can opt into the
 separate index:
 
 ```dart
-import 'package:remix_icons/icons_index.dart';
+import 'package:remix_ui_icons/icons_index.dart';
 
 final icon = remixIconsByName['check'];
 ```

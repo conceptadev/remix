@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart' as flutter;
 @flutter.staticIconProvider
 abstract final class RemixIcons {
   static const String _fontFamily = 'RemixIcons';
-  static const String? _fontPackage = 'remix_icons';
+  static const String? _fontPackage = 'remix_ui_icons';
 
   /// Source: accessibility.svg
   static const flutter.IconData accessibility = flutter.IconData(

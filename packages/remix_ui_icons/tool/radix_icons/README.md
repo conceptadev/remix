@@ -2,7 +2,7 @@
 
 This tool compiles the vendored Radix Icons 1.3.2 SVG snapshot into the
 tree-shakable `RemixIcons` Flutter font provider and the opt-in
-`package:remix_icons/icons_index.dart` name map. The toolchain is locked to
+`package:remix_ui_icons/icons_index.dart` name map. The toolchain is locked to
 Python 3.13, uv 0.11.24, and GlyphPact 1.1.0.
 
 `RemixIcons` stays an `@staticIconProvider` of static const fields (`catalog:

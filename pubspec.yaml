@@ -16,7 +16,7 @@ workspace:
   - apps/playground
   - packages/remix
   - packages/remix_fortal
-  - packages/remix_icons
+  - packages/remix_ui_icons
 
 melos:
   packages:
@@ -111,15 +111,15 @@ melos:
 
     icons:generate:
       steps:
-        - uv run --frozen --project packages/remix_icons/tool/radix_icons glyphpact --config packages/remix_icons/tool/radix_icons/glyphpact.json
-        - uv run --frozen --project packages/remix_icons/tool/radix_icons python packages/remix_icons/tool/radix_icons/generate_icons_index.py
+        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons glyphpact --config packages/remix_ui_icons/tool/radix_icons/glyphpact.json
+        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python packages/remix_ui_icons/tool/radix_icons/generate_icons_index.py
       description: Regenerate the locked RemixIcons font, Dart provider, and opt-in index
 
     icons:check:
       steps:
-        - uv run --frozen --project packages/remix_icons/tool/radix_icons glyphpact --config packages/remix_icons/tool/radix_icons/glyphpact.json --check
-        - uv run --frozen --project packages/remix_icons/tool/radix_icons python -m unittest discover -s packages/remix_icons/tool/radix_icons -p 'test_*.py'
-        - uv run --frozen --project packages/remix_icons/tool/radix_icons python packages/remix_icons/tool/radix_icons/verify.py
+        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons glyphpact --config packages/remix_ui_icons/tool/radix_icons/glyphpact.json --check
+        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python -m unittest discover -s packages/remix_ui_icons/tool/radix_icons -p 'test_*.py'
+        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python packages/remix_ui_icons/tool/radix_icons/verify.py
       description: Verify the pinned Radix snapshot, generated icon artifacts, and opt-in index
 
     ci:

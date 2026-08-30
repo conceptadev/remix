@@ -105,7 +105,7 @@
   "dart": {
     "className": "RemixIcons",
     "file": "remix_icons.dart",
-    "fontPackage": "remix_icons"
+    "fontPackage": "remix_ui_icons"
   },
   "lockFile": "iconfont.lock.json",
   "attributionFile": "ATTRIBUTION.md",

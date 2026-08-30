@@ -201,7 +201,7 @@ widgets. Their matching `fortal*ChartStyle()` recipes can style the underlying
 ## Icons
 
 Fortal depends on and re-exports the complete 318-glyph Radix Icons 1.3.2
-catalog from `remix_icons`. `FortalIcons` remains a compatibility alias for
+catalog from `remix_ui_icons`. `FortalIcons` remains a compatibility alias for
 `RemixIcons`, so existing references continue to compile and Flutter can
 subset the font. There is no name-to-icon map on that class.
 
@@ -210,7 +210,7 @@ the opt-in index. An application that never imports it keeps full font
 subsetting:
 
 ```dart
-import 'package:remix_icons/icons_index.dart';
+import 'package:remix_ui_icons/icons_index.dart';
 
 final icon = remixIconsByName['check'];
 ```

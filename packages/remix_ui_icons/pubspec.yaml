@@ -1,5 +1,5 @@
-name: remix_icons
-description: Tree-shakable Radix Icons for Flutter applications using Remix.
+name: remix_ui_icons
+description: Tree-shakable icons for Flutter applications built with Remix UI.
 repository: https://github.com/btwld/remix
 issue_tracker: https://github.com/btwld/remix/issues
 license: BSD-3-Clause

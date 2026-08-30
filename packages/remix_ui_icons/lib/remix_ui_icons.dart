@@ -2,6 +2,6 @@
 ///
 /// Refer to individual static constants such as [RemixIcons.check] so Flutter
 /// can subset the font to only the glyphs used by an application.
-library remix_icons;
+library remix_ui_icons;
 
 export 'src/generated/remix_icons.dart';
