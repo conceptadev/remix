@@ -27,13 +27,13 @@ Button depends on Theme. Installing Button resolves that graph in a stable
 order, adds its hosted dependencies, exports the authored files, and generates
 `button.g.dart` in the consumer.
 
-**Since:** the catalog has grown to twenty-six components on the same two
-mechanisms — one authored file plus one generated part per item, every item
-depending on `theme`. Nothing in the decision below changed to accommodate
-them: no schema field, no installer branch, and no addition to the fifteen
-theme tokens. Compound components (a checkbox group option, a tab bar with its
-tabs and panels) fit by declaring more than one `@MixWidget` in the same file.
-The current catalog is listed in `docs/open-code.mdx`.
+**Since:** the styled component catalog has grown on the same two mechanisms —
+one authored file plus one generated part per item, every item depending on
+`theme`. Nothing in the decision below changed to accommodate them: no schema
+field, no installer branch, and no addition to the fifteen theme tokens.
+Compound components (a checkbox group option, a tab bar with its tabs and
+panels) fit by declaring more than one `@MixWidget` in the same file. The
+current catalog is listed in `docs/open-code.mdx`.
 
 ## Ownership boundary
 
