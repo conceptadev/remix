@@ -102,7 +102,7 @@ wheels = [
 ]
 
 [[package]]
-name = "remix-fortal-icons-tool"
+name = "remix-icons-tool"
 version = "0.0.0"
 source = { virtual = "." }
 dependencies = [
