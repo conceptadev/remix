@@ -513,16 +513,36 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                 _Label('Progress and skeleton', color: data.mutedForeground),
                 const Padding(
                   padding: EdgeInsets.only(bottom: 8),
-                  child: AcmeProgress(value: 0.35, semanticsLabel: 'Upload'),
+                  child: SizedBox(
+                    width: 240,
+                    child: AcmeProgress(value: 0.35, semanticsLabel: 'Upload'),
+                  ),
                 ),
-                const Wrap(
+                Wrap(
                   spacing: 12,
                   runSpacing: 12,
                   children: [
-                    // The wrapped child keeps sizing the placeholder in both
-                    // states, so switching `loading` never reflows the row.
-                    AcmeSkeleton(child: Text('Placeholder for a name')),
-                    AcmeSkeleton(loading: false, child: Text('Loaded')),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _Label('Loading', color: data.mutedForeground),
+                        // The wrapped child keeps sizing the placeholder in
+                        // both states, so switching `loading` never reflows.
+                        const AcmeSkeleton(
+                          child: Text('Placeholder for a name'),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _Label('Loaded', color: data.mutedForeground),
+                        const AcmeSkeleton(
+                          loading: false,
+                          child: Text('Placeholder for a name'),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),

@@ -2004,6 +2004,14 @@ void main() {
         ]) {
           expect(finder, findsWidgets);
         }
+        expect(find.text('LOADING'), findsNWidgets(3));
+        expect(find.text('LOADED'), findsNWidgets(3));
+        expect(find.byType(AcmeSkeleton), findsNWidgets(6));
+        final progress = find.byType(AcmeProgress);
+        expect(progress, findsNWidgets(3));
+        for (var index = 0; index < 3; index++) {
+          expect(tester.getSize(progress.at(index)).width, 240);
+        }
       });
     }
   });
