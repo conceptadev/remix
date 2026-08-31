@@ -1971,6 +1971,7 @@ void main() {
 
         expect(tester.takeException(), isNull);
         expect(find.byType(AcmeThemeSection), findsNWidgets(3));
+        expect(brandTheme.radius, const Radius.circular(12));
         for (final finder in [
           find.byType(AcmeButton),
           find.byType(AcmeCheckbox),
@@ -2011,6 +2012,22 @@ void main() {
         expect(progress, findsNWidgets(3));
         for (var index = 0; index < 3; index++) {
           expect(tester.getSize(progress.at(index)).width, 240);
+        }
+        final expectedContentWidth = size.width > 1008
+            ? 960.0
+            : size.width - 48;
+        final cards = find.byType(AcmeCard);
+        expect(cards, findsNWidgets(3));
+        for (var index = 0; index < 3; index++) {
+          expect(tester.getSize(cards.at(index)).width, expectedContentWidth);
+        }
+        for (final accordion in tester.widgetList<AcmeAccordion<String>>(
+          find.byType(AcmeAccordion<String>),
+        )) {
+          // With no custom glyph, Remix communicates state with its built-in
+          // plus/minus indicator instead of showing one static checkmark for
+          // both the open and closed rows.
+          expect(accordion.trailingIcon, isNull);
         }
       });
     }
@@ -2566,6 +2583,17 @@ void main() {
         );
         expect(spec.spec.text.spec.style?.fontSize, 14, reason: variant.name);
         expect(spec.spec.icon.spec.size, 16, reason: variant.name);
+        expect(
+          spec.spec.icon.widgetModifiers,
+          contains(
+            isA<TranslateModifier>().having(
+              (modifier) => modifier.transform.storage[13],
+              'vertical offset',
+              2,
+            ),
+          ),
+          reason: variant.name,
+        );
       }
     });
 

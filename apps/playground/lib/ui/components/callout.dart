@@ -73,6 +73,13 @@ const _textSize = 14.0;
 /// Size of the leading icon, one step up so it aligns with the first line.
 const _iconSize = 16.0;
 
+/// Optical offset that aligns the icon with the first line's visible glyphs.
+///
+/// The row stays top-aligned for multi-line prose. Font line boxes reserve
+/// leading around their visible glyphs, so an icon at the line-box origin
+/// looks high even though both layout bounds start together.
+const _iconOffsetY = 2.0;
+
 /// Width of the callout outline.
 const _borderWidth = 1.0;
 
@@ -87,7 +94,7 @@ CalloutStyler _base() => CalloutStyler()
     .spacing(_gap)
     .borderRadius(.all(PlaygroundTokens.radius()))
     .text(.fontSize(_textSize).color(PlaygroundTokens.foreground()))
-    .icon(.size(_iconSize));
+    .icon(.size(_iconSize).wrap(.translate(x: 0, y: _iconOffsetY)));
 
 CalloutStyler _variantStyle(PlaygroundCalloutVariant variant) =>
     switch (variant) {

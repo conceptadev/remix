@@ -38,9 +38,10 @@ class AcmeGalleryApp extends StatelessWidget {
 
 /// Theme-wide customization.
 ///
-/// One `copyWith` restyles every button in its section: the recipe reads
-/// `AcmeTokens`, and `AcmeThemeScope` decides what those tokens resolve to. No
-/// button below it is touched.
+/// One `copyWith` restyles every recipe in its section: the recipes read
+/// `AcmeTokens`, and `AcmeThemeScope` decides what those tokens resolve to. A
+/// moderate radius keeps large surfaces readable; the one-instance button
+/// below demonstrates a full pill without turning cards and dialogs into one.
 final AcmeThemeData brandTheme = const AcmeThemeData.light().copyWith(
   primary: const Color(0xFF4F46E5),
   primaryForeground: const Color(0xFFFFFFFF),
@@ -48,8 +49,14 @@ final AcmeThemeData brandTheme = const AcmeThemeData.light().copyWith(
   accentForeground: const Color(0xFF312E81),
   border: const Color(0xFFC7D2FE),
   focusRing: const Color(0xFF4F46E5),
-  radius: const Radius.circular(999),
+  radius: const Radius.circular(12),
 );
+
+/// Maximum readable measure for the gallery's examples.
+const _galleryMaxWidth = 960.0;
+
+/// Minimum breathing room between the examples and the viewport edge.
+const _galleryInset = 24.0;
 
 /// Every theme section, stacked.
 class AcmeGallery extends StatelessWidget {
@@ -144,6 +151,10 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
   @override
   Widget build(BuildContext context) {
     final data = widget.data;
+    final viewportWidth = MediaQuery.sizeOf(context).width;
+    final horizontalInset = viewportWidth > _galleryMaxWidth + 2 * _galleryInset
+        ? (viewportWidth - _galleryMaxWidth) / 2
+        : _galleryInset;
 
     return AcmeThemeScope(
       data: data,
@@ -154,7 +165,10 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
             context,
           ).style.copyWith(color: data.foreground),
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.symmetric(
+              horizontal: horizontalInset,
+              vertical: _galleryInset,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -846,13 +860,11 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                       AcmeAccordion(
                         value: 'shipping',
                         title: 'Shipping',
-                        trailingIcon: AcmeIcons.check,
                         child: Text('Two to four business days.'),
                       ),
                       AcmeAccordion(
                         value: 'returns',
                         title: 'Returns',
-                        trailingIcon: AcmeIcons.check,
                         child: Text('Thirty days, unworn.'),
                       ),
                     ],
