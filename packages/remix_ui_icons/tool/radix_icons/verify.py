@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the pinned Radix inputs and generated Fortal icon artifacts."""
+"""Verify the pinned Radix inputs and generated Remix icon artifacts."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ PACKAGE_ROOT = Path(__file__).resolve().parents[2]
 REFERENCE_ROOT = PACKAGE_ROOT / "reference" / "radix_icons_1_3_2"
 ICONS_ROOT = REFERENCE_ROOT / "icons"
 MANIFEST_PATH = REFERENCE_ROOT / "manifest.json"
-GENERATED_ROOT = PACKAGE_ROOT / "lib" / "src" / "radix" / "icons" / "generated"
+GENERATED_ROOT = PACKAGE_ROOT / "lib" / "src" / "generated"
 
 EXPECTED_UPSTREAM = {
     "name": "Radix Icons",
@@ -134,9 +134,9 @@ def verify_generated(source_hashes: dict[str, str]) -> None:
 
     lock = _load_json(GENERATED_ROOT / "iconfont.lock.json")
     _require(lock.get("generatorVersion") == "1.1.0", "Unexpected lock generator")
-    _require(lock.get("fontFamily") == "FortalIcons", "Unexpected lock font family")
-    _require(lock.get("className") == "FortalIcons", "Unexpected lock class")
-    _require(lock.get("fontPackage") == "remix_fortal", "Unexpected lock package")
+    _require(lock.get("fontFamily") == "RemixIcons", "Unexpected lock font family")
+    _require(lock.get("className") == "RemixIcons", "Unexpected lock class")
+    _require(lock.get("fontPackage") == "remix_ui_icons", "Unexpected lock package")
     _require(lock.get("startCodepoint") == "0xE000", "Unexpected first codepoint")
     lock_glyphs = lock.get("glyphs", [])
     _require(len(lock_glyphs) == 318, f"Expected 318 locked glyphs, found {len(lock_glyphs)}")
@@ -178,16 +178,16 @@ def verify_generated(source_hashes: dict[str, str]) -> None:
 
     font = report.get("font", {})
     font_path = GENERATED_ROOT / str(font.get("file"))
-    _require(font_path.is_file(), "Missing generated FortalIcons font")
+    _require(font_path.is_file(), "Missing generated RemixIcons font")
     font_contents = font_path.read_bytes()
     _require(font.get("sha256") == _sha256(font_contents), "Generated font hash drift")
     _require(font.get("bytes") == len(font_contents), "Generated font byte count drift")
 
-    dart_path = GENERATED_ROOT / "fortal_icons.dart"
+    dart_path = GENERATED_ROOT / "remix_icons.dart"
     _require(dart_path.is_file(), "Missing generated Dart icon provider")
     dart = dart_path.read_text(encoding="utf-8")
-    _require("@flutter.staticIconProvider" in dart, "FortalIcons must be a static icon provider")
-    _require("abstract final class FortalIcons" in dart, "Missing FortalIcons class")
+    _require("@flutter.staticIconProvider" in dart, "RemixIcons must be a static icon provider")
+    _require("abstract final class RemixIcons" in dart, "Missing RemixIcons class")
     _require("static const flutter.IconData switchIcon" in dart, "Missing switchIcon collision rename")
     declaration_count = len(
         re.findall(r"static const flutter\.IconData \w+ = flutter\.IconData\(", dart)
@@ -196,28 +196,20 @@ def verify_generated(source_hashes: dict[str, str]) -> None:
     _require("Map<String" not in dart, "Runtime icon lookup maps defeat font tree shaking")
     _require("Catalog" not in dart, "Runtime icon catalogs must remain disabled")
 
-    public_export = (PACKAGE_ROOT / "lib" / "src" / "radix" / "icons.dart").read_text(
-        encoding="utf-8"
-    )
+    library = (PACKAGE_ROOT / "lib" / "remix_ui_icons.dart").read_text(encoding="utf-8")
     _require(
-        "export 'icons/generated/fortal_icons.dart';" in public_export,
+        "export 'src/generated/remix_icons.dart';" in library,
         "Missing generated-provider export",
     )
     _require(
-        "icons_index" not in public_export and "fortalIconsByName" not in public_export,
-        "Opt-in icons index must not be re-exported from the icons barrel",
-    )
-    library = (PACKAGE_ROOT / "lib" / "remix_fortal.dart").read_text(encoding="utf-8")
-    _require("export 'src/radix/icons.dart';" in library, "FortalIcons is not publicly exported")
-    _require(
-        "icons_index" not in library and "fortalIconsByName" not in library,
-        "Opt-in icons index must not be exported from remix_fortal.dart",
+        "icons_index" not in library and "remixIconsByName" not in library,
+        "Opt-in icons index must not be exported from remix_ui_icons.dart",
     )
     pubspec = (PACKAGE_ROOT / "pubspec.yaml").read_text(encoding="utf-8")
-    _require("family: FortalIcons" in pubspec, "FortalIcons family is not registered")
+    _require("family: RemixIcons" in pubspec, "RemixIcons family is not registered")
     _require(
-        "lib/src/radix/icons/generated/fonts/FortalIcons.otf" in pubspec,
-        "FortalIcons font asset is not registered",
+        "lib/src/generated/fonts/RemixIcons.otf" in pubspec,
+        "RemixIcons font asset is not registered",
     )
     notice = (PACKAGE_ROOT / "THIRD_PARTY_NOTICES.md").read_text(encoding="utf-8")
     _require("Radix Icons 1.3.2" in notice and "MIT License" in notice, "Missing Radix notice")
@@ -241,15 +233,15 @@ def _verify_icons_index(report: dict[str, Any]) -> None:
     names = load_glyph_names()
     _require(names == [glyph["name"] for glyph in report["glyphs"]], "Index names drifted from the report")
     index = INDEX_PATH.read_text(encoding="utf-8")
-    _require("const Map<String, IconData> fortalIconsByName" in index, "Missing fortalIconsByName")
+    _require("const Map<String, IconData> remixIconsByName" in index, "Missing remixIconsByName")
     _require(
-        "import 'package:remix_fortal/remix_fortal.dart'" not in index,
+        "import 'package:remix_ui_icons/remix_ui_icons.dart'" not in index,
         "Index must not import the main library",
     )
     for name in names:
         _require(
-            f"'{name}': FortalIcons.{name}" in index,
-            f"Index is missing FortalIcons.{name}",
+            f"'{name}': RemixIcons.{name}" in index,
+            f"Index is missing RemixIcons.{name}",
         )
 
 
@@ -269,10 +261,10 @@ def main() -> int:
         source_hashes = verify_sources()
         verify_generated(source_hashes)
     except (OSError, KeyError, TypeError, ValueError, VerificationError) as error:
-        print(f"Fortal icon verification failed: {error}", file=sys.stderr)
+        print(f"Remix icon verification failed: {error}", file=sys.stderr)
         return 1
 
-    print("Fortal icon artifacts verified: 318 glyphs, 313 lossless, 5 approved approximations.")
+    print("Remix icon artifacts verified: 318 glyphs, 313 lossless, 5 approved approximations.")
     return 0
 
 

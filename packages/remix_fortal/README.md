@@ -100,19 +100,20 @@ final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
 
 ## Icons
 
-Fortal includes the complete 318-glyph Radix Icons 1.3.2 catalog. Each glyph is
-a static `IconData` constant, allowing Flutter release builds to subset the font
-to referenced glyphs:
+Fortal depends on and re-exports the complete 318-glyph Radix Icons 1.3.2
+catalog from `remix_ui_icons`. `FortalIcons` remains a compatibility alias for
+`RemixIcons`, so existing references continue to compile and Flutter release
+builds can subset the font to referenced glyphs:
 
 ```dart
 const Icon(FortalIcons.check)
 ```
 
-There is deliberately no runtime name-to-icon map on `FortalIcons` itself
+There is deliberately no runtime name-to-icon map on `RemixIcons` itself
 because dynamic lookup would keep the full catalog reachable. Pass
 `FortalIcons` constants to any widget that accepts `IconData`; Fortal controls
-otherwise use Remix's inline Radix-shaped vector defaults. The font remains a
-declared `remix_fortal` package asset, so applications should measure their
+otherwise use Remix's inline Radix-shaped vector defaults. The font is a
+declared `remix_ui_icons` package asset, so applications should measure their
 release artifact rather than assume that referencing no catalog constants
 removes the asset entirely.
 
@@ -121,9 +122,9 @@ the opt-in index. An application that never imports it keeps full font
 subsetting:
 
 ```dart
-import 'package:remix_fortal/icons_index.dart';
+import 'package:remix_ui_icons/icons_index.dart';
 
-final icon = fortalIconsByName['check'];
+final icon = remixIconsByName['check'];
 ```
 
 The `shadow`, `shadowInner`, `shadowNone`, `shadowOuter`, and

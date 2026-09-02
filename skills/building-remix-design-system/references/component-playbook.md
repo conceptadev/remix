@@ -109,7 +109,7 @@ below is validated against them and should move with them:
 
 ```yaml
 dependencies:
-  remix: ^1.0.0-beta.6
+  remix: ^1.0.0-beta.7
   mix: ^2.2.0-beta.5
   mix_annotations: ^2.2.0-beta.1
 
