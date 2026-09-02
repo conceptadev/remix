@@ -1,0 +1,307 @@
+---
+title: Sidebar
+description: A controlled navigation panel with a fixed header, scrolling destinations, and a fixed footer
+keywords: [flutter, remix, sidebar, navigation, destination, accessibility, keyboard]
+---
+
+A sidebar presents sections of destinations that select an in-app view. It
+owns the panel that stacks a fixed header, a scrolling destination region, and
+a fixed footer. It also owns destination interaction, selected state
+presentation, ordinary Tab traversal, and navigation semantics. The
+application continues to own placement, width, safe areas, drawer or sheet
+presentation, routing, and dismissal behavior.
+
+## When to use this
+
+- **Application sidebars**: Select one page or workspace view
+- **Compact drawers**: Present the same panel inside a caller-owned overlay
+- **Settings navigation**: Move between in-place settings panels
+- **Sectioned navigation**: Group destinations under semantic headings
+
+Use `RemixLink` for a true URL or document link. Sidebar destinations behave as
+selected buttons: both Enter and Space activate them, and activation does not
+itself change routes or browser history.
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+enum AppPage { overview, customers, orders }
+
+class AppNavigation extends StatelessWidget {
+  const AppNavigation({
+    super.key,
+    required this.selectedPage,
+    required this.onSelected,
+  });
+
+  final AppPage? selectedPage;
+  final ValueChanged<AppPage> onSelected;
+
+  static const sections = [
+    RemixSidebarSection(
+      label: 'Workspace',
+      destinations: [
+        RemixSidebarDestination(
+          value: AppPage.overview,
+          label: 'Overview',
+          icon: Icons.space_dashboard_outlined,
+        ),
+      ],
+    ),
+    RemixSidebarSection(
+      label: 'Data',
+      destinations: [
+        RemixSidebarDestination(
+          value: AppPage.customers,
+          label: 'Customers',
+          icon: Icons.people_outline,
+        ),
+        RemixSidebarDestination(
+          value: AppPage.orders,
+          label: 'Orders',
+          icon: Icons.receipt_long_outlined,
+        ),
+      ],
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixSidebar<AppPage>(
+      header: const Text('Acme'),
+      sections: sections,
+      selectedValue: selectedPage,
+      onSelected: onSelected,
+      footer: const Text('Account'),
+      semanticLabel: 'Primary navigation',
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Controlled selection
+
+`selectedValue` is the only source of selected state. A null value means no
+destination is selected; otherwise it must match one destination. Activating
+an already-selected destination calls `onSelected` again. That reselection can
+close a drawer, reset nested content, or scroll the current view without
+inventing a second callback.
+
+Destination values must be unique across every section and retain stable
+equality and hash codes while rendered. At most one destination may request
+autofocus. Rebuild with new section and destination lists when content or order
+changes instead of mutating the supplied lists.
+
+`onSelected: null` and `enabled: false` both disable every destination while
+preserving selected styling. A destination's own `enabled` value combines with
+the panel-level state. Neither flag changes `header` or `footer` content.
+
+## Header, footer, and scrolling
+
+The panel fills the height it is given. The header and footer keep their own
+height and stay fixed, and the destination region takes the remaining space and
+scrolls when its content is taller.
+
+Given unbounded height the panel sizes to its content and scrolls nothing,
+which leaves scrolling to the host. Both slots are optional, so a sidebar with
+no header and no footer is a bare destination panel.
+
+<CodeGroup title="Host-owned placement" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+Widget buildSidebar({
+  required String? selectedPage,
+  required ValueChanged<String> selectPage,
+}) {
+  return SizedBox(
+    width: 256,
+    child: SafeArea(
+      child: RemixSidebar<String>(
+        header: const Text('Acme'),
+        sections: const [
+          RemixSidebarSection(
+            destinations: [
+              RemixSidebarDestination(
+                value: 'overview',
+                label: 'Overview',
+              ),
+            ],
+          ),
+        ],
+        selectedValue: selectedPage,
+        onSelected: selectPage,
+        footer: const Text('Account'),
+      ),
+    ),
+  );
+}
+```
+</CodeGroup>
+
+Ordinary use requires no Material ancestor, Overlay, Navigator, router, or
+SafeArea. Width, safe areas, drawer dismissal, and focus restoration stay with
+the caller that places the panel.
+
+## Semantics and keyboard behavior
+
+- The destination region publishes one `navigation` landmark, named by `semanticLabel` when supplied
+- `header` and `footer` sit outside that landmark, because brand, search, and account content are not destinations
+- Section labels are separate header nodes; visual text transforms preserve their authored accessible names
+- Empty sections and orphan headings are skipped
+- Every destination publishes one button node with selected state and no toggled state
+- A destination's `semanticLabel` replaces its visible label for accessibility services
+- `excludeSemantics` removes the landmark and destination subtree, and leaves header and footer semantics untouched
+- `Tab` and `Shift+Tab` traverse enabled destinations in visual order
+- `Enter` and `Space` activate the focused destination
+
+Arrow keys, Home, and End do not rove between destinations. This preserves
+ordinary document traversal instead of applying menu, tab, or toggle-group
+behavior.
+
+## Styling
+
+`SidebarStyler` exposes eight slots:
+
+| Slot | Responsibility |
+| --- | --- |
+| `container` | Layout and decoration for the panel that stacks the three regions |
+| `header` | Layout and decoration around the fixed header content |
+| `content` | Layout, padding, and section spacing inside the scrolling region |
+| `footer` | Layout and decoration around the fixed footer content |
+| `section` | Layout and decoration for one heading plus destination group |
+| `sectionLabel` | Heading typography and modifiers |
+| `destinations` | Layout and spacing between destination rows |
+| `destination` | Default `SidebarDestinationStyler` for every destination |
+
+The component forces the four structural FlexBox slots into source-order
+vertical layout after style resolution. Styles can change spacing, alignment,
+decoration, and sizing, but cannot reorder the panel regions, the navigation,
+or its semantics.
+
+A destination's `style` merges after the panel's default destination style, so
+local exceptions retain shared hover, focus, selected, and disabled variants.
+A raw `SidebarSpec` is authoritative and bypasses both fluent layers.
+
+<CodeGroup title="Fluent styling" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final style = SidebarStyler()
+    .color(const Color(0xFFFBFBFB))
+    .content(
+      FlexBoxStyler()
+          .spacing(12)
+          .padding(EdgeInsetsGeometryMix.all(12)),
+    )
+    .section(
+      FlexBoxStyler()
+          .spacing(6),
+    )
+    .destinations(
+      FlexBoxStyler()
+          .spacing(2),
+    )
+    .sectionLabel(
+      TextStyler()
+          .uppercase()
+          .fontSize(12),
+    )
+    .destination(
+      SidebarDestinationStyler()
+          .mainAxisSize(MainAxisSize.max)
+          .mainAxisAlignment(MainAxisAlignment.start),
+    );
+```
+</CodeGroup>
+
+`SidebarDestinationStyler` is the destination style type. It is a `ToggleStyler`
+because destinations reuse toggle interaction states, so depend on this name
+rather than on the toggle behind it.
+
+## Fortal recipe
+
+The public `FortalSidebar<T>` wrapper is produced by Mix code generation. Its
+recipe paints the solid panel surface with a trailing edge border, pads the
+scrolling destination region, and draws the footer divider. It uses compact
+uppercase section headings, a 12 logical-pixel section gap, a 2 logical-pixel
+destination gap, and full-width ghost `size2` toggle content inside a 48
+logical-pixel minimum target. The optional `highContrast` flag strengthens
+heading and selected-destination content without changing those metrics.
+
+The recipe sets no panel width and no header padding. Width belongs to the
+host, which must also size any drawer that presents the same panel, and header
+metrics usually have to match an application top bar.
+
+Sidebar is a Fortal extension, not a Radix Themes parity family, so it is
+intentionally absent from the generated Radix parity catalog.
+
+<CodeGroup title="Fortal sidebar" defaultLanguage="dart">
+```dart
+import 'package:remix/remix.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+const navigation = FortalSidebar<String>(
+  sections: [
+    RemixSidebarSection(
+      label: 'Workspace',
+      destinations: [
+        RemixSidebarDestination(
+          value: 'overview',
+          label: 'Overview',
+        ),
+      ],
+    ),
+  ],
+  selectedValue: 'overview',
+  semanticLabel: 'Primary navigation',
+);
+```
+</CodeGroup>
+
+## Constructors
+
+<CodeGroup title="Public API" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixSidebar<T> remixSidebarConstructor<T extends Object>({
+  Key? key,
+  Widget? header,
+  required List<RemixSidebarSection<T>> sections,
+  required T? selectedValue,
+  ValueChanged<T>? onSelected,
+  Widget? footer,
+  bool enabled = true,
+  String? semanticLabel,
+  bool excludeSemantics = false,
+  SidebarStyler style = const SidebarStyler.create(),
+  SidebarSpec? styleSpec,
+}) => throw UnimplementedError();
+
+RemixSidebarSection<T> remixSidebarSectionConstructor<T extends Object>({
+  String? label,
+  required List<RemixSidebarDestination<T>> destinations,
+}) => throw UnimplementedError();
+
+RemixSidebarDestination<T>
+    remixSidebarDestinationConstructor<T extends Object>({
+  required T value,
+  required String label,
+  IconData? icon,
+  String? semanticLabel,
+  bool enabled = true,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  SidebarDestinationStyler style = const SidebarDestinationStyler.create(),
+}) => throw UnimplementedError();
+```
+</CodeGroup>

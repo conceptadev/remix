@@ -771,10 +771,10 @@ void main() {
     final gallery = find.byType(GalleryNavigationPage);
     final example = find.descendant(
       of: gallery,
-      matching: find.byType(FortalNavigationList<String>),
+      matching: find.byType(FortalSidebar<String>),
     );
     expect(
-      tester.widget<FortalNavigationList<String>>(example).selectedValue,
+      tester.widget<FortalSidebar<String>>(example).selectedValue,
       'overview',
     );
 
@@ -787,7 +787,7 @@ void main() {
     await tester.pump();
 
     expect(
-      tester.widget<FortalNavigationList<String>>(example).selectedValue,
+      tester.widget<FortalSidebar<String>>(example).selectedValue,
       'activity',
     );
   });

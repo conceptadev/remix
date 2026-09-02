@@ -5,16 +5,16 @@ import 'package:remix_fortal/remix_fortal.dart';
 
 import '../../helpers/test_helpers.dart';
 
-const _sections = <RemixNavigationSection<String>>[
-  RemixNavigationSection(
+const _sections = <RemixSidebarSection<String>>[
+  RemixSidebarSection(
     label: 'Workspace',
     destinations: [
-      RemixNavigationDestination(
+      RemixSidebarDestination(
         value: 'overview',
         label: 'Overview',
         icon: Icons.space_dashboard_outlined,
       ),
-      RemixNavigationDestination(
+      RemixSidebarDestination(
         value: 'customers',
         label: 'Customers',
         icon: Icons.people_outline,
@@ -25,13 +25,48 @@ const _sections = <RemixNavigationSection<String>>[
 
 void main() {
   test('Fortal recipe exposes the dashboard navigation metrics', () {
-    final style = fortalNavigationListStyle();
+    final style = fortalSidebarStyle();
 
-    expect(style, isA<NavigationListStyler>());
+    expect(style, isA<SidebarStyler>());
     expect(style.$container, isNotNull);
+    expect(style.$content, isNotNull);
+    expect(style.$footer, isNotNull);
     expect(style.$sectionLabel, isNotNull);
     expect(style.$destinations, isNotNull);
     expect(style.$destination, isNotNull);
+
+    // Width and header padding belong to the host, not to the recipe.
+    expect(style.$header, isNull);
+  });
+
+  testWidgets('recipe paints the panel surface and the footer divider', (
+    tester,
+  ) async {
+    await tester.pumpRemixApp(
+      SizedBox(
+        height: 400,
+        width: 256,
+        child: FortalSidebar<String>(
+          header: const Text('Acme'),
+          sections: _sections,
+          selectedValue: 'overview',
+          onSelected: (_) {},
+          footer: const Text('Account'),
+        ),
+      ),
+    );
+
+    final spec = tester.resolvedSpecOf<SidebarSpec>(find.text('Overview'));
+    final panel = spec.container.spec.box?.spec.decoration as BoxDecoration?;
+    expect(panel?.color, isNotNull);
+    expect(panel?.border, isA<BorderDirectional>());
+    expect((panel?.border as BorderDirectional?)?.end.width, greaterThan(0));
+
+    final footer = spec.footer.spec.decoration as BoxDecoration?;
+    expect((footer?.border as Border?)?.top.width, greaterThan(0));
+
+    // The recipe pads the scrolling region rather than the panel.
+    expect(spec.content.spec.box?.spec.padding, isNotNull);
   });
 
   testWidgets('generated wrapper preserves generic navigation inputs', (
@@ -39,7 +74,7 @@ void main() {
   ) async {
     String? selected;
     await tester.pumpRemixApp(
-      FortalNavigationList<String>(
+      FortalSidebar<String>(
         sections: _sections,
         selectedValue: 'overview',
         onSelected: (value) => selected = value,
@@ -47,7 +82,7 @@ void main() {
       ),
     );
 
-    expect(find.byType(RemixNavigationList<String>), findsOneWidget);
+    expect(find.byType(RemixSidebar<String>), findsOneWidget);
     expect(find.text('WORKSPACE'), findsOneWidget);
 
     await tester.tap(find.text('Customers'));
@@ -59,7 +94,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpRemixApp(
-      FortalNavigationList<String>(
+      FortalSidebar<String>(
         sections: _sections,
         selectedValue: 'overview',
         onSelected: (_) {},
@@ -103,7 +138,7 @@ void main() {
     await tester.pumpRemixApp(
       SizedBox(
         width: 256,
-        child: FortalNavigationList<String>(
+        child: FortalSidebar<String>(
           sections: _sections,
           selectedValue: 'overview',
           onSelected: (_) {},
@@ -124,7 +159,7 @@ void main() {
   testWidgets('high contrast keeps selected content distinct', (tester) async {
     Future<Color?> selectedLabelColor(bool highContrast) async {
       await tester.pumpRemixApp(
-        FortalNavigationList<String>(
+        FortalSidebar<String>(
           sections: _sections,
           selectedValue: 'overview',
           onSelected: (_) {},

@@ -39,14 +39,11 @@ void main() {
       String? selected;
       await tester.pumpWidget(
         _widgetsHost(
-          RemixNavigationList<String>(
+          RemixSidebar<String>(
             sections: const [
-              RemixNavigationSection(
+              RemixSidebarSection(
                 destinations: [
-                  RemixNavigationDestination(
-                    value: 'overview',
-                    label: 'Overview',
-                  ),
+                  RemixSidebarDestination(value: 'overview', label: 'Overview'),
                 ],
               ),
             ],

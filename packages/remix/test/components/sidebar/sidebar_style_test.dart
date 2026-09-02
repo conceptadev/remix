@@ -5,25 +5,31 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
 
-const _destinations = <RemixNavigationDestination<String>>[
-  RemixNavigationDestination(value: 'overview', label: 'Overview'),
-  RemixNavigationDestination(value: 'customers', label: 'Customers'),
+const _destinations = <RemixSidebarDestination<String>>[
+  RemixSidebarDestination(value: 'overview', label: 'Overview'),
+  RemixSidebarDestination(value: 'customers', label: 'Customers'),
 ];
 
-const _sections = <RemixNavigationSection<String>>[
-  RemixNavigationSection(destinations: _destinations),
+const _sections = <RemixSidebarSection<String>>[
+  RemixSidebarSection(destinations: _destinations),
 ];
 
 void main() {
-  group('NavigationListStyler', () {
+  group('SidebarStyler', () {
     test('constructor retains every anatomy style', () {
       final container = FlexBoxStyler();
+      final header = BoxStyler();
+      final content = FlexBoxStyler();
+      final footer = BoxStyler();
       final section = FlexBoxStyler();
       final sectionLabel = TextStyler();
       final destinations = FlexBoxStyler();
-      final destination = ToggleStyler();
-      final style = NavigationListStyler(
+      final destination = SidebarDestinationStyler();
+      final style = SidebarStyler(
         container: container,
+        header: header,
+        content: content,
+        footer: footer,
         section: section,
         sectionLabel: sectionLabel,
         destinations: destinations,
@@ -31,15 +37,27 @@ void main() {
       );
 
       expect(style.$container, Prop.maybeMix(container));
+      expect(style.$header, Prop.maybeMix(header));
+      expect(style.$content, Prop.maybeMix(content));
+      expect(style.$footer, Prop.maybeMix(footer));
       expect(style.$section, Prop.maybeMix(section));
       expect(style.$sectionLabel, Prop.maybeMix(sectionLabel));
       expect(style.$destinations, Prop.maybeMix(destinations));
       expect(style.$destination, Prop.maybeMix(destination));
     });
 
+    test('SidebarDestinationStyler names the destination style type', () {
+      expect(SidebarDestinationStyler(), isA<ToggleStyler>());
+      const style = SidebarDestinationStyler.create();
+      expect(
+        const RemixSidebarDestination(value: 'a', label: 'A').style,
+        style,
+      );
+    });
+
     styleMethodTest(
       'forwards the root FlexBox surface',
-      initial: NavigationListStyler(),
+      initial: SidebarStyler(),
       modify: (style) => style.padding(.all(12)).spacing(8),
       expect: (style) {
         expect(style.$container, isNotNull);
@@ -47,29 +65,29 @@ void main() {
     );
 
     test('styleFrom and generic call preserve the public type', () {
-      expect(RemixNavigationList.styleFrom(), isA<NavigationListStyler>());
+      expect(RemixSidebar.styleFrom(), isA<SidebarStyler>());
 
-      final widget = NavigationListStyler().call<String>(
+      final widget = SidebarStyler().call<String>(
         sections: _sections,
         selectedValue: 'overview',
         onSelected: (_) {},
       );
 
-      expect(widget, isA<RemixNavigationList<String>>());
-      expect(widget.style, isA<NavigationListStyler>());
+      expect(widget, isA<RemixSidebar<String>>());
+      expect(widget.style, isA<SidebarStyler>());
     });
   });
 
-  group('RemixNavigationList styling', () {
+  group('RemixSidebar styling', () {
     testWidgets('default selected variants resolve in each toggle state', (
       tester,
     ) async {
       await tester.pumpRemixApp(
-        RemixNavigationList<String>(
+        RemixSidebar<String>(
           sections: _sections,
           selectedValue: 'overview',
           onSelected: (_) {},
-          style: NavigationListStyler(
+          style: SidebarStyler(
             destination: ToggleStyler()
                 .labelColor(Colors.red)
                 .onSelected(ToggleStyler().labelColor(Colors.blue)),
@@ -91,11 +109,11 @@ void main() {
       tester,
     ) async {
       await tester.pumpRemixApp(
-        RemixNavigationList<String>(
+        RemixSidebar<String>(
           sections: [
-            RemixNavigationSection(
+            RemixSidebarSection(
               destinations: [
-                RemixNavigationDestination(
+                RemixSidebarDestination(
                   value: 'overview',
                   label: 'Overview',
                   style: ToggleStyler().labelColor(Colors.green),
@@ -105,7 +123,7 @@ void main() {
           ],
           selectedValue: 'overview',
           onSelected: (_) {},
-          style: NavigationListStyler(
+          style: SidebarStyler(
             destination: ToggleStyler().labelColor(Colors.red),
           ),
         ),
@@ -121,13 +139,13 @@ void main() {
       tester,
     ) async {
       var fluentBuilds = 0;
-      final fluentStyle = NavigationListStyler().onBuilder((context) {
+      final fluentStyle = SidebarStyler().onBuilder((context) {
         fluentBuilds += 1;
-        return NavigationListStyler(
+        return SidebarStyler(
           destination: ToggleStyler().labelColor(Colors.blue),
         );
       });
-      const rawSpec = NavigationListSpec(
+      const rawSpec = SidebarSpec(
         destination: StyleSpec(
           spec: ToggleSpec(
             label: StyleSpec(
@@ -138,11 +156,11 @@ void main() {
       );
 
       await tester.pumpRemixApp(
-        RemixNavigationList<String>(
+        RemixSidebar<String>(
           sections: [
-            RemixNavigationSection(
+            RemixSidebarSection(
               destinations: [
-                RemixNavigationDestination(
+                RemixSidebarDestination(
                   value: 'overview',
                   label: 'Overview',
                   style: ToggleStyler().labelColor(Colors.green),
@@ -180,13 +198,13 @@ void main() {
           );
 
           await tester.pumpRemixApp(
-            RemixNavigationList<String>(
+            RemixSidebar<String>(
               sections: _sections,
               selectedValue: 'overview',
               onSelected: (_) {},
               style: useRawSpec
-                  ? NavigationListStyler()
-                  : NavigationListStyler(
+                  ? SidebarStyler()
+                  : SidebarStyler(
                       container: FlexBoxStyler()
                           .direction(Axis.horizontal)
                           .verticalDirection(VerticalDirection.up),
@@ -198,7 +216,7 @@ void main() {
                           .verticalDirection(VerticalDirection.up),
                     ),
               styleSpec: useRawSpec
-                  ? const NavigationListSpec(
+                  ? const SidebarSpec(
                       container: reversedHorizontal,
                       section: reversedHorizontal,
                       destinations: reversedHorizontal,
@@ -220,19 +238,19 @@ void main() {
         '${enabled ? 'null callback' : 'enabled false'} resolves the root disabled variant',
         (tester) async {
           await tester.pumpRemixApp(
-            RemixNavigationList<String>(
+            RemixSidebar<String>(
               sections: _sections,
               selectedValue: 'overview',
               onSelected: enabled ? null : (_) {},
               enabled: enabled,
-              style: NavigationListStyler()
+              style: SidebarStyler()
                   .color(Colors.red)
-                  .onDisabled(NavigationListStyler().color(Colors.grey)),
+                  .onDisabled(SidebarStyler().color(Colors.grey)),
             ),
           );
 
           final container = tester.widget<FlexBox>(
-            find.byKey(const ValueKey('RemixNavigationList.container')),
+            find.byKey(const ValueKey('RemixSidebar.container')),
           );
           final decoration =
               container.styleSpec!.spec.box?.spec.decoration as BoxDecoration?;

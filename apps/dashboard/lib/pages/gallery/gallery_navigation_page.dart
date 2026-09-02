@@ -16,10 +16,10 @@ class GalleryNavigationPage extends StatelessWidget {
         'Sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
     sections: [
       const GallerySection(
-        label: 'Navigation list',
+        label: 'Sidebar',
         description:
-            'A controlled Fortal sidebar recipe with headings, selected state, and ordinary Tab traversal.',
-        child: _NavigationListDemo(),
+            'A controlled Fortal sidebar with a fixed header and footer, a scrolling destination region, headings, selected state, and ordinary Tab traversal.',
+        child: _SidebarDemo(),
       ),
       GallerySection(
         label: 'Tabs',
@@ -61,34 +61,34 @@ class GalleryNavigationPage extends StatelessWidget {
   );
 }
 
-class _NavigationListDemo extends StatefulWidget {
-  const _NavigationListDemo();
+class _SidebarDemo extends StatefulWidget {
+  const _SidebarDemo();
 
   @override
-  State<_NavigationListDemo> createState() => _NavigationListDemoState();
+  State<_SidebarDemo> createState() => _SidebarDemoState();
 }
 
-class _NavigationListDemoState extends State<_NavigationListDemo> {
-  static const _sections = <RemixNavigationSection<String>>[
-    RemixNavigationSection(
+class _SidebarDemoState extends State<_SidebarDemo> {
+  static const _sections = <RemixSidebarSection<String>>[
+    RemixSidebarSection(
       label: 'Workspace',
       destinations: [
-        RemixNavigationDestination(
+        RemixSidebarDestination(
           value: 'overview',
           label: 'Overview',
           icon: Icons.space_dashboard_outlined,
         ),
-        RemixNavigationDestination(
+        RemixSidebarDestination(
           value: 'activity',
           label: 'Activity',
           icon: Icons.timeline_outlined,
         ),
       ],
     ),
-    RemixNavigationSection(
+    RemixSidebarSection(
       label: 'Manage',
       destinations: [
-        RemixNavigationDestination(
+        RemixSidebarDestination(
           value: 'settings',
           label: 'Settings',
           icon: Icons.settings_outlined,
@@ -100,13 +100,48 @@ class _NavigationListDemoState extends State<_NavigationListDemo> {
   String _selected = 'overview';
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    width: 280,
-    child: FortalNavigationList<String>(
-      sections: _sections,
-      selectedValue: _selected,
-      onSelected: (value) => setState(() => _selected = value),
-      semanticLabel: 'Gallery navigation example',
+  // Align loosens the stretched section constraints so the panel keeps the
+  // width and height a host would give it. The bounded height shows the
+  // destination region scrolling while the header and footer stay put.
+  Widget build(BuildContext context) => Align(
+    alignment: Alignment.centerLeft,
+    child: SizedBox(
+      width: 280,
+      height: 320,
+      child: FortalSidebar<String>(
+        header: const _SidebarDemoHeader(),
+        sections: _sections,
+        selectedValue: _selected,
+        onSelected: (value) => setState(() => _selected = value),
+        footer: const _SidebarDemoFooter(),
+        semanticLabel: 'Gallery navigation example',
+      ),
+    ),
+  );
+}
+
+class _SidebarDemoHeader extends StatelessWidget {
+  const _SidebarDemoHeader();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    child: const FortalText('Acme', size: .size4, weight: .bold),
+  );
+}
+
+class _SidebarDemoFooter extends StatelessWidget {
+  const _SidebarDemoFooter();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.all(14),
+    child: Row(
+      spacing: 10,
+      children: [
+        const FortalAvatar(label: 'AC', size: .size1),
+        const FortalText('Ada Chen', size: .size2, weight: .medium),
+      ],
     ),
   );
 }

@@ -8,7 +8,7 @@ import '../widgets/toast.dart';
 import '../widgets/typography.dart';
 import 'dashboard_page.dart';
 import 'dashboard_shell_layout.dart';
-import 'navigation_list.dart';
+import 'sidebar_sections.dart';
 
 class Sidebar extends StatelessWidget {
   const Sidebar({super.key, required this.selected, required this.onSelected});
@@ -18,38 +18,28 @@ class Sidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Box(
-      style: BoxStyler()
-          .width(dashboardSidebarWidth)
-          .color(FortalTokens.colorPanelSolid())
-          .border(
-            BoxBorderMix.right(
-              BorderSideMix(
-                color: FortalTokens.grayA5(),
-                width: FortalTokens.borderWidth1(),
-              ),
-            ),
+    // Placement stays here: RemixSidebar owns no display edge. The panel paints
+    // to that edge, so device insets become panel padding rather than a
+    // SafeArea wrapped around the painted surface.
+    final insets = MediaQuery.paddingOf(context);
+
+    return SizedBox(
+      width: dashboardSidebarWidth,
+      child: RemixSidebar<DashboardPage>(
+        style: fortalSidebarStyle().padding(
+          EdgeInsetsGeometryMix.only(
+            left: insets.left,
+            right: insets.right,
+            top: insets.top,
+            bottom: insets.bottom,
           ),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: .stretch,
-          children: [
-            const _Brand(),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(12, 16, 12, 20),
-                child: FortalNavigationList<DashboardPage>(
-                  sections: dashboardNavSections,
-                  selectedValue: selected,
-                  onSelected: onSelected,
-                  semanticLabel: 'Dashboard navigation',
-                ),
-              ),
-            ),
-            const FortalDivider(size: .size4),
-            const _Profile(),
-          ],
         ),
+        header: const _Brand(),
+        sections: dashboardSidebarSections,
+        selectedValue: selected,
+        onSelected: onSelected,
+        footer: const _Profile(),
+        semanticLabel: 'Dashboard navigation',
       ),
     );
   }

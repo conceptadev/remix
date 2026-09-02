@@ -1,31 +1,40 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'navigation_list.dart';
+part of 'sidebar.dart';
 
 // **************************************************************************
 // SpecGenerator
 // **************************************************************************
 
-mixin _$NavigationListSpec implements Spec<NavigationListSpec>, Diagnosticable {
+mixin _$SidebarSpec implements Spec<SidebarSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
+  StyleSpec<BoxSpec> get header;
+  StyleSpec<FlexBoxSpec> get content;
+  StyleSpec<BoxSpec> get footer;
   StyleSpec<FlexBoxSpec> get section;
   StyleSpec<TextSpec> get sectionLabel;
   StyleSpec<FlexBoxSpec> get destinations;
   StyleSpec<ToggleSpec> get destination;
 
   @override
-  Type get type => NavigationListSpec;
+  Type get type => SidebarSpec;
 
   @override
-  NavigationListSpec copyWith({
+  SidebarSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<BoxSpec>? header,
+    StyleSpec<FlexBoxSpec>? content,
+    StyleSpec<BoxSpec>? footer,
     StyleSpec<FlexBoxSpec>? section,
     StyleSpec<TextSpec>? sectionLabel,
     StyleSpec<FlexBoxSpec>? destinations,
     StyleSpec<ToggleSpec>? destination,
   }) {
-    return NavigationListSpec(
+    return SidebarSpec(
       container: container ?? this.container,
+      header: header ?? this.header,
+      content: content ?? this.content,
+      footer: footer ?? this.footer,
       section: section ?? this.section,
       sectionLabel: sectionLabel ?? this.sectionLabel,
       destinations: destinations ?? this.destinations,
@@ -34,9 +43,12 @@ mixin _$NavigationListSpec implements Spec<NavigationListSpec>, Diagnosticable {
   }
 
   @override
-  NavigationListSpec lerp(NavigationListSpec? other, double t) {
-    return NavigationListSpec(
+  SidebarSpec lerp(SidebarSpec? other, double t) {
+    return SidebarSpec(
       container: container.lerp(other?.container, t),
+      header: header.lerp(other?.header, t),
+      content: content.lerp(other?.content, t),
+      footer: footer.lerp(other?.footer, t),
       section: section.lerp(other?.section, t),
       sectionLabel: sectionLabel.lerp(other?.sectionLabel, t),
       destinations: destinations.lerp(other?.destinations, t),
@@ -47,6 +59,9 @@ mixin _$NavigationListSpec implements Spec<NavigationListSpec>, Diagnosticable {
   @override
   List<Object?> get props => [
     container,
+    header,
+    content,
+    footer,
     section,
     sectionLabel,
     destinations,
@@ -56,7 +71,7 @@ mixin _$NavigationListSpec implements Spec<NavigationListSpec>, Diagnosticable {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is NavigationListSpec &&
+        other is SidebarSpec &&
             runtimeType == other.runtimeType &&
             propsEquals(props, other.props);
   }
@@ -94,6 +109,9 @@ mixin _$NavigationListSpec implements Spec<NavigationListSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('header', header))
+      ..add(DiagnosticsProperty('content', content))
+      ..add(DiagnosticsProperty('footer', footer))
       ..add(DiagnosticsProperty('section', section))
       ..add(DiagnosticsProperty('sectionLabel', sectionLabel))
       ..add(DiagnosticsProperty('destinations', destinations))
@@ -102,26 +120,31 @@ mixin _$NavigationListSpec implements Spec<NavigationListSpec>, Diagnosticable {
 }
 
 @Deprecated(
-  'Rename to `_\$NavigationListSpec` and migrate the class declaration to `class NavigationListSpec with _\$NavigationListSpec`. The `_\$NavigationListSpecMethods` alias will be removed in mix_generator 3.0.',
+  'Rename to `_\$SidebarSpec` and migrate the class declaration to `class SidebarSpec with _\$SidebarSpec`. The `_\$SidebarSpecMethods` alias will be removed in mix_generator 3.0.',
 )
-typedef _$NavigationListSpecMethods = _$NavigationListSpec; // ignore: unused_element
+typedef _$SidebarSpecMethods = _$SidebarSpec; // ignore: unused_element
 
 // **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 
-class NavigationListStyler
-    extends MixStyler<NavigationListStyler, NavigationListSpec>
-    with RemixBoxStylerMixin<NavigationListStyler>
+class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
+    with RemixBoxStylerMixin<SidebarStyler>
     implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<StyleSpec<BoxSpec>>? $header;
+  final Prop<StyleSpec<FlexBoxSpec>>? $content;
+  final Prop<StyleSpec<BoxSpec>>? $footer;
   final Prop<StyleSpec<FlexBoxSpec>>? $section;
   final Prop<StyleSpec<TextSpec>>? $sectionLabel;
   final Prop<StyleSpec<FlexBoxSpec>>? $destinations;
   final Prop<StyleSpec<ToggleSpec>>? $destination;
 
-  const NavigationListStyler.create({
+  const SidebarStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<StyleSpec<BoxSpec>>? header,
+    Prop<StyleSpec<FlexBoxSpec>>? content,
+    Prop<StyleSpec<BoxSpec>>? footer,
     Prop<StyleSpec<FlexBoxSpec>>? section,
     Prop<StyleSpec<TextSpec>>? sectionLabel,
     Prop<StyleSpec<FlexBoxSpec>>? destinations,
@@ -130,22 +153,31 @@ class NavigationListStyler
     super.modifier,
     super.animation,
   }) : $container = container,
+       $header = header,
+       $content = content,
+       $footer = footer,
        $section = section,
        $sectionLabel = sectionLabel,
        $destinations = destinations,
        $destination = destination;
 
-  NavigationListStyler({
+  SidebarStyler({
     FlexBoxStyler? container,
+    BoxStyler? header,
+    FlexBoxStyler? content,
+    BoxStyler? footer,
     FlexBoxStyler? section,
     TextStyler? sectionLabel,
     FlexBoxStyler? destinations,
     ToggleStyler? destination,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
-    List<VariantStyle<NavigationListSpec>>? variants,
+    List<VariantStyle<SidebarSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
+         header: Prop.maybeMix(header),
+         content: Prop.maybeMix(content),
+         footer: Prop.maybeMix(footer),
          section: Prop.maybeMix(section),
          sectionLabel: Prop.maybeMix(sectionLabel),
          destinations: Prop.maybeMix(destinations),
@@ -155,112 +187,110 @@ class NavigationListStyler
          animation: animation,
        );
 
-  factory NavigationListStyler.container(FlexBoxStyler value) =>
-      NavigationListStyler().container(value);
-  factory NavigationListStyler.section(FlexBoxStyler value) =>
-      NavigationListStyler().section(value);
-  factory NavigationListStyler.sectionLabel(TextStyler value) =>
-      NavigationListStyler().sectionLabel(value);
-  factory NavigationListStyler.destinations(FlexBoxStyler value) =>
-      NavigationListStyler().destinations(value);
-  factory NavigationListStyler.destination(ToggleStyler value) =>
-      NavigationListStyler().destination(value);
-  factory NavigationListStyler.color(Color value) =>
-      NavigationListStyler().color(value);
-  factory NavigationListStyler.gradient(GradientMix value) =>
-      NavigationListStyler().gradient(value);
-  factory NavigationListStyler.border(BoxBorderMix value) =>
-      NavigationListStyler().border(value);
-  factory NavigationListStyler.borderRadius(BorderRadiusGeometryMix value) =>
-      NavigationListStyler().borderRadius(value);
-  factory NavigationListStyler.elevation(ElevationShadow value) =>
-      NavigationListStyler().elevation(value);
-  factory NavigationListStyler.shadow(BoxShadowMix value) =>
-      NavigationListStyler().shadow(value);
-  factory NavigationListStyler.shadows(List<BoxShadowMix> value) =>
-      NavigationListStyler().shadows(value);
-  factory NavigationListStyler.width(double value) =>
-      NavigationListStyler().width(value);
-  factory NavigationListStyler.height(double value) =>
-      NavigationListStyler().height(value);
-  factory NavigationListStyler.size(double width, double height) =>
-      NavigationListStyler().size(width, height);
-  factory NavigationListStyler.minWidth(double value) =>
-      NavigationListStyler().minWidth(value);
-  factory NavigationListStyler.maxWidth(double value) =>
-      NavigationListStyler().maxWidth(value);
-  factory NavigationListStyler.minHeight(double value) =>
-      NavigationListStyler().minHeight(value);
-  factory NavigationListStyler.maxHeight(double value) =>
-      NavigationListStyler().maxHeight(value);
-  factory NavigationListStyler.scale(
-    double scale, {
-    Alignment alignment = .center,
-  }) => NavigationListStyler().scale(scale, alignment: alignment);
-  factory NavigationListStyler.rotate(
+  factory SidebarStyler.container(FlexBoxStyler value) =>
+      SidebarStyler().container(value);
+  factory SidebarStyler.header(BoxStyler value) =>
+      SidebarStyler().header(value);
+  factory SidebarStyler.content(FlexBoxStyler value) =>
+      SidebarStyler().content(value);
+  factory SidebarStyler.footer(BoxStyler value) =>
+      SidebarStyler().footer(value);
+  factory SidebarStyler.section(FlexBoxStyler value) =>
+      SidebarStyler().section(value);
+  factory SidebarStyler.sectionLabel(TextStyler value) =>
+      SidebarStyler().sectionLabel(value);
+  factory SidebarStyler.destinations(FlexBoxStyler value) =>
+      SidebarStyler().destinations(value);
+  factory SidebarStyler.destination(ToggleStyler value) =>
+      SidebarStyler().destination(value);
+  factory SidebarStyler.color(Color value) => SidebarStyler().color(value);
+  factory SidebarStyler.gradient(GradientMix value) =>
+      SidebarStyler().gradient(value);
+  factory SidebarStyler.border(BoxBorderMix value) =>
+      SidebarStyler().border(value);
+  factory SidebarStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      SidebarStyler().borderRadius(value);
+  factory SidebarStyler.elevation(ElevationShadow value) =>
+      SidebarStyler().elevation(value);
+  factory SidebarStyler.shadow(BoxShadowMix value) =>
+      SidebarStyler().shadow(value);
+  factory SidebarStyler.shadows(List<BoxShadowMix> value) =>
+      SidebarStyler().shadows(value);
+  factory SidebarStyler.width(double value) => SidebarStyler().width(value);
+  factory SidebarStyler.height(double value) => SidebarStyler().height(value);
+  factory SidebarStyler.size(double width, double height) =>
+      SidebarStyler().size(width, height);
+  factory SidebarStyler.minWidth(double value) =>
+      SidebarStyler().minWidth(value);
+  factory SidebarStyler.maxWidth(double value) =>
+      SidebarStyler().maxWidth(value);
+  factory SidebarStyler.minHeight(double value) =>
+      SidebarStyler().minHeight(value);
+  factory SidebarStyler.maxHeight(double value) =>
+      SidebarStyler().maxHeight(value);
+  factory SidebarStyler.scale(double scale, {Alignment alignment = .center}) =>
+      SidebarStyler().scale(scale, alignment: alignment);
+  factory SidebarStyler.rotate(
     double radians, {
     Alignment alignment = .center,
-  }) => NavigationListStyler().rotate(radians, alignment: alignment);
-  factory NavigationListStyler.translate(
-    double x,
-    double y, [
-    double z = 0.0,
-  ]) => NavigationListStyler().translate(x, y, z);
-  factory NavigationListStyler.skew(double skewX, double skewY) =>
-      NavigationListStyler().skew(skewX, skewY);
-  factory NavigationListStyler.textStyle(TextStyler value) =>
-      NavigationListStyler().textStyle(value);
-  factory NavigationListStyler.image(DecorationImageMix value) =>
-      NavigationListStyler().image(value);
-  factory NavigationListStyler.shape(ShapeBorderMix value) =>
-      NavigationListStyler().shape(value);
-  factory NavigationListStyler.backgroundImage(
+  }) => SidebarStyler().rotate(radians, alignment: alignment);
+  factory SidebarStyler.translate(double x, double y, [double z = 0.0]) =>
+      SidebarStyler().translate(x, y, z);
+  factory SidebarStyler.skew(double skewX, double skewY) =>
+      SidebarStyler().skew(skewX, skewY);
+  factory SidebarStyler.textStyle(TextStyler value) =>
+      SidebarStyler().textStyle(value);
+  factory SidebarStyler.image(DecorationImageMix value) =>
+      SidebarStyler().image(value);
+  factory SidebarStyler.shape(ShapeBorderMix value) =>
+      SidebarStyler().shape(value);
+  factory SidebarStyler.backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => NavigationListStyler().backgroundImage(
+  }) => SidebarStyler().backgroundImage(
     image,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory NavigationListStyler.backgroundImageUrl(
+  factory SidebarStyler.backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => NavigationListStyler().backgroundImageUrl(
+  }) => SidebarStyler().backgroundImageUrl(
     url,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory NavigationListStyler.backgroundImageAsset(
+  factory SidebarStyler.backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
     ImageRepeat repeat = .noRepeat,
-  }) => NavigationListStyler().backgroundImageAsset(
+  }) => SidebarStyler().backgroundImageAsset(
     path,
     fit: fit,
     alignment: alignment,
     repeat: repeat,
   );
-  factory NavigationListStyler.linearGradient({
+  factory SidebarStyler.linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => NavigationListStyler().linearGradient(
+  }) => SidebarStyler().linearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory NavigationListStyler.radialGradient({
+  factory SidebarStyler.radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -268,7 +298,7 @@ class NavigationListStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => NavigationListStyler().radialGradient(
+  }) => SidebarStyler().radialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -277,14 +307,14 @@ class NavigationListStyler
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory NavigationListStyler.sweepGradient({
+  factory SidebarStyler.sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => NavigationListStyler().sweepGradient(
+  }) => SidebarStyler().sweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -292,20 +322,20 @@ class NavigationListStyler
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory NavigationListStyler.foregroundLinearGradient({
+  factory SidebarStyler.foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
     AlignmentGeometry? end,
     TileMode? tileMode,
-  }) => NavigationListStyler().foregroundLinearGradient(
+  }) => SidebarStyler().foregroundLinearGradient(
     colors: colors,
     stops: stops,
     begin: begin,
     end: end,
     tileMode: tileMode,
   );
-  factory NavigationListStyler.foregroundRadialGradient({
+  factory SidebarStyler.foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -313,7 +343,7 @@ class NavigationListStyler
     AlignmentGeometry? focal,
     double? focalRadius,
     TileMode? tileMode,
-  }) => NavigationListStyler().foregroundRadialGradient(
+  }) => SidebarStyler().foregroundRadialGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -322,14 +352,14 @@ class NavigationListStyler
     focalRadius: focalRadius,
     tileMode: tileMode,
   );
-  factory NavigationListStyler.foregroundSweepGradient({
+  factory SidebarStyler.foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
     double? startAngle,
     double? endAngle,
     TileMode? tileMode,
-  }) => NavigationListStyler().foregroundSweepGradient(
+  }) => SidebarStyler().foregroundSweepGradient(
     colors: colors,
     stops: stops,
     center: center,
@@ -337,128 +367,127 @@ class NavigationListStyler
     endAngle: endAngle,
     tileMode: tileMode,
   );
-  factory NavigationListStyler.row() => NavigationListStyler().row();
-  factory NavigationListStyler.column() => NavigationListStyler().column();
-  factory NavigationListStyler.alignment(AlignmentGeometry value) =>
-      NavigationListStyler().alignment(value);
-  factory NavigationListStyler.padding(EdgeInsetsGeometryMix value) =>
-      NavigationListStyler().padding(value);
-  factory NavigationListStyler.margin(EdgeInsetsGeometryMix value) =>
-      NavigationListStyler().margin(value);
-  factory NavigationListStyler.constraints(BoxConstraintsMix value) =>
-      NavigationListStyler().constraints(value);
-  factory NavigationListStyler.decoration(DecorationMix value) =>
-      NavigationListStyler().decoration(value);
-  factory NavigationListStyler.foregroundDecoration(DecorationMix value) =>
-      NavigationListStyler().foregroundDecoration(value);
-  factory NavigationListStyler.clipBehavior(Clip value) =>
-      NavigationListStyler().clipBehavior(value);
-  factory NavigationListStyler.direction(Axis value) =>
-      NavigationListStyler().direction(value);
-  factory NavigationListStyler.mainAxisAlignment(MainAxisAlignment value) =>
-      NavigationListStyler().mainAxisAlignment(value);
-  factory NavigationListStyler.crossAxisAlignment(CrossAxisAlignment value) =>
-      NavigationListStyler().crossAxisAlignment(value);
-  factory NavigationListStyler.mainAxisSize(MainAxisSize value) =>
-      NavigationListStyler().mainAxisSize(value);
-  factory NavigationListStyler.spacing(double value) =>
-      NavigationListStyler().spacing(value);
-  factory NavigationListStyler.verticalDirection(VerticalDirection value) =>
-      NavigationListStyler().verticalDirection(value);
-  factory NavigationListStyler.textDirection(TextDirection value) =>
-      NavigationListStyler().textDirection(value);
-  factory NavigationListStyler.textBaseline(TextBaseline value) =>
-      NavigationListStyler().textBaseline(value);
-  factory NavigationListStyler.transform(
+  factory SidebarStyler.row() => SidebarStyler().row();
+  factory SidebarStyler.column() => SidebarStyler().column();
+  factory SidebarStyler.alignment(AlignmentGeometry value) =>
+      SidebarStyler().alignment(value);
+  factory SidebarStyler.padding(EdgeInsetsGeometryMix value) =>
+      SidebarStyler().padding(value);
+  factory SidebarStyler.margin(EdgeInsetsGeometryMix value) =>
+      SidebarStyler().margin(value);
+  factory SidebarStyler.constraints(BoxConstraintsMix value) =>
+      SidebarStyler().constraints(value);
+  factory SidebarStyler.decoration(DecorationMix value) =>
+      SidebarStyler().decoration(value);
+  factory SidebarStyler.foregroundDecoration(DecorationMix value) =>
+      SidebarStyler().foregroundDecoration(value);
+  factory SidebarStyler.clipBehavior(Clip value) =>
+      SidebarStyler().clipBehavior(value);
+  factory SidebarStyler.direction(Axis value) =>
+      SidebarStyler().direction(value);
+  factory SidebarStyler.mainAxisAlignment(MainAxisAlignment value) =>
+      SidebarStyler().mainAxisAlignment(value);
+  factory SidebarStyler.crossAxisAlignment(CrossAxisAlignment value) =>
+      SidebarStyler().crossAxisAlignment(value);
+  factory SidebarStyler.mainAxisSize(MainAxisSize value) =>
+      SidebarStyler().mainAxisSize(value);
+  factory SidebarStyler.spacing(double value) => SidebarStyler().spacing(value);
+  factory SidebarStyler.verticalDirection(VerticalDirection value) =>
+      SidebarStyler().verticalDirection(value);
+  factory SidebarStyler.textDirection(TextDirection value) =>
+      SidebarStyler().textDirection(value);
+  factory SidebarStyler.textBaseline(TextBaseline value) =>
+      SidebarStyler().textBaseline(value);
+  factory SidebarStyler.transform(
     Matrix4 value, {
     Alignment alignment = .center,
-  }) => NavigationListStyler().transform(value, alignment: alignment);
+  }) => SidebarStyler().transform(value, alignment: alignment);
 
-  NavigationListStyler color(Color value) {
+  SidebarStyler color(Color value) {
     return container(FlexBoxStyler().color(value));
   }
 
-  NavigationListStyler gradient(GradientMix value) {
+  SidebarStyler gradient(GradientMix value) {
     return container(FlexBoxStyler().gradient(value));
   }
 
-  NavigationListStyler border(BoxBorderMix value) {
+  SidebarStyler border(BoxBorderMix value) {
     return container(FlexBoxStyler().border(value));
   }
 
-  NavigationListStyler borderRadius(BorderRadiusGeometryMix value) {
+  SidebarStyler borderRadius(BorderRadiusGeometryMix value) {
     return container(FlexBoxStyler().borderRadius(value));
   }
 
-  NavigationListStyler elevation(ElevationShadow value) {
+  SidebarStyler elevation(ElevationShadow value) {
     return container(FlexBoxStyler().elevation(value));
   }
 
-  NavigationListStyler shadow(BoxShadowMix value) {
+  SidebarStyler shadow(BoxShadowMix value) {
     return container(FlexBoxStyler().shadow(value));
   }
 
-  NavigationListStyler shadows(List<BoxShadowMix> value) {
+  SidebarStyler shadows(List<BoxShadowMix> value) {
     return container(FlexBoxStyler().shadows(value));
   }
 
-  NavigationListStyler width(double value) {
+  SidebarStyler width(double value) {
     return container(FlexBoxStyler().width(value));
   }
 
-  NavigationListStyler height(double value) {
+  SidebarStyler height(double value) {
     return container(FlexBoxStyler().height(value));
   }
 
-  NavigationListStyler size(double width, double height) {
+  SidebarStyler size(double width, double height) {
     return container(FlexBoxStyler().size(width, height));
   }
 
-  NavigationListStyler minWidth(double value) {
+  SidebarStyler minWidth(double value) {
     return container(FlexBoxStyler().minWidth(value));
   }
 
-  NavigationListStyler maxWidth(double value) {
+  SidebarStyler maxWidth(double value) {
     return container(FlexBoxStyler().maxWidth(value));
   }
 
-  NavigationListStyler minHeight(double value) {
+  SidebarStyler minHeight(double value) {
     return container(FlexBoxStyler().minHeight(value));
   }
 
-  NavigationListStyler maxHeight(double value) {
+  SidebarStyler maxHeight(double value) {
     return container(FlexBoxStyler().maxHeight(value));
   }
 
-  NavigationListStyler scale(double scale, {Alignment alignment = .center}) {
+  SidebarStyler scale(double scale, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().scale(scale, alignment: alignment));
   }
 
-  NavigationListStyler rotate(double radians, {Alignment alignment = .center}) {
+  SidebarStyler rotate(double radians, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().rotate(radians, alignment: alignment));
   }
 
-  NavigationListStyler translate(double x, double y, [double z = 0.0]) {
+  SidebarStyler translate(double x, double y, [double z = 0.0]) {
     return container(FlexBoxStyler().translate(x, y, z));
   }
 
-  NavigationListStyler skew(double skewX, double skewY) {
+  SidebarStyler skew(double skewX, double skewY) {
     return container(FlexBoxStyler().skew(skewX, skewY));
   }
 
-  NavigationListStyler textStyle(TextStyler value) {
+  SidebarStyler textStyle(TextStyler value) {
     return container(FlexBoxStyler().textStyle(value));
   }
 
-  NavigationListStyler image(DecorationImageMix value) {
+  SidebarStyler image(DecorationImageMix value) {
     return container(FlexBoxStyler().image(value));
   }
 
-  NavigationListStyler shape(ShapeBorderMix value) {
+  SidebarStyler shape(ShapeBorderMix value) {
     return container(FlexBoxStyler().shape(value));
   }
 
-  NavigationListStyler backgroundImage(
+  SidebarStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -474,7 +503,7 @@ class NavigationListStyler
     );
   }
 
-  NavigationListStyler backgroundImageUrl(
+  SidebarStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -490,7 +519,7 @@ class NavigationListStyler
     );
   }
 
-  NavigationListStyler backgroundImageAsset(
+  SidebarStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -506,7 +535,7 @@ class NavigationListStyler
     );
   }
 
-  NavigationListStyler linearGradient({
+  SidebarStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -524,7 +553,7 @@ class NavigationListStyler
     );
   }
 
-  NavigationListStyler radialGradient({
+  SidebarStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -546,7 +575,7 @@ class NavigationListStyler
     );
   }
 
-  NavigationListStyler sweepGradient({
+  SidebarStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -566,7 +595,7 @@ class NavigationListStyler
     );
   }
 
-  NavigationListStyler foregroundLinearGradient({
+  SidebarStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -584,7 +613,7 @@ class NavigationListStyler
     );
   }
 
-  NavigationListStyler foregroundRadialGradient({
+  SidebarStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -606,7 +635,7 @@ class NavigationListStyler
     );
   }
 
-  NavigationListStyler foregroundSweepGradient({
+  SidebarStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -626,84 +655,84 @@ class NavigationListStyler
     );
   }
 
-  NavigationListStyler row() {
+  SidebarStyler row() {
     return container(FlexBoxStyler().row());
   }
 
-  NavigationListStyler column() {
+  SidebarStyler column() {
     return container(FlexBoxStyler().column());
   }
 
-  NavigationListStyler alignment(AlignmentGeometry value) {
+  SidebarStyler alignment(AlignmentGeometry value) {
     return container(FlexBoxStyler().alignment(value));
   }
 
-  NavigationListStyler padding(EdgeInsetsGeometryMix value) {
+  SidebarStyler padding(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler().padding(value));
   }
 
-  NavigationListStyler margin(EdgeInsetsGeometryMix value) {
+  SidebarStyler margin(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler().margin(value));
   }
 
-  NavigationListStyler constraints(BoxConstraintsMix value) {
+  SidebarStyler constraints(BoxConstraintsMix value) {
     return container(FlexBoxStyler().constraints(value));
   }
 
-  NavigationListStyler decoration(DecorationMix value) {
+  SidebarStyler decoration(DecorationMix value) {
     return container(FlexBoxStyler().decoration(value));
   }
 
-  NavigationListStyler foregroundDecoration(DecorationMix value) {
+  SidebarStyler foregroundDecoration(DecorationMix value) {
     return container(FlexBoxStyler().foregroundDecoration(value));
   }
 
-  NavigationListStyler clipBehavior(Clip value) {
+  SidebarStyler clipBehavior(Clip value) {
     return container(FlexBoxStyler().clipBehavior(value));
   }
 
-  NavigationListStyler direction(Axis value) {
+  SidebarStyler direction(Axis value) {
     return container(FlexBoxStyler().direction(value));
   }
 
-  NavigationListStyler mainAxisAlignment(MainAxisAlignment value) {
+  SidebarStyler mainAxisAlignment(MainAxisAlignment value) {
     return container(FlexBoxStyler().mainAxisAlignment(value));
   }
 
-  NavigationListStyler crossAxisAlignment(CrossAxisAlignment value) {
+  SidebarStyler crossAxisAlignment(CrossAxisAlignment value) {
     return container(FlexBoxStyler().crossAxisAlignment(value));
   }
 
-  NavigationListStyler mainAxisSize(MainAxisSize value) {
+  SidebarStyler mainAxisSize(MainAxisSize value) {
     return container(FlexBoxStyler().mainAxisSize(value));
   }
 
-  NavigationListStyler spacing(double value) {
+  SidebarStyler spacing(double value) {
     return container(FlexBoxStyler().spacing(value));
   }
 
-  NavigationListStyler verticalDirection(VerticalDirection value) {
+  SidebarStyler verticalDirection(VerticalDirection value) {
     return container(FlexBoxStyler().verticalDirection(value));
   }
 
-  NavigationListStyler textDirection(TextDirection value) {
+  SidebarStyler textDirection(TextDirection value) {
     return container(FlexBoxStyler().textDirection(value));
   }
 
-  NavigationListStyler textBaseline(TextBaseline value) {
+  SidebarStyler textBaseline(TextBaseline value) {
     return container(FlexBoxStyler().textBaseline(value));
   }
 
-  NavigationListStyler transform(
-    Matrix4 value, {
-    Alignment alignment = .center,
-  }) {
+  SidebarStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(FlexBoxStyler().transform(value, alignment: alignment));
   }
 
   @override
   Set<String> get $stylerFieldNames => const {
     'container',
+    'header',
+    'content',
+    'footer',
     'section',
     'sectionLabel',
     'destinations',
@@ -714,79 +743,101 @@ class NavigationListStyler
   };
 
   /// Sets the container.
-  NavigationListStyler container(FlexBoxStyler value) {
-    return merge(NavigationListStyler(container: value));
+  SidebarStyler container(FlexBoxStyler value) {
+    return merge(SidebarStyler(container: value));
+  }
+
+  /// Sets the header.
+  SidebarStyler header(BoxStyler value) {
+    return merge(SidebarStyler(header: value));
+  }
+
+  /// Sets the content.
+  SidebarStyler content(FlexBoxStyler value) {
+    return merge(SidebarStyler(content: value));
+  }
+
+  /// Sets the footer.
+  SidebarStyler footer(BoxStyler value) {
+    return merge(SidebarStyler(footer: value));
   }
 
   /// Sets the section.
-  NavigationListStyler section(FlexBoxStyler value) {
-    return merge(NavigationListStyler(section: value));
+  SidebarStyler section(FlexBoxStyler value) {
+    return merge(SidebarStyler(section: value));
   }
 
   /// Sets the sectionLabel.
-  NavigationListStyler sectionLabel(TextStyler value) {
-    return merge(NavigationListStyler(sectionLabel: value));
+  SidebarStyler sectionLabel(TextStyler value) {
+    return merge(SidebarStyler(sectionLabel: value));
   }
 
   /// Sets the destinations.
-  NavigationListStyler destinations(FlexBoxStyler value) {
-    return merge(NavigationListStyler(destinations: value));
+  SidebarStyler destinations(FlexBoxStyler value) {
+    return merge(SidebarStyler(destinations: value));
   }
 
   /// Sets the destination.
-  NavigationListStyler destination(ToggleStyler value) {
-    return merge(NavigationListStyler(destination: value));
+  SidebarStyler destination(ToggleStyler value) {
+    return merge(SidebarStyler(destination: value));
   }
 
   /// Sets the animation configuration.
   @override
-  NavigationListStyler animate(AnimationConfig value) {
-    return merge(NavigationListStyler(animation: value));
+  SidebarStyler animate(AnimationConfig value) {
+    return merge(SidebarStyler(animation: value));
   }
 
   /// Sets the style variants.
   @override
-  NavigationListStyler variants(List<VariantStyle<NavigationListSpec>> value) {
-    return merge(NavigationListStyler(variants: value));
+  SidebarStyler variants(List<VariantStyle<SidebarSpec>> value) {
+    return merge(SidebarStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
   @override
-  NavigationListStyler wrap(WidgetModifierConfig value) {
-    return merge(NavigationListStyler(modifier: value));
+  SidebarStyler wrap(WidgetModifierConfig value) {
+    return merge(SidebarStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  NavigationListStyler modifier(WidgetModifierConfig value) {
-    return merge(NavigationListStyler(modifier: value));
+  SidebarStyler modifier(WidgetModifierConfig value) {
+    return merge(SidebarStyler(modifier: value));
   }
 
-  RemixNavigationList<T> call<T extends Object>({
+  RemixSidebar<T> call<T extends Object>({
     Key? key,
-    required List<RemixNavigationSection<T>> sections,
+    Widget? header,
+    required List<RemixSidebarSection<T>> sections,
     required T? selectedValue,
     ValueChanged<T>? onSelected,
+    Widget? footer,
     bool enabled = true,
     String? semanticLabel,
     bool excludeSemantics = false,
   }) {
-    return RemixNavigationList<T>(
+    return RemixSidebar<T>(
       key: key,
       style: this,
+      header: header,
       sections: sections,
       selectedValue: selectedValue,
       onSelected: onSelected,
+      footer: footer,
       enabled: enabled,
       semanticLabel: semanticLabel,
       excludeSemantics: excludeSemantics,
     );
   }
 
-  /// Merges with another [NavigationListStyler].
+  /// Merges with another [SidebarStyler].
   @override
-  NavigationListStyler merge(NavigationListStyler? other) {
-    return NavigationListStyler.create(
+  SidebarStyler merge(SidebarStyler? other) {
+    return SidebarStyler.create(
       container: MixOps.merge($container, other?.$container),
+      header: MixOps.merge($header, other?.$header),
+      content: MixOps.merge($content, other?.$content),
+      footer: MixOps.merge($footer, other?.$footer),
       section: MixOps.merge($section, other?.$section),
       sectionLabel: MixOps.merge($sectionLabel, other?.$sectionLabel),
       destinations: MixOps.merge($destinations, other?.$destinations),
@@ -797,11 +848,14 @@ class NavigationListStyler
     );
   }
 
-  /// Resolves to [StyleSpec<NavigationListSpec>] using [context].
+  /// Resolves to [StyleSpec<SidebarSpec>] using [context].
   @override
-  StyleSpec<NavigationListSpec> resolve(BuildContext context) {
-    final spec = NavigationListSpec(
+  StyleSpec<SidebarSpec> resolve(BuildContext context) {
+    final spec = SidebarSpec(
       container: MixOps.resolve(context, $container),
+      header: MixOps.resolve(context, $header),
+      content: MixOps.resolve(context, $content),
+      footer: MixOps.resolve(context, $footer),
       section: MixOps.resolve(context, $section),
       sectionLabel: MixOps.resolve(context, $sectionLabel),
       destinations: MixOps.resolve(context, $destinations),
@@ -820,6 +874,9 @@ class NavigationListStyler
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('header', $header))
+      ..add(DiagnosticsProperty('content', $content))
+      ..add(DiagnosticsProperty('footer', $footer))
       ..add(DiagnosticsProperty('section', $section))
       ..add(DiagnosticsProperty('sectionLabel', $sectionLabel))
       ..add(DiagnosticsProperty('destinations', $destinations))
@@ -829,6 +886,9 @@ class NavigationListStyler
   @override
   List<Object?> get props => [
     $container,
+    $header,
+    $content,
+    $footer,
     $section,
     $sectionLabel,
     $destinations,

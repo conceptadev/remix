@@ -1,32 +1,33 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
 
-const _sections = <RemixNavigationSection<String>>[
-  RemixNavigationSection(
+const _sections = <RemixSidebarSection<String>>[
+  RemixSidebarSection(
     label: 'Workspace',
     destinations: [
-      RemixNavigationDestination(
+      RemixSidebarDestination(
         value: 'overview',
         label: 'Overview',
         icon: Icons.space_dashboard_outlined,
       ),
     ],
   ),
-  RemixNavigationSection(
+  RemixSidebarSection(
     label: 'Data',
     destinations: [
-      RemixNavigationDestination(
+      RemixSidebarDestination(
         value: 'customers',
         label: 'Customers',
         icon: Icons.people_outline,
       ),
-      RemixNavigationDestination(
+      RemixSidebarDestination(
         value: 'orders',
         label: 'Orders',
         icon: Icons.receipt_long_outlined,
@@ -36,12 +37,12 @@ const _sections = <RemixNavigationSection<String>>[
 ];
 
 void main() {
-  group('RemixNavigationList', () {
+  group('RemixSidebar', () {
     testWidgets('renders labeled sections and destinations in source order', (
       tester,
     ) async {
       await tester.pumpRemixApp(
-        RemixNavigationList<String>(
+        RemixSidebar<String>(
           sections: _sections,
           selectedValue: 'overview',
           onSelected: (_) {},
@@ -60,10 +61,10 @@ void main() {
       tester,
     ) async {
       await tester.pumpRemixApp(
-        RemixNavigationList<String>(
+        RemixSidebar<String>(
           sections: const [
             ..._sections,
-            RemixNavigationSection(label: 'Empty', destinations: []),
+            RemixSidebarSection(label: 'Empty', destinations: []),
           ],
           selectedValue: 'overview',
           onSelected: (_) {},
@@ -78,7 +79,7 @@ void main() {
     ) async {
       final emitted = <String>[];
       await tester.pumpRemixApp(
-        RemixNavigationList<String>(
+        RemixSidebar<String>(
           sections: _sections,
           selectedValue: 'overview',
           onSelected: emitted.add,
@@ -97,7 +98,7 @@ void main() {
       final semantics = tester.ensureSemantics();
       final emitted = <String>[];
       await tester.pumpRemixApp(
-        RemixNavigationList<String>(
+        RemixSidebar<String>(
           sections: _sections,
           selectedValue: 'overview',
           onSelected: emitted.add,
@@ -116,7 +117,7 @@ void main() {
       (tester) async {
         final semantics = tester.ensureSemantics();
         await tester.pumpRemixApp(
-          RemixNavigationList<String>(
+          RemixSidebar<String>(
             sections: _sections,
             selectedValue: 'overview',
             onSelected: (_) {},
@@ -168,11 +169,11 @@ void main() {
     ) async {
       final semantics = tester.ensureSemantics();
       await tester.pumpRemixApp(
-        RemixNavigationList<String>(
+        RemixSidebar<String>(
           sections: _sections,
           selectedValue: 'overview',
           onSelected: (_) {},
-          style: NavigationListStyler().sectionLabel(TextStyler().uppercase()),
+          style: SidebarStyler().sectionLabel(TextStyler().uppercase()),
         ),
       );
 
@@ -190,11 +191,11 @@ void main() {
     ) async {
       final semantics = tester.ensureSemantics();
       await tester.pumpRemixApp(
-        RemixNavigationList<String>(
+        RemixSidebar<String>(
           sections: const [
-            RemixNavigationSection(
+            RemixSidebarSection(
               destinations: [
-                RemixNavigationDestination(
+                RemixSidebarDestination(
                   value: 'overview',
                   label: 'Overview',
                   semanticLabel: 'Workspace overview',
@@ -218,7 +219,7 @@ void main() {
     ) async {
       final semantics = tester.ensureSemantics();
       await tester.pumpRemixApp(
-        RemixNavigationList<String>(
+        RemixSidebar<String>(
           sections: _sections,
           selectedValue: 'overview',
           onSelected: (_) {},
@@ -232,21 +233,86 @@ void main() {
       semantics.dispose();
     });
 
+    testWidgets('excludeSemantics keeps header and footer semantics', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpRemixApp(
+        SizedBox(
+          height: 400,
+          child: RemixSidebar<String>(
+            header: const Text('Acme'),
+            sections: _sections,
+            selectedValue: 'overview',
+            onSelected: (_) {},
+            footer: const Text('Account'),
+            semanticLabel: 'Primary navigation',
+            excludeSemantics: true,
+          ),
+        ),
+      );
+
+      expect(find.bySemanticsLabel('Primary navigation'), findsNothing);
+      expect(find.bySemanticsLabel('Overview'), findsNothing);
+      expect(find.bySemanticsLabel('Acme'), findsOneWidget);
+      expect(find.bySemanticsLabel('Account'), findsOneWidget);
+      semantics.dispose();
+    });
+
+    testWidgets('header and footer stay outside the navigation landmark', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpRemixApp(
+        SizedBox(
+          height: 400,
+          child: RemixSidebar<String>(
+            header: const Text('Acme'),
+            sections: _sections,
+            selectedValue: 'overview',
+            onSelected: (_) {},
+            footer: const Text('Account'),
+            semanticLabel: 'Primary navigation',
+          ),
+        ),
+      );
+
+      final landmark = tester.getSemantics(
+        find.bySemanticsLabel('Primary navigation'),
+      );
+      expect(landmark.getSemanticsData().role, ui.SemanticsRole.navigation);
+
+      final names = <String>[];
+      void collect(SemanticsNode node) {
+        names.add(node.label);
+        node.visitChildren((child) {
+          collect(child);
+          return true;
+        });
+      }
+
+      landmark.visitChildren((child) {
+        collect(child);
+        return true;
+      });
+      expect(names, contains('Overview'));
+      expect(names, isNot(contains('Acme')));
+      expect(names, isNot(contains('Account')));
+      semantics.dispose();
+    });
+
     testWidgets('root and item disabled states remove activation', (
       tester,
     ) async {
       final semantics = tester.ensureSemantics();
       final emitted = <String>[];
       await tester.pumpRemixApp(
-        RemixNavigationList<String>(
+        RemixSidebar<String>(
           sections: const [
-            RemixNavigationSection(
+            RemixSidebarSection(
               destinations: [
-                RemixNavigationDestination(
-                  value: 'overview',
-                  label: 'Overview',
-                ),
-                RemixNavigationDestination(
+                RemixSidebarDestination(value: 'overview', label: 'Overview'),
+                RemixSidebarDestination(
                   value: 'disabled',
                   label: 'Disabled',
                   enabled: false,
@@ -283,7 +349,7 @@ void main() {
     testWidgets('a null callback disables every destination', (tester) async {
       final semantics = tester.ensureSemantics();
       await tester.pumpRemixApp(
-        const RemixNavigationList<String>(
+        const RemixSidebar<String>(
           sections: _sections,
           selectedValue: 'overview',
         ),
@@ -310,7 +376,7 @@ void main() {
       final semantics = tester.ensureSemantics();
       final emitted = <String>[];
       await tester.pumpRemixApp(
-        RemixNavigationList<String>(
+        RemixSidebar<String>(
           sections: _sections,
           selectedValue: 'overview',
           onSelected: emitted.add,
@@ -364,7 +430,7 @@ void main() {
     ) async {
       final semantics = tester.ensureSemantics();
       await tester.pumpRemixApp(
-        RemixNavigationList<String>(
+        RemixSidebar<String>(
           sections: _sections,
           selectedValue: null,
           onSelected: (_) {},
@@ -386,29 +452,106 @@ void main() {
       semantics.dispose();
     });
 
-    testWidgets('builds in scrolling and fixed-height non-scrolling hosts', (
-      tester,
-    ) async {
-      RemixNavigationList<String> buildList() => RemixNavigationList<String>(
+    testWidgets('an unbounded host keeps the panel unscrolled', (tester) async {
+      RemixSidebar<String> buildPanel() => RemixSidebar<String>(
         sections: _sections,
         selectedValue: 'overview',
         onSelected: (_) {},
       );
 
-      await tester.pumpRemixApp(SingleChildScrollView(child: buildList()));
+      await tester.pumpRemixApp(SingleChildScrollView(child: buildPanel()));
       expect(tester.takeException(), isNull);
       expect(
         find.descendant(
-          of: find.byType(RemixNavigationList<String>),
+          of: find.byType(RemixSidebar<String>),
           matching: find.byType(Scrollable),
         ),
         findsNothing,
       );
 
+      // A Column hands its children unbounded height, so the panel must not
+      // try to scroll or expand inside one either.
       await tester.pumpRemixApp(
-        SizedBox(height: 320, child: Column(children: [buildList()])),
+        SizedBox(height: 320, child: Column(children: [buildPanel()])),
       );
       expect(tester.takeException(), isNull);
+      expect(
+        find.descendant(
+          of: find.byType(RemixSidebar<String>),
+          matching: find.byType(Scrollable),
+        ),
+        findsNothing,
+      );
+    });
+
+    testWidgets('a bounded host scrolls destinations and pins the footer', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        SizedBox(
+          height: 200,
+          width: 240,
+          child: RemixSidebar<String>(
+            header: const Text('Acme'),
+            sections: _sections,
+            selectedValue: 'overview',
+            onSelected: (_) {},
+            footer: const Text('Account'),
+            style: SidebarStyler().destination(ToggleStyler().height(80)),
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+      final scrollable = find.descendant(
+        of: find.byType(RemixSidebar<String>),
+        matching: find.byType(Scrollable),
+      );
+      expect(scrollable, findsOneWidget);
+
+      // The header and footer stay outside the scroll region.
+      expect(
+        find.descendant(of: scrollable, matching: find.text('Acme')),
+        findsNothing,
+      );
+      expect(
+        find.descendant(of: scrollable, matching: find.text('Account')),
+        findsNothing,
+      );
+
+      final panel = tester.getRect(find.byType(RemixSidebar<String>));
+      final header = tester.getRect(find.text('Acme'));
+      final footer = tester.getRect(find.text('Account'));
+      expect(header.top, closeTo(panel.top, 0.5));
+      expect(footer.bottom, closeTo(panel.bottom, 0.5));
+
+      // Taller-than-viewport destinations scroll rather than overflow.
+      await tester.drag(scrollable, const Offset(0, -60));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('omits header and footer regions when they are absent', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        SizedBox(
+          height: 300,
+          child: RemixSidebar<String>(
+            sections: _sections,
+            selectedValue: 'overview',
+            onSelected: (_) {},
+            style: SidebarStyler()
+                .header(BoxStyler().height(40))
+                .footer(BoxStyler().height(40)),
+          ),
+        ),
+      );
+
+      // Both region styles resolve, but neither renders without content.
+      final panel = tester.getRect(find.byType(RemixSidebar<String>));
+      final firstHeading = tester.getRect(find.text('Workspace'));
+      expect(firstHeading.top, lessThan(panel.top + 40));
     });
 
     testWidgets('supports 200 percent text and RTL without overflow', (
@@ -422,12 +565,12 @@ void main() {
             ).copyWith(textScaler: const TextScaler.linear(2)),
             child: SizedBox(
               width: 256,
-              child: RemixNavigationList<String>(
+              child: RemixSidebar<String>(
                 sections: const [
-                  RemixNavigationSection(
+                  RemixSidebarSection(
                     label: 'Workspace',
                     destinations: [
-                      RemixNavigationDestination(
+                      RemixSidebarDestination(
                         value: 'overview',
                         label:
                             'Overview of every active workspace and its status',
@@ -451,11 +594,11 @@ void main() {
     testWidgets('rejects blank public labels', (tester) async {
       for (final blank in ['', ' ', '\t\n']) {
         await tester.pumpRemixApp(
-          RemixNavigationList<String>(
+          RemixSidebar<String>(
             sections: [
-              RemixNavigationSection(
+              RemixSidebarSection(
                 destinations: [
-                  RemixNavigationDestination(value: 'value', label: blank),
+                  RemixSidebarDestination(value: 'value', label: blank),
                 ],
               ),
             ],
@@ -465,12 +608,12 @@ void main() {
         expect(tester.takeException(), isA<AssertionError>());
 
         await tester.pumpRemixApp(
-          RemixNavigationList<String>(
+          RemixSidebar<String>(
             sections: [
-              RemixNavigationSection(
+              RemixSidebarSection(
                 label: blank,
                 destinations: const [
-                  RemixNavigationDestination(value: 'value', label: 'Value'),
+                  RemixSidebarDestination(value: 'value', label: 'Value'),
                 ],
               ),
             ],
@@ -480,11 +623,11 @@ void main() {
         expect(tester.takeException(), isA<AssertionError>());
 
         await tester.pumpRemixApp(
-          RemixNavigationList<String>(
+          RemixSidebar<String>(
             sections: [
-              RemixNavigationSection(
+              RemixSidebarSection(
                 destinations: [
-                  RemixNavigationDestination(
+                  RemixSidebarDestination(
                     value: 'value',
                     label: 'Value',
                     semanticLabel: blank,
@@ -498,7 +641,7 @@ void main() {
         expect(tester.takeException(), isA<AssertionError>());
 
         await tester.pumpRemixApp(
-          RemixNavigationList<String>(
+          RemixSidebar<String>(
             sections: const [],
             selectedValue: null,
             semanticLabel: blank,
@@ -512,12 +655,12 @@ void main() {
       tester,
     ) async {
       await tester.pumpRemixApp(
-        const RemixNavigationList<String>(
+        const RemixSidebar<String>(
           sections: [
-            RemixNavigationSection(
+            RemixSidebarSection(
               destinations: [
-                RemixNavigationDestination(value: 'same', label: 'First'),
-                RemixNavigationDestination(value: 'same', label: 'Second'),
+                RemixSidebarDestination(value: 'same', label: 'First'),
+                RemixSidebarDestination(value: 'same', label: 'Second'),
               ],
             ),
           ],
@@ -530,11 +673,11 @@ void main() {
       );
 
       await tester.pumpRemixApp(
-        const RemixNavigationList<String>(
+        const RemixSidebar<String>(
           sections: [
-            RemixNavigationSection(
+            RemixSidebarSection(
               destinations: [
-                RemixNavigationDestination(value: 'first', label: 'First'),
+                RemixSidebarDestination(value: 'first', label: 'First'),
               ],
             ),
           ],
@@ -547,16 +690,16 @@ void main() {
       );
 
       await tester.pumpRemixApp(
-        const RemixNavigationList<String>(
+        const RemixSidebar<String>(
           sections: [
-            RemixNavigationSection(
+            RemixSidebarSection(
               destinations: [
-                RemixNavigationDestination(
+                RemixSidebarDestination(
                   value: 'first',
                   label: 'First',
                   autofocus: true,
                 ),
-                RemixNavigationDestination(
+                RemixSidebarDestination(
                   value: 'second',
                   label: 'Second',
                   autofocus: true,
@@ -577,7 +720,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpRemixApp(
-        const RemixNavigationList<String>(sections: [], selectedValue: null),
+        const RemixSidebar<String>(sections: [], selectedValue: null),
       );
 
       expect(tester.takeException(), isNull);

@@ -1,7 +1,8 @@
 import 'dart:ui' as ui;
 
 import 'package:dashboard/shell/dashboard_page.dart';
-import 'package:dashboard/shell/navigation_list.dart';
+import 'package:dashboard/shell/sidebar.dart';
+import 'package:dashboard/shell/sidebar_sections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
@@ -9,26 +10,26 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
-const _sections = <RemixNavigationSection<DashboardPage>>[
-  RemixNavigationSection(
+const _sections = <RemixSidebarSection<DashboardPage>>[
+  RemixSidebarSection(
     label: 'Workspace',
     destinations: [
-      RemixNavigationDestination(
+      RemixSidebarDestination(
         value: DashboardPage.overview,
         label: 'Overview',
         icon: Icons.space_dashboard_outlined,
       ),
     ],
   ),
-  RemixNavigationSection(
+  RemixSidebarSection(
     label: 'Data',
     destinations: [
-      RemixNavigationDestination(
+      RemixSidebarDestination(
         value: DashboardPage.customers,
         label: 'Customers',
         icon: Icons.people_outline,
       ),
-      RemixNavigationDestination(
+      RemixSidebarDestination(
         value: DashboardPage.orders,
         label: 'Orders',
         icon: Icons.receipt_long_outlined,
@@ -40,16 +41,16 @@ const _sections = <RemixNavigationSection<DashboardPage>>[
 void main() {
   test('dashboard data uses the public immutable navigation records', () {
     expect(
-      dashboardNavSections,
-      isA<List<RemixNavigationSection<DashboardPage>>>(),
+      dashboardSidebarSections,
+      isA<List<RemixSidebarSection<DashboardPage>>>(),
     );
     expect(
-      dashboardNavSections.expand((section) => section.destinations).length,
+      dashboardSidebarSections.expand((section) => section.destinations).length,
       DashboardPage.values.length,
     );
     expect(
-      () => dashboardNavSections.add(
-        const RemixNavigationSection(destinations: []),
+      () => dashboardSidebarSections.add(
+        const RemixSidebarSection(destinations: []),
       ),
       throwsUnsupportedError,
     );
@@ -59,7 +60,7 @@ void main() {
     tester,
   ) async {
     final emitted = <DashboardPage>[];
-    await _pumpNavigationList(tester, onSelected: emitted.add);
+    await _pumpSidebar(tester, onSelected: emitted.add);
 
     await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)));
     await tester.pump();
@@ -75,7 +76,7 @@ void main() {
   ) async {
     final handle = tester.ensureSemantics();
     final emitted = <DashboardPage>[];
-    await _pumpNavigationList(tester, onSelected: emitted.add);
+    await _pumpSidebar(tester, onSelected: emitted.add);
 
     await tester.tap(find.byKey(const ValueKey(DashboardPage.overview)));
     await tester.pump();
@@ -94,11 +95,11 @@ void main() {
     tester,
   ) async {
     final handle = tester.ensureSemantics();
-    await _pumpNavigationList(
+    await _pumpSidebar(
       tester,
       sections: const [
         ..._sections,
-        RemixNavigationSection(label: 'Empty', destinations: []),
+        RemixSidebarSection(label: 'Empty', destinations: []),
       ],
     );
 
@@ -131,7 +132,7 @@ void main() {
     tester,
   ) async {
     final handle = tester.ensureSemantics();
-    await _pumpNavigationList(tester);
+    await _pumpSidebar(tester);
 
     final destination = find.semantics.byLabel('Overview');
     expect(destination, findsOne);
@@ -149,7 +150,7 @@ void main() {
   ) async {
     final handle = tester.ensureSemantics();
     final emitted = <DashboardPage>[];
-    await _pumpNavigationList(tester, onSelected: emitted.add);
+    await _pumpSidebar(tester, onSelected: emitted.add);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.tab);
     await tester.pump();
@@ -181,10 +182,36 @@ void main() {
     handle.dispose();
   });
 
+  testWidgets('the shell panel paints under device insets', (tester) async {
+    const insets = EdgeInsets.only(top: 44, bottom: 34);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MediaQuery(
+          data: const MediaQueryData(padding: insets),
+          child: FortalScope(
+            child: Row(
+              children: [
+                Sidebar(selected: DashboardPage.overview, onSelected: (_) {}),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final panel = tester.getRect(find.byType(Sidebar));
+    final brand = tester.getRect(find.byKey(const ValueKey('dashboard-brand')));
+
+    // The painted panel reaches the display edge while its content clears the
+    // top inset.
+    expect(brand.top, closeTo(panel.top + insets.top, 0.5));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('builds in scrolling and fixed-height column hosts', (
     tester,
   ) async {
-    FortalNavigationList<DashboardPage> buildList() => FortalNavigationList(
+    FortalSidebar<DashboardPage> buildList() => FortalSidebar(
       sections: _sections,
       selectedValue: DashboardPage.overview,
       onSelected: (_) {},
@@ -194,7 +221,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(
       find.descendant(
-        of: find.byType(RemixNavigationList<DashboardPage>),
+        of: find.byType(RemixSidebar<DashboardPage>),
         matching: find.byType(Scrollable),
       ),
       findsNothing,
@@ -207,7 +234,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(
       find.descendant(
-        of: find.byType(RemixNavigationList<DashboardPage>),
+        of: find.byType(RemixSidebar<DashboardPage>),
         matching: find.byType(Scrollable),
       ),
       findsNothing,
@@ -226,12 +253,12 @@ void main() {
           ).copyWith(textScaler: const TextScaler.linear(2)),
           child: SizedBox(
             width: 256,
-            child: FortalNavigationList<DashboardPage>(
+            child: FortalSidebar<DashboardPage>(
               sections: const [
-                RemixNavigationSection(
+                RemixSidebarSection(
                   label: 'Workspace',
                   destinations: [
-                    RemixNavigationDestination(
+                    RemixSidebarDestination(
                       value: DashboardPage.overview,
                       label:
                           'Overview of every active workspace and its status',
@@ -260,7 +287,7 @@ void main() {
         textDirection: TextDirection.rtl,
         child: SizedBox(
           width: 256,
-          child: FortalNavigationList<DashboardPage>(
+          child: FortalSidebar<DashboardPage>(
             sections: _sections,
             selectedValue: DashboardPage.overview,
             onSelected: (_) {},
@@ -276,7 +303,7 @@ void main() {
     tester,
   ) async {
     final handle = tester.ensureSemantics();
-    await _pumpNavigationList(tester, selectedValue: null);
+    await _pumpSidebar(tester, selectedValue: null);
 
     for (final section in _sections) {
       for (final destination in section.destinations) {
@@ -291,15 +318,15 @@ void main() {
   });
 }
 
-Future<void> _pumpNavigationList(
+Future<void> _pumpSidebar(
   WidgetTester tester, {
-  List<RemixNavigationSection<DashboardPage>> sections = _sections,
+  List<RemixSidebarSection<DashboardPage>> sections = _sections,
   DashboardPage? selectedValue = DashboardPage.overview,
   ValueChanged<DashboardPage>? onSelected,
 }) {
   return _pumpPage(
     tester,
-    FortalNavigationList<DashboardPage>(
+    FortalSidebar<DashboardPage>(
       sections: sections,
       selectedValue: selectedValue,
       onSelected: onSelected ?? (_) {},

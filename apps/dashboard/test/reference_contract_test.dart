@@ -243,12 +243,14 @@ void main() {
     ) async {
       await _pumpPage(tester, const GalleryNavigationPage());
 
-      final navigationListSection = _sectionChild(tester, 'Navigation list');
-      final navigationList = tester.widget<FortalNavigationList<String>>(
-        _within<FortalNavigationList<String>>(navigationListSection),
+      final sidebarSection = _sectionChild(tester, 'Sidebar');
+      final sidebar = tester.widget<FortalSidebar<String>>(
+        _within<FortalSidebar<String>>(sidebarSection),
       );
-      expect(navigationList.selectedValue, 'overview');
-      expect(navigationList.sections, hasLength(2));
+      expect(sidebar.selectedValue, 'overview');
+      expect(sidebar.sections, hasLength(2));
+      expect(sidebar.header, isNotNull);
+      expect(sidebar.footer, isNotNull);
 
       _expectValues<FortalTab, FortalTabsSize>(
         tester,

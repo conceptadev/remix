@@ -85,11 +85,11 @@ void main() {
   test(
     'the Fortal navigation list wrapper is constructible from the public API',
     () {
-      const navigation = FortalNavigationList<String>(
+      const navigation = FortalSidebar<String>(
         sections: [
-          RemixNavigationSection(
+          RemixSidebarSection(
             destinations: [
-              RemixNavigationDestination(value: 'overview', label: 'Overview'),
+              RemixSidebarDestination(value: 'overview', label: 'Overview'),
             ],
           ),
         ],
@@ -98,9 +98,9 @@ void main() {
         highContrast: true,
       );
 
-      expect(navigation, isA<FortalNavigationList<String>>());
+      expect(navigation, isA<FortalSidebar<String>>());
       expect(navigation.highContrast, isTrue);
-      expect(fortalNavigationListStyle(), isA<NavigationListStyler>());
+      expect(fortalSidebarStyle(), isA<SidebarStyler>());
     },
   );
 
