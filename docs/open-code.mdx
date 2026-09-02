@@ -468,7 +468,7 @@ and page-size control *are* those components — adding it installs all four.
 | `data_table` | `UiDataTable` | — |
 | `dialog` | `UiDialog` | — |
 | `disclosure` | `UiDisclosure` | — |
-| `divider` | `UiDivider` | orientation |
+| `divider` | `UiDivider` | — |
 | `icon_button` | `UiIconButton` | variant, size |
 | `link` | `UiLink` | — |
 | `menu` | `UiMenu` | — |
@@ -488,9 +488,14 @@ and page-size control *are* those components — adding it installs all four.
 | `tooltip` | `UiTooltip` | — |
 
 One `add` installs one item. The names above use the default `Ui` prefix;
-`--prefix Acme` gives you `AcmeButton` and friends. A recipe whose axis is
-named `variant` also gets one named constructor per value, so
-`UiBadge.destructive(label: 'Failing')` works out of the box.
+`--prefix Acme` gives you `AcmeButton` and friends. An axis is an enum the
+recipe declares, and a recipe whose axis is named `variant` also gets one
+named constructor per value, so `UiBadge.destructive(label: 'Failing')` works
+out of the box.
+
+A parameter is not an axis. `UiDivider` takes an `orientation`, but it is a
+plain Flutter `Axis` the recipe accepts rather than an enum of its own, so it
+generates no named constructors.
 
 `remix add icons` also declares `remix_ui_icons` and gives you a small alias
 surface to evolve with the application. Import
