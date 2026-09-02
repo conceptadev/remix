@@ -417,6 +417,8 @@ th[scope="row"].mono{font-family:var(--mono);font-size:12.6px;font-weight:400}
     <li><a href="#customize">Make it yours</a></li>
     <li><a href="#states">States</a></li>
     <li><a href="#update"><span class="n">6</span>Update</a></li>
+    <li class="grp">What comes next</li>
+    <li><a href="#generate">What it can generate</a></li>
     <li class="grp">Reference</li>
     <li><a href="#catalog">Catalog</a></li>
     <li><a href="#reference">Reference</a></li>
@@ -1342,6 +1344,133 @@ Preserved theme.
   next <code>add</code> treats the item as missing.</p>
 </section>
 
+<div class="part" role="separator" aria-label="What comes next"><span class="lbl">What comes next</span><p>One section. It is a design preview, not shipped behavior.</p></div>
+
+<section class="sec" id="generate">
+  <div class="sec-rule"><div>
+    <h2>What the recipe can generate next</h2>
+    <p class="sec-sub">Your recipe is a declaration in source. A generator can read it, and emit more than the adapter.</p>
+  </div></div>
+
+  <div class="note warn">
+    <div class="note-h"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.4 14.4 13.2H1.6z"/><path d="M8 6.4v3"/><path d="M8 11.4h.01"/></svg> This section is a design preview</div>
+    <p>Every other section on this page is verified against a real installation.
+    <strong>This one is not built yet.</strong> It describes the intended direction. The two
+    contracts it targets already exist, so the shapes below are real; the generator that would
+    emit them is not.</p>
+  </div>
+
+  <p>Today the CLI generates one artifact from your recipe: the adapter that calls
+  <code>RemixButton</code>. The same declaration carries enough to generate two more.</p>
+
+  <div class="tw stack"><table>
+    <thead><tr><th>What the recipe already holds</th><th>What a generator can derive from it</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">The <code>variant</code> and <code>size</code> enums, and their defaults</th><td data-label="Derives">The axes, and the exact value vocabulary both schemas need</td></tr>
+      <tr><th scope="row">Every combination of those enums</th><td data-label="Derives">The recipe matrix</td></tr>
+      <tr><th scope="row">The styler returned for each combination</th><td data-label="Derives">One resolved style for each recipe and slot</td></tr>
+      <tr><th scope="row">Your theme, with <code>.light()</code> and <code>.dark()</code></th><td data-label="Derives">The theme documents</td></tr>
+      <tr><th scope="row"><code>@MixWidget(target: RemixButton.new)</code></th><td data-label="Derives">The widget each schema names</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>A rendered widget tree cannot supply any of this. It is a result, and it does not keep the
+  enum that produced a value. The recipe is the declaration, which is why reading it works.</p>
+
+  <h3>The Muse A2UI catalog schema</h3>
+  <p>A Muse host declares a <strong>component catalog</strong>. A model then proposes A2UI
+  surfaces using only the components in that catalog. The catalog is a JSON Schema with
+  model-facing descriptions, pinned by a catalog ID and a canonical schema hash, so a host fails
+  closed when the catalog it expects is absent.</p>
+
+  <p>Muse writes that catalog by hand today. Generating it from your installed recipes makes your
+  own design system the vocabulary the model is allowed to use.</p>
+
+<figure class="term plain">
+  <figcaption class="term-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-title">the catalog entry a generator would emit for AcmeButton</span><button class="copy" type="button" data-done="0" aria-label="Copy to clipboard"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5v-1a1.6 1.6 0 0 0-1.6-1.6H4.1A1.6 1.6 0 0 0 2.5 4.5v4.8a1.6 1.6 0 0 0 1.6 1.6h1"/></svg><span aria-live="polite">Copy</span></button></figcaption>
+  <pre><code>{
+  <span class="kw">"component"</span>: { <span class="kw">"const"</span>: <span class="str">"AcmeButton"</span> },
+  <span class="kw">"description"</span>: <span class="str">"Labeled control that dispatches an allowed action.</span>
+<span class="str">                  Use AcmeIconButton when a compact icon-only control is clearer."</span>,
+  <span class="kw">"properties"</span>: {
+    <span class="kw">"label"</span>:   { <span class="kw">"type"</span>: <span class="str">"string"</span>,
+                 <span class="kw">"description"</span>: <span class="str">"Visible action label."</span> },
+<span class="mark">    <span class="kw">"variant"</span>: { <span class="kw">"enum"</span>: [<span class="str">"primary"</span>, <span class="str">"secondary"</span>, <span class="str">"outline"</span>, <span class="str">"ghost"</span>, <span class="str">"destructive"</span>],</span>
+<span class="mark">                 <span class="kw">"description"</span>: <span class="str">"Visual weight; one of the button variant tokens."</span> },</span>
+<span class="mark">    <span class="kw">"size"</span>:    { <span class="kw">"enum"</span>: [<span class="str">"small"</span>, <span class="str">"medium"</span>, <span class="str">"large"</span>],</span>
+<span class="mark">                 <span class="kw">"description"</span>: <span class="str">"Control density; one of the button size tokens."</span> },</span>
+    <span class="kw">"enabled"</span>: { <span class="kw">"type"</span>: <span class="str">"boolean"</span>,
+                 <span class="kw">"description"</span>: <span class="str">"Whether the control accepts input."</span> },
+    <span class="kw">"action"</span>:  { <span class="kw">"$ref"</span>: <span class="str">"common_types.json#/$defs/Action"</span> }
+  },
+  <span class="kw">"required"</span>: [<span class="str">"component"</span>, <span class="str">"label"</span>]
+}</code></pre>
+</figure>
+
+  <p>The two highlighted blocks come straight from your enums. Rename a variant in
+  <code>button.dart</code>, and the vocabulary the model may use changes with it. The
+  descriptions are the part a person still writes: they are prompt text, and Muse caps them at
+  180 characters for a component and 140 for a property.</p>
+
+  <h3>The component capture, with every state</h3>
+  <p>The second artifact is a portable component document. It records the complete matrix as
+  data: the properties, every state, the slots, one recipe for each cell, and the resolved style
+  behind each one. Mix Atlas already defines this contract as
+  <code>mix/component-capture/component/v1</code>, and already produces it for Fortal.</p>
+
+<figure class="term plain">
+  <figcaption class="term-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-title">the capture a generator would emit for the button recipe — abridged</span><button class="copy" type="button" data-done="0" aria-label="Copy to clipboard"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5v-1a1.6 1.6 0 0 0-1.6-1.6H4.1A1.6 1.6 0 0 0 2.5 4.5v4.8a1.6 1.6 0 0 0 1.6 1.6h1"/></svg><span aria-live="polite">Copy</span></button></figcaption>
+  <pre><code>{
+  <span class="kw">"schema"</span>: <span class="str">"mix/component-capture/component/v1"</span>,
+  <span class="kw">"id"</span>: <span class="str">"button"</span>,
+  <span class="kw">"properties"</span>: [
+    { <span class="kw">"id"</span>: <span class="str">"variant"</span>, <span class="kw">"kind"</span>: <span class="str">"enum"</span>,
+      <span class="kw">"values"</span>: [<span class="str">"primary"</span>, <span class="str">"secondary"</span>, <span class="str">"outline"</span>, <span class="str">"ghost"</span>, <span class="str">"destructive"</span>],
+      <span class="kw">"required"</span>: <span class="kw">true</span>, <span class="kw">"default"</span>: <span class="str">"primary"</span> },
+    { <span class="kw">"id"</span>: <span class="str">"size"</span>, <span class="kw">"kind"</span>: <span class="str">"enum"</span>,
+      <span class="kw">"values"</span>: [<span class="str">"small"</span>, <span class="str">"medium"</span>, <span class="str">"large"</span>],
+      <span class="kw">"required"</span>: <span class="kw">true</span>, <span class="kw">"default"</span>: <span class="str">"medium"</span> }
+  ],
+<span class="mark">  <span class="kw">"states"</span>: [</span>
+<span class="mark">    { <span class="kw">"id"</span>: <span class="str">"default"</span>,  <span class="kw">"widgetStates"</span>: [] },</span>
+<span class="mark">    { <span class="kw">"id"</span>: <span class="str">"hovered"</span>,  <span class="kw">"widgetStates"</span>: [<span class="str">"hovered"</span>] },</span>
+<span class="mark">    { <span class="kw">"id"</span>: <span class="str">"pressed"</span>,  <span class="kw">"widgetStates"</span>: [<span class="str">"pressed"</span>] },</span>
+<span class="mark">    { <span class="kw">"id"</span>: <span class="str">"focused"</span>,  <span class="kw">"widgetStates"</span>: [<span class="str">"focused"</span>] },</span>
+<span class="mark">    { <span class="kw">"id"</span>: <span class="str">"disabled"</span>, <span class="kw">"widgetStates"</span>: [<span class="str">"disabled"</span>],</span>
+<span class="mark">      <span class="kw">"properties"</span>: { <span class="kw">"enabled"</span>: <span class="kw">false</span> } },</span>
+<span class="mark">    { <span class="kw">"id"</span>: <span class="str">"loading"</span>,  <span class="kw">"widgetStates"</span>: [<span class="str">"disabled"</span>],</span>
+<span class="mark">      <span class="kw">"properties"</span>: { <span class="kw">"enabled"</span>: <span class="kw">false</span>, <span class="kw">"loading"</span>: <span class="kw">true</span> } }</span>
+<span class="mark">  ],</span>
+  <span class="kw">"slots"</span>: [
+    { <span class="kw">"id"</span>: <span class="str">"container"</span>, <span class="kw">"kind"</span>: <span class="str">"flex_box"</span> },
+    { <span class="kw">"id"</span>: <span class="str">"icon"</span>,      <span class="kw">"kind"</span>: <span class="str">"icon"</span> },
+    { <span class="kw">"id"</span>: <span class="str">"label"</span>,     <span class="kw">"kind"</span>: <span class="str">"text"</span> }
+  ],
+  <span class="kw">"recipes"</span>: [
+    { <span class="kw">"id"</span>: <span class="str">"primary-medium"</span>,
+      <span class="kw">"properties"</span>: { <span class="kw">"variant"</span>: <span class="str">"primary"</span>, <span class="kw">"size"</span>: <span class="str">"medium"</span> },
+      <span class="kw">"styles"</span>: { <span class="kw">"container"</span>: <span class="str">"primary-medium/container"</span>,
+                  <span class="kw">"label"</span>: <span class="str">"primary-medium/label"</span> } }
+    <span class="cm">// …one entry for each of the 15 combinations</span>
+  ],
+  <span class="kw">"styles"</span>: { <span class="cm">/* one resolved Mix Protocol style for each recipe and slot */</span> }
+}</code></pre>
+</figure>
+
+  <p>Five variants and three sizes give 15 recipes. Six states give 90 cells for each theme. The
+  six renders in <a href="#states">States</a> are those six states, drawn by the real component.
+  The document is the same matrix as data, so a tool can read it without a Flutter runtime.</p>
+
+  <h3>What still needs you</h3>
+  <p>A generator can derive the axes, the recipes, the styles, and the themes. It cannot derive
+  meaning. Stable slot names, the semantic role, where a nested component starts, and behavioral
+  geometry such as a slider fraction stay authored, because a wrong guess there is an
+  accessibility defect rather than a cosmetic one.</p>
+
+  <p>The target is a generated schema with a small authored file beside it, never a schema with
+  no author.</p>
+</section>
+
 <div class="part" role="separator" aria-label="Reference"><span class="lbl">Reference</span><p>Look these up when you need them.</p></div>
 
 <section class="sec" id="catalog">
@@ -1905,6 +2034,13 @@ ButtonStyler _disabledStyle() =&gt; ButtonStyler()
   <p>Every command and status line on this page was run against a fresh Flutter application created
   for this guide. Long planning output is shortened to the lines that affect your next decision, and
   every shortened block marks the elision.</p>
+
+  <p>One part is different.
+  <a href="#generate">What the recipe can generate next</a> is a design preview, and it says so at
+  the top of that section. Its two JSON shapes follow contracts that exist today &mdash; the Muse
+  A2UI component catalog, and <code>mix/component-capture/component/v1</code> &mdash; but no
+  generator emits them from a recipe yet. Read that section as direction, and the rest as
+  evidence.</p>
 
   <p>Every image is an application render, encoded as lossless WebP. No image shows terminal output.
   The button renders come from a specimen application built from the source that
