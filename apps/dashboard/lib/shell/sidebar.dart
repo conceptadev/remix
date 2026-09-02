@@ -18,22 +18,15 @@ class Sidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Placement stays here: RemixSidebar owns no display edge. The panel paints
-    // to that edge, so device insets become panel padding rather than a
-    // SafeArea wrapped around the painted surface.
+    // Placement stays here: FortalSidebar owns no display edge. Passing the
+    // device insets into the generated wrapper keeps them inside its painted
+    // surface instead of putting a SafeArea around that surface.
     final insets = MediaQuery.paddingOf(context);
 
     return SizedBox(
       width: dashboardSidebarWidth,
-      child: RemixSidebar<DashboardPage>(
-        style: fortalSidebarStyle().padding(
-          EdgeInsetsGeometryMix.only(
-            left: insets.left,
-            right: insets.right,
-            top: insets.top,
-            bottom: insets.bottom,
-          ),
-        ),
+      child: FortalSidebar<DashboardPage>(
+        panelPadding: insets,
         header: const _Brand(),
         sections: dashboardSidebarSections,
         selectedValue: selected,

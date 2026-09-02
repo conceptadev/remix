@@ -42,11 +42,13 @@ void main() {
   testWidgets('recipe paints the panel surface and the footer divider', (
     tester,
   ) async {
+    const panelPadding = EdgeInsets.fromLTRB(1, 2, 3, 4);
     await tester.pumpRemixApp(
       SizedBox(
         height: 400,
         width: 256,
         child: FortalSidebar<String>(
+          panelPadding: panelPadding,
           header: const Text('Acme'),
           sections: _sections,
           selectedValue: 'overview',
@@ -61,6 +63,7 @@ void main() {
     expect(panel?.color, isNotNull);
     expect(panel?.border, isA<BorderDirectional>());
     expect((panel?.border as BorderDirectional?)?.end.width, greaterThan(0));
+    expect(spec.container.spec.box?.spec.padding, panelPadding);
 
     final footer = spec.footer.spec.decoration as BoxDecoration?;
     expect((footer?.border as Border?)?.top.width, greaterThan(0));

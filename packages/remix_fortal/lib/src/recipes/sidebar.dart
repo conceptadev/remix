@@ -23,23 +23,27 @@ const _minimumDestinationTargetHeight = 48.0;
 /// 48-logical-pixel minimum height. The footer carries the divider that
 /// separates account content from navigation. [highContrast] strengthens
 /// section and selected destination content without changing layout.
+/// [panelPadding] applies host-owned insets inside the painted panel surface.
 ///
 /// The recipe sets no panel width and no header padding. Width belongs to the
 /// host, which must also size any drawer that presents the same panel, and
 /// header metrics usually have to match an application top bar.
 @MixWidget(target: RemixSidebar.new)
-SidebarStyler fortalSidebarStyle({bool highContrast = false}) {
+SidebarStyler fortalSidebarStyle({
+  bool highContrast = false,
+  EdgeInsetsGeometry? panelPadding,
+}) {
   return SidebarStyler(
-    container: FlexBoxStyler()
-        .color(FortalTokens.colorPanelSolid())
-        .border(
-          BoxBorderMix.end(
-            BorderSideMix(
-              color: FortalTokens.grayA5(),
-              width: FortalTokens.borderWidth1(),
+    container:
+        FlexBoxStyler(padding: EdgeInsetsGeometryMix.maybeValue(panelPadding))
+            .color(FortalTokens.colorPanelSolid())
+            .border(
+              .end(
+                .color(
+                  FortalTokens.grayA5(),
+                ).width(FortalTokens.borderWidth1()),
+              ),
             ),
-          ),
-        ),
     content: FlexBoxStyler()
         .spacing(FortalTokens.space3())
         .padding(
@@ -49,12 +53,7 @@ SidebarStyler fortalSidebarStyle({bool highContrast = false}) {
           ),
         ),
     footer: BoxStyler().border(
-      BoxBorderMix.top(
-        BorderSideMix(
-          color: FortalTokens.gray6(),
-          width: FortalTokens.borderWidth1(),
-        ),
-      ),
+      .top(.color(FortalTokens.gray6()).width(FortalTokens.borderWidth1())),
     ),
     sectionLabel: fortalTextStyle(size: .size1, weight: .medium)
         .color(highContrast ? FortalTokens.gray12() : FortalTokens.gray11())

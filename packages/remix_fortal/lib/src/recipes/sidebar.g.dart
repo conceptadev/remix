@@ -15,6 +15,7 @@ part of 'sidebar.dart';
 /// 48-logical-pixel minimum height. The footer carries the divider that
 /// separates account content from navigation. [highContrast] strengthens
 /// section and selected destination content without changing layout.
+/// [panelPadding] applies host-owned insets inside the painted panel surface.
 ///
 /// The recipe sets no panel width and no header padding. Width belongs to the
 /// host, which must also size any drawer that presents the same panel, and
@@ -23,6 +24,7 @@ class FortalSidebar<T extends Object> extends StatelessWidget {
   const FortalSidebar({
     super.key,
     this.highContrast = false,
+    this.panelPadding,
     this.header,
     required this.sections,
     required this.selectedValue,
@@ -34,6 +36,8 @@ class FortalSidebar<T extends Object> extends StatelessWidget {
   });
 
   final bool highContrast;
+
+  final EdgeInsetsGeometry? panelPadding;
 
   final Widget? header;
 
@@ -55,7 +59,10 @@ class FortalSidebar<T extends Object> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixSidebar<T>(
       key: this.key,
-      style: fortalSidebarStyle(highContrast: this.highContrast),
+      style: fortalSidebarStyle(
+        highContrast: this.highContrast,
+        panelPadding: this.panelPadding,
+      ),
       header: this.header,
       sections: this.sections,
       selectedValue: this.selectedValue,

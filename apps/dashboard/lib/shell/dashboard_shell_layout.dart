@@ -25,11 +25,8 @@ class DashboardShellHeader extends StatelessWidget {
           .padding(.horizontal(horizontalPadding))
           .color(FortalTokens.colorPanelSolid())
           .border(
-            BoxBorderMix.bottom(
-              BorderSideMix(
-                color: FortalTokens.grayA6(),
-                width: FortalTokens.borderWidth1(),
-              ),
+            .bottom(
+              .color(FortalTokens.grayA6()).width(FortalTokens.borderWidth1()),
             ),
           ),
       child: child,

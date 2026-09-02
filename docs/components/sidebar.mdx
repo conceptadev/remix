@@ -238,7 +238,9 @@ heading and selected-destination content without changing those metrics.
 
 The recipe sets no panel width and no header padding. Width belongs to the
 host, which must also size any drawer that presents the same panel, and header
-metrics usually have to match an application top bar.
+metrics usually have to match an application top bar. Pass host-owned display
+insets through `panelPadding` when the panel surface and trailing border must
+paint behind those insets while its contents remain clear of them.
 
 Sidebar is a Fortal extension, not a Radix Themes parity family, so it is
 intentionally absent from the generated Radix parity catalog.

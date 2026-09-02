@@ -201,9 +201,13 @@ void main() {
 
     final panel = tester.getRect(find.byType(Sidebar));
     final brand = tester.getRect(find.byKey(const ValueKey('dashboard-brand')));
+    final generated = tester.widget<FortalSidebar<DashboardPage>>(
+      find.byType(FortalSidebar<DashboardPage>),
+    );
 
     // The painted panel reaches the display edge while its content clears the
     // top inset.
+    expect(generated.panelPadding, insets);
     expect(brand.top, closeTo(panel.top + insets.top, 0.5));
     expect(tester.takeException(), isNull);
   });

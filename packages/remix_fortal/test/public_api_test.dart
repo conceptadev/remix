@@ -94,10 +94,12 @@ void main() {
       selectedValue: 'overview',
       semanticLabel: 'Primary navigation',
       highContrast: true,
+      panelPadding: EdgeInsets.all(8),
     );
 
     expect(navigation, isA<FortalSidebar<String>>());
     expect(navigation.highContrast, isTrue);
+    expect(navigation.panelPadding, const EdgeInsets.all(8));
     expect(fortalSidebarStyle(), isA<SidebarStyler>());
   });
 

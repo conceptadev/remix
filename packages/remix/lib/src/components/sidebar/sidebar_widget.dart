@@ -246,13 +246,13 @@ class RemixSidebar<T extends Object> extends StatelessWidget {
 
   SidebarStyler _effectiveStyle() {
     final panel = FlexBoxStyler()
-        .direction(Axis.vertical)
-        .mainAxisSize(MainAxisSize.max)
-        .crossAxisAlignment(CrossAxisAlignment.stretch);
+        .direction(.vertical)
+        .mainAxisSize(.max)
+        .crossAxisAlignment(.stretch);
     final stack = FlexBoxStyler()
-        .direction(Axis.vertical)
-        .mainAxisSize(MainAxisSize.min)
-        .crossAxisAlignment(CrossAxisAlignment.stretch);
+        .direction(.vertical)
+        .mainAxisSize(.min)
+        .crossAxisAlignment(.stretch);
 
     return SidebarStyler(
       container: panel,
@@ -269,8 +269,8 @@ class RemixSidebar<T extends Object> extends StatelessWidget {
       spec: value.spec.copyWith(
         flex: flex.copyWith(
           spec: flex.spec.copyWith(
-            direction: Axis.vertical,
-            verticalDirection: VerticalDirection.down,
+            direction: .vertical,
+            verticalDirection: .down,
           ),
         ),
       ),
