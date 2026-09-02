@@ -162,6 +162,10 @@
           "href": "/components/select"
         },
         {
+          "title": "Sidebar",
+          "href": "/components/sidebar"
+        },
+        {
           "title": "Skeleton",
           "href": "/components/skeleton"
         },

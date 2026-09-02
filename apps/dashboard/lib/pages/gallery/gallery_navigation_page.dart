@@ -13,8 +13,14 @@ class GalleryNavigationPage extends StatelessWidget {
   Widget build(BuildContext context) => GalleryPage(
     title: 'Navigation',
     intro:
-        'Tabs, standalone disclosures, and coordinated accordions for organizing dense interfaces.',
+        'Sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
     sections: [
+      const GallerySection(
+        label: 'Sidebar',
+        description:
+            'A controlled Fortal sidebar with a fixed header and footer, a scrolling destination region, headings, selected state, and ordinary Tab traversal.',
+        child: _SidebarDemo(),
+      ),
       GallerySection(
         label: 'Tabs',
         description: 'Both tab sizes with live keyboard and pointer selection.',
@@ -52,6 +58,91 @@ class GalleryNavigationPage extends StatelessWidget {
         ),
       ),
     ],
+  );
+}
+
+class _SidebarDemo extends StatefulWidget {
+  const _SidebarDemo();
+
+  @override
+  State<_SidebarDemo> createState() => _SidebarDemoState();
+}
+
+class _SidebarDemoState extends State<_SidebarDemo> {
+  static const _sections = <RemixSidebarSection<String>>[
+    RemixSidebarSection(
+      label: 'Workspace',
+      destinations: [
+        RemixSidebarDestination(
+          value: 'overview',
+          label: 'Overview',
+          icon: Icons.space_dashboard_outlined,
+        ),
+        RemixSidebarDestination(
+          value: 'activity',
+          label: 'Activity',
+          icon: Icons.timeline_outlined,
+        ),
+      ],
+    ),
+    RemixSidebarSection(
+      label: 'Manage',
+      destinations: [
+        RemixSidebarDestination(
+          value: 'settings',
+          label: 'Settings',
+          icon: Icons.settings_outlined,
+        ),
+      ],
+    ),
+  ];
+
+  String _selected = 'overview';
+
+  @override
+  // Align loosens the stretched section constraints so the panel keeps the
+  // width and height a host would give it. The bounded height shows the
+  // destination region scrolling while the header and footer stay put.
+  Widget build(BuildContext context) => Align(
+    alignment: Alignment.centerLeft,
+    child: SizedBox(
+      width: 280,
+      height: 320,
+      child: FortalSidebar<String>(
+        header: const _SidebarDemoHeader(),
+        sections: _sections,
+        selectedValue: _selected,
+        onSelected: (value) => setState(() => _selected = value),
+        footer: const _SidebarDemoFooter(),
+        semanticLabel: 'Gallery navigation example',
+      ),
+    ),
+  );
+}
+
+class _SidebarDemoHeader extends StatelessWidget {
+  const _SidebarDemoHeader();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    child: const FortalText('Acme', size: .size4, weight: .bold),
+  );
+}
+
+class _SidebarDemoFooter extends StatelessWidget {
+  const _SidebarDemoFooter();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.all(14),
+    child: Row(
+      spacing: 10,
+      children: [
+        const FortalAvatar(label: 'AC', size: .size1),
+        const FortalText('Ada Chen', size: .size2, weight: .medium),
+      ],
+    ),
   );
 }
 
