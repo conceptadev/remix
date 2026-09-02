@@ -28,8 +28,8 @@ plus `accordion`, `avatar`, `badge`, `button`, `callout`, `card`, `checkbox`,
 `skeleton`, `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toggle`,
 `toggle_group`, and `tooltip`.
 
-Until the separate public-release gate is complete, contributors can point the
-development dependency at a checkout or staged package:
+To run an unreleased build, contributors can point the development dependency
+at a checkout or staged package:
 
 ```shell
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
@@ -178,9 +178,7 @@ Mix merges state fragments by state. To replace a hover value, provide an
 Project-local use is the supported default. It pins the CLI alongside the app
 and makes template changes reviewable in ordinary dependency updates. A global
 activation is convenient for experiments, but it can silently move every
-project to a different template version. Hosted/global activation remains a
-post-MVP release gate until the package name, publisher, archive contents, and
-activation flow have been verified.
+project to a different template version.
 
 ## Repository proof
 

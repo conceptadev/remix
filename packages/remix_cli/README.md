@@ -27,16 +27,22 @@ dart run remix_cli:remix init --prefix Acme
 dart run remix_cli:remix add button
 ```
 
-Before the first hosted release, use a checkout or staged package path:
+To run an unreleased build, point at a checkout or staged package path:
 
 ```shell
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
 Global activation is convenient for experiments, but it does not pin the
-template version per project. Hosted/global activation remains behind the
-post-MVP release gate until the package and publisher configuration have been
-verified.
+template version per project:
+
+```shell
+dart pub global activate remix_cli
+```
+
+`remix_cli` is versioned independently of `remix` and `remix_fortal`, so its
+version never matches theirs. Its registry is authored against one `remix`
+version; `add` reports when your resolved `remix` is newer than that one.
 
 ## Initialize a project
 

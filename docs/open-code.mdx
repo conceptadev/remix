@@ -15,7 +15,8 @@ interaction rules. The installed file only decides what things look like.
 
 <Info>
 `remix_cli` is pre-1.0 and versioned independently from `remix` and
-`remix_fortal`. It is not yet published to pub.dev.
+`remix_fortal`, so its version never matches theirs. Install it from pub.dev
+like any other package.
 </Info>
 
 ## When to choose open code
@@ -44,17 +45,17 @@ flutter pub add dev:remix_cli
 The command is called `remix`. How you reach it depends on how it is installed:
 
 ```bash
-# Project-local dev dependency (recommended, and the only option today)
+# Project-local dev dependency (recommended)
 dart run remix_cli:remix <command>
 
-# Global install — available once remix_cli is published to pub.dev
+# Global install
 dart pub global activate remix_cli
 remix <command>
 ```
 
-Prefer the project-local form even after publishing: it pins the CLI *and* its
-bundled registry snapshot per project, so two apps on different Remix versions
-cannot install each other's templates.
+Prefer the project-local form: it pins the CLI *and* its bundled registry
+snapshot per project, so two apps on different Remix versions cannot install
+each other's templates.
 
 <Note>
 The examples below are written as `remix <command>` to match the tool's own
