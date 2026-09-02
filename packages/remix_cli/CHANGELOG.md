@@ -12,3 +12,7 @@
 - Every item depends on `theme`. `data_table` also depends on `checkbox`,
   `icon_button`, and `select`, because its selection column, pager, and
   page-size control are those components; `add data_table` installs all four.
+- `add` reports when the resolved `remix` is newer than the version this
+  registry snapshot was authored against. The install still completes;
+  `--dry-run` and `--diff` never print it, because they stop before
+  `flutter pub get`.

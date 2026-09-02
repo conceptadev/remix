@@ -1,8 +1,41 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
+import 'package:pub_semver/pub_semver.dart';
 import 'package:remix_cli/src/installer.dart';
 import 'package:remix_cli/src/process_runner.dart';
+import 'package:yaml/yaml.dart';
+
+/// The `remix` constraint the bundled registry declares, read from the file
+/// itself rather than restated here.
+///
+/// A literal copy would go stale on the next `remix` bump and fail every
+/// fixture in this suite with `does not satisfy`, inside the release pull
+/// request a bot opened. Deriving it means the bump moves one line.
+final String registryRemixConstraint = _readRegistryRemixConstraint();
+
+/// The lowest `remix` version [registryRemixConstraint] admits.
+///
+/// `tool/check_version_alignment.dart` holds this equal to the version in
+/// `packages/remix/pubspec.yaml`, so it is also the version the registry
+/// templates were authored against.
+final Version registryRemixFloor =
+    (VersionConstraint.parse(registryRemixConstraint) as VersionRange).min!;
+
+String _readRegistryRemixConstraint() {
+  // `dart test` runs with the package root as the current directory.
+  final document = loadYaml(
+    File(p.join('lib', 'src', 'registry', 'registry.yaml')).readAsStringSync(),
+  );
+  final items = (document as YamlMap)['items'] as YamlMap;
+  for (final item in items.values) {
+    final dependencies = (item as YamlMap)['dependencies'];
+    if (dependencies is YamlMap && dependencies['remix'] is String) {
+      return dependencies['remix'] as String;
+    }
+  }
+  throw StateError('registry.yaml declares no remix constraint.');
+}
 
 Directory createFlutterPackage() {
   final root = Directory.systemTemp.createTempSync('remix_cli_test_');
@@ -30,7 +63,7 @@ Map<String, List<int>> snapshotFiles(Directory root) {
 
 void writeRequiredPubspec(
   Directory root, {
-  String remix = '^1.0.0-beta.7',
+  String? remix,
   String mixAnnotations = '^2.2.0-beta.1',
   String? remixUiIcons,
   String buildRunner = '^2.10.1',
@@ -45,7 +78,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  remix: $remix
+  remix: ${remix ?? registryRemixConstraint}
   mix_annotations: $mixAnnotations
 ${remixUiIconsDependency}dev_dependencies:
   build_runner: $buildRunner
@@ -55,7 +88,7 @@ ${remixUiIconsDependency}dev_dependencies:
 
 void writeRequiredLock(
   Directory root, {
-  String remix = '1.0.0-beta.7',
+  String? remix,
   String mixAnnotations = '2.2.0-beta.1',
   String? remixUiIcons,
   String buildRunner = '2.10.1',
@@ -66,7 +99,7 @@ void writeRequiredLock(
       : '  remix_ui_icons:\n    version: "$remixUiIcons"\n';
   File(p.join(root.path, 'pubspec.lock')).writeAsStringSync('''packages:
   remix:
-    version: "$remix"
+    version: "${remix ?? registryRemixFloor}"
   mix_annotations:
     version: "$mixAnnotations"
 ${remixUiIconsPackage}  build_runner:

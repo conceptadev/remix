@@ -236,7 +236,16 @@ final class Installer {
         detail: 'Could not resolve consumer dependencies',
       );
       completed.add('pub get');
-      _verifyLockedVersions(root, requirements);
+      final locked = _verifyLockedVersions(root, requirements);
+      final floor = _snapshotFloor(requirements);
+      final lockedRemix = locked['remix'];
+      if (floor != null && lockedRemix != null && lockedRemix > floor) {
+        _writeOut(
+          'Resolved remix $lockedRemix; this remix_cli registry was authored '
+          'against $floor. Run flutter pub upgrade remix_cli, then review '
+          'with --diff.',
+        );
+      }
 
       final pathsToWrite = <String>[];
       for (final item in items) {
@@ -667,10 +676,13 @@ VersionConstraint? _hostedConstraint(Object? declaration) {
   return null;
 }
 
-void _verifyLockedVersions(
+// Returns the resolved version of every requirement so the caller can compare
+// them against the registry snapshot; the versions are parsed here anyway.
+Map<String, Version> _verifyLockedVersions(
   Directory root,
   List<_DependencyRequirement> requirements,
 ) {
+  final locked = <String, Version>{};
   final lock = _findPubLock(root);
   final document = loadYaml(lock.readAsStringSync());
   final packages = document is YamlMap && document['packages'] is YamlMap
@@ -696,7 +708,25 @@ void _verifyLockedVersions(
         '${requirement.name} $version does not satisfy ${requirement.constraint}.',
       );
     }
+    locked[requirement.name] = version;
   }
+  return locked;
+}
+
+// The `remix` version this registry snapshot was authored against.
+//
+// It is the floor of the registry constraint, not a separate `tested:` key:
+// `tool/check_version_alignment.dart` holds that floor equal to the released
+// `remix` version, so a second field would only be another value to keep in
+// step. A constraint with no lower bound — `any`, or a union — names no
+// authored version, so there is nothing to compare and the caller stays quiet.
+Version? _snapshotFloor(List<_DependencyRequirement> requirements) {
+  for (final requirement in requirements) {
+    if (requirement.name != 'remix') continue;
+    final constraint = requirement.constraint;
+    return constraint is VersionRange ? constraint.min : null;
+  }
+  return null;
 }
 
 String? _resolvedWorkspaceMemberVersion(

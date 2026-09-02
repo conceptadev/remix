@@ -348,6 +348,11 @@ against what is on disk. If the output is empty you are current:
 No authored-source differences.
 ```
 
+A `remix_cli` release that only changes the tool, and not a template, produces
+an empty diff. That is the expected result, not a failed upgrade: the CLI and
+its bundled registry snapshot share one version number, so every CLI release
+looks like a registry release even when no template moved.
+
 If you like the upstream version, take it wholesale:
 
 ```bash
@@ -365,6 +370,24 @@ Updated button.
 
 If you only want part of the upstream change, copy it out of the diff by hand.
 That is the intended workflow — the file is yours.
+
+### The Remix drift notice
+
+Each registry snapshot is authored against one `remix` version, and the
+constraint it installs is a caret — so `flutter pub upgrade` can move you onto
+a later `remix` that these templates were never tested against. `add` reports
+that after it resolves your lockfile:
+
+```
+Resolved remix 1.0.0; this remix_cli registry was authored against 1.0.0-beta.7. Run flutter pub upgrade remix_cli, then review with --diff.
+```
+
+It is a notice, not a failure — the install completes. A `remix` *below* the
+authored version is a different case and still fails outright, because the
+templates would not compile against it.
+
+The notice needs a resolved lockfile, so it prints only on a real `add`.
+`--dry-run` and `--diff` stop before `flutter pub get` and never show it.
 
 ### Reinstall behavior
 

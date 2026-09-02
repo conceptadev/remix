@@ -109,7 +109,9 @@ melos:
 
     version:align:check:
       run: dart run tool/check_version_alignment.dart
-      description: Verify remix and remix_fortal carry the identical version
+      description: >-
+        Verify remix and remix_fortal carry the identical version and the
+        remix_cli registry floors at it
 
     mix:consumer:check:
       run: dart run tool/check_consumer_mix.dart

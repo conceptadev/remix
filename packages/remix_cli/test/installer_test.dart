@@ -67,7 +67,7 @@ void main() {
       expect(runner.calls[1].arguments, [
         'pub',
         'add',
-        'remix@^1.0.0-beta.7',
+        'remix@$registryRemixConstraint',
         'mix_annotations@^2.2.0-beta.1',
         'dev:build_runner@^2.10.1',
         'dev:mix_generator@^2.2.0-beta.3',
@@ -136,7 +136,7 @@ workspace:
 ''');
       File(p.join(remixMember.path, 'pubspec.yaml')).writeAsStringSync('''
 name: remix
-version: 1.0.0-beta.7
+version: $registryRemixFloor
 environment:
   sdk: ">=3.11.0 <4.0.0"
 ''');
@@ -492,7 +492,7 @@ packages:
 ''',
         '''  remix:
     hosted: https://packages.example.test
-    version: ^1.0.0-beta.7
+    version: $registryRemixConstraint
 ''',
       ];
       for (final declaration in declarations) {
@@ -574,6 +574,45 @@ dev_dependencies:
     },
   );
 
+  test('a resolved remix above the snapshot floor prints a notice', () async {
+    // The registry constraint is a caret, so a consumer reaches an untested
+    // remix without ever failing lock verification. This line is the signal.
+    final drifted = registryRemixFloor.nextPatch;
+    writeRequiredPubspec(root);
+    writeRequiredLock(root, remix: '$drifted');
+    final output = <String>[];
+
+    await Installer(
+      projectRoot: root,
+      writeOut: output.add,
+      processRunner: happyRunner(root, lockedRemix: '$drifted'),
+    ).add(const AddOptions(item: 'button', mode: AddMode.write));
+
+    expect(
+      output,
+      contains(
+        allOf(
+          startsWith('Resolved remix $drifted;'),
+          contains('authored against $registryRemixFloor'),
+        ),
+      ),
+    );
+  });
+
+  test('a resolved remix at the snapshot floor prints no notice', () async {
+    writeRequiredPubspec(root);
+    writeRequiredLock(root);
+    final output = <String>[];
+
+    await Installer(
+      projectRoot: root,
+      writeOut: output.add,
+      processRunner: happyRunner(root),
+    ).add(const AddOptions(item: 'button', mode: AddMode.write));
+
+    expect(output, everyElement(isNot(startsWith('Resolved remix'))));
+  });
+
   test(
     'runtime requirements declared only under dev_dependencies fail preflight',
     () async {
@@ -594,7 +633,7 @@ dependencies:
     sdk: flutter
   mix_annotations: ^2.2.0-beta.1
 dev_dependencies:
-  remix: ^1.0.0-beta.7
+  remix: $registryRemixConstraint
   build_runner: ^2.10.1
   mix_generator: ^2.2.0-beta.3
 '''
@@ -604,7 +643,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  remix: ^1.0.0-beta.7
+  remix: $registryRemixConstraint
 dev_dependencies:
   mix_annotations: ^2.2.0-beta.1
   build_runner: ^2.10.1
@@ -655,7 +694,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  remix: ^1.0.0-beta.7
+  remix: $registryRemixConstraint
   mix_annotations: ^2.2.0-beta.1
   build_runner: ^2.10.1
   mix_generator: ^2.2.0-beta.3
@@ -687,10 +726,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  remix: ^1.0.0-beta.7
+  remix: $registryRemixConstraint
   mix_annotations: ^2.2.0-beta.1
 dev_dependencies:
-  remix: ^1.0.0-beta.7
+  remix: $registryRemixConstraint
   build_runner: ^2.10.1
   mix_generator: ^2.2.0-beta.3
 ''');
@@ -787,6 +826,7 @@ RecordingProcessRunner happyRunner(
   bool addMissingDependencies = false,
   bool writeLockOnPubGet = true,
   bool runRealFormatter = false,
+  String? lockedRemix,
   String? failStage,
 }) => RecordingProcessRunner((invocation) async {
   if (invocation.executable == 'flutter' &&
@@ -817,7 +857,7 @@ RecordingProcessRunner happyRunner(
         stderr: 'pub get failed',
       );
     }
-    if (writeLockOnPubGet) writeRequiredLock(root);
+    if (writeLockOnPubGet) writeRequiredLock(root, remix: lockedRemix);
     return successProcessOutput;
   }
   if (command.startsWith('format ')) {

@@ -236,6 +236,13 @@ Future<_Failure?> _checkInTemporaryApp({
   if (!cliRoot.existsSync()) {
     return _Failure('packages/remix_cli is missing from this checkout.');
   }
+  // The CLI comes from this checkout, but everything it then installs is
+  // resolved from pub.dev — including the `remix` version the registry floors
+  // at. So between the version pull request merging and its `v<version>` tag
+  // being served, this phase cannot resolve the new floor and fails on that
+  // commit. That window is expected and self-heals once pub.dev serves the
+  // tag; `remix_fortal`'s hosted pin lives with the identical one. The fix is
+  // to push the tag, never to teach this checker to probe pub.dev.
   final addCli = await _runProcess(
     sdk.dart,
     ['pub', 'add', 'dev:remix_cli@{path: ${cliRoot.path}}'],
@@ -287,6 +294,13 @@ Future<_Failure?> _checkInTemporaryApp({
     }
     stdout.writeln('  $package -> $root');
   }
+
+  final floorFailure = _verifyResolvedRemixFloor(
+    repositoryRoot: repositoryRoot,
+    hostedPackages: hostedPackages,
+  );
+  if (floorFailure != null) return floorFailure;
+  _step('Hosted remix resolved to the registry floor.');
 
   final hostedCheckoutFailure = _verifyCheckoutPackages(
     packages: hostedPackages,
@@ -534,6 +548,62 @@ _Failure? _verifyRegistryCoverage(Directory repositoryRoot) {
   return _Failure(
     'the checker and the bundled registry disagree on the catalog:\n'
     '${problems.map((problem) => '  - $problem').join('\n')}',
+  );
+}
+
+/// Fails when the hosted phase resolved a `remix` other than the one the
+/// registry floors at.
+///
+/// The registry constraint is a caret, so every later beta resolves and every
+/// other check here still passes — while the installed templates were only
+/// ever authored against the floor. `tool/check_version_alignment.dart` holds
+/// that floor equal to `packages/remix`; this proves the version a real
+/// consumer actually gets is the same one.
+_Failure? _verifyResolvedRemixFloor({
+  required Directory repositoryRoot,
+  required Map<String, String> hostedPackages,
+}) {
+  final registry = File(
+    '${repositoryRoot.path}/packages/remix_cli/lib/src/registry/registry.yaml',
+  );
+  final document = loadYaml(registry.readAsStringSync());
+  final items = document is YamlMap ? document['items'] : null;
+  if (items is! YamlMap) {
+    return _Failure('registry.yaml is not in the expected shape.');
+  }
+
+  String? constraint;
+  for (final item in items.values) {
+    final dependencies = (item as YamlMap)['dependencies'];
+    if (dependencies is YamlMap && dependencies['remix'] is String) {
+      constraint = dependencies['remix'] as String;
+      break;
+    }
+  }
+  if (constraint == null || !constraint.startsWith('^')) {
+    return _Failure(
+      'registry.yaml declares no caret remix constraint to floor at.',
+    );
+  }
+
+  final root = hostedPackages['remix'];
+  if (root == null) {
+    return _Failure('remix is missing from package_config.json.');
+  }
+
+  final floor = constraint.substring(1);
+  final expected = 'remix-$floor';
+  // pub resolves the cache directory URI with a trailing separator.
+  final actual = _basename(
+    root.endsWith(Platform.pathSeparator)
+        ? root.substring(0, root.length - 1)
+        : root,
+  );
+  if (actual == expected) return null;
+  return _Failure(
+    'the fresh app resolved $actual, but the registry floors at $floor. '
+    'If packages/remix was just bumped, push its `v$floor` tag and wait for '
+    'pub.dev to serve it.',
   );
 }
 
