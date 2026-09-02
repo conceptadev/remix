@@ -7,6 +7,8 @@ import '../widgets/action_menu.dart';
 import '../widgets/toast.dart';
 import '../widgets/typography.dart';
 import 'dashboard_page.dart';
+import 'dashboard_shell_layout.dart';
+import 'sidebar_sections.dart';
 
 class Sidebar extends StatelessWidget {
   const Sidebar({super.key, required this.selected, required this.onSelected});
@@ -16,49 +18,21 @@ class Sidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 256,
-      decoration: BoxDecoration(
-        color: MixScope.tokenOf(FortalTokens.colorPanelSolid, context),
-        border: Border(
-          right: BorderSide(
-            color: MixScope.tokenOf(FortalTokens.grayA5, context),
-          ),
-        ),
-      ),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: .stretch,
-          children: [
-            const _Brand(),
-            const FortalDivider(size: .size4),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(12, 16, 12, 20),
-                child: Column(
-                  crossAxisAlignment: .stretch,
-                  children: [
-                    for (final section in DashboardSection.values) ...[
-                      _SectionLabel(section.label),
-                      for (final page in DashboardPage.values.where(
-                        (page) => page.section == section,
-                      ))
-                        _NavItem(
-                          key: ValueKey('nav-${page.name}'),
-                          page: page,
-                          selected: page == selected,
-                          onPressed: () => onSelected(page),
-                        ),
-                      const SizedBox(height: 12),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-            const FortalDivider(size: .size4),
-            const _Profile(),
-          ],
-        ),
+    // Placement stays here: FortalSidebar owns no display edge. Passing the
+    // device insets into the generated wrapper keeps them inside its painted
+    // surface instead of putting a SafeArea around that surface.
+    final insets = MediaQuery.paddingOf(context);
+
+    return SizedBox(
+      width: dashboardSidebarWidth,
+      child: FortalSidebar<DashboardPage>(
+        panelPadding: insets,
+        header: const _Brand(),
+        sections: dashboardSidebarSections,
+        selectedValue: selected,
+        onSelected: onSelected,
+        footer: const _Profile(),
+        semanticLabel: 'Dashboard navigation',
       ),
     );
   }
@@ -69,78 +43,12 @@ class _Brand extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Box(
+    return DashboardShellHeader(
       key: const ValueKey('dashboard-brand'),
-      style: BoxStyler().padding(.all(FortalTokens.space4())),
+      horizontalPadding: FortalTokens.space4(),
       child: const FortalText('Dashboard', size: .size5, weight: .bold),
     );
   }
-}
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel(this.label);
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
-      child: StyledText(
-        label.toUpperCase(),
-        style: dashboardText(
-          .size1,
-          weight: .medium,
-          tone: .muted,
-        ).letterSpacing(0.7),
-      ),
-    );
-  }
-}
-
-/// A sidebar destination.
-///
-/// The Fortal ghost toggle already carries this exact treatment — `gray-12`
-/// when idle, `accent-3`/`accent-11` when selected, plus hover, press, focus
-/// ring and keyboard activation — so the destination only has to stretch it
-/// across the rail.
-///
-/// It does own its semantics, though. `RemixToggle` announces a *toggled*
-/// on/off state and offers no way to opt out, but a rail destination is one of
-/// a mutually exclusive set: `selected` is the contract assistive technology
-/// expects. Excluding the toggle's node and naming the destination here keeps
-/// that, and keeps the rendered label from being announced twice.
-class _NavItem extends StatelessWidget {
-  const _NavItem({
-    super.key,
-    required this.page,
-    required this.selected,
-    required this.onPressed,
-  });
-
-  final DashboardPage page;
-  final bool selected;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 2),
-    child: Semantics(
-      button: true,
-      selected: selected,
-      label: page.label,
-      excludeSemantics: true,
-      onTap: onPressed,
-      child: RemixToggle(
-        selected: selected,
-        onChanged: (_) => onPressed(),
-        label: page.label,
-        icon: page.icon,
-        style: fortalToggleStyle(
-          variant: .ghost,
-        ).container(.mainAxisSize(.max).mainAxisAlignment(.start)),
-      ),
-    ),
-  );
 }
 
 class _Profile extends StatelessWidget {

@@ -6,6 +6,7 @@ import 'package:dashboard/pages/gallery/gallery_forms_page.dart';
 import 'package:dashboard/pages/gallery/gallery_navigation_page.dart';
 import 'package:dashboard/pages/gallery/gallery_overlays_page.dart';
 import 'package:dashboard/pages/gallery/gallery_typography_page.dart';
+import 'package:dashboard/shell/dashboard_page.dart';
 import 'package:dashboard/shell/dashboard_shell.dart';
 import 'package:dashboard/theme/theme_scope.dart';
 import 'package:dashboard/theme/theme_settings.dart';
@@ -242,6 +243,15 @@ void main() {
     ) async {
       await _pumpPage(tester, const GalleryNavigationPage());
 
+      final sidebarSection = _sectionChild(tester, 'Sidebar');
+      final sidebar = tester.widget<FortalSidebar<String>>(
+        _within<FortalSidebar<String>>(sidebarSection),
+      );
+      expect(sidebar.selectedValue, 'overview');
+      expect(sidebar.sections, hasLength(2));
+      expect(sidebar.header, isNotNull);
+      expect(sidebar.footer, isNotNull);
+
       _expectValues<FortalTab, FortalTabsSize>(
         tester,
         within: _sectionChild(tester, 'Tabs'),
@@ -423,7 +433,9 @@ void main() {
           ),
         ),
       );
-      await tester.tap(find.byKey(const ValueKey('nav-settings')).first);
+      await tester.tap(
+        find.byKey(const ValueKey(DashboardPage.settings)).first,
+      );
       await tester.pump();
 
       final root = FortalTheme.of(tester.element(find.byType(DashboardShell)));
