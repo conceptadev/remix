@@ -245,11 +245,14 @@ intentionally absent from the generated Radix parity catalog.
 
 <CodeGroup title="Fortal sidebar" defaultLanguage="dart">
 ```dart
+import 'package:flutter/foundation.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
-const navigation = FortalSidebar<String>(
-  sections: [
+FortalSidebar<String> buildNavigation({
+  required ValueChanged<String> onSelected,
+}) => FortalSidebar<String>(
+  sections: const [
     RemixSidebarSection(
       label: 'Workspace',
       destinations: [
@@ -261,6 +264,7 @@ const navigation = FortalSidebar<String>(
     ),
   ],
   selectedValue: 'overview',
+  onSelected: onSelected,
   semanticLabel: 'Primary navigation',
 );
 ```

@@ -82,27 +82,24 @@ void main() {
     expect(fortalDataListStyle(), isA<DataListStyler>());
   });
 
-  test(
-    'the Fortal navigation list wrapper is constructible from the public API',
-    () {
-      const navigation = FortalSidebar<String>(
-        sections: [
-          RemixSidebarSection(
-            destinations: [
-              RemixSidebarDestination(value: 'overview', label: 'Overview'),
-            ],
-          ),
-        ],
-        selectedValue: 'overview',
-        semanticLabel: 'Primary navigation',
-        highContrast: true,
-      );
+  test('the Fortal sidebar wrapper is constructible from the public API', () {
+    const navigation = FortalSidebar<String>(
+      sections: [
+        RemixSidebarSection(
+          destinations: [
+            RemixSidebarDestination(value: 'overview', label: 'Overview'),
+          ],
+        ),
+      ],
+      selectedValue: 'overview',
+      semanticLabel: 'Primary navigation',
+      highContrast: true,
+    );
 
-      expect(navigation, isA<FortalSidebar<String>>());
-      expect(navigation.highContrast, isTrue);
-      expect(fortalSidebarStyle(), isA<SidebarStyler>());
-    },
-  );
+    expect(navigation, isA<FortalSidebar<String>>());
+    expect(navigation.highContrast, isTrue);
+    expect(fortalSidebarStyle(), isA<SidebarStyler>());
+  });
 
   test(
     'the Fortal data table wrapper is constructible from the public API',

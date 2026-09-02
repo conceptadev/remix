@@ -33,7 +33,7 @@ void main() {
       expect(find.byType(Navigator), findsNothing);
     });
 
-    testWidgets('navigation lists need no Material, Overlay, or Navigator', (
+    testWidgets('sidebars need no Material, Overlay, or Navigator', (
       tester,
     ) async {
       String? selected;

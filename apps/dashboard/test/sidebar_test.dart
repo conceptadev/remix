@@ -211,13 +211,13 @@ void main() {
   testWidgets('builds in scrolling and fixed-height column hosts', (
     tester,
   ) async {
-    FortalSidebar<DashboardPage> buildList() => FortalSidebar(
+    FortalSidebar<DashboardPage> buildPanel() => FortalSidebar(
       sections: _sections,
       selectedValue: DashboardPage.overview,
       onSelected: (_) {},
     );
 
-    await _pumpPage(tester, SingleChildScrollView(child: buildList()));
+    await _pumpPage(tester, SingleChildScrollView(child: buildPanel()));
     expect(tester.takeException(), isNull);
     expect(
       find.descendant(
@@ -229,7 +229,7 @@ void main() {
 
     await _pumpPage(
       tester,
-      SizedBox(height: 320, child: Column(children: [buildList()])),
+      SizedBox(height: 320, child: Column(children: [buildPanel()])),
     );
     expect(tester.takeException(), isNull);
     expect(

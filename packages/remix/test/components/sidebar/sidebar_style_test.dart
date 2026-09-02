@@ -105,7 +105,7 @@ void main() {
       );
     });
 
-    testWidgets('per-destination style merges after the list default', (
+    testWidgets('per-destination style merges after the sidebar default', (
       tester,
     ) async {
       await tester.pumpRemixApp(

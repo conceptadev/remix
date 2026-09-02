@@ -11,7 +11,8 @@ typedef SidebarDestinationStyler = ToggleStyler;
 /// [T] is non-nullable because `null` is reserved by the owning sidebar as the
 /// no-selection sentinel. Values must be unique across all sections and keep
 /// stable equality and hash-code behavior while rendered.
-class RemixSidebarDestination<T extends Object> {
+@immutable
+final class RemixSidebarDestination<T extends Object> {
   const RemixSidebarDestination({
     required this.value,
     required this.label,
@@ -60,7 +61,8 @@ class RemixSidebarDestination<T extends Object> {
 /// Declarative data for one section in a [RemixSidebar].
 ///
 /// A section with no [destinations] is skipped together with its [label].
-class RemixSidebarSection<T extends Object> {
+@immutable
+final class RemixSidebarSection<T extends Object> {
   const RemixSidebarSection({this.label, required this.destinations});
 
   /// Optional visible and semantic section heading.
@@ -281,10 +283,10 @@ class RemixSidebar<T extends Object> extends StatelessWidget {
 
     final effectiveStyle = _effectiveStyle();
     final handleSelected = onSelected;
-    final listDisabled = !enabled || handleSelected == null;
+    final destinationsDisabled = !enabled || handleSelected == null;
 
     return WidgetStateProvider(
-      states: listDisabled ? const {WidgetState.disabled} : const {},
+      states: destinationsDisabled ? const {WidgetState.disabled} : const {},
       child: RemixStyleSpecBuilder<SidebarSpec>(
         style: effectiveStyle,
         styleSpec: styleSpec,
@@ -315,7 +317,7 @@ class RemixSidebar<T extends Object> extends StatelessWidget {
                               key: ValueKey<T>(destination.value),
                               data: destination,
                               selected: destination.value == selectedValue,
-                              listEnabled: enabled,
+                              sidebarEnabled: enabled,
                               onSelected: handleSelected,
                               defaultStyle: styleSpec == null
                                   ? effectiveStyle
@@ -342,20 +344,26 @@ class RemixSidebar<T extends Object> extends StatelessWidget {
             ),
           );
 
-          // A Column hands its children unbounded main-axis constraints, so the
-          // panel's own constraints must be measured above the FlexBox. Only a
-          // bounded panel can scroll or pin the footer to its bottom edge.
+          final container = _forceSourceOrder(spec.container);
+
+          // FlexBox applies its Box constraints below this builder. Enforce
+          // those constraints here as ConstrainedBox will so style-provided
+          // height bounds also enable scrolling and pin the footer.
           return LayoutBuilder(
-            builder: (context, constraints) {
-              final bounded = constraints.hasBoundedHeight;
+            builder: (context, parentConstraints) {
+              final styleConstraints = container.spec.box?.spec.constraints;
+              final effectiveConstraints =
+                  styleConstraints?.enforce(parentConstraints) ??
+                  parentConstraints;
+              final hasBoundedHeight = effectiveConstraints.hasBoundedHeight;
 
               return FlexBox(
                 key: const ValueKey('RemixSidebar.container'),
-                styleSpec: _forceSourceOrder(spec.container),
+                styleSpec: container,
                 children: [
                   if (header case final header?)
                     Box(styleSpec: spec.header, child: header),
-                  if (bounded)
+                  if (hasBoundedHeight)
                     Expanded(child: SingleChildScrollView(child: landmark))
                   else
                     landmark,
@@ -376,7 +384,7 @@ class _RemixSidebarDestinationWidget<T extends Object> extends StatelessWidget {
     super.key,
     required this.data,
     required this.selected,
-    required this.listEnabled,
+    required this.sidebarEnabled,
     required this.onSelected,
     this.defaultStyle,
     this.defaultStyleSpec,
@@ -384,7 +392,7 @@ class _RemixSidebarDestinationWidget<T extends Object> extends StatelessWidget {
 
   final RemixSidebarDestination<T> data;
   final bool selected;
-  final bool listEnabled;
+  final bool sidebarEnabled;
   final ValueChanged<T>? onSelected;
   final SidebarStyler? defaultStyle;
   final StyleSpec<ToggleSpec>? defaultStyleSpec;
@@ -393,7 +401,7 @@ class _RemixSidebarDestinationWidget<T extends Object> extends StatelessWidget {
   Widget build(BuildContext context) {
     final handleSelected = onSelected;
     final effectiveEnabled =
-        listEnabled && data.enabled && handleSelected != null;
+        sidebarEnabled && data.enabled && handleSelected != null;
     void activate() => handleSelected!(data.value);
 
     return Semantics(

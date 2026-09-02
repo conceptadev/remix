@@ -2,7 +2,8 @@ part of 'sidebar.dart';
 
 /// Resolved visual properties for a [RemixSidebar].
 @MixableSpec(target: RemixSidebar.new, extraStylerMixins: [RemixBoxStylerMixin])
-class SidebarSpec with _$SidebarSpec {
+@immutable
+final class SidebarSpec with _$SidebarSpec {
   /// Layout and decoration for the panel that stacks header, content, and
   /// footer.
   @override

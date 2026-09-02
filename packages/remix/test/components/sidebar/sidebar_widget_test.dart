@@ -484,6 +484,71 @@ void main() {
       );
     });
 
+    for (final sizing in ['height', 'maxHeight', 'raw spec constraints']) {
+      testWidgets('$sizing bounds create a scrolling destination region', (
+        tester,
+      ) async {
+        var style = SidebarStyler();
+        SidebarSpec? styleSpec;
+        switch (sizing) {
+          case 'height':
+            style = style.height(200);
+          case 'maxHeight':
+            style = style.maxHeight(200);
+          case 'raw spec constraints':
+            styleSpec = const SidebarSpec(
+              container: StyleSpec(
+                spec: FlexBoxSpec(
+                  box: StyleSpec(
+                    spec: BoxSpec(
+                      constraints: BoxConstraints(
+                        minHeight: 200,
+                        maxHeight: 200,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+        }
+
+        final sections = [
+          RemixSidebarSection<String>(
+            destinations: [
+              for (var index = 0; index < 20; index += 1)
+                RemixSidebarDestination(
+                  value: 'item-$index',
+                  label: 'Item $index',
+                ),
+            ],
+          ),
+        ];
+
+        await tester.pumpRemixApp(
+          SingleChildScrollView(
+            child: RemixSidebar<String>(
+              header: const SizedBox(height: 32),
+              sections: sections,
+              selectedValue: 'item-0',
+              onSelected: (_) {},
+              footer: const SizedBox(height: 32),
+              style: style,
+              styleSpec: styleSpec,
+            ),
+          ),
+        );
+
+        final panel = find.byKey(const ValueKey('RemixSidebar.container'));
+        final scrollable = find.descendant(
+          of: find.byType(RemixSidebar<String>),
+          matching: find.byType(Scrollable),
+        );
+        expect(tester.getSize(panel).height, 200, reason: sizing);
+        expect(scrollable, findsOneWidget, reason: sizing);
+        expect(tester.takeException(), isNull, reason: sizing);
+      });
+    }
+
     testWidgets('a bounded host scrolls destinations and pins the footer', (
       tester,
     ) async {
