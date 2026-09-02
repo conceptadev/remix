@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 
 import 'ui/ui.dart';
@@ -561,6 +562,49 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                 ),
                 const SizedBox(height: 16),
 
+                _Label('Charts', color: data.mutedForeground),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: [
+                    _ChartCard(
+                      title: 'Line',
+                      color: data.mutedForeground,
+                      child: AcmeLineChart(
+                        showMarkers: true,
+                        semanticsLabel: 'Weekly revenue',
+                        xAxis: ChartAxis.numeric(
+                          min: 0,
+                          max: 4,
+                          interval: 1,
+                          labelFormatter: _weekdayLabel,
+                        ),
+                        yAxis: ChartAxis.numeric(min: 0, max: 50, interval: 10),
+                        series: _revenueSeries(),
+                      ),
+                    ),
+                    _ChartCard(
+                      title: 'Bar',
+                      color: data.mutedForeground,
+                      child: AcmeBarChart(
+                        semanticsLabel: 'Quarterly orders',
+                        yAxis: ChartAxis.numeric(min: 0, max: 50, interval: 10),
+                        groups: _orderGroups(),
+                      ),
+                    ),
+                    _ChartCard(
+                      title: 'Donut',
+                      color: data.mutedForeground,
+                      child: AcmePieChart(
+                        centerRadius: 34,
+                        semanticsLabel: 'Traffic channels',
+                        slices: _channelSlices(),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
                 _Label('Card, callout, divider', color: data.mutedForeground),
                 AcmeCard(
                   child: Column(
@@ -954,6 +998,102 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
     );
   }
 }
+
+/// A bounded surface for one chart family.
+///
+/// `mix_chart` has no intrinsic height. Keeping that constraint visible in the
+/// gallery prevents the copied recipe from appearing to size itself.
+class _ChartCard extends StatelessWidget {
+  const _ChartCard({
+    required this.title,
+    required this.color,
+    required this.child,
+  });
+
+  final String title;
+  final Color color;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 296,
+      child: AcmeCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _Label(title, color: color),
+            SizedBox(height: 160, child: child),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+List<LineSeries> _revenueSeries() => [
+  LineSeries(
+    id: 'revenue',
+    label: 'Revenue',
+    points: const [18, 31, 27, 42, 38].indexed
+        .map(
+          (entry) => ChartPoint(
+            id: entry.$1,
+            x: entry.$1.toDouble(),
+            y: entry.$2.toDouble(),
+          ),
+        )
+        .toList(),
+  ),
+  LineSeries(
+    id: 'target',
+    label: 'Target',
+    points: const [22, 26, 30, 34, 38].indexed
+        .map(
+          (entry) => ChartPoint(
+            id: entry.$1,
+            x: entry.$1.toDouble(),
+            y: entry.$2.toDouble(),
+          ),
+        )
+        .toList(),
+  ),
+];
+
+List<BarGroup> _orderGroups() =>
+    const [
+      (label: 'Q1', current: 28.0, previous: 20.0),
+      (label: 'Q2', current: 36.0, previous: 29.0),
+      (label: 'Q3', current: 31.0, previous: 34.0),
+      (label: 'Q4', current: 44.0, previous: 37.0),
+    ].indexed.map((entry) {
+      final (index, quarter) = entry;
+
+      return BarGroup(
+        id: index,
+        label: quarter.label,
+        bars: [
+          BarValue(id: 'current', label: 'Current', toY: quarter.current),
+          BarValue(id: 'previous', label: 'Previous', toY: quarter.previous),
+        ],
+      );
+    }).toList();
+
+List<PieSlice> _channelSlices() => [
+  PieSlice(id: 'direct', label: 'Direct', value: 42),
+  PieSlice(id: 'search', label: 'Search', value: 31),
+  PieSlice(id: 'social', label: 'Social', value: 17),
+  PieSlice(id: 'other', label: 'Other', value: 10),
+];
+
+String _weekdayLabel(double value) => switch (value.round()) {
+  0 => 'M',
+  1 => 'T',
+  2 => 'W',
+  3 => 'T',
+  4 => 'F',
+  _ => '',
+};
 
 class _Label extends StatelessWidget {
   const _Label(this.text, {required this.color});

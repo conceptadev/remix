@@ -247,7 +247,9 @@ lib/ui/
 ```
 
 Every later `add` drops one more pair into `components/` and extends the
-barrel's marker block. Nothing already on disk is touched.
+barrel's marker block. Existing authored source stays untouched. The focused
+build also includes every installed generated adapter, so a dependency change
+cannot remove an earlier generated part.
 
 `button.dart` is a styler function plus two enums:
 
@@ -426,6 +428,8 @@ Section placement is enforced, because the installed source lives under your
 | Package | Required section |
 |---|---|
 | `remix`, `mix_annotations` | `dependencies` |
+| `mix_chart` | `dependencies` when `chart` is installed |
+| `remix_ui_icons` | `dependencies` when `icons` is installed |
 | `build_runner`, `mix_generator` | either (build-time only) |
 
 A runtime package declared only under `dev_dependencies` fails **before** any
@@ -449,8 +453,9 @@ depends on it:
 `theme` installs `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`,
 giving you `UiTokens`, `UiThemeData`, and `UiThemeScope`. Every component item
 installs one authored file plus its generated adapter under
-`components/<item>.dart`. Two items differ: `icons` installs app-owned
-`icons.dart` with no generated adapter, while `data_table` also pulls in
+`components/<item>.dart`. Three items differ: `icons` installs app-owned
+`icons.dart` with no generated adapter; `chart` generates three adapters over
+`mix_chart`; and `data_table` also pulls in
 `checkbox`, `icon_button`, and `select`, because its selection column, pager,
 and page-size control *are* those components — adding it installs all four.
 
@@ -463,6 +468,7 @@ and page-size control *are* those components — adding it installs all four.
 | `button` | `UiButton` | variant, size |
 | `callout` | `UiCallout` | variant |
 | `card` | `UiCard` | — |
+| `chart` | `UiLineChart`, `UiBarChart`, `UiPieChart` | — |
 | `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` | — |
 | `data_list` | `UiDataList` | — |
 | `data_table` | `UiDataTable` | — |
@@ -496,6 +502,56 @@ out of the box.
 A parameter is not an axis. `UiDivider` takes an `orientation`, but it is a
 plain Flutter `Axis` the recipe accepts rather than an enum of its own, so it
 generates no named constructors.
+
+### Charts outside Fortal
+
+`chart` is an optional extension, not a Fortal preset and not a wrapper around
+Fortal:
+
+```bash
+remix add chart
+```
+
+It installs one editable recipe and generates `UiLineChart`, `UiBarChart`, and
+`UiPieChart`. Line series can draw lines or areas. Bar data can be grouped,
+stacked, or floating. A positive `centerRadius` makes a pie chart a donut.
+
+`mix_chart` retains the hard contract: data validation, rendering, pointer
+interaction, transitions, tooltips, and chart semantics. Your copied file owns
+the categorical palette, axes, grid, shared series geometry, and tooltip
+appearance. It reads only the current open-code theme tokens, so adding it does
+not require replacing an older customized Theme.
+
+Import chart data directly and give the chart finite dimensions:
+
+```dart
+import 'package:mix_chart/mix_chart.dart';
+
+import 'ui/ui.dart';
+
+final chart = SizedBox(
+  height: 240,
+  child: UiLineChart(
+    semanticsLabel: 'Weekly revenue',
+    showMarkers: true,
+    series: [
+      LineSeries(
+        id: 'revenue',
+        label: 'Revenue',
+        points: [
+          ChartPoint(id: 'mon', x: 0, y: 18),
+          ChartPoint(id: 'tue', x: 1, y: 31),
+        ],
+      ),
+    ],
+  ),
+);
+```
+
+The default palette follows `UiTokens.primary`, selects readable light or dark
+categorical colors from `UiTokens.background`, and removes duplicates. Edit
+`resolveUiChartPalette` for a design-system change. Pass `palette` or `style`
+for a one-chart override. The UI barrel does not re-export `mix_chart`.
 
 `remix add icons` also declares `remix_ui_icons` and gives you a small alias
 surface to evolve with the application. Import

@@ -47,7 +47,9 @@ current catalog is listed in `docs/open-code.mdx`.
 | Mix specs, stylers, variants, and resolution | |
 
 Nothing installed by the CLI copies Remix internals or depends on Fortal.
-Installed source imports the public `package:remix/remix.dart` surface.
+Core component source imports the public `package:remix/remix.dart` surface.
+The optional chart item also imports the public `package:mix_chart/mix_chart.dart`
+surface for its data, rendering, interaction, and semantics contract.
 
 ## Why generation is part of the consumer
 
@@ -104,8 +106,14 @@ the MVP has an update system.
 
 Runtime dependencies are `remix` and `mix_annotations`. Mix and Naked UI arrive
 through Remix, which avoids choosing a direct Mix version that Remix was not
-compiled against. Development dependencies are `build_runner` and
+compiled against. Installing the optional chart item adds `mix_chart` directly;
+it never adds `remix_fortal`. Development dependencies are `build_runner` and
 `mix_generator`.
+
+Chart is deliberately one item with three adapters. `mix_chart` owns the hard
+chart contract. The installed file owns presentation and resolves only the
+existing fifteen theme tokens. This keeps `remix add chart` compatible with a
+theme installed and customized before chart support existed.
 
 The recurring costs are visible:
 

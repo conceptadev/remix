@@ -180,6 +180,18 @@ final class Installer {
       for (final item in items)
         for (final target in item.generated) _resolveTarget(config, target),
     ];
+    // A newly added dependency can invalidate build_runner's asset graph. On
+    // that first rebuild, outputs excluded by --build-filter may be removed as
+    // stale even when their authored inputs did not change. Keep every
+    // already-installed registry adapter in the focused build so adding one
+    // optional item cannot delete another item's generated part.
+    final generationTargets = <String>{
+      ...generated,
+      for (final item in catalog.items.values)
+        for (final target in item.generated)
+          if (_projectFile(root, _resolveTarget(config, target)).existsSync())
+            _resolveTarget(config, target),
+    }.toList(growable: false);
 
     _printPlan(
       items: items,
@@ -288,13 +300,13 @@ final class Installer {
               'run',
               'build_runner',
               'build',
-              for (final target in generated) '--build-filter=$target',
+              for (final target in generationTargets) '--build-filter=$target',
             ],
             workingDirectory: root.path,
           ),
           detail: 'Mix code generation failed',
         );
-        for (final target in generated) {
+        for (final target in generationTargets) {
           if (!_projectFile(root, target).existsSync()) {
             throw StateError('Code generation did not create $target.');
           }

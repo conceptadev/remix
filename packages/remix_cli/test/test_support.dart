@@ -65,6 +65,7 @@ void writeRequiredPubspec(
   Directory root, {
   String? remix,
   String mixAnnotations = '^2.2.0-beta.1',
+  String? mixChart,
   String? remixUiIcons,
   String buildRunner = '^2.10.1',
   String mixGenerator = '^2.2.0-beta.3',
@@ -72,6 +73,7 @@ void writeRequiredPubspec(
   final remixUiIconsDependency = remixUiIcons == null
       ? ''
       : '  remix_ui_icons: $remixUiIcons\n';
+  final mixChartDependency = mixChart == null ? '' : '  mix_chart: $mixChart\n';
   File(p.join(root.path, 'pubspec.yaml')).writeAsStringSync('''name: consumer
 environment:
   sdk: ">=3.12.0 <4.0.0"
@@ -80,7 +82,7 @@ dependencies:
     sdk: flutter
   remix: ${remix ?? registryRemixConstraint}
   mix_annotations: $mixAnnotations
-${remixUiIconsDependency}dev_dependencies:
+$mixChartDependency${remixUiIconsDependency}dev_dependencies:
   build_runner: $buildRunner
   mix_generator: $mixGenerator
 ''');
@@ -90,6 +92,7 @@ void writeRequiredLock(
   Directory root, {
   String? remix,
   String mixAnnotations = '2.2.0-beta.1',
+  String? mixChart,
   String? remixUiIcons,
   String buildRunner = '2.10.1',
   String mixGenerator = '2.2.0-beta.3',
@@ -97,12 +100,15 @@ void writeRequiredLock(
   final remixUiIconsPackage = remixUiIcons == null
       ? ''
       : '  remix_ui_icons:\n    version: "$remixUiIcons"\n';
+  final mixChartPackage = mixChart == null
+      ? ''
+      : '  mix_chart:\n    version: "$mixChart"\n';
   File(p.join(root.path, 'pubspec.lock')).writeAsStringSync('''packages:
   remix:
     version: "${remix ?? registryRemixFloor}"
   mix_annotations:
     version: "$mixAnnotations"
-${remixUiIconsPackage}  build_runner:
+$mixChartPackage${remixUiIconsPackage}  build_runner:
     version: "$buildRunner"
   mix_generator:
     version: "$mixGenerator"

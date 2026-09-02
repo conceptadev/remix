@@ -22,6 +22,31 @@ void main() {
   );
 
   test(
+    'chart is a theme-only extension backed directly by mix_chart',
+    () async {
+      final catalog = await RegistryCatalog.loadBundled();
+      final chart = catalog.items['chart']!;
+      final source = await catalog.readTemplate(chart.files.single);
+
+      expect(catalog.resolve('chart').map((item) => item.name), [
+        'theme',
+        'chart',
+      ]);
+      expect(chart.dependencies.keys, {'mix_annotations', 'mix_chart'});
+      expect('${chart.dependencies['mix_chart']}', '^0.0.1-beta.1');
+      expect(source, contains("import 'package:mix_chart/mix_chart.dart';"));
+      expect(source, isNot(contains('remix_fortal')));
+      expect(
+        RegExp(
+          r'^@MixWidget\(target: (?:Line|Bar|Pie)Chart\.new\)$',
+          multiLine: true,
+        ).allMatches(source),
+        hasLength(3),
+      );
+    },
+  );
+
+  test(
     'dependency resolution de-duplicates in stable dependency-first order',
     () {
       final catalog = parse('''schema: 1
@@ -270,6 +295,7 @@ items:
       'flutter',
       'remix',
       'mix_annotations',
+      'mix_chart',
       'remix_ui_icons',
     };
     final directive = RegExp(r'''(?:import|export|part)\s+['"]([^'"]+)['"]''');
@@ -321,6 +347,7 @@ const _componentSurfaces =
       'button': (widgets: ['Button'], types: ['ButtonVariant', 'ButtonSize']),
       'callout': (widgets: ['Callout'], types: ['CalloutVariant']),
       'card': (widgets: ['Card'], types: []),
+      'chart': (widgets: ['LineChart', 'BarChart', 'PieChart'], types: []),
       'checkbox': (widgets: ['Checkbox', 'CheckboxGroupItem'], types: []),
       'data_list': (widgets: ['DataList'], types: []),
       'data_table': (widgets: ['DataTable'], types: []),

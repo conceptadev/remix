@@ -35,6 +35,7 @@ const _registryItems = <String>[
   'button',
   'callout',
   'card',
+  'chart',
   'checkbox',
   'data_list',
   'data_table',
@@ -74,6 +75,7 @@ const _registryItems = <String>[
 /// here to catch.
 const _generatedSnapshots = <String, String>{
   'lib/ui/components/button.g.dart': 'expected/acme_button.g.dart',
+  'lib/ui/components/chart.g.dart': 'expected/acme_chart.g.dart',
   'lib/ui/components/tabs.g.dart': 'expected/acme_tabs.g.dart',
 };
 
@@ -101,6 +103,7 @@ final _generatedAppFiles = <String>[
 const _requiredRuntimeDependencies = <String>[
   'remix',
   'mix_annotations',
+  'mix_chart',
   'remix_ui_icons',
 ];
 const _requiredDevDependencies = <String>['build_runner', 'mix_generator'];
@@ -109,6 +112,7 @@ const _allowedImportPackages = <String>[
   'flutter',
   'remix',
   'mix_annotations',
+  'mix_chart',
   'remix_ui_icons',
 ];
 

@@ -21,12 +21,16 @@ dart run remix_cli:remix add button
 ```
 
 One `add` installs one item. The catalog is `theme`, the opt-in `icons` seam,
-plus `accordion`, `avatar`, `badge`, `button`, `callout`, `card`, `checkbox`,
-`data_list`, `data_table`, `dialog`, `disclosure`, `divider`, `icon_button`,
-`link`,
-`menu`, `popover`, `progress`, `radio`, `segmented_control`, `select`,
-`skeleton`, `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toggle`,
-`toggle_group`, and `tooltip`.
+the optional `chart` extension, plus `accordion`, `avatar`, `badge`, `button`,
+`callout`, `card`, `checkbox`, `data_list`, `data_table`, `dialog`,
+`disclosure`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
+`radio`, `segmented_control`, `select`, `skeleton`, `slider`, `spinner`,
+`switch`, `tabs`, `textfield`, `toggle`, `toggle_group`, and `tooltip`.
+
+`chart` is the one optional extension outside the core Remix component
+surface. It builds directly on `mix_chart`, installs no Fortal code, and
+generates `AcmeLineChart`, `AcmeBarChart`, and `AcmePieChart` from one editable
+recipe.
 
 To run an unreleased build, contributors can point the development dependency
 at a checkout or staged package:
@@ -66,7 +70,9 @@ lib/ui/
 ```
 
 Every later component `add` drops one more pair into `components/` and extends
-the barrel's managed block. Nothing already on disk is touched.
+the barrel's managed block. Existing authored source stays untouched. The
+focused build also includes every installed generated adapter, so a dependency
+change cannot remove an earlier generated part.
 
 `dart run remix_cli:remix add icons` instead adds `lib/ui/icons.dart`, declares
 `remix_ui_icons`, and exposes a small, application-owned `UiIcons` alias set
@@ -75,6 +81,22 @@ evolves. The complete 318-icon catalog is one direct
 `package:remix_ui_icons/remix_ui_icons.dart` import away.
 
 The CLI does not create or modify `build.yaml`.
+
+## Charts without Fortal
+
+```shell
+dart run remix_cli:remix add chart
+```
+
+The application receives `components/chart.dart` and its generated adapter.
+The authored file owns the categorical palette, axes, grid, line and bar
+geometry, pie treatment, and tooltip. `mix_chart` still owns data, rendering,
+interaction, and semantics.
+
+Import `package:mix_chart/mix_chart.dart` for `LineSeries`, `ChartPoint`,
+`BarGroup`, and `PieSlice`. The UI barrel does not re-export that dependency.
+Give every chart finite dimensions; `mix_chart` charts have no intrinsic
+height. A positive `centerRadius` turns `AcmePieChart` into a donut.
 
 ## Source ownership
 

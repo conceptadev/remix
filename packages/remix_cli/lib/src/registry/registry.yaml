@@ -138,6 +138,26 @@ items:
     exports:
       - components/card.dart
 
+  # Charts are an optional extension over mix_chart rather than a Remix
+  # component. mix_chart keeps the data, interaction, semantics, and renderer
+  # contract; the installed recipe owns the application's visual language.
+  chart:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+      mix_chart: ^0.0.1-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/chart/chart.dart.tmpl
+        target: "@ui/components/chart.dart"
+    generated:
+      - "@ui/components/chart.g.dart"
+    exports:
+      - components/chart.dart
+
   divider:
     registryDependencies:
       - theme

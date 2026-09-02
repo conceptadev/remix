@@ -58,6 +58,7 @@ items:
     test('requires every committed generated adapter', () {
       const snapshots = [
         'expected/acme_button.g.dart',
+        'expected/acme_chart.g.dart',
         'expected/acme_tabs.g.dart',
       ];
 
@@ -191,6 +192,7 @@ void _writeValidFixture(Directory fixture) {
     'lib/main.dart',
     'test/open_code_test.dart',
     'expected/acme_button.g.dart',
+    'expected/acme_chart.g.dart',
     'expected/acme_tabs.g.dart',
   ];
   for (final relative in files) {
@@ -219,6 +221,7 @@ const _registryItems = <String>[
   'button',
   'callout',
   'card',
+  'chart',
   'checkbox',
   'data_list',
   'data_table',

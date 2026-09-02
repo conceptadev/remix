@@ -115,6 +115,49 @@ void main() {
   );
 
   test(
+    'adding Chart keeps installed adapters in the focused generation build',
+    () async {
+      await installButton(root);
+      final runner = happyRunner(
+        root,
+        addMissingDependencies: true,
+        addChartDependency: true,
+      );
+
+      await Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        processRunner: runner,
+      ).add(const AddOptions(item: 'chart', mode: AddMode.write));
+
+      final pubAdd = runner.calls.singleWhere(
+        (call) => call.arguments.take(2).join(' ') == 'pub add',
+      );
+      expect(pubAdd.arguments, ['pub', 'add', 'mix_chart@^0.0.1-beta.1']);
+      final build = runner.calls.singleWhere(
+        (call) => call.arguments.take(3).join(' ') == 'run build_runner build',
+      );
+      expect(
+        build.arguments.where(
+          (argument) => argument.startsWith('--build-filter='),
+        ),
+        {
+          '--build-filter=lib/ui/components/chart.g.dart',
+          '--build-filter=lib/ui/components/button.g.dart',
+        },
+      );
+      expect(
+        File(p.join(root.path, 'lib/ui/components/button.g.dart')).existsSync(),
+        isTrue,
+      );
+      expect(
+        File(p.join(root.path, 'lib/ui/components/chart.g.dart')).existsSync(),
+        isTrue,
+      );
+    },
+  );
+
+  test(
     'workspace members verify dependencies from the workspace lock',
     () async {
       final workspace = Directory.systemTemp.createTempSync(
@@ -349,11 +392,17 @@ packages:
           writeOut: (_) {},
         ).initialize(const InitOptions(prefix: 'Playground', uiPath: 'lib/ui'));
         final remixUiIcons = item == 'icons' ? '0.1.0' : null;
+        final mixChart = item == 'chart' ? '0.0.1-beta.1' : null;
         writeRequiredPubspec(
           caseRoot,
+          mixChart: mixChart == null ? null : '^$mixChart',
           remixUiIcons: remixUiIcons == null ? null : '^$remixUiIcons',
         );
-        writeRequiredLock(caseRoot, remixUiIcons: remixUiIcons);
+        writeRequiredLock(
+          caseRoot,
+          mixChart: mixChart,
+          remixUiIcons: remixUiIcons,
+        );
         await Installer(
           projectRoot: caseRoot,
           writeOut: (_) {},
@@ -685,6 +734,61 @@ dev_dependencies:
   );
 
   test(
+    'mix_chart declared only under dev_dependencies fails chart preflight',
+    () async {
+      final caseRoot = createFlutterPackage();
+      addTearDown(() => caseRoot.deleteSync(recursive: true));
+      await Installer(
+        projectRoot: caseRoot,
+        writeOut: (_) {},
+      ).initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'));
+      File(p.join(caseRoot.path, 'pubspec.yaml')).writeAsStringSync('''
+name: consumer
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  remix: $registryRemixConstraint
+  mix_annotations: ^2.2.0-beta.1
+dev_dependencies:
+  mix_chart: ^0.0.1-beta.1
+  build_runner: ^2.10.1
+  mix_generator: ^2.2.0-beta.3
+''');
+      writeRequiredLock(caseRoot, mixChart: '0.0.1-beta.1');
+      final before = snapshotFiles(caseRoot);
+      final runner = happyRunner(caseRoot);
+      final writer = RecordingFileWriter(caseRoot);
+
+      await expectLater(
+        Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+          processRunner: runner,
+          fileWriter: writer,
+        ).add(const AddOptions(item: 'chart', mode: AddMode.write)),
+        throwsA(
+          isFormatException.having(
+            (error) => error.message,
+            'message',
+            allOf(
+              contains('mix_chart'),
+              contains('dev_dependencies'),
+              contains('Move mix_chart to dependencies'),
+              contains('No source was written'),
+            ),
+          ),
+        ),
+      );
+
+      expect(snapshotFiles(caseRoot), before);
+      expect(runner.calls, isEmpty);
+      expect(writer.paths, isEmpty);
+    },
+  );
+
+  test(
     'development requirements are satisfied by the regular dependency section',
     () async {
       final pubspec = File(p.join(root.path, 'pubspec.yaml'))
@@ -824,6 +928,7 @@ Future<void> installButton(Directory root) async {
 RecordingProcessRunner happyRunner(
   Directory root, {
   bool addMissingDependencies = false,
+  bool addChartDependency = false,
   bool writeLockOnPubGet = true,
   bool runRealFormatter = false,
   String? lockedRemix,
@@ -846,7 +951,12 @@ RecordingProcessRunner happyRunner(
         stderr: 'pub add failed',
       );
     }
-    if (addMissingDependencies) writeRequiredPubspec(root);
+    if (addMissingDependencies) {
+      writeRequiredPubspec(
+        root,
+        mixChart: addChartDependency ? '^0.0.1-beta.1' : null,
+      );
+    }
     return successProcessOutput;
   }
   if (command == 'pub get') {
@@ -857,7 +967,13 @@ RecordingProcessRunner happyRunner(
         stderr: 'pub get failed',
       );
     }
-    if (writeLockOnPubGet) writeRequiredLock(root, remix: lockedRemix);
+    if (writeLockOnPubGet) {
+      writeRequiredLock(
+        root,
+        remix: lockedRemix,
+        mixChart: addChartDependency ? '0.0.1-beta.1' : null,
+      );
+    }
     return successProcessOutput;
   }
   if (command.startsWith('format ')) {

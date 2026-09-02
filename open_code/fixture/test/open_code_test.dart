@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mix_chart/mix_chart.dart';
 import 'package:open_code_fixture/main.dart';
 import 'package:open_code_fixture/ui/ui.dart';
 import 'package:remix/remix.dart';
@@ -2002,6 +2003,9 @@ void main() {
           find.byType(AcmeTooltip),
           find.byType(AcmeDataList),
           find.byType(AcmeDataTable<Map<String, String>>),
+          find.byType(AcmeLineChart),
+          find.byType(AcmeBarChart),
+          find.byType(AcmePieChart),
         ]) {
           expect(finder, findsWidgets);
         }
@@ -2017,10 +2021,22 @@ void main() {
             ? 960.0
             : size.width - 48;
         final cards = find.byType(AcmeCard);
-        expect(cards, findsNWidgets(3));
-        for (var index = 0; index < 3; index++) {
-          expect(tester.getSize(cards.at(index)).width, expectedContentWidth);
-        }
+        expect(cards, findsNWidgets(12));
+        final cardWidths = [
+          for (final element in cards.evaluate())
+            tester
+                .getSize(
+                  find.byElementPredicate(
+                    (candidate) => identical(candidate, element),
+                  ),
+                )
+                .width,
+        ];
+        expect(
+          cardWidths.where((width) => width == expectedContentWidth),
+          hasLength(3),
+        );
+        expect(cardWidths.where((width) => width == 296), hasLength(9));
         for (final accordion in tester.widgetList<AcmeAccordion<String>>(
           find.byType(AcmeAccordion<String>),
         )) {
@@ -2372,6 +2388,226 @@ void main() {
 
       expect(find.bySemanticsLabel('Upload'), findsOneWidget);
       expect(tester.getSize(find.byType(RemixProgress)).width, 200);
+      handle.dispose();
+    });
+  });
+
+  group('application-owned chart recipes', () {
+    for (final theme in _themes) {
+      testWidgets('palette is distinct and readable in ${theme.name}', (
+        tester,
+      ) async {
+        late List<Color> palette;
+
+        await tester.pumpWidget(
+          AcmeThemeScope(
+            data: theme.data,
+            child: _host(
+              _Probe((context) => palette = resolveAcmeChartPalette(context)),
+            ),
+          ),
+        );
+
+        expect(palette, hasLength(7));
+        expect(palette.first, theme.data.primary);
+        expect(palette.toSet(), hasLength(palette.length));
+        for (final color in palette) {
+          expect(
+            _contrastRatio(color, theme.data.background),
+            greaterThanOrEqualTo(4.5),
+            reason: '${theme.name}: $color',
+          );
+        }
+        expect(
+          () => palette.add(const Color(0xFF000000)),
+          throwsUnsupportedError,
+        );
+      });
+    }
+
+    testWidgets('palette follows primary and removes a duplicate', (
+      tester,
+    ) async {
+      late List<Color> palette;
+      final theme = const AcmeThemeData.light().copyWith(
+        primary: const Color(0xFF2563EB),
+      );
+
+      await tester.pumpWidget(
+        AcmeThemeScope(
+          data: theme,
+          child: _host(
+            _Probe((context) => palette = resolveAcmeChartPalette(context)),
+          ),
+        ),
+      );
+
+      expect(palette.first, theme.primary);
+      expect(palette, hasLength(6));
+      expect(palette.toSet(), hasLength(palette.length));
+    });
+
+    for (final theme in _themes) {
+      testWidgets('line parts resolve theme tokens in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeLineChartStyle(showMarkers: true),
+          theme: theme.data,
+        );
+        final axis = spec.spec.axis!.spec;
+        final grid = spec.spec.grid!.spec;
+        final series = spec.spec.series!.spec;
+        final tooltip = spec.spec.tooltip!.spec;
+
+        expect(spec.spec.palette, isNotEmpty);
+        expect(axis.label!.spec.style!.color, theme.data.mutedForeground);
+        expect(spec.spec.topAxis!.spec.showLabels, isFalse);
+        expect(spec.spec.rightAxis!.spec.showLabels, isFalse);
+        expect(grid.showHorizontal, isTrue);
+        expect(grid.showVertical, isFalse);
+        expect(grid.stroke!.spec.color, theme.data.border);
+        expect(series.stroke!.spec.width, 2);
+        expect(series.marker!.spec.show, isTrue);
+        expect(series.marker!.spec.borderColor, theme.data.background);
+        expect(tooltip.backgroundColor, theme.data.background);
+        expect(tooltip.border, BorderSide(color: theme.data.border));
+        expect(
+          tooltip.padding,
+          const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        );
+        expect(tooltip.text!.spec.style!.color, theme.data.foreground);
+      });
+
+      testWidgets('pie parts resolve theme tokens in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmePieChartStyle(centerRadius: 32, showLabels: true),
+          theme: theme.data,
+        );
+        final slice = spec.spec.slice!.spec;
+        final label = slice.label!.spec.style!;
+
+        expect(spec.spec.centerRadius, 32);
+        expect(spec.spec.centerColor, theme.data.background);
+        expect(spec.spec.sliceSpacing, 2);
+        expect(spec.spec.selectedSliceRadiusOffset, 4);
+        expect(slice.showLabel, isTrue);
+        expect(slice.cornerRadius, 2);
+        expect(label.fontSize, 12);
+        expect(label.fontWeight, FontWeight.w600);
+        expect(label.color, theme.data.background);
+      });
+    }
+
+    testWidgets('chart geometry clamps an application-wide pill radius', (
+      tester,
+    ) async {
+      final theme = const AcmeThemeData.light().copyWith(
+        radius: const Radius.circular(999),
+      );
+      final bar = await _resolve(tester, acmeBarChartStyle(), theme: theme);
+      final line = await _resolve(tester, acmeLineChartStyle(), theme: theme);
+
+      expect(bar.spec.bar!.spec.width, 16);
+      expect(bar.spec.bar!.spec.borderRadius, BorderRadius.circular(4));
+      expect(bar.spec.groupSpacing, 12);
+      expect(bar.spec.barSpacing, 6);
+      expect(line.spec.tooltip!.spec.borderRadius, BorderRadius.circular(12));
+    });
+
+    testWidgets('palette parameter and caller style merge last', (
+      tester,
+    ) async {
+      const palette = [Color(0xFF112233), Color(0xFF445566)];
+      final spec = await _resolve(
+        tester,
+        acmeLineChartStyle(
+          palette: palette,
+          style: LineChartStyler()
+              .grid(ChartGridStyler().showVertical(true))
+              .series(LineSeriesStyler().stroke(ChartStrokeStyler().width(7))),
+        ),
+        theme: const AcmeThemeData.light(),
+      );
+
+      expect(spec.spec.palette, palette);
+      expect(
+        () => spec.spec.palette!.add(const Color(0xFF778899)),
+        throwsUnsupportedError,
+      );
+      expect(spec.spec.grid!.spec.showVertical, isTrue);
+      expect(spec.spec.series!.spec.stroke!.spec.width, 7);
+    });
+
+    test('generated widgets expose recipe and chart parameters', () {
+      final line = AcmeLineChart(
+        showMarkers: true,
+        semanticsLabel: 'Revenue',
+        series: [_lineSeries()],
+      );
+      final bar = AcmeBarChart(semanticsLabel: 'Orders', groups: [_barGroup()]);
+      final pie = AcmePieChart(
+        centerRadius: 32,
+        showLabels: true,
+        semanticsLabel: 'Channels',
+        slices: [_pieSlice()],
+      );
+
+      expect(line.showMarkers, isTrue);
+      expect(line.semanticsLabel, 'Revenue');
+      expect(bar.semanticsLabel, 'Orders');
+      expect(pie.centerRadius, 32);
+      expect(pie.showLabels, isTrue);
+      expect(pie.semanticsLabel, 'Channels');
+    });
+
+    testWidgets('all three adapters render without a Material host', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+
+      await _pumpInScope(
+        tester,
+        SizedBox(
+          width: 720,
+          height: 180,
+          child: Row(
+            children: [
+              Expanded(
+                child: AcmeLineChart(
+                  semanticsLabel: 'Revenue',
+                  series: [_lineSeries()],
+                ),
+              ),
+              Expanded(
+                child: AcmeBarChart(
+                  semanticsLabel: 'Orders',
+                  groups: [_barGroup()],
+                ),
+              ),
+              Expanded(
+                child: AcmePieChart(
+                  semanticsLabel: 'Channels',
+                  slices: [_pieSlice()],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.byType(LineChart), findsOneWidget);
+      expect(find.byType(BarChart), findsOneWidget);
+      expect(find.byType(PieChart), findsOneWidget);
+      expect(find.bySemanticsLabel('Revenue'), findsOneWidget);
+      expect(find.bySemanticsLabel('Orders'), findsOneWidget);
+      expect(find.bySemanticsLabel('Channels'), findsOneWidget);
+      expect(tester.takeException(), isNull);
       handle.dispose();
     });
   });
@@ -4979,6 +5215,33 @@ void main() {
           theme: theme,
         )).spec.container,
       ),
+      'chart/line': (tester) async => (await _resolve(
+        tester,
+        acmeLineChartStyle(
+          style: LineChartStyler().frame(
+            ChartFrameStyler().backgroundColor(override),
+          ),
+        ),
+        theme: theme,
+      )).spec.frame?.spec.backgroundColor,
+      'chart/bar': (tester) async => (await _resolve(
+        tester,
+        acmeBarChartStyle(
+          style: BarChartStyler().frame(
+            ChartFrameStyler().backgroundColor(override),
+          ),
+        ),
+        theme: theme,
+      )).spec.frame?.spec.backgroundColor,
+      'chart/pie': (tester) async => (await _resolve(
+        tester,
+        acmePieChartStyle(
+          style: PieChartStyler().frame(
+            ChartFrameStyler().backgroundColor(override),
+          ),
+        ),
+        theme: theme,
+      )).spec.frame?.spec.backgroundColor,
       // Through a real widget, because a bare resolution also activates the
       // indeterminate fragment — see [_checkboxSpec] — and a state fragment
       // legitimately beats a base-level caller override.
@@ -5165,10 +5428,11 @@ void main() {
       ),
     };
 
-    test('every registry item is probed', () {
-      // The catalog is 28 items; `tabs` and `textfield` publish more than one
-      // recipe, so the probe count is higher than the item count.
-      expect(probes, hasLength(31));
+    test('every directly resolvable registry recipe is probed', () {
+      // These probes cover 29 items. Disclosure needs a live widget to resolve
+      // its state fragments and has focused tests above. Chart, tabs, and
+      // textfield publish more than one recipe, so this count is higher.
+      expect(probes, hasLength(34));
     });
 
     for (final entry in probes.entries) {
@@ -5200,6 +5464,18 @@ void main() {
       acmeCalloutStyle(),
     );
     expect(acmeCardStyle(style: const CardStyler.create()), acmeCardStyle());
+    expect(
+      acmeLineChartStyle(style: const LineChartStyler.create()),
+      acmeLineChartStyle(),
+    );
+    expect(
+      acmeBarChartStyle(style: const BarChartStyler.create()),
+      acmeBarChartStyle(),
+    );
+    expect(
+      acmePieChartStyle(style: const PieChartStyler.create()),
+      acmePieChartStyle(),
+    );
     expect(
       acmeDataListStyle(style: const DataListStyler.create()),
       acmeDataListStyle(),
@@ -5316,6 +5592,23 @@ const _themes = <({String name, AcmeThemeData data})>[
 /// matches on [IconData] rather than on rendered pixels.
 const IconData _leading = IconData(0x2713);
 const IconData _trailing = IconData(0x2715);
+
+LineSeries _lineSeries() => LineSeries(
+  id: 'revenue',
+  label: 'Revenue',
+  points: [
+    ChartPoint(id: 'monday', x: 0, y: 18),
+    ChartPoint(id: 'tuesday', x: 1, y: 31),
+  ],
+);
+
+BarGroup _barGroup() => BarGroup(
+  id: 'q1',
+  label: 'Q1',
+  bars: [BarValue(id: 'actual', label: 'Actual', toY: 42)],
+);
+
+PieSlice _pieSlice() => PieSlice(id: 'mobile', label: 'Mobile', value: 64);
 
 /// The minimal host: `WidgetsApp` and nothing from Material or Cupertino.
 Widget _host(Widget child) =>
