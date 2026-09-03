@@ -343,6 +343,7 @@ a.jcard .jn{display:block;font-family:var(--mono);font-size:10.5px;font-weight:6
 a.jcard b{display:block;color:var(--fg);font-size:.99rem;font-weight:600;margin-bottom:7px}
 a.jcard code{display:inline-block;font-size:11.8px;margin:0 0 8px;color:#B8C0D8;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
 a.jcard span.jr{display:block;font-size:.88rem;line-height:1.5;color:var(--fg-3)}
+a.jcard span.jr code{display:inline;margin:0;font-size:11.4px;white-space:normal}
 
 /* ---------- the three ownership scopes ---------- */
 .scope{margin:34px 0 0;padding:0 0 0 22px;border-left:1px solid var(--line-2)}
@@ -619,7 +620,7 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({
   <div class="journey">
     <a class="jcard" href="#install"><span class="jn">STEP 1</span><b>Install</b><code>dart pub global activate remix_cli</code><span class="jr">The <code>remix</code> command becomes available. Your app does not change.</span></a>
     <a class="jcard" href="#init"><span class="jn">STEP 2</span><b>Initialize</b><code>remix init --prefix Acme</code><span class="jr">Two files: the configuration and an empty managed barrel.</span></a>
-    <a class="jcard" href="#preview"><span class="jn">STEP 3</span><b>Preview</b><code>remix add button --dry-run</code><span class="jr">The plan, and the proposed source. Nothing is written.</span></a>
+    <a class="jcard" href="#preview"><span class="jn">STEP 3</span><b>Preview</b><code>remix add button --dry-run</code><span class="jr">The plan. Swap in <code>--diff</code> to read the proposed source. Neither writes.</span></a>
     <a class="jcard" href="#add"><span class="jn">STEP 4</span><b>Add</b><code>remix add button</code><span class="jr">Source, dependencies, exports, and the generated adapter.</span></a>
     <a class="jcard" href="#render"><span class="jn">STEP 5</span><b>First render</b><code>AcmeButton.primary(…)</code><span class="jr">Your widget tree shows the component for the first time.</span></a>
     <a class="jcard" href="#update"><span class="jn">STEP 6</span><b>Update</b><code>remix add button --diff</code><span class="jr">Compare a newer template with your file, then decide.</span></a>
@@ -744,14 +745,14 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({
 <section class="sec" id="preview">
   <div class="sec-rule"><span class="sec-n">3</span><div>
     <h2>Preview before you write</h2>
-    <p class="sec-sub">Two read-only modes. Both run preflight, then stop before any process or file change.</p>
+    <p class="sec-sub">Two read-only modes. Neither one writes to your project.</p>
   </div></div>
 
   <div class="tw stack"><table>
     <thead><tr><th>Mode</th><th>What it shows</th><th>What it writes</th></tr></thead>
     <tbody>
       <tr><th scope="row" class="mono">--dry-run</th><td data-label="What it shows">Items, dependencies, files, exports, and generated targets</td><td data-label="What it writes">Nothing</td></tr>
-      <tr><th scope="row" class="mono">--diff</th><td data-label="What it shows">The proposed authored Dart source, as a real <code>git diff</code></td><td data-label="What it writes">Nothing</td></tr>
+      <tr><th scope="row" class="mono">--diff</th><td data-label="What it shows">The proposed authored Dart source, as a real <code>git diff</code></td><td data-label="What it writes">Nothing in your project</td></tr>
     </tbody>
   </table></div>
 
@@ -812,8 +813,14 @@ new file mode 100644
     <code>remix add theme --diff</code>.</p>
   </div>
 
-  <p>Both preview modes return before <code>flutter pub get</code>. They do not add dependencies,
-  run generation, write source, or change what the app renders.</p>
+  <p>The two modes differ in what they run. <code class="flag">--dry-run</code> starts no process
+  at all. <code class="flag">--diff</code> resolves your Flutter toolchain, renders the proposal
+  into a temporary directory, formats it there with your project's Dart, and runs
+  <code>git diff</code> on that directory. It formats with your project's Dart on purpose: a
+  different formatter version would report differences that no install could produce.</p>
+
+  <p>Neither mode reaches <code>flutter pub get</code>. Neither adds a dependency, runs
+  generation, writes anything under <code>lib/</code>, or changes what the app renders.</p>
 </section>
 
 <section class="sec" id="add">
@@ -1293,6 +1300,15 @@ diff --git a/current/lib/ui/components/button.dart b/proposed/lib/ui/components/
   project, use <code>flutter pub upgrade remix_cli</code> for the first command. An empty diff after
   a CLI bump is normal: a tool-only release can leave every template unchanged.</p>
 
+  <div class="note warn">
+    <div class="note-h"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.4 14.4 13.2H1.6z"/><path d="M8 6.4v3"/><path d="M8 11.4h.01"/></svg> One diff covers one item</div>
+    <p><code>remix add button --diff</code> omits an already-installed theme, so it can come back
+    clean while the theme template moved. After a CLI upgrade, diff each item you installed, and
+    run <code>remix add theme --diff</code> as well.</p>
+    <p>An edited file also keeps its diff non-empty forever. Read the hunks; do not read an empty
+    result as the only sign that you are current.</p>
+  </div>
+
   <p>If you want the upstream version of one recipe, take it whole.</p>
 
 <figure class="term">
@@ -1693,8 +1709,8 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({ ... })
       <tr><th scope="row"><code>add requires exactly one item</code></th><td class="mono" data-label="Exit">64</td><td data-label="Do">Run one <code>remix add</code> command for each item.</td></tr>
       <tr><th scope="row"><code>modes are mutually exclusive</code></th><td class="mono" data-label="Exit">64</td><td data-label="Do">Choose one of <code class="flag">--dry-run</code>, <code class="flag">--diff</code>, or <code class="flag">--overwrite</code>.</td></tr>
       <tr><th scope="row"><code>Unknown registry item</code></th><td class="mono" data-label="Exit">1</td><td data-label="Do">Use a name from the <a href="#catalog">catalog</a>.</td></tr>
-      <tr><th scope="row"><code>Registry dependency … is partially installed</code></th><td class="mono" data-label="Exit">1</td><td data-label="Do">Name that dependency, and run <code>remix add theme --overwrite</code>.</td></tr>
-      <tr><th scope="row"><code>Requested item … is partially installed</code></th><td class="mono" data-label="Exit">1</td><td data-label="Do">Inspect with <code class="flag">--diff</code>, then use <code class="flag">--overwrite</code> to take the bundled source.</td></tr>
+      <tr><th scope="row"><code>Registry dependency … is partially installed</code></th><td class="mono" data-label="Exit">1</td><td data-label="Do">Name that dependency, and run <code>remix add theme --overwrite</code>. A partial dependency blocks every mode, including both previews.</td></tr>
+      <tr><th scope="row"><code>Requested item … is partially installed</code></th><td class="mono" data-label="Exit">1</td><td data-label="Do">Inspect with <code class="flag">--diff</code>, then use <code class="flag">--overwrite</code> to take the bundled source. A partially installed <em>requested</em> item still previews.</td></tr>
       <tr><th scope="row">No error</th><td class="mono" data-label="Exit">0</td><td data-label="Do">Success, including previews and no-op reruns.</td></tr>
     </tbody>
   </table></div>

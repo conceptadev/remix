@@ -97,7 +97,9 @@ The installer still protects application source:
 - `--overwrite` applies only to the item explicitly requested;
 - dependency declarations that already resolve compatibly are preserved;
 - validation and dependency failures happen before authored-source writes;
-- generation targets only the parts declared by resolved items.
+- generation targets the parts declared by resolved items, plus every
+  already-installed adapter, so adding one item cannot delete another
+  item's generated part.
 
 This is enough distribution machinery for a growing catalog without pretending
 the MVP has an update system.

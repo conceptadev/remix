@@ -351,6 +351,11 @@ against what is on disk. If the output is empty you are current:
 No authored-source differences.
 ```
 
+If you have edited the recipe, the diff never comes back empty: it reports your
+own edits every time, whether or not the template moved. Read the hunks, not the
+exit state. To see the template alone, compare against a copy of the file you
+installed, or run the diff in a scratch project that has never been edited.
+
 A `remix_cli` release that only changes the tool, and not a template, produces
 an empty diff. That is the expected result, not a failed upgrade: the CLI and
 its bundled registry snapshot share one version number, so every CLI release
