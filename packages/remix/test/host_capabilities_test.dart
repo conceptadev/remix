@@ -33,6 +33,35 @@ void main() {
       expect(find.byType(Navigator), findsNothing);
     });
 
+    testWidgets('sidebars need no Material, Overlay, or Navigator', (
+      tester,
+    ) async {
+      String? selected;
+      await tester.pumpWidget(
+        _widgetsHost(
+          RemixSidebar<String>(
+            sections: const [
+              RemixSidebarSection(
+                destinations: [
+                  RemixSidebarDestination(value: 'overview', label: 'Overview'),
+                ],
+              ),
+            ],
+            selectedValue: null,
+            onSelected: (value) => selected = value,
+          ),
+        ),
+      );
+
+      expect(find.text('Overview'), findsOneWidget);
+      expect(find.byType(Overlay), findsNothing);
+      expect(find.byType(Navigator), findsNothing);
+
+      await tester.tap(find.text('Overview'));
+      await tester.pump();
+      expect(selected, 'overview');
+    });
+
     group('caller-owned Overlay', () {
       testWidgets('opens a menu without a Navigator', (tester) async {
         await tester.pumpWidget(
@@ -58,6 +87,7 @@ void main() {
               items: const [
                 RemixSelectItem(value: 'item', label: 'Select item'),
               ],
+              onChanged: (_) {},
             ),
           ),
         );
@@ -116,6 +146,7 @@ void main() {
               style: _buttonStyle(),
               onPressed: () => showRemixDialog<void>(
                 context: context,
+                barrierLabel: 'Dismiss',
                 transitionDuration: Duration.zero,
                 builder: (context) =>
                     const Center(child: RemixDialog(title: 'Dialog title')),

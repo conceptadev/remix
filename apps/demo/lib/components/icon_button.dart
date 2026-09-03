@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:demo/addons/icon_data_knob.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -26,6 +27,7 @@ Widget buildIconButtonUseCase(BuildContext context) {
           onPressed: () {
             _showToast(context, 'RemixIconButton pressed');
           },
+          semanticLabel: 'Add',
           enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           loading: context.knobs.boolean(label: 'Loading', initialValue: false),
           icon: context.knobs.iconData(label: 'Icon', initialValue: Icons.add)!,
@@ -42,6 +44,21 @@ Widget buildIconButtonUseCase(BuildContext context) {
           ),
         ),
       ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixIconButton)
+Widget buildIconButtonCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    columns: labelsOf(FortalIconButtonSize.values),
+    rows: labelsOf(FortalIconButtonVariant.values),
+    cell: (row, column) => FortalIconButton(
+      icon: Icons.add,
+      semanticLabel: 'Add',
+      onPressed: () {},
+      size: FortalIconButtonSize.values[column],
+      variant: FortalIconButtonVariant.values[row],
     ),
   );
 }

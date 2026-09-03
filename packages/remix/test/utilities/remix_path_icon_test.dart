@@ -56,6 +56,10 @@ void main() {
       bounds: Rect.fromLTRB(0.2852460, 0.3964140, 8.9797602, 8.5216703),
       perimeter: 26.7144108,
     ),
+    RemixPathGlyph.thickDividerHorizontal: (
+      bounds: Rect.fromLTRB(0.75, 3.75, 8.25, 5.25),
+      perimeter: 16.2426414,
+    ),
     RemixPathGlyph.thickChevronRight: (
       bounds: Rect.fromLTRB(2.9190900, -0.0809141, 8.0672398, 9.0809202),
       perimeter: 24.3844013,

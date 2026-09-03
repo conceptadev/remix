@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
@@ -9,7 +10,9 @@ void main() {
   group('RemixSwitch', () {
     group('Basic Rendering', () {
       testWidgets('renders switch with minimal props', (tester) async {
-        await tester.pumpRemixApp(const RemixSwitch(selected: false));
+        await tester.pumpRemixApp(
+          const RemixSwitch(semanticLabel: 'Toggle', selected: false),
+        );
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSwitch), findsOneWidget);
@@ -17,7 +20,11 @@ void main() {
 
       testWidgets('renders switch in selected state', (tester) async {
         await tester.pumpRemixApp(
-          RemixSwitch(selected: true, onChanged: (value) {}),
+          RemixSwitch(
+            semanticLabel: 'Toggle',
+            selected: true,
+            onChanged: (value) {},
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -26,7 +33,11 @@ void main() {
 
       testWidgets('renders switch in unselected state', (tester) async {
         await tester.pumpRemixApp(
-          RemixSwitch(selected: false, onChanged: (value) {}),
+          RemixSwitch(
+            semanticLabel: 'Toggle',
+            selected: false,
+            onChanged: (value) {},
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -36,6 +47,7 @@ void main() {
       testWidgets('renders with custom style', (tester) async {
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             style: SwitchStyler().thumbColor(Colors.blue),
@@ -54,6 +66,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {
               wasChanged = true;
@@ -77,6 +90,7 @@ void main() {
           StatefulBuilder(
             builder: (context, setState) {
               return RemixSwitch(
+                semanticLabel: 'Toggle',
                 selected: switchValue,
                 onChanged: (value) {
                   setState(() {
@@ -109,6 +123,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {
               wasChanged = true;
@@ -125,7 +140,9 @@ void main() {
       });
 
       testWidgets('omitted onChanged disables interaction', (tester) async {
-        await tester.pumpRemixApp(const RemixSwitch(selected: false));
+        await tester.pumpRemixApp(
+          const RemixSwitch(semanticLabel: 'Toggle', selected: false),
+        );
         await tester.pumpAndSettle();
 
         final nakedToggle = tester.widget<NakedToggle>(
@@ -148,6 +165,7 @@ void main() {
         // Enabled switch - should call onChanged
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {
               enabledChanged = true;
@@ -165,6 +183,7 @@ void main() {
         // Now check disabled - should NOT call onChanged
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {
               disabledChanged = true;
@@ -187,6 +206,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             focusNode: focusNode,
@@ -200,7 +220,12 @@ void main() {
 
       testWidgets('handles autofocus parameter', (tester) async {
         await tester.pumpRemixApp(
-          RemixSwitch(selected: false, onChanged: (value) {}, autofocus: true),
+          RemixSwitch(
+            semanticLabel: 'Toggle',
+            selected: false,
+            onChanged: (value) {},
+            autofocus: true,
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -212,6 +237,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             focusNode: focusNode,
@@ -233,6 +259,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             style: customStyle,
@@ -255,6 +282,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             style: customStyle,
@@ -270,6 +298,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             style: customStyle,
@@ -287,6 +316,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             style: customStyle,
@@ -304,6 +334,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             style: customStyle,
@@ -321,6 +352,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             style: customStyle,
@@ -342,6 +374,7 @@ void main() {
         await tester.pumpRemixApp(
           RemixSwitch(
             selected: false,
+            semanticLabel: 'Toggle',
             onChanged: (value) {},
             style: customStyle,
           ),
@@ -384,6 +417,7 @@ void main() {
       testWidgets('accepts mouseCursor parameter', (tester) async {
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             mouseCursor: SystemMouseCursors.click,
@@ -397,6 +431,7 @@ void main() {
       testWidgets('can use custom mouse cursor', (tester) async {
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             mouseCursor: SystemMouseCursors.forbidden,
@@ -412,6 +447,7 @@ void main() {
       testWidgets('accepts enableFeedback parameter', (tester) async {
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             enableFeedback: true,
@@ -425,6 +461,7 @@ void main() {
       testWidgets('handles disabled feedback', (tester) async {
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             enableFeedback: false,
@@ -451,6 +488,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             style: customStyle,
@@ -468,6 +506,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             style: customStyle,
@@ -487,6 +526,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             style: customStyle,
@@ -505,6 +545,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             style: customStyle,
@@ -522,6 +563,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {},
             style: customStyle,
@@ -538,7 +580,12 @@ void main() {
         const key = ValueKey('switch_key');
 
         await tester.pumpRemixApp(
-          RemixSwitch(key: key, selected: false, onChanged: (value) {}),
+          RemixSwitch(
+            semanticLabel: 'Toggle',
+            key: key,
+            selected: false,
+            onChanged: (value) {},
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -558,7 +605,12 @@ void main() {
         );
 
         await tester.pumpRemixApp(
-          RemixSwitch(styleSpec: spec, selected: false, onChanged: (value) {}),
+          RemixSwitch(
+            semanticLabel: 'Toggle',
+            styleSpec: spec,
+            selected: false,
+            onChanged: (value) {},
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -585,6 +637,7 @@ void main() {
           StatefulBuilder(
             builder: (context, setState) {
               return RemixSwitch(
+                semanticLabel: 'Toggle',
                 selected: switchValue,
                 onChanged: (value) {
                   setState(() {
@@ -612,6 +665,7 @@ void main() {
 
         await tester.pumpRemixApp(
           RemixSwitch(
+            semanticLabel: 'Toggle',
             selected: false,
             onChanged: (value) {
               wasChanged = true;
@@ -641,6 +695,7 @@ void main() {
               return Column(
                 children: [
                   RemixSwitch(
+                    semanticLabel: 'Toggle',
                     selected: switchValue,
                     onChanged: (value) {
                       setState(() {
@@ -670,6 +725,88 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(switchValue, isTrue);
+      });
+    });
+
+    group('Accessible naming', () {
+      test('rejects an empty accessible name', () {
+        expect(
+          () => RemixSwitch(selected: false, semanticLabel: ''),
+          throwsAssertionError,
+        );
+      });
+
+      testWidgets('announces switch role and label', (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixSwitch(
+              selected: false,
+              semanticLabel: 'Airplane mode',
+              onChanged: (_) {},
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          expect(find.semantics.byLabel('Airplane mode'), findsOne);
+          expect(
+            find.semantics.byLabel('Airplane mode').evaluate().single,
+            isSemantics(
+              label: 'Airplane mode',
+              isEnabled: true,
+              hasToggledState: true,
+              isToggled: false,
+            ),
+          );
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('tap and keyboard activate the switch', (tester) async {
+        var selected = false;
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) {
+              return RemixSwitch(
+                selected: selected,
+                semanticLabel: 'Airplane mode',
+                focusNode: focusNode,
+                onChanged: (value) => setState(() => selected = value),
+              );
+            },
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(RemixSwitch));
+        await tester.pumpAndSettle();
+        expect(selected, isTrue);
+
+        focusNode.requestFocus();
+        await tester.pump();
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(selected, isFalse);
+      });
+
+      testWidgets('disabled switch does not toggle', (tester) async {
+        var selected = false;
+        await tester.pumpRemixApp(
+          RemixSwitch(
+            selected: selected,
+            semanticLabel: 'Airplane mode',
+            enabled: false,
+            onChanged: (value) => selected = value,
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byType(RemixSwitch));
+        await tester.pumpAndSettle();
+        expect(selected, isFalse);
       });
     });
   });

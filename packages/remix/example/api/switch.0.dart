@@ -29,6 +29,7 @@ class _SwitchExampleState extends State<SwitchExample> {
   Widget build(BuildContext context) {
     return Center(
       child: RemixSwitch(
+        semanticLabel: 'Toggle',
         style: style,
         selected: _selected.value,
         onChanged: (value) {

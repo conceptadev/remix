@@ -96,6 +96,7 @@ explicit `<String>`.
 | PieChart | `FortalPieChart` | — | — |
 | Progress | `FortalProgress` | `classic`, `surface`, `soft` | `size1`–`size3` (4/8/12 px) |
 | Accordion | `FortalAccordion<T>` | `surface`, `soft` | `size1`–`size3` |
+| Disclosure | `FortalDisclosure` | `surface`, `soft` | `size1`–`size3` |
 | Spinner | `FortalSpinner` | — | `size1`–`size3` |
 | Skeleton | `FortalSkeleton` | — | — |
 | Divider | `FortalDivider` | — | `size1`–`size4` |
@@ -125,6 +126,9 @@ Notes:
   `FortalCheckboxVariant`, etc.
 - Components that expose `highContrast` use it to strengthen their active or
   foreground treatment; do not assume the option exists on every family.
+  Soft badges pair `accentA3` / `accentA11` (Radix low-contrast text). That
+  pairing is not WCAG AA 4.5:1 in light mode for every accent when composited
+  over `colorPanelSolid`; pass `highContrast: true` (`accent12`) for AA.
 - There is no `FortalTabs` — use `RemixTabs` as the behavioral root.
 - `FortalIconButton` forwards the complete `RemixIconButton` behavior surface,
   including builders, long press, focus, semantics, and cursor options.
@@ -156,16 +160,27 @@ FortalLink('Read the docs', onPressed: openDocs)
 Rules that matter when writing code:
 
 - Omitting `size` on `FortalText`, `FortalCode`, `FortalKbd`, or `FortalLink`
-  inherits the ambient `DefaultTextStyle`, matching an unsized Radix `Text` at
-  `1em`. `FortalHeading` defaults to `size6` and `bold`.
+  pins the `text3` token metrics. `FortalText` also pins regular weight and
+  neutral `gray-12`; `FortalHeading` pins neutral `gray-12` and defaults to
+  `size6` and `bold`. Fortal typography never derives its token run from the
+  ambient `DefaultTextStyle`; transparent, non-accent `FortalCode.ghost`
+  retains only that style's foreground.
+- This deliberately differs from Radix CSS, where an unsized `Text` is `1em`.
+  Pass an explicit `size:` to select another token size, such as
+  `FortalText('Body copy', size: .size3)` or
+  `FortalHeading('Overview', size: .size6)`.
 - `headingLevel` drives accessibility only; it never changes the visual `size`.
   Page titles are level 1, sections and cards below them level 2.
 - Colour is opt-in: `accent: true` gives `accent-a11` and adding
   `highContrast: true` promotes it to `accent-12`. `highContrast` alone does
   nothing. `FortalKbd` pins `gray-12` and its own regular weight.
 - `truncate: true` wins over `softWrap` and forces one ellipsized line.
-- A `FortalLink` **without** `onPressed` is inert styled text: no focus stop, no
-  link role, no activation. Only an actionable link underlines.
+- A `FortalLink` **without** `onPressed` is disabled, exactly like one with
+  `enabled: false`: no focus stop, no link role, no activation. Only an
+  actionable link underlines. For accent text that never navigates, use
+  `FortalText(accent: true)`.
+- An actionable link activates on pointer and **Enter**, not Space. Use
+  `FortalButton` when Space should activate.
 - `linkUrl` is assistive metadata and is never launched; navigation belongs in
   `onPressed`. Passing `linkUrl` without `onPressed` asserts.
 - No leading trim, `pretty`/`balance` wrapping, responsive prop objects, or
@@ -204,21 +219,22 @@ page background behind its child.
 
 ### Scope placement
 
-The **outermost** `FortalScope` also establishes the Radix theme root's default
-text run — `text3` (16px, 1.5 line height, 0 letter spacing) at `gray-12`,
-regular weight, with no pinned font family. That is what an unsized
-`FortalText`, `FortalCode`, `FortalKbd`, or `FortalLink` measures `1em` against
-when there is no closer `DefaultTextStyle`, so placement matters:
+The **outermost** `FortalScope` establishes a courtesy `DefaultTextStyle` for
+bare Flutter `Text`: the Radix theme root run — `text3` (16px, 1.5 line height,
+0 letter spacing) at `gray-12`, regular weight, and no pinned font family.
+This is analogous to Material's `bodyMedium`; it is not the source of a Fortal
+typography run, which is always pinned from Fortal tokens. Placement therefore
+matters for bare `Text`:
 
 | Host | Put the scope |
 | --- | --- |
 | `WidgetsApp`, router, or a custom host | Above the app |
 | `MaterialApp`, `CupertinoApp` | In `builder:` |
 
-A **nested** scope re-scopes tokens only. It inherits the closest text style
-instead of restating the root run, so wrapping a subtree in
+A **nested** scope re-scopes tokens only. It does not restate the courtesy
+bare-`Text` run, so wrapping a subtree in
 `FortalScope(accent: .red, hasBackground: false, ...)` re-themes its tokens
-without resizing or recoloring the text already running through it.
+without changing the surrounding Flutter text inheritance.
 
 ```dart
 // MaterialApp / CupertinoApp
@@ -230,18 +246,21 @@ MaterialApp(
 
 Those apps pass `WidgetsApp` their own root `DefaultTextStyle`, which lands
 below anything wrapping the app. A scope placed above `MaterialApp` still
-supplies tokens, but its root text run is overridden. `builder:` sits below that
-style and above the `Navigator`, so pushed routes and raw `Overlay` entries
-receive the Fortal fallback.
+supplies tokens, but its courtesy bare-`Text` fallback is overridden.
+`builder:` sits below that style and above the `Navigator`, so pushed routes
+and raw `Overlay` entries receive the Fortal fallback.
 
-Normal Flutter inheritance still applies below the scope. A nearer
-`DefaultTextStyle`, including one from `Material` or `Scaffold`, wins. Unsized
-Fortal typography deliberately inherits it; use `size: FortalTextSize.size3`
-when a component needs the exact 16px Radix root size inside such a surface.
+Normal Flutter inheritance still applies to bare `Text` below the scope. A
+nearer `DefaultTextStyle`, including one from `Material` or `Scaffold`, wins
+for that bare text. Fortal typography does not inherit that run: its unsized
+components use their documented token defaults, and `size:` selects another
+token size. Transparent, non-accent `FortalCode.ghost` deliberately keeps only
+the ambient foreground so it can blend into surrounding text.
 
-If text inside a hand-rolled `OverlayEntry` renders red and monospace with a
-yellow double underline, the scope is in the wrong place: that is Flutter's
-"put your text in a Material" fallback style.
+If **bare Flutter `Text`** inside a hand-rolled `OverlayEntry` renders red and
+monospace with a yellow double underline, the scope is in the wrong place:
+that is Flutter's "put your text in a Material" fallback style. Fortal
+typography children pin their own token run.
 
 `FortalThemeConfig` is the immutable config object form:
 

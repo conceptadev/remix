@@ -141,7 +141,7 @@ class RemixCheckbox extends StatelessWidget {
               (true, _) =>
                 indeterminateIcon == null
                     ? RemixPathIcon(
-                        glyph: RemixPathGlyph.dash,
+                        glyph: RemixPathGlyph.thickDividerHorizontal,
                         styleSpec: spec.indicator,
                       )
                     : StyledIcon(
@@ -151,7 +151,7 @@ class RemixCheckbox extends StatelessWidget {
               (false, true) =>
                 checkedIcon == null
                     ? RemixPathIcon(
-                        glyph: RemixPathGlyph.check,
+                        glyph: RemixPathGlyph.thickCheck,
                         styleSpec: spec.indicator,
                       )
                     : StyledIcon(icon: checkedIcon, styleSpec: spec.indicator),
@@ -165,7 +165,7 @@ class RemixCheckbox extends StatelessWidget {
               (false, null) => null,
             };
 
-            final checkbox = RemixBoxWithEffects(
+            final checkbox = RemixBoxAdapter(
               styleSpec: spec.container,
               containerEffects: spec.containerEffects,
               child: indicator,

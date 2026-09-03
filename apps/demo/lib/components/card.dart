@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -59,6 +60,20 @@ Widget buildCardUseCase(BuildContext context) {
           ),
         ),
       ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixCard)
+Widget buildCardCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    cellWidth: 200,
+    columns: labelsOf(FortalCardSize.values),
+    rows: labelsOf(FortalCardVariant.values),
+    cell: (row, column) => FortalCard(
+      size: FortalCardSize.values[column],
+      variant: FortalCardVariant.values[row],
+      child: const FortalText('Card'),
     ),
   );
 }

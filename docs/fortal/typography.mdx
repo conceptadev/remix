@@ -30,30 +30,30 @@ tokens is the equivalent there.
 | `FortalHeading` | Page, section, and card titles | `header` with an explicit `headingLevel` |
 | `FortalCode` | Identifiers, snippets, tokens shown inline | None; Flutter has no code role |
 | `FortalKbd` | One keyboard key or shortcut | `keyboardKey`, inert |
-| `FortalLink` | Text that navigates | `link` **only** when `onPressed` is set |
+| `FortalLink` | Text that navigates | `link` **only** while enabled and given an `onPressed` |
 
-`FortalText` and `FortalCode` leave `size` and `weight` null by default so an
-omitted size inherits the ambient `DefaultTextStyle`, matching a Radix `Text`
-with no size prop rendering at `1em`. `FortalHeading` defaults to size 6 and
-bold because Radix Heading does.
+`FortalText`, `FortalCode`, `FortalKbd`, and `FortalLink` keep nullable public
+`size` fields, but an omitted size resolves the active scope's `text3` token
+rather than the ambient `DefaultTextStyle`. `FortalText` also defaults to the
+regular weight token and neutral `gray-12`; `FortalHeading` defaults to size 6,
+bold, and neutral `gray-12`.
 
-At the scope boundary, that `1em` is defined by the outermost `FortalScope`,
-which establishes the Radix theme root's text run — `text3` (16px, 1.5 line
-height) at `gray-12`, regular weight. With no closer `DefaultTextStyle`, an
-unsized `FortalCode` therefore resolves `0.95 × 0.95 × 16px`, exactly as
-upstream does. Under `MaterialApp` or `CupertinoApp` the scope belongs in
-`builder:` so the fallback reaches routes and raw overlays; see
-[scope placement](/fortal#scope-placement).
+This deliberately differs from Radix CSS, where an unsized `Text` renders at
+the surrounding `1em`. Fortal keeps the upstream Code and Kbd adjustments but
+anchors them to tokens: an unsized soft Code resolves
+`0.95 × 0.95 × text3`, and an unsized Kbd resolves `0.75 × text3`. Pass an
+explicit `size:` to select another token size.
 
-A nearer `DefaultTextStyle` still wins by design. In particular, `Material`
-and `Scaffold` commonly establish a local run. Unsized Fortal widgets inherit
-that run just as Radix text inherits a nearer CSS font size. Specify
-`size: FortalTextSize.size3` when exact root sizing is required inside one of
-those surfaces.
+The outermost `FortalScope` still establishes the Radix root run as a courtesy
+`DefaultTextStyle` for bare Flutter `Text`. Under `MaterialApp` or
+`CupertinoApp`, put the scope in `builder:` so that fallback reaches routes and
+raw overlays; see [scope placement](/fortal#scope-placement). A nearer
+`DefaultTextStyle` can replace the run for bare text, but never changes Fortal
+typography metrics.
 
-A nested `FortalScope` is not a new root: it re-scopes tokens and inherits the
-closest text style, so re-theming a subtree for a different accent or scaling
-leaves the surrounding `1em` intact.
+A nested `FortalScope` re-scopes tokens without restating the courtesy
+bare-`Text` run. Fortal typography re-resolves against the nested gray and
+scaling tokens, while ordinary Flutter text keeps its nearest inherited style.
 
 ## Basic implementation
 
@@ -111,10 +111,11 @@ Every family accepts the same scale and flow controls.
 `truncate` deliberately wins over `softWrap`: it forces exactly one ellipsized
 line, which is what a table cell or a row with a fixed-width neighbour needs.
 
-Colour is opt-in. `accent: true` takes the surrounding `FortalScope` accent at
-`accent-a11`, and `highContrast: true` promotes it to `accent-12`. Leaving
-`accent` false preserves the inherited foreground, so `highContrast` alone does
-nothing — the same gate Radix puts behind `[data-accent-color]`.
+`FortalText` and `FortalHeading` use neutral `gray-12` unless `accent: true`
+takes the surrounding `FortalScope` accent at `accent-a11`; adding
+`highContrast: true` promotes it to `accent-12`. `highContrast` alone leaves
+the neutral color unchanged — the same gate Radix puts behind
+`[data-accent-color]`.
 
 `FortalKbd` is the exception: it pins its own regular weight, line box, and
 `gray-12` foreground so a key cap never follows the surrounding copy.
@@ -151,7 +152,7 @@ class TypographyVariantsExample extends StatelessWidget {
 
 `FortalCode.ghost` is transparent and inherits the ambient foreground unless you
 pass `accent: true`; the other three variants always paint their own accent
-roles.
+roles. A foreground composed onto the recipe overrides that ambient fallback.
 
 ## Headings and semantic level
 
@@ -192,13 +193,20 @@ the requested level, and excludes the child so the label is not announced
 twice. Pass `semanticLabel` when the announced text should differ from the
 rendered text, or `excludeSemantics: true` to publish nothing at all.
 
-## Actionable versus inert links
+## Actionable versus disabled links
+
+A `FortalLink` without `onPressed` is **disabled**, the same as one with
+`enabled: false` — a null callback disables a Flutter control. It keeps the
+accent colour but gives up its focus stop, link role, and activation. Give it
+`onPressed` and it becomes a real link: focusable, activatable with pointer and
+Enter, and underlined according to `underline`.
 
 Every upstream underline rule is gated behind `:where(:any-link, button)`, so a
-`FortalLink` without `onPressed` is **inert**: styled accent text with no focus
-stop, no link role, and no activation. Give it `onPressed` and it becomes a real
-link — focusable, activatable with pointer, Enter, and Space, and underlined
-according to `underline`.
+disabled link never underlines regardless of `underline`. For accent-coloured
+text that was never meant to be followed, use `FortalText(accent: true)`.
+
+Space does **not** activate a link. That is the Button role's key; a link takes
+Enter, matching an anchor on the web.
 
 | `underline` | Behaviour when actionable |
 |-------------|---------------------------|
@@ -233,7 +241,7 @@ class LinkExample extends StatelessWidget {
           semanticHint: 'Opens the Fortal documentation',
           onPressed: onOpenDocs,
         ),
-        const FortalLink('Not a link yet'),
+        const FortalLink('Not available yet'),
       ],
     );
   }
@@ -247,14 +255,15 @@ launcher dependency. Passing `linkUrl` without `onPressed` asserts, because an
 announced destination with no activation is a broken promise to assistive
 technology.
 
-Set `enabled: false` to keep the callback and still refuse focus and activation.
+`enabled: false` keeps the callback and still refuses focus and activation, so
+a link that is only temporarily unavailable can hold on to its destination.
 
 ## Customizing the recipes
 
 Each widget calls a `fortal*Style` recipe you can use directly. `FortalText` and
-`FortalHeading` return a `TextStyler`; `FortalCode`, `FortalKbd`, and
-`FortalLink` return a `BadgeStyler` and take a `BuildContext`, because their
-geometry is em-relative to the resolved font size.
+`FortalHeading` return a `TextStyler`; `FortalCode` and `FortalKbd` return a
+`BadgeStyler` and `FortalLink` returns a `LinkStyler`. All three take a
+`BuildContext`, because their geometry is em-relative to the resolved font size.
 
 <CodeGroup title="Recipe customization" defaultLanguage="dart">
 ```dart

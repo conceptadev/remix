@@ -122,12 +122,20 @@
           "href": "/components/dialog"
         },
         {
+          "title": "Disclosure",
+          "href": "/components/disclosure"
+        },
+        {
           "title": "Divider",
           "href": "/components/divider"
         },
         {
           "title": "IconButton",
           "href": "/components/icon_button"
+        },
+        {
+          "title": "Link",
+          "href": "/components/link"
         },
         {
           "title": "Menu",
@@ -152,6 +160,10 @@
         {
           "title": "Select",
           "href": "/components/select"
+        },
+        {
+          "title": "Sidebar",
+          "href": "/components/sidebar"
         },
         {
           "title": "Skeleton",
@@ -201,6 +213,10 @@
         {
           "title": "Overview",
           "href": "/fortal"
+        },
+        {
+          "title": "Catalog",
+          "href": "/fortal/catalog"
         },
         {
           "title": "Typography",

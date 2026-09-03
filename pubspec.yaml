@@ -4,20 +4,12 @@ environment:
   flutter: ">=3.44.0"
 
 dev_dependencies:
-  melos: ^8.2.1
+  melos: ^8.5.0
   dart_code_metrics_presets: ^2.32.0
   flutter_lints: ^6.0.0
   build_runner: ^2.10.1
   pub_semver: ^2.2.0
   yaml: ^3.1.3
-
-dependency_overrides:
-  # Remove this pin after conceptadev/mix#1025 ships in mix_generator.
-  mix_generator:
-    git:
-      url: https://github.com/conceptadev/mix.git
-      ref: 367b1f916498008be89867d0fd192c383f877542
-      path: packages/mix_generator
 
 workspace:
   - apps/dashboard
@@ -27,6 +19,7 @@ workspace:
   - packages/remix_carbon/example
   - packages/remix
   - packages/remix_fortal
+  - packages/remix_ui_icons
 
 melos:
   packages:
@@ -62,31 +55,24 @@ melos:
       # tool/check_consumer_mix.dart enforces the same equality for anyone who
       # edits a pubspec without bootstrapping.
       dependencies:
-        mix: ^2.2.0-beta.4
+        # beta.5 is the floor, not a preference: mix_generator 2.2.0-beta.3
+        # emits `implements StylerFieldMetadata`, and that symbol first ships
+        # in mix 2.2.0-beta.5. Lowering this constraint compiles here but
+        # breaks any consumer that resolves beta.4.
+        mix: ^2.2.0-beta.5
         mix_annotations: ^2.2.0-beta.1
       dev_dependencies:
-        mix_generator: ^2.2.0-beta.2
+        mix_generator: ^2.2.0-beta.3
 
   scripts:
-    # Named `release:*` rather than `version`: a script named `version` shadows
-    # melos's built-in `melos version` command, so the script body could never
-    # invoke it.
-    release:version:
-      # Bumps the beta line rather than graduating to a stable major: breaking
-      # changes during a prerelease increment `beta.N`, they do not force 2.0.0.
-      #
-      # Tags are left to the release step. `publish.yml` fires on a tag push, so
-      # tagging here would publish before the version PR is reviewed.
-      run: >-
-        melos version --prerelease --preid beta --no-git-tag-version --yes
-      description: >-
-        Bump prerelease versions and changelogs from conventional commits
-
-    release:graduate:
-      # For the 1.0.0 release: drops the prerelease suffix from every package.
-      run: melos version --graduate --no-git-tag-version --yes
-      description: Graduate the prerelease line to stable versions
-
+    # No `release:*` versioning scripts here on purpose. They used to wrap
+    # `melos version --prerelease` / `--graduate`, both of which derive a
+    # version per package from that package's own commits — which is exactly
+    # the drift `version:align:check` now rejects. Run against this workspace
+    # they produce `remix 1.0.0-beta.5` and `remix_fortal 0.1.0-beta.4`.
+    #
+    # `.github/workflows/version.yml` is the only supported path: it takes one
+    # version and applies it to both packages with `-V`.
     generate:
       description: Regenerate library sources
       # remix_fortal's generator resolves package:remix, so it must not build
@@ -148,6 +134,10 @@ melos:
       packageFilters:
         dirExists: test
 
+    version:align:check:
+      run: dart run tool/check_version_alignment.dart
+      description: Verify remix and remix_fortal carry the identical version
+
     mix:consumer:check:
       run: dart run tool/check_consumer_mix.dart
       description: Verify consumer tests resolve the declared hosted Mix release
@@ -160,19 +150,23 @@ melos:
       run: dart run tool/check_material_independence.dart
       description: Verify published Remix libraries contain no direct Material usage
 
-    fortal:icons:generate:
-      run: uv run --frozen --project packages/remix_fortal/tool/radix_icons glyphpact --config packages/remix_fortal/tool/radix_icons/glyphpact.json
-      description: Regenerate the locked FortalIcons font and Dart provider
-
-    fortal:icons:check:
+    icons:generate:
       steps:
-        - uv run --frozen --project packages/remix_fortal/tool/radix_icons glyphpact --config packages/remix_fortal/tool/radix_icons/glyphpact.json --check
-        - uv run --frozen --project packages/remix_fortal/tool/radix_icons python packages/remix_fortal/tool/radix_icons/verify.py
-      description: Verify the pinned Radix snapshot and generated icon artifacts
+        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons glyphpact --config packages/remix_ui_icons/tool/radix_icons/glyphpact.json
+        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python packages/remix_ui_icons/tool/radix_icons/generate_icons_index.py
+      description: Regenerate the locked RemixIcons font, Dart provider, and opt-in index
+
+    icons:check:
+      steps:
+        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons glyphpact --config packages/remix_ui_icons/tool/radix_icons/glyphpact.json --check
+        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python -m unittest discover -s packages/remix_ui_icons/tool/radix_icons -p 'test_*.py'
+        - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python packages/remix_ui_icons/tool/radix_icons/verify.py
+      description: Verify the pinned Radix snapshot, generated icon artifacts, and opt-in index
 
     ci:
       steps:
         - toolchain:check
+        - version:align:check
         - mix:consumer:check
         - material:check
         - remix_carbon:tokens:check
@@ -192,6 +186,14 @@ melos:
       packageFilters:
         scope: remix_fortal
 
+    docs:catalog:
+      run: dart run tool/generate_fortal_catalog.dart
+      description: Regenerate the Fortal widget catalog from the parity manifest
+
     docs:check:
-      run: dart run tool/validate_docs.dart
-      description: Validate docs and reject retired APIs across workspace sources
+      # The catalog is rendered from the same manifest `fortal:parity:check`
+      # holds against the recipes, so a stale page is drift, not a doc edit.
+      steps:
+        - dart run tool/validate_docs.dart
+        - dart run tool/generate_fortal_catalog.dart --check
+      description: Validate docs, reject retired APIs, and fail on catalog drift

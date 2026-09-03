@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:demo/helpers/use_case_state.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -16,6 +17,7 @@ Widget buildSwitchUseCase(BuildContext context) {
     child: Scaffold(
       body: Center(
         child: FortalSwitch(
+          semanticLabel: 'Toggle',
           selected: context.knobs.boolean(label: 'Toggle', initialValue: true),
           enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           onChanged: (value) => knobState.updateKnob('Toggle', value),
@@ -32,6 +34,20 @@ Widget buildSwitchUseCase(BuildContext context) {
           ),
         ),
       ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixSwitch)
+Widget buildSwitchCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    columns: labelsOf(FortalSwitchSize.values),
+    rows: labelsOf(FortalSwitchVariant.values),
+    cell: (row, column) => FortalSwitch(
+      semanticLabel: 'Toggle',
+      selected: true,
+      size: FortalSwitchSize.values[column],
+      variant: FortalSwitchVariant.values[row],
     ),
   );
 }

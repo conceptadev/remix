@@ -41,9 +41,12 @@ void main() {
     testWidgets('RemixRadio and RadioStyler.call forward semantics', (
       tester,
     ) async {
-      final defaultRadio = RadioStyler().call<String>(value: 'default');
+      final defaultRadio = RadioStyler().call<String>(
+        value: 'default',
+        semanticLabel: 'Default option',
+      );
 
-      expect(defaultRadio.semanticLabel, isNull);
+      expect(defaultRadio.semanticLabel, 'Default option');
       expect(defaultRadio.excludeSemantics, isFalse);
 
       await tester.pumpRemixApp(
@@ -57,7 +60,7 @@ void main() {
       var nakedRadio = tester.widget<NakedRadio<String>>(
         find.byType(NakedRadio<String>),
       );
-      expect(nakedRadio.semanticLabel, isNull);
+      expect(nakedRadio.semanticLabel, 'Default option');
       expect(nakedRadio.excludeSemantics, isFalse);
 
       final labeledRadio = RadioStyler().call<String>(
@@ -220,6 +223,101 @@ void main() {
       expect(nakedMenu.excludeSemantics, isTrue);
     });
 
+    testWidgets('builder-backed RemixMenu announces its required label once', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: RemixMenuTrigger.builder(
+            label: 'Account menu',
+            builder: (context, state, child) => const Text('LF'),
+          ),
+          items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
+        ),
+      );
+
+      final nakedMenu = tester.widget<NakedMenu<String>>(
+        find.byType(NakedMenu<String>),
+      );
+      expect(nakedMenu.semanticLabel, 'Account menu');
+
+      final labelCount = find
+          .bySemanticsLabel('Account menu')
+          .evaluate()
+          .length;
+      final avatarCount = find.bySemanticsLabel('LF').evaluate().length;
+      semantics.dispose();
+
+      expect(labelCount, 1);
+      expect(avatarCount, 0, reason: 'custom visual content is excluded');
+    });
+
+    testWidgets(
+      'builder that wraps the default child still announces the required label once',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            trigger: RemixMenuTrigger.builder(
+              label: 'Account menu',
+              builder: (context, state, child) =>
+                  Row(children: [child!, const Text('extra')]),
+            ),
+            items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
+          ),
+        );
+
+        final labelCount = find
+            .bySemanticsLabel('Account menu')
+            .evaluate()
+            .length;
+        final extraCount = find.bySemanticsLabel('extra').evaluate().length;
+        semantics.dispose();
+
+        expect(labelCount, 1);
+        expect(extraCount, 0, reason: 'wrapped descendants stay excluded');
+      },
+    );
+
+    testWidgets(
+      'RemixMenu.semanticLabel overrides a builder-backed trigger label',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            semanticLabel: 'Workspace account',
+            trigger: RemixMenuTrigger.builder(
+              label: 'Account menu',
+              builder: (context, state, child) => const Text('LF'),
+            ),
+            items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
+          ),
+        );
+
+        final nakedMenu = tester.widget<NakedMenu<String>>(
+          find.byType(NakedMenu<String>),
+        );
+        expect(nakedMenu.semanticLabel, 'Workspace account');
+
+        final overrideCount = find
+            .bySemanticsLabel('Workspace account')
+            .evaluate()
+            .length;
+        final fallbackCount = find
+            .bySemanticsLabel('Account menu')
+            .evaluate()
+            .length;
+        semantics.dispose();
+
+        expect(overrideCount, 1);
+        expect(fallbackCount, 0);
+      },
+    );
+
     // Pins the documented scope of RemixMenu.excludeSemantics. Naked wraps only
     // the trigger in ExcludeSemantics; the overlay is mounted into the ambient
     // Overlay, so item semantics survive. Without this, the doc comment on
@@ -260,10 +358,52 @@ void main() {
       },
     );
 
+    testWidgets(
+      'builder-backed RemixMenu excludeSemantics covers the trigger, not the items',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+        final controller = MenuController();
+
+        await tester.pumpRemixApp(
+          RemixMenu<String>(
+            trigger: RemixMenuTrigger.builder(
+              label: 'Options',
+              builder: (context, state, child) => const Text('LF'),
+            ),
+            items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
+            controller: controller,
+            semanticLabel: 'Account actions',
+            excludeSemantics: true,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        controller.open();
+        await tester.pumpAndSettle();
+
+        final triggerCount = find
+            .bySemanticsLabel('Account actions')
+            .evaluate()
+            .length;
+        final itemCount = find.bySemanticsLabel('Copy').evaluate().length;
+        semantics.dispose();
+
+        expect(triggerCount, 0, reason: 'trigger semantics are excluded');
+        expect(
+          itemCount,
+          1,
+          reason: 'overlay items stay in the semantics tree',
+        );
+      },
+    );
+
     testWidgets('RemixSwitch and SwitchStyler.call forward excludeSemantics', (
       tester,
     ) async {
-      final defaultSwitch = SwitchStyler().call(selected: false);
+      final defaultSwitch = SwitchStyler().call(
+        selected: false,
+        semanticLabel: 'Notifications',
+      );
 
       expect(defaultSwitch.excludeSemantics, isFalse);
 

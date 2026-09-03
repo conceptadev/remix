@@ -711,7 +711,7 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
       ],
     );
 
-    return RemixBoxWithEffects(
+    return RemixBoxAdapter(
       styleSpec: _spec.container,
       containerEffects: _spec.containerEffects,
       child: LayoutBuilder(

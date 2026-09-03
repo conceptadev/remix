@@ -8,14 +8,14 @@ on:
 
 jobs:
   test:
-    uses: btwld/dart-actions/.github/workflows/ci.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
+    uses: conceptadev/dart-actions/.github/workflows/ci.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
     with:
       flutter-version: "3.44.0"
       run-dcm: false
 
-  fortal-icons:
+  icons:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,8 +24,10 @@ jobs:
           version: "0.11.24"
           python-version: "3.13"
           enable-cache: true
-          cache-dependency-glob: packages/remix_fortal/tool/radix_icons/uv.lock
-      - name: Verify generated Fortal icons
-        run: uv run --frozen --project packages/remix_fortal/tool/radix_icons glyphpact --config packages/remix_fortal/tool/radix_icons/glyphpact.json --check
+          cache-dependency-glob: packages/remix_ui_icons/tool/radix_icons/uv.lock
+      - name: Verify generated Remix icons
+        run: uv run --frozen --project packages/remix_ui_icons/tool/radix_icons glyphpact --config packages/remix_ui_icons/tool/radix_icons/glyphpact.json --check
+      - name: Test Remix icon index generator
+        run: uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python -m unittest discover -s packages/remix_ui_icons/tool/radix_icons -p 'test_*.py'
       - name: Verify icon integrity contract
-        run: uv run --frozen --project packages/remix_fortal/tool/radix_icons python packages/remix_fortal/tool/radix_icons/verify.py
+        run: uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python packages/remix_ui_icons/tool/radix_icons/verify.py

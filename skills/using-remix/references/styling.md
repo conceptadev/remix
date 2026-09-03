@@ -171,17 +171,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return FortalScope(
-      accent: FortalAccentColor.indigo,
-      brightness: _brightness,
-      child: MaterialApp(
-        theme: ThemeData(brightness: _brightness),
-        home: Scaffold(
-          body: FortalSwitch(
-            selected: _brightness == Brightness.dark,
-            onChanged: (dark) => setState(() =>
-                _brightness = dark ? Brightness.dark : Brightness.light),
-          ),
+    return MaterialApp(
+      theme: ThemeData(brightness: _brightness),
+      builder: (context, child) => FortalScope(
+        accent: FortalAccentColor.indigo,
+        brightness: _brightness,
+        child: child!,
+      ),
+      home: Scaffold(
+        body: FortalSwitch(
+          selected: _brightness == Brightness.dark,
+          onChanged: (dark) => setState(() =>
+              _brightness = dark ? Brightness.dark : Brightness.light),
         ),
       ),
     );

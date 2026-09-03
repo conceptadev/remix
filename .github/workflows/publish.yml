@@ -1,33 +1,49 @@
 name: Publish to pub.dev
 
-# Two tag-gated jobs rather than one job listing both packages: the reusable
+# Three tag-gated jobs rather than one job listing all packages: the reusable
 # publish workflow turns `packages:` into a parallel matrix with no ordering
-# knob, and `remix_fortal` depends on a hosted `remix`, so a single job would
-# race. `remix-v` and `remix_fortal-v` are unambiguous prefixes, so the two `if`
-# conditions stay mutually exclusive.
+# knob, and `remix_fortal` depends on hosted `remix` and `remix_ui_icons`
+# versions, so a single job would race.
 #
-# Tags are `<package>-v<version>`, which is what `melos version` looks for when
-# it derives each package's last release. The legacy bare `v<version>` pattern
-# is kept so tags pushed before that convention still resolve.
+# THE THREE PACKAGES PUBLISH FROM DIFFERENT TAG PATTERNS. This is not a style
+# choice — it is each package's "Automated publishing" tag pattern on pub.dev,
+# and the OIDC token is rejected if the pushed tag does not match:
+#
+#   remix          ->  v<version>               (bare, e.g. v1.0.0-beta.5)
+#   remix_fortal   ->  remix_fortal-v<version>
+#   remix_ui_icons ->  remix_ui_icons-v<version>
+#
+# Pushing `remix-v<version>` therefore does NOT publish remix. It fails
+# authentication with "this token has 'refs/tags/remix-v...' ref for which
+# publishing is not allowed. Expected tag 'v...'". That prefix is deliberately
+# absent from the triggers below so the mistake cannot start a doomed run.
+# Aligning the two would mean changing remix's tag pattern on pub.dev first.
+#
+# Separately, `melos version` derives each package's last release from its
+# `<package>-v*` tag. So a remix release wants both tags: `v<version>` is what
+# publishes, `remix-v<version>` is what melos reads. Only the first triggers
+# this workflow.
 #
 # The split does not order the two publishes: each tag push starts its own run,
-# so `git push --tags` still races. Push remix first, wait for pub.dev to serve
-# it, then push the remix_fortal tag. pub.dev does not verify that a dependency
-# version exists, so the wrong order ships an uninstallable remix_fortal rather
-# than failing the job.
+# so `git push --tags` still races — and it can also fire this workflow from
+# whatever stale `v*` tags a clone happens to hold. Push the tags one at a
+# time, remix first, and wait for pub.dev to serve it before pushing the
+# remix_fortal tag. pub.dev does not verify that a dependency version exists,
+# so the wrong order ships an uninstallable remix_fortal rather than failing
+# the job.
 on:
   push:
     tags:
-      - 'remix-v[0-9]+.[0-9]+.[0-9]+*'
       - 'remix_fortal-v[0-9]+.[0-9]+.[0-9]+*'
+      - 'remix_ui_icons-v[0-9]+.[0-9]+.[0-9]+*'
       - 'v[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
   publish-remix:
-    if: >-
-      startsWith(github.ref, 'refs/tags/remix-v') ||
-      startsWith(github.ref, 'refs/tags/v')
-    uses: btwld/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
+    # Bare `v*` only. `refs/tags/remix_fortal-v...` does not start with
+    # `refs/tags/v`, so the two conditions stay mutually exclusive.
+    if: startsWith(github.ref, 'refs/tags/v')
+    uses: conceptadev/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
     with:
       packages_folder_path: "packages"
       packages: "remix"
@@ -37,10 +53,20 @@ jobs:
 
   publish-remix-fortal:
     if: startsWith(github.ref, 'refs/tags/remix_fortal-v')
-    uses: btwld/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
+    uses: conceptadev/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
     with:
       packages_folder_path: "packages"
       packages: "remix_fortal"
+    permissions:
+      id-token: write
+      contents: read
+
+  publish-remix-ui-icons:
+    if: startsWith(github.ref, 'refs/tags/remix_ui_icons-v')
+    uses: conceptadev/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
+    with:
+      packages_folder_path: "packages"
+      packages: "remix_ui_icons"
     permissions:
       id-token: write
       contents: read

@@ -273,8 +273,15 @@ class _RemixTextFieldBody extends StatefulWidget {
 }
 
 class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
+  // Naked constructor props (cursor, textAlign) cannot be restyled from the
+  // builder, and Naked hover/press cover only its subtree. This controller
+  // is Mix resolution for chrome outside that subtree, not a second
+  // interaction owner.
   late final WidgetStatesController _styleController;
   final _activePressSources = <_RemixTextFieldPressSource>{};
+  // Naked owns an internal FocusNode when none is provided, but Remix still
+  // needs the same node for chrome tap-to-focus. Sharing one node here is
+  // the gap Naked does not close for label/padding taps.
   FocusNode? _internalFocusNode;
 
   FocusNode get _effectiveFocusNode =>
@@ -284,7 +291,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   void initState() {
     super.initState();
     _styleController = WidgetStatesController({
-      if (!widget.config.enabled || widget.config.readOnly) .disabled,
+      if (!widget.config.enabled) .disabled,
       if (widget.config.error) .error,
     });
     if (widget.config.focusNode == null) {
@@ -321,7 +328,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
     }
 
     _styleController
-      ..update(.disabled, !widget.config.enabled || widget.config.readOnly)
+      ..update(.disabled, !widget.config.enabled)
       ..update(.error, widget.config.error);
 
     if (!widget.config.enabled || widget.config.ignorePointers == true) {
@@ -444,6 +451,10 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
           ? (bool pressed) => _updatePressSource(.editable, pressed)
           : null,
       ignorePointers: config.ignorePointers,
+      // excludeSemantics is deliberately not forwarded: Remix excludes the
+      // whole composite below, which also covers the label, helper, and
+      // accessories that live outside this subtree. Forwarding as well would
+      // be a second, redundant boundary inside the first.
       semanticLabel: config.semanticLabel ?? config.label,
       semanticHint: effectiveSemanticHint,
       semanticErrorText: effectiveSemanticErrorText,
@@ -492,7 +503,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
       child: nakedTextField,
     );
 
-    final withAccessories = RemixBoxWithEffects(
+    final withAccessories = RemixBoxAdapter(
       styleSpec: spec.container,
       containerEffects: spec.containerEffects,
       child: Row(
@@ -529,6 +540,8 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
           )
         : withAccessories;
 
+    // Naked selection gestures do not cover Remix chrome (label, helper,
+    // decorated padding). This detector only forwards those hits.
     composite = _RemixTextFieldFallbackGestureDetector(
       enabled: acceptsPointerEvents,
       onTapAlwaysCalled: config.onTapAlwaysCalled,

@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -33,6 +34,42 @@ Widget buildAvatarUseCase(BuildContext context) {
               ],
             ),
           ),
+        ),
+      ),
+    ),
+  );
+}
+
+/// One controller per cell, created once rather than per build.
+///
+/// An accordion reads its open state from the group above it, so a shared
+/// controller would expand every cell in the matrix together, and a controller
+/// built inside `cell` would be replaced on each rebuild.
+final _catalogControllers = <String, RemixAccordionController<String>>{};
+
+RemixAccordionController<String> _catalogController(String cellId) {
+  return _catalogControllers.putIfAbsent(
+    cellId,
+    () => RemixAccordionController<String>(min: 0, max: 1),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixAccordion)
+Widget buildAccordionCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    cellWidth: 280,
+    columns: labelsOf(FortalAccordionSize.values),
+    rows: labelsOf(FortalAccordionVariant.values),
+    cell: (row, column) => SizedBox(
+      width: 260,
+      child: RemixAccordionGroup(
+        controller: _catalogController('$row.$column'),
+        child: FortalAccordion<String>(
+          value: 'panel',
+          title: 'Section',
+          size: FortalAccordionSize.values[column],
+          variant: FortalAccordionVariant.values[row],
+          child: const FortalText('Panel body'),
         ),
       ),
     ),

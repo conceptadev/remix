@@ -1,5 +1,63 @@
+## 1.0.0-beta.7
+
+ - **REFACTOR**(remix): simplify composite surface rendering (#165).
+ - **FEAT**(remix): give the two effect Mixes their dot-shorthand pair (#169).
+ - **FEAT**(remix): add RemixMenuTrigger.builder for custom menu triggers (#166).
+ - **FEAT**(remix): add disclosure component (#164).
+
+## 1.0.0-beta.6
+
+ - **FIX**: correct dashboard showcase and checkbox indicator regressions (#162).
+
+## 1.0.0-beta.5
+
+> Note: This release has breaking changes.
+
+ - **FEAT**(remix): add styler field metadata, raise Mix floor to 2.2.0-beta.5 (#158).
+ - **BREAKING** **REFACTOR**(remix): make interactive components visual-only over naked_ui (#157).
+ - **BREAKING** **REFACTOR**(remix): generate callable component stylers (#152).
+ - **BREAKING** **FEAT**(remix): add RemixLink and rebuild FortalLink on it (#151).
+
 ## 1.0.0-beta.4
 
+- **BREAKING**: `RemixIconButton.semanticLabel` is required and must be
+  nonblank. The generic `Icon Button` accessible name is removed.
+- **BREAKING**: `RemixRadio.semanticLabel` and `RemixSwitch.semanticLabel`
+  are required and must be nonblank. Adjacent `Text` is not an accessible
+  name.
+- **BREAKING**: `RemixSelect` with `onChanged == null` is a genuinely
+  disabled control. A callback-less select no longer opens for inspection.
+- **BREAKING**: `RemixSlider` requires `min < max` and
+  `snapDivisions == null || snapDivisions > 0`.
+- **BREAKING**: `showRemixDialog` requires a nonblank `barrierLabel` when
+  `barrierDismissible` is true. `RemixDialog` requires `semanticLabel` or
+  `title` when it owns the dialog role; a caller-owned ancestor dialog may
+  provide the role and accessible name instead.
+- **BREAKING**: `RemixTextField.readOnly` no longer resolves as
+  `WidgetState.disabled`. A read-only field is styled as enabled, so themes
+  that relied on the disabled visual for read-only need a dedicated recipe.
+- **BREAKING**: `RemixButton` and `RemixIconButton` no longer mark the
+  control as a semantic live region while `loading` is true. Entering the
+  loading state is no longer announced; `naked_ui` has no replacement API
+  yet.
+- **FIX**: Compose `RemixTabBar` inside `NakedTabBar` so the tab list owns
+  tab-bar semantics and keyboard traversal.
+- **FIX**: `NakedButton` is the sole semantic and behavior owner for
+  `RemixButton` and `RemixIconButton`. Visual content no longer republishes
+  the accessible name.
+- **FIX**: `RemixSelect` forwards the public `onChanged`, announces
+  `semanticLabel ?? label`, and resolves option styles from
+  `NakedSelectOptionState.controllerOf`. Each option row resolves only the
+  item branch of the style, so per-item animation and widget modifiers
+  render and the root modifiers are not re-applied per row.
+- **FIX**: `RemixSlider` paints the range from Naked direction-aware visual
+  percentages.
+- **FIX**: `RemixSlider` centers the thumb on the track when the track is
+  thicker than the thumb. The thumb previously ignored the horizontal inset
+  the track takes from its padding, so it sat
+  `trackThickness / 2 - thumbWidth / 2` short of the track at every value.
+- **FIX**: `RemixRadio` uses `NakedRadioState.isSelected` and forwards
+  grouping to `NakedRadioGroup`.
 - **BREAKING**: Replace handwritten component `Styler.call(...)` extensions
   with generator-owned instance methods. Ordinary `.call(...)` and callable
   styler syntax remain source-compatible, but explicit references to the old

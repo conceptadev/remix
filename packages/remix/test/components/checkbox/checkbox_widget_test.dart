@@ -64,7 +64,7 @@ void main() {
 
         expect(find.byType(RemixCheckbox), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
-        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
       });
 
       testWidgets('renders indeterminate state when tristate is true', (
@@ -77,7 +77,10 @@ void main() {
 
         expect(find.byType(RemixCheckbox), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
-        expect(_pathGlyph(RemixPathGlyph.dash), findsOneWidget);
+        expect(
+          _pathGlyph(RemixPathGlyph.thickDividerHorizontal),
+          findsOneWidget,
+        );
       });
     });
 
@@ -123,7 +126,7 @@ void main() {
 
         expect(find.byType(RemixCheckbox), findsOneWidget);
         expect(find.byType(StyledIcon), findsNothing);
-        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
       });
 
       testWidgets('uses custom checked icon', (tester) async {
@@ -319,7 +322,7 @@ void main() {
 
         expect(find.byType(RemixCheckbox), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
-        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
       });
     });
 
@@ -401,7 +404,10 @@ void main() {
 
         expect(find.byType(RemixCheckbox), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
-        expect(_pathGlyph(RemixPathGlyph.dash), findsOneWidget);
+        expect(
+          _pathGlyph(RemixPathGlyph.thickDividerHorizontal),
+          findsOneWidget,
+        );
       });
 
       testWidgets('handles tristate with true selected', (tester) async {
@@ -412,7 +418,7 @@ void main() {
 
         expect(find.byType(RemixCheckbox), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
-        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
       });
     });
   });

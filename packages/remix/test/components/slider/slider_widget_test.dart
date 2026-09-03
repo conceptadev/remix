@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 import 'package:remix/src/rendering/remix_box_effects.dart'
-    show RemixBoxWithEffects;
+    show RemixBoxAdapter;
 
 import '../../helpers/test_helpers.dart';
 
@@ -131,6 +133,34 @@ void main() {
             max: 0.0,
             onChanged: (value) {},
           ),
+          throwsA(isA<AssertionError>()),
+        );
+      });
+
+      test('throws assertion error when min equals max', () {
+        expect(
+          () => RemixSlider(
+            value: 0.0,
+            min: 1.0,
+            max: 1.0,
+            onChanged: (value) {},
+          ),
+          throwsA(isA<AssertionError>()),
+        );
+      });
+
+      test('throws assertion error when snapDivisions is zero', () {
+        expect(
+          () =>
+              RemixSlider(value: 0.5, snapDivisions: 0, onChanged: (value) {}),
+          throwsA(isA<AssertionError>()),
+        );
+      });
+
+      test('throws assertion error when snapDivisions is negative', () {
+        expect(
+          () =>
+              RemixSlider(value: 0.5, snapDivisions: -2, onChanged: (value) {}),
           throwsA(isA<AssertionError>()),
         );
       });
@@ -864,12 +894,259 @@ void main() {
         expect(find.byType(RemixSlider), findsOneWidget);
       });
     });
+
+    group('Direction-aware visuals and interaction', () {
+      Widget sizedSlider({
+        required double value,
+        TextDirection direction = TextDirection.ltr,
+        ValueChanged<double>? onChanged,
+        bool enabled = true,
+        FocusNode? focusNode,
+        String? semanticLabel,
+        NakedSliderSemanticFormatterCallback? semanticFormatterCallback,
+      }) {
+        return SizedBox(
+          width: 240,
+          child: RemixSlider(
+            value: value,
+            onChanged: onChanged ?? (_) {},
+            enabled: enabled,
+            focusNode: focusNode,
+            semanticLabel: semanticLabel,
+            semanticFormatterCallback: semanticFormatterCallback,
+            style: SliderStyler(thumb: BoxStyler().size(20, 20)),
+          ),
+        );
+      }
+
+      testWidgets('LTR places the thumb and range from the left', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(sizedSlider(value: 0.25));
+        await tester.pumpAndSettle();
+
+        final slider = tester.getRect(find.byType(RemixSlider));
+        final thumb = tester.getRect(find.byWidget(_sliderThumb(tester)));
+        expect(thumb.center.dx, lessThan(slider.center.dx));
+      });
+
+      testWidgets('RTL places the thumb and range from the right', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          sizedSlider(value: 0.25),
+          textDirection: TextDirection.rtl,
+        );
+        await tester.pumpAndSettle();
+
+        final slider = tester.getRect(find.byType(RemixSlider));
+        final thumb = tester.getRect(find.byWidget(_sliderThumb(tester)));
+        expect(thumb.center.dx, greaterThan(slider.center.dx));
+      });
+
+      // A track thicker than the thumb drives the horizontal inset, so the
+      // thumb must travel across the inset track, not the full slider box.
+      Widget thickTrackSlider({required double value}) {
+        return SizedBox(
+          width: 240,
+          child: RemixSlider(
+            value: value,
+            onChanged: (_) {},
+            style: SliderStyler(
+              thumb: BoxStyler().size(20, 20),
+            ).trackThickness(60),
+          ),
+        );
+      }
+
+      testWidgets('thumb centers on the track start at the minimum value', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(thickTrackSlider(value: 0));
+        await tester.pumpAndSettle();
+
+        final slider = tester.getRect(find.byType(RemixSlider));
+        final thumb = tester.getRect(find.byWidget(_sliderThumb(tester)));
+        // horizontalOverflow = max(thumb 20 / 2, track 60 / 2) = 30.
+        expect(thumb.center.dx, moreOrLessEquals(slider.left + 30));
+      });
+
+      testWidgets('thumb centers on the track end at the maximum value', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(thickTrackSlider(value: 1));
+        await tester.pumpAndSettle();
+
+        final slider = tester.getRect(find.byType(RemixSlider));
+        final thumb = tester.getRect(find.byWidget(_sliderThumb(tester)));
+        expect(thumb.center.dx, moreOrLessEquals(slider.right - 30));
+      });
+
+      testWidgets('thumb centers on the track midpoint at the middle value', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(thickTrackSlider(value: 0.5));
+        await tester.pumpAndSettle();
+
+        final slider = tester.getRect(find.byType(RemixSlider));
+        final thumb = tester.getRect(find.byWidget(_sliderThumb(tester)));
+        expect(thumb.center.dx, moreOrLessEquals(slider.center.dx));
+      });
+
+      testWidgets('RTL thumb centers on the track end at the minimum value', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          thickTrackSlider(value: 0),
+          textDirection: TextDirection.rtl,
+        );
+        await tester.pumpAndSettle();
+
+        final slider = tester.getRect(find.byType(RemixSlider));
+        final thumb = tester.getRect(find.byWidget(_sliderThumb(tester)));
+        expect(thumb.center.dx, moreOrLessEquals(slider.right - 30));
+      });
+
+      testWidgets('semantic increase and decrease change the value', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          var value = 0.5;
+          await tester.pumpRemixApp(
+            StatefulBuilder(
+              builder: (context, setState) {
+                return sizedSlider(
+                  value: value,
+                  semanticLabel: 'Volume',
+                  onChanged: (next) => setState(() => value = next),
+                );
+              },
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          tester.semantics.increase(find.semantics.byLabel('Volume'));
+          await tester.pumpAndSettle();
+          expect(value, greaterThan(0.5));
+
+          tester.semantics.decrease(find.semantics.byLabel('Volume'));
+          await tester.pumpAndSettle();
+          expect(value, lessThan(1.0));
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('keyboard arrows, Home, End, Page Up, and Page Down', (
+        tester,
+      ) async {
+        var value = 0.5;
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpRemixApp(
+          StatefulBuilder(
+            builder: (context, setState) {
+              return sizedSlider(
+                value: value,
+                focusNode: focusNode,
+                onChanged: (next) => setState(() => value = next),
+              );
+            },
+          ),
+        );
+        await tester.pumpAndSettle();
+        focusNode.requestFocus();
+        await tester.pump();
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await tester.pump();
+        expect(value, greaterThan(0.5));
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.home);
+        await tester.pump();
+        expect(value, 0);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.end);
+        await tester.pump();
+        expect(value, 1);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.pageDown);
+        await tester.pump();
+        expect(value, lessThan(1));
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.pageUp);
+        await tester.pump();
+        expect(value, greaterThan(0));
+      });
+
+      testWidgets('disabled slider does not change from keys or semantics', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          var value = 0.5;
+          final focusNode = FocusNode();
+          addTearDown(focusNode.dispose);
+          await tester.pumpRemixApp(
+            sizedSlider(
+              value: value,
+              enabled: false,
+              focusNode: focusNode,
+              semanticLabel: 'Volume',
+              onChanged: (next) => value = next,
+            ),
+          );
+          await tester.pumpAndSettle();
+          focusNode.requestFocus();
+          await tester.pump();
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          await tester.pump();
+          expect(value, 0.5);
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('external focus node receives focus', (tester) async {
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+        await tester.pumpRemixApp(
+          sizedSlider(value: 0.5, focusNode: focusNode),
+        );
+        await tester.pumpAndSettle();
+        focusNode.requestFocus();
+        await tester.pump();
+        expect(focusNode.hasFocus, isTrue);
+      });
+
+      testWidgets('semantic formatter is announced', (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            sizedSlider(
+              value: 0.5,
+              semanticLabel: 'Volume',
+              semanticFormatterCallback: (value) =>
+                  '${(value * 100).round()} percent',
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          final node = tester.getSemantics(find.bySemanticsLabel('Volume'));
+          expect(node.value, contains('50'));
+        } finally {
+          semantics.dispose();
+        }
+      });
+    });
   });
 }
 
-RemixBoxWithEffects _sliderThumb(WidgetTester tester) {
+RemixBoxAdapter _sliderThumb(WidgetTester tester) {
   return tester
-      .widgetList<RemixBoxWithEffects>(find.byType(RemixBoxWithEffects))
+      .widgetList<RemixBoxAdapter>(find.byType(RemixBoxAdapter))
       .singleWhere(
         (widget) => widget.styleSpec.spec.constraints?.maxWidth == 20,
       );

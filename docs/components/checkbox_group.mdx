@@ -249,13 +249,15 @@ CheckboxStyler _optionStyle() {
 
 ## Fortal widgets
 
-There is no Fortal checkbox-group widget, because the group has no visuals of
-its own. Style the **items** with the existing Fortal checkbox recipe; the
-group stays unstyled. Fortal keeps its 14/16/20 indicator geometry inside the
-item's default 48-pixel interaction target. The Radix CheckboxGroup family is
-audited separately as intentionally unmapped: caller-owned `Column`/`Row`
-spacing replaces its root and label gaps, while each item receives the mapped
-checkbox size, variant, color, and high-contrast styling.
+There is no Fortal checkbox-group widget, because the group root has no
+visuals of its own. Render each option as `FortalCheckboxGroupItem`, which
+applies `fortalCheckboxGroupItemStyle` for you; the group stays unstyled.
+Fortal keeps its 14/16/20 indicator geometry inside the item's default
+48-pixel interaction target. The Radix CheckboxGroup family is audited
+separately as intentionally unmapped at the root: caller-owned
+`Column`/`Row` spacing replaces its root layout, while each
+`FortalCheckboxGroupItem` receives the mapped checkbox visuals, size-linked
+`text1`/`text2`/`text3` label typography, and scaled 6/7/8 label gap.
 
 <CodeGroup title="Fortal-styled items" defaultLanguage="dart">
 ```dart
@@ -286,15 +288,13 @@ class _FortalCheckboxGroupExampleState
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 8,
         children: [
-          RemixCheckboxGroupItem<String>(
+          FortalCheckboxGroupItem<String>.surface(
             value: 'design',
             label: 'Design',
-            style: fortalCheckboxStyle(variant: FortalCheckboxVariant.surface),
           ),
-          RemixCheckboxGroupItem<String>(
+          FortalCheckboxGroupItem<String>.soft(
             value: 'code',
             label: 'Code',
-            style: fortalCheckboxStyle(variant: FortalCheckboxVariant.soft),
           ),
         ],
       ),
@@ -305,7 +305,7 @@ class _FortalCheckboxGroupExampleState
 </CodeGroup>
 
 <Info>
-  See the [fortalCheckboxStyle source code](https://github.com/btwld/remix/blob/main/packages/remix_fortal/lib/src/recipes/checkbox.dart) for all available options.
+  See the [fortalCheckboxGroupItemStyle source code](https://github.com/btwld/remix/blob/main/packages/remix_fortal/lib/src/recipes/checkbox.dart) for all available options.
 </Info>
 
 ## Controlled values

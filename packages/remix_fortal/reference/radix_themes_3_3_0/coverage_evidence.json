@@ -7,12 +7,12 @@
     },
     {
       "test": "test/fortal/fortal_theme_resolution_test.dart",
-      "case": "unsized typography measures 1em against the root, not the host",
+      "case": "root scope keeps a courtesy DefaultTextStyle for bare Text",
       "covers": ["state:rootTextStyle"]
     },
     {
       "test": "test/fortal/fortal_theme_resolution_test.dart",
-      "case": "a nested scope preserves the nearest text style",
+      "case": "a nested scope reanchors unsized typography to its tokens",
       "covers": ["state:rootTextStyle", "state:nestedInherit"]
     },
     {
@@ -873,6 +873,40 @@
       "covers": ["state:disabled"]
     }
   ],
+  "disclosure": [
+    {
+      "test": "test/components/disclosure/disclosure_style_test.dart",
+      "case": "each size resolves distinct layout metrics",
+      "covers": [
+        "enum:size.size1",
+        "enum:size.size2",
+        "enum:size.size3"
+      ]
+    },
+    {
+      "test": "test/components/disclosure/disclosure_style_test.dart",
+      "case": "variants resolve distinct visual treatments",
+      "covers": [
+        "enum:variant.surface",
+        "enum:variant.soft"
+      ]
+    },
+    {
+      "test": "test/components/disclosure/disclosure_widget_test.dart",
+      "case": "shows collapsed and expanded states",
+      "covers": ["state:collapsed", "state:expanded"]
+    },
+    {
+      "test": "test/components/disclosure/disclosure_style_test.dart",
+      "case": "hovered, pressed, focused, and disabled states resolve",
+      "covers": [
+        "state:hovered",
+        "state:pressed",
+        "state:focused",
+        "state:disabled"
+      ]
+    }
+  ],
   "toggle": [
     {
       "test": "test/components/toggle/toggle_widget_test.dart",
@@ -1053,7 +1087,7 @@
     },
     {
       "test": "test/components/typography/typography_test.dart",
-      "case": "code applies the nested Radix font-size adjustments",
+      "case": "code applies nested factors to the text3 token",
       "covers": ["enum:variant.soft", "enum:variant.ghost", "state:idle"]
     },
     {
@@ -1076,6 +1110,16 @@
       "test": "test/components/typography/typography_test.dart",
       "case": "ghost gains the accent foreground only when opted in",
       "covers": ["enum:variant.ghost", "state:accent"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "ghost preserves ambient Paint until a composed color overrides it",
+      "covers": ["enum:variant.ghost", "state:idle"]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
+      "case": "later merged ghost recipe replaces the ambient fallback",
+      "covers": ["enum:variant.ghost", "state:idle"]
     },
     {
       "test": "test/components/typography/typography_test.dart",
@@ -1112,7 +1156,7 @@
     },
     {
       "test": "test/components/typography/typography_test.dart",
-      "case": "kbd uses distinct unsized and explicit type factors",
+      "case": "kbd applies distinct unsized and explicit token factors",
       "covers": ["state:idle"]
     },
     {
@@ -1203,12 +1247,21 @@
     },
     {
       "test": "test/components/typography/typography_test.dart",
+      "case": "disabled links never underline even with a callback",
+      "covers": [
+        "enum:underline.auto",
+        "enum:underline.always",
+        "state:disabled"
+      ]
+    },
+    {
+      "test": "test/components/typography/typography_test.dart",
       "case": "inert links never underline; upstream gates on anchors",
       "covers": ["state:inert"]
     },
     {
       "test": "test/components/typography/typography_test.dart",
-      "case": "inert link exposes no interactive metadata",
+      "case": "a link with no callback is a disabled link",
       "covers": ["state:inert"]
     },
     {

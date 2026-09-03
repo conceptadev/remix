@@ -52,23 +52,22 @@ class GalleryTypographyPage extends StatelessWidget {
         GallerySection(
           label: 'Weights',
           description:
-              'Light, regular, medium, and bold are shared by every family.',
-          child: GalleryMatrix(
-            rows: const ['Text', 'Heading', 'Code', 'Link'],
-            columns: FortalTextWeight.values.map(enumLabel).toList(),
+              'Text, heading, code, and link share all four weight presets.',
+          child: GalleryEnumMatrix(
+            rows: _TypographyFamily.values,
+            columns: FortalTextWeight.values,
             cellWidth: 130,
-            cellBuilder: (context, row, column) {
-              final weight = FortalTextWeight.values[column];
-              return switch (row) {
-                0 => FortalText('Aa', size: .size4, weight: weight),
-                1 => FortalHeading(
+            cellBuilder: (context, family, weight) {
+              return switch (family) {
+                .text => FortalText('Aa', size: .size4, weight: weight),
+                .heading => FortalHeading(
                   'Aa',
                   headingLevel: 3,
                   size: .size4,
                   weight: weight,
                 ),
-                2 => FortalCode.soft('Aa', size: .size4, weight: weight),
-                _ => FortalLink(
+                .code => FortalCode.soft('Aa', size: .size4, weight: weight),
+                .link => FortalLink(
                   'Aa',
                   size: .size4,
                   weight: weight,
@@ -105,36 +104,34 @@ class GalleryTypographyPage extends StatelessWidget {
         GallerySection(
           label: 'Code',
           description: 'Solid, soft, outline, and ghost inline code.',
-          child: GalleryMatrix(
-            rows: FortalCodeVariant.values.map(enumLabel).toList(),
-            columns: const ['Default', 'High contrast'],
+          child: GalleryMatrix<FortalCodeVariant, bool>(
+            rows: FortalCodeVariant.values,
+            columns: const [false, true],
+            rowLabelBuilder: enumLabel,
+            columnLabelBuilder: (highContrast) =>
+                highContrast ? 'High contrast' : 'Default',
             cellWidth: 170,
-            cellBuilder: (_, row, column) => FortalCode(
+            cellBuilder: (_, variant, highContrast) => FortalCode(
               'const x = 1;',
-              variant: FortalCodeVariant.values[row],
+              variant: variant,
               size: .size2,
               accent: true,
-              highContrast: column == 1,
+              highContrast: highContrast,
             ),
           ),
         ),
         GallerySection(
           label: 'Keyboard keys',
           description:
-              'Classic key caps and the flat soft variant, at four sizes.',
-          child: GalleryMatrix(
-            rows: FortalKbdVariant.values.map(enumLabel).toList(),
-            columns: const ['Size 1', 'Size 3', 'Size 5', 'Size 7'],
+              'Classic key caps and the flat soft variant at all nine sizes.',
+          child: GalleryEnumMatrix(
+            rows: FortalKbdVariant.values,
+            columns: FortalTextSize.values,
             cellWidth: 130,
-            cellBuilder: (_, row, column) => FortalKbd(
+            cellBuilder: (_, variant, size) => FortalKbd(
               '⌘K',
-              variant: FortalKbdVariant.values[row],
-              size: const [
-                FortalTextSize.size1,
-                FortalTextSize.size3,
-                FortalTextSize.size5,
-                FortalTextSize.size7,
-              ][column],
+              variant: variant,
+              size: size,
               semanticLabel: 'Command K',
             ),
           ),
@@ -164,8 +161,10 @@ class GalleryTypographyPage extends StatelessWidget {
                 onPressed: () =>
                     showToast(context, message: 'High contrast activated'),
               ),
+              // Two spellings of the same state: a null callback disables the
+              // link exactly as `enabled: false` does.
               FortalLink('Disabled', enabled: false, onPressed: () {}),
-              const FortalLink('Inert'),
+              const FortalLink('Disabled (no callback)'),
               FortalLink(
                 'Documentation',
                 linkUrl: Uri.parse('https://docs.page/btwld/remix/fortal'),
@@ -186,7 +185,12 @@ class GalleryTypographyPage extends StatelessWidget {
             runSpacing: 12,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: const [
-              FortalText('Inherited', size: .size3),
+              FortalText('Neutral', size: .size3),
+              FortalText(
+                'High contrast alone',
+                size: .size3,
+                highContrast: true,
+              ),
               FortalText('Accent', size: .size3, accent: true),
               FortalText(
                 'Accent high contrast',
@@ -239,3 +243,5 @@ class GalleryTypographyPage extends StatelessWidget {
     );
   }
 }
+
+enum _TypographyFamily { text, heading, code, link }

@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -22,6 +23,7 @@ Widget buildTextFieldUseCase(BuildContext context) {
                 )
                 ? FortalIconButton.ghost(
                     icon: Icons.close_rounded,
+                    semanticLabel: 'Clear',
                     onPressed: () {},
                   )
                 : null,
@@ -61,6 +63,23 @@ Widget buildTextFieldUseCase(BuildContext context) {
             ),
           ),
         ),
+      ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixTextField)
+Widget buildTextFieldCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    cellWidth: 220,
+    columns: labelsOf(FortalTextFieldSize.values),
+    rows: labelsOf(FortalTextFieldVariant.values),
+    cell: (row, column) => SizedBox(
+      width: 180,
+      child: FortalTextField(
+        hintText: 'Text',
+        size: FortalTextFieldSize.values[column],
+        variant: FortalTextFieldVariant.values[row],
       ),
     ),
   );

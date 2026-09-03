@@ -1,8 +1,13 @@
 name: Prepare Version Bump
 
-# Pushes a branch that bumps versions and changelogs from conventional
-# commits. It never tags and never publishes: `publish.yml` fires on a tag push,
-# so the tag is pushed by hand after this PR is reviewed and merged.
+# Pushes a branch that sets both published packages to one explicit version and
+# writes their changelogs from conventional commits. It never tags and never
+# publishes: `publish.yml` fires on a tag push, so the tag is pushed by hand
+# after this PR is reviewed and merged.
+#
+# The version is a single input rather than one per package. remix and
+# remix_fortal ship as a pair and must carry the identical version, so there is
+# no per-package value to disagree about.
 #
 # It pushes a branch and prints its compare link rather than opening the pull
 # request itself. Opening one from a workflow needs "Allow GitHub Actions to
@@ -12,18 +17,9 @@ name: Prepare Version Bump
 on:
   workflow_dispatch:
     inputs:
-      remix_version:
-        description: "Exact version for remix (e.g. 1.0.0-beta.5). Cannot be combined with graduate."
-        required: false
-        default: ""
-      remix_fortal_version:
-        description: "Exact version for remix_fortal (e.g. 0.1.0-beta.4). Cannot be combined with graduate."
-        required: false
-        default: ""
-      graduate:
-        description: "Graduate the prerelease line to stable instead of bumping beta"
-        type: boolean
-        default: false
+      version:
+        description: "Exact version for BOTH remix and remix_fortal (e.g. 1.0.0-beta.5)."
+        required: true
 
 permissions:
   contents: write
@@ -58,37 +54,59 @@ jobs:
         run: |
           set -euo pipefail
 
-          overrides=""
-          if [ -n "${{ inputs.remix_version }}" ]; then
-            overrides="$overrides -V remix:${{ inputs.remix_version }}"
-          fi
-          if [ -n "${{ inputs.remix_fortal_version }}" ]; then
-            overrides="$overrides -V remix_fortal:${{ inputs.remix_fortal_version }}"
-          fi
+          version='${{ inputs.version }}'
 
-          # melos rejects manual versions combined with either mode:
-          # "Cannot use manualVersions with asPrerelease or asStableRelease."
-          if [ -n "$overrides" ] && [ "${{ inputs.graduate }}" = "true" ]; then
-            echo "::error::Exact versions cannot be combined with graduate. Choose one."
-            exit 1
-          fi
+          # One input applied to both packages, rather than a version per
+          # package that a human has to keep in step. remix and remix_fortal
+          # release in lockstep (tool/check_version_alignment.dart enforces it
+          # in CI), and melos has no lockstep mode of its own — left to derive
+          # versions from commits it would bump each package independently and
+          # split the pair apart. Passing an explicit `-V` for both is what
+          # keeps them identical.
+          overrides="-V remix:$version -V remix_fortal:$version"
 
-          dart pub global activate melos
-          melos bootstrap
+          # No `dart pub global activate melos`. melos runs whichever version
+          # the workspace pins as a dev dependency, so a global install cannot
+          # decide the version and only prints a reassuring, wrong one into the
+          # log — which is how a 7.8.2 crash came to be reported under an
+          # "Activated melos 8.5.0" line. Resolving the workspace and running
+          # its own melos makes the pin the single source of truth.
+          dart pub get
+          dart run melos bootstrap
 
-          git checkout -b release/version-packages
+          # Versioning happens on the checked-out branch, and the release
+          # branch is cut afterwards from the modified tree. `melos version`
+          # opens with `git pull --tags -f` to refresh the `<package>-v*` tags
+          # it derives each last release from, and a branch made here with
+          # `git checkout -b` has no upstream, so that pull aborts with "there
+          # is no tracking information for the current branch" before melos
+          # writes anything. Running while the tracking branch actions/checkout
+          # set up is still current is what gives that pull a remote to read.
 
           # `--no-git-commit-version` is what makes the diff check below
           # meaningful. melos commits by default, which would leave a clean tree
           # and make a successful run look like "nothing to version". It also
           # implies --no-git-tag-version.
-          if [ -n "$overrides" ]; then
-            melos version --no-git-commit-version --yes $overrides
-          elif [ "${{ inputs.graduate }}" = "true" ]; then
-            melos version --graduate --no-git-commit-version --yes
-          else
-            melos version --prerelease --preid beta --no-git-commit-version --yes
-          fi
+          # `--yes` is what skips the changelog-entry prompt manual `-V`
+          # versioning would otherwise raise. That is true from melos 8.0.0,
+          # which put the flag in front of it; on 7.x the prompt was
+          # unconditional and this workflow crashed on it. `< /dev/null` is
+          # kept as a second line of defence for any prompt added later, but it
+          # is not what makes this work: melos re-executes itself and the
+          # child does not inherit the redirect, so a redirected stdin alone
+          # still reached the prompt and threw StdinException.
+          # Scope is explicit so a conventional commit touching remix_cli
+          # cannot pull that independently versioned package into the lockstep
+          # Remix/Fortal release branch.
+          dart run melos version \
+            --scope=remix \
+            --scope=remix_fortal \
+            --no-git-commit-version \
+            --yes \
+            $overrides < /dev/null
+
+          # The pair must land aligned; verify rather than trust the inputs.
+          dart run tool/check_version_alignment.dart
 
           if git diff --quiet && git diff --cached --quiet; then
             echo "No packages required versioning."
@@ -96,6 +114,9 @@ jobs:
             exit 0
           fi
           echo "versioned=true" >> "$GITHUB_OUTPUT"
+
+          # Cut the branch now, carrying the working tree melos just wrote.
+          git checkout -b release/version-packages
 
           git add -A
           git commit -m "chore(release): version packages"
@@ -110,8 +131,18 @@ jobs:
             echo
             echo "[Open the pull request]($url)"
             echo
-            echo "After merging, push the release tags in order:"
-            echo '1. `remix-v<version>` — wait until pub.dev serves it'
-            echo '2. `remix_fortal-v<version>`'
+            echo "Both packages are on \`${{ inputs.version }}\`."
+            echo
+            echo "After merging, push these tags ONE AT A TIME, in this order."
+            echo "Do not \`git push --tags\`: stale \`v*\` tags in this repo"
+            echo "would start publish runs from the wrong commits."
+            echo
+            echo '1. `v${{ inputs.version }}` — publishes **remix**. Wait until'
+            echo '   pub.dev actually serves it before step 2; pub.dev does not'
+            echo '   verify a dependency exists, so publishing remix_fortal'
+            echo '   early ships an uninstallable package rather than failing.'
+            echo '2. `remix_fortal-v${{ inputs.version }}` — publishes **remix_fortal**.'
+            echo '3. `remix-v${{ inputs.version }}` — publishes nothing. melos'
+            echo '   reads it to derive the next release changelog.'
           } >> "$GITHUB_STEP_SUMMARY"
           echo "Open the pull request: $url"

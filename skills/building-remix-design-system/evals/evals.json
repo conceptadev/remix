@@ -5,43 +5,92 @@
       "id": 1,
       "prompt": "I want to implement Shopify Polaris as a Flutter package in this monorepo, built on Remix. Set up the package skeleton and the token pipeline plan — Polaris publishes its tokens in the @shopify/polaris-tokens npm package.",
       "expected_output": "A packages/polaris skeleton (pubspec with publish_to: none + path dep on remix, workspace + melos wiring including any nested example, NOTICE with Shopify attribution) and a tool/ pipeline plan pinning exact @shopify/polaris-tokens versions with extract/normalize/generate/verify stages, committed snapshot + generated Dart, --out flags, and a CI verify workflow — a generated standalone package, not a clone of Fortal with swapped colors.",
-      "files": []
+      "files": [],
+      "expectations": [
+        "Creates a standalone packages/polaris scaffold with publish_to none while Remix is a path dependency, workspace and melos wiring, and attribution.",
+        "Pins the exact upstream token source and defines extract, normalize, generate, and read-only verify stages.",
+        "Commits the normalized snapshot and generated Dart and adds a CI drift check instead of cloning Fortal content."
+      ]
     },
     {
       "id": 2,
       "prompt": "Add a Button component to our new design system package. The upstream system has primary/secondary/plain variants, three sizes (28/36/44px), a 3px focus ring, and loading buttons keep their variant color with a white spinner.",
       "expected_output": "A specs/components/button.yaml worksheet first, then a hand-written facade with a memoized styler recipe keyed by (variant, size, loading): loading styled through the onDisabled variant keeping variant fill (RemixButton folds loading into disabled), focus ring via foregroundDecoration (no layout shift), label typography consumed via a text-style token with TextStyler().style(token.mix()), size fallback explicit ?? LayoutScope.maybeOf ?? system default, plus widget tests measuring heights and asserting the loading container color (using pump, not pumpAndSettle).",
-      "files": []
+      "files": [],
+      "expectations": [
+        "Creates the component worksheet before implementation and records variants, sizes, states, tokens, behavior, and approximations.",
+        "Uses a memoized recipe and accounts for RemixButton treating loading as disabled while preserving the variant fill.",
+        "Uses a non-layout-shifting focus ring, token-backed label typography, explicit size fallback, and focused widget tests.",
+        "Uses pump rather than pumpAndSettle for an indefinitely animating spinner."
+      ]
     },
     {
       "id": 3,
       "prompt": "Our design system's tokens were updated upstream — bump the pinned token package from 3.1.0 to 3.4.0 and regenerate.",
       "expected_output": "A dedicated change editing only tool/upstream/package.json (the single version source), reinstalling and re-running the full pipeline, then reviewing the diffs of the source lock, normalized snapshot, and generated Dart; the verify script passes and inventory-count assertions in extract are updated deliberately if the token surface grew; affected component tests/goldens re-checked.",
-      "files": []
+      "files": [],
+      "expectations": [
+        "Changes the single pinned upstream version source rather than editing generated files by hand.",
+        "Re-runs the full pipeline and reviews source lock, normalized snapshot, and generated Dart diffs.",
+        "Runs read-only verification and deliberately updates inventory assertions and affected component tests when needed."
+      ]
     },
     {
       "id": 4,
       "prompt": "We don't have any code for this design system — just a 40-page brand guidelines PDF and a handful of @2x PNG screenshots of the buttons and form fields. Build the token layer from these.",
       "expected_output": "Classifies domains by source tier (PDF = tier 3, screenshots = tier 4), authors the inventory first, then a committed tool/authored/<sys>-authored-tokens.json where every value has a cite (PDF page or screenshot file+coordinates) and a confidence level (specified/measured/assumed, with assumed values echoed in worksheet approximations); screenshots calibrated for scale before measuring, colors sampled from flat regions; normalize/generate/verify run unchanged on the authored file, and no invented scales for tokens the sources don't define.",
-      "files": []
+      "files": [],
+      "expectations": [
+        "Classifies the PDF as tier 3 and screenshots as tier 4 and inventories token domains before transcribing values.",
+        "Stores citations and confidence for every authored value and records assumptions in component approximations.",
+        "Calibrates screenshot scale and samples flat color regions before measurement.",
+        "Runs the standard normalize, generate, and verify stages without inventing undefined scales."
+      ]
     },
     {
       "id": 5,
       "prompt": "Our design system lives in a Figma file — variables for colors and text styles, components laid out in frames. We have an API token. Build the token layer from it.",
       "expected_output": "Classifies the Figma file as tier 2 (queryable source), pins the file version so harvests are reproducible, maps variables/styles to color/type tokens and reads spacing from component frame layout values with node-link citations, lands results in a committed tool/authored/<sys>-authored-tokens.json with confidence specified/derived, and runs normalize/generate/verify unchanged on top of it; checks first whether a higher-tier source (published tokens package or export) exists before harvesting.",
-      "files": []
+      "files": [],
+      "expectations": [
+        "Checks for a higher-tier published token source before choosing Figma harvesting.",
+        "Pins the Figma file version and captures node-linked citations for harvested variables, styles, and spacing.",
+        "Stores authored values with specified or derived confidence and runs the standard normalize, generate, and verify stages."
+      ]
     },
     {
       "id": 6,
       "prompt": "We have no design assets at all. Our brand is 'calm, premium, dark-first', primary color is teal #0D9488, and we use Inter. Generate a design system package from that.",
       "expected_output": "Treats the brief as the pinned source (committed verbatim), asks for or confirms missing constraints (themes, density, gray preference) rather than silently inventing, decides the token inventory and theme model first and records it in an ADR, then authors tool/authored tokens with confidence 'designed' or 'derived' (values produced by documented rules like a perceptually even teal ramp and a modular type scale, each citing the brief or the rule); the standard normalize/generate/verify pipeline and package scaffold apply unchanged.",
-      "files": []
+      "files": [],
+      "expectations": [
+        "Commits the supplied brief as the pinned source and surfaces missing product constraints instead of silently deciding them.",
+        "Defines the token inventory and theme model in an ADR before authoring values.",
+        "Marks values designed or derived with citations to the brief or documented rules and uses the standard pipeline and scaffold."
+      ]
     },
     {
       "id": 7,
-      "prompt": "Our RemixSelect-based component has a generic call<T>() and three variants. Can mix_generator 2.1.2 generate the public AcmeSelect wrapper and named constructors, or do we still need to hand-write it? Show the recipe shape and explain the boundary.",
-      "expected_output": "Explains that genericity comes from the styler call<T>() and is copied to the generated widget, while the annotated top-level recipe function itself must be non-generic. Shows @MixWidget() on a non-generic acmeSelectStyle function whose Style suffix infers AcmeSelect, with a named, non-nullable enum parameter named exactly variant; this generates AcmeSelect.<enumValue> constructors and lets T infer from values/items/callbacks. Checks that the generated call parameters do not leak Remix-only public types; if they do, chooses a hand-written target-vocabulary facade. Mentions that nullable, required-positional, differently named, or non-enum variant parameters do not generate named constructors, while optional positional factory parameters are rejected. Requires a standalone-package spike and a second plain `dart run build_runner build` that leaves generated output unchanged before committing to this API.",
-      "files": []
+      "prompt": "Our RemixSelect-based component has a generic call<T>() and three variants. With this workspace's Mix codegen versions, can the generator create the public AcmeSelect wrapper and named constructors, or do we still need to hand-write it? Show the recipe shape and explain the boundary.",
+      "expected_output": "Reads the current root managed dependencies and packages/remix/pubspec.yaml instead of assuming an old version floor, and identifies the tested set as remix ^1.0.0-beta.7, mix ^2.2.0-beta.5, mix_annotations ^2.2.0-beta.1, build_runner ^2.10.1, and mix_generator ^2.2.0-beta.3. Explains that genericity comes from the styler call<T>() and is copied to the generated widget, while the annotated top-level recipe function itself must be non-generic. Shows @MixWidget() on a non-generic acmeSelectStyle function whose Style suffix infers AcmeSelect, with a named, non-nullable enum parameter named exactly variant; this generates AcmeSelect.<enumValue> constructors and lets T infer from values/items/callbacks. Checks that generated call parameters do not leak Remix-only public types; if they do, chooses a hand-written target-vocabulary facade. Mentions that nullable, required-positional, differently named, or non-enum variant parameters do not generate named constructors, while optional positional factory parameters are rejected. Requires a package-local spike and a second build_runner run that leaves generated output unchanged before committing to the API.",
+      "files": [],
+      "expectations": [
+        "Reads and reports the workspace-tested remix, mix, mix_annotations, and mix_generator constraints.",
+        "Uses a non-generic top-level @MixWidget recipe whose generic call type parameter is copied to the generated widget.",
+        "Uses a named non-nullable enum parameter named variant for generated named constructors and explains the cases that prevent generation.",
+        "Chooses a hand-written facade if Remix-only types leak and requires a package-local deterministic regeneration spike."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Our existing Flutter app already depends on remix_fortal. Build a product dashboard from FortalCard, FortalBadge, and FortalMenu; we are not creating another package or design system.",
+      "expected_output": "Routes the task to using-remix rather than invoking the standalone design-system workflow. It uses the existing Fortal package and does not scaffold packages/<name>, create a token pipeline, rename Fortal components, or generate a parallel widget catalog.",
+      "files": [],
+      "expectations": [
+        "Routes existing Remix/Fortal application UI to using-remix.",
+        "Does not scaffold a standalone design-system package or token pipeline.",
+        "Does not rename or regenerate the existing Fortal component catalog."
+      ]
     }
   ]
 }

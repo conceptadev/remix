@@ -16,13 +16,16 @@ export 'src/components/card/card.dart';
 export 'src/components/checkbox/checkbox.dart';
 export 'src/components/data_list/data_list.dart';
 export 'src/components/data_table/data_table.dart';
+export 'src/components/disclosure/disclosure.dart';
 export 'src/components/divider/divider.dart';
+export 'src/components/link/link.dart';
 export 'src/components/menu/menu.dart';
 export 'src/components/popover/popover.dart';
 export 'src/components/progress/progress.dart';
 export 'src/components/radio/radio.dart';
 export 'src/components/segmented_control/segmented_control.dart';
 export 'src/components/select/select.dart';
+export 'src/components/sidebar/sidebar.dart';
 export 'src/components/skeleton/skeleton.dart';
 export 'src/components/slider/slider.dart';
 export 'src/components/spinner/spinner.dart';
@@ -36,7 +39,12 @@ export 'src/components/tooltip/tooltip.dart';
 /// EXTERNAL DEPENDENCIES
 export 'package:mix/mix.dart';
 export 'package:naked_ui/naked_ui.dart'
-    show OverlayAlignment, OverlayPlacement, OverlayPositionConfig, OverlaySide;
+    show
+        NakedMenuState,
+        OverlayAlignment,
+        OverlayPlacement,
+        OverlayPositionConfig,
+        OverlaySide;
 
 /// RENDERING
 export 'src/rendering/remix_blend_mode.dart' show RemixBlendMode;

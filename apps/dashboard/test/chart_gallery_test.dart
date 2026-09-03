@@ -1,4 +1,6 @@
 import 'package:dashboard/main.dart';
+import 'package:dashboard/pages/charts_page.dart';
+import 'package:dashboard/shell/dashboard_page.dart';
 import 'package:dashboard/theme/theme_settings.dart';
 import 'package:dashboard/widgets/analytics_charts.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,7 @@ void main() {
       const DashboardApp(initialSettings: ThemeSettings(appearance: .light)),
     );
 
-    final destination = find.byKey(const ValueKey('nav-charts'));
+    final destination = find.byKey(const ValueKey(DashboardPage.charts));
     expect(destination, findsOneWidget);
     await tester.tap(destination);
     await tester.pump();
@@ -62,7 +64,7 @@ void main() {
         initialSettings: ThemeSettings(appearance: .dark, accentColor: .orange),
       ),
     );
-    await tester.tap(find.byKey(const ValueKey('nav-charts')));
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.charts)));
     await tester.pump();
 
     final page = find.byKey(const ValueKey('charts-page'));
@@ -351,6 +353,29 @@ void main() {
     expect(compact[2].dy, greaterThan(compact[1].dy));
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('charts gallery two-column rows share height', (tester) async {
+    tester.view.physicalSize = const Size(1200, 3600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      const FortalScope(child: MaterialApp(home: ChartsPage())),
+    );
+
+    Rect card(String title) => tester.getRect(
+      find
+          .ancestor(of: find.text(title), matching: find.byType(FortalCard))
+          .first,
+    );
+
+    final momentum = card('Revenue momentum');
+    final patterns = card('Per-series patterns');
+    expect(patterns.top, closeTo(momentum.top, 0.5));
+    expect(patterns.height, closeTo(momentum.height, 0.5));
+    expect(tester.takeException(), isNull);
+  });
 }
 
 Future<void> _pumpCompactCharts(WidgetTester tester) async {
@@ -364,7 +389,7 @@ Future<void> _pumpCompactCharts(WidgetTester tester) async {
   for (var frame = 0; frame < 5; frame++) {
     await tester.pump(const Duration(milliseconds: 100));
   }
-  await tester.tap(find.byKey(const ValueKey('nav-charts')).first);
+  await tester.tap(find.byKey(const ValueKey(DashboardPage.charts)).first);
   for (var frame = 0; frame < 5; frame++) {
     await tester.pump(const Duration(milliseconds: 100));
   }

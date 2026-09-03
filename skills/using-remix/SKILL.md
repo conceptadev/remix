@@ -5,10 +5,11 @@ description: >-
   companion Fortal theme package (`remix_fortal`): selecting Remix or Fortal,
   adding dependencies, placing `FortalScope`, composing overlays or routes,
   choosing Remix/Fortal components, or styling `Remix*` widgets with stylers,
-  states, variants, recipes, and tokens. Also trigger for Remix/Fortal widget
-  names or a UI request in a project that already depends on `remix` or
-  `remix_fortal`. Do not trigger for generic Flutter UI work when neither
-  package is present or requested.
+  states, variants, recipes, and tokens. Also trigger when building or auditing
+  a Remix/Fortal reference showcase or component gallery, for Remix/Fortal
+  widget names, or for a UI request in a project that already depends on
+  `remix` or `remix_fortal`. Do not trigger for generic Flutter UI work when
+  neither package is present or requested.
 ---
 
 # Using Remix
@@ -62,11 +63,15 @@ Also import `package:remix/remix.dart` when the file uses `Remix*` widgets,
 
 Every subtree that renders a `Fortal*` widget, a `fortal*Style()` recipe, or a
 `FortalTokens` value needs `FortalScope`. The outermost scope also establishes
-the Radix theme root's default text run — `text3` at `gray-12` — which is what
-an unsized `FortalText`, `FortalCode`, `FortalKbd`, or `FortalLink` measures
-`1em` against.
+a courtesy `DefaultTextStyle` for bare Flutter `Text`: the Radix theme root run
+of `text3` at `gray-12`, regular weight, and no pinned font family. This is a
+fallback for ordinary Flutter text, analogous to Material's `bodyMedium`; it
+does not supply the text run for Fortal typography, which resolves its own
+token defaults. Transparent, non-accent `FortalCode.ghost` deliberately keeps
+only the ambient foreground so inline code can blend with surrounding text.
 
-Placement depends on the host, and getting it wrong costs that text run:
+Placement depends on the host, and getting it wrong costs that courtesy
+bare-`Text` fallback:
 
 **`WidgetsApp` or a custom host — put the scope above the app.**
 
@@ -96,18 +101,20 @@ MaterialApp(
 
 Those apps hand `WidgetsApp` their own root `DefaultTextStyle`, which is
 installed *below* anything wrapping the app — so a scope placed above
-`MaterialApp` still supplies tokens but loses the root text run. `builder` wraps
-the whole `Navigator`, so this placement still reaches pushed routes and raw
-`Overlay` entries.
+`MaterialApp` still supplies tokens but loses the courtesy text fallback.
+`builder` wraps the whole `Navigator`, so bare `Text` in pushed routes and raw
+`Overlay` entries receives that fallback.
 
-Symptom of the wrong placement under `MaterialApp`: text in a hand-rolled
-`OverlayEntry` renders red, monospace, with a yellow double underline — that is
-Flutter's "put your text in a Material" fallback, not a Remix bug.
+Symptom of the wrong placement under `MaterialApp`: **bare Flutter `Text`** in
+a hand-rolled `OverlayEntry` renders red, monospace, with a yellow double
+underline — that is Flutter's "put your text in a Material" fallback, not a
+Remix bug. Fortal typography pins its own token run; non-accent ghost Code only
+retains the ambient foreground.
 
-A nested `FortalScope` re-scopes tokens only; it inherits the closest text style
-rather than restating the root run, so re-scoping a subtree for a different
-accent or scaling leaves the text running through it at its current size and
-color.
+A nested `FortalScope` re-scopes tokens only; it does not restate the courtesy
+bare-`Text` run. Re-scoping a subtree for a different accent or scaling leaves
+the surrounding Flutter text inheritance unchanged while Fortal typography
+resolves against the nested tokens.
 
 Ordinary `Remix*` widgets with fully custom styles do not need `FortalScope`.
 
@@ -139,6 +146,22 @@ FortalScope(
       ),
     ),
   ),
+)
+```
+
+`RemixMenuTrigger` is a configuration object, not a widget. The same object
+works with `FortalMenu`. For richer visual content, use
+`RemixMenuTrigger.builder` and return non-interactive content — never a nested
+button:
+
+```dart
+FortalMenu<String>(
+  trigger: RemixMenuTrigger.builder(
+    label: 'Account menu',
+    builder: (context, state, defaultTrigger) =>
+        const FortalAvatar(label: 'LF'),
+  ),
+  items: const [RemixMenuItem(value: 'profile', label: 'View profile')],
 )
 ```
 
@@ -203,14 +226,18 @@ Read only the references needed for the task:
 | Form controls, text areas, and selection | [Forms](references/forms.md) |
 | Cards, data lists/tables, loading, and display widgets | [Data display](references/data-display.md) |
 | Popovers, dialogs, tooltips, menus, and host requirements | [Overlays](references/overlays.md) |
-| Tabs and accordions | [Navigation](references/navigation.md) |
+| Tabs, accordions, and disclosures | [Navigation](references/navigation.md) |
 | Fluent styling, state/context variants, animation, callable styles | [Styling](references/styling.md) |
 | Fortal setup, presets, variants, sizes, scope, and tokens | [Fortal](references/fortal.md) |
 | Text, headings, inline code, keyboard keys, and links | [Fortal](references/fortal.md#typography) |
+| Reference apps, product examples, variant matrices, and showcase audits | [Reference showcases](references/reference-showcases.md) |
 
 ## Verify the result
 
 - Keep imports aligned with the selected package layer.
 - Confirm Fortal content and route/overlay builders are below `FortalScope`.
 - Confirm overlays and dialogs have the required caller-owned host capability.
+- For showcases, verify product examples and exhaustive coverage use their
+  respective rules instead of forcing one abstraction or contrast policy onto
+  both.
 - Run the project's formatter, analyzer, and relevant Flutter tests.

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix/src/rendering/remix_box_effects.dart'
-    show RemixBoxWithEffects;
+    show RemixBoxAdapter;
 import 'package:remix/src/utilities/remix_path_icon.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -247,13 +247,13 @@ void main() {
           ),
         );
 
-        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
 
         await tester.tap(_itemAt(1));
         await tester.pumpAndSettle();
 
         expect(
-          _pathGlyph(RemixPathGlyph.check),
+          _pathGlyph(RemixPathGlyph.thickCheck),
           findsOneWidget,
           reason: 'selection is owned by the caller, not the group',
         );
@@ -285,7 +285,7 @@ void main() {
         await tester.pump();
 
         expect(tester.takeException(), isNull);
-        expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
+        expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
       });
 
       testWidgets('a disabled group suppresses every option', (tester) async {
@@ -404,7 +404,7 @@ void main() {
           boxes[1].styleSpec?.spec.decoration,
           equals(boxes[0].styleSpec?.spec.decoration),
         );
-        expect(_pathGlyph(RemixPathGlyph.check), findsNWidgets(2));
+        expect(_pathGlyph(RemixPathGlyph.thickCheck), findsNWidgets(2));
       });
     });
 
@@ -449,7 +449,7 @@ void main() {
           tester.getSize(
             find.descendant(
               of: find.byKey(compactKey),
-              matching: find.byType(RemixBoxWithEffects),
+              matching: find.byType(RemixBoxAdapter),
             ),
           ),
           const Size.square(16),
@@ -478,7 +478,7 @@ void main() {
 
         final item = find.byKey(itemKey);
         final targetRect = tester.getRect(item);
-        final boxRect = tester.getRect(find.byType(RemixBoxWithEffects));
+        final boxRect = tester.getRect(find.byType(RemixBoxAdapter));
         final labelRect = tester.getRect(find.text(label));
         final locations = <Offset>[
           boxRect.center,
@@ -512,7 +512,7 @@ void main() {
           textDirection: TextDirection.rtl,
         );
 
-        final boxRect = tester.getRect(find.byType(RemixBoxWithEffects));
+        final boxRect = tester.getRect(find.byType(RemixBoxAdapter));
         final labelRect = tester.getRect(find.text(label));
         expect(boxRect.left, greaterThan(labelRect.left));
         expect(boxRect.left - labelRect.right, 12);
@@ -1231,7 +1231,7 @@ void main() {
             );
           }
 
-          expect(_pathGlyph(RemixPathGlyph.check), findsNothing);
+          expect(_pathGlyph(RemixPathGlyph.thickCheck), findsNothing);
           expect(
             tester.getSemantics(_itemAt(0)),
             checkbox(label: 'Design', checked: false),
@@ -1246,7 +1246,7 @@ void main() {
               <String>{'design'},
             ]),
           );
-          expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
+          expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
           expect(
             tester.getSemantics(_itemAt(0)),
             checkbox(label: 'Design', checked: true),
@@ -1260,13 +1260,13 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(emitted.last, equals({'design', 'code'}));
-          expect(_pathGlyph(RemixPathGlyph.check), findsNWidgets(2));
+          expect(_pathGlyph(RemixPathGlyph.thickCheck), findsNWidgets(2));
 
           await tester.tap(_itemAt(0));
           await tester.pumpAndSettle();
 
           expect(emitted.last, equals({'code'}));
-          expect(_pathGlyph(RemixPathGlyph.check), findsOneWidget);
+          expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
           expect(
             tester.getSemantics(_itemAt(0)),
             checkbox(label: 'Design', checked: false),

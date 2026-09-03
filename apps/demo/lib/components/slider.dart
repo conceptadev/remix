@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:demo/helpers/use_case_state.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -45,6 +46,23 @@ Widget buildSliderUseCase(BuildContext context) {
             ),
           ),
         ),
+      ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixSlider)
+Widget buildSliderCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    cellWidth: 180,
+    columns: labelsOf(FortalSliderSize.values),
+    rows: labelsOf(FortalSliderVariant.values),
+    cell: (row, column) => SizedBox(
+      width: 140,
+      child: FortalSlider(
+        value: 0.5,
+        size: FortalSliderSize.values[column],
+        variant: FortalSliderVariant.values[row],
       ),
     ),
   );

@@ -51,10 +51,13 @@ class MyApp extends StatelessWidget {
 ```
 
 `FortalScope` is a `MixScope`. The outermost one also establishes the Radix
-theme root's default text run — `text3` at `gray-12` — which is what an unsized
-`FortalText`, `FortalCode`, `FortalKbd`, or `FortalLink` measures `1em` against
-when no closer `DefaultTextStyle` is present. A nested scope only re-scopes
-tokens; it inherits the closest text style rather than restating the root run.
+theme root's `text3` at `gray-12` run as a courtesy `DefaultTextStyle` for bare
+Flutter `Text`. Fortal typography does not depend on that inherited run:
+unsized `FortalText`, `FortalCode`, `FortalKbd`, and `FortalLink` resolve their
+documented defaults directly from the active scope's tokens. A nested scope
+re-scopes those tokens without restating the courtesy bare-`Text` run. The one
+deliberate foreground exception is transparent, non-accent `FortalCode.ghost`,
+which blends with its surrounding text unless explicitly restyled.
 
 Place it above your app widget so that overlay and route content inherits the
 tokens — **except** under `MaterialApp` or `CupertinoApp`, which install their
@@ -72,9 +75,12 @@ final app = MaterialApp(
 ```
 
 This is a fallback, not a forced global style. A nearer `DefaultTextStyle`,
-including one installed by `Material` or `Scaffold`, still wins. Use an
-explicit `size: FortalTextSize.size3` when exact 16px Radix root sizing is
-required inside such a surface.
+including one installed by `Material` or `Scaffold`, still wins for bare
+Flutter `Text`. Fortal typography ignores that ambient run for token metrics
+and default roles: an omitted size uses `text3`, while an explicit `size:`
+selects another token size. This is a deliberate deviation from Radix's
+ambient CSS `1em` behavior. The sole ambient field retained by Fortal
+typography is the foreground of transparent, non-accent `FortalCode.ghost`.
 
 ## Customizing Fortal styles
 
@@ -94,24 +100,46 @@ final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
 
 ## Icons
 
-Fortal includes the complete 318-glyph Radix Icons 1.3.2 catalog. Each glyph is
-a static `IconData` constant, allowing Flutter release builds to subset the font
-to referenced glyphs:
+Fortal depends on and re-exports the complete 318-glyph Radix Icons 1.3.2
+catalog from `remix_ui_icons`. `FortalIcons` remains a compatibility alias for
+`RemixIcons`, so existing references continue to compile and Flutter release
+builds can subset the font to referenced glyphs:
 
 ```dart
 const Icon(FortalIcons.check)
 ```
 
-There is deliberately no runtime name-to-icon map because dynamic lookup would
-keep the full catalog reachable. Pass `FortalIcons` constants to any widget that
-accepts `IconData`; Fortal controls otherwise use Remix's inline Radix-shaped
-vector defaults. The font remains a declared `remix_fortal` package asset, so
-applications should measure their release artifact rather than assume that
-referencing no catalog constants removes the asset entirely.
+There is deliberately no runtime name-to-icon map on `RemixIcons` itself
+because dynamic lookup would keep the full catalog reachable. Pass
+`FortalIcons` constants to any widget that accepts `IconData`; Fortal controls
+otherwise use Remix's inline Radix-shaped vector defaults. The font is a
+declared `remix_ui_icons` package asset, so applications should measure their
+release artifact rather than assume that referencing no catalog constants
+removes the asset entirely.
+
+Catalogs, galleries, and drift tests that must enumerate every glyph can import
+the opt-in index. An application that never imports it keeps full font
+subsetting:
+
+```dart
+import 'package:remix_ui_icons/icons_index.dart';
+
+final icon = remixIconsByName['check'];
+```
 
 The `shadow`, `shadowInner`, `shadowNone`, `shadowOuter`, and
 `transparencyGrid` glyphs approximate Radix's partial opacity as opaque
 coverage; the other 313 glyphs are lossless conversions.
+
+## Soft variants and contrast
+
+Default `fortalBadgeStyle(variant: .soft)` pairs fill `accentA3` with label
+`accentA11`. That is the Radix step-11 **low-contrast text** role, not a WCAG
+AA 4.5:1 guarantee. In light mode, compositing that label over the fill over
+`colorPanelSolid` (a badge inside a card) misses 4.5:1 for some of the 31
+accents. Dark-mode default and `highContrast: true` — which promotes the label
+to `accent12` -- pass AA on that composite. Use `highContrast: true` when
+light-mode soft labels must meet WCAG AA.
 
 ## Charts
 
@@ -210,11 +238,20 @@ for controls, semantics, and parity boundaries.
 
 ### Layout & Navigation
 - **FortalTabBar**, **FortalTab**, **FortalTabView**, **FortalAccordion**
+- **FortalDisclosure**, **FortalSidebar**
 - **FortalMenu**, **FortalSegmentedControl**, **FortalToggleGroup**
 
 There is no `FortalTabs`: the behavioral root stays `RemixTabs`, which takes no
 style. The same applies to the other behavioral roots (`RemixRadioGroup`,
 `RemixCheckboxGroup`, `RemixAccordionGroup`).
+
+`FortalSidebar` is a Fortal extension rather than a Radix Themes parity
+family. It applies the solid panel surface, the scrolling-region padding, the
+footer divider, compact uppercase section headings, and the ghost `size2`
+toggle treatment to the public `RemixSidebar` behavior. It sets no panel width
+and no header padding, because the host owns placement and usually has to match
+its own top bar. Its optional `panelPadding` keeps host-provided display insets
+inside the painted surface when that surface must extend to the display edge.
 
 ### Overlays
 - **FortalDialog**, **FortalTooltip**, **FortalPopover**, **FortalCallout**

@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -34,6 +35,24 @@ Widget buildCalloutUseCase(BuildContext context) {
             ),
           ),
         ),
+      ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixCallout)
+Widget buildCalloutCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    cellWidth: 260,
+    columns: labelsOf(FortalCalloutSize.values),
+    rows: labelsOf(FortalCalloutVariant.values),
+    cell: (row, column) => SizedBox(
+      width: 220,
+      child: FortalCallout(
+        text: 'Callout',
+        icon: m.Icons.info_outline,
+        size: FortalCalloutSize.values[column],
+        variant: FortalCalloutVariant.values[row],
       ),
     ),
   );

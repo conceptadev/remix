@@ -88,7 +88,9 @@ variant.
 Spec timing defaults: `waitDuration` 300ms (hover delay), `showDuration`
 1500ms (touch long-press), `dismissDuration` 100ms (hover-exit grace).
 The tooltip styler's `label(...)` spec is applied through `DefaultTextStyle`,
-so normal `Text` descendants inside an arbitrary `tooltipChild` inherit it.
+so bare `Text` descendants inside an arbitrary `tooltipChild` inherit it.
+Fortal typography children pin their own token run instead; transparent,
+non-accent `FortalCode.ghost` retains only the ambient foreground.
 
 Fortal preset: `FortalTooltip` — same params, no variant/size.
 
@@ -107,10 +109,18 @@ Fortal preset: `FortalTooltip` — same params, no variant/size.
 | `useRootOverlay` | `bool` | `false` | no |
 | `positioning` | `OverlayPositionConfig` | `OverlayPositionConfig()` | no |
 | `triggerFocusNode` | `FocusNode?` | `null` | no |
+| `semanticLabel` | `String?` | `null` | no |
+| `excludeSemantics` | `bool` | `false` | no |
 
-`RemixMenuTrigger` and item entries are **data classes**, not widgets:
+`RemixMenuTrigger` and item entries are **configuration objects**, not widgets.
+The same `RemixMenuTrigger` is the trigger for `FortalMenu`; there is no
+separate Fortal trigger type.
 
-- **RemixMenuTrigger**: `label` (required), `icon` (optional).
+- **RemixMenuTrigger**: `label` (required), `icon` (optional). Use
+  `RemixMenuTrigger.builder(label:, icon:, builder:)` for custom visual
+  content. The builder receives `NakedMenuState` and the styled default
+  trigger; returned content must not be a nested interactive control.
+  `label` is the accessible fallback for any builder-backed trigger.
 - **RemixMenuItem\<T\>**: `value` (required), `label` (required),
   `leadingIcon`, `trailingIcon`, `enabled` (default true), `closeOnActivate`
   (default true), `semanticLabel`, `style`.

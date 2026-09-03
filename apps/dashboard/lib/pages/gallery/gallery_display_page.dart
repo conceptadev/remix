@@ -26,44 +26,39 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
           label: 'Avatar',
           description:
               'Two visual variants across all nine Radix-compatible sizes.',
-          child: GalleryMatrix(
-            rows: FortalAvatarVariant.values.map(enumLabel).toList(),
-            columns: FortalAvatarSize.values.map(enumLabel).toList(),
-            cellWidth: 120,
-            cellBuilder: (_, row, column) => FortalAvatar(
-              variant: FortalAvatarVariant.values[row],
-              size: FortalAvatarSize.values[column],
-              label: 'RF',
-            ),
+          child: GalleryEnumMatrix(
+            rows: FortalAvatarVariant.values,
+            columns: FortalAvatarSize.values,
+            // Size9 is 160px; preserve its 20px cell padding and divider.
+            cellWidth: 181,
+            cellBuilder: (_, variant, size) =>
+                FortalAvatar(variant: variant, size: size, label: 'RF'),
           ),
         ),
         GallerySection(
           label: 'Badge',
           description:
               'Status labels in solid, soft, surface, and outline variants.',
-          child: GalleryMatrix(
-            rows: FortalBadgeVariant.values.map(enumLabel).toList(),
-            columns: FortalBadgeSize.values.map(enumLabel).toList(),
-            cellBuilder: (_, row, column) => FortalBadge(
-              variant: FortalBadgeVariant.values[row],
-              size: FortalBadgeSize.values[column],
-              label: 'Active',
-            ),
+          child: GalleryEnumMatrix(
+            rows: FortalBadgeVariant.values,
+            columns: FortalBadgeSize.values,
+            cellBuilder: (_, variant, size) =>
+                FortalBadge(variant: variant, size: size, label: 'Active'),
           ),
         ),
         GallerySection(
           label: 'Card',
           description:
               'Surface, classic, and ghost containers across five spacing sizes.',
-          child: GalleryMatrix(
-            rows: FortalCardVariant.values.map(enumLabel).toList(),
-            columns: FortalCardSize.values.map(enumLabel).toList(),
+          child: GalleryEnumMatrix(
+            rows: FortalCardVariant.values,
+            columns: FortalCardSize.values,
             cellWidth: 200,
-            cellBuilder: (_, row, column) => SizedBox(
+            cellBuilder: (_, variant, size) => SizedBox(
               width: 160,
               child: FortalCard(
-                variant: FortalCardVariant.values[row],
-                size: FortalCardSize.values[column],
+                variant: variant,
+                size: size,
                 child: const FortalText('Card content', size: .size2),
               ),
             ),
@@ -72,15 +67,15 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
         GallerySection(
           label: 'Callout',
           description: 'Contextual information in every variant and size.',
-          child: GalleryMatrix(
-            rows: FortalCalloutVariant.values.map(enumLabel).toList(),
-            columns: FortalCalloutSize.values.map(enumLabel).toList(),
+          child: GalleryEnumMatrix(
+            rows: FortalCalloutVariant.values,
+            columns: FortalCalloutSize.values,
             cellWidth: 230,
-            cellBuilder: (_, row, column) => SizedBox(
+            cellBuilder: (_, variant, size) => SizedBox(
               width: 200,
               child: FortalCallout(
-                variant: FortalCalloutVariant.values[row],
-                size: FortalCalloutSize.values[column],
+                variant: variant,
+                size: size,
                 text: 'A helpful callout message.',
               ),
             ),
@@ -90,17 +85,17 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
           label: 'Data list',
           description:
               'Label and value pairs at every size, horizontal and vertical.',
-          child: GalleryMatrix(
-            rows: const ['Horizontal', 'Vertical'],
-            columns: FortalDataListSize.values.map(enumLabel).toList(),
+          child: GalleryEnumMatrix(
+            rows: Axis.values,
+            columns: FortalDataListSize.values,
             cellWidth: 250,
-            cellBuilder: (_, row, column) => FortalDataList(
-              size: FortalDataListSize.values[column],
-              orientation: row == 0 ? Axis.horizontal : Axis.vertical,
+            cellBuilder: (_, orientation, size) => FortalDataList(
+              size: size,
+              orientation: orientation,
               items: const [
                 RemixDataListItem(
                   label: 'Status',
-                  child: FortalBadge(label: 'Active'),
+                  child: FortalBadge(highContrast: true, label: 'Active'),
                 ),
                 RemixDataListItem(label: 'Plan', value: 'Enterprise'),
                 RemixDataListItem(label: 'Seats', value: '48'),
@@ -140,15 +135,15 @@ class _GalleryDisplayPageState extends State<GalleryDisplayPage> {
           label: 'Progress',
           description:
               'Determinate progress with classic, surface, and soft treatments.',
-          child: GalleryMatrix(
-            rows: FortalProgressVariant.values.map(enumLabel).toList(),
-            columns: FortalProgressSize.values.map(enumLabel).toList(),
+          child: GalleryEnumMatrix(
+            rows: FortalProgressVariant.values,
+            columns: FortalProgressSize.values,
             cellWidth: 210,
-            cellBuilder: (_, row, column) => SizedBox(
+            cellBuilder: (_, variant, size) => SizedBox(
               width: 170,
               child: FortalProgress(
-                variant: FortalProgressVariant.values[row],
-                size: FortalProgressSize.values[column],
+                variant: variant,
+                size: size,
                 value: 0.68,
                 semanticsLabel: '68 percent complete',
               ),

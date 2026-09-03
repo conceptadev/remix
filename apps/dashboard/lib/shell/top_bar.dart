@@ -4,11 +4,12 @@ import 'package:remix_fortal/remix_fortal.dart';
 
 import '../data/activity.dart';
 import '../theme/theme_scope.dart';
-import '../widgets/action_popover.dart';
+import '../widgets/action_menu.dart';
 import '../widgets/theme_panel.dart';
 import '../widgets/toast.dart';
 import '../widgets/typography.dart';
 import 'dashboard_page.dart';
+import 'dashboard_shell_layout.dart';
 
 class TopBar extends StatefulWidget {
   const TopBar({
@@ -32,16 +33,12 @@ class _TopBarState extends State<TopBar> {
 
   @override
   Widget build(BuildContext context) {
-    final border = MixScope.tokenOf(FortalTokens.grayA6, context);
-    final compact =
-        MediaQuery.sizeOf(context).width < dashboardCompactBreakpoint;
-    return Container(
-      height: 64,
-      padding: EdgeInsets.symmetric(horizontal: compact ? 12 : 24),
-      decoration: BoxDecoration(
-        color: MixScope.tokenOf(FortalTokens.colorPanelSolid, context),
-        border: Border(bottom: BorderSide(color: border)),
-      ),
+    final width = MediaQuery.sizeOf(context).width;
+    final compact = width < dashboardCompactBreakpoint;
+    return DashboardShellHeader(
+      horizontalPadding: compact
+          ? FortalTokens.space3()
+          : FortalTokens.space5(),
       child: Row(
         spacing: 12,
         children: [
@@ -52,7 +49,7 @@ class _TopBarState extends State<TopBar> {
               onPressed: onMenuPressed,
               icon: Icons.menu,
             ),
-          if (MediaQuery.sizeOf(context).width > 900) ...[
+          if (width > 900) ...[
             StyledText(
               widget.page.section.label,
               style: dashboardText(.size2, tone: .muted),
@@ -72,7 +69,7 @@ class _TopBarState extends State<TopBar> {
             ),
           ),
           const Spacer(),
-          if (MediaQuery.sizeOf(context).width > 1000)
+          if (width > 1000)
             SizedBox(
               width: 260,
               child: FortalTextField(
@@ -224,7 +221,7 @@ class _TopBarState extends State<TopBar> {
               icon: Icons.palette_outlined,
             ),
           ),
-          DashboardActionPopover(
+          DashboardActionMenu(
             key: const ValueKey('topbar-account-trigger'),
             semanticLabel: 'Account menu',
             positioning: const OverlayPositionConfig(

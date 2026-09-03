@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../widgets/app_accent_scope.dart';
+import '../widgets/disclosure_trigger.dart';
 import '../widgets/page_header.dart';
 import '../widgets/theme_panel.dart';
 import '../widgets/toast.dart';
@@ -30,6 +32,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final GridBoxStyler profileFields = .equalColumns(
+      2,
+    ).gap(14).onConstraints(const .maxWidth(560), .equalColumns(1).gap(14));
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(32),
       child: Align(
@@ -55,25 +61,20 @@ class _SettingsPageState extends State<SettingsPage> {
                       description:
                           'Your personal details and communication preferences.',
                     ),
-                    Row(
-                      crossAxisAlignment: .start,
-                      spacing: 14,
+                    GridBox(
+                      style: profileFields,
                       children: [
-                        Expanded(
-                          child: FortalTextField(
-                            controller: _nameController,
-                            label: 'Name',
-                            hintText: 'Your name',
-                          ),
+                        FortalTextField(
+                          controller: _nameController,
+                          label: 'Name',
+                          hintText: 'Your name',
                         ),
-                        Expanded(
-                          child: FortalTextField(
-                            controller: _emailController,
-                            label: 'Email',
-                            helperText: 'Domain verification is pending.',
-                            error: true,
-                            keyboardType: .emailAddress,
-                          ),
+                        FortalTextField(
+                          controller: _emailController,
+                          label: 'Email',
+                          helperText: 'Domain verification is pending.',
+                          error: true,
+                          keyboardType: .emailAddress,
                         ),
                       ],
                     ),
@@ -125,7 +126,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     Align(
                       alignment: .centerLeft,
                       child: FortalButton(
-                        key: const ValueKey('save-profile'),
                         onPressed: () => showToast(
                           context,
                           message: 'Profile settings saved',
@@ -155,29 +155,35 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
-              FortalCard(
-                size: .size3,
-                child: Column(
-                  crossAxisAlignment: .stretch,
-                  spacing: 16,
-                  children: [
-                    const CardHeading(
-                      title: 'Danger zone',
-                      description:
-                          'Destructive workspace actions cannot be undone.',
-                    ),
-                    Align(
-                      alignment: .centerLeft,
-                      child: FortalScope(
-                        accent: .red,
-                        hasBackground: false,
+              AppAccentScope(
+                accent: .red,
+                child: FortalDisclosure.soft(
+                  key: const ValueKey('settings-danger-zone'),
+                  size: .size3,
+                  animationStyle: dashboardDisclosureAnimationStyle,
+                  semanticHint: 'Shows destructive workspace actions',
+                  trigger: const Text('Danger zone'),
+                  triggerBuilder: (context, state, child) =>
+                      DashboardDisclosureTrigger(
+                        expanded: state.isExpanded,
+                        child: child!,
+                      ),
+                  content: Column(
+                    crossAxisAlignment: .stretch,
+                    spacing: 12,
+                    children: [
+                      const Text(
+                        'Destructive workspace actions cannot be undone.',
+                      ),
+                      Align(
+                        alignment: .centerLeft,
                         child: FortalButton.outline(
                           onPressed: _confirmDelete,
                           label: 'Delete workspace',
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -190,29 +196,24 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _confirmDelete() async {
     final confirmed = await showRemixDialog<bool>(
       context: context,
-      builder: (context) => Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: FortalDialog(
-            title: 'Delete workspace?',
-            description:
-                'This demo keeps your data safe, but a real action would be permanent.',
-            actions: [
-              FortalButton.soft(
-                onPressed: () => Navigator.of(context).pop(false),
-                label: 'Cancel',
-              ),
-              FortalScope(
-                accent: .red,
-                hasBackground: false,
-                child: FortalButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  label: 'Delete',
-                ),
-              ),
-            ],
+      barrierLabel: 'Dismiss',
+      builder: (context) => FortalDialog(
+        title: 'Delete workspace?',
+        description:
+            'This demo keeps your data safe, but a real action would be permanent.',
+        actions: [
+          FortalButton.soft(
+            onPressed: () => Navigator.of(context).pop(false),
+            label: 'Cancel',
           ),
-        ),
+          AppAccentScope(
+            accent: .red,
+            child: FortalButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              label: 'Delete',
+            ),
+          ),
+        ],
       ),
     );
     if (!mounted || confirmed != true) return;

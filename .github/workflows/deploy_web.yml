@@ -1,0 +1,75 @@
+name: Deploy web showcases
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent Pages run per branch or pull request
+concurrency:
+  group: "pages-${{ github.ref }}"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          cache: true
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # Resolve the workspace and run its own melos rather than installing one
+      # globally: melos delegates to the version pinned in the root pubspec, so
+      # a global install cannot decide the version.
+      - name: Bootstrap workspace
+        run: |
+          dart pub get
+          dart run melos bootstrap
+
+      - name: Build component catalog
+        working-directory: apps/demo
+        run: flutter build web --release --base-href /remix/
+
+      - name: Build dashboard
+        working-directory: apps/dashboard
+        run: flutter build web --release --base-href /remix/dashboard/
+
+      - name: Assemble Pages site
+        run: |
+          mkdir -p build/pages/dashboard
+          cp -R apps/demo/build/web/. build/pages/
+          cp -R apps/dashboard/build/web/. build/pages/dashboard/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: build/pages
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

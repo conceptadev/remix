@@ -24,6 +24,7 @@ part of 'radio.dart';
 ///         children: [
 ///           RemixRadio<String>(
 ///             value: 'option1',
+///             semanticLabel: 'Option 1',
 ///             style: radioStyle,
 ///           ),
 ///           const SizedBox(width: 8),
@@ -34,6 +35,7 @@ part of 'radio.dart';
 ///         children: [
 ///           RemixRadio<String>(
 ///             value: 'option2',
+///             semanticLabel: 'Option 2',
 ///             style: radioStyle,
 ///           ),
 ///           const SizedBox(width: 8),
@@ -49,6 +51,8 @@ class RemixRadioGroup<T> extends StatelessWidget {
     super.key,
     required this.groupValue,
     this.onChanged,
+    this.enabled = true,
+    this.semanticLabel,
     required this.child,
   });
 
@@ -60,34 +64,23 @@ class RemixRadioGroup<T> extends StatelessWidget {
   /// When null, the radio group is disabled and selection cannot change.
   final ValueChanged<T?>? onChanged;
 
+  /// Whether the group is enabled.
+  final bool enabled;
+
+  /// Accessible name for the radio group.
+  final String? semanticLabel;
+
   /// The child widget that contains the radio buttons.
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final groupEnabled = onChanged != null;
-
-    return RadioGroup<T>(
+    return NakedRadioGroup<T>(
       groupValue: groupValue,
-      onChanged: onChanged ?? _disabledRadioGroupOnChanged,
-      child: _RemixRadioGroupScope<T>(enabled: groupEnabled, child: child),
+      onChanged: onChanged,
+      enabled: enabled,
+      semanticLabel: semanticLabel,
+      child: child,
     );
-  }
-}
-
-void _disabledRadioGroupOnChanged<T>(T? _) => null;
-
-class _RemixRadioGroupScope<T> extends InheritedWidget {
-  const _RemixRadioGroupScope({required this.enabled, required super.child});
-
-  static _RemixRadioGroupScope<T>? maybeOf<T>(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType();
-  }
-
-  final bool enabled;
-
-  @override
-  bool updateShouldNotify(_RemixRadioGroupScope<T> oldWidget) {
-    return enabled != oldWidget.enabled;
   }
 }

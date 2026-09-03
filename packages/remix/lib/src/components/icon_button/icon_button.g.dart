@@ -104,9 +104,8 @@ typedef _$IconButtonSpecMethods = _$IconButtonSpec; // ignore: unused_element
 // **************************************************************************
 
 class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
-    with
-        RemixBoxStylerMixin<IconButtonStyler>,
-        IconStyleMixin<IconButtonStyler> {
+    with RemixBoxStylerMixin<IconButtonStyler>, IconStyleMixin<IconButtonStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<StyleSpec<SpinnerSpec>>? $spinner;
@@ -623,6 +622,17 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     return container(BoxStyler().transform(value, alignment: alignment));
   }
 
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'icon',
+    'spinner',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
+
   /// Sets the container.
   IconButtonStyler container(BoxStyler value) {
     return merge(IconButtonStyler(container: value));
@@ -670,8 +680,8 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
   RemixIconButton call({
     Key? key,
     required IconData? icon,
+    required String semanticLabel,
     RemixIconButtonIconBuilder? iconBuilder,
-    String? semanticLabel,
     RemixIconButtonLoadingBuilder? loadingBuilder,
     bool loading = false,
     bool enabled = true,
@@ -688,8 +698,8 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
       key: key,
       style: this,
       icon: icon,
-      iconBuilder: iconBuilder,
       semanticLabel: semanticLabel,
+      iconBuilder: iconBuilder,
       loadingBuilder: loadingBuilder,
       loading: loading,
       enabled: enabled,

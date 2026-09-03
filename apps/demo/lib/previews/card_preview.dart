@@ -113,11 +113,23 @@ Widget previewProfileCard() {
               Row(
                 mainAxisAlignment: .center,
                 children: [
-                  RemixIconButton(icon: Icons.email, onPressed: null),
+                  RemixIconButton(
+                    icon: Icons.email,
+                    semanticLabel: 'Email',
+                    onPressed: null,
+                  ),
                   SizedBox(width: 12),
-                  RemixIconButton(icon: Icons.phone, onPressed: null),
+                  RemixIconButton(
+                    icon: Icons.phone,
+                    semanticLabel: 'Call',
+                    onPressed: null,
+                  ),
                   SizedBox(width: 12),
-                  RemixIconButton(icon: Icons.message, onPressed: null),
+                  RemixIconButton(
+                    icon: Icons.message,
+                    semanticLabel: 'Message',
+                    onPressed: null,
+                  ),
                 ],
               ),
             ],

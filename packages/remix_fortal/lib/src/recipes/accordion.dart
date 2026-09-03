@@ -26,16 +26,12 @@ AccordionStyler fortalAccordionStyle({
 }
 
 // Panel anatomy follows the mapped Table family (see data_table.dart):
-// `container` alone owns radius, border, fill, and clipping, while trigger
-// and content stay flat rectangles that simply get cropped to its rounded
-// shape. That is what lets an expanded trigger meet its content with no
-// corner notch — neither part rounds its own corners, so there is no curve
-// for the divider to miss. The divider itself is a foreground border (see
-// `_fortalAccordionBorderSide`), matching the Table row divider technique so
-// it paints without insetting content by a pixel.
+// `container` alone owns radius, frame, fill, and clipping, while trigger and
+// content stay flat rectangles that simply get cropped to its rounded shape.
+// The frame and divider are foreground borders so edge-to-edge child fills
+// cannot partially cover their antialiased edges.
 AccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
   return AccordionStyler()
-      .container(.clipBehavior(.antiAlias))
       .trigger(.direction(.horizontal))
       .leadingIcon(.color(FortalTokens.gray11()))
       .title(
@@ -65,9 +61,12 @@ AccordionStyler _fortalAccordionSurfaceStyler([
 ]) {
   return _fortalAccordionBaseStyler(size)
       .container(
-        .color(
-          FortalTokens.gray2(),
-        ).border(.all(_fortalAccordionBorderSide(FortalTokens.gray6()))),
+        fortalSurfaceFrame(
+          fillColor: FortalTokens.gray2(),
+          borderColor: FortalTokens.gray6(),
+          borderWidth: FortalTokens.borderWidth1(),
+          radius: _fortalAccordionRadius(size),
+        ),
       )
       .trigger(.color(FortalTokens.gray1()))
       .content(
@@ -92,9 +91,12 @@ AccordionStyler _fortalAccordionSoftStyler([
 ]) {
   return _fortalAccordionBaseStyler(size)
       .container(
-        .color(
-          FortalTokens.accent2(),
-        ).border(.all(_fortalAccordionBorderSide(FortalTokens.accent6()))),
+        fortalSurfaceFrame(
+          fillColor: FortalTokens.accent2(),
+          borderColor: FortalTokens.accent6(),
+          borderWidth: FortalTokens.borderWidth1(),
+          radius: _fortalAccordionRadius(size),
+        ),
       )
       .trigger(.color(FortalTokens.accent2()))
       .title(.color(FortalTokens.accent12()))
@@ -122,10 +124,10 @@ AccordionStyler _fortalAccordionSoftStyler([
 BorderSideMix _fortalAccordionBorderSide(Color color) =>
     BorderSideMix(color: color, width: FortalTokens.borderWidth1());
 
-/// Pins accordion content to the 14px type-scale step (`text2`) regardless
-/// of accordion size, so content never renders larger than its own
-/// trigger's title (measured 14/15/16px at size1/size2/size3). [color]
-/// supplies the variant's own content tint.
+/// Pins bare [Text] accordion content to the 14px type-scale step (`text2`)
+/// regardless of accordion size, so content never renders larger than its own
+/// trigger's title (measured 14/15/16px at size1/size2/size3). Fortal text
+/// children pin their own run. [color] supplies the variant's own content tint.
 WidgetModifierConfig _fortalAccordionContentTypography(Color color) =>
     WidgetModifierConfig.defaultTextStyle(
       style: FortalTokens.text2.mix(),
@@ -134,7 +136,6 @@ WidgetModifierConfig _fortalAccordionContentTypography(Color color) =>
 AccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
   return switch (size) {
     .size1 => AccordionStyler(
-      container: .borderRadius(.all(FortalTokens.radius3())),
       trigger: FlexBoxStyler().padding(.all(FortalTokens.space2())),
       leadingIcon: .size(FortalTokens.space4()),
       title: .style(FortalTokens.text2.mix()),
@@ -142,7 +143,6 @@ AccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
       content: .padding(.all(FortalTokens.space2())),
     ),
     .size2 => AccordionStyler(
-      container: .borderRadius(.all(FortalTokens.radius4())),
       trigger: FlexBoxStyler().padding(.all(FortalTokens.space3())),
       leadingIcon: .size(FortalTokens.spinnerSize3()),
       title: .style(FortalTokens.accordionText2.mix()),
@@ -150,7 +150,6 @@ AccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
       content: .padding(.all(FortalTokens.space3())),
     ),
     .size3 => AccordionStyler(
-      container: .borderRadius(.all(FortalTokens.radius5())),
       trigger: FlexBoxStyler().padding(.all(FortalTokens.space4())),
       leadingIcon: .size(FortalTokens.space5()),
       title: .style(FortalTokens.text3.mix()),
@@ -159,3 +158,9 @@ AccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
     ),
   };
 }
+
+Radius _fortalAccordionRadius(FortalAccordionSize size) => switch (size) {
+  .size1 => FortalTokens.radius3(),
+  .size2 => FortalTokens.radius4(),
+  .size3 => FortalTokens.radius5(),
+};

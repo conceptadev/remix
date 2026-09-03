@@ -87,14 +87,10 @@ class _ChartSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final gap = MixScope.tokenOf(FortalTokens.space4, context);
     final titleGap = MixScope.tokenOf(FortalTokens.space2, context);
-    final cardHeight = 420 * FortalTheme.of(context).scaling.factor;
-    final GridBoxStyler gridStyle = GridBoxStyler.equalColumns(2)
-        .autoRows(GridTrack.fixed(cardHeight))
-        .gap(gap)
-        .onConstraints(
-          const Breakpoint.maxWidth(860),
-          GridBoxStyler.equalColumns(1).gap(gap),
-        );
+    // Omit autoRows: Mix 1031 defaults implicit rows to content height.
+    final GridBoxStyler gridStyle = .equalColumns(
+      2,
+    ).gap(gap).onConstraints(const .maxWidth(860), .equalColumns(1).gap(gap));
 
     return Column(
       crossAxisAlignment: .stretch,
@@ -252,8 +248,11 @@ Widget _viewportLabels(List<Color> palette) => DashboardChartCard(
         max: 6,
         interval: constraints.maxWidth < 360 ? 3 : 1,
         labelFormatter: _weekdayLabel,
-        labelBuilder: (_, label) =>
-            FortalBadge.soft(size: .size1, label: label.formattedValue),
+        labelBuilder: (_, label) => FortalBadge.soft(
+          size: .size1,
+          highContrast: true,
+          label: label.formattedValue,
+        ),
       ),
       yAxis: ChartAxis.numeric(min: 0, max: 60, interval: 10),
     ),

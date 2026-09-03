@@ -56,11 +56,13 @@ Use a generated `@MixWidget` wrapper **only if all of**:
 Otherwise write a **hand-written facade**: a `StatelessWidget` in the target
 vocabulary that builds a `*Styler` recipe and invokes its `.call(...)`.
 
-With `mix_generator` 2.1.2 or newer, a generic `call<T>()` target is not by
+With the workspace-tested codegen set, a generic `call<T>()` target is not by
 itself a reason to hand-write the facade. `@MixWidget` copies the styler
 `call<T>()` type parameters onto the generated widget, so callers normally
 infer `T` from items, values, and callbacks. The annotated recipe function
-itself must remain non-generic.
+itself must remain non-generic. In this checkout that contract is exercised by
+`mix_generator` 2.2.0-beta.3, `mix_annotations` 2.2.0-beta.1, and `mix`
+2.2.0-beta.5.
 
 The generator contract is intentionally convention-based:
 
@@ -101,16 +103,19 @@ SelectStyler acmeSelectStyle({
 Generation from a standalone package that returns Remix stylers should still
 be proven with a package-local spike before committing to the public API.
 
-For that spike, add the generator surface explicitly:
+For that spike, add the generator surface explicitly. Read the current root
+managed dependencies and `packages/remix/pubspec.yaml` first; the snapshot
+below is validated against them and should move with them:
 
 ```yaml
 dependencies:
-  remix: ^1.0.0
-  mix_annotations: ^2.1.2
+  remix: ^1.0.0-beta.7
+  mix: ^2.2.0-beta.5
+  mix_annotations: ^2.2.0-beta.1
 
 dev_dependencies:
   build_runner: ^2.10.1
-  mix_generator: ^2.1.2
+  mix_generator: ^2.2.0-beta.3
 ```
 
 Import `mix_annotations`, add a `part '<component>.g.dart';` directive to the

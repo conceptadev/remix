@@ -1,0 +1,113 @@
+---
+title: Disclosure
+description: A standalone trigger that expands and collapses one inline content panel.
+keywords: [flutter, remix, disclosure, collapsible, expandable, radix]
+---
+
+`RemixDisclosure` is a standalone trigger and one inline panel. Use
+`RemixAccordionGroup` when panels need to coordinate.
+
+Radix Primitives names this **Collapsible**.
+
+## Basic usage
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+import 'package:remix/remix.dart';
+
+class AccountDisclosure extends StatefulWidget {
+  const AccountDisclosure({super.key});
+
+  @override
+  State<AccountDisclosure> createState() => _AccountDisclosureState();
+}
+
+class _AccountDisclosureState extends State<AccountDisclosure> {
+  bool expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 320,
+      child: RemixDisclosure(
+        expanded: expanded,
+        onExpandedChanged: (value) => setState(() => expanded = value),
+        trigger: const Text('Account details'),
+        triggerBuilder: (context, NakedDisclosureState state, child) {
+          return Row(
+            children: [
+              Expanded(child: child!),
+              Icon(state.isExpanded ? Icons.remove : Icons.add),
+            ],
+          );
+        },
+        content: const Text('Signed in as person@example.com'),
+        style: DisclosureStyler()
+            .padding(.all(12))
+            .content(.padding(.all(12)))
+            .onExpanded(
+              DisclosureStyler().color(Colors.blue.shade50),
+            ),
+      ),
+    );
+  }
+}
+```
+
+Omit `expanded` for internal state. `defaultExpanded` only applies then.
+
+## Fortal widget
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+final disclosure = SizedBox(
+  width: 320,
+  child: FortalDisclosure.soft(
+    size: FortalDisclosureSize.size2,
+    trigger: const Text('Repository details'),
+    triggerBuilder: (context, NakedDisclosureState state, child) {
+      return Row(
+        children: [
+          Expanded(child: child!),
+          Icon(state.isExpanded ? Icons.remove : Icons.add),
+        ],
+      );
+    },
+    content: const Text('Three packages and twelve contributors'),
+  ),
+);
+```
+
+`FortalDisclosure` has no trailing-icon slot; compose the expand indicator
+with `triggerBuilder`. `FortalDisclosure.surface` and `FortalDisclosure.soft`
+provide three sizes. Radix Themes has no styled Collapsible; these presets
+reuse Fortal panel tokens.
+
+## Styling
+
+`DisclosureStyler` forwards top-level box methods such as `padding`, `color`,
+and `borderRadius` to the trigger. Style the other parts explicitly:
+
+- `container(...)` — frame around trigger and content
+- `containerEffects(...)` — shadows, strokes, backdrop blur
+- `trigger(...)` / `content(...)`
+- `onExpanded(...)` / `onCollapsed(...)`
+- `onHovered`, `onPressed`, `onFocused`, `onFocusVisible`, `onDisabled`
+
+Default transition is a 200ms top-anchored fade and size. Use
+`AnimationStyle.noAnimation` to skip it.
+
+## Keyboard and accessibility
+
+- Space and Enter toggle the focused trigger.
+- The trigger publishes button semantics and expanded state.
+- `semanticLabel` replaces trigger-descendant semantics; `semanticHint` adds context.
+- Open content stays in traversal; collapsed content is removed.
+- Collapse returns focus to the trigger if it is still interactive.
+
+`Collapsible.Content.forceMount` has no equivalent. Without a transition the
+panel unmounts immediately; with one it stays mounted until the exit finishes.

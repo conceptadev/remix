@@ -72,12 +72,6 @@ TextStyle fortalResolveTextToken(BuildContext context, FortalTextSize size) =>
 Color fortalResolveColor(BuildContext context, ColorToken token) =>
     MixScope.tokenOf(token, context);
 
-/// Falls back to what Flutter actually paints when the ambient style omits a
-/// size. `DefaultTextStyle.fallback().style.fontSize` is null, so reading it
-/// with `!` always throws rather than supplying a default.
-double fortalResolvedFontSize(TextStyle style) =>
-    style.fontSize ?? kDefaultFontSize;
-
 /// Derived from the resolved `radius1` rather than duplicating the Fortal
 /// radius enum table, so theme radius and scaling changes flow through.
 double fortalRadiusFactor(BuildContext context) {

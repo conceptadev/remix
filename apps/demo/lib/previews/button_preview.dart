@@ -60,13 +60,25 @@ Widget previewIconButtons() {
     const Row(
       mainAxisAlignment: .center,
       children: [
-        RemixIconButton(icon: Icons.add, onPressed: null),
+        RemixIconButton(icon: Icons.add, semanticLabel: 'Add', onPressed: null),
         SizedBox(width: 12),
-        RemixIconButton(icon: Icons.edit, onPressed: null),
+        RemixIconButton(
+          icon: Icons.edit,
+          semanticLabel: 'Edit',
+          onPressed: null,
+        ),
         SizedBox(width: 12),
-        RemixIconButton(icon: Icons.delete, onPressed: null),
+        RemixIconButton(
+          icon: Icons.delete,
+          semanticLabel: 'Delete',
+          onPressed: null,
+        ),
         SizedBox(width: 12),
-        RemixIconButton(icon: Icons.settings, onPressed: null),
+        RemixIconButton(
+          icon: Icons.settings,
+          semanticLabel: 'Settings',
+          onPressed: null,
+        ),
       ],
     ),
   );
@@ -100,11 +112,23 @@ Widget previewButtonVariations() {
         Row(
           mainAxisAlignment: .center,
           children: [
-            RemixIconButton(icon: Icons.thumb_up, onPressed: null),
+            RemixIconButton(
+              icon: Icons.thumb_up,
+              semanticLabel: 'Like',
+              onPressed: null,
+            ),
             SizedBox(width: 8),
-            RemixIconButton(icon: Icons.thumb_down, onPressed: null),
+            RemixIconButton(
+              icon: Icons.thumb_down,
+              semanticLabel: 'Dislike',
+              onPressed: null,
+            ),
             SizedBox(width: 8),
-            RemixIconButton(icon: Icons.share, onPressed: null),
+            RemixIconButton(
+              icon: Icons.share,
+              semanticLabel: 'Share',
+              onPressed: null,
+            ),
           ],
         ),
         SizedBox(height: 16),

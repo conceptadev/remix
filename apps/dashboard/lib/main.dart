@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 import 'shell/dashboard_shell.dart';
@@ -6,7 +8,13 @@ import 'theme/scroll_behavior.dart';
 import 'theme/theme_scope.dart';
 import 'theme/theme_settings.dart';
 
-void main() => runApp(const DashboardApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Web paints to canvas; without a live semantics tree the page has no
+  // accessible names for browser review or Playwright clicks.
+  if (kIsWeb) SemanticsBinding.instance.ensureSemantics();
+  runApp(const DashboardApp());
+}
 
 class DashboardApp extends StatefulWidget {
   const DashboardApp({super.key, this.initialSettings = const ThemeSettings()});
@@ -58,14 +66,11 @@ class _DashboardAppState extends State<DashboardApp>
         themeAnimationDuration: Duration.zero,
         // FortalScope goes *below* MaterialApp and *above* the Navigator.
         //
-        // MaterialApp always hands WidgetsApp its "put your text in a Material"
-        // fallback style, which WidgetsApp installs as a DefaultTextStyle
-        // around everything beneath it — so a scope placed above MaterialApp
-        // would have its root text run overridden. `builder` wraps the whole
-        // Navigator, so this placement still reaches pushed routes and raw
-        // Overlay entries such as the toast with Fortal's root fallback.
-        // A nearer DefaultTextStyle (for example from a Material surface) can
-        // still override it through Flutter's normal inheritance.
+        // MaterialApp installs its fallback DefaultTextStyle below its widget
+        // tree, so a scope placed above it would be overridden. `builder` wraps
+        // the whole Navigator, so this placement reaches pushed routes and raw
+        // Overlay entries such as the toast. A nearer DefaultTextStyle retains
+        // its normal priority through Flutter's inheritance.
         builder: (context, child) => FortalScope(
           key: const ValueKey('dashboard-fortal-scope'),
           accent: _settings.accentColor,

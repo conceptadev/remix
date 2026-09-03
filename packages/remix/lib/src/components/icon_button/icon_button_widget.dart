@@ -15,8 +15,8 @@ class RemixIconButton extends StatelessWidget {
   const RemixIconButton({
     super.key,
     required this.icon,
+    required this.semanticLabel,
     this.iconBuilder,
-    this.semanticLabel,
     this.loadingBuilder,
     this.loading = false,
     this.enabled = true,
@@ -34,7 +34,10 @@ class RemixIconButton extends StatelessWidget {
          icon != null || iconBuilder != null,
          'Either icon or iconBuilder must be provided.',
        ),
-       assert(semanticLabel == null || semanticLabel != '');
+       assert(
+         semanticLabel != '',
+         'RemixIconButton.semanticLabel must be a nonblank accessible name.',
+       );
 
   static final styleFrom = IconButtonStyler.new;
 
@@ -43,7 +46,12 @@ class RemixIconButton extends StatelessWidget {
   /// May be null when [iconBuilder] supplies the icon widget.
   final IconData? icon;
   final RemixIconButtonIconBuilder? iconBuilder;
-  final String? semanticLabel;
+
+  /// Accessible name for this icon-only control.
+  ///
+  /// Required and must be nonblank. A generic fallback cannot describe the
+  /// action, so callers supply the name that screen readers should announce.
+  final String semanticLabel;
   final RemixIconButtonLoadingBuilder? loadingBuilder;
   final bool loading;
   final bool enabled;
@@ -53,12 +61,12 @@ class RemixIconButton extends StatelessWidget {
   final FocusNode? focusNode;
   final bool autofocus;
   final String? semanticHint;
+
+  /// Whether to hide the complete control from the semantic tree.
   final bool excludeSemantics;
   final MouseCursor mouseCursor;
   final IconButtonStyler style;
   final IconButtonSpec? styleSpec;
-
-  bool get _isEnabled => enabled && !loading && onPressed != null;
 
   Widget _buildIcon(BuildContext context, StyleSpec<IconSpec> styleSpec) {
     if (iconBuilder case final builder?) {
@@ -72,15 +80,24 @@ class RemixIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final button = NakedButton(
-      onPressed: _isEnabled ? onPressed : null,
-      onLongPress: _isEnabled ? onLongPress : null,
-      enabled: _isEnabled,
+    assert(
+      semanticLabel.trim().isNotEmpty,
+      'RemixIconButton.semanticLabel must be a nonblank accessible name.',
+    );
+    final allowsInteraction = enabled && !loading;
+
+    return NakedButton(
+      // Naked UI beta.12 derives semantic actions from callback presence, so
+      // remove callbacks whenever this wrapper disallows interaction.
+      onPressed: allowsInteraction ? onPressed : null,
+      onLongPress: allowsInteraction ? onLongPress : null,
+      enabled: allowsInteraction,
       mouseCursor: mouseCursor,
       enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
-      semanticLabel: semanticLabel ?? 'Icon Button',
+      semanticLabel: semanticLabel,
+      semanticHint: semanticHint,
       excludeSemantics: excludeSemantics,
       builder: (context, _, _) => RemixStyleSpecBuilder<IconButtonSpec>(
         style: style,
@@ -92,10 +109,9 @@ class RemixIconButton extends StatelessWidget {
             maintainState: true,
             maintainAnimation: true,
             maintainSize: true,
-            maintainSemantics: true,
             child: _buildIcon(context, spec.icon),
           );
-          final button = RemixBoxWithEffects(
+          final button = RemixBoxAdapter(
             key: const ValueKey('remix-icon-button-surface'),
             styleSpec: spec.container,
             containerEffects: spec.containerEffects,
@@ -108,19 +124,17 @@ class RemixIconButton extends StatelessWidget {
                 : loadingBuilder!(context, spinnerSpec),
           );
 
-          return Stack(
-            alignment: Alignment.center,
-            children: [
-              button,
-              if (loading) Positioned.fill(child: Center(child: spinner)),
-            ],
+          return ExcludeSemantics(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                button,
+                if (loading) Positioned.fill(child: Center(child: spinner)),
+              ],
+            ),
           );
         },
       ),
     );
-
-    if (excludeSemantics) return button;
-
-    return Semantics(hint: semanticHint, liveRegion: loading, child: button);
   }
 }

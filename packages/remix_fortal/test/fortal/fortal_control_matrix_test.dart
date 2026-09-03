@@ -142,8 +142,11 @@ void main() {
         icon: Icons.add,
       );
       const checkbox = FortalCheckbox(selected: false);
-      const radio = FortalRadio<int>(value: 1);
-      const switchControl = FortalSwitch(selected: false);
+      const radio = FortalRadio<int>(value: 1, semanticLabel: 'Option');
+      const switchControl = FortalSwitch(
+        semanticLabel: 'Toggle',
+        selected: false,
+      );
       const progress = FortalProgress(value: 0.5);
       const spinner = FortalSpinner();
       const textField = FortalTextField();
@@ -177,8 +180,8 @@ void main() {
       expect(dataList.size, FortalDataListSize.size2);
       expect(dataList.highContrast, isFalse);
 
-      // Typography sizes are nullable so an omitted size inherits the ambient
-      // style, exactly as an unsized Radix Text renders at 1em.
+      // Typography sizes stay nullable so recipes can distinguish an omitted
+      // size (the text3 token default) from an explicit token selection.
       const text = FortalText('Body');
       const heading = FortalHeading('Title');
       const code = FortalCode('code');

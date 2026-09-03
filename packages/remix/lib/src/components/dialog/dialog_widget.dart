@@ -1,5 +1,25 @@
 part of 'dialog.dart';
 
+String? _nonblank(String? value) =>
+    value == null || value.trim().isEmpty ? null : value;
+
+String? _resolveDismissibleBarrierLabel({
+  required bool barrierDismissible,
+  required String? barrierLabel,
+}) {
+  if (barrierDismissible &&
+      (barrierLabel == null || barrierLabel.trim().isEmpty)) {
+    throw ArgumentError.value(
+      barrierLabel,
+      'barrierLabel',
+      'Dismissible dialogs require a nonblank localized barrier label.',
+    );
+  }
+  // Trim only for the check above; the caller-supplied label is passed
+  // through unmodified on both branches.
+  return barrierLabel;
+}
+
 WidgetBuilder _captureMixScope(BuildContext context, WidgetBuilder builder) {
   final scope = MixScope.maybeOf(context);
   if (scope == null) return builder;
@@ -18,6 +38,7 @@ WidgetBuilder _captureMixScope(BuildContext context, WidgetBuilder builder) {
 /// ```dart
 /// await showRemixDialog<String>(
 ///   context: context,
+///   barrierLabel: 'Dismiss',
 ///   builder: (context) => RemixDialog(
 ///     title: 'Delete Item',
 ///     description: 'Are you sure you want to delete this item?',
@@ -48,11 +69,15 @@ Future<T?> showRemixDialog<T>({
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,
 }) {
+  final resolvedBarrierLabel = _resolveDismissibleBarrierLabel(
+    barrierDismissible: barrierDismissible,
+    barrierLabel: barrierLabel,
+  );
   return showNakedDialog(
     context: context,
     barrierColor: barrierColor ?? const Color(0x8A000000),
     barrierDismissible: barrierDismissible,
-    barrierLabel: barrierLabel,
+    barrierLabel: resolvedBarrierLabel,
     useRootNavigator: useRootNavigator,
     routeSettings: routeSettings,
     anchorPoint: anchorPoint,
@@ -166,6 +191,10 @@ class RemixDialog extends StatelessWidget {
   final bool modal;
 
   /// Semantic label for accessibility.
+  ///
+  /// A standalone dialog requires this or a nonblank [title]. A dialog nested
+  /// under a caller-owned [NakedDialog] inherits that ancestor's dialog role
+  /// and accessible name.
   final String? semanticLabel;
 
   /// The style configuration for the dialog.
@@ -178,6 +207,15 @@ class RemixDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final resolvedSemanticLabel = _nonblank(semanticLabel) ?? _nonblank(title);
+    final hasDialogAncestor =
+        context.findAncestorWidgetOfExactType<NakedDialog>() != null;
+    if (!hasDialogAncestor && resolvedSemanticLabel == null) {
+      throw ArgumentError(
+        'A standalone RemixDialog requires a nonblank semanticLabel or title.',
+      );
+    }
+
     final content = RemixStyleSpecBuilder<DialogSpec>(
       style: style,
       styleSpec: styleSpec,
@@ -191,7 +229,7 @@ class RemixDialog extends StatelessWidget {
 
         // Skip the default column so a fully custom body keeps its layout.
         if (isLoneChild) {
-          return RemixBoxWithEffects(
+          return RemixBoxAdapter(
             styleSpec: spec.container,
             containerEffects: spec.containerEffects,
             child: child!,
@@ -212,7 +250,7 @@ class RemixDialog extends StatelessWidget {
             : null;
 
         // title → description → child → actions; never discard provided content.
-        return RemixBoxWithEffects(
+        return RemixBoxAdapter(
           styleSpec: spec.container,
           containerEffects: spec.containerEffects,
           child: scrollable && hasBody
@@ -251,13 +289,11 @@ class RemixDialog extends StatelessWidget {
       },
     );
 
-    final hasDialogAncestor =
-        context.findAncestorWidgetOfExactType<NakedDialog>() != null;
     if (hasDialogAncestor) return content;
 
     return NakedDialog(
       modal: modal,
-      semanticLabel: semanticLabel ?? title,
+      semanticLabel: resolvedSemanticLabel,
       child: content,
     );
   }

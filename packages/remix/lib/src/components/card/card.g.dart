@@ -94,7 +94,8 @@ typedef _$CardSpecMethods = _$CardSpec; // ignore: unused_element
 // **************************************************************************
 
 class CardStyler extends MixStyler<CardStyler, CardSpec>
-    with RemixBoxStylerMixin<CardStyler> {
+    with RemixBoxStylerMixin<CardStyler>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
@@ -582,6 +583,15 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
   CardStyler transform(Matrix4 value, {Alignment alignment = .center}) {
     return container(BoxStyler().transform(value, alignment: alignment));
   }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'containerEffects',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the container.
   CardStyler container(BoxStyler value) {

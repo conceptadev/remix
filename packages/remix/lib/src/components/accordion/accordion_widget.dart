@@ -340,7 +340,7 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
     // interior seam is a plain divider rather than two independently
     // rounded boxes. See fortalAccordionStyle for the divider half of that
     // treatment.
-    return RemixBoxWithEffects(
+    return RemixBoxAdapter(
       styleSpec: spec.container,
       containerEffects: spec.containerEffects,
       child: NakedAccordion<T>(

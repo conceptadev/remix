@@ -81,16 +81,47 @@ void main() {
     }
   });
 
-  testWidgets('unsized typography measures 1em against the root, not the host', (
+  testWidgets('root scope keeps a courtesy DefaultTextStyle for bare Text', (
     tester,
   ) async {
-    // The host supplies a deliberately wrong ambient size; the scope must win.
     await tester.pumpWidget(
       DefaultTextStyle(
         style: const TextStyle(fontSize: 40),
         child: const FortalScope(
           child: Directionality(
             textDirection: TextDirection.ltr,
+            child: Text('courtesy'),
+          ),
+        ),
+      ),
+    );
+
+    // The scope still offers its root run to ordinary Flutter text, even
+    // though Fortal typography no longer depends on that courtesy fallback.
+    final style = tester
+        .renderObject<RenderParagraph>(find.text('courtesy'))
+        .text
+        .style!;
+    expect(tester.widget<Text>(find.text('courtesy')).style, isNull);
+    expect(style.fontSize, 16);
+    expect(style.height, 1.5);
+    expect(style.letterSpacing, 0);
+    expect(style.fontWeight, FontWeight.w400);
+  });
+
+  testWidgets('unsized typography anchors to tokens over a nearer text style', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const FortalScope(
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: DefaultTextStyle(
+            style: TextStyle(
+              fontSize: 20,
+              letterSpacing: 2,
+              color: Colors.green,
+            ),
             child: Column(
               children: [FortalText('body'), FortalCode.soft('code')],
             ),
@@ -99,7 +130,6 @@ void main() {
       ),
     );
 
-    expect(tester.widget<Text>(find.text('body')).style?.fontSize, isNull);
     expect(
       tester
           .renderObject<RenderParagraph>(find.text('body'))
@@ -108,45 +138,13 @@ void main() {
           ?.fontSize,
       16,
     );
-    // Code's em geometry is derived from the resolved ambient size.
     expect(
       tester.widget<Text>(find.text('code')).style?.fontSize,
       closeTo(16 * 0.95 * 0.95, 1e-9),
     );
   });
 
-  testWidgets('unsized typography inherits a nearer text style', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      const FortalScope(
-        child: Directionality(
-          textDirection: TextDirection.ltr,
-          child: DefaultTextStyle(
-            style: TextStyle(fontSize: 20, letterSpacing: 2),
-            child: Column(
-              children: [FortalText('body'), FortalCode.soft('code')],
-            ),
-          ),
-        ),
-      ),
-    );
-
-    expect(
-      tester
-          .renderObject<RenderParagraph>(find.text('body'))
-          .text
-          .style
-          ?.fontSize,
-      20,
-    );
-    expect(
-      tester.widget<Text>(find.text('code')).style?.fontSize,
-      closeTo(20 * 0.95 * 0.95, 1e-9),
-    );
-  });
-
-  testWidgets('a nested scope preserves the nearest text style', (
+  testWidgets('a nested scope reanchors unsized typography to its tokens', (
     tester,
   ) async {
     // Accent and scaling are the two reasons a real subtree re-scopes; neither
@@ -178,14 +176,17 @@ void main() {
         .renderObject<RenderParagraph>(find.text('body'))
         .text
         .style!;
-    expect(body.fontSize, 20);
-    expect(body.fontWeight, FontWeight.w700);
-    expect(body.letterSpacing, 2);
-    expect(body.color, const Color(0xFF00FF00));
-    // Code keeps deriving its em geometry from that preserved ambient size.
+    expect(body.fontSize, 17.6);
+    expect(body.fontWeight, FontWeight.w400);
+    expect(body.letterSpacing, 0);
+    expect(
+      body.color,
+      MixScope.tokenOf(FortalTokens.gray12, tester.element(find.text('body'))),
+    );
+    // Code's geometry follows the nested scope's scaled text3 token.
     expect(
       tester.widget<Text>(find.text('code')).style?.fontSize,
-      closeTo(20 * 0.95 * 0.95, 1e-9),
+      closeTo(17.6 * 0.95 * 0.95, 1e-9),
     );
   });
 

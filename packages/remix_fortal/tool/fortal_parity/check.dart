@@ -4,8 +4,18 @@ import 'dart:typed_data';
 
 const _expectedIntegrity =
     'sha512-I0/h2CRNTpYNB7Mi3xFIvSsQq5a108d7kK8dTO5zp5b9HR5QJXKag6B8tjpz2ITkVYkFdkGk45doNkSr7OxwNw==';
-const _expectedNakedUiVersion = '1.0.0-beta.10';
-const _expectedNakedUiConstraint = '^1.0.0-beta.10';
+const _expectedNakedUiVersion = '1.0.0-beta.14';
+
+/// A range, not the exact version, because these are two different guarantees
+/// enforced in two different places. The parity contract is validated against
+/// exactly [_expectedNakedUiVersion], and the *lockfile* check below is what
+/// pins that: the workspace must resolve it hosted, byte-exact. The pubspec
+/// constraint is the consumer surface, and pub.dev refuses to publish an exact
+/// hosted constraint ("your dependency should allow more than one version",
+/// exit 65) — an exact pin here made the v1.0.0-beta.7 publish impossible.
+/// The floor still names the tested release; both packages must carry this
+/// identical string.
+const _expectedNakedUiConstraint = '^1.0.0-beta.14';
 const _expectedMappedFamilies = <String>{
   'avatar',
   'badge',
@@ -38,7 +48,12 @@ const _expectedMappedFamilies = <String>{
   'text_field',
   'tooltip',
 };
-const _expectedExtensions = <String>{'accordion', 'toggle', 'toggle_group'};
+const _expectedExtensions = <String>{
+  'accordion',
+  'disclosure',
+  'toggle',
+  'toggle_group',
+};
 const _expectedUnmappedUpstreamFamilies = <String>{'checkbox_group'};
 
 /// The five typography families publish one shared nine-step `FortalTextSize`
@@ -305,6 +320,9 @@ void _checkFamilies(
       '$id.deferredCapabilities',
       failures,
     );
+    if (id == 'disclosure') {
+      _checkDisclosurePrimitiveContract(family, failures);
+    }
     _checkCoverage(
       owner: id,
       enums: _familyEnumKeys(
@@ -334,8 +352,8 @@ void _checkFamilies(
     failures,
   );
   _expect(
-    families.length == 33,
-    'Exactly 33 Fortal families must be tracked.',
+    families.length == 34,
+    'Exactly 34 Fortal families must be tracked.',
     failures,
   );
   _checkUnmappedUpstreamFamilies(manifest, families.keys.toSet(), failures);
@@ -379,6 +397,85 @@ void _checkGlobalUpstreamInventory(
   for (final entry in families.entries) {
     _object(entry.value, 'upstreamInventory.families.${entry.key}', failures);
   }
+  final disclosure = _object(
+    families['disclosure'],
+    'upstreamInventory.families.disclosure',
+    failures,
+  );
+  if (disclosure != null) {
+    _checkDisclosureUpstreamInventory(
+      disclosure,
+      'upstreamInventory.families.disclosure',
+      failures,
+    );
+  }
+}
+
+void _checkDisclosurePrimitiveContract(
+  Map<String, Object?> family,
+  List<String> failures,
+) {
+  _expect(
+    family['radixComponent'] == 'Collapsible' &&
+        family['parity'] == 'extension',
+    'disclosure must map the Radix Collapsible primitive as a Fortal extension.',
+    failures,
+  );
+  _expect(
+    _strings(family['sourceFiles'], 'disclosure.sourceFiles', failures).isEmpty,
+    'disclosure must not claim Radix Themes source files.',
+    failures,
+  );
+  _expect(
+    _strings(
+      family['sourceSelectors'],
+      'disclosure.sourceSelectors',
+      failures,
+    ).isEmpty,
+    'disclosure must not claim Radix Themes style selectors.',
+    failures,
+  );
+  final inventory = _object(
+    family['upstreamInventory'],
+    'disclosure.upstreamInventory',
+    failures,
+  );
+  if (inventory != null) {
+    _checkDisclosureUpstreamInventory(
+      inventory,
+      'disclosure.upstreamInventory',
+      failures,
+    );
+  }
+}
+
+void _checkDisclosureUpstreamInventory(
+  Map<String, Object?> inventory,
+  String path,
+  List<String> failures,
+) {
+  final enums = _object(inventory['enums'], '$path.enums', failures);
+  _expect(
+    enums != null && enums.isEmpty,
+    '$path.enums must remain empty because Radix Collapsible exposes no enums.',
+    failures,
+  );
+  final states = _strings(inventory['states'], '$path.states', failures);
+  _expect(
+    _sameSet(states.toSet(), const {'open', 'closed', 'disabled'}),
+    '$path.states must be exactly open, closed, and disabled.',
+    failures,
+  );
+  final styleProps = _strings(
+    inventory['supportedStyleProps'],
+    '$path.supportedStyleProps',
+    failures,
+  );
+  _expect(
+    styleProps.isEmpty,
+    '$path.supportedStyleProps must remain empty because Radix Themes does not style Collapsible.',
+    failures,
+  );
 }
 
 String? _readFortalStylesSource(
@@ -594,6 +691,18 @@ Set<String> _familyEnumKeys({
           '$id.enums.$kind.default is not one of its documented values.',
         );
       }
+      if (stylesSource != null &&
+          fortalType is String &&
+          fortalType.isNotEmpty) {
+        _checkRecipeDefault(
+          id: id,
+          kind: kind,
+          fortalType: fortalType,
+          manifestDefault: defaultValue,
+          stylesSource: stylesSource,
+          failures: failures,
+        );
+      }
     }
 
     Iterable<String> expectedValues = documentedValues;
@@ -601,14 +710,11 @@ Set<String> _familyEnumKeys({
       if (stylesSource == null || fortalType is! String || fortalType.isEmpty) {
         continue;
       }
-      final suffix = '${kind[0].toUpperCase()}${kind.substring(1)}';
-      final idType = id
-          .split('_')
-          .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
-          .join();
-      final candidates = kind == 'size' && _sharedTextSizeFamilies.contains(id)
-          ? {'FortalTextSize'}
-          : {'$fortalType$suffix', 'Fortal$idType$suffix'};
+      final candidates = _fortalEnumCandidates(
+        id: id,
+        kind: kind,
+        fortalType: fortalType,
+      );
       RegExpMatch? enumMatch;
       for (final candidate in candidates) {
         enumMatch = RegExp(
@@ -896,7 +1002,9 @@ void _checkNakedPin(
   File workspaceLock,
   List<String> failures,
 ) {
-  // naked_ui is now pinned in three pubspecs; all of them must agree.
+  // Both publishable packages must carry the identical hosted constraint,
+  // whose floor is the release the parity contract was validated against.
+  // The exact tested resolution is enforced on the lockfile below, not here.
   final pinned = RegExp(
     '^  naked_ui: ${RegExp.escape(_expectedNakedUiConstraint)}\\s*\$',
     multiLine: true,
@@ -1024,6 +1132,118 @@ String? _lockEntry(String source, String dependency) {
   }
   return lines.sublist(start, end).join('\n');
 }
+
+/// The Dart enum names a family's `kind` could publish, most specific first.
+///
+/// The typography families share one nine-step scale and one weight enum
+/// instead of five parallel copies, so their `size` and `weight` anchor on the
+/// shared names. Every other kind is named after either the widget type or the
+/// manifest id, which differ for the families whose id is not a straight
+/// lower-snake of the type (`icon_button` publishes `FortalIconButtonVariant`,
+/// while `tabs` publishes `FortalTabsSize` against a `FortalTabBar` type).
+Set<String> _fortalEnumCandidates({
+  required String id,
+  required String kind,
+  required String fortalType,
+}) {
+  if (_sharedTextSizeFamilies.contains(id)) {
+    if (kind == 'size') return {'FortalTextSize'};
+    if (kind == 'weight') return {'FortalTextWeight'};
+  }
+  final suffix = '${kind[0].toUpperCase()}${kind.substring(1)}';
+  final idType = id
+      .split('_')
+      .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
+      .join();
+  return {'$fortalType$suffix', 'Fortal$idType$suffix'};
+}
+
+/// Verifies the manifest's recorded default is the one a caller actually gets.
+///
+/// The membership check in [_familyEnumKeys] only proves the default names one
+/// of its own documented values, so it stays green when a recipe's `= .size2`
+/// becomes `= .size3` — the manifest would then publish a default no caller
+/// receives. This reads the recipe signature, which is where the default is
+/// authored: `melos generate:check` already fails on any drift between a recipe
+/// and the widget constructor generated from it, so the recipe is the single
+/// place worth comparing against.
+void _checkRecipeDefault({
+  required String id,
+  required String kind,
+  required String fortalType,
+  required Object? manifestDefault,
+  required String stylesSource,
+  required List<String> failures,
+}) {
+  final candidates = _fortalEnumCandidates(
+    id: id,
+    kind: kind,
+    fortalType: fortalType,
+  );
+  final enumName = candidates.firstWhere(
+    (candidate) => RegExp(
+      'enum\\s+${RegExp.escape(candidate)}\\s*\\{',
+    ).hasMatch(stylesSource),
+    orElse: () => '',
+  );
+  // `orientation`, `activationMode`, and `alignment` name Flutter and Naked
+  // types the recipes take directly, so they have no Fortal enum to anchor on
+  // and no recipe-authored default to compare. `size` and `variant` are
+  // contractually required to resolve, and [_familyEnumKeys] already fails
+  // when they do not, so staying quiet here cannot hide a missing mapping.
+  if (enumName.isEmpty) return;
+
+  final actual = _recipeEnumDefault(stylesSource, enumName, kind);
+  if (!actual.resolved) {
+    failures.add(
+      '$id.enums.$kind.default records ${_defaultLabel(manifestDefault)} but '
+      'the recipe declares no $enumName $kind parameter.',
+    );
+    return;
+  }
+  if (actual.value != manifestDefault) {
+    failures.add(
+      '$id.enums.$kind.default is ${_defaultLabel(manifestDefault)} but the '
+      'recipe defaults $kind to ${_defaultLabel(actual.value)}.',
+    );
+  }
+}
+
+/// The default a caller gets for [parameter] where the recipe types it as
+/// [enumName].
+///
+/// `resolved: false` means no such parameter exists. `(resolved: true, value:
+/// null)` is the nullable no-default shape the typography families use so an
+/// omitted size resolves from tokens rather than a pinned enum value, which is
+/// exactly what a `null` default in the manifest records.
+///
+/// Anchoring on [enumName] rather than [parameter] alone keeps TextField and
+/// TextArea apart: they share `textfield.dart`, so a bare `size` search would
+/// read whichever signature happened to come first.
+({bool resolved, String? value}) _recipeEnumDefault(
+  String source,
+  String enumName,
+  String parameter,
+) {
+  // Doc comments cite defaults in prose (`defaults to [FortalDialogSize.size3]`),
+  // so strip comments before matching rather than risk reading documentation as
+  // the declaration.
+  final code = source
+      .replaceAll(RegExp(r'//[^\n]*'), '')
+      .replaceAll(RegExp(r'/\*.*?\*/', dotAll: true), '');
+  final escaped = RegExp.escape(enumName);
+  final withDefault = RegExp(
+    '\\b$escaped\\s+$parameter\\s*=\\s*(?:$escaped)?\\.([A-Za-z0-9_]+)',
+  ).firstMatch(code);
+  if (withDefault != null) return (resolved: true, value: withDefault.group(1));
+  if (RegExp('\\b$escaped\\?\\s+$parameter\\s*[,)]').hasMatch(code)) {
+    return (resolved: true, value: null);
+  }
+  return (resolved: false, value: null);
+}
+
+String _defaultLabel(Object? value) =>
+    value == null ? 'no default (nullable)' : "'$value'";
 
 Set<String> _dartEnumValues(String body) {
   return body
@@ -1164,7 +1384,7 @@ Never _finish(List<String> failures) {
   }
   stdout.writeln(
     'Verified @radix-ui/themes 3.3.0 contract: '
-    '30 mapped families, 3 Fortal extensions, 1 audited unmapped family, '
+    '30 mapped families, 4 Fortal extensions, 1 audited unmapped family, '
     'Chromium fixtures, '
     'coverage ledger, hosted Naked $_expectedNakedUiVersion resolution, and no '
     'undocumented approximations.',

@@ -1,3 +1,4 @@
+import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -17,7 +18,7 @@ Widget buildSelectUseCase(BuildContext context) {
     label: 'size',
     options: FortalSelectSize.values,
     labelBuilder: (size) => size.name,
-    initialOption: FortalSelectSize.size3,
+    initialOption: FortalSelectSize.size2,
   );
 
   String selectedValue = 'Apple';
@@ -51,6 +52,25 @@ Widget buildSelectUseCase(BuildContext context) {
           },
         ),
       ),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixSelect)
+Widget buildSelectCatalogUseCase(BuildContext context) {
+  return CatalogMatrix(
+    cellWidth: 220,
+    columns: labelsOf(FortalSelectSize.values),
+    rows: labelsOf(FortalSelectVariant.values),
+    // The closed trigger is the part the size and variant enums paint; the
+    // popup surface only exists once a cell is tapped.
+    cell: (row, column) => FortalSelect<String>(
+      trigger: const RemixSelectTrigger(placeholder: 'Select...'),
+      items: [RemixSelectItem(value: 'apple', label: 'Apple')],
+      selectedValue: 'apple',
+      onChanged: (_) {},
+      size: FortalSelectSize.values[column],
+      variant: FortalSelectVariant.values[row],
     ),
   );
 }

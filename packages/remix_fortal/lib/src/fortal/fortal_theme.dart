@@ -416,6 +416,17 @@ class FortalTokens {
     'fortal.checkbox.indicator-size.3',
   );
 
+  /// Checkbox-group label gaps derived from Radix's size-linked `0.5em`.
+  static const checkboxGroupItemGap1 = DoubleToken(
+    'fortal.checkbox-group.item-gap.1',
+  );
+  static const checkboxGroupItemGap2 = DoubleToken(
+    'fortal.checkbox-group.item-gap.2',
+  );
+  static const checkboxGroupItemGap3 = DoubleToken(
+    'fortal.checkbox-group.item-gap.3',
+  );
+
   /// Radio indicators are 40% of their control size in Radix Themes.
   ///
   /// These values need dedicated tokens because arithmetic on an unresolved
@@ -1111,6 +1122,9 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.checkboxIndicatorSize1: 9.0 * scaling,
     FortalTokens.checkboxIndicatorSize2: 10.0 * scaling,
     FortalTokens.checkboxIndicatorSize3: 12.0 * scaling,
+    FortalTokens.checkboxGroupItemGap1: 6.0 * scaling,
+    FortalTokens.checkboxGroupItemGap2: 7.0 * scaling,
+    FortalTokens.checkboxGroupItemGap3: 8.0 * scaling,
     FortalTokens.radioIndicatorSize1: 5.6 * scaling,
     FortalTokens.radioIndicatorSize2: 6.4 * scaling,
     FortalTokens.radioIndicatorSize3: 8.0 * scaling,
@@ -1378,7 +1392,7 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
   return allTokens;
 }
 
-/// Establishes the Radix theme root's default text run.
+/// Establishes a courtesy default text run for bare [Text] descendants.
 ///
 /// `.radix-themes` is not only a token carrier upstream: `color.css` sets
 /// `color: var(--gray-12)` in the same rule as the `data-has-background` fill,
@@ -1387,12 +1401,10 @@ Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeData theme) {
 /// `--default-font-weight`. Those resolve to exactly [FortalTokens.text3] plus
 /// [FortalTokens.gray12] at regular weight.
 ///
-/// Without this fallback, "inherits the ambient `DefaultTextStyle`" — the
-/// documented behaviour of an unsized [FortalText], [FortalCode], [FortalKbd],
-/// or [FortalLink] — means "inherits whatever the outer host happens to
-/// supply", so the em-relative geometry of Code, Kbd, and Link is measured
-/// against that host instead of Radix's 16px root. A nearer descendant
-/// `DefaultTextStyle` still wins through Flutter's normal inheritance.
+/// Fortal text recipes resolve and pin their own runs. This fallback keeps
+/// deliberately bare [Text] descendants aligned with Radix's root typography
+/// and neutral foreground. A nearer descendant `DefaultTextStyle` still wins
+/// through Flutter's normal inheritance.
 ///
 /// Only the outermost [FortalScope] installs this. A nested scope re-scopes
 /// tokens for its subtree and nothing more: upstream, `.radix-themes` inside

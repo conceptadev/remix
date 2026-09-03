@@ -129,7 +129,7 @@ pubspec.lock
 # When unpinning packages, Using lockfiles ensures that failures in PRs are
 # actually due to those PRs, not due to a package being updated.
 !/pubspec.lock
-!/packages/remix_fortal/tool/radix_icons/uv.lock
+!/packages/remix_ui_icons/tool/radix_icons/uv.lock
 
 # IntelliJ related
 *.iml

@@ -243,6 +243,8 @@ Remix provides a comprehensive set of production-ready components:
 ### Layout & Navigation
 - **Tabs** - Tabbed navigation
 - **Accordion** - Collapsible content sections
+- **Disclosure** - A standalone trigger and inline expandable panel
+- **Link** - Styled text that navigates, with the Link role and Enter activation
 - **Menu** - Context menus and dropdowns
 - **SegmentedControl** - Equal-segment controlled single selection
 

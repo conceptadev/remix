@@ -420,10 +420,10 @@ packages:
     dependency: "direct dev"
     description:
       name: melos
-      sha256: cc3b029d507d0edc5b80728cbba893715cb7802e1e12b7eea8dca386d49bf7fb
+      sha256: f910f0f48f02aeb3fa1b63d72ffb014f7db9a8995b42969b2bc756ea36463d1b
       url: "https://pub.dev"
     source: hosted
-    version: "8.2.1"
+    version: "8.5.0"
   meta:
     dependency: transitive
     description:
@@ -444,10 +444,10 @@ packages:
     dependency: transitive
     description:
       name: mix
-      sha256: "824337a20e80da644f2ca47d73e8f2b05bd2a2507ba803f952e4a0dae707d308"
+      sha256: ab19c799a280830cf9facd4818a81187506beaafce0e10ca99d6125c325decfb
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0-beta.4"
+    version: "2.2.0-beta.5"
   mix_annotations:
     dependency: transitive
     description:
@@ -465,13 +465,12 @@ packages:
     source: hosted
     version: "0.0.1-beta.1"
   mix_generator:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/mix_generator"
-      ref: "367b1f916498008be89867d0fd192c383f877542"
-      resolved-ref: "367b1f916498008be89867d0fd192c383f877542"
-      url: "https://github.com/conceptadev/mix.git"
-    source: git
+      name: mix_generator
+      sha256: fd707c5ec5948918b90ed52296408a275871af5eda48178ce8539e4da4a1691f
+      url: "https://pub.dev"
+    source: hosted
     version: "2.2.0-beta.3"
   mustache_template:
     dependency: transitive
@@ -485,10 +484,10 @@ packages:
     dependency: transitive
     description:
       name: naked_ui
-      sha256: cb6c35fc10cf62142da74b491c0033d53c0e8c4f2a6ef895751c1713e47c41b9
+      sha256: "765fe63516cb3b1445f340d31b8f71ac17f64a86a1a29ab238ad8d5cbf662f63"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-beta.10"
+    version: "1.0.0-beta.14"
   nested:
     dependency: transitive
     description:
