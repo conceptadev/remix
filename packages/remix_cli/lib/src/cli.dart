@@ -94,8 +94,13 @@ int? _writeRequestedHelp(
   required LineWriter writeOut,
   required LineWriter writeError,
 }) {
+  // `help` is handled here with `--help` and `-h`. Letting CommandRunner's own
+  // help command take it would print the usage once, return null, and fall
+  // through to the null-result branch below, which prints the usage again.
   if (arguments.length == 1 &&
-      (arguments.single == '--help' || arguments.single == '-h')) {
+      (arguments.single == '--help' ||
+          arguments.single == '-h' ||
+          arguments.single == 'help')) {
     writeOut(runner.usage);
     return successExitCode;
   }

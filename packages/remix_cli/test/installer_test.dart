@@ -10,6 +10,43 @@ import 'package:test/test.dart';
 import 'test_support.dart';
 
 void main() {
+  group('managed barrel line endings', () {
+    const lf =
+        'library;\n'
+        '\n'
+        '$managedExportsStart\n'
+        "export 'components/button.dart';\n"
+        '\n'
+        '$managedExportsEnd\n';
+    final crlf = lf.replaceAll('\n', '\r\n');
+
+    test('accepts an LF barrel', () {
+      expect(() => validateManagedBarrel(lf), returnsNormally);
+    });
+
+    test('accepts a CRLF barrel', () {
+      // Git with core.autocrlf=true hands a Windows consumer this exact file.
+      expect(() => validateManagedBarrel(crlf), returnsNormally);
+    });
+
+    test('rewriting an LF barrel keeps LF', () {
+      final updated = updateManagedBarrel(lf, const ['theme/tokens.dart']);
+
+      expect(updated, contains("export 'theme/tokens.dart';"));
+      expect(updated, isNot(contains('\r\n')));
+    });
+
+    test('rewriting a CRLF barrel keeps CRLF', () {
+      final updated = updateManagedBarrel(crlf, const ['theme/tokens.dart']);
+
+      expect(updated, contains("export 'theme/tokens.dart';"));
+      expect(
+        updated.split('\n').where((line) => line.isNotEmpty),
+        everyElement(endsWith('\r')),
+      );
+    });
+  });
+
   late Directory root;
 
   setUp(() async {
@@ -342,8 +379,18 @@ packages:
     button.writeAsStringSync('${button.readAsStringSync()}// local\n');
     final before = snapshotFiles(root);
     final runner = RecordingProcessRunner((invocation) async {
-      if (invocation.executable == Platform.resolvedExecutable) {
-        expect(invocation.arguments.first, 'format');
+      if (invocation.executable == 'flutter') {
+        return ProcessOutput(
+          exitCode: 0,
+          stdout: fakeFlutterMachineJson(root),
+          stderr: '',
+        );
+      }
+      if (invocation.arguments.first == 'format') {
+        // The proposal must be formatted by the project's Dart, because that
+        // is what `add` uses. A different formatter version would report
+        // differences no install could produce.
+        expect(invocation.executable, fakeToolchainDart(root));
         expect(invocation.workingDirectory, isNot(root.path));
         return successProcessOutput;
       }
@@ -368,7 +415,7 @@ packages:
     ).add(const AddOptions(item: 'button', mode: AddMode.diff));
 
     expect(snapshotFiles(root), before);
-    expect(runner.calls, hasLength(2));
+    expect(runner.calls, hasLength(3));
     expect(output.last, 'diff body');
   });
 
@@ -418,6 +465,11 @@ packages:
         await Installer(
           projectRoot: caseRoot,
           writeOut: output.add,
+          processRunner: happyRunner(
+            caseRoot,
+            runRealFormatter: true,
+            runRealGit: true,
+          ),
         ).add(AddOptions(item: item, mode: AddMode.diff));
 
         expect(snapshotFiles(caseRoot), before, reason: item);
@@ -430,7 +482,16 @@ packages:
     await installButton(root);
     final before = snapshotFiles(root);
     final runner = RecordingProcessRunner((invocation) {
-      if (invocation.executable == Platform.resolvedExecutable) {
+      if (invocation.executable == 'flutter') {
+        return Future.value(
+          ProcessOutput(
+            exitCode: 0,
+            stdout: fakeFlutterMachineJson(root),
+            stderr: '',
+          ),
+        );
+      }
+      if (invocation.arguments.first == 'format') {
         return Future.value(successProcessOutput);
       }
       throw ProcessException('git', invocation.arguments);
@@ -925,12 +986,17 @@ Future<void> installButton(Directory root) async {
   ).add(const AddOptions(item: 'button', mode: AddMode.write));
 }
 
+/// The Dart the installer resolves from [fakeFlutterMachineJson]'s SDK root.
+String fakeToolchainDart(Directory root) =>
+    p.join(root.path, 'bin', Platform.isWindows ? 'dart.exe' : 'dart');
+
 RecordingProcessRunner happyRunner(
   Directory root, {
   bool addMissingDependencies = false,
   bool addChartDependency = false,
   bool writeLockOnPubGet = true,
   bool runRealFormatter = false,
+  bool runRealGit = false,
   String? lockedRemix,
   String? failStage,
 }) => RecordingProcessRunner((invocation) async {
@@ -1007,6 +1073,10 @@ RecordingProcessRunner happyRunner(
         ..writeAsStringSync('// generated\n');
     }
     return successProcessOutput;
+  }
+  if (invocation.executable == 'git') {
+    if (!runRealGit) return successProcessOutput;
+    return const SystemProcessRunner().run(invocation);
   }
   if (command.startsWith('analyze ')) {
     if (failStage == 'analyze') {

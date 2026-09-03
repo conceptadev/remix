@@ -204,7 +204,13 @@ final class Installer {
 
     if (options.mode == AddMode.dryRun) return;
     if (options.mode == AddMode.diff) {
+      // The diff has to predict what `add` would write, and `add` formats with
+      // the project's Flutter SDK. Formatting the proposed tree with whichever
+      // Dart happens to run this CLI would report formatter-version
+      // differences that no install would ever produce.
+      final diffToolchain = await _resolveFlutter(root);
       await _printDiff(
+        dart: diffToolchain.dart,
         root: root,
         requestedName: requested.name,
         items: items,
@@ -404,6 +410,7 @@ final class Installer {
   }
 
   Future<void> _printDiff({
+    required String dart,
     required Directory root,
     required String requestedName,
     required List<RegistryItem> items,
@@ -439,7 +446,7 @@ final class Installer {
 
       await _checked(
         ProcessInvocation(
-          executable: Platform.resolvedExecutable,
+          executable: dart,
           arguments: ['format', ...proposedDartPaths],
           workingDirectory: proposed.path,
         ),
@@ -506,8 +513,18 @@ final class Installer {
   }
 }
 
+/// Splits [source] into lines without its line terminators.
+///
+/// A barrel that Git checked out with `core.autocrlf=true`, or that a Windows
+/// editor saved, carries CRLF endings. The markers are still there, so neither
+/// validation nor rewriting may depend on the terminator.
+List<String> _barrelLines(String source) => [
+  for (final line in source.split('\n'))
+    line.endsWith('\r') ? line.substring(0, line.length - 1) : line,
+];
+
 void validateManagedBarrel(String source) {
-  final lines = source.split('\n');
+  final lines = _barrelLines(source);
   final starts = <int>[];
   final ends = <int>[];
   for (var index = 0; index < lines.length; index++) {
@@ -532,7 +549,10 @@ void validateManagedBarrel(String source) {
 
 String updateManagedBarrel(String source, Iterable<String> additions) {
   validateManagedBarrel(source);
-  final lines = source.split('\n');
+  // Rewrite the file with the terminator it already uses, so an installed
+  // barrel never shows up as a whole-file change on Windows.
+  final terminator = source.contains('\r\n') ? '\r\n' : '\n';
+  final lines = _barrelLines(source);
   final start = lines.indexOf(managedExportsStart);
   final end = lines.indexOf(managedExportsEnd);
   final exports = <String>{...additions};
@@ -550,7 +570,7 @@ String updateManagedBarrel(String source, Iterable<String> additions) {
     ...lines.sublist(0, start),
     ...replacement,
     ...lines.sublist(end + 1),
-  ].join('\n');
+  ].join(terminator);
 }
 
 _ItemState _classify(Directory root, List<String> targets) {

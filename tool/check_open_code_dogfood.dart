@@ -91,7 +91,13 @@ Future<String?> _run(Directory root) async {
       '--diff',
     ], workingDirectory: playground.path);
     if (result.exitCode != 0) {
-      problems.add('$key: `remix add $key --diff` exited ${result.exitCode}');
+      // The exit code alone cannot be acted on from a CI log. Carry the
+      // reason, which is where a missing Git or a preflight refusal is named.
+      final detail = (result.stderr as String).trim();
+      problems.add(
+        '$key: `remix add $key --diff` exited ${result.exitCode}'
+        '${detail.isEmpty ? '' : '\n    $detail'}',
+      );
       continue;
     }
 

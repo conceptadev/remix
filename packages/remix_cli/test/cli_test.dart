@@ -18,6 +18,23 @@ void main() {
     expect(output.join('\n'), contains('Usage: remix <command>'));
   });
 
+  test('bare help prints usage exactly once', () async {
+    final output = <String>[];
+
+    final code = await runRemixCli(
+      ['help'],
+      writeOut: output.add,
+      writeError: fail,
+    );
+
+    expect(code, successExitCode);
+    expect(
+      'Usage: remix <command>'.allMatches(output.join('\n')).length,
+      1,
+      reason: 'CommandRunner help plus the null-result fallback printed twice.',
+    );
+  });
+
   test('command help is routed through the injected writer', () async {
     final output = <String>[];
 
