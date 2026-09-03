@@ -8,6 +8,7 @@ import '../../foundation/carbon_layout_scope.dart';
 import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../_shared/carbon_field_frame.dart';
+import '../_shared/carbon_menu_trigger.dart';
 import '../_shared/carbon_menu_size.dart';
 import '../menu/carbon_menu.dart';
 
@@ -120,7 +121,12 @@ class CarbonMultiselect<T extends Object> extends StatelessWidget {
           .height(height)
           .mainAxisSize(.max)
           .mainAxisAlignment(.spaceBetween)
-          .padding(.horizontal(CarbonTokens.spacing05()))
+          .padding(
+            EdgeInsetsGeometryMix.directional(
+              start: CarbonTokens.spacing05(),
+              end: CarbonTokens.spacing09(),
+            ),
+          )
           .color(readOnly ? const Color(0x00000000) : _carbonMultiselectField())
           .border(
             BoxBorderMix.bottom(
@@ -166,9 +172,14 @@ class CarbonMultiselect<T extends Object> extends StatelessWidget {
   }) => style(
     controller: controller,
     triggerFocusNode: focusNode,
-    trigger: RemixMenuTrigger(
+    trigger: carbonMenuTriggerWithTrailingIcon(
       label: triggerLabel,
       trailingIcon: CarbonIcons.chevronDown,
+      iconStyle: IconStyler()
+          .size(CarbonTokens.iconSize01())
+          .color(
+            enabled ? CarbonTokens.iconPrimary() : CarbonTokens.iconDisabled(),
+          ),
     ),
     semanticLabel: semanticLabel ?? label ?? placeholder,
     positioning: positioning,

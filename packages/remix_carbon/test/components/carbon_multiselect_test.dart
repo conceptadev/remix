@@ -1,6 +1,7 @@
 import 'package:remix_carbon/remix_carbon.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:remix/remix.dart';
 
 import '../helpers/pump.dart';
 
@@ -26,6 +27,12 @@ void main() {
         ),
       ),
     );
+
+    final menu = tester.widget<RemixMenu<String>>(
+      find.byType(RemixMenu<String>),
+    );
+    expect(menu.trigger.builder, isNotNull);
+    expect(find.byIcon(CarbonIcons.chevronDown), findsOneWidget);
 
     await tester.tap(find.bySemanticsLabel('Projects'));
     await tester.pumpAndSettle();

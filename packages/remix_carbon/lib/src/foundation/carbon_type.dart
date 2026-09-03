@@ -45,7 +45,7 @@ class CarbonType {
     String name, {
     String? fontFamily,
   }) {
-    final width = MediaQuery.sizeOf(context).width;
+    final width = MediaQuery.widthOf(context);
     final family = fontFamily ?? CarbonScope.overridesOf(context).fontFamily;
 
     return resolveFluid(name, width).toTextStyle(fontFamily: family);

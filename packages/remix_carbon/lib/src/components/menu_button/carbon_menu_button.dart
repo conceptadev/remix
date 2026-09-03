@@ -5,6 +5,7 @@ import '../../foundation/carbon_layout_scope.dart';
 import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_component_tokens.g.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
+import '../_shared/carbon_menu_trigger.dart';
 import '../_shared/carbon_menu_size.dart';
 import '../button/carbon_button.dart';
 import '../menu/carbon_menu.dart';
@@ -48,9 +49,10 @@ class CarbonMenuButton<T> extends StatelessWidget {
         carbonMenuStyle(
           size: carbonMenuSizeFor(size),
         ).trigger(_carbonMenuButtonTriggerStyle(kind: kind, size: size))(
-          trigger: RemixMenuTrigger(
+          trigger: carbonMenuTriggerWithTrailingIcon(
             label: label,
             trailingIcon: CarbonIcons.chevronDown,
+            iconStyle: _carbonMenuButtonChevronStyle(kind),
           ),
           items: items,
           controller: controller,
@@ -135,7 +137,14 @@ MenuTriggerStyler _carbonMenuButtonTriggerStyle({
   };
   final base = MenuTriggerStyler()
       .height(size.clampTo(.xs, .lg).height)
-      .padding(square ? .all(0) : .horizontal(CarbonTokens.spacing05()))
+      .padding(
+        square
+            ? EdgeInsetsDirectionalMix.all(0)
+            : EdgeInsetsGeometryMix.directional(
+                start: CarbonTokens.spacing05(),
+                end: CarbonTokens.spacing09(),
+              ),
+      )
       .mainAxisAlignment(square ? .center : .spaceBetween)
       .crossAxisAlignment(.center)
       .label(.style(CarbonTokens.bodyCompact01.mix()).color(foreground))
@@ -177,4 +186,20 @@ MenuTriggerStyler _carbonMenuButtonTriggerStyle({
     .secondary || .danger || .dangerTertiary || .dangerGhost =>
       throw StateError('Unsupported Carbon menu-button kind: ${kind.name}'),
   };
+}
+
+IconStyler _carbonMenuButtonChevronStyle(CarbonButtonKind kind) {
+  final foreground = switch (kind) {
+    .primary => CarbonTokens.textOnColor(),
+    .tertiary || .ghost => CarbonTokens.linkPrimary(),
+    .secondary || .danger || .dangerTertiary || .dangerGhost =>
+      throw StateError('Unsupported Carbon menu-button kind: ${kind.name}'),
+  };
+  final base = IconStyler().size(CarbonTokens.iconSize01()).color(foreground);
+
+  return kind == .tertiary
+      ? base
+            .onHovered(IconStyler().color(CarbonTokens.iconInverse()))
+            .onPressed(IconStyler().color(CarbonTokens.iconInverse()))
+      : base;
 }

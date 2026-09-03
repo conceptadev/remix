@@ -2,6 +2,7 @@ import 'package:remix_carbon/remix_carbon.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:remix/remix.dart';
 
 import '../helpers/pump.dart';
 
@@ -20,6 +21,8 @@ void main() {
         onPressed: () => activations++,
       ),
     );
+
+    expect(find.byType(RemixLink), findsOneWidget);
 
     final node = tester.getSemantics(find.text('Carbon guidance'));
     expect(
@@ -66,6 +69,18 @@ void main() {
       _style(tester, 'Large').color,
       CarbonTokens.linkVisited.resolve(tester.element(find.text('Large'))),
     );
+  });
+
+  testWidgets('CarbonLink forwards destination metadata to RemixLink', (
+    tester,
+  ) async {
+    final destination = Uri.parse('https://example.com/carbon');
+    await tester.pumpCarbonApp(
+      CarbonLink(label: 'Carbon docs', linkUrl: destination, onPressed: _noop),
+    );
+
+    final link = tester.widget<RemixLink>(find.byType(RemixLink));
+    expect(link.linkUrl, destination);
   });
 }
 

@@ -2,15 +2,14 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import '../../tokens/generated/carbon_tokens.g.dart';
-import '../_shared/carbon_action_surface.dart';
 
 /// Carbon link typography sizes.
 enum CarbonLinkSize { small, medium, large }
 
 /// An accessible Carbon text link.
 ///
-/// Flutter has no material-free link control, so this widget owns the link
-/// semantics and keyboard activation while Mix owns its visual state.
+/// [RemixLink] owns link semantics, focus, and keyboard activation while this
+/// facade applies Carbon typography and state tokens.
 class CarbonLink extends StatelessWidget {
   const CarbonLink({
     super.key,
@@ -19,9 +18,15 @@ class CarbonLink extends StatelessWidget {
     this.size = .medium,
     this.visited = false,
     this.inline = false,
+    this.enabled = true,
+    this.linkUrl,
     this.focusNode,
     this.autofocus = false,
+    this.enableFeedback = true,
+    this.mouseCursor = SystemMouseCursors.click,
     this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
   });
 
   final String label;
@@ -29,63 +34,84 @@ class CarbonLink extends StatelessWidget {
   final CarbonLinkSize size;
   final bool visited;
   final bool inline;
+  final bool enabled;
+  final Uri? linkUrl;
   final FocusNode? focusNode;
   final bool autofocus;
+  final bool enableFeedback;
+  final MouseCursor mouseCursor;
   final String? semanticLabel;
+  final String? semanticHint;
+  final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
-    final enabled = onPressed != null;
+  Widget build(BuildContext context) => RemixLink(
+    label: label,
+    onPressed: onPressed,
+    enabled: enabled,
+    linkUrl: linkUrl,
+    focusNode: focusNode,
+    autofocus: autofocus,
+    enableFeedback: enableFeedback,
+    mouseCursor: mouseCursor,
+    semanticLabel: semanticLabel,
+    semanticHint: semanticHint,
+    excludeSemantics: excludeSemantics,
+    style: carbonLinkStyle(size: size, visited: visited, inline: inline),
+  );
+}
 
-    return CarbonActionSurface(
-      semanticLabel: semanticLabel ?? label,
-      onPressed: onPressed,
-      enabled: enabled,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      excludeChildSemantics: true,
-      button: false,
-      link: true,
-      builder: (context, focused, hovered, _) {
-        final baseColor = visited
-            ? CarbonTokens.linkVisited
-            : CarbonTokens.linkPrimary;
-        final textStyle = TextStyler()
-            .style(switch (size) {
-              .small => CarbonTokens.helperText01.mix(),
-              .medium => CarbonTokens.bodyCompact01.mix(),
-              .large => CarbonTokens.bodyCompact02.mix(),
-            })
-            .color(
-              enabled
-                  ? (hovered ? CarbonTokens.linkPrimaryHover() : baseColor())
-                  : CarbonTokens.textDisabled(),
-            )
-            .decoration(hovered ? .underline : .none);
+final Map<(CarbonLinkSize, bool, bool), LinkStyler> _carbonLinkStyles = {};
 
-        return Box(
-          style: BoxStyler()
-              .padding(
-                inline
-                    ? EdgeInsetsMix.zero
-                    : EdgeInsetsGeometryMix.symmetric(
-                        horizontal: 2,
-                        vertical: 1,
-                      ),
-              )
-              .border(
-                BoxBorderMix.all(
-                  BorderSideMix(
-                    color: focused && enabled
-                        ? CarbonTokens.focus()
-                        : const Color(0x00000000),
-                    width: 2,
-                  ),
-                ),
+/// Carbon's token-backed visual recipe for [RemixLink].
+LinkStyler carbonLinkStyle({
+  CarbonLinkSize size = .medium,
+  bool visited = false,
+  bool inline = false,
+}) {
+  return _carbonLinkStyles.putIfAbsent((size, visited, inline), () {
+    final baseColor = visited
+        ? CarbonTokens.linkVisited
+        : CarbonTokens.linkPrimary;
+
+    return LinkStyler()
+        .padding(
+          inline
+              ? EdgeInsetsMix.zero
+              : EdgeInsetsGeometryMix.symmetric(horizontal: 2, vertical: 1),
+        )
+        .label(
+          TextStyler()
+              .style(switch (size) {
+                .small => CarbonTokens.helperText01.mix(),
+                .medium => CarbonTokens.bodyCompact01.mix(),
+                .large => CarbonTokens.bodyCompact02.mix(),
+              })
+              .color(baseColor()),
+        )
+        .onHovered(
+          LinkStyler().label(
+            TextStyler()
+                .color(CarbonTokens.linkPrimaryHover())
+                .decoration(.underline),
+          ),
+        )
+        .onFocusVisible(
+          LinkStyler().containerEffects(
+            RemixBoxEffectsMix(
+              outline: BorderSideMix(
+                color: CarbonTokens.focus(),
+                width: 2,
+                strokeAlign: BorderSide.strokeAlignInside,
               ),
-          child: StyledText(label, style: textStyle),
+              outlineOffset: -2,
+            ),
+          ),
+        )
+        .onDisabled(
+          LinkStyler().label(
+            TextStyler().color(CarbonTokens.textDisabled()).decoration(.none),
+          ),
         );
-      },
-    );
-  }
+  });
 }

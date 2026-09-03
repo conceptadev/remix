@@ -678,6 +678,7 @@ final _modalDemo = _sample(
 Future<void> _showModal(BuildContext context) async {
   final result = await showCarbonModal<String>(
     context: context,
+    barrierLabel: 'Dismiss modal',
     builder: (modalContext) => CarbonModal(
       size: .small,
       title: 'Delete project?',

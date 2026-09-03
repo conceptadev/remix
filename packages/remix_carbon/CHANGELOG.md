@@ -32,6 +32,16 @@
   `CarbonMotion`, and token-provenance tests.
 - Added the responsive component catalog to Carbon's DCM and release web-build
   gates, and consolidated its duplicated navigation and checkbox setup.
+- Synced to Remix 1.0.0-beta.7 and replaced Carbon's duplicated link,
+  expandable-tile disclosure, and side-navigation behavior with `RemixLink`,
+  `RemixDisclosure`, and `RemixSidebar` adapters. Carbon menu-button and
+  multiselect triggers now use Remix's custom trigger builder instead of a
+  Carbon-only fork of the Remix trigger API.
+- `CarbonSideNavItem` is now declarative destination data; its typed `icon`
+  replaces the old arbitrary leading/trailing widget slots so the Carbon
+  facade can delegate destination behavior directly to `RemixSidebar`.
+- Dismissible `showCarbonModal` calls now provide the localized barrier label
+  required by the latest Remix dialog contract.
 
 ### Fixed
 

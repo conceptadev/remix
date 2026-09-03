@@ -153,6 +153,8 @@ class _CarbonModalBase extends StatelessWidget {
 }
 
 /// Shows a Carbon modal while preserving the active token scope.
+///
+/// A dismissible modal requires a nonblank, localized [barrierLabel].
 Future<T?> showCarbonModal<T>({
   required BuildContext context,
   required WidgetBuilder builder,

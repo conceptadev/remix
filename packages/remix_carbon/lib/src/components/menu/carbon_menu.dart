@@ -49,7 +49,12 @@ MenuStyler carbonMenuStyle({CarbonMenuSize size = .small}) {
       .trigger(
         MenuTriggerStyler()
             .height(CarbonTokens.sizeMedium())
-            .padding(.horizontal(CarbonTokens.spacing05()))
+            .padding(
+              EdgeInsetsGeometryMix.directional(
+                start: CarbonTokens.spacing05(),
+                end: CarbonTokens.spacing05(),
+              ),
+            )
             .crossAxisAlignment(.center)
             .spacing(CarbonTokens.spacing03())
             .label(

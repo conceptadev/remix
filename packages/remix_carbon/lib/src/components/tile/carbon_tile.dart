@@ -6,6 +6,31 @@ import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../_shared/carbon_action_surface.dart';
 
+const _carbonExpandableTileLayer = ContextToken(
+  _resolveCarbonExpandableTileLayer,
+);
+const _carbonExpandableTileHover = ContextToken(
+  _resolveCarbonExpandableTileHover,
+);
+const _carbonExpandableTileActive = ContextToken(
+  _resolveCarbonExpandableTileActive,
+);
+const _carbonExpandableTileBorder = ContextToken(
+  _resolveCarbonExpandableTileBorder,
+);
+
+Color _resolveCarbonExpandableTileLayer(BuildContext context) =>
+    CarbonLayer.of(context).color(.layer).resolve(context);
+
+Color _resolveCarbonExpandableTileHover(BuildContext context) =>
+    CarbonLayer.of(context).color(.layerHover).resolve(context);
+
+Color _resolveCarbonExpandableTileActive(BuildContext context) =>
+    CarbonLayer.of(context).color(.layerActive).resolve(context);
+
+Color _resolveCarbonExpandableTileBorder(BuildContext context) =>
+    CarbonLayer.of(context).color(.borderSubtle).resolve(context);
+
 CardStyler _carbonTileStyle(
   BuildContext context, {
   bool focused = false,
@@ -154,7 +179,7 @@ class CarbonSelectableTile extends StatelessWidget {
 }
 
 /// Carbon tile whose disclosure can be controlled or internally owned.
-class CarbonExpandableTile extends StatefulWidget {
+class CarbonExpandableTile extends StatelessWidget {
   const CarbonExpandableTile({
     super.key,
     required this.title,
@@ -163,6 +188,8 @@ class CarbonExpandableTile extends StatefulWidget {
     this.initiallyExpanded = false,
     this.onExpandedChanged,
     this.enabled = true,
+    this.focusNode,
+    this.autofocus = false,
     this.semanticLabel,
   });
 
@@ -172,102 +199,90 @@ class CarbonExpandableTile extends StatefulWidget {
   final bool initiallyExpanded;
   final ValueChanged<bool>? onExpandedChanged;
   final bool enabled;
+  final FocusNode? focusNode;
+  final bool autofocus;
   final String? semanticLabel;
 
   @override
-  State<CarbonExpandableTile> createState() => _CarbonExpandableTileState();
-}
-
-class _CarbonExpandableTileState extends State<CarbonExpandableTile> {
-  late bool _internalExpanded;
-
-  bool get _expanded => widget.expanded ?? _internalExpanded;
-
-  @override
-  void initState() {
-    super.initState();
-    _internalExpanded = widget.initiallyExpanded;
-  }
-
-  void _toggle() {
-    final next = !_expanded;
-    if (widget.expanded == null) setState(() => _internalExpanded = next);
-    widget.onExpandedChanged?.call(next);
-  }
-
-  @override
-  Widget build(BuildContext context) =>
-      _carbonTileStyle(context).padding(.all(0))(
-        child: Column(
-          mainAxisSize: .min,
-          crossAxisAlignment: .stretch,
-          children: [
-            CarbonActionSurface(
-              semanticLabel: widget.semanticLabel ?? widget.title,
-              expanded: _expanded,
-              enabled: widget.enabled,
-              onPressed: _toggle,
-              builder: (context, focused, hovered, pressed) => Box(
-                style: BoxStyler()
-                    .minHeight(64)
-                    .padding(.all(CarbonTokens.spacing05()))
-                    .color(
-                      pressed
-                          ? CarbonLayer.of(
-                              context,
-                            ).color(.layerActive).resolve(context)
-                          : hovered
-                          ? CarbonLayer.of(
-                              context,
-                            ).color(.layerHover).resolve(context)
-                          : const Color(0x00000000),
-                    )
-                    .border(
-                      BoxBorderMix.all(
-                        BorderSideMix(
-                          color: focused
-                              ? CarbonTokens.focus()
-                              : const Color(0x00000000),
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: ExcludeSemantics(
-                        child: StyledText(
-                          widget.title,
-                          style: TextStyler()
-                              .style(CarbonTokens.headingCompact01.mix())
-                              .color(CarbonTokens.textPrimary()),
-                        ),
-                      ),
-                    ),
-                    ExcludeSemantics(
-                      child: Icon(
-                        _expanded
-                            ? CarbonIcons.chevronUp
-                            : CarbonIcons.chevronDown,
-                        size: CarbonTokens.iconSize01.resolve(context),
-                        color: CarbonTokens.iconPrimary.resolve(context),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            if (_expanded)
-              Padding(
-                padding: .fromLTRB(
-                  CarbonTokens.spacing05.resolve(context),
-                  0,
-                  CarbonTokens.spacing05.resolve(context),
-                  CarbonTokens.spacing05.resolve(context),
-                ),
-                child: widget.child,
-              ),
-          ],
+  Widget build(BuildContext context) => RemixDisclosure(
+    trigger: ExcludeSemantics(
+      child: StyledText(
+        title,
+        style: TextStyler()
+            .style(CarbonTokens.headingCompact01.mix())
+            .color(CarbonTokens.textPrimary()),
+      ),
+    ),
+    triggerBuilder: (context, state, triggerChild) => Row(
+      children: [
+        Expanded(child: triggerChild!),
+        ExcludeSemantics(
+          child: StyledIcon(
+            icon: state.isExpanded
+                ? CarbonIcons.chevronUp
+                : CarbonIcons.chevronDown,
+            style: IconStyler()
+                .size(CarbonTokens.iconSize01())
+                .color(CarbonTokens.iconPrimary()),
+          ),
         ),
-      );
+      ],
+    ),
+    content: child,
+    expanded: expanded,
+    defaultExpanded: initiallyExpanded,
+    onExpandedChanged: onExpandedChanged,
+    enabled: enabled,
+    focusNode: focusNode,
+    autofocus: autofocus,
+    semanticLabel: semanticLabel ?? title,
+    style: carbonExpandableTileStyle(),
+  );
 }
+
+final DisclosureStyler _carbonExpandableTileStyle = DisclosureStyler()
+    .container(
+      BoxStyler()
+          .minHeight(64)
+          .color(_carbonExpandableTileLayer())
+          .border(
+            BoxBorderMix.all(
+              BorderSideMix(color: _carbonExpandableTileBorder(), width: 1),
+            ),
+          ),
+    )
+    .trigger(BoxStyler().minHeight(64).padding(.all(CarbonTokens.spacing05())))
+    .content(
+      BoxStyler().padding(
+        EdgeInsetsGeometryMix.fromLTRB(
+          CarbonTokens.spacing05(),
+          0,
+          CarbonTokens.spacing05(),
+          CarbonTokens.spacing05(),
+        ),
+      ),
+    )
+    .onHovered(
+      DisclosureStyler().trigger(
+        BoxStyler().color(_carbonExpandableTileHover()),
+      ),
+    )
+    .onPressed(
+      DisclosureStyler().trigger(
+        BoxStyler().color(_carbonExpandableTileActive()),
+      ),
+    )
+    .onFocusVisible(
+      DisclosureStyler().trigger(
+        BoxStyler().foregroundDecoration(
+          BoxDecorationMix(
+            border: BoxBorderMix.all(
+              BorderSideMix(color: CarbonTokens.focus(), width: 2),
+            ),
+          ),
+        ),
+      ),
+    );
+
+/// Carbon's token-backed visual recipe for [RemixDisclosure].
+DisclosureStyler carbonExpandableTileStyle() => _carbonExpandableTileStyle;

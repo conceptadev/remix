@@ -18,6 +18,12 @@ void main() {
       ),
     );
 
+    final menu = tester.widget<RemixMenu<String>>(
+      find.byType(RemixMenu<String>),
+    );
+    expect(menu.trigger.builder, isNotNull);
+    expect(find.byIcon(CarbonIcons.chevronDown), findsOneWidget);
+
     await tester.tap(find.textContaining('Create'));
     await tester.pump();
     await tester.tap(find.text('Folder'));

@@ -36,6 +36,7 @@ void main() {
           onPressed: () async {
             await showCarbonModal<String>(
               context: context,
+              barrierLabel: 'Dismiss modal',
               builder: (context) => CarbonModal(
                 title: 'Confirm',
                 actions: [

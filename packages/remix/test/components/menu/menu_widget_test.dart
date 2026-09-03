@@ -205,24 +205,6 @@ void main() {
       expect(find.byIcon(Icons.more_vert), findsOneWidget);
     });
 
-    testWidgets('renders a trailing icon after the trigger label', (
-      tester,
-    ) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          trigger: const RemixMenuTrigger(
-            label: 'Options',
-            trailingIcon: Icons.expand_more,
-          ),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.text('Options'), findsOneWidget);
-      expect(find.byIcon(Icons.expand_more), findsOneWidget);
-    });
-
     testWidgets('renders menu with multiple items', (tester) async {
       await tester.pumpRemixApp(
         RemixMenu<String>(
