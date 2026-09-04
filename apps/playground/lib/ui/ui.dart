@@ -22,6 +22,7 @@ export 'components/progress.dart';
 export 'components/radio.dart';
 export 'components/segmented_control.dart';
 export 'components/select.dart';
+export 'components/sidebar.dart';
 export 'components/skeleton.dart';
 export 'components/slider.dart';
 export 'components/spinner.dart';

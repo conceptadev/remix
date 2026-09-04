@@ -366,6 +366,23 @@ items:
     exports:
       - components/toggle_group.dart
 
+  sidebar:
+    registryDependencies:
+      - theme
+      - toggle
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/sidebar/sidebar.dart.tmpl
+        target: "@ui/components/sidebar.dart"
+    generated:
+      - "@ui/components/sidebar.g.dart"
+    exports:
+      - components/sidebar.dart
+
   accordion:
     registryDependencies:
       - theme

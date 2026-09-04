@@ -29,11 +29,12 @@ One `add` installs one item. The catalog is `theme`, the opt-in `icons` seam,
 the optional `chart` extension, plus `accordion`, `avatar`, `badge`, `button`,
 `callout`, `card`, `checkbox`, `data_list`, `data_table`, `dialog`,
 `disclosure`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
-`radio`, `segmented_control`, `select`, `skeleton`, `slider`, `spinner`,
-`switch`, `tabs`, `textfield`, `toggle`, `toggle_group`, and `tooltip`.
+`radio`, `segmented_control`, `select`, `sidebar`, `skeleton`, `slider`,
+`spinner`, `switch`, `tabs`, `textfield`, `toggle`, `toggle_group`, and
+`tooltip`.
 
 The `fortal` preset contains that complete surface plus `base_button`, `code`,
-`heading`, `kbd`, `sidebar`, `text`, and `typography`.
+`heading`, `kbd`, `text`, and `typography`.
 
 `chart` is the one optional extension outside the core Remix component
 surface. It builds directly on `mix_chart`, installs no Fortal code, and

@@ -914,9 +914,10 @@ Preserved lib/ui/components/button.g.dart.</code></pre>
 
   <details class="source-more">
   <summary>Special cases: dependency order, and the <code>icons</code> item</summary>
-  <p>Every component item depends on <code>theme</code>. Only <code>data_table</code> depends on
-  other components, because its selection column is a checkbox, its pager is a pair of icon buttons,
-  and its page-size control is a select. One command installs all four prerequisites, in order.</p>
+  <p>Every default component item depends on <code>theme</code>.
+  <code>data_table</code> also depends on <code>checkbox</code>, <code>icon_button</code>, and <code>select</code>.
+  <code>sidebar</code> depends on <code>toggle</code> for its destinations.
+  The CLI installs these dependencies before the requested component.</p>
 
 <figure class="term">
   <figcaption class="term-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-title">Preview the dependency order</span><button class="copy" type="button" data-done="0" aria-label="Copy to clipboard"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5v-1a1.6 1.6 0 0 0-1.6-1.6H4.1A1.6 1.6 0 0 0 2.5 4.5v4.8a1.6 1.6 0 0 0 1.6 1.6h1"/></svg><span aria-live="polite">Copy</span></button></figcaption>
@@ -1574,6 +1575,7 @@ Preserved theme.
       <tr><th scope="row" class="mono">radio</th><td data-label="Surface">AcmeRadio</td></tr>
       <tr><th scope="row" class="mono">segmented_control</th><td data-label="Surface">AcmeSegmentedControl</td></tr>
       <tr><th scope="row" class="mono">select</th><td data-label="Surface">AcmeSelect</td></tr>
+      <tr><th scope="row" class="mono">sidebar</th><td data-label="Surface">AcmeSidebar</td></tr>
       <tr><th scope="row" class="mono">skeleton</th><td data-label="Surface">AcmeSkeleton</td></tr>
       <tr><th scope="row" class="mono">slider</th><td data-label="Surface">AcmeSlider</td></tr>
       <tr><th scope="row" class="mono">spinner</th><td data-label="Surface">AcmeSpinner</td></tr>
