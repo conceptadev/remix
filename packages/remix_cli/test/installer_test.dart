@@ -194,6 +194,23 @@ void main() {
     },
   );
 
+  test('Flutter bootstrap output can precede the machine response', () async {
+    writeRequiredPubspec(root);
+    await Installer(
+      projectRoot: root,
+      writeOut: (_) {},
+      processRunner: happyRunner(
+        root,
+        flutterPreamble: 'Resolving dependencies...\n',
+      ),
+    ).add(const AddOptions(item: 'button', mode: AddMode.write));
+
+    expect(
+      File(p.join(root.path, 'lib/ui/components/button.g.dart')).existsSync(),
+      isTrue,
+    );
+  });
+
   for (final layout in const {
     'explicit': ['apps/consumer', 'packages/remix'],
     'glob': ['apps/*', 'packages/*'],
@@ -1056,12 +1073,13 @@ RecordingProcessRunner happyRunner(
   bool runRealGit = false,
   String? lockedRemix,
   String? failStage,
+  String flutterPreamble = '',
 }) => RecordingProcessRunner((invocation) async {
   if (invocation.executable == 'flutter' &&
       invocation.arguments.join(' ') == '--version --machine') {
     return ProcessOutput(
       exitCode: 0,
-      stdout: fakeFlutterMachineJson(root),
+      stdout: '$flutterPreamble${fakeFlutterMachineJson(root)}',
       stderr: '',
     );
   }

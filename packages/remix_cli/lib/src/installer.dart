@@ -372,7 +372,11 @@ final class Installer {
     );
     final Object? machine;
     try {
-      machine = jsonDecode(output.stdout);
+      // A fresh SDK can print dependency setup before its machine response.
+      final jsonStart = output.stdout.indexOf('{');
+      machine = jsonDecode(
+        jsonStart < 0 ? output.stdout : output.stdout.substring(jsonStart),
+      );
     } on FormatException catch (error) {
       throw FormatException(
         'flutter --version --machine returned invalid JSON: $error',

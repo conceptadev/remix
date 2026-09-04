@@ -5,6 +5,7 @@ import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/cli.dart';
 import 'package:remix_cli/src/installer.dart';
 import 'package:test/test.dart';
+import 'package:yaml/yaml.dart';
 
 import 'test_support.dart';
 
@@ -49,6 +50,14 @@ dependency_overrides:
 ''');
       await installer.add(
         const AddOptions(item: 'button', mode: AddMode.write),
+      );
+
+      final pubspec =
+          loadYaml(File(p.join(root.path, 'pubspec.yaml')).readAsStringSync())
+              as YamlMap;
+      expect(
+        (pubspec['dependencies'] as YamlMap)['remix'],
+        registryRemixConstraint,
       );
 
       final button = File(
