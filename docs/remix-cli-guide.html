@@ -407,7 +407,7 @@ th[scope="row"].mono{font-family:var(--mono);font-size:12.6px;font-weight:400}
     <li class="grp">The model</li>
     <li><a href="#model">What you own</a></li>
     <li><a href="#seam">The ownership seam</a></li>
-    <li><a href="#choose">Fortal or open code</a></li>
+    <li><a href="#choose">Choose a preset</a></li>
     <li class="grp">The path</li>
     <li><a href="#path">The six steps</a></li>
     <li><a href="#install"><span class="n">1</span>Install</a></li>
@@ -580,26 +580,26 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({
 
 <section class="sec" id="choose">
   <div class="sec-rule"><div>
-    <h2>Fortal or open code</h2>
-    <p class="sec-sub">One decision, made before you install. Both sit on the same Remix widgets.</p>
+    <h2>Choose a preset</h2>
+    <p class="sec-sub">One application-owned source tree, with the visual language chosen at initialization.</p>
   </div></div>
 
-  <p>Fortal is a Radix Themes-inspired preset theme and widget catalog, shipped as the
-  <code>remix_fortal</code> package. Open code is this CLI.</p>
+  <p>Open code includes the minimal default preset and the Radix Themes-inspired Fortal
+  preset. Both copy editable source into your application and build on the same Remix widgets.</p>
 
   <div class="tw stack"><table>
-    <thead><tr><th></th><th>Fortal</th><th>Open code</th></tr></thead>
+    <thead><tr><th></th><th>Default</th><th>Fortal</th></tr></thead>
     <tbody>
-      <tr><th scope="row">Appearance lives in</th><td data-label="Fortal">A package dependency</td><td data-label="Open code">Source files in your <code>lib/</code></td></tr>
-      <tr><th scope="row">Normal customization</th><td data-label="Fortal">Token and style overrides</td><td data-label="Open code">Edit the recipe</td></tr>
-      <tr><th scope="row">Behavioral foundation</th><td data-label="Fortal">Remix</td><td data-label="Open code">Remix</td></tr>
-      <tr><th scope="row">Updates</th><td data-label="Fortal"><code>flutter pub upgrade</code></td><td data-label="Open code">Review source with <code class="flag">--diff</code></td></tr>
-      <tr><th scope="row">Best fit</th><td data-label="Fortal">A ready-made system you do not intend to change</td><td data-label="Open code">A design system the application owns</td></tr>
+      <tr><th scope="row">Initialize</th><td data-label="Default"><code>remix init --prefix Acme</code></td><td data-label="Fortal"><code>remix init --prefix Acme --preset fortal</code></td></tr>
+      <tr><th scope="row">Visual direction</th><td data-label="Default">A compact foundation for your own system</td><td data-label="Fortal">A complete Radix-inspired token and recipe system</td></tr>
+      <tr><th scope="row">Appearance lives in</th><td data-label="Default">Source files in your <code>lib/</code></td><td data-label="Fortal">Source files in your <code>lib/</code></td></tr>
+      <tr><th scope="row">Behavioral foundation</th><td data-label="Default">Remix</td><td data-label="Fortal">Remix</td></tr>
+      <tr><th scope="row">Updates</th><td data-label="Default">Review source with <code class="flag">--diff</code></td><td data-label="Fortal">Review source with <code class="flag">--diff</code></td></tr>
     </tbody>
   </table></div>
 
-  <p>One app can use both. They are Remix widgets either way, so a Fortal screen and an open-code
-  screen can sit beside each other.</p>
+  <p>The preset is recorded in <code>remix.yaml</code> and cannot change after initialization.
+  Recipes from different presets do not mix because their tokens and variant vocabularies differ.</p>
 </section>
 
 <div class="part" role="separator" aria-label="The path"><span class="lbl">The path</span><p>Six steps, in order. Each one separates the command from the change it makes.</p></div>

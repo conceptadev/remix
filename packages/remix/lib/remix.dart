@@ -1,7 +1,7 @@
 /// Remix design system widgets and styles.
 ///
-/// Remix ships no theme. For a ready-made Radix Themes-inspired preset, add the
-/// companion `remix_fortal` package.
+/// Remix ships no theme. For a ready-made Radix Themes-inspired starting point,
+/// initialize the application-owned `fortal` preset with `remix_cli`.
 library remix;
 
 /// COMPONENTS

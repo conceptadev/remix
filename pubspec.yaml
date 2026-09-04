@@ -27,10 +27,11 @@ melos:
 
   # No `command.bootstrap.environment` here on purpose. It rewrites one
   # `environment:` into every package it manages, and this workspace has two
-  # legitimate floors: the published libraries ship code that runs on Mix's
-  # Flutter 3.41, while the dev toolchain (analyzer, via build_runner) needs
-  # meta 1.18 and therefore Flutter 3.44. Melos offers no per-package
-  # exemption, so a single managed value could only be wrong for one group.
+  # legitimate floors: published libraries and application-owned Fortal source
+  # run on Mix's Flutter 3.41, while the dev toolchain (analyzer, via
+  # build_runner) needs meta 1.18 and therefore Flutter 3.44. Melos offers no
+  # per-package exemption, so a single managed value could only be wrong for
+  # one group.
   # tool/check_toolchain.dart owns both floors and enforces them instead.
 
   command:
@@ -40,16 +41,17 @@ melos:
       workspaceChangelog: false
 
     bootstrap:
-      # Mix floors are managed here so `remix` and `remix_fortal` cannot drift
-      # apart. Unlike `environment` above, this is safe to manage centrally:
-      # melos skips any package that does not already declare the dependency
-      # (see `_updateDependencies` in melos), so the apps keep resolving Mix
-      # transitively and never gain a direct dependency.
+      # Mix floors are managed here so the Fortal authoring source is analyzed
+      # against the same runtime as Remix. Unlike `environment` above, this is
+      # safe to manage centrally: melos skips any package that does not already
+      # declare the dependency (see `_updateDependencies` in melos), so the
+      # apps keep resolving Mix transitively and never gain a direct dependency.
       #
       # Keep these at the versions actually exercised by CI. Declaring an older
       # floor than we test would claim support for a Mix we never build against.
-      # tool/check_consumer_mix.dart enforces the same equality for anyone who
-      # edits a pubspec without bootstrapping.
+      # tool/check_consumer_mix.dart verifies the hosted Remix consumer
+      # contract; Fortal registry generation copies its floors from the default
+      # registry rather than publishing this internal manifest.
       dependencies:
         # beta.5 is the floor, not a preference: mix_generator 2.2.0-beta.3
         # emits `implements StylerFieldMetadata`, and that symbol first ships
@@ -61,14 +63,10 @@ melos:
         mix_generator: ^2.2.0-beta.3
 
   scripts:
-    # No `release:*` versioning scripts here on purpose. They used to wrap
-    # `melos version --prerelease` / `--graduate`, both of which derive a
-    # version per package from that package's own commits — which is exactly
-    # the drift `version:align:check` now rejects. Run against this workspace
-    # they produce `remix 1.0.0-beta.5` and `remix_fortal 0.1.0-beta.4`.
-    #
-    # `.github/workflows/version.yml` is the only supported path: it takes one
-    # version and applies it to both packages with `-V`.
+    # No `release:*` versioning scripts here on purpose. The version workflow
+    # is the supported path for the published Remix package; remix_fortal is an
+    # internal authoring and parity package whose source derives the bundled
+    # Fortal preset, so release automation must not version it.
     generate:
       description: Regenerate Remix sources
       # remix_fortal's generator resolves package:remix, so it must not build
@@ -109,9 +107,7 @@ melos:
 
     version:align:check:
       run: dart run tool/check_version_alignment.dart
-      description: >-
-        Verify remix and remix_fortal carry the identical version and the
-        remix_cli registry floors at it
+      description: Verify the remix_cli registry floors at the Remix version
 
     mix:consumer:check:
       run: dart run tool/check_consumer_mix.dart
@@ -123,7 +119,7 @@ melos:
 
     material:check:
       run: dart run tool/check_material_independence.dart
-      description: Verify published Remix libraries contain no direct Material usage
+      description: Verify Remix and Fortal consumer sources contain no direct Material usage
 
     open-code:check:
       steps:

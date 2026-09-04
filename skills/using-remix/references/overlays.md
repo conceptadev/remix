@@ -1,6 +1,8 @@
 # Overlay Components
 
-Constructor details and host requirements for Remix dialogs, tooltips, and menus. Fortal widgets mentioned here live in the separate `remix_fortal` package; see [Fortal](fortal.md).
+Constructor details and host requirements for Remix dialogs, tooltips, and
+menus. Fortal widgets mentioned here come from the application-owned Fortal
+preset; see [Fortal](fortal.md).
 
 ## Table of Contents
 
