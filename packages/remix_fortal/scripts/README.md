@@ -20,7 +20,7 @@ radix_colors.generated.json          # checked in; excluded from the published a
         │
         │  generate_radix_colors.dart
         ▼
-lib/src/radix/colors/colors_generated.dart   # checked in; shipped
+lib/src/theme/radix_colors.dart   # checked in; shipped
 ```
 
 ### `extract_radix_tokens.dart`
@@ -44,7 +44,7 @@ The tarball URL and its integrity hash are recorded in
 ### `generate_radix_colors.dart`
 
 Renders `radix_colors.generated.json` into the Dart swatch table at
-`lib/src/radix/colors/colors_generated.dart`.
+`lib/src/theme/radix_colors.dart`.
 
 ```sh
 fvm dart run scripts/generate_radix_colors.dart

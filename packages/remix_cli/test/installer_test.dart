@@ -51,12 +51,33 @@ void main() {
 
   setUp(() async {
     root = createFlutterPackage();
-    await Installer(
-      projectRoot: root,
-      writeOut: (_) {},
-    ).initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'));
+    await Installer(projectRoot: root, writeOut: (_) {}).initialize(
+      const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+    );
   });
   tearDown(() => root.deleteSync(recursive: true));
+
+  test('add loads the registry selected by project configuration', () async {
+    File(p.join(root.path, 'remix.yaml')).writeAsStringSync('''schema: 2
+prefix: Ui
+preset: fortal
+paths:
+  ui: lib/ui
+''');
+    String? loadedPreset;
+    final installer = Installer(
+      projectRoot: root,
+      writeOut: (_) {},
+      registryLoader: (preset) async {
+        loadedPreset = preset;
+        return RegistryCatalog.loadBundled(preset: 'default');
+      },
+    );
+
+    await installer.add(const AddOptions(item: 'button', mode: AddMode.dryRun));
+
+    expect(loadedPreset, 'fortal');
+  });
 
   test(
     'new add installs Theme before Button and runs exact processes',
@@ -295,10 +316,9 @@ packages:
   ]
 }
 ''');
-        await Installer(
-          projectRoot: member,
-          writeOut: (_) {},
-        ).initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'));
+        await Installer(projectRoot: member, writeOut: (_) {}).initialize(
+          const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        );
 
         final installer = Installer(
           projectRoot: member,
@@ -500,17 +520,20 @@ packages:
       // the formatter would then rewrite the file the CLI just wrote — which
       // shows up for a consumer as an `add --diff` that never comes back
       // clean.
-      final catalog = await RegistryCatalog.loadBundled();
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
       final items = catalog.items.keys.where((name) => name != 'theme');
       expect(items, isNotEmpty);
 
       for (final item in items) {
         final caseRoot = createFlutterPackage();
         addTearDown(() => caseRoot.deleteSync(recursive: true));
-        await Installer(
-          projectRoot: caseRoot,
-          writeOut: (_) {},
-        ).initialize(const InitOptions(prefix: 'Playground', uiPath: 'lib/ui'));
+        await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+          const InitOptions(
+            prefix: 'Playground',
+            preset: 'default',
+            uiPath: 'lib/ui',
+          ),
+        );
         final remixUiIcons = item == 'icons' ? '0.1.0' : null;
         final mixChart = item == 'chart' ? '0.0.1-beta.1' : null;
         writeRequiredPubspec(
@@ -607,10 +630,9 @@ packages:
     for (final stage in ['build', 'analyze']) {
       final caseRoot = createFlutterPackage();
       addTearDown(() => caseRoot.deleteSync(recursive: true));
-      await Installer(
-        projectRoot: caseRoot,
-        writeOut: (_) {},
-      ).initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'));
+      await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+      );
       writeRequiredPubspec(caseRoot);
       writeRequiredLock(caseRoot);
 
@@ -681,10 +703,9 @@ packages:
       for (final declaration in declarations) {
         final caseRoot = createFlutterPackage();
         addTearDown(() => caseRoot.deleteSync(recursive: true));
-        await Installer(
-          projectRoot: caseRoot,
-          writeOut: (_) {},
-        ).initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'));
+        await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+          const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        );
         final pubspec = File(p.join(caseRoot.path, 'pubspec.yaml'))
           ..writeAsStringSync('''name: consumer
 environment:
@@ -757,6 +778,35 @@ dev_dependencies:
     },
   );
 
+  test('both presets reject resolved beta.7 before writing source', () async {
+    for (final preset in ['default', 'fortal']) {
+      final caseRoot = createFlutterPackage();
+      addTearDown(() => caseRoot.deleteSync(recursive: true));
+      await Installer(
+        projectRoot: caseRoot,
+        writeOut: (_) {},
+      ).initialize(InitOptions(prefix: 'Ui', preset: preset, uiPath: 'lib/ui'));
+      writeRequiredPubspec(caseRoot, remix: '^1.0.0-beta.7');
+      writeRequiredLock(caseRoot, remix: '1.0.0-beta.7');
+      final before = snapshotFiles(caseRoot);
+      final writer = RecordingFileWriter(caseRoot);
+
+      await expectLater(
+        Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+          processRunner: happyRunner(caseRoot, writeLockOnPubGet: false),
+          fileWriter: writer,
+        ).add(const AddOptions(item: 'accordion', mode: AddMode.write)),
+        throwsStateError,
+        reason: preset,
+      );
+
+      expect(writer.paths, isEmpty, reason: preset);
+      expect(snapshotFiles(caseRoot), before, reason: preset);
+    }
+  });
+
   test('a resolved remix above the snapshot floor prints a notice', () async {
     // The registry constraint is a caret, so a consumer reaches an untested
     // remix without ever failing lock verification. This line is the signal.
@@ -802,10 +852,9 @@ dev_dependencies:
       for (final runtime in ['remix', 'mix_annotations']) {
         final caseRoot = createFlutterPackage();
         addTearDown(() => caseRoot.deleteSync(recursive: true));
-        await Installer(
-          projectRoot: caseRoot,
-          writeOut: (_) {},
-        ).initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'));
+        await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+          const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        );
         File(p.join(caseRoot.path, 'pubspec.yaml')).writeAsStringSync(
           runtime == 'remix'
               ? '''name: consumer
@@ -872,10 +921,9 @@ dev_dependencies:
     () async {
       final caseRoot = createFlutterPackage();
       addTearDown(() => caseRoot.deleteSync(recursive: true));
-      await Installer(
-        projectRoot: caseRoot,
-        writeOut: (_) {},
-      ).initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'));
+      await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+      );
       File(p.join(caseRoot.path, 'pubspec.yaml')).writeAsStringSync('''
 name: consumer
 environment:

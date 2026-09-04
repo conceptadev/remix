@@ -1,0 +1,223 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'card.g.dart';
+
+/// Radix Themes Card size presets.
+enum {{typePrefix}}CardSize { size1, size2, size3, size4, size5 }
+
+/// Radix Themes Card variants.
+enum {{typePrefix}}CardVariant { surface, classic, ghost }
+
+/// {{typePrefix}}-themed Card with the Radix size and variant contract.
+@MixWidget(target: RemixCard.new)
+CardStyler {{valuePrefix}}CardStyle({
+  {{typePrefix}}CardVariant variant = .surface,
+  {{typePrefix}}CardSize size = .size1,
+  CardStyler style = const CardStyler.create(),
+}) {
+  final metrics = _{{valuePrefix}}CardMetrics(size);
+  final base = CardStyler()
+      .padding(.all(metrics.padding))
+      .borderRadius(.all(metrics.radius))
+      .clipBehavior(Clip.antiAlias)
+      .onFocusVisible(
+        .containerEffects(
+          RemixBoxEffectsMix(
+            outline: BorderSideMix(
+              color: {{typePrefix}}Tokens.focus8(),
+              width: 2,
+              strokeAlign: BorderSide.strokeAlignInside,
+            ),
+            outlineOffset: -1,
+          ),
+        ),
+      );
+
+  return (switch (variant) {
+    .surface => _{{valuePrefix}}CardSurface(base),
+    .classic => _{{valuePrefix}}CardClassic(base),
+    .ghost => _{{valuePrefix}}CardGhost(base, metrics.ghostMargin),
+  }).merge(style);
+}
+
+({double padding, double ghostMargin, Radius radius}) _{{valuePrefix}}CardMetrics(
+  {{typePrefix}}CardSize size,
+) => switch (size) {
+  .size1 => (
+    padding: {{typePrefix}}Tokens.space3(),
+    ghostMargin: {{typePrefix}}Tokens.cardGhostMargin1(),
+    radius: {{typePrefix}}Tokens.radius4(),
+  ),
+  .size2 => (
+    padding: {{typePrefix}}Tokens.space4(),
+    ghostMargin: {{typePrefix}}Tokens.cardGhostMargin2(),
+    radius: {{typePrefix}}Tokens.radius4(),
+  ),
+  .size3 => (
+    padding: {{typePrefix}}Tokens.space5(),
+    ghostMargin: {{typePrefix}}Tokens.cardGhostMargin3(),
+    radius: {{typePrefix}}Tokens.radius5(),
+  ),
+  .size4 => (
+    padding: {{typePrefix}}Tokens.space6(),
+    ghostMargin: {{typePrefix}}Tokens.cardGhostMargin4(),
+    radius: {{typePrefix}}Tokens.radius5(),
+  ),
+  .size5 => (
+    padding: {{typePrefix}}Tokens.space8(),
+    ghostMargin: {{typePrefix}}Tokens.cardGhostMargin5(),
+    radius: {{typePrefix}}Tokens.radius6(),
+  ),
+};
+
+CardStyler _{{valuePrefix}}CardSurface(CardStyler base) {
+  base = base.containerEffects(
+    RemixBoxEffectsMix.backdropBlur({{typePrefix}}Tokens.panelBlur()),
+  );
+  final open = CardStyler()
+      .containerEffects(RemixBoxEffectsMix.behindContent(_{{valuePrefix}}CardPanel()))
+      .containerEffects(
+        RemixBoxEffectsMix.overContent(
+          _{{valuePrefix}}CardSurfaceStroke({{typePrefix}}Tokens.grayStroke7()),
+        ),
+      );
+  final activeFocus = CardStyler()
+      .containerEffects(
+        RemixBoxEffectsMix.behindContent(_{{valuePrefix}}CardActiveFocus()),
+      )
+      .onSelected(open);
+  final pressed = CardStyler()
+      .containerEffects(
+        RemixBoxEffectsMix.overContent(
+          _{{valuePrefix}}CardSurfaceStroke({{typePrefix}}Tokens.grayStroke6()),
+        ),
+      )
+      .onFocusVisible(activeFocus)
+      .onSelected(open);
+
+  return base
+      .containerEffects(RemixBoxEffectsMix.behindContent(_{{valuePrefix}}CardPanel()))
+      .containerEffects(
+        RemixBoxEffectsMix.overContent(
+          _{{valuePrefix}}CardSurfaceStroke({{typePrefix}}Tokens.grayStroke5()),
+        ),
+      )
+      .onHovered(open)
+      .onPressed(pressed)
+      .onSelected(open.onPressed(open));
+}
+
+CardStyler _{{valuePrefix}}CardClassic(CardStyler base) {
+  base = base.containerEffects(
+    RemixBoxEffectsMix.backdropBlur({{typePrefix}}Tokens.panelBlur()),
+  );
+  final open = CardStyler()
+      .animate(AnimationConfig.ease(const Duration(milliseconds: 40)))
+      .containerEffects(
+        RemixBoxEffectsMix.behindContent(
+          _{{valuePrefix}}CardPanel(
+            shadowToken: {{typePrefix}}Tokens.cardClassicHoverOuterShadows,
+          ),
+        ),
+      )
+      .containerEffects(
+        RemixBoxEffectsMix.overContent(
+          RemixBoxEffectLayerMix(
+            shadowToken: {{typePrefix}}Tokens.cardClassicHoverInnerShadows,
+          ),
+        ),
+      );
+  final pressed = CardStyler()
+      .animate(AnimationConfig.ease(const Duration(milliseconds: 40)))
+      .containerEffects(
+        RemixBoxEffectsMix.behindContent(
+          RemixBoxEffectLayerMix(
+            shadowToken: {{typePrefix}}Tokens.cardClassicActiveOuterShadows,
+          ),
+        ),
+      )
+      .containerEffects(
+        RemixBoxEffectsMix.overContent(
+          RemixBoxEffectLayerMix(
+            shadowToken: {{typePrefix}}Tokens.cardClassicActiveInnerShadows,
+          ),
+        ),
+      )
+      .onFocusVisible(
+        .containerEffects(
+          RemixBoxEffectsMix.behindContent(_{{valuePrefix}}CardActiveFocus()),
+        ).onSelected(open),
+      )
+      .onSelected(open);
+
+  return base
+      .animate(AnimationConfig.ease(const Duration(milliseconds: 120)))
+      .containerEffects(
+        RemixBoxEffectsMix.behindContent(
+          _{{valuePrefix}}CardPanel(shadowToken: {{typePrefix}}Tokens.cardClassicOuterShadows),
+        ),
+      )
+      .containerEffects(
+        RemixBoxEffectsMix.overContent(
+          RemixBoxEffectLayerMix(
+            shadowToken: {{typePrefix}}Tokens.cardClassicInnerShadows,
+          ),
+        ),
+      )
+      .onHovered(open)
+      .onPressed(pressed)
+      .onSelected(open.onPressed(open));
+}
+
+CardStyler _{{valuePrefix}}CardGhost(CardStyler base, double ghostMargin) {
+  final focused = CardStyler().color({{typePrefix}}Tokens.accentA2());
+  final open = CardStyler()
+      .color({{typePrefix}}Tokens.grayA3())
+      .onFocusVisible(focused);
+  final pressed = CardStyler()
+      .color({{typePrefix}}Tokens.grayA4())
+      .onFocusVisible(focused)
+      .onSelected(open);
+
+  return base
+      .margin(.all(ghostMargin))
+      .color(const Color(0x00000000))
+      .onHovered(open)
+      .onPressed(pressed)
+      .onSelected(open.onPressed(open));
+}
+
+RemixBoxEffectLayerMix _{{valuePrefix}}CardPanel({
+  RemixBoxShadowListToken? shadowToken,
+}) => RemixBoxEffectLayerMix(
+  gradients: [
+    RemixLinearGradientMix(
+      colors: [{{typePrefix}}Tokens.colorPanel(), {{typePrefix}}Tokens.colorPanel()],
+    ),
+  ],
+  gradientInsets: const [1],
+  shadowToken: shadowToken,
+);
+
+RemixBoxEffectLayerMix _{{valuePrefix}}CardActiveFocus() => RemixBoxEffectLayerMix(
+  gradients: [
+    RemixLinearGradientMix(
+      colors: [{{typePrefix}}Tokens.accentA2(), {{typePrefix}}Tokens.accentA2()],
+    ),
+    RemixLinearGradientMix(
+      colors: [{{typePrefix}}Tokens.colorPanel(), {{typePrefix}}Tokens.colorPanel()],
+    ),
+  ],
+  gradientInsets: const [1, 1],
+);
+
+RemixBoxEffectLayerMix _{{valuePrefix}}CardSurfaceStroke(Color color) =>
+    RemixBoxEffectLayerMix(
+      shadows: [
+        RemixBoxShadowMix(color: color, spreadRadius: 1, shapeInset: 1),
+      ],
+    );

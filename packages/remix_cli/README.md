@@ -1,8 +1,10 @@
 # remix_cli
 
 `remix_cli` installs editable component source into a Flutter application.
-Remix remains the behavior dependency; the application owns its tokens, theme
-values, component recipes, and generated adapters.
+Choose the compact `default` preset or the Radix Themes-inspired `fortal`
+preset at initialization. Remix remains the behavior dependency; the
+application owns its tokens, theme values, component recipes, and generated
+adapters.
 
 The 0.1.0 catalog includes an opt-in `icons` seam and covers the core Remix
 component surface: `accordion`, `avatar`, `badge`, `button`, `callout`, `card`,
@@ -10,7 +12,9 @@ component surface: `accordion`, `avatar`, `badge`, `button`, `callout`, `card`,
 `icon_button`, `link`, `menu`, `popover`, `progress`, `radio`,
 `segmented_control`, `select`, `skeleton`, `slider`, `spinner`, `switch`,
 `tabs`, `textfield`, `toggle`, `toggle_group`, and `tooltip`, each depending on
-`theme`. `data_table` also depends on `checkbox`, `icon_button`, and `select`,
+`theme`. The Fortal preset contains the same surface plus `base_button`,
+`code`, `heading`, `kbd`, `sidebar`, `text`, and `typography`. `data_table`
+also depends on `checkbox`, `icon_button`, and `select`,
 because its selection column, pager, and page-size control are those
 components. The catalog also offers `chart` as an optional extension over
 `mix_chart`; it does not depend on `remix_fortal`. There is no remote registry,
@@ -26,7 +30,7 @@ pins the CLI version and its bundled templates:
 
 ```shell
 flutter pub add dev:remix_cli
-dart run remix_cli:remix init --prefix Acme
+dart run remix_cli:remix init --prefix Acme --preset fortal
 dart run remix_cli:remix add button
 ```
 
@@ -36,6 +40,18 @@ To run an unreleased build, point at a checkout or staged package path:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
+Both presets require Remix `^1.0.0-beta.8`. Before that release is available,
+add this `pubspec_overrides.yaml` to the application:
+
+```yaml
+dependency_overrides:
+  remix:
+    path: /path/to/remix/packages/remix
+```
+
+Replace the path with your checkout. Remove the override after beta.8 is
+published and run `flutter pub get` to use hosted Remix.
+
 Global activation is convenient for experiments, but it does not pin the
 template version per project:
 
@@ -43,8 +59,8 @@ template version per project:
 dart pub global activate remix_cli
 ```
 
-`remix_cli` is versioned independently of `remix` and `remix_fortal`, so its
-version never matches theirs. Its registry is authored against one `remix`
+`remix_cli` is versioned independently of `remix`, so its version does not
+match Remix's. Its registry is authored against one `remix`
 version; `add` reports when your resolved `remix` is newer than that one.
 
 ## Initialize a project
@@ -58,8 +74,9 @@ dart run remix_cli:remix init
 The default configuration is:
 
 ```yaml
-schema: 1
+schema: 2
 prefix: Ui
+preset: default
 paths:
   ui: lib/ui
 ```
@@ -67,12 +84,24 @@ paths:
 Customize it only at initialization:
 
 ```shell
-dart run remix_cli:remix init --prefix Acme --ui-path lib/design_system
+dart run remix_cli:remix init --prefix Acme --preset fortal --ui-path lib/design_system
 ```
 
 `init` validates the Flutter project, writes `remix.yaml`, and creates a barrel
 with a managed export block. Repeating the same command is safe. A different
 configuration is refused instead of silently rewriting an existing project.
+The preset defaults to `default` when omitted and cannot be changed after
+initialization.
+
+### Fortal as owned source
+
+With `preset: fortal`, `add button` installs the full local theme layer,
+`base_button.dart`, `button.dart`, and the generated adapter. The configured
+prefix replaces Fortal throughout: `--prefix Acme` creates `AcmeScope`,
+`AcmeTokens`, `AcmeButton`, and `acmeButtonStyle`. The installed application
+does not depend directly on `mix`, `naked_ui`, or `remix_fortal`; it can edit
+the Radix color data, tokens, recipes, and instance overrides as ordinary app
+source.
 
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 Use an application prefix such as `Ui` or `Acme`.

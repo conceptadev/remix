@@ -127,12 +127,13 @@ The recurring costs are visible:
 
 ## What remains outside this MVP
 
-Fortal stays unchanged. There is no general component marketplace, remote
-registry, automatic migration, source lockfile, or public-release automation
-for `remix_cli`.
+**Since 2026-09-04:** Fortal is available as a second application-owned preset.
+Its separate source tree, derivation contract, and publication transition are
+recorded in [Presets: Fortal as application-owned source](PRESETS.md). There is
+still no general component marketplace, remote registry, automatic migration,
+or source lockfile. The CLI now has a tag-based publish workflow with a
+hosted consumer check.
 
-The first public release has a separate gate: confirm the pub.dev package and
-publisher, add an isolated tag contract, verify bundled assets from a staged
-archive in a clean Pub cache, publish a prerelease, and repeat the flow from the
-hosted package. Until then, project-local checkout or staged-package use is the
-honest supported path.
+The first public release still requires package bootstrap and hosted CLI
+verification. Until then, use a checkout or staged package with checkout Remix.
+The [release instructions](RELEASING.md) define the order and required checks.

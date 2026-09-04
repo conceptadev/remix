@@ -1,0 +1,547 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+/// The Radix BaseButton size scale shared by Button and IconButton.
+///
+/// Deliberate: this mirrors [{{typePrefix}}BaseButtonVariant]. Button and IconButton
+/// each own a size enum, so the shared metrics need a common type — passing the
+/// raw `size.index + 1` instead would drop every switch below to a wildcard and
+/// defer an unknown size to a runtime throw.
+enum {{typePrefix}}BaseButtonSize { size1, size2, size3, size4 }
+
+/// Shared Radix BaseButton metrics used by Button and IconButton recipes.
+({
+  double height,
+  double paddingX,
+  double gap,
+  Radius radius,
+  TextStyleToken text,
+  double spinnerSize,
+})
+{{valuePrefix}}BaseButtonMetrics({{typePrefix}}BaseButtonSize size) => switch (size) {
+  .size1 => (
+    height: {{typePrefix}}Tokens.space5(),
+    paddingX: {{typePrefix}}Tokens.space2(),
+    gap: {{typePrefix}}Tokens.space1(),
+    radius: {{typePrefix}}Tokens.radius1OrFull(),
+    text: {{typePrefix}}Tokens.text1,
+    spinnerSize: {{typePrefix}}Tokens.space3(),
+  ),
+  .size2 => (
+    height: {{typePrefix}}Tokens.space6(),
+    paddingX: {{typePrefix}}Tokens.space3(),
+    gap: {{typePrefix}}Tokens.space2(),
+    radius: {{typePrefix}}Tokens.radius2OrFull(),
+    text: {{typePrefix}}Tokens.text2,
+    spinnerSize: {{typePrefix}}Tokens.space4(),
+  ),
+  .size3 => (
+    height: {{typePrefix}}Tokens.space7(),
+    paddingX: {{typePrefix}}Tokens.space4(),
+    gap: {{typePrefix}}Tokens.space3(),
+    radius: {{typePrefix}}Tokens.radius3OrFull(),
+    text: {{typePrefix}}Tokens.text3,
+    spinnerSize: {{typePrefix}}Tokens.space4(),
+  ),
+  .size4 => (
+    height: {{typePrefix}}Tokens.space8(),
+    paddingX: {{typePrefix}}Tokens.space5(),
+    gap: {{typePrefix}}Tokens.space3(),
+    radius: {{typePrefix}}Tokens.radius4OrFull(),
+    text: {{typePrefix}}Tokens.text4,
+    spinnerSize: {{typePrefix}}Tokens.spinnerSize3(),
+  ),
+};
+
+/// Content-box metrics for the ghost BaseButton variant.
+({double paddingX, double paddingY, double marginX, double marginY, double gap})
+{{valuePrefix}}BaseButtonGhostMetrics({{typePrefix}}BaseButtonSize size) => switch (size) {
+  .size1 => (
+    paddingX: {{typePrefix}}Tokens.space2(),
+    paddingY: {{typePrefix}}Tokens.space1(),
+    marginX: {{typePrefix}}Tokens.baseButtonGhostMarginX12(),
+    marginY: {{typePrefix}}Tokens.baseButtonGhostMarginY12(),
+    gap: {{typePrefix}}Tokens.space1(),
+  ),
+  .size2 => (
+    paddingX: {{typePrefix}}Tokens.space2(),
+    paddingY: {{typePrefix}}Tokens.space1(),
+    marginX: {{typePrefix}}Tokens.baseButtonGhostMarginX12(),
+    marginY: {{typePrefix}}Tokens.baseButtonGhostMarginY12(),
+    gap: {{typePrefix}}Tokens.space1(),
+  ),
+  .size3 => (
+    paddingX: {{typePrefix}}Tokens.space3(),
+    paddingY: {{typePrefix}}Tokens.baseButtonGhostPaddingY3(),
+    marginX: {{typePrefix}}Tokens.baseButtonGhostMarginX3(),
+    marginY: {{typePrefix}}Tokens.baseButtonGhostMarginY3(),
+    gap: {{typePrefix}}Tokens.space2(),
+  ),
+  .size4 => (
+    paddingX: {{typePrefix}}Tokens.space4(),
+    paddingY: {{typePrefix}}Tokens.space2(),
+    marginX: {{typePrefix}}Tokens.baseButtonGhostMarginX4(),
+    marginY: {{typePrefix}}Tokens.baseButtonGhostMarginY4(),
+    gap: {{typePrefix}}Tokens.space2(),
+  ),
+};
+
+/// Content-box metrics for the ghost IconButton variant.
+({double padding, double margin}) {{valuePrefix}}IconButtonGhostMetrics(
+  {{typePrefix}}BaseButtonSize size,
+) => switch (size) {
+  .size1 => (
+    padding: {{typePrefix}}Tokens.space1(),
+    margin: {{typePrefix}}Tokens.iconButtonGhostMargin1(),
+  ),
+  .size2 => (
+    padding: {{typePrefix}}Tokens.iconButtonGhostPadding2(),
+    margin: {{typePrefix}}Tokens.iconButtonGhostMargin2(),
+  ),
+  .size3 => (
+    padding: {{typePrefix}}Tokens.space2(),
+    margin: {{typePrefix}}Tokens.iconButtonGhostMargin3(),
+  ),
+  .size4 => (
+    padding: {{typePrefix}}Tokens.space3(),
+    margin: {{typePrefix}}Tokens.iconButtonGhostMargin4(),
+  ),
+};
+
+/// Resolves a mode-aware ordered CSS filter at the component build context.
+WidgetModifierConfig {{valuePrefix}}ModeAwareFilter({
+  required List<RemixCssColorFilterOperation> light,
+  required List<RemixCssColorFilterOperation> dark,
+}) => WidgetModifierConfig.modifier(
+  _{{typePrefix}}ModeAwareFilterMix(light: light, dark: dark),
+);
+
+/// Explicit identity filter used to clear a higher-priority state filter.
+WidgetModifierConfig {{valuePrefix}}ClearFilter() =>
+    {{valuePrefix}}ModeAwareFilter(light: const [], dark: const []);
+
+/// Exact classic BaseButton surface for a visual state.
+RemixBoxEffectLayerMix {{valuePrefix}}ClassicBaseButtonSurface({
+  required bool highContrast,
+  bool hovered = false,
+  bool pressed = false,
+  bool disabled = false,
+}) {
+  final inset = {{typePrefix}}Tokens.baseButtonClassicAfterInset();
+  if (disabled) {
+    return RemixBoxEffectLayerMix(
+      gradients: [
+        RemixLinearGradientMix(
+          colors: [
+            {{typePrefix}}Tokens.blackA1(),
+            const Color(0x00000000),
+            {{typePrefix}}Tokens.whiteA1(),
+          ],
+          stops: const [-0.2, 0.4, 1],
+        ),
+        RemixLinearGradientMix(
+          colors: [{{typePrefix}}Tokens.grayA2(), {{typePrefix}}Tokens.grayA2()],
+        ),
+      ],
+      gradientInsets: [inset, inset],
+      shadowToken: {{typePrefix}}Tokens.baseButtonClassicDisabledShadows,
+    );
+  }
+
+  final baseColor = highContrast
+      ? {{typePrefix}}Tokens.accent12()
+      : {{typePrefix}}Tokens.accent9();
+  final afterColor = hovered && !highContrast
+      ? {{typePrefix}}Tokens.accent10()
+      : baseColor;
+  final pseudoGradient = RemixLinearGradientMix(
+    colors: [
+      highContrast
+          ? hovered || pressed
+                ? {{typePrefix}}Tokens.blackA5()
+                : {{typePrefix}}Tokens.blackA3()
+          : hovered
+          ? {{typePrefix}}Tokens.blackA2()
+          : pressed
+          ? {{typePrefix}}Tokens.blackA2()
+          : {{typePrefix}}Tokens.blackA1(),
+      const Color(0x00000000),
+      highContrast
+          ? pressed
+                ? {{typePrefix}}Tokens.whiteA3()
+                : {{typePrefix}}Tokens.whiteA2()
+          : hovered || pressed
+          ? {{typePrefix}}Tokens.whiteA3()
+          : {{typePrefix}}Tokens.whiteA2(),
+    ],
+    stops: hovered && !highContrast
+        ? const [-0.15, 0.425, 1]
+        : const [0, 0.5, 1],
+  );
+  final gradients = <RemixLinearGradientMix>[
+    pseudoGradient,
+    RemixLinearGradientMix(colors: [afterColor, afterColor]),
+    if (pressed)
+      RemixLinearGradientMix(
+        colors: [{{typePrefix}}Tokens.blackA1(), const Color(0x00000000)],
+      )
+    else ...[
+      RemixLinearGradientMix(
+        colors: [
+          const Color(0x00000000),
+          const Color(0x00000000),
+          {{typePrefix}}Tokens.grayA4(),
+          {{typePrefix}}Tokens.grayA4(),
+        ],
+        stops: const [0, 0.5, 0.5, 1],
+      ),
+      RemixLinearGradientMix(
+        colors: [
+          const Color(0x00000000),
+          const Color(0x00000000),
+          baseColor,
+          baseColor,
+        ],
+        stops: const [0, 0.5, 0.8, 1],
+      ),
+    ],
+  ];
+  return RemixBoxEffectLayerMix(
+    gradients: gradients,
+    gradientInsets: [inset, inset, ...List.filled(gradients.length - 2, 0)],
+    shadowToken: pressed
+        ? highContrast
+              ? {{typePrefix}}Tokens.baseButtonClassicActiveHighContrastShadows
+              : {{typePrefix}}Tokens.baseButtonClassicActiveShadows
+        : highContrast
+        ? {{typePrefix}}Tokens.baseButtonClassicHighContrastShadows
+        : {{typePrefix}}Tokens.baseButtonClassicShadows,
+  );
+}
+
+final class _{{typePrefix}}ModeAwareFilterMix
+    extends ModifierMix<RemixOrderedColorFilterModifier> {
+  const _{{typePrefix}}ModeAwareFilterMix({required this.light, required this.dark});
+
+  final List<RemixCssColorFilterOperation> light;
+  final List<RemixCssColorFilterOperation> dark;
+
+  @override
+  RemixOrderedColorFilterModifier resolve(BuildContext context) =>
+      RemixOrderedColorFilterModifier(
+        {{typePrefix}}Theme.of(context).isDark ? dark : light,
+      );
+
+  @override
+  _{{typePrefix}}ModeAwareFilterMix merge(_{{typePrefix}}ModeAwareFilterMix? other) =>
+      other ?? this;
+
+  @override
+  List<Object?> get props => [light, dark];
+}
+
+/// Shared Radix BaseButton variants implemented by Button and IconButton.
+enum {{typePrefix}}BaseButtonVariant { classic, solid, soft, surface, outline, ghost }
+
+/// One visual-state style fragment from the shared BaseButton recipe.
+final class {{typePrefix}}BaseButtonStateStyle {
+  const {{typePrefix}}BaseButtonStateStyle({
+    this.foreground,
+    this.background,
+    this.effects,
+    this.modifier,
+    this.spinnerOpacity,
+  });
+
+  final Color? foreground;
+  final Color? background;
+  final RemixBoxEffectsMix? effects;
+  final WidgetModifierConfig? modifier;
+  final double? spinnerOpacity;
+}
+
+/// Visual state styles shared by the concrete Button and IconButton stylers.
+final class {{typePrefix}}BaseButtonStateStyles {
+  const {{typePrefix}}BaseButtonStateStyles({
+    required this.idle,
+    required this.hovered,
+    required this.pressed,
+    required this.disabled,
+    required this.focusVisible,
+    required this.disabledFocus,
+  });
+
+  final {{typePrefix}}BaseButtonStateStyle idle;
+  final {{typePrefix}}BaseButtonStateStyle hovered;
+  final {{typePrefix}}BaseButtonStateStyle pressed;
+  final {{typePrefix}}BaseButtonStateStyle disabled;
+  final {{typePrefix}}BaseButtonStateStyle focusVisible;
+  final {{typePrefix}}BaseButtonStateStyle disabledFocus;
+}
+
+{{typePrefix}}BaseButtonStateStyles {{valuePrefix}}BaseButtonStateStyles({
+  required {{typePrefix}}BaseButtonVariant variant,
+  required bool highContrast,
+}) {
+  final states = switch (variant) {
+    .classic => _classicStateStyles(highContrast: highContrast),
+    .solid => _solidStateStyles(highContrast: highContrast),
+    .soft => _softStateStyles(highContrast: highContrast),
+    .surface => _surfaceStateStyles(highContrast: highContrast),
+    .outline => _outlineStateStyles(highContrast: highContrast),
+    .ghost => _ghostStateStyles(highContrast: highContrast),
+  };
+  final focusColor = switch (variant) {
+    .soft => {{typePrefix}}Tokens.accent8(),
+    .classic ||
+    .solid ||
+    .surface ||
+    .outline ||
+    .ghost => {{typePrefix}}Tokens.focus8(),
+  };
+  final focusOffset = switch (variant) {
+    .classic || .solid => 2.0,
+    .soft || .surface || .outline || .ghost => -1.0,
+  };
+
+  return {{typePrefix}}BaseButtonStateStyles(
+    idle: states.idle,
+    hovered: states.hovered,
+    pressed: states.pressed,
+    disabled: states.disabled,
+    focusVisible: {{typePrefix}}BaseButtonStateStyle(
+      effects: {{valuePrefix}}FocusOutline(focusColor, offset: focusOffset),
+    ),
+    disabledFocus: {{typePrefix}}BaseButtonStateStyle(
+      effects: RemixBoxEffectsMix.outline(
+        BorderSideMix(style: BorderStyle.none),
+      ),
+    ),
+  );
+}
+
+typedef _InteractionStateStyles = ({
+  {{typePrefix}}BaseButtonStateStyle idle,
+  {{typePrefix}}BaseButtonStateStyle hovered,
+  {{typePrefix}}BaseButtonStateStyle pressed,
+  {{typePrefix}}BaseButtonStateStyle disabled,
+});
+
+_InteractionStateStyles _classicStateStyles({required bool highContrast}) {
+  final foreground = highContrast
+      ? {{typePrefix}}Tokens.gray1()
+      : {{typePrefix}}Tokens.accentContrast();
+
+  return (
+    idle: {{typePrefix}}BaseButtonStateStyle(
+      foreground: foreground,
+      background: highContrast
+          ? {{typePrefix}}Tokens.accent12()
+          : {{typePrefix}}Tokens.accent9(),
+      effects: RemixBoxEffectsMix.behindContent(
+        {{valuePrefix}}ClassicBaseButtonSurface(highContrast: highContrast),
+      ),
+    ),
+    hovered: {{typePrefix}}BaseButtonStateStyle(
+      effects: RemixBoxEffectsMix.behindContent(
+        {{valuePrefix}}ClassicBaseButtonSurface(
+          highContrast: highContrast,
+          hovered: true,
+        ),
+      ),
+      modifier: _hoverFilter(highContrast, classic: true),
+    ),
+    pressed: {{typePrefix}}BaseButtonStateStyle(
+      effects: RemixBoxEffectsMix.behindContent(
+        {{valuePrefix}}ClassicBaseButtonSurface(
+          highContrast: highContrast,
+          pressed: true,
+        ),
+      ),
+      modifier: _pressedFilter(highContrast),
+    ),
+    disabled: {{typePrefix}}BaseButtonStateStyle(
+      foreground: {{typePrefix}}Tokens.grayA8(),
+      background: {{typePrefix}}Tokens.gray2(),
+      effects: RemixBoxEffectsMix.behindContent(
+        {{valuePrefix}}ClassicBaseButtonSurface(highContrast: false, disabled: true),
+      ),
+      spinnerOpacity: 1,
+      modifier: {{valuePrefix}}ClearFilter(),
+    ),
+  );
+}
+
+_InteractionStateStyles _solidStateStyles({required bool highContrast}) {
+  final foreground = highContrast
+      ? {{typePrefix}}Tokens.gray1()
+      : {{typePrefix}}Tokens.accentContrast();
+
+  return (
+    idle: {{typePrefix}}BaseButtonStateStyle(
+      foreground: foreground,
+      background: highContrast
+          ? {{typePrefix}}Tokens.accent12()
+          : {{typePrefix}}Tokens.accent9(),
+    ),
+    hovered: {{typePrefix}}BaseButtonStateStyle(
+      background: highContrast
+          ? {{typePrefix}}Tokens.accent12()
+          : {{typePrefix}}Tokens.accent10(),
+      modifier: _hoverFilter(highContrast, classic: false),
+    ),
+    pressed: {{typePrefix}}BaseButtonStateStyle(
+      background: highContrast
+          ? {{typePrefix}}Tokens.accent12()
+          : {{typePrefix}}Tokens.accent10(),
+      modifier: _pressedFilter(highContrast),
+    ),
+    disabled: {{typePrefix}}BaseButtonStateStyle(
+      foreground: {{typePrefix}}Tokens.grayA8(),
+      background: {{typePrefix}}Tokens.grayA3(),
+      spinnerOpacity: 1,
+      modifier: {{valuePrefix}}ClearFilter(),
+    ),
+  );
+}
+
+_InteractionStateStyles _softStateStyles({required bool highContrast}) => (
+  idle: {{typePrefix}}BaseButtonStateStyle(
+    foreground: highContrast
+        ? {{typePrefix}}Tokens.accent12()
+        : {{typePrefix}}Tokens.accentA11(),
+    background: {{typePrefix}}Tokens.accentA3(),
+  ),
+  hovered: {{typePrefix}}BaseButtonStateStyle(background: {{typePrefix}}Tokens.accentA4()),
+  pressed: {{typePrefix}}BaseButtonStateStyle(background: {{typePrefix}}Tokens.accentA5()),
+  disabled: {{typePrefix}}BaseButtonStateStyle(
+    foreground: {{typePrefix}}Tokens.grayA8(),
+    background: {{typePrefix}}Tokens.grayA3(),
+    spinnerOpacity: 1,
+  ),
+);
+
+_InteractionStateStyles _surfaceStateStyles({required bool highContrast}) => (
+  idle: {{typePrefix}}BaseButtonStateStyle(
+    foreground: highContrast
+        ? {{typePrefix}}Tokens.accent12()
+        : {{typePrefix}}Tokens.accentA11(),
+    background: {{typePrefix}}Tokens.accentSurface(),
+    effects: RemixBoxEffectsMix.behindContent(
+      {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA7()]),
+    ),
+  ),
+  hovered: {{typePrefix}}BaseButtonStateStyle(
+    background: {{typePrefix}}Tokens.accentSurface(),
+    effects: RemixBoxEffectsMix.behindContent(
+      {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA8()]),
+    ),
+  ),
+  pressed: {{typePrefix}}BaseButtonStateStyle(
+    background: {{typePrefix}}Tokens.accentA3(),
+    effects: RemixBoxEffectsMix.behindContent(
+      {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA8()]),
+    ),
+  ),
+  disabled: {{typePrefix}}BaseButtonStateStyle(
+    foreground: {{typePrefix}}Tokens.grayA8(),
+    background: {{typePrefix}}Tokens.grayA2(),
+    effects: RemixBoxEffectsMix.behindContent(
+      {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA6()]),
+    ),
+    spinnerOpacity: 1,
+  ),
+);
+
+_InteractionStateStyles _outlineStateStyles({required bool highContrast}) {
+  final strokes = highContrast
+      ? [{{typePrefix}}Tokens.accentA7(), {{typePrefix}}Tokens.grayA11()]
+      : [{{typePrefix}}Tokens.accentA8()];
+  final effects = RemixBoxEffectsMix.behindContent(
+    {{valuePrefix}}InsetSurface(strokes: strokes),
+  );
+
+  return (
+    idle: {{typePrefix}}BaseButtonStateStyle(
+      foreground: highContrast
+          ? {{typePrefix}}Tokens.accent12()
+          : {{typePrefix}}Tokens.accentA11(),
+      effects: effects,
+    ),
+    hovered: {{typePrefix}}BaseButtonStateStyle(
+      background: {{typePrefix}}Tokens.accentA2(),
+      effects: effects,
+    ),
+    pressed: {{typePrefix}}BaseButtonStateStyle(
+      background: {{typePrefix}}Tokens.accentA3(),
+      effects: effects,
+    ),
+    disabled: {{typePrefix}}BaseButtonStateStyle(
+      foreground: {{typePrefix}}Tokens.grayA8(),
+      background: const Color(0x00000000),
+      effects: RemixBoxEffectsMix.behindContent(
+        {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA7()]),
+      ),
+      spinnerOpacity: 1,
+    ),
+  );
+}
+
+_InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
+  idle: {{typePrefix}}BaseButtonStateStyle(
+    foreground: highContrast
+        ? {{typePrefix}}Tokens.accent12()
+        : {{typePrefix}}Tokens.accentA11(),
+    background: const Color(0x00000000),
+  ),
+  hovered: {{typePrefix}}BaseButtonStateStyle(background: {{typePrefix}}Tokens.accentA3()),
+  pressed: {{typePrefix}}BaseButtonStateStyle(background: {{typePrefix}}Tokens.accentA4()),
+  disabled: {{typePrefix}}BaseButtonStateStyle(
+    foreground: {{typePrefix}}Tokens.grayA8(),
+    background: const Color(0x00000000),
+    spinnerOpacity: 1,
+  ),
+);
+
+WidgetModifierConfig _hoverFilter(bool highContrast, {required bool classic}) {
+  if (!highContrast) return {{valuePrefix}}ClearFilter();
+
+  return {{valuePrefix}}ModeAwareFilter(
+    light: const [
+      RemixCssColorFilterOperation.contrast(0.88),
+      RemixCssColorFilterOperation.saturate(1.1),
+      RemixCssColorFilterOperation.brightness(1.1),
+    ],
+    dark: [
+      const RemixCssColorFilterOperation.contrast(0.88),
+      const RemixCssColorFilterOperation.saturate(1.3),
+      RemixCssColorFilterOperation.brightness(classic ? 1.14 : 1.18),
+    ],
+  );
+}
+
+WidgetModifierConfig _pressedFilter(bool highContrast) {
+  if (highContrast) {
+    return {{valuePrefix}}ModeAwareFilter(
+      light: const [
+        RemixCssColorFilterOperation.contrast(0.82),
+        RemixCssColorFilterOperation.saturate(1.2),
+        RemixCssColorFilterOperation.brightness(1.16),
+      ],
+      dark: const [
+        RemixCssColorFilterOperation.brightness(0.95),
+        RemixCssColorFilterOperation.saturate(1.2),
+      ],
+    );
+  }
+
+  return {{valuePrefix}}ModeAwareFilter(
+    light: const [
+      RemixCssColorFilterOperation.brightness(0.92),
+      RemixCssColorFilterOperation.saturate(1.1),
+    ],
+    dark: const [RemixCssColorFilterOperation.brightness(1.08)],
+  );
+}

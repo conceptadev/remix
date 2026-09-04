@@ -15,10 +15,75 @@ void main() {
     if (sandbox.existsSync()) sandbox.deleteSync(recursive: true);
   });
 
+  group('consumer source selection', () {
+    test('the default retains hosted and checkout validation', () {
+      final options = checker.parseConsumerCheckOptions([])!;
+
+      expect(options.source, checker.RemixSource.both);
+      expect(options.preset, 'default');
+      expect(options.keep, isFalse);
+      expect(options.hostedCli, isFalse);
+    });
+
+    test('either preset can select an explicit source', () {
+      for (final preset in ['default', 'fortal']) {
+        for (final source in checker.RemixSource.values) {
+          final options = checker.parseConsumerCheckOptions([
+            '--preset',
+            preset,
+            '--source',
+            source.name,
+            '--keep',
+          ])!;
+
+          expect(options.source, source);
+          expect(options.preset, preset);
+          expect(options.keep, isTrue);
+        }
+      }
+    });
+
+    test('invalid or repeated source choices fail instead of falling back', () {
+      for (final arguments in [
+        ['--source'],
+        ['--source', 'missing'],
+        ['--source', 'hosted', '--source', 'checkout'],
+        ['--preset', 'fortal', '--source', 'missing'],
+        ['--hosted-cli'],
+        ['--source', 'checkout', '--hosted-cli'],
+        ['--source', 'hosted', '--hosted-cli', '--hosted-cli'],
+      ]) {
+        expect(checker.parseConsumerCheckOptions(arguments), isNull);
+      }
+    });
+
+    test('hosted CLI validation requires an explicit hosted Remix source', () {
+      final options = checker.parseConsumerCheckOptions([
+        '--hosted-cli',
+        '--source',
+        'hosted',
+        '--preset',
+        'fortal',
+      ])!;
+
+      expect(options.hostedCli, isTrue);
+      expect(options.source, checker.RemixSource.hosted);
+      expect(options.preset, 'fortal');
+    });
+  });
+
   test('the committed fixture is the minimal pre-install contract', () {
     final fixture = Directory('${Directory.current.path}/open_code/fixture');
 
     expect(checker.fixtureContractProblem(fixture), isNull);
+  });
+
+  test('the Fortal fixture is also an isolated pre-install contract', () {
+    final fixture = Directory(
+      '${Directory.current.path}/open_code/fortal_fixture',
+    );
+
+    expect(checker.fixtureContractProblem(fixture, preset: 'fortal'), isNull);
   });
 
   group('registry coverage', () {
@@ -26,10 +91,17 @@ void main() {
       expect(checker.registryCoverageProblem(Directory.current), isNull);
     });
 
+    test('the Fortal catalog and the checker agree', () {
+      expect(
+        checker.registryCoverageProblem(Directory.current, preset: 'fortal'),
+        isNull,
+      );
+    });
+
     test('an item the checker never installs is reported', () {
       final root = Directory('${sandbox.path}/repo');
       final registry = File(
-        '${root.path}/packages/remix_cli/lib/src/registry/registry.yaml',
+        '${root.path}/packages/remix_cli/lib/src/registry/default/registry.yaml',
       );
       registry.parent.createSync(recursive: true);
       registry.writeAsStringSync('''

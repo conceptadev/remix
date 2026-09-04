@@ -77,12 +77,12 @@ class AvatarExample extends StatelessWidget {
 
 ## Fortal widgets
 
-Remix includes a Fortal-themed widget for this component:
+The application-owned Fortal preset provides a themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class FortalAvatarExample extends StatelessWidget {
   const FortalAvatarExample({super.key});
@@ -111,7 +111,7 @@ class FortalAvatarExample extends StatelessWidget {
 
 <Info>
   Set `fallbackLength: 2` for two-character labels so the generated widget uses
-  the pinned two-initial typography. See the [fortalAvatarStyle source code](https://github.com/btwld/remix/blob/main/packages/remix_fortal/lib/src/recipes/avatar.dart) for all available options.
+  the pinned two-initial typography. See the [fortalAvatarStyle source code](https://github.com/btwld/remix/blob/main/packages/remix_fortal/lib/src/components/avatar.dart) for all available options.
 </Info>
 
 ## Constructor

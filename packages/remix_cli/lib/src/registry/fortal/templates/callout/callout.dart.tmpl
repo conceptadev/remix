@@ -1,0 +1,86 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'callout.g.dart';
+
+/// Radix Themes Callout size presets.
+enum {{typePrefix}}CalloutSize { size1, size2, size3 }
+
+/// Radix Themes Callout variants.
+enum {{typePrefix}}CalloutVariant { soft, surface, outline }
+
+/// {{typePrefix}}-themed Callout with the Radix size, variant, and override contract.
+@MixWidget(target: RemixCallout.new)
+CalloutStyler {{valuePrefix}}CalloutStyle({
+  {{typePrefix}}CalloutVariant variant = .soft,
+  {{typePrefix}}CalloutSize size = .size2,
+  bool highContrast = false,
+  CalloutStyler style = const CalloutStyler.create(),
+}) {
+  final contentColor = highContrast
+      ? {{typePrefix}}Tokens.accent12()
+      : {{typePrefix}}Tokens.accentA11();
+  final base = _{{valuePrefix}}CalloutBaseStyler(
+    size,
+  ).iconColor(contentColor).textColor(contentColor);
+  return (switch (variant) {
+    .soft => base.color({{typePrefix}}Tokens.accentA3()),
+    .surface =>
+      base
+          .color({{typePrefix}}Tokens.accentA2())
+          .containerEffects(
+            RemixBoxEffectsMix.behindContent(
+              {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA6()]),
+            ),
+          ),
+    .outline => base.containerEffects(
+      RemixBoxEffectsMix.behindContent(
+        {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA7()]),
+      ),
+    ),
+  }).merge(style);
+}
+
+CalloutStyler _{{valuePrefix}}CalloutBaseStyler({{typePrefix}}CalloutSize size) {
+  final radius = _{{valuePrefix}}CalloutRadius(size);
+  return CalloutStyler(
+    container: .direction(.horizontal)
+        .mainAxisSize(.min)
+        .crossAxisAlignment(.start)
+        .spacing(_{{valuePrefix}}CalloutGap(size))
+        .padding(EdgeInsetsGeometryMix.all(_{{valuePrefix}}CalloutPadding(size))),
+    text: .style(_{{valuePrefix}}CalloutText(size).mix()),
+    icon: .size(_{{valuePrefix}}CalloutIconSize(size)),
+  ).borderRadius(.all(radius));
+}
+
+double _{{valuePrefix}}CalloutPadding({{typePrefix}}CalloutSize size) => switch (size) {
+  .size1 => {{typePrefix}}Tokens.space3(),
+  .size2 => {{typePrefix}}Tokens.space4(),
+  .size3 => {{typePrefix}}Tokens.space5(),
+};
+
+double _{{valuePrefix}}CalloutGap({{typePrefix}}CalloutSize size) => switch (size) {
+  .size1 => {{typePrefix}}Tokens.space2(),
+  .size2 => {{typePrefix}}Tokens.space3(),
+  .size3 => {{typePrefix}}Tokens.space4(),
+};
+
+TextStyleToken _{{valuePrefix}}CalloutText({{typePrefix}}CalloutSize size) => switch (size) {
+  .size1 || .size2 => {{typePrefix}}Tokens.text2,
+  .size3 => {{typePrefix}}Tokens.text3,
+};
+
+double _{{valuePrefix}}CalloutIconSize({{typePrefix}}CalloutSize size) => switch (size) {
+  .size1 || .size2 => {{typePrefix}}Tokens.space4(),
+  .size3 => {{typePrefix}}Tokens.spinnerSize3(),
+};
+
+Radius _{{valuePrefix}}CalloutRadius({{typePrefix}}CalloutSize size) => switch (size) {
+  .size1 => {{typePrefix}}Tokens.radius3(),
+  .size2 => {{typePrefix}}Tokens.radius4(),
+  .size3 => {{typePrefix}}Tokens.radius5(),
+};

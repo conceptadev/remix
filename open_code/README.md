@@ -4,10 +4,12 @@ This example is installed by `remix_cli`. It gives an application editable
 theme and component source while Remix continues to own rendering, interaction,
 focus, loading, disabled behavior, and accessibility.
 
-The registry source lives in `packages/remix_cli/lib/src/registry/`. There is
-no second copy under `open_code/`. The files in `open_code/fixture/` are a
-fresh-app gallery, behavioral test suite, and expected generated adapter used
-by `tool/check_open_code.dart`.
+The two registry trees live in
+`packages/remix_cli/lib/src/registry/default/` and
+`packages/remix_cli/lib/src/registry/fortal/`. There is no second registry copy
+under `open_code/`. `open_code/fixture/` proves the default preset, while
+`open_code/fortal_fixture/` proves Fortal with every generated widget and
+known Radix Themes 3.3.0 color values.
 
 ## Install the CLI in a project
 
@@ -19,7 +21,7 @@ the CLI version and its bundled templates:
 
 ```shell
 flutter pub add dev:remix_cli
-dart run remix_cli:remix init --prefix Acme
+dart run remix_cli:remix init --prefix Acme --preset default
 dart run remix_cli:remix add button
 ```
 
@@ -29,6 +31,9 @@ the optional `chart` extension, plus `accordion`, `avatar`, `badge`, `button`,
 `disclosure`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
 `radio`, `segmented_control`, `select`, `skeleton`, `slider`, `spinner`,
 `switch`, `tabs`, `textfield`, `toggle`, `toggle_group`, and `tooltip`.
+
+The `fortal` preset contains that complete surface plus `base_button`, `code`,
+`heading`, `kbd`, `sidebar`, `text`, and `typography`.
 
 `chart` is the one optional extension outside the core Remix component
 surface. It builds directly on `mix_chart`, installs no Fortal code, and
@@ -42,6 +47,18 @@ at a checkout or staged package:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
+Both presets require Remix `^1.0.0-beta.8`. Until that release is available,
+add a temporary `pubspec_overrides.yaml` to the application:
+
+```yaml
+dependency_overrides:
+  remix:
+    path: /path/to/remix/packages/remix
+```
+
+Replace the path with your checkout. The [release instructions](RELEASING.md)
+cover hosted validation, CLI bootstrap, and the Fortal transition.
+
 Two host notes travel with the catalog. An installed text field needs an
 `Overlay` ancestor once it takes focus, for its selection handles —
 `MaterialApp`, `CupertinoApp`, and any `WidgetsApp` with routes already provide
@@ -54,7 +71,28 @@ installed adapters inside them.
 `init` creates `remix.yaml` and a managed barrel at `lib/ui/ui.dart`. The
 default prefix is `Ui`; `--prefix Acme` produces names such as
 `AcmeThemeScope`, `AcmeButton`, and `acmeButtonStyle`. A different source root
-can be chosen once with `--ui-path`.
+can be chosen once with `--ui-path`. The preset also is chosen once: existing
+projects default to `default`, and changing a configured preset is refused.
+
+## Fortal as application-owned source
+
+```shell
+dart run remix_cli:remix init --prefix Acme --preset fortal
+dart run remix_cli:remix add button
+```
+
+This installs the full Fortal theme and recipe as prefixed local source:
+`AcmeScope`, `AcmeTokens`, `AcmeButton`, and `acmeButtonStyle`. It also installs
+the shared `base_button.dart` implementation used by Button and IconButton.
+No installed identifier is named Fortal, and the consumer does not declare
+direct `mix`, `naked_ui`, or `remix_fortal` dependencies. `remix` owns behavior;
+the application owns the copied Radix color table, 277-token theme, component
+recipes, and generated adapters.
+
+The Fortal templates are derived from analyzed Dart in
+`packages/remix_fortal/lib/src/`; do not edit the committed `.tmpl` files by
+hand. `tool/build_fortal_preset.dart --check` makes source/template drift a CI
+failure.
 
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 Use an application prefix such as `Ui` or `Acme`.
@@ -215,11 +253,15 @@ root:
 
 ```shell
 fvm dart test test/tool/check_open_code_test.dart
-fvm dart run tool/check_open_code.dart
+fvm dart run melos run open-code:check
 ```
 
-The full check creates a guarded temporary Flutter app, installs the checkout
-CLI with prefix `Acme`, adds every registry item, and proves generation,
-analysis, and all behavior tests against hosted Remix. It then overrides Remix to the current checkout,
-regenerates without a consumer `build.yaml`, and repeats the checks. Pass
-`--keep` to retain the generated gallery for inspection.
+The CI check creates a fresh application for each preset. It installs the
+checkout CLI with prefix `Acme`, adds every item, and verifies generation,
+analysis, and consumer tests against checkout Remix.
+
+After Remix is published, run `fvm dart run melos run open-code:release:check`
+to verify both presets with hosted Remix. The direct checker defaults to both
+sources. Select `--source checkout` or `--source hosted` for one source.
+Use `--hosted-cli --source hosted` after CLI publication to verify its hosted
+assets. Pass `--keep` to retain a generated application for inspection.

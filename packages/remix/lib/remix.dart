@@ -1,7 +1,7 @@
 /// Remix design system widgets and styles.
 ///
-/// Remix ships no theme. For a ready-made Radix Themes-inspired preset, add the
-/// companion `remix_fortal` package.
+/// Remix ships no theme. For a ready-made Radix Themes-inspired starting point,
+/// initialize the application-owned `fortal` preset with `remix_cli`.
 library remix;
 
 /// COMPONENTS
@@ -40,6 +40,12 @@ export 'src/components/tooltip/tooltip.dart';
 export 'package:mix/mix.dart';
 export 'package:naked_ui/naked_ui.dart'
     show
+        NakedAccordionTriggerBuilder,
+        NakedAccordionItemState,
+        NakedDisclosureState,
+        NakedDisclosureTransitionBuilder,
+        NakedSliderSemanticFormatterCallback,
+        NakedTabState,
         NakedMenuState,
         OverlayAlignment,
         OverlayPlacement,

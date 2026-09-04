@@ -20,7 +20,7 @@ void main() {
         processRunner: runner,
       );
       await installer.initialize(
-        const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'),
+        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
       );
 
       final code = await runRemixCli(
@@ -48,7 +48,7 @@ void main() {
       processRunner: runner,
     );
     await installer.initialize(
-      const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'),
+      const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
     );
     final before = snapshotFiles(root);
     final errors = <String>[];

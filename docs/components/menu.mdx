@@ -151,7 +151,7 @@ replace it.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class AccountMenuExample extends StatelessWidget {
   const AccountMenuExample({super.key});
@@ -187,7 +187,7 @@ menu item data, including another submenu.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class CompoundMenuExample extends StatefulWidget {
   const CompoundMenuExample({super.key});
@@ -320,13 +320,13 @@ directional submenu chevron.
 
 ## Fortal widgets
 
-Remix includes a Fortal-themed widget for this component:
+The application-owned Fortal preset provides a themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class FortalMenuExample extends StatelessWidget {
   const FortalMenuExample({super.key});
@@ -398,7 +398,7 @@ customization, pass `fortalMenuStyle(...).merge(customStyle)` to
 </Info>
 
 <Info>
-  See the [fortalMenuStyle source code](https://github.com/btwld/remix/blob/main/packages/remix_fortal/lib/src/recipes/menu.dart) for all available options.
+  See the [fortalMenuStyle source code](https://github.com/btwld/remix/blob/main/packages/remix_fortal/lib/src/components/menu.dart) for all available options.
 </Info>
 
 ## Constructor

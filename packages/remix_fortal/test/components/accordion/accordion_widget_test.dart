@@ -6,7 +6,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 import '../../helpers/test_helpers.dart';
 
 // Panel anatomy derives from the mapped Table family (see
-// packages/remix_fortal/lib/src/recipes/data_table.dart): the container owns
+// packages/remix_fortal/lib/src/components/data_table.dart): the container owns
 // radius, foreground frame, fill, and clipping so the trigger and content crop into
 // one rounded shape instead of each rounding their own corners. These tests
 // pin that contract directly, plus the content font size that keeps a

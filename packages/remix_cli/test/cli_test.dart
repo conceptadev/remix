@@ -113,15 +113,25 @@ void main() {
       successExitCode,
     );
     expect(received!.prefix, 'Ui');
+    expect(received!.preset, 'default');
     expect(received!.uiPath, 'lib/ui');
 
     await runRemixCli(
-      ['init', '--prefix', 'Acme', '--ui-path', 'lib/design_system'],
+      [
+        'init',
+        '--prefix',
+        'Acme',
+        '--preset',
+        'default',
+        '--ui-path',
+        'lib/design_system',
+      ],
       writeOut: fail,
       writeError: fail,
       onInit: onInit,
     );
     expect(received!.prefix, 'Acme');
+    expect(received!.preset, 'default');
     expect(received!.uiPath, 'lib/design_system');
   });
 

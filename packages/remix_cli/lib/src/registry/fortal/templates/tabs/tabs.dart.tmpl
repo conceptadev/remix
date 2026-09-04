@@ -1,0 +1,127 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'tabs.g.dart';
+
+/// {{typePrefix}} tab-list size presets matching Radix Themes 3.3.0.
+enum {{typePrefix}}TabsSize { size1, size2 }
+
+/// {{typePrefix}}-themed preset for [RemixTabBar].
+///
+/// The tab-list bottom border is a single hairline at every Radix size, so this
+/// preset takes no `size` — unlike [{{valuePrefix}}TabStyle], whose per-tab metrics vary.
+@MixWidget(target: RemixTabBar.new)
+TabBarStyler {{valuePrefix}}TabBarStyle({
+  TabBarStyler style = const TabBarStyler.create(),
+}) {
+  return TabBarStyler()
+      .border(
+        .bottom(
+          .color({{typePrefix}}Tokens.grayA5()).width({{typePrefix}}Tokens.borderWidth1()),
+        ),
+      )
+      .merge(style);
+}
+
+/// {{typePrefix}}-themed preset for [RemixTabView].
+@MixWidget(target: RemixTabView.new)
+TabViewStyler {{valuePrefix}}TabViewStyle({
+  TabViewStyler style = const TabViewStyler.create(),
+}) => TabViewStyler().merge(style);
+
+/// {{typePrefix}}-themed preset for [RemixTab].
+@MixWidget(target: RemixTab.new)
+TabStyler {{valuePrefix}}TabStyle({
+  {{typePrefix}}TabsSize size = {{typePrefix}}TabsSize.size2,
+  bool highContrast = false,
+  TabStyler style = const TabStyler.create(),
+}) {
+  final metrics = switch (size) {
+    {{typePrefix}}TabsSize.size1 => (
+      height: {{typePrefix}}Tokens.space6(),
+      outerPaddingX: {{typePrefix}}Tokens.space1(),
+      innerPaddingX: {{typePrefix}}Tokens.space1(),
+      innerPaddingY: {{typePrefix}}Tokens.tabInnerPaddingY1(),
+      radius: {{typePrefix}}Tokens.radius1(),
+      text: {{typePrefix}}Tokens.text1.mix(),
+      activeLetterSpacing: {{typePrefix}}Tokens.tabActiveLetterSpacing1(),
+    ),
+    {{typePrefix}}TabsSize.size2 => (
+      height: {{typePrefix}}Tokens.space7(),
+      outerPaddingX: {{typePrefix}}Tokens.space2(),
+      innerPaddingX: {{typePrefix}}Tokens.space2(),
+      innerPaddingY: {{typePrefix}}Tokens.space1(),
+      radius: {{typePrefix}}Tokens.radius2(),
+      text: {{typePrefix}}Tokens.text2.mix(),
+      activeLetterSpacing: {{typePrefix}}Tokens.tabActiveLetterSpacing2(),
+    ),
+  };
+
+  return TabStyler()
+      .label(
+        .style(metrics.text).letterSpacing(0.0).color({{typePrefix}}Tokens.grayA11()),
+      )
+      .icon(.color({{typePrefix}}Tokens.grayA11()).size({{typePrefix}}Tokens.space4()))
+      .wrap(
+        .box(
+          BoxStyler()
+              .height(metrics.height)
+              .padding(.horizontal(metrics.outerPaddingX))
+              .alignment(.center)
+              .border(
+                .bottom(
+                  .color(
+                    const Color(0x00000000),
+                  ).width({{typePrefix}}Tokens.borderWidth2()),
+                ),
+              ),
+        ),
+      )
+      .container(
+        .direction(.horizontal)
+            .padding(.horizontal(metrics.innerPaddingX))
+            .padding(.vertical(metrics.innerPaddingY))
+            .borderRadius(.all(metrics.radius))
+            .mainAxisAlignment(.center)
+            .spacing({{typePrefix}}Tokens.space2()),
+      )
+      .onHovered(
+        .label(.color({{typePrefix}}Tokens.gray12()))
+            .icon(.color({{typePrefix}}Tokens.gray12()))
+            .color({{typePrefix}}Tokens.grayA3())
+            .onFocusVisible(.color({{typePrefix}}Tokens.accentA3())),
+      )
+      .onFocusVisible(
+        // Solid `focus-8` where the other three rings use alpha `focus-a8`.
+        // See {{valuePrefix}}FocusRing: unresolved whether that is intentional.
+        TabStyler().{{valuePrefix}}FocusRing(
+          color: {{typePrefix}}Tokens.focus8(),
+          strokeAlign: null,
+        ),
+      )
+      .onSelected(
+        .label(
+              .color({{typePrefix}}Tokens.gray12())
+                  .fontWeight({{typePrefix}}Tokens.fontWeightMedium())
+                  .letterSpacing(metrics.activeLetterSpacing),
+            )
+            .icon(.color({{typePrefix}}Tokens.gray12()))
+            .wrap(
+              .box(
+                BoxStyler().border(
+                  .bottom(
+                    .color(
+                      highContrast
+                          ? {{typePrefix}}Tokens.accent12()
+                          : {{typePrefix}}Tokens.accentIndicator(),
+                    ).width({{typePrefix}}Tokens.borderWidth2()),
+                  ),
+                ),
+              ),
+            ),
+      )
+      .merge(style);
+}

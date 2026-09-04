@@ -21,7 +21,10 @@ $managedExportsStart
 $managedExportsEnd
 ''';
 
-typedef RegistryLoader = Future<RegistryCatalog> Function();
+typedef RegistryLoader = Future<RegistryCatalog> Function(String preset);
+
+Future<RegistryCatalog> _loadBundledRegistry(String preset) =>
+    RegistryCatalog.loadBundled(preset: preset);
 
 abstract interface class ProjectFileWriter {
   void write(File target, String contents);
@@ -54,7 +57,7 @@ final class Installer {
     required LineWriter writeOut,
     ProcessRunner processRunner = const SystemProcessRunner(),
     ProjectFileWriter fileWriter = const AtomicProjectFileWriter(),
-    RegistryLoader registryLoader = RegistryCatalog.loadBundled,
+    RegistryLoader registryLoader = _loadBundledRegistry,
   }) : projectRoot = projectRoot.absolute,
        _writeOut = writeOut,
        _processRunner = processRunner,
@@ -73,6 +76,7 @@ final class Installer {
     final requested = ProjectConfig.create(
       packageRoot: root,
       prefix: options.prefix,
+      preset: options.preset,
       uiPath: options.uiPath,
     );
     final configFile = File(p.join(root.path, projectConfigFileName));
@@ -88,9 +92,11 @@ final class Installer {
         packageRoot: root,
       );
       if (existing.prefix != requested.prefix ||
+          existing.preset != requested.preset ||
           existing.uiPath != requested.uiPath) {
         throw const FormatException(
-          'Existing remix.yaml does not match the requested prefix and UI path.',
+          'Existing remix.yaml does not match the requested prefix, preset, '
+          'and UI path.',
         );
       }
       writeConfig = false;
@@ -137,7 +143,7 @@ final class Installer {
     final currentBarrel = barrel.readAsStringSync();
     validateManagedBarrel(currentBarrel);
 
-    final catalog = await _registryLoader();
+    final catalog = await _registryLoader(config.preset);
     final items = catalog.resolve(options.item);
     final requested = items.last;
     final rendered = <String, String>{};

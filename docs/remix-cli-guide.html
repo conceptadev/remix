@@ -392,7 +392,7 @@ th[scope="row"].mono{font-family:var(--mono);font-size:12.6px;font-weight:400}
     <span class="brand"><span class="dot"></span>remix</span>
     <span class="top-meta">
       <span class="pill">remix_cli 0.1.0</span>
-      <span class="pill wide">remix 1.0.0-beta.7</span>
+      <span class="pill wide">remix 1.0.0-beta.8</span>
     </span>
   </div>
 </header>
@@ -407,7 +407,7 @@ th[scope="row"].mono{font-family:var(--mono);font-size:12.6px;font-weight:400}
     <li class="grp">The model</li>
     <li><a href="#model">What you own</a></li>
     <li><a href="#seam">The ownership seam</a></li>
-    <li><a href="#choose">Fortal or open code</a></li>
+    <li><a href="#choose">Choose a preset</a></li>
     <li class="grp">The path</li>
     <li><a href="#path">The six steps</a></li>
     <li><a href="#install"><span class="n">1</span>Install</a></li>
@@ -580,26 +580,26 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({
 
 <section class="sec" id="choose">
   <div class="sec-rule"><div>
-    <h2>Fortal or open code</h2>
-    <p class="sec-sub">One decision, made before you install. Both sit on the same Remix widgets.</p>
+    <h2>Choose a preset</h2>
+    <p class="sec-sub">One application-owned source tree, with the visual language chosen at initialization.</p>
   </div></div>
 
-  <p>Fortal is a Radix Themes-inspired preset theme and widget catalog, shipped as the
-  <code>remix_fortal</code> package. Open code is this CLI.</p>
+  <p>Open code includes the minimal default preset and the Radix Themes-inspired Fortal
+  preset. Both copy editable source into your application and build on the same Remix widgets.</p>
 
   <div class="tw stack"><table>
-    <thead><tr><th></th><th>Fortal</th><th>Open code</th></tr></thead>
+    <thead><tr><th></th><th>Default</th><th>Fortal</th></tr></thead>
     <tbody>
-      <tr><th scope="row">Appearance lives in</th><td data-label="Fortal">A package dependency</td><td data-label="Open code">Source files in your <code>lib/</code></td></tr>
-      <tr><th scope="row">Normal customization</th><td data-label="Fortal">Token and style overrides</td><td data-label="Open code">Edit the recipe</td></tr>
-      <tr><th scope="row">Behavioral foundation</th><td data-label="Fortal">Remix</td><td data-label="Open code">Remix</td></tr>
-      <tr><th scope="row">Updates</th><td data-label="Fortal"><code>flutter pub upgrade</code></td><td data-label="Open code">Review source with <code class="flag">--diff</code></td></tr>
-      <tr><th scope="row">Best fit</th><td data-label="Fortal">A ready-made system you do not intend to change</td><td data-label="Open code">A design system the application owns</td></tr>
+      <tr><th scope="row">Initialize</th><td data-label="Default"><code>remix init --prefix Acme</code></td><td data-label="Fortal"><code>remix init --prefix Acme --preset fortal</code></td></tr>
+      <tr><th scope="row">Visual direction</th><td data-label="Default">A compact foundation for your own system</td><td data-label="Fortal">A complete Radix-inspired token and recipe system</td></tr>
+      <tr><th scope="row">Appearance lives in</th><td data-label="Default">Source files in your <code>lib/</code></td><td data-label="Fortal">Source files in your <code>lib/</code></td></tr>
+      <tr><th scope="row">Behavioral foundation</th><td data-label="Default">Remix</td><td data-label="Fortal">Remix</td></tr>
+      <tr><th scope="row">Updates</th><td data-label="Default">Review source with <code class="flag">--diff</code></td><td data-label="Fortal">Review source with <code class="flag">--diff</code></td></tr>
     </tbody>
   </table></div>
 
-  <p>One app can use both. They are Remix widgets either way, so a Fortal screen and an open-code
-  screen can sit beside each other.</p>
+  <p>The preset is recorded in <code>remix.yaml</code> and cannot change after initialization.
+  Recipes from different presets do not mix because their tokens and variant vocabularies differ.</p>
 </section>
 
 <div class="part" role="separator" aria-label="The path"><span class="lbl">The path</span><p>Six steps, in order. Each one separates the command from the change it makes.</p></div>
@@ -638,7 +638,11 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({
     <p class="sec-sub">This walkthrough uses one command name all the way through: <code>remix</code>.</p>
   </div></div>
 
-  <p>Install the exact CLI version this guide was written against. If Dart prints a
+  <p>The CLI has not been published. The hosted commands below apply after its
+  first release and Remix beta.8. For now, follow the
+  <a href="https://docs.page/btwld/remix/open-code#install">checkout installation instructions</a>.</p>
+
+  <p>After publication, install the exact CLI version this guide was written against. If Dart prints a
   <code>PATH</code> instruction, follow it and reopen the shell before you continue.</p>
 
 <figure class="term">
@@ -763,7 +767,7 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({
   <figcaption class="term-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-title">Preview the install order and file state</span><button class="copy" type="button" data-done="0" aria-label="Copy to clipboard"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5v-1a1.6 1.6 0 0 0-1.6-1.6H4.1A1.6 1.6 0 0 0 2.5 4.5v4.8a1.6 1.6 0 0 0 1.6 1.6h1"/></svg><span aria-live="polite">Copy</span></button></figcaption>
   <pre><code><span class="pr">$</span> <span class="hl">remix add button --dry-run</span>
 Items: theme -&gt; button
-Dependencies: remix@^1.0.0-beta.7, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
+Dependencies: remix@^1.0.0-beta.8, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
 theme: <span class="wn">missing</span>; lib/ui/theme/tokens.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart
 button: <span class="wn">missing</span>; lib/ui/components/button.dart
 Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, components/button.dart
@@ -2071,7 +2075,7 @@ ButtonStyler _disabledStyle() =&gt; ButtonStyler()
       <tr><th scope="row" class="mono">remix_cli</th><td data-label="Version">0.1.0</td></tr>
       <tr><th scope="row" class="mono">Flutter</th><td data-label="Version">3.44.0 stable, framework 559ffa3f75</td></tr>
       <tr><th scope="row" class="mono">Dart</th><td data-label="Version">3.12.0 stable</td></tr>
-      <tr><th scope="row" class="mono">remix</th><td data-label="Version">1.0.0-beta.7, the registry snapshot version</td></tr>
+      <tr><th scope="row" class="mono">remix</th><td data-label="Version">1.0.0-beta.8, the registry snapshot version</td></tr>
       <tr><th scope="row" class="mono">mix</th><td data-label="Version">2.2.0-beta.5</td></tr>
       <tr><th scope="row" class="mono">mix_annotations</th><td data-label="Version">2.2.0-beta.1</td></tr>
       <tr><th scope="row" class="mono">mix_generator</th><td data-label="Version">2.2.0-beta.3</td></tr>
@@ -2090,7 +2094,7 @@ ButtonStyler _disabledStyle() =&gt; ButtonStyler()
 
 <footer class="end">
   <p>A guide to <code>remix_cli 0.1.0</code>. The registry is authored against
-  <code>remix 1.0.0-beta.7</code>. See <a href="#provenance">Provenance</a> for the complete
+  <code>remix 1.0.0-beta.8</code>. See <a href="#provenance">Provenance</a> for the complete
   toolchain and for how each example was produced.</p>
 </footer>
 

@@ -16,7 +16,7 @@ description, such as
 The contract tracks 30 mapped Radix families and three Fortal extensions.
 Text, Heading, Code, Kbd, and Link publish one shared nine-step
 `FortalTextSize`, so their `size` enum resolves against
-`lib/src/recipes/typography_shared.dart` rather than five parallel per-family
+`lib/src/components/typography.dart` rather than five parallel per-family
 enums. `upstreamInventory.families` must name exactly the tracked family set,
 so a new family fails the gate until both the Fortal mapping and the
 family-independent upstream record are written.

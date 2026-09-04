@@ -132,7 +132,11 @@ final _iconButtonInvocation = RegExp(
 final _remixImport = RegExp(
   r'''import\s+['"]package:(?:remix|remix_fortal)/(?:remix|remix_fortal)\.dart['"]\s*;''',
 );
+final _applicationOwnedFortalImport = RegExp(
+  r'''import\s+['"]ui/ui\.dart['"]\s*;''',
+);
 final _remixApiReference = RegExp(r'\b(?:Remix|Fortal)[A-Z]\w*');
+final _fortalApiReference = RegExp(r'\bFortal[A-Z]\w*');
 
 const _exampleSourceDirectories = <String>[
   'apps/dashboard/lib',
@@ -214,29 +218,35 @@ const _openCodeCatalogDocuments = <String>[
   'open_code/README.md',
 ];
 
-/// Fails when a bundled registry item is missing from a catalog document.
+/// Fails when an item in either bundled preset is missing from a catalog
+/// document.
 ///
 /// Deliberately one-directional: a document may mention `theme` or discuss an
 /// item in prose without listing it, and matching that exactly would make the
 /// check fight the writing. What it will not allow is shipping an item nobody
 /// wrote down.
 void _checkOpenCodeCatalog(Directory workspaceRoot, List<String> failures) {
-  final registry = File(
-    '${workspaceRoot.path}/packages/remix_cli/lib/src/registry/registry.yaml',
-  );
-  if (!registry.existsSync()) {
-    failures.add('packages/remix_cli is missing its registry.yaml.');
-    return;
-  }
+  final items = <String>{};
+  for (final preset in ['default', 'fortal']) {
+    final registry = File(
+      '${workspaceRoot.path}/packages/remix_cli/lib/src/registry/'
+      '$preset/registry.yaml',
+    );
+    if (!registry.existsSync()) {
+      failures.add('packages/remix_cli is missing its $preset registry.yaml.');
+      continue;
+    }
 
-  // Item keys are the only two-space-indented `name:` lines in the file.
-  final items = RegExp(r'^  ([a-z][a-z0-9_]*):$', multiLine: true)
-      .allMatches(registry.readAsStringSync())
-      .map((match) => match.group(1)!)
-      .where((name) => name != 'theme')
-      .toList();
+    // Item keys are the only two-space-indented `name:` lines in the file.
+    items.addAll(
+      RegExp(r'^  ([a-z][a-z0-9_]*):$', multiLine: true)
+          .allMatches(registry.readAsStringSync())
+          .map((match) => match.group(1)!)
+          .where((name) => name != 'theme'),
+    );
+  }
   if (items.isEmpty) {
-    failures.add('registry.yaml declared no component items.');
+    failures.add('bundled registries declared no component items.');
     return;
   }
 
@@ -247,7 +257,8 @@ void _checkOpenCodeCatalog(Directory workspaceRoot, List<String> failures) {
       continue;
     }
     final source = file.readAsStringSync();
-    final missing = items.where((item) => !source.contains('`$item`')).toList();
+    final missing = items.where((item) => !source.contains('`$item`')).toList()
+      ..sort();
     if (missing.isNotEmpty) {
       failures.add(
         '$relativePath does not list registry ${missing.join(', ')}.',
@@ -348,9 +359,17 @@ Future<void> main() async {
   try {
     for (final (index, snippet) in snippets.indexed) {
       final file = File('${tempRoot.path}/snippet_$index.dart');
+      // Fortal docs show the barrel an initialized application owns. The
+      // temporary validation directory has no application package, so map only
+      // that import to the analyzer-checked authoring package. The Fortal
+      // derivation round trip separately proves that the prefixed APIs match.
+      final validationSource = snippet.source.replaceAll(
+        _applicationOwnedFortalImport,
+        "import 'package:remix_fortal/remix_fortal.dart';",
+      );
       file.writeAsStringSync(
         '// Generated temporarily by tool/validate_docs.dart.\n'
-        '${snippet.source}\n',
+        '$validationSource\n',
       );
     }
 
@@ -812,14 +831,26 @@ _extractAnalyzableSnippets(
     final source = file.readAsStringSync();
     for (final (index, match) in fence.allMatches(source).indexed) {
       final snippet = match.group(1)!;
-      final importsRemix = _remixImport.hasMatch(snippet);
+      final importsApplicationUi = _applicationOwnedFortalImport.hasMatch(
+        snippet,
+      );
+      // Default-preset snippets use the same application-relative barrel but
+      // have no package source to analyze against here. Fortal snippets use a
+      // known prefix and can be mapped to the authoring package byte-for-byte.
+      if (importsApplicationUi && !_fortalApiReference.hasMatch(snippet)) {
+        skipped += 1;
+        continue;
+      }
+      final importsRemix =
+          _remixImport.hasMatch(snippet) || importsApplicationUi;
       if (!importsRemix) {
         skipped += 1;
         if (_remixApiReference.hasMatch(snippet)) {
           failures.add(
             '$relativePath Dart example ${index + 1} uses Remix or Fortal APIs '
-            'but imports neither package:remix/remix.dart nor '
-            'package:remix_fortal/remix_fortal.dart.',
+            'but imports neither package:remix/remix.dart, '
+            'package:remix_fortal/remix_fortal.dart, nor the application-owned '
+            'ui/ui.dart barrel.',
           );
         }
         continue;

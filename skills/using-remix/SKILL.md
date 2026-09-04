@@ -2,14 +2,14 @@
 name: using-remix
 description: >-
   Use when building Flutter UI with the Remix component library or its
-  companion Fortal theme package (`remix_fortal`): selecting Remix or Fortal,
-  adding dependencies, placing `FortalScope`, composing overlays or routes,
+  application-owned Fortal preset: selecting Remix or Fortal, setting up
+  `remix_cli`, placing the configured theme scope, composing overlays or routes,
   choosing Remix/Fortal components, or styling `Remix*` widgets with stylers,
   states, variants, recipes, and tokens. Also trigger when building or auditing
   a Remix/Fortal reference showcase or component gallery, for Remix/Fortal
-  widget names, or for a UI request in a project that already depends on
-  `remix` or `remix_fortal`. Do not trigger for generic Flutter UI work when
-  neither package is present or requested.
+  widget names, or for a UI request in a project that already contains
+  `remix`, `remix.yaml`, or the legacy `remix_fortal` package. Do not trigger
+  for generic Flutter UI work when none of those are present or requested.
 ---
 
 # Using Remix
@@ -18,19 +18,23 @@ Build accessible Flutter interfaces with Remix behavior and either custom
 styles or Fortal's ready-made Radix-inspired theme. For a new standalone
 design-system package built on Remix, use `building-remix-design-system`.
 
-## Choose the package layer
+## Choose the source layer
 
-Inspect the project's `pubspec.yaml` before assuming Remix is in use.
+Inspect the project's `pubspec.yaml` and `remix.yaml` before assuming how Remix
+is configured.
 
-| Need | Package and API |
+| Need | Source and API |
 | --- | --- |
 | Accessible component behavior with a custom visual system | `remix`; use `Remix*` widgets and `*Styler`s |
-| Ready-made Radix-inspired visuals | `remix_fortal`; use `FortalScope` and `Fortal*` widgets |
-| Fortal tokens with a customized composition | both packages; apply `fortal*Style()` to a `Remix*` widget |
-| A visual system unrelated to Fortal | base Remix styling; do not add `remix_fortal` |
+| Ready-made Radix-inspired visuals | `remix_cli` with `preset: fortal`; use the configured scope and prefixed widgets |
+| Fortal tokens with a customized composition | installed Fortal source plus `remix`; apply the prefixed recipe to a `Remix*` widget |
+| A visual system unrelated to Fortal | base Remix styling; do not initialize the Fortal preset |
 
-Remix ships no theme. Fortal is optional, lives in a separate package, depends
-on Remix, and does not re-export Remix APIs.
+Remix ships no theme. Fortal is optional application-owned source installed by
+the CLI. The repository's `remix_fortal` workspace package is its analyzed
+authoring and parity surface, not a dependency for new consumer applications.
+Preserve an existing legacy `remix_fortal` dependency unless the user asks to
+migrate it; do not add that dependency to a new consumer.
 
 ## Set up dependencies and imports
 
@@ -45,19 +49,28 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 ```
 
-For Fortal, add its separate dependency:
+For a new Fortal consumer, initialize the preset and add the needed items:
+
+This checkout prepares the first CLI release and requires Remix beta.8.
+Until both releases are available, use the checkout setup in
+`packages/remix_cli/README.md`. Use the hosted commands below after publication.
 
 ```bash
-flutter pub add remix_fortal
+flutter pub add dev:remix_cli
+dart run remix_cli:remix init --prefix Fortal --preset fortal
+dart run remix_cli:remix add button
 ```
 
 ```dart
 import 'package:flutter/widgets.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 ```
 
-Also import `package:remix/remix.dart` when the file uses `Remix*` widgets,
-`*Styler` types, or Remix data classes alongside Fortal.
+The examples in this skill use `--prefix Fortal`; honor the prefix already
+recorded in `remix.yaml` for an initialized project. Add each recipe before
+using it. Also import `package:remix/remix.dart` when the file uses `Remix*`
+widgets, `*Styler` types, or Remix data classes that the owned barrel does not
+export.
 
 ## Place FortalScope correctly
 
@@ -234,7 +247,7 @@ Read only the references needed for the task:
 
 ## Verify the result
 
-- Keep imports aligned with the selected package layer.
+- Keep imports aligned with the selected source layer and configured prefix.
 - Confirm Fortal content and route/overlay builders are below `FortalScope`.
 - Confirm overlays and dialogs have the required caller-owned host capability.
 - For showcases, verify product examples and exhaustive coverage use their

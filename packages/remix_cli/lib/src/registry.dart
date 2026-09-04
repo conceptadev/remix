@@ -5,7 +5,7 @@ import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
-const bundledRegistryUri = 'package:remix_cli/src/registry/registry.yaml';
+const bundledPresets = <String>{'default', 'fortal'};
 
 abstract interface class RegistryAssetLoader {
   Future<String> read(Uri uri);
@@ -29,6 +29,7 @@ final class PackageRegistryAssetLoader implements RegistryAssetLoader {
 
 final class RegistryCatalog {
   RegistryCatalog._({
+    required this.preset,
     required this.items,
     required Uri rootUri,
     required RegistryAssetLoader loader,
@@ -37,6 +38,7 @@ final class RegistryCatalog {
 
   factory RegistryCatalog.parse(
     String source, {
+    required String preset,
     required Uri rootUri,
     RegistryAssetLoader loader = const PackageRegistryAssetLoader(),
   }) {
@@ -63,6 +65,7 @@ final class RegistryCatalog {
       items[name] = _parseItem(name, entry.value.value);
     }
     final catalog = RegistryCatalog._(
+      preset: preset,
       items: Map.unmodifiable(items),
       rootUri: rootUri,
       loader: loader,
@@ -72,24 +75,37 @@ final class RegistryCatalog {
   }
 
   static Future<RegistryCatalog> loadBundled({
+    required String preset,
     RegistryAssetLoader loader = const PackageRegistryAssetLoader(),
   }) async {
-    final uri = Uri.parse(bundledRegistryUri);
+    if (!bundledPresets.contains(preset)) {
+      throw FormatException(
+        'Unknown preset $preset. Bundled presets: '
+        '${bundledPresets.join(', ')}.',
+      );
+    }
+    final uri = Uri.parse(
+      'package:remix_cli/src/registry/$preset/registry.yaml',
+    );
     final source = await loader.read(uri);
     return RegistryCatalog.parse(
       source,
+      preset: preset,
       rootUri: uri.resolve('.'),
       loader: loader,
     );
   }
 
+  final String preset;
   final Map<String, RegistryItem> items;
   final Uri _rootUri;
   final RegistryAssetLoader _loader;
 
   List<RegistryItem> resolve(String requested) {
     if (!items.containsKey(requested)) {
-      throw FormatException('Unknown registry item $requested.');
+      throw FormatException(
+        'Unknown registry item $requested in the $preset preset.',
+      );
     }
     final ordered = <RegistryItem>[];
     final visited = <String>{};

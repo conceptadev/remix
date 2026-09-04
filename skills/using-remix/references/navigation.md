@@ -1,6 +1,8 @@
 # Navigation Components
 
-Constructor details for Remix tabs, accordions, and disclosures. Fortal widgets mentioned here live in the separate `remix_fortal` package; see [Fortal](fortal.md).
+Constructor details for Remix tabs, accordions, and disclosures. Fortal widgets
+mentioned here come from the application-owned Fortal preset; see
+[Fortal](fortal.md).
 
 ## Components
 

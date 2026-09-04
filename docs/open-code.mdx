@@ -3,11 +3,11 @@ title: Open Code
 description: Install editable Remix component source into your app with the remix CLI
 ---
 
-Fortal gives you a themed catalog you *depend on*. **Open code** gives you the
-opposite trade: `remix_cli` copies a small, readable theme and one file per
-component **into your application**, and from that moment your team owns those
-files. No wrapper, no subclass, no theme-override escape hatch — you edit the
-source.
+**Open code** copies a theme and component recipes **into your application**.
+From that moment your team owns those files: no wrapper, no subclass, and no
+package-level theme override standing between you and the source. Choose the
+small `default` preset or the full Radix Themes-inspired `fortal` preset when
+you initialize the project.
 
 Remix keeps everything that is genuinely hard: rendering, pointer and keyboard
 handling, focus management, accessibility semantics, and the loading/disabled
@@ -17,21 +17,42 @@ interaction rules. The installed file only decides what things look like.
 `remix_cli` has not been published. The hosted installation commands below
 apply after its first release. Until then, use the checkout installation
 described in the CLI README. The CLI has its own version and release schedule.
+Fortal preset does not add a `remix_fortal` dependency.
 </Info>
 
-## When to choose open code
+## Choose a preset
 
-| | Fortal | Open code |
+| | `default` | `fortal` |
 |---|---|---|
-| You get | A dependency | Source files in `lib/` |
-| Restyling | Token and style overrides | Edit the recipe |
-| Upgrades | `flutter pub upgrade` | You own it; rerun `add --diff` to compare |
-| Best for | Ship fast on a Radix-like system | A house design system you intend to diverge |
+| Design language | Compact neutral starting point | Radix Themes 3.3.0 parity surface |
+| Theme | 15 semantic tokens | 277 tokens, Radix color scales, scaling, radius, and panel modes |
+| Component axes | Small default vocabulary | Fortal's `classic`, `solid`, `soft`, `surface`, `outline`, and `ghost` vocabulary where applicable |
+| Best for | A house system you intend to shape | Starting from a complete Radix-like system |
 
-Pick open code when the design system is *yours* and you expect to keep
-changing it. Pick Fortal when you want a good catalog and no maintenance.
+Both choices install local Dart under `lib/`, use Remix for behavior, and use
+the same `add --diff` / `add --overwrite` review workflow. They cannot be mixed
+inside one initialized source tree because their tokens and variant
+vocabularies are different.
 
 ## Install
+
+Before the first release, add the CLI from a checkout:
+
+```bash
+dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
+```
+
+Until Remix beta.8 is published, add this temporary `pubspec_overrides.yaml`
+to the application. Replace the path with your checkout:
+
+```yaml
+dependency_overrides:
+  remix:
+    path: /path/to/remix/packages/remix
+```
+
+After both releases are available, remove this override and use the hosted
+installation below. Both presets require Remix `^1.0.0-beta.8`.
 
 Add the CLI as a project-local dev dependency so its version is pinned in your
 lockfile, not in a machine-global install:
@@ -83,18 +104,19 @@ Run "remix help <command>" for more information about a command.
 ## 1. Initialize
 
 ```bash
-remix init
+remix init --preset default
 ```
 
 This writes two files and nothing else:
 
-- `remix.yaml` — your prefix and UI path
+- `remix.yaml` — your prefix, preset, and UI path
 - `lib/ui/ui.dart` — a managed barrel with an export marker block
 
 ```yaml
 # remix.yaml
-schema: 1
+schema: 2
 prefix: Ui
+preset: default
 paths:
   ui: lib/ui
 ```
@@ -103,13 +125,14 @@ Choose the naming and location up front, because the prefix is baked into every
 identifier the CLI renders:
 
 ```bash
-remix init --prefix Acme --ui-path lib/design_system
+remix init --prefix Acme --preset fortal --ui-path lib/design_system
 ```
 
-`--prefix Acme` produces `AcmeButton`, `AcmeButtonVariant`, `AcmeThemeData`,
-and `acmeButtonStyle`. The prefix must be an UpperCamel Dart identifier whose
+`--prefix Acme` produces identifiers such as `AcmeButton` and
+`acmeButtonStyle`. The prefix must be an UpperCamel Dart identifier whose
 lowercased form is not a reserved word, and the UI path must live under `lib/`.
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
+The preset defaults to `default` when omitted.
 
 `init` is also a repair command. Run it again and it recreates whichever of the
 two files is missing, telling you exactly which one it touched:
@@ -130,7 +153,7 @@ remix add button --dry-run
 
 ```
 Items: theme -> button
-Dependencies: remix@^1.0.0-beta.7, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
+Dependencies: remix@^1.0.0-beta.8, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
 theme: missing; lib/ui/theme/tokens.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart
 button: missing; lib/ui/components/button.dart
 Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, components/button.dart
@@ -188,20 +211,22 @@ class SignUpButton extends StatelessWidget {
 
 ## Configuration
 
-`remix.yaml` is the entire configuration surface — two settings, no plugins, no
-presets, no per-component overrides:
+`remix.yaml` is the entire configuration surface — three settings, no plugins
+and no per-component overrides:
 
 ```yaml
-schema: 1
+schema: 2
 prefix: Ui       # type prefix for every generated identifier
+preset: default  # bundled recipe tree selected at init
 paths:
   ui: lib/ui     # where installed source lives
 ```
 
 | Key | Default | Rules |
 |---|---|---|
-| `schema` | `1` | Must be exactly `1`. Anything else is rejected. |
+| `schema` | `2` | New files use schema 2. Schema 1 remains readable as `preset: default`; anything else is rejected. |
 | `prefix` | `Ui` | ASCII UpperCamel Dart identifier. Its lowercased form must not be a Dart reserved word. `Remix` and `Mix` are reserved for runtime dependencies. |
+| `preset` | `default` | Bundled registry selected for every later `add`. Choose `default` or `fortal` at `init`. |
 | `paths.ui` | `lib/ui` | Project-relative, normalized, no traversal, must be under `lib/`. Symlinks that escape the package root are rejected. |
 
 Unknown keys are an error rather than a warning, so a typo fails loudly instead
@@ -216,14 +241,14 @@ The prefix drives two identifier casings at once. With `prefix: Acme` you get
 the type `AcmeButton` and the function `acmeButtonStyle`.
 
 <Warning>
-Choose `prefix` and `paths.ui` before your first `add`. The CLI will not rename
-or move source it has already installed.
+Choose `prefix`, `preset`, and `paths.ui` before your first `add`. The CLI will
+not rename, restyle, or move source it has already installed.
 
 Running `init` with different values against an existing `remix.yaml` is a hard
 error, not a migration:
 
 ```
-FormatException: Existing remix.yaml does not match the requested prefix and UI path.
+FormatException: Existing remix.yaml does not match the requested prefix, preset, and UI path.
 ```
 
 Editing `remix.yaml` by hand afterwards is worse, because installed state is
@@ -294,6 +319,51 @@ ButtonStyler _variantStyle(UiButtonVariant variant) => switch (variant) {
 `@MixWidget` generates `UiButton` into `button.g.dart`, including one named
 constructor per variant (`UiButton.primary`, `.secondary`, `.outline`,
 `.ghost`, `.destructive`).
+
+## The Fortal preset
+
+Initialize Fortal once, then use the same item commands and ownership workflow:
+
+```bash
+remix init --prefix Acme --preset fortal
+remix add button
+```
+
+The application receives `AcmeScope`, `AcmeTokens`, `AcmeButton`, and
+`acmeButtonStyle`; no installed identifier is named Fortal. Button brings its
+shared `base_button` recipe, while the theme arrives as a complete local layer:
+
+```text
+lib/ui/
+├── ui.dart
+├── theme/
+│   ├── theme.dart
+│   ├── radix_colors.dart
+│   ├── computed.dart
+│   ├── control_styles.dart
+│   ├── tokens.dart
+│   ├── theme_data.dart
+│   ├── theme_scope.dart
+│   └── surface_frame.dart
+└── components/
+    ├── base_button.dart
+    ├── button.dart
+    └── button.g.dart
+```
+
+These are application files, not forwarding wrappers around
+`package:remix_fortal`. The authored recipes and pinned Radix Themes 3.3.0
+color data are copied from the same source used by the repository's parity
+suite. `remix` remains the behavior and styling-engine boundary;
+`mix_annotations`, `build_runner`, and `mix_generator` support adapter
+generation. `icons` additionally installs `remix_ui_icons`, and `chart`
+installs `mix_chart`. The preset adds no direct `mix`, `naked_ui`, or
+`remix_fortal` dependency.
+
+The source is deliberately editable. Change the token map, add an accent or
+variant, or merge a one-instance styler last. Future CLI versions never merge
+over those decisions automatically: inspect `remix add <item> --diff`, then
+use `--overwrite` only when you want the new authored file wholesale.
 
 ## The three levels of customization
 
@@ -388,7 +458,7 @@ a later `remix` that these templates were never tested against. `add` reports
 that after it resolves your lockfile:
 
 ```
-Resolved remix 1.0.0; this remix_cli registry was authored against 1.0.0-beta.7. Run flutter pub upgrade remix_cli, then review with --diff.
+Resolved remix 1.0.0; this remix_cli registry was authored against 1.0.0-beta.8. Run flutter pub upgrade remix_cli, then review with --diff.
 ```
 
 It is a notice, not a failure — the install completes. A `remix` *below* the
@@ -451,7 +521,7 @@ No source was written.
 Declaring the same package in both sections is rejected the same way. Fix your
 manifest and rerun — the CLI will not edit it for you.
 
-## Catalog
+## Default preset catalog
 
 The bundled registry is deliberately small, and every item after `theme`
 depends on it:
@@ -499,6 +569,13 @@ and page-size control *are* those components — adding it installs all four.
 | `toggle_group` | `UiToggleGroup` | variant, size |
 | `tooltip` | `UiTooltip` | — |
 
+The `fortal` catalog contains every item above and adds `base_button`, `code`,
+`heading`, `kbd`, `sidebar`, `text`, and `typography`. `base_button` and
+`typography` are shared authored recipes that arrive transitively with the
+components that use them. Fortal's component names use the configured prefix,
+so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
+`AcmeText` alongside its generated controls.
+
 One `add` installs one item. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. An axis is an enum the
 recipe declares, and a recipe whose axis is named `variant` also gets one
@@ -509,10 +586,10 @@ A parameter is not an axis. `UiDivider` takes an `orientation`, but it is a
 plain Flutter `Axis` the recipe accepts rather than an enum of its own, so it
 generates no named constructors.
 
-### Charts outside Fortal
+### Charts in the default preset
 
-`chart` is an optional extension, not a Fortal preset and not a wrapper around
-Fortal:
+The default preset's `chart` is an optional extension with its own compact
+recipe:
 
 ```bash
 remix add chart

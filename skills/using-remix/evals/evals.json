@@ -4,10 +4,10 @@
     {
       "id": 1,
       "prompt": "Build a settings page with a form that has text fields for name and email, a select dropdown for language preference, some checkboxes for notification options, and a submit button. Use Fortal theming with indigo accent. Make it look polished.",
-      "expected_output": "A complete Flutter widget importing package:remix_fortal/remix_fortal.dart (plus package:remix/remix.dart only if base Remix types are used), wrapped in FortalScope(accent: .indigo), using named Fortal variant constructors where the variant is fixed, including FortalSelect.surface without an unnecessary explicit generic type or redundant per-item preset styling, plus FortalTextField, FortalCheckbox, and FortalButton preset widgets.",
+      "expected_output": "A complete Flutter widget using the application-owned Fortal preset with the Fortal prefix, importing its ui/ui.dart barrel (plus package:remix/remix.dart only if base Remix types are used), wrapped in FortalScope(accent: .indigo), using named Fortal variant constructors where the variant is fixed, including FortalSelect.surface without an unnecessary explicit generic type or redundant per-item preset styling, plus FortalTextField, FortalCheckbox, and FortalButton preset widgets. Setup uses remix_cli init --prefix Fortal --preset fortal and adds the required items.",
       "files": [],
       "expectations": [
-        "Imports remix_fortal and imports remix only if base Remix types are used.",
+        "Uses the Fortal preset and its owned ui/ui.dart barrel, importing remix only if base Remix types are used.",
         "Places the UI below FortalScope with the indigo accent.",
         "Uses FortalTextField, FortalCheckbox, FortalButton, and a named FortalSelect variant without redundant item styling."
       ]
@@ -18,7 +18,7 @@
       "expected_output": "A RemixButton with a fully custom ButtonStyler using the fluent API — gradient, borderRadius(.circular(...)), .onPressed with scale, .onHovered with shadow/glow, and .animate(AnimationConfig...) for transitions. Imports only package:remix/remix.dart, since no theme package is needed. Uses ButtonStyler (not the removed RemixButtonStyle) throughout.",
       "files": [],
       "expectations": [
-        "Imports remix without adding remix_fortal or FortalScope.",
+        "Imports remix without initializing the Fortal preset or adding FortalScope.",
         "Uses ButtonStyler gradient, borderRadius(.circular(...)), pressed scale, hovered shadow, and animation APIs.",
         "Does not use removed RemixButtonStyle or borderRounded APIs."
       ]
@@ -26,10 +26,10 @@
     {
       "id": 3,
       "prompt": "I'm using FortalIconButton but I need a long-press action and a semantic label on it. How do I do that?",
-      "expected_output": "Explains that FortalIconButton (from the separate remix_fortal package) forwards the complete RemixIconButton behavior surface, and shows a named variant constructor using both onLongPress and semanticLabel directly, with import 'package:remix_fortal/remix_fortal.dart'; present.",
+      "expected_output": "Explains that the application-owned FortalIconButton forwards the complete RemixIconButton behavior surface, and shows a named variant constructor using both onLongPress and semanticLabel directly, imported from the installed ui/ui.dart barrel.",
       "files": [],
       "expectations": [
-        "Imports remix_fortal and uses a named FortalIconButton variant constructor.",
+        "Imports the owned Fortal barrel and uses a named FortalIconButton variant constructor.",
         "Passes both onLongPress and semanticLabel directly to FortalIconButton.",
         "Explains that the Fortal wrapper preserves the RemixIconButton behavior surface."
       ]
@@ -48,12 +48,12 @@
     {
       "id": 5,
       "prompt": "Can I call showRemixDialog from a subtree that does not have MixScope? I only need a plain Remix dialog, not Fortal tokens.",
-      "expected_output": "Explains that showRemixDialog works without MixScope and only clones tokens plus modifier order when a current scope exists. Distinguishes the scope-optional route helper from Fortal-styled content, which additionally needs the remix_fortal package and an ambient FortalScope so FortalTokens can resolve.",
+      "expected_output": "Explains that showRemixDialog works without MixScope and only clones tokens plus modifier order when a current scope exists. Distinguishes the scope-optional route helper from Fortal-styled content, which additionally needs the installed Fortal source and an ambient FortalScope so FortalTokens can resolve.",
       "files": [],
       "expectations": [
         "States that showRemixDialog works without MixScope.",
         "States that token and modifier-order cloning occurs only when a current MixScope exists.",
-        "Distinguishes plain Remix dialog hosting from Fortal content, which needs remix_fortal and FortalScope."
+        "Distinguishes plain Remix dialog hosting from Fortal content, which needs the installed Fortal preset and FortalScope."
       ]
     },
     {
@@ -70,12 +70,12 @@
     {
       "id": 7,
       "prompt": "This Flutter app already depends on remix. I want to switch one screen to FortalButton and FortalTextField. Which dependency and imports do I need?",
-      "expected_output": "Adds remix_fortal as a separate dependency, imports package:remix_fortal/remix_fortal.dart, retains an explicit package:remix/remix.dart import only when the file also uses base Remix widgets, stylers, or data classes, and does not claim that either package re-exports the other.",
+      "expected_output": "Initializes the application-owned Fortal preset with remix_cli when remix.yaml is absent, adds button and textfield, imports the installed ui/ui.dart barrel, and retains an explicit package:remix/remix.dart import only when the file also uses base Remix widgets, stylers, or data classes. It does not add remix_fortal as a new dependency.",
       "files": [],
       "expectations": [
-        "Adds remix_fortal as a separate dependency and imports its library.",
+        "Initializes the Fortal preset, adds the needed items, and imports the owned UI barrel.",
         "Keeps a remix import only when base Remix APIs are used in the file.",
-        "Does not claim that remix or remix_fortal re-exports the other package."
+        "Does not add remix_fortal as a new consumer dependency."
       ]
     },
     {
@@ -103,33 +103,33 @@
     {
       "id": 10,
       "prompt": "Create Fortal-styled tabs for Overview and Billing. I expected a FortalTabs widget; show the correct composition.",
-      "expected_output": "Uses RemixTabs as the behavioral root with FortalTabBar, FortalTab, and FortalTabView children, imports both remix and remix_fortal, and explicitly states that no FortalTabs wrapper exists.",
+      "expected_output": "Uses RemixTabs as the behavioral root with FortalTabBar, FortalTab, and FortalTabView children, imports remix plus the application-owned UI barrel, and explicitly states that no FortalTabs wrapper exists.",
       "files": [],
       "expectations": [
         "Uses RemixTabs as the behavioral root.",
         "Uses FortalTabBar, FortalTab, and FortalTabView as styled children.",
-        "Imports both packages and states that FortalTabs does not exist."
+        "Imports remix plus the owned Fortal barrel and states that FortalTabs does not exist."
       ]
     },
     {
       "id": 11,
       "prompt": "Our app uses Remix for behavior, but the design is fully custom and must not use Radix-like colors or Fortal tokens. Style a primary button from scratch.",
-      "expected_output": "Chooses base Remix rather than adding remix_fortal, imports package:remix/remix.dart, creates a custom ButtonStyler with interaction states, and uses RemixButton without FortalScope or Fortal tokens.",
+      "expected_output": "Chooses base Remix rather than initializing the Fortal preset, imports package:remix/remix.dart, creates a custom ButtonStyler with interaction states, and uses RemixButton without FortalScope or Fortal tokens.",
       "files": [],
       "expectations": [
         "Uses RemixButton with a custom ButtonStyler and interaction states.",
-        "Imports remix without adding remix_fortal.",
+        "Imports remix without initializing the Fortal preset.",
         "Does not add FortalScope, Fortal tokens, or Radix-like defaults."
       ]
     },
     {
       "id": 12,
       "prompt": "In a plain Flutter app with no Remix dependencies, write a CustomPainter that draws a sparkline.",
-      "expected_output": "Does not trigger or invoke using-remix, does not add remix or remix_fortal, and answers with ordinary Flutter CustomPainter guidance.",
+      "expected_output": "Does not trigger or invoke using-remix, does not add Remix or initialize a Fortal preset, and answers with ordinary Flutter CustomPainter guidance.",
       "files": [],
       "expectations": [
         "Does not invoke using-remix for an unrelated Flutter painting task.",
-        "Does not add remix or remix_fortal dependencies or imports.",
+        "Does not add Remix dependencies, remix_cli, or Fortal source.",
         "Answers with ordinary Flutter CustomPainter guidance."
       ]
     },

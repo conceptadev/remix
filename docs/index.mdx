@@ -171,10 +171,17 @@ final destructiveButton = baseButtonStyle
 ## Theming with Fortal
 
 Remix ships no theme of its own. If you want a polished, Radix Themes-inspired
-starting point instead of authoring every style yourself, add the companion
-[`remix_fortal`](https://pub.dev/packages/remix_fortal) package — it provides
-`FortalScope`, a token system, the `fortal*Style()` recipes, and a matching
-catalog of ready-made `Fortal*` widgets.
+starting point instead of authoring every style yourself, initialize the
+application-owned Fortal preset:
+
+```bash
+flutter pub add dev:remix_cli
+dart run remix_cli:remix init --prefix Fortal --preset fortal
+dart run remix_cli:remix add button
+```
+
+It copies `FortalScope`, the token system, `fortal*Style()` recipes, and the
+components you add into your application.
 
 See the [Fortal overview](/fortal) to get started.
 
@@ -186,7 +193,7 @@ Remix composes inside your existing Flutter host. It does not require a
 | UI | Caller provides | Compatible hosts |
 |----|-----------------|------------------|
 | Ordinary `Remix*` widgets | The inherited Flutter services used by the widget subtree | Material, Cupertino, Widgets, and router-based hosts |
-| Widgets styled by a theme package such as [Fortal](/fortal) | That package's token scope, in addition to the widget's normal Flutter services | Any Flutter host |
+| Widgets styled by the [Fortal preset](/fortal) | The preset's token scope, in addition to the widget's normal Flutter services | Any Flutter host |
 | Menu, select, popover, and tooltip | An `Overlay` | Any host exposing an overlay; use `Overlay.wrap` when no `Navigator` is needed |
 | `showRemixDialog` and `showRemixAlertDialog` | A `Navigator` | Any host with a caller-owned navigator |
 

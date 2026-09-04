@@ -1,3 +1,9 @@
+## 1.0.0-beta.8
+
+- Export the Naked UI constructor and state types required by generated
+  application-owned Accordion, Disclosure, Slider, and Tabs recipes.
+- Include the Remix Sidebar panel added after beta.7.
+
 ## 1.0.0-beta.7
 
  - **REFACTOR**(remix): simplify composite surface rendering (#165).
