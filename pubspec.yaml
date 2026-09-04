@@ -142,6 +142,10 @@ melos:
       run: dart run tool/check_consumer_mix.dart
       description: Verify consumer tests resolve the declared hosted Mix release
 
+    remix_carbon:consumer:check:
+      run: dart run tool/check_remix_carbon_consumer.dart
+      description: Analyze Remix Carbon against its exact declared hosted Remix floor
+
     toolchain:check:
       run: dart run tool/check_toolchain.dart
       description: Verify every package declares the melos-managed toolchain floor
@@ -168,6 +172,7 @@ melos:
         - toolchain:check
         - version:align:check
         - mix:consumer:check
+        - remix_carbon:consumer:check
         - material:check
         - remix_carbon:tokens:check
         - remix_carbon:icons:check

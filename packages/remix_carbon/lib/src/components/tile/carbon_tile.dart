@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import '../../foundation/carbon_layer.dart';
+import '../../foundation/carbon_motion.dart';
 import '../../icons/icons.dart';
 import '../../tokens/generated/carbon_tokens.g.dart';
 import '../_shared/carbon_action_surface.dart';
@@ -236,7 +237,30 @@ class CarbonExpandableTile extends StatelessWidget {
     focusNode: focusNode,
     autofocus: autofocus,
     semanticLabel: semanticLabel ?? title,
+    animationStyle: _carbonExpandableTileAnimationStyle(context),
     style: carbonExpandableTileStyle(),
+  );
+}
+
+AnimationStyle _carbonExpandableTileAnimationStyle(BuildContext context) {
+  final curve = CarbonMotion.resolveCurve(
+    context,
+    CarbonMotion.curve(.standard, .productive),
+  );
+
+  // Carbon's expanded state overrides max-height timing with fast-02; the
+  // transition back to the base state uses moderate-01.
+  return AnimationStyle(
+    curve: curve,
+    reverseCurve: curve,
+    duration: CarbonMotion.duration(
+      context,
+      CarbonTokens.durationFast02.resolve(context),
+    ),
+    reverseDuration: CarbonMotion.duration(
+      context,
+      CarbonTokens.durationModerate01.resolve(context),
+    ),
   );
 }
 

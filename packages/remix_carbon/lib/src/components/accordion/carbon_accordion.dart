@@ -152,6 +152,23 @@ class _CarbonAccordionBase<T> extends StatelessWidget {
   final Widget Function(Widget, Animation<double>) transitionBuilder;
   final AccordionStyler style;
 
+  Widget _buildTrigger(AccordionSpec spec, bool expanded) => FlexBox(
+    styleSpec: spec.trigger,
+    children: [
+      if (leadingIcon case final icon?)
+        StyledIcon(icon: icon, styleSpec: spec.leadingIcon),
+      // FlexBox is a Mix-owned Flex wrapper that DCM cannot infer here.
+      // ignore: avoid-flexible-outside-flex
+      Expanded(child: StyledText(title, styleSpec: spec.title)),
+      StyledIcon(
+        icon:
+            trailingIcon ??
+            (expanded ? CarbonIcons.chevronDown : CarbonIcons.chevronRight),
+        styleSpec: spec.trailingIcon,
+      ),
+    ],
+  );
+
   @override
   Widget build(BuildContext context) => style<T>(
     value: value,
@@ -159,8 +176,12 @@ class _CarbonAccordionBase<T> extends StatelessWidget {
     title: title,
     leadingIcon: leadingIcon,
     trailingIcon: trailingIcon,
-    collapsedIcon: CarbonIcons.chevronRight,
-    expandedIcon: CarbonIcons.chevronDown,
+    builder: (context, state) {
+      final styleSpec = StyleSpecProvider.of<AccordionSpec>(context);
+      assert(styleSpec != null, 'No CarbonAccordion style found in context.');
+
+      return _buildTrigger(styleSpec!.spec, state.isExpanded);
+    },
     enabled: enabled,
     mouseCursor: mouseCursor,
     enableFeedback: enableFeedback,

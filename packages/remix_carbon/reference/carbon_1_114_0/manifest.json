@@ -129,8 +129,8 @@
     {
       "id": "link",
       "publicApi": ["CarbonLink"],
-      "strategy": "carbon_native",
-      "remixBase": [],
+      "strategy": "remix_adapter",
+      "remixBase": ["RemixLink"],
       "semanticPrimitive": "link",
       "sourceFiles": ["scss/components/link/_link.scss", "es/components/Link/Link.d.ts"]
     },
@@ -298,7 +298,7 @@
       "id": "tile",
       "publicApi": ["CarbonTile", "CarbonClickableTile", "CarbonSelectableTile", "CarbonExpandableTile"],
       "strategy": "remix_adapter",
-      "remixBase": ["RemixCard"],
+      "remixBase": ["RemixCard", "RemixDisclosure"],
       "semanticPrimitive": "group_or_action",
       "sourceFiles": ["scss/components/tile/_tile.scss", "es/components/Tile/Tile.d.ts"]
     },

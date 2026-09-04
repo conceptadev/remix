@@ -73,6 +73,14 @@ LinkStyler carbonLinkStyle({
     final baseColor = visited
         ? CarbonTokens.linkVisited
         : CarbonTokens.linkPrimary;
+    final activeOutline = RemixBoxEffectsMix(
+      outline: BorderSideMix(
+        color: CarbonTokens.focus(),
+        width: 2,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      outlineOffset: -2,
+    );
 
     return LinkStyler()
         .padding(
@@ -87,7 +95,8 @@ LinkStyler carbonLinkStyle({
                 .medium => CarbonTokens.bodyCompact01.mix(),
                 .large => CarbonTokens.bodyCompact02.mix(),
               })
-              .color(baseColor()),
+              .color(baseColor())
+              .decoration(inline ? .underline : .none),
         )
         .onHovered(
           LinkStyler().label(
@@ -96,21 +105,21 @@ LinkStyler carbonLinkStyle({
                 .decoration(.underline),
           ),
         )
+        .onPressed(
+          LinkStyler()
+              .label(TextStyler().decoration(.underline))
+              .containerEffects(activeOutline),
+        )
         .onFocusVisible(
-          LinkStyler().containerEffects(
-            RemixBoxEffectsMix(
-              outline: BorderSideMix(
-                color: CarbonTokens.focus(),
-                width: 2,
-                strokeAlign: BorderSide.strokeAlignInside,
-              ),
-              outlineOffset: -2,
-            ),
-          ),
+          LinkStyler()
+              .label(TextStyler().decoration(.underline))
+              .containerEffects(activeOutline),
         )
         .onDisabled(
           LinkStyler().label(
-            TextStyler().color(CarbonTokens.textDisabled()).decoration(.none),
+            TextStyler()
+                .color(CarbonTokens.textDisabled())
+                .decoration(inline ? .underline : .none),
           ),
         );
   });

@@ -20,6 +20,9 @@
 - Carbon participates in workspace generation, dependency, documentation, and
   Material-independence checks; its separate token generator is also part of
   the root CI sequence.
+- Carbon is analyzed outside the workspace against the exact hosted Remix
+  version at its declared dependency floor, preventing newer sibling-only APIs
+  from leaking into consumer builds.
 - `CarbonLayer` resolves directly from the generated indexed role-family table
   instead of maintaining a duplicate hand-written map.
 - Aligned Remix/Mix dependencies with the workspace, removed unused direct
@@ -32,19 +35,28 @@
   `CarbonMotion`, and token-provenance tests.
 - Added the responsive component catalog to Carbon's DCM and release web-build
   gates, and consolidated its duplicated navigation and checkbox setup.
-- Synced to Remix 1.0.0-beta.7 and replaced Carbon's duplicated link,
-  expandable-tile disclosure, and side-navigation behavior with `RemixLink`,
-  `RemixDisclosure`, and `RemixSidebar` adapters. Carbon menu-button and
-  multiselect triggers now use Remix's custom trigger builder instead of a
-  Carbon-only fork of the Remix trigger API.
-- `CarbonSideNavItem` is now declarative destination data; its typed `icon`
-  replaces the old arbitrary leading/trailing widget slots so the Carbon
-  facade can delegate destination behavior directly to `RemixSidebar`.
+- Synced to Remix 1.0.0-beta.7 and replaced Carbon's duplicated link and
+  expandable-tile disclosure behavior with `RemixLink` and `RemixDisclosure`
+  adapters. Carbon menu-button and multiselect triggers now use Remix's custom
+  trigger builder instead of a Carbon-only fork of the Remix trigger API.
 - Dismissible `showCarbonModal` calls now provide the localized barrier label
   required by the latest Remix dialog contract.
 
 ### Fixed
 
+- `CarbonAccordion` now renders its Carbon chevrons through the custom trigger
+  API available at the declared Remix beta.7 floor, rather than relying on
+  newer sibling-only icon parameters that broke hosted consumer builds.
+- Inline links retain Carbon's underline in every state, and keyboard focus and
+  pointer press apply the same underlined focus treatment as Carbon Web.
+- Side-navigation selection markers use Carbon's logical-start edge and exact
+  three-pixel width, so the treatment mirrors correctly in RTL layouts.
+- `CarbonSideNav` now mounts its item widgets directly, so caller-provided
+  keys preserve destination identity while expanded and collapsed layouts
+  continue to share the same public item API.
+- Expandable tiles now use Carbon's productive `fast-02` / `moderate-01`
+  transition timings and honor the platform reduced-motion preference instead
+  of inheriting Remix's generic disclosure timing.
 - Select-based controls now expose the selected option's accessible label
   instead of a private adapter object's runtime name.
 - Date-picker triggers expose the formatted selected date as their semantic

@@ -58,4 +58,69 @@ void main() {
     await tester.pump();
     expect(find.text('Hidden details'), findsOneWidget);
   });
+
+  testWidgets('CarbonExpandableTile forwards controlled disclosure requests', (
+    tester,
+  ) async {
+    final requests = <bool>[];
+    await tester.pumpCarbonApp(
+      CarbonExpandableTile(
+        title: 'Controlled details',
+        expanded: false,
+        onExpandedChanged: requests.add,
+        child: const Text('Owner-controlled details'),
+      ),
+    );
+
+    await tester.tap(find.bySemanticsLabel('Controlled details'));
+    await tester.pump();
+
+    expect(requests, [true]);
+    expect(find.text('Owner-controlled details'), findsNothing);
+    expect(find.byIcon(CarbonIcons.chevronDown), findsOneWidget);
+    expect(find.byIcon(CarbonIcons.chevronUp), findsNothing);
+  });
+
+  testWidgets('CarbonExpandableTile uses reduced-motion-aware Carbon timing', (
+    tester,
+  ) async {
+    const tile = CarbonExpandableTile(
+      title: 'Motion',
+      child: Text('Animated details'),
+    );
+    await tester.pumpCarbonApp(tile);
+
+    var disclosure = tester.widget<RemixDisclosure>(
+      find.byType(RemixDisclosure),
+    );
+    expect(
+      disclosure.animationStyle.duration,
+      const Duration(milliseconds: 110),
+    );
+    expect(
+      disclosure.animationStyle.reverseDuration,
+      const Duration(milliseconds: 150),
+    );
+    expect(
+      disclosure.animationStyle.curve,
+      CarbonMotion.curve(.standard, .productive),
+    );
+    expect(
+      disclosure.animationStyle.reverseCurve,
+      CarbonMotion.curve(.standard, .productive),
+    );
+
+    await tester.pumpCarbonApp(
+      const MediaQuery(
+        data: MediaQueryData(disableAnimations: true),
+        child: tile,
+      ),
+    );
+
+    disclosure = tester.widget<RemixDisclosure>(find.byType(RemixDisclosure));
+    expect(disclosure.animationStyle.duration, Duration.zero);
+    expect(disclosure.animationStyle.reverseDuration, Duration.zero);
+    expect(disclosure.animationStyle.curve, Curves.linear);
+    expect(disclosure.animationStyle.reverseCurve, Curves.linear);
+  });
 }

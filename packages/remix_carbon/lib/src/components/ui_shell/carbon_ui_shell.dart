@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
@@ -156,88 +154,10 @@ class CarbonHeader extends StatelessWidget {
   );
 }
 
-const _carbonSideNavLayer = ContextToken(_resolveCarbonSideNavLayer);
-const _carbonSideNavSelected = ContextToken(_resolveCarbonSideNavSelected);
-const _carbonSideNavHover = ContextToken(_resolveCarbonSideNavHover);
-const _carbonSideNavActive = ContextToken(_resolveCarbonSideNavActive);
-
-Color _resolveCarbonSideNavLayer(BuildContext context) =>
-    CarbonLayer.of(context).color(.layer).resolve(context);
-
-Color _resolveCarbonSideNavSelected(BuildContext context) =>
-    CarbonLayer.of(context).color(.layerSelected).resolve(context);
-
-Color _resolveCarbonSideNavHover(BuildContext context) =>
-    CarbonLayer.of(context).color(.layerHover).resolve(context);
-
-Color _resolveCarbonSideNavActive(BuildContext context) =>
-    CarbonLayer.of(context).color(.layerActive).resolve(context);
-
-final Map<bool, SidebarStyler> _carbonSideNavStyles = {};
-
-/// Carbon's token-backed visual recipe for [RemixSidebar].
-SidebarStyler carbonSideNavStyle({bool expanded = true}) {
-  return _carbonSideNavStyles.putIfAbsent(expanded, () {
-    final destination = ToggleStyler()
-        .height(48)
-        .padding(.horizontal(CarbonTokens.spacing05()))
-        .mainAxisSize(.max)
-        .mainAxisAlignment(expanded ? .start : .center)
-        .crossAxisAlignment(.center)
-        .spacing(expanded ? CarbonTokens.spacing05() : 0)
-        .color(const Color(0x00000000))
-        .label(
-          TextStyler()
-              .style(CarbonTokens.bodyCompact01.mix())
-              .color(CarbonTokens.textPrimary())
-              .wrap(WidgetModifierConfig.visibility(expanded)),
-        )
-        .icon(
-          IconStyler()
-              .size(CarbonTokens.iconSize01())
-              .color(CarbonTokens.iconPrimary()),
-        )
-        .onHovered(ToggleStyler().color(_carbonSideNavHover()))
-        .onPressed(ToggleStyler().color(_carbonSideNavActive()))
-        .onSelected(
-          ToggleStyler()
-              .color(_carbonSideNavSelected())
-              .foregroundDecoration(
-                BoxDecorationMix(
-                  border: BoxBorderMix.left(
-                    BorderSideMix(
-                      color: CarbonTokens.borderInteractive(),
-                      width: 4,
-                    ),
-                  ),
-                ),
-              ),
-        )
-        .onFocusVisible(
-          ToggleStyler().foregroundDecoration(
-            BoxDecorationMix(
-              border: BoxBorderMix.all(
-                BorderSideMix(color: CarbonTokens.focus(), width: 2),
-              ),
-            ),
-          ),
-        )
-        .onDisabled(
-          ToggleStyler()
-              .label(TextStyler().color(CarbonTokens.textDisabled()))
-              .icon(IconStyler().color(CarbonTokens.iconDisabled())),
-        );
-
-    return SidebarStyler(
-      container: FlexBoxStyler()
-          .width(expanded ? 256 : 48)
-          .color(_carbonSideNavLayer()),
-      destination: destination,
-    );
-  });
-}
-
-/// Carbon side-navigation landmark backed by [RemixSidebar].
+/// Carbon side-navigation landmark.
+///
+/// This remains Carbon-native because the declared hosted Remix floor does
+/// not yet include `RemixSidebar`.
 class CarbonSideNav extends StatelessWidget {
   const CarbonSideNav({
     super.key,
@@ -252,73 +172,138 @@ class CarbonSideNav extends StatelessWidget {
   final Widget? footer;
   final String semanticLabel;
 
-  int? get _selectedIndex {
-    for (final (index, item) in items.indexed) {
-      if (item.selected) return index;
-    }
-
-    return null;
-  }
-
-  bool _debugSelectionIsValid() {
-    assert(
-      items.where((item) => item.selected).length <= 1,
-      'CarbonSideNav supports at most one selected item.',
-    );
-
-    return true;
-  }
-
   @override
-  Widget build(BuildContext context) {
-    assert(_debugSelectionIsValid());
-
-    return RemixSidebar<int>(
-      sections: [
-        RemixSidebarSection(
-          destinations: [
-            for (final (index, item) in items.indexed)
-              RemixSidebarDestination(
-                value: index,
-                label: item.label,
-                icon: item.icon,
-                semanticLabel: item.semanticLabel,
-                enabled: item.enabled && item.onPressed != null,
-                focusNode: item.focusNode,
-                autofocus: item.autofocus,
+  Widget build(BuildContext context) => Semantics(
+    role: .navigation,
+    label: semanticLabel,
+    container: true,
+    explicitChildNodes: true,
+    child: SizedBox(
+      width: expanded ? 256 : 48,
+      child: Box(
+        style: BoxStyler().color(
+          CarbonLayer.of(context).color(.layer).resolve(context),
+        ),
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: _CarbonSideNavScope(
+                  expanded: expanded,
+                  child: Column(crossAxisAlignment: .stretch, children: items),
+                ),
               ),
+            ),
+            ?footer,
           ],
         ),
-      ],
-      selectedValue: _selectedIndex,
-      onSelected: (index) => items.elementAtOrNull(index)?.onPressed?.call(),
-      footer: footer,
-      semanticLabel: semanticLabel,
-      style: carbonSideNavStyle(expanded: expanded),
-    );
-  }
+      ),
+    ),
+  );
 }
 
-/// Declarative data for one destination in [CarbonSideNav].
-@immutable
-final class CarbonSideNavItem {
+class _CarbonSideNavScope extends InheritedWidget {
+  const _CarbonSideNavScope({required this.expanded, required super.child});
+
+  final bool expanded;
+
+  static bool expandedOf(BuildContext context) =>
+      context
+          .dependOnInheritedWidgetOfExactType<_CarbonSideNavScope>()
+          ?.expanded ??
+      true;
+
+  @override
+  bool updateShouldNotify(_CarbonSideNavScope oldWidget) =>
+      expanded != oldWidget.expanded;
+}
+
+/// One destination in [CarbonSideNav].
+class CarbonSideNavItem extends StatelessWidget {
   const CarbonSideNavItem({
+    super.key,
     required this.label,
-    this.icon,
+    this.leading,
+    this.trailing,
     this.selected = false,
     this.enabled = true,
     this.onPressed,
-    this.focusNode,
-    this.autofocus = false,
     this.semanticLabel,
   });
 
   final String label;
-  final IconData? icon;
+  final Widget? leading;
+  final Widget? trailing;
   final bool selected;
   final bool enabled;
   final VoidCallback? onPressed;
-  final FocusNode? focusNode;
-  final bool autofocus;
   final String? semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final expanded = _CarbonSideNavScope.expandedOf(context);
+
+    return CarbonActionSurface(
+      semanticLabel: semanticLabel ?? label,
+      selected: selected,
+      enabled: enabled,
+      onPressed: onPressed,
+      excludeChildSemantics: true,
+      builder: (context, focused, hovered, pressed) => Box(
+        style: BoxStyler()
+            .height(48)
+            .padding(.horizontal(CarbonTokens.spacing05()))
+            .color(
+              selected
+                  ? CarbonLayer.of(
+                      context,
+                    ).color(.layerSelected).resolve(context)
+                  : hovered || pressed
+                  ? CarbonLayer.of(context).color(.layerHover).resolve(context)
+                  : const Color(0x00000000),
+            )
+            .border(
+              selected
+                  ? BoxBorderMix.start(
+                      BorderSideMix(
+                        color: CarbonTokens.borderInteractive(),
+                        width: 3,
+                      ),
+                    )
+                  : BoxBorderMix.all(
+                      BorderSideMix(
+                        color: focused
+                            ? CarbonTokens.focus()
+                            : const Color(0x00000000),
+                        width: 2,
+                      ),
+                    ),
+            ),
+        child: Row(
+          children: [
+            if (leading != null)
+              SizedBox(width: 16, height: 16, child: leading),
+            if (expanded) ...[
+              if (leading != null)
+                SizedBox(width: CarbonTokens.spacing05.resolve(context)),
+              Expanded(
+                child: StyledText(
+                  label,
+                  style: TextStyler()
+                      .style(CarbonTokens.bodyCompact01.mix())
+                      .color(
+                        enabled
+                            ? CarbonTokens.textPrimary()
+                            : CarbonTokens.textDisabled(),
+                      ),
+                ),
+              ),
+              ?trailing,
+            ],
+          ],
+        ),
+      ),
+    );
+  }
 }

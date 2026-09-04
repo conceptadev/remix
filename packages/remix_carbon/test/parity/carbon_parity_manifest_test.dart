@@ -87,6 +87,49 @@ void main() {
     expect(excluded, _expectedExcludedRemixFamilies);
   });
 
+  test('keeps the component matrix synchronized with the manifest', () {
+    final manifest =
+        jsonDecode(
+              File('reference/carbon_1_114_0/manifest.json').readAsStringSync(),
+            )
+            as Map<String, Object?>;
+    final matrix = File(
+      'reference/carbon_1_114_0/component_matrix.md',
+    ).readAsStringSync();
+    final families = [
+      ...manifest['coreFamilies']! as List<Object?>,
+      ...manifest['extensions']! as List<Object?>,
+    ].cast<Map<String, Object?>>();
+    final mappedRows = matrix
+        .split('\n')
+        .where(
+          (line) => line.startsWith('| `') && '|'.allMatches(line).length == 5,
+        );
+
+    expect(
+      mappedRows,
+      hasLength(families.length),
+      reason: 'The matrix must not contain missing or extra family rows.',
+    );
+
+    for (final family in families) {
+      final id = family['id']! as String;
+      final publicApi = (family['publicApi']! as List<Object?>).cast<String>();
+      final strategy = family['strategy']! as String;
+      final remixBase = (family['remixBase']! as List<Object?>).cast<String>();
+      final implementation = switch ((strategy, remixBase)) {
+        ('mix_chart_recipe', _) => '`mix_chart`',
+        (_, []) => 'Carbon-native',
+        _ => remixBase.map((name) => '`$name`').join(', '),
+      };
+      final expectedRow =
+          '| `$id` | ${publicApi.map((name) => '`$name`').join(', ')} '
+          '| `$strategy` | $implementation |';
+
+      expect(matrix, contains(expectedRow), reason: '$id matrix row drifted.');
+    }
+  });
+
   test('pins token packages from the same Carbon release baseline', () {
     final upstreamPackage =
         jsonDecode(File('tool/upstream/package.json').readAsStringSync())

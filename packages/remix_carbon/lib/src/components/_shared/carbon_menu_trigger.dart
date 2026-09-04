@@ -21,8 +21,10 @@ RemixMenuTrigger carbonMenuTriggerWithTrailingIcon({
         bottom: 0,
         end: CarbonTokens.spacing05.resolve(context),
         child: Center(
-          child: ExcludeSemantics(
-            child: StyledIcon(icon: trailingIcon, style: iconStyle),
+          child: IgnorePointer(
+            child: ExcludeSemantics(
+              child: StyledIcon(icon: trailingIcon, style: iconStyle),
+            ),
           ),
         ),
       ),

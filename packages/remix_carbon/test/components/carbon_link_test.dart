@@ -35,11 +35,42 @@ void main() {
       ),
     );
 
-    focusNode.requestFocus();
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
     await tester.pump();
+    expect(focusNode.hasFocus, isTrue);
+    expect(
+      _style(tester, 'Carbon guidance').decoration,
+      TextDecoration.underline,
+    );
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     expect(activations, 1);
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    expect(activations, 1);
     semantics.dispose();
+  });
+
+  testWidgets('CarbonLink keeps inline links underlined when disabled', (
+    tester,
+  ) async {
+    await tester.pumpCarbonApp(
+      const Column(
+        children: [
+          CarbonLink(label: 'Inline', inline: true, onPressed: _noop),
+          CarbonLink(
+            label: 'Disabled inline',
+            inline: true,
+            enabled: false,
+            onPressed: _noop,
+          ),
+        ],
+      ),
+    );
+
+    expect(_style(tester, 'Inline').decoration, TextDecoration.underline);
+    expect(
+      _style(tester, 'Disabled inline').decoration,
+      TextDecoration.underline,
+    );
   });
 
   testWidgets('CarbonLink uses Carbon size and state tokens', (tester) async {
@@ -81,6 +112,38 @@ void main() {
 
     final link = tester.widget<RemixLink>(find.byType(RemixLink));
     expect(link.linkUrl, destination);
+  });
+
+  testWidgets('CarbonLink forwards its disabled state', (tester) async {
+    final semantics = tester.ensureSemantics();
+    var activations = 0;
+    await tester.pumpCarbonApp(
+      CarbonLink(
+        label: 'Unavailable',
+        enabled: false,
+        onPressed: () => activations++,
+      ),
+    );
+
+    await tester.tap(find.text('Unavailable'));
+
+    expect(activations, 0);
+    expect(
+      tester.getSemantics(find.text('Unavailable')),
+      isSemantics(
+        label: 'Unavailable',
+        hasEnabledState: true,
+        isEnabled: false,
+        hasTapAction: false,
+      ),
+    );
+    expect(
+      _style(tester, 'Unavailable').color,
+      CarbonTokens.textDisabled.resolve(
+        tester.element(find.text('Unavailable')),
+      ),
+    );
+    semantics.dispose();
   });
 }
 

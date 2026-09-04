@@ -78,6 +78,34 @@ void main() {
     );
     expect(disabled.spec.title.spec.style?.color, disabled.textDisabled);
   });
+
+  testWidgets('CarbonAccordion preserves custom trigger icons', (tester) async {
+    final controller = RemixAccordionController<String>();
+    addTearDown(controller.dispose);
+
+    await tester.pumpCarbonApp(
+      CarbonAccordionGroup<String>(
+        controller: controller,
+        child: const CarbonAccordion<String>(
+          value: 'custom',
+          title: 'Custom icons',
+          leadingIcon: CarbonIcons.add,
+          trailingIcon: CarbonIcons.close,
+          child: Text('Panel'),
+        ),
+      ),
+    );
+
+    expect(find.byIcon(CarbonIcons.add), findsOneWidget);
+    expect(find.byIcon(CarbonIcons.close), findsOneWidget);
+    expect(find.byIcon(CarbonIcons.chevronRight), findsNothing);
+
+    await tester.tap(find.text('Custom icons'));
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(CarbonIcons.close), findsOneWidget);
+    expect(find.byIcon(CarbonIcons.chevronDown), findsNothing);
+  });
 }
 
 Future<({AccordionSpec spec, Color layerHover, Color textDisabled})> _resolve(

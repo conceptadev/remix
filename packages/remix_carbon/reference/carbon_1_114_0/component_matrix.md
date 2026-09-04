@@ -59,7 +59,7 @@ does not add the corresponding Remix API to Carbon's public surface.
 | `toggletip` | `CarbonToggletip` | `carbon_composite` | `RemixPopover` |
 | `tooltip` | `CarbonTooltip` | `remix_recipe` | `RemixTooltip` |
 | `tree_view` | `CarbonTreeView`, `CarbonTreeNode` | `carbon_native` | Carbon-native |
-| `ui_shell` | `CarbonUiShell`, `CarbonHeader`, `CarbonSideNav` | `remix_adapter` | `RemixSidebar` |
+| `ui_shell` | `CarbonUiShell`, `CarbonHeader`, `CarbonSideNav` | `carbon_native` | Carbon-native |
 | `bar_chart` | `CarbonBarChart` | `mix_chart_recipe` | `mix_chart` |
 | `line_chart` | `CarbonLineChart` | `mix_chart_recipe` | `mix_chart` |
 | `pie_chart` | `CarbonPieChart` | `mix_chart_recipe` | `mix_chart` |

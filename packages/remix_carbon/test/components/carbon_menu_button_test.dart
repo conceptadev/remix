@@ -1,4 +1,5 @@
 import 'package:remix_carbon/remix_carbon.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -23,8 +24,17 @@ void main() {
     );
     expect(menu.trigger.builder, isNotNull);
     expect(find.byIcon(CarbonIcons.chevronDown), findsOneWidget);
+    expect(
+      find.ancestor(
+        of: find.byIcon(CarbonIcons.chevronDown),
+        matching: find.byWidgetPredicate(
+          (widget) => widget is IgnorePointer && widget.ignoring,
+        ),
+      ),
+      findsOneWidget,
+    );
 
-    await tester.tap(find.textContaining('Create'));
+    await tester.tapAt(tester.getCenter(find.byIcon(CarbonIcons.chevronDown)));
     await tester.pump();
     await tester.tap(find.text('Folder'));
     await tester.pump();
