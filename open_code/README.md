@@ -47,6 +47,18 @@ at a checkout or staged package:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
+Both presets require Remix `^1.0.0-beta.8`. Until that release is available,
+add a temporary `pubspec_overrides.yaml` to the application:
+
+```yaml
+dependency_overrides:
+  remix:
+    path: /path/to/remix/packages/remix
+```
+
+Replace the path with your checkout. The [release instructions](RELEASING.md)
+cover hosted validation, CLI bootstrap, and the Fortal transition.
+
 Two host notes travel with the catalog. An installed text field needs an
 `Overlay` ancestor once it takes focus, for its selection handles —
 `MaterialApp`, `CupertinoApp`, and any `WidgetsApp` with routes already provide
@@ -241,12 +253,15 @@ root:
 
 ```shell
 fvm dart test test/tool/check_open_code_test.dart
-fvm dart run tool/check_open_code.dart
-fvm dart run tool/check_open_code.dart --preset fortal
+fvm dart run melos run open-code:check
 ```
 
-The full check creates a guarded temporary Flutter app, installs the checkout
-CLI with prefix `Acme`, adds every registry item, and proves generation,
-analysis, and all behavior tests against hosted Remix. It then overrides Remix to the current checkout,
-regenerates without a consumer `build.yaml`, and repeats the checks. Pass
-`--keep` to retain the generated gallery for inspection.
+The CI check creates a fresh application for each preset. It installs the
+checkout CLI with prefix `Acme`, adds every item, and verifies generation,
+analysis, and consumer tests against checkout Remix.
+
+After Remix is published, run `fvm dart run melos run open-code:release:check`
+to verify both presets with hosted Remix. The direct checker defaults to both
+sources. Select `--source checkout` or `--source hosted` for one source.
+Use `--hosted-cli --source hosted` after CLI publication to verify its hosted
+assets. Pass `--keep` to retain a generated application for inspection.

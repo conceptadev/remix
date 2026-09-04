@@ -1,6 +1,6 @@
 # Presets: Fortal as application-owned source
 
-**Status:** Implemented
+**Status:** Implemented; publication pending
 **Base branch:** `feat/open-code`
 
 ## The problem
@@ -13,8 +13,8 @@ package. It cannot own the source the way it owns the default recipes.
 
 This document designs the change that lets an application run
 `remix init --preset fortal` and then `remix add button`, and receive editable
-Fortal source under its own prefix. It is organized as a stack of pull
-requests against `feat/open-code`. Each pull request is green on its own.
+Fortal source under its own prefix. The final PR stack is Open Code, then Fortal, then the existing Sidebar PR.
+The Fortal PR preserves the five implementation commits described below.
 
 ## Decisions
 
@@ -50,16 +50,15 @@ with the reason, so a reviewer does not reopen it by accident.
 6. **`mix_chart` stays a hosted dependency of the `chart` item.** It is the
    chart engine the recipe styles, as `remix` is the button engine. The
    default `chart` item already declares it.
-7. **`remix_fortal` leaves pub.dev once the preset works; the directory
+7. **`remix_fortal` leaves pub.dev after the published replacement works; the directory
    stays.** Hosted Fortal has no consumer base to protect: 0 likes and 438
    downloads at `1.0.0-beta.7`. pub.dev cannot delete a package, so the
    package is marked discontinued with `remix init --preset fortal` named as
-   the replacement, after PR 4 proves that path. The directory
+   the replacement, after Commit 4 proves that path. The directory
    `packages/remix_fortal` is not deleted. It is the authored source the
    templates derive from, the target of 50 test files and the parity
    checker, and a dependency of `apps/dashboard`, `apps/demo`, and
-   `apps/playground`. Drift between it and the derived templates is not a
-   risk: `--check` fails CI on any byte of difference, the same way
+   `apps/playground`. The source and template check detects byte drift: `--check` fails CI on any byte of difference, the same way
    `docs/fortal/catalog.mdx` and the playground dogfood are checked today.
 
 ## What the application gets
@@ -208,19 +207,29 @@ item graph is correct by construction:
 committed files, and fails on any difference. `melos run open-code:fortal:check`
 runs it in CI, the way `docs:check` runs `generate_fortal_catalog.dart`.
 
-## The stack
+## The PR stack
 
-Five pull requests. The first two touch only `remix_fortal`. The third
-touches only `remix_cli` and the repository tools, and can be reviewed in
-parallel with the first two. The fourth depends on all three. The fifth is a
-product step with an external side effect, so it stays separate and last.
+1. `feat/open-code` targets `main` in PR #177.
+2. `feat/fortal-presets` targets `feat/open-code` and contains the Fortal work.
+3. `feat/open-code-sidebar` targets `feat/fortal-presets` in PR #178.
+
+Merge in that order. The original plan proposed five Fortal PRs. The final
+stack keeps those implementation boundaries as five commits in one Fortal PR.
+The Sidebar PR remains separate because it adds a default recipe.
+
+## Implementation commits
+
+The first two commits prepare Fortal source. The third adds preset selection.
+The fourth adds the derived preset and its consumer fixture. The fifth removes
+Fortal publication from repository automation. Package discontinuation remains
+a later release action.
 
 Two earlier drafts were folded in. The fresh-app proof is part of the PR
 that ships the Fortal preset, because a preset without its proof is not
 done. Docs land with the PR they describe, because `validate_docs.dart`
 already checks them and a flag without docs is not done either.
 
-### PR 1: `refactor(remix_fortal)`: lay the source out like an installed preset
+### Commit 1: `refactor(remix_fortal)`: lay the source out like an installed preset
 
 A pure move. Git sees renames, reviewers see paths, and no behavior changes.
 This goes first so every later content diff lands on the final paths.
@@ -253,7 +262,7 @@ This goes first so every later content diff lands on the final paths.
   file in the repository outside `.context/` contains `src/recipes/` or
   `src/fortal/`.
 
-### PR 2: `feat(remix_fortal)`: instance style override, and only `remix` imports
+### Commit 2: `feat(remix_fortal)`: instance style override, and only `remix` imports
 
 Content edits on the final paths. Every default component template takes a
 styler parameter merged last. No Fortal recipe does.
@@ -267,7 +276,7 @@ styler parameter merged last. No Fortal recipe does.
 - Remove the four unused `naked_ui` imports (`accordion`, `disclosure`,
   `slider`, `tabs`; verified unused with the analyzer) and the four direct
   `mix` imports (`chart`, `base_button`, `computed`, and the theme files).
-  `remix` re-exports `mix` in full. This is a precondition for PR 4, whose
+  `remix` re-exports `mix` in full. This is a precondition for Commit 4, whose
   tool refuses those imports.
 - Regenerate the `.g.dart` parts. The generator adds `style` to every named
   constructor.
@@ -277,11 +286,11 @@ styler parameter merged last. No Fortal recipe does.
   a sibling.
 - Proof: `fortal:parity:check` and the package test suite.
 
-### PR 3: `feat(remix_cli)`: preset axis
+### Commit 3: `feat(remix_cli)`: preset axis
 
 The CLI learns that more than one registry exists. Only `default` ships in
 this PR, so behavior for every existing project is unchanged. This is
-independent of PR 1 and PR 2.
+independent of Commit 1 and Commit 2.
 
 - Move `lib/src/registry/registry.yaml` and `templates/` to
   `lib/src/registry/default/`.
@@ -314,9 +323,9 @@ independent of PR 1 and PR 2.
   file and the `--preset` flag, and drops the words "no presets".
   `packages/remix_cli/CHANGELOG.md`.
 
-### PR 4: `feat(remix_cli)`: the Fortal preset, with its proof
+### Commit 4: `feat(remix_cli)`: the Fortal preset, with its proof
 
-Depends on PR 1, 2, and 3. The diff is mostly derived content; review the
+Depends on Commit 1, 2, and 3. The diff is mostly derived content; review the
 tool, the registry rules, and the check.
 
 - `tool/build_fortal_preset.dart` as specified above, and
@@ -348,7 +357,7 @@ tool, the registry rules, and the check.
   `open_code/CLEAN_SHEET.md` under "What remains outside this MVP" linking
   here; `packages/remix_cli/CHANGELOG.md`.
 
-### PR 5: `chore(remix_fortal)`: stop publishing
+### Commit 5: `chore(remix_fortal)`: stop publishing
 
 - `publish_to: none` in the pubspec. Remove the pub.dev publish notes from
   the pubspec comments and the package from any release automation that
@@ -360,12 +369,12 @@ tool, the registry rules, and the check.
 - After merge: mark `remix_fortal` discontinued on pub.dev with the preset
   named as the replacement.
 
-## Risks and how each PR bounds them
+## Risks and how each commit bounds them
 
-- **A `style` local collides with the new parameter.** Twelve recipes. PR 2
+- **A `style` local collides with the new parameter.** Twelve recipes. Commit 2
   renames them; the analyzer catches any miss.
-- **A file or path still contains `fortal` after PR 1.** The derivation tool
-  refuses, and PR 4's test plants one to prove the refusal.
+- **A file or path still contains `fortal` after Commit 1.** The derivation tool
+  refuses, and Commit 4's test plants one to prove the refusal.
 - **Formatter drift.** The installer formats rendered output, and wrapping
   depends on prefix length, as `check_open_code_dogfood.dart` documents. The
   drift check therefore compares the template to the source, never a rendered
@@ -377,6 +386,21 @@ tool, the registry rules, and the check.
   rejects it with its existing "unsupported schema" error. The project-local
   dev dependency pins the CLI, which is why the docs recommend it.
 
+## Consumer and release validation
+
+Both registries require Remix `^1.0.0-beta.8`. Beta.7 lacks the Naked UI types
+needed by generated Fortal adapters. The repository prepares beta.8 with these
+exports and the Sidebar panel.
+
+`melos run open-code:check` installs every item from both presets against the
+checkout. `melos run open-code:release:check` requires hosted Remix and never
+falls back to the checkout. The CLI publish job depends on the hosted check.
+A source/template round trip does not replace either consumer check.
+
+The first public release also requires the CLI bootstrap and a hosted CLI
+installation check. Follow [the release instructions](RELEASING.md). Keep
+`remix_fortal` available until the published replacement passes those checks.
+
 ## Out of this stack
 
 - `init --preset <x> --reinstall`, a batched `add --overwrite` for switching
@@ -384,7 +408,7 @@ tool, the registry rules, and the check.
 - Preset knobs at `init`, such as `--accent indigo --radius medium` written
   into the installed theme.
 - Authoring the default preset as Dart with the same derivation. The default
-  has no parity contract, so the pressure is lower. Reconsider after PR 4
+  has no parity contract, so the pressure is lower. Reconsider after Commit 4
   shows the tool's cost.
 - Deleting `packages/remix_fortal` from the repository. That would make the
   `.tmpl` files the only form of Fortal, move the parity suite behind a

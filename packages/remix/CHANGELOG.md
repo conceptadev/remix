@@ -1,5 +1,7 @@
 ## 1.0.0-beta.8
 
+- Export the Naked UI constructor and state types required by generated
+  application-owned Accordion, Disclosure, Slider, and Tabs recipes.
  - **FEAT**(sidebar): publish a Remix sidebar panel (#168).
 
 ## 1.0.0-beta.7

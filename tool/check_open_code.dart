@@ -2,13 +2,15 @@
 /// Flutter application.
 ///
 /// ```shell
-/// dart run tool/check_open_code.dart [--preset default|fortal] [--keep]
+/// dart run tool/check_open_code.dart [--preset default|fortal]
+///     [--source both|hosted|checkout] [--hosted-cli] [--keep]
 /// ```
 ///
 /// The checker writes only to a guarded system-temporary directory. It installs
 /// this checkout's `remix_cli`, lets the CLI install every registry item, then
-/// tests the installed source first with hosted Remix and again with a temporary
-/// override to the current Remix checkout.
+/// tests the installed source with the selected Remix source. The default runs
+/// hosted Remix first, then regenerates against the checkout. CI selects the
+/// checkout explicitly so an unpublished release can be validated before tagging.
 library;
 
 import 'dart:convert';
@@ -204,19 +206,36 @@ final class _PresetContract {
   ];
 }
 
-final class _ParsedArguments {
-  const _ParsedArguments({required this.keep, required this.preset});
+enum RemixSource { both, hosted, checkout }
+
+final class ConsumerCheckOptions {
+  const ConsumerCheckOptions({
+    required this.keep,
+    required this.preset,
+    required this.source,
+    required this.hostedCli,
+  });
 
   final bool keep;
-  final _PresetContract preset;
+  final String preset;
+  final RemixSource source;
+  final bool hostedCli;
 }
 
-_ParsedArguments? _parseArguments(List<String> arguments) {
+ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   var keep = false;
   var sawPreset = false;
+  var sawSource = false;
   var preset = _defaultPreset;
+  var source = RemixSource.both;
+  var hostedCli = false;
   for (var index = 0; index < arguments.length; index += 1) {
     final argument = arguments[index];
+    if (argument == '--hosted-cli') {
+      if (hostedCli) return null;
+      hostedCli = true;
+      continue;
+    }
     if (argument == '--keep') {
       if (keep) return null;
       keep = true;
@@ -236,17 +255,33 @@ _ParsedArguments? _parseArguments(List<String> arguments) {
       }
       continue;
     }
+    if (argument == '--source') {
+      if (sawSource || index + 1 >= arguments.length) return null;
+      sawSource = true;
+      final name = arguments[++index];
+      final selected = RemixSource.values.where((value) => value.name == name);
+      if (selected.isEmpty) return null;
+      source = selected.single;
+      continue;
+    }
     return null;
   }
-  return _ParsedArguments(keep: keep, preset: preset);
+  if (hostedCli && source != RemixSource.hosted) return null;
+  return ConsumerCheckOptions(
+    keep: keep,
+    preset: preset.name,
+    source: source,
+    hostedCli: hostedCli,
+  );
 }
 
 Future<void> main(List<String> arguments) async {
-  final parsed = _parseArguments(arguments);
+  final parsed = parseConsumerCheckOptions(arguments);
   if (parsed == null) {
     stderr.writeln(
       'Usage: dart run tool/check_open_code.dart '
-      '[--preset default|fortal] [--keep]',
+      '[--preset default|fortal] [--source both|hosted|checkout] '
+      '[--hosted-cli (requires --source hosted)] [--keep]',
     );
     exitCode = 64;
     return;
@@ -256,7 +291,9 @@ Future<void> main(List<String> arguments) async {
   final failure = await _run(
     repositoryRoot,
     keep: parsed.keep,
-    preset: parsed.preset,
+    preset: _presetByName(parsed.preset),
+    source: parsed.source,
+    hostedCli: parsed.hostedCli,
   );
   if (failure != null) {
     stderr.writeln('open-code check failed: ${failure.message}');
@@ -268,6 +305,8 @@ Future<_Failure?> _run(
   Directory repositoryRoot, {
   required bool keep,
   required _PresetContract preset,
+  required RemixSource source,
+  required bool hostedCli,
 }) async {
   final rootFailure = _verifyRepositoryRoot(repositoryRoot);
   if (rootFailure != null) return rootFailure;
@@ -306,6 +345,8 @@ Future<_Failure?> _run(
       fixtureRoot: fixtureRoot,
       app: app,
       preset: preset,
+      source: source,
+      hostedCli: hostedCli,
     );
     if (checkFailure != null) {
       return _retainedFailure(parent, checkFailure);
@@ -326,11 +367,15 @@ Future<_Failure?> _run(
       ..writeln('')
       ..writeln('Kept the generated application at:')
       ..writeln('  ${app.path}')
-      ..writeln('')
-      ..writeln('It has a temporary checkout override for Remix. Delete')
-      ..writeln('pubspec_overrides.yaml and run `${sdk.flutter} pub get` to')
-      ..writeln('return to hosted Remix.')
-      ..writeln('')
+      ..writeln('');
+    if (source != RemixSource.hosted) {
+      stdout
+        ..writeln('It has a temporary checkout override for Remix. Delete')
+        ..writeln('pubspec_overrides.yaml and run `${sdk.flutter} pub get` to')
+        ..writeln('return to hosted Remix after its required release exists.')
+        ..writeln('');
+    }
+    stdout
       ..writeln('Run the gallery:')
       ..writeln('  cd ${app.path} && ${sdk.flutter} run -d chrome')
       ..writeln('')
@@ -341,7 +386,7 @@ Future<_Failure?> _run(
       );
   }
 
-  stdout.writeln('open-code check passed.');
+  stdout.writeln('open-code check passed (${preset.name}, ${source.name}).');
   return null;
 }
 
@@ -351,6 +396,8 @@ Future<_Failure?> _checkInTemporaryApp({
   required Directory fixtureRoot,
   required Directory app,
   required _PresetContract preset,
+  required RemixSource source,
+  required bool hostedCli,
 }) async {
   final environment = _toolchainEnvironment(sdk);
 
@@ -378,21 +425,30 @@ Future<_Failure?> _checkInTemporaryApp({
   if (!cliRoot.existsSync()) {
     return _Failure('packages/remix_cli is missing from this checkout.');
   }
-  // The CLI comes from this checkout, but everything it then installs is
-  // resolved from pub.dev — including the `remix` version the registry floors
-  // at. So between the version pull request merging and its `v<version>` tag
-  // being served, this phase cannot resolve the new floor and fails on that
-  // commit. That window is expected and self-heals once pub.dev serves the
-  // tag. The fix is to push the tag, never to teach this checker to probe
-  // pub.dev.
+  final remixSource = Directory('${repositoryRoot.path}/packages/remix');
+  if (!remixSource.existsSync()) {
+    return _Failure('packages/remix is missing from this checkout.');
+  }
+  final startsWithCheckout = source == RemixSource.checkout;
+  if (startsWithCheckout) _writeCheckoutOverride(app, remixSource);
+
+  // Hosted mode never falls back to the checkout. A missing release must fail
+  // the release check, even when checkout validation already passed.
   final addCli = await _runProcess(
     sdk.dart,
-    ['pub', 'add', 'dev:remix_cli@{path: ${cliRoot.path}}'],
+    [
+      'pub',
+      'add',
+      if (hostedCli)
+        'dev:remix_cli:${(loadYaml(File('${cliRoot.path}/pubspec.yaml').readAsStringSync()) as YamlMap)['version']}'
+      else
+        'dev:remix_cli@{path: ${jsonEncode(cliRoot.path)}}',
+    ],
     workingDirectory: app.path,
     environment: environment,
   );
   if (addCli != null) {
-    return _Failure('could not add the checkout CLI to the temporary app');
+    return _Failure('could not add the selected CLI to the temporary app');
   }
 
   final init = await _runProcess(
@@ -426,17 +482,22 @@ Future<_Failure?> _checkInTemporaryApp({
   if (installedFailure != null) return installedFailure;
   _step('Installed UI inventory and import boundary are exact.');
 
-  final dependencyFailure = _verifyInstalledDependencies(app);
+  final dependencyFailure = _verifyInstalledDependencies(
+    app,
+    hostedCli: hostedCli,
+  );
   if (dependencyFailure != null) return dependencyFailure;
 
-  final hostedConfig = _readPackageConfig(app);
-  if (hostedConfig is _Failure) return hostedConfig;
-  final hostedPackages = hostedConfig as Map<String, String>;
+  final installedConfig = _readPackageConfig(app);
+  if (installedConfig is _Failure) return installedConfig;
+  final installedPackages = installedConfig as Map<String, String>;
   for (final package in [
     ..._requiredRuntimeDependencies,
     ..._requiredDevDependencies,
+    if (hostedCli) 'remix_cli',
   ]) {
-    final root = hostedPackages[package];
+    if (startsWithCheckout && package == 'remix') continue;
+    final root = installedPackages[package];
     if (root == null || !_isHostedCachePath(root)) {
       return _Failure(
         '$package resolved to ${root ?? 'nothing'}, expected a hosted cache.',
@@ -447,19 +508,22 @@ Future<_Failure?> _checkInTemporaryApp({
 
   final floorFailure = _verifyResolvedRemixFloor(
     repositoryRoot: repositoryRoot,
-    hostedPackages: hostedPackages,
+    resolvedPackages: installedPackages,
     preset: preset,
   );
   if (floorFailure != null) return floorFailure;
-  _step('Hosted remix resolved to the registry floor.');
+  _step('Resolved Remix matches the registry floor.');
 
-  final hostedCheckoutFailure = _verifyCheckoutPackages(
-    packages: hostedPackages,
+  final installedCheckoutFailure = _verifyCheckoutPackages(
+    packages: installedPackages,
     repositoryRoot: repositoryRoot,
-    expected: {'remix_cli': cliRoot},
+    expected: {
+      if (!hostedCli) 'remix_cli': cliRoot,
+      if (startsWithCheckout) 'remix': remixSource,
+    },
   );
-  if (hostedCheckoutFailure != null) return hostedCheckoutFailure;
-  _step('remix_cli is the only checkout package in hosted-consumer mode.');
+  if (installedCheckoutFailure != null) return installedCheckoutFailure;
+  _step('Installed packages match the selected source boundary.');
 
   if (preset.generatedSnapshots.isNotEmpty) {
     final generatedFailure = _verifyGeneratedFixture(
@@ -468,27 +532,19 @@ Future<_Failure?> _checkInTemporaryApp({
       preset: preset,
     );
     if (generatedFailure != null) return generatedFailure;
-    _step('Hosted generation matches the committed Acme adapter.');
+    _step('Generation matches the committed Acme adapter.');
   }
 
-  final hostedVerification = await _analyzeAndTest(
+  final installedVerification = await _analyzeAndTest(
     sdk: sdk,
     app: app,
-    dependencySource: 'hosted Remix',
+    dependencySource: startsWithCheckout ? 'current checkout' : 'hosted Remix',
     environment: environment,
   );
-  if (hostedVerification != null) return hostedVerification;
+  if (installedVerification != null) return installedVerification;
+  if (source != RemixSource.both) return null;
 
-  final remixSource = Directory('${repositoryRoot.path}/packages/remix');
-  if (!remixSource.existsSync()) {
-    return _Failure('packages/remix is missing from this checkout.');
-  }
-  File('${app.path}/pubspec_overrides.yaml').writeAsStringSync('''
-# Created in a guarded temporary app by tool/check_open_code.dart.
-dependency_overrides:
-  remix:
-    path: ${remixSource.path}
-''');
+  _writeCheckoutOverride(app, remixSource);
 
   final overrideGet = await _runProcess(
     sdk.flutter,
@@ -553,6 +609,15 @@ dependency_overrides:
     dependencySource: 'current checkout',
     environment: environment,
   );
+}
+
+void _writeCheckoutOverride(Directory app, Directory remixSource) {
+  File('${app.path}/pubspec_overrides.yaml').writeAsStringSync('''
+# Created in a guarded temporary app by tool/check_open_code.dart.
+dependency_overrides:
+  remix:
+    path: ${jsonEncode(remixSource.path)}
+''');
 }
 
 Future<_Failure?> _analyzeAndTest({
@@ -713,7 +778,7 @@ _Failure? _verifyRegistryCoverage(
   );
 }
 
-/// Fails when the hosted phase resolved a `remix` other than the one the
+/// Fails when the selected source resolved a `remix` other than the one the
 /// registry floors at.
 ///
 /// The registry constraint is a caret, so every later beta resolves and every
@@ -723,7 +788,7 @@ _Failure? _verifyRegistryCoverage(
 /// consumer actually gets is the same one.
 _Failure? _verifyResolvedRemixFloor({
   required Directory repositoryRoot,
-  required Map<String, String> hostedPackages,
+  required Map<String, String> resolvedPackages,
   required _PresetContract preset,
 }) {
   final registry = File(
@@ -750,20 +815,16 @@ _Failure? _verifyResolvedRemixFloor({
     );
   }
 
-  final root = hostedPackages['remix'];
+  final root = resolvedPackages['remix'];
   if (root == null) {
     return _Failure('remix is missing from package_config.json.');
   }
 
   final floor = constraint.substring(1);
-  final expected = 'remix-$floor';
-  // pub resolves the cache directory URI with a trailing separator.
-  final actual = _basename(
-    root.endsWith(Platform.pathSeparator)
-        ? root.substring(0, root.length - 1)
-        : root,
-  );
-  if (actual == expected) return null;
+  final manifest = File('$root/pubspec.yaml');
+  if (!manifest.existsSync()) return _Failure('Resolved Remix has no pubspec.');
+  final actual = (loadYaml(manifest.readAsStringSync()) as YamlMap)['version'];
+  if (actual == floor) return null;
   return _Failure(
     'the fresh app resolved $actual, but the registry floors at $floor. '
     'If packages/remix was just bumped, push its `v$floor` tag and wait for '
@@ -815,7 +876,10 @@ _Failure? _verifyFixtureContract(
   );
 }
 
-_Failure? _verifyInstalledDependencies(Directory app) {
+_Failure? _verifyInstalledDependencies(
+  Directory app, {
+  required bool hostedCli,
+}) {
   final sections = _dependencySections(
     File('${app.path}/pubspec.yaml').readAsStringSync(),
   );
@@ -850,7 +914,9 @@ _Failure? _verifyInstalledDependencies(Directory app) {
     }
   }
   final cli = development['remix_cli'];
-  if (cli is! YamlMap || !cli.containsKey('path')) {
+  if (hostedCli) {
+    if (cli is! String) problems.add('remix_cli is not a hosted constraint');
+  } else if (cli is! YamlMap || !cli.containsKey('path')) {
     problems.add('remix_cli is not a temporary path development dependency');
   }
   if (sections.containsKey('dependency_overrides')) {

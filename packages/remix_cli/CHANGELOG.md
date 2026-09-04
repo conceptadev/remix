@@ -1,5 +1,8 @@
 ## 0.1.0
 
+- Require Remix `^1.0.0-beta.8` for the generated Fortal adapters. CI checks
+  both presets with checkout Remix. Publication requires the hosted check.
+
 - Adds the `fortal` preset as application-owned source derived from the
   repository's analyzed Radix Themes 3.3.0 implementation. It installs a
   prefixed 277-token theme and full component catalog without a
@@ -13,7 +16,7 @@
 - Rejects reserved runtime prefixes before writing source and prints command help once.
 - Preserves spaces and special characters in generation filters. Each filter selects one generated file.
 - Bundles theme plus a registry item for every styled component surface in
-  `remix` 1.0.0-beta.7: accordion, avatar, badge, button, callout, card,
+  `remix`: accordion, avatar, badge, button, callout, card,
   checkbox, data_list,
   data_table, dialog, disclosure, divider, icon_button, link, menu, popover,
   progress, radio, segmented_control, select, skeleton, slider, spinner,

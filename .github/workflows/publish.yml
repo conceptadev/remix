@@ -22,8 +22,9 @@ name: Publish to pub.dev
 # publishes, `remix-v<version>` is what melos reads. Only the first triggers
 # this workflow.
 #
-# remix_cli and remix_ui_icons are versioned independently from Remix, so their
-# tags are pushed on their own schedules. remix_fortal is not publishable; its
+# remix_cli and remix_ui_icons are versioned independently from Remix.
+# The CLI consumer check requires its bundled Remix version to exist before
+# the CLI can publish. remix_fortal is not publishable; its
 # source remains in the repository as the Fortal preset's analyzed authoring
 # and parity surface.
 on:
@@ -34,6 +35,22 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
+  verify-cli-consumers:
+    if: startsWith(github.ref, 'refs/tags/remix_cli-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          cache: true
+      - name: Resolve the workspace
+        run: flutter pub get
+      - name: Verify both presets with hosted Remix
+        run: dart run melos run open-code:release:check
+
   publish-remix:
     # Bare `v*` only; package-prefixed tags do not start with `refs/tags/v`.
     if: startsWith(github.ref, 'refs/tags/v')
@@ -57,6 +74,7 @@ jobs:
 
   publish-remix-cli:
     if: startsWith(github.ref, 'refs/tags/remix_cli-v')
+    needs: verify-cli-consumers
     uses: conceptadev/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
     with:
       packages_folder_path: "packages"

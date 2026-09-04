@@ -124,8 +124,15 @@ melos:
     open-code:check:
       steps:
         - dart test test/tool/check_open_code_test.dart
-        - dart run tool/check_open_code.dart
-      description: Test the checker and install every registry item in a fresh app
+        - dart run tool/check_open_code.dart --source checkout
+        - dart run tool/check_open_code.dart --preset fortal --source checkout
+      description: Install every item from both presets against the Remix checkout
+
+    open-code:release:check:
+      steps:
+        - dart run tool/check_open_code.dart --source hosted
+        - dart run tool/check_open_code.dart --preset fortal --source hosted
+      description: Verify both presets against the required published Remix release
 
     open-code:fortal:build:
       run: dart run tool/build_fortal_preset.dart
@@ -167,9 +174,8 @@ melos:
         - open-code:dogfood:check
         - test:cli
         - test:flutter
-        # Last because it is the only step that leaves the workspace: it builds
-        # a throwaway app in the system temp directory and resolves from
-        # pub.dev before retesting against this checkout.
+        # Fresh consumers use checkout Remix and hosted supporting packages.
+        # The release check separately requires the published Remix version.
         - open-code:check
       description: >-
         Verify generated sources, docs, Fortal parity, tests, and the

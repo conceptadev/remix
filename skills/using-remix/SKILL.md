@@ -51,6 +51,10 @@ import 'package:remix/remix.dart';
 
 For a new Fortal consumer, initialize the preset and add the needed items:
 
+This checkout prepares the first CLI release and requires Remix beta.8.
+Until both releases are available, use the checkout setup in
+`packages/remix_cli/README.md`. Use the hosted commands below after publication.
+
 ```bash
 flutter pub add dev:remix_cli
 dart run remix_cli:remix init --prefix Fortal --preset fortal
