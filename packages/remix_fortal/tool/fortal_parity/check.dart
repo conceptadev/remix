@@ -483,13 +483,13 @@ String? _readFortalStylesSource(
   String id,
   List<String> failures,
 ) {
-  // Recipes are flat under lib/src/recipes/, and the TextField and TextArea
-  // recipes share one file because TextArea reuses TextField's private helpers.
+  // Components are flat under lib/src/components/, and TextField and TextArea
+  // share one file because TextArea reuses TextField's private helpers.
   final recipeName = switch (id) {
     'text_field' || 'text_area' => 'textfield',
     _ => id,
   };
-  final file = File('${packageRoot.path}/lib/src/recipes/$recipeName.dart');
+  final file = File('${packageRoot.path}/lib/src/components/$recipeName.dart');
   if (!file.existsSync()) {
     failures.add('$id is missing Fortal recipe source ${file.path}.');
     return null;
@@ -499,9 +499,7 @@ String? _readFortalStylesSource(
 
   // The shared scale, weights, and flow helpers live beside the five
   // typography recipes rather than inside any one of them.
-  final shared = File(
-    '${packageRoot.path}/lib/src/recipes/typography_shared.dart',
-  );
+  final shared = File('${packageRoot.path}/lib/src/components/typography.dart');
   if (!shared.existsSync()) {
     failures.add('$id is missing shared typography source ${shared.path}.');
     return source;
@@ -1258,14 +1256,14 @@ Set<String> _dartEnumValues(String body) {
 }
 
 void _checkVariantConstructors(Directory packageRoot, List<String> failures) {
-  final recipeRoot = Directory('${packageRoot.path}/lib/src/recipes');
+  final recipeRoot = Directory('${packageRoot.path}/lib/src/components');
   for (final entity in recipeRoot.listSync()) {
     if (entity is! File ||
         !entity.path.endsWith('.dart') ||
         entity.path.endsWith('.g.dart')) {
       continue;
     }
-    // Recipes are flat, so pair each one with its same-stem `.g.dart` rather
+    // Components are flat, so pair each one with its same-stem `.g.dart` rather
     // than concatenating every generated file in the directory.
     final generated = File(
       entity.path.replaceFirst(RegExp(r'\.dart$'), '.g.dart'),

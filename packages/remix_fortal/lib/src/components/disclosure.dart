@@ -1,0 +1,194 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:naked_ui/naked_ui.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'disclosure.g.dart';
+
+/// Fortal disclosure size presets.
+enum FortalDisclosureSize { size1, size2, size3 }
+
+/// Fortal disclosure color variants.
+enum FortalDisclosureVariant { surface, soft }
+
+/// Fortal-themed preset for [RemixDisclosure].
+@MixWidget(target: RemixDisclosure.new)
+DisclosureStyler fortalDisclosureStyle({
+  FortalDisclosureVariant variant = .surface,
+  FortalDisclosureSize size = .size2,
+}) {
+  return switch (variant) {
+    .surface => _fortalDisclosureSurfaceStyler(size),
+    .soft => _fortalDisclosureSoftStyler(size),
+  };
+}
+
+// Panel anatomy follows the mapped Table family (see data_table.dart):
+// `container` alone owns radius, frame, fill, and clipping, while trigger and
+// content stay flat rectangles that simply get cropped to its rounded shape.
+// The frame and divider are foreground borders so edge-to-edge child fills
+// cannot partially cover their antialiased edges.
+DisclosureStyler _fortalDisclosureBaseStyler(FortalDisclosureSize size) {
+  final metrics = _fortalDisclosureMetrics(size);
+
+  return DisclosureStyler()
+      .trigger(
+        BoxStyler()
+            .width(.infinity)
+            .alignment(.centerLeft)
+            .padding(.all(metrics.padding))
+            .wrap(
+              _fortalDisclosureTypography(
+                style: metrics.triggerText,
+                color: FortalTokens.gray12(),
+                iconColor: FortalTokens.gray11(),
+                iconSize: metrics.iconSize,
+              ),
+            ),
+      )
+      .content(
+        BoxStyler()
+            .width(.infinity)
+            .padding(.all(metrics.padding))
+            .wrap(
+              _fortalDisclosureTypography(
+                style: FortalTokens.text2,
+                color: FortalTokens.gray12(),
+                iconColor: FortalTokens.gray11(),
+                iconSize: metrics.iconSize,
+              ),
+            ),
+      );
+}
+
+DisclosureStyler _fortalDisclosureSurfaceStyler(FortalDisclosureSize size) {
+  final metrics = _fortalDisclosureMetrics(size);
+  return _fortalDisclosureBaseStyler(size)
+      .container(
+        fortalSurfaceFrame(
+          fillColor: FortalTokens.gray2(),
+          borderColor: FortalTokens.gray6(),
+          borderWidth: FortalTokens.borderWidth1(),
+          radius: metrics.radius,
+        ),
+      )
+      .trigger(.color(FortalTokens.gray1()))
+      .content(
+        .foregroundDecoration(
+          BoxDecorationMix(
+            border: BoxBorderMix.top(
+              _fortalDisclosureBorderSide(FortalTokens.gray6()),
+            ),
+          ),
+        ),
+      )
+      .onHovered(.trigger(.color(FortalTokens.gray2())))
+      .onPressed(.trigger(.color(FortalTokens.gray3())))
+      .onFocusVisible(DisclosureStyler().fortalFocusRing())
+      .onDisabled(_fortalDisclosureDisabledStyler());
+}
+
+DisclosureStyler _fortalDisclosureSoftStyler(FortalDisclosureSize size) {
+  final metrics = _fortalDisclosureMetrics(size);
+  return _fortalDisclosureBaseStyler(size)
+      .container(
+        fortalSurfaceFrame(
+          fillColor: FortalTokens.accent2(),
+          borderColor: FortalTokens.accent6(),
+          borderWidth: FortalTokens.borderWidth1(),
+          radius: metrics.radius,
+        ),
+      )
+      .trigger(
+        BoxStyler()
+            .color(FortalTokens.accent2())
+            .wrap(
+              _fortalDisclosureForeground(
+                color: FortalTokens.accent12(),
+                iconColor: FortalTokens.accent11(),
+              ),
+            ),
+      )
+      .content(
+        BoxStyler()
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BoxBorderMix.top(
+                  _fortalDisclosureBorderSide(FortalTokens.accent6()),
+                ),
+              ),
+            )
+            .wrap(
+              _fortalDisclosureForeground(
+                color: FortalTokens.accent12(),
+                iconColor: FortalTokens.accent11(),
+              ),
+            ),
+      )
+      .onHovered(.trigger(.color(FortalTokens.accent3())))
+      .onPressed(.trigger(.color(FortalTokens.accent4())))
+      .onFocusVisible(DisclosureStyler().fortalFocusRing())
+      .onDisabled(_fortalDisclosureDisabledStyler());
+}
+
+DisclosureStyler _fortalDisclosureDisabledStyler() {
+  return DisclosureStyler().trigger(
+    BoxStyler()
+        .color(FortalTokens.grayA3())
+        .wrap(
+          _fortalDisclosureForeground(
+            color: FortalTokens.gray8(),
+            iconColor: FortalTokens.gray8(),
+          ),
+        ),
+  );
+}
+
+BorderSideMix _fortalDisclosureBorderSide(Color color) =>
+    BorderSideMix(color: color, width: FortalTokens.borderWidth1());
+
+WidgetModifierConfig _fortalDisclosureTypography({
+  required TextStyleToken style,
+  required Color color,
+  required Color iconColor,
+  required double iconSize,
+}) {
+  return WidgetModifierConfig.defaultTextStyle(style: style.mix())
+      .defaultTextStyle(style: TextStyleMix().color(color))
+      .merge(WidgetModifierConfig.iconTheme(color: iconColor, size: iconSize));
+}
+
+WidgetModifierConfig _fortalDisclosureForeground({
+  required Color color,
+  required Color iconColor,
+}) {
+  return WidgetModifierConfig.defaultTextStyle(
+    style: TextStyleMix().color(color),
+  ).merge(WidgetModifierConfig.iconTheme(color: iconColor));
+}
+
+({double padding, Radius radius, TextStyleToken triggerText, double iconSize})
+_fortalDisclosureMetrics(FortalDisclosureSize size) {
+  return switch (size) {
+    .size1 => (
+      padding: FortalTokens.space2(),
+      radius: FortalTokens.radius3(),
+      triggerText: FortalTokens.text2,
+      iconSize: FortalTokens.space4(),
+    ),
+    .size2 => (
+      padding: FortalTokens.space3(),
+      radius: FortalTokens.radius4(),
+      triggerText: FortalTokens.accordionText2,
+      iconSize: FortalTokens.spinnerSize3(),
+    ),
+    .size3 => (
+      padding: FortalTokens.space4(),
+      radius: FortalTokens.radius5(),
+      triggerText: FortalTokens.text3,
+      iconSize: FortalTokens.space5(),
+    ),
+  };
+}
