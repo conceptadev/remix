@@ -18,6 +18,9 @@ update command, registry lockfile, or content-hash protocol.
 
 ## Install project-locally
 
+The CLI has not been published. The hosted commands below apply after its
+first release. Until then, use the checkout command in this section.
+
 A project-local development dependency is preferred because the app's lockfile
 pins the CLI version and its bundled templates:
 

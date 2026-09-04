@@ -11,6 +11,9 @@ by `tool/check_open_code.dart`.
 
 ## Install the CLI in a project
 
+The CLI has not been published. The hosted commands below apply after its
+first release. Until then, use the checkout command in this section.
+
 Use a project-local development dependency so the application's lockfile pins
 the CLI version and its bundled templates:
 
