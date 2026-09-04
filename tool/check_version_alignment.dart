@@ -18,7 +18,8 @@ const _lockstepPackages = ['remix', 'remix_fortal'];
 
 /// The registry file whose `remix` constraint must floor at the released
 /// `remix` version.
-const _registryPath = 'packages/remix_cli/lib/src/registry/registry.yaml';
+const _registryPath =
+    'packages/remix_cli/lib/src/registry/default/registry.yaml';
 
 void main() {
   final workspaceRoot = Directory.current.absolute;

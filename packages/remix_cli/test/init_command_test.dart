@@ -21,12 +21,13 @@ void main() {
 
   test('initializes defaults and an identical second run is a no-op', () async {
     await installer.initialize(
-      const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'),
+      const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
     );
     expect(
       File(p.join(root.path, 'remix.yaml')).readAsStringSync(),
-      '''schema: 1
+      '''schema: 2
 prefix: Ui
+preset: default
 paths:
   ui: lib/ui
 ''',
@@ -39,7 +40,7 @@ paths:
     final first = snapshotFiles(root);
 
     await installer.initialize(
-      const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'),
+      const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
     );
 
     expect(snapshotFiles(root), first);
@@ -50,13 +51,13 @@ paths:
     'repairs only a missing config and names the barrel preserved',
     () async {
       await installer.initialize(
-        const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'),
+        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
       );
       File(p.join(root.path, 'remix.yaml')).deleteSync();
       output.clear();
 
       await installer.initialize(
-        const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'),
+        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
       );
 
       expect(output, ['Created remix.yaml; preserved lib/ui/ui.dart.']);
@@ -67,13 +68,13 @@ paths:
     'repairs only a missing barrel and names the config preserved',
     () async {
       await installer.initialize(
-        const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'),
+        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
       );
       File(p.join(root.path, 'lib', 'ui', 'ui.dart')).deleteSync();
       output.clear();
 
       await installer.initialize(
-        const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'),
+        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
       );
 
       expect(output, ['Created lib/ui/ui.dart; preserved remix.yaml.']);
@@ -82,7 +83,11 @@ paths:
 
   test('initializes a custom prefix and path', () async {
     await installer.initialize(
-      const InitOptions(prefix: 'Acme', uiPath: 'lib/design_system'),
+      const InitOptions(
+        prefix: 'Acme',
+        preset: 'default',
+        uiPath: 'lib/design_system',
+      ),
     );
 
     expect(
@@ -93,6 +98,19 @@ paths:
       File(p.join(root.path, 'lib', 'design_system', 'ui.dart')).existsSync(),
       isTrue,
     );
+  });
+
+  test('rejects an unknown preset without partial initialization', () async {
+    final before = snapshotFiles(root);
+
+    await expectLater(
+      installer.initialize(
+        const InitOptions(prefix: 'Ui', preset: 'missing', uiPath: 'lib/ui'),
+      ),
+      throwsFormatException,
+    );
+
+    expect(snapshotFiles(root), before);
   });
 
   test(
@@ -125,7 +143,11 @@ paths:
 
       await expectLater(
         installer.initialize(
-          const InitOptions(prefix: 'Acme', uiPath: 'lib/design_system'),
+          const InitOptions(
+            prefix: 'Acme',
+            preset: 'default',
+            uiPath: 'lib/design_system',
+          ),
         ),
         throwsFormatException,
       );
@@ -141,7 +163,9 @@ paths:
     final before = snapshotFiles(root);
 
     await expectLater(
-      installer.initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui')),
+      installer.initialize(
+        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+      ),
       throwsFormatException,
     );
 
@@ -158,7 +182,9 @@ paths:
     final before = snapshotFiles(root);
 
     await expectLater(
-      installer.initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui')),
+      installer.initialize(
+        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+      ),
       throwsFormatException,
     );
 
@@ -179,7 +205,9 @@ paths:
       final before = snapshotFiles(root);
 
       await expectLater(
-        installer.initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui')),
+        installer.initialize(
+          const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        ),
         throwsFormatException,
         reason: source,
       );
@@ -192,13 +220,17 @@ paths:
   test('rejects non-Flutter and missing package roots', () async {
     File(p.join(root.path, 'pubspec.yaml')).writeAsStringSync('name: plain\n');
     await expectLater(
-      installer.initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui')),
+      installer.initialize(
+        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+      ),
       throwsFormatException,
     );
 
     File(p.join(root.path, 'pubspec.yaml')).deleteSync();
     await expectLater(
-      installer.initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui')),
+      installer.initialize(
+        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+      ),
       throwsFormatException,
     );
   });

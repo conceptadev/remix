@@ -52,7 +52,7 @@ void main(List<String> arguments) {
   }
 
   final registry = File(
-    '${workspaceRoot.path}/packages/remix_cli/lib/src/registry/registry.yaml',
+    '${workspaceRoot.path}/packages/remix_cli/lib/src/registry/default/registry.yaml',
   );
   if (!registry.existsSync()) {
     stderr.writeln('Missing ${registry.path}.');

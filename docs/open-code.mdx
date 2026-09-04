@@ -88,13 +88,14 @@ remix init
 
 This writes two files and nothing else:
 
-- `remix.yaml` — your prefix and UI path
+- `remix.yaml` — your prefix, preset, and UI path
 - `lib/ui/ui.dart` — a managed barrel with an export marker block
 
 ```yaml
 # remix.yaml
-schema: 1
+schema: 2
 prefix: Ui
+preset: default
 paths:
   ui: lib/ui
 ```
@@ -103,7 +104,7 @@ Choose the naming and location up front, because the prefix is baked into every
 identifier the CLI renders:
 
 ```bash
-remix init --prefix Acme --ui-path lib/design_system
+remix init --prefix Acme --preset default --ui-path lib/design_system
 ```
 
 `--prefix Acme` produces `AcmeButton`, `AcmeButtonVariant`, `AcmeThemeData`,
@@ -188,20 +189,22 @@ class SignUpButton extends StatelessWidget {
 
 ## Configuration
 
-`remix.yaml` is the entire configuration surface — two settings, no plugins, no
-presets, no per-component overrides:
+`remix.yaml` is the entire configuration surface — three settings, no plugins
+and no per-component overrides:
 
 ```yaml
-schema: 1
+schema: 2
 prefix: Ui       # type prefix for every generated identifier
+preset: default  # bundled recipe tree selected at init
 paths:
   ui: lib/ui     # where installed source lives
 ```
 
 | Key | Default | Rules |
 |---|---|---|
-| `schema` | `1` | Must be exactly `1`. Anything else is rejected. |
+| `schema` | `2` | New files use schema 2. Schema 1 remains readable as `preset: default`; anything else is rejected. |
 | `prefix` | `Ui` | ASCII UpperCamel Dart identifier. Its lowercased form must not be a Dart reserved word. `Remix` and `Mix` are reserved for runtime dependencies. |
+| `preset` | `default` | Bundled registry selected for every later `add`. It must be chosen at `init`; this release bundles `default`. |
 | `paths.ui` | `lib/ui` | Project-relative, normalized, no traversal, must be under `lib/`. Symlinks that escape the package root are rejected. |
 
 Unknown keys are an error rather than a warning, so a typo fails loudly instead
@@ -216,14 +219,14 @@ The prefix drives two identifier casings at once. With `prefix: Acme` you get
 the type `AcmeButton` and the function `acmeButtonStyle`.
 
 <Warning>
-Choose `prefix` and `paths.ui` before your first `add`. The CLI will not rename
-or move source it has already installed.
+Choose `prefix`, `preset`, and `paths.ui` before your first `add`. The CLI will
+not rename, restyle, or move source it has already installed.
 
 Running `init` with different values against an existing `remix.yaml` is a hard
 error, not a migration:
 
 ```
-FormatException: Existing remix.yaml does not match the requested prefix and UI path.
+FormatException: Existing remix.yaml does not match the requested prefix, preset, and UI path.
 ```
 
 Editing `remix.yaml` by hand afterwards is worse, because installed state is
