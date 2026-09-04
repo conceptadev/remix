@@ -6,15 +6,9 @@ const _expectedIntegrity =
     'sha512-I0/h2CRNTpYNB7Mi3xFIvSsQq5a108d7kK8dTO5zp5b9HR5QJXKag6B8tjpz2ITkVYkFdkGk45doNkSr7OxwNw==';
 const _expectedNakedUiVersion = '1.0.0-beta.14';
 
-/// A range, not the exact version, because these are two different guarantees
-/// enforced in two different places. The parity contract is validated against
-/// exactly [_expectedNakedUiVersion], and the *lockfile* check below is what
-/// pins that: the workspace must resolve it hosted, byte-exact. The pubspec
-/// constraint is the consumer surface, and pub.dev refuses to publish an exact
-/// hosted constraint ("your dependency should allow more than one version",
-/// exit 65) — an exact pin here made the v1.0.0-beta.7 publish impossible.
-/// The floor still names the tested release; both packages must carry this
-/// identical string.
+/// The parity contract validates one exact hosted Naked UI resolution through
+/// Remix. The range is Remix's consumer constraint; the workspace lockfile is
+/// the byte-exact tested resolution.
 const _expectedNakedUiConstraint = '^1.0.0-beta.14';
 const _expectedMappedFamilies = <String>{
   'avatar',
@@ -127,14 +121,12 @@ void main() {
   final remixPubspec = File(
     '${workspaceRoot.path}/packages/remix/pubspec.yaml',
   );
-  _checkNakedPin(
-    pubspec,
+  _checkNakedResolution(
     remixPubspec,
     File('${workspaceRoot.path}/pubspec.yaml'),
     File('${workspaceRoot.path}/pubspec.lock'),
     failures,
   );
-  _checkRemixHostedPin(pubspec, remixPubspec, failures);
   _checkVariantConstructors(packageRoot, failures);
   _checkApproximations(manifest, failures);
   _finish(failures);
@@ -993,30 +985,24 @@ void _checkFixtures(
   );
 }
 
-void _checkNakedPin(
-  File packagePubspec,
+void _checkNakedResolution(
   File remixPubspec,
   File workspacePubspec,
   File workspaceLock,
   List<String> failures,
 ) {
-  // Both publishable packages must carry the identical hosted constraint,
-  // whose floor is the release the parity contract was validated against.
-  // The exact tested resolution is enforced on the lockfile below, not here.
+  // Remix owns the Naked UI behavior boundary. Its hosted constraint must
+  // admit the release used by this parity contract, and the workspace lockfile
+  // below pins that resolution exactly.
   final pinned = RegExp(
     '^  naked_ui: ${RegExp.escape(_expectedNakedUiConstraint)}\\s*\$',
     multiLine: true,
   );
-  for (final entry in <String, File>{
-    'remix_fortal': packagePubspec,
-    'remix': remixPubspec,
-  }.entries) {
-    _expect(
-      pinned.hasMatch(entry.value.readAsStringSync()),
-      '${entry.key} must constrain naked_ui to $_expectedNakedUiConstraint.',
-      failures,
-    );
-  }
+  _expect(
+    pinned.hasMatch(remixPubspec.readAsStringSync()),
+    'remix must constrain naked_ui to $_expectedNakedUiConstraint.',
+    failures,
+  );
   final workspaceSource = workspacePubspec.readAsStringSync();
   _expect(
     !_hasDependencyOverride(workspaceSource, 'naked_ui'),
@@ -1038,62 +1024,6 @@ void _checkNakedPin(
         ).hasMatch(nakedUiLockEntry),
     'The workspace lockfile must resolve naked_ui '
     '$_expectedNakedUiVersion from pub.dev.',
-    failures,
-  );
-}
-
-/// Guards the publish-order hazard: `remix_fortal` must depend on a *hosted*
-/// `remix` whose floor is the version `remix` currently declares.
-///
-/// The invariant behind the equality is that the floor must name a `remix` that
-/// does **not** export Fortal. `remix` releases up to and including 1.0.0-beta.1
-/// bundled `FortalScope`, `FortalTokens`, and the `Fortal*` widgets, so a floor
-/// that admits one of those lets pub resolve a `remix` whose symbols collide
-/// with this package's. Keeping the floor pinned to whatever `remix` currently
-/// declares means the version bump that removes Fortal also forces this floor
-/// forward.
-///
-/// `dart pub publish --dry-run` cannot catch this — it validates the pubspec
-/// text and packs a tarball without re-resolving against the live registry, so
-/// a stale or path-shaped constraint would only fail after `remix_fortal` is
-/// already published.
-void _checkRemixHostedPin(
-  File packagePubspec,
-  File remixPubspec,
-  List<String> failures,
-) {
-  final source = packagePubspec.readAsStringSync();
-  // `melos version` rewrites this floor when `remix` bumps, because
-  // remix_fortal depends on it. A trailing comment is still tolerated so the
-  // line can carry a note without failing the contract.
-  final declared = RegExp(
-    r'^  remix:\s*\^?([^\s#]+)\s*(?:#.*)?$',
-    multiLine: true,
-  ).firstMatch(source);
-  _expect(
-    declared != null,
-    'remix_fortal must declare remix as a hosted constraint on one line '
-    '(no path: or git: entry).',
-    failures,
-  );
-  if (declared == null) return;
-
-  final remixVersion = RegExp(
-    r'^version:\s*(\S+)\s*$',
-    multiLine: true,
-  ).firstMatch(remixPubspec.readAsStringSync())?.group(1);
-  if (remixVersion == null) {
-    failures.add('packages/remix/pubspec.yaml must declare a version.');
-
-    return;
-  }
-
-  _expect(
-    declared.group(1) == remixVersion,
-    'remix_fortal must constrain remix to ^$remixVersion to match '
-    'packages/remix/pubspec.yaml (found ^${declared.group(1)}). The floor has '
-    'to name a remix release that no longer exports Fortal, or pub can resolve '
-    'a remix whose Fortal symbols collide with this package.',
     failures,
   );
 }

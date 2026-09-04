@@ -10,9 +10,10 @@ Fortal ships five typography families — `FortalText`, `FortalHeading`,
 size scale (`FortalTextSize`) and one weight enum (`FortalTextWeight`) instead
 of declaring five parallel copies.
 
-These families live only in `remix_fortal`. There is no `RemixText` or
-`RemixHeading`: base Remix stays theme-free, and a `TextStyler` plus your own
-tokens is the equivalent there.
+These families live only in the application-owned Fortal preset. There is no
+`RemixText` or `RemixHeading`: base Remix stays theme-free, and a `TextStyler`
+plus your own tokens is the equivalent there. The examples assume the preset
+was initialized with `--prefix Fortal` as shown in the [Fortal overview](/fortal).
 
 <Card>
   <img src="/assets/fortal-typography-light.png" alt="The five Fortal typography families in light mode" />
@@ -60,7 +61,7 @@ scaling tokens, while ordinary Flutter text keeps its nearest inherited style.
 <CodeGroup title="Basic implementation" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class TypographyExample extends StatelessWidget {
   const TypographyExample({super.key});
@@ -125,7 +126,7 @@ the neutral color unchanged — the same gate Radix puts behind
 <CodeGroup title="Code and Kbd variants" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class TypographyVariantsExample extends StatelessWidget {
   const TypographyVariantsExample({super.key});
@@ -163,7 +164,7 @@ can be level 1 at size 6 while an empty-state title stays level 2 at size 3.
 <CodeGroup title="Heading level and size" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class HeadingLevelExample extends StatelessWidget {
   const HeadingLevelExample({super.key});
@@ -222,7 +223,7 @@ idle treatment.
 <CodeGroup title="Links" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class LinkExample extends StatelessWidget {
   const LinkExample({super.key, required this.onOpenDocs});
@@ -250,9 +251,9 @@ class LinkExample extends StatelessWidget {
 </CodeGroup>
 
 `linkUrl` is assistive metadata only and is **never launched**. Navigation stays
-your responsibility inside `onPressed`, which keeps `remix_fortal` free of a URL
-launcher dependency. Passing `linkUrl` without `onPressed` asserts, because an
-announced destination with no activation is a broken promise to assistive
+your responsibility inside `onPressed`, which keeps the owned recipe free of a
+URL launcher dependency. Passing `linkUrl` without `onPressed` asserts, because
+an announced destination with no activation is a broken promise to assistive
 technology.
 
 `enabled: false` keeps the callback and still refuses focus and activation, so
@@ -269,7 +270,7 @@ Each widget calls a `fortal*Style` recipe you can use directly. `FortalText` and
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 /// Body text on the Fortal scale with one project-specific neutral tone.
 TextStyler mutedBody() => fortalTextStyle(

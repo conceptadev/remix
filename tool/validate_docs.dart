@@ -132,7 +132,11 @@ final _iconButtonInvocation = RegExp(
 final _remixImport = RegExp(
   r'''import\s+['"]package:(?:remix|remix_fortal)/(?:remix|remix_fortal)\.dart['"]\s*;''',
 );
+final _applicationOwnedFortalImport = RegExp(
+  r'''import\s+['"]ui/ui\.dart['"]\s*;''',
+);
 final _remixApiReference = RegExp(r'\b(?:Remix|Fortal)[A-Z]\w*');
+final _fortalApiReference = RegExp(r'\bFortal[A-Z]\w*');
 
 const _exampleSourceDirectories = <String>[
   'apps/dashboard/lib',
@@ -355,9 +359,17 @@ Future<void> main() async {
   try {
     for (final (index, snippet) in snippets.indexed) {
       final file = File('${tempRoot.path}/snippet_$index.dart');
+      // Fortal docs show the barrel an initialized application owns. The
+      // temporary validation directory has no application package, so map only
+      // that import to the analyzer-checked authoring package. The Fortal
+      // derivation round trip separately proves that the prefixed APIs match.
+      final validationSource = snippet.source.replaceAll(
+        _applicationOwnedFortalImport,
+        "import 'package:remix_fortal/remix_fortal.dart';",
+      );
       file.writeAsStringSync(
         '// Generated temporarily by tool/validate_docs.dart.\n'
-        '${snippet.source}\n',
+        '$validationSource\n',
       );
     }
 
@@ -819,14 +831,26 @@ _extractAnalyzableSnippets(
     final source = file.readAsStringSync();
     for (final (index, match) in fence.allMatches(source).indexed) {
       final snippet = match.group(1)!;
-      final importsRemix = _remixImport.hasMatch(snippet);
+      final importsApplicationUi = _applicationOwnedFortalImport.hasMatch(
+        snippet,
+      );
+      // Default-preset snippets use the same application-relative barrel but
+      // have no package source to analyze against here. Fortal snippets use a
+      // known prefix and can be mapped to the authoring package byte-for-byte.
+      if (importsApplicationUi && !_fortalApiReference.hasMatch(snippet)) {
+        skipped += 1;
+        continue;
+      }
+      final importsRemix =
+          _remixImport.hasMatch(snippet) || importsApplicationUi;
       if (!importsRemix) {
         skipped += 1;
         if (_remixApiReference.hasMatch(snippet)) {
           failures.add(
             '$relativePath Dart example ${index + 1} uses Remix or Fortal APIs '
-            'but imports neither package:remix/remix.dart nor '
-            'package:remix_fortal/remix_fortal.dart.',
+            'but imports neither package:remix/remix.dart, '
+            'package:remix_fortal/remix_fortal.dart, nor the application-owned '
+            'ui/ui.dart barrel.',
           );
         }
         continue;

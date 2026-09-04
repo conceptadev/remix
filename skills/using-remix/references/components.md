@@ -16,5 +16,5 @@ Every styled leaf `Remix*` widget accepts `style` (a `*Styler`) and
 such as `RemixTabs`, `RemixRadioGroup`, `RemixCheckboxGroup`, and
 `RemixAccordionGroup` do not have a styler.
 
-Fortal cross-references name APIs from the separate `remix_fortal` package.
-Read [fortal.md](fortal.md) for setup, presets, variants, sizes, and tokens.
+Fortal cross-references name APIs from the application-owned Fortal preset.
+Read [fortal.md](fortal.md) for setup, variants, sizes, and tokens.

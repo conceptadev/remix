@@ -1,5 +1,6 @@
 name: remix_fortal
 description: Fortal is a Radix Themes-inspired preset theme and widget catalog built on Remix.
+publish_to: none
 repository: https://github.com/btwld/remix
 documentation: https://docs.page/btwld/remix/fortal
 issue_tracker: https://github.com/btwld/remix/issues
@@ -12,12 +13,10 @@ topics:
   - styling
   - mix
 
-# Pre-release because every dependency below is itself a pre-release; pub warns
-# when a stable package is built on beta foundations. Graduate to 0.1.0 when
-# remix reaches 1.0.0 stable.
+# Retained for workspace package resolution; releases now ship through the
+# application-owned Fortal registry in remix_cli.
 version: 1.0.0-beta.7
 
-# Consumer floor, matching `remix` and `mix`. See packages/remix/pubspec.yaml.
 environment:
   sdk: ">=3.11.0 <4.0.0"
   flutter: ">=3.41.0"
@@ -25,31 +24,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # Tracks the sibling `remix` version automatically: release-please rewrites the
-  # annotated line below whenever it bumps `remix` (see the `extra-files` entry
-  # for packages/remix in release-please-config.json). During development pub
-  # resolves this to the local sibling anyway via `resolution: workspace`.
-  #
-  # The floor must name a `remix` that no longer exports Fortal. Releases up to
-  # and including 1.0.0-beta.1 still bundled FortalScope/FortalTokens/Fortal*, so
-  # `remix` has to cut its Fortal-free release before `remix_fortal` is published
-  # — otherwise pub could resolve a `remix` whose symbols collide with this
-  # package. `tool/fortal_parity/check.dart` (_checkRemixHostedPin) fails if the
-  # two ever fall out of sync. `melos version` rewrites this line when `remix`
-  # bumps, because remix_fortal depends on it.
+  # The workspace resolves this to the sibling source package. The derived
+  # registry owns the hosted Remix floor installed into consumer applications.
   remix: ^1.0.0-beta.7
   mix: ^2.2.0-beta.5
   mix_annotations: ^2.2.0-beta.1
   mix_chart: ^0.0.1-beta.1
-  # Ranged, not pinned: pub.dev rejects an exact hosted constraint with
-  # "your dependency should allow more than one version" and the publish
-  # exits 65. The floor is the release the Fortal parity contract was
-  # validated against; the exact tested resolution is enforced on the
-  # workspace lockfile by tool/fortal_parity/check.dart, which also requires
-  # both published packages to carry this identical constraint.
-  naked_ui: ^1.0.0-beta.14
-  # Publish remix_ui_icons before the next remix_fortal release so this remains a
-  # valid hosted dependency outside the workspace.
   remix_ui_icons: ^0.1.0
 
 dev_dependencies:

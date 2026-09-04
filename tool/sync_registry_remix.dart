@@ -9,12 +9,10 @@ import 'package:yaml/yaml.dart';
 /// dart run tool/sync_registry_remix.dart
 /// ```
 ///
-/// `melos version` rewrites the `remix` constraint of every pubspec dependent,
-/// which is how `remix_fortal`'s parity pin stays in step. The registry is
-/// data, not a pubspec, so melos never reaches it — this tool is the step that
-/// does. `tool/check_version_alignment.dart` is the checker that fails when it
-/// has not been run; the two are deliberately separate, because no `check_*`
-/// tool in this workspace writes.
+/// The registry is data, not a pubspec, so `melos version` never reaches it.
+/// This tool is the explicit write step; `tool/check_version_alignment.dart`
+/// is the checker that fails when it has not been run. The two stay separate
+/// because no `check_*` tool in this workspace writes.
 void main(List<String> arguments) {
   if (arguments.isNotEmpty) {
     stderr.writeln('Unsupported arguments: ${arguments.join(', ')}');

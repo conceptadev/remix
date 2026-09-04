@@ -1,6 +1,7 @@
 # Data Display Components
 
-Constructor details for Remix data-display widgets. Fortal widgets mentioned here live in the separate `remix_fortal` package; see [Fortal](fortal.md).
+Constructor details for Remix data-display widgets. Fortal widgets mentioned
+here come from the application-owned Fortal preset; see [Fortal](fortal.md).
 
 ## Table of Contents
 

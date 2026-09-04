@@ -37,7 +37,7 @@ and cell editing are out of scope.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class Person {
   const Person(this.id, this.name, this.role);
@@ -90,7 +90,7 @@ reorders the rows it was given.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class SortableTableExample extends StatefulWidget {
   const SortableTableExample({super.key, required this.names});
@@ -146,7 +146,7 @@ scoped to the visible page and preserves selections made on other pages.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class PagedTableExample extends StatefulWidget {
   const PagedTableExample({super.key, required this.allRows});
@@ -204,7 +204,7 @@ body rows while the column header and pagination footer stay in place.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class ActionCellExample extends StatelessWidget {
   const ActionCellExample({super.key, required this.rows});
@@ -256,7 +256,7 @@ range without a Material host. `start` and `end` alignments follow
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class LocalizedTableExample extends StatelessWidget {
   const LocalizedTableExample({super.key, required this.rows});

@@ -383,8 +383,8 @@ Future<_Failure?> _checkInTemporaryApp({
   // at. So between the version pull request merging and its `v<version>` tag
   // being served, this phase cannot resolve the new floor and fails on that
   // commit. That window is expected and self-heals once pub.dev serves the
-  // tag; `remix_fortal`'s hosted pin lives with the identical one. The fix is
-  // to push the tag, never to teach this checker to probe pub.dev.
+  // tag. The fix is to push the tag, never to teach this checker to probe
+  // pub.dev.
   final addCli = await _runProcess(
     sdk.dart,
     ['pub', 'add', 'dev:remix_cli@{path: ${cliRoot.path}}'],
