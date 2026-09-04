@@ -1,0 +1,220 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/tokens.dart';
+
+part 'tabs.g.dart';
+
+/// The application's tab-strip recipe.
+///
+/// The strip is the rule the tabs sit on: one hairline along its bottom edge,
+/// in the same `border` token every other control outline uses. It spans its
+/// container rather than hugging the tabs, so the rule lines up with the card
+/// or page edge beside it.
+///
+/// The strip does not scroll. Tabs wider than the container are a layout
+/// decision, and the scroll view belongs **outside** the bar:
+///
+/// ```dart
+/// SingleChildScrollView(
+///   scrollDirection: Axis.horizontal,
+///   child: {{typePrefix}}TabBar(child: Row(children: tabs)),
+/// )
+/// ```
+///
+/// Not inside it. Flutter's tab-bar semantics role requires every direct
+/// semantics child of the bar to be a tab, and a scroll view inserted between
+/// them adds a node of its own, which trips that assertion at runtime.
+///
+/// `RemixTabs` — the behavioral root that owns selection, roving focus, and
+/// arrow-key traversal — carries no styler and therefore no recipe. Compose it
+/// directly around this bar:
+///
+/// ```dart
+/// RemixTabs(
+///   selectedTabId: tab,
+///   onChanged: (id) => setState(() => tab = id),
+///   child: Column(
+///     children: [
+///       {{typePrefix}}TabBar(
+///         child: Row(children: [
+///           {{typePrefix}}Tab(tabId: 'account', label: 'Account'),
+///           {{typePrefix}}Tab(tabId: 'billing', label: 'Billing'),
+///         ]),
+///       ),
+///       {{typePrefix}}TabView(tabId: 'account', child: accountPanel),
+///       {{typePrefix}}TabView(tabId: 'billing', child: billingPanel),
+///     ],
+///   ),
+/// )
+/// ```
+@MixWidget(target: RemixTabBar.new)
+TabBarStyler {{valuePrefix}}TabBarStyle({
+  TabBarStyler style = const TabBarStyler.create(),
+}) => TabBarStyler()
+    .direction(.horizontal)
+    .mainAxisSize(.max)
+    .crossAxisAlignment(.end)
+    .border(.bottom(.color({{typePrefix}}Tokens.border()).width(_barBorderWidth)))
+    .merge(style);
+
+/// The application's Tab recipe.
+///
+/// Everything visual about one tab lives in this function: geometry,
+/// typography, and the hover/selected/focus/disabled fragments. Remix keeps
+/// ownership of rendering, selection, keyboard traversal, and the tab
+/// accessibility semantics — this recipe never reimplements any of that.
+///
+/// The selected tab is marked by its trailing edge. That edge is present in
+/// every state and merely transparent when unselected, so selecting a tab
+/// paints two pixels instead of reflowing the whole strip.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it. State fragments merge by state, not
+/// by depth: an override that must beat the recipe's selected underline has to
+/// be declared as a selected fragment too (`TabStyler().onSelected(...)`).
+///
+/// `builder` is deliberately not forwarded to the generated
+/// `{{typePrefix}}Tab`. Its type is `ValueWidgetBuilder<NakedTabState>`, and
+/// `NakedTabState` comes from `package:naked_ui`, which this layer does not
+/// depend on. Pass a `child` for custom content, or reach for `RemixTab`
+/// directly on the rare call site that needs the raw state.
+@MixWidget(
+  target: RemixTab.new,
+  widgetParameters: .only({
+    'tabId',
+    'child',
+    'label',
+    'icon',
+    'enabled',
+    'mouseCursor',
+    'enableFeedback',
+    'focusNode',
+    'autofocus',
+    'onFocusChange',
+    'onHoverChange',
+    'onPressChange',
+    'semanticLabel',
+  }),
+)
+TabStyler {{valuePrefix}}TabStyle({TabStyler style = const TabStyler.create()}) {
+  return _base()
+      .onHovered(_activeContent().color({{typePrefix}}Tokens.accent()))
+      .onSelected(_selectedStyle())
+      .onFocusVisible(_focusVisibleStyle())
+      .onDisabled(_disabledStyle())
+      .merge(style);
+}
+
+/// The application's recipe for the panel a tab reveals.
+///
+/// It exists so the panel carries the application's prefix and has one place
+/// to edit, and it earns that by owning the gap between the strip and the
+/// content: without it the panel's first line sits directly on the hairline.
+@MixWidget(target: RemixTabView.new)
+TabViewStyler {{valuePrefix}}TabViewStyle({
+  TabViewStyler style = const TabViewStyler.create(),
+}) => TabViewStyler().padding(.top(_panelGap)).merge(style);
+
+/// Width of the strip's hairline.
+const _barBorderWidth = 1.0;
+
+/// Width of the edge that marks the selected tab.
+///
+/// Twice the strip's hairline so the mark reads as a deliberate indicator
+/// rather than a thicker piece of the same rule.
+const _selectedEdgeWidth = 2.0;
+
+/// An edge that paints nothing, holding the selected mark's space.
+const _noEdge = Color(0x00000000);
+
+/// Gap between the strip and the panel it reveals.
+const _panelGap = 16.0;
+
+/// Width of the keyboard focus ring.
+const _focusRingWidth = 2.0;
+
+/// Opacity applied to the whole tab while disabled.
+const _disabledOpacity = 0.5;
+
+/// The tab's resting height, matching shadcn's `h-9` on its tab list and the
+/// button beside it.
+///
+/// One size, not a scale. A call site that needs another sets `.minHeight(...)`
+/// through [style].
+const _minHeight = 36.0;
+
+/// Horizontal inset inside a tab.
+const _paddingX = 12.0;
+
+/// Gap between a tab's icon and its label.
+const _gap = 8.0;
+
+/// Label size, matching body copy.
+const _labelSize = 14.0;
+
+/// Size of a tab's leading icon.
+const _iconSize = 16.0;
+
+/// Layout, typography, and the unselected content color.
+///
+/// An unselected tab is a destination, not the current one, so it uses
+/// `mutedForeground`; hover and selection both promote it to `foreground`.
+TabStyler _base() => _content({{typePrefix}}Tokens.mutedForeground())
+    .direction(.horizontal)
+    .mainAxisSize(.min)
+    .mainAxisAlignment(.center)
+    .crossAxisAlignment(.center)
+    .minHeight(_minHeight)
+    .padding(.horizontal(_paddingX))
+    .spacing(_gap)
+    .border(.bottom(.color(_noEdge).width(_selectedEdgeWidth)))
+    .label(.fontSize(_labelSize).fontWeight(FontWeight.w500))
+    .icon(.size(_iconSize));
+
+/// The selected tab: full-strength content and the `primary` edge.
+///
+/// It sets no fill on purpose. Variant fragments apply in declaration order
+/// and only overwrite what they name, so leaving `color` alone here is what
+/// lets a hovered selected tab keep the hover fill *and* the selected edge.
+TabStyler _selectedStyle() => _activeContent().border(
+  .bottom(.color({{typePrefix}}Tokens.primary()).width(_selectedEdgeWidth)),
+);
+
+/// The content color shared by the hovered and selected tabs.
+TabStyler _activeContent() => _content({{typePrefix}}Tokens.foreground());
+
+/// Applies one content color to the label and the icons.
+TabStyler _content(Color foreground) =>
+    TabStyler().label(.color(foreground)).icon(.color(foreground));
+
+/// The keyboard focus ring.
+///
+/// A *foreground* decoration rather than the box border: `TabSpec` has no
+/// `containerEffects` layer to paint an outline into, and Flutter insets a
+/// container's content by its border widths — so adding a real border on
+/// focus would nudge the label. A foreground decoration paints over the tab
+/// and takes no layout space, which is what a ring needs.
+TabStyler _focusVisibleStyle() => TabStyler().foregroundDecoration(
+  BoxDecorationMix.border(
+    .all(
+      BorderSideMix(
+        color: {{typePrefix}}Tokens.focusRing(),
+        width: _focusRingWidth,
+        // Inset, so the ring stays inside the tab's own bounds instead of
+        // overlapping its neighbours in the strip.
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+    ),
+  ),
+);
+
+/// Declared last so it wins over every other state fragment.
+///
+/// A disabled tab keeps whatever surface its state gives it and simply fades;
+/// the focus ring is cleared because a disabled tab that still draws a focus
+/// ring reads as reachable.
+TabStyler _disabledStyle() => TabStyler()
+    .foregroundDecoration(BoxDecorationMix.border(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));

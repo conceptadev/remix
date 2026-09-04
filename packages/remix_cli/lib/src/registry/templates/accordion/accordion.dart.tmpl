@@ -1,0 +1,185 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/tokens.dart';
+
+part 'accordion.g.dart';
+
+/// The application's Accordion recipe.
+///
+/// Remix owns the rendering, the expand and collapse animation, the group
+/// coordination, keyboard activation, and the accessibility semantics; this
+/// recipe supplies the row, the two icons, the title, and the panel.
+///
+/// `RemixAccordionGroup` — the behavioral coordinator that owns which values
+/// are expanded — carries no styler and therefore no recipe. Compose it
+/// directly around these:
+///
+/// ```dart
+/// // `RemixAccordionController` is Remix's alias for the Naked UI type, so
+/// // the controller does not pull `package:naked_ui` into this layer.
+/// RemixAccordionGroup<String>(
+///   controller: RemixAccordionController<String>(),
+///   child: Column(children: const [
+///     {{typePrefix}}Accordion(
+///       value: 'shipping',
+///       title: 'Shipping',
+///       child: Text('Two to four business days.'),
+///     ),
+///   ]),
+/// )
+/// ```
+///
+/// Each section is separated by a rule along its bottom edge rather than by a
+/// box of its own, so a stack of them reads as one list. The `border` token
+/// is the same hairline the divider draws, which is what makes a divider
+/// between sections indistinguishable from the sections' own edges.
+///
+/// `builder` is deliberately not forwarded to the generated
+/// `{{typePrefix}}Accordion`. Its type is `NakedAccordionTriggerBuilder`,
+/// which comes from `package:naked_ui` — a package this layer does not depend
+/// on. Use `title` with the icons, or reach for `RemixAccordion` directly on
+/// the rare call site that needs to build its own trigger row.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it. State fragments merge by state, not
+/// by depth: an override that must beat the recipe's open title has to be
+/// declared as a selected fragment too (`AccordionStyler().onSelected(...)`).
+@MixWidget(
+  target: RemixAccordion.new,
+  widgetParameters: .only({
+    'value',
+    'child',
+    'title',
+    'leadingIcon',
+    'trailingIcon',
+    'enabled',
+    'mouseCursor',
+    'enableFeedback',
+    'autofocus',
+    'focusNode',
+    'onFocusChange',
+    'onHoverChange',
+    'onPressChange',
+    'semanticLabel',
+    'transitionBuilder',
+  }),
+)
+AccordionStyler {{valuePrefix}}AccordionStyle({
+  AccordionStyler style = const AccordionStyler.create(),
+}) => AccordionStyler()
+    // `container` has to be reached by name. `AccordionStyler` forwards its
+    // box shorthand to `trigger`, so a bare `.border(...)` would outline the
+    // clickable row rather than the section, and the rule between sections
+    // would move with the panel as it opens.
+    .container(
+      .border(.bottom(.color({{typePrefix}}Tokens.border()).width(_borderWidth))),
+    )
+    // These *are* the forwarded shorthand, so they land on `trigger`: the row
+    // a reader clicks to open the section.
+    .direction(.horizontal)
+    .crossAxisAlignment(.center)
+    .minHeight(_triggerHeight)
+    .padding(.horizontal(_paddingX))
+    .spacing(_gap)
+    .title(
+      .fontSize(
+        _titleSize,
+      ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.foreground()),
+    )
+    .leadingIcon(.size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()))
+    // Both icons are markers, not the state: Remix renders whatever
+    // `IconData` the caller passes and does not rotate it, so a chevron that
+    // turns is a caller passing a different glyph when the section is open.
+    .trailingIcon(.size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()))
+    .content(
+      .padding(.only(left: _paddingX, right: _paddingX, bottom: _contentGap)),
+    )
+    .onHovered(_hoverStyle())
+    .onSelected(_openStyle())
+    .onFocusVisible(_focusVisibleStyle())
+    .onDisabled(_disabledStyle())
+    .merge(style);
+
+/// Width of the rule under each section.
+const _borderWidth = 1.0;
+
+/// Minimum height of the row a reader clicks to open a section.
+const _triggerHeight = 44.0;
+
+/// Gap between the icons and the title.
+const _gap = 8.0;
+
+/// Horizontal inset inside the row and its panel.
+///
+/// The same 12 every other row-like surface in this layer uses — the table's
+/// cells, the select's trigger, the callout. Upstream shadcn leaves its
+/// accordion trigger flush because the item it sits in supplies the inset;
+/// nothing wraps this one, so flush would put the title hard against whatever
+/// contains it while the rule below still spans the full width.
+const _paddingX = 12.0;
+
+/// Title size, matching body copy: a section heading, not a page heading.
+const _titleSize = 14.0;
+
+/// Size of the leading and trailing icons.
+const _iconSize = 16.0;
+
+/// Gap between the open panel's content and the rule below it.
+const _contentGap = 16.0;
+
+/// Width of the keyboard focus ring.
+///
+/// It carries no offset, unlike the button's. Sections stack directly on top
+/// of one another, so a ring pushed outward would cross into the section
+/// above and below it.
+const _focusRingWidth = 2.0;
+
+/// Opacity applied to the whole section while disabled.
+const _disabledOpacity = 0.5;
+
+/// Hovering underlines the title and promotes the icons.
+///
+/// The icons alone were not enough: they move from `mutedForeground` to
+/// `foreground`, which at 16px is invisible next to a title that is already
+/// at full strength — a hovered row looked exactly like a resting one. The
+/// underline is what a reader actually sees, and it is what shadcn's own
+/// accordion trigger uses (`hover:underline`).
+///
+/// The title's *weight* stays out of it, because that is what the open state
+/// uses; leaving it here would erase the difference between "the pointer is
+/// here" and "this section is open".
+AccordionStyler _hoverStyle() => _icons(
+  {{typePrefix}}Tokens.foreground(),
+).title(.decoration(TextDecoration.underline));
+
+/// The open section: promoted icons *and* a heavier title.
+///
+/// The weight is what separates "open" from "the pointer is here" — the two
+/// states otherwise share the icon promotion, and a reader scanning a
+/// collapsed list needs to find the open one without moving the mouse.
+AccordionStyler _openStyle() =>
+    _icons({{typePrefix}}Tokens.foreground()).title(.fontWeight(FontWeight.w600));
+
+/// Applies one color to both icons.
+AccordionStyler _icons(Color color) =>
+    AccordionStyler().leadingIcon(.color(color)).trailingIcon(.color(color));
+
+/// The keyboard focus ring.
+///
+/// An outline rather than a border: `RemixBoxEffects` paints it outside the
+/// section without taking layout space, and the section's own border is
+/// already carrying the rule between rows.
+AccordionStyler _focusVisibleStyle() => AccordionStyler().containerEffects(
+  .outline(
+    .color(
+      {{typePrefix}}Tokens.focusRing(),
+    ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
+  ),
+);
+
+/// Declared last so it wins over every other state fragment.
+AccordionStyler _disabledStyle() => AccordionStyler()
+    .containerEffects(.outline(.style(.none)))
+    .wrap(.opacity(_disabledOpacity));
