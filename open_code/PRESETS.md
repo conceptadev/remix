@@ -210,11 +210,13 @@ runs it in CI, the way `docs:check` runs `generate_fortal_catalog.dart`.
 ## The PR stack
 
 1. `feat/open-code` targets `main` in PR #177.
-2. `feat/fortal-presets` targets `feat/open-code` and contains the Fortal work.
+2. `feat/fortal-presets` targets `feat/open-code` in PR #180.
 3. `feat/open-code-sidebar` targets `feat/fortal-presets` in PR #178.
 
-Merge in that order. The original plan proposed five Fortal PRs. The final
-stack keeps those implementation boundaries as five commits in one Fortal PR.
+GitHub tracks these PRs as a native stack. Follow the merge and publication
+steps in [RELEASING.md](RELEASING.md).
+The original plan proposed five Fortal PRs. The final stack keeps those
+implementation boundaries as five commits in one Fortal PR.
 The Sidebar PR remains separate because it adds a default recipe.
 
 ## Implementation commits

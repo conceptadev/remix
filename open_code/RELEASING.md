@@ -6,10 +6,16 @@ The stack prepares Remix `1.0.0-beta.8` and `remix_cli` `0.1.0`.
 Neither version has been published from this stack. The existing
 `remix_fortal` release remains available until the replacement passes validation.
 
-Merge PR #177, the Fortal PR, and PR #178 in that order. Retarget each child
-PR to `main` after its parent merges. Preserve the parent commits when merging,
-or rebase the child after a squash merge. Require passing checks after each
-retarget or rebase.
+The native GitHub stack contains [#177](https://github.com/conceptadev/remix/pull/177),
+[#180](https://github.com/conceptadev/remix/pull/180), and
+[#178](https://github.com/conceptadev/remix/pull/178), from bottom to top.
+Review each PR against its parent. Require passing checks for every PR.
+
+After merge approval, merge the stack through the top PR, #178.
+GitHub merges all three PRs into `main`. For a partial merge, start with #177.
+GitHub automatically rebases the remaining branches and updates their targets.
+Require passing checks after any rebase. See the
+[GitHub stack instructions](https://docs.github.com/en/pull-requests/get-started/about-stacked-prs#merging).
 
 ## Validate the release candidate
 
