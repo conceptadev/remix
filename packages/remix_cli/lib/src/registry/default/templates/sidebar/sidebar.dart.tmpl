@@ -1,0 +1,128 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/tokens.dart';
+import 'toggle.dart';
+
+part 'sidebar.g.dart';
+
+/// The application's Sidebar recipe.
+///
+/// A sidebar is the navigation panel down one edge of an application shell.
+/// Remix owns the rendering, the header/content/footer stacking, the roving
+/// focus across destinations, the selection semantics, and the navigation
+/// landmark; this recipe owns the panel surface, the region insets, the
+/// section rhythm, and the label type.
+///
+/// It takes no variant and no size. There is one panel per shell, and the
+/// thing that actually varies between applications — how wide it is — is not
+/// the recipe's to decide: the host sizes the panel, because the same panel
+/// is usually presented as a drawer at narrow widths and the drawer's width
+/// is a layout decision. Nothing here sets a width, and nothing here pads the
+/// header, whose metrics normally have to line up with an application top bar.
+///
+/// This recipe **depends on the `toggle` item**, which is why its registry
+/// entry lists `toggle` beside `theme`. A destination is a toggle: it is a
+/// control that stays pressed, and `SidebarSpec` takes its style as a
+/// `ToggleStyler` field. Handing it the application's own ghost toggle recipe
+/// is what keeps a selected destination and a selected toggle the same colour
+/// without restating one component inside another.
+///
+/// The panel fill is `background`, the same token the page uses, and the
+/// trailing hairline in `border` is what separates the two — the same choice
+/// the card recipe makes, for the same reason.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it:
+///
+/// ```dart
+/// {{typePrefix}}Sidebar(
+///   style: SidebarStyler().width(_shellSidebarWidth),
+///   sections: sections,
+///   selectedValue: current,
+///   onSelected: go,
+/// )
+/// ```
+@MixWidget(target: RemixSidebar.new)
+SidebarStyler {{valuePrefix}}SidebarStyle({
+  SidebarStyler style = const SidebarStyler.create(),
+}) => SidebarStyler(
+  container: FlexBoxStyler()
+      .color({{typePrefix}}Tokens.background())
+      .border(.end(.color({{typePrefix}}Tokens.border()).width(_borderWidth))),
+  content: FlexBoxStyler()
+      .padding(
+        .symmetric(horizontal: _contentPaddingX, vertical: _contentPaddingY),
+      )
+      .spacing(_sectionGap),
+  footer: BoxStyler()
+      .border(.top(.color({{typePrefix}}Tokens.border()).width(_borderWidth)))
+      .padding(.all(_contentPaddingX)),
+  // A section label names the group below it. It is deliberately the
+  // quietest text in the panel: `mutedForeground` at the smallest size, so
+  // it reads as a heading for the destinations rather than as one of them.
+  sectionLabel: TextStyler()
+      .color({{typePrefix}}Tokens.mutedForeground())
+      .fontSize(_sectionLabelSize)
+      .fontWeight(FontWeight.w500)
+      .letterSpacing(_sectionLabelTracking)
+      .wrap(
+        .padding(
+          .symmetric(
+            horizontal: _sectionLabelPaddingX,
+            vertical: _sectionLabelPaddingY,
+          ),
+        ),
+      ),
+  destinations: FlexBoxStyler().spacing(_destinationGap),
+  // The application's own toggle, stretched to the panel width and pinned to
+  // a comfortable target height. `ghost` is the right weight here: a column
+  // of outlined destinations would draw more lines than the panel has room
+  // for, and selection already reads through the `accent` fill.
+  destination: {{valuePrefix}}ToggleStyle(variant: .ghost, size: .medium)
+      .minHeight(_destinationMinHeight)
+      .container(.mainAxisSize(.max).mainAxisAlignment(.start)),
+).merge(style);
+
+/// Width of the panel's trailing edge and the footer's top divider.
+const _borderWidth = 1.0;
+
+/// Horizontal inset of the scrolling destination region.
+const _contentPaddingX = 12.0;
+
+/// Vertical inset of the scrolling destination region.
+const _contentPaddingY = 16.0;
+
+/// Gap between adjacent sections.
+const _sectionGap = 16.0;
+
+/// Gap between adjacent destinations inside one section.
+///
+/// Much tighter than [_sectionGap]: destinations in a section are one list,
+/// and the whitespace is what tells a reader where that list ends.
+const _destinationGap = 2.0;
+
+/// Type scale for a section label.
+const _sectionLabelSize = 12.0;
+
+/// Extra tracking on a section label, which small uppercase-ish headings need
+/// to stay legible.
+const _sectionLabelTracking = 0.4;
+
+/// Horizontal inset of a section label.
+///
+/// Two pixels narrower than the destination's own `padding`, so the label's
+/// first glyph sits over the destination text below it rather than over the
+/// destination's edge.
+const _sectionLabelPaddingX = 10.0;
+
+/// Vertical inset of a section label.
+const _sectionLabelPaddingY = 6.0;
+
+/// Minimum height of one destination.
+///
+/// Taller than the 36px `medium` toggle it is built from: a destination is a
+/// primary navigation target, often reached on a touch screen, and this is
+/// the one place in this layer that meets the 48px guidance outright.
+const _destinationMinHeight = 48.0;

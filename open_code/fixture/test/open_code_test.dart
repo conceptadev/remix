@@ -3874,6 +3874,117 @@ void main() {
     });
   });
 
+  group('acmeSidebarStyle', () {
+    for (final theme in _themes) {
+      testWidgets('the panel is the page plus one edge in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeSidebarStyle(),
+          theme: theme.data,
+        );
+
+        // The same choice the card makes: one surface token, and the hairline
+        // is what separates the panel from the content beside it.
+        expect(
+          _flexDecoration(spec.spec.container)?.color,
+          theme.data.background,
+        );
+        expect(
+          _flexBorder(spec.spec.container),
+          BorderDirectional(
+            end: BorderSide(color: theme.data.border, width: 1),
+          ),
+        );
+        expect(
+          _boxBorder(spec.spec.footer),
+          Border(top: BorderSide(color: theme.data.border, width: 1)),
+        );
+      });
+
+      testWidgets('a section label reads quieter than a destination in '
+          '${theme.name}', (tester) async {
+        final spec = await _resolve(
+          tester,
+          acmeSidebarStyle(),
+          theme: theme.data,
+        );
+
+        expect(
+          spec.spec.sectionLabel.spec.style?.color,
+          theme.data.mutedForeground,
+        );
+        expect(
+          spec.spec.destination.spec.label.spec.style?.color,
+          theme.data.foreground,
+        );
+        _expectReadable(
+          spec.spec.sectionLabel.spec.style!.color!,
+          const Color(0x00000000),
+          page: theme.data.background,
+          floor: 4.5,
+          reason: 'sidebar section label',
+        );
+      });
+    }
+
+    testWidgets('a destination is the application toggle, widened', (
+      tester,
+    ) async {
+      const theme = AcmeThemeData.light();
+      final sidebar = await _resolve(tester, acmeSidebarStyle(), theme: theme);
+      final toggle = await _resolve(tester, acmeToggleStyle(), theme: theme);
+
+      final destination = sidebar.spec.destination.spec.container.spec;
+      // The recipe reuses the ghost toggle rather than restating it, so the
+      // resting fill and the type scale come from the toggle's own recipe.
+      expect(
+        destination.box?.spec.decoration,
+        toggle.spec.container.spec.box?.spec.decoration,
+      );
+      expect(
+        sidebar.spec.destination.spec.label.spec.style?.fontSize,
+        toggle.spec.label.spec.style?.fontSize,
+      );
+      // What the sidebar does add: full panel width, leading content, and a
+      // 48px target rather than the toggle's 36.
+      expect(destination.box?.spec.constraints?.minHeight, 48);
+      expect(destination.flex?.spec.mainAxisSize, MainAxisSize.max);
+      expect(destination.flex?.spec.mainAxisAlignment, MainAxisAlignment.start);
+    });
+
+    testWidgets('renders its sections through Remix', (tester) async {
+      var selected = 'overview';
+      await _pumpInScope(
+        tester,
+        AcmeSidebar<String>(
+          sections: const [
+            RemixSidebarSection(
+              label: 'Workspace',
+              destinations: [
+                RemixSidebarDestination(value: 'overview', label: 'Overview'),
+                RemixSidebarDestination(value: 'reports', label: 'Reports'),
+              ],
+            ),
+          ],
+          selectedValue: selected,
+          onSelected: (value) => selected = value,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(RemixSidebar<String>), findsOneWidget);
+      expect(find.text('Workspace'), findsOneWidget);
+      expect(find.text('Overview'), findsOneWidget);
+
+      await tester.tap(find.text('Reports'));
+      await tester.pumpAndSettle();
+
+      expect(selected, 'reports');
+    });
+  });
+
   group('acmeDataListStyle', () {
     for (final theme in _themes) {
       testWidgets('labels read quieter than their values in ${theme.name}', (
