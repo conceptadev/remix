@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
-import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
@@ -18,11 +17,12 @@ enum FortalAccordionVariant { surface, soft }
 AccordionStyler fortalAccordionStyle({
   FortalAccordionVariant variant = .surface,
   FortalAccordionSize size = .size2,
+  AccordionStyler style = const AccordionStyler.create(),
 }) {
-  return switch (variant) {
+  return (switch (variant) {
     .surface => _fortalAccordionSurfaceStyler(size),
     .soft => _fortalAccordionSoftStyler(size),
-  };
+  }).merge(style);
 }
 
 // Panel anatomy follows the mapped Table family (see data_table.dart):

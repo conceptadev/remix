@@ -32,6 +32,7 @@ const _minimumDestinationTargetHeight = 48.0;
 SidebarStyler fortalSidebarStyle({
   bool highContrast = false,
   EdgeInsetsGeometry? panelPadding,
+  SidebarStyler style = const SidebarStyler.create(),
 }) {
   return SidebarStyler(
     container:
@@ -76,5 +77,5 @@ SidebarStyler fortalSidebarStyle({
             )
             .minHeight(_minimumDestinationTargetHeight)
             .container(.mainAxisSize(.max).mainAxisAlignment(.start)),
-  );
+  ).merge(style);
 }

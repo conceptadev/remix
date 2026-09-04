@@ -1,8 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
-import 'package:mix/mix.dart';
-import 'package:remix/remix.dart' show RemixBoxShadow, RemixBoxShadowKind;
+import 'package:remix/remix.dart';
 
 import 'computed.dart';
 import 'radix_colors.dart' as radix;

@@ -57,6 +57,7 @@ enum FortalSegmentedControlVariant { surface, classic }
 SegmentedControlStyler fortalSegmentedControlStyle({
   FortalSegmentedControlVariant variant = .surface,
   FortalSegmentedControlSize size = .size2,
+  SegmentedControlStyler style = const SegmentedControlStyler.create(),
 }) {
   final metrics = _fortalSegmentedControlMetrics(size);
   final item = _fortalSegmentedControlItemStyle(variant, metrics);
@@ -72,7 +73,8 @@ SegmentedControlStyler fortalSegmentedControlStyle({
         SegmentedControlStyler().color(
           _segmentedControlDisabledTrackBackground(),
         ),
-      );
+      )
+      .merge(style);
 }
 
 SegmentedControlItemStyler _fortalSegmentedControlItemStyle(

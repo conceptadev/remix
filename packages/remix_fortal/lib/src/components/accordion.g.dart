@@ -12,6 +12,7 @@ class FortalAccordion<T> extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.style = const AccordionStyler.create(),
     required this.value,
     required this.child,
     this.title,
@@ -33,6 +34,7 @@ class FortalAccordion<T> extends StatelessWidget {
   const FortalAccordion.surface({
     super.key,
     this.size = .size2,
+    this.style = const AccordionStyler.create(),
     required this.value,
     required this.child,
     this.title,
@@ -54,6 +56,7 @@ class FortalAccordion<T> extends StatelessWidget {
   const FortalAccordion.soft({
     super.key,
     this.size = .size2,
+    this.style = const AccordionStyler.create(),
     required this.value,
     required this.child,
     this.title,
@@ -75,6 +78,8 @@ class FortalAccordion<T> extends StatelessWidget {
   final FortalAccordionVariant variant;
 
   final FortalAccordionSize size;
+
+  final AccordionStyler style;
 
   final T value;
 
@@ -112,7 +117,11 @@ class FortalAccordion<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixAccordion<T>(
       key: this.key,
-      style: fortalAccordionStyle(variant: this.variant, size: this.size),
+      style: fortalAccordionStyle(
+        variant: this.variant,
+        size: this.size,
+        style: this.style,
+      ),
       value: this.value,
       child: this.child,
       title: this.title,

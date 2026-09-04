@@ -11,7 +11,9 @@ part 'skeleton.g.dart';
 /// The pulse starts and rests on `grayA3` before moving toward `grayA4`;
 /// Radix's CSS `alternate-reverse` phase starts from `grayA4`.
 @MixWidget(target: RemixSkeleton.new)
-SkeletonStyler fortalSkeletonStyle() {
+SkeletonStyler fortalSkeletonStyle({
+  SkeletonStyler style = const SkeletonStyler.create(),
+}) {
   return SkeletonStyler()
       .container(
         BoxStyler()
@@ -20,5 +22,6 @@ SkeletonStyler fortalSkeletonStyle() {
             .borderRadius(.all(FortalTokens.radius1())),
       )
       .pulseColor(FortalTokens.grayA4())
-      .duration(FortalTokens.skeletonPulseDuration());
+      .duration(FortalTokens.skeletonPulseDuration())
+      .merge(style);
 }

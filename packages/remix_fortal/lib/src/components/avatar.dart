@@ -32,6 +32,7 @@ AvatarStyler fortalAvatarStyle({
   FortalAvatarSize size = .size3,
   bool highContrast = false,
   int fallbackLength = 1,
+  AvatarStyler style = const AvatarStyler.create(),
 }) {
   final base = _fortalAvatarBaseStyler(size, fallbackLength: fallbackLength);
   final softContent = highContrast
@@ -40,7 +41,7 @@ AvatarStyler fortalAvatarStyle({
   final solidContent = highContrast
       ? FortalTokens.accent1()
       : FortalTokens.accentContrast();
-  return switch (variant) {
+  return (switch (variant) {
     .soft =>
       base
           .color(FortalTokens.accentA3())
@@ -53,7 +54,7 @@ AvatarStyler fortalAvatarStyle({
           )
           .labelColor(solidContent)
           .iconColor(solidContent),
-  };
+  }).merge(style);
 }
 
 AvatarStyler _fortalAvatarBaseStyler(

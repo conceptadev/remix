@@ -13,6 +13,7 @@ class FortalRadio<T> extends StatelessWidget {
     this.variant = .surface,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const RadioStyler.create(),
     required this.value,
     required this.semanticLabel,
     this.enabled = true,
@@ -28,6 +29,7 @@ class FortalRadio<T> extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const RadioStyler.create(),
     required this.value,
     required this.semanticLabel,
     this.enabled = true,
@@ -43,6 +45,7 @@ class FortalRadio<T> extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const RadioStyler.create(),
     required this.value,
     required this.semanticLabel,
     this.enabled = true,
@@ -58,6 +61,7 @@ class FortalRadio<T> extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const RadioStyler.create(),
     required this.value,
     required this.semanticLabel,
     this.enabled = true,
@@ -73,6 +77,8 @@ class FortalRadio<T> extends StatelessWidget {
   final FortalRadioSize size;
 
   final bool highContrast;
+
+  final RadioStyler style;
 
   final T value;
 
@@ -98,6 +104,7 @@ class FortalRadio<T> extends StatelessWidget {
         variant: this.variant,
         size: this.size,
         highContrast: this.highContrast,
+        style: this.style,
       ),
       value: this.value,
       semanticLabel: this.semanticLabel,

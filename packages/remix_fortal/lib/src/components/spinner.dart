@@ -11,12 +11,15 @@ enum FortalSpinnerSize { size1, size2, size3 }
 
 /// Fortal-themed preset for [RemixSpinner] using the inherited foreground color.
 @MixWidget(target: RemixSpinner.new)
-SpinnerStyler fortalSpinnerStyle({FortalSpinnerSize size = .size2}) {
+SpinnerStyler fortalSpinnerStyle({
+  FortalSpinnerSize size = .size2,
+  SpinnerStyler style = const SpinnerStyler.create(),
+}) {
   return SpinnerStyler(
     opacity: 0.65,
     leafRadius: FortalTokens.radius1(),
     duration: const Duration(milliseconds: 800),
-  ).merge(_fortalSpinnerSizeStyler(size));
+  ).merge(_fortalSpinnerSizeStyler(size)).merge(style);
 }
 
 SpinnerStyler _fortalSpinnerSizeStyler(FortalSpinnerSize size) {

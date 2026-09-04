@@ -18,6 +18,7 @@ CheckboxStyler fortalCheckboxStyle({
   FortalCheckboxVariant variant = .surface,
   FortalCheckboxSize size = .size2,
   bool highContrast = false,
+  CheckboxStyler style = const CheckboxStyler.create(),
 }) {
   final metrics = _fortalCheckboxMetrics(size);
   final base =
@@ -44,11 +45,11 @@ CheckboxStyler fortalCheckboxStyle({
         ),
       );
 
-  return switch (variant) {
+  return (switch (variant) {
     .classic => _fortalCheckboxClassic(base, highContrast),
     .surface => _fortalCheckboxSurface(base, highContrast),
     .soft => _fortalCheckboxSoft(base, highContrast),
-  };
+  }).merge(style);
 }
 
 /// Fortal recipe for [RemixCheckboxGroupItem].
@@ -67,6 +68,7 @@ CheckboxStyler fortalCheckboxGroupItemStyle({
   FortalCheckboxVariant variant = .surface,
   FortalCheckboxSize size = .size2,
   bool highContrast = false,
+  CheckboxStyler style = const CheckboxStyler.create(),
 }) {
   final checkbox = fortalCheckboxStyle(
     variant: variant,
@@ -74,7 +76,7 @@ CheckboxStyler fortalCheckboxGroupItemStyle({
     highContrast: highContrast,
   );
 
-  return switch (size) {
+  return (switch (size) {
     .size1 =>
       checkbox
           .label(.style(FortalTokens.text1.mix()))
@@ -87,7 +89,7 @@ CheckboxStyler fortalCheckboxGroupItemStyle({
       checkbox
           .label(.style(FortalTokens.text3.mix()))
           .labelSpacing(FortalTokens.checkboxGroupItemGap3()),
-  };
+  }).merge(style);
 }
 
 ({double size, double indicatorSize, Radius radius}) _fortalCheckboxMetrics(

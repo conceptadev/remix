@@ -41,6 +41,7 @@ typedef _FortalDataTableMetrics = ({
 DataTableStyler fortalDataTableStyle({
   FortalDataTableSize size = .size2,
   FortalDataTableVariant variant = .ghost,
+  DataTableStyler style = const DataTableStyler.create(),
 }) {
   final metrics = _fortalDataTableMetrics(size);
   final base = DataTableStyler()
@@ -89,10 +90,10 @@ DataTableStyler fortalDataTableStyle({
       .pageButton(fortalIconButtonStyle(variant: .ghost, size: .size1))
       .pageSizeSelect(fortalSelectStyle(variant: .ghost, size: .size1));
 
-  return switch (variant) {
+  return (switch (variant) {
     .surface => _fortalDataTableSurface(base, metrics.radius),
     .ghost => base.color(const Color(0x00000000)),
-  };
+  }).merge(style);
 }
 
 _FortalDataTableMetrics _fortalDataTableMetrics(FortalDataTableSize size) =>

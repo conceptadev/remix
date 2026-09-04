@@ -27,6 +27,7 @@ LinkStyler fortalLinkStyle(
   bool truncate = false,
   bool highContrast = false,
   required bool actionable,
+  LinkStyler style = const LinkStyler.create(),
 }) {
   LinkStyler styleFor({bool hovered = false, bool focused = false}) =>
       _fortalLinkStateStyle(
@@ -42,7 +43,7 @@ LinkStyler fortalLinkStyle(
         focused: focused,
       );
 
-  if (!actionable) return styleFor();
+  if (!actionable) return styleFor().merge(style);
 
   // The focus-visible snapshot already drops the underline via `focused`; the
   // explicit `none` also clears any decoration inherited through the merge.
@@ -52,7 +53,8 @@ LinkStyler fortalLinkStyle(
 
   return styleFor()
       .onHovered(styleFor(hovered: true))
-      .onFocusVisible(focusVisible);
+      .onFocusVisible(focusVisible)
+      .merge(style);
 }
 
 /// Resolves one point in the link's state space.
@@ -187,6 +189,7 @@ class FortalLink extends StatelessWidget {
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
+    this.style = const LinkStyler.create(),
   }) : assert(text != ''),
        assert(semanticLabel == null || semanticLabel != ''),
        assert(semanticHint == null || semanticHint != ''),
@@ -209,6 +212,7 @@ class FortalLink extends StatelessWidget {
   final String? semanticLabel;
   final String? semanticHint;
   final bool excludeSemantics;
+  final LinkStyler style;
 
   @override
   Widget build(BuildContext context) {
@@ -233,6 +237,7 @@ class FortalLink extends StatelessWidget {
         truncate: truncate,
         highContrast: highContrast,
         actionable: enabled && onPressed != null,
+        style: style,
       ),
     );
   }

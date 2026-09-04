@@ -12,6 +12,7 @@ class FortalDataList extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const DataListStyler.create(),
     required this.items,
     this.orientation = Axis.horizontal,
     this.semanticLabel,
@@ -21,6 +22,8 @@ class FortalDataList extends StatelessWidget {
   final FortalDataListSize size;
 
   final bool highContrast;
+
+  final DataListStyler style;
 
   final List<RemixDataListItem> items;
 
@@ -37,6 +40,7 @@ class FortalDataList extends StatelessWidget {
       style: fortalDataListStyle(
         size: this.size,
         highContrast: this.highContrast,
+        style: this.style,
       ),
       items: this.items,
       orientation: this.orientation,

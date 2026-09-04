@@ -22,6 +22,7 @@ TextStyler fortalHeadingStyle({
   bool truncate = false,
   bool accent = false,
   bool highContrast = false,
+  TextStyler style = const TextStyler.create(),
 }) {
   final lineHeight = switch (size) {
     .size1 => 16.0 / 12.0,
@@ -35,22 +36,22 @@ TextStyler fortalHeadingStyle({
     .size9 => 1.0,
   };
 
-  var style = TextStyler(
+  var recipe = TextStyler(
     style: fortalTextSizeToken(size).mix(),
   ).height(lineHeight).fontWeight(fortalTextWeightToken(weight)());
   // Neutral headings pin `gray12` from the tokens rather than inheriting the
   // ambient foreground, matching fortalTextStyle's token-default contract.
-  style = accent
-      ? fortalAccentForeground(style, highContrast: highContrast)
-      : style.color(FortalTokens.gray12());
-  style = style.inherit(false);
+  recipe = accent
+      ? fortalAccentForeground(recipe, highContrast: highContrast)
+      : recipe.color(FortalTokens.gray12());
+  recipe = recipe.inherit(false);
 
   return fortalApplyTextFlow(
-    style,
+    recipe,
     align: align,
     softWrap: softWrap,
     truncate: truncate,
-  );
+  ).merge(style);
 }
 
 /// Token-backed visual heading with an independent native heading level.
@@ -71,6 +72,7 @@ class FortalHeading extends StatelessWidget {
     this.highContrast = false,
     this.semanticLabel,
     this.excludeSemantics = false,
+    this.style = const TextStyler.create(),
   }) : assert(text != ''),
        assert(headingLevel >= 1 && headingLevel <= 6),
        assert(semanticLabel == null || semanticLabel != '');
@@ -86,6 +88,7 @@ class FortalHeading extends StatelessWidget {
   final bool highContrast;
   final String? semanticLabel;
   final bool excludeSemantics;
+  final TextStyler style;
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +100,7 @@ class FortalHeading extends StatelessWidget {
       truncate: truncate,
       accent: accent,
       highContrast: highContrast,
+      style: style,
     )(text);
 
     if (excludeSemantics) return ExcludeSemantics(child: content);

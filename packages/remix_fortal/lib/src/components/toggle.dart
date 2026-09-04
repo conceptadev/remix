@@ -18,11 +18,12 @@ ToggleStyler fortalToggleStyle({
   FortalToggleVariant variant = .ghost,
   FortalToggleSize size = .size2,
   bool highContrast = false,
+  ToggleStyler style = const ToggleStyler.create(),
 }) {
-  return switch (variant) {
+  return (switch (variant) {
     .ghost => _fortalToggleGhostStyler(size, highContrast: highContrast),
     .outline => _fortalToggleOutlineStyler(size, highContrast: highContrast),
-  };
+  }).merge(style);
 }
 
 ToggleStyler _fortalToggleBaseStyler(FortalToggleSize size) {

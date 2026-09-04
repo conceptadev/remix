@@ -13,6 +13,7 @@ class FortalSelect<T> extends StatelessWidget {
     this.variant = .surface,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const SelectStyler.create(),
     required this.trigger,
     required this.items,
     this.selectedValue,
@@ -34,6 +35,7 @@ class FortalSelect<T> extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const SelectStyler.create(),
     required this.trigger,
     required this.items,
     this.selectedValue,
@@ -55,6 +57,7 @@ class FortalSelect<T> extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const SelectStyler.create(),
     required this.trigger,
     required this.items,
     this.selectedValue,
@@ -76,6 +79,7 @@ class FortalSelect<T> extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const SelectStyler.create(),
     required this.trigger,
     required this.items,
     this.selectedValue,
@@ -98,6 +102,8 @@ class FortalSelect<T> extends StatelessWidget {
   final FortalSelectSize size;
 
   final bool highContrast;
+
+  final SelectStyler style;
 
   final RemixSelectTrigger trigger;
 
@@ -131,6 +137,7 @@ class FortalSelect<T> extends StatelessWidget {
         variant: this.variant,
         size: this.size,
         highContrast: this.highContrast,
+        style: this.style,
       ),
       trigger: this.trigger,
       items: this.items,

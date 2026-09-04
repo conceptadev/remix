@@ -13,6 +13,7 @@ class FortalBadge extends StatelessWidget {
     this.variant = .soft,
     this.size = .size1,
     this.highContrast = false,
+    this.style = const BadgeStyler.create(),
     this.label,
     this.child,
     this.labelBuilder,
@@ -22,6 +23,7 @@ class FortalBadge extends StatelessWidget {
     super.key,
     this.size = .size1,
     this.highContrast = false,
+    this.style = const BadgeStyler.create(),
     this.label,
     this.child,
     this.labelBuilder,
@@ -31,6 +33,7 @@ class FortalBadge extends StatelessWidget {
     super.key,
     this.size = .size1,
     this.highContrast = false,
+    this.style = const BadgeStyler.create(),
     this.label,
     this.child,
     this.labelBuilder,
@@ -40,6 +43,7 @@ class FortalBadge extends StatelessWidget {
     super.key,
     this.size = .size1,
     this.highContrast = false,
+    this.style = const BadgeStyler.create(),
     this.label,
     this.child,
     this.labelBuilder,
@@ -49,6 +53,7 @@ class FortalBadge extends StatelessWidget {
     super.key,
     this.size = .size1,
     this.highContrast = false,
+    this.style = const BadgeStyler.create(),
     this.label,
     this.child,
     this.labelBuilder,
@@ -59,6 +64,8 @@ class FortalBadge extends StatelessWidget {
   final FortalBadgeSize size;
 
   final bool highContrast;
+
+  final BadgeStyler style;
 
   final String? label;
 
@@ -74,6 +81,7 @@ class FortalBadge extends StatelessWidget {
         variant: this.variant,
         size: this.size,
         highContrast: this.highContrast,
+        style: this.style,
       ),
       label: this.label,
       child: this.child,

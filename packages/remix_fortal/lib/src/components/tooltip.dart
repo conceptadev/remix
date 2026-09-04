@@ -8,7 +8,9 @@ part 'tooltip.g.dart';
 
 /// Fortal-themed preset for [RemixTooltip].
 @MixWidget(target: RemixTooltip.new)
-TooltipStyler fortalTooltipStyle() {
+TooltipStyler fortalTooltipStyle({
+  TooltipStyler style = const TooltipStyler.create(),
+}) {
   return TooltipStyler(
         label: .style(FortalTokens.text1.mix()),
         waitDuration: const Duration(milliseconds: 200),
@@ -17,5 +19,6 @@ TooltipStyler fortalTooltipStyle() {
       .padding(.vertical(FortalTokens.space1()))
       .padding(.horizontal(FortalTokens.space2()))
       .label(.color(FortalTokens.gray1()))
-      .color(FortalTokens.gray12());
+      .color(FortalTokens.gray12())
+      .merge(style);
 }

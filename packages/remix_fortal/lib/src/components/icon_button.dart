@@ -19,6 +19,7 @@ IconButtonStyler fortalIconButtonStyle({
   FortalIconButtonVariant variant = .solid,
   FortalIconButtonSize size = .size2,
   bool highContrast = false,
+  IconButtonStyler style = const IconButtonStyler.create(),
 }) {
   final base = _fortalIconButtonBaseStyler(
     variant,
@@ -33,7 +34,7 @@ IconButtonStyler fortalIconButtonStyle({
     base,
     stateStyles,
     pressedPaddingTop: variant == .classic ? (size == .size1 ? 1 : 2) : null,
-  );
+  ).merge(style);
 }
 
 IconButtonStyler _fortalIconButtonBaseStyler(

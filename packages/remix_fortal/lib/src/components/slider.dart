@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
-import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
@@ -19,6 +18,7 @@ SliderStyler fortalSliderStyle({
   FortalSliderVariant variant = .surface,
   FortalSliderSize size = .size2,
   bool highContrast = false,
+  SliderStyler style = const SliderStyler.create(),
 }) {
   final metrics = _fortalSliderMetrics(size);
   final radius = BorderRadiusMix.all(metrics.trackRadius);
@@ -75,7 +75,8 @@ SliderStyler fortalSliderStyle({
           (context) => FortalTheme.of(context).isDark,
         ),
         SliderStyler().onDisabled(.blendMode(BlendMode.screen)),
-      );
+      )
+      .merge(style);
 }
 
 SliderStyler _fortalSliderSurface(

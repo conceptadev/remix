@@ -16,6 +16,7 @@ enum FortalPopoverSize { size1, size2, size3, size4 }
 @MixWidget(target: RemixPopover.new)
 PopoverStyler fortalPopoverStyle({
   FortalPopoverSize size = FortalPopoverSize.size2,
+  PopoverStyler style = const PopoverStyler.create(),
 }) {
   final radius = switch (size) {
     FortalPopoverSize.size1 ||
@@ -40,5 +41,6 @@ PopoverStyler fortalPopoverStyle({
       )
       .containerEffects(
         RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
-      );
+      )
+      .merge(style);
 }

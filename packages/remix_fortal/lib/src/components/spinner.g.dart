@@ -11,11 +11,14 @@ class FortalSpinner extends StatelessWidget {
   const FortalSpinner({
     super.key,
     this.size = .size2,
+    this.style = const SpinnerStyler.create(),
     this.semanticsLabel,
     this.semanticsValue,
   });
 
   final FortalSpinnerSize size;
+
+  final SpinnerStyler style;
 
   final String? semanticsLabel;
 
@@ -25,7 +28,7 @@ class FortalSpinner extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixSpinner(
       key: this.key,
-      style: fortalSpinnerStyle(size: this.size),
+      style: fortalSpinnerStyle(size: this.size, style: this.style),
       semanticsLabel: this.semanticsLabel,
       semanticsValue: this.semanticsValue,
     );

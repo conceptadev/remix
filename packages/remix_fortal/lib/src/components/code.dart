@@ -24,6 +24,7 @@ BadgeStyler fortalCodeStyle(
   bool truncate = false,
   bool accent = false,
   bool highContrast = false,
+  BadgeStyler style = const BadgeStyler.create(),
 }) {
   final base = fortalResolveTextToken(context, size ?? FortalTextSize.size3);
   final baseFontSize = base.fontSize!;
@@ -103,7 +104,7 @@ BadgeStyler fortalCodeStyle(
   }
   if (foreground != null) textStyle = textStyle.color(foreground);
 
-  var style = BadgeStyler()
+  var recipe = BadgeStyler()
       .label(textStyle)
       .borderRadius(
         BorderRadiusGeometryMix.circular(
@@ -111,18 +112,18 @@ BadgeStyler fortalCodeStyle(
         ),
       );
   if (decorated) {
-    style = style.padding(
+    recipe = recipe.padding(
       EdgeInsetsGeometryMix.symmetric(
         horizontal: 0.25 * fontSize,
         vertical: 0.10 * fontSize,
       ),
     );
   }
-  if (fill != null) style = style.color(fill);
+  if (fill != null) recipe = recipe.color(fill);
 
   if (variant == .outline) {
     final ringWidth = math.max(1.0, 0.033 * fontSize);
-    style = style.containerEffects(
+    recipe = recipe.containerEffects(
       RemixBoxEffectsMix.behindContent(
         RemixBoxEffectLayerMix(
           shadows: [
@@ -146,7 +147,7 @@ BadgeStyler fortalCodeStyle(
     );
   }
 
-  return style;
+  return recipe.merge(style);
 }
 
 final class _AmbientCodeForegroundDirective extends Directive<TextStyle> {
@@ -219,6 +220,7 @@ class FortalCode extends StatelessWidget {
     this.truncate = false,
     this.accent = false,
     this.highContrast = false,
+    this.style = const BadgeStyler.create(),
   }) : assert(text != '');
 
   const FortalCode.solid(
@@ -230,6 +232,7 @@ class FortalCode extends StatelessWidget {
     this.truncate = false,
     this.accent = false,
     this.highContrast = false,
+    this.style = const BadgeStyler.create(),
   }) : variant = FortalCodeVariant.solid,
        assert(text != '');
 
@@ -242,6 +245,7 @@ class FortalCode extends StatelessWidget {
     this.truncate = false,
     this.accent = false,
     this.highContrast = false,
+    this.style = const BadgeStyler.create(),
   }) : variant = FortalCodeVariant.soft,
        assert(text != '');
 
@@ -254,6 +258,7 @@ class FortalCode extends StatelessWidget {
     this.truncate = false,
     this.accent = false,
     this.highContrast = false,
+    this.style = const BadgeStyler.create(),
   }) : variant = FortalCodeVariant.outline,
        assert(text != '');
 
@@ -266,6 +271,7 @@ class FortalCode extends StatelessWidget {
     this.truncate = false,
     this.accent = false,
     this.highContrast = false,
+    this.style = const BadgeStyler.create(),
   }) : variant = FortalCodeVariant.ghost,
        assert(text != '');
 
@@ -277,6 +283,7 @@ class FortalCode extends StatelessWidget {
   final bool truncate;
   final bool accent;
   final bool highContrast;
+  final BadgeStyler style;
 
   @override
   Widget build(BuildContext context) => fortalCodeStyle(
@@ -288,5 +295,6 @@ class FortalCode extends StatelessWidget {
     truncate: truncate,
     accent: accent,
     highContrast: highContrast,
+    style: style,
   )(label: text);
 }

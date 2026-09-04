@@ -49,6 +49,7 @@ const _neutralTextInputPlaceholder = ContextToken<Color>(
 TextFieldStyler fortalTextFieldStyle({
   FortalTextFieldVariant variant = .surface,
   FortalTextFieldSize size = .size2,
+  TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   final metrics = _fortalTextFieldMetrics(size, bordered: variant != .soft);
   final base = _fortalTextInputBaseStyle(
@@ -66,16 +67,15 @@ TextFieldStyler fortalTextFieldStyle({
     },
   );
 
-  final style = switch (variant) {
+  final recipe = switch (variant) {
     .classic => _fortalApplyClassicTextInput(base),
     .surface => _fortalApplySurfaceTextInput(base),
     .soft => _fortalApplySoftTextInput(base, placeholderOpacity: 0.60),
   };
 
-  return style.variant(
-    ContextVariant.widgetState(.error),
-    _fortalTextInputErrorStyle(),
-  );
+  return recipe
+      .variant(ContextVariant.widgetState(.error), _fortalTextInputErrorStyle())
+      .merge(style);
 }
 
 TextFieldStyler _fortalTextInputBaseStyle({
@@ -321,6 +321,7 @@ enum FortalTextAreaVariant { classic, surface, soft }
 TextFieldStyler fortalTextAreaStyle({
   FortalTextAreaVariant variant = .surface,
   FortalTextAreaSize size = .size2,
+  TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   final metrics = _fortalTextAreaMetrics(size);
   final base = _fortalTextInputBaseStyle(
@@ -340,16 +341,15 @@ TextFieldStyler fortalTextAreaStyle({
     },
   );
 
-  final style = switch (variant) {
+  final recipe = switch (variant) {
     .classic => _fortalApplyClassicTextInput(base),
     .surface => _fortalApplySurfaceTextInput(base),
     .soft => _fortalApplySoftTextInput(base, placeholderOpacity: 0.65),
   };
 
-  return style.variant(
-    ContextVariant.widgetState(.error),
-    _fortalTextInputErrorStyle(),
-  );
+  return recipe
+      .variant(ContextVariant.widgetState(.error), _fortalTextInputErrorStyle())
+      .merge(style);
 }
 
 ({

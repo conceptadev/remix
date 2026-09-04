@@ -23,6 +23,7 @@ class FortalDataTable<T> extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.variant = .ghost,
+    this.style = const DataTableStyler.create(),
     required this.rows,
     required this.columns,
     this.semanticLabel,
@@ -51,6 +52,7 @@ class FortalDataTable<T> extends StatelessWidget {
   const FortalDataTable.surface({
     super.key,
     this.size = .size2,
+    this.style = const DataTableStyler.create(),
     required this.rows,
     required this.columns,
     this.semanticLabel,
@@ -79,6 +81,7 @@ class FortalDataTable<T> extends StatelessWidget {
   const FortalDataTable.ghost({
     super.key,
     this.size = .size2,
+    this.style = const DataTableStyler.create(),
     required this.rows,
     required this.columns,
     this.semanticLabel,
@@ -107,6 +110,8 @@ class FortalDataTable<T> extends StatelessWidget {
   final FortalDataTableSize size;
 
   final FortalDataTableVariant variant;
+
+  final DataTableStyler style;
 
   final List<T> rows;
 
@@ -158,7 +163,11 @@ class FortalDataTable<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixDataTable<T>(
       key: this.key,
-      style: fortalDataTableStyle(size: this.size, variant: this.variant),
+      style: fortalDataTableStyle(
+        size: this.size,
+        variant: this.variant,
+        style: this.style,
+      ),
       rows: this.rows,
       columns: this.columns,
       semanticLabel: this.semanticLabel,

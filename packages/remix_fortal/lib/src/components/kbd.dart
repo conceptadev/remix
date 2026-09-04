@@ -19,6 +19,7 @@ BadgeStyler fortalKbdStyle(
   BuildContext context, {
   FortalTextSize? size,
   FortalKbdVariant variant = .classic,
+  BadgeStyler style = const BadgeStyler.create(),
 }) {
   final base = fortalResolveTextToken(context, size ?? FortalTextSize.size3);
   final fontSize = base.fontSize! * (size == null ? 0.75 : 0.8);
@@ -42,7 +43,7 @@ BadgeStyler fortalKbdStyle(
       .color(FortalTokens.gray12())
       .inherit(false);
 
-  var style = BadgeStyler()
+  var recipe = BadgeStyler()
       .label(textStyle)
       .minWidth(1.75 * fontSize)
       .padding(
@@ -63,14 +64,14 @@ BadgeStyler fortalKbdStyle(
       });
 
   if (variant == .classic) {
-    style = style.containerEffects(
+    recipe = recipe.containerEffects(
       RemixBoxEffectsMix.behindContent(
         RemixBoxEffectLayerMix(shadows: _fortalKbdShadows(context, fontSize)),
       ),
     );
   }
 
-  return style;
+  return recipe.merge(style);
 }
 
 /// The pinned six-layer classic key-cap stack, in upstream paint order.
@@ -144,6 +145,7 @@ class FortalKbd extends StatelessWidget {
     this.variant = FortalKbdVariant.classic,
     this.semanticLabel,
     this.excludeSemantics = false,
+    this.style = const BadgeStyler.create(),
   }) : assert(text != ''),
        assert(semanticLabel == null || semanticLabel != '');
 
@@ -153,6 +155,7 @@ class FortalKbd extends StatelessWidget {
     this.size,
     this.semanticLabel,
     this.excludeSemantics = false,
+    this.style = const BadgeStyler.create(),
   }) : variant = FortalKbdVariant.classic,
        assert(text != ''),
        assert(semanticLabel == null || semanticLabel != '');
@@ -163,6 +166,7 @@ class FortalKbd extends StatelessWidget {
     this.size,
     this.semanticLabel,
     this.excludeSemantics = false,
+    this.style = const BadgeStyler.create(),
   }) : variant = FortalKbdVariant.soft,
        assert(text != ''),
        assert(semanticLabel == null || semanticLabel != '');
@@ -172,12 +176,16 @@ class FortalKbd extends StatelessWidget {
   final FortalKbdVariant variant;
   final String? semanticLabel;
   final bool excludeSemantics;
+  final BadgeStyler style;
 
   @override
   Widget build(BuildContext context) {
-    final content = fortalKbdStyle(context, size: size, variant: variant)(
-      label: text,
-    );
+    final content = fortalKbdStyle(
+      context,
+      size: size,
+      variant: variant,
+      style: style,
+    )(label: text);
 
     if (excludeSemantics) return ExcludeSemantics(child: content);
 

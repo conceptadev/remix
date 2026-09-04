@@ -12,6 +12,7 @@ class FortalDisclosure extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.style = const DisclosureStyler.create(),
     required this.trigger,
     required this.content,
     this.triggerBuilder,
@@ -40,6 +41,7 @@ class FortalDisclosure extends StatelessWidget {
   const FortalDisclosure.surface({
     super.key,
     this.size = .size2,
+    this.style = const DisclosureStyler.create(),
     required this.trigger,
     required this.content,
     this.triggerBuilder,
@@ -68,6 +70,7 @@ class FortalDisclosure extends StatelessWidget {
   const FortalDisclosure.soft({
     super.key,
     this.size = .size2,
+    this.style = const DisclosureStyler.create(),
     required this.trigger,
     required this.content,
     this.triggerBuilder,
@@ -96,6 +99,8 @@ class FortalDisclosure extends StatelessWidget {
   final FortalDisclosureVariant variant;
 
   final FortalDisclosureSize size;
+
+  final DisclosureStyler style;
 
   final Widget trigger;
 
@@ -139,7 +144,11 @@ class FortalDisclosure extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixDisclosure(
       key: this.key,
-      style: fortalDisclosureStyle(variant: this.variant, size: this.size),
+      style: fortalDisclosureStyle(
+        variant: this.variant,
+        size: this.size,
+        style: this.style,
+      ),
       trigger: this.trigger,
       content: this.content,
       triggerBuilder: this.triggerBuilder,

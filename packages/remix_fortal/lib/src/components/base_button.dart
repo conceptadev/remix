@@ -1,12 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:mix/mix.dart';
-import 'package:remix/remix.dart'
-    show
-        RemixBoxEffectLayerMix,
-        RemixBoxEffectsMix,
-        RemixCssColorFilterOperation,
-        RemixLinearGradientMix,
-        RemixOrderedColorFilterModifier;
+import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 

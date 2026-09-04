@@ -1,12 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:mix/mix.dart';
-import 'package:remix/remix.dart'
-    show
-        RemixBoxEffectLayerMix,
-        RemixBoxEffectsMix,
-        RemixBoxShadowKind,
-        RemixBoxShadowMix,
-        RemixBoxStylerAnchors;
+import 'package:remix/remix.dart';
 
 import 'tokens.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:mix/mix.dart';
+import 'package:remix/remix.dart';
 
 import 'theme_data.dart';
 import 'tokens.dart';

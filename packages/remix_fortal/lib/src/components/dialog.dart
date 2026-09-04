@@ -37,6 +37,7 @@ final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
 DialogStyler fortalDialogStyle({
   FortalDialogSize size = FortalDialogSize.size3,
   FortalDialogAlign align = FortalDialogAlign.center,
+  DialogStyler style = const DialogStyler.create(),
 }) {
   final radius = switch (size) {
     FortalDialogSize.size1 || FortalDialogSize.size2 => FortalTokens.radius4(),
@@ -90,5 +91,6 @@ DialogStyler fortalDialogStyle({
       )
       .containerEffects(
         RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
-      );
+      )
+      .merge(style);
 }

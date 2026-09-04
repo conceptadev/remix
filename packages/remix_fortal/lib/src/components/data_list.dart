@@ -14,6 +14,7 @@ enum FortalDataListSize { size1, size2, size3 }
 DataListStyler fortalDataListStyle({
   FortalDataListSize size = .size2,
   bool highContrast = false,
+  DataListStyler style = const DataListStyler.create(),
 }) {
   final metrics = _fortalDataListMetrics(size);
 
@@ -35,7 +36,8 @@ DataListStyler fortalDataListStyle({
       .rowSpacing(metrics.rowSpacing)
       .columnSpacing(metrics.rowSpacing)
       .labelValueSpacing(FortalTokens.space1())
-      .minLabelWidth(FortalTokens.dataListLabelMinWidth());
+      .minLabelWidth(FortalTokens.dataListLabelMinWidth())
+      .merge(style);
 }
 
 ({TextStyleToken text, double rowSpacing}) _fortalDataListMetrics(

@@ -18,6 +18,7 @@ ToggleGroupStyler fortalToggleGroupStyle({
   FortalToggleGroupVariant variant = .soft,
   FortalToggleGroupSize size = .size2,
   bool highContrast = false,
+  ToggleGroupStyler style = const ToggleGroupStyler.create(),
 }) {
   final (
     selectedColor,
@@ -75,7 +76,7 @@ ToggleGroupStyler fortalToggleGroupStyle({
               .labelColor(FortalTokens.gray8())
               .iconColor(FortalTokens.gray8()),
         ),
-  ).merge(_fortalToggleGroupSizeStyler(size));
+  ).merge(_fortalToggleGroupSizeStyler(size)).merge(style);
 }
 
 ToggleGroupStyler _fortalToggleGroupSizeStyler(FortalToggleGroupSize size) {

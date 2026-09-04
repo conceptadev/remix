@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
@@ -55,8 +54,9 @@ LineChartStyler fortalLineChartStyle({
   bool highContrast = false,
   bool showMarkers = false,
   List<Color>? palette,
+  LineChartStyler style = const LineChartStyler.create(),
 }) {
-  final style = LineChartStyler()
+  final recipe = LineChartStyler()
       .frame(_fortalFrameStyle())
       .axis(_fortalAxisStyle())
       .topAxis(_hiddenAxisStyle())
@@ -86,11 +86,13 @@ LineChartStyler fortalLineChartStyle({
       )
       .tooltip(_fortalTooltipStyle());
 
-  return style.merge(
-    LineChartStyler.create(
-      palette: _paletteProp(highContrast: highContrast, palette: palette),
-    ),
-  );
+  return recipe
+      .merge(
+        LineChartStyler.create(
+          palette: _paletteProp(highContrast: highContrast, palette: palette),
+        ),
+      )
+      .merge(style);
 }
 
 /// Fortal presentation for a Mix grouped, stacked, or floating bar chart.
@@ -100,11 +102,12 @@ LineChartStyler fortalLineChartStyle({
 BarChartStyler fortalBarChartStyle({
   bool highContrast = false,
   List<Color>? palette,
+  BarChartStyler style = const BarChartStyler.create(),
 }) {
   final bar = BarStyler.create(
     borderRadius: Prop.token(_barRadiusToken),
   ).width(FortalTokens.space4());
-  final style = BarChartStyler()
+  final recipe = BarChartStyler()
       .frame(_fortalFrameStyle())
       .axis(_fortalAxisStyle())
       .topAxis(_hiddenAxisStyle())
@@ -115,11 +118,13 @@ BarChartStyler fortalBarChartStyle({
       .barSpacing(FortalTokens.space2())
       .tooltip(_fortalTooltipStyle());
 
-  return style.merge(
-    BarChartStyler.create(
-      palette: _paletteProp(highContrast: highContrast, palette: palette),
-    ),
-  );
+  return recipe
+      .merge(
+        BarChartStyler.create(
+          palette: _paletteProp(highContrast: highContrast, palette: palette),
+        ),
+      )
+      .merge(style);
 }
 
 /// Fortal presentation for a Mix pie or donut chart.
@@ -135,8 +140,9 @@ PieChartStyler fortalPieChartStyle({
   double centerRadius = 0,
   bool showLabels = false,
   List<Color>? palette,
+  PieChartStyler style = const PieChartStyler.create(),
 }) {
-  final style = PieChartStyler()
+  final recipe = PieChartStyler()
       .frame(_fortalFrameStyle())
       .centerRadius(centerRadius)
       .centerColor(FortalTokens.colorPanel())
@@ -155,11 +161,13 @@ PieChartStyler fortalPieChartStyle({
       )
       .tooltip(_fortalTooltipStyle());
 
-  return style.merge(
-    PieChartStyler.create(
-      palette: _paletteProp(highContrast: highContrast, palette: palette),
-    ),
-  );
+  return recipe
+      .merge(
+        PieChartStyler.create(
+          palette: _paletteProp(highContrast: highContrast, palette: palette),
+        ),
+      )
+      .merge(style);
 }
 
 Prop<List<Color>> _paletteProp({
