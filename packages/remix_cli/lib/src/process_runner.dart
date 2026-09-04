@@ -6,11 +6,13 @@ final class ProcessInvocation {
     required this.executable,
     required this.arguments,
     required this.workingDirectory,
+    this.environment,
   });
 
   final String executable;
   final List<String> arguments;
   final String workingDirectory;
+  final Map<String, String>? environment;
 
   String get display => [executable, ...arguments].join(' ');
 }
@@ -40,6 +42,7 @@ final class SystemProcessRunner implements ProcessRunner {
       invocation.executable,
       invocation.arguments,
       workingDirectory: invocation.workingDirectory,
+      environment: invocation.environment,
       runInShell: false,
     );
     final stdoutFuture = utf8.decoder.bind(process.stdout).join();

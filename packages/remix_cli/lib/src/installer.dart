@@ -237,9 +237,14 @@ final class Installer {
         }
         await _checked(
           ProcessInvocation(
-            executable: toolchain.flutter,
+            // Windows batch execution consumes caret version constraints.
+            // Dart pub uses the same SDK through FLUTTER_ROOT.
+            executable: Platform.isWindows ? toolchain.dart : toolchain.flutter,
             arguments: arguments,
             workingDirectory: root.path,
+            environment: Platform.isWindows
+                ? {'FLUTTER_ROOT': toolchain.sdkRoot}
+                : null,
           ),
           detail: 'Could not add required dependencies',
         );
@@ -397,6 +402,7 @@ final class Installer {
     }
     final sdkRoot = machine['flutterRoot']! as String;
     return _FlutterToolchain(
+      sdkRoot: sdkRoot,
       flutter: p.join(
         sdkRoot,
         'bin',
@@ -859,8 +865,13 @@ File _projectFile(Directory root, String relative) =>
     File(p.joinAll([root.path, ...p.posix.split(relative)]));
 
 final class _FlutterToolchain {
-  const _FlutterToolchain({required this.flutter, required this.dart});
+  const _FlutterToolchain({
+    required this.sdkRoot,
+    required this.flutter,
+    required this.dart,
+  });
 
+  final String sdkRoot;
   final String flutter;
   final String dart;
 }
