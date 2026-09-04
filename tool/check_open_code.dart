@@ -52,6 +52,7 @@ const _defaultRegistryItems = <String>[
   'radio',
   'segmented_control',
   'select',
+  'sidebar',
   'skeleton',
   'slider',
   'spinner',

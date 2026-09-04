@@ -529,11 +529,15 @@ depends on it:
 `theme` installs `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`,
 giving you `UiTokens`, `UiThemeData`, and `UiThemeScope`. Every component item
 installs one authored file plus its generated adapter under
-`components/<item>.dart`. Three items differ: `icons` installs app-owned
+`components/<item>.dart`. Four items differ: `icons` installs app-owned
 `icons.dart` with no generated adapter; `chart` generates three adapters over
-`mix_chart`; and `data_table` also pulls in
+`mix_chart`; `data_table` also pulls in
 `checkbox`, `icon_button`, and `select`, because its selection column, pager,
-and page-size control *are* those components — adding it installs all four.
+and page-size control *are* those components — adding it installs all four; and
+`sidebar` pulls in `toggle`, because a destination *is* one.
+
+The registry requires Remix beta.8, which includes `RemixSidebar`.
+The installer rejects older resolved versions before it writes source.
 
 | Item | Surface you get | Axes |
 |---|---|---|
@@ -559,6 +563,7 @@ and page-size control *are* those components — adding it installs all four.
 | `radio` | `UiRadio` | — |
 | `segmented_control` | `UiSegmentedControl` | — |
 | `select` | `UiSelect` | — |
+| `sidebar` | `UiSidebar` | — |
 | `skeleton` | `UiSkeleton` | — |
 | `slider` | `UiSlider` | — |
 | `spinner` | `UiSpinner` | — |
@@ -570,7 +575,7 @@ and page-size control *are* those components — adding it installs all four.
 | `tooltip` | `UiTooltip` | — |
 
 The `fortal` catalog contains every item above and adds `base_button`, `code`,
-`heading`, `kbd`, `sidebar`, `text`, and `typography`. `base_button` and
+`heading`, `kbd`, `text`, and `typography`. `base_button` and
 `typography` are shared authored recipes that arrive transitively with the
 components that use them. Fortal's component names use the configured prefix,
 so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
