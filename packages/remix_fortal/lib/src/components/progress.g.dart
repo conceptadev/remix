@@ -13,6 +13,7 @@ class FortalProgress extends StatelessWidget {
     this.variant = .surface,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ProgressStyler.create(),
     required this.value,
     this.semanticsLabel,
     this.semanticsValue,
@@ -22,6 +23,7 @@ class FortalProgress extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ProgressStyler.create(),
     required this.value,
     this.semanticsLabel,
     this.semanticsValue,
@@ -31,6 +33,7 @@ class FortalProgress extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ProgressStyler.create(),
     required this.value,
     this.semanticsLabel,
     this.semanticsValue,
@@ -40,6 +43,7 @@ class FortalProgress extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ProgressStyler.create(),
     required this.value,
     this.semanticsLabel,
     this.semanticsValue,
@@ -50,6 +54,8 @@ class FortalProgress extends StatelessWidget {
   final FortalProgressSize size;
 
   final bool highContrast;
+
+  final ProgressStyler style;
 
   final double value;
 
@@ -65,6 +71,7 @@ class FortalProgress extends StatelessWidget {
         variant: this.variant,
         size: this.size,
         highContrast: this.highContrast,
+        style: this.style,
       ),
       value: this.value,
       semanticsLabel: this.semanticsLabel,

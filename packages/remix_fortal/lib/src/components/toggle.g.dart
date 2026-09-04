@@ -13,6 +13,7 @@ class FortalToggle extends StatelessWidget {
     this.variant = .ghost,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ToggleStyler.create(),
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -30,6 +31,7 @@ class FortalToggle extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ToggleStyler.create(),
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -47,6 +49,7 @@ class FortalToggle extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ToggleStyler.create(),
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -65,6 +68,8 @@ class FortalToggle extends StatelessWidget {
   final FortalToggleSize size;
 
   final bool highContrast;
+
+  final ToggleStyler style;
 
   final bool selected;
 
@@ -96,6 +101,7 @@ class FortalToggle extends StatelessWidget {
         variant: this.variant,
         size: this.size,
         highContrast: this.highContrast,
+        style: this.style,
       ),
       selected: this.selected,
       onChanged: this.onChanged,

@@ -17,6 +17,7 @@ class FortalAvatar extends StatelessWidget {
     this.size = .size3,
     this.highContrast = false,
     this.fallbackLength = 1,
+    this.style = const AvatarStyler.create(),
     this.backgroundImage,
     this.foregroundImage,
     this.onBackgroundImageError,
@@ -33,6 +34,7 @@ class FortalAvatar extends StatelessWidget {
     this.size = .size3,
     this.highContrast = false,
     this.fallbackLength = 1,
+    this.style = const AvatarStyler.create(),
     this.backgroundImage,
     this.foregroundImage,
     this.onBackgroundImageError,
@@ -49,6 +51,7 @@ class FortalAvatar extends StatelessWidget {
     this.size = .size3,
     this.highContrast = false,
     this.fallbackLength = 1,
+    this.style = const AvatarStyler.create(),
     this.backgroundImage,
     this.foregroundImage,
     this.onBackgroundImageError,
@@ -67,6 +70,8 @@ class FortalAvatar extends StatelessWidget {
   final bool highContrast;
 
   final int fallbackLength;
+
+  final AvatarStyler style;
 
   final ImageProvider<Object>? backgroundImage;
 
@@ -95,6 +100,7 @@ class FortalAvatar extends StatelessWidget {
         size: this.size,
         highContrast: this.highContrast,
         fallbackLength: this.fallbackLength,
+        style: this.style,
       ),
       backgroundImage: this.backgroundImage,
       foregroundImage: this.foregroundImage,

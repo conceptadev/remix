@@ -18,11 +18,13 @@ SelectStyler fortalSelectStyle({
   FortalSelectVariant variant = .surface,
   FortalSelectSize size = .size2,
   bool highContrast = false,
+  SelectStyler style = const SelectStyler.create(),
 }) {
   return SelectStyler()
       .trigger(_fortalSelectTriggerStyler(variant, size))
       .content(_fortalSelectContentStyler(size))
-      .item(_fortalSelectItemStyler(variant, size, highContrast: highContrast));
+      .item(_fortalSelectItemStyler(variant, size, highContrast: highContrast))
+      .merge(style);
 }
 
 /// Creates the established combined-variant Select item recipe.

@@ -13,6 +13,7 @@ class FortalCheckbox extends StatelessWidget {
     this.variant = .surface,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const CheckboxStyler.create(),
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -33,6 +34,7 @@ class FortalCheckbox extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const CheckboxStyler.create(),
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -53,6 +55,7 @@ class FortalCheckbox extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const CheckboxStyler.create(),
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -73,6 +76,7 @@ class FortalCheckbox extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const CheckboxStyler.create(),
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -94,6 +98,8 @@ class FortalCheckbox extends StatelessWidget {
   final FortalCheckboxSize size;
 
   final bool highContrast;
+
+  final CheckboxStyler style;
 
   final bool? selected;
 
@@ -131,6 +137,7 @@ class FortalCheckbox extends StatelessWidget {
         variant: this.variant,
         size: this.size,
         highContrast: this.highContrast,
+        style: this.style,
       ),
       selected: this.selected,
       onChanged: this.onChanged,
@@ -167,6 +174,7 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.variant = .surface,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const CheckboxStyler.create(),
     required this.value,
     required this.label,
     this.semanticLabel,
@@ -184,6 +192,7 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const CheckboxStyler.create(),
     required this.value,
     required this.label,
     this.semanticLabel,
@@ -201,6 +210,7 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const CheckboxStyler.create(),
     required this.value,
     required this.label,
     this.semanticLabel,
@@ -218,6 +228,7 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const CheckboxStyler.create(),
     required this.value,
     required this.label,
     this.semanticLabel,
@@ -236,6 +247,8 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
   final FortalCheckboxSize size;
 
   final bool highContrast;
+
+  final CheckboxStyler style;
 
   final T value;
 
@@ -267,6 +280,7 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
         variant: this.variant,
         size: this.size,
         highContrast: this.highContrast,
+        style: this.style,
       ),
       value: this.value,
       label: this.label,

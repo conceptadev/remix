@@ -26,22 +26,23 @@ TextStyler fortalTextStyle({
   bool truncate = false,
   bool accent = false,
   bool highContrast = false,
+  TextStyler style = const TextStyler.create(),
 }) {
-  var style = TextStyler().style(
+  var recipe = TextStyler().style(
     fortalTextSizeToken(size ?? FortalTextSize.size3).mix(),
   );
-  style = style.fontWeight(
+  recipe = recipe.fontWeight(
     fortalTextWeightToken(weight ?? FortalTextWeight.regular)(),
   );
-  style = accent
-      ? fortalAccentForeground(style, highContrast: highContrast)
-      : style.color(FortalTokens.gray12());
-  style = style.inherit(false);
+  recipe = accent
+      ? fortalAccentForeground(recipe, highContrast: highContrast)
+      : recipe.color(FortalTokens.gray12());
+  recipe = recipe.inherit(false);
 
   return fortalApplyTextFlow(
-    style,
+    recipe,
     align: align,
     softWrap: softWrap,
     truncate: truncate,
-  );
+  ).merge(style);
 }

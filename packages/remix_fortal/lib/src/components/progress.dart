@@ -18,12 +18,13 @@ ProgressStyler fortalProgressStyle({
   FortalProgressVariant variant = .surface,
   FortalProgressSize size = .size2,
   bool highContrast = false,
+  ProgressStyler style = const ProgressStyler.create(),
 }) {
-  return switch (variant) {
+  return (switch (variant) {
     .classic => _fortalProgressClassicStyler(size, highContrast: highContrast),
     .surface => _fortalProgressSurfaceStyler(size, highContrast: highContrast),
     .soft => _fortalProgressSoftStyler(size, highContrast: highContrast),
-  };
+  }).merge(style);
 }
 
 ProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {

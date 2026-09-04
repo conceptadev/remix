@@ -16,6 +16,7 @@ class FortalLineChart extends StatelessWidget {
     this.highContrast = false,
     this.showMarkers = false,
     this.palette,
+    this.style = const LineChartStyler.create(),
     required this.series,
     this.xAxis,
     this.yAxis,
@@ -40,6 +41,8 @@ class FortalLineChart extends StatelessWidget {
   final bool showMarkers;
 
   final List<Color>? palette;
+
+  final LineChartStyler style;
 
   final List<LineSeries> series;
 
@@ -83,6 +86,7 @@ class FortalLineChart extends StatelessWidget {
         highContrast: this.highContrast,
         showMarkers: this.showMarkers,
         palette: this.palette,
+        style: this.style,
       ),
       series: this.series,
       xAxis: this.xAxis,
@@ -113,6 +117,7 @@ class FortalBarChart extends StatelessWidget {
     super.key,
     this.highContrast = false,
     this.palette,
+    this.style = const BarChartStyler.create(),
     required this.groups,
     this.xAxis,
     this.yAxis,
@@ -135,6 +140,8 @@ class FortalBarChart extends StatelessWidget {
   final bool highContrast;
 
   final List<Color>? palette;
+
+  final BarChartStyler style;
 
   final List<BarGroup> groups;
 
@@ -177,6 +184,7 @@ class FortalBarChart extends StatelessWidget {
       style: fortalBarChartStyle(
         highContrast: this.highContrast,
         palette: this.palette,
+        style: this.style,
       ),
       groups: this.groups,
       xAxis: this.xAxis,
@@ -213,6 +221,7 @@ class FortalPieChart extends StatelessWidget {
     this.centerRadius = 0,
     this.showLabels = false,
     this.palette,
+    this.style = const PieChartStyler.create(),
     required this.slices,
     this.dataTransition = ChartDataTransition.none,
     this.selectedSliceIds = const {},
@@ -234,6 +243,8 @@ class FortalPieChart extends StatelessWidget {
   final bool showLabels;
 
   final List<Color>? palette;
+
+  final PieChartStyler style;
 
   final List<PieSlice> slices;
 
@@ -268,6 +279,7 @@ class FortalPieChart extends StatelessWidget {
         centerRadius: this.centerRadius,
         showLabels: this.showLabels,
         palette: this.palette,
+        style: this.style,
       ),
       slices: this.slices,
       dataTransition: this.dataTransition,

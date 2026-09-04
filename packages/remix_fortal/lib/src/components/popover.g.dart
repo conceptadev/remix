@@ -14,6 +14,7 @@ class FortalPopover extends StatelessWidget {
   const FortalPopover({
     super.key,
     this.size = FortalPopoverSize.size2,
+    this.style = const PopoverStyler.create(),
     required this.popoverChild,
     required this.child,
     this.positioning = const OverlayPositionConfig(),
@@ -31,6 +32,8 @@ class FortalPopover extends StatelessWidget {
   });
 
   final FortalPopoverSize size;
+
+  final PopoverStyler style;
 
   final Widget popoverChild;
 
@@ -64,7 +67,7 @@ class FortalPopover extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixPopover(
       key: this.key,
-      style: fortalPopoverStyle(size: this.size),
+      style: fortalPopoverStyle(size: this.size, style: this.style),
       popoverChild: this.popoverChild,
       child: this.child,
       positioning: this.positioning,

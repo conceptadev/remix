@@ -14,10 +14,12 @@ enum FortalDividerSize { size1, size2, size3, size4 }
 DividerStyler fortalDividerStyle({
   FortalDividerSize size = .size1,
   Axis orientation = Axis.horizontal,
+  DividerStyler style = const DividerStyler.create(),
 }) {
   return DividerStyler()
       .color(FortalTokens.gray6())
-      .merge(_fortalDividerSizeStyler(size, orientation));
+      .merge(_fortalDividerSizeStyler(size, orientation))
+      .merge(style);
 }
 
 DividerStyler _fortalDividerSizeStyler(

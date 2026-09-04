@@ -25,6 +25,7 @@ class FortalSidebar<T extends Object> extends StatelessWidget {
     super.key,
     this.highContrast = false,
     this.panelPadding,
+    this.style = const SidebarStyler.create(),
     this.header,
     required this.sections,
     required this.selectedValue,
@@ -38,6 +39,8 @@ class FortalSidebar<T extends Object> extends StatelessWidget {
   final bool highContrast;
 
   final EdgeInsetsGeometry? panelPadding;
+
+  final SidebarStyler style;
 
   final Widget? header;
 
@@ -62,6 +65,7 @@ class FortalSidebar<T extends Object> extends StatelessWidget {
       style: fortalSidebarStyle(
         highContrast: this.highContrast,
         panelPadding: this.panelPadding,
+        style: this.style,
       ),
       header: this.header,
       sections: this.sections,

@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
-import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
@@ -15,21 +14,30 @@ enum FortalTabsSize { size1, size2 }
 /// The tab-list bottom border is a single hairline at every Radix size, so this
 /// preset takes no `size` — unlike [fortalTabStyle], whose per-tab metrics vary.
 @MixWidget(target: RemixTabBar.new)
-TabBarStyler fortalTabBarStyle() {
-  return TabBarStyler().border(
-    .bottom(.color(FortalTokens.grayA5()).width(FortalTokens.borderWidth1())),
-  );
+TabBarStyler fortalTabBarStyle({
+  TabBarStyler style = const TabBarStyler.create(),
+}) {
+  return TabBarStyler()
+      .border(
+        .bottom(
+          .color(FortalTokens.grayA5()).width(FortalTokens.borderWidth1()),
+        ),
+      )
+      .merge(style);
 }
 
 /// Fortal-themed preset for [RemixTabView].
 @MixWidget(target: RemixTabView.new)
-TabViewStyler fortalTabViewStyle() => TabViewStyler();
+TabViewStyler fortalTabViewStyle({
+  TabViewStyler style = const TabViewStyler.create(),
+}) => TabViewStyler().merge(style);
 
 /// Fortal-themed preset for [RemixTab].
 @MixWidget(target: RemixTab.new)
 TabStyler fortalTabStyle({
   FortalTabsSize size = FortalTabsSize.size2,
   bool highContrast = false,
+  TabStyler style = const TabStyler.create(),
 }) {
   final metrics = switch (size) {
     FortalTabsSize.size1 => (
@@ -114,5 +122,6 @@ TabStyler fortalTabStyle({
                 ),
               ),
             ),
-      );
+      )
+      .merge(style);
 }

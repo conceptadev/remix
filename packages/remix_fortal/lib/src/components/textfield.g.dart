@@ -12,6 +12,7 @@ class FortalTextField extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
     this.label,
@@ -75,6 +76,7 @@ class FortalTextField extends StatelessWidget {
   const FortalTextField.classic({
     super.key,
     this.size = .size2,
+    this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
     this.label,
@@ -138,6 +140,7 @@ class FortalTextField extends StatelessWidget {
   const FortalTextField.surface({
     super.key,
     this.size = .size2,
+    this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
     this.label,
@@ -201,6 +204,7 @@ class FortalTextField extends StatelessWidget {
   const FortalTextField.soft({
     super.key,
     this.size = .size2,
+    this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
     this.label,
@@ -263,6 +267,8 @@ class FortalTextField extends StatelessWidget {
   final FortalTextFieldVariant variant;
 
   final FortalTextFieldSize size;
+
+  final TextFieldStyler style;
 
   final TextEditingController? controller;
 
@@ -382,7 +388,11 @@ class FortalTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTextField(
       key: this.key,
-      style: fortalTextFieldStyle(variant: this.variant, size: this.size),
+      style: fortalTextFieldStyle(
+        variant: this.variant,
+        size: this.size,
+        style: this.style,
+      ),
       controller: this.controller,
       focusNode: this.focusNode,
       label: this.label,
@@ -453,6 +463,7 @@ class FortalTextArea extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
     this.label,
@@ -512,6 +523,7 @@ class FortalTextArea extends StatelessWidget {
   const FortalTextArea.classic({
     super.key,
     this.size = .size2,
+    this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
     this.label,
@@ -571,6 +583,7 @@ class FortalTextArea extends StatelessWidget {
   const FortalTextArea.surface({
     super.key,
     this.size = .size2,
+    this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
     this.label,
@@ -630,6 +643,7 @@ class FortalTextArea extends StatelessWidget {
   const FortalTextArea.soft({
     super.key,
     this.size = .size2,
+    this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
     this.label,
@@ -689,6 +703,8 @@ class FortalTextArea extends StatelessWidget {
   final FortalTextAreaVariant variant;
 
   final FortalTextAreaSize size;
+
+  final TextFieldStyler style;
 
   final TextEditingController? controller;
 
@@ -802,7 +818,11 @@ class FortalTextArea extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTextArea(
       key: this.key,
-      style: fortalTextAreaStyle(variant: this.variant, size: this.size),
+      style: fortalTextAreaStyle(
+        variant: this.variant,
+        size: this.size,
+        style: this.style,
+      ),
       controller: this.controller,
       focusNode: this.focusNode,
       label: this.label,

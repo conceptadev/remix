@@ -13,6 +13,7 @@ class FortalIconButton extends StatelessWidget {
     this.variant = .solid,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const IconButtonStyler.create(),
     required this.icon,
     required this.semanticLabel,
     this.iconBuilder,
@@ -33,6 +34,7 @@ class FortalIconButton extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const IconButtonStyler.create(),
     required this.icon,
     required this.semanticLabel,
     this.iconBuilder,
@@ -53,6 +55,7 @@ class FortalIconButton extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const IconButtonStyler.create(),
     required this.icon,
     required this.semanticLabel,
     this.iconBuilder,
@@ -73,6 +76,7 @@ class FortalIconButton extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const IconButtonStyler.create(),
     required this.icon,
     required this.semanticLabel,
     this.iconBuilder,
@@ -93,6 +97,7 @@ class FortalIconButton extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const IconButtonStyler.create(),
     required this.icon,
     required this.semanticLabel,
     this.iconBuilder,
@@ -113,6 +118,7 @@ class FortalIconButton extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const IconButtonStyler.create(),
     required this.icon,
     required this.semanticLabel,
     this.iconBuilder,
@@ -133,6 +139,7 @@ class FortalIconButton extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const IconButtonStyler.create(),
     required this.icon,
     required this.semanticLabel,
     this.iconBuilder,
@@ -154,6 +161,8 @@ class FortalIconButton extends StatelessWidget {
   final FortalIconButtonSize size;
 
   final bool highContrast;
+
+  final IconButtonStyler style;
 
   final IconData? icon;
 
@@ -191,6 +200,7 @@ class FortalIconButton extends StatelessWidget {
         variant: this.variant,
         size: this.size,
         highContrast: this.highContrast,
+        style: this.style,
       ),
       icon: this.icon,
       semanticLabel: this.semanticLabel,

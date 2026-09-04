@@ -13,6 +13,7 @@ class FortalButton extends StatelessWidget {
     this.variant = .solid,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ButtonStyler.create(),
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -37,6 +38,7 @@ class FortalButton extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ButtonStyler.create(),
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -61,6 +63,7 @@ class FortalButton extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ButtonStyler.create(),
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -85,6 +88,7 @@ class FortalButton extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ButtonStyler.create(),
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -109,6 +113,7 @@ class FortalButton extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ButtonStyler.create(),
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -133,6 +138,7 @@ class FortalButton extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ButtonStyler.create(),
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -157,6 +163,7 @@ class FortalButton extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const ButtonStyler.create(),
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
@@ -182,6 +189,8 @@ class FortalButton extends StatelessWidget {
   final FortalButtonSize size;
 
   final bool highContrast;
+
+  final ButtonStyler style;
 
   final String label;
 
@@ -227,6 +236,7 @@ class FortalButton extends StatelessWidget {
         variant: this.variant,
         size: this.size,
         highContrast: this.highContrast,
+        style: this.style,
       ),
       label: this.label,
       leadingIcon: this.leadingIcon,

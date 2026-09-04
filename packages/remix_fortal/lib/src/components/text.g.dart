@@ -27,6 +27,7 @@ class FortalText extends StatelessWidget {
     this.truncate = false,
     this.accent = false,
     this.highContrast = false,
+    this.style = const TextStyler.create(),
   });
 
   final FortalTextSize? size;
@@ -43,6 +44,8 @@ class FortalText extends StatelessWidget {
 
   final bool highContrast;
 
+  final TextStyler style;
+
   final String text;
 
   @override
@@ -55,6 +58,7 @@ class FortalText extends StatelessWidget {
       truncate: this.truncate,
       accent: this.accent,
       highContrast: this.highContrast,
+      style: this.style,
     ).call(this.text, key: this.key);
   }
 }

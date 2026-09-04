@@ -13,6 +13,7 @@ class FortalSlider extends StatelessWidget {
     this.variant = .surface,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const SliderStyler.create(),
     required this.value,
     this.onChanged,
     this.onChangeStart,
@@ -33,6 +34,7 @@ class FortalSlider extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const SliderStyler.create(),
     required this.value,
     this.onChanged,
     this.onChangeStart,
@@ -53,6 +55,7 @@ class FortalSlider extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const SliderStyler.create(),
     required this.value,
     this.onChanged,
     this.onChangeStart,
@@ -73,6 +76,7 @@ class FortalSlider extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const SliderStyler.create(),
     required this.value,
     this.onChanged,
     this.onChangeStart,
@@ -94,6 +98,8 @@ class FortalSlider extends StatelessWidget {
   final FortalSliderSize size;
 
   final bool highContrast;
+
+  final SliderStyler style;
 
   final double value;
 
@@ -131,6 +137,7 @@ class FortalSlider extends StatelessWidget {
         variant: this.variant,
         size: this.size,
         highContrast: this.highContrast,
+        style: this.style,
       ),
       value: this.value,
       onChanged: this.onChanged,

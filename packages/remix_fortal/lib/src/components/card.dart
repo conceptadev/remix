@@ -17,6 +17,7 @@ enum FortalCardVariant { surface, classic, ghost }
 CardStyler fortalCardStyle({
   FortalCardVariant variant = .surface,
   FortalCardSize size = .size1,
+  CardStyler style = const CardStyler.create(),
 }) {
   final metrics = _fortalCardMetrics(size);
   final base = CardStyler()
@@ -36,11 +37,11 @@ CardStyler fortalCardStyle({
         ),
       );
 
-  return switch (variant) {
+  return (switch (variant) {
     .surface => _fortalCardSurface(base),
     .classic => _fortalCardClassic(base),
     .ghost => _fortalCardGhost(base, metrics.ghostMargin),
-  };
+  }).merge(style);
 }
 
 ({double padding, double ghostMargin, Radius radius}) _fortalCardMetrics(

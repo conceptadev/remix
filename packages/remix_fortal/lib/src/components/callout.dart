@@ -18,6 +18,7 @@ CalloutStyler fortalCalloutStyle({
   FortalCalloutVariant variant = .soft,
   FortalCalloutSize size = .size2,
   bool highContrast = false,
+  CalloutStyler style = const CalloutStyler.create(),
 }) {
   final contentColor = highContrast
       ? FortalTokens.accent12()
@@ -25,7 +26,7 @@ CalloutStyler fortalCalloutStyle({
   final base = _fortalCalloutBaseStyler(
     size,
   ).iconColor(contentColor).textColor(contentColor);
-  return switch (variant) {
+  return (switch (variant) {
     .soft => base.color(FortalTokens.accentA3()),
     .surface =>
       base
@@ -40,7 +41,7 @@ CalloutStyler fortalCalloutStyle({
         fortalInsetSurface(strokes: [FortalTokens.accentA7()]),
       ),
     ),
-  };
+  }).merge(style);
 }
 
 CalloutStyler _fortalCalloutBaseStyler(FortalCalloutSize size) {

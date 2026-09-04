@@ -19,6 +19,7 @@ ButtonStyler fortalButtonStyle({
   FortalButtonVariant variant = .solid,
   FortalButtonSize size = .size2,
   bool highContrast = false,
+  ButtonStyler style = const ButtonStyler.create(),
 }) {
   final base = _fortalButtonBaseStyler(variant, _fortalBaseButtonSize(size));
   final stateStyles = fortalBaseButtonStateStyles(
@@ -30,7 +31,7 @@ ButtonStyler fortalButtonStyle({
     base,
     stateStyles,
     pressedPaddingTop: variant == .classic ? (size == .size1 ? 1 : 2) : null,
-  );
+  ).merge(style);
 }
 
 ButtonStyler _fortalButtonBaseStyler(

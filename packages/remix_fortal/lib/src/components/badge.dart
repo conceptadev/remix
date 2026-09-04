@@ -18,9 +18,10 @@ BadgeStyler fortalBadgeStyle({
   FortalBadgeVariant variant = .soft,
   FortalBadgeSize size = .size1,
   bool highContrast = false,
+  BadgeStyler style = const BadgeStyler.create(),
 }) {
   final base = _fortalBadgeBaseStyler(size);
-  return switch (variant) {
+  return (switch (variant) {
     .solid =>
       base
           .color(
@@ -67,7 +68,7 @@ BadgeStyler fortalBadgeStyle({
           .labelColor(
             highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
           ),
-  };
+  }).merge(style);
 }
 
 BadgeStyler _fortalBadgeBaseStyler(FortalBadgeSize size) {

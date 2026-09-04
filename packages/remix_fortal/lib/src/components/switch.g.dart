@@ -13,6 +13,7 @@ class FortalSwitch extends StatelessWidget {
     this.variant = .surface,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const SwitchStyler.create(),
     required this.selected,
     required this.semanticLabel,
     this.onChanged,
@@ -29,6 +30,7 @@ class FortalSwitch extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const SwitchStyler.create(),
     required this.selected,
     required this.semanticLabel,
     this.onChanged,
@@ -45,6 +47,7 @@ class FortalSwitch extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const SwitchStyler.create(),
     required this.selected,
     required this.semanticLabel,
     this.onChanged,
@@ -61,6 +64,7 @@ class FortalSwitch extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const SwitchStyler.create(),
     required this.selected,
     required this.semanticLabel,
     this.onChanged,
@@ -77,6 +81,8 @@ class FortalSwitch extends StatelessWidget {
   final FortalSwitchSize size;
 
   final bool highContrast;
+
+  final SwitchStyler style;
 
   final bool selected;
 
@@ -104,6 +110,7 @@ class FortalSwitch extends StatelessWidget {
         variant: this.variant,
         size: this.size,
         highContrast: this.highContrast,
+        style: this.style,
       ),
       selected: this.selected,
       semanticLabel: this.semanticLabel,

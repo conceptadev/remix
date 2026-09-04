@@ -13,6 +13,7 @@ class FortalCallout extends StatelessWidget {
     this.variant = .soft,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const CalloutStyler.create(),
     this.text,
     this.icon,
     this.child,
@@ -22,6 +23,7 @@ class FortalCallout extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const CalloutStyler.create(),
     this.text,
     this.icon,
     this.child,
@@ -31,6 +33,7 @@ class FortalCallout extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const CalloutStyler.create(),
     this.text,
     this.icon,
     this.child,
@@ -40,6 +43,7 @@ class FortalCallout extends StatelessWidget {
     super.key,
     this.size = .size2,
     this.highContrast = false,
+    this.style = const CalloutStyler.create(),
     this.text,
     this.icon,
     this.child,
@@ -50,6 +54,8 @@ class FortalCallout extends StatelessWidget {
   final FortalCalloutSize size;
 
   final bool highContrast;
+
+  final CalloutStyler style;
 
   final String? text;
 
@@ -65,6 +71,7 @@ class FortalCallout extends StatelessWidget {
         variant: this.variant,
         size: this.size,
         highContrast: this.highContrast,
+        style: this.style,
       ),
       text: this.text,
       icon: this.icon,

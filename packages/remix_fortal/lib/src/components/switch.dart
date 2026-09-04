@@ -36,12 +36,13 @@ SwitchStyler fortalSwitchStyle({
   FortalSwitchVariant variant = .surface,
   FortalSwitchSize size = .size2,
   bool highContrast = false,
+  SwitchStyler style = const SwitchStyler.create(),
 }) {
-  return switch (variant) {
+  return (switch (variant) {
     .classic => _fortalSwitchClassicStyler(size, highContrast: highContrast),
     .surface => _fortalSwitchSurfaceStyler(size, highContrast: highContrast),
     .soft => _fortalSwitchSoftStyler(size, highContrast: highContrast),
-  };
+  }).merge(style);
 }
 
 SwitchStyler _fortalSwitchBaseStyler(FortalSwitchSize size) {

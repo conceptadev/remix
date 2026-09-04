@@ -10,11 +10,14 @@ part of 'tooltip.dart';
 class FortalTooltip extends StatelessWidget {
   const FortalTooltip({
     super.key,
+    this.style = const TooltipStyler.create(),
     required this.tooltipChild,
     required this.child,
     this.tooltipSemantics,
     this.positioning = const OverlayPositionConfig(),
   });
+
+  final TooltipStyler style;
 
   final Widget tooltipChild;
 
@@ -28,7 +31,7 @@ class FortalTooltip extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTooltip(
       key: this.key,
-      style: fortalTooltipStyle(),
+      style: fortalTooltipStyle(style: this.style),
       tooltipChild: this.tooltipChild,
       child: this.child,
       tooltipSemantics: this.tooltipSemantics,

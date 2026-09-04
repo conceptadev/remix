@@ -16,6 +16,7 @@ class FortalDialog extends StatelessWidget {
     super.key,
     this.size = FortalDialogSize.size3,
     this.align = FortalDialogAlign.center,
+    this.style = const DialogStyler.create(),
     this.child,
     this.title,
     this.description,
@@ -28,6 +29,8 @@ class FortalDialog extends StatelessWidget {
   final FortalDialogSize size;
 
   final FortalDialogAlign align;
+
+  final DialogStyler style;
 
   final Widget? child;
 
@@ -47,7 +50,11 @@ class FortalDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixDialog(
       key: this.key,
-      style: fortalDialogStyle(size: this.size, align: this.align),
+      style: fortalDialogStyle(
+        size: this.size,
+        align: this.align,
+        style: this.style,
+      ),
       child: this.child,
       title: this.title,
       description: this.description,

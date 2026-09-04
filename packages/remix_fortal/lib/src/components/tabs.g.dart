@@ -11,7 +11,13 @@ part of 'tabs.dart';
 /// The tab-list bottom border is a single hairline at every Radix size, so this
 /// preset takes no `size` — unlike [fortalTabStyle], whose per-tab metrics vary.
 class FortalTabBar extends StatelessWidget {
-  const FortalTabBar({super.key, required this.child});
+  const FortalTabBar({
+    super.key,
+    this.style = const TabBarStyler.create(),
+    required this.child,
+  });
+
+  final TabBarStyler style;
 
   final Widget child;
 
@@ -19,7 +25,7 @@ class FortalTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTabBar(
       key: this.key,
-      style: fortalTabBarStyle(),
+      style: fortalTabBarStyle(style: this.style),
       child: this.child,
     );
   }
@@ -29,10 +35,13 @@ class FortalTabBar extends StatelessWidget {
 class FortalTabView extends StatelessWidget {
   const FortalTabView({
     super.key,
+    this.style = const TabViewStyler.create(),
     required this.tabId,
     required this.child,
     this.maintainState = true,
   });
+
+  final TabViewStyler style;
 
   final String tabId;
 
@@ -44,7 +53,7 @@ class FortalTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTabView(
       key: this.key,
-      style: fortalTabViewStyle(),
+      style: fortalTabViewStyle(style: this.style),
       tabId: this.tabId,
       child: this.child,
       maintainState: this.maintainState,
@@ -58,6 +67,7 @@ class FortalTab extends StatelessWidget {
     super.key,
     this.size = FortalTabsSize.size2,
     this.highContrast = false,
+    this.style = const TabStyler.create(),
     required this.tabId,
     this.child,
     this.label,
@@ -77,6 +87,8 @@ class FortalTab extends StatelessWidget {
   final FortalTabsSize size;
 
   final bool highContrast;
+
+  final TabStyler style;
 
   final String tabId;
 
@@ -110,7 +122,11 @@ class FortalTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTab(
       key: this.key,
-      style: fortalTabStyle(size: this.size, highContrast: this.highContrast),
+      style: fortalTabStyle(
+        size: this.size,
+        highContrast: this.highContrast,
+        style: this.style,
+      ),
       tabId: this.tabId,
       child: this.child,
       label: this.label,

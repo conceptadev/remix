@@ -12,8 +12,8 @@ import 'dart:math' as math;
 import 'dart:ui' show Color, Offset;
 
 import 'package:flutter/painting.dart' show BoxShadow, ColorSwatch;
-import 'package:mix/mix.dart' show MixToken;
-import 'package:remix/remix.dart' show RemixBoxShadow, RemixBoxShadowKind;
+import 'package:remix/remix.dart'
+    show MixToken, RemixBoxShadow, RemixBoxShadowKind;
 
 import 'radix_colors.dart';
 import 'theme_data.dart';

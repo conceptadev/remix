@@ -12,21 +12,36 @@ class FortalCard extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size1,
+    this.style = const CardStyler.create(),
     this.child,
   });
 
-  const FortalCard.surface({super.key, this.size = .size1, this.child})
-    : variant = FortalCardVariant.surface;
+  const FortalCard.surface({
+    super.key,
+    this.size = .size1,
+    this.style = const CardStyler.create(),
+    this.child,
+  }) : variant = FortalCardVariant.surface;
 
-  const FortalCard.classic({super.key, this.size = .size1, this.child})
-    : variant = FortalCardVariant.classic;
+  const FortalCard.classic({
+    super.key,
+    this.size = .size1,
+    this.style = const CardStyler.create(),
+    this.child,
+  }) : variant = FortalCardVariant.classic;
 
-  const FortalCard.ghost({super.key, this.size = .size1, this.child})
-    : variant = FortalCardVariant.ghost;
+  const FortalCard.ghost({
+    super.key,
+    this.size = .size1,
+    this.style = const CardStyler.create(),
+    this.child,
+  }) : variant = FortalCardVariant.ghost;
 
   final FortalCardVariant variant;
 
   final FortalCardSize size;
+
+  final CardStyler style;
 
   final Widget? child;
 
@@ -34,7 +49,11 @@ class FortalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixCard(
       key: this.key,
-      style: fortalCardStyle(variant: this.variant, size: this.size),
+      style: fortalCardStyle(
+        variant: this.variant,
+        size: this.size,
+        style: this.style,
+      ),
       child: this.child,
     );
   }

@@ -18,6 +18,7 @@ MenuStyler fortalMenuStyle({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
   bool highContrast = false,
+  MenuStyler style = const MenuStyler.create(),
 }) {
   final metrics = _fortalMenuMetrics(size);
   final base = MenuStyler()
@@ -44,7 +45,7 @@ MenuStyler fortalMenuStyle({
       )
       .divider(_fortalMenuDividerStyler(metrics));
 
-  return base;
+  return base.merge(style);
 }
 
 /// Fortal item recipe for per-item style overrides.

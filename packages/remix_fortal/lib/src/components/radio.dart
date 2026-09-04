@@ -36,12 +36,13 @@ RadioStyler fortalRadioStyle({
   FortalRadioVariant variant = .surface,
   FortalRadioSize size = .size2,
   bool highContrast = false,
+  RadioStyler style = const RadioStyler.create(),
 }) {
-  return switch (variant) {
+  return (switch (variant) {
     .classic => _fortalRadioClassicStyler(size, highContrast: highContrast),
     .surface => _fortalRadioSurfaceStyler(size, highContrast: highContrast),
     .soft => _fortalRadioSoftStyler(size, highContrast: highContrast),
-  };
+  }).merge(style);
 }
 
 RadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {

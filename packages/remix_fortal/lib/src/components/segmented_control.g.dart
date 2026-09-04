@@ -17,6 +17,7 @@ class FortalSegmentedControl<T extends Object> extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.style = const SegmentedControlStyler.create(),
     required this.items,
     required this.selectedValue,
     this.onChanged,
@@ -30,6 +31,7 @@ class FortalSegmentedControl<T extends Object> extends StatelessWidget {
   const FortalSegmentedControl.surface({
     super.key,
     this.size = .size2,
+    this.style = const SegmentedControlStyler.create(),
     required this.items,
     required this.selectedValue,
     this.onChanged,
@@ -43,6 +45,7 @@ class FortalSegmentedControl<T extends Object> extends StatelessWidget {
   const FortalSegmentedControl.classic({
     super.key,
     this.size = .size2,
+    this.style = const SegmentedControlStyler.create(),
     required this.items,
     required this.selectedValue,
     this.onChanged,
@@ -56,6 +59,8 @@ class FortalSegmentedControl<T extends Object> extends StatelessWidget {
   final FortalSegmentedControlVariant variant;
 
   final FortalSegmentedControlSize size;
+
+  final SegmentedControlStyler style;
 
   final List<RemixSegmentedControlItem<T>> items;
 
@@ -80,6 +85,7 @@ class FortalSegmentedControl<T extends Object> extends StatelessWidget {
       style: fortalSegmentedControlStyle(
         variant: this.variant,
         size: this.size,
+        style: this.style,
       ),
       items: this.items,
       selectedValue: this.selectedValue,
