@@ -111,7 +111,7 @@ void main() {
       ]);
       expect(
         runner.calls[4].arguments,
-        contains('--build-filter=lib/ui/components/button.g.dart'),
+        contains('--build-filter=package:consumer/ui/components/button.g.dart'),
       );
       expect(runner.calls[5].arguments, ['analyze', 'lib/ui']);
     },
@@ -179,8 +179,8 @@ void main() {
           (argument) => argument.startsWith('--build-filter='),
         ),
         {
-          '--build-filter=lib/ui/components/chart.g.dart',
-          '--build-filter=lib/ui/components/button.g.dart',
+          '--build-filter=package:consumer/ui/components/chart.g.dart',
+          '--build-filter=package:consumer/ui/components/button.g.dart',
         },
       );
       expect(
@@ -194,34 +194,62 @@ void main() {
     },
   );
 
-  test(
-    'workspace members verify dependencies from the workspace lock',
-    () async {
-      final workspace = Directory.systemTemp.createTempSync(
-        'remix_cli_workspace_test_',
-      );
-      addTearDown(() => workspace.deleteSync(recursive: true));
-      final member = Directory(p.join(workspace.path, 'apps/consumer'))
-        ..createSync(recursive: true);
-      final remixMember = Directory(p.join(workspace.path, 'packages/remix'))
-        ..createSync(recursive: true);
-      Directory(p.join(member.path, 'lib')).createSync();
-      File(p.join(workspace.path, 'pubspec.yaml')).writeAsStringSync('''
+  for (final layout in const {
+    'explicit': ['apps/consumer', 'packages/remix'],
+    'glob': ['apps/*', 'packages/*'],
+    'nested': ['apps', 'packages/remix'],
+    'unrelated ancestor': ['apps/other', 'packages/remix'],
+    'incompatible member': ['apps/consumer', 'packages/remix'],
+  }.entries) {
+    test(
+      '${layout.key} workspace checks the package identity and version',
+      () async {
+        final workspace = Directory.systemTemp.createTempSync(
+          'remix_cli_workspace_test_',
+        );
+        addTearDown(() => workspace.deleteSync(recursive: true));
+        final member = Directory(p.join(workspace.path, 'apps/consumer'))
+          ..createSync(recursive: true);
+        final remixMember = Directory(p.join(workspace.path, 'packages/remix'))
+          ..createSync(recursive: true);
+        final unrelated = layout.key == 'unrelated ancestor';
+        final incompatible = layout.key == 'incompatible member';
+        if (unrelated) {
+          Directory(p.join(workspace.path, 'apps/other')).createSync();
+        }
+        Directory(p.join(member.path, 'lib')).createSync();
+        File(p.join(workspace.path, 'pubspec.yaml')).writeAsStringSync('''
 name: workspace
 environment:
   sdk: ">=3.12.0 <4.0.0"
 workspace:
-  - apps/consumer
-  - packages/remix
+${layout.value.map((path) => '  - $path').join('\n')}
 ''');
-      File(p.join(remixMember.path, 'pubspec.yaml')).writeAsStringSync('''
+        if (layout.key == 'nested') {
+          File(p.join(workspace.path, 'apps/pubspec.yaml')).writeAsStringSync(
+            '''
+name: apps
+resolution: workspace
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+workspace:
+  - consumer
+''',
+          );
+        }
+        File(p.join(remixMember.path, 'pubspec.yaml')).writeAsStringSync('''
 name: remix
-version: $registryRemixFloor
+version: ${incompatible ? '0.0.0' : registryRemixFloor}
+resolution: workspace
 environment:
   sdk: ">=3.11.0 <4.0.0"
 ''');
-      writeRequiredPubspec(member);
-      File(p.join(workspace.path, 'pubspec.lock')).writeAsStringSync('''
+        writeRequiredPubspec(member);
+        final memberPubspec = File(p.join(member.path, 'pubspec.yaml'));
+        memberPubspec.writeAsStringSync(
+          '${memberPubspec.readAsStringSync()}resolution: workspace\n',
+        );
+        File(p.join(workspace.path, 'pubspec.lock')).writeAsStringSync('''
 packages:
   mix_annotations:
     version: "2.2.0-beta.1"
@@ -230,13 +258,18 @@ packages:
   mix_generator:
     version: "2.2.0-beta.3"
 ''');
-      final packageConfig = File(
-        p.join(workspace.path, '.dart_tool/package_config.json'),
-      )..createSync(recursive: true);
-      packageConfig.writeAsStringSync('''
+        final packageConfig = File(
+          p.join(workspace.path, '.dart_tool/package_config.json'),
+        )..createSync(recursive: true);
+        packageConfig.writeAsStringSync('''
 {
   "configVersion": 2,
   "packages": [
+    {
+      "name": "consumer",
+      "rootUri": "../apps/${unrelated ? 'other' : 'consumer'}",
+      "packageUri": "lib/"
+    },
     {
       "name": "remix",
       "rootUri": "../packages/remix",
@@ -245,24 +278,47 @@ packages:
   ]
 }
 ''');
-      await Installer(
-        projectRoot: member,
-        writeOut: (_) {},
-      ).initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'));
+        await Installer(
+          projectRoot: member,
+          writeOut: (_) {},
+        ).initialize(const InitOptions(prefix: 'Ui', uiPath: 'lib/ui'));
 
-      await Installer(
-        projectRoot: member,
-        writeOut: (_) {},
-        processRunner: happyRunner(member, writeLockOnPubGet: false),
-      ).add(const AddOptions(item: 'button', mode: AddMode.write));
+        final installer = Installer(
+          projectRoot: member,
+          writeOut: (_) {},
+          processRunner: happyRunner(member, writeLockOnPubGet: false),
+        );
+        if (unrelated || incompatible) {
+          final before = snapshotFiles(member);
+          await expectLater(
+            installer.add(
+              const AddOptions(item: 'button', mode: AddMode.write),
+            ),
+            throwsA(
+              isA<StateError>().having(
+                (error) => error.message,
+                'message',
+                contains(unrelated ? 'pubspec.lock' : 'does not satisfy'),
+              ),
+            ),
+          );
+          expect(snapshotFiles(member), before);
+          return;
+        }
+        await installer.add(
+          const AddOptions(item: 'button', mode: AddMode.write),
+        );
 
-      expect(
-        File(p.join(member.path, 'lib/ui/components/button.dart')).existsSync(),
-        isTrue,
-      );
-      expect(File(p.join(member.path, 'pubspec.lock')).existsSync(), isFalse);
-    },
-  );
+        expect(
+          File(
+            p.join(member.path, 'lib/ui/components/button.dart'),
+          ).existsSync(),
+          isTrue,
+        );
+        expect(File(p.join(member.path, 'pubspec.lock')).existsSync(), isFalse);
+      },
+    );
+  }
 
   test('Button overwrite preserves every customized Theme byte', () async {
     await installButton(root);
@@ -987,8 +1043,9 @@ Future<void> installButton(Directory root) async {
 }
 
 /// The Dart the installer resolves from [fakeFlutterMachineJson]'s SDK root.
-String fakeToolchainDart(Directory root) =>
-    p.join(root.path, 'bin', Platform.isWindows ? 'dart.exe' : 'dart');
+String fakeToolchainDart(Directory root) => Platform.isWindows
+    ? p.join(root.path, 'bin', 'cache', 'dart-sdk', 'bin', 'dart.exe')
+    : p.join(root.path, 'bin', 'dart');
 
 RecordingProcessRunner happyRunner(
   Directory root, {
@@ -1066,7 +1123,11 @@ RecordingProcessRunner happyRunner(
       File(
           p.joinAll([
             root.path,
-            ...p.posix.split(filter.substring('--build-filter='.length)),
+            'lib',
+            ...Uri.parse(filter.substring('--build-filter='.length))
+                .pathSegments
+                .skip(1)
+                .map((segment) => segment.replaceAll(r'\', '')),
           ]),
         )
         ..createSync(recursive: true)

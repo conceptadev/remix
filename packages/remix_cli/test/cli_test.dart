@@ -48,6 +48,25 @@ void main() {
     expect(output.join('\n'), contains('Usage: remix init'));
   });
 
+  test('help after command arguments prints command usage once', () async {
+    for (final arguments in [
+      ['add', 'button', '--help'],
+      ['init', '--prefix', 'Acme', '--help'],
+    ]) {
+      final result = await Process.run(Platform.resolvedExecutable, [
+        'run',
+        'bin/remix.dart',
+        ...arguments,
+      ]);
+
+      expect(result.exitCode, successExitCode);
+      expect(result.stderr, isEmpty);
+      expect('Usage: remix '.allMatches(result.stdout as String), hasLength(1));
+      expect(result.stdout, contains('Usage: remix ${arguments.first}'));
+      expect(result.stdout, isNot(contains('Usage: remix <command>')));
+    }
+  });
+
   test('missing and unknown commands are usage errors', () async {
     final errors = <String>[];
 

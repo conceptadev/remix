@@ -96,6 +96,28 @@ paths:
   });
 
   test(
+    'rejects runtime prefixes before initialization writes source',
+    () async {
+      for (final prefix in ['Remix', 'Mix']) {
+        final before = snapshotFiles(root);
+        final errors = <String>[];
+
+        final code = await runRemixCli(
+          ['init', '--prefix', prefix],
+          writeOut: output.add,
+          writeError: errors.add,
+          onInit: installer.initialize,
+        );
+
+        expect(code, failureExitCode, reason: prefix);
+        expect(errors.single, contains('reserved'), reason: prefix);
+        expect(snapshotFiles(root), before, reason: prefix);
+        expect(output, isEmpty, reason: prefix);
+      }
+    },
+  );
+
+  test(
     'rejects a file in the UI path without partial initialization',
     () async {
       File(p.join(root.path, 'lib', 'design_system')).writeAsStringSync('file');

@@ -738,7 +738,8 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({
   old names.</p>
 
   <p>The prefix must be an ASCII UpperCamel Dart identifier, and its lowercased form cannot be a
-  reserved word. <code>paths.ui</code> must stay inside <code>lib/</code>.</p>
+  reserved word. <code>Remix</code> and <code>Mix</code> are reserved for runtime dependencies.
+  <code>paths.ui</code> must stay inside <code>lib/</code>.</p>
   </details>
 </section>
 
@@ -1754,7 +1755,7 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({ ... })
     <thead><tr><th>Key</th><th>Default</th><th>Rule</th></tr></thead>
     <tbody>
       <tr><th scope="row" class="mono">schema</th><td data-label="Default"><code>1</code></td><td data-label="Rule">Must be exactly <code>1</code>.</td></tr>
-      <tr><th scope="row" class="mono">prefix</th><td data-label="Default"><code>Ui</code></td><td data-label="Rule">ASCII UpperCamel. Its lowercase form cannot be a Dart reserved word.</td></tr>
+      <tr><th scope="row" class="mono">prefix</th><td data-label="Default"><code>Ui</code></td><td data-label="Rule">ASCII UpperCamel. Its lowercase form cannot be a Dart reserved word. Remix and Mix are reserved for runtime dependencies.</td></tr>
       <tr><th scope="row" class="mono">paths.ui</th><td data-label="Default"><code>lib/ui</code></td><td data-label="Rule">Normalized, project-relative, and inside <code>lib/</code>.</td></tr>
     </tbody>
   </table></div>

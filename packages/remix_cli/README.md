@@ -74,6 +74,9 @@ dart run remix_cli:remix init --prefix Acme --ui-path lib/design_system
 with a managed export block. Repeating the same command is safe. A different
 configuration is refused instead of silently rewriting an existing project.
 
+The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
+Use an application prefix such as `Ui` or `Acme`.
+
 ## Add a component
 
 ```shell

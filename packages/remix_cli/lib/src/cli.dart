@@ -72,12 +72,8 @@ Future<int> runRemixCli(
   }
 
   try {
-    final result = await runner.run(arguments);
-    if (result == null) {
-      writeOut(runner.usage);
-      return successExitCode;
-    }
-    return result;
+    // CommandRunner already prints help when it returns no command result.
+    return await runner.run(arguments) ?? successExitCode;
   } on UsageException catch (error) {
     writeError(error.message);
     writeError(error.usage);
@@ -94,9 +90,7 @@ int? _writeRequestedHelp(
   required LineWriter writeOut,
   required LineWriter writeError,
 }) {
-  // `help` is handled here with `--help` and `-h`. Letting CommandRunner's own
-  // help command take it would print the usage once, return null, and fall
-  // through to the null-result branch below, which prints the usage again.
+  // Route the common help forms through the injected output callback.
   if (arguments.length == 1 &&
       (arguments.single == '--help' ||
           arguments.single == '-h' ||

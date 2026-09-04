@@ -177,6 +177,12 @@ Directory validateFlutterPackageRoot(Directory directory) {
 }
 
 void _validatePrefix(String prefix) {
+  if (prefix == 'Remix' || prefix == 'Mix') {
+    throw FormatException(
+      '$prefix is reserved for runtime dependencies. '
+      'Choose an application prefix such as Ui or Acme.',
+    );
+  }
   if (!RegExp(r'^[A-Z][A-Za-z0-9]*$').hasMatch(prefix)) {
     throw const FormatException(
       'prefix must be an ASCII UpperCamel Dart identifier.',

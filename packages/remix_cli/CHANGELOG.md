@@ -1,6 +1,10 @@
 ## 0.1.0
 
 - Initial project-local CLI for installing editable Remix UI source.
+- Uses the Flutter SDK and its Dart executable on Windows. CI verifies installation with the real SDK.
+- Supports explicit, glob, and nested workspace members through Pub's resolved package configuration.
+- Rejects reserved runtime prefixes before writing source and prints command help once.
+- Preserves spaces and special characters in generation filters. Each filter selects one generated file.
 - Bundles theme plus a registry item for every styled component surface in
   `remix` 1.0.0-beta.7: accordion, avatar, badge, button, callout, card,
   checkbox, data_list,

@@ -56,6 +56,9 @@ default prefix is `Ui`; `--prefix Acme` produces names such as
 `AcmeThemeScope`, `AcmeButton`, and `acmeButtonStyle`. A different source root
 can be chosen once with `--ui-path`.
 
+The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
+Use an application prefix such as `Ui` or `Acme`.
+
 `add button` resolves the Theme dependency first, adds compatible hosted
 package constraints when they are missing, writes the authored source, updates
 the managed barrel, and generates only the declared adapter:

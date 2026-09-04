@@ -109,6 +109,7 @@ remix init --prefix Acme --ui-path lib/design_system
 `--prefix Acme` produces `AcmeButton`, `AcmeButtonVariant`, `AcmeThemeData`,
 and `acmeButtonStyle`. The prefix must be an UpperCamel Dart identifier whose
 lowercased form is not a reserved word, and the UI path must live under `lib/`.
+The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 
 `init` is also a repair command. Run it again and it recreates whichever of the
 two files is missing, telling you exactly which one it touched:
@@ -200,7 +201,7 @@ paths:
 | Key | Default | Rules |
 |---|---|---|
 | `schema` | `1` | Must be exactly `1`. Anything else is rejected. |
-| `prefix` | `Ui` | ASCII UpperCamel Dart identifier. Its lowercased form must not be a Dart reserved word — `Class` and `Is` are rejected. |
+| `prefix` | `Ui` | ASCII UpperCamel Dart identifier. Its lowercased form must not be a Dart reserved word. `Remix` and `Mix` are reserved for runtime dependencies. |
 | `paths.ui` | `lib/ui` | Project-relative, normalized, no traversal, must be under `lib/`. Symlinks that escape the package root are rejected. |
 
 Unknown keys are an error rather than a warning, so a typo fails loudly instead

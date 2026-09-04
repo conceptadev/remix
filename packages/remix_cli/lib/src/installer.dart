@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:glob/glob.dart';
 import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
@@ -299,6 +300,8 @@ final class Installer {
           (pathsToWrite.any((path) => path.endsWith('.dart')) ||
               generated.any((path) => !_projectFile(root, path).existsSync()));
       if (needsGeneration) {
+        final packageName =
+            (loadYaml(pubspec.readAsStringSync()) as YamlMap)['name'] as String;
         await _checked(
           ProcessInvocation(
             executable: toolchain.dart,
@@ -306,7 +309,8 @@ final class Installer {
               'run',
               'build_runner',
               'build',
-              for (final target in generationTargets) '--build-filter=$target',
+              for (final target in generationTargets)
+                '--build-filter=${_generationFilter(packageName, target)}',
             ],
             workingDirectory: root.path,
           ),
@@ -358,7 +362,7 @@ final class Installer {
 
   Future<_FlutterToolchain> _resolveFlutter(Directory root) async {
     final invocation = ProcessInvocation(
-      executable: 'flutter',
+      executable: Platform.isWindows ? 'flutter.bat' : 'flutter',
       arguments: const ['--version', '--machine'],
       workingDirectory: root.path,
     );
@@ -394,7 +398,9 @@ final class Installer {
         'bin',
         Platform.isWindows ? 'flutter.bat' : 'flutter',
       ),
-      dart: p.join(sdkRoot, 'bin', Platform.isWindows ? 'dart.exe' : 'dart'),
+      dart: Platform.isWindows
+          ? p.join(sdkRoot, 'bin', 'cache', 'dart-sdk', 'bin', 'dart.exe')
+          : p.join(sdkRoot, 'bin', 'dart'),
     );
   }
 
@@ -728,7 +734,7 @@ Map<String, Version> _verifyLockedVersions(
     final lockedVersion = entry is YamlMap ? entry['version'] : null;
     final versionSource = lockedVersion is String
         ? lockedVersion
-        : _resolvedWorkspaceMemberVersion(lock.parent, requirement.name);
+        : _resolvedPackageVersion(lock.parent, requirement.name);
     if (versionSource is! String) {
       throw FormatException(
         '${requirement.name} is missing from pubspec.lock.',
@@ -761,24 +767,27 @@ Version? _snapshotFloor(List<_DependencyRequirement> requirements) {
   return null;
 }
 
-String? _resolvedWorkspaceMemberVersion(
-  Directory workspaceRoot,
+String? _resolvedPackageVersion(Directory resolutionRoot, String packageName) {
+  final root = _configuredPackageRoot(resolutionRoot, packageName);
+  if (root == null) return null;
+  final pubspec = File(p.join(root.path, 'pubspec.yaml'));
+  if (!pubspec.existsSync()) return null;
+  final document = loadYaml(pubspec.readAsStringSync());
+  if (document is! YamlMap || document['name'] != packageName) return null;
+  final version = document['version'];
+  return version is String ? version : null;
+}
+
+// Pub has already resolved workspace globs, nested members, and overrides.
+// Reuse its package map instead of interpreting workspace declarations again.
+Directory? _configuredPackageRoot(
+  Directory resolutionRoot,
   String packageName,
 ) {
-  final workspacePubspec = File(p.join(workspaceRoot.path, 'pubspec.yaml'));
   final packageConfig = File(
-    p.join(workspaceRoot.path, '.dart_tool', 'package_config.json'),
+    p.join(resolutionRoot.path, '.dart_tool', 'package_config.json'),
   );
-  if (!workspacePubspec.existsSync() || !packageConfig.existsSync()) {
-    return null;
-  }
-
-  final workspaceDocument = loadYaml(workspacePubspec.readAsStringSync());
-  final members = workspaceDocument is YamlMap
-      ? workspaceDocument['workspace']
-      : null;
-  if (members is! YamlList) return null;
-
+  if (!packageConfig.existsSync()) return null;
   final configDocument = jsonDecode(packageConfig.readAsStringSync());
   final configuredPackages = configDocument is Map
       ? configDocument['packages']
@@ -790,36 +799,10 @@ String? _resolvedWorkspaceMemberVersion(
   if (configured.length != 1) return null;
   final rootUri = configured.single['rootUri'];
   if (rootUri is! String) return null;
-  final configuredRoot = packageConfig.parent.uri.resolve(rootUri).toFilePath();
-  if (FileSystemEntity.typeSync(configuredRoot) !=
-      FileSystemEntityType.directory) {
-    return null;
-  }
-  final resolvedConfiguredRoot = Directory(
-    configuredRoot,
-  ).resolveSymbolicLinksSync();
-
-  for (final member in members) {
-    if (member is! String || p.isAbsolute(member)) continue;
-    final memberPath = p.normalize(p.join(workspaceRoot.path, member));
-    if (FileSystemEntity.typeSync(memberPath) !=
-        FileSystemEntityType.directory) {
-      continue;
-    }
-    final memberDirectory = Directory(memberPath);
-    if (memberDirectory.resolveSymbolicLinksSync() != resolvedConfiguredRoot) {
-      continue;
-    }
-    final memberPubspec = File(p.join(memberPath, 'pubspec.yaml'));
-    if (!memberPubspec.existsSync()) return null;
-    final memberDocument = loadYaml(memberPubspec.readAsStringSync());
-    if (memberDocument is! YamlMap || memberDocument['name'] != packageName) {
-      return null;
-    }
-    final version = memberDocument['version'];
-    return version is String ? version : null;
-  }
-  return null;
+  final uri = packageConfig.parent.uri.resolve(rootUri);
+  if (uri.scheme != 'file') return null;
+  final root = Directory.fromUri(uri);
+  return root.existsSync() ? root : null;
 }
 
 File _findPubLock(Directory packageRoot) {
@@ -845,24 +828,25 @@ File _findPubLock(Directory packageRoot) {
 }
 
 bool _workspaceContains(Directory workspaceRoot, String resolvedPackage) {
-  final pubspec = File(p.join(workspaceRoot.path, 'pubspec.yaml'));
+  final pubspec = File(p.join(resolvedPackage, 'pubspec.yaml'));
   if (!pubspec.existsSync()) return false;
 
   final document = loadYaml(pubspec.readAsStringSync());
-  final members = document is YamlMap ? document['workspace'] : null;
-  if (members is! YamlList) return false;
-
-  for (final member in members) {
-    if (member is! String || p.isAbsolute(member)) continue;
-    final memberPath = p.normalize(p.join(workspaceRoot.path, member));
-    final type = FileSystemEntity.typeSync(memberPath);
-    if (type != FileSystemEntityType.directory) continue;
-    if (Directory(memberPath).resolveSymbolicLinksSync() == resolvedPackage) {
-      return true;
-    }
-  }
-  return false;
+  final name = document is YamlMap ? document['name'] : null;
+  if (name is! String) return false;
+  final configured = _configuredPackageRoot(workspaceRoot, name);
+  return configured?.resolveSymbolicLinksSync() == resolvedPackage;
 }
+
+// Package URIs preserve spaces and URI characters. Quote glob syntax so each
+// filter selects one generated file, even when the UI path contains brackets.
+String _generationFilter(String packageName, String target) => Uri(
+  scheme: 'package',
+  pathSegments: [
+    packageName,
+    ...p.posix.split(Glob.quote(target.substring(4))),
+  ],
+).toString();
 
 String _resolveTarget(ProjectConfig config, String target) =>
     p.posix.join(config.uiPath, target.substring('@ui/'.length));
