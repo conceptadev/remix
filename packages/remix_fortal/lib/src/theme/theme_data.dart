@@ -227,7 +227,7 @@ class FortalThemeData extends FortalThemeConfig {
 }
 
 /// Builds the token map for a Fortal scope. Used by [FortalScope].
-Map<MixToken, Object> buildFortalScopeTokens(FortalThemeData theme) {
+Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
   final tokens = resolveFortalTokens(theme);
   final scaling = theme.scaling.factor;
   final shadows = buildFortalShadows(isDark: theme.isDark, colors: tokens);
@@ -356,7 +356,7 @@ Map<MixToken, Object> buildFortalScopeTokens(FortalThemeData theme) {
   };
 
   // Build base tokens map
-  final allTokens = <MixToken, Object>{
+  final allTokens = <MixToken<Object?>, Object>{
     ...colorTokens,
     // Defaults (may be overridden by JSON tokens below)
     FortalTokens.panelBlur:
@@ -658,9 +658,9 @@ Map<MixToken, Object> buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.fontWeightBold: FontWeight.w700,
 
     // Durations (token values)
-    FortalTokens.transitionFast: Duration(milliseconds: 100),
-    FortalTokens.transitionSlow: Duration(milliseconds: 300),
-    FortalTokens.skeletonPulseDuration: Duration(milliseconds: 1000),
+    FortalTokens.transitionFast: const Duration(milliseconds: 100),
+    FortalTokens.transitionSlow: const Duration(milliseconds: 300),
+    FortalTokens.skeletonPulseDuration: const Duration(milliseconds: 1000),
   };
 
   return allTokens;

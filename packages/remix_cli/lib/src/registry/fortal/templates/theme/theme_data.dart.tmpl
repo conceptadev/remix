@@ -1,0 +1,1090 @@
+import 'dart:math' as math;
+
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import 'computed.dart';
+import 'radix_colors.dart' as radix;
+import 'theme_scope.dart' show {{typePrefix}}Scope;
+import 'tokens.dart';
+
+/// Available accent colors matching Radix Themes names.
+enum {{typePrefix}}AccentColor {
+  gray,
+  mauve,
+  slate,
+  sage,
+  olive,
+  sand,
+  gold,
+  bronze,
+  brown,
+  yellow,
+  amber,
+  orange,
+  tomato,
+  red,
+  ruby,
+  crimson,
+  pink,
+  plum,
+  purple,
+  violet,
+  iris,
+  indigo,
+  blue,
+  cyan,
+  teal,
+  jade,
+  green,
+  grass,
+  lime,
+  mint,
+  sky,
+}
+
+/// Available neutral gray families matching Radix Themes names.
+enum {{typePrefix}}GrayColor { gray, mauve, slate, sage, olive, sand }
+
+/// Theme-level radius multipliers matching the Radix Themes presets.
+enum {{typePrefix}}Radius { none, small, medium, large, full }
+
+/// Background treatment used by floating panels.
+enum {{typePrefix}}PanelBackground { solid, translucent }
+
+/// Discrete theme scaling values supported by Radix Themes.
+enum {{typePrefix}}Scaling {
+  percent90(0.9),
+  percent95(0.95),
+  percent100(1.0),
+  percent105(1.05),
+  percent110(1.1);
+
+  const {{typePrefix}}Scaling(this.factor);
+
+  /// Numeric multiplier represented by this preset.
+  final double factor;
+}
+
+/// Partial theme values applied by a [{{typePrefix}}Scope].
+@immutable
+class {{typePrefix}}ThemeConfig {
+  const {{typePrefix}}ThemeConfig({
+    this.accent,
+    this.gray,
+    this.brightness,
+    this.panelBackground,
+    this.radius,
+    this.scaling,
+    this.hasBackground,
+  });
+
+  final {{typePrefix}}AccentColor? accent;
+  final {{typePrefix}}GrayColor? gray;
+  final Brightness? brightness;
+  final {{typePrefix}}PanelBackground? panelBackground;
+  final {{typePrefix}}Radius? radius;
+  final {{typePrefix}}Scaling? scaling;
+  final bool? hasBackground;
+
+  bool get isDark => brightness == .dark;
+
+  {{typePrefix}}ThemeConfig copyWith({
+    {{typePrefix}}AccentColor? accent,
+    {{typePrefix}}GrayColor? gray,
+    Brightness? brightness,
+    {{typePrefix}}PanelBackground? panelBackground,
+    {{typePrefix}}Radius? radius,
+    {{typePrefix}}Scaling? scaling,
+    bool? hasBackground,
+  }) => {{typePrefix}}ThemeConfig(
+    accent: accent ?? this.accent,
+    gray: gray ?? this.gray,
+    brightness: brightness ?? this.brightness,
+    panelBackground: panelBackground ?? this.panelBackground,
+    radius: radius ?? this.radius,
+    scaling: scaling ?? this.scaling,
+    hasBackground: hasBackground ?? this.hasBackground,
+  );
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is {{typePrefix}}ThemeConfig &&
+          accent == other.accent &&
+          gray == other.gray &&
+          brightness == other.brightness &&
+          panelBackground == other.panelBackground &&
+          radius == other.radius &&
+          scaling == other.scaling &&
+          hasBackground == other.hasBackground;
+
+  @override
+  int get hashCode => Object.hash(
+    accent,
+    gray,
+    brightness,
+    panelBackground,
+    radius,
+    scaling,
+    hasBackground,
+  );
+
+  Widget createScope({List<Type>? orderOfModifiers, required Widget child}) =>
+      {{typePrefix}}Scope(
+        accent: accent,
+        gray: gray,
+        brightness: brightness,
+        panelBackground: panelBackground,
+        radius: radius,
+        scaling: scaling,
+        hasBackground: hasBackground,
+        orderOfModifiers: orderOfModifiers,
+        child: child,
+      );
+}
+
+/// Fully resolved theme values inherited by a {{typePrefix}} subtree.
+@immutable
+class {{typePrefix}}ThemeData extends {{typePrefix}}ThemeConfig {
+  const {{typePrefix}}ThemeData({
+    required this.accent,
+    required this.gray,
+    required this.brightness,
+    required this.panelBackground,
+    required this.radius,
+    required this.scaling,
+    required this.hasBackground,
+  }) : super(
+         accent: accent,
+         gray: gray,
+         brightness: brightness,
+         panelBackground: panelBackground,
+         radius: radius,
+         scaling: scaling,
+         hasBackground: hasBackground,
+       );
+
+  @override
+  final {{typePrefix}}AccentColor accent;
+  @override
+  final {{typePrefix}}GrayColor gray;
+  @override
+  final Brightness brightness;
+  @override
+  final {{typePrefix}}PanelBackground panelBackground;
+  @override
+  final {{typePrefix}}Radius radius;
+  @override
+  final {{typePrefix}}Scaling scaling;
+  @override
+  final bool hasBackground;
+
+  @override
+  bool get isDark => brightness == .dark;
+
+  @override
+  {{typePrefix}}ThemeData copyWith({
+    {{typePrefix}}AccentColor? accent,
+    {{typePrefix}}GrayColor? gray,
+    Brightness? brightness,
+    {{typePrefix}}PanelBackground? panelBackground,
+    {{typePrefix}}Radius? radius,
+    {{typePrefix}}Scaling? scaling,
+    bool? hasBackground,
+  }) => {{typePrefix}}ThemeData(
+    accent: accent ?? this.accent,
+    gray: gray ?? this.gray,
+    brightness: brightness ?? this.brightness,
+    panelBackground: panelBackground ?? this.panelBackground,
+    radius: radius ?? this.radius,
+    scaling: scaling ?? this.scaling,
+    hasBackground: hasBackground ?? this.hasBackground,
+  );
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is {{typePrefix}}ThemeData &&
+          accent == other.accent &&
+          gray == other.gray &&
+          brightness == other.brightness &&
+          panelBackground == other.panelBackground &&
+          radius == other.radius &&
+          scaling == other.scaling &&
+          hasBackground == other.hasBackground;
+
+  @override
+  int get hashCode => Object.hash(
+    accent,
+    gray,
+    brightness,
+    panelBackground,
+    radius,
+    scaling,
+    hasBackground,
+  );
+}
+
+/// Builds the token map for a {{typePrefix}} scope. Used by [{{typePrefix}}Scope].
+Map<MixToken<Object?>, Object> build{{typePrefix}}ScopeTokens({{typePrefix}}ThemeData theme) {
+  final tokens = resolve{{typePrefix}}Tokens(theme);
+  final scaling = theme.scaling.factor;
+  final shadows = build{{typePrefix}}Shadows(isDark: theme.isDark, colors: tokens);
+
+  final colorTokens = {
+    // Role and functional tokens
+    {{typePrefix}}Tokens.colorBackground: tokens.colorBackground,
+    {{typePrefix}}Tokens.colorSurface: tokens.colorSurface,
+    {{typePrefix}}Tokens.segmentedControlIndicatorBackground: theme.isDark
+        ? tokens.gray.scale.alphaStep(3)
+        : tokens.colorBackground,
+    {{typePrefix}}Tokens.colorPanelSolid: tokens.colorPanelSolid,
+    {{typePrefix}}Tokens.colorPanelTranslucent: tokens.colorPanelTranslucent,
+    {{typePrefix}}Tokens.colorPanel: theme.panelBackground == .solid
+        ? tokens.colorPanelSolid
+        : tokens.colorPanelTranslucent,
+    {{typePrefix}}Tokens.colorOverlay: tokens.colorOverlay,
+    {{typePrefix}}Tokens.sliderHighContrastOverlay: theme.isDark
+        ? const Color(0x00000000)
+        : tokens.blackAlpha[8]!,
+    {{typePrefix}}Tokens.error3: (theme.isDark ? radix.red.dark : radix.red.light).scale
+        .step(3),
+    {{typePrefix}}Tokens.error7: (theme.isDark ? radix.red.dark : radix.red.light).scale
+        .step(7),
+    {{typePrefix}}Tokens.error8: (theme.isDark ? radix.red.dark : radix.red.light).scale
+        .step(8),
+    {{typePrefix}}Tokens.error9: (theme.isDark ? radix.red.dark : radix.red.light).scale
+        .step(9),
+    {{typePrefix}}Tokens.error11: (theme.isDark ? radix.red.dark : radix.red.light)
+        .scale
+        .step(11),
+    {{typePrefix}}Tokens.error12: (theme.isDark ? radix.red.dark : radix.red.light)
+        .scale
+        .step(12),
+    {{typePrefix}}Tokens.errorA7: (theme.isDark ? radix.red.dark : radix.red.light)
+        .scale
+        .alphaStep(7),
+    ..._accentColorTokens(tokens),
+    // Gray steps
+    {{typePrefix}}Tokens.gray1: tokens.gray.scale.step(1),
+    {{typePrefix}}Tokens.gray2: tokens.gray.scale.step(2),
+    {{typePrefix}}Tokens.gray3: tokens.gray.scale.step(3),
+    {{typePrefix}}Tokens.gray4: tokens.gray.scale.step(4),
+    {{typePrefix}}Tokens.gray5: tokens.gray.scale.step(5),
+    {{typePrefix}}Tokens.gray6: tokens.gray.scale.step(6),
+    {{typePrefix}}Tokens.gray7: tokens.gray.scale.step(7),
+    {{typePrefix}}Tokens.gray8: tokens.gray.scale.step(8),
+    {{typePrefix}}Tokens.gray9: tokens.gray.scale.step(9),
+    {{typePrefix}}Tokens.gray10: tokens.gray.scale.step(10),
+    {{typePrefix}}Tokens.gray11: tokens.gray.scale.step(11),
+    {{typePrefix}}Tokens.gray12: tokens.gray.scale.step(12),
+    // Gray role tokens (from resolved colors)
+    {{typePrefix}}Tokens.graySurface: tokens.gray.surface,
+    {{typePrefix}}Tokens.grayIndicator: tokens.gray.indicator,
+    {{typePrefix}}Tokens.grayTrack: tokens.gray.track,
+    {{typePrefix}}Tokens.grayContrast: tokens.gray.contrast,
+    // Gray alpha a1..a12
+    {{typePrefix}}Tokens.grayA1: tokens.gray.scale.alphaStep(1),
+    {{typePrefix}}Tokens.grayA2: tokens.gray.scale.alphaStep(2),
+    {{typePrefix}}Tokens.grayA3: tokens.gray.scale.alphaStep(3),
+    {{typePrefix}}Tokens.grayA4: tokens.gray.scale.alphaStep(4),
+    {{typePrefix}}Tokens.grayA5: tokens.gray.scale.alphaStep(5),
+    {{typePrefix}}Tokens.grayA6: tokens.gray.scale.alphaStep(6),
+    {{typePrefix}}Tokens.grayA7: tokens.gray.scale.alphaStep(7),
+    {{typePrefix}}Tokens.grayA8: tokens.gray.scale.alphaStep(8),
+    {{typePrefix}}Tokens.grayA9: tokens.gray.scale.alphaStep(9),
+    {{typePrefix}}Tokens.grayA10: tokens.gray.scale.alphaStep(10),
+    {{typePrefix}}Tokens.grayA11: tokens.gray.scale.alphaStep(11),
+    {{typePrefix}}Tokens.grayA12: tokens.gray.scale.alphaStep(12),
+    // Neutral helpers derived from primitives
+    {{typePrefix}}Tokens.blackA1: tokens.blackAlpha[1]!,
+    {{typePrefix}}Tokens.blackA2: tokens.blackAlpha[2]!,
+    {{typePrefix}}Tokens.blackA3: tokens.blackAlpha[3]!,
+    {{typePrefix}}Tokens.blackA4: tokens.blackAlpha[4]!,
+    {{typePrefix}}Tokens.blackA5: tokens.blackAlpha[5]!,
+    {{typePrefix}}Tokens.blackA6: tokens.blackAlpha[6]!,
+    {{typePrefix}}Tokens.blackA7: tokens.blackAlpha[7]!,
+    {{typePrefix}}Tokens.blackA8: tokens.blackAlpha[8]!,
+    {{typePrefix}}Tokens.blackA9: tokens.blackAlpha[9]!,
+    {{typePrefix}}Tokens.blackA10: tokens.blackAlpha[10]!,
+    {{typePrefix}}Tokens.blackA11: tokens.blackAlpha[11]!,
+    {{typePrefix}}Tokens.blackA12: tokens.blackAlpha[12]!,
+    {{typePrefix}}Tokens.whiteA1: tokens.whiteAlpha[1]!,
+    {{typePrefix}}Tokens.whiteA2: tokens.whiteAlpha[2]!,
+    {{typePrefix}}Tokens.whiteA3: tokens.whiteAlpha[3]!,
+    {{typePrefix}}Tokens.whiteA4: tokens.whiteAlpha[4]!,
+    {{typePrefix}}Tokens.whiteA5: tokens.whiteAlpha[5]!,
+    {{typePrefix}}Tokens.whiteA6: tokens.whiteAlpha[6]!,
+    {{typePrefix}}Tokens.whiteA7: tokens.whiteAlpha[7]!,
+    {{typePrefix}}Tokens.whiteA8: tokens.whiteAlpha[8]!,
+    {{typePrefix}}Tokens.whiteA9: tokens.whiteAlpha[9]!,
+    {{typePrefix}}Tokens.whiteA10: tokens.whiteAlpha[10]!,
+    {{typePrefix}}Tokens.whiteA11: tokens.whiteAlpha[11]!,
+    {{typePrefix}}Tokens.whiteA12: tokens.whiteAlpha[12]!,
+    {{typePrefix}}Tokens.shadowStroke: tokens.shadowStroke,
+    {{typePrefix}}Tokens.grayStroke3: mixOklabPremultiplied(
+      tokens.gray.scale.alphaStep(3),
+      tokens.gray.scale.step(3),
+      0.25,
+    ),
+    {{typePrefix}}Tokens.grayStroke4: mixOklabPremultiplied(
+      tokens.gray.scale.alphaStep(4),
+      tokens.gray.scale.step(4),
+      0.25,
+    ),
+    {{typePrefix}}Tokens.grayStroke5: mixOklabPremultiplied(
+      tokens.gray.scale.alphaStep(5),
+      tokens.gray.scale.step(5),
+      0.25,
+    ),
+    {{typePrefix}}Tokens.grayStroke6: mixOklabPremultiplied(
+      tokens.gray.scale.alphaStep(6),
+      tokens.gray.scale.step(6),
+      0.25,
+    ),
+    {{typePrefix}}Tokens.grayStroke7: mixOklabPremultiplied(
+      tokens.gray.scale.alphaStep(7),
+      tokens.gray.scale.step(7),
+      0.25,
+    ),
+    {{typePrefix}}Tokens.dataTableBorder: mixOklabPremultiplied(
+      tokens.gray.scale.alphaStep(5),
+      tokens.gray.scale.step(6),
+      0.5,
+    ),
+  };
+
+  // Build base tokens map
+  final allTokens = <MixToken<Object?>, Object>{
+    ...colorTokens,
+    // Defaults (may be overridden by JSON tokens below)
+    {{typePrefix}}Tokens.panelBlur:
+        theme.panelBackground == {{typePrefix}}PanelBackground.translucent ? 64.0 : 0.0,
+    {{typePrefix}}Tokens.space1: 4.0 * scaling,
+    {{typePrefix}}Tokens.space2: 8.0 * scaling,
+    {{typePrefix}}Tokens.space3: 12.0 * scaling,
+    {{typePrefix}}Tokens.space4: 16.0 * scaling,
+    {{typePrefix}}Tokens.space5: 24.0 * scaling,
+    {{typePrefix}}Tokens.space6: 32.0 * scaling,
+    {{typePrefix}}Tokens.space7: 40.0 * scaling,
+    {{typePrefix}}Tokens.space8: 48.0 * scaling,
+    {{typePrefix}}Tokens.space9: 64.0 * scaling,
+    {{typePrefix}}Tokens.spinnerSize3: 20.0 * scaling,
+    {{typePrefix}}Tokens.dataTableRowHeight1: 36.0 * scaling,
+    {{typePrefix}}Tokens.dataTableRowHeight2: 44.0 * scaling,
+    {{typePrefix}}Tokens.toggleGap1: 2.0 * scaling,
+    {{typePrefix}}Tokens.toggleGap3: 6.0 * scaling,
+    {{typePrefix}}Tokens.avatarSize6: 80.0 * scaling,
+    {{typePrefix}}Tokens.avatarSize7: 96.0 * scaling,
+    {{typePrefix}}Tokens.avatarSize8: 128.0 * scaling,
+    {{typePrefix}}Tokens.avatarSize9: 160.0 * scaling,
+    {{typePrefix}}Tokens.avatarIconSize1: 12.0 * scaling,
+    {{typePrefix}}Tokens.avatarIconSize2: 16.0 * scaling,
+    {{typePrefix}}Tokens.avatarIconSize3: 20.0 * scaling,
+    {{typePrefix}}Tokens.avatarIconSize4: 24.0 * scaling,
+    {{typePrefix}}Tokens.avatarIconSize5: 32.0 * scaling,
+    {{typePrefix}}Tokens.avatarIconSize6: 40.0 * scaling,
+    {{typePrefix}}Tokens.avatarIconSize7: 48.0 * scaling,
+    {{typePrefix}}Tokens.avatarIconSize8: 64.0 * scaling,
+    {{typePrefix}}Tokens.avatarIconSize9: 80.0 * scaling,
+    {{typePrefix}}Tokens.badgePaddingX1: 6.0 * scaling,
+    {{typePrefix}}Tokens.badgePaddingY1: 2.0 * scaling,
+    {{typePrefix}}Tokens.badgePaddingX3: 10.0 * scaling,
+    {{typePrefix}}Tokens.checkboxSize1: 14.0 * scaling,
+    {{typePrefix}}Tokens.checkboxSize3: 20.0 * scaling,
+    {{typePrefix}}Tokens.checkboxIndicatorSize1: 9.0 * scaling,
+    {{typePrefix}}Tokens.checkboxIndicatorSize2: 10.0 * scaling,
+    {{typePrefix}}Tokens.checkboxIndicatorSize3: 12.0 * scaling,
+    {{typePrefix}}Tokens.checkboxGroupItemGap1: 6.0 * scaling,
+    {{typePrefix}}Tokens.checkboxGroupItemGap2: 7.0 * scaling,
+    {{typePrefix}}Tokens.checkboxGroupItemGap3: 8.0 * scaling,
+    {{typePrefix}}Tokens.radioIndicatorSize1: 5.6 * scaling,
+    {{typePrefix}}Tokens.radioIndicatorSize2: 6.4 * scaling,
+    {{typePrefix}}Tokens.radioIndicatorSize3: 8.0 * scaling,
+    {{typePrefix}}Tokens.checkboxRadius1: _scaledRadiusToken(
+      theme.radius,
+      scaling,
+      3.0 * 0.875,
+    ),
+    {{typePrefix}}Tokens.checkboxRadius3: _scaledRadiusToken(
+      theme.radius,
+      scaling,
+      3.0 * 1.25,
+    ),
+    {{typePrefix}}Tokens.switchHeight2: 20.0 * scaling,
+    {{typePrefix}}Tokens.switchWidth1: 28.0 * scaling,
+    {{typePrefix}}Tokens.switchWidth2: 35.0 * scaling,
+    {{typePrefix}}Tokens.switchWidth3: 42.0 * scaling,
+    {{typePrefix}}Tokens.switchThumbSize1: 16.0 * scaling - 2.0,
+    {{typePrefix}}Tokens.switchThumbSize2: 20.0 * scaling - 2.0,
+    {{typePrefix}}Tokens.switchThumbSize3: 24.0 * scaling - 2.0,
+    {{typePrefix}}Tokens.progressHeight2: 6.0 * scaling,
+    {{typePrefix}}Tokens.sliderTrackSize1: 6.0 * scaling,
+    {{typePrefix}}Tokens.sliderTrackSize2: 8.0 * scaling,
+    {{typePrefix}}Tokens.sliderTrackSize3: 10.0 * scaling,
+    {{typePrefix}}Tokens.sliderThumbSize1: 13.0 * scaling,
+    {{typePrefix}}Tokens.sliderThumbSize2: 16.0 * scaling,
+    {{typePrefix}}Tokens.sliderThumbSize3: 19.0 * scaling,
+    {{typePrefix}}Tokens.textFieldPadding1: 6.0 * scaling,
+    {{typePrefix}}Tokens.textFieldPadding2: 8.0 * scaling,
+    {{typePrefix}}Tokens.textFieldPadding3: 12.0 * scaling,
+    {{typePrefix}}Tokens.textAreaMinHeight3: 80.0,
+    {{typePrefix}}Tokens.dataListRowGap3: 20.0 * scaling,
+    {{typePrefix}}Tokens.dataListLabelMinWidth: 120.0,
+    {{typePrefix}}Tokens.tabInnerPaddingY1: 2.0 * scaling,
+    {{typePrefix}}Tokens.tabActiveLetterSpacing1: -0.12 * scaling,
+    {{typePrefix}}Tokens.tabActiveLetterSpacing2: -0.14 * scaling,
+    {{typePrefix}}Tokens.selectSpace1Half: 6.0 * scaling,
+    {{typePrefix}}Tokens.selectIndicatorWidth1: 20.0 * scaling,
+    {{typePrefix}}Tokens.selectIndicatorSize1: 8.0 * scaling,
+    {{typePrefix}}Tokens.selectIndicatorSize2: 10.0 * scaling,
+    {{typePrefix}}Tokens.selectGhostMarginX12: -8.0 * scaling,
+    {{typePrefix}}Tokens.selectGhostMarginY12: -4.0 * scaling,
+    {{typePrefix}}Tokens.selectGhostMarginX3: -12.0 * scaling,
+    {{typePrefix}}Tokens.selectGhostMarginY3: -6.0 * scaling,
+    ..._radiusTokensFor(theme.radius, scaling),
+
+    // Exact layered Radix shadow tokens, resolved for the active color scales.
+    ...shadows,
+    {{typePrefix}}Tokens.sliderClassicDisabledTrackShadows: _scaleShadowOpacity(
+      shadows[{{typePrefix}}Tokens.shadow1Layers]! as List<RemixBoxShadow>,
+      0.5,
+    ),
+    {{typePrefix}}Tokens.cardClassicOuterShadows: _cardClassicShadows(
+      tokens,
+      isDark: theme.isDark,
+      layer: .outer,
+      state: .idle,
+    ),
+    {{typePrefix}}Tokens.cardClassicInnerShadows: _cardClassicShadows(
+      tokens,
+      isDark: theme.isDark,
+      layer: .inner,
+      state: .idle,
+    ),
+    {{typePrefix}}Tokens.cardClassicHoverOuterShadows: _cardClassicShadows(
+      tokens,
+      isDark: theme.isDark,
+      layer: .outer,
+      state: .hovered,
+    ),
+    {{typePrefix}}Tokens.cardClassicHoverInnerShadows: _cardClassicShadows(
+      tokens,
+      isDark: theme.isDark,
+      layer: .inner,
+      state: .hovered,
+    ),
+    {{typePrefix}}Tokens.cardClassicActiveOuterShadows: _cardClassicShadows(
+      tokens,
+      isDark: theme.isDark,
+      layer: .outer,
+      state: .active,
+    ),
+    {{typePrefix}}Tokens.cardClassicActiveInnerShadows: _cardClassicShadows(
+      tokens,
+      isDark: theme.isDark,
+      layer: .inner,
+      state: .active,
+    ),
+    {{typePrefix}}Tokens.selectTriggerClassicShadows: _selectClassicShadows(
+      tokens,
+      isDark: theme.isDark,
+    ),
+    {{typePrefix}}Tokens.selectTriggerClassicHoverShadows: [
+      _insetShadow(tokens.gray.scale.alphaStep(3), spread: 1),
+      ..._selectClassicShadows(tokens, isDark: theme.isDark),
+    ],
+    {{typePrefix}}Tokens.baseButtonClassicDisabledShadows:
+        _baseButtonClassicDisabledShadows(tokens, isDark: theme.isDark),
+    {{typePrefix}}Tokens.baseButtonClassicShadows: _baseButtonClassicShadows(
+      tokens,
+      isDark: theme.isDark,
+      highContrast: false,
+    ),
+    {{typePrefix}}Tokens.baseButtonClassicHighContrastShadows:
+        _baseButtonClassicShadows(
+          tokens,
+          isDark: theme.isDark,
+          highContrast: true,
+        ),
+    {{typePrefix}}Tokens.baseButtonClassicActiveShadows:
+        _baseButtonClassicActiveShadows(tokens, highContrast: false),
+    {{typePrefix}}Tokens.baseButtonClassicActiveHighContrastShadows:
+        _baseButtonClassicActiveShadows(tokens, highContrast: true),
+    {{typePrefix}}Tokens.baseButtonClassicAfterInset: theme.isDark ? 1.0 : 2.0,
+    {{typePrefix}}Tokens.baseButtonGhostPaddingY3: 6.0 * scaling,
+    {{typePrefix}}Tokens.baseButtonGhostMarginX12: -8.0 * scaling,
+    {{typePrefix}}Tokens.baseButtonGhostMarginY12: -4.0 * scaling,
+    {{typePrefix}}Tokens.baseButtonGhostMarginX3: -12.0 * scaling,
+    {{typePrefix}}Tokens.baseButtonGhostMarginY3: -6.0 * scaling,
+    {{typePrefix}}Tokens.baseButtonGhostMarginX4: -16.0 * scaling,
+    {{typePrefix}}Tokens.baseButtonGhostMarginY4: -8.0 * scaling,
+    {{typePrefix}}Tokens.iconButtonGhostPadding2: 6.0 * scaling,
+    {{typePrefix}}Tokens.iconButtonGhostMargin1: -4.0 * scaling,
+    {{typePrefix}}Tokens.iconButtonGhostMargin2: -6.0 * scaling,
+    {{typePrefix}}Tokens.iconButtonGhostMargin3: -8.0 * scaling,
+    {{typePrefix}}Tokens.iconButtonGhostMargin4: -12.0 * scaling,
+    {{typePrefix}}Tokens.cardGhostMargin1: -12.0 * scaling,
+    {{typePrefix}}Tokens.cardGhostMargin2: -16.0 * scaling,
+    {{typePrefix}}Tokens.cardGhostMargin3: -24.0 * scaling,
+    {{typePrefix}}Tokens.cardGhostMargin4: -32.0 * scaling,
+    {{typePrefix}}Tokens.cardGhostMargin5: -48.0 * scaling,
+    {{typePrefix}}Tokens.borderWidth1: 1.0,
+    {{typePrefix}}Tokens.borderWidth2: 2.0,
+    {{typePrefix}}Tokens.focusRingWidth: 2.0,
+    {{typePrefix}}Tokens.focusRingOffset: 2.0,
+    {{typePrefix}}Tokens.text1: TextStyle(
+      fontSize: 12.0 * scaling,
+      letterSpacing: 0.0025 * 12.0 * scaling,
+      height: 16.0 / 12.0,
+    ),
+    {{typePrefix}}Tokens.text2: TextStyle(
+      fontSize: 14.0 * scaling,
+      letterSpacing: 0.0,
+      height: 20.0 / 14.0,
+    ),
+    {{typePrefix}}Tokens.text3: TextStyle(
+      fontSize: 16.0 * scaling,
+      letterSpacing: 0.0,
+      height: 24.0 / 16.0,
+    ),
+    {{typePrefix}}Tokens.accordionText2: TextStyle(
+      fontSize: 15.0 * scaling,
+      letterSpacing: 0.0,
+      height: 20.0 / 15.0,
+    ),
+    {{typePrefix}}Tokens.text4: TextStyle(
+      fontSize: 18.0 * scaling,
+      letterSpacing: -0.0025 * 18.0 * scaling,
+      height: 26.0 / 18.0,
+    ),
+    {{typePrefix}}Tokens.text5: TextStyle(
+      fontSize: 20.0 * scaling,
+      letterSpacing: -0.005 * 20.0 * scaling,
+      height: 28.0 / 20.0,
+    ),
+    {{typePrefix}}Tokens.text6: TextStyle(
+      fontSize: 24.0 * scaling,
+      letterSpacing: -0.00625 * 24.0 * scaling,
+      height: 30.0 / 24.0,
+    ),
+    {{typePrefix}}Tokens.text7: TextStyle(
+      fontSize: 28.0 * scaling,
+      letterSpacing: -0.0075 * 28.0 * scaling,
+      height: 36.0 / 28.0,
+    ),
+    {{typePrefix}}Tokens.text8: TextStyle(
+      fontSize: 35.0 * scaling,
+      letterSpacing: -0.01 * 35.0 * scaling,
+      height: 40.0 / 35.0,
+    ),
+    {{typePrefix}}Tokens.text9: TextStyle(
+      fontSize: 60.0 * scaling,
+      letterSpacing: -0.025 * 60.0 * scaling,
+      height: 1.0,
+    ),
+    {{typePrefix}}Tokens.avatarFallback1One: _avatarFallbackText(
+      fontSize: 14,
+      letterSpacing: 0.0025 * 12,
+      scaling: scaling,
+    ),
+    {{typePrefix}}Tokens.avatarFallback1Two: _avatarFallbackText(
+      fontSize: 12,
+      letterSpacing: 0.0025 * 12,
+      scaling: scaling,
+    ),
+    {{typePrefix}}Tokens.avatarFallback2One: _avatarFallbackText(
+      fontSize: 16,
+      letterSpacing: 0,
+      scaling: scaling,
+    ),
+    {{typePrefix}}Tokens.avatarFallback2Two: _avatarFallbackText(
+      fontSize: 14,
+      letterSpacing: 0,
+      scaling: scaling,
+    ),
+    {{typePrefix}}Tokens.avatarFallback3One: _avatarFallbackText(
+      fontSize: 18,
+      letterSpacing: 0,
+      scaling: scaling,
+    ),
+    {{typePrefix}}Tokens.avatarFallback3Two: _avatarFallbackText(
+      fontSize: 16,
+      letterSpacing: 0,
+      scaling: scaling,
+    ),
+    {{typePrefix}}Tokens.avatarFallback4One: _avatarFallbackText(
+      fontSize: 20,
+      letterSpacing: -0.0025 * 18,
+      scaling: scaling,
+    ),
+    {{typePrefix}}Tokens.avatarFallback4Two: _avatarFallbackText(
+      fontSize: 18,
+      letterSpacing: -0.0025 * 18,
+      scaling: scaling,
+    ),
+    {{typePrefix}}Tokens.avatarFallback5: _avatarFallbackText(
+      fontSize: 24,
+      letterSpacing: -0.00625 * 24,
+      scaling: scaling,
+    ),
+    {{typePrefix}}Tokens.avatarFallback6: _avatarFallbackText(
+      fontSize: 28,
+      letterSpacing: -0.0075 * 28,
+      scaling: scaling,
+    ),
+    {{typePrefix}}Tokens.avatarFallback7: _avatarFallbackText(
+      fontSize: 28,
+      letterSpacing: -0.0075 * 28,
+      scaling: scaling,
+    ),
+    {{typePrefix}}Tokens.avatarFallback8: _avatarFallbackText(
+      fontSize: 35,
+      letterSpacing: -0.01 * 35,
+      scaling: scaling,
+    ),
+    {{typePrefix}}Tokens.avatarFallback9: _avatarFallbackText(
+      fontSize: 60,
+      letterSpacing: -0.025 * 60,
+      scaling: scaling,
+    ),
+
+    // Font weights (token values)
+    {{typePrefix}}Tokens.fontWeightLight: FontWeight.w300,
+    {{typePrefix}}Tokens.fontWeightRegular: FontWeight.w400,
+    {{typePrefix}}Tokens.fontWeightMedium: FontWeight.w500,
+    // Match Radix Themes font weights (bold = 700)
+    {{typePrefix}}Tokens.fontWeightBold: FontWeight.w700,
+
+    // Durations (token values)
+    {{typePrefix}}Tokens.transitionFast: const Duration(milliseconds: 100),
+    {{typePrefix}}Tokens.transitionSlow: const Duration(milliseconds: 300),
+    {{typePrefix}}Tokens.skeletonPulseDuration: const Duration(milliseconds: 1000),
+  };
+
+  return allTokens;
+}
+
+TextStyle _avatarFallbackText({
+  required double fontSize,
+  required double letterSpacing,
+  required double scaling,
+}) => TextStyle(
+  fontSize: fontSize * scaling,
+  letterSpacing: letterSpacing * scaling,
+  height: 1,
+);
+
+enum _CardShadowLayer { outer, inner }
+
+enum _CardShadowState { idle, hovered, active }
+
+List<RemixBoxShadow> _cardClassicShadows(
+  {{typePrefix}}ThemeColors colors, {
+  required bool isDark,
+  required _CardShadowLayer layer,
+  required _CardShadowState state,
+}) {
+  final inner = layer == _CardShadowLayer.inner;
+  final shapeInset = inner ? 1.0 : 0.0;
+  final border = switch ((isDark, state)) {
+    (true, _) => mixOklabPremultiplied(
+      colors.gray.scale.alphaStep(6),
+      colors.gray.scale.step(6),
+      0.25,
+    ),
+    (false, _CardShadowState.hovered) => mixOklabPremultiplied(
+      colors.gray.scale.alphaStep(4),
+      colors.gray.scale.step(4),
+      0.25,
+    ),
+    (false, _) => mixOklabPremultiplied(
+      colors.gray.scale.alphaStep(3),
+      colors.gray.scale.step(3),
+      0.25,
+    ),
+  };
+
+  RemixBoxShadow shadow(
+    Color color, {
+    Offset offset = Offset.zero,
+    double blur = 0,
+    required double spread,
+  }) => RemixBoxShadow(
+    color: color,
+    offset: offset,
+    blurRadius: blur,
+    spreadRadius: spread,
+    shapeInset: shapeInset,
+  );
+
+  if (state == _CardShadowState.hovered) {
+    if (isDark) {
+      return [
+        shadow(border, spread: inner ? 1 : 0),
+        shadow(colors.gray.scale.alphaStep(4), blur: 1, spread: inner ? 1 : 0),
+        shadow(
+          colors.gray.scale.alphaStep(4),
+          blur: 1,
+          spread: inner ? -1 : -2,
+        ),
+        shadow(
+          colors.gray.scale.alphaStep(3),
+          blur: 3,
+          spread: inner ? -2 : -3,
+        ),
+        shadow(
+          colors.gray.scale.alphaStep(3),
+          blur: 12,
+          spread: inner ? -2 : -3,
+        ),
+        shadow(
+          colors.gray.scale.alphaStep(7),
+          blur: 16,
+          spread: inner ? -8 : -9,
+        ),
+      ];
+    }
+    return [
+      shadow(border, spread: inner ? 1 : 0),
+      shadow(
+        colors.blackAlpha[1]!,
+        offset: const Offset(0, 1),
+        blur: 1,
+        spread: inner ? 1 : 0,
+      ),
+      shadow(
+        colors.gray.scale.alphaStep(3),
+        offset: const Offset(0, 2),
+        blur: 1,
+        spread: inner ? -1 : -2,
+      ),
+      shadow(
+        colors.blackAlpha[1]!,
+        offset: const Offset(0, 2),
+        blur: 3,
+        spread: inner ? -2 : -3,
+      ),
+      shadow(
+        colors.gray.scale.alphaStep(3),
+        offset: const Offset(0, 3),
+        blur: 12,
+        spread: inner ? -4 : -5,
+      ),
+      shadow(
+        colors.blackAlpha[1]!,
+        offset: const Offset(0, 4),
+        blur: 16,
+        spread: inner ? -8 : -9,
+      ),
+    ];
+  }
+
+  final active = state == _CardShadowState.active;
+  final subtle = isDark ? colors.blackAlpha[3]! : colors.blackAlpha[1]!;
+  final middle = isDark
+      ? colors.blackAlpha[6]!
+      : colors.gray.scale.alphaStep(active ? 4 : 2);
+  final bottom = isDark ? colors.blackAlpha[5]! : colors.blackAlpha[1]!;
+  return [
+    shadow(border, spread: inner ? 1 : 0),
+    shadow(const Color(0x00000000), spread: inner ? 1 : 0),
+    shadow(subtle, spread: inner ? 0.5 : 0),
+    shadow(middle, offset: const Offset(0, 1), blur: 1, spread: inner ? 0 : -1),
+    shadow(
+      isDark ? colors.blackAlpha[6]! : colors.blackAlpha[1]!,
+      offset: const Offset(0, 2),
+      blur: 1,
+      spread: inner ? -1 : -2,
+    ),
+    shadow(bottom, offset: const Offset(0, 1), blur: 3, spread: inner ? 0 : -1),
+  ];
+}
+
+RemixBoxShadow _insetShadow(
+  Color color, {
+  Offset offset = Offset.zero,
+  double blur = 0,
+  double spread = 0,
+  double shapeInset = 0,
+}) => RemixBoxShadow(
+  kind: RemixBoxShadowKind.inset,
+  color: color,
+  offset: offset,
+  blurRadius: blur,
+  spreadRadius: spread,
+  shapeInset: shapeInset,
+);
+
+List<RemixBoxShadow> _selectClassicShadows(
+  {{typePrefix}}ThemeColors colors, {
+  required bool isDark,
+}) {
+  if (isDark) {
+    return [
+      _insetShadow(colors.whiteAlpha[4]!, spread: 1),
+      _insetShadow(colors.whiteAlpha[4]!, offset: const Offset(0, 1), blur: 1),
+      _insetShadow(colors.blackAlpha[9]!, offset: const Offset(0, -1), blur: 1),
+    ];
+  }
+  return [
+    _insetShadow(colors.gray.scale.alphaStep(5), spread: 1),
+    _insetShadow(colors.whiteAlpha[11]!, offset: const Offset(0, 2), blur: 1),
+    _insetShadow(
+      colors.gray.scale.alphaStep(4),
+      offset: const Offset(0, -2),
+      blur: 1,
+    ),
+  ];
+}
+
+List<RemixBoxShadow> _baseButtonClassicDisabledShadows(
+  {{typePrefix}}ThemeColors colors, {
+  required bool isDark,
+}) {
+  if (isDark) {
+    return [
+      _insetShadow(colors.gray.scale.alphaStep(5), spread: 1),
+      _insetShadow(
+        colors.gray.scale.alphaStep(2),
+        offset: const Offset(0, 4),
+        blur: 2,
+        spread: -2,
+      ),
+      _insetShadow(
+        colors.gray.scale.alphaStep(5),
+        offset: const Offset(0, 1),
+        blur: 1,
+      ),
+      _insetShadow(colors.blackAlpha[3]!, offset: const Offset(0, -1), blur: 1),
+      _insetShadow(colors.gray.scale.alphaStep(2), spread: 1),
+    ];
+  }
+  return [
+    _insetShadow(colors.gray.scale.alphaStep(4), spread: 1),
+    _insetShadow(
+      colors.gray.scale.alphaStep(3),
+      offset: const Offset(0, -2),
+      blur: 1,
+    ),
+    _insetShadow(
+      colors.whiteAlpha[9]!,
+      offset: const Offset(0, 4),
+      blur: 2,
+      spread: -2,
+    ),
+    _insetShadow(
+      colors.whiteAlpha[9]!,
+      offset: const Offset(0, 2),
+      blur: 1,
+      spread: -1,
+    ),
+  ];
+}
+
+List<RemixBoxShadow> _baseButtonClassicShadows(
+  {{typePrefix}}ThemeColors colors, {
+  required bool isDark,
+  required bool highContrast,
+}) {
+  final accent = highContrast
+      ? colors.accent.scale.step(12)
+      : colors.accent.scale.step(9);
+  if (isDark) {
+    return [
+      _insetShadow(
+        colors.whiteAlpha[4]!,
+        offset: const Offset(0, 2),
+        blur: 3,
+        spread: -1,
+        shapeInset: 1,
+      ),
+      _insetShadow(colors.whiteAlpha[2]!, spread: 1),
+      _insetShadow(
+        colors.whiteAlpha[3]!,
+        offset: const Offset(0, 4),
+        blur: 2,
+        spread: -2,
+      ),
+      _insetShadow(colors.whiteAlpha[6]!, offset: const Offset(0, 1), blur: 1),
+      _insetShadow(colors.blackAlpha[6]!, offset: const Offset(0, -1), blur: 1),
+      _insetShadow(accent, spread: 1),
+    ];
+  }
+  return [
+    _insetShadow(
+      colors.whiteAlpha[4]!,
+      offset: const Offset(0, 2),
+      blur: 3,
+      spread: -1,
+      shapeInset: 2,
+    ),
+    _insetShadow(colors.gray.scale.alphaStep(4), spread: 1),
+    _insetShadow(
+      colors.gray.scale.alphaStep(3),
+      offset: const Offset(0, -2),
+      blur: 1,
+    ),
+    _insetShadow(accent, spread: 1),
+    _insetShadow(
+      colors.whiteAlpha[9]!,
+      offset: const Offset(0, 4),
+      blur: 2,
+      spread: -2,
+    ),
+    _insetShadow(
+      colors.whiteAlpha[9]!,
+      offset: const Offset(0, 2),
+      blur: 1,
+      spread: -1,
+    ),
+  ];
+}
+
+List<RemixBoxShadow> _baseButtonClassicActiveShadows(
+  {{typePrefix}}ThemeColors colors, {
+  required bool highContrast,
+}) {
+  final accent = highContrast
+      ? colors.accent.scale.step(12)
+      : colors.accent.scale.step(9);
+  return [
+    _insetShadow(
+      colors.gray.scale.alphaStep(4),
+      offset: const Offset(0, 4),
+      blur: 2,
+      spread: -2,
+    ),
+    _insetShadow(
+      colors.gray.scale.alphaStep(7),
+      offset: const Offset(0, 1),
+      blur: 1,
+    ),
+    _insetShadow(colors.gray.scale.alphaStep(5), spread: 1),
+    _insetShadow(accent, spread: 1),
+    _insetShadow(
+      colors.gray.scale.alphaStep(3),
+      offset: const Offset(0, 3),
+      blur: 2,
+    ),
+    _insetShadow(colors.whiteAlpha[7]!, spread: 1),
+    _insetShadow(colors.whiteAlpha[5]!, offset: const Offset(0, -2), blur: 1),
+  ];
+}
+
+Map<RadiusToken, Radius> _radiusTokensFor({{typePrefix}}Radius radius, double scaling) {
+  final factor = _radiusFactor(radius);
+  final thumb = switch (radius) {
+    .none || .small => const Radius.circular(0.5),
+    .medium || .large || .full => const Radius.circular(9999.0),
+  };
+  Radius scaled(double base) => Radius.circular(base * factor * scaling);
+  Radius larger(Radius first, Radius second) => Radius.elliptical(
+    first.x > second.x ? first.x : second.x,
+    first.y > second.y ? first.y : second.y,
+  );
+  final radius1 = scaled(3.0);
+  final radius2 = scaled(4.0);
+  final radius3 = scaled(6.0);
+  final radius4 = scaled(8.0);
+  final radius5 = scaled(12.0);
+  final radius6 = scaled(16.0);
+  final full = radius == .full ? const Radius.circular(9999.0) : Radius.zero;
+  Radius progressRadius(double height) {
+    final thumbBase = switch (radius) {
+      .none || .small => 0.5,
+      .medium || .large || .full => 9999.0,
+    };
+    return Radius.circular(math.max(factor * height / 3, factor * thumbBase));
+  }
+
+  return {
+    {{typePrefix}}Tokens.radius1: radius1,
+    {{typePrefix}}Tokens.radius2: radius2,
+    {{typePrefix}}Tokens.radius3: radius3,
+    {{typePrefix}}Tokens.radius4: radius4,
+    {{typePrefix}}Tokens.radius5: radius5,
+    {{typePrefix}}Tokens.radius6: radius6,
+    {{typePrefix}}Tokens.radiusFull: full,
+    {{typePrefix}}Tokens.radiusThumb: thumb,
+    {{typePrefix}}Tokens.radiusCircle: const Radius.circular(9999.0),
+    {{typePrefix}}Tokens.radius1OrFull: larger(radius1, full),
+    {{typePrefix}}Tokens.radius2OrFull: larger(radius2, full),
+    {{typePrefix}}Tokens.radius3OrFull: larger(radius3, full),
+    {{typePrefix}}Tokens.radius4OrFull: larger(radius4, full),
+    {{typePrefix}}Tokens.radius5OrFull: larger(radius5, full),
+    {{typePrefix}}Tokens.radius6OrFull: larger(radius6, full),
+    {{typePrefix}}Tokens.radius1OrThumb: larger(radius1, thumb),
+    {{typePrefix}}Tokens.radius2OrThumb: larger(radius2, thumb),
+    {{typePrefix}}Tokens.progressRadius1: progressRadius(4.0 * scaling),
+    {{typePrefix}}Tokens.progressRadius2: progressRadius(6.0 * scaling),
+    {{typePrefix}}Tokens.progressRadius3: progressRadius(8.0 * scaling),
+    {{typePrefix}}Tokens.sliderTrackRadius1: progressRadius(6.0 * scaling),
+    {{typePrefix}}Tokens.sliderTrackRadius2: progressRadius(8.0 * scaling),
+    {{typePrefix}}Tokens.sliderTrackRadius3: progressRadius(10.0 * scaling),
+  };
+}
+
+List<RemixBoxShadow> _scaleShadowOpacity(
+  List<RemixBoxShadow> shadows,
+  double factor,
+) => [
+  for (final shadow in shadows)
+    RemixBoxShadow(
+      kind: shadow.kind,
+      color: shadow.color.withValues(alpha: shadow.color.a * factor),
+      offset: shadow.offset,
+      blurRadius: shadow.blurRadius,
+      spreadRadius: shadow.spreadRadius,
+      shapeInset: shadow.shapeInset,
+    ),
+];
+
+double _radiusFactor({{typePrefix}}Radius radius) => switch (radius) {
+  .none => 0.0,
+  .small => 0.75,
+  .medium => 1.0,
+  .large || .full => 1.5,
+};
+
+Radius _scaledRadiusToken({{typePrefix}}Radius radius, double scaling, double base) =>
+    Radius.circular(base * scaling * _radiusFactor(radius));
+
+Map<ColorToken, Color> _accentColorTokens({{typePrefix}}ThemeColors tokens) {
+  final scale = tokens.accent.scale;
+
+  return {
+    {{typePrefix}}Tokens.accentSurface: tokens.accent.surface,
+    {{typePrefix}}Tokens.accentIndicator: tokens.accent.indicator,
+    {{typePrefix}}Tokens.accentTrack: tokens.accent.track,
+    {{typePrefix}}Tokens.accentContrast: tokens.accent.contrast,
+    {{typePrefix}}Tokens.focus8: tokens.focus8,
+    {{typePrefix}}Tokens.focusA5: tokens.focusA5,
+    {{typePrefix}}Tokens.focusA8: tokens.focusA8,
+    {{typePrefix}}Tokens.accent1: scale.step(1),
+    {{typePrefix}}Tokens.accent2: scale.step(2),
+    {{typePrefix}}Tokens.accent3: scale.step(3),
+    {{typePrefix}}Tokens.accent4: scale.step(4),
+    {{typePrefix}}Tokens.accent5: scale.step(5),
+    {{typePrefix}}Tokens.accent6: scale.step(6),
+    {{typePrefix}}Tokens.accent7: scale.step(7),
+    {{typePrefix}}Tokens.accent8: scale.step(8),
+    {{typePrefix}}Tokens.accent9: scale.step(9),
+    {{typePrefix}}Tokens.accent10: scale.step(10),
+    {{typePrefix}}Tokens.accent11: scale.step(11),
+    {{typePrefix}}Tokens.accent12: scale.step(12),
+    {{typePrefix}}Tokens.accentA1: scale.alphaStep(1),
+    {{typePrefix}}Tokens.accentA2: scale.alphaStep(2),
+    {{typePrefix}}Tokens.accentA3: scale.alphaStep(3),
+    {{typePrefix}}Tokens.accentA4: scale.alphaStep(4),
+    {{typePrefix}}Tokens.accentA5: scale.alphaStep(5),
+    {{typePrefix}}Tokens.accentA6: scale.alphaStep(6),
+    {{typePrefix}}Tokens.accentA7: scale.alphaStep(7),
+    {{typePrefix}}Tokens.accentA8: scale.alphaStep(8),
+    {{typePrefix}}Tokens.accentA9: scale.alphaStep(9),
+    {{typePrefix}}Tokens.accentA10: scale.alphaStep(10),
+    {{typePrefix}}Tokens.accentA11: scale.alphaStep(11),
+    {{typePrefix}}Tokens.accentA12: scale.alphaStep(12),
+  };
+}

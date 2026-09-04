@@ -5,7 +5,7 @@ import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
-const bundledPresets = <String>{'default'};
+const bundledPresets = <String>{'default', 'fortal'};
 
 abstract interface class RegistryAssetLoader {
   Future<String> read(Uri uri);

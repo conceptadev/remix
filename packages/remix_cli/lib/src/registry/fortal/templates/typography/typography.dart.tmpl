@@ -1,0 +1,82 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+/// The nine-step Radix Themes text scale supplied by [{{typePrefix}}Tokens].
+enum {{typePrefix}}TextSize {
+  size1,
+  size2,
+  size3,
+  size4,
+  size5,
+  size6,
+  size7,
+  size8,
+  size9,
+}
+
+/// Font weights supported by the {{typePrefix}} typography scale.
+///
+/// Closed rather than Flutter's [FontWeight], which is an open class accepting
+/// any value from 1 to 1000; Radix ships exactly these four.
+enum {{typePrefix}}TextWeight { light, regular, medium, bold }
+
+TextStyleToken {{valuePrefix}}TextSizeToken({{typePrefix}}TextSize size) => switch (size) {
+  .size1 => {{typePrefix}}Tokens.text1,
+  .size2 => {{typePrefix}}Tokens.text2,
+  .size3 => {{typePrefix}}Tokens.text3,
+  .size4 => {{typePrefix}}Tokens.text4,
+  .size5 => {{typePrefix}}Tokens.text5,
+  .size6 => {{typePrefix}}Tokens.text6,
+  .size7 => {{typePrefix}}Tokens.text7,
+  .size8 => {{typePrefix}}Tokens.text8,
+  .size9 => {{typePrefix}}Tokens.text9,
+};
+
+FontWeightToken {{valuePrefix}}TextWeightToken({{typePrefix}}TextWeight weight) =>
+    switch (weight) {
+      .light => {{typePrefix}}Tokens.fontWeightLight,
+      .regular => {{typePrefix}}Tokens.fontWeightRegular,
+      .medium => {{typePrefix}}Tokens.fontWeightMedium,
+      .bold => {{typePrefix}}Tokens.fontWeightBold,
+    };
+
+/// [truncate] deliberately wins over [softWrap], forcing one ellipsized line.
+TextStyler {{valuePrefix}}ApplyTextFlow(
+  TextStyler style, {
+  TextAlign? align,
+  required bool softWrap,
+  required bool truncate,
+}) {
+  if (align != null) style = style.textAlign(align);
+  if (truncate) {
+    return style.maxLines(1).softWrap(false).overflow(TextOverflow.ellipsis);
+  }
+
+  return style.softWrap(softWrap);
+}
+
+TextStyler {{valuePrefix}}AccentForeground(
+  TextStyler style, {
+  required bool highContrast,
+}) => style.color(
+  highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentA11(),
+);
+
+/// Code, Kbd, and Link derive em-relative geometry from the resolved font size,
+/// so unlike the other recipes they cannot stay context-free.
+TextStyle {{valuePrefix}}ResolveTextToken(BuildContext context, {{typePrefix}}TextSize size) =>
+    MixScope.tokenOf({{valuePrefix}}TextSizeToken(size), context);
+
+Color {{valuePrefix}}ResolveColor(BuildContext context, ColorToken token) =>
+    MixScope.tokenOf(token, context);
+
+/// Derived from the resolved `radius1` rather than duplicating the {{typePrefix}}
+/// radius enum table, so theme radius and scaling changes flow through.
+double {{valuePrefix}}RadiusFactor(BuildContext context) {
+  final scaling = {{typePrefix}}Theme.of(context).scaling.factor;
+  final radius = MixScope.tokenOf({{typePrefix}}Tokens.radius1, context);
+
+  return radius.x / (3 * scaling);
+}

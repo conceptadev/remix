@@ -9,18 +9,18 @@ import '../theme/theme.dart';
 
 part 'chart.g.dart';
 
-final _standardPaletteToken = ContextToken<List<Color>>(
+const _standardPaletteToken = ContextToken<List<Color>>(
   _resolveStandardPalette,
 );
-final _highContrastPaletteToken = ContextToken<List<Color>>(
+const _highContrastPaletteToken = ContextToken<List<Color>>(
   _resolveHighContrastPalette,
 );
-final _tooltipBorderToken = ContextToken<BorderSide>(_resolveTooltipBorder);
-final _tooltipRadiusToken = ContextToken<BorderRadius>(_resolveTooltipRadius);
-final _tooltipPaddingToken = ContextToken<EdgeInsets>(_resolveTooltipPadding);
-final _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);
-final _lineWidthToken = ContextToken<double>(_resolveLineWidth);
-final _highContrastLineWidthToken = ContextToken<double>(
+const _tooltipBorderToken = ContextToken<BorderSide>(_resolveTooltipBorder);
+const _tooltipRadiusToken = ContextToken<BorderRadius>(_resolveTooltipRadius);
+const _tooltipPaddingToken = ContextToken<EdgeInsets>(_resolveTooltipPadding);
+const _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);
+const _lineWidthToken = ContextToken<double>(_resolveLineWidth);
+const _highContrastLineWidthToken = ContextToken<double>(
   _resolveHighContrastLineWidth,
 );
 

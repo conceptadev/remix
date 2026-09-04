@@ -1,0 +1,224 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'menu.g.dart';
+
+/// Radix Themes menu content sizes.
+enum {{typePrefix}}MenuSize { size1, size2 }
+
+/// Radix Themes menu content variants.
+enum {{typePrefix}}MenuVariant { solid, soft }
+
+/// {{typePrefix}} menu content with Radix-owned size, variant, and contrast behavior.
+@MixWidget(target: RemixMenu.new)
+MenuStyler {{valuePrefix}}MenuStyle({
+  {{typePrefix}}MenuVariant variant = .solid,
+  {{typePrefix}}MenuSize size = .size2,
+  bool highContrast = false,
+  MenuStyler style = const MenuStyler.create(),
+}) {
+  final metrics = _{{valuePrefix}}MenuMetrics(size);
+  final base = MenuStyler()
+      .trigger(_{{valuePrefix}}MenuTriggerStyler(metrics))
+      .overlay(
+        FlexBoxStyler()
+            .padding(.all(metrics.contentPadding))
+            .borderRadius(.all(metrics.contentRadius))
+            // Radix pins menus to the solid panel with no backdrop blur,
+            // even when the theme panel background is translucent.
+            .color({{typePrefix}}Tokens.colorPanelSolid())
+            .decoration(
+              BoxDecorationMix.create(boxShadow: {{typePrefix}}Tokens.shadow5.mix()),
+            )
+            .clipBehavior(Clip.antiAlias),
+      )
+      .item(_{{valuePrefix}}MenuItemStyler(variant, metrics, highContrast: highContrast))
+      .submenuItem(
+        _{{valuePrefix}}MenuSubmenuItemStyler(
+          variant,
+          metrics,
+          highContrast: highContrast,
+        ),
+      )
+      .divider(_{{valuePrefix}}MenuDividerStyler(metrics));
+
+  return base.merge(style);
+}
+
+/// {{typePrefix}} item recipe for per-item style overrides.
+MenuItemStyler {{valuePrefix}}MenuItemStyle({
+  {{typePrefix}}MenuVariant variant = .solid,
+  {{typePrefix}}MenuSize size = .size2,
+  bool highContrast = false,
+}) => _{{valuePrefix}}MenuItemStyler(
+  variant,
+  _{{valuePrefix}}MenuMetrics(size),
+  highContrast: highContrast,
+);
+
+/// Radix has no menu-owned trigger; this mirrors the base Radix button
+/// content treatment (gap, text token, icon) without button chrome.
+MenuTriggerStyler _{{valuePrefix}}MenuTriggerStyler(_{{typePrefix}}MenuMetrics metrics) =>
+    MenuTriggerStyler()
+        .spacing(metrics.triggerGap)
+        .label(.style(metrics.text.mix()).color({{typePrefix}}Tokens.gray12()))
+        .icon(.color({{typePrefix}}Tokens.gray12()).size(metrics.contentIconSize));
+
+MenuItemStyler _{{valuePrefix}}MenuItemStyler(
+  {{typePrefix}}MenuVariant variant,
+  _{{typePrefix}}MenuMetrics metrics, {
+  required bool highContrast,
+}) {
+  final base = MenuItemStyler()
+      .direction(.horizontal)
+      .spacing({{typePrefix}}Tokens.space2())
+      .height(metrics.itemHeight)
+      .padding(.horizontal(metrics.leadingInset))
+      .borderRadius(.all(metrics.itemRadius))
+      .label(.style(metrics.text.mix()).color({{typePrefix}}Tokens.gray12()))
+      // Radix pins only indicator/subtrigger icons (8/10px); content icons
+      // follow the repo-wide text-matched sizes used by tabs and toggles.
+      .leadingIcon(.color({{typePrefix}}Tokens.gray12()).size(metrics.contentIconSize))
+      .trailingIcon(
+        .color({{typePrefix}}Tokens.grayA11()).size(metrics.contentIconSize),
+      )
+      .indicator(.color({{typePrefix}}Tokens.gray12()).size(metrics.indicatorSize));
+  final highlighted = _{{valuePrefix}}MenuHighlightedItemStyler(
+    variant,
+    highContrast: highContrast,
+  );
+  final disabled = MenuItemStyler()
+      .color(const Color(0x00000000))
+      .label(.color({{typePrefix}}Tokens.grayA8()))
+      .leadingIcon(.color({{typePrefix}}Tokens.grayA8()))
+      .trailingIcon(.color({{typePrefix}}Tokens.grayA8()))
+      .indicator(.color({{typePrefix}}Tokens.grayA8()));
+
+  // Naked's focused item is Radix's roving `data-highlighted` item, not a
+  // CSS focus ring, so this intentionally follows raw focus.
+  return base
+      .onHovered(highlighted)
+      .onFocused(highlighted)
+      .onPressed(highlighted)
+      .onDisabled(disabled);
+}
+
+MenuItemStyler _{{valuePrefix}}MenuHighlightedItemStyler(
+  {{typePrefix}}MenuVariant variant, {
+  required bool highContrast,
+}) {
+  final solidForeground = highContrast
+      ? {{typePrefix}}Tokens.accent1()
+      : {{typePrefix}}Tokens.accentContrast();
+
+  return switch (variant) {
+    .solid =>
+      MenuItemStyler()
+          .color(
+            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accent9(),
+          )
+          .label(.color(solidForeground))
+          .leadingIcon(.color(solidForeground))
+          .trailingIcon(.color(solidForeground))
+          .indicator(.color(solidForeground)),
+    .soft =>
+      MenuItemStyler()
+          .color({{typePrefix}}Tokens.accentA4())
+          .trailingIcon(.color({{typePrefix}}Tokens.gray12())),
+  };
+}
+
+MenuItemStyler _{{valuePrefix}}MenuSubmenuItemStyler(
+  {{typePrefix}}MenuVariant variant,
+  _{{typePrefix}}MenuMetrics metrics, {
+  required bool highContrast,
+}) {
+  final highlighted = _{{valuePrefix}}MenuHighlightedItemStyler(
+    variant,
+    highContrast: highContrast,
+  );
+  final submenuOpen = MenuItemStyler()
+      .color(switch (variant) {
+        .solid => {{typePrefix}}Tokens.grayA3(),
+        .soft => {{typePrefix}}Tokens.accentA3(),
+      })
+      .onHovered(highlighted)
+      // Roving `data-highlighted` state, not a focus-visible ring.
+      .onFocused(highlighted)
+      .onPressed(highlighted);
+
+  // The chevron keeps the exact Radix subtrigger icon size even though
+  // content trailing icons are text-matched.
+  return MenuItemStyler()
+      .trailingIcon(.color({{typePrefix}}Tokens.gray12()).size(metrics.indicatorSize))
+      .onSelected(submenuOpen);
+}
+
+DividerStyler _{{valuePrefix}}MenuDividerStyler(_{{typePrefix}}MenuMetrics metrics) =>
+    DividerStyler()
+        .height(1)
+        .margin(
+          .only(
+            left: metrics.leadingInset,
+            right: metrics.trailingInset,
+            top: {{typePrefix}}Tokens.space2(),
+            bottom: {{typePrefix}}Tokens.space2(),
+          ),
+        )
+        .color({{typePrefix}}Tokens.grayA6());
+
+class _{{typePrefix}}MenuMetrics {
+  const _{{typePrefix}}MenuMetrics({
+    required this.contentPadding,
+    required this.contentRadius,
+    required this.itemHeight,
+    required this.itemRadius,
+    required this.leadingInset,
+    required this.trailingInset,
+    required this.indicatorSize,
+    required this.contentIconSize,
+    required this.triggerGap,
+    required this.text,
+  });
+
+  final double contentPadding;
+  final Radius contentRadius;
+  final double itemHeight;
+  final Radius itemRadius;
+  final double leadingInset;
+  final double trailingInset;
+  final double indicatorSize;
+  final double contentIconSize;
+  final double triggerGap;
+  final TextStyleToken text;
+}
+
+_{{typePrefix}}MenuMetrics _{{valuePrefix}}MenuMetrics({{typePrefix}}MenuSize size) => switch (size) {
+  .size1 => _{{typePrefix}}MenuMetrics(
+    contentPadding: {{typePrefix}}Tokens.space1(),
+    contentRadius: {{typePrefix}}Tokens.radius3(),
+    itemHeight: {{typePrefix}}Tokens.space5(),
+    itemRadius: {{typePrefix}}Tokens.radius1(),
+    leadingInset: {{typePrefix}}Tokens.space2(),
+    trailingInset: {{typePrefix}}Tokens.space2(),
+    indicatorSize: {{typePrefix}}Tokens.selectIndicatorSize1(),
+    contentIconSize: {{typePrefix}}Tokens.space3(),
+    triggerGap: {{typePrefix}}Tokens.space1(),
+    text: {{typePrefix}}Tokens.text1,
+  ),
+  .size2 => _{{typePrefix}}MenuMetrics(
+    contentPadding: {{typePrefix}}Tokens.space2(),
+    contentRadius: {{typePrefix}}Tokens.radius4(),
+    itemHeight: {{typePrefix}}Tokens.space6(),
+    itemRadius: {{typePrefix}}Tokens.radius2(),
+    leadingInset: {{typePrefix}}Tokens.space3(),
+    trailingInset: {{typePrefix}}Tokens.space3(),
+    indicatorSize: {{typePrefix}}Tokens.selectIndicatorSize2(),
+    contentIconSize: {{typePrefix}}Tokens.space4(),
+    triggerGap: {{typePrefix}}Tokens.space2(),
+    text: {{typePrefix}}Tokens.text2,
+  ),
+};

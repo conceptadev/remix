@@ -1,0 +1,148 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import 'base_button.dart';
+import '../theme/theme.dart';
+
+part 'icon_button.g.dart';
+
+/// Radix Themes IconButton size presets.
+enum {{typePrefix}}IconButtonSize { size1, size2, size3, size4 }
+
+/// Radix Themes IconButton variants.
+enum {{typePrefix}}IconButtonVariant { classic, solid, soft, surface, outline, ghost }
+
+/// {{typePrefix}}-themed IconButton with the Radix size, variant, and override contract.
+@MixWidget(target: RemixIconButton.new)
+IconButtonStyler {{valuePrefix}}IconButtonStyle({
+  {{typePrefix}}IconButtonVariant variant = .solid,
+  {{typePrefix}}IconButtonSize size = .size2,
+  bool highContrast = false,
+  IconButtonStyler style = const IconButtonStyler.create(),
+}) {
+  final base = _{{valuePrefix}}IconButtonBaseStyler(
+    variant,
+    _{{valuePrefix}}BaseButtonSize(size),
+  );
+  final stateStyles = {{valuePrefix}}BaseButtonStateStyles(
+    variant: _{{valuePrefix}}BaseButtonVariant(variant),
+    highContrast: highContrast,
+  );
+
+  return _apply{{typePrefix}}IconButtonStateStyles(
+    base,
+    stateStyles,
+    pressedPaddingTop: variant == .classic ? (size == .size1 ? 1 : 2) : null,
+  ).merge(style);
+}
+
+IconButtonStyler _{{valuePrefix}}IconButtonBaseStyler(
+  {{typePrefix}}IconButtonVariant variant,
+  {{typePrefix}}BaseButtonSize size,
+) {
+  final metrics = {{valuePrefix}}BaseButtonMetrics(size);
+  var style = IconButtonStyler(
+    icon: .size(_{{valuePrefix}}IconButtonIconSize(size)),
+    spinner: .size(metrics.spinnerSize)
+        .opacity(0.65)
+        .leafRadius({{typePrefix}}Tokens.radius1())
+        .duration(const Duration(milliseconds: 800)),
+  ).borderRadius(.all(metrics.radius));
+
+  if (variant == .ghost) {
+    final ghost = {{valuePrefix}}IconButtonGhostMetrics(size);
+    style = style.padding(.all(ghost.padding)).margin(.all(ghost.margin));
+  } else {
+    style = style
+        .container(.alignment(.center))
+        .width(metrics.height)
+        .height(metrics.height);
+  }
+  return style;
+}
+
+double _{{valuePrefix}}IconButtonIconSize({{typePrefix}}BaseButtonSize size) => switch (size) {
+  .size1 => {{typePrefix}}Tokens.space3(),
+  .size2 => {{typePrefix}}Tokens.space4(),
+  .size3 => {{typePrefix}}Tokens.spinnerSize3(),
+  .size4 => {{typePrefix}}Tokens.space5(),
+};
+
+{{typePrefix}}BaseButtonVariant _{{valuePrefix}}BaseButtonVariant(
+  {{typePrefix}}IconButtonVariant variant,
+) => switch (variant) {
+  .classic => .classic,
+  .solid => .solid,
+  .soft => .soft,
+  .surface => .surface,
+  .outline => .outline,
+  .ghost => .ghost,
+};
+
+{{typePrefix}}BaseButtonSize _{{valuePrefix}}BaseButtonSize({{typePrefix}}IconButtonSize size) =>
+    switch (size) {
+      .size1 => .size1,
+      .size2 => .size2,
+      .size3 => .size3,
+      .size4 => .size4,
+    };
+
+IconButtonStyler _apply{{typePrefix}}IconButtonStateStyles(
+  IconButtonStyler base,
+  {{typePrefix}}BaseButtonStateStyles stateStyles, {
+  required double? pressedPaddingTop,
+}) {
+  var pressed = _apply{{typePrefix}}IconButtonState(
+    IconButtonStyler(),
+    stateStyles.pressed,
+  );
+  if (pressedPaddingTop != null) {
+    pressed = pressed.padding(.top(pressedPaddingTop));
+  }
+
+  return _apply{{typePrefix}}IconButtonState(base, stateStyles.idle)
+      .onHovered(
+        _apply{{typePrefix}}IconButtonState(IconButtonStyler(), stateStyles.hovered),
+      )
+      .onPressed(pressed)
+      .onDisabled(
+        _apply{{typePrefix}}IconButtonState(IconButtonStyler(), stateStyles.disabled),
+      )
+      .onFocusVisible(
+        _apply{{typePrefix}}IconButtonState(
+          IconButtonStyler(),
+          stateStyles.focusVisible,
+        ),
+      )
+      .onDisabled(
+        _apply{{typePrefix}}IconButtonState(
+          IconButtonStyler(),
+          stateStyles.disabledFocus,
+        ),
+      );
+}
+
+IconButtonStyler _apply{{typePrefix}}IconButtonState(
+  IconButtonStyler style,
+  {{typePrefix}}BaseButtonStateStyle state,
+) {
+  var result = style;
+  final foreground = state.foreground;
+  if (foreground != null) {
+    result = result.icon(.color(foreground)).spinner(.color(foreground));
+  }
+  if (state.background != null) {
+    result = result.color(state.background!);
+  }
+  if (state.effects != null) {
+    result = result.containerEffects(state.effects!);
+  }
+  if (state.spinnerOpacity != null) {
+    result = result.spinner(.opacity(state.spinnerOpacity!));
+  }
+  if (state.modifier != null) {
+    result = result.wrap(state.modifier!);
+  }
+  return result;
+}

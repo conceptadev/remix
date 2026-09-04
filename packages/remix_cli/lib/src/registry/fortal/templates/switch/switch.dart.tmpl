@@ -1,0 +1,354 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'switch.g.dart';
+
+/// {{typePrefix}} switch size presets.
+enum {{typePrefix}}SwitchSize {
+  /// Compact switch.
+  size1,
+
+  /// Default switch.
+  size2,
+
+  /// Large switch.
+  size3,
+}
+
+/// {{typePrefix}} switch color variants.
+enum {{typePrefix}}SwitchVariant {
+  /// Raised treatment with Radix's classic shadows.
+  classic,
+
+  /// Surface treatment with a visible border.
+  surface,
+
+  /// Softer accent treatment.
+  soft,
+}
+
+/// {{typePrefix}}-themed preset for [RemixSwitch].
+@MixWidget(target: RemixSwitch.new)
+SwitchStyler {{valuePrefix}}SwitchStyle({
+  {{typePrefix}}SwitchVariant variant = .surface,
+  {{typePrefix}}SwitchSize size = .size2,
+  bool highContrast = false,
+  SwitchStyler style = const SwitchStyler.create(),
+}) {
+  return (switch (variant) {
+    .classic => _{{valuePrefix}}SwitchClassicStyler(size, highContrast: highContrast),
+    .surface => _{{valuePrefix}}SwitchSurfaceStyler(size, highContrast: highContrast),
+    .soft => _{{valuePrefix}}SwitchSoftStyler(size, highContrast: highContrast),
+  }).merge(style);
+}
+
+SwitchStyler _{{valuePrefix}}SwitchBaseStyler({{typePrefix}}SwitchSize size) {
+  final metrics = _{{valuePrefix}}SwitchMetrics(size);
+  return SwitchStyler(
+        container: .size(
+          metrics.width,
+          metrics.height,
+        ).padding(.all(1)).borderRadius(.all(metrics.radius)),
+        thumb: .size(
+          metrics.thumbSize,
+          metrics.thumbSize,
+        ).borderRadius(.all(metrics.radius)),
+        trackEffects: RemixBoxEffectsMix(
+          behindContent: _{{valuePrefix}}SwitchLayer(),
+          overContent: _{{valuePrefix}}SwitchLayer(),
+        ),
+      )
+      .thumbColor(const Color(0xFFFFFFFF))
+      .onFocusVisible(
+        .trackEffects(
+          RemixBoxEffectsMix(
+            outline: BorderSideMix(
+              color: {{typePrefix}}Tokens.focus8(),
+              width: 2,
+              strokeAlign: BorderSide.strokeAlignInside,
+            ),
+            outlineOffset: 2,
+          ),
+        ),
+      );
+}
+
+SwitchStyler _{{valuePrefix}}SwitchClassicStyler(
+  {{typePrefix}}SwitchSize size, {
+  required bool highContrast,
+}) {
+  return _{{valuePrefix}}SwitchBaseStyler(size)
+      .trackColor({{typePrefix}}Tokens.grayA4())
+      .trackEffects(
+        RemixBoxEffectsMix.behindContent(
+          _{{valuePrefix}}SwitchLayer(shadowToken: {{typePrefix}}Tokens.shadow1Layers),
+        ),
+      )
+      .thumb(
+        _{{valuePrefix}}SwitchThumbStyler(selected: false, highContrast: highContrast),
+      )
+      .onSelected(
+        SwitchStyler()
+            .trackColor(
+              highContrast
+                  ? {{typePrefix}}Tokens.accent12()
+                  : {{typePrefix}}Tokens.accentTrack(),
+            )
+            .trackEffects(
+              RemixBoxEffectsMix.behindContent(
+                _{{valuePrefix}}SwitchLayer(
+                  shadows: [
+                    RemixBoxShadowMix(
+                      kind: .inset,
+                      color: {{typePrefix}}Tokens.grayA3(),
+                      spreadRadius: 1,
+                    ),
+                    RemixBoxShadowMix(
+                      kind: .inset,
+                      color: highContrast
+                          ? {{typePrefix}}Tokens.blackA2()
+                          : {{typePrefix}}Tokens.accentA4(),
+                      spreadRadius: 1,
+                    ),
+                    RemixBoxShadowMix(
+                      kind: .inset,
+                      color: {{typePrefix}}Tokens.blackA2(),
+                      offset: const Offset(0, 1.5),
+                      blurRadius: 2,
+                    ),
+                  ],
+                ),
+              ),
+            )
+            .thumb(
+              _{{valuePrefix}}SwitchThumbStyler(
+                selected: true,
+                highContrast: highContrast,
+              ),
+            ),
+      )
+      .onPressed(
+        SwitchStyler()
+            .trackColor({{typePrefix}}Tokens.grayA5())
+            .trackEffects(
+              RemixBoxEffectsMix.behindContent(_{{valuePrefix}}SwitchLayer()),
+            ),
+      )
+      .onDisabled(_{{valuePrefix}}SwitchDisabledStyler(classic: true));
+}
+
+SwitchStyler _{{valuePrefix}}SwitchSurfaceStyler(
+  {{typePrefix}}SwitchSize size, {
+  required bool highContrast,
+}) {
+  return _{{valuePrefix}}SwitchBaseStyler(size)
+      .trackColor({{typePrefix}}Tokens.grayA3())
+      .trackEffects(RemixBoxEffectsMix.behindContent(_{{valuePrefix}}SwitchLayer()))
+      .trackEffects(
+        RemixBoxEffectsMix.overContent(
+          _{{valuePrefix}}SwitchInsetRing({{typePrefix}}Tokens.grayA5()),
+        ),
+      )
+      .thumb(
+        _{{valuePrefix}}SwitchThumbStyler(selected: false, highContrast: highContrast),
+      )
+      .onSelected(
+        SwitchStyler()
+            .trackColor(
+              highContrast
+                  ? {{typePrefix}}Tokens.accent12()
+                  : {{typePrefix}}Tokens.accentTrack(),
+            )
+            .trackEffects(
+              RemixBoxEffectsMix.behindContent(_{{valuePrefix}}SwitchLayer()),
+            )
+            .thumb(
+              _{{valuePrefix}}SwitchThumbStyler(
+                selected: true,
+                highContrast: highContrast,
+              ),
+            ),
+      )
+      .onPressed(
+        SwitchStyler()
+            .trackColor({{typePrefix}}Tokens.grayA4())
+            .trackEffects(
+              RemixBoxEffectsMix.behindContent(_{{valuePrefix}}SwitchLayer()),
+            ),
+      )
+      .onDisabled(_{{valuePrefix}}SwitchDisabledStyler());
+}
+
+SwitchStyler _{{valuePrefix}}SwitchSoftStyler(
+  {{typePrefix}}SwitchSize size, {
+  required bool highContrast,
+}) {
+  return _{{valuePrefix}}SwitchBaseStyler(size)
+      .trackColor({{typePrefix}}Tokens.grayA3())
+      .trackEffects(RemixBoxEffectsMix.behindContent(_{{valuePrefix}}SwitchLayer()))
+      .thumb(_{{valuePrefix}}SwitchSoftThumbStyler(false))
+      .onSelected(
+        SwitchStyler()
+            .trackColor(
+              highContrast ? {{typePrefix}}Tokens.accentA6() : {{typePrefix}}Tokens.accentA4(),
+            )
+            .trackEffects(
+              RemixBoxEffectsMix.behindContent(_{{valuePrefix}}SwitchLayer()),
+            )
+            .thumb(_{{valuePrefix}}SwitchSoftThumbStyler(true)),
+      )
+      .onPressed(
+        SwitchStyler()
+            .trackColor({{typePrefix}}Tokens.grayA4())
+            .trackEffects(
+              RemixBoxEffectsMix.behindContent(_{{valuePrefix}}SwitchLayer()),
+            ),
+      )
+      .onDisabled(_{{valuePrefix}}SwitchDisabledStyler(soft: true));
+}
+
+({double width, double height, double thumbSize, Radius radius})
+_{{valuePrefix}}SwitchMetrics({{typePrefix}}SwitchSize size) {
+  final height = switch (size) {
+    .size1 => {{typePrefix}}Tokens.space4(),
+    .size2 => {{typePrefix}}Tokens.switchHeight2(),
+    .size3 => {{typePrefix}}Tokens.space5(),
+  };
+  final width = switch (size) {
+    .size1 => {{typePrefix}}Tokens.switchWidth1(),
+    .size2 => {{typePrefix}}Tokens.switchWidth2(),
+    .size3 => {{typePrefix}}Tokens.switchWidth3(),
+  };
+  final thumbSize = switch (size) {
+    .size1 => {{typePrefix}}Tokens.switchThumbSize1(),
+    .size2 => {{typePrefix}}Tokens.switchThumbSize2(),
+    .size3 => {{typePrefix}}Tokens.switchThumbSize3(),
+  };
+  final radius = switch (size) {
+    .size1 => {{typePrefix}}Tokens.radius1OrThumb(),
+    .size2 || .size3 => {{typePrefix}}Tokens.radius2OrThumb(),
+  };
+  return (width: width, height: height, thumbSize: thumbSize, radius: radius);
+}
+
+SwitchStyler _{{valuePrefix}}SwitchDisabledStyler({
+  bool classic = false,
+  bool soft = false,
+}) {
+  final trackColor = switch ((classic, soft)) {
+    (true, _) => {{typePrefix}}Tokens.grayA5(),
+    (_, true) => {{typePrefix}}Tokens.grayA4(),
+    _ => {{typePrefix}}Tokens.grayA3(),
+  };
+  return SwitchStyler()
+      .trackColor(trackColor)
+      .trackEffects(
+        RemixBoxEffectsMix.behindContent(
+          _{{valuePrefix}}SwitchLayer(
+            shadowToken: classic ? {{typePrefix}}Tokens.shadow1Layers : null,
+          ),
+        ),
+      )
+      .trackEffects(
+        RemixBoxEffectsMix.overContent(
+          classic || soft
+              ? _{{valuePrefix}}SwitchLayer(shadows: const [])
+              : _{{valuePrefix}}SwitchInsetRing({{typePrefix}}Tokens.grayA3()),
+        ),
+      )
+      .thumb(
+        BoxStyler().decoration(
+          .boxShadow([
+            BoxShadowMix(color: {{typePrefix}}Tokens.grayA2(), spreadRadius: 1),
+            BoxShadowMix(
+              color: {{typePrefix}}Tokens.blackA1(),
+              offset: const Offset(0, 1),
+              blurRadius: 3,
+            ),
+          ]),
+        ),
+      )
+      .thumbColor({{typePrefix}}Tokens.gray2());
+}
+
+BoxStyler _{{valuePrefix}}SwitchThumbStyler({
+  required bool selected,
+  required bool highContrast,
+}) => BoxStyler().decoration(
+  .boxShadow(
+    selected
+        ? [
+            BoxShadowMix(
+              color: {{typePrefix}}Tokens.blackA2(),
+              offset: const Offset(0, 1),
+              blurRadius: 3,
+            ),
+            BoxShadowMix(
+              color: {{typePrefix}}Tokens.blackA1(),
+              offset: const Offset(0, 2),
+              blurRadius: 4,
+              spreadRadius: -1,
+            ),
+            BoxShadowMix(
+              color: highContrast
+                  ? {{typePrefix}}Tokens.blackA2()
+                  : {{typePrefix}}Tokens.accentA4(),
+              spreadRadius: 1,
+            ),
+            BoxShadowMix(
+              color: {{typePrefix}}Tokens.blackA2(),
+              offset: const Offset(-1, 0),
+              blurRadius: 1,
+            ),
+          ]
+        : [
+            BoxShadowMix(color: {{typePrefix}}Tokens.blackA2(), spreadRadius: 1),
+            BoxShadowMix(
+              color: {{typePrefix}}Tokens.blackA1(),
+              offset: const Offset(0, 1),
+              blurRadius: 3,
+            ),
+            BoxShadowMix(
+              color: {{typePrefix}}Tokens.blackA1(),
+              offset: const Offset(0, 2),
+              blurRadius: 4,
+              spreadRadius: -1,
+            ),
+          ],
+  ),
+);
+
+BoxStyler _{{valuePrefix}}SwitchSoftThumbStyler(bool selected) => BoxStyler().decoration(
+  .boxShadow([
+    BoxShadowMix(color: {{typePrefix}}Tokens.blackA1(), spreadRadius: 1),
+    BoxShadowMix(
+      color: selected ? {{typePrefix}}Tokens.blackA2() : {{typePrefix}}Tokens.blackA1(),
+      offset: const Offset(0, 1),
+      blurRadius: 3,
+    ),
+    BoxShadowMix(
+      color: selected ? {{typePrefix}}Tokens.accentA3() : {{typePrefix}}Tokens.blackA1(),
+      offset: const Offset(0, 1),
+      blurRadius: 3,
+    ),
+    BoxShadowMix(
+      color: selected ? {{typePrefix}}Tokens.accentA3() : {{typePrefix}}Tokens.blackA1(),
+      offset: const Offset(0, 2),
+      blurRadius: 4,
+      spreadRadius: -1,
+    ),
+  ]),
+);
+
+RemixBoxEffectLayerMix _{{valuePrefix}}SwitchInsetRing(Color color) =>
+    _{{valuePrefix}}SwitchLayer(
+      shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
+    );
+
+RemixBoxEffectLayerMix _{{valuePrefix}}SwitchLayer({
+  List<RemixBoxShadowMix>? shadows,
+  RemixBoxShadowListToken? shadowToken,
+}) => RemixBoxEffectLayerMix(shadows: shadows, shadowToken: shadowToken);

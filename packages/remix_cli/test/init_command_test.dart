@@ -192,6 +192,36 @@ paths:
     expect(snapshotFiles(root), before);
   });
 
+  test('rejects changing the preset of an initialized project', () async {
+    await installer.initialize(
+      const InitOptions(
+        prefix: 'Ui',
+        preset: 'default',
+        uiPath: 'lib/ui',
+      ),
+    );
+    final before = snapshotFiles(root);
+
+    await expectLater(
+      installer.initialize(
+        const InitOptions(
+          prefix: 'Ui',
+          preset: 'fortal',
+          uiPath: 'lib/ui',
+        ),
+      ),
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('prefix, preset, and UI path'),
+        ),
+      ),
+    );
+
+    expect(snapshotFiles(root), before);
+  });
+
   test('rejects unrelated and malformed barrels without mutation', () async {
     for (final source in [
       'library;\n',

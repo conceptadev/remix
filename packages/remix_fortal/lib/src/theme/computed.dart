@@ -177,7 +177,7 @@ double _encodeSrgb(double channel) => channel <= 0.0031308
     : 1.055 * math.pow(channel, 1 / 2.4).toDouble() - 0.055;
 
 /// Builds Radix Themes elevation shadows for the active brightness.
-Map<MixToken, Object> buildFortalShadows({
+Map<MixToken<Object?>, Object> buildFortalShadows({
   required bool isDark,
   required FortalThemeColors colors,
 }) {
@@ -359,7 +359,7 @@ Map<MixToken, Object> buildFortalShadows({
   return _fortalShadowTokens(shadows);
 }
 
-Map<MixToken, Object> _fortalShadowTokens(
+Map<MixToken<Object?>, Object> _fortalShadowTokens(
   Map<String, List<RemixBoxShadow>> shadows,
 ) {
   final shadow1 = shadows['shadow1']!;
@@ -519,8 +519,8 @@ FortalThemeColors resolveFortalTokens(FortalThemeConfig theme) {
   final RadixColorScale gray = grayRC.scale;
 
   // Neutral alpha swatches
-  final ColorSwatch<int> blackA = blackAlpha;
-  final ColorSwatch<int> whiteA = whiteAlpha;
+  const ColorSwatch<int> blackA = blackAlpha;
+  const ColorSwatch<int> whiteA = whiteAlpha;
 
   // Backgrounds/panels/overlay
   final Color colorBackground = computeColorBackground(

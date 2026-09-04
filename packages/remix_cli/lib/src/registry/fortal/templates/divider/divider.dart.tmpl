@@ -1,0 +1,49 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'divider.g.dart';
+
+/// {{typePrefix}} divider length presets: 16, 32, 64, or the available axis extent.
+enum {{typePrefix}}DividerSize { size1, size2, size3, size4 }
+
+/// {{typePrefix}}-themed preset for [RemixDivider].
+@MixWidget(target: RemixDivider.new)
+DividerStyler {{valuePrefix}}DividerStyle({
+  {{typePrefix}}DividerSize size = .size1,
+  Axis orientation = Axis.horizontal,
+  DividerStyler style = const DividerStyler.create(),
+}) {
+  return DividerStyler()
+      .color({{typePrefix}}Tokens.gray6())
+      .merge(_{{valuePrefix}}DividerSizeStyler(size, orientation))
+      .merge(style);
+}
+
+DividerStyler _{{valuePrefix}}DividerSizeStyler(
+  {{typePrefix}}DividerSize size,
+  Axis orientation,
+) {
+  final length = switch (size) {
+    .size1 => {{typePrefix}}Tokens.space4(),
+    .size2 => {{typePrefix}}Tokens.space6(),
+    .size3 => {{typePrefix}}Tokens.space9(),
+    .size4 => null,
+  };
+  if (orientation == Axis.horizontal) {
+    final style = DividerStyler().height({{typePrefix}}Tokens.borderWidth1());
+    return length == null
+        ? style.wrap(
+            WidgetModifierConfig.fractionallySizedBox(widthFactor: 1).align(),
+          )
+        : style.width(length);
+  }
+  final style = DividerStyler().width({{typePrefix}}Tokens.borderWidth1());
+  return length == null
+      ? style.wrap(
+          WidgetModifierConfig.fractionallySizedBox(heightFactor: 1).align(),
+        )
+      : style.height(length);
+}

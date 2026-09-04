@@ -22,6 +22,38 @@ void main() {
     },
   );
 
+  test('Fortal registry loads its inferred dependency graph', () async {
+    final catalog = await RegistryCatalog.loadBundled(preset: 'fortal');
+
+    expect(catalog.preset, 'fortal');
+    expect(catalog.resolve('button').map((item) => item.name), [
+      'theme',
+      'base_button',
+      'button',
+    ]);
+    expect(catalog.items['data_table']!.registryDependencies, [
+      'theme',
+      'checkbox',
+      'icon_button',
+      'select',
+    ]);
+    expect(catalog.resolve('data_table').map((item) => item.name), [
+      'theme',
+      'checkbox',
+      'base_button',
+      'icon_button',
+      'select',
+      'data_table',
+    ]);
+    expect(catalog.items['theme']!.files, hasLength(8));
+    expect(catalog.items['theme']!.exports, ['theme/theme.dart']);
+
+    final button = catalog.items['button']!;
+    final source = await catalog.readTemplate(button.files.single);
+    expect(source, contains('{{typePrefix}}Button'));
+    expect(source, isNot(contains('remix_fortal')));
+  });
+
   test('unknown preset fails before reading an asset and lists bundles', () {
     expect(
       RegistryCatalog.loadBundled(
@@ -32,7 +64,7 @@ void main() {
         isA<FormatException>().having(
           (error) => error.message,
           'message',
-          allOf(contains('missing'), contains('default')),
+          allOf(contains('missing'), contains('default'), contains('fortal')),
         ),
       ),
     );

@@ -1,0 +1,108 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'badge.g.dart';
+
+/// Radix Themes Badge size presets.
+enum {{typePrefix}}BadgeSize { size1, size2, size3 }
+
+/// Radix Themes Badge variants.
+enum {{typePrefix}}BadgeVariant { solid, soft, surface, outline }
+
+/// {{typePrefix}}-themed Badge with the Radix size, variant, and override contract.
+@MixWidget(target: RemixBadge.new)
+BadgeStyler {{valuePrefix}}BadgeStyle({
+  {{typePrefix}}BadgeVariant variant = .soft,
+  {{typePrefix}}BadgeSize size = .size1,
+  bool highContrast = false,
+  BadgeStyler style = const BadgeStyler.create(),
+}) {
+  final base = _{{valuePrefix}}BadgeBaseStyler(size);
+  return (switch (variant) {
+    .solid =>
+      base
+          .color(
+            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accent9(),
+          )
+          .labelColor(
+            highContrast
+                ? {{typePrefix}}Tokens.accent1()
+                : {{typePrefix}}Tokens.accentContrast(),
+          ),
+    .soft =>
+      base
+          .color({{typePrefix}}Tokens.accentA3())
+          .labelColor(
+            // Step 11 is Radix low-contrast text, not WCAG AA 4.5:1 on
+            // accentA3 over colorPanelSolid. highContrast promotes accent12.
+            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentA11(),
+          ),
+    .surface =>
+      base
+          .color({{typePrefix}}Tokens.accentSurface())
+          .containerEffects(
+            RemixBoxEffectsMix.behindContent(
+              {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA6()]),
+            ),
+          )
+          .labelColor(
+            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentA11(),
+          ),
+    .outline =>
+      base
+          .containerEffects(
+            RemixBoxEffectsMix.behindContent(
+              {{valuePrefix}}InsetSurface(
+                strokes: [
+                  highContrast
+                      ? {{typePrefix}}Tokens.accentA7()
+                      : {{typePrefix}}Tokens.accentA8(),
+                  if (highContrast) {{typePrefix}}Tokens.grayA11(),
+                ],
+              ),
+            ),
+          )
+          .labelColor(
+            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentA11(),
+          ),
+  }).merge(style);
+}
+
+BadgeStyler _{{valuePrefix}}BadgeBaseStyler({{typePrefix}}BadgeSize size) {
+  final radius = _{{valuePrefix}}BadgeRadius(size);
+  return BadgeStyler(
+    container: .padding(_{{valuePrefix}}BadgePadding(size)),
+    label: .style(
+      _{{valuePrefix}}BadgeText(size).mix(),
+    ).fontWeight({{typePrefix}}Tokens.fontWeightMedium()),
+  ).borderRadius(.all(radius));
+}
+
+TextStyleToken _{{valuePrefix}}BadgeText({{typePrefix}}BadgeSize size) => switch (size) {
+  .size1 || .size2 => {{typePrefix}}Tokens.text1,
+  .size3 => {{typePrefix}}Tokens.text2,
+};
+
+EdgeInsetsGeometryMix _{{valuePrefix}}BadgePadding({{typePrefix}}BadgeSize size) =>
+    switch (size) {
+      .size1 => EdgeInsetsGeometryMix.symmetric(
+        horizontal: {{typePrefix}}Tokens.badgePaddingX1(),
+        vertical: {{typePrefix}}Tokens.badgePaddingY1(),
+      ),
+      .size2 => EdgeInsetsGeometryMix.symmetric(
+        horizontal: {{typePrefix}}Tokens.space2(),
+        vertical: {{typePrefix}}Tokens.space1(),
+      ),
+      .size3 => EdgeInsetsGeometryMix.symmetric(
+        horizontal: {{typePrefix}}Tokens.badgePaddingX3(),
+        vertical: {{typePrefix}}Tokens.space1(),
+      ),
+    };
+
+Radius _{{valuePrefix}}BadgeRadius({{typePrefix}}BadgeSize size) => switch (size) {
+  .size1 => {{typePrefix}}Tokens.radius1OrFull(),
+  .size2 || .size3 => {{typePrefix}}Tokens.radius2OrFull(),
+};

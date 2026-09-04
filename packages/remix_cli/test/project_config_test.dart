@@ -76,7 +76,7 @@ paths:
   });
 
   test('rejects invalid and unbundled presets', () {
-    for (final preset in ['', 'Default', 'default-name', 'fortal']) {
+    for (final preset in ['', 'Default', 'default-name', 'missing']) {
       expect(
         () => ProjectConfig.create(
           packageRoot: root,

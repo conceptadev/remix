@@ -1,0 +1,188 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import 'theme_data.dart';
+import 'tokens.dart';
+
+/// Establishes a courtesy default text run for bare [Text] descendants.
+///
+/// `.radix-themes` is not only a token carrier upstream: `color.css` sets
+/// `color: var(--gray-12)` in the same rule as the `data-has-background` fill,
+/// and `typography.css` pins the root to `--default-font-size`
+/// (`--font-size-3`), `--default-line-height`, `--default-letter-spacing`, and
+/// `--default-font-weight`. Those resolve to exactly [{{typePrefix}}Tokens.text3] plus
+/// [{{typePrefix}}Tokens.gray12] at regular weight.
+///
+/// {{typePrefix}} text recipes resolve and pin their own runs. This fallback keeps
+/// deliberately bare [Text] descendants aligned with Radix's root typography
+/// and neutral foreground. A nearer descendant `DefaultTextStyle` still wins
+/// through Flutter's normal inheritance.
+///
+/// Only the outermost [{{typePrefix}}Scope] installs this. A nested scope re-scopes
+/// tokens for its subtree and nothing more: upstream, `.radix-themes` inside
+/// another `.radix-themes` still inherits `color` and the font properties from
+/// its parent chain, and a nested scope that reinstalled the root run here
+/// would silently replace whatever `DefaultTextStyle` the subtree sits in.
+///
+/// The font family is deliberately left unset. Radix's `--default-font-family`
+/// is the platform system stack, and a null family is Flutter's equivalent;
+/// naming a concrete family here would pin every consumer to one typeface.
+Widget _{{valuePrefix}}RootTextStyle({
+  required Map<MixToken<Object?>, Object> tokens,
+  required Widget child,
+}) {
+  final root = tokens[{{typePrefix}}Tokens.text3]! as TextStyle;
+
+  return DefaultTextStyle(
+    style: root.copyWith(
+      color: tokens[{{typePrefix}}Tokens.gray12]! as Color,
+      fontWeight: tokens[{{typePrefix}}Tokens.fontWeightRegular]! as FontWeight,
+    ),
+    child: child,
+  );
+}
+
+/// Widget that provides {{typePrefix}} design tokens to its subtree via [MixScope].
+///
+/// Use [{{typePrefix}}Scope] at the root of your app (or around any subtree that uses
+/// {{typePrefix}} styles) so that [{{typePrefix}}Tokens] resolve to actual values.
+///
+/// ```dart
+/// {{typePrefix}}Scope(
+///   child: WidgetsApp(...),
+/// )
+/// ```
+class {{typePrefix}}Scope extends StatelessWidget {
+  const {{typePrefix}}Scope({
+    super.key,
+    this.accent,
+    this.gray,
+    this.brightness,
+    this.panelBackground,
+    this.radius,
+    this.scaling,
+    this.hasBackground,
+    this.orderOfModifiers,
+    required this.child,
+  });
+
+  final {{typePrefix}}AccentColor? accent;
+  final {{typePrefix}}GrayColor? gray;
+  final Brightness? brightness;
+  final {{typePrefix}}PanelBackground? panelBackground;
+  final {{typePrefix}}Radius? radius;
+  final {{typePrefix}}Scaling? scaling;
+  final bool? hasBackground;
+  final List<Type>? orderOfModifiers;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final config = {{typePrefix}}ThemeConfig(
+      accent: accent,
+      gray: gray,
+      brightness: brightness,
+      panelBackground: panelBackground,
+      radius: radius,
+      scaling: scaling,
+      hasBackground: hasBackground,
+    );
+    final parent = {{typePrefix}}Theme.maybeOf(context);
+    final data = _resolve{{typePrefix}}Theme(config, parent: parent);
+    final tokens = build{{typePrefix}}ScopeTokens(data);
+    Widget result = MixScope(
+      tokens: tokens,
+      orderOfModifiers: orderOfModifiers,
+      // Theme-root identity, not `hasBackground`, decides who owns the text
+      // run: a scope nested for its accent or scaling must leave the current
+      // run alone, while a root scope with `hasBackground: false` still
+      // establishes it.
+      child: parent == null
+          ? _{{valuePrefix}}RootTextStyle(tokens: tokens, child: child)
+          : child,
+    );
+    if (data.hasBackground) {
+      result = ColoredBox(
+        color: tokens[{{typePrefix}}Tokens.colorBackground]! as Color,
+        child: result,
+      );
+    }
+
+    return {{typePrefix}}Theme(
+      data: data,
+      orderOfModifiers: orderOfModifiers,
+      child: result,
+    );
+  }
+}
+
+{{typePrefix}}ThemeData _resolve{{typePrefix}}Theme(
+  {{typePrefix}}ThemeConfig config, {
+  {{typePrefix}}ThemeData? parent,
+}) {
+  final accent = config.accent ?? parent?.accent ?? {{typePrefix}}AccentColor.indigo;
+
+  return {{typePrefix}}ThemeData(
+    accent: accent,
+    gray: config.gray ?? parent?.gray ?? {{typePrefix}}GrayColor.slate,
+    brightness: config.brightness ?? parent?.brightness ?? Brightness.light,
+    panelBackground:
+        config.panelBackground ??
+        parent?.panelBackground ??
+        {{typePrefix}}PanelBackground.translucent,
+    radius: config.radius ?? parent?.radius ?? {{typePrefix}}Radius.medium,
+    scaling: config.scaling ?? parent?.scaling ?? {{typePrefix}}Scaling.percent100,
+    hasBackground: config.hasBackground ?? parent == null,
+  );
+}
+
+/// Makes the active [{{typePrefix}}ThemeData] available to descendants.
+class {{typePrefix}}Theme extends InheritedTheme {
+  const {{typePrefix}}Theme({
+    super.key,
+    required this.data,
+    this.orderOfModifiers,
+    required super.child,
+  });
+
+  final {{typePrefix}}ThemeData data;
+  final List<Type>? orderOfModifiers;
+
+  /// Returns the closest resolved {{typePrefix}} theme.
+  static {{typePrefix}}ThemeData of(BuildContext context) {
+    final data = maybeOf(context);
+    if (data != null) return data;
+    throw FlutterError.fromParts([
+      ErrorSummary('No {{typePrefix}}Theme found.'),
+      ErrorDescription(
+        '${context.widget.runtimeType} tried to read the {{typePrefix}} theme, but no {{typePrefix}}Scope was found above it.',
+      ),
+      context.describeElement('The context used was'),
+    ]);
+  }
+
+  /// Returns the closest resolved {{typePrefix}} theme, if one is available.
+  static {{typePrefix}}ThemeData? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<{{typePrefix}}Theme>()?.data;
+
+  /// Rebuilds only the theme and its Mix tokens.
+  ///
+  /// The captured subtree's text run is *not* synthesized here.
+  /// `DefaultTextStyle` is itself an [InheritedTheme], so
+  /// `InheritedTheme.capture` already carries the actual nearest ambient run
+  /// across to the new route; installing the Radix root run alongside it would
+  /// overwrite that capture with a value the source context never had.
+  @override
+  Widget wrap(BuildContext context, Widget child) => {{typePrefix}}Theme(
+    data: data,
+    orderOfModifiers: orderOfModifiers,
+    child: MixScope(
+      tokens: build{{typePrefix}}ScopeTokens(data),
+      orderOfModifiers: orderOfModifiers,
+      child: child,
+    ),
+  );
+
+  @override
+  bool updateShouldNotify({{typePrefix}}Theme oldWidget) => data != oldWidget.data;
+}
