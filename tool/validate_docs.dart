@@ -222,7 +222,7 @@ const _openCodeCatalogDocuments = <String>[
 /// wrote down.
 void _checkOpenCodeCatalog(Directory workspaceRoot, List<String> failures) {
   final registry = File(
-    '${workspaceRoot.path}/packages/remix_cli/lib/src/registry/registry.yaml',
+    '${workspaceRoot.path}/packages/remix_cli/lib/src/registry/default/registry.yaml',
   );
   if (!registry.existsSync()) {
     failures.add('packages/remix_cli is missing its registry.yaml.');

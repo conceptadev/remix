@@ -523,7 +523,7 @@ Future<Object> _resolveToolchain(Directory root, String pinned) async {
 /// checked — and every suite still passes.
 _Failure? _verifyRegistryCoverage(Directory repositoryRoot) {
   final file = File(
-    '${repositoryRoot.path}/packages/remix_cli/lib/src/registry/registry.yaml',
+    '${repositoryRoot.path}/packages/remix_cli/lib/src/registry/default/registry.yaml',
   );
   if (!file.existsSync()) {
     return _Failure('packages/remix_cli is missing its registry.yaml.');
@@ -568,7 +568,7 @@ _Failure? _verifyResolvedRemixFloor({
   required Map<String, String> hostedPackages,
 }) {
   final registry = File(
-    '${repositoryRoot.path}/packages/remix_cli/lib/src/registry/registry.yaml',
+    '${repositoryRoot.path}/packages/remix_cli/lib/src/registry/default/registry.yaml',
   );
   final document = loadYaml(registry.readAsStringSync());
   final items = document is YamlMap ? document['items'] : null;

@@ -25,7 +25,9 @@ final Version registryRemixFloor =
 String _readRegistryRemixConstraint() {
   // `dart test` runs with the package root as the current directory.
   final document = loadYaml(
-    File(p.join('lib', 'src', 'registry', 'registry.yaml')).readAsStringSync(),
+    File(
+      p.join('lib', 'src', 'registry', 'default', 'registry.yaml'),
+    ).readAsStringSync(),
   );
   final items = (document as YamlMap)['items'] as YamlMap;
   for (final item in items.values) {

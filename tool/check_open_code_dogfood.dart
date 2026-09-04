@@ -64,7 +64,7 @@ Future<void> main(List<String> arguments) async {
 
 Future<String?> _run(Directory root) async {
   final registry = File(
-    '${root.path}/packages/remix_cli/lib/src/registry/registry.yaml',
+    '${root.path}/packages/remix_cli/lib/src/registry/default/registry.yaml',
   );
   final playground = Directory('${root.path}/apps/playground');
   if (!registry.existsSync()) return 'the bundled registry is missing.';

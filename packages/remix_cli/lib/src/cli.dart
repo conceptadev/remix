@@ -17,9 +17,14 @@ typedef InitHandler = Future<void> Function(InitOptions options);
 typedef AddHandler = Future<void> Function(AddOptions options);
 
 final class InitOptions {
-  const InitOptions({required this.prefix, required this.uiPath});
+  const InitOptions({
+    required this.prefix,
+    required this.preset,
+    required this.uiPath,
+  });
 
   final String prefix;
+  final String preset;
   final String uiPath;
 }
 
@@ -122,6 +127,7 @@ final class _InitCommand extends Command<int> {
   _InitCommand(this._handler) {
     argParser
       ..addOption('prefix', defaultsTo: 'Ui')
+      ..addOption('preset', defaultsTo: 'default')
       ..addOption('ui-path', defaultsTo: 'lib/ui');
   }
 
@@ -145,6 +151,7 @@ final class _InitCommand extends Command<int> {
     await handler(
       InitOptions(
         prefix: argResults!.option('prefix')!,
+        preset: argResults!.option('preset')!,
         uiPath: argResults!.option('ui-path')!,
       ),
     );

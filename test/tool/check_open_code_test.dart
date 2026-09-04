@@ -29,7 +29,7 @@ void main() {
     test('an item the checker never installs is reported', () {
       final root = Directory('${sandbox.path}/repo');
       final registry = File(
-        '${root.path}/packages/remix_cli/lib/src/registry/registry.yaml',
+        '${root.path}/packages/remix_cli/lib/src/registry/default/registry.yaml',
       );
       registry.parent.createSync(recursive: true);
       registry.writeAsStringSync('''

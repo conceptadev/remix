@@ -1,5 +1,8 @@
 ## 0.1.0
 
+- Adds a preset axis to `remix init`. New configurations use schema 2 and
+  record `preset: default`; schema 1 configurations remain compatible and
+  read as the default preset.
 - Initial project-local CLI for installing editable Remix UI source.
 - Uses the Flutter SDK and its Dart executable on Windows. CI verifies installation with the real SDK.
 - Supports explicit, glob, and nested workspace members through Pub's resolved package configuration.

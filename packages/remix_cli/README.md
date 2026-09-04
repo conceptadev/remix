@@ -58,8 +58,9 @@ dart run remix_cli:remix init
 The default configuration is:
 
 ```yaml
-schema: 1
+schema: 2
 prefix: Ui
+preset: default
 paths:
   ui: lib/ui
 ```
@@ -67,7 +68,7 @@ paths:
 Customize it only at initialization:
 
 ```shell
-dart run remix_cli:remix init --prefix Acme --ui-path lib/design_system
+dart run remix_cli:remix init --prefix Acme --preset default --ui-path lib/design_system
 ```
 
 `init` validates the Flutter project, writes `remix.yaml`, and creates a barrel
