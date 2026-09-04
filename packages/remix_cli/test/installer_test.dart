@@ -778,6 +778,35 @@ dev_dependencies:
     },
   );
 
+  test('both presets reject resolved beta.7 before writing source', () async {
+    for (final preset in ['default', 'fortal']) {
+      final caseRoot = createFlutterPackage();
+      addTearDown(() => caseRoot.deleteSync(recursive: true));
+      await Installer(
+        projectRoot: caseRoot,
+        writeOut: (_) {},
+      ).initialize(InitOptions(prefix: 'Ui', preset: preset, uiPath: 'lib/ui'));
+      writeRequiredPubspec(caseRoot, remix: '^1.0.0-beta.7');
+      writeRequiredLock(caseRoot, remix: '1.0.0-beta.7');
+      final before = snapshotFiles(caseRoot);
+      final writer = RecordingFileWriter(caseRoot);
+
+      await expectLater(
+        Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+          processRunner: happyRunner(caseRoot, writeLockOnPubGet: false),
+          fileWriter: writer,
+        ).add(const AddOptions(item: 'accordion', mode: AddMode.write)),
+        throwsStateError,
+        reason: preset,
+      );
+
+      expect(writer.paths, isEmpty, reason: preset);
+      expect(snapshotFiles(caseRoot), before, reason: preset);
+    }
+  });
+
   test('a resolved remix above the snapshot floor prints a notice', () async {
     // The registry constraint is a caret, so a consumer reaches an untested
     // remix without ever failing lock verification. This line is the signal.

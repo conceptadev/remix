@@ -2,7 +2,7 @@ schema: 1
 items:
   theme:
     dependencies:
-      remix: ^1.0.0-beta.7
+      remix: ^1.0.0-beta.8
     files:
       - source: templates/theme/tokens.dart.tmpl
         target: "@ui/theme/tokens.dart"

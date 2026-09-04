@@ -152,11 +152,11 @@ jobs:
             echo
             echo "### CI on this branch"
             echo
-            echo 'This branch also moves the `remix` floor in the'
-            echo '`remix_cli` registry. `open-code:check` resolves that floor'
-            echo 'from pub.dev, so it fails until step 1 above is served.'
-            echo 'Expect a red run before the tag and a green one after; do'
-            echo 'not lower the floor to make it pass.'
+            echo 'CI installs both presets against checkout Remix.'
+            echo 'After pub.dev serves step 1, run'
+            echo '`dart run melos run open-code:release:check`.'
+            echo 'The CLI publish workflow requires this hosted check.'
+            echo 'Do not lower the registry floor to bypass a missing release.'
             echo
             echo "### remix_cli"
             echo
