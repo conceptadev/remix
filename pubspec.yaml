@@ -131,6 +131,16 @@ melos:
         - dart run tool/check_open_code.dart
       description: Test the checker and install every registry item in a fresh app
 
+    open-code:fortal:build:
+      run: dart run tool/build_fortal_preset.dart
+      description: Derive the Fortal registry from analyzer-checked package source
+
+    open-code:fortal:check:
+      steps:
+        - dart test test/tool/build_fortal_preset_test.dart
+        - dart run tool/build_fortal_preset.dart --check
+      description: Test Fortal derivation and fail on committed preset drift
+
     open-code:dogfood:check:
       run: dart run tool/check_open_code_dogfood.dart
       description: Verify the playground's installed source still mirrors the registry
@@ -155,6 +165,7 @@ melos:
         - mix:consumer:check
         - material:check
         - generate:check
+        - open-code:fortal:check
         - docs:check
         - fortal:parity:check
         - open-code:dogfood:check

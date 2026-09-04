@@ -58,6 +58,12 @@ void main() {
   tearDown(() => root.deleteSync(recursive: true));
 
   test('add loads the registry selected by project configuration', () async {
+    File(p.join(root.path, 'remix.yaml')).writeAsStringSync('''schema: 2
+prefix: Ui
+preset: fortal
+paths:
+  ui: lib/ui
+''');
     String? loadedPreset;
     final installer = Installer(
       projectRoot: root,
@@ -70,7 +76,7 @@ void main() {
 
     await installer.add(const AddOptions(item: 'button', mode: AddMode.dryRun));
 
-    expect(loadedPreset, 'default');
+    expect(loadedPreset, 'fortal');
   });
 
   test(

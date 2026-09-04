@@ -28,7 +28,7 @@ import 'tokens.dart';
 /// is the platform system stack, and a null family is Flutter's equivalent;
 /// naming a concrete family here would pin every consumer to one typeface.
 Widget _fortalRootTextStyle({
-  required Map<MixToken, Object> tokens,
+  required Map<MixToken<Object?>, Object> tokens,
   required Widget child,
 }) {
   final root = tokens[FortalTokens.text3]! as TextStyle;

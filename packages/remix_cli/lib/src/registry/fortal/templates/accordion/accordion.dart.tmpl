@@ -1,0 +1,166 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'accordion.g.dart';
+
+/// {{typePrefix}} accordion size presets.
+enum {{typePrefix}}AccordionSize { size1, size2, size3 }
+
+/// {{typePrefix}} accordion color variants.
+enum {{typePrefix}}AccordionVariant { surface, soft }
+
+/// {{typePrefix}}-themed preset for [RemixAccordion].
+@MixWidget(target: RemixAccordion.new)
+AccordionStyler {{valuePrefix}}AccordionStyle({
+  {{typePrefix}}AccordionVariant variant = .surface,
+  {{typePrefix}}AccordionSize size = .size2,
+  AccordionStyler style = const AccordionStyler.create(),
+}) {
+  return (switch (variant) {
+    .surface => _{{valuePrefix}}AccordionSurfaceStyler(size),
+    .soft => _{{valuePrefix}}AccordionSoftStyler(size),
+  }).merge(style);
+}
+
+// Panel anatomy follows the mapped Table family (see data_table.dart):
+// `container` alone owns radius, frame, fill, and clipping, while trigger and
+// content stay flat rectangles that simply get cropped to its rounded shape.
+// The frame and divider are foreground borders so edge-to-edge child fills
+// cannot partially cover their antialiased edges.
+AccordionStyler _{{valuePrefix}}AccordionBaseStyler({{typePrefix}}AccordionSize size) {
+  return AccordionStyler()
+      .trigger(.direction(.horizontal))
+      .leadingIcon(.color({{typePrefix}}Tokens.gray11()))
+      .title(
+        .fontWeight(
+          {{typePrefix}}Tokens.fontWeightMedium(),
+        ).color({{typePrefix}}Tokens.gray12()),
+      )
+      .trailingIcon(.color({{typePrefix}}Tokens.gray11()))
+      .content(.width(.infinity))
+      .merge(_{{valuePrefix}}AccordionSizeStyler(size));
+}
+
+AccordionStyler _{{valuePrefix}}AccordionFocusStyler() {
+  return AccordionStyler().trigger(FlexBoxStyler().{{valuePrefix}}FocusRing());
+}
+
+AccordionStyler _{{valuePrefix}}AccordionDisabledStyler() {
+  return AccordionStyler()
+      .trigger(.color({{typePrefix}}Tokens.grayA3()))
+      .leadingIcon(.color({{typePrefix}}Tokens.gray8()))
+      .title(.color({{typePrefix}}Tokens.gray8()))
+      .trailingIcon(.color({{typePrefix}}Tokens.gray8()));
+}
+
+AccordionStyler _{{valuePrefix}}AccordionSurfaceStyler([
+  {{typePrefix}}AccordionSize size = .size2,
+]) {
+  return _{{valuePrefix}}AccordionBaseStyler(size)
+      .container(
+        {{valuePrefix}}SurfaceFrame(
+          fillColor: {{typePrefix}}Tokens.gray2(),
+          borderColor: {{typePrefix}}Tokens.gray6(),
+          borderWidth: {{typePrefix}}Tokens.borderWidth1(),
+          radius: _{{valuePrefix}}AccordionRadius(size),
+        ),
+      )
+      .trigger(.color({{typePrefix}}Tokens.gray1()))
+      .content(
+        BoxStyler()
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BoxBorderMix.top(
+                  _{{valuePrefix}}AccordionBorderSide({{typePrefix}}Tokens.gray6()),
+                ),
+              ),
+            )
+            .wrap(_{{valuePrefix}}AccordionContentTypography({{typePrefix}}Tokens.gray12())),
+      )
+      .onHovered(.trigger(.color({{typePrefix}}Tokens.gray2())))
+      .onPressed(.trigger(.color({{typePrefix}}Tokens.gray3())))
+      .onFocusVisible(_{{valuePrefix}}AccordionFocusStyler())
+      .onDisabled(_{{valuePrefix}}AccordionDisabledStyler());
+}
+
+AccordionStyler _{{valuePrefix}}AccordionSoftStyler([
+  {{typePrefix}}AccordionSize size = .size2,
+]) {
+  return _{{valuePrefix}}AccordionBaseStyler(size)
+      .container(
+        {{valuePrefix}}SurfaceFrame(
+          fillColor: {{typePrefix}}Tokens.accent2(),
+          borderColor: {{typePrefix}}Tokens.accent6(),
+          borderWidth: {{typePrefix}}Tokens.borderWidth1(),
+          radius: _{{valuePrefix}}AccordionRadius(size),
+        ),
+      )
+      .trigger(.color({{typePrefix}}Tokens.accent2()))
+      .title(.color({{typePrefix}}Tokens.accent12()))
+      .trailingIcon(.color({{typePrefix}}Tokens.accent11()))
+      .content(
+        BoxStyler()
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BoxBorderMix.top(
+                  _{{valuePrefix}}AccordionBorderSide({{typePrefix}}Tokens.accent6()),
+                ),
+              ),
+            )
+            .wrap(_{{valuePrefix}}AccordionContentTypography({{typePrefix}}Tokens.accent12())),
+      )
+      .onHovered(.trigger(.color({{typePrefix}}Tokens.accent3())))
+      .onPressed(.trigger(.color({{typePrefix}}Tokens.accent4())))
+      .onFocusVisible(_{{valuePrefix}}AccordionFocusStyler())
+      .onDisabled(_{{valuePrefix}}AccordionDisabledStyler());
+}
+
+/// The 1px edge shared by the panel's outer border and the trigger/content
+/// divider, so the seam reads as a continuation of the frame rather than an
+/// unrelated line.
+BorderSideMix _{{valuePrefix}}AccordionBorderSide(Color color) =>
+    BorderSideMix(color: color, width: {{typePrefix}}Tokens.borderWidth1());
+
+/// Pins bare [Text] accordion content to the 14px type-scale step (`text2`)
+/// regardless of accordion size, so content never renders larger than its own
+/// trigger's title (measured 14/15/16px at size1/size2/size3). {{typePrefix}} text
+/// children pin their own run. [color] supplies the variant's own content tint.
+WidgetModifierConfig _{{valuePrefix}}AccordionContentTypography(Color color) =>
+    WidgetModifierConfig.defaultTextStyle(
+      style: {{typePrefix}}Tokens.text2.mix(),
+    ).defaultTextStyle(style: TextStyleMix().color(color));
+
+AccordionStyler _{{valuePrefix}}AccordionSizeStyler({{typePrefix}}AccordionSize size) {
+  return switch (size) {
+    .size1 => AccordionStyler(
+      trigger: FlexBoxStyler().padding(.all({{typePrefix}}Tokens.space2())),
+      leadingIcon: .size({{typePrefix}}Tokens.space4()),
+      title: .style({{typePrefix}}Tokens.text2.mix()),
+      trailingIcon: .size({{typePrefix}}Tokens.space4()),
+      content: .padding(.all({{typePrefix}}Tokens.space2())),
+    ),
+    .size2 => AccordionStyler(
+      trigger: FlexBoxStyler().padding(.all({{typePrefix}}Tokens.space3())),
+      leadingIcon: .size({{typePrefix}}Tokens.spinnerSize3()),
+      title: .style({{typePrefix}}Tokens.accordionText2.mix()),
+      trailingIcon: .size({{typePrefix}}Tokens.spinnerSize3()),
+      content: .padding(.all({{typePrefix}}Tokens.space3())),
+    ),
+    .size3 => AccordionStyler(
+      trigger: FlexBoxStyler().padding(.all({{typePrefix}}Tokens.space4())),
+      leadingIcon: .size({{typePrefix}}Tokens.space5()),
+      title: .style({{typePrefix}}Tokens.text3.mix()),
+      trailingIcon: .size({{typePrefix}}Tokens.space5()),
+      content: .padding(.all({{typePrefix}}Tokens.space4())),
+    ),
+  };
+}
+
+Radius _{{valuePrefix}}AccordionRadius({{typePrefix}}AccordionSize size) => switch (size) {
+  .size1 => {{typePrefix}}Tokens.radius3(),
+  .size2 => {{typePrefix}}Tokens.radius4(),
+  .size3 => {{typePrefix}}Tokens.radius5(),
+};

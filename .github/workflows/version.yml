@@ -113,6 +113,11 @@ jobs:
           # step is part of versioning, not a cleanup after it.
           dart run tool/sync_registry_remix.dart
 
+          # The Fortal preset copies its dependency floors from the default
+          # registry. Rebuild it immediately after the default floor moves so
+          # the two committed registry trees cannot disagree.
+          dart run tool/build_fortal_preset.dart
+
           # The pair must land aligned; verify rather than trust the inputs.
           # This also fails when the sync step above did not run.
           dart run tool/check_version_alignment.dart

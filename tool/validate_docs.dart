@@ -214,29 +214,35 @@ const _openCodeCatalogDocuments = <String>[
   'open_code/README.md',
 ];
 
-/// Fails when a bundled registry item is missing from a catalog document.
+/// Fails when an item in either bundled preset is missing from a catalog
+/// document.
 ///
 /// Deliberately one-directional: a document may mention `theme` or discuss an
 /// item in prose without listing it, and matching that exactly would make the
 /// check fight the writing. What it will not allow is shipping an item nobody
 /// wrote down.
 void _checkOpenCodeCatalog(Directory workspaceRoot, List<String> failures) {
-  final registry = File(
-    '${workspaceRoot.path}/packages/remix_cli/lib/src/registry/default/registry.yaml',
-  );
-  if (!registry.existsSync()) {
-    failures.add('packages/remix_cli is missing its registry.yaml.');
-    return;
-  }
+  final items = <String>{};
+  for (final preset in ['default', 'fortal']) {
+    final registry = File(
+      '${workspaceRoot.path}/packages/remix_cli/lib/src/registry/'
+      '$preset/registry.yaml',
+    );
+    if (!registry.existsSync()) {
+      failures.add('packages/remix_cli is missing its $preset registry.yaml.');
+      continue;
+    }
 
-  // Item keys are the only two-space-indented `name:` lines in the file.
-  final items = RegExp(r'^  ([a-z][a-z0-9_]*):$', multiLine: true)
-      .allMatches(registry.readAsStringSync())
-      .map((match) => match.group(1)!)
-      .where((name) => name != 'theme')
-      .toList();
+    // Item keys are the only two-space-indented `name:` lines in the file.
+    items.addAll(
+      RegExp(r'^  ([a-z][a-z0-9_]*):$', multiLine: true)
+          .allMatches(registry.readAsStringSync())
+          .map((match) => match.group(1)!)
+          .where((name) => name != 'theme'),
+    );
+  }
   if (items.isEmpty) {
-    failures.add('registry.yaml declared no component items.');
+    failures.add('bundled registries declared no component items.');
     return;
   }
 
@@ -247,7 +253,8 @@ void _checkOpenCodeCatalog(Directory workspaceRoot, List<String> failures) {
       continue;
     }
     final source = file.readAsStringSync();
-    final missing = items.where((item) => !source.contains('`$item`')).toList();
+    final missing = items.where((item) => !source.contains('`$item`')).toList()
+      ..sort();
     if (missing.isNotEmpty) {
       failures.add(
         '$relativePath does not list registry ${missing.join(', ')}.',

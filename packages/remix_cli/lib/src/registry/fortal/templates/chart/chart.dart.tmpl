@@ -1,0 +1,255 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:mix_chart/mix_chart.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/radix_colors.dart'
+    show amber, blue, cyan, green, orange, ruby, violet;
+import '../theme/theme.dart';
+
+part 'chart.g.dart';
+
+const _standardPaletteToken = ContextToken<List<Color>>(
+  _resolveStandardPalette,
+);
+const _highContrastPaletteToken = ContextToken<List<Color>>(
+  _resolveHighContrastPalette,
+);
+const _tooltipBorderToken = ContextToken<BorderSide>(_resolveTooltipBorder);
+const _tooltipRadiusToken = ContextToken<BorderRadius>(_resolveTooltipRadius);
+const _tooltipPaddingToken = ContextToken<EdgeInsets>(_resolveTooltipPadding);
+const _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);
+const _lineWidthToken = ContextToken<double>(_resolveLineWidth);
+const _highContrastLineWidthToken = ContextToken<double>(
+  _resolveHighContrastLineWidth,
+);
+
+/// Returns the categorical palette used by {{typePrefix}} charts in the current scope.
+///
+/// The first entry follows the configured {{typePrefix}} accent. Remaining entries use
+/// Radix color families selected for clear categorical separation. Set
+/// [highContrast] to use step 12 instead of the standard solid-color step 9.
+List<Color> resolve{{typePrefix}}ChartPalette(
+  BuildContext context, {
+  bool highContrast = false,
+}) {
+  final theme = {{typePrefix}}Theme.of(context);
+  final colors = resolve{{typePrefix}}Tokens(theme);
+  final step = highContrast ? 12 : 9;
+  final candidates = <Color>[
+    colors.accent.scale.step(step),
+    for (final family in [cyan, orange, ruby, green, violet, amber, blue])
+      (theme.isDark ? family.dark : family.light).scale.step(step),
+  ];
+
+  return List<Color>.unmodifiable(candidates.toSet());
+}
+
+/// {{typePrefix}} presentation for a Mix line or area chart.
+///
+/// Generates [{{typePrefix}}LineChart] through `mix_generator`. The plot remains
+/// transparent so callers can compose it inside any {{typePrefix}} surface.
+@MixWidget(target: LineChart.new)
+LineChartStyler {{valuePrefix}}LineChartStyle({
+  bool highContrast = false,
+  bool showMarkers = false,
+  List<Color>? palette,
+  LineChartStyler style = const LineChartStyler.create(),
+}) {
+  final recipe = LineChartStyler()
+      .frame(_{{valuePrefix}}FrameStyle())
+      .axis(_{{valuePrefix}}AxisStyle())
+      .topAxis(_hiddenAxisStyle())
+      .rightAxis(_hiddenAxisStyle())
+      .grid(_{{valuePrefix}}GridStyle())
+      .series(
+        LineSeriesStyler()
+            .curve(.curved)
+            .smoothness(0.18)
+            .preventCurveOvershooting(true)
+            .roundStrokeCap(true)
+            .roundStrokeJoin(true)
+            .stroke(
+              ChartStrokeStyler().width(
+                highContrast
+                    ? _highContrastLineWidthToken()
+                    : _lineWidthToken(),
+              ),
+            )
+            .marker(
+              ChartMarkerStyler()
+                  .show(showMarkers)
+                  .radius({{typePrefix}}Tokens.space1())
+                  .borderColor({{typePrefix}}Tokens.colorPanel())
+                  .borderWidth({{typePrefix}}Tokens.borderWidth2()),
+            ),
+      )
+      .tooltip(_{{valuePrefix}}TooltipStyle());
+
+  return recipe
+      .merge(
+        LineChartStyler.create(
+          palette: _paletteProp(highContrast: highContrast, palette: palette),
+        ),
+      )
+      .merge(style);
+}
+
+/// {{typePrefix}} presentation for a Mix grouped, stacked, or floating bar chart.
+///
+/// Generates [{{typePrefix}}BarChart] through `mix_generator`.
+@MixWidget(target: BarChart.new)
+BarChartStyler {{valuePrefix}}BarChartStyle({
+  bool highContrast = false,
+  List<Color>? palette,
+  BarChartStyler style = const BarChartStyler.create(),
+}) {
+  final bar = BarStyler.create(
+    borderRadius: Prop.token(_barRadiusToken),
+  ).width({{typePrefix}}Tokens.space4());
+  final recipe = BarChartStyler()
+      .frame(_{{valuePrefix}}FrameStyle())
+      .axis(_{{valuePrefix}}AxisStyle())
+      .topAxis(_hiddenAxisStyle())
+      .rightAxis(_hiddenAxisStyle())
+      .grid(_{{valuePrefix}}GridStyle())
+      .bar(bar)
+      .groupSpacing({{typePrefix}}Tokens.space4())
+      .barSpacing({{typePrefix}}Tokens.space2())
+      .tooltip(_{{valuePrefix}}TooltipStyle());
+
+  return recipe
+      .merge(
+        BarChartStyler.create(
+          palette: _paletteProp(highContrast: highContrast, palette: palette),
+        ),
+      )
+      .merge(style);
+}
+
+/// {{typePrefix}} presentation for a Mix pie or donut chart.
+///
+/// A positive [centerRadius] renders a donut. Labels are hidden by default so
+/// category names can be presented in a caller-owned legend without forcing
+/// low-contrast text onto arbitrary categorical colors. Generates
+/// [{{typePrefix}}PieChart] through `mix_generator`. For advanced chart-level geometry,
+/// pass this recipe directly to [PieChart.style] and merge a [PieSliceStyler].
+@MixWidget(target: PieChart.new)
+PieChartStyler {{valuePrefix}}PieChartStyle({
+  bool highContrast = false,
+  double centerRadius = 0,
+  bool showLabels = false,
+  List<Color>? palette,
+  PieChartStyler style = const PieChartStyler.create(),
+}) {
+  final recipe = PieChartStyler()
+      .frame(_{{valuePrefix}}FrameStyle())
+      .centerRadius(centerRadius)
+      .centerColor({{typePrefix}}Tokens.colorPanel())
+      .sliceSpacing({{typePrefix}}Tokens.borderWidth2())
+      .selectedSliceRadiusOffset({{typePrefix}}Tokens.space2())
+      .slice(
+        PieSliceStyler()
+            .showLabel(showLabels)
+            .cornerRadius({{typePrefix}}Tokens.borderWidth2())
+            .label(
+              TextStyler()
+                  .style({{typePrefix}}Tokens.text1.mix())
+                  .fontWeight(.w600)
+                  .color({{typePrefix}}Tokens.accentContrast()),
+            ),
+      )
+      .tooltip(_{{valuePrefix}}TooltipStyle());
+
+  return recipe
+      .merge(
+        PieChartStyler.create(
+          palette: _paletteProp(highContrast: highContrast, palette: palette),
+        ),
+      )
+      .merge(style);
+}
+
+Prop<List<Color>> _paletteProp({
+  required bool highContrast,
+  required List<Color>? palette,
+}) {
+  if (palette != null) return Prop.value(List<Color>.unmodifiable(palette));
+
+  return Prop.token(
+    highContrast ? _highContrastPaletteToken : _standardPaletteToken,
+  );
+}
+
+ChartFrameStyler _{{valuePrefix}}FrameStyle() => ChartFrameStyler()
+    .backgroundColor(MixColors.transparent)
+    .showBorder(false)
+    .clip(true);
+
+ChartAxisStyler _{{valuePrefix}}AxisStyle() => ChartAxisStyler()
+    .showLabels(true)
+    .label(
+      TextStyler().style({{typePrefix}}Tokens.text1.mix()).color({{typePrefix}}Tokens.gray11()),
+    )
+    .labelSpace({{typePrefix}}Tokens.space2())
+    .fitInside(true)
+    .fitInsideDistance({{typePrefix}}Tokens.space1())
+    .drawBelowEverything(true);
+
+ChartAxisStyler _hiddenAxisStyle() => ChartAxisStyler().showLabels(false);
+
+ChartGridStyler _{{valuePrefix}}GridStyle() => ChartGridStyler()
+    .show(true)
+    .showHorizontal(true)
+    .showVertical(false)
+    .stroke(
+      ChartStrokeStyler()
+          .color({{typePrefix}}Tokens.grayA5())
+          .width({{typePrefix}}Tokens.borderWidth1()),
+    );
+
+ChartTooltipStyler _{{valuePrefix}}TooltipStyle() =>
+    ChartTooltipStyler.create(
+          border: Prop.token(_tooltipBorderToken),
+          borderRadius: Prop.token(_tooltipRadiusToken),
+          padding: Prop.token(_tooltipPaddingToken),
+        )
+        .backgroundColor({{typePrefix}}Tokens.colorPanel())
+        .margin({{typePrefix}}Tokens.space2())
+        .maxWidth(280)
+        .fitHorizontally(true)
+        .fitVertically(true)
+        .text(
+          TextStyler()
+              .style({{typePrefix}}Tokens.text1.mix())
+              .fontWeight(.w500)
+              .color({{typePrefix}}Tokens.gray12()),
+        );
+
+List<Color> _resolveStandardPalette(BuildContext context) =>
+    resolve{{typePrefix}}ChartPalette(context);
+
+List<Color> _resolveHighContrastPalette(BuildContext context) =>
+    resolve{{typePrefix}}ChartPalette(context, highContrast: true);
+
+BorderSide _resolveTooltipBorder(BuildContext context) => BorderSide(
+  color: {{typePrefix}}Tokens.grayStroke6.resolve(context),
+  width: {{typePrefix}}Tokens.borderWidth1.resolve(context),
+);
+
+BorderRadius _resolveTooltipRadius(BuildContext context) =>
+    BorderRadius.all({{typePrefix}}Tokens.radius3.resolve(context));
+
+EdgeInsets _resolveTooltipPadding(BuildContext context) => EdgeInsets.symmetric(
+  horizontal: {{typePrefix}}Tokens.space3.resolve(context),
+  vertical: {{typePrefix}}Tokens.space2.resolve(context),
+);
+
+BorderRadius _resolveBarRadius(BuildContext context) =>
+    BorderRadius.all({{typePrefix}}Tokens.radius2.resolve(context));
+
+double _resolveLineWidth(BuildContext context) =>
+    2 * {{typePrefix}}Theme.of(context).scaling.factor;
+
+double _resolveHighContrastLineWidth(BuildContext context) =>
+    3 * {{typePrefix}}Theme.of(context).scaling.factor;

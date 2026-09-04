@@ -1,0 +1,21 @@
+# Keep the consumer fixture dependency-free while treating copied-source drift
+# as an error. Generated Mix adapters are covered by compilation and tests.
+analyzer:
+  language:
+    strict-casts: true
+    strict-raw-types: true
+  errors:
+    unused_import: error
+    unused_element: error
+  exclude:
+    - build/**
+    - lib/ui/**/*.g.dart
+
+linter:
+  rules:
+    - always_declare_return_types
+    - avoid_print
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_final_locals
+    - unnecessary_parenthesis

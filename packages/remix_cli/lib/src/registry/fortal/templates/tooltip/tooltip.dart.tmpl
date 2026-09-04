@@ -1,0 +1,24 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'tooltip.g.dart';
+
+/// {{typePrefix}}-themed preset for [RemixTooltip].
+@MixWidget(target: RemixTooltip.new)
+TooltipStyler {{valuePrefix}}TooltipStyle({
+  TooltipStyler style = const TooltipStyler.create(),
+}) {
+  return TooltipStyler(
+        label: .style({{typePrefix}}Tokens.text1.mix()),
+        waitDuration: const Duration(milliseconds: 200),
+      )
+      .borderRadius(.all({{typePrefix}}Tokens.radius2()))
+      .padding(.vertical({{typePrefix}}Tokens.space1()))
+      .padding(.horizontal({{typePrefix}}Tokens.space2()))
+      .label(.color({{typePrefix}}Tokens.gray1()))
+      .color({{typePrefix}}Tokens.gray12())
+      .merge(style);
+}

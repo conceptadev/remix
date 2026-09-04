@@ -1,5 +1,9 @@
 ## 0.1.0
 
+- Adds the `fortal` preset as application-owned source derived from the
+  repository's analyzed Radix Themes 3.3.0 implementation. It installs a
+  prefixed 277-token theme and full component catalog without a
+  `remix_fortal`, direct `mix`, or direct `naked_ui` dependency.
 - Adds a preset axis to `remix init`. New configurations use schema 2 and
   record `preset: default`; schema 1 configurations remain compatible and
   read as the default preset.

@@ -2,7 +2,7 @@
 /// Flutter application.
 ///
 /// ```shell
-/// dart run tool/check_open_code.dart [--keep]
+/// dart run tool/check_open_code.dart [--preset default|fortal] [--keep]
 /// ```
 ///
 /// The checker writes only to a guarded system-temporary directory. It installs
@@ -27,7 +27,7 @@ const _fixtureAppFiles = <String>[
 ///
 /// Each is added by its own `remix add`, which is the only supported call
 /// shape. Theme arrives as the first item's registry dependency.
-const _registryItems = <String>[
+const _defaultRegistryItems = <String>[
   'icons',
   'accordion',
   'avatar',
@@ -79,26 +79,78 @@ const _generatedSnapshots = <String, String>{
   'lib/ui/components/tabs.g.dart': 'expected/acme_tabs.g.dart',
 };
 
-/// Every file the CLI is expected to leave under `lib/ui/`, and nothing else.
-///
-/// Derived from [_registryItems] rather than restated: an item that installed
-/// a file this list does not name would be a boundary violation, and a list
-/// maintained by hand would drift into agreeing with whatever the CLI did.
-final _installedUiFiles = <String>[
-  'ui.dart',
-  'theme/tokens.dart',
-  'theme/theme_data.dart',
-  'theme/theme_scope.dart',
-  for (final item in _registryItems)
-    ...(item == 'icons'
-        ? const ['icons.dart']
-        : ['components/$item.dart', 'components/$item.g.dart']),
+const _fortalRegistryItems = <String>[
+  'icons',
+  'accordion',
+  'avatar',
+  'badge',
+  'base_button',
+  'button',
+  'callout',
+  'card',
+  'chart',
+  'checkbox',
+  'code',
+  'data_list',
+  'data_table',
+  'dialog',
+  'disclosure',
+  'divider',
+  'heading',
+  'icon_button',
+  'kbd',
+  'link',
+  'menu',
+  'popover',
+  'progress',
+  'radio',
+  'segmented_control',
+  'select',
+  'sidebar',
+  'skeleton',
+  'slider',
+  'spinner',
+  'switch',
+  'tabs',
+  'text',
+  'textfield',
+  'toggle',
+  'toggle_group',
+  'tooltip',
+  'typography',
 ];
 
-final _generatedAppFiles = <String>[
-  for (final item in _registryItems)
-    if (item != 'icons') 'lib/ui/components/$item.g.dart',
-];
+const _defaultPreset = _PresetContract(
+  name: 'default',
+  fixtureDirectory: 'fixture',
+  registryItems: _defaultRegistryItems,
+  themeFiles: ['tokens.dart', 'theme_data.dart', 'theme_scope.dart'],
+  generatedSnapshots: _generatedSnapshots,
+);
+
+const _fortalPreset = _PresetContract(
+  name: 'fortal',
+  fixtureDirectory: 'fortal_fixture',
+  registryItems: _fortalRegistryItems,
+  themeFiles: [
+    'computed.dart',
+    'control_styles.dart',
+    'radix_colors.dart',
+    'surface_frame.dart',
+    'theme.dart',
+    'theme_data.dart',
+    'theme_scope.dart',
+    'tokens.dart',
+  ],
+  nonGeneratedItems: {
+    'base_button',
+    'code',
+    'heading',
+    'kbd',
+    'link',
+    'typography',
+  },
+);
 
 const _requiredRuntimeDependencies = <String>[
   'remix',
@@ -116,25 +168,107 @@ const _allowedImportPackages = <String>[
   'remix_ui_icons',
 ];
 
+final class _PresetContract {
+  const _PresetContract({
+    required this.name,
+    required this.fixtureDirectory,
+    required this.registryItems,
+    required this.themeFiles,
+    this.nonGeneratedItems = const {},
+    this.generatedSnapshots = const {},
+  });
+
+  final String name;
+  final String fixtureDirectory;
+  final List<String> registryItems;
+  final List<String> themeFiles;
+  final Set<String> nonGeneratedItems;
+  final Map<String, String> generatedSnapshots;
+
+  List<String> get installedUiFiles => [
+    'ui.dart',
+    for (final file in themeFiles) 'theme/$file',
+    for (final item in registryItems)
+      ...(item == 'icons'
+          ? const ['icons.dart']
+          : [
+              'components/$item.dart',
+              if (!nonGeneratedItems.contains(item)) 'components/$item.g.dart',
+            ]),
+  ];
+
+  List<String> get generatedAppFiles => [
+    for (final item in registryItems)
+      if (item != 'icons' && !nonGeneratedItems.contains(item))
+        'lib/ui/components/$item.g.dart',
+  ];
+}
+
+final class _ParsedArguments {
+  const _ParsedArguments({required this.keep, required this.preset});
+
+  final bool keep;
+  final _PresetContract preset;
+}
+
+_ParsedArguments? _parseArguments(List<String> arguments) {
+  var keep = false;
+  var sawPreset = false;
+  var preset = _defaultPreset;
+  for (var index = 0; index < arguments.length; index += 1) {
+    final argument = arguments[index];
+    if (argument == '--keep') {
+      if (keep) return null;
+      keep = true;
+      continue;
+    }
+    if (argument == '--preset') {
+      if (sawPreset || index + 1 >= arguments.length) return null;
+      sawPreset = true;
+      final name = arguments[++index];
+      switch (name) {
+        case 'default':
+          preset = _defaultPreset;
+        case 'fortal':
+          preset = _fortalPreset;
+        default:
+          return null;
+      }
+      continue;
+    }
+    return null;
+  }
+  return _ParsedArguments(keep: keep, preset: preset);
+}
+
 Future<void> main(List<String> arguments) async {
-  final keep = arguments.contains('--keep');
-  final unknown = arguments.where((argument) => argument != '--keep').toList();
-  if (unknown.isNotEmpty) {
-    stderr.writeln('Unknown arguments: ${unknown.join(' ')}');
-    stderr.writeln('Usage: dart run tool/check_open_code.dart [--keep]');
+  final parsed = _parseArguments(arguments);
+  if (parsed == null) {
+    stderr.writeln(
+      'Usage: dart run tool/check_open_code.dart '
+      '[--preset default|fortal] [--keep]',
+    );
     exitCode = 64;
     return;
   }
 
   final repositoryRoot = Directory.current.absolute;
-  final failure = await _run(repositoryRoot, keep: keep);
+  final failure = await _run(
+    repositoryRoot,
+    keep: parsed.keep,
+    preset: parsed.preset,
+  );
   if (failure != null) {
     stderr.writeln('open-code check failed: ${failure.message}');
     exitCode = failure.exitCode;
   }
 }
 
-Future<_Failure?> _run(Directory repositoryRoot, {required bool keep}) async {
+Future<_Failure?> _run(
+  Directory repositoryRoot, {
+  required bool keep,
+  required _PresetContract preset,
+}) async {
   final rootFailure = _verifyRepositoryRoot(repositoryRoot);
   if (rootFailure != null) return rootFailure;
 
@@ -148,12 +282,14 @@ Future<_Failure?> _run(Directory repositoryRoot, {required bool keep}) async {
   final sdk = resolved as _Toolchain;
   _step('Flutter ${sdk.version} from ${sdk.root}');
 
-  final coverageFailure = _verifyRegistryCoverage(repositoryRoot);
+  final coverageFailure = _verifyRegistryCoverage(repositoryRoot, preset);
   if (coverageFailure != null) return coverageFailure;
   _step('Every bundled registry item is installed by this check.');
 
-  final fixtureRoot = Directory('${repositoryRoot.path}/open_code/fixture');
-  final fixtureFailure = _verifyFixtureContract(fixtureRoot);
+  final fixtureRoot = Directory(
+    '${repositoryRoot.path}/open_code/${preset.fixtureDirectory}',
+  );
+  final fixtureFailure = _verifyFixtureContract(fixtureRoot, preset);
   if (fixtureFailure != null) return fixtureFailure;
   _step('Fixture is a minimal pre-install app with no consumer build.yaml.');
 
@@ -169,6 +305,7 @@ Future<_Failure?> _run(Directory repositoryRoot, {required bool keep}) async {
       repositoryRoot: repositoryRoot,
       fixtureRoot: fixtureRoot,
       app: app,
+      preset: preset,
     );
     if (checkFailure != null) {
       return _retainedFailure(parent, checkFailure);
@@ -200,7 +337,7 @@ Future<_Failure?> _run(Directory repositoryRoot, {required bool keep}) async {
       ..writeln('Review local source against the registry:')
       ..writeln(
         '  cd ${app.path} && ${sdk.dart} run remix_cli:remix add '
-        '${_registryItems.first} --diff',
+        '${preset.registryItems.first} --diff',
       );
   }
 
@@ -213,6 +350,7 @@ Future<_Failure?> _checkInTemporaryApp({
   required Directory repositoryRoot,
   required Directory fixtureRoot,
   required Directory app,
+  required _PresetContract preset,
 }) async {
   final environment = _toolchainEnvironment(sdk);
 
@@ -259,13 +397,21 @@ Future<_Failure?> _checkInTemporaryApp({
 
   final init = await _runProcess(
     sdk.dart,
-    ['run', 'remix_cli:remix', 'init', '--prefix', 'Acme'],
+    [
+      'run',
+      'remix_cli:remix',
+      'init',
+      '--prefix',
+      'Acme',
+      '--preset',
+      preset.name,
+    ],
     workingDirectory: app.path,
     environment: environment,
   );
   if (init != null) return _Failure('remix init failed in the fresh app');
 
-  for (final item in _registryItems) {
+  for (final item in preset.registryItems) {
     final add = await _runProcess(
       sdk.dart,
       ['run', 'remix_cli:remix', 'add', item],
@@ -276,7 +422,7 @@ Future<_Failure?> _checkInTemporaryApp({
   }
   _step('CLI installed Theme, every item, dependencies, and generated output.');
 
-  final installedFailure = _verifyInstalledUi(app);
+  final installedFailure = _verifyInstalledUi(app, preset);
   if (installedFailure != null) return installedFailure;
   _step('Installed UI inventory and import boundary are exact.');
 
@@ -302,6 +448,7 @@ Future<_Failure?> _checkInTemporaryApp({
   final floorFailure = _verifyResolvedRemixFloor(
     repositoryRoot: repositoryRoot,
     hostedPackages: hostedPackages,
+    preset: preset,
   );
   if (floorFailure != null) return floorFailure;
   _step('Hosted remix resolved to the registry floor.');
@@ -314,12 +461,15 @@ Future<_Failure?> _checkInTemporaryApp({
   if (hostedCheckoutFailure != null) return hostedCheckoutFailure;
   _step('remix_cli is the only checkout package in hosted-consumer mode.');
 
-  final generatedFailure = _verifyGeneratedFixture(
-    app: app,
-    fixtureRoot: fixtureRoot,
-  );
-  if (generatedFailure != null) return generatedFailure;
-  _step('Hosted generation matches the committed Acme adapter.');
+  if (preset.generatedSnapshots.isNotEmpty) {
+    final generatedFailure = _verifyGeneratedFixture(
+      app: app,
+      fixtureRoot: fixtureRoot,
+      preset: preset,
+    );
+    if (generatedFailure != null) return generatedFailure;
+    _step('Hosted generation matches the committed Acme adapter.');
+  }
 
   final hostedVerification = await _analyzeAndTest(
     sdk: sdk,
@@ -361,7 +511,7 @@ dependency_overrides:
   if (currentCheckoutFailure != null) return currentCheckoutFailure;
   _step('Current-source override resolves only Remix and remix_cli locally.');
 
-  for (final relative in _generatedAppFiles) {
+  for (final relative in preset.generatedAppFiles) {
     final generated = File('${app.path}/$relative');
     if (!generated.existsSync()) {
       return _Failure('CLI produced no $relative before regeneration.');
@@ -374,7 +524,8 @@ dependency_overrides:
       'run',
       'build_runner',
       'build',
-      for (final relative in _generatedAppFiles) '--build-filter=$relative',
+      for (final relative in preset.generatedAppFiles)
+        '--build-filter=$relative',
     ],
     workingDirectory: app.path,
     environment: environment,
@@ -386,12 +537,15 @@ dependency_overrides:
     return _Failure('generation created an app-level build.yaml');
   }
 
-  final regeneratedFailure = _verifyGeneratedFixture(
-    app: app,
-    fixtureRoot: fixtureRoot,
-  );
-  if (regeneratedFailure != null) return regeneratedFailure;
-  _step('Current-source regeneration matches the committed Acme adapter.');
+  if (preset.generatedSnapshots.isNotEmpty) {
+    final regeneratedFailure = _verifyGeneratedFixture(
+      app: app,
+      fixtureRoot: fixtureRoot,
+      preset: preset,
+    );
+    if (regeneratedFailure != null) return regeneratedFailure;
+    _step('Current-source regeneration matches the committed Acme adapter.');
+  }
 
   return _analyzeAndTest(
     sdk: sdk,
@@ -515,15 +669,19 @@ Future<Object> _resolveToolchain(Directory root, String pinned) async {
   );
 }
 
-/// Fails when [_registryItems] and the bundled registry have drifted apart.
+/// Fails when the checked item list and bundled registry have drifted apart.
 ///
 /// This check exists because the failure it prevents is silent: an item added
-/// to `registry.yaml` but not to [_registryItems] is never installed, never
+/// to `registry.yaml` but not to the preset contract is never installed, never
 /// rendered into the fixture, never behavior-tested, and never boundary
 /// checked — and every suite still passes.
-_Failure? _verifyRegistryCoverage(Directory repositoryRoot) {
+_Failure? _verifyRegistryCoverage(
+  Directory repositoryRoot,
+  _PresetContract preset,
+) {
   final file = File(
-    '${repositoryRoot.path}/packages/remix_cli/lib/src/registry/default/registry.yaml',
+    '${repositoryRoot.path}/packages/remix_cli/lib/src/registry/'
+    '${preset.name}/registry.yaml',
   );
   if (!file.existsSync()) {
     return _Failure('packages/remix_cli is missing its registry.yaml.');
@@ -540,7 +698,7 @@ _Failure? _verifyRegistryCoverage(Directory repositoryRoot) {
     for (final key in (document['items'] as YamlMap).keys)
       if (key is String && key != 'theme') key,
   };
-  final installed = _registryItems.toSet();
+  final installed = preset.registryItems.toSet();
   final problems = <String>[
     for (final item in bundled.difference(installed))
       'registry.yaml has $item, which this check never installs',
@@ -566,9 +724,11 @@ _Failure? _verifyRegistryCoverage(Directory repositoryRoot) {
 _Failure? _verifyResolvedRemixFloor({
   required Directory repositoryRoot,
   required Map<String, String> hostedPackages,
+  required _PresetContract preset,
 }) {
   final registry = File(
-    '${repositoryRoot.path}/packages/remix_cli/lib/src/registry/default/registry.yaml',
+    '${repositoryRoot.path}/packages/remix_cli/lib/src/registry/'
+    '${preset.name}/registry.yaml',
   );
   final document = loadYaml(registry.readAsStringSync());
   final items = document is YamlMap ? document['items'] : null;
@@ -611,11 +771,17 @@ _Failure? _verifyResolvedRemixFloor({
   );
 }
 
-_Failure? _verifyFixtureContract(Directory fixtureRoot) {
+_Failure? _verifyFixtureContract(
+  Directory fixtureRoot,
+  _PresetContract preset,
+) {
   final problems = <String>[];
-  for (final relative in [..._fixtureAppFiles, ..._generatedSnapshots.values]) {
+  for (final relative in [
+    ..._fixtureAppFiles,
+    ...preset.generatedSnapshots.values,
+  ]) {
     if (!File('${fixtureRoot.path}/$relative').existsSync()) {
-      problems.add('open_code/fixture/$relative is missing');
+      problems.add('open_code/${preset.fixtureDirectory}/$relative is missing');
     }
   }
   if (File('${fixtureRoot.path}/build.yaml').existsSync()) {
@@ -643,7 +809,8 @@ _Failure? _verifyFixtureContract(Directory fixtureRoot) {
 
   if (problems.isEmpty) return null;
   return _Failure(
-    'open_code/fixture is not the minimal CLI consumer contract:\n'
+    'open_code/${preset.fixtureDirectory} is not the minimal CLI consumer '
+    'contract:\n'
     '${problems.map((problem) => '  - $problem').join('\n')}',
   );
 }
@@ -714,7 +881,7 @@ void _expectExactKeys(
 bool _isFlutterSdkDeclaration(Object? declaration) =>
     declaration is YamlMap && declaration['sdk'] == 'flutter';
 
-_Failure? _verifyInstalledUi(Directory app) {
+_Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
   if (File('${app.path}/build.yaml').existsSync()) {
     return _Failure('remix_cli created a consumer build.yaml');
   }
@@ -730,7 +897,7 @@ _Failure? _verifyInstalledUi(Directory app) {
           .map((file) => _relativePath(uiRoot, file))
           .toList()
         ..sort();
-  final expected = [..._installedUiFiles]..sort();
+  final expected = [...preset.installedUiFiles]..sort();
   final problems = <String>[];
   for (final relative in expected) {
     if (!found.contains(relative)) problems.add('installed UI lacks $relative');
@@ -740,7 +907,9 @@ _Failure? _verifyInstalledUi(Directory app) {
       problems.add('installed UI has an unexpected file: $relative');
     }
   }
-  problems.addAll(_installedReferenceProblems(uiRoot));
+  problems.addAll(
+    _installedReferenceProblems(uiRoot, preset.installedUiFiles.toSet()),
+  );
 
   if (problems.isEmpty) return null;
   return _Failure(
@@ -749,7 +918,10 @@ _Failure? _verifyInstalledUi(Directory app) {
   );
 }
 
-List<String> _installedReferenceProblems(Directory uiRoot) {
+List<String> _installedReferenceProblems(
+  Directory uiRoot,
+  Set<String> installedUiFiles,
+) {
   final directive = RegExp(
     r'''^\s*(?:import|export|part(?:\s+of)?)\s+([^;]+);''',
     multiLine: true,
@@ -766,7 +938,11 @@ List<String> _installedReferenceProblems(Directory uiRoot) {
     for (final match in directive.allMatches(file.readAsStringSync())) {
       for (final uriMatch in quotedUri.allMatches(match.group(1)!)) {
         final uri = uriMatch.group(1) ?? uriMatch.group(2)!;
-        final problem = _referenceProblem(uri, from: relative);
+        final problem = _referenceProblem(
+          uri,
+          from: relative,
+          installedUiFiles: installedUiFiles,
+        );
         if (problem != null) problems.add('$relative: $problem');
       }
     }
@@ -774,7 +950,11 @@ List<String> _installedReferenceProblems(Directory uiRoot) {
   return problems;
 }
 
-String? _referenceProblem(String uri, {required String from}) {
+String? _referenceProblem(
+  String uri, {
+  required String from,
+  required Set<String> installedUiFiles,
+}) {
   if (uri.startsWith('dart:')) return null;
   if (uri.startsWith('package:')) {
     final package = uri.substring('package:'.length).split('/').first;
@@ -788,7 +968,7 @@ String? _referenceProblem(String uri, {required String from}) {
   if (resolved.startsWith('..') || resolved.startsWith('/')) {
     return '`$uri` escapes lib/ui';
   }
-  if (!_installedUiFiles.contains(resolved)) {
+  if (!installedUiFiles.contains(resolved)) {
     return '`$uri` resolves to $resolved, which is not installed';
   }
   return null;
@@ -797,8 +977,9 @@ String? _referenceProblem(String uri, {required String from}) {
 _Failure? _verifyGeneratedFixture({
   required Directory app,
   required Directory fixtureRoot,
+  required _PresetContract preset,
 }) {
-  for (final entry in _generatedSnapshots.entries) {
+  for (final entry in preset.generatedSnapshots.entries) {
     final generated = File('${app.path}/${entry.key}');
     if (!generated.existsSync()) {
       return _Failure('generation produced no ${entry.key}');
@@ -806,7 +987,8 @@ _Failure? _verifyGeneratedFixture({
     final expected = File('${fixtureRoot.path}/${entry.value}');
     if (!_sameBytes(expected.readAsBytesSync(), generated.readAsBytesSync())) {
       return _Failure(
-        '${entry.key} differs from open_code/fixture/${entry.value}. '
+        '${entry.key} differs from open_code/${preset.fixtureDirectory}/'
+        '${entry.value}. '
         'Regenerate with --keep and review the diff; do not hand-edit '
         'generated source.',
       );
@@ -1001,16 +1183,27 @@ bool _sameBytes(List<int> left, List<int> right) {
   return true;
 }
 
+_PresetContract _presetByName(String name) => switch (name) {
+  'default' => _defaultPreset,
+  'fortal' => _fortalPreset,
+  _ => throw ArgumentError.value(name, 'preset', 'must be default or fortal'),
+};
+
 /// Returns the fixture contract error for focused regression tests.
-String? fixtureContractProblem(Directory fixtureRoot) =>
-    _verifyFixtureContract(fixtureRoot)?.message;
+String? fixtureContractProblem(
+  Directory fixtureRoot, {
+  String preset = 'default',
+}) => _verifyFixtureContract(fixtureRoot, _presetByName(preset))?.message;
 
 /// Returns the catalog-drift error for focused regression tests.
-String? registryCoverageProblem(Directory repositoryRoot) =>
-    _verifyRegistryCoverage(repositoryRoot)?.message;
+String? registryCoverageProblem(
+  Directory repositoryRoot, {
+  String preset = 'default',
+}) => _verifyRegistryCoverage(repositoryRoot, _presetByName(preset))?.message;
 
 /// Returns installed inventory/import errors for focused regression tests.
-String? installedUiProblem(Directory app) => _verifyInstalledUi(app)?.message;
+String? installedUiProblem(Directory app, {String preset = 'default'}) =>
+    _verifyInstalledUi(app, _presetByName(preset))?.message;
 
 /// Formats a post-creation failure so the retained directory is always named.
 String retainedFailureMessage(

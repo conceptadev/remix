@@ -21,9 +21,24 @@ void main() {
     expect(checker.fixtureContractProblem(fixture), isNull);
   });
 
+  test('the Fortal fixture is also an isolated pre-install contract', () {
+    final fixture = Directory(
+      '${Directory.current.path}/open_code/fortal_fixture',
+    );
+
+    expect(checker.fixtureContractProblem(fixture, preset: 'fortal'), isNull);
+  });
+
   group('registry coverage', () {
     test('the checkout catalog and the checker agree', () {
       expect(checker.registryCoverageProblem(Directory.current), isNull);
+    });
+
+    test('the Fortal catalog and the checker agree', () {
+      expect(
+        checker.registryCoverageProblem(Directory.current, preset: 'fortal'),
+        isNull,
+      );
     });
 
     test('an item the checker never installs is reported', () {

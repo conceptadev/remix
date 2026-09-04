@@ -1,5 +1,5 @@
 // Internal entrypoint for the theme layer, imported by every component under
-// `src/components/`. The package's public entrypoint is `lib/remix_fortal.dart`.
+// `src/components/`. The public entrypoint exports this barrel.
 
 export 'computed.dart';
 export 'control_styles.dart';
