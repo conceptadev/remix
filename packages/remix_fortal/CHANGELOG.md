@@ -1,3 +1,9 @@
+## 1.0.0-beta.8
+
+ - **FIX**(remix_ui_icons): use a publishable package name (#176).
+ - **FEAT**(sidebar): publish a Remix sidebar panel (#168).
+ - **FEAT**(remix_icons): extract Radix icon package (#174).
+
 ## 1.0.0-beta.7
 
  - **REFACTOR**(remix): simplify composite surface rendering (#165).
