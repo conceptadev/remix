@@ -1,3 +1,7 @@
+## 1.0.0-beta.8
+
+ - **FEAT**(sidebar): publish a Remix sidebar panel (#168).
+
 ## 1.0.0-beta.7
 
  - **REFACTOR**(remix): simplify composite surface rendering (#165).
