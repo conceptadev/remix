@@ -1711,7 +1711,7 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({ ... })
   <p>An incompatible constraint also fails preflight. The CLI never widens a constraint you chose.</p>
 
   <h3 id="ref-fails">When something fails</h3>
-  <p>Three problems meet a fresh app first.</p>
+  <p>These checks cover common problems in a fresh app.</p>
 
   <p><strong>Your linter flags the generated adapters.</strong> A default Flutter app includes
   <code>flutter_lints</code>, and the current generator emits explicit <code>this.</code> qualifiers.
@@ -1729,8 +1729,16 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({ ... })
   <p>With that exclude, <code>flutter analyze lib</code> reports <code>No issues found!</code>.</p>
 
   <p><strong>Text field selection handles fail.</strong> An installed text field needs an
-  <code>Overlay</code> ancestor once it takes focus. Material, Cupertino, and any routed
+  <code>Overlay</code> ancestor once it takes focus. <code>MaterialApp</code>, <code>CupertinoApp</code>, and any routed
   <code>WidgetsApp</code> already provide one; a bare <code>WidgetsApp(builder: …)</code> does not.</p>
+
+  <p><strong>A default dialog fills the viewport.</strong> The default recipe styles the panel.
+  Wrap <code>AcmeDialog</code> in <code>Center</code> inside the <code>showRemixDialog</code> builder.
+  This lets the panel's maximum width apply. The Fortal recipe supplies its own viewport alignment.</p>
+
+  <p><strong>Dialog text has unexpected decoration.</strong> The dialog captures the invoking context's inherited themes.
+  Use a context below your intended <code>DefaultTextStyle</code>.
+  For Fortal, place <code>AcmeScope</code> in the application builder, below the host.</p>
 
   <p><strong>&ldquo;Run remix init before remix add.&rdquo;</strong> The current directory has no
   <code>remix.yaml</code>. Run the CLI from the package that owns <code>pubspec.yaml</code>. In a
