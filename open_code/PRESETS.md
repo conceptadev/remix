@@ -390,9 +390,9 @@ tool, the registry rules, and the check.
 
 ## Consumer and release validation
 
-Both registries require Remix `^1.0.0-beta.8`. Beta.7 lacks the Naked UI types
-needed by generated Fortal adapters. The repository prepares beta.8 with these
-exports and the Sidebar panel.
+Both registries require Remix `^1.0.0-beta.9`. Published versions through beta.8
+lack the Naked UI types needed by generated Fortal adapters. The repository
+prepares beta.9 with these exports. Beta.8 already provides the Sidebar panel.
 
 `melos run open-code:check` installs every item from both presets against the
 checkout. `melos run open-code:release:check` requires hosted Remix and never

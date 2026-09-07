@@ -47,7 +47,7 @@ at a checkout or staged package:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.8`. Until that release is available,
+Both presets require Remix `^1.0.0-beta.9`. Until that release is available,
 add a temporary `pubspec_overrides.yaml` to the application:
 
 ```yaml

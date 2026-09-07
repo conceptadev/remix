@@ -1,6 +1,6 @@
 ## 0.1.0
 
-- Require Remix `^1.0.0-beta.8` for the generated Fortal adapters. CI checks
+- Require Remix `^1.0.0-beta.9` for the generated Fortal adapters. CI checks
   both presets with checkout Remix. Publication requires the hosted check.
 
 - Adds the `fortal` preset as application-owned source derived from the

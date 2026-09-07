@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Exact version for remix (e.g. 1.0.0-beta.8)."
+        description: "Exact version for remix (e.g. 1.0.0-beta.9)."
         required: true
 
 permissions:

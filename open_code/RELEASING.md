@@ -2,9 +2,12 @@
 
 ## Current state
 
-The stack prepares Remix `1.0.0-beta.8` and `remix_cli` `0.1.0`.
+The stack prepares Remix `1.0.0-beta.9` and `remix_cli` `0.1.0`.
 Neither version has been published from this stack. The existing
 `remix_fortal` release remains available until the replacement passes validation.
+
+Remix beta.8 was published from PR #182 on September 5, 2026. It does not
+include the exports required by the Fortal preset. This stack requires a new release.
 
 The native GitHub stack contains [#177](https://github.com/conceptadev/remix/pull/177),
 [#180](https://github.com/conceptadev/remix/pull/180), and
@@ -35,17 +38,17 @@ Run `fvm dart pub publish --dry-run` inside `packages/remix` and
 `packages/remix_cli`. Confirm that the CLI archive includes both registry trees
 and their templates. Resolve every publication error before continuing.
 
-The version and changelog for beta.8 are already prepared in this stack.
+The version and changelog for beta.9 are already prepared in this stack.
 Future releases use `.github/workflows/version.yml` to update Remix and both
 registry minimum versions together.
 
 ## Publish Remix first
 
-After release approval, tag the validated merge commit as `v1.0.0-beta.8` and
+After release approval, tag the validated merge commit as `v1.0.0-beta.9` and
 push that tag alone. The existing publish workflow publishes Remix.
-After success, record `remix-v1.0.0-beta.8` on the same commit for Melos history.
+After success, record `remix-v1.0.0-beta.9` on the same commit for Melos history.
 
-Wait until pub.dev serves beta.8. Then run:
+Wait until pub.dev serves beta.9. Then run:
 
 ```shell
 fvm dart run melos run open-code:release:check
@@ -53,7 +56,7 @@ fvm dart run melos run open-code:release:check
 
 This command installs both presets with hosted Remix and the checkout CLI.
 It must pass before CLI publication. It never substitutes checkout Remix for
-a missing hosted release. Keep the registry minimum at beta.8 if resolution fails.
+a missing hosted release. Keep the registry minimum at beta.9 if resolution fails.
 
 ## Bootstrap the CLI package
 
