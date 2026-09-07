@@ -117,7 +117,7 @@ dependencies, formats the authored files, runs generation only for the
 declared `button.g.dart`, and analyzes the installed UI path. It does not create
 or modify `build.yaml`.
 
-With the default path, the application receives:
+With the default preset and path, the application receives:
 
 ```text
 lib/ui/
@@ -131,11 +131,13 @@ lib/ui/
     button.g.dart
 ```
 
-One `add` installs one item. Repeat it for each component you want; every
-component item drops one authored file and one generated part into
-`components/` and extends the barrel. Existing authored source stays
-untouched. The focused build also includes every installed generated adapter,
-so a dependency change cannot remove an earlier generated part.
+One `add` installs one item and its registry dependencies. Repeat it for each
+component you need. Default component items add an authored file and a
+generated part to `components/`. Fortal also has shared source items without
+generated parts, such as `base_button` and `typography`.
+Existing authored source stays untouched. When generation runs, the build
+includes every installed adapter. This protects earlier generated parts when
+dependencies change.
 
 `dart run remix_cli:remix add icons` is the deliberate exception. It adds
 `lib/ui/icons.dart`, declares `remix_ui_icons`, and exposes a small,
@@ -143,7 +145,8 @@ application-owned `UiIcons` alias set with no generated adapter. Add or rename
 aliases there as your interface evolves. The complete 318-icon catalog remains
 one direct `package:remix_ui_icons/remix_ui_icons.dart` import away.
 
-Most items generate one widget. Four do not: `checkbox` also generates
+Most default component items generate one widget. Four generate several:
+`checkbox` also generates
 `UiCheckboxGroupItem`, `textfield` generates `UiTextField` and `UiTextArea`,
 `tabs` generates `UiTabBar`, `UiTab`, and `UiTabView`, and `chart` generates
 `UiLineChart`, `UiBarChart`, and `UiPieChart`.

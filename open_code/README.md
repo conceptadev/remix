@@ -97,9 +97,9 @@ failure.
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 Use an application prefix such as `Ui` or `Acme`.
 
-`add button` resolves the Theme dependency first, adds compatible hosted
-package constraints when they are missing, writes the authored source, updates
-the managed barrel, and generates only the declared adapter:
+The default preset installs Theme before Button. The command adds missing
+dependency constraints, writes source, updates the barrel, and generates the
+adapter:
 
 ```text
 lib/ui/
@@ -113,10 +113,14 @@ lib/ui/
     button.g.dart     generated; do not hand-edit
 ```
 
-Every later component `add` drops one more pair into `components/` and extends
+Each later default component `add` adds another pair to `components/` and extends
 the barrel's managed block. Existing authored source stays untouched. The
 focused build also includes every installed generated adapter, so a dependency
 change cannot remove an earlier generated part.
+
+Fortal also installs shared source items without generated parts, such as
+`base_button` and `typography`. Use `add <item> --dry-run` to inspect each
+preset's files and dependencies.
 
 `dart run remix_cli:remix add icons` instead adds `lib/ui/icons.dart`, declares
 `remix_ui_icons`, and exposes a small, application-owned `UiIcons` alias set

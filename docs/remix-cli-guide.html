@@ -600,6 +600,9 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({
 
   <p>The preset is recorded in <code>remix.yaml</code> and cannot change after initialization.
   Recipes from different presets do not mix because their tokens and variant vocabularies differ.</p>
+  <p>The following walkthrough, file trees, and catalog use the <code>default</code> preset with the <code>Acme</code> prefix.
+  Fortal uses <code>AcmeScope</code> and constructors such as <code>AcmeButton.solid</code>.
+  Its theme files and component axes differ.</p>
 </section>
 
 <div class="part" role="separator" aria-label="The path"><span class="lbl">The path</span><p>Six steps, in order. Each one separates the command from the change it makes.</p></div>
@@ -638,9 +641,26 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({
     <p class="sec-sub">This walkthrough uses one command name all the way through: <code>remix</code>.</p>
   </div></div>
 
-  <p>The CLI has not been published. The hosted commands below apply after its
-  first release and Remix beta.9. For now, follow the
-  <a href="https://docs.page/btwld/remix/open-code#install">checkout installation instructions</a>.</p>
+  <p>The CLI has not been published. The hosted commands below require its first release and Remix beta.9.
+  Use a checkout until both packages are available.</p>
+
+  <details class="source-more" open>
+  <summary>Use a checkout before publication</summary>
+  <p>Create <code>pubspec_overrides.yaml</code> in your Flutter application. Replace both checkout paths with your local repository path.</p>
+  <figure class="term plain">
+    <figcaption class="term-bar"><span class="term-title">pubspec_overrides.yaml</span></figcaption>
+    <pre><code>dependency_overrides:
+  remix:
+    path: /path/to/remix/packages/remix</code></pre>
+  </figure>
+  <figure class="term">
+    <figcaption class="term-bar"><span class="term-title">Install the checkout CLI in the application</span></figcaption>
+    <pre><code>dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
+dart run remix_cli:remix --version</code></pre>
+  </figure>
+  <p>For each following command, replace <code>remix</code> with <code>dart run remix_cli:remix</code>.
+  After publication, remove the Remix override and run <code>flutter pub get</code>.</p>
+  </details>
 
   <p>After publication, install the exact CLI version this guide was written against. If Dart prints a
   <code>PATH</code> instruction, follow it and reopen the shell before you continue.</p>
@@ -653,11 +673,11 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({
 </figure>
 
   <div class="result-line"><span class="result-label">RESULT</span><p><strong>The command is ready.</strong>
-  Every command below now works exactly as written. Your Flutter app has not changed yet.</p></div>
+  Global activation leaves your application unchanged. Project-local installation updates its development dependencies and lockfile.</p></div>
 
   <h3>Requirements</h3>
   <ul>
-    <li>Flutter <strong>3.44 or newer</strong>. The CLI runs <code>flutter --version --machine</code> before it touches a file.</li>
+    <li>Flutter <strong>3.44 or newer</strong> on <code>PATH</code>. The CLI inspects that SDK before installation or <code>--diff</code>.</li>
     <li>A Flutter package root. Its <code>pubspec.yaml</code> must list the Flutter SDK under <code>dependencies</code>.</li>
     <li>Git on <code>PATH</code>, for <code class="flag">--diff</code> only.</li>
   </ul>
@@ -701,8 +721,9 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({
   <div class="split">
 <figure class="term plain">
   <figcaption class="term-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-title">remix.yaml</span><button class="copy" type="button" data-done="0" aria-label="Copy to clipboard"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5v-1a1.6 1.6 0 0 0-1.6-1.6H4.1A1.6 1.6 0 0 0 2.5 4.5v4.8a1.6 1.6 0 0 0 1.6 1.6h1"/></svg><span aria-live="polite">Copy</span></button></figcaption>
-  <pre><code><span class="kw">schema</span>: <span class="num">1</span>
+  <pre><code><span class="kw">schema</span>: <span class="num">2</span>
 <span class="kw">prefix</span>: <span class="str">Acme</span>
+<span class="kw">preset</span>: <span class="str">default</span>
 <span class="kw">paths</span>:
   <span class="kw">ui</span>: <span class="str">lib/ui</span></code></pre>
 </figure>
@@ -958,6 +979,10 @@ Preserved theme.
   <div class="result-line"><span class="result-label">RESULT</span><p><strong>This is the first visual step.</strong>
   Step 4 supplied the source. Your widget tree decides where that source appears.</p></div>
 
+  <p>A fresh Flutter project can report generated-code lints. Apply the
+  <a href="#ref-fails">generated adapter exclusion</a> before running <code>flutter analyze</code>.
+  Keep authored recipes under analysis.</p>
+
   <p><code>AcmeButton.primary(…)</code> is a named constructor. The generator emits one for each
   value of the <code>variant</code> enum, so <code>AcmeButton.destructive(label: 'Delete')</code>
   works the same way.</p>
@@ -1203,9 +1228,10 @@ diff --git a/current/lib/ui/components/button.dart b/proposed/lib/ui/components/
 </figure>
   </div>
 
-    <p>Add a token here and to <code>AcmeThemeData</code>, and the scope map exposes it. Rename one,
-    and the analyzer finds every recipe that used it. Every recipe reads its corner radius from one
-    token, so one value turns every control into a pill.</p>
+    <p>Add the token to <code>tokens.dart</code>, its value to <code>AcmeThemeData</code>, and its mapping to <code>AcmeThemeData.tokens</code>.
+    Include the value in constructors, <code>copyWith</code>, equality, and <code>hashCode</code>.
+    The scope reads this explicit map. A token does not enter the map automatically.</p>
+    <p>Recipes that read <code>AcmeTokens.radius</code> share that radius value. Controls with fixed or circular geometry keep their own shape.</p>
 
 <figure class="term plain">
   <figcaption class="term-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-title">lib/main.dart — one value changed between two builds</span><button class="copy" type="button" data-done="0" aria-label="Copy to clipboard"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5v-1a1.6 1.6 0 0 0-1.6-1.6H4.1A1.6 1.6 0 0 0 2.5 4.5v4.8a1.6 1.6 0 0 0 1.6 1.6h1"/></svg><span aria-live="polite">Copy</span></button></figcaption>
@@ -1220,7 +1246,7 @@ diff --git a/current/lib/ui/components/button.dart b/proposed/lib/ui/components/
 <figure class="render"><img src="data:image/webp;base64,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" alt="The same brand theme buttons with a radius token of 20, which makes pill buttons." width="800" height="138" loading="lazy"><figcaption><b>After:</b> <code>radius</code> token 20</figcaption></figure>
   </div>
 
-    <div class="result-line"><span class="result-label">EFFECT</span><p><strong>Every recipe changes.</strong>
+    <div class="result-line"><span class="result-label">EFFECT</span><p><strong>Recipes that use the radius token change.</strong>
     The recipe files were untouched between these two builds. Only the theme value moved.</p></div>
 
     <p>Light and dark are the same mechanism. Switching at runtime changes only the value passed to
@@ -1375,8 +1401,8 @@ Preserved theme.
 
   <div class="note warn">
     <div class="note-h"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.4 14.4 13.2H1.6z"/><path d="M8 6.4v3"/><path d="M8 11.4h.01"/></svg> This section is a design preview</div>
-    <p>Every other section on this page is verified against a real installation.
-    <strong>This one is not built yet.</strong> It describes the intended direction. The two
+    <p>The other sections describe implemented CLI features. Hosted commands require package publication.
+    <strong>This section is not built yet.</strong> It describes the intended direction. The two
     contracts it targets already exist, so the shapes below are real; the generator that would
     emit them is not.</p>
   </div>
@@ -1411,8 +1437,7 @@ Preserved theme.
   <figcaption class="term-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-title">the catalog entry a generator would emit for AcmeButton</span><button class="copy" type="button" data-done="0" aria-label="Copy to clipboard"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5v-1a1.6 1.6 0 0 0-1.6-1.6H4.1A1.6 1.6 0 0 0 2.5 4.5v4.8a1.6 1.6 0 0 0 1.6 1.6h1"/></svg><span aria-live="polite">Copy</span></button></figcaption>
   <pre><code>{
   <span class="kw">"component"</span>: { <span class="kw">"const"</span>: <span class="str">"AcmeButton"</span> },
-  <span class="kw">"description"</span>: <span class="str">"Labeled control that dispatches an allowed action.</span>
-<span class="str">                  Use AcmeIconButton when a compact icon-only control is clearer."</span>,
+  <span class="kw">"description"</span>: <span class="str">"A labeled control that dispatches an allowed action. Use AcmeIconButton for a compact control without visible text."</span>,
   <span class="kw">"properties"</span>: {
     <span class="kw">"label"</span>:   { <span class="kw">"type"</span>: <span class="str">"string"</span>,
                  <span class="kw">"description"</span>: <span class="str">"Visible action label."</span> },
@@ -1600,8 +1625,9 @@ AcmePieChart(
   </div></div>
 
   <h3 id="ref-files">Files it writes</h3>
-  <p>Everything below <code>lib/ui/</code> is yours. The CLI touches nothing else in your app except
-  the dependency lists in <code>pubspec.yaml</code>.</p>
+  <p>The application owns the installed source below <code>lib/ui/</code>.
+  The CLI also writes <code>remix.yaml</code> and updates dependency declarations in <code>pubspec.yaml</code>.
+  Pub updates the lockfile and package metadata. The generator writes adapters and its build cache.</p>
 
   <div class="tw stack"><table>
     <thead><tr><th>File</th><th>What it holds</th><th>Generated?</th></tr></thead>
@@ -1758,8 +1784,9 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({ ... })
   <div class="tw stack"><table>
     <thead><tr><th>Key</th><th>Default</th><th>Rule</th></tr></thead>
     <tbody>
-      <tr><th scope="row" class="mono">schema</th><td data-label="Default"><code>1</code></td><td data-label="Rule">Must be exactly <code>1</code>.</td></tr>
+      <tr><th scope="row" class="mono">schema</th><td data-label="Default"><code>2</code></td><td data-label="Rule">New files use schema 2. Legacy schema 1 remains readable and selects the default preset.</td></tr>
       <tr><th scope="row" class="mono">prefix</th><td data-label="Default"><code>Ui</code></td><td data-label="Rule">ASCII UpperCamel. Its lowercase form cannot be a Dart reserved word. Remix and Mix are reserved for runtime dependencies.</td></tr>
+      <tr><th scope="row" class="mono">preset</th><td data-label="Default"><code>default</code></td><td data-label="Rule">Schema 2 requires <code>default</code> or <code>fortal</code>. Schema 1 has no preset key. Choose the preset at initialization.</td></tr>
       <tr><th scope="row" class="mono">paths.ui</th><td data-label="Default"><code>lib/ui</code></td><td data-label="Rule">Normalized, project-relative, and inside <code>lib/</code>.</td></tr>
     </tbody>
   </table></div>
@@ -2052,9 +2079,9 @@ ButtonStyler _disabledStyle() =&gt; ButtonStyler()
     <p class="sec-sub">What produced the commands, the source, and the images on this page.</p>
   </div></div>
 
-  <p>Every command and status line on this page was run against a fresh Flutter application created
-  for this guide. Long planning output is shortened to the lines that affect your next decision, and
-  every shortened block marks the elision.</p>
+  <p>The command examples describe CLI 0.1.0. Hosted installation requires publication; the checkout workflow works before publication.
+  The September 7, 2026 review repeated initialization and component installation in fresh applications for both presets.
+  Long planning output is shortened, and each shortened block marks the elision.</p>
 
   <p>One part is different.
   <a href="#generate">What the recipe can generate next</a> is a design preview, and it says so at
@@ -2069,13 +2096,16 @@ ButtonStyler _disabledStyle() =&gt; ButtonStyler()
   host-neutral gallery fixture that <code>tool/check_open_code.dart</code> installs. Both use the
   same installed <code>lib/ui/</code> layer.</p>
 
+  <p>The embedded renders predate the beta.9 release target. They show the default recipes, not a hosted beta.9 installation.
+  The table below describes the current checkout verification toolchain.</p>
+
   <div class="tw stack"><table>
     <thead><tr><th>Component</th><th>Version</th></tr></thead>
     <tbody>
       <tr><th scope="row" class="mono">remix_cli</th><td data-label="Version">0.1.0</td></tr>
       <tr><th scope="row" class="mono">Flutter</th><td data-label="Version">3.44.0 stable, framework 559ffa3f75</td></tr>
       <tr><th scope="row" class="mono">Dart</th><td data-label="Version">3.12.0 stable</td></tr>
-      <tr><th scope="row" class="mono">remix</th><td data-label="Version">1.0.0-beta.9, the registry snapshot version</td></tr>
+      <tr><th scope="row" class="mono">remix</th><td data-label="Version">1.0.0-beta.9, the current registry target; verified from a checkout before publication</td></tr>
       <tr><th scope="row" class="mono">mix</th><td data-label="Version">2.2.0-beta.5</td></tr>
       <tr><th scope="row" class="mono">mix_annotations</th><td data-label="Version">2.2.0-beta.1</td></tr>
       <tr><th scope="row" class="mono">mix_generator</th><td data-label="Version">2.2.0-beta.3</td></tr>
