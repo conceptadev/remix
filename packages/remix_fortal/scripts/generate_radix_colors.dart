@@ -254,7 +254,7 @@ class RadixColorGenerator {
 }
 
 const _radixColorApi = '''
-library radix_colors;
+library;
 
 import 'package:flutter/painting.dart';
 

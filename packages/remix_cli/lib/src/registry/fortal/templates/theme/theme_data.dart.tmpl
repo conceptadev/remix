@@ -148,37 +148,29 @@ class {{typePrefix}}ThemeConfig {
 @immutable
 class {{typePrefix}}ThemeData extends {{typePrefix}}ThemeConfig {
   const {{typePrefix}}ThemeData({
-    required this.accent,
-    required this.gray,
-    required this.brightness,
-    required this.panelBackground,
-    required this.radius,
-    required this.scaling,
-    required this.hasBackground,
-  }) : super(
-         accent: accent,
-         gray: gray,
-         brightness: brightness,
-         panelBackground: panelBackground,
-         radius: radius,
-         scaling: scaling,
-         hasBackground: hasBackground,
-       );
+    required {{typePrefix}}AccentColor super.accent,
+    required {{typePrefix}}GrayColor super.gray,
+    required Brightness super.brightness,
+    required {{typePrefix}}PanelBackground super.panelBackground,
+    required {{typePrefix}}Radius super.radius,
+    required {{typePrefix}}Scaling super.scaling,
+    required bool super.hasBackground,
+  });
 
   @override
-  final {{typePrefix}}AccentColor accent;
+  {{typePrefix}}AccentColor get accent => super.accent!;
   @override
-  final {{typePrefix}}GrayColor gray;
+  {{typePrefix}}GrayColor get gray => super.gray!;
   @override
-  final Brightness brightness;
+  Brightness get brightness => super.brightness!;
   @override
-  final {{typePrefix}}PanelBackground panelBackground;
+  {{typePrefix}}PanelBackground get panelBackground => super.panelBackground!;
   @override
-  final {{typePrefix}}Radius radius;
+  {{typePrefix}}Radius get radius => super.radius!;
   @override
-  final {{typePrefix}}Scaling scaling;
+  {{typePrefix}}Scaling get scaling => super.scaling!;
   @override
-  final bool hasBackground;
+  bool get hasBackground => super.hasBackground!;
 
   @override
   bool get isDark => brightness == .dark;

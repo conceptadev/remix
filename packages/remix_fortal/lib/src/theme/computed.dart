@@ -5,6 +5,7 @@
 /// original Radix Colors data.
 ///
 /// Components should use these functional roles rather than raw color steps.
+library;
 
 // Documentation for all public APIs is provided below
 

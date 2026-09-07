@@ -4,7 +4,7 @@
 // Radix Colors version: bundled with Radix Themes 3.3.0
 // Source integrity: sha512-I0/h2CRNTpYNB7Mi3xFIvSsQq5a108d7kK8dTO5zp5b9HR5QJXKag6B8tjpz2ITkVYkFdkGk45doNkSr7OxwNw==
 
-library radix_colors;
+library;
 
 import 'package:flutter/painting.dart';
 

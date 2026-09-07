@@ -148,37 +148,29 @@ class FortalThemeConfig {
 @immutable
 class FortalThemeData extends FortalThemeConfig {
   const FortalThemeData({
-    required this.accent,
-    required this.gray,
-    required this.brightness,
-    required this.panelBackground,
-    required this.radius,
-    required this.scaling,
-    required this.hasBackground,
-  }) : super(
-         accent: accent,
-         gray: gray,
-         brightness: brightness,
-         panelBackground: panelBackground,
-         radius: radius,
-         scaling: scaling,
-         hasBackground: hasBackground,
-       );
+    required FortalAccentColor super.accent,
+    required FortalGrayColor super.gray,
+    required Brightness super.brightness,
+    required FortalPanelBackground super.panelBackground,
+    required FortalRadius super.radius,
+    required FortalScaling super.scaling,
+    required bool super.hasBackground,
+  });
 
   @override
-  final FortalAccentColor accent;
+  FortalAccentColor get accent => super.accent!;
   @override
-  final FortalGrayColor gray;
+  FortalGrayColor get gray => super.gray!;
   @override
-  final Brightness brightness;
+  Brightness get brightness => super.brightness!;
   @override
-  final FortalPanelBackground panelBackground;
+  FortalPanelBackground get panelBackground => super.panelBackground!;
   @override
-  final FortalRadius radius;
+  FortalRadius get radius => super.radius!;
   @override
-  final FortalScaling scaling;
+  FortalScaling get scaling => super.scaling!;
   @override
-  final bool hasBackground;
+  bool get hasBackground => super.hasBackground!;
 
   @override
   bool get isDark => brightness == .dark;
