@@ -103,6 +103,11 @@ does not depend directly on `mix`, `naked_ui`, or `remix_fortal`; it can edit
 the Radix color data, tokens, recipes, and instance overrides as ordinary app
 source.
 
+Place `AcmeScope` below the application host. For a routed Material app, wrap
+the child of `MaterialApp.builder` with `AcmeScope`. Routes and dialogs then
+inherit its tokens and text defaults. See `lib/ui/theme/theme_scope.dart` for
+the scope example.
+
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 Use an application prefix such as `Ui` or `Acme`.
 

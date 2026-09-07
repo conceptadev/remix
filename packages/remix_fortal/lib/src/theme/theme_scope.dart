@@ -44,12 +44,14 @@ Widget _fortalRootTextStyle({
 
 /// Widget that provides Fortal design tokens to its subtree via [MixScope].
 ///
-/// Use [FortalScope] at the root of your app (or around any subtree that uses
-/// Fortal styles) so that [FortalTokens] resolve to actual values.
+/// Place [FortalScope] below the application host so its text defaults apply.
+/// For a routed app, wrap the navigator in the host's builder. This also keeps
+/// [FortalTokens] available to routes and dialogs.
 ///
 /// ```dart
-/// FortalScope(
-///   child: WidgetsApp(...),
+/// MaterialApp(
+///   builder: (_, child) => FortalScope(child: child!),
+///   home: const HomePage(),
 /// )
 /// ```
 class FortalScope extends StatelessWidget {

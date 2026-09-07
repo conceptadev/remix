@@ -603,6 +603,10 @@ ButtonStyler <span class="fn">acmeButtonStyle</span>({
   <p>The following walkthrough, file trees, and catalog use the <code>default</code> preset with the <code>Acme</code> prefix.
   Fortal uses <code>AcmeScope</code> and constructors such as <code>AcmeButton.solid</code>.
   Its theme files and component axes differ.</p>
+  <p>Place <code>AcmeScope</code> below the application host.
+  In a routed Material app, wrap the child of <code>MaterialApp.builder</code> with <code>AcmeScope</code>.
+  Routes and dialogs then inherit its tokens and text defaults.
+  See the example in <code>lib/ui/theme/theme_scope.dart</code>.</p>
 </section>
 
 <div class="part" role="separator" aria-label="The path"><span class="lbl">The path</span><p>Six steps, in order. Each one separates the command from the change it makes.</p></div>

@@ -44,12 +44,14 @@ Widget _{{valuePrefix}}RootTextStyle({
 
 /// Widget that provides {{typePrefix}} design tokens to its subtree via [MixScope].
 ///
-/// Use [{{typePrefix}}Scope] at the root of your app (or around any subtree that uses
-/// {{typePrefix}} styles) so that [{{typePrefix}}Tokens] resolve to actual values.
+/// Place [{{typePrefix}}Scope] below the application host so its text defaults apply.
+/// For a routed app, wrap the navigator in the host's builder. This also keeps
+/// [{{typePrefix}}Tokens] available to routes and dialogs.
 ///
 /// ```dart
-/// {{typePrefix}}Scope(
-///   child: WidgetsApp(...),
+/// MaterialApp(
+///   builder: (_, child) => {{typePrefix}}Scope(child: child!),
+///   home: const HomePage(),
 /// )
 /// ```
 class {{typePrefix}}Scope extends StatelessWidget {
