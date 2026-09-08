@@ -3,6 +3,10 @@
 Unstyled Flutter widgets for long-running agent work: compose a prompt, follow
 a transcript, pause for permission, and inspect execution and plans.
 
+This branch is a draft stacked on the open-code workflow. See the
+[clean-sheet review and registry integration plan](docs/open-code-review.md).
+Agent is not yet an installable CLI registry item.
+
 This private workspace package depends on [remix](https://pub.dev/packages/remix),
 Mix's styling runtime, and Lucide's icon font. It ships no theme, token scope,
 Fortal dependency, or model SDK. Every visual surface exposes a generated

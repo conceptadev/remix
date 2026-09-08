@@ -18,13 +18,14 @@ dependencies:
     sdk: flutter
   # Exact pin: the small internal glyph map targets this font's codepoints.
   lucide_icons_flutter: 3.1.15
-  mix: ^2.2.0-beta.4
+  mix: ^2.2.0-beta.5
   mix_annotations: ^2.2.0-beta.1
-  # Hosted pin; workspace resolution binds the local sibling.
-  remix: ^1.0.0-beta.4
+  # Match the behavior version exercised by the open-code stack.
+  # Workspace resolution binds the local sibling while Agent is private.
+  remix: ^1.0.0-beta.8
 
 dev_dependencies:
   build_runner: ^2.10.1
   flutter_test:
     sdk: flutter
-  mix_generator: ^2.2.0-beta.2
+  mix_generator: ^2.2.0-beta.3

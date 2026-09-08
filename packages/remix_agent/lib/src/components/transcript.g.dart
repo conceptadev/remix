@@ -96,7 +96,8 @@ typedef _$AgentTranscriptSpecMethods = _$AgentTranscriptSpec; // ignore: unused_
 // **************************************************************************
 
 class AgentTranscriptStyler
-    extends MixStyler<AgentTranscriptStyler, AgentTranscriptSpec> {
+    extends MixStyler<AgentTranscriptStyler, AgentTranscriptSpec>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $viewport;
   final Prop<StyleSpec<BoxSpec>>? $item;
   final Prop<double>? $spacing;
@@ -134,6 +135,16 @@ class AgentTranscriptStyler
       AgentTranscriptStyler().item(value);
   factory AgentTranscriptStyler.spacing(double value) =>
       AgentTranscriptStyler().spacing(value);
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'viewport',
+    'item',
+    'spacing',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the viewport.
   AgentTranscriptStyler viewport(BoxStyler value) {

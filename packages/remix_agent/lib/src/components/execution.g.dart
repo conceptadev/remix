@@ -165,7 +165,8 @@ typedef _$AgentExecutionSpecMethods = _$AgentExecutionSpec; // ignore: unused_el
 // **************************************************************************
 
 class AgentExecutionStyler
-    extends MixStyler<AgentExecutionStyler, AgentExecutionSpec> {
+    extends MixStyler<AgentExecutionStyler, AgentExecutionSpec>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $header;
   final Prop<StyleSpec<BoxSpec>>? $output;
   final Prop<StyleSpec<FlexBoxSpec>>? $actions;
@@ -280,6 +281,27 @@ class AgentExecutionStyler
       AgentExecutionStyler().errorStatus(value);
   factory AgentExecutionStyler.cancelledStatus(BoxStyler value) =>
       AgentExecutionStyler().cancelledStatus(value);
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'header',
+    'output',
+    'actions',
+    'tool',
+    'title',
+    'meta',
+    'status',
+    'toolIcon',
+    'statusIcon',
+    'indicator',
+    'runningStatus',
+    'successStatus',
+    'errorStatus',
+    'cancelledStatus',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the header.
   AgentExecutionStyler header(FlexBoxStyler value) {

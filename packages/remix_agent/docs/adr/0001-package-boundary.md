@@ -1,5 +1,9 @@
 # ADR 0001 — Package boundary
 
+The [open-code review](../open-code-review.md) retains this behavior boundary
+and proposes registry-distributed, application-owned recipes. That integration
+is planned, not implemented by this package decision.
+
 ## Decision
 
 Ship agent-run surfaces as `remix_agent`, a private workspace package that

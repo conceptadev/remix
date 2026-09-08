@@ -104,7 +104,8 @@ typedef _$AgentAnswerSpecMethods = _$AgentAnswerSpec; // ignore: unused_element
 // SpecStylerGenerator
 // **************************************************************************
 
-class AgentAnswerStyler extends MixStyler<AgentAnswerStyler, AgentAnswerSpec> {
+class AgentAnswerStyler extends MixStyler<AgentAnswerStyler, AgentAnswerSpec>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $body;
   final Prop<StyleSpec<FlexBoxSpec>>? $actions;
   final Prop<StyleSpec<BoxSpec>>? $feedback;
@@ -156,6 +157,18 @@ class AgentAnswerStyler extends MixStyler<AgentAnswerStyler, AgentAnswerSpec> {
       AgentAnswerStyler().sourcesLabel(value);
   factory AgentAnswerStyler.indicator(IconStyler value) =>
       AgentAnswerStyler().indicator(value);
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'body',
+    'actions',
+    'feedback',
+    'sourcesLabel',
+    'indicator',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the body.
   AgentAnswerStyler body(BoxStyler value) {

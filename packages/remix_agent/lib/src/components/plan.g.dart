@@ -170,7 +170,8 @@ typedef _$AgentPlanSpecMethods = _$AgentPlanSpec; // ignore: unused_element
 // SpecStylerGenerator
 // **************************************************************************
 
-class AgentPlanStyler extends MixStyler<AgentPlanStyler, AgentPlanSpec> {
+class AgentPlanStyler extends MixStyler<AgentPlanStyler, AgentPlanSpec>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $viewport;
   final Prop<StyleSpec<FlexBoxSpec>>? $item;
   final Prop<StyleSpec<TextSpec>>? $summaryTitle;
@@ -292,6 +293,28 @@ class AgentPlanStyler extends MixStyler<AgentPlanStyler, AgentPlanSpec> {
       AgentPlanStyler().completedStatus(value);
   factory AgentPlanStyler.cancelledStatus(IconStyler value) =>
       AgentPlanStyler().cancelledStatus(value);
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'viewport',
+    'item',
+    'summaryTitle',
+    'itemTitle',
+    'itemDetail',
+    'count',
+    'indicator',
+    'pendingItem',
+    'activeItem',
+    'completedItem',
+    'cancelledItem',
+    'pendingStatus',
+    'activeStatus',
+    'completedStatus',
+    'cancelledStatus',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the viewport.
   AgentPlanStyler viewport(BoxStyler value) {

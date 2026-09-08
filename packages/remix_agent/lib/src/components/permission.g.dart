@@ -190,7 +190,8 @@ typedef _$AgentPermissionSpecMethods = _$AgentPermissionSpec; // ignore: unused_
 // **************************************************************************
 
 class AgentPermissionStyler
-    extends MixStyler<AgentPermissionStyler, AgentPermissionSpec> {
+    extends MixStyler<AgentPermissionStyler, AgentPermissionSpec>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $content;
   final Prop<StyleSpec<FlexBoxSpec>>? $header;
   final Prop<StyleSpec<FlexBoxSpec>>? $actions;
@@ -333,6 +334,31 @@ class AgentPermissionStyler
       AgentPermissionStyler().deniedStatus(value);
   factory AgentPermissionStyler.errorStatus(BoxStyler value) =>
       AgentPermissionStyler().errorStatus(value);
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'content',
+    'header',
+    'actions',
+    'title',
+    'tool',
+    'description',
+    'status',
+    'detailsLabel',
+    'toolIcon',
+    'statusIcon',
+    'indicator',
+    'pendingStatus',
+    'decidingStatus',
+    'allowedStatus',
+    'runningStatus',
+    'completedStatus',
+    'deniedStatus',
+    'errorStatus',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the content.
   AgentPermissionStyler content(BoxStyler value) {

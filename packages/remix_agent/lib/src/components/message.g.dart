@@ -197,8 +197,8 @@ typedef _$AgentMessageCollapsibleSpecMethods = _$AgentMessageCollapsibleSpec; //
 // SpecStylerGenerator
 // **************************************************************************
 
-class AgentMessageStyler
-    extends MixStyler<AgentMessageStyler, AgentMessageSpec> {
+class AgentMessageStyler extends MixStyler<AgentMessageStyler, AgentMessageSpec>
+    implements StylerFieldMetadata {
   final Prop<double>? $maxWidth;
   final Prop<StyleSpec<FlexBoxSpec>>? $row;
   final Prop<StyleSpec<BoxSpec>>? $avatar;
@@ -257,6 +257,19 @@ class AgentMessageStyler
       AgentMessageStyler().body(value);
   factory AgentMessageStyler.footer(BoxStyler value) =>
       AgentMessageStyler().footer(value);
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'maxWidth',
+    'row',
+    'avatar',
+    'header',
+    'body',
+    'footer',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the maxWidth.
   AgentMessageStyler maxWidth(double value) {
@@ -405,7 +418,8 @@ class AgentMessageStyler
 
 class AgentMessageCollapsibleStyler
     extends
-        MixStyler<AgentMessageCollapsibleStyler, AgentMessageCollapsibleSpec> {
+        MixStyler<AgentMessageCollapsibleStyler, AgentMessageCollapsibleSpec>
+    implements StylerFieldMetadata {
   final Prop<double>? $collapsedHeight;
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $clipped;
@@ -443,6 +457,16 @@ class AgentMessageCollapsibleStyler
       AgentMessageCollapsibleStyler().container(value);
   factory AgentMessageCollapsibleStyler.clipped(BoxStyler value) =>
       AgentMessageCollapsibleStyler().clipped(value);
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'collapsedHeight',
+    'container',
+    'clipped',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the collapsedHeight.
   AgentMessageCollapsibleStyler collapsedHeight(double value) {

@@ -78,7 +78,8 @@ typedef _$AgentComposerSpecMethods = _$AgentComposerSpec; // ignore: unused_elem
 // **************************************************************************
 
 class AgentComposerStyler
-    extends MixStyler<AgentComposerStyler, AgentComposerSpec> {
+    extends MixStyler<AgentComposerStyler, AgentComposerSpec>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $toolbar;
 
   const AgentComposerStyler.create({
@@ -102,6 +103,14 @@ class AgentComposerStyler
 
   factory AgentComposerStyler.toolbar(FlexBoxStyler value) =>
       AgentComposerStyler().toolbar(value);
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'toolbar',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the toolbar.
   AgentComposerStyler toolbar(FlexBoxStyler value) {

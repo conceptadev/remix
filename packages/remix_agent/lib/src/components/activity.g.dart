@@ -153,7 +153,8 @@ typedef _$AgentActivitySpecMethods = _$AgentActivitySpec; // ignore: unused_elem
 // **************************************************************************
 
 class AgentActivityStyler
-    extends MixStyler<AgentActivityStyler, AgentActivitySpec> {
+    extends MixStyler<AgentActivityStyler, AgentActivitySpec>
+    implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $viewport;
   final Prop<StyleSpec<FlexBoxSpec>>? $item;
   final Prop<StyleSpec<TextSpec>>? $summaryTitle;
@@ -254,6 +255,25 @@ class AgentActivityStyler
       AgentActivityStyler().activeStatus(value);
   factory AgentActivityStyler.completedStatus(IconStyler value) =>
       AgentActivityStyler().completedStatus(value);
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'viewport',
+    'item',
+    'summaryTitle',
+    'itemTitle',
+    'itemDetail',
+    'indicator',
+    'pendingItem',
+    'activeItem',
+    'completedItem',
+    'pendingStatus',
+    'activeStatus',
+    'completedStatus',
+    'animation',
+    'modifier',
+    'variants',
+  };
 
   /// Sets the viewport.
   AgentActivityStyler viewport(BoxStyler value) {
