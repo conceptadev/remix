@@ -1,0 +1,199 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/tokens.dart';
+
+part 'select.g.dart';
+
+/// The application's Select recipe.
+///
+/// Remix owns the rendering, the overlay, keyboard traversal, the open and
+/// close behavior, and the listbox accessibility semantics; this recipe
+/// supplies the trigger, the floating panel, and the option rows.
+///
+/// One recipe covers all three, because `SelectSpec` carries them as fields:
+/// `trigger`, `content` with `menuContainer`, and `item`. An option in a loop
+/// therefore cannot be left unstyled.
+///
+/// The trigger is styled as a field rather than as a button — same border,
+/// same radius, same heights as the text field — because that is what it is.
+/// The panel matches the menu's, so a select and a menu opened side by side
+/// do not read as two systems.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it. State fragments merge by state, not
+/// by depth: an override that must beat the trigger's focus ring has to be
+/// declared as a focus fragment too.
+@MixWidget(target: RemixSelect.new)
+SelectStyler {{valuePrefix}}SelectStyle({
+  SelectStyler style = const SelectStyler.create(),
+}) {
+  return SelectStyler()
+      .trigger(_triggerStyle())
+      .content(_contentStyle())
+      .menuContainer(.direction(.vertical).mainAxisSize(.min))
+      .item(_itemStyle())
+      .merge(style);
+}
+
+/// Width of the trigger and panel outlines.
+const _borderWidth = 1.0;
+
+/// Horizontal inset inside the trigger.
+///
+/// Flat across the sizes, matching the text field this trigger is styled
+/// after — see that recipe for why a field's gutter does not grow the way a
+/// button's padding does.
+const _paddingX = 12.0;
+
+/// Horizontal inset inside an option row.
+///
+/// The menu's row inset, not the trigger's. The trigger is a field and takes
+/// a field's gutter; an option row is a row in a floating list, and this
+/// recipe claims above that its panel matches the menu's. Sharing the
+/// trigger's 12 here broke that claim in the only place a reader would
+/// notice: a menu and a select opened side by side had their labels on
+/// different left edges.
+const _rowPaddingX = 8.0;
+
+/// Gap between a row's text and its icons.
+const _gap = 8.0;
+
+/// Size of the trigger's chevron and an option's check mark, per size.
+///
+/// It scales with the control for the same reason the label does: a large
+/// select sits beside a large button, and a chevron that stayed at the medium
+/// size would read as a smaller control wearing the same height.
+/// Size of the trigger's chevron and an option's check mark.
+const _iconSize = 16.0;
+
+/// Inset between the panel edge and its rows.
+const _panelPadding = 4.0;
+
+/// The narrowest a panel gets, so a one-word list is still a target.
+const _panelMinWidth = 160.0;
+
+/// The tallest a panel gets before it scrolls.
+///
+/// Bounded on purpose: an unbounded list of options grows past the viewport
+/// and takes its own dismissal affordances with it.
+const _panelMaxHeight = 320.0;
+
+/// Minimum height of one option row.
+const _rowHeight = 32.0;
+
+/// Vertical inset inside an option row.
+const _rowPaddingY = 6.0;
+
+/// Opacity of the placeholder, on top of its `mutedForeground` color.
+///
+/// Remix multiplies this into the placeholder's own color rather than
+/// replacing it, which is why the recipe sets both.
+const _placeholderOpacity = 1.0;
+
+/// Width of the keyboard focus ring.
+const _focusRingWidth = 2.0;
+
+/// Distance between the trigger edge and its focus ring.
+const _focusRingOffset = 2.0;
+
+/// Opacity applied to the whole control while disabled.
+const _disabledOpacity = 0.5;
+
+/// The lift that separates the panel from whatever it covers.
+final _shadow = RemixBoxShadowMix(
+  color: const Color(0x1A000000),
+  offset: const Offset(0, 4),
+  blurRadius: 12,
+);
+
+/// The trigger's resting height, matching shadcn's `h-9` and the text field
+/// this trigger is styled after.
+///
+/// One size, not a scale. A call site that needs another sets
+/// `.minHeight(...)` through [style].
+const _minHeight = 36.0;
+
+/// Label, placeholder and option size, matching body copy.
+const _textSize = 14.0;
+
+/// The closed control: a field showing the current value and a chevron.
+SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
+    .direction(.horizontal)
+    .crossAxisAlignment(.center)
+    .mainAxisAlignment(.spaceBetween)
+    .minHeight(_minHeight)
+    .padding(.horizontal(_paddingX))
+    .spacing(_gap)
+    .color({{typePrefix}}Tokens.background())
+    .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
+    .borderRadius(.all({{typePrefix}}Tokens.radius()))
+    .label(.fontSize(_textSize).color({{typePrefix}}Tokens.foreground()))
+    // The placeholder is not a value: it has to read as the quieter of
+    // the two, or a select with nothing chosen looks answered.
+    .placeholder(.fontSize(_textSize).color({{typePrefix}}Tokens.mutedForeground()))
+    .placeholderOpacity(_placeholderOpacity)
+    .icon(.size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()))
+    .indicator(.size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()))
+    // The content moves with the surface. Tinting the box alone would
+    // leave the placeholder at `mutedForeground` on `accent`, which is
+    // 3.76:1 in the light theme — under the 4.5:1 floor for text this
+    // size, and only while the pointer is on it, which is the worst kind
+    // of contrast bug to notice.
+    .onHovered(
+      SelectTriggerStyler()
+          .color({{typePrefix}}Tokens.accent())
+          .label(.color({{typePrefix}}Tokens.accentForeground()))
+          .placeholder(.color({{typePrefix}}Tokens.accentForeground()))
+          .icon(.color({{typePrefix}}Tokens.accentForeground()))
+          .indicator(.color({{typePrefix}}Tokens.accentForeground())),
+    )
+    .onFocusVisible(
+      .containerEffects(
+        .outline(
+          .color(
+            {{typePrefix}}Tokens.focusRing(),
+          ).width(_focusRingWidth).strokeAlign(BorderSide.strokeAlignInside),
+        ).outlineOffset(_focusRingOffset),
+      ),
+    )
+    .onDisabled(
+      SelectTriggerStyler()
+          .containerEffects(.outline(.style(.none)))
+          .wrap(.opacity(_disabledOpacity)),
+    );
+
+/// The floating panel the options live in.
+SelectContentStyler _contentStyle() => SelectContentStyler()
+    .color({{typePrefix}}Tokens.background())
+    .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
+    .borderRadius(.all({{typePrefix}}Tokens.radius()))
+    .padding(.all(_panelPadding))
+    .minWidth(_panelMinWidth)
+    .maxHeight(_panelMaxHeight)
+    .containerEffects(.behindContent(.shadows([_shadow])));
+
+/// One option row.
+///
+/// `accent` marks the row under the pointer *and* the row the arrow keys are
+/// on, because a select is as often driven by the keyboard as by the mouse.
+/// The chosen option is marked by its check icon, which Remix renders.
+SelectMenuItemStyler _itemStyle() => SelectMenuItemStyler()
+    .direction(.horizontal)
+    .crossAxisAlignment(.center)
+    .minHeight(_rowHeight)
+    .padding(.symmetric(horizontal: _rowPaddingX, vertical: _rowPaddingY))
+    .spacing(_gap)
+    .borderRadius(.all({{typePrefix}}Tokens.radius()))
+    .label(.fontSize(_textSize).color({{typePrefix}}Tokens.foreground()))
+    .icon(.size(_iconSize).color({{typePrefix}}Tokens.foreground()))
+    .onHovered(_highlighted())
+    .onFocused(_highlighted())
+    .onDisabled(SelectMenuItemStyler().wrap(.opacity(_disabledOpacity)));
+
+/// The option under the pointer or the keyboard cursor.
+SelectMenuItemStyler _highlighted() => SelectMenuItemStyler()
+    .color({{typePrefix}}Tokens.accent())
+    .label(.color({{typePrefix}}Tokens.accentForeground()))
+    .icon(.color({{typePrefix}}Tokens.accentForeground()));

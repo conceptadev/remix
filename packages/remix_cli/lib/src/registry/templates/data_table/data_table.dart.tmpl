@@ -1,0 +1,170 @@
+import 'dart:math' as math;
+
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/tokens.dart';
+import 'checkbox.dart';
+import 'icon_button.dart';
+import 'select.dart';
+
+part 'data_table.g.dart';
+
+/// The application's DataTable recipe.
+///
+/// Remix owns the rendering, sorting, selection, pagination, the empty state,
+/// and the table accessibility semantics; this recipe supplies the frame, the
+/// rows, the cells, and the three text roles.
+///
+/// It is the one recipe in this layer that **depends on other items**, and it
+/// is the reason its registry entry lists `checkbox`, `icon_button`, and
+/// `select` beside `theme`. A table's selection column is a checkbox, its
+/// pager is a pair of icon buttons, and its page-size control is a select —
+/// literally, not by analogy. `DataTableSpec` takes each of those as a styler,
+/// so the honest thing is to hand it the application's own recipes rather than
+/// restate three components inside a fourth. Change the checkbox recipe and
+/// this table's checkboxes change with it, which is what a reader expects.
+///
+/// That is a deliberate exception to the rule that these files are
+/// self-contained. It earns it: the alternative is either three duplicated
+/// recipes that drift, or a table whose controls do not match the rest of the
+/// application.
+///
+/// The frame is the card's: `background` fill, `border` hairline, the theme
+/// radius. Header and body rows are separated by the same hairline, and the
+/// last body row drops it so the table does not draw a second line on top of
+/// its own bottom edge.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it.
+@MixWidget(target: RemixDataTable.new)
+DataTableStyler {{valuePrefix}}DataTableStyle({
+  DataTableStyler style = const DataTableStyler.create(),
+}) => DataTableStyler()
+    .color({{typePrefix}}Tokens.background())
+    .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
+    .borderRadius(.all(_frameRadius()))
+    .clipBehavior(Clip.antiAlias)
+    // The header sits on `muted` so a long table keeps its column names
+    // legible while the body scrolls under them.
+    .headerRow(.color({{typePrefix}}Tokens.muted()).border(_rowRule()))
+    .bodyRow(.border(_rowRule()))
+    // Without this the bottom row's rule would double up with the frame's own
+    // edge, which reads as a two-pixel border on one side only.
+    .lastBodyRow(.border(.bottom(.style(.none))))
+    .headerCell(_cell())
+    .bodyCell(_cell())
+    .selectionCell(_cell())
+    .headerMinHeight(_headerHeight)
+    .rowMinHeight(_rowHeight)
+    .selectionColumnWidth(_selectionColumnWidth)
+    // `foreground`, not `mutedForeground`: the header already sits on its own
+    // surface, and `mutedForeground` on `muted` measures 4.35:1 — under the
+    // floor for text this size. The weight is what makes a column name read
+    // as a label rather than as data.
+    .headerLabel(
+      .fontSize(
+        _labelSize,
+      ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.foreground()),
+    )
+    .cellText(.fontSize(_textSize).color({{typePrefix}}Tokens.foreground()))
+    .footerLabel(
+      .fontSize(_labelSize).color({{typePrefix}}Tokens.mutedForeground()),
+    )
+    .sortIcon(.size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()))
+    .sortIconSpacing(_sortIconSpacing)
+    .footer(
+      FlexBoxStyler()
+          .direction(.horizontal)
+          .crossAxisAlignment(.center)
+          .mainAxisAlignment(.end)
+          .minHeight(_headerHeight)
+          .padding(.horizontal(_cellPaddingX))
+          .spacing(_footerGap)
+          .border(.top(_rule())),
+    )
+    // The application's own controls, not restatements of them.
+    .selectionCheckbox({{valuePrefix}}CheckboxStyle())
+    .pageButton({{valuePrefix}}IconButtonStyle(variant: .ghost, size: .small))
+    .pageSizeSelect({{valuePrefix}}SelectStyle())
+    .merge(style);
+
+/// Width of the frame, the row rules, and the footer rule.
+const _borderWidth = 1.0;
+
+/// Horizontal inset inside every cell.
+const _cellPaddingX = 12.0;
+
+/// Vertical inset inside every cell.
+const _cellPaddingY = 8.0;
+
+/// Minimum height of the header row and the footer.
+const _headerHeight = 40.0;
+
+/// Minimum height of a body row.
+const _rowHeight = 44.0;
+
+/// Width of the column holding the selection checkboxes.
+const _selectionColumnWidth = 44.0;
+
+/// Column-name size, one step below the data it names.
+const _labelSize = 13.0;
+
+/// Cell text size, matching body copy.
+const _textSize = 14.0;
+
+/// Size of the sort indicator.
+const _iconSize = 14.0;
+
+/// Gap between a column name and its sort indicator.
+const _sortIconSpacing = 4.0;
+
+/// Gap between the footer's controls.
+const _footerGap = 12.0;
+
+/// The frame's corner radius, bounded so the clip cannot eat a corner cell.
+///
+/// This is the one recipe here that both rounds its frame and clips to it.
+/// The clip is not optional: the header sits on `muted` and would otherwise
+/// square off the top two corners inside the rounded border. But the corner
+/// arc is carved out of the first and last rows, and the leading cell of both
+/// is the selection column — so past a certain radius the clip stops trimming
+/// a fill and starts removing a checkbox.
+///
+/// The bound is the geometry, not a taste: an arc of radius r has finished
+/// turning r from the corner, so a radius no larger than half the header's
+/// height is fully out of the way by the row's own content line. Rows are
+/// taller than the header, so the header is what binds.
+///
+/// Clamping rather than hardcoding leaves the theme in charge in the other
+/// direction: `radius: Radius.zero` still gives a square table. The checkbox
+/// recipe clamps for the same class of reason at a different scale.
+const _maxFrameRadius = _headerHeight / 2;
+
+/// The theme's corner radius, clamped to [_maxFrameRadius].
+///
+/// A top-level final rather than a per-call closure because `ContextToken`
+/// equality is resolver identity: rebuilding one per call would make two
+/// identical recipes compare unequal.
+final _frameRadius = ContextToken<Radius>((context) {
+  final radius = {{typePrefix}}Tokens.radius.resolve(context);
+
+  return Radius.elliptical(
+    math.min(radius.x, _maxFrameRadius),
+    math.min(radius.y, _maxFrameRadius),
+  );
+});
+
+/// One hairline in the `border` token, shared by every rule the table draws.
+BorderSideMix _rule() =>
+    BorderSideMix(color: {{typePrefix}}Tokens.border(), width: _borderWidth);
+
+/// The rule under a row.
+BoxBorderMix _rowRule() => .bottom(_rule());
+
+/// One cell's padding, shared by the header, the body, and the selection
+/// column so the columns line up regardless of what is in them.
+BoxStyler _cell() => BoxStyler().padding(
+  .symmetric(horizontal: _cellPaddingX, vertical: _cellPaddingY),
+);

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
-import '../../utils/text.dart';
 import '../../widgets/gallery_scaffold.dart';
 import '../../widgets/toast.dart';
 
@@ -25,12 +24,12 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
           label: 'Button',
           description:
               'Classic, solid, soft, surface, outline, and ghost actions.',
-          child: GalleryMatrix(
-            rows: FortalButtonVariant.values.map(enumLabel).toList(),
-            columns: FortalButtonSize.values.map(enumLabel).toList(),
-            cellBuilder: (context, row, column) => FortalButton(
-              variant: FortalButtonVariant.values[row],
-              size: FortalButtonSize.values[column],
+          child: GalleryEnumMatrix(
+            rows: FortalButtonVariant.values,
+            columns: FortalButtonSize.values,
+            cellBuilder: (context, variant, size) => FortalButton(
+              variant: variant,
+              size: size,
               onPressed: () => showToast(context, message: 'Button pressed'),
               label: 'Button',
             ),
@@ -40,12 +39,12 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
           label: 'Icon button',
           description:
               'Compact icon-only controls with complete focus semantics.',
-          child: GalleryMatrix(
-            rows: FortalIconButtonVariant.values.map(enumLabel).toList(),
-            columns: FortalIconButtonSize.values.map(enumLabel).toList(),
-            cellBuilder: (context, row, column) => FortalIconButton(
-              variant: FortalIconButtonVariant.values[row],
-              size: FortalIconButtonSize.values[column],
+          child: GalleryEnumMatrix(
+            rows: FortalIconButtonVariant.values,
+            columns: FortalIconButtonSize.values,
+            cellBuilder: (context, variant, size) => FortalIconButton(
+              variant: variant,
+              size: size,
               semanticLabel: 'Add item',
               onPressed: () => showToast(context, message: 'Item added'),
               icon: Icons.add,
@@ -55,12 +54,12 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
         GallerySection(
           label: 'Toggle',
           description: 'Ghost and outline toggles remain fully interactive.',
-          child: GalleryMatrix(
-            rows: FortalToggleVariant.values.map(enumLabel).toList(),
-            columns: FortalToggleSize.values.map(enumLabel).toList(),
-            cellBuilder: (_, row, column) => FortalToggle(
-              variant: FortalToggleVariant.values[row],
-              size: FortalToggleSize.values[column],
+          child: GalleryEnumMatrix(
+            rows: FortalToggleVariant.values,
+            columns: FortalToggleSize.values,
+            cellBuilder: (_, variant, size) => FortalToggle(
+              variant: variant,
+              size: size,
               selected: _selected,
               icon: Icons.format_bold,
               label: 'Bold',

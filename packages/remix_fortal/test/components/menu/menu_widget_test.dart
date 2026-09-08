@@ -279,6 +279,90 @@ void main() {
       expect(triggerRow.styleSpec?.spec.flex?.spec.spacing, triggerGap);
     });
   }
+
+  testWidgets(
+    'unnamed FortalMenu accepts RemixMenuTrigger.builder and keeps recipes',
+    (tester) async {
+      final semantics = tester.ensureSemantics();
+      final controller = MenuController();
+      await tester.pumpRemixApp(
+        FortalMenu<String>(
+          controller: controller,
+          size: .size1,
+          trigger: RemixMenuTrigger.builder(
+            label: 'Account menu',
+            builder: (context, state, child) =>
+                const FortalAvatar(label: 'LF', size: .size2),
+          ),
+          onSelected: (_) {},
+          items: const [RemixMenuItem(value: 'profile', label: 'View profile')],
+        ),
+      );
+
+      expect(find.text('LF'), findsOneWidget);
+      expect(find.text('Account menu'), findsNothing);
+      expect(find.bySemanticsLabel('Account menu').evaluate().length, 1);
+      expect(find.bySemanticsLabel('LF').evaluate().length, 0);
+      semantics.dispose();
+
+      await tester.tap(find.text('LF'));
+      await tester.pump();
+
+      expect(find.text('View profile'), findsOneWidget);
+
+      final context = tester.element(find.text('View profile'));
+      final overlay = tester.widget<Box>(
+        find
+            .ancestor(
+              of: find
+                  .ancestor(
+                    of: find.text('View profile'),
+                    matching: find.byType(ColumnBox),
+                  )
+                  .first,
+              matching: find.byType(Box),
+            )
+            .first,
+      );
+      expect(
+        (overlay.styleSpec?.spec.decoration as BoxDecoration?)?.color,
+        FortalTokens.colorPanelSolid.resolve(context),
+      );
+      expect(_menuRowColor(tester, 'View profile'), isNull);
+
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: Offset.zero);
+      addTearDown(mouse.removePointer);
+      await mouse.moveTo(tester.getCenter(find.text('View profile')));
+      await tester.pump();
+      expect(
+        _menuRowColor(tester, 'View profile'),
+        FortalTokens.accent9.resolve(context),
+      );
+    },
+  );
+
+  testWidgets(
+    'FortalMenu.soft accepts RemixMenuTrigger.builder and opens items',
+    (tester) async {
+      await tester.pumpRemixApp(
+        FortalMenu<String>.soft(
+          trigger: RemixMenuTrigger.builder(
+            label: 'Account menu',
+            builder: (context, state, child) => const Icon(Icons.person),
+          ),
+          items: const [RemixMenuItem(value: 'profile', label: 'View profile')],
+        ),
+      );
+
+      expect(find.byIcon(Icons.person), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.person));
+      await tester.pump();
+
+      expect(find.text('View profile'), findsOneWidget);
+    },
+  );
 }
 
 Color? _menuRowColor(WidgetTester tester, String label) {

@@ -1,0 +1,10 @@
+pubspec_overrides.yaml
+.vscode/*
+.cursor/*
+test/*
+reference/*
+tool/*
+lib/src/generated/.glyphpact.json
+lib/src/generated/ATTRIBUTION.md
+lib/src/generated/iconfont.lock.json
+lib/src/generated/iconfont.report.json

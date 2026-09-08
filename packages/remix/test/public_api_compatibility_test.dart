@@ -70,6 +70,10 @@ void main() {
     expect(checkbox.label, 'Receive updates');
     expect(checkbox.minimumTapTargetSize, Size.zero);
     expect(menu.trigger, isA<RemixMenuTrigger>());
+    expect(menu.trigger.label, 'Actions');
+    expect(menu.trigger.icon, isNull);
+    expect(menu.trigger.builder, isNull);
+    expect(NakedMenuState, isNotNull);
     expect(menu.items, hasLength(4));
     expect(menu.items[0], isA<RemixMenuItem<String>>());
     expect(menu.items[1], isA<RemixMenuCheckboxItem<String>>());

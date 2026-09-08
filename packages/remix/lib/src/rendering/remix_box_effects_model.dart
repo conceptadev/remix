@@ -127,12 +127,68 @@ class RemixBoxShadowMix extends Mix<RemixBoxShadow> {
         shapeInset: value.shapeInset,
       );
 
+  /// Which of the shadow shapes this is: a drop shadow or an inner shadow.
+  ///
+  /// Named so a shadow can be written as a dot shorthand wherever one is
+  /// expected, matching [RemixBoxEffectsMix]. See [kind] for the chainable
+  /// counterpart that continues the same expression.
+  factory RemixBoxShadowMix.kind(RemixBoxShadowKind value) =>
+      RemixBoxShadowMix(kind: value);
+
+  /// The shadow's color.
+  factory RemixBoxShadowMix.color(Color value) =>
+      RemixBoxShadowMix(color: value);
+
+  /// How far the shadow is displaced from the box.
+  factory RemixBoxShadowMix.offset(Offset value) =>
+      RemixBoxShadowMix(offset: value);
+
+  /// How far the shadow's edge is blurred.
+  factory RemixBoxShadowMix.blurRadius(double value) =>
+      RemixBoxShadowMix(blurRadius: value);
+
+  /// How far the shadow grows beyond the box before blurring.
+  factory RemixBoxShadowMix.spreadRadius(double value) =>
+      RemixBoxShadowMix(spreadRadius: value);
+
+  /// Inset applied to the shape an inner shadow is cut from.
+  factory RemixBoxShadowMix.shapeInset(double value) =>
+      RemixBoxShadowMix(shapeInset: value);
+
   final Prop<RemixBoxShadowKind>? $kind;
   final Prop<Color>? $color;
   final Prop<Offset>? $offset;
   final Prop<double>? $blurRadius;
   final Prop<double>? $spreadRadius;
   final Prop<double>? $shapeInset;
+
+  /// Chainable counterpart of [RemixBoxShadowMix.kind].
+  ///
+  /// A named constructor and an instance method may share a name in Dart, so
+  /// the same word works as the entry point and as a link in a chain:
+  /// `.shadows([.color(black).blurRadius(12)])`.
+  RemixBoxShadowMix kind(RemixBoxShadowKind value) =>
+      merge(RemixBoxShadowMix(kind: value));
+
+  /// Chainable counterpart of [RemixBoxShadowMix.color].
+  RemixBoxShadowMix color(Color value) =>
+      merge(RemixBoxShadowMix(color: value));
+
+  /// Chainable counterpart of [RemixBoxShadowMix.offset].
+  RemixBoxShadowMix offset(Offset value) =>
+      merge(RemixBoxShadowMix(offset: value));
+
+  /// Chainable counterpart of [RemixBoxShadowMix.blurRadius].
+  RemixBoxShadowMix blurRadius(double value) =>
+      merge(RemixBoxShadowMix(blurRadius: value));
+
+  /// Chainable counterpart of [RemixBoxShadowMix.spreadRadius].
+  RemixBoxShadowMix spreadRadius(double value) =>
+      merge(RemixBoxShadowMix(spreadRadius: value));
+
+  /// Chainable counterpart of [RemixBoxShadowMix.shapeInset].
+  RemixBoxShadowMix shapeInset(double value) =>
+      merge(RemixBoxShadowMix(shapeInset: value));
 
   @override
   RemixBoxShadowMix merge(RemixBoxShadowMix? other) {
@@ -558,9 +614,50 @@ class RemixBoxEffectLayerMix extends Mix<RemixBoxEffectLayerSpec> {
        $gradientInsets = gradientInsets,
        $shadows = shadows;
 
+  /// The shadows this layer paints.
+  ///
+  /// Named so a layer can be written as a dot shorthand wherever one is
+  /// expected, matching [RemixBoxEffectsMix]:
+  /// `.containerEffects(.behindContent(.shadows([shadow])))`.
+  factory RemixBoxEffectLayerMix.shadows(List<RemixBoxShadowMix> value) =>
+      RemixBoxEffectLayerMix(shadows: value);
+
+  /// Resolves the layer's shadows from a token rather than a literal list.
+  factory RemixBoxEffectLayerMix.shadowToken(RemixBoxShadowListToken value) =>
+      RemixBoxEffectLayerMix(shadowToken: value);
+
+  /// The gradients this layer paints.
+  factory RemixBoxEffectLayerMix.gradients(
+    List<RemixLinearGradientMix> value,
+  ) => RemixBoxEffectLayerMix(gradients: value);
+
+  /// Per-gradient insets, applied in the same order as [gradients].
+  factory RemixBoxEffectLayerMix.gradientInsets(List<double> value) =>
+      RemixBoxEffectLayerMix(gradientInsets: value);
+
   final Prop<List<Gradient>>? $gradients;
   final Prop<List<double>>? $gradientInsets;
   final Prop<List<RemixBoxShadow>>? $shadows;
+
+  /// Chainable counterpart of [RemixBoxEffectLayerMix.shadows].
+  ///
+  /// A named constructor and an instance method may share a name in Dart, so
+  /// the same word works as the entry point and as a link in a chain:
+  /// `.behindContent(.gradients([gradient]).shadows([shadow]))`.
+  RemixBoxEffectLayerMix shadows(List<RemixBoxShadowMix> value) =>
+      merge(RemixBoxEffectLayerMix(shadows: value));
+
+  /// Chainable counterpart of [RemixBoxEffectLayerMix.shadowToken].
+  RemixBoxEffectLayerMix shadowToken(RemixBoxShadowListToken value) =>
+      merge(RemixBoxEffectLayerMix(shadowToken: value));
+
+  /// Chainable counterpart of [RemixBoxEffectLayerMix.gradients].
+  RemixBoxEffectLayerMix gradients(List<RemixLinearGradientMix> value) =>
+      merge(RemixBoxEffectLayerMix(gradients: value));
+
+  /// Chainable counterpart of [RemixBoxEffectLayerMix.gradientInsets].
+  RemixBoxEffectLayerMix gradientInsets(List<double> value) =>
+      merge(RemixBoxEffectLayerMix(gradientInsets: value));
 
   @override
   RemixBoxEffectLayerMix merge(RemixBoxEffectLayerMix? other) {

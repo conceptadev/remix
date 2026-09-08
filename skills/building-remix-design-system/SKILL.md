@@ -16,6 +16,12 @@ description: >-
 
 # Building a Design System Package on Remix
 
+Use `using-remix` for application UI that consumes base Remix or Fortal. This
+skill owns the standalone package, source-traceability, token-pipeline, and
+public-API workflow for a different design system. Use the project's Mix skill
+alongside it when implementation depends on exact versioned Mix or codegen
+syntax.
+
 The result of following this skill is a standalone package under `packages/`
 that:
 
@@ -107,6 +113,10 @@ Create `packages/<name>/` with `pubspec.yaml`, `analysis_options.yaml`,
 
 Non-obvious requirements (each one has produced a real failure):
 
+- Read the current root managed dependencies and
+  `packages/remix/pubspec.yaml`, then use that workspace-tested Remix/Mix/
+  annotations/generator set. Do not copy dependency floors from an older
+  design-system example or upgrade one member of the codegen set in isolation.
 - `publish_to: none` **while `remix` is a path dependency** — otherwise the
   analyzer emits a fatal `invalid_dependency` warning. Leave a comment saying
   when to remove it.

@@ -129,6 +129,54 @@ class _MenuExampleState extends State<MenuExample> {
 ```
 </CodeGroup>
 
+## Custom trigger content
+
+`RemixMenuTrigger` is a configuration object, not a widget. The same object is
+the trigger for `FortalMenu`; there is no separate Fortal trigger type.
+
+Use the unnamed constructor for the standard label/icon surface. Use
+`RemixMenuTrigger.builder` when the trigger needs richer visual content such as
+an avatar or profile row. The builder receives the current menu state and the
+already styled default trigger as `defaultTrigger`. It may wrap that child or
+replace it.
+
+<Warning>
+  Builder output must be non-interactive visual content. Returning a
+  `FortalButton`, `FortalIconButton`, or any other nested interactive control
+  creates duplicate semantics and a second tap target. `NakedMenu` already owns
+  tapping, focus, keyboard behavior, and expanded state.
+</Warning>
+
+<CodeGroup title="Builder-backed avatar trigger" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+class AccountMenuExample extends StatelessWidget {
+  const AccountMenuExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FortalMenu<String>(
+      trigger: RemixMenuTrigger.builder(
+        label: 'Account menu',
+        builder: (context, state, defaultTrigger) =>
+            const FortalAvatar(label: 'LF'),
+      ),
+      items: const [
+        RemixMenuItem(value: 'profile', label: 'View profile'),
+        RemixMenuItem(value: 'preferences', label: 'Preferences'),
+        RemixMenuDivider(),
+        RemixMenuItem(value: 'signout', label: 'Sign out'),
+      ],
+      onSelected: (value) => debugPrint(value),
+    );
+  }
+}
+```
+</CodeGroup>
+
 ## Checkboxes, radio groups, and submenus
 
 Checkboxes and radio groups are controlled. Keep their current value in your
@@ -393,7 +441,11 @@ Optional. Controls how one widget replaces another widget in the tree.
 
 #### `trigger` → `RemixMenuTrigger`
 
-**Required**. The trigger data that defines the menu's button.
+**Required**. Configuration for the menu's button, not a widget. Use
+`RemixMenuTrigger(label:, icon:)` for the standard surface or
+`RemixMenuTrigger.builder(label:, icon:, builder:)` for custom visual
+content. `label` is the visible default label and the accessible fallback
+for a builder-backed trigger. The same object works with `FortalMenu`.
 
 #### `items` → `List<RemixMenuItemData<T>>`
 

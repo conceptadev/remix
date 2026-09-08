@@ -1,6 +1,8 @@
 import 'dart:ui' as ui;
 
 import 'package:dashboard/main.dart';
+import 'package:dashboard/pages/gallery/gallery_navigation_page.dart';
+import 'package:dashboard/shell/dashboard_page.dart';
 import 'package:dashboard/shell/dashboard_shell.dart';
 import 'package:dashboard/shell/top_bar.dart';
 import 'package:dashboard/theme/theme_scope.dart';
@@ -9,6 +11,7 @@ import 'package:dashboard/utils/text.dart';
 import 'package:dashboard/widgets/page_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
@@ -52,17 +55,14 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    expect(
-      find.byKey(const ValueKey('sidebar-account-trigger')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const ValueKey('topbar-account-trigger')),
-      findsOneWidget,
-    );
+    final sidebar = find.byKey(const ValueKey('sidebar-account-trigger'));
+    final topBar = find.byKey(const ValueKey('topbar-account-trigger'));
+    expect(sidebar, findsOneWidget);
+    expect(topBar, findsOneWidget);
+    expect(tester.getSize(topBar).width, lessThanOrEqualTo(48));
     expect(find.text('Account actions'), findsNothing);
 
-    await tester.tap(find.byKey(const ValueKey('sidebar-account-trigger')));
+    await tester.tap(sidebar);
     await tester.pump();
 
     expect(find.text('View profile'), findsOneWidget);
@@ -73,7 +73,7 @@ void main() {
 
   testWidgets('customer rows retain compact kebab actions', (tester) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey('nav-customers')).first);
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
     await tester.pump();
 
     final trigger = find.byKey(const ValueKey('customer-actions-cus_024'));
@@ -87,6 +87,25 @@ void main() {
     expect(find.text('View profile'), findsOneWidget);
     expect(find.text('Send email'), findsOneWidget);
     expect(find.text('Archive'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('order rows retain compact kebab actions', (tester) async {
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.orders)).first);
+    await tester.pump();
+
+    final trigger = find.byKey(const ValueKey('order-actions-ORD-1048'));
+    expect(trigger, findsOneWidget);
+    expect(tester.getSize(trigger).width, lessThanOrEqualTo(46));
+
+    await tester.ensureVisible(trigger);
+    await tester.tap(trigger);
+    await tester.pump();
+
+    expect(find.text('View order'), findsOneWidget);
+    expect(find.text('Download receipt'), findsOneWidget);
+    expect(find.text('Issue refund'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -112,7 +131,9 @@ void main() {
       isTrue,
     );
 
-    await tester.tap(find.byKey(const ValueKey('nav-galleryForms')).first);
+    await tester.tap(
+      find.byKey(const ValueKey(DashboardPage.galleryForms)).first,
+    );
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -123,7 +144,75 @@ void main() {
       ),
       findsOneWidget,
     );
+    expect(
+      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
+      isFalse,
+    );
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('compact drawer exposes one dashboard navigation name', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    expect(find.bySemanticsLabel('Dashboard navigation'), findsOneWidget);
+    semantics.dispose();
+  });
+
+  testWidgets('compact selection restores focus to the menu trigger', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const DashboardApp());
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pump();
+    final menuTrigger = find.semantics.byLabel('Open navigation');
+    ui.Tristate menuFocusState() => menuTrigger
+        .evaluate()
+        .single
+        .getSemanticsData()
+        .flagsCollection
+        .isFocused;
+    expect(menuFocusState(), ui.Tristate.isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(
+      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
+      isTrue,
+    );
+
+    await tester.tap(
+      find.byKey(const ValueKey(DashboardPage.galleryForms)).first,
+    );
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    expect(
+      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
+      isFalse,
+    );
+    expect(menuFocusState(), ui.Tristate.isTrue);
+    semantics.dispose();
   });
 
   testWidgets('compact settings render without horizontal overflow', (
@@ -140,7 +229,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
     }
 
-    await tester.tap(find.byKey(const ValueKey('nav-settings')).first);
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.settings)).first);
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -157,7 +246,7 @@ void main() {
 
     final overviewSemantics = find
         .descendant(
-          of: find.byKey(const ValueKey('nav-overview')).first,
+          of: find.byKey(const ValueKey(DashboardPage.overview)).first,
           matching: find.byType(Semantics),
         )
         .first;
@@ -170,6 +259,59 @@ void main() {
     expect(data.hasAction(ui.SemanticsAction.tap), isTrue);
     expect(data.flagsCollection.isSelected, ui.Tristate.isTrue);
     expect(data.flagsCollection.isToggled, ui.Tristate.none);
+    expect(data.flagsCollection.isFocused, ui.Tristate.isFalse);
+
+    for (var tabs = 0; tabs < 20; tabs++) {
+      if (tester
+              .getSemantics(overviewSemantics)
+              .getSemanticsData()
+              .flagsCollection
+              .isFocused ==
+          ui.Tristate.isTrue) {
+        break;
+      }
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+    }
+
+    expect(
+      tester
+          .getSemantics(overviewSemantics)
+          .getSemanticsData()
+          .flagsCollection
+          .isFocused,
+      ui.Tristate.isTrue,
+    );
+
+    final customersSemantics = find
+        .descendant(
+          of: find.byKey(const ValueKey(DashboardPage.customers)).first,
+          matching: find.byType(Semantics),
+        )
+        .first;
+    final customersNode = tester.getSemantics(customersSemantics);
+    customersNode.owner!.performAction(
+      customersNode.id,
+      ui.SemanticsAction.tap,
+    );
+    await tester.pump();
+
+    expect(
+      tester
+          .getSemantics(customersSemantics)
+          .getSemanticsData()
+          .flagsCollection
+          .isSelected,
+      ui.Tristate.isTrue,
+    );
+    expect(
+      tester
+          .getSemantics(overviewSemantics)
+          .getSemanticsData()
+          .flagsCollection
+          .isSelected,
+      ui.Tristate.isFalse,
+    );
     semantics.dispose();
   });
 
@@ -178,7 +320,7 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    await tester.tap(find.byKey(const ValueKey('nav-customers')).first);
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
     await tester.pump();
 
     // FortalDataTable forwards the key to the Remix widget it builds, so the
@@ -213,7 +355,7 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
     expect(find.text('Refunded'), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('nav-orders')).first);
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.orders)).first);
     await tester.pump();
 
     // The filter offers "Refunded" too, so the badge is the second match.
@@ -225,7 +367,7 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    await tester.tap(find.byKey(const ValueKey('nav-settings')).first);
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.settings)).first);
     await tester.pump();
 
     final panel = find.byKey(const ValueKey('theme-panel'));
@@ -250,7 +392,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey('nav-settings')).first);
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.settings)).first);
     await tester.pump();
 
     final translucent = find.text('Translucent');
@@ -270,7 +412,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey('nav-galleryForms')).first);
+    final nav = find.byKey(const ValueKey(DashboardPage.galleryForms)).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
     await tester.pump();
 
     expect(find.byType(FortalTextArea), findsWidgets);
@@ -283,7 +427,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey('nav-galleryDisplay')).first);
+    final nav = find.byKey(const ValueKey(DashboardPage.galleryDisplay)).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
     await tester.pump();
 
     expect(find.byType(FortalDataList), findsWidgets);
@@ -305,7 +451,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey('nav-galleryDisplay')).first);
+    final nav = find.byKey(const ValueKey(DashboardPage.galleryDisplay)).first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
     await tester.pump();
 
     final largestAvatars = find.byWidgetPredicate(
@@ -322,7 +470,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey('nav-galleryOverlays')).first;
+    final nav = find.byKey(const ValueKey(DashboardPage.galleryOverlays)).first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
@@ -347,7 +495,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey('nav-galleryOverlays')).first;
+    final nav = find.byKey(const ValueKey(DashboardPage.galleryOverlays)).first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
@@ -369,7 +517,7 @@ void main() {
     expect(tester.getSize(content).height, expectedHeight);
   });
 
-  testWidgets('dashboard action popovers shrink-wrap their actions', (
+  testWidgets('dashboard action menus expose menu semantics and width', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(1400, 900);
@@ -377,18 +525,85 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
+    final semantics = tester.ensureSemantics();
     await tester.pumpWidget(const DashboardApp());
     await tester.tap(find.byKey(const ValueKey('sidebar-account-trigger')));
     await tester.pump();
 
-    final content = find.ancestor(
-      of: find.text('View profile'),
-      matching: find.byWidgetPredicate(
-        (widget) => widget is SizedBox && widget.width == 180,
-      ),
+    expect(
+      tester.getSemantics(find.text('View profile')).getSemanticsData().role,
+      ui.SemanticsRole.menuItem,
     );
-    expect(content, findsOneWidget);
-    expect(tester.getSize(content).height, lessThan(180));
+    expect(
+      find.byKey(const ValueKey('dashboard-action-profile')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('dashboard-action-preferences')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('dashboard-action-signout')),
+      findsOneWidget,
+    );
+    expect(
+      tester.getTopLeft(find.text('View profile')).dy,
+      lessThan(tester.getTopLeft(find.text('Preferences')).dy),
+    );
+    expect(
+      tester.getTopLeft(find.text('Preferences')).dy,
+      lessThan(tester.getTopLeft(find.text('Sign out')).dy),
+    );
+
+    final panel = find
+        .ancestor(
+          of: find.text('View profile'),
+          matching: find.byType(ColumnBox),
+        )
+        .first;
+    final divider = find.descendant(
+      of: panel,
+      matching: find.byType(RemixDivider),
+    );
+    expect(divider, findsOneWidget);
+    final dividerY = tester.getCenter(divider).dy;
+    expect(
+      dividerY,
+      greaterThan(tester.getTopLeft(find.text('Preferences')).dy),
+    );
+    expect(dividerY, lessThan(tester.getTopLeft(find.text('Sign out')).dy));
+
+    final overlay = find
+        .ancestor(
+          of: find
+              .ancestor(
+                of: find.text('View profile'),
+                matching: find.byType(ColumnBox),
+              )
+              .first,
+          matching: find.byType(Box),
+        )
+        .first;
+    expect(tester.getSize(overlay).width, 180);
+    expect(tester.getSize(overlay).height, lessThan(180));
+    final contentInset = FortalTokens.space1.resolve(
+      tester.element(find.text('View profile')),
+    );
+    expect(
+      tester
+          .getSize(find.byKey(const ValueKey('dashboard-action-profile')))
+          .width,
+      180 - contentInset * 2,
+    );
+
+    await tester.tap(find.text('View profile'));
+    await tester.pump();
+
+    expect(find.text('View profile'), findsNothing);
+    expect(find.text('Profile opened'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    semantics.dispose();
+    await tester.pump(const Duration(seconds: 4));
   });
 
   testWidgets('notification popover shrink-wraps its activity', (tester) async {
@@ -420,12 +635,14 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey('nav-galleryOverlays')).first;
+    final nav = find.byKey(const ValueKey(DashboardPage.galleryOverlays)).first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
 
-    await tester.tap(find.text('Open').first);
+    final trigger = find.bySemanticsLabel('Open Center Size3 dialog');
+    await tester.ensureVisible(trigger);
+    await tester.tap(trigger);
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -444,8 +661,15 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey('nav-settings')).first);
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.settings)).first);
     await tester.pump();
+
+    final dangerZone = find.byKey(const ValueKey('settings-danger-zone'));
+    await tester.ensureVisible(dangerZone.first);
+    await tester.tap(find.text('Danger zone'));
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
 
     final trigger = find.text('Delete workspace');
     await tester.ensureVisible(trigger);
@@ -465,7 +689,9 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    await tester.tap(find.byKey(const ValueKey('nav-galleryActions')).first);
+    await tester.tap(
+      find.byKey(const ValueKey(DashboardPage.galleryActions)).first,
+    );
     await tester.pump();
 
     expect(find.text('Button'), findsWidgets);
@@ -477,7 +703,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey('nav-galleryNavigation')).first;
+    final nav = find
+        .byKey(const ValueKey(DashboardPage.galleryNavigation))
+        .first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
@@ -492,34 +720,108 @@ void main() {
     expect(items.children, everyElement(isA<FortalAccordion<String>>()));
   });
 
+  testWidgets('navigation gallery disclosure collapses independently', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const DashboardApp());
+    final nav = find
+        .byKey(const ValueKey(DashboardPage.galleryNavigation))
+        .first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
+    await tester.pump();
+
+    final gallery = find.byType(GalleryNavigationPage);
+    final disclosureFinder = find.descendant(
+      of: gallery,
+      matching: find.byType(FortalDisclosure),
+    );
+    final disclosureCount = tester
+        .widgetList<FortalDisclosure>(disclosureFinder)
+        .length;
+
+    final panelCopy = find.descendant(
+      of: gallery,
+      matching: find.text('Delivery takes 3–5 business days.'),
+    );
+    expect(panelCopy, findsNWidgets(disclosureCount));
+
+    final trigger = find.bySemanticsLabel('Surface Size1 shipping details');
+    await tester.ensureVisible(trigger);
+    await tester.pump();
+    await tester.tap(trigger);
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    expect(panelCopy, findsNWidgets(disclosureCount - 1));
+  });
+
+  testWidgets('navigation gallery list updates its controlled selection', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const DashboardApp());
+    final nav = find
+        .byKey(const ValueKey(DashboardPage.galleryNavigation))
+        .first;
+    await tester.ensureVisible(nav);
+    await tester.tap(nav);
+    await tester.pump();
+
+    final gallery = find.byType(GalleryNavigationPage);
+    final example = find.descendant(
+      of: gallery,
+      matching: find.byType(FortalSidebar<String>),
+    );
+    expect(
+      tester.widget<FortalSidebar<String>>(example).selectedValue,
+      'overview',
+    );
+
+    final activity = find.descendant(
+      of: gallery,
+      matching: find.byKey(const ValueKey('activity')),
+    );
+    await tester.ensureVisible(activity);
+    await tester.tap(activity);
+    await tester.pump();
+
+    expect(
+      tester.widget<FortalSidebar<String>>(example).selectedValue,
+      'activity',
+    );
+  });
+
   testWidgets('every sidebar destination renders without replacing the shell', (
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    const destinations = <String, String>{
-      'overview': 'A snapshot of your workspace performance.',
-      'customers': 'Manage customer access, plans, and account status.',
-      'orders': 'Review transactions and fulfillment status.',
-      'settings': 'Manage your profile, preferences, and workspace.',
-      'charts':
+    const destinations = <DashboardPage, String>{
+      DashboardPage.overview: 'A snapshot of your workspace performance.',
+      DashboardPage.customers:
+          'Manage customer access, plans, and account status.',
+      DashboardPage.orders: 'Review transactions and fulfillment status.',
+      DashboardPage.settings:
+          'Manage your profile, preferences, and workspace.',
+      DashboardPage.charts:
           'Fortal-native chart patterns for comparison, composition, interaction, and empty states.',
-      'galleryActions':
+      DashboardPage.galleryActions:
           'Interactive actions across every Fortal variant and size.',
-      'galleryForms':
+      DashboardPage.galleryForms:
           'Production-ready fields and selection controls in every preset.',
-      'galleryDisplay':
+      DashboardPage.galleryDisplay:
           'Rich surfaces and status components for product interfaces.',
-      'galleryOverlays':
+      DashboardPage.galleryOverlays:
           'Real dialog, popover, tooltip, and menu triggers for every recipe.',
-      'galleryNavigation':
-          'Tabs and disclosure patterns for organizing dense interfaces.',
-      'galleryTypography':
+      DashboardPage.galleryNavigation:
+          'Sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
+      DashboardPage.galleryTypography:
           'Text, headings, code, keys, and links on one shared scale.',
     };
 
     for (final entry in destinations.entries) {
-      final nav = find.byKey(ValueKey('nav-${entry.key}')).first;
+      final nav = find.byKey(ValueKey(entry.key)).first;
       await tester.ensureVisible(nav);
       await tester.tap(nav);
       await tester.pump();
@@ -562,7 +864,7 @@ void main() {
 
   testWidgets('theme panel changes the resolved accent live', (tester) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey('nav-settings')).first);
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.settings)).first);
     await tester.pump();
 
     final grass = find.byKey(const ValueKey('accent-grass'));
@@ -576,7 +878,7 @@ void main() {
 
   testWidgets('theme swatch centers its selected checkmark', (tester) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey('nav-settings')).first);
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.settings)).first);
     await tester.pump();
 
     final swatch = find.byKey(const ValueKey('accent-indigo'));
@@ -632,7 +934,7 @@ void main() {
 
   testWidgets('grid sorts, selects the page, and paginates', (tester) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey('nav-customers')).first);
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
     await tester.pump();
 
     final sortName = find.text('Customer').first;
@@ -665,7 +967,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey('nav-customers')).first);
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
     await tester.pump();
 
     final selectAll = find
@@ -706,7 +1008,9 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey('nav-galleryTypography')).first;
+    final nav = find
+        .byKey(const ValueKey(DashboardPage.galleryTypography))
+        .first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
@@ -735,7 +1039,9 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    final nav = find.byKey(const ValueKey('nav-galleryTypography')).first;
+    final nav = find
+        .byKey(const ValueKey(DashboardPage.galleryTypography))
+        .first;
     await tester.ensureVisible(nav);
     await tester.tap(nav);
     await tester.pump();
@@ -771,7 +1077,9 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
     }
 
-    await tester.tap(find.byKey(const ValueKey('nav-galleryTypography')).first);
+    await tester.tap(
+      find.byKey(const ValueKey(DashboardPage.galleryTypography)).first,
+    );
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -878,7 +1186,7 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byKey(const ValueKey('nav-customers')).first);
+    await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
     await tester.pump();
 
     final search = find.byKey(const ValueKey('global-search'));

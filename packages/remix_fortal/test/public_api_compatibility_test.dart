@@ -30,6 +30,36 @@ void main() {
     const textArea = FortalTextArea.classic();
 
     expect(menu.variant, FortalMenuVariant.soft);
+    expect(menu.trigger.label, 'Actions');
+    expect(menu.trigger.icon, isNull);
+
+    Widget accountBuilder(
+      BuildContext context,
+      NakedMenuState state,
+      Widget? child,
+    ) {
+      return child ?? const SizedBox.shrink();
+    }
+
+    final unnamedBuilderMenu = FortalMenu<String>(
+      trigger: RemixMenuTrigger.builder(
+        label: 'Account menu',
+        builder: accountBuilder,
+      ),
+      items: const [RemixMenuItem(value: 'save', label: 'Save')],
+    );
+    final namedBuilderMenu = FortalMenu<String>.soft(
+      trigger: RemixMenuTrigger.builder(
+        label: 'Account menu',
+        builder: accountBuilder,
+      ),
+      items: const [RemixMenuItem(value: 'save', label: 'Save')],
+    );
+
+    expect(unnamedBuilderMenu.trigger.label, 'Account menu');
+    expect(unnamedBuilderMenu.trigger.builder, same(accountBuilder));
+    expect(namedBuilderMenu.variant, FortalMenuVariant.soft);
+    expect(namedBuilderMenu.trigger.builder, same(accountBuilder));
     expect(select.variant, FortalSelectVariant.ghost);
     expect(radio.variant, FortalRadioVariant.soft);
     expect(button.variant, FortalButtonVariant.soft);

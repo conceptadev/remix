@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-const dashboardCompactBreakpoint = 720.0;
-
 enum DashboardSection {
   overview('Workspace'),
   data('Data'),

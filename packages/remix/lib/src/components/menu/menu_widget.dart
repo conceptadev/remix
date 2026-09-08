@@ -4,19 +4,44 @@ part of 'menu.dart';
 // DATA CLASSES - Trigger and Menu Item Hierarchy
 // ============================================================================
 
-/// Data class representing a menu trigger.
+/// Configuration for a [RemixMenu] trigger.
 ///
-/// Used with [RemixMenu] to define the trigger button that opens the menu.
-/// The trigger displays an optional icon (leading position) and label text.
+/// This is a configuration object, not a widget. The same object is the trigger
+/// for Fortal menus; there is no separate Fortal trigger type.
+///
+/// Use the unnamed constructor for the standard label/icon trigger. Use
+/// [RemixMenuTrigger.builder] when the trigger needs richer visual content.
+/// Builder output must be non-interactive visual content — not a nested
+/// button. [NakedMenu] continues to own tapping, focus, keyboard behavior,
+/// expanded semantics, and overlay state.
+///
+/// [label] is the visible default label and the accessible fallback for a
+/// builder-backed trigger.
 class RemixMenuTrigger {
-  /// The text label to display in the trigger.
+  /// Creates a standard label/icon trigger.
+  const RemixMenuTrigger({required this.label, this.icon}) : builder = null;
+
+  /// Creates a trigger that supplies custom visual content.
+  ///
+  /// The builder receives the current [NakedMenuState] and the already styled
+  /// default label/icon trigger as its child. It may wrap that child or
+  /// replace it entirely. Returned content must not add a second interactive
+  /// control.
+  const RemixMenuTrigger.builder({
+    required this.label,
+    this.icon,
+    required this.builder,
+  });
+
+  /// The visible default label and the accessible fallback for a
+  /// builder-backed trigger.
   final String label;
 
-  /// Optional icon to display before the label.
-  /// When provided, icon appears in leading position (before text).
+  /// Optional icon shown before [label] in the default trigger.
   final IconData? icon;
 
-  const RemixMenuTrigger({required this.label, this.icon});
+  /// Optional custom trigger content. Null for the standard trigger.
+  final ValueWidgetBuilder<NakedMenuState>? builder;
 }
 
 /// Base sealed class for all menu item types.
@@ -324,6 +349,15 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 ///   items: [...],
 ///   onSelected: (value) => debugPrint(value),
 /// )
+///
+/// // Custom visual content — builder output must not be a nested button
+/// RemixMenu<String>(
+///   trigger: RemixMenuTrigger.builder(
+///     label: 'Account menu',
+///     builder: (context, state, defaultTrigger) => const Text('LF'),
+///   ),
+///   items: [...],
+/// )
 /// ```
 class RemixMenu<T> extends StatefulWidget {
   const RemixMenu({
@@ -348,7 +382,11 @@ class RemixMenu<T> extends StatefulWidget {
     this.styleSpec,
   });
 
-  /// The trigger data that defines the menu's button.
+  /// Trigger configuration for the menu's button.
+  ///
+  /// A configuration object, not a widget. Use [RemixMenuTrigger] for the
+  /// standard label/icon surface or [RemixMenuTrigger.builder] for custom
+  /// visual content.
   final RemixMenuTrigger trigger;
 
   /// The declarative ordinary, compound, submenu, and divider data.
@@ -391,6 +429,10 @@ class RemixMenu<T> extends StatefulWidget {
   final OverlayPositionConfig positioning;
 
   /// The semantic label for the menu trigger.
+  ///
+  /// Standard triggers keep descendant-derived names unless this is set.
+  /// Builder-backed triggers use this value when set and otherwise fall back
+  /// to [RemixMenuTrigger.label].
   final String? semanticLabel;
 
   /// Whether to hide the menu trigger from the semantic tree.
@@ -433,6 +475,24 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
   MenuController get _effectiveController =>
       widget.controller ?? _internalController;
 
+  String? get _resolvedTriggerSemanticLabel {
+    if (widget.trigger.builder == null) {
+      return widget.semanticLabel;
+    }
+    return widget.semanticLabel ?? widget.trigger.label;
+  }
+
+  Widget _buildDefaultTrigger(MenuTriggerSpec triggerSpec) {
+    return RowBox(
+      styleSpec: triggerSpec.container,
+      children: [
+        if (widget.trigger.icon != null)
+          StyledIcon(icon: widget.trigger.icon!, styleSpec: triggerSpec.icon),
+        StyledText(widget.trigger.label, styleSpec: triggerSpec.label),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final style = _buildStyle();
@@ -469,7 +529,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       closeOnClickOutside: widget.closeOnClickOutside,
       triggerFocusNode: widget.triggerFocusNode,
       positioning: widget.positioning,
-      semanticLabel: widget.semanticLabel,
+      semanticLabel: _resolvedTriggerSemanticLabel,
       excludeSemantics: widget.excludeSemantics,
       // Render trigger from RemixMenuTrigger data
       builder: (context, state, _) {
@@ -480,20 +540,14 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
           builder: (context, spec) {
             return StyleSpecBuilder(
               styleSpec: spec.trigger,
-              builder: (context, triggerSpec) => RowBox(
-                styleSpec: triggerSpec.container,
-                children: [
-                  if (widget.trigger.icon != null)
-                    StyledIcon(
-                      icon: widget.trigger.icon!,
-                      styleSpec: triggerSpec.icon,
-                    ),
-                  StyledText(
-                    widget.trigger.label,
-                    styleSpec: triggerSpec.label,
-                  ),
-                ],
-              ),
+              builder: (context, triggerSpec) {
+                final defaultTrigger = _buildDefaultTrigger(triggerSpec);
+                final triggerBuilder = widget.trigger.builder;
+                if (triggerBuilder == null) {
+                  return defaultTrigger;
+                }
+                return triggerBuilder(context, state, defaultTrigger);
+              },
             );
           },
         );

@@ -204,6 +204,73 @@ void main() {
     });
   });
 
+  group('effect Mixes carry the dot-shorthand pair', () {
+    // Every field gets a named constructor and an instance method under the
+    // same word, so the same name works as the entry point of an expression
+    // and as a link in its chain. These tests are written in the shorthand
+    // form on purpose: if a static counterpart went missing the file would
+    // stop compiling, which is the assertion.
+
+    test('a layer constructor sets its own field and nothing else', () {
+      final shadow = RemixBoxShadowMix(blurRadius: 12);
+      expect(
+        RemixBoxEffectLayerMix.shadows([shadow]),
+        RemixBoxEffectLayerMix(shadows: [shadow]),
+      );
+      expect(
+        RemixBoxEffectLayerMix.gradientInsets(const [1, 2]),
+        RemixBoxEffectLayerMix(gradientInsets: const [1, 2]),
+      );
+    });
+
+    test('a shadow constructor sets its own field and nothing else', () {
+      expect(
+        RemixBoxShadowMix.blurRadius(12),
+        RemixBoxShadowMix(blurRadius: 12),
+      );
+      expect(
+        RemixBoxShadowMix.color(const Color(0xFF00FF00)),
+        RemixBoxShadowMix(color: const Color(0xFF00FF00)),
+      );
+      expect(
+        RemixBoxShadowMix.offset(const Offset(0, 4)),
+        RemixBoxShadowMix(offset: const Offset(0, 4)),
+      );
+    });
+
+    test('the chainable counterpart merges rather than replaces', () {
+      final chained = RemixBoxShadowMix.color(
+        const Color(0xFF00FF00),
+      ).blurRadius(12).offset(const Offset(0, 4));
+
+      expect(
+        chained,
+        RemixBoxShadowMix(
+          color: const Color(0xFF00FF00),
+          blurRadius: 12,
+          offset: const Offset(0, 4),
+        ),
+      );
+    });
+
+    test('a whole layer reads as one shorthand expression', () {
+      final RemixBoxEffectsMix shorthand = .behindContent(
+        .shadows([.color(const Color(0x1A000000)).blurRadius(12)]),
+      );
+
+      expect(
+        shorthand,
+        RemixBoxEffectsMix(
+          behindContent: RemixBoxEffectLayerMix(
+            shadows: [
+              RemixBoxShadowMix(color: const Color(0x1A000000), blurRadius: 12),
+            ],
+          ),
+        ),
+      );
+    });
+  });
+
   group('Box effects geometry', () {
     testWidgets('preserves mutable child state across Box renderer routes', (
       tester,

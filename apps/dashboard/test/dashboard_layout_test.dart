@@ -1,13 +1,105 @@
+import 'package:dashboard/main.dart';
 import 'package:dashboard/pages/overview_page.dart';
 import 'package:dashboard/pages/settings_page.dart';
+import 'package:dashboard/shell/dashboard_shell_layout.dart';
+import 'package:dashboard/shell/sidebar.dart';
+import 'package:dashboard/shell/top_bar.dart';
 import 'package:dashboard/theme/theme_scope.dart';
 import 'package:dashboard/theme/theme_settings.dart';
+import 'package:dashboard/widgets/action_menu.dart';
 import 'package:dashboard/widgets/analytics_charts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 void main() {
+  testWidgets('shell switches to the drawer strictly below 720 pixels', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    tester.view.physicalSize = const Size(720, 800);
+    await tester.pumpWidget(const DashboardApp());
+    expect(tester.widget<Scaffold>(find.byType(Scaffold)).drawer, isNull);
+    expect(find.byKey(const ValueKey('dashboard-menu')), findsNothing);
+
+    tester.view.physicalSize = const Size(719, 800);
+    await tester.pumpWidget(const DashboardApp());
+    expect(tester.widget<Scaffold>(find.byType(Scaffold)).drawer, isNotNull);
+    expect(find.byKey(const ValueKey('dashboard-menu')), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('shell headers align in the sidebar and compact drawer', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    void expectAligned() {
+      final brand = tester.getRect(
+        find.byKey(const ValueKey('dashboard-brand')),
+      );
+      final topBar = tester.getRect(find.byType(TopBar));
+
+      expect(brand.height, dashboardShellHeaderHeight);
+      expect(topBar.height, dashboardShellHeaderHeight);
+      expect(brand.top, closeTo(topBar.top, 0.01));
+      expect(brand.bottom, closeTo(topBar.bottom, 0.01));
+    }
+
+    tester.view.physicalSize = const Size(1000, 800);
+    await tester.pumpWidget(const DashboardApp());
+    expectAligned();
+
+    tester.view.physicalSize = const Size(390, 844);
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expectAligned();
+  });
+
+  testWidgets('the sidebar pins its brand and account rows around the '
+      'scrolling navigation', (tester) async {
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    tester.view.physicalSize = const Size(1000, 800);
+    await tester.pumpWidget(const DashboardApp());
+
+    final panel = tester.getRect(find.byType(Sidebar));
+    final brand = tester.getRect(find.byKey(const ValueKey('dashboard-brand')));
+    final account = tester.getRect(
+      find.byKey(const ValueKey('sidebar-account-trigger')),
+    );
+
+    expect(brand.top, closeTo(panel.top, 0.5));
+    expect(account.bottom, lessThanOrEqualTo(panel.bottom));
+    expect(account.top, greaterThan(brand.bottom));
+
+    // The destination region owns the only scroll view in the panel, so the
+    // brand and account rows stay fixed.
+    final scrollable = find.descendant(
+      of: find.byType(Sidebar),
+      matching: find.byType(Scrollable),
+    );
+    expect(scrollable, findsOneWidget);
+    expect(
+      find.descendant(
+        of: scrollable,
+        matching: find.byType(DashboardActionMenu),
+      ),
+      findsNothing,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('overview metrics collapse 4 to 2 to 1 and stretch in-row', (
     tester,
   ) async {

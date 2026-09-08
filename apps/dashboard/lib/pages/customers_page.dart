@@ -6,7 +6,7 @@ import '../data/customers.dart';
 import '../data/models.dart';
 import '../utils/date_format.dart';
 import '../utils/pagination.dart';
-import '../widgets/action_popover.dart';
+import '../widgets/action_menu.dart';
 import '../widgets/data_table_cell_text.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/page_header.dart';
@@ -86,6 +86,7 @@ class _CustomersPageState extends State<CustomersPage> {
                       children: [
                         FortalBadge(
                           size: .size2,
+                          highContrast: true,
                           label: '${_selectedIds.length} selected',
                         ),
                         FortalButton.ghost(
@@ -209,7 +210,7 @@ class _CustomersPageState extends State<CustomersPage> {
       semanticLabel: 'Actions',
       width: const FixedColumnWidth(64),
       alignment: .end,
-      cellBuilder: (context, customer) => DashboardActionPopover(
+      cellBuilder: (context, customer) => DashboardActionMenu(
         key: ValueKey('customer-actions-${customer.id}'),
         semanticLabel: 'Actions for ${customer.name}',
         positioning: dataTableActionsPositioning,

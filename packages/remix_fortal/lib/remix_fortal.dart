@@ -38,6 +38,7 @@ export 'src/recipes/progress.dart';
 export 'src/recipes/radio.dart';
 export 'src/recipes/segmented_control.dart';
 export 'src/recipes/select.dart';
+export 'src/recipes/sidebar.dart';
 export 'src/recipes/skeleton.dart';
 export 'src/recipes/slider.dart';
 export 'src/recipes/spinner.dart';

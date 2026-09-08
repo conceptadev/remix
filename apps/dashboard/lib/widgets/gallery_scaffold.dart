@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../utils/text.dart';
 import 'page_header.dart';
 import 'typography.dart';
 
@@ -57,51 +58,75 @@ class GallerySection extends StatelessWidget {
   );
 }
 
-class GalleryMatrix extends StatelessWidget {
+/// A typed Mix Grid whose axis values label and build every comparison cell.
+class GalleryMatrix<R, C> extends StatelessWidget {
   const GalleryMatrix({
     super.key,
     required this.rows,
     required this.columns,
+    required this.rowLabelBuilder,
+    required this.columnLabelBuilder,
     required this.cellBuilder,
     this.cellWidth = 200,
   });
 
-  final List<String> rows;
-  final List<String> columns;
-  final Widget Function(BuildContext context, int row, int column) cellBuilder;
+  final List<R> rows;
+  final List<C> columns;
+  final String Function(R value) rowLabelBuilder;
+  final String Function(C value) columnLabelBuilder;
+  final Widget Function(BuildContext context, R row, C column) cellBuilder;
   final double cellWidth;
 
   @override
   Widget build(BuildContext context) {
-    final border = MixScope.tokenOf(FortalTokens.grayA5, context);
+    final divider = BorderSideMix(color: FortalTokens.grayA5(), width: 1);
+    final borderRadius = BorderRadiusMix.all(FortalTokens.radius3());
+    final GridBoxStyler gridStyle = .columns([
+      const .fixed(112),
+      for (final _ in columns) .fixed(cellWidth),
+    ]);
+
     return SingleChildScrollView(
       scrollDirection: .horizontal,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: border),
-          borderRadius: BorderRadius.all(
-            MixScope.tokenOf(FortalTokens.radius3, context),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            _MatrixRow(
-              border: border,
-              label: '',
-              cells: [for (final column in columns) _MatrixLabel(column)],
-              cellWidth: cellWidth,
-            ),
-            for (final (rowIndex, row) in rows.indexed)
-              _MatrixRow(
-                border: border,
-                label: row,
-                cells: [
-                  for (var column = 0; column < columns.length; column++)
-                    cellBuilder(context, rowIndex, column),
-                ],
-                cellWidth: cellWidth,
+      child: Box(
+        style: BoxStyler()
+            .borderRadius(borderRadius)
+            .clipBehavior(.antiAlias)
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BoxBorderMix.all(divider),
+                borderRadius: borderRadius,
               ),
+            ),
+        child: GridBox(
+          style: gridStyle,
+          children: [
+            _MatrixCell(
+              divider: divider,
+              alignment: .centerLeft,
+              child: const _MatrixLabel(''),
+            ),
+            for (final column in columns)
+              _MatrixCell(
+                divider: divider,
+                hasLeadingDivider: true,
+                child: _MatrixLabel(columnLabelBuilder(column)),
+              ),
+            for (final row in rows) ...[
+              _MatrixCell(
+                divider: divider,
+                hasTopDivider: true,
+                alignment: .centerLeft,
+                child: _MatrixLabel(rowLabelBuilder(row)),
+              ),
+              for (final column in columns)
+                _MatrixCell(
+                  divider: divider,
+                  hasLeadingDivider: true,
+                  hasTopDivider: true,
+                  child: cellBuilder(context, row, column),
+                ),
+            ],
           ],
         ),
       ),
@@ -109,41 +134,52 @@ class GalleryMatrix extends StatelessWidget {
   }
 }
 
-class _MatrixRow extends StatelessWidget {
-  const _MatrixRow({
-    required this.border,
-    required this.label,
-    required this.cells,
-    required this.cellWidth,
+class _MatrixCell extends StatelessWidget {
+  const _MatrixCell({
+    required this.child,
+    required this.divider,
+    this.hasLeadingDivider = false,
+    this.hasTopDivider = false,
+    this.alignment = Alignment.center,
   });
 
-  final Color border;
-  final String label;
-  final List<Widget> cells;
-  final double cellWidth;
+  final Widget child;
+  final BorderSideMix divider;
+  final bool hasLeadingDivider;
+  final bool hasTopDivider;
+  final AlignmentGeometry alignment;
 
   @override
-  Widget build(BuildContext context) => Container(
-    decoration: BoxDecoration(
-      border: Border(bottom: BorderSide(color: border)),
-    ),
-    child: Row(
-      children: [
-        SizedBox(width: 112, child: _MatrixLabel(label)),
-        for (final cell in cells)
-          Container(
-            width: cellWidth,
-            constraints: const BoxConstraints(minHeight: 64),
-            padding: const EdgeInsets.all(10),
-            alignment: .center,
-            decoration: BoxDecoration(
-              border: Border(left: BorderSide(color: border)),
-            ),
-            child: cell,
+  Widget build(BuildContext context) {
+    var style = BoxStyler()
+        .minHeight(64)
+        .padding(.all(10))
+        .alignment(alignment);
+    if (hasLeadingDivider || hasTopDivider) {
+      style = style.foregroundDecoration(
+        BoxDecorationMix(
+          border: BorderMix(
+            left: hasLeadingDivider ? divider : null,
+            top: hasTopDivider ? divider : null,
           ),
-      ],
-    ),
-  );
+        ),
+      );
+    }
+
+    return Box(style: style, child: child);
+  }
+}
+
+/// A comparison matrix whose labels come directly from its enum axes.
+class GalleryEnumMatrix<R extends Enum, C extends Enum>
+    extends GalleryMatrix<R, C> {
+  const GalleryEnumMatrix({
+    super.key,
+    required super.rows,
+    required super.columns,
+    required super.cellBuilder,
+    super.cellWidth,
+  }) : super(rowLabelBuilder: enumLabel, columnLabelBuilder: enumLabel);
 }
 
 class _MatrixLabel extends StatelessWidget {
@@ -151,11 +187,8 @@ class _MatrixLabel extends StatelessWidget {
   final String label;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(10),
-    child: StyledText(
-      label,
-      style: dashboardText(.size1, weight: .medium, tone: .muted),
-    ),
+  Widget build(BuildContext context) => StyledText(
+    label,
+    style: dashboardText(.size1, weight: .medium, tone: .muted),
   );
 }

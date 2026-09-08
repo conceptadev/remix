@@ -161,11 +161,17 @@ const _testSourceDirectories = <String>[
   'packages/remix_fortal/test',
 ];
 
-const _consumerDocumentationDirectories = <String>['skills/using-remix'];
+const _publishedSkillDirectories = <String>[
+  'skills/using-remix',
+  'skills/building-remix-design-system',
+];
 const _consumerDocumentationFiles = <String>[
   'README.md',
   'packages/remix/README.md',
   'packages/remix_fortal/README.md',
+  'packages/remix_cli/README.md',
+  'open_code/README.md',
+  'open_code/CLEAN_SHEET.md',
 ];
 
 final _staleConsumerDocumentationClaims = <(RegExp, String)>[
@@ -197,6 +203,58 @@ final _staleConsumerDocumentationClaims = <(RegExp, String)>[
     'stale component backgroundColor alias claim',
   ),
 ];
+
+/// Documents that list the open-code registry's items by name.
+///
+/// The catalog is the one thing in these files that goes stale the instant a
+/// registry item lands, and it is the thing a reader trusts most.
+const _openCodeCatalogDocuments = <String>[
+  'docs/open-code.mdx',
+  'packages/remix_cli/README.md',
+  'open_code/README.md',
+];
+
+/// Fails when a bundled registry item is missing from a catalog document.
+///
+/// Deliberately one-directional: a document may mention `theme` or discuss an
+/// item in prose without listing it, and matching that exactly would make the
+/// check fight the writing. What it will not allow is shipping an item nobody
+/// wrote down.
+void _checkOpenCodeCatalog(Directory workspaceRoot, List<String> failures) {
+  final registry = File(
+    '${workspaceRoot.path}/packages/remix_cli/lib/src/registry/registry.yaml',
+  );
+  if (!registry.existsSync()) {
+    failures.add('packages/remix_cli is missing its registry.yaml.');
+    return;
+  }
+
+  // Item keys are the only two-space-indented `name:` lines in the file.
+  final items = RegExp(r'^  ([a-z][a-z0-9_]*):$', multiLine: true)
+      .allMatches(registry.readAsStringSync())
+      .map((match) => match.group(1)!)
+      .where((name) => name != 'theme')
+      .toList();
+  if (items.isEmpty) {
+    failures.add('registry.yaml declared no component items.');
+    return;
+  }
+
+  for (final relativePath in _openCodeCatalogDocuments) {
+    final file = File('${workspaceRoot.path}/$relativePath');
+    if (!file.existsSync()) {
+      failures.add('$relativePath is missing.');
+      continue;
+    }
+    final source = file.readAsStringSync();
+    final missing = items.where((item) => !source.contains('`$item`')).toList();
+    if (missing.isNotEmpty) {
+      failures.add(
+        '$relativePath does not list registry ${missing.join(', ')}.',
+      );
+    }
+  }
+}
 
 Future<void> main() async {
   // This validator owns root `docs/`, root `docs.json`, the root README, and
@@ -245,6 +303,9 @@ Future<void> main() async {
     workspaceRoot,
     failures,
   );
+  _checkOpenCodeCatalog(workspaceRoot, failures);
+  _checkSkillEvalMetadata(workspaceRoot, failures);
+  _checkDesignSystemSkillVersions(workspaceRoot, failures);
   final exampleSourceCount = _checkDartSources(
     workspaceRoot,
     _exampleSourceDirectories,
@@ -331,7 +392,7 @@ int _checkConsumerDocumentation(
   List<String> failures,
 ) {
   final documents = <File>[];
-  for (final relativeDirectory in _consumerDocumentationDirectories) {
+  for (final relativeDirectory in _publishedSkillDirectories) {
     final directory = Directory('${workspaceRoot.path}/$relativeDirectory');
     if (!directory.existsSync()) {
       failures.add(
@@ -381,6 +442,141 @@ int _checkConsumerDocumentation(
   }
 
   return documents.length;
+}
+
+void _checkSkillEvalMetadata(Directory workspaceRoot, List<String> failures) {
+  for (final skillDirectory in _publishedSkillDirectories) {
+    final evalsFile = File(
+      '${workspaceRoot.path}/$skillDirectory/evals/evals.json',
+    );
+    if (!evalsFile.existsSync()) {
+      failures.add('$skillDirectory is missing evals/evals.json.');
+      continue;
+    }
+
+    Object? decoded;
+    try {
+      decoded = jsonDecode(evalsFile.readAsStringSync());
+    } on FormatException catch (error) {
+      failures.add('$skillDirectory/evals/evals.json is invalid: $error');
+      continue;
+    }
+    if (decoded is! Map<String, Object?>) {
+      failures.add('$skillDirectory/evals/evals.json must be a JSON object.');
+      continue;
+    }
+
+    final expectedName = skillDirectory.split('/').last;
+    if (decoded['skill_name'] != expectedName) {
+      failures.add(
+        '$skillDirectory/evals/evals.json skill_name must be $expectedName.',
+      );
+    }
+    final evals = decoded['evals'];
+    if (evals is! List<Object?> || evals.isEmpty) {
+      failures.add('$skillDirectory/evals/evals.json needs nonempty evals.');
+      continue;
+    }
+
+    final ids = <int>{};
+    for (final (index, value) in evals.indexed) {
+      final label = '$skillDirectory/evals/evals.json eval ${index + 1}';
+      if (value is! Map<String, Object?>) {
+        failures.add('$label must be a JSON object.');
+        continue;
+      }
+      final id = value['id'];
+      if (id is! int || !ids.add(id)) {
+        failures.add('$label needs a unique integer id.');
+      }
+      for (final field in ['prompt', 'expected_output']) {
+        final fieldValue = value[field];
+        if (fieldValue is! String || fieldValue.trim().isEmpty) {
+          failures.add('$label needs a nonempty $field.');
+        }
+      }
+      final expectations = value['expectations'];
+      if (expectations is! List<Object?> ||
+          expectations.isEmpty ||
+          expectations.any((item) => item is! String || item.trim().isEmpty)) {
+        failures.add('$label needs nonempty string expectations.');
+      }
+      final files = value['files'];
+      if (files is! List<Object?> || files.any((item) => item is! String)) {
+        failures.add('$label files must be a list of strings.');
+        continue;
+      }
+      for (final path in files.cast<String>()) {
+        if (!File('${workspaceRoot.path}/$skillDirectory/$path').existsSync()) {
+          failures.add('$label references missing file $path.');
+        }
+      }
+    }
+  }
+}
+
+void _checkDesignSystemSkillVersions(
+  Directory workspaceRoot,
+  List<String> failures,
+) {
+  final skillRoot = '${workspaceRoot.path}/skills/building-remix-design-system';
+  final remixPubspec = File(
+    '${workspaceRoot.path}/packages/remix/pubspec.yaml',
+  ).readAsStringSync();
+  final playbookFile = File('$skillRoot/references/component-playbook.md');
+  final foundationFile = File('$skillRoot/references/foundation-patterns.md');
+  final evalsFile = File('$skillRoot/evals/evals.json');
+  if (!playbookFile.existsSync() ||
+      !foundationFile.existsSync() ||
+      !evalsFile.existsSync()) {
+    failures.add('Missing building-remix-design-system version references.');
+    return;
+  }
+
+  String field(String name, {int indentation = 0}) {
+    final leadingWhitespace = ''.padLeft(indentation);
+    final match = RegExp(
+      '^$leadingWhitespace${RegExp.escape(name)}:\\s*(\\S+)\\s*\$',
+      multiLine: true,
+    ).firstMatch(remixPubspec);
+    if (match == null) {
+      failures.add('packages/remix/pubspec.yaml is missing $name.');
+      return '<missing>';
+    }
+    return match.group(1)!;
+  }
+
+  final expected = <String, String>{
+    'remix': '^${field('version')}',
+    'mix': field('mix', indentation: 2),
+    'mix_annotations': field('mix_annotations', indentation: 2),
+    'build_runner': field('build_runner', indentation: 2),
+    'mix_generator': field('mix_generator', indentation: 2),
+  };
+  final playbook = playbookFile.readAsStringSync();
+  final evals = evalsFile.readAsStringSync();
+  for (final MapEntry(:key, :value) in expected.entries) {
+    if (!playbook.contains('  $key: $value')) {
+      failures.add(
+        'skills/building-remix-design-system/references/component-playbook.md '
+        'must track the tested $key constraint $value.',
+      );
+    }
+    if (!evals.contains('$key $value')) {
+      failures.add(
+        'skills/building-remix-design-system/evals/evals.json must track the '
+        'tested $key constraint $value.',
+      );
+    }
+  }
+
+  final mixVersion = expected['mix']!.replaceFirst('^', '');
+  if (!foundationFile.readAsStringSync().contains('`mix $mixVersion`')) {
+    failures.add(
+      'skills/building-remix-design-system/references/'
+      'foundation-patterns.md must name the tested mix version $mixVersion.',
+    );
+  }
 }
 
 int _checkDartSources(

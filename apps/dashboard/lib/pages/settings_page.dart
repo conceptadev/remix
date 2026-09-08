@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+import '../widgets/app_accent_scope.dart';
+import '../widgets/disclosure_trigger.dart';
 import '../widgets/page_header.dart';
 import '../widgets/theme_panel.dart';
 import '../widgets/toast.dart';
@@ -153,29 +155,35 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
-              FortalCard(
-                size: .size3,
-                child: Column(
-                  crossAxisAlignment: .stretch,
-                  spacing: 16,
-                  children: [
-                    const CardHeading(
-                      title: 'Danger zone',
-                      description:
-                          'Destructive workspace actions cannot be undone.',
-                    ),
-                    Align(
-                      alignment: .centerLeft,
-                      child: FortalScope(
-                        accent: .red,
-                        hasBackground: false,
+              AppAccentScope(
+                accent: .red,
+                child: FortalDisclosure.soft(
+                  key: const ValueKey('settings-danger-zone'),
+                  size: .size3,
+                  animationStyle: dashboardDisclosureAnimationStyle,
+                  semanticHint: 'Shows destructive workspace actions',
+                  trigger: const Text('Danger zone'),
+                  triggerBuilder: (context, state, child) =>
+                      DashboardDisclosureTrigger(
+                        expanded: state.isExpanded,
+                        child: child!,
+                      ),
+                  content: Column(
+                    crossAxisAlignment: .stretch,
+                    spacing: 12,
+                    children: [
+                      const Text(
+                        'Destructive workspace actions cannot be undone.',
+                      ),
+                      Align(
+                        alignment: .centerLeft,
                         child: FortalButton.outline(
                           onPressed: _confirmDelete,
                           label: 'Delete workspace',
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -189,29 +197,23 @@ class _SettingsPageState extends State<SettingsPage> {
     final confirmed = await showRemixDialog<bool>(
       context: context,
       barrierLabel: 'Dismiss',
-      builder: (context) => Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: FortalDialog(
-            title: 'Delete workspace?',
-            description:
-                'This demo keeps your data safe, but a real action would be permanent.',
-            actions: [
-              FortalButton.soft(
-                onPressed: () => Navigator.of(context).pop(false),
-                label: 'Cancel',
-              ),
-              FortalScope(
-                accent: .red,
-                hasBackground: false,
-                child: FortalButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  label: 'Delete',
-                ),
-              ),
-            ],
+      builder: (context) => FortalDialog(
+        title: 'Delete workspace?',
+        description:
+            'This demo keeps your data safe, but a real action would be permanent.',
+        actions: [
+          FortalButton.soft(
+            onPressed: () => Navigator.of(context).pop(false),
+            label: 'Cancel',
           ),
-        ),
+          AppAccentScope(
+            accent: .red,
+            child: FortalButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              label: 'Delete',
+            ),
+          ),
+        ],
       ),
     );
     if (!mounted || confirmed != true) return;

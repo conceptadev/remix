@@ -140,7 +140,7 @@ enum AcmeSize { xs, sm, md, lg, xl, x2l;
 - If no component consumes motion yet, say so in the worksheet's
   approximations — don't let docs imply animated transitions exist.
 
-## Mix API cheatsheet (verified against mix 2.1)
+## Mix API cheatsheet (verified against `mix 2.2.0-beta.5`)
 
 | Need | API |
 | --- | --- |

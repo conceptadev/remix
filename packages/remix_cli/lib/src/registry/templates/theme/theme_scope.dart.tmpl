@@ -1,0 +1,88 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import 'theme_data.dart';
+
+/// Installs a [{{typePrefix}}ThemeData] for a subtree.
+///
+/// Two things are installed together on purpose:
+///
+/// * [{{typePrefix}}Theme], so application code can read the raw values through
+///   [{{typePrefix}}Theme.of];
+/// * a `MixScope` carrying the same values keyed by `{{typePrefix}}Tokens`, so every Mix
+///   styler resolved below this point sees them.
+///
+/// Nesting a scope replaces the values for its subtree; nothing merges with
+/// the ancestor, which keeps "what does this token resolve to here?" a
+/// single-lookup question.
+class {{typePrefix}}ThemeScope extends StatelessWidget {
+  /// Creates a scope that provides [data] to [child].
+  const {{typePrefix}}ThemeScope({super.key, required this.data, required this.child});
+
+  /// The theme installed for [child].
+  final {{typePrefix}}ThemeData data;
+
+  /// The subtree that resolves against [data].
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return {{typePrefix}}Theme(
+      data: data,
+      child: MixScope(tokens: data.tokens, child: child),
+    );
+  }
+}
+
+/// The inherited half of [{{typePrefix}}ThemeScope].
+///
+/// Prefer [{{typePrefix}}ThemeScope]; this is public because `{{typePrefix}}Theme.of` is how widgets
+/// read theme values that are not expressed as Mix styles, and because
+/// `InheritedTheme.wrap` has to be able to rebuild it across a route
+/// boundary.
+class {{typePrefix}}Theme extends InheritedTheme {
+  /// Creates the inherited theme holding [data].
+  const {{typePrefix}}Theme({super.key, required this.data, required super.child});
+
+  /// The theme values available to [child].
+  final {{typePrefix}}ThemeData data;
+
+  /// The closest [{{typePrefix}}ThemeData], or `null` when no scope is installed.
+  static {{typePrefix}}ThemeData? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<{{typePrefix}}Theme>()?.data;
+
+  /// The closest [{{typePrefix}}ThemeData].
+  ///
+  /// Throws when no [{{typePrefix}}ThemeScope] is installed above [context]; use
+  /// [maybeOf] when absence is a valid state.
+  static {{typePrefix}}ThemeData of(BuildContext context) {
+    final data = maybeOf(context);
+    if (data != null) return data;
+
+    throw FlutterError.fromParts([
+      ErrorSummary('No {{typePrefix}}Theme found.'),
+      ErrorDescription(
+        '${context.widget.runtimeType} tried to read the UI theme, but no '
+        '{{typePrefix}}ThemeScope was found above it.',
+      ),
+      context.describeElement('The context used was'),
+    ]);
+  }
+
+  /// Rebuilds the theme *and* its Mix scope for a captured subtree.
+  ///
+  /// `InheritedTheme.capture` only carries `InheritedTheme`s across a route
+  /// boundary. `MixScope` is a plain `InheritedModel`, so without rebuilding
+  /// it here a captured subtree would keep the theme values and lose the
+  /// token values that recipes actually resolve.
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return {{typePrefix}}Theme(
+      data: data,
+      child: MixScope(tokens: data.tokens, child: child),
+    );
+  }
+
+  @override
+  bool updateShouldNotify({{typePrefix}}Theme oldWidget) => data != oldWidget.data;
+}
