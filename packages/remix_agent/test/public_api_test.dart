@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:remix/remix.dart';
 import 'package:remix_agent/remix_agent.dart';
 
 void main() {
@@ -28,7 +29,15 @@ void main() {
     expect(execution.status, AgentExecutionStatus.running);
     expect(plan.items, isEmpty);
     expect(activity.status, AgentRunStatus.working);
-    expect(kDefaultLiveEdgeThreshold, 56);
+    expect(const AgentComposerSpec(), isA<AgentComposerSpec>());
+    expect(const AgentTranscript(children: []), isA<AgentTranscript>());
+    expect(
+      const AgentPermission(
+        tool: 't',
+        parameters: [RemixDataListItem(label: 'a', value: 'b')],
+      ),
+      isA<AgentPermission>(),
+    );
   });
 
   test('library sources do not import Material', () {
@@ -48,5 +57,22 @@ void main() {
       }
     }
     expect(hits, isEmpty);
+  });
+
+  test('barrel hides implementation and test seams', () {
+    final barrel = File('lib/remix_agent.dart').existsSync()
+        ? File('lib/remix_agent.dart')
+        : File('packages/remix_agent/lib/remix_agent.dart');
+    final source = barrel.readAsStringSync();
+    for (final seam in [
+      'behavior/live_edge.dart',
+      'components/disclosure.dart',
+      'components/clip_reveal.dart',
+      'models/permission_parameter.dart',
+      'style/defaults.dart',
+      'style/motion.dart',
+    ]) {
+      expect(source, isNot(contains(seam)));
+    }
   });
 }

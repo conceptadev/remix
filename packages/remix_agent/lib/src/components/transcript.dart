@@ -1,149 +1,119 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import '../behavior/live_edge.dart';
-import '../style/defaults.dart';
+import '../style/live_edge.dart';
+import '../style/style_builder.dart';
 
-/// Reader-aware transcript viewport.
-///
-/// Follows streamed growth only while the reader stays at the live edge.
-/// User scroll or drag away releases follow. Returning to the edge
-/// re-attaches. Nested scrollables do not count as leaving the edge.
+part 'transcript.g.dart';
+
+/// Chronological transcript with reader-aware live-edge following.
 class AgentTranscript extends StatefulWidget {
-  /// Creates a live-edge transcript.
   const AgentTranscript({
     super.key,
-    required this.child,
+    required List<Widget> this.children,
     this.followOutput = true,
-    this.followThreshold = kDefaultLiveEdgeThreshold,
+    this.followThreshold = 48.0,
     this.busy = false,
+    this.busyLabel = 'Busy',
     this.label = 'Conversation',
-    this.onFollowChange,
+    this.onFollowChanged,
     this.controller,
-    this.padding,
-    this.maxHeight,
     this.clipBehavior = Clip.hardEdge,
-  });
+    this.style = const AgentTranscriptStyler.create(),
+    this.styleSpec,
+  }) : itemCount = null,
+       itemBuilder = null;
 
-  /// Transcript contents. Typically a column of [AgentMessage] rows.
-  final Widget child;
+  const AgentTranscript.builder({
+    super.key,
+    required int this.itemCount,
+    required IndexedWidgetBuilder this.itemBuilder,
+    this.followOutput = true,
+    this.followThreshold = 48.0,
+    this.busy = false,
+    this.busyLabel = 'Busy',
+    this.label = 'Conversation',
+    this.onFollowChanged,
+    this.controller,
+    this.clipBehavior = Clip.hardEdge,
+    this.style = const AgentTranscriptStyler.create(),
+    this.styleSpec,
+  }) : children = null;
 
-  /// When false, the viewport never auto-follows.
+  final List<Widget>? children;
+  final int? itemCount;
+  final IndexedWidgetBuilder? itemBuilder;
   final bool followOutput;
-
-  /// Pixels from the end that still count as following.
   final double followThreshold;
-
-  /// Marks the log as waiting for more content.
   final bool busy;
-
-  /// Accessible name for the scrollable log.
+  final String busyLabel;
   final String label;
-
-  /// Reports follow / release.
-  final ValueChanged<bool>? onFollowChange;
-
-  /// Optional external scroll controller.
+  final ValueChanged<bool>? onFollowChanged;
   final ScrollController? controller;
-
-  /// Inset around [child].
-  final EdgeInsetsGeometry? padding;
-
-  /// Optional viewport cap.
-  final double? maxHeight;
-
-  /// How overflow is clipped. Defaults to [Clip.hardEdge].
   final Clip clipBehavior;
+  final AgentTranscriptStyler style;
+  final AgentTranscriptSpec? styleSpec;
 
   @override
-  State<AgentTranscript> createState() => AgentTranscriptState();
+  State<AgentTranscript> createState() => _AgentTranscriptState();
 }
 
-/// State exposed so tests can read the shipped [ScrollController].
-class AgentTranscriptState extends State<AgentTranscript> {
-  ScrollController? _owned;
-  late final LiveEdgePolicy policy;
-  var _focusVisible = false;
-
-  ScrollController get controller => widget.controller ?? _owned!;
+class _AgentTranscriptState extends State<AgentTranscript> {
+  ScrollController? _ownedController;
+  late ScrollController _controller;
+  late final AgentLiveEdgeEngine _liveEdge;
 
   @override
   void initState() {
     super.initState();
-    if (widget.controller == null) {
-      _owned = ScrollController();
-    }
-    policy = LiveEdgePolicy(
-      threshold: widget.followThreshold,
+    _controller = widget.controller ?? (_ownedController = ScrollController());
+    _liveEdge = AgentLiveEdgeEngine(
       enabled: widget.followOutput,
-      onFollowChange: widget.onFollowChange,
+      threshold: widget.followThreshold,
+      onChanged: widget.onFollowChanged,
     );
-    WidgetsBinding.instance.addPostFrameCallback((_) => _follow());
+    _scheduleFollow();
   }
 
   @override
   void didUpdateWidget(AgentTranscript oldWidget) {
     super.didUpdateWidget(oldWidget);
-    policy.enabled = widget.followOutput;
-    policy.threshold = widget.followThreshold;
-    policy.onFollowChange = widget.onFollowChange;
-    WidgetsBinding.instance.addPostFrameCallback((_) => _follow());
+    _liveEdge
+      ..enabled = widget.followOutput
+      ..threshold = widget.followThreshold
+      ..onChanged = widget.onFollowChanged;
+    if (!identical(oldWidget.controller, widget.controller)) {
+      final offset = _controller.hasClients ? _controller.offset : 0.0;
+      final oldOwned = _ownedController;
+      _ownedController = null;
+      _controller =
+          widget.controller ??
+          (_ownedController = ScrollController(initialScrollOffset: offset));
+      if (oldOwned != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => oldOwned.dispose());
+      }
+    }
+    _scheduleFollow();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _follow());
+  void _scheduleFollow() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _liveEdge.follow(_controller);
+    });
   }
 
-  @override
-  void dispose() {
-    _owned?.dispose();
-    super.dispose();
+  bool _handleScroll(ScrollNotification notification) {
+    if (notification.depth != 0) return false;
+    _liveEdge.handleScroll(notification, _controller);
+    return notification is OverscrollNotification;
   }
 
-  Future<void> _follow() {
-    if (!mounted) {
-      return Future<void>.value();
-    }
-    return policy.followIfNeeded(controller);
-  }
-
-  bool _onNotification(ScrollNotification notification) {
-    if (notification.depth != 0) {
-      return false;
-    }
-    // Contain overscroll so glow/bounce cannot chain out of the log.
-    if (notification is OverscrollNotification) {
-      return true;
-    }
-    if (policy.isProgrammatic) {
-      return false;
-    }
-    // Content-size changes also emit scroll notifications. Only pointer or
-    // wheel input should release or re-attach follow.
-    final fromPointer =
-        notification is ScrollUpdateNotification &&
-        notification.dragDetails != null;
-    final fromUser = notification is UserScrollNotification;
-    if (!fromPointer && !fromUser) {
-      return false;
-    }
-    if (controller.hasClients) {
-      policy.handleUserScroll(controller.position);
-    }
-    return false;
-  }
-
-  void _scrollByIntent(_TranscriptScrollIntent intent) {
-    if (!controller.hasClients) {
-      return;
-    }
-    final position = controller.position;
-    if (!position.hasPixels || !position.hasContentDimensions) {
-      return;
-    }
+  void _handleIntent(_TranscriptScrollIntent intent) {
+    if (!_controller.hasClients) return;
+    final position = _controller.position;
     final target = switch (intent.kind) {
       _TranscriptScrollKind.lineUp => position.pixels - 50,
       _TranscriptScrollKind.lineDown => position.pixels + 50,
@@ -159,102 +129,84 @@ class AgentTranscriptState extends State<AgentTranscript> {
           .clamp(position.minScrollExtent, position.maxScrollExtent)
           .toDouble(),
     );
-    policy.handleUserScroll(position);
-  }
-
-  EdgeInsetsGeometry get _padding {
-    const gutter = EdgeInsetsDirectional.only(end: kAgentScrollbarGutter);
-    return widget.padding == null ? gutter : gutter.add(widget.padding!);
+    _liveEdge.handlePosition(position);
   }
 
   @override
   Widget build(BuildContext context) {
-    final ink = agentInkOf(context);
-    return Semantics(
-      container: true,
-      liveRegion: widget.busy,
-      label: widget.label,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          // min-h-0 so a flex host can shrink the log. h-full when the host
-          // already has a definite height; stay shrink-wrapped when unbounded
-          // so Column/maxHeight callers (activity, execution) stay compact.
-          var chrome = BoxStyler().minHeight(0);
-          if (constraints.hasBoundedHeight) {
-            final cap = widget.maxHeight;
-            chrome = chrome.height(
-              cap == null
-                  ? constraints.maxHeight
-                  : cap < constraints.maxHeight
-                  ? cap
-                  : constraints.maxHeight,
-            );
-          } else if (widget.maxHeight != null) {
-            chrome = chrome.maxHeight(widget.maxHeight!);
-          }
-          if (constraints.hasBoundedWidth) {
-            chrome = chrome.width(constraints.maxWidth);
-          }
-          if (_focusVisible) {
-            chrome = chrome.foregroundDecoration(
-              .border(
-                .color(ink)
-                    .width(kAgentFocusRingWidth)
-                    .strokeAlign(BorderSide.strokeAlignInside),
-              ),
-            );
-          }
-
-          return FocusableActionDetector(
-            shortcuts: _transcriptScrollShortcuts,
-            actions: <Type, Action<Intent>>{
-              _TranscriptScrollIntent: CallbackAction<_TranscriptScrollIntent>(
-                onInvoke: (intent) {
-                  _scrollByIntent(intent);
-                  return null;
-                },
-              ),
-            },
-            onShowFocusHighlight: (show) {
-              if (_focusVisible == show) {
-                return;
-              }
-              setState(() => _focusVisible = show);
-            },
-            child: Box(
-              style: chrome,
-              child: ClipRect(
-                clipBehavior: widget.clipBehavior,
-                child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(context).copyWith(
-                    overscroll: false,
-                    physics: const ClampingScrollPhysics(),
-                  ),
-                  child: NotificationListener<ScrollMetricsNotification>(
+    return AgentStyleBuilder<AgentTranscriptSpec>(
+      style: widget.style,
+      styleSpec: widget.styleSpec,
+      builder: (context, spec) => Semantics(
+        container: true,
+        explicitChildNodes: true,
+        label: widget.label,
+        value: widget.busy ? widget.busyLabel : null,
+        child: FocusableActionDetector(
+          shortcuts: _transcriptShortcuts,
+          actions: <Type, Action<Intent>>{
+            _TranscriptScrollIntent: CallbackAction<_TranscriptScrollIntent>(
+              onInvoke: (intent) {
+                _handleIntent(intent);
+                return null;
+              },
+            ),
+          },
+          child: Box(
+            styleSpec: spec.viewport,
+            child: LayoutBuilder(
+              builder: (context, constraints) =>
+                  NotificationListener<ScrollMetricsNotification>(
                     onNotification: (notification) {
-                      if (notification.depth == 0 && policy.following) {
-                        _follow();
+                      if (notification.depth == 0 && _liveEdge.following) {
+                        _scheduleFollow();
                       }
                       return false;
                     },
                     child: NotificationListener<ScrollNotification>(
-                      onNotification: _onNotification,
-                      child: SingleChildScrollView(
-                        controller: controller,
-                        padding: _padding,
-                        physics: const ClampingScrollPhysics(),
-                        clipBehavior: widget.clipBehavior,
-                        child: widget.child,
+                      onNotification: _handleScroll,
+                      child: ScrollConfiguration(
+                        behavior: ScrollConfiguration.of(context).copyWith(
+                          overscroll: false,
+                          physics: const ClampingScrollPhysics(),
+                        ),
+                        child: _buildList(
+                          spec,
+                          shrinkWrap: !constraints.hasBoundedHeight,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
+  }
+
+  Widget _buildList(AgentTranscriptSpec spec, {required bool shrinkWrap}) {
+    final children = widget.children;
+    final count = children?.length ?? widget.itemCount!;
+    final spacing = spec.spacing ?? 0;
+    assert(spacing >= 0, 'AgentTranscript spacing must be non-negative.');
+    return ListView.separated(
+      controller: _controller,
+      shrinkWrap: shrinkWrap,
+      physics: const ClampingScrollPhysics(),
+      clipBehavior: widget.clipBehavior,
+      itemCount: count,
+      itemBuilder: (context, index) => Box(
+        styleSpec: spec.item,
+        child: children?[index] ?? widget.itemBuilder!(context, index),
+      ),
+      separatorBuilder: (context, index) => SizedBox(height: spacing),
+    );
+  }
+
+  @override
+  void dispose() {
+    _ownedController?.dispose();
+    super.dispose();
   }
 }
 
@@ -262,11 +214,10 @@ enum _TranscriptScrollKind { lineUp, lineDown, pageUp, pageDown, home, end }
 
 class _TranscriptScrollIntent extends Intent {
   const _TranscriptScrollIntent(this.kind);
-
   final _TranscriptScrollKind kind;
 }
 
-const _transcriptScrollShortcuts = <ShortcutActivator, Intent>{
+const _transcriptShortcuts = <ShortcutActivator, Intent>{
   SingleActivator(LogicalKeyboardKey.arrowUp): _TranscriptScrollIntent(
     _TranscriptScrollKind.lineUp,
   ),
@@ -286,3 +237,21 @@ const _transcriptScrollShortcuts = <ShortcutActivator, Intent>{
     _TranscriptScrollKind.end,
   ),
 };
+
+@MixableSpec(target: AgentTranscript.new)
+@immutable
+final class AgentTranscriptSpec with _$AgentTranscriptSpec {
+  @override
+  final StyleSpec<BoxSpec> viewport;
+  @override
+  final StyleSpec<BoxSpec> item;
+  @override
+  final double? spacing;
+
+  const AgentTranscriptSpec({
+    StyleSpec<BoxSpec>? viewport,
+    StyleSpec<BoxSpec>? item,
+    this.spacing,
+  }) : viewport = viewport ?? const StyleSpec(spec: BoxSpec()),
+       item = item ?? const StyleSpec(spec: BoxSpec());
+}

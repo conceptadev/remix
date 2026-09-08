@@ -9,6 +9,7 @@ class AgentActivityItem {
     required this.id,
     required this.title,
     this.status = AgentActivityItemStatus.pending,
+    this.detail,
     this.child,
   });
 
@@ -20,6 +21,9 @@ class AgentActivityItem {
 
   /// Current status.
   final AgentActivityItemStatus status;
+
+  /// Optional compact detail rendered with the activity detail style slot.
+  final String? detail;
 
   /// Optional host-rendered detail. The catalog does not parse this child.
   final Widget? child;

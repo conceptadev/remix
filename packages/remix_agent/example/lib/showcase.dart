@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
 
 import 'demos.dart';
 import 'host.dart';
@@ -248,27 +249,48 @@ class _TopBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         child: Row(
           children: [
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: theme.live,
-                shape: BoxShape.circle,
+            Semantics(
+              container: true,
+              explicitChildNodes: true,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ExcludeSemantics(
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: theme.live,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    'Remix Agent',
+                    style: theme.body.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(width: 12),
+                  Text('review catalog', style: theme.meta),
+                ],
               ),
             ),
-            const SizedBox(width: 10),
-            Text(
-              'Remix Agent',
-              style: theme.body.copyWith(fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(width: 12),
-            Text('review catalog', style: theme.meta),
             const Spacer(),
-            GestureDetector(
-              onTap: onToggleDark,
-              child: Text(
-                theme.dark ? 'Day' : 'Night',
-                style: theme.meta.copyWith(color: theme.ink),
+            Semantics(
+              container: true,
+              explicitChildNodes: true,
+              child: RemixButton(
+                label: theme.dark ? 'Day' : 'Night',
+                onPressed: onToggleDark,
+                style: ButtonStyler()
+                    .minWidth(48)
+                    .minHeight(48)
+                    .padding(.symmetric(horizontal: 8))
+                    .label(
+                      TextStyler()
+                          .color(theme.ink)
+                          .fontSize(theme.meta.fontSize ?? 12),
+                    ),
               ),
             ),
           ],
@@ -342,28 +364,25 @@ class _RailItem extends StatelessWidget {
     final theme = HostTheme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 6, right: 8),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 6,
-              height: 6,
-              decoration: BoxDecoration(
-                color: selected ? theme.live : theme.hairline,
-                shape: BoxShape.circle,
-              ),
+      child: RemixToggle(
+        selected: selected,
+        label: label,
+        onChanged: (_) => onTap(),
+        style: ToggleStyler()
+            .minHeight(48)
+            .padding(.symmetric(horizontal: 12))
+            .borderRadius(.circular(8))
+            .color(
+              selected
+                  ? theme.live.withValues(alpha: 0.14)
+                  : const Color(0x00000000),
+            )
+            .label(
+              TextStyler()
+                  .color(theme.ink)
+                  .fontSize(theme.body.fontSize ?? 14)
+                  .fontWeight(selected ? FontWeight.w600 : FontWeight.w400),
             ),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: theme.body.copyWith(
-                fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

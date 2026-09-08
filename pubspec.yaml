@@ -78,7 +78,7 @@ melos:
         concurrency: 1
         orderDependents: true
       packageFilters:
-        scope: [remix, remix_fortal]
+        scope: [remix, remix_agent, remix_fortal]
 
     generate:check:
       run: dart run ../../tool/check_generated.dart
@@ -87,7 +87,7 @@ melos:
         concurrency: 1
         orderDependents: true
       packageFilters:
-        scope: [remix, remix_fortal]
+        scope: [remix, remix_agent, remix_fortal]
 
     test:flutter:
       exec: flutter test --reporter=failures-only

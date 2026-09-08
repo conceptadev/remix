@@ -1,10 +1,18 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import 'showcase.dart';
 
+final _semanticsHandles = <SemanticsHandle>[];
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const RemixAgentExampleApp());
+  if (kIsWeb) {
+    _semanticsHandles.add(SemanticsBinding.instance.ensureSemantics());
+  }
 }
 
 /// Local catalog host. No theme package and no MaterialApp.

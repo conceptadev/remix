@@ -86,7 +86,7 @@ class RemixIconButton extends StatelessWidget {
     );
     final allowsInteraction = enabled && !loading;
 
-    return NakedButton(
+    final button = NakedButton(
       // Naked UI beta.12 derives semantic actions from callback presence, so
       // remove callbacks whenever this wrapper disallows interaction.
       onPressed: allowsInteraction ? onPressed : null,
@@ -135,6 +135,18 @@ class RemixIconButton extends StatelessWidget {
           );
         },
       ),
+    );
+
+    if (!loading || excludeSemantics) return button;
+    return Stack(
+      children: [
+        button,
+        Semantics(
+          liveRegion: true,
+          label: '$semanticLabel, loading',
+          child: const SizedBox.square(dimension: 1),
+        ),
+      ],
     );
   }
 }

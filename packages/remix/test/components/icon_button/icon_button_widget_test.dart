@@ -311,7 +311,7 @@ void main() {
         semantics.dispose();
       });
 
-      testWidgets('loading updates that owner without duplicating it', (
+      testWidgets('loading keeps one button and a separate live announcement', (
         tester,
       ) async {
         final semantics = tester.ensureSemantics();
@@ -341,6 +341,12 @@ void main() {
             hasTapAction: false,
             hasLongPressAction: false,
           ),
+        );
+        final announcement = find.semantics.byLabel('Save item, loading');
+        expect(announcement, findsOne);
+        expect(
+          announcement.evaluate().single,
+          isSemantics(label: 'Save item, loading', isLiveRegion: true),
         );
         semantics.dispose();
       });

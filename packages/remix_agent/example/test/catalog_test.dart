@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -99,7 +100,7 @@ void main() {
     await tester.ensureVisible(succeed);
     await tester.pump();
     await tester.tap(succeed);
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.text('12 passed · 0 failed'), findsNothing);
 
     final title = find.descendant(
@@ -111,5 +112,50 @@ void main() {
     await tester.tap(title);
     await tester.pump();
     expect(find.text('12 passed · 0 failed'), findsOneWidget);
+  });
+
+  testWidgets('styled catalog meets Flutter accessibility guidelines', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(const RemixAgentExampleApp());
+    await tester.pumpAndSettle();
+
+    expect(tester, meetsGuideline(labeledTapTargetGuideline));
+    expect(tester, meetsGuideline(androidTapTargetGuideline));
+    expect(tester, meetsGuideline(textContrastGuideline));
+  });
+
+  testWidgets('catalog chrome uses keyboard-operable Remix controls', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(const RemixAgentExampleApp());
+    await tester.pump();
+
+    expect(find.byType(RemixToggle), findsNWidgets(catalogEntries.length));
+    expect(find.widgetWithText(RemixButton, 'Night'), findsOneWidget);
+
+    final themeToggleFocus = tester
+        .widgetList<Focus>(
+          find.ancestor(of: find.text('Night'), matching: find.byType(Focus)),
+        )
+        .map((focus) => focus.focusNode)
+        .whereType<FocusNode>()
+        .firstWhere(
+          (node) => node.debugLabel?.startsWith('NakedButton') ?? false,
+        );
+    themeToggleFocus.requestFocus();
+    await tester.pump();
+    expect(themeToggleFocus.hasFocus, isTrue);
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    await tester.pump();
+    expect(find.widgetWithText(RemixButton, 'Day'), findsOneWidget);
   });
 }

@@ -1,322 +1,242 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import '../behavior/live_edge.dart';
 import '../models/plan_item.dart';
 import '../models/statuses.dart';
-import '../style/defaults.dart';
-import 'disclosure.dart';
-import 'marks.dart';
+import '../style/functional_glyph.dart';
+import '../style/live_edge.dart';
+import '../style/style_builder.dart';
 
-/// Title / detail / empty copy. 14 / 20.
-const _kPlanRunHeight = 20 / 14;
+part 'plan.g.dart';
 
-/// Trigger corner and focus-visible ring.
-const _kTriggerRadius = 6.0;
+typedef AgentPlanStatusBuilder =
+    Widget Function(BuildContext context, AgentPlanItem item);
+typedef AgentPlanStatusLabelBuilder = String Function(AgentPlanItem item);
+typedef AgentPlanIndicatorBuilder =
+    Widget Function(BuildContext context, bool expanded);
 
-/// Trigger horizontal inset. Viewport 8 + row 6 so the 8px caret
-/// shares an edge with item marks.
-const _kSummaryPadX = 14.0;
-
-/// Task plan for a long-running agent turn.
-class AgentPlan extends StatelessWidget {
-  /// Creates a plan.
+/// Toggleable task plan with lifecycle-aware uncontrolled disclosure state.
+class AgentPlan extends StatefulWidget {
   const AgentPlan({
     super.key,
     required this.items,
     this.title = 'Plan',
+    this.emptyLabel = 'No tasks yet',
+    this.semanticLabel = 'Task plan',
     this.collapseOnComplete = true,
-    this.open,
-    this.onOpenChange,
-    this.maxHeight = kAgentPlanViewportHeight,
-    this.style,
+    this.expanded,
+    this.defaultExpanded = true,
+    this.onExpandedChanged,
+    this.statusBuilder,
+    this.statusLabelBuilder,
+    this.indicatorBuilder,
+    this.followOutput = true,
+    this.followThreshold = 48,
+    this.onFollowChanged,
+    this.disclosureStyle = const DisclosureStyler.create(),
+    this.style = const AgentPlanStyler.create(),
+    this.styleSpec,
   });
 
-  /// Ordered items.
   final List<AgentPlanItem> items;
-
-  /// Visible title.
   final String title;
-
-  /// Collapse the list when every item is settled.
+  final String emptyLabel;
+  final String semanticLabel;
   final bool collapseOnComplete;
-
-  /// Controlled expanded state.
-  final bool? open;
-
-  /// Called when the operator toggles the disclosure.
-  final ValueChanged<bool>? onOpenChange;
-
-  /// Maximum height of the live item list.
-  final double maxHeight;
-
-  /// Optional card style. Off by default — a plan is a list, not a card.
-  final CardStyler? style;
-
-  /// Number of completed items.
-  int get completedCount => items
-      .where((item) => item.status == AgentPlanItemStatus.completed)
-      .length;
-
-  /// True while any item is still pending or in progress.
-  bool get isWorking =>
-      items.any((item) => !item.status.isDone) && items.isNotEmpty;
-
-  @override
-  Widget build(BuildContext context) {
-    final working = isWorking;
-    final countLabel = '${completedCount}/${items.length}';
-
-    final content = AgentDisclosure(
-      working: working,
-      collapseOnComplete: collapseOnComplete,
-      open: open,
-      onOpenChange: onOpenChange,
-      defaultOpen: items.isEmpty,
-      semanticLabel: title,
-      summary: _PlanSummary(title: title, count: countLabel),
-      child: _PlanViewport(
-        followOutput: working,
-        busy: working,
-        maxHeight: maxHeight,
-        child: items.isEmpty
-            ? const _PlanEmpty()
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (final item in items)
-                    _PlanItem(
-                      key: ValueKey('agent-plan-item-${item.id}'),
-                      item: item,
-                    ),
-                ],
-              ),
-      ),
-    );
-
-    return Semantics(
-      container: true,
-      label: 'Task plan',
-      child: agentMaybeCard(context: context, style: style, child: content),
-    );
-  }
-}
-
-/// 36-floor trigger. 14px inset, one-line title, 10px, tabular count.
-///
-/// Not [AgentDisclosureSummary] — that row wraps the title, has no
-/// focus-visible ring, and floors at 6px pad instead of 36.
-class _PlanSummary extends StatefulWidget {
-  const _PlanSummary({required this.title, required this.count});
-
-  final String title;
-  final String count;
-
-  @override
-  State<_PlanSummary> createState() => _PlanSummaryState();
-}
-
-class _PlanSummaryState extends State<_PlanSummary> {
-  final _states = WidgetStatesController();
-  FocusNode? _ancestor;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final node = Focus.maybeOf(context);
-    if (!identical(node, _ancestor)) {
-      _ancestor?.removeListener(_syncFocus);
-      _ancestor = node;
-      _ancestor?.addListener(_syncFocus);
-    }
-    _syncFocus();
-  }
-
-  @override
-  void dispose() {
-    _ancestor?.removeListener(_syncFocus);
-    _states.dispose();
-    super.dispose();
-  }
-
-  void _syncFocus() {
-    _states.focused = _ancestor?.hasFocus ?? false;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Disclosure rebuilds this summary on toggle. The expand inherited
-    // widget stays private to disclosure.dart.
-    final shown =
-        context
-            .findAncestorWidgetOfExactType<Semantics>()
-            ?.properties
-            .expanded ??
-        true;
-    final ink = agentInkOf(context);
-
-    return PressableBox(
-      key: const ValueKey('agent-plan-trigger'),
-      controller: _states,
-      canRequestFocus: false,
-      excludeFromSemantics: true,
-      semanticsRole: PressableSemanticsRole.none,
-      mouseCursor: SystemMouseCursors.click,
-      style: BoxStyler()
-          .minHeight(kAgentRowMinHeight)
-          .padding(.symmetric(horizontal: _kSummaryPadX, vertical: 4))
-          .alignment(.centerLeft)
-          .borderRadius(.circular(_kTriggerRadius))
-          .onFocusVisible(
-            .foregroundDecoration(
-              .border(
-                .color(ink)
-                    .width(kAgentFocusRingWidth)
-                    .strokeAlign(BorderSide.strokeAlignInside),
-              ).borderRadius(.circular(_kTriggerRadius)),
-            ),
-          ),
-      child: Row(
-        children: [
-          Box(
-            style: BoxStyler()
-                .wrap(.opacity(0.5))
-                .onHovered(BoxStyler().wrap(.opacity(1))),
-            child: AgentChevron(expanded: shown),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              widget.title,
-              maxLines: 1,
-              softWrap: false,
-              overflow: TextOverflow.ellipsis,
-              style: agentTitleOf(context),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            widget.count,
-            maxLines: 1,
-            style: agentMetaOf(context).copyWith(fontWeight: FontWeight.w500),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Item list. Own viewport: the conversation transcript reserves a
-/// 12px end gutter so lines don't jump; this list is px-2 with no
-/// scrollbar reserve.
-class _PlanViewport extends StatefulWidget {
-  const _PlanViewport({
-    required this.followOutput,
-    required this.busy,
-    required this.maxHeight,
-    required this.child,
-  });
-
+  final bool? expanded;
+  final bool defaultExpanded;
+  final ValueChanged<bool>? onExpandedChanged;
+  final AgentPlanStatusBuilder? statusBuilder;
+  final AgentPlanStatusLabelBuilder? statusLabelBuilder;
+  final AgentPlanIndicatorBuilder? indicatorBuilder;
   final bool followOutput;
-  final bool busy;
-  final double maxHeight;
-  final Widget child;
+  final double followThreshold;
+  final ValueChanged<bool>? onFollowChanged;
+  final DisclosureStyler disclosureStyle;
+  final AgentPlanStyler style;
+  final AgentPlanSpec? styleSpec;
+
+  int get settledCount => items.where((item) => item.status.isDone).length;
+  bool get isWorking => items.any((item) => !item.status.isDone);
 
   @override
-  State<_PlanViewport> createState() => _PlanViewportState();
+  State<AgentPlan> createState() => _AgentPlanState();
 }
 
-class _PlanViewportState extends State<_PlanViewport> {
-  final _controller = ScrollController();
-  late final _policy = LiveEdgePolicy(enabled: widget.followOutput);
+class _AgentPlanState extends State<AgentPlan> {
+  late bool _uncontrolledExpanded;
+
+  bool get _expanded => widget.expanded ?? _uncontrolledExpanded;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _follow());
+    _uncontrolledExpanded = widget.expanded ?? widget.defaultExpanded;
   }
 
   @override
-  void didUpdateWidget(_PlanViewport oldWidget) {
+  void didUpdateWidget(AgentPlan oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _policy.enabled = widget.followOutput;
-    WidgetsBinding.instance.addPostFrameCallback((_) => _follow());
+    if (oldWidget.expanded != null && widget.expanded == null) {
+      _uncontrolledExpanded = oldWidget.expanded!;
+    }
+    final wasWorking = oldWidget.isWorking;
+    final working = widget.isWorking;
+    if (wasWorking && !working && widget.collapseOnComplete) {
+      _request(false);
+    } else if (!wasWorking && working) {
+      _request(true);
+    }
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _follow());
+  void _request(bool next) {
+    if (widget.expanded == null && next != _uncontrolledExpanded) {
+      setState(() => _uncontrolledExpanded = next);
+    }
+    widget.onExpandedChanged?.call(next);
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  String _statusLabel(AgentPlanItem item) =>
+      widget.statusLabelBuilder?.call(item) ??
+      switch (item.status) {
+        AgentPlanItemStatus.pending => 'Pending',
+        AgentPlanItemStatus.inProgress => 'In progress',
+        AgentPlanItemStatus.completed => 'Completed',
+        AgentPlanItemStatus.cancelled => 'Cancelled',
+      };
+
+  AgentFunctionalGlyphKind _statusGlyph(AgentPlanItemStatus status) =>
+      switch (status) {
+        AgentPlanItemStatus.pending => .pending,
+        AgentPlanItemStatus.inProgress => .active,
+        AgentPlanItemStatus.completed => .completed,
+        AgentPlanItemStatus.cancelled => .cancelled,
+      };
+
+  StyleSpec<BoxSpec> _statusContainer(
+    AgentPlanSpec spec,
+    AgentPlanItemStatus status,
+  ) => switch (status) {
+    AgentPlanItemStatus.pending => spec.pendingItem,
+    AgentPlanItemStatus.inProgress => spec.activeItem,
+    AgentPlanItemStatus.completed => spec.completedItem,
+    AgentPlanItemStatus.cancelled => spec.cancelledItem,
+  };
+
+  StyleSpec<IconSpec> _statusStyle(
+    AgentPlanSpec spec,
+    AgentPlanItemStatus status,
+  ) => switch (status) {
+    AgentPlanItemStatus.pending => spec.pendingStatus,
+    AgentPlanItemStatus.inProgress => spec.activeStatus,
+    AgentPlanItemStatus.completed => spec.completedStatus,
+    AgentPlanItemStatus.cancelled => spec.cancelledStatus,
+  };
+
+  Widget _defaultStatus(
+    BuildContext context,
+    AgentPlanSpec spec,
+    AgentPlanItem item,
+  ) {
+    return StyleSpecBuilder<IconSpec>(
+      styleSpec: _statusStyle(spec, item.status),
+      builder: (context, iconSpec) =>
+          AgentFunctionalGlyph(kind: _statusGlyph(item.status), spec: iconSpec),
+    );
   }
 
-  Future<void> _follow() {
-    if (!mounted) {
-      return Future<void>.value();
-    }
-    return _policy.followIfNeeded(_controller);
-  }
-
-  bool _onNotification(ScrollNotification notification) {
-    if (notification.depth != 0) {
-      return false;
-    }
-    if (notification is OverscrollNotification) {
-      return true;
-    }
-    if (_policy.isProgrammatic) {
-      return false;
-    }
-    final fromPointer =
-        notification is ScrollUpdateNotification &&
-        notification.dragDetails != null;
-    final fromUser = notification is UserScrollNotification;
-    if (!fromPointer && !fromUser) {
-      return false;
-    }
-    if (_controller.hasClients) {
-      _policy.handleUserScroll(_controller.position);
-    }
-    return false;
+  Widget _indicator(BuildContext context, AgentPlanSpec spec, bool expanded) {
+    return widget.indicatorBuilder?.call(context, expanded) ??
+        StyleSpecBuilder<IconSpec>(
+          styleSpec: spec.indicator,
+          builder: (context, iconSpec) => AgentFunctionalGlyph(
+            kind: .chevron,
+            spec: iconSpec,
+            expanded: expanded,
+          ),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      container: true,
-      liveRegion: widget.busy,
-      label: 'Task list',
-      child: Box(
-        key: const ValueKey('agent-plan-viewport'),
-        style: BoxStyler().minHeight(0).maxHeight(widget.maxHeight),
-        child: NotificationListener<ScrollMetricsNotification>(
-          onNotification: (notification) {
-            if (notification.depth == 0 && _policy.following) {
-              _follow();
-            }
-            return false;
-          },
-          child: NotificationListener<ScrollNotification>(
-            onNotification: _onNotification,
-            child: ScrollConfiguration(
-              behavior: ScrollConfiguration.of(context).copyWith(
-                overscroll: false,
-                physics: const ClampingScrollPhysics(),
+    return AgentStyleBuilder<AgentPlanSpec>(
+      style: widget.style,
+      styleSpec: widget.styleSpec,
+      builder: (context, spec) => Semantics(
+        container: true,
+        explicitChildNodes: true,
+        label: widget.semanticLabel,
+        child: RemixDisclosure(
+          expanded: _expanded,
+          onExpandedChanged: _request,
+          semanticLabel: widget.title,
+          style: widget.disclosureStyle,
+          triggerBuilder: (context, state, trigger) => Row(
+            children: [
+              Expanded(child: trigger!),
+              _indicator(context, spec, state.isExpanded),
+            ],
+          ),
+          trigger: Row(
+            children: [
+              Expanded(
+                child: StyledText(widget.title, styleSpec: spec.summaryTitle),
               ),
-              child: SingleChildScrollView(
-                controller: _controller,
-                padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                physics: const ClampingScrollPhysics(),
-                clipBehavior: Clip.hardEdge,
-                child: widget.child,
+              StyledText(
+                '${widget.settledCount}/${widget.items.length}',
+                styleSpec: spec.count,
               ),
-            ),
+            ],
+          ),
+          content: Box(
+            styleSpec: spec.viewport,
+            child: widget.items.isEmpty
+                ? StyledText(widget.emptyLabel, styleSpec: spec.itemDetail)
+                : AgentLiveEdgeScrollView(
+                    followOutput: widget.followOutput,
+                    followThreshold: widget.followThreshold,
+                    onFollowChanged: widget.onFollowChanged,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (final item in widget.items)
+                          Semantics(
+                            container: true,
+                            excludeSemantics: true,
+                            label: [
+                              item.title,
+                              if (item.detail != null) item.detail!,
+                              _statusLabel(item),
+                            ].join(', '),
+                            child: Box(
+                              styleSpec: _statusContainer(spec, item.status),
+                              child: RowBox(
+                                key: ValueKey('agent-plan-item-${item.id}'),
+                                styleSpec: spec.item,
+                                children: [
+                                  widget.statusBuilder?.call(context, item) ??
+                                      _defaultStatus(context, spec, item),
+                                  Expanded(
+                                    child: StyledText(
+                                      item.title,
+                                      styleSpec: spec.itemTitle,
+                                    ),
+                                  ),
+                                  if (item.detail != null)
+                                    StyledText(
+                                      item.detail!,
+                                      styleSpec: spec.itemDetail,
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
           ),
         ),
       ),
@@ -324,105 +244,69 @@ class _PlanViewportState extends State<_PlanViewport> {
   }
 }
 
-class _PlanEmpty extends StatelessWidget {
-  const _PlanEmpty();
-
+@MixableSpec(target: AgentPlan.new)
+@immutable
+final class AgentPlanSpec with _$AgentPlanSpec {
   @override
-  Widget build(BuildContext context) {
-    return Box(
-      style: BoxStyler().padding(.symmetric(horizontal: 6, vertical: 8)),
-      child: Text(
-        'No tasks yet',
-        style: agentBodyOf(
-          context,
-        ).copyWith(height: _kPlanRunHeight, color: agentMutedOf(context)),
-      ),
-    );
-  }
-}
-
-class _PlanItem extends StatelessWidget {
-  const _PlanItem({super.key, required this.item});
-
-  final AgentPlanItem item;
-
+  final StyleSpec<BoxSpec> viewport;
   @override
-  Widget build(BuildContext context) {
-    final detail = item.detail;
-
-    return Box(
-      style: BoxStyler()
-          .minHeight(kAgentRowMinHeight)
-          .padding(.symmetric(horizontal: 6, vertical: 4)),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _PlanMark(status: item.status),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              item.title,
-              maxLines: 1,
-              softWrap: false,
-              overflow: TextOverflow.ellipsis,
-              style: _titleStyle(context, item.status),
-            ),
-          ),
-          if (detail != null) ...[
-            const SizedBox(width: 10),
-            Text(
-              detail,
-              maxLines: 1,
-              style: agentBodyOf(context).copyWith(
-                height: _kPlanRunHeight,
-                color: agentInkOf(context).withValues(alpha: 0.55),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  TextStyle _titleStyle(BuildContext context, AgentPlanItemStatus status) {
-    final color = switch (status) {
-      AgentPlanItemStatus.inProgress => agentInkOf(context),
-      AgentPlanItemStatus.pending => agentMutedOf(context),
-      AgentPlanItemStatus.completed ||
-      AgentPlanItemStatus.cancelled => agentCompletedOf(context),
-    };
-    return agentBodyOf(context).copyWith(
-      height: _kPlanRunHeight,
-      color: color,
-      decoration: status == AgentPlanItemStatus.completed
-          ? TextDecoration.lineThrough
-          : TextDecoration.none,
-      decorationColor: color,
-      decorationThickness: 1,
-    );
-  }
-}
-
-/// [AgentLiveMark] pads 4px top for stacked copy. This row is items-center
-/// on one line, so balance the pad.
-class _PlanMark extends StatelessWidget {
-  const _PlanMark({required this.status});
-
-  final AgentPlanItemStatus status;
-
+  final StyleSpec<FlexBoxSpec> item;
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: AgentLiveMark(
-        kind: switch (status) {
-          AgentPlanItemStatus.pending => AgentMarkKind.pending,
-          AgentPlanItemStatus.inProgress => AgentMarkKind.live,
-          AgentPlanItemStatus.completed => AgentMarkKind.done,
-          AgentPlanItemStatus.cancelled => AgentMarkKind.cancelled,
-        },
-        semanticLabel: status.name,
-      ),
-    );
-  }
+  final StyleSpec<TextSpec> summaryTitle;
+  @override
+  final StyleSpec<TextSpec> itemTitle;
+  @override
+  final StyleSpec<TextSpec> itemDetail;
+  @override
+  final StyleSpec<TextSpec> count;
+  @override
+  final StyleSpec<IconSpec> indicator;
+  @override
+  final StyleSpec<BoxSpec> pendingItem;
+  @override
+  final StyleSpec<BoxSpec> activeItem;
+  @override
+  final StyleSpec<BoxSpec> completedItem;
+  @override
+  final StyleSpec<BoxSpec> cancelledItem;
+  @override
+  final StyleSpec<IconSpec> pendingStatus;
+  @override
+  final StyleSpec<IconSpec> activeStatus;
+  @override
+  final StyleSpec<IconSpec> completedStatus;
+  @override
+  final StyleSpec<IconSpec> cancelledStatus;
+
+  const AgentPlanSpec({
+    StyleSpec<BoxSpec>? viewport,
+    StyleSpec<FlexBoxSpec>? item,
+    StyleSpec<TextSpec>? summaryTitle,
+    StyleSpec<TextSpec>? itemTitle,
+    StyleSpec<TextSpec>? itemDetail,
+    StyleSpec<TextSpec>? count,
+    StyleSpec<IconSpec>? indicator,
+    StyleSpec<BoxSpec>? pendingItem,
+    StyleSpec<BoxSpec>? activeItem,
+    StyleSpec<BoxSpec>? completedItem,
+    StyleSpec<BoxSpec>? cancelledItem,
+    StyleSpec<IconSpec>? pendingStatus,
+    StyleSpec<IconSpec>? activeStatus,
+    StyleSpec<IconSpec>? completedStatus,
+    StyleSpec<IconSpec>? cancelledStatus,
+  }) : viewport = viewport ?? const StyleSpec(spec: BoxSpec()),
+       item = item ?? const StyleSpec(spec: FlexBoxSpec()),
+       summaryTitle = summaryTitle ?? const StyleSpec(spec: TextSpec()),
+       itemTitle = itemTitle ?? const StyleSpec(spec: TextSpec()),
+       itemDetail = itemDetail ?? const StyleSpec(spec: TextSpec()),
+       count = count ?? const StyleSpec(spec: TextSpec()),
+       indicator = indicator ?? const StyleSpec(spec: IconSpec()),
+       pendingItem = pendingItem ?? const StyleSpec(spec: BoxSpec()),
+       activeItem = activeItem ?? const StyleSpec(spec: BoxSpec()),
+       completedItem = completedItem ?? const StyleSpec(spec: BoxSpec()),
+       cancelledItem = cancelledItem ?? const StyleSpec(spec: BoxSpec()),
+       pendingStatus = pendingStatus ?? const StyleSpec(spec: IconSpec()),
+       activeStatus = activeStatus ?? const StyleSpec(spec: IconSpec()),
+       completedStatus = completedStatus ?? const StyleSpec(spec: IconSpec()),
+       cancelledStatus = cancelledStatus ?? const StyleSpec(spec: IconSpec());
 }

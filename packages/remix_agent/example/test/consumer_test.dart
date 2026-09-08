@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_agent/remix_agent.dart';
@@ -38,10 +39,16 @@ void main() {
               child: Overlay.wrap(
                 child: Column(
                   children: [
-                    AgentComposer(onSubmit: submitted.add),
-                    AgentPermission(
-                      tool: 'demo.tool',
-                      onDeny: () => denied = true,
+                    SizedBox(
+                      width: 400,
+                      child: AgentComposer(onSubmit: submitted.add),
+                    ),
+                    SizedBox(
+                      width: 400,
+                      child: AgentPermission(
+                        tool: 'demo.tool',
+                        onDeny: () => denied = true,
+                      ),
                     ),
                   ],
                 ),
@@ -54,7 +61,7 @@ void main() {
 
     await tester.enterText(find.byType(AgentComposer), 'ship it');
     await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('agent-composer-send')));
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pump();
     expect(submitted, ['ship it']);
 

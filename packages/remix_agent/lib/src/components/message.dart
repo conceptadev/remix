@@ -1,61 +1,38 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../models/statuses.dart';
-import '../style/defaults.dart';
-import 'marks.dart';
+import '../style/style_builder.dart';
 
-/// Collapsed copy is four conversation lines (14 / 24).
-const _kCollapsedLines = 4;
+part 'message.g.dart';
 
-/// Opaque through 68%, then fade to transparent.
-const _kFadeStop = 0.68;
+enum AgentMessageAlign { start, end }
 
-/// Gutter from the clamped copy to the expand pill.
-const _kMoreGutter = 8.0;
-
-/// Horizontal pad inside the expand pill.
-const _kMorePad = 8.0;
-
-/// Label ↔ caret inside the expand pill.
-const _kMoreCaretGap = 4.0;
-
-/// Where a message row sits in the transcript.
-enum AgentMessageAlign {
-  /// Start of the row (assistant default).
-  start,
-
-  /// End of the row (user default).
-  end,
-}
-
-/// Groups consecutive [AgentMessage] rows.
+/// Groups chronological message rows without imposing visual chrome.
 class AgentMessageGroup extends StatelessWidget {
-  /// Creates a message group.
   const AgentMessageGroup({
     super.key,
     required this.children,
-    this.spacing = 6,
+    this.spacing = 0,
   });
 
   final List<Widget> children;
   final double spacing;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      spacing: spacing,
-      children: children,
-    );
-  }
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    mainAxisSize: MainAxisSize.min,
+    spacing: spacing,
+    children: children,
+  );
 }
 
-/// Sender-aware transcript row.
+/// Sender-aware message row. Message bodies are never clamped automatically.
 class AgentMessage extends StatelessWidget {
-  /// Creates a message row.
   const AgentMessage({
     super.key,
     required this.role,
@@ -64,45 +41,28 @@ class AgentMessage extends StatelessWidget {
     this.avatar,
     this.showAvatar = false,
     this.placeholderAvatar = false,
-    this.expand,
     this.maxWidth,
     this.header,
     this.footer,
-    this.style,
+    this.semanticLabel,
+    this.surfaceStyle = const CardStyler.create(),
+    this.style = const AgentMessageStyler.create(),
+    this.styleSpec,
   });
 
-  /// Who authored the row.
   final AgentRole role;
-
-  /// Body. Hosts supply rendered content.
   final Widget child;
-
-  /// Optional align override. Defaults from [role].
   final AgentMessageAlign? align;
-
-  /// Optional avatar. Never invented: no letter fallback.
   final Widget? avatar;
-
-  /// When false, no avatar slot is reserved unless [placeholderAvatar].
   final bool showAvatar;
-
-  /// Keep an empty avatar slot so grouped rows stay aligned.
   final bool placeholderAvatar;
-
-  /// When true, the body fills the remaining row. Defaults to start-aligned.
-  final bool? expand;
-
-  /// Max width of a user bubble. Defaults to 82% of the row.
   final double? maxWidth;
-
-  /// Optional metadata above the body.
   final Widget? header;
-
-  /// Optional metadata below the body.
   final Widget? footer;
-
-  /// Optional card style. Assistant has no card unless this is set.
-  final CardStyler? style;
+  final String? semanticLabel;
+  final CardStyler surfaceStyle;
+  final AgentMessageStyler style;
+  final AgentMessageSpec? styleSpec;
 
   bool get _alignEnd =>
       (align ??
@@ -111,351 +71,316 @@ class AgentMessage extends StatelessWidget {
               : AgentMessageAlign.start)) ==
       AgentMessageAlign.end;
 
-  bool get _expand => expand ?? !_alignEnd;
-
   @override
   Widget build(BuildContext context) {
-    final prose = DefaultTextStyle.merge(
-      style: agentConversationOf(context),
-      child: _AgentMessageCopy(child: child),
-    );
-
-    final Widget bubble;
-    if (_alignEnd) {
-      bubble = RemixCard(
-        style: style ?? agentUserCardStyle(context),
-        child: prose,
-      );
-    } else if (style != null) {
-      bubble = RemixCard(style: style!, child: prose);
-    } else {
-      bubble = prose;
-    }
-
-    final sized = _expand
-        ? bubble
-        : LayoutBuilder(
-            builder: (context, constraints) {
-              final cap =
-                  maxWidth ??
-                  (constraints.maxWidth.isFinite
-                      ? constraints.maxWidth * 0.82
-                      : 360);
-              final max = cap < kAgentUserBubbleMinWidth
-                  ? kAgentUserBubbleMinWidth
-                  : cap;
-              return Align(
+    return AgentStyleBuilder<AgentMessageSpec>(
+      style: style,
+      styleSpec: styleSpec,
+      builder: (context, spec) {
+        final body = RemixCard(
+          style: surfaceStyle,
+          child: Box(styleSpec: spec.body, child: child),
+        );
+        final cap = maxWidth ?? spec.maxWidth;
+        final constrained = cap == null
+            ? body
+            : ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: cap),
+                child: body,
+              );
+        final stack = Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: _alignEnd
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
+          children: [
+            if (header != null) Box(styleSpec: spec.header, child: header),
+            constrained,
+            if (footer != null) Box(styleSpec: spec.footer, child: footer),
+          ],
+        );
+        final avatarSlot = _avatarSlot(spec);
+        final row = RowBox(
+          styleSpec: spec.row,
+          children: [
+            if (!_alignEnd && avatarSlot != null) avatarSlot,
+            Flexible(
+              fit: FlexFit.loose,
+              child: Align(
+                widthFactor: 1,
                 alignment: _alignEnd
                     ? AlignmentDirectional.centerEnd
                     : AlignmentDirectional.centerStart,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minWidth: kAgentUserBubbleMinWidth,
-                    maxWidth: max,
-                  ),
-                  child: IntrinsicWidth(child: bubble),
-                ),
-              );
-            },
-          );
-
-    final stack = Column(
-      crossAxisAlignment: _alignEnd
-          ? CrossAxisAlignment.end
-          : CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (header != null) ...[header!, const SizedBox(height: 4)],
-        sized,
-        if (footer != null) ...[const SizedBox(height: 4), footer!],
-      ],
-    );
-
-    final leading = _avatarSlot();
-
-    final row = Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: _alignEnd
-          ? MainAxisAlignment.end
-          : MainAxisAlignment.start,
-      children: [
-        if (!_alignEnd && leading != null) ...[
-          leading,
-          const SizedBox(width: 8),
-        ],
-        Flexible(child: stack),
-        if (_alignEnd && leading != null) ...[
-          const SizedBox(width: 8),
-          leading,
-        ],
-      ],
-    );
-
-    return Semantics(
-      container: true,
-      label: role == AgentRole.user ? 'User message' : 'Assistant message',
-      child: row,
+                child: stack,
+              ),
+            ),
+            if (_alignEnd && avatarSlot != null) avatarSlot,
+          ],
+        );
+        return Semantics(
+          container: true,
+          explicitChildNodes: true,
+          label:
+              semanticLabel ??
+              (role == AgentRole.user ? 'User message' : 'Assistant message'),
+          child: row,
+        );
+      },
     );
   }
 
-  Widget? _avatarSlot() {
-    if (placeholderAvatar) {
-      return const SizedBox(width: 32, height: 32);
-    }
-    if (!showAvatar) {
-      return null;
-    }
-    return avatar;
+  Widget? _avatarSlot(AgentMessageSpec spec) {
+    if (placeholderAvatar) return Box(styleSpec: spec.avatar);
+    if (!showAvatar || avatar == null) return null;
+    return Box(styleSpec: spec.avatar, child: avatar);
   }
 }
 
-/// Long copy clamps to four lines with a bottom fade and an expand pill.
-class _AgentMessageCopy extends StatefulWidget {
-  const _AgentMessageCopy({required this.child});
+/// Explicit, opt-in clipping for noninteractive message copy.
+///
+/// Do not place buttons, links, or other interactive descendants in [child].
+/// While collapsed, the whole child remains readable to assistive technology
+/// but is removed from pointer input, focus, and traversal.
+class AgentMessageCollapsible extends StatefulWidget {
+  const AgentMessageCollapsible({
+    super.key,
+    required this.child,
+    this.expanded,
+    this.defaultExpanded = false,
+    this.onExpandedChanged,
+    this.showMoreLabel = 'Show more',
+    this.showLessLabel = 'Show less',
+    this.toggleStyle = const ButtonStyler.create(),
+    this.style = const AgentMessageCollapsibleStyler.create(),
+    this.styleSpec,
+  });
 
   final Widget child;
+  final bool? expanded;
+  final bool defaultExpanded;
+  final ValueChanged<bool>? onExpandedChanged;
+  final String showMoreLabel;
+  final String showLessLabel;
+  final ButtonStyler toggleStyle;
+  final AgentMessageCollapsibleStyler style;
+  final AgentMessageCollapsibleSpec? styleSpec;
 
   @override
-  State<_AgentMessageCopy> createState() => _AgentMessageCopyState();
+  State<AgentMessageCollapsible> createState() =>
+      _AgentMessageCollapsibleState();
 }
 
-class _AgentMessageCopyState extends State<_AgentMessageCopy> {
-  var _open = false;
-  var _overflows = false;
+class _AgentMessageCollapsibleState extends State<AgentMessageCollapsible> {
+  late bool _uncontrolledExpanded;
+  bool _overflows = false;
 
-  double _collapsedHeightOf(BuildContext context) {
-    final run = DefaultTextStyle.of(context).style;
-    final fontSize = run.fontSize ?? 14;
-    final height = run.height ?? 24 / 14;
-    return fontSize * height * _kCollapsedLines;
+  bool get _expanded => widget.expanded ?? _uncontrolledExpanded;
+
+  @override
+  void initState() {
+    super.initState();
+    _uncontrolledExpanded = widget.expanded ?? widget.defaultExpanded;
   }
 
-  void _reportOverflow(bool overflows) {
-    if (overflows == _overflows) {
-      return;
+  @override
+  void didUpdateWidget(AgentMessageCollapsible oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.expanded != null && widget.expanded == null) {
+      _uncontrolledExpanded = oldWidget.expanded!;
     }
+  }
+
+  void _toggle() {
+    final next = !_expanded;
+    if (widget.expanded == null) {
+      setState(() => _uncontrolledExpanded = next);
+    }
+    widget.onExpandedChanged?.call(next);
+  }
+
+  void _handleOverflow(bool value) {
+    if (value == _overflows) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || overflows == _overflows) {
-        return;
-      }
-      setState(() => _overflows = overflows);
+      if (mounted && value != _overflows) setState(() => _overflows = value);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final collapsedHeight = _collapsedHeightOf(context);
-    final fade = !_open && _overflows;
-    final copy = Box(
-      key: const ValueKey('agent-message-copy'),
-      style: fade
-          ? BoxStyler().wrap(
-              WidgetModifierConfig.shaderMask(
-                shaderCallback: ShaderCallbackBuilder.linearGradient(
-                  begin: .topCenter,
-                  end: .bottomCenter,
-                  colors: const [
-                    Color(0xFF000000),
-                    Color(0xFF000000),
-                    Color(0x00000000),
-                  ],
-                  stops: const [0, _kFadeStop, 1],
+    return AgentStyleBuilder<AgentMessageCollapsibleSpec>(
+      style: widget.style,
+      styleSpec: widget.styleSpec,
+      builder: (context, spec) {
+        final height = spec.collapsedHeight;
+        final collapsed = !_expanded && height != null;
+        Widget content = _OverflowClip(
+          maxHeight: height,
+          clip: collapsed,
+          onOverflowChanged: _handleOverflow,
+          child: Box(styleSpec: spec.clipped, child: widget.child),
+        );
+        if (collapsed) {
+          content = IgnorePointer(
+            child: Focus(
+              canRequestFocus: false,
+              skipTraversal: true,
+              descendantsAreFocusable: false,
+              descendantsAreTraversable: false,
+              child: content,
+            ),
+          );
+        }
+        return Box(
+          styleSpec: spec.container,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              content,
+              if (_overflows)
+                RemixButton(
+                  label: _expanded
+                      ? widget.showLessLabel
+                      : widget.showMoreLabel,
+                  semanticLabel: _expanded
+                      ? widget.showLessLabel
+                      : widget.showMoreLabel,
+                  onPressed: _toggle,
+                  style: widget.toggleStyle,
                 ),
-                blendMode: BlendMode.dstIn,
-              ),
-            )
-          : BoxStyler(),
-      child: _MessageClamp(
-        maxHeight: collapsedHeight,
-        clamp: !_open,
-        onOverflow: _reportOverflow,
-        child: widget.child,
-      ),
-    );
-
-    return ColumnBox(
-      style: FlexBoxStyler()
-          .crossAxisAlignment(.start)
-          .mainAxisSize(.min)
-          .spacing(_overflows ? _kMoreGutter : 0),
-      children: [
-        copy,
-        if (_overflows)
-          RemixButton(
-            key: const ValueKey('agent-message-more'),
-            label: _open ? 'Show less' : 'Show more',
-            onPressed: () => setState(() => _open = !_open),
-            trailingIconBuilder: (_, _, _) => AgentChevron(expanded: _open),
-            style: _messageMoreStyle(context),
+            ],
           ),
-      ],
+        );
+      },
     );
   }
 }
 
-ButtonStyler _messageMoreStyle(BuildContext context) {
-  final ink = agentInkOf(context);
-  return ButtonStyler()
-      .height(kAgentActionSize)
-      .padding(.horizontal(_kMorePad))
-      .mainAxisSize(.min)
-      .borderRadius(.circular(kAgentActionSize / 2))
-      .color(const Color(0x00000000))
-      .label(
-        TextStyler()
-            .fontSize(12)
-            .fontWeight(FontWeight.w500)
-            .color(agentMutedOf(context)),
-      )
-      .spacing(_kMoreCaretGap)
-      .iconAlignment(.end)
-      .wrap(
-        WidgetModifierConfig.align(alignment: AlignmentDirectional.centerStart),
-      )
-      .onHovered(
-        ButtonStyler()
-            .color(ink.withValues(alpha: 0.06))
-            .label(TextStyler().color(ink)),
-      );
-}
-
-class _MessageClamp extends SingleChildRenderObjectWidget {
-  const _MessageClamp({
+class _OverflowClip extends SingleChildRenderObjectWidget {
+  const _OverflowClip({
     required this.maxHeight,
-    required this.clamp,
-    required this.onOverflow,
+    required this.clip,
+    required this.onOverflowChanged,
     required super.child,
   });
 
-  final double maxHeight;
-  final bool clamp;
-  final ValueChanged<bool> onOverflow;
+  final double? maxHeight;
+  final bool clip;
+  final ValueChanged<bool> onOverflowChanged;
 
   @override
-  RenderObject createRenderObject(BuildContext context) {
-    return _RenderMessageClamp(
-      maxHeight: maxHeight,
-      clamp: clamp,
-      onOverflow: onOverflow,
-    );
-  }
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderOverflowClip(maxHeight, clip, onOverflowChanged);
 
   @override
   void updateRenderObject(
     BuildContext context,
-    _RenderMessageClamp renderObject,
+    covariant _RenderOverflowClip renderObject,
   ) {
     renderObject
       ..maxHeight = maxHeight
-      ..clamp = clamp
-      ..onOverflow = onOverflow;
+      ..clip = clip
+      ..onOverflowChanged = onOverflowChanged;
   }
 }
 
-class _RenderMessageClamp extends RenderProxyBox {
-  _RenderMessageClamp({
-    required double maxHeight,
-    required bool clamp,
-    required ValueChanged<bool> onOverflow,
-  }) : _maxHeight = maxHeight,
-       _clamp = clamp,
-       _onOverflow = onOverflow;
+class _RenderOverflowClip extends RenderProxyBox {
+  _RenderOverflowClip(this._maxHeight, this._clip, this.onOverflowChanged);
 
-  double _maxHeight;
-  bool _clamp;
-  ValueChanged<bool> _onOverflow;
-  var _overflows = false;
+  double? _maxHeight;
+  bool _clip;
+  ValueChanged<bool> onOverflowChanged;
+  bool _reportedOverflow = false;
 
-  set maxHeight(double value) {
-    if (_maxHeight == value) {
-      return;
-    }
+  set maxHeight(double? value) {
+    if (value == _maxHeight) return;
     _maxHeight = value;
     markNeedsLayout();
   }
 
-  set clamp(bool value) {
-    if (_clamp == value) {
-      return;
-    }
-    _clamp = value;
+  set clip(bool value) {
+    if (value == _clip) return;
+    _clip = value;
     markNeedsLayout();
-  }
-
-  set onOverflow(ValueChanged<bool> value) {
-    _onOverflow = value;
-  }
-
-  BoxConstraints get _childConstraints {
-    return constraints.copyWith(minHeight: 0, maxHeight: double.infinity);
-  }
-
-  double _heightFor(double childHeight) {
-    final overflows = childHeight > _maxHeight + 0.5;
-    if (overflows != _overflows) {
-      _overflows = overflows;
-      _onOverflow(overflows);
-    }
-    return _clamp && overflows ? _maxHeight : childHeight;
   }
 
   @override
   void performLayout() {
-    if (child == null) {
+    final current = child;
+    if (current == null) {
       size = constraints.smallest;
       return;
     }
-    child!.layout(_childConstraints, parentUsesSize: true);
-    size = constraints.constrain(
-      Size(child!.size.width, _heightFor(child!.size.height)),
-    );
-  }
-
-  @override
-  Size computeDryLayout(BoxConstraints constraints) {
-    if (child == null) {
-      return constraints.smallest;
-    }
-    final childSize = child!.getDryLayout(
+    current.layout(
       constraints.copyWith(minHeight: 0, maxHeight: double.infinity),
+      parentUsesSize: true,
     );
-    final overflows = childSize.height > _maxHeight + 0.5;
-    final height = _clamp && overflows ? _maxHeight : childSize.height;
-    return constraints.constrain(Size(childSize.width, height));
+    final limit = _maxHeight;
+    final overflow = limit != null && current.size.height > limit;
+    size = constraints.constrain(
+      Size(current.size.width, _clip && overflow ? limit : current.size.height),
+    );
+    if (overflow != _reportedOverflow) {
+      _reportedOverflow = overflow;
+      onOverflowChanged(overflow);
+    }
   }
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    if (child == null) {
+    if (child == null) return;
+    if (!_clip) {
+      super.paint(context, offset);
       return;
     }
-    if (_clamp && _overflows) {
-      context.pushClipRect(
-        needsCompositing,
-        offset,
-        Offset.zero & size,
-        super.paint,
-      );
-      return;
-    }
-    super.paint(context, offset);
+    context.pushClipRect(needsCompositing, offset, offset & size, super.paint);
   }
+}
 
+@MixableSpec(target: AgentMessage.new)
+@immutable
+final class AgentMessageSpec with _$AgentMessageSpec {
   @override
-  double computeMinIntrinsicHeight(double width) {
-    final childHeight = super.computeMinIntrinsicHeight(width);
-    if (_clamp && childHeight > _maxHeight) {
-      return _maxHeight;
-    }
-    return childHeight;
-  }
+  final double? maxWidth;
+  @override
+  final StyleSpec<FlexBoxSpec> row;
+  @override
+  final StyleSpec<BoxSpec> avatar;
+  @override
+  final StyleSpec<BoxSpec> header;
+  @override
+  final StyleSpec<BoxSpec> body;
+  @override
+  final StyleSpec<BoxSpec> footer;
 
+  const AgentMessageSpec({
+    this.maxWidth,
+    StyleSpec<FlexBoxSpec>? row,
+    StyleSpec<BoxSpec>? avatar,
+    StyleSpec<BoxSpec>? header,
+    StyleSpec<BoxSpec>? body,
+    StyleSpec<BoxSpec>? footer,
+  }) : row = row ?? const StyleSpec(spec: FlexBoxSpec()),
+       avatar = avatar ?? const StyleSpec(spec: BoxSpec()),
+       header = header ?? const StyleSpec(spec: BoxSpec()),
+       body = body ?? const StyleSpec(spec: BoxSpec()),
+       footer = footer ?? const StyleSpec(spec: BoxSpec());
+}
+
+@MixableSpec(target: AgentMessageCollapsible.new)
+@immutable
+final class AgentMessageCollapsibleSpec with _$AgentMessageCollapsibleSpec {
   @override
-  double computeMaxIntrinsicHeight(double width) {
-    final childHeight = super.computeMaxIntrinsicHeight(width);
-    if (_clamp && childHeight > _maxHeight) {
-      return _maxHeight;
-    }
-    return childHeight;
-  }
+  final double? collapsedHeight;
+  @override
+  final StyleSpec<BoxSpec> container;
+  @override
+  final StyleSpec<BoxSpec> clipped;
+
+  const AgentMessageCollapsibleSpec({
+    this.collapsedHeight,
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<BoxSpec>? clipped,
+  }) : container = container ?? const StyleSpec(spec: BoxSpec()),
+       clipped = clipped ?? const StyleSpec(spec: BoxSpec());
 }

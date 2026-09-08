@@ -99,17 +99,22 @@ enum AgentRole {
 
 /// Whether a permission or execution is still occupying the operator.
 extension AgentPermissionStatusX on AgentPermissionStatus {
-  /// True while the card should stay expanded.
-  bool get isWorking =>
-      this == AgentPermissionStatus.pending ||
-      this == AgentPermissionStatus.deciding ||
-      this == AgentPermissionStatus.running;
+  /// True until a terminal outcome. [pending] is working (HITL in flight)
+  /// but does not keep parameter details open.
+  bool get isWorking => !isSettled;
 
   /// True after a terminal decision or outcome.
   bool get isSettled =>
       this == AgentPermissionStatus.complete ||
       this == AgentPermissionStatus.denied ||
       this == AgentPermissionStatus.error;
+
+  /// True while parameter details stay open without a user toggle.
+  /// Pending starts closed.
+  bool get keepsDetailsOpen =>
+      this == AgentPermissionStatus.deciding ||
+      this == AgentPermissionStatus.allowed ||
+      this == AgentPermissionStatus.running;
 }
 
 /// Working vs settled for an execution disclosure.

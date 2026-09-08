@@ -4,6 +4,150 @@ import 'package:remix_agent/remix_agent.dart';
 
 import 'host.dart';
 
+/// Example-only light/dark recipes. They are deliberately not exported by the
+/// headless package.
+final class _AgentDemoStyles {
+  _AgentDemoStyles(this.theme);
+
+  final HostTheme theme;
+
+  Color get ink => theme.ink;
+  Color get paper =>
+      theme.dark ? const Color(0xFF1A1E28) : const Color(0xFFF7F9FB);
+  Color get line => ink.withValues(alpha: 0.16);
+
+  CardStyler get card => CardStyler()
+      .color(paper)
+      .border(.all(.color(line).width(1)))
+      .borderRadius(.circular(12))
+      .padding(.all(12));
+
+  ButtonStyler get button => ButtonStyler()
+      .color(theme.live)
+      .padding(.symmetric(horizontal: 12, vertical: 15))
+      .borderRadius(.circular(8))
+      .label(TextStyler().color(const Color(0xFFFFFFFF)).fontSize(13));
+
+  IconButtonStyler get submitIconButton => IconButtonStyler()
+      .size(48, 48)
+      .color(theme.live)
+      .borderRadius(.circular(24))
+      .iconColor(const Color(0xFFFFFFFF))
+      .iconSize(16);
+
+  IconButtonStyler get stopIconButton =>
+      submitIconButton.color(ink).iconSize(12);
+
+  IconButtonStyler get utilityIconButton => IconButtonStyler()
+      .size(48, 48)
+      .color(const Color(0x00000000))
+      .borderRadius(.circular(8))
+      .iconColor(ink.withValues(alpha: 0.62))
+      .iconSize(14)
+      .onHovered(
+        IconButtonStyler().color(ink.withValues(alpha: 0.06)).iconColor(ink),
+      )
+      .onPressed(IconButtonStyler().color(ink.withValues(alpha: 0.10)));
+
+  TextFieldStyler get textField =>
+      TextFieldStyler().container(BoxStyler().padding(.all(8)));
+
+  DataListStyler get dataList =>
+      DataListStyler().rowSpacing(6).columnSpacing(12);
+
+  DisclosureStyler get disclosure => DisclosureStyler()
+      .trigger(BoxStyler().padding(.symmetric(vertical: 15)))
+      .content(BoxStyler().padding(.only(top: 8)));
+
+  AgentComposerStyler get composer => AgentComposerStyler(
+    toolbar: FlexBoxStyler().mainAxisSize(.max).spacing(8),
+  );
+
+  AgentMessageStyler get message => AgentMessageStyler(
+    row: FlexBoxStyler().mainAxisSize(.max).spacing(8),
+    avatar: BoxStyler().size(28, 28),
+    header: BoxStyler().padding(.only(bottom: 4)),
+    body: BoxStyler(),
+    footer: BoxStyler().padding(.only(top: 4)),
+    maxWidth: 560,
+  );
+
+  AgentMessageCollapsibleStyler get collapsible =>
+      AgentMessageCollapsibleStyler(
+        collapsedHeight: 72,
+        container: BoxStyler(),
+        clipped: BoxStyler(),
+      );
+
+  AgentPlanStyler get plan => AgentPlanStyler(
+    viewport: BoxStyler().maxHeight(220),
+    item: FlexBoxStyler().spacing(8).padding(.symmetric(vertical: 5)),
+    summaryTitle: TextStyler().color(ink).fontSize(14),
+    itemTitle: TextStyler().color(ink).fontSize(14),
+    itemDetail: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
+    count: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
+    indicator: IconStyler().color(ink).size(16),
+    pendingStatus: IconStyler().color(ink.withValues(alpha: 0.45)).size(18),
+    activeStatus: IconStyler().color(theme.live).size(18),
+    completedStatus: IconStyler().color(theme.live).size(18),
+    cancelledStatus: IconStyler().color(ink.withValues(alpha: 0.45)).size(18),
+  );
+
+  AgentActivityStyler get activity => AgentActivityStyler(
+    viewport: BoxStyler().maxHeight(200),
+    item: FlexBoxStyler().spacing(8).padding(.symmetric(vertical: 5)),
+    summaryTitle: TextStyler().color(ink).fontSize(14),
+    itemTitle: TextStyler().color(ink).fontSize(14),
+    itemDetail: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
+    indicator: IconStyler().color(ink).size(16),
+    pendingStatus: IconStyler().color(ink.withValues(alpha: 0.45)).size(12),
+    activeStatus: IconStyler().color(theme.live).size(12),
+    completedStatus: IconStyler().color(theme.live).size(12),
+  );
+
+  AgentExecutionStyler get execution => AgentExecutionStyler(
+    header: FlexBoxStyler().spacing(8),
+    output: BoxStyler().color(ink.withValues(alpha: 0.05)).padding(.all(10)),
+    actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
+    tool: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
+    title: TextStyler().color(ink).fontWeight(FontWeight.w600),
+    meta: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
+    status: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
+    toolIcon: IconStyler().color(ink).size(16),
+    statusIcon: IconStyler().color(theme.live).size(12),
+    indicator: IconStyler().color(ink).size(16),
+  );
+
+  AgentPermissionStyler get permission => AgentPermissionStyler(
+    header: FlexBoxStyler().spacing(8),
+    actions: FlexBoxStyler().spacing(8).padding(.only(top: 10)),
+    title: TextStyler().color(ink).fontWeight(FontWeight.w600),
+    tool: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
+    description: TextStyler().color(ink.withValues(alpha: 0.72)),
+    status: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
+    detailsLabel: TextStyler().color(ink).fontSize(13),
+    toolIcon: IconStyler().color(ink).size(16),
+    statusIcon: IconStyler().color(theme.live).size(12),
+    indicator: IconStyler().color(ink).size(16),
+  );
+
+  AgentAnswerStyler get answer => AgentAnswerStyler(
+    body: BoxStyler(),
+    actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
+    sourcesLabel: TextStyler().color(ink).fontSize(13),
+    indicator: IconStyler().color(ink).size(16),
+  );
+
+  AgentTranscriptStyler get transcript => AgentTranscriptStyler(
+    viewport: BoxStyler().padding(.only(right: 12)),
+    item: BoxStyler(),
+    spacing: 10,
+  );
+}
+
+_AgentDemoStyles _styles(BuildContext context) =>
+    _AgentDemoStyles(HostTheme.of(context));
+
 class CatalogAction extends StatelessWidget {
   const CatalogAction({
     super.key,
@@ -11,62 +155,54 @@ class CatalogAction extends StatelessWidget {
     this.onPressed,
     this.quiet = false,
   });
-
   final String label;
   final VoidCallback? onPressed;
   final bool quiet;
 
   @override
   Widget build(BuildContext context) {
-    final theme = HostTheme.of(context);
-    final style = quiet
-        ? agentQuietButtonStyle(context)
-        : agentButtonStyle(
-            context,
-          ).color(theme.live).labelColor(const Color(0xFFFFFFFF));
-    return RemixButton(label: label, onPressed: onPressed, style: style);
+    final styles = _styles(context);
+    return RemixButton(
+      label: label,
+      onPressed: onPressed,
+      style: quiet
+          ? styles.button
+                .color(styles.ink.withValues(alpha: 0.14))
+                .labelColor(styles.ink)
+          : styles.button,
+    );
   }
 }
 
 class ComposerDemo extends StatefulWidget {
   const ComposerDemo({super.key});
-
   @override
   State<ComposerDemo> createState() => _ComposerDemoState();
 }
 
 class _ComposerDemoState extends State<ComposerDemo> {
-  final _sent = <String>[];
-  var _running = false;
-
+  var running = false;
+  String? sent;
   @override
   Widget build(BuildContext context) {
+    final styles = _styles(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AgentComposer(
-          running: _running,
+          style: styles.composer,
+          surfaceStyle: styles.card,
+          fieldStyle: styles.textField,
+          submitStyle: styles.submitIconButton,
+          stopStyle: styles.stopIconButton,
+          running: running,
           onSubmit: (value) => setState(() {
-            _sent.add(value);
-            _running = true;
+            sent = value;
+            running = true;
           }),
-          onStop: () => setState(() => _running = false),
+          onStop: () => setState(() => running = false),
         ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          children: [
-            CatalogAction(
-              label: _running ? 'Mark idle' : 'Mark running',
-              quiet: true,
-              onPressed: () => setState(() => _running = !_running),
-            ),
-          ],
-        ),
-        if (_sent.isNotEmpty) ...[
-          const SizedBox(height: 8),
-          Text('Last sent: ${_sent.last}', style: HostTheme.of(context).meta),
-        ],
+        if (sent != null) Text('Last sent: $sent'),
       ],
     );
   }
@@ -74,27 +210,32 @@ class _ComposerDemoState extends State<ComposerDemo> {
 
 class MessageDemo extends StatelessWidget {
   const MessageDemo({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return const AgentMessageGroup(
+    final styles = _styles(context);
+    return AgentMessageGroup(
+      spacing: 8,
       children: [
         AgentMessage(
           role: AgentRole.user,
-          header: Text('You'),
-          child: Text('Review the checkout flow and pause before tests.'),
+          style: styles.message,
+          surfaceStyle: styles.card,
+          header: const Text('You'),
+          child: const Text('Review the checkout flow and pause before tests.'),
         ),
         AgentMessage(
           role: AgentRole.assistant,
-          header: Text('Agent'),
-          footer: Text('just now'),
-          child: Text(
-            'I will read the brief, then ask before I run the suite.',
+          style: styles.message,
+          surfaceStyle: styles.card,
+          header: const Text('Agent'),
+          child: AgentMessageCollapsible(
+            style: styles.collapsible,
+            toggleStyle: styles.button,
+            child: const Text(
+              'I will inspect the checkout flow, map the payment path, verify the shared cart model, and pause before running focused checks. '
+              'This longer message demonstrates explicit opt-in clipping.',
+            ),
           ),
-        ),
-        AgentMessage(
-          role: AgentRole.assistant,
-          child: Text('Grouped follow-up stays aligned with the first turn.'),
         ),
       ],
     );
@@ -103,99 +244,80 @@ class MessageDemo extends StatelessWidget {
 
 class TranscriptDemo extends StatefulWidget {
   const TranscriptDemo({super.key});
-
   @override
   State<TranscriptDemo> createState() => _TranscriptDemoState();
 }
 
 class _TranscriptDemoState extends State<TranscriptDemo> {
-  var _lines = 8;
-  var _following = true;
-
+  var lines = 10;
+  var following = true;
   @override
-  Widget build(BuildContext context) {
-    final theme = HostTheme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          _following ? 'Following the live edge' : 'Released — reading history',
-          style: theme.meta.copyWith(color: theme.live),
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Text(following ? 'Following the live edge' : 'Reading history'),
+      SizedBox(
+        height: 180,
+        child: AgentTranscript.builder(
+          style: _styles(context).transcript,
+          itemCount: lines,
+          itemBuilder: (_, i) => Text('Line ${i + 1} of the growing log.'),
+          onFollowChanged: (value) => setState(() => following = value),
         ),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 180,
-          child: AgentTranscript(
-            followOutput: true,
-            onFollowChange: (value) => setState(() => _following = value),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (var i = 0; i < _lines; i++)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Text('Line ${i + 1} of the growing log.'),
-                  ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        CatalogAction(
-          label: 'Append lines',
-          onPressed: () => setState(() => _lines += 4),
-        ),
-      ],
-    );
-  }
+      ),
+      CatalogAction(
+        label: 'Append lines',
+        onPressed: () => setState(() => lines += 4),
+      ),
+    ],
+  );
 }
 
 class PermissionDemo extends StatefulWidget {
   const PermissionDemo({super.key});
-
   @override
   State<PermissionDemo> createState() => _PermissionDemoState();
 }
 
 class _PermissionDemoState extends State<PermissionDemo> {
-  var _status = AgentPermissionStatus.pending;
-
+  var status = AgentPermissionStatus.pending;
+  var request = 0;
   @override
   Widget build(BuildContext context) {
+    final styles = _styles(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AgentPermission(
+          requestId: request,
+          style: styles.permission,
+          surfaceStyle: styles.card,
+          detailsStyle: styles.disclosure,
+          parametersStyle: styles.dataList,
+          allowOnceStyle: styles.button,
+          alwaysAllowStyle: styles.button,
+          denyStyle: styles.button,
           tool: 'terminal.run',
-          description: 'Run the focused test suite in this workspace.',
-          status: _status,
+          status: status,
+          description: 'Run the focused test suite.',
           parameters: const [
-            AgentPermissionParameter(
-              id: 'command',
-              label: 'Command',
-              value: 'flutter test',
-            ),
-            AgentPermissionParameter(
-              id: 'cwd',
+            RemixDataListItem(label: 'Command', value: 'flutter test'),
+            RemixDataListItem(
               label: 'Directory',
               value: 'packages/remix_agent',
             ),
           ],
           onAllowOnce: () =>
-              setState(() => _status = AgentPermissionStatus.allowed),
+              setState(() => status = AgentPermissionStatus.complete),
           onAlwaysAllow: () =>
-              setState(() => _status = AgentPermissionStatus.complete),
-          onDeny: () => setState(() => _status = AgentPermissionStatus.denied),
+              setState(() => status = AgentPermissionStatus.complete),
+          onDeny: () => setState(() => status = AgentPermissionStatus.denied),
         ),
-        const SizedBox(height: 8),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: CatalogAction(
-            label: 'Replay',
-            quiet: true,
-            onPressed: () =>
-                setState(() => _status = AgentPermissionStatus.pending),
-          ),
+        CatalogAction(
+          label: 'Replay',
+          onPressed: () => setState(() {
+            request++;
+            status = AgentPermissionStatus.pending;
+          }),
         ),
       ],
     );
@@ -204,49 +326,34 @@ class _PermissionDemoState extends State<PermissionDemo> {
 
 class ExecutionDemo extends StatefulWidget {
   const ExecutionDemo({super.key});
-
   @override
   State<ExecutionDemo> createState() => _ExecutionDemoState();
 }
 
 class _ExecutionDemoState extends State<ExecutionDemo> {
-  var _status = AgentExecutionStatus.running;
-
+  var status = AgentExecutionStatus.running;
   @override
   Widget build(BuildContext context) {
+    final styles = _styles(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AgentExecution(
+          style: styles.execution,
+          surfaceStyle: styles.card,
+          disclosureStyle: styles.disclosure,
+          copyStyle: styles.utilityIconButton,
+          retryStyle: styles.utilityIconButton,
           tool: 'terminal.run',
           title: 'Focused checks',
-          status: _status,
-          meta: _status == AgentExecutionStatus.running ? 'live' : '2.1s',
+          status: status,
+          onCopy: () {},
+          onRetry: () => setState(() => status = AgentExecutionStatus.running),
           child: const Text('12 passed · 0 failed'),
         ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            CatalogAction(
-              label: 'Succeed',
-              onPressed: () =>
-                  setState(() => _status = AgentExecutionStatus.success),
-            ),
-            CatalogAction(
-              label: 'Fail',
-              quiet: true,
-              onPressed: () =>
-                  setState(() => _status = AgentExecutionStatus.error),
-            ),
-            CatalogAction(
-              label: 'Cancel',
-              quiet: true,
-              onPressed: () =>
-                  setState(() => _status = AgentExecutionStatus.cancelled),
-            ),
-          ],
+        CatalogAction(
+          label: 'Succeed',
+          onPressed: () =>
+              setState(() => status = AgentExecutionStatus.success),
         ),
       ],
     );
@@ -255,48 +362,39 @@ class _ExecutionDemoState extends State<ExecutionDemo> {
 
 class PlanDemo extends StatefulWidget {
   const PlanDemo({super.key});
-
   @override
   State<PlanDemo> createState() => _PlanDemoState();
 }
 
+AgentPlanItemStatus _planItemStatus(int index, int currentStep) {
+  if (index < currentStep) return AgentPlanItemStatus.completed;
+  if (index == currentStep) return AgentPlanItemStatus.inProgress;
+  return AgentPlanItemStatus.pending;
+}
+
 class _PlanDemoState extends State<PlanDemo> {
-  var _step = 1;
-
-  List<AgentPlanItem> get _items {
-    AgentPlanItemStatus at(int index) {
-      if (_step > index) return AgentPlanItemStatus.completed;
-      if (_step == index) return AgentPlanItemStatus.inProgress;
-      return AgentPlanItemStatus.pending;
-    }
-
-    return [
-      AgentPlanItem(id: '1', title: 'Read the checkout brief', status: at(1)),
-      AgentPlanItem(id: '2', title: 'Map the payment path', status: at(2)),
-      AgentPlanItem(id: '3', title: 'Run focused checks', status: at(3)),
-    ];
-  }
-
+  var step = 0;
   @override
   Widget build(BuildContext context) {
+    final styles = _styles(context);
+    final items = List.generate(
+      3,
+      (i) => AgentPlanItem(
+        id: '$i',
+        title: ['Read the brief', 'Map the path', 'Run checks'][i],
+        status: _planItemStatus(i, step),
+      ),
+    );
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AgentPlan(items: _items),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          children: [
-            CatalogAction(
-              label: 'Advance',
-              onPressed: _step >= 4 ? null : () => setState(() => _step += 1),
-            ),
-            CatalogAction(
-              label: 'Replay',
-              quiet: true,
-              onPressed: () => setState(() => _step = 1),
-            ),
-          ],
+        AgentPlan(
+          style: styles.plan,
+          disclosureStyle: styles.disclosure,
+          items: items,
+        ),
+        CatalogAction(
+          label: 'Advance',
+          onPressed: () => setState(() => step = (step + 1).clamp(0, 3)),
         ),
       ],
     );
@@ -305,21 +403,21 @@ class _PlanDemoState extends State<PlanDemo> {
 
 class ActivityDemo extends StatefulWidget {
   const ActivityDemo({super.key});
-
   @override
   State<ActivityDemo> createState() => _ActivityDemoState();
 }
 
 class _ActivityDemoState extends State<ActivityDemo> {
-  var _status = AgentRunStatus.working;
-
+  var status = AgentRunStatus.working;
   @override
   Widget build(BuildContext context) {
+    final styles = _styles(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AgentActivity(
-          status: _status,
+          style: styles.activity,
+          disclosureStyle: styles.disclosure,
+          status: status,
           items: [
             const AgentActivityItem(
               id: 'read',
@@ -328,24 +426,19 @@ class _ActivityDemoState extends State<ActivityDemo> {
             ),
             AgentActivityItem(
               id: 'map',
-              title: 'Mapping the payment path',
-              status: _status == AgentRunStatus.working
+              title: 'Mapping the path',
+              status: status == AgentRunStatus.working
                   ? AgentActivityItemStatus.active
                   : AgentActivityItemStatus.complete,
-              child: const Text('3 screens, 1 shared cart model'),
             ),
           ],
         ),
-        const SizedBox(height: 8),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: CatalogAction(
-            label: _status == AgentRunStatus.working ? 'Complete' : 'Replay',
-            onPressed: () => setState(() {
-              _status = _status == AgentRunStatus.working
-                  ? AgentRunStatus.complete
-                  : AgentRunStatus.working;
-            }),
+        CatalogAction(
+          label: status == AgentRunStatus.working ? 'Complete' : 'Replay',
+          onPressed: () => setState(
+            () => status = status == AgentRunStatus.working
+                ? AgentRunStatus.complete
+                : AgentRunStatus.working,
           ),
         ),
       ],
@@ -355,199 +448,112 @@ class _ActivityDemoState extends State<ActivityDemo> {
 
 class AnswerDemo extends StatefulWidget {
   const AnswerDemo({super.key});
-
   @override
   State<AnswerDemo> createState() => _AnswerDemoState();
 }
 
 class _AnswerDemoState extends State<AnswerDemo> {
-  var _status = AgentAnswerStatus.streaming;
-
+  var status = AgentAnswerStatus.streaming;
+  var stream = 0;
   @override
   Widget build(BuildContext context) {
+    final styles = _styles(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AgentAnswer(
-          status: _status,
-          copyAction: const Text('Copy'),
-          retryAction: GestureDetector(
-            onTap: () => setState(() => _status = AgentAnswerStatus.streaming),
-            child: const Text('Retry'),
-          ),
-          sources: const Text('Sources: checkout brief, payment notes'),
+          style: styles.answer,
+          surfaceStyle: styles.card,
+          sourcesStyle: styles.disclosure,
+          copyStyle: styles.utilityIconButton,
+          retryStyle: styles.utilityIconButton,
+          streamId: stream,
+          status: status,
+          onCopy: () {},
+          onRetry: () => setState(() {
+            stream++;
+            status = AgentAnswerStatus.streaming;
+          }),
+          sourcesContent: const Text('Checkout brief · payment notes'),
           child: Text(
-            _status == AgentAnswerStatus.streaming
+            status.isStreaming
                 ? 'The checkout flow is…'
-                : 'The checkout flow is ready for a focused check. Payment and cart share one model.',
+                : 'The checkout flow is ready for review.',
           ),
         ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          children: [
-            CatalogAction(
-              label: 'Complete',
-              onPressed: () =>
-                  setState(() => _status = AgentAnswerStatus.complete),
-            ),
-            CatalogAction(
-              label: 'Error',
-              quiet: true,
-              onPressed: () =>
-                  setState(() => _status = AgentAnswerStatus.error),
-            ),
-          ],
+        CatalogAction(
+          label: 'Complete',
+          onPressed: () => setState(() => status = AgentAnswerStatus.complete),
         ),
       ],
     );
   }
 }
 
-class ComposedRunDemo extends StatefulWidget {
+class ComposedRunDemo extends StatelessWidget {
   const ComposedRunDemo({super.key});
-
-  @override
-  State<ComposedRunDemo> createState() => _ComposedRunDemoState();
-}
-
-class _ComposedRunDemoState extends State<ComposedRunDemo> {
-  final _prompts = <String>[];
-  var _running = false;
-  var _permission = AgentPermissionStatus.pending;
-  var _execution = AgentExecutionStatus.running;
-  var _answer = AgentAnswerStatus.streaming;
-  var _activity = AgentRunStatus.working;
-
-  void _submit(String prompt) {
-    setState(() {
-      _prompts.add(prompt);
-      _running = true;
-      _answer = AgentAnswerStatus.streaming;
-      _activity = AgentRunStatus.working;
-    });
-  }
-
-  void _allow() {
-    setState(() {
-      _permission = AgentPermissionStatus.complete;
-      _execution = AgentExecutionStatus.success;
-      _answer = AgentAnswerStatus.complete;
-      _activity = AgentRunStatus.complete;
-      _running = false;
-    });
-  }
-
-  void _deny() {
-    setState(() {
-      _permission = AgentPermissionStatus.denied;
-      _running = false;
-      _answer = AgentAnswerStatus.complete;
-      _activity = AgentRunStatus.complete;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final styles = _styles(context);
     return SizedBox(
       height: 420,
       child: Column(
         children: [
           Expanded(
             child: AgentTranscript(
+              style: styles.transcript,
               followOutput: false,
-              busy: _running,
-              child: AgentMessageGroup(
-                children: [
-                  const AgentMessage(
-                    role: AgentRole.user,
-                    child: Text('Review the checkout flow.'),
-                  ),
-                  const AgentMessage(
-                    role: AgentRole.assistant,
-                    child: Text(
-                      'I will inspect the flow and pause before running checks.',
+              children: [
+                AgentMessage(
+                  role: AgentRole.user,
+                  style: styles.message,
+                  surfaceStyle: styles.card,
+                  child: const Text('Review the checkout flow.'),
+                ),
+                AgentPlan(
+                  style: styles.plan,
+                  disclosureStyle: styles.disclosure,
+                  items: const [
+                    AgentPlanItem(
+                      id: '1',
+                      title: 'Inspect checkout',
+                      status: AgentPlanItemStatus.inProgress,
                     ),
-                  ),
-                  AgentPlan(
-                    items: [
-                      const AgentPlanItem(
-                        id: '1',
-                        title: 'Inspect the checkout flow',
-                        status: AgentPlanItemStatus.completed,
-                      ),
-                      AgentPlanItem(
-                        id: '2',
-                        title: 'Run focused checks',
-                        status: _permission == AgentPermissionStatus.pending
-                            ? AgentPlanItemStatus.inProgress
-                            : AgentPlanItemStatus.completed,
-                      ),
-                    ],
-                  ),
-                  AgentActivity(
-                    status: _activity,
-                    items: [
-                      const AgentActivityItem(
-                        id: 'read',
-                        title: 'Reading the brief',
-                        status: AgentActivityItemStatus.complete,
-                      ),
-                      AgentActivityItem(
-                        id: 'check',
-                        title: 'Preparing checks',
-                        status: _running
-                            ? AgentActivityItemStatus.active
-                            : AgentActivityItemStatus.complete,
-                      ),
-                    ],
-                  ),
-                  AgentPermission(
-                    tool: 'terminal.run',
-                    description: 'The agent wants to run focused checks.',
-                    status: _permission,
-                    parameters: const [
-                      AgentPermissionParameter(
-                        id: 'command',
-                        label: 'Command',
-                        value: 'flutter test',
-                      ),
-                    ],
-                    onAllowOnce: _allow,
-                    onAlwaysAllow: _allow,
-                    onDeny: _deny,
-                  ),
-                  if (_permission == AgentPermissionStatus.allowed ||
-                      _permission == AgentPermissionStatus.running ||
-                      _permission == AgentPermissionStatus.complete)
-                    AgentExecution(
-                      tool: 'terminal.run',
-                      title: 'Focused checks',
-                      status: _execution,
-                      child: const Text('12 passed'),
-                    ),
-                  AgentAnswer(
-                    status: _answer,
-                    copyAction: const Text('Copy'),
-                    child: const Text(
-                      'The checkout flow is ready for a focused check.',
-                    ),
-                  ),
-                  for (final prompt in _prompts)
-                    AgentMessage(role: AgentRole.user, child: Text(prompt)),
-                ],
-              ),
+                  ],
+                ),
+                AgentPermission(
+                  style: styles.permission,
+                  surfaceStyle: styles.card,
+                  detailsStyle: styles.disclosure,
+                  parametersStyle: styles.dataList,
+                  allowOnceStyle: styles.button,
+                  alwaysAllowStyle: styles.button,
+                  denyStyle: styles.button,
+                  tool: 'terminal.run',
+                  parameters: const [
+                    RemixDataListItem(label: 'Command', value: 'flutter test'),
+                  ],
+                  onAllowOnce: () {},
+                  onDeny: () {},
+                ),
+                AgentAnswer(
+                  style: styles.answer,
+                  surfaceStyle: styles.card,
+                  sourcesStyle: styles.disclosure,
+                  copyStyle: styles.utilityIconButton,
+                  retryStyle: styles.utilityIconButton,
+                  status: AgentAnswerStatus.complete,
+                  child: const Text('Ready for review.'),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 12),
           AgentComposer(
-            running: _running,
-            onSubmit: _submit,
-            onStop: () => setState(() {
-              _running = false;
-              _answer = AgentAnswerStatus.complete;
-              _activity = AgentRunStatus.complete;
-            }),
+            style: styles.composer,
+            surfaceStyle: styles.card,
+            fieldStyle: styles.textField,
+            submitStyle: styles.submitIconButton,
+            stopStyle: styles.stopIconButton,
+            onSubmit: (_) {},
           ),
         ],
       ),

@@ -1,19 +1,24 @@
-import 'dart:math' as math;
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../models/statuses.dart';
-import '../style/defaults.dart';
-import 'disclosure.dart';
+import '../style/functional_glyph.dart';
+import '../style/style_builder.dart';
 import 'transcript.dart';
 
-/// Tool execution disclosure.
-///
-/// Stays open while [status] is running. Collapses when the run settles if
-/// [collapseOnComplete] is true. [child] is host-rendered output.
-class AgentExecution extends StatelessWidget {
-  /// Creates an execution disclosure.
+part 'execution.g.dart';
+
+typedef AgentExecutionStatusLabelBuilder =
+    String Function(AgentExecutionStatus status);
+typedef AgentExecutionStatusBuilder =
+    Widget Function(BuildContext context, AgentExecutionStatus status);
+typedef AgentExecutionIndicatorBuilder =
+    Widget Function(BuildContext context, bool expanded);
+
+/// Toggleable tool execution output with lifecycle-driven open requests.
+class AgentExecution extends StatefulWidget {
   const AgentExecution({
     super.key,
     required this.tool,
@@ -22,568 +27,313 @@ class AgentExecution extends StatelessWidget {
     this.status = AgentExecutionStatus.running,
     this.meta,
     this.icon,
-    this.copyAction,
-    this.retryAction,
+    this.onCopy,
+    this.onRetry,
+    this.copyIconBuilder,
+    this.retryIconBuilder,
+    this.indicatorBuilder,
+    this.statusBuilder,
+    this.statusLabelBuilder,
+    this.copyLabel = 'Copy output',
+    this.retryLabel = 'Retry execution',
+    this.outputLabel = 'Tool output',
     this.showActions = true,
     this.collapseOnComplete = true,
-    this.open,
-    this.onOpenChange,
-    this.maxHeight = 220,
-    this.style,
+    this.expanded,
+    this.defaultExpanded = true,
+    this.onExpandedChanged,
+    this.semanticLabel = 'Tool execution',
+    this.surfaceStyle = const CardStyler.create(),
+    this.disclosureStyle = const DisclosureStyler.create(),
+    this.copyStyle = const IconButtonStyler.create(),
+    this.retryStyle = const IconButtonStyler.create(),
+    this.style = const AgentExecutionStyler.create(),
+    this.styleSpec,
   });
 
-  /// Tool name.
   final String tool;
-
-  /// Visible title.
   final String title;
-
-  /// Host-rendered output.
   final Widget child;
-
-  /// Current machine state.
   final AgentExecutionStatus status;
-
-  /// Optional compact metadata (duration, status code).
   final String? meta;
-
-  /// Optional 16px kind glyph. A Mix terminal mark is used when omitted.
   final Widget? icon;
-
-  /// Optional copy control. Shown after the run settles.
-  final Widget? copyAction;
-
-  /// Optional retry control. Shown after the run settles.
-  final Widget? retryAction;
-
-  /// When false, hide copy/retry even after the run settles.
+  final VoidCallback? onCopy;
+  final VoidCallback? onRetry;
+  final RemixIconButtonIconBuilder? copyIconBuilder;
+  final RemixIconButtonIconBuilder? retryIconBuilder;
+  final AgentExecutionIndicatorBuilder? indicatorBuilder;
+  final AgentExecutionStatusBuilder? statusBuilder;
+  final AgentExecutionStatusLabelBuilder? statusLabelBuilder;
+  final String copyLabel;
+  final String retryLabel;
+  final String outputLabel;
   final bool showActions;
-
-  /// When true, hide the body after the run settles.
   final bool collapseOnComplete;
-
-  /// Controlled expanded state.
-  final bool? open;
-
-  /// Called when the operator toggles the disclosure.
-  final ValueChanged<bool>? onOpenChange;
-
-  /// Maximum height of the live output viewport.
-  final double maxHeight;
-
-  /// Optional card style. Off by default — the well is the surface.
-  final CardStyler? style;
+  final bool? expanded;
+  final bool defaultExpanded;
+  final ValueChanged<bool>? onExpandedChanged;
+  final String semanticLabel;
+  final CardStyler surfaceStyle;
+  final DisclosureStyler disclosureStyle;
+  final IconButtonStyler copyStyle;
+  final IconButtonStyler retryStyle;
+  final AgentExecutionStyler style;
+  final AgentExecutionSpec? styleSpec;
 
   @override
-  Widget build(BuildContext context) {
-    final working = status.isWorking;
-    final statusLabel = _statusLabel;
-    final revealActions =
-        showActions &&
-        status.isSettled &&
-        (copyAction != null || retryAction != null);
-
-    final content = AgentDisclosure(
-      working: working,
-      collapseOnComplete: collapseOnComplete,
-      open: open,
-      onOpenChange: onOpenChange,
-      semanticLabel: title,
-      summary: _ExecutionTrigger(
-        title: title,
-        tool: tool,
-        meta: meta,
-        icon: icon,
-        status: status,
-        statusLabel: statusLabel,
-      ),
-      child: Padding(
-        padding: const EdgeInsetsDirectional.only(start: 24, top: 6),
-        child: Box(
-          key: const ValueKey('agent-execution-well'),
-          style: _outputWellStyle(context),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DefaultTextStyle(
-                style: _logRunOf(context),
-                child: AgentTranscript(
-                  followOutput: working,
-                  busy: working,
-                  label: 'Tool output',
-                  maxHeight: maxHeight,
-                  // 12 all sides; omit end so the transcript gutter is the end 12.
-                  padding: const EdgeInsetsDirectional.only(
-                    start: 12,
-                    top: 12,
-                    bottom: 12,
-                  ),
-                  child: child,
-                ),
-              ),
-              if (revealActions)
-                Padding(
-                  key: const ValueKey('agent-execution-footer'),
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 6),
-                  child: Row(
-                    children: [
-                      if (copyAction != null)
-                        _ExecutionAction(
-                          key: const ValueKey('agent-execution-copy'),
-                          child: copyAction!,
-                        ),
-                      if (copyAction != null && retryAction != null)
-                        const SizedBox(width: 2),
-                      if (retryAction != null)
-                        _ExecutionAction(
-                          key: const ValueKey('agent-execution-retry'),
-                          child: retryAction!,
-                        ),
-                      const Spacer(),
-                      Text(
-                        statusLabel,
-                        maxLines: 1,
-                        style: _quietRunOf(context),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    return Semantics(
-      container: true,
-      label: 'Tool execution',
-      child: agentMaybeCard(context: context, style: style, child: content),
-    );
-  }
-
-  String get _statusLabel {
-    return switch (status) {
-      AgentExecutionStatus.running => 'Running',
-      AgentExecutionStatus.success => 'Completed',
-      AgentExecutionStatus.error => 'Failed',
-      AgentExecutionStatus.cancelled => 'Cancelled',
-    };
-  }
+  State<AgentExecution> createState() => _AgentExecutionState();
 }
 
-/// Leading kind slot. 16+8 gap lines up with the 24px well indent.
-const _kIconSlot = 16.0;
+class _AgentExecutionState extends State<AgentExecution> {
+  late bool _uncontrolledExpanded;
 
-/// Trailing expand chevron.
-const _kChevron = 14.0;
-
-/// Status mark beside the trigger label.
-const _kStatusMark = 12.0;
-
-/// Trigger corner and focus-visible ring.
-const _kTriggerRadius = 6.0;
-
-/// One-line trigger. Not [AgentDisclosureSummary] — that row wraps the title,
-/// substitutes meta for status, and floors at 6px pad instead of 36.
-class _ExecutionTrigger extends StatefulWidget {
-  const _ExecutionTrigger({
-    required this.title,
-    required this.tool,
-    required this.status,
-    required this.statusLabel,
-    this.meta,
-    this.icon,
-  });
-
-  final String title;
-  final String tool;
-  final AgentExecutionStatus status;
-  final String statusLabel;
-  final String? meta;
-  final Widget? icon;
+  bool get _expanded => widget.expanded ?? _uncontrolledExpanded;
 
   @override
-  State<_ExecutionTrigger> createState() => _ExecutionTriggerState();
-}
-
-class _ExecutionTriggerState extends State<_ExecutionTrigger> {
-  final _states = WidgetStatesController();
-  FocusNode? _ancestor;
+  void initState() {
+    super.initState();
+    _uncontrolledExpanded = widget.expanded ?? widget.defaultExpanded;
+  }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final node = Focus.maybeOf(context);
-    if (!identical(node, _ancestor)) {
-      _ancestor?.removeListener(_syncFocus);
-      _ancestor = node;
-      _ancestor?.addListener(_syncFocus);
+  void didUpdateWidget(AgentExecution oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.expanded != null && widget.expanded == null) {
+      _uncontrolledExpanded = oldWidget.expanded!;
     }
-    _syncFocus();
+    if (!oldWidget.status.isWorking && widget.status.isWorking) {
+      _request(true);
+    } else if (oldWidget.status.isWorking &&
+        !widget.status.isWorking &&
+        widget.collapseOnComplete) {
+      _request(false);
+    }
   }
 
-  @override
-  void dispose() {
-    _ancestor?.removeListener(_syncFocus);
-    _states.dispose();
-    super.dispose();
+  void _request(bool next) {
+    if (widget.expanded == null && next != _uncontrolledExpanded) {
+      setState(() => _uncontrolledExpanded = next);
+    }
+    widget.onExpandedChanged?.call(next);
   }
 
-  void _syncFocus() {
-    _states.focused = _ancestor?.hasFocus ?? false;
+  String get _statusLabel =>
+      widget.statusLabelBuilder?.call(widget.status) ??
+      switch (widget.status) {
+        AgentExecutionStatus.running => 'Running',
+        AgentExecutionStatus.success => 'Completed',
+        AgentExecutionStatus.error => 'Failed',
+        AgentExecutionStatus.cancelled => 'Cancelled',
+      };
+
+  StyleSpec<BoxSpec> _statusContainer(AgentExecutionSpec spec) =>
+      switch (widget.status) {
+        AgentExecutionStatus.running => spec.runningStatus,
+        AgentExecutionStatus.success => spec.successStatus,
+        AgentExecutionStatus.error => spec.errorStatus,
+        AgentExecutionStatus.cancelled => spec.cancelledStatus,
+      };
+
+  AgentFunctionalGlyphKind get _statusGlyph => switch (widget.status) {
+    AgentExecutionStatus.running => .loading,
+    AgentExecutionStatus.success => .completedCircle,
+    AgentExecutionStatus.error => .errorCircle,
+    AgentExecutionStatus.cancelled => .cancelledCircle,
+  };
+
+  Widget _indicator(
+    BuildContext context,
+    AgentExecutionSpec spec,
+    bool expanded,
+  ) =>
+      widget.indicatorBuilder?.call(context, expanded) ??
+      StyleSpecBuilder<IconSpec>(
+        styleSpec: spec.indicator,
+        builder: (context, iconSpec) => AgentFunctionalGlyph(
+          kind: .chevron,
+          spec: iconSpec,
+          expanded: expanded,
+        ),
+      );
+
+  Widget _toolIcon(AgentExecutionSpec spec) {
+    final icon = widget.icon;
+    if (icon != null) return icon;
+    return StyleSpecBuilder<IconSpec>(
+      styleSpec: spec.toolIcon,
+      builder: (context, iconSpec) =>
+          AgentFunctionalGlyph(kind: .tool, spec: iconSpec),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Disclosure rebuilds this summary on toggle. The expand inherited
-    // widget stays private to disclosure.dart.
-    final expanded =
-        context
-            .findAncestorWidgetOfExactType<Semantics>()
-            ?.properties
-            .expanded ??
-        true;
-    final ink = agentInkOf(context);
-    final muted = agentMutedOf(context);
-    final reduce = MediaQuery.disableAnimationsOf(context);
-
-    return PressableBox(
-      key: const ValueKey('agent-execution-trigger'),
-      controller: _states,
-      canRequestFocus: false,
-      excludeFromSemantics: true,
-      semanticsRole: PressableSemanticsRole.none,
-      mouseCursor: SystemMouseCursors.click,
-      style: BoxStyler()
-          .minHeight(kAgentRowMinHeight)
-          .padding(.symmetric(vertical: 4))
-          .borderRadius(.circular(_kTriggerRadius))
-          .onFocusVisible(
-            .foregroundDecoration(
-              .border(
-                .color(ink)
-                    .width(kAgentFocusRingWidth)
-                    .strokeAlign(BorderSide.strokeAlignInside),
-              ).borderRadius(.circular(_kTriggerRadius)),
-            ),
-          ),
-      child: Row(
-        children: [
-          Box(
-            key: const ValueKey('agent-execution-icon'),
-            style: BoxStyler().size(_kIconSlot, _kIconSlot).alignment(.center),
-            child: IconTheme(
-              data: IconThemeData(size: _kIconSlot, color: muted),
-              child:
-                  widget.icon ??
-                  ExcludeSemantics(
-                    child: CustomPaint(
-                      size: const Size(_kIconSlot, _kIconSlot),
-                      painter: _KindGlyphPainter(color: muted),
-                    ),
-                  ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
+    return AgentStyleBuilder<AgentExecutionSpec>(
+      style: widget.style,
+      styleSpec: widget.styleSpec,
+      builder: (context, spec) => Semantics(
+        container: true,
+        explicitChildNodes: true,
+        label: widget.semanticLabel,
+        value: '${widget.tool}, $_statusLabel',
+        child: RemixCard(
+          style: widget.surfaceStyle,
+          child: RemixDisclosure(
+            expanded: _expanded,
+            onExpandedChanged: _request,
+            semanticLabel: widget.title,
+            style: widget.disclosureStyle,
+            triggerBuilder: (context, state, trigger) => Row(
               children: [
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Text(
-                    widget.title,
-                    maxLines: 1,
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    style: _titleRunOf(context),
-                  ),
+                Expanded(child: trigger!),
+                _indicator(context, spec, state.isExpanded),
+              ],
+            ),
+            trigger: RowBox(
+              styleSpec: spec.header,
+              children: [
+                _toolIcon(spec),
+                StyledText(widget.tool, styleSpec: spec.tool),
+                Expanded(
+                  child: StyledText(widget.title, styleSpec: spec.title),
                 ),
-                if (widget.meta != null) ...[
-                  const SizedBox(width: 8),
-                  Text(
-                    widget.meta!,
-                    maxLines: 1,
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    style: agentMetaOf(context),
-                  ),
-                ],
-                const SizedBox(width: 8),
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Text(
-                    widget.tool,
-                    maxLines: 1,
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    style: _toolRunOf(context),
+                if (widget.meta != null)
+                  StyledText(widget.meta!, styleSpec: spec.meta),
+                Box(
+                  styleSpec: _statusContainer(spec),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      widget.statusBuilder?.call(context, widget.status) ??
+                          StyleSpecBuilder<IconSpec>(
+                            styleSpec: spec.statusIcon,
+                            builder: (context, iconSpec) =>
+                                AgentFunctionalGlyph(
+                                  kind: _statusGlyph,
+                                  spec: iconSpec,
+                                ),
+                          ),
+                      StyledText(_statusLabel, styleSpec: spec.status),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(width: 8),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _StatusMark(status: widget.status),
-              const SizedBox(width: 4),
-              Text(
-                widget.statusLabel,
-                maxLines: 1,
-                style: _statusRunOf(context),
-              ),
-            ],
-          ),
-          const SizedBox(width: 8),
-          Box(
-            key: const ValueKey('agent-execution-chevron'),
-            style: BoxStyler()
-                .size(_kChevron, _kChevron)
-                .alignment(.center)
-                .wrap(.opacity(0.50))
-                .onHovered(BoxStyler().wrap(.opacity(0.62))),
-            child: Box(
-              style: BoxStyler()
-                  .size(_kChevron, _kChevron)
-                  .rotate(expanded ? math.pi : 0)
-                  .animate(
-                    reduce
-                        ? .linear(Duration.zero)
-                        : AnimationConfig.springDescription(
-                            mass: 0.55,
-                            stiffness: 460,
-                            damping: 30,
-                          ),
+            content: Box(
+              styleSpec: spec.output,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AgentTranscript(
+                    children: [widget.child],
+                    followOutput: widget.status.isWorking,
+                    busy: widget.status.isWorking,
+                    label: widget.outputLabel,
                   ),
-              child: CustomPaint(
-                size: const Size(_kChevron, _kChevron),
-                painter: _DownChevronPainter(color: ink),
+                  if (widget.showActions && widget.status.isSettled)
+                    RowBox(
+                      styleSpec: spec.actions,
+                      children: [
+                        if (widget.onCopy != null)
+                          RemixIconButton(
+                            icon: null,
+                            iconBuilder:
+                                widget.copyIconBuilder ??
+                                (context, iconSpec, icon) =>
+                                    AgentFunctionalGlyph(
+                                      kind: .copy,
+                                      spec: iconSpec,
+                                    ),
+                            semanticLabel: widget.copyLabel,
+                            onPressed: widget.onCopy,
+                            style: widget.copyStyle,
+                          ),
+                        if (widget.onRetry != null)
+                          RemixIconButton(
+                            icon: null,
+                            iconBuilder:
+                                widget.retryIconBuilder ??
+                                (context, iconSpec, icon) =>
+                                    AgentFunctionalGlyph(
+                                      kind: .retry,
+                                      spec: iconSpec,
+                                    ),
+                            semanticLabel: widget.retryLabel,
+                            onPressed: widget.onRetry,
+                            style: widget.retryStyle,
+                          ),
+                      ],
+                    ),
+                ],
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-/// 28×28 muted 6px-radius hover-wash. Same chrome as the answer slots.
-class _ExecutionAction extends StatelessWidget {
-  const _ExecutionAction({super.key, required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final ink = agentInkOf(context);
-    return PressableBox(
-      canRequestFocus: false,
-      excludeFromSemantics: true,
-      semanticsRole: PressableSemanticsRole.none,
-      mouseCursor: MouseCursor.defer,
-      style: BoxStyler()
-          .size(kAgentActionSize, kAgentActionSize)
-          .alignment(.center)
-          .clipBehavior(Clip.hardEdge)
-          .borderRadius(.circular(kAgentActionRadius))
-          .onHovered(.color(ink.withValues(alpha: 0.06))),
-      child: DefaultTextStyle.merge(style: agentMetaOf(context), child: child),
-    );
-  }
-}
-
-/// 12px host-ink mark. Spinner while running; check, x, or slash when settled.
-class _StatusMark extends StatelessWidget {
-  const _StatusMark({required this.status});
-
-  final AgentExecutionStatus status;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = agentMutedOf(context);
-    if (status == AgentExecutionStatus.running) {
-      return ExcludeSemantics(
-        child: RemixSpinner(
-          key: const ValueKey('agent-execution-status-mark'),
-          style: SpinnerStyler()
-              .size(_kStatusMark)
-              .strokeWidth(1.4)
-              .indicatorColor(color),
         ),
-      );
-    }
-
-    return ExcludeSemantics(
-      child: CustomPaint(
-        key: const ValueKey('agent-execution-status-mark'),
-        size: const Size(_kStatusMark, _kStatusMark),
-        painter: _StatusMarkPainter(color: color, status: status),
       ),
     );
   }
 }
 
-/// Clipped wash. Pad lives on the log so the footer can sit on the shell.
-BoxStyler _outputWellStyle(BuildContext context) {
-  return BoxStyler()
-      .color(agentInkOf(context).withValues(alpha: 0.08))
-      .borderRadius(.circular(kAgentControlRadius))
-      .clipBehavior(Clip.antiAlias);
-}
-
-TextStyle _titleRunOf(BuildContext context) {
-  return DefaultTextStyle.of(context).style.copyWith(
-    fontSize: 14,
-    height: 20 / 14,
-    fontWeight: FontWeight.w500,
-    color: agentInkOf(context).withValues(alpha: 0.90),
-  );
-}
-
-TextStyle _logRunOf(BuildContext context) {
-  return agentBodyOf(context).copyWith(
-    fontFamily: 'monospace',
-    color: agentInkOf(context).withValues(alpha: 0.80),
-  );
-}
-
-TextStyle _toolRunOf(BuildContext context) {
-  return _quietRunOf(context).copyWith(fontFamily: 'monospace');
-}
-
-TextStyle _statusRunOf(BuildContext context) {
-  return _quietRunOf(
-    context,
-  ).copyWith(fontWeight: FontWeight.w500, color: agentMutedOf(context));
-}
-
-TextStyle _quietRunOf(BuildContext context) {
-  return DefaultTextStyle.of(context).style.copyWith(
-    fontSize: 11,
-    height: 1.35,
-    fontWeight: FontWeight.w400,
-    color: agentInkOf(context).withValues(alpha: 0.55),
-  );
-}
-
-class _KindGlyphPainter extends CustomPainter {
-  const _KindGlyphPainter({required this.color});
-
-  final Color color;
-
+@MixableSpec(target: AgentExecution.new)
+@immutable
+final class AgentExecutionSpec with _$AgentExecutionSpec {
   @override
-  void paint(Canvas canvas, Size size) {
-    final stroke = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-    final s = size.shortestSide;
-    final inset = s * 1.5 / 16;
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(inset, inset, s - inset * 2, s - inset * 2),
-        Radius.circular(s * 2 / 16),
-      ),
-      stroke,
-    );
-    canvas.drawPath(
-      Path()
-        ..moveTo(s * 4.5 / 16, s * 7 / 16)
-        ..lineTo(s * 6.5 / 16, s * 9 / 16)
-        ..lineTo(s * 4.5 / 16, s * 11 / 16),
-      stroke,
-    );
-  }
-
+  final StyleSpec<FlexBoxSpec> header;
   @override
-  bool shouldRepaint(_KindGlyphPainter oldDelegate) =>
-      color != oldDelegate.color;
-}
-
-class _DownChevronPainter extends CustomPainter {
-  const _DownChevronPainter({required this.color});
-
-  final Color color;
-
+  final StyleSpec<BoxSpec> output;
   @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.4
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-    final s = size.shortestSide;
-    canvas.drawPath(
-      Path()
-        ..moveTo(s * 3.5 / 14, s * 5.25 / 14)
-        ..lineTo(s * 7 / 14, s * 8.75 / 14)
-        ..lineTo(s * 10.5 / 14, s * 5.25 / 14),
-      paint,
-    );
-  }
-
+  final StyleSpec<FlexBoxSpec> actions;
   @override
-  bool shouldRepaint(_DownChevronPainter oldDelegate) =>
-      color != oldDelegate.color;
-}
-
-class _StatusMarkPainter extends CustomPainter {
-  const _StatusMarkPainter({required this.color, required this.status});
-
-  final Color color;
-  final AgentExecutionStatus status;
-
+  final StyleSpec<TextSpec> tool;
   @override
-  void paint(Canvas canvas, Size size) {
-    final stroke = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-    final s = size.shortestSide;
-    final o = Offset(size.width / 2, size.height / 2);
-    canvas.drawCircle(o, s / 2 - 0.6, stroke);
-    switch (status) {
-      case AgentExecutionStatus.success:
-        canvas.drawPath(
-          Path()
-            ..moveTo(s * 3.2 / 12, s * 6.2 / 12)
-            ..lineTo(s * 5.2 / 12, s * 8.2 / 12)
-            ..lineTo(s * 8.8 / 12, s * 4.2 / 12),
-          stroke,
-        );
-      case AgentExecutionStatus.error:
-        canvas.drawLine(
-          Offset(s * 4.1 / 12, s * 4.1 / 12),
-          Offset(s * 7.9 / 12, s * 7.9 / 12),
-          stroke,
-        );
-        canvas.drawLine(
-          Offset(s * 7.9 / 12, s * 4.1 / 12),
-          Offset(s * 4.1 / 12, s * 7.9 / 12),
-          stroke,
-        );
-      case AgentExecutionStatus.cancelled:
-        canvas.drawLine(
-          Offset(s * 3.4 / 12, s * 3.4 / 12),
-          Offset(s * 8.6 / 12, s * 8.6 / 12),
-          stroke,
-        );
-      case AgentExecutionStatus.running:
-        break;
-    }
-  }
-
+  final StyleSpec<TextSpec> title;
   @override
-  bool shouldRepaint(_StatusMarkPainter oldDelegate) {
-    return color != oldDelegate.color || status != oldDelegate.status;
-  }
+  final StyleSpec<TextSpec> meta;
+  @override
+  final StyleSpec<TextSpec> status;
+  @override
+  final StyleSpec<IconSpec> toolIcon;
+  @override
+  final StyleSpec<IconSpec> statusIcon;
+  @override
+  final StyleSpec<IconSpec> indicator;
+  @override
+  final StyleSpec<BoxSpec> runningStatus;
+  @override
+  final StyleSpec<BoxSpec> successStatus;
+  @override
+  final StyleSpec<BoxSpec> errorStatus;
+  @override
+  final StyleSpec<BoxSpec> cancelledStatus;
+
+  const AgentExecutionSpec({
+    StyleSpec<FlexBoxSpec>? header,
+    StyleSpec<BoxSpec>? output,
+    StyleSpec<FlexBoxSpec>? actions,
+    StyleSpec<TextSpec>? tool,
+    StyleSpec<TextSpec>? title,
+    StyleSpec<TextSpec>? meta,
+    StyleSpec<TextSpec>? status,
+    StyleSpec<IconSpec>? toolIcon,
+    StyleSpec<IconSpec>? statusIcon,
+    StyleSpec<IconSpec>? indicator,
+    StyleSpec<BoxSpec>? runningStatus,
+    StyleSpec<BoxSpec>? successStatus,
+    StyleSpec<BoxSpec>? errorStatus,
+    StyleSpec<BoxSpec>? cancelledStatus,
+  }) : header = header ?? const StyleSpec(spec: FlexBoxSpec()),
+       output = output ?? const StyleSpec(spec: BoxSpec()),
+       actions = actions ?? const StyleSpec(spec: FlexBoxSpec()),
+       tool = tool ?? const StyleSpec(spec: TextSpec()),
+       title = title ?? const StyleSpec(spec: TextSpec()),
+       meta = meta ?? const StyleSpec(spec: TextSpec()),
+       status = status ?? const StyleSpec(spec: TextSpec()),
+       toolIcon = toolIcon ?? const StyleSpec(spec: IconSpec()),
+       statusIcon = statusIcon ?? const StyleSpec(spec: IconSpec()),
+       indicator = indicator ?? const StyleSpec(spec: IconSpec()),
+       runningStatus = runningStatus ?? const StyleSpec(spec: BoxSpec()),
+       successStatus = successStatus ?? const StyleSpec(spec: BoxSpec()),
+       errorStatus = errorStatus ?? const StyleSpec(spec: BoxSpec()),
+       cancelledStatus = cancelledStatus ?? const StyleSpec(spec: BoxSpec());
 }
