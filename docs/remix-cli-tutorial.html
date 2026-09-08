@@ -1,67 +1,40 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="icon" href="data:,"><title>Build an application with Remix CLI — screenshot tutorial</title>
+<link rel="icon" href="data:,"><title>Build a settings screen with Remix CLI</title>
 <meta name="description" content="A complete Remix CLI tutorial with real screenshots, source code, both presets, customization, preservation checks, and sample projects.">
-<style>
-:root{color-scheme:dark;--bg:#0b0d11;--surface:#131720;--line:#29313e;--fg:#eff2f7;--muted:#aab5c7;--accent:#b1c2ff;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-*{box-sizing:border-box}html{scroll-padding-top:100px}body{margin:0;background:var(--bg);color:var(--fg);font-size:16px;line-height:1.65}
-a{color:var(--accent);text-underline-offset:4px}a:hover{color:#fff}button,a,summary{touch-action:manipulation}:focus-visible{outline:2px solid #b1c2ff;outline-offset:4px}
-.skip{position:fixed;top:-100px;left:20px;background:var(--surface);padding:12px;z-index:10}.skip:focus{top:12px}
-header{position:sticky;top:0;z-index:5;background:#0b0d11f2;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
-.top{max-width:1370px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:17px 28px;font-size:14px}.brand{font-weight:700;letter-spacing:.03em;text-decoration:none}.top span{color:var(--muted)}
-.layout{display:grid;grid-template-columns:240px minmax(0,880px);gap:64px;max-width:1296px;margin:0 auto;padding:56px 28px 100px}
-aside{position:sticky;top:88px;max-height:calc(100vh - 110px);overflow:auto;font-size:13px}aside>p{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
-nav a{display:block;color:var(--muted);text-decoration:none;border-left:1px solid var(--line);padding:8px 12px}nav a:hover{background:var(--surface);color:var(--fg)}nav span{display:block;font-size:11px;letter-spacing:.02em;color:#7e8a9f}
-main{min-width:0}.eyebrow{color:var(--accent);text-transform:uppercase;letter-spacing:.1em;font-size:12px;font-weight:650;margin-bottom:12px}
-h1{font-size:clamp(36px,5vw,58px);line-height:1.08;letter-spacing:-.035em;margin:0 0 24px;max-width:800px}h2{font-size:32px;line-height:1.2;letter-spacing:-.025em;margin:0 0 14px}h3{font-size:21px;margin-top:34px}
-p{color:var(--muted);max-width:76ch;margin:0 0 18px}p strong,li strong{color:var(--fg)}.lead{font-size:19px;line-height:1.5;color:#c6cfdf;margin-bottom:26px}
-section{padding:46px 0 18px;border-top:1px solid var(--line);margin-top:42px}section:first-of-type{margin-top:36px}ul,ol{padding-left:24px;color:var(--muted)}li{margin:10px 0}
-code,kbd,pre{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}code{font-size:.87em;overflow-wrap:anywhere}p code,td code,th code,li code{background:#1a202c;color:#dbe3f5;padding:2px 5px;border-radius:4px}kbd{padding:2px 6px;border:1px solid #566075;border-radius:4px;color:var(--fg)}
-.code{margin:24px 0;border:1px solid var(--line);border-radius:10px;background:#0f131a;overflow:hidden}.code figcaption{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 15px;border-bottom:1px solid var(--line);font-size:12px;color:var(--muted);background:var(--surface)}
-pre{margin:0;padding:20px;overflow:auto;font-size:13px;line-height:1.6;tab-size:2}pre code{font-size:inherit;overflow-wrap:normal;white-space:pre}.output pre{color:#bdddbb}.copy{font:inherit;color:#d4def2;border:1px solid #3d475b;background:transparent;border-radius:5px;padding:5px 10px;cursor:pointer}
-.output pre code{white-space:pre-wrap;overflow-wrap:anywhere}
-.shot{margin:30px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}.shot img{display:block;width:100%;height:auto}.shot figcaption{padding:16px 20px;color:var(--muted);font-size:14px;line-height:1.55}
-.result,.note{padding:20px 22px;margin:26px 0;border:1px solid #384660;border-left:3px solid #9bb0f4;border-radius:8px;background:#141b28}.result p,.note p{margin:7px 0 0}.result strong,.note strong{font-size:14px;color:#dce6ff}
-.table-wrap{overflow-x:auto;margin:26px 0;border:1px solid var(--line);border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.5}th,td{text-align:left;vertical-align:top;padding:15px 16px;border-bottom:1px solid var(--line)}th{font-weight:600}td{color:var(--muted)}thead{background:var(--surface)}tbody tr:last-child>*{border-bottom:0}
-details{margin:24px 0;border:1px solid var(--line);padding:16px 18px;border-radius:10px}summary{cursor:pointer;font-weight:600;font-size:15px}details[open]>summary{margin-bottom:20px}details .code{margin-bottom:0}details pre{max-height:600px}.download{display:inline-block;border:1px solid #6b7eaf;background:#1c2949;padding:11px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px}
-footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px;margin-top:48px}
-@media(max-width:1060px){.layout{grid-template-columns:1fr;max-width:936px;gap:26px;padding-top:28px}aside{position:static;max-height:none}nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--line);border-radius:8px}nav a{border-left:0;border-bottom:1px solid var(--line)}h1{font-size:42px}}
-@media(max-width:560px){.layout{padding:24px 18px 64px}.top{padding:14px 18px}.top span{display:none}nav{grid-template-columns:1fr}nav a{padding:8px 12px}nav span{display:inline;margin-right:8px}h1{font-size:36px}h2{font-size:27px}section{margin-top:30px;padding-top:34px}pre{padding:16px;font-size:12px}.table-wrap table{min-width:570px}.shot figcaption{padding:14px}details{padding:14px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-</style></head><body><a class="skip" href="#main">Skip to tutorial</a>
-<header><div class="top"><a class="brand" href="remix-cli-guide.html">remix / open code</a><span>Screenshot tutorial · Flutter 3.44.0</span><a href="remix-cli-guide.html">Reference guide</a></div></header>
-<div class="layout"><aside><p>In this tutorial</p><nav aria-label="Tutorial steps"><a href="#start"><span>Start here</span>What you will build</a><a href="#create"><span>1</span>Create the Flutter project</a><a href="#install-cli"><span>2</span>Use the reviewed checkout</a><a href="#initialize"><span>3</span>Choose the preset and prefix</a><a href="#install-button"><span>4</span>Add the first component</a><a href="#render-button"><span>5</span>Put Button in the application</a><a href="#compose"><span>6</span>Add the settings controls</a><a href="#customize"><span>7</span>Change appearance at the correct level</a><a href="#exercise"><span>8</span>Check the visible behavior</a><a href="#preserve"><span>9</span>Keep the source you edited</a><a href="#fortal"><span>10</span>Build the same sample with Fortal</a><a href="#validate"><span>11</span>Run the checks yourself</a><a href="#troubleshoot"><span>12</span>Resolve the common failures</a><a href="#evidence"><span>Review notes</span>What the screenshots establish</a></nav></aside>
-<main id="main"><p class="eyebrow">A practical tutorial</p><h1>Build an application<br>with Remix CLI.</h1>
-<p class="lead">Follow the commands. Inspect the source. Compare the screenshots. Then verify that your edits stay yours.</p>
-<p>This page follows one complete application from an empty Flutter project to a working settings screen.
-Every step names the files you change and the result you should observe.</p>
-<section id="start"><p class="eyebrow">Start here</p><h2>What you will build</h2><p class="lead">Build a small settings screen from editable Remix recipes.</p>
-<p>The sample is named <strong>Launchpad</strong>. It is a fictional application used only for this tutorial.
-You write its screen, layout, and callbacks. The Remix CLI installs its theme and component recipes.</p>
-<p>You will create a Flutter project, install the default preset, and render a Button.
-Then you will compose the screen, customize a recipe, and verify source preservation.
-An optional section repeats the setup with Fortal.</p>
-<p>This tutorial assumes basic Flutter knowledge and access to a terminal.
-Use a desktop browser for the sample. The sample does not include a mobile layout or a backend.</p>
-<figure class="shot"><a href="assets/remix-cli-tutorial/default-finished.jpg" aria-label="Open screenshot: Finished default sample with workspace settings, a sidebar, and a cyan preview button"><img src="assets/remix-cli-tutorial/default-finished.jpg" alt="Finished default sample with workspace settings, a sidebar, and a cyan preview button" width="1200" height="900" loading="lazy"></a><figcaption><strong>The finished sample.</strong> This capture includes the 44-pixel Button customization from Step 7. The CLI does not generate this complete screen. <a href="assets/remix-cli-tutorial/default-finished.jpg">Open at full size</a>.</figcaption></figure>
-<div class="table-wrap"><table><thead><tr><th>Part</th><th>Responsibility</th><th>Where to inspect it</th></tr></thead><tbody>
-<tr><th>Flutter</th><td>Creates and runs the application.</td><td><code>lib/main.dart</code></td></tr>
-<tr><th>Remix CLI</th><td>Installs the theme and recipes. It runs adapter generation.</td><td><code>remix.yaml</code> and <code>lib/ui/</code></td></tr>
-<tr><th>Your application</th><td>Owns the screen, callbacks, theme, and recipes.</td><td><code>SampleApp</code>, <code>WorkspacePage</code>, and authored <code>lib/ui/</code> files</td></tr>
-<tr><th>Remix</th><td>Provides widget rendering and interaction behavior.</td><td><code>package:remix/remix.dart</code></td></tr>
-<tr><th>CI</th><td>Runs automated repository checks on GitHub.</td><td>The PR checks, separate from this application</td></tr>
-</tbody></table></div>
-<p><a class="download" href="assets/remix-cli-tutorial/sample-projects.zip" download>Download both complete sample projects</a></p>
-<p>Follow the steps to build the sample yourself. Use the archive to compare your files or inspect the final result.
-The archive includes generated adapters and four behavior tests for each preset.</p>
+<link rel="stylesheet" href="assets/remix-cli-tutorial/tutorial.css"></head><body><a class="skip" href="#main">Skip to tutorial</a>
+<header><div class="top"><a class="brand" href="remix-cli-guide.html">remix / open code</a><span class="top-label">A Flutter tutorial</span><div class="top-links"><a href="remix-cli-guide.html">Reference guide</a><a class="top-download" href="assets/remix-cli-tutorial/sample-projects.zip" download>Download samples</a></div></div></header>
+<div class="layout"><aside class="sidebar"><details class="contents" open><summary>Contents<span class="current-location" id="current-location">The sample</span></summary><nav aria-label="Tutorial steps"><a href="#start" data-label="The sample"><span>Start</span>The sample</a><a href="#create" data-label="Prepare Flutter"><span>1</span>Prepare Flutter</a><a href="#install-cli" data-label="Install the CLI"><span>2</span>Install the CLI</a><a href="#initialize" data-label="Choose a preset"><span>3</span>Choose a preset</a><a href="#install-button" data-label="Install Button"><span>4</span>Install Button</a><a href="#render-button" data-label="Render Button"><span>5</span>Render Button</a><a href="#compose" data-label="Build the screen"><span>6</span>Build the screen</a><a href="#customize" data-label="Customize the source"><span>7</span>Customize the source</a><a href="#exercise" data-label="Exercise the screen"><span>8</span>Exercise the screen</a><a href="#preserve" data-label="Preserve your edits"><span>9</span>Preserve your edits</a><a href="#fortal" data-label="Try Fortal"><span>10</span>Try Fortal</a><a href="#validate" data-label="Run the tests"><span>11</span>Run the tests</a><a href="#troubleshoot" data-label="Troubleshoot"><span>12</span>Troubleshoot</a><a href="#evidence" data-label="Review the evidence"><span>Notes</span>Review the evidence</a></nav></details><div class="reading-tools"><label><input type="checkbox" id="wrap-code">Wrap long code lines</label><p class="sidebar-note">All examples are available offline.</p></div></aside>
+<main id="main"><section id="start"><p class="eyebrow">Remix CLI tutorial</p><h1>Build a settings screen<br>with Remix CLI.</h1>
+<p class="lead">Install editable Flutter recipes, build a working screen, and make the source your own.</p>
+<p>The sample is named <strong>Launchpad</strong>. You write its layout and callbacks. The CLI installs its theme and component recipes.</p>
+<div class="intro-actions"><a class="action primary" href="#create">Start with an empty project</a><a class="action" href="assets/remix-cli-tutorial/sample-projects.zip" download>Download both samples</a></div>
+<p class="version-note">Tested with Flutter 3.44.0 and Dart 3.12.0. The steps use a pinned Remix checkout.</p>
+<figure class="shot"><a href="assets/remix-cli-tutorial/default-finished.jpg" aria-label="Open screenshot: Finished default sample with workspace settings, a sidebar, and a cyan preview button"><img src="assets/remix-cli-tutorial/default-finished.jpg" alt="Finished default sample with workspace settings, a sidebar, and a cyan preview button" width="1200" height="900" fetchpriority="high"></a><figcaption><span class="figure-label">Figure 1</span><strong>The finished sample.</strong> This capture includes the 44-pixel Button customization from Step 7. The CLI does not generate this complete screen. <a href="assets/remix-cli-tutorial/default-finished.jpg">Open at full size</a>.</figcaption></figure>
+<div class="ownership"><h2 id="source-ownership">How the pieces fit together</h2>
+<p>The CLI installs source in your application. The generator connects that source to Remix widgets.</p>
+<ol class="source-flow" aria-label="From installation to a running application">
+<li><h3>Install the recipe</h3><p><a href="#install-button">Add Button with the CLI.</a></p><p class="source-file"><code>lib/ui/components/button.dart</code></p><p>The recipe defines Button styles. The CLI also installs the theme.</p><p class="source-owner">Your editable source</p></li>
+<li><h3>Generate the adapter</h3><p>The CLI runs <code>build_runner</code> with <code>mix_generator</code>.</p><p class="source-file"><code>lib/ui/components/button.g.dart</code></p><p>The adapter exposes <code>AcmeButton</code>. <a href="#customize">Regenerate it after recipe API changes.</a></p><p class="source-owner">Generated source</p></li>
+<li><h3>Build the screen</h3><p><a href="#compose">Use the installed widgets.</a></p><p class="source-file"><code>lib/main.dart</code></p><p>Your application supplies the layout, state, and callbacks.</p><p class="source-owner">Your application code</p></li>
+</ol>
+<p class="runtime-note"><strong>At runtime:</strong> the adapter uses <code>package:remix/remix.dart</code> for rendering and interaction behavior.</p>
+<p class="scope-note">GitHub CI runs repository checks separately. <a href="#validate">Step 11 explains the checks and how to test your sample.</a></p>
+</div>
+<h2 class="before-heading">Before you start</h2>
+<p>You need basic Flutter knowledge, Git, a terminal, and an installed Flutter SDK.
+The sample targets desktop browsers and uses local state. It has no backend or mobile layout.</p>
+<p>Follow the steps to build the default sample. <a href="#fortal">Step 10 covers Fortal in a separate project.</a>
+The download includes both complete projects, generated adapters, and four tests per preset.</p>
+
 </section><section id="create"><p class="eyebrow">1 · Prepare</p><h2>Create the Flutter project</h2><p class="lead">Start from an empty project so each CLI change is visible.</p>
 <p>This tutorial uses Flutter <strong>3.44.0</strong>, Dart <strong>3.12.0</strong>, and Git.
 Put the intended Flutter SDK on <code>PATH</code>. The CLI checks the Flutter executable found there.</p>
-<figure class="code"><figcaption><span>Check the tools</span><button type="button" class="copy" aria-label="Copy Check the tools" aria-live="polite">Copy</button></figcaption><pre><code>flutter --version
+<figure class="code"><figcaption><span class="code-heading"><span>Check the tools</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Check the tools">Copy</button></figcaption><pre tabindex="0" aria-label="Check the tools"><code class="language-bash">flutter --version
 dart --version
 git --version</code></pre></figure>
 <p>Run these commands from the directory where you keep sample applications.</p>
-<figure class="code" id="create-default"><figcaption><span>Create the default sample</span><button type="button" class="copy" aria-label="Copy Create the default sample" aria-live="polite">Copy</button></figcaption><pre><code>flutter create --empty --platforms=web remix_default_demo
+<figure class="code" id="create-default"><figcaption><span class="code-heading"><span>Create the default sample</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Create the default sample">Copy</button></figcaption><pre tabindex="0" aria-label="Create the default sample"><code class="language-bash">flutter create --empty --platforms=web remix_default_demo
 cd remix_default_demo</code></pre></figure>
 <p>The following commands run inside <code>remix_default_demo</code>, beside its <code>pubspec.yaml</code>.
 The project name also appears in the test import provided later.</p>
@@ -70,26 +43,26 @@ The project name also appears in the test import provided later.</p>
 <p>The September 7, 2026 review used Remix <code>1.0.0-beta.9</code> and CLI <code>0.1.0</code> from a checkout.
 Those releases were not published at review time. The instructions below work with that checkout.</p></div>
 <p>Use the complete PR stack, including Sidebar. The reviewed checkout is <code>bfae6507676fadea7632e2f7f66924935c04ca2a</code>.</p>
-<details><summary>Get the reviewed checkout</summary>
+<details open><summary>Get the reviewed checkout</summary>
 <p>Open a second terminal in the directory where you keep repositories. Run these commands there.</p>
-<figure class="code"><figcaption><span>Get the exact reviewed source</span><button type="button" class="copy" aria-label="Copy Get the exact reviewed source" aria-live="polite">Copy</button></figcaption><pre><code>git clone https://github.com/conceptadev/remix.git remix-review
+<figure class="code"><figcaption><span class="code-heading"><span>Get the exact reviewed source</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Get the exact reviewed source">Copy</button></figcaption><pre tabindex="0" aria-label="Get the exact reviewed source"><code class="language-bash">git clone https://github.com/conceptadev/remix.git remix-review
 git -C remix-review checkout bfae6507676fadea7632e2f7f66924935c04ca2a
 git -C remix-review rev-parse --show-toplevel</code></pre></figure>
 <p>The last command prints the checkout path. Use that path wherever the tutorial shows <code>/path/to/remix</code>.</p>
 <p>Return to the first terminal in <code>remix_default_demo</code> for the remaining commands.</p></details>
 <p>Replace <code>/path/to/remix</code> with your Remix checkout path.
 Create <code>pubspec_overrides.yaml</code> in the sample project.</p>
-<figure class="code" id="remix-override"><figcaption><span>pubspec_overrides.yaml</span><button type="button" class="copy" aria-label="Copy pubspec_overrides.yaml" aria-live="polite">Copy</button></figcaption><pre><code>dependency_overrides:
+<figure class="code" id="remix-override"><figcaption><span class="code-heading"><span>pubspec_overrides.yaml</span><span class="language-label">YAML</span></span><button type="button" class="copy" aria-label="Copy pubspec_overrides.yaml">Copy</button></figcaption><pre tabindex="0" aria-label="pubspec_overrides.yaml"><code class="language-yaml">dependency_overrides:
   remix:
-    path: /path/to/remix/packages/remix</code></pre></figure><figure class="code" id="install-local-cli"><figcaption><span>Install the CLI as a development dependency</span><button type="button" class="copy" aria-label="Copy Install the CLI as a development dependency" aria-live="polite">Copy</button></figcaption><pre><code>dart pub add &quot;dev:remix_cli@{path: /path/to/remix/packages/remix_cli}&quot;
-dart run remix_cli:remix --version</code></pre></figure><figure class="code output"><figcaption><span>Expected version</span></figcaption><pre><code>0.1.0</code></pre></figure>
+    path: /path/to/remix/packages/remix</code></pre></figure><figure class="code" id="install-local-cli"><figcaption><span class="code-heading"><span>Install the CLI as a development dependency</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Install the CLI as a development dependency">Copy</button></figcaption><pre tabindex="0" aria-label="Install the CLI as a development dependency"><code class="language-bash">dart pub add &quot;dev:remix_cli@{path: /path/to/remix/packages/remix_cli}&quot;
+dart run remix_cli:remix --version</code></pre></figure><figure class="code output"><figcaption><span class="code-heading"><span>Expected version</span><span class="language-label">Output</span></span></figcaption><pre tabindex="0" aria-label="Expected version"><code class="language-none">0.1.0</code></pre></figure>
 <p>The CLI installation updates development dependencies and the lockfile.
 The Remix override selects the reviewed runtime when the CLI adds the Remix dependency.</p>
 <details><summary>Use hosted packages after publication</summary>
 <p>Use the <a href="remix-cli-guide.html#install">reference installation instructions</a> after both packages are available.
 Remove the checkout override and replace the CLI path dependency with the published version.
 Run <code>flutter pub get</code> and repeat analysis and tests.</p></details>
-<div class="result"><strong>Check the result</strong><p>The version command prints <code>0.1.0</code>. The application still has no installed theme or recipe.</p></div></section><section id="initialize"><p class="eyebrow">3 · Initialize</p><h2>Choose the preset and prefix</h2><p class="lead">The configuration fixes the preset, generated names, and installation path.</p><figure class="code" id="init-default"><figcaption><span>Initialize the default preset</span><button type="button" class="copy" aria-label="Copy Initialize the default preset" aria-live="polite">Copy</button></figcaption><pre><code>dart run remix_cli:remix init --prefix Acme --preset default</code></pre></figure><figure class="code output"><figcaption><span>Observed output from the fresh sample</span></figcaption><pre><code>Initialized remix.yaml and lib/ui/ui.dart.</code></pre></figure><figure class="code" id="default-config"><figcaption><span>remix.yaml</span><button type="button" class="copy" aria-label="Copy remix.yaml" aria-live="polite">Copy</button></figcaption><pre><code>schema: 2
+<div class="result"><strong>Check the result</strong><p>The version command prints <code>0.1.0</code>. The application still has no installed theme or recipe.</p></div></section><section id="initialize"><p class="eyebrow">3 · Initialize</p><h2>Choose the preset and prefix</h2><p class="lead">The configuration fixes the preset, generated names, and installation path.</p><figure class="code" id="init-default"><figcaption><span class="code-heading"><span>Initialize the default preset</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Initialize the default preset">Copy</button></figcaption><pre tabindex="0" aria-label="Initialize the default preset"><code class="language-bash">dart run remix_cli:remix init --prefix Acme --preset default</code></pre></figure><figure class="code output"><figcaption><span class="code-heading"><span>Observed output from the fresh sample</span><span class="language-label">Output</span></span></figcaption><pre tabindex="0" aria-label="Observed output from the fresh sample"><code class="language-none">Initialized remix.yaml and lib/ui/ui.dart.</code></pre></figure><figure class="code" id="default-config"><figcaption><span class="code-heading"><span>remix.yaml</span><span class="language-label">YAML</span></span><button type="button" class="copy" aria-label="Copy remix.yaml">Copy</button></figcaption><pre tabindex="0" aria-label="remix.yaml"><code class="language-yaml">schema: 2
 prefix: Acme
 preset: default
 paths:
@@ -98,7 +71,7 @@ paths:
 The CLI writes an empty managed barrel at <code>lib/ui/ui.dart</code>.</p>
 <p>The preset selects the theme and recipe vocabulary. Choose Fortal in a separate project; do not change this project's preset later.</p>
 <div class="result"><strong>Check the result</strong><p>Open <code>remix.yaml</code> and confirm schema <code>2</code> and preset <code>default</code>.
-Open <code>lib/ui/ui.dart</code> and confirm its export markers. No component renders yet.</p></div></section><section id="install-button"><p class="eyebrow">4 · Preview and install</p><h2>Add the first component</h2><p class="lead">Read the plan, then allow the CLI to install Button and its theme.</p><figure class="code" id="preview-button"><figcaption><span>Preview the plan</span><button type="button" class="copy" aria-label="Copy Preview the plan" aria-live="polite">Copy</button></figcaption><pre><code>dart run remix_cli:remix add button --dry-run</code></pre></figure><figure class="code output"><figcaption><span>Observed plan before installation</span></figcaption><pre><code>Items: theme -&gt; button
+Open <code>lib/ui/ui.dart</code> and confirm its export markers. No component renders yet.</p></div></section><section id="install-button"><p class="eyebrow">4 · Preview and install</p><h2>Add the first component</h2><p class="lead">Read the plan, then allow the CLI to install Button and its theme.</p><figure class="code" id="preview-button"><figcaption><span class="code-heading"><span>Preview the plan</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Preview the plan">Copy</button></figcaption><pre tabindex="0" aria-label="Preview the plan"><code class="language-bash">dart run remix_cli:remix add button --dry-run</code></pre></figure><figure class="code output"><figcaption><span class="code-heading"><span>Observed plan before installation</span><span class="language-label">Output</span></span></figcaption><pre tabindex="0" aria-label="Observed plan before installation"><code class="language-none">Items: theme -&gt; button
 Dependencies: remix@^1.0.0-beta.9, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
 theme: missing; lib/ui/theme/tokens.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart
 button: missing; lib/ui/components/button.dart
@@ -106,9 +79,9 @@ Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, compo
 Generated: lib/ui/components/button.g.dart</code></pre></figure>
 <p><code>theme -&gt; button</code> is the installation order. Both items are <code>missing</code> in a fresh project.
 The dry-run reports the plan and writes no files.</p>
-<figure class="code" id="install-button-command"><figcaption><span>Install Button</span><button type="button" class="copy" aria-label="Copy Install Button" aria-live="polite">Copy</button></figcaption><pre><code>dart run remix_cli:remix add button</code></pre></figure><figure class="code output"><figcaption><span>Observed result after the plan</span></figcaption><pre><code>Added theme.
+<figure class="code" id="install-button-command"><figcaption><span class="code-heading"><span>Install Button</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Install Button">Copy</button></figcaption><pre tabindex="0" aria-label="Install Button"><code class="language-bash">dart run remix_cli:remix add button</code></pre></figure><figure class="code output"><figcaption><span class="code-heading"><span>Observed result after the plan</span><span class="language-label">Output</span></span></figcaption><pre tabindex="0" aria-label="Observed result after the plan"><code class="language-none">Added theme.
 Added button.
-Generated lib/ui/components/button.g.dart.</code></pre></figure><figure class="code output"><figcaption><span>Files to inspect</span></figcaption><pre><code>lib/ui/
+Generated lib/ui/components/button.g.dart.</code></pre></figure><figure class="code output"><figcaption><span class="code-heading"><span>Files to inspect</span><span class="language-label">Output</span></span></figcaption><pre tabindex="0" aria-label="Files to inspect"><code class="language-none">lib/ui/
 ├── ui.dart
 ├── theme/
 │   ├── tokens.dart
@@ -125,7 +98,7 @@ The CLI also adds required dependencies, updates the barrel exports, and runs ge
 The CLI reports successful generation. The application screen still uses Flutter's starter code.</p></div></section><section id="render-button"><p class="eyebrow">5 · Render</p><h2>Put Button in the application</h2><p class="lead">This is the first step that changes the visible application.</p>
 <p>Replace <code>lib/main.dart</code> with this complete example.
 It imports the managed barrel and places the Button below <code>AcmeThemeScope</code>.</p>
-<details><summary>Show the complete first-render main.dart</summary><figure class="code" id="first-main"><figcaption><span>lib/main.dart · first render</span><button type="button" class="copy" aria-label="Copy lib/main.dart · first render" aria-live="polite">Copy</button></figcaption><pre><code>import &#x27;package:flutter/widgets.dart&#x27;;
+<details open><summary>Complete first-render main.dart</summary><figure class="code" id="first-main"><figcaption><span class="code-heading"><span>lib/main.dart · first render</span><span class="language-label">Dart</span></span><button type="button" class="copy" aria-label="Copy lib/main.dart · first render">Copy</button></figcaption><pre tabindex="0" aria-label="lib/main.dart · first render"><code class="language-dart">import &#x27;package:flutter/widgets.dart&#x27;;
 
 import &#x27;ui/ui.dart&#x27;;
 
@@ -168,10 +141,11 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-}</code></pre></figure></details><figure class="code"><figcaption><span>Run the application</span><button type="button" class="copy" aria-label="Copy Run the application" aria-live="polite">Copy</button></figcaption><pre><code>flutter run -d chrome</code></pre></figure><figure class="shot"><a href="assets/remix-cli-tutorial/first-render.jpg" aria-label="Open screenshot: A single black Continue button centered on a white application surface"><img src="assets/remix-cli-tutorial/first-render.jpg" alt="A single black Continue button centered on a white application surface" width="800" height="300" loading="lazy"></a><figcaption><strong>First render.</strong> This detail capture comes from the complete example above, built with the installed default recipe. <a href="assets/remix-cli-tutorial/first-render.jpg">Open at full size</a>.</figcaption></figure>
-<p>The sample uses <code>WidgetsApp</code> and an <code>Overlay</code>.
+}</code></pre></figure></details><figure class="code"><figcaption><span class="code-heading"><span>Run the application</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Run the application">Copy</button></figcaption><pre tabindex="0" aria-label="Run the application"><code class="language-bash">flutter run -d chrome</code></pre></figure><figure class="shot"><a href="assets/remix-cli-tutorial/first-render.jpg" aria-label="Open screenshot: A single black Continue button centered on a white application surface"><img src="assets/remix-cli-tutorial/first-render.jpg" alt="A single black Continue button centered on a white application surface" width="800" height="300" loading="lazy"></a><figcaption><span class="figure-label">Figure 2</span><strong>First render.</strong> This detail capture comes from the complete example above, built with the installed default recipe. <a href="assets/remix-cli-tutorial/first-render.jpg">Open at full size</a>.</figcaption></figure>
+<p>Keep the <code>flutter run</code> terminal open. Open another terminal in the same sample directory for the following CLI commands.</p>
+<p>The first example uses <code>WidgetsApp</code> and an <code>Overlay</code>.
 The larger application below uses <code>MaterialApp</code> for its navigation host.</p>
-<div class="result"><strong>Check the result</strong><p>Chrome shows a centered <strong>Continue</strong> button. The callback is intentionally empty in this first example.</p></div></section><section id="compose"><p class="eyebrow">6 · Compose the screen</p><h2>Add the settings controls</h2><p class="lead">Install the remaining recipes, then write the application that uses them.</p><figure class="code" id="install-screen"><figcaption><span>Install one item per command</span><button type="button" class="copy" aria-label="Copy Install one item per command" aria-live="polite">Copy</button></figcaption><pre><code>dart run remix_cli:remix add checkbox
+<div class="result"><strong>Check the result</strong><p>Chrome shows a centered <strong>Continue</strong> button. The callback is intentionally empty in this first example.</p></div></section><section id="compose"><p class="eyebrow">6 · Compose the screen</p><h2>Add the settings controls</h2><p class="lead">Install the remaining recipes, then write the application that uses them.</p><figure class="code" id="install-screen"><figcaption><span class="code-heading"><span>Install one item per command</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Install one item per command">Copy</button></figcaption><pre tabindex="0" aria-label="Install one item per command"><code class="language-bash">dart run remix_cli:remix add checkbox
 dart run remix_cli:remix add textfield
 dart run remix_cli:remix add dialog
 dart run remix_cli:remix add card
@@ -180,7 +154,7 @@ dart run remix_cli:remix add sidebar</code></pre></figure>
 Each command generates the required adapters and updates <code>lib/ui/ui.dart</code>.</p>
 <p>Replace <code>lib/main.dart</code> with the complete sample below.
 The sample imports only Flutter, Remix, and the application barrel.</p>
-<details><summary>Show the complete settings-screen main.dart</summary><figure class="code" id="default-main"><figcaption><span>lib/main.dart · default sample</span><button type="button" class="copy" aria-label="Copy lib/main.dart · default sample" aria-live="polite">Copy</button></figcaption><pre><code>import &#x27;package:flutter/material.dart&#x27;;
+<details><summary>Complete settings-screen main.dart</summary><figure class="code" id="default-main"><figcaption><span class="code-heading"><span>lib/main.dart · default sample</span><span class="language-label">Dart</span></span><button type="button" class="copy" aria-label="Copy lib/main.dart · default sample">Copy</button></figcaption><pre tabindex="0" aria-label="lib/main.dart · default sample"><code class="language-dart">import &#x27;package:flutter/material.dart&#x27;;
 import &#x27;package:remix/remix.dart&#x27;;
 
 import &#x27;ui/ui.dart&#x27;;
@@ -535,7 +509,7 @@ It owns the selected destination, save state, and callbacks. No request leaves t
 <h3>Place the scope below the host</h3>
 <p><code>MaterialApp.builder</code> wraps the navigation child with the text defaults and recipe scope.
 Routes and dialogs can then inherit those values.</p>
-<figure class="code"><figcaption><span>lib/main.dart · _SampleAppState.build</span><button type="button" class="copy" aria-label="Copy lib/main.dart · _SampleAppState.build" aria-live="polite">Copy</button></figcaption><pre><code>builder: (context, child) =&gt; DefaultTextStyle(
+<figure class="code"><figcaption><span class="code-heading"><span>lib/main.dart · _SampleAppState.build</span><span class="language-label">Dart</span></span><button type="button" class="copy" aria-label="Copy lib/main.dart · _SampleAppState.build">Copy</button></figcaption><pre tabindex="0" aria-label="lib/main.dart · _SampleAppState.build"><code class="language-dart">builder: (context, child) =&gt; DefaultTextStyle(
   style: Theme.of(context).textTheme.bodyMedium!,
   child: AcmeThemeScope(
     data: dark ? const AcmeThemeData.dark() : const AcmeThemeData.light(),
@@ -543,13 +517,13 @@ Routes and dialogs can then inherit those values.</p>
   ),
 ),</code></pre></figure>
 <p>Restart the application after replacing its root widget.
-In the terminal running <code>flutter run</code>, press <kbd>R</kbd> for a hot restart.</p>
+Return to the terminal running <code>flutter run</code>. Press <kbd>R</kbd> for a hot restart.</p>
 <div class="result"><strong>Check the result</strong><p>The settings screen shows Sidebar, TextField, Checkbox, Card, and Button.
-The default medium buttons remain 36 pixels tall until Step 7.</p></div></section><section id="customize"><p class="eyebrow">7 · Customize</p><h2>Change appearance at the correct level</h2><p class="lead">Use a call-site override, a recipe edit, or a theme value according to the intended scope.</p>
+The default medium buttons remain 36 pixels tall until Step 7.</p></div></section><section id="customize"><p class="eyebrow">7 · Customize</p><h2>Customize a Button or the theme</h2><p class="lead">Choose an instance override, a recipe edit, or a theme value based on which controls should change.</p>
 <h3>One instance: the cyan preview button</h3>
 <p>Open <code>lib/main.dart</code>, <code>_WorkspacePageState.build</code>, and find the <strong>Run preview</strong> button.
 Its <code>style</code> overrides one instance.</p>
-<figure class="code"><figcaption><span>lib/main.dart · the Run preview style</span><button type="button" class="copy" aria-label="Copy lib/main.dart · the Run preview style" aria-live="polite">Copy</button></figcaption><pre><code>style: ButtonStyler()
+<figure class="code"><figcaption><span class="code-heading"><span>lib/main.dart · the Run preview style</span><span class="language-label">Dart</span></span><button type="button" class="copy" aria-label="Copy lib/main.dart · the Run preview style">Copy</button></figcaption><pre tabindex="0" aria-label="lib/main.dart · the Run preview style"><code class="language-dart">style: ButtonStyler()
     .color(const Color(0xFF0E7490))
     .label(.color(const Color(0xFFFFFFFF)))
     .onPressed(ButtonStyler().color(const Color(0xFF164E63)))
@@ -560,24 +534,24 @@ The neighboring Button keeps its recipe. The <code>onPressed</code> callback sti
 <h3>One component family: make medium buttons taller</h3>
 <p>Open <code>lib/ui/components/button.dart</code>, <code>_metricsFor</code>.
 Change only the medium <code>minHeight</code> from <code>36.0</code> to <code>44.0</code>.</p>
-<figure class="code" id="medium-metrics"><figcaption><span>lib/ui/components/button.dart · _metricsFor</span><button type="button" class="copy" aria-label="Copy lib/ui/components/button.dart · _metricsFor" aria-live="polite">Copy</button></figcaption><pre><code>.medium =&gt; (
+<figure class="code" id="medium-metrics"><figcaption><span class="code-heading"><span>lib/ui/components/button.dart · _metricsFor</span><span class="language-label">Dart</span></span><button type="button" class="copy" aria-label="Copy lib/ui/components/button.dart · _metricsFor">Copy</button></figcaption><pre tabindex="0" aria-label="lib/ui/components/button.dart · _metricsFor"><code class="language-dart">.medium =&gt; (
   minHeight: 44.0,
   paddingX: 16.0,
   gap: 8.0,
   labelSize: 14.0,
   iconSize: 16.0,
-),</code></pre></figure><figure class="shot"><a href="assets/remix-cli-tutorial/recipe-edit.jpg" aria-label="Open screenshot: VS Code web showing minHeight 44.0 in the medium Button metrics"><img src="assets/remix-cli-tutorial/recipe-edit.jpg" alt="VS Code web showing minHeight 44.0 in the medium Button metrics" width="2257" height="1329" loading="lazy"></a><figcaption><strong>The saved recipe edit.</strong> The editor shows the application-owned file. The terminal shows a later dry-run against the installed project. <a href="assets/remix-cli-tutorial/recipe-edit.jpg">Open at full size</a>.</figcaption></figure>
+),</code></pre></figure><figure class="shot"><a href="assets/remix-cli-tutorial/recipe-edit.jpg" aria-label="Open screenshot: VS Code web showing minHeight 44.0 in the medium Button metrics"><img src="assets/remix-cli-tutorial/recipe-edit.jpg" alt="VS Code web showing minHeight 44.0 in the medium Button metrics" width="2257" height="1329" loading="lazy"></a><figcaption><span class="figure-label">Figure 3</span><strong>The saved recipe edit.</strong> The editor shows the application-owned file. The terminal shows a later dry-run against the installed project. <a href="assets/remix-cli-tutorial/recipe-edit.jpg">Open at full size</a>.</figcaption></figure>
 <p>Restart or reload the running application to see the change.
 This edit changes a recipe value. It does not change the generated widget signature.</p>
 <p>When you change recipe parameters, enums, or annotations, regenerate the adapter.</p>
-<figure class="code"><figcaption><span>Regenerate after a recipe API change</span><button type="button" class="copy" aria-label="Copy Regenerate after a recipe API change" aria-live="polite">Copy</button></figcaption><pre><code>dart run build_runner build --delete-conflicting-outputs</code></pre></figure>
+<figure class="code"><figcaption><span class="code-heading"><span>Regenerate after a recipe API change</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Regenerate after a recipe API change">Copy</button></figcaption><pre tabindex="0" aria-label="Regenerate after a recipe API change"><code class="language-bash">dart run build_runner build --delete-conflicting-outputs</code></pre></figure>
 <h3>The theme: shared values and runtime switching</h3>
 <p>Open <code>lib/ui/theme/theme_data.dart</code>, <code>AcmeThemeData</code>, for shared values.
 Open <code>lib/main.dart</code>, <code>_SampleAppState.build</code>, for the light and dark switch.</p>
 <p>A new token also needs an entry in <code>AcmeThemeData.tokens</code>.
 Include its value in constructors, <code>copyWith</code>, equality, and <code>hashCode</code>.</p>
 <p>See the <a href="remix-cli-guide.html#customize">customization reference</a> for token and theme examples.</p>
-<div class="result"><strong>Check the result</strong><p>Every default medium Button uses the 44-pixel minimum height.
+<div class="result"><strong>Check the result</strong><p>Every medium Button in this default sample uses the 44-pixel minimum height.
 The cyan Button keeps its instance override. The review measured <strong>Save changes</strong> at 44 CSS pixels with device pixel ratio 1.</p></div></section><section id="exercise"><p class="eyebrow">8 · Exercise the application</p><h2>Check the visible behavior</h2><p class="lead">A screenshot shows a state. These actions verify how the application reaches that state.</p>
 <ol>
 <li>Reload the sample to reset its local state.</li>
@@ -586,7 +560,7 @@ The cyan Button keeps its instance override. The review measured <strong>Save ch
 <li>Select <strong>Save changes</strong>. Try a second press while the spinner is visible.</li>
 <li>Wait for the result. Confirm <strong>Save count: 1</strong> and <strong>Summary: off</strong>.</li>
 </ol>
-<figure class="shot"><a href="assets/remix-cli-tutorial/saving.jpg" aria-label="Open screenshot: The Save changes button showing a spinner with Launchpad Studio entered and the summary checkbox cleared"><img src="assets/remix-cli-tutorial/saving.jpg" alt="The Save changes button showing a spinner with Launchpad Studio entered and the summary checkbox cleared" width="850" height="430" loading="lazy"></a><figcaption><strong>Saving.</strong> Remix renders the loading state and disables the Button. The application supplies <code>loading: saving</code>. <a href="assets/remix-cli-tutorial/saving.jpg">Open at full size</a>.</figcaption></figure><figure class="shot"><a href="assets/remix-cli-tutorial/saved.jpg" aria-label="Open screenshot: The saved result names Launchpad Studio, save count 1, and summary off"><img src="assets/remix-cli-tutorial/saved.jpg" alt="The saved result names Launchpad Studio, save count 1, and summary off" width="850" height="430" loading="lazy"></a><figcaption><strong>Saved.</strong> The application callback retains the entered values and reports one completed save. <a href="assets/remix-cli-tutorial/saved.jpg">Open at full size</a>.</figcaption></figure>
+<figure class="shot"><a href="assets/remix-cli-tutorial/saving.jpg" aria-label="Open screenshot: The Save changes button showing a spinner with Launchpad Studio entered and the summary checkbox cleared"><img src="assets/remix-cli-tutorial/saving.jpg" alt="The Save changes button showing a spinner with Launchpad Studio entered and the summary checkbox cleared" width="850" height="430" loading="lazy"></a><figcaption><span class="figure-label">Figure 4</span><strong>Saving.</strong> Remix renders the loading state and disables the Button. The application supplies <code>loading: saving</code>. <a href="assets/remix-cli-tutorial/saving.jpg">Open at full size</a>.</figcaption></figure><figure class="shot"><a href="assets/remix-cli-tutorial/saved.jpg" aria-label="Open screenshot: The saved result names Launchpad Studio, save count 1, and summary off"><img src="assets/remix-cli-tutorial/saved.jpg" alt="The saved result names Launchpad Studio, save count 1, and summary off" width="850" height="430" loading="lazy"></a><figcaption><span class="figure-label">Figure 5</span><strong>Saved.</strong> The application callback retains the entered values and reports one completed save. <a href="assets/remix-cli-tutorial/saved.jpg">Open at full size</a>.</figcaption></figure>
 <div class="table-wrap"><table><thead><tr><th>Action</th><th>Expected result</th><th>Code to inspect</th></tr></thead><tbody>
 <tr><th>Select Delete workspace.</th><td>The disabled callback does not run.</td><td><code>enabled: false</code> in <code>_WorkspacePageState.build</code></td></tr>
 <tr><th>Select Run preview.</th><td>The status reports that the preview completed.</td><td>The instance Button's <code>onPressed</code></td></tr>
@@ -597,32 +571,33 @@ The cyan Button keeps its instance override. The review measured <strong>Save ch
 <h3>Open and confirm a dialog</h3>
 <p>Select <strong>Preview invitation</strong>, then <strong>Confirm</strong>.
 The dialog closes and the status reports a local confirmation. It sends no invitation.</p>
-<figure class="shot"><a href="assets/remix-cli-tutorial/default-dialog.jpg" aria-label="Open screenshot: Centered default dialog in dark mode with Cancel and Confirm buttons"><img src="assets/remix-cli-tutorial/default-dialog.jpg" alt="Centered default dialog in dark mode with Cancel and Confirm buttons" width="2257" height="1273" loading="lazy"></a><figcaption><strong>Default dialog.</strong> The panel is centered and its text has no fallback underline. This capture follows a dark-theme switch. <a href="assets/remix-cli-tutorial/default-dialog.jpg">Open at full size</a>.</figcaption></figure>
+<figure class="shot"><a href="assets/remix-cli-tutorial/default-dialog.jpg" aria-label="Open screenshot: Centered default dialog in dark mode with Cancel and Confirm buttons"><img src="assets/remix-cli-tutorial/default-dialog.jpg" alt="Centered default dialog in dark mode with Cancel and Confirm buttons" width="2257" height="1273" loading="lazy"></a><figcaption><span class="figure-label">Figure 6</span><strong>Default dialog.</strong> The panel is centered and its text has no fallback underline. This capture follows a dark-theme switch. <a href="assets/remix-cli-tutorial/default-dialog.jpg">Open at full size</a>.</figcaption></figure>
 <p>Open <code>lib/main.dart</code>, <code>_WorkspacePageState.invite</code>.
 Its <code>showRemixDialog</code> builder wraps <code>AcmeDialog</code> in <code>Center</code>, so the panel's maximum width can apply.</p>
 <p>The host supplies the intended <code>DefaultTextStyle</code> before the dialog captures inherited themes.</p>
-<div class="result"><strong>Check the result</strong><p>The form keeps its values, loading prevents duplicate saves, disabled controls stay inactive, and the dialog returns its result.</p></div></section><section id="preserve"><p class="eyebrow">9 · Review updates</p><h2>Keep the source you edited</h2><p class="lead">Use a diff to inspect the bundled recipe without replacing your source.</p><figure class="code" id="diff-button"><figcaption><span>Compare the edited Button with its bundled template</span><button type="button" class="copy" aria-label="Copy Compare the edited Button with its bundled template" aria-live="polite">Copy</button></figcaption><pre><code>dart run remix_cli:remix add button --diff</code></pre></figure><figure class="code output"><figcaption><span>Relevant lines from the observed diff</span></figcaption><pre><code>-    minHeight: 44.0,
+<div class="result"><strong>Check the result</strong><p>The form keeps its values, loading prevents duplicate saves, disabled controls stay inactive, and the dialog returns its result.</p></div></section><section id="preserve"><p class="eyebrow">9 · Review updates</p><h2>Keep the source you edited</h2><p class="lead">Use a diff to inspect the bundled recipe without replacing your source.</p><figure class="code" id="diff-button"><figcaption><span class="code-heading"><span>Compare the edited Button with its bundled template</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Compare the edited Button with its bundled template">Copy</button></figcaption><pre tabindex="0" aria-label="Compare the edited Button with its bundled template"><code class="language-bash">dart run remix_cli:remix add button --diff</code></pre></figure><figure class="code output"><figcaption><span class="code-heading"><span>Relevant lines from the observed diff</span><span class="language-label">Diff</span></span></figcaption><pre tabindex="0" aria-label="Relevant lines from the observed diff"><code class="language-diff">-    minHeight: 44.0,
 +    minHeight: 36.0,</code></pre></figure>
 <p><code>current</code> is your file. <code>proposed</code> is the bundled template.
 The removed line is your 44-pixel edit. The added line is the upstream 36-pixel value.</p>
 <p>The diff reports the difference and leaves the project source unchanged.</p>
-<figure class="code" id="preserve-button"><figcaption><span>Run an ordinary add again</span><button type="button" class="copy" aria-label="Copy Run an ordinary add again" aria-live="polite">Copy</button></figcaption><pre><code>dart run remix_cli:remix add button</code></pre></figure><figure class="code output"><figcaption><span>Observed preservation result after the plan</span></figcaption><pre><code>Preserved theme.
+<figure class="code" id="preserve-button"><figcaption><span class="code-heading"><span>Run an ordinary add again</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Run an ordinary add again">Copy</button></figcaption><pre tabindex="0" aria-label="Run an ordinary add again"><code class="language-bash">dart run remix_cli:remix add button</code></pre></figure><figure class="code output"><figcaption><span class="code-heading"><span>Observed preservation result after the plan</span><span class="language-label">Output</span></span></figcaption><pre tabindex="0" aria-label="Observed preservation result after the plan"><code class="language-none">Preserved theme.
 Preserved button.
 Preserved lib/ui/components/button.g.dart.</code></pre></figure>
 <p>Confirm that the medium <code>minHeight</code> still equals <code>44.0</code> in <code>button.dart</code>.</p>
 <details><summary>Optional: replace the requested recipe</summary>
 <p>Commit or copy your edit before this experiment. The command below replaces the requested Button recipe with the bundled version.</p>
-<figure class="code"><figcaption><span>Replace Button with the bundled source</span><button type="button" class="copy" aria-label="Copy Replace Button with the bundled source" aria-live="polite">Copy</button></figcaption><pre><code>dart run remix_cli:remix add button --overwrite</code></pre></figure>
+<figure class="code"><figcaption><span class="code-heading"><span>Replace Button with the bundled source</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Replace Button with the bundled source">Copy</button></figcaption><pre tabindex="0" aria-label="Replace Button with the bundled source"><code class="language-bash">dart run remix_cli:remix add button --overwrite</code></pre></figure>
 <p>Button returns to 36 pixels. An already-installed theme remains unchanged.
 Restore the 44-pixel edit if you want the final sample to match the screenshots.</p></details>
 <p>Diff each installed item when you update the CLI. Button's diff omits an already-installed theme.</p>
-<figure class="code"><figcaption><span>Review the theme separately</span><button type="button" class="copy" aria-label="Copy Review the theme separately" aria-live="polite">Copy</button></figcaption><pre><code>dart run remix_cli:remix add theme --diff</code></pre></figure><div class="result"><strong>Check the result</strong><p>Dry-run, diff, and ordinary add preserve your authored source.
+<figure class="code"><figcaption><span class="code-heading"><span>Review the theme separately</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Review the theme separately">Copy</button></figcaption><pre tabindex="0" aria-label="Review the theme separately"><code class="language-bash">dart run remix_cli:remix add theme --diff</code></pre></figure><div class="result"><strong>Check the result</strong><p>Dry-run, diff, and ordinary add preserve your authored source.
 Explicit Button overwrite replaces Button and preserves installed registry dependencies.</p></div></section><section id="fortal"><p class="eyebrow">10 · Optional preset</p><h2>Build the same sample with Fortal</h2><p class="lead">Repeat the workflow in a separate Flutter project.</p>
-<p>Run these commands from the directory above the default sample.</p>
-<figure class="code"><figcaption><span>Create the Fortal project</span><button type="button" class="copy" aria-label="Copy Create the Fortal project" aria-live="polite">Copy</button></figcaption><pre><code>flutter create --empty --platforms=web remix_fortal_demo
+<p>Use the CLI terminal in <code>remix_default_demo</code>. These commands move to its parent directory and create the Fortal project.</p>
+<figure class="code" id="create-fortal"><figcaption><span class="code-heading"><span>Create the Fortal project</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Create the Fortal project">Copy</button></figcaption><pre tabindex="0" aria-label="Create the Fortal project"><code class="language-bash">cd ..
+flutter create --empty --platforms=web remix_fortal_demo
 cd remix_fortal_demo</code></pre></figure>
 <p>Repeat Step 2 to add the Remix override and the checkout CLI in this project.</p>
-<figure class="code" id="install-fortal"><figcaption><span>Initialize and install Fortal recipes</span><button type="button" class="copy" aria-label="Copy Initialize and install Fortal recipes" aria-live="polite">Copy</button></figcaption><pre><code>dart run remix_cli:remix init --prefix Acme --preset fortal
+<figure class="code" id="install-fortal"><figcaption><span class="code-heading"><span>Initialize and install Fortal recipes</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Initialize and install Fortal recipes">Copy</button></figcaption><pre tabindex="0" aria-label="Initialize and install Fortal recipes"><code class="language-bash">dart run remix_cli:remix init --prefix Acme --preset fortal
 dart run remix_cli:remix add button
 dart run remix_cli:remix add checkbox
 dart run remix_cli:remix add textfield
@@ -639,7 +614,7 @@ The theme and shared source files differ from the default preset.</p>
 </tbody></table></div>
 <p>Use the Fortal source below for <code>lib/main.dart</code>.
 It uses the same application flow with the Fortal API. The default Button height edit does not apply to this project.</p>
-<details><summary>Show the complete Fortal main.dart</summary><figure class="code" id="fortal-main"><figcaption><span>lib/main.dart · Fortal sample</span><button type="button" class="copy" aria-label="Copy lib/main.dart · Fortal sample" aria-live="polite">Copy</button></figcaption><pre><code>import &#x27;package:flutter/material.dart&#x27;;
+<details><summary>Complete Fortal main.dart</summary><figure class="code" id="fortal-main"><figcaption><span class="code-heading"><span>lib/main.dart · Fortal sample</span><span class="language-label">Dart</span></span><button type="button" class="copy" aria-label="Copy lib/main.dart · Fortal sample">Copy</button></figcaption><pre tabindex="0" aria-label="lib/main.dart · Fortal sample"><code class="language-dart">import &#x27;package:flutter/material.dart&#x27;;
 import &#x27;package:remix/remix.dart&#x27;;
 
 import &#x27;ui/ui.dart&#x27;;
@@ -982,18 +957,18 @@ class _WorkspacePageState extends State&lt;WorkspacePage&gt; {
       ),
     );
   }
-}</code></pre></figure></details><figure class="shot"><a href="assets/remix-cli-tutorial/fortal-dark.jpg" aria-label="Open screenshot: The Fortal sample in dark mode with purple controls and the cyan instance override"><img src="assets/remix-cli-tutorial/fortal-dark.jpg" alt="The Fortal sample in dark mode with purple controls and the cyan instance override" width="1200" height="900" loading="lazy"></a><figcaption><strong>The Fortal sample.</strong> The application supplies the layout. Installed Fortal recipes supply the control appearance. <a href="assets/remix-cli-tutorial/fortal-dark.jpg">Open at full size</a>.</figcaption></figure><figure class="shot"><a href="assets/remix-cli-tutorial/fortal-dialog.jpg" aria-label="Open screenshot: Fortal dialog in dark mode with a centered panel and normal text decoration"><img src="assets/remix-cli-tutorial/fortal-dialog.jpg" alt="Fortal dialog in dark mode with a centered panel and normal text decoration" width="2257" height="1273" loading="lazy"></a><figcaption><strong>Fortal dialog.</strong> <code>AcmeScope</code> sits below the application host. Routes inherit its tokens and text defaults. <a href="assets/remix-cli-tutorial/fortal-dialog.jpg">Open at full size</a>.</figcaption></figure><div class="result"><strong>Check the result</strong><p>The separate project records <code>preset: fortal</code> and uses <code>AcmeScope</code> and <code>AcmeButton.solid</code>.
+}</code></pre></figure></details><figure class="shot"><a href="assets/remix-cli-tutorial/fortal-dark.jpg" aria-label="Open screenshot: The Fortal sample in dark mode with purple controls and the cyan instance override"><img src="assets/remix-cli-tutorial/fortal-dark.jpg" alt="The Fortal sample in dark mode with purple controls and the cyan instance override" width="1200" height="900" loading="lazy"></a><figcaption><span class="figure-label">Figure 7</span><strong>The Fortal sample.</strong> The application supplies the layout. Installed Fortal recipes supply the control appearance. <a href="assets/remix-cli-tutorial/fortal-dark.jpg">Open at full size</a>.</figcaption></figure><figure class="shot"><a href="assets/remix-cli-tutorial/fortal-dialog.jpg" aria-label="Open screenshot: Fortal dialog in dark mode with a centered panel and normal text decoration"><img src="assets/remix-cli-tutorial/fortal-dialog.jpg" alt="Fortal dialog in dark mode with a centered panel and normal text decoration" width="2257" height="1273" loading="lazy"></a><figcaption><span class="figure-label">Figure 8</span><strong>Fortal dialog.</strong> <code>AcmeScope</code> sits below the application host. Routes inherit its tokens and text defaults. <a href="assets/remix-cli-tutorial/fortal-dialog.jpg">Open at full size</a>.</figcaption></figure><div class="result"><strong>Check the result</strong><p>The separate project records <code>preset: fortal</code> and uses <code>AcmeScope</code> and <code>AcmeButton.solid</code>.
 Repeat the behavior checks from Step 8.</p></div></section><section id="validate"><p class="eyebrow">11 · Validate</p><h2>Run the checks yourself</h2><p class="lead">Use analysis, behavior tests, and a release build to verify more than appearance.</p>
 <p>Apply this configuration in each sample's <code>analysis_options.yaml</code>.
-The current generator produces lint findings in adapters. Keep authored recipes under analysis.</p>
-<figure class="code" id="analysis-options"><figcaption><span>analysis_options.yaml</span><button type="button" class="copy" aria-label="Copy analysis_options.yaml" aria-live="polite">Copy</button></figcaption><pre><code>include: package:flutter_lints/flutter.yaml
+The generator version in this checkout produces lint findings in adapters. Keep authored recipes under analysis.</p>
+<figure class="code" id="analysis-options"><figcaption><span class="code-heading"><span>analysis_options.yaml</span><span class="language-label">YAML</span></span><button type="button" class="copy" aria-label="Copy analysis_options.yaml">Copy</button></figcaption><pre tabindex="0" aria-label="analysis_options.yaml"><code class="language-yaml">include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude:
     - lib/ui/**/*.g.dart</code></pre></figure>
 <p>Create <code>test/workflow_test.dart</code> with the matching test source below.
 The imports assume the project names used in Steps 1 and 10.</p>
-<details><summary>Show the four default sample tests</summary><figure class="code" id="default-tests"><figcaption><span>test/workflow_test.dart · default</span><button type="button" class="copy" aria-label="Copy test/workflow_test.dart · default" aria-live="polite">Copy</button></figcaption><pre><code>import &#x27;package:flutter/material.dart&#x27;;
+<details><summary>Four default sample tests</summary><figure class="code" id="default-tests"><figcaption><span class="code-heading"><span>test/workflow_test.dart · default</span><span class="language-label">Dart</span></span><button type="button" class="copy" aria-label="Copy test/workflow_test.dart · default">Copy</button></figcaption><pre tabindex="0" aria-label="test/workflow_test.dart · default"><code class="language-dart">import &#x27;package:flutter/material.dart&#x27;;
 import &#x27;package:flutter/rendering.dart&#x27;;
 import &#x27;package:flutter_test/flutter_test.dart&#x27;;
 import &#x27;package:remix_default_demo/main.dart&#x27;;
@@ -1086,7 +1061,7 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
-}</code></pre></figure></details><details><summary>Show the four Fortal sample tests</summary><figure class="code" id="fortal-tests"><figcaption><span>test/workflow_test.dart · Fortal</span><button type="button" class="copy" aria-label="Copy test/workflow_test.dart · Fortal" aria-live="polite">Copy</button></figcaption><pre><code>import &#x27;package:flutter/material.dart&#x27;;
+}</code></pre></figure></details><details><summary>Four Fortal sample tests</summary><figure class="code" id="fortal-tests"><figcaption><span class="code-heading"><span>test/workflow_test.dart · Fortal</span><span class="language-label">Dart</span></span><button type="button" class="copy" aria-label="Copy test/workflow_test.dart · Fortal">Copy</button></figcaption><pre tabindex="0" aria-label="test/workflow_test.dart · Fortal"><code class="language-dart">import &#x27;package:flutter/material.dart&#x27;;
 import &#x27;package:flutter/rendering.dart&#x27;;
 import &#x27;package:flutter_test/flutter_test.dart&#x27;;
 import &#x27;package:remix_fortal_demo/main.dart&#x27;;
@@ -1179,7 +1154,7 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
-}</code></pre></figure></details><figure class="code" id="validate-sample"><figcaption><span>Run from either sample directory</span><button type="button" class="copy" aria-label="Copy Run from either sample directory" aria-live="polite">Copy</button></figcaption><pre><code>flutter analyze
+}</code></pre></figure></details><figure class="code" id="validate-sample"><figcaption><span class="code-heading"><span>Run from either sample directory</span><span class="language-label">Terminal</span></span><button type="button" class="copy" aria-label="Copy Run from either sample directory">Copy</button></figcaption><pre tabindex="0" aria-label="Run from either sample directory"><code class="language-bash">flutter analyze
 flutter test
 flutter build web --release</code></pre></figure>
 <p>The tests verify retained form values, one save during loading, disabled controls, the instance callback, dialog results, text decoration, and Sidebar selection.</p>
@@ -1206,7 +1181,7 @@ Hosted package validation remains a release step after publication.</p></div></s
 <p>The <a href="remix-cli-guide.html#ref-fails">reference guide</a> also covers partial installs, dependency declarations, and command errors.</p>
 </section><section id="evidence"><p class="eyebrow">Review notes</p><h2>What the screenshots establish</h2><p class="lead">Each screenshot has one purpose and a stated capture context.</p>
 <p>The screenshots contain real browser or editor pixels. Application detail images use browser screenshot crops.
-The screenshot links open the original files used by this page.</p>
+Each screenshot link opens its full resolution file.</p>
 <div class="table-wrap"><table><thead><tr><th>Evidence</th><th>What it establishes</th><th>What else to check</th></tr></thead><tbody>
 <tr><th>First render</th><td>The installed default Button renders in the supplied host.</td><td>Read the installation output from Step 4.</td></tr>
 <tr><th>Editor</th><td>The saved application recipe contains the 44-pixel edit.</td><td>Run diff and preservation checks from Step 9.</td></tr>
@@ -1220,14 +1195,12 @@ The current screenshots cover desktop behavior. They do not certify every compon
 The <a href="assets/remix-cli-tutorial/evidence.json">evidence manifest</a> records screenshot and source digests.</p>
 <p>Read the <a href="remix-cli-guide.html">reference guide</a> for the full catalog, configuration rules, and source ownership model.</p>
 </section>
-<footer>Reviewed September 7, 2026. Commands use the checkout CLI. Screenshots show real applications and the actual editor.</footer></main></div>
-<script>
-document.querySelectorAll('.copy').forEach(button=>{
-  button.addEventListener('click',async()=>{
-    const text=button.closest('figure').querySelector('code').textContent;
-    try{await navigator.clipboard.writeText(text);button.textContent='Copied';}
-    catch{button.textContent='Select and copy';}
-    setTimeout(()=>{button.textContent='Copy';},1800);
-  });
-});
-</script></body></html>
+<footer>Examples reviewed September 7, 2026. Tutorial design reviewed September 8, 2026. Commands use the checkout CLI. Screenshots show real applications and the actual editor. <a href="assets/remix-cli-tutorial/README.md">Assets and licenses</a>.</footer></main></div>
+<p class="sr-only" id="copy-status" role="status" aria-live="polite"></p>
+<script defer src="assets/remix-cli-tutorial/prism/prism-core.min.js" data-manual></script>
+<script defer src="assets/remix-cli-tutorial/prism/prism-clike.min.js"></script>
+<script defer src="assets/remix-cli-tutorial/prism/prism-dart.min.js"></script>
+<script defer src="assets/remix-cli-tutorial/prism/prism-yaml.min.js"></script>
+<script defer src="assets/remix-cli-tutorial/prism/prism-bash.min.js"></script>
+<script defer src="assets/remix-cli-tutorial/prism/prism-diff.min.js"></script>
+<script defer src="assets/remix-cli-tutorial/tutorial.js"></script></body></html>
