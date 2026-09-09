@@ -1,0 +1,35 @@
+{
+  "name": "@conceptadev/remix-docs",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.5.3",
+  "engines": { "node": ">=24.14.0" },
+  "scripts": {
+    "content": "python3 ../../tool/prepare_docs_site.py",
+    "dev": "pnpm content && next dev",
+    "build": "pnpm content && next build",
+    "typecheck": "pnpm content && next typegen && tsc --noEmit",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@conceptadev/docs-theme": "git+https://github.com/conceptadev/docs-theme.git#57be8044beaf23c5414a671693b297615560095c",
+    "@base-ui/react": "1.7.0",
+    "fumadocs-core": "16.15.8",
+    "fumadocs-mdx": "15.4.0",
+    "fumadocs-ui": "npm:@fumadocs/base-ui@16.15.8",
+    "next": "16.3.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/mdx": "2.0.14",
+    "@types/node": "26.3.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "postcss": "8.5.26",
+    "tailwindcss": "4.3.3",
+    "typescript": "6.0.3"
+  }
+}

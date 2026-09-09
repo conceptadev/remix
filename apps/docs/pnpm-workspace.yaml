@@ -1,0 +1,10 @@
+packages: []
+strictPeerDependencies: true
+engineStrict: true
+allowBuilds:
+  esbuild: true
+  '@conceptadev/docs-theme@git+ssh://git@github.com/conceptadev/docs-theme.git#57be8044beaf23c5414a671693b297615560095c': true
+minimumReleaseAgeStrict: true
+minimumReleaseAgeExclude:
+  - '@fumadocs/base-ui@16.15.8'
+  - 'fumadocs-core@16.15.8'

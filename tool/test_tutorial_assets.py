@@ -6,7 +6,9 @@ import shutil
 import tempfile
 import unittest
 
-from check_tutorial_assets import check_assets, check_content, TutorialCode
+from check_tutorial_assets import check_assets, check_content
+from prepare_docs_site import expand_sources, prepare
+import zipfile
 
 
 class TutorialAssetTests(unittest.TestCase):
@@ -60,15 +62,43 @@ class TutorialAssetTests(unittest.TestCase):
         path.write_text(json.dumps(evidence))
         self.assertTrue(any("checkout pin" in error for error in check_content(self.root)))
 
-    def test_broken_offline_section_fails(self):
+    def test_missing_source_panel_fails(self):
         path = self.root / "docs/tutorials/settings-screen.mdx"
-        path.write_text(path.read_text().replace(".html#compose", ".html#missing-section"))
-        self.assertTrue(any("missing HTML anchor" in error for error in check_content(self.root)))
+        path.write_text(path.read_text().replace('<TutorialSource preset="default" file="lib/main.dart" />', ''))
+        self.assertTrue(any("both complete applications" in error for error in check_content(self.root)))
 
-    def test_parser_decodes_entities_and_keeps_literal_code(self):
-        parser = TutorialCode()
-        parser.feed('<code>ignore</code><figure id="example"><pre><code class="language-dart">a &lt; b &amp;&amp; c</code></pre></figure>')
-        self.assertEqual(parser.blocks, {"example": ("dart", "a < b && c")})
+    def test_panels_use_exact_downloaded_source(self):
+        with zipfile.ZipFile(self.root / "docs/assets/remix-cli-tutorial/sample-projects.zip") as archive:
+            for preset in ["default", "fortal"]:
+                for file in ["lib/main.dart", "test/workflow_test.dart"]:
+                    rendered = expand_sources(f'<TutorialSource preset="{preset}" file="{file}" />', archive)
+                    self.assertIn(archive.read(f"{preset}_demo/{file}").decode().rstrip("\n"), rendered)
+                    self.assertTrue(rendered.startswith('```dart title='))
+
+    def test_unknown_source_include_is_rejected(self):
+        with self.assertRaises(ValueError):
+            expand_sources('<TutorialSource preset="default" file="../../secrets" />', None)
+
+    def test_staging_is_repeatable_and_preserves_authoring_source(self):
+        source = Path(__file__).resolve().parents[1]
+        shutil.copyfile(source / "docs.json", self.root / "docs.json")
+        page = self.root / "docs/tutorials/settings-screen.mdx"
+        before = page.read_bytes()
+        prepare(self.root)
+        staged = self.root / "apps/docs/.generated/content/tutorials/settings-screen.mdx"
+        first = staged.read_bytes()
+        prepare(self.root)
+        self.assertEqual(staged.read_bytes(), first)
+        self.assertEqual(page.read_bytes(), before)
+        self.assertNotIn(b"<TutorialSource", first)
+        self.assertIn(b"class _WorkspacePageState", first)
+        navigation = json.loads((self.root / "apps/docs/.generated/content/meta.json").read_text())
+        # Explicit links keep the overview separate from its same-named folder.
+        sidebar = json.loads((self.root / "docs.json").read_text())["sidebar"]
+        for group in sidebar:
+            for item in group["pages"]:
+                self.assertIn(f"[{item['title']}]({item['href']})", navigation["pages"])
+        self.assertFalse((self.root / "apps/docs/public/assets/remix-cli-tutorial/tutorial.js").exists())
 
 
 if __name__ == "__main__":
