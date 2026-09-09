@@ -65,8 +65,16 @@
       "group": "Introduction",
       "pages": [
         {
-          "title": "Getting Started",
+          "title": "Introduction",
           "href": "/"
+        },
+        {
+          "title": "Getting Started",
+          "href": "/getting-started"
+        },
+        {
+          "title": "Styling Components",
+          "href": "/guides/styling-components"
         },
         {
           "title": "Styler API",
@@ -75,6 +83,15 @@
         {
           "title": "Open Code",
           "href": "/open-code"
+        }
+      ]
+    },
+    {
+      "group": "Tutorials",
+      "pages": [
+        {
+          "title": "Build a Settings Screen",
+          "href": "/tutorials/settings-screen"
         }
       ]
     },
