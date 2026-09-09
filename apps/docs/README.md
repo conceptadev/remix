@@ -23,8 +23,48 @@ pnpm start
 ```
 
 Set `NEXT_PUBLIC_SITE_URL` to the deployment origin before building metadata.
-This is a server deployment: `/api/search` uses the native Fumadocs endpoint.
+This is a server deployment: `/api/search` uses Fumadocs search, prioritizing
+page titles and frontmatter keywords while retaining section links.
 Static export and deployment under a path prefix are not configured.
+
+With the server running, verify component discovery with
+`node --test scripts/test-search.mjs`. Set `DOCS_TEST_URL` for a different origin.
+
+## Reusable build and publishing
+
+`.github/actions/setup-docs` installs the pinned Node/pnpm toolchain and the
+locked theme dependency. `.github/workflows/docs.yml` can be called from another
+workflow with `workflow_call` or run manually with `workflow_dispatch`.
+It validates sources, builds Flutter previews and the Next.js server, tests an
+isolated deployment copy, and uploads `remix-docs-server` as a tar archive.
+
+Before running the workflow:
+
+- Configure `DOCS_THEME_TOKEN` as an Actions secret with read-only contents
+  access to `conceptadev/docs-theme`. The default Remix `GITHUB_TOKEN` cannot
+  read that separate private repository. Credentials are scoped to dependency
+  installation and are not saved in the artifact.
+- Supply `site-url` as the final HTTPS origin. Canonical/social URLs are baked
+  into the build, so rebuild when the public origin changes.
+
+The artifact supports a root-path Node server deployment. Extract it on a
+Node 24.14+ host and run `HOSTNAME=0.0.0.0 PORT=3000 node server.js` behind the
+host's HTTPS endpoint. It contains public assets, Flutter previews, Next client
+chunks, and traced server dependencies; no install or Flutter SDK is needed
+on the host. Linux CI produces the artifact intended for a Linux host.
+
+Local artifact verification after `pnpm build`:
+
+```bash
+node scripts/package-server.mjs
+node scripts/test-server.mjs
+```
+
+The workflow prepares an artifact; it does not provision hosting or publish a
+site. Choose/configure the host before deploying. It is deliberately manual
+while the theme is private: pull-request builds must not receive cross-repo
+credentials for untrusted code. The existing GitHub Pages workflow continues
+to publish the Flutter showcases and cannot serve this Next.js server app.
 
 ## Theme access and release limitation
 
@@ -36,8 +76,8 @@ source is allowed to run scripts.
 Installation requires GitHub access to that currently internal repository.
 No theme source or credentials are vendored here.
 
-This is ready for authorized local development, not anonymous installation or
-public CI. Once the theme's license and publication are resolved, replace the
+The locked theme works locally and in the authenticated workflow above;
+anonymous installation is not supported. Once the theme's license and publication are resolved, replace the
 Git dependency with its verified npm release, regenerate the lockfile, and
 repeat the production/browser checks. Do not add a token to this repository
 or bypass access controls to make the dependency resolve.
@@ -45,6 +85,10 @@ or bypass access controls to make the dependency resolve.
 ## Content ownership
 
 Edit MDX and assets under `../../docs`; edit navigation in `../../docs.json`.
+That JSON file contains only `sidebar`; site settings live in `docs.config.ts`
+and colors live in `app/global.css`. Component categories use `collapsible: true`.
+The Fortal catalog generator reuses those categories; regenerate it with
+`melos docs:catalog` after changing their membership or names.
 `pnpm content` validates evidence, stages generated MDX in `.generated/content`,
 and copies assets into `public/assets`. These directories are disposable and
 gitignored. Restart `pnpm dev` after editing canonical content to stage changes.
@@ -70,6 +114,8 @@ examples with Fortal styling, not standalone applications.
 The embedded example follows the site's light/dark theme so a dark page never
 frames a white canvas. The Theme control still overrides it for comparison, and
 that explicit choice then persists across site theme changes.
+Reset example restores the first example, follows the site theme again, and
+restarts the embedded Flutter app.
 
 Both `pnpm dev` and `pnpm build` build that same Flutter catalog into ignored
 `public/previews`. `/previews/` opens the full catalog; embedded routes use

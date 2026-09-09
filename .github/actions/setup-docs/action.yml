@@ -1,0 +1,35 @@
+name: Set up Concepta docs
+description: Install the pinned docs toolchain and dependencies
+inputs:
+  working-directory:
+    description: Directory containing the docs package and lockfile
+    default: apps/docs
+  theme-token:
+    description: Read-only token with access to conceptadev/docs-theme
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+      with:
+        node-version: '24.14.0'
+    - shell: bash
+      run: npm install --global pnpm@11.5.3
+    - name: Install locked dependencies
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        DOCS_THEME_TOKEN: ${{ inputs.theme-token }}
+      run: |
+        if [ -z "$DOCS_THEME_TOKEN" ]; then
+          echo 'DOCS_THEME_TOKEN must have read access to conceptadev/docs-theme.' >&2
+          exit 1
+        fi
+        # Scope Git configuration to this process and its children. Credentials
+        # are never written to disk or included in the deployment artifact.
+        export GIT_CONFIG_COUNT=2
+        export GIT_CONFIG_KEY_0='url.https://github.com/.insteadOf'
+        export GIT_CONFIG_VALUE_0='ssh://git@github.com/'
+        export GIT_CONFIG_KEY_1='credential.https://github.com.helper'
+        export GIT_CONFIG_VALUE_1='!f() { printf "%s\n" "username=x-access-token" "password=$DOCS_THEME_TOKEN"; }; f'
+        pnpm install --frozen-lockfile

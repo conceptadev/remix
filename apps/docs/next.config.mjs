@@ -5,6 +5,7 @@ const sourceRef = process.env.DOCS_SOURCE_REF ?? execFileSync('git', ['rev-parse
 
 export default createMDX()({
   reactStrictMode: true,
+  output: 'standalone',
   env: { DOCS_SOURCE_REF: sourceRef },
   transpilePackages: ['@conceptadev/docs-theme'],
   async rewrites() {

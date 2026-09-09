@@ -28,22 +28,24 @@ export function FlutterPreview({ title, cases }: {
   const [chosenMode, setChosenMode] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const [attempt, setAttempt] = useState(0);
-  const [status, setStatus] = useState<'loading' | 'ready' | 'slow'>('loading');
+  const [loadState, setLoadState] = useState<{ url: string; status: 'ready' | 'slow' } | null>(null);
   const mode = chosenMode ?? (resolvedTheme === 'dark' ? 'dark' : 'light');
   const query = new URLSearchParams({ path, theme: `{name:${mode}}` });
   const catalogUrl = `/previews/#/?${query}`;
   const previewUrl = `${catalogUrl}&preview&attempt=${attempt}`;
+  const status = loadState?.url === previewUrl ? loadState.status : 'loading';
+  const compact = ['Button', 'IconButton', 'Badge', 'Switch', 'Checkbox', 'Radio', 'Spinner', 'Progress'].includes(title);
 
   // The resolved theme is only known on the client; render one correct frame.
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    setStatus('loading');
-    const timeout = window.setTimeout(() => setStatus('slow'), 25000);
+    setLoadState(null);
+    const timeout = window.setTimeout(() => setLoadState({ url: previewUrl, status: 'slow' }), 25000);
     const onMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin || event.source !== frame.current?.contentWindow || event.data?.type !== 'remix-preview-ready') return;
       window.clearTimeout(timeout);
-      setStatus('ready');
+      setLoadState({ url: previewUrl, status: 'ready' });
     };
     window.addEventListener('message', onMessage);
     return () => { window.clearTimeout(timeout); window.removeEventListener('message', onMessage); };
@@ -57,9 +59,16 @@ export function FlutterPreview({ title, cases }: {
       <PreviewSelect label="Theme" aria-label="Example theme" id={`${id}-theme`} value={mode} onChange={event => setChosenMode(event.target.value)}>
         <option value="light">Light</option><option value="dark">Dark</option>
       </PreviewSelect>
-      <a href={catalogUrl} target="_blank" rel="noreferrer">Open catalog</a>
+      <div className="remix-preview-actions">
+        <button type="button" className="remix-preview-reset" onClick={() => {
+          setPath(cases[0].path);
+          setChosenMode(null);
+          setAttempt(value => value + 1);
+        }}>Reset example</button>
+        <a href={catalogUrl} target="_blank" rel="noreferrer">Open catalog</a>
+      </div>
     </div>
-    <div className="remix-preview-stage" aria-busy={status === 'loading'}>
+    <div className={`remix-preview-stage${['Dialog', 'Data Table'].includes(title) ? ' remix-preview-stage-large' : compact ? ' remix-preview-stage-compact' : ''}`} data-status={status} aria-busy={status === 'loading'}>
       {mounted && <iframe key={previewUrl} ref={frame} src={previewUrl} title={`${title} interactive Flutter example`} loading="lazy" />}
       {status !== 'ready' && <div className="remix-preview-status" role="status">
         <span>{status === 'loading' ? 'Starting Flutter example…' : 'The example is taking longer to start. Retry or open the catalog.'}</span>

@@ -62,8 +62,18 @@ def prepare(root):
     navigation = json.loads((root / "docs.json").read_text())
     pages = []
     for group in navigation["sidebar"]:
-        pages.append(f"---{group['group']}---")
-        pages.extend(f"[{page['title']}]({page['href']})" for page in group["pages"])
+        links = [f"[{page['title']}]({page['href']})" for page in group["pages"]]
+        if group.get("collapsible"):
+            folder = "nav-" + re.sub(r"[^a-z0-9]+", "-", group["group"].lower())
+            target = content / folder
+            target.mkdir()
+            (target / "meta.json").write_text(json.dumps({
+                "title": group["group"], "pages": links, "defaultOpen": False,
+            }, indent=2) + "\n")
+            pages.append(folder)
+        else:
+            pages.append(f"---{group['group']}---")
+            pages.extend(links)
     (content / "meta.json").write_text(json.dumps({"pages": pages}, indent=2) + "\n")
     shutil.copytree(docs / "assets", assets, dirs_exist_ok=True)
     print("Staged canonical Remix docs, archive-backed examples, navigation, and assets.")

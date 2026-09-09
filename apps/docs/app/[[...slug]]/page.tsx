@@ -10,7 +10,7 @@ export default async function Page({ params }: PageProps<'/[[...slug]]'>) {
   const page = source.getPage((await params).slug);
   if (!page) notFound();
   const MDX = page.data.body;
-  return <DocsPage toc={page.data.toc.filter(item => item.depth <= 3)} full={page.data.full}>
+  return <DocsPage toc={page.data.toc.filter(item => item.depth <= (page.url === '/fortal/catalog' ? 2 : 3))} full={page.data.full}>
     <header className="concepta-docs-page-header">
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>

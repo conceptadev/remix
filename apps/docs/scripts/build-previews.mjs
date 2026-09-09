@@ -3,4 +3,6 @@ import { fileURLToPath } from 'node:url';
 
 const demo = fileURLToPath(new URL('../../demo/', import.meta.url));
 const output = fileURLToPath(new URL('../public/previews/', import.meta.url));
-execFileSync('fvm', ['flutter', 'build', 'web', '--release', '--base-href', '/previews/', '--output', output], { cwd: demo, stdio: 'inherit' });
+const command = process.env.CI ? 'flutter' : 'fvm';
+const args = ['build', 'web', '--release', '--base-href', '/previews/', '--output', output];
+execFileSync(command, process.env.CI ? args : ['flutter', ...args], { cwd: demo, stdio: 'inherit' });

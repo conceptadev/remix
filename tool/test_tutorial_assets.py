@@ -100,9 +100,15 @@ class TutorialAssetTests(unittest.TestCase):
         navigation = json.loads((self.root / "apps/docs/.generated/content/meta.json").read_text())
         # Explicit links keep the overview separate from its same-named folder.
         sidebar = json.loads((self.root / "docs.json").read_text())["sidebar"]
+        all_links = list(navigation["pages"])
+        for folder in staged.parents[1].glob("nav-*/meta.json"):
+            category = json.loads(folder.read_text())
+            self.assertFalse(category["defaultOpen"])
+            self.assertIn(folder.parent.name, navigation["pages"])
+            all_links.extend(category["pages"])
         for group in sidebar:
             for item in group["pages"]:
-                self.assertIn(f"[{item['title']}]({item['href']})", navigation["pages"])
+                self.assertEqual(all_links.count(f"[{item['title']}]({item['href']})"), 1)
         self.assertFalse((self.root / "apps/docs/public/assets/remix-cli-tutorial/tutorial.js").exists())
 
 
