@@ -7,6 +7,8 @@ import 'package:remix_agent_example/demos.dart';
 import 'package:remix_agent_example/main.dart';
 import 'package:remix_agent_example/showcase.dart';
 
+import 'helpers/pump_catalog.dart';
+
 void main() {
   testWidgets('catalog lists every surface and the composed run', (
     tester,
@@ -100,7 +102,7 @@ void main() {
     await tester.ensureVisible(succeed);
     await tester.pump();
     await tester.tap(succeed);
-    await tester.pumpAndSettle();
+    await pumpCatalog(tester);
     expect(find.text('12 passed · 0 failed'), findsNothing);
 
     final title = find.descendant(
@@ -122,7 +124,7 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
 
     await tester.pumpWidget(const RemixAgentExampleApp());
-    await tester.pumpAndSettle();
+    await pumpCatalog(tester);
 
     expect(tester, meetsGuideline(labeledTapTargetGuideline));
     expect(tester, meetsGuideline(androidTapTargetGuideline));

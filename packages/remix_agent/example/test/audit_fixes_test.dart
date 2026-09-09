@@ -7,6 +7,8 @@ import 'package:remix_agent_example/demos.dart';
 import 'package:remix_agent_example/main.dart';
 import 'package:remix_agent_example/showcase.dart';
 
+import 'helpers/pump_catalog.dart';
+
 Future<void> pumpDemo(WidgetTester tester, Widget child) async {
   await tester.pumpWidget(
     WidgetsApp(
@@ -16,15 +18,15 @@ Future<void> pumpDemo(WidgetTester tester, Widget child) async {
       ),
     ),
   );
-  await tester.pumpAndSettle();
+  await pumpCatalog(tester);
 }
 
 Future<void> tapText(WidgetTester tester, String text) async {
   final target = find.text(text).last;
   await tester.ensureVisible(target);
-  await tester.pumpAndSettle();
+  await pumpCatalog(tester);
   await tester.tap(target);
-  await tester.pumpAndSettle();
+  await pumpCatalog(tester);
 }
 
 void main() {
@@ -49,7 +51,7 @@ void main() {
     await tester.ensureVisible(input);
     await tester.enterText(input, 'Check again');
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-    await tester.pumpAndSettle();
+    await pumpCatalog(tester);
     expect(find.text('Check again'), findsOneWidget);
     await tapText(tester, 'Deny');
     expect(find.text('Permission denied. No checks were run.'), findsOneWidget);
@@ -57,12 +59,12 @@ void main() {
     await tester.ensureVisible(input);
     await tester.enterText(input, 'Try once more');
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-    await tester.pumpAndSettle();
+    await pumpCatalog(tester);
     await tapText(tester, 'Allow once');
     final stop = find.byKey(const ValueKey('agent-composer-stop'));
     await tester.ensureVisible(stop);
     await tester.tap(stop);
-    await tester.pumpAndSettle();
+    await pumpCatalog(tester);
     expect(
       tester.widget<AgentExecution>(find.byType(AgentExecution)).status,
       AgentExecutionStatus.cancelled,
@@ -70,6 +72,36 @@ void main() {
     expect(
       find.text('Run stopped. Submit another message to try again.'),
       findsOneWidget,
+    );
+  });
+
+  testWidgets('execution reaches failure and retries', (tester) async {
+    await pumpDemo(tester, const ExecutionDemo());
+    await tapText(tester, 'Succeed');
+    await tapText(tester, 'Fail');
+    expect(
+      tester.widget<AgentExecution>(find.byType(AgentExecution)).status,
+      AgentExecutionStatus.error,
+    );
+    await tapText(tester, 'Focused checks');
+    final retry = find.byWidgetPredicate(
+      (w) => w is RemixIconButton && w.semanticLabel == 'Retry execution',
+    );
+    await tester.ensureVisible(retry);
+    await tester.tap(retry);
+    await pumpCatalog(tester);
+    expect(
+      tester.widget<AgentExecution>(find.byType(AgentExecution)).status,
+      AgentExecutionStatus.running,
+    );
+  });
+
+  testWidgets('composed run supports always allow', (tester) async {
+    await pumpDemo(tester, const ComposedRunDemo());
+    await tapText(tester, 'Always allow');
+    expect(
+      tester.widget<AgentExecution>(find.byType(AgentExecution)).status,
+      AgentExecutionStatus.running,
     );
   });
 
@@ -124,7 +156,7 @@ void main() {
           (w) => w is RemixIconButton && w.semanticLabel == 'Retry answer',
         ),
       );
-      await tester.pumpAndSettle();
+      await pumpCatalog(tester);
       expect(find.text('Sources'), findsNothing);
       expect(find.text('Writing the answer…'), findsOneWidget);
     },
@@ -139,13 +171,13 @@ void main() {
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
       await tester.pumpWidget(const RemixAgentExampleApp());
-      await tester.pumpAndSettle();
+      await pumpCatalog(tester);
       for (final label in ['Activity', 'Answer', 'Composer']) {
         final nav = find.widgetWithText(RemixToggle, label);
         await tester.ensureVisible(nav);
-        await tester.pumpAndSettle();
+        await pumpCatalog(tester);
         await tester.tap(nav);
-        await tester.pumpAndSettle();
+        await pumpCatalog(tester);
         expect(tester.widget<RemixToggle>(nav).selected, isTrue);
         final rect = tester.getRect(nav);
         expect(rect.left, greaterThanOrEqualTo(0));

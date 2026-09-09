@@ -95,7 +95,11 @@ void main() {
     tester,
   ) async {
     final key = GlobalKey<_UncontrolledPermissionHarnessState>();
-    await pumpAgent(tester, _UncontrolledPermissionHarness(key: key));
+    await pumpAgent(
+      tester,
+      _UncontrolledPermissionHarness(key: key),
+      disableAnimations: true,
+    );
 
     key.currentState!.decide();
     await tester.pumpAndSettle();

@@ -151,21 +151,66 @@ class AgentFunctionalGlyph extends StatelessWidget {
         ? baseColor
         : baseColor.withValues(alpha: baseColor.a * opacity.clamp(0, 1));
 
-    return ExcludeSemantics(
-      child: Icon(
-        _icon,
-        size: spec.size ?? theme.size,
-        fill: spec.fill ?? theme.fill,
-        weight: spec.weight ?? theme.weight,
-        grade: spec.grade ?? theme.grade,
-        opticalSize: spec.opticalSize ?? theme.opticalSize,
-        color: color,
-        shadows: spec.shadows ?? theme.shadows,
-        textDirection: spec.textDirection,
-        applyTextScaling:
-            spec.applyTextScaling ?? theme.applyTextScaling ?? false,
-        blendMode: spec.blendMode ?? BlendMode.srcOver,
-      ),
+    final icon = Icon(
+      _icon,
+      size: spec.size ?? theme.size,
+      fill: spec.fill ?? theme.fill,
+      weight: spec.weight ?? theme.weight,
+      grade: spec.grade ?? theme.grade,
+      opticalSize: spec.opticalSize ?? theme.opticalSize,
+      color: color,
+      shadows: spec.shadows ?? theme.shadows,
+      textDirection: spec.textDirection,
+      applyTextScaling:
+          spec.applyTextScaling ?? theme.applyTextScaling ?? false,
+      blendMode: spec.blendMode ?? BlendMode.srcOver,
     );
+    return ExcludeSemantics(
+      child: kind == AgentFunctionalGlyphKind.loading
+          ? _LoadingGlyph(child: icon)
+          : icon,
+    );
+  }
+}
+
+/// Animate only indeterminate loading; status labels own the semantics.
+class _LoadingGlyph extends StatefulWidget {
+  const _LoadingGlyph({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_LoadingGlyph> createState() => _LoadingGlyphState();
+}
+
+class _LoadingGlyphState extends State<_LoadingGlyph>
+    with SingleTickerProviderStateMixin {
+  late final _turns = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 1),
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final animate =
+        !(MediaQuery.maybeOf(context)?.disableAnimations ?? false) &&
+        TickerMode.valuesOf(context).enabled;
+    if (animate) {
+      if (!_turns.isAnimating) _turns.repeat();
+    } else {
+      _turns.stop();
+      _turns.value = 0;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      RotationTransition(turns: _turns, child: widget.child);
+
+  @override
+  void dispose() {
+    _turns.dispose();
+    super.dispose();
   }
 }

@@ -119,7 +119,11 @@ void main() {
     tester,
   ) async {
     final key = GlobalKey<_ExecutionHarnessState>();
-    await pumpAgent(tester, _ExecutionHarness(key: key));
+    await pumpAgent(
+      tester,
+      _ExecutionHarness(key: key),
+      disableAnimations: true,
+    );
     await tester.tap(find.text('Run checks'));
     await tester.pumpAndSettle();
     expect(find.text('output'), findsNothing);

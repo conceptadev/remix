@@ -172,14 +172,11 @@ class _AgentCatalogState extends State<AgentCatalog> {
               ),
               const SizedBox(height: 8),
               Text('UNPUBLISHED REVIEW CATALOG', style: theme.meta),
-              const SizedBox(height: 36),
-              for (final entry in catalogEntries) ...[
+              for (final entry in catalogEntries)
                 KeyedSubtree(
                   key: _keys[entry.id],
-                  child: _Section(entry: entry),
+                  child: _Section(entry: entry, wide: wide),
                 ),
-                const SizedBox(height: 24),
-              ],
             ],
           ),
         ),
@@ -222,6 +219,36 @@ class _AgentCatalogState extends State<AgentCatalog> {
   }
 }
 
+/// The installed theme, bridged onto this application's palette.
+///
+/// The registry ships a neutral scale; this catalog is a workshop ledger. Only
+/// the surface, text, hairline, radius and accent tokens move, and they move
+/// through the installed theme's own [UiThemeData.copyWith] — so `lib/ui/`
+/// stays byte-identical to the registry and every recipe recomputes its hover,
+/// focus and disabled fragments from these values for free.
+///
+/// `primary` becomes copper, which keeps the accent on exactly two things: a
+/// live run, and the one primary action on a surface. `destructive` stays the
+/// registry red, because stopping a run is an interrupt, not the accent.
+UiThemeData _bridgedTheme(HostTheme theme) {
+  final base = theme.dark
+      ? const UiThemeData.dark()
+      : const UiThemeData.light();
+  return base.copyWith(
+    background: theme.surface,
+    foreground: theme.ink,
+    primary: theme.live,
+    primaryForeground: const Color(0xFFF7F9FB),
+    muted: theme.ink.withValues(alpha: 0.05),
+    mutedForeground: theme.ink.withValues(alpha: 0.62),
+    accent: theme.ink.withValues(alpha: 0.08),
+    accentForeground: theme.ink,
+    border: theme.hairline,
+    focusRing: theme.live,
+    radius: const Radius.circular(12),
+  );
+}
+
 /// Lets the catalog flip the ancestor [HostTheme].
 class DarkHost extends StatefulWidget {
   const DarkHost({super.key, required this.child});
@@ -248,7 +275,7 @@ class _DarkHostState extends State<DarkHost> {
       // do not read tokens, so nesting this over `MixScope.empty` changes
       // nothing for them.
       child: UiThemeScope(
-        data: dark ? const UiThemeData.dark() : const UiThemeData.light(),
+        data: _bridgedTheme(theme),
         child: DefaultTextStyle(
           style: theme.body,
           child: ColoredBox(color: theme.paper, child: widget.child),
@@ -376,10 +403,34 @@ class _RailState extends State<_Rail> {
     if (!widget.vertical) {
       return ColoredBox(
         color: theme.rail,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(children: items),
+        // The strip scrolls, so its edges fade into the rail instead of
+        // cutting a label mid-word. The scrollbar is dropped with it: a
+        // hairline of chrome under the chips read as a stray rule.
+        child: ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              Color(0x00000000),
+              Color(0xFF000000),
+              Color(0xFF000000),
+              Color(0x00000000),
+            ],
+            stops: [0, 0.04, 0.96, 1],
+          ).createShader(bounds),
+          blendMode: BlendMode.dstIn,
+          child: ScrollConfiguration(
+            behavior: ScrollConfiguration.of(
+              context,
+            ).copyWith(scrollbars: false),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              // 8 here plus the toggle's own 12 puts a chip's label on the
+              // same left edge as the page content below it.
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: Row(children: items),
+            ),
+          ),
         ),
       );
     }
@@ -389,13 +440,27 @@ class _RailState extends State<_Rail> {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 20, 12, 20),
         children: [
-          Text('Surfaces', style: theme.meta),
+          // The pills start at the list's own 16; their labels sit 12 further
+          // in. The caption follows the labels, so the column reads as one
+          // left edge rather than two.
+          const Padding(
+            padding: EdgeInsets.only(left: 12),
+            child: _RailCaption(),
+          ),
           const SizedBox(height: 12),
           ...items,
         ],
       ),
     );
   }
+}
+
+class _RailCaption extends StatelessWidget {
+  const _RailCaption();
+
+  @override
+  Widget build(BuildContext context) =>
+      Text('Surfaces', style: HostTheme.of(context).meta);
 }
 
 class _RailItem extends StatelessWidget {
@@ -440,15 +505,19 @@ class _RailItem extends StatelessWidget {
 }
 
 class _Section extends StatelessWidget {
-  const _Section({required this.entry});
+  const _Section({required this.entry, required this.wide});
 
   final CatalogEntry entry;
+
+  final bool wide;
+
+  double get _sectionGap => wide ? 48 : 32;
 
   @override
   Widget build(BuildContext context) {
     final theme = HostTheme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(top: 24),
+      padding: EdgeInsets.only(top: _sectionGap),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

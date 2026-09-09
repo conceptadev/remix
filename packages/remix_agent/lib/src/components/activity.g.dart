@@ -12,6 +12,7 @@ mixin _$AgentActivitySpec implements Spec<AgentActivitySpec>, Diagnosticable {
   StyleSpec<TextSpec> get summaryTitle;
   StyleSpec<TextSpec> get itemTitle;
   StyleSpec<TextSpec> get itemDetail;
+  StyleSpec<TextSpec> get count;
   StyleSpec<IconSpec> get indicator;
   StyleSpec<BoxSpec> get pendingItem;
   StyleSpec<BoxSpec> get activeItem;
@@ -30,6 +31,7 @@ mixin _$AgentActivitySpec implements Spec<AgentActivitySpec>, Diagnosticable {
     StyleSpec<TextSpec>? summaryTitle,
     StyleSpec<TextSpec>? itemTitle,
     StyleSpec<TextSpec>? itemDetail,
+    StyleSpec<TextSpec>? count,
     StyleSpec<IconSpec>? indicator,
     StyleSpec<BoxSpec>? pendingItem,
     StyleSpec<BoxSpec>? activeItem,
@@ -44,6 +46,7 @@ mixin _$AgentActivitySpec implements Spec<AgentActivitySpec>, Diagnosticable {
       summaryTitle: summaryTitle ?? this.summaryTitle,
       itemTitle: itemTitle ?? this.itemTitle,
       itemDetail: itemDetail ?? this.itemDetail,
+      count: count ?? this.count,
       indicator: indicator ?? this.indicator,
       pendingItem: pendingItem ?? this.pendingItem,
       activeItem: activeItem ?? this.activeItem,
@@ -62,6 +65,7 @@ mixin _$AgentActivitySpec implements Spec<AgentActivitySpec>, Diagnosticable {
       summaryTitle: summaryTitle.lerp(other?.summaryTitle, t),
       itemTitle: itemTitle.lerp(other?.itemTitle, t),
       itemDetail: itemDetail.lerp(other?.itemDetail, t),
+      count: count.lerp(other?.count, t),
       indicator: indicator.lerp(other?.indicator, t),
       pendingItem: pendingItem.lerp(other?.pendingItem, t),
       activeItem: activeItem.lerp(other?.activeItem, t),
@@ -79,6 +83,7 @@ mixin _$AgentActivitySpec implements Spec<AgentActivitySpec>, Diagnosticable {
     summaryTitle,
     itemTitle,
     itemDetail,
+    count,
     indicator,
     pendingItem,
     activeItem,
@@ -133,6 +138,7 @@ mixin _$AgentActivitySpec implements Spec<AgentActivitySpec>, Diagnosticable {
       ..add(DiagnosticsProperty('summaryTitle', summaryTitle))
       ..add(DiagnosticsProperty('itemTitle', itemTitle))
       ..add(DiagnosticsProperty('itemDetail', itemDetail))
+      ..add(DiagnosticsProperty('count', count))
       ..add(DiagnosticsProperty('indicator', indicator))
       ..add(DiagnosticsProperty('pendingItem', pendingItem))
       ..add(DiagnosticsProperty('activeItem', activeItem))
@@ -160,6 +166,7 @@ class AgentActivityStyler
   final Prop<StyleSpec<TextSpec>>? $summaryTitle;
   final Prop<StyleSpec<TextSpec>>? $itemTitle;
   final Prop<StyleSpec<TextSpec>>? $itemDetail;
+  final Prop<StyleSpec<TextSpec>>? $count;
   final Prop<StyleSpec<IconSpec>>? $indicator;
   final Prop<StyleSpec<BoxSpec>>? $pendingItem;
   final Prop<StyleSpec<BoxSpec>>? $activeItem;
@@ -174,6 +181,7 @@ class AgentActivityStyler
     Prop<StyleSpec<TextSpec>>? summaryTitle,
     Prop<StyleSpec<TextSpec>>? itemTitle,
     Prop<StyleSpec<TextSpec>>? itemDetail,
+    Prop<StyleSpec<TextSpec>>? count,
     Prop<StyleSpec<IconSpec>>? indicator,
     Prop<StyleSpec<BoxSpec>>? pendingItem,
     Prop<StyleSpec<BoxSpec>>? activeItem,
@@ -189,6 +197,7 @@ class AgentActivityStyler
        $summaryTitle = summaryTitle,
        $itemTitle = itemTitle,
        $itemDetail = itemDetail,
+       $count = count,
        $indicator = indicator,
        $pendingItem = pendingItem,
        $activeItem = activeItem,
@@ -203,6 +212,7 @@ class AgentActivityStyler
     TextStyler? summaryTitle,
     TextStyler? itemTitle,
     TextStyler? itemDetail,
+    TextStyler? count,
     IconStyler? indicator,
     BoxStyler? pendingItem,
     BoxStyler? activeItem,
@@ -219,6 +229,7 @@ class AgentActivityStyler
          summaryTitle: Prop.maybeMix(summaryTitle),
          itemTitle: Prop.maybeMix(itemTitle),
          itemDetail: Prop.maybeMix(itemDetail),
+         count: Prop.maybeMix(count),
          indicator: Prop.maybeMix(indicator),
          pendingItem: Prop.maybeMix(pendingItem),
          activeItem: Prop.maybeMix(activeItem),
@@ -241,6 +252,8 @@ class AgentActivityStyler
       AgentActivityStyler().itemTitle(value);
   factory AgentActivityStyler.itemDetail(TextStyler value) =>
       AgentActivityStyler().itemDetail(value);
+  factory AgentActivityStyler.count(TextStyler value) =>
+      AgentActivityStyler().count(value);
   factory AgentActivityStyler.indicator(IconStyler value) =>
       AgentActivityStyler().indicator(value);
   factory AgentActivityStyler.pendingItem(BoxStyler value) =>
@@ -263,6 +276,7 @@ class AgentActivityStyler
     'summaryTitle',
     'itemTitle',
     'itemDetail',
+    'count',
     'indicator',
     'pendingItem',
     'activeItem',
@@ -298,6 +312,11 @@ class AgentActivityStyler
   /// Sets the itemDetail.
   AgentActivityStyler itemDetail(TextStyler value) {
     return merge(AgentActivityStyler(itemDetail: value));
+  }
+
+  /// Sets the count.
+  AgentActivityStyler count(TextStyler value) {
+    return merge(AgentActivityStyler(count: value));
   }
 
   /// Sets the indicator.
@@ -406,6 +425,7 @@ class AgentActivityStyler
       summaryTitle: MixOps.merge($summaryTitle, other?.$summaryTitle),
       itemTitle: MixOps.merge($itemTitle, other?.$itemTitle),
       itemDetail: MixOps.merge($itemDetail, other?.$itemDetail),
+      count: MixOps.merge($count, other?.$count),
       indicator: MixOps.merge($indicator, other?.$indicator),
       pendingItem: MixOps.merge($pendingItem, other?.$pendingItem),
       activeItem: MixOps.merge($activeItem, other?.$activeItem),
@@ -428,6 +448,7 @@ class AgentActivityStyler
       summaryTitle: MixOps.resolve(context, $summaryTitle),
       itemTitle: MixOps.resolve(context, $itemTitle),
       itemDetail: MixOps.resolve(context, $itemDetail),
+      count: MixOps.resolve(context, $count),
       indicator: MixOps.resolve(context, $indicator),
       pendingItem: MixOps.resolve(context, $pendingItem),
       activeItem: MixOps.resolve(context, $activeItem),
@@ -453,6 +474,7 @@ class AgentActivityStyler
       ..add(DiagnosticsProperty('summaryTitle', $summaryTitle))
       ..add(DiagnosticsProperty('itemTitle', $itemTitle))
       ..add(DiagnosticsProperty('itemDetail', $itemDetail))
+      ..add(DiagnosticsProperty('count', $count))
       ..add(DiagnosticsProperty('indicator', $indicator))
       ..add(DiagnosticsProperty('pendingItem', $pendingItem))
       ..add(DiagnosticsProperty('activeItem', $activeItem))
@@ -469,6 +491,7 @@ class AgentActivityStyler
     $summaryTitle,
     $itemTitle,
     $itemDetail,
+    $count,
     $indicator,
     $pendingItem,
     $activeItem,

@@ -23,7 +23,16 @@ class HostTheme extends InheritedWidget {
 
   Color get rail => dark ? const Color(0xFF1A1E28) : const Color(0xFFDDE3EA);
 
-  Color get hairline => ink.withValues(alpha: 0.14);
+  /// The fill every card paints, one step off [paper].
+  ///
+  /// The installed recipes read this too: `UiThemeScope` bridges it into
+  /// `UiTokens.background`, so the composer's card and the seven local cards
+  /// paint one surface instead of two.
+  Color get surface => dark ? const Color(0xFF1A1E28) : const Color(0xFFF7F9FB);
+
+  /// The single hairline: card borders, the rail divider, and the installed
+  /// recipes' `UiTokens.border` all resolve to this one value.
+  Color get hairline => ink.withValues(alpha: 0.16);
 
   TextStyle get body => TextStyle(
     color: ink,

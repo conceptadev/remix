@@ -20,9 +20,8 @@ final class _AgentDemoStyles {
   final HostTheme theme;
 
   Color get ink => theme.ink;
-  Color get paper =>
-      theme.dark ? const Color(0xFF1A1E28) : const Color(0xFFF7F9FB);
-  Color get line => ink.withValues(alpha: 0.16);
+  Color get paper => theme.surface;
+  Color get line => theme.hairline;
 
   CardStyler get card => CardStyler()
       .color(paper)
@@ -107,10 +106,12 @@ final class _AgentDemoStyles {
         .fontSize(12)
         .wrap(.padding(.only(right: 8))),
     indicator: IconStyler().color(ink).size(16),
-    pendingStatus: IconStyler().color(ink.withValues(alpha: 0.45)).size(18),
+    // 0.5 rather than 0.45: these marks carry state, and the lighter value
+    // measured 2.94:1 on the light card, under the 3:1 floor for non-text.
+    pendingStatus: IconStyler().color(ink.withValues(alpha: 0.5)).size(18),
     activeStatus: IconStyler().color(theme.live).size(18),
     completedStatus: IconStyler().color(theme.live).size(18),
-    cancelledStatus: IconStyler().color(ink.withValues(alpha: 0.45)).size(18),
+    cancelledStatus: IconStyler().color(ink.withValues(alpha: 0.5)).size(18),
   );
 
   // Keep 12px status marks centered in the same 18px slot as Plan's glyphs.
@@ -127,8 +128,14 @@ final class _AgentDemoStyles {
         .fontWeight(FontWeight.w600),
     itemTitle: TextStyler().color(ink).fontSize(14),
     itemDetail: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
+    // Same styler as Plan's count, and Activity reserves the chevron's slot
+    // even while working, so the two ledgers' counts share one right edge.
+    count: TextStyler()
+        .color(ink.withValues(alpha: 0.62))
+        .fontSize(12)
+        .wrap(.padding(.only(right: 8))),
     indicator: IconStyler().color(ink).size(16),
-    pendingStatus: _leadingStatus(ink.withValues(alpha: 0.45)),
+    pendingStatus: _leadingStatus(ink.withValues(alpha: 0.5)),
     activeStatus: _leadingStatus(theme.live),
     completedStatus: _leadingStatus(theme.live),
   );
@@ -241,6 +248,10 @@ Widget _installedComposer(
 }) {
   final feedback = catalogMotion(context, quick: true);
   final recipe = uiAgentComposerRecipe(
+    // The send control already owns a 48px row of its own under the field.
+    // A two-line floor on top of that made an empty composer the tallest
+    // thing in the catalog.
+    fieldStyle: TextFieldStyler().minHeight(44),
     submitStyle: IconButtonStyler(animation: feedback),
     stopStyle: IconButtonStyler(animation: feedback),
   );
@@ -251,6 +262,7 @@ Widget _installedComposer(
     fieldStyle: recipe.fieldStyle,
     submitStyle: recipe.submitStyle,
     stopStyle: recipe.stopStyle,
+    minLines: 1,
     running: running,
     onSubmit: onSubmit,
     onStop: onStop,
@@ -315,7 +327,9 @@ class MessageDemo extends StatelessWidget {
             toggleStyle: styles.ghostButton,
             child: const Text(
               'I will inspect the checkout flow, map the payment path, verify the shared cart model, and pause before running focused checks. '
-              'This longer message demonstrates explicit opt-in clipping.',
+              'This longer message demonstrates explicit opt-in clipping: the host asks for it, the collapsed height is the host\'s number, '
+              'and everything past that height stays clipped until someone expands the row. Long enough to clip at the catalog\'s own width, '
+              'not only on a phone.',
             ),
           ),
         ),
@@ -477,12 +491,20 @@ class _ExecutionDemoState extends State<ExecutionDemo> {
           onRetry: () => setState(() => status = AgentExecutionStatus.running),
           child: Text(_executionOutput(status)),
         ),
+        // Cycles through the failure state too. It was the one status with
+        // copy written for it that no control in the catalog could reach.
         CatalogAction(
-          label: status.isWorking ? 'Succeed' : 'Replay',
+          label: switch (status) {
+            AgentExecutionStatus.running => 'Succeed',
+            AgentExecutionStatus.success => 'Fail',
+            _ => 'Replay',
+          },
           onPressed: () => setState(
-            () => status = status.isWorking
-                ? AgentExecutionStatus.success
-                : AgentExecutionStatus.running,
+            () => status = switch (status) {
+              AgentExecutionStatus.running => AgentExecutionStatus.success,
+              AgentExecutionStatus.success => AgentExecutionStatus.error,
+              _ => AgentExecutionStatus.running,
+            },
           ),
         ),
       ],
@@ -734,6 +756,7 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
               detailsStyle: styles.disclosure,
               parametersStyle: styles.dataList,
               allowOnceStyle: styles.decision(styles.button),
+              alwaysAllowStyle: styles.decision(styles.quietButton),
               denyStyle: styles.decision(styles.ghostButton),
               tool: 'terminal.run',
               description:
@@ -749,6 +772,7 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
                 RemixDataListItem(label: 'Command', value: 'flutter test'),
               ],
               onAllowOnce: () => setState(() => stage = _RunStage.running),
+              onAlwaysAllow: () => setState(() => stage = _RunStage.running),
               onDeny: () => setState(() => stage = _RunStage.denied),
             ),
             if (working || complete || stage == _RunStage.cancelled)

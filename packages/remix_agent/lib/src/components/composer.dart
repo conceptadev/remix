@@ -173,63 +173,72 @@ class _AgentComposerState extends State<AgentComposer> {
     return AgentStyleBuilder<AgentComposerSpec>(
       style: widget.style,
       styleSpec: widget.styleSpec,
-      builder: (context, spec) => Focus(
-        canRequestFocus: false,
-        skipTraversal: true,
-        onKeyEvent: _handleKey,
-        child: RemixCard(
-          style: widget.surfaceStyle,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ScrollConfiguration(
-                behavior: ScrollConfiguration.of(
-                  context,
-                ).copyWith(scrollbars: false),
-                child: RemixTextArea(
-                  controller: _controller,
-                  focusNode: _focusNode,
-                  enabled: widget.enabled,
-                  autofocus: widget.autofocus,
-                  hintText: widget.hintText,
-                  semanticLabel: widget.semanticLabel,
-                  minLines: widget.minLines,
-                  maxLines: widget.maxLines,
-                  textInputAction: TextInputAction.newline,
-                  style: widget.fieldStyle,
-                ),
-              ),
-              RowBox(
-                styleSpec: spec.toolbar,
-                children: [
-                  if (widget.leading != null) widget.leading!,
-                  const Spacer(),
-                  if (widget.trailing != null) widget.trailing!,
-                  RemixIconButton(
-                    key: ValueKey(
-                      widget.running
-                          ? 'agent-composer-stop'
-                          : 'agent-composer-send',
-                    ),
-                    icon: null,
-                    iconBuilder: widget.running
-                        ? (widget.stopIconBuilder ?? _defaultStopIcon)
-                        : (widget.submitIconBuilder ?? _defaultSubmitIcon),
-                    semanticLabel: widget.running
-                        ? widget.stopLabel
-                        : widget.submitLabel,
-                    enabled: widget.running
-                        ? widget.enabled && widget.onStop != null
-                        : _canSubmit,
-                    onPressed: widget.running ? widget.onStop : _submit,
-                    style: widget.running
-                        ? widget.stopStyle
-                        : widget.submitStyle,
+      // Keep the field and action in separate accessibility nodes.
+      builder: (context, spec) => Semantics(
+        container: true,
+        explicitChildNodes: true,
+        label: widget.semanticLabel,
+        child: Focus(
+          canRequestFocus: false,
+          skipTraversal: true,
+          onKeyEvent: _handleKey,
+          child: RemixCard(
+            style: widget.surfaceStyle,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(
+                    context,
+                  ).copyWith(scrollbars: false),
+                  child: RemixTextArea(
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    enabled: widget.enabled,
+                    autofocus: widget.autofocus,
+                    hintText: widget.hintText,
+                    semanticLabel: widget.semanticLabel,
+                    minLines: widget.minLines,
+                    maxLines: widget.maxLines,
+                    textInputAction: TextInputAction.newline,
+                    style: widget.fieldStyle,
                   ),
-                ],
-              ),
-            ],
+                ),
+                RowBox(
+                  styleSpec: spec.toolbar,
+                  children: [
+                    if (widget.leading != null) widget.leading!,
+                    const Spacer(),
+                    if (widget.trailing != null) widget.trailing!,
+                    Semantics(
+                      container: true,
+                      child: RemixIconButton(
+                        key: ValueKey(
+                          widget.running
+                              ? 'agent-composer-stop'
+                              : 'agent-composer-send',
+                        ),
+                        icon: null,
+                        iconBuilder: widget.running
+                            ? (widget.stopIconBuilder ?? _defaultStopIcon)
+                            : (widget.submitIconBuilder ?? _defaultSubmitIcon),
+                        semanticLabel: widget.running
+                            ? widget.stopLabel
+                            : widget.submitLabel,
+                        enabled: widget.running
+                            ? widget.enabled && widget.onStop != null
+                            : _canSubmit,
+                        onPressed: widget.running ? widget.onStop : _submit,
+                        style: widget.running
+                            ? widget.stopStyle
+                            : widget.submitStyle,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

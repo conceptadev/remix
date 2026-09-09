@@ -61,6 +61,11 @@ class AgentActivity extends StatefulWidget {
 
   bool get isWorking => status == AgentRunStatus.working;
 
+  /// Number of completed rows in the activity ledger.
+  int get settledCount => items
+      .where((item) => item.status == AgentActivityItemStatus.complete)
+      .length;
+
   @override
   State<AgentActivity> createState() => _AgentActivityState();
 }
@@ -176,11 +181,22 @@ class _AgentActivityState extends State<AgentActivity> {
           triggerBuilder: (context, state, trigger) => Row(
             children: [
               Expanded(child: trigger!),
-              if (!widget.isWorking)
-                _indicator(context, spec, state.isExpanded),
+              // Preserve the count alignment and expansion cue while working.
+              // RemixDisclosure keeps the forced-open header non-toggleable.
+              _indicator(context, spec, state.isExpanded),
             ],
           ),
-          trigger: StyledText(widget.title, styleSpec: spec.summaryTitle),
+          trigger: Row(
+            children: [
+              Expanded(
+                child: StyledText(widget.title, styleSpec: spec.summaryTitle),
+              ),
+              StyledText(
+                '${widget.settledCount}/${widget.items.length}',
+                styleSpec: spec.count,
+              ),
+            ],
+          ),
           content: Box(
             styleSpec: spec.viewport,
             child: AgentLiveEdgeScrollView(
@@ -261,6 +277,8 @@ final class AgentActivitySpec with _$AgentActivitySpec {
   @override
   final StyleSpec<TextSpec> itemDetail;
   @override
+  final StyleSpec<TextSpec> count;
+  @override
   final StyleSpec<IconSpec> indicator;
   @override
   final StyleSpec<BoxSpec> pendingItem;
@@ -281,6 +299,7 @@ final class AgentActivitySpec with _$AgentActivitySpec {
     StyleSpec<TextSpec>? summaryTitle,
     StyleSpec<TextSpec>? itemTitle,
     StyleSpec<TextSpec>? itemDetail,
+    StyleSpec<TextSpec>? count,
     StyleSpec<IconSpec>? indicator,
     StyleSpec<BoxSpec>? pendingItem,
     StyleSpec<BoxSpec>? activeItem,
@@ -293,6 +312,7 @@ final class AgentActivitySpec with _$AgentActivitySpec {
        summaryTitle = summaryTitle ?? const StyleSpec(spec: TextSpec()),
        itemTitle = itemTitle ?? const StyleSpec(spec: TextSpec()),
        itemDetail = itemDetail ?? const StyleSpec(spec: TextSpec()),
+       count = count ?? const StyleSpec(spec: TextSpec()),
        indicator = indicator ?? const StyleSpec(spec: IconSpec()),
        pendingItem = pendingItem ?? const StyleSpec(spec: BoxSpec()),
        activeItem = activeItem ?? const StyleSpec(spec: BoxSpec()),
