@@ -13,9 +13,12 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return <html lang="en" className="concepta-docs remix-docs" suppressHydrationWarning><body className="flex min-h-screen flex-col">
     <RootProvider>
-      <DocsLayout tree={source.getPageTree()} {...createBaseLayoutOptions(docsConfig)}
-        sidebar={{ banner: <span className="remix-docs-label">Documentation</span> }}
-      >{children}</DocsLayout>
+      {/* No sidebar banner: the wordmark sits directly above it, and a
+          "Documentation" label there reads as a heading for the quick links
+          below it, which it does not head. */}
+      <DocsLayout tree={source.getPageTree()} {...createBaseLayoutOptions(docsConfig)}>
+        {children}
+      </DocsLayout>
     </RootProvider>
   </body></html>;
 }

@@ -4,10 +4,29 @@
 
 /* Product identity stays here; the shared theme owns reading/layout rules. */
 .remix-docs {
-  --docs-primary-light: #087a0a;
+  /* Derived from the brand green for light surfaces. #087a0a only reached
+     4.17:1 on muted and 4.49:1 on secondary; this clears AA on all four. */
+  --docs-primary-light: #066b08;
   --docs-primary-dark: #00eb03;
+
+  /* Fumadocs reads these as `var(--color-fd-<type>)` from the callout's inline
+     style, never through a utility, so Tailwind prunes them out of the theme's
+     `@theme` block and every callout falls back to `--color-fd-muted`. Declared
+     here they survive, and they carry Concepta's support ramp rather than
+     Fumadocs' generic defaults. */
+  --color-fd-info: #0c31ff;
+  --color-fd-success: #006f50;
+  --color-fd-warning: #e97000;
+  --color-fd-error: #c62828;
+  --color-fd-idea: #e97000;
 }
-.remix-docs-label { font-size: 0.875rem; color: var(--color-fd-muted-foreground); }
+.remix-docs.dark {
+  --color-fd-info: #7b9fff;
+  --color-fd-success: #1fe0b8;
+  --color-fd-warning: #ffc04d;
+  --color-fd-error: #ff6b6b;
+  --color-fd-idea: #ffc04d;
+}
 .remix-preview { margin-block: 0 2rem; }
 .remix-preview-toolbar { display: grid; grid-template-columns: minmax(0, 1fr) 6.5rem auto; align-items: end; gap: 0.75rem 1rem; padding: 1rem; border-bottom: 1px solid var(--color-fd-border); font-size: 0.875rem; }
 .remix-preview-field { display: grid; gap: 0.375rem; min-width: 0; }
