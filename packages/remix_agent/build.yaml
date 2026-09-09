@@ -1,5 +1,10 @@
 targets:
   $default:
+    # The nested example is a separate workspace package with its own builders.
+    # Including it here lets the combining builder delete its generated parts.
+    sources:
+      exclude:
+        - example/**
     builders:
       mix_generator|mix_generator:
         enabled: true
