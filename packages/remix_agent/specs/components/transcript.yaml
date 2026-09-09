@@ -1,6 +1,10 @@
+# This package ships no value for any measurement in this worksheet.
+# `Agent*Spec` names the slots; the application's recipe fills them. The
+# numbers below are the benchmark the anatomy was read from, not a default
+# this package resolves. See ../../docs/open-code-review.md.
 component: Transcript
 flutter_name: AgentTranscript
-status: implemented (vertical slice)
+status: behavior implemented (vertical slice); no visual defaults shipped
 
 source:
   ref: live-edge follow/release contract
@@ -19,7 +23,7 @@ states:
   - busy
   - focus-visible
 tokens: {}
-non_token_measurements:
+recipe_measurements:
   - followThreshold default 56 logical pixels
   - scrollbar gutter 12
   - focus ring 2 inset, host ink

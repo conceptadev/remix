@@ -1,6 +1,10 @@
+# This package ships no value for any measurement in this worksheet.
+# `Agent*Spec` names the slots; the application's recipe fills them. The
+# numbers below are the benchmark the anatomy was read from, not a default
+# this package resolves. See ../../docs/open-code-review.md.
 component: Composer
 flutter_name: AgentComposer
-status: complete
+status: behavior complete; no visual defaults shipped
 
 source:
   ref: industry agent-run composer contract
@@ -25,7 +29,7 @@ states:
   - empty (send disabled)
   - canSubmit false
 tokens: {}
-non_token_measurements:
+recipe_measurements:
   - card pad 8
   - card radius 16
   - field pad 8 horizontal / 6 top
@@ -40,6 +44,11 @@ non_token_measurements:
   - hint 14/24 ink@0.55
   - empty/disabled send opacity 0.5
   - disabled opacity 0.6
+# The first proven application recipe for this anatomy. It composes the
+# installed card, text-area, and icon-button recipes and adds only the toolbar
+# row and the card inset; `tool/check_agent_consumer.dart` builds and tests it.
+reference_recipe: open_code/agent_fixture/lib/agent/composer.dart
+
 behavior:
   - Field and send/stop share one card
   - Enter submits when the field is not composing and Shift is not held

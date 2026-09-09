@@ -1,6 +1,10 @@
+# This package ships no value for any measurement in this worksheet.
+# `Agent*Spec` names the slots; the application's recipe fills them. The
+# numbers below are the benchmark the anatomy was read from, not a default
+# this package resolves. See ../../docs/open-code-review.md.
 component: Activity
 flutter_name: AgentActivity
-status: complete
+status: behavior complete; no visual defaults shipped
 
 source:
   ref: in-transcript activity ledger
@@ -16,7 +20,7 @@ states:
   - working
   - complete
 tokens: {}
-non_token_measurements:
+recipe_measurements:
   - trigger height 28
   - working 14 / regular muted
   - completed 14 / medium muted, gap 6, trailing chevron

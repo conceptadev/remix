@@ -11,7 +11,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  remix: ^1.0.0-beta.4
+  # Match the package's own floor. Workspace resolution binds the local
+  # siblings, so a stale constraint here compiles and says nothing until
+  # someone reads it as the tested version.
+  remix: ^1.0.0-beta.8
   remix_agent: ^0.1.0-beta.1
 
 dev_dependencies:

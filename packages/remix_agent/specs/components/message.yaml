@@ -1,10 +1,14 @@
+# This package ships no value for any measurement in this worksheet.
+# `Agent*Spec` names the slots; the application's recipe fills them. The
+# numbers below are the benchmark the anatomy was read from, not a default
+# this package resolves. See ../../docs/open-code-review.md.
 component: Message
 flutter_name: AgentMessage
-status: implemented (vertical slice)
+status: behavior implemented (vertical slice); no visual defaults shipped
 anatomy: [avatar, header, body, expand pill, footer]
 states: [user, assistant]
 tokens: {}
-non_token_measurements:
+recipe_measurements:
   - group spacing 6
   - user bubble max 82% of row
   - user bubble min 36

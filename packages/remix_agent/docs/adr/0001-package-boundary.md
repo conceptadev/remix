@@ -2,7 +2,9 @@
 
 The [open-code review](../open-code-review.md) retains this behavior boundary
 and proposes registry-distributed, application-owned recipes. That integration
-is planned, not implemented by this package decision.
+is planned, not implemented by this package decision. What the first consumer
+established, and what is still gated, is recorded under
+[Runtime and recipe split](#runtime-and-recipe-split) below.
 
 ## Decision
 
@@ -49,3 +51,38 @@ controller and discard variant, animation, and modifier metadata.
 
 Composer, message, transcript, answer, permission, execution, plan, activity.
 No shell widget, no file tree, no highlighter, no citation engine.
+
+## Runtime and recipe split
+
+The package owns behavior. The application owns appearance, and receives it as
+installed `remix_cli` source rather than as an Agent theme.
+
+| Remix Agent owns | The application owns |
+|---|---|
+| Controller and focus-node ownership, IME handling | The composer, message, and permission recipes |
+| Permission latches and status machines | Every colour, size, radius, and inset |
+| Live-edge follow and release | The theme those values resolve from |
+| Accessibility semantics and keyboard rules | Per-instance overrides at the call site |
+| `Agent*Spec` slot names, empty by default | Which installed recipes a surface reuses |
+
+One surface has a proven consumer. `open_code/agent_fixture/` installs Theme,
+Card, TextField, and IconButton with the checkout CLI and styles `AgentComposer`
+from them; `tool/check_agent_consumer.dart` builds that application, runs its
+suite, then edits the installed IconButton recipe and reruns the suite to prove
+the edit reaches Agent's send and stop buttons.
+
+The recipe is a **bundle**, not a single styler. `AgentComposer` takes
+`style`, `surfaceStyle`, `fieldStyle`, `submitStyle`, and `stopStyle`, and
+`AgentComposerSpec` holds only the toolbar, so one `@MixWidget` recipe cannot
+supply the other four. `uiAgentComposerRecipe()` returns all five and the call
+site spreads them. The four child stylers stay unresolved, for the reason the
+section above gives.
+
+Two things remain gated and are not claimed anywhere in this package:
+
+1. **Publication.** The package is `publish_to: none`. A registry item's
+   dependency is a hosted version constraint, so there is no Agent registry
+   item and hosted installation is not advertised.
+2. **The other seven surfaces.** Message, transcript, answer, permission,
+   execution, plan, and activity have no proven recipe yet. Their worksheets
+   record the benchmark measurements, not shipped defaults.

@@ -1,6 +1,10 @@
+# This package ships no value for any measurement in this worksheet.
+# `Agent*Spec` names the slots; the application's recipe fills them. The
+# numbers below are the benchmark the anatomy was read from, not a default
+# this package resolves. See ../../docs/open-code-review.md.
 component: Permission
 flutter_name: AgentPermission
-status: complete
+status: behavior complete; no visual defaults shipped
 
 source:
   ref: in-transcript tool permission machine
@@ -24,7 +28,7 @@ states:
   - denied
   - error
 tokens: {}
-non_token_measurements:
+recipe_measurements:
   - card radius 16, overflow clipped
   - card pad 16
   - status well 32×32, radius 12, mt 2

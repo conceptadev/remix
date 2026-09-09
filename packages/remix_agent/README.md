@@ -35,8 +35,12 @@ import 'package:remix/remix.dart';
 import 'package:remix_agent/remix_agent.dart';
 ```
 
-Ordinary surfaces need only a normal Flutter host. A model picker built with
-`RemixSelect` still needs the caller’s `Overlay`.
+Ordinary surfaces need only a normal Flutter host. `AgentComposer` is the one
+exception, and the requirement is the text field's rather than Agent's:
+`EditableText` asserts on an `Overlay` ancestor the moment it takes focus, for
+its selection handles and magnifier. `MaterialApp`, `CupertinoApp`, and any
+`WidgetsApp` with routes already provide one; a bare `WidgetsApp(builder: ...)`
+does not. A model picker built with `RemixSelect` needs the same `Overlay`.
 
 ## What this is
 
@@ -60,6 +64,35 @@ host.
 - A markdown renderer, syntax highlighter, or citation engine.
 - An LLM client or tool runtime.
 
+## Styling with installed recipes
+
+An application styles these surfaces with the same `remix_cli` source it
+installs for the rest of its UI. There is no Agent theme and no Agent preset.
+
+A surface takes more than one styler, so a recipe returns a **bundle** and the
+call site spreads it. `AgentComposer` takes five: its own anatomy, plus
+unresolved stylers for the card, the field, and the two buttons.
+
+```dart
+final recipe = uiAgentComposerRecipe();
+
+AgentComposer(
+  onSubmit: submit,
+  style: recipe.style,
+  surfaceStyle: recipe.surfaceStyle,
+  fieldStyle: recipe.fieldStyle,
+  submitStyle: recipe.submitStyle,
+  stopStyle: recipe.stopStyle,
+)
+```
+
+The bundle calls the application's installed `uiCardStyle`, `uiTextAreaStyle`,
+and `uiIconButtonStyle` and adds only Agent-specific geometry, so editing one
+of those files changes the composer with it. A working recipe lives in
+[`open_code/agent_fixture/lib/agent/composer.dart`](../../open_code/agent_fixture/lib/agent/composer.dart),
+and `dart run tool/check_agent_consumer.dart` builds a fresh application around
+it. The other seven surfaces have no proven recipe yet.
+
 ## Local catalog
 
 A full review page lives in `example/`. It is unpublished and meant for
@@ -80,5 +113,14 @@ WidgetsApp(
 ```
 
 Do not wrap the tree in a package-owned app or overlay host. Provide
-`Overlay.wrap` only when a slot opens a picker. See
-[`docs/provenance.md`](docs/provenance.md) for the behavioral benchmark record.
+`Overlay.wrap` yourself around any subtree holding a composer or a picker:
+
+```dart
+WidgetsApp(
+  color: const Color(0xFFFFFFFF),
+  builder: (_, _) => Overlay.wrap(child: const MyComposerPage()),
+);
+```
+
+See [`docs/provenance.md`](docs/provenance.md) for the behavioral benchmark
+record.

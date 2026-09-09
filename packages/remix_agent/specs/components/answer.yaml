@@ -1,6 +1,10 @@
+# This package ships no value for any measurement in this worksheet.
+# `Agent*Spec` names the slots; the application's recipe fills them. The
+# numbers below are the benchmark the anatomy was read from, not a default
+# this package resolves. See ../../docs/open-code-review.md.
 component: Answer
 flutter_name: AgentAnswer
-status: complete
+status: behavior complete; no visual defaults shipped
 
 source:
   ref: streaming answer surface
@@ -19,7 +23,7 @@ states:
   - complete
   - error
 tokens: {}
-non_token_measurements:
+recipe_measurements:
   - body 14 / 24, ink@0.90
   - completion offset 12
   - action gap 2

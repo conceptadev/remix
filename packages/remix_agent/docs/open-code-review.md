@@ -15,6 +15,36 @@ The current branch is a draft foundation for that work. **There is no Agent
 registry item yet.** Hosted installation cannot be advertised while
 `remix_agent` remains `publish_to: none`.
 
+## Implementation status
+
+Updated 2026-09-08, after the sequence below reached its third gate.
+
+| Step | State |
+| --- | --- |
+| 1. Preserve and stack the foundation | Done. The two base-button loading announcements now have their own cases in `packages/remix/test/components/button/button_widget_test.dart` and `.../icon_button/icon_button_widget_test.dart`. |
+| 2. Prove one consumer | Done for Composer. `open_code/agent_fixture/` and `tool/check_agent_consumer.dart`. |
+| 3. Set the runtime release contract | **Open. This is the next decision, and it is not a code change.** |
+| 4. Add the item and convert the catalog | Worksheets and ADR reconciled. No registry item, no template tree; both wait on step 3. |
+| 5. Verify installation, ownership, and behavior | Partly done, in the step-2 checker. Browser and hosted-consumer runs remain. |
+
+`tool/check_agent_consumer.dart` builds a fresh application, installs Theme,
+Card, TextField, and IconButton with the checkout CLI, and points `remix` and
+`remix_agent` at this checkout. It then proves, in that application:
+
+- `uiAgentComposerRecipe()` supplies all five composer stylers from the
+  installed recipes;
+- editing the installed IconButton recipe changes Agent's send and stop
+  buttons, and the CLI reports the edited file as application-owned;
+- an instance override still beats the recipe;
+- field focus and button hover still resolve in the child controllers;
+- Enter, Shift+Enter, IME composition, and a controller swap still behave;
+- the semantic tree holds one field and one action;
+- the light and dark themes both reach Agent through the same recipe;
+- the installed layer imports no `remix_agent`.
+
+It has no hosted phase, and nothing in it claims that hosted installation
+works. Step 3 is what would allow that claim.
+
 ## Start from the consumer's problem
 
 An application needs prompt editing, streaming answers, permission decisions,
