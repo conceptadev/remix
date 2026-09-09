@@ -1,0 +1,327 @@
+---
+title: Build a settings screen
+description: Use Remix CLI recipes to build, customize, and test a Flutter settings screen
+---
+
+Build **Launchpad**, a desktop-browser settings screen with a form, save state,
+dialog, and sidebar. You write the application; the CLI installs editable
+component recipes and their theme.
+
+![Launchpad with the default preset and a cyan preview button](/assets/remix-cli-tutorial/default-finished.jpg)
+
+The finished screenshot includes the medium Button height edit below. It is
+an application example, not a screen the CLI generates for you.
+
+This walkthrough uses the same reviewed code as the
+[complete offline tutorial](/remix-cli-tutorial.html). The
+[sample download](/assets/remix-cli-tutorial/sample-projects.zip) contains
+both projects, generated adapters, and four behavior tests per preset.
+
+## Before you start
+
+Use Flutter **3.44.0**, its bundled Dart **3.12.0**, Git, and a desktop browser.
+The samples use local state, with no backend or responsive mobile layout.
+
+The September 7, 2026 captures used checkout
+`bfae6507676fadea7632e2f7f66924935c04ca2a`, with Remix `1.0.0-beta.9` and
+CLI `0.1.0`. These are recorded checkout versions, not a claim that those
+packages are published. Keep the pin when reproducing the screenshots.
+
+## Prepare the project and CLI
+
+In the directory where you keep applications:
+
+{/* tutorial-source: create-default */}
+
+```bash
+flutter create --empty --platforms=web remix_default_demo
+cd remix_default_demo
+```
+
+In a second terminal, get the reviewed Remix checkout:
+
+{/* tutorial-source: reviewed-checkout */}
+
+```bash
+git clone https://github.com/conceptadev/remix.git remix-review
+git -C remix-review checkout bfae6507676fadea7632e2f7f66924935c04ca2a
+git -C remix-review rev-parse --show-toplevel
+```
+
+Use the printed absolute path in place of `/path/to/remix` below. Back in
+`remix_default_demo`, create `pubspec_overrides.yaml`:
+
+{/* tutorial-source: remix-override */}
+
+```yaml
+dependency_overrides:
+  remix:
+    path: /path/to/remix/packages/remix
+```
+
+Then install the checkout CLI as a project-local development dependency:
+
+{/* tutorial-source: install-local-cli */}
+
+```bash
+dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
+dart run remix_cli:remix --version
+```
+
+The version should be `0.1.0`. Keep running CLI commands from the sample's
+package root, beside `pubspec.yaml`.
+
+## Initialize and install Button
+
+{/* tutorial-source: init-default */}
+
+```bash
+dart run remix_cli:remix init --prefix Acme --preset default
+```
+
+`Acme` controls local names such as `AcmeButton` and `acmeButtonStyle`.
+Initialization writes `remix.yaml` and a managed barrel at `lib/ui/ui.dart`.
+It does not install a component yet.
+
+Preview the first install:
+
+{/* tutorial-source: preview-button */}
+
+```bash
+dart run remix_cli:remix add button --dry-run
+```
+
+The plan should install `theme` before `button`. No source is written by
+`--dry-run`. Install when the plan matches:
+
+{/* tutorial-source: install-button-command */}
+
+```bash
+dart run remix_cli:remix add button
+```
+
+Inspect `lib/ui/components/button.dart`, the recipe you own, and
+`button.g.dart`, the adapter produced by the generator. Edit the recipe, not
+the generated file. The CLI also adds the required dependencies and exports.
+
+## Render the first button
+
+Replace `lib/main.dart` with this complete example:
+
+{/* tutorial-source: first-main */}
+
+```dart
+import 'package:flutter/widgets.dart';
+
+import 'ui/ui.dart';
+
+void main() => runApp(const AcmeApp());
+
+class AcmeApp extends StatelessWidget {
+  const AcmeApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return WidgetsApp(
+      color: const Color(0xFF000000),
+      builder: (_, _) => Overlay(
+        initialEntries: [
+          OverlayEntry(
+            builder: (_) => const AcmeThemeScope(
+              data: AcmeThemeData.light(),
+              child: HomePage(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = AcmeTheme.of(context);
+    return ColoredBox(
+      color: theme.background,
+      child: Center(
+        child: AcmeButton.primary(
+          label: 'Continue',
+          onPressed: () {},
+        ),
+      ),
+    );
+  }
+}
+```
+
+{/* tutorial-source: run-application */}
+
+```bash
+flutter run -d chrome
+```
+
+![The default Continue button on a white surface](/assets/remix-cli-tutorial/first-render.jpg)
+
+You should see **Continue** centered in the app. Its callback is deliberately
+empty at this stage. Keep this terminal open; use another terminal in the same
+sample directory for the remaining CLI commands.
+
+## Build the settings screen
+
+Install the remaining recipes, one item per command:
+
+{/* tutorial-source: install-screen */}
+
+```bash
+dart run remix_cli:remix add checkbox
+dart run remix_cli:remix add textfield
+dart run remix_cli:remix add dialog
+dart run remix_cli:remix add card
+dart run remix_cli:remix add sidebar
+```
+
+The existing theme is preserved. Sidebar also installs its `toggle`
+dependency. Each command updates the barrel and generates the needed adapters.
+
+Download and unzip the [reviewed samples](/assets/remix-cli-tutorial/sample-projects.zip).
+Copy `default_demo/lib/main.dart` into your application's `lib/main.dart`.
+You can also read and copy the [complete source inline](/remix-cli-tutorial.html#compose).
+Keep your CLI-installed `lib/ui` files; the next step changes one of them.
+
+The complete app owns the form values, save counter, loading flag, dialog
+result, and sidebar selection. It uses `MaterialApp` as the navigation host.
+Keep its host builder and scope placement together: the text field needs an
+overlay, and the dialog needs the invoking context's navigator and text defaults.
+
+## Customize your recipe
+
+Open `lib/ui/components/button.dart`. In `_metricsFor`, change the medium
+`minHeight` from `36.0` to `44.0`. Reload the app. All medium default buttons
+should use the taller recipe, while the cyan preview button keeps its
+instance-specific colors and rounded shape.
+
+![The application-owned recipe with minHeight set to 44.0](/assets/remix-cli-tutorial/recipe-edit.jpg)
+
+This changes a recipe value, not the generated widget signature. If you change
+recipe parameters, enums, or annotations, regenerate the adapter as described
+in the [customization reference](/remix-cli-guide.html#customize).
+
+## Check behavior and preserve edits
+
+1. Reload to reset local state. Enter **Launchpad Studio** as the workspace name.
+2. Clear **Send a weekly summary**, then press **Save changes** twice while loading.
+3. Confirm **Save count: 1** and **Summary: off** when the save completes.
+4. Open and confirm the invitation dialog. Check that its result reaches the screen.
+5. Change the sidebar selection and test the preview button's callback.
+
+![Saved form values with one completed save and summary off](/assets/remix-cli-tutorial/saved.jpg)
+
+Now compare your edited Button with its bundled recipe:
+
+{/* tutorial-source: diff-button */}
+
+```bash
+dart run remix_cli:remix add button --diff
+```
+
+The diff's `current` side contains your `44.0` edit; `proposed` contains the
+bundled `36.0`. The command does not replace your source. Repeat ordinary add:
+
+{/* tutorial-source: preserve-button */}
+
+```bash
+dart run remix_cli:remix add button
+```
+
+Confirm the medium height remains `44.0`. `--overwrite` is an explicit
+replacement operation; do not use it to inspect an update. See
+[source-preservation details](/remix-cli-tutorial.html#preserve) before trying it.
+
+## Try Fortal separately
+
+Do not switch the default project's preset. From its directory, create a
+second application:
+
+{/* tutorial-source: create-fortal */}
+
+```bash
+cd ..
+flutter create --empty --platforms=web remix_fortal_demo
+cd remix_fortal_demo
+```
+
+Repeat the checkout override and CLI installation from the first step in this
+new project. Then initialize Fortal and install its recipes:
+
+{/* tutorial-source: install-fortal */}
+
+```bash
+dart run remix_cli:remix init --prefix Acme --preset fortal
+dart run remix_cli:remix add button
+dart run remix_cli:remix add checkbox
+dart run remix_cli:remix add textfield
+dart run remix_cli:remix add dialog
+dart run remix_cli:remix add card
+dart run remix_cli:remix add sidebar
+```
+
+Copy `fortal_demo/lib/main.dart` from the download to this app's `lib/main.dart`.
+The Fortal example uses `AcmeScope` and `AcmeButton.solid`, rather than
+`AcmeThemeScope` and `AcmeButton.primary`. Keep its complete host configuration.
+Do not apply the default preset's Button metrics edit to Fortal.
+
+![The Fortal settings screen in dark mode](/assets/remix-cli-tutorial/fortal-dark.jpg)
+
+Fortal supplies a different theme and recipe vocabulary, not a second runtime
+for your form. Repeat the same behavior checks. Neither preset adds a
+`remix_fortal` package dependency to the consumer application.
+
+## Run the tests
+
+Copy `test/workflow_test.dart` from the matching downloaded project into each
+sample. Keep the project names used above; the tests import those names.
+Replace `analysis_options.yaml` with the reviewed configuration:
+
+{/* tutorial-source: analysis-options */}
+
+```yaml
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - lib/ui/**/*.g.dart
+```
+
+This excludes generated adapters from the pinned generator's lint findings,
+not your authored recipes. Run from each sample directory:
+
+{/* tutorial-source: validate-sample */}
+
+```bash
+flutter analyze
+flutter test
+flutter build web --release
+```
+
+Each sample has four tests covering form/save behavior, disabled controls,
+callbacks, dialog results and text decoration, and sidebar selection. Fix
+failures before treating a screenshot as evidence that the sample works.
+
+## Troubleshooting and evidence
+
+- **Pub cannot resolve beta.9:** check the absolute checkout path in `pubspec_overrides.yaml`.
+- **Missing generated class:** inspect the add command's generation error and the recipe's `part` declaration.
+- **Missing overlay or incorrect dialog text:** restore the complete sample's application host and scope placement.
+- **No `primary` constructor:** use the default sample with `default`, or the `solid` constructor with `fortal`.
+
+See the [full troubleshooting table](/remix-cli-tutorial.html#troubleshoot)
+and [Open Code reference](/open-code) for configuration and command details.
+
+Screenshots were captured from Flutter release web builds and an editor during
+the September 7 review. They show desktop states, not certification of all
+components or platforms. [Recorded evidence](/assets/remix-cli-tutorial/evidence.json)
+tracks their hashes and source checkout. [Asset licenses](/assets/remix-cli-tutorial/README.md)
+and the original offline HTML remain alongside this documentation.

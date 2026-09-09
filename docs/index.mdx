@@ -1,203 +1,68 @@
 ---
 title: Introduction
-description: Customizable Flutter components with powerful styling
+description: Build custom Flutter interfaces with Remix behavior and Mix styling
 ---
 
-!["Remix banner"](https://jtmo7uveygl6pnag.public.blob.vercel-storage.com/remix_banner.png)
-
-A comprehensive Flutter component library that combines headless UI behavior with Mix's powerful styling system, giving you complete freedom to build and customize components that match your design system perfectly.
-
-Remix brings together the best of both worlds: the robust interaction behavior and accessibility of Naked UI with the flexible, composable styling capabilities of Mix. This combination enables you to create components that are fully customizable, reusable, and maintainable.
+Remix is a Flutter component library built on [Mix](https://github.com/conceptadev/mix)
+and [Naked UI](https://github.com/conceptadev/naked_ui). It provides interaction
+behavior, focus handling, and accessibility semantics while leaving the visual
+design to your application.
 
 ## Why Remix?
 
-### The Problem
+Custom controls need more than a different color. Buttons need loading and
+disabled behavior; menus need focus and keyboard handling; dialogs need to work
+with the application's navigator. Remix supplies those component behaviors so
+you can concentrate on the interface and its application state.
 
-Flutter developers commonly face these challenges when building custom UIs:
-
-- **Verbose styling** - Deep widget nesting makes code difficult to read and maintain
-- **Complex state management** - Handling hover, focus, and press states requires extensive boilerplate
-- **Style reusability** - Creating consistent, reusable component styles often leads to copied code
-- **Animation overhead** - Adding smooth transitions requires significant setup
-
-### The Solution
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
-
-final style = ButtonStyler()
-  .padding(.horizontal(16))
-  .padding(.vertical(10))
-  .color(Colors.blue)
-  .borderRadius(.all(const Radius.circular(8)))
-  .animate(AnimationConfig.spring(300.ms))
-  .onHovered(.color(Colors.blue.shade700));
-
-final styledButton = RemixButton(
-  onPressed: () {},
-  label: 'Click me',
-  style: style,
-);
-```
-
-Or using callable styles:
-```dart
-import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
-
-final button = ButtonStyler()
-  .padding(.horizontal(16))
-  .padding(.vertical(10))
-  .color(Colors.blue)
-  .borderRadius(.all(const Radius.circular(8)))
-  .onHovered(.color(Colors.blue.shade700))
-  .animate(AnimationConfig.spring(300.ms));
-
-final fluentButton = button(
-  label: 'Click me',
-  onPressed: () {},
-); // return RemixButton Widget.
-```
-
-With Remix, you get:
-- **Ready-to-use components** with all the behavior, accessibility, and keyboard navigation built-in
-- **Complete styling freedom** using Mix's powerful, chainable styling API
-- **State-aware styling** with built-in support for hover, focus, press, and custom states
-- **Smooth animations** that work seamlessly with your style definitions
+Use a component styler to define appearance, reuse it across instances, and
+change styles in response to hover, focus, or press. Your application still owns
+layout, values, callbacks, and persistence.
 
 ## Quick Start
 
-### Installation
+Choose the workflow that matches what you want to own:
 
-Add Remix to your project:
+| Workflow | What you write | Start here |
+| --- | --- | --- |
+| Use Remix directly | Component instances and Mix stylers | [Install and render a button](/getting-started) |
+| Install editable recipes | Local theme and component source, plus your application | [Open Code reference](/open-code) |
+| Learn through a complete screen | A settings form, save behavior, dialog, and sidebar | [CLI settings-screen tutorial](/tutorials/settings-screen) |
 
-```bash
-flutter pub add remix
-```
+The CLI tutorial uses a pinned checkout, not an assumed published CLI release.
+It covers the small `default` preset and the separate `fortal` preset.
 
-Or add it to your `pubspec.yaml`:
+## Styling components
 
-```yaml
-dependencies:
-  remix: ^1.0.0
-```
-
-### Your First Component
-
-Let's build your first button with Remix. This simple example demonstrates how easy it is to create a fully customizable component using Remix's styling API.
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
-
-class MyApp extends StatelessWidget {
-
-  final button = ButtonStyler()
-    .padding(.horizontal(16))
-    .padding(.vertical(10))
-    .color(Colors.blue)
-    .borderRadius(.all(const Radius.circular(8)))
-    .label(TextStyler().color(Colors.white));
-
-  @override
-  Widget build(BuildContext context) {
-    return WidgetsApp(
-      color: Colors.blue,
-      builder: (_, _) => Center(
-        child: button(
-          label: 'Click Me',
-          onPressed: () => debugPrint('Button pressed!'),
-        ),
-      ),
-    );
-  }
-}
-```
-
-### Adding Interaction States
-
-Easily define how components should look in different interaction states.
-
-```dart
-final style = ButtonStyler()
-  .padding(.horizontal(16))
-  .padding(.vertical(10))
-  .color(Colors.blue)
-  .borderRadius(.all(const Radius.circular(8)))
-  .label(TextStyler().color(Colors.white))
-  .onHovered(.color(Colors.blue.shade700)) // [!code ++]
-  .onPressed(.scale(0.95)); // [!code ++]
-```
-
-### Adding Animation
-
-Make your button style smoothly animate when its state changes by chaining `.animate()` with your state-specific styles. You can use `AnimationConfig.spring` to get natural, spring-based motion.
-
-```dart
-final style = ButtonStyler()
-  .padding(.horizontal(16))
-  .padding(.vertical(10))
-  .color(Colors.blue)
-  .borderRadius(.all(const Radius.circular(8)))
-  .animate(AnimationConfig.spring(300.ms)) // [!code ++]
-  .onHovered(.color(Colors.blue.shade700))
-  .onPressed(.scale(0.95));
-```
-
-This example animates both the color on hover and the scale on press, creating a smooth interactive experience for your users. 
-
-> **Note:** Animation support is built using the powerful Mix API. To dive deeper into animated styles, visit the [Mix Repository](https://github.com/btwld/mix) for more capabilities and advanced examples with keyframes and Phase Animations.
-
-### Style Composition and Reuse
-
-Create base styles and extend them to build variants:
-
-```dart
-final baseButtonStyle = ButtonStyler()
-    .padding(.horizontal(16))
-    .padding(.vertical(10))
-    .borderRadius(.all(const Radius.circular(8)));
-
-final primaryButton = baseButtonStyle
-    .color(Colors.blue)
-    .label(TextStyler().color(Colors.white));
-
-final destructiveButton = baseButtonStyle
-    .color(Colors.red)
-    .label(TextStyler().color(Colors.white));
-```
+A styler defines appearance; the widget supplies behavior. Start with the
+[styling guide](/guides/styling-components) for states, animation, and reuse.
+The [Styler API](/styler-api) documents the canonical methods and shorthand
+rules. Individual [component pages](/components/button) cover their own slots
+and interaction contracts.
 
 ## Theming with Fortal
 
-Remix ships no theme of its own. If you want a polished, Radix Themes-inspired
-starting point instead of authoring every style yourself, initialize the
-application-owned Fortal preset:
+The [Fortal preset](/fortal) provides a Radix Themes-inspired starting point.
+The CLI installs its tokens, scope, and recipes into your application. You own
+those files; the preset does not add a `remix_fortal` dependency to your app.
 
-```bash
-flutter pub add dev:remix_cli
-dart run remix_cli:remix init --prefix Fortal --preset fortal
-dart run remix_cli:remix add button
-```
+Use the [tutorial's Fortal step](/tutorials/settings-screen#try-fortal-separately)
+to compare it with the default preset. Keep the two presets in separate
+initialized projects: their token systems and component constructors differ.
 
-It copies `FortalScope`, the token system, `fortal*Style()` recipes, and the
-components you add into your application.
+## Host capabilities
 
-See the [Fortal overview](/fortal) to get started.
+Remix composes inside your Flutter host. It does not require a `MaterialApp`,
+`Scaffold`, or Remix-owned application wrapper.
 
-## Host Capabilities
+| UI | Caller provides |
+| --- | --- |
+| Ordinary `Remix*` widgets | The inherited Flutter services used by the widget subtree |
+| Widgets styled by the [Fortal preset](/fortal) | The preset's token scope, plus the widget's normal Flutter services |
+| Menu, select, popover, and tooltip | An `Overlay`; use `Overlay.wrap` when no `Navigator` is needed |
+| `showRemixDialog` and `showRemixAlertDialog` | A caller-owned `Navigator` above the invoking context |
 
-Remix composes inside your existing Flutter host. It does not require a
-`MaterialApp`, `Scaffold`, or Remix-owned application wrapper.
-
-| UI | Caller provides | Compatible hosts |
-|----|-----------------|------------------|
-| Ordinary `Remix*` widgets | The inherited Flutter services used by the widget subtree | Material, Cupertino, Widgets, and router-based hosts |
-| Widgets styled by the [Fortal preset](/fortal) | The preset's token scope, in addition to the widget's normal Flutter services | Any Flutter host |
-| Menu, select, popover, and tooltip | An `Overlay` | Any host exposing an overlay; use `Overlay.wrap` when no `Navigator` is needed |
-| `showRemixDialog` and `showRemixAlertDialog` | A `Navigator` | Any host with a caller-owned navigator |
-
-For a portal-based interface without routing, provide only an overlay:
+For a portal-based interface without routing, provide an overlay:
 
 ```dart
 import 'package:flutter/widgets.dart';
@@ -220,67 +85,16 @@ Widget buildPortalHost() {
 }
 ```
 
-A `MaterialApp`, `CupertinoApp`, `WidgetsApp`, or router with routing configured
-commonly provides a `Navigator` and its overlay already. Dialog helpers push
-routes, so their calling context must be below that caller-owned `Navigator`.
-
-## Components
-
-Remix provides a comprehensive set of production-ready components:
-
-### Interactive Elements
-- **Button** - Clickable actions with full styling control
-- **IconButton** - Icon-based actions
-- **Switch** - Toggle controls
-- **Toggle** - Two-state on/off buttons
-- **Checkbox** - Multiple selection
-- **Radio** - Single selection from a group
-- **Slider** - Continuous value selection
-
-### Input Components
-- **TextField** - Text input with validation support
-- **Select** - Dropdown selection with keyboard navigation
-
-### Display Components
-- **Avatar** - User avatars and images
-- **Badge** - Status indicators and labels
-- **Card** - Content containers
-- **Divider** - Visual separators
-- **Progress** - Progress indicators
-- **Spinner** - Loading states
-
-### Layout & Navigation
-- **Tabs** - Tabbed navigation
-- **Accordion** - Collapsible content sections
-- **Disclosure** - A standalone trigger and inline expandable panel
-- **Menu** - Context menus and dropdowns
-
-### Overlays
-- **Dialog** - Modal dialogs
-- **Tooltip** - Contextual help
-- **Callout** - Highlighted information blocks
-
-## Who is Remix for?
-
-Remix is ideal for:
-- **Teams building custom design systems** who need full control over component appearance
-- **Developers requiring complex state management** with multiple variants and interaction states
-- **Applications needing consistent styling** across dozens of components
+Material, Cupertino, Widgets, and router-based hosts can all supply these
+services. The [settings-screen tutorial](/tutorials/settings-screen) shows a
+complete host, including the scope placement used by its dialog.
 
 ## Examples
 
-Live examples:
+- [Fortal dashboard](https://conceptadev.github.io/remix/dashboard/): an application with layouts, data, and theme controls.
+- [Component catalog](https://conceptadev.github.io/remix/): components, variants, and interaction states.
+- [Download both tutorial projects](/assets/remix-cli-tutorial/sample-projects.zip): default and Fortal examples with source and behavior tests.
 
-- [Fortal dashboard](https://conceptadev.github.io/remix/dashboard/) — a polished product dashboard with responsive layouts, charts, data, and live theme controls.
-- [Component catalog](https://conceptadev.github.io/remix/) — the Widgetbook catalog for reviewing Remix and Fortal components, variants, and states.
-
-Check out `apps/dashboard`, `apps/demo`, and the per-package examples in
-`packages/remix/example` and `packages/remix_fortal/example` for complete working examples demonstrating:
-- Component usage patterns
-- Style composition techniques
-- Design system implementation
-- Advanced customization
-
----
-
-Built with ❤️ using [Mix](https://github.com/btwld/mix) and [Naked UI](https://github.com/btwld/naked_ui)
+The repository also contains `apps/dashboard`, `apps/demo`,
+`packages/remix/example`, and `packages/remix_fortal/example`. The last is an
+authoring-package example, not a dependency the CLI adds to consumer apps.

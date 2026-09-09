@@ -1,0 +1,80 @@
+---
+title: Getting started
+description: Install Remix from this checkout and render your first styled button
+---
+
+Remix can be used directly as a widget library. You do not need the CLI or a
+preset for this path. If you want editable component recipes instead, follow
+the [CLI tutorial](/tutorials/settings-screen).
+
+## Installation
+
+These docs describe the code in this repository, whose Remix package version
+is `1.0.0-beta.9`. Do not substitute a stable `1.0.0` dependency: the repository
+version is a prerelease, not evidence that a stable release exists.
+
+For this checkout, use Flutter 3.44.0 and its bundled Dart 3.12.0, matching
+`.fvmrc`. The runtime package's consumer floor is Flutter 3.41 / Dart 3.11;
+the CLI and this repository's development workflow use the newer toolchain.
+
+Create an application, then add the local runtime package. Replace
+`/path/to/remix` with the absolute path to your checkout:
+
+```bash
+flutter create remix_example
+cd remix_example
+flutter pub add "remix:{path: /path/to/remix/packages/remix}"
+```
+
+For a registry installation, check the available versions on
+[pub.dev](https://pub.dev/packages/remix/versions) and select docs matching that
+release. A plain `flutter pub add remix` does not select an unpublished checkout.
+
+## Your first component
+
+Replace `lib/main.dart` with this example:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+void main() => runApp(const ExampleApp());
+
+class ExampleApp extends StatelessWidget {
+  const ExampleApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final button = ButtonStyler()
+        .padding(.horizontal(16))
+        .padding(.vertical(10))
+        .color(Colors.blue)
+        .borderRadius(.circular(8))
+        .label(.color(Colors.white));
+
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: button(
+            label: 'Click me',
+            onPressed: () => debugPrint('Button pressed'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+Run `flutter run`. You should see a blue button with a white label, and pressing
+it should print `Button pressed` in the debug console.
+
+`ButtonStyler` holds the appearance. Calling it produces a `RemixButton`;
+your callback supplies the application action. `MaterialApp` and `Scaffold`
+are convenient hosts here, not requirements imposed by Remix.
+
+## Next steps
+
+- [Style states and reuse a base style](/guides/styling-components).
+- [Check host requirements](/#host-capabilities) before adding menus or dialogs.
+- [Build a settings screen with the CLI](/tutorials/settings-screen) to learn the application-owned recipe workflow.
