@@ -104,10 +104,8 @@ class AgentMessage extends StatelessWidget {
           styleSpec: spec.row,
           children: [
             if (!_alignEnd && avatarSlot != null) avatarSlot,
-            Flexible(
-              fit: FlexFit.loose,
+            Expanded(
               child: Align(
-                widthFactor: 1,
                 alignment: _alignEnd
                     ? AlignmentDirectional.centerEnd
                     : AlignmentDirectional.centerStart,

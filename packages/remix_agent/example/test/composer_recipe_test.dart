@@ -16,10 +16,11 @@ const _dark = UiThemeData.dark();
 
 /// A standalone installed control for comparing the send button's dimensions.
 /// The glyph is incidental to the geometry assertion.
-const _referenceIconButton = UiIconButton(
+final _referenceIconButton = UiIconButton(
   icon: IconData(0x2192),
   semanticLabel: 'Reference',
   size: UiIconButtonSize.small,
+  style: IconButtonStyler().size(48, 48),
 );
 
 Iterable<Color> _decorationColors(WidgetTester tester, Finder root) sync* {

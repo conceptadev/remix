@@ -9,6 +9,50 @@ import 'package:remix_agent/remix_agent.dart';
 import '../helpers/pump.dart';
 
 void main() {
+  for (final direction in TextDirection.values) {
+    testWidgets('message roles align to opposite edges in $direction', (
+      tester,
+    ) async {
+      await pumpAgent(
+        tester,
+        Directionality(
+          textDirection: direction,
+          child: SizedBox(
+            width: 500,
+            child: AgentMessageGroup(
+              children: [
+                AgentMessage(
+                  role: .user,
+                  child: SizedBox(
+                    key: ValueKey('user'),
+                    width: 100,
+                    height: 20,
+                  ),
+                ),
+                AgentMessage(
+                  role: .assistant,
+                  child: SizedBox(
+                    key: ValueKey('assistant'),
+                    width: 100,
+                    height: 20,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      final user = tester.getRect(find.byKey(const ValueKey('user')));
+      final assistant = tester.getRect(find.byKey(const ValueKey('assistant')));
+      expect(user.width, 100);
+      expect(assistant.width, 100);
+      expect(
+        user.left - assistant.left,
+        direction == TextDirection.ltr ? 400 : -400,
+      );
+    });
+  }
+
   testWidgets('header and footer remain outside the message card', (
     tester,
   ) async {

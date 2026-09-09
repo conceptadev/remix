@@ -24,7 +24,7 @@ final catalogEntries = <CatalogEntry>[
     id: 'run',
     title: 'A full turn',
     lede:
-        'Every surface in one transcript: plan, activity, permission, execution, answer, then the composer.',
+        'A mock run: allow or deny checks, finish or stop the run, then submit another message.',
     builder: (_) => const ComposedRunDemo(),
   ),
   CatalogEntry(
@@ -65,8 +65,7 @@ final catalogEntries = <CatalogEntry>[
   CatalogEntry(
     id: 'plan',
     title: 'Plan',
-    lede:
-        'Pending, in progress, completed, cancelled — plus a completion count.',
+    lede: 'Advance through three tasks, then replay the plan.',
     builder: (_) => const PlanDemo(),
   ),
   CatalogEntry(
@@ -96,6 +95,7 @@ class _AgentCatalogState extends State<AgentCatalog> {
   final _keys = {for (final entry in catalogEntries) entry.id: GlobalKey()};
   var _active = catalogEntries.first.id;
   late final ScrollController _scroll;
+  var _jumpInProgress = 0;
 
   @override
   void initState() {
@@ -112,6 +112,7 @@ class _AgentCatalogState extends State<AgentCatalog> {
   }
 
   void _onScroll() {
+    if (_jumpInProgress > 0) return;
     CatalogEntry? current;
     for (final entry in catalogEntries) {
       final box =
@@ -129,11 +130,18 @@ class _AgentCatalogState extends State<AgentCatalog> {
     final context = _keys[id]?.currentContext;
     if (context == null) return;
     setState(() => _active = id);
-    await Scrollable.ensureVisible(
-      context,
-      alignment: 0.04,
-      duration: const Duration(milliseconds: 220),
-    );
+    _jumpInProgress++;
+    try {
+      await Scrollable.ensureVisible(
+        context,
+        alignment: 0.04,
+        duration: MediaQuery.disableAnimationsOf(context)
+            ? Duration.zero
+            : const Duration(milliseconds: 220),
+      );
+    } finally {
+      _jumpInProgress--;
+    }
   }
 
   @override
@@ -279,8 +287,10 @@ class _TopBar extends StatelessWidget {
                     'Remix Agent',
                     style: theme.body.copyWith(fontWeight: FontWeight.w600),
                   ),
-                  const SizedBox(width: 12),
-                  Text('review catalog', style: theme.meta),
+                  if (MediaQuery.sizeOf(context).width >= 480) ...[
+                    const SizedBox(width: 12),
+                    Text('review catalog', style: theme.meta),
+                  ],
                 ],
               ),
             ),
@@ -309,7 +319,7 @@ class _TopBar extends StatelessWidget {
   }
 }
 
-class _Rail extends StatelessWidget {
+class _Rail extends StatefulWidget {
   const _Rail({
     required this.active,
     required this.onSelect,
@@ -321,18 +331,43 @@ class _Rail extends StatelessWidget {
   final bool vertical;
 
   @override
+  State<_Rail> createState() => _RailState();
+}
+
+class _RailState extends State<_Rail> {
+  final _keys = {for (final entry in catalogEntries) entry.id: GlobalKey()};
+
+  @override
+  void didUpdateWidget(_Rail oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.active != widget.active ||
+        oldWidget.vertical != widget.vertical) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final target = _keys[widget.active]?.currentContext;
+        if (target == null) return;
+        // Reveal only within the rail; do not move the page's content scroll.
+        Scrollable.of(
+          target,
+        ).position.ensureVisible(target.findRenderObject()!, alignment: 0.5);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = HostTheme.of(context);
     final items = [
       for (final entry in catalogEntries)
         _RailItem(
+          key: _keys[entry.id],
           label: entry.title,
-          selected: entry.id == active,
-          onTap: () => onSelect(entry.id),
+          selected: entry.id == widget.active,
+          onTap: () => widget.onSelect(entry.id),
         ),
     ];
 
-    if (!vertical) {
+    if (!widget.vertical) {
       return ColoredBox(
         color: theme.rail,
         child: SingleChildScrollView(
@@ -359,6 +394,7 @@ class _Rail extends StatelessWidget {
 
 class _RailItem extends StatelessWidget {
   const _RailItem({
+    super.key,
     required this.label,
     required this.selected,
     required this.onTap,

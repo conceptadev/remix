@@ -1,6 +1,7 @@
 library;
 
 // remix_cli:exports:start
+export 'components/button.dart';
 export 'components/card.dart';
 export 'components/icon_button.dart';
 export 'components/textfield.dart';

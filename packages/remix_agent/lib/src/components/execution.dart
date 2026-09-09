@@ -193,9 +193,15 @@ class _AgentExecutionState extends State<AgentExecution> {
               styleSpec: spec.header,
               children: [
                 _toolIcon(spec),
-                StyledText(widget.tool, styleSpec: spec.tool),
                 Expanded(
-                  child: StyledText(widget.title, styleSpec: spec.title),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      StyledText(widget.title, styleSpec: spec.title),
+                      StyledText(widget.tool, styleSpec: spec.tool),
+                    ],
+                  ),
                 ),
                 if (widget.meta != null)
                   StyledText(widget.meta!, styleSpec: spec.meta),

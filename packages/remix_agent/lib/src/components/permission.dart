@@ -189,6 +189,22 @@ class _AgentPermissionState extends State<AgentPermission> {
         ),
       );
 
+  // Horizontal by default; callers may stack actions without losing the
+  // action slot's box, modifiers, or nested style resolution.
+  StyleSpec<FlexBoxSpec> _actionsStyle(AgentPermissionSpec spec) {
+    final actions = spec.actions.spec;
+    final flex = actions.flex ?? const StyleSpec(spec: FlexSpec());
+    return spec.actions.copyWith(
+      spec: actions.copyWith(
+        flex: flex.copyWith(
+          spec: flex.spec.copyWith(
+            direction: flex.spec.direction ?? Axis.horizontal,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AgentStyleBuilder<AgentPermissionSpec>(
@@ -263,8 +279,8 @@ class _AgentPermissionState extends State<AgentPermission> {
                     ),
                   ),
                 if (widget.status == AgentPermissionStatus.pending)
-                  RowBox(
-                    styleSpec: spec.actions,
+                  FlexBox(
+                    styleSpec: _actionsStyle(spec),
                     children: [
                       RemixButton(
                         key: const ValueKey('agent-permission-allow-once'),

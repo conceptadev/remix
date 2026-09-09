@@ -46,15 +46,16 @@ class UiAgentComposerRecipe {
 
 /// This application's Composer recipe.
 ///
-/// It adds only Agent-specific geometry — the toolbar row, the card inset, and
-/// the field's missing second box — and takes everything else from the
+/// It adds application geometry — 48px action targets, toolbar, card inset,
+/// and the field's missing second box — and takes everything else from the
 /// installed [uiCardStyle], [uiTextAreaStyle], and [uiIconButtonStyle]
 /// recipes in `lib/ui/components/`. Editing one of those files changes this
 /// composer with it, which is the whole point of installing them.
 ///
 /// It is the one demo wired this way. The other seven surfaces still use the
-/// local review-only stylers in `demos.dart`, which is the intermediate state
-/// the package's ADR describes: prove one surface before converting eight.
+/// local structural stylers in `demos.dart`; their buttons reuse installed
+/// recipes. The package's ADR records this intermediate state: prove one
+/// complete surface before converting eight.
 ///
 /// Each parameter is merged **last** into its own styler, so a call site can
 /// override any one surface without forking the bundle:
@@ -74,15 +75,17 @@ UiAgentComposerRecipe uiAgentComposerRecipe({
   style: _toolbarStyle().merge(style),
   surfaceStyle: uiCardStyle(style: _surfaceStyle().merge(surfaceStyle)),
   fieldStyle: uiTextAreaStyle(style: _fieldStyle().merge(fieldStyle)),
-  // Small, because the toolbar is a strip under the field rather than a row of
-  // primary page actions.
-  submitStyle: uiIconButtonStyle(size: .small, style: submitStyle),
+  // Preserve the installed recipe and add the catalog's touch-target geometry.
+  submitStyle: uiIconButtonStyle(
+    size: .small,
+    style: IconButtonStyler().size(48, 48).merge(submitStyle),
+  ),
   // `destructive` is the vocabulary's interrupt colour, and stop interrupts a
   // run. Reusing it keeps the composer inside the fifteen theme tokens.
   stopStyle: uiIconButtonStyle(
     variant: .destructive,
     size: .small,
-    style: stopStyle,
+    style: IconButtonStyler().size(48, 48).merge(stopStyle),
   ),
 );
 

@@ -17,8 +17,13 @@ pixels and a single-column narrow layout below that breakpoint.
 
 The hero is a full turn. The rail jumps to Composer, Message, Transcript,
 Permission, Execution, Plan, Activity, and Answer. Each section is a live
-control, not a screenshot. The composed hero deliberately disables transcript
-auto-follow so its fixed review frame remains stable.
+control, not a screenshot. The composed run uses the page scroll so every
+permission decision stays visible. Allow or deny the mock command, finish or stop it, and submit a new
+message to replay. It never invokes a terminal or model.
+
+The registry-installed Button recipe also supplies catalog and permission
+actions. Composer controls add 48px touch geometry through the recipe override
+slots; the installed source remains unchanged.
 
 The catalog recipes pass Remix child stylers separately from structural Agent
 stylers and rely on Agent's built-in Lucide glyphs. Top-bar and rail actions are

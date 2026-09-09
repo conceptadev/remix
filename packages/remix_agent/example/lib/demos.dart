@@ -1,14 +1,18 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_agent/remix_agent.dart';
 
 import 'agent_recipes.dart';
 import 'host.dart';
+import 'ui/ui.dart';
 
 /// Example-only light/dark recipes. They are deliberately not exported by the
 /// headless package.
 final class _AgentDemoStyles {
-  _AgentDemoStyles(this.theme);
+  _AgentDemoStyles(this.theme, {required this.narrow});
+
+  final bool narrow;
 
   final HostTheme theme;
 
@@ -23,22 +27,24 @@ final class _AgentDemoStyles {
       .borderRadius(.circular(12))
       .padding(.all(12));
 
-  ButtonStyler get button => ButtonStyler()
-      .color(theme.live)
-      .padding(.symmetric(horizontal: 12, vertical: 15))
-      .borderRadius(.circular(8))
-      .label(TextStyler().color(const Color(0xFFFFFFFF)).fontSize(13));
+  ButtonStyler get button => uiButtonStyle(
+    style: ButtonStyler().minHeight(48).padding(.horizontal(12)),
+  );
 
-  IconButtonStyler get utilityIconButton => IconButtonStyler()
-      .size(48, 48)
-      .color(const Color(0x00000000))
-      .borderRadius(.circular(8))
-      .iconColor(ink.withValues(alpha: 0.62))
-      .iconSize(14)
-      .onHovered(
-        IconButtonStyler().color(ink.withValues(alpha: 0.06)).iconColor(ink),
-      )
-      .onPressed(IconButtonStyler().color(ink.withValues(alpha: 0.10)));
+  ButtonStyler get quietButton => uiButtonStyle(
+    variant: .outline,
+    style: ButtonStyler().minHeight(48).padding(.horizontal(12)),
+  );
+
+  ButtonStyler get ghostButton => uiButtonStyle(
+    variant: .ghost,
+    style: ButtonStyler().minHeight(48).padding(.horizontal(12)),
+  );
+
+  IconButtonStyler get utilityIconButton => uiIconButtonStyle(
+    variant: .ghost,
+    style: IconButtonStyler().size(48, 48),
+  );
 
   DataListStyler get dataList =>
       DataListStyler().rowSpacing(6).columnSpacing(12);
@@ -104,7 +110,11 @@ final class _AgentDemoStyles {
 
   AgentPermissionStyler get permission => AgentPermissionStyler(
     header: FlexBoxStyler().spacing(8),
-    actions: FlexBoxStyler().spacing(8).padding(.only(top: 10)),
+    actions: FlexBoxStyler()
+        .direction(narrow ? .vertical : .horizontal)
+        .crossAxisAlignment(narrow ? .stretch : .center)
+        .spacing(8)
+        .padding(.only(top: 10)),
     title: TextStyler().color(ink).fontWeight(FontWeight.w600),
     tool: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
     description: TextStyler().color(ink.withValues(alpha: 0.72)),
@@ -129,15 +139,17 @@ final class _AgentDemoStyles {
   );
 }
 
-_AgentDemoStyles _styles(BuildContext context) =>
-    _AgentDemoStyles(HostTheme.of(context));
+_AgentDemoStyles _styles(BuildContext context) => _AgentDemoStyles(
+  HostTheme.of(context),
+  narrow: MediaQuery.sizeOf(context).width < 600,
+);
 
 class CatalogAction extends StatelessWidget {
   const CatalogAction({
     super.key,
     required this.label,
     this.onPressed,
-    this.quiet = false,
+    this.quiet = true,
   });
   final String label;
   final VoidCallback? onPressed;
@@ -146,14 +158,14 @@ class CatalogAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final styles = _styles(context);
-    return RemixButton(
-      label: label,
-      onPressed: onPressed,
-      style: quiet
-          ? styles.button
-                .color(styles.ink.withValues(alpha: 0.14))
-                .labelColor(styles.ink)
-          : styles.button,
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: RemixButton(
+        label: label,
+        onPressed: onPressed,
+        enabled: onPressed != null,
+        style: quiet ? styles.quietButton : styles.button,
+      ),
     );
   }
 }
@@ -231,7 +243,7 @@ class MessageDemo extends StatelessWidget {
           header: const Text('Agent'),
           child: AgentMessageCollapsible(
             style: styles.collapsible,
-            toggleStyle: styles.button,
+            toggleStyle: styles.ghostButton,
             child: const Text(
               'I will inspect the checkout flow, map the payment path, verify the shared cart model, and pause before running focused checks. '
               'This longer message demonstrates explicit opt-in clipping.',
@@ -250,7 +262,15 @@ class TranscriptDemo extends StatefulWidget {
 }
 
 class _TranscriptDemoState extends State<TranscriptDemo> {
+  final _scroll = ScrollController();
   var lines = 10;
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
   var following = true;
   @override
   Widget build(BuildContext context) => Column(
@@ -259,11 +279,17 @@ class _TranscriptDemoState extends State<TranscriptDemo> {
       Text(following ? 'Following the live edge' : 'Reading history'),
       SizedBox(
         height: 180,
-        child: AgentTranscript.builder(
-          style: _styles(context).transcript,
-          itemCount: lines,
-          itemBuilder: (_, i) => Text('Line ${i + 1} of the growing log.'),
-          onFollowChanged: (value) => setState(() => following = value),
+        child: RawScrollbar(
+          controller: _scroll,
+          thumbVisibility: true,
+          thumbColor: HostTheme.of(context).ink.withValues(alpha: 0.45),
+          child: AgentTranscript.builder(
+            controller: _scroll,
+            style: _styles(context).transcript,
+            itemCount: lines,
+            itemBuilder: (_, i) => Text('Line ${i + 1} of the growing log.'),
+            onFollowChanged: (value) => setState(() => following = value),
+          ),
         ),
       ),
       CatalogAction(
@@ -295,11 +321,13 @@ class _PermissionDemoState extends State<PermissionDemo> {
           detailsStyle: styles.disclosure,
           parametersStyle: styles.dataList,
           allowOnceStyle: styles.button,
-          alwaysAllowStyle: styles.button,
-          denyStyle: styles.button,
+          alwaysAllowStyle: styles.quietButton,
+          denyStyle: styles.ghostButton,
           tool: 'terminal.run',
           status: status,
-          description: 'Run the focused test suite.',
+          description:
+              'Run the focused test suite. Always allow applies only '
+              'to this command in this demo session.',
           parameters: const [
             RemixDataListItem(label: 'Command', value: 'flutter test'),
             RemixDataListItem(
@@ -325,6 +353,13 @@ class _PermissionDemoState extends State<PermissionDemo> {
   }
 }
 
+String _executionOutput(AgentExecutionStatus status) => switch (status) {
+  .running => 'Running the focused test suite…',
+  .success => '12 passed · 0 failed',
+  .error => 'Checkout validation failed. Review the output and retry.',
+  .cancelled => 'Checks stopped before completion.',
+};
+
 class ExecutionDemo extends StatefulWidget {
   const ExecutionDemo({super.key});
   @override
@@ -347,14 +382,18 @@ class _ExecutionDemoState extends State<ExecutionDemo> {
           tool: 'terminal.run',
           title: 'Focused checks',
           status: status,
-          onCopy: () {},
+          onCopy: () =>
+              Clipboard.setData(ClipboardData(text: _executionOutput(status))),
           onRetry: () => setState(() => status = AgentExecutionStatus.running),
-          child: const Text('12 passed · 0 failed'),
+          child: Text(_executionOutput(status)),
         ),
         CatalogAction(
-          label: 'Succeed',
-          onPressed: () =>
-              setState(() => status = AgentExecutionStatus.success),
+          label: status.isWorking ? 'Succeed' : 'Replay',
+          onPressed: () => setState(
+            () => status = status.isWorking
+                ? AgentExecutionStatus.success
+                : AgentExecutionStatus.running,
+          ),
         ),
       ],
     );
@@ -394,8 +433,8 @@ class _PlanDemoState extends State<PlanDemo> {
           items: items,
         ),
         CatalogAction(
-          label: 'Advance',
-          onPressed: () => setState(() => step = (step + 1).clamp(0, 3)),
+          label: step < 3 ? 'Advance' : 'Replay',
+          onPressed: () => setState(() => step = step < 3 ? step + 1 : 0),
         ),
       ],
     );
@@ -469,88 +508,198 @@ class _AnswerDemoState extends State<AnswerDemo> {
           retryStyle: styles.utilityIconButton,
           streamId: stream,
           status: status,
-          onCopy: () {},
+          onCopy: () => Clipboard.setData(
+            const ClipboardData(text: 'The checkout flow is ready for review.'),
+          ),
           onRetry: () => setState(() {
             stream++;
             status = AgentAnswerStatus.streaming;
           }),
-          sourcesContent: const Text('Checkout brief · payment notes'),
+          sourcesContent: status.isStreaming
+              ? null
+              : const Text('Checkout brief · payment notes'),
           child: Text(
             status.isStreaming
-                ? 'The checkout flow is…'
+                ? 'Writing the answer…'
                 : 'The checkout flow is ready for review.',
           ),
         ),
         CatalogAction(
           label: 'Complete',
-          onPressed: () => setState(() => status = AgentAnswerStatus.complete),
+          onPressed: status.isStreaming
+              ? () => setState(() => status = AgentAnswerStatus.complete)
+              : null,
         ),
       ],
     );
   }
 }
 
-class ComposedRunDemo extends StatelessWidget {
+enum _RunStage { permission, running, complete, denied, cancelled }
+
+/// A deterministic host-owned run; no model or terminal is contacted.
+class ComposedRunDemo extends StatefulWidget {
   const ComposedRunDemo({super.key});
+
+  @override
+  State<ComposedRunDemo> createState() => _ComposedRunDemoState();
+}
+
+class _ComposedRunDemoState extends State<ComposedRunDemo> {
+  var stage = _RunStage.permission;
+  var request = 0;
+  var prompt = 'Review the checkout flow.';
+
+  void _start(String value) => setState(() {
+    prompt = value;
+    request++;
+    stage = _RunStage.permission;
+  });
+
   @override
   Widget build(BuildContext context) {
     final styles = _styles(context);
-    return SizedBox(
-      height: 420,
-      child: Column(
-        children: [
-          Expanded(
-            child: AgentTranscript(
-              style: styles.transcript,
-              followOutput: false,
-              children: [
-                AgentMessage(
-                  role: AgentRole.user,
-                  style: styles.message,
-                  surfaceStyle: styles.card,
-                  child: const Text('Review the checkout flow.'),
+    final working = stage == _RunStage.running;
+    final complete = stage == _RunStage.complete;
+    final stopped = stage == _RunStage.denied || stage == _RunStage.cancelled;
+    final output = _executionOutput(
+      complete
+          ? AgentExecutionStatus.success
+          : stopped
+          ? AgentExecutionStatus.cancelled
+          : AgentExecutionStatus.running,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AgentTranscript(
+          style: styles.transcript,
+          followOutput: false,
+          children: [
+            AgentMessage(
+              role: AgentRole.user,
+              style: styles.message,
+              surfaceStyle: styles.card,
+              child: Text(prompt),
+            ),
+            AgentPlan(
+              key: ValueKey('plan-$request'),
+              style: styles.plan,
+              disclosureStyle: styles.disclosure,
+              items: [
+                const AgentPlanItem(
+                  id: 'inspect',
+                  title: 'Inspect checkout',
+                  status: .completed,
                 ),
-                AgentPlan(
-                  style: styles.plan,
-                  disclosureStyle: styles.disclosure,
-                  items: const [
-                    AgentPlanItem(
-                      id: '1',
-                      title: 'Inspect checkout',
-                      status: AgentPlanItemStatus.inProgress,
-                    ),
-                  ],
-                ),
-                AgentPermission(
-                  style: styles.permission,
-                  surfaceStyle: styles.card,
-                  detailsStyle: styles.disclosure,
-                  parametersStyle: styles.dataList,
-                  allowOnceStyle: styles.button,
-                  alwaysAllowStyle: styles.button,
-                  denyStyle: styles.button,
-                  tool: 'terminal.run',
-                  parameters: const [
-                    RemixDataListItem(label: 'Command', value: 'flutter test'),
-                  ],
-                  onAllowOnce: () {},
-                  onDeny: () {},
-                ),
-                AgentAnswer(
-                  style: styles.answer,
-                  surfaceStyle: styles.card,
-                  sourcesStyle: styles.disclosure,
-                  copyStyle: styles.utilityIconButton,
-                  retryStyle: styles.utilityIconButton,
-                  status: AgentAnswerStatus.complete,
-                  child: const Text('Ready for review.'),
+                AgentPlanItem(
+                  id: 'checks',
+                  title: 'Run focused checks',
+                  status: complete
+                      ? .completed
+                      : stopped
+                      ? .cancelled
+                      : stage == _RunStage.permission
+                      ? .pending
+                      : .inProgress,
                 ),
               ],
             ),
+            AgentActivity(
+              key: ValueKey('activity-$request'),
+              style: styles.activity,
+              disclosureStyle: styles.disclosure,
+              status: complete || stopped ? .complete : .working,
+              items: [
+                const AgentActivityItem(
+                  id: 'read',
+                  title: 'Read the checkout flow',
+                  status: .complete,
+                ),
+                AgentActivityItem(
+                  id: 'checks',
+                  title: stage == _RunStage.permission
+                      ? 'Waiting for permission'
+                      : stopped
+                      ? 'Checks stopped'
+                      : complete
+                      ? 'Finished focused checks'
+                      : 'Running focused checks',
+                  status: complete || stopped ? .complete : .active,
+                ),
+              ],
+            ),
+            AgentPermission(
+              requestId: request,
+              style: styles.permission,
+              surfaceStyle: styles.card,
+              detailsStyle: styles.disclosure,
+              parametersStyle: styles.dataList,
+              allowOnceStyle: styles.button,
+              denyStyle: styles.ghostButton,
+              tool: 'terminal.run',
+              description:
+                  'Run the focused test suite. This demo never executes a command.',
+              status: stage == _RunStage.permission
+                  ? .pending
+                  : stage == _RunStage.denied
+                  ? .denied
+                  : working
+                  ? .running
+                  : .complete,
+              parameters: const [
+                RemixDataListItem(label: 'Command', value: 'flutter test'),
+              ],
+              onAllowOnce: () => setState(() => stage = _RunStage.running),
+              onDeny: () => setState(() => stage = _RunStage.denied),
+            ),
+            if (working || complete || stage == _RunStage.cancelled)
+              AgentExecution(
+                key: ValueKey('execution-$request'),
+                style: styles.execution,
+                surfaceStyle: styles.card,
+                disclosureStyle: styles.disclosure,
+                copyStyle: styles.utilityIconButton,
+                retryStyle: styles.utilityIconButton,
+                tool: 'terminal.run',
+                title: 'Focused checks',
+                status: complete
+                    ? .success
+                    : working
+                    ? .running
+                    : .cancelled,
+                onCopy: () => Clipboard.setData(ClipboardData(text: output)),
+                onRetry: () => _start(prompt),
+                child: Text(output),
+              ),
+            if (complete || stopped)
+              AgentAnswer(
+                style: styles.answer,
+                surfaceStyle: styles.card,
+                sourcesStyle: styles.disclosure,
+                status: .complete,
+                child: Text(
+                  complete
+                      ? 'All 12 checks passed. The checkout flow is ready for review.'
+                      : stage == _RunStage.denied
+                      ? 'Permission denied. No checks were run.'
+                      : 'Run stopped. Submit another message to try again.',
+                ),
+              ),
+          ],
+        ),
+        if (working)
+          CatalogAction(
+            label: 'Finish checks',
+            onPressed: () => setState(() => stage = _RunStage.complete),
           ),
-          _installedComposer(onSubmit: (_) {}),
-        ],
-      ),
+        const SizedBox(height: 16),
+        _installedComposer(
+          onSubmit: _start,
+          running: working,
+          onStop: () => setState(() => stage = _RunStage.cancelled),
+        ),
+      ],
     );
   }
 }

@@ -5,7 +5,7 @@
 /// ```
 ///
 /// Playground expects the full default registry; the Agent example expects
-/// only its Composer dependencies. Check expected items even when their files
+/// its Composer dependencies and the catalog Button. Check expected items even when their files
 /// are missing. The CLI owns config parsing, template rendering, and diffing.
 ///
 /// Application-owned source may be customized. Each deliberate edit belongs in
@@ -26,7 +26,13 @@ const _customized = <String, String>{
 /// Expected items per consumer; null means the entire default registry.
 const _consumers = <String, List<String>?>{
   'apps/playground': null,
-  'packages/remix_agent/example': ['theme', 'card', 'textfield', 'icon_button'],
+  'packages/remix_agent/example': [
+    'theme',
+    'card',
+    'textfield',
+    'icon_button',
+    'button',
+  ],
 };
 
 /// What `remix add --diff` prints when the installed source is up to date.

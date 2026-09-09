@@ -176,7 +176,8 @@ class _AgentActivityState extends State<AgentActivity> {
           triggerBuilder: (context, state, trigger) => Row(
             children: [
               Expanded(child: trigger!),
-              _indicator(context, spec, state.isExpanded),
+              if (!widget.isWorking)
+                _indicator(context, spec, state.isExpanded),
             ],
           ),
           trigger: StyledText(widget.title, styleSpec: spec.summaryTitle),

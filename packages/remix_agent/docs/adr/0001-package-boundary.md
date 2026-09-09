@@ -75,7 +75,7 @@ templates. `example/test/composer_recipe_test.dart` then proves:
 - `uiAgentComposerRecipe()` combines the toolbar style with four child
   stylers derived from installed recipes;
 - Agent's send button has the same dimensions as a standalone installed
-  IconButton and uses the expected theme color;
+  IconButton with the same 48px touch override and uses the expected theme color;
 - an instance override still beats the recipe;
 - field focus and button hover still resolve in the child controllers;
 - Enter, Shift+Enter, IME composition, and a controller swap still behave;
