@@ -1,3 +1,6 @@
+import 'dart:ui' as ui;
+
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -96,6 +99,63 @@ void main() {
     await tester.pump();
     expect(find.text('Show more'), findsOneWidget);
   });
+
+  testWidgets(
+    'collapsed content paints at a nonzero offset and stays clipped',
+    (tester) async {
+      const boundaryKey = ValueKey('message-paint');
+      await pumpAgent(
+        tester,
+        RepaintBoundary(
+          key: boundaryKey,
+          child: ColoredBox(
+            color: const Color(0xFFFFFFFF),
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 30, top: 40),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: SizedBox(
+                    width: 160,
+                    child: AgentMessageCollapsible(
+                      style: AgentMessageCollapsibleStyler(collapsedHeight: 20),
+                      child: const SizedBox(
+                        height: 100,
+                        child: ColoredBox(color: Color(0xFFFF0000)),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final boundary = tester.renderObject<RenderRepaintBoundary>(
+        find.byKey(boundaryKey),
+      );
+      await tester.runAsync(() async {
+        final image = await boundary.toImage();
+        try {
+          final bytes = (await image.toByteData(
+            format: ui.ImageByteFormat.rawRgba,
+          ))!;
+          List<int> pixel(int x, int y) {
+            final offset = (y * image.width + x) * 4;
+            return bytes.buffer.asUint8List(offset, 4).toList();
+          }
+
+          expect(pixel(35, 45), [255, 0, 0, 255]);
+          expect(pixel(35, 130), [255, 255, 255, 255]);
+        } finally {
+          image.dispose();
+        }
+      });
+    },
+  );
 
   testWidgets('collapsed copy stays readable to assistive technology', (
     tester,

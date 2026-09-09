@@ -333,7 +333,13 @@ class _RenderOverflowClip extends RenderProxyBox {
       super.paint(context, offset);
       return;
     }
-    context.pushClipRect(needsCompositing, offset, offset & size, super.paint);
+    // pushClipRect applies the paint offset to this local rectangle.
+    context.pushClipRect(
+      needsCompositing,
+      offset,
+      Offset.zero & size,
+      super.paint,
+    );
   }
 }
 
