@@ -311,7 +311,7 @@ String _recipePath(String id) {
     'text_field' || 'text_area' => 'textfield',
     _ => id,
   };
-  return 'lib/src/recipes/$recipeName.dart';
+  return 'lib/src/components/$recipeName.dart';
 }
 
 String _otherDefaults(Map<String, Object?> family, Map<String, Object?> enums) {

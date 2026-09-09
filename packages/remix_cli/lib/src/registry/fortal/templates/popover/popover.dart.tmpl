@@ -1,0 +1,46 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'popover.g.dart';
+
+/// {{typePrefix}} popover size presets matching Radix Themes 3.3.0.
+enum {{typePrefix}}PopoverSize { size1, size2, size3, size4 }
+
+/// {{typePrefix}}-themed preset for [RemixPopover].
+///
+/// The generated [{{typePrefix}}Popover] defaults to [{{typePrefix}}PopoverSize.size2], a
+/// 480-pixel maximum width, and no arrow.
+@MixWidget(target: RemixPopover.new)
+PopoverStyler {{valuePrefix}}PopoverStyle({
+  {{typePrefix}}PopoverSize size = {{typePrefix}}PopoverSize.size2,
+  PopoverStyler style = const PopoverStyler.create(),
+}) {
+  final radius = switch (size) {
+    {{typePrefix}}PopoverSize.size1 ||
+    {{typePrefix}}PopoverSize.size2 => {{typePrefix}}Tokens.radius4(),
+    {{typePrefix}}PopoverSize.size3 ||
+    {{typePrefix}}PopoverSize.size4 => {{typePrefix}}Tokens.radius5(),
+  };
+  final padding = switch (size) {
+    {{typePrefix}}PopoverSize.size1 => {{typePrefix}}Tokens.space3(),
+    {{typePrefix}}PopoverSize.size2 => {{typePrefix}}Tokens.space4(),
+    {{typePrefix}}PopoverSize.size3 => {{typePrefix}}Tokens.space5(),
+    {{typePrefix}}PopoverSize.size4 => {{typePrefix}}Tokens.space6(),
+  };
+
+  return PopoverStyler()
+      .maxWidth(480)
+      .padding(.all(padding))
+      .borderRadius(.all(radius))
+      .color({{typePrefix}}Tokens.colorPanel())
+      .decoration(
+        BoxDecorationMix.create(boxShadow: {{typePrefix}}Tokens.shadow5.mix()),
+      )
+      .containerEffects(
+        RemixBoxEffectsMix.backdropBlur({{typePrefix}}Tokens.panelBlur()),
+      )
+      .merge(style);
+}

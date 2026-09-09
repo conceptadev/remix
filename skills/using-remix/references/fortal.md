@@ -1,7 +1,7 @@
 # Fortal Theme Reference
 
-Complete reference for Fortal — the Radix-inspired design system that ships as a
-separate package on top of Remix: preset widgets, variants, sizes, and tokens.
+Complete reference for Fortal — the Radix-inspired, application-owned Remix
+preset: widgets, variants, sizes, and tokens.
 
 ## Table of Contents
 
@@ -21,22 +21,26 @@ Place `FortalScope` above every subtree that renders Fortal styles. Put it above
 
 ## Install and import
 
-Everything on this page lives in `remix_fortal`, not `remix`:
+Initialize the Fortal registry and add the items the application uses:
 
 ```bash
-flutter pub add remix_fortal
+flutter pub add dev:remix_cli
+dart run remix_cli:remix init --prefix Fortal --preset fortal
+dart run remix_cli:remix add button
 ```
 
 ```dart
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 ```
 
-`remix_fortal` does not re-export `remix`. Import both when a file also uses base
-`Remix*` widgets or `*Styler` types.
+The examples use the `Fortal` prefix; use the prefix already recorded in
+`remix.yaml` for an initialized project. Add every recipe before using it. The
+owned barrel does not re-export `remix`, so import `package:remix/remix.dart`
+when a file also uses base `Remix*` widgets or `*Styler` types.
 
-Charts also use `mix_chart` data models. Add and import `mix_chart` directly;
-Fortal provides the themed recipes and generated wrappers without re-exporting
-the chart package.
+`dart run remix_cli:remix add chart` installs the chart recipe and its
+`mix_chart` dependency. Import `mix_chart` directly for its data models because
+the owned barrel does not re-export it.
 
 ## Presets and recipes
 
@@ -132,10 +136,11 @@ Notes:
 - There is no `FortalTabs` — use `RemixTabs` as the behavioral root.
 - `FortalIconButton` forwards the complete `RemixIconButton` behavior surface,
   including builders, long press, focus, semantics, and cursor options.
-- Generated `FortalButton` does not accept a style override. For Fortal visuals
-  with custom one-icon placement, use
-  `RemixButton(style: fortalButtonStyle(...).iconAlignment(.end), ...)`.
-  With two icons, leading → label → trailing order remains stable.
+- Every installed preset widget accepts its component styler through `style`,
+  merged after the recipe. For custom one-icon placement, use
+  `FortalButton.solid(style: ButtonStyler().iconAlignment(.end), ...)` or
+  compose a `RemixButton` from `fortalButtonStyle(...)`. With two icons,
+  leading → label → trailing order remains stable.
 - `FortalSelect` and `FortalMenu` both include matching default item styles.
   Set an individual item's `style` only when that row needs an override.
 

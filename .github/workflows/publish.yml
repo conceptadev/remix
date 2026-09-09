@@ -1,16 +1,13 @@
 name: Publish to pub.dev
 
-# Four tag-gated jobs rather than one job listing all packages: the reusable
-# publish workflow turns `packages:` into a parallel matrix with no ordering
-# knob, and `remix_fortal` depends on hosted `remix` and `remix_ui_icons`
-# versions, so a single job would race.
+# Three tag-gated jobs keep each package aligned with its configured pub.dev
+# automated-publishing tag pattern.
 #
-# THE FOUR PACKAGES PUBLISH FROM DIFFERENT TAG PATTERNS. This is not a style
+# THE THREE PACKAGES PUBLISH FROM DIFFERENT TAG PATTERNS. This is not a style
 # choice — it is each package's "Automated publishing" tag pattern on pub.dev,
 # and the OIDC token is rejected if the pushed tag does not match:
 #
 #   remix          ->  v<version>               (bare, e.g. v1.0.0-beta.5)
-#   remix_fortal   ->  remix_fortal-v<version>
 #   remix_ui_icons ->  remix_ui_icons-v<version>
 #   remix_cli      ->  remix_cli-v<version>
 #
@@ -25,45 +22,42 @@ name: Publish to pub.dev
 # publishes, `remix-v<version>` is what melos reads. Only the first triggers
 # this workflow.
 #
-# The split does not order the two publishes: each tag push starts its own run,
-# so `git push --tags` still races — and it can also fire this workflow from
-# whatever stale `v*` tags a clone happens to hold. Push the tags one at a
-# time, remix first, and wait for pub.dev to serve it before pushing the
-# remix_fortal tag. pub.dev does not verify that a dependency version exists,
-# so the wrong order ships an uninstallable remix_fortal rather than failing
-# the job.
-#
-# remix_cli is versioned independently of the remix/remix_fortal pair, so its
-# tag is pushed on its own schedule and orders against nothing. It depends on
-# no other package here — it ships a CLI and a registry of templates — so it
-# cannot race the jobs above.
+# remix_cli and remix_ui_icons are versioned independently from Remix.
+# The CLI consumer check requires its bundled Remix version to exist before
+# the CLI can publish. remix_fortal is not publishable; its
+# source remains in the repository as the Fortal preset's analyzed authoring
+# and parity surface.
 on:
   push:
     tags:
       - 'remix_cli-v[0-9]+.[0-9]+.[0-9]+*'
-      - 'remix_fortal-v[0-9]+.[0-9]+.[0-9]+*'
       - 'remix_ui_icons-v[0-9]+.[0-9]+.[0-9]+*'
       - 'v[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
+  verify-cli-consumers:
+    if: startsWith(github.ref, 'refs/tags/remix_cli-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          cache: true
+      - name: Resolve the workspace
+        run: flutter pub get
+      - name: Verify both presets with hosted Remix
+        run: dart run melos run open-code:release:check
+
   publish-remix:
-    # Bare `v*` only. `refs/tags/remix_fortal-v...` does not start with
-    # `refs/tags/v`, so the two conditions stay mutually exclusive.
+    # Bare `v*` only; package-prefixed tags do not start with `refs/tags/v`.
     if: startsWith(github.ref, 'refs/tags/v')
     uses: conceptadev/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
     with:
       packages_folder_path: "packages"
       packages: "remix"
-    permissions:
-      id-token: write
-      contents: read
-
-  publish-remix-fortal:
-    if: startsWith(github.ref, 'refs/tags/remix_fortal-v')
-    uses: conceptadev/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
-    with:
-      packages_folder_path: "packages"
-      packages: "remix_fortal"
     permissions:
       id-token: write
       contents: read
@@ -80,6 +74,7 @@ jobs:
 
   publish-remix-cli:
     if: startsWith(github.ref, 'refs/tags/remix_cli-v')
+    needs: verify-cli-consumers
     uses: conceptadev/dart-actions/.github/workflows/publish.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
     with:
       packages_folder_path: "packages"

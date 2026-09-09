@@ -2,16 +2,16 @@
 #
 # Intentionally minimal: every workspace package carries its own
 # `analysis_options.yaml`, and this file must not shadow them. It exists for
-# one reason: the two consumer fixtures below.
+# one reason: the consumer fixtures below.
 #
-# `open_code/fixture/` and `open_code/agent_fixture/` are standalone consumer
-# applications, not workspace members (see open_code/README.md). Each resolves
-# its dependencies inside the throwaway app that its checker assembles
-# (`tool/check_open_code.dart` and `tool/check_agent_consumer.dart`), so
-# neither has a `.dart_tool/package_config.json` here and their `package:`
-# imports cannot resolve in this checkout. Each pubspec makes a nested
-# analysis context, so a root-level `dart analyze` would descend into them and
-# report every import as missing.
+# The `open_code/*fixture/` directories are standalone consumer applications,
+# not workspace members (see open_code/README.md). Each resolves its
+# dependencies inside the throwaway app its checker assembles
+# (`tool/check_open_code.dart` and `tool/check_agent_consumer.dart`), so none
+# has a `.dart_tool/package_config.json` here and their `package:` imports
+# cannot resolve in this checkout. Their own pubspecs make them nested
+# analysis contexts, so a root-level `dart analyze` would descend into them
+# and report every import as missing.
 #
 # Excluding them does not weaken coverage: each checker runs `flutter analyze`
 # over that exact source in the assembled app, where its dependencies are real.
@@ -21,4 +21,5 @@
 analyzer:
   exclude:
     - open_code/fixture/**
+    - open_code/fortal_fixture/**
     - open_code/agent_fixture/**

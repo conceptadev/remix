@@ -1,4 +1,4 @@
-# Fortal
+# Fortal authoring package
 
 A Radix Themes-inspired preset theme and widget catalog for
 [Remix](https://pub.dev/packages/remix).
@@ -9,18 +9,23 @@ set of prebuilt styles based on
 [Radix Themes 3.3.0](https://www.radix-ui.com/themes), providing a polished,
 modern UI out of the box while remaining fully customizable.
 
-Fortal lives in its own package so that `remix` stays genuinely theme-free. If
-you are building your own design system on Remix, you pay nothing for a theme you
-never use — no token tables, no Radix color data, no parity contract.
+This workspace package is no longer released for consumers. It is the
+analyzer-checked source of truth for the application-owned `fortal` preset
+bundled with `remix_cli`, plus the target of Fortal's tests and Radix parity
+checks. Consumer applications copy the source into their own project instead
+of depending on `remix_fortal`.
 
 ## Installation
 
 ```bash
-flutter pub add remix_fortal
+flutter pub add dev:remix_cli
+dart run remix_cli:remix init --prefix Fortal --preset fortal
+dart run remix_cli:remix add button
 ```
 
-`remix_fortal` depends on `remix` and does not re-export it. Import both when you
-need base Remix widgets alongside Fortal ones.
+The `Fortal` prefix preserves the API names in this guide. Add each additional
+item when you use it, then import the generated `lib/ui/ui.dart` barrel from
+application code.
 
 ## Quick Start
 
@@ -30,7 +35,7 @@ constructor with `variant:` when the choice is dynamic:
 
 ```dart
 import 'package:flutter/widgets.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -66,7 +71,7 @@ own root text style below anything wrapping the app. There, put the scope in
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 final app = MaterialApp(
   builder: (context, child) => FortalScope(child: child!),
@@ -90,7 +95,7 @@ recipes directly when you need a custom Remix widget composition:
 ```dart
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
   .borderRadius(.all(const Radius.circular(8)))
@@ -100,22 +105,25 @@ final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
 
 ## Icons
 
-Fortal depends on and re-exports the complete 318-glyph Radix Icons 1.3.2
-catalog from `remix_ui_icons`. `FortalIcons` remains a compatibility alias for
-`RemixIcons`, so existing references continue to compile and Flutter release
-builds can subset the font to referenced glyphs:
+Install the optional application-owned icon aliases through the configured
+preset:
+
+```bash
+dart run remix_cli:remix add icons
+```
+
+That item adds `remix_ui_icons` and creates a small `FortalIcons` alias set you
+can edit as the application's vocabulary evolves:
 
 ```dart
 const Icon(FortalIcons.check)
 ```
 
-There is deliberately no runtime name-to-icon map on `RemixIcons` itself
-because dynamic lookup would keep the full catalog reachable. Pass
-`FortalIcons` constants to any widget that accepts `IconData`; Fortal controls
-otherwise use Remix's inline Radix-shaped vector defaults. The font is a
-declared `remix_ui_icons` package asset, so applications should measure their
-release artifact rather than assume that referencing no catalog constants
-removes the asset entirely.
+Import `package:remix_ui_icons/remix_ui_icons.dart` and use `RemixIcons`
+directly for the complete 318-glyph Radix Icons 1.3.2 catalog. There is
+deliberately no runtime name-to-icon map on `RemixIcons` itself because dynamic
+lookup would keep the full catalog reachable. Fortal controls otherwise use
+Remix's inline Radix-shaped vector defaults.
 
 Catalogs, galleries, and drift tests that must enumerate every glyph can import
 the opt-in index. An application that never imports it keeps full font
@@ -144,16 +152,17 @@ light-mode soft labels must meet WCAG AA.
 ## Charts
 
 Fortal includes themed line, bar, and pie chart recipes backed by
-[`mix_chart`](https://pub.dev/packages/mix_chart). Add `mix_chart` directly when
-constructing chart data; Fortal intentionally does not re-export dependencies.
+[`mix_chart`](https://pub.dev/packages/mix_chart). The chart item adds that
+dependency automatically; import it directly when constructing chart data
+because the application-owned barrel does not re-export it.
 
 ```bash
-flutter pub add mix_chart remix_fortal
+dart run remix_cli:remix add chart
 ```
 
 ```dart
 import 'package:mix_chart/mix_chart.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 final chart = FortalLineChart(
   semanticsLabel: 'Weekly revenue',
@@ -202,7 +211,7 @@ You can use these tokens directly in your own styles:
 
 ```dart
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 final style = ButtonStyler()
   .color(FortalTokens.accent9())
@@ -270,7 +279,7 @@ wrapper that calls the corresponding `Remix*` constructor with a `fortal*Style()
 recipe. Anything you can do with Remix, you can do with Fortal — and you can drop
 down to plain Remix stylers at any point.
 
-- [Remix on pub.dev](https://pub.dev/packages/remix)
+- [Remix CLI on pub.dev](https://pub.dev/packages/remix_cli)
 - [Documentation](https://docs.page/btwld/remix/fortal)
 - [GitHub](https://github.com/btwld/remix)
 

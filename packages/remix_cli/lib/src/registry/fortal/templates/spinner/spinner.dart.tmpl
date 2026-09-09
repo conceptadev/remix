@@ -1,0 +1,31 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'spinner.g.dart';
+
+/// {{typePrefix}} spinner size presets.
+enum {{typePrefix}}SpinnerSize { size1, size2, size3 }
+
+/// {{typePrefix}}-themed preset for [RemixSpinner] using the inherited foreground color.
+@MixWidget(target: RemixSpinner.new)
+SpinnerStyler {{valuePrefix}}SpinnerStyle({
+  {{typePrefix}}SpinnerSize size = .size2,
+  SpinnerStyler style = const SpinnerStyler.create(),
+}) {
+  return SpinnerStyler(
+    opacity: 0.65,
+    leafRadius: {{typePrefix}}Tokens.radius1(),
+    duration: const Duration(milliseconds: 800),
+  ).merge(_{{valuePrefix}}SpinnerSizeStyler(size)).merge(style);
+}
+
+SpinnerStyler _{{valuePrefix}}SpinnerSizeStyler({{typePrefix}}SpinnerSize size) {
+  return switch (size) {
+    .size1 => SpinnerStyler(size: {{typePrefix}}Tokens.space3()),
+    .size2 => SpinnerStyler(size: {{typePrefix}}Tokens.space4()),
+    .size3 => SpinnerStyler(size: {{typePrefix}}Tokens.spinnerSize3()),
+  };
+}

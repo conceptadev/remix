@@ -19,7 +19,7 @@ A modal dialog component for focused content and actions.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class DialogExample extends StatelessWidget {
   const DialogExample({super.key});
@@ -66,7 +66,7 @@ configuration is needed.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 Future<void> showDeleteDialog(BuildContext context) async {
   await showRemixAlertDialog<void>(
@@ -93,7 +93,7 @@ Future<void> showDeleteDialog(BuildContext context) async {
 
 ## Fortal widgets
 
-Remix includes a Fortal-themed widget for this component:
+The application-owned Fortal preset provides a themed widget for this component:
 
 `FortalDialog` defaults to `FortalDialogSize.size3`,
 `FortalDialogAlign.center`, fills the available width up to 600 logical pixels,
@@ -103,7 +103,7 @@ preserves safe viewport insets, and uses `modal: true`. Set
 <CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class FortalDialogExample extends StatelessWidget {
   const FortalDialogExample({super.key});
@@ -131,7 +131,7 @@ class FortalDialogExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalDialogStyle source code](https://github.com/btwld/remix/blob/main/packages/remix_fortal/lib/src/recipes/dialog.dart) for all available options.
+  See the [fortalDialogStyle source code](https://github.com/btwld/remix/blob/main/packages/remix_fortal/lib/src/components/dialog.dart) for all available options.
 </Info>
 
 ## Show function

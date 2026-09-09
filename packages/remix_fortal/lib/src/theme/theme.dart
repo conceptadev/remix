@@ -1,0 +1,14 @@
+// Internal entrypoint for the theme layer, imported by every component under
+// `src/components/`. The public entrypoint exports this barrel.
+
+export 'computed.dart';
+export 'control_styles.dart';
+export 'surface_frame.dart';
+export 'theme_data.dart' hide buildFortalScopeTokens;
+export 'theme_scope.dart';
+export 'tokens.dart';
+
+// `radix_colors.dart` deliberately stays out of this barrel because it exposes
+// bare color names such as `gray` and `red`. The public package barrel exports
+// it explicitly for compatibility; installed applications import it only from
+// `theme_data.dart`.

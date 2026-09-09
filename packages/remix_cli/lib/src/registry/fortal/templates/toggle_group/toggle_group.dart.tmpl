@@ -1,0 +1,121 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'toggle_group.g.dart';
+
+/// {{typePrefix}} toggle-group size presets.
+enum {{typePrefix}}ToggleGroupSize { size1, size2, size3 }
+
+/// {{typePrefix}} toggle-group color treatments.
+enum {{typePrefix}}ToggleGroupVariant { soft, surface }
+
+/// {{typePrefix}}-themed segmented-control preset for [RemixToggleGroup].
+@MixWidget(target: RemixToggleGroup.new)
+ToggleGroupStyler {{valuePrefix}}ToggleGroupStyle({
+  {{typePrefix}}ToggleGroupVariant variant = .soft,
+  {{typePrefix}}ToggleGroupSize size = .size2,
+  bool highContrast = false,
+  ToggleGroupStyler style = const ToggleGroupStyler.create(),
+}) {
+  final (
+    selectedColor,
+    selectedHoverColor,
+    selectedPressedColor,
+  ) = switch (variant) {
+    .soft => (
+      {{typePrefix}}Tokens.accent3(),
+      {{typePrefix}}Tokens.accent4(),
+      {{typePrefix}}Tokens.accent5(),
+    ),
+    .surface => (
+      {{typePrefix}}Tokens.accentSurface(),
+      {{typePrefix}}Tokens.accentA4(),
+      {{typePrefix}}Tokens.accentA5(),
+    ),
+  };
+  final selectedForeground = highContrast
+      ? {{typePrefix}}Tokens.accent12()
+      : {{typePrefix}}Tokens.accent11();
+
+  return ToggleGroupStyler(
+    container: FlexBoxStyler(
+      decoration: BoxDecorationMix(
+        border: BorderMix.all(
+          BorderSideMix(
+            color: {{typePrefix}}Tokens.gray7(),
+            width: {{typePrefix}}Tokens.borderWidth1(),
+          ),
+        ),
+        color: {{typePrefix}}Tokens.colorSurface(),
+      ),
+      clipBehavior: .hardEdge,
+      mainAxisSize: .min,
+      spacing: 0,
+    ),
+    item: .alignment(.center)
+        .labelColor({{typePrefix}}Tokens.gray11())
+        .iconColor({{typePrefix}}Tokens.gray11())
+        .labelFontWeight({{typePrefix}}Tokens.fontWeightMedium())
+        .onHovered(ToggleGroupItemStyler().color({{typePrefix}}Tokens.grayA3()))
+        .onPressed(ToggleGroupItemStyler().color({{typePrefix}}Tokens.grayA4()))
+        .onSelected(
+          ToggleGroupItemStyler()
+              .color(selectedColor)
+              .labelColor(selectedForeground)
+              .iconColor(selectedForeground)
+              .onHovered(ToggleGroupItemStyler().color(selectedHoverColor))
+              .onPressed(ToggleGroupItemStyler().color(selectedPressedColor)),
+        )
+        .onFocusVisible(ToggleGroupItemStyler().{{valuePrefix}}FocusRing())
+        .onDisabled(
+          ToggleGroupItemStyler()
+              .color({{typePrefix}}Tokens.grayA3())
+              .labelColor({{typePrefix}}Tokens.gray8())
+              .iconColor({{typePrefix}}Tokens.gray8()),
+        ),
+  ).merge(_{{valuePrefix}}ToggleGroupSizeStyler(size)).merge(style);
+}
+
+ToggleGroupStyler _{{valuePrefix}}ToggleGroupSizeStyler({{typePrefix}}ToggleGroupSize size) {
+  return switch (size) {
+    .size1 => ToggleGroupStyler(
+      container: FlexBoxStyler().borderRadius(.all({{typePrefix}}Tokens.radius2())),
+      item:
+          .container(
+                FlexBoxStyler()
+                    .padding(.horizontal({{typePrefix}}Tokens.space2()))
+                    .padding(.vertical({{typePrefix}}Tokens.space1()))
+                    .spacing({{typePrefix}}Tokens.toggleGap1()),
+              )
+              .label(.style({{typePrefix}}Tokens.text1.mix()))
+              .icon(.size({{typePrefix}}Tokens.space3())),
+    ),
+    .size2 => ToggleGroupStyler(
+      container: FlexBoxStyler().borderRadius(.all({{typePrefix}}Tokens.radius2())),
+      item:
+          .container(
+                FlexBoxStyler()
+                    .padding(.horizontal({{typePrefix}}Tokens.space3()))
+                    .padding(.vertical({{typePrefix}}Tokens.space2()))
+                    .spacing({{typePrefix}}Tokens.space1()),
+              )
+              .label(.style({{typePrefix}}Tokens.text2.mix()))
+              .icon(.size({{typePrefix}}Tokens.space4())),
+    ),
+    .size3 => ToggleGroupStyler(
+      container: FlexBoxStyler().borderRadius(.all({{typePrefix}}Tokens.radius3())),
+      item:
+          .container(
+                FlexBoxStyler()
+                    .padding(.horizontal({{typePrefix}}Tokens.space4()))
+                    .padding(.vertical({{typePrefix}}Tokens.space2()))
+                    .spacing({{typePrefix}}Tokens.toggleGap3()),
+              )
+              .label(.style({{typePrefix}}Tokens.text3.mix()))
+              .icon(.size({{typePrefix}}Tokens.spinnerSize3())),
+    ),
+  };
+}

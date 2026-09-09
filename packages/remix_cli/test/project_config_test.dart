@@ -12,7 +12,7 @@ void main() {
   setUp(() => root = createFlutterPackage());
   tearDown(() => root.deleteSync(recursive: true));
 
-  test('parses and encodes the exact schema', () {
+  test('reads schema 1 as default and encodes schema 2', () {
     final config = ProjectConfig.parse('''schema: 1
 prefix: Acme
 paths:
@@ -21,12 +21,27 @@ paths:
 
     expect(config.prefix, 'Acme');
     expect(config.valuePrefix, 'acme');
+    expect(config.preset, 'default');
     expect(config.uiPath, 'lib/design_system');
-    expect(config.encode(), '''schema: 1
+    expect(config.encode(), '''schema: 2
 prefix: Acme
+preset: default
 paths:
   ui: lib/design_system
 ''');
+  });
+
+  test('parses the exact schema 2 shape', () {
+    final config = ProjectConfig.parse('''schema: 2
+prefix: Acme
+preset: default
+paths:
+  ui: lib/design_system
+''', packageRoot: root);
+
+    expect(config.prefix, 'Acme');
+    expect(config.preset, 'default');
+    expect(config.uiPath, 'lib/design_system');
   });
 
   test('rejects invalid and reserved prefixes', () {
@@ -35,6 +50,7 @@ paths:
         () => ProjectConfig.create(
           packageRoot: root,
           prefix: prefix,
+          preset: 'default',
           uiPath: 'lib/ui',
         ),
         throwsFormatException,
@@ -45,6 +61,7 @@ paths:
 
   test('rejects unknown, missing, and unsupported config fields', () {
     for (final source in [
+      'schema: 3\nprefix: Ui\npreset: default\npaths:\n  ui: lib/ui\n',
       'schema: 2\nprefix: Ui\npaths:\n  ui: lib/ui\n',
       'schema: 1\npaths:\n  ui: lib/ui\n',
       'schema: 1\nprefix: Ui\npaths:\n  ui: lib/ui\nstyle: new\n',
@@ -54,6 +71,21 @@ paths:
         () => ProjectConfig.parse(source, packageRoot: root),
         throwsFormatException,
         reason: source,
+      );
+    }
+  });
+
+  test('rejects invalid and unbundled presets', () {
+    for (final preset in ['', 'Default', 'default-name', 'missing']) {
+      expect(
+        () => ProjectConfig.create(
+          packageRoot: root,
+          prefix: 'Ui',
+          preset: preset,
+          uiPath: 'lib/ui',
+        ),
+        throwsFormatException,
+        reason: preset,
       );
     }
   });
@@ -72,6 +104,7 @@ paths:
         () => ProjectConfig.create(
           packageRoot: root,
           prefix: 'Ui',
+          preset: 'default',
           uiPath: uiPath,
         ),
         throwsFormatException,
@@ -89,6 +122,7 @@ paths:
       () => ProjectConfig.create(
         packageRoot: root,
         prefix: 'Ui',
+        preset: 'default',
         uiPath: 'lib/ui',
       ),
       throwsFormatException,
@@ -100,6 +134,7 @@ paths:
       final encoded = ProjectConfig.create(
         packageRoot: root,
         prefix: 'Acme',
+        preset: 'default',
         uiPath: uiPath,
       ).encode();
 

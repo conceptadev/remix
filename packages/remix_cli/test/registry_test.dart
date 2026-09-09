@@ -7,8 +7,9 @@ void main() {
   test(
     'bundled registry resolves theme before button and loads assets',
     () async {
-      final catalog = await RegistryCatalog.loadBundled();
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
 
+      expect(catalog.preset, 'default');
       expect(catalog.resolve('button').map((item) => item.name), [
         'theme',
         'button',
@@ -21,10 +22,79 @@ void main() {
     },
   );
 
+  test('Fortal registry loads its inferred dependency graph', () async {
+    final catalog = await RegistryCatalog.loadBundled(preset: 'fortal');
+
+    expect(catalog.preset, 'fortal');
+    expect(catalog.resolve('button').map((item) => item.name), [
+      'theme',
+      'base_button',
+      'button',
+    ]);
+    expect(catalog.items['data_table']!.registryDependencies, [
+      'theme',
+      'checkbox',
+      'icon_button',
+      'select',
+    ]);
+    expect(catalog.resolve('data_table').map((item) => item.name), [
+      'theme',
+      'checkbox',
+      'base_button',
+      'icon_button',
+      'select',
+      'data_table',
+    ]);
+    expect(catalog.items['theme']!.files, hasLength(8));
+    expect(catalog.items['theme']!.exports, ['theme/theme.dart']);
+
+    final button = catalog.items['button']!;
+    final source = await catalog.readTemplate(button.files.single);
+    expect(source, contains('{{typePrefix}}Button'));
+    expect(source, isNot(contains('remix_fortal')));
+  });
+
+  test('unknown preset fails before reading an asset and lists bundles', () {
+    expect(
+      RegistryCatalog.loadBundled(
+        preset: 'missing',
+        loader: const _NoopLoader(),
+      ),
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          allOf(contains('missing'), contains('default'), contains('fortal')),
+        ),
+      ),
+    );
+  });
+
+  test('unknown item error identifies its preset', () {
+    final catalog = parse('''schema: 1
+items:
+  button:
+    files:
+      - source: templates/button.dart.tmpl
+        target: "@ui/button.dart"
+''');
+
+    expect(
+      () => catalog.resolve('missing'),
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('test preset'),
+        ),
+      ),
+    );
+  });
+
   test(
     'chart is a theme-only extension backed directly by mix_chart',
     () async {
-      final catalog = await RegistryCatalog.loadBundled();
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
       final chart = catalog.items['chart']!;
       final source = await catalog.readTemplate(chart.files.single);
 
@@ -202,7 +272,7 @@ items:
   );
 
   test('every item resolves theme first and owns its expected files', () async {
-    final catalog = await RegistryCatalog.loadBundled();
+    final catalog = await RegistryCatalog.loadBundled(preset: 'default');
 
     // Both directions. Checking only that each listed name exists would let a
     // new registry item ship with no surface pinned and no rendering asserted.
@@ -215,16 +285,15 @@ items:
       final item = catalog.items[name];
       expect(item, isNotNull, reason: name);
       // Dependency-first order, and `theme` always leads because every
-      // component declares it. `data_table` is the one item that needs more:
-      // its selection column, pager, and page-size control are the
-      // application's own checkbox, icon button, and select.
-      expect(
-        catalog.resolve(name).map((item) => item.name),
-        name == 'data_table'
-            ? ['theme', 'checkbox', 'icon_button', 'select', name]
-            : ['theme', name],
-        reason: name,
-      );
+      // component declares it. Two items need more: `data_table`'s selection
+      // column, pager, and page-size control are the application's own
+      // checkbox, icon button, and select, and a `sidebar` destination is the
+      // application's own toggle.
+      expect(catalog.resolve(name).map((item) => item.name), switch (name) {
+        'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
+        'sidebar' => ['theme', 'toggle', name],
+        _ => ['theme', name],
+      }, reason: name);
       if (name == 'icons') {
         expect(item!.files.single.target, '@ui/icons.dart');
         expect(item.generated, isEmpty);
@@ -238,7 +307,7 @@ items:
   });
 
   test('both prefixes render every configured public surface', () async {
-    final catalog = await RegistryCatalog.loadBundled();
+    final catalog = await RegistryCatalog.loadBundled(preset: 'default');
 
     for (final entry in _componentSurfaces.entries) {
       final source = await catalog.readTemplate(
@@ -290,7 +359,7 @@ items:
   });
 
   test('bundled templates stay inside the allowed import boundary', () async {
-    final catalog = await RegistryCatalog.loadBundled();
+    final catalog = await RegistryCatalog.loadBundled(preset: 'default');
     const allowedPackages = {
       'flutter',
       'remix',
@@ -365,6 +434,7 @@ const _componentSurfaces =
       'radio': (widgets: ['Radio'], types: []),
       'segmented_control': (widgets: ['SegmentedControl'], types: []),
       'select': (widgets: ['Select'], types: []),
+      'sidebar': (widgets: ['Sidebar'], types: []),
       'skeleton': (widgets: ['Skeleton'], types: []),
       'slider': (widgets: ['Slider'], types: []),
       'spinner': (widgets: ['Spinner'], types: []),
@@ -381,7 +451,8 @@ const _componentSurfaces =
 
 RegistryCatalog parse(String source) => RegistryCatalog.parse(
   source,
-  rootUri: Uri.parse('package:remix_cli/src/registry/'),
+  preset: 'test',
+  rootUri: Uri.parse('package:remix_cli/src/registry/test/'),
   loader: const _NoopLoader(),
 );
 
