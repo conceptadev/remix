@@ -89,9 +89,9 @@ AgentComposer(
 The bundle calls the application's installed `uiCardStyle`, `uiTextAreaStyle`,
 and `uiIconButtonStyle` and adds only Agent-specific geometry, so editing one
 of those files changes the composer with it. A working recipe lives in
-[`open_code/agent_fixture/lib/agent/composer.dart`](../../open_code/agent_fixture/lib/agent/composer.dart),
-and `dart run tool/check_agent_consumer.dart` builds a fresh application around
-it. The other seven surfaces have no proven recipe yet.
+[`example/lib/agent_recipes.dart`](example/lib/agent_recipes.dart), against
+source the CLI installed into `example/lib/ui/`. The other seven surfaces still
+use the catalog's local review-only stylers.
 
 ## Local catalog
 

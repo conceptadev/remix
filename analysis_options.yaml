@@ -5,15 +5,14 @@
 # one reason: the consumer fixtures below.
 #
 # The `open_code/*fixture/` directories are standalone consumer applications,
-# not workspace members (see open_code/README.md). Each resolves its
-# dependencies inside the throwaway app its checker assembles
-# (`tool/check_open_code.dart` and `tool/check_agent_consumer.dart`), so none
-# has a `.dart_tool/package_config.json` here and their `package:` imports
-# cannot resolve in this checkout. Their own pubspecs make them nested
-# analysis contexts, so a root-level `dart analyze` would descend into them
-# and report every import as missing.
+# not workspace members (see open_code/README.md). They resolve dependencies
+# inside the throwaway apps that `tool/check_open_code.dart` assembles, so they
+# have no `.dart_tool/package_config.json` here and their `package:` imports
+# cannot resolve in this checkout. Their own pubspecs make them nested analysis
+# contexts, so a root-level `dart analyze` would descend into them and report
+# every import as missing.
 #
-# Excluding them does not weaken coverage: each checker runs `flutter analyze`
+# Excluding them does not weaken coverage: the checker runs `flutter analyze`
 # over that exact source in the assembled app, where its dependencies are real.
 # `open_code/templates/` is deliberately *not* excluded -- it has no pubspec of
 # its own, so it analyzes in this context against the workspace's `remix` and
@@ -22,4 +21,3 @@ analyzer:
   exclude:
     - open_code/fixture/**
     - open_code/fortal_fixture/**
-    - open_code/agent_fixture/**

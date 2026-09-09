@@ -46,8 +46,8 @@ recipe_measurements:
   - disabled opacity 0.6
 # The first proven application recipe for this anatomy. It composes the
 # installed card, text-area, and icon-button recipes and adds only the toolbar
-# row and the card inset; `tool/check_agent_consumer.dart` builds and tests it.
-reference_recipe: open_code/agent_fixture/lib/agent/composer.dart
+# row and the card inset; example/test/composer_recipe_test.dart exercises it.
+reference_recipe: example/lib/agent_recipes.dart
 
 behavior:
   - Field and send/stop share one card

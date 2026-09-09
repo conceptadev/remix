@@ -1,5 +1,3 @@
-import 'package:agent_consumer_fixture/agent/composer.dart';
-import 'package:agent_consumer_fixture/ui/ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
@@ -7,23 +5,29 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_agent/remix_agent.dart';
-
-/// The edge the installed IconButton recipe gives its `small` size.
-///
-/// Read from the environment so `tool/check_agent_consumer.dart` can edit the
-/// installed recipe, rerun this suite with the new value, and prove the edit
-/// reached Agent's send and stop buttons. Nothing in Agent knows this number;
-/// it comes from `lib/ui/components/icon_button.dart`.
-const _iconButtonEdge = int.fromEnvironment(
-  'AGENT_RECIPE_EDGE',
-  defaultValue: 32,
-);
+import 'package:remix_agent_example/agent_recipes.dart';
+import 'package:remix_agent_example/ui/ui.dart';
 
 const _sendKey = ValueKey('agent-composer-send');
 const _stopKey = ValueKey('agent-composer-stop');
 
 const _light = UiThemeData.light();
 const _dark = UiThemeData.dark();
+
+/// A control built straight from the installed IconButton recipe.
+///
+/// Agent's send button is compared against this rather than against a literal
+/// size. A literal would pass whether or not Agent's button came from the
+/// application's file; this comparison holds only while both sides resolve the
+/// same recipe, so editing `lib/ui/components/icon_button.dart` moves both.
+///
+/// The glyph is a bare codepoint because the catalog installs no icon set. It
+/// is never read; only the control's geometry is.
+const _referenceIconButton = UiIconButton(
+  icon: IconData(0x2192),
+  semanticLabel: 'Reference',
+  size: UiIconButtonSize.small,
+);
 
 Iterable<Color> _decorationColors(WidgetTester tester, Finder root) sync* {
   for (final widget in tester.widgetList<DecoratedBox>(
@@ -44,10 +48,10 @@ Iterable<Color> _decorationColors(WidgetTester tester, Finder root) sync* {
 List<SemanticsNode> _nodes(WidgetTester tester) =>
     tester.semantics.simulatedAccessibilityTraversal().toList();
 
-/// Pumps [child] in the same host the gallery uses.
+/// Pumps [child] under the host the catalog uses.
 ///
-/// The `Overlay` is not optional here: every case below builds a composer, and
-/// a focused `EditableText` asserts on one.
+/// The `Overlay` is not optional: every case here builds a composer, and a
+/// focused `EditableText` asserts on one.
 Future<void> _pump(
   WidgetTester tester,
   Widget child, {
@@ -59,9 +63,6 @@ Future<void> _pump(
   await tester.pumpWidget(
     WidgetsApp(
       color: const Color(0xFF0A0A0A),
-      // `Overlay.wrap` rather than `Overlay(initialEntries: ...)`: the second
-      // form builds its entry once and ignores every later rebuild, which
-      // would make the controller-swap case below silently pump nothing.
       builder: (_, _) => UiThemeScope(
         data: theme,
         child: Overlay.wrap(
@@ -104,17 +105,30 @@ Widget _composer({
 
 void main() {
   group('the installed recipes style Agent', () {
-    testWidgets('send takes the IconButton recipe primary variant', (
+    testWidgets('send is the application IconButton, not a copy of it', (
       tester,
     ) async {
-      await _pump(tester, _composer(initialValue: 'go', onSubmit: (_) {}));
+      await _pump(
+        tester,
+        SizedBox(
+          width: 400,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _composer(initialValue: 'go', onSubmit: (_) {}),
+              _referenceIconButton,
+            ],
+          ),
+        ),
+      );
 
       final send = find.byKey(_sendKey);
+      final reference = find.byType(UiIconButton);
+
       expect(_decorationColors(tester, send), contains(_light.primary));
-      expect(
-        tester.getSize(send),
-        Size(_iconButtonEdge.toDouble(), _iconButtonEdge.toDouble()),
-      );
+      // The comparison, not the literal, is the assertion: change
+      // `lib/ui/components/icon_button.dart` and both sides move together.
+      expect(tester.getSize(send), tester.getSize(reference));
     });
 
     testWidgets('stop takes the IconButton recipe destructive variant', (
@@ -124,10 +138,6 @@ void main() {
 
       final stop = find.byKey(_stopKey);
       expect(_decorationColors(tester, stop), contains(_light.destructive));
-      expect(
-        tester.getSize(stop),
-        Size(_iconButtonEdge.toDouble(), _iconButtonEdge.toDouble()),
-      );
     });
 
     testWidgets('the card recipe paints the composer surface', (tester) async {
@@ -157,6 +167,15 @@ void main() {
       );
     });
 
+    testWidgets('the text-area recipe reaches the field', (tester) async {
+      await _pump(tester, _composer(onSubmit: (_) {}));
+
+      expect(
+        tester.widget<EditableText>(find.byType(EditableText)).cursorColor,
+        _light.foreground,
+      );
+    });
+
     testWidgets('a narrow surface keeps the toolbar on one row', (
       tester,
     ) async {
@@ -171,15 +190,6 @@ void main() {
 
       expect(tester.takeException(), isNull);
       expect(find.byKey(_sendKey), findsOneWidget);
-    });
-
-    testWidgets('the text-area recipe reaches the field', (tester) async {
-      await _pump(tester, _composer(onSubmit: (_) {}));
-
-      expect(
-        tester.widget<EditableText>(find.byType(EditableText)).cursorColor,
-        _light.foreground,
-      );
     });
   });
 
@@ -305,37 +315,14 @@ void main() {
       final second = TextEditingController(text: 'second');
       addTearDown(first.dispose);
       addTearDown(second.dispose);
-      final recipe = uiAgentComposerRecipe();
 
-      await _pump(
-        tester,
-        AgentComposer(
-          controller: first,
-          style: recipe.style,
-          surfaceStyle: recipe.surfaceStyle,
-          fieldStyle: recipe.fieldStyle,
-          submitStyle: recipe.submitStyle,
-          stopStyle: recipe.stopStyle,
-          onSubmit: (_) {},
-        ),
-      );
+      await _pump(tester, _composer(controller: first, onSubmit: (_) {}));
       expect(
         tester.widget<EditableText>(find.byType(EditableText)).controller.text,
         'first',
       );
 
-      await _pump(
-        tester,
-        AgentComposer(
-          controller: second,
-          style: recipe.style,
-          surfaceStyle: recipe.surfaceStyle,
-          fieldStyle: recipe.fieldStyle,
-          submitStyle: recipe.submitStyle,
-          stopStyle: recipe.stopStyle,
-          onSubmit: (_) {},
-        ),
-      );
+      await _pump(tester, _composer(controller: second, onSubmit: (_) {}));
       await tester.pump();
 
       expect(

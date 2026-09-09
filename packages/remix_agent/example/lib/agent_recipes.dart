@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_agent/remix_agent.dart';
 
-import '../ui/ui.dart';
+import 'ui/ui.dart';
 
 /// Every styler one [AgentComposer] needs, in one value.
 ///
@@ -44,13 +44,17 @@ class UiAgentComposerRecipe {
   final IconButtonStyler stopStyle;
 }
 
-/// The application's Composer recipe.
+/// This application's Composer recipe.
 ///
 /// It adds only Agent-specific geometry — the toolbar row, the card inset, and
 /// the field's missing second box — and takes everything else from the
 /// installed [uiCardStyle], [uiTextAreaStyle], and [uiIconButtonStyle]
-/// recipes. Editing one of those files changes this composer with it, which is
-/// the whole point of installing them.
+/// recipes in `lib/ui/components/`. Editing one of those files changes this
+/// composer with it, which is the whole point of installing them.
+///
+/// It is the one demo wired this way. The other seven surfaces still use the
+/// local review-only stylers in `demos.dart`, which is the intermediate state
+/// the package's ADR describes: prove one surface before converting eight.
 ///
 /// Each parameter is merged **last** into its own styler, so a call site can
 /// override any one surface without forking the bundle:

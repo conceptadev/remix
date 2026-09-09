@@ -20,9 +20,8 @@ dependencies:
   lucide_icons_flutter: 3.1.15
   mix: ^2.2.0-beta.5
   mix_annotations: ^2.2.0-beta.1
-  # Match the behavior version exercised by the open-code stack, which is the
-  # version tool/check_agent_consumer.dart resolves. Workspace resolution binds
-  # the local sibling while Agent is private.
+  # Match the behavior version exercised by the open-code stack. Workspace
+  # resolution binds the local sibling while Agent is private.
   remix: ^1.0.0-beta.9
 
 dev_dependencies:

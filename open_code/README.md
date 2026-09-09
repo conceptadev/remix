@@ -9,8 +9,8 @@ The two registry trees live in
 `packages/remix_cli/lib/src/registry/fortal/`. There is no second registry copy
 under `open_code/`. `open_code/fixture/` proves the default preset, while
 `open_code/fortal_fixture/` proves Fortal with every generated widget and
-known Radix Themes 3.3.0 color values. `open_code/agent_fixture/` is a third,
-much smaller consumer used by `tool/check_agent_consumer.dart`; see
+known Radix Themes 3.3.0 color values. A behavioral package can be styled from
+the same installed source; see
 [Styling a package on top of the catalog](#styling-a-package-on-top-of-the-catalog).
 
 ## Install the CLI in a project
@@ -260,9 +260,10 @@ package that takes unresolved stylers can be styled from them too, which keeps
 its surfaces inside the application's design language instead of adding a
 second one.
 
-`remix_agent` is the worked example. `open_code/agent_fixture/` installs Theme,
-Card, TextField, and IconButton, then composes them into one recipe bundle for
-`AgentComposer`:
+`remix_agent` is the worked example. Its catalog app,
+`packages/remix_agent/example/`, installs Theme, Card, TextField, and
+IconButton the way any consumer does, then composes them into one recipe bundle
+for `AgentComposer`:
 
 ```dart
 final recipe = uiAgentComposerRecipe();
@@ -282,9 +283,14 @@ its own spec covers one of them. The four child stylers are passed on
 unresolved, so each control resolves its own hover, focus, and disabled state.
 
 `remix_agent` has no registry item. It is `publish_to: none`, and a registry
-item's dependency is a hosted version constraint, so the fixture names the
-package through a checkout override that `tool/check_agent_consumer.dart`
-writes into the temporary app.
+item's dependency is a hosted version constraint, so there is nothing to
+install and nothing to advertise. The example resolves it as a workspace
+sibling, which is development evidence rather than proof of hosted
+installation.
+
+Only the composer is wired this way. The catalog's other seven surfaces still
+use local review-only stylers, which is the intermediate state the package's
+ADR describes: prove one surface before converting eight.
 
 ## Repository proof
 
@@ -306,15 +312,12 @@ sources. Select `--source checkout` or `--source hosted` for one source.
 Use `--hosted-cli --source hosted` after CLI publication to verify its hosted
 assets. Pass `--keep` to retain a generated application for inspection.
 
-The Agent consumer is a separate check:
+Both dogfood consumers are checked against the templates they installed:
 
 ```shell
-fvm dart run tool/check_agent_consumer.dart
+fvm dart run tool/check_open_code_dogfood.dart
 ```
 
-It installs four default-preset items with the default `Ui` prefix, points
-`remix` and `remix_agent` at this checkout, and runs the fixture's suite. It
-then edits the installed IconButton recipe and reruns the suite with the new
-expected metric, which is what proves Agent's send and stop buttons are painted
-by the application's file. It has no hosted phase, because `remix_agent` has no
-release. `--keep` works here too.
+`apps/playground` holds every item; `packages/remix_agent/example` holds the
+four its composer recipe composes. The walk asks each consumer's `remix.yaml`
+what it installed, so a consumer is never faulted for an item it never added.

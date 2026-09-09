@@ -66,24 +66,24 @@ installed `remix_cli` source rather than as an Agent theme.
 | Accessibility semantics and keyboard rules | Per-instance overrides at the call site |
 | `Agent*Spec` slot names, empty by default | Which installed recipes a surface reuses |
 
-One surface has a proven consumer. `open_code/agent_fixture/` installs Theme,
-Card, TextField, and IconButton with the checkout CLI and styles `AgentComposer`
-from them. `tool/check_agent_consumer.dart` builds that application and proves,
-inside it:
+One surface has a proven consumer, and it is the catalog app rather than a
+purpose-built fixture. `example/` runs `remix init` and installs Theme, Card,
+TextField, and IconButton exactly as any application does; the installed source
+is committed, and `tool/check_open_code_dogfood.dart` holds it against the
+templates. `example/test/composer_recipe_test.dart` then proves:
 
 - `uiAgentComposerRecipe()` supplies all five composer stylers from the
   installed recipes;
-- editing the installed IconButton recipe changes Agent's send and stop
-  buttons, and the CLI reports the edited file as application-owned;
+- Agent's send button matches a control built from the same recipe, so the two
+  cannot diverge — a fork fails the comparison, and a recipe edit moves both;
 - an instance override still beats the recipe;
 - field focus and button hover still resolve in the child controllers;
 - Enter, Shift+Enter, IME composition, and a controller swap still behave;
 - the semantic tree holds one field and one action;
-- the light and dark themes both reach Agent through the same recipe;
-- the installed layer imports no `remix_agent`.
+- the light and dark themes both reach Agent through the same recipe.
 
-That checker has no hosted phase, and nothing in it claims hosted installation
-works.
+The example resolves `remix_agent` as a workspace sibling. That is development
+evidence; nothing here claims hosted installation works.
 
 The recipe is a **bundle**, not a single styler. `AgentComposer` takes
 `style`, `surfaceStyle`, `fieldStyle`, `submitStyle`, and `stopStyle`, and

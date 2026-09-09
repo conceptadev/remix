@@ -3,6 +3,7 @@ import 'package:remix/remix.dart';
 
 import 'demos.dart';
 import 'host.dart';
+import 'ui/ui.dart';
 
 class CatalogEntry {
   const CatalogEntry({
@@ -227,9 +228,17 @@ class _DarkHostState extends State<DarkHost> {
     final theme = HostTheme(dark: dark, child: widget.child);
     return HostTheme(
       dark: dark,
-      child: DefaultTextStyle(
-        style: theme.body,
-        child: ColoredBox(color: theme.paper, child: widget.child),
+      // The installed recipes resolve `UiTokens` through the `MixScope` this
+      // scope installs, so the composer follows the same light/dark switch the
+      // rest of the catalog does. The other seven demos use plain colours and
+      // do not read tokens, so nesting this over `MixScope.empty` changes
+      // nothing for them.
+      child: UiThemeScope(
+        data: dark ? const UiThemeData.dark() : const UiThemeData.light(),
+        child: DefaultTextStyle(
+          style: theme.body,
+          child: ColoredBox(color: theme.paper, child: widget.child),
+        ),
       ),
     );
   }

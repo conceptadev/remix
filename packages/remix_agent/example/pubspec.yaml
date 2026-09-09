@@ -1,5 +1,5 @@
 name: remix_agent_example
-description: WidgetsApp example for remix_agent. Local stylers only; no theme package.
+description: WidgetsApp example for remix_agent. Installed recipes style the composer.
 publish_to: none
 resolution: workspace
 version: 0.1.0+1
@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # Added by `remix add`: the installed recipes carry `@MixWidget`.
+  mix_annotations: ^2.2.0-beta.1
   # Match the package's own floor. Workspace resolution binds the local
   # siblings, so a stale constraint here compiles and says nothing until
   # someone reads it as the tested version.
@@ -18,8 +20,13 @@ dependencies:
   remix_agent: ^0.1.0-beta.1
 
 dev_dependencies:
+  build_runner: ^2.10.1
   flutter_test:
     sdk: flutter
+  mix_generator: ^2.2.0-beta.3
+  # Project-local CLI pin for the application-owned UI source. Workspace
+  # resolution uses the local package during development.
+  remix_cli: ^0.1.0
 
 flutter:
   uses-material-design: true

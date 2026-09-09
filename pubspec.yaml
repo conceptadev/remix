@@ -84,14 +84,19 @@ melos:
     generate:check:
       description: Regenerate Remix sources and fail only on generated drift
       exec:
-        command: dart run ../../tool/check_generated.dart
+        # `$MELOS_ROOT_PATH`, not a fixed `../../`: the scope below spans two
+        # directory depths, and `packages/remix_agent/example` is three levels
+        # down.
+        command: dart run $MELOS_ROOT_PATH/tool/check_generated.dart
         concurrency: 1
         orderDependents: true
-      # The playground is in scope because it holds a committed, CLI-installed
-      # copy of every registry item. Nothing in the app renders those files, so
-      # a `.g.dart` left behind by a recipe edit would compile and ship green.
+      # The playground and the Agent example are in scope because each holds a
+      # committed, CLI-installed copy of registry source. Nothing renders those
+      # files in the playground, so a `.g.dart` left behind by a recipe edit
+      # would compile and ship green.
       packageFilters:
-        scope: [remix, remix_agent, remix_fortal, playground]
+        scope:
+          [remix, remix_agent, remix_fortal, playground, remix_agent_example]
 
     test:flutter:
       exec: flutter test --reporter=failures-only
@@ -151,14 +156,6 @@ melos:
       run: dart run tool/check_open_code_dogfood.dart
       description: Verify the playground's installed source still mirrors the registry
 
-    agent:consumer:check:
-      steps:
-        - dart test test/tool/check_agent_consumer_test.dart
-        - dart run tool/check_agent_consumer.dart
-      description: >-
-        Install Theme, Card, TextField, and IconButton in a fresh app and prove
-        those recipes style remix_agent's composer
-
     icons:generate:
       steps:
         - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons glyphpact --config packages/remix_ui_icons/tool/radix_icons/glyphpact.json
@@ -185,16 +182,12 @@ melos:
         - open-code:dogfood:check
         - test:cli
         - test:flutter
-        # Last because they are the only steps that leave the workspace: each
-        # builds a throwaway app in the system temp directory. Fresh consumers
-        # use checkout Remix and hosted supporting packages; the release check
-        # separately requires the published Remix version. `agent:consumer`
-        # has no hosted phase at all, because remix_agent is private.
+        # Fresh consumers use checkout Remix and hosted supporting packages.
+        # The release check separately requires the published Remix version.
         - open-code:check
-        - agent:consumer:check
       description: >-
         Verify generated sources, docs, Fortal parity, tests, and the
-        open-code and Agent consumer boundaries
+        open-code consumer boundary
 
     fortal:parity:check:
       exec: dart run tool/fortal_parity/check.dart

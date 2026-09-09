@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_agent/remix_agent.dart';
 
+import 'agent_recipes.dart';
 import 'host.dart';
 
 /// Example-only light/dark recipes. They are deliberately not exported by the
@@ -28,16 +29,6 @@ final class _AgentDemoStyles {
       .borderRadius(.circular(8))
       .label(TextStyler().color(const Color(0xFFFFFFFF)).fontSize(13));
 
-  IconButtonStyler get submitIconButton => IconButtonStyler()
-      .size(48, 48)
-      .color(theme.live)
-      .borderRadius(.circular(24))
-      .iconColor(const Color(0xFFFFFFFF))
-      .iconSize(16);
-
-  IconButtonStyler get stopIconButton =>
-      submitIconButton.color(ink).iconSize(12);
-
   IconButtonStyler get utilityIconButton => IconButtonStyler()
       .size(48, 48)
       .color(const Color(0x00000000))
@@ -49,19 +40,12 @@ final class _AgentDemoStyles {
       )
       .onPressed(IconButtonStyler().color(ink.withValues(alpha: 0.10)));
 
-  TextFieldStyler get textField =>
-      TextFieldStyler().container(BoxStyler().padding(.all(8)));
-
   DataListStyler get dataList =>
       DataListStyler().rowSpacing(6).columnSpacing(12);
 
   DisclosureStyler get disclosure => DisclosureStyler()
       .trigger(BoxStyler().padding(.symmetric(vertical: 15)))
       .content(BoxStyler().padding(.only(top: 8)));
-
-  AgentComposerStyler get composer => AgentComposerStyler(
-    toolbar: FlexBoxStyler().mainAxisSize(.max).spacing(8),
-  );
 
   AgentMessageStyler get message => AgentMessageStyler(
     row: FlexBoxStyler().mainAxisSize(.max).spacing(8),
@@ -174,6 +158,29 @@ class CatalogAction extends StatelessWidget {
   }
 }
 
+/// The catalog's composer, styled by the installed recipes.
+///
+/// Both call sites go through here so the standalone demo and the composed run
+/// cannot drift apart.
+Widget _installedComposer({
+  required ValueChanged<String> onSubmit,
+  bool running = false,
+  VoidCallback? onStop,
+}) {
+  final recipe = uiAgentComposerRecipe();
+
+  return AgentComposer(
+    style: recipe.style,
+    surfaceStyle: recipe.surfaceStyle,
+    fieldStyle: recipe.fieldStyle,
+    submitStyle: recipe.submitStyle,
+    stopStyle: recipe.stopStyle,
+    running: running,
+    onSubmit: onSubmit,
+    onStop: onStop,
+  );
+}
+
 class ComposerDemo extends StatefulWidget {
   const ComposerDemo({super.key});
   @override
@@ -185,16 +192,10 @@ class _ComposerDemoState extends State<ComposerDemo> {
   String? sent;
   @override
   Widget build(BuildContext context) {
-    final styles = _styles(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AgentComposer(
-          style: styles.composer,
-          surfaceStyle: styles.card,
-          fieldStyle: styles.textField,
-          submitStyle: styles.submitIconButton,
-          stopStyle: styles.stopIconButton,
+        _installedComposer(
           running: running,
           onSubmit: (value) => setState(() {
             sent = value;
@@ -547,14 +548,7 @@ class ComposedRunDemo extends StatelessWidget {
               ],
             ),
           ),
-          AgentComposer(
-            style: styles.composer,
-            surfaceStyle: styles.card,
-            fieldStyle: styles.textField,
-            submitStyle: styles.submitIconButton,
-            stopStyle: styles.stopIconButton,
-            onSubmit: (_) {},
-          ),
+          _installedComposer(onSubmit: (_) {}),
         ],
       ),
     );
