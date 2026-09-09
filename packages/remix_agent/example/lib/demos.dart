@@ -82,7 +82,7 @@ final class _AgentDemoStyles {
 
   AgentPlanStyler get plan => AgentPlanStyler(
     viewport: BoxStyler().maxHeight(220),
-    item: FlexBoxStyler().spacing(8).padding(.symmetric(vertical: 6)),
+    item: FlexBoxStyler().spacing(6).padding(.symmetric(vertical: 6)),
     summaryTitle: TextStyler()
         .color(ink)
         .fontSize(14)
@@ -100,9 +100,14 @@ final class _AgentDemoStyles {
     cancelledStatus: IconStyler().color(ink.withValues(alpha: 0.45)).size(18),
   );
 
+  // Keep 12px status marks centered in the same 18px slot as Plan's glyphs.
+  // With the 6px row gap, both ledgers share the tool headers' 24px text gutter.
+  IconStyler _leadingStatus(Color color) =>
+      IconStyler().color(color).size(12).wrap(.padding(.horizontal(3)));
+
   AgentActivityStyler get activity => AgentActivityStyler(
     viewport: BoxStyler().maxHeight(200),
-    item: FlexBoxStyler().spacing(8).padding(.symmetric(vertical: 6)),
+    item: FlexBoxStyler().spacing(6).padding(.symmetric(vertical: 6)),
     summaryTitle: TextStyler()
         .color(ink)
         .fontSize(14)
@@ -110,9 +115,9 @@ final class _AgentDemoStyles {
     itemTitle: TextStyler().color(ink).fontSize(14),
     itemDetail: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
     indicator: IconStyler().color(ink).size(16),
-    pendingStatus: IconStyler().color(ink.withValues(alpha: 0.45)).size(12),
-    activeStatus: IconStyler().color(theme.live).size(12),
-    completedStatus: IconStyler().color(theme.live).size(12),
+    pendingStatus: _leadingStatus(ink.withValues(alpha: 0.45)),
+    activeStatus: _leadingStatus(theme.live),
+    completedStatus: _leadingStatus(theme.live),
   );
 
   AgentExecutionStyler get execution => AgentExecutionStyler(
@@ -148,7 +153,7 @@ final class _AgentDemoStyles {
     tool: TextStyler()
         .color(ink.withValues(alpha: 0.62))
         .fontSize(12)
-        .wrap(.padding(.only(top: 4))),
+        .wrap(.padding(.directional(start: 24, top: 4))),
     description: TextStyler()
         .color(ink.withValues(alpha: 0.72))
         .wrap(.padding(.symmetric(vertical: 8))),
@@ -158,7 +163,7 @@ final class _AgentDemoStyles {
         .wrap(.padding(.symmetric(horizontal: 6))),
     detailsLabel: TextStyler().color(ink).fontSize(13),
     toolIcon: IconStyler().color(ink).size(16),
-    statusIcon: IconStyler().color(theme.live).size(12),
+    statusIcon: _leadingStatus(theme.live),
     indicator: IconStyler().color(ink).size(16),
   );
 
