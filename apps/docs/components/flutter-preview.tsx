@@ -1,5 +1,6 @@
 'use client';
 
+import { useTheme } from 'fumadocs-ui/provider/base';
 import { useEffect, useId, useRef, useState, type ComponentProps } from 'react';
 
 // Native selection retains keyboard navigation and the mobile system picker.
@@ -21,13 +22,20 @@ export function FlutterPreview({ title, cases }: {
 }) {
   const id = useId();
   const frame = useRef<HTMLIFrameElement>(null);
+  const { resolvedTheme } = useTheme();
   const [path, setPath] = useState(cases[0].path);
-  const [mode, setMode] = useState('light');
+  // The example follows the site theme until the reader picks one to compare.
+  const [chosenMode, setChosenMode] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [status, setStatus] = useState<'loading' | 'ready' | 'slow'>('loading');
+  const mode = chosenMode ?? (resolvedTheme === 'dark' ? 'dark' : 'light');
   const query = new URLSearchParams({ path, theme: `{name:${mode}}` });
   const catalogUrl = `/previews/#/?${query}`;
   const previewUrl = `${catalogUrl}&preview&attempt=${attempt}`;
+
+  // The resolved theme is only known on the client; render one correct frame.
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     setStatus('loading');
@@ -46,13 +54,13 @@ export function FlutterPreview({ title, cases }: {
       <PreviewSelect label="Example" id={`${id}-case`} value={path} onChange={event => setPath(event.target.value)}>
         {cases.map(item => <option key={item.path} value={item.path}>{item.name}</option>)}
       </PreviewSelect>
-      <PreviewSelect label="Theme" aria-label="Example theme" id={`${id}-theme`} value={mode} onChange={event => setMode(event.target.value)}>
+      <PreviewSelect label="Theme" aria-label="Example theme" id={`${id}-theme`} value={mode} onChange={event => setChosenMode(event.target.value)}>
         <option value="light">Light</option><option value="dark">Dark</option>
       </PreviewSelect>
       <a href={catalogUrl} target="_blank" rel="noreferrer">Open catalog</a>
     </div>
     <div className="remix-preview-stage" aria-busy={status === 'loading'}>
-      <iframe key={previewUrl} ref={frame} src={previewUrl} title={`${title} interactive Flutter example`} loading="lazy" />
+      {mounted && <iframe key={previewUrl} ref={frame} src={previewUrl} title={`${title} interactive Flutter example`} loading="lazy" />}
       {status !== 'ready' && <div className="remix-preview-status" role="status">
         <span>{status === 'loading' ? 'Starting Flutter example…' : 'The example is taking longer to start. Retry or open the catalog.'}</span>
         {status === 'slow' && <button type="button" onClick={() => setAttempt(value => value + 1)}>Retry example</button>}

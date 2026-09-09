@@ -12,8 +12,8 @@ importers:
         specifier: 1.7.0
         version: 1.7.0(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@conceptadev/docs-theme':
-        specifier: git+https://github.com/conceptadev/docs-theme.git#75c0bc67a2b075b8d64da7daa206e9f341d00c84
-        version: git+ssh://git@github.com/conceptadev/docs-theme.git#75c0bc67a2b075b8d64da7daa206e9f341d00c84(@fumadocs/base-ui@16.15.8(@types/mdx@2.0.14)(@types/react@19.2.18)(fumadocs-core@16.15.8(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.2.18)(lucide-react@1.43.0(react@19.2.8))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@types/mdx@2.0.14)(fumadocs-core@16.15.8(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.2.18)(lucide-react@1.43.0(react@19.2.8))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: git+https://github.com/conceptadev/docs-theme.git#0f032d0efb437a2aface4e3198a708549ef39671
+        version: git+ssh://git@github.com/conceptadev/docs-theme.git#0f032d0efb437a2aface4e3198a708549ef39671(@fumadocs/base-ui@16.15.8(@types/mdx@2.0.14)(@types/react@19.2.18)(fumadocs-core@16.15.8(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.2.18)(lucide-react@1.43.0(react@19.2.8))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@types/mdx@2.0.14)(fumadocs-core@16.15.8(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.2.18)(lucide-react@1.43.0(react@19.2.8))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       fumadocs-core:
         specifier: 16.15.8
         version: 16.15.8(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.2.18)(lucide-react@1.43.0(react@19.2.8))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3)
@@ -98,8 +98,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@conceptadev/docs-theme@git+ssh://git@github.com/conceptadev/docs-theme.git#75c0bc67a2b075b8d64da7daa206e9f341d00c84':
-    resolution: {commit: 75c0bc67a2b075b8d64da7daa206e9f341d00c84, repo: git@github.com:conceptadev/docs-theme.git, type: git}
+  '@conceptadev/docs-theme@git+ssh://git@github.com/conceptadev/docs-theme.git#0f032d0efb437a2aface4e3198a708549ef39671':
+    resolution: {commit: 0f032d0efb437a2aface4e3198a708549ef39671, repo: git@github.com:conceptadev/docs-theme.git, type: git}
     version: 0.0.1
     engines: {node: '>=24.14.0'}
     peerDependencies:
@@ -1759,7 +1759,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.18
 
-  ? '@conceptadev/docs-theme@git+ssh://git@github.com/conceptadev/docs-theme.git#75c0bc67a2b075b8d64da7daa206e9f341d00c84(@fumadocs/base-ui@16.15.8(@types/mdx@2.0.14)(@types/react@19.2.18)(fumadocs-core@16.15.8(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.2.18)(lucide-react@1.43.0(react@19.2.8))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@types/mdx@2.0.14)(fumadocs-core@16.15.8(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.2.18)(lucide-react@1.43.0(react@19.2.8))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)'
+  ? '@conceptadev/docs-theme@git+ssh://git@github.com/conceptadev/docs-theme.git#0f032d0efb437a2aface4e3198a708549ef39671(@fumadocs/base-ui@16.15.8(@types/mdx@2.0.14)(@types/react@19.2.18)(fumadocs-core@16.15.8(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.2.18)(lucide-react@1.43.0(react@19.2.8))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@types/mdx@2.0.14)(fumadocs-core@16.15.8(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.2.18)(lucide-react@1.43.0(react@19.2.8))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(zod@4.4.3))(next@16.3.4(@types/node@26.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)'
   : dependencies:
       '@fontsource/hanken-grotesk': 5.3.0
       '@fontsource/jetbrains-mono': 5.3.0

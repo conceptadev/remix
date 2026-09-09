@@ -30,8 +30,9 @@ Static export and deployment under a path prefix are not configured.
 
 The theme is not published on npm yet. `package.json` and the lockfile pin the
 reviewed `conceptadev/docs-theme` commit
-`75c0bc67a2b075b8d64da7daa206e9f341d00c84`. pnpm fetches this GitHub dependency
-over SSH and builds it; only this exact Git source is allowed to run scripts.
+`0f032d0efb437a2aface4e3198a708549ef39671`, the merged theme `main`. pnpm
+fetches this GitHub dependency over SSH and builds it; only this exact Git
+source is allowed to run scripts.
 Installation requires GitHub access to that currently internal repository.
 No theme source or credentials are vendored here.
 
@@ -66,6 +67,10 @@ source. `docs/component-previews.json` selects the generated Widgetbook routes;
 directly. Edit these sources, not the generated MDX. Source panels are catalog
 examples with Fortal styling, not standalone applications.
 
+The embedded example follows the site's light/dark theme so a dark page never
+frames a white canvas. The Theme control still overrides it for comparison, and
+that explicit choice then persists across site theme changes.
+
 Both `pnpm dev` and `pnpm build` build that same Flutter catalog into ignored
 `public/previews`. `/previews/` opens the full catalog; embedded routes use
 Widgetbook's native preview mode. No separate renderer or remote deployment
@@ -80,7 +85,13 @@ The build uses the current Git commit for page-source links. Set
 `DOCS_SOURCE_REF` explicitly when building without a Git checkout. Configure
 `NEXT_PUBLIC_SITE_URL` separately for canonical metadata.
 
+## Styling
+
+`app/global.css` loads Tailwind, the Fumadocs `preset.css`, and the theme's
+`theme.css`, in that order. The Concepta payload is a complete Fumadocs color
+preset, so `fumadocs-ui/css/neutral.css` must not be stacked underneath it.
 Shared fonts, reading styles, and logo support belong in `conceptadev/docs-theme`.
-Remix owns its existing artwork, green accent, and Flutter preview integration.
-The theme documents its Concepta design-system reference; private design-system
-source and assets are not copied into this repository.
+Remix keeps only its own identity in `.remix-docs`: its existing artwork, the
+green accent through `--docs-primary-light`/`--docs-primary-dark`, and the
+Flutter preview styles. The theme documents its Concepta design-system
+reference; private design-system source and assets are not copied here.
