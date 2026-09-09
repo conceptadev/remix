@@ -735,6 +735,74 @@ void main() {
           semantics.dispose();
         }
       });
+
+      // `pump`, not `pumpAndSettle`: the loading spinner animates forever, so
+      // settling never returns.
+      testWidgets('loading keeps one button and a separate live announcement', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixButton(
+              label: 'Save',
+              semanticHint: 'Saves the current document',
+              loading: true,
+              onPressed: () {},
+              onLongPress: () {},
+            ),
+          );
+          await tester.pump();
+
+          expect(collectButtons(tester), hasLength(1));
+          final button = find.semantics.byLabel('Save');
+          expect(button, findsOne);
+          expect(
+            button.evaluate().single,
+            isSemantics(
+              label: 'Save',
+              hint: 'Saves the current document',
+              isButton: true,
+              hasEnabledState: true,
+              isEnabled: false,
+              hasTapAction: false,
+              hasLongPressAction: false,
+            ),
+          );
+
+          final announcement = find.semantics.byLabel('Save, loading');
+          expect(announcement, findsOne);
+          expect(
+            announcement.evaluate().single,
+            isSemantics(label: 'Save, loading', isLiveRegion: true),
+          );
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('excludeSemantics also hides the loading announcement', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixButton(
+              label: 'Save',
+              loading: true,
+              excludeSemantics: true,
+              onPressed: () {},
+            ),
+          );
+          await tester.pump();
+
+          expect(find.semantics.byLabel('Save'), findsNothing);
+          expect(find.semantics.byLabel('Save, loading'), findsNothing);
+          expect(collectButtons(tester), isEmpty);
+        } finally {
+          semantics.dispose();
+        }
+      });
     });
 
     group('Layout and Sizing', () {

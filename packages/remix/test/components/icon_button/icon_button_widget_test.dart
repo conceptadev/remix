@@ -483,6 +483,27 @@ void main() {
         semantics.dispose();
       });
 
+      testWidgets('excludeSemantics also hides the loading announcement', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+
+        await tester.pumpRemixApp(
+          RemixIconButton(
+            icon: Icons.save,
+            onPressed: () {},
+            loading: true,
+            excludeSemantics: true,
+            semanticLabel: 'Save item',
+          ),
+        );
+        await tester.pump();
+
+        expect(find.semantics.byLabel('Save item'), findsNothing);
+        expect(find.semantics.byLabel('Save item, loading'), findsNothing);
+        semantics.dispose();
+      });
+
       testWidgets('renders correctly in enabled state', (tester) async {
         await tester.pumpRemixApp(
           RemixIconButton(
