@@ -26,5 +26,12 @@ actions. Composer controls add 48px touch geometry through the recipe override
 slots; the installed source remains unchanged.
 
 The catalog recipes pass Remix child stylers separately from structural Agent
-stylers and rely on Agent's built-in Lucide glyphs. Top-bar and rail actions are
+stylers. A shared Lucide chevron builder adds Mix rotation to disclosure
+indicators; other glyphs use Agent's defaults. Top-bar and rail actions are
 Remix controls, so the same catalog can be reviewed with pointer or keyboard.
+
+`motion.dart` keeps animation choices in the application: 120ms control feedback
+and 200ms chevron and turn-item entrances. The latter fade and move 8px without
+changing layout; request keys prevent replay during status updates. Reduced
+motion renders the final state immediately. Disclosure panels reuse Remix's
+existing fade/size transition and reduced-motion handling.

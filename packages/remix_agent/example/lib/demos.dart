@@ -5,12 +5,15 @@ import 'package:remix_agent/remix_agent.dart';
 
 import 'agent_recipes.dart';
 import 'host.dart';
+import 'motion.dart';
 import 'ui/ui.dart';
 
 /// Example-only light/dark recipes. They are deliberately not exported by the
 /// headless package.
 final class _AgentDemoStyles {
-  _AgentDemoStyles(this.theme, {required this.narrow});
+  _AgentDemoStyles(this.theme, {required this.narrow, required this.feedback});
+
+  final AnimationConfig? feedback;
 
   final bool narrow;
 
@@ -28,17 +31,23 @@ final class _AgentDemoStyles {
       .padding(.all(16));
 
   ButtonStyler get button => uiButtonStyle(
-    style: ButtonStyler().minHeight(48).padding(.horizontal(12)),
+    style: ButtonStyler(
+      animation: feedback,
+    ).minHeight(48).padding(.horizontal(12)),
   );
 
   ButtonStyler get quietButton => uiButtonStyle(
     variant: .outline,
-    style: ButtonStyler().minHeight(48).padding(.horizontal(12)),
+    style: ButtonStyler(
+      animation: feedback,
+    ).minHeight(48).padding(.horizontal(12)),
   );
 
   ButtonStyler get ghostButton => uiButtonStyle(
     variant: .ghost,
-    style: ButtonStyler().minHeight(48).padding(.horizontal(12)),
+    style: ButtonStyler(
+      animation: feedback,
+    ).minHeight(48).padding(.horizontal(12)),
   );
 
   ButtonStyler decision(ButtonStyler style) =>
@@ -46,7 +55,7 @@ final class _AgentDemoStyles {
 
   IconButtonStyler get utilityIconButton => uiIconButtonStyle(
     variant: .ghost,
-    style: IconButtonStyler().size(48, 48),
+    style: IconButtonStyler(animation: feedback).size(48, 48),
   );
 
   DataListStyler get dataList =>
@@ -56,13 +65,17 @@ final class _AgentDemoStyles {
       .trigger(BoxStyler().minHeight(48).padding(.symmetric(vertical: 8)))
       .content(BoxStyler().padding(.only(top: 8)));
 
-  DisclosureStyler get ledger => disclosure.container(
-    BoxStyler()
-        .color(paper)
-        .border(.all(.color(line).width(1)))
-        .borderRadius(.circular(12))
-        .padding(.symmetric(horizontal: 16, vertical: 8)),
-  );
+  // The trigger already reserves 48px. Avoid stacking another content inset
+  // above the first row; keep the row spacing and outer card inset intact.
+  DisclosureStyler get ledger => disclosure
+      .content(BoxStyler().padding(.all(0)))
+      .container(
+        BoxStyler()
+            .color(paper)
+            .border(.all(.color(line).width(1)))
+            .borderRadius(.circular(12))
+            .padding(.symmetric(horizontal: 16, vertical: 8)),
+      );
 
   AgentMessageStyler get message => AgentMessageStyler(
     row: FlexBoxStyler().mainAxisSize(.max).spacing(8),
@@ -184,6 +197,7 @@ final class _AgentDemoStyles {
 _AgentDemoStyles _styles(BuildContext context) => _AgentDemoStyles(
   HostTheme.of(context),
   narrow: MediaQuery.sizeOf(context).width < 600,
+  feedback: catalogMotion(context, quick: true),
 );
 
 class CatalogAction extends StatelessWidget {
@@ -219,12 +233,17 @@ class CatalogAction extends StatelessWidget {
 ///
 /// Both call sites go through here so the standalone demo and the composed run
 /// cannot drift apart.
-Widget _installedComposer({
+Widget _installedComposer(
+  BuildContext context, {
   required ValueChanged<String> onSubmit,
   bool running = false,
   VoidCallback? onStop,
 }) {
-  final recipe = uiAgentComposerRecipe();
+  final feedback = catalogMotion(context, quick: true);
+  final recipe = uiAgentComposerRecipe(
+    submitStyle: IconButtonStyler(animation: feedback),
+    stopStyle: IconButtonStyler(animation: feedback),
+  );
 
   return AgentComposer(
     style: recipe.style,
@@ -253,6 +272,7 @@ class _ComposerDemoState extends State<ComposerDemo> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _installedComposer(
+          context,
           running: running,
           onSubmit: (value) => setState(() {
             sent = value;
@@ -385,6 +405,7 @@ class _PermissionDemoState extends State<PermissionDemo> {
         AgentPermission(
           requestId: request,
           style: styles.permission,
+          indicatorBuilder: catalogChevron,
           surfaceStyle: styles.card,
           detailsStyle: styles.disclosure,
           parametersStyle: styles.dataList,
@@ -443,6 +464,7 @@ class _ExecutionDemoState extends State<ExecutionDemo> {
       children: [
         AgentExecution(
           style: styles.execution,
+          indicatorBuilder: catalogChevron,
           surfaceStyle: styles.card,
           disclosureStyle: styles.disclosure,
           copyStyle: styles.utilityIconButton,
@@ -497,6 +519,7 @@ class _PlanDemoState extends State<PlanDemo> {
       children: [
         AgentPlan(
           style: styles.plan,
+          indicatorBuilder: catalogChevron,
           disclosureStyle: styles.ledger,
           items: items,
         ),
@@ -524,6 +547,7 @@ class _ActivityDemoState extends State<ActivityDemo> {
       children: [
         AgentActivity(
           style: styles.activity,
+          indicatorBuilder: catalogChevron,
           disclosureStyle: styles.ledger,
           status: status,
           items: [
@@ -570,6 +594,7 @@ class _AnswerDemoState extends State<AnswerDemo> {
       children: [
         AgentAnswer(
           style: styles.answer,
+          sourcesIndicatorBuilder: catalogChevron,
           surfaceStyle: styles.card,
           sourcesStyle: styles.disclosure,
           copyStyle: styles.utilityIconButton,
@@ -645,6 +670,7 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
           followOutput: false,
           children: [
             AgentMessage(
+              key: ValueKey('message-$request'),
               role: AgentRole.user,
               style: styles.message,
               surfaceStyle: styles.card,
@@ -653,6 +679,7 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
             AgentPlan(
               key: ValueKey('plan-$request'),
               style: styles.plan,
+              indicatorBuilder: catalogChevron,
               disclosureStyle: styles.ledger,
               items: [
                 const AgentPlanItem(
@@ -676,6 +703,7 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
             AgentActivity(
               key: ValueKey('activity-$request'),
               style: styles.activity,
+              indicatorBuilder: catalogChevron,
               disclosureStyle: styles.ledger,
               status: complete || stopped ? .complete : .working,
               items: [
@@ -698,8 +726,10 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
               ],
             ),
             AgentPermission(
+              key: ValueKey('permission-$request'),
               requestId: request,
               style: styles.permission,
+              indicatorBuilder: catalogChevron,
               surfaceStyle: styles.card,
               detailsStyle: styles.disclosure,
               parametersStyle: styles.dataList,
@@ -725,6 +755,7 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
               AgentExecution(
                 key: ValueKey('execution-$request'),
                 style: styles.execution,
+                indicatorBuilder: catalogChevron,
                 surfaceStyle: styles.card,
                 disclosureStyle: styles.disclosure,
                 copyStyle: styles.utilityIconButton,
@@ -742,7 +773,9 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
               ),
             if (complete || stopped)
               AgentAnswer(
+                key: ValueKey('answer-$request'),
                 style: styles.answer,
+                sourcesIndicatorBuilder: catalogChevron,
                 surfaceStyle: styles.card,
                 sourcesStyle: styles.disclosure,
                 status: .complete,
@@ -754,7 +787,7 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
                       : 'Run stopped. Submit another message to try again.',
                 ),
               ),
-          ],
+          ].map((child) => CatalogEntrance(key: child.key, child: child)).toList(),
         ),
         if (working)
           CatalogAction(
@@ -763,6 +796,7 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
           ),
         const SizedBox(height: 16),
         _installedComposer(
+          context,
           onSubmit: _start,
           running: working,
           onStop: () => setState(() => stage = _RunStage.cancelled),
