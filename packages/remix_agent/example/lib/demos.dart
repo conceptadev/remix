@@ -25,7 +25,7 @@ final class _AgentDemoStyles {
       .color(paper)
       .border(.all(.color(line).width(1)))
       .borderRadius(.circular(12))
-      .padding(.all(12));
+      .padding(.all(16));
 
   ButtonStyler get button => uiButtonStyle(
     style: ButtonStyler().minHeight(48).padding(.horizontal(12)),
@@ -41,6 +41,9 @@ final class _AgentDemoStyles {
     style: ButtonStyler().minHeight(48).padding(.horizontal(12)),
   );
 
+  ButtonStyler decision(ButtonStyler style) =>
+      narrow ? style.width(double.infinity) : style;
+
   IconButtonStyler get utilityIconButton => uiIconButtonStyle(
     variant: .ghost,
     style: IconButtonStyler().size(48, 48),
@@ -50,13 +53,21 @@ final class _AgentDemoStyles {
       DataListStyler().rowSpacing(6).columnSpacing(12);
 
   DisclosureStyler get disclosure => DisclosureStyler()
-      .trigger(BoxStyler().padding(.symmetric(vertical: 15)))
+      .trigger(BoxStyler().minHeight(48).padding(.symmetric(vertical: 8)))
       .content(BoxStyler().padding(.only(top: 8)));
+
+  DisclosureStyler get ledger => disclosure.container(
+    BoxStyler()
+        .color(paper)
+        .border(.all(.color(line).width(1)))
+        .borderRadius(.circular(12))
+        .padding(.symmetric(horizontal: 16, vertical: 8)),
+  );
 
   AgentMessageStyler get message => AgentMessageStyler(
     row: FlexBoxStyler().mainAxisSize(.max).spacing(8),
     avatar: BoxStyler().size(28, 28),
-    header: BoxStyler().padding(.only(bottom: 4)),
+    header: BoxStyler().padding(.only(bottom: 6)),
     body: BoxStyler(),
     footer: BoxStyler().padding(.only(top: 4)),
     maxWidth: 560,
@@ -71,11 +82,17 @@ final class _AgentDemoStyles {
 
   AgentPlanStyler get plan => AgentPlanStyler(
     viewport: BoxStyler().maxHeight(220),
-    item: FlexBoxStyler().spacing(8).padding(.symmetric(vertical: 5)),
-    summaryTitle: TextStyler().color(ink).fontSize(14),
+    item: FlexBoxStyler().spacing(8).padding(.symmetric(vertical: 6)),
+    summaryTitle: TextStyler()
+        .color(ink)
+        .fontSize(14)
+        .fontWeight(FontWeight.w600),
     itemTitle: TextStyler().color(ink).fontSize(14),
     itemDetail: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
-    count: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
+    count: TextStyler()
+        .color(ink.withValues(alpha: 0.62))
+        .fontSize(12)
+        .wrap(.padding(.only(right: 8))),
     indicator: IconStyler().color(ink).size(16),
     pendingStatus: IconStyler().color(ink.withValues(alpha: 0.45)).size(18),
     activeStatus: IconStyler().color(theme.live).size(18),
@@ -85,8 +102,11 @@ final class _AgentDemoStyles {
 
   AgentActivityStyler get activity => AgentActivityStyler(
     viewport: BoxStyler().maxHeight(200),
-    item: FlexBoxStyler().spacing(8).padding(.symmetric(vertical: 5)),
-    summaryTitle: TextStyler().color(ink).fontSize(14),
+    item: FlexBoxStyler().spacing(8).padding(.symmetric(vertical: 6)),
+    summaryTitle: TextStyler()
+        .color(ink)
+        .fontSize(14)
+        .fontWeight(FontWeight.w600),
     itemTitle: TextStyler().color(ink).fontSize(14),
     itemDetail: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
     indicator: IconStyler().color(ink).size(16),
@@ -97,12 +117,21 @@ final class _AgentDemoStyles {
 
   AgentExecutionStyler get execution => AgentExecutionStyler(
     header: FlexBoxStyler().spacing(8),
-    output: BoxStyler().color(ink.withValues(alpha: 0.05)).padding(.all(10)),
+    output: BoxStyler()
+        .color(ink.withValues(alpha: 0.05))
+        .borderRadius(.circular(6))
+        .padding(.all(12)),
     actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
-    tool: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
+    tool: TextStyler()
+        .color(ink.withValues(alpha: 0.62))
+        .fontSize(12)
+        .wrap(.padding(.only(top: 4))),
     title: TextStyler().color(ink).fontWeight(FontWeight.w600),
     meta: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
-    status: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
+    status: TextStyler()
+        .color(ink.withValues(alpha: 0.72))
+        .fontSize(12)
+        .wrap(.padding(.symmetric(horizontal: 6))),
     toolIcon: IconStyler().color(ink).size(16),
     statusIcon: IconStyler().color(theme.live).size(12),
     indicator: IconStyler().color(ink).size(16),
@@ -114,11 +143,19 @@ final class _AgentDemoStyles {
         .direction(narrow ? .vertical : .horizontal)
         .crossAxisAlignment(narrow ? .stretch : .center)
         .spacing(8)
-        .padding(.only(top: 10)),
+        .padding(.only(top: 8)),
     title: TextStyler().color(ink).fontWeight(FontWeight.w600),
-    tool: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
-    description: TextStyler().color(ink.withValues(alpha: 0.72)),
-    status: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
+    tool: TextStyler()
+        .color(ink.withValues(alpha: 0.62))
+        .fontSize(12)
+        .wrap(.padding(.only(top: 4))),
+    description: TextStyler()
+        .color(ink.withValues(alpha: 0.72))
+        .wrap(.padding(.symmetric(vertical: 8))),
+    status: TextStyler()
+        .color(ink.withValues(alpha: 0.72))
+        .fontSize(12)
+        .wrap(.padding(.symmetric(horizontal: 6))),
     detailsLabel: TextStyler().color(ink).fontSize(13),
     toolIcon: IconStyler().color(ink).size(16),
     statusIcon: IconStyler().color(theme.live).size(12),
@@ -135,7 +172,7 @@ final class _AgentDemoStyles {
   AgentTranscriptStyler get transcript => AgentTranscriptStyler(
     viewport: BoxStyler().padding(.only(right: 12)),
     item: BoxStyler(),
-    spacing: 10,
+    spacing: 16,
   );
 }
 
@@ -159,12 +196,15 @@ class CatalogAction extends StatelessWidget {
   Widget build(BuildContext context) {
     final styles = _styles(context);
     return Padding(
-      padding: const EdgeInsets.only(top: 16),
-      child: RemixButton(
-        label: label,
-        onPressed: onPressed,
-        enabled: onPressed != null,
-        style: quiet ? styles.quietButton : styles.button,
+      padding: const EdgeInsets.only(top: 12),
+      child: Align(
+        alignment: AlignmentDirectional.centerEnd,
+        child: RemixButton(
+          label: label,
+          onPressed: onPressed,
+          enabled: onPressed != null,
+          style: quiet ? styles.quietButton : styles.button,
+        ),
       ),
     );
   }
@@ -215,7 +255,11 @@ class _ComposerDemoState extends State<ComposerDemo> {
           }),
           onStop: () => setState(() => running = false),
         ),
-        if (sent != null) Text('Last sent: $sent'),
+        if (sent != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text('Last sent: $sent', style: HostTheme.of(context).meta),
+          ),
       ],
     );
   }
@@ -227,20 +271,20 @@ class MessageDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     final styles = _styles(context);
     return AgentMessageGroup(
-      spacing: 8,
+      spacing: 16,
       children: [
         AgentMessage(
           role: AgentRole.user,
           style: styles.message,
           surfaceStyle: styles.card,
-          header: const Text('You'),
+          header: Text('You', style: HostTheme.of(context).meta),
           child: const Text('Review the checkout flow and pause before tests.'),
         ),
         AgentMessage(
           role: AgentRole.assistant,
           style: styles.message,
           surfaceStyle: styles.card,
-          header: const Text('Agent'),
+          header: Text('Agent', style: HostTheme.of(context).meta),
           child: AgentMessageCollapsible(
             style: styles.collapsible,
             toggleStyle: styles.ghostButton,
@@ -276,20 +320,39 @@ class _TranscriptDemoState extends State<TranscriptDemo> {
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      Text(following ? 'Following the live edge' : 'Reading history'),
-      SizedBox(
-        height: 180,
-        child: RawScrollbar(
-          controller: _scroll,
-          thumbVisibility: true,
-          thumbColor: HostTheme.of(context).ink.withValues(alpha: 0.45),
-          child: AgentTranscript.builder(
-            controller: _scroll,
-            style: _styles(context).transcript,
-            itemCount: lines,
-            itemBuilder: (_, i) => Text('Line ${i + 1} of the growing log.'),
-            onFollowChanged: (value) => setState(() => following = value),
-          ),
+      RemixCard(
+        style: _styles(context).card,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              following ? 'Following the live edge' : 'Reading history',
+              style: HostTheme.of(context).meta,
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 180,
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(
+                  context,
+                ).copyWith(scrollbars: false),
+                child: RawScrollbar(
+                  controller: _scroll,
+                  thumbVisibility: true,
+                  thumbColor: HostTheme.of(context).ink.withValues(alpha: 0.45),
+                  child: AgentTranscript.builder(
+                    controller: _scroll,
+                    style: _styles(context).transcript,
+                    itemCount: lines,
+                    itemBuilder: (_, i) =>
+                        Text('Line ${i + 1} of the growing log.'),
+                    onFollowChanged: (value) =>
+                        setState(() => following = value),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       CatalogAction(
@@ -320,9 +383,9 @@ class _PermissionDemoState extends State<PermissionDemo> {
           surfaceStyle: styles.card,
           detailsStyle: styles.disclosure,
           parametersStyle: styles.dataList,
-          allowOnceStyle: styles.button,
-          alwaysAllowStyle: styles.quietButton,
-          denyStyle: styles.ghostButton,
+          allowOnceStyle: styles.decision(styles.button),
+          alwaysAllowStyle: styles.decision(styles.quietButton),
+          denyStyle: styles.decision(styles.ghostButton),
           tool: 'terminal.run',
           status: status,
           description:
@@ -429,7 +492,7 @@ class _PlanDemoState extends State<PlanDemo> {
       children: [
         AgentPlan(
           style: styles.plan,
-          disclosureStyle: styles.disclosure,
+          disclosureStyle: styles.ledger,
           items: items,
         ),
         CatalogAction(
@@ -456,7 +519,7 @@ class _ActivityDemoState extends State<ActivityDemo> {
       children: [
         AgentActivity(
           style: styles.activity,
-          disclosureStyle: styles.disclosure,
+          disclosureStyle: styles.ledger,
           status: status,
           items: [
             const AgentActivityItem(
@@ -573,7 +636,7 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AgentTranscript(
-          style: styles.transcript,
+          style: styles.transcript.viewport(BoxStyler().padding(.all(0))),
           followOutput: false,
           children: [
             AgentMessage(
@@ -585,7 +648,7 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
             AgentPlan(
               key: ValueKey('plan-$request'),
               style: styles.plan,
-              disclosureStyle: styles.disclosure,
+              disclosureStyle: styles.ledger,
               items: [
                 const AgentPlanItem(
                   id: 'inspect',
@@ -608,7 +671,7 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
             AgentActivity(
               key: ValueKey('activity-$request'),
               style: styles.activity,
-              disclosureStyle: styles.disclosure,
+              disclosureStyle: styles.ledger,
               status: complete || stopped ? .complete : .working,
               items: [
                 const AgentActivityItem(
@@ -635,8 +698,8 @@ class _ComposedRunDemoState extends State<ComposedRunDemo> {
               surfaceStyle: styles.card,
               detailsStyle: styles.disclosure,
               parametersStyle: styles.dataList,
-              allowOnceStyle: styles.button,
-              denyStyle: styles.ghostButton,
+              allowOnceStyle: styles.decision(styles.button),
+              denyStyle: styles.decision(styles.ghostButton),
               tool: 'terminal.run',
               description:
                   'Run the focused test suite. This demo never executes a command.',

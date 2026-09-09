@@ -134,7 +134,7 @@ class _AgentCatalogState extends State<AgentCatalog> {
     try {
       await Scrollable.ensureVisible(
         context,
-        alignment: 0.04,
+        alignment: 0,
         duration: MediaQuery.disableAnimationsOf(context)
             ? Duration.zero
             : const Duration(milliseconds: 220),
@@ -154,29 +154,35 @@ class _AgentCatalogState extends State<AgentCatalog> {
     final body = SingleChildScrollView(
       controller: _scroll,
       padding: EdgeInsets.fromLTRB(wide ? 36 : 20, 28, wide ? 48 : 20, 80),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text('Remix Agent', style: theme.display),
-          const SizedBox(height: 8),
-          Text(
-            'Surfaces for a long-running run. No theme. No model SDK. '
-            'Compose them in the host.',
-            style: theme.body.copyWith(
-              color: theme.ink.withValues(alpha: 0.72),
-            ),
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text('Remix Agent', style: theme.display),
+              const SizedBox(height: 8),
+              Text(
+                'Surfaces for a long-running run. No theme. No model SDK. '
+                'Compose them in the host.',
+                style: theme.body.copyWith(
+                  color: theme.ink.withValues(alpha: 0.72),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text('UNPUBLISHED REVIEW CATALOG', style: theme.meta),
+              const SizedBox(height: 36),
+              for (final entry in catalogEntries) ...[
+                KeyedSubtree(
+                  key: _keys[entry.id],
+                  child: _Section(entry: entry),
+                ),
+                const SizedBox(height: 24),
+              ],
+            ],
           ),
-          const SizedBox(height: 8),
-          Text('UNPUBLISHED REVIEW CATALOG', style: theme.meta),
-          const SizedBox(height: 36),
-          for (final entry in catalogEntries) ...[
-            KeyedSubtree(
-              key: _keys[entry.id],
-              child: _Section(entry: entry),
-            ),
-            const SizedBox(height: 40),
-          ],
-        ],
+        ),
       ),
     );
 
@@ -441,30 +447,27 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = HostTheme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          entry.title,
-          style: theme.body.copyWith(fontSize: 20, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          entry.lede,
-          style: theme.body.copyWith(color: theme.ink.withValues(alpha: 0.7)),
-        ),
-        const SizedBox(height: 16),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border.all(color: theme.hairline),
-            color: theme.paper,
+    return Padding(
+      padding: const EdgeInsets.only(top: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            entry.title,
+            style: theme.body.copyWith(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: entry.builder(context),
+          const SizedBox(height: 6),
+          Text(
+            entry.lede,
+            style: theme.body.copyWith(color: theme.ink.withValues(alpha: 0.7)),
           ),
-        ),
-      ],
+          const SizedBox(height: 16),
+          entry.builder(context),
+        ],
+      ),
     );
   }
 }

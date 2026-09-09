@@ -96,7 +96,7 @@ const _toolbarGap = 8.0;
 ///
 /// Tighter than the card recipe's own 24: a composer is an input frame, and
 /// the field inside it already carries the reading gutter.
-const _surfacePadding = 8.0;
+const _surfacePadding = 12.0;
 
 /// A fill that paints nothing.
 const _transparent = Color(0x00000000);
@@ -120,10 +120,11 @@ CardStyler _surfaceStyle() => CardStyler().padding(.all(_surfacePadding));
 /// The field, with its own surface removed.
 ///
 /// The card is already the frame, so the text area drops its fill, its border,
-/// and its gutter rather than drawing a second box inside the first. Its
+/// and uses a small reading gutter inside the shared frame. Its
 /// typography, hint colour, cursor colour, focus ring, and disabled fragment
 /// all stay, which is what keeps this a recipe edit rather than a fork.
 TextFieldStyler _fieldStyle() => TextFieldStyler()
     .color(_transparent)
     .border(.style(.none))
-    .padding(.all(0));
+    .minHeight(56)
+    .padding(.all(4));
