@@ -255,6 +255,43 @@ void main() {
     expect(colors, isNot(contains(_light.primary)));
   });
 
+  testWidgets('surface, field, toolbar, and stop overrides beat the recipe', (
+    tester,
+  ) async {
+    const surface = Color(0xFF123456);
+    const cursor = Color(0xFF234567);
+    const toolbar = Color(0xFF345678);
+    const stop = Color(0xFF456789);
+    final recipe = uiAgentComposerRecipe(
+      style: AgentComposerStyler(
+        toolbar: FlexBoxStyler().color(toolbar).padding(.all(20)),
+      ),
+      surfaceStyle: CardStyler().color(surface),
+      fieldStyle: TextFieldStyler(cursorColor: cursor),
+      stopStyle: IconButtonStyler().color(stop),
+    );
+    await _pump(
+      tester,
+      _composer(recipe: recipe, running: true, onStop: () {}),
+    );
+
+    expect(
+      _decorationColors(tester, find.byType(RemixCard)),
+      contains(surface),
+    );
+    expect(
+      tester.widget<EditableText>(find.byType(EditableText)).cursorColor,
+      cursor,
+    );
+    expect(_decorationColors(tester, find.byType(RowBox)), contains(toolbar));
+    final toolbarTop = tester.getTopLeft(find.byType(RowBox)).dy;
+    final stopTop = tester.getTopLeft(find.byKey(_stopKey)).dy;
+    expect(stopTop - toolbarTop, 20);
+    final stopColors = _decorationColors(tester, find.byKey(_stopKey)).toList();
+    expect(stopColors, contains(stop));
+    expect(stopColors, isNot(contains(_light.destructive)));
+  });
+
   group('Agent keeps the behaviour the recipe never sees', () {
     testWidgets('Enter submits, Shift+Enter and IME composition do not', (
       tester,

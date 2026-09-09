@@ -10,10 +10,10 @@ fvm flutter run -d chrome
 fvm flutter run -d web-server --web-hostname localhost --web-port 7388
 ```
 
-Day / Night in the top bar switches local, non-exported light and dark style
-recipes. The Agent package itself contributes no visual defaults. The catalog
-uses a fixed two-column wide layout at 880 logical pixels and a single-column
-narrow layout below that breakpoint.
+Day / Night switches the Composer's installed `UiThemeScope` and the local
+styles used by the other seven surfaces. The Agent package contributes no
+visual defaults. The catalog uses a fixed two-column wide layout at 880 logical
+pixels and a single-column narrow layout below that breakpoint.
 
 The hero is a full turn. The rail jumps to Composer, Message, Transcript,
 Permission, Execution, Plan, Activity, and Answer. Each section is a live
@@ -21,5 +21,5 @@ control, not a screenshot. The composed hero deliberately disables transcript
 auto-follow so its fixed review frame remains stable.
 
 The catalog recipes pass Remix child stylers separately from structural Agent
-stylers and rely on Agent's built-in path glyphs. Top-bar and rail actions are
+stylers and rely on Agent's built-in Lucide glyphs. Top-bar and rail actions are
 Remix controls, so the same catalog can be reviewed with pointer or keyboard.

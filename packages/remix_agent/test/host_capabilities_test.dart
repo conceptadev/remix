@@ -4,7 +4,7 @@ import 'package:remix/remix.dart';
 import 'package:remix_agent/remix_agent.dart';
 
 void main() {
-  testWidgets('ordinary catalog widgets need no Overlay or Navigator', (
+  testWidgets('unfocused catalog widgets mount without Overlay or Navigator', (
     tester,
   ) async {
     await tester.pumpWidget(

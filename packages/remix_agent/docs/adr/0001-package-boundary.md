@@ -104,6 +104,7 @@ Two things remain gated, and neither is claimed anywhere in this package:
    execution, plan, and activity have no proven recipe yet. Their worksheets
    record the benchmark measurements, not shipped defaults.
 
-A browser pass over the light, dark, narrow, wide, and reduced-motion states,
-and one hosted-consumer run, both remain open. Package widget tests cannot
-establish either.
+Local Chrome checks cover the catalog in light, dark, narrow, wide, and
+reduced-motion states, including Composer submit/stop and permission and
+disclosure interactions. Hosted-consumer verification remains open and depends
+on publication; local browser and widget tests do not establish installability.

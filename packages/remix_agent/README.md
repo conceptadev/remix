@@ -22,12 +22,13 @@ have neutral Material-free Lucide defaults. Their public builders remain the
 replacement point; visual color and size still come from host styles.
 
 A `MixScope` is not an Agent requirement. Add one only when the host's own
-styles resolve scoped Mix tokens. The local catalog uses `MixScope.empty`
-because its review-only light and dark recipes use Mix.
+styles resolve scoped Mix tokens. The catalog's Composer uses the installed
+`UiThemeScope` for its light and dark tokens; the other demos use local styles.
 
 ## Install
 
-Add the path or hosted constraint your workspace uses, then:
+The package is unpublished. Use it as a workspace member or a local path
+dependency, then:
 
 ```dart
 import 'package:flutter/widgets.dart';
