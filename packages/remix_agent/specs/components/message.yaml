@@ -1,7 +1,7 @@
 # This package ships no value for any measurement in this worksheet.
 # `Agent*Spec` names the slots; the application's recipe fills them. The
 # numbers below are the benchmark the anatomy was read from, not a default
-# this package resolves. See ../../docs/open-code-review.md.
+# this package resolves. See ../../docs/adr/0001-package-boundary.md.
 component: Message
 flutter_name: AgentMessage
 status: behavior implemented (vertical slice); no visual defaults shipped

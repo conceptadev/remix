@@ -1,10 +1,11 @@
 # ADR 0001 — Package boundary
 
-The [open-code review](../open-code-review.md) retains this behavior boundary
-and proposes registry-distributed, application-owned recipes. That integration
-is planned, not implemented by this package decision. What the first consumer
+A clean-sheet review of this package against the open-code workflow retained
+the behavior boundary below and proposed registry-distributed,
+application-owned recipes instead of an Agent theme. That integration is
+planned, not implemented by this package decision. What the first consumer
 established, and what is still gated, is recorded under
-[Runtime and recipe split](#runtime-and-recipe-split) below.
+[Runtime and recipe split](#runtime-and-recipe-split).
 
 ## Decision
 
@@ -67,9 +68,22 @@ installed `remix_cli` source rather than as an Agent theme.
 
 One surface has a proven consumer. `open_code/agent_fixture/` installs Theme,
 Card, TextField, and IconButton with the checkout CLI and styles `AgentComposer`
-from them; `tool/check_agent_consumer.dart` builds that application, runs its
-suite, then edits the installed IconButton recipe and reruns the suite to prove
-the edit reaches Agent's send and stop buttons.
+from them. `tool/check_agent_consumer.dart` builds that application and proves,
+inside it:
+
+- `uiAgentComposerRecipe()` supplies all five composer stylers from the
+  installed recipes;
+- editing the installed IconButton recipe changes Agent's send and stop
+  buttons, and the CLI reports the edited file as application-owned;
+- an instance override still beats the recipe;
+- field focus and button hover still resolve in the child controllers;
+- Enter, Shift+Enter, IME composition, and a controller swap still behave;
+- the semantic tree holds one field and one action;
+- the light and dark themes both reach Agent through the same recipe;
+- the installed layer imports no `remix_agent`.
+
+That checker has no hosted phase, and nothing in it claims hosted installation
+works.
 
 The recipe is a **bundle**, not a single styler. `AgentComposer` takes
 `style`, `surfaceStyle`, `fieldStyle`, `submitStyle`, and `stopStyle`, and
@@ -78,11 +92,18 @@ supply the other four. `uiAgentComposerRecipe()` returns all five and the call
 site spreads them. The four child stylers stay unresolved, for the reason the
 section above gives.
 
-Two things remain gated and are not claimed anywhere in this package:
+Two things remain gated, and neither is claimed anywhere in this package:
 
 1. **Publication.** The package is `publish_to: none`. A registry item's
-   dependency is a hosted version constraint, so there is no Agent registry
-   item and hosted installation is not advertised.
+   dependency is a hosted version constraint, not a way to publish a private
+   workspace sibling, so there is no Agent registry item and hosted
+   installation is not advertised. Resolving the publication metadata,
+   dependency floors, provenance, and release checks is the next decision, and
+   it is not a code change.
 2. **The other seven surfaces.** Message, transcript, answer, permission,
    execution, plan, and activity have no proven recipe yet. Their worksheets
    record the benchmark measurements, not shipped defaults.
+
+A browser pass over the light, dark, narrow, wide, and reduced-motion states,
+and one hosted-consumer run, both remain open. Package widget tests cannot
+establish either.

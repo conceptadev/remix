@@ -14,7 +14,7 @@
 /// It deliberately has no hosted phase. `remix_agent` is `publish_to: none`, so
 /// there is no version to resolve and nothing here claims that hosted
 /// installation works. That claim needs a release first; see
-/// `packages/remix_agent/docs/open-code-review.md`.
+/// `packages/remix_agent/docs/adr/0001-package-boundary.md`.
 library;
 
 import 'dart:convert';
