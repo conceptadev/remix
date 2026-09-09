@@ -1,6 +1,19 @@
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState, type ComponentProps } from 'react';
+
+// Native selection retains keyboard navigation and the mobile system picker.
+function PreviewSelect({ label, ...props }: ComponentProps<'select'> & { label: string }) {
+  return <div className="remix-preview-field">
+    <label htmlFor={props.id}>{label}</label>
+    <div className="remix-preview-select">
+      <select {...props} />
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="m6 9 6 6 6-6" />
+      </svg>
+    </div>
+  </div>;
+}
 
 export function FlutterPreview({ title, cases }: {
   title: string;
@@ -30,14 +43,12 @@ export function FlutterPreview({ title, cases }: {
 
   return <div className="not-prose remix-preview">
     <div className="remix-preview-toolbar">
-      <label htmlFor={`${id}-case`}>Example</label>
-      <select id={`${id}-case`} value={path} onChange={event => setPath(event.target.value)}>
+      <PreviewSelect label="Example" id={`${id}-case`} value={path} onChange={event => setPath(event.target.value)}>
         {cases.map(item => <option key={item.path} value={item.path}>{item.name}</option>)}
-      </select>
-      <label className="sr-only" htmlFor={`${id}-theme`}>Example theme</label>
-      <select id={`${id}-theme`} value={mode} onChange={event => setMode(event.target.value)}>
+      </PreviewSelect>
+      <PreviewSelect label="Theme" aria-label="Example theme" id={`${id}-theme`} value={mode} onChange={event => setMode(event.target.value)}>
         <option value="light">Light</option><option value="dark">Dark</option>
-      </select>
+      </PreviewSelect>
       <a href={catalogUrl} target="_blank" rel="noreferrer">Open catalog</a>
     </div>
     <div className="remix-preview-stage" aria-busy={status === 'loading'}>

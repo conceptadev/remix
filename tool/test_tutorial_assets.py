@@ -95,6 +95,7 @@ class TutorialAssetTests(unittest.TestCase):
         self.assertIn(b"class _WorkspacePageState", first)
         button = (staged.parents[1] / "components/button.mdx").read_text()
         self.assertIn('title="Button" cases=', button)
+        self.assertIn('<Tab value="Preview" keepMounted>', button)
         self.assertIn((source / "apps/demo/lib/components/button.dart").read_text().rstrip(), button)
         navigation = json.loads((self.root / "apps/docs/.generated/content/meta.json").read_text())
         # Explicit links keep the overview separate from its same-named folder.

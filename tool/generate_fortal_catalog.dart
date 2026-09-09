@@ -108,12 +108,11 @@ String _render(Map<String, Object?> manifest, Directory packageRoot) {
       'actually gets.',
     )
     ..writeln()
-    ..writeln('<Card>')
     ..writeln(
-      '  <img src="/assets/fortal-catalog.png" alt="Fortal components across '
-      'their variants" />',
+      'This is the API reference. Start with the [Fortal overview](/fortal) '
+      'for installation and theming. For live examples and source, choose '
+      'a component in the sidebar, such as [Button](/components/button).',
     )
-    ..writeln('</Card>')
     ..writeln()
     ..writeln(
       'A `—` value means the widget does not expose that axis. When values '

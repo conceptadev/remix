@@ -10,9 +10,19 @@
 }
 .remix-docs-label { font-size: 0.875rem; color: var(--color-fd-muted-foreground); }
 .remix-preview { margin-block: 0 2rem; }
-.remix-preview-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--color-fd-border); font-size: 0.875rem; }
-.remix-preview-toolbar select { max-width: 100%; min-height: 2.75rem; padding: 0.375rem 0.75rem; background: var(--color-fd-background); border: 1px solid var(--color-fd-border); border-radius: 0.375rem; color: var(--color-fd-foreground); }
-.remix-preview-toolbar a { margin-left: auto; text-decoration: underline; text-underline-offset: 0.2em; }
+.remix-preview-toolbar { display: grid; grid-template-columns: minmax(0, 1fr) 6.5rem auto; align-items: end; gap: 0.75rem 1rem; padding: 1rem; border-bottom: 1px solid var(--color-fd-border); font-size: 0.875rem; }
+.remix-preview-field { display: grid; gap: 0.375rem; min-width: 0; }
+.remix-preview-field label { color: var(--color-fd-muted-foreground); }
+.remix-preview-select { position: relative; }
+.remix-preview-select select { appearance: none; width: 100%; min-height: 2.75rem; padding: 0.5rem 2.5rem 0.5rem 0.75rem; background: var(--color-fd-background); border: 1px solid var(--color-fd-border); border-radius: 0.375rem; color: var(--color-fd-foreground); font: inherit; text-overflow: ellipsis; cursor: pointer; }
+.remix-preview-select svg { position: absolute; inset-inline-end: 0.75rem; top: 50%; transform: translateY(-50%); width: 1rem; height: 1rem; pointer-events: none; }
+.remix-preview-select select:hover { border-color: var(--color-fd-muted-foreground); }
+.remix-preview-toolbar a { display: inline-flex; align-items: center; min-height: 2.75rem; text-decoration: underline; text-underline-offset: 0.2em; }
+@media (max-width: 640px) {
+  .remix-preview-toolbar { grid-template-columns: 6.5rem minmax(0, 1fr); }
+  .remix-preview-field:first-child { grid-column: 1 / -1; }
+  .remix-preview-toolbar a { justify-self: end; }
+}
 .remix-preview-stage { position: relative; height: 400px; background: var(--color-fd-background); }
 .remix-preview-stage iframe { width: 100%; height: 100%; border: 0; }
 .remix-preview-status { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 1.5rem; text-align: center; background: var(--color-fd-background); }

@@ -49,7 +49,7 @@ def prepare(root):
                     raise ValueError(f"No catalog cases for {path.stem}")
                 code = (root / f"apps/demo/lib/components/{path.stem}.dart").read_text().rstrip("\n")
                 title = re.search(r"^title: (.+)$", text, re.MULTILINE)[1]
-                panel = (f'\n<Tabs items={{["Preview", "Source"]}}>\n<Tab value="Preview">\n'
+                panel = (f'\n<Tabs items={{["Preview", "Source"]}}>\n<Tab value="Preview" keepMounted>\n'
                          f'<FlutterPreview title={json.dumps(title)} cases={{{json.dumps(example["cases"])}}} />\n'
                          f'</Tab>\n<Tab value="Source">\n\n'
                          f'```dart title="apps/demo/lib/components/{path.stem}.dart"\n{code}\n```\n\n'
