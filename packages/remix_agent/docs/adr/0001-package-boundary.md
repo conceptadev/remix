@@ -72,10 +72,10 @@ TextField, and IconButton exactly as any application does; the installed source
 is committed, and `tool/check_open_code_dogfood.dart` holds it against the
 templates. `example/test/composer_recipe_test.dart` then proves:
 
-- `uiAgentComposerRecipe()` supplies all five composer stylers from the
-  installed recipes;
-- Agent's send button matches a control built from the same recipe, so the two
-  cannot diverge — a fork fails the comparison, and a recipe edit moves both;
+- `uiAgentComposerRecipe()` combines the toolbar style with four child
+  stylers derived from installed recipes;
+- Agent's send button has the same dimensions as a standalone installed
+  IconButton and uses the expected theme color;
 - an instance override still beats the recipe;
 - field focus and button hover still resolve in the child controllers;
 - Enter, Shift+Enter, IME composition, and a controller swap still behave;

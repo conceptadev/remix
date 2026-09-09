@@ -14,15 +14,8 @@ const _stopKey = ValueKey('agent-composer-stop');
 const _light = UiThemeData.light();
 const _dark = UiThemeData.dark();
 
-/// A control built straight from the installed IconButton recipe.
-///
-/// Agent's send button is compared against this rather than against a literal
-/// size. A literal would pass whether or not Agent's button came from the
-/// application's file; this comparison holds only while both sides resolve the
-/// same recipe, so editing `lib/ui/components/icon_button.dart` moves both.
-///
-/// The glyph is a bare codepoint because the catalog installs no icon set. It
-/// is never read; only the control's geometry is.
+/// A standalone installed control for comparing the send button's dimensions.
+/// The glyph is incidental to the geometry assertion.
 const _referenceIconButton = UiIconButton(
   icon: IconData(0x2192),
   semanticLabel: 'Reference',
@@ -105,7 +98,7 @@ Widget _composer({
 
 void main() {
   group('the installed recipes style Agent', () {
-    testWidgets('send is the application IconButton, not a copy of it', (
+    testWidgets('send matches installed IconButton size and color', (
       tester,
     ) async {
       await _pump(
@@ -126,8 +119,7 @@ void main() {
       final reference = find.byType(UiIconButton);
 
       expect(_decorationColors(tester, send), contains(_light.primary));
-      // The comparison, not the literal, is the assertion: change
-      // `lib/ui/components/icon_button.dart` and both sides move together.
+      // Compare dimensions without hard-coding the installed recipe's size.
       expect(tester.getSize(send), tester.getSize(reference));
     });
 

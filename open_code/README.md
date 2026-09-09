@@ -319,5 +319,6 @@ fvm dart run tool/check_open_code_dogfood.dart
 ```
 
 `apps/playground` holds every item; `packages/remix_agent/example` holds the
-four its composer recipe composes. The walk asks each consumer's `remix.yaml`
-what it installed, so a consumer is never faulted for an item it never added.
+four its composer recipe composes. The checker declares those expected items
+explicitly, so missing files are checked too. The CLI reads each consumer's
+`remix.yaml` to locate its installed source.
