@@ -1,0 +1,350 @@
+{
+  "accordion": {
+    "cases": [
+      {
+        "name": "Accordion Component",
+        "path": "components/remixaccordion/accordion-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixaccordion/catalog"
+      }
+    ]
+  },
+  "avatar": {
+    "cases": [
+      {
+        "name": "Avatar Component",
+        "path": "components/remixavatar/avatar-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixavatar/catalog"
+      }
+    ]
+  },
+  "badge": {
+    "cases": [
+      {
+        "name": "Badge Component",
+        "path": "components/remixbadge/badge-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixbadge/catalog"
+      }
+    ]
+  },
+  "button": {
+    "cases": [
+      {
+        "name": "Button Component",
+        "path": "components/remixbutton/button-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixbutton/catalog"
+      }
+    ]
+  },
+  "callout": {
+    "cases": [
+      {
+        "name": "Callout Component",
+        "path": "components/remixcallout/callout-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixcallout/catalog"
+      }
+    ]
+  },
+  "card": {
+    "cases": [
+      {
+        "name": "Card Component",
+        "path": "components/remixcard/card-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixcard/catalog"
+      }
+    ]
+  },
+  "checkbox": {
+    "cases": [
+      {
+        "name": "Checkbox Component",
+        "path": "components/remixcheckbox/checkbox-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixcheckbox/catalog"
+      }
+    ]
+  },
+  "checkbox_group": {
+    "cases": [
+      {
+        "name": "Interests",
+        "path": "components/remixcheckboxgroup<object>/interests"
+      }
+    ]
+  },
+  "data_list": {
+    "cases": [
+      {
+        "name": "Catalog",
+        "path": "components/remixdatalist/catalog"
+      }
+    ]
+  },
+  "data_table": {
+    "cases": [
+      {
+        "name": "Catalog",
+        "path": "components/remixdatatable/catalog"
+      }
+    ]
+  },
+  "dialog": {
+    "cases": [
+      {
+        "name": "Alert Dialog",
+        "path": "components/remixdialog/alert-dialog"
+      },
+      {
+        "name": "Dialog Component",
+        "path": "components/remixdialog/dialog-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixdialog/catalog"
+      }
+    ]
+  },
+  "disclosure": {
+    "cases": [
+      {
+        "name": "Fortal",
+        "path": "components/remixdisclosure/fortal"
+      },
+      {
+        "name": "Remix",
+        "path": "components/remixdisclosure/remix"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixdisclosure/catalog"
+      }
+    ]
+  },
+  "divider": {
+    "cases": [
+      {
+        "name": "Divider Component",
+        "path": "components/remixdivider/divider-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixdivider/catalog"
+      }
+    ]
+  },
+  "icon_button": {
+    "cases": [
+      {
+        "name": "Icon Button Component",
+        "path": "components/remixiconbutton/icon-button-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixiconbutton/catalog"
+      }
+    ]
+  },
+  "link": {
+    "cases": [
+      {
+        "name": "Catalog",
+        "path": "components/fortallink/catalog"
+      }
+    ]
+  },
+  "menu": {
+    "cases": [
+      {
+        "name": "Menu Component",
+        "path": "components/remixmenu/menu-component"
+      }
+    ]
+  },
+  "popover": {
+    "cases": [
+      {
+        "name": "Popover Component",
+        "path": "components/remixpopover/popover-component"
+      }
+    ]
+  },
+  "progress": {
+    "cases": [
+      {
+        "name": "Progress Component",
+        "path": "components/remixprogress/progress-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixprogress/catalog"
+      }
+    ]
+  },
+  "radio": {
+    "cases": [
+      {
+        "name": "Radio Component",
+        "path": "components/remixradio/radio-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixradio/catalog"
+      }
+    ]
+  },
+  "segmented_control": {
+    "cases": [
+      {
+        "name": "Catalog",
+        "path": "components/remixsegmentedcontrol<object>/catalog"
+      }
+    ]
+  },
+  "select": {
+    "cases": [
+      {
+        "name": "Select Component",
+        "path": "components/remixselect/select-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixselect/catalog"
+      }
+    ]
+  },
+  "sidebar": {
+    "cases": [
+      {
+        "name": "Workspace navigation",
+        "path": "components/remixsidebar<object>/workspace-navigation"
+      }
+    ]
+  },
+  "skeleton": {
+    "cases": [
+      {
+        "name": "Loading content",
+        "path": "components/remixskeleton/loading-content"
+      }
+    ]
+  },
+  "slider": {
+    "cases": [
+      {
+        "name": "Slider Component",
+        "path": "components/remixslider/slider-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixslider/catalog"
+      }
+    ]
+  },
+  "spinner": {
+    "cases": [
+      {
+        "name": "Spinner Component",
+        "path": "components/remixspinner/spinner-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixspinner/catalog"
+      }
+    ]
+  },
+  "switch": {
+    "cases": [
+      {
+        "name": "Switch Component",
+        "path": "components/remixswitch/switch-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixswitch/catalog"
+      }
+    ]
+  },
+  "tabs": {
+    "cases": [
+      {
+        "name": "Tabs Component",
+        "path": "components/remixtabs/tabs-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixtabs/catalog"
+      }
+    ]
+  },
+  "textarea": {
+    "cases": [
+      {
+        "name": "Catalog",
+        "path": "components/fortaltextarea/catalog"
+      }
+    ]
+  },
+  "textfield": {
+    "cases": [
+      {
+        "name": "TextField Component",
+        "path": "components/remixtextfield/textfield-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixtextfield/catalog"
+      }
+    ]
+  },
+  "toggle": {
+    "cases": [
+      {
+        "name": "Toggle Component",
+        "path": "components/remixtoggle/toggle-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixtoggle/catalog"
+      }
+    ]
+  },
+  "toggle_group": {
+    "cases": [
+      {
+        "name": "Toggle Group Component",
+        "path": "components/remixtogglegroup/toggle-group-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixtogglegroup/catalog"
+      }
+    ]
+  },
+  "tooltip": {
+    "cases": [
+      {
+        "name": "Tooltip Component",
+        "path": "components/remixtooltip/tooltip-component"
+      }
+    ]
+  }
+}

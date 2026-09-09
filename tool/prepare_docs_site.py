@@ -29,6 +29,10 @@ def prepare(root):
     app = root / "apps/docs"
     content = app / ".generated/content"
     assets = app / "public/assets"
+    previews = json.loads((docs / "component-previews.json").read_text())
+    component_pages = {path.stem for path in (docs / "components").glob("*.mdx")}
+    if set(previews) != component_pages:
+        raise ValueError("Every component page must map to its catalog examples")
     # Both paths are fixed generated outputs, never the root docs directory.
     for output in [content, assets]:
         if output.exists():
@@ -38,7 +42,22 @@ def prepare(root):
         for path in docs.rglob("*.mdx"):
             target = content / path.relative_to(docs)
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text(expand_sources(path.read_text(), archive))
+            text = expand_sources(path.read_text(), archive)
+            if path.parent == docs / "components":
+                example = previews[path.stem]
+                if not example["cases"]:
+                    raise ValueError(f"No catalog cases for {path.stem}")
+                code = (root / f"apps/demo/lib/components/{path.stem}.dart").read_text().rstrip("\n")
+                title = re.search(r"^title: (.+)$", text, re.MULTILINE)[1]
+                panel = (f'\n<Tabs items={{["Preview", "Source"]}}>\n<Tab value="Preview">\n'
+                         f'<FlutterPreview title={json.dumps(title)} cases={{{json.dumps(example["cases"])}}} />\n'
+                         f'</Tab>\n<Tab value="Source">\n\n'
+                         f'```dart title="apps/demo/lib/components/{path.stem}.dart"\n{code}\n```\n\n'
+                         f'</Tab>\n</Tabs>\n')
+                # Insert after frontmatter; authored docs stay unchanged.
+                end = text.index("\n---", 3) + 4
+                text = text[:end] + "\n" + panel + text[end:]
+            target.write_text(text)
     # Fumadocs supports root page paths and separators in a meta file.
     navigation = json.loads((root / "docs.json").read_text())
     pages = []

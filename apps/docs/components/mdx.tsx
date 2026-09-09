@@ -2,6 +2,7 @@ import { getConceptaMDXComponents } from '@conceptadev/docs-theme/mdx';
 import { Callout } from 'fumadocs-ui/components/callout';
 import type { ReactNode } from 'react';
 import type { MDXComponents } from 'mdx/types';
+import { FlutterPreview } from './flutter-preview';
 
 // Existing content uses these names. Fumadocs still owns the code blocks,
 // highlighting, copy controls, and callout presentation.
@@ -12,6 +13,7 @@ function CodeGroup({ title, children }: { title?: string; defaultLanguage?: stri
 export function getMDXComponents(overrides?: MDXComponents) {
   return getConceptaMDXComponents({
     CodeGroup,
+    FlutterPreview,
     Info: ({ children }: { children: ReactNode }) => <Callout type="info">{children}</Callout>,
     Note: ({ children }: { children: ReactNode }) => <Callout type="info">{children}</Callout>,
     Warning: ({ children }: { children: ReactNode }) => <Callout type="warn">{children}</Callout>,

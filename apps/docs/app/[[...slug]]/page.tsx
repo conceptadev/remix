@@ -10,11 +10,13 @@ export default async function Page({ params }: PageProps<'/[[...slug]]'>) {
   const page = source.getPage((await params).slug);
   if (!page) notFound();
   const MDX = page.data.body;
-  return <DocsPage toc={page.data.toc} full={page.data.full}>
-    <DocsTitle>{page.data.title}</DocsTitle>
-    <DocsDescription>{page.data.description}</DocsDescription>
+  return <DocsPage toc={page.data.toc.filter(item => item.depth <= 3)} full={page.data.full}>
+    <header className="concepta-docs-page-header">
+      <DocsTitle>{page.data.title}</DocsTitle>
+      <DocsDescription>{page.data.description}</DocsDescription>
+    </header>
     <DocsBody><MDX components={getMDXComponents({ a: createRelativeLink(source, page) })} /></DocsBody>
-    <a href={createSourceUrl(docsConfig, page.path)} className="text-sm text-fd-muted-foreground underline">View page source</a>
+    <a href={createSourceUrl(docsConfig, page.path)} className="concepta-docs-source-link">View page source on GitHub</a>
   </DocsPage>;
 }
 export function generateStaticParams() { return source.generateParams(); }

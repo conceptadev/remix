@@ -13,13 +13,13 @@
   },
   "socialPreview": "/assets/banner.png",
   "navigation": {
-    "github": "https://github.com/btwld/remix"
+    "github": "https://github.com/conceptadev/remix"
   },
   "search": {
     "enabled": true
   },
   "social": {
-    "github": "btwld/remix"
+    "github": "conceptadev/remix"
   },
   "meta": {
     "author": "Bitwild",
@@ -43,7 +43,7 @@
       },
       {
         "title": "GitHub",
-        "url": "https://github.com/btwld/remix"
+        "url": "https://github.com/conceptadev/remix"
       },
       {
         "title": "pub.dev",

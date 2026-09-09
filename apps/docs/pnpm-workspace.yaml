@@ -3,7 +3,7 @@ strictPeerDependencies: true
 engineStrict: true
 allowBuilds:
   esbuild: true
-  '@conceptadev/docs-theme@git+ssh://git@github.com/conceptadev/docs-theme.git#57be8044beaf23c5414a671693b297615560095c': true
+  '@conceptadev/docs-theme@git+ssh://git@github.com/conceptadev/docs-theme.git#75c0bc67a2b075b8d64da7daa206e9f341d00c84': true
 minimumReleaseAgeStrict: true
 minimumReleaseAgeExclude:
   - '@fumadocs/base-ui@16.15.8'

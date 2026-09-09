@@ -5,7 +5,8 @@ Fumadocs theme. It does not contain a second editable copy of the documentation.
 
 ## Run
 
-Use Node 24.14+, pnpm 11.5.3, and Python 3.9+:
+Use Node 24.14+, pnpm 11.5.3, Python 3.9+, and FVM with the repository's
+pinned Flutter SDK. Run `fvm flutter pub get` in `apps/demo` first:
 
 ```bash
 cd apps/docs
@@ -29,7 +30,7 @@ Static export and deployment under a path prefix are not configured.
 
 The theme is not published on npm yet. `package.json` and the lockfile pin the
 reviewed `conceptadev/docs-theme` commit
-`57be8044beaf23c5414a671693b297615560095c`. pnpm fetches this GitHub dependency
+`75c0bc67a2b075b8d64da7daa206e9f341d00c84`. pnpm fetches this GitHub dependency
 over SSH and builds it; only this exact Git source is allowed to run scripts.
 Installation requires GitHub access to that currently internal repository.
 No theme source or credentials are vendored here.
@@ -56,3 +57,30 @@ retains existing `Info`, `Note`, `Warning`, and single-example `CodeGroup` tags.
 The retired standalone tutorial and guide URLs redirect to their native MDX
 replacements. Old HTML files and their renderer dependencies remain recoverable
 from Git history, not shipped alongside the new app.
+
+## Live component examples
+
+Every component page pairs a live Widgetbook preview with its real catalog
+source. `docs/component-previews.json` selects the generated Widgetbook routes;
+`tool/prepare_docs_site.py` includes `apps/demo/lib/components/<page>.dart`
+directly. Edit these sources, not the generated MDX. Source panels are catalog
+examples with Fortal styling, not standalone applications.
+
+Both `pnpm dev` and `pnpm build` build that same Flutter catalog into ignored
+`public/previews`. `/previews/` opens the full catalog; embedded routes use
+Widgetbook's native preview mode. No separate renderer or remote deployment
+is required. To iterate on docs alone after the initial build, run `pnpm content`
+and `pnpm exec next dev`. Rebuild previews after changing Flutter examples.
+
+`apps/demo/test/docs_preview_test.dart` checks page coverage, actual generated
+routes, and the new interactive examples. Run it from `apps/demo` with
+`fvm flutter test test/docs_preview_test.dart test/catalog_test.dart`.
+
+The build uses the current Git commit for page-source links. Set
+`DOCS_SOURCE_REF` explicitly when building without a Git checkout. Configure
+`NEXT_PUBLIC_SITE_URL` separately for canonical metadata.
+
+Shared fonts, reading styles, and logo support belong in `conceptadev/docs-theme`.
+Remix owns its existing artwork, green accent, and Flutter preview integration.
+The theme documents its Concepta design-system reference; private design-system
+source and assets are not copied into this repository.

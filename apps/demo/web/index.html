@@ -34,6 +34,14 @@
 
 </head>
 <body>
+  <script>
+    // The docs host only accepts this signal from its own preview frame.
+    window.addEventListener('flutter-first-frame', function () {
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'remix-preview-ready' }, window.location.origin);
+      }
+    });
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

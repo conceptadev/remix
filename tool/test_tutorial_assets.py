@@ -82,6 +82,7 @@ class TutorialAssetTests(unittest.TestCase):
     def test_staging_is_repeatable_and_preserves_authoring_source(self):
         source = Path(__file__).resolve().parents[1]
         shutil.copyfile(source / "docs.json", self.root / "docs.json")
+        shutil.copytree(source / "apps/demo/lib/components", self.root / "apps/demo/lib/components")
         page = self.root / "docs/tutorials/settings-screen.mdx"
         before = page.read_bytes()
         prepare(self.root)
@@ -92,6 +93,9 @@ class TutorialAssetTests(unittest.TestCase):
         self.assertEqual(page.read_bytes(), before)
         self.assertNotIn(b"<TutorialSource", first)
         self.assertIn(b"class _WorkspacePageState", first)
+        button = (staged.parents[1] / "components/button.mdx").read_text()
+        self.assertIn('title="Button" cases=', button)
+        self.assertIn((source / "apps/demo/lib/components/button.dart").read_text().rstrip(), button)
         navigation = json.loads((self.root / "apps/docs/.generated/content/meta.json").read_text())
         # Explicit links keep the overview separate from its same-named folder.
         sidebar = json.loads((self.root / "docs.json").read_text())["sidebar"]
