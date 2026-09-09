@@ -7,7 +7,9 @@ focus, loading, disabled behavior, and accessibility.
 The registry source lives in `packages/remix_cli/lib/src/registry/`. There is
 no second copy under `open_code/`. The files in `open_code/fixture/` are a
 fresh-app gallery, behavioral test suite, and expected generated adapter used
-by `tool/check_open_code.dart`.
+by `tool/check_open_code.dart`. `open_code/agent_fixture/` is a second, much
+smaller consumer used by `tool/check_agent_consumer.dart`; see
+[Styling a package on top of the catalog](#styling-a-package-on-top-of-the-catalog).
 
 ## Install the CLI in a project
 
@@ -208,6 +210,39 @@ and makes template changes reviewable in ordinary dependency updates. A global
 activation is convenient for experiments, but it can silently move every
 project to a different template version.
 
+## Styling a package on top of the catalog
+
+Installed recipes are not only for an application's own widgets. A behavioral
+package that takes unresolved stylers can be styled from them too, which keeps
+its surfaces inside the application's design language instead of adding a
+second one.
+
+`remix_agent` is the worked example. `open_code/agent_fixture/` installs Theme,
+Card, TextField, and IconButton, then composes them into one recipe bundle for
+`AgentComposer`:
+
+```dart
+final recipe = uiAgentComposerRecipe();
+
+AgentComposer(
+  onSubmit: submit,
+  style: recipe.style,
+  surfaceStyle: recipe.surfaceStyle,
+  fieldStyle: recipe.fieldStyle,
+  submitStyle: recipe.submitStyle,
+  stopStyle: recipe.stopStyle,
+)
+```
+
+A bundle rather than a single styler, because the widget takes five stylers and
+its own spec covers one of them. The four child stylers are passed on
+unresolved, so each control resolves its own hover, focus, and disabled state.
+
+`remix_agent` has no registry item. It is `publish_to: none`, and a registry
+item's dependency is a hosted version constraint, so the fixture names the
+package through a checkout override that `tool/check_agent_consumer.dart`
+writes into the temporary app.
+
 ## Repository proof
 
 Run the focused unit test and the full fresh-consumer check from the workspace
@@ -223,3 +258,16 @@ CLI with prefix `Acme`, adds every registry item, and proves generation,
 analysis, and all behavior tests against hosted Remix. It then overrides Remix to the current checkout,
 regenerates without a consumer `build.yaml`, and repeats the checks. Pass
 `--keep` to retain the generated gallery for inspection.
+
+The Agent consumer is a separate check:
+
+```shell
+fvm dart run tool/check_agent_consumer.dart
+```
+
+It installs four items with the default `Ui` prefix, points `remix` and
+`remix_agent` at this checkout, and runs the fixture's suite. It then edits the
+installed IconButton recipe and reruns the suite with the new expected metric,
+which is what proves Agent's send and stop buttons are painted by the
+application's file. It has no hosted phase, because `remix_agent` has no
+release. `--keep` works here too.

@@ -138,6 +138,14 @@ melos:
       run: dart run tool/check_open_code_dogfood.dart
       description: Verify the playground's installed source still mirrors the registry
 
+    agent:consumer:check:
+      steps:
+        - dart test test/tool/check_agent_consumer_test.dart
+        - dart run tool/check_agent_consumer.dart
+      description: >-
+        Install Theme, Card, TextField, and IconButton in a fresh app and prove
+        those recipes style remix_agent's composer
+
     icons:generate:
       steps:
         - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons glyphpact --config packages/remix_ui_icons/tool/radix_icons/glyphpact.json
@@ -163,13 +171,15 @@ melos:
         - open-code:dogfood:check
         - test:cli
         - test:flutter
-        # Last because it is the only step that leaves the workspace: it builds
-        # a throwaway app in the system temp directory and resolves from
-        # pub.dev before retesting against this checkout.
+        # Last because they are the only steps that leave the workspace: each
+        # builds a throwaway app in the system temp directory. `open-code`
+        # resolves from pub.dev before retesting against this checkout;
+        # `agent:consumer` has no hosted phase, because remix_agent is private.
         - open-code:check
+        - agent:consumer:check
       description: >-
         Verify generated sources, docs, Fortal parity, tests, and the
-        open-code consumer boundary
+        open-code and Agent consumer boundaries
 
     fortal:parity:check:
       exec: dart run tool/fortal_parity/check.dart
