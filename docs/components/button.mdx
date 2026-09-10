@@ -152,6 +152,50 @@ class FortalButtonExample extends StatelessWidget {
   See the [fortalButtonStyle source code](https://github.com/btwld/remix/blob/main/packages/remix_fortal/lib/src/components/button.dart) for all available options.
 </Info>
 
+### Fortal button icon sizing
+
+`FortalButton.size` selects the button's layout and label metrics, but does not
+set the size of its leading or trailing icons. The default icon builders inherit
+the surrounding Flutter `IconTheme` size; Flutter falls back to 24 logical pixels
+when no icon size is supplied. A small button can therefore still contain a
+24-pixel icon.
+
+Use `IconTheme(data: IconThemeData(size: 14), child: FortalButton.soft(...))`
+to set the inherited size for a subtree. For an explicit per-button override,
+pass a Fortal recipe to `RemixButton` and customize its icon styler.
+`FortalButton` itself has no `style` parameter.
+
+<CodeGroup title="Explicit Fortal icon size" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+class FortalButtonIconSizeExample extends StatelessWidget {
+  const FortalButtonIconSizeExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FortalScope(
+      child: RemixButton(
+        label: 'Save',
+        leadingIcon: Icons.save,
+        trailingIcon: Icons.check,
+        onPressed: () {},
+        style: fortalButtonStyle(variant: .soft, size: .size1)
+            .icon(IconStyler().size(14)),
+      ),
+    );
+  }
+}
+```
+</CodeGroup>
+
+The 14-pixel value is a caller choice, not a Fortal size preset. This override
+applies to both default icon slots. Custom `leadingIconBuilder` and
+`trailingIconBuilder` implementations receive the icon spec and are responsible
+for applying it to their own widgets.
+
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart

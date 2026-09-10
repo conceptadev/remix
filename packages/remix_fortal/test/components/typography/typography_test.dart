@@ -12,6 +12,40 @@ import '../../helpers/test_helpers.dart';
 
 void main() {
   group('metrics', () {
+    for (final variant in FortalKbdVariant.values) {
+      testWidgets('kbd ${variant.name} preserves token font families', (
+        tester,
+      ) async {
+        for (final size in [null, FortalTextSize.size2]) {
+          final token = size == null ? FortalTokens.text3 : FortalTokens.text2;
+          await _pump(
+            tester,
+            Builder(
+              builder: (context) => MixScope.inherit(
+                textStyles: {
+                  token: token
+                      .resolve(context)
+                      .copyWith(
+                        fontFamily: 'Custom family',
+                        fontFamilyFallback: ['Fallback family'],
+                      ),
+                },
+                child: FortalKbd('Key', variant: variant, size: size),
+              ),
+            ),
+            ambient: const TextStyle(fontFamily: 'Unrelated ambient family'),
+          );
+          final style = _renderedTextStyle(tester, 'Key');
+          expect(style.fontFamily, 'Custom family');
+          expect(style.fontFamilyFallback, ['Fallback family']);
+          expect(style.inherit, isFalse);
+          expect(style.fontWeight, FontWeight.w400);
+          expect(style.fontSize, closeTo(size == null ? 12 : 11.2, 1e-9));
+          expect(style.height, 1.7);
+        }
+      });
+    }
+
     testWidgets('all nine sizes resolve the pinned scale across scaling', (
       tester,
     ) async {
