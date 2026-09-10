@@ -50,8 +50,8 @@ void main() {
       initial: ToggleGroupItemStyler(),
       modify: (style) => style.labelColor(Colors.red).iconColor(Colors.red),
       expect: (style) {
-        expect(style.$label, isNotNull);
-        expect(style.$icon, isNotNull);
+        expect(style.$label, Prop.maybeMix(TextStyler().color(Colors.red)));
+        expect(style.$icon, Prop.maybeMix(IconStyler().color(Colors.red)));
       },
     );
 

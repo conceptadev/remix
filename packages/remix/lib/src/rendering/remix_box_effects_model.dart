@@ -135,7 +135,6 @@ class RemixBoxShadowMix extends Mix<RemixBoxShadow> {
   factory RemixBoxShadowMix.kind(RemixBoxShadowKind value) =>
       RemixBoxShadowMix(kind: value);
 
-  /// The shadow's color.
   factory RemixBoxShadowMix.color(Color value) =>
       RemixBoxShadowMix(color: value);
 
@@ -539,6 +538,7 @@ class _RemixDoubleListMix extends Mix<List<double>> {
   @override
   _RemixDoubleListMix merge(_RemixDoubleListMix? other) => other ?? this;
 
+  // Doubles can carry Mix token references, including gradient insets.
   @override
   List<double> resolve(BuildContext context) => values
       .map((value) => MixOps.resolve(context, Prop.value(value))!)

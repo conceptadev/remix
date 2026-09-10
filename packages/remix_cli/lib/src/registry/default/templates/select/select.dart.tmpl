@@ -60,11 +60,6 @@ const _rowPaddingX = 8.0;
 /// Gap between a row's text and its icons.
 const _gap = 8.0;
 
-/// Size of the trigger's chevron and an option's check mark, per size.
-///
-/// It scales with the control for the same reason the label does: a large
-/// select sits beside a large button, and a chevron that stayed at the medium
-/// size would read as a smaller control wearing the same height.
 /// Size of the trigger's chevron and an option's check mark.
 const _iconSize = 16.0;
 

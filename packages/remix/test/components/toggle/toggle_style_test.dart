@@ -7,13 +7,6 @@ import '../../helpers/test_methods.dart';
 void main() {
   group('ToggleStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        final style = ToggleStyler();
-
-        expect(style, isNotNull);
-        expect(style, isA<ToggleStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(FlexBoxStyler());
         final label = Prop.maybeMix(TextStyler());
@@ -45,10 +38,9 @@ void main() {
           icon: iconStyler,
         );
 
-        expect(style, isNotNull);
-        expect(style.$container, isNotNull);
-        expect(style.$label, isNotNull);
-        expect(style.$icon, isNotNull);
+        expect(style.$container, equals(Prop.maybeMix(containerStyler)));
+        expect(style.$label, equals(Prop.maybeMix(labelStyler)));
+        expect(style.$icon, equals(Prop.maybeMix(iconStyler)));
       });
     });
 

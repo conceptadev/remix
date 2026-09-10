@@ -620,6 +620,20 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSelect<String>), findsOneWidget);
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+        final panel = tester.widget<ColumnBox>(
+          find
+              .ancestor(
+                of: find.text('Option A'),
+                matching: find.byType(ColumnBox),
+              )
+              .first,
+        );
+        expect(
+          panel.styleSpec!.spec.box!.spec.padding,
+          const EdgeInsets.all(16),
+        );
       });
 
       testWidgets('applies trigger styling', (tester) async {
@@ -632,6 +646,7 @@ void main() {
         await tester.pumpRemixApp(
           RemixSelect<String>(
             onChanged: (_) {},
+            selectedValue: 'a',
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
             style: customStyle,
@@ -640,6 +655,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSelect<String>), findsOneWidget);
+        expect(
+          tester.widget<Text>(find.text('Option A')).style!.color,
+          Colors.blue,
+        );
       });
 
       testWidgets('applies item styling', (tester) async {
@@ -661,6 +680,12 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSelect<String>), findsOneWidget);
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+        expect(
+          tester.widget<Text>(find.text('Option A')).style!.color,
+          Colors.red,
+        );
       });
 
       testWidgets('applies select-level default item styling', (tester) async {
@@ -1083,17 +1108,23 @@ void main() {
 
     group('Semantics', () {
       testWidgets('applies semanticLabel to select', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSelect<String>(
-            onChanged: (_) {},
-            trigger: const RemixSelectTrigger(placeholder: 'Select'),
-            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
-            semanticLabel: 'Custom Select Label',
-          ),
-        );
-        await tester.pumpAndSettle();
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixSelect<String>(
+              onChanged: (_) {},
+              trigger: const RemixSelectTrigger(placeholder: 'Select'),
+              items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+              semanticLabel: 'Custom Select Label',
+            ),
+          );
+          await tester.pumpAndSettle();
 
-        expect(find.byType(RemixSelect<String>), findsOneWidget);
+          expect(find.byType(RemixSelect<String>), findsOneWidget);
+          expect(find.bySemanticsLabel('Custom Select Label'), findsOneWidget);
+        } finally {
+          semantics.dispose();
+        }
       });
     });
 

@@ -23,6 +23,20 @@ List<SemanticsNode> _collectSemanticsNodes(
   return nodes;
 }
 
+SemanticsData _dialogSemantics(WidgetTester tester) {
+  final root = tester
+      .binding
+      .renderViews
+      .single
+      .owner!
+      .semanticsOwner!
+      .rootSemanticsNode!;
+  return _collectSemanticsNodes(
+    root,
+    (node) => node.getSemanticsData().role == SemanticsRole.dialog,
+  ).single.getSemanticsData();
+}
+
 void main() {
   group('showRemixAlertDialog', () {
     testWidgets('opens and renders alert content', (tester) async {
@@ -603,26 +617,54 @@ void main() {
     });
 
     group('Modal Behavior', () {
-      testWidgets('modal dialog blocks background interaction', (tester) async {
-        await tester.pumpRemixApp(
-          RemixDialog(title: 'Modal Dialog', modal: true),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+      testWidgets('modal dialog hides background semantics', (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            Stack(
+              children: [
+                Semantics(
+                  label: 'Background control',
+                  child: const SizedBox(width: 50, height: 50),
+                ),
+                RemixDialog(title: 'Dialog', modal: true),
+              ],
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(find.bySemanticsLabel('Background control'), findsNothing);
+          final dialog = _dialogSemantics(tester);
+          expect(dialog.flagsCollection.scopesRoute, true);
+          expect(dialog.flagsCollection.namesRoute, true);
+        } finally {
+          semantics.dispose();
+        }
       });
 
-      testWidgets('non-modal dialog allows background interaction', (
+      testWidgets('non-modal dialog preserves background semantics', (
         tester,
       ) async {
-        await tester.pumpRemixApp(
-          RemixDialog(title: 'Non-Modal Dialog', modal: false),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            Stack(
+              children: [
+                Semantics(
+                  label: 'Background control',
+                  child: const SizedBox(width: 50, height: 50),
+                ),
+                RemixDialog(title: 'Dialog', modal: false),
+              ],
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(find.bySemanticsLabel('Background control'), findsOneWidget);
+          final dialog = _dialogSemantics(tester);
+          expect(dialog.flagsCollection.scopesRoute, false);
+          expect(dialog.flagsCollection.namesRoute, false);
+        } finally {
+          semantics.dispose();
+        }
       });
     });
 
@@ -714,26 +756,38 @@ void main() {
       testWidgets('dialog with semantic label uses provided label', (
         tester,
       ) async {
-        await tester.pumpRemixApp(
-          RemixDialog(
-            title: 'Dialog Title',
-            semanticLabel: 'Custom Semantic Label',
-          ),
-        );
-        await tester.pumpAndSettle();
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixDialog(
+              title: 'Dialog Title',
+              semanticLabel: 'Custom Semantic Label',
+            ),
+          );
+          await tester.pumpAndSettle();
 
-        expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.text('Dialog Title'), findsOneWidget);
+          expect(find.byType(RemixDialog), findsOneWidget);
+          expect(find.text('Dialog Title'), findsOneWidget);
+          expect(_dialogSemantics(tester).label, 'Custom Semantic Label');
+        } finally {
+          semantics.dispose();
+        }
       });
 
       testWidgets('dialog without semantic label uses title as label', (
         tester,
       ) async {
-        await tester.pumpRemixApp(RemixDialog(title: 'Default Label Dialog'));
-        await tester.pumpAndSettle();
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(RemixDialog(title: 'Default Label Dialog'));
+          await tester.pumpAndSettle();
 
-        expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.text('Default Label Dialog'), findsOneWidget);
+          expect(find.byType(RemixDialog), findsOneWidget);
+          expect(find.text('Default Label Dialog'), findsOneWidget);
+          expect(_dialogSemantics(tester).label, 'Default Label Dialog');
+        } finally {
+          semantics.dispose();
+        }
       });
 
       testWidgets('dialog with child preserves child semantics', (
@@ -824,6 +878,15 @@ void main() {
         expect(find.byType(RemixDialog), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
         expect(find.text('Styled Dialog'), findsOneWidget);
+        final container = tester.widget<Box>(find.byType(Box)).styleSpec!.spec;
+        expect(container.padding, const EdgeInsets.all(32));
+        expect(
+          container.decoration,
+          BoxDecoration(
+            color: Colors.lightGreen,
+            borderRadius: BorderRadius.circular(16),
+          ),
+        );
       });
 
       testWidgets('applies custom title style', (tester) async {
@@ -845,6 +908,10 @@ void main() {
         expect(find.byType(RemixDialog), findsOneWidget);
         expect(find.byType(StyledText), findsOneWidget);
         expect(find.text('Styled Title'), findsOneWidget);
+        final style = tester.widget<Text>(find.text('Styled Title')).style!;
+        expect(style.color, Colors.red);
+        expect(style.fontSize, 20);
+        expect(style.fontWeight, FontWeight.bold);
       });
 
       testWidgets('applies custom description style', (tester) async {
@@ -870,6 +937,12 @@ void main() {
         expect(find.byType(RemixDialog), findsOneWidget);
         expect(find.byType(StyledText), findsOneWidget);
         expect(find.text('Styled Description'), findsOneWidget);
+        final style = tester
+            .widget<Text>(find.text('Styled Description'))
+            .style!;
+        expect(style.color, Colors.blue);
+        expect(style.fontSize, 14);
+        expect(style.fontStyle, FontStyle.italic);
       });
 
       testWidgets('applies custom actions style', (tester) async {
@@ -899,6 +972,15 @@ void main() {
         expect(find.text('Styled Actions'), findsOneWidget);
         expect(find.text('Left'), findsOneWidget);
         expect(find.text('Right'), findsOneWidget);
+        final actionsSpec = tester
+            .widget<FlexBox>(find.byType(FlexBox))
+            .styleSpec!
+            .spec;
+        expect(actionsSpec.flex!.spec.spacing, 16);
+        expect(
+          actionsSpec.flex!.spec.mainAxisAlignment,
+          MainAxisAlignment.spaceBetween,
+        );
       });
 
       testWidgets('uses default style when none provided', (tester) async {

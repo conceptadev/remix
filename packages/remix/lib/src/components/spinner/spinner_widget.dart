@@ -1,7 +1,6 @@
 part of 'spinner.dart';
 
-/// The [RemixSpinner] widget is used to display a loading spinner.
-/// It can be customized using the [style] parameter to fit different design needs.
+/// An animated loading indicator with Mix styling.
 ///
 /// ## Examples
 ///

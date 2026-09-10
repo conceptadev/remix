@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -72,54 +73,45 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = SwitchSpec(
-          container: StyleSpec(spec: BoxSpec()),
-          thumb: StyleSpec(spec: BoxSpec()),
+        const start = SwitchSpec(
+          container: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(4))),
+          thumb: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(2))),
         );
-        final spec2 = SwitchSpec(
-          container: StyleSpec(spec: BoxSpec()),
-          thumb: StyleSpec(spec: BoxSpec()),
+        const end = SwitchSpec(
+          container: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(12))),
+          thumb: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(6))),
         );
-
-        final result = spec1.lerp(spec2, 0.0);
-
-        expect(result, isNot(same(spec1)));
-        expect(result.container, equals(spec1.container));
-        expect(result.thumb, equals(spec1.thumb));
+        final result = start.lerp(end, 0.0);
+        expect(result.container.spec.padding, EdgeInsets.all(4.0));
+        expect(result.thumb.spec.padding, EdgeInsets.all(2.0));
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = SwitchSpec(
-          container: StyleSpec(spec: BoxSpec()),
-          thumb: StyleSpec(spec: BoxSpec()),
+        const start = SwitchSpec(
+          container: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(4))),
+          thumb: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(2))),
         );
-        final spec2 = SwitchSpec(
-          container: StyleSpec(spec: BoxSpec()),
-          thumb: StyleSpec(spec: BoxSpec()),
+        const end = SwitchSpec(
+          container: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(12))),
+          thumb: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(6))),
         );
-
-        final result = spec1.lerp(spec2, 1.0);
-
-        expect(result, isNot(same(spec2)));
-        expect(result.container, equals(spec2.container));
-        expect(result.thumb, equals(spec2.thumb));
+        final result = start.lerp(end, 1.0);
+        expect(result.container.spec.padding, EdgeInsets.all(12.0));
+        expect(result.thumb.spec.padding, EdgeInsets.all(6.0));
       });
 
       test('interpolates between two specs at t=0.5', () {
-        final spec1 = SwitchSpec(
-          container: StyleSpec(spec: BoxSpec()),
-          thumb: StyleSpec(spec: BoxSpec()),
+        const start = SwitchSpec(
+          container: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(4))),
+          thumb: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(2))),
         );
-        final spec2 = SwitchSpec(
-          container: StyleSpec(spec: BoxSpec()),
-          thumb: StyleSpec(spec: BoxSpec()),
+        const end = SwitchSpec(
+          container: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(12))),
+          thumb: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(6))),
         );
-
-        final result = spec1.lerp(spec2, 0.5);
-
-        expect(result, isNotNull);
-        expect(result.container, isNotNull);
-        expect(result.thumb, isNotNull);
+        final result = start.lerp(end, 0.5);
+        expect(result.container.spec.padding, EdgeInsets.all(8.0));
+        expect(result.thumb.spec.padding, EdgeInsets.all(4.0));
       });
     });
 
@@ -163,12 +155,18 @@ void main() {
     });
 
     group('Diagnostic Support', () {
-      test('debugFillProperties works without throwing', () {
+      test('diagnostics publish SwitchSpec fields', () {
         const spec = SwitchSpec();
-
+        final builder = DiagnosticPropertiesBuilder();
+        spec.debugFillProperties(builder);
         expect(
-          () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
-          returnsNormally,
+          builder.properties.map((property) => property.name),
+          unorderedEquals([
+            'container',
+            'thumb',
+            'trackEffects',
+            'thumbEffects',
+          ]),
         );
       });
 
@@ -196,8 +194,8 @@ void main() {
           thumb: StyleSpec(spec: BoxSpec()),
         );
 
-        expect(spec.container, isNotNull);
-        expect(spec.thumb, isNotNull);
+        expect(spec.container, const StyleSpec(spec: BoxSpec()));
+        expect(spec.thumb, const StyleSpec(spec: BoxSpec()));
       });
     });
 
@@ -205,8 +203,8 @@ void main() {
       test('provides default values for all properties', () {
         const spec = SwitchSpec();
 
-        expect(spec.container, isNotNull);
-        expect(spec.thumb, isNotNull);
+        expect(spec.container, const StyleSpec(spec: BoxSpec()));
+        expect(spec.thumb, const StyleSpec(spec: BoxSpec()));
       });
     });
   });

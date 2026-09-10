@@ -2,8 +2,7 @@
 
 The content in `docs/` is owned by this repository. `docs.json` defines its
 navigation. `apps/docs` renders it with the shared Concepta Fumadocs theme.
-See [the app README](../apps/docs/README.md) for run commands and the temporary
-GitHub-access requirement while the theme is unpublished.
+See [the app README](../apps/docs/README.md) for run commands.
 
 ## Content organization
 

@@ -301,17 +301,26 @@ void main() {
 
     group('Accessibility', () {
       testWidgets('semanticLabel overrides default label', (tester) async {
-        await tester.pumpRemixApp(
-          RemixCheckbox(
-            selected: false,
-            onChanged: (value) {},
-            semanticLabel: 'Custom Semantic Label',
-          ),
-        );
-        await tester.pumpAndSettle();
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixCheckbox(
+              selected: false,
+              onChanged: (value) {},
+              semanticLabel: 'Custom Semantic Label',
+            ),
+          );
+          await tester.pumpAndSettle();
 
-        expect(find.byType(RemixCheckbox), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
+          expect(find.byType(RemixCheckbox), findsOneWidget);
+          expect(find.byType(Box), findsOneWidget);
+          expect(
+            find.bySemanticsLabel('Custom Semantic Label'),
+            findsOneWidget,
+          );
+        } finally {
+          semantics.dispose();
+        }
       });
 
       testWidgets('renders correctly in checked state', (tester) async {

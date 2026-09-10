@@ -454,6 +454,7 @@ void main() {
         final spec = await _resolveStyle(
           tester,
           theme: const AcmeThemeData.light(),
+          size: size,
         );
         final flex = spec.spec.container.spec.flex?.spec;
 
@@ -1176,8 +1177,6 @@ void main() {
       'default': (box: 16.0, indicator: 10.0, gap: 8.0, labelSize: 14.0),
     };
 
-    test('every size is covered', () {});
-
     for (final entry in expected.entries) {
       testWidgets('${entry.key} has its exact metrics', (tester) async {
         final spec = await _checkboxSpec(
@@ -1678,8 +1677,6 @@ void main() {
         iconSize: 16.0,
       ),
     };
-
-    test('every size is covered', () {});
 
     for (final entry in expected.entries) {
       testWidgets('${entry.key} has its exact metrics', (tester) async {
@@ -2247,8 +2244,6 @@ void main() {
   group('acmeSpinnerStyle', () {
     const diameters = <String, double>{'default': 20};
 
-    test('every size is covered', () {});
-
     for (final theme in _themes) {
       testWidgets('takes the foreground color in ${theme.name}', (
         tester,
@@ -2329,8 +2324,6 @@ void main() {
 
   group('acmeProgressStyle', () {
     const thicknesses = <String, double>{'default': 8};
-
-    test('every size is covered', () {});
 
     for (final theme in _themes) {
       testWidgets('track and indicator take their tokens in ${theme.name}', (
@@ -2616,8 +2609,6 @@ void main() {
     const expected = <String, ({double diameter, double labelSize})>{
       'default': (diameter: 40, labelSize: 14),
     };
-
-    test('every size is covered', () {});
 
     for (final entry in expected.entries) {
       testWidgets('${entry.key} is a circle with scaled initials', (
@@ -3248,8 +3239,6 @@ void main() {
   group('acmeSwitchStyle', () {
     const heights = <String, double>{'default': 20};
 
-    test('every size is covered', () {});
-
     for (final entry in heights.entries) {
       testWidgets('${entry.key} keeps the thumb flush in the track', (
         tester,
@@ -3362,8 +3351,6 @@ void main() {
     const expected = <String, ({double diameter, double dot})>{
       'default': (diameter: 16, dot: 6),
     };
-
-    test('every size is covered', () {});
 
     for (final entry in expected.entries) {
       testWidgets('${entry.key} is a circle around a smaller dot', (
@@ -3482,8 +3469,6 @@ void main() {
   group('acmeSliderStyle', () {
     const rails = <String, double>{'default': 6};
 
-    test('every size is covered', () {});
-
     for (final entry in rails.entries) {
       testWidgets('${entry.key} scales the thumb with the rail', (
         tester,
@@ -3584,8 +3569,6 @@ void main() {
     const heights = <String, ({double minHeight, double textSize})>{
       'default': (minHeight: 36, textSize: 14),
     };
-
-    test('every size is covered', () {});
 
     for (final entry in heights.entries) {
       testWidgets('${entry.key} sizes the field and its text', (tester) async {
@@ -4442,8 +4425,6 @@ void main() {
 
   group('acmeSelectStyle', () {
     const heights = <String, double>{'default': 36};
-
-    test('every size is covered', () {});
 
     for (final entry in heights.entries) {
       testWidgets('${entry.key} matches the text field it sits beside', (

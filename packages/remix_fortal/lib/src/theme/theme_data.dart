@@ -346,11 +346,8 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
       0.5,
     ),
   };
-
-  // Build base tokens map
   final allTokens = <MixToken<Object?>, Object>{
     ...colorTokens,
-    // Defaults (may be overridden by JSON tokens below)
     FortalTokens.panelBlur:
         theme.panelBackground == FortalPanelBackground.translucent ? 64.0 : 0.0,
     FortalTokens.space1: 4.0 * scaling,

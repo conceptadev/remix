@@ -296,12 +296,12 @@
     },
     {
       "test": "test/components/dialog/dialog_widget_test.dart",
-      "case": "modal dialog blocks background interaction",
+      "case": "modal dialog hides background semantics",
       "covers": ["state:modal"]
     },
     {
       "test": "test/components/dialog/dialog_widget_test.dart",
-      "case": "non-modal dialog allows background interaction",
+      "case": "non-modal dialog preserves background semantics",
       "covers": ["state:nonModal"]
     }
   ],
@@ -910,7 +910,7 @@
   "toggle": [
     {
       "test": "test/components/toggle/toggle_widget_test.dart",
-      "case": "recipe works for all variant/size combos",
+      "case": "each toggle variant and size applies its metrics and selected colors",
       "covers": [
         "enum:size.size1",
         "enum:size.size2",

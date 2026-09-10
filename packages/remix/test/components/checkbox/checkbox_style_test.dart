@@ -7,12 +7,6 @@ import '../../helpers/test_methods.dart';
 void main() {
   group('CheckboxStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        const style = CheckboxStyler.create();
-        expect(style, isNotNull);
-        expect(style, isA<CheckboxStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final indicator = Prop.maybeMix(IconStyler());
@@ -26,10 +20,10 @@ void main() {
           labelSpacing: labelSpacing,
         );
 
-        expect(style, isNotNull);
-        expect(style, isA<CheckboxStyler>());
-        expect(style.$label, label);
-        expect(style.$labelSpacing, labelSpacing);
+        expect(style.$container, equals(container));
+        expect(style.$indicator, equals(indicator));
+        expect(style.$label, equals(label));
+        expect(style.$labelSpacing, equals(labelSpacing));
       });
 
       test('constructor with styler parameters', () {
@@ -38,8 +32,16 @@ void main() {
           indicator: IconStyler(color: Colors.blue),
         );
 
-        expect(style, isNotNull);
-        expect(style, isA<CheckboxStyler>());
+        expect(
+          style.$container,
+          equals(
+            Prop.maybeMix(BoxStyler(padding: EdgeInsetsGeometryMix.all(4.0))),
+          ),
+        );
+        expect(
+          style.$indicator,
+          equals(Prop.maybeMix(IconStyler(color: Colors.blue))),
+        );
       });
     });
 

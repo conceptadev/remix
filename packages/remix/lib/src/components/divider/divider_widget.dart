@@ -4,7 +4,6 @@ part of 'divider.dart';
 ///
 /// Dividers help to organize content by visually separating it into groups.
 ///
-/// This example shows how to use a [RemixDivider] in a list of items.
 ///
 /// ```dart
 /// Column(

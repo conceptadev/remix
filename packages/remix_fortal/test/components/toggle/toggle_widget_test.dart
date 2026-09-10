@@ -7,67 +7,70 @@ import '../../helpers/test_helpers.dart';
 
 void main() {
   group('Fortal Styles', () {
-    testWidgets('renders with ghost variant', (tester) async {
-      await tester.pumpRemixApp(
-        RemixToggle(
-          selected: false,
-          onChanged: (value) {},
-          label: 'Bold',
-          style: fortalToggleStyle(),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixToggle), findsOneWidget);
-    });
-
-    testWidgets('renders with outline variant', (tester) async {
-      await tester.pumpRemixApp(
-        RemixToggle(
-          selected: false,
-          onChanged: (value) {},
-          label: 'Bold',
-          style: fortalToggleStyle(variant: .outline),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixToggle), findsOneWidget);
-    });
-
-    testWidgets('renders with all sizes', (tester) async {
-      for (final size in FortalToggleSize.values) {
-        await tester.pumpRemixApp(
-          RemixToggle(
-            selected: false,
-            onChanged: (value) {},
-            label: 'Bold',
-            style: fortalToggleStyle(size: size),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixToggle), findsOneWidget);
-      }
-    });
-
-    testWidgets('recipe works for all variant/size combos', (tester) async {
-      for (final variant in FortalToggleVariant.values) {
-        for (final size in FortalToggleSize.values) {
-          await tester.pumpRemixApp(
-            RemixToggle(
-              selected: false,
-              onChanged: (value) {},
-              label: 'Bold',
-              style: fortalToggleStyle(variant: variant, size: size),
-            ),
-          );
-          await tester.pumpAndSettle();
-
-          expect(find.byType(RemixToggle), findsOneWidget);
+    testWidgets(
+      'each toggle variant and size applies its metrics and selected colors',
+      (tester) async {
+        for (final variant in FortalToggleVariant.values) {
+          for (final size in FortalToggleSize.values) {
+            for (final selected in [false, true]) {
+              await tester.pumpRemixApp(
+                RemixToggle(
+                  selected: selected,
+                  onChanged: (_) {},
+                  label: 'Bold',
+                  style: fortalToggleStyle(variant: variant, size: size),
+                ),
+              );
+              await tester.pumpAndSettle();
+              final row = tester.widget<RowBox>(find.byType(RowBox));
+              final box = row.styleSpec!.spec.box!.spec;
+              final padding = switch (size) {
+                FortalToggleSize.size1 => const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 4,
+                ),
+                FortalToggleSize.size2 => const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                FortalToggleSize.size3 => const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+              };
+              expect(box.padding!.resolve(TextDirection.ltr), padding);
+              final context = tester.element(find.byType(RowBox));
+              Color color(ColorToken token) => MixScope.tokenOf(token, context);
+              final decoration = box.decoration! as BoxDecoration;
+              expect(
+                decoration.color,
+                selected
+                    ? color(
+                        variant == FortalToggleVariant.ghost
+                            ? FortalTokens.accent3
+                            : FortalTokens.accentA3,
+                      )
+                    : Colors.transparent,
+              );
+              expect(
+                tester.widget<Text>(find.text('Bold')).style!.color,
+                color(selected ? FortalTokens.accent11 : FortalTokens.gray12),
+              );
+              if (variant == FortalToggleVariant.outline) {
+                final border = decoration.border! as Border;
+                expect(border.top.width, 1);
+                expect(
+                  border.top.color,
+                  color(selected ? FortalTokens.accentA5 : FortalTokens.gray7),
+                );
+              } else {
+                expect(decoration.border, isNull);
+              }
+            }
+          }
         }
-      }
-    });
+      },
+    );
 
     testWidgets('wraps a complete label at 200% in 200 logical pixels', (
       tester,

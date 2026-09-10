@@ -90,7 +90,7 @@ RadioStyler _{{valuePrefix}}RadioClassicStyler(
       )
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          _{{valuePrefix}}RadioInsetRing({{typePrefix}}Tokens.gray7()),
+          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.gray7()]),
         ),
       )
       .indicatorColor(
@@ -160,7 +160,7 @@ RadioStyler _{{valuePrefix}}RadioSurfaceStyler(
       )
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          _{{valuePrefix}}RadioInsetRing({{typePrefix}}Tokens.grayA7()),
+          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA7()]),
         ),
       )
       .indicator(
@@ -195,7 +195,7 @@ RadioStyler _{{valuePrefix}}RadioSurfaceStyler(
             )
             .containerEffects(
               RemixBoxEffectsMix.overContent(
-                _{{valuePrefix}}RadioInsetRing({{typePrefix}}Tokens.grayA6()),
+                {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA6()]),
               ),
             )
             .indicatorColor({{typePrefix}}Tokens.grayA8()),
@@ -254,8 +254,3 @@ RadioStyler _{{valuePrefix}}RadioSoftStyler(
     indicatorSize: {{typePrefix}}Tokens.radioIndicatorSize3(),
   ),
 };
-
-RemixBoxEffectLayerMix _{{valuePrefix}}RadioInsetRing(Color color) =>
-    RemixBoxEffectLayerMix(
-      shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
-    );

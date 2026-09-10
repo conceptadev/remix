@@ -213,9 +213,13 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        // Since text is obscured, we can't directly check the rendered text,
-        // but we can verify the widget exists
         expect(find.byType(RemixTextField), findsOneWidget);
+        expect(
+          tester
+              .widget<NakedTextField>(find.byType(NakedTextField))
+              .obscureText,
+          true,
+        );
       });
     });
 
@@ -436,36 +440,66 @@ void main() {
       });
 
       testWidgets('uses semantic label parameter', (tester) async {
-        await tester.pumpRemixApp(
-          const RemixTextField(label: 'Email', semanticLabel: 'Email Address'),
-        );
-        await tester.pumpAndSettle();
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            const RemixTextField(
+              label: 'Email',
+              semanticLabel: 'Email Address',
+            ),
+          );
+          await tester.pumpAndSettle();
 
-        // Verify the widget is rendered with semantic properties
-        expect(find.byType(RemixTextField), findsOneWidget);
-        expect(find.text('Email'), findsOneWidget);
+          // Verify the widget is rendered with semantic properties
+          expect(find.byType(RemixTextField), findsOneWidget);
+          expect(find.text('Email'), findsOneWidget);
+          expect(
+            _textFieldSemanticNodes(tester).single.getSemanticsData().label,
+            'Email Address',
+          );
+        } finally {
+          semantics.dispose();
+        }
       });
 
       testWidgets('uses semantic hint parameter', (tester) async {
-        await tester.pumpRemixApp(
-          const RemixTextField(
-            hintText: 'Enter your email',
-            semanticHint: 'Enter your email address',
-          ),
-        );
-        await tester.pumpAndSettle();
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            const RemixTextField(
+              hintText: 'Enter your email',
+              semanticHint: 'Enter your email address',
+            ),
+          );
+          await tester.pumpAndSettle();
 
-        // Verify the widget is rendered with semantic properties
-        expect(find.byType(RemixTextField), findsOneWidget);
-        expect(find.text('Enter your email'), findsOneWidget);
+          // Verify the widget is rendered with semantic properties
+          expect(find.byType(RemixTextField), findsOneWidget);
+          expect(find.text('Enter your email'), findsOneWidget);
+          expect(
+            _textFieldSemanticNodes(tester).single.getSemanticsData().hint,
+            'Enter your email address',
+          );
+        } finally {
+          semantics.dispose();
+        }
       });
 
       testWidgets('defaults semantic label to label parameter', (tester) async {
-        await tester.pumpRemixApp(const RemixTextField(label: 'Email'));
-        await tester.pumpAndSettle();
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(const RemixTextField(label: 'Email'));
+          await tester.pumpAndSettle();
 
-        // When only label is provided, it should be used for both label and semantic label
-        expect(find.text('Email'), findsOneWidget);
+          // When only label is provided, it should be used for both label and semantic label
+          expect(find.text('Email'), findsOneWidget);
+          expect(
+            _textFieldSemanticNodes(tester).single.getSemanticsData().label,
+            'Email',
+          );
+        } finally {
+          semantics.dispose();
+        }
       });
 
       testWidgets('announces label, hint, and non-error helper exactly once', (
@@ -1563,6 +1597,12 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixTextField), findsOneWidget);
+        expect(
+          tester
+              .widget<NakedTextField>(find.byType(NakedTextField))
+              .keyboardType,
+          TextInputType.emailAddress,
+        );
       });
 
       testWidgets('respects textInputAction', (tester) async {
@@ -1572,6 +1612,12 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixTextField), findsOneWidget);
+        expect(
+          tester
+              .widget<NakedTextField>(find.byType(NakedTextField))
+              .textInputAction,
+          TextInputAction.next,
+        );
       });
 
       testWidgets('respects textCapitalization', (tester) async {
@@ -1581,6 +1627,12 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixTextField), findsOneWidget);
+        expect(
+          tester
+              .widget<NakedTextField>(find.byType(NakedTextField))
+              .textCapitalization,
+          TextCapitalization.words,
+        );
       });
     });
 
@@ -1919,8 +1971,8 @@ void main() {
         await tester.enterText(find.byType(RemixTextField), 'Content');
         await tester.pumpAndSettle();
 
-        // Hint should not be visible when there's content
         expect(find.text('Content'), findsOneWidget);
+        expect(find.text('Enter text'), findsNothing);
 
         controller.dispose();
       });

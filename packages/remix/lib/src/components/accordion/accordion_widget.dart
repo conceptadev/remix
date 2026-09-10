@@ -72,7 +72,6 @@ class RemixAccordionGroup<T> extends StatelessWidget {
     this.initialExpandedValues = const [],
   });
 
-  /// Accordion items to render.
   final Widget child;
 
   /// Controller that manages expanded values.
@@ -279,7 +278,6 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
         if (leadingIcon != null)
           StyledIcon(icon: leadingIcon, styleSpec: spec.leadingIcon),
         if (title != null)
-          // ignore: avoid-flexible-outside-flex
           Expanded(child: StyledText(title, styleSpec: spec.title)),
         if (_config.trailingIcon case final icon?)
           StyledIcon(icon: icon, styleSpec: spec.trailingIcon)

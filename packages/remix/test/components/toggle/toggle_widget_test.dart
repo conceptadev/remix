@@ -360,6 +360,13 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixToggle), findsOneWidget);
+        final container = tester
+            .widget<RowBox>(find.byType(RowBox))
+            .styleSpec!
+            .spec
+            .box!
+            .spec;
+        expect(container.padding, const EdgeInsets.all(16));
       });
 
       testWidgets('applies multiple style methods', (tester) async {
@@ -482,6 +489,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixToggle), findsOneWidget);
+        expect(toggleValue, isFalse);
       });
     });
 

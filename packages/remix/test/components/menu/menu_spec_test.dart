@@ -144,12 +144,13 @@ void main() {
     });
 
     group('Diagnostic Support', () {
-      test('debugFillProperties works without throwing', () {
+      test('diagnostics publish MenuTriggerSpec fields', () {
         const spec = MenuTriggerSpec();
-
+        final builder = DiagnosticPropertiesBuilder();
+        spec.debugFillProperties(builder);
         expect(
-          () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
-          returnsNormally,
+          builder.properties.map((property) => property.name),
+          unorderedEquals(['container', 'label', 'icon']),
         );
       });
 
@@ -455,12 +456,22 @@ void main() {
     });
 
     group('Diagnostic Support', () {
-      test('debugFillProperties works without throwing', () {
+      test('diagnostics publish MenuSpec fields', () {
         const spec = MenuSpec();
-
+        final builder = DiagnosticPropertiesBuilder();
+        spec.debugFillProperties(builder);
         expect(
-          () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
-          returnsNormally,
+          builder.properties.map((property) => property.name),
+          unorderedEquals([
+            'trigger',
+            'overlay',
+            'containerEffects',
+            'item',
+            'checkboxItem',
+            'radioItem',
+            'submenuItem',
+            'divider',
+          ]),
         );
       });
 
@@ -622,12 +633,19 @@ void main() {
     });
 
     group('Diagnostic Support', () {
-      test('debugFillProperties works without throwing', () {
+      test('diagnostics publish MenuItemSpec fields', () {
         const spec = MenuItemSpec();
-
+        final builder = DiagnosticPropertiesBuilder();
+        spec.debugFillProperties(builder);
         expect(
-          () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
-          returnsNormally,
+          builder.properties.map((property) => property.name),
+          unorderedEquals([
+            'container',
+            'label',
+            'leadingIcon',
+            'trailingIcon',
+            'indicator',
+          ]),
         );
       });
 

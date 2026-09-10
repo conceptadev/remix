@@ -143,7 +143,7 @@ TextFieldStyler _{{valuePrefix}}ApplySurfaceTextInput(TextFieldStyler base) =>
         )
         .containerEffects(
           RemixBoxEffectsMix.overContent(
-            _{{valuePrefix}}TextInputInsetRing({{typePrefix}}Tokens.grayA7()),
+            {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA7()]),
           ),
         )
         .onDisabled(
@@ -162,7 +162,7 @@ TextFieldStyler _{{valuePrefix}}ApplySurfaceTextInput(TextFieldStyler base) =>
               )
               .containerEffects(
                 RemixBoxEffectsMix.overContent(
-                  _{{valuePrefix}}TextInputInsetRing({{typePrefix}}Tokens.grayA6()),
+                  {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA6()]),
                 ),
               ),
         );
@@ -301,11 +301,6 @@ _{{valuePrefix}}TextFieldMetrics({{typePrefix}}TextFieldSize size, {required boo
         text: {{typePrefix}}Tokens.text3,
       ),
     };
-
-RemixBoxEffectLayerMix _{{valuePrefix}}TextInputInsetRing(Color color) =>
-    RemixBoxEffectLayerMix(
-      shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
-    );
 
 /// Radix Themes TextArea size presets.
 enum {{typePrefix}}TextAreaSize { size1, size2, size3 }

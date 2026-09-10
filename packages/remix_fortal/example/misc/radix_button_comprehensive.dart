@@ -69,7 +69,6 @@ class _ComprehensiveTestScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Fortal Button - Complete Spec Test'),
         actions: [
-          // Theme controls
           PopupMenuButton<Brightness>(
             itemBuilder: (context) => [
               const PopupMenuItem(value: .light, child: Text('Light')),
@@ -88,7 +87,6 @@ class _ComprehensiveTestScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: .start,
           children: [
-            // Theme Controls
             _ThemeControls(
               accent: currentAccent,
               gray: currentGray,
@@ -96,8 +94,6 @@ class _ComprehensiveTestScreen extends StatelessWidget {
               onGrayChanged: onGrayChanged,
             ),
             const SizedBox(height: 24),
-
-            // All Variants - Default Size (2)
             const Text(
               'All Variants - Size 2 (Default)',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -105,8 +101,6 @@ class _ComprehensiveTestScreen extends StatelessWidget {
             const SizedBox(height: 16),
             const _AllVariantsSection(size: 2),
             const SizedBox(height: 32),
-
-            // Size Comparison - Solid Variant
             const Text(
               'Size Comparison - Solid Variant',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -114,8 +108,6 @@ class _ComprehensiveTestScreen extends StatelessWidget {
             const SizedBox(height: 16),
             const _SizeComparisonSection(),
             const SizedBox(height: 32),
-
-            // State Testing - Each Variant
             const Text(
               'State Testing - All Variants',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -123,8 +115,6 @@ class _ComprehensiveTestScreen extends StatelessWidget {
             const SizedBox(height: 16),
             const _StateTestingSection(),
             const SizedBox(height: 32),
-
-            // Accent Color Showcase
             const Text(
               'Accent Color Showcase - Solid Variant',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -237,35 +227,26 @@ class _AllVariantsSection extends StatelessWidget {
       spacing: 12,
       runSpacing: 12,
       children: [
-        // Solid
         _getSizedStyle(.solid).call(
           label: 'Solid',
           leadingIcon: Icons.check_circle,
           onPressed: () => _showSnackBar(context, 'Solid pressed'),
         ),
-
-        // Soft
         _getSizedStyle(.soft).call(
           label: 'Soft',
           leadingIcon: Icons.favorite,
           onPressed: () => _showSnackBar(context, 'Soft pressed'),
         ),
-
-        // Surface
         _getSizedStyle(.surface).call(
           label: 'Surface',
           leadingIcon: Icons.layers,
           onPressed: () => _showSnackBar(context, 'Surface pressed'),
         ),
-
-        // Outline
         _getSizedStyle(.outline).call(
           label: 'Outline',
           leadingIcon: Icons.crop_free,
           onPressed: () => _showSnackBar(context, 'Outline pressed'),
         ),
-
-        // Ghost
         _getSizedStyle(.ghost).call(
           label: 'Ghost',
           leadingIcon: Icons.visibility_off,
@@ -344,7 +325,6 @@ class _StateTestingSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: .start,
       children: [
-        // Normal, Loading, Disabled states for each variant
         for (final variantName in [
           'Solid',
           'Soft',
@@ -360,20 +340,15 @@ class _StateTestingSection extends StatelessWidget {
           Wrap(
             spacing: 8,
             children: [
-              // Normal
               _getVariantButton(variantName).call(
                 label: 'Normal',
                 onPressed: () => debugPrint('Button pressed'),
               ),
-
-              // Loading
               _getVariantButton(variantName).call(
                 label: 'Loading',
                 loading: true,
                 onPressed: () => debugPrint('Button pressed'),
               ),
-
-              // Disabled
               _getVariantButton(
                 variantName,
               ).call(label: 'Disabled', enabled: false, onPressed: null),

@@ -7,13 +7,6 @@ import '../../helpers/test_methods.dart';
 void main() {
   group('SwitchStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        final style = SwitchStyler();
-
-        expect(style, isNotNull);
-        expect(style, isA<SwitchStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final thumb = Prop.maybeMix(BoxStyler());
@@ -40,9 +33,8 @@ void main() {
           thumb: thumbStyler,
         );
 
-        expect(style, isNotNull);
-        expect(style.$container, isNotNull);
-        expect(style.$thumb, isNotNull);
+        expect(style.$container, equals(Prop.maybeMix(containerStyler)));
+        expect(style.$thumb, equals(Prop.maybeMix(thumbStyler)));
       });
     });
 

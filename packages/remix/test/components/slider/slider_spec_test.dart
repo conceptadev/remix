@@ -204,12 +204,26 @@ void main() {
     });
 
     group('Diagnostic Support', () {
-      test('debugFillProperties works without throwing', () {
-        final spec = SliderSpec();
-
+      test('diagnostics publish SliderSpec fields', () {
+        const spec = SliderSpec();
+        final builder = DiagnosticPropertiesBuilder();
+        spec.debugFillProperties(builder);
         expect(
-          () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
-          returnsNormally,
+          builder.properties.map((property) => property.name),
+          unorderedEquals([
+            'track',
+            'trackColor',
+            'trackWidth',
+            'trackEffects',
+            'range',
+            'rangeColor',
+            'rangeWidth',
+            'rangeEffects',
+            'thumb',
+            'thumbEffects',
+            'thumbFocusEffects',
+            'blendMode',
+          ]),
         );
       });
 
@@ -252,11 +266,11 @@ void main() {
       test('uses correct default values', () {
         final spec = SliderSpec();
 
-        expect(spec.thumb, isNotNull);
-        expect(spec.trackColor, isNotNull);
-        expect(spec.trackWidth, isNotNull);
-        expect(spec.rangeColor, isNotNull);
-        expect(spec.rangeWidth, isNotNull);
+        expect(spec.thumb, const StyleSpec(spec: BoxSpec()));
+        expect(spec.trackColor, MixColors.grey);
+        expect(spec.trackWidth, 8);
+        expect(spec.rangeColor, MixColors.black);
+        expect(spec.rangeWidth, 8);
       });
     });
   });

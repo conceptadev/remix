@@ -2,17 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
+import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
   group('AvatarStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        const style = AvatarStyler.create();
-        expect(style, isNotNull);
-        expect(style, isA<AvatarStyler>());
-      });
-
       test('constructor with styler parameters', () {
         final style = AvatarStyler(
           container: BoxStyler(
@@ -22,8 +17,24 @@ void main() {
           icon: IconStyler(color: Colors.red),
         );
 
-        expect(style, isNotNull);
-        expect(style, isA<AvatarStyler>());
+        expect(
+          style.$container,
+          equals(
+            Prop.maybeMix(
+              BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
+            ),
+          ),
+        );
+        expect(
+          style.$label,
+          equals(
+            Prop.maybeMix(TextStyler(style: TextStyleMix(color: Colors.white))),
+          ),
+        );
+        expect(
+          style.$icon,
+          equals(Prop.maybeMix(IconStyler(color: Colors.red))),
+        );
       });
     });
 
@@ -351,6 +362,12 @@ void main() {
             .iconColor(Colors.yellow);
 
         expect(style, isA<AvatarStyler>());
+        expect(style.$container, Prop.maybeMix(BoxStyler().size(100, 100)));
+        expect(style.$label, Prop.maybeMix(TextStyler().color(Colors.white)));
+        expect(
+          style.resolve(MockBuildContext()).spec.icon.spec.color,
+          Colors.yellow,
+        );
       });
     });
 
