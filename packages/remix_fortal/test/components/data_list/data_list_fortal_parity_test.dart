@@ -4,6 +4,32 @@ import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 void main() {
+  for (final value in ['1', '2', 'true', 'colors/fortal.accent.9']) {
+    testWidgets(
+      'horizontal single-value layout preserves intrinsic bounds: $value',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            builder: (_, child) => FortalScope(child: child!),
+            home: Center(
+              child: SizedBox(
+                width: 500,
+                child: FortalDataList(
+                  size: .size1,
+                  items: [
+                    RemixDataListItem(label: 'Declared value', value: value),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+        expect(tester.takeException(), isNull);
+        expect(find.text(value), findsOneWidget);
+      },
+    );
+  }
+
   for (final (size, fontSize, rowSpacing) in const [
     (FortalDataListSize.size1, 12.0, 12.0),
     (FortalDataListSize.size2, 14.0, 16.0),
