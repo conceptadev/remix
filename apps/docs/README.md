@@ -38,14 +38,9 @@ workflow with `workflow_call` or run manually with `workflow_dispatch`.
 It validates sources, builds Flutter previews and the Next.js server, tests an
 isolated deployment copy, and uploads `remix-docs-server` as a tar archive.
 
-Before running the workflow:
-
-- Configure `DOCS_THEME_TOKEN` as an Actions secret with read-only contents
-  access to `conceptadev/docs-theme`. The default Remix `GITHUB_TOKEN` cannot
-  read that separate private repository. Credentials are scoped to dependency
-  installation and are not saved in the artifact.
-- Supply `site-url` as the final HTTPS origin. Canonical/social URLs are baked
-  into the build, so rebuild when the public origin changes.
+Supply `site-url` as the final HTTPS origin. Canonical/social URLs are baked
+into the build, so rebuild when the public origin changes. The public npm
+theme dependency requires no GitHub token or npm login.
 
 The artifact supports a root-path Node server deployment. Extract it on a
 Node 24.14+ host and run `HOSTNAME=0.0.0.0 PORT=3000 node server.js` behind the
@@ -61,26 +56,17 @@ node scripts/test-server.mjs
 ```
 
 The workflow prepares an artifact; it does not provision hosting or publish a
-site. Choose/configure the host before deploying. It is deliberately manual
-while the theme is private: pull-request builds must not receive cross-repo
-credentials for untrusted code. The existing GitHub Pages workflow continues
+site. Choose/configure the host before deploying. Run it manually or call it
+from a deployment workflow. The existing GitHub Pages workflow continues
 to publish the Flutter showcases and cannot serve this Next.js server app.
 
-## Theme access and release limitation
+## Theme package
 
-The theme is not published on npm yet. `package.json` and the lockfile pin the
-reviewed `conceptadev/docs-theme` commit
-`0f032d0efb437a2aface4e3198a708549ef39671`, the merged theme `main`. pnpm
-fetches this GitHub dependency over SSH and builds it; only this exact Git
-source is allowed to run scripts.
-Installation requires GitHub access to that currently internal repository.
-No theme source or credentials are vendored here.
-
-The locked theme works locally and in the authenticated workflow above;
-anonymous installation is not supported. Once the theme's license and publication are resolved, replace the
-Git dependency with its verified npm release, regenerate the lockfile, and
-repeat the production/browser checks. Do not add a token to this repository
-or bypass access controls to make the dependency resolve.
+The site pins `@concepta/docs-theme@0.0.1` from the public npm registry.
+The theme uses BSD-3-Clause; its source repository is `conceptadev/docs-theme`.
+The lockfile records the published archive integrity. The release-age exception
+is limited to this reviewed first version. To upgrade, change the pinned version,
+regenerate the lockfile, and repeat the production and deployment smoke checks.
 
 ## Content ownership
 

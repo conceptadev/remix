@@ -1,4 +1,4 @@
-import { createPageMetadata, createSourceUrl } from '@conceptadev/docs-theme';
+import { createPageMetadata, createSourceUrl } from '@concepta/docs-theme';
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/layouts/docs/page';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { notFound } from 'next/navigation';

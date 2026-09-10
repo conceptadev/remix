@@ -7,7 +7,7 @@ export default createMDX()({
   reactStrictMode: true,
   output: 'standalone',
   env: { DOCS_SOURCE_REF: sourceRef },
-  transpilePackages: ['@conceptadev/docs-theme'],
+  transpilePackages: ['@concepta/docs-theme'],
   async rewrites() {
     return [{ source: '/previews', destination: '/previews/index.html' }];
   },

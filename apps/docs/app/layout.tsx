@@ -1,4 +1,4 @@
-import { createSiteMetadata, createBaseLayoutOptions } from '@conceptadev/docs-theme';
+import { createSiteMetadata, createBaseLayoutOptions } from '@concepta/docs-theme';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import type { ReactNode } from 'react';

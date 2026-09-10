@@ -1,4 +1,4 @@
-import { defineDocsConfig } from '@conceptadev/docs-theme';
+import { defineDocsConfig } from '@concepta/docs-theme';
 
 export const docsConfig = defineDocsConfig({
   organization: { name: 'Concepta', homeUrl: 'https://concepta.dev' },

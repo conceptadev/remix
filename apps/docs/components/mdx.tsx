@@ -1,4 +1,4 @@
-import { getConceptaMDXComponents } from '@conceptadev/docs-theme/mdx';
+import { getConceptaMDXComponents } from '@concepta/docs-theme/mdx';
 import { Callout } from 'fumadocs-ui/components/callout';
 import type { ReactNode } from 'react';
 import type { MDXComponents } from 'mdx/types';

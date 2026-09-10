@@ -13,10 +13,6 @@ on:
         description: Public HTTPS origin for the documentation
         required: true
         type: string
-    secrets:
-      DOCS_THEME_TOKEN:
-        description: Read-only access to the private Concepta docs theme
-        required: true
 
 permissions:
   contents: read
@@ -52,8 +48,6 @@ jobs:
           cache: true
       - run: flutter pub get
       - uses: ./.github/actions/setup-docs
-        with:
-          theme-token: ${{ secrets.DOCS_THEME_TOKEN }}
       - name: Validate documentation sources
         run: |
           dart run tool/generate_fortal_catalog.dart --check

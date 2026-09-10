@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/preset.css';
-@import '@conceptadev/docs-theme/theme.css';
+@import '@concepta/docs-theme/theme.css';
 
 /* Product identity stays here; the shared theme owns reading/layout rules. */
 .remix-docs {
