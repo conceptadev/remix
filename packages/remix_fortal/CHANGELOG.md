@@ -1,3 +1,8 @@
+## 1.0.0-beta.9
+
+ - **FIX**(data_list): bound minimum intrinsic width by maximum (#185).
+ - **DOCS**(fortal): clarify button icon sizing and overrides (#187).
+
 ## 1.0.0-beta.8
 
  - **FIX**(remix_ui_icons): use a publishable package name (#176).
