@@ -1,3 +1,7 @@
+## 1.0.0-beta.9
+
+ - **FIX**(data_list): bound minimum intrinsic width by maximum (#185).
+
 ## 1.0.0-beta.8
 
  - **FEAT**(sidebar): publish a Remix sidebar panel (#168).
