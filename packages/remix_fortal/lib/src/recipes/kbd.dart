@@ -15,6 +15,8 @@ enum FortalKbdVariant { classic, soft }
 /// upstream's unsized `0.75em` — anchored to the root `text3` token rather
 /// than the ambient `DefaultTextStyle`, so a host text run cannot resize the
 /// key cap.
+/// The resolved token supplies the font family and fallback families; Kbd
+/// retains its own weight, spacing, and line box.
 BadgeStyler fortalKbdStyle(
   BuildContext context, {
   FortalTextSize? size,
@@ -31,6 +33,12 @@ BadgeStyler fortalKbdStyle(
   // Kbd pins its own weight and line box regardless of the surrounding style,
   // so it stays a key cap rather than following surrounding copy.
   final textStyle = TextStyler()
+      .style(
+        TextStyleMix(
+          fontFamily: base.fontFamily,
+          fontFamilyFallback: base.fontFamilyFallback,
+        ),
+      )
       .fontSize(fontSize)
       .fontWeight(FortalTokens.fontWeightRegular())
       .height(1.7)
