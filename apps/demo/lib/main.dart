@@ -24,7 +24,6 @@ class HotReload extends StatelessWidget {
 }
 
 class FortalThemeAddon extends ThemeAddon<ThemeData> {
-  /// Creates a new instance of [MaterialThemeAddon].
   FortalThemeAddon()
     : super(
         themes: [

@@ -43,24 +43,6 @@ void main() {
 
         expect(find.byType(RemixSlider), findsOneWidget);
       });
-
-      testWidgets('contains SizedBox widget', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.5, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(SizedBox), findsWidgets);
-      });
-
-      testWidgets('contains Stack widget', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.5, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(Stack), findsWidgets);
-      });
     });
 
     group('Value Validation', () {
@@ -181,6 +163,12 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSlider), findsOneWidget);
+        expect(
+          tester
+              .widgetList<Box>(find.byType(Box))
+              .map((box) => box.styleSpec?.spec.decoration),
+          contains(const BoxDecoration(color: Colors.blue)),
+        );
       });
 
       testWidgets('applies thumb color styling', (tester) async {
@@ -198,6 +186,12 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSlider), findsOneWidget);
+        expect(
+          tester
+              .widgetList<Box>(find.byType(Box))
+              .map((box) => box.styleSpec?.spec.decoration),
+          contains(const BoxDecoration(color: Colors.red)),
+        );
       });
 
       testWidgets('applies range color styling', (tester) async {
@@ -215,6 +209,12 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSlider), findsOneWidget);
+        expect(
+          tester
+              .widgetList<Box>(find.byType(Box))
+              .map((box) => box.styleSpec?.spec.decoration),
+          contains(const BoxDecoration(color: Colors.green)),
+        );
       });
 
       testWidgets('applies thumb size styling', (tester) async {
@@ -232,6 +232,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSlider), findsOneWidget);
+        final thumb = tester
+            .widgetList<RemixBoxAdapter>(find.byType(RemixBoxAdapter))
+            .last;
+        expect(tester.getSize(find.byWidget(thumb)), const Size(24, 24));
       });
 
       testWidgets('applies thickness styling', (tester) async {
@@ -249,6 +253,11 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSlider), findsOneWidget);
+        final rails = tester
+            .widgetList<RemixBoxAdapter>(find.byType(RemixBoxAdapter))
+            .toList();
+        expect(tester.getSize(find.byWidget(rails[0])).height, 12);
+        expect(tester.getSize(find.byWidget(rails[1])).height, 12);
       });
 
       testWidgets('applies track thickness styling', (tester) async {
@@ -266,10 +275,15 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSlider), findsOneWidget);
+        final rails = tester
+            .widgetList<RemixBoxAdapter>(find.byType(RemixBoxAdapter))
+            .toList();
+        expect(tester.getSize(find.byWidget(rails[0])).height, 10);
+        expect(tester.getSize(find.byWidget(rails[1])).height, 8);
       });
 
       testWidgets('applies range thickness styling', (tester) async {
-        final customStyle = SliderStyler().rangeThickness(8.0);
+        final customStyle = SliderStyler().rangeThickness(6.0);
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -283,6 +297,11 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSlider), findsOneWidget);
+        final rails = tester
+            .widgetList<RemixBoxAdapter>(find.byType(RemixBoxAdapter))
+            .toList();
+        expect(tester.getSize(find.byWidget(rails[0])).height, 8);
+        expect(tester.getSize(find.byWidget(rails[1])).height, 6);
       });
     });
 
@@ -356,7 +375,6 @@ void main() {
 
         // Drag (swipe right) the slider's thumb
         final sliderFinder = find.byType(RemixSlider);
-        // final sliderCenter = tester.getCenter(sliderFinder);
 
         // Drag a reasonable amount to the right
         await tester.drag(sliderFinder, const Offset(100.0, 0.0));
@@ -498,6 +516,8 @@ void main() {
       });
 
       testWidgets('handles autofocus parameter', (tester) async {
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
         await tester.pumpRemixApp(
           RemixSlider(
             value: 0.5,
@@ -505,6 +525,7 @@ void main() {
             max: 1.0,
             onChanged: (value) {},
             autofocus: true,
+            focusNode: focusNode,
           ),
         );
         await tester.pumpAndSettle();
@@ -512,6 +533,7 @@ void main() {
         expect(find.byType(RemixSlider), findsOneWidget);
 
         expect(tester.binding.focusManager.primaryFocus, isNotNull);
+        expect(focusNode.hasFocus, isTrue);
       });
 
       testWidgets('can request focus programmatically', (tester) async {
@@ -872,6 +894,7 @@ void main() {
             builder: (context, setState) {
               return RemixSlider(
                 value: sliderValue,
+                style: SliderStyler(thumb: BoxStyler().size(20, 20)),
                 min: 0.0,
                 max: 1.0,
                 onChanged: (value) => setState(() => sliderValue = value),
@@ -882,15 +905,41 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSlider), findsOneWidget);
+        final before = tester.getCenter(find.byWidget(_sliderThumb(tester)));
+        await tester.drag(find.byType(RemixSlider), const Offset(100, 0));
+        await tester.pumpAndSettle();
+        expect(sliderValue, greaterThan(0.5));
+        expect(
+          tester.getCenter(find.byWidget(_sliderThumb(tester))).dx,
+          greaterThan(before.dx),
+        );
       });
 
-      testWidgets('handles min and max bounds correctly', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 25.0, min: 0.0, max: 100.0, onChanged: (value) {}),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSlider), findsOneWidget);
+      testWidgets('positions the thumb at min, midpoint, and max', (
+        tester,
+      ) async {
+        for (final value in [0.0, 50.0, 100.0]) {
+          await tester.pumpRemixApp(
+            SizedBox(
+              width: 240,
+              child: RemixSlider(
+                value: value,
+                min: 0,
+                max: 100,
+                onChanged: (_) {},
+                style: SliderStyler(thumb: BoxStyler().size(20, 20)),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          final slider = tester.getRect(find.byType(RemixSlider));
+          final thumb = tester.getRect(find.byWidget(_sliderThumb(tester)));
+          expect(
+            thumb.center.dx,
+            closeTo(slider.left + 10 + 220 * value / 100, 0.01),
+            reason: 'value: $value',
+          );
+        }
       });
     });
 

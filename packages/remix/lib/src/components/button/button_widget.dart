@@ -201,7 +201,6 @@ class RemixButton extends StatelessWidget {
             );
     }
 
-    // Build text widget
     final textWidget = textBuilder == null
         ? StyledText(label, styleSpec: spec.label)
         : StyleSpecBuilder(

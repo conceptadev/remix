@@ -7,13 +7,6 @@ import '../../helpers/test_methods.dart';
 void main() {
   group('SpinnerStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        final style = SpinnerStyler();
-
-        expect(style, isNotNull);
-        expect(style, isA<SpinnerStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final size = Prop.maybe(24.0);
         final strokeWidth = Prop.maybe(2.0);

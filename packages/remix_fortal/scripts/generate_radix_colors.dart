@@ -192,11 +192,7 @@ class RadixColorGenerator {
     final scales = colors['scales'] as Map<String, dynamic>;
     final neutrals = colors['neutrals'] as Map<String, dynamic>;
     final meta = data['meta'] as Map<String, dynamic>;
-
-    // Generate Dart code
     final buffer = StringBuffer();
-
-    // File header
     buffer.writeln('// GENERATED CODE - DO NOT EDIT');
     buffer.writeln('// Generated from: ${meta['description']}');
     buffer.writeln('// Radix Themes version: ${meta['radix_themes_version']}');
@@ -205,8 +201,6 @@ class RadixColorGenerator {
     buffer.writeln();
     buffer.write(_radixColorApi);
     buffer.writeln();
-
-    // Generate color scale instances
     for (final entry in scales.entries) {
       final colorName = entry.key;
       final colorData = entry.value as Map<String, dynamic>;
@@ -215,8 +209,6 @@ class RadixColorGenerator {
       _generateColorInstance(buffer, colorName, colorData);
       buffer.writeln();
     }
-
-    // Generate neutral instances (blackA, whiteA)
     for (final entry in neutrals.entries) {
       final colorName = entry.key;
       final colorData = entry.value as Map<String, dynamic>;
@@ -225,8 +217,6 @@ class RadixColorGenerator {
       _generateNeutralInstance(buffer, colorName, colorData);
       buffer.writeln();
     }
-
-    // Generate RadixColorTheme instances
     buffer.writeln('// Color theme instances');
     for (final colorName in scales.keys) {
       final dartName = _toDartName(colorName);
@@ -234,16 +224,12 @@ class RadixColorGenerator {
         'const $dartName = RadixColorTheme(_${dartName}Light, _${dartName}Dark);',
       );
     }
-
-    // Generate neutral instances
     buffer.writeln();
     buffer.writeln('// Neutral instances');
     for (final colorName in neutrals.keys) {
       final dartName = _toDartName(colorName);
       buffer.writeln('const $dartName = _${dartName}Alpha;');
     }
-
-    // Write to file
     final outputFile = File(outputPath);
     await outputFile.writeAsString(buffer.toString());
 
@@ -286,8 +272,6 @@ class RadixColorScale {
   final ColorSwatch<int> alpha;
 
   const RadixColorScale(this.solid, this.alpha);
-
-  // Semantic color accessors for better code readability
 
   /// The most subtle background color (step 1).
   Color get appBackground => step(1);

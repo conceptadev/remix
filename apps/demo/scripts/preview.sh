@@ -7,7 +7,6 @@ echo "🚀 Starting Remix Widget Preview..."
 echo "📍 Running from: $(pwd)"
 echo ""
 
-# Check if Flutter is available
 if ! command -v flutter &> /dev/null
 then
     echo "❌ Flutter could not be found. Please ensure Flutter is installed and in your PATH."

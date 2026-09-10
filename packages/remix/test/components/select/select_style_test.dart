@@ -7,13 +7,6 @@ import '../../helpers/test_methods.dart';
 void main() {
   group('SelectStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        final style = SelectStyler();
-
-        expect(style, isNotNull);
-        expect(style, isA<SelectStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final menuContainer = Prop.maybeMix(FlexBoxStyler());
         final trigger = Prop.maybeMix(SelectTriggerStyler());
@@ -255,13 +248,6 @@ void main() {
 
   group('SelectTriggerStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        final style = SelectTriggerStyler();
-
-        expect(style, isNotNull);
-        expect(style, isA<SelectTriggerStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(FlexBoxStyler());
         final label = Prop.maybeMix(TextStyler());
@@ -512,13 +498,6 @@ void main() {
 
   group('SelectMenuItemStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        final style = SelectMenuItemStyler();
-
-        expect(style, isNotNull);
-        expect(style, isA<SelectMenuItemStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(FlexBoxStyler());
         final text = Prop.maybeMix(TextStyler());

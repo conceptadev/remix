@@ -7,8 +7,6 @@
 /// Components should use these functional roles rather than raw color steps.
 library;
 
-// Documentation for all public APIs is provided below
-
 import 'dart:math' as math;
 import 'dart:ui' show Color, Offset;
 
@@ -23,9 +21,6 @@ import 'tokens.dart';
 // ============================================================================
 // FUNCTIONAL / COMPUTED IMPLEMENTATIONS
 // ============================================================================
-
-// Computes contrast foreground color for solid accent backgrounds.
-//
 
 /// Computes solid focus ring color (accent step 8).
 Color computeFocus8(RadixColorScale accent) => accent.step(8);

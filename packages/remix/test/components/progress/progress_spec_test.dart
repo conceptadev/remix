@@ -144,12 +144,20 @@ void main() {
     });
 
     group('Diagnostic Support', () {
-      test('debugFillProperties works without throwing', () {
+      test('diagnostics publish ProgressSpec fields', () {
         const spec = ProgressSpec();
-
+        final builder = DiagnosticPropertiesBuilder();
+        spec.debugFillProperties(builder);
         expect(
-          () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
-          returnsNormally,
+          builder.properties.map((property) => property.name),
+          unorderedEquals([
+            'container',
+            'track',
+            'indicator',
+            'trackContainer',
+            'trackEffects',
+            'indicatorEffects',
+          ]),
         );
       });
 

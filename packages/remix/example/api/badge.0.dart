@@ -39,7 +39,6 @@ class BadgeExample extends StatelessWidget {
               .wrap(.align(alignment: .center))
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
-        .labelColor(Colors.greenAccent.shade700)
         .labelColor(Colors.white)
         .labelFontWeight(FontWeight.bold)
         .labelFontSize(15);

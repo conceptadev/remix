@@ -477,7 +477,10 @@ class _RenderBreakableDataListValue extends RenderProxyBox {
     }
     painter.dispose();
 
-    return widestCluster;
+    // Selection boxes and paragraph intrinsics can differ by floating-point
+    // rounding. A minimum must never exceed the child's maximum width.
+    final maximum = super.computeMaxIntrinsicWidth(height);
+    return widestCluster > maximum ? maximum : widestCluster;
   }
 
   static RenderParagraph? _findParagraph(RenderObject? root) {

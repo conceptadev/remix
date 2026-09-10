@@ -37,8 +37,6 @@ class RadixColorScale {
 
   const RadixColorScale(this.solid, this.alpha);
 
-  // Semantic color accessors for better code readability
-
   /// The most subtle background color (step 1).
   Color get appBackground => step(1);
 

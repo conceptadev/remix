@@ -14,11 +14,7 @@ void main() {
         await tester.pumpRemixApp(RemixButton(label: 'Click Me'));
 
         await tester.pumpAndSettle();
-
-        // Verify text is rendered
         expect(find.text('Click Me'), findsOneWidget);
-
-        // Verify NakedButton is used internally
         expect(find.byType(NakedButton), findsOneWidget);
       });
 
@@ -28,8 +24,6 @@ void main() {
         );
 
         await tester.pumpAndSettle();
-
-        // Verify both text and icon are rendered
         expect(find.text('Save'), findsOneWidget);
         expect(find.byIcon(Icons.save), findsOneWidget);
       });
@@ -127,12 +121,8 @@ void main() {
         );
 
         await tester.pumpAndSettle();
-
-        // Verify custom text widget is rendered
         expect(find.byKey(const ValueKey('custom_text')), findsOneWidget);
         expect(find.text('Custom: Original Label'), findsOneWidget);
-
-        // Verify original label is not rendered as StyledText
         expect(find.text('Original Label'), findsNothing);
       });
 
@@ -152,11 +142,7 @@ void main() {
         );
 
         await tester.pumpAndSettle();
-
-        // Verify custom icon widget is rendered
         expect(find.byKey(const ValueKey('custom_icon')), findsOneWidget);
-
-        // Verify icon has custom color
         final icon = tester.widget<Icon>(find.byIcon(Icons.star));
         expect(icon.color, equals(Colors.red));
       });
@@ -180,12 +166,8 @@ void main() {
 
         await tester
             .pump(); // Use pump() instead of pumpAndSettle() to avoid timeout
-
-        // Verify custom loading widget is rendered
         expect(find.byKey(const ValueKey('custom_loading')), findsOneWidget);
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
-
-        // Verify default spinner is not rendered
         expect(find.byType(RemixSpinner), findsNothing);
       });
 
@@ -216,8 +198,6 @@ void main() {
         );
 
         await tester.pumpAndSettle();
-
-        // Verify builders received correct spec parameters
         expect(receivedTextSpec, isNotNull);
         expect(receivedIconSpec, isNotNull);
         expect(receivedSpinnerSpec, isNotNull);
@@ -239,11 +219,7 @@ void main() {
 
         await tester
             .pump(); // Use pump() instead of pumpAndSettle() to avoid timeout
-
-        // Verify spinner is present
         expect(find.byType(RemixSpinner), findsOneWidget);
-
-        // Verify content is hidden but maintains size
         final VisibilityWidgets = tester.widgetList<Visibility>(
           find.byType(Visibility),
         );

@@ -268,6 +268,12 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSwitch), findsOneWidget);
+        final thumb = tester
+            .widgetList<Box>(find.byType(Box))
+            .last
+            .styleSpec!
+            .spec;
+        expect((thumb.decoration as BoxDecoration).color, Colors.blue);
       });
 
       testWidgets('applies custom thumb styling', (tester) async {
@@ -400,16 +406,30 @@ void main() {
       });
 
       testWidgets('has proper semantics for screen readers', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSwitch(
-            selected: true,
-            onChanged: (value) {},
-            semanticLabel: 'Enable notifications',
-          ),
-        );
-        await tester.pumpAndSettle();
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixSwitch(
+              selected: true,
+              onChanged: (value) {},
+              semanticLabel: 'Enable notifications',
+            ),
+          );
+          await tester.pumpAndSettle();
 
-        expect(find.byType(RemixSwitch), findsOneWidget);
+          expect(find.byType(RemixSwitch), findsOneWidget);
+          expect(
+            find.semantics.byLabel('Enable notifications').evaluate().single,
+            isSemantics(
+              label: 'Enable notifications',
+              isEnabled: true,
+              hasToggledState: true,
+              isToggled: true,
+            ),
+          );
+        } finally {
+          semantics.dispose();
+        }
       });
     });
 
@@ -658,6 +678,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSwitch), findsOneWidget);
+        expect(switchValue, isFalse);
       });
 
       testWidgets('handles disabled state with enabled=false', (tester) async {

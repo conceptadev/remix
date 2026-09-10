@@ -90,7 +90,7 @@ RadioStyler _fortalRadioClassicStyler(
       )
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          _fortalRadioInsetRing(FortalTokens.gray7()),
+          fortalInsetSurface(strokes: [FortalTokens.gray7()]),
         ),
       )
       .indicatorColor(
@@ -160,7 +160,7 @@ RadioStyler _fortalRadioSurfaceStyler(
       )
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          _fortalRadioInsetRing(FortalTokens.grayA7()),
+          fortalInsetSurface(strokes: [FortalTokens.grayA7()]),
         ),
       )
       .indicator(
@@ -195,7 +195,7 @@ RadioStyler _fortalRadioSurfaceStyler(
             )
             .containerEffects(
               RemixBoxEffectsMix.overContent(
-                _fortalRadioInsetRing(FortalTokens.grayA6()),
+                fortalInsetSurface(strokes: [FortalTokens.grayA6()]),
               ),
             )
             .indicatorColor(FortalTokens.grayA8()),
@@ -254,8 +254,3 @@ RadioStyler _fortalRadioSoftStyler(
     indicatorSize: FortalTokens.radioIndicatorSize3(),
   ),
 };
-
-RemixBoxEffectLayerMix _fortalRadioInsetRing(Color color) =>
-    RemixBoxEffectLayerMix(
-      shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
-    );

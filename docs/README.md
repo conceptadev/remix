@@ -1,8 +1,8 @@
 # Maintaining Remix documentation
 
 The content in `docs/` is owned by this repository. `docs.json` defines its
-navigation. The website is a publication surface, not a second authority for
-Remix APIs or release versions.
+navigation. `apps/docs` renders it with the shared Concepta Fumadocs theme.
+See [the app README](../apps/docs/README.md) for run commands.
 
 ## Content organization
 
@@ -22,11 +22,15 @@ package source and analyzer remain authoritative for examples.
 
 ## Tutorial source and evidence
 
-`remix-cli-tutorial.html` keeps the complete reviewed walkthrough, full source
-listings, and offline presentation. The MDX tutorial is a condensed reading
-path through the same workflow. Each fenced block carries a hidden
-`tutorial-source` marker naming its corresponding HTML figure. The checker
-compares that exact block, including its language and whitespace.
+`tutorials/settings-screen.mdx` is the tutorial. Full application and test
+panels use build-time `TutorialSource` includes from the checked sample ZIP.
+There is no second HTML tutorial or separate source listing to keep in sync.
+
+Each authored fenced block carries a hidden `tutorial-source` marker matched
+against `assets/remix-cli-tutorial/code-evidence.json`. The hashes preserve the
+reviewed commands and first-render example from commit `3c63fe44f`; they are
+not another editable copy of the code. Review any intentional change before
+updating that evidence. The old HTML presentations are recoverable in Git.
 
 Keep screenshots, sample projects, capture pins, and licenses under
 `assets/remix-cli-tutorial/`. Do not relabel old captures as new validation.
@@ -42,11 +46,11 @@ fvm dart run melos run docs:check
 ```
 
 This validates navigation, known retired APIs, analyzable Dart snippets,
-generated catalog consistency, tutorial asset/source hashes, native tutorial
-excerpt parity, and local links in the introduction/setup/styling/tutorial
+generated catalog consistency, tutorial asset/source hashes, recorded snippet
+parity, complete source-panel inclusion, and local links in the introduction/setup/styling/tutorial
 pages. Regression tests deliberately corrupt fixtures in temporary directories.
 
 The tutorial's application-relative `ui/ui.dart` example is checked against
-the reviewed HTML, not compiled against the workspace package. Replay the
+recorded evidence, not compiled against the workspace package. Replay the
 downloaded Flutter samples when application code or CLI behavior changes.
-These content checks do not build or deploy a documentation website.
+Run `pnpm typecheck` and `pnpm build` inside `apps/docs` to validate the site.

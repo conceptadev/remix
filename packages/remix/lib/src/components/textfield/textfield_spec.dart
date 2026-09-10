@@ -1,54 +1,6 @@
 part of 'textfield.dart';
 
-/// Defines the structure and styling properties for a text field component.
-///
-/// TextFieldSpec is the resolved specification that describes how a text field
-/// should be styled, structured, and behave. It follows the Spec pattern used
-/// throughout the Remix framework, where:
-///
-/// 1. **Style classes** (like [TextFieldStyler]) define styling APIs
-/// 2. **Spec classes** (like [TextFieldSpec]) hold resolved styling properties
-/// 3. **Widget classes** (like [RemixTextField]) consume specs to render UI
-///
-/// The TextFieldSpec contains both styling properties ([StyleSpec] instances)
-/// for visual elements and configuration properties for text field behavior
-/// such as cursor appearance, text alignment, and selection handling.
-///
-/// ## Architecture Overview
-///
-/// ```
-/// TextFieldStyler -> TextFieldSpec -> RemixTextField Widget
-/// (Define styles)       (Hold props)     (Render UI)
-/// ```
-///
-/// ## Property Categories
-///
-/// **Visual Styling**: [text], [hintText], [container], [helperText], [label]
-/// **Text Behavior**: [textAlign]
-/// **Cursor Configuration**: [cursorWidth], [cursorHeight], [cursorRadius], [cursorColor], [cursorOpacityAnimates]
-/// **Selection Styling**: [selectionHeightStyle], [selectionWidthStyle]
-/// **Input Configuration**: [scrollPadding], [keyboardAppearance]
-///
-/// ## Usage
-///
-/// Specs are typically not created directly by users. Instead, they are
-/// built internally when applying styles:
-///
-/// ```dart
-/// // Style creates and populates the spec
-/// final style = TextFieldStyler()
-///   .color(Colors.black)
-///   .cursorColor(Colors.blue)
-///   .spacing(8.0);
-///
-/// // Widget receives the resolved spec
-/// RemixTextField(style: style)
-/// ```
-///
-/// See also:
-/// - [TextFieldStyler] for the styling API
-/// - [RemixTextField] for the widget implementation
-/// - [Spec] for the base specification pattern
+/// Resolved visual properties for a [RemixTextField].
 @MixableSpec(
   target: RemixTextField.new,
   extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin],

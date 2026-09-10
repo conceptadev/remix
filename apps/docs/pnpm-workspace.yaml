@@ -1,0 +1,10 @@
+packages: []
+strictPeerDependencies: true
+engineStrict: true
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeStrict: true
+minimumReleaseAgeExclude:
+  - '@fumadocs/base-ui@16.15.8'
+  - 'fumadocs-core@16.15.8'
+  - '@concepta/docs-theme@0.0.1'

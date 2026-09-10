@@ -30,8 +30,6 @@ class SpacedColumn extends StatelessWidget {
 
     for (int i = 0; i < children.length; i++) {
       spacedChildren.add(children[i]);
-
-      // Add spacing between items (but not after the last item)
       if (i < children.length - 1) {
         spacedChildren.add(SizedBox(height: spacing));
       }

@@ -7,13 +7,6 @@ import '../../helpers/test_methods.dart';
 void main() {
   group('DataListStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        final style = DataListStyler();
-
-        expect(style, isNotNull);
-        expect(style, isA<DataListStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final labelContainer = Prop.maybeMix(BoxStyler());
@@ -55,15 +48,15 @@ void main() {
           minLabelWidth: 120.0,
         );
 
-        expect(style.$container, isNotNull);
-        expect(style.$labelContainer, isNotNull);
-        expect(style.$valueContainer, isNotNull);
-        expect(style.$label, isNotNull);
-        expect(style.$value, isNotNull);
-        expect(style.$rowSpacing, isNotNull);
-        expect(style.$columnSpacing, isNotNull);
-        expect(style.$labelValueSpacing, isNotNull);
-        expect(style.$minLabelWidth, isNotNull);
+        expect(style.$container, equals(Prop.maybeMix(BoxStyler())));
+        expect(style.$labelContainer, equals(Prop.maybeMix(BoxStyler())));
+        expect(style.$valueContainer, equals(Prop.maybeMix(BoxStyler())));
+        expect(style.$label, equals(Prop.maybeMix(TextStyler())));
+        expect(style.$value, equals(Prop.maybeMix(TextStyler())));
+        expect(style.$rowSpacing, equals(Prop.value(8.0)));
+        expect(style.$columnSpacing, equals(Prop.value(16.0)));
+        expect(style.$labelValueSpacing, equals(Prop.value(4.0)));
+        expect(style.$minLabelWidth, equals(Prop.value(120.0)));
       });
     });
 

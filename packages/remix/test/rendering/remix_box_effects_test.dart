@@ -6,6 +6,25 @@ import 'package:remix/src/rendering/remix_box_effects.dart'
     show RemixBoxAdapter, RemixFlexBoxAdapter;
 
 void main() {
+  testWidgets('resolves token-backed gradient insets', (tester) async {
+    const inset = DoubleToken('test.gradient.inset');
+    late RemixBoxEffectLayerSpec resolved;
+    await tester.pumpWidget(
+      MixScope(
+        tokens: {inset: 3.0},
+        child: Builder(
+          builder: (context) {
+            resolved = RemixBoxEffectLayerMix(
+              gradientInsets: [inset(), 1],
+            ).resolve(context);
+            return const SizedBox();
+          },
+        ),
+      ),
+    );
+    expect(resolved.gradientInsets, [3.0, 1.0]);
+  });
+
   group('RemixBoxEffectsSpec', () {
     test('rejects explicit shadows and a shadow token together', () {
       expect(

@@ -12,9 +12,8 @@ component recipes and their theme.
 The finished screenshot includes the medium Button height edit below. It is
 an application example, not a screen the CLI generates for you.
 
-This walkthrough uses the same reviewed code as the
-[complete offline tutorial](/remix-cli-tutorial.html). The
-[sample download](/assets/remix-cli-tutorial/sample-projects.zip) contains
+This walkthrough includes the complete application and test source below.
+The [sample download](/assets/remix-cli-tutorial/sample-projects.zip) contains
 both projects, generated adapters, and four behavior tests per preset.
 
 ## Before you start
@@ -186,10 +185,18 @@ dart run remix_cli:remix add sidebar
 The existing theme is preserved. Sidebar also installs its `toggle`
 dependency. Each command updates the barrel and generates the needed adapters.
 
-Download and unzip the [reviewed samples](/assets/remix-cli-tutorial/sample-projects.zip).
-Copy `default_demo/lib/main.dart` into your application's `lib/main.dart`.
-You can also read and copy the [complete source inline](/remix-cli-tutorial.html#compose).
+Replace your application's `lib/main.dart` with the complete default source below.
+The same file is `default_demo/lib/main.dart` in the
+[reviewed samples](/assets/remix-cli-tutorial/sample-projects.zip).
 Keep your CLI-installed `lib/ui` files; the next step changes one of them.
+
+<Accordions>
+<Accordion title="Complete default lib/main.dart">
+
+<TutorialSource preset="default" file="lib/main.dart" />
+
+</Accordion>
+</Accordions>
 
 The complete app owns the form values, save counter, loading flag, dialog
 result, and sidebar selection. It uses `MaterialApp` as the navigation host.
@@ -207,7 +214,7 @@ instance-specific colors and rounded shape.
 
 This changes a recipe value, not the generated widget signature. If you change
 recipe parameters, enums, or annotations, regenerate the adapter as described
-in the [customization reference](/remix-cli-guide.html#customize).
+in the [customization reference](/open-code#the-three-levels-of-customization).
 
 ## Check behavior and preserve edits
 
@@ -238,7 +245,7 @@ dart run remix_cli:remix add button
 
 Confirm the medium height remains `44.0`. `--overwrite` is an explicit
 replacement operation; do not use it to inspect an update. See
-[source-preservation details](/remix-cli-tutorial.html#preserve) before trying it.
+[source-preservation details](/open-code#updating) before trying it.
 
 ## Try Fortal separately
 
@@ -268,7 +275,17 @@ dart run remix_cli:remix add card
 dart run remix_cli:remix add sidebar
 ```
 
-Copy `fortal_demo/lib/main.dart` from the download to this app's `lib/main.dart`.
+Replace this app's `lib/main.dart` with the complete Fortal source below, also
+available as `fortal_demo/lib/main.dart` in the download.
+
+<Accordions>
+<Accordion title="Complete Fortal lib/main.dart">
+
+<TutorialSource preset="fortal" file="lib/main.dart" />
+
+</Accordion>
+</Accordions>
+
 The Fortal example uses `AcmeScope` and `AcmeButton.solid`, rather than
 `AcmeThemeScope` and `AcmeButton.primary`. Keep its complete host configuration.
 Do not apply the default preset's Button metrics edit to Fortal.
@@ -283,6 +300,20 @@ for your form. Repeat the same behavior checks. Neither preset adds a
 
 Copy `test/workflow_test.dart` from the matching downloaded project into each
 sample. Keep the project names used above; the tests import those names.
+
+<Accordions>
+<Accordion title="Default workflow tests">
+
+<TutorialSource preset="default" file="test/workflow_test.dart" />
+
+</Accordion>
+<Accordion title="Fortal workflow tests">
+
+<TutorialSource preset="fortal" file="test/workflow_test.dart" />
+
+</Accordion>
+</Accordions>
+
 Replace `analysis_options.yaml` with the reviewed configuration:
 
 {/* tutorial-source: analysis-options */}
@@ -317,11 +348,11 @@ failures before treating a screenshot as evidence that the sample works.
 - **Missing overlay or incorrect dialog text:** restore the complete sample's application host and scope placement.
 - **No `primary` constructor:** use the default sample with `default`, or the `solid` constructor with `fortal`.
 
-See the [full troubleshooting table](/remix-cli-tutorial.html#troubleshoot)
-and [Open Code reference](/open-code) for configuration and command details.
+See the [Open Code reference](/open-code) for configuration and command details.
 
 Screenshots were captured from Flutter release web builds and an editor during
 the September 7 review. They show desktop states, not certification of all
 components or platforms. [Recorded evidence](/assets/remix-cli-tutorial/evidence.json)
-tracks their hashes and source checkout. [Asset licenses](/assets/remix-cli-tutorial/README.md)
-and the original offline HTML remain alongside this documentation.
+tracks their hashes and source checkout. [Assets and evidence](/assets/remix-cli-tutorial/README.md)
+remain alongside this documentation. Source panels above are expanded from the
+same archive during the documentation build, not maintained as separate copies.

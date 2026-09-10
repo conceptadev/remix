@@ -136,7 +136,7 @@ CheckboxStyler _{{valuePrefix}}CheckboxSurface(CheckboxStyler base, bool highCon
       )
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          _{{valuePrefix}}CheckboxInsetRing({{typePrefix}}Tokens.grayA7()),
+          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA7()]),
         ),
       )
       .onSelected(selected)
@@ -148,7 +148,7 @@ CheckboxStyler _{{valuePrefix}}CheckboxSurface(CheckboxStyler base, bool highCon
             )
             .containerEffects(
               RemixBoxEffectsMix.overContent(
-                _{{valuePrefix}}CheckboxInsetRing({{typePrefix}}Tokens.grayA6()),
+                {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA6()]),
               ),
             )
             .indicatorColor({{typePrefix}}Tokens.grayA8()),
@@ -207,7 +207,7 @@ CheckboxStyler _{{valuePrefix}}CheckboxClassic(CheckboxStyler base, bool highCon
       )
       .containerEffects(
         RemixBoxEffectsMix.overContent(
-          _{{valuePrefix}}CheckboxInsetRing({{typePrefix}}Tokens.grayA3()),
+          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA3()]),
         ),
       )
       .onSelected(selected)
@@ -251,8 +251,3 @@ CheckboxStyler _{{valuePrefix}}CheckboxSoft(CheckboxStyler base, bool highContra
             .indicatorColor({{typePrefix}}Tokens.grayA8()),
       );
 }
-
-RemixBoxEffectLayerMix _{{valuePrefix}}CheckboxInsetRing(Color color) =>
-    RemixBoxEffectLayerMix(
-      shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
-    );

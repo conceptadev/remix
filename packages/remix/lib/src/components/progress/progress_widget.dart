@@ -1,8 +1,6 @@
 part of 'progress.dart';
 
-/// The [RemixProgress] widget is used to display a progress bar that indicates a
-/// completion percentage between 0 and 1. It can be customized using the
-/// [style] parameter to fit different design needs.
+/// A progress bar showing a completion value between 0 and 1.
 ///
 /// ## Example
 ///
@@ -27,9 +25,6 @@ class RemixProgress extends StatelessWidget {
   static final styleFrom = ProgressStyler.new;
 
   /// The progress value between 0 and 1.
-  ///
-  /// This value determines how much of the progress bar is filled.
-  /// A value of 0 means empty, while 1 means completely filled.
   final double value;
 
   /// The accessible name exposed when this progress bar is not decorative.

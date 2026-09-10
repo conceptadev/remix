@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -50,30 +51,60 @@ void main() {
       });
 
       test('interpolates between two specs at t=0', () {
-        const spec1 = TabBarSpec();
-        const spec2 = TabBarSpec();
-
-        final result = spec1.lerp(spec2, 0.0);
-
-        expect(result.container, isNotNull);
+        const start = TabBarSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(4))),
+            ),
+          ),
+        );
+        const end = TabBarSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(12))),
+            ),
+          ),
+        );
+        final result = start.lerp(end, 0);
+        expect(result.container.spec.box!.spec.padding, EdgeInsets.all(4.0));
       });
 
       test('interpolates between two specs at t=1', () {
-        const spec1 = TabBarSpec();
-        const spec2 = TabBarSpec();
-
-        final result = spec1.lerp(spec2, 1.0);
-
-        expect(result.container, isNotNull);
+        const start = TabBarSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(4))),
+            ),
+          ),
+        );
+        const end = TabBarSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(12))),
+            ),
+          ),
+        );
+        final result = start.lerp(end, 1);
+        expect(result.container.spec.box!.spec.padding, EdgeInsets.all(12.0));
       });
 
       test('interpolates between two specs at t=0.5', () {
-        const spec1 = TabBarSpec();
-        const spec2 = TabBarSpec();
-
-        final result = spec1.lerp(spec2, 0.5);
-
-        expect(result.container, isNotNull);
+        const start = TabBarSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(4))),
+            ),
+          ),
+        );
+        const end = TabBarSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(12))),
+            ),
+          ),
+        );
+        final result = start.lerp(end, 0.5);
+        expect(result.container.spec.box!.spec.padding, EdgeInsets.all(8.0));
       });
     });
 
@@ -168,30 +199,36 @@ void main() {
       });
 
       test('interpolates between two specs at t=0', () {
-        const spec1 = TabViewSpec();
-        const spec2 = TabViewSpec();
-
-        final result = spec1.lerp(spec2, 0.0);
-
-        expect(result.container, isNotNull);
+        const start = TabViewSpec(
+          container: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(4))),
+        );
+        const end = TabViewSpec(
+          container: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(12))),
+        );
+        final result = start.lerp(end, 0);
+        expect(result.container.spec.padding, EdgeInsets.all(4.0));
       });
 
       test('interpolates between two specs at t=1', () {
-        const spec1 = TabViewSpec();
-        const spec2 = TabViewSpec();
-
-        final result = spec1.lerp(spec2, 1.0);
-
-        expect(result.container, isNotNull);
+        const start = TabViewSpec(
+          container: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(4))),
+        );
+        const end = TabViewSpec(
+          container: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(12))),
+        );
+        final result = start.lerp(end, 1);
+        expect(result.container.spec.padding, EdgeInsets.all(12.0));
       });
 
       test('interpolates between two specs at t=0.5', () {
-        const spec1 = TabViewSpec();
-        const spec2 = TabViewSpec();
-
-        final result = spec1.lerp(spec2, 0.5);
-
-        expect(result.container, isNotNull);
+        const start = TabViewSpec(
+          container: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(4))),
+        );
+        const end = TabViewSpec(
+          container: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(12))),
+        );
+        final result = start.lerp(end, 0.5);
+        expect(result.container.spec.padding, EdgeInsets.all(8.0));
       });
     });
 
@@ -327,36 +364,78 @@ void main() {
       });
 
       test('interpolates between two specs at t=0', () {
-        const spec1 = TabSpec();
-        const spec2 = TabSpec();
-
-        final result = spec1.lerp(spec2, 0.0);
-
-        expect(result.container, isNotNull);
-        expect(result.label, isNotNull);
-        expect(result.icon, isNotNull);
+        const start = TabSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(4))),
+            ),
+          ),
+          label: StyleSpec(spec: TextSpec(style: TextStyle(fontSize: 12))),
+          icon: StyleSpec(spec: IconSpec(size: 12)),
+        );
+        const end = TabSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(12))),
+            ),
+          ),
+          label: StyleSpec(spec: TextSpec(style: TextStyle(fontSize: 20))),
+          icon: StyleSpec(spec: IconSpec(size: 20)),
+        );
+        final result = start.lerp(end, 0);
+        expect(result.container.spec.box!.spec.padding, EdgeInsets.all(4.0));
+        expect(result.label.spec.style!.fontSize, 12.0);
+        expect(result.icon.spec.size, 12.0);
       });
 
       test('interpolates between two specs at t=1', () {
-        const spec1 = TabSpec();
-        const spec2 = TabSpec();
-
-        final result = spec1.lerp(spec2, 1.0);
-
-        expect(result.container, isNotNull);
-        expect(result.label, isNotNull);
-        expect(result.icon, isNotNull);
+        const start = TabSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(4))),
+            ),
+          ),
+          label: StyleSpec(spec: TextSpec(style: TextStyle(fontSize: 12))),
+          icon: StyleSpec(spec: IconSpec(size: 12)),
+        );
+        const end = TabSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(12))),
+            ),
+          ),
+          label: StyleSpec(spec: TextSpec(style: TextStyle(fontSize: 20))),
+          icon: StyleSpec(spec: IconSpec(size: 20)),
+        );
+        final result = start.lerp(end, 1);
+        expect(result.container.spec.box!.spec.padding, EdgeInsets.all(12.0));
+        expect(result.label.spec.style!.fontSize, 20.0);
+        expect(result.icon.spec.size, 20.0);
       });
 
       test('interpolates between two specs at t=0.5', () {
-        const spec1 = TabSpec();
-        const spec2 = TabSpec();
-
-        final result = spec1.lerp(spec2, 0.5);
-
-        expect(result.container, isNotNull);
-        expect(result.label, isNotNull);
-        expect(result.icon, isNotNull);
+        const start = TabSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(4))),
+            ),
+          ),
+          label: StyleSpec(spec: TextSpec(style: TextStyle(fontSize: 12))),
+          icon: StyleSpec(spec: IconSpec(size: 12)),
+        );
+        const end = TabSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(spec: BoxSpec(padding: EdgeInsets.all(12))),
+            ),
+          ),
+          label: StyleSpec(spec: TextSpec(style: TextStyle(fontSize: 20))),
+          icon: StyleSpec(spec: IconSpec(size: 20)),
+        );
+        final result = start.lerp(end, 0.5);
+        expect(result.container.spec.box!.spec.padding, EdgeInsets.all(8.0));
+        expect(result.label.spec.style!.fontSize, 16.0);
+        expect(result.icon.spec.size, 16.0);
       });
     });
 

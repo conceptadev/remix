@@ -647,6 +647,15 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixMenu<String>), findsOneWidget);
+      final trigger = tester.widget<RowBox>(
+        find
+            .ancestor(of: find.text('Options'), matching: find.byType(RowBox))
+            .first,
+      );
+      expect(
+        trigger.styleSpec!.spec.box!.spec.padding,
+        const EdgeInsets.all(20),
+      );
     });
 
     testWidgets('applies custom style to menu items', (tester) async {
@@ -665,6 +674,14 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixMenu<String>), findsOneWidget);
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+      final item = tester.widget<FlexBox>(
+        find
+            .ancestor(of: find.text('Copy'), matching: find.byType(FlexBox))
+            .first,
+      );
+      expect(item.styleSpec!.spec.box!.spec.padding, const EdgeInsets.all(12));
     });
 
     testWidgets('applies menu-level default item style', (tester) async {
@@ -1038,47 +1055,125 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixMenu<String>), findsOneWidget);
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+      final trigger = tester.getRect(find.text('Options'));
+      final item = tester.getRect(find.text('Copy'));
+      expect(item.top, greaterThanOrEqualTo(trigger.bottom));
+      expect(item.left, closeTo(trigger.left, 0.01));
     });
   });
 
   group('RemixMenu Configuration Tests', () {
     testWidgets('respects closeOnClickOutside flag', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          closeOnClickOutside: true,
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
+      for (final enabled in [true, false]) {
+        final controller = MenuController();
+        await tester.pumpRemixApp(
+          Stack(
+            children: [
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: TextButton(
+                  key: const ValueKey('background'),
+                  onPressed: () {},
+                  child: const Text('Background'),
+                ),
+              ),
+              Center(
+                child: RemixMenu<String>(
+                  key: ValueKey(enabled),
+                  controller: controller,
+                  closeOnClickOutside: enabled,
+                  trigger: const RemixMenuTrigger(label: 'Options'),
+                  items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
+                ),
+              ),
+            ],
+          ),
+        );
+        await tester.tap(find.text('Options'));
+        await tester.pumpAndSettle();
+        expect(find.text('Copy'), findsOneWidget);
+        await tester.tap(find.byKey(const ValueKey('background')));
+        await tester.pumpAndSettle();
+        expect(controller.isOpen, !enabled);
+        expect(find.text('Copy'), enabled ? findsNothing : findsOneWidget);
+        controller.close();
+        await tester.pumpAndSettle();
+      }
     });
 
     testWidgets('respects consumeOutsideTaps flag', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          consumeOutsideTaps: false,
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
+      for (final enabled in [true, false]) {
+        var backgroundTaps = 0;
+        final controller = MenuController();
+        await tester.pumpRemixApp(
+          Stack(
+            children: [
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: TextButton(
+                  key: const ValueKey('background'),
+                  onPressed: () => backgroundTaps++,
+                  child: const Text('Background'),
+                ),
+              ),
+              Center(
+                child: RemixMenu<String>(
+                  key: ValueKey(enabled),
+                  controller: controller,
+                  consumeOutsideTaps: enabled,
+                  trigger: const RemixMenuTrigger(label: 'Options'),
+                  items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
+                ),
+              ),
+            ],
+          ),
+        );
+        await tester.tap(find.text('Options'));
+        await tester.pumpAndSettle();
+        expect(find.text('Copy'), findsOneWidget);
+        await tester.tap(find.byKey(const ValueKey('background')));
+        await tester.pumpAndSettle();
+        expect(controller.isOpen, isFalse);
+        expect(backgroundTaps, enabled ? 0 : 1);
+        controller.close();
+        await tester.pumpAndSettle();
+      }
     });
 
     testWidgets('respects useRootOverlay flag', (tester) async {
-      await tester.pumpRemixApp(
-        RemixMenu<String>(
-          useRootOverlay: true,
-          trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
+      for (final useRoot in [true, false]) {
+        final nestedOverlay = GlobalKey<OverlayState>();
+        late OverlayState rootOverlay;
+        final entry = OverlayEntry(
+          builder: (context) {
+            rootOverlay = Overlay.of(context, rootOverlay: true);
+            return Center(
+              child: RemixMenu<String>(
+                useRootOverlay: useRoot,
+                trigger: const RemixMenuTrigger(label: 'Options'),
+                items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
+              ),
+            );
+          },
+        );
+        await tester.pumpRemixApp(
+          Overlay(key: nestedOverlay, initialEntries: [entry]),
+        );
+        await tester.tap(find.text('Options'));
+        await tester.pumpAndSettle();
+        final rootRender = rootOverlay.context.findRenderObject()!;
+        final nestedRender = nestedOverlay.currentContext!.findRenderObject()!;
+        RenderObject? host = tester.renderObject(find.text('Copy'));
+        while (host != null && host != rootRender && host != nestedRender) {
+          host = host.parent;
+        }
+        expect(host, same(useRoot ? rootRender : nestedRender));
+        entry.remove();
+        await tester.pumpRemixApp(const SizedBox());
+        entry.dispose();
+      }
     });
   });
 

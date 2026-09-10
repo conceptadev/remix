@@ -41,6 +41,12 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixProgress), findsOneWidget);
+      expect(tester.getSize(find.byType(RemixProgress)).height, 20);
+      final boxes = tester.widgetList<Box>(find.byType(Box)).toList();
+      expect(
+        tester.getSize(find.byWidget(boxes[2])).width,
+        closeTo(tester.getSize(find.byWidget(boxes[1])).width * 0.75, 0.01),
+      );
     });
   });
 
@@ -74,6 +80,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixProgress), findsOneWidget);
+      expect(tester.getSize(find.byType(RemixProgress)).height, 30);
     });
 
     testWidgets('applies width style', (tester) async {
@@ -83,6 +90,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixProgress), findsOneWidget);
+      expect(tester.getSize(find.byType(RemixProgress)).width, 200);
     });
 
     testWidgets('applies track color style', (tester) async {
@@ -95,6 +103,12 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixProgress), findsOneWidget);
+      final box = tester
+          .widgetList<Box>(find.byType(Box))
+          .elementAt(1)
+          .styleSpec!
+          .spec;
+      expect((box.decoration as BoxDecoration).color, Colors.grey);
     });
 
     testWidgets('applies indicator color style', (tester) async {
@@ -107,6 +121,12 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixProgress), findsOneWidget);
+      final box = tester
+          .widgetList<Box>(find.byType(Box))
+          .elementAt(2)
+          .styleSpec!
+          .spec;
+      expect((box.decoration as BoxDecoration).color, Colors.blue);
     });
 
     testWidgets('applies padding style', (tester) async {
@@ -119,6 +139,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixProgress), findsOneWidget);
+      expect(
+        tester.widget<Box>(find.byType(Box).first).styleSpec!.spec.padding,
+        const EdgeInsets.all(16),
+      );
     });
 
     testWidgets('applies margin style', (tester) async {
@@ -131,6 +155,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixProgress), findsOneWidget);
+      expect(
+        tester.widget<Box>(find.byType(Box).first).styleSpec!.spec.margin,
+        const EdgeInsets.all(8),
+      );
     });
 
     testWidgets('applies combined styles', (tester) async {

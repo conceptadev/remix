@@ -7,20 +7,14 @@ import '../../helpers/test_methods.dart';
 void main() {
   group('BadgeStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        const style = BadgeStyler.create();
-        expect(style, isNotNull);
-        expect(style, isA<BadgeStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final text = Prop.maybeMix(TextStyler());
 
         final style = BadgeStyler.create(container: container, label: text);
 
-        expect(style, isNotNull);
-        expect(style, isA<BadgeStyler>());
+        expect(style.$container, equals(container));
+        expect(style.$label, equals(text));
       });
 
       test('constructor with styler parameters', () {
@@ -29,8 +23,18 @@ void main() {
           label: TextStyler(style: TextStyleMix(color: Colors.red)),
         );
 
-        expect(style, isNotNull);
-        expect(style, isA<BadgeStyler>());
+        expect(
+          style.$container,
+          equals(
+            Prop.maybeMix(BoxStyler(padding: EdgeInsetsGeometryMix.all(8.0))),
+          ),
+        );
+        expect(
+          style.$label,
+          equals(
+            Prop.maybeMix(TextStyler(style: TextStyleMix(color: Colors.red))),
+          ),
+        );
       });
     });
 

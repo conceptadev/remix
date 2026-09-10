@@ -94,10 +94,7 @@ void main() {
         );
 
         await tester.pumpAndSettle();
-
-        // First item should be expanded and show content
         expect(find.text('First content'), findsOneWidget);
-        // Second item should be collapsed
         expect(find.text('Second content'), findsNothing);
       });
     });
@@ -691,12 +688,39 @@ void main() {
       testWidgets(
         'uses title as semantic label when no semanticLabel provided',
         (tester) async {
+          final semantics = tester.ensureSemantics();
+          try {
+            await tester.pumpRemixApp(
+              RemixAccordionGroup<String>(
+                controller: RemixAccordionController<String>(),
+                child: RemixAccordion<String>(
+                  value: 'item1',
+                  title: 'Test Title',
+                  child: const Text('Content'),
+                ),
+              ),
+            );
+
+            await tester.pumpAndSettle();
+
+            expect(find.text('Test Title'), findsOneWidget);
+            expect(find.bySemanticsLabel('Test Title'), findsOneWidget);
+          } finally {
+            semantics.dispose();
+          }
+        },
+      );
+
+      testWidgets('uses custom semanticLabel when provided', (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
           await tester.pumpRemixApp(
             RemixAccordionGroup<String>(
               controller: RemixAccordionController<String>(),
               child: RemixAccordion<String>(
                 value: 'item1',
                 title: 'Test Title',
+                semanticLabel: 'Custom Label',
                 child: const Text('Content'),
               ),
             ),
@@ -704,27 +728,11 @@ void main() {
 
           await tester.pumpAndSettle();
 
-          expect(find.text('Test Title'), findsOneWidget);
-        },
-      );
-
-      testWidgets('uses custom semanticLabel when provided', (tester) async {
-        await tester.pumpRemixApp(
-          RemixAccordionGroup<String>(
-            controller: RemixAccordionController<String>(),
-            child: RemixAccordion<String>(
-              value: 'item1',
-              title: 'Test Title',
-              semanticLabel: 'Custom Label',
-              child: const Text('Content'),
-            ),
-          ),
-        );
-
-        await tester.pumpAndSettle();
-
-        // Widget should render correctly with semantic label
-        expect(find.byType(RemixAccordion<String>), findsOneWidget);
+          expect(find.byType(RemixAccordion<String>), findsOneWidget);
+          expect(find.bySemanticsLabel('Custom Label'), findsOneWidget);
+        } finally {
+          semantics.dispose();
+        }
       });
     });
 

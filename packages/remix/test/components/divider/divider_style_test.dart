@@ -2,18 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
+import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
   group('DividerStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        final style = DividerStyler();
-
-        expect(style, isNotNull);
-        expect(style, isA<DividerStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final variants = <VariantStyle<DividerSpec>>[];
@@ -33,8 +27,7 @@ void main() {
 
         final style = DividerStyler(container: containerStyler);
 
-        expect(style, isNotNull);
-        expect(style.$container, isNotNull);
+        expect(style.$container, equals(Prop.maybeMix(containerStyler)));
       });
     });
 
@@ -257,6 +250,10 @@ void main() {
         expect(merged, isNot(same(style1)));
         expect(merged, isNot(same(style2)));
         expect(merged.$container, isNotNull);
+        final box = merged.resolve(MockBuildContext()).spec.container.spec;
+        expect((box.decoration as BoxDecoration).color, Colors.red);
+        expect(box.constraints!.minHeight, 2);
+        expect(box.constraints!.maxHeight, 2);
       });
     });
 

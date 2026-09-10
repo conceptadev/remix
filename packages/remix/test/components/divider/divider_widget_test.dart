@@ -25,6 +25,12 @@ void main() {
 
         expect(find.byType(RemixDivider), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
+        expect(
+          (tester.widget<Box>(find.byType(Box)).styleSpec!.spec.decoration
+                  as BoxDecoration)
+              .color,
+          Colors.red,
+        );
       });
 
       testWidgets('renders divider with thickness', (tester) async {
@@ -35,6 +41,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDivider), findsOneWidget);
+        expect(tester.getSize(find.byType(RemixDivider)).height, 2);
       });
     });
 
@@ -67,8 +74,7 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        final box = tester.widget<SizedBox>(find.byType(SizedBox));
-        expect(box.width, equals(200));
+        expect(tester.getSize(find.byType(RemixDivider)).width, 200);
       });
     });
 
@@ -85,6 +91,8 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDivider), findsOneWidget);
+        final spec = tester.widget<Box>(find.byType(Box)).styleSpec!.spec;
+        expect(spec.padding, const EdgeInsets.symmetric(vertical: 8));
       });
 
       testWidgets('applies margin style correctly', (tester) async {
@@ -99,6 +107,8 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDivider), findsOneWidget);
+        final spec = tester.widget<Box>(find.byType(Box)).styleSpec!.spec;
+        expect(spec.margin, const EdgeInsets.symmetric(horizontal: 16));
       });
 
       testWidgets('applies decoration style correctly', (tester) async {
@@ -116,6 +126,14 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDivider), findsOneWidget);
+        final spec = tester.widget<Box>(find.byType(Box)).styleSpec!.spec;
+        expect(
+          spec.decoration,
+          BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        );
       });
     });
 
@@ -132,7 +150,9 @@ void main() {
     });
 
     group('Integration', () {
-      testWidgets('works in ListView', (tester) async {
+      testWidgets('renders a divider between each ListView item', (
+        tester,
+      ) async {
         await tester.pumpRemixApp(
           ListView(
             children: List.generate(5, (index) {
@@ -151,7 +171,9 @@ void main() {
         expect(find.byType(RemixDivider), findsNWidgets(4));
       });
 
-      testWidgets('works alongside other Remix components', (tester) async {
+      testWidgets('renders between two RemixButtons without dropping either', (
+        tester,
+      ) async {
         await tester.pumpRemixApp(
           Column(
             children: [

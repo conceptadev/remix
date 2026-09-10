@@ -33,6 +33,17 @@ void main() {
 
         expect(find.byType(RemixTooltip), findsOneWidget);
         expect(find.byIcon(Icons.info), findsOneWidget);
+        final gesture = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        await gesture.addPointer(location: Offset.zero);
+        await gesture.moveTo(tester.getCenter(find.byType(RemixTooltip)));
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pumpAndSettle();
+        expect(find.text('Tooltip Content'), findsOneWidget);
+        await gesture.removePointer();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pumpAndSettle();
       });
 
       testWidgets('renders with custom widgets', (tester) async {
@@ -88,6 +99,18 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixTooltip), findsOneWidget);
+        final gesture = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        await gesture.addPointer(location: Offset.zero);
+        await gesture.moveTo(tester.getCenter(find.byType(RemixTooltip)));
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pumpAndSettle();
+        final box = tester.widget<Box>(find.byType(Box)).styleSpec!.spec;
+        expect(box.padding, const EdgeInsets.all(20));
+        await gesture.removePointer();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pumpAndSettle();
       });
 
       testWidgets('applies custom background color', (tester) async {
@@ -101,6 +124,18 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixTooltip), findsOneWidget);
+        final gesture = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        await gesture.addPointer(location: Offset.zero);
+        await gesture.moveTo(tester.getCenter(find.byType(RemixTooltip)));
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pumpAndSettle();
+        final box = tester.widget<Box>(find.byType(Box)).styleSpec!.spec;
+        expect((box.decoration as BoxDecoration).color, Colors.blue);
+        await gesture.removePointer();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pumpAndSettle();
       });
 
       testWidgets('applies custom border radius', (tester) async {
@@ -116,6 +151,21 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixTooltip), findsOneWidget);
+        final gesture = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        await gesture.addPointer(location: Offset.zero);
+        await gesture.moveTo(tester.getCenter(find.byType(RemixTooltip)));
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pumpAndSettle();
+        final box = tester.widget<Box>(find.byType(Box)).styleSpec!.spec;
+        expect(
+          (box.decoration as BoxDecoration).borderRadius,
+          BorderRadius.circular(12),
+        );
+        await gesture.removePointer();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pumpAndSettle();
       });
 
       testWidgets('applies custom margin', (tester) async {
@@ -129,6 +179,18 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixTooltip), findsOneWidget);
+        final gesture = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        await gesture.addPointer(location: Offset.zero);
+        await gesture.moveTo(tester.getCenter(find.byType(RemixTooltip)));
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pumpAndSettle();
+        final box = tester.widget<Box>(find.byType(Box)).styleSpec!.spec;
+        expect(box.margin, const EdgeInsets.all(8));
+        await gesture.removePointer();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pumpAndSettle();
       });
 
       testWidgets('applies custom alignment', (tester) async {
@@ -142,6 +204,18 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixTooltip), findsOneWidget);
+        final gesture = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        await gesture.addPointer(location: Offset.zero);
+        await gesture.moveTo(tester.getCenter(find.byType(RemixTooltip)));
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pumpAndSettle();
+        final box = tester.widget<Box>(find.byType(Box)).styleSpec!.spec;
+        expect(box.alignment, Alignment.topCenter);
+        await gesture.removePointer();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pumpAndSettle();
       });
 
       testWidgets('applies custom decoration', (tester) async {
@@ -157,6 +231,18 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixTooltip), findsOneWidget);
+        final gesture = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        await gesture.addPointer(location: Offset.zero);
+        await gesture.moveTo(tester.getCenter(find.byType(RemixTooltip)));
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pumpAndSettle();
+        final box = tester.widget<Box>(find.byType(Box)).styleSpec!.spec;
+        expect((box.decoration as BoxDecoration).color, Colors.red);
+        await gesture.removePointer();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pumpAndSettle();
       });
 
       testWidgets('applies label style to text tooltip children', (
@@ -184,50 +270,6 @@ void main() {
 
         final tooltipContext = tester.element(find.text('Styled tooltip'));
         expect(DefaultTextStyle.of(tooltipContext).style.color, Colors.purple);
-      });
-    });
-
-    group('Duration Configuration', () {
-      testWidgets('applies custom wait duration', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTooltip(
-            style: TooltipStyler().waitDuration(
-              const Duration(milliseconds: 500),
-            ),
-            tooltipChild: const Text('Tooltip'),
-            child: const Text('Trigger'),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTooltip), findsOneWidget);
-      });
-
-      testWidgets('applies custom show duration', (tester) async {
-        await tester.pumpRemixApp(
-          RemixTooltip(
-            style: TooltipStyler().showDuration(
-              const Duration(milliseconds: 2000),
-            ),
-            tooltipChild: const Text('Tooltip'),
-            child: const Text('Trigger'),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTooltip), findsOneWidget);
-      });
-
-      testWidgets('uses default durations when not specified', (tester) async {
-        await tester.pumpRemixApp(
-          const RemixTooltip(
-            tooltipChild: Text('Tooltip'),
-            child: Text('Trigger'),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixTooltip), findsOneWidget);
       });
     });
 
@@ -590,6 +632,17 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Success'), findsOneWidget);
+        final gesture = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        await gesture.addPointer(location: Offset.zero);
+        await gesture.moveTo(tester.getCenter(find.byType(RemixTooltip)));
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pumpAndSettle();
+        expect(find.byIcon(Icons.check_circle), findsOneWidget);
+        await gesture.removePointer();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pumpAndSettle();
       });
     });
   });

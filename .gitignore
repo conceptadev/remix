@@ -299,3 +299,6 @@ app.*.symbols
 component_patterns_analysis.md
 /.cursor
 **/.venv/
+
+# Local design review output
+.impeccable/

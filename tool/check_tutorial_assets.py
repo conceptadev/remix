@@ -5,50 +5,12 @@ This verifies recorded evidence, not a fresh Flutter replay or visual review.
 """
 
 import hashlib
-from html.parser import HTMLParser
 import json
 from pathlib import Path
 import re
 import zipfile
 
-
-class TutorialCode(HTMLParser):
-    """Read literal pre/code blocks, decoding HTML entities once."""
-
-    def __init__(self):
-        super().__init__()
-        self.in_pre = False
-        self.language = None
-        self.text = []
-        self.figure = None
-        self.blocks = {}
-
-    def handle_starttag(self, tag, attrs):
-        if tag == "figure":
-            self.figure = dict(attrs).get("id")
-        if tag == "pre":
-            self.in_pre = True
-        if tag == "code" and self.in_pre:
-            classes = dict(attrs).get("class", "").split()
-            self.language = next(
-                (name.removeprefix("language-") for name in classes
-                 if name.startswith("language-")), "text")
-            self.text = []
-
-    def handle_data(self, data):
-        if self.language is not None:
-            self.text.append(data)
-
-    def handle_endtag(self, tag):
-        if tag == "code" and self.language is not None:
-            language = "text" if self.language == "none" else self.language
-            if self.figure:
-                self.blocks[self.figure] = (language, "".join(self.text))
-            self.language = None
-        if tag == "pre":
-            self.in_pre = False
-        if tag == "figure":
-            self.figure = None
+from prepare_docs_site import SOURCE_TAG
 
 
 def check_assets(root):
@@ -80,8 +42,7 @@ def check_assets(root):
 
 def check_content(root):
     failures = []
-    offline = TutorialCode()
-    offline.feed((root / "docs/remix-cli-tutorial.html").read_text())
+    recorded = json.loads((root / "docs/assets/remix-cli-tutorial/code-evidence.json").read_text())
     native = root / "docs/tutorials/settings-screen.mdx"
     source = native.read_text()
     blocks = re.findall(
@@ -93,12 +54,21 @@ def check_content(root):
     if len(blocks) != len(re.findall(r"^```\w+", source, re.MULTILINE)):
         failures.append("Every native tutorial code block needs a tutorial-source marker")
     for block_id, language, code in blocks:
-        if offline.blocks.get(block_id) != (language, code):
-            failures.append(f"Native tutorial code block {block_id} differs from the offline tutorial")
+        expected = recorded.get(block_id, {})
+        if expected.get("language") != language or expected.get("sha256") != hashlib.sha256(code.encode()).hexdigest():
+            failures.append(f"Native tutorial code block {block_id} differs from recorded evidence")
+    if {block[0] for block in blocks} != set(recorded):
+        failures.append("Native tutorial is missing a recorded code block")
+    expected_sources = {(preset, file) for preset in ["default", "fortal"]
+                        for file in ["lib/main.dart", "test/workflow_test.dart"]}
+    if set(SOURCE_TAG.findall(source)) != expected_sources:
+        failures.append("Tutorial must include both complete applications and both test files")
+    if "<TutorialSource" in SOURCE_TAG.sub("", source):
+        failures.append("Unsupported tutorial source include")
 
     # The capture pin describes the evidence, not the latest branch head.
     evidence = json.loads((root / "docs/assets/remix-cli-tutorial/evidence.json").read_text())
-    # The first checkout command in the reviewed HTML is the reproducibility pin.
+    # The checkout command remains pinned to the original capture.
     pin = re.search(r"git -C remix-review checkout ([a-f0-9]{40})", source)
     if not pin or pin.group(1) != evidence["source_checkout"]:
         failures.append("Native tutorial checkout pin differs from recorded evidence")
@@ -114,10 +84,6 @@ def check_content(root):
                 target = target.with_suffix(".mdx")
             if not target.is_file():
                 failures.append(f"{page.relative_to(root)}: missing link target {href}")
-            elif target.suffix == ".html" and "#" in href:
-                anchor = href.split("#", 1)[1]
-                if anchor not in re.findall(r'\bid="([^"]+)"', target.read_text()):
-                    failures.append(f"{page.relative_to(root)}: missing HTML anchor {href}")
     return failures
 
 

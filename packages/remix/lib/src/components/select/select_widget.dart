@@ -451,7 +451,6 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
           children: [
             if (trigger.icon != null)
               StyledIcon(icon: trigger.icon!, styleSpec: spec.icon),
-            // ignore: avoid-flexible-outside-flex
             Expanded(
               child: Opacity(
                 opacity: isPlaceholder ? spec.placeholderOpacity ?? 1 : 1,
@@ -518,7 +517,6 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
               child: RowBox(
                 styleSpec: item.container,
                 children: [
-                  // ignore: avoid-flexible-outside-flex
                   Expanded(child: StyledText(data.label, styleSpec: item.text)),
                   if (state.isSelected)
                     Box(

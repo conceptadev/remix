@@ -7,12 +7,6 @@ import '../../helpers/test_methods.dart';
 void main() {
   group('DialogStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        const style = DialogStyler.create();
-        expect(style, isNotNull);
-        expect(style, isA<DialogStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final title = Prop.maybeMix(TextStyler());
@@ -26,8 +20,10 @@ void main() {
           actions: actions,
         );
 
-        expect(style, isNotNull);
-        expect(style, isA<DialogStyler>());
+        expect(style.$container, equals(container));
+        expect(style.$title, equals(title));
+        expect(style.$description, equals(description));
+        expect(style.$actions, equals(actions));
       });
 
       test('constructor with styler parameters', () {
@@ -38,8 +34,28 @@ void main() {
           actions: FlexBoxStyler(spacing: 8.0),
         );
 
-        expect(style, isNotNull);
-        expect(style, isA<DialogStyler>());
+        expect(
+          style.$container,
+          equals(
+            Prop.maybeMix(BoxStyler(padding: EdgeInsetsGeometryMix.all(24.0))),
+          ),
+        );
+        expect(
+          style.$title,
+          equals(
+            Prop.maybeMix(TextStyler(style: TextStyleMix(color: Colors.blue))),
+          ),
+        );
+        expect(
+          style.$description,
+          equals(
+            Prop.maybeMix(TextStyler(style: TextStyleMix(color: Colors.grey))),
+          ),
+        );
+        expect(
+          style.$actions,
+          equals(Prop.maybeMix(FlexBoxStyler(spacing: 8.0))),
+        );
       });
     });
 

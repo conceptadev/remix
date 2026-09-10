@@ -197,13 +197,8 @@ void main() {
 
       test('two specs with different properties are not equal', () {
         const spec1 = CheckboxSpec();
-        final spec2 = CheckboxSpec(
-          container: StyleSpec(spec: BoxSpec()),
-          indicator: StyleSpec(spec: IconSpec()),
-        );
-
-        // Since both have default values, they should be equal
-        expect(spec1, equals(spec2));
+        const spec2 = CheckboxSpec(labelSpacing: 16);
+        expect(spec1, isNot(equals(spec2)));
       });
 
       test('specs with same custom properties are equal', () {
@@ -303,26 +298,15 @@ void main() {
         expect(updatedSpec.indicator, equals(originalIndicator));
       });
 
-      test('lerp handles edge t values', () {
-        final spec1 = CheckboxSpec(
-          container: StyleSpec(spec: BoxSpec()),
-          indicator: StyleSpec(spec: IconSpec()),
+      test('lerp retains each endpoint', () {
+        const start = CheckboxSpec(
+          indicator: StyleSpec(spec: IconSpec(size: 12)),
         );
-        final spec2 = CheckboxSpec(
-          container: StyleSpec(spec: BoxSpec()),
-          indicator: StyleSpec(spec: IconSpec()),
+        const end = CheckboxSpec(
+          indicator: StyleSpec(spec: IconSpec(size: 24)),
         );
-
-        // Test t=0.0
-        final result0 = spec1.lerp(spec2, 0.0);
-        expect(result0, isA<CheckboxSpec>());
-
-        // Test t=1.0
-        final result1 = spec1.lerp(spec2, 1.0);
-        expect(result1, isA<CheckboxSpec>());
-
-        // Test t=0.0 and t=1.0 should be different
-        expect(result0, isNot(same(result1)));
+        expect(start.lerp(end, 0).indicator.spec.size, 12);
+        expect(start.lerp(end, 1).indicator.spec.size, 24);
       });
 
       test('spec with complex StyleSpec properties', () {

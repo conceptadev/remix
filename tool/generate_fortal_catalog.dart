@@ -108,12 +108,11 @@ String _render(Map<String, Object?> manifest, Directory packageRoot) {
       'actually gets.',
     )
     ..writeln()
-    ..writeln('<Card>')
     ..writeln(
-      '  <img src="/assets/fortal-catalog.png" alt="Fortal components across '
-      'their variants" />',
+      'This is the API reference. Start with the [Fortal overview](/fortal) '
+      'for installation and theming. For live examples and source, choose '
+      'a component in the sidebar, such as [Button](/components/button).',
     )
-    ..writeln('</Card>')
     ..writeln()
     ..writeln(
       'A `—` value means the widget does not expose that axis. When values '
@@ -125,11 +124,59 @@ String _render(Map<String, Object?> manifest, Directory packageRoot) {
     )
     ..writeln();
 
+  buffer
+    ..writeln(
+      '<CatalogSearch items={${jsonEncode(families.map((family) => family['fortalType']).toList())}} />',
+    )
+    ..writeln();
   _writeGlanceTable(buffer, families, packageRoot);
-  _writeFamilySections(buffer, families, manifest, packageRoot);
+  // Keep existing widget anchors; categories come from the docs navigation.
+  buffer.writeln('<span id="widgets" />');
+  for (final category in _categories(families).entries) {
+    buffer
+      ..writeln('## ${category.key}')
+      ..writeln();
+    _writeFamilySections(buffer, category.value, manifest, packageRoot);
+  }
   _writeUnmapped(buffer, manifest);
 
   return buffer.toString();
+}
+
+/// Reuse sidebar categories and fail if a new family has no navigation home.
+Map<String, List<Map<String, Object?>>> _categories(
+  List<Map<String, Object?>> families,
+) {
+  final navigation =
+      jsonDecode(File('docs.json').readAsStringSync()) as Map<String, Object?>;
+  final remaining = {for (final family in families) family['id']: family};
+  final result = <String, List<Map<String, Object?>>>{};
+  for (final group
+      in (navigation['sidebar']! as List).cast<Map<String, Object?>>()) {
+    if (group['collapsible'] != true) continue;
+    final members = <Map<String, Object?>>[];
+    for (final page in (group['pages']! as List).cast<Map<String, Object?>>()) {
+      final slug = (page['href']! as String).split('/').last;
+      final id = switch (slug) {
+        'textfield' => 'text_field',
+        'textarea' => 'text_area',
+        _ => slug,
+      };
+      final family = remaining.remove(id);
+      if (family != null) members.add(family);
+    }
+    if (members.isNotEmpty) result[group['group']! as String] = members;
+  }
+  result['Typography'] = [
+    for (final id in ['heading', 'text', 'code', 'kbd'])
+      if (remaining.remove(id) case final family?) family,
+  ];
+  if (remaining.isNotEmpty) {
+    throw StateError(
+      'Catalog families need a category: ${remaining.keys.join(', ')}',
+    );
+  }
+  return result;
 }
 
 void _writeGlanceTable(
@@ -165,10 +212,6 @@ void _writeFamilySections(
 ) {
   final approximations = (manifest['approximations']! as List<Object?>)
       .cast<Map<String, Object?>>();
-
-  buffer
-    ..writeln('## Widgets')
-    ..writeln();
 
   for (final family in families) {
     final id = family['id']! as String;

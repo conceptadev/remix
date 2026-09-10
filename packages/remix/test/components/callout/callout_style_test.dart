@@ -7,12 +7,6 @@ import '../../helpers/test_methods.dart';
 void main() {
   group('CalloutStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        const style = CalloutStyler.create();
-        expect(style, isNotNull);
-        expect(style, isA<CalloutStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(FlexBoxStyler());
         final text = Prop.maybeMix(TextStyler());
@@ -24,8 +18,9 @@ void main() {
           icon: icon,
         );
 
-        expect(style, isNotNull);
-        expect(style, isA<CalloutStyler>());
+        expect(style.$container, equals(container));
+        expect(style.$text, equals(text));
+        expect(style.$icon, equals(icon));
       });
 
       test('constructor with styler parameters', () {
@@ -35,8 +30,24 @@ void main() {
           icon: IconStyler(color: Colors.green),
         );
 
-        expect(style, isNotNull);
-        expect(style, isA<CalloutStyler>());
+        expect(
+          style.$container,
+          equals(
+            Prop.maybeMix(
+              FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
+            ),
+          ),
+        );
+        expect(
+          style.$text,
+          equals(
+            Prop.maybeMix(TextStyler(style: TextStyleMix(color: Colors.blue))),
+          ),
+        );
+        expect(
+          style.$icon,
+          equals(Prop.maybeMix(IconStyler(color: Colors.green))),
+        );
       });
     });
 

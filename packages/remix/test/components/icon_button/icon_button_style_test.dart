@@ -7,12 +7,6 @@ import '../../helpers/test_methods.dart';
 void main() {
   group('IconButtonStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        const style = IconButtonStyler.create();
-        expect(style, isNotNull);
-        expect(style, isA<IconButtonStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final icon = Prop.maybeMix(IconStyler());
@@ -24,8 +18,9 @@ void main() {
           spinner: spinner,
         );
 
-        expect(style, isNotNull);
-        expect(style, isA<IconButtonStyler>());
+        expect(style.$container, equals(container));
+        expect(style.$icon, equals(icon));
+        expect(style.$spinner, equals(spinner));
       });
 
       test('constructor with styler parameters', () {
@@ -35,8 +30,17 @@ void main() {
           spinner: SpinnerStyler(),
         );
 
-        expect(style, isNotNull);
-        expect(style, isA<IconButtonStyler>());
+        expect(
+          style.$container,
+          equals(
+            Prop.maybeMix(BoxStyler(padding: EdgeInsetsGeometryMix.all(12.0))),
+          ),
+        );
+        expect(
+          style.$icon,
+          equals(Prop.maybeMix(IconStyler(color: Colors.blue))),
+        );
+        expect(style.$spinner, equals(Prop.maybeMix(SpinnerStyler())));
       });
     });
 

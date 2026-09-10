@@ -125,12 +125,13 @@ void main() {
     });
 
     group('Diagnostic Support', () {
-      test('debugFillProperties works without throwing', () {
+      test('diagnostics publish RadioSpec fields', () {
         const spec = RadioSpec();
-
+        final builder = DiagnosticPropertiesBuilder();
+        spec.debugFillProperties(builder);
         expect(
-          () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
-          returnsNormally,
+          builder.properties.map((property) => property.name),
+          unorderedEquals(['container', 'indicator', 'containerEffects']),
         );
       });
 
