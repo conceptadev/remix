@@ -7,6 +7,9 @@ part of 'button.dart';
 // **************************************************************************
 
 /// Fortal-themed Button with the Radix size, variant, and override contract.
+///
+/// Default icon slots use the preset's icon size, not the ambient IconTheme.
+/// An explicit icon size in [style] overrides that default.
 class FortalButton extends StatelessWidget {
   const FortalButton({
     super.key,

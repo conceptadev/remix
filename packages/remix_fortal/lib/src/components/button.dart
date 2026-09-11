@@ -14,6 +14,9 @@ enum FortalButtonSize { size1, size2, size3, size4 }
 enum FortalButtonVariant { classic, solid, soft, surface, outline, ghost }
 
 /// Fortal-themed Button with the Radix size, variant, and override contract.
+///
+/// Default icon slots use the preset's icon size, not the ambient IconTheme.
+/// An explicit icon size in [style] overrides that default.
 @MixWidget(target: RemixButton.new)
 ButtonStyler fortalButtonStyle({
   FortalButtonVariant variant = .solid,
@@ -40,6 +43,7 @@ ButtonStyler _fortalButtonBaseStyler(
 ) {
   final metrics = fortalBaseButtonMetrics(size);
   var style = ButtonStyler(
+    icon: .size(fortalBaseButtonIconSize(size)),
     container: .direction(.horizontal).mainAxisSize(.min).spacing(metrics.gap),
     label: .style(metrics.text.mix()).fontWeight(
       variant == .ghost

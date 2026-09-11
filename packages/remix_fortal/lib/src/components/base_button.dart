@@ -55,6 +55,14 @@ fortalBaseButtonMetrics(FortalBaseButtonSize size) => switch (size) {
   ),
 };
 
+/// Default icon dimensions shared by text and icon-only button presets.
+double fortalBaseButtonIconSize(FortalBaseButtonSize size) => switch (size) {
+  .size1 => FortalTokens.space3(),
+  .size2 => FortalTokens.space4(),
+  .size3 => FortalTokens.spinnerSize3(),
+  .size4 => FortalTokens.space5(),
+};
+
 /// Content-box metrics for the ghost BaseButton variant.
 ({double paddingX, double paddingY, double marginX, double marginY, double gap})
 fortalBaseButtonGhostMetrics(FortalBaseButtonSize size) => switch (size) {

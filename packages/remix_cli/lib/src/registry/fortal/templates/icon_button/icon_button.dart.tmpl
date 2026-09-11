@@ -43,7 +43,7 @@ IconButtonStyler _{{valuePrefix}}IconButtonBaseStyler(
 ) {
   final metrics = {{valuePrefix}}BaseButtonMetrics(size);
   var style = IconButtonStyler(
-    icon: .size(_{{valuePrefix}}IconButtonIconSize(size)),
+    icon: .size({{valuePrefix}}BaseButtonIconSize(size)),
     spinner: .size(metrics.spinnerSize)
         .opacity(0.65)
         .leafRadius({{typePrefix}}Tokens.radius1())
@@ -61,13 +61,6 @@ IconButtonStyler _{{valuePrefix}}IconButtonBaseStyler(
   }
   return style;
 }
-
-double _{{valuePrefix}}IconButtonIconSize({{typePrefix}}BaseButtonSize size) => switch (size) {
-  .size1 => {{typePrefix}}Tokens.space3(),
-  .size2 => {{typePrefix}}Tokens.space4(),
-  .size3 => {{typePrefix}}Tokens.spinnerSize3(),
-  .size4 => {{typePrefix}}Tokens.space5(),
-};
 
 {{typePrefix}}BaseButtonVariant _{{valuePrefix}}BaseButtonVariant(
   {{typePrefix}}IconButtonVariant variant,
