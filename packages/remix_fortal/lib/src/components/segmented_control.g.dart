@@ -8,6 +8,9 @@ part of 'segmented_control.dart';
 
 /// Fortal recipe for [RemixSegmentedControl].
 ///
+/// Content icons use size-matched 12/16/20 token defaults rather than the
+/// ambient icon size. Control and item styles may override these defaults.
+///
 /// Paints the selected item in place. It does not reproduce Radix's sliding
 /// indicator, duplicate-label crossfade, inactive separators, or max-content
 /// overflow. Changing an item's label with the selection can therefore cause a
