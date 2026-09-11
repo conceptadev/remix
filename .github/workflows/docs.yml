@@ -1,0 +1,73 @@
+name: Build publishable docs
+
+on:
+  workflow_dispatch:
+    inputs:
+      site-url:
+        description: Public HTTPS origin for the documentation
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      site-url:
+        description: Public HTTPS origin for the documentation
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_SITE_URL: ${{ inputs.site-url }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Validate publishing origin
+        run: |
+          python3 - <<'PY'
+          import os
+          from urllib.parse import urlsplit
+          url = urlsplit(os.environ['NEXT_PUBLIC_SITE_URL'])
+          if (url.scheme != 'https' or not url.hostname or url.username or
+              url.password or url.path not in ('', '/') or url.query or url.fragment):
+              raise SystemExit('site-url must be an HTTPS origin without a path, credentials, query, or fragment.')
+          PY
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          cache: true
+      - run: flutter pub get
+      - uses: ./.github/actions/setup-docs
+      - name: Validate documentation sources
+        run: |
+          dart run tool/generate_fortal_catalog.dart --check
+          python3 tool/check_tutorial_assets.py
+          python3 -m unittest discover -s tool -p 'test_tutorial_assets.py'
+      - name: Build server and Flutter previews
+        working-directory: apps/docs
+        run: pnpm build
+      - name: Assemble deployment directory
+        working-directory: apps/docs
+        run: node scripts/package-server.mjs
+      - name: Smoke test the deployment artifact
+        working-directory: apps/docs
+        run: node scripts/test-server.mjs
+      - name: Archive deployment
+        working-directory: apps/docs
+        run: tar -czf remix-docs-server.tar.gz -C .next/standalone .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: remix-docs-server
+          path: apps/docs/remix-docs-server.tar.gz
+          if-no-files-found: error
+          retention-days: 7

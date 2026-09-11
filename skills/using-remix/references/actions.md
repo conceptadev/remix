@@ -62,7 +62,7 @@ Fortal preset: `FortalButton` — all params above plus
 | `enableFeedback` | `bool` | `true` | no |
 | `focusNode` | `FocusNode?` | `null` | no |
 | `mouseCursor` | `MouseCursor` | `SystemMouseCursors.click` | no |
-| `semanticLabel` | `String?` | `null` | no |
+| `semanticLabel` | `String` | — | yes (nonblank) |
 | `semanticHint` | `String?` | `null` | no |
 | `excludeSemantics` | `bool` | `false` | no |
 | `iconBuilder` | `RemixIconButtonIconBuilder?` | `null` | no |

@@ -143,7 +143,7 @@ TextFieldStyler _fortalApplySurfaceTextInput(TextFieldStyler base) =>
         )
         .containerEffects(
           RemixBoxEffectsMix.overContent(
-            _fortalTextInputInsetRing(FortalTokens.grayA7()),
+            fortalInsetSurface(strokes: [FortalTokens.grayA7()]),
           ),
         )
         .onDisabled(
@@ -162,7 +162,7 @@ TextFieldStyler _fortalApplySurfaceTextInput(TextFieldStyler base) =>
               )
               .containerEffects(
                 RemixBoxEffectsMix.overContent(
-                  _fortalTextInputInsetRing(FortalTokens.grayA6()),
+                  fortalInsetSurface(strokes: [FortalTokens.grayA6()]),
                 ),
               ),
         );
@@ -301,11 +301,6 @@ _fortalTextFieldMetrics(FortalTextFieldSize size, {required bool bordered}) =>
         text: FortalTokens.text3,
       ),
     };
-
-RemixBoxEffectLayerMix _fortalTextInputInsetRing(Color color) =>
-    RemixBoxEffectLayerMix(
-      shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
-    );
 
 /// Radix Themes TextArea size presets.
 enum FortalTextAreaSize { size1, size2, size3 }

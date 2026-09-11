@@ -7,13 +7,6 @@ import '../../helpers/test_methods.dart';
 void main() {
   group('SliderStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        final style = SliderStyler();
-
-        expect(style, isNotNull);
-        expect(style, isA<SliderStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final thumb = Prop.maybeMix(BoxStyler());
         final trackColor = Prop.value(Colors.blue);

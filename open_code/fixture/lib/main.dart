@@ -922,8 +922,8 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                 // content and the expanded trigger fill.
                 const AcmeDisclosure(
                   defaultExpanded: true,
-                  trigger: const Text('Show details'),
-                  content: const Text('The full breakdown, revealed.'),
+                  trigger: Text('Show details'),
+                  content: Text('The full breakdown, revealed.'),
                 ),
                 const SizedBox(height: 16),
 

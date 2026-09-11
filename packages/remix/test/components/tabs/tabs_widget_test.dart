@@ -1,5 +1,6 @@
 import 'dart:ui' show SemanticsRole, Tristate;
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -354,6 +355,14 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(selectedTab, equals('tab1'));
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await tester.pumpAndSettle();
+        expect(selectedTab, 'tab2');
+        expect(find.text('Content 2'), findsOneWidget);
+        expect(find.text('Content 1'), findsNothing);
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+        await tester.pumpAndSettle();
+        expect(selectedTab, 'tab1');
       });
     });
 
@@ -990,9 +999,11 @@ void main() {
 
     group('Mouse Interaction', () {
       testWidgets('handles hover changes', (tester) async {
+        final changes = <bool>[];
         await tester.pumpRemixApp(
           RemixTabs(
             selectedTabId: 'tab1',
+            onChanged: (_) {},
             child: Column(
               children: [
                 RemixTabBar(
@@ -1002,7 +1013,7 @@ void main() {
                         tabId: 'tab1',
                         label: 'Tab 1',
                         onHoverChange: (hovered) {
-                          // Callback is tested by existence
+                          changes.add(hovered);
                         },
                       ),
                     ],
@@ -1015,14 +1026,26 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        // Verify callback is set up (existence test)
         expect(find.byType(RemixTab), findsOneWidget);
+        final gesture = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        await gesture.addPointer(location: const Offset(799, 599));
+        await gesture.moveTo(tester.getCenter(find.text('Tab 1')));
+        await tester.pump();
+        expect(changes.last, isTrue);
+        await gesture.moveTo(const Offset(799, 599));
+        await tester.pump();
+        expect(changes.last, isFalse);
+        await gesture.removePointer();
       });
 
       testWidgets('handles press changes', (tester) async {
+        final changes = <bool>[];
         await tester.pumpRemixApp(
           RemixTabs(
             selectedTabId: 'tab1',
+            onChanged: (_) {},
             child: Column(
               children: [
                 RemixTabBar(
@@ -1032,7 +1055,7 @@ void main() {
                         tabId: 'tab1',
                         label: 'Tab 1',
                         onPressChange: (pressed) {
-                          // Callback is tested by existence
+                          changes.add(pressed);
                         },
                       ),
                     ],
@@ -1045,8 +1068,15 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        // Verify callback is set up (existence test)
         expect(find.byType(RemixTab), findsOneWidget);
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.text('Tab 1')),
+        );
+        await tester.pump();
+        expect(changes.last, isTrue);
+        await gesture.up();
+        await tester.pump();
+        expect(changes.last, isFalse);
       });
 
       testWidgets('handles custom mouse cursor', (tester) async {

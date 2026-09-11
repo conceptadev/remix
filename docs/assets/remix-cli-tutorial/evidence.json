@@ -1,0 +1,434 @@
+{
+  "review_date": "2026-09-07",
+  "source_checkout": "bfae6507676fadea7632e2f7f66924935c04ca2a",
+  "toolchain": {
+    "flutter": "3.44.0",
+    "dart": "3.12.0",
+    "remix": "1.0.0-beta.9",
+    "remix_cli": "0.1.0"
+  },
+  "capture": "Actual Chrome application renders and VS Code web. Detail images use browser screenshot crops.",
+  "screenshots": [
+    {
+      "file": "default-dialog.jpg",
+      "sha256": "ce74dc4a7dfccb9e9ae13c7cd208f841992089946b34a5c7947677e543ed1c98",
+      "bytes": 61908
+    },
+    {
+      "file": "default-finished.jpg",
+      "sha256": "423a23eea0750abd8c39cc8bc43d337e00743131746509e52f9ab7e03613e153",
+      "bytes": 51326
+    },
+    {
+      "file": "first-render.jpg",
+      "sha256": "ca40c02ea3691b1d1e60521dcfa81b10b356d34edcbc045d0833b3954a6fcb9e",
+      "bytes": 3498
+    },
+    {
+      "file": "fortal-dark.jpg",
+      "sha256": "3b6ed40836934a0796248714a6bc9a0dc592ea99633331b7eb948203bce1d125",
+      "bytes": 52461
+    },
+    {
+      "file": "fortal-dialog.jpg",
+      "sha256": "7e493ff0bb93bbf6cec0fe96490f127ef92cdc60df52595c8dffaf86d91b96fb",
+      "bytes": 61134
+    },
+    {
+      "file": "recipe-edit.jpg",
+      "sha256": "173218812562927a40eab0e70ad6a2faec176b3590882a1e967749740c33e3d8",
+      "bytes": 203814
+    },
+    {
+      "file": "saved.jpg",
+      "sha256": "cc9dbe3fe9401633a06463b65f1e82378751c8951b65d6b11fecbcef463b73d2",
+      "bytes": 21988
+    },
+    {
+      "file": "saving.jpg",
+      "sha256": "6c401cd2affe46987081aa00ec8bc064c4eb767f2d3f18aec3d01aa8f801f6d5",
+      "bytes": 19881
+    }
+  ],
+  "source": [
+    {
+      "preset": "default",
+      "main_sha256": "3363bee62ba14a4dcf7ca554424038ef1de5cdf663ca9f392e367497afc1dada",
+      "test_sha256": "4e658d39ca93c2a63259ec6bacd55aeef1aaa87660f3b7457a34069f0f0354f6"
+    },
+    {
+      "preset": "fortal",
+      "main_sha256": "06f6da57e236173a36a8fd1356040ef8e9e62e209cfe975bd2ec83b3b7c50e97",
+      "test_sha256": "cd0d26434ccc79e629f95e89ce1e42b4985d2e180d00ea4bdee0990b329222a4"
+    }
+  ],
+  "archive_sha256": "119bfedd657e6933736875d8b70909e049aa5f9c3f882da9eece0c08c062716a",
+  "first_render_source_sha256": "f8f43244e34277e0c7b27d92def68ced08fa93b0852e56dd20beb5a33821f10e",
+  "validation": {
+    "fresh_default_replay": "Passed project creation, installation, first render, composition, customization, diff preservation, ordinary add preservation, analysis, four tests, and release web builds.",
+    "downloaded_default": "Passed dependency resolution, analysis, and four tests after checkout path substitution.",
+    "downloaded_fortal": "Passed dependency resolution, analysis, and four tests after checkout path substitution.",
+    "command_results": [
+      {
+        "label": "create-default",
+        "exit_code": 0
+      },
+      {
+        "label": "install-local-cli-0",
+        "exit_code": 0
+      },
+      {
+        "label": "install-local-cli-1",
+        "exit_code": 0
+      },
+      {
+        "label": "init-default-0",
+        "exit_code": 0
+      },
+      {
+        "label": "preview-button-0",
+        "exit_code": 0
+      },
+      {
+        "label": "install-button-command-0",
+        "exit_code": 0
+      },
+      {
+        "label": "first-render-build",
+        "exit_code": 0
+      },
+      {
+        "label": "install-screen-0",
+        "exit_code": 0
+      },
+      {
+        "label": "install-screen-1",
+        "exit_code": 0
+      },
+      {
+        "label": "install-screen-2",
+        "exit_code": 0
+      },
+      {
+        "label": "install-screen-3",
+        "exit_code": 0
+      },
+      {
+        "label": "install-screen-4",
+        "exit_code": 0
+      },
+      {
+        "label": "diff-button-0",
+        "exit_code": 0
+      },
+      {
+        "label": "preserve-button-0",
+        "exit_code": 0
+      },
+      {
+        "label": "validate-sample-0",
+        "exit_code": 0
+      },
+      {
+        "label": "validate-sample-1",
+        "exit_code": 0
+      },
+      {
+        "label": "validate-sample-2",
+        "exit_code": 0
+      },
+      {
+        "label": "download-default-pub-get",
+        "exit_code": 0
+      },
+      {
+        "label": "download-default-analyze",
+        "exit_code": 0
+      },
+      {
+        "label": "download-default-test",
+        "exit_code": 0
+      },
+      {
+        "label": "download-fortal-pub-get",
+        "exit_code": 0
+      },
+      {
+        "label": "download-fortal-analyze",
+        "exit_code": 0
+      },
+      {
+        "label": "download-fortal-test",
+        "exit_code": 0
+      }
+    ],
+    "source_consistency": "The HTML examples match the archived main.dart and tests. Archived lib, test, and web files match the validated downloads.",
+    "browser": "Chrome at 2257 by 1273 pixels. Reviewed three sections in 390 by 844 pixel frames.",
+    "browser_checks": [
+      "Section links",
+      "Source disclosure",
+      "Copy success feedback",
+      "Full-size screenshot link",
+      "No reported console warnings or errors"
+    ],
+    "structure": {
+      "unique_ids": 34,
+      "url_references_checked": 48,
+      "screenshots": 8,
+      "archive_entries": 78
+    },
+    "limits": [
+      "The sample application targets desktop browsers.",
+      "Generated adapters have an analyzer exclusion for current generator lint findings.",
+      "Hosted package validation requires publication."
+    ]
+  },
+  "tutorial_design_review": {
+    "date": "2026-09-08",
+    "source_checkout": "b2453a6eb8e1f19d6353f2f7b9d083736e0d46fa",
+    "changes": [
+      "Reference guide typography",
+      "Local syntax highlighting",
+      "Source ownership explanation",
+      "Compact navigation with the current section",
+      "Code wrapping and keyboard access",
+      "Explicit terminal and Fortal directory instructions"
+    ],
+    "content_checks": {
+      "code_blocks": 35,
+      "unchanged_code_blocks": 34,
+      "command_change": "Fortal setup now starts with cd .. from remix_default_demo.",
+      "unique_ids": 39,
+      "url_references": 64,
+      "screenshots_unchanged": 8,
+      "archive_unchanged": true,
+      "syntax_contrast": {
+        "#e0c4f4": 11.82,
+        "#b7c0d1": 10.14,
+        "#c5adff": 9.54,
+        "#a7d8b4": 11.6,
+        "#a8b0c0": 8.52,
+        "#ffada6": 10.42,
+        "#8fd8eb": 11.66,
+        "#e5c58d": 11.23,
+        "#ffc48f": 11.98
+      },
+      "heading_hierarchy": "passed"
+    },
+    "fresh_default": "Passed installation, first render, composition, preservation, analysis, four tests, and release web builds.",
+    "fresh_fortal": "Passed the displayed directory change, installation, analysis, four tests, and a release web build.",
+    "downloads": "Both archived projects passed dependency resolution, analysis, and four tests each.",
+    "command_results": [
+      {
+        "label": "create-default",
+        "directory": "tutorial-replay",
+        "exit_code": 0
+      },
+      {
+        "label": "install-local-cli-0",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-local-cli-1",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "init-default-0",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "preview-button-0",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-button-command-0",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "first-render-build",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-screen-0",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-screen-1",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-screen-2",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-screen-3",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-screen-4",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "diff-button-0",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "preserve-button-0",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "validate-sample-0",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "validate-sample-1",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "validate-sample-2",
+        "directory": "remix_default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "create-fortal-1",
+        "directory": "tutorial-replay",
+        "exit_code": 0
+      },
+      {
+        "label": "install-local-cli-0",
+        "directory": "remix_fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-local-cli-1",
+        "directory": "remix_fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-fortal-0",
+        "directory": "remix_fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-fortal-1",
+        "directory": "remix_fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-fortal-2",
+        "directory": "remix_fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-fortal-3",
+        "directory": "remix_fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-fortal-4",
+        "directory": "remix_fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-fortal-5",
+        "directory": "remix_fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "install-fortal-6",
+        "directory": "remix_fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "validate-fortal-0",
+        "directory": "remix_fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "validate-fortal-1",
+        "directory": "remix_fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "validate-fortal-2",
+        "directory": "remix_fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "download-default-pub-get",
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "download-default-analyze",
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "download-default-test",
+        "directory": "default_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "download-fortal-pub-get",
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "download-fortal-analyze",
+        "directory": "fortal_demo",
+        "exit_code": 0
+      },
+      {
+        "label": "download-fortal-test",
+        "directory": "fortal_demo",
+        "exit_code": 0
+      }
+    ],
+    "browser": {
+      "surface": "Chrome",
+      "desktop": [
+        2257,
+        1273
+      ],
+      "narrow_frames": [
+        390,
+        320
+      ],
+      "checks": [
+        "Syntax tokens rendered",
+        "Current section updates",
+        "Contents opens with Enter and closes after navigation",
+        "Wrap control updates code layout",
+        "Tab focuses code and ArrowDown scrolls it",
+        "Copy success feedback",
+        "Clipboard read displayed the expected YAML values",
+        "No tutorial console errors or warnings"
+      ],
+      "limits": [
+        "The browser policy blocks automated file URL access. The Downloads copy requires a file comparison.",
+        "The virtual clipboard cannot inspect the operating system clipboard. The browser review confirmed YAML values and a 58-character clipboard read.",
+        "The narrow frames validate the tutorial layout, not the sample application."
+      ]
+    },
+    "preview": {
+      "file": "tutorial-preview.jpg",
+      "sha256": "0a841b84199550677fda1ca7345da17103e6a60a73648f7d9065140f09ea315c"
+    }
+  }
+}

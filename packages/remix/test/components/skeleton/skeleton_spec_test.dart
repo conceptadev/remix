@@ -177,14 +177,14 @@ void main() {
     });
 
     group('Diagnostics', () {
-      test('fills properties without throwing', () {
+      test('diagnostics publish the skeleton anatomy and timing', () {
         const spec = SkeletonSpec();
-
+        final builder = DiagnosticPropertiesBuilder();
+        spec.debugFillProperties(builder);
         expect(
-          () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
-          returnsNormally,
+          builder.properties.map((property) => property.name),
+          unorderedEquals(['container', 'pulseColor', 'duration']),
         );
-        expect(spec.toString(), isNotEmpty);
       });
     });
 

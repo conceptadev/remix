@@ -654,12 +654,12 @@ List<_DependencyRequirement> _collectRequirements(List<RegistryItem> items) {
   }
 
   for (final item in items) {
-    item.dependencies.forEach(
-      (name, constraint) => add(name, constraint, dev: false),
-    );
-    item.devDependencies.forEach(
-      (name, constraint) => add(name, constraint, dev: true),
-    );
+    for (final entry in item.dependencies.entries) {
+      add(entry.key, entry.value, dev: false);
+    }
+    for (final entry in item.devDependencies.entries) {
+      add(entry.key, entry.value, dev: true);
+    }
   }
   return List.unmodifiable(requirements.values);
 }

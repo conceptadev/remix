@@ -454,6 +454,7 @@ void main() {
         final spec = await _resolveStyle(
           tester,
           theme: const AcmeThemeData.light(),
+          size: size,
         );
         final flex = spec.spec.container.spec.flex?.spec;
 
@@ -1176,8 +1177,6 @@ void main() {
       'default': (box: 16.0, indicator: 10.0, gap: 8.0, labelSize: 14.0),
     };
 
-    test('every size is covered', () {});
-
     for (final entry in expected.entries) {
       testWidgets('${entry.key} has its exact metrics', (tester) async {
         final spec = await _checkboxSpec(
@@ -1678,8 +1677,6 @@ void main() {
         iconSize: 16.0,
       ),
     };
-
-    test('every size is covered', () {});
 
     for (final entry in expected.entries) {
       testWidgets('${entry.key} has its exact metrics', (tester) async {
@@ -2247,8 +2244,6 @@ void main() {
   group('acmeSpinnerStyle', () {
     const diameters = <String, double>{'default': 20};
 
-    test('every size is covered', () {});
-
     for (final theme in _themes) {
       testWidgets('takes the foreground color in ${theme.name}', (
         tester,
@@ -2329,8 +2324,6 @@ void main() {
 
   group('acmeProgressStyle', () {
     const thicknesses = <String, double>{'default': 8};
-
-    test('every size is covered', () {});
 
     for (final theme in _themes) {
       testWidgets('track and indicator take their tokens in ${theme.name}', (
@@ -2616,8 +2609,6 @@ void main() {
     const expected = <String, ({double diameter, double labelSize})>{
       'default': (diameter: 40, labelSize: 14),
     };
-
-    test('every size is covered', () {});
 
     for (final entry in expected.entries) {
       testWidgets('${entry.key} is a circle with scaled initials', (
@@ -3248,8 +3239,6 @@ void main() {
   group('acmeSwitchStyle', () {
     const heights = <String, double>{'default': 20};
 
-    test('every size is covered', () {});
-
     for (final entry in heights.entries) {
       testWidgets('${entry.key} keeps the thumb flush in the track', (
         tester,
@@ -3362,8 +3351,6 @@ void main() {
     const expected = <String, ({double diameter, double dot})>{
       'default': (diameter: 16, dot: 6),
     };
-
-    test('every size is covered', () {});
 
     for (final entry in expected.entries) {
       testWidgets('${entry.key} is a circle around a smaller dot', (
@@ -3482,8 +3469,6 @@ void main() {
   group('acmeSliderStyle', () {
     const rails = <String, double>{'default': 6};
 
-    test('every size is covered', () {});
-
     for (final entry in rails.entries) {
       testWidgets('${entry.key} scales the thumb with the rail', (
         tester,
@@ -3584,8 +3569,6 @@ void main() {
     const heights = <String, ({double minHeight, double textSize})>{
       'default': (minHeight: 36, textSize: 14),
     };
-
-    test('every size is covered', () {});
 
     for (final entry in heights.entries) {
       testWidgets('${entry.key} sizes the field and its text', (tester) async {
@@ -3871,6 +3854,117 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(chosen, ['board']);
+    });
+  });
+
+  group('acmeSidebarStyle', () {
+    for (final theme in _themes) {
+      testWidgets('the panel is the page plus one edge in ${theme.name}', (
+        tester,
+      ) async {
+        final spec = await _resolve(
+          tester,
+          acmeSidebarStyle(),
+          theme: theme.data,
+        );
+
+        // The same choice the card makes: one surface token, and the hairline
+        // is what separates the panel from the content beside it.
+        expect(
+          _flexDecoration(spec.spec.container)?.color,
+          theme.data.background,
+        );
+        expect(
+          _flexBorder(spec.spec.container),
+          BorderDirectional(
+            end: BorderSide(color: theme.data.border, width: 1),
+          ),
+        );
+        expect(
+          _boxBorder(spec.spec.footer),
+          Border(top: BorderSide(color: theme.data.border, width: 1)),
+        );
+      });
+
+      testWidgets('a section label reads quieter than a destination in '
+          '${theme.name}', (tester) async {
+        final spec = await _resolve(
+          tester,
+          acmeSidebarStyle(),
+          theme: theme.data,
+        );
+
+        expect(
+          spec.spec.sectionLabel.spec.style?.color,
+          theme.data.mutedForeground,
+        );
+        expect(
+          spec.spec.destination.spec.label.spec.style?.color,
+          theme.data.foreground,
+        );
+        _expectReadable(
+          spec.spec.sectionLabel.spec.style!.color!,
+          const Color(0x00000000),
+          page: theme.data.background,
+          floor: 4.5,
+          reason: 'sidebar section label',
+        );
+      });
+    }
+
+    testWidgets('a destination is the application toggle, widened', (
+      tester,
+    ) async {
+      const theme = AcmeThemeData.light();
+      final sidebar = await _resolve(tester, acmeSidebarStyle(), theme: theme);
+      final toggle = await _resolve(tester, acmeToggleStyle(), theme: theme);
+
+      final destination = sidebar.spec.destination.spec.container.spec;
+      // The recipe reuses the ghost toggle rather than restating it, so the
+      // resting fill and the type scale come from the toggle's own recipe.
+      expect(
+        destination.box?.spec.decoration,
+        toggle.spec.container.spec.box?.spec.decoration,
+      );
+      expect(
+        sidebar.spec.destination.spec.label.spec.style?.fontSize,
+        toggle.spec.label.spec.style?.fontSize,
+      );
+      // What the sidebar does add: full panel width, leading content, and a
+      // 48px target rather than the toggle's 36.
+      expect(destination.box?.spec.constraints?.minHeight, 48);
+      expect(destination.flex?.spec.mainAxisSize, MainAxisSize.max);
+      expect(destination.flex?.spec.mainAxisAlignment, MainAxisAlignment.start);
+    });
+
+    testWidgets('renders its sections through Remix', (tester) async {
+      var selected = 'overview';
+      await _pumpInScope(
+        tester,
+        AcmeSidebar<String>(
+          sections: const [
+            RemixSidebarSection(
+              label: 'Workspace',
+              destinations: [
+                RemixSidebarDestination(value: 'overview', label: 'Overview'),
+                RemixSidebarDestination(value: 'reports', label: 'Reports'),
+              ],
+            ),
+          ],
+          selectedValue: selected,
+          onSelected: (value) => selected = value,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(RemixSidebar<String>), findsOneWidget);
+      expect(find.text('Workspace'), findsOneWidget);
+      expect(find.text('Overview'), findsOneWidget);
+
+      await tester.tap(find.text('Reports'));
+      await tester.pumpAndSettle();
+
+      expect(selected, 'reports');
     });
   });
 
@@ -4331,8 +4425,6 @@ void main() {
 
   group('acmeSelectStyle', () {
     const heights = <String, double>{'default': 36};
-
-    test('every size is covered', () {});
 
     for (final entry in heights.entries) {
       testWidgets('${entry.key} matches the text field it sits beside', (

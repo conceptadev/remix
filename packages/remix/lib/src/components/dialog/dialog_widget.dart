@@ -187,7 +187,9 @@ class RemixDialog extends StatelessWidget {
   /// caller-owned and is never wrapped in the structured scroll region.
   final bool scrollable;
 
-  /// Whether to block background content interaction.
+  /// Whether to hide background semantics and announce a dialog route.
+  ///
+  /// Pointer blocking is supplied by the route barrier in [showRemixDialog].
   final bool modal;
 
   /// Semantic label for accessibility.

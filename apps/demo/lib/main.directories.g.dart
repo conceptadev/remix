@@ -17,6 +17,8 @@ import 'package:demo/components/button.dart' as _demo_components_button;
 import 'package:demo/components/callout.dart' as _demo_components_callout;
 import 'package:demo/components/card.dart' as _demo_components_card;
 import 'package:demo/components/checkbox.dart' as _demo_components_checkbox;
+import 'package:demo/components/checkbox_group.dart'
+    as _demo_components_checkbox_group;
 import 'package:demo/components/code.dart' as _demo_components_code;
 import 'package:demo/components/data_list.dart' as _demo_components_data_list;
 import 'package:demo/components/data_table.dart' as _demo_components_data_table;
@@ -35,6 +37,8 @@ import 'package:demo/components/radio.dart' as _demo_components_radio;
 import 'package:demo/components/segmented_control.dart'
     as _demo_components_segmented_control;
 import 'package:demo/components/select.dart' as _demo_components_select;
+import 'package:demo/components/sidebar.dart' as _demo_components_sidebar;
+import 'package:demo/components/skeleton.dart' as _demo_components_skeleton;
 import 'package:demo/components/slider.dart' as _demo_components_slider;
 import 'package:demo/components/spinner.dart' as _demo_components_spinner;
 import 'package:demo/components/switch.dart' as _demo_components_switch;
@@ -198,6 +202,15 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'RemixCheckboxGroup<Object>',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Interests',
+            builder: _demo_components_checkbox_group.buildCheckboxGroupUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'RemixDataList',
         useCases: [
           _widgetbook.WidgetbookUseCase(
@@ -339,6 +352,24 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Select Component',
             builder: _demo_components_select.buildSelectUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixSidebar<Object>',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Workspace navigation',
+            builder: _demo_components_sidebar.buildSidebarUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixSkeleton',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Loading content',
+            builder: _demo_components_skeleton.buildSkeletonUseCase,
           ),
         ],
       ),

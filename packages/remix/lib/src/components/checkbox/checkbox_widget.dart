@@ -1,7 +1,6 @@
 part of 'checkbox.dart';
 
-/// A customizable checkbox component that supports various styles and behaviors.
-/// The checkbox integrates with the Mix styling system and follows Remix design patterns.
+/// A checkbox with an optional visible label and Mix styling.
 ///
 /// ## Example
 ///

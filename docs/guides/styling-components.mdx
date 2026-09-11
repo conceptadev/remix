@@ -1,0 +1,78 @@
+---
+title: Styling components
+description: Define appearance, respond to interaction states, and reuse Remix styles
+---
+
+Start a style with the component's concrete styler and chain the properties you
+need. Keep application values and callbacks on the widget; put appearance in
+the styler. This is the same separation used throughout Mix.
+
+## Respond to interaction states
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final buttonStyle = ButtonStyler()
+    .padding(.horizontal(16))
+    .padding(.vertical(10))
+    .color(Colors.blue)
+    .borderRadius(.circular(8))
+    .label(.color(Colors.white))
+    .onHovered(.color(Colors.blue.shade700))
+    .onPressed(.scale(0.95));
+```
+
+Remix tracks hover and press for the component. The state-specific styles
+describe the appearance to apply; you do not need another hover detector to
+drive these variants. Use the [component reference](/components/button) for
+its disabled, loading, and focus behavior.
+
+## Animate style changes
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final animatedButton = ButtonStyler()
+    .color(Colors.blue)
+    .onHovered(.color(Colors.blue.shade700))
+    .onPressed(.scale(0.95))
+    .animate(AnimationConfig.spring(300.ms));
+```
+
+The animation applies to style transitions, including the color and scale in
+this example. It does not supply application behavior such as saving data or
+deciding when a loading state begins.
+
+## Reuse a base style
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final baseButton = ButtonStyler()
+    .padding(.horizontal(16))
+    .padding(.vertical(10))
+    .borderRadius(.circular(8));
+
+final primaryButton = baseButton
+    .color(Colors.blue)
+    .label(.color(Colors.white));
+
+final destructiveButton = baseButton
+    .color(Colors.red)
+    .label(.color(Colors.white));
+```
+
+Each chain returns a new style, leaving `baseButton` unchanged. Both variants
+retain the shared spacing and radius while defining their own colors.
+
+## Choose between a style and an installed recipe
+
+Use a styler directly when the application only needs a reusable appearance.
+Use [Open Code](/open-code) when you want a local token system, named component
+variants, and generated widget adapters that your team can maintain.
+
+Follow the [Styler API](/styler-api) for method names and contextual shorthand.
+Use canonical calls such as `.padding(.horizontal(16))` for spacing.

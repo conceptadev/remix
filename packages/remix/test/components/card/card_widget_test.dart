@@ -99,6 +99,15 @@ void main() {
         expect(find.byType(RemixCard), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
         expect(find.text('Styled Card'), findsOneWidget);
+        final box = tester.widget<Box>(find.byType(Box)).styleSpec!.spec;
+        expect(box.padding, const EdgeInsets.all(20));
+        expect(
+          box.decoration,
+          BoxDecoration(
+            color: Colors.lightBlue,
+            borderRadius: BorderRadius.circular(12),
+          ),
+        );
       });
 
       testWidgets('uses default style when none provided', (tester) async {

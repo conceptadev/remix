@@ -1,6 +1,6 @@
-# Remix Widget Preview 🎨
+# Remix Widget Preview
 
-Flutter Widget Preview integration for Remix components, providing an interactive browser-based preview environment for rapid development and testing.
+Browser previews of Remix components using Flutter Widget Preview.
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ fvm flutter widget-preview start
 
 ## What's Included
 
-### 📋 Form Components
+### Form Components
 - **Checkbox States**: Unchecked, checked, disabled states
 - **Switch States**: On/off states with enabled/disabled variants
 - **Radio Group**: Multiple options with selection state
@@ -39,14 +39,14 @@ fvm flutter widget-preview start
 - **Slider Examples**: Different values and disabled state
 - **Select Dropdown**: Dropdown with multiple options
 
-### 🎛️ Layout Components  
+### Layout Components
 - **Cards**: Basic card, with actions, profile card, stats dashboard
 - **Buttons**: Basic buttons, states, icon-only, variations
 
 ## How It Works
 
 1. **Start Command**: Launches a local web server
-2. **Chrome Opens**: Automatically opens preview environment 
+2. **Chrome Opens**: Automatically opens preview environment
 3. **Interactive Sidebar**: Lists all `@Preview` annotated functions
 4. **Live Updates**: Hot reload when you save changes
 5. **Responsive**: Each preview has defined viewport size
@@ -56,7 +56,7 @@ fvm flutter widget-preview start
 ```
 apps/demo/lib/previews/
 ├── preview_helper.dart      # Shared helper function
-├── button_preview.dart      # Button component previews  
+├── button_preview.dart      # Button component previews
 ├── card_preview.dart        # Card component previews
 └── form_preview.dart        # Form component previews
 ```
@@ -118,16 +118,16 @@ Widget createRemixPreview(Widget child) {
 ## Browser Environment
 
 ### Supported
-✅ Chrome (primary browser)  
-✅ Hot reload and live updates  
-✅ Responsive viewport controls  
-✅ Zoom and inspection tools
+- Chrome (primary browser)
+- Hot reload and live updates
+- Responsive viewport controls
+- Zoom and inspection tools
 
-### Not Supported  
-❌ Native platform APIs  
-❌ dart:io library  
-❌ Platform-specific plugins  
-❌ IDE integration (browser only)
+### Not Supported
+- Native platform APIs
+- dart:io library
+- Platform-specific plugins
+- IDE integration (browser only)
 
 ## Troubleshooting
 
@@ -154,7 +154,7 @@ Manually navigate to: `http://localhost:9000` (or port shown in terminal)
 ## Performance Tips
 
 - Keep preview functions lightweight
-- Use `const` constructors where possible  
+- Use `const` constructors where possible
 - Avoid expensive computations in previews
 - Limit preview count per file for faster loading
 

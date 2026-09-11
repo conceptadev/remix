@@ -145,12 +145,13 @@ void main() {
     });
 
     group('Diagnostic Support', () {
-      test('debugFillProperties works without throwing', () {
+      test('diagnostics publish SelectSpec fields', () {
         const spec = SelectSpec();
-
+        final builder = DiagnosticPropertiesBuilder();
+        spec.debugFillProperties(builder);
         expect(
-          () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
-          returnsNormally,
+          builder.properties.map((property) => property.name),
+          unorderedEquals(['trigger', 'content', 'menuContainer', 'item']),
         );
       });
 
@@ -311,14 +312,22 @@ void main() {
     });
 
     group('Diagnostic Support', () {
-      test('debugFillProperties works without throwing', () {
-        const spec = SelectTriggerSpec(indicatorOpacity: 0.5);
-        final properties = DiagnosticPropertiesBuilder();
-
-        expect(() => spec.debugFillProperties(properties), returnsNormally);
+      test('diagnostics publish SelectTriggerSpec fields', () {
+        const spec = SelectTriggerSpec();
+        final builder = DiagnosticPropertiesBuilder();
+        spec.debugFillProperties(builder);
         expect(
-          properties.properties.map((property) => property.name),
-          containsAll(['indicator', 'indicatorOpacity']),
+          builder.properties.map((property) => property.name),
+          unorderedEquals([
+            'container',
+            'label',
+            'placeholder',
+            'icon',
+            'indicator',
+            'containerEffects',
+            'indicatorOpacity',
+            'placeholderOpacity',
+          ]),
         );
       });
 
@@ -455,12 +464,13 @@ void main() {
     });
 
     group('Diagnostic Support', () {
-      test('debugFillProperties works without throwing', () {
+      test('diagnostics publish SelectMenuItemSpec fields', () {
         const spec = SelectMenuItemSpec();
-
+        final builder = DiagnosticPropertiesBuilder();
+        spec.debugFillProperties(builder);
         expect(
-          () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
-          returnsNormally,
+          builder.properties.map((property) => property.name),
+          unorderedEquals(['container', 'text', 'indicator', 'icon']),
         );
       });
 

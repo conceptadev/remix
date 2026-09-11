@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -43,23 +45,41 @@ void main() {
       });
 
       testWidgets('renders avatar with background image', (tester) async {
-        // Test that the avatar widget can be created with a background image
-        final avatar = RemixAvatar(
-          backgroundImage: const NetworkImage('https://example.com/avatar.png'),
+        final image = MemoryImage(
+          base64Decode(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+          ),
         );
-
-        expect(avatar.backgroundImage, isNotNull);
-        expect(avatar, isA<RemixAvatar>());
+        await tester.pumpRemixApp(
+          RemixAvatar(backgroundImage: image, label: 'JD'),
+        );
+        await tester.runAsync(
+          () => precacheImage(image, tester.element(find.byType(RemixAvatar))),
+        );
+        await tester.pumpAndSettle();
+        expect(tester.widget<Image>(find.byType(Image)).image, same(image));
+        final rendered = tester.widget<RawImage>(find.byType(RawImage));
+        expect(rendered.image, isNotNull);
+        expect(rendered.fit, BoxFit.cover);
       });
 
       testWidgets('renders avatar with foreground image', (tester) async {
-        // Test that the avatar widget can be created with a foreground image
-        final avatar = RemixAvatar(
-          foregroundImage: const NetworkImage('https://example.com/badge.png'),
+        final image = MemoryImage(
+          base64Decode(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+          ),
         );
-
-        expect(avatar.foregroundImage, isNotNull);
-        expect(avatar, isA<RemixAvatar>());
+        await tester.pumpRemixApp(
+          RemixAvatar(foregroundImage: image, label: 'JD'),
+        );
+        await tester.runAsync(
+          () => precacheImage(image, tester.element(find.byType(RemixAvatar))),
+        );
+        await tester.pumpAndSettle();
+        expect(tester.widget<Image>(find.byType(Image)).image, same(image));
+        final rendered = tester.widget<RawImage>(find.byType(RawImage));
+        expect(rendered.image, isNotNull);
+        expect(rendered.fit, BoxFit.cover);
       });
     });
 
@@ -179,7 +199,6 @@ void main() {
               'https://invalid-url.com/image.png',
             ),
             onBackgroundImageError: (e, stackTrace) {
-              // Callback is properly set
               exception = e as Exception;
             },
           ),
@@ -201,7 +220,6 @@ void main() {
             ),
             onForegroundImageError: (e, stackTrace) {
               exception = e as Exception;
-              // Callback is properly set
             },
           ),
         );

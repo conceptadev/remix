@@ -1,0 +1,66 @@
+{
+  "create-default": {
+    "language": "bash",
+    "sha256": "6b402b1fae2b9056ddf55d364389a19a43be74d1b7f5d33c2f8df5d298ec0b01"
+  },
+  "reviewed-checkout": {
+    "language": "bash",
+    "sha256": "ebae21090d5a1d680bb1d61c36696a5394e166a86c935d87b507cd943ef5c8b5"
+  },
+  "remix-override": {
+    "language": "yaml",
+    "sha256": "20d0455d269012b7df71529d90bc01db476e55d55bd16bc9ccaba2828e092f22"
+  },
+  "install-local-cli": {
+    "language": "bash",
+    "sha256": "3f45157108b8f87576852d677f59940a201dac20771b0f00b1b76b774aba3426"
+  },
+  "init-default": {
+    "language": "bash",
+    "sha256": "a2ea41d47eacad1542cc7ff4eee9f6eb8aa61f46ca27d54e231ea5fa60505aed"
+  },
+  "preview-button": {
+    "language": "bash",
+    "sha256": "25992687a0f803bf6ce6e7641726c7d2b5dad71d93b2c17c173aa51a570ab94b"
+  },
+  "install-button-command": {
+    "language": "bash",
+    "sha256": "06e2196d76f7330d87721f248db67169493e11eb1e65421c36043e05e2077a3e"
+  },
+  "first-main": {
+    "language": "dart",
+    "sha256": "12570e3eaa5ec42ea2f6243cdf656c30502478671a3a87e5bb97627c6d441c06"
+  },
+  "run-application": {
+    "language": "bash",
+    "sha256": "3946ab439bb751405eaf71a4e738d0dd998d84a7d0c84915225448a9f3f42071"
+  },
+  "install-screen": {
+    "language": "bash",
+    "sha256": "e6f3f00e8572276571f39d08b3d150ce265c1c06d16e77ddb44ad0d5d047ef97"
+  },
+  "diff-button": {
+    "language": "bash",
+    "sha256": "34ad896c421e5526af279c388379b943e8b7e522f2bc3cf7557b42aaac70ce8b"
+  },
+  "preserve-button": {
+    "language": "bash",
+    "sha256": "06e2196d76f7330d87721f248db67169493e11eb1e65421c36043e05e2077a3e"
+  },
+  "create-fortal": {
+    "language": "bash",
+    "sha256": "6d5f4103d5227b04843590891841d5c93959ae2b95dbd0fb0012f1ff647e6026"
+  },
+  "install-fortal": {
+    "language": "bash",
+    "sha256": "9c4f5f83748974101bf0a84b0f6e9435baf7560379d160c05c716d768ea1143f"
+  },
+  "analysis-options": {
+    "language": "yaml",
+    "sha256": "9e0ee70644542f397b40fd33dda804291d279e330218fc6d61c10e8f0b99b725"
+  },
+  "validate-sample": {
+    "language": "bash",
+    "sha256": "ce7ff34dc4931caf81a358e0ebe8bce5ca8af34c6f8b8658fdfaced0c674823f"
+  }
+}

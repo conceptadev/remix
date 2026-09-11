@@ -94,7 +94,6 @@ final Map<String, WidgetBuilder> components = {
       ),
     ),
   ),
-  // A consolidated page to preview all components together
   'all': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
     child: const PreviewShell(child: AllComponentsPage()),

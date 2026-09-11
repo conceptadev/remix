@@ -320,9 +320,7 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 // REMIX MENU - Main menu widget
 // ============================================================================
 
-/// A customizable menu component with data-driven API.
-///
-/// Uses a simple, declarative API with data classes for trigger and items.
+/// An overlay menu configured with trigger and item data.
 /// All styling is centralized in [MenuStyler] and passed directly to children.
 ///
 /// ## Example

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'presets.dart';
+
 class ControlsBar extends StatelessWidget {
   const ControlsBar({
     super.key,
@@ -40,17 +42,17 @@ class ControlsBar extends StatelessWidget {
             const SizedBox(width: 16),
             _PresetChip(
               label: 'Mobile',
-              onTap: () => onChange(size: const Size(375, 812)),
+              onTap: () => onChange(size: ViewportPresets.mobile),
             ),
             const SizedBox(width: 8),
             _PresetChip(
               label: 'Tablet',
-              onTap: () => onChange(size: const Size(768, 1024)),
+              onTap: () => onChange(size: ViewportPresets.tablet),
             ),
             const SizedBox(width: 8),
             _PresetChip(
               label: 'Desktop',
-              onTap: () => onChange(size: const Size(1280, 800)),
+              onTap: () => onChange(size: ViewportPresets.desktop),
             ),
             const Spacer(),
             Text('W', style: textTheme.labelMedium),

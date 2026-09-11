@@ -227,14 +227,8 @@ void main() {
 
       test('two specs with different properties are not equal', () {
         const spec1 = IconButtonSpec();
-        final spec2 = IconButtonSpec(
-          container: StyleSpec(spec: BoxSpec()),
-          icon: StyleSpec(spec: IconSpec()),
-          spinner: StyleSpec(spec: SpinnerSpec()),
-        );
-
-        // Since both have default values, they should be equal
-        expect(spec1, equals(spec2));
+        const spec2 = IconButtonSpec(icon: StyleSpec(spec: IconSpec(size: 24)));
+        expect(spec1, isNot(equals(spec2)));
       });
 
       test('specs with same custom properties are equal', () {
@@ -346,28 +340,11 @@ void main() {
         expect(updatedSpec.spinner, equals(originalSpinner));
       });
 
-      test('lerp handles edge t values', () {
-        final spec1 = IconButtonSpec(
-          container: StyleSpec(spec: BoxSpec()),
-          icon: StyleSpec(spec: IconSpec()),
-          spinner: StyleSpec(spec: SpinnerSpec()),
-        );
-        final spec2 = IconButtonSpec(
-          container: StyleSpec(spec: BoxSpec()),
-          icon: StyleSpec(spec: IconSpec()),
-          spinner: StyleSpec(spec: SpinnerSpec()),
-        );
-
-        // Test t=0.0
-        final result0 = spec1.lerp(spec2, 0.0);
-        expect(result0, isA<IconButtonSpec>());
-
-        // Test t=1.0
-        final result1 = spec1.lerp(spec2, 1.0);
-        expect(result1, isA<IconButtonSpec>());
-
-        // Test t=0.0 and t=1.0 should be different
-        expect(result0, isNot(same(result1)));
+      test('lerp retains each endpoint', () {
+        const start = IconButtonSpec(icon: StyleSpec(spec: IconSpec(size: 12)));
+        const end = IconButtonSpec(icon: StyleSpec(spec: IconSpec(size: 24)));
+        expect(start.lerp(end, 0).icon.spec.size, 12);
+        expect(start.lerp(end, 1).icon.spec.size, 24);
       });
 
       test('spec with complex StyleSpec properties', () {

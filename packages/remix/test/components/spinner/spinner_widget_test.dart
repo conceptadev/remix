@@ -5,6 +5,11 @@ import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
 
+Finder _spinnerPaint() => find.descendant(
+  of: find.byType(RemixSpinner),
+  matching: find.byType(CustomPaint),
+);
+
 void main() {
   group('RemixSpinner', () {
     group('Basic Rendering', () {
@@ -45,16 +50,11 @@ void main() {
     });
 
     group('Painter selection', () {
-      Finder spinnerPaint() => find.descendant(
-        of: find.byType(RemixSpinner),
-        matching: find.byType(CustomPaint),
-      );
-
       testWidgets('keeps the base spinner on the arc painter', (tester) async {
         await tester.pumpRemixApp(const RemixSpinner());
         await tester.pump();
 
-        final customPaint = tester.widget<CustomPaint>(spinnerPaint());
+        final customPaint = tester.widget<CustomPaint>(_spinnerPaint());
 
         expect(customPaint.painter, isA<RemixSpinnerPainter>());
       });
@@ -67,7 +67,7 @@ void main() {
         );
         await tester.pump();
 
-        final customPaint = tester.widget<CustomPaint>(spinnerPaint());
+        final customPaint = tester.widget<CustomPaint>(_spinnerPaint());
 
         expect(customPaint.painter, isA<RemixLeafSpinnerPainter>());
       });
@@ -86,7 +86,7 @@ void main() {
         );
         await tester.pump();
 
-        final customPaint = tester.widget<CustomPaint>(spinnerPaint());
+        final customPaint = tester.widget<CustomPaint>(_spinnerPaint());
         final painter = customPaint.painter;
 
         expect(painter, isA<RemixSpinnerPainter>());
@@ -107,7 +107,7 @@ void main() {
         );
         await tester.pump();
 
-        final customPaint = tester.widget<CustomPaint>(spinnerPaint());
+        final customPaint = tester.widget<CustomPaint>(_spinnerPaint());
         final painter = customPaint.painter;
 
         expect(painter, isA<RemixLeafSpinnerPainter>());
@@ -123,6 +123,7 @@ void main() {
         await tester.pump();
 
         expect(find.byType(RemixSpinner), findsOneWidget);
+        expect(tester.getSize(_spinnerPaint()), const Size(48, 48));
       });
 
       testWidgets('applies custom indicator color', (tester) async {
@@ -134,6 +135,10 @@ void main() {
         await tester.pump();
 
         expect(find.byType(RemixSpinner), findsOneWidget);
+        final painter =
+            tester.widget<CustomPaint>(_spinnerPaint()).painter!
+                as RemixSpinnerPainter;
+        expect(painter.indicatorColor, const Color(0xFF0000FF));
       });
 
       testWidgets('applies custom track color', (tester) async {
@@ -143,6 +148,10 @@ void main() {
         await tester.pump();
 
         expect(find.byType(RemixSpinner), findsOneWidget);
+        final painter =
+            tester.widget<CustomPaint>(_spinnerPaint()).painter!
+                as RemixSpinnerPainter;
+        expect(painter.trackColor, const Color(0xFFCCCCCC));
       });
 
       testWidgets('applies custom stroke width', (tester) async {
@@ -152,6 +161,10 @@ void main() {
         await tester.pump();
 
         expect(find.byType(RemixSpinner), findsOneWidget);
+        final painter =
+            tester.widget<CustomPaint>(_spinnerPaint()).painter!
+                as RemixSpinnerPainter;
+        expect(painter.strokeWidth, 3);
       });
 
       testWidgets('applies custom track stroke width', (tester) async {
@@ -161,6 +174,10 @@ void main() {
         await tester.pump();
 
         expect(find.byType(RemixSpinner), findsOneWidget);
+        final painter =
+            tester.widget<CustomPaint>(_spinnerPaint()).painter!
+                as RemixSpinnerPainter;
+        expect(painter.trackStrokeWidth, 2);
       });
 
       testWidgets('applies custom duration', (tester) async {
@@ -172,6 +189,12 @@ void main() {
         await tester.pump();
 
         expect(find.byType(RemixSpinner), findsOneWidget);
+        final painter =
+            tester.widget<CustomPaint>(_spinnerPaint()).painter!
+                as RemixSpinnerPainter;
+        final before = painter.animation.value;
+        await tester.pump(const Duration(milliseconds: 250));
+        expect(painter.animation.value - before, closeTo(0.5, 0.01));
       });
     });
 

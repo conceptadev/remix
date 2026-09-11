@@ -60,7 +60,6 @@ final class RemixDefaultContentStyle extends StatelessWidget {
 
 /// Builds from a raw spec when supplied, otherwise resolves the fluent style.
 class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
-  /// Creates a builder that supports both style and raw spec inputs.
   const RemixStyleSpecBuilder({
     super.key,
     required this.style,
@@ -87,7 +86,6 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
   /// [RemixFocusHighlightModeProvider.of] directly.
   final bool trackFocusHighlightMode;
 
-  /// Builds the widget with the resolved or supplied spec.
   final Widget Function(BuildContext context, S spec) builder;
 
   Widget _buildTracked(BuildContext context, S spec) {
@@ -104,19 +102,16 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final spec = styleSpec;
-    late final Widget result;
-    if (spec != null) {
-      result = StyleSpecBuilder<S>(
-        styleSpec: StyleSpec(spec: spec),
-        builder: _buildTracked,
-      );
-    } else {
-      result = StyleBuilder<S>(
-        style: style,
-        controller: controller,
-        builder: _buildTracked,
-      );
-    }
+    final Widget result = spec != null
+        ? StyleSpecBuilder<S>(
+            styleSpec: StyleSpec(spec: spec),
+            builder: _buildTracked,
+          )
+        : StyleBuilder<S>(
+            style: style,
+            controller: controller,
+            builder: _buildTracked,
+          );
 
     if (!trackFocusHighlightMode) return result;
 

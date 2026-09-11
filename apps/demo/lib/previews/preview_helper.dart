@@ -24,26 +24,3 @@ Widget createRemixPreview(Widget child) {
     ),
   );
 }
-
-/// Dark mode variant of the preview wrapper.
-Widget createRemixPreviewDark(Widget child) {
-  return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(
-      brightness: Brightness.dark,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: MixColors.blueGrey,
-        brightness: Brightness.dark,
-      ),
-    ),
-    home: Builder(
-      builder: (context) => FortalScope(
-        brightness: Theme.of(context).brightness,
-        child: Scaffold(
-          backgroundColor: MixColors.black,
-          body: Center(child: child),
-        ),
-      ),
-    ),
-  );
-}

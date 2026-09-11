@@ -56,12 +56,21 @@ void main() {
           modifier: WidgetModifierConfig(),
         );
 
-        expect(style.$container, isNotNull);
-        expect(style.$waitDuration, isNotNull);
-        expect(style.$showDuration, isNotNull);
-        expect(style.$variants, isNotNull);
-        expect(style.$animation, isNotNull);
-        expect(style.$modifier, isNotNull);
+        expect(style.$container, Prop.maybeMix(BoxStyler()));
+        expect(
+          style.$waitDuration,
+          Prop.value(const Duration(milliseconds: 500)),
+        );
+        expect(
+          style.$showDuration,
+          Prop.value(const Duration(milliseconds: 2000)),
+        );
+        expect(style.$variants, isEmpty);
+        expect(
+          style.$animation,
+          AnimationConfig.linear(const Duration(milliseconds: 200)),
+        );
+        expect(style.$modifier, WidgetModifierConfig());
       });
     });
 
@@ -314,19 +323,6 @@ void main() {
         expect(tooltip.style, same(style));
         expect(tooltip.tooltipChild, isA<Text>());
         expect(tooltip.child.key, const Key('trigger'));
-      });
-
-      testWidgets('resolve() provides default durations', (tester) async {
-        const style = TooltipStyler.create();
-
-        await tester.pumpMaterialApp(Container());
-        final context = tester.element(find.byType(Container));
-
-        final styleSpec = style.resolve(context);
-
-        // Duration fields may be null when resolved as they're not part of the style
-        expect(styleSpec.spec.waitDuration, isA<Duration?>());
-        expect(styleSpec.spec.showDuration, isA<Duration?>());
       });
     });
 

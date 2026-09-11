@@ -10,13 +10,13 @@ The 0.1.0 catalog includes an opt-in `icons` seam and covers the core Remix
 component surface: `accordion`, `avatar`, `badge`, `button`, `callout`, `card`,
 `checkbox`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
 `icon_button`, `link`, `menu`, `popover`, `progress`, `radio`,
-`segmented_control`, `select`, `skeleton`, `slider`, `spinner`, `switch`,
-`tabs`, `textfield`, `toggle`, `toggle_group`, and `tooltip`, each depending on
-`theme`. The Fortal preset contains the same surface plus `base_button`,
-`code`, `heading`, `kbd`, `sidebar`, `text`, and `typography`. `data_table`
-also depends on `checkbox`, `icon_button`, and `select`,
-because its selection column, pager, and page-size control are those
-components. The catalog also offers `chart` as an optional extension over
+`segmented_control`, `select`, `sidebar`, `skeleton`, `slider`, `spinner`,
+`switch`, `tabs`, `textfield`, `toggle`, `toggle_group`, and `tooltip`, each
+with a `theme` dependency. The Fortal preset also includes `base_button`,
+`code`, `heading`, `kbd`, `text`, and `typography`. The `data_table` item uses
+`checkbox`, `icon_button`, and `select` for its controls. The default `sidebar`
+item uses the application's `toggle` recipe for destinations.
+The catalog also offers `chart` as an optional extension over
 `mix_chart`; it does not depend on `remix_fortal`. There is no remote registry,
 update command, registry lockfile, or content-hash protocol.
 

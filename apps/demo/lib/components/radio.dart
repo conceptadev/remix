@@ -1,5 +1,4 @@
 import 'package:demo/helpers/catalog.dart';
-import 'package:demo/helpers/string.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -55,7 +54,9 @@ Widget buildRadioUseCase(BuildContext context) {
                               ),
                             ),
                             const SizedBox(width: 8),
-                            Text(theme.name.capitalize()),
+                            Text(
+                              '${theme.name[0].toUpperCase()}${theme.name.substring(1)}',
+                            ),
                           ],
                         ),
                       ),

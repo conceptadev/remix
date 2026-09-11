@@ -1,7 +1,6 @@
 part of 'callout.dart';
 
-/// The [RemixCallout] widget is used to display a message.
-/// It can be customized using the [style] parameter to fit different design needs.
+/// A message row with optional text, icon, or custom content.
 ///
 /// ## Example
 ///
@@ -50,7 +49,6 @@ class RemixCallout extends StatelessWidget {
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
-        // For raw constructor, use provided child directly
         if (child != null) {
           return RemixFlexBoxAdapter(
             styleSpec: spec.container,
@@ -59,26 +57,21 @@ class RemixCallout extends StatelessWidget {
             children: [
               // RowBox resolves to a Flex. A loose fit gives custom content a
               // bounded maximum width without forcing it to fill the callout.
-              // ignore: avoid-flexible-outside-flex
               Flexible(child: child!),
             ],
           );
         }
 
-        // Build the callout content with text and optional icon
         final List<Widget> children = [];
 
-        // Add icon if present
         if (icon != null || spec.icon.spec.icon != null) {
           children.add(StyledIcon(icon: icon, styleSpec: spec.icon));
         }
 
-        // Add text if present
         if (text?.isNotEmpty == true) {
           children.add(
             // RowBox resolves to a Flex. A loose fit lets text wrap while
             // preserving its intrinsic width for short messages.
-            // ignore: avoid-flexible-outside-flex
             Flexible(child: StyledText(text!, styleSpec: spec.text)),
           );
         }

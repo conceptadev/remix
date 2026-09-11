@@ -277,6 +277,10 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixRadio<String>), findsOneWidget);
+        expect(selectedValue, isNull);
+        await tester.tap(find.byType(RemixRadio<String>));
+        await tester.pumpAndSettle();
+        expect(selectedValue, 'option1');
       });
     });
 
@@ -360,6 +364,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixRadio<String>), findsOneWidget);
+        expect(tester.getSize(find.byType(Box).first), const Size(32, 32));
       });
 
       testWidgets('applies indicator styling', (tester) async {
@@ -381,6 +386,12 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixRadio<String>), findsOneWidget);
+        expect(
+          (tester.widget<Box>(find.byType(Box).last).styleSpec!.spec.decoration
+                  as BoxDecoration)
+              .color,
+          Colors.blue,
+        );
       });
 
       testWidgets('applies alignment styling', (tester) async {

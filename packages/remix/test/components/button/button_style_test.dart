@@ -8,13 +8,6 @@ import '../../helpers/test_methods.dart';
 void main() {
   group('ButtonStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        final style = ButtonStyler();
-
-        expect(style, isNotNull);
-        expect(style, isA<ButtonStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(FlexBoxStyler());
         final label = Prop.maybeMix(TextStyler());
@@ -290,7 +283,17 @@ void main() {
         initial: ButtonStyler(),
         modify: (style) => style.transform(Matrix4.identity()),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style
+                .resolve(MockBuildContext())
+                .spec
+                .container
+                .spec
+                .box!
+                .spec
+                .transform,
+            Matrix4.identity(),
+          );
         },
       );
 
@@ -358,7 +361,15 @@ void main() {
         initial: ButtonStyler(),
         modify: (style) => style.padding(.start(4.0)).margin(.end(8.0)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          final box = style
+              .resolve(MockBuildContext())
+              .spec
+              .container
+              .spec
+              .box!
+              .spec;
+          expect(box.padding, const EdgeInsetsDirectional.only(start: 4));
+          expect(box.margin, const EdgeInsetsDirectional.only(end: 8));
         },
       );
 
@@ -383,7 +394,18 @@ void main() {
         initial: ButtonStyler(),
         modify: (style) => style.shape(.stadium()).minHeight(32.0),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          final box = style
+              .resolve(MockBuildContext())
+              .spec
+              .container
+              .spec
+              .box!
+              .spec;
+          expect(
+            (box.decoration as ShapeDecoration).shape,
+            const StadiumBorder(),
+          );
+          expect(box.constraints!.minHeight, 32);
         },
       );
     });

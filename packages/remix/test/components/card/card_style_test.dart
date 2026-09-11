@@ -7,19 +7,12 @@ import '../../helpers/test_methods.dart';
 void main() {
   group('CardStyler', () {
     group('Constructors', () {
-      test('default constructor creates valid instance', () {
-        const style = CardStyler.create();
-        expect(style, isNotNull);
-        expect(style, isA<CardStyler>());
-      });
-
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
 
         final style = CardStyler.create(container: container);
 
-        expect(style, isNotNull);
-        expect(style, isA<CardStyler>());
+        expect(style.$container, equals(container));
       });
 
       test('constructor with styler parameters', () {
@@ -27,8 +20,12 @@ void main() {
           container: BoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
         );
 
-        expect(style, isNotNull);
-        expect(style, isA<CardStyler>());
+        expect(
+          style.$container,
+          equals(
+            Prop.maybeMix(BoxStyler(padding: EdgeInsetsGeometryMix.all(16.0))),
+          ),
+        );
       });
     });
 

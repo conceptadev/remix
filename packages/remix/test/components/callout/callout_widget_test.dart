@@ -209,6 +209,9 @@ void main() {
         expect(find.byType(StyledIcon), findsOneWidget);
         expect(find.byIcon(Icons.favorite), findsOneWidget);
         expect(find.text('Styled Icon'), findsOneWidget);
+        final icon = tester.widget<Icon>(find.byIcon(Icons.favorite));
+        expect(icon.color, Colors.red);
+        expect(icon.size, 24);
       });
     });
 
@@ -263,6 +266,10 @@ void main() {
         expect(find.byType(RemixCallout), findsOneWidget);
         expect(find.byType(StyledText), findsOneWidget);
         expect(find.text('Styled Text'), findsOneWidget);
+        final text = tester.widget<Text>(find.text('Styled Text')).style!;
+        expect(text.color, Colors.blue);
+        expect(text.fontSize, 16);
+        expect(text.fontWeight, FontWeight.bold);
       });
     });
 

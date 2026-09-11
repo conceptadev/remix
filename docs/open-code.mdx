@@ -3,6 +3,10 @@ title: Open Code
 description: Install editable Remix component source into your app with the remix CLI
 ---
 
+For a guided walkthrough with screenshots and runnable sample projects, start
+with [Build a settings screen](/tutorials/settings-screen). This page is the
+command and configuration reference.
+
 **Open code** copies a theme and component recipes **into your application**.
 From that moment your team owns those files: no wrapper, no subclass, and no
 package-level theme override standing between you and the source. Choose the
@@ -81,7 +85,7 @@ each other's templates.
 <Note>
 The examples below are written as `remix <command>` to match the tool's own
 usage output. If you are using the project-local form, prefix each one with
-`dart run remix_cli:` — for example `dart run remix_cli:remix init`.
+`dart run remix_cli:`, for example `dart run remix_cli:remix init`.
 </Note>
 
 ```
@@ -143,8 +147,8 @@ Created remix.yaml; preserved lib/ui/ui.dart.
 
 ## 2. Preview before you write
 
-Never let a generator surprise you. Both preview modes run the full preflight —
-path safety, dependency sections, registry resolution — and then stop before any
+Never let a generator surprise you. Both preview modes run the full preflight
+(path safety, dependency sections, registry resolution) and then stop before any
 file is written or any process runs.
 
 ```bash
@@ -211,7 +215,7 @@ class SignUpButton extends StatelessWidget {
 
 ## Configuration
 
-`remix.yaml` is the entire configuration surface — three settings, no plugins
+`remix.yaml` is the entire configuration surface: three settings, no plugins
 and no per-component overrides:
 
 ```yaml
@@ -245,11 +249,7 @@ Choose `prefix`, `preset`, and `paths.ui` before your first `add`. The CLI will
 not rename, restyle, or move source it has already installed.
 
 Running `init` with different values against an existing `remix.yaml` is a hard
-error, not a migration:
-
-```
-FormatException: Existing remix.yaml does not match the requested prefix, preset, and UI path.
-```
+error, not a migration.
 
 Editing `remix.yaml` by hand afterwards is worse, because installed state is
 tracked by *file path*, not by content. `remix add button` would still see
@@ -257,6 +257,12 @@ tracked by *file path*, not by content. `remix add button` would still see
 the old prefix in place. To actually change a prefix you must rename the
 identifiers yourself, or delete the installed files and reinstall.
 </Warning>
+
+For example, an `init` that conflicts with the existing configuration reports:
+
+```
+FormatException: Existing remix.yaml does not match the requested prefix, preset, and UI path.
+```
 
 ## What lands in your app
 
@@ -372,9 +378,9 @@ use `--overwrite` only when you want the new authored file wholesale.
 
 ## The three levels of customization
 
-**Edit the recipe** — change it for the whole app, permanently. It is your file.
+**Edit the recipe:** change it for the whole app, permanently. It is your file.
 
-**Retheme a subtree** — one `copyWith` restyles every button beneath it, because
+**Retheme a subtree:** one `copyWith` restyles every button beneath it, because
 the recipe reads tokens and the scope decides what tokens resolve to:
 
 ```dart
@@ -387,7 +393,7 @@ UiThemeScope(
 )
 ```
 
-**Override one instance** — `style` is merged **last**, so it beats the resolved
+**Override one instance:** `style` is merged **last**, so it beats the resolved
 recipe without forking it:
 
 ```dart
@@ -402,7 +408,7 @@ UiButton.primary(
 
 <Warning>
 State fragments merge by state, not by depth. An override that must beat the
-recipe's hover fill has to be declared as a hover fragment too — a bare
+recipe's hover fill has to be declared as a hover fragment too; a bare
 `.color(...)` only replaces the idle one.
 </Warning>
 
@@ -453,12 +459,12 @@ Updated button.
 ```
 
 If you only want part of the upstream change, copy it out of the diff by hand.
-That is the intended workflow — the file is yours.
+That is the intended workflow. The file is yours.
 
 ### The Remix drift notice
 
 Each registry snapshot is authored against one `remix` version, and the
-constraint it installs is a caret — so `flutter pub upgrade` can move you onto
+constraint it installs is a caret, so `flutter pub upgrade` can move you onto
 a later `remix` that these templates were never tested against. `add` reports
 that after it resolves your lockfile:
 
@@ -466,7 +472,7 @@ that after it resolves your lockfile:
 Resolved remix 1.0.0; this remix_cli registry was authored against 1.0.0-beta.9. Run flutter pub upgrade remix_cli, then review with --diff.
 ```
 
-It is a notice, not a failure — the install completes. A `remix` *below* the
+It is a notice, not a failure. The install completes. A `remix` *below* the
 authored version is a different case and still fails outright, because the
 templates would not compile against it.
 
@@ -524,7 +530,7 @@ No source was written.
 ```
 
 Declaring the same package in both sections is rejected the same way. Fix your
-manifest and rerun — the CLI will not edit it for you.
+manifest and rerun; the CLI will not edit it for you.
 
 ## Default preset catalog
 
@@ -534,11 +540,15 @@ depends on it:
 `theme` installs `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`,
 giving you `UiTokens`, `UiThemeData`, and `UiThemeScope`. Every component item
 installs one authored file plus its generated adapter under
-`components/<item>.dart`. Three items differ: `icons` installs app-owned
+`components/<item>.dart`. Four items differ: `icons` installs app-owned
 `icons.dart` with no generated adapter; `chart` generates three adapters over
-`mix_chart`; and `data_table` also pulls in
+`mix_chart`; `data_table` also pulls in
 `checkbox`, `icon_button`, and `select`, because its selection column, pager,
-and page-size control *are* those components — adding it installs all four.
+and page-size control *are* those components; adding it installs all four; and
+`sidebar` pulls in `toggle`, because a destination *is* one.
+
+The registry requires Remix beta.9, which includes `RemixSidebar`.
+The installer rejects older resolved versions before it writes source.
 
 | Item | Surface you get | Axes |
 |---|---|---|
@@ -564,6 +574,7 @@ and page-size control *are* those components — adding it installs all four.
 | `radio` | `UiRadio` | — |
 | `segmented_control` | `UiSegmentedControl` | — |
 | `select` | `UiSelect` | — |
+| `sidebar` | `UiSidebar` | — |
 | `skeleton` | `UiSkeleton` | — |
 | `slider` | `UiSlider` | — |
 | `spinner` | `UiSpinner` | — |
@@ -575,7 +586,7 @@ and page-size control *are* those components — adding it installs all four.
 | `tooltip` | `UiTooltip` | — |
 
 The `fortal` catalog contains every item above and adds `base_button`, `code`,
-`heading`, `kbd`, `sidebar`, `text`, and `typography`. `base_button` and
+`heading`, `kbd`, `text`, and `typography`. `base_button` and
 `typography` are shared authored recipes that arrive transitively with the
 components that use them. Fortal's component names use the configured prefix,
 so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
@@ -653,7 +664,7 @@ them from `package:remix/remix.dart` and put the installed adapters inside.
 
 `toggle_group`, `segmented_control`, `menu`, and `select` work the other way
 round. Their options are data, not widgets, and the parent's own recipe carries
-the option style — so one `add` covers the container *and* every row, and a row
+the option style, so one `add` covers the container *and* every row, and a row
 in a loop cannot be left unstyled.
 
 One host note: an installed text field needs an `Overlay` ancestor once it

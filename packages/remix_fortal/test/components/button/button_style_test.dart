@@ -23,6 +23,41 @@ void main() {
 
         expect(resolved, isA<StyleSpec<ButtonSpec>>());
         expect(resolved.spec, isA<ButtonSpec>());
+        final context = tester.element(find.byType(SizedBox).last);
+        Color color(ColorToken token) => MixScope.tokenOf(token, context);
+        final box = resolved.spec.container.spec.box!.spec;
+        final expectedFill = switch (variant) {
+          FortalButtonVariant.classic ||
+          FortalButtonVariant.solid => color(FortalTokens.accent9),
+          FortalButtonVariant.soft => color(FortalTokens.accentA3),
+          FortalButtonVariant.surface => color(FortalTokens.accentSurface),
+          FortalButtonVariant.outline => null,
+          FortalButtonVariant.ghost => Colors.transparent,
+        };
+        expect((box.decoration as BoxDecoration?)?.color, expectedFill);
+        final expectedLabel =
+            variant == FortalButtonVariant.classic ||
+                variant == FortalButtonVariant.solid
+            ? color(FortalTokens.accentContrast)
+            : color(FortalTokens.accentA11);
+        expect(resolved.spec.label.spec.style!.color, expectedLabel);
+        final effects = resolved.spec.containerEffects?.behindContent;
+        if (variant == FortalButtonVariant.classic) {
+          expect(effects!.gradients, isNotEmpty);
+        } else if (variant == FortalButtonVariant.surface ||
+            variant == FortalButtonVariant.outline) {
+          expect(
+            effects!.shadows.single.color,
+            color(
+              variant == FortalButtonVariant.surface
+                  ? FortalTokens.accentA7
+                  : FortalTokens.accentA8,
+            ),
+          );
+          expect(effects.shadows.single.spreadRadius, 1);
+        } else {
+          expect(effects, isNull);
+        }
       });
     }
 

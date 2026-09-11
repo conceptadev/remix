@@ -1,72 +1,19 @@
 {
-  "name": "Remix",
-  "description": "A comprehensive Flutter component library combining headless UI behavior with Mix's powerful styling system.",
-  "favicon": "/assets/favicon.png",
-  "logo": {
-    "dark": "/assets/logo_dark.png",
-    "light": "/assets/logo_light.png"
-  },
-  "theme": {
-    "defaultTheme": "dark",
-    "primary": "#00EB03",
-    "backgroundDark": "#0A080A"
-  },
-  "socialPreview": "/assets/banner.png",
-  "navigation": {
-    "github": "https://github.com/btwld/remix"
-  },
-  "search": {
-    "enabled": true
-  },
-  "social": {
-    "github": "btwld/remix"
-  },
-  "meta": {
-    "author": "Bitwild",
-    "keywords": [
-      "flutter",
-      "components",
-      "ui",
-      "widgets",
-      "styling",
-      "mix",
-      "design-system",
-      "accessibility",
-      "customizable"
-    ]
-  },
-  "footer": {
-    "links": [
-      {
-        "title": "Documentation",
-        "url": "/"
-      },
-      {
-        "title": "GitHub",
-        "url": "https://github.com/btwld/remix"
-      },
-      {
-        "title": "pub.dev",
-        "url": "https://pub.dev/packages/remix"
-      },
-      {
-        "title": "Mix",
-        "url": "https://github.com/btwld/mix"
-      },
-      {
-        "title": "Naked UI",
-        "url": "https://github.com/btwld/naked_ui"
-      }
-    ],
-    "copyright": "© 2026 Bitwild. BSD-3-Clause License."
-  },
   "sidebar": [
     {
-      "group": "Introduction",
+      "group": "Start here",
       "pages": [
         {
-          "title": "Getting Started",
+          "title": "Introduction",
           "href": "/"
+        },
+        {
+          "title": "Getting Started",
+          "href": "/getting-started"
+        },
+        {
+          "title": "Styling Components",
+          "href": "/guides/styling-components"
         },
         {
           "title": "Styler API",
@@ -79,31 +26,25 @@
       ]
     },
     {
-      "group": "Components",
+      "group": "Tutorials",
       "pages": [
         {
-          "title": "Accordion",
-          "href": "/components/accordion"
-        },
-        {
-          "title": "Avatar",
-          "href": "/components/avatar"
-        },
-        {
-          "title": "Badge",
-          "href": "/components/badge"
-        },
+          "title": "Build a Settings Screen",
+          "href": "/tutorials/settings-screen"
+        }
+      ]
+    },
+    {
+      "group": "Actions and inputs",
+      "collapsible": true,
+      "pages": [
         {
           "title": "Button",
           "href": "/components/button"
         },
         {
-          "title": "Callout",
-          "href": "/components/callout"
-        },
-        {
-          "title": "Card",
-          "href": "/components/card"
+          "title": "IconButton",
+          "href": "/components/icon_button"
         },
         {
           "title": "Checkbox",
@@ -114,80 +55,20 @@
           "href": "/components/checkbox_group"
         },
         {
-          "title": "Data List",
-          "href": "/components/data_list"
-        },
-        {
-          "title": "Data Table",
-          "href": "/components/data_table"
-        },
-        {
-          "title": "Dialog",
-          "href": "/components/dialog"
-        },
-        {
-          "title": "Disclosure",
-          "href": "/components/disclosure"
-        },
-        {
-          "title": "Divider",
-          "href": "/components/divider"
-        },
-        {
-          "title": "IconButton",
-          "href": "/components/icon_button"
-        },
-        {
-          "title": "Link",
-          "href": "/components/link"
-        },
-        {
-          "title": "Menu",
-          "href": "/components/menu"
-        },
-        {
-          "title": "Popover",
-          "href": "/components/popover"
-        },
-        {
-          "title": "Progress",
-          "href": "/components/progress"
-        },
-        {
           "title": "Radio",
           "href": "/components/radio"
-        },
-        {
-          "title": "Segmented Control",
-          "href": "/components/segmented_control"
         },
         {
           "title": "Select",
           "href": "/components/select"
         },
         {
-          "title": "Sidebar",
-          "href": "/components/sidebar"
-        },
-        {
-          "title": "Skeleton",
-          "href": "/components/skeleton"
-        },
-        {
           "title": "Slider",
           "href": "/components/slider"
         },
         {
-          "title": "Spinner",
-          "href": "/components/spinner"
-        },
-        {
           "title": "Switch",
           "href": "/components/switch"
-        },
-        {
-          "title": "Tabs",
-          "href": "/components/tabs"
         },
         {
           "title": "TextArea",
@@ -204,10 +85,116 @@
         {
           "title": "Toggle Group",
           "href": "/components/toggle_group"
+        }
+      ]
+    },
+    {
+      "group": "Navigation",
+      "collapsible": true,
+      "pages": [
+        {
+          "title": "Link",
+          "href": "/components/link"
+        },
+        {
+          "title": "Menu",
+          "href": "/components/menu"
+        },
+        {
+          "title": "Segmented Control",
+          "href": "/components/segmented_control"
+        },
+        {
+          "title": "Sidebar",
+          "href": "/components/sidebar"
+        },
+        {
+          "title": "Tabs",
+          "href": "/components/tabs"
+        }
+      ]
+    },
+    {
+      "group": "Overlays",
+      "collapsible": true,
+      "pages": [
+        {
+          "title": "Dialog",
+          "href": "/components/dialog"
+        },
+        {
+          "title": "Popover",
+          "href": "/components/popover"
         },
         {
           "title": "Tooltip",
           "href": "/components/tooltip"
+        }
+      ]
+    },
+    {
+      "group": "Feedback",
+      "collapsible": true,
+      "pages": [
+        {
+          "title": "Callout",
+          "href": "/components/callout"
+        },
+        {
+          "title": "Progress",
+          "href": "/components/progress"
+        },
+        {
+          "title": "Skeleton",
+          "href": "/components/skeleton"
+        },
+        {
+          "title": "Spinner",
+          "href": "/components/spinner"
+        }
+      ]
+    },
+    {
+      "group": "Layout",
+      "collapsible": true,
+      "pages": [
+        {
+          "title": "Accordion",
+          "href": "/components/accordion"
+        },
+        {
+          "title": "Card",
+          "href": "/components/card"
+        },
+        {
+          "title": "Disclosure",
+          "href": "/components/disclosure"
+        },
+        {
+          "title": "Divider",
+          "href": "/components/divider"
+        }
+      ]
+    },
+    {
+      "group": "Data display",
+      "collapsible": true,
+      "pages": [
+        {
+          "title": "Avatar",
+          "href": "/components/avatar"
+        },
+        {
+          "title": "Badge",
+          "href": "/components/badge"
+        },
+        {
+          "title": "Data List",
+          "href": "/components/data_list"
+        },
+        {
+          "title": "Data Table",
+          "href": "/components/data_table"
         }
       ]
     },
