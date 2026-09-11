@@ -616,13 +616,9 @@ void main() {
     await tester.tap(find.byIcon(Icons.notifications_none));
     await tester.pump();
 
-    final content = find.ancestor(
-      of: find.text('Mark all read'),
-      matching: find.byWidgetPredicate(
-        (widget) => widget is SizedBox && widget.width == 330,
-      ),
-    );
+    final content = find.byKey(const ValueKey('topbar-notifications-content'));
     expect(content, findsOneWidget);
+    expect(tester.getSize(content).width, 330);
     expect(tester.getSize(content).height, lessThan(300));
   });
 
@@ -908,7 +904,7 @@ void main() {
       of: topBar,
       matching: find.byKey(const ValueKey('remix-icon-button-surface')),
     );
-    expect(surfaces, findsNWidgets(3));
+    expect(surfaces, findsNWidgets(4));
 
     void expectSquareSurfaces() {
       for (final surface in surfaces.evaluate()) {

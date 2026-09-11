@@ -4,6 +4,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 
 const dashboardCompactBreakpoint = 720.0;
 const dashboardSidebarWidth = 256.0;
+const dashboardSidebarCollapsedWidth = 72.0;
 const dashboardShellHeaderHeight = 64.0;
 
 class DashboardShellHeader extends StatelessWidget {
@@ -21,7 +22,7 @@ class DashboardShellHeader extends StatelessWidget {
     return Box(
       style: BoxStyler()
           .height(dashboardShellHeaderHeight)
-          .alignment(.centerLeft)
+          .alignment(AlignmentDirectional.centerStart)
           .padding(.horizontal(horizontalPadding))
           .color(FortalTokens.colorPanelSolid())
           .border(

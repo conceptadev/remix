@@ -17,11 +17,15 @@ class TopBar extends StatefulWidget {
     required this.page,
     required this.onSearchChanged,
     this.onMenuPressed,
+    this.onSidebarToggle,
+    this.sidebarCollapsed = false,
   });
 
   final DashboardPage page;
   final ValueChanged<String> onSearchChanged;
   final VoidCallback? onMenuPressed;
+  final VoidCallback? onSidebarToggle;
+  final bool sidebarCollapsed;
 
   @override
   State<TopBar> createState() => _TopBarState();
@@ -35,43 +39,71 @@ class _TopBarState extends State<TopBar> {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final compact = width < dashboardCompactBreakpoint;
+    final toolbarButtonStyle = fortalIconButtonStyle(variant: .ghost)
+        .width(40)
+        .height(40)
+        .padding(.all(0))
+        .margin(.all(0))
+        .container(.alignment(.center));
+    final navigationLabel = widget.sidebarCollapsed
+        ? 'Expand navigation'
+        : 'Collapse navigation';
     return DashboardShellHeader(
       horizontalPadding: compact
           ? FortalTokens.space3()
           : FortalTokens.space5(),
-      child: Row(
-        spacing: 12,
+      child: RowBox(
+        style: FlexBoxStyler().spacing(FortalTokens.space2()),
         children: [
           if (widget.onMenuPressed case final onMenuPressed?)
-            FortalIconButton.ghost(
+            RemixIconButton(
               key: const ValueKey('dashboard-menu'),
               semanticLabel: 'Open navigation',
+              style: toolbarButtonStyle,
               onPressed: onMenuPressed,
               icon: Icons.menu,
             ),
-          if (width > 900) ...[
-            StyledText(
-              widget.page.section.label,
-              style: dashboardText(.size2, tone: .muted),
+          if (widget.onSidebarToggle case final onToggle?)
+            FortalTooltip(
+              tooltipChild: ExcludeSemantics(child: Text(navigationLabel)),
+              child: RemixIconButton(
+                key: const ValueKey('dashboard-sidebar-toggle'),
+                semanticLabel: navigationLabel,
+                style: toolbarButtonStyle,
+                onPressed: onToggle,
+                icon: widget.sidebarCollapsed ? Icons.menu : Icons.menu_open,
+              ),
             ),
-            Icon(
-              Icons.chevron_right,
-              size: 14,
-              color: MixScope.tokenOf(FortalTokens.gray8, context),
-            ),
-          ],
-          Flexible(
-            // The breadcrumb repeats the page title the page header already
-            // publishes as a heading, so it stays plain truncating text.
-            child: StyledText(
-              widget.page.label,
-              style: dashboardTextLine(.size4, weight: .bold),
+          Expanded(
+            child: RowBox(
+              style: FlexBoxStyler().spacing(FortalTokens.space3()),
+              children: [
+                if (width > 900) ...[
+                  StyledText(
+                    widget.page.section.label,
+                    style: dashboardText(.size2, tone: .muted),
+                  ),
+                  StyledIcon(
+                    icon: Directionality.of(context) == TextDirection.ltr
+                        ? Icons.chevron_right
+                        : Icons.chevron_left,
+                    style: IconStyler().size(14).color(FortalTokens.gray8()),
+                  ),
+                ],
+                Flexible(
+                  // Context repeats the page heading; it is not another heading
+                  // or a workspace-switching control.
+                  child: StyledText(
+                    widget.page.label,
+                    style: dashboardTextLine(.size4, weight: .bold),
+                  ),
+                ),
+              ],
             ),
           ),
-          const Spacer(),
           if (width > 1000)
-            SizedBox(
-              width: 260,
+            Box(
+              style: BoxStyler().width(260),
               child: FortalTextField(
                 key: const ValueKey('global-search'),
                 leading: const Icon(Icons.search, size: 18),
@@ -79,9 +111,10 @@ class _TopBarState extends State<TopBar> {
                 onChanged: widget.onSearchChanged,
               ),
             ),
-          FortalIconButton.ghost(
+          RemixIconButton(
             key: const ValueKey('theme-quick-toggle'),
             semanticLabel: 'Toggle dark mode',
+            style: toolbarButtonStyle,
             onPressed: () {
               final theme = ThemeScope.of(context);
               final isDark = FortalTheme.of(context).isDark;
@@ -102,14 +135,16 @@ class _TopBarState extends State<TopBar> {
               alignment: .end,
               sideOffset: 8,
             ),
-            popoverChild: SizedBox(
-              width: 330,
-              child: Column(
-                mainAxisSize: .min,
-                crossAxisAlignment: .stretch,
-                spacing: 10,
+            popoverChild: Box(
+              key: const ValueKey('topbar-notifications-content'),
+              style: BoxStyler().width(330),
+              child: ColumnBox(
+                style: FlexBoxStyler()
+                    .mainAxisSize(.min)
+                    .crossAxisAlignment(.stretch)
+                    .spacing(10),
                 children: [
-                  Row(
+                  RowBox(
                     children: [
                       const Expanded(
                         child: FortalHeading(
@@ -133,26 +168,24 @@ class _TopBarState extends State<TopBar> {
                     ],
                   ),
                   for (final event in activityEvents.take(4))
-                    Row(
-                      crossAxisAlignment: .start,
-                      spacing: 9,
+                    RowBox(
+                      style: FlexBoxStyler()
+                          .crossAxisAlignment(.start)
+                          .spacing(9),
                       children: [
-                        Container(
-                          width: 7,
-                          height: 7,
-                          margin: const EdgeInsets.only(top: 6),
-                          decoration: BoxDecoration(
-                            color: MixScope.tokenOf(
-                              FortalTokens.accent9,
-                              context,
-                            ),
-                            shape: .circle,
-                          ),
+                        Box(
+                          style: BoxStyler()
+                              .width(7)
+                              .height(7)
+                              .margin(.top(6))
+                              .color(FortalTokens.accent9())
+                              .borderRadius(.circular(4)),
                         ),
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: .start,
-                            spacing: 2,
+                          child: ColumnBox(
+                            style: FlexBoxStyler()
+                                .crossAxisAlignment(.start)
+                                .spacing(2),
                             children: [
                               FortalText(
                                 event.title,
@@ -171,8 +204,9 @@ class _TopBarState extends State<TopBar> {
                 ],
               ),
             ),
-            child: FortalIconButton.ghost(
+            child: RemixIconButton(
               semanticLabel: 'Notifications',
+              style: toolbarButtonStyle,
               onPressed: _toggleNotifications,
               icon: Icons.notifications_none,
               iconBuilder: (context, spec, icon) => Stack(
@@ -185,13 +219,12 @@ class _TopBarState extends State<TopBar> {
                   Positioned(
                     right: -1,
                     top: -1,
-                    child: Container(
-                      width: 7,
-                      height: 7,
-                      decoration: BoxDecoration(
-                        color: MixScope.tokenOf(FortalTokens.accent9, context),
-                        shape: .circle,
-                      ),
+                    child: Box(
+                      style: BoxStyler()
+                          .width(7)
+                          .height(7)
+                          .color(FortalTokens.accent9())
+                          .borderRadius(.circular(4)),
                     ),
                   ),
                 ],
@@ -207,16 +240,14 @@ class _TopBarState extends State<TopBar> {
               alignment: .end,
               sideOffset: 8,
             ),
-            popoverChild: SizedBox(
-              width: 400,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 650),
-                child: const SingleChildScrollView(child: ThemePanel()),
-              ),
+            popoverChild: Box(
+              style: BoxStyler().width(400).maxHeight(650),
+              child: const SingleChildScrollView(child: ThemePanel()),
             ),
-            child: FortalIconButton.ghost(
+            child: RemixIconButton(
               key: const ValueKey('theme-panel-trigger'),
               semanticLabel: 'Theme settings',
+              style: toolbarButtonStyle,
               onPressed: _toggleTheme,
               icon: Icons.palette_outlined,
             ),
