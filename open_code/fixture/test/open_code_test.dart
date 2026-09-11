@@ -26,6 +26,11 @@ void main() {
       expect(theme.destructiveForeground, const Color(0xFFFFFFFF));
       expect(theme.border, const Color(0xFFE5E5E5));
       expect(theme.focusRing, const Color(0xFF737373));
+      expect(theme.chart1, const Color(0xFF2563EB));
+      expect(theme.chart2, const Color(0xFFC2410C));
+      expect(theme.chart3, const Color(0xFF047857));
+      expect(theme.chart4, const Color(0xFF7E22CE));
+      expect(theme.chart5, const Color(0xFFBE123C));
       expect(theme.radius, const Radius.circular(8));
     });
 
@@ -46,6 +51,11 @@ void main() {
       expect(theme.destructiveForeground, const Color(0xFFFFFFFF));
       expect(theme.border, const Color(0xFF404040));
       expect(theme.focusRing, const Color(0xFFA3A3A3));
+      expect(theme.chart1, const Color(0xFF60A5FA));
+      expect(theme.chart2, const Color(0xFFFB923C));
+      expect(theme.chart3, const Color(0xFF34D399));
+      expect(theme.chart4, const Color(0xFFC084FC));
+      expect(theme.chart5, const Color(0xFFFB7185));
       expect(theme.radius, const Radius.circular(8));
     });
 
@@ -53,7 +63,7 @@ void main() {
       for (final theme in const [AcmeThemeData.light(), AcmeThemeData.dark()]) {
         final tokens = theme.tokens;
 
-        expect(AcmeTokens.colors, hasLength(14));
+        expect(AcmeTokens.colors, hasLength(19));
         expect(tokens, hasLength(AcmeTokens.colors.length + 1));
         expect(tokens.keys.toSet(), <MixToken<Object?>>{
           ...AcmeTokens.colors,
@@ -2401,8 +2411,13 @@ void main() {
           ),
         );
 
-        expect(palette, hasLength(7));
-        expect(palette.first, theme.data.primary);
+        expect(palette, [
+          theme.data.chart1,
+          theme.data.chart2,
+          theme.data.chart3,
+          theme.data.chart4,
+          theme.data.chart5,
+        ]);
         expect(palette.toSet(), hasLength(palette.length));
         for (final color in palette) {
           expect(
@@ -2418,12 +2433,10 @@ void main() {
       });
     }
 
-    testWidgets('palette follows primary and removes a duplicate', (
-      tester,
-    ) async {
+    testWidgets('palette follows an edited chart token', (tester) async {
       late List<Color> palette;
       final theme = const AcmeThemeData.light().copyWith(
-        primary: const Color(0xFF2563EB),
+        chart1: const Color(0xFF4F46E5),
       );
 
       await tester.pumpWidget(
@@ -2435,9 +2448,8 @@ void main() {
         ),
       );
 
-      expect(palette.first, theme.primary);
-      expect(palette, hasLength(6));
-      expect(palette.toSet(), hasLength(palette.length));
+      expect(palette.first, theme.chart1);
+      expect(palette, hasLength(AcmeTokens.chart.length));
     });
 
     for (final theme in _themes) {

@@ -27,6 +27,11 @@ class {{typePrefix}}ThemeData {
     required this.destructiveForeground,
     required this.border,
     required this.focusRing,
+    required this.chart1,
+    required this.chart2,
+    required this.chart3,
+    required this.chart4,
+    required this.chart5,
     required this.radius,
   });
 
@@ -46,6 +51,11 @@ class {{typePrefix}}ThemeData {
       destructiveForeground = const Color(0xFFFFFFFF),
       border = const Color(0xFFE5E5E5),
       focusRing = const Color(0xFF737373),
+      chart1 = const Color(0xFF2563EB),
+      chart2 = const Color(0xFFC2410C),
+      chart3 = const Color(0xFF047857),
+      chart4 = const Color(0xFF7E22CE),
+      chart5 = const Color(0xFFBE123C),
       radius = const Radius.circular(8);
 
   /// The neutral dark theme.
@@ -64,6 +74,11 @@ class {{typePrefix}}ThemeData {
       destructiveForeground = const Color(0xFFFFFFFF),
       border = const Color(0xFF404040),
       focusRing = const Color(0xFFA3A3A3),
+      chart1 = const Color(0xFF60A5FA),
+      chart2 = const Color(0xFFFB923C),
+      chart3 = const Color(0xFF34D399),
+      chart4 = const Color(0xFFC084FC),
+      chart5 = const Color(0xFFFB7185),
       radius = const Radius.circular(8);
 
   /// Value for [{{typePrefix}}Tokens.background].
@@ -108,6 +123,21 @@ class {{typePrefix}}ThemeData {
   /// Value for [{{typePrefix}}Tokens.focusRing].
   final Color focusRing;
 
+  /// Value for [{{typePrefix}}Tokens.chart1].
+  final Color chart1;
+
+  /// Value for [{{typePrefix}}Tokens.chart2].
+  final Color chart2;
+
+  /// Value for [{{typePrefix}}Tokens.chart3].
+  final Color chart3;
+
+  /// Value for [{{typePrefix}}Tokens.chart4].
+  final Color chart4;
+
+  /// Value for [{{typePrefix}}Tokens.chart5].
+  final Color chart5;
+
   /// Value for [{{typePrefix}}Tokens.radius].
   final Radius radius;
 
@@ -131,6 +161,11 @@ class {{typePrefix}}ThemeData {
         {{typePrefix}}Tokens.destructiveForeground: destructiveForeground,
         {{typePrefix}}Tokens.border: border,
         {{typePrefix}}Tokens.focusRing: focusRing,
+        {{typePrefix}}Tokens.chart1: chart1,
+        {{typePrefix}}Tokens.chart2: chart2,
+        {{typePrefix}}Tokens.chart3: chart3,
+        {{typePrefix}}Tokens.chart4: chart4,
+        {{typePrefix}}Tokens.chart5: chart5,
         {{typePrefix}}Tokens.radius: radius,
       });
 
@@ -150,6 +185,11 @@ class {{typePrefix}}ThemeData {
     Color? destructiveForeground,
     Color? border,
     Color? focusRing,
+    Color? chart1,
+    Color? chart2,
+    Color? chart3,
+    Color? chart4,
+    Color? chart5,
     Radius? radius,
   }) => {{typePrefix}}ThemeData(
     background: background ?? this.background,
@@ -166,6 +206,11 @@ class {{typePrefix}}ThemeData {
     destructiveForeground: destructiveForeground ?? this.destructiveForeground,
     border: border ?? this.border,
     focusRing: focusRing ?? this.focusRing,
+    chart1: chart1 ?? this.chart1,
+    chart2: chart2 ?? this.chart2,
+    chart3: chart3 ?? this.chart3,
+    chart4: chart4 ?? this.chart4,
+    chart5: chart5 ?? this.chart5,
     radius: radius ?? this.radius,
   );
 
@@ -184,6 +229,11 @@ class {{typePrefix}}ThemeData {
     destructiveForeground,
     border,
     focusRing,
+    chart1,
+    chart2,
+    chart3,
+    chart4,
+    chart5,
     radius,
   ];
 

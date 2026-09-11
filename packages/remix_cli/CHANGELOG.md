@@ -31,6 +31,8 @@
   glyph aliases.
 - Adds an optional `chart` item backed directly by `mix_chart`. One editable
   recipe generates line, bar, and pie adapters without depending on Fortal.
+  Its palette reads the default theme's `chart1` to `chart5` tokens, which
+  clear 4.5:1 against the page in both shipped themes.
 - Keeps already-installed registry adapters in a focused generation run so a
   new dependency cannot invalidate build_runner's graph and remove them.
 - Every item depends on `theme`. `data_table` also depends on `checkbox`,
