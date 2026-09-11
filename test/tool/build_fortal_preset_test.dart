@@ -58,6 +58,15 @@ void main() {
       'toggle',
       'tooltip',
     ]);
+    // sidebar_layout's `sidebar` field is typed `Widget`, not
+    // `FortalSidebar`, so its source never imports components/sidebar.dart
+    // and import inference alone would miss this dependency. It comes from
+    // _uninferredRegistryDependencies instead, mirroring the same manual
+    // dependency the default preset's hand-authored registry.yaml declares.
+    expect(
+      _strings((items['sidebar_layout'] as YamlMap)['registryDependencies']),
+      ['theme', 'sidebar'],
+    );
     expect(
       (items['base_button'] as YamlMap).containsKey('dependencies'),
       isFalse,

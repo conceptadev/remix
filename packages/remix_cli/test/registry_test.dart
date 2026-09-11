@@ -48,6 +48,27 @@ void main() {
     expect(catalog.items['theme']!.files, hasLength(8));
     expect(catalog.items['theme']!.exports, ['theme/theme.dart']);
 
+    // sidebar_layout composes an already-installed sidebar into its row and
+    // compact sheet without ever importing components/sidebar.dart (its
+    // `sidebar` field stays generically typed as `Widget`), so this
+    // dependency comes from build_fortal_preset.dart's manual override, not
+    // from import inference. Regression coverage for that gap: a fresh
+    // `remix add sidebar_layout` on the fortal preset must still pull in a
+    // working Sidebar, matching the default preset's registry.yaml.
+    expect(catalog.items['sidebar_layout']!.registryDependencies, [
+      'theme',
+      'sidebar',
+    ]);
+    expect(catalog.resolve('sidebar_layout').map((item) => item.name), [
+      'theme',
+      'typography',
+      'text',
+      'toggle',
+      'tooltip',
+      'sidebar',
+      'sidebar_layout',
+    ]);
+
     final button = catalog.items['button']!;
     final source = await catalog.readTemplate(button.files.single);
     expect(source, contains('{{typePrefix}}Button'));

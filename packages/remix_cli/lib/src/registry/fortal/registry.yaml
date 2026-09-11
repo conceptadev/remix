@@ -432,6 +432,7 @@ items:
   sidebar_layout:
     registryDependencies:
       - theme
+      - sidebar
     files:
       - source: templates/sidebar_layout/sidebar_layout.dart.tmpl
         target: "@ui/components/sidebar_layout.dart"
