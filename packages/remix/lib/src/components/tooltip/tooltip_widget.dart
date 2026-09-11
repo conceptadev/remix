@@ -9,6 +9,8 @@ class RemixTooltip extends StatelessWidget {
     super.key,
     required this.tooltipChild,
     required this.child,
+    this.open,
+    this.onOpenChanged,
     this.tooltipSemantics,
     this.positioning = const OverlayPositionConfig(),
     this.style = const TooltipStyler.create(),
@@ -27,6 +29,12 @@ class RemixTooltip extends StatelessWidget {
   /// The child widget that will trigger the tooltip.
   final Widget child;
 
+  /// Controlled visibility, or null for hover/focus/touch-managed visibility.
+  final bool? open;
+
+  /// Requests a visibility change; controlled callers must accept it in [open].
+  final ValueChanged<bool>? onOpenChanged;
+
   /// The semantic label for the tooltip.
   final String? tooltipSemantics;
 
@@ -42,6 +50,8 @@ class RemixTooltip extends StatelessWidget {
       styleSpec: styleSpec,
       builder: (context, spec) {
         return NakedTooltip(
+          open: open,
+          onOpenChanged: onOpenChanged,
           overlayBuilder: (context, info) => Box(
             styleSpec: spec.container,
             child: StyleSpecBuilder(
@@ -60,7 +70,30 @@ class RemixTooltip extends StatelessWidget {
               spec.dismissDuration ?? const Duration(milliseconds: 100),
           positioning: positioning,
           semanticLabel: tooltipSemantics,
-          child: child,
+          child: Focus(
+            canRequestFocus: false,
+            skipTraversal: true,
+            includeSemantics: false,
+            onKeyEvent: (_, event) {
+              // A controlled, closed tooltip must not swallow a containing
+              // drawer/menu's dismissal shortcut in NakedTooltip's handler.
+              // Match NakedTooltip's binding so modified Escape is untouched.
+              if (open == false &&
+                  event is KeyDownEvent &&
+                  const SingleActivator(
+                    LogicalKeyboardKey.escape,
+                  ).accepts(event, HardwareKeyboard.instance)) {
+                const intent = DismissIntent();
+                final action = Actions.maybeFind<DismissIntent>(context);
+                if (action != null && action.isEnabled(intent)) {
+                  Actions.invoke(context, intent);
+                  return KeyEventResult.handled;
+                }
+              }
+              return KeyEventResult.ignored;
+            },
+            child: child,
+          ),
         );
       },
     );
