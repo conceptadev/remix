@@ -72,7 +72,11 @@ void main() {
               final bounds = tester.getRect(find.byType(RemixButton));
               for (final icon in [Icons.save, Icons.check]) {
                 final finder = find.byIcon(icon);
-                if (finder.evaluate().isEmpty) continue;
+                final expected = icon == Icons.save
+                    ? slots != 'trailing'
+                    : slots != 'leading';
+                expect(finder, expected ? findsOneWidget : findsNothing);
+                if (!expected) continue;
                 final rect = tester.getRect(finder);
                 expect(rect.left, greaterThanOrEqualTo(bounds.left));
                 expect(rect.right, lessThanOrEqualTo(bounds.right));
@@ -115,6 +119,41 @@ void main() {
         expect(presses, 1);
         expect(tester.takeException(), isNull);
       });
+
+      testWidgets('${variant.name}/${size.name} accepts widget icon override', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          FortalButton(
+            variant: variant,
+            size: size,
+            style: ButtonStyler().icon(IconStyler().size(14)),
+            label: 'Save',
+            leadingIcon: Icons.save,
+            trailingIcon: Icons.check,
+            onPressed: () {},
+          ),
+        );
+        expect(tester.getSize(find.byIcon(Icons.save)), const Size.square(14));
+        expect(tester.getSize(find.byIcon(Icons.check)), const Size.square(14));
+        expect(tester.takeException(), isNull);
+      });
     }
   }
+
+  testWidgets('base RemixButton still inherits icon size', (tester) async {
+    await tester.pumpRemixApp(
+      IconTheme(
+        data: const IconThemeData(size: 19),
+        child: RemixButton(
+          label: 'Save',
+          leadingIcon: Icons.save,
+          trailingIcon: Icons.check,
+          onPressed: () {},
+        ),
+      ),
+    );
+    expect(tester.getSize(find.byIcon(Icons.save)), const Size.square(19));
+    expect(tester.getSize(find.byIcon(Icons.check)), const Size.square(19));
+  });
 }
