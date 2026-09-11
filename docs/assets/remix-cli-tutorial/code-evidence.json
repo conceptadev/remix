@@ -37,7 +37,7 @@
   },
   "install-screen": {
     "language": "bash",
-    "sha256": "e6f3f00e8572276571f39d08b3d150ce265c1c06d16e77ddb44ad0d5d047ef97"
+    "sha256": "0c9832469ae8f1cc90fbf2521be93debc344f4e077c1fd282eafb757920850e8"
   },
   "diff-button": {
     "language": "bash",
@@ -53,7 +53,7 @@
   },
   "install-fortal": {
     "language": "bash",
-    "sha256": "9c4f5f83748974101bf0a84b0f6e9435baf7560379d160c05c716d768ea1143f"
+    "sha256": "21f06c711d445f00e0bb258726f785210efd2360a990f147072023e95c46ae29"
   },
   "analysis-options": {
     "language": "yaml",

@@ -1,5 +1,10 @@
 ## 0.1.0
 
+- Adds `sidebar_layout` to both presets: an open-code shell layout, not a
+  styled component, that rows an installed `sidebar` beside a header and body
+  above its compact breakpoint, and presents it as a start-edge sheet below
+  it. It has no `Spec` and installs no generated adapter.
+
 - `sidebar` in both presets labels collapsed icon-rail destinations with the
   application's `tooltip` recipe, so adding it also installs `tooltip`. The
   Fortal recipe also narrows its navigation padding as the rail collapses.
