@@ -24,11 +24,14 @@ enum PlaygroundToastVariant {
 ///
 /// Remix owns the queue, the timers, focus, and the announcement through
 /// `RemixToastScope`; this recipe owns the surface, the type, and the colors.
-/// Hand it to the scope once, below the app's `Overlay`:
+/// Hand it to the scope once, above the app's `Navigator` so every route,
+/// including dialogs, can reach it:
 ///
 /// ```dart
 /// MaterialApp(
-///   home: RemixToastScope(style: playgroundToastStyle(), child: const Shell()),
+///   builder: (context, child) => Overlay.wrap(
+///     child: RemixToastScope(style: playgroundToastStyle(), child: child!),
+///   ),
 /// )
 /// ```
 ///

@@ -80,15 +80,15 @@ class _DashboardAppState extends State<DashboardApp>
           panelBackground: _settings.panelBackground,
           radius: _settings.radius,
           scaling: _settings.scaling,
-          child: child!,
+          // RemixToastScope sits above the Navigator, in its own Overlay, so
+          // showRemixToast() works from every route, including dialogs and
+          // the compact navigation sheet. It inherits the live Fortal tokens
+          // FortalScope publishes above.
+          child: Overlay.wrap(
+            child: RemixToastScope(style: fortalToastStyle(), child: child!),
+          ),
         ),
-        // RemixToastScope hosts every showRemixToast() call through one
-        // OverlayPortal below the Navigator's Overlay, inheriting the live
-        // Fortal tokens FortalScope publishes above.
-        home: RemixToastScope(
-          style: fortalToastStyle(),
-          child: const DashboardShell(),
-        ),
+        home: const DashboardShell(),
       ),
     );
   }

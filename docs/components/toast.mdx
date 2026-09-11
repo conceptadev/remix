@@ -17,7 +17,7 @@ Use a [dialog](/components/dialog) instead when the user must respond before con
 
 ## Basic implementation
 
-Place one `RemixToastScope` below your app's `Overlay`, in a subtree that stays mounted. With `MaterialApp` that is `home` or a persistent router shell. No `Scaffold` is required.
+Place one `RemixToastScope` above your app's `Navigator`, so every route, including dialogs, can reach it. With `MaterialApp`, put it in `builder` inside `Overlay.wrap`, which gives toasts their own overlay above every route. No `Scaffold` is required.
 
 <CodeGroup title="Scope placement" defaultLanguage="dart">
 ```dart
@@ -31,12 +31,14 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // Theme scopes belong in `builder`, above the Navigator and its Overlay.
-      builder: (context, child) => FortalScope(child: child!),
-      home: RemixToastScope(
-        style: fortalToastStyle(),
-        child: const Center(child: FortalText('Home')),
+      // Theme and toast scopes belong in `builder`, above the Navigator, so
+      // every route, including dialogs, can reach them.
+      builder: (context, child) => FortalScope(
+        child: Overlay.wrap(
+          child: RemixToastScope(style: fortalToastStyle(), child: child!),
+        ),
       ),
+      home: const Center(child: FortalText('Home')),
     );
   }
 }

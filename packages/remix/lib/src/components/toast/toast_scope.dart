@@ -143,9 +143,11 @@ RemixToastHandle showRemixToast(BuildContext context, RemixToastData toast) {
         'RemixToastScope ancestor.',
       ),
       ErrorHint(
-        'Place a RemixToastScope below the app Overlay in a subtree that stays '
-        'mounted, for example:\n'
-        '  MaterialApp(home: RemixToastScope(child: Shell()))\n'
+        'Place one RemixToastScope above the app Navigator so every route, '
+        'including dialogs, can reach it. With MaterialApp, put it in '
+        'builder:\n'
+        '  MaterialApp(builder: (context, child) => '
+        'Overlay.wrap(child: RemixToastScope(child: child!)))\n'
         'No Scaffold is required.',
       ),
       context.describeElement('The context used was'),
@@ -157,10 +159,11 @@ RemixToastHandle showRemixToast(BuildContext context, RemixToastData toast) {
 
 /// Hosts queued, nonmodal toasts styled with [RemixToast].
 ///
-/// Place one scope below the app's [Overlay] in a subtree that stays mounted,
-/// such as `MaterialApp.home` or a persistent router shell. Toasts render
-/// through one overlay portal, so they inherit the scope's [MixScope] tokens
-/// and [Directionality] and update live when those change.
+/// Place one scope above the app's `Navigator` so every route, including
+/// dialogs, can reach it: with `MaterialApp`, in `builder` inside
+/// [Overlay.wrap]. A scope in `MaterialApp.home` only reaches the home route.
+/// Toasts render through one overlay portal, so they inherit the scope's
+/// [MixScope] tokens and [Directionality] and update live when those change.
 ///
 /// Queueing, timers, pausing, focus, and status or alert semantics come from
 /// [NakedToastScope]; see its documentation for the full behavior contract.

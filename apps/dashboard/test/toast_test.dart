@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:dashboard/main.dart';
 import 'package:dashboard/shell/dashboard_shell.dart';
 import 'package:dashboard/theme/theme_scope.dart';
 import 'package:dashboard/theme/theme_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -120,6 +123,67 @@ void main() {
 
     // Let both toasts' dismissal timers and exit transitions run out rather
     // than leaving them pending past the end of the test.
+    await tester.pump(const Duration(seconds: 4));
+    await _settle(tester);
+  });
+
+  testWidgets('toast shows from inside a dialog route', (tester) async {
+    final context = await _pumpDashboard(tester);
+    late BuildContext dialogContext;
+    unawaited(
+      showRemixDialog<void>(
+        context: context,
+        barrierLabel: 'Dismiss',
+        builder: (context) {
+          dialogContext = context;
+          return const FortalDialog(
+            title: 'Invite teammates',
+            description: 'Share this workspace with your collaborators.',
+          );
+        },
+      ),
+    );
+    await _settle(tester);
+
+    // Dialog routes are siblings of `home` in the Navigator's Overlay, so
+    // this only works when the scope sits above the Navigator.
+    showRemixToast(
+      dialogContext,
+      const RemixToastData(
+        title: 'Invite sent',
+        icon: Icons.check_circle_outline,
+      ),
+    );
+    await _settle(tester);
+
+    expect(find.text('Invite sent'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 4));
+    await _settle(tester);
+  });
+
+  testWidgets('toast text resolves against the Fortal root, not a fallback', (
+    tester,
+  ) async {
+    final context = await _pumpDashboard(tester);
+
+    showRemixToast(
+      context,
+      const RemixToastData(title: 'Saved', icon: Icons.check_circle_outline),
+    );
+    await _settle(tester);
+
+    // Text outside a styled subtree inherits Flutter's "put your text in a
+    // Material" fallback: red, monospace, with a yellow double underline.
+    final style = tester
+        .renderObject<RenderParagraph>(find.text('Saved'))
+        .text
+        .style!;
+
+    expect(style.decoration, anyOf(isNull, TextDecoration.none));
+    expect(style.fontFamily, isNot('monospace'));
+    expect(style.color, MixScope.tokenOf(FortalTokens.gray12, context));
+
     await tester.pump(const Duration(seconds: 4));
     await _settle(tester);
   });
