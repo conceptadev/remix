@@ -20,7 +20,7 @@ dependencies:
   widgetbook: ^3.25.0
   # Workspace resolution uses the local packages during development; these
   # hosted constraints keep the app manifest deployable outside the workspace.
-  remix: ^1.0.0-beta.9
+  remix: ^1.0.0-beta.10
   remix_fortal: ^1.0.0-beta.9
 
 dev_dependencies:

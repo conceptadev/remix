@@ -46,7 +46,7 @@ Before the first release, add the CLI from a checkout:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Until Remix beta.9 is published, add this temporary `pubspec_overrides.yaml`
+Until Remix beta.10 is published, add this temporary `pubspec_overrides.yaml`
 to the application. Replace the path with your checkout:
 
 ```yaml
@@ -56,7 +56,7 @@ dependency_overrides:
 ```
 
 After both releases are available, remove this override and use the hosted
-installation below. Both presets require Remix `^1.0.0-beta.9`.
+installation below. Both presets require Remix `^1.0.0-beta.10`.
 
 Add the CLI as a project-local dev dependency so its version is pinned in your
 lockfile, not in a machine-global install:
@@ -157,7 +157,7 @@ remix add button --dry-run
 
 ```
 Items: theme -> button
-Dependencies: remix@^1.0.0-beta.9, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
+Dependencies: remix@^1.0.0-beta.10, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
 theme: missing; lib/ui/theme/tokens.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart
 button: missing; lib/ui/components/button.dart
 Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, components/button.dart
@@ -469,7 +469,7 @@ a later `remix` that these templates were never tested against. `add` reports
 that after it resolves your lockfile:
 
 ```
-Resolved remix 1.0.0; this remix_cli registry was authored against 1.0.0-beta.9. Run flutter pub upgrade remix_cli, then review with --diff.
+Resolved remix 1.0.0; this remix_cli registry was authored against 1.0.0-beta.10. Run flutter pub upgrade remix_cli, then review with --diff.
 ```
 
 It is a notice, not a failure. The install completes. A `remix` *below* the
@@ -554,7 +554,7 @@ and `icon_button` for its action and close control. `sidebar_layout` is a
 layout with no `Spec` or generated adapter; it pulls in `sidebar` to compose
 into its row and compact sheet.
 
-The registry requires Remix beta.9, which includes `RemixSidebar`.
+The registry requires Remix beta.10, which includes `RemixSidebar` and the Toast APIs.
 The installer rejects older resolved versions before it writes source.
 
 | Item | Surface you get | Axes |

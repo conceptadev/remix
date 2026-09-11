@@ -16,7 +16,7 @@ dependencies:
   # Match the package's own floor. Workspace resolution binds the local
   # siblings, so a stale constraint here compiles and says nothing until
   # someone reads it as the tested version.
-  remix: ^1.0.0-beta.9
+  remix: ^1.0.0-beta.10
   remix_agent: ^0.1.0-beta.1
 
 dev_dependencies:

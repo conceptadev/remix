@@ -14,7 +14,7 @@ dependencies:
   # Workspace resolution uses the local packages during development; these
   # hosted constraints keep the app manifest deployable outside the workspace.
   mix_chart: ^0.0.1-beta.1
-  remix: ^1.0.0-beta.9
+  remix: ^1.0.0-beta.10
   remix_fortal: ^1.0.0-beta.9
 
 dev_dependencies:

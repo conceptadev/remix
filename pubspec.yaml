@@ -11,16 +11,6 @@ dev_dependencies:
   test: ^1.31.0
   yaml: ^3.1.3
 
-# TEMPORARY: builds against btwld/naked_ui#99 (NakedToastScope) until
-# naked_ui 1.0.0-beta.15 is published. Replace with the hosted pin before
-# merging.
-dependency_overrides:
-  naked_ui:
-    git:
-      url: https://github.com/btwld/naked_ui.git
-      path: packages/naked_ui
-      ref: 8e5c8f0aa405e0ff07fe52bc83ba83805ec1b10e
-
 workspace:
   - apps/dashboard
   - apps/demo
@@ -89,7 +79,7 @@ melos:
         cupertino_icons: ^1.0.8
         pub_semver: ^2.2.0
         yaml: ^3.1.3
-        remix: ^1.0.0-beta.9
+        remix: ^1.0.0-beta.10
         remix_fortal: ^1.0.0-beta.9
         remix_ui_icons: ^0.1.0
       dev_dependencies:

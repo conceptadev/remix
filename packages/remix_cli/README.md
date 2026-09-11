@@ -47,7 +47,7 @@ To run an unreleased build, point at a checkout or staged package path:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.9`. Before that release is available,
+Both presets require Remix `^1.0.0-beta.10`. Before that release is available,
 add this `pubspec_overrides.yaml` to the application:
 
 ```yaml
@@ -56,7 +56,7 @@ dependency_overrides:
     path: /path/to/remix/packages/remix
 ```
 
-Replace the path with your checkout. Remove the override after beta.9 is
+Replace the path with your checkout. Remove the override after beta.10 is
 published and run `flutter pub get` to use hosted Remix.
 
 Global activation is convenient for experiments, but it does not pin the

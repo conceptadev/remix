@@ -1,4 +1,7 @@
-## Unreleased
+## 1.0.0-beta.10
+
+- **BREAKING**: Align Fortal icon button sizes to 12/16/20 pixels and apply tab container styling to custom tab children; use the builder escape hatch for fully custom tab rendering.
+- Preserve inherited menu item styles, root menu and table variants, and tooltip text defaults.
 
 - Add controlled sidebar collapse, coordinated width/content transitions configured with AnimationStyle, accessible icon-only destinations, and styled tooltips.
 - Add controlled tooltip visibility and preserve enclosing dismissal actions when closed.
