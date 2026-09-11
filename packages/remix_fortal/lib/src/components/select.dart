@@ -13,6 +13,9 @@ enum FortalSelectSize { size1, size2, size3 }
 enum FortalSelectVariant { surface, soft, ghost }
 
 /// Fortal-themed Select with Radix-owned trigger and content configuration.
+///
+/// Content icons use size-matched 12/16/20 token defaults rather than the
+/// ambient icon size. Override the trigger icon through [style] when needed.
 @MixWidget(target: RemixSelect.new)
 SelectStyler fortalSelectStyle({
   FortalSelectVariant variant = .surface,
@@ -47,7 +50,13 @@ SelectTriggerStyler _fortalSelectTriggerStyler(
       .placeholder(
         _fortalSelectTriggerText(size, color: FortalTokens.grayA10()),
       )
-      .icon(.color(FortalTokens.gray12()))
+      .icon(
+        .color(FortalTokens.gray12()).size(switch (size) {
+          .size1 => FortalTokens.space3(),
+          .size2 => FortalTokens.space4(),
+          .size3 => FortalTokens.spinnerSize3(),
+        }),
+      )
       .indicator(.color(FortalTokens.gray12()).size(size == .size3 ? 11 : 9))
       .onFocusVisible(
         .containerEffects(
