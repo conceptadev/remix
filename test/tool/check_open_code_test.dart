@@ -315,6 +315,7 @@ const _registryItems = <String>[
   'switch',
   'tabs',
   'textfield',
+  'toast',
   'toggle',
   'toggle_group',
   'tooltip',

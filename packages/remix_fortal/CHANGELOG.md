@@ -1,3 +1,7 @@
+## Unreleased
+
+- Add `fortalToastStyle` and the generated `FortalToast` with surface and classic variants, three sizes, and a visual-only accent, neutral, or error intent. Toast is a Fortal extension and is not tracked in the Radix Themes parity ledger.
+
 ## 1.0.0-beta.9
 
  - **FIX**(data_list): bound minimum intrinsic width by maximum (#185).

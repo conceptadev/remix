@@ -2,6 +2,7 @@
 
 - Add controlled sidebar collapse, coordinated width/content transitions configured with AnimationStyle, accessible icon-only destinations, and styled tooltips.
 - Add controlled tooltip visibility and preserve enclosing dismissal actions when closed.
+- Add `RemixToastScope`, `showRemixToast`, and the stateless `RemixToast`: queued, nonmodal notifications over `NakedToastScope` with six directional placements, same-id replacement, pause on hover, focus, and background, status or alert announcements, and composed action and close buttons styled through `ToastSpec`. Requires `naked_ui` 1.0.0-beta.15.
 
 ## 1.0.0-beta.9
 

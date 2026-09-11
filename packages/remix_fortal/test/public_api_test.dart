@@ -103,6 +103,19 @@ void main() {
     expect(fortalSidebarStyle(), isA<SidebarStyler>());
   });
 
+  test('the Fortal toast wrapper is constructible from the public API', () {
+    const toast = FortalToast.surface(
+      title: 'Draft saved',
+      size: FortalToastSize.size3,
+      intent: FortalToastIntent.error,
+    );
+
+    expect(toast, isA<FortalToast>());
+    expect(toast.variant, FortalToastVariant.surface);
+    expect(toast.intent, FortalToastIntent.error);
+    expect(fortalToastStyle(), isA<ToastStyler>());
+  });
+
   test(
     'the Fortal data table wrapper is constructible from the public API',
     () {

@@ -540,13 +540,14 @@ depends on it:
 `theme` installs `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`,
 giving you `UiTokens`, `UiThemeData`, and `UiThemeScope`. Every component item
 installs one authored file plus its generated adapter under
-`components/<item>.dart`. Four items differ: `icons` installs app-owned
+`components/<item>.dart`. Five items differ: `icons` installs app-owned
 `icons.dart` with no generated adapter; `chart` generates three adapters over
 `mix_chart`; `data_table` also pulls in
 `checkbox`, `icon_button`, and `select`, because its selection column, pager,
-and page-size control *are* those components; adding it installs all four; and
+and page-size control *are* those components; adding it installs all four;
 `sidebar` pulls in `toggle` and `tooltip`, because a destination *is* a toggle
-and a collapsed rail labels it with a tooltip.
+and a collapsed rail labels it with a tooltip; and `toast` pulls in `button`
+and `icon_button`, because its action and close control *are* those.
 
 The registry requires Remix beta.9, which includes `RemixSidebar`.
 The installer rejects older resolved versions before it writes source.
@@ -582,6 +583,7 @@ The installer rejects older resolved versions before it writes source.
 | `switch` | `UiSwitch` | — |
 | `tabs` | `UiTabBar`, `UiTab`, `UiTabView` | — |
 | `textfield` | `UiTextField`, `UiTextArea` | — |
+| `toast` | `UiToast` | variant |
 | `toggle` | `UiToggle` | variant, size |
 | `toggle_group` | `UiToggleGroup` | variant, size |
 | `tooltip` | `UiTooltip` | — |

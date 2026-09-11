@@ -29,6 +29,7 @@ export 'components/spinner.dart';
 export 'components/switch.dart';
 export 'components/tabs.dart';
 export 'components/textfield.dart';
+export 'components/toast.dart';
 export 'components/toggle.dart';
 export 'components/toggle_group.dart';
 export 'components/tooltip.dart';

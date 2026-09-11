@@ -32,8 +32,8 @@ the optional `chart` extension, plus `accordion`, `avatar`, `badge`, `button`,
 `callout`, `card`, `checkbox`, `data_list`, `data_table`, `dialog`,
 `disclosure`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
 `radio`, `segmented_control`, `select`, `sidebar`, `skeleton`, `slider`,
-`spinner`, `switch`, `tabs`, `textfield`, `toggle`, `toggle_group`, and
-`tooltip`.
+`spinner`, `switch`, `tabs`, `textfield`, `toast`, `toggle`, `toggle_group`,
+and `tooltip`.
 
 The `fortal` preset contains that complete surface plus `base_button`, `code`,
 `heading`, `kbd`, `text`, and `typography`.

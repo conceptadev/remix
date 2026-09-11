@@ -1,0 +1,275 @@
+---
+title: Toast
+description: Queued, nonmodal notifications with timers, pause rules, and status or alert announcements
+keywords: [flutter, remix, toast, snackbar, notification, overlay, feedback]
+---
+
+Short, nonmodal notifications that appear at a screen edge, stack, and dismiss themselves.
+
+## When to use this
+
+- **Confirmations**: "Draft saved", "Link copied"
+- **Undo affordances**: A short-lived message with one action
+- **Background results**: An upload or sync that finished while the user kept working
+- **Urgent notices**: Failures that must be announced immediately
+
+Use a [dialog](/components/dialog) instead when the user must respond before continuing.
+
+## Basic implementation
+
+Place one `RemixToastScope` below your app's `Overlay`, in a subtree that stays mounted. With `MaterialApp` that is `home` or a persistent router shell. No `Scaffold` is required.
+
+<CodeGroup title="Scope placement" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+class App extends StatelessWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      // Theme scopes belong in `builder`, above the Navigator and its Overlay.
+      builder: (context, child) => FortalScope(child: child!),
+      home: RemixToastScope(
+        style: fortalToastStyle(),
+        child: const Center(child: FortalText('Home')),
+      ),
+    );
+  }
+}
+```
+</CodeGroup>
+
+Show a toast from any event callback below the scope:
+
+<CodeGroup title="Showing a toast" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+class SaveButton extends StatelessWidget {
+  const SaveButton({super.key, required this.onSave, required this.onUndo});
+
+  final VoidCallback onSave;
+  final VoidCallback onUndo;
+
+  @override
+  Widget build(BuildContext context) {
+    return FortalButton(
+      label: 'Save',
+      onPressed: () {
+        onSave();
+        showRemixToast(
+          context,
+          RemixToastData(
+            title: 'Draft saved',
+            description: 'Stored on this device.',
+            action: RemixToastAction(label: 'Undo', onPressed: onUndo),
+          ),
+        );
+      },
+    );
+  }
+}
+```
+</CodeGroup>
+
+`showRemixToast` returns a `RemixToastHandle`. Await `handle.closed` to learn why the toast left (`timeout`, `action`, `close`, `programmatic`, `replaced`, `queueOverflow`, or `scopeDisposed`), or call `handle.dismiss()` to remove it early.
+
+## Behavior
+
+- **Queue.** Up to `maxVisible` toasts (default 3) show at once, oldest first. Up to `maxQueued` more (default 20) wait; when the queue is full the oldest waiting toast is dropped with `queueOverflow`. A waiting toast has no widget, announcement, or timer.
+- **Lifetime.** Each toast stays for its `duration` (default 4 seconds) once it is visible. A `null` duration persists until dismissed and requires an action or the close button.
+- **Pausing.** The countdown stops while the pointer is over the toast, while focus is inside it, and while the app is in the background. Resuming restarts the full duration.
+- **Replacement.** Showing `RemixToastData` with the same non-null `id` as a visible or queued toast updates it in place and restarts its lifetime; the earlier handle closes with `replaced`.
+- **Placement.** Six `RemixToastPlacement` values. Start and end follow the text direction, and the newest toast sits nearest the edge. The stack clears the safe area and the keyboard.
+- **Theme.** Toasts render through one overlay portal, so they inherit the scope's `MixScope` tokens and update live when the theme changes.
+
+## Accessibility
+
+- Each toast is announced once, as a status (`RemixToastPriority.polite`, the default) or an alert (`RemixToastPriority.assertive`). The announcement is `semanticLabel`, or the title and description on separate lines.
+- Reserve `assertive` for urgent, destructive, or time-sensitive messages. A Fortal `intent` changes only the icon color, never the announcement.
+- Showing a toast never moves focus. The action and close button are ordinary buttons in the focus order; Escape dismisses the toast that contains focus, and focus returns to where it was.
+- When the platform reports accessible navigation (`MediaQuery.accessibleNavigationOf`), toasts with an action or close button never time out.
+- Set `RemixToastScope.dismissLabel` to a localized close-button label.
+
+## Fortal widgets
+
+The application-owned Fortal preset provides `fortalToastStyle`, a recipe for the scope, and the generated `FortalToast` for static previews:
+
+`fortalToastStyle` defaults to `FortalToastVariant.classic`, `FortalToastSize.size2`, and `FortalToastIntent.accent`. The surface caps at 360 logical pixels and shrinks on narrow screens. Toast is a Fortal extension: Radix Themes has no toast, so the recipe reuses the Card panel and shadow tokens.
+
+<CodeGroup title="Fortal recipe" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+void showUploadFailed(BuildContext context) {
+  showRemixToast(
+    context,
+    RemixToastData(
+      title: 'Upload failed',
+      priority: RemixToastPriority.assertive,
+      style: fortalToastStyle(intent: FortalToastIntent.error),
+    ),
+  );
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [fortalToastStyle source code](https://github.com/conceptadev/remix/blob/main/packages/remix_fortal/lib/src/components/toast.dart) for all available options.
+</Info>
+
+## Show function
+
+<CodeGroup title="showRemixToast" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+RemixToastHandle showRemixToastSignature(
+  BuildContext context,
+  RemixToastData toast,
+) => throw UnimplementedError();
+```
+</CodeGroup>
+
+Throws a `FlutterError` when there is no `RemixToastScope` above `context`, and an `ArgumentError` for blank text or a persistent toast without an action or close button. Call it from an event callback, not during build.
+
+With a caller-owned `RemixToastController`, use `controller.showToast(data)` instead.
+
+## Constructors
+
+<CodeGroup title="RemixToastScope" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+RemixToastScope remixToastScopeConstructor({
+  Key? key,
+  RemixToastController? controller,
+  RemixToastPlacement placement = RemixToastPlacement.bottomEnd,
+  int maxVisible = 3,
+  int maxQueued = 20,
+  EdgeInsetsGeometry inset = const EdgeInsetsDirectional.all(24),
+  double gap = 12,
+  String dismissLabel = 'Dismiss notification',
+  ToastStyler style = const ToastStyler.create(),
+  required Widget child,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+<CodeGroup title="RemixToastData" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+RemixToastData remixToastDataConstructor({
+  Object? id,
+  required String title,
+  String? description,
+  String? semanticLabel,
+  IconData? icon,
+  RemixToastAction? action,
+  Duration? duration = const Duration(seconds: 4),
+  RemixToastPriority priority = RemixToastPriority.polite,
+  bool showCloseButton = true,
+  ToastStyler? style,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+<CodeGroup title="RemixToast" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+RemixToast remixToastConstructor({
+  Key? key,
+  required String title,
+  String? description,
+  IconData? icon,
+  RemixToastAction? action,
+  VoidCallback? onDismiss,
+  String? dismissLabel,
+  bool excludeMessageSemantics = false,
+  ToastStyler style = const ToastStyler.create(),
+  ToastSpec? styleSpec,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+`RemixToast` is the stateless surface the scope builds for each toast. Build it directly for a custom presenter or a static preview.
+
+## Properties
+
+### Scope Properties
+
+#### `controller` → `RemixToastController?`
+
+Optional. A caller-owned controller. The scope creates its own when this is null and never disposes one you pass in.
+
+#### `placement` → `RemixToastPlacement`
+
+Optional. The edge and side the stack grows from. Defaults to `bottomEnd`.
+
+#### `maxVisible` → `int`
+
+Optional. How many toasts can be on screen at once. At least one.
+
+#### `maxQueued` → `int`
+
+Optional. How many toasts can wait for a visible slot.
+
+#### `inset` → `EdgeInsetsGeometry`
+
+Optional. Space between the stack and the safe area's edges.
+
+#### `gap` → `double`
+
+Optional. Space between stacked toasts.
+
+#### `dismissLabel` → `String`
+
+Optional. The localized accessible name of every close button. Must not be blank.
+
+#### `style` → `ToastStyler`
+
+Optional. The base style of every toast. Each `RemixToastData.style` merges over it.
+
+### Style Methods
+
+#### `container(FlexBoxStyler value)`
+
+Configures the outer row: surface, padding, and the gap between icon, message, and controls.
+
+#### `content(FlexBoxStyler value)`
+
+Configures the column holding the title and description.
+
+#### `title(TextStyler value)`
+
+Configures the title text style.
+
+#### `description(TextStyler value)`
+
+Configures the description text style.
+
+#### `icon(IconStyler value)`
+
+Configures the decorative leading icon.
+
+#### `action(Style<ButtonSpec> value)`
+
+Styles the action button. The style resolves against the button's own hover, focus, and press states.
+
+#### `closeButton(Style<IconButtonSpec> value)`
+
+Styles the close button, resolved against its own states.

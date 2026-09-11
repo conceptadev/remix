@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:demo/components/checkbox_group.dart';
 import 'package:demo/components/sidebar.dart';
 import 'package:demo/components/skeleton.dart';
+import 'package:demo/components/toast.dart';
 import 'package:demo/main.directories.g.dart';
 import 'package:demo/main.dart';
 import 'package:flutter/material.dart';
@@ -95,6 +96,21 @@ void main() {
       isFalse,
     );
     expect(find.text('Show skeleton'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  testWidgets('toast example shows a toast whose Undo runs once', (
+    tester,
+  ) async {
+    await show(tester, const ToastExample());
+    await tester.tap(find.text('Archive conversation'));
+    await tester.pumpAndSettle();
+    expect(find.text('Conversation archived'), findsOneWidget);
+
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
+    expect(find.text('Undone: 1'), findsOneWidget);
+    expect(find.text('Conversation archived'), findsNothing);
     await tester.pumpWidget(const SizedBox.shrink());
   });
 }

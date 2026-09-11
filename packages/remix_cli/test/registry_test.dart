@@ -285,13 +285,16 @@ items:
       final item = catalog.items[name];
       expect(item, isNotNull, reason: name);
       // Dependency-first order, and `theme` always leads because every
-      // component declares it. Two items need more: `data_table`'s selection
+      // component declares it. Three items need more: `data_table`'s selection
       // column, pager, and page-size control are the application's own
-      // checkbox, icon button, and select, and a `sidebar` destination is the
-      // application's own toggle, labelled by its own tooltip when collapsed.
+      // checkbox, icon button, and select, a `sidebar` destination is the
+      // application's own toggle, labelled by its own tooltip when collapsed,
+      // and a `toast`'s action and close control are the application's own
+      // button and icon button.
       expect(catalog.resolve(name).map((item) => item.name), switch (name) {
         'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
         'sidebar' => ['theme', 'toggle', 'tooltip', name],
+        'toast' => ['theme', 'button', 'icon_button', name],
         _ => ['theme', name],
       }, reason: name);
       if (name == 'icons') {
@@ -441,6 +444,7 @@ const _componentSurfaces =
       'switch': (widgets: ['Switch'], types: []),
       'tabs': (widgets: ['TabBar', 'Tab', 'TabView'], types: []),
       'textfield': (widgets: ['TextField', 'TextArea'], types: []),
+      'toast': (widgets: ['Toast'], types: ['ToastVariant']),
       'toggle': (widgets: ['Toggle'], types: ['ToggleVariant', 'ToggleSize']),
       'tooltip': (widgets: ['Tooltip'], types: []),
       'toggle_group': (
