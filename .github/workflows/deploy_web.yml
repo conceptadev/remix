@@ -15,7 +15,7 @@ permissions:
 # Allow only one concurrent Pages run per branch or pull request
 concurrency:
   group: "pages-${{ github.ref }}"
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
