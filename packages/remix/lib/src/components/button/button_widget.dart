@@ -256,21 +256,21 @@ class RemixButton extends StatelessWidget {
     );
 
     // Layer spinner above the content while keeping size stable.
-    // Visual children are excluded from semantics: NakedButton already
-    // publishes the accessible name, hint, and actions.
-    return ExcludeSemantics(
-      child: Stack(
-        alignment: .center,
-        children: [contentRow, if (loading) spinner],
-      ),
+    final layered = Stack(
+      alignment: .center,
+      children: [contentRow, if (loading) spinner],
     );
+
+    // NakedButton owns the one accessible button node. Visual descendants are
+    // decorative once that node supplies an accessible name.
+    return ExcludeSemantics(child: layered);
   }
 
   @override
   Widget build(BuildContext context) {
     final allowsInteraction = enabled && !loading;
 
-    return NakedButton(
+    final button = NakedButton(
       // Naked UI beta.12 derives semantic actions from callback presence, so
       // remove callbacks whenever this wrapper disallows interaction.
       onPressed: allowsInteraction ? onPressed : null,
@@ -291,6 +291,18 @@ class RemixButton extends StatelessWidget {
           builder: _buildContent,
         );
       },
+    );
+
+    if (!loading || excludeSemantics) return button;
+    return Stack(
+      children: [
+        button,
+        Semantics(
+          liveRegion: true,
+          label: '${semanticLabel ?? label}, loading',
+          child: const SizedBox.square(dimension: 1),
+        ),
+      ],
     );
   }
 }

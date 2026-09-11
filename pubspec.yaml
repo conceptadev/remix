@@ -18,12 +18,15 @@ workspace:
   - packages/remix
   - packages/remix_cli
   - packages/remix_fortal
+  - packages/remix_agent
+  - packages/remix_agent/example
   - packages/remix_ui_icons
 
 melos:
   packages:
     - apps/*
     - packages/*
+    - packages/remix_agent/example
 
   # No `command.bootstrap.environment` here on purpose. It rewrites one
   # `environment:` into every package it manages, and this workspace has two
@@ -76,19 +79,24 @@ melos:
         concurrency: 1
         orderDependents: true
       packageFilters:
-        scope: [remix, remix_fortal]
+        scope: [remix, remix_agent, remix_fortal]
 
     generate:check:
       description: Regenerate Remix sources and fail only on generated drift
       exec:
-        command: dart run ../../tool/check_generated.dart
+        # `$MELOS_ROOT_PATH`, not a fixed `../../`: the scope below spans two
+        # directory depths, and `packages/remix_agent/example` is three levels
+        # down.
+        command: dart run $MELOS_ROOT_PATH/tool/check_generated.dart
         concurrency: 1
         orderDependents: true
-      # The playground is in scope because it holds a committed, CLI-installed
-      # copy of every registry item. Nothing in the app renders those files, so
-      # a `.g.dart` left behind by a recipe edit would compile and ship green.
+      # The playground and the Agent example are in scope because each holds a
+      # committed, CLI-installed copy of registry source. Nothing renders those
+      # files in the playground, so a `.g.dart` left behind by a recipe edit
+      # would compile and ship green.
       packageFilters:
-        scope: [remix, remix_fortal, playground]
+        scope:
+          [remix, remix_agent, remix_fortal, playground, remix_agent_example]
 
     test:flutter:
       exec: flutter test --reporter=failures-only

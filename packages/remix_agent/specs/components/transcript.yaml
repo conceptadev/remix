@@ -1,0 +1,44 @@
+# This package ships no value for any measurement in this worksheet.
+# `Agent*Spec` names the slots; the application's recipe fills them. The
+# numbers below are the benchmark the anatomy was read from, not a default
+# this package resolves. See ../../docs/adr/0001-package-boundary.md.
+component: Transcript
+flutter_name: AgentTranscript
+status: behavior implemented (vertical slice); no visual defaults shipped
+
+source:
+  ref: live-edge follow/release contract
+  files: []
+  docs: internal worksheets
+
+anatomy:
+  - min-h-0 host
+  - h-full clipped scroll viewport
+  - child column
+  - stable end scrollbar gutter
+  - inset focus-visible ring
+states:
+  - following
+  - released
+  - busy
+  - focus-visible
+tokens: {}
+recipe_measurements:
+  - followThreshold default 56 logical pixels
+  - scrollbar gutter 12
+  - focus ring 2 inset, host ink
+behavior:
+  - Follow while distance-to-end <= threshold
+  - Release on user scroll or drag away
+  - Re-attach only after the reader returns to the edge
+  - Nested scrollables (depth > 0) do not release follow
+  - Reduced motion jumps instead of animating
+  - Programmatic follow is latched
+  - Fills a bounded host; shrink-wraps when unbounded
+  - Overscroll is contained (no glow/bounce chaining)
+  - Keyboard-focusable; Arrow/Page/Home/End scroll and update follow
+  - Focus-visible paints a 2px inset ring from host DefaultTextStyle ink
+approximations:
+  - overscroll-contain → ClampingScrollPhysics, no overscroll indicator, absorb OverscrollNotification
+  - scrollbar-gutter: stable → reserved end padding (12)
+  - focus-visible ring-2 ring-inset → 2px inside stroke, host ink

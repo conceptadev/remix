@@ -1,0 +1,10 @@
+{
+  "name": "Remix Agent catalog",
+  "short_name": "Remix Agent",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#E8EDF2",
+  "theme_color": "#12151C",
+  "description": "Local review catalog for Remix Agent surfaces.",
+  "orientation": "any"
+}

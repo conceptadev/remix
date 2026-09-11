@@ -28,6 +28,7 @@ is configured.
 | Accessible component behavior with a custom visual system | `remix`; use `Remix*` widgets and `*Styler`s |
 | Ready-made Radix-inspired visuals | `remix_cli` with `preset: fortal`; use the configured scope and prefixed widgets |
 | Fortal tokens with a customized composition | installed Fortal source plus `remix`; apply the prefixed recipe to a `Remix*` widget |
+| Agent-run surfaces (composer, transcript, permission, plan) | `remix_agent`; use `Agent*` widgets. It depends on `remix` only, has no registry item, and takes its appearance from the application's installed recipes. |
 | A visual system unrelated to Fortal | base Remix styling; do not initialize the Fortal preset |
 
 Remix ships no theme. Fortal is optional application-owned source installed by

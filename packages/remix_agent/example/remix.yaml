@@ -1,0 +1,5 @@
+schema: 2
+prefix: Ui
+preset: default
+paths:
+  ui: lib/ui
