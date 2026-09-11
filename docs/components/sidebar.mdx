@@ -96,12 +96,15 @@ The sidebar owns its 200ms animation. Set `expandedWidth` and `collapsedWidth`
 together to animate width with labels and headings; omit both for host-sized
 panels. Parent constraints still take precedence. Initial state is immediate,
 rapid reversals continue from the current frame, and reduced motion settles on
-the latest target without animation.
+the latest target without animation. Destination icons and section rows hold
+their positions while the panel moves: the narrowing row clips each label, and
+a settled rail centers each icon in its target.
 
 `animationStyle` uses Flutter's existing `AnimationStyle`, as `RemixDisclosure`
 does. Its duration/curve configure expansion; reverseDuration/reverseCurve
 configure collapse, falling back to the forward settings. Defaults are 200ms
-and ease-in-out. Text phases scale with the chosen duration. Set
+and ease-in-out. Labels ease out over the first 30% of a collapse and ease in
+over the final 75% of an expansion; these phases scale with the duration. Set
 `animationStyle: AnimationStyle.noAnimation` for immediate updates; the host's
 reduced-motion preference also takes precedence. Custom curves are clamped to
 the width endpoints.
@@ -148,7 +151,9 @@ in a minimal host. `tooltipPositioning` overrides the default logical-end,
 centered placement with an 8px gap and collision avoidance.
 
 Fortal interpolates navigation padding between `space3` expanded and `space2`
-collapsed, preserving theme scaling. The dashboard uses 256px and 72px widths;
+collapsed, preserving theme scaling, and adds the difference back to each
+destination's leading padding so icons hold still. With the dashboard's 256px
+and 72px widths, icons settle on the rail's center line without a final shift;
 custom widths must accommodate padding, borders, display insets, and at least
 48px destination targets. Increase the host width when custom/scaled tokens
 need more room. Keep a mobile drawer's open state separate from the desktop

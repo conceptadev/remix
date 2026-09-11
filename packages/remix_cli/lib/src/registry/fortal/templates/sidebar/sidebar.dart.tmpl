@@ -9,7 +9,7 @@ import 'tooltip.dart';
 
 part 'sidebar.g.dart';
 
-const _sectionLabelHorizontalPadding = 10.0;
+const _sectionLabelHorizontalPadding = 14.0;
 const _sectionLabelVerticalPadding = 6.0;
 const _sectionLabelLetterSpacing = 0.7;
 const _destinationSpacing = 2.0;
@@ -82,8 +82,47 @@ SidebarStyler {{valuePrefix}}SidebarStyle({
               highContrast: highContrast,
             )
             .minHeight(_minimumDestinationTargetHeight)
+            .padding(
+              EdgeInsetsMix.create(
+                left: Prop.mix(
+                  _DestinationInlinePadding(collapsed, left: true),
+                ),
+                right: Prop.mix(
+                  _DestinationInlinePadding(collapsed, left: false),
+                ),
+              ),
+            )
             .container(.mainAxisSize(.max).mainAxisAlignment(.start)),
   ).merge(style);
+}
+
+/// Repays the narrowing panel inset on the leading side so icons hold still.
+///
+/// Icons stay `space3 + space4` from the panel's leading edge: expanded rows
+/// start at `space4`, and the rail's narrower inset is added back here. A 72px
+/// dashboard rail then settles each icon on its center line. The trailing side
+/// keeps the toggle's `space3`. Sides are physical so this merges with the
+/// toggle's own horizontal padding; the text direction picks the leading one.
+final class _DestinationInlinePadding extends Mix<double> {
+  const _DestinationInlinePadding(this.collapsed, {required this.left});
+  final bool collapsed;
+  final bool left;
+
+  @override
+  double resolve(BuildContext context) {
+    final trailing = {{typePrefix}}Tokens.space3.resolve(context);
+    final leading = (Directionality.of(context) == TextDirection.ltr) == left;
+    if (!leading) return trailing;
+    return trailing +
+        {{typePrefix}}Tokens.space4.resolve(context) -
+        _SidebarHorizontalPadding(collapsed).resolve(context);
+  }
+
+  @override
+  Mix<double> merge(Mix<double>? other) => other ?? this;
+
+  @override
+  List<Object?> get props => [collapsed, left];
 }
 
 /// Resolve both endpoints before interpolation so theme scaling stays live.

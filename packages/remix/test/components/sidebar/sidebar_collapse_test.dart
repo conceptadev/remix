@@ -127,7 +127,20 @@ void main() {
       final key = GlobalKey<_HostState>();
       await tester.pumpWidget(_Host(key: key, initiallyCollapsed: true));
       expect(find.text('Overview'), findsNothing);
-      expect(find.text('Workspace'), findsNothing);
+      // The heading keeps its row so icons never shift; its text is hidden.
+      expect(
+        tester
+            .widget<Opacity>(
+              find
+                  .ancestor(
+                    of: find.text('Workspace'),
+                    matching: find.byType(Opacity),
+                  )
+                  .first,
+            )
+            .opacity,
+        0,
+      );
       expect(find.byIcon(Icons.home), findsOneWidget);
       final node = tester.getSemantics(find.bySemanticsLabel('Overview'));
       expect(
@@ -189,6 +202,83 @@ void main() {
       }
     },
   );
+
+  testWidgets('icons and section rows hold still while the panel moves', (
+    tester,
+  ) async {
+    // A Material host keeps single-line navigation text; _Host's fallback
+    // 48px text wraps at rest, which is a different (row height) contract.
+    var collapsed = false;
+    late StateSetter update;
+    late SidebarAnimation motion;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: Row(
+            children: [
+              StatefulBuilder(
+                builder: (context, setState) {
+                  update = setState;
+                  return RemixSidebar<String>(
+                    expandedWidth: 256,
+                    collapsedWidth: 72,
+                    collapsed: collapsed,
+                    header: Builder(
+                      builder: (context) {
+                        motion = RemixSidebar.animationOf(context);
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                    selectedValue: 'home',
+                    onSelected: (_) {},
+                    sections: const [
+                      RemixSidebarSection(
+                        label: 'Workspace',
+                        destinations: [
+                          RemixSidebarDestination(
+                            value: 'home',
+                            label: 'Overview',
+                            icon: Icons.home,
+                          ),
+                        ],
+                      ),
+                      RemixSidebarSection(
+                        label: 'Data',
+                        destinations: [
+                          RemixSidebarDestination(
+                            value: 'orders',
+                            label: 'Orders',
+                            icon: Icons.receipt,
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    Rect icon(IconData data) => tester.getRect(find.byIcon(data));
+    final home = icon(Icons.home);
+    final orders = icon(Icons.receipt);
+    for (final target in [true, false]) {
+      update(() => collapsed = target);
+      await tester.pump();
+      for (var i = 0; i < 14; i++) {
+        await tester.pump(const Duration(milliseconds: 16));
+        // Headings keep their rows, so icons never move vertically.
+        expect(icon(Icons.home).top, closeTo(home.top, .01));
+        expect(icon(Icons.receipt).top, closeTo(orders.top, .01));
+        if (motion.isAnimating) {
+          expect(icon(Icons.home).left, closeTo(home.left, .01));
+        }
+        expect(tester.takeException(), isNull);
+      }
+    }
+  });
 
   testWidgets(
     'rapid reversals continue from the displayed frame and last target wins',
@@ -338,12 +428,16 @@ void main() {
       expect(key.currentState!.motion!.expansion, 0);
       key.currentState!.update(collapsed: false);
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 200));
-      expect(key.currentState!.motion!.expansion, closeTo(.5, .001));
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(key.currentState!.motion!.expansion, closeTo(.25, .001));
       expect(key.currentState!.motion!.labelOpacity, 0);
       await tester.pump(const Duration(milliseconds: 100));
-      expect(key.currentState!.motion!.labelOpacity, closeTo(.5, .001));
-      await tester.pump(const Duration(milliseconds: 116));
+      expect(key.currentState!.motion!.expansion, closeTo(.5, .001));
+      expect(
+        key.currentState!.motion!.labelOpacity,
+        closeTo(Curves.easeOut.transform(1 / 3), .001),
+      );
+      await tester.pump(const Duration(milliseconds: 216));
       expect(key.currentState!.motion!.expansion, 1);
       expect(key.currentState!.motion!.isAnimating, isFalse);
     },
@@ -396,7 +490,10 @@ void main() {
       await tester.pump(const Duration(milliseconds: 40));
       final frame = key.currentState!.motion!;
       expect(frame.expansion, 1);
-      expect(frame.labelOpacity, closeTo(1 / 3, .001));
+      expect(
+        frame.labelOpacity,
+        closeTo(1 - Curves.easeOut.transform(.2 / .3), .001),
+      );
       final opacity = tester.widget<Opacity>(
         find
             .ancestor(of: find.text('Overview'), matching: find.byType(Opacity))

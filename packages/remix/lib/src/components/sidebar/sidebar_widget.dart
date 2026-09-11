@@ -169,8 +169,9 @@ class RemixSidebar<T extends Object> extends StatefulWidget {
   /// Timing for expansion and collapse, matching RemixDisclosure's API.
   ///
   /// Defaults to 200ms and ease-in-out. Collapse uses reverseDuration and
-  /// reverseCurve when provided, otherwise the forward settings. Text fades
-  /// out in the first 30% of collapse and in during the final 50% of expansion.
+  /// reverseCurve when provided, otherwise the forward settings. Text eases
+  /// out over the first 30% of collapse and in over the final 75% of
+  /// expansion. Icons and section rows hold their positions while moving.
   /// Overshooting curves are clamped to the panel's width endpoints.
   /// AnimationStyle.noAnimation and reduced motion settle immediately.
   final AnimationStyle animationStyle;
@@ -325,10 +326,7 @@ class RemixSidebar<T extends Object> extends StatefulWidget {
     ).merge(style);
   }
 
-  StyleSpec<FlexBoxSpec> _forceSourceOrder(
-    StyleSpec<FlexBoxSpec> value, {
-    double spacingFactor = 1,
-  }) {
+  StyleSpec<FlexBoxSpec> _forceSourceOrder(StyleSpec<FlexBoxSpec> value) {
     final flex = value.spec.flex ?? const StyleSpec(spec: FlexSpec());
 
     return value.copyWith(
@@ -337,9 +335,6 @@ class RemixSidebar<T extends Object> extends StatefulWidget {
           spec: flex.spec.copyWith(
             direction: .vertical,
             verticalDirection: .down,
-            spacing: flex.spec.spacing == null
-                ? null
-                : flex.spec.spacing! * spacingFactor,
           ),
         ),
       ),
@@ -400,46 +395,28 @@ class RemixSidebar<T extends Object> extends StatefulWidget {
               for (final section in sections)
                 if (section.destinations.isNotEmpty)
                   FlexBox(
-                    styleSpec: _forceSourceOrder(
-                      spec.section,
-                      spacingFactor: motion.expansion,
-                    ),
+                    styleSpec: _forceSourceOrder(spec.section),
                     children: [
                       if (section.label case final label?)
                         Semantics(
                           header: true,
                           label: label,
                           excludeSemantics: true,
-                          // Web accessibility drops zero-area nodes. Retain a
-                          // one-pixel anchor even when the heading is hidden.
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              minHeight: 1,
-                              minWidth: 1,
-                            ),
-                            child: ClipRect(
-                              child: Align(
-                                alignment: AlignmentDirectional.topStart,
-                                heightFactor: motion.expansion,
-                                child: Opacity(
-                                  opacity: motion.labelOpacity,
-                                  child: Offstage(
-                                    offstage: motion.expansion == 0,
-                                    child: StyledText(
-                                      label,
-                                      styleSpec: motion.expansion == 1
-                                          ? spec.sectionLabel
-                                          : spec.sectionLabel.copyWith(
-                                              spec: spec.sectionLabel.spec
-                                                  .copyWith(
-                                                    maxLines: 1,
-                                                    softWrap: false,
-                                                  ),
-                                            ),
+                          // The heading keeps its row in the rail, so
+                          // destinations never shift vertically; only the
+                          // text fades.
+                          child: Opacity(
+                            opacity: motion.labelOpacity,
+                            child: StyledText(
+                              label,
+                              styleSpec: motion.expansion == 1
+                                  ? spec.sectionLabel
+                                  : spec.sectionLabel.copyWith(
+                                      spec: spec.sectionLabel.spec.copyWith(
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
                             ),
                           ),
                         ),
@@ -563,9 +540,9 @@ class _RemixSidebarState<T extends Object> extends State<RemixSidebar<T>>
   SidebarAnimation _frame(bool collapsed, AnimationStyle style) {
     final end = collapsed ? 0.0 : 1.0;
     final t = _controller.value;
-    final textT = collapsed
-        ? (t / .3).clamp(0.0, 1.0)
-        : ((t - .5) / .5).clamp(0.0, 1.0);
+    final textT = Curves.easeOut.transform(
+      collapsed ? (t / .3).clamp(0.0, 1.0) : ((t - .25) / .75).clamp(0.0, 1.0),
+    );
     final curve =
         (collapsed ? style.reverseCurve : null) ??
         style.curve ??
@@ -804,35 +781,28 @@ class _RemixSidebarDestinationState<T extends Object>
       MainAxisAlignment.end => AlignmentDirectional.centerEnd,
       _ => AlignmentDirectional.centerStart,
     };
+    // Icons hold their expanded position while the narrowing row clips the
+    // label; only the settled rail centers them.
+    final railAtRest = motion.expansion == 0 && !motion.isAnimating;
     Widget content(bool bounded) {
       final label = Offstage(
         offstage: motion.expansion == 0,
-        child: ClipRect(
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            widthFactor: motion.expansion,
-            child: Opacity(
-              opacity: motion.labelOpacity,
-              child: StyledText(
-                widget.data.label,
-                styleSpec: spec.label.copyWith(
-                  spec: spec.label.spec.copyWith(
-                    maxLines: 1,
-                    softWrap: false,
-                    overflow: TextOverflow.clip,
-                  ),
-                ),
+        child: Opacity(
+          opacity: motion.labelOpacity,
+          child: StyledText(
+            widget.data.label,
+            styleSpec: spec.label.copyWith(
+              spec: spec.label.spec.copyWith(
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.clip,
               ),
             ),
           ),
         ),
       );
       return Align(
-        alignment: AlignmentGeometry.lerp(
-          AlignmentDirectional.center,
-          expandedAlignment,
-          motion.expansion,
-        )!,
+        alignment: railAtRest ? AlignmentDirectional.center : expandedAlignment,
         widthFactor: bounded ? null : 1,
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -849,13 +819,32 @@ class _RemixSidebarDestinationState<T extends Object>
 
     return LayoutBuilder(
       builder: (context, constraints) => RowBox(
-        styleSpec: spec.container,
+        styleSpec: railAtRest
+            ? _centeredContainer(spec.container)
+            : spec.container,
         children: [
           if (constraints.hasBoundedWidth)
             Flexible(child: content(true))
           else
             content(false),
         ],
+      ),
+    );
+  }
+
+  /// Centers the settled rail icon in the whole target, not only in the space
+  /// left by a recipe's (possibly asymmetric) horizontal padding.
+  StyleSpec<FlexBoxSpec> _centeredContainer(StyleSpec<FlexBoxSpec> container) {
+    final box = container.spec.box;
+    final padding = box?.spec.padding?.resolve(Directionality.of(context));
+    if (box == null || padding == null) return container;
+    return container.copyWith(
+      spec: container.spec.copyWith(
+        box: box.copyWith(
+          spec: box.spec.copyWith(
+            padding: EdgeInsets.only(top: padding.top, bottom: padding.bottom),
+          ),
+        ),
       ),
     );
   }

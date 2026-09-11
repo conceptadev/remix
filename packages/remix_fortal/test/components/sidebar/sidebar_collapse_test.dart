@@ -194,8 +194,15 @@ void main() {
       for (final targetCollapsed in [true, false]) {
         update(() => collapsed = targetCollapsed);
         await tester.pump();
+        double? pinned;
         for (final elapsed in [0, 50, 50, 50, 50, 16]) {
           await tester.pump(Duration(milliseconds: elapsed));
+          // The start padding repays the panel inset, so the icon holds still.
+          final iconX = tester.getCenter(find.byIcon(Icons.home)).dx;
+          if (motion.isAnimating) {
+            pinned ??= iconX;
+            expect(iconX, closeTo(pinned, .01));
+          }
           final target = tester.getRect(
             find.bySemanticsLabel('A very long localized destination label'),
           );
