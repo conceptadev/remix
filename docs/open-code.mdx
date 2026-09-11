@@ -495,6 +495,9 @@ look, then `--overwrite` deliberately.
 Generated adapters are not your problem. `button.g.dart` is regenerated
 whenever its authored source is rewritten or the adapter is missing, and the
 CLI verifies the file exists afterwards rather than assuming the build worked.
+The current `mix_generator` writes `this.` qualifiers that `flutter_lints`
+reports as infos, so exclude `lib/ui/**/*.g.dart` under `analyzer: exclude:`
+in `analysis_options.yaml`.
 </Note>
 
 ### Removing an item
@@ -545,7 +548,8 @@ installs one authored file plus its generated adapter under
 `mix_chart`; `data_table` also pulls in
 `checkbox`, `icon_button`, and `select`, because its selection column, pager,
 and page-size control *are* those components; adding it installs all four; and
-`sidebar` pulls in `toggle`, because a destination *is* one.
+`sidebar` pulls in `toggle` and `tooltip`, because a destination *is* a toggle
+and a collapsed rail labels it with a tooltip.
 
 The registry requires Remix beta.9, which includes `RemixSidebar`.
 The installer rejects older resolved versions before it writes source.
@@ -617,9 +621,10 @@ stacked, or floating. A positive `centerRadius` makes a pie chart a donut.
 
 `mix_chart` retains the hard contract: data validation, rendering, pointer
 interaction, transitions, tooltips, and chart semantics. Your copied file owns
-the categorical palette, axes, grid, shared series geometry, and tooltip
-appearance. It reads only the current open-code theme tokens, so adding it does
-not require replacing an older customized Theme.
+the axes, grid, shared series geometry, and tooltip appearance. Series colors
+come from the Theme's `chart1` to `chart5` tokens. A Theme installed by an
+earlier CLI build lacks them: add the five tokens to `tokens.dart` and
+`theme_data.dart` before adding `chart`.
 
 Import chart data directly and give the chart finite dimensions:
 
@@ -647,10 +652,11 @@ final chart = SizedBox(
 );
 ```
 
-The default palette follows `UiTokens.primary`, selects readable light or dark
-categorical colors from `UiTokens.background`, and removes duplicates. Edit
-`resolveUiChartPalette` for a design-system change. Pass `palette` or `style`
-for a one-chart override. The UI barrel does not re-export `mix_chart`.
+The palette is `UiTokens.chart`: `chart1` to `chart5` in series order. The
+shipped light and dark values keep each series' hue and clear 4.5:1 against
+the page background. Edit them in `UiThemeData` for a design-system change.
+Pass `palette` or `style` for a one-chart override. The UI barrel does not
+re-export `mix_chart`.
 
 `remix add icons` also declares `remix_ui_icons` and gives you a small alias
 surface to evolve with the application. Import

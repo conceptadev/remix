@@ -70,8 +70,31 @@ abstract final class {{typePrefix}}Tokens {
   /// follows; nothing else reads this token.
   static const focusRing = ColorToken('ui.color.focus-ring');
 
+  /// First categorical chart series color.
+  ///
+  /// Charts assign [chart1] through [chart5] to series in order; see [chart].
+  /// The shipped themes keep one hue per series in both brightnesses, and
+  /// every value clears 4.5:1 against [background]. That also keeps pie labels,
+  /// which are drawn in [background], readable on their slice.
+  static const chart1 = ColorToken('ui.color.chart-1');
+
+  /// Second categorical chart series color. See [chart1].
+  static const chart2 = ColorToken('ui.color.chart-2');
+
+  /// Third categorical chart series color. See [chart1].
+  static const chart3 = ColorToken('ui.color.chart-3');
+
+  /// Fourth categorical chart series color. See [chart1].
+  static const chart4 = ColorToken('ui.color.chart-4');
+
+  /// Fifth categorical chart series color. See [chart1].
+  static const chart5 = ColorToken('ui.color.chart-5');
+
   /// Corner radius shared by the application's controls.
   static const radius = RadiusToken('ui.radius');
+
+  /// The chart series colors in the order charts assign them.
+  static const chart = <ColorToken>[chart1, chart2, chart3, chart4, chart5];
 
   /// Every color token this layer defines, in declaration order.
   ///
@@ -92,5 +115,10 @@ abstract final class {{typePrefix}}Tokens {
     destructiveForeground,
     border,
     focusRing,
+    chart1,
+    chart2,
+    chart3,
+    chart4,
+    chart5,
   ];
 }

@@ -1,5 +1,9 @@
 ## 0.1.0
 
+- `sidebar` in both presets labels collapsed icon-rail destinations with the
+  application's `tooltip` recipe, so adding it also installs `tooltip`. The
+  Fortal recipe also narrows its navigation padding as the rail collapses.
+
 - Require Remix `^1.0.0-beta.9` for the generated Fortal adapters. CI checks
   both presets with checkout Remix. Publication requires the hosted check.
 
@@ -27,6 +31,8 @@
   glyph aliases.
 - Adds an optional `chart` item backed directly by `mix_chart`. One editable
   recipe generates line, bar, and pie adapters without depending on Fortal.
+  Its palette reads the default theme's `chart1` to `chart5` tokens, which
+  clear 4.5:1 against the page in both shipped themes.
 - Keeps already-installed registry adapters in a focused generation run so a
   new dependency cannot invalidate build_runner's graph and remove them.
 - Every item depends on `theme`. `data_table` also depends on `checkbox`,

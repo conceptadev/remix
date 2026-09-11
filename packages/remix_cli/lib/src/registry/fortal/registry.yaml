@@ -415,6 +415,7 @@ items:
       - theme
       - text
       - toggle
+      - tooltip
     dependencies:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:

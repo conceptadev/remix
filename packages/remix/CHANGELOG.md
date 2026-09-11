@@ -1,3 +1,8 @@
+## Unreleased
+
+- Add controlled sidebar collapse, coordinated width/content transitions configured with AnimationStyle, accessible icon-only destinations, and styled tooltips.
+- Add controlled tooltip visibility and preserve enclosing dismissal actions when closed.
+
 ## 1.0.0-beta.9
 
 - Export the Naked UI constructor and state types required by generated

@@ -49,6 +49,9 @@ enum {{typePrefix}}SegmentedControlVariant { surface, classic }
 
 /// {{typePrefix}} recipe for [RemixSegmentedControl].
 ///
+/// Content icons use size-matched 12/16/20 token defaults rather than the
+/// ambient icon size. Control and item styles may override these defaults.
+///
 /// Paints the selected item in place. It does not reproduce Radix's sliding
 /// indicator, duplicate-label crossfade, inactive separators, or max-content
 /// overflow. Changing an item's label with the selection can therefore cause a
@@ -99,7 +102,7 @@ SegmentedControlItemStyler _{{valuePrefix}}SegmentedControlItemStyle(
             .maxLines(1)
             .overflow(TextOverflow.ellipsis),
       )
-      .icon(IconStyler().color({{typePrefix}}Tokens.gray12()))
+      .icon(IconStyler().color({{typePrefix}}Tokens.gray12()).size(metrics.iconSize))
       .containerEffects(
         RemixBoxEffectsMix(
           behindContent: RemixBoxEffectLayerMix(),
@@ -194,6 +197,7 @@ class _{{typePrefix}}SegmentedControlMetrics {
     required this.radius,
     required this.text,
     required this.activeLetterSpacing,
+    required this.iconSize,
   });
 
   final double height;
@@ -202,6 +206,7 @@ class _{{typePrefix}}SegmentedControlMetrics {
   final Radius radius;
   final TextStyleToken text;
   final double activeLetterSpacing;
+  final double iconSize;
 }
 
 _{{typePrefix}}SegmentedControlMetrics _{{valuePrefix}}SegmentedControlMetrics(
@@ -214,6 +219,7 @@ _{{typePrefix}}SegmentedControlMetrics _{{valuePrefix}}SegmentedControlMetrics(
     radius: {{typePrefix}}Tokens.radius2OrFull(),
     text: {{typePrefix}}Tokens.text1,
     activeLetterSpacing: {{typePrefix}}Tokens.tabActiveLetterSpacing1(),
+    iconSize: {{typePrefix}}Tokens.space3(),
   ),
   .size2 => _{{typePrefix}}SegmentedControlMetrics(
     height: {{typePrefix}}Tokens.space6(),
@@ -222,6 +228,7 @@ _{{typePrefix}}SegmentedControlMetrics _{{valuePrefix}}SegmentedControlMetrics(
     radius: {{typePrefix}}Tokens.radius2OrFull(),
     text: {{typePrefix}}Tokens.text2,
     activeLetterSpacing: {{typePrefix}}Tokens.tabActiveLetterSpacing2(),
+    iconSize: {{typePrefix}}Tokens.space4(),
   ),
   .size3 => _{{typePrefix}}SegmentedControlMetrics(
     height: {{typePrefix}}Tokens.space7(),
@@ -232,5 +239,6 @@ _{{typePrefix}}SegmentedControlMetrics _{{valuePrefix}}SegmentedControlMetrics(
     // The pinned `-0.01em` is derived from the resolved size-3 text token so
     // it remains exact at every {{typePrefix}} scaling without adding an eighth token.
     activeLetterSpacing: _segmentedControlActiveLetterSpacing3(),
+    iconSize: {{typePrefix}}Tokens.spinnerSize3(),
   ),
 };

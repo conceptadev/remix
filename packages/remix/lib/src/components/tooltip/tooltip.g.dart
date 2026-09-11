@@ -698,6 +698,8 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     Key? key,
     required Widget tooltipChild,
     required Widget child,
+    bool? open,
+    ValueChanged<bool>? onOpenChanged,
     String? tooltipSemantics,
     OverlayPositionConfig positioning = const OverlayPositionConfig(),
   }) {
@@ -706,6 +708,8 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
       style: this,
       tooltipChild: tooltipChild,
       child: child,
+      open: open,
+      onOpenChanged: onOpenChanged,
       tooltipSemantics: tooltipSemantics,
       positioning: positioning,
     );

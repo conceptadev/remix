@@ -516,46 +516,43 @@ class _DataTableStyles {
   /// Values resolved once, outside any row's widget-state scope.
   final DataTableSpec spec;
 
-  /// Resolves [prop] in [context] so widget-state variants see the row's
-  /// states, falling back to the table-level value when there is no styler.
-  V _resolve<V>(BuildContext context, Prop<V>? prop, V fallback) {
-    if (styler == null || prop == null) return fallback;
+  DataTableSpec resolve(BuildContext context) => styler == null
+      ? spec
+      : _DataTableRegionProjection(styler!, spec).build(context).spec;
+}
 
-    return MixOps.resolve(context, prop) ?? fallback;
-  }
+/// Applies root variants before resolving regions against the cell's state.
+final class _DataTableRegionProjection extends DataTableStyler {
+  _DataTableRegionProjection(this.source, this.fallback)
+    : super.create(variants: source.$variants);
 
-  StyleSpec<BoxSpec> headerRow(BuildContext context) =>
-      _resolve(context, styler?.$headerRow, spec.headerRow);
+  final DataTableStyler source;
+  final DataTableSpec fallback;
 
-  /// The final row merges [DataTableSpec.lastBodyRow] over the shared row
-  /// chrome; every other row uses the shared chrome alone.
-  StyleSpec<BoxSpec> bodyRow(BuildContext context, {required bool isLast}) {
-    if (!isLast) return _resolve(context, styler?.$bodyRow, spec.bodyRow);
+  @override
+  DataTableStyler merge(DataTableStyler? other) =>
+      _DataTableRegionProjection(source.merge(other), fallback);
 
-    return _resolve(
-      context,
-      MixOps.merge(styler?.$bodyRow, styler?.$lastBodyRow),
-      spec.lastBodyRow ?? spec.bodyRow,
-    );
-  }
+  @override
+  StyleSpec<DataTableSpec> resolve(BuildContext context) => StyleSpec(
+    spec: fallback.copyWith(
+      headerRow: MixOps.resolve(context, source.$headerRow),
+      bodyRow: MixOps.resolve(context, source.$bodyRow),
+      lastBodyRow: MixOps.resolve(
+        context,
+        MixOps.merge(source.$bodyRow, source.$lastBodyRow),
+      ),
+      headerCell: MixOps.resolve(context, source.$headerCell),
+      bodyCell: MixOps.resolve(context, source.$bodyCell),
+      selectionCell: MixOps.resolve(context, source.$selectionCell),
+      headerLabel: MixOps.resolve(context, source.$headerLabel),
+      cellText: MixOps.resolve(context, source.$cellText),
+      sortIcon: MixOps.resolve(context, source.$sortIcon),
+    ),
+  );
 
-  StyleSpec<BoxSpec> headerCell(BuildContext context) =>
-      _resolve(context, styler?.$headerCell, spec.headerCell);
-
-  StyleSpec<BoxSpec> bodyCell(BuildContext context) =>
-      _resolve(context, styler?.$bodyCell, spec.bodyCell);
-
-  StyleSpec<BoxSpec> selectionCell(BuildContext context) =>
-      _resolve(context, styler?.$selectionCell, spec.selectionCell);
-
-  StyleSpec<TextSpec> headerLabel(BuildContext context) =>
-      _resolve(context, styler?.$headerLabel, spec.headerLabel);
-
-  StyleSpec<TextSpec> cellText(BuildContext context) =>
-      _resolve(context, styler?.$cellText, spec.cellText);
-
-  StyleSpec<IconSpec> sortIcon(BuildContext context) =>
-      _resolve(context, styler?.$sortIcon, spec.sortIcon);
+  @override
+  List<Object?> get props => [source, fallback];
 }
 
 /// Renders one table: header, body, optional empty surface, optional footer.
@@ -1037,8 +1034,8 @@ class _DataTableHeaderCell extends StatelessWidget {
   final _DataTableSortIcons? sortIcons;
   final bool useSelectionCell;
 
-  Widget _buildContent(BuildContext context) {
-    final headerStyle = styles.headerLabel(context);
+  Widget _buildContent(DataTableSpec resolved) {
+    final headerStyle = resolved.headerLabel;
     // A custom header inherits the header typography the way Radix cascades
     // `th` styles onto arbitrary markup, without excluding its own semantics.
     final content = child == null
@@ -1060,9 +1057,9 @@ class _DataTableHeaderCell extends StatelessWidget {
                 RemixPathGlyph.caretDown,
               null => RemixPathGlyph.caretSort,
             },
-            styleSpec: styles.sortIcon(context),
+            styleSpec: resolved.sortIcon,
           )
-        : StyledIcon(icon: icon, styleSpec: styles.sortIcon(context));
+        : StyledIcon(icon: icon, styleSpec: resolved.sortIcon);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -1079,15 +1076,16 @@ class _DataTableHeaderCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget cell = Builder(
-      builder: (context) => _DataTableCellSurface(
-        row: styles.headerRow(context),
-        cell: useSelectionCell
-            ? styles.selectionCell(context)
-            : styles.headerCell(context),
-        alignment: alignment,
-        minHeight: minHeight,
-        child: _buildContent(context),
-      ),
+      builder: (context) {
+        final resolved = styles.resolve(context);
+        return _DataTableCellSurface(
+          row: resolved.headerRow,
+          cell: useSelectionCell ? resolved.selectionCell : resolved.headerCell,
+          alignment: alignment,
+          minHeight: minHeight,
+          child: _buildContent(resolved),
+        );
+      },
     );
 
     if (onSort != null) {
@@ -1153,18 +1151,23 @@ class _DataTableBodyCell extends StatelessWidget {
       child: WidgetStateProvider(
         states: states,
         child: Builder(
-          builder: (context) => _DataTableCellSurface(
-            row: styles.bodyRow(context, isLast: isLastRow),
-            cell: useSelectionCell
-                ? styles.selectionCell(context)
-                : styles.bodyCell(context),
-            alignment: alignment,
-            minHeight: minHeight,
-            child: RemixDefaultContentStyle(
-              text: styles.cellText(context),
-              child: child,
-            ),
-          ),
+          builder: (context) {
+            final resolved = styles.resolve(context);
+            return _DataTableCellSurface(
+              row: isLastRow
+                  ? (resolved.lastBodyRow ?? resolved.bodyRow)
+                  : resolved.bodyRow,
+              cell: useSelectionCell
+                  ? resolved.selectionCell
+                  : resolved.bodyCell,
+              alignment: alignment,
+              minHeight: minHeight,
+              child: RemixDefaultContentStyle(
+                text: resolved.cellText,
+                child: child,
+              ),
+            );
+          },
         ),
       ),
     );

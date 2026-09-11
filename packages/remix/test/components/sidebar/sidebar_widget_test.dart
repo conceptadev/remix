@@ -54,7 +54,12 @@ void main() {
       expect(find.text('Overview'), findsOneWidget);
       expect(find.text('Customers'), findsOneWidget);
       expect(find.text('Orders'), findsOneWidget);
-      expect(find.byType(RemixToggle), findsNWidgets(3));
+      expect(
+        tester
+            .widgetList<Semantics>(find.byType(Semantics))
+            .where((node) => node.properties.button == true),
+        hasLength(3),
+      );
     });
 
     testWidgets('skips empty sections together with their headings', (

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
 
 import '../pages/charts_page.dart';
 import '../pages/customers_page.dart';
@@ -27,6 +28,7 @@ class _DashboardShellState extends State<DashboardShell> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   DashboardPage _selected = .overview;
   String _searchQuery = '';
+  bool _sidebarCollapsed = false;
 
   void _select(DashboardPage page) {
     setState(() => _selected = page);
@@ -62,11 +64,19 @@ class _DashboardShellState extends State<DashboardShell> {
               child: Sidebar(selected: _selected, onSelected: _select),
             )
           : null,
-      body: Row(
+      body: RowBox(
         children: [
-          if (!compact) Sidebar(selected: _selected, onSelected: _select),
+          if (!compact)
+            Sidebar(
+              key: const ValueKey('desktop-sidebar'),
+              selected: _selected,
+              onSelected: _select,
+              collapsed: _sidebarCollapsed,
+              onToggle: () =>
+                  setState(() => _sidebarCollapsed = !_sidebarCollapsed),
+            ),
           Expanded(
-            child: Column(
+            child: ColumnBox(
               children: [
                 TopBar(
                   page: _selected,

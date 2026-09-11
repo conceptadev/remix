@@ -49,6 +49,9 @@ enum FortalSegmentedControlVariant { surface, classic }
 
 /// Fortal recipe for [RemixSegmentedControl].
 ///
+/// Content icons use size-matched 12/16/20 token defaults rather than the
+/// ambient icon size. Control and item styles may override these defaults.
+///
 /// Paints the selected item in place. It does not reproduce Radix's sliding
 /// indicator, duplicate-label crossfade, inactive separators, or max-content
 /// overflow. Changing an item's label with the selection can therefore cause a
@@ -99,7 +102,7 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
             .maxLines(1)
             .overflow(TextOverflow.ellipsis),
       )
-      .icon(IconStyler().color(FortalTokens.gray12()))
+      .icon(IconStyler().color(FortalTokens.gray12()).size(metrics.iconSize))
       .containerEffects(
         RemixBoxEffectsMix(
           behindContent: RemixBoxEffectLayerMix(),
@@ -194,6 +197,7 @@ class _FortalSegmentedControlMetrics {
     required this.radius,
     required this.text,
     required this.activeLetterSpacing,
+    required this.iconSize,
   });
 
   final double height;
@@ -202,6 +206,7 @@ class _FortalSegmentedControlMetrics {
   final Radius radius;
   final TextStyleToken text;
   final double activeLetterSpacing;
+  final double iconSize;
 }
 
 _FortalSegmentedControlMetrics _fortalSegmentedControlMetrics(
@@ -214,6 +219,7 @@ _FortalSegmentedControlMetrics _fortalSegmentedControlMetrics(
     radius: FortalTokens.radius2OrFull(),
     text: FortalTokens.text1,
     activeLetterSpacing: FortalTokens.tabActiveLetterSpacing1(),
+    iconSize: FortalTokens.space3(),
   ),
   .size2 => _FortalSegmentedControlMetrics(
     height: FortalTokens.space6(),
@@ -222,6 +228,7 @@ _FortalSegmentedControlMetrics _fortalSegmentedControlMetrics(
     radius: FortalTokens.radius2OrFull(),
     text: FortalTokens.text2,
     activeLetterSpacing: FortalTokens.tabActiveLetterSpacing2(),
+    iconSize: FortalTokens.space4(),
   ),
   .size3 => _FortalSegmentedControlMetrics(
     height: FortalTokens.space7(),
@@ -232,5 +239,6 @@ _FortalSegmentedControlMetrics _fortalSegmentedControlMetrics(
     // The pinned `-0.01em` is derived from the resolved size-3 text token so
     // it remains exact at every Fortal scaling without adding an eighth token.
     activeLetterSpacing: _segmentedControlActiveLetterSpacing3(),
+    iconSize: FortalTokens.spinnerSize3(),
   ),
 };
