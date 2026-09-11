@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 import '../../widgets/gallery_scaffold.dart';
-import '../../widgets/toast.dart';
 
 class GalleryActionsPage extends StatefulWidget {
   const GalleryActionsPage({super.key});
@@ -30,7 +30,13 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
             cellBuilder: (context, variant, size) => FortalButton(
               variant: variant,
               size: size,
-              onPressed: () => showToast(context, message: 'Button pressed'),
+              onPressed: () => showRemixToast(
+                context,
+                RemixToastData(
+                  title: 'Button pressed',
+                  icon: Icons.check_circle_outline,
+                ),
+              ),
               label: 'Button',
             ),
           ),
@@ -46,7 +52,13 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
               variant: variant,
               size: size,
               semanticLabel: 'Add item',
-              onPressed: () => showToast(context, message: 'Item added'),
+              onPressed: () => showRemixToast(
+                context,
+                RemixToastData(
+                  title: 'Item added',
+                  icon: Icons.check_circle_outline,
+                ),
+              ),
               icon: Icons.add,
             ),
           ),

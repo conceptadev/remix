@@ -11,7 +11,6 @@ import '../widgets/data_table_cell_text.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/page_header.dart';
 import '../widgets/status_badge.dart';
-import '../widgets/toast.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
 
@@ -60,8 +59,13 @@ class _OrdersPageState extends State<OrdersPage> {
             title: 'Orders',
             description: 'Review transactions and fulfillment status.',
             actions: FortalButton(
-              onPressed: () =>
-                  showToast(context, message: 'Order export prepared'),
+              onPressed: () => showRemixToast(
+                context,
+                RemixToastData(
+                  title: 'Order export prepared',
+                  icon: Icons.check_circle_outline,
+                ),
+              ),
               label: 'Export',
               leadingIcon: Icons.download_outlined,
             ),
@@ -190,8 +194,13 @@ class _OrdersPageState extends State<OrdersPage> {
             dividerBefore: true,
           ),
         ],
-        onSelected: (value) =>
-            showToast(context, message: '$value selected for ${order.id}'),
+        onSelected: (value) => showRemixToast(
+          context,
+          RemixToastData(
+            title: '$value selected for ${order.id}',
+            icon: Icons.check_circle_outline,
+          ),
+        ),
       ),
     ),
   ];

@@ -6,7 +6,6 @@ import '../widgets/app_accent_scope.dart';
 import '../widgets/disclosure_trigger.dart';
 import '../widgets/page_header.dart';
 import '../widgets/theme_panel.dart';
-import '../widgets/toast.dart';
 import '../widgets/typography.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -126,9 +125,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     Align(
                       alignment: .centerLeft,
                       child: FortalButton(
-                        onPressed: () => showToast(
+                        onPressed: () => showRemixToast(
                           context,
-                          message: 'Profile settings saved',
+                          RemixToastData(
+                            title: 'Profile settings saved',
+                            icon: Icons.check_circle_outline,
+                          ),
                         ),
                         label: 'Save changes',
                       ),
@@ -217,10 +219,12 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
     if (!mounted || confirmed != true) return;
-    showToast(
+    showRemixToast(
       context,
-      message: 'Demo workspace was not deleted',
-      icon: Icons.info_outline,
+      RemixToastData(
+        title: 'Demo workspace was not deleted',
+        icon: Icons.info_outline,
+      ),
     );
   }
 }

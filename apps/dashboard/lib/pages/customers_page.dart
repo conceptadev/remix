@@ -11,7 +11,6 @@ import '../widgets/data_table_cell_text.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/page_header.dart';
 import '../widgets/status_badge.dart';
-import '../widgets/toast.dart';
 
 class CustomersPage extends StatefulWidget {
   const CustomersPage({super.key, this.globalQuery = ''});
@@ -57,8 +56,13 @@ class _CustomersPageState extends State<CustomersPage> {
             title: 'Customers',
             description: 'Manage customer access, plans, and account status.',
             actions: FortalButton(
-              onPressed: () =>
-                  showToast(context, message: 'Customer invitation started'),
+              onPressed: () => showRemixToast(
+                context,
+                RemixToastData(
+                  title: 'Customer invitation started',
+                  icon: Icons.check_circle_outline,
+                ),
+              ),
               label: 'Add customer',
               leadingIcon: Icons.add,
             ),
@@ -91,20 +95,29 @@ class _CustomersPageState extends State<CustomersPage> {
                         ),
                         FortalButton.ghost(
                           size: .size1,
-                          onPressed: () => showToast(
+                          onPressed: () => showRemixToast(
                             context,
-                            message:
-                                'Export prepared for ${_selectedIds.length} customers',
+                            RemixToastData(
+                              title:
+                                  'Export prepared for ${_selectedIds.length} customers',
+                              icon: Icons.check_circle_outline,
+                            ),
                           ),
                           label: 'Export',
                         ),
                         FortalButton.ghost(
                           size: .size1,
-                          onPressed: () => showToast(
+                          onPressed: () => showRemixToast(
                             context,
-                            message:
-                                '${_selectedIds.length} customers archived',
-                            actionLabel: 'Undo',
+                            RemixToastData(
+                              title:
+                                  '${_selectedIds.length} customers archived',
+                              icon: Icons.check_circle_outline,
+                              action: RemixToastAction(
+                                label: 'Undo',
+                                onPressed: () {},
+                              ),
+                            ),
                           ),
                           label: 'Archive',
                         ),
@@ -224,8 +237,13 @@ class _CustomersPageState extends State<CustomersPage> {
             dividerBefore: true,
           ),
         ],
-        onSelected: (value) =>
-            showToast(context, message: '$value selected for ${customer.name}'),
+        onSelected: (value) => showRemixToast(
+          context,
+          RemixToastData(
+            title: '$value selected for ${customer.name}',
+            icon: Icons.check_circle_outline,
+          ),
+        ),
       ),
     ),
   ];
