@@ -1,7 +1,3 @@
-## Unreleased
-
-- Expose controlled visibility on FortalTooltip.
-
 ## 1.0.0-beta.9
 
  - **FIX**(data_list): bound minimum intrinsic width by maximum (#185).
