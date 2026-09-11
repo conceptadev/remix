@@ -17,6 +17,16 @@ import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
+/// Whether the shell's compact navigation sheet is currently open.
+///
+/// `TopBar` sits inside `FortalSidebarLayout`'s `header` slot in both the
+/// wide and compact presentations, so its element is always a descendant of
+/// the scope the layout re-provides — unlike `DashboardShell`'s own element,
+/// which sits above the layout it returns.
+bool _isCompactSheetOpen(WidgetTester tester) => FortalSidebarLayoutScope.of(
+  tester.element(find.byType(TopBar)),
+).isCompactOpen;
+
 void main() {
   testWidgets('renders the dashboard inside one app and one shell', (
     tester,
@@ -24,7 +34,11 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
 
     expect(find.byType(MaterialApp), findsOneWidget);
-    expect(find.byType(Scaffold), findsOneWidget);
+    // The shell replaced Material's Scaffold/Drawer with the open-code
+    // FortalSidebarLayout template; see `compact layout uses a sheet
+    // without rendering overflows` below for its compact-sheet behavior.
+    expect(find.byType(Scaffold), findsNothing);
+    expect(find.byType(FortalSidebarLayout), findsOneWidget);
     expect(
       find.byKey(const ValueKey('dashboard-fortal-scope')),
       findsOneWidget,
@@ -109,7 +123,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('compact layout uses a drawer without rendering overflows', (
+  testWidgets('compact layout uses a sheet without rendering overflows', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(390, 844);
@@ -126,10 +140,7 @@ void main() {
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
-    expect(
-      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
-      isTrue,
-    );
+    expect(_isCompactSheetOpen(tester), isTrue);
 
     await tester.tap(
       find.byKey(const ValueKey(DashboardPage.galleryForms)).first,
@@ -144,14 +155,11 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(
-      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
-      isFalse,
-    );
+    expect(_isCompactSheetOpen(tester), isFalse);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('compact drawer exposes one dashboard navigation name', (
+  testWidgets('compact sheet exposes one dashboard navigation name', (
     tester,
   ) async {
     final semantics = tester.ensureSemantics();
@@ -195,10 +203,7 @@ void main() {
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
-    expect(
-      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
-      isTrue,
-    );
+    expect(_isCompactSheetOpen(tester), isTrue);
 
     await tester.tap(
       find.byKey(const ValueKey(DashboardPage.galleryForms)).first,
@@ -207,10 +212,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
     }
 
-    expect(
-      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
-      isFalse,
-    );
+    expect(_isCompactSheetOpen(tester), isFalse);
     expect(menuFocusState(), ui.Tristate.isTrue);
     semantics.dispose();
   });
@@ -1153,7 +1155,9 @@ void main() {
     expect(painted(activityTitle), mauve);
   });
 
-  testWidgets('drawer sidebar text follows the gray theme too', (tester) async {
+  testWidgets('compact sheet sidebar text follows the gray theme too', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);

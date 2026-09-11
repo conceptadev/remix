@@ -31,9 +31,11 @@ One `add` installs one item. The catalog is `theme`, the opt-in `icons` seam,
 the optional `chart` extension, plus `accordion`, `avatar`, `badge`, `button`,
 `callout`, `card`, `checkbox`, `data_list`, `data_table`, `dialog`,
 `disclosure`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
-`radio`, `segmented_control`, `select`, `sidebar`, `skeleton`, `slider`,
-`spinner`, `switch`, `tabs`, `textfield`, `toggle`, `toggle_group`, and
-`tooltip`.
+`radio`, `segmented_control`, `select`, `sidebar`, `sidebar_layout`,
+`skeleton`, `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toggle`,
+`toggle_group`, and `tooltip`. `sidebar_layout` is a plain shell layout with
+no `Spec` and no generated adapter, pairing an installed `sidebar` with a
+header and body.
 
 The `fortal` preset contains that complete surface plus `base_button`, `code`,
 `heading`, `kbd`, `text`, and `typography`.

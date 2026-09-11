@@ -421,6 +421,17 @@ List<String> _imports(String source) => [
   for (final match in _importPattern.allMatches(source)) match.group(1)!,
 ];
 
+/// Registry dependencies a component composes but never imports.
+///
+/// [_registryDependencies] otherwise infers the graph from `import`
+/// statements, which misses `sidebar_layout` -> `sidebar`: its `sidebar`
+/// field is typed `Widget`, not `FortalSidebar`, so nothing imports
+/// `components/sidebar.dart`. The default preset's hand-authored
+/// registry.yaml declares the same dependency for the same reason.
+const _uninferredRegistryDependencies = <String, List<String>>{
+  'sidebar_layout': ['sidebar'],
+};
+
 List<String> _registryDependencies({
   required String sourcePath,
   required List<String> imports,
@@ -447,6 +458,15 @@ List<String> _registryDependencies({
         dependencies.add(component);
       }
     }
+  }
+  final name = p.posix.basenameWithoutExtension(sourcePath);
+  for (final component in _uninferredRegistryDependencies[name] ?? const []) {
+    if (!componentNames.contains(component)) {
+      throw FormatException(
+        '$sourcePath declares missing component dependency $component.',
+      );
+    }
+    dependencies.add(component);
   }
   return [
     if (dependencies.remove('theme')) 'theme',

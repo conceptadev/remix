@@ -180,10 +180,14 @@ dart run remix_cli:remix add textfield
 dart run remix_cli:remix add dialog
 dart run remix_cli:remix add card
 dart run remix_cli:remix add sidebar
+dart run remix_cli:remix add sidebar_layout
 ```
 
 The existing theme is preserved. Sidebar also installs its `toggle` and
-`tooltip` dependencies. Each command updates the barrel and generates the needed adapters.
+`tooltip` dependencies. Sidebar Layout is a plain shell layout — no `Spec`,
+no generated adapter — that pairs an installed sidebar with a header and body,
+switching to a start-edge sheet below its compact breakpoint. Each command
+updates the barrel and generates the needed adapters.
 
 Replace your application's `lib/main.dart` with the complete default source below.
 The same file is `default_demo/lib/main.dart` in the
@@ -273,6 +277,7 @@ dart run remix_cli:remix add textfield
 dart run remix_cli:remix add dialog
 dart run remix_cli:remix add card
 dart run remix_cli:remix add sidebar
+dart run remix_cli:remix add sidebar_layout
 ```
 
 Replace this app's `lib/main.dart` with the complete Fortal source below, also
