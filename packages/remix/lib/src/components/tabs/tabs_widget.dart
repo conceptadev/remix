@@ -144,7 +144,8 @@ class RemixTab extends StatelessWidget {
          'Either child, builder, or label must be provided',
        );
 
-  /// The tab content when not using [builder].
+  /// Custom content placed inside the styled tab container instead of the
+  /// built-in [label] and [icon]. Use [builder] to replace the container too.
   final Widget? child;
 
   /// The unique identifier for this tab.
@@ -174,7 +175,11 @@ class RemixTab extends StatelessWidget {
   /// Called when press state changes.
   final ValueChanged<bool>? onPressChange;
 
-  /// Custom builder for the tab content.
+  /// Replaces the tab's visual content while retaining its behavior.
+  ///
+  /// The third argument is the styled default container, including [child]
+  /// or the built-in label/icon content. Return it to retain container styling,
+  /// or return another widget to take full control of the visual content.
   final ValueWidgetBuilder<NakedTabState>? builder;
 
   /// Semantic label for accessibility.
