@@ -53,6 +53,7 @@ const _defaultRegistryItems = <String>[
   'segmented_control',
   'select',
   'sidebar',
+  'sidebar_layout',
   'skeleton',
   'slider',
   'spinner',
@@ -111,6 +112,7 @@ const _fortalRegistryItems = <String>[
   'segmented_control',
   'select',
   'sidebar',
+  'sidebar_layout',
   'skeleton',
   'slider',
   'spinner',
@@ -131,6 +133,7 @@ const _defaultPreset = _PresetContract(
   registryItems: _defaultRegistryItems,
   themeFiles: ['tokens.dart', 'theme_data.dart', 'theme_scope.dart'],
   generatedSnapshots: _generatedSnapshots,
+  nonGeneratedItems: {'sidebar_layout'},
 );
 
 const _fortalPreset = _PresetContract(
@@ -153,6 +156,7 @@ const _fortalPreset = _PresetContract(
     'heading',
     'kbd',
     'link',
+    'sidebar_layout',
     'typography',
   },
 );

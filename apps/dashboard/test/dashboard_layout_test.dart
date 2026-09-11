@@ -13,26 +13,33 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 void main() {
-  testWidgets('shell switches to the drawer strictly below 720 pixels', (
+  testWidgets('shell switches to the sheet strictly below 720 pixels', (
     tester,
   ) async {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
+    // `TopBar` sits inside `FortalSidebarLayout`'s `header` slot in both
+    // presentations, so it is always a descendant of the scope the layout
+    // re-provides.
+    bool isCompact() => FortalSidebarLayoutScope.of(
+      tester.element(find.byType(TopBar)),
+    ).isCompact;
+
     tester.view.physicalSize = const Size(720, 800);
     await tester.pumpWidget(const DashboardApp());
-    expect(tester.widget<Scaffold>(find.byType(Scaffold)).drawer, isNull);
+    expect(isCompact(), isFalse);
     expect(find.byKey(const ValueKey('dashboard-menu')), findsNothing);
 
     tester.view.physicalSize = const Size(719, 800);
     await tester.pumpWidget(const DashboardApp());
-    expect(tester.widget<Scaffold>(find.byType(Scaffold)).drawer, isNotNull);
+    expect(isCompact(), isTrue);
     expect(find.byKey(const ValueKey('dashboard-menu')), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('shell headers align in the sidebar and compact drawer', (
+  testWidgets('shell headers align in the sidebar and compact sheet', (
     tester,
   ) async {
     tester.view.devicePixelRatio = 1;

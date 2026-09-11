@@ -32,6 +32,12 @@ void main() {
   final toggle = find.byKey(const ValueKey('dashboard-sidebar-toggle')).first;
   double width(WidgetTester tester) =>
       tester.getSize(find.byType(Sidebar)).width;
+  // `TopBar` sits inside `FortalSidebarLayout`'s `header` slot in both
+  // presentations, so it is always a descendant of the scope the layout
+  // re-provides.
+  bool isCompactSheetOpen(WidgetTester tester) => FortalSidebarLayoutScope.of(
+    tester.element(find.byType(TopBar)),
+  ).isCompactOpen;
 
   testWidgets(
     'toolbar actions stay at the trailing edge with usable navigation targets',
@@ -230,7 +236,7 @@ void main() {
   );
 
   testWidgets(
-    'breakpoint interruptions use an expanded drawer and restore desktop preference',
+    'breakpoint interruptions use an expanded sheet and restore desktop preference',
     (tester) async {
       await mount(tester);
       await tester.tap(toggle);
@@ -251,10 +257,7 @@ void main() {
       await tester.tap(find.text('Customers').first);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
-      expect(
-        tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
-        isFalse,
-      );
+      expect(isCompactSheetOpen(tester), isFalse);
       for (final breakpoint in [720.0, 721.0]) {
         tester.view.physicalSize = Size(breakpoint, 900);
         await tester.pump();

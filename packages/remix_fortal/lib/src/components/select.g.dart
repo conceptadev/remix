@@ -7,6 +7,9 @@ part of 'select.dart';
 // **************************************************************************
 
 /// Fortal-themed Select with Radix-owned trigger and content configuration.
+///
+/// Content icons use size-matched 12/16/20 token defaults rather than the
+/// ambient icon size. Override the trigger icon through [style] when needed.
 class FortalSelect<T> extends StatelessWidget {
   const FortalSelect({
     super.key,

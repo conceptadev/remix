@@ -48,6 +48,27 @@ void main() {
     expect(catalog.items['theme']!.files, hasLength(8));
     expect(catalog.items['theme']!.exports, ['theme/theme.dart']);
 
+    // sidebar_layout composes an already-installed sidebar into its row and
+    // compact sheet without ever importing components/sidebar.dart (its
+    // `sidebar` field stays generically typed as `Widget`), so this
+    // dependency comes from build_fortal_preset.dart's manual override, not
+    // from import inference. Regression coverage for that gap: a fresh
+    // `remix add sidebar_layout` on the fortal preset must still pull in a
+    // working Sidebar, matching the default preset's registry.yaml.
+    expect(catalog.items['sidebar_layout']!.registryDependencies, [
+      'theme',
+      'sidebar',
+    ]);
+    expect(catalog.resolve('sidebar_layout').map((item) => item.name), [
+      'theme',
+      'typography',
+      'text',
+      'toggle',
+      'tooltip',
+      'sidebar',
+      'sidebar_layout',
+    ]);
+
     final button = catalog.items['button']!;
     final source = await catalog.readTemplate(button.files.single);
     expect(source, contains('{{typePrefix}}Button'));
@@ -113,6 +134,47 @@ items:
         ).allMatches(source),
         hasLength(3),
       );
+    },
+  );
+
+  test(
+    'sidebar_layout is a plain layout with no Spec or generated adapter',
+    () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      final item = catalog.items['sidebar_layout']!;
+
+      expect(item.registryDependencies, ['theme', 'sidebar']);
+      expect(item.dependencies, isEmpty);
+      expect(item.devDependencies, isEmpty);
+      expect(item.generated, isEmpty);
+
+      final source = await catalog.readTemplate(item.files.single);
+      expect(source, isNot(contains('part \'')));
+      expect(source, isNot(contains('@MixWidget')));
+      expect(source, isNot(contains('package:flutter/material.dart')));
+
+      for (final prefix in const [
+        (type: 'Acme', value: 'acme'),
+        (type: 'Ui', value: 'ui'),
+      ]) {
+        final rendered = const TemplateRenderer().render(
+          source,
+          typePrefix: prefix.type,
+          valuePrefix: prefix.value,
+        );
+        expect(
+          rendered,
+          contains('class ${prefix.type}SidebarLayout extends StatefulWidget'),
+        );
+        expect(
+          rendered,
+          contains(
+            'class ${prefix.type}SidebarLayoutScope extends InheritedWidget',
+          ),
+        );
+        expect(rendered, isNot(contains('{{')));
+        expect(rendered, isNot(contains('}}')));
+      }
     },
   );
 
@@ -285,15 +347,12 @@ items:
       final item = catalog.items[name];
       expect(item, isNotNull, reason: name);
       // Dependency-first order, and `theme` always leads because every
-      // component declares it. Three items need more: `data_table`'s selection
-      // column, pager, and page-size control are the application's own
-      // checkbox, icon button, and select, a `sidebar` destination is the
-      // application's own toggle, labelled by its own tooltip when collapsed,
-      // and a `toast`'s action and close control are the application's own
-      // button and icon button.
+      // component declares it. Compound items retain their dependency-first
+      // order, including both toast controls and the sidebar layout's panel.
       expect(catalog.resolve(name).map((item) => item.name), switch (name) {
         'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
         'sidebar' => ['theme', 'toggle', 'tooltip', name],
+        'sidebar_layout' => ['theme', 'toggle', 'tooltip', 'sidebar', name],
         'toast' => ['theme', 'button', 'icon_button', name],
         _ => ['theme', name],
       }, reason: name);
@@ -301,6 +360,11 @@ items:
         expect(item!.files.single.target, '@ui/icons.dart');
         expect(item.generated, isEmpty);
         expect(item.exports, ['icons.dart']);
+      } else if (name == 'sidebar_layout') {
+        // A layout, not a styled component: no Spec, no generated adapter.
+        expect(item!.files.single.target, '@ui/components/$name.dart');
+        expect(item.generated, isEmpty);
+        expect(item.exports, ['components/$name.dart']);
       } else {
         expect(item!.files.single.target, '@ui/components/$name.dart');
         expect(item.generated, ['@ui/components/$name.g.dart']);
@@ -438,6 +502,10 @@ const _componentSurfaces =
       'segmented_control': (widgets: ['SegmentedControl'], types: []),
       'select': (widgets: ['Select'], types: []),
       'sidebar': (widgets: ['Sidebar'], types: []),
+      // A layout, not a styled component: it has no `@MixWidget` recipe
+      // function, so it contributes no widgets or types here. Its own class
+      // declaration is pinned separately below.
+      'sidebar_layout': (widgets: [], types: []),
       'skeleton': (widgets: ['Skeleton'], types: []),
       'slider': (widgets: ['Slider'], types: []),
       'spinner': (widgets: ['Spinner'], types: []),

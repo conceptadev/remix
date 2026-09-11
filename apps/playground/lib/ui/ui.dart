@@ -23,6 +23,7 @@ export 'components/radio.dart';
 export 'components/segmented_control.dart';
 export 'components/select.dart';
 export 'components/sidebar.dart';
+export 'components/sidebar_layout.dart';
 export 'components/skeleton.dart';
 export 'components/slider.dart';
 export 'components/spinner.dart';

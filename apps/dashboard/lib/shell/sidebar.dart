@@ -33,6 +33,12 @@ class Sidebar extends StatelessWidget {
     // surface instead of putting a SafeArea around that surface.
     final insets = MediaQuery.paddingOf(context);
 
+    // `Sidebar` stays self-sizing (rather than deferring width entirely to
+    // `FortalSidebarLayout`'s row) so it keeps working the way `sidebar_test`
+    // exercises it: standalone, in a bare `Row` with no imposed width. The
+    // shell's own row wraps this same width in an `AnimatedContainer` using
+    // the identical constants and the identical `collapsed` trigger, so the
+    // two transitions move together.
     return FortalSidebar<DashboardPage>(
       collapsed: collapsed,
       expandedWidth: dashboardSidebarWidth,

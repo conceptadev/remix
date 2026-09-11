@@ -45,6 +45,7 @@ export 'src/components/radio.dart';
 export 'src/components/segmented_control.dart';
 export 'src/components/select.dart';
 export 'src/components/sidebar.dart';
+export 'src/components/sidebar_layout.dart';
 export 'src/components/skeleton.dart';
 export 'src/components/slider.dart';
 export 'src/components/spinner.dart';

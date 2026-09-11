@@ -309,6 +309,7 @@ const _registryItems = <String>[
   'segmented_control',
   'select',
   'sidebar',
+  'sidebar_layout',
   'skeleton',
   'slider',
   'spinner',
@@ -321,6 +322,10 @@ const _registryItems = <String>[
   'tooltip',
 ];
 
+/// Items with no generated adapter: layouts and other plain compositions
+/// that install with no `Spec` and no `part '*.g.dart';`.
+const _nonGeneratedRegistryItems = <String>['sidebar_layout'];
+
 void _writeInstalledUi(Directory app) {
   final files = [
     'ui.dart',
@@ -330,7 +335,11 @@ void _writeInstalledUi(Directory app) {
     for (final item in _registryItems)
       ...(item == 'icons'
           ? const ['icons.dart']
-          : ['components/$item.dart', 'components/$item.g.dart']),
+          : [
+              'components/$item.dart',
+              if (!_nonGeneratedRegistryItems.contains(item))
+                'components/$item.g.dart',
+            ]),
   ];
   for (final relative in files) {
     final file = File('${app.path}/lib/ui/$relative');

@@ -429,6 +429,16 @@ items:
     exports:
       - components/sidebar.dart
 
+  sidebar_layout:
+    registryDependencies:
+      - theme
+      - sidebar
+    files:
+      - source: templates/sidebar_layout/sidebar_layout.dart.tmpl
+        target: "@ui/components/sidebar_layout.dart"
+    exports:
+      - components/sidebar_layout.dart
+
   skeleton:
     registryDependencies:
       - theme
