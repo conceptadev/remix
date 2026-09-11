@@ -4,7 +4,6 @@ import 'package:remix_fortal/remix_fortal.dart';
 
 import '../../utils/text.dart';
 import '../../widgets/gallery_scaffold.dart';
-import '../../widgets/toast.dart';
 
 class GalleryOverlaysPage extends StatefulWidget {
   const GalleryOverlaysPage({super.key});
@@ -143,8 +142,13 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
                   ],
                 ),
               ],
-              onSelected: (value) =>
-                  showToast(context, message: '$value selected'),
+              onSelected: (value) => showRemixToast(
+                context,
+                RemixToastData(
+                  title: '$value selected',
+                  icon: Icons.check_circle_outline,
+                ),
+              ),
             ),
           ),
         ),

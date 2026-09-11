@@ -129,6 +129,10 @@
         {
           "title": "Tooltip",
           "href": "/components/tooltip"
+        },
+        {
+          "title": "Toast",
+          "href": "/components/toast"
         }
       ]
     },

@@ -1,0 +1,157 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+import 'button.dart';
+import 'icon_button.dart';
+
+part 'toast.g.dart';
+
+/// {{typePrefix}} toast size presets.
+enum {{typePrefix}}ToastSize { size1, size2, size3 }
+
+/// {{typePrefix}} toast surfaces, matching the Card surface and classic treatments.
+enum {{typePrefix}}ToastVariant { surface, classic }
+
+/// The color role of the leading icon.
+///
+/// Visual only: it never changes [RemixToastData.priority]. Choose
+/// [RemixToastPriority.assertive] explicitly when a message needs an
+/// immediate announcement.
+enum {{typePrefix}}ToastIntent { accent, neutral, error }
+
+/// {{typePrefix}}-themed toast surface for [RemixToast] and [RemixToastScope].
+///
+/// A {{typePrefix}} extension: Radix Themes has no toast, so the recipe reuses the
+/// Card panel and shadow tokens. The surface caps at 360 logical pixels and
+/// shrinks with the available width.
+///
+/// ```dart
+/// RemixToastScope(style: {{valuePrefix}}ToastStyle(), child: const Shell())
+/// ```
+@MixWidget(target: RemixToast.new)
+ToastStyler {{valuePrefix}}ToastStyle({
+  {{typePrefix}}ToastVariant variant = .classic,
+  {{typePrefix}}ToastSize size = .size2,
+  {{typePrefix}}ToastIntent intent = .accent,
+  ToastStyler style = const ToastStyler.create(),
+}) {
+  final metrics = _{{valuePrefix}}ToastMetrics(size);
+  final base =
+      ToastStyler(
+            container: FlexBoxStyler().spacing(metrics.gap),
+            content: FlexBoxStyler().spacing({{typePrefix}}Tokens.space1()),
+            icon: IconStyler()
+                .size(metrics.iconSize)
+                .color(_{{valuePrefix}}ToastIntentColor(intent)),
+            title: TextStyler(style: metrics.text.mix())
+                .fontWeight({{typePrefix}}Tokens.fontWeightMedium())
+                .color({{typePrefix}}Tokens.gray12()),
+            description: TextStyler(
+              style: metrics.text.mix(),
+            ).color({{typePrefix}}Tokens.gray11()),
+            action: {{valuePrefix}}ButtonStyle(variant: .ghost, size: .size1),
+            closeButton: {{valuePrefix}}IconButtonStyle(variant: .ghost, size: .size1)
+                .merge(
+                  IconButtonStyler().icon(
+                    IconStyler().color({{typePrefix}}Tokens.gray11()),
+                  ),
+                ),
+          )
+          .padding(.all(metrics.padding))
+          .borderRadius(.all(metrics.radius))
+          .maxWidth(360)
+          .containerEffects(
+            RemixBoxEffectsMix.backdropBlur({{typePrefix}}Tokens.panelBlur()),
+          );
+
+  return (switch (variant) {
+    .surface =>
+      base
+          .containerEffects(
+            RemixBoxEffectsMix.behindContent(_{{valuePrefix}}ToastPanel()),
+          )
+          .containerEffects(
+            RemixBoxEffectsMix.overContent(
+              RemixBoxEffectLayerMix(
+                shadows: [
+                  RemixBoxShadowMix(
+                    color: {{typePrefix}}Tokens.grayStroke5(),
+                    spreadRadius: 1,
+                    shapeInset: 1,
+                  ),
+                ],
+              ),
+            ),
+          )
+          .decoration(
+            BoxDecorationMix.create(boxShadow: {{typePrefix}}Tokens.shadow4.mix()),
+          ),
+    .classic =>
+      base
+          .containerEffects(
+            RemixBoxEffectsMix.behindContent(
+              _{{valuePrefix}}ToastPanel(
+                shadowToken: {{typePrefix}}Tokens.cardClassicOuterShadows,
+              ),
+            ),
+          )
+          .containerEffects(
+            RemixBoxEffectsMix.overContent(
+              RemixBoxEffectLayerMix(
+                shadowToken: {{typePrefix}}Tokens.cardClassicInnerShadows,
+              ),
+            ),
+          ),
+  }).merge(style);
+}
+
+({
+  double padding,
+  double gap,
+  double iconSize,
+  Radius radius,
+  TextStyleToken text,
+})
+_{{valuePrefix}}ToastMetrics({{typePrefix}}ToastSize size) => switch (size) {
+  .size1 => (
+    padding: {{typePrefix}}Tokens.space3(),
+    gap: {{typePrefix}}Tokens.space2(),
+    iconSize: {{typePrefix}}Tokens.space4(),
+    radius: {{typePrefix}}Tokens.radius3(),
+    text: {{typePrefix}}Tokens.text1,
+  ),
+  .size2 => (
+    padding: {{typePrefix}}Tokens.space4(),
+    gap: {{typePrefix}}Tokens.space3(),
+    iconSize: {{typePrefix}}Tokens.space4(),
+    radius: {{typePrefix}}Tokens.radius4(),
+    text: {{typePrefix}}Tokens.text2,
+  ),
+  .size3 => (
+    padding: {{typePrefix}}Tokens.space5(),
+    gap: {{typePrefix}}Tokens.space3(),
+    iconSize: {{typePrefix}}Tokens.space5(),
+    radius: {{typePrefix}}Tokens.radius5(),
+    text: {{typePrefix}}Tokens.text3,
+  ),
+};
+
+Color _{{valuePrefix}}ToastIntentColor({{typePrefix}}ToastIntent intent) => switch (intent) {
+  .accent => {{typePrefix}}Tokens.accent11(),
+  .neutral => {{typePrefix}}Tokens.gray11(),
+  .error => {{typePrefix}}Tokens.error11(),
+};
+
+RemixBoxEffectLayerMix _{{valuePrefix}}ToastPanel({
+  RemixBoxShadowListToken? shadowToken,
+}) => RemixBoxEffectLayerMix(
+  gradients: [
+    RemixLinearGradientMix(
+      colors: [{{typePrefix}}Tokens.colorPanel(), {{typePrefix}}Tokens.colorPanel()],
+    ),
+  ],
+  gradientInsets: const [1],
+  shadowToken: shadowToken,
+);

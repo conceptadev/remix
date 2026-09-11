@@ -315,6 +315,18 @@
       }
     ]
   },
+  "toast": {
+    "cases": [
+      {
+        "name": "Stacked notifications",
+        "path": "components/remixtoast/stacked-notifications"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixtoast/catalog"
+      }
+    ]
+  },
   "toggle": {
     "cases": [
       {

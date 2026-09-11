@@ -3,7 +3,7 @@ schema: 1
 items:
   theme:
     dependencies:
-      remix: ^1.0.0-beta.9
+      remix: ^1.0.0-beta.10
     files:
       - source: templates/theme/computed.dart.tmpl
         target: "@ui/theme/computed.dart"
@@ -551,6 +551,24 @@ items:
       - "@ui/components/textfield.g.dart"
     exports:
       - components/textfield.dart
+
+  toast:
+    registryDependencies:
+      - theme
+      - button
+      - icon_button
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/toast/toast.dart.tmpl
+        target: "@ui/components/toast.dart"
+    generated:
+      - "@ui/components/toast.g.dart"
+    exports:
+      - components/toast.dart
 
   toggle:
     registryDependencies:

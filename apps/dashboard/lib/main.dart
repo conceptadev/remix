@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 import 'shell/dashboard_shell.dart';
@@ -68,9 +69,9 @@ class _DashboardAppState extends State<DashboardApp>
         //
         // MaterialApp installs its fallback DefaultTextStyle below its widget
         // tree, so a scope placed above it would be overridden. `builder` wraps
-        // the whole Navigator, so this placement reaches pushed routes and raw
-        // Overlay entries such as the toast. A nearer DefaultTextStyle retains
-        // its normal priority through Flutter's inheritance.
+        // the whole Navigator, so this placement reaches pushed routes and
+        // dialogs. A nearer DefaultTextStyle retains its normal priority
+        // through Flutter's inheritance.
         builder: (context, child) => FortalScope(
           key: const ValueKey('dashboard-fortal-scope'),
           accent: _settings.accentColor,
@@ -79,7 +80,13 @@ class _DashboardAppState extends State<DashboardApp>
           panelBackground: _settings.panelBackground,
           radius: _settings.radius,
           scaling: _settings.scaling,
-          child: child!,
+          // RemixToastScope sits above the Navigator, in its own Overlay, so
+          // showRemixToast() works from every route, including dialogs and
+          // the compact navigation sheet. It inherits the live Fortal tokens
+          // FortalScope publishes above.
+          child: Overlay.wrap(
+            child: RemixToastScope(style: fortalToastStyle(), child: child!),
+          ),
         ),
         home: const DashboardShell(),
       ),

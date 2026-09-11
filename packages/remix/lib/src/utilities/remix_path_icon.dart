@@ -14,7 +14,8 @@ enum RemixPathGlyph {
   caretUp(15),
   caretDown(15),
   chevronLeft(15),
-  chevronRight(15);
+  chevronRight(15),
+  cross(15);
 
   const RemixPathGlyph(this.viewBoxSize);
 
@@ -107,6 +108,7 @@ class _RemixPathIconPainter extends CustomPainter {
       .caretDown => _caretDownPath(),
       .chevronLeft => _chevronLeftPath(),
       .chevronRight => _chevronRightPath(),
+      .cross => _crossPath(),
     };
     for (final shadow in shadows) {
       canvas.drawPath(path.shift(shadow.offset / scale), shadow.toPaint());
@@ -273,6 +275,27 @@ Path _chevronLeftPath() => Path()
   ..cubicTo(4.20477, 7.64955, 4.20477, 7.35027, 4.38508, 7.15794)
   ..lineTo(8.13508, 3.15794)
   ..cubicTo(8.32394, 2.95648, 8.64036, 2.94628, 8.84182, 3.13514)
+  ..close();
+
+// Radix Icons `Cross2Icon`.
+Path _crossPath() => Path()
+  ..moveTo(11.7816, 4.03157)
+  ..cubicTo(12.0062, 3.80702, 12.0062, 3.44295, 11.7816, 3.2184)
+  ..cubicTo(11.5571, 2.99385, 11.193, 2.99385, 10.9685, 3.2184)
+  ..lineTo(7.50005, 6.68682)
+  ..lineTo(4.03164, 3.2184)
+  ..cubicTo(3.80708, 2.99385, 3.44301, 2.99385, 3.21846, 3.2184)
+  ..cubicTo(2.99391, 3.44295, 2.99391, 3.80702, 3.21846, 4.03157)
+  ..lineTo(6.68688, 7.49999)
+  ..lineTo(3.21846, 10.9684)
+  ..cubicTo(2.99391, 11.193, 2.99391, 11.557, 3.21846, 11.7816)
+  ..cubicTo(3.44301, 12.0061, 3.80708, 12.0061, 4.03164, 11.7816)
+  ..lineTo(7.50005, 8.31316)
+  ..lineTo(10.9685, 11.7816)
+  ..cubicTo(11.193, 12.0061, 11.5571, 12.0061, 11.7816, 11.7816)
+  ..cubicTo(12.0062, 11.557, 12.0062, 11.193, 11.7816, 10.9684)
+  ..lineTo(8.31322, 7.49999)
+  ..lineTo(11.7816, 4.03157)
   ..close();
 
 Path _chevronRightPath() => Path()

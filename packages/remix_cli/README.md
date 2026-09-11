@@ -11,14 +11,15 @@ component surface: `accordion`, `avatar`, `badge`, `button`, `callout`, `card`,
 `checkbox`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
 `icon_button`, `link`, `menu`, `popover`, `progress`, `radio`,
 `segmented_control`, `select`, `sidebar`, `sidebar_layout`, `skeleton`,
-`slider`, `spinner`, `switch`, `tabs`, `textfield`, `toggle`, `toggle_group`,
-and `tooltip`, each with a `theme` dependency. The Fortal preset also includes
-`base_button`, `code`, `heading`, `kbd`, `text`, and `typography`. The
-`data_table` item uses `checkbox`, `icon_button`, and `select` for its
-controls. The default `sidebar` item uses the application's `toggle` recipe
-for destinations. `sidebar_layout` is a plain shell layout with no `Spec` and
-no generated adapter: it composes an installed `sidebar` into a row above its
-compact breakpoint and a start-edge sheet below it.
+`slider`, `spinner`, `switch`, `tabs`, `textfield`, `toast`, `toggle`,
+`toggle_group`, and `tooltip`, each with a `theme` dependency. The Fortal
+preset also includes `base_button`, `code`, `heading`, `kbd`, `text`, and
+`typography`. The `data_table` item uses `checkbox`, `icon_button`, and
+`select` for its controls; `toast` uses `button` and `icon_button` for its
+action and close control. The default `sidebar` item uses the application's
+`toggle` recipe for destinations. `sidebar_layout` is a plain shell layout
+with no `Spec` or generated adapter: it composes an installed `sidebar` into
+a row above its compact breakpoint and a start-edge sheet below it.
 The catalog also offers `chart` as an optional extension over
 `mix_chart`; it does not depend on `remix_fortal`. There is no remote registry,
 update command, registry lockfile, or content-hash protocol.
@@ -46,7 +47,7 @@ To run an unreleased build, point at a checkout or staged package path:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.9`. Before that release is available,
+Both presets require Remix `^1.0.0-beta.10`. Before that release is available,
 add this `pubspec_overrides.yaml` to the application:
 
 ```yaml
@@ -55,7 +56,7 @@ dependency_overrides:
     path: /path/to/remix/packages/remix
 ```
 
-Replace the path with your checkout. Remove the override after beta.9 is
+Replace the path with your checkout. Remove the override after beta.10 is
 published and run `flutter pub get` to use hosted Remix.
 
 Global activation is convenient for experiments, but it does not pin the

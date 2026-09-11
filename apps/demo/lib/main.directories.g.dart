@@ -46,6 +46,7 @@ import 'package:demo/components/tabs.dart' as _demo_components_tabs;
 import 'package:demo/components/text.dart' as _demo_components_text;
 import 'package:demo/components/textarea.dart' as _demo_components_textarea;
 import 'package:demo/components/textfield.dart' as _demo_components_textfield;
+import 'package:demo/components/toast.dart' as _demo_components_toast;
 import 'package:demo/components/toggle.dart' as _demo_components_toggle;
 import 'package:demo/components/toggle_group.dart'
     as _demo_components_toggle_group;
@@ -435,6 +436,19 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'TextField Component',
             builder: _demo_components_textfield.buildTextFieldUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixToast',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder: _demo_components_toast.buildToastCatalogUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Stacked notifications',
+            builder: _demo_components_toast.buildToastUseCase,
           ),
         ],
       ),

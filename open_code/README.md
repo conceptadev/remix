@@ -32,10 +32,10 @@ the optional `chart` extension, plus `accordion`, `avatar`, `badge`, `button`,
 `callout`, `card`, `checkbox`, `data_list`, `data_table`, `dialog`,
 `disclosure`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
 `radio`, `segmented_control`, `select`, `sidebar`, `sidebar_layout`,
-`skeleton`, `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toggle`,
-`toggle_group`, and `tooltip`. `sidebar_layout` is a plain shell layout with
-no `Spec` and no generated adapter, pairing an installed `sidebar` with a
-header and body.
+`skeleton`, `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toast`,
+`toggle`, `toggle_group`, and `tooltip`. `sidebar_layout` is a plain shell
+layout with no `Spec` and no generated adapter, pairing an installed
+`sidebar` with a header and body.
 
 The `fortal` preset contains that complete surface plus `base_button`, `code`,
 `heading`, `kbd`, `text`, and `typography`.
@@ -52,7 +52,7 @@ at a checkout or staged package:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.9`. Until that release is available,
+Both presets require Remix `^1.0.0-beta.10`. Until that release is available,
 add a temporary `pubspec_overrides.yaml` to the application:
 
 ```yaml

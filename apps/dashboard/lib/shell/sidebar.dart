@@ -4,7 +4,6 @@ import 'package:remix_fortal/remix_fortal.dart';
 
 import '../utils/text.dart';
 import '../widgets/action_menu.dart';
-import '../widgets/toast.dart';
 import '../widgets/typography.dart';
 import 'dashboard_page.dart';
 import 'dashboard_shell_layout.dart';
@@ -204,11 +203,14 @@ class _Profile extends StatelessWidget {
             dividerBefore: true,
           ),
         ],
-        onSelected: (value) => showToast(
+        onSelected: (value) => showRemixToast(
           context,
-          message: value == 'signout'
-              ? 'Signed out of demo'
-              : '${capitalize(value)} opened',
+          RemixToastData(
+            title: value == 'signout'
+                ? 'Signed out of demo'
+                : '${capitalize(value)} opened',
+            icon: Icons.check_circle_outline,
+          ),
         ),
       ),
     );

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 import '../../utils/text.dart';
 import '../../widgets/gallery_scaffold.dart';
-import '../../widgets/toast.dart';
 
 /// The five Fortal typography families on one page.
 ///
@@ -71,8 +71,13 @@ class GalleryTypographyPage extends StatelessWidget {
                   'Aa',
                   size: .size4,
                   weight: weight,
-                  onPressed: () =>
-                      showToast(context, message: 'Link activated'),
+                  onPressed: () => showRemixToast(
+                    context,
+                    RemixToastData(
+                      title: 'Link activated',
+                      icon: Icons.check_circle_outline,
+                    ),
+                  ),
                 ),
               };
             },
@@ -150,16 +155,24 @@ class GalleryTypographyPage extends StatelessWidget {
                 FortalLink(
                   enumLabel(underline),
                   underline: underline,
-                  onPressed: () => showToast(
+                  onPressed: () => showRemixToast(
                     context,
-                    message: '${enumLabel(underline)} link activated',
+                    RemixToastData(
+                      title: '${enumLabel(underline)} link activated',
+                      icon: Icons.check_circle_outline,
+                    ),
                   ),
                 ),
               FortalLink(
                 'High contrast',
                 highContrast: true,
-                onPressed: () =>
-                    showToast(context, message: 'High contrast activated'),
+                onPressed: () => showRemixToast(
+                  context,
+                  RemixToastData(
+                    title: 'High contrast activated',
+                    icon: Icons.check_circle_outline,
+                  ),
+                ),
               ),
               // Two spellings of the same state: a null callback disables the
               // link exactly as `enabled: false` does.
@@ -169,8 +182,13 @@ class GalleryTypographyPage extends StatelessWidget {
                 'Documentation',
                 linkUrl: Uri.parse('https://docs.page/btwld/remix/fortal'),
                 semanticHint: 'Opens the Fortal documentation',
-                onPressed: () =>
-                    showToast(context, message: 'Navigation is the caller\'s'),
+                onPressed: () => showRemixToast(
+                  context,
+                  RemixToastData(
+                    title: 'Navigation is the caller\'s',
+                    icon: Icons.check_circle_outline,
+                  ),
+                ),
               ),
             ],
           ),

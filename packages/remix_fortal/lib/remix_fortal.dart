@@ -53,6 +53,7 @@ export 'src/components/switch.dart';
 export 'src/components/tabs.dart';
 export 'src/components/text.dart';
 export 'src/components/textfield.dart';
+export 'src/components/toast.dart';
 export 'src/components/toggle.dart';
 export 'src/components/toggle_group.dart';
 export 'src/components/tooltip.dart';

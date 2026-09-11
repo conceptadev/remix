@@ -135,6 +135,33 @@ void main() {
 
         _expectScopedOverlayContent(tester, find.text('Tooltip content'));
       });
+
+      testWidgets('shows a toast without a Navigator', (tester) async {
+        await tester.pumpWidget(
+          _overlayHost(
+            RemixToastScope(
+              child: Builder(
+                builder: (context) => RemixButton(
+                  label: 'Save',
+                  style: _buttonStyle(),
+                  onPressed: () => showRemixToast(
+                    context,
+                    const RemixToastData(title: 'Toast content'),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Save'));
+        await tester.pumpAndSettle();
+
+        _expectScopedOverlayContent(tester, find.text('Toast content'));
+        await tester.pump(const Duration(seconds: 4));
+        await tester.pumpAndSettle();
+        expect(find.text('Toast content'), findsNothing);
+      });
     });
 
     testWidgets('opens a dialog with a caller-owned Navigator', (tester) async {

@@ -12,7 +12,7 @@ topics:
   - styling
   - mix
 
-version: 1.0.0-beta.9
+version: 1.0.0-beta.10
 
 # Consumer floor, matching `mix` and `naked_ui`. Intentionally lower than the
 # workspace's own toolchain floor: dev tooling needs a newer SDK than the
@@ -33,7 +33,7 @@ dependencies:
   # validated against; the exact tested resolution is enforced on the
   # workspace lockfile by tool/fortal_parity/check.dart, which also requires
   # both published packages to carry this identical constraint.
-  naked_ui: ^1.0.0-beta.14
+  naked_ui: ^1.0.0-beta.15
 
 dev_dependencies:
   flutter_test:

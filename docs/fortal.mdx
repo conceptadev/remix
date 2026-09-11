@@ -119,6 +119,11 @@ app. A scope placed above `MaterialApp` still supplies tokens, but its root text
 run is overridden. `builder:` sits below that style and above the `Navigator`,
 so pushed routes and raw `Overlay` entries receive the Fortal fallback.
 
+A [`RemixToastScope`](/components/toast) goes the other side of the
+`Navigator`: in `home` or a persistent router shell, below the Overlay it
+renders into. Its toasts then inherit this scope's tokens live, like any other
+descendant.
+
 The root run is only a fallback for bare Flutter `Text`, and it follows
 Flutter's normal text-style cascade. A nearer `DefaultTextStyle`, including one
 installed by `Material` or `Scaffold`, wins for that bare text. Fortal

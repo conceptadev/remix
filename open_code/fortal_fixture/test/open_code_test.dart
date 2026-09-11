@@ -248,6 +248,7 @@ List<_WidgetCase> _generatedWidgetCases() => [
     AcmeTextField,
   }),
   const _WidgetCase('text area', AcmeTextArea(label: 'Notes'), {AcmeTextArea}),
+  const _WidgetCase('toast', AcmeToast(title: 'Draft saved'), {AcmeToast}),
   const _WidgetCase('toggle', AcmeToggle(selected: false, label: 'Bold'), {
     AcmeToggle,
   }),
@@ -301,6 +302,7 @@ const _allGeneratedWidgetTypes = <Type>{
   AcmeText,
   AcmeTextField,
   AcmeTextArea,
+  AcmeToast,
   AcmeToggle,
   AcmeToggleGroup<String>,
   AcmeTooltip,

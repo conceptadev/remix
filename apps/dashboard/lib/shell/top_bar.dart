@@ -6,7 +6,6 @@ import '../data/activity.dart';
 import '../theme/theme_scope.dart';
 import '../widgets/action_menu.dart';
 import '../widgets/theme_panel.dart';
-import '../widgets/toast.dart';
 import '../widgets/typography.dart';
 import 'dashboard_page.dart';
 import 'dashboard_shell_layout.dart';
@@ -135,9 +134,12 @@ class _TopBarState extends State<TopBar> {
                         size: .size1,
                         onPressed: () {
                           _notificationsController.close();
-                          showToast(
+                          showRemixToast(
                             context,
-                            message: 'All notifications marked read',
+                            RemixToastData(
+                              title: 'All notifications marked read',
+                              icon: Icons.check_circle_outline,
+                            ),
                           );
                         },
                         label: 'Mark all read',
@@ -247,11 +249,14 @@ class _TopBarState extends State<TopBar> {
                 dividerBefore: true,
               ),
             ],
-            onSelected: (value) => showToast(
+            onSelected: (value) => showRemixToast(
               context,
-              message: value == 'signout'
-                  ? 'Signed out of demo'
-                  : 'Opened $value',
+              RemixToastData(
+                title: value == 'signout'
+                    ? 'Signed out of demo'
+                    : 'Opened $value',
+                icon: Icons.check_circle_outline,
+              ),
             ),
           ),
         ],

@@ -8,6 +8,9 @@
 - `sidebar` in both presets labels collapsed icon-rail destinations with the
   application's `tooltip` recipe, so adding it also installs `tooltip`. The
   Fortal recipe also narrows its navigation padding as the rail collapses.
+- Adds a `toast` item to both presets. Its action and close control are the
+  application's own `button` and `icon_button` recipes, so adding it installs
+  both. It needs the Remix release that ships `RemixToastScope`.
 
 - Require Remix `^1.0.0-beta.9` for the generated Fortal adapters. CI checks
   both presets with checkout Remix. Publication requires the hosted check.

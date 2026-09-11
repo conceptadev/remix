@@ -19,6 +19,31 @@ void main() {
     expect(const DisclosureSpec(), isA<DisclosureSpec>());
   });
 
+  test('toast API is constructible from the package barrel', () {
+    const data = RemixToastData(
+      id: 'upload',
+      title: 'Uploaded',
+      priority: RemixToastPriority.assertive,
+    );
+    const scope = RemixToastScope(
+      placement: RemixToastPlacement.topCenter,
+      child: SizedBox(),
+    );
+    const toast = RemixToast(title: 'Uploaded');
+    final RemixToastController controller = RemixToastController();
+    addTearDown(controller.dispose);
+
+    expect(data.duration, const Duration(seconds: 4));
+    expect(scope.dismissLabel, 'Dismiss notification');
+    expect(toast.style, isA<ToastStyler>());
+    expect(const ToastSpec(), isA<ToastSpec>());
+    expect(controller.isAttached, isFalse);
+    expect(
+      RemixToastDismissReason.values,
+      contains(RemixToastDismissReason.action),
+    );
+  });
+
   test('segmented control API is constructible from the package barrel', () {
     const item = RemixSegmentedControlItem<String>(
       value: 'list',
