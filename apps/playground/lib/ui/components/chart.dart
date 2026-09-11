@@ -19,25 +19,13 @@ const _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);
 
 /// Returns the categorical palette shared by this application's charts.
 ///
-/// The first color follows the application's `primary` token. The remaining
-/// colors are local values chosen for separation on the active background.
-/// Edit the two lists below to change every chart, or pass `palette` to one
-/// recipe or generated widget for a local override.
-///
-/// The returned list removes duplicates. A brand whose primary matches one of
-/// the fixed colors therefore keeps a useful palette instead of drawing two
-/// series with the same paint.
-List<Color> resolvePlaygroundChartPalette(BuildContext context) {
-  final background = PlaygroundTokens.background.resolve(context);
-  final fixed = background.computeLuminance() < _darkBackgroundLuminance
-      ? _darkCategoricalColors
-      : _lightCategoricalColors;
-
-  return List<Color>.unmodifiable(<Color>{
-    PlaygroundTokens.primary.resolve(context),
-    ...fixed,
-  });
-}
+/// The colors are the theme's `chart1` through `chart5` tokens in series
+/// order, so editing them in `PlaygroundThemeData` restyles every chart.
+/// Pass `palette` to one recipe or generated widget for a local override.
+List<Color> resolvePlaygroundChartPalette(BuildContext context) =>
+    List<Color>.unmodifiable([
+      for (final token in PlaygroundTokens.chart) token.resolve(context),
+    ]);
 
 /// The application's line and area chart recipe.
 ///
@@ -140,33 +128,6 @@ PieChartStyler playgroundPieChartStyle({
     .tooltip(_chartTooltipStyle())
     .merge(PieChartStyler.create(palette: _paletteProp(palette)))
     .merge(style);
-
-/// Luminance below which the dark categorical palette is used.
-///
-/// This is the WCAG midpoint where white becomes the stronger contrasting
-/// choice than black. It lets a custom dark background select the right list
-/// without adding a brightness field to the existing theme contract.
-const _darkBackgroundLuminance = 0.179;
-
-/// Categorical colors for a light page, excluding the theme's primary color.
-const _lightCategoricalColors = <Color>[
-  Color(0xFF2563EB),
-  Color(0xFFC2410C),
-  Color(0xFF047857),
-  Color(0xFF7E22CE),
-  Color(0xFFBE123C),
-  Color(0xFF0E7490),
-];
-
-/// Categorical colors for a dark page, excluding the theme's primary color.
-const _darkCategoricalColors = <Color>[
-  Color(0xFF60A5FA),
-  Color(0xFFFB923C),
-  Color(0xFF34D399),
-  Color(0xFFC084FC),
-  Color(0xFFFB7185),
-  Color(0xFF22D3EE),
-];
 
 /// Width of a line series.
 const _lineWidth = 2.0;

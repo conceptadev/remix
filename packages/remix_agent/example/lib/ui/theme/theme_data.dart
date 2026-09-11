@@ -27,6 +27,11 @@ class UiThemeData {
     required this.destructiveForeground,
     required this.border,
     required this.focusRing,
+    required this.chart1,
+    required this.chart2,
+    required this.chart3,
+    required this.chart4,
+    required this.chart5,
     required this.radius,
   });
 
@@ -46,6 +51,11 @@ class UiThemeData {
       destructiveForeground = const Color(0xFFFFFFFF),
       border = const Color(0xFFE5E5E5),
       focusRing = const Color(0xFF737373),
+      chart1 = const Color(0xFF2563EB),
+      chart2 = const Color(0xFFC2410C),
+      chart3 = const Color(0xFF047857),
+      chart4 = const Color(0xFF7E22CE),
+      chart5 = const Color(0xFFBE123C),
       radius = const Radius.circular(8);
 
   /// The neutral dark theme.
@@ -64,6 +74,11 @@ class UiThemeData {
       destructiveForeground = const Color(0xFFFFFFFF),
       border = const Color(0xFF404040),
       focusRing = const Color(0xFFA3A3A3),
+      chart1 = const Color(0xFF60A5FA),
+      chart2 = const Color(0xFFFB923C),
+      chart3 = const Color(0xFF34D399),
+      chart4 = const Color(0xFFC084FC),
+      chart5 = const Color(0xFFFB7185),
       radius = const Radius.circular(8);
 
   /// Value for [UiTokens.background].
@@ -108,6 +123,21 @@ class UiThemeData {
   /// Value for [UiTokens.focusRing].
   final Color focusRing;
 
+  /// Value for [UiTokens.chart1].
+  final Color chart1;
+
+  /// Value for [UiTokens.chart2].
+  final Color chart2;
+
+  /// Value for [UiTokens.chart3].
+  final Color chart3;
+
+  /// Value for [UiTokens.chart4].
+  final Color chart4;
+
+  /// Value for [UiTokens.chart5].
+  final Color chart5;
+
   /// Value for [UiTokens.radius].
   final Radius radius;
 
@@ -131,6 +161,11 @@ class UiThemeData {
         UiTokens.destructiveForeground: destructiveForeground,
         UiTokens.border: border,
         UiTokens.focusRing: focusRing,
+        UiTokens.chart1: chart1,
+        UiTokens.chart2: chart2,
+        UiTokens.chart3: chart3,
+        UiTokens.chart4: chart4,
+        UiTokens.chart5: chart5,
         UiTokens.radius: radius,
       });
 
@@ -150,6 +185,11 @@ class UiThemeData {
     Color? destructiveForeground,
     Color? border,
     Color? focusRing,
+    Color? chart1,
+    Color? chart2,
+    Color? chart3,
+    Color? chart4,
+    Color? chart5,
     Radius? radius,
   }) => UiThemeData(
     background: background ?? this.background,
@@ -166,6 +206,11 @@ class UiThemeData {
     destructiveForeground: destructiveForeground ?? this.destructiveForeground,
     border: border ?? this.border,
     focusRing: focusRing ?? this.focusRing,
+    chart1: chart1 ?? this.chart1,
+    chart2: chart2 ?? this.chart2,
+    chart3: chart3 ?? this.chart3,
+    chart4: chart4 ?? this.chart4,
+    chart5: chart5 ?? this.chart5,
     radius: radius ?? this.radius,
   );
 
@@ -184,6 +229,11 @@ class UiThemeData {
     destructiveForeground,
     border,
     focusRing,
+    chart1,
+    chart2,
+    chart3,
+    chart4,
+    chart5,
     radius,
   ];
 
