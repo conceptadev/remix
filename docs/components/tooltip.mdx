@@ -90,6 +90,18 @@ class _TriggerButton extends StatelessWidget {
 ```
 </CodeGroup>
 
+## Controlled visibility
+
+`RemixTooltip` and `FortalTooltip` accept `open` and `onOpenChanged`.
+Leave `open` null for automatic hover, keyboard-focus, and touch behavior.
+When `open` is a boolean, interaction requests a change through
+`onOpenChanged`; the owner must update `open` to accept it. Changing visibility
+keeps the trigger mounted and preserves its focus.
+
+A controlled, closed tooltip delegates unmodified Escape to an enabled enclosing
+`DismissIntent` action, allowing a containing drawer or menu to dismiss.
+An open tooltip handles Escape by requesting closure.
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:
@@ -136,6 +148,8 @@ RemixTooltip remixTooltipConstructor({
   Key? key,
   required Widget tooltipChild,
   required Widget child,
+  bool? open,
+  ValueChanged<bool>? onOpenChanged,
   String? tooltipSemantics,
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
   TooltipStyler style = const TooltipStyler.create(),
@@ -167,6 +181,14 @@ Optional. The style spec for the tooltip.
 #### `child` → `Widget`
 
 **Required**. The child widget that will trigger the tooltip.
+
+#### `open` → `bool?`
+
+Optional. Controlled visibility, or null for hover/focus/touch-managed visibility.
+
+#### `onOpenChanged` → `ValueChanged<bool>?`
+
+Optional. Requests a visibility change; controlled callers must accept it in `open`.
 
 #### `tooltipSemantics` → `String?`
 
@@ -251,6 +273,6 @@ Applies a matrix transformation to the component.
 
 Sets the widget modifier.
 
-#### `call({Key? key, required Widget tooltipChild, required Widget child, String? tooltipSemantics, OverlayPositionConfig positioning = const OverlayPositionConfig()})`
+#### `call({Key? key, required Widget tooltipChild, required Widget child, bool? open, ValueChanged<bool>? onOpenChanged, String? tooltipSemantics, OverlayPositionConfig positioning = const OverlayPositionConfig()})`
 
 Creates a `RemixTooltip` widget with this style applied.

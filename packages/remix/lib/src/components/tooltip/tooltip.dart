@@ -2,6 +2,7 @@ library remix_tooltip;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:naked_ui/naked_ui.dart';
