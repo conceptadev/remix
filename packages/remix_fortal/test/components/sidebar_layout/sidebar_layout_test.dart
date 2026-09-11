@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -254,6 +255,208 @@ void main() {
 
     expect(find.byKey(_sidebarKey), findsOneWidget);
     expect(lastNotified, isTrue);
+  });
+
+  testWidgets(
+    'openCompact is a no-op while wide and its state does not carry over '
+    'to the next compact presentation',
+    (tester) async {
+      late BuildContext scopeContext;
+      final width = ValueNotifier<double>(900);
+      await tester.pumpWidget(
+        FortalScope(
+          child: MaterialApp(
+            home: ValueListenableBuilder<double>(
+              valueListenable: width,
+              builder: (context, value, _) => Align(
+                alignment: Alignment.topLeft,
+                child: SizedBox(
+                  width: value,
+                  height: 600,
+                  child: FortalSidebarLayout(
+                    header: Builder(
+                      builder: (context) {
+                        scopeContext = context;
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                    sidebar: const SizedBox(
+                      key: _sidebarKey,
+                      child: Text('Sidebar'),
+                    ),
+                    body: const SizedBox(key: _bodyKey, child: Text('Body')),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(FortalSidebarLayoutScope.of(scopeContext).isCompact, isFalse);
+
+      FortalSidebarLayoutScope.of(scopeContext).openCompact();
+      await tester.pumpAndSettle();
+
+      // Still wide: the sidebar is only ever mounted once, inline in the
+      // row, and the documented "always false outside a compact
+      // presentation" invariant holds despite the openCompact call.
+      expect(find.byKey(_sidebarKey), findsOneWidget);
+      expect(FortalSidebarLayoutScope.of(scopeContext).isCompactOpen, isFalse);
+
+      width.value = 500;
+      await tester.pumpAndSettle();
+
+      // Narrow now, but nothing asked for the sheet at this width: the
+      // earlier no-op openCompact call must not have left state that
+      // reopens it.
+      final scopeNarrow = FortalSidebarLayoutScope.of(
+        tester.element(find.byKey(_bodyKey)),
+      );
+      expect(scopeNarrow.isCompact, isTrue);
+      expect(scopeNarrow.isCompactOpen, isFalse);
+      expect(find.byKey(_sidebarKey), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'closes the sheet on its own route when a nested Navigator sits between '
+    'the layout and the root Navigator showRemixDialog pushed onto',
+    (tester) async {
+      final width = ValueNotifier<double>(500);
+      late BuildContext scopeContext;
+      await tester.pumpWidget(
+        FortalScope(
+          child: MaterialApp(
+            home: ValueListenableBuilder<double>(
+              valueListenable: width,
+              builder: (context, value, _) => Align(
+                alignment: Alignment.topLeft,
+                child: SizedBox(
+                  width: value,
+                  height: 600,
+                  // A Navigator nested below the root -- e.g. what a
+                  // go_router ShellRoute or a per-tab Navigator would put
+                  // between the layout and the app's root Navigator, which
+                  // is where showRemixDialog's default useRootNavigator:
+                  // true actually pushes the sheet's route.
+                  child: Navigator(
+                    onGenerateRoute: (settings) => MaterialPageRoute(
+                      builder: (context) => FortalSidebarLayout(
+                        header: Builder(
+                          builder: (context) {
+                            scopeContext = context;
+                            return const SizedBox.shrink();
+                          },
+                        ),
+                        sidebar: const SizedBox(
+                          key: _sidebarKey,
+                          child: Text('Sidebar'),
+                        ),
+                        body: const SizedBox(
+                          key: _bodyKey,
+                          child: Text('Body'),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      FortalSidebarLayoutScope.of(scopeContext).openCompact();
+      await tester.pumpAndSettle();
+      expect(find.byKey(_sidebarKey), findsOneWidget);
+
+      width.value = 900;
+      await tester.pumpAndSettle();
+
+      // Exactly one sidebar instance: the wide row's. A bare
+      // `Navigator.of(context).maybePop()` would pop the nested Navigator
+      // (a no-op there, since it owns only its single route) and leave the
+      // sheet's own route stuck open on the root Navigator underneath.
+      expect(find.byKey(_sidebarKey), findsOneWidget);
+      final scopeAfter = FortalSidebarLayoutScope.of(
+        tester.element(find.byKey(_sidebarKey)),
+      );
+      expect(scopeAfter.isCompact, isFalse);
+      expect(scopeAfter.isCompactOpen, isFalse);
+    },
+  );
+
+  testWidgets('crossing to wide leaves a route pushed above the sheet alone', (
+    tester,
+  ) async {
+    final rootNavigatorKey = GlobalKey<NavigatorState>();
+    const markerKey = ValueKey('marker-route');
+    final width = ValueNotifier<double>(500);
+    late BuildContext scopeContext;
+    await tester.pumpWidget(
+      FortalScope(
+        child: MaterialApp(
+          navigatorKey: rootNavigatorKey,
+          home: ValueListenableBuilder<double>(
+            valueListenable: width,
+            builder: (context, value, _) => Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: value,
+                height: 600,
+                child: FortalSidebarLayout(
+                  header: Builder(
+                    builder: (context) {
+                      scopeContext = context;
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                  sidebar: const SizedBox(
+                    key: _sidebarKey,
+                    child: Text('Sidebar'),
+                  ),
+                  body: const SizedBox(key: _bodyKey, child: Text('Body')),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    FortalSidebarLayoutScope.of(scopeContext).openCompact();
+    await tester.pumpAndSettle();
+    expect(find.byKey(_sidebarKey), findsOneWidget);
+
+    // Simulate the host pushing something else on top of the sheet, on
+    // the same root Navigator the sheet's own route lives on.
+    unawaited(
+      rootNavigatorKey.currentState!.push<void>(
+        MaterialPageRoute<void>(
+          builder: (context) => const SizedBox(
+            key: markerKey,
+            child: Text('On top of the sheet'),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byKey(markerKey), findsOneWidget);
+
+    width.value = 900;
+    await tester.pumpAndSettle();
+
+    // The marker route -- not the sheet's -- is on top, so it must still
+    // be there, undisturbed, after the layout closes its own route.
+    expect(find.byKey(markerKey), findsOneWidget);
+
+    rootNavigatorKey.currentState!.pop();
+    await tester.pumpAndSettle();
+
+    // With the marker popped, only the wide row's sidebar remains: the
+    // sheet's own route was actually removed, not left stuck underneath.
+    expect(find.byKey(_sidebarKey), findsOneWidget);
   });
 
   testWidgets('the compact sheet sits at the start edge in LTR', (

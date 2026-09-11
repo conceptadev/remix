@@ -40,6 +40,12 @@ const _compactSheetBarrierGutter = 56.0;
 /// controlled. Leave [compactOpen] null to let the layout manage it, still
 /// observing changes through [onCompactOpenChanged] if supplied.
 ///
+/// A controlled [compactOpen] is the single source of truth: a barrier tap,
+/// Escape, a back gesture, or crossing back above [compactBreakpoint] only
+/// calls [onCompactOpenChanged] rather than dismissing the sheet directly.
+/// The host must set [compactOpen] to `false` from that callback for the
+/// dismissal to stick.
+///
 /// ```dart
 /// FortalSidebarLayout(
 ///   sidebar: FortalSidebar<AppPage>(
@@ -111,6 +117,16 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
   bool _selfOpen = false;
   bool _sheetShowing = false;
 
+  /// The layout's presentation as of its most recent build, so [_openCompact]
+  /// can no-op while wide even when called outside that build.
+  bool _isCompact = false;
+
+  /// The route [showRemixDialog] pushed for the open sheet, captured from
+  /// inside its own builder via `ModalRoute.of` so [_removeSheetRoute] can
+  /// close exactly that route on the Navigator that actually owns it,
+  /// rather than popping whatever a bare `Navigator.of(context)` finds.
+  Route<void>? _sheetRoute;
+
   bool get _effectiveOpen => widget.compactOpen ?? _selfOpen;
 
   void _setOpen(bool value) {
@@ -121,10 +137,17 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
     widget.onCompactOpenChanged?.call(value);
   }
 
-  void _openCompact() => _setOpen(true);
+  // No-op while wide, so open state never carries over to the next compact
+  // presentation.
+  void _openCompact() {
+    if (!_isCompact) return;
+    _setOpen(true);
+  }
+
   void _closeCompact() => _setOpen(false);
 
   void _reconcileSheet(bool isCompact) {
+    _isCompact = isCompact;
     final desiredOpen = isCompact && _effectiveOpen;
     if (desiredOpen == _sheetShowing) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -132,9 +155,15 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
       if (desiredOpen) {
         if (!_sheetShowing) _pushSheet();
       } else if (_sheetShowing) {
-        Navigator.of(context).maybePop();
+        _removeSheetRoute();
       }
     });
+  }
+
+  void _removeSheetRoute() {
+    final route = _sheetRoute;
+    if (route == null || !route.isActive) return;
+    route.navigator?.removeRoute(route);
   }
 
   Future<void> _pushSheet() async {
@@ -150,6 +179,7 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
           ? Duration.zero
           : const Duration(milliseconds: 250),
       builder: (dialogContext) {
+        _sheetRoute = ModalRoute.of(dialogContext);
         final available = MediaQuery.sizeOf(dialogContext).width;
         final width = math.min(
           widget.sidebarWidth,
@@ -194,6 +224,9 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
         );
       },
     );
+    // Reached once, however the route completed: a user dismissal or
+    // _removeSheetRoute above.
+    _sheetRoute = null;
     _sheetShowing = false;
     if (mounted) _setOpen(false);
   }
@@ -207,7 +240,8 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
 
         return FortalSidebarLayoutScope._(
           isCompact: isCompact,
-          isCompactOpen: _effectiveOpen,
+          // Anded with isCompact so it can't read true while wide.
+          isCompactOpen: isCompact && _effectiveOpen,
           openCompact: _openCompact,
           closeCompact: _closeCompact,
           child: isCompact ? _body() : _wideRow(),
