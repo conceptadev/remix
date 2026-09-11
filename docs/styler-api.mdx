@@ -142,8 +142,8 @@ operation without ambiguous overloads.
 Component stylers are generated from `@MixableSpec`. Preset wrapper classes are
 generated from `@MixWidget`, which is not Remix-internal: any package that
 depends on `remix` can annotate a recipe function with it, and the generator
-emits a widget calling the target Remix constructor. The
-[`remix_fortal`](/fortal) package does exactly this to produce its `Fortal*`
+emits a widget calling the target Remix constructor. The application-owned
+[`fortal` preset](/fortal) uses exactly this mechanism to produce its prefixed
 catalog. The annotations identify the target Remix constructor and which recipe
 parameters become wrapper fields. Generated files remain deterministic build
 artifacts and should never be edited directly.

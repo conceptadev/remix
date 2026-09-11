@@ -1,0 +1,319 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'select.g.dart';
+
+/// Radix Themes Select root size presets.
+enum {{typePrefix}}SelectSize { size1, size2, size3 }
+
+/// Radix Themes Select variants.
+enum {{typePrefix}}SelectVariant { surface, soft, ghost }
+
+/// {{typePrefix}}-themed Select with Radix-owned trigger and content configuration.
+@MixWidget(target: RemixSelect.new)
+SelectStyler {{valuePrefix}}SelectStyle({
+  {{typePrefix}}SelectVariant variant = .surface,
+  {{typePrefix}}SelectSize size = .size2,
+  bool highContrast = false,
+  SelectStyler style = const SelectStyler.create(),
+}) {
+  return SelectStyler()
+      .trigger(_{{valuePrefix}}SelectTriggerStyler(variant, size))
+      .content(_{{valuePrefix}}SelectContentStyler(size))
+      .item(_{{valuePrefix}}SelectItemStyler(variant, size, highContrast: highContrast))
+      .merge(style);
+}
+
+/// Creates the established combined-variant Select item recipe.
+SelectMenuItemStyler {{valuePrefix}}SelectMenuItemStyle({
+  {{typePrefix}}SelectVariant variant = .surface,
+  {{typePrefix}}SelectSize size = .size2,
+  bool highContrast = false,
+}) => _{{valuePrefix}}SelectItemStyler(variant, size, highContrast: highContrast);
+
+SelectTriggerStyler _{{valuePrefix}}SelectTriggerStyler(
+  {{typePrefix}}SelectVariant variant,
+  {{typePrefix}}SelectSize size,
+) {
+  final radius = _{{valuePrefix}}SelectTriggerRadius(size);
+  final base = SelectTriggerStyler()
+      .direction(.horizontal)
+      .mainAxisAlignment(.spaceBetween)
+      .borderRadius(.all(radius))
+      .label(_{{valuePrefix}}SelectTriggerText(size, color: {{typePrefix}}Tokens.gray12()))
+      .placeholder(
+        _{{valuePrefix}}SelectTriggerText(size, color: {{typePrefix}}Tokens.grayA10()),
+      )
+      .icon(.color({{typePrefix}}Tokens.gray12()))
+      .indicator(.color({{typePrefix}}Tokens.gray12()).size(size == .size3 ? 11 : 9))
+      .onFocusVisible(
+        .containerEffects(
+          RemixBoxEffectsMix.overContent(_{{valuePrefix}}SelectFocusRing()),
+        ),
+      )
+      .merge(_{{valuePrefix}}SelectTriggerSizeStyler(variant, size));
+
+  return switch (variant) {
+    .surface => _{{valuePrefix}}SelectSurfaceTrigger(base),
+    .soft => _{{valuePrefix}}SelectSoftTrigger(base),
+    .ghost => _{{valuePrefix}}SelectGhostTrigger(base),
+  };
+}
+
+TextStyler _{{valuePrefix}}SelectTriggerText({{typePrefix}}SelectSize size, {Color? color}) {
+  final token = switch (size) {
+    .size1 => {{typePrefix}}Tokens.text1,
+    .size2 => {{typePrefix}}Tokens.text2,
+    .size3 => {{typePrefix}}Tokens.text3,
+  };
+  return TextStyler(style: token.mix())
+      .fontWeight({{typePrefix}}Tokens.fontWeightRegular())
+      .color(color ?? {{typePrefix}}Tokens.gray12());
+}
+
+Radius _{{valuePrefix}}SelectTriggerRadius({{typePrefix}}SelectSize size) => switch (size) {
+  .size1 => {{typePrefix}}Tokens.radius1OrFull(),
+  .size2 => {{typePrefix}}Tokens.radius2OrFull(),
+  .size3 => {{typePrefix}}Tokens.radius3OrFull(),
+};
+
+SelectTriggerStyler _{{valuePrefix}}SelectTriggerSizeStyler(
+  {{typePrefix}}SelectVariant variant,
+  {{typePrefix}}SelectSize size,
+) {
+  final style = SelectTriggerStyler().spacing(switch (size) {
+    .size1 => {{typePrefix}}Tokens.space1(),
+    .size2 => {{typePrefix}}Tokens.selectSpace1Half(),
+    .size3 => {{typePrefix}}Tokens.space2(),
+  });
+  return switch (variant) {
+    .ghost => switch (size) {
+      .size1 || .size2 =>
+        style
+            .padding(.horizontal({{typePrefix}}Tokens.space2()))
+            .padding(.vertical({{typePrefix}}Tokens.space1()))
+            .margin(.horizontal({{typePrefix}}Tokens.selectGhostMarginX12()))
+            .margin(.vertical({{typePrefix}}Tokens.selectGhostMarginY12())),
+      .size3 =>
+        style
+            .padding(.horizontal({{typePrefix}}Tokens.space3()))
+            .padding(.vertical({{typePrefix}}Tokens.selectSpace1Half()))
+            .margin(.horizontal({{typePrefix}}Tokens.selectGhostMarginX3()))
+            .margin(.vertical({{typePrefix}}Tokens.selectGhostMarginY3())),
+    },
+    .surface || .soft => switch (size) {
+      .size1 =>
+        style
+            .height({{typePrefix}}Tokens.space5())
+            .padding(.horizontal({{typePrefix}}Tokens.space2())),
+      .size2 =>
+        style
+            .height({{typePrefix}}Tokens.space6())
+            .padding(.horizontal({{typePrefix}}Tokens.space3())),
+      .size3 =>
+        style
+            .height({{typePrefix}}Tokens.space7())
+            .padding(.horizontal({{typePrefix}}Tokens.space4())),
+    },
+  };
+}
+
+RemixBoxEffectLayerMix _{{valuePrefix}}SelectFocusRing() {
+  return RemixBoxEffectLayerMix(
+    shadows: [
+      RemixBoxShadowMix(color: {{typePrefix}}Tokens.focus8(), spreadRadius: 1),
+      RemixBoxShadowMix(
+        kind: RemixBoxShadowKind.inset,
+        color: {{typePrefix}}Tokens.focus8(),
+        spreadRadius: 1,
+      ),
+    ],
+  );
+}
+
+SelectTriggerStyler _{{valuePrefix}}SelectSurfaceTrigger(SelectTriggerStyler base) {
+  return base
+      .indicatorOpacity(0.9)
+      .color({{typePrefix}}Tokens.colorSurface())
+      .containerEffects(
+        RemixBoxEffectsMix.behindContent(
+          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA7()]),
+        ),
+      )
+      .onHovered(
+        .containerEffects(
+          RemixBoxEffectsMix.behindContent(
+            {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA8()]),
+          ),
+        ),
+      )
+      .onSelected(
+        .containerEffects(
+          RemixBoxEffectsMix.behindContent(
+            {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA8()]),
+          ),
+        ),
+      )
+      .onDisabled(
+        .color({{typePrefix}}Tokens.grayA2())
+            .label(.color({{typePrefix}}Tokens.grayA11()))
+            .icon(.color({{typePrefix}}Tokens.grayA9()))
+            .indicator(.color({{typePrefix}}Tokens.grayA9()))
+            .containerEffects(
+              RemixBoxEffectsMix.behindContent(
+                {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA6()]),
+              ),
+            ),
+      );
+}
+
+SelectTriggerStyler _{{valuePrefix}}SelectSoftTrigger(SelectTriggerStyler base) {
+  return base
+      .label(.color({{typePrefix}}Tokens.accent12()))
+      .placeholder(.color({{typePrefix}}Tokens.accent12()))
+      .placeholderOpacity(0.6)
+      .icon(.color({{typePrefix}}Tokens.accent12()))
+      .indicator(.color({{typePrefix}}Tokens.accent12()))
+      .color({{typePrefix}}Tokens.accentA3())
+      .onHovered(.color({{typePrefix}}Tokens.accentA4()))
+      .onSelected(.color({{typePrefix}}Tokens.accentA4()))
+      .onDisabled(
+        .label(.color({{typePrefix}}Tokens.grayA11()))
+            .icon(.color({{typePrefix}}Tokens.grayA9()))
+            .indicator(.color({{typePrefix}}Tokens.grayA9()))
+            .color({{typePrefix}}Tokens.grayA3()),
+      );
+}
+
+SelectTriggerStyler _{{valuePrefix}}SelectGhostTrigger(SelectTriggerStyler base) {
+  return base
+      .label(.color({{typePrefix}}Tokens.accent12()))
+      .placeholder(.color({{typePrefix}}Tokens.accent12()))
+      .placeholderOpacity(0.6)
+      .icon(.color({{typePrefix}}Tokens.accent12()))
+      .indicator(.color({{typePrefix}}Tokens.accent12()))
+      .color(const Color(0x00000000))
+      .onHovered(.color({{typePrefix}}Tokens.accentA3()))
+      .onSelected(.color({{typePrefix}}Tokens.accentA3()))
+      .onDisabled(
+        .label(.color({{typePrefix}}Tokens.grayA11()))
+            .icon(.color({{typePrefix}}Tokens.grayA9()))
+            .indicator(.color({{typePrefix}}Tokens.grayA9()))
+            .color(const Color(0x00000000)),
+      );
+}
+
+SelectContentStyler _{{valuePrefix}}SelectContentStyler({{typePrefix}}SelectSize size) {
+  final radius = switch (size) {
+    .size1 => {{typePrefix}}Tokens.radius3(),
+    .size2 || .size3 => {{typePrefix}}Tokens.radius4(),
+  };
+  return SelectContentStyler()
+      .padding(
+        .all(switch (size) {
+          .size1 => {{typePrefix}}Tokens.space1(),
+          .size2 || .size3 => {{typePrefix}}Tokens.space2(),
+        }),
+      )
+      .borderRadius(.all(radius))
+      .color({{typePrefix}}Tokens.colorPanel())
+      .decoration(
+        BoxDecorationMix.create(boxShadow: {{typePrefix}}Tokens.shadow5.mix()),
+      )
+      .clipBehavior(Clip.antiAlias)
+      .containerEffects(
+        RemixBoxEffectsMix.backdropBlur({{typePrefix}}Tokens.panelBlur()),
+      );
+}
+
+SelectMenuItemStyler _{{valuePrefix}}SelectItemStyler(
+  {{typePrefix}}SelectVariant variant,
+  {{typePrefix}}SelectSize size, {
+  bool highContrast = false,
+}) {
+  final metrics = _{{valuePrefix}}SelectContentMetrics(size);
+  final base = SelectMenuItemStyler()
+      .direction(.horizontal)
+      .height(metrics.itemHeight)
+      .padding(.horizontal(metrics.indicatorWidth))
+      .borderRadius(.all(metrics.itemRadius))
+      .text(
+        TextStyler(style: metrics.itemText.mix()).color({{typePrefix}}Tokens.gray12()),
+      )
+      .indicator(
+        BoxStyler(
+          alignment: .center,
+          constraints: BoxConstraintsMix.width(metrics.indicatorWidth),
+        ),
+      )
+      .icon(
+        IconStyler(color: {{typePrefix}}Tokens.gray12(), size: metrics.indicatorSize),
+      );
+
+  final highlighted = switch (variant) {
+    .surface || .ghost =>
+      SelectMenuItemStyler()
+          .color(
+            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accent9(),
+          )
+          .text(
+            TextStyler().color(
+              highContrast
+                  ? {{typePrefix}}Tokens.accent1()
+                  : {{typePrefix}}Tokens.accentContrast(),
+            ),
+          )
+          .iconColor(
+            highContrast
+                ? {{typePrefix}}Tokens.accent1()
+                : {{typePrefix}}Tokens.accentContrast(),
+          ),
+    .soft => SelectMenuItemStyler().color({{typePrefix}}Tokens.accentA4()),
+  };
+
+  // Naked's focused option is Radix's roving `data-highlighted` item, not a
+  // CSS focus ring, so this intentionally follows raw focus.
+  return base
+      .onHovered(highlighted)
+      .onFocused(highlighted)
+      .onPressed(highlighted)
+      .onDisabled(
+        .color(
+          const Color(0x00000000),
+        ).text(.color({{typePrefix}}Tokens.grayA8())).iconColor({{typePrefix}}Tokens.grayA8()),
+      );
+}
+
+({
+  double itemHeight,
+  double indicatorWidth,
+  double indicatorSize,
+  Radius itemRadius,
+  TextStyleToken itemText,
+})
+_{{valuePrefix}}SelectContentMetrics({{typePrefix}}SelectSize size) => switch (size) {
+  .size1 => (
+    itemHeight: {{typePrefix}}Tokens.space5(),
+    indicatorWidth: {{typePrefix}}Tokens.selectIndicatorWidth1(),
+    indicatorSize: {{typePrefix}}Tokens.selectIndicatorSize1(),
+    itemRadius: {{typePrefix}}Tokens.radius1(),
+    itemText: {{typePrefix}}Tokens.text1,
+  ),
+  .size2 => (
+    itemHeight: {{typePrefix}}Tokens.space6(),
+    indicatorWidth: {{typePrefix}}Tokens.space5(),
+    indicatorSize: {{typePrefix}}Tokens.selectIndicatorSize2(),
+    itemRadius: {{typePrefix}}Tokens.radius2(),
+    itemText: {{typePrefix}}Tokens.text2,
+  ),
+  .size3 => (
+    itemHeight: {{typePrefix}}Tokens.space6(),
+    indicatorWidth: {{typePrefix}}Tokens.space5(),
+    indicatorSize: {{typePrefix}}Tokens.selectIndicatorSize2(),
+    itemRadius: {{typePrefix}}Tokens.radius2(),
+    itemText: {{typePrefix}}Tokens.text3,
+  ),
+};

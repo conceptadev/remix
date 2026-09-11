@@ -1,5 +1,7 @@
 ## 1.0.0-beta.9
 
+- Export the Naked UI constructor and state types required by generated
+  application-owned Accordion, Disclosure, Slider, and Tabs recipes.
  - **FIX**(data_list): bound minimum intrinsic width by maximum (#185).
 
 ## 1.0.0-beta.8

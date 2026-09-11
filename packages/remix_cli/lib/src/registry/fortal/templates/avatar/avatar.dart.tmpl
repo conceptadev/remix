@@ -1,0 +1,127 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'avatar.g.dart';
+
+/// Radix Themes Avatar size presets.
+enum {{typePrefix}}AvatarSize {
+  size1,
+  size2,
+  size3,
+  size4,
+  size5,
+  size6,
+  size7,
+  size8,
+  size9,
+}
+
+/// Radix Themes Avatar variants.
+enum {{typePrefix}}AvatarVariant { soft, solid }
+
+/// {{typePrefix}}-themed Avatar with the Radix size, variant, and override contract.
+///
+/// [fallbackLength] selects the pinned one- or two-character fallback
+/// typography. Pass `2` when [RemixAvatar.label] contains two initials.
+@MixWidget(target: RemixAvatar.new)
+AvatarStyler {{valuePrefix}}AvatarStyle({
+  {{typePrefix}}AvatarVariant variant = .soft,
+  {{typePrefix}}AvatarSize size = .size3,
+  bool highContrast = false,
+  int fallbackLength = 1,
+  AvatarStyler style = const AvatarStyler.create(),
+}) {
+  final base = _{{valuePrefix}}AvatarBaseStyler(size, fallbackLength: fallbackLength);
+  final softContent = highContrast
+      ? {{typePrefix}}Tokens.accent12()
+      : {{typePrefix}}Tokens.accentA11();
+  final solidContent = highContrast
+      ? {{typePrefix}}Tokens.accent1()
+      : {{typePrefix}}Tokens.accentContrast();
+  return (switch (variant) {
+    .soft =>
+      base
+          .color({{typePrefix}}Tokens.accentA3())
+          .labelColor(softContent)
+          .iconColor(softContent),
+    .solid =>
+      base
+          .color(
+            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accent9(),
+          )
+          .labelColor(solidContent)
+          .iconColor(solidContent),
+  }).merge(style);
+}
+
+AvatarStyler _{{valuePrefix}}AvatarBaseStyler(
+  {{typePrefix}}AvatarSize size, {
+  required int fallbackLength,
+}) {
+  final fallbackText = _{{valuePrefix}}AvatarFallbackText(size, fallbackLength);
+  final dimension = _{{valuePrefix}}AvatarDimension(size);
+  return AvatarStyler()
+      .clipBehavior(.hardEdge)
+      .label(
+        TextStyler(
+          style: fallbackText.mix(),
+        ).fontWeight({{typePrefix}}Tokens.fontWeightMedium()),
+      )
+      .icon(.size(_{{valuePrefix}}AvatarIconSize(size)).color({{typePrefix}}Tokens.accentA11()))
+      .size(dimension, dimension)
+      .borderRadius(.all(_{{valuePrefix}}AvatarRadius(size)));
+}
+
+double _{{valuePrefix}}AvatarDimension({{typePrefix}}AvatarSize size) => switch (size) {
+  .size1 => {{typePrefix}}Tokens.space5(),
+  .size2 => {{typePrefix}}Tokens.space6(),
+  .size3 => {{typePrefix}}Tokens.space7(),
+  .size4 => {{typePrefix}}Tokens.space8(),
+  .size5 => {{typePrefix}}Tokens.space9(),
+  .size6 => {{typePrefix}}Tokens.avatarSize6(),
+  .size7 => {{typePrefix}}Tokens.avatarSize7(),
+  .size8 => {{typePrefix}}Tokens.avatarSize8(),
+  .size9 => {{typePrefix}}Tokens.avatarSize9(),
+};
+
+double _{{valuePrefix}}AvatarIconSize({{typePrefix}}AvatarSize size) => switch (size) {
+  .size1 => {{typePrefix}}Tokens.avatarIconSize1(),
+  .size2 => {{typePrefix}}Tokens.avatarIconSize2(),
+  .size3 => {{typePrefix}}Tokens.avatarIconSize3(),
+  .size4 => {{typePrefix}}Tokens.avatarIconSize4(),
+  .size5 => {{typePrefix}}Tokens.avatarIconSize5(),
+  .size6 => {{typePrefix}}Tokens.avatarIconSize6(),
+  .size7 => {{typePrefix}}Tokens.avatarIconSize7(),
+  .size8 => {{typePrefix}}Tokens.avatarIconSize8(),
+  .size9 => {{typePrefix}}Tokens.avatarIconSize9(),
+};
+
+Radius _{{valuePrefix}}AvatarRadius({{typePrefix}}AvatarSize size) => switch (size) {
+  .size1 || .size2 => {{typePrefix}}Tokens.radius2OrFull(),
+  .size3 || .size4 => {{typePrefix}}Tokens.radius3OrFull(),
+  .size5 => {{typePrefix}}Tokens.radius4OrFull(),
+  .size6 || .size7 => {{typePrefix}}Tokens.radius5OrFull(),
+  .size8 || .size9 => {{typePrefix}}Tokens.radius6OrFull(),
+};
+
+TextStyleToken _{{valuePrefix}}AvatarFallbackText(
+  {{typePrefix}}AvatarSize size,
+  int fallbackLength,
+) => switch ((size, fallbackLength == 2)) {
+  (.size1, false) => {{typePrefix}}Tokens.avatarFallback1One,
+  (.size1, true) => {{typePrefix}}Tokens.avatarFallback1Two,
+  (.size2, false) => {{typePrefix}}Tokens.avatarFallback2One,
+  (.size2, true) => {{typePrefix}}Tokens.avatarFallback2Two,
+  (.size3, false) => {{typePrefix}}Tokens.avatarFallback3One,
+  (.size3, true) => {{typePrefix}}Tokens.avatarFallback3Two,
+  (.size4, false) => {{typePrefix}}Tokens.avatarFallback4One,
+  (.size4, true) => {{typePrefix}}Tokens.avatarFallback4Two,
+  (.size5, _) => {{typePrefix}}Tokens.avatarFallback5,
+  (.size6, _) => {{typePrefix}}Tokens.avatarFallback6,
+  (.size7, _) => {{typePrefix}}Tokens.avatarFallback7,
+  (.size8, _) => {{typePrefix}}Tokens.avatarFallback8,
+  (.size9, _) => {{typePrefix}}Tokens.avatarFallback9,
+};

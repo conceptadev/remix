@@ -1,0 +1,52 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'data_list.g.dart';
+
+/// Radix Themes DataList size presets.
+enum {{typePrefix}}DataListSize { size1, size2, size3 }
+
+/// {{typePrefix}} recipe for [RemixDataList].
+@MixWidget(target: RemixDataList.new)
+DataListStyler {{valuePrefix}}DataListStyle({
+  {{typePrefix}}DataListSize size = .size2,
+  bool highContrast = false,
+  DataListStyler style = const DataListStyler.create(),
+}) {
+  final metrics = _{{valuePrefix}}DataListMetrics(size);
+
+  return DataListStyler()
+      .label(
+        TextStyler()
+            .style(metrics.text.mix())
+            .fontWeight({{typePrefix}}Tokens.fontWeightRegular())
+            .color(
+              highContrast ? {{typePrefix}}Tokens.gray12() : {{typePrefix}}Tokens.grayA11(),
+            ),
+      )
+      .value(
+        TextStyler()
+            .style(metrics.text.mix())
+            .fontWeight({{typePrefix}}Tokens.fontWeightRegular())
+            .color({{typePrefix}}Tokens.gray12()),
+      )
+      .rowSpacing(metrics.rowSpacing)
+      .columnSpacing(metrics.rowSpacing)
+      .labelValueSpacing({{typePrefix}}Tokens.space1())
+      .minLabelWidth({{typePrefix}}Tokens.dataListLabelMinWidth())
+      .merge(style);
+}
+
+({TextStyleToken text, double rowSpacing}) _{{valuePrefix}}DataListMetrics(
+  {{typePrefix}}DataListSize size,
+) => switch (size) {
+  .size1 => (text: {{typePrefix}}Tokens.text1, rowSpacing: {{typePrefix}}Tokens.space3()),
+  .size2 => (text: {{typePrefix}}Tokens.text2, rowSpacing: {{typePrefix}}Tokens.space4()),
+  .size3 => (
+    text: {{typePrefix}}Tokens.text3,
+    rowSpacing: {{typePrefix}}Tokens.dataListRowGap3(),
+  ),
+};

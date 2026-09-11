@@ -1,6 +1,8 @@
 import 'dart:io';
 
-const _publishedPackages = ['remix', 'remix_fortal'];
+// Fortal stays here because these sources are copied into consumer apps even
+// though the authoring package itself is no longer published.
+const _consumerSourcePackages = ['remix', 'remix_fortal'];
 
 final _forbiddenLibraryDirective = RegExp(
   r'''^\s*(?:import|export)\s+['"]package:(?:flutter/(?:material\.dart|src/material/[^'"]+)|material_ui/[^'"]+)['"]''',
@@ -21,7 +23,7 @@ void main() {
   final workspace = Directory.current.absolute;
   final failures = <String>[];
 
-  for (final package in _publishedPackages) {
+  for (final package in _consumerSourcePackages) {
     final packageDirectory = Directory('${workspace.path}/packages/$package');
     final libraryDirectory = Directory('${packageDirectory.path}/lib');
     final pubspec = File('${packageDirectory.path}/pubspec.yaml');
@@ -55,7 +57,10 @@ void main() {
   }
 
   if (failures.isEmpty) {
-    stdout.writeln('Published Remix libraries have no direct Material usage.');
+    stdout.writeln(
+      'Remix and application-owned Fortal sources have no direct Material '
+      'usage.',
+    );
     return;
   }
 

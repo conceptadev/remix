@@ -1,0 +1,131 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'progress.g.dart';
+
+/// {{typePrefix}} progress size presets.
+enum {{typePrefix}}ProgressSize { size1, size2, size3 }
+
+/// {{typePrefix}} progress color variants.
+enum {{typePrefix}}ProgressVariant { classic, surface, soft }
+
+/// {{typePrefix}}-themed preset for [RemixProgress].
+@MixWidget(target: RemixProgress.new)
+ProgressStyler {{valuePrefix}}ProgressStyle({
+  {{typePrefix}}ProgressVariant variant = .surface,
+  {{typePrefix}}ProgressSize size = .size2,
+  bool highContrast = false,
+  ProgressStyler style = const ProgressStyler.create(),
+}) {
+  return (switch (variant) {
+    .classic => _{{valuePrefix}}ProgressClassicStyler(size, highContrast: highContrast),
+    .surface => _{{valuePrefix}}ProgressSurfaceStyler(size, highContrast: highContrast),
+    .soft => _{{valuePrefix}}ProgressSoftStyler(size, highContrast: highContrast),
+  }).merge(style);
+}
+
+ProgressStyler _{{valuePrefix}}ProgressBaseStyler({{typePrefix}}ProgressSize size) {
+  final metrics = _{{valuePrefix}}ProgressMetrics(size);
+  return ProgressStyler(
+    container: .width(.infinity)
+        .height(metrics.height)
+        .borderRadius(.all(metrics.radius))
+        .clipBehavior(.antiAlias),
+    track: .width(.infinity).height(metrics.height),
+    indicator: .height(metrics.height).borderRadius(.all(metrics.radius)),
+    trackEffects: RemixBoxEffectsMix(
+      behindContent: _{{valuePrefix}}ProgressLayer(),
+      overContent: _{{valuePrefix}}ProgressLayer(),
+    ),
+    indicatorEffects: RemixBoxEffectsMix(
+      behindContent: _{{valuePrefix}}ProgressLayer(),
+      overContent: _{{valuePrefix}}ProgressLayer(),
+    ),
+  );
+}
+
+ProgressStyler _{{valuePrefix}}ProgressClassicStyler(
+  {{typePrefix}}ProgressSize size, {
+  required bool highContrast,
+}) {
+  return _{{valuePrefix}}ProgressBaseStyler(size)
+      .trackColor({{typePrefix}}Tokens.grayA3())
+      .trackEffects(
+        RemixBoxEffectsMix.overContent(
+          _{{valuePrefix}}ProgressLayer(shadowToken: {{typePrefix}}Tokens.shadow1Layers),
+        ),
+      )
+      .indicatorColor(
+        highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentTrack(),
+      );
+}
+
+ProgressStyler _{{valuePrefix}}ProgressSurfaceStyler(
+  {{typePrefix}}ProgressSize size, {
+  required bool highContrast,
+}) {
+  return _{{valuePrefix}}ProgressBaseStyler(size)
+      .trackColor({{typePrefix}}Tokens.grayA3())
+      .trackEffects(
+        RemixBoxEffectsMix.overContent(
+          _{{valuePrefix}}ProgressLayer(
+            shadows: [
+              RemixBoxShadowMix(
+                kind: .inset,
+                color: {{typePrefix}}Tokens.grayA4(),
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+        ),
+      )
+      .indicatorColor(
+        highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentTrack(),
+      );
+}
+
+ProgressStyler _{{valuePrefix}}ProgressSoftStyler(
+  {{typePrefix}}ProgressSize size, {
+  required bool highContrast,
+}) {
+  return _{{valuePrefix}}ProgressBaseStyler(size)
+      .trackColor({{typePrefix}}Tokens.grayA4())
+      .track(
+        .foregroundDecoration(BoxDecorationMix(color: {{typePrefix}}Tokens.whiteA1())),
+      )
+      .indicatorColor(
+        highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accent8(),
+      )
+      .indicator(
+        .foregroundDecoration(
+          BoxDecorationMix(
+            color: highContrast ? null : {{typePrefix}}Tokens.accentA5(),
+          ),
+        ),
+      );
+}
+
+({double height, Radius radius}) _{{valuePrefix}}ProgressMetrics(
+  {{typePrefix}}ProgressSize size,
+) => switch (size) {
+  .size1 => (
+    height: {{typePrefix}}Tokens.space1(),
+    radius: {{typePrefix}}Tokens.progressRadius1(),
+  ),
+  .size2 => (
+    height: {{typePrefix}}Tokens.progressHeight2(),
+    radius: {{typePrefix}}Tokens.progressRadius2(),
+  ),
+  .size3 => (
+    height: {{typePrefix}}Tokens.space2(),
+    radius: {{typePrefix}}Tokens.progressRadius3(),
+  ),
+};
+
+RemixBoxEffectLayerMix _{{valuePrefix}}ProgressLayer({
+  List<RemixBoxShadowMix>? shadows,
+  RemixBoxShadowListToken? shadowToken,
+}) => RemixBoxEffectLayerMix(shadows: shadows, shadowToken: shadowToken);

@@ -1,0 +1,261 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'radio.g.dart';
+
+/// {{typePrefix}} radio size presets.
+enum {{typePrefix}}RadioSize {
+  /// Compact radio.
+  size1,
+
+  /// Default radio.
+  size2,
+
+  /// Large radio.
+  size3,
+}
+
+/// {{typePrefix}} radio color variants.
+enum {{typePrefix}}RadioVariant {
+  /// Raised treatment with Radix's classic shadow and gradient layers.
+  classic,
+
+  /// Surface treatment with neutral border.
+  surface,
+
+  /// Soft accent treatment.
+  soft,
+}
+
+/// {{typePrefix}}-themed preset for [RemixRadio].
+@MixWidget(target: RemixRadio.new)
+RadioStyler {{valuePrefix}}RadioStyle({
+  {{typePrefix}}RadioVariant variant = .surface,
+  {{typePrefix}}RadioSize size = .size2,
+  bool highContrast = false,
+  RadioStyler style = const RadioStyler.create(),
+}) {
+  return (switch (variant) {
+    .classic => _{{valuePrefix}}RadioClassicStyler(size, highContrast: highContrast),
+    .surface => _{{valuePrefix}}RadioSurfaceStyler(size, highContrast: highContrast),
+    .soft => _{{valuePrefix}}RadioSoftStyler(size, highContrast: highContrast),
+  }).merge(style);
+}
+
+RadioStyler _{{valuePrefix}}RadioBaseStyler({{typePrefix}}RadioSize size) {
+  final metrics = _{{valuePrefix}}RadioMetrics(size);
+  return RadioStyler(
+    container: .size(
+      metrics.size,
+      metrics.size,
+    ).alignment(.center).borderRadius(.all({{typePrefix}}Tokens.radiusCircle())),
+    indicator: .size(
+      metrics.indicatorSize,
+      metrics.indicatorSize,
+    ).borderRadius(.all({{typePrefix}}Tokens.radiusCircle())),
+    containerEffects: RemixBoxEffectsMix(
+      behindContent: RemixBoxEffectLayerMix(),
+      overContent: RemixBoxEffectLayerMix(),
+    ),
+  ).onFocusVisible(
+    .containerEffects(
+      RemixBoxEffectsMix(
+        outline: BorderSideMix(
+          color: {{typePrefix}}Tokens.focus8(),
+          width: 2,
+          strokeAlign: BorderSide.strokeAlignInside,
+        ),
+        outlineOffset: 2,
+      ),
+    ),
+  );
+}
+
+RadioStyler _{{valuePrefix}}RadioClassicStyler(
+  {{typePrefix}}RadioSize size, {
+  required bool highContrast,
+}) {
+  final selectedColor = highContrast
+      ? {{typePrefix}}Tokens.accent12()
+      : {{typePrefix}}Tokens.accentIndicator();
+  return _{{valuePrefix}}RadioBaseStyler(size)
+      .color({{typePrefix}}Tokens.colorSurface())
+      .containerEffects(
+        RemixBoxEffectsMix.behindContent(
+          RemixBoxEffectLayerMix(shadowToken: {{typePrefix}}Tokens.shadow1Layers),
+        ),
+      )
+      .containerEffects(
+        RemixBoxEffectsMix.overContent(
+          _{{valuePrefix}}RadioInsetRing({{typePrefix}}Tokens.gray7()),
+        ),
+      )
+      .indicatorColor(
+        highContrast ? {{typePrefix}}Tokens.accent1() : {{typePrefix}}Tokens.accentContrast(),
+      )
+      .onSelected(
+        .color(selectedColor)
+            .containerEffects(
+              RemixBoxEffectsMix.behindContent(
+                RemixBoxEffectLayerMix(
+                  gradients: [
+                    RemixLinearGradientMix(
+                      colors: [
+                        {{typePrefix}}Tokens.whiteA3(),
+                        const Color(0x00000000),
+                        {{typePrefix}}Tokens.blackA3(),
+                      ],
+                    ),
+                  ],
+                  shadows: [
+                    RemixBoxShadowMix(
+                      kind: .inset,
+                      color: {{typePrefix}}Tokens.whiteA4(),
+                      offset: const Offset(0, 0.5),
+                      blurRadius: 0.5,
+                    ),
+                    RemixBoxShadowMix(
+                      kind: .inset,
+                      color: {{typePrefix}}Tokens.blackA4(),
+                      offset: const Offset(0, -0.5),
+                      blurRadius: 0.5,
+                    ),
+                  ],
+                ),
+              ),
+            )
+            .indicatorColor(
+              highContrast
+                  ? {{typePrefix}}Tokens.accent1()
+                  : {{typePrefix}}Tokens.accentContrast(),
+            ),
+      )
+      .onDisabled(
+        .color({{typePrefix}}Tokens.grayA3())
+            .containerEffects(
+              RemixBoxEffectsMix.behindContent(
+                RemixBoxEffectLayerMix(shadowToken: {{typePrefix}}Tokens.shadow1Layers),
+              ),
+            )
+            .containerEffects(
+              RemixBoxEffectsMix.overContent(
+                RemixBoxEffectLayerMix(shadows: const []),
+              ),
+            )
+            .indicatorColor({{typePrefix}}Tokens.grayA8()),
+      );
+}
+
+RadioStyler _{{valuePrefix}}RadioSurfaceStyler(
+  {{typePrefix}}RadioSize size, {
+  required bool highContrast,
+}) {
+  return _{{valuePrefix}}RadioBaseStyler(size)
+      .color({{typePrefix}}Tokens.colorSurface())
+      .containerEffects(
+        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+      )
+      .containerEffects(
+        RemixBoxEffectsMix.overContent(
+          _{{valuePrefix}}RadioInsetRing({{typePrefix}}Tokens.grayA7()),
+        ),
+      )
+      .indicator(
+        .color(
+          {{typePrefix}}Tokens.accent9(),
+        ).borderRadius(.all({{typePrefix}}Tokens.radiusCircle())),
+      )
+      .onSelected(
+        .color(
+              highContrast
+                  ? {{typePrefix}}Tokens.accent12()
+                  : {{typePrefix}}Tokens.accentIndicator(),
+            )
+            .containerEffects(
+              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+            )
+            .containerEffects(
+              RemixBoxEffectsMix.overContent(
+                RemixBoxEffectLayerMix(shadows: const []),
+              ),
+            )
+            .indicatorColor(
+              highContrast
+                  ? {{typePrefix}}Tokens.accent1()
+                  : {{typePrefix}}Tokens.accentContrast(),
+            ),
+      )
+      .onDisabled(
+        .color({{typePrefix}}Tokens.grayA3())
+            .containerEffects(
+              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+            )
+            .containerEffects(
+              RemixBoxEffectsMix.overContent(
+                _{{valuePrefix}}RadioInsetRing({{typePrefix}}Tokens.grayA6()),
+              ),
+            )
+            .indicatorColor({{typePrefix}}Tokens.grayA8()),
+      );
+}
+
+RadioStyler _{{valuePrefix}}RadioSoftStyler(
+  {{typePrefix}}RadioSize size, {
+  required bool highContrast,
+}) {
+  return _{{valuePrefix}}RadioBaseStyler(size)
+      .color({{typePrefix}}Tokens.accentA4())
+      .containerEffects(
+        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+      )
+      .indicator(
+        .color(
+          highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accent11(),
+        ).borderRadius(.all({{typePrefix}}Tokens.radiusCircle())),
+      )
+      .onSelected(
+        .color({{typePrefix}}Tokens.accentA4())
+            .containerEffects(
+              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+            )
+            .indicator(
+              .color(
+                highContrast
+                    ? {{typePrefix}}Tokens.accent12()
+                    : {{typePrefix}}Tokens.accent11(),
+              ),
+            ),
+      )
+      .onDisabled(
+        .color({{typePrefix}}Tokens.grayA3())
+            .containerEffects(
+              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+            )
+            .indicatorColor({{typePrefix}}Tokens.grayA8()),
+      );
+}
+
+({double size, double indicatorSize}) _{{valuePrefix}}RadioMetrics(
+  {{typePrefix}}RadioSize size,
+) => switch (size) {
+  .size1 => (
+    size: {{typePrefix}}Tokens.checkboxSize1(),
+    indicatorSize: {{typePrefix}}Tokens.radioIndicatorSize1(),
+  ),
+  .size2 => (
+    size: {{typePrefix}}Tokens.space4(),
+    indicatorSize: {{typePrefix}}Tokens.radioIndicatorSize2(),
+  ),
+  .size3 => (
+    size: {{typePrefix}}Tokens.checkboxSize3(),
+    indicatorSize: {{typePrefix}}Tokens.radioIndicatorSize3(),
+  ),
+};
+
+RemixBoxEffectLayerMix _{{valuePrefix}}RadioInsetRing(Color color) =>
+    RemixBoxEffectLayerMix(
+      shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
+    );

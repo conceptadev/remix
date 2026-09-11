@@ -4,20 +4,28 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
+import 'registry.dart';
+
 const projectConfigFileName = 'remix.yaml';
-const supportedProjectSchema = 1;
+const supportedProjectSchema = 2;
 
 final class ProjectConfig {
-  ProjectConfig._({required this.prefix, required this.uiPath});
+  ProjectConfig._({
+    required this.prefix,
+    required this.preset,
+    required this.uiPath,
+  });
 
   factory ProjectConfig.create({
     required Directory packageRoot,
     required String prefix,
+    required String preset,
     required String uiPath,
   }) {
     _validatePrefix(prefix);
+    _validatePreset(preset);
     _validateUiPath(packageRoot, uiPath);
-    return ProjectConfig._(prefix: prefix, uiPath: uiPath);
+    return ProjectConfig._(prefix: prefix, preset: preset, uiPath: uiPath);
   }
 
   factory ProjectConfig.parse(String source, {required Directory packageRoot}) {
@@ -30,17 +38,27 @@ final class ProjectConfig {
     if (document is! YamlMap) {
       throw const FormatException('$projectConfigFileName must contain a map.');
     }
-    _requireExactKeys(document, {'schema', 'prefix', 'paths'}, 'configuration');
-
     final schema = document['schema'];
-    if (schema != supportedProjectSchema) {
+    if (schema != 1 && schema != supportedProjectSchema) {
       throw FormatException(
-        'Unsupported remix.yaml schema $schema; remix_cli supports schema 1.',
+        'Unsupported remix.yaml schema $schema; '
+        'remix_cli supports schemas 1 and $supportedProjectSchema.',
       );
     }
+    _requireExactKeys(
+      document,
+      schema == 1
+          ? {'schema', 'prefix', 'paths'}
+          : {'schema', 'prefix', 'preset', 'paths'},
+      'configuration',
+    );
     final prefix = document['prefix'];
     if (prefix is! String) {
       throw const FormatException('remix.yaml prefix must be a string.');
+    }
+    final preset = schema == 1 ? 'default' : document['preset'];
+    if (preset is! String) {
+      throw const FormatException('remix.yaml preset must be a string.');
     }
     final paths = document['paths'];
     if (paths is! YamlMap) {
@@ -54,19 +72,22 @@ final class ProjectConfig {
     return ProjectConfig.create(
       packageRoot: packageRoot,
       prefix: prefix,
+      preset: preset,
       uiPath: uiPath,
     );
   }
 
   final String prefix;
+  final String preset;
   final String uiPath;
 
   String get valuePrefix =>
       '${prefix.substring(0, 1).toLowerCase()}${prefix.substring(1)}';
 
   String encode() =>
-      '''schema: 1
+      '''schema: 2
 prefix: $prefix
+preset: $preset
 paths:
   ui: ${_encodeYamlPath(uiPath)}
 ''';
@@ -193,6 +214,17 @@ void _validatePrefix(String prefix) {
   if (_dartReservedWords.contains(valuePrefix)) {
     throw FormatException(
       '$prefix derives the reserved Dart word $valuePrefix.',
+    );
+  }
+}
+
+void _validatePreset(String preset) {
+  if (!RegExp(r'^[a-z][a-z0-9_]*$').hasMatch(preset)) {
+    throw const FormatException('preset must be a lowercase ASCII identifier.');
+  }
+  if (!bundledPresets.contains(preset)) {
+    throw FormatException(
+      'Unknown preset $preset. Bundled presets: ${bundledPresets.join(', ')}.',
     );
   }
 }

@@ -8,7 +8,8 @@ void main() {
 /// Remix ships no theme: every visual decision below is a styler you author.
 ///
 /// If you would rather start from a ready-made Radix Themes-inspired palette,
-/// add the companion `remix_fortal` package and wrap your app in `FortalScope`.
+/// initialize the `fortal` preset with `remix_cli` and wrap your app in the
+/// installed scope.
 class RemixExampleApp extends StatelessWidget {
   const RemixExampleApp({super.key});
 

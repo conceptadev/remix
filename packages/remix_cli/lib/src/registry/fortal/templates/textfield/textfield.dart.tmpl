@@ -1,0 +1,388 @@
+// `DragStartBehavior` and `MaxLengthEnforcement` appear in the generated
+// {{typePrefix}}TextField/{{typePrefix}}TextArea constructors, so they must be visible from
+// this library even though nothing here references them directly.
+import 'package:flutter/gestures.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'textfield.g.dart';
+
+/// {{typePrefix}} text field size presets.
+enum {{typePrefix}}TextFieldSize {
+  /// Compact text field.
+  size1,
+
+  /// Default text field.
+  size2,
+
+  /// Large text field.
+  size3,
+}
+
+/// {{typePrefix}} text field color variants.
+enum {{typePrefix}}TextFieldVariant {
+  /// Raised treatment with Radix's level-one shadow.
+  classic,
+
+  /// Surface treatment with neutral border and text colors.
+  surface,
+
+  /// Soft accent treatment.
+  soft,
+}
+
+Color _resolveNeutralTextInputPlaceholder(BuildContext context) {
+  final color = {{typePrefix}}Tokens.grayA10.resolve(context);
+  return color.withValues(alpha: color.a * 0.5);
+}
+
+const _neutralTextInputPlaceholder = ContextToken<Color>(
+  _resolveNeutralTextInputPlaceholder,
+);
+
+/// {{typePrefix}}-themed preset for [RemixTextField].
+@MixWidget(target: RemixTextField.new)
+TextFieldStyler {{valuePrefix}}TextFieldStyle({
+  {{typePrefix}}TextFieldVariant variant = .surface,
+  {{typePrefix}}TextFieldSize size = .size2,
+  TextFieldStyler style = const TextFieldStyler.create(),
+}) {
+  final metrics = _{{valuePrefix}}TextFieldMetrics(size, bordered: variant != .soft);
+  final base = _{{valuePrefix}}TextInputBaseStyle(
+    container: BoxStyler()
+        .height(metrics.height)
+        .padding(.horizontal(metrics.paddingX))
+        .borderRadius(.all(metrics.radius))
+        .clipBehavior(.antiAlias),
+    spacing: metrics.spacing,
+    crossAxisAlignment: .center,
+    text: metrics.text,
+    focusColor: switch (variant) {
+      .soft => {{typePrefix}}Tokens.accent8(),
+      .classic || .surface => {{typePrefix}}Tokens.focus8(),
+    },
+  );
+
+  final recipe = switch (variant) {
+    .classic => _{{valuePrefix}}ApplyClassicTextInput(base),
+    .surface => _{{valuePrefix}}ApplySurfaceTextInput(base),
+    .soft => _{{valuePrefix}}ApplySoftTextInput(base, placeholderOpacity: 0.60),
+  };
+
+  return recipe
+      .variant(ContextVariant.widgetState(.error), _{{valuePrefix}}TextInputErrorStyle())
+      .merge(style);
+}
+
+TextFieldStyler _{{valuePrefix}}TextInputBaseStyle({
+  required BoxStyler container,
+  required double spacing,
+  required CrossAxisAlignment crossAxisAlignment,
+  required TextStyleToken text,
+  required Color focusColor,
+}) =>
+    TextFieldStyler(
+          container: container,
+          spacing: spacing,
+          crossAxisAlignment: crossAxisAlignment,
+          text: .style(text.mix()),
+          hintText: .style(text.mix()).textHeightBehavior(
+            TextHeightBehaviorMix()
+                .applyHeightToFirstAscent(false)
+                .applyHeightToLastDescent(true),
+          ),
+          helperText: .style({{typePrefix}}Tokens.text1.mix()),
+          label: .style({{typePrefix}}Tokens.text2.mix()),
+          cursorWidth: 1.5,
+          containerEffects: RemixBoxEffectsMix(
+            behindContent: RemixBoxEffectLayerMix(),
+            overContent: RemixBoxEffectLayerMix(),
+          ),
+        )
+        .wrap(.iconTheme(color: {{typePrefix}}Tokens.gray11(), size: 16.0))
+        // Radix keys text-input rings from :focus/:focus-within, so unlike
+        // control focus rings this intentionally follows raw focus.
+        .onFocused(
+          .containerEffects({{valuePrefix}}FocusOutline(focusColor, offset: -1)),
+        );
+
+TextFieldStyler _{{valuePrefix}}ApplyClassicTextInput(TextFieldStyler base) =>
+    _{{valuePrefix}}ApplyNeutralTextInput(base)
+        .color({{typePrefix}}Tokens.colorSurface())
+        .containerEffects(
+          RemixBoxEffectsMix.behindContent(
+            RemixBoxEffectLayerMix(shadowToken: {{typePrefix}}Tokens.shadow1Layers),
+          ),
+        )
+        .onDisabled(
+          _{{valuePrefix}}NeutralTextInputDisabledStyle()
+              .color({{typePrefix}}Tokens.colorSurface())
+              .containerEffects(
+                RemixBoxEffectsMix.behindContent(
+                  RemixBoxEffectLayerMix(
+                    gradients: [
+                      RemixLinearGradientMix(
+                        colors: [{{typePrefix}}Tokens.grayA2(), {{typePrefix}}Tokens.grayA2()],
+                      ),
+                    ],
+                    shadowToken: {{typePrefix}}Tokens.shadow1Layers,
+                  ),
+                ),
+              ),
+        );
+
+TextFieldStyler _{{valuePrefix}}ApplySurfaceTextInput(TextFieldStyler base) =>
+    _{{valuePrefix}}ApplyNeutralTextInput(base)
+        .color({{typePrefix}}Tokens.colorSurface())
+        .containerEffects(
+          RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+        )
+        .containerEffects(
+          RemixBoxEffectsMix.overContent(
+            _{{valuePrefix}}TextInputInsetRing({{typePrefix}}Tokens.grayA7()),
+          ),
+        )
+        .onDisabled(
+          _{{valuePrefix}}NeutralTextInputDisabledStyle()
+              .color({{typePrefix}}Tokens.colorSurface())
+              .containerEffects(
+                RemixBoxEffectsMix.behindContent(
+                  RemixBoxEffectLayerMix(
+                    gradients: [
+                      RemixLinearGradientMix(
+                        colors: [{{typePrefix}}Tokens.grayA2(), {{typePrefix}}Tokens.grayA2()],
+                      ),
+                    ],
+                  ),
+                ),
+              )
+              .containerEffects(
+                RemixBoxEffectsMix.overContent(
+                  _{{valuePrefix}}TextInputInsetRing({{typePrefix}}Tokens.grayA6()),
+                ),
+              ),
+        );
+
+TextFieldStyler _{{valuePrefix}}ApplySoftTextInput(
+  TextFieldStyler base, {
+  required double placeholderOpacity,
+}) => base
+    .merge(
+      TextFieldStyler(
+        text: .fontWeight({{typePrefix}}Tokens.fontWeightRegular()),
+        hintText: .fontWeight({{typePrefix}}Tokens.fontWeightRegular()),
+        cursorColor: {{typePrefix}}Tokens.accent12(),
+        helperText: .color(
+          {{typePrefix}}Tokens.gray11(),
+        ).fontWeight({{typePrefix}}Tokens.fontWeightRegular()),
+        label: .color(
+          {{typePrefix}}Tokens.gray12(),
+        ).fontWeight({{typePrefix}}Tokens.fontWeightMedium()),
+      ),
+    )
+    .textColor({{typePrefix}}Tokens.accent12())
+    .text(.selectionColor({{typePrefix}}Tokens.accentA5()))
+    .onEnabled(
+      .hintText(
+        .color({{typePrefix}}Tokens.accent12().withValues(alpha: placeholderOpacity)),
+      ),
+    )
+    .wrap(.iconTheme(color: {{typePrefix}}Tokens.accent10()))
+    .color({{typePrefix}}Tokens.accentA3())
+    .containerEffects(
+      RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+    )
+    .onDisabled(
+      _{{valuePrefix}}SoftTextInputDisabledStyle()
+          .color({{typePrefix}}Tokens.grayA3())
+          .containerEffects(
+            RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+          ),
+    );
+
+TextFieldStyler _{{valuePrefix}}ApplyNeutralTextInput(TextFieldStyler base) =>
+    base.merge(
+      TextFieldStyler(
+        text: .color(
+          {{typePrefix}}Tokens.gray12(),
+        ).selectionColor({{typePrefix}}Tokens.focusA5()),
+        hintText: .color(_neutralTextInputPlaceholder()),
+        cursorColor: {{typePrefix}}Tokens.gray12(),
+        helperText: .color({{typePrefix}}Tokens.gray11()),
+        label: .color(
+          {{typePrefix}}Tokens.gray12(),
+        ).fontWeight({{typePrefix}}Tokens.fontWeightMedium()),
+      ),
+    );
+
+// Keep the disabled-color branch on raw focus for the same :focus-within
+// contract as the enabled text input.
+TextFieldStyler _{{valuePrefix}}TextInputDisabledBaseStyle() =>
+    TextFieldStyler(
+      text: .color(
+        {{typePrefix}}Tokens.grayA11(),
+      ).selectionColor({{typePrefix}}Tokens.grayA5()),
+      cursorColor: {{typePrefix}}Tokens.grayA11(),
+    ).onFocused(
+      .containerEffects({{valuePrefix}}FocusOutline({{typePrefix}}Tokens.gray8(), offset: -1)),
+    );
+
+TextFieldStyler _{{valuePrefix}}NeutralTextInputDisabledStyle() =>
+    _{{valuePrefix}}TextInputDisabledBaseStyle().hintText(
+      .color(_neutralTextInputPlaceholder()),
+    );
+
+TextFieldStyler _{{valuePrefix}}SoftTextInputDisabledStyle() =>
+    _{{valuePrefix}}TextInputDisabledBaseStyle().hintText(
+      .color({{typePrefix}}Tokens.accent12().withValues(alpha: 0.5)),
+    );
+
+TextFieldStyler _{{valuePrefix}}TextInputErrorStyle() => TextFieldStyler(
+  helperText: .color({{typePrefix}}Tokens.error11()),
+  label: .color({{typePrefix}}Tokens.error11()),
+  cursorColor: {{typePrefix}}Tokens.error9(),
+  containerEffects: RemixBoxEffectsMix(
+    overContent: RemixBoxEffectLayerMix(
+      shadows: [
+        RemixBoxShadowMix(
+          kind: .inset,
+          color: {{typePrefix}}Tokens.errorA7(),
+          spreadRadius: 1,
+        ),
+      ],
+    ),
+    outline: BorderSideMix(
+      color: {{typePrefix}}Tokens.error8(),
+      width: 2,
+      strokeAlign: BorderSide.strokeAlignInside,
+    ),
+    outlineOffset: -1,
+  ),
+);
+
+({
+  double height,
+  double paddingX,
+  double spacing,
+  Radius radius,
+  TextStyleToken text,
+})
+_{{valuePrefix}}TextFieldMetrics({{typePrefix}}TextFieldSize size, {required bool bordered}) =>
+    switch (size) {
+      .size1 => (
+        height: {{typePrefix}}Tokens.space5(),
+        paddingX: bordered
+            ? {{typePrefix}}Tokens.textFieldPadding1()
+            : {{typePrefix}}Tokens.selectSpace1Half(),
+        spacing: {{typePrefix}}Tokens.space2(),
+        radius: {{typePrefix}}Tokens.radius2OrFull(),
+        text: {{typePrefix}}Tokens.text1,
+      ),
+      .size2 => (
+        height: {{typePrefix}}Tokens.space6(),
+        paddingX: bordered
+            ? {{typePrefix}}Tokens.textFieldPadding2()
+            : {{typePrefix}}Tokens.space2(),
+        spacing: {{typePrefix}}Tokens.space2(),
+        radius: {{typePrefix}}Tokens.radius2OrFull(),
+        text: {{typePrefix}}Tokens.text2,
+      ),
+      .size3 => (
+        height: {{typePrefix}}Tokens.space7(),
+        paddingX: bordered
+            ? {{typePrefix}}Tokens.textFieldPadding3()
+            : {{typePrefix}}Tokens.space3(),
+        spacing: {{typePrefix}}Tokens.space3(),
+        radius: {{typePrefix}}Tokens.radius3OrFull(),
+        text: {{typePrefix}}Tokens.text3,
+      ),
+    };
+
+RemixBoxEffectLayerMix _{{valuePrefix}}TextInputInsetRing(Color color) =>
+    RemixBoxEffectLayerMix(
+      shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
+    );
+
+/// Radix Themes TextArea size presets.
+enum {{typePrefix}}TextAreaSize { size1, size2, size3 }
+
+/// Radix Themes TextArea variants.
+enum {{typePrefix}}TextAreaVariant { classic, surface, soft }
+
+/// {{typePrefix}} recipe for [RemixTextArea].
+///
+/// Scrolling follows the host platform; this recipe does not reproduce Radix's
+/// themed browser scrollbar or resize handle.
+@MixWidget(target: RemixTextArea.new)
+TextFieldStyler {{valuePrefix}}TextAreaStyle({
+  {{typePrefix}}TextAreaVariant variant = .surface,
+  {{typePrefix}}TextAreaSize size = .size2,
+  TextFieldStyler style = const TextFieldStyler.create(),
+}) {
+  final metrics = _{{valuePrefix}}TextAreaMetrics(size);
+  final base = _{{valuePrefix}}TextInputBaseStyle(
+    container: BoxStyler()
+        .minHeight(metrics.minHeight)
+        .padding(
+          .symmetric(horizontal: metrics.paddingX, vertical: metrics.paddingY),
+        )
+        .borderRadius(.all(metrics.radius))
+        .clipBehavior(.antiAlias),
+    spacing: metrics.spacing,
+    crossAxisAlignment: .start,
+    text: metrics.text,
+    focusColor: switch (variant) {
+      .soft => {{typePrefix}}Tokens.accent8(),
+      .classic || .surface => {{typePrefix}}Tokens.focus8(),
+    },
+  );
+
+  final recipe = switch (variant) {
+    .classic => _{{valuePrefix}}ApplyClassicTextInput(base),
+    .surface => _{{valuePrefix}}ApplySurfaceTextInput(base),
+    .soft => _{{valuePrefix}}ApplySoftTextInput(base, placeholderOpacity: 0.65),
+  };
+
+  return recipe
+      .variant(ContextVariant.widgetState(.error), _{{valuePrefix}}TextInputErrorStyle())
+      .merge(style);
+}
+
+({
+  double minHeight,
+  double paddingX,
+  double paddingY,
+  double spacing,
+  Radius radius,
+  TextStyleToken text,
+})
+_{{valuePrefix}}TextAreaMetrics({{typePrefix}}TextAreaSize size) => switch (size) {
+  .size1 => (
+    minHeight: {{typePrefix}}Tokens.space8(),
+    paddingX: {{typePrefix}}Tokens.selectSpace1Half(),
+    paddingY: {{typePrefix}}Tokens.space1(),
+    spacing: {{typePrefix}}Tokens.space2(),
+    radius: {{typePrefix}}Tokens.radius2(),
+    text: {{typePrefix}}Tokens.text1,
+  ),
+  .size2 => (
+    minHeight: {{typePrefix}}Tokens.space9(),
+    paddingX: {{typePrefix}}Tokens.space2(),
+    paddingY: {{typePrefix}}Tokens.selectSpace1Half(),
+    spacing: {{typePrefix}}Tokens.space2(),
+    radius: {{typePrefix}}Tokens.radius2(),
+    text: {{typePrefix}}Tokens.text2,
+  ),
+  .size3 => (
+    minHeight: {{typePrefix}}Tokens.textAreaMinHeight3(),
+    paddingX: {{typePrefix}}Tokens.space3(),
+    paddingY: {{typePrefix}}Tokens.space2(),
+    spacing: {{typePrefix}}Tokens.space3(),
+    radius: {{typePrefix}}Tokens.radius3(),
+    text: {{typePrefix}}Tokens.text3,
+  ),
+};
