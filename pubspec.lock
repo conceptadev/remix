@@ -505,12 +505,13 @@ packages:
     source: hosted
     version: "2.0.5"
   naked_ui:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: naked_ui
-      sha256: "765fe63516cb3b1445f340d31b8f71ac17f64a86a1a29ab238ad8d5cbf662f63"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/naked_ui"
+      ref: "8e5c8f0aa405e0ff07fe52bc83ba83805ec1b10e"
+      resolved-ref: "8e5c8f0aa405e0ff07fe52bc83ba83805ec1b10e"
+      url: "https://github.com/btwld/naked_ui.git"
+    source: git
     version: "1.0.0-beta.14"
   nested:
     dependency: transitive
