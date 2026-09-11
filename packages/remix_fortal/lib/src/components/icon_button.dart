@@ -43,7 +43,7 @@ IconButtonStyler _fortalIconButtonBaseStyler(
 ) {
   final metrics = fortalBaseButtonMetrics(size);
   var style = IconButtonStyler(
-    icon: .size(_fortalIconButtonIconSize(size)),
+    icon: .size(fortalBaseButtonIconSize(size)),
     spinner: .size(metrics.spinnerSize)
         .opacity(0.65)
         .leafRadius(FortalTokens.radius1())
@@ -61,13 +61,6 @@ IconButtonStyler _fortalIconButtonBaseStyler(
   }
   return style;
 }
-
-double _fortalIconButtonIconSize(FortalBaseButtonSize size) => switch (size) {
-  .size1 => FortalTokens.space3(),
-  .size2 => FortalTokens.space4(),
-  .size3 => FortalTokens.spinnerSize3(),
-  .size4 => FortalTokens.space5(),
-};
 
 FortalBaseButtonVariant _fortalBaseButtonVariant(
   FortalIconButtonVariant variant,

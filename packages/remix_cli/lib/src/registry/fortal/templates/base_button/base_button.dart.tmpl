@@ -55,6 +55,14 @@ enum {{typePrefix}}BaseButtonSize { size1, size2, size3, size4 }
   ),
 };
 
+/// Default icon dimensions shared by text and icon-only button presets.
+double {{valuePrefix}}BaseButtonIconSize({{typePrefix}}BaseButtonSize size) => switch (size) {
+  .size1 => {{typePrefix}}Tokens.space3(),
+  .size2 => {{typePrefix}}Tokens.space4(),
+  .size3 => {{typePrefix}}Tokens.spinnerSize3(),
+  .size4 => {{typePrefix}}Tokens.space5(),
+};
+
 /// Content-box metrics for the ghost BaseButton variant.
 ({double paddingX, double paddingY, double marginX, double marginY, double gap})
 {{valuePrefix}}BaseButtonGhostMetrics({{typePrefix}}BaseButtonSize size) => switch (size) {

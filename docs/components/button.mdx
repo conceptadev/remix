@@ -154,16 +154,16 @@ class FortalButtonExample extends StatelessWidget {
 
 ### Fortal button icon sizing
 
-`FortalButton.size` selects the button's layout and label metrics, but does not
-set the size of its leading or trailing icons. The default icon builders inherit
-the surrounding Flutter `IconTheme` size; Flutter falls back to 24 logical pixels
-when no icon size is supplied. A small button can therefore still contain a
-24-pixel icon.
+`FortalButton.size` selects layout, label and default icon dimensions. Leading
+and trailing icons share Fortal IconButton's token-based size scale:
+`space3`, `space4`, `spinnerSize3`, and `space5` for sizes 1 through 4.
+The surrounding `IconTheme` no longer determines their size. Base
+`RemixButton` remains theme-neutral and still supports inherited sizing.
 
-Use `IconTheme(data: IconThemeData(size: 14), child: FortalButton.soft(...))`
-to set the inherited size for a subtree. For an explicit per-button override,
-pass a Fortal recipe to `RemixButton` and customize its icon styler.
-`FortalButton` itself has no `style` parameter.
+For an explicit per-button override, customize the icon styler through
+`FortalButton(style: ButtonStyler().icon(IconStyler().size(14)), ...)`, or pass
+a customized Fortal recipe to `RemixButton` as below. Applications previously
+depending on `IconTheme.size` for Fortal buttons should use an explicit override.
 
 <CodeGroup title="Explicit Fortal icon size" defaultLanguage="dart">
 ```dart
