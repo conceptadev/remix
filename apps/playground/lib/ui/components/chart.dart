@@ -1,0 +1,273 @@
+import 'dart:math' as math;
+
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:mix_chart/mix_chart.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/tokens.dart';
+
+part 'chart.g.dart';
+
+const _defaultPaletteToken = ContextToken<List<Color>>(
+  resolvePlaygroundChartPalette,
+);
+const _tooltipBorderToken = ContextToken<BorderSide>(_resolveTooltipBorder);
+const _tooltipRadiusToken = ContextToken<BorderRadius>(_resolveTooltipRadius);
+const _tooltipPaddingToken = ContextToken<EdgeInsets>(_resolveTooltipPadding);
+const _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);
+
+/// Returns the categorical palette shared by this application's charts.
+///
+/// The first color follows the application's `primary` token. The remaining
+/// colors are local values chosen for separation on the active background.
+/// Edit the two lists below to change every chart, or pass `palette` to one
+/// recipe or generated widget for a local override.
+///
+/// The returned list removes duplicates. A brand whose primary matches one of
+/// the fixed colors therefore keeps a useful palette instead of drawing two
+/// series with the same paint.
+List<Color> resolvePlaygroundChartPalette(BuildContext context) {
+  final background = PlaygroundTokens.background.resolve(context);
+  final fixed = background.computeLuminance() < _darkBackgroundLuminance
+      ? _darkCategoricalColors
+      : _lightCategoricalColors;
+
+  return List<Color>.unmodifiable(<Color>{
+    PlaygroundTokens.primary.resolve(context),
+    ...fixed,
+  });
+}
+
+/// The application's line and area chart recipe.
+///
+/// `mix_chart` owns the data model, rendering, interaction, and semantics.
+/// This file owns the palette, axes, grid, line, markers, and tooltip. Give the
+/// generated [PlaygroundLineChart] a bounded height because charts have no
+/// intrinsic height.
+///
+/// [style] merges last, so one call site can replace any part of the recipe.
+@MixWidget(target: LineChart.new)
+LineChartStyler playgroundLineChartStyle({
+  bool showMarkers = false,
+  List<Color>? palette,
+  LineChartStyler style = const LineChartStyler.create(),
+}) => LineChartStyler()
+    .frame(_chartFrameStyle())
+    .axis(_chartAxisStyle())
+    .topAxis(_hiddenAxisStyle())
+    .rightAxis(_hiddenAxisStyle())
+    .grid(_chartGridStyle())
+    .series(
+      LineSeriesStyler()
+          .curve(.curved)
+          .smoothness(0.18)
+          .preventCurveOvershooting(true)
+          .roundStrokeCap(true)
+          .roundStrokeJoin(true)
+          .stroke(ChartStrokeStyler().width(_lineWidth))
+          .marker(
+            ChartMarkerStyler()
+                .show(showMarkers)
+                .radius(_markerRadius)
+                .borderColor(PlaygroundTokens.background())
+                .borderWidth(_markerBorderWidth),
+          ),
+    )
+    .tooltip(_chartTooltipStyle())
+    .merge(LineChartStyler.create(palette: _paletteProp(palette)))
+    .merge(style);
+
+/// The application's grouped, stacked, and floating bar chart recipe.
+///
+/// `mix_chart` owns the bar data and behavior. This recipe supplies the shared
+/// visual treatment. Give the generated [PlaygroundBarChart] a bounded
+/// height because charts have no intrinsic height.
+///
+/// [style] merges last, so one call site can replace any part of the recipe.
+@MixWidget(target: BarChart.new)
+BarChartStyler playgroundBarChartStyle({
+  List<Color>? palette,
+  BarChartStyler style = const BarChartStyler.create(),
+}) => BarChartStyler()
+    .frame(_chartFrameStyle())
+    .axis(_chartAxisStyle())
+    .topAxis(_hiddenAxisStyle())
+    .rightAxis(_hiddenAxisStyle())
+    .grid(_chartGridStyle())
+    .bar(
+      BarStyler.create(
+        borderRadius: Prop.token(_barRadiusToken),
+      ).width(_barWidth),
+    )
+    .groupSpacing(_barGroupSpacing)
+    .barSpacing(_barSpacing)
+    .tooltip(_chartTooltipStyle())
+    .merge(BarChartStyler.create(palette: _paletteProp(palette)))
+    .merge(style);
+
+/// The application's pie and donut chart recipe.
+///
+/// A positive [centerRadius] creates a donut. Labels stay hidden by default;
+/// a caller-owned legend keeps category names readable with any custom
+/// palette. Give the generated [PlaygroundPieChart] a bounded width and
+/// height because charts have no intrinsic size.
+///
+/// [style] merges last, so one call site can replace any part of the recipe.
+@MixWidget(target: PieChart.new)
+PieChartStyler playgroundPieChartStyle({
+  double centerRadius = 0,
+  bool showLabels = false,
+  List<Color>? palette,
+  PieChartStyler style = const PieChartStyler.create(),
+}) => PieChartStyler()
+    .frame(_chartFrameStyle())
+    .centerRadius(centerRadius)
+    .centerColor(PlaygroundTokens.background())
+    .sliceSpacing(_sliceSpacing)
+    .selectedSliceRadiusOffset(_selectedSliceOffset)
+    .slice(
+      PieSliceStyler()
+          .showLabel(showLabels)
+          .cornerRadius(_sliceRadius)
+          .label(
+            TextStyler()
+                .fontSize(_labelSize)
+                .fontWeight(FontWeight.w600)
+                .color(PlaygroundTokens.background()),
+          ),
+    )
+    .tooltip(_chartTooltipStyle())
+    .merge(PieChartStyler.create(palette: _paletteProp(palette)))
+    .merge(style);
+
+/// Luminance below which the dark categorical palette is used.
+///
+/// This is the WCAG midpoint where white becomes the stronger contrasting
+/// choice than black. It lets a custom dark background select the right list
+/// without adding a brightness field to the existing theme contract.
+const _darkBackgroundLuminance = 0.179;
+
+/// Categorical colors for a light page, excluding the theme's primary color.
+const _lightCategoricalColors = <Color>[
+  Color(0xFF2563EB),
+  Color(0xFFC2410C),
+  Color(0xFF047857),
+  Color(0xFF7E22CE),
+  Color(0xFFBE123C),
+  Color(0xFF0E7490),
+];
+
+/// Categorical colors for a dark page, excluding the theme's primary color.
+const _darkCategoricalColors = <Color>[
+  Color(0xFF60A5FA),
+  Color(0xFFFB923C),
+  Color(0xFF34D399),
+  Color(0xFFC084FC),
+  Color(0xFFFB7185),
+  Color(0xFF22D3EE),
+];
+
+/// Width of a line series.
+const _lineWidth = 2.0;
+
+/// Radius of an optional line marker.
+const _markerRadius = 3.0;
+
+/// Border that separates a line marker from the plot behind it.
+const _markerBorderWidth = 2.0;
+
+/// Width of each bar before a caller override.
+const _barWidth = 16.0;
+
+/// Space between bar groups.
+const _barGroupSpacing = 12.0;
+
+/// Space between bars in one group.
+const _barSpacing = 6.0;
+
+/// Gap between pie slices.
+const _sliceSpacing = 2.0;
+
+/// Extra radius applied to a selected pie slice.
+const _selectedSliceOffset = 4.0;
+
+/// Corner radius applied to each pie slice.
+const _sliceRadius = 2.0;
+
+/// Axis, tooltip, and optional pie-label text size.
+const _labelSize = 12.0;
+
+/// Maximum corner radius for bars.
+const _maxBarRadius = 4.0;
+
+/// Maximum corner radius for the tooltip surface.
+const _maxTooltipRadius = 12.0;
+
+Prop<List<Color>> _paletteProp(List<Color>? palette) => palette == null
+    ? Prop.token(_defaultPaletteToken)
+    : Prop.value(List<Color>.unmodifiable(palette));
+
+ChartFrameStyler _chartFrameStyle() => ChartFrameStyler()
+    .backgroundColor(MixColors.transparent)
+    .showBorder(false)
+    .clip(true);
+
+ChartAxisStyler _chartAxisStyle() => ChartAxisStyler()
+    .showLabels(true)
+    .label(
+      TextStyler()
+          .fontSize(_labelSize)
+          .color(PlaygroundTokens.mutedForeground()),
+    )
+    .labelSpace(8)
+    .fitInside(true)
+    .fitInsideDistance(4)
+    .drawBelowEverything(true);
+
+ChartAxisStyler _hiddenAxisStyle() => ChartAxisStyler().showLabels(false);
+
+ChartGridStyler _chartGridStyle() => ChartGridStyler()
+    .show(true)
+    .showHorizontal(true)
+    .showVertical(false)
+    .stroke(ChartStrokeStyler().color(PlaygroundTokens.border()).width(1));
+
+ChartTooltipStyler _chartTooltipStyle() =>
+    ChartTooltipStyler.create(
+          border: Prop.token(_tooltipBorderToken),
+          borderRadius: Prop.token(_tooltipRadiusToken),
+          padding: Prop.token(_tooltipPaddingToken),
+        )
+        .backgroundColor(PlaygroundTokens.background())
+        .margin(8)
+        .maxWidth(280)
+        .fitHorizontally(true)
+        .fitVertically(true)
+        .text(
+          TextStyler()
+              .fontSize(_labelSize)
+              .fontWeight(FontWeight.w500)
+              .color(PlaygroundTokens.foreground()),
+        );
+
+BorderSide _resolveTooltipBorder(BuildContext context) =>
+    BorderSide(color: PlaygroundTokens.border.resolve(context), width: 1);
+
+BorderRadius _resolveTooltipRadius(BuildContext context) =>
+    BorderRadius.all(_clampedThemeRadius(context, _maxTooltipRadius));
+
+EdgeInsets _resolveTooltipPadding(BuildContext context) =>
+    const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
+
+BorderRadius _resolveBarRadius(BuildContext context) =>
+    BorderRadius.all(_clampedThemeRadius(context, _maxBarRadius));
+
+Radius _clampedThemeRadius(BuildContext context, double maximum) {
+  final radius = PlaygroundTokens.radius.resolve(context);
+
+  return Radius.elliptical(
+    math.min(radius.x, maximum),
+    math.min(radius.y, maximum),
+  );
+}

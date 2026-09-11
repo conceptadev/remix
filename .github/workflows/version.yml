@@ -105,7 +105,16 @@ jobs:
             --yes \
             $overrides < /dev/null
 
+          # melos rewrites the `remix` constraint of every pubspec dependent,
+          # which is how remix_fortal's pin follows the bump. remix_cli's
+          # registry.yaml is data, not a pubspec, so melos never reaches it and
+          # its `remix: ^<floor>` would keep pointing at the previous release.
+          # That floor is what the CLI reports as the tested version, so this
+          # step is part of versioning, not a cleanup after it.
+          dart run tool/sync_registry_remix.dart
+
           # The pair must land aligned; verify rather than trust the inputs.
+          # This also fails when the sync step above did not run.
           dart run tool/check_version_alignment.dart
 
           if git diff --quiet && git diff --cached --quiet; then
@@ -144,5 +153,21 @@ jobs:
             echo '2. `remix_fortal-v${{ inputs.version }}` — publishes **remix_fortal**.'
             echo '3. `remix-v${{ inputs.version }}` — publishes nothing. melos'
             echo '   reads it to derive the next release changelog.'
+            echo
+            echo "### CI on this branch"
+            echo
+            echo 'This branch also moves the `remix` floor in the'
+            echo '`remix_cli` registry. `open-code:check` resolves that floor'
+            echo 'from pub.dev, so it fails until step 1 above is served.'
+            echo 'Expect a red run before the tag and a green one after; do'
+            echo 'not lower the floor to make it pass.'
+            echo
+            echo "### remix_cli"
+            echo
+            echo '`remix_cli` is versioned independently and is NOT in this'
+            echo 'release. To release it, in its own pull request: bump'
+            echo '`packages/remix_cli/pubspec.yaml`,'
+            echo '`packages/remix_cli/lib/src/version.dart`, and its CHANGELOG'
+            echo 'to the same version, then push `remix_cli-v<version>`.'
           } >> "$GITHUB_STEP_SUMMARY"
           echo "Open the pull request: $url"

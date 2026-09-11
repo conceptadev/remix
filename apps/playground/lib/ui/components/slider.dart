@@ -1,0 +1,125 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/tokens.dart';
+
+part 'slider.g.dart';
+
+/// The application's Slider recipe.
+///
+/// Remix owns the rendering, the drag and keyboard behavior, the mapping from
+/// a 0-1 value onto the filled range, and the slider accessibility semantics;
+/// this recipe supplies the rail, the filled range, and the thumb.
+///
+/// The rail is `muted` and the range is `primary`, the same pairing the
+/// progress bar uses — a slider is a progress bar you can grab, and reading
+/// them as one family is worth more than distinguishing them by color.
+///
+/// `semanticFormatterCallback` is deliberately not forwarded to the generated
+/// `PlaygroundSlider`. Its type is
+/// `NakedSliderSemanticFormatterCallback`, which comes from
+/// `package:naked_ui` — a package this layer does not depend on. Reach for
+/// `RemixSlider` directly on the rare call site that needs to reword the
+/// announced value.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it. State fragments merge by state, not
+/// by depth: an override that must beat the recipe's hover thumb has to be
+/// declared as a hover fragment too (`SliderStyler().onHovered(...)`).
+@MixWidget(
+  target: RemixSlider.new,
+  widgetParameters: .only({
+    'value',
+    'onChanged',
+    'onChangeStart',
+    'onChangeEnd',
+    'min',
+    'max',
+    'enabled',
+    'enableFeedback',
+    'focusNode',
+    'autofocus',
+    'snapDivisions',
+    'semanticLabel',
+    'excludeSemantics',
+  }),
+)
+SliderStyler playgroundSliderStyle({
+  SliderStyler style = const SliderStyler.create(),
+}) {
+  return SliderStyler()
+      .thickness(_rail)
+      .trackColor(PlaygroundTokens.muted())
+      .rangeColor(PlaygroundTokens.primary())
+      .thumbSize(const Size.square(_thumb))
+      .thumbColor(PlaygroundTokens.background())
+      .thumb(
+        BoxStyler()
+            .borderRadius(.all(_circular))
+            // The thumb is a light disc on a light rail, so its own outline is
+            // what separates it from the range it sits on.
+            .border(
+              .color(PlaygroundTokens.primary()).width(_thumbBorderWidth),
+            ),
+      )
+      // A thumb is a grab target, so it answers the pointer. The outline
+      // keeps identifying it; only the fill moves, which is why hovering does
+      // not make the thumb harder to find on a light rail.
+      .onHovered(SliderStyler().thumbColor(PlaygroundTokens.accent()))
+      .onFocusVisible(_focusVisibleStyle())
+      .onDisabled(_disabledStyle())
+      .merge(style);
+}
+
+/// A radius large enough to round any thumb in this scale into a circle.
+const _circular = Radius.circular(999);
+
+/// Width of the thumb's outline.
+const _thumbBorderWidth = 2.0;
+
+/// Width of the keyboard focus ring.
+const _focusRingWidth = 2.0;
+
+/// Distance between the thumb edge and its focus ring.
+const _focusRingOffset = 2.0;
+
+/// Opacity applied to the whole control while disabled.
+const _disabledOpacity = 0.5;
+
+/// The rail's thickness, matching shadcn's `h-1.5`.
+///
+/// One size, not a scale. A call site that needs another sets `.thickness(...)`
+/// through [style].
+const _rail = 6.0;
+
+/// Thumb diameter as a multiple of the rail thickness.
+///
+/// Derived rather than stated, so the grab target keeps its relationship to
+/// the rail if the rail is ever changed.
+const _thumbRatio = 2.5;
+
+/// The thumb's diameter.
+const _thumb = _rail * _thumbRatio;
+
+/// The keyboard focus ring, drawn around the thumb.
+///
+/// `thumbFocusEffects` rather than `thumbEffects`: Remix paints the former
+/// only while the slider has visible focus, which is the state a ring is for.
+SliderStyler _focusVisibleStyle() => SliderStyler().thumbFocusEffects(
+  RemixBoxEffectsMix(
+    outline: BorderSideMix(
+      color: PlaygroundTokens.focusRing(),
+      width: _focusRingWidth,
+      strokeAlign: BorderSide.strokeAlignInside,
+    ),
+    outlineOffset: _focusRingOffset,
+  ),
+);
+
+/// Declared last so it wins over every other state fragment.
+///
+/// A disabled slider keeps its rail and range and simply fades; there is no
+/// ring to clear because the focus effects are already conditional on focus.
+SliderStyler _disabledStyle() =>
+    SliderStyler().wrap(.opacity(_disabledOpacity));

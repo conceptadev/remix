@@ -169,6 +169,9 @@ const _consumerDocumentationFiles = <String>[
   'README.md',
   'packages/remix/README.md',
   'packages/remix_fortal/README.md',
+  'packages/remix_cli/README.md',
+  'open_code/README.md',
+  'open_code/CLEAN_SHEET.md',
 ];
 
 final _staleConsumerDocumentationClaims = <(RegExp, String)>[
@@ -200,6 +203,58 @@ final _staleConsumerDocumentationClaims = <(RegExp, String)>[
     'stale component backgroundColor alias claim',
   ),
 ];
+
+/// Documents that list the open-code registry's items by name.
+///
+/// The catalog is the one thing in these files that goes stale the instant a
+/// registry item lands, and it is the thing a reader trusts most.
+const _openCodeCatalogDocuments = <String>[
+  'docs/open-code.mdx',
+  'packages/remix_cli/README.md',
+  'open_code/README.md',
+];
+
+/// Fails when a bundled registry item is missing from a catalog document.
+///
+/// Deliberately one-directional: a document may mention `theme` or discuss an
+/// item in prose without listing it, and matching that exactly would make the
+/// check fight the writing. What it will not allow is shipping an item nobody
+/// wrote down.
+void _checkOpenCodeCatalog(Directory workspaceRoot, List<String> failures) {
+  final registry = File(
+    '${workspaceRoot.path}/packages/remix_cli/lib/src/registry/registry.yaml',
+  );
+  if (!registry.existsSync()) {
+    failures.add('packages/remix_cli is missing its registry.yaml.');
+    return;
+  }
+
+  // Item keys are the only two-space-indented `name:` lines in the file.
+  final items = RegExp(r'^  ([a-z][a-z0-9_]*):$', multiLine: true)
+      .allMatches(registry.readAsStringSync())
+      .map((match) => match.group(1)!)
+      .where((name) => name != 'theme')
+      .toList();
+  if (items.isEmpty) {
+    failures.add('registry.yaml declared no component items.');
+    return;
+  }
+
+  for (final relativePath in _openCodeCatalogDocuments) {
+    final file = File('${workspaceRoot.path}/$relativePath');
+    if (!file.existsSync()) {
+      failures.add('$relativePath is missing.');
+      continue;
+    }
+    final source = file.readAsStringSync();
+    final missing = items.where((item) => !source.contains('`$item`')).toList();
+    if (missing.isNotEmpty) {
+      failures.add(
+        '$relativePath does not list registry ${missing.join(', ')}.',
+      );
+    }
+  }
+}
 
 Future<void> main() async {
   // This validator owns root `docs/`, root `docs.json`, the root README, and
@@ -248,6 +303,7 @@ Future<void> main() async {
     workspaceRoot,
     failures,
   );
+  _checkOpenCodeCatalog(workspaceRoot, failures);
   _checkSkillEvalMetadata(workspaceRoot, failures);
   _checkDesignSystemSkillVersions(workspaceRoot, failures);
   final exampleSourceCount = _checkDartSources(
