@@ -48,6 +48,12 @@ class RemixTooltip extends StatelessWidget {
               styleSpec: spec.label,
               builder: (context, labelSpec) => DefaultTextStyle.merge(
                 style: labelSpec.style,
+                textAlign: labelSpec.textAlign,
+                softWrap: labelSpec.softWrap,
+                overflow: labelSpec.overflow,
+                maxLines: labelSpec.maxLines,
+                textWidthBasis: labelSpec.textWidthBasis,
+                textHeightBehavior: labelSpec.textHeightBehavior,
                 child: tooltipChild,
               ),
             ),
