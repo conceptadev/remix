@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:dashboard/main.dart';
 import 'package:dashboard/shell/sidebar.dart';
+import 'package:dashboard/shell/sidebar_sections.dart';
 import 'package:dashboard/shell/top_bar.dart';
 import 'package:dashboard/theme/theme_settings.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -94,6 +95,41 @@ void main() {
       );
       expect(tester.takeException(), isNull);
     }
+  });
+
+  testWidgets('icons and the sidebar toggle hold the rail center line', (
+    tester,
+  ) async {
+    await mount(tester);
+    final sidebar = find.byType(Sidebar);
+    final icons = [
+      dashboardSidebarSections.first.destinations.first.icon!,
+      dashboardSidebarSections[1].destinations.first.icon!,
+    ];
+    Offset center(IconData icon) => tester.getCenter(
+      find.descendant(of: sidebar, matching: find.byIcon(icon)).first,
+    );
+    final start = [for (final icon in icons) center(icon)];
+    for (final collapsed in [true, false]) {
+      await tester.tap(toggle);
+      await tester.pump();
+      for (var i = 0; i < 14; i++) {
+        await tester.pump(const Duration(milliseconds: 16));
+        for (var j = 0; j < icons.length; j++) {
+          expect(center(icons[j]).dx, closeTo(start[j].dx, .6));
+          expect(center(icons[j]).dy, closeTo(start[j].dy, .01));
+        }
+      }
+      if (collapsed) {
+        // The toggle lives in the sidebar header and settles on the rail.
+        expect(find.descendant(of: sidebar, matching: toggle), findsOneWidget);
+        expect(
+          tester.getCenter(toggle).dx,
+          closeTo(center(icons.first).dx, .6),
+        );
+      }
+    }
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets(

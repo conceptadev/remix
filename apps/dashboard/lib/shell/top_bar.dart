@@ -17,15 +17,11 @@ class TopBar extends StatefulWidget {
     required this.page,
     required this.onSearchChanged,
     this.onMenuPressed,
-    this.onSidebarToggle,
-    this.sidebarCollapsed = false,
   });
 
   final DashboardPage page;
   final ValueChanged<String> onSearchChanged;
   final VoidCallback? onMenuPressed;
-  final VoidCallback? onSidebarToggle;
-  final bool sidebarCollapsed;
 
   @override
   State<TopBar> createState() => _TopBarState();
@@ -39,15 +35,7 @@ class _TopBarState extends State<TopBar> {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final compact = width < dashboardCompactBreakpoint;
-    final toolbarButtonStyle = fortalIconButtonStyle(variant: .ghost)
-        .width(40)
-        .height(40)
-        .padding(.all(0))
-        .margin(.all(0))
-        .container(.alignment(.center));
-    final navigationLabel = widget.sidebarCollapsed
-        ? 'Expand navigation'
-        : 'Collapse navigation';
+    final toolbarButtonStyle = dashboardToolbarButtonStyle;
     return DashboardShellHeader(
       horizontalPadding: compact
           ? FortalTokens.space3()
@@ -62,17 +50,6 @@ class _TopBarState extends State<TopBar> {
               style: toolbarButtonStyle,
               onPressed: onMenuPressed,
               icon: Icons.menu,
-            ),
-          if (widget.onSidebarToggle case final onToggle?)
-            FortalTooltip(
-              tooltipChild: ExcludeSemantics(child: Text(navigationLabel)),
-              child: RemixIconButton(
-                key: const ValueKey('dashboard-sidebar-toggle'),
-                semanticLabel: navigationLabel,
-                style: toolbarButtonStyle,
-                onPressed: onToggle,
-                icon: widget.sidebarCollapsed ? Icons.menu : Icons.menu_open,
-              ),
             ),
           Expanded(
             child: RowBox(

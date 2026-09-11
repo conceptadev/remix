@@ -72,18 +72,14 @@ class _DashboardShellState extends State<DashboardShell> {
               selected: _selected,
               onSelected: _select,
               collapsed: _sidebarCollapsed,
+              onToggle: () =>
+                  setState(() => _sidebarCollapsed = !_sidebarCollapsed),
             ),
           Expanded(
             child: ColumnBox(
               children: [
                 TopBar(
                   page: _selected,
-                  sidebarCollapsed: _sidebarCollapsed,
-                  onSidebarToggle: compact
-                      ? null
-                      : () => setState(
-                          () => _sidebarCollapsed = !_sidebarCollapsed,
-                        ),
                   onMenuPressed: compact
                       ? () => _scaffoldKey.currentState?.openDrawer()
                       : null,
