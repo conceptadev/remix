@@ -117,6 +117,47 @@ items:
   );
 
   test(
+    'sidebar_layout is a plain layout with no Spec or generated adapter',
+    () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      final item = catalog.items['sidebar_layout']!;
+
+      expect(item.registryDependencies, ['theme', 'sidebar']);
+      expect(item.dependencies, isEmpty);
+      expect(item.devDependencies, isEmpty);
+      expect(item.generated, isEmpty);
+
+      final source = await catalog.readTemplate(item.files.single);
+      expect(source, isNot(contains('part \'')));
+      expect(source, isNot(contains('@MixWidget')));
+      expect(source, isNot(contains('package:flutter/material.dart')));
+
+      for (final prefix in const [
+        (type: 'Acme', value: 'acme'),
+        (type: 'Ui', value: 'ui'),
+      ]) {
+        final rendered = const TemplateRenderer().render(
+          source,
+          typePrefix: prefix.type,
+          valuePrefix: prefix.value,
+        );
+        expect(
+          rendered,
+          contains('class ${prefix.type}SidebarLayout extends StatefulWidget'),
+        );
+        expect(
+          rendered,
+          contains(
+            'class ${prefix.type}SidebarLayoutScope extends InheritedWidget',
+          ),
+        );
+        expect(rendered, isNot(contains('{{')));
+        expect(rendered, isNot(contains('}}')));
+      }
+    },
+  );
+
+  test(
     'dependency resolution de-duplicates in stable dependency-first order',
     () {
       final catalog = parse('''schema: 1
@@ -285,19 +326,27 @@ items:
       final item = catalog.items[name];
       expect(item, isNotNull, reason: name);
       // Dependency-first order, and `theme` always leads because every
-      // component declares it. Two items need more: `data_table`'s selection
-      // column, pager, and page-size control are the application's own
-      // checkbox, icon button, and select, and a `sidebar` destination is the
-      // application's own toggle, labelled by its own tooltip when collapsed.
+      // component declares it. Three items need more: `data_table`'s
+      // selection column, pager, and page-size control are the application's
+      // own checkbox, icon button, and select; a `sidebar` destination is the
+      // application's own toggle, labelled by its own tooltip when collapsed;
+      // and `sidebar_layout` composes an already-installed `sidebar` into its
+      // row and compact sheet.
       expect(catalog.resolve(name).map((item) => item.name), switch (name) {
         'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
         'sidebar' => ['theme', 'toggle', 'tooltip', name],
+        'sidebar_layout' => ['theme', 'toggle', 'tooltip', 'sidebar', name],
         _ => ['theme', name],
       }, reason: name);
       if (name == 'icons') {
         expect(item!.files.single.target, '@ui/icons.dart');
         expect(item.generated, isEmpty);
         expect(item.exports, ['icons.dart']);
+      } else if (name == 'sidebar_layout') {
+        // A layout, not a styled component: no Spec, no generated adapter.
+        expect(item!.files.single.target, '@ui/components/$name.dart');
+        expect(item.generated, isEmpty);
+        expect(item.exports, ['components/$name.dart']);
       } else {
         expect(item!.files.single.target, '@ui/components/$name.dart');
         expect(item.generated, ['@ui/components/$name.g.dart']);
@@ -435,6 +484,10 @@ const _componentSurfaces =
       'segmented_control': (widgets: ['SegmentedControl'], types: []),
       'select': (widgets: ['Select'], types: []),
       'sidebar': (widgets: ['Sidebar'], types: []),
+      // A layout, not a styled component: it has no `@MixWidget` recipe
+      // function, so it contributes no widgets or types here. Its own class
+      // declaration is pinned separately below.
+      'sidebar_layout': (widgets: [], types: []),
       'skeleton': (widgets: ['Skeleton'], types: []),
       'slider': (widgets: ['Slider'], types: []),
       'spinner': (widgets: ['Spinner'], types: []),

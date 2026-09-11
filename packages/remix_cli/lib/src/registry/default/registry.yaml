@@ -534,3 +534,18 @@ items:
       - "@ui/components/data_table.g.dart"
     exports:
       - components/data_table.dart
+
+  # A layout, not a styled component: it has no Spec and installs no
+  # generated adapter, so it declares neither `dependencies` (mix_annotations)
+  # nor `devDependencies` (build_runner, mix_generator). It still depends on
+  # `sidebar` because it composes an already-installed Sidebar into its row
+  # and compact sheet, even though its own source never imports that file.
+  sidebar_layout:
+    registryDependencies:
+      - theme
+      - sidebar
+    files:
+      - source: templates/sidebar_layout/sidebar_layout.dart.tmpl
+        target: "@ui/components/sidebar_layout.dart"
+    exports:
+      - components/sidebar_layout.dart
