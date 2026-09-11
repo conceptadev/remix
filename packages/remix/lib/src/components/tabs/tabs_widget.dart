@@ -199,15 +199,17 @@ class RemixTab extends StatelessWidget {
     TabSpec spec,
     NakedTabState state,
   ) {
-    final defaultContent =
-        child ??
-        FlexBox(
-          styleSpec: spec.container,
-          children: [
-            if (icon != null) StyledIcon(icon: icon!, styleSpec: spec.icon),
-            if (label != null) StyledText(label!, styleSpec: spec.label),
-          ],
-        );
+    final defaultContent = FlexBox(
+      styleSpec: spec.container,
+      children: [
+        if (child != null)
+          child!
+        else ...[
+          if (icon != null) StyledIcon(icon: icon!, styleSpec: spec.icon),
+          if (label != null) StyledText(label!, styleSpec: spec.label),
+        ],
+      ],
+    );
 
     if (builder != null) {
       return builder!(context, state, defaultContent);
