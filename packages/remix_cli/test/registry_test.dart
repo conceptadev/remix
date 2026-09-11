@@ -288,10 +288,10 @@ items:
       // component declares it. Two items need more: `data_table`'s selection
       // column, pager, and page-size control are the application's own
       // checkbox, icon button, and select, and a `sidebar` destination is the
-      // application's own toggle.
+      // application's own toggle, labelled by its own tooltip when collapsed.
       expect(catalog.resolve(name).map((item) => item.name), switch (name) {
         'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
-        'sidebar' => ['theme', 'toggle', name],
+        'sidebar' => ['theme', 'toggle', 'tooltip', name],
         _ => ['theme', name],
       }, reason: name);
       if (name == 'icons') {
