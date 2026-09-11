@@ -24,7 +24,7 @@ states:
   - focus-visible
 tokens: {}
 recipe_measurements:
-  - followThreshold default 56 logical pixels
+  - followThreshold default 48 logical pixels
   - scrollbar gutter 12
   - focus ring 2 inset, host ink
 behavior:

@@ -112,12 +112,10 @@ ToastStyler _base() => ToastStyler()
 
 /// The tone shows in the glyph and, for `destructive`, the outline. The
 /// sentence stays in `foreground` for contrast.
-ToastStyler _variantStyle({{typePrefix}}ToastVariant variant) =>
-    switch (variant) {
-      .neutral => ToastStyler().icon(
-        .color({{typePrefix}}Tokens.mutedForeground()),
-      ),
-      .destructive => ToastStyler()
-          .border(.color({{typePrefix}}Tokens.destructive()))
-          .icon(.color({{typePrefix}}Tokens.destructive())),
-    };
+ToastStyler _variantStyle({{typePrefix}}ToastVariant variant) => switch (variant) {
+  .neutral => ToastStyler().icon(.color({{typePrefix}}Tokens.mutedForeground())),
+  .destructive =>
+    ToastStyler()
+        .border(.color({{typePrefix}}Tokens.destructive()))
+        .icon(.color({{typePrefix}}Tokens.destructive())),
+};

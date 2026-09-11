@@ -12,15 +12,9 @@ part 'chart.g.dart';
 const _defaultPaletteToken = ContextToken<List<Color>>(
   resolve{{typePrefix}}ChartPalette,
 );
-const _tooltipBorderToken = ContextToken<BorderSide>(
-  _resolveTooltipBorder,
-);
-const _tooltipRadiusToken = ContextToken<BorderRadius>(
-  _resolveTooltipRadius,
-);
-const _tooltipPaddingToken = ContextToken<EdgeInsets>(
-  _resolveTooltipPadding,
-);
+const _tooltipBorderToken = ContextToken<BorderSide>(_resolveTooltipBorder);
+const _tooltipRadiusToken = ContextToken<BorderRadius>(_resolveTooltipRadius);
+const _tooltipPaddingToken = ContextToken<EdgeInsets>(_resolveTooltipPadding);
 const _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);
 
 /// Returns the categorical palette shared by this application's charts.
@@ -198,11 +192,7 @@ ChartGridStyler _chartGridStyle() => ChartGridStyler()
     .show(true)
     .showHorizontal(true)
     .showVertical(false)
-    .stroke(
-      ChartStrokeStyler()
-          .color({{typePrefix}}Tokens.border())
-          .width(1),
-    );
+    .stroke(ChartStrokeStyler().color({{typePrefix}}Tokens.border()).width(1));
 
 ChartTooltipStyler _chartTooltipStyle() =>
     ChartTooltipStyler.create(
@@ -222,21 +212,17 @@ ChartTooltipStyler _chartTooltipStyle() =>
               .color({{typePrefix}}Tokens.foreground()),
         );
 
-BorderSide _resolveTooltipBorder(BuildContext context) => BorderSide(
-  color: {{typePrefix}}Tokens.border.resolve(context),
-  width: 1,
-);
+BorderSide _resolveTooltipBorder(BuildContext context) =>
+    BorderSide(color: {{typePrefix}}Tokens.border.resolve(context), width: 1);
 
-BorderRadius _resolveTooltipRadius(BuildContext context) => BorderRadius.all(
-  _clampedThemeRadius(context, _maxTooltipRadius),
-);
+BorderRadius _resolveTooltipRadius(BuildContext context) =>
+    BorderRadius.all(_clampedThemeRadius(context, _maxTooltipRadius));
 
 EdgeInsets _resolveTooltipPadding(BuildContext context) =>
     const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
 
-BorderRadius _resolveBarRadius(BuildContext context) => BorderRadius.all(
-  _clampedThemeRadius(context, _maxBarRadius),
-);
+BorderRadius _resolveBarRadius(BuildContext context) =>
+    BorderRadius.all(_clampedThemeRadius(context, _maxBarRadius));
 
 Radius _clampedThemeRadius(BuildContext context, double maximum) {
   final radius = {{typePrefix}}Tokens.radius.resolve(context);

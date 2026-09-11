@@ -96,6 +96,12 @@ void main() {
     }
   }
 
+  final registryConstraints = _checkRegistryConstraints(
+    workspaceRoot,
+    managed,
+    failures,
+  );
+
   if (failures.isNotEmpty) {
     stderr.writeln(
       'Dependency constraint drift detected (${failures.length}):',
@@ -115,6 +121,74 @@ void main() {
 
   stdout.writeln(
     '${managed.length} shared dependency constraints come from melos and '
-    'match in all ${members.length + 1} workspace pubspecs.',
+    'match in all ${members.length + 1} workspace pubspecs, and in '
+    '$registryConstraints bundled registry declarations.',
   );
+}
+
+/// Registry files whose pub constraints a consumer inherits on `remix add`.
+const _registryPaths = [
+  'packages/remix_cli/lib/src/registry/default/registry.yaml',
+  'packages/remix_cli/lib/src/registry/fortal/registry.yaml',
+];
+
+/// `remix`, whose registry floor records the tested release rather than the
+/// workspace constraint.
+///
+/// `tool/check_version_alignment.dart` owns it and holds it equal to
+/// `packages/remix`'s own version. Comparing it here too would give one value
+/// two owners that disagree during a release.
+const _versionAlignedPackages = {'remix'};
+
+/// Holds the registry's own pub constraints to the melos-managed values.
+///
+/// These are data, not pubspec dependencies, so `melos bootstrap` never
+/// rewrites them and the pubspec walk above cannot see them. Nothing else
+/// compares them to the workspace either: `build_fortal_preset.dart` requires
+/// only that a package resolve to one distinct value *within* a registry, so
+/// all 32 copies of a generator floor can agree with each other while having
+/// drifted from the toolchain the templates are actually built against.
+int _checkRegistryConstraints(
+  Directory workspaceRoot,
+  Map<String, String> managed,
+  List<String> failures,
+) {
+  var compared = 0;
+  for (final relativePath in _registryPaths) {
+    final registry = File('${workspaceRoot.path}/$relativePath');
+    if (!registry.existsSync()) {
+      failures.add('$relativePath is missing.');
+      continue;
+    }
+
+    final document = loadYaml(registry.readAsStringSync());
+    final items = document is YamlMap ? document['items'] : null;
+    if (items is! YamlMap) {
+      failures.add('$relativePath is not in the expected shape.');
+      continue;
+    }
+
+    for (final MapEntry(key: item, value: definition) in items.entries) {
+      if (definition is! YamlMap) continue;
+      // The registry spells this section `devDependencies`, not the pubspec's
+      // `dev_dependencies`.
+      for (final section in const ['dependencies', 'devDependencies']) {
+        (definition[section] as YamlMap?)?.forEach((name, constraint) {
+          if (constraint == null || constraint is YamlMap) return;
+          if (_versionAlignedPackages.contains(name)) return;
+          final expected = managed[name as String];
+          if (expected == null) return;
+          compared++;
+          if ('$constraint' != expected) {
+            failures.add(
+              '$relativePath item $item declares $name $constraint, but melos '
+              'manages $expected.',
+            );
+          }
+        });
+      }
+    }
+  }
+
+  return compared;
 }
