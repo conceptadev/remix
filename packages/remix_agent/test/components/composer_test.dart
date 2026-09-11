@@ -115,4 +115,53 @@ void main() {
     expect(stops, 1);
     expect(submitted, isEmpty);
   });
+
+  // Both swaps used to dispose the superseded owned object inside
+  // didUpdateWidget, while the child RemixTextArea still held it. Detaching
+  // then touched a disposed object, which asserts in debug.
+  testWidgets('adopting a host controller keeps the composer usable', (
+    tester,
+  ) async {
+    final adopted = TextEditingController(text: 'from host');
+    addTearDown(adopted.dispose);
+
+    await pumpAgent(
+      tester,
+      const AgentComposer(initialValue: 'owned'),
+      overlay: true,
+    );
+    await pumpAgent(tester, AgentComposer(controller: adopted), overlay: true);
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('from host'), findsOneWidget);
+  });
+
+  testWidgets('adopting a host focus node keeps the composer usable', (
+    tester,
+  ) async {
+    final adopted = FocusNode();
+    addTearDown(adopted.dispose);
+
+    await pumpAgent(
+      tester,
+      const AgentComposer(initialValue: 'text'),
+      overlay: true,
+    );
+    // The owned node is created lazily by the getter, so it only exists to be
+    // disposed once the field has been built.
+    await tester.pump();
+
+    await pumpAgent(
+      tester,
+      AgentComposer(initialValue: 'text', focusNode: adopted),
+      overlay: true,
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    adopted.requestFocus();
+    await tester.pump();
+    expect(adopted.hasFocus, isTrue);
+  });
 }

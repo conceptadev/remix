@@ -5,8 +5,8 @@ import 'package:remix/remix.dart';
 
 import '../models/statuses.dart';
 import '../style/functional_glyph.dart';
+import '../style/live_edge.dart';
 import '../style/style_builder.dart';
-import 'transcript.dart';
 
 part 'execution.g.dart';
 
@@ -231,11 +231,20 @@ class _AgentExecutionState extends State<AgentExecution> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  AgentTranscript(
-                    children: [widget.child],
-                    followOutput: widget.status.isWorking,
-                    busy: widget.status.isWorking,
+                  // Deliberately not an AgentTranscript. That installs
+                  // Arrow/Page/Home/End shortcuts and its own Semantics
+                  // container, and an execution card is normally nested inside
+                  // a host transcript: the inner list shrink-wraps to a zero
+                  // scroll extent but its action still consumes those intents,
+                  // so focus landing here stopped the outer transcript from
+                  // scrolling, and its `busy` value announced the status a
+                  // second time. This is the primitive plan and activity use.
+                  Semantics(
                     label: widget.outputLabel,
+                    child: AgentLiveEdgeScrollView(
+                      followOutput: widget.status.isWorking,
+                      child: widget.child,
+                    ),
                   ),
                   if (widget.showActions && widget.status.isSettled)
                     RowBox(

@@ -1,3 +1,5 @@
+import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix_agent/remix_agent.dart';
@@ -67,5 +69,85 @@ void main() {
       find.byKey(const ValueKey('custom-execution-indicator')),
       findsOneWidget,
     );
+  });
+
+  testWidgets(
+    'a focused execution card leaves transcript scroll keys working',
+    (tester) async {
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+
+      await pumpAgent(
+        tester,
+        SizedBox(
+          width: 400,
+          height: 200,
+          child: AgentTranscript(
+            followOutput: false,
+            controller: controller,
+            children: const [
+              AgentExecution(
+                tool: 'tool',
+                title: 'Run',
+                child: Focus(
+                  autofocus: true,
+                  child: SizedBox(width: 80, height: 80),
+                ),
+              ),
+              SizedBox(height: 400),
+            ],
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(controller.position.maxScrollExtent, greaterThan(0));
+      expect(controller.offset, 0);
+
+      // The card used to wrap its output in a second AgentTranscript, whose
+      // action consumed this intent against a zero scroll extent instead of
+      // letting the host transcript scroll.
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.pump();
+
+      expect(controller.offset, greaterThan(0));
+    },
+  );
+
+  testWidgets('execution announces its status once', (tester) async {
+    // Disposed inline, not in a tearDown: the framework verifies outstanding
+    // handles at the end of the test body, before tearDowns run.
+    final handle = tester.ensureSemantics();
+
+    await pumpAgent(
+      tester,
+      const AgentExecution(
+        tool: 'tool',
+        title: 'Run',
+        status: AgentExecutionStatus.running,
+        child: Text('output'),
+      ),
+    );
+
+    final values = <String>[];
+    void collect(SemanticsNode node) {
+      if (node.value.isNotEmpty) values.add(node.value);
+      node.visitChildren((child) {
+        collect(child);
+
+        return true;
+      });
+    }
+
+    collect(tester.getSemantics(find.byType(AgentExecution)));
+
+    // The positive assertion keeps the negative one honest: if the walk stopped
+    // seeing values, this would fail rather than pass vacuously.
+    expect(values.where((value) => value.contains('Running')), hasLength(1));
+    // The nested transcript also carried `busy`, so a running card reported its
+    // state twice -- once as this value, once as a nested 'Busy'.
+    expect(values.where((value) => value.contains('Busy')), isEmpty);
+
+    handle.dispose();
   });
 }
