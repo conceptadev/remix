@@ -27,6 +27,11 @@ class PlaygroundThemeData {
     required this.destructiveForeground,
     required this.border,
     required this.focusRing,
+    required this.chart1,
+    required this.chart2,
+    required this.chart3,
+    required this.chart4,
+    required this.chart5,
     required this.radius,
   });
 
@@ -46,6 +51,11 @@ class PlaygroundThemeData {
       destructiveForeground = const Color(0xFFFFFFFF),
       border = const Color(0xFFE5E5E5),
       focusRing = const Color(0xFF4F46E5),
+      chart1 = const Color(0xFF2563EB),
+      chart2 = const Color(0xFFC2410C),
+      chart3 = const Color(0xFF047857),
+      chart4 = const Color(0xFF7E22CE),
+      chart5 = const Color(0xFFBE123C),
       radius = const Radius.circular(8);
 
   /// The neutral dark theme.
@@ -64,6 +74,11 @@ class PlaygroundThemeData {
       destructiveForeground = const Color(0xFFFFFFFF),
       border = const Color(0xFF404040),
       focusRing = const Color(0xFFA3A3A3),
+      chart1 = const Color(0xFF60A5FA),
+      chart2 = const Color(0xFFFB923C),
+      chart3 = const Color(0xFF34D399),
+      chart4 = const Color(0xFFC084FC),
+      chart5 = const Color(0xFFFB7185),
       radius = const Radius.circular(8);
 
   /// Value for [PlaygroundTokens.background].
@@ -108,6 +123,21 @@ class PlaygroundThemeData {
   /// Value for [PlaygroundTokens.focusRing].
   final Color focusRing;
 
+  /// Value for [PlaygroundTokens.chart1].
+  final Color chart1;
+
+  /// Value for [PlaygroundTokens.chart2].
+  final Color chart2;
+
+  /// Value for [PlaygroundTokens.chart3].
+  final Color chart3;
+
+  /// Value for [PlaygroundTokens.chart4].
+  final Color chart4;
+
+  /// Value for [PlaygroundTokens.chart5].
+  final Color chart5;
+
   /// Value for [PlaygroundTokens.radius].
   final Radius radius;
 
@@ -131,6 +161,11 @@ class PlaygroundThemeData {
         PlaygroundTokens.destructiveForeground: destructiveForeground,
         PlaygroundTokens.border: border,
         PlaygroundTokens.focusRing: focusRing,
+        PlaygroundTokens.chart1: chart1,
+        PlaygroundTokens.chart2: chart2,
+        PlaygroundTokens.chart3: chart3,
+        PlaygroundTokens.chart4: chart4,
+        PlaygroundTokens.chart5: chart5,
         PlaygroundTokens.radius: radius,
       });
 
@@ -150,6 +185,11 @@ class PlaygroundThemeData {
     Color? destructiveForeground,
     Color? border,
     Color? focusRing,
+    Color? chart1,
+    Color? chart2,
+    Color? chart3,
+    Color? chart4,
+    Color? chart5,
     Radius? radius,
   }) => PlaygroundThemeData(
     background: background ?? this.background,
@@ -166,6 +206,11 @@ class PlaygroundThemeData {
     destructiveForeground: destructiveForeground ?? this.destructiveForeground,
     border: border ?? this.border,
     focusRing: focusRing ?? this.focusRing,
+    chart1: chart1 ?? this.chart1,
+    chart2: chart2 ?? this.chart2,
+    chart3: chart3 ?? this.chart3,
+    chart4: chart4 ?? this.chart4,
+    chart5: chart5 ?? this.chart5,
     radius: radius ?? this.radius,
   );
 
@@ -184,6 +229,11 @@ class PlaygroundThemeData {
     destructiveForeground,
     border,
     focusRing,
+    chart1,
+    chart2,
+    chart3,
+    chart4,
+    chart5,
     radius,
   ];
 

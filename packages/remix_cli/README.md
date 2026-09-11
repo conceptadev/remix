@@ -28,6 +28,9 @@ update command, registry lockfile, or content-hash protocol.
 The CLI has not been published. The hosted commands below apply after its
 first release. Until then, use the checkout command in this section.
 
+The CLI requires Flutter 3.44 or later (Dart 3.12). With an older SDK, adding
+the dependency fails during version solving.
+
 A project-local development dependency is preferred because the app's lockfile
 pins the CLI version and its bundled templates:
 
@@ -125,6 +128,17 @@ dependencies, formats the authored files, runs generation only for the
 declared `button.g.dart`, and analyzes the installed UI path. It does not create
 or modify `build.yaml`.
 
+The current `mix_generator` writes explicit `this.` qualifiers into generated
+adapters, which `flutter_lints` reports as `unnecessary_this` infos. They do
+not fail the command. To keep `flutter analyze` on the source you own, exclude
+the adapters in `analysis_options.yaml`, matching your `paths.ui`:
+
+```yaml
+analyzer:
+  exclude:
+    - lib/ui/**/*.g.dart
+```
+
 With the default preset and path, the application receives:
 
 ```text
@@ -198,8 +212,9 @@ final chart = SizedBox(
 ```
 
 Charts have no intrinsic height, so give line and bar charts a bounded height
-and pie charts a bounded size. Edit `resolveUiChartPalette` to change the
-shared palette, or pass `palette` or a chart `style` for one instance.
+and pie charts a bounded size. The palette is the theme's `chart1` to
+`chart5` tokens: edit them in `theme/theme_data.dart` to restyle every chart,
+or pass `palette` or a chart `style` for one instance.
 
 `RemixCheckboxGroup`, `RemixRadioGroup`, `RemixTabs`, and
 `RemixAccordionGroup` are behavioral and carry no style, so the registry has

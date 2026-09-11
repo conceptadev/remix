@@ -13,6 +13,9 @@ enum {{typePrefix}}SelectSize { size1, size2, size3 }
 enum {{typePrefix}}SelectVariant { surface, soft, ghost }
 
 /// {{typePrefix}}-themed Select with Radix-owned trigger and content configuration.
+///
+/// Content icons use size-matched 12/16/20 token defaults rather than the
+/// ambient icon size. Override the trigger icon through [style] when needed.
 @MixWidget(target: RemixSelect.new)
 SelectStyler {{valuePrefix}}SelectStyle({
   {{typePrefix}}SelectVariant variant = .surface,
@@ -47,7 +50,13 @@ SelectTriggerStyler _{{valuePrefix}}SelectTriggerStyler(
       .placeholder(
         _{{valuePrefix}}SelectTriggerText(size, color: {{typePrefix}}Tokens.grayA10()),
       )
-      .icon(.color({{typePrefix}}Tokens.gray12()))
+      .icon(
+        .color({{typePrefix}}Tokens.gray12()).size(switch (size) {
+          .size1 => {{typePrefix}}Tokens.space3(),
+          .size2 => {{typePrefix}}Tokens.space4(),
+          .size3 => {{typePrefix}}Tokens.spinnerSize3(),
+        }),
+      )
       .indicator(.color({{typePrefix}}Tokens.gray12()).size(size == .size3 ? 11 : 9))
       .onFocusVisible(
         .containerEffects(
