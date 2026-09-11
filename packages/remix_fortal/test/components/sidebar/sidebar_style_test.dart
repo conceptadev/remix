@@ -150,7 +150,7 @@ void main() {
     );
 
     expect(
-      tester.getSize(find.byType(RemixToggle).first).height,
+      tester.getSize(find.bySemanticsLabel('Overview')).height,
       greaterThanOrEqualTo(48),
     );
     await expectLater(tester, meetsGuideline(androidTapTargetGuideline));

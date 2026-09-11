@@ -84,6 +84,76 @@ class AppNavigation extends StatelessWidget {
 ```
 </CodeGroup>
 
+## Collapsing to an icon rail
+
+Set `collapsed: true` to hide destination labels and section heading text.
+Accessible names, semantic headings, selected state, Tab traversal, and
+activation stay available. Every rendered destination must provide an icon
+when collapsed; a missing icon throws a descriptive `FlutterError` in all
+build modes. Expanded sidebars continue to support text-only destinations.
+
+The sidebar owns its 200ms animation. Set `expandedWidth` and `collapsedWidth`
+together to animate width with labels and headings; omit both for host-sized
+panels. Parent constraints still take precedence. Initial state is immediate,
+rapid reversals continue from the current frame, and reduced motion settles on
+the latest target without animation.
+
+`animationStyle` uses Flutter's existing `AnimationStyle`, as `RemixDisclosure`
+does. Its duration/curve configure expansion; reverseDuration/reverseCurve
+configure collapse, falling back to the forward settings. Defaults are 200ms
+and ease-in-out. Text phases scale with the chosen duration. Set
+`animationStyle: AnimationStyle.noAnimation` for immediate updates; the host's
+reduced-motion preference also takes precedence. Custom curves are clamped to
+the width endpoints.
+
+Mix `.animate(...)` remains available for visual style changes such as hover
+colors. Use `animationStyle` for collapse motion; independently animating the
+same width/padding with Mix would add a second interpolation to that geometry.
+
+<CodeGroup title="Animated icon rail" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+Widget buildCollapsibleSidebar({
+  required bool collapsed,
+  required String selectedPage,
+  required ValueChanged<String> onSelected,
+  required List<RemixSidebarSection<String>> sections,
+}) => FortalSidebar<String>(
+  collapsed: collapsed,
+  expandedWidth: 256,
+  collapsedWidth: 72,
+  sections: sections,
+  selectedValue: selectedPage,
+  onSelected: onSelected,
+);
+```
+</CodeGroup>
+
+The example assumes a `FortalScope` and an `Overlay` supplied by the host.
+Use a normal icon button to change the caller's `collapsed` value. Header and
+footer widgets can read `RemixSidebar.animationOf(context)` to coordinate custom
+content using `expansion` and `labelOpacity`, while keeping interactive controls
+mounted. Read it inside the slot widget's build method or a `Builder`, so the
+context is below the sidebar. No separate transition widget or input is needed.
+
+Collapsed destinations reveal their labels on hover, keyboard focus, or long
+press. Tooltips are suppressed during movement and dismissed on expansion.
+`showTooltips: false` disables automatic tooltips without changing accessible
+names. Expanded use, and collapsed use with automatic tooltips disabled,
+requires no overlay. Otherwise provide an `Overlay`, such as `Overlay.wrap`
+in a minimal host. `tooltipPositioning` overrides the default logical-end,
+centered placement with an 8px gap and collision avoidance.
+
+Fortal interpolates navigation padding between `space3` expanded and `space2`
+collapsed, preserving theme scaling. The dashboard uses 256px and 72px widths;
+custom widths must accommodate padding, borders, display insets, and at least
+48px destination targets. Increase the host width when custom/scaled tokens
+need more room. Keep a mobile drawer's open state separate from the desktop
+collapse preference and present the drawer expanded.
+
 ## Controlled selection
 
 `selectedValue` is the only source of selected state. A null value means no
@@ -167,7 +237,7 @@ behavior.
 
 ## Styling
 
-`SidebarStyler` exposes eight slots:
+`SidebarStyler` exposes nine slots:
 
 | Slot | Responsibility |
 | --- | --- |
@@ -179,6 +249,7 @@ behavior.
 | `sectionLabel` | Heading typography and modifiers |
 | `destinations` | Layout and spacing between destination rows |
 | `destination` | Default `SidebarDestinationStyler` for every destination |
+| `tooltip` | Automatic collapsed destination tooltip style |
 
 The component forces the four structural FlexBox slots into source-order
 vertical layout after style resolution. Styles can change spacing, alignment,
@@ -282,6 +353,12 @@ import 'package:remix/remix.dart';
 RemixSidebar<T> remixSidebarConstructor<T extends Object>({
   Key? key,
   Widget? header,
+  bool collapsed = false,
+  bool showTooltips = true,
+  OverlayPositionConfig? tooltipPositioning,
+  double? expandedWidth,
+  double? collapsedWidth,
+  AnimationStyle animationStyle = const AnimationStyle(),
   required List<RemixSidebarSection<T>> sections,
   required T? selectedValue,
   ValueChanged<T>? onSelected,

@@ -56,6 +56,7 @@ void main() {
       'theme',
       'text',
       'toggle',
+      'tooltip',
     ]);
     expect(
       (items['base_button'] as YamlMap).containsKey('dependencies'),

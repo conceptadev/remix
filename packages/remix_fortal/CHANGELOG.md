@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Add animated icon-rail sidebar styling, themed destination tooltips, and generated collapse/width inputs.
 - Expose controlled visibility on FortalTooltip.
 
 ## 1.0.0-beta.9

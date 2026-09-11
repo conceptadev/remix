@@ -42,6 +42,10 @@ final class SidebarSpec with _$SidebarSpec {
   @override
   final StyleSpec<ToggleSpec> destination;
 
+  /// Visual treatment of automatic collapsed destination tooltips.
+  @override
+  final StyleSpec<TooltipSpec> tooltip;
+
   const SidebarSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<BoxSpec>? header,
@@ -51,6 +55,7 @@ final class SidebarSpec with _$SidebarSpec {
     StyleSpec<TextSpec>? sectionLabel,
     StyleSpec<FlexBoxSpec>? destinations,
     StyleSpec<ToggleSpec>? destination,
+    StyleSpec<TooltipSpec>? tooltip,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        header = header ?? const StyleSpec(spec: BoxSpec()),
        content = content ?? const StyleSpec(spec: FlexBoxSpec()),
@@ -58,5 +63,14 @@ final class SidebarSpec with _$SidebarSpec {
        section = section ?? const StyleSpec(spec: FlexBoxSpec()),
        sectionLabel = sectionLabel ?? const StyleSpec(spec: TextSpec()),
        destinations = destinations ?? const StyleSpec(spec: FlexBoxSpec()),
-       destination = destination ?? const StyleSpec(spec: ToggleSpec());
+       destination = destination ?? const StyleSpec(spec: ToggleSpec()),
+       tooltip =
+           tooltip ??
+           const StyleSpec(
+             spec: TooltipSpec(
+               waitDuration: null,
+               showDuration: null,
+               dismissDuration: null,
+             ),
+           );
 }

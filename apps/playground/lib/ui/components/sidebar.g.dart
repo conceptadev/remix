@@ -48,6 +48,12 @@ class PlaygroundSidebar<T extends Object> extends StatelessWidget {
     super.key,
     this.style = const SidebarStyler.create(),
     this.header,
+    this.collapsed = false,
+    this.showTooltips = true,
+    this.tooltipPositioning,
+    this.expandedWidth,
+    this.collapsedWidth,
+    this.animationStyle = const AnimationStyle(),
     required this.sections,
     required this.selectedValue,
     this.onSelected,
@@ -60,6 +66,18 @@ class PlaygroundSidebar<T extends Object> extends StatelessWidget {
   final SidebarStyler style;
 
   final Widget? header;
+
+  final bool collapsed;
+
+  final bool showTooltips;
+
+  final OverlayPositionConfig? tooltipPositioning;
+
+  final double? expandedWidth;
+
+  final double? collapsedWidth;
+
+  final AnimationStyle animationStyle;
 
   final List<RemixSidebarSection<T>> sections;
 
@@ -81,6 +99,12 @@ class PlaygroundSidebar<T extends Object> extends StatelessWidget {
       key: this.key,
       style: playgroundSidebarStyle(style: this.style),
       header: this.header,
+      collapsed: this.collapsed,
+      showTooltips: this.showTooltips,
+      tooltipPositioning: this.tooltipPositioning,
+      expandedWidth: this.expandedWidth,
+      collapsedWidth: this.collapsedWidth,
+      animationStyle: this.animationStyle,
       sections: this.sections,
       selectedValue: this.selectedValue,
       onSelected: this.onSelected,

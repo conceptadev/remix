@@ -5,6 +5,7 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'text.dart';
 import 'toggle.dart';
+import 'tooltip.dart';
 
 part 'sidebar.g.dart';
 
@@ -25,15 +26,17 @@ const _minimumDestinationTargetHeight = 48.0;
 /// section and selected destination content without changing layout.
 /// [panelPadding] applies host-owned insets inside the painted panel surface.
 ///
-/// The recipe sets no panel width and no header padding. Width belongs to the
-/// host, which must also size any drawer that presents the same panel, and
-/// header metrics usually have to match an application top bar.
+/// The recipe sets no panel width and no header padding. The host can supply
+/// expanded/collapsed widths to the widget for coordinated animation, or size
+/// the panel itself. Header metrics usually match an application top bar.
 @MixWidget(target: RemixSidebar.new)
 SidebarStyler {{valuePrefix}}SidebarStyle({
   bool highContrast = false,
+  bool collapsed = false,
   EdgeInsetsGeometry? panelPadding,
   SidebarStyler style = const SidebarStyler.create(),
 }) {
+  final horizontalPadding = Prop.mix(_SidebarHorizontalPadding(collapsed));
   return SidebarStyler(
     container:
         FlexBoxStyler(padding: EdgeInsetsGeometryMix.maybeValue(panelPadding))
@@ -48,9 +51,11 @@ SidebarStyler {{valuePrefix}}SidebarStyle({
     content: FlexBoxStyler()
         .spacing({{typePrefix}}Tokens.space3())
         .padding(
-          .symmetric(
-            horizontal: {{typePrefix}}Tokens.space3(),
-            vertical: {{typePrefix}}Tokens.space4(),
+          EdgeInsetsMix.create(
+            left: horizontalPadding,
+            right: horizontalPadding,
+            top: Prop.token({{typePrefix}}Tokens.space4),
+            bottom: Prop.token({{typePrefix}}Tokens.space4),
           ),
         ),
     footer: BoxStyler().border(
@@ -68,6 +73,7 @@ SidebarStyler {{valuePrefix}}SidebarStyle({
             ),
           ),
         ),
+    tooltip: {{valuePrefix}}TooltipStyle(),
     destinations: FlexBoxStyler().spacing(_destinationSpacing),
     destination:
         {{valuePrefix}}ToggleStyle(
@@ -78,4 +84,26 @@ SidebarStyler {{valuePrefix}}SidebarStyle({
             .minHeight(_minimumDestinationTargetHeight)
             .container(.mainAxisSize(.max).mainAxisAlignment(.start)),
   ).merge(style);
+}
+
+/// Resolve both endpoints before interpolation so theme scaling stays live.
+final class _SidebarHorizontalPadding extends Mix<double> {
+  const _SidebarHorizontalPadding(this.collapsed);
+  final bool collapsed;
+
+  @override
+  double resolve(BuildContext context) {
+    final expansion =
+        RemixSidebar.maybeAnimationOf(context)?.expansion ??
+        (collapsed ? 0.0 : 1.0);
+    final rail = {{typePrefix}}Tokens.space2.resolve(context);
+    final expanded = {{typePrefix}}Tokens.space3.resolve(context);
+    return rail + (expanded - rail) * expansion;
+  }
+
+  @override
+  Mix<double> merge(Mix<double>? other) => other ?? this;
+
+  @override
+  List<Object?> get props => [collapsed];
 }
