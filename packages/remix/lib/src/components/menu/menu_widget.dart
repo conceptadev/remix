@@ -502,6 +502,10 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
           style: style,
           styleSpec: widget.styleSpec,
           builder: (context, spec) {
+            final inherited = Style.maybeOf<MenuSpec>(context);
+            final effectiveStyle = inherited is MenuStyler
+                ? inherited.merge(style)
+                : style;
             return _RemixMenuItemsPanel<T>(
               items: widget.items,
               overlayStyleSpec: spec.overlay,
@@ -509,7 +513,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
               dividerStyleSpec: spec.divider,
               hasRootSelectionCallback: widget.onSelected != null,
               itemStyles: widget.styleSpec == null
-                  ? _RemixMenuItemStyles.fromStyler(style)
+                  ? _RemixMenuItemStyles.fromStyler(effectiveStyle)
                   : _RemixMenuItemStyles.fromSpec(spec),
             );
           },
