@@ -115,10 +115,16 @@ final class RemixSidebarSection<T extends Object> {
 ///   footer: const AccountMenu(),
 /// )
 /// ```
-class RemixSidebar<T extends Object> extends StatelessWidget {
+class RemixSidebar<T extends Object> extends StatefulWidget {
   const RemixSidebar({
     super.key,
     this.header,
+    this.collapsed = false,
+    this.showTooltips = true,
+    this.tooltipPositioning,
+    this.expandedWidth,
+    this.collapsedWidth,
+    this.animationStyle = const AnimationStyle(),
     required this.sections,
     required this.selectedValue,
     this.onSelected,
@@ -128,7 +134,65 @@ class RemixSidebar<T extends Object> extends StatelessWidget {
     this.excludeSemantics = false,
     this.style = const SidebarStyler.create(),
     this.styleSpec,
-  });
+  }) : assert((expandedWidth == null) == (collapsedWidth == null)),
+       assert(
+         expandedWidth == null ||
+             (expandedWidth > 0 && expandedWidth < double.infinity),
+       ),
+       assert(
+         collapsedWidth == null ||
+             (collapsedWidth > 0 &&
+                 (expandedWidth == null || collapsedWidth <= expandedWidth)),
+       );
+
+  /// Whether to present only destination icons. Every destination must have
+  /// an icon in this mode. The collapse trigger belongs to the host.
+  final bool collapsed;
+
+  /// Whether collapsed destinations reveal their labels in tooltips.
+  ///
+  /// Automatic tooltips require a caller-owned Overlay. Expanded sidebars and
+  /// sidebars with this set to false need no overlay.
+  final bool showTooltips;
+
+  /// Tooltip placement override; defaults to logical end with collision handling.
+  final OverlayPositionConfig? tooltipPositioning;
+
+  /// Expanded panel width. Set together with [collapsedWidth] to animate width
+  /// with the labels and headings. When both are null, the host sizes the panel.
+  /// Parent constraints still take precedence.
+  final double? expandedWidth;
+
+  /// Icon-rail width; must be positive and no greater than [expandedWidth].
+  final double? collapsedWidth;
+
+  /// Timing for expansion and collapse, matching RemixDisclosure's API.
+  ///
+  /// Defaults to 200ms and ease-in-out. Collapse uses reverseDuration and
+  /// reverseCurve when provided, otherwise the forward settings. Text eases
+  /// out over the first 30% of collapse and in over the final 75% of
+  /// expansion. Icons and section rows hold their positions while moving.
+  /// Overshooting curves are clamped to the panel's width endpoints.
+  /// AnimationStyle.noAnimation and reduced motion settle immediately.
+  final AnimationStyle animationStyle;
+
+  /// Reads the sidebar-owned animation for custom header/footer content.
+  /// The context must be below a sidebar, for example inside a slot's Builder.
+  static SidebarAnimation animationOf(BuildContext context) {
+    final motion = maybeAnimationOf(context);
+    if (motion == null) {
+      throw FlutterError(
+        'RemixSidebar.animationOf requires a sidebar ancestor.',
+      );
+    }
+    return motion;
+  }
+
+  /// Reads the current frame, or null outside a sidebar.
+  /// Style recipes can use this to coordinate their resolved visual values.
+  static SidebarAnimation? maybeAnimationOf(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<_SidebarAnimationScope>()
+      ?.motion;
 
   /// Optional fixed content above the destination region.
   ///
@@ -278,9 +342,43 @@ class RemixSidebar<T extends Object> extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    assert(_debugConfigurationIsValid());
+  State<RemixSidebar<T>> createState() => _RemixSidebarState<T>();
 
+  Widget _build(BuildContext context, SidebarAnimation motion) {
+    assert(_debugConfigurationIsValid());
+    if (collapsed) {
+      for (final section in sections) {
+        for (final destination in section.destinations) {
+          if (destination.icon == null) {
+            throw FlutterError(
+              'Collapsed RemixSidebar destination ${destination.value} '
+              'must provide an icon.',
+            );
+          }
+        }
+      }
+      if (showTooltips && Overlay.maybeOf(context) == null) {
+        throw FlutterError(
+          'Collapsed RemixSidebar tooltips require an Overlay. '
+          'Provide Overlay.wrap or set showTooltips to false.',
+        );
+      }
+    }
+    final panel = _buildPanel(context, motion);
+    return _SidebarAnimationScope(
+      motion: motion,
+      child: expandedWidth == null
+          ? panel
+          : Box(
+              style: BoxStyler().width(
+                ui.lerpDouble(collapsedWidth, expandedWidth, motion.expansion)!,
+              ),
+              child: panel,
+            ),
+    );
+  }
+
+  Widget _buildPanel(BuildContext context, SidebarAnimation motion) {
     final effectiveStyle = _effectiveStyle();
     final handleSelected = onSelected;
     final destinationsDisabled = !enabled || handleSelected == null;
@@ -304,9 +402,22 @@ class RemixSidebar<T extends Object> extends StatelessWidget {
                           header: true,
                           label: label,
                           excludeSemantics: true,
-                          child: StyledText(
-                            label,
-                            styleSpec: spec.sectionLabel,
+                          // The heading keeps its row in the rail, so
+                          // destinations never shift vertically; only the
+                          // text fades.
+                          child: Opacity(
+                            opacity: motion.labelOpacity,
+                            child: StyledText(
+                              label,
+                              styleSpec: motion.expansion == 1
+                                  ? spec.sectionLabel
+                                  : spec.sectionLabel.copyWith(
+                                      spec: spec.sectionLabel.spec.copyWith(
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    ),
+                            ),
                           ),
                         ),
                       FlexBox(
@@ -316,6 +427,20 @@ class RemixSidebar<T extends Object> extends StatelessWidget {
                             _RemixSidebarDestinationWidget<T>(
                               key: ValueKey<T>(destination.value),
                               data: destination,
+                              motion: motion,
+                              tooltipsEnabled: collapsed && showTooltips,
+                              tooltipStyle: spec.tooltip,
+                              tooltipPositioning:
+                                  tooltipPositioning ??
+                                  OverlayPositionConfig(
+                                    side:
+                                        Directionality.of(context) ==
+                                            TextDirection.ltr
+                                        ? OverlaySide.right
+                                        : OverlaySide.left,
+                                    alignment: OverlayAlignment.center,
+                                    sideOffset: 8,
+                                  ),
                               selected: destination.value == selectedValue,
                               sidebarEnabled: enabled,
                               onSelected: handleSelected,
@@ -379,13 +504,129 @@ class RemixSidebar<T extends Object> extends StatelessWidget {
   }
 }
 
-class _RemixSidebarDestinationWidget<T extends Object> extends StatelessWidget {
+/// One frame of a sidebar's coordinated geometry and text transition.
+///
+/// Read this value with [RemixSidebar.animationOf] inside a header or footer
+/// to coordinate custom content with the sidebar-owned animation.
+@immutable
+final class SidebarAnimation {
+  const SidebarAnimation._({
+    required this.expansion,
+    required this.labelOpacity,
+    this.isAnimating = false,
+  }) : assert(expansion >= 0 && expansion <= 1),
+       assert(labelOpacity >= 0 && labelOpacity <= 1);
+
+  /// Zero for the icon rail and one for the expanded panel.
+  final double expansion;
+
+  /// Coordinated visibility of destination, brand, and account text.
+  final double labelOpacity;
+
+  /// Whether tooltips should remain suppressed while geometry moves.
+  final bool isAnimating;
+}
+
+class _RemixSidebarState<T extends Object> extends State<RemixSidebar<T>>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    value: 1,
+  );
+  late double _fromExpansion = widget.collapsed ? 0 : 1;
+  late double _fromOpacity = _fromExpansion;
+  bool _reduceMotion = false;
+
+  SidebarAnimation _frame(bool collapsed, AnimationStyle style) {
+    final end = collapsed ? 0.0 : 1.0;
+    final t = _controller.value;
+    final textT = Curves.easeOut.transform(
+      collapsed ? (t / .3).clamp(0.0, 1.0) : ((t - .25) / .75).clamp(0.0, 1.0),
+    );
+    final curve =
+        (collapsed ? style.reverseCurve : null) ??
+        style.curve ??
+        Curves.easeInOut;
+    return SidebarAnimation._(
+      expansion: ui.lerpDouble(
+        _fromExpansion,
+        end,
+        curve.transform(t).clamp(0.0, 1.0),
+      )!,
+      labelOpacity: ui.lerpDouble(_fromOpacity, end, textT)!,
+      isAnimating: _controller.isAnimating,
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _reduceMotion = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    if (_reduceMotion) _controller.value = 1;
+  }
+
+  @override
+  void didUpdateWidget(RemixSidebar<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final targetChanged = oldWidget.collapsed != widget.collapsed;
+    final timingChanged = oldWidget.animationStyle != widget.animationStyle;
+    if (!targetChanged && !timingChanged) return;
+    // Sample the old direction AND timing before retargeting either channel.
+    final previous = _frame(oldWidget.collapsed, oldWidget.animationStyle);
+    _fromExpansion = previous.expansion;
+    _fromOpacity = previous.labelOpacity;
+    final style = widget.animationStyle;
+    final duration =
+        (widget.collapsed ? style.reverseDuration : null) ??
+        style.duration ??
+        const Duration(milliseconds: 200);
+    if (_reduceMotion ||
+        duration == Duration.zero ||
+        (!targetChanged && !_controller.isAnimating)) {
+      _controller.value = 1;
+    } else {
+      _controller.duration = duration;
+      _controller.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: _controller,
+    builder: (context, child) =>
+        widget._build(context, _frame(widget.collapsed, widget.animationStyle)),
+  );
+}
+
+/// Makes the internally owned frame available to slots and style resolution.
+class _SidebarAnimationScope extends InheritedWidget {
+  const _SidebarAnimationScope({required this.motion, required super.child});
+  final SidebarAnimation motion;
+
+  @override
+  bool updateShouldNotify(_SidebarAnimationScope oldWidget) =>
+      motion.expansion != oldWidget.motion.expansion ||
+      motion.labelOpacity != oldWidget.motion.labelOpacity ||
+      motion.isAnimating != oldWidget.motion.isAnimating;
+}
+
+class _RemixSidebarDestinationWidget<T extends Object> extends StatefulWidget {
   const _RemixSidebarDestinationWidget({
     super.key,
     required this.data,
     required this.selected,
     required this.sidebarEnabled,
     required this.onSelected,
+    required this.motion,
+    required this.tooltipsEnabled,
+    required this.tooltipStyle,
+    required this.tooltipPositioning,
     this.defaultStyle,
     this.defaultStyleSpec,
   });
@@ -394,43 +635,231 @@ class _RemixSidebarDestinationWidget<T extends Object> extends StatelessWidget {
   final bool selected;
   final bool sidebarEnabled;
   final ValueChanged<T>? onSelected;
+  final SidebarAnimation motion;
+  final bool tooltipsEnabled;
+  final StyleSpec<TooltipSpec> tooltipStyle;
+  final OverlayPositionConfig tooltipPositioning;
   final SidebarStyler? defaultStyle;
   final StyleSpec<ToggleSpec>? defaultStyleSpec;
 
   @override
-  Widget build(BuildContext context) {
-    final handleSelected = onSelected;
-    final effectiveEnabled =
-        sidebarEnabled && data.enabled && handleSelected != null;
-    void activate() => handleSelected!(data.value);
+  State<_RemixSidebarDestinationWidget<T>> createState() =>
+      _RemixSidebarDestinationState<T>();
+}
 
-    return Semantics(
+class _RemixSidebarDestinationState<T extends Object>
+    extends State<_RemixSidebarDestinationWidget<T>> {
+  bool _tooltipOpen = false;
+  bool _hovered = false;
+  bool _focused = false;
+  Timer? _resumeTooltip;
+
+  bool get _canShow => widget.tooltipsEnabled && !widget.motion.isAnimating;
+
+  @override
+  void didUpdateWidget(_RemixSidebarDestinationWidget<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!_canShow) {
+      _resumeTooltip?.cancel();
+      _tooltipOpen = false;
+    } else if ((!oldWidget.tooltipsEnabled || oldWidget.motion.isAnimating) &&
+        (_hovered || _focused)) {
+      _resumeTooltip?.cancel();
+      _resumeTooltip = Timer(
+        widget.tooltipStyle.spec.waitDuration ??
+            const Duration(milliseconds: 300),
+        () {
+          if (mounted && _canShow && (_hovered || _focused)) {
+            setState(() => _tooltipOpen = true);
+          }
+        },
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _resumeTooltip?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final data = widget.data;
+    final handleSelected = widget.onSelected;
+    final enabled =
+        widget.sidebarEnabled && data.enabled && handleSelected != null;
+    void activate() => handleSelected!(data.value);
+    final style = widget.defaultStyleSpec != null
+        ? _RawSidebarDestinationStyler(widget.defaultStyleSpec!)
+        : _SidebarDestinationStyler(
+            defaultStyle: widget.defaultStyle!,
+            itemStyle: data.style,
+          );
+
+    final button = Semantics(
       button: true,
-      selected: selected,
-      enabled: effectiveEnabled,
+      selected: widget.selected,
+      enabled: enabled,
       label: data.semanticLabel ?? data.label,
-      onTap: effectiveEnabled ? activate : null,
-      child: RemixToggle(
-        selected: selected,
-        enabled: effectiveEnabled,
-        onChanged: effectiveEnabled ? (_) => activate() : null,
-        label: data.label,
-        icon: data.icon,
+      onTap: enabled ? activate : null,
+      child: NakedToggle(
+        value: widget.selected,
+        enabled: enabled,
+        onChanged: enabled ? (_) => activate() : null,
         focusNode: data.focusNode,
         autofocus: data.autofocus,
         excludeSemantics: true,
-        style: defaultStyleSpec != null
-            ? _RawSidebarDestinationStyler(defaultStyleSpec!)
-            : _SidebarDestinationStyler(
-                defaultStyle: defaultStyle!,
-                itemStyle: data.style,
+        builder: (context, _, _) => RemixStyleSpecBuilder<ToggleSpec>(
+          style: style,
+          styleSpec: null,
+          controller: NakedToggleState.controllerOf(context),
+          builder: (context, spec) => _destinationContent(spec),
+        ),
+      ),
+    );
+    // The wrapper stays mounted in overlay hosts in both presentations, so
+    // toggling label/tooltip visibility cannot replace the focused button.
+    if (Overlay.maybeOf(context) == null) return button;
+    return MouseRegion(
+      onEnter: (_) => _hovered = true,
+      onExit: (_) {
+        _hovered = false;
+        if (!_focused) _resumeTooltip?.cancel();
+      },
+      child: Focus(
+        canRequestFocus: false,
+        skipTraversal: true,
+        includeSemantics: false,
+        onFocusChange: (value) {
+          _focused = value;
+          if (!value && !_hovered) _resumeTooltip?.cancel();
+        },
+        child: RemixTooltip(
+          open: _canShow && _tooltipOpen,
+          onOpenChanged: (value) {
+            if (!value) _resumeTooltip?.cancel();
+            final next = _canShow && value;
+            if (next != _tooltipOpen) setState(() => _tooltipOpen = next);
+          },
+          // The button already owns the accessible name. Suppress the
+          // duplicate tooltip name that Flutter web appends to button labels.
+          tooltipChild: ExcludeSemantics(child: Text(data.label)),
+          positioning: widget.tooltipPositioning,
+          style: _SidebarTooltipStyler(widget.tooltipStyle),
+          child: button,
+        ),
+      ),
+    );
+  }
+
+  Widget _destinationContent(ToggleSpec spec) {
+    final motion = widget.motion;
+    // Keep the expanded contract (including caller-supplied wrapping and
+    // space-between alignment) and avoid reveal wrappers at rest. Only the
+    // content changes here; the interactive NakedToggle remains mounted.
+    if (motion.expansion == 1 && !motion.isAnimating) {
+      return LayoutBuilder(
+        builder: (context, constraints) => RowBox(
+          styleSpec: spec.container,
+          children: [
+            if (widget.data.icon case final icon?)
+              StyledIcon(icon: icon, styleSpec: spec.icon),
+            if (constraints.hasBoundedWidth)
+              Flexible(
+                child: StyledText(widget.data.label, styleSpec: spec.label),
+              )
+            else
+              StyledText(widget.data.label, styleSpec: spec.label),
+          ],
+        ),
+      );
+    }
+    final flex = spec.container.spec.flex?.spec;
+    final expandedAlignment = switch (flex?.mainAxisAlignment) {
+      MainAxisAlignment.center => AlignmentDirectional.center,
+      MainAxisAlignment.end => AlignmentDirectional.centerEnd,
+      _ => AlignmentDirectional.centerStart,
+    };
+    // Icons hold their expanded position while the narrowing row clips the
+    // label; only the settled rail centers them.
+    final railAtRest = motion.expansion == 0 && !motion.isAnimating;
+    Widget content(bool bounded) {
+      final label = Offstage(
+        offstage: motion.expansion == 0,
+        child: Opacity(
+          opacity: motion.labelOpacity,
+          child: StyledText(
+            widget.data.label,
+            styleSpec: spec.label.copyWith(
+              spec: spec.label.spec.copyWith(
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.clip,
               ),
+            ),
+          ),
+        ),
+      );
+      return Align(
+        alignment: railAtRest ? AlignmentDirectional.center : expandedAlignment,
+        widthFactor: bounded ? null : 1,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (widget.data.icon case final icon?) ...[
+              StyledIcon(icon: icon, styleSpec: spec.icon),
+              SizedBox(width: (flex?.spacing ?? 0) * motion.expansion),
+            ],
+            if (bounded) Flexible(child: label) else label,
+          ],
+        ),
+      );
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) => RowBox(
+        styleSpec: railAtRest
+            ? _centeredContainer(spec.container)
+            : spec.container,
+        children: [
+          if (constraints.hasBoundedWidth)
+            Flexible(child: content(true))
+          else
+            content(false),
+        ],
+      ),
+    );
+  }
+
+  /// Centers the settled rail icon in the whole target, not only in the space
+  /// left by a recipe's (possibly asymmetric) horizontal padding.
+  StyleSpec<FlexBoxSpec> _centeredContainer(StyleSpec<FlexBoxSpec> container) {
+    final box = container.spec.box;
+    final padding = box?.spec.padding?.resolve(Directionality.of(context));
+    if (box == null || padding == null) return container;
+    return container.copyWith(
+      spec: container.spec.copyWith(
+        box: box.copyWith(
+          spec: box.spec.copyWith(
+            padding: EdgeInsets.only(top: padding.top, bottom: padding.bottom),
+          ),
+        ),
       ),
     );
   }
 }
 
-/// Resolves the sidebar's nested destination style inside RemixToggle's state
+final class _SidebarTooltipStyler extends TooltipStyler {
+  const _SidebarTooltipStyler(this.value) : super.create();
+  final StyleSpec<TooltipSpec> value;
+  @override
+  StyleSpec<TooltipSpec> resolve(BuildContext context) => value;
+  @override
+  List<Object?> get props => [value];
+}
+
+/// Resolves the sidebar's nested destination style inside NakedToggle's state
 /// context, then merges the per-destination override after it.
 ///
 /// Resolving this at the panel root would discard selected, hovered, pressed,
@@ -467,7 +896,7 @@ final class _SidebarDestinationStyler extends ToggleStyler {
   List<Object?> get props => [defaultStyle, itemStyle];
 }
 
-/// Adapts a nested raw destination spec to RemixToggle's style input so its
+/// Adapts a nested raw destination spec to the destination's style input so its
 /// animation and modifier metadata remain intact.
 final class _RawSidebarDestinationStyler extends ToggleStyler {
   const _RawSidebarDestinationStyler(this.value) : super.create();

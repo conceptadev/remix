@@ -1,5 +1,9 @@
 ## 0.1.0
 
+- `sidebar` in both presets labels collapsed icon-rail destinations with the
+  application's `tooltip` recipe, so adding it also installs `tooltip`. The
+  Fortal recipe also narrows its navigation padding as the rail collapses.
+
 - Require Remix `^1.0.0-beta.9` for the generated Fortal adapters. CI checks
   both presets with checkout Remix. Publication requires the hosted check.
 

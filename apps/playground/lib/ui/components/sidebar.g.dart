@@ -21,12 +21,14 @@ part of 'sidebar.dart';
 /// is a layout decision. Nothing here sets a width, and nothing here pads the
 /// header, whose metrics normally have to line up with an application top bar.
 ///
-/// This recipe **depends on the `toggle` item**, which is why its registry
-/// entry lists `toggle` beside `theme`. A destination is a toggle: it is a
-/// control that stays pressed, and `SidebarSpec` takes its style as a
+/// This recipe **depends on the `toggle` and `tooltip` items**, which is why
+/// its registry entry lists both beside `theme`. A destination is a toggle: it
+/// is a control that stays pressed, and `SidebarSpec` takes its style as a
 /// `ToggleStyler` field. Handing it the application's own ghost toggle recipe
 /// is what keeps a selected destination and a selected toggle the same colour
-/// without restating one component inside another.
+/// without restating one component inside another. The same reasoning covers
+/// the tooltip: when the host collapses the panel to an icon rail, each
+/// destination's label appears in the application's own tooltip recipe.
 ///
 /// The panel fill is `background`, the same token the page uses, and the
 /// trailing hairline in `border` is what separates the two — the same choice
@@ -48,6 +50,12 @@ class PlaygroundSidebar<T extends Object> extends StatelessWidget {
     super.key,
     this.style = const SidebarStyler.create(),
     this.header,
+    this.collapsed = false,
+    this.showTooltips = true,
+    this.tooltipPositioning,
+    this.expandedWidth,
+    this.collapsedWidth,
+    this.animationStyle = const AnimationStyle(),
     required this.sections,
     required this.selectedValue,
     this.onSelected,
@@ -60,6 +68,18 @@ class PlaygroundSidebar<T extends Object> extends StatelessWidget {
   final SidebarStyler style;
 
   final Widget? header;
+
+  final bool collapsed;
+
+  final bool showTooltips;
+
+  final OverlayPositionConfig? tooltipPositioning;
+
+  final double? expandedWidth;
+
+  final double? collapsedWidth;
+
+  final AnimationStyle animationStyle;
 
   final List<RemixSidebarSection<T>> sections;
 
@@ -81,6 +101,12 @@ class PlaygroundSidebar<T extends Object> extends StatelessWidget {
       key: this.key,
       style: playgroundSidebarStyle(style: this.style),
       header: this.header,
+      collapsed: this.collapsed,
+      showTooltips: this.showTooltips,
+      tooltipPositioning: this.tooltipPositioning,
+      expandedWidth: this.expandedWidth,
+      collapsedWidth: this.collapsedWidth,
+      animationStyle: this.animationStyle,
       sections: this.sections,
       selectedValue: this.selectedValue,
       onSelected: this.onSelected,

@@ -16,7 +16,8 @@ void main() {
       expect(spec.sectionLabel, isA<StyleSpec<TextSpec>>());
       expect(spec.destinations, isA<StyleSpec<FlexBoxSpec>>());
       expect(spec.destination, isA<StyleSpec<ToggleSpec>>());
-      expect(spec.props, hasLength(8));
+      expect(spec.tooltip, isA<StyleSpec<TooltipSpec>>());
+      expect(spec.props, hasLength(9));
     });
 
     test(
@@ -46,6 +47,7 @@ void main() {
           'sectionLabel',
           'destinations',
           'destination',
+          'tooltip',
         ]);
       },
     );

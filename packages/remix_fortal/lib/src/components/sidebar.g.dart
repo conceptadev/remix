@@ -17,16 +17,22 @@ part of 'sidebar.dart';
 /// section and selected destination content without changing layout.
 /// [panelPadding] applies host-owned insets inside the painted panel surface.
 ///
-/// The recipe sets no panel width and no header padding. Width belongs to the
-/// host, which must also size any drawer that presents the same panel, and
-/// header metrics usually have to match an application top bar.
+/// The recipe sets no panel width and no header padding. The host can supply
+/// expanded/collapsed widths to the widget for coordinated animation, or size
+/// the panel itself. Header metrics usually match an application top bar.
 class FortalSidebar<T extends Object> extends StatelessWidget {
   const FortalSidebar({
     super.key,
     this.highContrast = false,
+    this.collapsed = false,
     this.panelPadding,
     this.style = const SidebarStyler.create(),
     this.header,
+    this.showTooltips = true,
+    this.tooltipPositioning,
+    this.expandedWidth,
+    this.collapsedWidth,
+    this.animationStyle = const AnimationStyle(),
     required this.sections,
     required this.selectedValue,
     this.onSelected,
@@ -38,11 +44,23 @@ class FortalSidebar<T extends Object> extends StatelessWidget {
 
   final bool highContrast;
 
+  final bool collapsed;
+
   final EdgeInsetsGeometry? panelPadding;
 
   final SidebarStyler style;
 
   final Widget? header;
+
+  final bool showTooltips;
+
+  final OverlayPositionConfig? tooltipPositioning;
+
+  final double? expandedWidth;
+
+  final double? collapsedWidth;
+
+  final AnimationStyle animationStyle;
 
   final List<RemixSidebarSection<T>> sections;
 
@@ -64,10 +82,17 @@ class FortalSidebar<T extends Object> extends StatelessWidget {
       key: this.key,
       style: fortalSidebarStyle(
         highContrast: this.highContrast,
+        collapsed: this.collapsed,
         panelPadding: this.panelPadding,
         style: this.style,
       ),
       header: this.header,
+      collapsed: this.collapsed,
+      showTooltips: this.showTooltips,
+      tooltipPositioning: this.tooltipPositioning,
+      expandedWidth: this.expandedWidth,
+      collapsedWidth: this.collapsedWidth,
+      animationStyle: this.animationStyle,
       sections: this.sections,
       selectedValue: this.selectedValue,
       onSelected: this.onSelected,

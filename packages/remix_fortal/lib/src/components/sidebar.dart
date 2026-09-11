@@ -5,10 +5,11 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'text.dart';
 import 'toggle.dart';
+import 'tooltip.dart';
 
 part 'sidebar.g.dart';
 
-const _sectionLabelHorizontalPadding = 10.0;
+const _sectionLabelHorizontalPadding = 14.0;
 const _sectionLabelVerticalPadding = 6.0;
 const _sectionLabelLetterSpacing = 0.7;
 const _destinationSpacing = 2.0;
@@ -25,15 +26,17 @@ const _minimumDestinationTargetHeight = 48.0;
 /// section and selected destination content without changing layout.
 /// [panelPadding] applies host-owned insets inside the painted panel surface.
 ///
-/// The recipe sets no panel width and no header padding. Width belongs to the
-/// host, which must also size any drawer that presents the same panel, and
-/// header metrics usually have to match an application top bar.
+/// The recipe sets no panel width and no header padding. The host can supply
+/// expanded/collapsed widths to the widget for coordinated animation, or size
+/// the panel itself. Header metrics usually match an application top bar.
 @MixWidget(target: RemixSidebar.new)
 SidebarStyler fortalSidebarStyle({
   bool highContrast = false,
+  bool collapsed = false,
   EdgeInsetsGeometry? panelPadding,
   SidebarStyler style = const SidebarStyler.create(),
 }) {
+  final horizontalPadding = Prop.mix(_SidebarHorizontalPadding(collapsed));
   return SidebarStyler(
     container:
         FlexBoxStyler(padding: EdgeInsetsGeometryMix.maybeValue(panelPadding))
@@ -48,9 +51,11 @@ SidebarStyler fortalSidebarStyle({
     content: FlexBoxStyler()
         .spacing(FortalTokens.space3())
         .padding(
-          .symmetric(
-            horizontal: FortalTokens.space3(),
-            vertical: FortalTokens.space4(),
+          EdgeInsetsMix.create(
+            left: horizontalPadding,
+            right: horizontalPadding,
+            top: Prop.token(FortalTokens.space4),
+            bottom: Prop.token(FortalTokens.space4),
           ),
         ),
     footer: BoxStyler().border(
@@ -68,6 +73,7 @@ SidebarStyler fortalSidebarStyle({
             ),
           ),
         ),
+    tooltip: fortalTooltipStyle(),
     destinations: FlexBoxStyler().spacing(_destinationSpacing),
     destination:
         fortalToggleStyle(
@@ -76,6 +82,67 @@ SidebarStyler fortalSidebarStyle({
               highContrast: highContrast,
             )
             .minHeight(_minimumDestinationTargetHeight)
+            .padding(
+              EdgeInsetsMix.create(
+                left: Prop.mix(
+                  _DestinationInlinePadding(collapsed, left: true),
+                ),
+                right: Prop.mix(
+                  _DestinationInlinePadding(collapsed, left: false),
+                ),
+              ),
+            )
             .container(.mainAxisSize(.max).mainAxisAlignment(.start)),
   ).merge(style);
+}
+
+/// Repays the narrowing panel inset on the leading side so icons hold still.
+///
+/// Icons stay `space3 + space4` from the panel's leading edge: expanded rows
+/// start at `space4`, and the rail's narrower inset is added back here. A 72px
+/// dashboard rail then settles each icon on its center line. The trailing side
+/// keeps the toggle's `space3`. Sides are physical so this merges with the
+/// toggle's own horizontal padding; the text direction picks the leading one.
+final class _DestinationInlinePadding extends Mix<double> {
+  const _DestinationInlinePadding(this.collapsed, {required this.left});
+  final bool collapsed;
+  final bool left;
+
+  @override
+  double resolve(BuildContext context) {
+    final trailing = FortalTokens.space3.resolve(context);
+    final leading = (Directionality.of(context) == TextDirection.ltr) == left;
+    if (!leading) return trailing;
+    return trailing +
+        FortalTokens.space4.resolve(context) -
+        _SidebarHorizontalPadding(collapsed).resolve(context);
+  }
+
+  @override
+  Mix<double> merge(Mix<double>? other) => other ?? this;
+
+  @override
+  List<Object?> get props => [collapsed, left];
+}
+
+/// Resolve both endpoints before interpolation so theme scaling stays live.
+final class _SidebarHorizontalPadding extends Mix<double> {
+  const _SidebarHorizontalPadding(this.collapsed);
+  final bool collapsed;
+
+  @override
+  double resolve(BuildContext context) {
+    final expansion =
+        RemixSidebar.maybeAnimationOf(context)?.expansion ??
+        (collapsed ? 0.0 : 1.0);
+    final rail = FortalTokens.space2.resolve(context);
+    final expanded = FortalTokens.space3.resolve(context);
+    return rail + (expanded - rail) * expansion;
+  }
+
+  @override
+  Mix<double> merge(Mix<double>? other) => other ?? this;
+
+  @override
+  List<Object?> get props => [collapsed];
 }

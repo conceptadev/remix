@@ -109,10 +109,8 @@ void main() {
     final selectedBox = selected.container.spec.box?.spec;
     final selectedFlex = selected.container.spec.flex?.spec;
 
-    expect(
-      selectedBox?.padding,
-      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-    );
+    // The wider leading inset keeps icons still when the panel collapses.
+    expect(selectedBox?.padding, const EdgeInsets.fromLTRB(16, 8, 12, 8));
     expect(selectedBox?.constraints?.minHeight, 48);
     expect(selectedFlex?.spacing, 4);
     expect(selectedFlex?.mainAxisSize, MainAxisSize.max);
@@ -150,7 +148,7 @@ void main() {
     );
 
     expect(
-      tester.getSize(find.byType(RemixToggle).first).height,
+      tester.getSize(find.bySemanticsLabel('Overview')).height,
       greaterThanOrEqualTo(48),
     );
     await expectLater(tester, meetsGuideline(androidTapTargetGuideline));

@@ -4,6 +4,7 @@ import 'package:remix/remix.dart';
 
 import '../theme/tokens.dart';
 import 'toggle.dart';
+import 'tooltip.dart';
 
 part 'sidebar.g.dart';
 
@@ -22,12 +23,14 @@ part 'sidebar.g.dart';
 /// is a layout decision. Nothing here sets a width, and nothing here pads the
 /// header, whose metrics normally have to line up with an application top bar.
 ///
-/// This recipe **depends on the `toggle` item**, which is why its registry
-/// entry lists `toggle` beside `theme`. A destination is a toggle: it is a
-/// control that stays pressed, and `SidebarSpec` takes its style as a
+/// This recipe **depends on the `toggle` and `tooltip` items**, which is why
+/// its registry entry lists both beside `theme`. A destination is a toggle: it
+/// is a control that stays pressed, and `SidebarSpec` takes its style as a
 /// `ToggleStyler` field. Handing it the application's own ghost toggle recipe
 /// is what keeps a selected destination and a selected toggle the same colour
-/// without restating one component inside another.
+/// without restating one component inside another. The same reasoning covers
+/// the tooltip: when the host collapses the panel to an icon rail, each
+/// destination's label appears in the application's own tooltip recipe.
 ///
 /// The panel fill is `background`, the same token the page uses, and the
 /// trailing hairline in `border` is what separates the two — the same choice
@@ -83,6 +86,9 @@ SidebarStyler playgroundSidebarStyle({
   destination: playgroundToggleStyle(variant: .ghost, size: .medium)
       .minHeight(_destinationMinHeight)
       .container(.mainAxisSize(.max).mainAxisAlignment(.start)),
+  // A collapsed rail shows each destination's label in the application's own
+  // tooltip, so it reads like every other tooltip in the app.
+  tooltip: playgroundTooltipStyle(),
 ).merge(style);
 
 /// Width of the panel's trailing edge and the footer's top divider.

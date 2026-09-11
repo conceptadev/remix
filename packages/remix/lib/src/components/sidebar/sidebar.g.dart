@@ -15,6 +15,7 @@ mixin _$SidebarSpec implements Spec<SidebarSpec>, Diagnosticable {
   StyleSpec<TextSpec> get sectionLabel;
   StyleSpec<FlexBoxSpec> get destinations;
   StyleSpec<ToggleSpec> get destination;
+  StyleSpec<TooltipSpec> get tooltip;
 
   @override
   Type get type => SidebarSpec;
@@ -29,6 +30,7 @@ mixin _$SidebarSpec implements Spec<SidebarSpec>, Diagnosticable {
     StyleSpec<TextSpec>? sectionLabel,
     StyleSpec<FlexBoxSpec>? destinations,
     StyleSpec<ToggleSpec>? destination,
+    StyleSpec<TooltipSpec>? tooltip,
   }) {
     return SidebarSpec(
       container: container ?? this.container,
@@ -39,6 +41,7 @@ mixin _$SidebarSpec implements Spec<SidebarSpec>, Diagnosticable {
       sectionLabel: sectionLabel ?? this.sectionLabel,
       destinations: destinations ?? this.destinations,
       destination: destination ?? this.destination,
+      tooltip: tooltip ?? this.tooltip,
     );
   }
 
@@ -53,6 +56,7 @@ mixin _$SidebarSpec implements Spec<SidebarSpec>, Diagnosticable {
       sectionLabel: sectionLabel.lerp(other?.sectionLabel, t),
       destinations: destinations.lerp(other?.destinations, t),
       destination: destination.lerp(other?.destination, t),
+      tooltip: tooltip.lerp(other?.tooltip, t),
     );
   }
 
@@ -66,6 +70,7 @@ mixin _$SidebarSpec implements Spec<SidebarSpec>, Diagnosticable {
     sectionLabel,
     destinations,
     destination,
+    tooltip,
   ];
 
   @override
@@ -115,7 +120,8 @@ mixin _$SidebarSpec implements Spec<SidebarSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('section', section))
       ..add(DiagnosticsProperty('sectionLabel', sectionLabel))
       ..add(DiagnosticsProperty('destinations', destinations))
-      ..add(DiagnosticsProperty('destination', destination));
+      ..add(DiagnosticsProperty('destination', destination))
+      ..add(DiagnosticsProperty('tooltip', tooltip));
   }
 }
 
@@ -139,6 +145,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
   final Prop<StyleSpec<TextSpec>>? $sectionLabel;
   final Prop<StyleSpec<FlexBoxSpec>>? $destinations;
   final Prop<StyleSpec<ToggleSpec>>? $destination;
+  final Prop<StyleSpec<TooltipSpec>>? $tooltip;
 
   const SidebarStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
@@ -149,6 +156,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     Prop<StyleSpec<TextSpec>>? sectionLabel,
     Prop<StyleSpec<FlexBoxSpec>>? destinations,
     Prop<StyleSpec<ToggleSpec>>? destination,
+    Prop<StyleSpec<TooltipSpec>>? tooltip,
     super.variants,
     super.modifier,
     super.animation,
@@ -159,7 +167,8 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
        $section = section,
        $sectionLabel = sectionLabel,
        $destinations = destinations,
-       $destination = destination;
+       $destination = destination,
+       $tooltip = tooltip;
 
   SidebarStyler({
     FlexBoxStyler? container,
@@ -170,6 +179,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     TextStyler? sectionLabel,
     FlexBoxStyler? destinations,
     ToggleStyler? destination,
+    TooltipStyler? tooltip,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<SidebarSpec>>? variants,
@@ -182,6 +192,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
          sectionLabel: Prop.maybeMix(sectionLabel),
          destinations: Prop.maybeMix(destinations),
          destination: Prop.maybeMix(destination),
+         tooltip: Prop.maybeMix(tooltip),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -203,6 +214,8 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
       SidebarStyler().destinations(value);
   factory SidebarStyler.destination(ToggleStyler value) =>
       SidebarStyler().destination(value);
+  factory SidebarStyler.tooltip(TooltipStyler value) =>
+      SidebarStyler().tooltip(value);
   factory SidebarStyler.color(Color value) => SidebarStyler().color(value);
   factory SidebarStyler.gradient(GradientMix value) =>
       SidebarStyler().gradient(value);
@@ -737,6 +750,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     'sectionLabel',
     'destinations',
     'destination',
+    'tooltip',
     'animation',
     'modifier',
     'variants',
@@ -782,6 +796,11 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     return merge(SidebarStyler(destination: value));
   }
 
+  /// Sets the tooltip.
+  SidebarStyler tooltip(TooltipStyler value) {
+    return merge(SidebarStyler(tooltip: value));
+  }
+
   /// Sets the animation configuration.
   @override
   SidebarStyler animate(AnimationConfig value) {
@@ -808,6 +827,12 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
   RemixSidebar<T> call<T extends Object>({
     Key? key,
     Widget? header,
+    bool collapsed = false,
+    bool showTooltips = true,
+    OverlayPositionConfig? tooltipPositioning,
+    double? expandedWidth,
+    double? collapsedWidth,
+    AnimationStyle animationStyle = const AnimationStyle(),
     required List<RemixSidebarSection<T>> sections,
     required T? selectedValue,
     ValueChanged<T>? onSelected,
@@ -820,6 +845,12 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
       key: key,
       style: this,
       header: header,
+      collapsed: collapsed,
+      showTooltips: showTooltips,
+      tooltipPositioning: tooltipPositioning,
+      expandedWidth: expandedWidth,
+      collapsedWidth: collapsedWidth,
+      animationStyle: animationStyle,
       sections: sections,
       selectedValue: selectedValue,
       onSelected: onSelected,
@@ -842,6 +873,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
       sectionLabel: MixOps.merge($sectionLabel, other?.$sectionLabel),
       destinations: MixOps.merge($destinations, other?.$destinations),
       destination: MixOps.merge($destination, other?.$destination),
+      tooltip: MixOps.merge($tooltip, other?.$tooltip),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -860,6 +892,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
       sectionLabel: MixOps.resolve(context, $sectionLabel),
       destinations: MixOps.resolve(context, $destinations),
       destination: MixOps.resolve(context, $destination),
+      tooltip: MixOps.resolve(context, $tooltip),
     );
 
     return StyleSpec(
@@ -880,7 +913,8 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
       ..add(DiagnosticsProperty('section', $section))
       ..add(DiagnosticsProperty('sectionLabel', $sectionLabel))
       ..add(DiagnosticsProperty('destinations', $destinations))
-      ..add(DiagnosticsProperty('destination', $destination));
+      ..add(DiagnosticsProperty('destination', $destination))
+      ..add(DiagnosticsProperty('tooltip', $tooltip));
   }
 
   @override
@@ -893,6 +927,7 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     $sectionLabel,
     $destinations,
     $destination,
+    $tooltip,
     $animation,
     $modifier,
     $variants,
