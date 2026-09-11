@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:flutter/widgets.dart';
+import 'package:remix_fortal/remix_fortal.dart';
 
 import '../pages/charts_page.dart';
 import '../pages/customers_page.dart';
@@ -25,20 +25,14 @@ class DashboardShell extends StatefulWidget {
 }
 
 class _DashboardShellState extends State<DashboardShell> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   DashboardPage _selected = .overview;
   String _searchQuery = '';
   bool _sidebarCollapsed = false;
 
-  void _select(DashboardPage page) {
-    setState(() => _selected = page);
-    _scaffoldKey.currentState?.closeDrawer();
-  }
+  void _select(DashboardPage page) => setState(() => _selected = page);
 
   @override
   Widget build(BuildContext context) {
-    final compact =
-        MediaQuery.sizeOf(context).width < dashboardCompactBreakpoint;
     // IndexedStack is keyed by DashboardPage.index, so this list must stay in
     // enum order.
     final pages = <Widget>[
@@ -55,45 +49,44 @@ class _DashboardShellState extends State<DashboardShell> {
       const GalleryTypographyPage(),
     ];
 
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.transparent,
-      drawer: compact
-          ? Drawer(
-              width: dashboardSidebarWidth,
-              child: Sidebar(selected: _selected, onSelected: _select),
-            )
-          : null,
-      body: RowBox(
-        children: [
-          if (!compact)
-            Sidebar(
-              key: const ValueKey('desktop-sidebar'),
-              selected: _selected,
-              onSelected: _select,
-              collapsed: _sidebarCollapsed,
-              onToggle: () =>
-                  setState(() => _sidebarCollapsed = !_sidebarCollapsed),
-            ),
-          Expanded(
-            child: ColumnBox(
-              children: [
-                TopBar(
-                  page: _selected,
-                  onMenuPressed: compact
-                      ? () => _scaffoldKey.currentState?.openDrawer()
-                      : null,
-                  onSearchChanged: (value) =>
-                      setState(() => _searchQuery = value.trim().toLowerCase()),
-                ),
-                Expanded(
-                  child: IndexedStack(index: _selected.index, children: pages),
-                ),
-              ],
-            ),
-          ),
-        ],
+    return FortalSidebarLayout(
+      compactBreakpoint: dashboardCompactBreakpoint,
+      sidebarWidth: dashboardSidebarWidth,
+      collapsedWidth: dashboardSidebarCollapsedWidth,
+      collapsed: _sidebarCollapsed,
+      sidebar: Builder(
+        builder: (context) {
+          final scope = FortalSidebarLayoutScope.of(context);
+          return Sidebar(
+            key: const ValueKey('dashboard-sidebar'),
+            selected: _selected,
+            // The compact sheet always shows the fully expanded panel — a
+            // mobile drawer with icon-only labels defeats the point of the
+            // sheet — independent of the desktop collapse toggle.
+            collapsed: !scope.isCompact && _sidebarCollapsed,
+            onSelected: (page) {
+              _select(page);
+              scope.closeCompact();
+            },
+            // Null hides the collapse control inside the compact sheet.
+            onToggle: scope.isCompact
+                ? null
+                : () => setState(() => _sidebarCollapsed = !_sidebarCollapsed),
+          );
+        },
       ),
+      header: Builder(
+        builder: (context) {
+          final scope = FortalSidebarLayoutScope.of(context);
+          return TopBar(
+            page: _selected,
+            onMenuPressed: scope.isCompact ? scope.openCompact : null,
+            onSearchChanged: (value) =>
+                setState(() => _searchQuery = value.trim().toLowerCase()),
+          );
+        },
+      ),
+      body: IndexedStack(index: _selected.index, children: pages),
     );
   }
 }
