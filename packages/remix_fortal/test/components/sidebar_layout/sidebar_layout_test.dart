@@ -63,6 +63,81 @@ Widget _layout({
 }
 
 void main() {
+  testWidgets('controlled dismissal waits for the host to close', (
+    tester,
+  ) async {
+    final open = ValueNotifier<bool>(true);
+    addTearDown(open.dispose);
+    final requests = <bool>[];
+    await tester.pumpWidget(
+      FortalScope(
+        child: MaterialApp(
+          home: ValueListenableBuilder<bool>(
+            valueListenable: open,
+            builder: (context, value, _) => SizedBox(
+              width: 500,
+              child: FortalSidebarLayout(
+                compactBreakpoint: 1000,
+                compactOpen: value,
+                onCompactOpenChanged: requests.add,
+                sidebar: const SizedBox(
+                  key: _sidebarKey,
+                  child: Text('Sidebar'),
+                ),
+                body: const Text('Body'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tapAt(const Offset(790, 300));
+    await tester.pumpAndSettle();
+    expect(requests, [false]);
+    expect(find.byKey(_sidebarKey), findsOneWidget);
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(requests, [false, false]);
+    expect(find.byKey(_sidebarKey), findsOneWidget);
+    open.value = false;
+    await tester.pumpAndSettle();
+    expect(find.byKey(_sidebarKey), findsNothing);
+    expect(requests, [false, false]);
+  });
+
+  testWidgets('removing the layout removes its open sheet', (tester) async {
+    final present = ValueNotifier<bool>(true);
+    addTearDown(present.dispose);
+    await tester.pumpWidget(
+      FortalScope(
+        child: MaterialApp(
+          home: ValueListenableBuilder<bool>(
+            valueListenable: present,
+            builder: (context, value, _) => value
+                ? FortalSidebarLayout(
+                    compactBreakpoint: 1000,
+                    compactOpen: true,
+                    sidebar: const SizedBox(
+                      key: _sidebarKey,
+                      child: Text('Sidebar'),
+                    ),
+                    body: const Text('Body'),
+                  )
+                : const Text('Replacement'),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byKey(_sidebarKey), findsOneWidget);
+    present.value = false;
+    await tester.pumpAndSettle();
+    expect(find.byKey(_sidebarKey), findsNothing);
+    expect(find.text('Replacement'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('renders the sidebar inline above the compact breakpoint', (
     tester,
   ) async {
@@ -208,12 +283,12 @@ void main() {
     bool? lastOpen;
     await _pump(
       tester,
-      _layout(
-        compactOpen: true,
-        onCompactOpenChanged: (value) => lastOpen = value,
-      ),
+      _layout(onCompactOpenChanged: (value) => lastOpen = value),
       width: 500,
     );
+    FortalSidebarLayoutScope.of(
+      tester.element(find.byKey(_bodyKey)),
+    ).openCompact();
     await tester.pumpAndSettle();
     expect(find.byKey(_sidebarKey), findsOneWidget);
 
@@ -227,7 +302,10 @@ void main() {
   testWidgets('tapping the barrier dismisses the compact sheet', (
     tester,
   ) async {
-    await _pump(tester, _layout(compactOpen: true), width: 500);
+    await _pump(tester, _layout(), width: 500);
+    FortalSidebarLayoutScope.of(
+      tester.element(find.byKey(_bodyKey)),
+    ).openCompact();
     await tester.pumpAndSettle();
     expect(find.byKey(_sidebarKey), findsOneWidget);
 

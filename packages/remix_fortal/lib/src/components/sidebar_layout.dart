@@ -41,10 +41,9 @@ const _compactSheetBarrierGutter = 56.0;
 /// observing changes through [onCompactOpenChanged] if supplied.
 ///
 /// A controlled [compactOpen] is the single source of truth: a barrier tap,
-/// Escape, a back gesture, or crossing back above [compactBreakpoint] only
-/// calls [onCompactOpenChanged] rather than dismissing the sheet directly.
-/// The host must set [compactOpen] to `false` from that callback for the
-/// dismissal to stick.
+/// Escape, or a back gesture requests closure through [onCompactOpenChanged].
+/// The host must set [compactOpen] to `false` to dismiss it. Crossing back
+/// above [compactBreakpoint] hides the sheet and requests a closed state.
 ///
 /// ```dart
 /// FortalSidebarLayout(
@@ -104,9 +103,9 @@ class FortalSidebarLayout extends StatefulWidget {
   /// Controlled compact-sheet visibility. Null lets the layout manage it.
   final bool? compactOpen;
 
-  /// Called after the compact sheet's open state changes, whether the
-  /// change came from the host (a controlled [compactOpen] update) or from
-  /// the user dismissing the sheet (barrier tap, Escape, or a route pop).
+  /// Called when the user requests a different open state, or an
+  /// uncontrolled sheet changes state. Updating [compactOpen] itself does
+  /// not emit another callback.
   final ValueChanged<bool>? onCompactOpenChanged;
 
   @override
@@ -130,8 +129,8 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
   bool get _effectiveOpen => widget.compactOpen ?? _selfOpen;
 
   void _setOpen(bool value) {
+    if (_effectiveOpen == value) return;
     if (widget.compactOpen == null) {
-      if (_selfOpen == value) return;
       setState(() => _selfOpen = value);
     }
     widget.onCompactOpenChanged?.call(value);
@@ -152,7 +151,7 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
     if (desiredOpen == _sheetShowing) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      if (desiredOpen) {
+      if (_isCompact && _effectiveOpen) {
         if (!_sheetShowing) _pushSheet();
       } else if (_sheetShowing) {
         _removeSheetRoute();
@@ -185,38 +184,47 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
           widget.sidebarWidth,
           math.max(0.0, available - _compactSheetBarrierGutter),
         );
-        return FortalSidebarLayoutScope._(
-          isCompact: true,
-          isCompactOpen: true,
-          openCompact: _openCompact,
-          closeCompact: _closeCompact,
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            // A plain DecoratedBox paints the panel surface without
-            // affecting layout, unlike a Mix `Box`, whose border-box sizing
-            // would shrink `width` by the border's own stroke width.
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: MixScope.tokenOf(
-                  FortalTokens.colorPanelSolid,
-                  dialogContext,
-                ),
-                border: BorderDirectional(
-                  end: BorderSide(
-                    color: MixScope.tokenOf(FortalTokens.grayA5, dialogContext),
-                    width: MixScope.tokenOf(
-                      FortalTokens.borderWidth1,
-                      dialogContext,
+        return PopScope<void>(
+          canPop: widget.compactOpen == null,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) _closeCompact();
+          },
+          child: FortalSidebarLayoutScope._(
+            isCompact: true,
+            isCompactOpen: true,
+            openCompact: _openCompact,
+            closeCompact: _closeCompact,
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              // A plain DecoratedBox paints the panel surface without
+              // affecting layout, unlike a Mix `Box`, whose border-box sizing
+              // would shrink `width` by the border's own stroke width.
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: MixScope.tokenOf(
+                    FortalTokens.colorPanelSolid,
+                    dialogContext,
+                  ),
+                  border: BorderDirectional(
+                    end: BorderSide(
+                      color: MixScope.tokenOf(
+                        FortalTokens.grayA5,
+                        dialogContext,
+                      ),
+                      width: MixScope.tokenOf(
+                        FortalTokens.borderWidth1,
+                        dialogContext,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              child: SizedBox(
-                width: width,
-                height: double.infinity,
-                child: RemixDialog(
-                  semanticLabel: _navigationSemanticLabel,
-                  child: widget.sidebar,
+                child: SizedBox(
+                  width: width,
+                  height: double.infinity,
+                  child: RemixDialog(
+                    semanticLabel: _navigationSemanticLabel,
+                    child: widget.sidebar,
+                  ),
                 ),
               ),
             ),
@@ -229,6 +237,21 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
     _sheetRoute = null;
     _sheetShowing = false;
     if (mounted) _setOpen(false);
+  }
+
+  @override
+  void dispose() {
+    final route = _sheetRoute;
+    if (route != null) {
+      // Navigator mutations must wait until the current tree update finishes.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final navigator = route.navigator;
+        if (navigator != null && navigator.mounted && route.isActive) {
+          navigator.removeRoute(route);
+        }
+      });
+    }
+    super.dispose();
   }
 
   @override
