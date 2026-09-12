@@ -484,10 +484,10 @@ packages:
     dependency: transitive
     description:
       name: mix_chart
-      sha256: fbc284e5626a0021c43f078c55e51570b7dae69d59089302310933d1924bbb91
+      sha256: "2d546782702116f438445ea20090f3bb20a343805536ec183c202b5c9b87ab6a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1-beta.1"
+    version: "0.0.1-beta.3"
   mix_generator:
     dependency: transitive
     description:
