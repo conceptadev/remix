@@ -59,20 +59,55 @@ void main() {
     expect(hits, isEmpty);
   });
 
-  test('barrel hides implementation and test seams', () {
+  test('every component ships a worksheet', () {
+    final root = Directory('lib').existsSync() ? '' : 'packages/remix_agent/';
+    final components = Directory('${root}lib/src/components')
+        .listSync()
+        .whereType<File>()
+        .map((file) => file.uri.pathSegments.last)
+        .where((name) => name.endsWith('.dart') && !name.endsWith('.g.dart'))
+        .map((name) => name.substring(0, name.length - '.dart'.length))
+        .toSet();
+    final worksheets = Directory('${root}specs/components')
+        .listSync()
+        .whereType<File>()
+        .map((file) => file.uri.pathSegments.last)
+        .where((name) => name.endsWith('.yaml'))
+        .map((name) => name.substring(0, name.length - '.yaml'.length))
+        .toSet();
+
+    // skills/building-remix-design-system documents the worksheet as a
+    // component's first artifact, written before any code. Comparing both
+    // directions keeps that true: a component added without one fails, and so
+    // does a worksheet outliving the component it described.
+    expect(worksheets, components);
+  });
+
+  test('barrel exports exactly the pinned public surface', () {
     final barrel = File('lib/remix_agent.dart').existsSync()
         ? File('lib/remix_agent.dart')
         : File('packages/remix_agent/lib/remix_agent.dart');
-    final source = barrel.readAsStringSync();
-    for (final seam in [
-      'behavior/live_edge.dart',
-      'components/disclosure.dart',
-      'components/clip_reveal.dart',
-      'models/permission_parameter.dart',
-      'style/defaults.dart',
-      'style/motion.dart',
-    ]) {
-      expect(source, isNot(contains(seam)));
-    }
+    final exported = RegExp(r"^export '([^']+)';", multiLine: true)
+        .allMatches(barrel.readAsStringSync())
+        .map((match) => match.group(1)!)
+        .toSet();
+
+    // Compared as a set, not asserted absent one path at a time: an equality
+    // fails on a *new* export too, which is the direction that leaks. Everything
+    // under `src/style/` is an implementation seam -- `functional_glyph.dart`,
+    // `live_edge.dart` -- and stays out by omission.
+    expect(exported, {
+      'src/components/activity.dart',
+      'src/components/answer.dart',
+      'src/components/composer.dart',
+      'src/components/execution.dart',
+      'src/components/message.dart',
+      'src/components/permission.dart',
+      'src/components/plan.dart',
+      'src/components/transcript.dart',
+      'src/models/activity_item.dart',
+      'src/models/plan_item.dart',
+      'src/models/statuses.dart',
+    });
   });
 }

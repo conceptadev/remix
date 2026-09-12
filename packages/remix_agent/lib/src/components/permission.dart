@@ -5,7 +5,6 @@ import 'package:remix/remix.dart';
 
 import '../models/statuses.dart';
 import '../style/functional_glyph.dart';
-import '../style/style_builder.dart';
 
 part 'permission.g.dart';
 
@@ -178,16 +177,12 @@ class _AgentPermissionState extends State<AgentPermission> {
     BuildContext context,
     AgentPermissionSpec spec,
     bool expanded,
-  ) =>
-      widget.indicatorBuilder?.call(context, expanded) ??
-      StyleSpecBuilder<IconSpec>(
-        styleSpec: spec.indicator,
-        builder: (context, iconSpec) => AgentFunctionalGlyph(
-          kind: .chevron,
-          spec: iconSpec,
-          expanded: expanded,
-        ),
-      );
+  ) => agentDisclosureIndicator(
+    context,
+    styleSpec: spec.indicator,
+    expanded: expanded,
+    builder: widget.indicatorBuilder,
+  );
 
   // Horizontal by default; callers may stack actions without losing the
   // action slot's box, modifiers, or nested style resolution.
@@ -207,7 +202,7 @@ class _AgentPermissionState extends State<AgentPermission> {
 
   @override
   Widget build(BuildContext context) {
-    return AgentStyleBuilder<AgentPermissionSpec>(
+    return RemixStyleSpecBuilder<AgentPermissionSpec>(
       style: widget.style,
       styleSpec: widget.styleSpec,
       builder: (context, spec) => Semantics(

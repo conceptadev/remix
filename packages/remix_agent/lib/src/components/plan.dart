@@ -7,7 +7,6 @@ import '../models/plan_item.dart';
 import '../models/statuses.dart';
 import '../style/functional_glyph.dart';
 import '../style/live_edge.dart';
-import '../style/style_builder.dart';
 
 part 'plan.g.dart';
 
@@ -147,21 +146,17 @@ class _AgentPlanState extends State<AgentPlan> {
     );
   }
 
-  Widget _indicator(BuildContext context, AgentPlanSpec spec, bool expanded) {
-    return widget.indicatorBuilder?.call(context, expanded) ??
-        StyleSpecBuilder<IconSpec>(
-          styleSpec: spec.indicator,
-          builder: (context, iconSpec) => AgentFunctionalGlyph(
-            kind: .chevron,
-            spec: iconSpec,
-            expanded: expanded,
-          ),
-        );
-  }
+  Widget _indicator(BuildContext context, AgentPlanSpec spec, bool expanded) =>
+      agentDisclosureIndicator(
+        context,
+        styleSpec: spec.indicator,
+        expanded: expanded,
+        builder: widget.indicatorBuilder,
+      );
 
   @override
   Widget build(BuildContext context) {
-    return AgentStyleBuilder<AgentPlanSpec>(
+    return RemixStyleSpecBuilder<AgentPlanSpec>(
       style: widget.style,
       styleSpec: widget.styleSpec,
       builder: (context, spec) => Semantics(

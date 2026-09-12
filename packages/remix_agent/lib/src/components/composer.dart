@@ -5,7 +5,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../style/functional_glyph.dart';
-import '../style/style_builder.dart';
 
 part 'composer.g.dart';
 
@@ -121,18 +120,30 @@ class _AgentComposerState extends State<AgentComposer> {
     if (!identical(oldWidget.controller, widget.controller)) {
       final seed = _controller.text;
       _controller.removeListener(_handleControllerChanged);
-      _ownedController?.dispose();
+      final oldOwnedController = _ownedController;
       _ownedController = null;
       _controller =
           widget.controller ??
           (_ownedController = TextEditingController(text: seed));
       _text = _controller.text;
       _controller.addListener(_handleControllerChanged);
+      _disposeAfterFrame(oldOwnedController);
     }
     if (!identical(oldWidget.focusNode, widget.focusNode)) {
-      _ownedFocusNode?.dispose();
+      final oldOwnedFocusNode = _ownedFocusNode;
       _ownedFocusNode = null;
+      _disposeAfterFrame(oldOwnedFocusNode);
     }
+  }
+
+  /// Releases a superseded owned object once the child has let go of it.
+  ///
+  /// The same deferral the transcript uses for its scroll controller: the child
+  /// RemixTextArea still holds the old controller and focus node until this
+  /// frame's rebuild detaches them, and detaching touches a disposed object.
+  void _disposeAfterFrame(ChangeNotifier? superseded) {
+    if (superseded == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) => superseded.dispose());
   }
 
   void _submit() {
@@ -170,7 +181,7 @@ class _AgentComposerState extends State<AgentComposer> {
 
   @override
   Widget build(BuildContext context) {
-    return AgentStyleBuilder<AgentComposerSpec>(
+    return RemixStyleSpecBuilder<AgentComposerSpec>(
       style: widget.style,
       styleSpec: widget.styleSpec,
       // Keep the field and action in separate accessibility nodes.

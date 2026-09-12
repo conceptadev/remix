@@ -17,7 +17,11 @@ import 'theme_data.dart';
 /// single-lookup question.
 class {{typePrefix}}ThemeScope extends StatelessWidget {
   /// Creates a scope that provides [data] to [child].
-  const {{typePrefix}}ThemeScope({super.key, required this.data, required this.child});
+  const {{typePrefix}}ThemeScope({
+    super.key,
+    required this.data,
+    required this.child,
+  });
 
   /// The theme installed for [child].
   final {{typePrefix}}ThemeData data;

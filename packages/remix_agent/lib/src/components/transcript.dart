@@ -5,7 +5,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../style/live_edge.dart';
-import '../style/style_builder.dart';
 
 part 'transcript.g.dart';
 
@@ -65,6 +64,19 @@ class _AgentTranscriptState extends State<AgentTranscript> {
   ScrollController? _ownedController;
   late ScrollController _controller;
   late final AgentLiveEdgeEngine _liveEdge;
+
+  /// Publishes this surface's focus to the styles resolved above it.
+  ///
+  /// `focused` has no other source here: Agent's slots resolve above any Naked
+  /// control, so without this the `focus-visible` state the transcript
+  /// worksheet documents could never activate.
+  ///
+  /// Only `focused`. The pointer-driven states do not resolve on this slot, and
+  /// did not before this controller existed either — a host's `onHovered` on
+  /// [AgentTranscriptSpec.viewport] has never had an effect. Passing a
+  /// controller also means Mix will not mount its own pointer detector, so
+  /// restoring hover would be this object's job; nothing asks for it yet.
+  final WidgetStatesController _statesController = WidgetStatesController();
 
   @override
   void initState() {
@@ -134,15 +146,18 @@ class _AgentTranscriptState extends State<AgentTranscript> {
 
   @override
   Widget build(BuildContext context) {
-    return AgentStyleBuilder<AgentTranscriptSpec>(
+    return RemixStyleSpecBuilder<AgentTranscriptSpec>(
       style: widget.style,
       styleSpec: widget.styleSpec,
+      controller: _statesController,
       builder: (context, spec) => Semantics(
         container: true,
         explicitChildNodes: true,
         label: widget.label,
         value: widget.busy ? widget.busyLabel : null,
         child: FocusableActionDetector(
+          onFocusChange: (focused) =>
+              _statesController.update(WidgetState.focused, focused),
           shortcuts: _transcriptShortcuts,
           actions: <Type, Action<Intent>>{
             _TranscriptScrollIntent: CallbackAction<_TranscriptScrollIntent>(
@@ -206,6 +221,7 @@ class _AgentTranscriptState extends State<AgentTranscript> {
   @override
   void dispose() {
     _ownedController?.dispose();
+    _statesController.dispose();
     super.dispose();
   }
 }

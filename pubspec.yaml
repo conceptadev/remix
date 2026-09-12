@@ -196,14 +196,31 @@ melos:
       run: dart run tool/check_dependency_constraints.dart
       description: Verify shared dependency constraints match the melos bootstrap config
 
+    analyze:
+      # The shared `dart-actions` workflow already runs an analyzer step, so
+      # this is not what guards `main`. It exists so `melos run ci` -- the
+      # documented local gate -- reports the same failures a pull request
+      # would, instead of deferring them to a push.
+      run: dart analyze
+      description: Analyze every workspace package
+
+    format:check:
+      # The analyzer does not check formatting, so nothing else here would.
+      # Generated sources are covered too, which is why this runs after
+      # `generate:check` rather than before it.
+      run: dart format --output=none --set-exit-if-changed .
+      description: Verify every Dart source matches the formatter
+
     ci:
       steps:
         - toolchain:check
         - constraints:check
+        - analyze
         - version:align:check
         - mix:consumer:check
         - material:check
         - generate:check
+        - format:check
         - open-code:fortal:check
         - docs:check
         - fortal:parity:check

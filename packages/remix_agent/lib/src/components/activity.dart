@@ -7,7 +7,6 @@ import '../models/activity_item.dart';
 import '../models/statuses.dart';
 import '../style/functional_glyph.dart';
 import '../style/live_edge.dart';
-import '../style/style_builder.dart';
 
 part 'activity.g.dart';
 
@@ -152,20 +151,16 @@ class _AgentActivityState extends State<AgentActivity> {
     BuildContext context,
     AgentActivitySpec spec,
     bool expanded,
-  ) =>
-      widget.indicatorBuilder?.call(context, expanded) ??
-      StyleSpecBuilder<IconSpec>(
-        styleSpec: spec.indicator,
-        builder: (context, iconSpec) => AgentFunctionalGlyph(
-          kind: .chevron,
-          spec: iconSpec,
-          expanded: expanded,
-        ),
-      );
+  ) => agentDisclosureIndicator(
+    context,
+    styleSpec: spec.indicator,
+    expanded: expanded,
+    builder: widget.indicatorBuilder,
+  );
 
   @override
   Widget build(BuildContext context) {
-    return AgentStyleBuilder<AgentActivitySpec>(
+    return RemixStyleSpecBuilder<AgentActivitySpec>(
       style: widget.style,
       styleSpec: widget.styleSpec,
       builder: (context, spec) => Semantics(

@@ -5,7 +5,6 @@ import 'package:remix/remix.dart';
 
 import '../models/statuses.dart';
 import '../style/functional_glyph.dart';
-import '../style/style_builder.dart';
 
 part 'answer.g.dart';
 
@@ -109,23 +108,19 @@ class _AgentAnswerState extends State<AgentAnswer> {
     BuildContext context,
     AgentAnswerSpec spec,
     bool expanded,
-  ) =>
-      widget.sourcesIndicatorBuilder?.call(context, expanded) ??
-      StyleSpecBuilder<IconSpec>(
-        styleSpec: spec.indicator,
-        builder: (context, iconSpec) => AgentFunctionalGlyph(
-          kind: .chevron,
-          spec: iconSpec,
-          expanded: expanded,
-        ),
-      );
+  ) => agentDisclosureIndicator(
+    context,
+    styleSpec: spec.indicator,
+    expanded: expanded,
+    builder: widget.sourcesIndicatorBuilder,
+  );
 
   @override
   Widget build(BuildContext context) {
     final revealActions =
         !widget.status.isStreaming &&
         (widget.showActions ?? widget.status.showsActions);
-    return AgentStyleBuilder<AgentAnswerSpec>(
+    return RemixStyleSpecBuilder<AgentAnswerSpec>(
       style: widget.style,
       styleSpec: widget.styleSpec,
       builder: (context, spec) => Semantics(

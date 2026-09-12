@@ -1,9 +1,25 @@
+import 'dart:io';
+
 import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/registry.dart';
 import 'package:remix_cli/src/template_renderer.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('bundledPresets matches the preset trees on disk', () {
+    // `dart test` runs with the package root as the current directory.
+    final onDisk = Directory(p.join('lib', 'src', 'registry'))
+        .listSync()
+        .whereType<Directory>()
+        .map((directory) => p.basename(directory.path))
+        .toSet();
+
+    // bundledPresets gates both loadBundled and `--preset` validation, so a
+    // tree shipped without an entry here is unreachable behind "Unknown
+    // preset", and an entry without a tree fails only once someone selects it.
+    expect(onDisk, bundledPresets);
+  });
+
   test(
     'bundled registry resolves theme before button and loads assets',
     () async {
@@ -450,7 +466,10 @@ items:
           } else if (!uri.startsWith('dart:')) {
             expect(uri, isNot(startsWith('/')), reason: file.source);
             final resolved = p.posix.normalize(
-              p.posix.join(p.posix.dirname(file.target.substring(4)), uri),
+              p.posix.join(
+                p.posix.dirname(file.target.substring(uiTargetPrefix.length)),
+                uri,
+              ),
             );
             expect(resolved, isNot(startsWith('../')), reason: file.source);
           }
