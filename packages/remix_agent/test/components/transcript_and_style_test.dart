@@ -147,10 +147,10 @@ void main() {
     focusNode.requestFocus();
     await tester.pump();
 
-    // Mix tracks pointer states on its own, but `focused` needs a controller,
-    // and Agent's slots resolve above any Naked control. Until the transcript
-    // published its own focus there was no source for this state, so a host's
-    // focus styling on the viewport could never activate.
+    // `focused` needs a controller, and Agent's slots resolve above any Naked
+    // control. Until the transcript published its own focus there was no source
+    // for this state, so a host's focus styling on the viewport could never
+    // activate.
     expect(tester.getTopLeft(find.text('leaf')).dx, unfocused + 40);
   });
 }

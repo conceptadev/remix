@@ -35,9 +35,10 @@ void main() {
 
   test('the declared indigo customization is still here', () {
     // `tool/check_open_code_dogfood.dart` records this app's indigo primary and
-    // matching focus ring as a deliberate edit, which means it *tolerates* any
-    // divergence in the theme and cannot notice a reinstall reverting this back
-    // to the template's neutral palette. This is the only executable guard.
+    // matching focus ring as a deliberate edit, and it does fail if the theme
+    // ever matches the template again, so a plain reinstall is already caught.
+    // What it cannot see is *which* edit: any custom color satisfies it. These
+    // are the values themselves, and the tie between the ring and the primary.
     const light = PlaygroundThemeData.light();
 
     expect(light.primary, const Color(0xFF4F46E5));

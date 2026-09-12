@@ -67,12 +67,15 @@ class _AgentTranscriptState extends State<AgentTranscript> {
 
   /// Publishes this surface's focus to the styles resolved above it.
   ///
-  /// Mix installs automatic tracking for pointer-driven states, so hover and
-  /// press resolve without help, but `focused` needs an ancestor state scope or
-  /// a controller. Agent's own slots resolve above any Naked control, so
-  /// without this the `focus-visible` state the transcript worksheet documents
-  /// had no source and a host's focus styling on [AgentTranscriptSpec.viewport]
-  /// could never activate.
+  /// `focused` has no other source here: Agent's slots resolve above any Naked
+  /// control, so without this the `focus-visible` state the transcript
+  /// worksheet documents could never activate.
+  ///
+  /// Only `focused`. The pointer-driven states do not resolve on this slot, and
+  /// did not before this controller existed either — a host's `onHovered` on
+  /// [AgentTranscriptSpec.viewport] has never had an effect. Passing a
+  /// controller also means Mix will not mount its own pointer detector, so
+  /// restoring hover would be this object's job; nothing asks for it yet.
   final WidgetStatesController _statesController = WidgetStatesController();
 
   @override
