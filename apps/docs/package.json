@@ -8,9 +8,11 @@
     "content": "python3 ../../tool/prepare_docs_site.py",
     "dev": "pnpm content && pnpm previews && next dev",
     "previews": "node scripts/build-previews.mjs",
-    "build": "pnpm content && pnpm previews && next build",
+    "build": "pnpm content && pnpm previews && next build && node scripts/prepare-static.mjs",
     "typecheck": "pnpm content && next typegen && tsc --noEmit",
-    "start": "next start"
+    "start": "node scripts/serve-pages.mjs",
+    "test:search": "node --test scripts/test-search.mjs scripts/test-legacy-worker.mjs",
+    "test:pages": "node scripts/test-pages.mjs"
   },
   "dependencies": {
     "@concepta/docs-theme": "0.0.1",

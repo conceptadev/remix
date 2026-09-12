@@ -1,5 +1,7 @@
 'use client';
 
+import { sitePath } from '@/lib/paths';
+
 import { useTheme } from 'fumadocs-ui/provider/base';
 import { useEffect, useId, useRef, useState, type ComponentProps } from 'react';
 
@@ -31,7 +33,7 @@ export function FlutterPreview({ title, cases }: {
   const [loadState, setLoadState] = useState<{ url: string; status: 'ready' | 'slow' } | null>(null);
   const mode = chosenMode ?? (resolvedTheme === 'dark' ? 'dark' : 'light');
   const query = new URLSearchParams({ path, theme: `{name:${mode}}` });
-  const catalogUrl = `/previews/#/?${query}`;
+  const catalogUrl = `${sitePath('/catalog/')}#/?${query}`;
   const previewUrl = `${catalogUrl}&preview&attempt=${attempt}`;
   const status = loadState?.url === previewUrl ? loadState.status : 'loading';
   const compact = ['Button', 'IconButton', 'Badge', 'Switch', 'Checkbox', 'Radio', 'Spinner', 'Progress'].includes(title);

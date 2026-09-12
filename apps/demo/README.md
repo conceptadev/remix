@@ -5,7 +5,7 @@ presets, variants, states, and preview scenarios.
 
 ## Live catalog
 
-[Open the Remix component catalog](https://conceptadev.github.io/remix/).
+[Open the Remix component catalog](https://conceptadev.github.io/remix/catalog/).
 
 From the repository root:
 

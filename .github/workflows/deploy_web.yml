@@ -1,4 +1,4 @@
-name: Deploy web showcases
+name: Deploy documentation and showcases
 
 on:
   push:
@@ -20,6 +20,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_BASE_PATH: /remix
+      NEXT_PUBLIC_SITE_URL: https://conceptadev.github.io
+      NEXT_TELEMETRY_DISABLED: 1
 
     steps:
       - name: Checkout repository
@@ -42,9 +46,18 @@ jobs:
           dart pub get
           dart run melos bootstrap
 
-      - name: Build component catalog
-        working-directory: apps/demo
-        run: flutter build web --release --base-href /remix/
+      - uses: ./.github/actions/setup-docs
+
+      - name: Validate documentation
+        run: |
+          dart run tool/generate_fortal_catalog.dart --check
+          python3 tool/check_tutorial_assets.py
+          python3 -m unittest discover -s tool -p 'test_tutorial_assets.py'
+          pnpm --dir apps/docs typecheck
+
+      - name: Build documentation and component catalog
+        working-directory: apps/docs
+        run: pnpm build
 
       - name: Build dashboard
         working-directory: apps/dashboard
@@ -52,9 +65,16 @@ jobs:
 
       - name: Assemble Pages site
         run: |
-          mkdir -p build/pages/dashboard
-          cp -R apps/demo/build/web/. build/pages/
-          cp -R apps/dashboard/build/web/. build/pages/dashboard/
+          node apps/docs/scripts/package-pages.mjs
+
+      - name: Check exported routes and assets
+        run: |
+          node apps/docs/scripts/test-pages.mjs
+          node --test apps/docs/scripts/test-static-http.mjs
+
+      - name: Verify static search
+        working-directory: apps/docs
+        run: pnpm test:search
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
@@ -62,7 +82,7 @@ jobs:
           path: build/pages
 
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

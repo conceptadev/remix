@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/components/mdx';
 import { docsConfig } from '@/docs.config';
 import { source } from '@/lib/source';
+import { sitePath } from '@/lib/paths';
 
 export default async function Page({ params }: PageProps<'/[[...slug]]'>) {
   const page = source.getPage((await params).slug);
@@ -23,5 +24,5 @@ export function generateStaticParams() { return source.generateParams(); }
 export async function generateMetadata({ params }: PageProps<'/[[...slug]]'>) {
   const page = source.getPage((await params).slug);
   if (!page) notFound();
-  return createPageMetadata(docsConfig, { title: page.data.title, description: page.data.description, path: page.url });
+  return createPageMetadata(docsConfig, { title: page.data.title, description: page.data.description, path: sitePath(page.url) });
 }
