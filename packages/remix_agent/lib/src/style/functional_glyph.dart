@@ -88,10 +88,6 @@ abstract final class _LucideGlyphs {
   );
 }
 
-/// Internal Material-free glyph set used by Agent's functional defaults.
-///
-/// The types are intentionally not exported from the package barrel. Public
-/// icon/status builders remain the replacement mechanism.
 /// Builds the chevron that reports a collapsible surface's state.
 ///
 /// Every collapsible Agent surface offers the host the same escape hatch — a
@@ -116,6 +112,10 @@ Widget agentDisclosureIndicator(
       );
 }
 
+/// Internal Material-free glyph set used by Agent's functional defaults.
+///
+/// The types are intentionally not exported from the package barrel. Public
+/// icon/status builders remain the replacement mechanism.
 enum AgentFunctionalGlyphKind {
   send,
   stop,

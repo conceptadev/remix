@@ -94,8 +94,8 @@ void main() {
 
     // Compared as a set, not asserted absent one path at a time: an equality
     // fails on a *new* export too, which is the direction that leaks. Everything
-    // under `src/style/` is an implementation seam -- `style_builder.dart`,
-    // `functional_glyph.dart`, `live_edge.dart` -- and stays out by omission.
+    // under `src/style/` is an implementation seam -- `functional_glyph.dart`,
+    // `live_edge.dart` -- and stays out by omission.
     expect(exported, {
       'src/components/activity.dart',
       'src/components/answer.dart',

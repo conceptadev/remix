@@ -268,8 +268,10 @@ final class Installer {
   /// Every step appends to `completed` before the next one starts, so a failure
   /// can tell the reader how far the install got.
   Future<void> _install(_InstallPlan plan, AddOptions options) async {
-    // Named locals so the steps below read as they did when this was one
-    // method, and so the plan stays the only description of what is installed.
+    // Unpacked in one place so the steps below read as prose. The plan stays
+    // the only description of what gets installed: nothing past this point
+    // re-reads the project, so no step can act on a different answer than the
+    // one already printed.
     final root = plan.root;
     final config = plan.config;
     final items = plan.items;

@@ -466,7 +466,10 @@ items:
           } else if (!uri.startsWith('dart:')) {
             expect(uri, isNot(startsWith('/')), reason: file.source);
             final resolved = p.posix.normalize(
-              p.posix.join(p.posix.dirname(file.target.substring(4)), uri),
+              p.posix.join(
+                p.posix.dirname(file.target.substring(uiTargetPrefix.length)),
+                uri,
+              ),
             );
             expect(resolved, isNot(startsWith('../')), reason: file.source);
           }
