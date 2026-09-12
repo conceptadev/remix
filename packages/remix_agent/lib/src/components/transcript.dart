@@ -5,7 +5,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../style/live_edge.dart';
-import '../style/style_builder.dart';
 
 part 'transcript.g.dart';
 
@@ -65,6 +64,16 @@ class _AgentTranscriptState extends State<AgentTranscript> {
   ScrollController? _ownedController;
   late ScrollController _controller;
   late final AgentLiveEdgeEngine _liveEdge;
+
+  /// Publishes this surface's focus to the styles resolved above it.
+  ///
+  /// Mix installs automatic tracking for pointer-driven states, so hover and
+  /// press resolve without help, but `focused` needs an ancestor state scope or
+  /// a controller. Agent's own slots resolve above any Naked control, so
+  /// without this the `focus-visible` state the transcript worksheet documents
+  /// had no source and a host's focus styling on [AgentTranscriptSpec.viewport]
+  /// could never activate.
+  final WidgetStatesController _statesController = WidgetStatesController();
 
   @override
   void initState() {
@@ -134,15 +143,18 @@ class _AgentTranscriptState extends State<AgentTranscript> {
 
   @override
   Widget build(BuildContext context) {
-    return AgentStyleBuilder<AgentTranscriptSpec>(
+    return RemixStyleSpecBuilder<AgentTranscriptSpec>(
       style: widget.style,
       styleSpec: widget.styleSpec,
+      controller: _statesController,
       builder: (context, spec) => Semantics(
         container: true,
         explicitChildNodes: true,
         label: widget.label,
         value: widget.busy ? widget.busyLabel : null,
         child: FocusableActionDetector(
+          onFocusChange: (focused) =>
+              _statesController.update(WidgetState.focused, focused),
           shortcuts: _transcriptShortcuts,
           actions: <Type, Action<Intent>>{
             _TranscriptScrollIntent: CallbackAction<_TranscriptScrollIntent>(
@@ -206,6 +218,7 @@ class _AgentTranscriptState extends State<AgentTranscript> {
   @override
   void dispose() {
     _ownedController?.dispose();
+    _statesController.dispose();
     super.dispose();
   }
 }

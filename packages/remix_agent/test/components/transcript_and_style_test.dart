@@ -121,6 +121,38 @@ void main() {
     expect(node.getSemanticsData().flagsCollection.isLiveRegion, isFalse);
     handle.dispose();
   });
+
+  testWidgets('a focused transcript resolves host focus styling', (
+    tester,
+  ) async {
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+
+    await pumpAgent(
+      tester,
+      SizedBox(
+        height: 120,
+        width: 300,
+        child: AgentTranscript(
+          followOutput: false,
+          style: AgentTranscriptStyler(
+            viewport: BoxStyler().onFocused(BoxStyler().paddingLeft(40)),
+          ),
+          children: [Focus(focusNode: focusNode, child: const Text('leaf'))],
+        ),
+      ),
+    );
+    final unfocused = tester.getTopLeft(find.text('leaf')).dx;
+
+    focusNode.requestFocus();
+    await tester.pump();
+
+    // Mix tracks pointer states on its own, but `focused` needs a controller,
+    // and Agent's slots resolve above any Naked control. Until the transcript
+    // published its own focus there was no source for this state, so a host's
+    // focus styling on the viewport could never activate.
+    expect(tester.getTopLeft(find.text('leaf')).dx, unfocused + 40);
+  });
 }
 
 class _TranscriptHarness extends StatefulWidget {

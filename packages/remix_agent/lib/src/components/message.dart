@@ -5,7 +5,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../models/statuses.dart';
-import '../style/style_builder.dart';
 
 part 'message.g.dart';
 
@@ -73,7 +72,7 @@ class AgentMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AgentStyleBuilder<AgentMessageSpec>(
+    return RemixStyleSpecBuilder<AgentMessageSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
@@ -205,7 +204,7 @@ class _AgentMessageCollapsibleState extends State<AgentMessageCollapsible> {
 
   @override
   Widget build(BuildContext context) {
-    return AgentStyleBuilder<AgentMessageCollapsibleSpec>(
+    return RemixStyleSpecBuilder<AgentMessageCollapsibleSpec>(
       style: widget.style,
       styleSpec: widget.styleSpec,
       builder: (context, spec) {

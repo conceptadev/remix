@@ -5,7 +5,6 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../style/functional_glyph.dart';
-import '../style/style_builder.dart';
 
 part 'composer.g.dart';
 
@@ -182,7 +181,7 @@ class _AgentComposerState extends State<AgentComposer> {
 
   @override
   Widget build(BuildContext context) {
-    return AgentStyleBuilder<AgentComposerSpec>(
+    return RemixStyleSpecBuilder<AgentComposerSpec>(
       style: widget.style,
       styleSpec: widget.styleSpec,
       // Keep the field and action in separate accessibility nodes.

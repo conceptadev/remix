@@ -92,6 +92,30 @@ abstract final class _LucideGlyphs {
 ///
 /// The types are intentionally not exported from the package barrel. Public
 /// icon/status builders remain the replacement mechanism.
+/// Builds the chevron that reports a collapsible surface's state.
+///
+/// Every collapsible Agent surface offers the host the same escape hatch — a
+/// builder that replaces the glyph outright — over the same default. Each takes
+/// that builder under its own name, because a permission card discloses
+/// *details* and an answer discloses *sources*, so the shared part is this
+/// body and not the parameter.
+Widget agentDisclosureIndicator(
+  BuildContext context, {
+  required StyleSpec<IconSpec> styleSpec,
+  required bool expanded,
+  Widget Function(BuildContext context, bool expanded)? builder,
+}) {
+  return builder?.call(context, expanded) ??
+      StyleSpecBuilder<IconSpec>(
+        styleSpec: styleSpec,
+        builder: (context, iconSpec) => AgentFunctionalGlyph(
+          kind: .chevron,
+          spec: iconSpec,
+          expanded: expanded,
+        ),
+      );
+}
+
 enum AgentFunctionalGlyphKind {
   send,
   stop,

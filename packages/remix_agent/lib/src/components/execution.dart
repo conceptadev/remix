@@ -6,7 +6,6 @@ import 'package:remix/remix.dart';
 import '../models/statuses.dart';
 import '../style/functional_glyph.dart';
 import '../style/live_edge.dart';
-import '../style/style_builder.dart';
 
 part 'execution.g.dart';
 
@@ -145,16 +144,12 @@ class _AgentExecutionState extends State<AgentExecution> {
     BuildContext context,
     AgentExecutionSpec spec,
     bool expanded,
-  ) =>
-      widget.indicatorBuilder?.call(context, expanded) ??
-      StyleSpecBuilder<IconSpec>(
-        styleSpec: spec.indicator,
-        builder: (context, iconSpec) => AgentFunctionalGlyph(
-          kind: .chevron,
-          spec: iconSpec,
-          expanded: expanded,
-        ),
-      );
+  ) => agentDisclosureIndicator(
+    context,
+    styleSpec: spec.indicator,
+    expanded: expanded,
+    builder: widget.indicatorBuilder,
+  );
 
   Widget _toolIcon(AgentExecutionSpec spec) {
     final icon = widget.icon;
@@ -168,7 +163,7 @@ class _AgentExecutionState extends State<AgentExecution> {
 
   @override
   Widget build(BuildContext context) {
-    return AgentStyleBuilder<AgentExecutionSpec>(
+    return RemixStyleSpecBuilder<AgentExecutionSpec>(
       style: widget.style,
       styleSpec: widget.styleSpec,
       builder: (context, spec) => Semantics(
