@@ -6,4 +6,5 @@ public/assets/
 public/previews/
 *.tsbuildinfo
 next-env.d.ts
-remix-docs-server.tar.gz
+public/catalog/
+out/

@@ -14,51 +14,58 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Open `http://localhost:3000/tutorials/settings-screen`. Production checks:
+Open `http://localhost:3000/remix/tutorials/settings-screen/`. Production checks:
 
 ```bash
 pnpm typecheck
 pnpm build
+pnpm test:search
+DOCS_OUTPUT=out node scripts/test-pages.mjs --docs-only
+DOCS_OUTPUT=out pnpm start
+```
+
+## GitHub Pages publishing
+
+The app exports static HTML with `/remix` as its base path. Set
+`NEXT_PUBLIC_SITE_URL` to the HTTPS origin before building metadata; it defaults
+to `https://conceptadev.github.io`. Search downloads static page and section
+indexes and runs in the browser, preserving component-title and keyword ranking.
+No Node server runs in production.
+
+`.github/workflows/deploy_web.yml` builds the docs and catalog, then the dashboard,
+checks the combined artifact, and deploys it through GitHub Pages on main.
+Pull requests build and validate without deploying. The public routes are:
+
+- `/remix/`: Fumadocs documentation
+- `/remix/catalog/`: Flutter component catalog and embedded examples
+- `/remix/dashboard/`: dashboard showcase
+
+`.github/actions/setup-docs` installs the pinned Node/pnpm toolchain and locked
+dependencies. The reusable `.github/workflows/docs.yml` accepts a `site-url`
+HTTPS origin and uploads a verified `remix-docs-static` artifact containing docs
+and catalog. It does not deploy or include the dashboard.
+
+To assemble and preview the full Pages artifact locally after `pnpm build`:
+
+```bash
+cd ../dashboard
+fvm flutter build web --release --base-href /remix/dashboard/
+cd ../docs
+node scripts/package-pages.mjs
+pnpm test:pages
 pnpm start
 ```
 
-Set `NEXT_PUBLIC_SITE_URL` to the deployment origin before building metadata.
-This is a server deployment: `/api/search` uses Fumadocs search, prioritizing
-page titles and frontmatter keywords while retaining section links.
-Static export and deployment under a path prefix are not configured.
-
-With the server running, verify component discovery with
-`node --test scripts/test-search.mjs`. Set `DOCS_TEST_URL` for a different origin.
-
-## Reusable build and publishing
-
-`.github/actions/setup-docs` installs the pinned Node/pnpm toolchain and the
-locked theme dependency. `.github/workflows/docs.yml` can be called from another
-workflow with `workflow_call` or run manually with `workflow_dispatch`.
-It validates sources, builds Flutter previews and the Next.js server, tests an
-isolated deployment copy, and uploads `remix-docs-server` as a tar archive.
-
-Supply `site-url` as the final HTTPS origin. Canonical/social URLs are baked
-into the build, so rebuild when the public origin changes. The public npm
-theme dependency requires no GitHub token or npm login.
-
-The artifact supports a root-path Node server deployment. Extract it on a
-Node 24.14+ host and run `HOSTNAME=0.0.0.0 PORT=3000 node server.js` behind the
-host's HTTPS endpoint. It contains public assets, Flutter previews, Next client
-chunks, and traced server dependencies; no install or Flutter SDK is needed
-on the host. Linux CI produces the artifact intended for a Linux host.
-
-Local artifact verification after `pnpm build`:
-
-```bash
-node scripts/package-server.mjs
-node scripts/test-server.mjs
-```
-
-The workflow prepares an artifact; it does not provision hosting or publish a
-site. Choose/configure the host before deploying. Run it manually or call it
-from a deployment workflow. The existing GitHub Pages workflow continues
-to publish the Flutter showcases and cannot serve this Next.js server app.
+The packager recreates `build/pages` and adds the dashboard. The docs build
+includes `.nojekyll` and static aliases for `/remix/previews/` and the retired tutorial/guide HTML URLs.
+Old catalog `#/?` links at the docs root forward to `/remix/catalog/` with their
+query and fragment preserved; normal documentation anchors remain unchanged.
+A retirement worker replaces the old root Flutter service worker so returning
+visitors leave the cached catalog and load the docs. Catalog and dashboard
+workers retain their own scopes.
+The local server emulates directory indexes and real 404 responses under the
+Pages mount, without a single-page-app fallback. Revert the migration and rerun
+the main-branch Pages workflow to restore the previous deployment.
 
 ## Theme package
 
@@ -104,7 +111,7 @@ Reset example restores the first example, follows the site theme again, and
 restarts the embedded Flutter app.
 
 Both `pnpm dev` and `pnpm build` build that same Flutter catalog into ignored
-`public/previews`. `/previews/` opens the full catalog; embedded routes use
+`public/catalog`. `/remix/catalog/` opens the full catalog; embedded routes use
 Widgetbook's native preview mode. No separate renderer or remote deployment
 is required. To iterate on docs alone after the initial build, run `pnpm content`
 and `pnpm exec next dev`. Rebuild previews after changing Flutter examples.

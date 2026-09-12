@@ -27,6 +27,7 @@ jobs:
     timeout-minutes: 25
     env:
       NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_BASE_PATH: /remix
       NEXT_PUBLIC_SITE_URL: ${{ inputs.site-url }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -53,21 +54,21 @@ jobs:
           dart run tool/generate_fortal_catalog.dart --check
           python3 tool/check_tutorial_assets.py
           python3 -m unittest discover -s tool -p 'test_tutorial_assets.py'
-      - name: Build server and Flutter previews
+      - name: Type check documentation
+        working-directory: apps/docs
+        run: pnpm typecheck
+      - name: Build static documentation and catalog
         working-directory: apps/docs
         run: pnpm build
-      - name: Assemble deployment directory
+      - name: Verify static export and search
         working-directory: apps/docs
-        run: node scripts/package-server.mjs
-      - name: Smoke test the deployment artifact
-        working-directory: apps/docs
-        run: node scripts/test-server.mjs
-      - name: Archive deployment
-        working-directory: apps/docs
-        run: tar -czf remix-docs-server.tar.gz -C .next/standalone .
+        run: |
+          DOCS_OUTPUT=out node scripts/test-pages.mjs --docs-only
+          pnpm test:search
       - uses: actions/upload-artifact@v4
         with:
-          name: remix-docs-server
-          path: apps/docs/remix-docs-server.tar.gz
+          name: remix-docs-static
+          path: apps/docs/out
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 7
