@@ -124,6 +124,49 @@ final class Installer {
   }
 
   Future<void> add(AddOptions options) async {
+    final plan = await _planAdd(options);
+
+    _printPlan(
+      items: plan.items,
+      requirements: plan.requirements,
+      filesByItem: plan.filesByItem,
+      generated: plan.generated,
+      exports: plan.exports,
+      states: plan.states,
+    );
+
+    if (options.mode == AddMode.dryRun) return;
+    if (options.mode == AddMode.diff) {
+      // The diff has to predict what `add` would write, and `add` formats with
+      // the project's Flutter SDK. Formatting the proposed tree with whichever
+      // Dart happens to run this CLI would report formatter-version
+      // differences that no install would ever produce.
+      final diffToolchain = await _resolveFlutter(plan.root);
+      await _printDiff(
+        dart: diffToolchain.dart,
+        root: plan.root,
+        requestedName: plan.requested.name,
+        items: plan.items,
+        states: plan.states,
+        filesByItem: plan.filesByItem,
+        rendered: plan.rendered,
+        barrelRelative: plan.barrelRelative,
+        currentBarrel: plan.currentBarrel,
+        proposedBarrel: plan.proposedBarrel,
+      );
+      return;
+    }
+
+    await _install(plan, options);
+  }
+
+  /// Resolves everything an install depends on without writing anything.
+  ///
+  /// The order below is the preflight contract: every way a request can be
+  /// rejected is reached before the first process runs or the first byte is
+  /// written, which is also what lets `--dry-run` and `--diff` report from the
+  /// same work a real install would do rather than from a second guess at it.
+  Future<_InstallPlan> _planAdd(AddOptions options) async {
     final root = validateFlutterPackageRoot(projectRoot);
     final configFile = File(p.join(root.path, projectConfigFileName));
     if (!configFile.existsSync()) {
@@ -200,36 +243,49 @@ final class Installer {
             _resolveTarget(config, target),
     }.toList(growable: false);
 
-    _printPlan(
+    return _InstallPlan(
+      root: root,
+      config: config,
       items: items,
-      requirements: requirements,
+      rendered: rendered,
       filesByItem: filesByItem,
-      generated: generated,
-      exports: exports,
       states: states,
+      exports: exports,
+      barrel: barrel,
+      barrelRelative: barrelRelative,
+      currentBarrel: currentBarrel,
+      proposedBarrel: proposedBarrel,
+      requirements: requirements,
+      dependencies: dependencies,
+      generated: generated,
+      generationTargets: generationTargets,
+      pubspec: pubspec,
     );
+  }
 
-    if (options.mode == AddMode.dryRun) return;
-    if (options.mode == AddMode.diff) {
-      // The diff has to predict what `add` would write, and `add` formats with
-      // the project's Flutter SDK. Formatting the proposed tree with whichever
-      // Dart happens to run this CLI would report formatter-version
-      // differences that no install would ever produce.
-      final diffToolchain = await _resolveFlutter(root);
-      await _printDiff(
-        dart: diffToolchain.dart,
-        root: root,
-        requestedName: requested.name,
-        items: items,
-        states: states,
-        filesByItem: filesByItem,
-        rendered: rendered,
-        barrelRelative: barrelRelative,
-        currentBarrel: currentBarrel,
-        proposedBarrel: proposedBarrel,
-      );
-      return;
-    }
+  /// Carries out [plan]: dependencies, source, formatting, generation, analysis.
+  ///
+  /// Every step appends to `completed` before the next one starts, so a failure
+  /// can tell the reader how far the install got.
+  Future<void> _install(_InstallPlan plan, AddOptions options) async {
+    // Named locals so the steps below read as they did when this was one
+    // method, and so the plan stays the only description of what is installed.
+    final root = plan.root;
+    final config = plan.config;
+    final items = plan.items;
+    final requested = plan.requested;
+    final rendered = plan.rendered;
+    final filesByItem = plan.filesByItem;
+    final states = plan.states;
+    final barrel = plan.barrel;
+    final barrelRelative = plan.barrelRelative;
+    final currentBarrel = plan.currentBarrel;
+    final proposedBarrel = plan.proposedBarrel;
+    final requirements = plan.requirements;
+    final dependencies = plan.dependencies;
+    final generated = plan.generated;
+    final generationTargets = plan.generationTargets;
+    final pubspec = plan.pubspec;
 
     final toolchain = await _resolveFlutter(root);
     final completed = <String>[];
@@ -860,12 +916,12 @@ String _generationFilter(String packageName, String target) => Uri(
   scheme: 'package',
   pathSegments: [
     packageName,
-    ...p.posix.split(Glob.quote(target.substring(4))),
+    ...p.posix.split(Glob.quote(target.substring(uiTargetPrefix.length))),
   ],
 ).toString();
 
 String _resolveTarget(ProjectConfig config, String target) =>
-    p.posix.join(config.uiPath, target.substring('@ui/'.length));
+    p.posix.join(config.uiPath, target.substring(uiTargetPrefix.length));
 
 File _projectFile(Directory root, String relative) =>
     File(p.joinAll([root.path, ...p.posix.split(relative)]));
@@ -894,6 +950,56 @@ final class _DependencyInspection {
   const _DependencyInspection(this.missing);
 
   final List<_DependencyRequirement> missing;
+}
+
+/// Everything `add` resolved before it was allowed to change anything.
+///
+/// This exists to keep the preflight honest: the planning phase hands back one
+/// value, so a step that runs later cannot quietly re-read the project and act
+/// on a different answer than the one already printed.
+final class _InstallPlan {
+  const _InstallPlan({
+    required this.root,
+    required this.config,
+    required this.items,
+    required this.rendered,
+    required this.filesByItem,
+    required this.states,
+    required this.exports,
+    required this.barrel,
+    required this.barrelRelative,
+    required this.currentBarrel,
+    required this.proposedBarrel,
+    required this.requirements,
+    required this.dependencies,
+    required this.generated,
+    required this.generationTargets,
+    required this.pubspec,
+  });
+
+  final Directory root;
+  final ProjectConfig config;
+
+  /// The requested item and its dependencies, dependencies first.
+  final List<RegistryItem> items;
+
+  /// Rendered source keyed by the project-relative path it belongs at.
+  final Map<String, String> rendered;
+  final Map<String, List<String>> filesByItem;
+  final Map<String, _ItemState> states;
+  final List<String> exports;
+  final File barrel;
+  final String barrelRelative;
+  final String currentBarrel;
+  final String proposedBarrel;
+  final List<_DependencyRequirement> requirements;
+  final _DependencyInspection dependencies;
+  final List<String> generated;
+  final List<String> generationTargets;
+  final File pubspec;
+
+  /// The item the user asked for; [items] resolves its dependencies ahead of it.
+  RegistryItem get requested => items.last;
 }
 
 enum _ItemState { missing, partial, complete }
