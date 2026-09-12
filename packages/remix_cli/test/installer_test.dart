@@ -191,7 +191,7 @@ paths:
       final pubAdd = runner.calls.singleWhere(
         (call) => call.arguments.take(2).join(' ') == 'pub add',
       );
-      expect(pubAdd.arguments, ['pub', 'add', 'mix_chart@^0.0.1-beta.1']);
+      expect(pubAdd.arguments, ['pub', 'add', 'mix_chart@^0.0.1-beta.3']);
       final build = runner.calls.singleWhere(
         (call) => call.arguments.take(3).join(' ') == 'run build_runner build',
       );
@@ -535,7 +535,7 @@ packages:
           ),
         );
         final remixUiIcons = item == 'icons' ? '0.1.0' : null;
-        final mixChart = item == 'chart' ? '0.0.1-beta.1' : null;
+        final mixChart = item == 'chart' ? '0.0.1-beta.3' : null;
         writeRequiredPubspec(
           caseRoot,
           mixChart: mixChart == null ? null : '^$mixChart',
@@ -938,11 +938,11 @@ dependencies:
   remix: $registryRemixConstraint
   mix_annotations: ^2.2.0-beta.1
 dev_dependencies:
-  mix_chart: ^0.0.1-beta.1
+  mix_chart: ^0.0.1-beta.3
   build_runner: ^2.10.1
   mix_generator: ^2.2.0-beta.3
 ''');
-      writeRequiredLock(caseRoot, mixChart: '0.0.1-beta.1');
+      writeRequiredLock(caseRoot, mixChart: '0.0.1-beta.3');
       final before = snapshotFiles(caseRoot);
       final runner = happyRunner(caseRoot);
       final writer = RecordingFileWriter(caseRoot);
@@ -1147,7 +1147,7 @@ RecordingProcessRunner happyRunner(
     if (addMissingDependencies) {
       writeRequiredPubspec(
         root,
-        mixChart: addChartDependency ? '^0.0.1-beta.1' : null,
+        mixChart: addChartDependency ? '^0.0.1-beta.3' : null,
       );
     }
     return successProcessOutput;
@@ -1164,7 +1164,7 @@ RecordingProcessRunner happyRunner(
       writeRequiredLock(
         root,
         remix: lockedRemix,
-        mixChart: addChartDependency ? '0.0.1-beta.1' : null,
+        mixChart: addChartDependency ? '0.0.1-beta.3' : null,
       );
     }
     return successProcessOutput;
