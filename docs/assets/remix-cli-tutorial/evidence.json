@@ -62,7 +62,7 @@
       "test_sha256": "37b7be5ce79290a951544184372a618b969f5ba5f3af27da4bacf0932f50701f"
     }
   ],
-  "archive_sha256": "202d1b15d545140acac1c334b5d6dbffd4a08fd7e4c7d0e1d3f2bf1b8cbd8eb9",
+  "archive_sha256": "6de5990c0934508641dbf761a4600ee9d2d86c0dde033e865eeb70898cbd0893",
   "first_render_source_sha256": "f8f43244e34277e0c7b27d92def68ced08fa93b0852e56dd20beb5a33821f10e",
   "validation": {
     "fresh_default_replay": "Passed project creation, installation, first render, composition, customization, diff preservation, ordinary add preservation, analysis, four tests, and release web builds.",
@@ -439,7 +439,7 @@
   },
   "theme_mode_migration": {
     "date": "2026-09-12",
-    "changes": "Updated both theme layers and application hosts to theme/darkTheme/mode, with generated appearance tests. Original screenshot captures are unchanged and predate this revision.",
-    "validation": "Both downloaded projects passed analysis and all 12 tests against the current local Remix checkout, including eight theme-mode tests and four workflow tests per project."
+    "changes": "Updated both theme layers and application hosts to theme/darkTheme/mode, with generated appearance tests. Original screenshot captures are unchanged and predate this revision. Hard cutoff removes scope data/brightness and config createScope.",
+    "validation": "After the hard cutoff, both downloaded projects passed analysis and all 12 tests against the current local Remix checkout."
   }
 }

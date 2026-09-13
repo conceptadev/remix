@@ -19,16 +19,13 @@ class {{typePrefix}}ThemeScope extends StatelessWidget {
   /// A custom theme without darkTheme is used in both modes.
   /// Nested scopes inherit the configured pair and active selection.
   const {{typePrefix}}ThemeScope({
-    super.key, this.theme, this.darkTheme, this.mode, this.data,
+    super.key, this.theme, this.darkTheme, this.mode,
     required this.child,
-  }) : assert(data == null || (theme == null && darkTheme == null && mode == null),
-       'Use data for a fixed theme, or theme/darkTheme/mode for appearance selection.');
+  });
 
   final {{typePrefix}}ThemeData? theme;
   final {{typePrefix}}ThemeData? darkTheme;
   final {{typePrefix}}ThemeMode? mode;
-  /// Compatibility shorthand for installing one fixed, resolved theme.
-  final {{typePrefix}}ThemeData? data;
   final Widget child;
 
   @override
@@ -42,11 +39,9 @@ class {{typePrefix}}ThemeScope extends StatelessWidget {
 
   Widget _build(BuildContext context) {
     final inherited = context.dependOnInheritedWidgetOfExactType<{{typePrefix}}Theme>();
-    final base = data ?? theme ?? inherited?.baseTheme ?? inherited?.data ?? const {{typePrefix}}ThemeData.light();
-    final dark = data ?? darkTheme ?? (theme != null ? theme! : inherited?.darkTheme ?? inherited?.data ?? const {{typePrefix}}ThemeData.dark());
-    final useDark = data != null
-        ? data!.brightness == Brightness.dark
-        : mode == null && inherited != null
+    final base = theme ?? inherited?.baseTheme ?? inherited?.data ?? const {{typePrefix}}ThemeData.light();
+    final dark = darkTheme ?? (theme != null ? theme! : inherited?.darkTheme ?? inherited?.data ?? const {{typePrefix}}ThemeData.dark());
+    final useDark = mode == null && inherited != null
             ? inherited.usesDarkTheme
             : switch (mode ?? {{typePrefix}}ThemeMode.system) {
                 {{typePrefix}}ThemeMode.light => false,

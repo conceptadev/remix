@@ -139,7 +139,7 @@ Future<BadgeSpec> _resolve(
   late BadgeSpec result;
   await tester.pumpWidget(
     FortalScope(
-      brightness: .light,
+      mode: .light,
       scaling: scaling,
       radius: radius,
       child: WidgetsApp(
@@ -180,7 +180,7 @@ _tokens(WidgetTester tester) async {
   result;
   await tester.pumpWidget(
     FortalScope(
-      brightness: .light,
+      mode: .light,
       child: WidgetsApp(
         color: Colors.black,
         builder: (context, child) {

@@ -154,8 +154,8 @@ Widget withAppearance(Widget child) => FortalScope(
 
 Supplying only `theme` makes it the fallback for both modes. Supplying only
 `darkTheme` retains the default or inherited base theme. Direct scope options
-such as `accent` apply to both appearances; legacy `brightness` explicitly
-selects brightness and takes precedence over `mode`.
+such as `accent` apply to both appearances. Appearance selection uses `mode`;
+the scope no longer accepts a `brightness` parameter.
 
 Installed Fortal source uses your prefix: `AcmeScope`, `AcmeThemeData`, and
 `AcmeThemeMode` expose the same behavior. No Material application host is needed.

@@ -84,7 +84,7 @@ Future<CalloutSpec> _resolve(
   late CalloutSpec result;
   await tester.pumpWidget(
     FortalScope(
-      brightness: .light,
+      mode: .light,
       scaling: scaling,
       child: WidgetsApp(
         color: Colors.black,
@@ -120,7 +120,7 @@ _tokens(WidgetTester tester) async {
   result;
   await tester.pumpWidget(
     FortalScope(
-      brightness: .light,
+      mode: .light,
       child: WidgetsApp(
         color: Colors.black,
         builder: (context, child) {

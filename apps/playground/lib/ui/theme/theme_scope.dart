@@ -23,19 +23,12 @@ class PlaygroundThemeScope extends StatelessWidget {
     this.theme,
     this.darkTheme,
     this.mode,
-    this.data,
     required this.child,
-  }) : assert(
-         data == null || (theme == null && darkTheme == null && mode == null),
-         'Use data for a fixed theme, or theme/darkTheme/mode for appearance selection.',
-       );
+  });
 
   final PlaygroundThemeData? theme;
   final PlaygroundThemeData? darkTheme;
   final PlaygroundThemeMode? mode;
-
-  /// Compatibility shorthand for installing one fixed, resolved theme.
-  final PlaygroundThemeData? data;
   final Widget child;
 
   @override
@@ -54,22 +47,18 @@ class PlaygroundThemeScope extends StatelessWidget {
     final inherited = context
         .dependOnInheritedWidgetOfExactType<PlaygroundTheme>();
     final base =
-        data ??
         theme ??
         inherited?.baseTheme ??
         inherited?.data ??
         const PlaygroundThemeData.light();
     final dark =
-        data ??
         darkTheme ??
         (theme != null
             ? theme!
             : inherited?.darkTheme ??
                   inherited?.data ??
                   const PlaygroundThemeData.dark());
-    final useDark = data != null
-        ? data!.brightness == Brightness.dark
-        : mode == null && inherited != null
+    final useDark = mode == null && inherited != null
         ? inherited.usesDarkTheme
         : switch (mode ?? PlaygroundThemeMode.system) {
             PlaygroundThemeMode.light => false,

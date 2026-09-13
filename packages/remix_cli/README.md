@@ -116,6 +116,8 @@ inherit its tokens and text defaults. See `lib/ui/theme/theme_scope.dart` for
 the scope example.
 
 Both presets support `theme`, `darkTheme`, and `mode` on their generated scope.
+The old scope `data` and `brightness` parameters and config `createScope`
+shortcut are removed. Update application-owned callers to this API.
 With no configuration, roots use the generated light/dark pair and follow the
 system. Nested scopes inherit the pair and active selection. A custom `theme`
 without `darkTheme` is used in both modes; supplying `darkTheme` alone keeps the

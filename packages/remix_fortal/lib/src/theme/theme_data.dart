@@ -133,19 +133,6 @@ class FortalThemeConfig {
     scaling,
     hasBackground,
   );
-
-  Widget createScope({List<Type>? orderOfModifiers, required Widget child}) =>
-      FortalScope(
-        accent: accent,
-        gray: gray,
-        brightness: brightness,
-        panelBackground: panelBackground,
-        radius: radius,
-        scaling: scaling,
-        hasBackground: hasBackground,
-        orderOfModifiers: orderOfModifiers,
-        child: child,
-      );
 }
 
 /// Fully resolved theme values inherited by a Fortal subtree.

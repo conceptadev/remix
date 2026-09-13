@@ -186,5 +186,5 @@ WidgetsApp(
 
 Read `FortalTheme.of(context).brightness` below the scope when UI needs the
 resolved appearance. A custom `theme` without `darkTheme` is the fallback in
-both modes. Preserve existing `FortalThemeConfig.createScope` calls when a
-fixed legacy configuration is intentional.
+both modes. Use `theme` for a fixed configuration; the config `createScope` shortcut has
+been removed.

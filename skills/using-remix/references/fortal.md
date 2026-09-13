@@ -229,7 +229,7 @@ Use `theme: const FortalThemeData.light()` and
 the preset supplies both defaults. With only `theme`, both modes use that
 fallback. With only `darkTheme`, the base remains inherited or default.
 Nested scopes inherit the pair and current selection unless `mode` is explicit.
-The app owns preference persistence. Legacy `brightness` overrides `mode`.
+The app owns preference persistence. Scope `brightness` is removed; use `mode`.
 
 ### Scope placement
 
@@ -279,7 +279,7 @@ typography children pin their own token run.
 ```dart
 const theme = FortalThemeConfig(accent: .green, gray: .sage, brightness: .dark);
 final light = theme.copyWith(brightness: .light);
-theme.createScope(child: MyApp())
+FortalScope(theme: theme, child: MyApp())
 ```
 
 ---

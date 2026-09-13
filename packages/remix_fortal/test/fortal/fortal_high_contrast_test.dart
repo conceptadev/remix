@@ -520,7 +520,7 @@ Future<T> _resolveFortalStyle<T>(
   await tester.pumpWidget(
     FortalScope(
       accent: accent,
-      brightness: brightness == .dark ? .dark : .light,
+      mode: brightness == Brightness.dark ? .dark : .light,
       radius: radius,
       child: MaterialApp(
         home: WidgetStateProvider(

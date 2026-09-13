@@ -26,6 +26,23 @@ class ExampleHostPolicyTest(unittest.TestCase):
             self.assertEqual(len(errors), 1)
             self.assertIn('theme_scope.dart.tmpl:1:', errors[0])
 
+    def test_rejects_removed_scope_parameters_but_allows_theme_data(self):
+        for source in [
+            'AcmeThemeScope(data: theme, child: screen)',
+            'AcmeThemeScope(child: screen, data: theme)',
+            'AcmeThemeScope (child: screen, data: theme)',
+            'FortalScope(brightness: Brightness.dark, child: screen)',
+            'AcmeScope(lightTheme: theme, child: screen)',
+            'const {{typePrefix}}ThemeScope({this.data, required this.child});',
+            'config.createScope(child: screen)',
+            'Widget createScope({required Widget child}) => child;',
+            'AcmeThemeScope({AcmeThemeData? data, required Widget child});',
+        ]:
+            with self.subTest(source=source):
+                self.assertTrue(violations('example.dart', source))
+        self.assertEqual(violations('example.dart',
+            'FortalScope(theme: FortalThemeConfig(brightness: Brightness.dark), child: screen)'), [])
+
     def test_allows_compatibility_prose_and_widgets_app(self):
         self.assertEqual(violations('guide.md', 'No MaterialApp is required.\nWidgetsApp(color: color)'), [])
 

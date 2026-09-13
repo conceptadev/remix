@@ -67,7 +67,6 @@ class {{typePrefix}}Scope extends StatelessWidget {
     this.mode,
     this.accent,
     this.gray,
-    this.brightness,
     this.panelBackground,
     this.radius,
     this.scaling,
@@ -86,7 +85,6 @@ class {{typePrefix}}Scope extends StatelessWidget {
 
   final {{typePrefix}}AccentColor? accent;
   final {{typePrefix}}GrayColor? gray;
-  final Brightness? brightness;
   final {{typePrefix}}PanelBackground? panelBackground;
   final {{typePrefix}}Radius? radius;
   final {{typePrefix}}Scaling? scaling;
@@ -121,11 +119,7 @@ class {{typePrefix}}Scope extends StatelessWidget {
         {{typePrefix}}ThemeConfig(
           accent: accent ?? config.accent,
           gray: gray ?? config.gray,
-          brightness:
-              brightness ??
-              config.brightness ??
-              ancestor?.brightness ??
-              fallback,
+          brightness: config.brightness ?? ancestor?.brightness ?? fallback,
           panelBackground: panelBackground ?? config.panelBackground,
           radius: radius ?? config.radius,
           scaling: scaling ?? config.scaling,
@@ -139,9 +133,7 @@ class {{typePrefix}}Scope extends StatelessWidget {
     final dark = darkTheme == null && theme != null
         ? base
         : resolve(darkTheme, darkParent, Brightness.dark);
-    final useDark = brightness != null
-        ? brightness == Brightness.dark
-        : mode == null && inherited != null
+    final useDark = mode == null && inherited != null
         ? inherited.usesDarkTheme
         : switch (mode ?? {{typePrefix}}ThemeMode.system) {
             {{typePrefix}}ThemeMode.light => false,

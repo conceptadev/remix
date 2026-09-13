@@ -363,7 +363,7 @@ Future<SelectSpec> _resolve(
   late SelectSpec resolved;
   await tester.pumpWidget(
     FortalScope(
-      brightness: brightness,
+      mode: brightness == Brightness.dark ? .dark : .light,
       scaling: scaling,
       radius: radius,
       child: WidgetsApp(
@@ -433,7 +433,7 @@ _tokens(WidgetTester tester, {Brightness brightness = .light}) async {
   result;
   await tester.pumpWidget(
     FortalScope(
-      brightness: brightness,
+      mode: brightness == Brightness.dark ? .dark : .light,
       child: WidgetsApp(
         color: Colors.black,
         builder: (context, child) {

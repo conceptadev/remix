@@ -77,7 +77,7 @@ void main() {
       for (final (size, dimension, _) in metrics) {
         await tester.pumpWidget(
           FortalScope(
-            brightness: .light,
+            mode: .light,
             child: MaterialApp(
               home: FortalAvatar(size: size, icon: Icons.person),
             ),
@@ -93,7 +93,7 @@ void main() {
         double? builderSize;
         await tester.pumpWidget(
           FortalScope(
-            brightness: .light,
+            mode: .light,
             child: MaterialApp(
               home: FortalAvatar(
                 size: size,
@@ -195,7 +195,7 @@ Future<AvatarSpec> _resolve(
   late AvatarSpec resolved;
   await tester.pumpWidget(
     FortalScope(
-      brightness: .light,
+      mode: .light,
       scaling: scaling,
       radius: radius,
       child: WidgetsApp(
@@ -232,7 +232,7 @@ _tokens(WidgetTester tester) async {
   result;
   await tester.pumpWidget(
     FortalScope(
-      brightness: .light,
+      mode: .light,
       child: WidgetsApp(
         color: Colors.black,
         builder: (context, child) {

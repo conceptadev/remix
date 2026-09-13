@@ -45,7 +45,7 @@ void main() {
 
 Widget _fortalHost(Widget child) {
   return FortalScope(
-    brightness: .light,
+    mode: .light,
     child: WidgetsApp(
       color: const Color(0xFFFFFFFF),
       builder: (_, _) => Center(child: child),
@@ -55,7 +55,7 @@ Widget _fortalHost(Widget child) {
 
 Widget _fortalOverlayHost(Widget child) {
   return FortalScope(
-    brightness: .light,
+    mode: .light,
     child: WidgetsApp(
       color: const Color(0xFFFFFFFF),
       builder: (_, _) => Overlay.wrap(child: Center(child: child)),

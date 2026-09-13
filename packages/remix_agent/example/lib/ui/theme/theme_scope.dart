@@ -23,19 +23,12 @@ class UiThemeScope extends StatelessWidget {
     this.theme,
     this.darkTheme,
     this.mode,
-    this.data,
     required this.child,
-  }) : assert(
-         data == null || (theme == null && darkTheme == null && mode == null),
-         'Use data for a fixed theme, or theme/darkTheme/mode for appearance selection.',
-       );
+  });
 
   final UiThemeData? theme;
   final UiThemeData? darkTheme;
   final UiThemeMode? mode;
-
-  /// Compatibility shorthand for installing one fixed, resolved theme.
-  final UiThemeData? data;
   final Widget child;
 
   @override
@@ -53,22 +46,18 @@ class UiThemeScope extends StatelessWidget {
   Widget _build(BuildContext context) {
     final inherited = context.dependOnInheritedWidgetOfExactType<UiTheme>();
     final base =
-        data ??
         theme ??
         inherited?.baseTheme ??
         inherited?.data ??
         const UiThemeData.light();
     final dark =
-        data ??
         darkTheme ??
         (theme != null
             ? theme!
             : inherited?.darkTheme ??
                   inherited?.data ??
                   const UiThemeData.dark());
-    final useDark = data != null
-        ? data!.brightness == Brightness.dark
-        : mode == null && inherited != null
+    final useDark = mode == null && inherited != null
         ? inherited.usesDarkTheme
         : switch (mode ?? UiThemeMode.system) {
             UiThemeMode.light => false,

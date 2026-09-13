@@ -1,6 +1,6 @@
 ## Unreleased
 
-- Add `FortalScope.theme`, `darkTheme`, and `mode`, with light/dark data constructors, live system appearance, and nested theme-pair inheritance. Existing direct scope options remain supported.
+- Add `FortalScope.theme`, `darkTheme`, and `mode`, with light/dark data constructors, live system appearance, and nested theme-pair inheritance. **Breaking:** remove scope `brightness` and config `createScope`; use `mode` and `theme`. Direct design options such as `accent` remain supported.
 
 - Add `fortalToastStyle` and the generated `FortalToast` with surface and classic variants, three sizes, and a visual-only accent, neutral, or error intent. Toast is a Fortal extension and is not tracked in the Radix Themes parity ledger.
 

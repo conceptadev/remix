@@ -462,7 +462,7 @@ Future<DataTableSpec> _resolve(
   late DataTableSpec result;
   await tester.pumpWidget(
     FortalScope(
-      brightness: brightness,
+      mode: brightness == Brightness.dark ? .dark : .light,
       scaling: scaling,
       child: WidgetsApp(
         color: Colors.black,
@@ -511,7 +511,7 @@ _tokens(WidgetTester tester) async {
   result;
   await tester.pumpWidget(
     FortalScope(
-      brightness: .light,
+      mode: .light,
       child: WidgetsApp(
         color: Colors.black,
         builder: (context, child) {

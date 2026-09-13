@@ -432,10 +432,11 @@ regeneration still preserves existing authored files unless you explicitly use
 appearance picker. Selection controls and persistence belong to the application.
 The dashboard is a reference consumer of the same scope behavior.
 
-Existing `AcmeThemeScope(data: ...)` calls remain a fixed-theme shorthand.
-Fortal's direct design options and `brightness` remain supported; direct options
-override the supplied theme values, and explicit `brightness` overrides mode
-selection. Prefer `theme`, `darkTheme`, and `mode` in new app setup.
+The theme API has a hard cutoff: scope constructors accept `theme`, `darkTheme`,
+and `mode`. The default scope's `data` parameter, FortalScope's `brightness`
+parameter, and the config `createScope` shortcut have been removed. Use `theme`
+for a fixed theme and `mode` for appearance selection. Direct Fortal design
+options such as `accent` still override the supplied theme values.
 
 ## The three levels of customization
 

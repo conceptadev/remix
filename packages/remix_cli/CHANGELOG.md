@@ -1,6 +1,6 @@
 ## Unreleased
 
-- Generate `theme`, `darkTheme`, and `mode` scope parameters for both presets, including light/dark defaults and live system appearance. Existing default-scope `data` calls remain supported.
+- Generate `theme`, `darkTheme`, and `mode` scope parameters for both presets, including light/dark defaults and live system appearance. **Breaking:** remove the default scope `data` parameter; use `theme`.
 
 ## 0.1.0
 

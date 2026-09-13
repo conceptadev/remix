@@ -140,8 +140,9 @@ or a new application wrapper. Keep `WidgetsApp` as the host.
   platform brightness changes; no application brightness observer is needed.
 - Generated default scopes use `<Prefix>ThemeScope`; generated Fortal scopes use
   `<Prefix>Scope`. Both export `<Prefix>ThemeData` and `<Prefix>ThemeMode`.
-- Existing default-scope `data` calls remain a fixed-theme compatibility path.
-  Fortal's legacy `brightness` option overrides `mode` when explicitly supplied.
+- No compatibility aliases: scope `data`, scope `brightness`, and config
+  `createScope` are removed. Use `theme` for fixed values and `mode` to select
+  appearance. Brightness remains a resolved theme-data property.
 
 ```dart
 FortalScope(
@@ -152,9 +153,9 @@ FortalScope(
 )
 ```
 
-These APIs describe the current checkout. For older installed source, inspect
-its constructor before using them; generated source is application-owned and
-must be updated deliberately without overwriting custom tokens.
+These APIs are the required standard. Migrate older installed scopes and their
+callers together; do not add compatibility aliases. Preserve application-owned
+custom tokens while updating generated source.
 
 ## Provide only the host capabilities in use
 
