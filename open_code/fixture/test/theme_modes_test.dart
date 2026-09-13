@@ -8,9 +8,13 @@ void main() {
     builder: (context, _) => child,
   );
   late AcmeThemeData active;
+  late Color background;
+  late Color accent;
   Widget probe() => Builder(
     builder: (context) {
       active = AcmeTheme.of(context);
+      background = AcmeTokens.background.resolve(context);
+      accent = AcmeTokens.primary.resolve(context);
       return const SizedBox.shrink();
     },
   );
@@ -22,9 +26,11 @@ void main() {
     addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
     await tester.pumpWidget(AcmeThemeScope(child: host(probe())));
     expect(active.brightness, Brightness.light);
+    expect(background, const Color(0xFFFFFFFF));
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
     await tester.pump();
     expect(active.brightness, Brightness.dark);
+    expect(background, const Color(0xFF0A0A0A));
   });
 
   testWidgets('explicit mode overrides system and survives changes', (
@@ -34,9 +40,11 @@ void main() {
     addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
     await tester.pumpWidget(host(AcmeThemeScope(mode: .light, child: probe())));
     expect(active.brightness, Brightness.light);
+    expect(background, const Color(0xFFFFFFFF));
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
     await tester.pump();
     expect(active.brightness, Brightness.light);
+    expect(background, const Color(0xFFFFFFFF));
   });
 
   testWidgets('theme is the fallback when a custom dark theme is omitted', (
@@ -52,6 +60,7 @@ void main() {
       ),
     );
     expect(active.brightness, Brightness.light);
+    expect(background, const Color(0xFFFFFFFF));
   });
 
   testWidgets('darkTheme alone leaves the generated light default available', (
@@ -67,6 +76,7 @@ void main() {
       ),
     );
     expect(active.brightness, Brightness.light);
+    expect(background, const Color(0xFFFFFFFF));
     await tester.pumpWidget(
       host(
         AcmeThemeScope(
@@ -77,6 +87,7 @@ void main() {
       ),
     );
     expect(active.brightness, Brightness.dark);
+    expect(background, const Color(0xFF0A0A0A));
   });
 
   testWidgets(
@@ -94,6 +105,7 @@ void main() {
         ),
       );
       expect(active.brightness, Brightness.dark);
+      expect(background, const Color(0xFF0A0A0A));
     },
   );
 
@@ -112,6 +124,7 @@ void main() {
       ),
     );
     expect(active.brightness, Brightness.light);
+    expect(background, const Color(0xFFFFFFFF));
   });
 
   testWidgets('capturing a theme preserves alternatives for a new subtree', (
@@ -138,6 +151,7 @@ void main() {
     );
     await tester.pumpWidget(host(captured));
     expect(active.brightness, Brightness.light);
+    expect(background, const Color(0xFFFFFFFF));
   });
 
   testWidgets('changing mode updates an already-open dialog', (tester) async {
@@ -172,10 +186,47 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(active.brightness, Brightness.light);
+    expect(background, const Color(0xFFFFFFFF));
     update(() => mode = AcmeThemeMode.dark);
     await tester.pumpAndSettle();
     expect(active.brightness, Brightness.dark);
+    expect(background, const Color(0xFF0A0A0A));
     Navigator.of(pageContext).pop();
     await tester.pumpAndSettle();
+  });
+
+  testWidgets('custom colors survive copyWith and repeated mode switching', (
+    tester,
+  ) async {
+    final light = const AcmeThemeData.light()
+        .copyWith(primary: const Color(0xFF123456))
+        .copyWith(radius: const Radius.circular(12));
+    final dark = const AcmeThemeData.dark()
+        .copyWith(primary: const Color(0xFFABCDEF))
+        .copyWith(radius: const Radius.circular(12));
+    for (final mode in [
+      AcmeThemeMode.light,
+      AcmeThemeMode.dark,
+      AcmeThemeMode.light,
+    ]) {
+      await tester.pumpWidget(
+        host(
+          AcmeThemeScope(
+            theme: light,
+            darkTheme: dark,
+            mode: mode,
+            child: probe(),
+          ),
+        ),
+      );
+      expect(
+        accent,
+        mode == AcmeThemeMode.light
+            ? const Color(0xFF123456)
+            : const Color(0xFFABCDEF),
+      );
+      expect(active.radius, light.radius);
+    }
+    expect(const Color(0xFF123456), isNot(const Color(0xFFABCDEF)));
   });
 }

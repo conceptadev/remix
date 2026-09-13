@@ -241,7 +241,9 @@ typography run, which is always pinned from Fortal tokens. Placement therefore
 matters for bare `Text`:
 
 For a simple `WidgetsApp` builder, the scope can wrap the app. For a routed app,
-put it in `builder` above the Navigator.
+put it in `builder` above the Navigator. A default WidgetsApp preserves the
+outer scope’s text defaults; an explicit `textStyle` overrides them. A scope
+inside the app builder establishes its defaults below that override.
 
 A **nested** scope re-scopes tokens only. It does not restate the courtesy
 bare-`Text` run, so wrapping a subtree in

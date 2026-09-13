@@ -8,9 +8,13 @@ void main() {
     builder: (context, _) => child,
   );
   late AcmeThemeData active;
+  late Color background;
+  late Color accent;
   Widget probe() => Builder(
     builder: (context) {
       active = AcmeTheme.of(context);
+      background = AcmeTokens.colorBackground.resolve(context);
+      accent = AcmeTokens.accent9.resolve(context);
       return const SizedBox.shrink();
     },
   );
@@ -22,9 +26,17 @@ void main() {
     addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
     await tester.pumpWidget(AcmeScope(child: host(probe())));
     expect(active.brightness, Brightness.light);
+    expect(
+      background,
+      resolveAcmeTokens(const AcmeThemeData.light()).colorBackground,
+    );
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
     await tester.pump();
     expect(active.brightness, Brightness.dark);
+    expect(
+      background,
+      resolveAcmeTokens(const AcmeThemeData.dark()).colorBackground,
+    );
   });
 
   testWidgets('explicit mode overrides system and survives changes', (
@@ -34,9 +46,17 @@ void main() {
     addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
     await tester.pumpWidget(host(AcmeScope(mode: .light, child: probe())));
     expect(active.brightness, Brightness.light);
+    expect(
+      background,
+      resolveAcmeTokens(const AcmeThemeData.light()).colorBackground,
+    );
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
     await tester.pump();
     expect(active.brightness, Brightness.light);
+    expect(
+      background,
+      resolveAcmeTokens(const AcmeThemeData.light()).colorBackground,
+    );
   });
 
   testWidgets('theme is the fallback when a custom dark theme is omitted', (
@@ -52,6 +72,10 @@ void main() {
       ),
     );
     expect(active.brightness, Brightness.light);
+    expect(
+      background,
+      resolveAcmeTokens(const AcmeThemeData.light()).colorBackground,
+    );
   });
 
   testWidgets('darkTheme alone leaves the generated light default available', (
@@ -67,6 +91,10 @@ void main() {
       ),
     );
     expect(active.brightness, Brightness.light);
+    expect(
+      background,
+      resolveAcmeTokens(const AcmeThemeData.light()).colorBackground,
+    );
     await tester.pumpWidget(
       host(
         AcmeScope(
@@ -77,6 +105,10 @@ void main() {
       ),
     );
     expect(active.brightness, Brightness.dark);
+    expect(
+      background,
+      resolveAcmeTokens(const AcmeThemeData.dark()).colorBackground,
+    );
   });
 
   testWidgets(
@@ -94,6 +126,10 @@ void main() {
         ),
       );
       expect(active.brightness, Brightness.dark);
+      expect(
+        background,
+        resolveAcmeTokens(const AcmeThemeData.dark()).colorBackground,
+      );
     },
   );
 
@@ -112,6 +148,10 @@ void main() {
       ),
     );
     expect(active.brightness, Brightness.light);
+    expect(
+      background,
+      resolveAcmeTokens(const AcmeThemeData.light()).colorBackground,
+    );
   });
 
   testWidgets('capturing a theme preserves alternatives for a new subtree', (
@@ -138,6 +178,10 @@ void main() {
     );
     await tester.pumpWidget(host(captured));
     expect(active.brightness, Brightness.light);
+    expect(
+      background,
+      resolveAcmeTokens(const AcmeThemeData.light()).colorBackground,
+    );
   });
 
   testWidgets('changing mode updates an already-open dialog', (tester) async {
@@ -171,10 +215,84 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(active.brightness, Brightness.light);
+    expect(
+      background,
+      resolveAcmeTokens(const AcmeThemeData.light()).colorBackground,
+    );
     update(() => mode = AcmeThemeMode.dark);
     await tester.pumpAndSettle();
     expect(active.brightness, Brightness.dark);
+    expect(
+      background,
+      resolveAcmeTokens(const AcmeThemeData.dark()).colorBackground,
+    );
     Navigator.of(pageContext).pop();
     await tester.pumpAndSettle();
+  });
+
+  testWidgets('custom colors survive copyWith and repeated mode switching', (
+    tester,
+  ) async {
+    final light = const AcmeThemeData.light(
+      accent: AcmeAccentColor.red,
+    ).copyWith(radius: AcmeRadius.large);
+    final dark = const AcmeThemeData.dark(
+      accent: AcmeAccentColor.blue,
+    ).copyWith(radius: AcmeRadius.large);
+    for (final mode in [
+      AcmeThemeMode.light,
+      AcmeThemeMode.dark,
+      AcmeThemeMode.light,
+    ]) {
+      await tester.pumpWidget(
+        host(
+          AcmeScope(theme: light, darkTheme: dark, mode: mode, child: probe()),
+        ),
+      );
+      expect(
+        accent,
+        mode == AcmeThemeMode.light
+            ? resolveAcmeTokens(light).accent.scale.step(9)
+            : resolveAcmeTokens(dark).accent.scale.step(9),
+      );
+      expect(active.radius, light.radius);
+    }
+    expect(
+      resolveAcmeTokens(light).accent.scale.step(9),
+      isNot(resolveAcmeTokens(dark).accent.scale.step(9)),
+    );
+  });
+
+  testWidgets('text defaults respect host placement and explicit overrides', (
+    tester,
+  ) async {
+    const override = TextStyle(color: Color(0xFFFF00FF), fontSize: 31);
+    Widget app({TextStyle? textStyle, bool scopeInBuilder = false}) =>
+        WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          textStyle: textStyle,
+          builder: (context, _) => scopeInBuilder
+              ? const AcmeScope(mode: .light, child: Text('sample'))
+              : const Text('sample'),
+        );
+    TextStyle rendered() =>
+        tester.widget<RichText>(find.byType(RichText).first).text.style!;
+    final foreground = resolveAcmeTokens(
+      const AcmeThemeData.light(),
+    ).gray.scale.step(12);
+    await tester.pumpWidget(AcmeScope(mode: .light, child: app()));
+    expect(rendered().color, foreground);
+    expect(rendered().fontSize, 16);
+    await tester.pumpWidget(
+      AcmeScope(
+        mode: .light,
+        child: app(textStyle: override),
+      ),
+    );
+    expect(rendered().color, override.color);
+    expect(rendered().fontSize, 31);
+    await tester.pumpWidget(app(textStyle: override, scopeInBuilder: true));
+    expect(rendered().color, foreground);
+    expect(rendered().fontSize, 16);
   });
 }

@@ -157,6 +157,11 @@ Supplying only `theme` makes it the fallback for both modes. Supplying only
 such as `accent` apply to both appearances. Appearance selection uses `mode`;
 the scope no longer accepts a `brightness` parameter.
 
+For routed WidgetsApp examples, wrap the Navigator with the scope in `builder`.
+A default WidgetsApp also preserves the text defaults of a scope above it. An
+explicit WidgetsApp `textStyle` overrides those outer defaults; a scope inside
+the builder establishes its defaults below the app’s text style.
+
 Installed Fortal source uses your prefix: `AcmeScope`, `AcmeThemeData`, and
 `AcmeThemeMode` expose the same behavior. No Material application host is needed.
 
