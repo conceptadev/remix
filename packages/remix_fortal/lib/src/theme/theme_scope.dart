@@ -62,9 +62,11 @@ Widget _fortalRootTextStyle({
 class FortalScope extends StatelessWidget {
   const FortalScope({
     super.key,
+    this.theme,
+    this.darkTheme,
+    this.mode,
     this.accent,
     this.gray,
-    this.brightness,
     this.panelBackground,
     this.radius,
     this.scaling,
@@ -73,9 +75,16 @@ class FortalScope extends StatelessWidget {
     required this.child,
   });
 
+  /// Base appearance. Without either theme, the preset provides both defaults.
+  /// If only [theme] is supplied, it is also the dark-mode fallback.
+  final FortalThemeConfig? theme;
+  final FortalThemeConfig? darkTheme;
+
+  /// Omitted at a root follows the system; omitted below a scope inherits it.
+  final FortalThemeMode? mode;
+
   final FortalAccentColor? accent;
   final FortalGrayColor? gray;
-  final Brightness? brightness;
   final FortalPanelBackground? panelBackground;
   final FortalRadius? radius;
   final FortalScaling? scaling;
@@ -85,17 +94,56 @@ class FortalScope extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final config = FortalThemeConfig(
-      accent: accent,
-      gray: gray,
-      brightness: brightness,
-      panelBackground: panelBackground,
-      radius: radius,
-      scaling: scaling,
-      hasBackground: hasBackground,
-    );
-    final parent = FortalTheme.maybeOf(context);
-    final data = _resolveFortalTheme(config, parent: parent);
+    final view = View.maybeOf(context);
+    if (MediaQuery.maybeOf(context) == null && view != null) {
+      return MediaQuery.fromView(
+        view: view,
+        child: Builder(builder: _build),
+      );
+    }
+    return _build(context);
+  }
+
+  Widget _build(BuildContext context) {
+    final inherited = context.dependOnInheritedWidgetOfExactType<FortalTheme>();
+    final parent = inherited?.data;
+    final baseParent = inherited?.baseTheme ?? parent;
+    final darkParent = inherited?.darkTheme ?? parent;
+    FortalThemeData resolve(
+      FortalThemeConfig? supplied,
+      FortalThemeData? ancestor,
+      Brightness fallback,
+    ) {
+      final config = supplied ?? const FortalThemeConfig();
+      return _resolveFortalTheme(
+        FortalThemeConfig(
+          accent: accent ?? config.accent,
+          gray: gray ?? config.gray,
+          brightness: config.brightness ?? ancestor?.brightness ?? fallback,
+          panelBackground: panelBackground ?? config.panelBackground,
+          radius: radius ?? config.radius,
+          scaling: scaling ?? config.scaling,
+          hasBackground: hasBackground ?? config.hasBackground,
+        ),
+        parent: ancestor,
+      );
+    }
+
+    final base = resolve(theme, baseParent, Brightness.light);
+    final dark = darkTheme == null && theme != null
+        ? base
+        : resolve(darkTheme, darkParent, Brightness.dark);
+    final useDark = mode == null && inherited != null
+        ? inherited.usesDarkTheme
+        : switch (mode ?? FortalThemeMode.system) {
+            FortalThemeMode.light => false,
+            FortalThemeMode.dark => true,
+            FortalThemeMode.system =>
+              (MediaQuery.maybePlatformBrightnessOf(context) ??
+                      Brightness.light) ==
+                  Brightness.dark,
+          };
+    final data = useDark ? dark : base;
     final tokens = buildFortalScopeTokens(data);
     Widget result = MixScope(
       tokens: tokens,
@@ -117,6 +165,9 @@ class FortalScope extends StatelessWidget {
 
     return FortalTheme(
       data: data,
+      baseTheme: base,
+      darkTheme: dark,
+      useDarkTheme: useDark,
       orderOfModifiers: orderOfModifiers,
       child: result,
     );
@@ -148,11 +199,18 @@ class FortalTheme extends InheritedTheme {
   const FortalTheme({
     super.key,
     required this.data,
+    this.baseTheme,
+    this.darkTheme,
+    this.useDarkTheme,
     this.orderOfModifiers,
     required super.child,
   });
 
   final FortalThemeData data;
+  final FortalThemeData? baseTheme;
+  final FortalThemeData? darkTheme;
+  final bool? useDarkTheme;
+  bool get usesDarkTheme => useDarkTheme ?? data.isDark;
   final List<Type>? orderOfModifiers;
 
   /// Returns the closest resolved Fortal theme.
@@ -182,6 +240,9 @@ class FortalTheme extends InheritedTheme {
   @override
   Widget wrap(BuildContext context, Widget child) => FortalTheme(
     data: data,
+    baseTheme: baseTheme,
+    darkTheme: darkTheme,
+    useDarkTheme: useDarkTheme,
     orderOfModifiers: orderOfModifiers,
     child: MixScope(
       tokens: buildFortalScopeTokens(data),
@@ -191,5 +252,9 @@ class FortalTheme extends InheritedTheme {
   );
 
   @override
-  bool updateShouldNotify(FortalTheme oldWidget) => data != oldWidget.data;
+  bool updateShouldNotify(FortalTheme oldWidget) =>
+      data != oldWidget.data ||
+      baseTheme != oldWidget.baseTheme ||
+      darkTheme != oldWidget.darkTheme ||
+      useDarkTheme != oldWidget.useDarkTheme;
 }

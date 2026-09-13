@@ -23,7 +23,7 @@ void main() {
 
           await tester.pumpWidget(
             FortalScope(
-              brightness: .light,
+              mode: .light,
               scaling: scaling,
               radius: radius,
               child: WidgetsApp(
@@ -119,7 +119,7 @@ void main() {
 
     await tester.pumpWidget(
       FortalScope(
-        brightness: .light,
+        mode: .light,
         accent: .gray,
         gray: .slate,
         child: WidgetsApp(

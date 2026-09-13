@@ -101,7 +101,6 @@ Widget createRemixPreview(Widget child) {
       pageBuilder: (context, animation, secondaryAnimation) => builder(context),
     ),
     builder: (context, navigator) => FortalScope(
-      brightness: MediaQuery.platformBrightnessOf(context),
       child: navigator!,
     ),
     home: ColoredBox(

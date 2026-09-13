@@ -1356,7 +1356,7 @@ Future<void> _pump(
   MaterialApp(
     home: FortalScope(
       scaling: scaling,
-      brightness: brightness,
+      mode: brightness == Brightness.dark ? .dark : .light,
       child: Scaffold(
         body: DefaultTextStyle(style: ambient, child: child),
       ),
@@ -1413,7 +1413,7 @@ _accentTokens(WidgetTester tester, Brightness brightness) async {
   result;
   await tester.pumpWidget(
     FortalScope(
-      brightness: brightness,
+      mode: brightness == Brightness.dark ? .dark : .light,
       child: Builder(
         builder: (context) {
           Color token(ColorToken value) => MixScope.tokenOf(value, context);
@@ -1444,7 +1444,7 @@ Future<Color> _resolveToken(
   late Color result;
   await tester.pumpWidget(
     FortalScope(
-      brightness: brightness,
+      mode: brightness == Brightness.dark ? .dark : .light,
       child: Builder(
         builder: (context) {
           result = MixScope.tokenOf(token, context);

@@ -55,7 +55,7 @@ void main() {
         late Color gray12;
         await tester.pumpWidget(
           FortalScope(
-            brightness: brightness,
+            mode: brightness == Brightness.dark ? .dark : .light,
             scaling: scaling,
             child: Builder(
               builder: (context) {
@@ -200,7 +200,7 @@ void main() {
       FortalScope(
         accent: .red,
         gray: .mauve,
-        brightness: .dark,
+        mode: .dark,
         radius: .large,
         child: Builder(
           builder: (context) {
@@ -374,7 +374,7 @@ _captureRecipeTokens(
 
   await tester.pumpWidget(
     FortalScope(
-      brightness: brightness,
+      mode: brightness == Brightness.dark ? .dark : .light,
       scaling: scaling,
       child: Builder(
         builder: (context) {

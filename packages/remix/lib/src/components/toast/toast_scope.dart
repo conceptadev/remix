@@ -158,8 +158,8 @@ RemixToastHandle showRemixToast(BuildContext context, RemixToastData toast) {
 /// Hosts queued, nonmodal toasts styled with [RemixToast].
 ///
 /// Place one scope above the app's `Navigator` so every route, including
-/// dialogs, can reach it: with `MaterialApp`, in `builder` inside
-/// [Overlay.wrap]. A scope in `MaterialApp.home` only reaches the home route.
+/// dialogs, can reach it: with `WidgetsApp`, in `builder` inside
+/// [Overlay.wrap]. A scope in `WidgetsApp.home` only reaches the home route.
 /// Toasts render through one overlay portal, so they inherit the scope's
 /// [MixScope] tokens and [Directionality] and update live when those change.
 ///

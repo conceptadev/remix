@@ -115,12 +115,19 @@ the child of `WidgetsApp.builder` with `AcmeScope`. Routes and dialogs then
 inherit its tokens and text defaults. See `lib/ui/theme/theme_scope.dart` for
 the scope example.
 
-For both presets, the application owns light, dark, or system appearance.
-Resolve system brightness in `WidgetsApp.builder`, then pass light/dark data to
-the default scope or `brightness` to the Fortal scope. Scopes take `child`; use a
-Flutter `Builder` below a scope only when its callback must read the newly
-installed theme. The CLI installs theme files, not a complete app host or an
-appearance picker. See the [application host standard](../../docs/open-code.mdx#application-host-and-appearance).
+Both presets support `theme`, `darkTheme`, and `mode` on their generated scope.
+The old scope `data` and `brightness` parameters and config `createScope`
+shortcut are removed. Update application-owned callers to this API.
+With no configuration, roots use the generated light/dark pair and follow the
+system. Nested scopes inherit the pair and active selection. A custom `theme`
+without `darkTheme` is used in both modes; supplying `darkTheme` alone keeps the
+base default. Both presets generate `AcmeThemeData.light()`, `.dark()`, and
+`AcmeThemeMode` (`system`, `light`, `dark`). Use `AcmeThemeScope` for default and
+`AcmeScope` for Fortal, with your configured prefix.
+
+Place the scope in `WidgetsApp.builder` above the Navigator. The CLI installs
+theme files, not a complete app host or appearance picker. See the
+[application host standard](../../docs/open-code.mdx#application-host-and-appearance).
 
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 Use an application prefix such as `Ui` or `Acme`.

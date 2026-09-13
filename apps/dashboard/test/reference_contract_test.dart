@@ -398,7 +398,7 @@ void main() {
         ),
       );
 
-      expect(_segmentedValues<ThemeMode>(tester), ThemeMode.values);
+      expect(_segmentedValues<FortalThemeMode>(tester), FortalThemeMode.values);
       expect(
         _segmentedValues<FortalPanelBackground>(tester),
         FortalPanelBackground.values,

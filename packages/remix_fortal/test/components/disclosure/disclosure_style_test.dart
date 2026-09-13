@@ -137,7 +137,7 @@ Future<DisclosureSpec> _resolve(
   late DisclosureSpec result;
   await tester.pumpWidget(
     FortalScope(
-      brightness: .light,
+      mode: .light,
       child: WidgetsApp(
         color: Colors.black,
         builder: (context, child) => WidgetStateStyleOverride(

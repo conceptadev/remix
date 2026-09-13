@@ -29,7 +29,7 @@ void main() {
               (tester) async {
                 await tester.pumpRemixApp(
                   FortalScope(
-                    brightness: brightness,
+                    mode: brightness == Brightness.dark ? .dark : .light,
                     child: FortalToast(
                       variant: variant,
                       size: size,

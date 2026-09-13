@@ -97,7 +97,10 @@ class _ViewportFrame extends StatelessWidget {
         localizationsDelegates: const [DefaultMaterialLocalizations.delegate],
         builder: (context, navigator) => Theme(
           data: ThemeData(brightness: brightness),
-          child: FortalScope(brightness: brightness, child: navigator!),
+          child: FortalScope(
+            mode: brightness == Brightness.dark ? .dark : .light,
+            child: navigator!,
+          ),
         ),
         home: Material(
           type: MaterialType.transparency,

@@ -66,6 +66,10 @@ enum FortalScaling {
   final double factor;
 }
 
+/// Appearance selection for a Fortal scope. A root defaults to system;
+/// a nested scope inherits its parent's selection when mode is omitted.
+enum FortalThemeMode { system, light, dark }
+
 /// Partial theme values applied by a [FortalScope].
 @immutable
 class FortalThemeConfig {
@@ -129,19 +133,6 @@ class FortalThemeConfig {
     scaling,
     hasBackground,
   );
-
-  Widget createScope({List<Type>? orderOfModifiers, required Widget child}) =>
-      FortalScope(
-        accent: accent,
-        gray: gray,
-        brightness: brightness,
-        panelBackground: panelBackground,
-        radius: radius,
-        scaling: scaling,
-        hasBackground: hasBackground,
-        orderOfModifiers: orderOfModifiers,
-        child: child,
-      );
 }
 
 /// Fully resolved theme values inherited by a Fortal subtree.
@@ -156,6 +147,42 @@ class FortalThemeData extends FortalThemeConfig {
     required FortalScaling super.scaling,
     required bool super.hasBackground,
   });
+
+  /// The preset's light appearance, with editable design options.
+  const FortalThemeData.light({
+    FortalAccentColor accent = FortalAccentColor.indigo,
+    FortalGrayColor gray = FortalGrayColor.slate,
+    FortalPanelBackground panelBackground = FortalPanelBackground.translucent,
+    FortalRadius radius = FortalRadius.medium,
+    FortalScaling scaling = FortalScaling.percent100,
+    bool hasBackground = true,
+  }) : this(
+         accent: accent,
+         gray: gray,
+         brightness: Brightness.light,
+         panelBackground: panelBackground,
+         radius: radius,
+         scaling: scaling,
+         hasBackground: hasBackground,
+       );
+
+  /// The preset's dark appearance, with editable design options.
+  const FortalThemeData.dark({
+    FortalAccentColor accent = FortalAccentColor.indigo,
+    FortalGrayColor gray = FortalGrayColor.slate,
+    FortalPanelBackground panelBackground = FortalPanelBackground.translucent,
+    FortalRadius radius = FortalRadius.medium,
+    FortalScaling scaling = FortalScaling.percent100,
+    bool hasBackground = true,
+  }) : this(
+         accent: accent,
+         gray: gray,
+         brightness: Brightness.dark,
+         panelBackground: panelBackground,
+         radius: radius,
+         scaling: scaling,
+         hasBackground: hasBackground,
+       );
 
   @override
   FortalAccentColor get accent => super.accent!;

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:open_code_fixture/main.dart';
@@ -56,12 +57,14 @@ void main() {
 }
 
 Widget _host(Widget child) {
-  return MaterialApp(
-    home: AcmeScope(
-      child: Scaffold(
-        body: Center(child: SizedBox(width: 640, height: 480, child: child)),
-      ),
+  return WidgetsApp(
+    color: const Color(0xFFFFFFFF),
+    pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+      settings: settings,
+      pageBuilder: (context, _, _) => builder(context),
     ),
+    builder: (context, navigator) => AcmeScope(child: navigator!),
+    home: Center(child: SizedBox(width: 640, height: 480, child: child)),
   );
 }
 

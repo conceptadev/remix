@@ -306,7 +306,7 @@ Future<_FortalTokenSnapshot> _captureFortalTokens(
 
   await tester.pumpWidget(
     FortalScope(
-      brightness: brightness == .dark ? .dark : .light,
+      mode: brightness == Brightness.dark ? .dark : .light,
       child: MaterialApp(
         home: Builder(
           builder: (context) {

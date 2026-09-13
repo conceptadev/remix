@@ -4,6 +4,9 @@ import 'package:remix/remix.dart';
 
 import 'tokens.dart';
 
+/// Appearance selection for an application-owned theme.
+enum UiThemeMode { system, light, dark }
+
 /// The concrete values behind [UiTokens] for one brightness.
 ///
 /// This is application-owned data: change a hex value, add a field, or drop
@@ -13,6 +16,7 @@ import 'tokens.dart';
 class UiThemeData {
   /// Creates a theme with an explicit value for every token.
   const UiThemeData({
+    this.brightness = Brightness.light,
     required this.background,
     required this.foreground,
     required this.primary,
@@ -37,7 +41,8 @@ class UiThemeData {
 
   /// The neutral light theme.
   const UiThemeData.light()
-    : background = const Color(0xFFFFFFFF),
+    : brightness = Brightness.light,
+      background = const Color(0xFFFFFFFF),
       foreground = const Color(0xFF171717),
       primary = const Color(0xFF171717),
       primaryForeground = const Color(0xFFFAFAFA),
@@ -60,7 +65,8 @@ class UiThemeData {
 
   /// The neutral dark theme.
   const UiThemeData.dark()
-    : background = const Color(0xFF0A0A0A),
+    : brightness = Brightness.dark,
+      background = const Color(0xFF0A0A0A),
       foreground = const Color(0xFFFAFAFA),
       primary = const Color(0xFFFAFAFA),
       primaryForeground = const Color(0xFF171717),
@@ -80,6 +86,9 @@ class UiThemeData {
       chart4 = const Color(0xFFC084FC),
       chart5 = const Color(0xFFFB7185),
       radius = const Radius.circular(8);
+
+  /// Brightness of these concrete values, independent of the selection mode.
+  final Brightness brightness;
 
   /// Value for [UiTokens.background].
   final Color background;
@@ -171,6 +180,7 @@ class UiThemeData {
 
   /// Returns a copy of this theme with the given values replaced.
   UiThemeData copyWith({
+    Brightness? brightness,
     Color? background,
     Color? foreground,
     Color? primary,
@@ -192,6 +202,7 @@ class UiThemeData {
     Color? chart5,
     Radius? radius,
   }) => UiThemeData(
+    brightness: brightness ?? this.brightness,
     background: background ?? this.background,
     foreground: foreground ?? this.foreground,
     primary: primary ?? this.primary,
@@ -215,6 +226,7 @@ class UiThemeData {
   );
 
   List<Object?> get _fields => [
+    brightness,
     background,
     foreground,
     primary,

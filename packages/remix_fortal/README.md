@@ -90,6 +90,30 @@ selects another token size. This is a deliberate deviation from Radix's
 ambient CSS `1em` behavior. The sole ambient field retained by Fortal
 typography is the foreground of transparent, non-accent `FortalCode.ghost`.
 
+## Light, dark, and system appearance
+
+`FortalScope` supplies light and dark preset defaults and follows the system at
+the root. Nested scopes inherit the configured pair and active selection.
+Customize the pair with `theme` and `darkTheme`, or force `mode` to `.light` or
+`.dark`. `mode: .system` follows live platform brightness changes.
+
+```dart
+FortalScope(
+  theme: const FortalThemeData.light(accent: FortalAccentColor.indigo),
+  darkTheme: const FortalThemeData.dark(accent: FortalAccentColor.indigo),
+  mode: FortalThemeMode.system,
+  child: child,
+)
+```
+
+Supplying only `theme` makes it the fallback for both modes. Supplying only
+`darkTheme` retains the default or inherited base theme. Direct scope options
+such as `accent` apply to both appearances. Appearance selection uses `mode`;
+the scope no longer accepts a `brightness` parameter.
+
+Installed Fortal source uses your prefix: `AcmeScope`, `AcmeThemeData`, and
+`AcmeThemeMode` expose the same behavior. No Material application host is needed.
+
 ## Customizing Fortal styles
 
 Fortal widgets call the matching `fortal*Style` recipe internally. Use those

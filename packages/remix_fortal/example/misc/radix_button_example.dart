@@ -21,7 +21,7 @@ class FortalButtonExampleApp extends StatelessWidget {
       builder: (context, child) => FortalScope(
         accent: FortalAccentColor.indigo,
         gray: FortalGrayColor.slate,
-        brightness: .light,
+        mode: .light,
         child: Overlay.wrap(
           child: RemixToastScope(style: fortalToastStyle(), child: child!),
         ),

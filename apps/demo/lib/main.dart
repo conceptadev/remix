@@ -46,7 +46,7 @@ class FortalThemeAddon extends ThemeAddon<ThemeData> {
           return Theme(
             data: theme,
             child: FortalScope(
-              brightness: theme.brightness,
+              mode: theme.brightness == Brightness.dark ? .dark : .light,
               child: ColoredBox(
                 color: theme.scaffoldBackgroundColor,
                 child: DefaultTextStyle(

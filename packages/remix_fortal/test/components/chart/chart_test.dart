@@ -17,7 +17,7 @@ void main() {
       await tester.pumpWidget(
         FortalScope(
           accent: .orange,
-          brightness: .dark,
+          mode: .dark,
           child: Builder(
             builder: (context) {
               publicPalette = resolveFortalChartPalette(context);

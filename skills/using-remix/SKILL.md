@@ -93,7 +93,7 @@ bare-`Text` fallback:
 FortalScope(
   accent: FortalAccentColor.indigo,
   gray: FortalGrayColor.slate,
-  brightness: Brightness.light,
+  mode: FortalThemeMode.system,
   child: WidgetsApp(
     color: const Color(0xFFFFFFFF),
     builder: (_, _) => const MyScreen(),
@@ -120,11 +120,46 @@ WidgetsApp(
 
 The builder wraps the Navigator, so pushed routes and overlays inherit the
 scope. Use `WidgetsApp` in documentation and runnable examples; do not introduce
-Material application hosts. A nearer `DefaultTextStyle` can override bare text.
+Material application hosts. A default WidgetsApp preserves an outer scope’s
+text defaults. An explicit WidgetsApp `textStyle` or a nearer `DefaultTextStyle`
+can override them; placing the scope in the builder establishes its defaults
+below the app’s text style.
 
 A nested `FortalScope` re-scopes tokens only; it does not restate the courtesy
 bare-`Text` run. Ordinary `Remix*` widgets with fully custom styles do not need
 `FortalScope`.
+
+## Theme selection
+
+Use `theme`, `darkTheme`, and `mode`; do not introduce a `lightTheme` parameter
+or a new application wrapper. Keep `WidgetsApp` as the host.
+
+- A root with neither theme supplies preset light/dark defaults and follows the system.
+- Supplying only `theme` uses that value in both modes. Supplying only `darkTheme`
+  retains the default or inherited base theme. Direct scope design overrides
+  such as `accent` apply to both appearances.
+- An empty nested scope inherits the configured pair and active selection.
+  An explicit nested `mode` can select from the inherited pair.
+- The app owns the mode preference and persistence. `mode: .system` reacts to
+  platform brightness changes; no application brightness observer is needed.
+- Generated default scopes use `<Prefix>ThemeScope`; generated Fortal scopes use
+  `<Prefix>Scope`. Both export `<Prefix>ThemeData` and `<Prefix>ThemeMode`.
+- No compatibility aliases: scope `data`, scope `brightness`, and config
+  `createScope` are removed. Use `theme` for fixed values and `mode` to select
+  appearance. Brightness remains a resolved theme-data property.
+
+```dart
+FortalScope(
+  theme: const FortalThemeData.light(),
+  darkTheme: const FortalThemeData.dark(),
+  mode: FortalThemeMode.system,
+  child: child,
+)
+```
+
+These APIs are the required standard. Migrate older installed scopes and their
+callers together; do not add compatibility aliases. Preserve application-owned
+custom tokens while updating generated source.
 
 ## Provide only the host capabilities in use
 
@@ -138,8 +173,10 @@ Remix composes inside the caller's host. Do not invent `RemixApp`,
 | Menu, select, popover, tooltip | An `Overlay`; use `Overlay.wrap` when no navigator is needed |
 | `showRemixDialog` or `showRemixAlertDialog` | A caller-owned `Navigator` |
 
-`MaterialApp`, `CupertinoApp`, `WidgetsApp`, and router-based hosts are all
-valid. A host with routing commonly provides both a navigator and its overlay.
+Use `WidgetsApp` for new application scaffolding and examples, including routed
+applications. Existing Material or Cupertino applications can host Remix at
+runtime; that interoperability does not change the authoring standard. A routed
+WidgetsApp provides a navigator and its overlay.
 
 For a portal-only subtree:
 

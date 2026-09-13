@@ -23,6 +23,7 @@ const _fixtureAppFiles = <String>[
   'analysis_options.yaml',
   'lib/main.dart',
   'test/open_code_test.dart',
+  'test/theme_modes_test.dart',
 ];
 
 /// The registry items the CLI installs, in invocation order.

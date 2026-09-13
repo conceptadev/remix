@@ -275,7 +275,7 @@ class _DarkHostState extends State<DarkHost> {
       // do not read tokens, so nesting this over `MixScope.empty` changes
       // nothing for them.
       child: UiThemeScope(
-        data: _bridgedTheme(theme),
+        theme: _bridgedTheme(theme),
         child: DefaultTextStyle(
           style: theme.body,
           child: ColoredBox(color: theme.paper, child: widget.child),
