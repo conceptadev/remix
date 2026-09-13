@@ -242,7 +242,7 @@ expect(tester.getSize(find.byType(AcmeButton)).height, 48.0);
 
 Test harness notes:
 
-- Pump inside the system scope: `AcmeScope(child: MaterialApp(...))` or
+- Pump inside the system scope: `AcmeScope(child: WidgetsApp(...))` or
   vice versa — put the scope where the example puts it.
 - **`pumpAndSettle` hangs forever with an animating spinner** — use
   `tester.pump(const Duration(milliseconds: 100))` in loading tests.

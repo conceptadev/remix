@@ -35,7 +35,7 @@ release. A plain `flutter pub add remix` does not select an unpublished checkout
 Replace `lib/main.dart` with this example:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 void main() => runApp(const ExampleApp());
@@ -48,13 +48,15 @@ class ExampleApp extends StatelessWidget {
     final button = ButtonStyler()
         .padding(.horizontal(16))
         .padding(.vertical(10))
-        .color(Colors.blue)
+        .color(const Color(0xFF2196F3))
         .borderRadius(.circular(8))
-        .label(.color(Colors.white));
+        .label(.color(const Color(0xFFFFFFFF)));
 
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
+    return WidgetsApp(
+      color: const Color(0xFFFFFFFF),
+      builder: (context, child) => ColoredBox(
+        color: const Color(0xFFFFFFFF),
+        child: Center(
           child: button(
             label: 'Click me',
             onPressed: () => debugPrint('Button pressed'),
@@ -70,8 +72,8 @@ Run `flutter run`. You should see a blue button with a white label, and pressing
 it should print `Button pressed` in the debug console.
 
 `ButtonStyler` holds the appearance. Calling it produces a `RemixButton`;
-your callback supplies the application action. `MaterialApp` and `Scaffold`
-are convenient hosts here, not requirements imposed by Remix.
+your callback supplies the application action. `WidgetsApp` supplies the Flutter
+host; Remix supplies the component and its styling.
 
 ## Next steps
 

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
@@ -8,11 +9,19 @@ void main() {
   // Enable semantics for web testing/automation
   WidgetsFlutterBinding.ensureInitialized();
   // ignore: deprecated_member_use
-  WidgetsBinding.instance.ensureSemantics();
+  if (kIsWeb) WidgetsBinding.instance.ensureSemantics();
 
   runApp(
-    const MaterialApp(
-      home: Scaffold(backgroundColor: Colors.white, body: MenuExample()),
+    WidgetsApp(
+      color: Colors.white,
+      debugShowCheckedModeBanner: false,
+      textStyle: const TextStyle(color: Color(0xFF202020), fontSize: 16),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+        settings: settings,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            builder(context),
+      ),
+      home: const ColoredBox(color: Colors.white, child: MenuExample()),
     ),
   );
 }
@@ -72,20 +81,6 @@ class _MenuExampleState extends State<MenuExample> {
               debugPrint('RemixMenu: $value');
             },
             controller: controller,
-          ),
-          const SizedBox(height: 40),
-          // Material PopupMenuButton for comparison
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              debugPrint('Material Menu: $value');
-            },
-            itemBuilder: (context) => const [
-              PopupMenuItem(value: 'History', child: Text('History')),
-              PopupMenuItem(value: 'Settings', child: Text('Settings')),
-              PopupMenuDivider(),
-              PopupMenuItem(value: 'Logout', child: Text('Logout')),
-            ],
-            child: const Text('Open Material Menu'),
           ),
         ],
       ),

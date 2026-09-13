@@ -81,8 +81,9 @@ def prepare(root):
 
 if __name__ == "__main__":
     from check_tutorial_assets import check_assets, check_content
+    from check_example_hosts import check_hosts
     root = Path(__file__).resolve().parents[1]
-    failures = check_assets(root) + check_content(root)
+    failures = check_assets(root) + check_content(root) + check_hosts(root)
     if failures:
         raise SystemExit("Documentation source validation failed:\n" + "\n".join(failures))
     prepare(root)

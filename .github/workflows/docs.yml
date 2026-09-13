@@ -52,6 +52,8 @@ jobs:
       - name: Validate documentation sources
         run: |
           dart run tool/generate_fortal_catalog.dart --check
+          python3 tool/check_example_hosts.py
+          python3 -m unittest discover -s tool -p 'test_example_hosts.py'
           python3 tool/check_tutorial_assets.py
           python3 -m unittest discover -s tool -p 'test_tutorial_assets.py'
       - name: Type check documentation

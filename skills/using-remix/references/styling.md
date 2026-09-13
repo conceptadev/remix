@@ -160,10 +160,9 @@ class AppStyles {
 RemixButton(label: 'Save', onPressed: save, style: AppStyles.primaryButton)
 ```
 
-### Material Dark Mode Interoperability
+### Dynamic brightness
 
-When the caller uses `MaterialApp`, keep its theme brightness aligned with
-`FortalScope`. `MaterialApp` and `Scaffold` are not Remix requirements.
+Use `WidgetsApp` and pass the selected brightness to `FortalScope`.
 
 ```dart
 class _MyAppState extends State<MyApp> {
@@ -171,15 +170,19 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(brightness: _brightness),
+    return WidgetsApp(
+      color: const Color(0xFFFFFFFF),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+    settings: settings,
+    pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+  ),
       builder: (context, child) => FortalScope(
         accent: FortalAccentColor.indigo,
         brightness: _brightness,
         child: child!,
       ),
-      home: Scaffold(
-        body: FortalSwitch(
+      home: Center(
+        child: FortalSwitch(
           selected: _brightness == Brightness.dark,
           onChanged: (dark) => setState(() =>
               _brightness = dark ? Brightness.dark : Brightness.light),

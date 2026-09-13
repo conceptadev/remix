@@ -17,11 +17,11 @@ Use a [dialog](/components/dialog) instead when the user must respond before con
 
 ## Basic implementation
 
-Place one `RemixToastScope` above your app's `Navigator`, so every route, including dialogs, can reach it. With `MaterialApp`, put it in `builder` inside `Overlay.wrap`, which gives toasts their own overlay above every route. No `Scaffold` is required.
+Place one `RemixToastScope` above your app's `Navigator`, so every route, including dialogs, can reach it. With `WidgetsApp`, put it in `builder` inside `Overlay.wrap`, which gives toasts their own overlay above every route. No `Scaffold` is required.
 
 <CodeGroup title="Scope placement" defaultLanguage="dart">
 ```dart
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'ui/ui.dart';
 
@@ -30,7 +30,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return WidgetsApp(
+      color: const Color(0xFFF8FAFC),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+        ),
       // Theme and toast scopes belong in `builder`, above the Navigator, so
       // every route, including dialogs, can reach them.
       builder: (context, child) => FortalScope(
@@ -49,7 +54,7 @@ Show a toast from any event callback below the scope:
 
 <CodeGroup title="Showing a toast" defaultLanguage="dart">
 ```dart
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'ui/ui.dart';
 

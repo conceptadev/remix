@@ -7,6 +7,7 @@ import 'package:demo/components/skeleton.dart';
 import 'package:demo/components/toast.dart';
 import 'package:demo/main.directories.g.dart';
 import 'package:demo/main.dart';
+import 'package:demo/previews/preview_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix_fortal/remix_fortal.dart';
@@ -53,7 +54,8 @@ void main() {
   });
 
   Future<void> show(WidgetTester tester, Widget child) async {
-    await tester.pumpWidget(MaterialApp(home: FortalScope(child: child)));
+    await tester.pumpWidget(createRemixPreview(child));
+    expect(find.byType(MaterialApp), findsNothing);
     await tester.pump(const Duration(milliseconds: 100));
     expect(tester.takeException(), isNull);
   }

@@ -231,10 +231,8 @@ This is analogous to Material's `bodyMedium`; it is not the source of a Fortal
 typography run, which is always pinned from Fortal tokens. Placement therefore
 matters for bare `Text`:
 
-| Host | Put the scope |
-| --- | --- |
-| `WidgetsApp`, router, or a custom host | Above the app |
-| `MaterialApp`, `CupertinoApp` | In `builder:` |
+For a simple `WidgetsApp` builder, the scope can wrap the app. For a routed app,
+put it in `builder` above the Navigator.
 
 A **nested** scope re-scopes tokens only. It does not restate the courtesy
 bare-`Text` run, so wrapping a subtree in
@@ -242,18 +240,18 @@ bare-`Text` run, so wrapping a subtree in
 without changing the surrounding Flutter text inheritance.
 
 ```dart
-// MaterialApp / CupertinoApp
-MaterialApp(
+WidgetsApp(
+  color: const Color(0xFFFFFFFF),
+  pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+    settings: settings,
+    pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+  ),
   builder: (context, child) => FortalScope(child: child!),
   home: const MyScreen(),
 )
 ```
 
-Those apps pass `WidgetsApp` their own root `DefaultTextStyle`, which lands
-below anything wrapping the app. A scope placed above `MaterialApp` still
-supplies tokens, but its courtesy bare-`Text` fallback is overridden.
-`builder:` sits below that style and above the `Navigator`, so pushed routes
-and raw `Overlay` entries receive the Fortal fallback.
+The builder wraps the Navigator so routes and overlays inherit the scope.
 
 Normal Flutter inheritance still applies to bare `Text` below the scope. A
 nearer `DefaultTextStyle`, including one from `Material` or `Scaffold`, wins

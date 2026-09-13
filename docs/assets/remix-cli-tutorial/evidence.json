@@ -53,16 +53,16 @@
   "source": [
     {
       "preset": "default",
-      "main_sha256": "3363bee62ba14a4dcf7ca554424038ef1de5cdf663ca9f392e367497afc1dada",
-      "test_sha256": "4e658d39ca93c2a63259ec6bacd55aeef1aaa87660f3b7457a34069f0f0354f6"
+      "main_sha256": "0b06853815861994a17ffa03cb1ae6884585b53d895d00a8d8d763002848f77c",
+      "test_sha256": "c480e6f5b025bad32d236dc22ae66403e45ab946953a0f2d70b78f7b533b4d92"
     },
     {
       "preset": "fortal",
-      "main_sha256": "06f6da57e236173a36a8fd1356040ef8e9e62e209cfe975bd2ec83b3b7c50e97",
-      "test_sha256": "cd0d26434ccc79e629f95e89ce1e42b4985d2e180d00ea4bdee0990b329222a4"
+      "main_sha256": "ef8fcb230d6e250eaab8e54da8f2f83a8d9ad8388d374380312f84d9debb3a34",
+      "test_sha256": "37b7be5ce79290a951544184372a618b969f5ba5f3af27da4bacf0932f50701f"
     }
   ],
-  "archive_sha256": "119bfedd657e6933736875d8b70909e049aa5f9c3f882da9eece0c08c062716a",
+  "archive_sha256": "3a560ad160d1e92cb57e67b70200a0454bea49b2f18e6ad96792b6ab680402c3",
   "first_render_source_sha256": "f8f43244e34277e0c7b27d92def68ced08fa93b0852e56dd20beb5a33821f10e",
   "validation": {
     "fresh_default_replay": "Passed project creation, installation, first render, composition, customization, diff preservation, ordinary add preservation, analysis, four tests, and release web builds.",
@@ -430,5 +430,11 @@
       "file": "tutorial-preview.jpg",
       "sha256": "0a841b84199550677fda1ca7345da17103e6a60a73648f7d9065140f09ea315c"
     }
+  },
+  "widgets_app_migration": {
+    "date": "2026-09-12",
+    "changes": "Both downloadable apps now use WidgetsApp with PageRouteBuilder and inherited theme scopes. Workflow tests assert no MaterialApp host.",
+    "screenshots": "Original captures retained; not recaptured for this host migration.",
+    "validation": "Both downloaded projects passed dependency resolution, analysis, and all four workflow tests against the local Remix checkout."
   }
 }

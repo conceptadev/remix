@@ -357,8 +357,8 @@ lib/ui/
     └── button.g.dart
 ```
 
-Place `AcmeScope` below the application host. For a routed Material app, wrap
-the child of `MaterialApp.builder` with `AcmeScope`. Routes and dialogs then
+Place `AcmeScope` below the application host. For a routed `WidgetsApp`, wrap
+the child of `WidgetsApp.builder` with `AcmeScope`. Routes and dialogs then
 inherit its tokens and text defaults. The scope example lives in
 `lib/ui/theme/theme_scope.dart`.
 
@@ -375,6 +375,44 @@ The source is deliberately editable. Change the token map, add an accent or
 variant, or merge a one-instance styler last. Future CLI versions never merge
 over those decisions automatically: inspect `remix add <item> --diff`, then
 use `--overwrite` only when you want the new authored file wholesale.
+
+## Application host and appearance
+
+Open Code documentation and runnable examples use `WidgetsApp`. For a routed
+application, install the generated theme scope in `WidgetsApp.builder` and pass
+its `child` through. That child is the Navigator; keeping the scope above it
+makes the active theme available to routes, dialogs, and overlays. See the
+[complete routed host example](/fortal#scope-placement).
+
+The application owns the appearance preference: light, dark, or system. Resolve
+system appearance from `MediaQuery.platformBrightnessOf(context)` inside the
+app builder so platform changes rebuild the theme. An explicit light or dark
+preference takes precedence over the system value.
+
+The installed presets currently expose different theme APIs:
+
+| Preset | Supply the resolved appearance |
+| --- | --- |
+| `default` | Pass `AcmeThemeData.light()` or `AcmeThemeData.dark()` to `AcmeThemeScope(data: ...)` |
+| `fortal` | Pass the resolved `Brightness` to `AcmeScope(brightness: ...)`; keep accent, gray, radius, and scaling consistent across modes |
+
+Use the configured prefix in place of `Acme`. The CLI installs the theme layer;
+it does not currently generate a complete application host or appearance picker.
+The [downloadable tutorial apps](/tutorials/settings-screen) demonstrate manual
+light/dark switching with both presets.
+
+Generated scopes take a `child`. `WidgetsApp.builder` handles placement; it does
+not need a matching builder constructor on the scope. If a widget must read the
+newly installed theme while building, put a Flutter `Builder` below the scope
+and use that callback's context. The app builder's own context is above the
+scope it returns.
+
+The reference starter contract is to preserve the selected theme across routes,
+update visible overlays when appearance changes, support system appearance
+changes, and preserve application-owned theme edits during regeneration. Theme
+selection and persistence belong to the application; component recipes consume
+the resolved theme. A shared `RemixScope` or theme base class is not currently
+part of the generated API.
 
 ## The three levels of customization
 

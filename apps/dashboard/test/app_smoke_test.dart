@@ -33,7 +33,8 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    expect(find.byType(MaterialApp), findsOneWidget);
+    expect(find.byType(WidgetsApp), findsOneWidget);
+    expect(find.byType(MaterialApp), findsNothing);
     // The shell replaced Material's Scaffold/Drawer with the open-code
     // FortalSidebarLayout template; see `compact layout uses a sheet
     // without rendering overflows` below for its compact-sheet behavior.
@@ -49,7 +50,7 @@ void main() {
   testWidgets('uses a text-only Dashboard brand', (tester) async {
     await tester.pumpWidget(const DashboardApp());
 
-    final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+    final app = tester.widget<WidgetsApp>(find.byType(WidgetsApp));
     expect(app.title, 'Dashboard');
 
     final brand = find.byKey(const ValueKey('dashboard-brand'));
@@ -830,12 +831,12 @@ void main() {
   });
 
   testWidgets(
-    'quick toggle keeps Material and Fortal brightness synchronized',
+    'quick toggle changes Fortal brightness without a Material host',
     (tester) async {
       await tester.pumpWidget(const DashboardApp());
       final shell = tester.element(find.byType(DashboardShell));
 
-      expect(Theme.of(shell).brightness, FortalTheme.of(shell).brightness);
+      expect(find.byType(MaterialApp), findsNothing);
       final before = FortalTheme.of(shell).isDark;
 
       await tester.tap(find.byKey(const ValueKey('theme-quick-toggle')).first);
@@ -843,10 +844,7 @@ void main() {
 
       final updatedShell = tester.element(find.byType(DashboardShell));
       expect(FortalTheme.of(updatedShell).isDark, isNot(before));
-      expect(
-        Theme.of(updatedShell).brightness,
-        FortalTheme.of(updatedShell).brightness,
-      );
+      expect(find.byType(MaterialApp), findsNothing);
     },
   );
 
@@ -857,7 +855,7 @@ void main() {
 
     final shell = tester.element(find.byType(DashboardShell));
     expect(FortalTheme.of(shell).isDark, isTrue);
-    expect(Theme.of(shell).brightness, Brightness.dark);
+    expect(find.byType(MaterialApp), findsNothing);
   });
 
   testWidgets('theme panel changes the resolved accent live', (tester) async {

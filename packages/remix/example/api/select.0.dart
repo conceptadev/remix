@@ -3,8 +3,16 @@ import 'package:remix/remix.dart';
 
 void main() {
   runApp(
-    const MaterialApp(
-      home: Scaffold(backgroundColor: Color(0xFFECEFEB), body: SelectExample()),
+    WidgetsApp(
+      color: Color(0xFFECEFEB),
+      debugShowCheckedModeBanner: false,
+      textStyle: const TextStyle(color: Color(0xFF202020), fontSize: 16),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+        settings: settings,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            builder(context),
+      ),
+      home: const ColoredBox(color: Color(0xFFECEFEB), child: SelectExample()),
     ),
   );
 }

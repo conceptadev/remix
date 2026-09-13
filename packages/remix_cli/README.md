@@ -110,10 +110,17 @@ does not depend directly on `mix`, `naked_ui`, or `remix_fortal`; it can edit
 the Radix color data, tokens, recipes, and instance overrides as ordinary app
 source.
 
-Place `AcmeScope` below the application host. For a routed Material app, wrap
-the child of `MaterialApp.builder` with `AcmeScope`. Routes and dialogs then
+Place `AcmeScope` below the application host. For a routed `WidgetsApp`, wrap
+the child of `WidgetsApp.builder` with `AcmeScope`. Routes and dialogs then
 inherit its tokens and text defaults. See `lib/ui/theme/theme_scope.dart` for
 the scope example.
+
+For both presets, the application owns light, dark, or system appearance.
+Resolve system brightness in `WidgetsApp.builder`, then pass light/dark data to
+the default scope or `brightness` to the Fortal scope. Scopes take `child`; use a
+Flutter `Builder` below a scope only when its callback must read the newly
+installed theme. The CLI installs theme files, not a complete app host or an
+appearance picker. See the [application host standard](../../docs/open-code.mdx#application-host-and-appearance).
 
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 Use an application prefix such as `Ui` or `Acme`.

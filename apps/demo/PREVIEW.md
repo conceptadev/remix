@@ -78,7 +78,7 @@ Widget previewMyWidget() {
 ### 2. Use the Helper
 Always use `createRemixPreview()` helper to ensure:
 - Proper Remix theming and tokens
-- Material design context
+- Flutter navigation and overlay support
 - Consistent background and centering
 - Debug banner disabled
 
@@ -93,16 +93,20 @@ Always use `createRemixPreview()` helper to ensure:
 ### Preview Helper Function
 ```dart
 Widget createRemixPreview(Widget child) {
-  return MaterialApp(
+  return WidgetsApp(
+    color: const Color(0xFFFAFAFA),
     debugShowCheckedModeBanner: false,
-    home: Builder(
-      builder: (context) => FortalScope(
-        brightness: Theme.of(context).brightness,
-        child: Scaffold(
-          backgroundColor: MixColors.grey[50],
-          body: Center(child: child),
-        ),
-      ),
+    pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+      settings: settings,
+      pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+    ),
+    builder: (context, navigator) => FortalScope(
+      brightness: MediaQuery.platformBrightnessOf(context),
+      child: navigator!,
+    ),
+    home: ColoredBox(
+      color: const Color(0xFFFAFAFA),
+      child: Center(child: child),
     ),
   );
 }

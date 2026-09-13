@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:remix_fortal/remix_fortal.dart';
 import 'package:flutter/services.dart';
 
 import 'presets.dart';
@@ -18,26 +19,16 @@ class ControlsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return Material(
-      elevation: 1,
-      color: Theme.of(context).colorScheme.surface,
+    return ColoredBox(
+      color: const Color(0xFFFAFAFA),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: Row(
           children: [
-            SegmentedButton<Brightness>(
-              segments: const [
-                ButtonSegment(value: .light, label: Text('Light')),
-                ButtonSegment(value: .dark, label: Text('Dark')),
-              ],
-              selected: {brightness},
-              onSelectionChanged: (selection) {
-                if (selection.isNotEmpty) {
-                  onChange(brightness: selection.first);
-                }
-              },
+            FortalButton(
+              label: brightness == .light ? 'Dark theme' : 'Light theme',
+              onPressed: () =>
+                  onChange(brightness: brightness == .light ? .dark : .light),
             ),
             const SizedBox(width: 16),
             _PresetChip(
@@ -55,7 +46,7 @@ class ControlsBar extends StatelessWidget {
               onTap: () => onChange(size: ViewportPresets.desktop),
             ),
             const Spacer(),
-            Text('W', style: textTheme.labelMedium),
+            const FortalText('W'),
             const SizedBox(width: 6),
             _SizeField(
               initial: size.width.round(),
@@ -64,7 +55,7 @@ class ControlsBar extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            Text('H', style: textTheme.labelMedium),
+            const FortalText('H'),
             const SizedBox(width: 6),
             _SizeField(
               initial: size.height.round(),
@@ -87,11 +78,7 @@ class _PresetChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ActionChip(
-      label: Text(label),
-      onPressed: onTap,
-      visualDensity: VisualDensity.compact,
-    );
+    return FortalButton(label: label, onPressed: onTap);
   }
 }
 
@@ -118,25 +105,10 @@ class _SizeFieldState extends State<_SizeField> {
 
   @override
   Widget build(BuildContext context) {
-    final border = OutlineInputBorder(
-      borderSide: BorderSide(color: Theme.of(context).dividerColor),
-      borderRadius: BorderRadius.circular(6),
-    );
-
     return SizedBox(
       width: 80,
-      child: TextField(
+      child: FortalTextField(
         controller: controller,
-        decoration: InputDecoration(
-          isDense: true,
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 8,
-            horizontal: 8,
-          ),
-          focusedBorder: border,
-          enabledBorder: border,
-          border: border,
-        ),
         keyboardType: TextInputType.number,
         onSubmitted: (text) {
           final value = int.tryParse(text);

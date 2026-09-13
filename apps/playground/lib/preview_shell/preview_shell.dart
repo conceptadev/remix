@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_fortal/remix_fortal.dart';
 
 import 'controls_bar.dart';
 import 'presets.dart';
@@ -83,12 +84,24 @@ class _ViewportFrame extends StatelessWidget {
         platformBrightness: brightness,
         devicePixelRatio: 1.0,
       ),
-      child: MaterialApp(
+      child: WidgetsApp(
+        color: const Color(0xFFFAFAFA),
+        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              builder(context),
+        ),
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(brightness: brightness),
-        home: Scaffold(
-          backgroundColor: MixColors.transparent,
-          body: Center(child: child),
+        // Existing comparison panes include Material controls. Supply their
+        // localization and theme explicitly; the app host remains WidgetsApp.
+        localizationsDelegates: const [DefaultMaterialLocalizations.delegate],
+        builder: (context, navigator) => Theme(
+          data: ThemeData(brightness: brightness),
+          child: FortalScope(brightness: brightness, child: navigator!),
+        ),
+        home: Material(
+          type: MaterialType.transparency,
+          child: Center(child: child),
         ),
       ),
     );

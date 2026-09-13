@@ -15,7 +15,7 @@ class HotReload extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Widgetbook.material(
+    return Widgetbook(
       addons: [FortalThemeAddon()],
       appBuilder: (context, child) => child,
       directories: directories,

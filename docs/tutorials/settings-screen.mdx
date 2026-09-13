@@ -203,7 +203,7 @@ Keep your CLI-installed `lib/ui` files; the next step changes one of them.
 </Accordions>
 
 The complete app owns the form values, save counter, loading flag, dialog
-result, and sidebar selection. It uses `MaterialApp` as the navigation host.
+result, and sidebar selection. It uses `WidgetsApp` with a Navigator as the application host.
 Keep its host builder and scope placement together: the text field needs an
 overlay, and the dialog needs the invoking context's navigator and text defaults.
 
