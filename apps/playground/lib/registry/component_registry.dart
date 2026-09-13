@@ -29,141 +29,88 @@ import 'entries/typography_entry.dart';
 
 // Map component slugs to a builder that returns the component inside FortalScope.
 final Map<String, WidgetBuilder> components = {
-  'button': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildButtonExample()),
-  ),
-  'textfield': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildTextFieldExample()),
-  ),
+  'button': (context) =>
+      FortalScope(child: PreviewShell(child: buildButtonExample())),
+  'textfield': (context) =>
+      FortalScope(child: PreviewShell(child: buildTextFieldExample())),
   'textarea': (context) => PreviewShell(
     child: Builder(
-      builder: (context) => FortalScope(
-        brightness: MediaQuery.platformBrightnessOf(context),
-        hasBackground: false,
-        child: buildTextAreaExample(),
-      ),
+      builder: (context) =>
+          FortalScope(hasBackground: false, child: buildTextAreaExample()),
     ),
   ),
-  'checkbox': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildCheckboxExample()),
-  ),
+  'checkbox': (context) =>
+      FortalScope(child: PreviewShell(child: buildCheckboxExample())),
   'checkbox_group': (context) => PreviewShell(
     child: Builder(
-      builder: (context) => FortalScope(
-        brightness: MediaQuery.platformBrightnessOf(context),
-        hasBackground: false,
-        child: buildCheckboxGroupExample(),
-      ),
+      builder: (context) =>
+          FortalScope(hasBackground: false, child: buildCheckboxGroupExample()),
     ),
   ),
-  'radio': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildRadioExample()),
-  ),
-  'select': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildSelectExample()),
-  ),
+  'radio': (context) =>
+      FortalScope(child: PreviewShell(child: buildRadioExample())),
+  'select': (context) =>
+      FortalScope(child: PreviewShell(child: buildSelectExample())),
   'segmented-control': (context) => PreviewShell(
     child: Builder(
       builder: (context) => FortalScope(
-        brightness: MediaQuery.platformBrightnessOf(context),
         hasBackground: false,
         child: buildSegmentedControlExample(),
       ),
     ),
   ),
-  'switch': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildSwitchExample()),
-  ),
-  'slider': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildSliderExample()),
-  ),
+  'switch': (context) =>
+      FortalScope(child: PreviewShell(child: buildSwitchExample())),
+  'slider': (context) =>
+      FortalScope(child: PreviewShell(child: buildSliderExample())),
   // Resolve Fortal inside PreviewShell so its light/dark control owns tokens.
   'menu': (context) => PreviewShell(
     child: Builder(
-      builder: (context) => FortalScope(
-        brightness: MediaQuery.platformBrightnessOf(context),
-        hasBackground: false,
-        child: buildMenuExample(),
-      ),
+      builder: (context) =>
+          FortalScope(hasBackground: false, child: buildMenuExample()),
     ),
   ),
-  'all': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: const PreviewShell(child: AllComponentsPage()),
-  ),
-  'avatar': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildAvatarExample()),
-  ),
-  'badge': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildBadgeExample()),
-  ),
+  'all': (context) =>
+      FortalScope(child: const PreviewShell(child: AllComponentsPage())),
+  'avatar': (context) =>
+      FortalScope(child: PreviewShell(child: buildAvatarExample())),
+  'badge': (context) =>
+      FortalScope(child: PreviewShell(child: buildBadgeExample())),
   // Resolve Fortal *inside* PreviewShell so the shell's light/dark control owns
   // the tokens; reading Theme.of above the shell leaves them stuck on light.
   'typography': (context) => PreviewShell(
     initialSize: const Size(900, 1180),
     child: Builder(
-      builder: (context) => FortalScope(
-        brightness: MediaQuery.platformBrightnessOf(context),
-        hasBackground: false,
-        child: buildTypographyExample(),
-      ),
+      builder: (context) =>
+          FortalScope(hasBackground: false, child: buildTypographyExample()),
     ),
   ),
-  'card': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildCardExample()),
-  ),
-  'callout': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildCalloutExample()),
-  ),
+  'card': (context) =>
+      FortalScope(child: PreviewShell(child: buildCardExample())),
+  'callout': (context) =>
+      FortalScope(child: PreviewShell(child: buildCalloutExample())),
   'data_list': (context) => PreviewShell(
     child: Builder(
-      builder: (context) => FortalScope(
-        brightness: MediaQuery.platformBrightnessOf(context),
-        hasBackground: false,
-        child: buildDataListExample(),
-      ),
+      builder: (context) =>
+          FortalScope(hasBackground: false, child: buildDataListExample()),
     ),
   ),
-  'data_table': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildDataTableExample()),
-  ),
-  'divider': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildDividerExample()),
-  ),
-  'progress': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildProgressExample()),
-  ),
+  'data_table': (context) =>
+      FortalScope(child: PreviewShell(child: buildDataTableExample())),
+  'divider': (context) =>
+      FortalScope(child: PreviewShell(child: buildDividerExample())),
+  'progress': (context) =>
+      FortalScope(child: PreviewShell(child: buildProgressExample())),
   'skeleton': (context) => PreviewShell(
     child: Builder(
-      builder: (context) => FortalScope(
-        brightness: MediaQuery.platformBrightnessOf(context),
-        hasBackground: false,
-        child: buildSkeletonExample(),
-      ),
+      builder: (context) =>
+          FortalScope(hasBackground: false, child: buildSkeletonExample()),
     ),
   ),
-  'spinner': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildSpinnerExample()),
-  ),
-  'tooltip': (context) => FortalScope(
-    brightness: MediaQuery.platformBrightnessOf(context),
-    child: PreviewShell(child: buildTooltipExample()),
-  ),
+  'spinner': (context) =>
+      FortalScope(child: PreviewShell(child: buildSpinnerExample())),
+  'tooltip': (context) =>
+      FortalScope(child: PreviewShell(child: buildTooltipExample())),
 };
 
 List<String> get availableComponents => components.keys.toList()..sort();

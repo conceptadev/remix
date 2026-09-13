@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 @immutable
@@ -12,19 +12,16 @@ class ThemeSettings {
     this.scaling = .percent100,
   });
 
-  final ThemeMode appearance;
+  final FortalThemeMode appearance;
   final FortalAccentColor accentColor;
   final FortalGrayColor grayColor;
   final FortalPanelBackground panelBackground;
   final FortalRadius radius;
   final FortalScaling scaling;
 
-  ThemeMode get themeMode => appearance;
-
-  // ThemeMode.system is app state rather than a FortalThemeConfig value, so the
-  // dashboard keeps a concrete settings object that can be copied atomically.
+  // The scope resolves system appearance; the dashboard owns the preference.
   ThemeSettings copyWith({
-    ThemeMode? appearance,
+    FortalThemeMode? appearance,
     FortalAccentColor? accentColor,
     FortalGrayColor? grayColor,
     FortalPanelBackground? panelBackground,

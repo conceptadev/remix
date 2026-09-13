@@ -14,7 +14,7 @@ class FortalExampleApp extends StatelessWidget {
     return FortalScope(
       accent: .blue,
       gray: .slate,
-      brightness: .light,
+      mode: .light,
       child: WidgetsApp(
         color: const Color(0xFFF8FAFC),
         debugShowCheckedModeBanner: false,

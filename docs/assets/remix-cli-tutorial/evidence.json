@@ -53,16 +53,16 @@
   "source": [
     {
       "preset": "default",
-      "main_sha256": "0b06853815861994a17ffa03cb1ae6884585b53d895d00a8d8d763002848f77c",
+      "main_sha256": "483ac622b3f6ead7e69997044ff2872f1201ba1ae4ea06c4ef741b0269243547",
       "test_sha256": "c480e6f5b025bad32d236dc22ae66403e45ab946953a0f2d70b78f7b533b4d92"
     },
     {
       "preset": "fortal",
-      "main_sha256": "ef8fcb230d6e250eaab8e54da8f2f83a8d9ad8388d374380312f84d9debb3a34",
+      "main_sha256": "a91813b55f594f6941a3970fb5305d3da211ba1708eaa1efddcacfcd36e696c6",
       "test_sha256": "37b7be5ce79290a951544184372a618b969f5ba5f3af27da4bacf0932f50701f"
     }
   ],
-  "archive_sha256": "3a560ad160d1e92cb57e67b70200a0454bea49b2f18e6ad96792b6ab680402c3",
+  "archive_sha256": "202d1b15d545140acac1c334b5d6dbffd4a08fd7e4c7d0e1d3f2bf1b8cbd8eb9",
   "first_render_source_sha256": "f8f43244e34277e0c7b27d92def68ced08fa93b0852e56dd20beb5a33821f10e",
   "validation": {
     "fresh_default_replay": "Passed project creation, installation, first render, composition, customization, diff preservation, ordinary add preservation, analysis, four tests, and release web builds.",
@@ -436,5 +436,10 @@
     "changes": "Both downloadable apps now use WidgetsApp with PageRouteBuilder and inherited theme scopes. Workflow tests assert no MaterialApp host.",
     "screenshots": "Original captures retained; not recaptured for this host migration.",
     "validation": "Both downloaded projects passed dependency resolution, analysis, and all four workflow tests against the local Remix checkout."
+  },
+  "theme_mode_migration": {
+    "date": "2026-09-12",
+    "changes": "Updated both theme layers and application hosts to theme/darkTheme/mode, with generated appearance tests. Original screenshot captures are unchanged and predate this revision.",
+    "validation": "Both downloaded projects passed analysis and all 12 tests against the current local Remix checkout, including eight theme-mode tests and four workflow tests per project."
   }
 }

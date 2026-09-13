@@ -848,6 +848,47 @@ void main() {
     },
   );
 
+  testWidgets(
+    'system appearance follows the platform and resumes after reset',
+    (tester) async {
+      final platform = tester.binding.platformDispatcher;
+      addTearDown(platform.clearPlatformBrightnessTestValue);
+      platform.platformBrightnessTestValue = Brightness.light;
+      await tester.pumpWidget(const DashboardApp());
+
+      bool isDark() =>
+          FortalTheme.of(tester.element(find.byType(DashboardShell))).isDark;
+      expect(isDark(), isFalse);
+
+      platform.platformBrightnessTestValue = Brightness.dark;
+      await tester.pump();
+      expect(isDark(), isTrue);
+
+      await tester.tap(find.byKey(const ValueKey('theme-quick-toggle')).first);
+      await tester.pump();
+      expect(isDark(), isFalse);
+      platform.platformBrightnessTestValue = Brightness.light;
+      await tester.pump();
+      platform.platformBrightnessTestValue = Brightness.dark;
+      await tester.pump();
+      expect(isDark(), isFalse);
+
+      await tester.tap(
+        find.byKey(const ValueKey(DashboardPage.settings)).first,
+      );
+      await tester.pump();
+      final reset = find.byKey(const ValueKey('theme-reset')).first;
+      await tester.ensureVisible(reset);
+      await tester.tap(reset);
+      await tester.pump();
+      expect(isDark(), isTrue);
+      platform.platformBrightnessTestValue = Brightness.light;
+      await tester.pump();
+      expect(isDark(), isFalse);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('supports an explicit dark initial theme', (tester) async {
     await tester.pumpWidget(
       const DashboardApp(initialSettings: ThemeSettings(appearance: .dark)),

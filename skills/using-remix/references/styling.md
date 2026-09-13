@@ -178,7 +178,7 @@ class _MyAppState extends State<MyApp> {
   ),
       builder: (context, child) => FortalScope(
         accent: FortalAccentColor.indigo,
-        brightness: _brightness,
+        mode: _brightness == Brightness.dark ? .dark : .light,
         child: child!,
       ),
       home: Center(

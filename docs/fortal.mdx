@@ -133,6 +133,33 @@ blend into surrounding text without inheriting that run's metrics.
   theme entries inserted above that route.
 </Warning>
 
+## Light, dark, and system appearance
+
+`FortalScope` supplies light and dark preset defaults and follows the system at
+the root. Nested scopes inherit the configured pair and active selection.
+Customize the pair with `theme` and `darkTheme`, or force `mode` to `.light` or
+`.dark`. `mode: .system` follows live platform brightness changes.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix_fortal/remix_fortal.dart';
+
+Widget withAppearance(Widget child) => FortalScope(
+  theme: const FortalThemeData.light(accent: FortalAccentColor.indigo),
+  darkTheme: const FortalThemeData.dark(accent: FortalAccentColor.indigo),
+  mode: FortalThemeMode.system,
+  child: child,
+);
+```
+
+Supplying only `theme` makes it the fallback for both modes. Supplying only
+`darkTheme` retains the default or inherited base theme. Direct scope options
+such as `accent` apply to both appearances; legacy `brightness` explicitly
+selects brightness and takes precedence over `mode`.
+
+Installed Fortal source uses your prefix: `AcmeScope`, `AcmeThemeData`, and
+`AcmeThemeMode` expose the same behavior. No Material application host is needed.
+
 ## Customizing Fortal Styles
 
 Fortal widgets call the matching `fortal*Style` recipe internally. Use those

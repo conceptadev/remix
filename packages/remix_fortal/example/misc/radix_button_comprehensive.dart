@@ -32,7 +32,7 @@ class _FortalButtonComprehensiveTestState
       builder: (context, child) => FortalScope(
         accent: _accent,
         gray: _gray,
-        brightness: _brightness,
+        mode: _brightness == Brightness.dark ? .dark : .light,
         child: Overlay.wrap(
           child: RemixToastScope(style: fortalToastStyle(), child: child!),
         ),
@@ -396,7 +396,7 @@ class _AccentShowcaseSection extends StatelessWidget {
         return FortalScope(
           accent: accentColor,
           gray: FortalGrayColor.slate,
-          brightness: FortalTheme.of(context).brightness,
+
           child: fortalButtonStyle(variant: .solid).call(
             label: accentColor.name,
             onPressed: () => debugPrint('Button pressed'),

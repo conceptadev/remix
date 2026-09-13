@@ -384,35 +384,58 @@ its `child` through. That child is the Navigator; keeping the scope above it
 makes the active theme available to routes, dialogs, and overlays. See the
 [complete routed host example](/fortal#scope-placement).
 
-The application owns the appearance preference: light, dark, or system. Resolve
-system appearance from `MediaQuery.platformBrightnessOf(context)` inside the
-app builder so platform changes rebuild the theme. An explicit light or dark
-preference takes precedence over the system value.
+The generated scopes expose `theme`, `darkTheme`, and `mode`. A root without
+arguments supplies the preset's light and dark defaults and follows the system.
+A nested scope inherits its parent's configured pair and active selection.
 
-The installed presets currently expose different theme APIs:
+| Preset | Scope | Theme values and modes |
+| --- | --- | --- |
+| `default` | `AcmeThemeScope` | `AcmeThemeData.light()`, `.dark()`, and `AcmeThemeMode` |
+| `fortal` | `AcmeScope` | `AcmeThemeData.light()`, `.dark()`, and `AcmeThemeMode` |
 
-| Preset | Supply the resolved appearance |
-| --- | --- |
-| `default` | Pass `AcmeThemeData.light()` or `AcmeThemeData.dark()` to `AcmeThemeScope(data: ...)` |
-| `fortal` | Pass the resolved `Brightness` to `AcmeScope(brightness: ...)`; keep accent, gray, radius, and scaling consistent across modes |
+Use your configured prefix in place of `Acme`. The same parameters apply to
+both presets:
 
-Use the configured prefix in place of `Acme`. The CLI installs the theme layer;
-it does not currently generate a complete application host or appearance picker.
-The [downloadable tutorial apps](/tutorials/settings-screen) demonstrate manual
-light/dark switching with both presets.
+```dart
+AcmeThemeScope(
+  theme: const AcmeThemeData.light(),
+  darkTheme: const AcmeThemeData.dark(),
+  mode: AcmeThemeMode.system,
+  child: child,
+)
+```
 
-Generated scopes take a `child`. `WidgetsApp.builder` handles placement; it does
-not need a matching builder constructor on the scope. If a widget must read the
-newly installed theme while building, put a Flutter `Builder` below the scope
-and use that callback's context. The app builder's own context is above the
-scope it returns.
+For Fortal, use `AcmeScope` in that example. Its theme constructors also accept
+accent, gray, radius, scaling, panel background, and background visibility.
+Set shared design options on both appearances when customizing the pair.
 
-The reference starter contract is to preserve the selected theme across routes,
-update visible overlays when appearance changes, support system appearance
-changes, and preserve application-owned theme edits during regeneration. Theme
-selection and persistence belong to the application; component recipes consume
-the resolved theme. A shared `RemixScope` or theme base class is not currently
-part of the generated API.
+`mode` accepts `system`, `light`, and `dark`. The root reacts to platform
+brightness changes in system mode. An explicit mode overrides the system;
+a nested scope with no mode inherits the parent's active selection, even if a
+nearer `MediaQuery` reports a different system brightness. Nested scopes can
+explicitly select another mode from the inherited pair.
+
+`theme` is the base and fallback. When you supply a custom `theme` without a
+`darkTheme`, it is used in both modes; colors are not automatically inverted.
+Supplying only `darkTheme` retains the inherited or generated light theme and
+does not force dark mode. Supplying neither retains both preset defaults.
+
+Generated scopes take a `child`. Keep `WidgetsApp.builder` above the Navigator
+and use its child; no scope-specific builder constructor is required. To read
+the newly installed theme while building, put Flutter's `Builder` below the
+scope and use that callback's context.
+
+The [downloadable tutorial apps](/tutorials/settings-screen) show the same API
+in both presets. Their generated theme files are editable application source;
+regeneration still preserves existing authored files unless you explicitly use
+`--overwrite`. The CLI installs the theme layer, not a complete app host or
+appearance picker. Selection controls and persistence belong to the application.
+The dashboard is a reference consumer of the same scope behavior.
+
+Existing `AcmeThemeScope(data: ...)` calls remain a fixed-theme shorthand.
+Fortal's direct design options and `brightness` remain supported; direct options
+override the supplied theme values, and explicit `brightness` overrides mode
+selection. Prefer `theme`, `darkTheme`, and `mode` in new app setup.
 
 ## The three levels of customization
 
@@ -423,7 +446,7 @@ the recipe reads tokens and the scope decides what tokens resolve to:
 
 ```dart
 UiThemeScope(
-  data: const UiThemeData.light().copyWith(
+  theme: const UiThemeData.light().copyWith(
     primary: const Color(0xFF4F46E5),
     radius: const Radius.circular(999),
   ),

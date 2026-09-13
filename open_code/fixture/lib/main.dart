@@ -158,7 +158,7 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
         : _galleryInset;
 
     return AcmeThemeScope(
-      data: data,
+      theme: data,
       child: ColoredBox(
         color: data.background,
         child: DefaultTextStyle(

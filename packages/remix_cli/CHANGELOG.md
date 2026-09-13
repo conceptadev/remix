@@ -1,3 +1,7 @@
+## Unreleased
+
+- Generate `theme`, `darkTheme`, and `mode` scope parameters for both presets, including light/dark defaults and live system appearance. Existing default-scope `data` calls remain supported.
+
 ## 0.1.0
 
 - Adds `sidebar_layout` to both presets: an open-code shell layout, not a
