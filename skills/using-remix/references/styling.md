@@ -160,38 +160,31 @@ class AppStyles {
 RemixButton(label: 'Save', onPressed: save, style: AppStyles.primaryButton)
 ```
 
-### Dynamic brightness
+### Dynamic appearance
 
-Use `WidgetsApp` and pass the selected brightness to `FortalScope`.
+Keep the preference as `FortalThemeMode`, initially `.system`, and pass it to
+`FortalScope.mode` in the `WidgetsApp.builder` above the Navigator. Offer
+System, Light, and Dark choices; update the preference with `setState`.
+The scope handles live platform brightness changes while System is selected.
 
 ```dart
-class _MyAppState extends State<MyApp> {
-  var _brightness = Brightness.light;
-
-  @override
-  Widget build(BuildContext context) {
-    return WidgetsApp(
-      color: const Color(0xFFFFFFFF),
-      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+WidgetsApp(
+  color: const Color(0xFFFFFFFF),
+  pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
     settings: settings,
     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
   ),
-      builder: (context, child) => FortalScope(
-        accent: FortalAccentColor.indigo,
-        mode: _brightness == Brightness.dark ? .dark : .light,
-        child: child!,
-      ),
-      home: Center(
-        child: FortalSwitch(
-          selected: _brightness == Brightness.dark,
-          onChanged: (dark) => setState(() =>
-              _brightness = dark ? Brightness.dark : Brightness.light),
-        ),
-      ),
-    );
-  }
-}
+  builder: (context, child) => FortalScope(
+    theme: const FortalThemeData.light(accent: FortalAccentColor.indigo),
+    darkTheme: const FortalThemeData.dark(accent: FortalAccentColor.indigo),
+    mode: selectedMode,
+    child: child!,
+  ),
+  home: const MyScreen(),
+)
 ```
 
-`FortalThemeConfig` is the value-object form for dynamic theming:
-`config.createScope(child: …)`, `config.copyWith(brightness: …)`.
+Read `FortalTheme.of(context).brightness` below the scope when UI needs the
+resolved appearance. A custom `theme` without `darkTheme` is the fallback in
+both modes. Preserve existing `FortalThemeConfig.createScope` calls when a
+fixed legacy configuration is intentional.

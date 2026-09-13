@@ -93,7 +93,7 @@ bare-`Text` fallback:
 FortalScope(
   accent: FortalAccentColor.indigo,
   gray: FortalGrayColor.slate,
-  brightness: Brightness.light,
+  mode: FortalThemeMode.system,
   child: WidgetsApp(
     color: const Color(0xFFFFFFFF),
     builder: (_, _) => const MyScreen(),
@@ -125,6 +125,36 @@ Material application hosts. A nearer `DefaultTextStyle` can override bare text.
 A nested `FortalScope` re-scopes tokens only; it does not restate the courtesy
 bare-`Text` run. Ordinary `Remix*` widgets with fully custom styles do not need
 `FortalScope`.
+
+## Theme selection
+
+Use `theme`, `darkTheme`, and `mode`; do not introduce a `lightTheme` parameter
+or a new application wrapper. Keep `WidgetsApp` as the host.
+
+- A root with neither theme supplies preset light/dark defaults and follows the system.
+- Supplying only `theme` uses that value in both modes. Supplying only `darkTheme`
+  retains the default or inherited base theme.
+- An empty nested scope inherits the configured pair and active selection.
+  An explicit nested `mode` can select from the inherited pair.
+- The app owns the mode preference and persistence. `mode: .system` reacts to
+  platform brightness changes; no application brightness observer is needed.
+- Generated default scopes use `<Prefix>ThemeScope`; generated Fortal scopes use
+  `<Prefix>Scope`. Both export `<Prefix>ThemeData` and `<Prefix>ThemeMode`.
+- Existing default-scope `data` calls remain a fixed-theme compatibility path.
+  Fortal's legacy `brightness` option overrides `mode` when explicitly supplied.
+
+```dart
+FortalScope(
+  theme: const FortalThemeData.light(),
+  darkTheme: const FortalThemeData.dark(),
+  mode: FortalThemeMode.system,
+  child: child,
+)
+```
+
+These APIs describe the current checkout. For older installed source, inspect
+its constructor before using them; generated source is application-owned and
+must be updated deliberately without overwriting custom tokens.
 
 ## Provide only the host capabilities in use
 

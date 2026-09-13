@@ -17,7 +17,7 @@ preset: widgets, variants, sizes, and tokens.
 
 Use Fortal when the UI should follow its ready-made Radix-inspired visual system. Use base Remix when the user wants a distinct visual language, does not want Fortal's token scales, or needs a fully custom `*Styler`. Fortal is optional and never required for ordinary `Remix*` widgets.
 
-Place `FortalScope` above every subtree that renders Fortal styles. Put it above the application or router when overlay entries and pushed routes must inherit Fortal tokens — **except** under `MaterialApp` or `CupertinoApp`, where it belongs in `builder:`. See [Scope placement](#fortalscope--theme-config).
+Place `FortalScope` above every subtree that renders Fortal styles. For routed `WidgetsApp` examples, use `builder` above the Navigator so routes and overlays inherit the scope. See [Scope placement](#fortalscope--theme-config).
 
 ## Install and import
 
@@ -200,7 +200,7 @@ Rules that matter when writing code:
 FortalScope(
   accent: FortalAccentColor.indigo,   // default .indigo
   gray: FortalGrayColor.slate,        // default .slate
-  brightness: Brightness.light,       // default .light
+  mode: FortalThemeMode.system,       // root default; nested scopes inherit
   panelBackground: FortalPanelBackground.translucent,
   radius: FortalRadius.medium,
   scaling: FortalScaling.percent100,
@@ -221,6 +221,15 @@ mauve, slate, sage, olive, sand.
 selects `none|small|medium|large|full`; `scaling` selects 90%, 95%, 100%, 105%,
 or 110%; and `hasBackground` controls whether the scope paints the resolved
 page background behind its child.
+
+### Appearance selection
+
+Use `theme: const FortalThemeData.light()` and
+`darkTheme: const FortalThemeData.dark()` to configure a pair. With neither,
+the preset supplies both defaults. With only `theme`, both modes use that
+fallback. With only `darkTheme`, the base remains inherited or default.
+Nested scopes inherit the pair and current selection unless `mode` is explicit.
+The app owns preference persistence. Legacy `brightness` overrides `mode`.
 
 ### Scope placement
 
