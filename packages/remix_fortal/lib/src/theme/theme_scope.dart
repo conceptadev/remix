@@ -49,7 +49,12 @@ Widget _fortalRootTextStyle({
 /// [FortalTokens] available to routes and dialogs.
 ///
 /// ```dart
-/// MaterialApp(
+/// WidgetsApp(
+///   color: const Color(0xFFF8FAFC),
+///   pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+///     settings: settings,
+///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+///   ),
 ///   builder: (_, child) => FortalScope(child: child!),
 ///   home: const HomePage(),
 /// )

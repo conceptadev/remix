@@ -28,7 +28,13 @@ enum PlaygroundToastVariant {
 /// including dialogs, can reach it:
 ///
 /// ```dart
-/// MaterialApp(
+/// WidgetsApp(
+///   color: const Color(0xFFF8FAFC),
+///   pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+///     settings: settings,
+///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+///   ),
+///   home: const SizedBox.shrink(),
 ///   builder: (context, child) => Overlay.wrap(
 ///     child: RemixToastScope(style: playgroundToastStyle(), child: child!),
 ///   ),

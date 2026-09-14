@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
 import 'package:remix_fortal/remix_fortal.dart';
 
 void main() {
@@ -10,18 +11,23 @@ class FortalButtonExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: FortalScope(
+    return WidgetsApp(
+      color: const Color(0xFFF8FAFC),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+        settings: settings,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            builder(context),
+      ),
+      builder: (context, child) => FortalScope(
         accent: FortalAccentColor.indigo,
         gray: FortalGrayColor.slate,
         brightness: .light,
-        child: const FortalButtonExampleScreen(),
+        child: Overlay.wrap(
+          child: RemixToastScope(style: fortalToastStyle(), child: child!),
+        ),
       ),
+      home: const FortalButtonExampleScreen(),
       title: 'Fortal Button Example',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-      ),
     );
   }
 }
@@ -31,39 +37,43 @@ class FortalButtonExampleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Fortal Button Variants & Sizes'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: const SingleChildScrollView(
-        padding: EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            Text(
-              'Button Variants',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            _VariantSection(),
-            SizedBox(height: 32),
-            Text(
-              'Button Sizes',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            _SizeSection(),
-            SizedBox(height: 32),
-            Text(
-              'Button States',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            _StateSection(),
-          ],
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(24),
+          child: const FortalHeading('Fortal Button Variants & Sizes'),
         ),
-      ),
+        Expanded(
+          child: const SingleChildScrollView(
+            padding: EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                Text(
+                  'Button Variants',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16),
+                _VariantSection(),
+                SizedBox(height: 32),
+                Text(
+                  'Button Sizes',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16),
+                _SizeSection(),
+                SizedBox(height: 32),
+                Text(
+                  'Button States',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16),
+                _StateSection(),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -71,10 +81,8 @@ class FortalButtonExampleScreen extends StatelessWidget {
 class _VariantSection extends StatelessWidget {
   const _VariantSection();
 
-  void _showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+  void _showToast(BuildContext context, String message) {
+    showRemixToast(context, RemixToastData(title: message));
   }
 
   @override
@@ -85,27 +93,27 @@ class _VariantSection extends StatelessWidget {
       children: [
         fortalButtonStyle(variant: .solid).call(
           label: 'Solid',
-          onPressed: () => _showSnackBar(context, 'Solid button pressed'),
+          onPressed: () => _showToast(context, 'Solid button pressed'),
         ),
         fortalButtonStyle(variant: .soft).call(
           label: 'Soft',
-          onPressed: () => _showSnackBar(context, 'Soft button pressed'),
+          onPressed: () => _showToast(context, 'Soft button pressed'),
         ),
         fortalButtonStyle(variant: .surface).call(
           label: 'Surface',
-          onPressed: () => _showSnackBar(context, 'Surface button pressed'),
+          onPressed: () => _showToast(context, 'Surface button pressed'),
         ),
         fortalButtonStyle(variant: .outline).call(
           label: 'Outline',
-          onPressed: () => _showSnackBar(context, 'Outline button pressed'),
+          onPressed: () => _showToast(context, 'Outline button pressed'),
         ),
         fortalButtonStyle(variant: .ghost).call(
           label: 'Ghost',
-          onPressed: () => _showSnackBar(context, 'Ghost button pressed'),
+          onPressed: () => _showToast(context, 'Ghost button pressed'),
         ),
         fortalButtonStyle(variant: .surface).call(
           label: 'Surface',
-          onPressed: () => _showSnackBar(context, 'Surface button pressed'),
+          onPressed: () => _showToast(context, 'Surface button pressed'),
         ),
       ],
     );

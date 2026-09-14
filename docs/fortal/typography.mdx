@@ -42,8 +42,7 @@ anchors them to tokens: an unsized soft Code resolves
 explicit `size:` to select another token size.
 
 The outermost `FortalScope` still establishes the Radix root run as a courtesy
-`DefaultTextStyle` for bare Flutter `Text`. Under `MaterialApp` or
-`CupertinoApp`, put the scope in `builder:` so that fallback reaches routes and
+`DefaultTextStyle` for bare Flutter `Text`. Under `WidgetsApp`, put the scope in `builder:` so that fallback reaches routes and
 raw overlays; see [scope placement](/fortal#scope-placement). A nearer
 `DefaultTextStyle` can replace the run for bare text, but never changes Fortal
 typography metrics.

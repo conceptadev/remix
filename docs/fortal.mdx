@@ -89,23 +89,25 @@ run. Fortal typography re-resolves against those nested tokens, so gray or
 scaling changes apply to the subtree, while ordinary Flutter text keeps its
 nearest inherited style.
 
-Where the outermost scope goes therefore depends on your host:
-
-| Host | Put `FortalScope` |
-|------|-------------------|
-| `WidgetsApp`, a router, or a custom host | Above the app, as in the Quick Start above |
-| `MaterialApp` or `CupertinoApp` | Inside `builder:` |
+Use `WidgetsApp` for the application host. For an application with routes, put
+`FortalScope` in `builder`, above the Navigator, so pushed routes and dialogs
+inherit the same tokens and text style:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'ui/ui.dart';
 
-class MyMaterialApp extends StatelessWidget {
-  const MyMaterialApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return WidgetsApp(
+      color: const Color(0xFFF8FAFC),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+        ),
       builder: (context, child) => FortalScope(child: child!),
       home: const Center(child: FortalText('Themed')),
     );
@@ -113,16 +115,9 @@ class MyMaterialApp extends StatelessWidget {
 }
 ```
 
-`MaterialApp` and `CupertinoApp` hand `WidgetsApp` their own root
-`DefaultTextStyle`, and `WidgetsApp` installs it below everything that wraps the
-app. A scope placed above `MaterialApp` still supplies tokens, but its root text
-run is overridden. `builder:` sits below that style and above the `Navigator`,
-so pushed routes and raw `Overlay` entries receive the Fortal fallback.
-
-A [`RemixToastScope`](/components/toast) goes the other side of the
-`Navigator`: in `home` or a persistent router shell, below the Overlay it
-renders into. Its toasts then inherit this scope's tokens live, like any other
-descendant.
+For app-wide toasts, wrap the Navigator in `Overlay.wrap` and
+`RemixToastScope` inside this builder, below `FortalScope`. See the
+[toast scope example](/components/toast).
 
 The root run is only a fallback for bare Flutter `Text`, and it follows
 Flutter's normal text-style cascade. A nearer `DefaultTextStyle`, including one
@@ -133,10 +128,9 @@ explicit `size:` selects another token size. Transparent, non-accent
 blend into surrounding text without inheriting that run's metrics.
 
 <Warning>
-  If bare Flutter `Text` inside a hand-rolled `OverlayEntry` renders red and
-  monospace with a yellow double underline, the scope is above `MaterialApp`
-  rather than inside `builder:`. That is Flutter's "put your text in a
-  Material" fallback style; Fortal typography pins its own token run.
+  If an overlay's text does not inherit your theme, ensure the theme scope wraps
+  the Navigator or Overlay that owns the entry. A scope inside one route cannot
+  theme entries inserted above that route.
 </Warning>
 
 ## Customizing Fortal Styles

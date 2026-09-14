@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'ui/ui.dart';
 
@@ -12,20 +12,24 @@ class AcmeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return WidgetsApp(
+      color: const Color(0xFFF8FAFC),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+        settings: settings,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            builder(context),
+      ),
       debugShowCheckedModeBanner: false,
-      home: AcmeScope(
-        child: Scaffold(
-          body: Center(
-            child: AcmeCard(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AcmeHeading('Fortal, now yours'),
-                  AcmeText('Radix Themes 3.3.0 expressed as local Dart.'),
-                  AcmeButton(label: 'Continue'),
-                ],
-              ),
+      home: const AcmeScope(
+        child: Center(
+          child: AcmeCard(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AcmeHeading('Fortal, now yours'),
+                AcmeText('Radix Themes 3.3.0 expressed as local Dart.'),
+                AcmeButton(label: 'Continue'),
+              ],
             ),
           ),
         ),

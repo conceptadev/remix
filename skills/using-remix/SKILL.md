@@ -101,10 +101,15 @@ FortalScope(
 )
 ```
 
-**`MaterialApp` or `CupertinoApp` — put the scope in `builder`.**
+**Routed `WidgetsApp` — put the scope in `builder`.**
 
 ```dart
-MaterialApp(
+WidgetsApp(
+  color: const Color(0xFFFFFFFF),
+  pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+    settings: settings,
+    pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+  ),
   builder: (context, child) => FortalScope(
     accent: FortalAccentColor.indigo,
     child: child!,
@@ -113,24 +118,13 @@ MaterialApp(
 )
 ```
 
-Those apps hand `WidgetsApp` their own root `DefaultTextStyle`, which is
-installed *below* anything wrapping the app — so a scope placed above
-`MaterialApp` still supplies tokens but loses the courtesy text fallback.
-`builder` wraps the whole `Navigator`, so bare `Text` in pushed routes and raw
-`Overlay` entries receives that fallback.
-
-Symptom of the wrong placement under `MaterialApp`: **bare Flutter `Text`** in
-a hand-rolled `OverlayEntry` renders red, monospace, with a yellow double
-underline — that is Flutter's "put your text in a Material" fallback, not a
-Remix bug. Fortal typography pins its own token run; non-accent ghost Code only
-retains the ambient foreground.
+The builder wraps the Navigator, so pushed routes and overlays inherit the
+scope. Use `WidgetsApp` in documentation and runnable examples; do not introduce
+Material application hosts. A nearer `DefaultTextStyle` can override bare text.
 
 A nested `FortalScope` re-scopes tokens only; it does not restate the courtesy
-bare-`Text` run. Re-scoping a subtree for a different accent or scaling leaves
-the surrounding Flutter text inheritance unchanged while Fortal typography
-resolves against the nested tokens.
-
-Ordinary `Remix*` widgets with fully custom styles do not need `FortalScope`.
+bare-`Text` run. Ordinary `Remix*` widgets with fully custom styles do not need
+`FortalScope`.
 
 ## Provide only the host capabilities in use
 

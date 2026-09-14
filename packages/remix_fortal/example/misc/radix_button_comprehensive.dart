@@ -22,25 +22,31 @@ class _FortalButtonComprehensiveTestState
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: FortalScope(
+    return WidgetsApp(
+      color: const Color(0xFFF8FAFC),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+        settings: settings,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            builder(context),
+      ),
+      builder: (context, child) => FortalScope(
         accent: _accent,
         gray: _gray,
         brightness: _brightness,
-        child: _ComprehensiveTestScreen(
-          onAccentChanged: (accent) => setState(() => _accent = accent),
-          onGrayChanged: (gray) => setState(() => _gray = gray),
-          onBrightnessChanged: (brightness) =>
-              setState(() => _brightness = brightness),
-          currentAccent: _accent,
-          currentGray: _gray,
-          currentBrightness: _brightness,
+        child: Overlay.wrap(
+          child: RemixToastScope(style: fortalToastStyle(), child: child!),
         ),
       ),
+      home: _ComprehensiveTestScreen(
+        onAccentChanged: (accent) => setState(() => _accent = accent),
+        onGrayChanged: (gray) => setState(() => _gray = gray),
+        onBrightnessChanged: (brightness) =>
+            setState(() => _brightness = brightness),
+        currentAccent: _accent,
+        currentGray: _gray,
+        currentBrightness: _brightness,
+      ),
       title: 'Fortal Button Comprehensive Test',
-      theme: _brightness == .light
-          ? ThemeData.light(useMaterial3: true)
-          : ThemeData.dark(useMaterial3: true),
     );
   }
 }
@@ -65,68 +71,71 @@ class _ComprehensiveTestScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Fortal Button - Complete Spec Test'),
-        actions: [
-          PopupMenuButton<Brightness>(
-            itemBuilder: (context) => [
-              const PopupMenuItem(value: .light, child: Text('Light')),
-              const PopupMenuItem(value: .dark, child: Text('Dark')),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(24),
+          child: Row(
+            children: [
+              const Expanded(
+                child: FortalHeading('Fortal Button - Complete Spec Test'),
+              ),
+              FortalButton(
+                label: currentBrightness == .light
+                    ? 'Dark theme'
+                    : 'Light theme',
+                onPressed: () => onBrightnessChanged(
+                  currentBrightness == .light ? .dark : .light,
+                ),
+              ),
             ],
-            onSelected: onBrightnessChanged,
-            icon: Icon(
-              currentBrightness == .light ? Icons.light_mode : Icons.dark_mode,
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                _ThemeControls(
+                  accent: currentAccent,
+                  gray: currentGray,
+                  onAccentChanged: onAccentChanged,
+                  onGrayChanged: onGrayChanged,
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  'All Variants - Size 2 (Default)',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                const _AllVariantsSection(size: 2),
+                const SizedBox(height: 32),
+                const Text(
+                  'Size Comparison - Solid Variant',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                const _SizeComparisonSection(),
+                const SizedBox(height: 32),
+                const Text(
+                  'State Testing - All Variants',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                const _StateTestingSection(),
+                const SizedBox(height: 32),
+                const Text(
+                  'Accent Color Showcase - Solid Variant',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                const _AccentShowcaseSection(),
+              ],
             ),
           ),
-        ],
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            _ThemeControls(
-              accent: currentAccent,
-              gray: currentGray,
-              onAccentChanged: onAccentChanged,
-              onGrayChanged: onGrayChanged,
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'All Variants - Size 2 (Default)',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const _AllVariantsSection(size: 2),
-            const SizedBox(height: 32),
-            const Text(
-              'Size Comparison - Solid Variant',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const _SizeComparisonSection(),
-            const SizedBox(height: 32),
-            const Text(
-              'State Testing - All Variants',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const _StateTestingSection(),
-            const SizedBox(height: 32),
-            const Text(
-              'Accent Color Showcase - Solid Variant',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const _AccentShowcaseSection(),
-          ],
         ),
-      ),
-      backgroundColor: currentBrightness == .dark
-          ? Colors.grey.shade900
-          : Colors.white,
+      ],
     );
   }
 }
@@ -147,7 +156,7 @@ class _ThemeControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return FortalCard(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -161,32 +170,38 @@ class _ThemeControls extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: DropdownButton<FortalAccentColor>(
+                  child: FortalSelect<FortalAccentColor>(
                     items: FortalAccentColor.values
                         .map(
-                          (color) => DropdownMenuItem(
+                          (color) => RemixSelectItem(
                             value: color,
-                            child: Text('Accent: ${color.name}'),
+                            label: 'Accent: ${color.name}',
                           ),
                         )
                         .toList(),
-                    value: accent,
+                    selectedValue: accent,
+                    trigger: const RemixSelectTrigger(
+                      placeholder: 'Choose accent',
+                    ),
                     onChanged: (value) =>
                         value != null ? onAccentChanged(value) : null,
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: DropdownButton<FortalGrayColor>(
+                  child: FortalSelect<FortalGrayColor>(
                     items: FortalGrayColor.values
                         .map(
-                          (color) => DropdownMenuItem(
+                          (color) => RemixSelectItem(
                             value: color,
-                            child: Text('Gray: ${color.name}'),
+                            label: 'Gray: ${color.name}',
                           ),
                         )
                         .toList(),
-                    value: gray,
+                    selectedValue: gray,
+                    trigger: const RemixSelectTrigger(
+                      placeholder: 'Choose gray',
+                    ),
                     onChanged: (value) =>
                         value != null ? onGrayChanged(value) : null,
                   ),
@@ -205,10 +220,8 @@ class _AllVariantsSection extends StatelessWidget {
 
   final int size;
 
-  void _showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+  void _showToast(BuildContext context, String message) {
+    showRemixToast(context, RemixToastData(title: message));
   }
 
   ButtonStyler _getSizedStyle(FortalButtonVariant variant) {
@@ -230,34 +243,34 @@ class _AllVariantsSection extends StatelessWidget {
         _getSizedStyle(.solid).call(
           label: 'Solid',
           leadingIcon: Icons.check_circle,
-          onPressed: () => _showSnackBar(context, 'Solid pressed'),
+          onPressed: () => _showToast(context, 'Solid pressed'),
         ),
         _getSizedStyle(.soft).call(
           label: 'Soft',
           leadingIcon: Icons.favorite,
-          onPressed: () => _showSnackBar(context, 'Soft pressed'),
+          onPressed: () => _showToast(context, 'Soft pressed'),
         ),
         _getSizedStyle(.surface).call(
           label: 'Surface',
           leadingIcon: Icons.layers,
-          onPressed: () => _showSnackBar(context, 'Surface pressed'),
+          onPressed: () => _showToast(context, 'Surface pressed'),
         ),
         _getSizedStyle(.outline).call(
           label: 'Outline',
           leadingIcon: Icons.crop_free,
-          onPressed: () => _showSnackBar(context, 'Outline pressed'),
+          onPressed: () => _showToast(context, 'Outline pressed'),
         ),
         _getSizedStyle(.ghost).call(
           label: 'Ghost',
           leadingIcon: Icons.visibility_off,
-          onPressed: () => _showSnackBar(context, 'Ghost pressed'),
+          onPressed: () => _showToast(context, 'Ghost pressed'),
         ),
 
         // Surface (was Classic)
         _getSizedStyle(.surface).call(
           label: 'Surface',
           leadingIcon: Icons.style,
-          onPressed: () => _showSnackBar(context, 'Surface pressed'),
+          onPressed: () => _showToast(context, 'Surface pressed'),
         ),
       ],
     );
@@ -383,7 +396,7 @@ class _AccentShowcaseSection extends StatelessWidget {
         return FortalScope(
           accent: accentColor,
           gray: FortalGrayColor.slate,
-          brightness: Theme.of(context).brightness,
+          brightness: FortalTheme.of(context).brightness,
           child: fortalButtonStyle(variant: .solid).call(
             label: accentColor.name,
             onPressed: () => debugPrint('Button pressed'),

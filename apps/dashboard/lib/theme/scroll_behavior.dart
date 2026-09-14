@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-class AppScrollBehavior extends MaterialScrollBehavior {
+class AppScrollBehavior extends ScrollBehavior {
   const AppScrollBehavior();
 
   @override

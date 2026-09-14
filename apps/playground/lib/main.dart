@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/semantics.dart' show SemanticsBinding;
+
+import 'package:remix_fortal/remix_fortal.dart';
 
 import 'registry/component_registry.dart';
 import 'routes/playground_home.dart';
@@ -9,7 +11,7 @@ void main() {
   // Ensure bindings are initialized before enabling semantics
   WidgetsFlutterBinding.ensureInitialized();
   // Enable accessible semantics for automation tools (e.g., Playwright)
-  SemanticsBinding.instance.ensureSemantics();
+  if (kIsWeb) SemanticsBinding.instance.ensureSemantics();
   runApp(const _App());
 }
 
@@ -24,12 +26,18 @@ class _App extends StatelessWidget {
 
     final builder = components[key];
 
-    return MaterialApp(
+    return WidgetsApp(
+      color: const Color(0xFFFAFAFA),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+        settings: settings,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            builder(context),
+      ),
+      builder: (context, child) => FortalScope(child: child!),
       home: builder != null
-          ? Scaffold(body: Builder(builder: builder))
+          ? Builder(builder: builder)
           : const PlaygroundHome(),
       title: 'Remix Playground',
-      theme: ThemeData(useMaterial3: true),
       debugShowCheckedModeBanner: false,
     );
   }

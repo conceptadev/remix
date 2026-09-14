@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
@@ -8,10 +9,18 @@ void main() {
   // Enable semantics for web testing/automation
   WidgetsFlutterBinding.ensureInitialized();
   // ignore: deprecated_member_use
-  WidgetsBinding.instance.ensureSemantics();
+  if (kIsWeb) WidgetsBinding.instance.ensureSemantics();
   runApp(
-    const MaterialApp(
-      home: Scaffold(backgroundColor: Colors.white, body: AccordionExample()),
+    WidgetsApp(
+      color: Colors.white,
+      debugShowCheckedModeBanner: false,
+      textStyle: const TextStyle(color: Color(0xFF202020), fontSize: 16),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+        settings: settings,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            builder(context),
+      ),
+      home: const ColoredBox(color: Colors.white, child: AccordionExample()),
     ),
   );
 }
@@ -24,7 +33,7 @@ class AccordionExample extends StatefulWidget {
 }
 
 class _AccordionExampleState extends State<AccordionExample> {
-  final controller = RemixAccordionController(min: 0, max: 1);
+  final controller = RemixAccordionController<String>(min: 0, max: 1);
 
   @override
   void dispose() {
@@ -43,7 +52,7 @@ class _AccordionExampleState extends State<AccordionExample> {
               .spacing(24)
               .mainAxisSize(.min),
           children: [
-            RemixAccordionGroup(
+            RemixAccordionGroup<String>(
               controller: controller,
               child: ColumnBox(
                 style: FlexBoxStyler().spacing(16),

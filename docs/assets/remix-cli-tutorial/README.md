@@ -25,3 +25,8 @@ These checks do not replace a fresh Flutter replay when the samples or CLI chang
 The screenshots and downloadable projects are unchanged by the presentation
 migration. Fumadocs now supplies the site's typography and code highlighting;
 no separate third-party font or Prism bundle is distributed in this directory.
+
+On 2026-09-12, the downloadable apps moved to `WidgetsApp` with a Navigator.
+Their workflow tests also assert the neutral host. Source and archive hashes
+record that revision; the screenshot hashes and original capture checkout remain
+unchanged. Those screenshots predate the host migration.
