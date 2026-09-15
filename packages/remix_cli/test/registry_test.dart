@@ -124,7 +124,7 @@ items:
         'chart',
       ]);
       expect(chart.dependencies.keys, {'mix_annotations', 'mix_chart'});
-      expect('${chart.dependencies['mix_chart']}', '^0.0.1-beta.1');
+      expect('${chart.dependencies['mix_chart']}', '^0.0.1-beta.3');
       expect(source, contains("import 'package:mix_chart/mix_chart.dart';"));
       expect(source, isNot(contains('remix_fortal')));
       expect(

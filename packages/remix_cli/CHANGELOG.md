@@ -12,7 +12,8 @@
   application's own `button` and `icon_button` recipes, so adding it installs
   both. It needs the Remix release that ships `RemixToastScope`.
 
-- Require Remix `^1.0.0-beta.9` for the generated Fortal adapters. CI checks
+- Require Remix `^1.0.0-beta.10` for the generated adapters and `mix_chart`
+  `^0.0.1-beta.3` for the optional chart recipe. CI checks
   both presets with checkout Remix. Publication requires the hosted check.
 
 - Adds the `fortal` preset as application-owned source derived from the

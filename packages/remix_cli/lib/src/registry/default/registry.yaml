@@ -146,7 +146,7 @@ items:
       - theme
     dependencies:
       mix_annotations: ^2.2.0-beta.1
-      mix_chart: ^0.0.1-beta.1
+      mix_chart: ^0.0.1-beta.3
     devDependencies:
       build_runner: ^2.10.1
       mix_generator: ^2.2.0-beta.3
